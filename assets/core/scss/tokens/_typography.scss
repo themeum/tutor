@@ -5,8 +5,20 @@
 // FONT FAMILIES
 // =============================================================================
 
-$tutor-font-family-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-$tutor-font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$tutor-font-family-heading:
+  'Inter',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Roboto,
+  sans-serif;
+$tutor-font-family-body:
+  'Inter',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Roboto,
+  sans-serif;
 
 // =============================================================================
 // FONT WEIGHTS
@@ -22,6 +34,7 @@ $tutor-font-weight-bold: 700; // Bold
 // Base: 16px = 1rem
 // =============================================================================
 
+$tutor-font-size-d1: 4rem; // 64px ÷ 16 = 4rem
 $tutor-font-size-h1: 2.5rem; // 40px ÷ 16 = 2.5rem
 $tutor-font-size-h2: 2rem; // 32px ÷ 16 = 2rem
 $tutor-font-size-h3: 1.5rem; // 24px ÷ 16 = 1.5rem
@@ -40,6 +53,7 @@ $tutor-font-size-p3: 0.75rem; // 12px ÷ 16 = 0.75rem
 // Base: 16px = 1rem
 // =============================================================================
 
+$tutor-line-height-d1: 4.5rem; // 72px ÷ 16 = 4.5rem
 $tutor-line-height-h1: 3rem; // 48px ÷ 16 = 3rem
 $tutor-line-height-h2: 2.5rem; // 40px ÷ 16 = 2.5rem
 $tutor-line-height-h3: 2rem; // 32px ÷ 16 = 2rem
@@ -58,6 +72,7 @@ $tutor-line-height-p3: 1.125rem; // 18px ÷ 16 = 1.125rem
 // =============================================================================
 
 $tutor-font-sizes: (
+  d1: $tutor-font-size-d1,
   h1: $tutor-font-size-h1,
   h2: $tutor-font-size-h2,
   h3: $tutor-font-size-h3,
@@ -69,10 +84,11 @@ $tutor-font-sizes: (
   p2: $tutor-font-size-p2,
   tiny: $tutor-font-size-tiny,
   tiny-2: $tutor-font-size-tiny-2,
-  p3: $tutor-font-size-p3
+  p3: $tutor-font-size-p3,
 );
 
 $tutor-line-heights: (
+  d1: $tutor-line-height-d1,
   h1: $tutor-line-height-h1,
   h2: $tutor-line-height-h2,
   h3: $tutor-line-height-h3,
@@ -84,12 +100,12 @@ $tutor-line-heights: (
   p2: $tutor-line-height-p2,
   tiny: $tutor-line-height-tiny,
   tiny-2: $tutor-line-height-tiny-2,
-  p3: $tutor-line-height-p3
+  p3: $tutor-line-height-p3,
 );
 
 $tutor-font-weights: (
   regular: $tutor-font-weight-regular,
   medium: $tutor-font-weight-medium,
   semibold: $tutor-font-weight-semibold,
-  bold: $tutor-font-weight-bold
+  bold: $tutor-font-weight-bold,
 );

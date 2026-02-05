@@ -24,5 +24,8 @@
 		<testsuite name="flash-message-test">
 			<directory>tests/phpunit/FlashMessageTest.php</directory>
 		</testsuite>
+		<testsuite name="course-model-test">
+			<directory>tests/phpunit/CourseModelTest.php</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>

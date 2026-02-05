@@ -10,9 +10,11 @@
 
 namespace Tutor\Models;
 
+use InvalidArgumentException;
 use TUTOR\Course;
 use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\QueryHelper;
+use TUTOR\Lesson;
 use TUTOR_ASSIGNMENTS\Assignments;
 
 /**
@@ -1343,5 +1345,69 @@ class CourseModel {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if the current user has course content access
+	 *
+	 * @since 4.0.0
+	 *
+	 * @throws InvalidArgumentException If args are invalid.
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * `$defaults = array(
+	 *      'current_post_type' => '',
+	 *      'current_post_id'   => 0,
+	 *      'course_id'         => 0,
+	 *      'is_public'         => false,
+	 *      'is_enrolled'       => false,
+	 *  );`.
+	 *
+	 * @return bool
+	 */
+	public static function has_course_content_access( array $args = array() ): bool {
+		$defaults = array(
+			'current_post_type' => '',
+			'current_post_id'   => 0,
+			'course_id'         => 0,
+			'is_public'         => false,
+			'is_enrolled'       => false,
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		if ( ! $args['course_id'] || ! $args['current_post_id'] || ! $args['current_post_type'] ) {
+			throw new InvalidArgumentException( __( 'Invalid argument passed', 'tutor' ) );
+		}
+
+		$has_access = false;
+		$user_id    = get_current_user_id();
+		switch ( $args['current_post_type'] ) {
+			case tutor()->lesson_post_type:
+				$is_preview = (int) get_post_meta( $args['current_post_id'], Lesson::PREVIEW_META_KEY, true );
+				if ( $args['is_public'] || $is_preview ) {
+					$has_access = true;
+				} elseif ( $args['is_enrolled'] || tutor_utils()->has_enrolled_content_access( 'lesson' ) ) {
+					$has_access = true;
+				}
+				break;
+			case tutor()->quiz_post_type:
+			case tutor()->assignment_post_type:
+				if ( $user_id ) {
+					$content_type = tutor()->quiz_post_type === $args['current_post_type'] ? 'quiz' : 'assignment';
+					if ( $args['is_enrolled'] || $args['is_public'] || tutor_utils()->has_enrolled_content_access( $content_type ) ) {
+						$has_access = true;
+					}
+				}
+				break;
+			default:
+				if ( $args['is_enrolled'] ) {
+					$has_access = true;
+				}
+				break;
+		}
+
+		return apply_filters( 'tutor_course_content_access', $has_access, $args );
 	}
 }

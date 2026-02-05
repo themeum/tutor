@@ -103,6 +103,9 @@ class Assets {
 		 * @since 4.0.0
 		 */
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		// Add custom meta.
+		add_action( 'wp_head', array( $this, 'add_custom_data' ) );
 	}
 
 	/**
@@ -913,5 +916,20 @@ class Assets {
 		}
 
 		return apply_filters( 'tutor_should_load_legacy_scripts', $load );
+	}
+
+	/**
+	 * Add custom meta data to the head section.
+	 *
+	 * Outputs a viewport meta tag to improve mobile responsiveness.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function add_custom_data() {
+		if ( tutor_utils()->is_dashboard_page() || tutor_utils()->is_learning_area() ) {
+			echo '<meta name="viewport" content="width=device-width, initial-scale=1" />' . "\n";
+		}
 	}
 }
