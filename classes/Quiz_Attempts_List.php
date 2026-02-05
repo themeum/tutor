@@ -18,6 +18,7 @@ use Tutor\Cache\QuizAttempts;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Positions;
 use Tutor\Components\Popover;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Models\QuizModel;
@@ -438,12 +439,12 @@ class Quiz_Attempts_List {
 	public function render_retry_button( $course_id = 0, $quiz_id = 0, $attempt = array(), $attempts_count = 0 ) {
 		if ( $this->check_is_student( $course_id ) && $this->should_retry( $attempt, $attempts_count ) ) {
 			Button::make()
-			->label( __( 'Retry', 'tutor' ) )
-			->icon( Icon::RELOAD )
-			->size( Size::MEDIUM )
-			->variant( 'primary' )
-			->attr( '@click', $this->get_retry_attribute( $quiz_id ) )
-			->render();
+				->label( __( 'Retry', 'tutor' ) )
+				->icon( Icon::RELOAD )
+				->size( Size::MEDIUM )
+				->variant( 'primary' )
+				->attr( '@click', $this->get_retry_attribute( $quiz_id ) )
+				->render();
 		}
 	}
 
@@ -606,7 +607,8 @@ class Quiz_Attempts_List {
 	public function render_quiz_attempt_popover( $attempt = array() ) {
 		Popover::make()
 			->trigger( $this->get_kebab_button() )
-			->placement( 'bottom' )
+			->placement( Positions::BOTTOM_END )
+			->min_width( 120 )
 			->menu_item( $this->get_details_item( $attempt ) )
 			->menu_item(
 				array(

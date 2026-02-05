@@ -348,11 +348,15 @@
           background-color: $tutor-surface-base;
         }
 
+        &:not(:last-child) {
+          border-bottom: 1px solid $tutor-border-idle;
+        }
+
         /** for mobile there is button html 
          * so need to capture second to last child 
         **/
-        &:not(:nth-last-child(2)) {
-          @include tutor-breakpoint-up(sm) {
+        @include tutor-breakpoint-up(sm) {
+          &:not(:nth-last-child(2)) {
             border-bottom: 1px solid $tutor-border-idle;
           }
         }

@@ -54,6 +54,7 @@ $remaining_attempts = array_slice( $attempts, 1 );
 						'attempt_id'       => $attempt['attempt_id'] ?? 0,
 						'course_id'        => $course_id,
 						'quiz_attempt_obj' => $quiz_attempt_obj,
+						'is_previous'      => true,
 					)
 				);
 				?>

@@ -1,9 +1,15 @@
 <?php
 /**
- * Tutor dashboard sidebar.
+ * Tutor dashboard header.
+ * Reusable component for displaying the dashboard header.
  *
- * @package tutor
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 4.0.0
  */
+
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;

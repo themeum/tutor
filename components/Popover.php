@@ -149,6 +149,16 @@ class Popover extends BaseComponent {
 	protected $popover_close_outside = true;
 
 	/**
+	 * Minimum width for popover
+	 * Default 170px
+	 *
+	 * @var int
+	 *
+	 * @since 4.0.0
+	 */
+	protected $min_width = 170;
+
+	/**
 	 * Set Popover title
 	 *
 	 * @since 4.0.0
@@ -159,6 +169,20 @@ class Popover extends BaseComponent {
 	 */
 	public function title( string $popover_title ): self {
 		$this->popover_title = $popover_title;
+		return $this;
+	}
+
+	/**
+	 * Set minimum width for popover
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $min_width the minimum width for popover.
+	 *
+	 * @return self
+	 */
+	public function min_width( int $min_width ): self {
+		$this->min_width = $min_width;
 		return $this;
 	}
 
@@ -436,8 +460,7 @@ class Popover extends BaseComponent {
 					$content,
 					$menu_item_attr
 				);
-			} else {
-				if ( Positions::RIGHT === $icon_alignment ) {
+			} elseif ( Positions::RIGHT === $icon_alignment ) {
 					$menu_items .= sprintf(
 						'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%3$s%4$s</%1$s>',
 						$tag,
@@ -446,20 +469,19 @@ class Popover extends BaseComponent {
 						$icon,
 						$menu_item_attr
 					);
-				} else {
-					$menu_items .= sprintf(
-						'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%4$s%3$s</%1$s>',
-						$tag,
-						$class,
-						$content,
-						$icon,
-						$menu_item_attr
-					);
-				}
+			} else {
+				$menu_items .= sprintf(
+					'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%4$s%3$s</%1$s>',
+					$tag,
+					$class,
+					$content,
+					$icon,
+					$menu_item_attr
+				);
 			}
 		}
 
-		return sprintf( '<div class="tutor-popover-menu">%s</div>', $menu_items );
+		return sprintf( '<div class="tutor-popover-menu" style="min-width: %dpx">%s</div>', $this->min_width, $menu_items );
 	}
 
 	/**

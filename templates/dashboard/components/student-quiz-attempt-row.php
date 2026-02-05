@@ -20,6 +20,7 @@ $show_quiz_title = $show_quiz_title ?? false;
 $show_course     = $show_course ?? false;
 $attempt_number  = $attempt_number ?? null;
 $attempts_count  = $attempts_count ?? 0;
+$is_previous     = $is_previous ?? false;
 
 ?>
 <div class="tutor-quiz-attempts-item">
@@ -45,7 +46,12 @@ $attempts_count  = $attempts_count ?? 0;
 						</span>
 					</button>
 				<?php else : ?>
-				<a href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>" class="tutor-text-medium-tiny tutor-student-attempt-detail tutor-text-brand"><?php echo esc_html__( 'See Details', 'tutor' ); ?></a>
+				<a
+					href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>"
+					class="tutor-tiny tutor-font-medium tutor-student-attempt-detail tutor-text-brand"
+				>
+					<?php esc_html_e( 'See Details', 'tutor' ); ?>
+				</a>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>
@@ -58,22 +64,34 @@ $attempts_count  = $attempts_count ?? 0;
 					echo esc_html( sprintf( __( 'Attempt %d', 'tutor' ), $attempt_number ) );
 					?>
 				</div>
-				<a href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>" class="tutor-text-medium-tiny tutor-student-attempt-detail tutor-text-brand"><?php echo esc_html__( 'See Details', 'tutor' ); ?></a>
+				<a 
+					href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>"
+					class="tutor-tiny tutor-font-medium tutor-student-attempt-detail tutor-text-brand"
+				>
+						<?php esc_html_e( 'See Details', 'tutor' ); ?>
+				</a>
 			</div>
 		<?php endif; ?>
 
-		<div class="tutor-quiz-item-info-course">
+		<?php if ( ! $is_previous ) : ?>
+			<div class="tutor-quiz-item-info-course">
 			<?php esc_html_e( 'Course:', 'tutor' ); ?> 
 			<?php
-			PreviewTrigger::make()
-				->id( $course_id ?? 0 )
-				->render()
+				PreviewTrigger::make()
+					->id( $course_id ?? 0 )
+					->render()
 			?>
 		</div>
+		<?php endif; ?>
 
-		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html( $attempt['date'] ?? '' ); ?></div>
+		<div class="tutor-quiz-item-info-date tutor-text-subdued">
+			<?php echo esc_html( $attempt['date'] ?? '' ); ?>
+		</div>
+
 		<?php if ( ! empty( $attempt['student'] ) ) : ?>
-		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html__( 'Student Name: ', 'tutor' ) . esc_html( $attempt['student'] ); ?></div>
+		<div class="tutor-quiz-item-info-date tutor-text-subdued">
+			<?php esc_html_e( 'Student Name: ', 'tutor' ) . esc_html( $attempt['student'] ); ?>
+		</div>
 		<?php endif; ?>
 	</div>
 
@@ -107,6 +125,5 @@ $attempts_count  = $attempts_count ?? 0;
 		$quiz_attempt_obj->render_quiz_attempt_list_badge( $attempt );
 		$quiz_attempt_obj->render_student_attempt_popover( $attempt, $attempts_count, $quiz_id );
 		?>
-		
 	</div>
 </div>
