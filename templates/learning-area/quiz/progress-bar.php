@@ -8,26 +8,52 @@
  * @since 4.0.0
  */
 
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Variant;
 use TUTOR\Icon;
+
+$remaining_time_secs    = isset( $remaining_time_secs ) ? (int) $remaining_time_secs : 0;
+$quiz_when_time_expires = $quiz_when_time_expires ?? 'auto_abandon';
+$form_id                = $form_id ?? '';
+$has_time_limit         = $remaining_time_secs > 0;
 
 ?>
 
 <div class="tutor-quiz-header">
-	<div class="tutor-quiz-progress" x-data="tutorQuizTimer(1500)" >
+	<div
+		class="tutor-quiz-progress"
+		x-data="tutorQuizTimer({
+			duration: <?php echo esc_attr( $remaining_time_secs ); ?>,
+			expiresAction: '<?php echo esc_attr( $quiz_when_time_expires ); ?>',
+			formId: '<?php echo esc_attr( $form_id ); ?>',
+		})"
+		x-init="init()"
+	>
 		<div class="tutor-quiz-progress-header">
 			<div class="tutor-flex tutor-items-center tutor-gap-4">
 				<?php tutor_utils()->render_svg_icon( Icon::TIME, 32, 32, array( 'class' => 'tutor-icon-brand' ) ); ?>
 
-				<div class="tutor-quiz-progress-time">
-					<span x-text="minutes">00</span>
-					<span>:</span>
-					<span x-text="seconds">00</span>
-				</div>
+				<?php if ( $has_time_limit ) : ?>
+					<div class="tutor-quiz-progress-time">
+						<span x-text="minutes">00</span>
+						<span>:</span>
+						<span x-text="seconds">00</span>
+					</div>
+				<?php else : ?>
+					<div class="tutor-quiz-progress-time">
+						<?php esc_html_e( 'No Limit', 'tutor' ); ?>
+					</div>
+				<?php endif; ?>
 			</div>
 
-			<button class="tutor-btn tutor-btn-outline tutor-px-8">
-				<?php esc_html_e( 'Quit', 'tutor' ); ?>
-			</button>
+			<?php
+			Button::make()
+				->label( __( 'Quit', 'tutor' ) )
+				->variant( Variant::OUTLINE )
+				->attr( 'class', 'tutor-px-8' )
+				->attr( '@click', 'requestAbandon()' )
+				->render();
+			?>
 		</div>
 
 		<div class="tutor-progress-bar tutor-progress-bar-brand">

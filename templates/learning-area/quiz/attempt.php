@@ -25,6 +25,7 @@ $quiz_attempt_info['date_time_now'] = date( 'Y-m-d H:i:s', tutor_time() );//phpc
 $time_limit_seconds                 = tutor_utils()->avalue_dot( 'time_limit.time_limit_seconds', $quiz_attempt_info );
 $remaining_time_secs                = ( strtotime( $tutor_is_started_quiz->attempt_started_at ) + $time_limit_seconds ) - strtotime( $quiz_attempt_info['date_time_now'] );
 $remaining_time_context             = tutor_utils()->seconds_to_time_context( $remaining_time_secs );
+$quiz_when_time_expires             = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
 
 $form_id        = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
 $questions      = tutor_utils()->get_random_questions_by_quiz();
@@ -68,11 +69,20 @@ $default_values = array(
 		(errors) => handleQuizError(errors)
 	)($event)"
 >
-	<?php tutor_load_template( 'learning-area.quiz.progress-bar' ); ?>
+	<?php
+	tutor_load_template(
+		'learning-area.quiz.progress-bar',
+		array(
+			'remaining_time_secs'    => max( 0, (int) $remaining_time_secs ),
+			'quiz_when_time_expires' => $quiz_when_time_expires,
+			'form_id'                => $form_id,
+		)
+	);
+	?>
 	<div class="tutor-quiz-questions">
 		<?php
 		foreach ( $questions as $index => $question ) {
-			Quiz::render_question( $question, $index + 1 );
+			Quiz::render_question( $question, $index );
 		}
 		?>
 	</div>
