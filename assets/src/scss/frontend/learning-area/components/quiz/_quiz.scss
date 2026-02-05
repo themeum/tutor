@@ -5,6 +5,7 @@
   &-submission {
     @include tutor-flex(column);
     gap: $tutor-spacing-11;
+    height: 100%;
 
     @include tutor-breakpoint-down(sm) {
       gap: $tutor-spacing-6;
@@ -547,7 +548,8 @@
 
   &-footer {
     padding-block: $tutor-spacing-8;
-    border: 1px solid $tutor-border-idle;
+    margin-top: auto;
+    border-top: 1px solid $tutor-border-idle;
   }
 
   &-submission-modal {
