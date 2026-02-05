@@ -544,6 +544,12 @@
       }
     }
   }
+
+  &-footer {
+    padding-block: $tutor-spacing-8;
+    border: 1px solid $tutor-border-idle;
+  }
+
   &-submission-modal {
     &-content {
       @include tutor-flex(column, stretch, space-between);

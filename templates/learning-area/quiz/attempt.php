@@ -12,9 +12,10 @@
  * @since 4.0.0
  */
 
-use Tutor\Components\Button;
-use Tutor\Models\QuizModel;
 use Tutor\Quiz;
+use Tutor\Models\QuizModel;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
 
 global $tutor_is_started_quiz;
 
@@ -67,12 +68,15 @@ $questions = tutor_utils()->get_random_questions_by_quiz();
 		?>
 	</div>
 
-	<?php
-		Button::make()
-			->label( __( 'Submit Quiz', 'tutor' ) )
-			->attr( 'form', $form_id )
-			->attr( 'type', 'submit' )
-			->attr( 'style', 'display: block; margin: 0 auto;' )
-			->render();
-	?>
+	<div class="tutor-quiz-footer">
+		<?php
+			Button::make()
+				->label( __( 'Submit Quiz', 'tutor' ) )
+				->size( Size::LARGE )
+				->attr( 'form', $form_id )
+				->attr( 'type', 'submit' )
+				->attr( 'style', 'display: block; margin: 0 auto; min-width: 290px;' )
+				->render();
+		?>
+	</div>
 </form>
