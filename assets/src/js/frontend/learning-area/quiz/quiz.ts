@@ -186,42 +186,45 @@ export const quizSubmissionMeta: AlpineComponentMeta = {
   component: quizSubmission,
 };
 
-const quizAutoStart = (config: QuizAutoStartConfig) => ({
-  quizID: config.quizID,
-  autoStart: config.autoStart,
-  query: window.TutorCore.query,
-  toast: window.TutorCore.toast,
-  startQuizMutation: null as MutationState<unknown, StartQuizPayload> | null,
+const quizAutoStart = (config: QuizAutoStartConfig) => {
+  const query = window.TutorCore.query;
+  const toast = window.TutorCore.toast;
 
-  init() {
-    this.startQuizMutation = this.query.useMutation(this.startQuiz, {
-      onSuccess: () => {
-        window.location.reload();
-      },
-      onError: (error: Error) => {
-        this.toast.error(convertToErrorMessage(error));
-      },
-    });
+  return {
+    quizID: config.quizID,
+    autoStart: Number(tutorConfig.quiz_options?.quiz_auto_start),
+    startQuizMutation: null as MutationState<unknown, StartQuizPayload> | null,
 
-    if (!this.autoStart) {
-      return;
-    }
+    init() {
+      this.startQuizMutation = query.useMutation(this.startQuiz, {
+        onSuccess: () => {
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
+        },
+      });
 
-    this.startQuizMutation?.mutate({ quizID: this.quizID });
-  },
+      if (!this.autoStart) {
+        return;
+      }
 
-  handleStartQuiz() {
-    this.startQuizMutation?.mutate({ quizID: this.quizID });
-  },
+      this.startQuizMutation?.mutate({ quizID: this.quizID });
+    },
 
-  startQuiz(payload: StartQuizPayload) {
-    return axios.postForm(window.location.href, {
-      quiz_id: payload.quizID,
-      tutor_action: endpoints.START_QUIZ,
-      _tutor_nonce: tutorConfig._tutor_nonce,
-    });
-  },
-});
+    handleStartQuiz() {
+      this.startQuizMutation?.mutate({ quizID: this.quizID });
+    },
+
+    startQuiz(payload: StartQuizPayload) {
+      return axios.postForm(window.location.href, {
+        quiz_id: payload.quizID,
+        tutor_action: endpoints.START_QUIZ,
+        _tutor_nonce: tutorConfig._tutor_nonce,
+      });
+    },
+  };
+};
 
 export const quizAutoStartMeta: AlpineComponentMeta = {
   name: 'quizAutoStart',
