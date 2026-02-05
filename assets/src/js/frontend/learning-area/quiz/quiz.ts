@@ -11,6 +11,15 @@ interface QuizSubmissionConfig {
   attemptId: string;
 }
 
+interface QuizAutoStartConfig {
+  quizID: number;
+  autoStart: boolean;
+}
+
+interface StartQuizPayload {
+  quizID: number;
+}
+
 const ERROR_MESSAGES = {
   SUBMIT_FAILED: __('Failed to submit quiz', 'tutor'),
   REQUIRED_QUESTIONS: __('Please answer all required questions before submitting.', 'tutor'),
@@ -112,4 +121,44 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 export const quizSubmissionMeta: AlpineComponentMeta = {
   name: 'quizSubmission',
   component: quizSubmission,
+};
+
+const quizAutoStart = (config: QuizAutoStartConfig) => ({
+  quizID: config.quizID,
+  autoStart: config.autoStart,
+  query: window.TutorCore.query,
+  toast: window.TutorCore.toast,
+  startQuizMutation: null as MutationState<unknown, StartQuizPayload> | null,
+
+  init() {
+    this.startQuizMutation = this.query.useMutation(this.startQuiz, {
+      onSuccess: () => {
+        window.location.reload();
+      },
+      onError: (error: Error) => {
+        this.toast.error(convertToErrorMessage(error));
+      },
+    });
+
+    if (!this.autoStart) {
+      return;
+    }
+
+    this.startQuizMutation?.mutate({
+      quizID: this.quizID,
+    });
+  },
+
+  startQuiz(payload: StartQuizPayload) {
+    return axios.postForm(window.location.href, {
+      quiz_id: payload.quizID,
+      tutor_action: endpoints.START_QUIZ,
+      _tutor_nonce: tutorConfig._tutor_nonce,
+    });
+  },
+});
+
+export const quizAutoStartMeta: AlpineComponentMeta = {
+  name: 'quizAutoStart',
+  component: quizAutoStart,
 };

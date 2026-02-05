@@ -24,6 +24,8 @@ $quiz_id         = $quiz->ID;
 $total_questions = (int) tutor_utils()->total_questions_for_student_by_quiz( $quiz_id );
 $quiz_options    = get_post_meta( $quiz_id, 'tutor_quiz_option', true );
 
+$quiz_auto_start = ! empty( $quiz_options['quiz_auto_start'] ) && '1' === (string) $quiz_options['quiz_auto_start'];
+
 $passing_grade      = (int) $quiz_options['passing_grade'] ?? 0;
 $quiz_time          = $quiz_options['time_limit'] ?? null;
 $quiz_item_readable = ! empty( $quiz_time ) ? $quiz_time['time_value'] . ' ' . $quiz_time['time_type'] : '';
@@ -65,13 +67,24 @@ $attempts   = $quiz_model->quiz_attempts( $quiz_id, $user_id );
 				Button::make()->label( __( 'Skip Quiz', 'tutor' ) )->attr( 'class', 'tutor-btn-ghost' )->render();
 			?>
 
-			<form id="tutor-start-quiz" method="post">
+			<form
+				x-data="tutorQuizAutoStart({
+					quizID: <?php echo esc_attr( $quiz_id ); ?>,
+					autoStart: <?php echo $quiz_auto_start ? 'true' : 'false'; ?>,
+				})"
+				x-init="init()"
+			>
 				<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-
 				<input type="hidden" value="<?php echo esc_attr( $quiz_id ); ?>" name="quiz_id"/>
 				<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
-				<?php Button::make()->label( __( 'Start Quiz', 'tutor' ) )->render(); ?>
+				<?php
+				Button::make()
+					->label( __( 'Start Quiz', 'tutor' ) )
+					->attr( 'x-bind:disabled', 'startQuizMutation?.isPending' )
+					->attr( ':class', "{ 'tutor-btn-loading': startQuizMutation?.isPending }" )
+					->render();
+				?>
 			</form>
 		</div>
 	</div>
