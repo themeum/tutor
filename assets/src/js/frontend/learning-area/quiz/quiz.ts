@@ -1,9 +1,10 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { tutorConfig } from '@TutorShared/config/config';
 import endpoints from '@TutorShared/utils/endpoints';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
+import axios, { type AxiosResponse } from 'axios';
 
 interface QuizSubmissionConfig {
   formId: string;
@@ -15,93 +16,98 @@ const ERROR_MESSAGES = {
   REQUIRED_QUESTIONS: __('Please answer all required questions before submitting.', 'tutor'),
 } as const;
 
-const quizSubmission = (config: QuizSubmissionConfig) => ({
-  formId: config.formId,
-  attemptId: config.attemptId,
-  query: window.TutorCore.query,
-  form: window.TutorCore.form,
-  toast: window.TutorCore.toast,
-  submitQuizMutation: null as MutationState<{ success?: boolean; data?: unknown }, Record<string, unknown>> | null,
-  $el: null as HTMLFormElement | null,
+const quizSubmission = (config: QuizSubmissionConfig) => {
+  const query = window.TutorCore.query;
+  const toast = window.TutorCore.toast;
 
-  init() {
-    this.handleQuizSubmit = this.handleQuizSubmit.bind(this);
-    this.handleQuizError = this.handleQuizError.bind(this);
-    this.submitQuizMutation = this.query.useMutation(this.submitQuizAttempt, {
-      onSuccess: (response: { success?: boolean }) => {
-        if (response?.success === false) {
-          this.toast.error(ERROR_MESSAGES.SUBMIT_FAILED);
-          return;
+  return {
+    formId: config.formId,
+    attemptId: config.attemptId,
+    submitQuizMutation: null as MutationState<{ success?: boolean; data?: unknown }, Record<string, unknown>> | null,
+    $el: null as HTMLFormElement | null,
+
+    init() {
+      this.handleQuizSubmit = this.handleQuizSubmit.bind(this);
+      this.handleQuizError = this.handleQuizError.bind(this);
+      this.submitQuizMutation = query.useMutation(this.submitQuizAttempt, {
+        onSuccess: (response: AxiosResponse<{ success?: boolean }>) => {
+          if (response?.data?.success === false) {
+            toast.error(ERROR_MESSAGES.SUBMIT_FAILED);
+            return;
+          }
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
+        },
+      });
+    },
+
+    handleQuizSubmit(data: Record<string, unknown>) {
+      const payload = this.buildSubmitPayload(data);
+      this.submitQuizMutation?.mutate(payload);
+    },
+
+    handleQuizError() {
+      toast.error(ERROR_MESSAGES.REQUIRED_QUESTIONS);
+    },
+
+    buildSubmitPayload(data: Record<string, unknown>): Record<string, unknown> {
+      const payload = this.normalizePayload(data);
+      payload.attempt_id = this.attemptId;
+
+      return payload;
+    },
+
+    normalizePayload(values: Record<string, unknown>): Record<string, unknown> {
+      const counts = new Map<string, number>();
+
+      return Object.entries(values).reduce<Record<string, unknown>>((acc, [key, value]) => {
+        const baseKey = key.replace(/\[\].*$/, '');
+        const prevCount = counts.get(baseKey) ?? 0;
+        const nextCount = prevCount + 1;
+        counts.set(baseKey, nextCount);
+
+        const appendValue = (target: unknown[], incoming: unknown) => {
+          if (Array.isArray(incoming)) {
+            incoming.forEach((item) => target.push(item));
+            return;
+          }
+          target.push(incoming);
+        };
+
+        if (nextCount === 1) {
+          acc[baseKey] = value;
+          return acc;
         }
-        window.location.reload();
-      },
-      onError: (error: Error) => {
-        this.toast.error(convertToErrorMessage(error) || ERROR_MESSAGES.SUBMIT_FAILED);
-      },
-    });
-  },
 
-  handleQuizSubmit(data: Record<string, unknown>) {
-    const payload = this.buildSubmitPayload(data);
-    this.submitQuizMutation?.mutate(payload);
-  },
+        const existing = acc[baseKey];
+        const nextValues: unknown[] = [];
 
-  handleQuizError() {
-    this.toast.error(ERROR_MESSAGES.REQUIRED_QUESTIONS);
-  },
-
-  buildSubmitPayload(data: Record<string, unknown>): Record<string, unknown> {
-    const payload = this.normalizePayload(data);
-    payload.attempt_id = this.attemptId;
-
-    return payload;
-  },
-
-  normalizePayload(values: Record<string, unknown>): Record<string, unknown> {
-    const counts = new Map<string, number>();
-
-    return Object.entries(values).reduce<Record<string, unknown>>((acc, [key, value]) => {
-      const baseKey = key.replace(/\[\].*$/, '');
-      const prevCount = counts.get(baseKey) ?? 0;
-      const nextCount = prevCount + 1;
-      counts.set(baseKey, nextCount);
-
-      const appendValue = (target: unknown[], incoming: unknown) => {
-        if (Array.isArray(incoming)) {
-          incoming.forEach((item) => target.push(item));
-          return;
+        if (nextCount === 2) {
+          appendValue(nextValues, existing);
+        } else if (Array.isArray(existing)) {
+          existing.forEach((item) => nextValues.push(item));
         }
-        target.push(incoming);
-      };
 
-      if (nextCount === 1) {
-        acc[baseKey] = value;
+        appendValue(nextValues, value);
+        acc[baseKey] = nextValues;
+
         return acc;
-      }
+      }, {});
+    },
 
-      const existing = acc[baseKey];
-      const nextValues: unknown[] = [];
-
-      if (nextCount === 2) {
-        appendValue(nextValues, existing);
-      } else if (Array.isArray(existing)) {
-        existing.forEach((item) => nextValues.push(item));
-      }
-
-      appendValue(nextValues, value);
-      acc[baseKey] = nextValues;
-
-      return acc;
-    }, {});
-  },
-
-  async submitQuizAttempt(payload: Record<string, unknown>) {
-    const response = await wpAjaxInstance.post(endpoints.QUIZ_ATTEMPT_SUBMIT, payload);
-    return response?.data ?? {};
-  },
-
-  // Validation is handled by tutorForm rules at input registration.
-});
+    submitQuizAttempt(payload: Record<string, unknown>) {
+      return axios
+        .postForm(window.location.href, {
+          tutor_action: endpoints.QUIZ_ATTEMPT_SUBMIT,
+          _tutor_nonce: tutorConfig._tutor_nonce,
+          ...payload,
+        })
+        .then((res) => res.data);
+    },
+  };
+};
 
 export const quizSubmissionMeta: AlpineComponentMeta = {
   name: 'quizSubmission',
