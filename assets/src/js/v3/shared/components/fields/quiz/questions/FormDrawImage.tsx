@@ -21,26 +21,6 @@ import {
 } from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
 
-/** Shared draw-on-image API from Tutor Pro (window.TutorDrawOnImage). */
-interface TutorDrawOnImageAPI {
-  init: (options: {
-    image: HTMLImageElement;
-    canvas: HTMLCanvasElement;
-    brushSize?: number;
-    strokeStyle?: string;
-    initialMaskUrl?: string;
-    onMaskChange?: (value: string) => void;
-  }) => { destroy: () => void };
-  DEFAULT_BRUSH_SIZE?: number;
-  DEFAULT_STROKE_STYLE?: string;
-}
-
-declare global {
-  interface Window {
-    TutorDrawOnImage?: TutorDrawOnImageAPI;
-  }
-}
-
 const INSTRUCTOR_STROKE_STYLE = 'rgba(255, 0, 0, 0.9)';
 
 interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption | undefined> {
