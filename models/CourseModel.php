@@ -525,7 +525,7 @@ class CourseModel {
 					 * Delete Quiz data
 					 */
 					if ( get_post_type( $content_id ) === 'tutor_quiz' ) {
-						// Collect draw_image file paths before deleting rows (files deleted after DB for safety).
+						// Collect file paths from all question types that store files before deleting rows (files deleted after DB for safety).
 						$attempts_for_quiz  = QueryHelper::get_all( 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ), 'attempt_id', -1 );
 						$attempt_file_paths = array();
 						if ( ! empty( $attempts_for_quiz ) ) {
@@ -535,7 +535,7 @@ class CourseModel {
 								},
 								$attempts_for_quiz
 							);
-							$attempt_file_paths = QuizModel::get_draw_image_file_paths_for_attempts( $attempt_ids );
+							$attempt_file_paths = QuizModel::get_attempt_file_paths_for_deletion( $attempt_ids );
 						}
 
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ) );

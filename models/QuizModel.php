@@ -550,9 +550,8 @@ class QuizModel {
 		$attempt_ids                              = array_map( 'absint', array_filter( $attempt_ids ) );
 
 		if ( count( $attempt_ids ) ) {
-			// Collect draw_image file paths before deleting rows (files deleted after DB for safety).
-			// Scoped to draw_image only: other question types are never touched (see get_draw_image_file_paths_for_attempts).
-			$attempt_file_paths = self::get_draw_image_file_paths_for_attempts( $attempt_ids );
+			// Collect file paths from all question types that store files (e.g. draw_image). Files deleted after DB for safety.
+			$attempt_file_paths = self::get_attempt_file_paths_for_deletion( $attempt_ids );
 
 			// Delete attempt answers (child) then attempts (parent); use QueryHelper for bulk delete.
 			QueryHelper::bulk_delete(
@@ -571,8 +570,47 @@ class QuizModel {
 	}
 
 	/**
+	 * Get all file paths that should be deleted when the given attempt(s) are removed.
+	 * All question types that store files (draw_image, pin_image, etc.) add their paths
+	 * via the tutor_quiz/attempt_file_paths_for_deletion filter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int[] $attempt_ids Array of quiz attempt IDs.
+	 *
+	 * @return string[] Array of absolute file paths.
+	 */
+	public static function get_attempt_file_paths_for_deletion( array $attempt_ids ) {
+		$paths = array();
+		/**
+		 * Question types that store files add paths to delete when attempts are removed.
+		 * Core registers draw_image via add_draw_image_attempt_file_paths; other types (e.g. pin_image) add their own.
+		 *
+		 * @param string[] $file_paths  Absolute file paths collected so far.
+		 * @param int[]    $attempt_ids Quiz attempt IDs being deleted.
+		 */
+		$paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', $paths, $attempt_ids );
+		return is_array( $paths ) ? array_values( array_filter( array_unique( $paths ) ) ) : array();
+	}
+
+	/**
+	 * Filter callback: add draw_image attempt file paths for deletion.
+	 * Registered on tutor_quiz/attempt_file_paths_for_deletion so draw_image uses the same mechanism as other types.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string[] $file_paths  Paths collected so far.
+	 * @param int[]    $attempt_ids Quiz attempt IDs being deleted.
+	 *
+	 * @return string[]
+	 */
+	public static function add_draw_image_attempt_file_paths( $file_paths, $attempt_ids ) {
+		return array_merge( (array) $file_paths, self::get_draw_image_file_paths_for_attempts( $attempt_ids ) );
+	}
+
+	/**
 	 * Get file paths of draw_image attempt mask files for given attempt(s).
-	 * Used to delete files after DB rows are removed (e.g. when quiz is deleted).
+	 * Used by get_attempt_file_paths_for_deletion; also usable when only draw_image paths are needed.
 	 *
 	 * @since 4.0.0
 	 *
