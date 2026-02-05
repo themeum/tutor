@@ -525,10 +525,28 @@ class CourseModel {
 					 * Delete Quiz data
 					 */
 					if ( get_post_type( $content_id ) === 'tutor_quiz' ) {
+						// Collect draw_image file paths before deleting rows (files deleted after DB for safety).
+						$attempts_for_quiz  = QueryHelper::get_all( 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ), 'attempt_id', -1 );
+						$attempt_file_paths = array();
+						if ( ! empty( $attempts_for_quiz ) ) {
+							$attempt_ids        = array_map(
+								function ( $row ) {
+									return (int) $row->attempt_id;
+								},
+								$attempts_for_quiz
+							);
+							$attempt_file_paths = QuizModel::get_draw_image_file_paths_for_attempts( $attempt_ids );
+						}
+
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ) );
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $content_id ) );
 
+						QuizModel::delete_files_by_paths( $attempt_file_paths );
+
 						do_action( 'tutor_before_delete_quiz_content', $content_id, null );
+
+						// Collect instructor draw_image file paths before deleting question data.
+						$quiz_file_paths = QuizModel::get_draw_image_file_paths_for_quiz( $content_id );
 
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
@@ -537,6 +555,8 @@ class CourseModel {
 							$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) " );
 						}
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $content_id ) );
+
+						QuizModel::delete_files_by_paths( $quiz_file_paths );
 					}
 
 					/**

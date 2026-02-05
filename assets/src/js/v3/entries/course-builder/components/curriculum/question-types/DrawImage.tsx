@@ -19,7 +19,27 @@ import { nanoid } from '@TutorShared/utils/util';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
 
-const BRUSH_SIZE = 15;
+/** Shared draw-on-image API from Tutor Pro (window.TutorDrawOnImage). */
+interface TutorDrawOnImageAPI {
+  init: (options: {
+    image: HTMLImageElement;
+    canvas: HTMLCanvasElement;
+    brushSize?: number;
+    strokeStyle?: string;
+    initialMaskUrl?: string;
+    onMaskChange?: (value: string) => void;
+  }) => { destroy: () => void };
+  DEFAULT_BRUSH_SIZE?: number;
+  DEFAULT_STROKE_STYLE?: string;
+}
+
+declare global {
+  interface Window {
+    TutorDrawOnImage?: TutorDrawOnImageAPI;
+  }
+}
+
+const INSTRUCTOR_STROKE_STYLE = 'rgba(255, 0, 0, 0.9)';
 
 const DrawImage = () => {
   const form = useFormContext<QuizForm>();
@@ -33,12 +53,11 @@ const DrawImage = () => {
     defaultValue: [] as QuizQuestionOption[],
   }) as QuizQuestionOption[];
 
-  const [isDrawing, setIsDrawing] = useState(false);
   const [isDrawModeActive, setIsDrawModeActive] = useState(false);
 
   const imageRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const lastPointRef = useRef<{ x: number; y: number } | null>(null);
+  const drawInstanceRef = useRef<{ destroy: () => void } | null>(null);
 
   // Ensure there is always a single option for this question type.
   useEffect(() => {
@@ -102,7 +121,8 @@ const DrawImage = () => {
         : null,
   });
 
-  const syncCanvasWithImage = useCallback((maskUrl?: string) => {
+  /** Display-only: sync canvas size and draw saved mask when not in draw mode. */
+  const syncCanvasDisplay = useCallback((maskUrl?: string) => {
     const img = imageRef.current;
     const canvas = canvasRef.current;
 
@@ -141,11 +161,6 @@ const DrawImage = () => {
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = 'rgba(255, 0, 0, 0.9)';
-    ctx.fillStyle = 'rgba(255, 0, 0, 0.9)';
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = BRUSH_SIZE;
 
     if (maskUrl) {
       const maskImg = new Image();
@@ -156,157 +171,98 @@ const DrawImage = () => {
     }
   }, []);
 
+  // Display-only sync when not in draw mode (saved mask + canvas size).
   useEffect(() => {
-    syncCanvasWithImage(option?.answer_two_gap_match || undefined);
-  }, [option?.image_url, option?.answer_two_gap_match, syncCanvasWithImage]);
+    if (isDrawModeActive) {
+      return;
+    }
+    syncCanvasDisplay(option?.answer_two_gap_match || undefined);
+  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match, syncCanvasDisplay]);
 
   useEffect(() => {
+    if (isDrawModeActive) {
+      return;
+    }
     const img = imageRef.current;
     if (!img) {
       return;
     }
-
     const handleLoad = () => {
-      syncCanvasWithImage(option?.answer_two_gap_match || undefined);
+      syncCanvasDisplay(option?.answer_two_gap_match || undefined);
     };
-
     img.addEventListener('load', handleLoad);
-
     return () => {
       img.removeEventListener('load', handleLoad);
     };
-  }, [option?.answer_two_gap_match, syncCanvasWithImage]);
+  }, [isDrawModeActive, option?.answer_two_gap_match, syncCanvasDisplay]);
 
   useEffect(() => {
+    if (isDrawModeActive) {
+      return;
+    }
     const img = imageRef.current;
     const canvas = canvasRef.current;
     if (!img || !canvas) {
       return;
     }
-
     const container = img.parentElement;
     if (!container) {
       return;
     }
-
     const resizeObserver = new ResizeObserver(() => {
-      syncCanvasWithImage(option?.answer_two_gap_match || undefined);
+      syncCanvasDisplay(option?.answer_two_gap_match || undefined);
     });
-
     resizeObserver.observe(container);
-
     return () => {
       resizeObserver.disconnect();
     };
-  }, [option?.image_url, option?.answer_two_gap_match, syncCanvasWithImage]);
+  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match, syncCanvasDisplay]);
 
+  // Wire to shared draw-on-image module when draw mode is active (Tutor Pro).
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
+    if (!isDrawModeActive || !option?.image_url) {
       return;
     }
-
-    const getCoords = (event: MouseEvent | TouchEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-
-      let clientX: number;
-      let clientY: number;
-
-      if (event instanceof TouchEvent) {
-        const touch = event.touches[0] || event.changedTouches[0];
-        clientX = touch.clientX;
-        clientY = touch.clientY;
-      } else {
-        clientX = event.clientX;
-        clientY = event.clientY;
-      }
-
-      return {
-        x: (clientX - rect.left) * scaleX,
-        y: (clientY - rect.top) * scaleY,
-      };
-    };
-
-    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
-      if (!isDrawModeActive) return;
-
-      event.preventDefault();
-      if (!option?.image_url) {
-        return;
-      }
-
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      const coords = getCoords(event);
-      if (!coords) return;
-
-      setIsDrawing(true);
-      lastPointRef.current = coords;
-
-      ctx.beginPath();
-      ctx.arc(coords.x, coords.y, BRUSH_SIZE / 2, 0, Math.PI * 2);
-      ctx.fill();
-    };
-
-    const handlePointerMove = (event: MouseEvent | TouchEvent) => {
-      if (!isDrawing) return;
-
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      const coords = getCoords(event);
-      const lastPoint = lastPointRef.current;
-      if (!coords || !lastPoint) return;
-
-      ctx.beginPath();
-      ctx.moveTo(lastPoint.x, lastPoint.y);
-      ctx.lineTo(coords.x, coords.y);
-      ctx.stroke();
-
-      lastPointRef.current = coords;
-    };
-
-    const handlePointerUp = (event: MouseEvent | TouchEvent) => {
-      event.preventDefault();
-      setIsDrawing(false);
-      lastPointRef.current = null;
-    };
-
-    const handleMouseDown = (event: MouseEvent) => handlePointerDown(event);
-    const handleMouseMove = (event: MouseEvent) => handlePointerMove(event);
-    const handleMouseUp = (event: MouseEvent) => handlePointerUp(event);
-
-    const handleTouchStart = (event: TouchEvent) => handlePointerDown(event);
-    const handleTouchMove = (event: TouchEvent) => handlePointerMove(event);
-    const handleTouchEnd = (event: TouchEvent) => handlePointerUp(event);
-
-    canvas.addEventListener('mousedown', handleMouseDown);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseup', handleMouseUp);
-    canvas.addEventListener('mouseleave', handleMouseUp);
-
-    canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-    canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
-
+    const img = imageRef.current;
+    const canvas = canvasRef.current;
+    const api = typeof window !== 'undefined' ? window.TutorDrawOnImage : undefined;
+    if (!img || !canvas || !api?.init) {
+      return;
+    }
+    if (drawInstanceRef.current) {
+      drawInstanceRef.current.destroy();
+      drawInstanceRef.current = null;
+    }
+    const brushSize = api.DEFAULT_BRUSH_SIZE ?? 15;
+    const instance = api.init({
+      image: img,
+      canvas,
+      brushSize,
+      strokeStyle: INSTRUCTOR_STROKE_STYLE,
+      initialMaskUrl: option.answer_two_gap_match || undefined,
+    });
+    drawInstanceRef.current = instance;
     return () => {
-      canvas.removeEventListener('mousedown', handleMouseDown);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseup', handleMouseUp);
-      canvas.removeEventListener('mouseleave', handleMouseUp);
-
-      canvas.removeEventListener('touchstart', handleTouchStart);
-      canvas.removeEventListener('touchmove', handleTouchMove);
-      canvas.removeEventListener('touchend', handleTouchEnd);
+      instance.destroy();
+      drawInstanceRef.current = null;
     };
-  }, [isDrawing, isDrawModeActive, option?.image_url]);
+  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match]);
+
+  // Cleanup shared instance on unmount.
+  useEffect(() => {
+    return () => {
+      if (drawInstanceRef.current) {
+        drawInstanceRef.current.destroy();
+        drawInstanceRef.current = null;
+      }
+    };
+  }, []);
 
   const handleSave = () => {
     const canvas = canvasRef.current;
-    if (!canvas || !option) return;
+    if (!canvas || !option) {
+      return;
+    }
 
     const dataUrl = canvas.toDataURL('image/png');
     const blank = document.createElement('canvas');
@@ -323,18 +279,29 @@ const DrawImage = () => {
       is_saved: true,
     };
     form.setValue(answersPath, [updated]);
+
+    if (drawInstanceRef.current) {
+      drawInstanceRef.current.destroy();
+      drawInstanceRef.current = null;
+    }
+    setIsDrawModeActive(false);
   };
 
   const handleClear = () => {
+    if (drawInstanceRef.current) {
+      drawInstanceRef.current.destroy();
+      drawInstanceRef.current = null;
+    }
+
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    if (!option) return;
+    if (!option) {
+      return;
+    }
 
     const updated: QuizQuestionOption = {
       ...option,
@@ -345,22 +312,23 @@ const DrawImage = () => {
       is_saved: true,
     };
     form.setValue(answersPath, [updated]);
+    setIsDrawModeActive(false);
   };
 
   const handleDraw = () => {
     setIsDrawModeActive(true);
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
   };
 
   const clearImage = () => {
-    if (!option) return;
+    if (!option) {
+      return;
+    }
+
+    if (drawInstanceRef.current) {
+      drawInstanceRef.current.destroy();
+      drawInstanceRef.current = null;
+    }
+    setIsDrawModeActive(false);
 
     const updated: QuizQuestionOption = {
       ...option,

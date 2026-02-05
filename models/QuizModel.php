@@ -545,22 +545,247 @@ class QuizModel {
 	 * @return void
 	 */
 	public static function delete_quiz_attempt( $attempt_ids ) {
-		global $wpdb;
-
 		// Singlular to array.
 		! is_array( $attempt_ids ) ? $attempt_ids = array( $attempt_ids ) : 0;
+		$attempt_ids                              = array_map( 'absint', array_filter( $attempt_ids ) );
 
 		if ( count( $attempt_ids ) ) {
-			$attempt_ids = implode( ',', $attempt_ids );
+			// Collect draw_image file paths before deleting rows (files deleted after DB for safety).
+			// Scoped to draw_image only: other question types are never touched (see get_draw_image_file_paths_for_attempts).
+			$attempt_file_paths = self::get_draw_image_file_paths_for_attempts( $attempt_ids );
 
-			//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			// Deleting attempt (comment), child attempt and attempt meta (comment meta).
-			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
-			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
-			//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			// Delete attempt answers (child) then attempts (parent); use QueryHelper for bulk delete.
+			QueryHelper::bulk_delete(
+				QueryHelper::prepare_table_name( 'tutor_quiz_attempt_answers' ),
+				array( 'quiz_attempt_id' => $attempt_ids )
+			);
+			QueryHelper::bulk_delete(
+				QueryHelper::prepare_table_name( 'tutor_quiz_attempts' ),
+				array( 'attempt_id' => $attempt_ids )
+			);
 
-			do_action( 'tutor_quiz/attempt_deleted', $attempt_ids );
+			self::delete_files_by_paths( $attempt_file_paths );
+
+			do_action( 'tutor_quiz/attempt_deleted', implode( ',', $attempt_ids ) );
 		}
+	}
+
+	/**
+	 * Get file paths of draw_image attempt mask files for given attempt(s).
+	 * Used to delete files after DB rows are removed (e.g. when quiz is deleted).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int[] $attempt_ids Array of quiz attempt IDs.
+	 *
+	 * @return string[] Array of absolute file paths.
+	 */
+	public static function get_draw_image_file_paths_for_attempts( array $attempt_ids ) {
+		$paths = array();
+		if ( empty( $attempt_ids ) ) {
+			return $paths;
+		}
+
+		$upload_dir = wp_upload_dir();
+		if ( ! empty( $upload_dir['error'] ) ) {
+			return $paths;
+		}
+
+		$uploads_base_url = trailingslashit( $upload_dir['baseurl'] );
+		$uploads_base_dir = trailingslashit( $upload_dir['basedir'] );
+		$quiz_image_url   = $uploads_base_url . 'tutor/quiz-image/';
+
+		$attempt_answers = QueryHelper::get_all(
+			'tutor_quiz_attempt_answers',
+			array( 'quiz_attempt_id' => $attempt_ids ),
+			'attempt_answer_id',
+			-1
+		);
+
+		if ( empty( $attempt_answers ) ) {
+			return $paths;
+		}
+
+		$question_ids = array_unique(
+			array_filter(
+				array_map(
+					function ( $row ) {
+						return isset( $row->question_id ) ? (int) $row->question_id : null;
+					},
+					$attempt_answers
+				)
+			)
+		);
+
+		if ( empty( $question_ids ) ) {
+			return $paths;
+		}
+
+		$draw_image_questions = QueryHelper::get_all(
+			'tutor_quiz_questions',
+			array(
+				'question_id'   => $question_ids,
+				'question_type' => 'draw_image',
+			),
+			'question_id',
+			-1
+		);
+
+		$draw_image_question_ids = array_flip(
+			array_map(
+				function ( $row ) {
+					return (int) $row->question_id;
+				},
+				$draw_image_questions
+			)
+		);
+
+		foreach ( $attempt_answers as $row ) {
+			$question_id = isset( $row->question_id ) ? (int) $row->question_id : 0;
+			if ( ! isset( $draw_image_question_ids[ $question_id ] ) ) {
+				continue;
+			}
+			$url = is_string( $row->given_answer ?? '' ) ? trim( $row->given_answer ) : '';
+			if ( '' === $url || strpos( $url, 'http' ) !== 0 ) {
+				continue;
+			}
+			if ( strpos( $url, $quiz_image_url ) !== 0 ) {
+				continue;
+			}
+			$path = str_replace( $uploads_base_url, $uploads_base_dir, $url );
+			if ( '' !== $path && is_file( $path ) && is_readable( $path ) ) {
+				$paths[] = $path;
+			}
+		}
+
+		return $paths;
+	}
+
+	/**
+	 * Delete draw_image question mask files for given quiz attempt(s).
+	 *
+	 * When attempts are deleted, image files stored in uploads/tutor/quiz-image
+	 * for draw_image answers must be removed to avoid orphaned files.
+	 * Only the draw_image question type uses this folder; other question types are not affected.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int[] $attempt_ids Array of quiz attempt IDs.
+	 *
+	 * @return void
+	 */
+	public static function delete_draw_image_files_for_attempts( array $attempt_ids ) {
+		$paths = self::get_draw_image_file_paths_for_attempts( $attempt_ids );
+		self::delete_files_by_paths( $paths );
+	}
+
+	/**
+	 * Delete files by absolute path (e.g. after DB rows have been removed).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string[] $paths Array of absolute file paths.
+	 *
+	 * @return void
+	 */
+	public static function delete_files_by_paths( array $paths ) {
+		foreach ( $paths as $path ) {
+			if ( is_string( $path ) && '' !== $path && is_file( $path ) && is_readable( $path ) ) {
+				wp_delete_file( $path );
+			}
+		}
+	}
+
+	/**
+	 * Get file paths of draw_image instructor mask files for a quiz.
+	 * Used to delete files after DB rows are removed (e.g. when quiz is deleted).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $quiz_id Quiz post ID.
+	 *
+	 * @return string[] Array of absolute file paths.
+	 */
+	public static function get_draw_image_file_paths_for_quiz( $quiz_id ) {
+		$paths = array();
+		$quiz_id = (int) $quiz_id;
+		if ( $quiz_id <= 0 ) {
+			return $paths;
+		}
+
+		$upload_dir = wp_upload_dir();
+		if ( ! empty( $upload_dir['error'] ) ) {
+			return $paths;
+		}
+
+		$uploads_base_url = trailingslashit( $upload_dir['baseurl'] );
+		$uploads_base_dir = trailingslashit( $upload_dir['basedir'] );
+		$quiz_image_url   = $uploads_base_url . 'tutor/quiz-image/';
+
+		$draw_image_questions = QueryHelper::get_all(
+			'tutor_quiz_questions',
+			array(
+				'quiz_id'       => $quiz_id,
+				'question_type' => 'draw_image',
+			),
+			'question_id',
+			-1
+		);
+
+		if ( empty( $draw_image_questions ) ) {
+			return $paths;
+		}
+
+		$question_ids = array_map(
+			function ( $row ) {
+				return (int) $row->question_id;
+			},
+			$draw_image_questions
+		);
+
+		$question_answers = QueryHelper::get_all(
+			'tutor_quiz_question_answers',
+			array(
+				'belongs_question_id'   => $question_ids,
+				'belongs_question_type' => 'draw_image',
+			),
+			'answer_id',
+			-1
+		);
+
+		foreach ( $question_answers as $row ) {
+			$url = is_string( $row->answer_two_gap_match ?? '' ) ? trim( $row->answer_two_gap_match ) : '';
+			if ( '' === $url || strpos( $url, 'http' ) !== 0 ) {
+				continue;
+			}
+			if ( strpos( $url, $quiz_image_url ) !== 0 ) {
+				continue;
+			}
+			$path = str_replace( $uploads_base_url, $uploads_base_dir, $url );
+			if ( '' !== $path && is_file( $path ) && is_readable( $path ) ) {
+				$paths[] = $path;
+			}
+		}
+
+		return $paths;
+	}
+
+	/**
+	 * Delete draw_image instructor reference mask files for a quiz.
+	 *
+	 * When a quiz is deleted, image files stored in uploads/tutor/quiz-image
+	 * for draw_image question answers (instructor masks) must be removed.
+	 * Only the draw_image question type uses this folder; other question types are not affected.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $quiz_id Quiz post ID.
+	 *
+	 * @return void
+	 */
+	public static function delete_draw_image_files_for_quiz( $quiz_id ) {
+		$paths = self::get_draw_image_file_paths_for_quiz( $quiz_id );
+		self::delete_files_by_paths( $paths );
 	}
 
 	/**
