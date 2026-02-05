@@ -50,7 +50,16 @@
 		}
 	}
 
-	&-attempts {
+	&-attempts,
+	.tutor-quiz-attempts {
+		.tutor-quiz-attempts-header {
+			grid-template-columns: 310px 180px 1.5fr 1fr;
+		}
+
+		.tutor-quiz-attempts-item {
+			grid-template-columns: 310px 180px 1.5fr 1fr;
+		}
+
 		.tutor-table-wrapper {
 			@include tutor-breakpoint-down(sm) {
 				overflow-x: hidden;

@@ -1386,7 +1386,65 @@ class Quiz {
 	 * @return void
 	 */
 	public static function render_quiz_attempts( $quiz_id ) {
-		// @TODO.
+		$quiz_id = tutor_utils()->get_post_id( $quiz_id );
+		if ( ! $quiz_id ) {
+			return;
+		}
+
+		$user_id    = get_current_user_id();
+		$quiz_model = new QuizModel();
+		$attempts   = $quiz_model->quiz_attempts( $quiz_id, $user_id );
+
+		if ( empty( $attempts ) ) {
+			return;
+		}
+
+		$formatted_attempts = QuizModel::format_quiz_attempts( $attempts );
+		$quiz_attempts      = $formatted_attempts[ $quiz_id ] ?? reset( $formatted_attempts );
+		$attempts_list      = $quiz_attempts['attempts'] ?? array();
+
+		if ( empty( $attempts_list ) ) {
+			return;
+		}
+
+		$attempts_count   = count( $attempts_list );
+		$quiz_attempt_obj = new Quiz_Attempts_List( false );
+		$course_id        = $quiz_attempts['course_id'] ?? 0;
+		?>
+			<div class="tutor-quiz-attempts tutor-border tutor-rounded-2xl">
+				<div class="tutor-quiz-attempts-header">
+					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Attempts Date', 'tutor' ); ?></div>
+					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
+					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
+					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
+				</div>
+				<div class="tutor-quiz-attempts-list">
+					<?php
+					foreach ( $attempts_list as $index => $attempt ) {
+						$attempt_number = $attempts_count - $index;
+						?>
+						<div class="tutor-quiz-attempts-item-wrapper">
+							<?php
+							tutor_load_template(
+								'dashboard.components.student-quiz-attempt-row',
+								array(
+									'attempt'          => $attempt,
+									'attempt_number'   => $attempt_number,
+									'quiz_id'          => $quiz_id,
+									'course_id'        => $course_id,
+									'quiz_attempt_obj' => $quiz_attempt_obj,
+									'attempts_count'   => $attempts_count,
+									'is_previous'      => true,
+								)
+							);
+							?>
+						</div>
+						<?php
+					}
+					?>
+				</div>
+			</div>
+		<?php
 	}
 
 	/**
