@@ -595,70 +595,37 @@ class QuizModel {
 		$uploads_base_dir = trailingslashit( $upload_dir['basedir'] );
 		$quiz_image_url   = $uploads_base_url . 'tutor/quiz-image/';
 
-		$attempt_answers = QueryHelper::get_all(
-			'tutor_quiz_attempt_answers',
-			array( 'quiz_attempt_id' => $attempt_ids ),
-			'attempt_answer_id',
-			-1
-		);
-
-		if ( empty( $attempt_answers ) ) {
+		$attempt_ids = array_filter( array_map( 'absint', $attempt_ids ) );
+		if ( empty( $attempt_ids ) ) {
 			return $paths;
 		}
 
-		$question_ids = array_unique(
-			array_filter(
-				array_map(
-					function ( $row ) {
-						return isset( $row->question_id ) ? (int) $row->question_id : null;
-					},
-					$attempt_answers
-				)
-			)
-		);
-
-		if ( empty( $question_ids ) ) {
-			return $paths;
-		}
-
-		$draw_image_questions = QueryHelper::get_all(
-			'tutor_quiz_questions',
+		$response = QueryHelper::get_joined_data(
+			'tutor_quiz_attempt_answers AS a',
 			array(
-				'question_id'   => $question_ids,
-				'question_type' => 'draw_image',
+				array(
+					'type'  => 'INNER',
+					'table' => 'tutor_quiz_questions AS q',
+					'on'    => 'a.question_id = q.question_id',
+				),
 			),
-			'question_id',
-			-1
+			array( 'a.given_answer' ),
+			array(
+				'a.quiz_attempt_id' => $attempt_ids,
+				'q.question_type'   => 'draw_image',
+			),
+			array(),
+			'',
+			-1,
+			0
 		);
 
-		$draw_image_question_ids = array_flip(
-			array_map(
-				function ( $row ) {
-					return (int) $row->question_id;
-				},
-				$draw_image_questions
-			)
-		);
-
-		foreach ( $attempt_answers as $row ) {
-			$question_id = isset( $row->question_id ) ? (int) $row->question_id : 0;
-			if ( ! isset( $draw_image_question_ids[ $question_id ] ) ) {
-				continue;
-			}
-			$url = is_string( $row->given_answer ?? '' ) ? trim( $row->given_answer ) : '';
-			if ( '' === $url || strpos( $url, 'http' ) !== 0 ) {
-				continue;
-			}
-			if ( strpos( $url, $quiz_image_url ) !== 0 ) {
-				continue;
-			}
-			$path = str_replace( $uploads_base_url, $uploads_base_dir, $url );
-			if ( '' !== $path && is_file( $path ) && is_readable( $path ) ) {
-				$paths[] = $path;
-			}
+		$rows = isset( $response['results'] ) && is_array( $response['results'] ) ? $response['results'] : array();
+		if ( empty( $rows ) ) {
+			return $paths;
 		}
 
-		return $paths;
+		return self::resolve_draw_image_urls_to_paths( $rows, 'given_answer', $uploads_base_url, $uploads_base_dir, $quiz_image_url );
 	}
 
 	/**
@@ -694,6 +661,38 @@ class QuizModel {
 				wp_delete_file( $path );
 			}
 		}
+	}
+
+	/**
+	 * Resolve tutor/quiz-image URLs from rows to absolute file paths.
+	 * Only includes paths for files that exist and are readable.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $rows              Rows with a URL in the given property (e.g. attempt answers or question answers).
+	 * @param string $url_property      Property name on each row (e.g. 'given_answer', 'answer_two_gap_match').
+	 * @param string $uploads_base_url  Base URL for uploads (trailingslashit).
+	 * @param string $uploads_base_dir  Base dir for uploads (trailingslashit).
+	 * @param string $quiz_image_url    Quiz-image URL prefix (uploads_base_url . 'tutor/quiz-image/').
+	 *
+	 * @return string[] Absolute file paths.
+	 */
+	private static function resolve_draw_image_urls_to_paths( array $rows, $url_property, $uploads_base_url, $uploads_base_dir, $quiz_image_url ) {
+		$paths = array();
+		foreach ( $rows as $row ) {
+			$url = is_string( $row->$url_property ?? '' ) ? trim( $row->$url_property ) : '';
+			if ( '' === $url || strpos( $url, 'http' ) !== 0 ) {
+				continue;
+			}
+			if ( strpos( $url, $quiz_image_url ) !== 0 ) {
+				continue;
+			}
+			$path = str_replace( $uploads_base_url, $uploads_base_dir, $url );
+			if ( '' !== $path && is_file( $path ) && is_readable( $path ) ) {
+				$paths[] = $path;
+			}
+		}
+		return $paths;
 	}
 
 	/**
@@ -753,21 +752,7 @@ class QuizModel {
 			-1
 		);
 
-		foreach ( $question_answers as $row ) {
-			$url = is_string( $row->answer_two_gap_match ?? '' ) ? trim( $row->answer_two_gap_match ) : '';
-			if ( '' === $url || strpos( $url, 'http' ) !== 0 ) {
-				continue;
-			}
-			if ( strpos( $url, $quiz_image_url ) !== 0 ) {
-				continue;
-			}
-			$path = str_replace( $uploads_base_url, $uploads_base_dir, $url );
-			if ( '' !== $path && is_file( $path ) && is_readable( $path ) ) {
-				$paths[] = $path;
-			}
-		}
-
-		return $paths;
+		return self::resolve_draw_image_urls_to_paths( $question_answers, 'answer_two_gap_match', $uploads_base_url, $uploads_base_dir, $quiz_image_url );
 	}
 
 	/**
