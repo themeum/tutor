@@ -91,10 +91,20 @@ $single_url = UrlHelper::add_query_params(
 				<?php if ( $last_reply ) { ?>
 				<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-sm-ml-2">
 					<?php Avatar::make()->user( $last_reply->user_id )->size( Size::SIZE_20 )->render(); ?>
-					<div class="tutor-text-small"><?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $last_reply->comment_date_gmt ) ) ) ); //phpcs:ignore ?></div>
+					<div class="tutor-text-small">
+						<?php
+							/* translators: %s: time difference */
+							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $last_reply->comment_date_gmt ) ) ) );
+						?>
+					</div>
 				</div>
 				<?php } else { ?>
-					<div class="tutor-text-small"><?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) ); //phpcs:ignore ?></div>
+					<div class="tutor-text-small">
+						<?php
+							/* translators: %s: time difference */
+							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
+						?>
+					</div>
 				<?php } ?>
 			</div>
 			<?php if ( User::is_instructor_view() ) : ?>
