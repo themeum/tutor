@@ -125,6 +125,7 @@ const FormDrawImage = ({ field, questionId }: FormDrawImageProps) => {
     onChange: (file) => {
       if (file && !Array.isArray(file)) {
         const { id, url } = file;
+        // Clear previous draw when image is replaced — the saved mask was for the old image.
         const updated: QuizQuestionOption = {
           ...option,
           ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
@@ -132,8 +133,15 @@ const FormDrawImage = ({ field, questionId }: FormDrawImageProps) => {
           }),
           image_id: id,
           image_url: url,
+          answer_two_gap_match: '',
         };
         updateOption(updated);
+        // Clean up draw instance and canvas so the new image shows without the old mask.
+        if (drawInstanceRef.current) {
+          drawInstanceRef.current.destroy();
+          drawInstanceRef.current = null;
+        }
+        setIsDrawModeActive(false);
       }
     },
     initialFiles: option.image_id
