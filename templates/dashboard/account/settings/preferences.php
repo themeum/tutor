@@ -16,7 +16,6 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 
-// Theme options.
 $theme_options = UserPreference::get_theme_options();
 
 $font_scale_options = UserPreference::get_font_scale_options();
@@ -24,8 +23,10 @@ $font_scale_options = UserPreference::get_font_scale_options();
 // Load current user preferences to seed the form.
 $user_preferences = ( new UserPreference( false ) )->get_preferences();
 
+$autoload_course_content = (bool) tutor_utils()->get_option( 'autoload_next_course_content' );
+
 $default_values = array(
-	'auto_play_next' => isset( $user_preferences['auto_play_next'] ) ? (bool) $user_preferences['auto_play_next'] : false,
+	'auto_play_next' => isset( $user_preferences['auto_play_next'] ) ? (bool) $user_preferences['auto_play_next'] : $autoload_course_content,
 	'theme'          => isset( $user_preferences['theme'] ) ? $user_preferences['theme'] : UserPreference::DEFAULT_THEME,
 	'font_scale'     => isset( $user_preferences['font_scale'] ) ? (int) $user_preferences['font_scale'] : UserPreference::DEFAULT_FONT_SCALE,
 );
@@ -46,7 +47,7 @@ $default_values = array(
 	>
 		<!-- Course Content Section -->
 		<h5 class="tutor-preferences-section-header tutor-h5">
-			<?php esc_html_e( 'Course Content', 'tutor' ); ?>
+			<?php esc_html_e( 'Preferences', 'tutor' ); ?>
 		</h5>
 		<div class="tutor-card tutor-card-rounded-2xl tutor-mb-7">
 			<div class="tutor-preferences-setting-item">
@@ -67,11 +68,6 @@ $default_values = array(
 					?>
 				</div>
 			</div>
-		</div>
-
-		<!-- Appearance Section -->
-		<h5 class="tutor-preferences-section-header tutor-color-black tutor-mb-7"><?php esc_html_e( 'Appearance', 'tutor' ); ?></h5>
-		<div class="tutor-card tutor-card-rounded-2xl tutor-mb-6">
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">
 					<div class="tutor-preferences-setting-icon">
@@ -94,10 +90,6 @@ $default_values = array(
 					?>
 				</div>
 			</div>
-		</div>
-
-		<h5 class="tutor-preferences-section-header tutor-color-black tutor-mb-7"><?php esc_html_e( 'Accessibility', 'tutor' ); ?></h5>
-		<div class="tutor-card tutor-card-rounded-2xl tutor-mb-6">
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">
 					<div class="tutor-preferences-setting-icon">
