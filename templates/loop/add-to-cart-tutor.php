@@ -27,14 +27,14 @@ ob_start();
 
 if ( $is_course_in_user_cart ) {
 	?>
-	<a href="<?php echo esc_url( $cart_page_url ? $cart_page_url : '#' ); ?>" class="<?php echo esc_attr( 'tutor-btn tutor-btn-outline-primary tutor-btn-md' . ' ' . ( $cart_page_url ? '' : 'tutor-cart-page-not-configured' ) ); ?>">
+	<a href="<?php echo esc_url( $cart_page_url ? $cart_page_url : '#' ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-md <?php echo esc_attr( $cart_page_url ? '' : 'tutor-cart-page-not-configured' ); ?>">
 		<?php esc_html_e( 'View Cart', 'tutor' ); ?>
 	</a>
 	<?php
 } else {
 	?>
 	<div class="list-item-button"> 
-		<button data-quantity="1" class="<?php echo esc_attr( 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block' . ' ' . $conditional_class ); ?>" data-course-id="<?php the_ID(); ?>" rel="nofollow">
+		<button data-quantity="1" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block <?php echo esc_attr( $conditional_class ); ?>" data-course-id="<?php the_ID(); ?>" rel="nofollow">
 			<span class="tutor-icon-cart-line tutor-mr-8"></span>
 			<span class="cart-text"><?php esc_html_e( 'Add to Cart', 'tutor' ); ?></span>
 		</button> 

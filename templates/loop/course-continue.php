@@ -25,7 +25,7 @@ $lesson_url          = tutor_utils()->get_course_first_lesson();
 $completed_percent   = tutor_utils()->get_course_completed_percent();
 $is_completed_course = tutor_utils()->is_completed_course();
 $retake_course       = tutor_utils()->can_user_retake_course();
-$button_class        = 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block';
+$button_class        = 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ';
 $can_complete_course = CourseModel::can_complete_course( $course_id, $user_id );
 $completion_mode     = tutor_utils()->get_option( 'course_completion_process' );
 
@@ -49,7 +49,7 @@ if ( $lesson_url && ! $is_completed_course ) {
 	?>
 	<a 	href="<?php echo esc_url( $lesson_url ); ?>" 
 		class="<?php echo esc_attr( $button_class ); ?>" 
-		data-course_id="<?php echo esc_attr( $course_id ); ?>">
+		data-course_id="<?php echo get_the_ID(); ?>">
 		<?php echo esc_html( $link_text ); ?>
 	</a>
 	<?php

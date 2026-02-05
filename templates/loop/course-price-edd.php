@@ -14,10 +14,9 @@ $download   = new EDD_Download( $product_id );
 
 add_filter(
 	'edd_purchase_link_defaults',
-	function ( $defaults ) {
+	function( $defaults ) {
 		if ( isset( $defaults['class'] ) ) {
-			$course_id         = get_the_ID();
-			$defaults['class'] = 'edd-add-to-cart button white edd-submit edd-has-js ' . 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block' . ' ';
+			$defaults['class'] = 'edd-add-to-cart button white edd-submit edd-has-js tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ';
 		}
 		return $defaults;
 	}
