@@ -12,6 +12,7 @@ interface QuizSubmissionConfig {
 
 const ERROR_MESSAGES = {
   SUBMIT_FAILED: __('Failed to submit quiz', 'tutor'),
+  REQUIRED_QUESTIONS: __('Please answer all required questions before submitting.', 'tutor'),
 } as const;
 
 const quizSubmission = (config: QuizSubmissionConfig) => ({
@@ -25,6 +26,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => ({
 
   init() {
     this.handleQuizSubmit = this.handleQuizSubmit.bind(this);
+    this.handleQuizError = this.handleQuizError.bind(this);
     this.submitQuizMutation = this.query.useMutation(this.submitQuizAttempt, {
       onSuccess: (response: { success?: boolean }) => {
         if (response?.success === false) {
@@ -42,6 +44,10 @@ const quizSubmission = (config: QuizSubmissionConfig) => ({
   handleQuizSubmit(data: Record<string, unknown>) {
     const payload = this.buildSubmitPayload(data);
     this.submitQuizMutation?.mutate(payload);
+  },
+
+  handleQuizError() {
+    this.toast.error(ERROR_MESSAGES.REQUIRED_QUESTIONS);
   },
 
   buildSubmitPayload(data: Record<string, unknown>): Record<string, unknown> {
@@ -90,7 +96,8 @@ const quizSubmission = (config: QuizSubmissionConfig) => ({
   },
 
   async submitQuizAttempt(payload: Record<string, unknown>) {
-    return wpAjaxInstance.post(endpoints.QUIZ_ATTEMPT_SUBMIT, payload);
+    const response = await wpAjaxInstance.post(endpoints.QUIZ_ATTEMPT_SUBMIT, payload);
+    return response?.data ?? {};
   },
 
   // Validation is handled by tutorForm rules at input registration.

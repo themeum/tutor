@@ -41,6 +41,7 @@ const questionOrdering = (
   init() {
     if (!this.initialized) {
       this.setupDrag();
+      this._callbacks.onOrder?.(this.getOrder());
       this.initialized = true;
     }
   },
