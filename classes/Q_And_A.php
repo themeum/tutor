@@ -92,14 +92,13 @@ class Q_And_A {
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		if ( ! $this->has_qna_access( $user_id, $course_id ) ) {
-			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 
 		$qna_text = Input::post( 'answer', '', tutor()->has_pro ? Input::TYPE_KSES_POST : Input::TYPE_TEXTAREA );
 
 		if ( ! $qna_text ) {
-			// Content validation.
-			wp_send_json_error( array( 'message' => __( 'Empty Content Not Allowed!', 'tutor' ) ) );
+			$this->response_bad_request( __( 'Empty Content Not Allowed!', 'tutor' ) );
 		}
 
 		// Prepare course, question info.
@@ -232,12 +231,12 @@ class Q_And_A {
 
 		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
 		if ( ! $question_id || ! tutor_utils()->can_user_manage( 'qa_question', $question_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+			$this->response_bad_request( tutor_utils()->error_message( 'authorization' ) );
 		}
 
 		$this->delete_qna_permanently( array( $question_id ) );
 
-		wp_send_json_success();
+		$this->json_response( __( 'Comment deleted successfully.', 'tutor' ) );
 	}
 
 	/**
@@ -352,7 +351,7 @@ class Q_And_A {
 		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
 
 		if ( ! tutor_utils()->can_user_manage( 'qa_question', $question_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission Denied!', 'tutor' ) ) );
+			$this->response_bad_request( tutor_utils()->error_message( 'authorization' ) );
 		}
 
 		// Get who asked the question.
