@@ -10,12 +10,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Components\Avatar;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\InputField;
 use Tutor\Components\Button;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
@@ -27,7 +27,7 @@ use Tutor\Helpers\UrlHelper;
 $question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
 
 if ( $question_id ) {
-	tutor_load_template( 'learning-area.subpages.qna-single' );
+	tutor_load_template( 'learning-area.subpages.qna.qna-single' );
 	return;
 }
 
@@ -73,7 +73,7 @@ $questions   = tutor_utils()->get_qa_questions(
 
 ?>
 <div class="tutor-pt-4 tutor-pb-6">
-	<div class="tutor-learning-area-qna" x-data="tutorQna()">
+	<div class="tutor-learning-area-qna" x-data="tutorQnA()">
 		<div class="tutor-discussion-search tutor-p-6 tutor-border-b">
 			<?php
 			SearchFilter::make()
@@ -86,68 +86,31 @@ $questions   = tutor_utils()->get_qa_questions(
 			?>
 		</div>
 
-		<form
-			class="tutor-discussion-form tutor-p-6 tutor-border-b tutor-qna-form"
-			x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $tutor_course_id ); ?>', defaultValues: { course_id: <?php echo esc_html( $tutor_course_id ); ?> } }), focused : false }"
-			@submit.prevent="handleSubmit((data) => createQnaMutation?.mutate(data))($event)"
-		>
-			<div class="tutor-input-field">
-				<label for="tutor-qna-question" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4"><?php esc_html_e( 'Question & Answer', 'tutor' ); ?></label>
-				<div class="tutor-input-wrapper">
-					<?php
-					InputField::make()
-						->type( InputType::TEXTAREA )
-						->name( 'answer' )
-						->placeholder( 'Asked questions...' )
-						->attr( '@focus', 'focused = true' )
-						->attr( 'x-bind', "register('answer', { required: '" . esc_html( __( 'Please enter a response', 'tutor' ) ) . "' })" )
-						->attr( 'rows', 4 )
-						->render();
-					?>
-				</div>
-			</div>
-			<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5" x-cloak :class="{ 'tutor-hidden': !focused }">
-				<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2">
-					<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?>
-					<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
-					<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?>
-					<?php esc_html_e( 'Enter to Save', 'tutor' ); ?>
-				</div>
-				<div class="tutor-flex tutor-items-center tutor-gap-4">
-					<?php
-					Button::make()
-						->label( __( 'Cancel', 'tutor' ) )
-						->variant( Variant::GHOST )
-						->size( Size::X_SMALL )
-						->attr( 'type', 'button' )
-						->attr( '@click', 'reset(); focused = false' )
-						->attr( ':disabled', 'createQnaMutation?.isPending' )
-						->render();
-					Button::make()
-						->label( __( 'Save', 'tutor' ) )
-						->variant( Variant::PRIMARY_SOFT )
-						->size( Size::X_SMALL )
-						->attr( 'type', 'submit' )
-						->attr( ':disabled', 'createQnaMutation?.isPending' )
-						->attr( ':class', "{ 'tutor-btn-loading': createQnaMutation?.isPending }" )
-						->render();
-					?>
-				</div>
-			</div>
-		</form>
+		<div class="tutor-p-6">
+			<label for="answer" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4">
+				<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
+			</label>
+			<?php
+			tutor_load_template(
+				'learning-area.subpages.qna.qna-form',
+				array(
+					'form_id'        => 'learning-area-qna-form',
+					'submit_handler' => '(data) => createQnAMutation?.mutate({ ...data, course_id: ' . (int) $tutor_course_id . ' })',
+					'cancel_handler' => 'reset(); focused = false',
+					'is_pending'     => 'createQnAMutation?.isPending',
+					'placeholder'    => __( 'Asked questions...', 'tutor' ),
+					'submit_label'   => __( 'Save', 'tutor' ),
+				)
+			);
+			?>
+		</div>
 
-		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
+		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b tutor-border-t">
 			<div class="tutor-small tutor-text-secondary">
 				<?php esc_html_e( 'Questions', 'tutor' ); ?>
 				<span class="tutor-text-primary tutor-font-medium">(<?php echo esc_html( $total_items ); ?>)</span>
 			</div>
-			<div>
-				<?php
-				Sorting::make()
-					->order( $order_by )
-					->render();
-				?>
-			</div>
+			<?php Sorting::make()->order( $order_by )->render(); ?>
 		</div>
 
 		<?php if ( empty( $questions ) ) : ?>
@@ -157,7 +120,7 @@ $questions   = tutor_utils()->get_qa_questions(
 				<?php
 				foreach ( $questions as $question ) :
 					tutor_load_template(
-						'learning-area.subpages.qna-card',
+						'learning-area.subpages.qna.qna-card',
 						array(
 							'question' => $question,
 						)
@@ -173,6 +136,17 @@ $questions   = tutor_utils()->get_qa_questions(
 			->total( $total_items )
 			->limit( $question_per_page )
 			->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-5 tutor-sm-border-t' )
+			->render();
+		?>
+
+		<?php
+		ConfirmationModal::make()
+			->id( 'tutor-qna-delete-modal' )
+			->title( __( 'Delete This Question?', 'tutor' ) )
+			->message( __( 'Are you sure you want to delete this question permanently? Please confirm your choice.', 'tutor' ) )
+			->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
+			->confirm_handler( 'deleteQnAMutation?.mutate(payload)' )
+			->mutation_state( 'deleteQnAMutation' )
 			->render();
 		?>
 	</div>

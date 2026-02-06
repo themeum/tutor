@@ -26,6 +26,7 @@ interface DeleteQnaPayload {
 }
 
 const FORM_ID_PREFIXES = {
+  QNA_FORM: 'learning-area-qna-form',
   QNA_EDIT: 'qna-edit-',
   QNA_REPLY: 'qna-reply-form-',
 };
@@ -35,6 +36,15 @@ const ELEMENT_IDS = {
   REPLIES_LIST_CONTAINER: 'tutor-discussion-replies-list',
 };
 
+const MODALS = {
+  QNA_DELETE: 'tutor-qna-delete-modal',
+};
+
+const URL_PARAMS = {
+  QUESTION_ID: 'question_id',
+  ORDER: 'order',
+};
+
 /**
  * Q&A Page Component
  * Handles Q&A related action in learning area
@@ -42,22 +52,31 @@ const ELEMENT_IDS = {
 const qnaPage = () => {
   const query = window.TutorCore.query;
   const form = window.TutorCore.form;
+  const modal = window.TutorCore.modal;
   const toast = window.TutorCore.toast;
 
   return {
     query,
-    createQnaMutation: null as MutationState<unknown, CreateQnaPayload> | null,
+    createQnAMutation: null as MutationState<unknown, CreateQnaPayload> | null,
     updateQnAMutation: null as MutationState<unknown, UpdateQnAPayload> | null,
-    replyQnaMutation: null as MutationState<unknown, ReplyQnaPayload> | null,
-    deleteQnaMutation: null as MutationState<unknown, unknown> | null,
+    replyQnAMutation: null as MutationState<unknown, ReplyQnaPayload> | null,
+    deleteQnAMutation: null as MutationState<unknown, unknown> | null,
     editingId: null as number | null,
     editingFormId: null as string | null,
+    loadingReplies: false,
+    repliesOrder: 'DESC',
     $nextTick: undefined as ((callback: () => void) => void) | undefined,
 
     init() {
-      this.createQnaMutation = this.query.useMutation(this.createQnA, {
+      this.createQnAMutation = this.query.useMutation(this.createQnA, {
         onSuccess: () => {
           toast.success(__('Question saved successfully', 'tutor'));
+
+          const formId = FORM_ID_PREFIXES.QNA_FORM;
+          if (form.hasForm(formId)) {
+            form.reset(formId);
+          }
+
           window.location.reload();
         },
         onError: (error: Error) => {
@@ -84,28 +103,34 @@ const qnaPage = () => {
         },
       });
 
-      this.replyQnaMutation = this.query.useMutation(this.replyQna, {
-        onSuccess: () => {
+      this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
+        onSuccess: (_, payload) => {
           toast.success(__('Reply saved successfully', 'tutor'));
-          window.location.reload();
+          this.reloadReplies();
+          const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${payload.question_id}`;
+          if (form.hasForm(formId)) {
+            form.reset(formId);
+          }
         },
         onError: (error: Error) => {
           toast.error(convertToErrorMessage(error));
         },
       });
 
-      this.deleteQnaMutation = this.query.useMutation(this.deleteQnA, {
-        onSuccess: (result, payload) => {
-          if (payload?.context === 'question') {
-            toast.success(__('Question deleted successfully', 'tutor'));
-            const url = new URL(window.location.href);
-            url.searchParams.delete('question_id');
-            window.location.href = url.toString();
-          } else if (payload?.context === 'reply') {
+      this.deleteQnAMutation = this.query.useMutation(this.deleteQnA, {
+        onSuccess: (_, payload) => {
+          if (payload.context === 'reply') {
             toast.success(__('Reply deleted successfully', 'tutor'));
-            window.location.reload();
+            modal.closeModal(MODALS.QNA_DELETE);
+            this.reloadReplies();
           } else {
-            window.location.reload();
+            toast.success(__('Question deleted successfully', 'tutor'));
+            modal.closeModal(MODALS.QNA_DELETE);
+
+            // Reload the page.
+            const url = new URL(window.location.href);
+            url.searchParams.delete(URL_PARAMS.QUESTION_ID);
+            window.location.href = url.toString();
           }
         },
         onError: (error: Error) => {
@@ -122,12 +147,47 @@ const qnaPage = () => {
       return wpAjaxInstance.post(endpoints.UPDATE_QNA, payload);
     },
 
-    replyQna(payload: ReplyQnaPayload) {
+    replyQnA(payload: ReplyQnaPayload) {
       return wpAjaxInstance.post(endpoints.CREATE_UPDATE_QNA, payload);
     },
 
     deleteQnA(payload: DeleteQnaPayload) {
       return wpAjaxInstance.post(endpoints.DELETE_DASHBOARD_QNA, payload);
+    },
+
+    async reloadReplies(order?: string) {
+      if (order) {
+        this.repliesOrder = order;
+      }
+
+      const url = new URL(window.location.href);
+      const commentId = parseInt(url.searchParams.get(URL_PARAMS.QUESTION_ID) || '0');
+
+      if (!commentId) return;
+
+      this.loadingReplies = true;
+      try {
+        const response = await wpAjaxInstance.post(endpoints.LOAD_QNA_REPLIES, {
+          comment_id: commentId,
+          order: this.repliesOrder,
+          context: 'learning-area',
+        });
+
+        const container = document.getElementById(ELEMENT_IDS.REPLIES_LIST_CONTAINER);
+        if (container && typeof response.data?.html === 'string') {
+          container.innerHTML = response.data.html;
+
+          // Update URL without reload
+          const url = new URL(window.location.href);
+          url.searchParams.set(URL_PARAMS.ORDER, this.repliesOrder);
+          window.history.pushState({}, '', url.toString());
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to reload replies:', error);
+      } finally {
+        this.loadingReplies = false;
+      }
     },
 
     setEditing(id: number | null) {
@@ -143,6 +203,12 @@ const qnaPage = () => {
         });
       }
     },
+
+    handleKeydown(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        (event.target as HTMLFormElement).closest('form')?.requestSubmit();
+      }
+    },
   };
 };
 
@@ -150,7 +216,7 @@ export const initializeQna = () => {
   window.TutorComponentRegistry.register({
     type: 'component',
     meta: {
-      name: 'qna',
+      name: 'QnA',
       component: qnaPage,
     },
   });

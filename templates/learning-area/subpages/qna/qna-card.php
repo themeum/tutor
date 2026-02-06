@@ -102,7 +102,7 @@ $single_url = UrlHelper::add_query_params(
 					</button>
 					<button
 						class="tutor-popover-menu-item tutor-gap-5 tutor-sm-border-t"
-						@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $question_id ); ?> });"
+						@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_html( $question_id ); ?> });"
 					>
 						<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
 						<?php esc_html_e( 'Delete', 'tutor' ); ?>
@@ -118,7 +118,7 @@ $single_url = UrlHelper::add_query_params(
 <div x-show="editingId === <?php echo (int) $question_id; ?>" x-cloak class="tutor-card tutor-surface-l1-hover">
 	<?php
 	tutor_load_template(
-		'dashboard.discussions.qna-form',
+		'learning-area.subpages.qna.qna-form',
 		array(
 			'form_id'        => 'qna-edit-' . (int) $question_id,
 			'default_value'  => $question->comment_content,
