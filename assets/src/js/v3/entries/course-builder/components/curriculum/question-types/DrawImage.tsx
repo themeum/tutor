@@ -31,7 +31,7 @@ const DrawImage = () => {
     }
     const baseAnswer: QuizQuestionOption = {
       _data_status: QuizDataStatus.NEW,
-      is_saved: true,
+      is_saved: false,
       answer_id: nanoid(),
       belongs_question_id: activeQuestionId,
       belongs_question_type: 'draw_image' as QuizQuestionOption['belongs_question_type'],
