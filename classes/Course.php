@@ -1778,7 +1778,7 @@ class Course extends Tutor_Base {
 			if ( is_array( $order ) && count( $order ) ) {
 				$i = 0;
 				foreach ( $order as $topic ) {
-					++$i;
+					$i++;
 					$wpdb->update(
 						$wpdb->posts,
 						array( 'menu_order' => $i ),
@@ -2822,10 +2822,10 @@ class Course extends Tutor_Base {
 					}
 				}
 				if ( ! $has_passed ) {
-					++$required_assignment_pass;
+					$required_assignment_pass++;
 				}
 			} else {
-				++$required_assignment_pass;
+				$required_assignment_pass++;
 			}
 		}
 
@@ -2841,11 +2841,11 @@ class Course extends Tutor_Base {
 					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
 
 					if ( $earned_percentage < $passing_grade ) {
-						++$required_quiz_pass;
+						$required_quiz_pass++;
 						$is_quiz_pass = false;
 					}
 				} else {
-					++$required_quiz_pass;
+					$required_quiz_pass++;
 					$is_quiz_pass = false;
 				}
 			}
