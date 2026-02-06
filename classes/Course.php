@@ -14,8 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use stdClass;
-use Tutor\Components\Button;
 use TUTOR\Input;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
@@ -24,7 +22,6 @@ use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
-use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * Course Class
