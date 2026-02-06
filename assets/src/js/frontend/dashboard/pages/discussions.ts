@@ -1,6 +1,7 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
 
 interface ReplyCommentPayload {
@@ -109,7 +110,7 @@ const discussionsPage = () => {
           }
         },
         onError: (error: Error) => {
-          toast.error(error.message || __('Failed to delete Comment', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -125,7 +126,7 @@ const discussionsPage = () => {
           }
         },
         onError: (error: Error) => {
-          toast.error(error.message || __('Failed to save reply', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -147,7 +148,7 @@ const discussionsPage = () => {
           this.editingId = null;
         },
         onError: (error: Error) => {
-          toast.error(error.message || __('Failed to update comment', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -170,7 +171,7 @@ const discussionsPage = () => {
           );
         },
         onError: (error: Error) => {
-          toast.error(error.message || __('Action failed', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -188,7 +189,7 @@ const discussionsPage = () => {
           }
         },
         onError: (error: Error) => {
-          toast.error(error.message || __('Failed to delete Q&A', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -203,7 +204,7 @@ const discussionsPage = () => {
           }
         },
         onError: (error: Error) => {
-          toast.error(error.message || __('Failed to save reply', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -223,7 +224,7 @@ const discussionsPage = () => {
           }
         },
         onError: (error: Error) => {
-          toast.error(error.message || __('Failed to update', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
     },

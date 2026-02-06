@@ -274,7 +274,7 @@ $single_url = UrlHelper::add_query_params(
 
 					<button
 						class="tutor-popover-menu-item tutor-gap-5 tutor-sm-border-t"
-						@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $question_id ); ?> });"
+						@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_html( $question_id ); ?> });"
 					>
 						<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
 						<?php esc_html_e( 'Delete', 'tutor' ); ?>

@@ -12,10 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
-use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
-use Tutor\Components\Popover;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use TUTOR\User;

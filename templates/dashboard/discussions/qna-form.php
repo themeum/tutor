@@ -1,12 +1,12 @@
 <?php
 /**
- * Q&A Edit Form Template
+ * Q&A Form Template
  *
  * @package Tutor\Templates
  * @subpackage Dashboard
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 1.0.0
+ * @since 4.0.0
  */
 
 use Tutor\Components\Button;
@@ -19,7 +19,8 @@ defined( 'ABSPATH' ) || exit;
 
 $form_id        = isset( $form_id ) ? $form_id : '';
 $label          = isset( $label ) ? $label : '';
-$form_class     = isset( $form_class ) ? $form_class : 'tutor-mb-3';
+$submit_label   = isset( $submit_label ) ? $submit_label : __( 'Update', 'tutor' );
+$form_class     = isset( $form_class ) ? $form_class : '';
 $default_value  = isset( $default_value ) ? $default_value : '';
 $submit_handler = isset( $submit_handler ) ? $submit_handler : '';
 $cancel_handler = isset( $cancel_handler ) ? $cancel_handler : '';
@@ -73,7 +74,7 @@ $placeholder    = isset( $placeholder ) ? $placeholder : __( 'Write your questio
 				->render();
 
 			Button::make()
-				->label( __( 'Update', 'tutor' ) )
+				->label( $submit_label )
 				->variant( Variant::PRIMARY )
 				->size( Size::X_SMALL )
 				->attr( 'type', 'submit' )

@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\Avatar;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
-use Tutor\Components\EmptyState;
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
 use TUTOR\Input;
@@ -22,7 +21,7 @@ use TUTOR\User;
 
 $question = tutor_utils()->get_qa_question( (int) $discussion_id );
 if ( ! $question ) {
-	EmptyState::make()->render();
+	wp_safe_redirect( $discussion_url );
 	return;
 }
 
@@ -136,7 +135,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 								<span x-text="isArchived ? '<?php echo esc_js( __( 'Un-Archive', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Archive', 'tutor' ) ); ?>'"></span>
 							</button>
 							<?php endif; ?>
-							<?php if ( $user_id === (int) $question->user_id ) : ?>
+							<?php if ( $is_user_asker ) : ?>
 							<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $question->comment_ID; ?>, 'qna'); hide()">
 								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
@@ -144,7 +143,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 							<?php endif; ?>
 							<button 
 								class="tutor-popover-menu-item tutor-gap-5"
-								@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $question->comment_ID ); ?> });"
+								@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_html( $question->comment_ID ); ?> }); hide();"
 							>
 								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>
@@ -158,7 +157,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 			<?php echo wp_kses_post( $question->comment_content ); ?>
 		</div>
 
-		<?php if ( $user_id === (int) $question->user_id ) : ?>
+		<?php if ( $is_user_asker ) : ?>
 			<div x-show="editingId === <?php echo (int) $question->comment_ID; ?>" x-cloak class="tutor-w-full">
 				<?php
 					tutor_load_template(
