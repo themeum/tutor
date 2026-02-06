@@ -14,6 +14,19 @@
 
   &-header {
     background-color: $tutor-surface-l1;
+    position: sticky;
+    top: 0;
+    z-index: $tutor-z-header;
+
+    body:has(#wpadminbar) & {
+      top: 46px;
+    }
+
+    @include tutor-breakpoint-up(sm) {
+      body:has(#wpadminbar) & {
+        top: 32px;
+      }
+    }
   }
 
   &-progress {
