@@ -75,13 +75,13 @@ $is_previous     = $is_previous ?? false;
 
 		<?php if ( ! $is_previous ) : ?>
 			<div class="tutor-quiz-item-info-course">
-			<?php esc_html_e( 'Course:', 'tutor' ); ?> 
-			<?php
-				PreviewTrigger::make()
-					->id( $course_id ?? 0 )
-					->render()
-			?>
-		</div>
+				<?php esc_html_e( 'Course:', 'tutor' ); ?> 
+				<?php
+					PreviewTrigger::make()
+						->id( $course_id ?? 0 )
+						->render()
+				?>
+			</div>
 		<?php endif; ?>
 
 		<div class="tutor-quiz-item-info-date tutor-text-subdued">
