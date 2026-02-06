@@ -6,6 +6,7 @@
     @include tutor-flex(column);
     gap: $tutor-spacing-11;
     height: 100%;
+    padding-top: calc((#{$tutor-spacing-8} * 2) + 44px + #{$tutor-spacing-14});
 
     @include tutor-breakpoint-down(sm) {
       gap: $tutor-spacing-6;
@@ -14,8 +15,9 @@
 
   &-header {
     background-color: $tutor-surface-l1;
-    position: sticky;
+    position: fixed;
     top: 0;
+    inset-inline: 0;
     z-index: $tutor-z-header;
 
     body:has(#wpadminbar) & {
