@@ -50,8 +50,9 @@ $has_time_limit         = $remaining_time_secs > 0;
 			Button::make()
 				->label( __( 'Quit', 'tutor' ) )
 				->variant( Variant::OUTLINE )
+				->attr( 'type', 'button' )
 				->attr( 'class', 'tutor-px-8' )
-				->attr( '@click', 'requestAbandon()' )
+				->attr( '@click', 'handleAbandonQuiz' )
 				->render();
 			?>
 		</div>

@@ -23,6 +23,7 @@ interface StartQuizPayload {
 
 const ERROR_MESSAGES = {
   SUBMIT_FAILED: __('Failed to submit quiz', 'tutor'),
+  ABANDON_FAILED: __('Failed to abandon quiz', 'tutor'),
   REQUIRED_QUESTIONS: __('Please answer all required questions before submitting.', 'tutor'),
 } as const;
 
@@ -65,11 +66,15 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       });
 
       this.abandonQuizMutation = query.useMutation(this.abandonQuizAttempt, {
-        onSuccess: () => {
-          window.location.reload();
+        onSuccess: (response: { success?: boolean }) => {
+          if (response?.success) {
+            window.location.reload();
+          } else {
+            toast.error(ERROR_MESSAGES.ABANDON_FAILED);
+          }
         },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error) || ERROR_MESSAGES.SUBMIT_FAILED);
+          toast.error(convertToErrorMessage(error));
         },
       });
     },
@@ -170,6 +175,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         .then((res) => res.data);
     },
 
+    // @TODO: Need to handle abandon action.
     abandonQuizAttempt(payload: Record<string, unknown>) {
       return wpAjaxInstance
         .post(endpoints.QUIZ_ABANDON, {

@@ -95,10 +95,6 @@ const quizTimer = (config: QuizTimerConfig) => {
       this.dispatchQuizEvent(this.expiresAction);
     },
 
-    requestAbandon() {
-      this.dispatchQuizEvent('auto_abandon');
-    },
-
     get minutes() {
       return String(Math.floor(this.remaining / 60)).padStart(2, '0');
     },
