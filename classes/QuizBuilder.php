@@ -86,20 +86,15 @@ class QuizBuilder {
 	 * @return array
 	 */
 	public function prepare_answer_data( $question_id, $question_type, $input ) {
-		$answer_title         = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
-		$is_correct           = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
-		$image_id             = Input::sanitize( $input['image_id'] ?? null );
-		// Draw image: pass raw base64 or URL to QuizModel::save_quiz_draw_image_mask (Input::sanitize would corrupt base64
-		// and sanitize_text_field can strip URL chars); it returns a URL—sanitize that with esc_url_raw.
-		if ( 'draw_image' === $question_type && isset( $input['answer_two_gap_match'] ) ) {
-			$answer_two_gap_match = esc_url_raw(
-				QuizModel::save_quiz_draw_image_mask( wp_unslash( $input['answer_two_gap_match'] ) )
-			);
-		} else {
-			$answer_two_gap_match = Input::sanitize( $input['answer_two_gap_match'] ?? '', '' );
-		}
-		$answer_view_format   = Input::sanitize( $input['answer_view_format'] ?? '' );
-		$answer_settings      = null;
+		$answer_title = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
+		$is_correct   = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
+		$image_id     = Input::sanitize( $input['image_id'] ?? null );
+		// Let the hook handle special cases (e.g. draw_image) and return a normalized value.
+		$answer_two_gap_match_raw = isset( $input['answer_two_gap_match'] ) ? wp_unslash( $input['answer_two_gap_match'] ) : '';
+		$answer_two_gap_match_raw = apply_filters( 'tutor_save_quiz_draw_image_mask', $answer_two_gap_match_raw, $question_type );
+		$answer_two_gap_match     = Input::sanitize( $answer_two_gap_match_raw ?? '', '' );
+		$answer_view_format       = Input::sanitize( $input['answer_view_format'] ?? '' );
+		$answer_settings          = null;
 
 		$answer_data = array(
 			'belongs_question_id'   => $question_id,

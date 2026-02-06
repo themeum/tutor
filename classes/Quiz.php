@@ -127,8 +127,6 @@ class Quiz {
 		 */
 		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
 
-		// Collect file paths for attempt deletion: draw_image (and others via same filter).
-		add_filter( 'tutor_quiz/attempt_file_paths_for_deletion', array( QuizModel::class, 'add_draw_image_attempt_file_paths' ), 10, 2 );
 
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 
@@ -739,18 +737,14 @@ class Quiz {
 						// 	$is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
 						// }
 						//phpcs:enable
-					} elseif ( 'draw_image' === $question_type ) {
-						$given_answer = '';
-						if ( is_array( $answers ) && isset( $answers['answers']['mask'] ) ) {
-							$given_answer = Input::sanitize( $answers['answers']['mask'] ?? '', '' );
-						}
-						// Save base64 mask to uploads and store file URL in DB.
-						if ( '' !== $given_answer ) {
-							$given_answer = QuizModel::save_quiz_draw_image_mask( $given_answer );
-						}
-
-						// Base correctness is determined later via filters in Tutor Pro.
-						$is_answer_was_correct = false;
+					} else {
+						$custom_answer_data = array(
+							'given_answer'          => $given_answer,
+							'is_answer_was_correct' => $is_answer_was_correct,
+						);
+						$custom_answer_data = apply_filters( 'tutor_quiz_process_custom_question_answer', $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id );
+						$given_answer          = $custom_answer_data['given_answer'];
+						$is_answer_was_correct = $custom_answer_data['is_answer_was_correct'];
 					}
 
 					$question_mark = $is_answer_was_correct ? $question->question_mark : 0;
@@ -781,19 +775,9 @@ class Quiz {
 
 					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 
-					if ( 'draw_image' === $question_type ) {
-						$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
-					}
-
-					// For Pro-powered draw-image questions, adjust total marks after
-					// add-ons have had a chance to modify achieved_mark via filters.
-					if ( 'draw_image' === $question_type ) {
-						// Remove the previously added base question_mark (typically 0
-						// for draw_image in core) and add the final achieved_mark
-						// decided by Pro (or other filters).
-						$total_marks -= $question_mark;
-						$total_marks += (float) $answers_data['achieved_mark'];
-					}
+					// Allow Pro to grade draw_image (and other custom types) and set achieved_mark / is_correct.
+					$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
+					$total_marks  = apply_filters( 'tutor_quiz_adjust_total_marks_for_question', $total_marks, $question_mark, $answers_data, $question_type, $question_id );
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 				}
@@ -1126,8 +1110,15 @@ class Quiz {
 
 		QuizModel::delete_files_by_paths( $attempt_file_paths );
 
-		// Collect instructor draw_image file paths before deleting question data.
-		$quiz_file_paths = QuizModel::get_draw_image_file_paths_for_quiz( $quiz_id );
+		// Collect instructor file paths before deleting question data (e.g. draw_image masks).
+		/**
+		 * Filter to get file paths for quiz deletion.
+		 * Pro and other add-ons register their question types via this filter.
+		 *
+		 * @param string[] $file_paths Paths collected so far.
+		 * @param int      $quiz_id   Quiz post ID.
+		 */
+		$quiz_file_paths = apply_filters( 'tutor_quiz_quiz_file_paths_for_deletion', array(), $quiz_id );
 
 		$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $quiz_id ) );
 

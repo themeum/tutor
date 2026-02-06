@@ -545,8 +545,15 @@ class CourseModel {
 
 						do_action( 'tutor_before_delete_quiz_content', $content_id, null );
 
-						// Collect instructor draw_image file paths before deleting question data.
-						$quiz_file_paths = QuizModel::get_draw_image_file_paths_for_quiz( $content_id );
+						// Collect instructor file paths before deleting question data (e.g. draw_image masks).
+						/**
+						 * Filter to get file paths for quiz deletion.
+						 * Pro and other add-ons register their question types via this filter.
+						 *
+						 * @param string[] $file_paths Paths collected so far.
+						 * @param int      $quiz_id   Quiz post ID.
+						 */
+						$quiz_file_paths = apply_filters( 'tutor_quiz_quiz_file_paths_for_deletion', array(), $content_id );
 
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
