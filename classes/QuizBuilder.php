@@ -89,9 +89,9 @@ class QuizBuilder {
 		$answer_title         = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
 		$is_correct           = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
 		$image_id             = Input::sanitize( $input['image_id'] ?? null );
-		// Draw image: pass raw base64 or URL to QuizModel::save_quiz_draw_image_mask (Input::sanitize would corrupt base64
+		// Draw image / Pin image: pass raw base64 or URL to QuizModel::save_quiz_draw_image_mask (Input::sanitize would corrupt base64
 		// and sanitize_text_field can strip URL chars); it returns a URL—sanitize that with esc_url_raw.
-		if ( 'draw_image' === $question_type && isset( $input['answer_two_gap_match'] ) ) {
+		if ( in_array( $question_type, array( 'draw_image', 'pin_image' ), true ) && isset( $input['answer_two_gap_match'] ) ) {
 			$answer_two_gap_match = esc_url_raw(
 				QuizModel::save_quiz_draw_image_mask( wp_unslash( $input['answer_two_gap_match'] ) )
 			);

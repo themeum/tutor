@@ -109,6 +109,12 @@ const questionTypeOptions: {
     icon: 'quizImageAnswer',
     isPro: true,
   },
+  {
+    label: __('Pin on Image', 'tutor'),
+    value: 'pin_image',
+    icon: 'quizImageAnswer',
+    isPro: true,
+  },
 ];
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -229,7 +235,22 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                     is_correct: '1',
                   },
                 ]
-              : [],
+              : questionType === 'pin_image'
+                ? [
+                    {
+                      _data_status: QuizDataStatus.NEW,
+                      is_saved: true,
+                      answer_id: nanoid(),
+                      answer_title: '',
+                      belongs_question_id: questionId,
+                      belongs_question_type: 'pin_image',
+                      answer_two_gap_match: '',
+                      answer_view_format: 'pin_image',
+                      answer_order: 0,
+                      is_correct: '1',
+                    },
+                  ]
+                : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,

@@ -545,8 +545,11 @@ class CourseModel {
 
 						do_action( 'tutor_before_delete_quiz_content', $content_id, null );
 
-						// Collect instructor draw_image file paths before deleting question data.
-						$quiz_file_paths = QuizModel::get_draw_image_file_paths_for_quiz( $content_id );
+						// Collect instructor draw_image & pin_image file paths before deleting question data.
+						$quiz_file_paths = array_merge(
+							QuizModel::get_draw_image_file_paths_for_quiz( $content_id ),
+							QuizModel::get_pin_image_file_paths_for_quiz( $content_id )
+						);
 
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {

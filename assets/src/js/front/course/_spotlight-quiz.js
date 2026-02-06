@@ -2,7 +2,7 @@ window.jQuery(document).ready($ => {
     const { __ } = window.wp.i18n;
 
     // Currently only these types of question supports answer reveal mode.
-    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice', 'draw_image'];
+    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice', 'draw_image', 'pin_image'];
 
     let quiz_options = _tutorobject.quiz_options
     let interactions = new Map();
@@ -102,8 +102,8 @@ window.jQuery(document).ready($ => {
             });
         }
 
-        // Reveal mode for draw_image: show reference (instructor mask) and explanation.
-        if (is_reveal_mode() && $question_wrap.data('question-type') === 'draw_image') {
+        // Reveal mode for draw_image & pin_image: show reference (instructor mask) and explanation.
+        if (is_reveal_mode() && ['draw_image', 'pin_image'].includes($question_wrap.data('question-type'))) {
             $question_wrap.find('.tutor-quiz-explanation-wrapper').removeClass('tutor-d-none');
             $question_wrap.find('.tutor-draw-image-reference-wrapper').removeClass('tutor-d-none');
             goNext = true;
@@ -172,6 +172,17 @@ window.jQuery(document).ready($ => {
                     var $maskInput = $required_answer_wrap.find('input[name*="[answers][mask]"]');
                     if ($maskInput.length && !$maskInput.val().trim().length) {
                         $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please draw on the image to answer this question.', 'tutor')}</p>`);
+                        validated = false;
+                    }
+                } else if ($question_wrap.data('question-type') === 'pin_image') {
+                    // Pin image: require normalized pin coordinates (hidden inputs [answers][pin][x|y]).
+                    var $pinX = $required_answer_wrap.find('input[name*="[answers][pin][x]"]');
+                    var $pinY = $required_answer_wrap.find('input[name*="[answers][pin][y]"]');
+                    if (
+                        !$pinX.length || !$pinY.length ||
+                        !$pinX.val().trim().length || !$pinY.val().trim().length
+                    ) {
+                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please drop a pin on the image to answer this question.', 'tutor')}</p>`);
                         validated = false;
                     }
                 } else if ($type === 'radio') {

@@ -794,6 +794,69 @@ class QuizModel {
 	}
 
 	/**
+	 * Get file paths of pin_image instructor mask files for a quiz.
+	 *
+	 * Pin-image questions reuse the same mask storage (uploads/tutor/quiz-image)
+	 * as draw_image; this helper mirrors get_draw_image_file_paths_for_quiz()
+	 * but filters on question_type/belongs_question_type = pin_image.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $quiz_id Quiz post ID.
+	 *
+	 * @return string[] Array of absolute file paths.
+	 */
+	public static function get_pin_image_file_paths_for_quiz( $quiz_id ) {
+		$paths = array();
+		$quiz_id = (int) $quiz_id;
+		if ( $quiz_id <= 0 ) {
+			return $paths;
+		}
+
+		$upload_dir = wp_upload_dir();
+		if ( ! empty( $upload_dir['error'] ) ) {
+			return $paths;
+		}
+
+		$uploads_base_url = trailingslashit( $upload_dir['baseurl'] );
+		$uploads_base_dir = trailingslashit( $upload_dir['basedir'] );
+		$quiz_image_url   = $uploads_base_url . 'tutor/quiz-image/';
+
+		$pin_image_questions = QueryHelper::get_all(
+			'tutor_quiz_questions',
+			array(
+				'quiz_id'       => $quiz_id,
+				'question_type' => 'pin_image',
+			),
+			'question_id',
+			-1
+		);
+
+		if ( empty( $pin_image_questions ) ) {
+			return $paths;
+		}
+
+		$question_ids = array_map(
+			function ( $row ) {
+				return (int) $row->question_id;
+			},
+			$pin_image_questions
+		);
+
+		$question_answers = QueryHelper::get_all(
+			'tutor_quiz_question_answers',
+			array(
+				'belongs_question_id'   => $question_ids,
+				'belongs_question_type' => 'pin_image',
+			),
+			'answer_id',
+			-1
+		);
+
+		return self::resolve_draw_image_urls_to_paths( $question_answers, 'answer_two_gap_match', $uploads_base_url, $uploads_base_dir, $quiz_image_url );
+	}
+
+	/**
 	 * Delete draw_image instructor reference mask files for a quiz.
 	 *
 	 * When a quiz is deleted, image files stored in uploads/tutor/quiz-image

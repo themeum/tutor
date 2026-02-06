@@ -751,6 +751,31 @@ class Quiz {
 
 						// Base correctness is determined later via filters in Tutor Pro.
 						$is_answer_was_correct = false;
+					} elseif ( 'pin_image' === $question_type ) {
+						$given_answer = '';
+
+						// For pin_image, student drops a pin (map-like) on the image.
+						// Frontend posts normalized coordinates in:
+						// attempt[attempt_id][quiz_question][question_id][answers][pin][x|y]
+						if ( is_array( $answers ) && isset( $answers['answers']['pin'] ) && is_array( $answers['answers']['pin'] ) ) {
+							$raw_pin = $answers['answers']['pin'];
+							$x       = isset( $raw_pin['x'] ) ? (float) $raw_pin['x'] : 0.0;
+							$y       = isset( $raw_pin['y'] ) ? (float) $raw_pin['y'] : 0.0;
+
+							// Clamp to [0, 1] to avoid out-of-bounds data.
+							$x = max( 0.0, min( 1.0, $x ) );
+							$y = max( 0.0, min( 1.0, $y ) );
+
+							$given_answer = wp_json_encode(
+								array(
+									'x' => $x,
+									'y' => $y,
+								)
+							);
+						}
+
+						// Base correctness is determined later via filters (Tutor Pro).
+						$is_answer_was_correct = false;
 					}
 
 					$question_mark = $is_answer_was_correct ? $question->question_mark : 0;
@@ -785,11 +810,15 @@ class Quiz {
 						$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 					}
 
-					// For Pro-powered draw-image questions, adjust total marks after
+					if ( 'pin_image' === $question_type ) {
+						$answers_data = apply_filters( 'tutor_filter_pin_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
+					}
+
+					// For Pro-powered draw-image and pin-image questions, adjust total marks after
 					// add-ons have had a chance to modify achieved_mark via filters.
-					if ( 'draw_image' === $question_type ) {
+					if ( in_array( $question_type, array( 'draw_image', 'pin_image' ), true ) ) {
 						// Remove the previously added base question_mark (typically 0
-						// for draw_image in core) and add the final achieved_mark
+						// for these question types in core) and add the final achieved_mark
 						// decided by Pro (or other filters).
 						$total_marks -= $question_mark;
 						$total_marks += (float) $answers_data['achieved_mark'];
@@ -1126,8 +1155,11 @@ class Quiz {
 
 		QuizModel::delete_files_by_paths( $attempt_file_paths );
 
-		// Collect instructor draw_image file paths before deleting question data.
-		$quiz_file_paths = QuizModel::get_draw_image_file_paths_for_quiz( $quiz_id );
+		// Collect instructor draw_image & pin_image file paths before deleting question data.
+		$quiz_file_paths = array_merge(
+			QuizModel::get_draw_image_file_paths_for_quiz( $quiz_id ),
+			QuizModel::get_pin_image_file_paths_for_quiz( $quiz_id )
+		);
 
 		$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $quiz_id ) );
 
