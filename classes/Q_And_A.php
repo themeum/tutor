@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -49,6 +50,8 @@ class Q_And_A {
 			return;
 		}
 
+		add_filter( 'tutor_learning_area_sub_page_nav_item', array( $this, 'add_learning_area_menu' ), 10, 2 );
+
 		add_action( 'wp_ajax_tutor_qna_create_update', array( $this, 'tutor_qna_create_update' ) );
 		add_action( 'wp_ajax_tutor_qna_update', array( $this, 'tutor_qna_update' ) );
 		add_action( 'wp_ajax_tutor_delete_dashboard_question', array( $this, 'tutor_delete_dashboard_question' ) );
@@ -56,6 +59,42 @@ class Q_And_A {
 		add_action( 'wp_ajax_tutor_qna_bulk_action', array( $this, 'process_bulk_action' ) );
 		add_action( 'wp_ajax_tutor_q_and_a_load_more', array( $this, 'load_more' ) );
 		add_action( 'wp_ajax_tutor_qna_load_replies', array( $this, 'load_replies' ) );
+	}
+
+	/**
+	 * Add learning area menu
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $menu_items the array of nav items.
+	 * @param string $base_url the base url.
+	 *
+	 * @return array
+	 */
+	public function add_learning_area_menu( $menu_items, $base_url ) {
+		global $wp_query, $post;
+
+		$enable_q_and_a_on_course  = (bool) get_tutor_option( 'enable_q_and_a_on_course' );
+		$enable_qa_for_this_course = ( $wp_query->is_single && ! empty( $post ) ) ? get_post_meta( $post->ID, '_tutor_enable_qa', true ) === 'yes' : false;
+		$is_enrolled               = tutor_utils()->is_enrolled();
+
+		if ( $enable_q_and_a_on_course && $enable_qa_for_this_course && $is_enrolled ) {
+			$qna_item = array(
+				'qna' => array(
+					'title'    => __( 'Q&A', 'tutor' ),
+					'icon'     => Icon::QA,
+					'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'qna' ) ),
+					'template' => tutor_get_template( 'learning-area.subpages.qna' ),
+				),
+			);
+
+			// Remove existing Q&A if Tutor already added it.
+			unset( $menu_items['qna'] );
+
+			$menu_items = $qna_item + $menu_items;
+		}
+
+		return $menu_items;
 	}
 
 	/**
