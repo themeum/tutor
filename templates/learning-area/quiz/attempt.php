@@ -15,6 +15,7 @@
 use Tutor\Quiz;
 use Tutor\Models\QuizModel;
 use Tutor\Components\Button;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 
 global $tutor_is_started_quiz;
@@ -28,7 +29,9 @@ $remaining_time_context             = tutor_utils()->seconds_to_time_context( $r
 $quiz_when_time_expires             = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
 $questions                          = tutor_utils()->get_random_questions_by_quiz();
 
-$form_id        = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
+$form_id  = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
+$modal_id = 'tutor-quiz-abandon-modal';
+
 $default_values = array(
 	'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question_ids][]' => array_map(
 		function ( $question ) {
@@ -39,7 +42,6 @@ $default_values = array(
 );
 
 ?>
-
 <form 
 	id="<?php echo esc_attr( $form_id ); ?>"
 	class="tutor-quiz tutor-quiz-submission"
@@ -100,4 +102,15 @@ $default_values = array(
 				->render();
 		?>
 	</div>
+	<?php
+		ConfirmationModal::make()
+			->id( $modal_id )
+			->title( __( 'Abandon Quiz?', 'tutor' ) )
+			->message( __( 'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor' ) )
+			->confirm_text( __( 'Yes, Leave Quiz', 'tutor' ) )
+			->cancel_text( __( 'Stay Here', 'tutor' ) )
+			->confirm_handler( "handleAbandonQuiz(); TutorCore.modal.closeModal('$modal_id')" )
+			->mutation_state( 'abandonQuizMutation' )
+			->render();
+	?>
 </form>

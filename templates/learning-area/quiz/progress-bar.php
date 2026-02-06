@@ -52,7 +52,7 @@ $has_time_limit         = $remaining_time_secs > 0;
 					->variant( Variant::OUTLINE )
 					->attr( 'type', 'button' )
 					->attr( 'class', 'tutor-px-8' )
-					->attr( '@click', 'requestAbandon()' )
+					->attr( '@click', "TutorCore.modal.showModal('tutor-quiz-abandon-modal')" )
 					->render();
 			?>
 		</div>
