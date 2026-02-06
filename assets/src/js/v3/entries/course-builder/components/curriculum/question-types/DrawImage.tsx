@@ -46,15 +46,24 @@ const DrawImage = () => {
     form.setValue(answersPath, [baseAnswer]);
   }, [activeQuestionId, optionsFields.length, answersPath, form]);
 
+  // Only render Controller when the value exists to ensure field.value is always defined
+  if (optionsFields.length === 0) {
+    return null;
+  }
+
   return (
     <div css={styles.optionWrapper}>
       <Controller
-        key={optionsFields.length ? JSON.stringify(optionsFields[0]) : ''}
+        key={JSON.stringify(optionsFields[0])}
         control={form.control}
         name={`questions.${activeQuestionIndex}.question_answers.0` as 'questions.0.question_answers.0'}
         render={(controllerProps) => (
           <FormDrawImage
             {...controllerProps}
+            field={{
+              ...controllerProps.field,
+              value: controllerProps.field.value as QuizQuestionOption,
+            }}
             questionId={activeQuestionId}
             validationError={validationError}
             setValidationError={setValidationError}
