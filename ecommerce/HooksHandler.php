@@ -193,7 +193,7 @@ class HooksHandler {
 		/**
 		 * Ignore canceled/failed webhooks for old/failed payment session to avoid unenrolling paid users.
 		 *
-		 * @since 3.9.5
+		 * @since 3.9.7
 		 */
 		$is_valid_paid_order = OrderModel::ORDER_COMPLETED === $order_details && OrderModel::PAYMENT_PAID === $order_details->payment_status;
 
