@@ -70,6 +70,11 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 	?>
 
 	<div class="tutor-quiz-question-options">
+		<input
+			type="hidden"
+			name="<?php echo esc_attr( $answer_field_name ); ?>"
+			x-bind="<?php echo esc_attr( $register_attr ); ?>"
+		>
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div
 				class="tutor-quiz-question-option"
@@ -85,13 +90,6 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 					<?php endif; ?>
 					<?php echo esc_html( $answer['answer_title'] ); ?>
 				</div>
-
-				<input
-					type="hidden"
-					name="<?php echo esc_attr( $answer_field_name ); ?>"
-					x-bind="<?php echo esc_attr( $register_attr ); ?>"
-					value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
-				>
 
 				<button type="button" data-grab-handle>
 					<?php tutor_utils()->render_svg_icon( Icon::GRAB_HANDLE, 40, 40 ); ?>

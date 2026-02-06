@@ -587,12 +587,6 @@ class Quiz {
 					$given_answer          = '';
 
 					if ( 'true_false' === $question_type || 'single_choice' === $question_type ) {
-
-						if ( ! is_numeric( $answers ) || ! $answers ) {
-							wp_send_json_error();
-							exit;
-						}
-
 						$given_answer          = $answers;
 						$is_answer_was_correct = (bool) $wpdb->get_var(
 							$wpdb->prepare(
@@ -678,8 +672,9 @@ class Quiz {
 						$given_answer    = wp_kses_post( $answers );
 
 					} elseif ( 'ordering' === $question_type || 'matching' === $question_type || 'image_matching' === $question_type ) {
+						$answers = (array) tutor_utils()->avalue_dot( 'answers', $answers );
 
-						$given_answer = (array) array_map( 'sanitize_text_field', tutor_utils()->avalue_dot( 'answers', $answers ) );
+						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
 						$given_answer = maybe_serialize( $given_answer );
 
 						$get_original_answers = (array) $wpdb->get_col(

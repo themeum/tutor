@@ -110,7 +110,9 @@ const questionOrdering = (
         QUESTION_ORDERING_CONSTANTS.ATTRS.OPTION,
         QUESTION_ORDERING_CONSTANTS.VALUES.DRAGGABLE,
       );
-      this._callbacks.onOrder?.(this.getOrder());
+      requestAnimationFrame(() => {
+        this._callbacks.onOrder?.(this.getOrder());
+      });
     });
   },
 
@@ -121,9 +123,7 @@ const questionOrdering = (
     }
 
     const options = Array.from(
-      container.querySelectorAll<HTMLElement>(
-        `.${QUESTION_ORDERING_CONSTANTS.CLASSES.QUESTION_OPTION}[${QUESTION_ORDERING_CONSTANTS.ATTRS.OPTION}="${QUESTION_ORDERING_CONSTANTS.VALUES.DRAGGABLE}"]`,
-      ),
+      container.querySelectorAll<HTMLElement>(`.${QUESTION_ORDERING_CONSTANTS.CLASSES.QUESTION_OPTION}`),
     );
 
     return options.map((option) => option.dataset[QUESTION_ORDERING_CONSTANTS.DATASET.ID] ?? '').filter(Boolean);
