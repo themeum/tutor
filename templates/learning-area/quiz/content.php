@@ -29,7 +29,7 @@ $quiz_time          = $quiz_options['time_limit'] ?? null;
 $quiz_item_readable = ! empty( $quiz_time ) ? $quiz_time['time_value'] . ' ' . $quiz_time['time_type'] : '';
 
 $quiz_model = new QuizModel();
-$attempts   = $quiz_model->quiz_attempts( $quiz_id, $user_id );
+$attempts   = $quiz_model->quiz_attempts( $quiz_id, get_current_user_id() );
 
 ?>
 <div class="tutor-quiz-intro">

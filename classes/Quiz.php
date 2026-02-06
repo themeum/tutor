@@ -1424,11 +1424,20 @@ class Quiz {
 		?>
 			<div class="tutor-quiz-attempts tutor-border tutor-rounded-2xl">
 				<div class="tutor-quiz-attempts-header">
-					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Attempts Date', 'tutor' ); ?></div>
-					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
-					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
-					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
+					<div class="tutor-quiz-attempts-header-item">
+						<?php esc_html_e( 'Attempts Date', 'tutor' ); ?>
+					</div>
+					<div class="tutor-quiz-attempts-header-item">
+						<?php esc_html_e( 'Marks', 'tutor' ); ?>
+					</div>
+					<div class="tutor-quiz-attempts-header-item">
+						<?php esc_html_e( 'Time', 'tutor' ); ?>
+					</div>
+					<div class="tutor-quiz-attempts-header-item">
+						<?php esc_html_e( 'Result', 'tutor' ); ?>
+					</div>
 				</div>
+				
 				<div class="tutor-quiz-attempts-list">
 					<?php
 					foreach ( $attempts_list as $index => $attempt ) {
