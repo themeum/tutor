@@ -10,6 +10,7 @@
  */
 
 use TUTOR\Icon;
+use TUTOR\Lesson;
 
 global $tutor_current_content_id;
 
@@ -26,16 +27,7 @@ $lesson_title = $lesson->post_title;
 $active_class = $tutor_current_content_id === $lesson->ID ? 'active' : '';
 
 // Check if lesson has video.
-$video_info  = tutor_utils()->get_video_info( $lesson->ID );
-$lesson_type = __( 'Reading', 'tutor' );
-
-if ( $video_info && ! empty( $video_info->playtime ) ) {
-	$duration = tutor_utils()->get_optimized_duration( $video_info->playtime );
-
-	/* translators: %s: duration in minutes */
-	$lesson_type = sprintf( __( 'Video - %s mins', 'tutor' ), $duration );
-}
-
+$lesson_type       = Lesson::get_content_type_info( $lesson );
 $lesson_title_html = '<div>
 	<div>' . esc_html( $lesson_title ) . '</div>
 	<div class="tutor-tiny tutor-text-subdued">' . esc_html( $lesson_type ) . '</div>

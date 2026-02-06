@@ -19,6 +19,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\LessonModel;
 use Tutor\Traits\JsonResponse;
+use WP_Post;
 
 /**
  * Lesson class
@@ -35,7 +36,7 @@ class Lesson extends Tutor_Base {
 	 * @var string
 	 */
 	const PREVIEW_META_KEY = '_is_preview';
-	
+
 	/**
 	 * Lesson post type
 	 *
@@ -1099,5 +1100,28 @@ class Lesson extends Tutor_Base {
 				'count'    => $total_comments,
 			)
 		);
+	}
+
+	/**
+	 * Get lesson content type info with video duration
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_Post $lesson Lesson post.
+	 *
+	 * @return string
+	 */
+	public static function get_content_type_info( WP_Post $lesson ) {
+		$video_info  = tutor_utils()->get_video_info( $lesson->ID );
+		$lesson_type = __( 'Reading', 'tutor' );
+
+		if ( $video_info && ! empty( $video_info->playtime ) ) {
+			$duration = tutor_utils()->get_optimized_duration( $video_info->playtime );
+
+			/* translators: %s: duration in minutes */
+			$lesson_type = sprintf( __( 'Video - %s mins', 'tutor' ), $duration );
+		}
+
+		return $lesson_type;
 	}
 }
