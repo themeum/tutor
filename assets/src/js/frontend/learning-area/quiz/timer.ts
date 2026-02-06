@@ -83,6 +83,16 @@ const quizTimer = (config: QuizTimerConfig) => {
       );
     },
 
+    requestAbandon() {
+      document.dispatchEvent(
+        new CustomEvent(TUTOR_CUSTOM_EVENTS.QUIZ_ABANDON_REQUESTED, {
+          detail: {
+            formId: this.formId,
+          },
+        }),
+      );
+    },
+
     handleExpire() {
       if (this.expired) {
         return;

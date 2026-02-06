@@ -52,12 +52,16 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         this.handleQuizTimeout(detail);
       }) as EventListener);
 
+      document.addEventListener(TUTOR_CUSTOM_EVENTS.QUIZ_ABANDON_REQUESTED, ((event: Event) => {
+        const detail = (event as CustomEvent)?.detail ?? {};
+        if (detail?.formId && detail.formId !== this.formId) {
+          return;
+        }
+        this.handleAbandonQuiz();
+      }) as EventListener);
+
       this.submitQuizMutation = query.useMutation(this.submitQuizAttempt, {
-        onSuccess: (response: { success?: boolean }) => {
-          if (response?.success === false) {
-            toast.error(ERROR_MESSAGES.SUBMIT_FAILED);
-            return;
-          }
+        onSuccess: () => {
           window.location.reload();
         },
         onError: (error: Error) => {
@@ -66,12 +70,8 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       });
 
       this.abandonQuizMutation = query.useMutation(this.abandonQuizAttempt, {
-        onSuccess: (response: { success?: boolean }) => {
-          if (response?.success) {
-            window.location.reload();
-          } else {
-            toast.error(ERROR_MESSAGES.ABANDON_FAILED);
-          }
+        onSuccess: () => {
+          window.location.reload();
         },
         onError: (error: Error) => {
           toast.error(convertToErrorMessage(error));
