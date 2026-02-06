@@ -70,6 +70,7 @@ const endpoints = {
   DELETE_GOOGLE_MEET: 'tutor_google_meet_delete',
   UPLOAD_GOOGLE_MEET_CREDENTIALS: 'tutor_pro_google_meet_credential_upload',
   RESET_GOOGLE_MEET_CREDENTIALS: 'tutor_google_meet_reset_cred',
+  UPDATE_GOOGLE_MEET_SETTINGS: 'tutor_update_google_meet_settings',
 
   // TOPIC
   GET_COURSE_CONTENTS: 'tutor_course_contents',
