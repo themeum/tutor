@@ -1335,17 +1335,18 @@ class Quiz {
 	 *
 	 * @param int    $total_questions Total questions.
 	 * @param string $quiz_item_readable Readable time.
+	 * @param int    $total_marks Total Marks.
 	 * @param string $passing_grade Passing grade.
 	 *
 	 * @return void
 	 */
-	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $passing_grade ) {
+	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade ) {
 		$quiz_summary = array(
 			array(
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ) . __( 'Questions', 'tutor' ) . '
+							' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE, 20, 20 ) . __( 'Questions', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $total_questions ),
@@ -1355,7 +1356,7 @@ class Quiz {
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::CLOCK ) . __( 'Quiz Time', 'tutor' ) . '
+							' . tutor_utils()->get_svg_icon( Icon::CLOCK, 20, 20 ) . __( 'Quiz Time', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $quiz_item_readable ),
@@ -1365,10 +1366,20 @@ class Quiz {
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::PASSED ) . __( 'Passing Marks', 'tutor' ) . '
+							' . tutor_utils()->get_svg_icon( Icon::PRIME_CHECK_CIRCLE, 20, 20 ) . __( 'Total Marks', 'tutor' ) . '
 						</div>',
 					),
-					array( 'content' => $passing_grade ),
+					array( 'content' => $total_questions ),
+				),
+			),
+			array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::PASSED, 20, 20 ) . __( 'Passing Marks', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' => $passing_grade . '%' ),
 				),
 			),
 		);

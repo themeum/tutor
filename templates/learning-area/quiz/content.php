@@ -20,10 +20,10 @@ if ( ! $quiz || ! is_a( $quiz, 'WP_Post' ) ) {
 	return;
 }
 
-$quiz_id         = $quiz->ID;
-$total_questions = (int) tutor_utils()->total_questions_for_student_by_quiz( $quiz_id );
-$quiz_options    = get_post_meta( $quiz_id, 'tutor_quiz_option', true );
-
+$quiz_id            = $quiz->ID;
+$total_questions    = (int) tutor_utils()->total_questions_for_student_by_quiz( $quiz_id );
+$quiz_options       = get_post_meta( $quiz_id, 'tutor_quiz_option', true );
+$total_marks        = Quiz::get_quiz_total_marks( $quiz_id );
 $passing_grade      = (int) $quiz_options['passing_grade'] ?? 0;
 $quiz_time          = $quiz_options['time_limit'] ?? null;
 $quiz_item_readable = ! empty( $quiz_time ) ? $quiz_time['time_value'] . ' ' . $quiz_time['time_type'] : '';
@@ -52,7 +52,7 @@ $attempts   = $quiz_model->quiz_attempts( $quiz_id, $user_id );
 		<!-- Quiz Parameters Table -->
 		<div class="tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-quiz-intro-params tutor-mb-8">
 			<?php
-				Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $passing_grade );
+				Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade );
 			?>
 		</div>
 
