@@ -52,6 +52,7 @@ $default_values = array(
 		const submission = tutorQuizSubmission({
 			formId: "<?php echo esc_attr( $form_id ); ?>",
 			attemptId: "<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>",
+			quizId: <?php echo esc_attr( $tutor_is_started_quiz->quiz_id ); ?>,
 		});
 
 		return {

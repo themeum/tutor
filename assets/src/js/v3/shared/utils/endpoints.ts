@@ -59,6 +59,7 @@ const endpoints = {
   DELETE_QUIZ: 'tutor_quiz_delete',
   START_QUIZ: 'tutor_start_quiz',
   QUIZ_ABANDON: 'tutor_quiz_abandon',
+  QUIZ_TIMEOUT: 'tutor_quiz_timeout',
   QUIZ_ATTEMPT_SUBMIT: 'tutor_answering_quiz_question',
 
   // ZOOM

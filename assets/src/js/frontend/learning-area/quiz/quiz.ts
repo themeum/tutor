@@ -11,6 +11,7 @@ import axios from 'axios';
 interface QuizSubmissionConfig {
   formId: string;
   attemptId: string;
+  quizId: number;
 }
 
 interface QuizAutoStartConfig {
@@ -35,8 +36,11 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
   return {
     formId: config.formId,
     attemptId: config.attemptId,
+    quizId: config.quizId,
     submitQuizMutation: null as MutationState<{ success?: boolean; data?: unknown }, Record<string, unknown>> | null,
     abandonQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
+    timeoutQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
+    hasTimedOut: false,
     $el: null as HTMLFormElement | null,
 
     init() {
@@ -77,6 +81,15 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
           toast.error(convertToErrorMessage(error));
         },
       });
+
+      this.timeoutQuizMutation = query.useMutation(this.timeoutQuizAttempt, {
+        onSuccess: () => {
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
+        },
+      });
     },
 
     handleQuizSubmit(data: Record<string, unknown>) {
@@ -98,25 +111,43 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       this.abandonQuizMutation?.mutate(payload);
     },
 
+    handleQuizTimeoutAbandon() {
+      if (!this.quizId) {
+        return;
+      }
+
+      this.timeoutQuizMutation?.mutate({ quiz_id: this.quizId });
+    },
+
     handleQuizTimeout(detail: { action?: string; formId?: string }) {
       const action = detail?.action;
       if (!action || !this.formId || !form.hasForm(this.formId)) {
         return;
       }
 
-      if (this.submitQuizMutation?.isPending || this.abandonQuizMutation?.isPending) {
+      if (this.hasTimedOut) {
+        return;
+      }
+
+      if (
+        this.submitQuizMutation?.isPending ||
+        this.abandonQuizMutation?.isPending ||
+        this.timeoutQuizMutation?.isPending
+      ) {
         return;
       }
 
       const data = form.getFormState?.(this.formId)?.values ?? {};
 
       if (action === 'auto_submit') {
+        this.hasTimedOut = true;
         this.handleQuizSubmit(data);
         return;
       }
 
       if (action === 'auto_abandon') {
-        this.handleAbandonQuiz();
+        this.hasTimedOut = true;
+        this.handleQuizTimeoutAbandon();
       }
     },
 
@@ -180,6 +211,14 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       return wpAjaxInstance
         .post(endpoints.QUIZ_ABANDON, {
           tutor_action: endpoints.QUIZ_ATTEMPT_SUBMIT,
+          ...payload,
+        })
+        .then((data) => data as { success?: boolean; data?: unknown });
+    },
+
+    timeoutQuizAttempt(payload: Record<string, unknown>) {
+      return wpAjaxInstance
+        .post(endpoints.QUIZ_TIMEOUT, {
           ...payload,
         })
         .then((data) => data as { success?: boolean; data?: unknown });
