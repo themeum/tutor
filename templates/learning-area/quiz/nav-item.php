@@ -37,8 +37,10 @@ $quiz_title_html = '<div>
 <div class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s', $active_class ) ); ?>">
 	<?php if ( $is_completed ) : ?>
 	<a href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>">
-		<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_COLORIZE, 20, 20 ); ?>
-		<?php echo $quiz_title_html; //phpcs:ignore -- already-escaped ?>
+		<?php
+		tutor_utils()->render_svg_icon( Icon::COMPLETED_COLORIZE, 20, 20 );
+		echo $quiz_title_html; //phpcs:ignore -- already-escaped
+		?>
 	</a>
 	<?php else : ?>
 	<a href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>">
