@@ -385,6 +385,7 @@ final class Icon {
 	const VIDEO_CAMERA               = 'video-camera';
 	const VIDEO_CAMERA_2             = 'video-camera-2';
 	const VIDEO_FILE                 = 'video-file';
+	const VIDEO_FILL                 = 'video-fill';
 	const VIDEO_QUALITY              = 'video-quality';
 	const VIMEO                      = 'vimeo';
 	const VISITED                    = 'visited';

@@ -369,6 +369,7 @@ export const icons = [
   'videoCamera',
   'videoCamera2',
   'videoFile',
+  'videoFill',
   'videoQuality',
   'vimeo',
   'visited',
