@@ -178,6 +178,7 @@ final class Icon {
 	const GIFT_CARD                  = 'gift-card';
 	const GITHUB                     = 'github';
 	const GLOBE                      = 'globe';
+	const GOOGLE_CALENDER_COLORIZE   = 'google-calender-colorize';
 	const GOOGLE_MEET                = 'google-meet';
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
 	const GRAB_HANDLE                = 'grab-handle';

@@ -162,6 +162,7 @@ export const icons = [
   'giftCard',
   'github',
   'globe',
+  'googleCalenderColorize',
   'googleMeet',
   'googleMeetColorize',
   'grabHandle',
