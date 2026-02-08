@@ -307,9 +307,36 @@ $tutor-quiz-footer-offset: 96px;
           color: $tutor-text-success;
         }
 
-        .tutor-checkbox:disabled {
+        .tutor-checkbox,
+        .tutor-radio {
+          opacity: 1;
+          border-color: $tutor-actions-success-primary;
+          background-color: $tutor-actions-success-primary;
+          accent-color: $tutor-actions-success-primary;
+          color: $tutor-icon-idle-inverse;
+        }
+
+        .tutor-checkbox:disabled,
+        .tutor-radio:disabled {
           background-color: $tutor-actions-success-primary;
           color: $tutor-icon-idle-inverse;
+        }
+
+        .tutor-checkbox::after {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+
+        .tutor-radio::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 6px;
+          height: 6px;
+          transform: translate(-50%, -50%);
+          border-radius: $tutor-radius-full;
+          background-color: $tutor-surface-l1;
         }
       }
 
@@ -324,9 +351,36 @@ $tutor-quiz-footer-offset: 96px;
           color: $tutor-text-critical;
         }
 
-        .tutor-checkbox:disabled {
+        .tutor-checkbox,
+        .tutor-radio {
+          opacity: 1;
+          border-color: $tutor-actions-critical-primary;
+          background-color: $tutor-actions-critical-primary;
+          accent-color: $tutor-actions-critical-primary;
+          color: $tutor-icon-idle-inverse;
+        }
+
+        .tutor-checkbox:disabled,
+        .tutor-radio:disabled {
           background-color: $tutor-actions-critical-primary;
           color: $tutor-icon-idle-inverse;
+        }
+
+        .tutor-checkbox::after {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+
+        .tutor-radio::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 6px;
+          height: 6px;
+          transform: translate(-50%, -50%);
+          border-radius: $tutor-radius-full;
+          background-color: $tutor-surface-l1;
         }
       }
 
