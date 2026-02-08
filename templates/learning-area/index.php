@@ -31,8 +31,8 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 $subpages = Template::make_learning_area_sub_page_nav_items();
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<body class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>">
-	<div x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
+<body class="<?php echo esc_attr( is_admin_bar_showing() ? 'tutor-has-admin-bar' : '' ); ?>">
+	<div x-data="{ sidebarOpen: false, isFullScreen: false }" class="tutor-learning-area" :class="{ 'is-fullscreen': isFullScreen }">
 		<?php tutor_load_template( 'learning-area.components.header' ); ?>
 		<div class="tutor-learning-area-body">
 			<?php tutor_load_template( 'learning-area.components.sidebar' ); ?>
