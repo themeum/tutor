@@ -19,6 +19,7 @@ $default_question = array(
 	'question_type'     => 'fill_in_the_blank',
 	'answer_required'   => true,
 	'question_mark'     => 10,
+	'answer_explanation' => '',
 	'question_settings' => array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
@@ -138,4 +139,14 @@ if ( $answer_is_required ) {
 			})()"
 		></div>
 	<?php endif; ?>
+
+	<?php
+	tutor_load_template(
+		'learning-area.quiz.question-explanation',
+		array(
+			'answer_explanation' => $question['answer_explanation'],
+			'question_id'        => $question['question_id'],
+		)
+	);
+	?>
 </div>

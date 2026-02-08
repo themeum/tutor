@@ -77,13 +77,9 @@ $tutor-quiz-footer-offset: 96px;
         max-height: calc(100vh - #{$tutor-quiz-header-offset-admin} - #{$tutor-quiz-footer-offset});
         scroll-margin-top: $tutor-quiz-header-offset-admin;
       }
-
-      .tutor-quiz-questions {
-        padding-top: $tutor-quiz-header-offset-admin;
-      }
     }
 
-    @include tutor-breakpoint-up(sm) {
+    @include tutor-breakpoint-down(sm) {
       body:has(#wpadminbar) & {
         .tutor-quiz-questions-pagination {
           top: $tutor-quiz-header-offset-admin-sm;
@@ -99,6 +95,84 @@ $tutor-quiz-footer-offset: 96px;
           padding-top: $tutor-quiz-header-offset-admin-sm;
         }
       }
+    }
+  }
+
+  &-explanation {
+    margin-top: $tutor-spacing-7;
+    border-radius: $tutor-radius-2xl;
+    background-color: $tutor-surface-base;
+    overflow: hidden;
+
+    &.is-open {
+      background-color: $tutor-surface-base;
+    }
+
+    &:hover {
+      background-color: $tutor-surface-l1-hover;
+    }
+
+    &.is-open:hover {
+      background-color: $tutor-surface-l1-hover;
+    }
+
+    &-trigger {
+      @include tutor-flex(row, center);
+      @include tutor-typography('small', 'medium');
+      gap: $tutor-spacing-4;
+      width: 100%;
+      padding: $tutor-spacing-6;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      color: $tutor-text-primary;
+
+      svg {
+        color: $tutor-icon-brand;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $tutor-actions-brand-primary;
+        outline-offset: 2px;
+      }
+    }
+
+    &-chevron {
+      margin-left: auto;
+      color: $tutor-icon-secondary;
+      opacity: 0;
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    &:hover &-chevron,
+    &.is-open &-chevron {
+      opacity: 1;
+    }
+
+    &.is-open &-chevron {
+      transform: rotate(180deg);
+    }
+
+    &-panel {
+      overflow: hidden;
+    }
+
+    &-body {
+      padding: 0 $tutor-spacing-6 $tutor-spacing-6 $tutor-spacing-6;
+      color: $tutor-text-secondary;
+    }
+
+    &.is-open &-body {
+      padding-left: calc(#{$tutor-spacing-6} + #{$tutor-spacing-8} + #{$tutor-spacing-2});
+    }
+  }
+
+  &-question:not([data-revealed='1']) {
+    .tutor-quiz-explanation {
+      display: none;
     }
   }
 

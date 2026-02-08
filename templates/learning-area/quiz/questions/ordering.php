@@ -21,6 +21,7 @@ $default_question = array(
 	'question_type'     => 'ordering',
 	'answer_required'   => true,
 	'question_mark'     => 10,
+	'answer_explanation' => '',
 	'question_settings' => array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
@@ -100,7 +101,17 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 	<div
 		class="tutor-quiz-questions-error"
 		x-cloak
-		x-show="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
-		x-text="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
+	x-show="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
+	x-text="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
 	></div>
+
+	<?php
+	tutor_load_template(
+		'learning-area.quiz.question-explanation',
+		array(
+			'answer_explanation' => $question['answer_explanation'],
+			'question_id'        => $question['question_id'],
+		)
+	);
+	?>
 </div>

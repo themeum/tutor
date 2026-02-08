@@ -85,4 +85,14 @@ if ( $answer_is_required ) {
 			</div>
 	<?php endforeach; ?>
 	</div>
+
+	<?php
+	tutor_load_template(
+		'learning-area.quiz.question-explanation',
+		array(
+			'answer_explanation' => $question['answer_explanation'],
+			'question_id'        => $question['question_id'],
+		)
+	);
+	?>
 </div>

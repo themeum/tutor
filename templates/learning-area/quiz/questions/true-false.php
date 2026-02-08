@@ -23,6 +23,7 @@ $default_question = array(
 	'question_type'        => 'true_false',
 	'answer_required'      => true,
 	'question_mark'        => 10,
+	'answer_explanation'   => '',
 	'question_settings'    => array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
@@ -120,7 +121,17 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 	<div
 		class="tutor-quiz-questions-error"
 		x-cloak
-		x-show="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
-		x-text="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
+	x-show="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
+	x-text="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
 	></div>
+
+	<?php
+	tutor_load_template(
+		'learning-area.quiz.question-explanation',
+		array(
+			'answer_explanation' => $question['answer_explanation'],
+			'question_id'        => $question['question_id'],
+		)
+	);
+	?>
 </div>

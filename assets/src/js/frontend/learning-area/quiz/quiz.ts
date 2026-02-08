@@ -217,6 +217,11 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         return;
       }
 
+      const explanationTrigger = wrapper.querySelector<HTMLButtonElement>('[data-quiz-explanation-toggle]');
+      if (explanationTrigger && explanationTrigger.getAttribute('aria-expanded') !== 'true') {
+        explanationTrigger.click();
+      }
+
       const inputs = Array.from(
         question.querySelectorAll<HTMLInputElement>('input[type="radio"], input[type="checkbox"]'),
       );
@@ -581,6 +586,11 @@ const quizLayout = (config: QuizLayoutConfig) => {
       }
       if (question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) === '1') {
         return;
+      }
+
+      const explanationTrigger = wrapper.querySelector<HTMLButtonElement>('[data-quiz-explanation-toggle]');
+      if (explanationTrigger && explanationTrigger.getAttribute('aria-expanded') !== 'true') {
+        explanationTrigger.click();
       }
 
       const inputs = Array.from(

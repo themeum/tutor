@@ -22,6 +22,7 @@ $default_question = array(
 	'question_type'     => 'open_ended',
 	'answer_required'   => true,
 	'question_mark'     => 10,
+	'answer_explanation' => '',
 	'question_settings' => array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
@@ -94,11 +95,21 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 
 			$input_field->render();
 		?>
-		<?php if ( $characters_limit > 0 ) : ?>
-			<p class="tutor-small tutor-text-subdued">
-				<?php esc_html_e( 'Character Remaining: ', 'tutor' ); ?>
-				<span x-text="remaining"></span>
-			</p>
-		<?php endif; ?>
+	<?php if ( $characters_limit > 0 ) : ?>
+		<p class="tutor-small tutor-text-subdued">
+			<?php esc_html_e( 'Character Remaining: ', 'tutor' ); ?>
+			<span x-text="remaining"></span>
+		</p>
+	<?php endif; ?>
 	</div>
+
+	<?php
+	tutor_load_template(
+		'learning-area.quiz.question-explanation',
+		array(
+			'answer_explanation' => $question['answer_explanation'],
+			'question_id'        => $question['question_id'],
+		)
+	);
+	?>
 </div>
