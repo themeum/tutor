@@ -28,6 +28,15 @@ interface QuizLayoutConfig {
   totalQuestions: number;
 }
 
+type QuizFooterPosition = 'only' | 'first' | 'middle' | 'last';
+
+const QUIZ_FOOTER_POSITIONS = {
+  ONLY: 'only',
+  FIRST: 'first',
+  MIDDLE: 'middle',
+  LAST: 'last',
+} as const;
+
 const QuestionTimeoutAction = {
   AUTO_ABANDON: 'auto_abandon',
   AUTO_SUBMIT: 'auto_submit',
@@ -333,6 +342,19 @@ const quizLayout = (config: QuizLayoutConfig) => {
       }
       this.currentIndex = index;
       this.scrollToQuestion();
+    },
+
+    getFooterPosition(): QuizFooterPosition {
+      if (this.totalQuestions === 1) {
+        return QUIZ_FOOTER_POSITIONS.ONLY;
+      }
+      if (this.currentIndex === 1) {
+        return QUIZ_FOOTER_POSITIONS.FIRST;
+      }
+      if (this.currentIndex >= this.totalQuestions) {
+        return QUIZ_FOOTER_POSITIONS.LAST;
+      }
+      return QUIZ_FOOTER_POSITIONS.MIDDLE;
     },
 
     getQuestionWrapper(index: number) {
