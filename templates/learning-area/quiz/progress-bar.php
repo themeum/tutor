@@ -15,7 +15,7 @@ use TUTOR\Icon;
 $remaining_time_secs    = isset( $remaining_time_secs ) ? (int) $remaining_time_secs : 0;
 $quiz_when_time_expires = $quiz_when_time_expires ?? 'auto_abandon';
 $form_id                = $form_id ?? '';
-$has_time_limit         = $remaining_time_secs > 0;
+$has_time_limit         = isset( $has_time_limit ) ? (bool) $has_time_limit : $remaining_time_secs > 0;
 
 ?>
 
@@ -24,6 +24,7 @@ $has_time_limit         = $remaining_time_secs > 0;
 		class="tutor-quiz-progress"
 		x-data="tutorQuizTimer({
 			duration: <?php echo esc_attr( $remaining_time_secs ); ?>,
+			hasLimit: <?php echo $has_time_limit ? 'true' : 'false'; ?>,
 			expiresAction: '<?php echo esc_attr( $quiz_when_time_expires ); ?>',
 			formId: '<?php echo esc_attr( $form_id ); ?>',
 		})"

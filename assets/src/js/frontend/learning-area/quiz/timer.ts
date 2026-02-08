@@ -8,6 +8,7 @@ type QuizExpireAction = 'auto_submit' | 'auto_abandon' | 'autosubmit';
 
 interface QuizTimerConfig {
   duration: number;
+  hasLimit?: boolean;
   expiresAction?: QuizExpireAction;
   formId?: string;
 }
@@ -18,12 +19,13 @@ interface QuizTimerConfig {
  */
 const quizTimer = (config: QuizTimerConfig) => {
   const total = Math.max(0, config.duration);
+  const hasLimit = typeof config.hasLimit === 'boolean' ? config.hasLimit : total > 0;
   const expiresAction = config.expiresAction ?? 'auto_submit';
 
   return {
     total,
     remaining: total,
-    hasLimit: total > 0,
+    hasLimit,
     expired: false,
     expiresAction,
     formId: config.formId ?? '',

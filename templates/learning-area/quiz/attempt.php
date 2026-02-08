@@ -27,6 +27,7 @@ $time_limit_seconds                 = tutor_utils()->avalue_dot( 'time_limit.tim
 $remaining_time_secs                = ( strtotime( $tutor_is_started_quiz->attempt_started_at ) + $time_limit_seconds ) - strtotime( $quiz_attempt_info['date_time_now'] );
 $remaining_time_context             = tutor_utils()->seconds_to_time_context( $remaining_time_secs );
 $quiz_when_time_expires             = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
+$has_time_limit                     = $time_limit_seconds > 0;
 $questions                          = tutor_utils()->get_random_questions_by_quiz();
 $question_layout_view               = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_layout_view' );
 $question_layout_view               = $question_layout_view ? $question_layout_view : 'single_question';
@@ -112,6 +113,7 @@ $default_values = array(
 		array(
 			'remaining_time_secs'    => max( 0, (int) $remaining_time_secs ),
 			'quiz_when_time_expires' => $quiz_when_time_expires,
+			'has_time_limit'         => $has_time_limit,
 			'form_id'                => $form_id,
 		)
 	);
