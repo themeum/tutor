@@ -180,6 +180,7 @@ declare global {
       };
       quiz_options?: {
         quiz_auto_start?: string;
+        feedback_mode?: string;
       };
     };
     wpApiSettings: {

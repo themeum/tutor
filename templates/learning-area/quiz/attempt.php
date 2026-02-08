@@ -30,8 +30,25 @@ $quiz_when_time_expires             = tutor_utils()->get_option( 'quiz_when_time
 $questions                          = tutor_utils()->get_random_questions_by_quiz();
 $question_layout_view               = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_layout_view' );
 $question_layout_view               = $question_layout_view ? $question_layout_view : 'single_question';
+$feedback_mode                      = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'feedback_mode', '' );
+$reveal_wait_ms                      = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
 $is_linear_layout                   = in_array( $question_layout_view, array( 'single_question', 'question_pagination' ), true );
 $show_previous_button               = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
+
+$reveal_question_types = array( 'true_false', 'single_choice', 'multiple_choice' );
+$quiz_answers          = array();
+foreach ( $questions as $question ) {
+	if ( ! in_array( $question->question_type, $reveal_question_types, true ) ) {
+		continue;
+	}
+
+	$answers = QuizModel::get_answers_by_quiz_question( $question->question_id );
+	foreach ( $answers as $answer ) {
+		if ( ! empty( $answer->is_correct ) ) {
+			$quiz_answers[] = $answer->answer_id;
+		}
+	}
+}
 
 $form_id  = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
 $modal_id = 'tutor-quiz-abandon-modal';
@@ -60,12 +77,16 @@ $default_values = array(
 			formId: "<?php echo esc_attr( $form_id ); ?>",
 			attemptId: "<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>",
 			quizId: <?php echo esc_attr( $tutor_is_started_quiz->quiz_id ); ?>,
+			feedbackMode: "<?php echo esc_attr( $feedback_mode ); ?>",
+			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
 		});
 
 		const layout = tutorQuizLayout({
 			layout: "<?php echo esc_attr( $question_layout_view ); ?>",
 			formId: "<?php echo esc_attr( $form_id ); ?>",
 			totalQuestions: <?php echo esc_attr( count( $questions ) ); ?>,
+			feedbackMode: "<?php echo esc_attr( $feedback_mode ); ?>",
+			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
 		});
 
 		return {
@@ -151,6 +172,7 @@ $default_values = array(
 					->size( Size::LARGE )
 					->variant( \Tutor\Components\Constants\Variant::OUTLINE )
 					->attr( 'type', 'button' )
+					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
 					->attr( '@click', 'goPrev()' )
 					->attr( 'x-show', $show_previous_button ? 'currentIndex > 1' : 'false' )
 					->attr( 'class', 'tutor-quiz-answer-previous-btn' )
@@ -160,6 +182,7 @@ $default_values = array(
 					->label( __( 'Submit &amp; Next', 'tutor' ) )
 					->size( Size::LARGE )
 					->attr( 'type', 'button' )
+					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
 					->attr( '@click', 'goNext()' )
 					->attr( 'x-show', 'currentIndex < totalQuestions' )
 					->attr( 'class', 'tutor-quiz-answer-next-btn' )
@@ -170,6 +193,7 @@ $default_values = array(
 					->size( Size::LARGE )
 					->attr( 'type', 'submit' )
 					->attr( 'x-show', 'currentIndex === totalQuestions' )
+					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
 					->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
 					->attr( 'class', 'tutor-quiz-submit-btn' )
 					->render();
@@ -179,6 +203,7 @@ $default_values = array(
 					->size( Size::LARGE )
 					->variant( \Tutor\Components\Constants\Variant::GHOST )
 					->attr( 'type', 'button' )
+					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
 					->attr( 'x-show', 'canSkip(currentIndex)' )
 					->attr( '@click', 'goNext({ skipValidation: true })' )
 					->attr( 'class', 'tutor-quiz-skip-btn' )
@@ -194,6 +219,7 @@ $default_values = array(
 					->size( Size::LARGE )
 					->attr( 'form', $form_id )
 					->attr( 'type', 'submit' )
+					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
 					->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
 					->attr( 'style', 'display: block; margin: 0 auto; min-width: 290px;' )
 					->render();
@@ -212,3 +238,7 @@ $default_values = array(
 			->render();
 	?>
 </form>
+
+<script type="application/octet-stream" id="tutor-quiz-context">
+	<?php echo esc_html( base64_encode( wp_json_encode( $quiz_answers ) ) ); ?>
+</script>

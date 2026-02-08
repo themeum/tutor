@@ -1,3 +1,6 @@
+import { __ } from '@wordpress/i18n';
+import axios from 'axios';
+
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
@@ -5,13 +8,13 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
-import { __ } from '@wordpress/i18n';
-import axios from 'axios';
 
 interface QuizSubmissionConfig {
   formId: string;
   attemptId: string;
   quizId: number;
+  feedbackMode?: string;
+  revealWaitMs?: number;
 }
 
 interface QuizAutoStartConfig {
@@ -26,9 +29,25 @@ interface QuizLayoutConfig {
   layout: keyof typeof QuizLayoutType;
   formId: string;
   totalQuestions: number;
+  feedbackMode?: string;
+  revealWaitMs?: number;
 }
 
 type QuizFooterPosition = 'only' | 'first' | 'middle' | 'last';
+
+const QUIZ_REVEAL_CONFIG = {
+  ANSWER_CONTEXT_ID: 'tutor-quiz-context',
+  DEFAULT_WAIT_MS: 2000,
+  SUPPORTED_TYPES: ['true_false', 'single_choice', 'multiple_choice'] as const,
+  OPTION_SELECTOR: '.tutor-quiz-question-option',
+  QUESTION_SELECTOR: '.tutor-quiz-question',
+  DATA_OPTION_ATTR: 'data-option',
+  DATA_REVEALED_ATTR: 'data-revealed',
+  DATA_OPTION_CORRECT: 'correct',
+  DATA_OPTION_INCORRECT: 'incorrect',
+} as const;
+
+type RevealQuestionType = (typeof QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES)[number];
 
 const QUIZ_FOOTER_POSITIONS = {
   ONLY: 'only',
@@ -72,11 +91,15 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     formId: config.formId,
     attemptId: config.attemptId,
     quizId: config.quizId,
+    feedbackMode: config.feedbackMode ?? '',
+    revealWaitMs: config.revealWaitMs ?? null,
     submitQuizMutation: null as MutationState<{ success?: boolean; data?: unknown }, Record<string, unknown>> | null,
     abandonQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
     timeoutQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
     hasTimedOut: false,
+    isRevealSubmitting: false,
     $el: null as HTMLFormElement | null,
+    $root: null as HTMLElement | null,
 
     init() {
       this.handleQuizSubmit = this.handleQuizSubmit.bind(this);
@@ -128,8 +151,125 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     },
 
     handleQuizSubmit(data: Record<string, unknown>) {
+      if (this.isRevealSubmitting) {
+        return;
+      }
+
+      if (this.isRevealMode()) {
+        const revealWait = this.getRevealWaitTime();
+        const shouldDelay = this.revealOnSubmit();
+        if (shouldDelay) {
+          this.isRevealSubmitting = true;
+          const payload = this.buildSubmitPayload(data);
+          window.setTimeout(() => {
+            this.submitQuizMutation?.mutate(payload);
+            this.isRevealSubmitting = false;
+          }, revealWait);
+          return;
+        }
+      }
+
       const payload = this.buildSubmitPayload(data);
       this.submitQuizMutation?.mutate(payload);
+    },
+
+    getRevealWaitTime(): number {
+      const feedbackWaitMs = Number(this.revealWaitMs ?? '');
+      if (!Number.isNaN(feedbackWaitMs) && feedbackWaitMs > 0) {
+        return feedbackWaitMs;
+      }
+      const configValue = Number(tutorConfig.quiz_answer_display_time ?? '');
+      if (!Number.isNaN(configValue) && configValue > 0) {
+        return configValue;
+      }
+      return QUIZ_REVEAL_CONFIG.DEFAULT_WAIT_MS;
+    },
+
+    isRevealMode(): boolean {
+      const feedbackMode = this.feedbackMode || tutorConfig.quiz_options?.feedback_mode;
+      return feedbackMode === 'reveal';
+    },
+
+    getRevealAnswerIds(): number[] {
+      const script = document.getElementById(QUIZ_REVEAL_CONFIG.ANSWER_CONTEXT_ID);
+      if (!script?.textContent) {
+        return [];
+      }
+
+      try {
+        const decoded = window.atob(script.textContent.trim());
+        const parsed = JSON.parse(decoded);
+        if (!Array.isArray(parsed)) {
+          return [];
+        }
+        return parsed.map((value) => Number(value)).filter((value) => !Number.isNaN(value));
+      } catch {
+        return [];
+      }
+    },
+
+    revealQuestion(wrapper: HTMLElement, revealAnswerIds: number[]) {
+      const question = wrapper.querySelector(QUIZ_REVEAL_CONFIG.QUESTION_SELECTOR) as HTMLElement | null;
+      if (!question) {
+        return;
+      }
+      if (question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) === '1') {
+        return;
+      }
+
+      const inputs = Array.from(
+        question.querySelectorAll<HTMLInputElement>('input[type="radio"], input[type="checkbox"]'),
+      );
+
+      inputs.forEach((input) => {
+        const option = input.closest(QUIZ_REVEAL_CONFIG.OPTION_SELECTOR) as HTMLElement | null;
+        if (!option) {
+          return;
+        }
+
+        const answerId = Number(input.value);
+        const isCorrect = revealAnswerIds.includes(answerId);
+
+        if (isCorrect) {
+          option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT);
+        } else if (input.checked) {
+          option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT);
+        }
+
+        input.disabled = true;
+      });
+
+      question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
+    },
+
+    revealOnSubmit(): boolean {
+      const revealAnswerIds = this.getRevealAnswerIds();
+      if (!revealAnswerIds.length) {
+        return false;
+      }
+
+      const root = this.$root ?? this.$el;
+      if (!root) {
+        return false;
+      }
+
+      const wrappers = Array.from(root.querySelectorAll<HTMLElement>(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER));
+      let revealedAny = false;
+
+      wrappers.forEach((wrapper) => {
+        const question = wrapper.querySelector(QUIZ_REVEAL_CONFIG.QUESTION_SELECTOR) as HTMLElement | null;
+        if (!question) {
+          return;
+        }
+        const questionType = (question.dataset?.question ?? '') as RevealQuestionType;
+        if (!(QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES as readonly string[]).includes(questionType)) {
+          return;
+        }
+        this.revealQuestion(wrapper, revealAnswerIds);
+        revealedAny = true;
+      });
+
+      return revealedAny;
     },
 
     handleQuizError() {
@@ -273,10 +413,15 @@ const quizLayout = (config: QuizLayoutConfig) => {
     formId: config.formId ?? '',
     totalQuestions: Number(config.totalQuestions) || 0,
     currentIndex: 1,
+    feedbackMode: config.feedbackMode ?? '',
+    revealWaitMs: config.revealWaitMs ?? null,
+    revealAnswerIds: [] as number[],
+    isRevealing: false,
     $el: null as HTMLElement | null,
     $root: null as HTMLElement | null,
 
     init() {
+      this.revealAnswerIds = this.getRevealAnswerIds();
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
@@ -315,6 +460,9 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
+      if (this.isRevealing) {
+        return;
+      }
 
       const wrapper = this.getQuestionWrapper(this.currentIndex);
       if (!wrapper) {
@@ -325,6 +473,20 @@ const quizLayout = (config: QuizLayoutConfig) => {
         if (!isValid) {
           return;
         }
+      }
+
+      if (!skipValidation && this.isRevealMode() && this.shouldReveal(wrapper)) {
+        this.isRevealing = true;
+        this.revealQuestion(wrapper);
+        const wait = this.getRevealWaitTime();
+        window.setTimeout(() => {
+          this.isRevealing = false;
+          if (this.currentIndex < this.totalQuestions) {
+            this.currentIndex += 1;
+            this.scrollToQuestion();
+          }
+        }, wait);
+        return;
       }
 
       if (this.currentIndex < this.totalQuestions) {
@@ -357,6 +519,122 @@ const quizLayout = (config: QuizLayoutConfig) => {
       return QUIZ_FOOTER_POSITIONS.MIDDLE;
     },
 
+    getRevealWaitTime(): number {
+      const feedbackWaitMs = Number(this.revealWaitMs ?? '');
+      if (!Number.isNaN(feedbackWaitMs) && feedbackWaitMs > 0) {
+        return feedbackWaitMs;
+      }
+      const configValue = Number(tutorConfig.quiz_answer_display_time ?? '');
+      if (!Number.isNaN(configValue) && configValue > 0) {
+        return configValue;
+      }
+      return QUIZ_REVEAL_CONFIG.DEFAULT_WAIT_MS;
+    },
+
+    isRevealMode(): boolean {
+      const feedbackMode =
+        this.feedbackMode || (tutorConfig as { quiz_options?: { feedback_mode?: string } }).quiz_options?.feedback_mode;
+      return feedbackMode === 'reveal';
+    },
+
+    getRevealAnswerIds(): number[] {
+      const script = document.getElementById(QUIZ_REVEAL_CONFIG.ANSWER_CONTEXT_ID);
+      if (!script?.textContent) {
+        return [];
+      }
+
+      try {
+        const decoded = window.atob(script.textContent.trim());
+        const parsed = JSON.parse(decoded);
+        if (!Array.isArray(parsed)) {
+          return [];
+        }
+        return parsed.map((value) => Number(value)).filter((value) => !Number.isNaN(value));
+      } catch {
+        return [];
+      }
+    },
+
+    getQuestionElement(wrapper: HTMLElement): HTMLElement | null {
+      return wrapper.querySelector(QUIZ_REVEAL_CONFIG.QUESTION_SELECTOR);
+    },
+
+    getQuestionType(wrapper: HTMLElement): string {
+      return this.getQuestionElement(wrapper)?.dataset?.question ?? '';
+    },
+
+    shouldReveal(wrapper: HTMLElement): boolean {
+      if (!this.isRevealMode()) {
+        return false;
+      }
+      if (!this.revealAnswerIds.length) {
+        return false;
+      }
+      const questionType = this.getQuestionType(wrapper);
+      return (QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES as readonly string[]).includes(questionType);
+    },
+
+    revealQuestion(wrapper: HTMLElement) {
+      const question = this.getQuestionElement(wrapper);
+      if (!question) {
+        return;
+      }
+      if (question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) === '1') {
+        return;
+      }
+
+      const inputs = Array.from(
+        question.querySelectorAll<HTMLInputElement>('input[type="radio"], input[type="checkbox"]'),
+      );
+
+      inputs.forEach((input) => {
+        const option = input.closest(QUIZ_REVEAL_CONFIG.OPTION_SELECTOR) as HTMLElement | null;
+        if (!option) {
+          return;
+        }
+
+        const answerId = Number(input.value);
+        const isCorrect = this.revealAnswerIds.includes(answerId);
+
+        if (isCorrect) {
+          option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT);
+        } else if (input.checked) {
+          option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT);
+        }
+
+        input.disabled = true;
+      });
+
+      question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
+    },
+
+    revealOnSubmit(): boolean {
+      if (!this.isRevealMode()) {
+        return false;
+      }
+
+      if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
+        const wrappers = Array.from(
+          (this.$root ?? this.$el)?.querySelectorAll<HTMLElement>(`${QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER}`) ?? [],
+        );
+        let revealedAny = false;
+        wrappers.forEach((wrapper) => {
+          if (this.shouldReveal(wrapper)) {
+            this.revealQuestion(wrapper);
+            revealedAny = true;
+          }
+        });
+        return revealedAny;
+      }
+
+      const wrapper = this.getQuestionWrapper(this.currentIndex);
+      if (!wrapper || !this.shouldReveal(wrapper)) {
+        return false;
+      }
+      this.revealQuestion(wrapper);
+      return true;
+    },
+
     getQuestionWrapper(index: number) {
       const root = this.$root ?? this.$el;
       return root?.querySelector(
@@ -375,7 +653,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
     getQuestionIdByIndex(values: Record<string, unknown>, index: number) {
       const entry = Object.entries(values).find(([key]) => key.includes('[quiz_question_ids]'));
       if (!entry) {
-        return [];
+        return null;
       }
       const [, value] = entry;
       const ids = Array.isArray(value) ? value : [];
