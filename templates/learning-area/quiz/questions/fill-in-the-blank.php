@@ -33,6 +33,7 @@ $question           = wp_parse_args( $question, $default_question );
 $answer_is_required = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
 $required_message   = __( 'The answer for this question is required', 'tutor' );
 $field_name         = '';
+$field_names        = array();
 $register_rules     = '';
 if ( $answer_is_required ) {
 	$register_rules = ", { required: '" . esc_js( $required_message ) . "' }";
@@ -70,7 +71,7 @@ if ( $answer_is_required ) {
 
 					$answer_title = preg_replace_callback(
 						'/{dash}/',
-						function () use ( &$input_index, $tutor_is_started_quiz, $question, $register_rules, &$field_name ) {
+						function () use ( &$input_index, $tutor_is_started_quiz, $question, $register_rules, &$field_name, &$field_names ) {
 
 							$attempt_id  = (int) $tutor_is_started_quiz->attempt_id;
 							$question_id = (int) $question['question_id'];
@@ -100,6 +101,7 @@ if ( $answer_is_required ) {
 							if ( '' === $field_name ) {
 								$field_name = $input_name;
 							}
+							$field_names[] = $input_name;
 
 							return $input_html;
 						},
@@ -124,11 +126,16 @@ if ( $answer_is_required ) {
 		<?php endforeach; ?>
 	</div>
 	<?php if ( $field_name ) : ?>
+		<?php $unique_field_names = array_values( array_unique( $field_names ) ); ?>
 		<div
 			class="tutor-quiz-questions-error"
+			x-data="{ fieldNames: <?php echo esc_attr( wp_json_encode( $unique_field_names ) ); ?> }"
 			x-cloak
-			x-show="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
-			x-text="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
+			x-show="fieldNames.some((name) => errors?.[name]?.message)"
+			x-text="(() => {
+				const match = fieldNames.find((name) => errors?.[name]?.message);
+				return match ? errors?.[match]?.message : '';
+			})()"
 		></div>
 	<?php endif; ?>
 </div>
