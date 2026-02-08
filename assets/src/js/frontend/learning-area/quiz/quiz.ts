@@ -41,6 +41,10 @@ const QUIZ_REVEAL_CONFIG = {
   SUPPORTED_TYPES: ['true_false', 'single_choice', 'multiple_choice'] as const,
   OPTION_SELECTOR: '.tutor-quiz-question-option',
   QUESTION_SELECTOR: '.tutor-quiz-question',
+  EXPLANATION_SELECTOR: '[data-quiz-explanation]',
+  EXPLANATION_TRIGGER_SELECTOR: '[data-quiz-explanation-toggle]',
+  EXPLANATION_BODY_SELECTOR: '.tutor-quiz-explanation-body',
+  EXPLANATION_CONTENT_DATASET: 'quizExplanationContent',
   DATA_OPTION_ATTR: 'data-option',
   DATA_REVEALED_ATTR: 'data-revealed',
   DATA_OPTION_CORRECT: 'correct',
@@ -217,7 +221,21 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         return;
       }
 
-      const explanationTrigger = wrapper.querySelector<HTMLButtonElement>('[data-quiz-explanation-toggle]');
+      const explanationTrigger = wrapper.querySelector<HTMLButtonElement>(
+        QUIZ_REVEAL_CONFIG.EXPLANATION_TRIGGER_SELECTOR,
+      );
+      const explanation = wrapper.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_SELECTOR);
+      const explanationBody =
+        explanation?.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_BODY_SELECTOR) ?? null;
+      const encodedExplanation = explanation?.dataset?.[QUIZ_REVEAL_CONFIG.EXPLANATION_CONTENT_DATASET] ?? '';
+      if (explanationBody && encodedExplanation && !explanationBody.innerHTML.trim()) {
+        try {
+          const decoded = decodeURIComponent(encodedExplanation.split('').reverse().join(''));
+          explanationBody.innerHTML = decoded;
+        } catch {
+          // ignore decode errors
+        }
+      }
       if (explanationTrigger && explanationTrigger.getAttribute('aria-expanded') !== 'true') {
         explanationTrigger.click();
       }
@@ -588,7 +606,21 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
 
-      const explanationTrigger = wrapper.querySelector<HTMLButtonElement>('[data-quiz-explanation-toggle]');
+      const explanationTrigger = wrapper.querySelector<HTMLButtonElement>(
+        QUIZ_REVEAL_CONFIG.EXPLANATION_TRIGGER_SELECTOR,
+      );
+      const explanation = wrapper.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_SELECTOR);
+      const explanationBody =
+        explanation?.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_BODY_SELECTOR) ?? null;
+      const encodedExplanation = explanation?.dataset?.[QUIZ_REVEAL_CONFIG.EXPLANATION_CONTENT_DATASET] ?? '';
+      if (explanationBody && encodedExplanation && !explanationBody.innerHTML.trim()) {
+        try {
+          const decoded = decodeURIComponent(encodedExplanation.split('').reverse().join(''));
+          explanationBody.innerHTML = decoded;
+        } catch {
+          // ignore decode errors
+        }
+      }
       if (explanationTrigger && explanationTrigger.getAttribute('aria-expanded') !== 'true') {
         explanationTrigger.click();
       }

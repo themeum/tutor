@@ -27,6 +27,8 @@ if ( '' === $answer_explanation || ! $is_reveal_mode ) {
 	return;
 }
 
+$encoded_explanation = strrev( rawurlencode( wp_kses_post( $answer_explanation ) ) );
+
 ?>
 
 <div
@@ -34,6 +36,7 @@ if ( '' === $answer_explanation || ! $is_reveal_mode ) {
 	data-quiz-explanation
 	x-data="{ open: false }"
 	:class="{ 'is-open': open }"
+	data-quiz-explanation-content="<?php echo esc_attr( $encoded_explanation ); ?>"
 >
 	<button
 		id="<?php echo esc_attr( $trigger_id ); ?>"
@@ -62,8 +65,6 @@ if ( '' === $answer_explanation || ! $is_reveal_mode ) {
 		x-show="open"
 		x-collapse.duration.300ms
 	>
-		<div class="tutor-quiz-explanation-body">
-			<?php echo wp_kses_post( $answer_explanation ); ?>
-		</div>
+		<div class="tutor-quiz-explanation-body"></div>
 	</div>
 </div>
