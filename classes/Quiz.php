@@ -1497,7 +1497,7 @@ class Quiz {
 		$rand_choice = ! empty( $question_settings['randomize_question'] )
 		&& '1' === $question_settings['randomize_question'];
 
-		$question->index             = $index + 1;
+		$question->index             = $index;
 		$question->question_settings = $question_settings;
 
 		$answers = QuizModel::get_answers_by_quiz_question(

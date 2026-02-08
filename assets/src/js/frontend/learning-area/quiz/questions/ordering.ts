@@ -110,6 +110,9 @@ const questionOrdering = (
         QUESTION_ORDERING_CONSTANTS.ATTRS.OPTION,
         QUESTION_ORDERING_CONSTANTS.VALUES.DRAGGABLE,
       );
+      if (this.$el) {
+        this.$el.dataset.hasInteraction = '1';
+      }
       requestAnimationFrame(() => {
         this._callbacks.onOrder?.(this.getOrder());
       });

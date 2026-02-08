@@ -1,15 +1,104 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
+$tutor-quiz-header-offset: calc(44px + (#{$tutor-spacing-8} * 2));
+$tutor-quiz-header-offset-admin: calc(44px + (#{$tutor-spacing-8} * 2) + 46px);
+$tutor-quiz-header-offset-admin-sm: calc(44px + (#{$tutor-spacing-8} * 2) + 32px);
+$tutor-quiz-footer-offset: 96px;
+
 .tutor-quiz {
   &-submission {
     @include tutor-flex(column);
     gap: $tutor-spacing-11;
     height: 100%;
     padding-top: calc((#{$tutor-spacing-8} * 2) + 44px + #{$tutor-spacing-14});
+    background-color: $tutor-surface-base;
 
     @include tutor-breakpoint-down(sm) {
       gap: $tutor-spacing-6;
+    }
+
+    &[data-question-layout-view='single_question'],
+    &[data-question-layout-view='question_pagination'] {
+      max-height: 100dvh;
+      padding-top: 0;
+    }
+
+    &[data-question-layout-view='single_question'] .tutor-quiz-questions-pagination,
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-questions-pagination {
+      position: sticky;
+      top: $tutor-quiz-header-offset;
+      z-index: $tutor-z-header;
+      background-color: $tutor-surface-base;
+      padding-block: $tutor-spacing-4;
+    }
+
+    &[data-question-layout-view='single_question'] .tutor-quiz-footer,
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-footer {
+      position: fixed;
+      inset-inline: 0;
+      bottom: 0;
+      z-index: $tutor-z-header;
+      background-color: $tutor-surface-l1;
+      border-top: 1px solid $tutor-border-idle;
+      padding: $tutor-spacing-6 $tutor-spacing-6 calc(#{$tutor-spacing-6} + env(safe-area-inset-bottom, 0px));
+      margin-top: 0;
+      justify-content: center;
+    }
+
+    &[data-question-layout-view='single_question'] .tutor-quiz-question-wrapper,
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-question-wrapper {
+      max-height: calc(100dvh - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset});
+      max-height: calc(100vh - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset});
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      scroll-margin-top: $tutor-quiz-header-offset;
+      padding-bottom: $tutor-quiz-footer-offset;
+    }
+
+    &[data-question-layout-view='single_question'] .tutor-quiz-question,
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-question {
+      margin-block: auto;
+    }
+
+    &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-skip-btn,
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-footer .tutor-quiz-skip-btn {
+      margin-inline-start: 0;
+    }
+
+    body:has(#wpadminbar) & {
+      .tutor-quiz-questions-pagination {
+        top: $tutor-quiz-header-offset-admin;
+      }
+
+      .tutor-quiz-question-wrapper {
+        max-height: calc(100dvh - #{$tutor-quiz-header-offset-admin} - #{$tutor-quiz-footer-offset});
+        max-height: calc(100vh - #{$tutor-quiz-header-offset-admin} - #{$tutor-quiz-footer-offset});
+        scroll-margin-top: $tutor-quiz-header-offset-admin;
+      }
+
+      .tutor-quiz-questions {
+        padding-top: $tutor-quiz-header-offset-admin;
+      }
+    }
+
+    @include tutor-breakpoint-up(sm) {
+      body:has(#wpadminbar) & {
+        .tutor-quiz-questions-pagination {
+          top: $tutor-quiz-header-offset-admin-sm;
+        }
+
+        .tutor-quiz-question-wrapper {
+          max-height: calc(100dvh - #{$tutor-quiz-header-offset-admin-sm} - #{$tutor-quiz-footer-offset});
+          max-height: calc(100vh - #{$tutor-quiz-header-offset-admin-sm} - #{$tutor-quiz-footer-offset});
+          scroll-margin-top: $tutor-quiz-header-offset-admin-sm;
+        }
+
+        .tutor-quiz-questions {
+          padding-top: $tutor-quiz-header-offset-admin-sm;
+        }
+      }
     }
   }
 
@@ -33,10 +122,9 @@
 
   &-progress {
     @include tutor-flex(column);
-    width: 100%;
-    max-width: 792px; // @TODO: Need to use container class
+    @include tutor-container(792px);
+    padding-inline: 0;
     padding-block: $tutor-spacing-8;
-    margin-inline: auto;
     gap: $tutor-spacing-5;
 
     @include tutor-breakpoint-down(sm) {
@@ -64,14 +152,70 @@
 
   &-questions {
     @include tutor-flex(column);
+    @include tutor-container(792px);
+    padding-inline: 0;
     width: 100%;
-    max-width: 792px;
-    margin-inline: auto;
     gap: $tutor-spacing-5;
 
     @include tutor-breakpoint-down(sm) {
       padding-inline: $tutor-spacing-6;
     }
+
+    &[data-question-layout-view='single_question'],
+    &[data-question-layout-view='question_pagination'] {
+      justify-content: center;
+      height: 100%;
+      max-height: 100dvh;
+      padding-top: $tutor-quiz-header-offset;
+    }
+  }
+
+  &-questions-pagination {
+    @include tutor-flex(row, center, center);
+    margin-bottom: $tutor-spacing-5;
+
+    ul {
+      @include tutor-flex(row, center, center);
+      gap: $tutor-spacing-2;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-wrap: wrap;
+    }
+
+    .tutor-quiz-question-paginate-item {
+      @include tutor-typography('small', 'semibold');
+      width: 32px;
+      height: 32px;
+      border-radius: $tutor-radius-sm;
+      border: 1px solid $tutor-border-idle;
+      background-color: $tutor-surface-l1;
+      color: $tutor-text-secondary;
+      cursor: pointer;
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+
+      &:hover {
+        border-color: $tutor-border-hover;
+        background-color: $tutor-surface-l1-hover;
+      }
+
+      &.active {
+        border-color: $tutor-border-brand;
+        background-color: $tutor-surface-brand-secondary;
+        color: $tutor-text-brand;
+      }
+    }
+  }
+
+  &-question-wrapper {
+    width: 100%;
+  }
+
+  &-skip-btn {
+    margin-inline-start: auto;
   }
 
   &-question {
@@ -131,10 +275,8 @@
       border-radius: $tutor-radius-md;
       background-color: $tutor-surface-l1;
       cursor: pointer;
-      transition-property: background-color, border-color, color;
-      transition-duration: 0.2s;
-      transition-timing-function: ease;
       overflow: hidden;
+      @include tutor-transition((background-color, border-color, color));
 
       &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not(
           [data-option='draggable']
@@ -523,10 +665,8 @@
         border-radius: 0;
         padding: 0 $tutor-spacing-2;
         width: 167px;
-        transition-property: color, opacity;
-        transition-duration: 0.2s;
-        transition-timing-function: ease-in-out;
         color: $tutor-text-brand;
+        @include tutor-transition((color, opacity));
 
         &::placeholder {
           opacity: 0;
@@ -565,6 +705,27 @@
     padding-block: $tutor-spacing-8;
     margin-top: auto;
     border-top: 1px solid $tutor-border-idle;
+
+    &-inner {
+      @include tutor-flex(row, center, flex-start);
+      gap: $tutor-spacing-4;
+      width: 100%;
+      max-width: 792px;
+      margin-inline: auto;
+    }
+
+    &[data-position='first'] &-inner {
+      justify-content: flex-end;
+    }
+
+    &[data-position='only'] &-inner {
+      justify-content: center;
+    }
+
+    &[data-position='last'] &-inner,
+    &[data-position='middle'] &-inner {
+      justify-content: space-between;
+    }
   }
 
   &-submission-modal {

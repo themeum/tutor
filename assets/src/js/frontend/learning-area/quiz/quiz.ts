@@ -22,10 +22,36 @@ interface StartQuizPayload {
   quizID: number;
 }
 
+interface QuizLayoutConfig {
+  layout: keyof typeof QuizLayoutType;
+  formId: string;
+  totalQuestions: number;
+}
+
+const QuestionTimeoutAction = {
+  AUTO_ABANDON: 'auto_abandon',
+  AUTO_SUBMIT: 'auto_submit',
+};
+
+const QuizLayoutType = {
+  QUESTION_BELOW_EACH_OTHER: 'question_below_each_other',
+  QUESTION_PAGINATION: 'question_pagination',
+  SINGLE_QUESTION: 'single_question',
+};
+
 const ERROR_MESSAGES = {
   SUBMIT_FAILED: __('Failed to submit quiz', 'tutor'),
   ABANDON_FAILED: __('Failed to abandon quiz', 'tutor'),
   REQUIRED_QUESTIONS: __('Please answer all required questions before submitting.', 'tutor'),
+} as const;
+
+const QUIZ_LAYOUT_SELECTORS = {
+  QUESTION_WRAPPER_ATTR: 'data-quiz-question-index',
+  QUESTION_WRAPPER: '.tutor-quiz-question-wrapper',
+} as const;
+
+const QUIZ_LAYOUT_KEYS = {
+  QUESTION_VALUE_PREFIX: '[quiz_question]',
 } as const;
 
 const quizSubmission = (config: QuizSubmissionConfig) => {
@@ -119,7 +145,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       this.timeoutQuizMutation?.mutate({ quiz_id: this.quizId });
     },
 
-    handleQuizTimeout(detail: { action?: string; formId?: string }) {
+    handleQuizTimeout(detail: { action?: keyof typeof QuestionTimeoutAction; formId?: string }) {
       const action = detail?.action;
       if (!action || !this.formId || !form.hasForm(this.formId)) {
         return;
@@ -139,13 +165,13 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 
       const data = form.getFormState?.(this.formId)?.values ?? {};
 
-      if (action === 'auto_submit') {
+      if (action === QuestionTimeoutAction.AUTO_SUBMIT) {
         this.hasTimedOut = true;
         this.handleQuizSubmit(data);
         return;
       }
 
-      if (action === 'auto_abandon') {
+      if (action === QuestionTimeoutAction.AUTO_ABANDON) {
         this.hasTimedOut = true;
         this.handleQuizTimeoutAbandon();
       }
@@ -206,7 +232,6 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         .then((res) => res.data);
     },
 
-    // @TODO: Need to handle abandon action.
     abandonQuizAttempt(payload: Record<string, unknown>) {
       return wpAjaxInstance
         .post(endpoints.QUIZ_ABANDON, {
@@ -229,6 +254,145 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 export const quizSubmissionMeta: AlpineComponentMeta = {
   name: 'quizSubmission',
   component: quizSubmission,
+};
+
+const quizLayout = (config: QuizLayoutConfig) => {
+  const form = window.TutorCore?.form;
+
+  return {
+    layout: config.layout ?? QuizLayoutType.QUESTION_BELOW_EACH_OTHER,
+    formId: config.formId ?? '',
+    totalQuestions: Number(config.totalQuestions) || 0,
+    currentIndex: 1,
+    $el: null as HTMLElement | null,
+    $root: null as HTMLElement | null,
+
+    init() {
+      if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
+        return;
+      }
+      this.currentIndex = 1;
+    },
+
+    isQuestionActive(index: number) {
+      if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
+        return true;
+      }
+      return index === this.currentIndex;
+    },
+
+    canSkip(index: number) {
+      if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
+        return false;
+      }
+      const wrapper = this.getQuestionWrapper(index);
+      if (!wrapper || index >= this.totalQuestions) {
+        return false;
+      }
+      return wrapper.dataset.answerRequired !== '1';
+    },
+
+    goPrev() {
+      if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
+        return;
+      }
+      if (this.currentIndex > 1) {
+        this.currentIndex -= 1;
+        this.scrollToQuestion();
+      }
+    },
+
+    async goNext({ skipValidation = false }: { skipValidation?: boolean } = {}) {
+      if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
+        return;
+      }
+
+      const wrapper = this.getQuestionWrapper(this.currentIndex);
+      if (!wrapper) {
+        return;
+      }
+      if (!skipValidation) {
+        const isValid = await this.triggerQuestionValidation(this.currentIndex);
+        if (!isValid) {
+          return;
+        }
+      }
+
+      if (this.currentIndex < this.totalQuestions) {
+        this.currentIndex += 1;
+        this.scrollToQuestion();
+      }
+    },
+
+    goTo(index: number) {
+      if (this.layout !== QuizLayoutType.QUESTION_PAGINATION) {
+        return;
+      }
+      if (!index || index < 1 || index > this.totalQuestions) {
+        return;
+      }
+      this.currentIndex = index;
+      this.scrollToQuestion();
+    },
+
+    getQuestionWrapper(index: number) {
+      const root = this.$root ?? this.$el;
+      return root?.querySelector(
+        `${QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER}[${QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER_ATTR}="${index}"]`,
+      ) as HTMLElement | null;
+    },
+
+    scrollToQuestion() {
+      const wrapper = this.getQuestionWrapper(this.currentIndex);
+      if (!wrapper) {
+        return;
+      }
+      wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+
+    getQuestionIdByIndex(values: Record<string, unknown>, index: number) {
+      const entry = Object.entries(values).find(([key]) => key.includes('[quiz_question_ids]'));
+      if (!entry) {
+        return [];
+      }
+      const [, value] = entry;
+      const ids = Array.isArray(value) ? value : [];
+
+      if (!ids.length) {
+        return null;
+      }
+
+      return ids[index - 1] ?? null;
+    },
+
+    getQuestionFieldNames(values: Record<string, unknown>, index: number) {
+      const questionId = this.getQuestionIdByIndex(values, index);
+      if (!questionId) {
+        return [];
+      }
+      const needle = `${QUIZ_LAYOUT_KEYS.QUESTION_VALUE_PREFIX}[${questionId}]`;
+      return Object.keys(values).filter((key) => key.includes(needle));
+    },
+
+    async triggerQuestionValidation(index: number) {
+      if (!form || !this.formId || !form.hasForm(this.formId)) {
+        return true;
+      }
+
+      const values = form.getFormState(this.formId).values ?? {};
+      const fieldNames = this.getQuestionFieldNames(values, index);
+      if (!fieldNames.length) {
+        return true;
+      }
+
+      return await form.trigger(this.formId, fieldNames);
+    },
+  };
+};
+
+export const quizLayoutMeta: AlpineComponentMeta = {
+  name: 'quizLayout',
+  component: quizLayout,
 };
 
 const quizAutoStart = (config: QuizAutoStartConfig) => {
