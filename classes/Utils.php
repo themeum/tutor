@@ -6264,7 +6264,11 @@ class Utils {
 			return wc_price( $price );
 		} elseif ( function_exists( 'edd_currency_filter' ) ) {
 			return edd_currency_filter( edd_format_amount( $price ) );
+		} elseif ( function_exists( 'pmpro_formatPrice' ) ) {
+			$price       = floatval( Input::sanitize( $price ) );
+			return pmpro_formatPrice( $price );
 		} else {
+			$price       = floatval( Input::sanitize( $price ) );
 			return number_format_i18n( $price );
 		}
 	}
