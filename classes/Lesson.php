@@ -1115,11 +1115,15 @@ class Lesson extends Tutor_Base {
 		$video_info  = tutor_utils()->get_video_info( $lesson->ID );
 		$lesson_type = __( 'Reading', 'tutor' );
 
-		if ( $video_info && ! empty( $video_info->playtime ) ) {
-			$duration = tutor_utils()->get_optimized_duration( $video_info->playtime );
+		if ( $video_info ) {
+			$lesson_type = __( 'Video', 'tutor' );
+			$playtime    = $video_info->playtime ?? '';
 
-			/* translators: %s: duration in minutes */
-			$lesson_type = sprintf( __( 'Video - %s mins', 'tutor' ), $duration );
+			// Check if the playtime is actually a valid, positive duration.
+			if ( ! empty( $playtime ) ) {
+				/* translators: %s: duration in minutes */
+				$lesson_type = sprintf( __( 'Video - %s mins', 'tutor' ), $playtime );
+			}
 		}
 
 		return $lesson_type;

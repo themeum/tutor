@@ -27,5 +27,8 @@
 		<testsuite name="course-model-test">
 			<directory>tests/phpunit/CourseModelTest.php</directory>
 		</testsuite>
+		<testsuite name="lesson-test">
+			<directory>tests/phpunit/LessonContentInfoTest.php</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>
