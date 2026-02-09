@@ -288,8 +288,6 @@ class UserPreference {
 	/**
 	 * Get default preferences.
 	 *
-	 * Keep this method very small and declarative so it is easy to extend.
-	 *
 	 * @since 4.0.0
 	 *
 	 * @return array
