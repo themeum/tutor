@@ -1,6 +1,8 @@
+import { quizAutoStartMeta } from './auto-start';
+import { quizLayoutMeta } from './layout';
 import { questionMatchingMeta } from './questions/matching';
 import { questionOrderingMeta } from './questions/ordering';
-import { quizAutoStartMeta, quizLayoutMeta, quizSubmissionMeta } from './quiz';
+import { quizSubmissionMeta } from './submission';
 import { quizTimerMeta } from './timer';
 
 export const initializeQuizInterface = () => {
