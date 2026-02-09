@@ -551,7 +551,8 @@ class QuizModel {
 
 		if ( count( $attempt_ids ) ) {
 			// Collect file paths from all question types that store files (e.g. draw_image). Files deleted after DB for safety.
-			$attempt_file_paths = self::get_attempt_file_paths_for_deletion( $attempt_ids );
+			$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
+			$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
 
 			// Delete attempt answers (child) then attempts (parent); use QueryHelper for bulk delete.
 			QueryHelper::bulk_delete(
@@ -567,121 +568,6 @@ class QuizModel {
 
 			do_action( 'tutor_quiz/attempt_deleted', implode( ',', $attempt_ids ) );
 		}
-	}
-
-	/**
-	 * Get all file paths that should be deleted when the given attempt(s) are removed.
-	 * All question types that store files (draw_image, pin_image, etc.) add their paths
-	 * via the tutor_quiz/attempt_file_paths_for_deletion filter.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int[] $attempt_ids Array of quiz attempt IDs.
-	 *
-	 * @return string[] Array of absolute file paths.
-	 */
-	public static function get_attempt_file_paths_for_deletion( array $attempt_ids ) {
-		$paths = array();
-		/**
-		 * Question types that store files add paths to delete when attempts are removed.
-		 * Core registers draw_image via add_draw_image_attempt_file_paths; other types (e.g. pin_image) add their own.
-		 *
-		 * @param string[] $file_paths  Absolute file paths collected so far.
-		 * @param int[]    $attempt_ids Quiz attempt IDs being deleted.
-		 */
-		$paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', $paths, $attempt_ids );
-		return is_array( $paths ) ? array_values( array_filter( array_unique( $paths ) ) ) : array();
-	}
-
-	/**
-	 * Filter callback: add draw_image attempt file paths for deletion.
-	 * Registered on tutor_quiz/attempt_file_paths_for_deletion so draw_image uses the same mechanism as other types.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string[] $file_paths  Paths collected so far.
-	 * @param int[]    $attempt_ids Quiz attempt IDs being deleted.
-	 *
-	 * @return string[]
-	 */
-	public static function add_draw_image_attempt_file_paths( $file_paths, $attempt_ids ) {
-		return array_merge( (array) $file_paths, self::get_draw_image_file_paths_for_attempts( $attempt_ids ) );
-	}
-
-	/**
-	 * Get file paths of draw_image attempt mask files for given attempt(s).
-	 * Used by get_attempt_file_paths_for_deletion; also usable when only draw_image paths are needed.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int[] $attempt_ids Array of quiz attempt IDs.
-	 *
-	 * @return string[] Array of absolute file paths.
-	 */
-	public static function get_draw_image_file_paths_for_attempts( array $attempt_ids ) {
-		$paths = array();
-		if ( empty( $attempt_ids ) ) {
-			return $paths;
-		}
-
-		$upload_dir = wp_upload_dir();
-		if ( ! empty( $upload_dir['error'] ) ) {
-			return $paths;
-		}
-
-		$uploads_base_url = trailingslashit( $upload_dir['baseurl'] );
-		$uploads_base_dir = trailingslashit( $upload_dir['basedir'] );
-		$quiz_image_url   = $uploads_base_url . 'tutor/quiz-image/';
-
-		$attempt_ids = array_filter( array_map( 'absint', $attempt_ids ) );
-		if ( empty( $attempt_ids ) ) {
-			return $paths;
-		}
-
-		$response = QueryHelper::get_joined_data(
-			'tutor_quiz_attempt_answers AS a',
-			array(
-				array(
-					'type'  => 'INNER',
-					'table' => 'tutor_quiz_questions AS q',
-					'on'    => 'a.question_id = q.question_id',
-				),
-			),
-			array( 'a.given_answer' ),
-			array(
-				'a.quiz_attempt_id' => $attempt_ids,
-				'q.question_type'   => 'draw_image',
-			),
-			array(),
-			'',
-			-1,
-			0
-		);
-
-		$rows = isset( $response['results'] ) && is_array( $response['results'] ) ? $response['results'] : array();
-		if ( empty( $rows ) ) {
-			return $paths;
-		}
-
-		return self::resolve_draw_image_urls_to_paths( $rows, 'given_answer', $uploads_base_url, $uploads_base_dir, $quiz_image_url );
-	}
-
-	/**
-	 * Delete draw_image question mask files for given quiz attempt(s).
-	 *
-	 * When attempts are deleted, image files stored in uploads/tutor/quiz-image
-	 * for draw_image answers must be removed to avoid orphaned files.
-	 * Only the draw_image question type uses this folder; other question types are not affected.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int[] $attempt_ids Array of quiz attempt IDs.
-	 *
-	 * @return void
-	 */
-	public static function delete_draw_image_files_for_attempts( array $attempt_ids ) {
-		$paths = self::get_draw_image_file_paths_for_attempts( $attempt_ids );
-		self::delete_files_by_paths( $paths );
 	}
 
 	/**
@@ -703,12 +589,12 @@ class QuizModel {
 
 	/**
 	 * Resolve tutor/quiz-image URLs from rows to absolute file paths.
-	 * Only includes paths for files that exist and are readable.
+	 * Used by pin_image (and optionally by add-ons); draw_image file handling is in Pro.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array  $rows              Rows with a URL in the given property (e.g. attempt answers or question answers).
-	 * @param string $url_property      Property name on each row (e.g. 'given_answer', 'answer_two_gap_match').
+	 * @param array  $rows              Rows with a URL in the given property (e.g. question answers).
+	 * @param string $url_property      Property name on each row (e.g. 'answer_two_gap_match').
 	 * @param string $uploads_base_url  Base URL for uploads (trailingslashit).
 	 * @param string $uploads_base_dir  Base dir for uploads (trailingslashit).
 	 * @param string $quiz_image_url    Quiz-image URL prefix (uploads_base_url . 'tutor/quiz-image/').
@@ -734,71 +620,10 @@ class QuizModel {
 	}
 
 	/**
-	 * Get file paths of draw_image instructor mask files for a quiz.
-	 * Used to delete files after DB rows are removed (e.g. when quiz is deleted).
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int $quiz_id Quiz post ID.
-	 *
-	 * @return string[] Array of absolute file paths.
-	 */
-	public static function get_draw_image_file_paths_for_quiz( $quiz_id ) {
-		$paths = array();
-		$quiz_id = (int) $quiz_id;
-		if ( $quiz_id <= 0 ) {
-			return $paths;
-		}
-
-		$upload_dir = wp_upload_dir();
-		if ( ! empty( $upload_dir['error'] ) ) {
-			return $paths;
-		}
-
-		$uploads_base_url = trailingslashit( $upload_dir['baseurl'] );
-		$uploads_base_dir = trailingslashit( $upload_dir['basedir'] );
-		$quiz_image_url   = $uploads_base_url . 'tutor/quiz-image/';
-
-		$draw_image_questions = QueryHelper::get_all(
-			'tutor_quiz_questions',
-			array(
-				'quiz_id'       => $quiz_id,
-				'question_type' => 'draw_image',
-			),
-			'question_id',
-			-1
-		);
-
-		if ( empty( $draw_image_questions ) ) {
-			return $paths;
-		}
-
-		$question_ids = array_map(
-			function ( $row ) {
-				return (int) $row->question_id;
-			},
-			$draw_image_questions
-		);
-
-		$question_answers = QueryHelper::get_all(
-			'tutor_quiz_question_answers',
-			array(
-				'belongs_question_id'   => $question_ids,
-				'belongs_question_type' => 'draw_image',
-			),
-			'answer_id',
-			-1
-		);
-
-		return self::resolve_draw_image_urls_to_paths( $question_answers, 'answer_two_gap_match', $uploads_base_url, $uploads_base_dir, $quiz_image_url );
-	}
-
-	/**
 	 * Get file paths of pin_image instructor mask files for a quiz.
 	 *
 	 * Pin-image questions reuse the same mask storage (uploads/tutor/quiz-image)
-	 * as draw_image; this helper mirrors get_draw_image_file_paths_for_quiz()
-	 * but filters on question_type/belongs_question_type = pin_image.
+	 * as draw_image; same pattern as Pro's draw_image file-path helper.
 	 *
 	 * @since 4.0.0
 	 *
@@ -854,24 +679,6 @@ class QuizModel {
 		);
 
 		return self::resolve_draw_image_urls_to_paths( $question_answers, 'answer_two_gap_match', $uploads_base_url, $uploads_base_dir, $quiz_image_url );
-	}
-
-	/**
-	 * Delete draw_image instructor reference mask files for a quiz.
-	 *
-	 * When a quiz is deleted, image files stored in uploads/tutor/quiz-image
-	 * for draw_image question answers (instructor masks) must be removed.
-	 * Only the draw_image question type uses this folder; other question types are not affected.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int $quiz_id Quiz post ID.
-	 *
-	 * @return void
-	 */
-	public static function delete_draw_image_files_for_quiz( $quiz_id ) {
-		$paths = self::get_draw_image_file_paths_for_quiz( $quiz_id );
-		self::delete_files_by_paths( $paths );
 	}
 
 	/**
@@ -1652,64 +1459,4 @@ class QuizModel {
 		return false;
 	}
 
-	/**
-	 * Save draw-image question mask (base64 or URL) to uploads and return file URL.
-	 *
-	 * Stores the file under wp-content/uploads/tutor/quiz-type/ with a unique
-	 * filename. Used for both instructor reference mask and student attempt mask.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $base64_or_url base64 image string (data:image/...;base64,...) or existing URL.
-	 *
-	 * @return string URL of the saved file, or original value if not base64 / save failed.
-	 */
-	public static function save_quiz_draw_image_mask( $base64_or_url ) {
-		$value = is_string( $base64_or_url ) ? trim( $base64_or_url ) : '';
-		if ( '' === $value ) {
-			return $value;
-		}
-
-		$upload_dir = wp_upload_dir();
-		if ( ! empty( $upload_dir['error'] ) ) {
-			return $value;
-		}
-
-		// Already a URL (e.g. previously saved file or legacy) – only allow local uploads URLs.
-		if ( preg_match( '#^https?://#i', $value ) ) {
-			$uploads_base = trailingslashit( $upload_dir['baseurl'] );
-
-			// Only trust URLs that point to the site's uploads directory.
-			if ( 0 === strpos( $value, $uploads_base ) ) {
-				return $value;
-			}
-
-			// Reject external/unknown URLs for security – data should live on instructor server only.
-			return '';
-		}
-
-		// Expect a data:image/*;base64,... URI from the canvas. Save to tutor/quiz-image (not wp media).
-		if ( ! preg_match( '#^data:image/(\w+);base64,(.+)$#is', $value, $m ) ) {
-			return $value;
-		}
-
-		$subdir_path       = 'tutor/quiz-image';
-		$filter_upload_dir = function ( $uploads ) use ( $subdir_path ) {
-			$uploads['path']   = trailingslashit( $uploads['basedir'] ) . $subdir_path;
-			$uploads['url']    = trailingslashit( $uploads['baseurl'] ) . $subdir_path;
-			$uploads['subdir'] = '/' . $subdir_path;
-			return $uploads;
-		};
-
-		add_filter( 'upload_dir', $filter_upload_dir, 10, 1 );
-		try {
-			$basename = 'draw-mask-' . gmdate( 'Y-m-d-His' ) . '-' . wp_rand( 1000, 9999 ) . '.png';
-			$result   = tutor_utils()->upload_base64_image( $value, $basename, false );
-			return $result->url;
-		} catch ( \Exception $e ) {
-			return $value;
-		} finally {
-			remove_filter( 'upload_dir', $filter_upload_dir, 10 );
-		}
-	}
 }

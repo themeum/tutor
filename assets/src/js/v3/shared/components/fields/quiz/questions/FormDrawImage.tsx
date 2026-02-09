@@ -19,11 +19,10 @@ import {
   type QuizQuestionOption,
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
-import { nanoid } from '@TutorShared/utils/util';
 
 const INSTRUCTOR_STROKE_STYLE = 'rgba(255, 0, 0, 0.9)';
 
-interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption | undefined> {
+interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
   validationError?: {
     message: string;
@@ -37,23 +36,8 @@ interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption | un
   >;
 }
 
-const getDefaultOption = (questionId: ID): QuizQuestionOption => ({
-  _data_status: QuizDataStatus.NEW,
-  is_saved: true,
-  answer_id: nanoid(),
-  belongs_question_id: questionId,
-  belongs_question_type: 'draw_image' as QuizQuestionOption['belongs_question_type'],
-  answer_title: '',
-  is_correct: '1',
-  image_id: undefined,
-  image_url: '',
-  answer_two_gap_match: '',
-  answer_view_format: 'draw_image',
-  answer_order: 0,
-});
-
-const FormDrawImage = ({ field, questionId }: FormDrawImageProps) => {
-  const option = (field.value ?? getDefaultOption(questionId)) as QuizQuestionOption;
+const FormDrawImage = ({ field }: FormDrawImageProps) => {
+  const option = field.value;
 
   const [isDrawModeActive, setIsDrawModeActive] = useState(false);
 
@@ -87,15 +71,15 @@ const FormDrawImage = ({ field, questionId }: FormDrawImageProps) => {
     }
 
     const rect = container.getBoundingClientRect();
-    const w = Math.round(rect.width);
-    const h = Math.round(rect.height);
+    const width = Math.round(rect.width);
+    const height = Math.round(rect.height);
 
-    if (!w || !h) {
+    if (!width || !height) {
       return;
     }
 
-    canvas.width = w;
-    canvas.height = h;
+    canvas.width = width;
+    canvas.height = height;
     canvas.style.position = 'absolute';
     canvas.style.top = '0';
     canvas.style.left = '0';
@@ -153,7 +137,15 @@ const FormDrawImage = ({ field, questionId }: FormDrawImageProps) => {
       : null,
   });
 
-  // Display-only sync when not in draw mode (saved mask + canvas size).
+  /*
+   * Display-only canvas sync (when not in draw mode): we use three separate useEffects
+   * so each one handles a single concern and its own cleanup:
+   * 1) Sync immediately when deps change (image URL, mask, draw mode).
+   * 2) Sync when the <img> fires 'load' (e.g. after src change or first load).
+   * 3) Sync when the container is resized (ResizeObserver).
+   * React runs them in declaration order after commit; merging into one effect would
+   * mix three different triggers and cleanups (addEventListener, ResizeObserver) in one place.
+   */
   useEffect(() => {
     if (isDrawModeActive) {
       return;

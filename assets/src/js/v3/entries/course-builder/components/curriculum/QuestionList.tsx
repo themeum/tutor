@@ -224,7 +224,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
               ? [
                   {
                     _data_status: QuizDataStatus.NEW,
-                    is_saved: true,
+                    is_saved: false,
                     answer_id: nanoid(),
                     answer_title: '',
                     belongs_question_id: questionId,

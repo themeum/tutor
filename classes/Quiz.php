@@ -127,8 +127,9 @@ class Quiz {
 		 */
 		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
 
-		// Collect file paths for attempt deletion: draw_image (and others via same filter).
-		add_filter( 'tutor_quiz/attempt_file_paths_for_deletion', array( QuizModel::class, 'add_draw_image_attempt_file_paths' ), 10, 2 );
+		// Pin image: process answer via filter (priority 5 so core runs before Pro custom types).
+		add_filter( 'tutor_quiz_process_custom_question_answer', array( $this, 'process_pin_image_question_answer' ), 5, 6 );
+		add_filter( 'tutor_quiz_quiz_file_paths_for_deletion', array( $this, 'add_pin_image_quiz_file_paths_for_deletion' ), 10, 2 );
 
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 
@@ -739,43 +740,14 @@ class Quiz {
 						// 	$is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
 						// }
 						//phpcs:enable
-					} elseif ( 'draw_image' === $question_type ) {
-						$given_answer = '';
-						if ( is_array( $answers ) && isset( $answers['answers']['mask'] ) ) {
-							$given_answer = Input::sanitize( $answers['answers']['mask'] ?? '', '' );
-						}
-						// Save base64 mask to uploads and store file URL in DB.
-						if ( '' !== $given_answer ) {
-							$given_answer = QuizModel::save_quiz_draw_image_mask( $given_answer );
-						}
-
-						// Base correctness is determined later via filters in Tutor Pro.
-						$is_answer_was_correct = false;
-					} elseif ( 'pin_image' === $question_type ) {
-						$given_answer = '';
-
-						// For pin_image, student drops a pin (map-like) on the image.
-						// Frontend posts normalized coordinates in:
-						// attempt[attempt_id][quiz_question][question_id][answers][pin][x|y]
-						if ( is_array( $answers ) && isset( $answers['answers']['pin'] ) && is_array( $answers['answers']['pin'] ) ) {
-							$raw_pin = $answers['answers']['pin'];
-							$x       = isset( $raw_pin['x'] ) ? (float) $raw_pin['x'] : 0.0;
-							$y       = isset( $raw_pin['y'] ) ? (float) $raw_pin['y'] : 0.0;
-
-							// Clamp to [0, 1] to avoid out-of-bounds data.
-							$x = max( 0.0, min( 1.0, $x ) );
-							$y = max( 0.0, min( 1.0, $y ) );
-
-							$given_answer = wp_json_encode(
-								array(
-									'x' => $x,
-									'y' => $y,
-								)
-							);
-						}
-
-						// Base correctness is determined later via filters (Tutor Pro).
-						$is_answer_was_correct = false;
+					} else {
+						$custom_answer_data = array(
+							'given_answer'          => $given_answer,
+							'is_answer_was_correct' => $is_answer_was_correct,
+						);
+						$custom_answer_data = apply_filters( 'tutor_quiz_process_custom_question_answer', $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id );
+						$given_answer          = $custom_answer_data['given_answer'];
+						$is_answer_was_correct = $custom_answer_data['is_answer_was_correct'];
 					}
 
 					$question_mark = $is_answer_was_correct ? $question->question_mark : 0;
@@ -806,23 +778,10 @@ class Quiz {
 
 					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 
-					if ( 'draw_image' === $question_type ) {
-						$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
-					}
-
-					if ( 'pin_image' === $question_type ) {
-						$answers_data = apply_filters( 'tutor_filter_pin_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
-					}
-
-					// For Pro-powered draw-image and pin-image questions, adjust total marks after
-					// add-ons have had a chance to modify achieved_mark via filters.
-					if ( in_array( $question_type, array( 'draw_image', 'pin_image' ), true ) ) {
-						// Remove the previously added base question_mark (typically 0
-						// for these question types in core) and add the final achieved_mark
-						// decided by Pro (or other filters).
-						$total_marks -= $question_mark;
-						$total_marks += (float) $answers_data['achieved_mark'];
-					}
+					// Allow Pro (or add-ons) to grade draw_image and pin_image and set achieved_mark / is_correct.
+					$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
+					$answers_data = apply_filters( 'tutor_filter_pin_image_answer_data', $answers_data, $question_id, $question_type );
+					$total_marks  = apply_filters( 'tutor_quiz_adjust_total_marks_for_question', $total_marks, $question_mark, $answers_data, $question_type, $question_id );
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 				}
@@ -1147,7 +1106,8 @@ class Quiz {
 				},
 				$attempts_for_quiz
 			);
-			$attempt_file_paths = QuizModel::get_attempt_file_paths_for_deletion( $attempt_ids );
+			$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
+			$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
 		}
 
 		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $quiz_id ) );
@@ -1155,11 +1115,15 @@ class Quiz {
 
 		QuizModel::delete_files_by_paths( $attempt_file_paths );
 
-		// Collect instructor draw_image & pin_image file paths before deleting question data.
-		$quiz_file_paths = array_merge(
-			QuizModel::get_draw_image_file_paths_for_quiz( $quiz_id ),
-			QuizModel::get_pin_image_file_paths_for_quiz( $quiz_id )
-		);
+		// Collect instructor file paths before deleting question data (e.g. draw_image / pin_image masks).
+		/**
+		 * Filter to get file paths for quiz deletion.
+		 * Pro and other add-ons register their question types via this filter.
+		 *
+		 * @param string[] $file_paths Paths collected so far.
+		 * @param int      $quiz_id   Quiz post ID.
+		 */
+		$quiz_file_paths = apply_filters( 'tutor_quiz_quiz_file_paths_for_deletion', array(), $quiz_id );
 
 		$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $quiz_id ) );
 
@@ -1187,6 +1151,65 @@ class Quiz {
 			__( 'Quiz deleted successfully', 'tutor' ),
 			$quiz_id
 		);
+	}
+
+	/**
+	 * Process pin_image question answer (filter callback).
+	 * Student pin is stored as normalized coordinates JSON; grading is done via tutor_filter_pin_image_answer_data (Pro).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $custom_answer_data Array with given_answer and is_answer_was_correct.
+	 * @param string $question_type      Question type.
+	 * @param array  $answers            Answer data from request.
+	 * @param object $question           Question object.
+	 * @param int    $question_id        Question ID.
+	 * @param int    $attempt_id         Attempt ID.
+	 *
+	 * @return array Modified custom_answer_data.
+	 */
+	public function process_pin_image_question_answer( $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id ) {
+		if ( 'pin_image' !== $question_type ) {
+			return $custom_answer_data;
+		}
+
+		$given_answer = '';
+
+		// Frontend posts: attempt[attempt_id][quiz_question][question_id][answers][pin][x|y]
+		if ( is_array( $answers ) && isset( $answers['answers']['pin'] ) && is_array( $answers['answers']['pin'] ) ) {
+			$raw_pin = $answers['answers']['pin'];
+			$x       = isset( $raw_pin['x'] ) ? (float) $raw_pin['x'] : 0.0;
+			$y       = isset( $raw_pin['y'] ) ? (float) $raw_pin['y'] : 0.0;
+
+			$x = max( 0.0, min( 1.0, $x ) );
+			$y = max( 0.0, min( 1.0, $y ) );
+
+			$given_answer = wp_json_encode(
+				array(
+					'x' => $x,
+					'y' => $y,
+				)
+			);
+		}
+
+		$custom_answer_data['given_answer']          = $given_answer;
+		$custom_answer_data['is_answer_was_correct'] = false;
+
+		return $custom_answer_data;
+	}
+
+	/**
+	 * Add pin_image instructor mask file paths for quiz deletion (filter callback).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string[] $file_paths Paths collected so far.
+	 * @param int      $quiz_id    Quiz post ID.
+	 *
+	 * @return string[]
+	 */
+	public function add_pin_image_quiz_file_paths_for_deletion( $file_paths, $quiz_id ) {
+		return array_merge( (array) $file_paths, QuizModel::get_pin_image_file_paths_for_quiz( $quiz_id ) );
 	}
 
 	/**

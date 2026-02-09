@@ -19,11 +19,10 @@ import {
   type QuizQuestionOption,
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
-import { nanoid } from '@TutorShared/utils/util';
 
 const INSTRUCTOR_STROKE_STYLE = 'rgba(0, 120, 255, 0.9)';
 
-interface FormPinImageProps extends FormControllerProps<QuizQuestionOption | undefined> {
+interface FormPinImageProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
   validationError?: {
     message: string;
@@ -37,23 +36,8 @@ interface FormPinImageProps extends FormControllerProps<QuizQuestionOption | und
   >;
 }
 
-const getDefaultOption = (questionId: ID): QuizQuestionOption => ({
-  _data_status: QuizDataStatus.NEW,
-  is_saved: true,
-  answer_id: nanoid(),
-  belongs_question_id: questionId,
-  belongs_question_type: 'pin_image' as QuizQuestionOption['belongs_question_type'],
-  answer_title: '',
-  is_correct: '1',
-  image_id: undefined,
-  image_url: '',
-  answer_two_gap_match: '',
-  answer_view_format: 'pin_image',
-  answer_order: 0,
-});
-
-const FormPinImage = ({ field, questionId }: FormPinImageProps) => {
-  const option = (field.value ?? getDefaultOption(questionId)) as QuizQuestionOption;
+const FormPinImage = ({ field }: FormPinImageProps) => {
+  const option = field.value;
 
   const [isDrawModeActive, setIsDrawModeActive] = useState(false);
 

@@ -355,9 +355,19 @@ if ( is_array( $answers ) && count( $answers ) ) {
 						$answer_status = null === $answer->is_correct ? 'pending' : 'wrong';
 					}
 
-					// Draw image: auto-graded, so correct or wrong only.
-					elseif ( 'draw_image' === $answer->question_type ) {
-						$answer_status = (bool) $answer->is_correct ? 'correct' : 'wrong';
+					// Allow Pro and add-ons to set answer status for custom question types.
+					/**
+					 * Filter to set answer status for custom question types.
+					 * Pro handles draw_image via this filter.
+					 *
+					 * @param string|null $answer_status Current answer status (null if not set).
+					 * @param object      $answer        Answer object.
+					 *
+					 * @return string|null Answer status or null to use default.
+					 */
+					$custom_status = apply_filters( 'tutor_quiz_answer_status_for_question_type', null, $answer );
+					if ( null !== $custom_status ) {
+						$answer_status = $custom_status;
 					}
 					?>
 
@@ -531,69 +541,15 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													}
 
 													tutor_render_answer_list( $answers );
-												} elseif ( 'draw_image' === $answer->question_type ) {
-
-													// Student's submitted drawing: mask is stored as local file URL only 
-													$given_mask        = ! empty( $answer->given_answer ) ? stripslashes( $answer->given_answer ) : '';
-													$given_mask_is_url = is_string( $given_mask ) && false !== wp_http_validate_url( $given_mask );
-
-													if ( $given_mask_is_url ) {
-														$draw_image_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id, false );
-														$instructor_answer  = is_array( $draw_image_answers ) && ! empty( $draw_image_answers ) ? reset( $draw_image_answers ) : null;
-														$given_bg_url       = QuizModel::get_answer_image_url( $instructor_answer );
-														echo '<div class="tutor-draw-image-given-answer tutor-mb-12">';
-														echo '<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">' . esc_html__( 'Your drawing:', 'tutor' ) . '</p>';
-														echo '<div style="position: relative; display: inline-block;">';
-														if ( $given_bg_url ) {
-															echo '<img src="' . esc_url( $given_bg_url ) . '" alt="" style="display: block; max-width: 100%; height: auto;" />';
-															echo '<img src="' . esc_url( $given_mask ) . '" alt="" role="presentation" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" />';
-														} else {
-															echo '<img src="' . esc_url( $given_mask ) . '" alt="" style="max-width: 100%; height: auto; border: 1px solid #ddd;" />';
-														}
-														echo '</div>';
-														echo '</div>';
-													} else {
-														echo '<span class="tutor-fs-7 tutor-color-secondary">' . esc_html__( 'No drawing submitted.', 'tutor' ) . '</span>';
-													}
-												} elseif ( 'pin_image' === $answer->question_type ) {
-
-													// Student's submitted pin: normalized coordinates stored as JSON in given_answer.
-													$coords_json = ! empty( $answer->given_answer ) ? stripslashes( $answer->given_answer ) : '';
-													$coords      = json_decode( $coords_json, true );
-
-													if ( is_array( $coords ) && isset( $coords['x'], $coords['y'] ) ) {
-														$pin_x = (float) $coords['x'];
-														$pin_y = (float) $coords['y'];
-
-														// Load instructor background image to render the pin over it.
-														$pin_answers       = QuizModel::get_answers_by_quiz_question( $answer->question_id, 'pin_image' );
-														$instructor_answer = is_array( $pin_answers ) && ! empty( $pin_answers ) ? reset( $pin_answers ) : null;
-														$bg_url            = $instructor_answer ? QuizModel::get_answer_image_url( $instructor_answer ) : '';
-
-														if ( $bg_url ) {
-															echo '<div class="tutor-pin-image-given-answer tutor-mb-12">';
-															echo '<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">' . esc_html__( 'Your pin:', 'tutor' ) . '</p>';
-															echo '<div style="position: relative; display: inline-block;">';
-															echo '<img src="' . esc_url( $bg_url ) . '" alt="" style="display: block; max-width: 100%; height: auto;" />';
-															echo '<span style="
-																position: absolute;
-																width: 14px;
-																height: 14px;
-																border-radius: 50%;
-																background: #ff4b4b;
-																border: 2px solid #ffffff;
-																transform: translate(-50%, -100%);
-																left: ' . esc_attr( $pin_x * 100 ) . '%;
-																top: ' . esc_attr( $pin_y * 100 ) . '%;
-															"></span>';
-															echo '</div>';
-															echo '</div>';
-														} else {
-															echo '<span class="tutor-fs-7 tutor-color-secondary">' . esc_html__( 'Pin submitted, but no background image found.', 'tutor' ) . '</span>';
-														}
-													} else {
-														echo '<span class="tutor-fs-7 tutor-color-secondary">' . esc_html__( 'No pin submitted.', 'tutor' ) . '</span>';
-													}
+												} else {
+													/**
+													 * Allow Pro and add-ons to render custom question type answers.
+													 * Pro handles draw_image and pin_image via this action.
+													 *
+													 * @param object $answer       Answer object.
+													 * @param string $display_type Display type ('given_answer').
+													 */
+													do_action( 'tutor_quiz_render_answer_for_question_type', $answer, 'given_answer' );
 												}
 												?>
 												</div>
@@ -764,55 +720,15 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														echo '</div>';
 													}
 
-													// Draw image: show instructor reference (correct answer zones). Mask is local file URL only.
-													elseif ( 'draw_image' === $answer->question_type ) {
-
-														$draw_image_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id, false );
-														$instructor_answer  = is_array( $draw_image_answers ) && ! empty( $draw_image_answers ) ? reset( $draw_image_answers ) : null;
-														$ref_mask           = $instructor_answer && ! empty( $instructor_answer->answer_two_gap_match ) ? $instructor_answer->answer_two_gap_match : '';
-														$ref_mask_is_url    = is_string( $ref_mask ) && false !== wp_http_validate_url( $ref_mask );
-
-														if ( $instructor_answer && $ref_mask_is_url ) {
-															$ref_bg = QuizModel::get_answer_image_url( $instructor_answer );
-															echo '<div class="tutor-draw-image-correct-answer">';
-															echo '<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">' . esc_html__( 'Reference (correct answer zones):', 'tutor' ) . '</p>';
-															if ( $ref_bg ) {
-																echo '<div style="position: relative; display: inline-block;">';
-																echo '<img src="' . esc_url( $ref_bg ) . '" alt="" style="display: block; max-width: 100%; height: auto;" />';
-																echo '<img src="' . esc_url( $ref_mask ) . '" alt="" role="presentation" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" />';
-																echo '</div>';
-															} else {
-																echo '<img src="' . esc_url( $ref_mask ) . '" alt="" style="max-width: 100%; height: auto; border: 1px solid #ddd;" />';
-															}
-															echo '</div>';
-														} else {
-															echo '<span class="tutor-fs-7 tutor-color-secondary">' . esc_html__( 'No reference available.', 'tutor' ) . '</span>';
-														}
-													}
-													// Pin image: show instructor reference mask over background.
-													elseif ( 'pin_image' === $answer->question_type ) {
-
-														$pin_answers       = QuizModel::get_answers_by_quiz_question( $answer->question_id, 'pin_image' );
-														$instructor_answer = is_array( $pin_answers ) && ! empty( $pin_answers ) ? reset( $pin_answers ) : null;
-														$ref_mask          = $instructor_answer && ! empty( $instructor_answer->answer_two_gap_match ) ? $instructor_answer->answer_two_gap_match : '';
-														$ref_mask_is_url   = is_string( $ref_mask ) && false !== wp_http_validate_url( $ref_mask );
-
-														if ( $instructor_answer && $ref_mask_is_url ) {
-															$ref_bg = QuizModel::get_answer_image_url( $instructor_answer );
-															echo '<div class="tutor-pin-image-correct-answer">';
-															echo '<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">' . esc_html__( 'Reference (correct answer zone):', 'tutor' ) . '</p>';
-															if ( $ref_bg ) {
-																echo '<div style="position: relative; display: inline-block;">';
-																echo '<img src="' . esc_url( $ref_bg ) . '" alt="" style="display: block; max-width: 100%; height: auto;" />';
-																echo '<img src="' . esc_url( $ref_mask ) . '" alt="" role="presentation" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" />';
-																echo '</div>';
-															} else {
-																echo '<img src="' . esc_url( $ref_mask ) . '" alt="" style="max-width: 100%; height: auto; border: 1px solid #ddd;" />';
-															}
-															echo '</div>';
-														} else {
-															echo '<span class="tutor-fs-7 tutor-color-secondary">' . esc_html__( 'No reference available.', 'tutor' ) . '</span>';
-														}
+													else {
+														/**
+														 * Allow Pro and add-ons to render correct answer for custom question types.
+														 * Pro handles draw_image and pin_image via this action.
+														 *
+														 * @param object $answer       Answer object.
+														 * @param string $display_type  Display type ('correct_answer').
+														 */
+														do_action( 'tutor_quiz_render_answer_for_question_type', $answer, 'correct_answer' );
 													}
 												}
 												?>
