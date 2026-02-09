@@ -193,7 +193,7 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2 )
 				<?php esc_html_e( 'Continue Learning', 'tutor' ); ?>
 			</div>
 			<a 
-				href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url( 'enrolled-courses' ) ); ?>" 
+				href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url( 'courses' ) ); ?>" 
 				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-text-brand tutor-p-none tutor-min-h-0"
 			>
 				<?php esc_html_e( 'See All', 'tutor' ); ?>
