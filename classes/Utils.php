@@ -6252,24 +6252,27 @@ class Utils {
 	 * Get the price format
 	 *
 	 * @since 1.1.2
+	 * @since 4.0.0 Condition added for Paid Membership Pro Monetization.
 	 *
 	 * @param int $price price.
 	 *
 	 * @return int|string
 	 */
 	public function tutor_price( $price = 0 ) {
-		if ( tutor_utils()->is_monetize_by_tutor() ) {
+
+		$price_float = floatval( Input::sanitize( $price ) );
+		$monetize_by = $this->get_option( 'monetize_by' );
+		
+		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			return tutor_get_formatted_price( $price );
-		} elseif ( function_exists( 'wc_price' ) ) {
+		} elseif ( 'wc' ===  $monetize_by ) {
 			return wc_price( $price );
-		} elseif ( function_exists( 'edd_currency_filter' ) ) {
+		} elseif ( 'edd' === $monetize_by ) {
 			return edd_currency_filter( edd_format_amount( $price ) );
-		} elseif ( function_exists( 'pmpro_formatPrice' ) ) {
-			$price       = floatval( Input::sanitize( $price ) );
-			return pmpro_formatPrice( $price );
-		} else {
-			$price       = floatval( Input::sanitize( $price ) );
-			return number_format_i18n( $price );
+		} elseif ( 'pmpro' === $monetize_by ) {
+			return pmpro_formatPrice( $price_float );
+		} else {		
+			return number_format_i18n( $price_float );
 		}
 	}
 
