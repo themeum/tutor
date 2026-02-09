@@ -1347,7 +1347,10 @@ class Quiz {
 					array( 'content' => $total_questions ),
 				),
 			),
-			array(
+		);
+
+		if ( ! empty( $quiz_item_readable ) ) {
+			$quiz_summary[] = array(
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
@@ -1356,26 +1359,28 @@ class Quiz {
 					),
 					array( 'content' => $quiz_item_readable ),
 				),
-			),
-			array(
-				'columns' => array(
-					array(
-						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::PRIME_CHECK_CIRCLE, 20, 20 ) . __( 'Total Marks', 'tutor' ) . '
-						</div>',
-					),
-					array( 'content' => $total_questions ),
+			);
+		}
+
+		$quiz_summary[] = array(
+			'columns' => array(
+				array(
+					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+						' . tutor_utils()->get_svg_icon( Icon::PRIME_CHECK_CIRCLE, 20, 20 ) . __( 'Total Marks', 'tutor' ) . '
+					</div>',
 				),
+				array( 'content' => $total_questions ),
 			),
-			array(
-				'columns' => array(
-					array(
-						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::PASSED, 20, 20 ) . __( 'Passing Marks', 'tutor' ) . '
-						</div>',
-					),
-					array( 'content' => $passing_grade . '%' ),
+		);
+
+		$quiz_summary[] = array(
+			'columns' => array(
+				array(
+					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+						' . tutor_utils()->get_svg_icon( Icon::PASSED, 20, 20 ) . __( 'Passing Marks', 'tutor' ) . '
+					</div>',
 				),
+				array( 'content' => $passing_grade . '%' ),
 			),
 		);
 
