@@ -30,9 +30,17 @@ $show_question_number          = '1' !== $hide_question_number_overview;
 		<?php echo esc_html( $question_title ); ?>
 
 		<?php if ( ! empty( $question_description ) ) : ?>
-			<div class="tutor-p2 tutor-text-secondary">
-				<?php echo wp_kses_post( $question_description ); ?>
-			</div>
+			<?php
+			$description = apply_filters( 'tutor_filter_quiz_question_description', wp_unslash( $question_description ) );
+			if ( $description ) {
+				$markup = "<div class='tutor-p2 tutor-text-secondary'>{$description}</div>";
+				if ( function_exists( 'tutor' ) && tutor()->has_pro ) {
+					do_action( 'tutor_quiz_question_desc_render', $markup );
+				} else {
+					echo wp_kses_post( $markup );
+				}
+			}
+			?>
 		<?php endif; ?>
 	</div>
 

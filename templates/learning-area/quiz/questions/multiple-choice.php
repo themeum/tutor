@@ -15,14 +15,14 @@ use Tutor\Quiz;
 global $tutor_is_started_quiz;
 
 $default_question = array(
-	'index'             => 1,
-	'question_id'       => 0,
-	'question_title'    => '',
-	'question_type'     => 'multiple_choice',
-	'answer_required'   => true,
-	'question_mark'     => 10,
+	'index'              => 1,
+	'question_id'        => 0,
+	'question_title'     => '',
+	'question_type'      => 'multiple_choice',
+	'answer_required'    => true,
+	'question_mark'      => 10,
 	'answer_explanation' => '',
-	'question_settings' => array(
+	'question_settings'  => array(
 		'answer_required'             => '0',
 		'question_mark'               => '1',
 		'question_type'               => 'multiple_choice',
@@ -152,17 +152,14 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 	<div
 		class="tutor-quiz-questions-error"
 		x-cloak
-	x-show="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
-	x-text="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
+		x-show="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
+		x-text="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
 	></div>
 
 	<?php
-	tutor_load_template(
-		'learning-area.quiz.question-explanation',
-		array(
-			'answer_explanation' => $question['answer_explanation'],
-			'question_id'        => $question['question_id'],
-		)
-	);
+		$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
+		$quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
+
+		do_action( 'tutor_quiz_question_after_answers', $quiz_settings, (object) $question );
 	?>
 </div>

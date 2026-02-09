@@ -1351,7 +1351,7 @@ class Quiz {
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::CLOCK, 20, 20 ) . __( 'Quiz Time', 'tutor' ) . '
+							' . tutor_utils()->get_svg_icon( Icon::TIME, 20, 20 ) . __( 'Quiz Time', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $quiz_item_readable ),
@@ -1516,6 +1516,10 @@ class Quiz {
 				'question' => (array) $question,
 			)
 		);
+
+		if ( isset( $GLOBALS['tutor_is_started_quiz'] ) ) {
+			do_action( 'tutor_require_question_answer_file', $question->question_type, $GLOBALS['tutor_is_started_quiz'], $question );
+		}
 	}
 
 	/**

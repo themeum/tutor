@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 global $tutor_is_started_quiz;
 
 $default_question = array(
-	'index'             => 1,
-	'question_id'       => 0,
-	'question_title'    => '',
-	'question_type'     => 'fill_in_the_blank',
-	'answer_required'   => true,
-	'question_mark'     => 10,
+	'index'              => 1,
+	'question_id'        => 0,
+	'question_title'     => '',
+	'question_type'      => 'fill_in_the_blank',
+	'answer_required'    => true,
+	'question_mark'      => 10,
 	'answer_explanation' => '',
-	'question_settings' => array(
+	'question_settings'  => array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
 		'question_type'      => 'fill_in_the_blank',
@@ -141,12 +141,9 @@ if ( $answer_is_required ) {
 	<?php endif; ?>
 
 	<?php
-	tutor_load_template(
-		'learning-area.quiz.question-explanation',
-		array(
-			'answer_explanation' => $question['answer_explanation'],
-			'question_id'        => $question['question_id'],
-		)
-	);
+		$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
+		$quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
+
+		do_action( 'tutor_quiz_question_after_answers', $quiz_settings, (object) $question );
 	?>
 </div>

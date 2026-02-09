@@ -126,12 +126,9 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 	></div>
 
 	<?php
-	tutor_load_template(
-		'learning-area.quiz.question-explanation',
-		array(
-			'answer_explanation' => $question['answer_explanation'],
-			'question_id'        => $question['question_id'],
-		)
-	);
+		$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
+		$quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
+
+		do_action( 'tutor_quiz_question_after_answers', $quiz_settings, (object) $question );
 	?>
 </div>

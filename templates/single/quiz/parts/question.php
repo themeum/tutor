@@ -130,7 +130,7 @@
 					if ( $question_description ) {
 						$markup = "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
 						if ( tutor()->has_pro ) {
-							do_action( 'tutor_quiz_question_desc_render', $markup, $question );
+							do_action( 'tutor_quiz_question_desc_render', $markup );
 						} else {
 							echo wp_kses_post( $markup );
 						}
@@ -192,7 +192,7 @@
 
 					<div class="answer-help-block tutor-mt-24"></div>
 
-					<?php do_action( 'tutor_quiz_question_after_answers', $post, $quiz_details, $question ); ?>
+					<?php do_action( 'tutor_quiz_question_after_answers', $quiz_details, $question ); ?>
 
 					<?php if ( 'question_below_each_other' !== $question_layout_view ) : ?>
 						<div class="tutor-quiz-btn-group tutor-mt-60 tutor-d-flex">
