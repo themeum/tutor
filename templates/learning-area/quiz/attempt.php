@@ -17,6 +17,7 @@ use Tutor\Models\QuizModel;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 
 global $tutor_is_started_quiz;
 
@@ -53,6 +54,12 @@ foreach ( $questions as $question ) {
 
 $form_id  = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
 $modal_id = 'tutor-quiz-abandon-modal';
+$modal_cancel_button = Button::make()
+	->label( __( 'Stay Here', 'tutor' ) )
+	->variant( Variant::SECONDARY )
+	->size( Size::SMALL )
+	->attr( '@click', "handleAbandonCancel(); TutorCore.modal.closeModal('$modal_id')" )
+	->get();
 
 $default_values = array(
 	'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question_ids][]' => array_map(
@@ -78,6 +85,7 @@ $default_values = array(
 			formId: "<?php echo esc_attr( $form_id ); ?>",
 			attemptId: "<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>",
 			quizId: <?php echo esc_attr( $tutor_is_started_quiz->quiz_id ); ?>,
+			abandonModalId: "<?php echo esc_attr( $modal_id ); ?>",
 			feedbackMode: "<?php echo esc_attr( $feedback_mode ); ?>",
 			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
 		});
@@ -108,15 +116,16 @@ $default_values = array(
 	)($event)"
 >
 	<?php
-	tutor_load_template(
-		'learning-area.quiz.progress-bar',
-		array(
-			'remaining_time_secs'    => max( 0, (int) $remaining_time_secs ),
-			'quiz_when_time_expires' => $quiz_when_time_expires,
-			'has_time_limit'         => $has_time_limit,
-			'form_id'                => $form_id,
-		)
-	);
+		tutor_load_template(
+			'learning-area.quiz.progress-bar',
+			array(
+				'remaining_time_secs'    => max( 0, (int) $remaining_time_secs ),
+				'quiz_when_time_expires' => $quiz_when_time_expires,
+				'has_time_limit'         => $has_time_limit,
+				'form_id'                => $form_id,
+				'modal_id'               => $modal_id,
+			)
+		);
 	?>
 	<div
 		class="tutor-quiz-questions"
@@ -234,9 +243,9 @@ $default_values = array(
 			->title( __( 'Abandon Quiz?', 'tutor' ) )
 			->message( __( 'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor' ) )
 			->confirm_text( __( 'Yes, Leave Quiz', 'tutor' ) )
-			->cancel_text( __( 'Stay Here', 'tutor' ) )
-			->confirm_handler( "handleAbandonQuiz(); TutorCore.modal.closeModal('$modal_id')" )
+			->confirm_handler( "handleAbandonConfirm(); TutorCore.modal.closeModal('$modal_id')" )
 			->mutation_state( 'abandonQuizMutation' )
+			->cancel_button( $modal_cancel_button )
 			->render();
 	?>
 </form>

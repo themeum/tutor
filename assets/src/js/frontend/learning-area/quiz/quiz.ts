@@ -7,12 +7,14 @@ import type { AlpineComponentMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
+import { convertToFormData } from '@TutorShared/utils/form';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface QuizSubmissionConfig {
   formId: string;
   attemptId: string;
   quizId: number;
+  abandonModalId: string;
   feedbackMode?: string;
   revealWaitMs?: number;
 }
@@ -49,6 +51,11 @@ const QUIZ_REVEAL_CONFIG = {
   DATA_REVEALED_ATTR: 'data-revealed',
   DATA_OPTION_CORRECT: 'correct',
   DATA_OPTION_INCORRECT: 'incorrect',
+} as const;
+
+const QUIZ_ABANDON_CONFIG = {
+  NAVIGATION_EVENT: 'click',
+  IGNORE_ANCHOR_PREFIXES: ['#', 'javascript:'],
 } as const;
 
 type RevealQuestionType = (typeof QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES)[number];
@@ -90,11 +97,13 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
   const query = window.TutorCore.query;
   const toast = window.TutorCore.toast;
   const form = window.TutorCore.form;
+  const modal = window.TutorCore.modal;
 
   return {
     formId: config.formId,
     attemptId: config.attemptId,
     quizId: config.quizId,
+    abandonModalId: config.abandonModalId,
     feedbackMode: config.feedbackMode ?? '',
     revealWaitMs: config.revealWaitMs ?? null,
     submitQuizMutation: null as MutationState<{ success?: boolean; data?: unknown }, Record<string, unknown>> | null,
@@ -102,6 +111,14 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     timeoutQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
     hasTimedOut: false,
     isRevealSubmitting: false,
+    beforeUnloadTriggered: false,
+    isAbandoningNavigation: false,
+    skipBeforeUnload: false,
+    pendingNavigationAction: '' as 'reload' | 'navigate' | '',
+    pendingNavigationUrl: '',
+    beforeUnloadHandler: null as ((event: BeforeUnloadEvent) => string | void) | null,
+    pageHideHandler: null as (() => void) | null,
+    navigationHandler: null as ((event: MouseEvent) => void) | null,
     $el: null as HTMLFormElement | null,
     $root: null as HTMLElement | null,
 
@@ -126,6 +143,14 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         this.handleAbandonQuiz();
       }) as EventListener);
 
+      this.beforeUnloadHandler = this.handleBeforeUnload.bind(this);
+      this.pageHideHandler = this.handlePageHide.bind(this);
+      this.navigationHandler = this.handleNavigationAttempt.bind(this);
+
+      window.addEventListener('beforeunload', this.beforeUnloadHandler);
+      window.addEventListener('pagehide', this.pageHideHandler);
+      document.addEventListener(QUIZ_ABANDON_CONFIG.NAVIGATION_EVENT, this.navigationHandler, true);
+
       this.submitQuizMutation = query.useMutation(this.submitQuizAttempt, {
         onSuccess: () => {
           window.location.reload();
@@ -137,9 +162,25 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 
       this.abandonQuizMutation = query.useMutation(this.abandonQuizAttempt, {
         onSuccess: () => {
+          this.isAbandoningNavigation = false;
+          this.skipBeforeUnload = true;
+          if (this.beforeUnloadHandler) {
+            window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+          }
+          if (this.pendingNavigationAction === 'navigate' && this.pendingNavigationUrl) {
+            const nextUrl = this.pendingNavigationUrl;
+            this.pendingNavigationAction = '';
+            this.pendingNavigationUrl = '';
+            window.location.assign(nextUrl);
+            return;
+          }
+          this.pendingNavigationAction = '';
+          this.pendingNavigationUrl = '';
           window.location.reload();
         },
         onError: (error: Error) => {
+          this.isAbandoningNavigation = false;
+          this.skipBeforeUnload = false;
           toast.error(convertToErrorMessage(error));
         },
       });
@@ -307,6 +348,131 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       const data = form.getFormState?.(this.formId)?.values ?? {};
       const payload = this.buildSubmitPayload(data);
       this.abandonQuizMutation?.mutate(payload);
+    },
+
+    handleAbandonConfirm() {
+      this.isAbandoningNavigation = true;
+      this.skipBeforeUnload = true;
+      if (this.beforeUnloadHandler) {
+        window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+      }
+      if (!this.pendingNavigationAction) {
+        this.pendingNavigationAction = 'reload';
+      }
+      this.handleAbandonQuiz();
+    },
+
+    handleAbandonCancel() {
+      this.pendingNavigationAction = '';
+      this.pendingNavigationUrl = '';
+      this.isAbandoningNavigation = false;
+      this.skipBeforeUnload = false;
+    },
+
+    handleNavigationAttempt(event: MouseEvent) {
+      const target = event.target as HTMLElement | null;
+      if (!target) {
+        return;
+      }
+
+      const link = target.closest('a');
+      if (!link) {
+        return;
+      }
+
+      if (link.hasAttribute('download')) {
+        return;
+      }
+
+      const href = link.getAttribute('href') || '';
+      if (!href || QUIZ_ABANDON_CONFIG.IGNORE_ANCHOR_PREFIXES.some((prefix) => href.startsWith(prefix))) {
+        return;
+      }
+
+      const targetAttr = (link.getAttribute('target') || '').toLowerCase();
+      if (targetAttr && targetAttr !== '_self') {
+        return;
+      }
+
+      if (!this.shouldWarnOnUnload()) {
+        return;
+      }
+
+      event.preventDefault();
+      this.pendingNavigationAction = 'navigate';
+      this.pendingNavigationUrl = link.href;
+      modal?.showModal?.(this.abandonModalId);
+    },
+
+    handleBeforeUnload(event: BeforeUnloadEvent) {
+      if (!this.shouldWarnOnUnload()) {
+        return;
+      }
+      this.beforeUnloadTriggered = true;
+      event.preventDefault();
+      event.returnValue = '';
+      return '';
+    },
+
+    handlePageHide() {
+      if (!this.beforeUnloadTriggered) {
+        return;
+      }
+      this.beforeUnloadTriggered = false;
+
+      if (!this.formId || !form?.hasForm?.(this.formId)) {
+        return;
+      }
+      const data = form.getFormState?.(this.formId)?.values ?? {};
+      const payload = this.buildSubmitPayload(data);
+
+      if (!payload) {
+        return;
+      }
+
+      this.sendAbandonBeacon(payload);
+    },
+
+    shouldWarnOnUnload(): boolean {
+      if (!this.formId || !form?.hasForm?.(this.formId)) {
+        return false;
+      }
+      if (this.skipBeforeUnload) {
+        return false;
+      }
+      if (this.isAbandoningNavigation) {
+        return false;
+      }
+      if (this.hasTimedOut || this.isRevealSubmitting) {
+        return false;
+      }
+      if (this.submitQuizMutation?.isPending || this.abandonQuizMutation?.isPending) {
+        return false;
+      }
+      return true;
+    },
+
+    sendAbandonBeacon(payload: Record<string, unknown>) {
+      const formData = convertToFormData(
+        {
+          action: endpoints.QUIZ_ABANDON,
+          [tutorConfig.nonce_key]: tutorConfig._tutor_nonce,
+          tutor_action: endpoints.QUIZ_ATTEMPT_SUBMIT,
+          ...payload,
+        },
+        'post',
+      );
+
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(tutorConfig.ajaxurl, formData);
+        return;
+      }
+
+      fetch(tutorConfig.ajaxurl, {
+        method: 'POST',
+        body: formData,
+        keepalive: true,
+      }).catch(() => {});
     },
 
     handleQuizTimeoutAbandon() {

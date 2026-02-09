@@ -15,6 +15,7 @@ use TUTOR\Icon;
 $remaining_time_secs    = isset( $remaining_time_secs ) ? (int) $remaining_time_secs : 0;
 $quiz_when_time_expires = $quiz_when_time_expires ?? 'auto_abandon';
 $form_id                = $form_id ?? '';
+$modal_id               = $modal_id ?? '';
 $has_time_limit         = isset( $has_time_limit ) ? (bool) $has_time_limit : $remaining_time_secs > 0;
 
 ?>
@@ -53,7 +54,7 @@ $has_time_limit         = isset( $has_time_limit ) ? (bool) $has_time_limit : $r
 					->variant( Variant::OUTLINE )
 					->attr( 'type', 'button' )
 					->attr( 'class', 'tutor-px-8' )
-					->attr( '@click', "TutorCore.modal.showModal('tutor-quiz-abandon-modal')" )
+					->attr( '@click', "TutorCore.modal.showModal('$modal_id')" )
 					->render();
 			?>
 		</div>
