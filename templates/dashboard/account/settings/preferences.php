@@ -21,15 +21,7 @@ $theme_options = UserPreference::get_theme_options();
 $font_scale_options = UserPreference::get_font_scale_options();
 
 // Load current user preferences to seed the form.
-$user_preferences = ( new UserPreference( false ) )->get_preferences();
-
-$autoload_course_content = (bool) tutor_utils()->get_option( 'autoload_next_course_content' );
-
-$default_values = array(
-	'auto_play_next' => isset( $user_preferences['auto_play_next'] ) ? (bool) $user_preferences['auto_play_next'] : $autoload_course_content,
-	'theme'          => isset( $user_preferences['theme'] ) ? $user_preferences['theme'] : UserPreference::DEFAULT_THEME,
-	'font_scale'     => isset( $user_preferences['font_scale'] ) ? (int) $user_preferences['font_scale'] : UserPreference::DEFAULT_FONT_SCALE,
-);
+$user_preferences = UserPreference::get_preferences();
 
 ?>
 
@@ -40,7 +32,7 @@ $default_values = array(
 			id: "<?php echo esc_attr( $form_id ); ?>", 
 			mode: "onChange", 
 			shouldFocusError: true,
-			defaultValues: <?php echo wp_json_encode( $default_values ); ?>
+			defaultValues: <?php echo wp_json_encode( $user_preferences ); ?>
 		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit((data) => { savePreferencesMutation?.mutate({...data, formId: '<?php echo esc_attr( $form_id ); ?>'}); })($event)"

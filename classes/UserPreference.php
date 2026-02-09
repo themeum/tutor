@@ -15,6 +15,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Cache\TutorCache;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Traits\JsonResponse;
 
@@ -159,26 +160,6 @@ class UserPreference {
 	}
 
 	/**
-	 * Get default preferences.
-	 *
-	 * Keep this method very small and declarative so it is easy to extend.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_default_preferences() {
-		return apply_filters(
-			'tutor_user_preference_defaults',
-			array(
-				'auto_play_next' => true,
-				'theme'          => self::DEFAULT_THEME,
-				'font_scale'     => self::DEFAULT_FONT_SCALE,
-			)
-		);
-	}
-
-	/**
 	 * Get merged preferences for a user.
 	 *
 	 * Stored values override defaults; unknown keys are ignored.
@@ -189,17 +170,46 @@ class UserPreference {
 	 *
 	 * @return array
 	 */
-	public function get_preferences( $user_id = 0 ) {
+	public static function get_preferences( $user_id = 0 ) {
 		$user_id = tutor_utils()->get_user_id( $user_id );
 		if ( ! $user_id ) {
 			return array();
 		}
 
+		// Check cache first.
+		$cache_key = 'get_preferences_' . $user_id;
+		$cached    = TutorCache::get( $cache_key );
+		if ( false !== $cached ) {
+			return $cached;
+		}
+
+		// Get from database.
 		$preferences = get_user_meta( $user_id, self::META_KEY, true );
 		if ( ! is_array( $preferences ) ) {
 			$preferences = array();
 		}
-		return array_merge( self::get_default_preferences(), $preferences );
+		$result = array_merge( self::get_default_preferences(), $preferences );
+
+		// Store in cache.
+		TutorCache::set( $cache_key, $result );
+
+		return $result;
+	}
+
+	/**
+	 * Get a single preference value with default support.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string     $key      Preference key.
+	 * @param mixed      $fallback Default value if not set. If false, use internal defaults.
+	 * @param int|string $user_id  Optional user id.
+	 *
+	 * @return mixed
+	 */
+	public static function get( $key, $fallback = false, $user_id = 0 ) {
+		$prefs = self::get_preferences( $user_id );
+		return isset( $prefs[ $key ] ) ? $prefs[ $key ] : $fallback;
 	}
 
 	/**
@@ -273,6 +283,29 @@ class UserPreference {
 			__( 'Preferences saved successfully', 'tutor' ),
 			$preference_data
 		);
+	}
+
+	/**
+	 * Get default preferences.
+	 *
+	 * Keep this method very small and declarative so it is easy to extend.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	private static function get_default_preferences() {
+		// Get defaults with filter.
+		$defaults = apply_filters(
+			'tutor_user_preference_defaults',
+			array(
+				'auto_play_next' => (bool) tutor_utils()->get_option( 'autoload_next_course_content' ),
+				'theme'          => self::DEFAULT_THEME,
+				'font_scale'     => self::DEFAULT_FONT_SCALE,
+			)
+		);
+
+		return $defaults;
 	}
 
 	/**
