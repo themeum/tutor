@@ -36,6 +36,7 @@ interface QuizLayoutConfig {
 }
 
 type QuizFooterPosition = 'only' | 'first' | 'middle' | 'last';
+type RevealQuestionType = (typeof QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES)[number];
 
 const QUIZ_REVEAL_CONFIG = {
   ANSWER_CONTEXT_ID: 'tutor-quiz-context',
@@ -57,8 +58,6 @@ const QUIZ_ABANDON_CONFIG = {
   NAVIGATION_EVENT: 'click',
   IGNORE_ANCHOR_PREFIXES: ['#', 'javascript:'],
 } as const;
-
-type RevealQuestionType = (typeof QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES)[number];
 
 const QUIZ_FOOTER_POSITIONS = {
   ONLY: 'only',
@@ -92,6 +91,79 @@ const QUIZ_LAYOUT_SELECTORS = {
 const QUIZ_LAYOUT_KEYS = {
   QUESTION_VALUE_PREFIX: '[quiz_question]',
 } as const;
+
+const decodeHexString = (encoded: string): string | null => {
+  const bytes = encoded.match(/.{1,2}/g);
+  if (!bytes) {
+    return null;
+  }
+  return bytes.map((byte) => String.fromCharCode(parseInt(byte, 16))).join('');
+};
+
+const decodeExplanationContent = (encoded: string): string => {
+  if (!encoded) {
+    return '';
+  }
+  try {
+    const hexDecoded = decodeHexString(encoded);
+    if (hexDecoded) {
+      return decodeURIComponent(hexDecoded);
+    }
+  } catch {
+    // fall through to legacy decode
+  }
+  try {
+    return decodeURIComponent(encoded.split('').reverse().join(''));
+  } catch {
+    return '';
+  }
+};
+
+const revealQuestionWithAnswers = (wrapper: HTMLElement, revealAnswerIds: number[]): void => {
+  const question = wrapper.querySelector(QUIZ_REVEAL_CONFIG.QUESTION_SELECTOR) as HTMLElement | null;
+  if (!question) {
+    return;
+  }
+  if (question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) === '1') {
+    return;
+  }
+
+  const explanationTrigger = wrapper.querySelector<HTMLButtonElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_TRIGGER_SELECTOR);
+  const explanation = wrapper.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_SELECTOR);
+  const explanationBody = explanation?.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_BODY_SELECTOR) ?? null;
+  const encodedExplanation = explanation?.dataset?.[QUIZ_REVEAL_CONFIG.EXPLANATION_CONTENT_DATASET] ?? '';
+  if (explanationBody && encodedExplanation && !explanationBody.innerHTML.trim()) {
+    const decoded = decodeExplanationContent(encodedExplanation);
+    if (decoded) {
+      explanationBody.innerHTML = decoded;
+    }
+  }
+  if (explanationTrigger && explanationTrigger.getAttribute('aria-expanded') !== 'true') {
+    explanationTrigger.click();
+  }
+
+  const inputs = Array.from(question.querySelectorAll<HTMLInputElement>('input[type="radio"], input[type="checkbox"]'));
+
+  inputs.forEach((input) => {
+    const option = input.closest(QUIZ_REVEAL_CONFIG.OPTION_SELECTOR) as HTMLElement | null;
+    if (!option) {
+      return;
+    }
+
+    const answerId = Number(input.value);
+    const isCorrect = revealAnswerIds.includes(answerId);
+
+    if (isCorrect) {
+      option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT);
+    } else if (input.checked) {
+      option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT);
+    }
+
+    input.disabled = true;
+  });
+
+  question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
+};
 
 const quizSubmission = (config: QuizSubmissionConfig) => {
   const query = window.TutorCore.query;
@@ -242,7 +314,14 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       }
 
       try {
-        const decoded = window.atob(script.textContent.trim());
+        const encoded = script.textContent.trim();
+        const decoded = encoded
+          .match(/.{1,2}/g)
+          ?.map((byte) => String.fromCharCode(parseInt(byte, 16)))
+          .join('');
+        if (!decoded) {
+          return [];
+        }
         const parsed = JSON.parse(decoded);
         if (!Array.isArray(parsed)) {
           return [];
@@ -254,56 +333,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     },
 
     revealQuestion(wrapper: HTMLElement, revealAnswerIds: number[]) {
-      const question = wrapper.querySelector(QUIZ_REVEAL_CONFIG.QUESTION_SELECTOR) as HTMLElement | null;
-      if (!question) {
-        return;
-      }
-      if (question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) === '1') {
-        return;
-      }
-
-      const explanationTrigger = wrapper.querySelector<HTMLButtonElement>(
-        QUIZ_REVEAL_CONFIG.EXPLANATION_TRIGGER_SELECTOR,
-      );
-      const explanation = wrapper.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_SELECTOR);
-      const explanationBody =
-        explanation?.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_BODY_SELECTOR) ?? null;
-      const encodedExplanation = explanation?.dataset?.[QUIZ_REVEAL_CONFIG.EXPLANATION_CONTENT_DATASET] ?? '';
-      if (explanationBody && encodedExplanation && !explanationBody.innerHTML.trim()) {
-        try {
-          const decoded = decodeURIComponent(encodedExplanation.split('').reverse().join(''));
-          explanationBody.innerHTML = decoded;
-        } catch {
-          // ignore decode errors
-        }
-      }
-      if (explanationTrigger && explanationTrigger.getAttribute('aria-expanded') !== 'true') {
-        explanationTrigger.click();
-      }
-
-      const inputs = Array.from(
-        question.querySelectorAll<HTMLInputElement>('input[type="radio"], input[type="checkbox"]'),
-      );
-
-      inputs.forEach((input) => {
-        const option = input.closest(QUIZ_REVEAL_CONFIG.OPTION_SELECTOR) as HTMLElement | null;
-        if (!option) {
-          return;
-        }
-
-        const answerId = Number(input.value);
-        const isCorrect = revealAnswerIds.includes(answerId);
-
-        if (isCorrect) {
-          option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT);
-        } else if (input.checked) {
-          option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT);
-        }
-
-        input.disabled = true;
-      });
-
-      question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
+      revealQuestionWithAnswers(wrapper, revealAnswerIds);
     },
 
     revealOnSubmit(): boolean {
@@ -733,7 +763,14 @@ const quizLayout = (config: QuizLayoutConfig) => {
       }
 
       try {
-        const decoded = window.atob(script.textContent.trim());
+        const encoded = script.textContent.trim();
+        const decoded = encoded
+          .match(/.{1,2}/g)
+          ?.map((byte) => String.fromCharCode(parseInt(byte, 16)))
+          .join('');
+        if (!decoded) {
+          return [];
+        }
         const parsed = JSON.parse(decoded);
         if (!Array.isArray(parsed)) {
           return [];
@@ -764,56 +801,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
     },
 
     revealQuestion(wrapper: HTMLElement) {
-      const question = this.getQuestionElement(wrapper);
-      if (!question) {
-        return;
-      }
-      if (question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) === '1') {
-        return;
-      }
-
-      const explanationTrigger = wrapper.querySelector<HTMLButtonElement>(
-        QUIZ_REVEAL_CONFIG.EXPLANATION_TRIGGER_SELECTOR,
-      );
-      const explanation = wrapper.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_SELECTOR);
-      const explanationBody =
-        explanation?.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_BODY_SELECTOR) ?? null;
-      const encodedExplanation = explanation?.dataset?.[QUIZ_REVEAL_CONFIG.EXPLANATION_CONTENT_DATASET] ?? '';
-      if (explanationBody && encodedExplanation && !explanationBody.innerHTML.trim()) {
-        try {
-          const decoded = decodeURIComponent(encodedExplanation.split('').reverse().join(''));
-          explanationBody.innerHTML = decoded;
-        } catch {
-          // ignore decode errors
-        }
-      }
-      if (explanationTrigger && explanationTrigger.getAttribute('aria-expanded') !== 'true') {
-        explanationTrigger.click();
-      }
-
-      const inputs = Array.from(
-        question.querySelectorAll<HTMLInputElement>('input[type="radio"], input[type="checkbox"]'),
-      );
-
-      inputs.forEach((input) => {
-        const option = input.closest(QUIZ_REVEAL_CONFIG.OPTION_SELECTOR) as HTMLElement | null;
-        if (!option) {
-          return;
-        }
-
-        const answerId = Number(input.value);
-        const isCorrect = this.revealAnswerIds.includes(answerId);
-
-        if (isCorrect) {
-          option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT);
-        } else if (input.checked) {
-          option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT);
-        }
-
-        input.disabled = true;
-      });
-
-      question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
+      revealQuestionWithAnswers(wrapper, this.revealAnswerIds);
     },
 
     revealOnSubmit(): boolean {

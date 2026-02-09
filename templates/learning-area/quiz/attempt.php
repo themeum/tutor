@@ -33,7 +33,7 @@ $questions                          = tutor_utils()->get_random_questions_by_qui
 $question_layout_view               = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_layout_view' );
 $question_layout_view               = $question_layout_view ? $question_layout_view : 'single_question';
 $feedback_mode                      = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'feedback_mode', '' );
-$reveal_wait_ms                      = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
+$reveal_wait_ms                     = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
 $is_linear_layout                   = in_array( $question_layout_view, array( 'single_question', 'question_pagination' ), true );
 $show_previous_button               = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
 
@@ -52,8 +52,8 @@ foreach ( $questions as $question ) {
 	}
 }
 
-$form_id  = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
-$modal_id = 'tutor-quiz-abandon-modal';
+$form_id             = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
+$modal_id            = 'tutor-quiz-abandon-modal';
 $modal_cancel_button = Button::make()
 	->label( __( 'Stay Here', 'tutor' ) )
 	->variant( Variant::SECONDARY )
@@ -126,7 +126,7 @@ $default_values = array(
 				'modal_id'               => $modal_id,
 			)
 		);
-	?>
+		?>
 	<div
 		class="tutor-quiz-questions"
 		data-question-layout-view="<?php echo esc_attr( $question_layout_view ); ?>"
@@ -251,5 +251,5 @@ $default_values = array(
 </form>
 
 <script type="application/octet-stream" id="tutor-quiz-context">
-	<?php echo esc_html( base64_encode( wp_json_encode( $quiz_answers ) ) ); ?>
+	<?php echo esc_html( bin2hex( wp_json_encode( $quiz_answers ) ) ); ?>
 </script>
