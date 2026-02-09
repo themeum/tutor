@@ -524,7 +524,7 @@ class CourseModel {
 					/**
 					 * Delete Quiz data
 					 */
-					if ( get_post_type( $content_id ) === 'tutor_quiz' ) {
+					if ( get_post_type( $content_id ) === $quiz_post_type ) {
 						// Collect file paths from all question types that store files before deleting rows (files deleted after DB for safety).
 						$attempts_for_quiz  = QueryHelper::get_all( 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ), 'attempt_id', -1 );
 						$attempt_file_paths = array();
