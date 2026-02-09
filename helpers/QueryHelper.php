@@ -252,17 +252,32 @@ class QueryHelper {
 	 * Otherwise the clause would be `WHERE column_name = 'value'`
 	 *
 	 * @since 3.0.0
+	 * @since 3.9.7 added prepared statement for value.
 	 *
 	 * @param array $where  The where clause array. e.g. array( 'id', 'IN', array(1, 2, 3) ) or array( 'id', '=', 1 ).
 	 *
 	 * @return string
 	 */
 	public static function make_clause( array $where ) {
+		global $wpdb;
 		list ( $field, $operator, $value ) = $where;
 
 		$upper_operator = strtoupper( $operator );
 		if ( in_array( $upper_operator, array( 'IN', 'NOT IN' ), true ) ) {
 			$value = '(' . self::prepare_in_clause( $value ) . ')';
+		} elseif ( in_array( $upper_operator, array( 'BETWEEN', 'NOT BETWEEN' ), true ) ) {
+			$values = explode( 'AND', $value );
+			if ( is_numeric( $values[0] ) && is_numeric( $values[1] ) ) {
+				$value = $wpdb->prepare( '%d AND %d', trim( $values[0] ), trim( $values[1] ) );
+			} else {
+				$value = $wpdb->prepare( '%s AND %s', trim( $values[0] ), trim( $values[1] ) );
+			}
+		} elseif ( strtoupper( $value ) === 'NULL' ) {
+			$value = 'NULL';
+		} elseif ( is_numeric( $value ) ) {
+			$value = $wpdb->prepare( '%d', trim( $value ) );
+		} else {
+			$value = $wpdb->prepare( '%s', trim( $value ) );
 		}
 
 		return "{$field} {$upper_operator} {$value}";
@@ -346,15 +361,15 @@ class QueryHelper {
 					case 'BETWEEN':
 					case 'NOT BETWEEN':
 						if ( is_array( $val ) && count( $val ) === 2 ) {
-							$val1   = is_numeric( $val[0] ) ? $val[0] : "'" . $val[0] . "'";
-							$val2   = is_numeric( $val[1] ) ? $val[1] : "'" . $val[1] . "'";
+							$val1   = $val[0];
+							$val2   = $val[1];
 							$clause = array( $field, $operator, "{$val1} AND {$val2}" );
 						}
 						break;
 
 					case 'IS':
 					case 'IS NOT':
-						$val    = strtoupper( $val ) === 'NULL' ? 'NULL' : "'" . $val . "'";
+						$val    = strtoupper( $val ) === 'NULL' ? 'NULL' : $val;
 						$clause = array( $field, $operator, $val );
 						break;
 					case 'RAW':
@@ -365,16 +380,14 @@ class QueryHelper {
 						$clause = $final_query;
 						break;
 					default: // =, !=, <, >, <=, >=, LIKE, NOT LIKE, <>
-						$val    = is_numeric( $val ) ? $val : "'" . $val . "'";
 						$clause = array( $field, $operator, $val );
 						break;
 				}
 			} elseif ( is_array( $value ) ) {
 				$clause = array( $field, 'IN', $value );
 			} elseif ( 'null' === strtolower( $value ) ) {
-					$clause = array( $field, 'IS', 'NULL' );
+				$clause = array( $field, 'IS', 'NULL' );
 			} else {
-				$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
 				$clause = array( $field, '=', $value );
 			}
 
