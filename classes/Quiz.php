@@ -1102,7 +1102,8 @@ class Quiz {
 				},
 				$attempts_for_quiz
 			);
-			$attempt_file_paths = QuizModel::get_attempt_file_paths_for_deletion( $attempt_ids );
+			$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
+			$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
 		}
 
 		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $quiz_id ) );

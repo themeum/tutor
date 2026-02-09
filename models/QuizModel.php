@@ -551,7 +551,8 @@ class QuizModel {
 
 		if ( count( $attempt_ids ) ) {
 			// Collect file paths from all question types that store files (e.g. draw_image). Files deleted after DB for safety.
-			$attempt_file_paths = self::get_attempt_file_paths_for_deletion( $attempt_ids );
+			$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
+			$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
 
 			// Delete attempt answers (child) then attempts (parent); use QueryHelper for bulk delete.
 			QueryHelper::bulk_delete(
@@ -567,30 +568,6 @@ class QuizModel {
 
 			do_action( 'tutor_quiz/attempt_deleted', implode( ',', $attempt_ids ) );
 		}
-	}
-
-	/**
-	 * Get all file paths that should be deleted when the given attempt(s) are removed.
-	 * All question types that store files (pin_image, etc.) add their paths
-	 * via the tutor_quiz/attempt_file_paths_for_deletion filter.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int[] $attempt_ids Array of quiz attempt IDs.
-	 *
-	 * @return string[] Array of absolute file paths.
-	 */
-	public static function get_attempt_file_paths_for_deletion( array $attempt_ids ) {
-		$paths = array();
-		/**
-		 * Question types that store files add paths to delete when attempts are removed.
-		 * Pro and other add-ons register their question types via this filter.
-		 *
-		 * @param string[] $file_paths  Absolute file paths collected so far.
-		 * @param int[]    $attempt_ids Quiz attempt IDs being deleted.
-		 */
-		$paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', $paths, $attempt_ids );
-		return is_array( $paths ) ? array_values( array_filter( array_unique( $paths ) ) ) : array();
 	}
 
 	/**
