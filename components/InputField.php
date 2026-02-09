@@ -334,6 +334,15 @@ class InputField extends BaseComponent {
 	protected $close_on_select = null;
 
 	/**
+	 * Raw JS onChange callback for select input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string|null
+	 */
+	protected $on_change = null;
+
+	/**
 	 * Max Height for select input.
 	 *
 	 * @since 4.0.0
@@ -534,6 +543,22 @@ class InputField extends BaseComponent {
 	 */
 	public function collapsable( $close_on_select = true ): self {
 		$this->close_on_select = $close_on_select;
+		return $this;
+	}
+
+	/**
+	 * Set raw JS onChange callback for select input.
+	 *
+	 * Example: ->on_change( 'function(value){ console.log(value); }' )
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $on_change Raw JS function string.
+	 *
+	 * @return self
+	 */
+	public function on_change( $on_change ): self {
+		$this->on_change = $on_change;
 		return $this;
 	}
 
@@ -1242,7 +1267,14 @@ class InputField extends BaseComponent {
 			$size_class = 'tutor-select-lg';
 		}
 
-		$props_json           = htmlspecialchars( wp_json_encode( $props ), ENT_QUOTES, 'UTF-8' );
+		$props_json_raw = wp_json_encode( $props );
+		$props_json     = $props_json_raw;
+
+		if ( null !== $this->on_change && '' !== $this->on_change ) {
+			$props_json = sprintf( 'Object.assign(%s, { onChange: %s })', $props_json_raw, $this->on_change );
+		}
+
+		$props_json           = htmlspecialchars( $props_json, ENT_QUOTES, 'UTF-8' );
 		$select_input_buttons = $this->render_select_input_button() ?? '';
 		$select_input_options = $this->render_select_input_options() ?? '';
 

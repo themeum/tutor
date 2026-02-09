@@ -29,6 +29,14 @@ class Lesson extends Tutor_Base {
 	use JsonResponse;
 
 	/**
+	 * Preview meta key
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	const PREVIEW_META_KEY = '_is_preview';
+	
+	/**
 	 * Lesson post type
 	 *
 	 * @since 4.0.0
