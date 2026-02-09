@@ -128,8 +128,10 @@ $tutor-quiz-footer-offset: 96px;
       cursor: pointer;
       color: $tutor-text-primary;
 
-      svg {
-        color: $tutor-icon-brand;
+      span:first-of-type {
+        svg {
+          color: $tutor-icon-brand;
+        }
       }
 
       &:focus-visible {
