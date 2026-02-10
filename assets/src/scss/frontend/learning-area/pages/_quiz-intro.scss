@@ -4,6 +4,7 @@
 .tutor-quiz-intro {
 	@include tutor-container(748px);
 	width: 100%;
+	padding-bottom: $tutor-spacing-7;
 
 	&-icon {
 		@include tutor-flex-center;

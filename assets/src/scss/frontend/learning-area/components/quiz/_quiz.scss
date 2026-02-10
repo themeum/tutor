@@ -425,6 +425,10 @@ $tutor-quiz-footer-offset: 96px;
       &-options {
         @include tutor-grid-auto-columns(2, 4);
 
+        &:not(:has(img)) {
+          @include tutor-grid-auto-columns(2, 2);
+        }
+
         @include tutor-breakpoint-down(sm) {
           &:has(img) {
             @include tutor-grid-auto-columns(2, 2);
