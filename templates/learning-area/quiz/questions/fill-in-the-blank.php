@@ -13,14 +13,15 @@ defined( 'ABSPATH' ) || exit;
 global $tutor_is_started_quiz;
 
 $default_question = array(
-	'index'              => 1,
-	'question_id'        => 0,
-	'question_title'     => '',
-	'question_type'      => 'fill_in_the_blank',
-	'answer_required'    => true,
-	'question_mark'      => 10,
-	'answer_explanation' => '',
-	'question_settings'  => array(
+	'index'                => 1,
+	'question_id'          => 0,
+	'question_title'       => '',
+	'question_description' => '',
+	'question_type'        => 'fill_in_the_blank',
+	'answer_required'      => true,
+	'question_mark'        => 10,
+	'answer_explanation'   => '',
+	'question_settings'    => array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
 		'question_type'      => 'fill_in_the_blank',
@@ -41,109 +42,83 @@ if ( $answer_is_required ) {
 }
 
 ?>
+<div class="tutor-quiz-question-options">
+	<?php foreach ( $question['question_answers'] as $answer ) : ?>
+		<div class="tutor-quiz-question-option">
+			<?php
+			$answer_title = $answer['answer_title'];
+			$dash_count   = substr_count( $answer_title, '{dash}' );
 
-<div 
-	class="tutor-quiz-question" 
-	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
-	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
->
-	<?php
-	tutor_load_template(
-		'learning-area.quiz.question-header',
-		array(
-			'index'                => $question['index'],
-			'question_title'       => $question['question_title'],
-			'question_description' => $question['question_description'],
-			'question_mark'        => $question['question_mark'],
-			'show_question_mark'   => $question['question_settings']['show_question_mark'],
-		)
-	);
-	?>
+			if ( $dash_count > 0 ) {
+				$input_index = 0;
 
-	<div class="tutor-quiz-question-options">
-		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<div class="tutor-quiz-question-option">
-				<?php
-				$answer_title = $answer['answer_title'];
-				$dash_count   = substr_count( $answer_title, '{dash}' );
+				$answer_title = preg_replace_callback(
+					'/{dash}/',
+					function () use ( &$input_index, $tutor_is_started_quiz, $question, $register_rules, &$field_name, &$field_names ) {
 
-				if ( $dash_count > 0 ) {
-					$input_index = 0;
+						$attempt_id  = (int) $tutor_is_started_quiz->attempt_id;
+						$question_id = (int) $question['question_id'];
 
-					$answer_title = preg_replace_callback(
-						'/{dash}/',
-						function () use ( &$input_index, $tutor_is_started_quiz, $question, $register_rules, &$field_name, &$field_names ) {
+						$input_name = sprintf(
+							'attempt[%d][quiz_question][%d][][%d]',
+							$attempt_id,
+							$question_id,
+							$input_index
+						);
 
-							$attempt_id  = (int) $tutor_is_started_quiz->attempt_id;
-							$question_id = (int) $question['question_id'];
+						$register_attr = "register('{$input_name}'{$register_rules})";
+						$input_html    = sprintf(
+							'<input
+								type="text"
+								class="tutor-quiz-question-input"
+								placeholder="%s"
+								name="%s"
+								x-bind="%s"
+							/>',
+							esc_attr__( 'Type your answer here', 'tutor' ),
+							$input_name,
+							esc_attr( $register_attr )
+						);
 
-							$input_name = sprintf(
-								'attempt[%d][quiz_question][%d][][%d]',
-								$attempt_id,
-								$question_id,
-								$input_index
-							);
+						$input_index++;
+						if ( '' === $field_name ) {
+							$field_name = $input_name;
+						}
+						$field_names[] = $input_name;
 
-							$register_attr = "register('{$input_name}'{$register_rules})";
-							$input_html    = sprintf(
-								'<input
-									type="text"
-									class="tutor-quiz-question-input"
-									placeholder="%s"
-									name="%s"
-									x-bind="%s"
-								/>',
-								esc_attr__( 'Type your answer here', 'tutor' ),
-								$input_name,
-								esc_attr( $register_attr )
-							);
-
-							$input_index++;
-							if ( '' === $field_name ) {
-								$field_name = $input_name;
-							}
-							$field_names[] = $input_name;
-
-							return $input_html;
-						},
-						$answer_title
-					);
-				}
-
-				echo wp_kses(
-					$answer_title,
-					array(
-						'input' => array(
-							'type'        => true,
-							'class'       => true,
-							'name'        => true,
-							'placeholder' => true,
-							'x-bind'      => true,
-						),
-					)
+						return $input_html;
+					},
+					$answer_title
 				);
-				?>
-			</div>
-		<?php endforeach; ?>
-	</div>
-	<?php if ( $field_name ) : ?>
-		<?php $unique_field_names = array_values( array_unique( $field_names ) ); ?>
-		<div
-			class="tutor-quiz-questions-error"
-			x-data="{ fieldNames: <?php echo esc_attr( wp_json_encode( $unique_field_names ) ); ?> }"
-			x-cloak
-			x-show="fieldNames.some((name) => errors?.[name]?.message)"
-			x-text="(() => {
-				const match = fieldNames.find((name) => errors?.[name]?.message);
-				return match ? errors?.[match]?.message : '';
-			})()"
-		></div>
-	<?php endif; ?>
+			}
 
-	<?php
-		$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
-		$quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
-
-		do_action( 'tutor_quiz_question_after_answers', $quiz_settings, (object) $question );
-	?>
+			echo wp_kses(
+				$answer_title,
+				array(
+					'input' => array(
+						'type'        => true,
+						'class'       => true,
+						'name'        => true,
+						'placeholder' => true,
+						'x-bind'      => true,
+					),
+				)
+			);
+			?>
+		</div>
+	<?php endforeach; ?>
 </div>
+
+<?php if ( $field_name ) : ?>
+	<?php $unique_field_names = array_values( array_unique( $field_names ) ); ?>
+	<div
+		class="tutor-quiz-questions-error"
+		x-data="{ fieldNames: <?php echo esc_attr( wp_json_encode( $unique_field_names ) ); ?> }"
+		x-cloak
+		x-show="fieldNames.some((name) => errors?.[name]?.message)"
+		x-text="(() => {
+			const match = fieldNames.find((name) => errors?.[name]?.message);
+			return match ? errors?.[match]?.message : '';
+		})()"
+	></div>
+<?php endif; ?>

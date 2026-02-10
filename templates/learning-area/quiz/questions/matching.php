@@ -18,14 +18,15 @@ use Tutor\Components\Constants\Variant;
 global $tutor_is_started_quiz;
 
 $default_question = array(
-	'index'              => 1,
-	'question_id'        => 0,
-	'question_title'     => '',
-	'question_type'      => 'matching',
-	'answer_required'    => true,
-	'question_mark'      => 10,
-	'answer_explanation' => '',
-	'question_settings'  => array(
+	'index'                => 1,
+	'question_id'          => 0,
+	'question_title'       => '',
+	'question_description' => '',
+	'question_type'        => 'matching',
+	'answer_required'      => true,
+	'question_mark'        => 10,
+	'answer_explanation'   => '',
+	'question_settings'    => array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
 		'question_type'      => 'matching',
@@ -51,30 +52,18 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 
 ?>
 
-<div 
-	class="tutor-quiz-question" 
-	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
-	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
+<div
 	x-data="tutorQuestionMatching({
 		questionId: 'question-<?php echo esc_attr( $question['question_id'] ); ?>',
 		onDrop: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
 		onClear: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
 	})"
+	class='tutor-flex tutor-flex-column tutor-gap-7 tutor-sm-gap-5'
 >
-	<?php
-	tutor_load_template(
-		'learning-area.quiz.question-header',
-		array(
-			'index'                => $question['index'],
-			'question_title'       => $question['question_title'],
-			'question_description' => $question['question_description'],
-			'question_mark'        => $question['question_mark'],
-			'show_question_mark'   => $question['question_settings']['show_question_mark'],
-		)
-	);
-	?>
-
-	<div class="tutor-quiz-question-options" data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>">
+	<div
+		class="tutor-quiz-question-options"
+		data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>"
+	>
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option">
 				<?php if ( $question['question_settings']['is_image_matching'] && ! empty( $answer['image_id'] ) ) : ?>
@@ -131,7 +120,11 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 		</div>
 		<div class="tutor-quiz-question-options">
 			<?php foreach ( $question['question_answers'] as $answer ) : ?>
-				<div class="tutor-quiz-question-option" data-option="draggable" data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>">
+				<div
+					class="tutor-quiz-question-option"
+					data-option="draggable"
+					data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>"
+				>
 					<div data-title>
 						<?php echo esc_html( $answer['answer_two_gap_match'] ); ?>
 					</div>
@@ -142,11 +135,4 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 			<?php endforeach; ?>
 		</div>
 	</div>
-
-	<?php
-		$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
-		$quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
-
-		do_action( 'tutor_quiz_question_after_answers', $quiz_settings, (object) $question );
-	?>
 </div>

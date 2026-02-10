@@ -77,58 +77,33 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 
 ?>
 
-<div 
-	class="tutor-quiz-question" 
-	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
-	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
->
-	<?php
-	tutor_load_template(
-		'learning-area.quiz.question-header',
-		array(
-			'index'                => $question['index'],
-			'question_title'       => $question['question_title'],
-			'question_description' => $question['question_description'],
-			'question_mark'        => $question['question_mark'],
-			'show_question_mark'   => $question['question_settings']['show_question_mark'],
-		)
-	);
-	?>
-
-	<div class="tutor-quiz-question-options">
-		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<label 
-				class="tutor-quiz-question-option" 
+<div class="tutor-quiz-question-options">
+	<?php foreach ( $question['question_answers'] as $answer ) : ?>
+		<label 
+			class="tutor-quiz-question-option" 
+			<?php if ( $show_correct_answers ) : ?>
+				data-option="<?php echo esc_attr( $is_correct( $answer ) ); ?>"
+			<?php endif; ?>
+		>
+			<input
+				class="tutor-hidden"
+				type="radio"
+				name="<?php echo esc_attr( $field_name ); ?>"
+				value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
+				x-bind="<?php echo esc_attr( $register_attr ); ?>"
 				<?php if ( $show_correct_answers ) : ?>
-					data-option="<?php echo esc_attr( $is_correct( $answer ) ); ?>"
+					checked
 				<?php endif; ?>
 			>
-				<input
-					class="tutor-hidden"
-					type="radio"
-					name="<?php echo esc_attr( $field_name ); ?>"
-					value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
-					x-bind="<?php echo esc_attr( $register_attr ); ?>"
-					<?php if ( $show_correct_answers ) : ?>
-						checked
-					<?php endif; ?>
-				>
-				<?php tutor_utils()->render_svg_icon( $answer['is_correct'] ? Icon::CHECK_2 : Icon::CROSS, 20, 20 ); ?>
-				<?php echo esc_html( $answer['answer_title'] ); ?>
-			</label>
-		<?php endforeach; ?>
-	</div>
-	<div
-		class="tutor-quiz-questions-error"
-		x-cloak
+			<?php tutor_utils()->render_svg_icon( $answer['is_correct'] ? Icon::CHECK_2 : Icon::CROSS, 20, 20 ); ?>
+			<?php echo esc_html( $answer['answer_title'] ); ?>
+		</label>
+	<?php endforeach; ?>
+</div>
+
+<div
+	class="tutor-quiz-questions-error"
+	x-cloak
 	x-show="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
 	x-text="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
-	></div>
-
-	<?php
-		$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
-		$quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
-
-		do_action( 'tutor_quiz_question_after_answers', $quiz_settings, (object) $question );
-	?>
-</div>
+></div>

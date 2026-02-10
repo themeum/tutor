@@ -1620,15 +1620,13 @@ class Quiz {
 		);
 
 		tutor_load_template(
-			'learning-area.quiz.questions.' . $template,
+			'learning-area.quiz.question',
 			array(
-				'question' => (array) $question,
+				'question'          => $question,
+				'question_settings' => $question_settings,
+				'question_type'     => $template,
 			)
 		);
-
-		if ( isset( $GLOBALS['tutor_is_started_quiz'] ) ) {
-			do_action( 'tutor_require_question_answer_file', $question->question_type, $GLOBALS['tutor_is_started_quiz'], $question );
-		}
 	}
 
 	/**

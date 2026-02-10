@@ -44,52 +44,26 @@ if ( $answer_is_required ) {
 
 ?>
 
-<div 
-	class="tutor-quiz-question" 
-	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
-	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
->
-	<?php
-	tutor_load_template(
-		'learning-area.quiz.question-header',
-		array(
-			'index'                => $question['index'],
-			'question_title'       => $question['question_title'],
-			'question_description' => $question['question_description'],
-			'points'               => $question['question_mark'],
-			'show_question_mark'   => $question['question_settings']['show_question_mark'],
-		)
-	);
-	?>
+<div class="tutor-quiz-question-options">
+	<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
+		<div class="tutor-quiz-question-option">
+			<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+			<?php
+			$input_name    = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . '][answer_id][' . $answer['answer_id'] . ']';
+			$rules_suffix  = $register_rules;
+			$register_attr = "register('{$input_name}'{$rules_suffix})";
 
-	<div class="tutor-quiz-question-options">
-		<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
-			<div class="tutor-quiz-question-option">
-				<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
-				<?php
-				$input_name    = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . '][answer_id][' . $answer['answer_id'] . ']';
-				$rules_suffix  = $register_rules;
-				$register_attr = "register('{$input_name}'{$rules_suffix})";
+			if ( 0 === $index ) {
+				$field_name = $input_name;
+			}
 
-				if ( 0 === $index ) {
-					$field_name = $input_name;
-				}
-
-				InputField::make()
-					->name( $input_name )
-					->clearable()
-					->attr( 'x-bind', $register_attr )
-					->placeholder( __( 'Write your answer here', 'tutor' ) )
-					->render();
-				?>
-			</div>
+			InputField::make()
+				->name( $input_name )
+				->clearable()
+				->attr( 'x-bind', $register_attr )
+				->placeholder( __( 'Write your answer here', 'tutor' ) )
+				->render();
+			?>
+		</div>
 	<?php endforeach; ?>
-	</div>
-
-	<?php
-		$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
-		$quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
-
-		do_action( 'tutor_quiz_question_after_answers', $quiz_settings, (object) $question );
-	?>
 </div>

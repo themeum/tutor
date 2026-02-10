@@ -59,54 +59,27 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 
 ?>
 
-<div 
-	class="tutor-quiz-question" 
-	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
-	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
+<div
+	class="tutor-quiz-question-options"
+	<?php if ( $characters_limit > 0 ) : ?>
+		x-data="{ max: <?php echo esc_attr( $characters_limit ); ?>, remaining: <?php echo esc_attr( $characters_limit ); ?> }"
+		x-effect="remaining = Math.max(0, max - (values?.['<?php echo esc_attr( $field_name ); ?>'] || '').length)"
+	<?php endif; ?>
 >
 	<?php
-	tutor_load_template(
-		'learning-area.quiz.question-header',
-		array(
-			'index'                => $question['index'],
-			'question_title'       => $question['question_title'],
-			'question_description' => $question['question_description'],
-			'question_mark'        => $question['question_mark'],
-			'show_question_mark'   => $question['question_settings']['show_question_mark'],
-		)
-	);
+		$input_field = InputField::make()
+			->type( InputType::TEXTAREA )
+			->name( $field_name )
+			->clearable()
+			->attr( 'x-bind', $register_attr )
+			->placeholder( __( 'Type your answer here', 'tutor' ) );
+
+		$input_field->render();
 	?>
-
-	<?php $input_name = $field_name; ?>
-	<div
-		class="tutor-quiz-question-options"
-		<?php if ( $characters_limit > 0 ) : ?>
-			x-data="{ max: <?php echo esc_attr( $characters_limit ); ?>, remaining: <?php echo esc_attr( $characters_limit ); ?> }"
-			x-effect="remaining = Math.max(0, max - (values?.['<?php echo esc_attr( $input_name ); ?>'] || '').length)"
-		<?php endif; ?>
-	>
-		<?php
-			$input_field = InputField::make()
-				->type( InputType::TEXTAREA )
-				->name( $input_name )
-				->clearable()
-				->attr( 'x-bind', $register_attr )
-				->placeholder( __( 'Type your answer here', 'tutor' ) );
-
-			$input_field->render();
-		?>
 	<?php if ( $characters_limit > 0 ) : ?>
 		<p class="tutor-small tutor-text-subdued">
 			<?php esc_html_e( 'Character Remaining: ', 'tutor' ); ?>
 			<span x-text="remaining"></span>
 		</p>
 	<?php endif; ?>
-	</div>
-
-	<?php
-		$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
-		$quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
-
-		do_action( 'tutor_quiz_question_after_answers', $quiz_settings, (object) $question );
-	?>
 </div>

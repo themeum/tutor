@@ -15,14 +15,15 @@ use TUTOR\Icon;
 global $tutor_is_started_quiz;
 
 $default_question = array(
-	'index'              => 1,
-	'question_id'        => 1,
-	'question_title'     => '',
-	'question_type'      => 'ordering',
-	'answer_required'    => true,
-	'question_mark'      => 10,
-	'answer_explanation' => '',
-	'question_settings'  => array(
+	'index'                => 1,
+	'question_id'          => 1,
+	'question_title'       => '',
+	'question_description' => '',
+	'question_type'        => 'ordering',
+	'answer_required'      => true,
+	'question_mark'        => 10,
+	'answer_explanation'   => '',
+	'question_settings'    => array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
 		'question_type'      => 'ordering',
@@ -47,29 +48,13 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 
 ?>
 
-<div 
-	class="tutor-quiz-question"
-	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
-	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
+<div
 	data-question-id="question-<?php echo esc_attr( $question['question_id'] ); ?>"
 	x-data="tutorQuestionOrdering({
 		questionId: 'question-<?php echo esc_attr( $question['question_id'] ); ?>',
 		onOrder: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
 	})"
 >
-	<?php
-	tutor_load_template(
-		'learning-area.quiz.question-header',
-		array(
-			'index'                => $question['index'],
-			'question_title'       => $question['question_title'],
-			'question_description' => $question['question_description'],
-			'question_mark'        => $question['question_mark'],
-			'show_question_mark'   => $question['question_settings']['show_question_mark'],
-		)
-	);
-	?>
-
 	<div class="tutor-quiz-question-options">
 		<input
 			type="hidden"
@@ -98,17 +83,11 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 			</div>
 		<?php endforeach; ?>
 	</div>
+	
 	<div
 		class="tutor-quiz-questions-error"
 		x-cloak
-	x-show="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
-	x-text="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
+		x-show="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
+		x-text="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
 	></div>
-
-	<?php
-		$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
-		$quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
-
-		do_action( 'tutor_quiz_question_after_answers', $quiz_settings, (object) $question );
-	?>
 </div>
