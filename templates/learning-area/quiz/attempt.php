@@ -116,17 +116,18 @@ $default_values = array(
 	)($event)"
 >
 	<?php
-		tutor_load_template(
-			'learning-area.quiz.progress-bar',
-			array(
-				'remaining_time_secs'    => max( 0, (int) $remaining_time_secs ),
-				'quiz_when_time_expires' => $quiz_when_time_expires,
-				'has_time_limit'         => $has_time_limit,
-				'form_id'                => $form_id,
-				'modal_id'               => $modal_id,
-			)
-		);
-		?>
+	tutor_load_template(
+		'learning-area.quiz.progress-bar',
+		array(
+			'remaining_time_secs'    => max( 0, (int) $remaining_time_secs ),
+			'quiz_when_time_expires' => $quiz_when_time_expires,
+			'has_time_limit'         => $has_time_limit,
+			'form_id'                => $form_id,
+			'modal_id'               => $modal_id,
+		)
+	);
+	?>
+  
 	<div
 		class="tutor-quiz-questions"
 		data-question-layout-view="<?php echo esc_attr( $question_layout_view ); ?>"
