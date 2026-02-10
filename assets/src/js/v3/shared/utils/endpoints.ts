@@ -63,6 +63,7 @@ const endpoints = {
   GET_ZOOM_MEETING_DETAILS: 'tutor_zoom_meeting_details',
   SAVE_ZOOM_MEETING: 'tutor_zoom_save_meeting',
   DELETE_ZOOM_MEETING: 'tutor_zoom_delete_meeting',
+  ZOOM_SAVE_API: 'tutor_save_zoom_api',
 
   // GOOGLE MEET
   GET_GOOGLE_MEET_DETAILS: 'tutor_google_meet_meeting_details',
