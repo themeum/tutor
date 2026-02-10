@@ -107,10 +107,6 @@ body:has(#wpadminbar) {
     }
   }
 
-  .tutor-profile-notification-content {
-    border-top: 1px solid $tutor-border-idle;
-  }
-
   .tutor-profile-notification-toggle {
     display: flex;
     align-items: center;
@@ -141,9 +137,5 @@ body:has(#wpadminbar) {
 
   .tutor-input-field {
     margin-bottom: 0px;
-  }
-
-  .tutor-profile-notification-content {
-    border-top: 1px solid $tutor-border-idle;
   }
 }
