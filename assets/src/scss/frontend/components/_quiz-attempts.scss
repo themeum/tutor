@@ -225,21 +225,18 @@
 
           .tutor-quiz-marks-correct,
           .tutor-quiz-marks-incorrect {
-            @include tutor-typography(tiny, medium, secondary);
-            @include tutor-flex(row, center);
-            gap: $tutor-spacing-3;
-            background-color: $tutor-surface-l2;
-            padding: 0 $tutor-spacing-2;
-            border-radius: 40px;
+            @include tutor-badge-base;
+            width: 100%;
+            border-radius: $tutor-radius-full;
 
             &::before {
               content: '';
               display: inline-block;
               width: 8px;
               height: 8px;
-              border-radius: 100%;
+              border-radius: $tutor-radius-full;
               background-color: $tutor-icon-success-primary;
-              margin-inline-start: $tutor-spacing-3;
+              margin-inline-start: $tutor-spacing-1;
             }
           }
 

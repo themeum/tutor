@@ -52,6 +52,7 @@
 
 	&-attempts,
 	.tutor-quiz-attempts {
+		overflow: hidden;
 		.tutor-quiz-attempts-header {
 			grid-template-columns: 310px 180px 1.5fr 1fr;
 		}
