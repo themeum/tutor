@@ -59,6 +59,17 @@ interface ResetPasswordFormProps {
   confirm_new_password: string;
 }
 
+interface PreferencesFormProps {
+  auto_play_next: boolean;
+  theme: string;
+  font_scale: number;
+  formId?: string;
+}
+
+interface UpdateNotificationProps {
+  [key: string]: boolean | string;
+}
+
 const settings = () => {
   const query = window.TutorCore.query;
   const form = window.TutorCore.form;
@@ -78,6 +89,7 @@ const settings = () => {
     saveWithdrawMethodMutation: null as MutationState<TutorMutationResponse<string>> | null,
     resetPasswordMutation: null as MutationState<TutorMutationResponse<string>> | null,
     handleUpdateNotification: null as MutationState<unknown, unknown> | null,
+    savePreferencesMutation: null as MutationState<TutorMutationResponse<PreferencesFormProps>> | null,
 
     init() {
       if (!this.$el) {
@@ -93,7 +105,8 @@ const settings = () => {
       this.handleResetPassword = this.handleResetPassword.bind(this);
 
       this.handleUpdateNotification = this.query.useMutation(this.updateNotification, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data: TutorMutationResponse<string>, payload: UpdateNotificationProps) => {
+          this.form.reset(payload?.formId as string, payload as unknown as Record<string, unknown>);
           this.toast.success(data?.message ?? __('Notification settings updated', 'tutor'));
         },
         onError: (error: Error) => {
@@ -159,12 +172,34 @@ const settings = () => {
           this.toast.error(convertToErrorMessage(error));
         },
       });
+
+      this.savePreferencesMutation = this.query.useMutation(this.updatePreferences, {
+        onSuccess: (data: TutorMutationResponse<PreferencesFormProps>, payload: PreferencesFormProps) => {
+          this.form.reset(payload?.formId || '', payload as unknown as Record<string, unknown>);
+          this.toast.success(data?.message ?? __('Preferences saved successfully', 'tutor'));
+        },
+        onError: (error: Error) => {
+          this.toast.error(convertToErrorMessage(error));
+        },
+      });
     },
 
-    async updateNotification(payload: Record<string, boolean>) {
+    async updatePreferences(payload: PreferencesFormProps) {
+      return wpAjaxInstance.post(endpoints.UPDATE_USER_PREFERENCES, payload) as unknown as Promise<
+        TutorMutationResponse<PreferencesFormProps>
+      >;
+    },
+
+    async updateNotification(payload: UpdateNotificationProps) {
       const transformedPayload = Object.keys(payload).reduce(
         (formattedPayload, key) => {
           const value = payload[key];
+
+          if (typeof value !== 'boolean') {
+            formattedPayload[`${key}`] = value;
+            return formattedPayload;
+          }
+
           const stringValue = typeof value === 'boolean' ? (value ? 'on' : 'off') : value;
 
           if (!key.includes('__')) {

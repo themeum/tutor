@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use stdClass;
 use TUTOR\Input;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
@@ -23,7 +22,6 @@ use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
-use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * Course Class
@@ -300,6 +298,8 @@ class Course extends Tutor_Base {
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
 		add_filter( 'the_preview', array( $this, 'handle_schedule_courses' ) );
+
+		add_action( 'tutor_course_action_btn', array( $this, 'render_course_action_btn' ) );
 	}
 
 	/**
@@ -1174,6 +1174,19 @@ class Course extends Tutor_Base {
 			delete_post_meta( $course_id, '_elementor_edit_mode' );
 		} elseif ( 'droip' === $builder ) {
 			delete_post_meta( $course_id, 'droip_editor_mode' );
+		} elseif ( 'divi' === $builder ) {
+			$old_post_content     = get_post_meta( $course_id, '_et_pb_old_content', true );
+			$course               = get_post( $course_id );
+			$course->post_content = $old_post_content;
+			$result               = wp_update_post( $course );
+
+			if ( $result && ! is_wp_error( $result ) ) {
+				update_post_meta( $course_id, '_et_pb_use_builder', 'off' );
+				update_post_meta( $course_id, '_et_pb_old_content', '' );
+				delete_post_meta( $course_id, '_et_dynamic_cached_shortcodes' );
+				delete_post_meta( $course_id, '_et_dynamic_cached_attributes' );
+				delete_post_meta( $course_id, '_et_builder_module_features_cache' );
+			}
 		}
 
 		$this->json_response(
@@ -3230,5 +3243,40 @@ class Course extends Tutor_Base {
 		// Set course regular & sale price.
 		update_post_meta( $post_ID, self::COURSE_PRICE_META, $regular_price );
 		update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $sale_price );
+	}
+
+	/**
+	 * Render start/resume button in enrolled course action btn.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return void
+	 */
+	public function render_course_action_btn( int $course_id ) {
+		$is_completed = tutor_utils()->is_completed_course( $course_id );
+		if ( $is_completed ) {
+			return;
+		}
+
+		$course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+
+		$button_text = $course_progress['completed_percent'] > 0 ? __( 'Resume', 'tutor' ) : __( 'Start', 'tutor' );
+		$button_url  = tutor_utils()->get_course_first_lesson( $course_id );
+
+		if ( ! $button_url ) {
+			$button_url = get_the_permalink( $course_id );
+		}
+
+		ob_start();
+		?>
+		<a href="<?php echo esc_url( $button_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small">
+			<?php echo esc_html( $button_text ); ?>
+		</a>
+		<?php
+		$button = ob_get_clean();
+
+		echo wp_kses_post( $button );
 	}
 }

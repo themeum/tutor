@@ -9,8 +9,6 @@
  * @since 4.0.0
  */
 
-$attempts_count = tutor_utils()->count( $attempts );
-
 if ( empty( $attempts ) ) {
 	return;
 }
@@ -18,23 +16,23 @@ if ( empty( $attempts ) ) {
 $first_attempt      = $attempts[0];
 $remaining_attempts = array_slice( $attempts, 1 );
 
-
 ?>
 <div x-data="{ expanded: false }" class="tutor-quiz-attempts-item-wrapper" :class="{ 'tutor-quiz-previous-attempts': expanded }">
 	<!-- First Attempt (Always Visible with Quiz Title & Expand Button) -->
 	<?php
 	tutor_load_template(
-		'dashboard.components.quiz-attempt-row',
+		$quiz_attempt_obj->get_quiz_attempt_row_template( $course_id ),
 		array(
-			'attempt'         => $first_attempt,
-			'quiz_title'      => $quiz_title,
-			'course_title'    => $course_title,
-			'course_id'       => $course_id,
-			'show_quiz_title' => true,
-			'show_course'     => true,
-			'quiz_id'         => $quiz_id,
-			'attempts_count'  => $attempts_count,
-			'attempt_id'      => $first_attempt['attempt_id'] ?? 0,
+			'attempt'          => $first_attempt,
+			'quiz_title'       => $quiz_title,
+			'course_title'     => $course_title,
+			'course_id'        => $course_id,
+			'show_quiz_title'  => true,
+			'show_course'      => true,
+			'quiz_id'          => $quiz_id,
+			'attempts_count'   => $attempts_count,
+			'attempt_id'       => $first_attempt['attempt_id'] ?? 0,
+			'quiz_attempt_obj' => $quiz_attempt_obj,
 		)
 	);
 	?>
@@ -48,17 +46,29 @@ $remaining_attempts = array_slice( $attempts, 1 );
 			<?php foreach ( $remaining_attempts as $key => $attempt ) : ?>
 				<?php
 				tutor_load_template(
-					'dashboard.components.quiz-attempt-row',
+					$quiz_attempt_obj->get_quiz_attempt_row_template( $course_id ),
 					array(
-						'attempt'        => $attempt,
-						'attempt_number' => count( $remaining_attempts ) - $key,
-						'quiz_id'        => $quiz_id,
-						'attempt_id'     => $attempt['attempt_id'] ?? 0,
-						'course_id'      => $course_id,
+						'attempt'          => $attempt,
+						'attempt_number'   => count( $remaining_attempts ) - $key,
+						'quiz_id'          => $quiz_id,
+						'attempt_id'       => $attempt['attempt_id'] ?? 0,
+						'course_id'        => $course_id,
+						'quiz_attempt_obj' => $quiz_attempt_obj,
 					)
 				);
 				?>
 			<?php endforeach; ?>
 		</div>
 	<?php endif; ?>
+
+	<div class="tutor-quiz-item-actions tutor-flex">
+		<?php
+		$quiz_attempt_obj->render_retry_button(
+			$course_id,
+			$quiz_id,
+			$first_attempt,
+			$attempts_count
+		);
+		?>
+	</div>
 </div>
