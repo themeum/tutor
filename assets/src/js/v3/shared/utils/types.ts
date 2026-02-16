@@ -296,6 +296,7 @@ export type QuizQuestionType =
   | 'image_answering'
   | 'ordering'
   | 'draw_image'
+  | 'coordinates'
   | 'h5p';
 
 export interface QuizQuestionOption {

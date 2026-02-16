@@ -2,7 +2,7 @@ window.jQuery(document).ready($ => {
     const { __ } = window.wp.i18n;
 
     // Currently only these types of question supports answer reveal mode.
-    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice', 'draw_image'];
+    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice', 'draw_image', 'coordinates'];
 
     let quiz_options = _tutorobject.quiz_options
     let interactions = new Map();
@@ -102,10 +102,12 @@ window.jQuery(document).ready($ => {
             });
         }
 
-        // Reveal mode for draw_image: show reference (instructor mask) and explanation.
-        if (is_reveal_mode() && $question_wrap.data('question-type') === 'draw_image') {
+        // Reveal mode for draw_image & coordinates: show reference/explanation.
+        if (is_reveal_mode() && ['draw_image', 'coordinates'].includes($question_wrap.data('question-type'))) {
             $question_wrap.find('.tutor-quiz-explanation-wrapper').removeClass('tutor-d-none');
-            $question_wrap.find('.tutor-draw-image-reference-wrapper').removeClass('tutor-d-none');
+            if ($question_wrap.data('question-type') === 'draw_image') {
+                $question_wrap.find('.tutor-draw-image-reference-wrapper').removeClass('tutor-d-none');
+            }
             goNext = true;
         }
 
@@ -172,6 +174,17 @@ window.jQuery(document).ready($ => {
                     var $maskInput = $required_answer_wrap.find('input[name*="[answers][mask]"]');
                     if ($maskInput.length && !$maskInput.val().trim().length) {
                         $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please draw on the image to answer this question.', 'tutor')}</p>`);
+                        validated = false;
+                    }
+                } else if ($question_wrap.data('question-type') === 'coordinates') {
+                    // Coordinates: require grid point (hidden inputs [answers][coordinates][x|y]).
+                    var $coordX = $required_answer_wrap.find('input[name*="[answers][coordinates][x]"]');
+                    var $coordY = $required_answer_wrap.find('input[name*="[answers][coordinates][y]"]');
+                    if (
+                        !$coordX.length || !$coordY.length ||
+                        $coordX.val().trim().length === 0 || $coordY.val().trim().length === 0
+                    ) {
+                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please select a coordinate on the grid to answer this question.', 'tutor')}</p>`);
                         validated = false;
                     }
                 } else if ($type === 'radio') {

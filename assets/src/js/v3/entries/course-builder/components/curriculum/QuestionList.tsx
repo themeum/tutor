@@ -110,6 +110,12 @@ const questionTypeOptions: {
     icon: 'quizImageAnswer',
     isPro: true,
   },
+  {
+    label: __('Coordinates', 'tutor'),
+    value: 'coordinates',
+    icon: 'quizImageAnswer',
+    isPro: true,
+  },
 ];
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -230,7 +236,22 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                     is_correct: '1',
                   },
                 ]
-              : [],
+              : questionType === 'coordinates'
+                ? [
+                    {
+                      _data_status: QuizDataStatus.NEW,
+                      is_saved: false,
+                      answer_id: nanoid(),
+                      answer_title: '',
+                      belongs_question_id: questionId,
+                      belongs_question_type: 'coordinates',
+                      answer_two_gap_match: '',
+                      answer_view_format: 'coordinates',
+                      answer_order: 0,
+                      is_correct: '1',
+                    },
+                  ]
+                : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,
