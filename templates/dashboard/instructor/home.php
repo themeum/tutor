@@ -403,6 +403,10 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 		<?php foreach ( $stat_cards as $card ) : ?>
 			<div class="tutor-flex-1">
 			<?php
+			// If from woo-commerce convert the monetization data to appropriate format.
+			if ( 'wc' === tutor_utils()->get_option( 'monetize_by' ) ) {
+				$card['value'] = tutor_utils()->fix_wc_monetization_format( $card['value'] );
+			}
 			tutor_load_template(
 				'dashboard.instructor.analytics.stat-card',
 				array(
