@@ -14,11 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use DateTime;
 use DateInterval;
-use Tutor\Models\CourseModel;
-use Tutor\Helpers\QueryHelper;
+use DateTime;
+use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\Settings;
 use Tutor\Helpers\DateTimeHelper;
+use Tutor\Helpers\QueryHelper;
+use Tutor\Models\CourseModel;
 
 /**
  * Instructor class
@@ -844,6 +846,7 @@ class Instructor {
 	}
 
 	/**
+	 *
 	 * Calculates percentage change and UI metadata for a statistics card.
 	 *
 	 * @since 4.0.0
@@ -905,5 +908,66 @@ class Instructor {
 		tutor_load_template_from_custom_path( $template, $data, $once );
 
 		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Get currency configuration from active monetization system.
+	 *
+	 * Supports WooCommerce, Easy Digital Downloads (EDD),
+	 * and Paid Memberships Pro (PMPro).
+	 *
+	 * @return array{
+	 *     currency: string,
+	 *     symbol: string,
+	 *     position: string,
+	 *     decimal_separator: string,
+	 *     thousand_separator: string
+	 * }
+	 */
+	public static function get_active_currency_config(): array {
+
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+
+		// WooCommerce.
+		if ( 'wc' === $monetize_by ) {
+			return array(
+				'symbol'             => get_woocommerce_currency_symbol(),
+				'position'           => get_option( 'woocommerce_currency_pos' ),
+				'decimal_separator'  => wc_get_price_decimal_separator(),
+				'thousand_separator' => wc_get_price_thousand_separator(),
+				'no_of_decimal'      => wc_get_price_decimals(),
+			);
+		}
+
+		// Easy Digital Downloads.
+		if ( function_exists( 'edd_get_currency' ) ) {
+			return array(
+				'symbol'             => edd_currency_symbol(),
+				'position'           => edd_get_option( 'currency_position', 'before' ),
+				'decimal_separator'  => edd_get_option( 'decimal_separator', '.' ),
+				'thousand_separator' => edd_get_option( 'thousands_separator', ',' ),
+			);
+		}
+
+		// Paid Memberships Pro.
+		if ( function_exists( 'pmpro_getOption' ) ) {
+			global $pmpro_currency, $pmpro_currency_symbol;
+
+			return array(
+				'symbol'             => $pmpro_currency_symbol ?? '$',
+				'position'           => 'left', // PMPro defaults left.
+				'decimal_separator'  => '.',
+				'thousand_separator' => ',',
+			);
+		}
+
+		// Tutor.
+		return array(
+			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ) ),
+			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, true ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, true ),
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, true ),
+			'no_of_decimal'      => tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, true ),
+		);
 	}
 }
