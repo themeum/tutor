@@ -60,10 +60,6 @@ const DrawImage = () => {
         render={(controllerProps) => (
           <FormDrawImage
             {...controllerProps}
-            field={{
-              ...controllerProps.field,
-              value: controllerProps.field.value as QuizQuestionOption,
-            }}
             questionId={activeQuestionId}
             validationError={validationError}
             setValidationError={setValidationError}

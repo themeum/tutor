@@ -106,6 +106,7 @@ const questionTypeOptions: {
   {
     label: __('Draw on Image', 'tutor'),
     value: 'draw_image',
+    // TODO: icon is not final.
     icon: 'quizImageAnswer',
     isPro: true,
   },

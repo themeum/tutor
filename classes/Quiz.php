@@ -41,6 +41,27 @@ class Quiz {
 	const META_QUIZ_OPTION = 'tutor_quiz_option';
 
 	/**
+	 * Quiz feedback mode: show result after the attempt.
+	 *
+	 * @since 4.0.0
+	 */
+	const QUIZ_FEEDBACK_MODE_REVEAL = 'reveal';
+
+	/**
+	 * Quiz feedback mode: reattempt quiz any number of times.
+	 *
+	 * @since 4.0.0
+	 */
+	const QUIZ_FEEDBACK_MODE_RETRY = 'retry';
+
+	/**
+	 * Quiz feedback mode: answers shown after quiz is finished.
+	 *
+	 * @since 4.0.0
+	 */
+	const QUIZ_FEEDBACK_MODE_DEFAULT = 'default';
+
+	/**
 	 * Allowed attrs
 	 *
 	 * @var array

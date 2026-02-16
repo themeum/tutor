@@ -57,6 +57,7 @@ const endpoints = {
   QUIZ_IMPORT_DATA: 'quiz_import_data',
   QUIZ_EXPORT_DATA: 'quiz_export_data',
   DELETE_QUIZ: 'tutor_quiz_delete',
+  START_QUIZ: 'tutor_start_quiz',
 
   // ZOOM
   GET_ZOOM_MEETING_DETAILS: 'tutor_zoom_meeting_details',
@@ -81,6 +82,9 @@ const endpoints = {
   // LESSON
   GET_LESSON_DETAILS: 'tutor_lesson_details',
   SAVE_LESSON: 'tutor_save_lesson',
+  LOAD_LESSON_COMMENTS: 'tutor_load_lesson_comments',
+  CREATE_LESSON_COMMENT: 'tutor_create_lesson_comment',
+  UPDATE_LESSON_COMMENT: 'tutor_update_lesson_comment',
   DELETE_LESSON_COMMENT: 'tutor_delete_lesson_comment',
   REPLY_LESSON_COMMENT: 'tutor_reply_lesson_comment',
 
@@ -181,7 +185,10 @@ const endpoints = {
   SAVE_BILLING_INFO: 'tutor_save_billing_info',
   SAVE_WITHDRAW_METHOD: 'tutor_save_withdraw_account',
   RESET_PASSWORD: 'tutor_profile_password_reset',
-  UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference'
+  UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference',
+  UPDATE_USER_PREFERENCES: 'tutor_save_user_preferences',
+  REMOVE_DEVICE_MANUALLY: 'tutor_remove_device_manually',
+  REMOVE_ALL_ACTIVE_LOGINS: 'tutor_remove_all_active_logins',
 } as const;
 
 export default endpoints;

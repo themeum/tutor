@@ -13,13 +13,16 @@ use TUTOR\Input;
 use TUTOR\Template;
 
 global $tutor_course,
+$current_user_id,
+$tutor_course_id,
 $tutor_course_list_url,
 $tutor_current_content_id,
 $tutor_is_enrolled,
 $tutor_current_post;
 
-$is_preview  = get_post_meta( $tutor_current_post->ID, '_is_preview', true );
-$current_url = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
+$is_preview       = get_post_meta( $tutor_current_post->ID, '_is_preview', true );
+$current_url      = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
+$course_completed = tutor_utils()->get_course_completed_percent( $tutor_course_id, $current_user_id );
 
 $menu_items  = Template::make_learning_area_sub_page_nav_items( $current_url );
 $active_menu = Input::get( 'subpage', '' );
@@ -37,13 +40,18 @@ $active_menu = Input::get( 'subpage', '' );
 	<div class="tutor-learning-sidebar-curriculum">
 		<div class="tutor-learning-progress">
 			<div class="tutor-learning-progress-content">
-				<div class="tutor-learning-progress-text"><span>7%</span> Completed</div>
+				<div class="tutor-learning-progress-text">
+					<?php
+					// translators: %s: course completed percentage.
+					echo sprintf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $course_completed ) . '%</span>' );
+					?>
+				</div>
 				<button class="tutor-learning-progress-reset">
 					<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2, 20, 20 ); ?>
 				</button>
 			</div>
 			<div class="tutor-progress-bar" data-tutor-animated="">
-				<div class="tutor-progress-bar-fill" style="--tutor-progress-width: 75%;"></div>
+				<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $course_completed ); ?>%;"></div>
 			</div>
 		</div>
 		<div class="tutor-learning-nav">
@@ -122,7 +130,16 @@ $active_menu = Input::get( 'subpage', '' );
 			foreach ( $menu_items as $key => $item ) {
 				$active_class = ( $key === $active_menu ) ? 'active' : '';
 				?>
-				<a href="<?php echo esc_url( $item['url'] ); ?>" class="tutor-learning-pages-item <?php echo esc_attr( $active_class ); ?>">
+				<a 	href="<?php echo esc_url( $item['url'] ); ?>" 
+					class="tutor-learning-pages-item <?php echo esc_attr( $active_class ); ?>"
+					<?php
+					if ( isset( $item['onclick'] ) ) {
+						?>
+						onclick="<?php echo esc_attr( $item['onclick'] ); ?>"
+						<?php
+					}
+					?>
+				>
 					<?php tutor_utils()->render_svg_icon( $item['icon'], 20, 20 ); ?>
 					<?php echo esc_html( $item['title'] ); ?>
 				</a>

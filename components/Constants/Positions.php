@@ -19,15 +19,16 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class Positions {
 
-    /**
-     * Position Types
-     *
-     * @since 4.0.0
-     */
-    public const LEFT = 'left';
-    public const RIGHT = 'right';
-    public const TOP = 'top';
-    public const BOTTOM = 'bottom';
-    public const BOTTOM_START = 'bottom-start';
-    public const CENTER = 'center';
+	/**
+	 * Position Types
+	 *
+	 * @since 4.0.0
+	 */
+	public const LEFT         = 'left';
+	public const RIGHT        = 'right';
+	public const TOP          = 'top';
+	public const BOTTOM       = 'bottom';
+	public const BOTTOM_START = 'bottom-start';
+	public const BOTTOM_END   = 'bottom-end';
+	public const CENTER       = 'center';
 }
