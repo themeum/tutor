@@ -107,7 +107,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
       type: 'image',
     },
     onChange: (file) => {
-      if (file && !Array.isArray(file)) {
+      if (file && !Array.isArray(file) && option) {
         const { id, url } = file;
         // Clear previous draw when image is replaced — the saved mask was for the old image.
         const updated: QuizQuestionOption = {
@@ -128,7 +128,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
         setIsDrawModeActive(false);
       }
     },
-    initialFiles: option.image_id
+    initialFiles: option?.image_id
       ? {
           id: Number(option.image_id),
           url: option.image_url || '',
@@ -191,7 +191,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
     }
     const img = imageRef.current;
     const canvas = canvasRef.current;
-    const api = typeof window !== 'undefined' ? window.TutorDrawOnImage : undefined;
+    const api = typeof window !== 'undefined' ? window.TutorCore?.drawOnImage : undefined;
     if (!img || !canvas || !api?.init) {
       return;
     }
@@ -223,6 +223,10 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
       }
     };
   }, []);
+
+  if (!option) {
+    return null;
+  }
 
   const handleSave = () => {
     const canvas = canvasRef.current;

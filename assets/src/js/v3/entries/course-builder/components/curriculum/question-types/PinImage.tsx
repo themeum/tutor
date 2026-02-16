@@ -60,10 +60,6 @@ const PinImage = () => {
         render={(controllerProps) => (
           <FormPinImage
             {...controllerProps}
-            field={{
-              ...controllerProps.field,
-              value: controllerProps.field.value as QuizQuestionOption,
-            }}
             questionId={activeQuestionId}
             validationError={validationError}
             setValidationError={setValidationError}
