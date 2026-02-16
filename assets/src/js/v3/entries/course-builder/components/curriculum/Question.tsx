@@ -39,6 +39,7 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   matching: 'quizImageMatching',
   image_answering: 'quizImageAnswer',
   ordering: 'quizOrdering',
+  draw_image: 'quizImageAnswer',
   h5p: 'quizH5p',
 };
 
