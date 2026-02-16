@@ -6,7 +6,7 @@ export interface OverviewChartProps {
   earnings: number[];
   enrolled: number[];
   labels: string[];
-  currency: MonetizationData[];
+  currency: MonetizationData;
 }
 
 export interface ChartColors {
@@ -715,14 +715,11 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
   },
 });
 
-const formatPriceByMonetization = (data: MonetizationData, value: number): string => {
-  const formatter = createPriceFormatter({
+const formatPriceByMonetization = (data: MonetizationData, value: number): string =>
+  createPriceFormatter({
     symbol: data?.symbol ?? '$',
     position: data?.position ?? 'left',
     thousandSeparator: data?.thousand_separator ?? ',',
     decimalSeparator: data?.decimal_separator ?? '.',
     fraction_digits: Number(data?.no_of_decimal ?? 2),
-  });
-
-  return formatter(value);
-};
+  })(value);

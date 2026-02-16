@@ -950,14 +950,16 @@ class Instructor {
 		}
 
 		// Paid Memberships Pro.
-		if ( function_exists( 'pmpro_getOption' ) ) {
-			global $pmpro_currency, $pmpro_currency_symbol;
+		if ( 'pmpro' === $monetize_by && function_exists( 'pmpro_get_currency' ) ) {
+
+            $currency = pmpro_get_currency();
 
 			return array(
-				'symbol'             => $pmpro_currency_symbol ?? '$',
-				'position'           => 'left', // PMPro defaults left.
-				'decimal_separator'  => '.',
-				'thousand_separator' => ',',
+				'symbol'             => $currency['symbol'],
+				'position'           => $currency['position'],
+				'decimal_separator'  => $currency['decimal_separator'],
+				'thousand_separator' => $currency['thousands_separator'],
+				'no_of_decimal' 	 => $currency['decimals'],
 			);
 		}
 
