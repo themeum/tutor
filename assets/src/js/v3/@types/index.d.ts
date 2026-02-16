@@ -52,18 +52,6 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wp: any;
   interface Window {
-    TutorDrawOnImage?: {
-      init: (options: {
-        image: HTMLImageElement;
-        canvas: HTMLCanvasElement;
-        brushSize?: number;
-        strokeStyle?: string;
-        initialMaskUrl?: string;
-        onMaskChange?: (value: string) => void;
-      }) => { destroy: () => void };
-      DEFAULT_BRUSH_SIZE?: number;
-      DEFAULT_STROKE_STYLE?: string;
-    };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     wp: any;
     ajaxurl: string;
