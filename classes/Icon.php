@@ -139,6 +139,7 @@ final class Icon {
 	const DOT                        = 'dot';
 	const DOWNLOAD                   = 'download';
 	const DOWNLOAD_2                 = 'download-2';
+	const DOWNLOAD_3                 = 'download-3';
 	const DOWNLOAD_COLORIZE          = 'download-colorize';
 	const DRAG                       = 'drag';
 	const DRAG_VERTICAL              = 'drag-vertical';
