@@ -160,12 +160,15 @@
 		}
 
 		&-actions {
-			display: none;
-		}
-
-		&-footer {
+			position: static;
 			display: block;
+			visibility: visible;
+			opacity: 1;
 			padding: $tutor-spacing-6 $tutor-spacing-4 0;
+
+			.tutor-btn {
+				width: 100%;
+			}
 		}
 	}
 }
