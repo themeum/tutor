@@ -105,8 +105,11 @@ window.jQuery(document).ready($ => {
         // Reveal mode for draw_image & coordinates: show reference/explanation.
         if (is_reveal_mode() && ['draw_image', 'coordinates'].includes($question_wrap.data('question-type'))) {
             $question_wrap.find('.tutor-quiz-explanation-wrapper').removeClass('tutor-d-none');
-            if ($question_wrap.data('question-type') === 'draw_image') {
+            const qType = $question_wrap.data('question-type');
+            if (qType === 'draw_image') {
                 $question_wrap.find('.tutor-draw-image-reference-wrapper').removeClass('tutor-d-none');
+            } else if (qType === 'coordinates') {
+                $question_wrap.find('.tutor-coordinates-reference-wrapper').removeClass('tutor-d-none');
             }
             goNext = true;
         }

@@ -219,6 +219,10 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
     [option, updateOption],
   );
 
+  if (!option) {
+    return null;
+  }
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.card}>
