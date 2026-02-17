@@ -164,12 +164,13 @@
         a {
           @include tutor-button-reset();
           @include tutor-typography(small, medium, subdued);
-          @include tutor-flex(row, center);
+          @include tutor-flex(row, flex-start, center);
           gap: $tutor-spacing-4;
           padding: $tutor-spacing-4 $tutor-spacing-5;
           min-height: 40px;
-
+          margin-top: $tutor-spacing-2;
           svg {
+            margin-top: 3px;
             color: $tutor-icon-subdued;
           }
         }
