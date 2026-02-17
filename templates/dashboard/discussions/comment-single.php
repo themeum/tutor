@@ -27,7 +27,8 @@ if ( ! $lesson_comment ) {
 	return;
 }
 
-$user_id = get_current_user_id();
+$user_id                 = get_current_user_id();
+$comment_delete_modal_id = 'tutor-comment-delete-modal';
 
 $replies_order = Input::get( 'order', 'DESC' );
 $replies       = Lesson::get_comment_replies( $discussion_id, $replies_order );
@@ -53,7 +54,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 					<span class="tutor-discussion-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></span> 
 					<span class="tutor-text-secondary">
 						<?php
-							// Translators: %s is the time of comment.
+							// translators: %s is the time of comment.
 							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $lesson_comment->comment_date_gmt ) ) ) );
 						?>
 					</span>
@@ -77,7 +78,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
-							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('tutor-comment-delete-modal', { commentId: <?php echo esc_html( $lesson_comment->comment_ID ); ?> }); hide()">
+							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('<?php echo esc_js( $comment_delete_modal_id ); ?>', { commentId: <?php echo esc_html( $lesson_comment->comment_ID ); ?> }); hide()">
 								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>
@@ -142,7 +143,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 
 	<?php
 	ConfirmationModal::make()
-		->id( 'tutor-comment-delete-modal' )
+		->id( $comment_delete_modal_id )
 		->title( __( 'Delete This Comment?', 'tutor' ) )
 		->message( __( 'Are you sure you want to delete this comment permanently? Please confirm your choice.', 'tutor' ) )
 		->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
