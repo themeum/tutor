@@ -113,6 +113,7 @@ const questionTypeOptions: {
   {
     label: __('Pin on Image', 'tutor'),
     value: 'pin_image',
+    // TODO: icon is not final.
     icon: 'quizImageAnswer',
     isPro: true,
   },
