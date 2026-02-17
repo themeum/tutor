@@ -54,6 +54,10 @@ const questionTypes = {
     label: __('Draw on Image', 'tutor'),
     icon: 'quizImageAnswer',
   },
+  scale: {
+    label: __('Scale', 'tutor'),
+    icon: 'quizImageAnswer',
+  },
   h5p: {
     label: __('H5P', 'tutor'),
     icon: 'quizTrueFalse',

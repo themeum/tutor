@@ -5258,6 +5258,11 @@ class Utils {
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),
+			'scale'             => array(
+				'name'   => __( 'Scale', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-scale tutor-icon-slider-horizontal"></i></span>',
+				'is_pro' => true,
+			),
 		);
 
 		if ( isset( $types[ $type ] ) ) {

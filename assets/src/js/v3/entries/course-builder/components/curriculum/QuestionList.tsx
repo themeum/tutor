@@ -110,6 +110,12 @@ const questionTypeOptions: {
     icon: 'quizImageAnswer',
     isPro: true,
   },
+  {
+    label: __('Scale', 'tutor'),
+    value: 'scale',
+    icon: 'quizImageAnswer',
+    isPro: true,
+  },
 ];
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
