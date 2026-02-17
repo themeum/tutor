@@ -248,6 +248,8 @@ class QueryHelper {
 	/**
 	 * Prepare BETWEEN and NOT BETWEEN sql clauses.
 	 *
+	 * @since 3.9.7
+	 *
 	 * @param array $values the array of values.
 	 *
 	 * @return string
