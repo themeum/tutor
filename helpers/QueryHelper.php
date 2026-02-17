@@ -263,13 +263,10 @@ class QueryHelper {
 
 		$upper_operator = strtoupper( $operator );
 
-		if ( is_array( $value ) ) {
-			$value = array_map( fn( $val ) => self::prepare_value( $val ), $value );
-		}
-
 		if ( in_array( $upper_operator, array( 'IN', 'NOT IN' ), true ) ) {
-			$value = '(' . implode( ',', $value ) . ')';
+			$value = '(' . self::prepare_in_clause( $value ) . ')';
 		} elseif ( in_array( $upper_operator, array( 'BETWEEN', 'NOT BETWEEN' ), true ) ) {
+			$value = array_map( fn( $val ) => self::prepare_value( $val ), $value );
 			$value = implode( ' AND ', $value );
 		} elseif ( strtoupper( $value ) === 'NULL' ) {
 			$value = 'NULL';
