@@ -810,7 +810,7 @@ class CouponModel {
 		} else {
 			$coupon = $this->get_coupon(
 				array(
-					'coupon_code'   => esc_sql( $coupon_code ),
+					'coupon_code'   => $coupon_code,
 					'coupon_status' => self::STATUS_ACTIVE,
 				)
 			);
