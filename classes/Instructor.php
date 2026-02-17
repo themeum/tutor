@@ -913,8 +913,7 @@ class Instructor {
 	/**
 	 * Get currency configuration from active monetization system.
 	 *
-	 * Supports WooCommerce, Easy Digital Downloads (EDD),
-	 * and Paid Memberships Pro (PMPro).
+	 * @since 4.0.0
 	 *
 	 * @return array{
 	 *     currency: string,
@@ -922,6 +921,7 @@ class Instructor {
 	 *     position: string,
 	 *     decimal_separator: string,
 	 *     thousand_separator: string
+	 *     no_of_decimal: int
 	 * }
 	 */
 	public static function get_active_currency_config(): array {
@@ -940,10 +940,13 @@ class Instructor {
 		}
 
 		// Easy Digital Downloads.
-		if ( function_exists( 'edd_get_currency' ) ) {
+		if ( 'edd' === $monetize_by ) {
+
+			$position = edd_get_option( 'currency_position', 'before' ) === 'before' ? 'left' : 'right';
+
 			return array(
-				'symbol'             => edd_currency_symbol(),
-				'position'           => edd_get_option( 'currency_position', 'before' ),
+				'symbol'             => edd_currency_symbol( edd_get_currency() ),
+				'position'           => $position,
 				'decimal_separator'  => edd_get_option( 'decimal_separator', '.' ),
 				'thousand_separator' => edd_get_option( 'thousands_separator', ',' ),
 			);
@@ -952,14 +955,14 @@ class Instructor {
 		// Paid Memberships Pro.
 		if ( 'pmpro' === $monetize_by && function_exists( 'pmpro_get_currency' ) ) {
 
-            $currency = pmpro_get_currency();
+			$currency = pmpro_get_currency();
 
 			return array(
 				'symbol'             => $currency['symbol'],
 				'position'           => $currency['position'],
 				'decimal_separator'  => $currency['decimal_separator'],
 				'thousand_separator' => $currency['thousands_separator'],
-				'no_of_decimal' 	 => $currency['decimals'],
+				'no_of_decimal'      => (int) $currency['decimals'],
 			);
 		}
 
@@ -969,7 +972,7 @@ class Instructor {
 			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, true ),
 			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, true ),
 			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, true ),
-			'no_of_decimal'      => tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, true ),
+			'no_of_decimal'      => (int) tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, true ),
 		);
 	}
 }
