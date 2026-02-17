@@ -246,21 +246,6 @@ class QueryHelper {
 	}
 
 	/**
-	 * Prepare BETWEEN and NOT BETWEEN sql clauses.
-	 *
-	 * @since 3.9.7
-	 *
-	 * @param array $values the array of values.
-	 *
-	 * @return string
-	 */
-	public static function prepare_between_clause( array $values ): string {
-		$values = array_map( fn( $val ) => self::prepare_value( $val ), $values );
-		$value  = implode( ' AND ', $values );
-		return $value;
-	}
-
-	/**
 	 * Make tge where clause base on its column operator and values.
 	 *
 	 * If the operator is IN then make the clause like `WHERE column_name IN (value1, value2, ...)`
@@ -277,10 +262,15 @@ class QueryHelper {
 		list ( $field, $operator, $value ) = $where;
 
 		$upper_operator = strtoupper( $operator );
+
+		if ( is_array( $value ) ) {
+			$value = array_map( fn( $val ) => self::prepare_value( $val ), $value );
+		}
+
 		if ( in_array( $upper_operator, array( 'IN', 'NOT IN' ), true ) ) {
-			$value = '(' . self::prepare_in_clause( $value ) . ')';
+			$value = '(' . implode( ',', $value ) . ')';
 		} elseif ( in_array( $upper_operator, array( 'BETWEEN', 'NOT BETWEEN' ), true ) ) {
-			$value = self::prepare_between_clause( $value );
+			$value = implode( ' AND ', $value );
 		} elseif ( strtoupper( $value ) === 'NULL' ) {
 			$value = 'NULL';
 		} else {
@@ -962,13 +952,7 @@ class QueryHelper {
 	 * @return string
 	 */
 	public static function prepare_in_clause( array $arr ) {
-		$escaped = array_map(
-			function( $value ) {
-				return self::prepare_value( $value );
-			},
-			$arr
-		);
-	
+		$escaped = array_map( fn( $value ) => self::prepare_value( $value ), $arr );
 		return implode( ',', $escaped );
 	}
 
