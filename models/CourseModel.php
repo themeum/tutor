@@ -10,9 +10,11 @@
 
 namespace Tutor\Models;
 
+use InvalidArgumentException;
 use TUTOR\Course;
 use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\QueryHelper;
+use TUTOR\Lesson;
 use TUTOR_ASSIGNMENTS\Assignments;
 
 /**
@@ -524,11 +526,37 @@ class CourseModel {
 					/**
 					 * Delete Quiz data
 					 */
-					if ( get_post_type( $content_id ) === 'tutor_quiz' ) {
+					if ( get_post_type( $content_id ) === $quiz_post_type ) {
+						// Collect file paths from all question types that store files before deleting rows (files deleted after DB for safety).
+						$attempts_for_quiz  = QueryHelper::get_all( 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ), 'attempt_id', -1 );
+						$attempt_file_paths = array();
+						if ( ! empty( $attempts_for_quiz ) ) {
+							$attempt_ids        = array_map(
+								function ( $row ) {
+									return (int) $row->attempt_id;
+								},
+								$attempts_for_quiz
+							);
+							$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
+							$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
+						}
+
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ) );
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $content_id ) );
 
+						QuizModel::delete_files_by_paths( $attempt_file_paths );
+
 						do_action( 'tutor_before_delete_quiz_content', $content_id, null );
+
+						// Collect instructor file paths before deleting question data (e.g. draw_image masks).
+						/**
+						 * Filter to get file paths for quiz deletion.
+						 * Pro and other add-ons register their question types via this filter.
+						 *
+						 * @param string[] $file_paths Paths collected so far.
+						 * @param int      $quiz_id   Quiz post ID.
+						 */
+						$quiz_file_paths = apply_filters( 'tutor_quiz_quiz_file_paths_for_deletion', array(), $content_id );
 
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
@@ -537,6 +565,8 @@ class CourseModel {
 							$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) " );
 						}
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $content_id ) );
+
+						QuizModel::delete_files_by_paths( $quiz_file_paths );
 					}
 
 					/**
@@ -1343,5 +1373,69 @@ class CourseModel {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if the current user has course content access
+	 *
+	 * @since 4.0.0
+	 *
+	 * @throws InvalidArgumentException If args are invalid.
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * `$defaults = array(
+	 *      'current_post_type' => '',
+	 *      'current_post_id'   => 0,
+	 *      'course_id'         => 0,
+	 *      'is_public'         => false,
+	 *      'is_enrolled'       => false,
+	 *  );`.
+	 *
+	 * @return bool
+	 */
+	public static function has_course_content_access( array $args = array() ): bool {
+		$defaults = array(
+			'current_post_type' => '',
+			'current_post_id'   => 0,
+			'course_id'         => 0,
+			'is_public'         => false,
+			'is_enrolled'       => false,
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		if ( ! $args['course_id'] || ! $args['current_post_id'] || ! $args['current_post_type'] ) {
+			throw new InvalidArgumentException( __( 'Invalid argument passed', 'tutor' ) );
+		}
+
+		$has_access = false;
+		$user_id    = get_current_user_id();
+		switch ( $args['current_post_type'] ) {
+			case tutor()->lesson_post_type:
+				$is_preview = (int) get_post_meta( $args['current_post_id'], Lesson::PREVIEW_META_KEY, true );
+				if ( $args['is_public'] || $is_preview ) {
+					$has_access = true;
+				} elseif ( $args['is_enrolled'] || tutor_utils()->has_enrolled_content_access( 'lesson' ) ) {
+					$has_access = true;
+				}
+				break;
+			case tutor()->quiz_post_type:
+			case tutor()->assignment_post_type:
+				if ( $user_id ) {
+					$content_type = tutor()->quiz_post_type === $args['current_post_type'] ? 'quiz' : 'assignment';
+					if ( $args['is_enrolled'] || $args['is_public'] || tutor_utils()->has_enrolled_content_access( $content_type ) ) {
+						$has_access = true;
+					}
+				}
+				break;
+			default:
+				if ( $args['is_enrolled'] ) {
+					$has_access = true;
+				}
+				break;
+		}
+
+		return apply_filters( 'tutor_course_content_access', $has_access, $args );
 	}
 }
