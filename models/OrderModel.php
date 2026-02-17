@@ -12,13 +12,14 @@ namespace Tutor\Models;
 
 use Exception;
 use TUTOR\Earnings;
-use Tutor\Ecommerce\Tax;
-use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\DateTimeHelper;
 use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\CheckoutController;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OrderActivitiesController;
+use Tutor\Ecommerce\Tax;
+use Tutor\Helpers\DateTimeHelper;
+use Tutor\Helpers\QueryHelper;
+use TUTOR\User;
 
 /**
  * OrderModel Class
@@ -1215,13 +1216,13 @@ class OrderModel {
 				// Split each discount.
 				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
 
-				$discount->total = is_admin() ? $admin_discount : $instructor_discount;
+				$discount->total = User::is_admin() ? $admin_discount : $instructor_discount;
 			}
 
 			list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
 
 			$response['discounts']       = $discount_items;
-			$response['total_discounts'] = is_admin() ? $admin_total : $instructor_total;
+			$response['total_discounts'] = User::is_admin() ? $admin_total : $instructor_total;
 		}
 
 		return $response;
@@ -1364,14 +1365,14 @@ class OrderModel {
 
 			// Update total amount from list.
 			$split_refund  = (object) tutor_split_amounts( $refund->total );
-			$refund->total = is_admin() ? $split_refund->admin : $split_refund->instructor;
+			$refund->total = User::is_admin() ? $split_refund->admin : $split_refund->instructor;
 		}
 
 		$split_total_refund = (object) tutor_split_amounts( $total_refund );
 
 		$response = array(
 			'refunds'       => $refunds,
-			'total_refunds' => is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
+			'total_refunds' => User::is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
 		);
 
 		return $response;

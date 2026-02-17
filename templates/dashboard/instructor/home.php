@@ -155,7 +155,7 @@ $previous_period_ratings = ! $is_all_time
 /**
  * -------------------------
  * Hover (comparison) data
- * Only when pro reports + date range and if all-time is not selected.
+ * Only for Pro Reports and “All Time” is not chosen.
  * -------------------------
  */
 $total_earnings_state_card_details = array();
