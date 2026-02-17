@@ -15,8 +15,6 @@ namespace Tutor\Components;
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Icon;
-
 /**
  * WPEditor Component Class.
  *
@@ -344,6 +342,7 @@ class WPEditor extends BaseComponent {
 			<?php echo $wrapper_attr_str; // phpcs:ignore ?>
 			x-data="tutorWPEditor({ 
 				name: '<?php echo esc_js( $this->name ); ?>',
+				editorId: '<?php echo esc_js( $editor_id ); ?>',
 				placeholder: '<?php echo esc_js( $this->placeholder ); ?>'
 			})"
 			x-init="init()"

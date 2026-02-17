@@ -1,15 +1,5 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
 
-// Global type declarations for WordPress editor
-declare global {
-  interface Window {
-    tinymce?: {
-      get(id: string): TinyMCEEditor | null;
-    };
-    quicktags?: unknown;
-  }
-}
-
 interface TinyMCEEditor {
   getContent(): string;
   setContent(content: string): void;
@@ -22,6 +12,7 @@ interface TinyMCEEditor {
 
 interface WPEditorConfig {
   name: string;
+  editorId: string;
   placeholder?: string;
 }
 
@@ -29,15 +20,36 @@ interface AlpineComponent {
   $el: HTMLElement;
 }
 
+interface WPEditorComponent {
+  name: string;
+  editorId: string;
+  placeholder: string;
+  editorInstance: TinyMCEEditor | null;
+  isVisualMode: boolean;
+  initialized: boolean;
+  init(this: AlpineComponent & WPEditorComponent): void;
+  setupTinyMCE(this: AlpineComponent & WPEditorComponent): void;
+  setupTextarea(this: AlpineComponent & WPEditorComponent): void;
+  setupQuickTags(this: AlpineComponent & WPEditorComponent): void;
+  setupFormResetListener(this: AlpineComponent & WPEditorComponent): void;
+  syncEditorToForm(this: AlpineComponent & WPEditorComponent): void;
+  syncTextareaToForm(this: AlpineComponent & WPEditorComponent): void;
+  updateFormValue(this: AlpineComponent & WPEditorComponent, content: string): void;
+  triggerBlur(this: AlpineComponent & WPEditorComponent): void;
+  getContent(this: AlpineComponent & WPEditorComponent): string;
+  setContent(this: AlpineComponent & WPEditorComponent, content: string): void;
+}
+
 /**
  * WordPress Editor Alpine.js Component
  * Integrates wp_editor (TinyMCE/QuickTags) with tutorForm validation system
  */
-export const wpEditor = (config: WPEditorConfig) => {
-  const { name, placeholder = '' } = config;
+export const wpEditor = (config: WPEditorConfig): WPEditorComponent => {
+  const { name, editorId, placeholder = '' } = config;
 
   return {
     name,
+    editorId,
     placeholder,
     editorInstance: null as TinyMCEEditor | null,
     isVisualMode: true,
@@ -57,13 +69,17 @@ export const wpEditor = (config: WPEditorConfig) => {
         this.setupQuickTags();
       }
 
+      // Listen for form reset events
+      this.setupFormResetListener();
+
       this.initialized = true;
     },
 
-    setupTinyMCE(this: AlpineComponent & ReturnType<typeof wpEditor>) {
+    setupTinyMCE(this: AlpineComponent & WPEditorComponent) {
       // TinyMCE might not be initialized immediately
       const checkEditor = () => {
-        const editor = window.tinymce?.get(this.name);
+        // Use editorId instead of name to support multiple editors
+        const editor = window.tinymce?.get(this.editorId);
 
         if (editor) {
           this.editorInstance = editor;
@@ -109,8 +125,8 @@ export const wpEditor = (config: WPEditorConfig) => {
       checkEditor();
     },
 
-    setupTextarea(this: AlpineComponent & ReturnType<typeof wpEditor>) {
-      const textarea = document.getElementById(this.name) as HTMLTextAreaElement;
+    setupTextarea(this: AlpineComponent & WPEditorComponent) {
+      const textarea = document.getElementById(this.editorId) as HTMLTextAreaElement;
 
       if (textarea) {
         // Set placeholder
@@ -135,15 +151,14 @@ export const wpEditor = (config: WPEditorConfig) => {
       }
     },
 
-    setupQuickTags(this: AlpineComponent & ReturnType<typeof wpEditor>) {
+    setupQuickTags(this: AlpineComponent & WPEditorComponent) {
       // QuickTags buttons trigger changes in text mode
-      const textarea = document.getElementById(this.name) as HTMLTextAreaElement;
+      const textarea = document.getElementById(this.editorId) as HTMLTextAreaElement;
 
       if (textarea) {
         // Monitor for QuickTags button clicks
-        // Monitor for QuickTags button clicks
-        // QuickTags toolbars usually have ID "qt_{name}_toolbar"
-        const toolbarId = `qt_${this.name}_toolbar`;
+        // QuickTags toolbars usually have ID "qt_{editorId}_toolbar"
+        const toolbarId = `qt_${this.editorId}_toolbar`;
         const toolbar = document.getElementById(toolbarId);
 
         if (toolbar) {
@@ -159,21 +174,37 @@ export const wpEditor = (config: WPEditorConfig) => {
       }
     },
 
-    syncEditorToForm(this: AlpineComponent & ReturnType<typeof wpEditor>) {
+    setupFormResetListener(this: AlpineComponent & WPEditorComponent) {
+      // Listen for form reset events from tutorForm
+      window.addEventListener('tutor-form-reset', (event: Event) => {
+        const customEvent = event as CustomEvent;
+        const { formId, defaultValues } = customEvent.detail || {};
+
+        // Check if this reset event is for our form by checking if our element is inside the form
+        const form = this.$el.closest('form');
+        if (form && form.getAttribute('x-data')?.includes(`id: '${formId}'`)) {
+          // Reset editor content to default value
+          const defaultValue = defaultValues?.[this.name] || '';
+          this.setContent(defaultValue);
+        }
+      });
+    },
+
+    syncEditorToForm(this: AlpineComponent & WPEditorComponent) {
       if (this.editorInstance) {
         const content = this.editorInstance.getContent();
         this.updateFormValue(content);
       }
     },
 
-    syncTextareaToForm(this: AlpineComponent & ReturnType<typeof wpEditor>) {
+    syncTextareaToForm(this: AlpineComponent & WPEditorComponent) {
       const textarea = document.getElementById(this.name) as HTMLTextAreaElement;
       if (textarea) {
         this.updateFormValue(textarea.value);
       }
     },
 
-    updateFormValue(this: AlpineComponent & ReturnType<typeof wpEditor>, content: string) {
+    updateFormValue(this: AlpineComponent & WPEditorComponent, content: string) {
       // Get the hidden input that's bound to the form
       const hiddenInput = this.$el.querySelector(`input[name="${this.name}"]`) as HTMLInputElement;
 
@@ -186,7 +217,7 @@ export const wpEditor = (config: WPEditorConfig) => {
       }
     },
 
-    triggerBlur(this: AlpineComponent & ReturnType<typeof wpEditor>) {
+    triggerBlur(this: AlpineComponent & WPEditorComponent) {
       const hiddenInput = this.$el.querySelector(`input[name="${this.name}"]`) as HTMLInputElement;
 
       if (hiddenInput) {
@@ -194,7 +225,7 @@ export const wpEditor = (config: WPEditorConfig) => {
       }
     },
 
-    getContent(this: AlpineComponent & ReturnType<typeof wpEditor>): string {
+    getContent(this: AlpineComponent & WPEditorComponent): string {
       if (this.isVisualMode && this.editorInstance) {
         return this.editorInstance.getContent();
       }
@@ -203,7 +234,7 @@ export const wpEditor = (config: WPEditorConfig) => {
       return textarea ? textarea.value : '';
     },
 
-    setContent(this: AlpineComponent & ReturnType<typeof wpEditor>, content: string) {
+    setContent(this: AlpineComponent & WPEditorComponent, content: string) {
       if (this.isVisualMode && this.editorInstance) {
         this.editorInstance.setContent(content);
       }
