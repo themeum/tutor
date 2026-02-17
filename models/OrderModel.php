@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Exception;
+use Tutor\Components\Badge;
 use TUTOR\Earnings;
 use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\CheckoutController;
@@ -2158,5 +2159,34 @@ class OrderModel {
 		} else {
 			return $link;
 		}
+	}
+
+	/**
+	 * Render order status badge.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $status order status.
+	 *
+	 * @return void
+	 */
+	public static function render_order_status_badge( $status ) {
+
+		switch ( $status ) {
+			case self::ORDER_INCOMPLETE:
+				$badge_class = 'default';
+				break;
+			case 'canceled':
+			case self::ORDER_CANCELLED:
+			case self::ORDER_TRASH:
+				$badge_class = 'error';
+				break;
+			case self::ORDER_COMPLETED:
+				$badge_class = 'success';
+				break;
+		}
+
+		$label = tutor_utils()->translate_dynamic_text( $status );
+		Badge::make()->label( $label )->rounded()->attr( 'class', 'tutor-badge-' . $badge_class )->render();
 	}
 }
