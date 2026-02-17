@@ -11,11 +11,6 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
-
-// If from woo-commerce convert the monetization data to appropriate format.
-if ( 'wc' === tutor_utils()->get_option( 'monetize_by' ) ) {
-	$item['revenue'] = tutor_utils()->fix_wc_monetization_format( $item['revenue'] );
-}
 ?>
 
 <div class="tutor-dashboard-home-course">

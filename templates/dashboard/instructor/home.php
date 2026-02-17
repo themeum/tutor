@@ -180,7 +180,7 @@ $stat_cards = array(
 		'variation'     => 'success',
 		'title'         => esc_html__( 'Total Earnings', 'tutor' ),
 		'icon'          => Icon::EARNING,
-		'value'         => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ?? 0 ) ),
+		'value'         => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ?? 0, false ) ),
 		'hover_content' => $total_earnings_state_card_details,
 	),
 	array(
@@ -404,10 +404,6 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 		<?php foreach ( $stat_cards as $card ) : ?>
 			<div class="tutor-flex-1">
 			<?php
-			// If from woo-commerce convert the monetization data to appropriate format.
-			if ( 'wc' === tutor_utils()->get_option( 'monetize_by' ) ) {
-				$card['value'] = tutor_utils()->fix_wc_monetization_format( $card['value'] );
-			}
 			tutor_load_template(
 				'dashboard.instructor.analytics.stat-card',
 				array(

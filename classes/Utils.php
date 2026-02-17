@@ -6257,27 +6257,27 @@ class Utils {
 	 * Get the price format
 	 *
 	 * @since 1.1.2
-	 * @since 4.0.0 Condition added for Paid Membership Pro Monetization.
+	 * @since 4.0.0 Condition added for different monetizations and also added $html_markup for woocommece
 	 *
 	 * @param int $price price.
+	 * @param bool $html_markup  Whether to include HTML markup ( Only for woocommerce as it returns html markup ).                                    
 	 *
 	 * @return int|string
 	 */
-	public function tutor_price( $price = 0 ) {
+	public function tutor_price( $price = 0, $html_markup = true ) {
 
-		$price_float = floatval( Input::sanitize( $price ) );
 		$monetize_by = $this->get_option( 'monetize_by' );
 		
 		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			return tutor_get_formatted_price( $price );
-		} elseif ( 'wc' ===  $monetize_by ) {
-			return wc_price( $price );
-		} elseif ( 'edd' === $monetize_by ) {
+		} elseif ( function_exists( 'wc_price' ) && 'wc' ===  $monetize_by ) {
+			return wc_price( $price, array( 'in_span' => $html_markup ) );
+		} elseif ( function_exists( 'edd_currency_filter' ) && 'edd' === $monetize_by ) {
 			return edd_currency_filter( edd_format_amount( $price ) );
-		} elseif ( 'pmpro' === $monetize_by ) {
-			return pmpro_formatPrice( $price_float );
+		} elseif (  function_exists( 'pmpro_formatPrice' ) && 'pmpro' === $monetize_by ) {
+			return pmpro_formatPrice( floatval( $price ) );
 		} else {		
-			return number_format_i18n( $price_float );
+			return number_format_i18n( floatval( $price ) );
 		}
 	}
 
@@ -10900,17 +10900,5 @@ class Utils {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Normalizes WooCommerce monetization output to plain text.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $value WooCommerce price HTML or encoded string.
-	 * @return string Plain text monetary value.
-	 */
-	public function fix_wc_monetization_format( $value ): string {
-		return wp_strip_all_tags( wp_specialchars_decode( $value ) );
 	}
 }

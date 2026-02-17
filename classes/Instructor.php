@@ -705,6 +705,7 @@ class Instructor {
 	 * @since 4.0.0
 	 *
 	 * @param array $top_courses List of course objects returned from analytics.
+	 *
 	 * @return array Formatted top performing courses data.
 	 */
 	public static function format_instructor_top_performing_courses( $top_courses ) {
@@ -718,7 +719,7 @@ class Instructor {
 				return array(
 					'name'     => $course->course_title,
 					'url'      => get_permalink( $course->course_id ),
-					'revenue'  => wp_kses_post( tutor_utils()->tutor_price( $course->total_revenue ?? 0 ) ),
+					'revenue'  => wp_kses_post( tutor_utils()->tutor_price( $course->total_revenue ?? 0, false ) ),
 					'students' => $course->total_student ?? 0,
 				);
 			},
