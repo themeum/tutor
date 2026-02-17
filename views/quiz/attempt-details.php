@@ -354,6 +354,21 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					elseif ( in_array( $answer->question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true ) ) {
 						$answer_status = null === $answer->is_correct ? 'pending' : 'wrong';
 					}
+
+					// Allow Pro and add-ons to set answer status for custom question types.
+					/**
+					 * Filter to set answer status for custom question types.
+					 * Pro handles draw_image via this filter.
+					 *
+					 * @param string|null $answer_status Current answer status (null if not set).
+					 * @param object      $answer        Answer object.
+					 *
+					 * @return string|null Answer status or null to use default.
+					 */
+					$custom_status = apply_filters( 'tutor_quiz_answer_status_for_question_type', null, $answer );
+					if ( null !== $custom_status ) {
+						$answer_status = $custom_status;
+					}
 					?>
 
 							<tr class="tutor-quiz-answer-status-<?php echo esc_html( $answer_status ); ?>">
@@ -526,6 +541,15 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													}
 
 													tutor_render_answer_list( $answers );
+												} else {
+													/**
+													 * Allow Pro and add-ons to render custom question type answers.
+													 * Pro handles draw_image via this action.
+													 *
+													 * @param object $answer      Answer object.
+													 * @param string $display_type Display type ('given_answer').
+													 */
+													do_action( 'tutor_quiz_render_answer_for_question_type', $answer, 'given_answer' );
 												}
 												?>
 												</div>
@@ -694,6 +718,17 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																<?php
 														}
 														echo '</div>';
+													}
+
+													else {
+														/**
+														 * Allow Pro and add-ons to render correct answer for custom question types.
+														 * Pro handles draw_image via this action.
+														 *
+														 * @param object $answer      Answer object.
+														 * @param string $display_type Display type ('correct_answer').
+														 */
+														do_action( 'tutor_quiz_render_answer_for_question_type', $answer, 'correct_answer' );
 													}
 												}
 												?>

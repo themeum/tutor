@@ -130,7 +130,16 @@ $active_menu = Input::get( 'subpage', '' );
 			foreach ( $menu_items as $key => $item ) {
 				$active_class = ( $key === $active_menu ) ? 'active' : '';
 				?>
-				<a href="<?php echo esc_url( $item['url'] ); ?>" class="tutor-learning-pages-item <?php echo esc_attr( $active_class ); ?>">
+				<a 	href="<?php echo esc_url( $item['url'] ); ?>" 
+					class="tutor-learning-pages-item <?php echo esc_attr( $active_class ); ?>"
+					<?php
+					if ( isset( $item['onclick'] ) ) {
+						?>
+						onclick="<?php echo esc_attr( $item['onclick'] ); ?>"
+						<?php
+					}
+					?>
+				>
 					<?php tutor_utils()->render_svg_icon( $item['icon'], 20, 20 ); ?>
 					<?php echo esc_html( $item['title'] ); ?>
 				</a>
