@@ -629,8 +629,8 @@ class Instructor {
 
 		$complete_status = tutor_utils()->get_earnings_completed_statuses();
 
-		$amount_type = is_admin() ? 'earnings.admin_amount' : 'earnings.instructor_amount';
-		$amount_rate = is_admin() ? 'earnings.admin_rate' : 'earnings.instructor_rate';
+		$amount_type = User::is_admin() ? 'earnings.admin_amount' : 'earnings.instructor_amount';
+		$amount_rate = User::is_admin() ? 'earnings.admin_rate' : 'earnings.instructor_rate';
 
 		$amount_condition = "CASE
 			WHEN orders.tax_type = 'inclusive' AND earnings.course_price_grand_total > 0
@@ -733,6 +733,7 @@ class Instructor {
 	 * @since 4.0.0
 	 *
 	 * @param int $instructor_id Instructor (author) user ID.
+	 *
 	 * @return array List of upcoming live task posts.
 	 */
 	public static function get_instructor_upcoming_live_tasks( $instructor_id ) {
@@ -782,6 +783,7 @@ class Instructor {
 	 * @since 4.0.0
 	 *
 	 * @param array $upcoming_live_tasks List of live task post objects.
+	 *
 	 * @return array Formatted upcoming live tasks data.
 	 */
 	public static function format_instructor_upcoming_live_tasks( $upcoming_live_tasks ) {
@@ -821,6 +823,7 @@ class Instructor {
 	 * @since 4.0.0
 	 *
 	 * @param array $reviews List of review objects.
+	 *
 	 * @return array Formatted recent reviews data.
 	 */
 	public static function format_instructor_recent_reviews( $reviews ) {
