@@ -929,7 +929,7 @@ class QueryHelper {
 		$escaped_value = null;
 		if ( is_int( $value ) ) {
 			$escaped_value = $wpdb->prepare( '%d', $value );
-		} else if( is_float( $value ) ) {
+		} elseif( is_float( $value ) ) {
 			list( $whole, $decimal ) = explode( '.', $value );
 			$expression = '%.'. strlen( $decimal ) . 'f';
 			$escaped_value = $wpdb->prepare( $expression, $value );
