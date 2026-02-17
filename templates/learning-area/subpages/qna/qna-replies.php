@@ -44,7 +44,7 @@ use TUTOR\Icon;
 						</span>
 						<span class="tutor-text-secondary">
 							<?php
-								// Translators: %s is the time of comment.
+								// translators: %s is the time of comment.
 								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $reply->comment_date_gmt ) ) ) );
 							?>
 						</span>

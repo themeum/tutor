@@ -99,7 +99,7 @@ const qnaPage = () => {
           }
         },
         onError: (error: Error) => {
-          toast.error(error.message || __('Failed to update', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 

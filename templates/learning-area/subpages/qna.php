@@ -76,13 +76,13 @@ $questions   = tutor_utils()->get_qa_questions(
 	<div class="tutor-learning-area-qna" x-data="tutorQnA()">
 		<div class="tutor-discussion-search tutor-p-6 tutor-border-b">
 			<?php
-			SearchFilter::make()
-				->form_id( 'tutor-qna-search-form' )
-				->placeholder( 'Search questions, topics...' )
-				->action( UrlHelper::current() )
-				->hidden_inputs( array( 'subpage' => 'qna' ) )
-				->size( 'large' )
-				->render();
+				SearchFilter::make()
+					->form_id( 'tutor-qna-search-form' )
+					->placeholder( 'Search questions, topics...' )
+					->action( UrlHelper::current() )
+					->hidden_inputs( array( 'subpage' => 'qna' ) )
+					->size( Size::LARGE )
+					->render();
 			?>
 		</div>
 

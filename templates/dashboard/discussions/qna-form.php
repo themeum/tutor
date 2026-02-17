@@ -9,13 +9,14 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Button;
+use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\InputField;
-use Tutor\Components\Constants\InputType;
-
-defined( 'ABSPATH' ) || exit;
+use TUTOR\Icon;
 
 $form_id        = isset( $form_id ) ? $form_id : '';
 $label          = isset( $label ) ? $label : '';
@@ -29,7 +30,7 @@ $placeholder    = isset( $placeholder ) ? $placeholder : __( 'Write your questio
 
 ?>
 
-<form 
+<form
 	class="<?php echo esc_attr( $form_class ); ?>"
 	x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>', mode: 'onSubmit', defaultValues: { answer: '<?php echo esc_js( $default_value ); ?>' } }), focused: false }"
 	x-bind="getFormBindings()"
@@ -51,15 +52,15 @@ $placeholder    = isset( $placeholder ) ? $placeholder : __( 'Write your questio
 	$input->render();
 	?>
 
-	<div 
-		class="tutor-flex tutor-items-center tutor-mt-5 tutor-justify-between tutor-sm-justify-end" 
-		x-cloak 
+	<div
+		class="tutor-flex tutor-items-center tutor-mt-5 tutor-justify-between tutor-sm-justify-end"
+		x-cloak
 		:class="{ 'tutor-hidden': !focused }"
 	>
 		<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2 tutor-sm-hidden">
-			<?php tutor_utils()->render_svg_icon( \TUTOR\Icon::COMMAND, 12, 12 ); ?> 
+			<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?>
 			<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
-			<?php tutor_utils()->render_svg_icon( \TUTOR\Icon::ENTER, 12, 12 ); ?> 
+			<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?>
 			<?php esc_html_e( 'Enter to Save', 'tutor' ); ?>
 		</div>
 		<div class="tutor-flex tutor-items-center tutor-gap-2">
@@ -75,7 +76,6 @@ $placeholder    = isset( $placeholder ) ? $placeholder : __( 'Write your questio
 
 			Button::make()
 				->label( $submit_label )
-				->variant( Variant::PRIMARY )
 				->size( Size::X_SMALL )
 				->attr( 'type', 'submit' )
 				->attr( ':disabled', $is_pending )

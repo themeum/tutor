@@ -198,7 +198,7 @@ const discussionsPage = () => {
         onSuccess: (_, payload) => {
           toast.success(__('Reply saved successfully', 'tutor'));
           this.reloadReplies();
-          const formId = `qna-reply-form-${payload.question_id}`;
+          const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${payload.question_id}`;
           if (form.hasForm(formId)) {
             form.reset(formId);
           }
