@@ -5138,6 +5138,11 @@ class Utils {
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-ordering tutor-icon-ordering-z-a"></i></span>',
 				'is_pro' => true,
 			),
+			'draw_image'        => array(
+				'name'   => __( 'Draw on Image', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
+				'is_pro' => true,
+			),
 		);
 
 		if ( isset( $types[ $type ] ) ) {
@@ -5198,7 +5203,7 @@ class Utils {
 		$quiz_id = $this->get_post_id( $quiz_id );
 		global $wpdb;
 
-		$max_questions_count = (int) $this->get_quiz_option( get_the_ID(), 'max_questions_for_answer' );
+		$max_questions_count = (int) $this->get_quiz_option( $quiz_id, 'max_questions_for_answer' );
 		$total_question      = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT count(question_id)
@@ -10587,13 +10592,14 @@ class Utils {
 	 * @since 3.0.0
 	 *
 	 * @param string $base64_image_str base64 image string.
-	 * @param string $filename filename.
+	 * @param string $filename         filename.
+	 * @param bool   $add_to_media     Optional. Whether to add the file to WordPress media library. Default true.
 	 *
-	 * @return object consist of id, title, url.
+	 * @return object consist of id, title, url. When $add_to_media is false, id is 0.
 	 *
 	 * @throws \Exception If upload failed.
 	 */
-	public function upload_base64_image( $base64_image_str, $filename = null ) {
+	public function upload_base64_image( $base64_image_str, $filename = null, $add_to_wp_media = true ) {
 		try {
 			$arr = explode( ',', $base64_image_str, 2 );
 			if ( ! isset( $arr[1] ) ) {
@@ -10608,17 +10614,21 @@ class Utils {
 				throw new \Exception( $uploaded['error'] );
 			}
 
-			$attachment = array(
-				'guid'           => $uploaded['url'],
-				'post_mime_type' => $uploaded['type'],
-				'post_title'     => $filename,
-				'post_content'   => '',
-				'post_status'    => 'inherit',
-			);
+			if ( $add_to_wp_media ) {
+				$attachment = array(
+					'guid'           => $uploaded['url'],
+					'post_mime_type' => $uploaded['type'],
+					'post_title'     => $filename,
+					'post_content'   => '',
+					'post_status'    => 'inherit',
+				);
 
-			$media_id    = wp_insert_attachment( $attachment, $uploaded['file'] );
-			$attach_data = wp_generate_attachment_metadata( $media_id, $uploaded['file'] );
-			wp_update_attachment_metadata( $media_id, $attach_data );
+				$media_id    = wp_insert_attachment( $attachment, $uploaded['file'] );
+				$attach_data = wp_generate_attachment_metadata( $media_id, $uploaded['file'] );
+				wp_update_attachment_metadata( $media_id, $attach_data );
+			} else {
+				$media_id = 0;
+			}
 
 			return (object) array(
 				'id'    => $media_id,
