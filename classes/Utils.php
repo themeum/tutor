@@ -4266,15 +4266,13 @@ class Utils {
 		$course_id     = sanitize_text_field( $course_id );
 		$date_filter   = sanitize_text_field( $date_filter );
 		$instructor_id = $this->get_user_id( $instructor_id );
-		$args          = $this->sanitize_array( $args );
 
 		$course_query = '';
 		$date_query   = '';
-
 		$where_clause = '';
 
-		if ( ! empty( $args['where'] ) ) {
-			$where_clause = ' AND ' . $args['where'];
+		if ( ! empty( $args['where'] ) && is_array( $args['where'] ) ) {
+			$where_clause = count( $args['where'] ) ? ' AND ' . QueryHelper::prepare_where_clause( $args['where'] ) : '';
 		}
 
 		if ( '' !== $course_id ) {

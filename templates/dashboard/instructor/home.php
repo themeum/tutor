@@ -330,7 +330,7 @@ $review_where = array( 'comment_post_ID' => array( 'IN', $instructor_course_ids 
 if ( ! $is_all_time ) {
 	$review_where['comment_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
 }
-$review_args    = array( 'where' => QueryHelper::prepare_where_clause( $review_where ) );
+$review_args    = array( 'where' => $review_where );
 $reviews        = tutor_utils()->get_reviews_by_instructor( $user->ID, 0, 3, '', '', $review_args );
 $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->results );
 ?>
