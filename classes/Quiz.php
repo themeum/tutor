@@ -46,6 +46,27 @@ class Quiz {
 	const META_QUIZ_OPTION = 'tutor_quiz_option';
 
 	/**
+	 * Quiz feedback mode: show result after the attempt.
+	 *
+	 * @since 4.0.0
+	 */
+	const QUIZ_FEEDBACK_MODE_REVEAL = 'reveal';
+
+	/**
+	 * Quiz feedback mode: reattempt quiz any number of times.
+	 *
+	 * @since 4.0.0
+	 */
+	const QUIZ_FEEDBACK_MODE_RETRY = 'retry';
+
+	/**
+	 * Quiz feedback mode: answers shown after quiz is finished.
+	 *
+	 * @since 4.0.0
+	 */
+	const QUIZ_FEEDBACK_MODE_DEFAULT = 'default';
+
+	/**
 	 * Allowed attrs
 	 *
 	 * @var array
@@ -131,6 +152,7 @@ class Quiz {
 		 * @since 2.1.0
 		 */
 		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
+
 
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 
@@ -736,6 +758,14 @@ class Quiz {
 						// 	$is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
 						// }
 						//phpcs:enable
+					} else {
+						$custom_answer_data = array(
+							'given_answer'          => $given_answer,
+							'is_answer_was_correct' => $is_answer_was_correct,
+						);
+						$custom_answer_data = apply_filters( 'tutor_quiz_process_custom_question_answer', $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id );
+						$given_answer          = $custom_answer_data['given_answer'];
+						$is_answer_was_correct = $custom_answer_data['is_answer_was_correct'];
 					}
 
 					$question_mark = $is_answer_was_correct ? $question->question_mark : 0;
@@ -765,6 +795,10 @@ class Quiz {
 					}
 
 					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
+
+					// Allow Pro to grade draw_image (and other custom types) and set achieved_mark / is_correct.
+					$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
+					$total_marks  = apply_filters( 'tutor_quiz_adjust_total_marks_for_question', $total_marks, $question_mark, $answers_data, $question_type, $question_id );
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 				}
@@ -1079,8 +1113,34 @@ class Quiz {
 
 		do_action( 'tutor_delete_quiz_before', $quiz_id );
 
+		// Collect file paths from all question types that store files before deleting rows (files deleted after DB for safety).
+		$attempts_for_quiz  = QueryHelper::get_all( 'tutor_quiz_attempts', array( 'quiz_id' => $quiz_id ), 'attempt_id', -1 );
+		$attempt_file_paths = array();
+		if ( ! empty( $attempts_for_quiz ) ) {
+			$attempt_ids        = array_map(
+				function ( $row ) {
+					return (int) $row->attempt_id;
+				},
+				$attempts_for_quiz
+			);
+			$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
+			$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
+		}
+
 		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $quiz_id ) );
 		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $quiz_id ) );
+
+		QuizModel::delete_files_by_paths( $attempt_file_paths );
+
+		// Collect instructor file paths before deleting question data (e.g. draw_image masks).
+		/**
+		 * Filter to get file paths for quiz deletion.
+		 * Pro and other add-ons register their question types via this filter.
+		 *
+		 * @param string[] $file_paths Paths collected so far.
+		 * @param int      $quiz_id   Quiz post ID.
+		 */
+		$quiz_file_paths = apply_filters( 'tutor_quiz_quiz_file_paths_for_deletion', array(), $quiz_id );
 
 		$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $quiz_id ) );
 
@@ -1097,6 +1157,8 @@ class Quiz {
 		}
 
 		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) );
+
+		QuizModel::delete_files_by_paths( $quiz_file_paths );
 
 		wp_delete_post( $quiz_id, true );
 
