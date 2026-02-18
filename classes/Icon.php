@@ -92,6 +92,7 @@ final class Icon {
 	const CIRCUM_LOCK                = 'circum-lock';
 	const CLOCK                      = 'clock';
 	const CLOCK_2                    = 'clock-2';
+	const CLOCK_FRAME                = 'clock-frame';
 	const CODING                     = 'coding';
 	const COLLAPSED                  = 'collapsed';
 	const COLOR_OPTION               = 'color-option';

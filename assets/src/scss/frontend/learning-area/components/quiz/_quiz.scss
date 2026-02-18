@@ -129,13 +129,13 @@ $tutor-quiz-footer-offset: 96px;
 
     &-header {
       @include tutor-flex(row, center, space-between);
+      gap: $tutor-spacing-8;
     }
 
-    &-time {
-      @include tutor-flex(row, center, center);
-      @include tutor-typography('h3', 'semibold');
-      gap: $tutor-spacing-2;
-      font-variant-numeric: tabular-nums;
+    &-bar-wrapper {
+      flex: 1;
+      min-width: 0;
+      padding-top: $tutor-spacing-2;
     }
 
     &-animate {
@@ -143,6 +143,94 @@ $tutor-quiz-footer-offset: 96px;
         @include tutor-spin;
         transform-origin: center;
       }
+    }
+  }
+
+  &-timer-frame {
+    @include tutor-flex(row, center, center);
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    @include tutor-transition(color);
+
+    &.is-initial {
+      color: $tutor-text-brand;
+    }
+
+    &.is-warning {
+      color: $tutor-text-exception4;
+    }
+
+    &.is-critical {
+      color: $tutor-text-critical;
+    }
+
+    &[data-shaking='1'] {
+      animation: tutor-shake 0.5s ease-in-out;
+    }
+
+    svg {
+      display: block;
+    }
+  }
+
+  &-timer-text {
+    @include tutor-typography('h5', 'semibold');
+    @include tutor-flex-center;
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 27px;
+    font-variant-numeric: tabular-nums;
+    @include tutor-transition(color);
+
+    &.is-initial {
+      color: $tutor-text-brand;
+    }
+
+    &.is-warning {
+      color: $tutor-text-exception4;
+    }
+
+    &.is-critical {
+      color: $tutor-text-critical;
+    }
+  }
+
+  &-timer-separator {
+    line-height: 1;
+  }
+
+  &-timer-digit-wrapper {
+    height: 1.25em;
+    overflow: hidden;
+    line-height: 1.25em;
+  }
+
+  &-timer-reel {
+    @include tutor-flex-column;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    span {
+      display: block;
+      height: 1.25em;
+      text-align: center;
+    }
+  }
+
+  @keyframes tutor-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    10%,
+    50%,
+    90% {
+      transform: translateX(-2px);
+    }
+    30%,
+    70% {
+      transform: translateX(2px);
     }
   }
 

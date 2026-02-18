@@ -124,6 +124,7 @@ $default_values = array(
 			'has_time_limit'         => $has_time_limit,
 			'form_id'                => $form_id,
 			'modal_id'               => $modal_id,
+			'total_questions'        => count( $questions ),
 		)
 	);
 	?>
