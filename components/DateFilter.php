@@ -83,15 +83,6 @@ class DateFilter extends BaseComponent {
 	protected $placement = self::PLACEMENT_BOTTOM_START;
 
 	/**
-	 * CSS class name used for the icon element.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var string
-	 */
-	protected $icon_class;
-
-	/**
 	 * Button size.
 	 *
 	 * @var string
@@ -182,25 +173,12 @@ class DateFilter extends BaseComponent {
 	}
 
 	/**
-	 * Set Icon Class.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $icon_class CSS class name used for the icon element.
-	 *
-	 * @return self
-	 */
-	public function icon_class( string $icon_class ): self {
-		$this->icon_class = $icon_class;
-		return $this;
-	}
-
-	/**
 	 * Enable or disable the display of the label text.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @param bool $show_label True to show the label, false to hide it.
+	 *
 	 * @return $this
 	 */
 	public function show_label( bool $show_label ) {
@@ -233,10 +211,6 @@ class DateFilter extends BaseComponent {
 
 		$popover_classes = 'tutor-popover';
 		$icon            = Icon::CALENDAR_2;
-
-		if ( ! empty( $this->icon_class ) ) {
-			$button_classes .= " {$this->icon_class}";
-		}
 
 		if ( $is_range ) {
 			$calendar_options = array(
