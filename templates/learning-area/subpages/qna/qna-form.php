@@ -18,15 +18,15 @@ use Tutor\Components\Constants\Variant;
 use Tutor\Components\InputField;
 use TUTOR\Icon;
 
-$form_id        = isset( $form_id ) ? $form_id : '';
-$label          = isset( $label ) ? $label : '';
-$submit_label   = isset( $submit_label ) ? $submit_label : __( 'Update', 'tutor' );
-$form_class     = isset( $form_class ) ? $form_class : '';
-$default_value  = isset( $default_value ) ? $default_value : '';
-$submit_handler = isset( $submit_handler ) ? $submit_handler : '';
-$cancel_handler = isset( $cancel_handler ) ? $cancel_handler : '';
-$is_pending     = isset( $is_pending ) ? $is_pending : '';
-$placeholder    = isset( $placeholder ) ? $placeholder : __( 'Write your question', 'tutor' );
+$form_id        = $form_id ?? '';
+$label          = $label ?? '';
+$submit_label   = $submit_label ?? __( 'Update', 'tutor' );
+$form_class     = $form_class ?? '';
+$default_value  = $default_value ?? '';
+$submit_handler = $submit_handler ?? '';
+$cancel_handler = $cancel_handler ?? '';
+$is_pending     = $is_pending ?? '';
+$placeholder    = $placeholder ?? __( 'Write your question', 'tutor' );
 
 ?>
 

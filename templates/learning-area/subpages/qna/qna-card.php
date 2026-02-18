@@ -20,7 +20,7 @@ global $tutor_course_id;
 $current_user_id = get_current_user_id();
 $is_user_asker   = $current_user_id === (int) $question->user_id;
 
-$limit   = 60;
+$limit   = 60; // Content text limit.
 $content = wp_strip_all_tags( $question->comment_content );
 $content = strlen( $content ) > $limit ? substr( $content, 0, $limit ) . '...' : $content;
 
