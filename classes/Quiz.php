@@ -151,7 +151,7 @@ class Quiz {
 
 		// Pin image: process answer via filter (priority 5 so core runs before Pro custom types).
 		add_filter( 'tutor_quiz_process_custom_question_answer', array( $this, 'process_pin_image_question_answer' ), 5, 6 );
-		add_filter( 'tutor_quiz_quiz_file_paths_for_deletion', array( $this, 'add_pin_image_quiz_file_paths_for_deletion' ), 10, 2 );
+		// Pin/draw image quiz file paths for deletion are added by Tutor Pro via tutor_quiz_quiz_file_paths_for_deletion.
 
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 
@@ -1184,20 +1184,17 @@ class Quiz {
 	 * @param array  $custom_answer_data Array with given_answer and is_answer_was_correct.
 	 * @param string $question_type      Question type.
 	 * @param array  $answers            Answer data from request.
-	 * @param object $question           Question object.
-	 * @param int    $question_id        Question ID.
-	 * @param int    $attempt_id         Attempt ID.
 	 *
 	 * @return array Modified custom_answer_data.
 	 */
-	public function process_pin_image_question_answer( $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id ) {
+	public function process_pin_image_question_answer( $custom_answer_data, $question_type, $answers ) {
 		if ( 'pin_image' !== $question_type ) {
 			return $custom_answer_data;
 		}
 
 		$given_answer = '';
 
-		// Frontend posts: attempt[attempt_id][quiz_question][question_id][answers][pin][x|y]
+		// Frontend posts: attempt[attempt_id][quiz_question][question_id][answers][pin][x|y].
 		if ( is_array( $answers ) && isset( $answers['answers']['pin'] ) && is_array( $answers['answers']['pin'] ) ) {
 			$raw_pin = $answers['answers']['pin'];
 			$x       = isset( $raw_pin['x'] ) ? (float) $raw_pin['x'] : 0.0;
@@ -1218,20 +1215,6 @@ class Quiz {
 		$custom_answer_data['is_answer_was_correct'] = false;
 
 		return $custom_answer_data;
-	}
-
-	/**
-	 * Add pin_image instructor mask file paths for quiz deletion (filter callback).
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string[] $file_paths Paths collected so far.
-	 * @param int      $quiz_id    Quiz post ID.
-	 *
-	 * @return string[]
-	 */
-	public function add_pin_image_quiz_file_paths_for_deletion( $file_paths, $quiz_id ) {
-		return array_merge( (array) $file_paths, QuizModel::get_pin_image_file_paths_for_quiz( $quiz_id ) );
 	}
 
 	/**
