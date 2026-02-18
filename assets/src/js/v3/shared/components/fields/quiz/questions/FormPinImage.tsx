@@ -71,15 +71,15 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
     }
 
     const rect = container.getBoundingClientRect();
-    const w = Math.round(rect.width);
-    const h = Math.round(rect.height);
+    const width = Math.round(rect.width);
+    const height = Math.round(rect.height);
 
-    if (!w || !h) {
+    if (!width || !height) {
       return;
     }
 
-    canvas.width = w;
-    canvas.height = h;
+    canvas.width = width;
+    canvas.height = height;
     canvas.style.position = 'absolute';
     canvas.style.top = '0';
     canvas.style.left = '0';
