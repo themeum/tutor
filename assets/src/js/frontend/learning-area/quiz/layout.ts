@@ -31,6 +31,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
     feedbackMode: config.feedbackMode ?? '',
     revealWaitMs: config.revealWaitMs ?? null,
     revealAnswerIds: [] as number[],
+    answerRequiredByIndex: {} as Record<number, boolean>,
     isRevealing: false,
 
     $el: null as HTMLElement | null,
@@ -38,6 +39,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
     init() {
       this.revealAnswerIds = this.getRevealAnswerIds();
+      this.answerRequiredByIndex = this.getAnswerRequiredMap();
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
@@ -55,11 +57,62 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return false;
       }
+      if (index >= this.totalQuestions) {
+        return false;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(this.answerRequiredByIndex, index)) {
+        return !this.answerRequiredByIndex[index];
+      }
+
       const wrapper = this.getQuestionWrapper(index);
-      if (!wrapper || index >= this.totalQuestions) {
+      if (!wrapper) {
         return false;
       }
       return wrapper.dataset.answerRequired !== '1';
+    },
+
+    hasAttemptedValue(value: unknown): boolean {
+      if (value === null || value === undefined) {
+        return false;
+      }
+
+      if (typeof value === 'string') {
+        return value.trim().length > 0;
+      }
+
+      if (Array.isArray(value)) {
+        return value.some((item) => this.hasAttemptedValue(item));
+      }
+
+      if (typeof value === 'object') {
+        return Object.values(value as Record<string, unknown>).some((item) => this.hasAttemptedValue(item));
+      }
+
+      return true;
+    },
+
+    isQuestionAttempted(index: number): boolean {
+      if (!form || !this.formId || !form.hasForm(this.formId)) {
+        return false;
+      }
+
+      const values = form.getFormState(this.formId).values ?? {};
+      const fieldNames = this.getQuestionFieldNames(values, index);
+
+      if (!fieldNames.length) {
+        return false;
+      }
+
+      return fieldNames.some((fieldName) => this.hasAttemptedValue(values[fieldName]));
+    },
+
+    shouldDisableNextButton(): boolean {
+      if (this.layout !== QuizLayoutType.SINGLE_QUESTION) {
+        return false;
+      }
+
+      return !this.isQuestionAttempted(this.currentIndex);
     },
 
     goPrev() {
@@ -77,6 +130,9 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
       if (this.isRevealing) {
+        return;
+      }
+      if (!skipValidation && this.shouldDisableNextButton()) {
         return;
       }
 
@@ -233,6 +289,26 @@ const quizLayout = (config: QuizLayoutConfig) => {
       return root?.querySelector(
         `${QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER}[${QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER_ATTR}="${index}"]`,
       ) as HTMLElement | null;
+    },
+
+    getAnswerRequiredMap(): Record<number, boolean> {
+      const root = this.$root ?? this.$el;
+      if (!root) {
+        return {};
+      }
+
+      const wrappers = Array.from(root.querySelectorAll<HTMLElement>(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER));
+      const map: Record<number, boolean> = {};
+
+      wrappers.forEach((wrapper) => {
+        const index = Number(wrapper.getAttribute(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER_ATTR));
+        if (Number.isNaN(index) || index < 1) {
+          return;
+        }
+        map[index] = wrapper.dataset.answerRequired === '1';
+      });
+
+      return map;
     },
 
     scrollToQuestion() {

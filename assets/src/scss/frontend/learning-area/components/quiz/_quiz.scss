@@ -67,6 +67,16 @@ $tutor-quiz-footer-offset: 96px;
       margin-inline-start: 0;
     }
 
+    &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-footer-inner {
+      justify-content: center;
+    }
+
+    &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-footer-inner:has(
+        .tutor-quiz-skip-btn:not([style*='display: none'])
+      ) {
+      justify-content: space-between;
+    }
+
     body:has(#wpadminbar) & {
       .tutor-quiz-questions-pagination {
         top: $tutor-quiz-header-offset-admin;
@@ -166,7 +176,7 @@ $tutor-quiz-footer-offset: 96px;
     }
 
     &[data-shaking='1'] {
-      animation: tutor-shake 0.5s ease-in-out;
+      animation: tutor-quiz-timer-shake 0.5s ease-in-out;
     }
 
     svg {
@@ -219,7 +229,7 @@ $tutor-quiz-footer-offset: 96px;
     }
   }
 
-  @keyframes tutor-shake {
+  @keyframes tutor-quiz-timer-shake {
     0%,
     100% {
       transform: rotate(0deg);
@@ -320,6 +330,18 @@ $tutor-quiz-footer-offset: 96px;
 
   &-skip-btn {
     margin-inline-start: auto;
+  }
+
+  &-answer-next-btn,
+  &-submit-btn {
+    padding-inline: 32px;
+
+    &:disabled {
+      background-color: $tutor-button-disabled;
+      border-color: $tutor-button-disabled;
+      color: $tutor-text-subdued;
+      opacity: 1;
+    }
   }
 
   &-question {
@@ -874,6 +896,7 @@ $tutor-quiz-footer-offset: 96px;
       width: 100%;
       max-width: 792px;
       margin-inline: auto;
+
     }
 
     &[data-position='first'] &-inner {

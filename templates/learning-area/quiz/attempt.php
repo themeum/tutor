@@ -218,21 +218,32 @@ $default_values = array(
 			<div class="tutor-quiz-footer-inner">
 				<?php
 				Button::make()
+					->label( __( 'Skip Question', 'tutor' ) )
+					->size( Size::LARGE )
+					->variant( Variant::GHOST )
+					->attr( 'type', 'button' )
+					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+					->attr( 'x-show', 'canSkip(currentIndex)' )
+					->attr( '@click', 'goNext({ skipValidation: true })' )
+					->attr( 'class', 'tutor-quiz-skip-btn' )
+					->render();
+
+				Button::make()
 					->label( __( 'Back', 'tutor' ) )
 					->size( Size::LARGE )
-					->variant( \Tutor\Components\Constants\Variant::OUTLINE )
+					->variant( Variant::OUTLINE )
 					->attr( 'type', 'button' )
 					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
 					->attr( '@click', 'goPrev()' )
-					->attr( 'x-show', $show_previous_button ? 'currentIndex > 1' : 'false' )
+					->attr( 'x-show', $show_previous_button ? 'layout !== "single_question" && currentIndex > 1' : 'false' )
 					->attr( 'class', 'tutor-quiz-answer-previous-btn' )
 					->render();
 
 				Button::make()
-					->label( __( 'Submit &amp; Next', 'tutor' ) )
+					->label( __( 'Next', 'tutor' ) )
 					->size( Size::LARGE )
 					->attr( 'type', 'button' )
-					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+					->attr( ':disabled', 'isRevealSubmitting || isRevealing || shouldDisableNextButton()' )
 					->attr( '@click', 'goNext()' )
 					->attr( 'x-show', 'currentIndex < totalQuestions' )
 					->attr( 'class', 'tutor-quiz-answer-next-btn' )
@@ -246,17 +257,6 @@ $default_values = array(
 					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
 					->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
 					->attr( 'class', 'tutor-quiz-submit-btn' )
-					->render();
-
-				Button::make()
-					->label( __( 'Skip Question', 'tutor' ) )
-					->size( Size::LARGE )
-					->variant( \Tutor\Components\Constants\Variant::GHOST )
-					->attr( 'type', 'button' )
-					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
-					->attr( 'x-show', 'canSkip(currentIndex)' )
-					->attr( '@click', 'goNext({ skipValidation: true })' )
-					->attr( 'class', 'tutor-quiz-skip-btn' )
 					->render();
 				?>
 			</div>
