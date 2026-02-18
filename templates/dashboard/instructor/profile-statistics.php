@@ -8,7 +8,7 @@
  * @since 4.0.0
  */
 
-use TUTOR\Icon;
+defined( 'ABSPATH' ) || exit;
 ?>	
 		
 <h5 class="tutor-statistic-title">
