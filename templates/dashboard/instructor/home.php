@@ -100,8 +100,9 @@ $end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', I
 $is_all_time    = empty( $start_date ) && empty( $end_date );
 $previous_dates = $is_all_time ? array() : Instructor::get_comparison_date_range( $start_date, $end_date );
 
-$date_range = fn( $from, $to, $column ) => array(
-	$column => array( 'BETWEEN', array( $from, $to ) ),
+$date_range = fn( $from, $to ): array => array(
+	'from' => $from,
+	'to'   => $to,
 );
 
 $stat = function ( $current, $previous, $previous_dates ) {
@@ -127,7 +128,7 @@ if ( $is_pro_reports ) {
 	if ( ! $is_all_time ) {
 		$previous_period_earnings = WithdrawModel::get_withdraw_summary(
 			$user->ID,
-			$date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], 'created_at' )
+			$date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )
 		)->total_income ?? 0;
 	}
 }
@@ -144,13 +145,13 @@ $previous_period_students = ! $is_all_time
 							? Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID )
 							: 0;
 
+
 // Total Ratings.
-$total_ratings_where     = ! $is_all_time ? $date_range( $start_date, $end_date, 'reviews.comment_date' ) : array();
+$total_ratings_where     = ! $is_all_time ? $date_range( $start_date, $end_date ) : array();
 $total_ratings           = tutor_utils()->get_instructor_ratings( $user->ID, $total_ratings_where );
 $previous_period_ratings = ! $is_all_time
-							? tutor_utils()->get_instructor_ratings( $user->ID, $date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], 'reviews.comment_date' ) )
+							? tutor_utils()->get_instructor_ratings( $user->ID, $date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) )
 							: (object) array( 'rating_avg' => 0 );
-
 
 /**
  * -------------------------
@@ -326,11 +327,10 @@ if ( $is_all_time && $tutor_pro_enabled ) {
 // );
 
 // Recent Reviews.
-$review_where = array( 'comment_post_ID' => array( 'IN', $instructor_course_ids ) );
+$review_args = array();
 if ( ! $is_all_time ) {
-	$review_where['comment_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
+	$review_args = $date_range( $start_date, $end_date );
 }
-$review_args    = array( 'where' => $review_where );
 $reviews        = tutor_utils()->get_reviews_by_instructor( $user->ID, 0, 3, '', '', $review_args );
 $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->results );
 ?>

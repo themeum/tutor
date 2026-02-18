@@ -14,7 +14,6 @@ use TUTOR\Icon;
 use Tutor\Ecommerce\Tax;
 use Tutor\Cache\TutorCache;
 use Tutor\Models\QuizModel;
-use Tutor\Helpers\UrlHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
@@ -4254,7 +4253,7 @@ class Utils {
 	 * @param int    $limit limit.
 	 * @param string $course_id course id.
 	 * @param string $date_filter date filter.
-	 * @param array  $args Optional query arguments.
+	 * @param array  $args Optional additional WHERE conditions.
 	 *
 	 * @return array|null|object
 	 */
@@ -4271,8 +4270,12 @@ class Utils {
 		$date_query   = '';
 		$where_clause = '';
 
-		if ( ! empty( $args['where'] ) && is_array( $args['where'] ) ) {
-			$where_clause = count( $args['where'] ) ? ' AND ' . QueryHelper::prepare_where_clause( $args['where'] ) : '';
+		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
+			$from = Input::sanitize( $args['from'] );
+			$to   = Input::sanitize( $args['to'] );
+
+			$where['comment_date'] = array( 'BETWEEN', array( $from, $to ) );
+			$where_clause          = ' AND ' . QueryHelper::prepare_where_clause( $where );
 		}
 
 		if ( '' !== $course_id ) {
@@ -4362,11 +4365,11 @@ class Utils {
 	 * @since 4.0.0 Added $where Parameter.
 	 *
 	 * @param int   $instructor_id instructor id.
-	 * @param array $where       Optional additional WHERE conditions.
+	 * @param array $args       Optional additional WHERE conditions.
 	 *
 	 * @return object
 	 */
-	public function get_instructor_ratings( $instructor_id, $where = array() ) {
+	public function get_instructor_ratings( $instructor_id, $args = array() ) {
 		global $wpdb;
 
 		$ratings = array(
@@ -4375,15 +4378,20 @@ class Utils {
 			'rating_avg'   => 0.00,
 		);
 
-		// Prepare where clause.
-		$where_clause = QueryHelper::prepare_where_clause(
-			$this->sanitize_array(
-				$where + array(
-					'courses.user_id'  => $instructor_id,
-					'courses.meta_key' => '_tutor_instructor_course_id',
-				)
-			)
+		$where = array(
+			'courses.user_id'  => (int) $instructor_id,
+			'courses.meta_key' => '_tutor_instructor_course_id',
 		);
+
+		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
+			$from = Input::sanitize( $args['from'] );
+			$to   = Input::sanitize( $args['to'] );
+
+			$where['reviews.comment_date'] = array( 'BETWEEN', array( $from, $to ) );
+		}
+
+		// Prepare where clause.
+		$where_clause = QueryHelper::prepare_where_clause( $where );
 
 		$rating = $wpdb->get_row(
 			"SELECT COUNT(rating.meta_value) as rating_count, SUM(rating.meta_value) as rating_sum
@@ -6257,24 +6265,24 @@ class Utils {
 	 * @since 1.1.2
 	 * @since 4.0.0 Condition added for different monetizations and also added $html_markup for woocommece
 	 *
-	 * @param int $price price.
-	 * @param bool $html_markup  Whether to include HTML markup ( Only for woocommerce as it returns html markup ).                                    
+	 * @param int  $price price.
+	 * @param bool $html_markup  Whether to include HTML markup ( Only for woocommerce as it returns html markup ).
 	 *
 	 * @return int|string
 	 */
 	public function tutor_price( $price = 0, $html_markup = true ) {
 
 		$monetize_by = $this->get_option( 'monetize_by' );
-		
+
 		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			return tutor_get_formatted_price( $price );
-		} elseif ( function_exists( 'wc_price' ) && 'wc' ===  $monetize_by ) {
+		} elseif ( function_exists( 'wc_price' ) && 'wc' === $monetize_by ) {
 			return wc_price( $price, array( 'in_span' => $html_markup ) );
 		} elseif ( function_exists( 'edd_currency_filter' ) && 'edd' === $monetize_by ) {
 			return edd_currency_filter( edd_format_amount( $price ) );
-		} elseif (  function_exists( 'pmpro_formatPrice' ) && 'pmpro' === $monetize_by ) {
+		} elseif ( function_exists( 'pmpro_formatPrice' ) && 'pmpro' === $monetize_by ) {
 			return pmpro_formatPrice( floatval( $price ) );
-		} else {		
+		} else {
 			return number_format_i18n( floatval( $price ) );
 		}
 	}

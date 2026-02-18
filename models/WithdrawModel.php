@@ -10,6 +10,9 @@
 
 namespace Tutor\Models;
 
+use Tutor\Helpers\QueryHelper;
+use TUTOR\Input;
+
 /**
  * WithdrawModel Class
  *
@@ -29,8 +32,8 @@ class WithdrawModel {
 	 * @since 2.0.7
 	 * @since 4.0.0 $args parameter added.
 	 *
-	 * @param  int $instructor_id instructor id.
-	 * @param array $args Optional query.
+	 * @param  int   $instructor_id instructor id.
+	 * @param array $args Optional additional WHERE conditions.
 	 * @return array|object|null|void
 	 */
 	public static function get_withdraw_summary( $instructor_id, $args = array() ) {
@@ -39,8 +42,12 @@ class WithdrawModel {
 		$args         = tutor_utils()->sanitize_array( $args );
 		$where_clause = '';
 
-		if ( ! empty( $args['where'] ) ) {
-			$where_clause = ' AND ' . $args['where'];
+		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
+			$from = Input::sanitize( $args['from'] );
+			$to   = Input::sanitize( $args['to'] );
+
+			$where['created_at'] = array( 'BETWEEN', array( $from, $to ) );
+			$where_clause        = ' AND ' . QueryHelper::prepare_where_clause( $where );
 		}
 
 		$maturity_days = tutor_utils()->get_option( 'minimum_days_for_balance_to_be_available' );
