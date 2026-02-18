@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use TUTOR\User;
 
@@ -53,22 +55,22 @@ $edit_profile_url = tutor_utils()->tutor_dashboard_url( 'account/settings' );
 			</div>
 			<ul class="tutor-user-profile-details">
 				<li>
-					<?php echo esc_html__( 'Username', 'tutor-pro' ); ?> : 
+					<?php echo esc_html__( 'Username', 'tutor' ); ?> : 
 					<span><?php echo esc_html( $student_details->user_login ); ?></span>
 				</li>
 				<li>
-					<?php echo esc_html__( 'Email', 'tutor-pro' ); ?> : 
+					<?php echo esc_html__( 'Email', 'tutor' ); ?> : 
 					<span><?php echo esc_html( $student_details->user_email ); ?></span>
 				</li>
 				<li>
-					<?php echo esc_html__( 'Phone', 'tutor-pro' ); ?> : 
+					<?php echo esc_html__( 'Phone', 'tutor' ); ?> : 
 					<span></span>
 				</li>
 			</ul>
 		</div>
 		<div class="tutor-profile-member-since">
 			<?php tutor_utils()->render_svg_icon( Icon::MEMBER ); ?>
-			<?php echo esc_html__( 'Member since', 'tutor-pro' ); ?>
+			<?php echo esc_html__( 'Member since', 'tutor' ); ?>
 			<?php echo esc_html( tutor_i18n_get_formated_date( $student_details->user_registered, 'F j, Y' ) ); ?>
 		</div>
 	</div>
