@@ -27,7 +27,7 @@ use Tutor\Helpers\UrlHelper;
 $question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
 
 if ( $question_id ) {
-	tutor_load_template( 'learning-area.subpages.qna.qna-single' );
+	tutor_load_template( 'learning-area.subpages.qna.single' );
 	return;
 }
 
@@ -92,7 +92,7 @@ $questions   = tutor_utils()->get_qa_questions(
 			</label>
 			<?php
 			tutor_load_template(
-				'learning-area.subpages.qna.qna-form',
+				'learning-area.subpages.qna.form',
 				array(
 					'form_id'        => 'learning-area-qna-form',
 					'submit_handler' => '(data) => createQnAMutation?.mutate({ ...data, course_id: ' . (int) $tutor_course_id . ' })',
@@ -120,7 +120,7 @@ $questions   = tutor_utils()->get_qa_questions(
 				<?php
 				foreach ( $questions as $question ) :
 					tutor_load_template(
-						'learning-area.subpages.qna.qna-card',
+						'learning-area.subpages.qna.card',
 						array(
 							'question' => $question,
 						)

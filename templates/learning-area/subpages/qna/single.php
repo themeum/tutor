@@ -95,7 +95,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 				<div x-show="editingId === <?php echo (int) $question->comment_ID; ?>" x-cloak class="tutor-w-full">
 					<?php
 						tutor_load_template(
-							'learning-area.subpages.qna.qna-form',
+							'learning-area.subpages.qna.form',
 							array(
 								'form_id'        => 'qna-edit-' . (int) $question->comment_ID,
 								'default_value'  => $question->comment_content,
@@ -111,7 +111,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 
 		<?php
 		tutor_load_template(
-			'learning-area.subpages.qna.qna-form',
+			'learning-area.subpages.qna.form',
 			array(
 				'form_id'        => 'qna-reply-form-' . $question->comment_ID,
 				'submit_handler' => '(data) => replyQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ', course_id: ' . (int) $question->course_id . ' })',
@@ -128,7 +128,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 		<div id="tutor-discussion-replies-list">
 			<?php
 			tutor_load_template(
-				'learning-area.subpages.qna.qna-replies',
+				'learning-area.subpages.qna.replies',
 				array(
 					'replies'       => $replies,
 					'replies_order' => $replies_order,

@@ -118,7 +118,7 @@ $single_url = UrlHelper::add_query_params(
 <div x-show="editingId === <?php echo (int) $question_id; ?>" x-cloak class="tutor-card tutor-surface-l1-hover">
 	<?php
 	tutor_load_template(
-		'learning-area.subpages.qna.qna-form',
+		'learning-area.subpages.qna.form',
 		array(
 			'form_id'        => 'qna-edit-' . (int) $question_id,
 			'default_value'  => $question->comment_content,

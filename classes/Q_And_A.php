@@ -512,7 +512,7 @@ class Q_And_A {
 
 		$template = 'dashboard.discussions.qna-replies';
 		if ( 'learning-area' === $context ) {
-			$template = 'learning-area.subpages.qna.qna-replies';
+			$template = 'learning-area.subpages.qna.replies';
 		}
 
 		ob_start();
