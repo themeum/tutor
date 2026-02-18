@@ -232,21 +232,16 @@ export class QueryService {
 
           return result;
         } catch (err) {
-          const error = {
-            message: (err as Error).message || 'Mutation failed',
-            code: (err as { code?: string }).code,
-          } as TError;
-
-          (this as unknown as MutationState<TData, TVariables, TError>).error = error;
+          (this as unknown as MutationState<TData, TVariables, TError>).error = err as TError;
           (this as unknown as MutationState<TData, TVariables, TError>).isError = true;
 
           if (options.onError) {
-            options.onError(error, variables);
+            options.onError(err as TError, variables);
           }
 
           // onSettled callback - always called
           if (options.onSettled) {
-            options.onSettled(null, error, variables);
+            options.onSettled(null, err as TError, variables);
           }
 
           throw err;
