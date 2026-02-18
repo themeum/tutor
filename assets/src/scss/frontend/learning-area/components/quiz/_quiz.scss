@@ -255,6 +255,25 @@ $tutor-quiz-footer-offset: 96px;
     }
   }
 
+  &-question-meta {
+    @include tutor-flex(row, center, space-between);
+    @include tutor-container(792px);
+    padding-inline: 0;
+
+    @include tutor-breakpoint-down(sm) {
+      padding-inline: $tutor-spacing-6;
+    }
+  }
+
+  &-question-indicator,
+  &-attempt-progress {
+    @include tutor-typography('small');
+
+    strong {
+      @include tutor-typography('small', 'bold');
+    }
+  }
+
   &-questions-pagination {
     @include tutor-flex(row, center, center);
     margin-bottom: $tutor-spacing-5;

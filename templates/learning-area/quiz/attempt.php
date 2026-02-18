@@ -36,6 +36,9 @@ $feedback_mode                      = tutor_utils()->get_quiz_option( $tutor_is_
 $reveal_wait_ms                     = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
 $is_linear_layout                   = in_array( $question_layout_view, array( 'single_question', 'question_pagination' ), true );
 $show_previous_button               = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
+$attempts_allowed                   = (int) tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'attempts_allowed', 0 );
+$previous_attempts                  = tutor_utils()->quiz_attempts();
+$current_attempt_number             = ( is_array( $previous_attempts ) ? count( $previous_attempts ) : 0 ) + 1;
 
 $reveal_question_types = array( 'true_false', 'single_choice', 'multiple_choice' );
 $quiz_answers          = array();
@@ -152,6 +155,40 @@ $default_values = array(
 				</ul>
 			</div>
 		<?php endif; ?>
+
+		<?php if ( $is_linear_layout ) : ?>
+			<div class="tutor-quiz-question-meta">
+				<div class="tutor-quiz-question-indicator">
+					<?php
+					echo wp_kses(
+						sprintf(
+							/* translators: %s: question number indicator (e.g. 01/15) */
+							__( 'Question No: %s', 'tutor' ),
+							'<strong x-text="String(currentIndex).padStart(2, \'0\') + \'/\' + String(totalQuestions).padStart(2, \'0\')"></strong>'
+						),
+						array(
+							'strong' => array(
+								'x-text' => true,
+							),
+						)
+					);
+					?>
+				</div>
+				<div class="tutor-quiz-attempt-progress">
+					<?php
+					echo wp_kses(
+						sprintf(
+							/* translators: %s: allowed attempts (number or ∞) */
+							__( 'Total Attempt: %s', 'tutor' ),
+							'<strong>' . esc_html( $current_attempt_number ) . '/' . ( 0 === $attempts_allowed ? '&infin;' : esc_html( $attempts_allowed ) ) . '</strong>'
+						),
+						array( 'strong' => array() )
+					);
+					?>
+				</div>
+			</div>
+		<?php endif; ?>
+
 		<?php
 		foreach ( $questions as $index => $question ) {
 			$question_settings = maybe_unserialize( $question->question_settings );
