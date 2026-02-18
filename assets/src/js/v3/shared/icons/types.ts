@@ -289,6 +289,7 @@ export const icons = [
   'quizShortAnswer',
   'quizTrueFalse',
   'ratings',
+  'read',
   'receiptPercent',
   'redo',
   'refresh',
