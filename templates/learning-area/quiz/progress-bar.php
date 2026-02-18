@@ -34,10 +34,10 @@ $total_questions        = isset( $total_questions ) ? (int) $total_questions : 0
 		x-init="init()"
 	>
 		<div class="tutor-quiz-progress-header">
-			<div class="tutor-quiz-timer-frame" :class="'is-' + timerState" :data-shaking="shaking ? '1' : '0'">
-				<?php tutor_utils()->render_svg_icon( Icon::CLOCK_FRAME, 66, 33 ); ?>
+			<?php if ( $has_time_limit ) : ?>
+				<div class="tutor-quiz-timer-frame" :class="'is-' + timerState" :data-shaking="shaking ? '1' : '0'">
+					<?php tutor_utils()->render_svg_icon( Icon::CLOCK_FRAME, 66, 33 ); ?>
 
-				<?php if ( $has_time_limit ) : ?>
 					<div class="tutor-quiz-timer-text" :class="'is-' + timerState">
 						<?php
 						$digit_positions = array(
@@ -82,12 +82,8 @@ $total_questions        = isset( $total_questions ) ? (int) $total_questions : 0
 						endforeach;
 						?>
 					</div>
-				<?php else : ?>
-					<div class="tutor-quiz-timer-text is-initial">
-						<?php esc_html_e( 'No Limit', 'tutor' ); ?>
-					</div>
-				<?php endif; ?>
-			</div>
+				</div>
+			<?php endif; ?>
 
 			<div class="tutor-quiz-progress-bar-wrapper">
 				<div class="tutor-progress-bar tutor-progress-bar-brand">
