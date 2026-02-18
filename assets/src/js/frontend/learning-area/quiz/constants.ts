@@ -13,6 +13,7 @@ export const QUIZ_REVEAL_CONFIG = {
   EXPLANATION_CONTENT_DATASET: 'quizExplanationContent',
   DATA_OPTION_ATTR: 'data-option',
   DATA_REVEALED_ATTR: 'data-revealed',
+  DATA_RESULT_ATTR: 'data-reveal-result',
   DATA_OPTION_CORRECT: 'correct',
   DATA_OPTION_INCORRECT: 'incorrect',
 } as const;

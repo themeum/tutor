@@ -32,6 +32,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
     revealWaitMs: config.revealWaitMs ?? null,
     revealAnswerIds: [] as number[],
     answerRequiredByIndex: {} as Record<number, boolean>,
+    revealFooterState: '' as '' | 'correct' | 'incorrect',
     isRevealing: false,
 
     $el: null as HTMLElement | null,
@@ -115,12 +116,38 @@ const quizLayout = (config: QuizLayoutConfig) => {
       return !this.isQuestionAttempted(this.currentIndex);
     },
 
+    syncRevealFooterState(wrapper: HTMLElement) {
+      if (!this.isRevealMode()) {
+        this.revealFooterState = '';
+        return;
+      }
+
+      const question = this.getQuestionElement(wrapper);
+      if (!question || question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) !== '1') {
+        this.revealFooterState = '';
+        return;
+      }
+
+      const result = question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_RESULT_ATTR);
+      if (result === QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT) {
+        this.revealFooterState = 'correct';
+        return;
+      }
+      if (result === QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT) {
+        this.revealFooterState = 'incorrect';
+        return;
+      }
+
+      this.revealFooterState = '';
+    },
+
     goPrev() {
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
       if (this.currentIndex > 1) {
         this.currentIndex -= 1;
+        this.revealFooterState = '';
         this.scrollToQuestion();
       }
     },
@@ -150,9 +177,11 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (!skipValidation && this.isRevealMode() && this.shouldReveal(wrapper)) {
         this.isRevealing = true;
         this.revealQuestion(wrapper);
+        this.syncRevealFooterState(wrapper);
         const wait = this.getRevealWaitTime();
         window.setTimeout(() => {
           this.isRevealing = false;
+          this.revealFooterState = '';
           if (this.currentIndex < this.totalQuestions) {
             this.currentIndex += 1;
             this.scrollToQuestion();
@@ -163,6 +192,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
       if (this.currentIndex < this.totalQuestions) {
         this.currentIndex += 1;
+        this.revealFooterState = '';
         this.scrollToQuestion();
       }
     },
@@ -175,6 +205,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
       this.currentIndex = index;
+      this.revealFooterState = '';
       this.scrollToQuestion();
     },
 

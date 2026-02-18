@@ -51,6 +51,8 @@ export const revealQuestionWithAnswers = (wrapper: HTMLElement, revealAnswerIds:
   }
 
   const inputs = Array.from(question.querySelectorAll<HTMLInputElement>('input[type="radio"], input[type="checkbox"]'));
+  const selectedAnswerIds = new Set<number>();
+  const correctAnswerIds = new Set<number>();
 
   inputs.forEach((input) => {
     const option = input.closest(QUIZ_REVEAL_CONFIG.OPTION_SELECTOR) as HTMLElement | null;
@@ -59,7 +61,18 @@ export const revealQuestionWithAnswers = (wrapper: HTMLElement, revealAnswerIds:
     }
 
     const answerId = Number(input.value);
+    if (Number.isNaN(answerId)) {
+      return;
+    }
+
+    if (input.checked) {
+      selectedAnswerIds.add(answerId);
+    }
+
     const isCorrect = revealAnswerIds.includes(answerId);
+    if (isCorrect) {
+      correctAnswerIds.add(answerId);
+    }
 
     if (isCorrect) {
       option.setAttribute(QUIZ_REVEAL_CONFIG.DATA_OPTION_ATTR, QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT);
@@ -70,5 +83,14 @@ export const revealQuestionWithAnswers = (wrapper: HTMLElement, revealAnswerIds:
     input.disabled = true;
   });
 
+  const hasMatchingSelection =
+    selectedAnswerIds.size > 0 &&
+    selectedAnswerIds.size === correctAnswerIds.size &&
+    Array.from(selectedAnswerIds).every((id) => correctAnswerIds.has(id));
+
+  question.setAttribute(
+    QUIZ_REVEAL_CONFIG.DATA_RESULT_ATTR,
+    hasMatchingSelection ? QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT : QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT,
+  );
   question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
 };

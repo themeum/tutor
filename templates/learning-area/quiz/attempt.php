@@ -14,6 +14,7 @@
 
 use Tutor\Quiz;
 use Tutor\Models\QuizModel;
+use TUTOR\Icon;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
@@ -213,9 +214,39 @@ $default_values = array(
 		<div
 			class="tutor-quiz-footer"
 			x-bind:data-position="getFooterPosition()"
+			:data-reveal-state="revealFooterState"
 			x-cloak
 		>
 			<div class="tutor-quiz-footer-inner">
+				<div
+					class="tutor-quiz-footer-feedback"
+					x-show="revealFooterState !== ''"
+				>
+					<span
+						class="tutor-quiz-footer-feedback-icon"
+						x-show="revealFooterState === 'correct'"
+					>
+						<?php tutor_utils()->render_svg_icon( Icon::CHECK_2, 26, 26 ); ?>
+					</span>
+					<span
+						class="tutor-quiz-footer-feedback-icon"
+						x-show="revealFooterState === 'incorrect'"
+					>
+						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 26, 26 ); ?>
+					</span>
+					<span
+						class="tutor-quiz-footer-feedback-text"
+						x-show="revealFooterState === 'correct'"
+					>
+						<?php esc_html_e( 'Nicely Done!', 'tutor' ); ?>
+					</span>
+					<span
+						class="tutor-quiz-footer-feedback-text"
+						x-show="revealFooterState === 'incorrect'"
+					>
+						<?php esc_html_e( 'Wrong Answer', 'tutor' ); ?>
+					</span>
+				</div>
 				<?php
 				Button::make()
 					->label( __( 'Skip Question', 'tutor' ) )
@@ -223,7 +254,7 @@ $default_values = array(
 					->variant( Variant::GHOST )
 					->attr( 'type', 'button' )
 					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
-					->attr( 'x-show', 'canSkip(currentIndex)' )
+					->attr( 'x-show', 'canSkip(currentIndex) && revealFooterState === ""' )
 					->attr( '@click', 'goNext({ skipValidation: true })' )
 					->attr( 'class', 'tutor-quiz-skip-btn' )
 					->render();

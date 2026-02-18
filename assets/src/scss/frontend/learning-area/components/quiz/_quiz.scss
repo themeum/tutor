@@ -68,13 +68,29 @@ $tutor-quiz-footer-offset: 96px;
     }
 
     &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-footer-inner {
-      justify-content: center;
+      justify-content: center !important;
+    }
+
+    &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-footer-inner:has(
+        .tutor-quiz-footer-feedback:not([style*='display: none'])
+      ) {
+      justify-content: space-between !important;
     }
 
     &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-footer-inner:has(
         .tutor-quiz-skip-btn:not([style*='display: none'])
       ) {
-      justify-content: space-between;
+      justify-content: space-between !important;
+    }
+
+    &[data-question-layout-view='single_question'] .tutor-quiz-footer[data-reveal-state='correct'],
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-footer[data-reveal-state='correct'] {
+      border-top-color: $tutor-border-success;
+    }
+
+    &[data-question-layout-view='single_question'] .tutor-quiz-footer[data-reveal-state='incorrect'],
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-footer[data-reveal-state='incorrect'] {
+      border-top-color: $tutor-border-error;
     }
 
     body:has(#wpadminbar) & {
@@ -890,13 +906,60 @@ $tutor-quiz-footer-offset: 96px;
     margin-top: auto;
     border-top: 1px solid $tutor-border-idle;
 
+    &[data-reveal-state='correct'] {
+      border-top-color: $tutor-border-success;
+
+      .tutor-quiz-footer-feedback-icon {
+        background-color: $tutor-surface-exception3-highlight;
+        color: $tutor-icon-success-primary;
+      }
+
+      .tutor-quiz-footer-feedback-text {
+        color: $tutor-text-success;
+      }
+    }
+
+    &[data-reveal-state='incorrect'] {
+      border-top-color: $tutor-border-error;
+
+      .tutor-quiz-footer-feedback-icon {
+        background-color: $tutor-surface-critical;
+        color: $tutor-icon-critical;
+      }
+
+      .tutor-quiz-footer-feedback-text {
+        color: $tutor-text-critical;
+      }
+    }
+
     &-inner {
       @include tutor-flex(row, center, flex-start);
       gap: $tutor-spacing-4;
       width: 100%;
       max-width: 792px;
       margin-inline: auto;
+    }
 
+    &-feedback {
+      @include tutor-flex(row, center, flex-start);
+      gap: $tutor-spacing-3;
+      margin-inline-end: auto;
+    }
+
+    &-feedback-icon {
+      @include tutor-flex(row, center, center);
+      width: 40px;
+      height: 40px;
+      border-radius: $tutor-radius-full;
+      background-color: $tutor-surface-l1;
+
+      svg {
+        display: block;
+      }
+    }
+
+    &-feedback-text {
+      @include tutor-typography('h6', 'medium');
     }
 
     &[data-position='first'] &-inner {
