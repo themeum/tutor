@@ -120,7 +120,7 @@ $tutor-quiz-footer-offset: 96px;
     @include tutor-flex(column);
     @include tutor-container(792px);
     padding-inline: 0;
-    padding-block: $tutor-spacing-8;
+    padding-block: $tutor-spacing-5;
     gap: $tutor-spacing-5;
 
     @include tutor-breakpoint-down(sm) {
