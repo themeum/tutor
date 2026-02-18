@@ -72,13 +72,15 @@ class Q_And_A {
 	 * @return array
 	 */
 	public function add_learning_area_menu( $menu_items, $base_url ) {
-		global $wp_query, $post;
+		global $tutor_course_id;
 
-		$enable_q_and_a_on_course  = (bool) get_tutor_option( 'enable_q_and_a_on_course' );
-		$enable_qa_for_this_course = ( $wp_query->is_single && ! empty( $post ) ) ? get_post_meta( $post->ID, '_tutor_enable_qa', true ) === 'yes' : false;
-		$is_enrolled               = tutor_utils()->is_enrolled();
+		$user_id = get_current_user_id();
 
-		if ( $enable_q_and_a_on_course && $enable_qa_for_this_course && $is_enrolled ) {
+		$enable_q_and_a_on_course = (bool) get_tutor_option( 'enable_q_and_a_on_course' );
+		$is_enabled_course_wise   = (bool) get_post_meta( $tutor_course_id, '_tutor_enable_qa', true );
+		$can_access               = tutor_utils()->has_user_course_content_access( $user_id, $tutor_course_id );
+
+		if ( $is_enabled_course_wise && $enable_q_and_a_on_course && $can_access ) {
 			$qna_item = array(
 				'qna' => array(
 					'title'    => __( 'Q&A', 'tutor' ),
