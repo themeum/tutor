@@ -8,7 +8,6 @@
  * @since 4.0.0
  */
 
-use TUTOR\Icon;
 ?>	
 		
 <h5 class="tutor-statistic-title">

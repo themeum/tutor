@@ -1930,6 +1930,12 @@ class OrderModel {
 	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit, $order_by, $order ): array {
 		global $wpdb;
 
+		$order_clause = '';
+
+		if ( sanitize_sql_orderby( $order ) ) {
+			$order_clause = "ORDER BY {$order_by} {$order}";
+		}
+
 		//phpcs:disable
 		$statements = $wpdb->get_results(
 			$wpdb->prepare(
@@ -1951,7 +1957,7 @@ class OrderModel {
 				WHERE statements.user_id = %d
 				{$course_query}
 				{$date_query}
-				ORDER BY {$order_by} {$order}
+				{$order_clause}
 				LIMIT %d, %d",
 				$user_id,
 				$offset,

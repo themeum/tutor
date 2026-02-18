@@ -54,8 +54,9 @@ $label = __( 'Live Session', 'tutor' );
 		</div>
 		<div class="tutor-dashboard-home-task-live-tag" data-meta>
 			<div class="tutor-dashboard-home-task-live-tag-badge">
-				<?php Badge::make()
-					->icon( $get_icon_by_post_type( $item['post_type'] ) )
+				<?php
+				Badge::make()
+					->icon( Icon::get_icon_by_post_type( $item['post_type'] ) )
 					->label( $label )
 					->rounded()
 					->render();
