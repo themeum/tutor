@@ -222,16 +222,16 @@ $tutor-quiz-footer-offset: 96px;
   @keyframes tutor-shake {
     0%,
     100% {
-      transform: translateX(0);
+      transform: rotate(0deg);
     }
     10%,
     50%,
     90% {
-      transform: translateX(-2px);
+      transform: rotate(-6deg);
     }
     30%,
     70% {
-      transform: translateX(2px);
+      transform: rotate(6deg);
     }
   }
 
