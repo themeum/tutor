@@ -11,11 +11,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Components\Button;
-use Tutor\Components\ConfirmationModal;
-use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
-use Tutor\Models\QuizModel;
 use TUTOR\Quiz;
 
 global $tutor_current_post, $tutor_course_id;
