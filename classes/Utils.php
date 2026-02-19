@@ -4366,7 +4366,7 @@ class Utils {
 	 * Get instructors rating
 	 *
 	 * @since 1.0.0
-	 * @since 4.0.0 Added $where Parameter.
+	 * @since 4.0.0 Added $args Parameter.
 	 *
 	 * @param int   $instructor_id instructor id.
 	 * @param array $args       Optional additional WHERE conditions.
@@ -10917,6 +10917,9 @@ class Utils {
 	 *
 	 * @since 4.0.0
 	 *
+	 * @param string $monitize_by Optional. Monetization provider key
+	 *                                 (e.g., 'wc', 'edd', 'pmpro').
+	 *
 	 * @return array{
 	 *     currency: string,
 	 *     symbol: string,
@@ -10926,9 +10929,9 @@ class Utils {
 	 *     no_of_decimal: int
 	 * }
 	 */
-	public function get_monetization_currency_config(): array {
+	public function get_monetization_currency_config( $monetize_by = '' ): array {
 
-		$monetize_by = $this->get_option( 'monetize_by' );
+		$monetize_by = empty( $monetize_by ) ? $this->get_option( 'monetize_by' ) : $monetize_by;
 
 		// WooCommerce.
 		if ( 'wc' === $monetize_by ) {
