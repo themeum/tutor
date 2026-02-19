@@ -10,16 +10,18 @@
 
 namespace TUTOR;
 
-use TUTOR\Icon;
-use Tutor\Ecommerce\Tax;
 use Tutor\Cache\TutorCache;
-use Tutor\Models\QuizModel;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Traits\JsonResponse;
+use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\Settings;
+use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\DateTimeHelper;
+use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\QueryHelper;
+use TUTOR\Icon;
+use Tutor\Models\CourseModel;
+use Tutor\Models\QuizModel;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -3913,6 +3915,8 @@ class Utils {
 
 		if ( is_object( $user ) && $user->tutor_profile_photo && wp_get_attachment_image_url( $user->tutor_profile_photo ) ) {
 			$avatar_url = wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' );
+		} else {
+			$avatar_url = get_avatar_url( $user_id );
 		}
 
 		TutorCache::set( $cache_key, $avatar_url );
@@ -4266,16 +4270,16 @@ class Utils {
 		$date_filter   = sanitize_text_field( $date_filter );
 		$instructor_id = $this->get_user_id( $instructor_id );
 
-		$course_query = '';
-		$date_query   = '';
-		$where_clause = '';
+		$course_query       = '';
+		$date_query         = '';
+		$review_date_clause = '';
 
 		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
 			$from = Input::sanitize( $args['from'] );
 			$to   = Input::sanitize( $args['to'] );
 
 			$where['comment_date'] = array( 'BETWEEN', array( $from, $to ) );
-			$where_clause          = ' AND ' . QueryHelper::prepare_where_clause( $where );
+			$review_date_clause    = ' AND ' . QueryHelper::prepare_where_clause( $where );
 		}
 
 		if ( '' !== $course_id ) {
@@ -4308,7 +4312,7 @@ class Utils {
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
-						{$where_clause}
+						{$review_date_clause}
 						{$course_query}
 						{$date_query}
 				",
@@ -4342,7 +4346,7 @@ class Utils {
 					WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
-						{$where_clause}
+						{$review_date_clause}
 						{$course_query}
 						{$date_query}
 					ORDER BY {$order_by} DESC
@@ -10906,5 +10910,67 @@ class Utils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get currency configuration from active monetization system.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array{
+	 *     currency: string,
+	 *     symbol: string,
+	 *     position: string,
+	 *     decimal_separator: string,
+	 *     thousand_separator: string
+	 *     no_of_decimal: int
+	 * }
+	 */
+	public function get_monetization_currency_config(): array {
+
+		$monetize_by = $this->get_option( 'monetize_by' );
+
+		// WooCommerce.
+		if ( 'wc' === $monetize_by ) {
+			return array(
+				'symbol'             => get_woocommerce_currency_symbol(),
+				'position'           => get_option( 'woocommerce_currency_pos' ),
+				'decimal_separator'  => wc_get_price_decimal_separator(),
+				'thousand_separator' => wc_get_price_thousand_separator(),
+				'no_of_decimal'      => wc_get_price_decimals(),
+			);
+		}
+
+		// Easy Digital Downloads.
+		if ( 'edd' === $monetize_by ) {
+			$position = edd_get_option( 'currency_position', 'before' ) === 'before' ? 'left' : 'right';
+			return array(
+				'symbol'             => edd_currency_symbol( edd_get_currency() ),
+				'position'           => $position,
+				'decimal_separator'  => edd_get_option( 'decimal_separator', '.' ),
+				'thousand_separator' => edd_get_option( 'thousands_separator', ',' ),
+			);
+		}
+
+		// Paid Memberships Pro.
+		if ( 'pmpro' === $monetize_by && function_exists( 'pmpro_get_currency' ) ) {
+			$currency = pmpro_get_currency();
+			return array(
+				'symbol'             => $currency['symbol'] ?? '',
+				'position'           => $currency['position'] ?? '',
+				'decimal_separator'  => $currency['decimal_separator'] ?? '',
+				'thousand_separator' => $currency['thousands_separator'] ?? '',
+				'no_of_decimal'      => (int) $currency['decimals'] ?? 2,
+			);
+		}
+
+		// Tutor.
+		return array(
+			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ) ),
+			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, true ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, true ),
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, true ),
+			'no_of_decimal'      => (int) tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, true ),
+		);
 	}
 }
