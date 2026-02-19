@@ -10,20 +10,21 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Avatar;
+use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
+use TUTOR\Input;
 use TUTOR\User;
 
-$user             = wp_get_current_user();
-$student_details  = get_userdata( $user->ID );
-$student_meta     = get_user_meta( $user->ID );
+$user_id          = Input::has('student_id') ? Input::get('student_id') : get_current_user_id();
+$student_details  = get_userdata( $user_id );
+$student_meta     = get_user_meta( $user_id );
 $edit_profile_url = tutor_utils()->tutor_dashboard_url( 'account/settings' );
 ?>
 
 <div class="tutor-profile-card">
 	<div class="tutor-profile-card-header">
-		<div class="tutor-avatar tutor-avatar-104 tutor-border tutor-border-2 tutor-border-brand-secondary">
-			<img src="<?php echo esc_url( get_avatar_url( $user->ID ) ); ?>" alt="<?php echo esc_attr( $student_details->user_nicename ); ?>" class="tutor-avatar-image">
-		</div>
+		<?php Avatar::make()->user( $user_id )->size( Size::SIZE_104 )->render(); ?>
 		<?php if ( User::is_student() && User::is_student_view() ) : ?>
 		<a href="<?php echo esc_url( $edit_profile_url ); ?>" class="tutor-edit-profile-btn">
 			<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
