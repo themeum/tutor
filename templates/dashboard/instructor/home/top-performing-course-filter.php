@@ -2,7 +2,7 @@
 /**
  * Template for Top Performing Course filter in Instructor dashboard.
  *
- * @package TutorPro\CourseBundle
+ * @package Tutor\Templates
  * @subpackage Templates
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com

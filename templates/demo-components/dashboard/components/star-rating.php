@@ -1,6 +1,5 @@
 <?php
 
-use TUTOR\Icon;
 /**
  * Star Rating Component
  * Reusable star rating component for displaying ratings
@@ -11,9 +10,9 @@ use TUTOR\Icon;
  * @since 4.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Icon;
 
 // Default values - all data must be passed from parent.
 $rating              = isset( $rating ) ? floatval( $rating ) : 0.00;
@@ -37,7 +36,9 @@ $star      = tutor_utils()->get_svg_icon( Icon::STAR_LINE, $icon_size, $icon_siz
 			? Icon::STAR_FILL
 			: ( $is_half ? Icon::STAR_LINE : Icon::STAR_LINE ); // Todo: Half star icon.
 
-		$icon_html = tutor_utils()->render_svg_icon( $icon_name, 16, 16, array(), true ); // phpcs:ignore
+		ob_start();
+		tutor_utils()->render_svg_icon( $icon_name, 16, 16, array() );
+		$icon_html = ob_get_clean();
 		?>
 		<div class="<?php echo esc_attr( $icon_class ); ?>" data-rating-value="<?php echo esc_attr( $i ); ?>">
 			<?php echo $icon_html; // phpcs:ignore ?>
