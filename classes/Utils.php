@@ -10928,7 +10928,7 @@ class Utils {
 	 */
 	public function get_monetization_currency_config(): array {
 
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+		$monetize_by = $this->get_option( 'monetize_by' );
 
 		// WooCommerce.
 		if ( 'wc' === $monetize_by ) {
