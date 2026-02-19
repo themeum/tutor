@@ -1,14 +1,7 @@
 import type { AlpineComponentMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
 
-import {
-  QUIZ_FOOTER_POSITIONS,
-  QUIZ_LAYOUT_KEYS,
-  QUIZ_LAYOUT_SELECTORS,
-  QUIZ_REVEAL_CONFIG,
-  QuizLayoutType,
-  type QuizFooterPosition,
-} from './constants';
+import { QUIZ_LAYOUT_KEYS, QUIZ_LAYOUT_SELECTORS, QUIZ_REVEAL_CONFIG, QuizLayoutType } from './constants';
 import { revealQuestionWithAnswers } from './helpers';
 
 export interface QuizLayoutConfig {
@@ -207,19 +200,6 @@ const quizLayout = (config: QuizLayoutConfig) => {
       this.currentIndex = index;
       this.revealFooterState = '';
       this.scrollToQuestion();
-    },
-
-    getFooterPosition(): QuizFooterPosition {
-      if (this.totalQuestions === 1) {
-        return QUIZ_FOOTER_POSITIONS.ONLY;
-      }
-      if (this.currentIndex === 1) {
-        return QUIZ_FOOTER_POSITIONS.FIRST;
-      }
-      if (this.currentIndex >= this.totalQuestions) {
-        return QUIZ_FOOTER_POSITIONS.LAST;
-      }
-      return QUIZ_FOOTER_POSITIONS.MIDDLE;
     },
 
     getRevealWaitTime(): number {

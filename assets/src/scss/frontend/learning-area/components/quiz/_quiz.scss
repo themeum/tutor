@@ -973,18 +973,6 @@ $tutor-quiz-footer-offset: 96px;
       margin-inline-start: auto;
     }
 
-    &[data-position='first'] &-inner {
-      justify-content: flex-end;
-    }
-
-    &[data-position='only'] &-inner {
-      justify-content: center;
-    }
-
-    &[data-position='last'] &-inner,
-    &[data-position='middle'] &-inner {
-      justify-content: space-between;
-    }
   }
 
   &-submission-modal {

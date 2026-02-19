@@ -213,7 +213,6 @@ $default_values = array(
 	<?php if ( $is_linear_layout ) : ?>
 		<div
 			class="tutor-quiz-footer"
-			x-bind:data-position="getFooterPosition()"
 			:data-reveal-state="revealFooterState"
 			x-cloak
 		>
