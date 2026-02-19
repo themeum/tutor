@@ -4270,16 +4270,16 @@ class Utils {
 		$date_filter   = sanitize_text_field( $date_filter );
 		$instructor_id = $this->get_user_id( $instructor_id );
 
-		$course_query = '';
-		$date_query   = '';
-		$where_clause = '';
+		$course_query       = '';
+		$date_query         = '';
+		$review_date_clause = '';
 
 		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
 			$from = Input::sanitize( $args['from'] );
 			$to   = Input::sanitize( $args['to'] );
 
 			$where['comment_date'] = array( 'BETWEEN', array( $from, $to ) );
-			$where_clause          = ' AND ' . QueryHelper::prepare_where_clause( $where );
+			$review_date_clause    = ' AND ' . QueryHelper::prepare_where_clause( $where );
 		}
 
 		if ( '' !== $course_id ) {
@@ -4312,7 +4312,7 @@ class Utils {
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
-						{$where_clause}
+						{$review_date_clause}
 						{$course_query}
 						{$date_query}
 				",
@@ -4346,7 +4346,7 @@ class Utils {
 					WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
-						{$where_clause}
+						{$review_date_clause}
 						{$course_query}
 						{$date_query}
 					ORDER BY {$order_by} DESC
