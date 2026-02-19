@@ -201,6 +201,7 @@ $default_values = array(
 				data-quiz-question-index="<?php echo esc_attr( $question_index ); ?>"
 				data-answer-required="<?php echo esc_attr( $answer_required ? '1' : '0' ); ?>"
 				x-show="isQuestionActive(<?php echo esc_attr( $question_index ); ?>)"
+				:class="{ 'tutor-quiz-question-wrapper-active': isQuestionActive(<?php echo esc_attr( $question_index ); ?>) }"
 				x-cloak
 			>
 				<?php Quiz::render_question( $question, $question_index ); ?>

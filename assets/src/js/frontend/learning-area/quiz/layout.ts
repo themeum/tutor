@@ -14,6 +14,9 @@ export interface QuizLayoutConfig {
 
 const quizLayout = (config: QuizLayoutConfig) => {
   const form = window.TutorCore?.form;
+  const docWithViewTransition = document as Document & {
+    startViewTransition?: (callback: () => void) => { finished: Promise<void> };
+  };
 
   return {
     layout: config.layout ?? QuizLayoutType.QUESTION_BELOW_EACH_OTHER,
@@ -139,8 +142,10 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
       if (this.currentIndex > 1) {
-        this.currentIndex -= 1;
-        this.revealFooterState = '';
+        this.runWithViewTransition(() => {
+          this.currentIndex -= 1;
+          this.revealFooterState = '';
+        }, 'back');
         this.scrollToQuestion();
       }
     },
@@ -174,9 +179,11 @@ const quizLayout = (config: QuizLayoutConfig) => {
         const wait = this.getRevealWaitTime();
         window.setTimeout(() => {
           this.isRevealing = false;
-          this.revealFooterState = '';
           if (this.currentIndex < this.totalQuestions) {
-            this.currentIndex += 1;
+            this.runWithViewTransition(() => {
+              this.currentIndex += 1;
+              this.revealFooterState = '';
+            });
             this.scrollToQuestion();
           }
         }, wait);
@@ -184,8 +191,10 @@ const quizLayout = (config: QuizLayoutConfig) => {
       }
 
       if (this.currentIndex < this.totalQuestions) {
-        this.currentIndex += 1;
-        this.revealFooterState = '';
+        this.runWithViewTransition(() => {
+          this.currentIndex += 1;
+          this.revealFooterState = '';
+        });
         this.scrollToQuestion();
       }
     },
@@ -197,9 +206,33 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (!index || index < 1 || index > this.totalQuestions) {
         return;
       }
-      this.currentIndex = index;
-      this.revealFooterState = '';
+      this.runWithViewTransition(
+        () => {
+          this.currentIndex = index;
+          this.revealFooterState = '';
+        },
+        index < this.currentIndex ? 'back' : 'forward',
+      );
       this.scrollToQuestion();
+    },
+
+    runWithViewTransition(update: () => void, direction: 'forward' | 'back' = 'forward') {
+      const transitionRoot = document.documentElement;
+      transitionRoot.style.setProperty('--tutor-quiz-vt-dir', direction === 'back' ? '-1' : '1');
+
+      if (!docWithViewTransition.startViewTransition) {
+        update();
+        transitionRoot.style.removeProperty('--tutor-quiz-vt-dir');
+        return;
+      }
+
+      const transition = docWithViewTransition.startViewTransition.call(document, () => {
+        update();
+      });
+
+      transition.finished.finally(() => {
+        transitionRoot.style.removeProperty('--tutor-quiz-vt-dir');
+      });
     },
 
     getRevealWaitTime(): number {
