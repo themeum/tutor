@@ -33,7 +33,17 @@ use Tutor\Components\Constants\Size;
 					</div>
 					<div class="tutor-flex tutor-gap-5 tutor-items-center">
 						<span class="tutor-badge"><?php echo esc_html( $review['course_name'] ); ?></span>
-						<span class="tutor-text-subdued tutor-tiny"><?php echo esc_html( human_time_diff( strtotime( $review['date'] ) ) . ' ago' ); ?></span>
+						<span class="tutor-text-subdued tutor-tiny">
+							<?php
+							echo esc_html(
+								sprintf(
+									/* translators: %s: Human-readable time difference. */
+									__( '%s ago', 'tutor' ),
+									human_time_diff( strtotime( $review['date'] ) )
+								)
+							);
+							?>
+						</span>
 					</div>
 				</div>
 
