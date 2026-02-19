@@ -3913,6 +3913,8 @@ class Utils {
 
 		if ( is_object( $user ) && $user->tutor_profile_photo && wp_get_attachment_image_url( $user->tutor_profile_photo ) ) {
 			$avatar_url = wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' );
+		} else {
+			$avatar_url = get_avatar_url( $user_id );
 		}
 
 		TutorCache::set( $cache_key, $avatar_url );

@@ -837,7 +837,7 @@ class Instructor {
 				return array(
 					'user'        => array(
 						'name'   => $review->display_name,
-						'avatar' => get_avatar_url( $review->user_id ),
+						'avatar' => tutor_utils()->get_user_avatar_url( $review->user_id ),
 					),
 					'course_name' => get_the_title( $review->comment_post_ID ),
 					'date'        => $review->comment_date,
@@ -891,27 +891,6 @@ class Instructor {
 			'class'      => $class,
 			'icon_class' => '-tutor-mb-1',
 		);
-	}
-
-	/**
-	 * Render a template and return its output as a string.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $template   Template file path or slug.
-	 * @param array  $data       Data to be passed to the template.
-	 * @param bool   $once       Whether the template should be loaded only once.
-	 *                           Defaults to true.
-	 *
-	 * @return string Rendered template output.
-	 */
-	public static function get_template_output( $template, $data, $once = true ) {
-
-		ob_start();
-
-		tutor_load_template_from_custom_path( $template, $data, $once );
-
-		return (string) ob_get_clean();
 	}
 
 	/**
