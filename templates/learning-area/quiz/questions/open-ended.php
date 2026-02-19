@@ -40,8 +40,6 @@ $quiz_options = $quiz_id ? tutor_utils()->get_quiz_option( $quiz_id ) : array();
 $limit_key    = 'short_answer' === $question_type ? 'short_answer_characters_limit' : 'open_ended_answer_characters_limit';
 
 $characters_limit    = (int) ( $quiz_options[ $limit_key ] ?? 0 );
-$answer_is_required  = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
-$required_message    = __( 'The answer for this question is required', 'tutor' );
 $field_name          = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . ']';
 $register_rule_parts = array();
 if ( $answer_is_required ) {

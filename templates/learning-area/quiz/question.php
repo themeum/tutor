@@ -19,8 +19,10 @@ defined( 'ABSPATH' ) || exit;
 
 global $tutor_is_started_quiz;
 
-$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
-$quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
+$quiz_id            = $tutor_is_started_quiz->quiz_id ?? 0;
+$quiz_settings      = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
+$answer_is_required = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
+$required_message   = __( 'The answer for this question is required', 'tutor' );
 ?>
 
 <div
@@ -45,7 +47,9 @@ $quiz_settings = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : a
 	tutor_load_template(
 		'learning-area.quiz.questions.' . $question_type,
 		array(
-			'question' => (array) $question,
+			'question'           => (array) $question,
+			'answer_is_required' => $answer_is_required,
+			'required_message'   => $required_message,
 		)
 	);
 

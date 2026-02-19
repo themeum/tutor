@@ -31,12 +31,10 @@ $default_question = array(
 	),
 );
 
-$question           = wp_parse_args( $question, $default_question );
-$answer_is_required = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
-$required_message   = __( 'The answer for this question is required', 'tutor' );
-$field_name         = '';
-$field_names        = array();
-$register_rules     = '';
+$question       = wp_parse_args( $question, $default_question );
+$field_name     = '';
+$field_names    = array();
+$register_rules = '';
 if ( $answer_is_required ) {
 	$register_rules = ", { required: '" . esc_js( $required_message ) . "' }";
 }

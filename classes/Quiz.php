@@ -153,7 +153,6 @@ class Quiz {
 		 */
 		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
 
-
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 
 		// Add quiz title as nav item & render single content on the learning area.
@@ -759,11 +758,11 @@ class Quiz {
 						// }
 						//phpcs:enable
 					} else {
-						$custom_answer_data = array(
+						$custom_answer_data    = array(
 							'given_answer'          => $given_answer,
 							'is_answer_was_correct' => $is_answer_was_correct,
 						);
-						$custom_answer_data = apply_filters( 'tutor_quiz_process_custom_question_answer', $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id );
+						$custom_answer_data    = apply_filters( 'tutor_quiz_process_custom_question_answer', $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id );
 						$given_answer          = $custom_answer_data['given_answer'];
 						$is_answer_was_correct = $custom_answer_data['is_answer_was_correct'];
 					}
