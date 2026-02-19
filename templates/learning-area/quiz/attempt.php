@@ -247,48 +247,49 @@ $default_values = array(
 						<?php esc_html_e( 'Wrong Answer', 'tutor' ); ?>
 					</span>
 				</div>
+				
 				<?php
-				Button::make()
-					->label( __( 'Skip Question', 'tutor' ) )
-					->size( Size::LARGE )
-					->variant( Variant::GHOST )
-					->attr( 'type', 'button' )
-					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
-					->attr( 'x-show', 'canSkip(currentIndex) && revealFooterState === ""' )
-					->attr( '@click', 'goNext({ skipValidation: true })' )
-					->attr( 'class', 'tutor-quiz-skip-btn' )
-					->render();
+					Button::make()
+						->label( __( 'Skip Question', 'tutor' ) )
+						->size( Size::LARGE )
+						->variant( Variant::GHOST )
+						->attr( 'type', 'button' )
+						->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+						->attr( 'x-show', 'canSkip(currentIndex) && revealFooterState === ""' )
+						->attr( '@click', 'goNext({ skipValidation: true })' )
+						->attr( 'class', 'tutor-quiz-skip-btn' )
+						->render();
 
-				Button::make()
-					->label( __( 'Back', 'tutor' ) )
-					->size( Size::LARGE )
-					->variant( Variant::OUTLINE )
-					->attr( 'type', 'button' )
-					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
-					->attr( '@click', 'goPrev()' )
-					->attr( 'x-show', $show_previous_button ? 'layout !== "single_question" && currentIndex > 1' : 'false' )
-					->attr( 'class', 'tutor-quiz-answer-previous-btn' )
-					->render();
+					Button::make()
+						->label( __( 'Back', 'tutor' ) )
+						->size( Size::LARGE )
+						->variant( Variant::OUTLINE )
+						->attr( 'type', 'button' )
+						->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+						->attr( '@click', 'goPrev()' )
+						->attr( 'x-show', $show_previous_button ? 'layout !== "single_question" && currentIndex > 1' : 'false' )
+						->attr( 'class', 'tutor-quiz-answer-previous-btn' )
+						->render();
 
-				Button::make()
-					->label( __( 'Next', 'tutor' ) )
-					->size( Size::LARGE )
-					->attr( 'type', 'button' )
-					->attr( ':disabled', 'isRevealSubmitting || isRevealing || shouldDisableNextButton()' )
-					->attr( '@click', 'goNext()' )
-					->attr( 'x-show', 'currentIndex < totalQuestions' )
-					->attr( 'class', 'tutor-quiz-answer-next-btn' )
-					->render();
+					Button::make()
+						->label( __( 'Next', 'tutor' ) )
+						->size( Size::LARGE )
+						->attr( 'type', 'button' )
+						->attr( ':disabled', 'isRevealSubmitting || isRevealing || shouldDisableNextButton()' )
+						->attr( '@click', 'goNext()' )
+						->attr( 'x-show', 'currentIndex < totalQuestions' )
+						->attr( 'class', 'tutor-quiz-answer-next-btn' )
+						->render();
 
-				Button::make()
-					->label( __( 'Submit Quiz', 'tutor' ) )
-					->size( Size::LARGE )
-					->attr( 'type', 'submit' )
-					->attr( 'x-show', 'currentIndex === totalQuestions' )
-					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
-					->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
-					->attr( 'class', 'tutor-quiz-submit-btn' )
-					->render();
+					Button::make()
+						->label( __( 'Submit Quiz', 'tutor' ) )
+						->size( Size::LARGE )
+						->attr( 'type', 'submit' )
+						->attr( 'x-show', 'currentIndex === totalQuestions' )
+						->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+						->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
+						->attr( 'class', 'tutor-quiz-submit-btn' )
+						->render();
 				?>
 			</div>
 		</div>
