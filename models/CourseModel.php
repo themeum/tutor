@@ -1466,7 +1466,7 @@ class CourseModel {
 		foreach ( $topics_query->posts as $topic_post ) {
 			$topic_id = (int) $topic_post->ID;
 
-			$total_topic_items     = 0;
+			$total_topic_items           = 0;
 			$total_topic_items_completed = 0;
 
 			$topic = array(
@@ -1517,31 +1517,31 @@ class CourseModel {
 
 					} elseif ( tutor()->zoom_post_type === $post_type ) {
 
-						$zoom_start_date = get_post_meta($post_id, '_tutor_zm_start_datetime', true);
-						$start_timestamp = $zoom_start_date ? strtotime( $zoom_start_date ) : 0;
-						$is_completed = $start_timestamp && strtotime('now') > $start_timestamp;
+						$zoom_start_date  = get_post_meta( $post_id, '_tutor_zm_start_datetime', true );
+						$start_timestamp  = $zoom_start_date ? strtotime( $zoom_start_date ) : 0;
+						$is_completed     = $start_timestamp && strtotime( 'now' ) > $start_timestamp;
 						$topic['items'][] = array(
-							'type'  => 'zoom_meeting',
-							'id'    => $post_id,
-							'title' => $content_post->post_title,
-							'link'  => esc_url_raw( get_permalink( $post_id ) ),
-							'label' => __( 'Live Class', 'tutor' ),
-							'icon'  => Icon::ZOOM,
+							'type'         => 'zoom_meeting',
+							'id'           => $post_id,
+							'title'        => $content_post->post_title,
+							'link'         => esc_url_raw( get_permalink( $post_id ) ),
+							'label'        => __( 'Live Class', 'tutor' ),
+							'icon'         => Icon::ZOOM,
 							'is_completed' => $is_completed,
 						);
 
 					} elseif ( tutor()->meet_post_type === $post_type ) {
-						$google_end_date = get_post_meta($post_id, 'tutor-google-meet-end-datetime', true);
-						$end_timestamp = $google_end_date ? strtotime( $google_end_date ) : 0;
-						$is_completed = $end_timestamp && strtotime('now') > $end_timestamp;
+						$google_end_date = get_post_meta( $post_id, 'tutor-google-meet-end-datetime', true );
+						$end_timestamp   = $google_end_date ? strtotime( $google_end_date ) : 0;
+						$is_completed    = $end_timestamp && strtotime( 'now' ) > $end_timestamp;
 
 						$topic['items'][] = array(
-							'type'  => 'google_meet',
-							'id'    => $post_id,
-							'title' => $content_post->post_title,
-							'link'  => esc_url_raw( get_permalink( $post_id ) ),
-							'label' => __( 'Live Class', 'tutor' ),
-							'icon'  => Icon::GOOGLE_MEET,
+							'type'         => 'google_meet',
+							'id'           => $post_id,
+							'title'        => $content_post->post_title,
+							'link'         => esc_url_raw( get_permalink( $post_id ) ),
+							'label'        => __( 'Live Class', 'tutor' ),
+							'icon'         => Icon::GOOGLE_MEET,
 							'is_completed' => $is_completed,
 						);
 
@@ -1566,24 +1566,24 @@ class CourseModel {
 						$topic['topic_completed'] = false;
 					} else {
 						$topic['topic_started'] = true;
-						$total_topic_items_completed++;
+						++$total_topic_items_completed;
 					}
 				}
 
-				$total_topic_items = count($contents_query->posts);
+				$total_topic_items = count( $contents_query->posts );
 			}
 
 			$topic['topic_completion_percentage'] = $total_topic_items > 0 && $total_topic_items_completed > 0
-													? (int) round( ( $total_topic_items_completed / $total_topic_items ) * 100)
+													? (int) round( ( $total_topic_items_completed / $total_topic_items ) * 100 )
 													: 0;
-			$topic_list[] = $topic;
+			$topic_list[]                         = $topic;
 		}
 
 		wp_reset_postdata();
 
 		return $topic_list;
 	}
-	
+
 	/**
 	 * Check if the current user has course content access
 	 *
