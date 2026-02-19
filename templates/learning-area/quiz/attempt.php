@@ -252,22 +252,26 @@ $default_values = array(
 					Button::make()
 						->label( __( 'Skip Question', 'tutor' ) )
 						->size( Size::LARGE )
-						->variant( Variant::GHOST )
+						->variant( Variant::LINK_GRAY )
 						->attr( 'type', 'button' )
 						->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
 						->attr( 'x-show', 'canSkip(currentIndex) && revealFooterState === ""' )
 						->attr( '@click', 'goNext({ skipValidation: true })' )
 						->attr( 'class', 'tutor-quiz-skip-btn' )
 						->render();
+				?>
 
+				<div class="tutor-quiz-footer-actions">
+				<?php
 					Button::make()
 						->label( __( 'Back', 'tutor' ) )
 						->size( Size::LARGE )
 						->variant( Variant::OUTLINE )
+						->icon( Icon::ARROW_LEFT_2, 'left', 20, 20 )
 						->attr( 'type', 'button' )
 						->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
 						->attr( '@click', 'goPrev()' )
-						->attr( 'x-show', $show_previous_button ? 'layout !== "single_question" && currentIndex > 1' : 'false' )
+						->attr( 'x-show', $show_previous_button ? 'currentIndex > 1' : 'false' )
 						->attr( 'class', 'tutor-quiz-answer-previous-btn' )
 						->render();
 
@@ -291,6 +295,7 @@ $default_values = array(
 						->attr( 'class', 'tutor-quiz-submit-btn' )
 						->render();
 				?>
+				</div>
 			</div>
 		</div>
 	<?php else : ?>

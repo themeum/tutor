@@ -67,18 +67,22 @@ $tutor-quiz-footer-offset: 96px;
       margin-inline-start: 0;
     }
 
-    &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-footer-inner {
-      justify-content: center !important;
-    }
-
-    &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-footer-inner:has(
-        .tutor-quiz-footer-feedback:not([style*='display: none'])
-      ) {
-      justify-content: space-between !important;
+    &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-footer-inner,
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-footer .tutor-quiz-footer-inner {
+      justify-content: flex-end !important;
     }
 
     &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-footer-inner:has(
         .tutor-quiz-skip-btn:not([style*='display: none'])
+      ),
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-footer .tutor-quiz-footer-inner:has(
+        .tutor-quiz-skip-btn:not([style*='display: none'])
+      ),
+    &[data-question-layout-view='single_question'] .tutor-quiz-footer .tutor-quiz-footer-inner:has(
+        .tutor-quiz-footer-feedback:not([style*='display: none'])
+      ),
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-footer .tutor-quiz-footer-inner:has(
+        .tutor-quiz-footer-feedback:not([style*='display: none'])
       ) {
       justify-content: space-between !important;
     }
@@ -349,8 +353,9 @@ $tutor-quiz-footer-offset: 96px;
   }
 
   &-answer-next-btn,
+  &-previous-btn,
   &-submit-btn {
-    padding-inline: 32px;
+    padding-inline: $tutor-spacing-9;
 
     &:disabled {
       background-color: $tutor-button-disabled;
@@ -960,6 +965,12 @@ $tutor-quiz-footer-offset: 96px;
 
     &-feedback-text {
       @include tutor-typography('h6', 'medium');
+    }
+
+    &-actions {
+      @include tutor-flex(row, center, flex-end);
+      gap: $tutor-spacing-6;
+      margin-inline-start: auto;
     }
 
     &[data-position='first'] &-inner {
