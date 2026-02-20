@@ -10,16 +10,18 @@
 
 namespace TUTOR;
 
-use TUTOR\Icon;
-use Tutor\Ecommerce\Tax;
 use Tutor\Cache\TutorCache;
-use Tutor\Models\QuizModel;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Traits\JsonResponse;
+use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\Settings;
+use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\DateTimeHelper;
+use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\QueryHelper;
+use TUTOR\Icon;
+use Tutor\Models\CourseModel;
+use Tutor\Models\QuizModel;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -2921,21 +2923,126 @@ class Utils {
 	}
 
 	/**
+	 * Separation of all menu items for providing ease of usage
+	 *
+	 * @since 2.0.0
+	 *
+	 * @since 4.0.0 Menu item updated based on student view
+	 *
+	 * @return array array of menu items.
+	 */
+	public function default_menus(): array {
+		$items = array(
+			'index'             => array(
+				'title' => __( 'Home', 'tutor' ),
+				'icon'  => Icon::HOME,
+			),
+			'courses'           => array(
+				'title' => __( 'Courses', 'tutor' ),
+				'icon'  => Icon::COURSES,
+			),
+			'retrieve-password' => array(
+				'title'         => __( 'Retrieve Password', 'tutor' ),
+				'show_ui'       => false,
+				'login_require' => false,
+			),
+			'account'           => array(
+				'label'   => __( 'Account', 'tutor' ),
+				'show_ui' => false,
+			),
+		);
+
+		if ( $this->should_show_dicussion_menu() ) {
+			$items['discussions'] = array(
+				'title' => __( 'Discussions', 'tutor' ),
+				'icon'  => Icon::QA,
+			);
+		}
+
+		return apply_filters( 'tutor_student_dashboard_nav', $items );
+	}
+
+	/**
+	 * Separation of all menu items for providing ease of usage
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array array of menu items.
+	 */
+	public function instructor_menus(): array {
+		$menus = array(
+			'index'         => array(
+				'title' => __( 'Home', 'tutor' ),
+				'icon'  => Icon::HOME,
+			),
+			'my-courses'    => array(
+				'title'    => __( 'Courses', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::COURSES,
+			),
+			// Hidden menu.
+			'create-course' => array(
+				'title'    => __( 'Create Course', 'tutor' ),
+				'show_ui'  => false,
+				'auth_cap' => tutor()->instructor_role,
+			),
+			'create-bundle' => array(
+				'title'    => __( 'Create Bundle', 'tutor' ),
+				'show_ui'  => false,
+				'auth_cap' => tutor()->instructor_role,
+			),
+		);
+
+		$menus = apply_filters( 'tutor_after_instructor_menu_my_courses', $menus );
+
+		$other_menus = array(
+			'announcements' => array(
+				'title'    => __( 'Announcements', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::ANNOUNCEMENT,
+			),
+			'quiz-attempts' => array(
+				'title'    => __( 'Quiz Attempts', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QUIZ,
+			),
+		);
+
+		if ( $this->should_show_dicussion_menu() ) {
+			$other_menus['discussions'] = array(
+				'title'    => __( 'Discussions', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QA,
+			);
+		}
+
+		$all_menus = apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
+
+		return $all_menus;
+	}
+
+	/**
 	 * Tutor Dashboard Pages, supporting for the URL rewriting
 	 *
 	 * @since 1.0.0
 	 *
-	 * @since 4.0.0 View mode added.
+	 * @since 4.0.0 param $context added.
 	 *
-	 * @return mixed
+	 * @param string $context context.
+	 *               `view` to get pages according to role.
+	 *               `rewrite_rules` to get all page for rewrite rules.
+	 *
+	 * @return array
 	 */
-	public function tutor_dashboard_pages() {
+	public function tutor_dashboard_pages( $context = 'view' ) {
 
-		$nav_items = array();
-		if ( User::is_instructor_view() ) {
-			$nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
+		$nav_items            = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
+		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
+
+		if ( 'rewrite_rules' === $context ) {
+			$nav_items = array_merge( $nav_items, $instructor_nav_items );
 		} else {
-			$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
+			$nav_items = User::is_instructor_view() ? $instructor_nav_items : $nav_items;
 		}
 
 		return apply_filters( 'tutor_dashboard/nav_items_all', $nav_items );
@@ -2949,21 +3056,8 @@ class Utils {
 	 * @return array
 	 */
 	public function tutor_dashboard_permalinks() {
-		$dashboard_pages = $this->tutor_dashboard_pages();
-
-		$dashboard_permalinks = apply_filters(
-			'tutor_dashboard/permalinks',
-			array(
-				'retrieve-password' => array(
-					'title'         => __( 'Retrieve Password', 'tutor' ),
-					'login_require' => false,
-				),
-			)
-		);
-
-		$dashboard_pages = array_merge( $dashboard_pages, $dashboard_permalinks );
-
-		return $dashboard_pages;
+		$dashboard_permalinks = apply_filters( 'tutor_dashboard/permalinks', $this->tutor_dashboard_pages( 'rewrite_rules' ) );
+		return $dashboard_permalinks;
 	}
 
 	/**
@@ -3913,6 +4007,8 @@ class Utils {
 
 		if ( is_object( $user ) && $user->tutor_profile_photo && wp_get_attachment_image_url( $user->tutor_profile_photo ) ) {
 			$avatar_url = wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' );
+		} else {
+			$avatar_url = get_avatar_url( $user_id );
 		}
 
 		TutorCache::set( $cache_key, $avatar_url );
@@ -4266,16 +4362,16 @@ class Utils {
 		$date_filter   = sanitize_text_field( $date_filter );
 		$instructor_id = $this->get_user_id( $instructor_id );
 
-		$course_query = '';
-		$date_query   = '';
-		$where_clause = '';
+		$course_query       = '';
+		$date_query         = '';
+		$review_date_clause = '';
 
 		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
 			$from = Input::sanitize( $args['from'] );
 			$to   = Input::sanitize( $args['to'] );
 
 			$where['comment_date'] = array( 'BETWEEN', array( $from, $to ) );
-			$where_clause          = ' AND ' . QueryHelper::prepare_where_clause( $where );
+			$review_date_clause    = ' AND ' . QueryHelper::prepare_where_clause( $where );
 		}
 
 		if ( '' !== $course_id ) {
@@ -4308,7 +4404,7 @@ class Utils {
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
-						{$where_clause}
+						{$review_date_clause}
 						{$course_query}
 						{$date_query}
 				",
@@ -4342,7 +4438,7 @@ class Utils {
 					WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
-						{$where_clause}
+						{$review_date_clause}
 						{$course_query}
 						{$date_query}
 					ORDER BY {$order_by} DESC
@@ -4362,7 +4458,7 @@ class Utils {
 	 * Get instructors rating
 	 *
 	 * @since 1.0.0
-	 * @since 4.0.0 Added $where Parameter.
+	 * @since 4.0.0 Added $args Parameter.
 	 *
 	 * @param int   $instructor_id instructor id.
 	 * @param array $args       Optional additional WHERE conditions.
@@ -5222,7 +5318,7 @@ class Utils {
 		$quiz_id = $this->get_post_id( $quiz_id );
 		global $wpdb;
 
-		$max_questions_count = (int) $this->get_quiz_option( get_the_ID(), 'max_questions_for_answer' );
+		$max_questions_count = (int) $this->get_quiz_option( $quiz_id, 'max_questions_for_answer' );
 		$total_question      = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT count(question_id)
@@ -9542,64 +9638,6 @@ class Utils {
 		}
 	}
 
-	/**
-	 * Separation of all menu items for providing ease of usage
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return array array of menu items.
-	 */
-	public function instructor_menus(): array {
-		$menus = array(
-			'index'         => array(
-				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME,
-			),
-			'my-courses'    => array(
-				'title'    => __( 'Courses', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::COURSES,
-			),
-			// Hidden menu.
-			'create-course' => array(
-				'title'    => __( 'Create Course', 'tutor' ),
-				'show_ui'  => false,
-				'auth_cap' => tutor()->instructor_role,
-			),
-			'create-bundle' => array(
-				'title'    => __( 'Create Bundle', 'tutor' ),
-				'show_ui'  => false,
-				'auth_cap' => tutor()->instructor_role,
-			),
-		);
-
-		$menus = apply_filters( 'tutor_after_instructor_menu_my_courses', $menus );
-
-		$other_menus = array(
-			'announcements' => array(
-				'title'    => __( 'Announcements', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::ANNOUNCEMENT,
-			),
-			'quiz-attempts' => array(
-				'title'    => __( 'Quiz Attempts', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QUIZ,
-			),
-		);
-
-		if ( $this->should_show_dicussion_menu() ) {
-			$other_menus['discussions'] = array(
-				'title'    => __( 'Discussions', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QA,
-			);
-		}
-
-		$all_menus = apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
-
-		return $all_menus;
-	}
 
 	/**
 	 * Should show the disscussion menu on the student
@@ -9616,40 +9654,6 @@ class Utils {
 		return $is_q_and_a_enabled || $is_lesson_comment_enabled;
 	}
 
-	/**
-	 * Separation of all menu items for providing ease of usage
-	 *
-	 * @since 2.0.0
-	 *
-	 * @since 4.0.0 Menu item updated based on student view
-	 *
-	 * @return array array of menu items.
-	 */
-	public function default_menus(): array {
-		$items = array(
-			'index'   => array(
-				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME,
-			),
-			'courses' => array(
-				'title' => __( 'Courses', 'tutor' ),
-				'icon'  => Icon::COURSES,
-			),
-			'account' => array(
-				'label'   => __( 'Account', 'tutor' ),
-				'show_ui' => false,
-			),
-		);
-
-		if ( $this->should_show_dicussion_menu() ) {
-			$items['discussions'] = array(
-				'title' => __( 'Discussions', 'tutor' ),
-				'icon'  => Icon::QA,
-			);
-		}
-
-		return apply_filters( 'tutor_student_dashboard_nav', $items );
-	}
 
 	/**
 	 * Default config for tutor text editor
@@ -10906,5 +10910,70 @@ class Utils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get currency configuration from active monetization system.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $monitize_by Optional. Monetization provider key
+	 *                                 (e.g., 'wc', 'edd', 'pmpro').
+	 *
+	 * @return array{
+	 *     currency: string,
+	 *     symbol: string,
+	 *     position: string,
+	 *     decimal_separator: string,
+	 *     thousand_separator: string
+	 *     no_of_decimal: int
+	 * }
+	 */
+	public function get_monetization_currency_config( $monetize_by = '' ): array {
+
+		$monetize_by = empty( $monetize_by ) ? $this->get_option( 'monetize_by' ) : $monetize_by;
+
+		// WooCommerce.
+		if ( 'wc' === $monetize_by ) {
+			return array(
+				'symbol'             => get_woocommerce_currency_symbol(),
+				'position'           => get_option( 'woocommerce_currency_pos' ),
+				'decimal_separator'  => wc_get_price_decimal_separator(),
+				'thousand_separator' => wc_get_price_thousand_separator(),
+				'no_of_decimal'      => wc_get_price_decimals(),
+			);
+		}
+
+		// Easy Digital Downloads.
+		if ( 'edd' === $monetize_by ) {
+			$position = edd_get_option( 'currency_position', 'before' ) === 'before' ? 'left' : 'right';
+			return array(
+				'symbol'             => edd_currency_symbol( edd_get_currency() ),
+				'position'           => $position,
+				'decimal_separator'  => edd_get_option( 'decimal_separator', '.' ),
+				'thousand_separator' => edd_get_option( 'thousands_separator', ',' ),
+			);
+		}
+
+		// Paid Memberships Pro.
+		if ( 'pmpro' === $monetize_by && function_exists( 'pmpro_get_currency' ) ) {
+			$currency = pmpro_get_currency();
+			return array(
+				'symbol'             => $currency['symbol'] ?? '',
+				'position'           => $currency['position'] ?? '',
+				'decimal_separator'  => $currency['decimal_separator'] ?? '',
+				'thousand_separator' => $currency['thousands_separator'] ?? '',
+				'no_of_decimal'      => (int) $currency['decimals'] ?? 2,
+			);
+		}
+
+		// Tutor.
+		return array(
+			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ) ),
+			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, true ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, true ),
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, true ),
+			'no_of_decimal'      => (int) tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, true ),
+		);
 	}
 }

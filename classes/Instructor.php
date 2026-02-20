@@ -837,7 +837,7 @@ class Instructor {
 				return array(
 					'user'        => array(
 						'name'   => $review->display_name,
-						'avatar' => get_avatar_url( $review->user_id ),
+						'avatar' => tutor_utils()->get_user_avatar_url( $review->user_id ),
 					),
 					'course_name' => get_the_title( $review->comment_post_ID ),
 					'date'        => $review->comment_date,
@@ -890,93 +890,6 @@ class Instructor {
 			'icon'       => $icon,
 			'class'      => $class,
 			'icon_class' => '-tutor-mb-1',
-		);
-	}
-
-	/**
-	 * Render a template and return its output as a string.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $template   Template file path or slug.
-	 * @param array  $data       Data to be passed to the template.
-	 * @param bool   $once       Whether the template should be loaded only once.
-	 *                           Defaults to true.
-	 *
-	 * @return string Rendered template output.
-	 */
-	public static function get_template_output( $template, $data, $once = true ) {
-
-		ob_start();
-
-		tutor_load_template_from_custom_path( $template, $data, $once );
-
-		return (string) ob_get_clean();
-	}
-
-	/**
-	 * Get currency configuration from active monetization system.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return array{
-	 *     currency: string,
-	 *     symbol: string,
-	 *     position: string,
-	 *     decimal_separator: string,
-	 *     thousand_separator: string
-	 *     no_of_decimal: int
-	 * }
-	 */
-	public static function get_active_currency_config(): array {
-
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
-
-		// WooCommerce.
-		if ( 'wc' === $monetize_by ) {
-			return array(
-				'symbol'             => get_woocommerce_currency_symbol(),
-				'position'           => get_option( 'woocommerce_currency_pos' ),
-				'decimal_separator'  => wc_get_price_decimal_separator(),
-				'thousand_separator' => wc_get_price_thousand_separator(),
-				'no_of_decimal'      => wc_get_price_decimals(),
-			);
-		}
-
-		// Easy Digital Downloads.
-		if ( 'edd' === $monetize_by ) {
-
-			$position = edd_get_option( 'currency_position', 'before' ) === 'before' ? 'left' : 'right';
-
-			return array(
-				'symbol'             => edd_currency_symbol( edd_get_currency() ),
-				'position'           => $position,
-				'decimal_separator'  => edd_get_option( 'decimal_separator', '.' ),
-				'thousand_separator' => edd_get_option( 'thousands_separator', ',' ),
-			);
-		}
-
-		// Paid Memberships Pro.
-		if ( 'pmpro' === $monetize_by && function_exists( 'pmpro_get_currency' ) ) {
-
-			$currency = pmpro_get_currency();
-
-			return array(
-				'symbol'             => $currency['symbol'],
-				'position'           => $currency['position'],
-				'decimal_separator'  => $currency['decimal_separator'],
-				'thousand_separator' => $currency['thousands_separator'],
-				'no_of_decimal'      => (int) $currency['decimals'],
-			);
-		}
-
-		// Tutor.
-		return array(
-			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ) ),
-			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, true ),
-			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, true ),
-			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, true ),
-			'no_of_decimal'      => (int) tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, true ),
 		);
 	}
 }

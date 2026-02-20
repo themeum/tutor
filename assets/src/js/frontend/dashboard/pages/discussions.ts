@@ -1,6 +1,7 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
 
 interface ReplyCommentPayload {
@@ -8,6 +9,12 @@ interface ReplyCommentPayload {
   comment_parent: number;
   comment: string;
 }
+
+interface DeleteCommentPayload {
+  comment_id: number;
+  is_reply?: boolean;
+}
+
 interface QnASingleActionPayload {
   question_id: number;
   qna_action: string;
@@ -19,6 +26,39 @@ interface ReplyQnAPayload {
   question_id: number;
   answer: string;
 }
+interface UpdateQnAPayload {
+  question_id: number;
+  answer: string;
+}
+
+interface DeleteQnAPayload {
+  question_id: number;
+  context?: 'question' | 'reply';
+}
+
+const FORM_ID_PREFIXES = {
+  COMMENT_EDIT: 'lesson-comment-edit-',
+  COMMENT_REPLY: 'lesson-comment-reply-form-',
+  QNA_EDIT: 'qna-edit-',
+  QNA_REPLY: 'qna-reply-form-',
+};
+
+const MODALS = {
+  COMMENT_DELETE: 'tutor-comment-delete-modal',
+  QNA_DELETE: 'tutor-qna-delete-modal',
+};
+
+const ELEMENT_IDS = {
+  COMMENT_TEXT_PREFIX: 'tutor-lesson-comment-text-',
+  QNA_TEXT_PREFIX: 'tutor-qna-text-',
+  REPLIES_LIST_CONTAINER: 'tutor-discussion-replies-list',
+};
+
+const URL_PARAMS = {
+  TAB: 'tab',
+  ID: 'id',
+  ORDER: 'order',
+};
 
 /**
  * Discussions Page Component
@@ -26,47 +66,95 @@ interface ReplyQnAPayload {
  */
 const discussionsPage = () => {
   const query = window.TutorCore.query;
+  const form = window.TutorCore.form;
+  const toast = window.TutorCore.toast;
+  const modal = window.TutorCore.modal;
 
   return {
     query,
-    deleteCommentMutation: null as MutationState<unknown, unknown> | null,
+    deleteCommentMutation: null as MutationState<unknown, DeleteCommentPayload> | null,
     replyCommentMutation: null as MutationState<unknown, ReplyCommentPayload> | null,
+    editCommentMutation: null as MutationState<unknown, { comment_id: number; comment: string }> | null,
     qnaSingleActionMutation: null as MutationState<unknown, unknown> | null,
     deleteQnAMutation: null as MutationState<unknown, unknown> | null,
     replyQnAMutation: null as MutationState<unknown, unknown> | null,
+    updateQnAMutation: null as MutationState<unknown, UpdateQnAPayload> | null,
+    loadQnARepliesMutation: null as MutationState<unknown, unknown> | null,
     currentAction: null as string | null,
     currentQuestionId: null as number | null,
     isSolved: false,
     isImportant: false,
     isArchived: false,
+    editingId: null as number | null,
+    editingFormId: null as string | null,
+    loadingReplies: false,
+    repliesOrder: 'DESC',
+    $nextTick: undefined as ((callback: () => void) => void) | undefined,
 
     init() {
+      // Set initial state from URL
+      const url = new URL(window.location.href);
+      this.repliesOrder = url.searchParams.get(URL_PARAMS.ORDER) || 'DESC';
+
       // Lesson comment delete mutation.
       this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
-        onSuccess: () => {
-          const url = new URL(window.location.href);
-          url.searchParams.delete('id');
-          window.location.href = url.toString();
+        onSuccess: (_, payload) => {
+          if (payload.is_reply) {
+            toast.success(__('Reply deleted successfully', 'tutor'));
+            modal.closeModal(MODALS.COMMENT_DELETE);
+            this.reloadReplies();
+          } else {
+            const url = new URL(window.location.href);
+            url.searchParams.delete(URL_PARAMS.ID);
+            window.location.href = url.toString();
+          }
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to delete Comment', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
       // Lesson comment reply mutation
       this.replyCommentMutation = this.query.useMutation(this.replyComment, {
-        onSuccess: () => {
-          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
-          window.location.reload();
+        onSuccess: (_, payload) => {
+          toast.success(__('Reply saved successfully', 'tutor'));
+          this.reloadReplies();
+
+          const formId = `${FORM_ID_PREFIXES.COMMENT_REPLY}${payload.comment_parent}`;
+          if (form.hasForm(formId)) {
+            form.reset(formId);
+          }
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
+          toast.error(convertToErrorMessage(error));
+        },
+      });
+
+      // Lesson comment edit mutation.
+      this.editCommentMutation = this.query.useMutation(this.updateComment, {
+        onSuccess: (_, payload) => {
+          toast.success(__('Comment updated successfully.', 'tutor'));
+
+          const element = document.getElementById(`${ELEMENT_IDS.COMMENT_TEXT_PREFIX}${payload.comment_id}`);
+          if (element) {
+            element.innerHTML = payload.comment;
+          }
+
+          if (this.editingFormId && form.hasForm(this.editingFormId)) {
+            form.reset(this.editingFormId);
+            this.editingFormId = null;
+          }
+
+          this.editingId = null;
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
         },
       });
 
       // Q&A single action mutation (read, unread, solved, important, archived).
       this.qnaSingleActionMutation = this.query.useMutation(this.qnaSingleAction, {
-        onSuccess: (response, payload: QnASingleActionPayload) => {
+        onSuccess: (_, payload: QnASingleActionPayload) => {
           const action = payload.qna_action;
           if (action === 'solved') {
             this.isSolved = !this.isSolved;
@@ -83,35 +171,101 @@ const discussionsPage = () => {
           );
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Action failed', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
       // Q&A delete mutation.
       this.deleteQnAMutation = this.query.useMutation(this.deleteQnA, {
-        onSuccess: () => {
-          const url = new URL(window.location.href);
-          url.searchParams.delete('id');
-          window.location.href = url.toString();
+        onSuccess: (_, payload) => {
+          if (payload.context === 'reply') {
+            toast.success(__('Reply deleted successfully', 'tutor'));
+            modal.closeModal(MODALS.QNA_DELETE);
+            this.reloadReplies();
+          } else {
+            const url = new URL(window.location.href);
+            url.searchParams.delete(URL_PARAMS.ID);
+            window.location.href = url.toString();
+          }
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to delete Q&A', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
       // Q&A reply mutation.
       this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
-        onSuccess: () => {
-          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
-          window.location.reload();
+        onSuccess: (_, payload) => {
+          toast.success(__('Reply saved successfully', 'tutor'));
+          this.reloadReplies();
+          const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${payload.question_id}`;
+          if (form.hasForm(formId)) {
+            form.reset(formId);
+          }
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
+          toast.error(convertToErrorMessage(error));
+        },
+      });
+
+      // Q&A update mutation.
+      this.updateQnAMutation = this.query.useMutation(this.updateQnA, {
+        onSuccess: (_, payload) => {
+          toast.success(__('Updated successfully', 'tutor'));
+
+          // Update DOM directly for immediate feedback
+          const element = document.getElementById(`${ELEMENT_IDS.QNA_TEXT_PREFIX}${payload.question_id}`);
+          if (element) {
+            element.innerHTML = payload.answer;
+          }
+
+          if (this.editingId === payload.question_id) {
+            this.setEditing(null);
+          }
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
         },
       });
     },
 
-    deleteComment(payload: { comment_id: number }) {
+    async reloadReplies(order?: string) {
+      if (order) {
+        this.repliesOrder = order;
+      }
+
+      const url = new URL(window.location.href);
+      const commentId = parseInt(url.searchParams.get(URL_PARAMS.ID) || '0');
+      const tab = url.searchParams.get(URL_PARAMS.TAB) || 'qna';
+
+      if (!commentId) return;
+
+      this.loadingReplies = true;
+      try {
+        const endpoint = tab === 'qna' ? endpoints.LOAD_QNA_REPLIES : endpoints.LOAD_COMMENT_REPLIES;
+        const response = await wpAjaxInstance.post(endpoint, {
+          comment_id: commentId,
+          order: this.repliesOrder,
+        });
+
+        const container = document.getElementById(ELEMENT_IDS.REPLIES_LIST_CONTAINER);
+        if (container && typeof response.data?.html === 'string') {
+          container.innerHTML = response.data.html;
+
+          // Update URL without reload
+          const url = new URL(window.location.href);
+          url.searchParams.set(URL_PARAMS.ORDER, this.repliesOrder);
+          window.history.pushState({}, '', url.toString());
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to reload replies:', error);
+      } finally {
+        this.loadingReplies = false;
+      }
+    },
+
+    deleteComment(payload: DeleteCommentPayload) {
       return wpAjaxInstance.post(endpoints.DELETE_LESSON_COMMENT, payload);
     },
 
@@ -119,16 +273,24 @@ const discussionsPage = () => {
       return wpAjaxInstance.post(endpoints.REPLY_LESSON_COMMENT, payload);
     },
 
+    updateComment(payload: { comment_id: number; comment: string }) {
+      return wpAjaxInstance.post(endpoints.UPDATE_LESSON_COMMENT, payload);
+    },
+
     qnaSingleAction(payload: QnASingleActionPayload) {
       return wpAjaxInstance.post(endpoints.QNA_SINGLE_ACTION, payload);
     },
 
-    deleteQnA(payload: { question_id: number }) {
+    deleteQnA(payload: DeleteQnAPayload) {
       return wpAjaxInstance.post(endpoints.DELETE_DASHBOARD_QNA, payload);
     },
 
     replyQnA(payload: ReplyQnAPayload) {
       return wpAjaxInstance.post(endpoints.CREATE_UPDATE_QNA, payload);
+    },
+
+    updateQnA(payload: UpdateQnAPayload) {
+      return wpAjaxInstance.post(endpoints.UPDATE_QNA, payload);
     },
 
     async handleQnASingleAction(questionId: number, action: string, extras: Record<string, string> = {}) {
@@ -146,9 +308,41 @@ const discussionsPage = () => {
       }
     },
 
+    handleReplyComment(data: { comment: string }, commentId: number, courseId: number) {
+      return this.replyCommentMutation?.mutate({
+        comment: data.comment,
+        comment_parent: commentId,
+        comment_post_ID: courseId,
+      });
+    },
+
+    handleEditComment(data: { comment: string }, commentId: number) {
+      return this.editCommentMutation?.mutate({
+        comment_id: commentId,
+        comment: data.comment,
+      });
+    },
+
     handleKeydown(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
         (event.target as HTMLFormElement).closest('form')?.requestSubmit();
+      }
+    },
+
+    setEditing(id: number | null, context = 'comment') {
+      const prefix = context === 'qna' ? FORM_ID_PREFIXES.QNA_EDIT : FORM_ID_PREFIXES.COMMENT_EDIT;
+      const field = context === 'qna' ? 'answer' : 'comment';
+
+      this.editingId = id;
+      const formId = id ? `${prefix}${id}` : null;
+      this.editingFormId = formId;
+
+      if (id && formId) {
+        this.$nextTick?.(() => {
+          if (form.hasForm(formId)) {
+            form.setFocus(formId, field);
+          }
+        });
       }
     },
   };

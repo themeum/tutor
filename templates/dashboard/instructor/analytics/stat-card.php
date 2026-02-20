@@ -36,7 +36,7 @@ if ( ! empty( $hover_content ) ) {
 	$start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
 	$end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
 	$template_path  = tutor()->path . 'templates/dashboard/instructor/analytics/stat-card-hover.php';
-	$hover_template = Instructor::get_template_output(
+	$hover_template = get_template_buffer(
 		$template_path,
 		array(
 			'start_date'    => $start_date,

@@ -222,7 +222,7 @@ if ( $is_pro_reports ) {
 		'earnings' => array_merge( array( 0 ), $graph_earnings, array( 0 ) ),
 		'enrolled' => array_merge( array( 0 ), $graph_enrollments, array( 0 ) ),
 		'labels'   => array_merge( array( '' ), $labels, array( '' ) ),
-		'currency' => Instructor::get_active_currency_config(),
+		'currency' => tutor_utils()->get_monetization_currency_config(),
 	);
 }
 
