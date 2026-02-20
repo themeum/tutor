@@ -15,7 +15,7 @@ use Tutor\Quiz;
 
 global $tutor_is_started_quiz;
 
-$field_name     = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . ']';
+$field_name     = $question_field_name_base ?? '';
 $register_rules = '';
 if ( $answer_is_required ) {
 	$register_rules = ", { required: '" . esc_js( $required_message ) . "' }";

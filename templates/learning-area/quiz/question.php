@@ -40,6 +40,9 @@ $default_question = array(
 $quiz_id            = $tutor_is_started_quiz->quiz_id ?? 0;
 $quiz_settings      = tutor_utils()->get_quiz_option( $quiz_id, 'quiz_settings', array() );
 $show_question_mark = $question_settings['show_question_mark'] ?? '0';
+$attempt_id         = (int) ( $tutor_is_started_quiz->attempt_id ?? 0 );
+$question_id        = (int) ( $question->question_id ?? 0 );
+$field_name_base    = sprintf( 'attempt[%d][quiz_question][%d]', $attempt_id, $question_id );
 
 $answer_is_required = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
 $required_message   = __( 'The answer for this question is required', 'tutor' );
@@ -67,10 +70,11 @@ $required_message   = __( 'The answer for this question is required', 'tutor' );
 	tutor_load_template(
 		'learning-area.quiz.questions.' . $question_type,
 		array(
-			'question'           => wp_parse_args( (array) $question, $default_question ),
-			'quiz_settings'      => $quiz_settings,
-			'answer_is_required' => $answer_is_required,
-			'required_message'   => $required_message,
+			'question'                 => wp_parse_args( (array) $question, $default_question ),
+			'quiz_settings'            => $quiz_settings,
+			'answer_is_required'       => $answer_is_required,
+			'required_message'         => $required_message,
+			'question_field_name_base' => $field_name_base,
 		)
 	);
 

@@ -12,13 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 
-global $tutor_is_started_quiz;
-
-$answer_field_name = sprintf(
-	'attempt[%d][quiz_question][%d][answers][]',
-	$tutor_is_started_quiz->attempt_id,
-	$question['question_id']
-);
+$answer_field_name = ( $question_field_name_base ?? '' ) . '[answers][]';
 $register_rules    = '';
 if ( $answer_is_required ) {
 	$register_rules = ", { validate: (value) => Array.isArray(value) && value.length > 0 || '" . esc_js( $required_message ) . "' }";

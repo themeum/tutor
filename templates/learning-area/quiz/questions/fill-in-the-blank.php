@@ -10,11 +10,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-global $tutor_is_started_quiz;
-
-$field_name     = '';
-$field_names    = array();
-$register_rules = '';
+$base_field_name = ( $question_field_name_base ?? '' ) . '[]';
+$field_name      = '';
+$field_names     = array();
+$register_rules  = '';
 if ( $answer_is_required ) {
 	$register_rules = ", { required: '" . esc_js( $required_message ) . "' }";
 }
@@ -32,17 +31,9 @@ if ( $answer_is_required ) {
 
 				$answer_title = preg_replace_callback(
 					'/{dash}/',
-					function () use ( &$input_index, $tutor_is_started_quiz, $question, $register_rules, &$field_name, &$field_names ) {
+					function () use ( &$input_index, $base_field_name, $register_rules, &$field_name, &$field_names ) {
 
-						$attempt_id  = (int) $tutor_is_started_quiz->attempt_id;
-						$question_id = (int) $question['question_id'];
-
-						$input_name = sprintf(
-							'attempt[%d][quiz_question][%d][][%d]',
-							$attempt_id,
-							$question_id,
-							$input_index
-						);
+						$input_name = sprintf( '%s[%d]', $base_field_name, $input_index );
 
 						$register_attr = "register('{$input_name}'{$register_rules})";
 						$input_html    = sprintf(
