@@ -194,6 +194,12 @@ function tutor_get_translate_text() {
 		'second'             => array(
 			'text' => __( 'Second', 'tutor' ),
 		),
+		'exclusive' 		 => array(
+			'text' => __( 'Exclusive', 'tutor' ),
+		),
+		'inclusive' 		 => array(
+			'text' => __( 'Inclusive', 'tutor' ),
+		),
 
 		// Translate able week name.
 		'monday'             => array(

@@ -164,5 +164,4 @@ abstract class BaseComponent {
 		// phpcs:ignore -- Sanitization is performed within each child class’s `get` method implementation.
 		echo $this->get();
 	}
-
 }
