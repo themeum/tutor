@@ -1601,14 +1601,13 @@ class Quiz {
 			}
 			?>
 
-			<form
-				x-data="tutorQuizAutoStart({
-					quizID: <?php echo esc_attr( $quiz_id ); ?>,
-					autoStart: <?php echo $quiz_auto_start ? 'true' : 'false'; ?>,
-				})"
-				x-init="init()"
-				@submit.prevent="handleStartQuiz()"
-			>
+				<form
+					x-data="tutorQuizAutoStart({
+						quizID: <?php echo esc_attr( $quiz_id ); ?>,
+						autoStart: <?php echo $quiz_auto_start ? 'true' : 'false'; ?>,
+					})"
+					@submit.prevent="handleStartQuiz()"
+				>
 				<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 				<input type="hidden" value="<?php echo esc_attr( $quiz_id ); ?>" name="quiz_id"/>
 				<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
