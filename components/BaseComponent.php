@@ -59,6 +59,32 @@ abstract class BaseComponent {
 	 */
 	protected $attributes = array();
 
+
+	/**
+	 * Allowed HTML tags and Alpine.js attributes
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $allowed_attributes = array();
+
+	/**
+	 * Allowed Alpine.js HTML attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	private const ALLOWED_ALPINE_ATTRS = array(
+		'x-data',
+		'x-text',
+		'x-show',
+		'x-cloak',
+		'x-ref',
+		'x-transition',
+	);
+
 	/**
 	 * Set or merge multiple HTML attributes.
 	 *
@@ -139,6 +165,47 @@ abstract class BaseComponent {
 	 */
 	protected function esc( $value, $esc_fn = 'esc_html' ): string {
 		return call_user_func( $esc_fn, $value );
+	}
+
+	/**
+	 * Returns the allowed HTML attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public function allowed_attributes() {
+
+		if ( empty( $this->allowed_attributes ) ) {
+			return wp_kses_allowed_html( 'post' );
+		}
+
+		return $this->allowed_attributes;
+	}
+
+	/**
+	 * Add Alpine.js attributes to the allowed attribute-list.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attributes attribute map.
+	 *
+	 * @return $this
+	 */
+	public function add_x_attrs( array $attributes ) {
+
+		$allowed_attributes = self::allowed_attributes();
+
+		foreach ( $attributes as $tag => $attr ) {
+			$tag = sanitize_key( $tag );
+
+			if ( ! isset( $allowed_attributes[ $tag ][ $attr ] ) && in_array( $attr, self::ALLOWED_ALPINE_ATTRS, true ) ) {
+				$allowed_attributes[ $tag ][ $attr ] = true;
+			}
+		}
+
+		$this->allowed_attributes = $allowed_attributes;
+		return $this;
 	}
 
 	/**
