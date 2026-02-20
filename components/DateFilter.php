@@ -10,9 +10,9 @@
 
 namespace Tutor\Components;
 
-use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
 use TUTOR\Input;
+use Tutor\Components\Constants\Size;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -97,6 +97,15 @@ class DateFilter extends BaseComponent {
 	protected $icon_size = 20;
 
 	/**
+	 * Whether to display the label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $show_label = true;
+
+	/**
 	 * Set filter type.
 	 *
 	 * @param string $type Filter type (single|range).
@@ -160,6 +169,20 @@ class DateFilter extends BaseComponent {
 	 */
 	public function placement( string $placement ): self {
 		$this->placement = $placement;
+		return $this;
+	}
+
+	/**
+	 * Enable or disable the display of the label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $show_label True to show the label, false to hide it.
+	 *
+	 * @return $this
+	 */
+	public function show_label( bool $show_label ) {
+		$this->show_label = $show_label;
 		return $this;
 	}
 
@@ -264,6 +287,10 @@ class DateFilter extends BaseComponent {
 	protected function calculate_label(): string {
 		if ( self::TYPE_SINGLE === $this->type ) {
 			return Input::get( 'date', '' );
+		}
+
+		if ( ! $this->show_label ) {
+			return '';
 		}
 
 		$start_date = Input::get( 'start_date' );

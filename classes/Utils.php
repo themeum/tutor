@@ -10,17 +10,18 @@
 
 namespace TUTOR;
 
-use TUTOR\Icon;
-use Tutor\Ecommerce\Tax;
 use Tutor\Cache\TutorCache;
-use Tutor\Models\QuizModel;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Traits\JsonResponse;
+use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\Settings;
+use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\DateTimeHelper;
-use Tutor\Helpers\UrlHelper;
+use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\QueryHelper;
+use TUTOR\Icon;
+use Tutor\Models\CourseModel;
+use Tutor\Models\QuizModel;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -3499,15 +3500,15 @@ class Utils {
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.ID)
-			FROM 	{$wpdb->posts} enrollment
-					INNER  JOIN {$wpdb->posts} course
-							ON enrollment.post_parent=course.ID
-			WHERE 	course.post_author = %d
+				FROM {$wpdb->posts} enrollment
+				INNER JOIN {$wpdb->posts} course
+					ON enrollment.post_parent=course.ID
+				WHERE course.post_author = %d
 					AND course.post_type = %s
 					AND course.post_status = %s
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s;
-			",
+				",
 				$instructor_id,
 				$course_post_type,
 				'publish',
@@ -3591,11 +3592,11 @@ class Utils {
 		$students       = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.post_author) AS course_taken, user.*, (SELECT post_date FROM {$wpdb->posts} WHERE post_author = user.ID LIMIT 1) AS enroll_date
-				FROM 	{$wpdb->posts} enrollment
-					INNER  JOIN {$wpdb->posts} AS course
-							ON enrollment.post_parent=course.ID
-					INNER  JOIN {$wpdb->users} AS user
-							ON user.ID = enrollment.post_author
+				FROM {$wpdb->posts} enrollment
+				INNER JOIN {$wpdb->posts} AS course
+					ON enrollment.post_parent=course.ID
+				INNER JOIN {$wpdb->users} AS user
+					ON user.ID = enrollment.post_author
 				WHERE course.post_type = %s
 					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
@@ -3604,11 +3605,9 @@ class Utils {
 					{$course_query}
 					{$date_query}
 					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email = %s OR user.user_login LIKE %s )
-
 				GROUP BY enrollment.post_author
 				ORDER BY {$order_by} {$order}
-				LIMIT %d, %d
-			",
+				LIMIT %d, %d",
 				$course_post_type,
 				'tutor_enrolled',
 				'completed',
@@ -3637,9 +3636,7 @@ class Utils {
 					{$course_query}
 					{$date_query}
 				GROUP BY enrollment.post_author
-				ORDER BY {$order_by} {$order}
-
-			",
+				ORDER BY {$order_by} {$order}",
 				$course_post_type,
 				'tutor_enrolled',
 				'completed',
@@ -4010,6 +4007,8 @@ class Utils {
 
 		if ( is_object( $user ) && $user->tutor_profile_photo && wp_get_attachment_image_url( $user->tutor_profile_photo ) ) {
 			$avatar_url = wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' );
+		} else {
+			$avatar_url = get_avatar_url( $user_id );
 		}
 
 		TutorCache::set( $cache_key, $avatar_url );
@@ -4343,16 +4342,18 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 1.4.0 $course_id $date_filter param added.
 	 * @since 1.9.9 Course id & date filter is sorting with specific course and date.
+	 * @since 4.0.0 $args parameter added.
 	 *
 	 * @param int    $instructor_id user id.
 	 * @param int    $offset offset.
 	 * @param int    $limit limit.
 	 * @param string $course_id course id.
 	 * @param string $date_filter date filter.
+	 * @param array  $args Optional additional WHERE conditions.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_reviews_by_instructor( $instructor_id = 0, $offset = 0, $limit = 150, $course_id = '', $date_filter = '' ) {
+	public function get_reviews_by_instructor( $instructor_id = 0, $offset = 0, $limit = 150, $course_id = '', $date_filter = '', $args = array() ) {
 		global $wpdb;
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$offset        = sanitize_text_field( $offset );
@@ -4361,8 +4362,17 @@ class Utils {
 		$date_filter   = sanitize_text_field( $date_filter );
 		$instructor_id = $this->get_user_id( $instructor_id );
 
-		$course_query = '';
-		$date_query   = '';
+		$course_query       = '';
+		$date_query         = '';
+		$review_date_clause = '';
+
+		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
+			$from = Input::sanitize( $args['from'] );
+			$to   = Input::sanitize( $args['to'] );
+
+			$where['comment_date'] = array( 'BETWEEN', array( $from, $to ) );
+			$review_date_clause    = ' AND ' . QueryHelper::prepare_where_clause( $where );
+		}
 
 		if ( '' !== $course_id ) {
 			$course_query = " AND {$wpdb->comments}.comment_post_ID = {$course_id} ";
@@ -4394,6 +4404,7 @@ class Utils {
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
+						{$review_date_clause}
 						{$course_query}
 						{$date_query}
 				",
@@ -4402,6 +4413,7 @@ class Utils {
 				)
 			);
 
+			$order_by = $args['order_by'] ?? 'comment_ID';
 			// Results.
 			$results['results'] = $wpdb->get_results(
 				$wpdb->prepare(
@@ -4416,21 +4428,21 @@ class Utils {
 						{$wpdb->users}.display_name,
 						{$wpdb->posts}.post_title as course_title
 
-				FROM 	{$wpdb->comments}
-						INNER JOIN {$wpdb->commentmeta}
-								ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-						INNER JOIN {$wpdb->users}
-								ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-						INNER JOIN {$wpdb->posts}
-								ON {$wpdb->posts}.ID = {$wpdb->comments}.comment_post_ID
-				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
+					FROM {$wpdb->comments}
+					INNER JOIN {$wpdb->commentmeta}
+						ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+					INNER JOIN {$wpdb->users}
+						ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+					INNER JOIN {$wpdb->posts}
+						ON {$wpdb->posts}.ID = {$wpdb->comments}.comment_post_ID
+					WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
+						{$review_date_clause}
 						{$course_query}
 						{$date_query}
-				ORDER BY comment_ID DESC
-				LIMIT %d, %d;
-				",
+					ORDER BY {$order_by} DESC
+					LIMIT %d, %d",
 					'tutor_course_rating',
 					'tutor_rating',
 					$offset,
@@ -4446,12 +4458,14 @@ class Utils {
 	 * Get instructors rating
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 Added $args Parameter.
 	 *
-	 * @param int $instructor_id instructor id.
+	 * @param int   $instructor_id instructor id.
+	 * @param array $args       Optional additional WHERE conditions.
 	 *
 	 * @return object
 	 */
-	public function get_instructor_ratings( $instructor_id ) {
+	public function get_instructor_ratings( $instructor_id, $args = array() ) {
 		global $wpdb;
 
 		$ratings = array(
@@ -4460,23 +4474,32 @@ class Utils {
 			'rating_avg'   => 0.00,
 		);
 
+		$where = array(
+			'courses.user_id'  => (int) $instructor_id,
+			'courses.meta_key' => '_tutor_instructor_course_id',
+		);
+
+		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
+			$from = Input::sanitize( $args['from'] );
+			$to   = Input::sanitize( $args['to'] );
+
+			$where['reviews.comment_date'] = array( 'BETWEEN', array( $from, $to ) );
+		}
+
+		// Prepare where clause.
+		$where_clause = QueryHelper::prepare_where_clause( $where );
+
 		$rating = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT COUNT(rating.meta_value) as rating_count, SUM(rating.meta_value) as rating_sum
-			FROM 	{$wpdb->usermeta} courses
-					INNER JOIN {$wpdb->comments} reviews
-							ON courses.meta_value = reviews.comment_post_ID
-						   AND reviews.comment_type = 'tutor_course_rating'
-						   AND reviews.comment_approved = 'approved'
-					INNER JOIN {$wpdb->commentmeta} rating
-							ON reviews.comment_ID = rating.comment_id
-						   AND rating.meta_key = 'tutor_rating'
-			WHERE 	courses.user_id = %d
-					AND courses.meta_key = %s
-			",
-				$instructor_id,
-				'_tutor_instructor_course_id'
-			)
+			"SELECT COUNT(rating.meta_value) as rating_count, SUM(rating.meta_value) as rating_sum
+			FROM {$wpdb->usermeta} courses
+			INNER JOIN {$wpdb->comments} reviews
+				ON courses.meta_value = reviews.comment_post_ID
+				AND reviews.comment_type = 'tutor_course_rating'
+				AND reviews.comment_approved = 'approved'
+			INNER JOIN {$wpdb->commentmeta} rating
+				ON reviews.comment_ID = rating.comment_id
+				AND rating.meta_key = 'tutor_rating'
+		    WHERE {$where_clause}"
 		);
 
 		if ( $rating->rating_count ) {
@@ -6336,20 +6359,27 @@ class Utils {
 	 * Get the price format
 	 *
 	 * @since 1.1.2
+	 * @since 4.0.0 Condition added for different monetizations and also added $html_markup for woocommece
 	 *
-	 * @param int $price price.
+	 * @param int  $price price.
+	 * @param bool $html_markup  Whether to include HTML markup ( Only for woocommerce as it returns html markup ).
 	 *
 	 * @return int|string
 	 */
-	public function tutor_price( $price = 0 ) {
-		if ( tutor_utils()->is_monetize_by_tutor() ) {
+	public function tutor_price( $price = 0, $html_markup = true ) {
+
+		$monetize_by = $this->get_option( 'monetize_by' );
+
+		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			return tutor_get_formatted_price( $price );
-		} elseif ( function_exists( 'wc_price' ) ) {
-			return wc_price( $price );
-		} elseif ( function_exists( 'edd_currency_filter' ) ) {
+		} elseif ( function_exists( 'wc_price' ) && 'wc' === $monetize_by ) {
+			return wc_price( $price, array( 'in_span' => $html_markup ) );
+		} elseif ( function_exists( 'edd_currency_filter' ) && 'edd' === $monetize_by ) {
 			return edd_currency_filter( edd_format_amount( $price ) );
+		} elseif ( function_exists( 'pmpro_formatPrice' ) && 'pmpro' === $monetize_by ) {
+			return pmpro_formatPrice( floatval( $price ) );
 		} else {
-			return number_format_i18n( $price );
+			return number_format_i18n( floatval( $price ) );
 		}
 	}
 
@@ -8642,7 +8672,7 @@ class Utils {
 	 *
 	 * @return boolean
 	 */
-	public function is_tutor_frontend_dashboard( $subpage = null ) {
+	public function is_tutor_frontend_dashboard( $subpage = '' ) {
 		global $wp_query;
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
@@ -10880,5 +10910,70 @@ class Utils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get currency configuration from active monetization system.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $monitize_by Optional. Monetization provider key
+	 *                                 (e.g., 'wc', 'edd', 'pmpro').
+	 *
+	 * @return array{
+	 *     currency: string,
+	 *     symbol: string,
+	 *     position: string,
+	 *     decimal_separator: string,
+	 *     thousand_separator: string
+	 *     no_of_decimal: int
+	 * }
+	 */
+	public function get_monetization_currency_config( $monetize_by = '' ): array {
+
+		$monetize_by = empty( $monetize_by ) ? $this->get_option( 'monetize_by' ) : $monetize_by;
+
+		// WooCommerce.
+		if ( 'wc' === $monetize_by ) {
+			return array(
+				'symbol'             => get_woocommerce_currency_symbol(),
+				'position'           => get_option( 'woocommerce_currency_pos' ),
+				'decimal_separator'  => wc_get_price_decimal_separator(),
+				'thousand_separator' => wc_get_price_thousand_separator(),
+				'no_of_decimal'      => wc_get_price_decimals(),
+			);
+		}
+
+		// Easy Digital Downloads.
+		if ( 'edd' === $monetize_by ) {
+			$position = edd_get_option( 'currency_position', 'before' ) === 'before' ? 'left' : 'right';
+			return array(
+				'symbol'             => edd_currency_symbol( edd_get_currency() ),
+				'position'           => $position,
+				'decimal_separator'  => edd_get_option( 'decimal_separator', '.' ),
+				'thousand_separator' => edd_get_option( 'thousands_separator', ',' ),
+			);
+		}
+
+		// Paid Memberships Pro.
+		if ( 'pmpro' === $monetize_by && function_exists( 'pmpro_get_currency' ) ) {
+			$currency = pmpro_get_currency();
+			return array(
+				'symbol'             => $currency['symbol'] ?? '',
+				'position'           => $currency['position'] ?? '',
+				'decimal_separator'  => $currency['decimal_separator'] ?? '',
+				'thousand_separator' => $currency['thousands_separator'] ?? '',
+				'no_of_decimal'      => (int) $currency['decimals'] ?? 2,
+			);
+		}
+
+		// Tutor.
+		return array(
+			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ) ),
+			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, true ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, true ),
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, true ),
+			'no_of_decimal'      => (int) tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, true ),
+		);
 	}
 }

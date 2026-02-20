@@ -74,7 +74,7 @@ $total_items     = Lesson::get_comments( $count_args );
 	<?php
 	foreach ( $lesson_comments as $lesson_comment ) :
 		tutor_load_template(
-			'dashboard.discussions.lesson-comment-card',
+			'dashboard.discussions.comment-card',
 			array(
 				'lesson_comment' => $lesson_comment,
 				'discussion_url' => $discussion_url,

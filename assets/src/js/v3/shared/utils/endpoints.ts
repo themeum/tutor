@@ -87,11 +87,14 @@ const endpoints = {
   UPDATE_LESSON_COMMENT: 'tutor_update_lesson_comment',
   DELETE_LESSON_COMMENT: 'tutor_delete_lesson_comment',
   REPLY_LESSON_COMMENT: 'tutor_reply_lesson_comment',
+  LOAD_COMMENT_REPLIES: 'tutor_load_comment_replies',
 
   // Q&A
   QNA_SINGLE_ACTION: 'tutor_qna_single_action',
   DELETE_DASHBOARD_QNA: 'tutor_delete_dashboard_question',
   CREATE_UPDATE_QNA: 'tutor_qna_create_update',
+  UPDATE_QNA: 'tutor_qna_update',
+  LOAD_QNA_REPLIES: 'tutor_qna_load_replies',
 
   // ASSIGNMENT
   GET_ASSIGNMENT_DETAILS: 'tutor_assignment_details',

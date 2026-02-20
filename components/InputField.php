@@ -15,12 +15,10 @@ namespace Tutor\Components;
 
 defined( 'ABSPATH' ) || exit;
 
-use ReflectionClass;
-use Tutor\Components\Constants\InputType;
-use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
-use Tutor\Components\Button;
 use TUTOR\Icon;
+use ReflectionClass;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\InputType;
 
 /**
  * InputField Component Class.
