@@ -57,7 +57,8 @@ $has_image = function ( $answer ) {
 $has_multiple_correct_answer = isset( $question['question_settings']['has_multiple_correct_answer'] ) && '1' === $question['question_settings']['has_multiple_correct_answer'];
 $radio_required_message      = __( 'Please select an option to answer', 'tutor' );
 $checkbox_required_message   = __( 'Please select at least one option to answer.', 'tutor' );
-$field_name                  = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . ']' . ( $has_multiple_correct_answer ? '[]' : '' );
+$field_name_base             = $question_field_name_base ?? '';
+$field_name                  = $field_name_base . ( $has_multiple_correct_answer ? '[]' : '' );
 $register_rules              = '';
 if ( $answer_is_required ) {
 	if ( $has_multiple_correct_answer ) {

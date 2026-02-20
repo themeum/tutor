@@ -42,6 +42,9 @@ $quiz_settings      = tutor_utils()->get_quiz_option( $quiz_id, 'quiz_settings',
 $show_question_mark = $question_settings['show_question_mark'] ?? '0';
 $answer_is_required = '1' === $question_settings['answer_required'] ?? '0';
 $required_message   = __( 'The answer for this question is required.', 'tutor' );
+$attempt_id         = (int) ( $tutor_is_started_quiz->attempt_id ?? 0 );
+$question_id        = (int) ( $question->question_id ?? 0 );
+$field_name_base    = sprintf( 'attempt[%d][quiz_question][%d]', $attempt_id, $question_id );
 
 ?>
 
@@ -71,7 +74,7 @@ $required_message   = __( 'The answer for this question is required.', 'tutor' )
 			'quiz_settings'      => $quiz_settings,
 			'answer_is_required' => $answer_is_required,
 			'required_message'   => $required_message,
-
+			'question_field_name_base' => $field_name_base,
 		)
 	);
 

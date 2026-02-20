@@ -13,16 +13,12 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 
-global $tutor_is_started_quiz;
-
 $question_type = $question['question_settings']['question_type'] ?? 'open_ended';
-$quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
-
 $quiz_settings = $quiz_settings ?? array();
 $limit_key     = 'short_answer' === $question_type ? 'short_answer_characters_limit' : 'open_ended_answer_characters_limit';
 
 $characters_limit    = (int) ( $quiz_settings[ $limit_key ] ?? 0 );
-$field_name          = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . ']';
+$field_name          = $question_field_name_base ?? '';
 $register_rule_parts = array();
 if ( $answer_is_required ) {
 	$register_rule_parts[] = "required: '" . esc_js( $required_message ) . "'";
