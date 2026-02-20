@@ -17,26 +17,6 @@ use Tutor\Components\Constants\Variant;
 
 global $tutor_is_started_quiz;
 
-$default_question = array(
-	'index'                => 1,
-	'question_id'          => 0,
-	'question_title'       => '',
-	'question_description' => '',
-	'question_type'        => 'matching',
-	'answer_required'      => true,
-	'question_mark'        => 10,
-	'answer_explanation'   => '',
-	'question_settings'    => array(
-		'answer_required'    => '0',
-		'question_mark'      => '1',
-		'question_type'      => 'matching',
-		'randomize_question' => '0',
-		'show_question_mark' => '1',
-		'is_image_matching'  => '0',
-	),
-);
-
-$question          = wp_parse_args( $question, $default_question );
 $answer_field_name = sprintf(
 	'attempt[%d][quiz_question][%d][answers][]',
 	$tutor_is_started_quiz->attempt_id,

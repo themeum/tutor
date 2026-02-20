@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $user_id      = get_current_user_id();
-$attempt_id   = Input::get( 'view_quiz_attempt_id', 0, Input::TYPE_INT );
+$attempt_id   = Input::get( 'attempt_id', 0, Input::TYPE_INT );
 $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 ?>
 

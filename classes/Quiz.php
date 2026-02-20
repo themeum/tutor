@@ -67,6 +67,13 @@ class Quiz {
 	const QUIZ_FEEDBACK_MODE_DEFAULT = 'default';
 
 	/**
+	 * URL Query param
+	 *
+	 * @since 4.0.0
+	 */
+	const ACTION_VIEW_DETAILS = 'view_details';
+
+	/**
 	 * Allowed attrs
 	 *
 	 * @var array
@@ -1307,7 +1314,6 @@ class Quiz {
 	 * @since 3.8.1
 	 *
 	 * @param int $course_id The ID of the course.
-	 * @param int $user_id The ID of the user.
 	 *
 	 * @return array Returns an array of quiz attempt objects with their answers, or an empty array on error.
 	 */
@@ -1550,7 +1556,7 @@ class Quiz {
 		$user_id           = get_current_user_id();
 		$quiz_model        = new QuizModel();
 		$attempts          = $quiz_model->quiz_attempts( $quiz_id, $user_id );
-		$attempted_count   = is_array( $attempts ) ? count( $attempts ) : 0;
+		$attempted_count   = tutor_utils()->count( $attempts );
 		$feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
 		$attempts_allowed  = 'retry' !== $feedback_mode ? 1 : (int) tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed', 0 );
 		$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
