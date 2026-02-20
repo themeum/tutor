@@ -1,6 +1,6 @@
 <?php
 /**
- * Openended Short Answer
+ * Open-ended and Short Answer
  *
  * @package Tutor\Templates
  * @author Themeum <support@themeum.com>
@@ -15,33 +15,13 @@ use Tutor\Components\Constants\InputType;
 
 global $tutor_is_started_quiz;
 
-$default_question = array(
-	'index'              => 1,
-	'question_id'        => 1,
-	'question_title'     => '',
-	'question_type'      => 'open_ended',
-	'answer_required'    => true,
-	'question_mark'      => 10,
-	'answer_explanation' => '',
-	'question_settings'  => array(
-		'answer_required'    => '0',
-		'question_mark'      => '1',
-		'question_type'      => 'open_ended',
-		'randomize_question' => '0',
-		'show_question_mark' => '1',
-	),
-);
-
-$question      = wp_parse_args( $question, $default_question );
 $question_type = $question['question_settings']['question_type'] ?? 'open_ended';
 $quiz_id       = $tutor_is_started_quiz->quiz_id ?? 0;
 
-$quiz_options = $quiz_id ? tutor_utils()->get_quiz_option( $quiz_id ) : array();
-$limit_key    = 'short_answer' === $question_type ? 'short_answer_characters_limit' : 'open_ended_answer_characters_limit';
+$quiz_settings = $quiz_settings ?? array();
+$limit_key     = 'short_answer' === $question_type ? 'short_answer_characters_limit' : 'open_ended_answer_characters_limit';
 
-$characters_limit    = (int) ( $quiz_options[ $limit_key ] ?? 0 );
-$answer_is_required  = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
-$required_message    = __( 'The answer for this question is required', 'tutor' );
+$characters_limit    = (int) ( $quiz_settings[ $limit_key ] ?? 0 );
 $field_name          = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . ']';
 $register_rule_parts = array();
 if ( $answer_is_required ) {

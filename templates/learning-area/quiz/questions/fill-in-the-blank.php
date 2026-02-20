@@ -12,31 +12,9 @@ defined( 'ABSPATH' ) || exit;
 
 global $tutor_is_started_quiz;
 
-$default_question = array(
-	'index'                => 1,
-	'question_id'          => 0,
-	'question_title'       => '',
-	'question_description' => '',
-	'question_type'        => 'fill_in_the_blank',
-	'answer_required'      => true,
-	'question_mark'        => 10,
-	'answer_explanation'   => '',
-	'question_settings'    => array(
-		'answer_required'    => '0',
-		'question_mark'      => '1',
-		'question_type'      => 'fill_in_the_blank',
-		'randomize_question' => '0',
-		'show_question_mark' => '1',
-		'is_image_matching'  => '0',
-	),
-);
-
-$question           = wp_parse_args( $question, $default_question );
-$answer_is_required = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
-$required_message   = __( 'The answer for this question is required', 'tutor' );
-$field_name         = '';
-$field_names        = array();
-$register_rules     = '';
+$field_name     = '';
+$field_names    = array();
+$register_rules = '';
 if ( $answer_is_required ) {
 	$register_rules = ", { required: '" . esc_js( $required_message ) . "' }";
 }

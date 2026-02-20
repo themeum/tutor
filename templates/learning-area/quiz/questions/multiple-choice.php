@@ -14,27 +14,6 @@ use Tutor\Quiz;
 
 global $tutor_is_started_quiz;
 
-$default_question = array(
-	'index'                => 1,
-	'question_id'          => 0,
-	'question_title'       => '',
-	'question_description' => '',
-	'question_type'        => 'multiple_choice',
-	'answer_required'      => true,
-	'question_mark'        => 10,
-	'answer_explanation'   => '',
-	'question_settings'    => array(
-		'answer_required'             => '0',
-		'question_mark'               => '1',
-		'question_type'               => 'multiple_choice',
-		'randomize_question'          => '0',
-		'has_multiple_correct_answer' => '1',
-		'show_question_mark'          => '1',
-	),
-);
-
-$question = wp_parse_args( $question, $default_question );
-
 /** Check if current answer is correct
  *
  * @param array $answer Answer data.
@@ -76,7 +55,6 @@ $has_image = function ( $answer ) {
 };
 
 $has_multiple_correct_answer = isset( $question['question_settings']['has_multiple_correct_answer'] ) && '1' === $question['question_settings']['has_multiple_correct_answer'];
-$answer_is_required          = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
 $radio_required_message      = __( 'Please select an option to answer', 'tutor' );
 $checkbox_required_message   = __( 'Please select at least one option to answer.', 'tutor' );
 $field_name                  = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . ']' . ( $has_multiple_correct_answer ? '[]' : '' );

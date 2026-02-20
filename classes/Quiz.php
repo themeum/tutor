@@ -160,7 +160,6 @@ class Quiz {
 		 */
 		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
 
-
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 
 		// Add quiz title as nav item & render single content on the learning area.
@@ -766,11 +765,11 @@ class Quiz {
 						// }
 						//phpcs:enable
 					} else {
-						$custom_answer_data = array(
+						$custom_answer_data    = array(
 							'given_answer'          => $given_answer,
 							'is_answer_was_correct' => $is_answer_was_correct,
 						);
-						$custom_answer_data = apply_filters( 'tutor_quiz_process_custom_question_answer', $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id );
+						$custom_answer_data    = apply_filters( 'tutor_quiz_process_custom_question_answer', $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id );
 						$given_answer          = $custom_answer_data['given_answer'];
 						$is_answer_was_correct = $custom_answer_data['is_answer_was_correct'];
 					}
@@ -1315,7 +1314,6 @@ class Quiz {
 	 * @since 3.8.1
 	 *
 	 * @param int $course_id The ID of the course.
-	 * @param int $user_id The ID of the user.
 	 *
 	 * @return array Returns an array of quiz attempt objects with their answers, or an empty array on error.
 	 */
@@ -1558,7 +1556,7 @@ class Quiz {
 		$user_id           = get_current_user_id();
 		$quiz_model        = new QuizModel();
 		$attempts          = $quiz_model->quiz_attempts( $quiz_id, $user_id );
-		$attempted_count   = is_array( $attempts ) ? count( $attempts ) : 0;
+		$attempted_count   = tutor_utils()->count( $attempts );
 		$feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
 		$attempts_allowed  = 'retry' !== $feedback_mode ? 1 : (int) tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed', 0 );
 		$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;

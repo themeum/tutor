@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Variant;
 use TUTOR\Icon;

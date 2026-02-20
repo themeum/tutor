@@ -14,33 +14,13 @@ use TUTOR\Icon;
 
 global $tutor_is_started_quiz;
 
-$default_question = array(
-	'index'                => 1,
-	'question_id'          => 1,
-	'question_title'       => '',
-	'question_description' => '',
-	'question_type'        => 'ordering',
-	'answer_required'      => true,
-	'question_mark'        => 10,
-	'answer_explanation'   => '',
-	'question_settings'    => array(
-		'answer_required'    => '0',
-		'question_mark'      => '1',
-		'question_type'      => 'ordering',
-		'randomize_question' => '0',
-		'show_question_mark' => '1',
-	),
-);
-
-$question           = wp_parse_args( $question, $default_question );
-$answer_field_name  = sprintf(
+$answer_field_name = sprintf(
 	'attempt[%d][quiz_question][%d][answers][]',
 	$tutor_is_started_quiz->attempt_id,
 	$question['question_id']
 );
-$answer_is_required = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
-$required_message   = __( 'The answer for this question is required', 'tutor' );
-$register_rules     = '';
+$required_message  = __( 'The answer for this question is required', 'tutor' );
+$register_rules    = '';
 if ( $answer_is_required ) {
 	$register_rules = ", { validate: (value) => Array.isArray(value) && value.length > 0 || '" . esc_js( $required_message ) . "' }";
 }
