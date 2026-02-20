@@ -1,24 +1,30 @@
 <?php
 /**
- * Tutor quiz.
+ * Tutor learning area quiz attempt details.
  *
  * @package Tutor\Templates
+ * @subpackage LearningArea
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
  */
 
+use Tutor\Components\Button;
 use TUTOR\Icon;
 
-?>
+defined( 'ABSPATH' ) || exit;
 
+global $tutor_current_post, $tutor_course_id;
+
+$back_url = get_permalink( $tutor_current_post->ID );
+?>
 <div class="tutor-quiz-summary-page">
 	<div class="tutor-quiz-summary-header">
 		<div class="tutor-quiz-summary-header-inner">
 			<div class="tutor-flex tutor-items-center tutor-gap-4">
-				<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-					<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
-				</button>
+				<?php
+					Button::make()->icon( Icon::ARROW_LEFT_2 )->tag( 'a' )->attr( 'href', $back_url )->attr( 'class', 'tutor-btn-ghost tutor-btn-x-small tutor-btn-icon' )->render();
+				?>
 				<h5 class="tutor-h5 tutor-font-semibold"><?php esc_html_e( 'Quiz Summary', 'tutor' ); ?></h5>
 			</div>
 			<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">

@@ -11,6 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Input;
 use TUTOR\Quiz;
 
 global $tutor_current_post, $tutor_course_id;

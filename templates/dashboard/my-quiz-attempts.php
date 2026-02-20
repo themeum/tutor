@@ -18,7 +18,7 @@ use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
 
-if ( Input::has( 'view_quiz_attempt_id' ) ) {
+if ( Input::has( 'attempt_id' ) ) {
 	// Load single attempt details if ID provided.
 	include __DIR__ . '/my-quiz-attempts/attempts-details.php';
 	return;

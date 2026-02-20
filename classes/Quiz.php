@@ -67,6 +67,13 @@ class Quiz {
 	const QUIZ_FEEDBACK_MODE_DEFAULT = 'default';
 
 	/**
+	 * URL Query param
+	 *
+	 * @since 4.0.0
+	 */
+	const ACTION_VIEW_DETAILS = 'view_details';
+
+	/**
 	 * Allowed attrs
 	 *
 	 * @var array

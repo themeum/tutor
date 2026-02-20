@@ -416,12 +416,16 @@ class Quiz_Attempts_List {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $attempt the quiz attempt.
+	 * @param array $attempt Quiz attempt.
+	 * @param array $query_param Query param to add with the URL.
 	 *
 	 * @return string
 	 */
-	public function get_review_url( $attempt = array() ): string {
-		return UrlHelper::add_query_params( get_pagenum_link(), array( 'view_quiz_attempt_id' => $attempt['attempt_id'] ?? 0 ) );
+	public function get_review_url( $attempt = array(), $query_param = array() ): string {
+		$default = array( 'attempt_id' => $attempt['attempt_id'] ?? 0 );
+		$params  = wp_parse_args( $query_param, $default );
+
+		return UrlHelper::add_query_params( get_pagenum_link(), $params );
 	}
 
 	/**
@@ -501,11 +505,15 @@ class Quiz_Attempts_List {
 	 * @return array
 	 */
 	private function get_details_item( $attempt = array() ) {
+		$query_param = array( 'action' => 'view_details' );
+
+		$url = $this->get_review_url( $attempt, $query_param );
+
 		$details_item = array(
 			'tag'     => 'a',
 			'content' => __( 'Details', 'tutor' ),
 			'icon'    => tutor_utils()->get_svg_icon( Icon::RESOURCES ),
-			'attr'    => array( 'href' => $this->get_review_url( $attempt ) ),
+			'attr'    => array( 'href' => $url ),
 		);
 		return $details_item;
 	}

@@ -13,6 +13,7 @@ use TUTOR\Course_List;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use TUTOR\Quiz;
 use TUTOR\Template;
 
 // Tutor global variable for using inside learning area.
@@ -63,6 +64,15 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 $tutor_is_started_quiz = tutor_utils()->is_started_quiz( $tutor_current_content_id );
 if ( tutor()->quiz_post_type === $tutor_current_post_type && $tutor_is_started_quiz ) {
 	tutor_load_template( 'learning-area.quiz.attempt' );
+	wp_footer();
+	exit;
+}
+
+$attempt_id  = Input::get( 'attempt_id', 0, Input::TYPE_INT );
+$user_action = Input::get( 'action' );
+
+if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
+	tutor_load_template( 'learning-area.quiz.attempt-details' );
 	wp_footer();
 	exit;
 }
