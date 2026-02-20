@@ -313,6 +313,7 @@ final class Icon {
 	const QUIZ_SHORT_ANSWER          = 'quiz-short-answer';
 	const QUIZ_TRUE_FALSE            = 'quiz-true-false';
 	const RATINGS                    = 'ratings';
+	const READ                       = 'read';
 	const RECEIPT_PERCENT            = 'receipt-percent';
 	const REDO                       = 'redo';
 	const REFRESH                    = 'refresh';
