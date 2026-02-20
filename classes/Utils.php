@@ -2923,21 +2923,126 @@ class Utils {
 	}
 
 	/**
+	 * Separation of all menu items for providing ease of usage
+	 *
+	 * @since 2.0.0
+	 *
+	 * @since 4.0.0 Menu item updated based on student view
+	 *
+	 * @return array array of menu items.
+	 */
+	public function default_menus(): array {
+		$items = array(
+			'index'             => array(
+				'title' => __( 'Home', 'tutor' ),
+				'icon'  => Icon::HOME,
+			),
+			'courses'           => array(
+				'title' => __( 'Courses', 'tutor' ),
+				'icon'  => Icon::COURSES,
+			),
+			'retrieve-password' => array(
+				'title'         => __( 'Retrieve Password', 'tutor' ),
+				'show_ui'       => false,
+				'login_require' => false,
+			),
+			'account'           => array(
+				'label'   => __( 'Account', 'tutor' ),
+				'show_ui' => false,
+			),
+		);
+
+		if ( $this->should_show_dicussion_menu() ) {
+			$items['discussions'] = array(
+				'title' => __( 'Discussions', 'tutor' ),
+				'icon'  => Icon::QA,
+			);
+		}
+
+		return apply_filters( 'tutor_student_dashboard_nav', $items );
+	}
+
+	/**
+	 * Separation of all menu items for providing ease of usage
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array array of menu items.
+	 */
+	public function instructor_menus(): array {
+		$menus = array(
+			'index'         => array(
+				'title' => __( 'Home', 'tutor' ),
+				'icon'  => Icon::HOME,
+			),
+			'my-courses'    => array(
+				'title'    => __( 'Courses', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::COURSES,
+			),
+			// Hidden menu.
+			'create-course' => array(
+				'title'    => __( 'Create Course', 'tutor' ),
+				'show_ui'  => false,
+				'auth_cap' => tutor()->instructor_role,
+			),
+			'create-bundle' => array(
+				'title'    => __( 'Create Bundle', 'tutor' ),
+				'show_ui'  => false,
+				'auth_cap' => tutor()->instructor_role,
+			),
+		);
+
+		$menus = apply_filters( 'tutor_after_instructor_menu_my_courses', $menus );
+
+		$other_menus = array(
+			'announcements' => array(
+				'title'    => __( 'Announcements', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::ANNOUNCEMENT,
+			),
+			'quiz-attempts' => array(
+				'title'    => __( 'Quiz Attempts', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QUIZ,
+			),
+		);
+
+		if ( $this->should_show_dicussion_menu() ) {
+			$other_menus['discussions'] = array(
+				'title'    => __( 'Discussions', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QA,
+			);
+		}
+
+		$all_menus = apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
+
+		return $all_menus;
+	}
+
+	/**
 	 * Tutor Dashboard Pages, supporting for the URL rewriting
 	 *
 	 * @since 1.0.0
 	 *
-	 * @since 4.0.0 View mode added.
+	 * @since 4.0.0 param $context added.
 	 *
-	 * @return mixed
+	 * @param string $context context.
+	 *               `view` to get pages according to role.
+	 *               `rewrite_rules` to get all page for rewrite rules.
+	 *
+	 * @return array
 	 */
-	public function tutor_dashboard_pages() {
+	public function tutor_dashboard_pages( $context = 'view' ) {
 
-		$nav_items = array();
-		if ( User::is_instructor_view() ) {
-			$nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
+		$nav_items            = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
+		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
+
+		if ( 'rewrite_rules' === $context ) {
+			$nav_items = array_merge( $nav_items, $instructor_nav_items );
 		} else {
-			$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
+			$nav_items = User::is_instructor_view() ? $instructor_nav_items : $nav_items;
 		}
 
 		return apply_filters( 'tutor_dashboard/nav_items_all', $nav_items );
@@ -2951,21 +3056,8 @@ class Utils {
 	 * @return array
 	 */
 	public function tutor_dashboard_permalinks() {
-		$dashboard_pages = $this->tutor_dashboard_pages();
-
-		$dashboard_permalinks = apply_filters(
-			'tutor_dashboard/permalinks',
-			array(
-				'retrieve-password' => array(
-					'title'         => __( 'Retrieve Password', 'tutor' ),
-					'login_require' => false,
-				),
-			)
-		);
-
-		$dashboard_pages = array_merge( $dashboard_pages, $dashboard_permalinks );
-
-		return $dashboard_pages;
+		$dashboard_permalinks = apply_filters( 'tutor_dashboard/permalinks', $this->tutor_dashboard_pages( 'rewrite_rules' ) );
+		return $dashboard_permalinks;
 	}
 
 	/**
@@ -9546,64 +9638,6 @@ class Utils {
 		}
 	}
 
-	/**
-	 * Separation of all menu items for providing ease of usage
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return array array of menu items.
-	 */
-	public function instructor_menus(): array {
-		$menus = array(
-			'index'         => array(
-				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME,
-			),
-			'my-courses'    => array(
-				'title'    => __( 'Courses', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::COURSES,
-			),
-			// Hidden menu.
-			'create-course' => array(
-				'title'    => __( 'Create Course', 'tutor' ),
-				'show_ui'  => false,
-				'auth_cap' => tutor()->instructor_role,
-			),
-			'create-bundle' => array(
-				'title'    => __( 'Create Bundle', 'tutor' ),
-				'show_ui'  => false,
-				'auth_cap' => tutor()->instructor_role,
-			),
-		);
-
-		$menus = apply_filters( 'tutor_after_instructor_menu_my_courses', $menus );
-
-		$other_menus = array(
-			'announcements' => array(
-				'title'    => __( 'Announcements', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::ANNOUNCEMENT,
-			),
-			'quiz-attempts' => array(
-				'title'    => __( 'Quiz Attempts', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QUIZ,
-			),
-		);
-
-		if ( $this->should_show_dicussion_menu() ) {
-			$other_menus['discussions'] = array(
-				'title'    => __( 'Discussions', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QA,
-			);
-		}
-
-		$all_menus = apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
-
-		return $all_menus;
-	}
 
 	/**
 	 * Should show the disscussion menu on the student
@@ -9620,40 +9654,6 @@ class Utils {
 		return $is_q_and_a_enabled || $is_lesson_comment_enabled;
 	}
 
-	/**
-	 * Separation of all menu items for providing ease of usage
-	 *
-	 * @since 2.0.0
-	 *
-	 * @since 4.0.0 Menu item updated based on student view
-	 *
-	 * @return array array of menu items.
-	 */
-	public function default_menus(): array {
-		$items = array(
-			'index'   => array(
-				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME,
-			),
-			'courses' => array(
-				'title' => __( 'Courses', 'tutor' ),
-				'icon'  => Icon::COURSES,
-			),
-			'account' => array(
-				'label'   => __( 'Account', 'tutor' ),
-				'show_ui' => false,
-			),
-		);
-
-		if ( $this->should_show_dicussion_menu() ) {
-			$items['discussions'] = array(
-				'title' => __( 'Discussions', 'tutor' ),
-				'icon'  => Icon::QA,
-			);
-		}
-
-		return apply_filters( 'tutor_student_dashboard_nav', $items );
-	}
 
 	/**
 	 * Default config for tutor text editor
