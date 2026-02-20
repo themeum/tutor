@@ -76,7 +76,7 @@ abstract class BaseComponent {
 	 *
 	 * @var array
 	 */
-	private const ALLOWED_ALPINE_ATTRS = array(
+	protected const ALLOWED_ALPINE_ATTRS = array(
 		'x-data',
 		'x-text',
 		'x-show',
