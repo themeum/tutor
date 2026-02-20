@@ -162,12 +162,17 @@
 
   .tutor-error-text {
     @include tutor-typography('tiny', 'regular', 'critical');
-    margin-top: $tutor-spacing-3;
   }
 
   .tutor-help-text {
     @include tutor-typography('tiny', 'regular', 'subdued');
-    margin-top: $tutor-spacing-3;
+  }
+
+  .tutor-error-text,
+  .tutor-help-text {
+    &:not(:empty) {
+      margin-top: $tutor-spacing-3;
+    }
   }
 
   &-error {
