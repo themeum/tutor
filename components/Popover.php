@@ -175,13 +175,15 @@ class Popover extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $popover_body the popover body html.
+	 * @param string $popover_body_esc the popover body escape function.
 	 * @param array  $allowed_html html that should be checked before escape.
 	 *
 	 * @return self
 	 */
-	public function body( string $popover_body, array $allowed_html = array() ): self {
-		$this->popover_body = $popover_body;
-		$this->allowed_html = wp_parse_args( $allowed_html, $this->allowed_html );
+	public function body( string $popover_body, string $popover_body_esc = 'esc_html', array $allowed_html = array() ): self {
+		$this->popover_body     = $popover_body;
+		$this->popover_body_esc = $popover_body_esc;
+		$this->allowed_html     = wp_parse_args( $allowed_html, $this->allowed_html );
 		return $this;
 	}
 
