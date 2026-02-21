@@ -134,11 +134,12 @@ abstract class BaseComponent {
 	 *
 	 * @param mixed  $value Value to escape.
 	 * @param string $esc_fn Callable esc func.
+	 * @param array  $allowed_html additional html values to check.
 	 *
 	 * @return string Escaped string.
 	 */
-	protected function esc( $value, $esc_fn = 'esc_html' ): string {
-		return call_user_func( $esc_fn, $value );
+	protected function esc( $value, $esc_fn = 'esc_html', array $allowed_html = array() ): string {
+		return count( $allowed_html ) ? call_user_func( $esc_fn, $value, $allowed_html ) : call_user_func( $esc_fn, $value );
 	}
 
 	/**
@@ -164,5 +165,4 @@ abstract class BaseComponent {
 		// phpcs:ignore -- Sanitization is performed within each child class’s `get` method implementation.
 		echo $this->get();
 	}
-
 }

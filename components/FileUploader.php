@@ -236,15 +236,6 @@ class FileUploader extends BaseComponent {
 	protected $upload_icon_size = 24;
 
 	/**
-	 * Whether to show subtitle.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var boolean
-	 */
-	protected $show_subtitle = true;
-
-	/**
 	 * Set uploader accept attribute.
 	 *
 	 * Common types: .pdf, .doc, .docx, .jpg, .jpeg, .png
@@ -292,18 +283,6 @@ class FileUploader extends BaseComponent {
 	public function uploader_icon( $icon ) {
 		$this->uploader_icon = $icon;
 
-		return $this;
-	}
-
-	/**
-	 * Set whether to show subtitle.
-	 *
-	 * @param boolean $show_subtitle show subtitle or not.
-	 *
-	 * @return self
-	 */
-	public function show_subtitle( $show_subtitle = true ) {
-		$this->show_subtitle = $show_subtitle;
 		return $this;
 	}
 
@@ -530,7 +509,7 @@ class FileUploader extends BaseComponent {
 		$max_size            = $this->max_size ?? wp_max_upload_size();
 		$icon                = $this->uploader_icon;
 		$title               = ! empty( $this->uploader_title ) ? $this->uploader_title : __( 'Drop files here or click to upload', 'tutor' );
-		$subtitle            = ! empty( $this->uploader_subtitle ) ? $this->uploader_subtitle : __( 'PDF, DOC, DOCX, JPG, PNG Formats (Max 50MB)', 'tutor' );
+		$subtitle            = ! empty( $this->uploader_subtitle ) ? $this->uploader_subtitle : '';
 		$button_text         = ! empty( $this->uploader_button_text ) ? $this->uploader_button_text : __( 'Select Files', 'tutor' );
 		$on_file_select      = $this->attributes['onFileSelect'] ?? 'null';
 		$on_error            = $this->attributes['onError'] ?? 'null';
@@ -644,7 +623,7 @@ class FileUploader extends BaseComponent {
 				</div>
 				<div class="tutor-file-uploader-content">
 					<p class="tutor-file-uploader-title"><?php echo esc_html( $title ); ?></p>
-					<?php if ( $this->show_subtitle ) : ?>
+					<?php if ( ! empty( $subtitle ) ) : ?>
 					<p class="tutor-file-uploader-subtitle"><?php echo esc_html( $subtitle ); ?></p>
 					<?php endif; ?>
 				</div>

@@ -63,7 +63,7 @@ class Popover extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $popover_body_esc = '';
+	protected $popover_body_esc = 'wp_kses_post';
 
 	/**
 	 * The popover placement location (left | right | top | bottom ).
@@ -149,6 +149,13 @@ class Popover extends BaseComponent {
 	protected $popover_close_outside = true;
 
 	/**
+	 * Allowed html tags.
+	 *
+	 * @var array
+	 */
+	protected $allowed_html = array();
+
+	/**
 	 * Set Popover title
 	 *
 	 * @since 4.0.0
@@ -168,13 +175,13 @@ class Popover extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $popover_body the popover body html.
-	 * @param string $popover_body_esc the escape function.
+	 * @param array  $allowed_html html that should be checked before escape.
 	 *
 	 * @return self
 	 */
-	public function body( string $popover_body, string $popover_body_esc = '' ): self {
-		$this->popover_body     = $popover_body;
-		$this->popover_body_esc = $popover_body_esc;
+	public function body( string $popover_body, array $allowed_html = array() ): self {
+		$this->popover_body = $popover_body;
+		$this->allowed_html = wp_parse_args( $allowed_html, $this->allowed_html );
 		return $this;
 	}
 
@@ -273,7 +280,7 @@ class Popover extends BaseComponent {
 	 */
 	public function menu_item( array $args ): self {
 		$menu_item_tag                          = isset( $args['tag'] ) ? $args['tag'] : '';
-		$menu_item_tag                          = $this->popover_body_esc ? $this->esc( $menu_item_tag, $this->popover_body_esc ) : $menu_item_tag;
+		$menu_item_tag                          = $this->esc( $menu_item_tag, $this->popover_body_esc, $this->allowed_html );
 		$this->popover_menu_item_class          = $args['class'] ?? '';
 		$this->popover_menu_item_icon           = $args['icon'] ?? '';
 		$this->popover_menu_item_icon_alignment = isset( $args['icon_alignment'] ) && in_array( $args['icon_alignment'], array( Positions::LEFT, Positions::RIGHT ), true ) ? $args['icon_alignment'] : Positions::LEFT;
@@ -344,7 +351,7 @@ class Popover extends BaseComponent {
 			return '';
 		}
 
-		$body = $this->popover_body_esc ? $this->esc( $this->popover_body, $this->popover_body_esc ) : $this->popover_body;
+		$body = $this->esc( $this->popover_body, $this->popover_body_esc, $this->allowed_html );
 
 		return sprintf(
 			'<div class="tutor-popover-body">
@@ -423,7 +430,7 @@ class Popover extends BaseComponent {
 		foreach ( $this->popover_menu_items as $item ) {
 			$tag            = $item['tag'] ?? 'div';
 			$content        = isset( $item['content'] ) ? $item['content'] : '';
-			$content        = $this->popover_body_esc ? $this->esc( $content, $this->popover_body_esc ) : $content;
+			$content        = $this->esc( $content, $this->popover_body_esc, $this->allowed_html );
 			$class          = isset( $item['class'] ) ? esc_attr( $item['class'] ) : '';
 			$icon           = $item['icon'] ?? '';
 			$icon_alignment = $item['icon_alignment'] ?? Positions::LEFT;

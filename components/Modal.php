@@ -58,6 +58,15 @@ class Modal extends BaseComponent {
 	protected $id = '';
 
 	/**
+	 * Allowed html tags
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $allowed_html = array();
+
+	/**
 	 * Modal title.
 	 *
 	 * @since 4.0.0
@@ -177,10 +186,12 @@ class Modal extends BaseComponent {
 	 *
 	 * @param string $title Modal title.
 	 * @param string $esc_cb Callable escaping function.
+	 * @param array  $allowed_html the html to check before sanitization.
 	 *
 	 * @return $this
 	 */
-	public function title( string $title, $esc_cb = 'esc_html' ) {
+	public function title( string $title, $esc_cb = 'esc_html', array $allowed_html = array() ) {
+		$this->allowed_html = wp_parse_args( $allowed_html, $this->allowed_html );
 		$this->title        = $title;
 		$this->title_esc_cb = $esc_cb;
 		return $this;
@@ -306,11 +317,11 @@ class Modal extends BaseComponent {
 		}
 
 		$title_html = $this->title
-			? sprintf( '<div class="tutor-modal-title">%s</div>', $this->esc( $this->title, $this->title_esc_cb ) )
+			? sprintf( '<div class="tutor-modal-title">%s</div>', $this->esc( $this->title, $this->title_esc_cb, $this->allowed_html ) )
 			: '';
 
 		$subtitle_html = $this->subtitle
-			? sprintf( '<div class="tutor-modal-subtitle">%s</div>', $this->esc( $this->subtitle, $this->subtitle_esc_cb ) )
+			? sprintf( '<div class="tutor-modal-subtitle">%s</div>', $this->esc( $this->subtitle, $this->subtitle_esc_cb, $this->allowed_html ) )
 			: '';
 
 		return sprintf(
@@ -342,7 +353,7 @@ class Modal extends BaseComponent {
 				return $content ? $content : '';
 			}
 		} else {
-			$content = $this->esc( $this->body, $this->body_esc_cb );
+			$content = $this->esc( $this->body, $this->body_esc_cb, $this->allowed_html );
 		}
 
 		return sprintf( '<div class="tutor-modal-body">%s</div>', $content );
