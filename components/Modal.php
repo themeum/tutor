@@ -76,24 +76,6 @@ class Modal extends BaseComponent {
 	protected $title_icon = '';
 
 	/**
-	 * Modal title icon position.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var string (left|right)
-	 */
-	protected $title_icon_position = 'left';
-
-	/**
-	 * Modal title icon size.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var integer
-	 */
-	protected $title_icon_size = 16;
-
-	/**
 	 * Modal title esc func.
 	 *
 	 * @since 4.0.0
@@ -237,37 +219,6 @@ class Modal extends BaseComponent {
 	}
 
 	/**
-	 * Set modal title icon position.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $title_icon_position the icon position (left|right).
-	 *
-	 * @return $this
-	 */
-	public function title_icon_position( string $title_icon_position = 'left' ) {
-		if ( ! in_array( $title_icon_position, array( 'left', 'right' ), true ) ) {
-			return $this;
-		}
-		$this->title_icon_position = $title_icon_position;
-		return $this;
-	}
-
-	/**
-	 * Set modal title icon size.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int $title_icon_size the icon size.
-	 *
-	 * @return $this
-	 */
-	public function title_icon_size( int $title_icon_size ) {
-		$this->title_icon_size = $title_icon_size;
-		return $this;
-	}
-
-	/**
 	 * Set modal subtitle.
 	 *
 	 * @since 4.0.0
@@ -399,20 +350,13 @@ class Modal extends BaseComponent {
 
 		if ( ! empty( $this->title_icon ) ) {
 			ob_start();
-			tutor_utils()->render_svg_icon( $this->title_icon, $this->title_icon_size, $this->title_icon_size );
+			tutor_utils()->render_svg_icon( $this->title_icon, 24, 24 );
 			$icon = ob_get_clean();
 
 			return sprintf(
-				'left' !== $this->title_icon_position ?
-					'<div class="tutor-modal-header">
+				'<div class="tutor-modal-header">
 						<div class="tutor-flex tutor-items-center tutor-gap-4">
 							%1$s%3$s
-						</div>
-						%2$s
-					</div>' :
-					'<div class="tutor-modal-header">
-						<div class="tutor-flex tutor-items-center tutor-gap-4">
-							%3$s%1$s
 						</div>
 						%2$s
 					</div>',

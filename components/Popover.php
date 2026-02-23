@@ -72,17 +72,7 @@ class Popover extends BaseComponent {
 	 *
 	 * @var array
 	 */
-	protected $allowed_html_tags = array(
-		'span'   => array(
-			'class'  => true,
-			'x-text' => true,
-		),
-		'b'      => array(),
-		'strong' => array(),
-		'i'      => array(),
-		'em'     => array(),
-		'br'     => array(),
-	);
+	protected $allowed_html_tags = array();
 
 	/**
 	 * The popover placement location (left | right | top | bottom ).
