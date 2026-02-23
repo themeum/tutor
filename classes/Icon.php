@@ -184,6 +184,7 @@ final class Icon {
 	const GIFT_CARD                  = 'gift-card';
 	const GITHUB                     = 'github';
 	const GLOBE                      = 'globe';
+	const GOOGLE_CALENDER_COLORIZE   = 'google-calender-colorize';
 	const GOOGLE_MEET                = 'google-meet';
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
 	const GRAB_HANDLE                = 'grab-handle';
@@ -213,6 +214,7 @@ final class Icon {
 	const ISO                        = 'iso';
 	const JAVASCRIPT                 = 'javascript';
 	const JPG                        = 'jpg';
+	const JSON                       = 'json';
 	const JSON_FILE                  = 'json-file';
 	const KEY                        = 'key';
 	const LANDSCAPE                  = 'landscape';
@@ -395,6 +397,7 @@ final class Icon {
 	const VIDEO_CAMERA               = 'video-camera';
 	const VIDEO_CAMERA_2             = 'video-camera-2';
 	const VIDEO_FILE                 = 'video-file';
+	const VIDEO_FILL                 = 'video-fill';
 	const VIDEO_QUALITY              = 'video-quality';
 	const VIMEO                      = 'vimeo';
 	const VISITED                    = 'visited';

@@ -67,6 +67,15 @@ class Modal extends BaseComponent {
 	protected $title = '';
 
 	/**
+	 * Modal title icon.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $title_icon = '';
+
+	/**
 	 * Modal title esc func.
 	 *
 	 * @since 4.0.0
@@ -196,6 +205,20 @@ class Modal extends BaseComponent {
 	}
 
 	/**
+	 * Set modal title icon.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $title_icon the modal title icon name.
+	 *
+	 * @return $this
+	 */
+	public function title_icon( string $title_icon ) {
+		$this->title_icon = $title_icon;
+		return $this;
+	}
+
+	/**
 	 * Set modal subtitle.
 	 *
 	 * @since 4.0.0
@@ -315,6 +338,8 @@ class Modal extends BaseComponent {
 			return '';
 		}
 
+		$icon = '';
+
 		$title_html = $this->title
 			? sprintf( '<div class="tutor-modal-title">%s</div>', $this->esc( $this->title, $this->title_esc_cb ) )
 			: '';
@@ -322,6 +347,25 @@ class Modal extends BaseComponent {
 		$subtitle_html = $this->subtitle
 			? sprintf( '<div class="tutor-modal-subtitle">%s</div>', $this->esc( $this->subtitle, $this->subtitle_esc_cb ) )
 			: '';
+
+		if ( ! empty( $this->title_icon ) ) {
+			ob_start();
+			tutor_utils()->render_svg_icon( $this->title_icon, 24, 24 );
+			$icon = ob_get_clean();
+
+			return sprintf(
+				'<div class="tutor-modal-header">
+						<div class="tutor-flex tutor-items-center tutor-gap-4">
+							%1$s%3$s
+						</div>
+						%2$s
+					</div>',
+				$title_html,
+				$subtitle_html,
+				$icon,
+			);
+
+		}
 
 		return sprintf(
 			'<div class="tutor-modal-header">%s%s</div>',

@@ -66,6 +66,15 @@ class Popover extends BaseComponent {
 	protected $popover_body_esc = 'wp_kses_post';
 
 	/**
+	 * Allowed HTML tags and attributes. Keys are tag names and values are allowed attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $allowed_html_tags = array();
+
+	/**
 	 * The popover placement location (left | right | top | bottom ).
 	 *
 	 * Default 'bottom-start'.
@@ -168,11 +177,13 @@ class Popover extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $popover_body the popover body html.
+	 * @param array  $allowed_html_tags html tags to allow.
 	 *
 	 * @return self
 	 */
-	public function body( string $popover_body ): self {
-		$this->popover_body = $popover_body;
+	public function body( string $popover_body, array $allowed_html_tags = array() ): self {
+		$this->popover_body      = $popover_body;
+		$this->allowed_html_tags = $allowed_html_tags;
 		return $this;
 	}
 
@@ -341,7 +352,7 @@ class Popover extends BaseComponent {
 			return '';
 		}
 
-		$body = $this->esc( $this->popover_body, $this->popover_body_esc );
+		$body = wp_kses( $this->popover_body, $this->get_allowed_html_tags( $this->allowed_html_tags ) );
 
 		return sprintf(
 			'<div class="tutor-popover-body">
@@ -436,8 +447,7 @@ class Popover extends BaseComponent {
 					$content,
 					$menu_item_attr
 				);
-			} else {
-				if ( Positions::RIGHT === $icon_alignment ) {
+			} elseif ( Positions::RIGHT === $icon_alignment ) {
 					$menu_items .= sprintf(
 						'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%3$s%4$s</%1$s>',
 						$tag,
@@ -446,16 +456,15 @@ class Popover extends BaseComponent {
 						$icon,
 						$menu_item_attr
 					);
-				} else {
-					$menu_items .= sprintf(
-						'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%4$s%3$s</%1$s>',
-						$tag,
-						$class,
-						$content,
-						$icon,
-						$menu_item_attr
-					);
-				}
+			} else {
+				$menu_items .= sprintf(
+					'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%4$s%3$s</%1$s>',
+					$tag,
+					$class,
+					$content,
+					$icon,
+					$menu_item_attr
+				);
 			}
 		}
 
