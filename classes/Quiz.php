@@ -1517,7 +1517,7 @@ class Quiz {
 						<div class="tutor-quiz-attempts-item-wrapper">
 							<?php
 							tutor_load_template(
-								'dashboard.components.student-quiz-attempt-row',
+								'shared.components.student-quiz-attempt-row',
 								array(
 									'attempt'          => $attempt,
 									'attempt_number'   => $attempt_number,
