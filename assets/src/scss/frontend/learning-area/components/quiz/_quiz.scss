@@ -161,13 +161,38 @@ $tutor-quiz-content-bottom-offset: calc(
 
     &-header {
       @include tutor-flex(row, center, space-between);
-      gap: $tutor-spacing-8;
+      gap: $tutor-spacing-5;
+
+      @include tutor-breakpoint-down(sm) {
+        align-items: flex-start;
+      }
+    }
+
+    &-meta {
+      @include tutor-flex(row, center, flex-start);
+      gap: $tutor-spacing-5;
+      min-width: 0;
+      flex: 1;
+
+      @include tutor-breakpoint-down(sm) {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: $tutor-spacing-3;
+      }
+    }
+
+    &-title {
+      @include tutor-typography('h5', 'semibold');
+      color: $tutor-text-primary;
+      padding-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
     }
 
     &-bar-wrapper {
-      flex: 1;
-      min-width: 0;
-      padding-top: $tutor-spacing-2;
+      width: 100%;
     }
 
     &-animate {
@@ -213,6 +238,7 @@ $tutor-quiz-content-bottom-offset: calc(
     inset-inline: 0;
     bottom: 0;
     height: 27px;
+    line-height: 1;
     font-variant-numeric: tabular-nums;
     @include tutor-transition(color);
 
