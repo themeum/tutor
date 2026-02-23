@@ -57,17 +57,17 @@ if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_d
 	<?php if ( is_array( $questions ) ) : ?>
 		<?php foreach ( $questions as $index => $question ) : ?>
 			<?php
-			$question_id = (int) ( $question->question_id ?? 0 );
-			$status      = '';
+			$question_id       = (int) ( $question->question_id ?? 0 );
+			$item_status_class = '';
 
 			if ( isset( $question_status_map[ $question_id ] ) ) {
-				$item_status = $question_status_map[ $question_id ];
-				if ( ! empty( $item_status['has_pending'] ) ) {
-					$status = 'pending';
-				} elseif ( ! empty( $item_status['has_incorrect'] ) ) {
-					$status = 'incorrect';
-				} elseif ( ! empty( $item_status['has_correct'] ) ) {
-					$status = 'correct';
+				$question_status_data = $question_status_map[ $question_id ];
+				if ( ! empty( $question_status_data['has_pending'] ) ) {
+					$item_status_class = 'pending';
+				} elseif ( ! empty( $question_status_data['has_incorrect'] ) ) {
+					$item_status_class = 'incorrect';
+				} elseif ( ! empty( $question_status_data['has_correct'] ) ) {
+					$item_status_class = 'correct';
 				}
 			}
 
@@ -75,8 +75,8 @@ if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_d
 			if ( 0 === (int) $index ) {
 				$classes[] = 'active';
 			}
-			if ( $status ) {
-				$classes[] = $status;
+			if ( $item_status_class ) {
+				$classes[] = $item_status_class;
 			}
 			?>
 			<a href="#" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
