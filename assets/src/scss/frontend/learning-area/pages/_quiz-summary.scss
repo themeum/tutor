@@ -1,25 +1,43 @@
-// Learning Area Quiz Summary Page Styles
-
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
 .tutor-quiz-summary-page {
+  --tutor-quiz-summary-header-height: 64px;
+  --tutor-quiz-summary-header-top: 0px;
+  --tutor-quiz-summary-sidebar-top: calc(var(--tutor-quiz-summary-header-top) + #{$tutor-spacing-13} + var(--tutor-quiz-summary-header-height));
+
+  body:has(#wpadminbar) & {
+    --tutor-quiz-summary-header-top: 46px;
+  }
+
+  @include tutor-breakpoint-up(sm) {
+    body:has(#wpadminbar) & {
+      --tutor-quiz-summary-header-top: 32px;
+    }
+  }
+
   background-color: $tutor-surface-base;
   .tutor-quiz-summary-header {
+    position: sticky;
+    top: var(--tutor-quiz-summary-header-top);
+    z-index: $tutor-z-header;
+    min-height: var(--tutor-quiz-summary-header-height);
     background-color: $tutor-surface-l1;
-    padding: $tutor-spacing-6;
+    padding: 0 $tutor-spacing-6;
     border-bottom: 1px solid $tutor-border-idle;
 
     &-inner {
       @include tutor-flex(row, center, space-between);
       max-width: 736px;
+      min-height: var(--tutor-quiz-summary-header-height);
       margin: 0 auto;
     }
   }
 
   .tutor-quiz-summary-body {
     max-width: 1220px;
-    margin: $tutor-spacing-13 auto;
+    padding-block: $tutor-spacing-13;
+    margin-inline: auto;
     display: grid;
     grid-template-columns: 300px 1fr;
     gap: 128px;
@@ -29,10 +47,10 @@
     }
   }
 
-  // @TODO: Need to implement the sticky sidebar functions.
   .tutor-quiz-summary-sidebar {
     position: sticky;
-    top: 0;
+    top: var(--tutor-quiz-summary-sidebar-top);
+    align-self: start;
 
     @include tutor-breakpoint-down(sm) {
       display: none;
@@ -40,6 +58,7 @@
 
     .tutor-quiz-sidebar-questions {
       .tutor-quiz-sidebar-question-item {
+        all: unset;
         @include tutor-flex(row);
         outline: none;
         box-shadow: none;
@@ -62,6 +81,10 @@
             border-radius: 50%;
             background-color: $tutor-icon-disabled;
           }
+        }
+
+        .tutor-question-content {
+          @include tutor-typography(p2);
         }
 
         &.active {
