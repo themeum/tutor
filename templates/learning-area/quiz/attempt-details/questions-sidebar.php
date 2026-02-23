@@ -53,38 +53,44 @@ if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_d
 }
 ?>
 
-<div class="tutor-quiz-sidebar-questions">
-	<?php if ( is_array( $questions ) ) : ?>
-		<?php foreach ( $questions as $index => $question ) : ?>
-			<?php
-			$question_id       = (int) ( $question->question_id ?? 0 );
-			$item_status_class = '';
+<div class="tutor-quiz-summary-sidebar">
+	<h3 class="tutor-h3 tutor-mb-10">
+		<?php esc_html_e( 'Quiz questions', 'tutor' ); ?>
+	</h3>
 
-			if ( isset( $question_status_map[ $question_id ] ) ) {
-				$question_status_data = $question_status_map[ $question_id ];
-				if ( ! empty( $question_status_data['has_pending'] ) ) {
-					$item_status_class = 'pending';
-				} elseif ( ! empty( $question_status_data['has_incorrect'] ) ) {
-					$item_status_class = 'incorrect';
-				} elseif ( ! empty( $question_status_data['has_correct'] ) ) {
-					$item_status_class = 'correct';
+	<div class="tutor-quiz-sidebar-questions">
+		<?php if ( is_array( $questions ) ) : ?>
+			<?php foreach ( $questions as $index => $question ) : ?>
+				<?php
+				$question_id       = (int) ( $question->question_id ?? 0 );
+				$item_status_class = '';
+
+				if ( isset( $question_status_map[ $question_id ] ) ) {
+					$question_status_data = $question_status_map[ $question_id ];
+					if ( ! empty( $question_status_data['has_pending'] ) ) {
+						$item_status_class = 'pending';
+					} elseif ( ! empty( $question_status_data['has_incorrect'] ) ) {
+						$item_status_class = 'incorrect';
+					} elseif ( ! empty( $question_status_data['has_correct'] ) ) {
+						$item_status_class = 'correct';
+					}
 				}
-			}
 
-			$classes = array( 'tutor-quiz-sidebar-question-item' );
-			if ( 0 === (int) $index ) {
-				$classes[] = 'active';
-			}
-			if ( $item_status_class ) {
-				$classes[] = $item_status_class;
-			}
-			?>
-			<a href="#" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
-				<div class="tutor-question-number"><?php echo esc_html( (int) $index + 1 ); ?>.</div>
-				<div class="tutor-question-content">
-					<?php echo esc_html( wp_strip_all_tags( (string) ( $question->question_title ?? '' ) ) ); ?>
-				</div>
-			</a>
-		<?php endforeach; ?>
-	<?php endif; ?>
+				$classes = array( 'tutor-quiz-sidebar-question-item' );
+				if ( 0 === (int) $index ) {
+					$classes[] = 'active';
+				}
+				if ( $item_status_class ) {
+					$classes[] = $item_status_class;
+				}
+				?>
+				<a href="#" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+					<div class="tutor-question-number"><?php echo esc_html( (int) $index + 1 ); ?>.</div>
+					<div class="tutor-question-content">
+						<?php echo esc_html( wp_strip_all_tags( (string) ( $question->question_title ?? '' ) ) ); ?>
+					</div>
+				</a>
+			<?php endforeach; ?>
+		<?php endif; ?>
+	</div>
 </div>

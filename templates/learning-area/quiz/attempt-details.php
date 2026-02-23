@@ -52,21 +52,15 @@ $attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
 	</div>
 
 	<div class="tutor-quiz-summary-body">
-		<div class="tutor-quiz-summary-sidebar">
-			<h3 class="tutor-h3 tutor-mb-10">
-				<?php esc_html_e( 'Quiz questions', 'tutor' ); ?>
-			</h3>
-
-			<?php
-			tutor_load_template(
-				'learning-area.quiz.attempt-details.questions-sidebar',
-				array(
-					'quiz_id'      => $quiz_id,
-					'attempt_data' => $attempt_data,
-				)
-			);
-			?>
-		</div>
+		<?php
+		tutor_load_template(
+			'learning-area.quiz.attempt-details.questions-sidebar',
+			array(
+				'quiz_id'      => $quiz_id,
+				'attempt_data' => $attempt_data,
+			)
+		);
+		?>
 		<div class="tutor-quiz-summary-content">
 			<h3 class="tutor-h3 tutor-sm-text-h5 tutor-text-subdued tutor-mb-10 tutor-sm-mb-5">
 				<?php esc_html_e( 'Review your answers', 'tutor' ); ?>
