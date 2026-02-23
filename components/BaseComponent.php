@@ -13,6 +13,8 @@
 
 namespace Tutor\Components;
 
+use TUTOR\Input;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -139,6 +141,39 @@ abstract class BaseComponent {
 	 */
 	protected function esc( $value, $esc_fn = 'esc_html' ): string {
 		return call_user_func( $esc_fn, $value );
+	}
+
+	/**
+	 * Retrieve the list of allowed HTML tags and attributes.
+	 *
+	 * Provides a base set of safe HTML tags and merges additional
+	 * SVG tags and any custom tags passed
+	 * through the $extra_tags parameter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<string, array<string, bool>> $extra_tags Optional.
+	 *        Additional HTML tags and their allowed attributes
+	 *        in KSES-compatible format.
+	 *
+	 * @return array<string, array<string, bool>> Allowed HTML tags
+	 *         and attributes formatted for wp_kses().
+	 */
+	protected function get_allowed_html_tags( $extra_tags = array() ) {
+
+		$allowed_html_tags = array(
+			'div'    => array(),
+			'b'      => array(),
+			'strong' => array(),
+			'i'      => array(),
+			'em'     => array(),
+			'span'   => array(),
+		);
+
+		$allowed_html_tags = wp_parse_args( Input::allow_svg( array() ), $allowed_html_tags );
+		$allowed_html_tags = wp_parse_args( $extra_tags, $allowed_html_tags );
+
+		return $allowed_html_tags;
 	}
 
 	/**
