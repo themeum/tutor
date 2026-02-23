@@ -13,59 +13,6 @@ $tutor-quiz-content-bottom-offset: calc(
     #{$tutor-spacing-2}
 );
 
-::view-transition-group(tutor-quiz-question) {
-  animation-duration: 280ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-::view-transition-old(tutor-quiz-question),
-::view-transition-new(tutor-quiz-question) {
-  animation-duration: 280ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-::view-transition-old(tutor-quiz-question) {
-  animation-name: tutor-quiz-question-exit;
-}
-
-::view-transition-new(tutor-quiz-question) {
-  animation-name: tutor-quiz-question-enter;
-}
-
-@keyframes tutor-quiz-question-enter {
-  from {
-    opacity: 0;
-    transform: translateX(calc(22px * var(--tutor-quiz-vt-dir, 1))) scale(0.985);
-    filter: blur(1px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-    filter: blur(0);
-  }
-}
-
-@keyframes tutor-quiz-question-exit {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-    filter: blur(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(calc(-22px * var(--tutor-quiz-vt-dir, 1))) scale(0.985);
-    filter: blur(1px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(tutor-quiz-question),
-  ::view-transition-old(tutor-quiz-question),
-  ::view-transition-new(tutor-quiz-question) {
-    animation-duration: 1ms;
-  }
-}
-
 .tutor-quiz {
   &-submission {
     @include tutor-flex(column);

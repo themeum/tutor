@@ -14,9 +14,6 @@ export interface QuizLayoutConfig {
 
 const quizLayout = (config: QuizLayoutConfig) => {
   const form = window.TutorCore?.form;
-  const docWithViewTransition = document as Document & {
-    startViewTransition?: (callback: () => void) => { finished: Promise<void> };
-  };
 
   return {
     layout: config.layout ?? QuizLayoutType.QUESTION_BELOW_EACH_OTHER,
@@ -45,6 +42,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
       this.currentIndex = 1;
+      this.syncCurrentRevealFooterState();
     },
 
     isQuestionActive(index: number) {
@@ -172,6 +170,21 @@ const quizLayout = (config: QuizLayoutConfig) => {
       this.revealFooterState = '';
     },
 
+    syncCurrentRevealFooterState() {
+      if (!this.isRevealMode()) {
+        this.revealFooterState = '';
+        return;
+      }
+
+      const wrapper = this.getQuestionWrapper(this.currentIndex);
+      if (!wrapper) {
+        this.revealFooterState = '';
+        return;
+      }
+
+      this.syncRevealFooterState(wrapper);
+    },
+
     goPrev() {
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
@@ -180,7 +193,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         this.markCurrentAsSkipped();
         this.runWithViewTransition(() => {
           this.currentIndex -= 1;
-          this.revealFooterState = '';
+          this.syncCurrentRevealFooterState();
         }, 'back');
         this.scrollToQuestion();
       }
@@ -219,7 +232,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
             this.markCurrentAsSkipped();
             this.runWithViewTransition(() => {
               this.currentIndex += 1;
-              this.revealFooterState = '';
+              this.syncCurrentRevealFooterState();
             });
             this.scrollToQuestion();
           }
@@ -231,7 +244,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         this.markCurrentAsSkipped();
         this.runWithViewTransition(() => {
           this.currentIndex += 1;
-          this.revealFooterState = '';
+          this.syncCurrentRevealFooterState();
         });
         this.scrollToQuestion();
       }
@@ -248,7 +261,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
       this.runWithViewTransition(
         () => {
           this.currentIndex = index;
-          this.revealFooterState = '';
+          this.syncCurrentRevealFooterState();
         },
         index < this.currentIndex ? 'back' : 'forward',
       );
@@ -256,22 +269,8 @@ const quizLayout = (config: QuizLayoutConfig) => {
     },
 
     runWithViewTransition(update: () => void, direction: 'forward' | 'back' = 'forward') {
-      const transitionRoot = document.documentElement;
-      transitionRoot.style.setProperty('--tutor-quiz-vt-dir', direction === 'back' ? '-1' : '1');
-
-      if (!docWithViewTransition.startViewTransition) {
-        update();
-        transitionRoot.style.removeProperty('--tutor-quiz-vt-dir');
-        return;
-      }
-
-      const transition = docWithViewTransition.startViewTransition.call(document, () => {
-        update();
-      });
-
-      transition.finished.finally(() => {
-        transitionRoot.style.removeProperty('--tutor-quiz-vt-dir');
-      });
+      void direction;
+      update();
     },
 
     getRevealWaitTime(): number {
