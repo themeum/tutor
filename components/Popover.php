@@ -341,7 +341,7 @@ class Popover extends BaseComponent {
 			return '';
 		}
 
-		$body = $this->esc( $this->popover_body, $this->popover_body_esc );
+		$body = wp_kses( $this->popover_body, $this->get_allowed_html_tags() );
 
 		return sprintf(
 			'<div class="tutor-popover-body">
