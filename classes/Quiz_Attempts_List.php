@@ -383,7 +383,7 @@ class Quiz_Attempts_List {
 	 * @return string
 	 */
 	public function get_quiz_attempt_row_template( $course_id = 0 ): string {
-		$template = $this->check_is_student( $course_id ) ? 'dashboard.components.student-quiz-attempt-row'
+		$template = $this->check_is_student( $course_id ) ? 'shared.components.student-quiz-attempt-row'
 		: 'dashboard.components.quiz-attempt-row';
 		return $template;
 	}
