@@ -130,6 +130,15 @@ class Modal extends BaseComponent {
 	protected $is_template = false;
 
 	/**
+	 * Template data.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $template_data = array();
+
+	/**
 	 * Footer buttons HTML.
 	 *
 	 * @since 4.0.0
@@ -239,9 +248,10 @@ class Modal extends BaseComponent {
 	 *
 	 * @return $this
 	 */
-	public function template( $path ) {
-		$this->body        = $path;
-		$this->is_template = true;
+	public function template( $path, $data = array() ) {
+		$this->body          = $path;
+		$this->is_template   = true;
+		$this->template_data = $data;
 		return $this;
 	}
 
@@ -348,6 +358,7 @@ class Modal extends BaseComponent {
 		if ( $this->is_template ) {
 			if ( file_exists( $this->body ) ) {
 				ob_start();
+				$data = $this->template_data;
 				include $this->body;
 				$content = ob_get_clean();
 				return $content ? $content : '';

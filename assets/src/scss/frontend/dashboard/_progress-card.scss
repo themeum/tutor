@@ -7,8 +7,6 @@
 .tutor-progress-card {
 	position: relative;
 	padding: $tutor-spacing-4;
-	@include tutor-flex(row, stretch, flex-start);
-	gap: $tutor-spacing-5;
 	border: 1px solid $tutor-border-idle;
 	border-radius: $tutor-radius-2xl;
 	transition: all 0.2s ease;
@@ -17,6 +15,11 @@
 
 	&:hover {
 		background-color: $tutor-surface-l1-hover;
+	}
+
+	.tutor-progress-card-inner {
+		@include tutor-flex(row, stretch, flex-start);
+		gap: $tutor-spacing-5;
 	}
 
 	.tutor-progress-card-thumbnail {
@@ -160,12 +163,15 @@
 		}
 
 		&-actions {
-			display: none;
-		}
-
-		&-footer {
+			position: static;
 			display: block;
-			padding: $tutor-spacing-6 $tutor-spacing-4 0;
+			visibility: visible;
+			opacity: 1;
+			padding: $tutor-spacing-6 0 0;
+
+			.tutor-btn {
+				width: 100%;
+			}
 		}
 	}
 }

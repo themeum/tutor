@@ -3,7 +3,7 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
-.tutor-learning-area-certificate {
+.tutor-certificate-wrapper {
   @include tutor-flex(column);
   gap: $tutor-spacing-5;
 

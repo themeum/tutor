@@ -10,11 +10,12 @@
 
 namespace Tutor\Models;
 
-use InvalidArgumentException;
+use TUTOR\Icon;
 use TUTOR\Course;
-use Tutor\Ecommerce\Tax;
-use Tutor\Helpers\QueryHelper;
 use TUTOR\Lesson;
+use Tutor\Ecommerce\Tax;
+use InvalidArgumentException;
+use Tutor\Helpers\QueryHelper;
 use TUTOR_ASSIGNMENTS\Assignments;
 
 /**
@@ -329,12 +330,12 @@ class CourseModel {
 		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT $select_col
-			FROM 	$wpdb->posts
+			FROM $wpdb->posts
 			LEFT JOIN {$wpdb->usermeta}
-					ON $wpdb->usermeta.user_id = %d
-					AND $wpdb->usermeta.meta_key = %s
-					AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
-			WHERE	1 = 1 {$where_post_status}
+				ON $wpdb->usermeta.user_id = %d
+				AND $wpdb->usermeta.meta_key = %s
+				AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
+			WHERE 1 = 1 {$where_post_status}
 				AND $wpdb->posts.post_type IN ({$post_types})
 				AND ($wpdb->posts.post_author = %d OR $wpdb->usermeta.user_id = %d)
 				{$search_sql}
@@ -526,11 +527,37 @@ class CourseModel {
 					/**
 					 * Delete Quiz data
 					 */
-					if ( get_post_type( $content_id ) === 'tutor_quiz' ) {
+					if ( get_post_type( $content_id ) === $quiz_post_type ) {
+						// Collect file paths from all question types that store files before deleting rows (files deleted after DB for safety).
+						$attempts_for_quiz  = QueryHelper::get_all( 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ), 'attempt_id', -1 );
+						$attempt_file_paths = array();
+						if ( ! empty( $attempts_for_quiz ) ) {
+							$attempt_ids        = array_map(
+								function ( $row ) {
+									return (int) $row->attempt_id;
+								},
+								$attempts_for_quiz
+							);
+							$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
+							$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
+						}
+
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ) );
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $content_id ) );
 
+						QuizModel::delete_files_by_paths( $attempt_file_paths );
+
 						do_action( 'tutor_before_delete_quiz_content', $content_id, null );
+
+						// Collect instructor file paths before deleting question data (e.g. draw_image masks).
+						/**
+						 * Filter to get file paths for quiz deletion.
+						 * Pro and other add-ons register their question types via this filter.
+						 *
+						 * @param string[] $file_paths Paths collected so far.
+						 * @param int      $quiz_id   Quiz post ID.
+						 */
+						$quiz_file_paths = apply_filters( 'tutor_quiz_quiz_file_paths_for_deletion', array(), $content_id );
 
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
@@ -539,6 +566,8 @@ class CourseModel {
 							$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) " );
 						}
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $content_id ) );
+
+						QuizModel::delete_files_by_paths( $quiz_file_paths );
 					}
 
 					/**
@@ -1347,6 +1376,197 @@ class CourseModel {
 		return false;
 	}
 
+	/**
+	 * Get the number of courses created by an instructor within a given date range.
+	 *
+	 * @since 4.0.0
+	 *
+	 * If no date range is provided, all courses authored by the user are counted.
+	 * Courses without a `_wp_old_date` meta value are considered valid based on
+	 * their publish date.
+	 *
+	 * @param string|null $start_date Start date in Y-m-d format.
+	 * @param string|null $end_date   End date in Y-m-d format.
+	 * @param int         $user_id    Course author (user) ID.
+	 *
+	 * @return int Total number of matching courses.
+	 */
+	public static function get_course_count_by_date( $start_date, $end_date, $user_id ) {
+
+		$common_args = array(
+			'post_author'    => $user_id,
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		);
+
+		if ( empty( $start_date ) && empty( $end_date ) ) {
+			return self::get_courses_by_args( $common_args )->post_count;
+		}
+
+		$by_date = self::get_courses_by_args(
+			$common_args +
+			array(
+				'date_query' => array(
+					'column'    => 'post_date_gmt',
+					'before'    => $end_date,
+					'after'     => $start_date,
+					'inclusive' => true,
+				),
+			)
+		);
+
+		$by_meta = self::get_courses_by_args(
+			$common_args +
+			array(
+				'meta_key'     => '_wp_old_date',
+				'meta_value'   => array( $start_date, $end_date ),
+				'meta_compare' => 'BETWEEN',
+				'meta_type'    => 'DATE',
+			)
+		);
+
+		$post_ids = array_unique( array_merge( (array) $by_date->posts, (array) $by_meta->posts ) );
+
+		$filtered = array_filter(
+			$post_ids,
+			function ( int $post_id ) use ( $start_date, $end_date ): bool {
+				$old_date = get_post_meta( $post_id, '_wp_old_date', true ); // first value.
+
+				if ( empty( $old_date ) ) {
+					return true;
+				}
+
+				return strtotime( $start_date ) <= $old_date && strtotime( $end_date ) >= $old_date;
+			}
+		);
+
+		return count( $filtered );
+	}
+
+	/**
+	 * Get topic-wise progress data for a course and a student.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id   Course ID.
+	 * @param int $student_id Student ID.
+	 *
+	 * @return array[] Topic progress data.
+	 */
+	public static function get_topic_progress_by_course_id( $course_id, $student_id ) {
+
+		$topics_query = tutor_utils()->get_topics( $course_id );
+
+		$topic_list = array();
+
+		if ( empty( $topics_query ) || ! $topics_query->have_posts() ) {
+			return $topic_list;
+		}
+
+		foreach ( $topics_query->posts as $topic_post ) {
+			$topic_id = (int) $topic_post->ID;
+
+			$topic = array(
+				'topic_id'        => $topic_id,
+				'topic_summary'   => $topic_post->post_content,
+				'topic_title'     => get_the_title( $topic_id ),
+				'items'           => array(),
+				'topic_completed' => true,
+				'topic_started'   => false,
+			);
+
+			$contents_query = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
+
+			if ( ! empty( $contents_query ) && $contents_query->have_posts() ) {
+				foreach ( $contents_query->posts as $content_post ) {
+					$post_id      = (int) $content_post->ID;
+					$post_type    = $content_post->post_type;
+					$is_completed = true;
+
+					if ( tutor()->quiz_post_type === $post_type ) {
+
+						$is_completed = (bool) tutor_utils()->has_attempted_quiz( $student_id, $post_id );
+
+						$topic['items'][] = array(
+							'type'         => 'quiz',
+							'id'           => $post_id,
+							'link'         => esc_url_raw( get_permalink( $post_id ) ),
+							'title'        => $content_post->post_title,
+							'is_completed' => $is_completed,
+							'time_limit'   => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_value' ),
+							'time_type'    => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_type' ),
+							'label'        => __( 'Quiz', 'tutor' ),
+							'icon'         => Icon::QUIZ_2,
+						);
+
+					} elseif ( tutor()->assignment_post_type === $post_type ) {
+
+						$submitted_count = tutor_utils()->get_submitted_assignment_count( $post_id, $student_id );
+						$is_completed    = $submitted_count > 0;
+
+						$topic['items'][] = array(
+							'type'         => 'assignment',
+							'id'           => $post_id,
+							'link'         => esc_url_raw( get_permalink( $post_id ) ),
+							'title'        => $content_post->post_title,
+							'is_completed' => $is_completed,
+							'label'        => __( 'Assignment', 'tutor' ),
+							'icon'         => Icon::BOOK_2,
+						);
+
+					} elseif ( tutor()->zoom_post_type === $post_type ) {
+						$topic['items'][] = array(
+							'type'  => 'zoom_meeting',
+							'id'    => $post_id,
+							'title' => $content_post->post_title,
+							'link'  => esc_url_raw( get_permalink( $post_id ) ),
+							'label' => __( 'Live Class', 'tutor' ),
+							'icon'  => Icon::ZOOM,
+						);
+
+					} elseif ( tutor()->meet_post_type === $post_type ) {
+						$topic['items'][] = array(
+							'type'  => 'google_meet',
+							'id'    => $post_id,
+							'title' => $content_post->post_title,
+							'link'  => esc_url_raw( get_permalink( $post_id ) ),
+							'label' => __( 'Live Class', 'tutor' ),
+							'icon'  => Icon::GOOGLE_MEET,
+						);
+
+					} else {
+						$video        = tutor_utils()->get_video_info( $post_id );
+						$is_completed = (bool) tutor_utils()->is_completed_lesson( $post_id, $student_id );
+
+						$topic['items'][] = array(
+							'type'            => 'lesson',
+							'id'              => $post_id,
+							'link'            => esc_url_raw( get_permalink( $post_id ) ),
+							'title'           => $content_post->post_title,
+							'video'           => $video,
+							'video_play_time' => isset( $video->playtime ) ? $video->playtime : '',
+							'is_completed'    => $is_completed,
+							'label'           => __( 'Reading', 'tutor' ),
+							'icon'            => Icon::COURSES,
+						);
+					}
+
+					if ( ! $is_completed ) {
+						$topic['topic_completed'] = false;
+					} else {
+						$topic['topic_started'] = true;
+					}
+				}
+			}
+
+			$topic_list[] = $topic;
+		}
+
+		wp_reset_postdata();
+
+		return $topic_list;
+	}
+	
 	/**
 	 * Check if the current user has course content access
 	 *

@@ -19,6 +19,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\LessonModel;
 use Tutor\Traits\JsonResponse;
+use WP_Post;
 
 /**
  * Lesson class
@@ -35,7 +36,7 @@ class Lesson extends Tutor_Base {
 	 * @var string
 	 */
 	const PREVIEW_META_KEY = '_is_preview';
-	
+
 	/**
 	 * Lesson post type
 	 *
@@ -120,6 +121,7 @@ class Lesson extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_update_lesson_comment', array( $this, 'ajax_update_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'reply_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_load_lesson_comments', array( $this, 'load_lesson_comments' ) );
+		add_action( 'wp_ajax_tutor_load_comment_replies', array( $this, 'load_comment_replies' ) );
 
 		// Add lesson title as nav item & render single content on the learning area.
 		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
@@ -1099,5 +1101,66 @@ class Lesson extends Tutor_Base {
 				'count'    => $total_comments,
 			)
 		);
+	}
+
+	/**
+	 * Load comment replies for dashboard.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function load_comment_replies() {
+		tutor_utils()->check_nonce();
+
+		$comment_id    = Input::post( 'comment_id', 0, Input::TYPE_INT );
+		$replies_order = Input::post( 'order', 'DESC' );
+
+		if ( ! $comment_id ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$user_id = get_current_user_id();
+		$replies = self::get_comment_replies( $comment_id, $replies_order );
+
+		ob_start();
+		tutor_load_template(
+			'dashboard.discussions.comment-replies',
+			array(
+				'replies'       => $replies,
+				'replies_order' => $replies_order,
+				'user_id'       => $user_id,
+			)
+		);
+		$html = ob_get_clean();
+
+		wp_send_json_success( array( 'html' => $html ) );
+	}
+
+	/**
+	 * Get lesson content type info with video duration
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_Post $lesson Lesson post.
+	 *
+	 * @return string
+	 */
+	public static function get_content_type_info( WP_Post $lesson ) {
+		$video_info  = tutor_utils()->get_video_info( $lesson->ID );
+		$lesson_type = __( 'Reading', 'tutor' );
+
+		if ( $video_info ) {
+			$lesson_type = __( 'Video', 'tutor' );
+			$playtime    = $video_info->playtime ?? '';
+
+			// Check if the playtime is actually a valid, positive duration.
+			if ( ! empty( $playtime ) ) {
+				/* translators: %s: duration in minutes */
+				$lesson_type = sprintf( __( 'Video - %s mins', 'tutor' ), $playtime );
+			}
+		}
+
+		return $lesson_type;
 	}
 }
