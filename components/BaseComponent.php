@@ -136,6 +136,7 @@ abstract class BaseComponent {
 	 *
 	 * @param mixed  $value Value to escape.
 	 * @param string $esc_fn Callable esc func.
+	 * @param array  $allowed_html additional html values to check.
 	 *
 	 * @return string Escaped string.
 	 */

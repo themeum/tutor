@@ -204,6 +204,7 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
     },
 
     handleDateClick(self: Calendar, event: MouseEvent) {
+      event.stopPropagation();
       if (self.context.inputElement) {
         this.handleInputSelection(self);
       } else if (self.selectionDatesMode === 'multiple-ranged') {
