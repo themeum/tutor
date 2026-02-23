@@ -58,25 +58,6 @@ class Modal extends BaseComponent {
 	protected $id = '';
 
 	/**
-	 * Allowed html tags
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var array
-	 */
-	protected $allowed_html_tags = array(
-		'span'   => array(
-			'class'  => true,
-			'x-text' => true,
-		),
-		'b'      => array(),
-		'strong' => array(),
-		'i'      => array(),
-		'em'     => array(),
-		'br'     => array(),
-	);
-
-	/**
 	 * Modal title.
 	 *
 	 * @since 4.0.0
@@ -84,6 +65,33 @@ class Modal extends BaseComponent {
 	 * @var string
 	 */
 	protected $title = '';
+
+	/**
+	 * Modal title icon.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $title_icon = '';
+
+	/**
+	 * Modal title icon position.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string (left|right)
+	 */
+	protected $title_icon_position = 'left';
+
+	/**
+	 * Modal title icon size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var integer
+	 */
+	protected $title_icon_size = 16;
 
 	/**
 	 * Modal title esc func.
@@ -204,13 +212,58 @@ class Modal extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $title Modal title.
-	 * @param array  $allowed_html_tags the html to check before sanitization.
+	 * @param string $esc_cb Callable escaping function.
 	 *
 	 * @return $this
 	 */
-	public function title( string $title, array $allowed_html_tags = array() ) {
-		$this->allowed_html_tags = wp_parse_args( $allowed_html_tags, $this->allowed_html_tags );
-		$this->title             = $title;
+	public function title( string $title, $esc_cb = 'esc_html' ) {
+		$this->title        = $title;
+		$this->title_esc_cb = $esc_cb;
+		return $this;
+	}
+
+	/**
+	 * Set modal title icon.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $title_icon the modal title icon name.
+	 *
+	 * @return $this
+	 */
+	public function title_icon( string $title_icon ) {
+		$this->title_icon = $title_icon;
+		return $this;
+	}
+
+	/**
+	 * Set modal title icon position.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $title_icon_position the icon position (left|right).
+	 *
+	 * @return $this
+	 */
+	public function title_icon_position( string $title_icon_position = 'left' ) {
+		if ( ! in_array( $title_icon_position, array( 'left', 'right' ), true ) ) {
+			return $this;
+		}
+		$this->title_icon_position = $title_icon_position;
+		return $this;
+	}
+
+	/**
+	 * Set modal title icon size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $title_icon_size the icon size.
+	 *
+	 * @return $this
+	 */
+	public function title_icon_size( int $title_icon_size ) {
+		$this->title_icon_size = $title_icon_size;
 		return $this;
 	}
 
@@ -334,6 +387,8 @@ class Modal extends BaseComponent {
 			return '';
 		}
 
+		$icon = '';
+
 		$title_html = $this->title
 			? sprintf( '<div class="tutor-modal-title">%s</div>', $this->esc( $this->title, $this->title_esc_cb ) )
 			: '';
@@ -341,6 +396,32 @@ class Modal extends BaseComponent {
 		$subtitle_html = $this->subtitle
 			? sprintf( '<div class="tutor-modal-subtitle">%s</div>', $this->esc( $this->subtitle, $this->subtitle_esc_cb ) )
 			: '';
+
+		if ( ! empty( $this->title_icon ) ) {
+			ob_start();
+			tutor_utils()->render_svg_icon( $this->title_icon, $this->title_icon_size, $this->title_icon_size );
+			$icon = ob_get_clean();
+
+			return sprintf(
+				'left' !== $this->title_icon_position ?
+					'<div class="tutor-modal-header">
+						<div class="tutor-flex tutor-items-center tutor-gap-4">
+							%1$s%3$s
+						</div>
+						%2$s
+					</div>' :
+					'<div class="tutor-modal-header">
+						<div class="tutor-flex tutor-items-center tutor-gap-4">
+							%3$s%1$s
+						</div>
+						%2$s
+					</div>',
+				$title_html,
+				$subtitle_html,
+				$icon,
+			);
+
+		}
 
 		return sprintf(
 			'<div class="tutor-modal-header">%s%s</div>',

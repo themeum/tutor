@@ -149,23 +149,6 @@ class Popover extends BaseComponent {
 	protected $popover_close_outside = true;
 
 	/**
-	 * Allowed html tags.
-	 *
-	 * @var array
-	 */
-	protected $allowed_html_tags = array(
-		'span'   => array(
-			'class'  => true,
-			'x-text' => true,
-		),
-		'b'      => array(),
-		'strong' => array(),
-		'i'      => array(),
-		'em'     => array(),
-		'br'     => array(),
-	);
-
-	/**
 	 * Set Popover title
 	 *
 	 * @since 4.0.0
@@ -185,13 +168,11 @@ class Popover extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $popover_body the popover body html.
-	 * @param array  $allowed_html_tags html that should be checked before escape.
 	 *
 	 * @return self
 	 */
-	public function body( string $popover_body, array $allowed_html_tags = array() ): self {
-		$this->popover_body      = $popover_body;
-		$this->allowed_html_tags = wp_parse_args( $allowed_html_tags, $this->allowed_html_tags );
+	public function body( string $popover_body ): self {
+		$this->popover_body = $popover_body;
 		return $this;
 	}
 
