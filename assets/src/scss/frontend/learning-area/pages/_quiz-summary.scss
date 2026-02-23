@@ -4,6 +4,7 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-quiz-summary-page {
+  background-color: $tutor-surface-base;
   .tutor-quiz-summary-header {
     background-color: $tutor-surface-l1;
     padding: $tutor-spacing-6;
