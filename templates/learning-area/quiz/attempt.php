@@ -36,10 +36,16 @@ $question_layout_view               = $question_layout_view ? $question_layout_v
 $feedback_mode                      = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'feedback_mode', '' );
 $reveal_wait_ms                     = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
 $is_linear_layout                   = in_array( $question_layout_view, array( 'single_question', 'question_pagination' ), true );
+$pagination_style                   = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_pagination_style', 'radio' );
 $show_previous_button               = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
 $attempts_allowed                   = (int) tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'attempts_allowed', 0 );
 $previous_attempts                  = tutor_utils()->quiz_attempts();
-$current_attempt_number             = ( is_array( $previous_attempts ) ? count( $previous_attempts ) : 0 ) + 1;
+$current_attempt_number             = ( is_array( $previous_attempts ) ? count( $previous_attempts ) : 0 );
+
+$supported_pagination_styles = array( 'shape', 'radio', 'number' );
+if ( ! in_array( $pagination_style, $supported_pagination_styles, true ) ) {
+	$pagination_style = 'question_pagination' === $question_layout_view ? 'shape' : 'number';
+}
 
 $reveal_question_types = array( 'true_false', 'single_choice', 'multiple_choice' );
 $quiz_answers          = array();
@@ -138,25 +144,6 @@ $default_values = array(
 		data-question-layout-view="<?php echo esc_attr( $question_layout_view ); ?>"
 		x-cloak
 	>
-		<?php if ( 'question_pagination' === $question_layout_view ) : ?>
-			<div class="tutor-quiz-questions-pagination">
-				<ul>
-					<?php foreach ( $questions as $index => $question ) : ?>
-						<li>
-							<button
-								type="button"
-								class="tutor-quiz-question-paginate-item"
-								:class="{ 'active': currentIndex === <?php echo esc_attr( $index + 1 ); ?> }"
-								@click="goTo(<?php echo esc_attr( $index + 1 ); ?>)"
-							>
-								<?php echo esc_html( $index + 1 ); ?>
-							</button>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-			</div>
-		<?php endif; ?>
-
 		<?php if ( $is_linear_layout ) : ?>
 			<div class="tutor-quiz-question-meta">
 				<div class="tutor-quiz-question-indicator">
@@ -209,6 +196,37 @@ $default_values = array(
 			<?php
 		}
 		?>
+
+		<?php if ( $is_linear_layout && count( $questions ) > 1 ) : ?>
+			<div
+				class="tutor-quiz-questions-pagination"
+				data-pagination-style="<?php echo esc_attr( $pagination_style ); ?>"
+			>
+				<ul>
+					<?php foreach ( $questions as $index => $question ) : ?>
+						<li>
+							<button
+								type="button"
+								class="tutor-quiz-question-paginate-item"
+								:class="getPaginationItemClass(<?php echo esc_attr( $index + 1 ); ?>)"
+								:data-state="getPaginationState(<?php echo esc_attr( $index + 1 ); ?>)"
+								@click="goTo(<?php echo esc_attr( $index + 1 ); ?>)"
+							>
+								<span class="tutor-quiz-question-paginate-label">
+									<?php echo esc_html( $index + 1 ); ?>
+								</span>
+								<span class="tutor-quiz-question-paginate-icon tutor-quiz-question-paginate-icon-correct">
+									<?php tutor_utils()->render_svg_icon( Icon::CHECK_2, 12, 12 ); ?>
+								</span>
+								<span class="tutor-quiz-question-paginate-icon tutor-quiz-question-paginate-icon-incorrect">
+									<?php tutor_utils()->render_svg_icon( Icon::CROSS, 12, 12 ); ?>
+								</span>
+							</button>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		<?php endif; ?>
 	</div>
 
 	<?php if ( $is_linear_layout ) : ?>

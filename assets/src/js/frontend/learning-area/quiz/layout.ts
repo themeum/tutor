@@ -28,6 +28,8 @@ const quizLayout = (config: QuizLayoutConfig) => {
     revealWaitMs: config.revealWaitMs ?? null,
     revealAnswerIds: [] as number[],
     answerRequiredByIndex: {} as Record<number, boolean>,
+    revealStateByIndex: {} as Record<number, 'correct' | 'incorrect'>,
+    skippedByIndex: {} as Record<number, boolean>,
     revealFooterState: '' as '' | 'correct' | 'incorrect',
     isRevealing: false,
 
@@ -37,6 +39,8 @@ const quizLayout = (config: QuizLayoutConfig) => {
     init() {
       this.revealAnswerIds = this.getRevealAnswerIds();
       this.answerRequiredByIndex = this.getAnswerRequiredMap();
+      this.revealStateByIndex = this.getRevealStateMap();
+      this.skippedByIndex = this.getSkippedStateMap();
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
@@ -112,6 +116,35 @@ const quizLayout = (config: QuizLayoutConfig) => {
       return !this.isQuestionAttempted(this.currentIndex);
     },
 
+    getPaginationState(index: number): 'answered' | 'correct' | 'incorrect' | 'skipped' | null {
+      if (this.revealStateByIndex[index]) {
+        return this.revealStateByIndex[index];
+      }
+
+      if (this.isQuestionAttempted(index)) {
+        return 'answered';
+      }
+
+      if (this.skippedByIndex[index]) {
+        return 'skipped';
+      }
+
+      return null;
+    },
+
+    getPaginationItemClass(index: number) {
+      const state = this.getPaginationState(index);
+
+      return {
+        active: this.currentIndex === index,
+        answered: state === 'answered',
+        correct: state === 'correct',
+        incorrect: state === 'incorrect',
+        skipped: state === 'skipped',
+        upcoming: index > this.currentIndex && state === null,
+      };
+    },
+
     syncRevealFooterState(wrapper: HTMLElement) {
       if (!this.isRevealMode()) {
         this.revealFooterState = '';
@@ -126,10 +159,12 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
       const result = question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_RESULT_ATTR);
       if (result === QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT) {
+        this.revealStateByIndex[this.currentIndex] = 'correct';
         this.revealFooterState = 'correct';
         return;
       }
       if (result === QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT) {
+        this.revealStateByIndex[this.currentIndex] = 'incorrect';
         this.revealFooterState = 'incorrect';
         return;
       }
@@ -142,6 +177,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
       if (this.currentIndex > 1) {
+        this.markCurrentAsSkipped();
         this.runWithViewTransition(() => {
           this.currentIndex -= 1;
           this.revealFooterState = '';
@@ -180,6 +216,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         window.setTimeout(() => {
           this.isRevealing = false;
           if (this.currentIndex < this.totalQuestions) {
+            this.markCurrentAsSkipped();
             this.runWithViewTransition(() => {
               this.currentIndex += 1;
               this.revealFooterState = '';
@@ -191,6 +228,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
       }
 
       if (this.currentIndex < this.totalQuestions) {
+        this.markCurrentAsSkipped();
         this.runWithViewTransition(() => {
           this.currentIndex += 1;
           this.revealFooterState = '';
@@ -200,12 +238,13 @@ const quizLayout = (config: QuizLayoutConfig) => {
     },
 
     goTo(index: number) {
-      if (this.layout !== QuizLayoutType.QUESTION_PAGINATION) {
+      if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
       if (!index || index < 1 || index > this.totalQuestions) {
         return;
       }
+      this.markCurrentAsSkipped();
       this.runWithViewTransition(
         () => {
           this.currentIndex = index;
@@ -353,6 +392,74 @@ const quizLayout = (config: QuizLayoutConfig) => {
       });
 
       return map;
+    },
+
+    getRevealStateMap(): Record<number, 'correct' | 'incorrect'> {
+      const root = this.$root ?? this.$el;
+      if (!root || !this.isRevealMode()) {
+        return {};
+      }
+
+      const wrappers = Array.from(root.querySelectorAll<HTMLElement>(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER));
+      const map: Record<number, 'correct' | 'incorrect'> = {};
+
+      wrappers.forEach((wrapper) => {
+        const index = Number(wrapper.getAttribute(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER_ATTR));
+        if (Number.isNaN(index) || index < 1) {
+          return;
+        }
+
+        const question = this.getQuestionElement(wrapper);
+        if (!question || question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) !== '1') {
+          return;
+        }
+
+        const result = question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_RESULT_ATTR);
+        if (result === QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT) {
+          map[index] = 'correct';
+          return;
+        }
+        if (result === QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT) {
+          map[index] = 'incorrect';
+        }
+      });
+
+      return map;
+    },
+
+    getSkippedStateMap(): Record<number, boolean> {
+      const root = this.$root ?? this.$el;
+      if (!root) {
+        return {};
+      }
+
+      const wrappers = Array.from(root.querySelectorAll<HTMLElement>(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER));
+      const map: Record<number, boolean> = {};
+
+      wrappers.forEach((wrapper) => {
+        const index = Number(wrapper.getAttribute(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER_ATTR));
+        if (Number.isNaN(index) || index < 1) {
+          return;
+        }
+        map[index] = false;
+      });
+
+      return map;
+    },
+
+    markCurrentAsSkipped() {
+      const index = this.currentIndex;
+      if (!index || index < 1 || index > this.totalQuestions) {
+        return;
+      }
+
+      if (this.revealStateByIndex[index]) {
+        this.skippedByIndex[index] = false;
+        return;
+      }
+
+      const attempted = this.isQuestionAttempted(index);
+      this.skippedByIndex[index] = !attempted;
     },
 
     scrollToQuestion() {
