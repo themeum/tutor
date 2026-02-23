@@ -162,12 +162,18 @@ abstract class BaseComponent {
 	protected function get_allowed_html_tags( $extra_tags = array() ) {
 
 		$allowed_html_tags = array(
-			'div'    => array(),
+			'div'    => array(
+				'class' => true,
+			),
+			'span'   => array(
+				'class' => true,
+			),
+			'p'      => array(
+				'class' => true,
+			),
 			'b'      => array(),
 			'strong' => array(),
 			'i'      => array(),
-			'em'     => array(),
-			'span'   => array(),
 		);
 
 		$allowed_html_tags = wp_parse_args( Input::allow_svg( array() ), $allowed_html_tags );
