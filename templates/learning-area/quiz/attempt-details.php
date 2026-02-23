@@ -48,7 +48,7 @@ $attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
 	</div>
 
 	<div class="tutor-surface-l1">
-		<?php tutor_load_template( 'learning-area.quiz.attempt-details.summary' ); ?>
+		<?php tutor_load_template( 'learning-area.quiz.attempt-details.summary', array( 'attempt_data' => $attempt_data ) ); ?>
 	</div>
 
 	<div class="tutor-quiz-summary-body">
