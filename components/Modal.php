@@ -64,7 +64,17 @@ class Modal extends BaseComponent {
 	 *
 	 * @var array
 	 */
-	protected $allowed_html = array();
+	protected $allowed_html_tags = array(
+		'span'   => array(
+			'class'  => true,
+			'x-text' => true,
+		),
+		'b'      => array(),
+		'strong' => array(),
+		'i'      => array(),
+		'em'     => array(),
+		'br'     => array(),
+	);
 
 	/**
 	 * Modal title.
@@ -194,15 +204,13 @@ class Modal extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $title Modal title.
-	 * @param string $esc_cb Callable escaping function.
-	 * @param array  $allowed_html the html to check before sanitization.
+	 * @param array  $allowed_html_tags the html to check before sanitization.
 	 *
 	 * @return $this
 	 */
-	public function title( string $title, $esc_cb = 'esc_html', array $allowed_html = array() ) {
-		$this->allowed_html = wp_parse_args( $allowed_html, $this->allowed_html );
-		$this->title        = $title;
-		$this->title_esc_cb = $esc_cb;
+	public function title( string $title, array $allowed_html_tags = array() ) {
+		$this->allowed_html_tags = wp_parse_args( $allowed_html_tags, $this->allowed_html_tags );
+		$this->title             = $title;
 		return $this;
 	}
 
@@ -327,11 +335,11 @@ class Modal extends BaseComponent {
 		}
 
 		$title_html = $this->title
-			? sprintf( '<div class="tutor-modal-title">%s</div>', $this->esc( $this->title, $this->title_esc_cb, $this->allowed_html ) )
+			? sprintf( '<div class="tutor-modal-title">%s</div>', $this->esc( $this->title, $this->title_esc_cb ) )
 			: '';
 
 		$subtitle_html = $this->subtitle
-			? sprintf( '<div class="tutor-modal-subtitle">%s</div>', $this->esc( $this->subtitle, $this->subtitle_esc_cb, $this->allowed_html ) )
+			? sprintf( '<div class="tutor-modal-subtitle">%s</div>', $this->esc( $this->subtitle, $this->subtitle_esc_cb ) )
 			: '';
 
 		return sprintf(
@@ -364,7 +372,7 @@ class Modal extends BaseComponent {
 				return $content ? $content : '';
 			}
 		} else {
-			$content = $this->esc( $this->body, $this->body_esc_cb, $this->allowed_html );
+			$content = $this->esc( $this->body, $this->body_esc_cb );
 		}
 
 		return sprintf( '<div class="tutor-modal-body">%s</div>', $content );

@@ -138,8 +138,8 @@ abstract class BaseComponent {
 	 *
 	 * @return string Escaped string.
 	 */
-	protected function esc( $value, $esc_fn = 'esc_html', array $allowed_html = array() ): string {
-		return count( $allowed_html ) ? call_user_func( $esc_fn, $value, $allowed_html ) : call_user_func( $esc_fn, $value );
+	protected function esc( $value, $esc_fn = 'esc_html' ): string {
+		return call_user_func( $esc_fn, $value );
 	}
 
 	/**
