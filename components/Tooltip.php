@@ -116,9 +116,11 @@ class Tooltip extends BaseComponent {
 	);
 
 	/**
-	 * Set the tooltip content.
+	 * Set and sanitize the tooltip content.
 	 *
-	 * @param string $content HTML or text content.
+	 * @param string                             $content HTML or text content.
+	 * @param array<string, array<string, bool>> $extra_tags Optional.
+	 *        Additional HTML tags and attributes in KSES-compatible format.
 	 *
 	 * @return $this
 	 */
