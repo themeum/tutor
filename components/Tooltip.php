@@ -122,8 +122,9 @@ class Tooltip extends BaseComponent {
 	 *
 	 * @return $this
 	 */
-	public function content( string $content ): self {
-		$this->content = $content;
+	public function content( string $content, $extra_tags = array() ): self {
+
+		$this->content = wp_kses( $content, $this->get_allowed_html_tags( $extra_tags ) );
 		return $this;
 	}
 
@@ -278,7 +279,7 @@ class Tooltip extends BaseComponent {
 			esc_attr( $this->attributes['class'] ?? '' ),
 			$this->get_attributes_string(),
 			$trigger_html,
-			wp_kses( $this->content, $this->allowed_attributes() )
+			$this->content
 		);
 
 		return $this->component_string;

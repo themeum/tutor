@@ -13,6 +13,8 @@
 
 namespace Tutor\Components;
 
+use TUTOR\Input;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -58,32 +60,6 @@ abstract class BaseComponent {
 	 * @var array
 	 */
 	protected $attributes = array();
-
-
-	/**
-	 * Allowed HTML tags and Alpine.js attributes
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var array
-	 */
-	protected $allowed_attributes = array();
-
-	/**
-	 * Allowed Alpine.js HTML attributes.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var array
-	 */
-	protected const ALLOWED_ALPINE_ATTRS = array(
-		'x-data',
-		'x-text',
-		'x-show',
-		'x-cloak',
-		'x-ref',
-		'x-transition',
-	);
 
 	/**
 	 * Set or merge multiple HTML attributes.
@@ -168,44 +144,36 @@ abstract class BaseComponent {
 	}
 
 	/**
-	 * Returns the allowed HTML attributes.
+	 * Retrieve the list of allowed HTML tags and attributes.
+	 *
+	 * Provides a base set of safe HTML tags and merges additional
+	 * SVG tags and any custom tags passed
+	 * through the $extra_tags parameter.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @return array
+	 * @param array<string, array<string, bool>> $extra_tags Optional.
+	 *        Additional HTML tags and their allowed attributes
+	 *        in KSES-compatible format.
+	 *
+	 * @return array<string, array<string, bool>> Allowed HTML tags
+	 *         and attributes formatted for wp_kses().
 	 */
-	public function allowed_attributes() {
+	protected function get_allowed_html_tags( $extra_tags = array() ) {
 
-		if ( empty( $this->allowed_attributes ) ) {
-			return wp_kses_allowed_html( 'post' );
-		}
+		$allowed_html_tags = array(
+			'div'    => array(),
+			'b'      => array(),
+			'strong' => array(),
+			'i'      => array(),
+			'em'     => array(),
+			'span'   => array(),
+		);
 
-		return $this->allowed_attributes;
-	}
+		$allowed_html_tags = wp_parse_args( Input::allow_svg( array() ), $allowed_html_tags );
+		$allowed_html_tags = wp_parse_args( $extra_tags, $allowed_html_tags );
 
-	/**
-	 * Add Alpine.js attributes to the allowed attribute-list.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array $attributes attribute map.
-	 *
-	 * @return $this
-	 */
-	public function add_x_attrs( array $attributes ) {
-
-		$allowed_attributes = self::allowed_attributes();
-
-		foreach ( $attributes as $tag => $attr ) {
-			$tag = sanitize_key( $tag );
-
-			if ( ! isset( $allowed_attributes[ $tag ][ $attr ] ) && in_array( $attr, self::ALLOWED_ALPINE_ATTRS, true ) ) {
-				$allowed_attributes[ $tag ][ $attr ] = true;
-			}
-		}
-
-		$this->allowed_attributes = $allowed_attributes;
-		return $this;
+		return $allowed_html_tags;
 	}
 
 	/**
