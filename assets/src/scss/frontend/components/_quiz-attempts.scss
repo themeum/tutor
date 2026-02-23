@@ -298,14 +298,14 @@
       }
 
       @include tutor-breakpoint-up(sm) {
-        &:hover {
+        &:hover:has(.tutor-quiz-item-result-more) {
           .tutor-quiz-item-result {
             .tutor-badge {
               display: none;
             }
 
             .tutor-quiz-item-result-more {
-              display: block;
+              display: flex;
             }
           }
         }

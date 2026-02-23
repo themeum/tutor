@@ -9,14 +9,28 @@
  * @since 4.0.0
  */
 
-use Tutor\Components\Button;
 use TUTOR\Icon;
+use TUTOR\Quiz_Attempts_List;
+use Tutor\Models\QuizModel;
+use Tutor\Components\Button;
 
 defined( 'ABSPATH' ) || exit;
 
 global $tutor_current_post, $tutor_course_id;
 
 $back_url = get_permalink( $tutor_current_post->ID );
+
+$is_quiz_details_hidden = Quiz_Attempts_List::is_attempt_details_hidden();
+
+if ( $is_quiz_details_hidden ) {
+	return;
+}
+
+$quiz_id = $tutor_current_post->ID;
+$user_id = get_current_user_id();
+
+$attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
+
 ?>
 <div class="tutor-quiz-summary-page">
 	<div class="tutor-quiz-summary-header">
@@ -34,7 +48,7 @@ $back_url = get_permalink( $tutor_current_post->ID );
 	</div>
 
 	<div class="tutor-surface-l1">
-		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.summary' ); ?>
+		<?php tutor_load_template( 'learning-area.quiz.attempt-details.summary' ); ?>
 	</div>
 
 	<div class="tutor-quiz-summary-body">
