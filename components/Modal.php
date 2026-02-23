@@ -356,7 +356,7 @@ class Modal extends BaseComponent {
 			return sprintf(
 				'<div class="tutor-modal-header">
 						<div class="tutor-flex tutor-items-center tutor-gap-4">
-							%1$s%3$s
+							%3$s%1$s
 						</div>
 						%2$s
 					</div>',
