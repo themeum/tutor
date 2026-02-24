@@ -28,6 +28,34 @@
   overflow: hidden;
 }
 
+@mixin tutor-scrollbar(
+  $width: 8px,
+  $thumb-color: $tutor-border-idle,
+  $thumb-hover-color: $tutor-icon-secondary,
+  $track-color: transparent,
+  $radius: $tutor-radius-full
+) {
+  scrollbar-width: thin;
+  scrollbar-color: $thumb-color $track-color;
+
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: $radius;
+
+    &:hover {
+      background: $thumb-hover-color;
+    }
+  }
+}
+
 @mixin tutor-focus-ring($color: 'brand') {
   $shadow: none;
 
