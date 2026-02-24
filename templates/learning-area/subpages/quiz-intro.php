@@ -9,11 +9,9 @@
  * @since 1.0.0
  */
 
-use TUTOR\Icon;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use TUTOR\Icon;
 
 // Sample quiz data - in real implementation, these would come from quiz settings.
 $quiz_title       = __( 'Quick Quiz', 'tutor' );
