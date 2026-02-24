@@ -247,7 +247,7 @@ class DateFilter extends BaseComponent {
 				<?php endif; ?>
 
 				<?php if ( $this->has_selection() ) : ?>
-					<span @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary">
+					<span @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary tutor-flex tutor-align-center">
 						<?php tutor_utils()->render_svg_icon( Icon::CROSS_2 ); ?>
 					</span>
 				<?php endif; ?>
