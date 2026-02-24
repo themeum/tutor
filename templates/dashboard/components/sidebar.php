@@ -110,3 +110,4 @@ $dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
 		</ul>
 	</div>
 </div>
+<?php tutor_load_template( 'dashboard.components.nav-mobile', array( 'dashboard_pages' => $dashboard_pages ) ); ?>
