@@ -1,4 +1,5 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
+import { TUTOR_CUSTOM_EVENTS } from '../constant';
 
 interface TinyMCEEditor {
   getContent(): string;
@@ -40,10 +41,6 @@ interface WPEditorComponent {
   setContent(this: AlpineComponent & WPEditorComponent, content: string): void;
 }
 
-/**
- * WordPress Editor Alpine.js Component
- * Integrates wp_editor (TinyMCE/QuickTags) with tutorForm validation system
- */
 export const wpEditor = (config: WPEditorConfig): WPEditorComponent => {
   const { name, editorId, placeholder = '' } = config;
 
@@ -113,7 +110,7 @@ export const wpEditor = (config: WPEditorConfig): WPEditorComponent => {
 
           // Dispatch custom focus event
           editor.on('focus', () => {
-            this.$el.dispatchEvent(new CustomEvent('editor-focus', { bubbles: true }));
+            this.$el.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.WP_EDITOR_FOCUS, { bubbles: true }));
           });
         } else {
           // Retry after a short delay
@@ -146,7 +143,7 @@ export const wpEditor = (config: WPEditorConfig): WPEditorComponent => {
 
         // Dispatch custom focus event
         textarea.addEventListener('focus', () => {
-          this.$el.dispatchEvent(new CustomEvent('editor-focus', { bubbles: true }));
+          this.$el.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.WP_EDITOR_FOCUS, { bubbles: true }));
         });
       }
     },
@@ -176,7 +173,7 @@ export const wpEditor = (config: WPEditorConfig): WPEditorComponent => {
 
     setupFormResetListener(this: AlpineComponent & WPEditorComponent) {
       // Listen for form reset events from tutorForm
-      window.addEventListener('tutor-form-reset', (event: Event) => {
+      window.addEventListener(TUTOR_CUSTOM_EVENTS.FORM_RESET, (event: Event) => {
         const customEvent = event as CustomEvent;
         const { formId, defaultValues } = customEvent.detail || {};
 
