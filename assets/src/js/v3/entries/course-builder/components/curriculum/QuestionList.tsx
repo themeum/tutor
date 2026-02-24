@@ -110,6 +110,12 @@ const questionTypeOptions: {
     icon: 'quizImageAnswer',
     isPro: true,
   },
+  {
+    label: __('Jigsaw', 'tutor'),
+    value: 'jigsaw',
+    icon: 'quizImageAnswer',
+    isPro: true,
+  },
 ];
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -230,7 +236,26 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                     is_correct: '1',
                   },
                 ]
-              : [],
+              : questionType === 'jigsaw'
+                ? [
+                    {
+                      _data_status: QuizDataStatus.NEW,
+                      is_saved: false,
+                      answer_id: nanoid(),
+                      answer_title: '',
+                      belongs_question_id: questionId,
+                      belongs_question_type: 'jigsaw',
+                      answer_two_gap_match: JSON.stringify({
+                        nbPieces: 12,
+                        shape: 0,
+                        rotationAllowed: false,
+                      }),
+                      answer_view_format: 'jigsaw',
+                      answer_order: 0,
+                      is_correct: '1',
+                    },
+                  ]
+                : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,

@@ -16,6 +16,7 @@ import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/quest
 import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/question-types/OpenEndedAndShortAnswer';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import DrawImage from '@CourseBuilderComponents/curriculum/question-types/DrawImage';
+import Jigsaw from '@CourseBuilderComponents/curriculum/question-types/Jigsaw';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { tutorConfig } from '@TutorShared/config/config';
@@ -56,6 +57,7 @@ const QuestionForm = () => {
     image_answering: <ImageAnswering key={activeQuestionId} />,
     ordering: <MultipleChoiceAndOrdering key={activeQuestionId} />,
     draw_image: <DrawImage key={activeQuestionId} />,
+    jigsaw: <Jigsaw key={activeQuestionId} />,
   } as const;
 
   useEffect(() => {

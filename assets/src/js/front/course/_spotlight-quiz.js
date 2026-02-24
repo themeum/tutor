@@ -2,7 +2,7 @@ window.jQuery(document).ready($ => {
     const { __ } = window.wp.i18n;
 
     // Currently only these types of question supports answer reveal mode.
-    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice', 'draw_image'];
+    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice', 'draw_image', 'jigsaw'];
 
     let quiz_options = _tutorobject.quiz_options
     let interactions = new Map();
@@ -108,6 +108,11 @@ window.jQuery(document).ready($ => {
             $question_wrap.find('.tutor-draw-image-reference-wrapper').removeClass('tutor-d-none');
             goNext = true;
         }
+        // Reveal mode for jigsaw: show explanation.
+        if (is_reveal_mode() && $question_wrap.data('question-type') === 'jigsaw') {
+            $question_wrap.find('.tutor-quiz-explanation-wrapper').removeClass('tutor-d-none');
+            goNext = true;
+        }
 
         if (validatedTrue) {
             goNext = true;
@@ -172,9 +177,20 @@ window.jQuery(document).ready($ => {
                     var $maskInput = $required_answer_wrap.find('input[name*="[answers][mask]"]');
                     if ($maskInput.length && !$maskInput.val().trim().length) {
                         $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please draw on the image to answer this question.', 'tutor')}</p>`);
-                        validated = false;
+                        $question_wrap.find('.tutor-quiz-next-btn-all').prop('disabled', true);
+                        return;
                     }
-                } else if ($type === 'radio') {
+                }
+                // Jigsaw: require [answers][solved] to have value "solved".
+                if ($question_wrap.data('question-type') === 'jigsaw') {
+                    var $solvedInput = $required_answer_wrap.find('input[name*="[answers][solved]"]');
+                    if ($solvedInput.length && $solvedInput.val() !== 'solved') {
+                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please solve the puzzle to answer this question.', 'tutor')}</p>`);
+                        $question_wrap.find('.tutor-quiz-next-btn-all').prop('disabled', true);
+                        return;
+                    }
+                }
+                else if ($type === 'radio') {
                     if ($required_answer_wrap.find('input[type="radio"]:checked').length == 0) {
                         $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please select an option to answer', 'tutor')}</p>`);
                         validated = false;
@@ -235,6 +251,12 @@ window.jQuery(document).ready($ => {
 
     $(document).on('change', '.quiz-attempt-single-question input[name*="[answers][mask]"]', function () {
         if ($('.tutor-quiz-time-expired').length === 0 && $(this).val().trim().length) {
+            $('.tutor-quiz-next-btn-all').prop('disabled', false);
+        }
+    });
+
+    $(document).on('change', '.quiz-attempt-single-question input[name*="[answers][solved]"]', function () {
+        if ($('.tutor-quiz-time-expired').length === 0 && $(this).val() === 'solved') {
             $('.tutor-quiz-next-btn-all').prop('disabled', false);
         }
     });
