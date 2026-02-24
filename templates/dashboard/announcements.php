@@ -9,6 +9,8 @@
  * @since 1.7.9
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
@@ -22,10 +24,6 @@ use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 $limit        = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );

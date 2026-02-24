@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Course_List;
 use TUTOR\Icon;
 use TUTOR\Input;

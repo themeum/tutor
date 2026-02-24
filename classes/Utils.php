@@ -9545,10 +9545,15 @@ class Utils {
 	 * Get total number of contents & completed contents that belongs to this topic.
 	 *
 	 * @since 2.0.0
+	 * @since 4.0.0 Return percentage of completed contents.
 	 *
 	 * @param int $topic_id | all contents will be checked that belong to this topic.
 	 *
-	 * @return array counted number of contents & completed contents number.
+	 * @return array {
+	 *     contents:int,
+	 *     completed:int,
+	 *     percentage:float
+	 * }
 	 */
 	public function count_completed_contents_by_topic( int $topic_id ): array {
 		$topic_id  = sanitize_text_field( $topic_id );
@@ -9606,9 +9611,14 @@ class Utils {
 				}
 			}
 		}
+
+		$total_contents = $this->count( $contents );
+		$percentage     = $total_contents > 0 ? ( $completed / $total_contents ) * 100 : 0;
+
 		return array(
-			'contents'  => is_array( $contents ) ? count( $contents ) : 0,
+			'contents'  => $total_contents,
 			'completed' => $completed,
+			'percentage' => $percentage,
 		);
 	}
 
