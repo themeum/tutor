@@ -108,13 +108,15 @@ const FormJigsaw = ({ field }: FormJigsawProps) => {
     },
     onChange: (file) => {
       if (file && !Array.isArray(file) && option) {
+        const nextStatus = calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE);
         updateOption({
-          ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
-            _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
+          ...(nextStatus && {
+            _data_status: nextStatus as QuizDataStatus,
           }),
           image_id: file.id,
           image_url: file.url,
           answer_two_gap_match: JSON.stringify({ ...config }),
+          is_saved: true,
         });
       }
     },
@@ -236,20 +238,6 @@ const FormJigsaw = ({ field }: FormJigsawProps) => {
                 </option>
               ))}
             </select>
-          </div>
-
-          <div css={styles.configRow}>
-            <label css={styles.switchLabel}>
-              <input
-                type="checkbox"
-                css={styles.checkbox}
-                checked={config.rotationAllowed}
-                onChange={(e) => setConfig({ rotationAllowed: e.target.checked })}
-                aria-label={__('Enable rotation', __TUTOR_TEXT_DOMAIN__)}
-              />
-              <span>{__('Enable rotation', __TUTOR_TEXT_DOMAIN__)}</span>
-            </label>
-            <p css={styles.hint}>{__('Pieces can be rotated; students tap/click to rotate.', __TUTOR_TEXT_DOMAIN__)}</p>
           </div>
         </div>
       </Show>
