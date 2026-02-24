@@ -9,6 +9,7 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
 ?>
 <!--update announcements modal-->
 <div class="tutor-modal-wrap tutor-announcements-modal-wrap tutor-accouncement-update-modal">

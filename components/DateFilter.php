@@ -14,9 +14,7 @@ use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Components\Constants\Size;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * DateFilter Component Class.
