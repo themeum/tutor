@@ -15,7 +15,6 @@ use TUTOR\Input;
 use TUTOR\Instructor;
 use TUTOR_REPORT\Analytics;
 use Tutor\Models\CourseModel;
-use Tutor\Helpers\QueryHelper;
 use Tutor\Models\WithdrawModel;
 use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
@@ -46,12 +45,12 @@ $sortable_sections = array(
 		'is_active' => true,
 		'order'     => 3,
 	),
-	array(
-		'id'        => 'upcoming_tasks_and_activity',
-		'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
-		'is_active' => true,
-		'order'     => 4,
-	),
+	// array(
+	// 'id'        => 'upcoming_tasks_and_activity',
+	// 'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
+	// 'is_active' => true,
+	// 'order'     => 4,
+	// ),
 	array(
 		'id'        => 'recent_reviews',
 		'label'     => esc_html__( 'Recent Student Reviews', 'tutor' ),
@@ -399,7 +398,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 	<div 
 		data-section-id="current_stats" 
 		class="tutor-flex tutor-gap-5 tutor-z-positive"					
-		:class="{ 'tutor-hidden':  !watch('current_stats')}"
+		x-show="watch('current_stats')"
 	>
 		<?php foreach ( $stat_cards as $card ) : ?>
 			<div class="tutor-flex-1">
@@ -422,18 +421,19 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 
 	<!-- Overview Chart -->
 	<?php
-	tutor_load_template(
-		'dashboard.instructor.home.overview-chart',
-		array(
-			'overview_chart_data' => $overview_chart_data,
-		)
-	);
+	if ( $overview_chart_data ) :
+		tutor_load_template(
+			'dashboard.instructor.home.overview-chart',
+			array(
+				'overview_chart_data' => $overview_chart_data,
+			)
+		);
+	endif;
 	?>
-
 	<div 
 		data-section-id="course_completion_and_leader" 
 		class="tutor-flex tutor-gap-6"
-		:class="{ 'tutor-hidden':  !watch('course_completion_and_leader')}"
+		x-show="watch('course_completion_and_leader')"
 	>
 		<!-- Course Completion Chart -->
 		<?php
@@ -473,7 +473,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 		<div 
 			data-section-id="top_performing_courses"
 			class="tutor-dashboard-home-card"
-			:class="{ 'tutor-hidden':  !watch('top_performing_courses')}"
+			x-show="watch('top_performing_courses')"
 		> 
 			<div class="tutor-flex tutor-row tutor-justify-between tutor-align-center tutor-gap-9">
 				<div class="tutor-small">
@@ -517,7 +517,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 		<div
 			data-section-id="upcoming_tasks_and_activity"
 			class="tutor-flex tutor-gap-6"
-			:class="{ 'tutor-hidden':  !watch('upcoming_tasks_and_activity')}"
+			x-show="watch('upcoming_tasks_and_activity')"
 		>
 			<!-- Upcoming Tasks -->
 			<div class="tutor-dashboard-home-card tutor-flex-1">
@@ -564,7 +564,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 		<div 
 			data-section-id="recent_reviews" 
 			class="tutor-dashboard-home-card"
-			:class="{ 'tutor-hidden':  !watch('recent_reviews')}"
+			x-show="watch('recent_reviews')"
 		>
 			<div class="tutor-small">
 				<?php esc_html_e( 'Recent Student Reviews', 'tutor' ); ?>
