@@ -22,6 +22,8 @@ if ( ! $quiz_id ) {
 
 $questions           = tutor_utils()->get_questions_by_quiz( $quiz_id );
 $question_status_map = array();
+$first_question_id   = is_array( $questions ) && ! empty( $questions ) ? (int) ( $questions[0]->question_id ?? 0 ) : 0;
+$first_question_id   = $first_question_id > 0 ? $first_question_id : '';
 
 if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_data->attempt_id ) ) {
 	$attempt_answers = QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
@@ -53,7 +55,12 @@ if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_d
 }
 ?>
 
-<div class="tutor-quiz-summary-sidebar">
+<div
+	class="tutor-quiz-summary-sidebar"
+	x-data="tutorQuizSummarySidebar({
+		firstQuestionId: '<?php echo esc_js( (string) $first_question_id ); ?>'
+	})"
+>
 	<h3 class="tutor-h3 tutor-mb-10">
 		<?php esc_html_e( 'Quiz questions', 'tutor' ); ?>
 	</h3>
@@ -77,14 +84,17 @@ if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_d
 				}
 
 				$classes = array( 'tutor-quiz-sidebar-question-item' );
-				if ( 0 === (int) $index ) {
-					$classes[] = 'active';
-				}
 				if ( $item_status_class ) {
 					$classes[] = $item_status_class;
 				}
 				?>
-				<a href="#" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+				<a
+					href="#question-<?php echo esc_attr( $question_id ); ?>"
+					class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>"
+					data-question-id="<?php echo esc_attr( $question_id ); ?>"
+					:class="{ 'active': String(activeQuestionId) === '<?php echo esc_attr( $question_id ); ?>' }"
+					@click.prevent="setActiveQuestion('<?php echo esc_attr( $question_id ); ?>')"
+				>
 					<div class="tutor-question-number"><?php echo esc_html( (int) $index + 1 ); ?>.</div>
 					<div class="tutor-question-content">
 						<?php echo esc_html( wp_strip_all_tags( (string) ( $question->question_title ?? '' ) ) ); ?>

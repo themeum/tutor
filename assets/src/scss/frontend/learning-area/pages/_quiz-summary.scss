@@ -89,7 +89,7 @@
 
         &.active {
           background-color: $tutor-surface-l1;
-          border: 1px solid $tutor-border-idle;
+          outline: 1px solid $tutor-border-idle;
           border-radius: $tutor-radius-md;
         }
 
