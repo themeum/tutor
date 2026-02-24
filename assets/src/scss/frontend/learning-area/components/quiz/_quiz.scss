@@ -1065,6 +1065,11 @@ $tutor-quiz-content-bottom-offset: calc(
             background-color: $tutor-surface-l1;
             padding: 0 $tutor-spacing-4;
 
+            // Hide dnd-kit's default drop-back animation frame for matching draggables.
+            &[data-dnd-dragging][data-dnd-dropping] {
+              opacity: 0 !important;
+            }
+
             [data-title] {
               @include tutor-typography('small');
               @include tutor-flex(row, center, flex-start);
