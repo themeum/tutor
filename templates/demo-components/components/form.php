@@ -1020,25 +1020,25 @@ use Tutor\Components\Constants\InputType;
 							</button>
 						</div>
 
-							<!-- Focus Field -->
-							<div>
-								<button 
-									onclick="TutorCore.form.setFocus('profile-form', 'firstName', { shouldSelect: true })"
-									class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
+						<!-- Focus Field -->
+						<div>
+							<button 
+								onclick="TutorCore.form.setFocus('profile-form', 'firstName', { shouldSelect: true })"
+								class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
 							>
-									🎯 Focus First Name
-								</button>
-							</div>
+								🎯 Focus First Name
+							</button>
+						</div>
 
-							<!-- Focus Date -->
-							<div>
-								<button 
-									onclick="TutorCore.form.setFocus('profile-form', 'profilePublishDate')"
-									class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
-								>
-									🎯 Focus Publish Date
-								</button>
-							</div>
+						<!-- Focus Date -->
+						<div>
+							<button 
+								onclick="TutorCore.form.setFocus('profile-form', 'profilePublishDate')"
+								class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
+							>
+								🎯 Focus Publish Date
+							</button>
+						</div>
 
 						<!-- Reset Form -->
 						<div>
