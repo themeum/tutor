@@ -15,7 +15,6 @@ export interface TimeInputProps extends PopoverProps {
   clearable?: boolean;
   name?: string;
   required?: boolean | string;
-  validTime?: boolean | string | { message: string };
   onChange?: (value: string) => void;
 }
 
@@ -88,7 +87,6 @@ export const timeInput = (props: TimeInputProps = {}) => {
     clearable: props.clearable ?? defaultProps.clearable,
     name: props.name ?? defaultProps.name,
     required: props.required ?? defaultProps.required,
-    validTime: props.validTime ?? false,
     onChange: props.onChange,
 
     init() {
@@ -398,12 +396,11 @@ export const timeInput = (props: TimeInputProps = {}) => {
 
         const rules: ValidationRules = {
           numberOnly: false,
+          validTime: true,
         };
+
         if (this.required) {
           rules.required = this.required;
-        }
-        if (this.validTime) {
-          rules.validTime = this.validTime;
         }
 
         alpineData.register(this.name, rules);

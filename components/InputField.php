@@ -388,17 +388,6 @@ class InputField extends BaseComponent {
 	protected $interval = 30;
 
 	/**
-	 * Time validation rule for time input.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var bool|string
-	 */
-	protected $valid_time = false;
-
-
-
-	/**
 	 * Whether to show password strength meter.
 	 *
 	 * @since 4.0.0
@@ -883,19 +872,6 @@ class InputField extends BaseComponent {
 		return $this;
 	}
 
-	/**
-	 * Set valid time rule for time input.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param bool|string $valid_time Rule flag or custom message.
-	 *
-	 * @return self
-	 */
-	public function valid_time( $valid_time = true ): self {
-		$this->valid_time = $valid_time;
-		return $this;
-	}
 	/**
 	 * Set whether to show password strength meter.
 	 *
@@ -1803,15 +1779,14 @@ class InputField extends BaseComponent {
 			'clearable'   => $this->clearable,
 			'required'    => $this->required,
 			'interval'    => $this->interval,
-			'validTime'   => $this->valid_time,
 		);
 
 		$props_json = htmlspecialchars( wp_json_encode( $props ), ENT_QUOTES, 'UTF-8' );
 		$input_icon = $this->left_icon;
-		if ( empty( $input_icon ) && function_exists( 'tutor_utils' ) ) {
+		if ( empty( $input_icon ) ) {
 			$input_icon = tutor_utils()->get_svg_icon( Icon::CLOCK, 20, 20 );
 		}
-		$clear_icon = function_exists( 'tutor_utils' ) ? tutor_utils()->get_svg_icon( Icon::CROSS, 12, 12 ) : '';
+		$clear_icon = tutor_utils()->get_svg_icon( Icon::CROSS, 12, 12 );
 
 		return sprintf(
 			'<div

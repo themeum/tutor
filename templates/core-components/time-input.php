@@ -10,14 +10,13 @@ use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
 
-$placeholder = $placeholder ?? __( 'Select time', 'tutor' );
-$value       = isset( $value ) ? (string) $value : '';
-$interval    = isset( $interval ) ? (int) $interval : 30;
-$disabled    = isset( $disabled ) ? (bool) $disabled : false;
-$clearable   = isset( $clearable ) ? (bool) $clearable : true;
-$name        = $name ?? '';
-$required    = $required ?? false;
-$valid_time  = $valid_time ?? false;
+$placeholder   = $placeholder ?? __( 'Select time', 'tutor' );
+$value         = isset( $value ) ? (string) $value : '';
+$interval      = isset( $interval ) ? (int) $interval : 30;
+$disabled      = isset( $disabled ) ? (bool) $disabled : false;
+$clearable     = isset( $clearable ) ? (bool) $clearable : true;
+$name          = $name ?? '';
+$required      = $required ?? false;
 $wrapper_class = $wrapper_class ?? 'tutor-time-input tutor-input-field';
 
 $props = array(
@@ -28,7 +27,6 @@ $props = array(
 	'clearable'   => $clearable,
 	'name'        => $name,
 	'required'    => $required,
-	'validTime'   => $valid_time,
 );
 
 ?>

@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 				<?php echo esc_html__( 'Default (30 minute interval)', 'tutor' ); ?>
 			</h4>
 			<?php
-			echo InputField::make()
+			InputField::make()
 				->type( InputType::TIME )
 				->name( 'start_time' )
 				->value( '02:30 PM' )
@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 				<?php echo esc_html__( '15 minute interval', 'tutor' ); ?>
 			</h4>
 			<?php
-			echo InputField::make()
+			InputField::make()
 				->type( InputType::TIME )
 				->name( 'meeting_time' )
 				->interval( 15 )
@@ -55,7 +55,7 @@ defined( 'ABSPATH' ) || exit;
 				<?php echo esc_html__( 'Using InputField with InputType::TIME.', 'tutor' ); ?>
 			</p>
 			<?php
-			echo InputField::make()
+			InputField::make()
 				->type( InputType::TIME )
 				->name( 'builder_class_time' )
 				->label( __( 'Class Time (Builder)', 'tutor' ) )
@@ -90,14 +90,13 @@ defined( 'ABSPATH' ) || exit;
 				class="tutor-max-w-md tutor-space-y-5"
 			>
 				<?php
-				echo InputField::make()
+				InputField::make()
 					->type( InputType::TIME )
 					->name( 'demo_class_time' )
 					->label( __( 'Class Time', 'tutor' ) )
 					->placeholder( __( 'Select class time', 'tutor' ) )
 					->clearable()
 					->required( __( 'Class time is required', 'tutor' ) )
-					->valid_time( __( 'Please enter a valid time (e.g. 02:30 PM)', 'tutor' ) )
 					->help_text( __( 'Choose when the class starts', 'tutor' ) )
 					->render();
 				?>
