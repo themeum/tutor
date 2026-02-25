@@ -10,7 +10,7 @@ use Tutor\Components\Constants\Variant;
 use TUTOR\Icon;
 use Tutor\Components\Button;
 
-$active_nav = 'profile';
+$active_nav = '';
 
 if ( ! empty( $dashboard_pages ) && is_array( $dashboard_pages ) && empty( $dashboard_pages_more_items ) ) {
 	$dashboard_pages_more_items = array_slice( $dashboard_pages, 4, null, true );
