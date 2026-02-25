@@ -1,5 +1,4 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { __ } from '@wordpress/i18n';
@@ -263,10 +262,6 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
         el.addEventListener('focus', () => this.syncCalendarWithInputValue());
         el.addEventListener('click', () => this.syncCalendarWithInputValue());
         el.addEventListener('click', (e) => this.handleNavigationClick(e));
-        el.addEventListener(TUTOR_CUSTOM_EVENTS.CALENDAR_SYNC, (event: Event) => {
-          const customEvent = event as CustomEvent<{ value?: string }>;
-          this.syncCalendarWithInputValue(customEvent.detail?.value);
-        });
         el.addEventListener('click', (e) => this.handlePresetClick(e));
         el.addEventListener('click', (e) => this.handleActionClick(e));
         window.addEventListener('popstate', this.updateActivePreset);

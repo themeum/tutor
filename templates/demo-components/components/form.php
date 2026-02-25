@@ -849,9 +849,9 @@ use Tutor\Components\Constants\InputType;
 						</div>
 
 							<!-- Email -->
-							<div class="tutor-input-field tutor-mb-4" :class="{
-								'tutor-input-field-error': errors.profileEmail,
-							}">
+						<div class="tutor-input-field tutor-mb-4" :class="{
+							'tutor-input-field-error': errors.profileEmail,
+						}">
 							<label for="profileEmail" class="tutor-label tutor-label-required">Email</label>
 							<div class="tutor-input-wrapper">
 								<input 
@@ -875,10 +875,10 @@ use Tutor\Components\Constants\InputType;
 									<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ) ); ?>
 								</button>
 							</div>
-								<div class="tutor-error-text" x-cloak x-show="errors.profileEmail" x-text="errors?.profileEmail?.message" role="alert" aria-live="polite"></div>
-							</div>
+							<div class="tutor-error-text" x-cloak x-show="errors.profileEmail" x-text="errors?.profileEmail?.message" role="alert" aria-live="polite"></div>
+						</div>
 
-							<?php
+						<?php
 							InputField::make()
 								->type( InputType::DATE )
 								->name( 'profilePublishDate' )
@@ -904,10 +904,10 @@ use Tutor\Components\Constants\InputType;
 								->attr( 'class', 'tutor-mb-4' )
 								->attr( 'x-bind', "register('profilePublishDateTime', { required: 'Publish date time is required' })" )
 								->render();
-							?>
+						?>
 
-							<div class="tutor-flex tutor-gap-3">
-								<button 
+						<div class="tutor-flex tutor-gap-3">
+							<button 
 								type="submit" 
 								class="tutor-btn tutor-btn-primary"
 								:disabled="isSubmitting"
@@ -941,8 +941,8 @@ use Tutor\Components\Constants\InputType;
 									firstName: 'Jane',
 									lastName: 'Smith',
 									profileEmail: 'jane.smith@example.com',
-									profilePublishDate: '2026-02-25',
-									profilePublishDateTime: '2026-02-25 10:30 AM'
+									profilePublishDate: '2026-03-25',
+									profilePublishDateTime: '2026-03-25 10:30 AM'
 								}, { shouldValidate: true })"
 								class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
 							>
