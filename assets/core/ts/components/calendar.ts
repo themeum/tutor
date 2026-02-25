@@ -1,6 +1,3 @@
-import { type AlpineComponentMeta } from '@Core/ts/types';
-import { tutorConfig } from '@TutorShared/config/config';
-import { DateFormats } from '@TutorShared/config/constants';
 import { __ } from '@wordpress/i18n';
 import {
   endOfMonth,
@@ -13,9 +10,12 @@ import {
   subMonths,
   subYears,
 } from 'date-fns';
-import { type Calendar, Calendar as VanillaCalendar } from 'vanilla-calendar-pro';
-import type OptionsCalendar from 'vanilla-calendar-pro/options';
-// @ts-ignore
+
+import { type AlpineComponentMeta } from '@Core/ts/types';
+import { tutorConfig } from '@TutorShared/config/config';
+import { DateFormats } from '@TutorShared/config/constants';
+import { type Calendar, type Options, Calendar as VanillaCalendar } from 'vanilla-calendar-pro';
+
 import 'vanilla-calendar-pro/styles/index.css';
 
 const PRESETS = {
@@ -42,7 +42,7 @@ const PRESET_LABELS: Record<Preset, string> = {
   [PRESETS.LAST_YEAR]: __('Last year', 'tutor'),
 };
 
-export function calendar({ options, hidePopover }: { options: OptionsCalendar; hidePopover?: () => void }) {
+export function calendar({ options, hidePopover }: { options: Options; hidePopover?: () => void }) {
   return {
     $el: undefined as HTMLElement | HTMLInputElement | undefined,
     $nextTick: null as unknown as (callback: () => void) => void,
@@ -87,9 +87,7 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
         return;
       }
 
-      const formElement = inputElement.closest(
-        'form[x-data*="tutorForm"], form[x-data*="form("]',
-      ) as HTMLElement | null;
+      const formElement = inputElement.closest('form[x-data*="tutorForm"]') as HTMLElement | null;
       if (!formElement) {
         return;
       }
