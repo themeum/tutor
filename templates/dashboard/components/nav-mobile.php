@@ -23,9 +23,14 @@ if ( ! empty( $dashboard_pages ) && is_array( $dashboard_pages ) && empty( $dash
 		<?php
 		foreach ( $dashboard_pages as $key => $item ) {
 			$active_class = ( $key === $active_nav ) ? 'active' : '';
+			$menu_link    = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
+			// Add new menu item property "url" for custom link.
+			if ( isset( $dashboard_page['url'] ) ) {
+				$menu_link = $dashboard_page['url'];
+			}
 			?>
 			<li>
-				<a class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $item['url'] ?? '#' ); ?>">
+				<a class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $menu_link ?? '#' ); ?>">
 					<?php if ( isset( $item['image'] ) ) : ?>
 						<img 
 							src="<?php echo esc_url( $item['image'] ); ?>" 
@@ -37,7 +42,7 @@ if ( ! empty( $dashboard_pages ) && is_array( $dashboard_pages ) && empty( $dash
 					<?php else : ?>
 						<?php tutor_utils()->render_svg_icon( ( $key === $active_nav ) ? $item['active_icon'] : $item['icon'], 20, 20 ); ?>
 					<?php endif; ?>
-					<span><?php echo esc_html( $item['title'] ); ?></span>
+					<span class="tutor-tiny"><?php echo esc_html( $item['title'] ); ?></span>
 				</a>
 			</li>
 			<?php
@@ -74,14 +79,19 @@ if ( ! empty( $dashboard_pages ) && is_array( $dashboard_pages ) && empty( $dash
 			>
 				<ul>
 					<?php
-					foreach ( $dashboard_pages_more_items as $m_key => $m_item ) {
-						$active_class = ( $m_key === $active_nav ) ? 'active' : '';
-						$icon         = ( $m_key === $active_nav ) ? $m_item['active_icon'] : $m_item['icon'];
+					foreach ( $dashboard_pages_more_items as $key => $item ) {
+						$active_class = ( $key === $active_nav ) ? 'active' : '';
+						$icon         = ( $key === $active_nav ) ? $item['active_icon'] : $item['icon'];
+						$menu_link    = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
+						// Add new menu item property "url" for custom link.
+						if ( isset( $dashboard_page['url'] ) ) {
+							$menu_link = $dashboard_page['url'];
+						}
 						?>
 							<li role="none">
-								<a role="menuitem" class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $m_item['url'] ?? '#' ); ?>" @click="open = false">
+								<a role="menuitem" class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $menu_link ?? '#' ); ?>" @click="open = false">
 								<?php tutor_utils()->render_svg_icon( $icon, 18, 18 ); ?>
-									<span><?php echo esc_html( $m_item['title'] ); ?></span>
+									<span class="tutor-tiny"><?php echo esc_html( $item['title'] ); ?></span>
 								</a>
 							</li>
 						<?php
