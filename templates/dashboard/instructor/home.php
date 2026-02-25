@@ -398,7 +398,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 	<!-- Stat cards -->
 	<div 
 		data-section-id="current_stats" 
-		class="tutor-flex tutor-gap-5 tutor-z-positive"					
+		class="tutor-flex tutor-flex-wrap tutor-gap-5 tutor-z-positive"					
 		:class="{ 'tutor-hidden':  !watch('current_stats')}"
 	>
 		<?php foreach ( $stat_cards as $card ) : ?>
