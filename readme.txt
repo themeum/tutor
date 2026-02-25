@@ -321,8 +321,8 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.9.7 - Feb 25, 2026
 
-Fix: SQL injection security vulnerabilities.
-Fix: Stripe order automatically cancelled in certain cases.
+Fix: Resolved SQL injection security vulnerabilities to enhance system security.
+Fix: Fixed an issue where Stripe orders were automatically canceled in certain cases.
 
 = 3.9.6 - Jan 28, 2026
 
