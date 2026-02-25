@@ -1,6 +1,6 @@
 <?php
 /**
- * Tutor dashboard sidebar.
+ * Tutor dashboard header.
  *
  * @package Tutor\Templates
  * @author Themeum <support@themeum.com>

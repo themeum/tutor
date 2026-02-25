@@ -2,7 +2,10 @@
 /**
  * Tutor dashboard sidebar.
  *
- * @package tutor
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
+ * @link https://www.themeum.com/
+ * @since 4.0.0
  */
 
 global $wp_query;
@@ -110,10 +113,12 @@ $dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
 		</ul>
 	</div>
 </div>
-<?php tutor_load_template(
-	'dashboard.components.nav-mobile',
-	array(
-		'dashboard_pages'     => $dashboard_pages,
-		'dashboard_page_slug' => $dashboard_page_slug,
-	)
-); ?>
+<?php
+	tutor_load_template(
+		'dashboard.components.nav-mobile',
+		array(
+			'dashboard_pages'     => $dashboard_pages,
+			'dashboard_page_slug' => $dashboard_page_slug,
+		)
+	);
+	?>
