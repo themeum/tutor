@@ -71,6 +71,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
     "path": "^0.12.7",
+    "prettier": "^3.8.1",
     "sass": "^1.62.1",
     "sass-loader": "^16.0.5",
     "source-map": "^0.7.4",
