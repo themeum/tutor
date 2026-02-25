@@ -1,7 +1,4 @@
 import type { LocalStorageKeys } from '@TutorShared/config/constants';
-import { EventEmitter } from 'events';
-
-export const localStorageEventEmitter = new EventEmitter();
 
 export const setToLocalStorage = (key: LocalStorageKeys, value: string) => {
   localStorage.setItem(key, value);
