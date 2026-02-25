@@ -1,4 +1,5 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { __ } from '@wordpress/i18n';
@@ -48,6 +49,96 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
     $nextTick: null as unknown as (callback: () => void) => void,
     calendar: null as Calendar | null,
 
+    parseInputValue(inputValue: string): { selectedDates: string[]; selectedTime: string } {
+      const normalizedValue = inputValue.trim();
+
+      if (!normalizedValue) {
+        return { selectedDates: [], selectedTime: '' };
+      }
+
+      const [datePart, ...timeParts] = normalizedValue.split(' ');
+      const selectedDates = datePart ? [datePart] : [];
+      const selectedTime = timeParts.join(' ').trim();
+
+      return { selectedDates, selectedTime };
+    },
+
+    syncCalendarWithInputValue(inputValue?: string): void {
+      if (!this.calendar || !this.calendar.context.inputElement) {
+        return;
+      }
+
+      const value = inputValue ?? this.calendar.context.inputElement.value;
+      const { selectedDates, selectedTime } = this.parseInputValue(value);
+
+      this.calendar.set({
+        selectedDates,
+        selectedTime: selectedTime || undefined,
+      });
+    },
+
+    setupFormIntegration(): void {
+      if (!options.inputMode || !(this.$el instanceof HTMLInputElement)) {
+        return;
+      }
+
+      const inputElement = this.$el;
+      const fieldName = inputElement.name;
+      if (!fieldName) {
+        return;
+      }
+
+      const formElement = inputElement.closest(
+        'form[x-data*="tutorForm"], form[x-data*="form("]',
+      ) as HTMLElement | null;
+      if (!formElement) {
+        return;
+      }
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const alpineData = window.Alpine?.$data(formElement) as any;
+        if (!alpineData || typeof alpineData.setValue !== 'function') {
+          return;
+        }
+
+        const inputValue = inputElement.value?.trim() ?? '';
+        const formValue = alpineData.values?.[fieldName];
+        const normalizedFormValue = formValue == null ? '' : String(formValue).trim();
+
+        // Keep initial input value as the form baseline default when form has no value yet.
+        if (!normalizedFormValue && inputValue) {
+          alpineData.setValue(fieldName, inputValue, {
+            shouldValidate: false,
+            shouldTouch: false,
+            shouldDirty: false,
+          });
+
+          if (alpineData.fields?.[fieldName]) {
+            alpineData.fields[fieldName].defaultValue = inputValue;
+          }
+        } else if (normalizedFormValue && normalizedFormValue !== inputValue) {
+          inputElement.value = normalizedFormValue;
+          this.syncCalendarWithInputValue(normalizedFormValue);
+        }
+
+        // Watch external form updates (setValue/reset/setValues) and keep calendar state in sync.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const component = this as unknown as { $watch?: (path: string, cb: (value: any) => void) => void };
+        component.$watch?.(`values.${fieldName}`, (newValue) => {
+          const normalizedValue = newValue == null ? '' : String(newValue).trim();
+          if (inputElement.value !== normalizedValue) {
+            inputElement.value = normalizedValue;
+          }
+
+          this.syncCalendarWithInputValue(normalizedValue);
+        });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('Failed to integrate calendar with form:', error);
+      }
+    },
+
     init(): void {
       if (!this.$el) return;
 
@@ -60,11 +151,9 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
 
         // For input mode
         if (options.inputMode && (el as HTMLInputElement).value) {
-          const parts = (el as HTMLInputElement).value.split(' ');
-          selectedDates.push(parts[0]);
-          if (parts.length > 1) {
-            selectedTime = parts.slice(1).join(' ');
-          }
+          const parsedValue = this.parseInputValue((el as HTMLInputElement).value);
+          selectedDates.push(...parsedValue.selectedDates);
+          selectedTime = parsedValue.selectedTime;
         } else {
           // For filter mode
           const startDate = url.searchParams.get('start_date');
@@ -165,8 +254,19 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
         });
 
         this.calendar.init();
+        if (options.inputMode) {
+          this.syncCalendarWithInputValue((el as HTMLInputElement).value);
+          this.setupFormIntegration();
+        }
         this.updateActivePreset();
 
+        el.addEventListener('focus', () => this.syncCalendarWithInputValue());
+        el.addEventListener('click', () => this.syncCalendarWithInputValue());
+        el.addEventListener('click', (e) => this.handleNavigationClick(e));
+        el.addEventListener(TUTOR_CUSTOM_EVENTS.CALENDAR_SYNC, (event: Event) => {
+          const customEvent = event as CustomEvent<{ value?: string }>;
+          this.syncCalendarWithInputValue(customEvent.detail?.value);
+        });
         el.addEventListener('click', (e) => this.handlePresetClick(e));
         el.addEventListener('click', (e) => this.handleActionClick(e));
         window.addEventListener('popstate', this.updateActivePreset);
@@ -191,6 +291,13 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       } else if (action === 'clear') {
         this.clear();
       }
+    },
+
+    handleNavigationClick(e: Event) {
+      const target = (e.target as HTMLElement).closest('[data-vc="controls"]');
+      if (!target) return;
+
+      e.stopPropagation();
     },
 
     handlePresetClick(e: Event) {
@@ -219,15 +326,15 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
     },
 
     handleInputSelection(self: Calendar) {
-      let inputValue = '';
-
-      if (self.context.selectedDates[0]) {
-        inputValue = `${self.context.selectedDates[0]} ${self.context.selectedTime ?? ''}`;
-      }
+      const selectedDate = self.context.selectedDates[0] ?? '';
+      const selectedTime = self.context.selectedTime ?? '';
+      const inputValue = `${selectedDate}${selectedTime ? ` ${selectedTime}` : ''}`.trim();
 
       if (self.context.inputElement) {
         self.context.inputElement.value = inputValue;
+        self.context.inputElement.dispatchEvent(new Event('input', { bubbles: true }));
         self.context.inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+        self.context.inputElement.dispatchEvent(new Event('blur', { bubbles: true }));
         self.hide();
       }
     },
