@@ -562,7 +562,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												<td class="correct-answer" data-title="<?php echo esc_attr( $column ); ?>">
 												<div>
 												<?php
-												if ( ( $answer->question_type != 'open_ended' && $answer->question_type != 'short_answer' ) ) {
+												if ( ( $answer->question_type != 'open_ended' && $answer->question_type !== 'short_answer' ) ) {
 
 													global $wpdb;
 

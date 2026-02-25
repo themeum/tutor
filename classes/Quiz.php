@@ -764,7 +764,7 @@ class Quiz {
 							'given_answer'          => $given_answer,
 							'is_answer_was_correct' => $is_answer_was_correct,
 						);
-						$custom_answer_data = apply_filters( 'tutor_quiz_process_custom_question_answer', $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id );
+						$custom_answer_data    = apply_filters( 'tutor_quiz_process_custom_question_answer', $custom_answer_data, $question_type, $answers, $question, $question_id, $attempt_id );
 						$given_answer          = $custom_answer_data['given_answer'];
 						$is_answer_was_correct = $custom_answer_data['is_answer_was_correct'];
 					}
