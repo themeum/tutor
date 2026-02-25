@@ -82,6 +82,8 @@ function copy() {
         '!./stories/**',
         '!rsbuild.config.ts',
         '!phpstan.neon',
+        '!package.json',
+        '!pnpm-lock.yaml',
       ],
       {
         allowEmpty: true,
