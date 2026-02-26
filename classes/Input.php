@@ -218,13 +218,21 @@ class Input {
 	 * Check input has key or not
 	 *
 	 * @since 2.0.2
+	 * @since 4.0.0 param $method added.
 	 *
 	 * @param string $key input key name.
+	 * @param string $method request method.
+	 *
 	 * @return boolean
 	 */
-	public static function has( $key ) {
+	public static function has( $key, $method = '' ) {
+		if ( empty( $method ) ) {
+			//phpcs:ignore WordPress.Security.NonceVerification
+			return isset( $_REQUEST[ $key ] );
+		}
+
 		//phpcs:ignore WordPress.Security.NonceVerification
-		return isset( $_REQUEST[ $key ] );
+		return self::GET_REQUEST === $method ? isset( $_GET[ $key ] ) : isset( $_POST[ $key ] );
 	}
 
 	/**
