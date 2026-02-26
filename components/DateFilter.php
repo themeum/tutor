@@ -13,6 +13,7 @@ namespace Tutor\Components;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Popover;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -226,6 +227,8 @@ class DateFilter extends BaseComponent {
 
 		$options_json = wp_json_encode( $calendar_options );
 
+		$origin = Popover::TRANSFORM_ORIGIN_MAP[ $this->placement ] ?? 'center.top';
+
 		ob_start();
 		?>
 		<div x-data="tutorPopover({ placement: '<?php echo esc_attr( $this->placement ); ?>' })">
@@ -255,6 +258,7 @@ class DateFilter extends BaseComponent {
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-transition.origin.<?php echo esc_attr( $origin ); ?>
 				@click.outside="handleClickOutside()"
 				class="<?php echo esc_attr( $popover_classes ); ?>"
 			>
