@@ -516,8 +516,7 @@ class Popover extends BaseComponent {
 					x-ref="content"
 					x-show="open"
 					x-cloak
-					x-transition
-					:style="\'transform-origin: ' . $origin . '\'" 
+					x-transition.%s
 					class=%s
 					%s"
 				>	
@@ -529,6 +528,7 @@ class Popover extends BaseComponent {
 			</div>',
 			$placement_position,
 			$button,
+			$origin,
 			$class,
 			$closeable_attr,
 			$header,
