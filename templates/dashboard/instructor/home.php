@@ -15,7 +15,6 @@ use TUTOR\Input;
 use TUTOR\Instructor;
 use TUTOR_REPORT\Analytics;
 use Tutor\Models\CourseModel;
-use Tutor\Helpers\QueryHelper;
 use Tutor\Models\WithdrawModel;
 use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
