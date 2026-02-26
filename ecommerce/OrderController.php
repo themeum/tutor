@@ -769,7 +769,7 @@ class OrderController {
 			'key'   => '',
 			'title' => __( 'All', 'tutor' ),
 			'value' => $this->model->get_order_count( $where, $search ),
-			'url'   => $url . '&data=all',
+			'url'   => UrlHelper::add_query_params( $url, array( 'data' => 'all' ) ),
 		);
 
 		foreach ( $order_status as $key => $value ) {
@@ -779,7 +779,7 @@ class OrderController {
 				'key'   => $key,
 				'title' => $value,
 				'value' => $this->model->get_order_count( $where, $search ),
-				'url'   => $url . '&data=' . $key,
+				'url'   => UrlHelper::add_query_params( $url, array( 'data' => $key ) ),
 			);
 		}
 
