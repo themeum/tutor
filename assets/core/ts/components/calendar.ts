@@ -42,11 +42,68 @@ const PRESET_LABELS: Record<Preset, string> = {
   [PRESETS.LAST_YEAR]: __('Last year', 'tutor'),
 };
 
+const TUTOR_CALENDAR_SELECTORS = {
+  form: 'form[x-data*="tutorForm"]',
+  modalContent: '.tutor-modal-content',
+  actionButton: '[data-calendar-action]',
+  presetButton: '[data-preset]',
+} as const;
+
+const VC_CALENDAR_SELECTORS = {
+  navigationControls: '[data-vc="controls"]',
+  dateCell: '[data-vc-date]',
+  presetButtonsContainer: '.vc-presets [data-preset]',
+} as const;
+
+const TUTOR_CALENDAR_DATA_ATTRS = {
+  action: 'data-calendar-action',
+  preset: 'data-preset',
+  active: 'data-active',
+  modalCalendar: 'data-tutor-modal-calendar',
+} as const;
+
+const VC_CALENDAR_DATA_ATTRS = {
+  date: 'data-vc-date',
+  calendarHidden: 'data-vc-calendar-hidden',
+} as const;
+
+const TUTOR_CALENDAR_VALUES = {
+  apply: 'apply',
+  clear: 'clear',
+  calendarZIndex: '100001',
+  themeAttrDetect: 'body[data-theme]',
+  calendarClasses: 'vc tutor-vc-calendar',
+} as const;
+
+const TUTOR_DOM_VALUES = {
+  fixed: 'fixed',
+  auto: 'auto',
+} as const;
+
+const TUTOR_CALENDAR_EVENTS = {
+  click: 'click',
+  focus: 'focus',
+  pointerDown: 'pointerdown',
+  mouseDown: 'mousedown',
+  popstate: 'popstate',
+  calendarClear: 'tutor-calendar:clear',
+} as const;
+
+const TUTOR_CALENDAR_QUERY_PARAMS = {
+  startDate: 'start_date',
+  endDate: 'end_date',
+  date: 'date',
+} as const;
+
 export function calendar({ options, hidePopover }: { options: Options; hidePopover?: () => void }) {
   return {
     $el: undefined as HTMLElement | HTMLInputElement | undefined,
     $nextTick: null as unknown as (callback: () => void) => void,
     calendar: null as Calendar | null,
+    calendarRootElement: null as HTMLElement | null,
+    cleanupCalendarRootListeners: null as (() => void) | null,
+    calendarClearHandler: null as (() => void) | null,
+    popStateHandler: null as (() => void) | null,
 
     parseInputValue(inputValue: string): { selectedDates: string[]; selectedTime: string } {
       const normalizedValue = inputValue.trim();
@@ -87,7 +144,7 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
         return;
       }
 
-      const formElement = inputElement.closest('form[x-data*="tutorForm"]') as HTMLElement | null;
+      const formElement = inputElement.closest(TUTOR_CALENDAR_SELECTORS.form) as HTMLElement | null;
       if (!formElement) {
         return;
       }
@@ -122,7 +179,7 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
         // Watch external form updates (setValue/reset/setValues) and keep calendar state in sync.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const component = this as unknown as { $watch?: (path: string, cb: (value: any) => void) => void };
-        component.$watch?.(`values.${fieldName}`, (newValue) => {
+        component.$watch?.(`values['${fieldName}']`, (newValue) => {
           const normalizedValue = newValue == null ? '' : String(newValue).trim();
           if (inputElement.value !== normalizedValue) {
             inputElement.value = normalizedValue;
@@ -134,6 +191,81 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
         // eslint-disable-next-line no-console
         console.warn('Failed to integrate calendar with form:', error);
       }
+    },
+
+    getCalendarRootElement(): HTMLElement | null {
+      const calendarContext = this.calendar?.context as { mainElement?: HTMLElement } | undefined;
+      const mainElement = calendarContext?.mainElement ?? null;
+      if (!mainElement) {
+        return null;
+      }
+
+      // In input mode, before first open, mainElement points to the input itself.
+      if (mainElement instanceof HTMLInputElement) {
+        return null;
+      }
+
+      return mainElement;
+    },
+
+    setupCalendarRootListeners(): void {
+      const rootElement = this.getCalendarRootElement();
+      if (!rootElement) {
+        return;
+      }
+
+      this.cleanupCalendarRootListeners?.();
+
+      this.calendarRootElement = rootElement;
+
+      const clickHandler = (event: Event) => {
+        this.handleNavigationClick(event);
+        this.handlePresetClick(event);
+        this.handleActionClick(event);
+      };
+
+      // Keep modal outside-click handlers from receiving calendar clicks.
+      const pointerDownHandler = (event: Event) => {
+        event.stopPropagation();
+      };
+
+      rootElement.addEventListener(TUTOR_CALENDAR_EVENTS.click, clickHandler);
+      rootElement.addEventListener(TUTOR_CALENDAR_EVENTS.pointerDown, pointerDownHandler);
+      rootElement.addEventListener(TUTOR_CALENDAR_EVENTS.mouseDown, pointerDownHandler);
+
+      this.cleanupCalendarRootListeners = () => {
+        rootElement.removeEventListener(TUTOR_CALENDAR_EVENTS.click, clickHandler);
+        rootElement.removeEventListener(TUTOR_CALENDAR_EVENTS.pointerDown, pointerDownHandler);
+        rootElement.removeEventListener(TUTOR_CALENDAR_EVENTS.mouseDown, pointerDownHandler);
+      };
+    },
+
+    integrateWithModalContext(): void {
+      if (!options.inputMode || !(this.$el instanceof HTMLInputElement)) {
+        return;
+      }
+
+      const inputElement = this.$el;
+      const modalContent = inputElement.closest(TUTOR_CALENDAR_SELECTORS.modalContent) as HTMLElement | null;
+      if (!modalContent) {
+        return;
+      }
+
+      const rootElement = this.getCalendarRootElement();
+      if (!rootElement) {
+        return;
+      }
+
+      rootElement.setAttribute(TUTOR_CALENDAR_DATA_ATTRS.modalCalendar, 'true');
+      if (!modalContent.contains(rootElement)) {
+        modalContent.appendChild(rootElement);
+      }
+
+      // Keep viewport-based coordinates after moving into modal DOM.
+      rootElement.removeAttribute(VC_CALENDAR_DATA_ATTRS.calendarHidden);
+      rootElement.style.pointerEvents = TUTOR_DOM_VALUES.auto;
+      rootElement.style.position = TUTOR_DOM_VALUES.fixed;
+      rootElement.style.zIndex = TUTOR_CALENDAR_VALUES.calendarZIndex;
     },
 
     init(): void {
@@ -153,9 +285,9 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
           selectedTime = parsedValue.selectedTime;
         } else {
           // For filter mode
-          const startDate = url.searchParams.get('start_date');
-          const endDate = url.searchParams.get('end_date');
-          const singleDate = url.searchParams.get('date');
+          const startDate = url.searchParams.get(TUTOR_CALENDAR_QUERY_PARAMS.startDate);
+          const endDate = url.searchParams.get(TUTOR_CALENDAR_QUERY_PARAMS.endDate);
+          const singleDate = url.searchParams.get(TUTOR_CALENDAR_QUERY_PARAMS.date);
 
           if (startDate && endDate) {
             selectedDates.push(startDate, endDate);
@@ -164,10 +296,12 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
           }
         }
 
+        const userOnInit = options.onInit;
+        const userOnShow = options.onShow;
+
         this.calendar = new VanillaCalendar(el, {
           ...options,
-          themeAttrDetect: 'html[data-theme]',
-          selectedTheme: 'light',
+          themeAttrDetect: TUTOR_CALENDAR_VALUES.themeAttrDetect,
           locale: tutorConfig.local?.replace('_', '-') ?? 'en-US',
           enableJumpToSelectedDate: true,
           selectedWeekends: [],
@@ -175,8 +309,18 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
           ...(selectedDates.length ? { selectedDates } : {}),
           ...(selectedTime ? { selectedTime } : {}),
           onClickDate: (self, event) => this.handleDateClick(self, event as MouseEvent),
+          onInit: (self) => {
+            this.setupCalendarRootListeners();
+            this.integrateWithModalContext();
+            userOnInit?.(self);
+          },
+          onShow: (self) => {
+            this.setupCalendarRootListeners();
+            this.integrateWithModalContext();
+            userOnShow?.(self);
+          },
           styles: {
-            calendar: 'vc tutor-vc-calendar',
+            calendar: TUTOR_CALENDAR_VALUES.calendarClasses,
           },
           layouts: {
             multiple: `
@@ -185,7 +329,7 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
                   ${(Object.entries(PRESET_LABELS) as [Preset, string][])
                     .map(
                       ([key, label]) => `
-                      <button type="button" data-preset="${key}">
+                      <button type="button" ${TUTOR_CALENDAR_DATA_ATTRS.preset}="${key}">
                         <span>${label}</span>
                         <span class="vc-preset-icon" x-data="tutorIcon({ name: 'check-2' })"></span>
                       </button>
@@ -237,10 +381,10 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
                   <#ControlTime />
 
                   <div class="vc-footer tutor-flex tutor-justify-end tutor-gap-5 tutor-mt-6">
-                    <button type="button" data-calendar-action="clear" class="tutor-btn tutor-btn-secondary tutor-btn-small">
+                    <button type="button" ${TUTOR_CALENDAR_DATA_ATTRS.action}="${TUTOR_CALENDAR_VALUES.clear}" class="tutor-btn tutor-btn-secondary tutor-btn-small">
                     ${__('Clear Selection', 'tutor')}
                     </button>
-                    <button type="button" data-calendar-action="apply" class="tutor-btn tutor-btn-primary tutor-btn-small">
+                    <button type="button" ${TUTOR_CALENDAR_DATA_ATTRS.action}="${TUTOR_CALENDAR_VALUES.apply}" class="tutor-btn tutor-btn-primary tutor-btn-small">
                     ${__('Apply', 'tutor')}
                     </button>
                   </div>
@@ -257,47 +401,58 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
         }
         this.updateActivePreset();
 
-        el.addEventListener('focus', () => this.syncCalendarWithInputValue());
-        el.addEventListener('click', () => this.syncCalendarWithInputValue());
-        el.addEventListener('click', (e) => this.handleNavigationClick(e));
-        el.addEventListener('click', (e) => this.handlePresetClick(e));
-        el.addEventListener('click', (e) => this.handleActionClick(e));
-        window.addEventListener('popstate', this.updateActivePreset);
-        window.addEventListener('tutor-calendar:clear', () => this.clear());
+        el.addEventListener(TUTOR_CALENDAR_EVENTS.focus, () => this.syncCalendarWithInputValue());
+        el.addEventListener(TUTOR_CALENDAR_EVENTS.click, () => this.syncCalendarWithInputValue());
+
+        this.popStateHandler = () => this.updateActivePreset();
+        this.calendarClearHandler = () => this.clear();
+        window.addEventListener(TUTOR_CALENDAR_EVENTS.popstate, this.popStateHandler);
+        window.addEventListener(TUTOR_CALENDAR_EVENTS.calendarClear, this.calendarClearHandler);
       });
     },
 
     destroy() {
+      this.cleanupCalendarRootListeners?.();
+      this.cleanupCalendarRootListeners = null;
+      this.calendarRootElement = null;
       this.calendar?.destroy();
       this.calendar = null;
-      window.removeEventListener('popstate', this.updateActivePreset);
-      window.removeEventListener('tutor-calendar:clear', () => this.clear());
+
+      if (this.popStateHandler) {
+        window.removeEventListener(TUTOR_CALENDAR_EVENTS.popstate, this.popStateHandler);
+        this.popStateHandler = null;
+      }
+
+      if (this.calendarClearHandler) {
+        window.removeEventListener(TUTOR_CALENDAR_EVENTS.calendarClear, this.calendarClearHandler);
+        this.calendarClearHandler = null;
+      }
     },
 
     handleActionClick(e: Event) {
-      const target = (e.target as HTMLElement).closest('[data-calendar-action]');
+      const target = (e.target as HTMLElement).closest(TUTOR_CALENDAR_SELECTORS.actionButton);
       if (!target) return;
 
-      const action = target.getAttribute('data-calendar-action');
-      if (action === 'apply') {
+      const action = target.getAttribute(TUTOR_CALENDAR_DATA_ATTRS.action);
+      if (action === TUTOR_CALENDAR_VALUES.apply) {
         this.applyRange();
-      } else if (action === 'clear') {
+      } else if (action === TUTOR_CALENDAR_VALUES.clear) {
         this.clear();
       }
     },
 
     handleNavigationClick(e: Event) {
-      const target = (e.target as HTMLElement).closest('[data-vc="controls"]');
+      const target = (e.target as HTMLElement).closest(VC_CALENDAR_SELECTORS.navigationControls);
       if (!target) return;
 
       e.stopPropagation();
     },
 
     handlePresetClick(e: Event) {
-      const target = (e.target as HTMLElement).closest('[data-preset]');
+      const target = (e.target as HTMLElement).closest(TUTOR_CALENDAR_SELECTORS.presetButton);
       if (!target) return;
 
-      const preset = target.getAttribute('data-preset') as Preset | null;
+      const preset = target.getAttribute(TUTOR_CALENDAR_DATA_ATTRS.preset) as Preset | null;
       if (preset) {
         this.applyPreset(preset);
       }
@@ -308,7 +463,9 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
       if (self.context.inputElement) {
         this.handleInputSelection(self);
       } else if (self.selectionDatesMode === 'multiple-ranged') {
-        const date = (event.target as HTMLElement).closest('[data-vc-date]')?.getAttribute('data-vc-date');
+        const date = (event.target as HTMLElement)
+          .closest(VC_CALENDAR_SELECTORS.dateCell)
+          ?.getAttribute(VC_CALENDAR_DATA_ATTRS.date);
 
         if (date && self.context.selectedDates.length === 2 && !self.context.selectedDates[0]) {
           this.calendar?.set({ selectedDates: [date, date] });
@@ -337,15 +494,15 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
 
       hidePopover?.();
       this.navigateWithParams({
-        start_date: this.calendar.context.selectedDates[0],
-        end_date: this.calendar.context.selectedDates[1],
+        [TUTOR_CALENDAR_QUERY_PARAMS.startDate]: this.calendar.context.selectedDates[0],
+        [TUTOR_CALENDAR_QUERY_PARAMS.endDate]: this.calendar.context.selectedDates[1],
       });
     },
 
     handleSingleDateSelection(self: Calendar) {
       hidePopover?.();
       this.navigateWithParams({
-        date: self.context.selectedDates[0],
+        [TUTOR_CALENDAR_QUERY_PARAMS.date]: self.context.selectedDates[0],
       });
     },
 
@@ -365,9 +522,9 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
 
     clear() {
       this.navigateWithParams({
-        start_date: null,
-        end_date: null,
-        date: null,
+        [TUTOR_CALENDAR_QUERY_PARAMS.startDate]: null,
+        [TUTOR_CALENDAR_QUERY_PARAMS.endDate]: null,
+        [TUTOR_CALENDAR_QUERY_PARAMS.date]: null,
       });
     },
 
@@ -415,11 +572,11 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
       const url = new URL(window.location.href);
 
       if (dates.length) {
-        url.searchParams.set('start_date', dates[0]);
-        url.searchParams.set('end_date', dates[1]);
+        url.searchParams.set(TUTOR_CALENDAR_QUERY_PARAMS.startDate, dates[0]);
+        url.searchParams.set(TUTOR_CALENDAR_QUERY_PARAMS.endDate, dates[1]);
       } else {
-        url.searchParams.delete('start_date');
-        url.searchParams.delete('end_date');
+        url.searchParams.delete(TUTOR_CALENDAR_QUERY_PARAMS.startDate);
+        url.searchParams.delete(TUTOR_CALENDAR_QUERY_PARAMS.endDate);
       }
 
       window.location.href = url.toString();
@@ -429,8 +586,8 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
       if (!this.$el) return;
 
       const url = new URL(window.location.href);
-      const startDate = url.searchParams.get('start_date');
-      const endDate = url.searchParams.get('end_date');
+      const startDate = url.searchParams.get(TUTOR_CALENDAR_QUERY_PARAMS.startDate);
+      const endDate = url.searchParams.get(TUTOR_CALENDAR_QUERY_PARAMS.endDate);
 
       let activePreset: Preset | '' = '';
 
@@ -448,12 +605,12 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
         }
       }
 
-      const buttons = this.$el.querySelectorAll('.vc-presets [data-preset]');
+      const buttons = this.$el.querySelectorAll(VC_CALENDAR_SELECTORS.presetButtonsContainer);
       buttons.forEach((btn) => {
-        if (activePreset && btn.getAttribute('data-preset') === activePreset) {
-          btn.setAttribute('data-active', '');
+        if (activePreset && btn.getAttribute(TUTOR_CALENDAR_DATA_ATTRS.preset) === activePreset) {
+          btn.setAttribute(TUTOR_CALENDAR_DATA_ATTRS.active, '');
         } else {
-          btn.removeAttribute('data-active');
+          btn.removeAttribute(TUTOR_CALENDAR_DATA_ATTRS.active);
         }
       });
     },
