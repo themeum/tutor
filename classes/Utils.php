@@ -10986,4 +10986,31 @@ class Utils {
 			'no_of_decimal'      => (int) tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, true ),
 		);
 	}
+
+	/**
+	 * Get the icon constant based on the given post type.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $post_type The post type slug.
+	 *
+	 * @return string Icon constant associated with the post type.
+	 */
+	public static function get_icon_by_post_type( $post_type ): string {
+		switch ( $post_type ) {
+			case 'tutor_assignments':
+				return Icon::ASSIGNMENT;
+			case 'tutor-google-meet':
+				return Icon::GOOGLE_MEET_COLORIZE;
+			case 'tutor_quiz':
+				return Icon::QUIZ;
+			case 'tutor_zoom_meeting':
+				return Icon::ZOOM_COLORIZE;
+			case 'lesson':
+				return Icon::LESSON;
+			default:
+				return '';
+		}
+	}
+
 }

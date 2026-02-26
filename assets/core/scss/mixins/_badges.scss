@@ -4,7 +4,6 @@
 
 @mixin tutor-badge-base() {
   @include tutor-typography('tiny', 'medium', 'secondary');
-  width: max-content;
   border-radius: $tutor-radius-sm;
   padding-inline: $tutor-spacing-4;
   display: flex;

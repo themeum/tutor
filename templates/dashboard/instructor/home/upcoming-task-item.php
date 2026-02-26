@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 use Tutor\Components\Badge;
+use TUTOR\Utils;
 
 $label = __( 'Live Session', 'tutor' );
 ?>
@@ -41,7 +42,7 @@ $label = __( 'Live Session', 'tutor' );
 			<div class="tutor-dashboard-home-task-live-tag-badge">
 				<?php
 				Badge::make()
-					->icon( Icon::get_icon_by_post_type( $item['post_type'] ) )
+					->icon( Utils::get_icon_by_post_type( $item['post_type'] ) )
 					->label( $label )
 					->rounded()
 					->render();

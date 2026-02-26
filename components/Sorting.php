@@ -163,7 +163,10 @@ class Sorting extends BaseComponent {
 				@click="toggle()"
 				class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon"
 			>
-				<?php tutor_utils()->render_svg_icon( Icon::STEPPER, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+				<?php
+					$sorting_icon = 'DESC' === $this->order ? Icon::STEPPER : Icon::DESCENDING;
+					tutor_utils()->render_svg_icon( $sorting_icon, 16, 16, array( 'class' => 'tutor-icon-secondary' ) );
+				?>
 			</button>
 
 			<div
