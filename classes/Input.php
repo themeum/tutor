@@ -240,13 +240,14 @@ class Input {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $keys keys.
+	 * @param array  $keys keys.
+	 * @param string $method request method.
 	 *
 	 * @return boolean
 	 */
-	public static function has_any( array $keys ) {
+	public static function has_any( array $keys, $method = '' ) {
 		foreach ( $keys as $key ) {
-			if ( self::has( $key ) ) {
+			if ( self::has( $key, $method ) ) {
 				return true;
 			}
 		}
