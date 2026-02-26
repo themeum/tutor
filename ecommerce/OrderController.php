@@ -18,6 +18,7 @@ use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\OrderActivitiesModel;
@@ -741,6 +742,14 @@ class OrderController {
 		}
 
 		if ( 'dashboard' === $context ) {
+			/**
+			 * Frontend dashboard will show all orders under `Billing > Order History` section.
+			 * So we need to remove order_type from where clause.
+			 *
+			 * @since 4.0.0
+			 */
+			unset( $where['order_type'] );
+
 			$start_date = Input::get( 'start_date', '' );
 			$end_date   = Input::get( 'end_date', '' );
 			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
