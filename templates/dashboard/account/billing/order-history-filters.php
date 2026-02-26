@@ -66,12 +66,12 @@ $selected = count( $selected ) ? reset( $selected ) : $filter_options[0];
 			$query_params = array( 'data', 'order', 'start_date', 'end_date' );
 			if ( Input::has_any( $query_params, Input::GET_REQUEST ) ) {
 				Button::make()
-				->tag( 'a' )
-				->attr( 'href', Dashboard::get_account_page_url( 'billing' ) )
-				->attr( 'class', 'tutor-text-brand' )
-				->label( __( 'Clear all', 'tutor' ) )
-				->variant( Variant::LINK )
-				->render();
+					->tag( 'a' )
+					->attr( 'href', Dashboard::get_account_page_url( 'billing' ) )
+					->attr( 'class', 'tutor-text-brand' )
+					->label( __( 'Clear all', 'tutor' ) )
+					->variant( Variant::LINK )
+					->render();
 			}
 
 			DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
