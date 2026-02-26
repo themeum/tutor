@@ -59,7 +59,10 @@ $display_name = tutor_utils()->display_name( $user_id );
 				?>
 			</button> -->
 			<div>
-				<?php do_action( 'tutor_dashboard/before_header_button' ); ?>
+				<?php
+				// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+				do_action( 'tutor_dashboard/before_header_button' );
+				?>
 			</div>
 			<div 
 				x-data="tutorPopover({
