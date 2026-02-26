@@ -226,7 +226,7 @@ class Ecommerce {
 	public static function get_payment_method_label( $payment_method ) {
 
 		if ( empty( $payment_method ) ) {
-			return null;
+			return $payment_method;
 		}
 
 		$payment_method_labels = array(

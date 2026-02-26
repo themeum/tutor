@@ -33,7 +33,7 @@ $order_filter  = Input::get( 'order', 'DESC' );
 $search_filter = Input::get( 'search', '' );
 
 // Announcement's parent.
-$course_id  = Input::get( 'course-id', '' );
+$course_id  = Input::get( 'course-id', 0, Input::TYPE_INT );
 $start_date = Input::get( 'start_date', '' );
 $end_date   = Input::get( 'end_date', '' );
 
@@ -91,7 +91,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 				->render();
 			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
-				<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-start' )->render(); ?>
+				<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render(); ?>
 				<?php Sorting::make()->order( $order_filter )->render(); ?>
 			</div>
 		</div>
