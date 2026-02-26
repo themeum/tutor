@@ -6,6 +6,7 @@ import { type popoverMeta } from '@Core/ts/components/popover';
 import { type selectDropdownMeta } from '@Core/ts/components/select-dropdown';
 import { type stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 import { type tabsMeta } from '@Core/ts/components/tabs';
+import { type timeInputMeta } from '@Core/ts/components/time-input';
 
 import { type FormService } from '@Core/ts/services/Form';
 import { type ModalService } from '@Core/ts/services/Modal';
@@ -46,6 +47,7 @@ export interface TutorCore {
   accordion: ExtractComponent<typeof accordionMeta>;
   form: FormService;
   stepperDropdown: ExtractComponent<typeof stepperDropdownMeta>;
+  timeInput: ExtractComponent<typeof timeInputMeta>;
   toast: ToastService;
   query: QueryService;
   modal: ModalService;
