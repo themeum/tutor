@@ -8,23 +8,26 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use TUTOR\Icon;
 use Tutor\Components\Button;
 
-$active_nav = '';
-
-if ( ! empty( $dashboard_pages ) && is_array( $dashboard_pages ) && empty( $dashboard_pages_more_items ) ) {
-	$dashboard_pages_more_items = array_slice( $dashboard_pages, 4, null, true );
-	$dashboard_pages            = array_slice( $dashboard_pages, 0, 4, true );
+if ( ! tutor_utils()->count( $dashboard_pages ) ) {
+	return;
 }
+
+$active_nav        = '';
+$visible_nav_items = array_slice( $dashboard_pages, 0, 4, true );
+$more_nav_items    = array_slice( $dashboard_pages, 4, null, true );
 
 ?>
 <div class="tutor-dashboard-nav-mobile">
 	<ul class="tutor-dashboard-nav-mobile-list">
 		<?php
-		foreach ( $dashboard_pages as $key => $item ) {
+		foreach ( $visible_nav_items as $key => $item ) {
 			if ( 'index' === $key ) {
 				$key = '';
 			}
@@ -46,7 +49,7 @@ if ( ! empty( $dashboard_pages ) && is_array( $dashboard_pages ) && empty( $dash
 		}
 		?>
 		<?php
-		if ( ! empty( $dashboard_pages_more_items ) && is_array( $dashboard_pages_more_items ) && count( $dashboard_pages_more_items ) > 0 ) :
+		if ( tutor_utils()->count( $more_nav_items ) ) :
 			?>
 			<li x-data="tutorPopover({ placement: 'top-end', offset: 16 })">
 				<?php
@@ -76,7 +79,7 @@ if ( ! empty( $dashboard_pages ) && is_array( $dashboard_pages ) && empty( $dash
 				>
 					<ul>
 						<?php
-						foreach ( $dashboard_pages_more_items as $key => $item ) {
+						foreach ( $more_nav_items as $key => $item ) {
 							$active_class = ( $key === $active_nav ) ? 'active' : '';
 							$icon         = ( $key === $active_nav ) ? $item['active_icon'] : $item['icon'];
 							$menu_link    = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
