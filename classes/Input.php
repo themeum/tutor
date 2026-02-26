@@ -28,8 +28,8 @@ class Input {
 	const TYPE_TEXTAREA  = 'textarea';
 	const TYPE_KSES_POST = 'kses-post';
 
-	private const GET_REQUEST  = 'get';
-	private const POST_REQUEST = 'post';
+	const GET_REQUEST  = 'get';
+	const POST_REQUEST = 'post';
 
 	/**
 	 * Common data sanitizer method
@@ -260,13 +260,14 @@ class Input {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $keys keys.
+	 * @param array  $keys keys.
+	 * @param string $method request method.
 	 *
 	 * @return boolean
 	 */
-	public static function has_all( array $keys ) {
+	public static function has_all( array $keys, $method = '' ) {
 		foreach ( $keys as $key ) {
-			if ( ! self::has( $key ) ) {
+			if ( ! self::has( $key, $method ) ) {
 				return false;
 			}
 		}
