@@ -11,12 +11,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\InputType;
-use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\CourseFilter;
-use Tutor\Components\ConfirmationModal;
+use Tutor\Components\DateFilter;
 use Tutor\Components\EmptyState;
+use Tutor\Components\InputField;
 use Tutor\Components\Pagination;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Components\SearchFilter;
@@ -93,9 +94,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 				->render();
 			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
-				<button type="button" class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon">
-					<?php tutor_utils()->render_svg_icon( Icon::CALENDAR_2, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-				</button>
+				<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-start' )->render(); ?>
 				<?php Sorting::make()->order( $order_filter )->render(); ?>
 			</div>
 		</div>
@@ -221,7 +220,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 
 					<?php
 					$course_options = array_map(
-						function( $course ) {
+						function ( $course ) {
 							return array(
 								'label' => $course->post_title,
 								'value' => $course->ID,
