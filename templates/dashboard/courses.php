@@ -9,6 +9,8 @@
  * @since 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Constants\Size;
 use TUTOR\Input;
 use Tutor\Components\Pagination;
