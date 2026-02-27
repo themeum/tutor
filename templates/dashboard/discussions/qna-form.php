@@ -35,21 +35,37 @@ $placeholder    = $placeholder ?? __( 'Write your question', 'tutor' );
 	x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>', mode: 'onSubmit', defaultValues: { answer: '<?php echo esc_js( $default_value ); ?>' } }), focused: false }"
 	x-bind="getFormBindings()"
 	@submit.prevent="handleSubmit(<?php echo esc_js( $submit_handler ); ?>)($event)"
+	@wp-editor-focus="focused = true"
 >
 	<?php
-	$input = InputField::make()
-		->type( InputType::TEXTAREA )
-		->name( 'answer' )
-		->placeholder( $placeholder )
-		->attr( 'x-bind', "register('answer', { required: '" . esc_js( __( 'Please enter your response.', 'tutor' ) ) . "' })" )
-		->attr( '@keydown', 'handleKeydown($event)' )
-		->attr( '@focus', 'focused = true' );
+	$custom_editor = apply_filters(
+		'tutor_qna_editor',
+		array(
+			'form_id'       => $form_id,
+			'default_value' => $default_value,
+			'placeholder'   => $placeholder,
+			'label'         => $label,
+		)
+	);
 
-	if ( $label ) {
-		$input->label( $label );
+	if ( ! $custom_editor ) {
+		$input = InputField::make()
+			->type( InputType::TEXTAREA )
+			->name( 'answer' )
+			->placeholder( $placeholder )
+			->attr( 'x-bind', "register('answer', { required: '" . esc_js( __( 'Please enter your response.', 'tutor' ) ) . "' })" )
+			->attr( '@keydown', 'handleKeydown($event)' )
+			->attr( '@focus', 'focused = true' );
+
+		if ( $label ) {
+			$input->label( $label );
+		}
+
+		$input->render();
 	}
 
-	$input->render();
+	//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo $custom_editor;
 	?>
 
 	<div
