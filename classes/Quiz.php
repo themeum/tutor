@@ -802,7 +802,6 @@ class Quiz {
 
 					// Allow Pro (or add-ons) to grade draw_image and pin_image and set achieved_mark / is_correct.
 					$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
-					$answers_data = apply_filters( 'tutor_filter_pin_image_answer_data', $answers_data, $question_id, $question_type );
 					$total_marks  = apply_filters( 'tutor_quiz_adjust_total_marks_for_question', $total_marks, $question_mark, $answers_data, $question_type, $question_id );
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
@@ -1177,7 +1176,7 @@ class Quiz {
 
 	/**
 	 * Process pin_image question answer (filter callback).
-	 * Student pin is stored as normalized coordinates JSON; grading is done via tutor_filter_pin_image_answer_data (Pro).
+	 * Student pin is stored as normalized coordinates JSON; grading is done via tutor_filter_quiz_answer_data (Pro).
 	 *
 	 * @since 4.0.0
 	 *
