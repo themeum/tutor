@@ -799,8 +799,6 @@ class Quiz {
 
 					// Allow Pro to grade draw_image (and other custom types) and set achieved_mark / is_correct.
 					$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
-					// Allow Pro to grade jigsaw and set achieved_mark / is_correct.
-					$answers_data = apply_filters( 'tutor_filter_jigsaw_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 					$total_marks  = apply_filters( 'tutor_quiz_adjust_total_marks_for_question', $total_marks, $question_mark, $answers_data, $question_type, $question_id );
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
