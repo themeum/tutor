@@ -313,7 +313,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 									->label( __( 'Cancel', 'tutor' ) )
 									->size( Size::SMALL )
 									->variant( Variant::GHOST )
-									->attr( '@click', "TutorCore.modal.closeModal('$create_modal_id')" )
+									->attr( '@click', sprintf( 'TutorCore.modal.hideModal("%s")', $create_modal_id ) )
 									->render();
 
 								Button::make()
@@ -324,7 +324,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 									->attr( ':disabled', 'createUpdateMutation?.isPending' )
 									->attr(
 										'@click',
-										"handleSubmit((data) => handleFormSubmit(data))($event)"
+										'handleSubmit((data) => handleFormSubmit(data))($event)'
 									)
 									->attr( 'x-text', 'formActionText' )
 									->render();

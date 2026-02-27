@@ -10,6 +10,7 @@ interface AnnouncementFormData {
   course_id: string;
   title: string;
   summary: string;
+  tutor_notify_all_students?: boolean;
   action_type: 'create' | 'update';
 }
 
@@ -17,6 +18,7 @@ interface AnnouncementPayload extends Record<string, unknown> {
   tutor_announcement_course: string;
   tutor_announcement_title: string;
   tutor_announcement_summary: string;
+  tutor_notify_all_students?: 'on' | 'off';
   action_type: 'create' | 'update';
   announcement_id?: number;
 }
@@ -55,6 +57,7 @@ const announcementsPage = ({ formId, deleteModalId, createModalId }: Announcemen
       course_id: '',
       title: '',
       summary: '',
+      tutor_notify_all_students: true,
       action_type: 'create',
     } as AnnouncementFormData,
 
@@ -119,7 +122,13 @@ const announcementsPage = ({ formId, deleteModalId, createModalId }: Announcemen
       }
     },
 
-    openEditModal(data: { id: number; title: string; summary: string; course_id: number }) {
+    openEditModal(data: {
+      id: number;
+      title: string;
+      summary: string;
+      course_id: number;
+      tutor_notify_all_students: boolean;
+    }) {
       this.formData.id = data.id;
       this.formData.course_id = data.course_id.toString();
       this.formData.title = data.title;
@@ -143,6 +152,7 @@ const announcementsPage = ({ formId, deleteModalId, createModalId }: Announcemen
           tutor_announcement_course: String(data.course_id),
           tutor_announcement_title: data.title,
           tutor_announcement_summary: data.summary,
+          tutor_notify_all_students: true,
         };
 
         form.reset(formId, values);
@@ -151,6 +161,9 @@ const announcementsPage = ({ formId, deleteModalId, createModalId }: Announcemen
 
     async handleFormSubmit(data: AnnouncementPayload) {
       const payload: AnnouncementPayload = {
+        ...(data.tutor_notify_all_students && {
+          tutor_notify_all_students: data.tutor_notify_all_students ? 'on' : 'off',
+        }),
         tutor_announcement_course: data.tutor_announcement_course || '',
         tutor_announcement_title: data.tutor_announcement_title || '',
         tutor_announcement_summary: data.tutor_announcement_summary || '',
