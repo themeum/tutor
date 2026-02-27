@@ -41,11 +41,15 @@ $page_nav_items = array(
 );
 ?>
 <div class="tutor-dashboard-discussions" x-data="tutorDiscussions()">
+	<h4 class="tutor-h4 tutor-mb-4 tutor-hidden tutor-sm-block">
+		<?php esc_html_e( 'Discussions', 'tutor' ); ?>
+	</h4>
+
 	<?php
 	if ( $discussion_id ) {
 		$template = tutor()->path . 'templates/dashboard/discussions/qna-single.php';
 		if ( 'lesson-comments' === $current_tab ) {
-			$template = tutor()->path . 'templates/dashboard/discussions/lesson-comment-single.php';
+			$template = tutor()->path . 'templates/dashboard/discussions/comment-single.php';
 		}
 		require_once $template;
 	} else {
@@ -58,7 +62,7 @@ $page_nav_items = array(
 				<?php
 				$template = tutor()->path . 'templates/dashboard/discussions/qna-list.php';
 				if ( 'lesson-comments' === $current_tab ) {
-					$template = tutor()->path . 'templates/dashboard/discussions/lesson-comment-list.php';
+					$template = tutor()->path . 'templates/dashboard/discussions/comment-list.php';
 				}
 
 				require_once $template;

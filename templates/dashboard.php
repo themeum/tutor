@@ -8,6 +8,8 @@
  * @since 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\User;
 ?>
 

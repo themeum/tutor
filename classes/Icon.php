@@ -33,10 +33,12 @@ final class Icon {
 	const ARCHIVE_2                  = 'archive-2';
 	const ARROWS_IN                  = 'arrows-in';
 	const ARROWS_OUT                 = 'arrows-out';
+	const ARROW_DOWN                 = 'arrow-down';
 	const ARROW_LEFT                 = 'arrow-left';
 	const ARROW_LEFT_2               = 'arrow-left-2';
 	const ARROW_LEFT_ALT             = 'arrow-left-alt';
 	const ARROW_RIGHT_2              = 'arrow-right-2';
+	const ARROW_UP                   = 'arrow-up';
 	const ASSIGNMENT                 = 'assignment';
 	const ATTACH                     = 'attach';
 	const ATTACHMENT_LINE            = 'attachment-line';
@@ -97,6 +99,7 @@ final class Icon {
 	const COLOR_OPTION               = 'color-option';
 	const COMMAND                    = 'command';
 	const COMMENTS                   = 'comments';
+	const COMMISSION                 = 'commission';
 	const COMPLETED                  = 'completed';
 	const COMPLETED_CIRCLE           = 'completed-circle';
 	const COMPLETED_COLORIZE         = 'completed-colorize';
@@ -146,6 +149,7 @@ final class Icon {
 	const DUPLICATE                  = 'duplicate';
 	const DWG                        = 'dwg';
 	const EARNING                    = 'earning';
+	const EARNING_FILL               = 'earning-fill';
 	const EDIT                       = 'edit';
 	const EDIT_2                     = 'edit-2';
 	const ELEMENTOR_COLORIZED        = 'elementor-colorized';
@@ -166,6 +170,7 @@ final class Icon {
 	const EYE_OFF                    = 'eye-off';
 	const FACEBOOK                   = 'facebook';
 	const FEATHER                    = 'feather';
+	const FEES                       = 'fees';
 	const FILE                       = 'file';
 	const FILE_ATTACHEMENT           = 'file-attachement';
 	const FILTER                     = 'filter';
@@ -179,6 +184,7 @@ final class Icon {
 	const GIFT_CARD                  = 'gift-card';
 	const GITHUB                     = 'github';
 	const GLOBE                      = 'globe';
+	const GOOGLE_CALENDER_COLORIZE   = 'google-calender-colorize';
 	const GOOGLE_MEET                = 'google-meet';
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
 	const GRAB_HANDLE                = 'grab-handle';
@@ -208,6 +214,7 @@ final class Icon {
 	const ISO                        = 'iso';
 	const JAVASCRIPT                 = 'javascript';
 	const JPG                        = 'jpg';
+	const JSON                       = 'json';
 	const JSON_FILE                  = 'json-file';
 	const KEY                        = 'key';
 	const LANDSCAPE                  = 'landscape';
@@ -261,6 +268,7 @@ final class Icon {
 	const OPEN                       = 'open';
 	const OUTLINE_NONE               = 'outline-none';
 	const PASSED                     = 'passed';
+	const PASSED_FILL                = 'passed-fill';
 	const PASSING                    = 'passing';
 	const PAUSE_CIRCLE               = 'pause-circle';
 	const PDF                        = 'pdf';
@@ -286,6 +294,7 @@ final class Icon {
 	const PROFILE                    = 'profile';
 	const PROFILE_CIRCLE             = 'profile-circle';
 	const PROFILE_CIRCLE_FILL        = 'profile-circle-fill';
+	const PROGRESS                   = 'progress';
 	const PSD                        = 'psd';
 	const PUBLISH                    = 'publish';
 	const QA                         = 'qa';
@@ -306,17 +315,20 @@ final class Icon {
 	const QUIZ_SHORT_ANSWER          = 'quiz-short-answer';
 	const QUIZ_TRUE_FALSE            = 'quiz-true-false';
 	const RATINGS                    = 'ratings';
+	const READ                       = 'read';
 	const RECEIPT_PERCENT            = 'receipt-percent';
 	const REDO                       = 'redo';
 	const REFRESH                    = 'refresh';
 	const RELOAD                     = 'reload';
 	const RELOAD_2                   = 'reload-2';
 	const RELOAD_3                   = 'reload-3';
+	const RELOAD_4                   = 'reload-4';
 	const REMOVE_IMAGE               = 'remove-image';
 	const REPORT                     = 'report';
 	const RESOURCES                  = 'resources';
 	const ROTATE                     = 'rotate';
 	const RTF                        = 'rtf';
+	const SALE                       = 'sale';
 	const SALE_TYPE                  = 'sale-type';
 	const SAVE                       = 'save';
 	const SEARCH                     = 'search';
@@ -385,9 +397,11 @@ final class Icon {
 	const VIDEO_CAMERA               = 'video-camera';
 	const VIDEO_CAMERA_2             = 'video-camera-2';
 	const VIDEO_FILE                 = 'video-file';
+	const VIDEO_FILL                 = 'video-fill';
 	const VIDEO_QUALITY              = 'video-quality';
 	const VIMEO                      = 'vimeo';
 	const VISITED                    = 'visited';
+	const WALLET                     = 'wallet';
 	const WARNING                    = 'warning';
 	const WARNING_LINE               = 'warning-line';
 	const WEIGHT_BOX                 = 'weight-box';
@@ -402,4 +416,31 @@ final class Icon {
 	const ZIP                        = 'zip';
 	const ZOOM                       = 'zoom';
 	const ZOOM_COLORIZE              = 'zoom-colorize';
+
+
+	/**
+	 * Get the icon constant based on the given post type.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $post_type The post type slug.
+	 *
+	 * @return string Icon constant associated with the post type.
+	 */
+	public static function get_icon_by_post_type( $post_type ): string {
+		switch ( $post_type ) {
+			case 'tutor_assignments':
+				return self::ASSIGNMENT;
+			case 'tutor-google-meet':
+				return self::GOOGLE_MEET_COLORIZE;
+			case 'tutor_quiz':
+				return self::QUIZ;
+			case 'tutor_zoom_meeting':
+				return self::ZOOM_COLORIZE;
+			case 'lesson':
+				return self::LESSON;
+			default:
+				return '';
+		}
+	}
 }

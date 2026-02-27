@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
@@ -18,8 +20,6 @@ use Tutor\Components\StarRatingInput;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Helpers\DateTimeHelper;
-
-defined( 'ABSPATH' ) || exit;
 
 $default_review = array(
 	'comment_ID'      => '',

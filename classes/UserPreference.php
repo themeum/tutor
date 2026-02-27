@@ -125,7 +125,7 @@ class UserPreference {
 	 * @return void
 	 */
 	public function apply_font_scale() {
-		if ( ! tutor_utils()->is_dashboard_page() ) {
+		if ( ! tutor_utils()->is_dashboard_page() && ! tutor_utils()->is_learning_area() ) {
 			return;
 		}
 		$prefs          = $this->get_preferences();
@@ -147,7 +147,7 @@ class UserPreference {
 	 * @return array
 	 */
 	public function add_theme_attribute( $classes ) {
-		if ( ! tutor_utils()->is_dashboard_page() ) {
+		if ( ! tutor_utils()->is_dashboard_page() && ! tutor_utils()->is_learning_area() ) {
 			return $classes;
 		}
 		$prefs = $this->get_preferences();

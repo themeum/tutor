@@ -45,6 +45,17 @@ body {
   @include tutor-transition((background-color, color));
 }
 
+.tutor-dashboard-layout,
+.tutor-learning-area,
+.tutor-account-page-wrapper {
+  min-height: 100vh;
+  background-color: $tutor-surface-base;
+
+  a {
+    text-decoration: none;
+  }
+}
+
 // Remove default margin in all browsers
 h1,
 h2,
@@ -66,21 +77,11 @@ ol {
   list-style: none;
 }
 
-li > ol,
-li > ul,
+li>ol,
+li>ul,
 ol,
 ul {
   padding: 0;
-}
-
-a  {
-  text-decoration: none;
-  color: inherit;
-
-  &:hover {
-    text-decoration: none;
-    color: inherit;
-  }
 }
 
 // Alpine.js cloak utility

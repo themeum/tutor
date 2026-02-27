@@ -63,11 +63,16 @@ const endpoints = {
   GET_ZOOM_MEETING_DETAILS: 'tutor_zoom_meeting_details',
   SAVE_ZOOM_MEETING: 'tutor_zoom_save_meeting',
   DELETE_ZOOM_MEETING: 'tutor_zoom_delete_meeting',
+  ZOOM_SAVE_API: 'tutor_save_zoom_api',
+  ZOOM_SAVE_SETTINGS: 'tutor_save_zoom_settings',
 
   // GOOGLE MEET
   GET_GOOGLE_MEET_DETAILS: 'tutor_google_meet_meeting_details',
   SAVE_GOOGLE_MEET: 'tutor_google_meet_new_meeting',
   DELETE_GOOGLE_MEET: 'tutor_google_meet_delete',
+  UPLOAD_GOOGLE_MEET_CREDENTIALS: 'tutor_pro_google_meet_credential_upload',
+  RESET_GOOGLE_MEET_CREDENTIALS: 'tutor_google_meet_reset_cred',
+  UPDATE_GOOGLE_MEET_SETTINGS: 'tutor_update_google_meet_settings',
 
   // TOPIC
   GET_COURSE_CONTENTS: 'tutor_course_contents',
@@ -87,11 +92,14 @@ const endpoints = {
   UPDATE_LESSON_COMMENT: 'tutor_update_lesson_comment',
   DELETE_LESSON_COMMENT: 'tutor_delete_lesson_comment',
   REPLY_LESSON_COMMENT: 'tutor_reply_lesson_comment',
+  LOAD_COMMENT_REPLIES: 'tutor_load_comment_replies',
 
   // Q&A
   QNA_SINGLE_ACTION: 'tutor_qna_single_action',
   DELETE_DASHBOARD_QNA: 'tutor_delete_dashboard_question',
   CREATE_UPDATE_QNA: 'tutor_qna_create_update',
+  UPDATE_QNA: 'tutor_qna_update',
+  LOAD_QNA_REPLIES: 'tutor_qna_load_replies',
 
   // ASSIGNMENT
   GET_ASSIGNMENT_DETAILS: 'tutor_assignment_details',
