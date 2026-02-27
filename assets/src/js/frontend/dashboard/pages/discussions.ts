@@ -1,7 +1,7 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { convertToErrorMessage, decodeHtmlEntities } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
 
 interface ReplyCommentPayload {
@@ -59,6 +59,8 @@ const URL_PARAMS = {
   ID: 'id',
   ORDER: 'order',
 };
+
+const CARD_TITLE_WORD_LIMIT = 60;
 
 /**
  * Discussions Page Component
@@ -216,7 +218,15 @@ const discussionsPage = () => {
           // Update DOM directly for immediate feedback
           const element = document.getElementById(`${ELEMENT_IDS.QNA_TEXT_PREFIX}${payload.question_id}`);
           if (element) {
-            element.innerHTML = payload.answer;
+            if (element.closest('.tutor-discussion-card')) {
+              const striped_answer = decodeHtmlEntities(payload.answer);
+              element.innerHTML =
+                striped_answer.length > CARD_TITLE_WORD_LIMIT
+                  ? `${striped_answer.substring(0, 60)}...`
+                  : striped_answer;
+            } else {
+              element.innerHTML = payload.answer;
+            }
           }
 
           if (this.editingId === payload.question_id) {
