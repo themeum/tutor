@@ -29,5 +29,6 @@ abstract class Positions {
 	public const TOP          = 'top';
 	public const BOTTOM       = 'bottom';
 	public const BOTTOM_START = 'bottom-start';
+	public const BOTTOM_END   = 'bottom-end';
 	public const CENTER       = 'center';
 }

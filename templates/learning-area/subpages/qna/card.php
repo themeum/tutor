@@ -20,7 +20,7 @@ global $tutor_course_id;
 $current_user_id = get_current_user_id();
 $is_user_asker   = $current_user_id === (int) $question->user_id;
 
-$limit   = 60;
+$limit   = 60; // Content text limit.
 $content = wp_strip_all_tags( $question->comment_content );
 $content = strlen( $content ) > $limit ? substr( $content, 0, $limit ) . '...' : $content;
 
@@ -118,7 +118,7 @@ $single_url = UrlHelper::add_query_params(
 <div x-show="editingId === <?php echo (int) $question_id; ?>" x-cloak class="tutor-card tutor-surface-l1-hover">
 	<?php
 	tutor_load_template(
-		'learning-area.subpages.qna.qna-form',
+		'learning-area.subpages.qna.form',
 		array(
 			'form_id'        => 'qna-edit-' . (int) $question_id,
 			'default_value'  => $question->comment_content,

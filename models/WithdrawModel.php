@@ -10,6 +10,9 @@
 
 namespace Tutor\Models;
 
+use Tutor\Helpers\QueryHelper;
+use TUTOR\Input;
+
 /**
  * WithdrawModel Class
  *
@@ -27,12 +30,25 @@ class WithdrawModel {
 	 * Get withdraw summary info for an user
 	 *
 	 * @since 2.0.7
+	 * @since 4.0.0 $args parameter added.
 	 *
-	 * @param  int $instructor_id instructor id.
+	 * @param  int   $instructor_id instructor id.
+	 * @param array $args Optional additional WHERE conditions.
 	 * @return array|object|null|void
 	 */
-	public static function get_withdraw_summary( $instructor_id ) {
+	public static function get_withdraw_summary( $instructor_id, $args = array() ) {
 		global $wpdb;
+
+		$args        = tutor_utils()->sanitize_array( $args );
+		$date_clause = '';
+
+		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
+			$from = Input::sanitize( $args['from'] );
+			$to   = Input::sanitize( $args['to'] );
+
+			$where['created_at'] = array( 'BETWEEN', array( $from, $to ) );
+			$date_clause         = ' AND ' . QueryHelper::prepare_where_clause( $where );
+		}
 
 		$maturity_days = tutor_utils()->get_option( 'minimum_days_for_balance_to_be_available' );
 
@@ -49,25 +65,25 @@ class WithdrawModel {
                 
                 FROM (
                         SELECT ID,display_name, 
-                    COALESCE((SELECT SUM(instructor_amount) FROM {$wpdb->prefix}tutor_earnings WHERE order_status='%s' GROUP BY user_id HAVING user_id=u.ID),0) total_income,
+                    COALESCE((SELECT SUM(instructor_amount) FROM {$wpdb->prefix}tutor_earnings WHERE order_status='%s' {$date_clause} GROUP BY user_id HAVING user_id=u.ID),0) total_income,
                     
                         COALESCE((
                         SELECT sum(amount) total_withdraw FROM {$wpdb->prefix}tutor_withdraws 
-                        WHERE status='%s'
+                        WHERE status='%s' {$date_clause}
                         GROUP BY user_id
                         HAVING user_id=u.ID
                     ),0) total_withdraw,
 					
 					COALESCE((
                         SELECT sum(amount) total_pending FROM {$wpdb->prefix}tutor_withdraws 
-                        WHERE status='pending'
+                        WHERE status='pending' {$date_clause}
                         GROUP BY user_id
                         HAVING user_id=u.ID
                     ),0) total_pending,
 
                     COALESCE((
                         SELECT SUM(instructor_amount) FROM(
-                            SELECT user_id, instructor_amount, created_at, DATEDIFF(NOW(),created_at) AS days_old FROM {$wpdb->prefix}tutor_earnings WHERE order_status='%s'
+                            SELECT user_id, instructor_amount, created_at, DATEDIFF(NOW(),created_at) AS days_old FROM {$wpdb->prefix}tutor_earnings WHERE order_status='%s' {$date_clause}
                         ) a
                         WHERE days_old >= %d
                         GROUP BY user_id

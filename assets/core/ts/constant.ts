@@ -12,4 +12,5 @@ export const TUTOR_CUSTOM_EVENTS = {
   WP_EDITOR_FOCUS: 'wp-editor-focus',
   TUTOR_PLAYER_READY: 'tutor-player-ready',
   COMMENT_REPLIED: 'tutor:comment:replied',
+  LESSON_PLAYER_READY: 'tutorLessonPlayerReady',
 };

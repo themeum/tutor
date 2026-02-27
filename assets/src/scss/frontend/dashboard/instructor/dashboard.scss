@@ -226,6 +226,19 @@
       color: $tutor-text-brand;
       width: fit-content;
     }
+
+    &-live-tag {
+      position: relative;
+      margin-top: $tutor-spacing-5;
+
+      &-badge {
+        @include tutor-flex(row, center, flex-start);
+        opacity: 1;
+        visibility: visible;
+        z-index: $tutor-z-positive;
+        @include tutor-transition((opacity, visibility));
+      }
+    }
   }
 
   &-activity {

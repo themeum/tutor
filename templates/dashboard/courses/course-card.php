@@ -7,6 +7,8 @@
  * @author Themeum
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\CourseModel;
 
 $course_permalink = get_the_permalink();
@@ -20,11 +22,15 @@ $course_categories = get_the_terms( $course_id, CourseModel::COURSE_CATEGORY );
 $category_names    = is_array( $course_categories ) ? wp_list_pluck( $course_categories, 'name' ) : array();
 $category          = implode( ', ', $category_names );
 
+$course_learning_url = tutor_utils()->get_course_first_lesson();
+if ( get_post_type() !== tutor()->course_post_type ) {
+	$course_learning_url = get_permalink();
+}
+
 ?>
 
-<a href="<?php echo esc_url( $course_permalink ); ?>">
-	<div class="tutor-card tutor-progress-card">
-		
+<div class="tutor-card tutor-progress-card">
+	<div class="tutor-progress-card-inner" onclick="window.location.href = '<?php echo esc_url( $course_learning_url ); ?>';">
 		<div class="tutor-progress-card-thumbnail">
 			<?php do_action( 'tutor_my_courses_before_thumbnail', $course_id ); ?>
 			<?php if ( ! empty( $tutor_course_img ) ) : ?>
@@ -33,7 +39,6 @@ $category          = implode( ', ', $category_names );
 		</div>
 
 		<div class="tutor-progress-card-content">
-
 			<!-- course header  -->
 			<div class="tutor-progress-card-header">
 				<?php if ( ! empty( $category ) ) : ?>
@@ -54,6 +59,7 @@ $category          = implode( ', ', $category_names );
 							<?php
 							printf(
 								esc_html(
+									// translators: %1$s is the completed count, %2$s is the total count.
 									_n(
 										'%1$s of %2$s lesson',
 										'%1$s of %2$s lessons',
@@ -69,6 +75,7 @@ $category          = implode( ', ', $category_names );
 							<span class="tutor-progress-card-separator">•</span>
 							<?php
 								printf(
+									// translators: %1$s is the completed percent.
 									esc_html__( '%1$s%% Complete', 'tutor' ),
 									esc_html( $course_progress['completed_percent'] )
 								);
@@ -86,7 +93,10 @@ $category          = implode( ', ', $category_names );
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
-
 		</div>
 	</div>
-</a>
+
+	<div class="tutor-progress-card-actions">
+		<?php do_action( 'tutor_course_action_btn', $course_id ); ?>
+	</div>
+</div>

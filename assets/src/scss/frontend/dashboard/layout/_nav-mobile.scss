@@ -23,20 +23,21 @@
     margin: 0;
     padding: 0;
 
-    > li {
+    >li {
       @include tutor-flex(column, center);
       min-width: 44px;
       margin: 0;
       padding: 0;
 
-      > a,
-      > button {
+      >a,
+      >button {
         @include tutor-button-reset();
         @include tutor-typography(tiny, medium);
         @include tutor-flex(column, center);
         gap: $tutor-spacing-2;
 
-        &.active {
+        &.active, 
+        &.active span {
           color: $tutor-text-brand;
         }
       }
@@ -66,7 +67,8 @@
           outline: none;
           box-shadow: none;
 
-          &.active {
+          &.active, 
+          &.active span {
             color: $tutor-text-brand;
           }
         }

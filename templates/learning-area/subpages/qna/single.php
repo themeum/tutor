@@ -28,8 +28,9 @@ if ( ! $question ) {
 	return;
 }
 
-$user_id       = get_current_user_id();
-$is_user_asker = $user_id === (int) $question->user_id;
+$user_id             = get_current_user_id();
+$is_user_asker       = $user_id === (int) $question->user_id;
+$qna_delete_modal_id = 'tutor-qna-delete-modal';
 
 $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_order, 'frontend' );
 ?>
@@ -75,7 +76,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 								</button>
 								<button 
 									class="tutor-popover-menu-item tutor-gap-5"
-									@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_html( $question->comment_ID ); ?> }); hide();"
+									@click="TutorCore.modal.showModal('<?php echo esc_js( $qna_delete_modal_id ); ?>', { question_id: <?php echo esc_html( $question->comment_ID ); ?> }); hide();"
 								>
 									<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 								</button>
@@ -94,7 +95,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 				<div x-show="editingId === <?php echo (int) $question->comment_ID; ?>" x-cloak class="tutor-w-full">
 					<?php
 						tutor_load_template(
-							'learning-area.subpages.qna.qna-form',
+							'learning-area.subpages.qna.form',
 							array(
 								'form_id'        => 'qna-edit-' . (int) $question->comment_ID,
 								'default_value'  => $question->comment_content,
@@ -110,7 +111,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 
 		<?php
 		tutor_load_template(
-			'learning-area.subpages.qna.qna-form',
+			'learning-area.subpages.qna.form',
 			array(
 				'form_id'        => 'qna-reply-form-' . $question->comment_ID,
 				'submit_handler' => '(data) => replyQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ', course_id: ' . (int) $question->course_id . ' })',
@@ -127,7 +128,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 		<div id="tutor-discussion-replies-list">
 			<?php
 			tutor_load_template(
-				'learning-area.subpages.qna.qna-replies',
+				'learning-area.subpages.qna.replies',
 				array(
 					'replies'       => $replies,
 					'replies_order' => $replies_order,
@@ -139,7 +140,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 
 		<?php
 		ConfirmationModal::make()
-			->id( 'tutor-qna-delete-modal' )
+			->id( $qna_delete_modal_id )
 			->title( __( 'Delete This Question?', 'tutor' ) )
 			->message( __( 'Are you sure you want to delete this question permanently? Please confirm your choice.', 'tutor' ) )
 			->confirm_text( __( 'Yes, Delete This', 'tutor' ) )

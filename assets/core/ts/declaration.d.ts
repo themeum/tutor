@@ -64,6 +64,18 @@ declare global {
       nonce?: {
         getNonceData: (sendKeyValue?: boolean) => Record<string, string> | { key: string; value: string };
       };
+      drawOnImage?: {
+        init: (options: {
+          image: HTMLImageElement;
+          canvas: HTMLCanvasElement;
+          brushSize?: number;
+          strokeStyle?: string;
+          initialMaskUrl?: string;
+          onMaskChange?: (value: string) => void;
+        }) => { destroy: () => void };
+        DEFAULT_BRUSH_SIZE?: number;
+        DEFAULT_STROKE_STYLE?: string;
+      };
     };
 
     // Legacy functions (deprecated)

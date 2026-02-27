@@ -53,7 +53,7 @@ class Q_And_A {
 		add_filter( 'tutor_learning_area_sub_page_nav_item', array( $this, 'add_learning_area_menu' ), 10, 2 );
 
 		add_action( 'wp_ajax_tutor_qna_create_update', array( $this, 'tutor_qna_create_update' ) );
-		add_action( 'wp_ajax_tutor_qna_update', array( $this, 'tutor_qna_update' ) );
+		add_action( 'wp_ajax_tutor_qna_update', array( $this, 'ajax_qna_update' ) );
 		add_action( 'wp_ajax_tutor_delete_dashboard_question', array( $this, 'tutor_delete_dashboard_question' ) );
 		add_action( 'wp_ajax_tutor_qna_single_action', array( $this, 'tutor_qna_single_action' ) );
 		add_action( 'wp_ajax_tutor_qna_bulk_action', array( $this, 'process_bulk_action' ) );
@@ -72,13 +72,15 @@ class Q_And_A {
 	 * @return array
 	 */
 	public function add_learning_area_menu( $menu_items, $base_url ) {
-		global $wp_query, $post;
+		global $tutor_course_id;
 
-		$enable_q_and_a_on_course  = (bool) get_tutor_option( 'enable_q_and_a_on_course' );
-		$enable_qa_for_this_course = ( $wp_query->is_single && ! empty( $post ) ) ? get_post_meta( $post->ID, '_tutor_enable_qa', true ) === 'yes' : false;
-		$is_enrolled               = tutor_utils()->is_enrolled();
+		$user_id = get_current_user_id();
 
-		if ( $enable_q_and_a_on_course && $enable_qa_for_this_course && $is_enrolled ) {
+		$enable_q_and_a_on_course = (bool) get_tutor_option( 'enable_q_and_a_on_course' );
+		$is_enabled_course_wise   = (bool) get_post_meta( $tutor_course_id, '_tutor_enable_qa', true );
+		$can_access               = tutor_utils()->is_enrolled( $tutor_course_id ) || tutor_utils()->has_user_course_content_access( $user_id, $tutor_course_id );
+
+		if ( $is_enabled_course_wise && $enable_q_and_a_on_course && $can_access ) {
 			$qna_item = array(
 				'qna' => array(
 					'title'    => __( 'Q&A', 'tutor' ),
@@ -235,9 +237,9 @@ class Q_And_A {
 	/**
 	 * Update question [frontend dashboard]
 	 *
-	 * @since  v.4.0.0
+	 * @since 4.0.0
 	 */
-	public function tutor_qna_update() {
+	public function ajax_qna_update() {
 		tutor_utils()->checking_nonce();
 
 		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
@@ -257,13 +259,13 @@ class Q_And_A {
 		global $wpdb;
 		$wpdb->update( $wpdb->comments, $data, array( 'comment_ID' => $question_id ) );
 
-		wp_send_json_success( array( 'message' => __( 'Comment edited successfully', 'tutor' ) ) );
+		$this->json_response( __( 'Comment edited successfully', 'tutor' ) );
 	}
 
 	/**
 	 * Delete question [frontend dashboard]
 	 *
-	 * @since  v.1.6.4
+	 * @since 1.6.4
 	 */
 	public function tutor_delete_dashboard_question() {
 		tutor_utils()->checking_nonce();
@@ -490,7 +492,7 @@ class Q_And_A {
 	/**
 	 * Load replies
 	 *
-	 * @since v4.0.0
+	 * @since 4.0.0
 	 *
 	 * @return void send wp_json response
 	 */
@@ -498,7 +500,7 @@ class Q_And_A {
 		tutor_utils()->checking_nonce();
 
 		$comment_id    = Input::post( 'comment_id', 0, Input::TYPE_INT );
-		$replies_order = Input::post( 'order', 'DESC' );
+		$replies_order = QueryHelper::get_valid_sort_order( Input::post( 'order', 'DESC' ) );
 		$context       = Input::post( 'context', 'dashboard' );
 
 		if ( ! $comment_id ) {
@@ -510,7 +512,7 @@ class Q_And_A {
 
 		$template = 'dashboard.discussions.qna-replies';
 		if ( 'learning-area' === $context ) {
-			$template = 'learning-area.subpages.qna.qna-replies';
+			$template = 'learning-area.subpages.qna.replies';
 		}
 
 		ob_start();
@@ -524,6 +526,6 @@ class Q_And_A {
 		);
 		$html = ob_get_clean();
 
-		wp_send_json_success( array( 'html' => $html ) );
+		$this->json_response( '', array( 'html' => $html ) );
 	}
 }

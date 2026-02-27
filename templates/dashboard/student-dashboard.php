@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use Tutor\Models\CourseModel;
 
@@ -193,7 +195,7 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2 )
 				<?php esc_html_e( 'Continue Learning', 'tutor' ); ?>
 			</div>
 			<a 
-				href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url( 'enrolled-courses' ) ); ?>" 
+				href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url( 'courses' ) ); ?>" 
 				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-text-brand tutor-p-none tutor-min-h-0"
 			>
 				<?php esc_html_e( 'See All', 'tutor' ); ?>
@@ -203,61 +205,60 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2 )
 		<?php
 		while ( $courses_in_progress->have_posts() ) :
 			$courses_in_progress->the_post();
-			$tutor_course_img  = get_tutor_course_thumbnail_src();
-			$course_categories = get_tutor_course_categories();
-			$course_progress   = tutor_utils()->get_course_completed_percent( get_the_ID(), 0, true );
-			$completed_number  = 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
+			$tutor_course_img    = get_tutor_course_thumbnail_src();
+			$course_categories   = get_tutor_course_categories();
+			$course_progress     = tutor_utils()->get_course_completed_percent( get_the_ID(), 0, true );
+			$completed_number    = 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
+			$course_learning_url = tutor_utils()->get_course_first_lesson();
+			if ( get_post_type() !== tutor()->course_post_type ) {
+				$course_learning_url = get_permalink();
+			}
 			?>
 			<div class="tutor-card tutor-progress-card">
-				<div class="tutor-progress-card-thumbnail">
-					<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
-				</div>
-				<div class="tutor-progress-card-content">
-					<div class="tutor-progress-card-header">
-						<?php if ( ! empty( $course_categories ) ) : ?>
-							<div class="tutor-progress-card-category">
-								<?php echo esc_html( implode( ', ', wp_list_pluck( $course_categories, 'name' ) ) ); ?>
-							</div>
-						<?php endif; ?>
-						<h3 class="tutor-progress-card-title"><?php the_title(); ?></h3>
+				<div class="tutor-progress-card-inner" onclick="window.location.href = '<?php echo esc_url( $course_learning_url ); ?>';">
+					<div class="tutor-progress-card-thumbnail">
+						<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 					</div>
-					<div class="tutor-progress-card-progress">
-						<div class="tutor-progress-card-details">
-							<?php
-								echo esc_html(
-									sprintf(
-									/* translators: 1: completed lesson count, 2: total lesson count */
-										__( '%1$s of %2$s lessons', 'tutor' ),
-										$course_progress['completed_count'],
-										$course_progress['total_count']
-									)
-								);
-							?>
-							<span class="tutor-progress-card-separator">•</span>
-							<?php
-								printf(
-								/* translators: %s: completed percentage */
-									esc_html__( '%s%% Complete', 'tutor' ),
-									esc_html( $course_progress['completed_percent'] )
-								);
-							?>
+					<div class="tutor-progress-card-content">
+						<div class="tutor-progress-card-header">
+							<?php if ( ! empty( $course_categories ) ) : ?>
+								<div class="tutor-progress-card-category">
+									<?php echo esc_html( implode( ', ', wp_list_pluck( $course_categories, 'name' ) ) ); ?>
+								</div>
+							<?php endif; ?>
+							<h3 class="tutor-progress-card-title"><?php the_title(); ?></h3>
 						</div>
-						<div class="tutor-progress-card-bar">
-							<div class="tutor-progress-bar" data-tutor-animated>
-								<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;"></div>
+						<div class="tutor-progress-card-progress">
+							<div class="tutor-progress-card-details">
+								<?php
+									echo esc_html(
+										sprintf(
+										/* translators: 1: completed lesson count, 2: total lesson count */
+											__( '%1$s of %2$s lessons', 'tutor' ),
+											$course_progress['completed_count'],
+											$course_progress['total_count']
+										)
+									);
+								?>
+								<span class="tutor-progress-card-separator">•</span>
+								<?php
+									printf(
+									/* translators: %s: completed percentage */
+										esc_html__( '%s%% Complete', 'tutor' ),
+										esc_html( $course_progress['completed_percent'] )
+									);
+								?>
+							</div>
+							<div class="tutor-progress-card-bar">
+								<div class="tutor-progress-bar" data-tutor-animated>
+									<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;"></div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="tutor-progress-card-actions">
-					<a href="<?php the_permalink(); ?>" class="tutor-btn tutor-btn-primary tutor-btn-small">
-						<?php esc_html_e( 'Resume', 'tutor' ); ?>
-					</a>
-				</div>
-				<div class="tutor-progress-card-footer">
-					<a href="<?php the_permalink(); ?>" class="tutor-btn tutor-btn-primary tutor-btn-block">
-						<?php esc_html_e( 'Resume', 'tutor' ); ?>
-					</a>
+					<?php do_action( 'tutor_course_action_btn', get_the_ID() ); ?>
 				</div>
 			</div>
 			<?php endwhile; ?>

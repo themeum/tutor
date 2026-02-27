@@ -57,16 +57,22 @@ const endpoints = {
   QUIZ_IMPORT_DATA: 'quiz_import_data',
   QUIZ_EXPORT_DATA: 'quiz_export_data',
   DELETE_QUIZ: 'tutor_quiz_delete',
+  START_QUIZ: 'tutor_start_quiz',
 
   // ZOOM
   GET_ZOOM_MEETING_DETAILS: 'tutor_zoom_meeting_details',
   SAVE_ZOOM_MEETING: 'tutor_zoom_save_meeting',
   DELETE_ZOOM_MEETING: 'tutor_zoom_delete_meeting',
+  ZOOM_SAVE_API: 'tutor_save_zoom_api',
+  ZOOM_SAVE_SETTINGS: 'tutor_save_zoom_settings',
 
   // GOOGLE MEET
   GET_GOOGLE_MEET_DETAILS: 'tutor_google_meet_meeting_details',
   SAVE_GOOGLE_MEET: 'tutor_google_meet_new_meeting',
   DELETE_GOOGLE_MEET: 'tutor_google_meet_delete',
+  UPLOAD_GOOGLE_MEET_CREDENTIALS: 'tutor_pro_google_meet_credential_upload',
+  RESET_GOOGLE_MEET_CREDENTIALS: 'tutor_google_meet_reset_cred',
+  UPDATE_GOOGLE_MEET_SETTINGS: 'tutor_update_google_meet_settings',
 
   // TOPIC
   GET_COURSE_CONTENTS: 'tutor_course_contents',

@@ -17,7 +17,7 @@ use Tutor\Components\Constants\InputType;
 $form_id = 'tutor-reset-password-form';
 
 $default_values = array(
-	'current_password'     => '',
+	'previous_password'    => '',
 	'new_password'         => '',
 	'confirm_new_password' => '',
 );
@@ -40,11 +40,11 @@ $default_values = array(
 		InputField::make()
 			->type( InputType::PASSWORD )
 			->label( __( 'Current Password', 'tutor' ) )
-			->name( 'current_password' )
-			->id( 'current_password' )
+			->name( 'previous_password' )
+			->id( 'previous_password' )
 			->placeholder( __( 'Current Password', 'tutor' ) )
 			->required()
-			->attr( 'x-bind', "register('current_password', { required: true })" )
+			->attr( 'x-bind', "register('previous_password', { required: true })" )
 			->render();
 
 		InputField::make()

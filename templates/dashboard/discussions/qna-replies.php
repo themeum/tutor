@@ -22,7 +22,7 @@ use TUTOR\User;
 <div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-t" :class="{ 'tutor-loading-spinner': loadingReplies }">
 	<div class="tutor-small tutor-text-secondary">
 		<?php esc_html_e( 'Replies', 'tutor' ); ?>
-		<span class="tutor-text-primary tutor-font-medium">(<?php echo (int) count( $replies ); ?>)</span>
+		<span class="tutor-text-primary tutor-font-medium">(<?php echo esc_html( count( $replies ) ); ?>)</span>
 	</div>
 	<?php
 	Sorting::make()
@@ -36,7 +36,7 @@ use TUTOR\User;
 <div class="tutor-discussion-single-reply-list tutor-border-t">
 	<?php foreach ( $replies as $reply ) : ?>
 		<div class="tutor-discussion-reply-list-item">
-			<div class="tutor-flex tutor-gap-5 tutor-w-full" x-show="editingId !== <?php echo (int) $reply->comment_ID; ?>">
+			<div class="tutor-flex tutor-gap-5 tutor-w-full" x-show="editingId !== <?php echo esc_attr( $reply->comment_ID ); ?>">
 				<?php Avatar::make()->user( $reply->user_id )->size( Size::SIZE_40 )->render(); ?>
 				<div class="tutor-flex-1">
 					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
@@ -45,12 +45,12 @@ use TUTOR\User;
 						</span>
 						<span class="tutor-text-secondary">
 							<?php
-								// Translators: %s is the time of comment.
-								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $reply->comment_date_gmt ) ) ) );
+							// translators: %s is the time of comment.
+							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $reply->comment_date_gmt ) ) ) );
 							?>
 						</span>
 					</div>
-					<div class="tutor-p2 tutor-text-secondary" id="tutor-qna-text-<?php echo (int) $reply->comment_ID; ?>">
+					<div class="tutor-p2 tutor-text-secondary" id="tutor-qna-text-<?php echo esc_attr( $reply->comment_ID ); ?>">
 						<?php echo wp_kses_post( $reply->comment_content ); ?>
 					</div>
 				</div>
@@ -60,34 +60,35 @@ use TUTOR\User;
 				$has_menu   = $can_edit || $can_delete;
 				?>
 				<?php if ( $has_menu ) : ?>
-				<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-ml-auto">
-					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-					</button>
-					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
-						<div class="tutor-popover-menu" style="min-width: 110px;">
-							<?php if ( $user_id === (int) $reply->user_id ) : ?>
-							<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $reply->comment_ID; ?>, 'qna'); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
-								<?php esc_html_e( 'Edit', 'tutor' ); ?>
-							</button>
-							<?php endif; ?>
-							<?php if ( User::is_instructor_view() || $user_id === (int) $reply->user_id ) : ?>
-							<button 
-								class="tutor-popover-menu-item tutor-gap-5" 
-								@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_html( $reply->comment_ID ); ?>, context: 'reply' }); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
-								<?php esc_html_e( 'Delete', 'tutor' ); ?>
-							</button>
-							<?php endif; ?>
+					<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-ml-auto">
+						<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
+							<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+						</button>
+						<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
+							<div class="tutor-popover-menu" style="min-width: 110px;">
+								<?php if ( $can_edit ) : ?>
+									<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo esc_attr( $reply->comment_ID ); ?>, 'qna'); hide()">
+										<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
+										<?php esc_html_e( 'Edit', 'tutor' ); ?>
+									</button>
+								<?php endif; ?>
+								<?php if ( $can_delete ) : ?>
+									<button
+										class="tutor-popover-menu-item tutor-gap-5"
+										@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_attr( $reply->comment_ID ); ?>, context: 'reply' }); hide()"
+									>
+										<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
+										<?php esc_html_e( 'Delete', 'tutor' ); ?>
+									</button>
+								<?php endif; ?>
+							</div>
 						</div>
 					</div>
-				</div>
 				<?php endif; ?>
 			</div>
 
-			<?php if ( $user_id === (int) $reply->user_id ) : ?>
-				<div x-show="editingId === <?php echo (int) $reply->comment_ID; ?>" x-cloak class="tutor-mt-5 tutor-w-full">
+			<?php if ( $can_edit ) : ?>
+				<div x-show="editingId === <?php echo esc_attr( $reply->comment_ID ); ?>" x-cloak class="tutor-mt-5 tutor-w-full">
 					<?php
 					tutor_load_template(
 						'dashboard.discussions.qna-form',
