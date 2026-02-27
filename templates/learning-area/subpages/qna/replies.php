@@ -80,7 +80,7 @@ use TUTOR\Icon;
 				<div x-show="editingId === <?php echo (int) $reply->comment_ID; ?>" x-cloak class="tutor-mt-5 tutor-w-full">
 					<?php
 					tutor_load_template(
-						'dashboard.discussions.qna-form',
+						'learning-area.subpages.qna.qna-form',
 						array(
 							'form_id'        => 'qna-edit-' . (int) $reply->comment_ID,
 							'default_value'  => $reply->comment_content,
