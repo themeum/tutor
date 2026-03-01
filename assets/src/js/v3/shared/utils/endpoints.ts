@@ -181,6 +181,7 @@ const endpoints = {
   DELETE_ANNOUNCEMENT: 'tutor_announcement_delete',
 
   // Notifications
+  PUSH_NOTIFICATION_SAVE_SUBSCRIPTION: 'tutor_pn_save_subscription',
   GET_ALL_NOTIFICATIONS: 'tutor_get_all_notifications',
   MARK_ALL_NOTIFICATIONS_AS_READ: 'toggle_all_notifications_status_as_read',
   MARK_SINGLE_NOTIFICATION_AS_READ: 'toggle_single_notification_status_as_read',
