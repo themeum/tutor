@@ -32,7 +32,7 @@ class ComponentHelper {
 	 *
 	 * @return void
 	 */
-	public static function render_order_status_badge( $status ) : void {
+	public static function render_status_badge( $status ) : void {
 		$badge_class = '';
 		switch ( $status ) {
 			case 'processing':
