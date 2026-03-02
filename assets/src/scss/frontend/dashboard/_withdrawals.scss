@@ -1,0 +1,22 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-user-withdrawals {
+    .tutor-avaialble-withdrawal-amount {
+        font-size: $tutor-font-size-h3;
+        font-weight: $tutor-font-weight-bold;
+        line-height: $tutor-line-height-h3;
+    }
+
+    .tutor-withdrawal-status {
+        display: flex;
+        background-color: $tutor-surface-base;
+        border-radius: $tutor-radius-lg;
+        padding: 16px;
+        margin-top: 16px;
+
+        >div {
+            flex-grow: 1;
+        }
+    }
+}
