@@ -16,7 +16,7 @@ use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\User;
 
-$user_id          = Input::has('student_id') ? Input::get('student_id') : get_current_user_id();
+$user_id          = Input::get( 'student_id', get_current_user_id(), Input::TYPE_INT );
 $student_details  = get_userdata( $user_id );
 $student_meta     = get_user_meta( $user_id );
 $edit_profile_url = tutor_utils()->tutor_dashboard_url( 'account/settings' );
