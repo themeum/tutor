@@ -25,6 +25,7 @@ interface ReplyQnAPayload {
   course_id: number;
   question_id: number;
   answer: string;
+  reply_context?: 'list' | 'single';
 }
 interface UpdateQnAPayload {
   question_id: number;
@@ -87,6 +88,7 @@ const discussionsPage = () => {
     isArchived: false,
     editingId: null as number | null,
     editingFormId: null as string | null,
+    replyingId: null as number | null,
     loadingReplies: false,
     repliesOrder: 'DESC',
     $nextTick: undefined as ((callback: () => void) => void) | undefined,
@@ -197,10 +199,18 @@ const discussionsPage = () => {
       this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
         onSuccess: (_, payload) => {
           toast.success(__('Reply saved successfully', 'tutor'));
-          this.reloadReplies();
+          
           const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${payload.question_id}`;
           if (form.hasForm(formId)) {
             form.reset(formId);
+          }
+
+          if (payload.reply_context === 'single') {
+            this.reloadReplies();
+          } else {
+            // List view
+            this.setReplying(null);
+            this.updateReplyCount(payload.question_id);
           }
         },
         onError: (error: Error) => {
@@ -343,6 +353,39 @@ const discussionsPage = () => {
             form.setFocus(formId, field);
           }
         });
+      }
+    },
+
+    setReplying(id: number | null) {
+      this.replyingId = id;
+
+      if (id) {
+        const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${id}`;
+        this.$nextTick?.(() => {
+          if (form.hasForm(formId)) {
+            form.setFocus(formId, 'answer');
+          }
+        });
+      }
+    },
+
+    toggleReply(id: number) {
+      if (this.replyingId === id) {
+        this.setReplying(null);
+      } else {
+        this.setReplying(id);
+      }
+    },
+
+    updateReplyCount(questionId: number) {
+      // Find the reply count element and increment it
+      const card = document.querySelector(`[data-question-id="${questionId}"]`);
+      if (card) {
+        const countElement = card.querySelector('.tutor-discussion-card-reply-count');
+        if (countElement) {
+          const currentCount = parseInt(countElement.textContent || '0', 10);
+          countElement.textContent = String(currentCount + 1);
+        }
       }
     },
   };
