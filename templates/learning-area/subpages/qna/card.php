@@ -42,6 +42,7 @@ $single_url = UrlHelper::add_query_params(
 ?>
 <div 
 	class="tutor-discussion-card"
+	data-question-id="<?php echo (int) $question_id; ?>"
 	x-show="editingId !== <?php echo (int) $question_id; ?>"
 	x-data="tutorPopover({ placement: 'bottom-end' })"
 	:class="{'active': open}"
@@ -57,15 +58,19 @@ $single_url = UrlHelper::add_query_params(
 				?>
 			</div>
 		</div>
-		<h6 class="tutor-discussion-card-title" id="tutor-qna-text-<?php echo (int) $question_id; ?>"><?php echo wp_kses_post( $content ); ?></h6>
+		<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="tutor-qna-text-<?php echo (int) $question_id; ?>"><?php echo wp_kses_post( $content ); ?></a>
 		<div class="tutor-flex tutor-items-center tutor-justify-between">
 			<div class="tutor-discussion-card-meta">
-				<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-meta-reply-button">
+				<button 
+					@click="toggleReply(<?php echo (int) $question_id; ?>)"
+					class="tutor-discussion-card-meta-reply-button"
+					type="button"
+				>
 					<?php esc_html_e( 'Reply', 'tutor' ); ?>
-				</a>
+				</button>
 				<div class="tutor-flex tutor-items-center tutor-gap-2">
 					<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 
-					<?php echo esc_html( $question->answer_count ); ?>
+					<span class="tutor-discussion-card-reply-count"><?php echo esc_html( $question->answer_count ); ?></span>
 				</div>
 
 				<?php if ( $last_reply ) : ?>
@@ -83,9 +88,13 @@ $single_url = UrlHelper::add_query_params(
 		</div>
 	</div>
 	<div class="tutor-discussion-card-actions">
-		<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
+		<button 
+			@click="toggleReply(<?php echo (int) $question_id; ?>)"
+			class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden"
+			type="button"
+		>
 			<?php esc_html_e( 'Reply', 'tutor' ); ?>
-		</a>
+		</button>
 		<?php if ( $is_user_asker ) : ?>
 		<div class="tutor-flex">
 			<button 
@@ -130,3 +139,20 @@ $single_url = UrlHelper::add_query_params(
 	?>
 </div>
 <?php endif; ?>
+
+<div x-show="replyingId === <?php echo (int) $question_id; ?>" x-cloak class="tutor-card tutor-surface-l1-hover tutor-mt-4">
+	<?php
+	tutor_load_template(
+		'learning-area.subpages.qna.form',
+		array(
+			'form_id'        => 'qna-reply-form-' . (int) $question_id,
+			'submit_handler' => '(data) => replyQnAMutation?.mutate({ ...data, question_id: ' . (int) $question_id . ', course_id: ' . (int) $question->course_id . ', reply_context: \'list\' })',
+			'cancel_handler' => 'setReplying(null)',
+			'is_pending'     => 'replyQnAMutation?.isPending',
+			'placeholder'    => __( 'Just drop your response here!', 'tutor' ),
+			'label'          => __( 'Reply', 'tutor' ),
+			'submit_label'   => __( 'Save', 'tutor' ),
+		)
+	);
+	?>
+</div>
