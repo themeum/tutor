@@ -18,6 +18,7 @@ use Tutor\Components\Pagination;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Modal;
+use TUTOR\Dashboard;
 use Tutor\Helpers\ComponentHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\WithdrawModel;
@@ -134,11 +135,12 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 
 			<div class="tutor-mt-4 tutor-text-tiny">
 				<?php
+				$withdrawal_pref_link = Dashboard::get_account_page_url( 'settings?tab=withdraw' );
 				echo wp_kses_post(
 					sprintf(
 						/* translators: %s: Withdraw Preference */
 						__( 'The preferred payment method is selected as PayPal. You can change your %s', 'tutor' ),
-						'<a href="">' . __( 'Withdraw Preference', 'tutor' ) . '</a>'
+						'<a href="' . esc_url( $withdrawal_pref_link ) . '">' . __( 'Withdraw Preference', 'tutor' ) . '</a>'
 					)
 				);
 				?>
