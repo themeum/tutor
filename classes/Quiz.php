@@ -795,8 +795,6 @@ class Quiz {
 
 					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 
-					// Allow Pro (or add-ons) to grade draw_image and pin_image and set achieved_mark / is_correct.
-					$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 					// Filter total marks after grading. Runs after answers_data is built and graded,
 					// so add-ons (e.g. H5P, pin_image, draw_image) can add their achieved marks.
 					$total_marks = apply_filters( 'tutor_filter_quiz_total_marks', $total_marks, $question_id, $question_type, $user_id, $attempt_id, $answers_data );
