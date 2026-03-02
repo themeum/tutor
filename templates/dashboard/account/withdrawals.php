@@ -11,6 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Badge;
 use TUTOR\Input;
 use Tutor\Components\Button;
 use Tutor\Components\EmptyState;
@@ -158,7 +159,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 				<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
 					<?php require_once tutor_get_template( 'dashboard.account.withdrawal.withdrawal-history-filters' ); ?>  
 				</div>
-				<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
+				<div class="tutor-flex tutor-flex-column tutor-gap-5">
 					<?php if ( tutor_utils()->count( $withdral_history->results ) > 0 ) : ?>
 						<?php foreach ( $withdral_history->results as $withdrawal ) : ?>
 						<div class="tutor-billing-card">
@@ -167,7 +168,12 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 									<div>
 									<?php
 									$method_data = maybe_unserialize( $withdrawal->method_data );
-									ComponentHelper::render_payment_method_badge( $method_data['withdraw_method_name'] ?? '' );
+									$method_key  = $method_data['withdraw_method_key'] ?? '';
+									$method_icon = $method_icons[ $method_key ] ?? '';
+									Badge::make()
+										->icon( $method_icon )
+										->label( $method_data['withdraw_method_name'] ?? '' )
+										->render();
 									?>
 									</div>
 									<div class="tutor-text-tiny"><?php echo esc_html( tutor_utils()->asterisks_email( $withdrawal->user_email ) ); ?></div>
@@ -180,7 +186,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 							<div class="tutor-billing-card-right">
 								<div class="tutor-billing-card-amount">
 									<?php echo esc_html( tutor_utils()->tutor_price( $withdrawal->amount ) ); ?>
-									<?php ComponentHelper::render_order_status_badge( $withdrawal->status ); ?>
+									<?php ComponentHelper::render_status_badge( $withdrawal->status ); ?>
 								</div>
 							</div>
 						</div>
