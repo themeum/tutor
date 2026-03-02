@@ -202,6 +202,16 @@ window.jQuery(document).ready($=>{
                     }
                 }
             },
+            error: (xhr) => {
+                let message = __('Something went wrong.', 'tutor');
+
+                try {
+                    const resp = JSON.parse(xhr.responseText);
+                    message = resp.message || message;
+                } catch (e) {}
+
+                tutor_toast(__('Error!', 'tutor'), message, 'error');
+            },
             complete: () =>{
                 button.removeClass('is-loading');
             }

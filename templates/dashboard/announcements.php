@@ -9,12 +9,15 @@
  * @since 1.7.9
  */
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\InputType;
-use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\CourseFilter;
-use Tutor\Components\ConfirmationModal;
+use Tutor\Components\DateFilter;
 use Tutor\Components\EmptyState;
+use Tutor\Components\InputField;
 use Tutor\Components\Pagination;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Components\SearchFilter;
@@ -23,10 +26,6 @@ use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 $limit        = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 
@@ -34,12 +33,9 @@ $order_filter  = Input::get( 'order', 'DESC' );
 $search_filter = Input::get( 'search', '' );
 
 // Announcement's parent.
-$course_id   = Input::get( 'course-id', '' );
-$date_filter = Input::get( 'date', '' );
-
-$filter_year  = gmdate( 'Y', strtotime( $date_filter ) );
-$filter_month = gmdate( 'm', strtotime( $date_filter ) );
-$filter_day   = gmdate( 'd', strtotime( $date_filter ) );
+$course_id  = Input::get( 'course-id', 0, Input::TYPE_INT );
+$start_date = Input::get( 'start_date', '' );
+$end_date   = Input::get( 'end_date', '' );
 
 $args = array(
 	'post_type'      => 'tutor_announcements',
@@ -52,19 +48,19 @@ $args = array(
 	'order'          => sanitize_text_field( $order_filter ),
 
 );
-if ( ! empty( $date_filter ) ) {
+if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 	$args['date_query'] = array(
 		array(
-			'year'  => $filter_year,
-			'month' => $filter_month,
-			'day'   => $filter_day,
+			'before'    => $end_date,
+			'after'     => $start_date,
+			'inclusive' => true,
 		),
 	);
 }
 if ( ! current_user_can( 'administrator' ) ) {
 	$args['author'] = get_current_user_id();
 }
-$the_query           = new WP_Query( $args );
+$the_query           = new \WP_Query( $args );
 $announcements       = $the_query->have_posts() ? $the_query->posts : array();
 $total_announcements = $the_query->found_posts;
 
@@ -95,9 +91,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 				->render();
 			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
-				<button type="button" class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon">
-					<?php tutor_utils()->render_svg_icon( Icon::CALENDAR_2, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-				</button>
+				<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render(); ?>
 				<?php Sorting::make()->order( $order_filter )->render(); ?>
 			</div>
 		</div>

@@ -227,6 +227,15 @@ class FileUploader extends BaseComponent {
 	protected $value = '';
 
 	/**
+	 * Upload icon size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var integer
+	 */
+	protected $upload_icon_size = 24;
+
+	/**
 	 * Set uploader accept attribute.
 	 *
 	 * Common types: .pdf, .doc, .docx, .jpg, .jpeg, .png
@@ -273,6 +282,21 @@ class FileUploader extends BaseComponent {
 	 */
 	public function uploader_icon( $icon ) {
 		$this->uploader_icon = $icon;
+
+		return $this;
+	}
+
+	/**
+	 * Set uploader icon size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $size Icon size.
+	 *
+	 * @return $this
+	 */
+	public function uploader_icon_size( $size ) {
+		$this->upload_icon_size = $size;
 
 		return $this;
 	}
@@ -485,7 +509,7 @@ class FileUploader extends BaseComponent {
 		$max_size            = $this->max_size ?? wp_max_upload_size();
 		$icon                = $this->uploader_icon;
 		$title               = ! empty( $this->uploader_title ) ? $this->uploader_title : __( 'Drop files here or click to upload', 'tutor' );
-		$subtitle            = ! empty( $this->uploader_subtitle ) ? $this->uploader_subtitle : __( 'PDF, DOC, DOCX, JPG, PNG Formats (Max 50MB)', 'tutor' );
+		$subtitle            = ! empty( $this->uploader_subtitle ) ? $this->uploader_subtitle : '';
 		$button_text         = ! empty( $this->uploader_button_text ) ? $this->uploader_button_text : __( 'Select Files', 'tutor' );
 		$on_file_select      = $this->attributes['onFileSelect'] ?? 'null';
 		$on_error            = $this->attributes['onError'] ?? 'null';
@@ -562,7 +586,7 @@ class FileUploader extends BaseComponent {
 					</div>
 					<div class="tutor-mt-1">
 						<button type="button" class="tutor-btn tutor-btn-primary-soft tutor-btn-sm" @click="openFileDialog()">
-							<?php esc_html_e( 'Upload More Files', 'tutor' ); ?>
+							<?php $this->multiple ? esc_html_e( 'Upload More Files', 'tutor' ) : esc_html_e( 'Upload Again', 'tutor' ); ?>
 						</button>
 					</div>
 				</div>
@@ -595,11 +619,13 @@ class FileUploader extends BaseComponent {
 					<?php echo $this->get_attributes_string(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				>
 				<div class="tutor-file-uploader-icon">
-					<?php tutor_utils()->render_svg_icon( $icon, 24, 24 ); ?>
+					<?php tutor_utils()->render_svg_icon( $icon, $this->upload_icon_size, $this->upload_icon_size ); ?>
 				</div>
 				<div class="tutor-file-uploader-content">
 					<p class="tutor-file-uploader-title"><?php echo esc_html( $title ); ?></p>
+					<?php if ( ! empty( $subtitle ) ) : ?>
 					<p class="tutor-file-uploader-subtitle"><?php echo esc_html( $subtitle ); ?></p>
+					<?php endif; ?>
 				</div>
 				<button type="button" class="tutor-btn tutor-btn-primary-soft" :disabled="isDisabled">
 					<?php echo esc_html( $button_text ); ?>

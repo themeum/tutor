@@ -116,14 +116,17 @@ class Tooltip extends BaseComponent {
 	);
 
 	/**
-	 * Set the tooltip content.
+	 * Set and sanitize the tooltip content.
 	 *
-	 * @param string $content HTML or text content.
+	 * @param string                             $content HTML or text content.
+	 * @param array<string, array<string, bool>> $extra_tags Optional.
+	 *        Additional HTML tags and attributes in KSES-compatible format.
 	 *
 	 * @return $this
 	 */
-	public function content( string $content ): self {
-		$this->content = $content;
+	public function content( string $content, $extra_tags = array() ): self {
+
+		$this->content = wp_kses( $content, $this->get_allowed_html_tags( $extra_tags ) );
 		return $this;
 	}
 
@@ -278,7 +281,7 @@ class Tooltip extends BaseComponent {
 			esc_attr( $this->attributes['class'] ?? '' ),
 			$this->get_attributes_string(),
 			$trigger_html,
-			wp_kses_post( $this->content )
+			$this->content
 		);
 
 		return $this->component_string;
