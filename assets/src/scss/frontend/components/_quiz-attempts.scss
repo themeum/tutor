@@ -11,20 +11,6 @@
 }
 
 .tutor-quiz-attempts {
-  .tutor-quiz-students-attempts-filter-item:nth-child(1) {
-    .tutor-btn-link {
-      span:nth-child(1) {
-        color: $tutor-text-secondary;
-      }
-      span:nth-child(2) {
-        color: $tutor-text-primary;
-      }
-
-      svg {
-        color: $tutor-icon-secondary;
-      }
-    }
-  }
 
   &-filter {
     @include tutor-flex(row, center, space-between);
