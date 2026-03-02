@@ -2,6 +2,10 @@
 @use '../mixins' as *;
 
 .tutor-vc-calendar {
+  z-index: calc($tutor-z-highest + 1);
+  background-color: $tutor-surface-l1 !important;
+  border-radius: $tutor-radius-md !important;
+
   .vc-date__btn {
     font-size: $tutor-font-size-small;
   }

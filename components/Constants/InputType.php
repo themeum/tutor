@@ -39,6 +39,7 @@ abstract class InputType {
 	public const DROPDOWN  = 'dropdown';
 	public const LINK      = 'link';
 	public const DATE      = 'date';
+	public const TIME      = 'time';
 	public const DATE_TIME = 'date-time';
 	public const FILE      = 'file';
 }

@@ -82,7 +82,7 @@ $active_nav = 'profile';
 			<?php
 		}
 		?>
-		<li x-data="tutorPopover({ placement: 'top-start', offset: 16 })">
+		<li x-data="tutorPopover({ placement: 'top-end', offset: 16 })">
 			<button
 				type="button"
 				x-ref="trigger"

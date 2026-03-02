@@ -9,6 +9,8 @@
  * @version 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\WithdrawModel;

@@ -9,6 +9,7 @@
  * @since 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <?php if ( ! get_option( 'users_can_register', false ) ) : ?> 

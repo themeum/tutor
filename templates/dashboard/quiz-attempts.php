@@ -9,6 +9,8 @@
  * @since 1.4.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Positions;
 use Tutor\Components\Constants\Size;
