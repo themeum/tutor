@@ -12,6 +12,7 @@ import { initializeOverview } from './pages/overview';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
 import { initializeReviews } from './pages/reviews';
 import { initializeSettings } from './pages/settings';
+import { initializeWithdrawals } from './pages/withdrawals';
 
 /**
  * Get current dashboard page from URL
@@ -67,6 +68,9 @@ const getCurrentPage = (): string => {
   if (path.includes('/reviews')) {
     return 'reviews';
   }
+  if (path.includes('/account/withdrawals')) {
+    return 'withdrawals';
+  }
 
   // Default to home when subpage=dashboard
   return 'home';
@@ -109,6 +113,9 @@ const initializeDashboard = () => {
       break;
     case 'reviews':
       initializeReviews();
+      break;
+    case 'withdrawals':
+      initializeWithdrawals();
       break;
     default:
       // eslint-disable-next-line no-console

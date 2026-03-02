@@ -197,6 +197,9 @@ const endpoints = {
   UPDATE_USER_PREFERENCES: 'tutor_save_user_preferences',
   REMOVE_DEVICE_MANUALLY: 'tutor_remove_device_manually',
   REMOVE_ALL_ACTIVE_LOGINS: 'tutor_remove_all_active_logins',
+
+  // Withdrawals
+  MAKE_AN_WITHDRAW: 'tutor_make_an_withdraw',
 } as const;
 
 export default endpoints;
