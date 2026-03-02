@@ -34,7 +34,6 @@ const FORM_ID_PREFIXES = {
 
 const ELEMENT_IDS = {
   QNA_TEXT_PREFIX: 'tutor-qna-text-',
-  QNA_LIST_CONTAINER: 'tutor-discussion-list',
   REPLIES_LIST_CONTAINER: 'tutor-discussion-replies-list',
 };
 
@@ -107,7 +106,7 @@ const qnaPage = () => {
       });
 
       this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
-        onSuccess: (data, payload) => {
+        onSuccess: (_, payload) => {
           toast.success(__('Reply saved successfully', 'tutor'));
           
           const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${payload.question_id}`;
@@ -236,7 +235,6 @@ const qnaPage = () => {
     },
 
     updateReplyCount(questionId: number) {
-      // Find the reply count element and increment it
       const card = document.querySelector(`[data-question-id="${questionId}"]`);
       if (card) {
         const countElement = card.querySelector('.tutor-discussion-card-reply-count');
