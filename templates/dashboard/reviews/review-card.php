@@ -48,24 +48,26 @@ $delete_modal_id = 'review-delete-modal';
 	<div x-show="!isEditMode">
 		<!-- Header Section -->
 		<div class="tutor-review-header">
-			<!-- Type Badge with Icon -->
-			<?php if ( ! empty( $review['is_bundle'] ) ) : ?>
-				<?php
-					Badge::make()
-						->variant( Badge::HIGHLIGHT )
-						->icon( Icon::BUNDLE )
-						->label( __( 'Bundle', 'tutor' ) )
-						->render();
-				?>
-			<?php else : ?>
-				<?php
-					Badge::make()
-						->variant( Badge::INFO )
-						->icon( Icon::COURSES )
-						->label( __( 'Course', 'tutor' ) )
-						->render();
-				?>
-			<?php endif; ?>
+			<div class="tutor-flex tutor-align-center">
+				<!-- Type Badge with Icon -->
+				<?php if ( ! empty( $review['is_bundle'] ) ) : ?>
+					<?php
+						Badge::make()
+							->variant( Badge::HIGHLIGHT )
+							->icon( Icon::BUNDLE )
+							->label( __( 'Bundle', 'tutor' ) )
+							->render();
+					?>
+				<?php else : ?>
+					<?php
+						Badge::make()
+							->variant( Badge::INFO )
+							->icon( Icon::COURSES )
+							->label( __( 'Course', 'tutor' ) )
+							->render();
+					?>
+				<?php endif; ?>
+			</div>
 
 			<!-- Course Title -->
 			<div class="tutor-review-title">
