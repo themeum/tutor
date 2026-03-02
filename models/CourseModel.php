@@ -1481,15 +1481,16 @@ class CourseModel {
 				array_filter( $items, fn( $item ) => $item['is_completed'] )
 			);
 
-			$percentage   = $total_topic_items > 0 && $total_topic_items_completed > 0
-							? (int) round( ( $total_topic_items_completed / $total_topic_items ) * 100 )
+			$percentage = $total_topic_items > 0 && $total_topic_items_completed > 0
+							? round( ( $total_topic_items_completed / $total_topic_items ) * 100, 2 )
 							: 0;
+
 			$topic_list[] = array(
-				'topic_id'                    => $topic_id,
-				'topic_summary'               => $topic_post->post_content,
-				'topic_title'                 => get_the_title( $topic_id ),
-				'items'                       => $items,
-				'topic_completion_percentage' => $percentage,
+				'id'                    => $topic_id,
+				'summary'               => $topic_post->post_content,
+				'title'                 => get_the_title( $topic_id ),
+				'items'                 => $items,
+				'completion_percentage' => $percentage,
 			);
 		}
 
@@ -1575,10 +1576,10 @@ class CourseModel {
 	private function build_course_progress_item( \WP_Post $post, $user_id ) {
 
 		$base_items = array(
-			'post_id'   => $post->ID,
-			'post_type' => $post->post_type,
-			'link'      => esc_url_raw( get_permalink( $post->ID ) ),
-			'title'     => $post->post_title,
+			'id'    => $post->ID,
+			'type'  => $post->post_type,
+			'link'  => esc_url_raw( get_permalink( $post->ID ) ),
+			'title' => $post->post_title,
 		);
 
 		switch ( $post->post_type ) {
@@ -1603,6 +1604,10 @@ class CourseModel {
 				);
 
 			case tutor()->zoom_post_type:
+				if ( ! tutor_utils()->is_addon_enabled( 'tutor-zoom' ) ) {
+					return $base_items;
+				}
+
 				return array_merge(
 					$base_items,
 					array(
@@ -1613,6 +1618,10 @@ class CourseModel {
 				);
 
 			case tutor()->meet_post_type:
+				if ( ! tutor_utils()->is_addon_enabled( 'google-meet' ) ) {
+					return $base_items;
+				}
+
 				return array_merge(
 					$base_items,
 					array(
