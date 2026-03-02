@@ -208,7 +208,6 @@ const discussionsPage = () => {
           if (payload.reply_context === 'single') {
             this.reloadReplies();
           } else {
-            // List view
             this.setReplying(null);
             this.updateReplyCount(payload.question_id);
           }
