@@ -760,7 +760,7 @@ class Quiz {
 						// }
 						//phpcs:enable
 					} else {
-						$custom_answer_data = array(
+						$custom_answer_data    = array(
 							'given_answer'          => $given_answer,
 							'is_answer_was_correct' => $is_answer_was_correct,
 						);
