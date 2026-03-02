@@ -97,20 +97,27 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 					<div>
 						<?php
 						if ( $is_balance_sufficient && $withdraw_method_name ) {
-							$modal_id = 'withdrawal-request-modal';
+							$form_id             = 'withdrawal-request-form';
+							$modal_id            = 'withdrawal-request-modal';
+							$modal_template_path = tutor_get_template( 'dashboard.account.withdrawal.withdrawal-request-modal' );
 
 							Button::make()
 								->label( __( 'Request Withdrawal', 'tutor' ) )
-								->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" )
+								->attr( '@click', "TutorCore.form.reset('{$form_id}'); TutorCore.modal.showModal('{$modal_id}')" )
 								->variant( Variant::PRIMARY )
 								->size( Size::SMALL )
 								->render();
 
-							$template_path = tutor_get_template( 'dashboard.account.withdrawal.withdrawal-request-modal' );
 							Modal::make()
 								->id( $modal_id )
 								->title( 'Withdrawal Request' )
-								->template( $template_path )
+								->template(
+									$modal_template_path,
+									array(
+										'form_id'  => $form_id,
+										'modal_id' => $modal_id,
+									)
+								)
 								->render();
 						}
 						?>

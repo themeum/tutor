@@ -16,8 +16,8 @@ use Tutor\Components\InputField;
 
 defined( 'ABSPATH' ) || exit;
 
-$form_id  = 'withdrawal-request-form';
-$modal_id = 'withdrawal-request-modal';
+$form_id  = $data['form_id'] ?? '';
+$modal_id = $data['modal_id'] ?? '';
 ?>
 
 <div class="tutor-p-8">
