@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Input;
 
 /**
@@ -25,6 +26,66 @@ class WithdrawModel {
 	const STATUS_PENDING  = 'pending';
 	const STATUS_APPROVED = 'approved';
 	const STATUS_REJECTED = 'rejected';
+
+	/**
+	 * Get withdrawal status list
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_withdrawal_status_list() {
+		return array(
+			self::STATUS_PENDING  => __( 'Pending', 'tutor' ),
+			self::STATUS_APPROVED => __( 'Approved', 'tutor' ),
+			self::STATUS_REJECTED => __( 'Rejected', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Get withdrawal count
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $where where.
+	 *
+	 * @return int
+	 */
+	public static function get_withdrawal_count( $where = array() ) {
+		return QueryHelper::get_count( 'tutor_withdraws', $where, array(), 'withdraw_id' );
+	}
+
+	/**
+	 * Get status count
+	 *
+	 * @since 4.0.0
+	 */
+	public static function get_status_filter_options() {
+		$url   = get_pagenum_link();
+		$where = array(
+			'user_id' => get_current_user_id(),
+		);
+
+		$tabs [] = array(
+			'key'   => '',
+			'title' => __( 'All', 'tutor' ),
+			'value' => self::get_withdrawal_count( $where ),
+			'url'   => UrlHelper::add_query_params( $url, array( 'data' => 'all' ) ),
+		);
+
+		foreach ( self::get_withdrawal_status_list() as $status => $title ) {
+			$where['status'] = $status;
+
+			$tabs[] = array(
+				'key'   => $status,
+				'title' => $title,
+				'value' => self::get_withdrawal_count( $where ),
+				'url'   => UrlHelper::add_query_params( $url, array( 'data' => $status ) ),
+			);
+		}
+
+		return $tabs;
+	}
 
 	/**
 	 * Get withdraw summary info for an user
@@ -52,7 +113,7 @@ class WithdrawModel {
 
 		$maturity_days = tutor_utils()->get_option( 'minimum_days_for_balance_to_be_available' );
 
-		//phpcs:disable WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
+		//phpcs:disable
 		$data = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT ID, display_name, 
@@ -101,7 +162,7 @@ class WithdrawModel {
 			)
 		);
 
-		//phpcs:enable WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
+		//phpcs:enable
 
 		return $data;
 	}
@@ -129,7 +190,7 @@ class WithdrawModel {
 
 		if ( ! empty( $status ) ) {
 			$status = (array) $status;
-			$status = "'" . implode( "','", $status ) . "'";
+			$status = QueryHelper::prepare_in_clause( $status );
 
 			$query_by_status_sql = " AND status IN({$status}) ";
 		}
@@ -153,6 +214,12 @@ class WithdrawModel {
 		$date_query = '';
 		if ( isset( $date ) && '' !== $date ) {
 			$date_query = "AND DATE(created_at) = CAST( '$date' AS DATE )";
+		}
+
+		// Date range @since 4.0.0.
+		$date_query = '';
+		if ( isset( $start_date ) && isset( $end_date ) ) {
+			$date_query = "AND DATE(created_at) BETWEEN CAST( '$start_date' AS DATE ) AND CAST( '$end_date' AS DATE )";
 		}
 
 		// Search query @since 2.0.0.
