@@ -9239,8 +9239,8 @@ class Utils {
 			return '';
 		}
 		$mail_part    = explode( '@', $email );
-		$mail_part[0] = str_repeat( '*', strlen( $mail_part[0] ) );
-		return $mail_part[0] . $mail_part[1];
+		$mail_part[0] = $this->asterisks_center_text( $mail_part[0] );
+		return $mail_part[0] . '@' . $mail_part[1];
 	}
 
 	/**
@@ -9256,7 +9256,7 @@ class Utils {
 	 * @return string
 	 */
 	function asterisks_center_text( string $str, $number_of_asterisks = -1 ): string {
-		if ( empty( $str ) ) {
+		if ( '' === $str ) {
 			return '';
 		}
 
