@@ -11,10 +11,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\DateFilter;
 use Tutor\Components\Sorting;
+use TUTOR\Dashboard;
 use Tutor\Ecommerce\OrderController;
 use TUTOR\Icon;
+use TUTOR\Input;
 
 $filter_options = ( new OrderController( false ) )->tabs_key_value( 'dashboard' );
 
@@ -58,8 +62,21 @@ $selected = count( $selected ) ? reset( $selected ) : $filter_options[0];
 	</div>
 	<div class="tutor-qna-filter-right">
 		<div class="tutor-flex tutor-items-center tutor-gap-3">
-			<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render(); ?>
-			<?php Sorting::make()->order( $order_filter )->render(); ?>
+			<?php
+			$query_params = array( 'data', 'order', 'start_date', 'end_date' );
+			if ( Input::has_any( $query_params, Input::GET_REQUEST ) ) {
+				Button::make()
+					->tag( 'a' )
+					->attr( 'href', Dashboard::get_account_page_url( 'billing' ) )
+					->attr( 'class', 'tutor-text-brand' )
+					->label( __( 'Clear all', 'tutor' ) )
+					->variant( Variant::LINK )
+					->render();
+			}
+
+			DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
+			Sorting::make()->order( $order_filter )->render();
+			?>
 		</div>
 	</div>
 </div>

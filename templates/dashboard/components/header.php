@@ -1,8 +1,11 @@
 <?php
 /**
- * Tutor dashboard sidebar.
+ * Tutor dashboard header.
  *
- * @package tutor
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
+ * @link https://www.themeum.com/
+ * @since 4.0.0
  */
 
 use Tutor\Components\Button;

@@ -3535,12 +3535,14 @@ class Utils {
 	 * @param string  $order order.
 	 *
 	 * @since 3.4.0
+	 * @since 4.0.0 $args parameter added for additional where clause in query.
 	 *
 	 * @param array   $post_status the post status.
+	 * @param array   $args Optional additional WHERE conditions.
 	 *
 	 * @return array
 	 */
-	public function get_students_by_instructor( int $instructor_id, int $offset, int $limit, $search_filter = '', $course_id = '', $date_filter = '', $order_by = '', $order = '', $post_status = array( 'publish' ) ): array {
+	public function get_students_by_instructor( int $instructor_id, int $offset, int $limit, $search_filter = '', $course_id = '', $date_filter = '', $order_by = '', $order = '', $post_status = array( 'publish' ), $args = array() ): array {
 		global $wpdb;
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$limit         = sanitize_text_field( $limit );
@@ -3566,11 +3568,12 @@ class Utils {
 
 		$course_post_type = tutor()->course_post_type;
 
-		$search_term_raw = $search_filter;
-		$search_query    = '%' . $wpdb->esc_like( $search_filter ) . '%';
-		$course_query    = '';
-		$date_query      = '';
-		$author_query    = '';
+		$search_term_raw          = $search_filter;
+		$search_query             = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$course_query             = '';
+		$date_query               = '';
+		$author_query             = '';
+		$registratipn_date_clause = '';
 
 		if ( $course_id ) {
 			$course_query = " AND course.ID = $course_id ";
@@ -3588,6 +3591,14 @@ class Utils {
 			$author_query = "AND course.post_author = $instructor_id";
 		}
 
+		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
+			$from = Input::sanitize( $args['from'] );
+			$to   = Input::sanitize( $args['to'] );
+
+			$where['user.user_registered'] = array( 'BETWEEN', array( $from, $to ) );
+			$registratipn_date_clause      = ' AND ' . QueryHelper::prepare_where_clause( $where );
+		}
+
 		$post_status    = QueryHelper::prepare_in_clause( $post_status );
 		$students       = $wpdb->get_results(
 			$wpdb->prepare(
@@ -3601,6 +3612,7 @@ class Utils {
 					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
+					{$registratipn_date_clause}
 					{$author_query}
 					{$course_query}
 					{$date_query}
@@ -9621,8 +9633,8 @@ class Utils {
 		$percentage     = $total_contents > 0 ? ( $completed / $total_contents ) * 100 : 0;
 
 		return array(
-			'contents'  => $total_contents,
-			'completed' => $completed,
+			'contents'   => $total_contents,
+			'completed'  => $completed,
 			'percentage' => $percentage,
 		);
 	}
@@ -10990,5 +11002,31 @@ class Utils {
 			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, true ),
 			'no_of_decimal'      => (int) tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, true ),
 		);
+	}
+
+	/**
+	 * Get the icon constant based on the given post type.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $post_type The post type slug.
+	 *
+	 * @return string Icon constant associated with the post type.
+	 */
+	public static function get_icon_by_post_type( $post_type ): string {
+		switch ( $post_type ) {
+			case 'tutor_assignments':
+				return Icon::ASSIGNMENT;
+			case 'tutor-google-meet':
+				return Icon::GOOGLE_MEET_COLORIZE;
+			case 'tutor_quiz':
+				return Icon::QUIZ;
+			case 'tutor_zoom_meeting':
+				return Icon::ZOOM_COLORIZE;
+			case 'lesson':
+				return Icon::LESSON;
+			default:
+				return '';
+		}
 	}
 }

@@ -129,6 +129,7 @@ final class Icon {
 	const DBF                        = 'dbf';
 	const DELETE                     = 'delete';
 	const DELETE_2                   = 'delete-2';
+	const DESCENDING                 = 'descending';
 	const DEVICES                    = 'devices';
 	const DISCOUNT_TYPE              = 'discount-type';
 	const DIVI_COLORIZED             = 'divi-colorized';
@@ -416,31 +417,4 @@ final class Icon {
 	const ZIP                        = 'zip';
 	const ZOOM                       = 'zoom';
 	const ZOOM_COLORIZE              = 'zoom-colorize';
-
-
-	/**
-	 * Get the icon constant based on the given post type.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $post_type The post type slug.
-	 *
-	 * @return string Icon constant associated with the post type.
-	 */
-	public static function get_icon_by_post_type( $post_type ): string {
-		switch ( $post_type ) {
-			case 'tutor_assignments':
-				return self::ASSIGNMENT;
-			case 'tutor-google-meet':
-				return self::GOOGLE_MEET_COLORIZE;
-			case 'tutor_quiz':
-				return self::QUIZ;
-			case 'tutor_zoom_meeting':
-				return self::ZOOM_COLORIZE;
-			case 'lesson':
-				return self::LESSON;
-			default:
-				return '';
-		}
-	}
 }

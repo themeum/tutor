@@ -119,7 +119,6 @@ $footer_links = array(
 			</div>
 		</div>
 	</div>
-	<?php tutor_load_template( 'demo-components.dashboard.components.nav-mobile' ); ?>
 </div>
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 </body>
