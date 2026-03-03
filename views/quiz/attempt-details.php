@@ -543,13 +543,12 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													tutor_render_answer_list( $answers );
 												} else {
 													/**
-													 * Allow Pro and add-ons to render custom question type answers.
+													 * Allow Pro and add-ons to render given answer for custom question types.
 													 * Pro handles draw_image and pin_image via this action.
 													 *
-													 * @param object $answer       Answer object.
-													 * @param string $display_type Display type ('given_answer').
+													 * @param object $answer Answer object.
 													 */
-													do_action( 'tutor_quiz_render_answer_for_question_type', $answer, 'given_answer' );
+													do_action( 'tutor_quiz_render_given_answer_for_question_type', $answer );
 												}
 												?>
 												</div>
@@ -725,10 +724,9 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														 * Allow Pro and add-ons to render correct answer for custom question types.
 														 * Pro handles draw_image and pin_image via this action.
 														 *
-														 * @param object $answer       Answer object.
-														 * @param string $display_type  Display type ('correct_answer').
+														 * @param object $answer Answer object.
 														 */
-														do_action( 'tutor_quiz_render_answer_for_question_type', $answer, 'correct_answer' );
+														do_action( 'tutor_quiz_render_correct_answer_for_question_type', $answer );
 													}
 												}
 												?>
