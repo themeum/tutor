@@ -158,6 +158,13 @@ class Popover extends BaseComponent {
 	protected $popover_close_outside = true;
 
 	/**
+	 * Menu min width.
+	 *
+	 * @var string
+	 */
+	protected $menu_min_width;
+
+	/**
 	 * Set Popover title
 	 *
 	 * @since 4.0.0
@@ -295,6 +302,20 @@ class Popover extends BaseComponent {
 			'attr'           => $args['attr'] ?? array(),
 		);
 
+		return $this;
+	}
+
+	/**
+	 * Set menu min width.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $width the min width value.
+	 *
+	 * @return self
+	 */
+	public function menu_min_width( string $width ): self {
+		$this->menu_min_width = $width;
 		return $this;
 	}
 
@@ -468,7 +489,8 @@ class Popover extends BaseComponent {
 			}
 		}
 
-		return sprintf( '<div class="tutor-popover-menu">%s</div>', $menu_items );
+		$style = $this->menu_min_width ? " style=\"min-width: {$this->menu_min_width}\"" : '';
+		return sprintf( '<div class="tutor-popover-menu"%s>%s</div>', $style, $menu_items );
 	}
 
 	/**
