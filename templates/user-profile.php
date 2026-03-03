@@ -25,6 +25,7 @@ $github_url       = $student_meta['_tutor_profile_github'][0] ?? '#';
 $x_url            = $student_meta['_tutor_profile_twitter'][0] ?? '#';
 $facebook_url     = $student_meta['_tutor_profile_facebook'][0] ?? '#';
 $linked_in_url    = $student_meta['_tutor_profile_linkedin'][0] ?? '#';
+$phone_number     = $student_meta['phone_number'][0] ?? '';
 ?>
 
 <div class="tutor-profile-card">
@@ -68,10 +69,10 @@ $linked_in_url    = $student_meta['_tutor_profile_linkedin'][0] ?? '#';
 					<?php echo esc_html__( 'Email', 'tutor' ); ?> : 
 					<span><?php echo esc_html( $student_details->user_email ); ?></span>
 				</li>
-				<?php if ( ! empty( $student_meta['phone_number'][0] ) ) : ?>
+				<?php if ( ! empty( $phone_number ) ) : ?>
 				<li>
 					<?php echo esc_html__( 'Phone', 'tutor' ); ?> : 
-					<span><?php echo esc_html( $student_meta['phone_number'][0] ); ?></span>
+					<span><?php echo esc_html( $phone_number ); ?></span>
 				</li>
 				<?php endif; ?>	
 			</ul>
