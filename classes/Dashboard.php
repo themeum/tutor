@@ -92,8 +92,8 @@ class Dashboard {
 		if ( User::is_instructor_view() ) {
 			$pages['withdrawals'] = array(
 				'title'       => esc_html__( 'Withdrawals', 'tutor' ),
-				'icon'        => Icon::EARNING,
-				'icon_active' => Icon::EARNING,
+				'icon'        => Icon::WALLET,
+				'icon_active' => Icon::WALLET,
 				'url'         => self::get_account_page_url( 'withdrawals' ),
 				'template'    => tutor_get_template( 'dashboard.account.withdrawals' ),
 			);

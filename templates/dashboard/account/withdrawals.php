@@ -23,7 +23,6 @@ use Tutor\Components\Tooltip;
 use TUTOR\Dashboard;
 use Tutor\Helpers\ComponentHelper;
 use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use Tutor\Models\WithdrawModel;
 
@@ -59,13 +58,8 @@ $saved_account        = WithdrawModel::get_user_withdraw_method();
 $withdraw_method_name = tutor_utils()->avalue_dot( 'withdraw_method_name', $saved_account );
 
 
-$history_count = $withdral_history->count;
-$method_icons  = array(
-	'bank_transfer_withdraw' => UrlHelper::asset( 'images/icon-bank.svg' ),
-	'echeck_withdraw'        => UrlHelper::asset( 'images/icon-echeck.svg' ),
-	'paypal_withdraw'        => UrlHelper::asset( 'images/icon-paypal.svg' ),
-);
-
+$history_count  = $withdral_history->count;
+$method_icons   = WithdrawModel::get_method_icons();
 $status_message = array(
 	WithdrawModel::STATUS_REJECTED => __( 'Please contact the site administrator for more information.', 'tutor' ),
 	WithdrawModel::STATUS_PENDING  => __( 'Withdrawal request is pending for approval, please hold tight.', 'tutor' ),
@@ -160,7 +154,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 				<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
 					<?php require_once tutor_get_template( 'dashboard.account.withdrawal.withdrawal-history-filters' ); ?>  
 				</div>
-				<div class="tutor-flex tutor-flex-column tutor-gap-5">
+				<div class="tutor-flex tutor-flex-column">
 					<?php if ( tutor_utils()->count( $withdral_history->results ) > 0 ) : ?>
 						<?php
 						foreach ( $withdral_history->results as $withdrawal ) :
@@ -183,14 +177,11 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 									<div class="tutor-text-tiny">
 									<?php
 									switch ( $method_key ) {
-										case 'bank_transfer_withdraw':
-											$method_title = $method_data['account_number']['value'];
-											$method_title = substr_replace( $method_title, '****', 2, strlen( $method_title ) - 4 );
+										case WithdrawModel::METHOD_BANK_TRANSFER_WITHDRAW:
+											$method_title = tutor_utils()->asterisks_center_text( $method_data['account_number']['value'] ?? '', 4 );
 											break;
-										case 'paypal_withdraw':
-											$method_title = $method_data['paypal_email']['value'];
-											$email_base   = substr( $method_title, 0, strpos( $method_title, '@' ) );
-											$method_title = substr_replace( $email_base, '****', 2, strlen( $email_base ) - 3 ) . substr( $method_title, strpos( $method_title, '@' ) );
+										case WithdrawModel::METHOD_PAYPAL_WITHDRAW:
+											$method_title = tutor_utils()->asterisks_email( $method_data['paypal_email']['value'] ?? '' );
 											break;
 									}
 									echo esc_html( $method_title );
@@ -225,7 +216,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 					<?php else : ?>
 						<?php
 						EmptyState::make()
-						->title( 'No withdrawal records found' )
+						->title( __( 'No withdrawal records found', 'tutor' ) )
 						->render();
 						?>
 			<?php endif; ?>

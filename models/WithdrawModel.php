@@ -28,6 +28,13 @@ class WithdrawModel {
 	const STATUS_REJECTED = 'rejected';
 
 	/**
+	 * Withdrawal method keys
+	 */
+	const METHOD_BANK_TRANSFER_WITHDRAW = 'bank_transfer_withdraw';
+	const METHOD_PAYPAL_WITHDRAW        = 'paypal_withdraw';
+	const METHOD_ECHECK_WITHDRAW        = 'echeck_withdraw';
+
+	/**
 	 * Get withdrawal status list
 	 *
 	 * @since 4.0.0
@@ -39,6 +46,36 @@ class WithdrawModel {
 			self::STATUS_PENDING  => __( 'Pending', 'tutor' ),
 			self::STATUS_APPROVED => __( 'Approved', 'tutor' ),
 			self::STATUS_REJECTED => __( 'Rejected', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Get withdrawal method list
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_withdrawal_method_list() {
+		return array(
+			self::METHOD_BANK_TRANSFER_WITHDRAW => __( 'Bank Transfer', 'tutor' ),
+			self::METHOD_PAYPAL_WITHDRAW        => __( 'PayPal', 'tutor' ),
+			self::METHOD_ECHECK_WITHDRAW        => __( 'E-Check', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Get withdrawal method icons
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_method_icons() {
+		return array(
+			self::METHOD_BANK_TRANSFER_WITHDRAW => UrlHelper::asset( 'images/icon-bank.svg' ),
+			self::METHOD_PAYPAL_WITHDRAW        => UrlHelper::asset( 'images/icon-paypal.svg' ),
+			self::METHOD_ECHECK_WITHDRAW        => UrlHelper::asset( 'images/icon-echeck.svg' ),
 		);
 	}
 
