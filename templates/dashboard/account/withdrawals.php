@@ -19,17 +19,20 @@ use Tutor\Components\Pagination;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Modal;
+use Tutor\Components\Tooltip;
 use TUTOR\Dashboard;
 use Tutor\Helpers\ComponentHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
+use TUTOR\Icon;
 use Tutor\Models\WithdrawModel;
 
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
 $current_page  = max( 1, Input::get( 'current_page', 0, Input::TYPE_INT ) );
 $offset        = ( $current_page - 1 ) * $item_per_page;
 
-$selected_filter = Input::get( 'data', '', Input::TYPE_STRING );
-$order_filter    = Input::get( 'order', 'DESC', Input::TYPE_STRING );
+$selected_filter = Input::get( 'data', '' );
+$order_filter    = Input::get( 'order', 'DESC' );
 $start_date      = Input::get( 'start_date' );
 $end_date        = Input::get( 'end_date' );
 $user_id         = get_current_user_id();
@@ -57,17 +60,15 @@ $withdraw_method_name = tutor_utils()->avalue_dot( 'withdraw_method_name', $save
 
 
 $history_count = $withdral_history->count;
-$image_base    = tutor()->url . '/assets/images/';
-
-$method_icons = array(
-	'bank_transfer_withdraw' => $image_base . 'icon-bank.svg',
-	'echeck_withdraw'        => $image_base . 'icon-echeck.svg',
-	'paypal_withdraw'        => $image_base . 'icon-paypal.svg',
+$method_icons  = array(
+	'bank_transfer_withdraw' => UrlHelper::asset( 'images/icon-bank.svg' ),
+	'echeck_withdraw'        => UrlHelper::asset( 'images/icon-echeck.svg' ),
+	'paypal_withdraw'        => UrlHelper::asset( 'images/icon-paypal.svg' ),
 );
 
 $status_message = array(
-	'rejected' => __( 'Please contact the site administrator for more information.', 'tutor' ),
-	'pending'  => __( 'Withdrawal request is pending for approval, please hold tight.', 'tutor' ),
+	WithdrawModel::STATUS_REJECTED => __( 'Please contact the site administrator for more information.', 'tutor' ),
+	WithdrawModel::STATUS_PENDING  => __( 'Withdrawal request is pending for approval, please hold tight.', 'tutor' ),
 );
 
 $currency_symbol = '';
@@ -161,22 +162,40 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 				</div>
 				<div class="tutor-flex tutor-flex-column tutor-gap-5">
 					<?php if ( tutor_utils()->count( $withdral_history->results ) > 0 ) : ?>
-						<?php foreach ( $withdral_history->results as $withdrawal ) : ?>
+						<?php
+						foreach ( $withdral_history->results as $withdrawal ) :
+							$method_data  = maybe_unserialize( $withdrawal->method_data );
+							$method_key   = $method_data['withdraw_method_key'] ?? '';
+							$method_icon  = $method_icons[ $method_key ] ?? '';
+							$method_title = '';
+							?>
 						<div class="tutor-billing-card">
 							<div class="tutor-billing-card-left">
 								<div class="tutor-flex tutor-gap-6">
 									<div>
 									<?php
-									$method_data = maybe_unserialize( $withdrawal->method_data );
-									$method_key  = $method_data['withdraw_method_key'] ?? '';
-									$method_icon = $method_icons[ $method_key ] ?? '';
 									Badge::make()
 										->icon( $method_icon )
 										->label( $method_data['withdraw_method_name'] ?? '' )
 										->render();
 									?>
 									</div>
-									<div class="tutor-text-tiny"><?php echo esc_html( tutor_utils()->asterisks_email( $withdrawal->user_email ) ); ?></div>
+									<div class="tutor-text-tiny">
+									<?php
+									switch ( $method_key ) {
+										case 'bank_transfer_withdraw':
+											$method_title = $method_data['account_number']['value'];
+											$method_title = substr_replace( $method_title, '****', 2, strlen( $method_title ) - 4 );
+											break;
+										case 'paypal_withdraw':
+											$method_title = $method_data['paypal_email']['value'];
+											$email_base   = substr( $method_title, 0, strpos( $method_title, '@' ) );
+											$method_title = substr_replace( $email_base, '****', 2, strlen( $email_base ) - 3 ) . substr( $method_title, strpos( $method_title, '@' ) );
+											break;
+									}
+									echo esc_html( $method_title );
+									?>
+									</div>
 								</div>
 								<div class="tutor-text-tiny">
 									<?php echo esc_html( tutor_i18n_get_formated_date( $withdrawal->created_at ) ); ?>
@@ -186,7 +205,19 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 							<div class="tutor-billing-card-right">
 								<div class="tutor-billing-card-amount">
 									<?php echo esc_html( tutor_utils()->tutor_price( $withdrawal->amount ) ); ?>
-									<?php ComponentHelper::render_status_badge( $withdrawal->status ); ?>
+
+									<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-mt-4">
+										<?php
+										ComponentHelper::render_status_badge( $withdrawal->status );
+										if ( in_array( $withdrawal->status, array( WithdrawModel::STATUS_PENDING, WithdrawModel::STATUS_REJECTED ), true ) ) {
+											Tooltip::make()
+												->content( $status_message[ $withdrawal->status ] )
+												->placement( 'top' )
+												->trigger_element( tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON ) )
+												->render();
+										}
+										?>
+									</div>
 								</div>
 							</div>
 						</div>
