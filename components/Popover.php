@@ -197,7 +197,7 @@ class Popover extends BaseComponent {
 	 * @return self
 	 */
 	public function placement( string $popover_placement = 'bottom-start' ): self {
-		$placement_positions = array( Positions::TOP, Positions::LEFT, Positions::RIGHT, Positions::BOTTOM, Positions::BOTTOM_START );
+		$placement_positions = array( Positions::TOP, Positions::LEFT, Positions::RIGHT, Positions::BOTTOM, Positions::BOTTOM_START, Positions::BOTTOM_END );
 		if ( ! in_array( $popover_placement, $placement_positions, true ) ) {
 			$this->popover_placement = Positions::BOTTOM_START;
 		}
