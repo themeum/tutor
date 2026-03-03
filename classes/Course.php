@@ -1700,6 +1700,19 @@ class Course extends Tutor_Base {
 	public function tutor_update_course_content_order() {
 		tutor_utils()->checking_nonce();
 
+		if ( Input::has( 'tutor_topics_lessons_sorting' ) ) {
+			$sorting_order = Input::post( 'tutor_topics_lessons_sorting' );
+			$sorting_order = json_decode( $sorting_order, true );
+			if ( tutor_utils()->count( $sorting_order ) ) {
+				foreach ( $sorting_order as $topic ) {
+					if ( isset( $topic['topic_id'] ) && ! tutor_utils()->can_user_manage( 'topic', $topic['topic_id'] ) ) {
+						wp_send_json_error( __( 'Access Denied!', 'tutor' ) );
+						return;
+					}
+				}
+			}
+		}
+
 		if ( Input::has( 'content_parent' ) ) {
 			$content_parent = Input::post( 'content_parent', array(), Input::TYPE_ARRAY );
 			$topic_id       = tutor_utils()->array_get( 'parent_topic_id', $content_parent );
@@ -2084,6 +2097,12 @@ class Course extends Tutor_Base {
 		 */
 
 		$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
+
+		$course = get_post( $course_id );
+
+		if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
+			wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
+		}
 
 		/**
 		 * If is is not purchasable, it's free, and enroll right now
@@ -3009,6 +3028,12 @@ class Course extends Tutor_Base {
 			$password_protected = post_password_required( $course_id );
 			if ( $password_protected ) {
 				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
+			}
+
+			$course = get_post( $course_id );
+
+			if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
+				wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
 			}
 
 			/**
