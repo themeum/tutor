@@ -19,8 +19,10 @@ import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { CourseTopic } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import { Addons } from '@TutorShared/config/constants';
-import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled } from '@TutorShared/utils/util';
@@ -47,6 +49,168 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
   return (
     <div css={styles.settings}>
+      <div css={styles.card}>
+        <h5>{__('Quiz scope', 'tutor')}</h5>
+
+        <div css={styles.innerCard}>
+          <Controller
+            name="quiz_option.passing_grade"
+            control={form.control}
+            rules={requiredRule()}
+            render={(controllerProps) => (
+              <FormInputWithContent
+                {...controllerProps}
+                isInlineLabel
+                type="number"
+                label={__('Passing Grade', 'tutor')}
+                helpText={__('Set the minimum score percentage required to pass this quiz', 'tutor')}
+                content="%"
+                contentPosition="right"
+                showVerticalBar={false}
+                contentCss={styleUtils.inputCurrencyStyle}
+              />
+            )}
+          />
+
+          <Controller
+            name="quiz_option.questions_order"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                isInlineLabel
+                label={__('Question Order', 'tutor')}
+                placeholder={__('Select an option', 'tutor')}
+                options={[
+                  { label: __('Random', 'tutor'), value: 'rand' },
+                  { label: __('Sorting', 'tutor'), value: 'sorting' },
+                  { label: __('Ascending', 'tutor'), value: 'asc' },
+                  { label: __('Descending', 'tutor'), value: 'desc' },
+                ]}
+              />
+            )}
+          />
+
+          <hr />
+
+          <div css={styles.inlineForm}>
+            <Show when={contentType !== 'tutor_h5p_quiz'}>
+              <Controller
+                name="quiz_option.limit_questions_to_answer"
+                rules={requiredRule()}
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCheckbox
+                    {...controllerProps}
+                    label={__('Limit questions to answer', 'tutor')}
+                    helpText={__(
+                      'Set the number of quiz questions randomly from your question pool. If the set number exceeds available questions, all questions will be included',
+                      'tutor',
+                    )}
+                  />
+                )}
+              />
+
+              <Show when={form.watch('quiz_option.limit_questions_to_answer')}>
+                <Controller
+                  name="quiz_option.max_questions_for_answer"
+                  rules={requiredRule()}
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormInput {...controllerProps} type="number" isInlineLabel selectOnFocus />
+                  )}
+                />
+              </Show>
+            </Show>
+          </div>
+        </div>
+
+        <h5>{__('Timing', 'tutor')}</h5>
+
+        <div css={styles.innerCard}>
+          <Show when={contentType !== 'tutor_h5p_quiz'}>
+            <div css={styles.inlineForm}>
+              <Controller
+                name="quiz_option.enable_time_limit"
+                control={form.control}
+                rules={requiredRule()}
+                render={(controllerProps) => (
+                  <FormCheckbox {...controllerProps} label={__('Set Time Limit', 'tutor')} />
+                )}
+              />
+              <div css={styles.timeLimit}>
+                <Controller
+                  name="quiz_option.time_limit.time_value"
+                  control={form.control}
+                  rules={{
+                    ...requiredRule(),
+                    validate: (value) => {
+                      if (value <= 0) {
+                        return __('Time limit must be greater than 0', 'tutor');
+                      }
+                      return true;
+                    },
+                  }}
+                  render={(controllerProps) => (
+                    <FormInput {...controllerProps} type="number" selectOnFocus dataAttribute="data-time-limit" />
+                  )}
+                />
+                <Controller
+                  name="quiz_option.time_limit.time_type"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormSelectInput
+                      {...controllerProps}
+                      dataAttribute="data-time-limit-unit"
+                      options={[
+                        { label: __('Sec', 'tutor'), value: 'seconds' },
+                        { label: __('Min', 'tutor'), value: 'minutes' },
+                        { label: __('Hour', 'tutor'), value: 'hours' },
+                        { label: __('Days', 'tutor'), value: 'days' },
+                        { label: __('Weeks', 'tutor'), value: 'weeks' },
+                      ]}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            <Controller
+              name="quiz_option.hide_quiz_time_display"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormSwitch {...controllerProps} label={__('Hide quiz timer from students', 'tutor')} />
+              )}
+            />
+
+            <hr />
+          </Show>
+
+          <div css={styles.inlineForm}>
+            <Controller
+              name="quiz_option.quiz_auto_start"
+              control={form.control}
+              render={(controllerProps) => <FormCheckbox {...controllerProps} label={__('Auto start quiz', 'tutor')} />}
+            />
+
+            <div css={styles.inlineForm}>
+              <div>{__('After', 'tutor')}</div>
+              <Controller
+                name="quiz_option.auto_start_delay"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInputWithContent
+                    {...controllerProps}
+                    content={__('secs', 'tutor')}
+                    showVerticalBar={false}
+                    contentPosition="right"
+                  />
+                )}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
       <Card
         title={__('Basic Settings', 'tutor')}
         collapsedAnimationDependencies={[feedbackMode, prerequisites?.length, quizSettingsValidationErrorLength]}
@@ -390,8 +554,43 @@ export default QuizSettings;
 
 const styles = {
   settings: css`
-    ${styleUtils.display.flex('column')}
-    gap: ${spacing[24]};
+    display: grid;
+    grid-template-columns: 439px 305px;
+    gap: ${spacing[12]};
+
+    ${Breakpoint.smallMobile} {
+      grid-template-columns: 1fr;
+    }
+  `,
+  card: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
+    border-radius: ${borderRadius[12]};
+    border: 1px solid ${colorTokens.stroke.divider};
+    padding: ${spacing[12]};
+    background-color: ${colorTokens.background.white};
+
+    h5 {
+      ${typography.caption()};
+      color: ${colorTokens.text.title};
+    }
+
+    hr {
+      width: 100%;
+      background-color: ${colorTokens.stroke.divider};
+    }
+  `,
+  innerCard: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
+    padding: ${spacing[12]};
+    border-radius: ${borderRadius[8]};
+    background-color: ${colorTokens.surface.courseBuilder};
+  `,
+  inlineForm: css`
+    ${styleUtils.display.flex('row')};
+    align-items: center;
+    gap: ${spacing[8]};
   `,
   formWrapper: css`
     ${styleUtils.display.flex('column')}
@@ -401,6 +600,28 @@ const styles = {
     ${styleUtils.display.flex()}
     align-items: flex-start;
     gap: ${spacing[8]};
+  `,
+  timeLimit: css`
+    display: grid;
+    align-items: end;
+    grid-template-columns: 1fr 100px;
+
+    & input {
+      border: 1px solid ${colorTokens.stroke.default};
+
+      &[data-time-limit] {
+        border-radius: ${borderRadius[6]} 0 0 ${borderRadius[6]};
+        border-right: none;
+
+        &:focus {
+          border-right: 1px solid ${colorTokens.stroke.default};
+          z-index: ${zIndex.positive};
+        }
+      }
+      &[data-time-limit-unit] {
+        border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
+      }
+    }
   `,
   questionLayoutAndOrder: css`
     ${styleUtils.display.flex()}

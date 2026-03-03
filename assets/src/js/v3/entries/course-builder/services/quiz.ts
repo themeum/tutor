@@ -2,12 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 
-import type {
-  QuizFeedbackMode,
-  QuizLayoutView,
-  QuizQuestionsOrder,
-  QuizTimeLimit,
-} from '@CourseBuilderComponents/modals/QuizModal';
 import { useToast } from '@TutorShared/atoms/Toast';
 
 import type { ContentDripType } from '@CourseBuilderServices/course';
@@ -27,6 +21,12 @@ import {
   type TutorMutationResponse,
 } from '@TutorShared/utils/types';
 import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
+
+type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
+type QuizFeedbackMode = 'default' | 'reveal' | 'retry';
+type QuizLayoutView = '' | 'single_question' | 'question_pagination' | 'question_below_each_other'; // question_pagination will be deprecated
+type QuizQuestionsOrder = 'rand' | 'sorting' | 'asc' | 'desc';
+type QuizPaginationType = 'shape' | 'radio' | 'number';
 
 interface ImportQuizPayload {
   topic_id: ID;
@@ -85,7 +85,9 @@ export interface QuizDetailsResponse {
     passing_grade: number;
     max_questions_for_answer: number;
     quiz_auto_start: '0' | '1';
+    auto_start_delay: number;
     question_layout_view: QuizLayoutView;
+    pagination_type: QuizPaginationType;
     questions_order: QuizQuestionsOrder;
     hide_question_number_overview: '0' | '1';
     short_answer_characters_limit: number;
@@ -104,6 +106,7 @@ export interface QuizForm {
   quiz_title: string;
   quiz_description: string;
   quiz_option: {
+    enable_time_limit: boolean;
     time_limit: {
       time_value: number;
       time_type: QuizTimeLimit;
@@ -113,13 +116,17 @@ export interface QuizForm {
     attempts_allowed: number;
     pass_is_required: boolean;
     passing_grade: number;
+    limit_questions_to_answer: boolean;
     max_questions_for_answer: number;
     quiz_auto_start: boolean;
+    auto_start_delay: string; // in seconds
     question_layout_view: QuizLayoutView;
     questions_order: QuizQuestionsOrder;
     hide_question_number_overview: boolean;
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
+    show_pagination: boolean;
+    pagination_type: QuizPaginationType;
     content_drip_settings: {
       unlock_date: string;
       after_xdays_of_enroll: number;
@@ -151,6 +158,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
     quiz_title: quiz.post_title ?? '',
     quiz_description: quiz.post_content ?? '',
     quiz_option: {
+      enable_time_limit: quiz.quiz_option.time_limit.time_value > 0,
       time_limit: {
         time_value: quiz.quiz_option.time_limit.time_value ?? 0,
         time_type: quiz.quiz_option.time_limit.time_type ?? 'minutes',
@@ -160,10 +168,14 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       attempts_allowed: quiz.quiz_option.attempts_allowed ?? 10,
       pass_is_required: quiz.quiz_option.pass_is_required === '1',
       passing_grade: quiz.quiz_option.passing_grade ?? 80,
+      limit_questions_to_answer: !!Number(quiz.quiz_option.max_questions_for_answer),
       max_questions_for_answer: quiz.quiz_option.max_questions_for_answer ?? 10,
       quiz_auto_start: quiz.quiz_option.quiz_auto_start === '1',
+      auto_start_delay: String(quiz.quiz_option.auto_start_delay ?? 5),
       question_layout_view: quiz.quiz_option.question_layout_view || 'single_question',
       questions_order: quiz.quiz_option.questions_order ?? 'rand',
+      show_pagination: quiz.quiz_option.question_layout_view === 'question_pagination',
+      pagination_type: quiz.quiz_option.pagination_type ?? 'shape',
       hide_question_number_overview: quiz.quiz_option.hide_question_number_overview === '1',
       short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit ?? 200,
       open_ended_answer_characters_limit: quiz.quiz_option.open_ended_answer_characters_limit ?? 500,
@@ -210,8 +222,10 @@ export const convertQuizFormDataToPayload = (
         pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
         passing_grade: formData.quiz_option.passing_grade,
         question_layout_view: formData.quiz_option.question_layout_view,
+        pagination_type: formData.quiz_option.pagination_type,
         questions_order: formData.quiz_option.questions_order,
         quiz_auto_start: formData.quiz_option.quiz_auto_start ? '1' : '0',
+        auto_start_delay: Number(formData.quiz_option.auto_start_delay),
         short_answer_characters_limit: formData.quiz_option.short_answer_characters_limit,
         time_limit: {
           time_type: formData.quiz_option.time_limit.time_type,
