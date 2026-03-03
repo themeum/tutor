@@ -110,8 +110,11 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 								->template(
 									$modal_template_path,
 									array(
-										'form_id'  => $form_id,
-										'modal_id' => $modal_id,
+										'form_id'        => $form_id,
+										'modal_id'       => $modal_id,
+										'available_balance' => $available_for_withdraw,
+										'min_withdrawal' => $min_withdraw,
+										'withdraw_method_name' => $withdraw_method_name,
 									)
 								)
 								->render();
