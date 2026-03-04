@@ -249,7 +249,7 @@ class Course extends Tutor_Base {
 		 */
 		add_action( 'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 2 );
 
-		add_action( 'wp_ajax_tutor_update_course_content_order', array( $this, 'tutor_update_course_content_order' ) );
+		add_action( 'wp_ajax_tutor_update_course_content_order', array( $this, 'ajax_update_course_content_order' ) );
 
 		add_action( 'wp_ajax_tutor_get_wc_product', array( $this, 'get_wc_product' ) );
 		add_action( 'wp_ajax_tutor_get_wc_products', array( $this, 'get_wc_products' ) );
@@ -1697,8 +1697,22 @@ class Course extends Tutor_Base {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function tutor_update_course_content_order() {
+	public function ajax_update_course_content_order() {
 		tutor_utils()->checking_nonce();
+
+		$sorting_order = Input::post( 'tutor_topics_lessons_sorting', '' );
+		$sorting_order = json_decode( $sorting_order, true ) ?? array();
+
+		if ( ! tutor_utils()->count( $sorting_order ) ) {
+			wp_send_json_error( __( 'Sorting order is required', 'tutor' ) );
+		}
+
+		foreach ( $sorting_order as $topic ) {
+			if ( isset( $topic['topic_id'] ) && ! tutor_utils()->can_user_manage( 'topic', $topic['topic_id'] ) ) {
+				wp_send_json_error( __( 'Access Denied!', 'tutor' ) );
+				return;
+			}
+		}
 
 		if ( Input::has( 'content_parent' ) ) {
 			$content_parent = Input::post( 'content_parent', array(), Input::TYPE_ARRAY );
@@ -1716,7 +1730,7 @@ class Course extends Tutor_Base {
 		}
 
 		// Save course content order.
-		$this->save_course_content_order();
+		$this->save_course_content_order( $sorting_order );
 
 		wp_send_json_success();
 	}
@@ -1763,56 +1777,56 @@ class Course extends Tutor_Base {
 	 * Save course content order
 	 *
 	 * @since 1.0.0
+	 * @since 3.9.8 param $order added.
+	 *
+	 * @param array $sort_order the lesson and topic order array.
+	 *
 	 * @return void
 	 */
-	private function save_course_content_order() {
+	private function save_course_content_order( $sort_order = array() ) {
 		global $wpdb;
 
-		$new_order = Input::post( 'tutor_topics_lessons_sorting' );
-		if ( ! empty( $new_order ) ) {
-			$order = json_decode( $new_order, true );
+		if ( ! tutor_utils()->count( $sort_order ) ) {
+			return;
+		}
 
-			if ( is_array( $order ) && count( $order ) ) {
-				$i = 0;
-				foreach ( $order as $topic ) {
-					$i++;
+		$i = 0;
+		foreach ( $sort_order as $topic ) {
+			$i++;
+			$wpdb->update(
+				$wpdb->posts,
+				array( 'menu_order' => $i ),
+				array( 'ID' => $topic['topic_id'] )
+			);
+
+			/**
+			* Removing All lesson with topic
+			*/
+			$wpdb->update(
+				$wpdb->posts,
+				array( 'post_parent' => 0 ),
+				array( 'post_parent' => $topic['topic_id'] )
+			);
+
+			/**
+			* Lesson Attaching with topic ID
+			* Sorting lesson
+			*/
+			if ( isset( $topic['lesson_ids'] ) ) {
+				$lesson_ids = $topic['lesson_ids'];
+			} else {
+				$lesson_ids = array();
+			}
+			if ( count( $lesson_ids ) ) {
+				foreach ( $lesson_ids as $lesson_key => $lesson_id ) {
 					$wpdb->update(
 						$wpdb->posts,
-						array( 'menu_order' => $i ),
-						array( 'ID' => $topic['topic_id'] )
+						array(
+							'post_parent' => $topic['topic_id'],
+							'menu_order'  => $lesson_key,
+						),
+						array( 'ID' => $lesson_id )
 					);
-
-					/**
-					 * Removing All lesson with topic
-					 */
-
-					$wpdb->update(
-						$wpdb->posts,
-						array( 'post_parent' => 0 ),
-						array( 'post_parent' => $topic['topic_id'] )
-					);
-
-					/**
-					 * Lesson Attaching with topic ID
-					 * Sorting lesson
-					 */
-					if ( isset( $topic['lesson_ids'] ) ) {
-						$lesson_ids = $topic['lesson_ids'];
-					} else {
-						$lesson_ids = array();
-					}
-					if ( count( $lesson_ids ) ) {
-						foreach ( $lesson_ids as $lesson_key => $lesson_id ) {
-							$wpdb->update(
-								$wpdb->posts,
-								array(
-									'post_parent' => $topic['topic_id'],
-									'menu_order'  => $lesson_key,
-								),
-								array( 'ID' => $lesson_id )
-							);
-						}
-					}
 				}
 			}
 		}
@@ -1885,10 +1899,12 @@ class Course extends Tutor_Base {
 			//phpcs:enable WordPress.Security.NonceVerification.Missing
 		}
 
+		$sorting_order = Input::post( 'tutor_topics_lessons_sorting', '' );
+		$sorting_order = json_decode( $sorting_order, true ) ?? array();
 		/**
 		 * Sorting Topics and lesson
 		 */
-		$this->save_course_content_order();
+		$this->save_course_content_order( $sorting_order );
 
 		// Additional data like course intro video.
 		if ( $additional_data_edit ) {
@@ -2084,6 +2100,12 @@ class Course extends Tutor_Base {
 		 */
 
 		$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
+
+		$course = get_post( $course_id );
+
+		if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
+			wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
+		}
 
 		/**
 		 * If is is not purchasable, it's free, and enroll right now
@@ -3009,6 +3031,12 @@ class Course extends Tutor_Base {
 			$password_protected = post_password_required( $course_id );
 			if ( $password_protected ) {
 				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
+			}
+
+			$course = get_post( $course_id );
+
+			if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
+				wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
 			}
 
 			/**
