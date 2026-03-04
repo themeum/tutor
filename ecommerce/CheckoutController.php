@@ -1057,14 +1057,15 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function pay_incomplete_order() {
-		$order_id       = Input::post( 'order_id', 0, Input::TYPE_INT );
-		$payment_method = Input::post( 'payment_method', '' );
-		$request        = Input::sanitize_array( $_POST ); //phpcs:ignore -- $POST sanitized
 
 		// Authentication check.
 		if ( ! is_user_logged_in() ) {
-			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_id, __( 'Please log in first', 'tutor' ) );
+			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, 0, __( 'Please log in first', 'tutor' ) );
 		}
+
+		$order_id       = Input::post( 'order_id', 0, Input::TYPE_INT );
+		$payment_method = Input::post( 'payment_method', '' );
+		$request        = Input::sanitize_array( $_POST ); //phpcs:ignore -- $POST sanitized
 
 		$billing_model           = new BillingModel();
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
@@ -1077,14 +1078,8 @@ class CheckoutController {
 		if ( $order_id ) {
 			$order_model = new OrderModel();
 			$order_data  = $order_model->get_order_by_id( $order_id );
-			if ( $order_data ) {
+			if ( $order_data && get_current_user_id() === (int) $order_data->user_id ) {
 				try {
-
-					$result = $this->is_valid_subscription_order( $order_data );
-
-					if ( ! $result['success'] ) {
-						tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_id, $result['message'] );
-					}
 
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
@@ -1198,46 +1193,5 @@ class CheckoutController {
 				'results'     => $results,
 			),
 		);
-	}
-
-	/**
-	 * Validate whether an order is eligible for subscription payment.
-	 *
-	 * @since 3.9.8
-	 *
-	 * @param object $order_data Order object.
-	 *
-	 * @return array{
-	 *     success: bool,
-	 *     message?: string
-	 * } Returns an array with:
-	 * - 'success' (bool)   Whether the order is valid for subscription payment.
-	 * - 'message' (string) Error message when validation fails.
-	 */
-	public function is_valid_subscription_order( object $order_data ): array {
-		if ( OrderModel::TYPE_SINGLE_ORDER === $order_data->order_type ) {
-			return array(
-				'success' => false,
-				'message' => __( 'This order is not eligible for subscription payment.', 'tutor' ),
-			);
-		}
-
-		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
-			return array(
-				'success' => false,
-				'message' => __( 'Subscription Addon is disable', 'tutor' ),
-			);
-		}
-
-		// Add ownership check.
-		if ( get_current_user_id() !== $order_data->user_id && ! current_user_can( 'manage_options' ) ) {
-
-			return array(
-				'success' => false,
-				'message' => __( 'You do not have permission to modify this order', 'tutor' ),
-			);
-		}
-
-		return array( 'success' => true );
 	}
 }
