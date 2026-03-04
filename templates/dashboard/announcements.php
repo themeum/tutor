@@ -33,7 +33,7 @@ $order_filter  = Input::get( 'order', 'DESC' );
 $search_filter = Input::get( 'search', '' );
 
 // Announcement's parent.
-$course_id  = Input::get( 'course-id', 0, Input::TYPE_INT );
+$course_id  = Input::get( 'course-id', '' );
 $start_date = Input::get( 'start_date', '' );
 $end_date   = Input::get( 'end_date', '' );
 
