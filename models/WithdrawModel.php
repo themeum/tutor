@@ -226,11 +226,11 @@ class WithdrawModel {
 			$where['withdraw_tbl.user_id'] = $user_id;
 		}
 
-		if ( isset( $filter['status'] ) ) {
+		if ( isset( $filter['status'] ) && ! empty( $filter['status'] ) ) {
 			$where['withdraw_tbl.status'] = (array) $filter['status'];
 		}
 
-		if ( isset( $filter['date'] ) ) {
+		if ( isset( $filter['date'] ) && ! empty( $filter['date'] ) ) {
 			$where['DATE(withdraw_tbl.created_at) = %s'] = array( 'RAW', array( $filter['date'] ) );
 		}
 
@@ -238,7 +238,7 @@ class WithdrawModel {
 			$where['DATE(withdraw_tbl.created_at)'] = array( 'BETWEEN', array( $filter['start_date'], $filter['end_date'] ) );
 		}
 
-		if ( isset( $filter['search'] ) ) {
+		if ( isset( $filter['search'] ) && ! empty( $filter['search'] ) ) {
 			$term = $filter['search'];
 			$like = '%' . $wpdb->esc_like( $term ) . '%';
 
