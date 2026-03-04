@@ -14,7 +14,7 @@ interface FormInputWithContentProps extends FormControllerProps<string | number 
   contentPosition?: 'left' | 'right';
   showVerticalBar?: boolean;
   type?: 'number' | 'text';
-  size?: 'regular' | 'large';
+  size?: 'small' | 'regular' | 'large';
   label?: string;
   disabled?: boolean;
   readOnly?: boolean;
@@ -153,7 +153,7 @@ const styles = {
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
     /** Increasing the css specificity */
-    &[data-input] {
+    &.tutor-input-field:not(textarea) {
       ${typography.body()};
       border: none;
       box-shadow: none;
@@ -179,6 +179,18 @@ const styles = {
           `};
         `
       }
+
+      ${
+        size === 'small' &&
+        css`
+          font-size: ${fontSize[16]};
+          height: 32px;
+          ${showVerticalBar &&
+          css`
+            padding-${contentPosition}: ${spacing[4]};
+          `};
+        `
+      }
   
       &:focus {
         box-shadow: none;
@@ -199,6 +211,13 @@ const styles = {
       ${typography.body()}
     `}
 
+    ${size === 'small' &&
+    css`
+      min-width: 32px;
+      height: 32px;
+      padding-inline: ${spacing[4]};
+    `}
+
     ${showVerticalBar &&
     css`
       border-right: 1px solid ${colorTokens.stroke.default};
@@ -215,6 +234,13 @@ const styles = {
     ${size === 'large' &&
     css`
       ${typography.body()}
+    `}
+
+    ${size === 'small' &&
+    css`
+      height: 32px;
+      min-width: 32px;
+      padding-inline: ${spacing[4]};
     `}
 
     ${showVerticalBar &&
