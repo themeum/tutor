@@ -13,9 +13,9 @@
 
 namespace Tutor\Components;
 
-use TUTOR\Icon;
-
 defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Icon;
 
 /**
  * StatusSelect Component Class.
@@ -124,12 +124,7 @@ class StatusSelect extends BaseComponent {
 				'selected' => $this->selected,
 				'action'   => $this->action,
 				'data'     => $this->data,
-				'variants' => array_map(
-					function( $opt ) {
-						return $opt['variant'] ?? 'default';
-					},
-					$this->options
-				),
+				'variants' => array_map( fn( $opt ) => $opt['variant'] ?? 'default', $this->options ),
 			)
 		);
 
@@ -163,7 +158,7 @@ class StatusSelect extends BaseComponent {
 			>
 				<?php foreach ( $this->options as $value => $option ) : ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $this->selected, $value ); ?>>
-						<?php echo esc_html( $option['label'] ); ?>
+						<?php echo esc_html( $option['label'] ?? '' ); ?>
 					</option>
 				<?php endforeach; ?>
 			</select>
