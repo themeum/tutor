@@ -339,7 +339,7 @@ class WPEditor extends BaseComponent {
 
 		?>
 		<div 
-			<?php echo $wrapper_attr_str; // phpcs:ignore ?>
+			<?php echo esc_attr( $wrapper_attr_str ); ?>
 			x-data="tutorWPEditor({ 
 				name: '<?php echo esc_js( $this->name ); ?>',
 				editorId: '<?php echo esc_js( $editor_id ); ?>',
@@ -361,7 +361,7 @@ class WPEditor extends BaseComponent {
 				<input 
 					type="hidden" 
 					name="<?php echo esc_attr( $this->name ); ?>"
-					<?php echo $this->get_attributes_string(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php $this->render_attributes(); ?>
 				/>
 
 				<?php
