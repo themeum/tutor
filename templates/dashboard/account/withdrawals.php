@@ -204,8 +204,12 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 										<?php
 										ComponentHelper::render_status_badge( $withdrawal->status );
 										if ( in_array( $withdrawal->status, array( WithdrawModel::STATUS_PENDING, WithdrawModel::STATUS_REJECTED ), true ) ) {
+											$tooltip_content = $status_message[ $withdrawal->status ];
+											if ( WithdrawModel::STATUS_REJECTED === $withdrawal->status && is_array( $method_data ) && isset( $method_data['rejects'] ) ) {
+												$tooltip_content = $method_data['rejects']['reject_comment'] ? $method_data['rejects']['reject_comment'] : $method_data['rejects']['reject_type'];
+											}
 											Tooltip::make()
-												->content( $status_message[ $withdrawal->status ] )
+												->content( $tooltip_content )
 												->placement( 'top' )
 												->trigger_element( tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON ) )
 												->render();
