@@ -29,6 +29,11 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
 
+import FormQuizLayoutSelect from './FormQuizLayoutSelect';
+
+import QuizFullPageSvg from '@SharedImages/quiz-fullpage.svg';
+import QuizSingleLayoutSvg from '@SharedImages/quiz-single-question.svg';
+
 const courseId = getCourseId();
 
 interface QuizSettingsProps {
@@ -302,6 +307,60 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               />
             </div>
           </div>
+        </div>
+      </div>
+
+      <div css={styles.card}>
+        <h5>{__('Navigation & Display', 'tutor')}</h5>
+
+        <div css={styles.innerCard}>
+          <Controller
+            control={form.control}
+            name="quiz_option.question_layout_view"
+            render={(controllerProps) => (
+              <FormQuizLayoutSelect
+                {...controllerProps}
+                label={__('Layout', 'tutor')}
+                description={__('Choose how students will answer the questions.', 'tutor')}
+                options={[
+                  {
+                    label: __('Single Question', 'tutor'),
+                    value: 'single_question',
+                    image: <QuizSingleLayoutSvg width={72} height={92} />,
+                  },
+                  {
+                    label: __('Full Page', 'tutor'),
+                    value: 'question_pagination',
+                    image: <QuizFullPageSvg width={72} height={92} />,
+                  },
+                ]}
+              />
+            )}
+          />
+
+          <Controller
+            control={form.control}
+            name="quiz_option.questions_order"
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Question Order', 'tutor')}
+                placeholder={__('Select an option', 'tutor')}
+                options={[
+                  { label: __('Random', 'tutor'), value: 'rand' },
+                  { label: __('Sorting', 'tutor'), value: 'sorting' },
+                  { label: __('Ascending', 'tutor'), value: 'asc' },
+                  { label: __('Descending', 'tutor'), value: 'desc' },
+                ]}
+              />
+            )}
+          />
+
+          <Controller
+            control={form.control}
+            name="quiz_option.show_pagination"
+            render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Show Pagination', 'tutor')} />}
+          />
         </div>
       </div>
 
