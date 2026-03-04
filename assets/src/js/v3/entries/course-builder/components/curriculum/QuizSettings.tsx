@@ -20,10 +20,12 @@ import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithPresets from '@TutorShared/components/fields/FormInputWithPresets';
+import { Addons } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
 
 import FormQuizLayoutSelect from './FormQuizLayoutSelect';
@@ -82,6 +84,9 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const questionsCount = questions.length;
   const hasOpenEndedQuestions = questions.some((question) => question.question_type === 'open_ended');
   const hasShortAnswerQuestions = questions.some((question) => question.question_type === 'short_answer');
+  const hasAttemptsLimit = form.watch('quiz_option.limit_attempts_allowed');
+  const showPassRequired =
+    isAddonEnabled(Addons.CONTENT_DRIP) && contentDripType === 'unlock_sequentially' && hasAttemptsLimit;
   const hasQuestionLimit = form.watch('quiz_option.limit_questions_to_answer');
   const hasTimeLimit = form.watch('quiz_option.enable_time_limit');
   const availableQuestionInPool = Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount);
@@ -235,6 +240,16 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   />
                 </Show>
               </div>
+
+              <Show when={showPassRequired}>
+                <Controller
+                  control={form.control}
+                  name="quiz_option.pass_is_required"
+                  render={(controllerProps) => (
+                    <FormSwitch {...controllerProps} label={__('Pass is required', 'tutor')} />
+                  )}
+                />
+              </Show>
             </Show>
           </div>
 
@@ -503,7 +518,11 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           </div>
         </div>
 
-        <Show when={contentDripType || hasOpenEndedQuestions || hasShortAnswerQuestions}>
+        <Show
+          when={
+            (isAddonEnabled(Addons.CONTENT_DRIP) && contentDripType) || hasOpenEndedQuestions || hasShortAnswerQuestions
+          }
+        >
           <div css={styles.card}>
             <Show when={hasOpenEndedQuestions || hasShortAnswerQuestions}>
               <h5>{__('Character Limits', 'tutor')}</h5>
@@ -559,78 +578,80 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               </div>
             </Show>
 
-            <Show when={contentDripType === 'unlock_by_date'}>
-              <h5 css={styles.contentDripLabel}>
-                <SVGIcon name="contentDrip" height={24} width={24} />
-                {__('Unlock Date', 'tutor')}
-                <Tooltip content={__('Set the date when the quiz will be available.', 'tutor')}>
-                  <SVGIcon name="info" width={20} height={20} />
-                </Tooltip>
-              </h5>
+            <Show when={isAddonEnabled(Addons.CONTENT_DRIP) && contentType !== 'tutor_h5p_quiz'}>
+              <Show when={contentDripType === 'unlock_by_date'}>
+                <h5 css={styles.contentDripLabel}>
+                  <SVGIcon name="contentDrip" height={24} width={24} />
+                  {__('Unlock Date', 'tutor')}
+                  <Tooltip content={__('Set the date when the quiz will be available.', 'tutor')}>
+                    <SVGIcon name="info" width={20} height={20} />
+                  </Tooltip>
+                </h5>
 
-              <div css={styles.innerCard}>
-                <Controller
-                  name="quiz_option.content_drip_settings.unlock_date"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormDateInput {...controllerProps} placeholder={__('Select Unlock Date', 'tutor')} />
-                  )}
-                />
-              </div>
-            </Show>
+                <div css={styles.innerCard}>
+                  <Controller
+                    name="quiz_option.content_drip_settings.unlock_date"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormDateInput {...controllerProps} placeholder={__('Select Unlock Date', 'tutor')} />
+                    )}
+                  />
+                </div>
+              </Show>
 
-            <Show when={contentDripType === 'after_finishing_prerequisites'}>
-              <h5 css={styles.contentDripLabel}>
-                <SVGIcon name="contentDrip" height={24} width={24} />
-                {__('Prerequisites', 'tutor')}
-                <Tooltip content={__('Select items that should be complete before this item', 'tutor')}>
-                  <SVGIcon name="info" width={20} height={20} />
-                </Tooltip>
-              </h5>
+              <Show when={contentDripType === 'after_finishing_prerequisites'}>
+                <h5 css={styles.contentDripLabel}>
+                  <SVGIcon name="contentDrip" height={24} width={24} />
+                  {__('Prerequisites', 'tutor')}
+                  <Tooltip content={__('Select items that should be complete before this item', 'tutor')}>
+                    <SVGIcon name="info" width={20} height={20} />
+                  </Tooltip>
+                </h5>
 
-              <div css={styles.innerCard}>
-                <Controller
-                  name="quiz_option.content_drip_settings.prerequisites"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormTopicPrerequisites
-                      {...controllerProps}
-                      placeholder={__('Select Prerequisite', 'tutor')}
-                      options={
-                        topics.reduce((topics, topic) => {
-                          topics.push({
-                            ...topic,
-                            contents: topic.contents.filter((content) => String(content.ID) !== String(quizId)),
-                          });
+                <div css={styles.innerCard}>
+                  <Controller
+                    name="quiz_option.content_drip_settings.prerequisites"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormTopicPrerequisites
+                        {...controllerProps}
+                        placeholder={__('Select Prerequisite', 'tutor')}
+                        options={
+                          topics.reduce((topics, topic) => {
+                            topics.push({
+                              ...topic,
+                              contents: topic.contents.filter((content) => String(content.ID) !== String(quizId)),
+                            });
 
-                          return topics;
-                        }, [] as CourseTopic[]) || []
-                      }
-                      isSearchable
-                    />
-                  )}
-                />
-              </div>
-            </Show>
+                            return topics;
+                          }, [] as CourseTopic[]) || []
+                        }
+                        isSearchable
+                      />
+                    )}
+                  />
+                </div>
+              </Show>
 
-            <Show when={contentDripType === 'specific_days'}>
-              <h5 css={styles.contentDripLabel}>
-                <SVGIcon name="contentDrip" height={24} width={24} />
-                {__('Available after days', 'tutor')}
-                <Tooltip content={__('This quiz will be available after the given number of days.', 'tutor')}>
-                  <SVGIcon name="info" width={20} height={20} />
-                </Tooltip>
-              </h5>
+              <Show when={contentDripType === 'specific_days'}>
+                <h5 css={styles.contentDripLabel}>
+                  <SVGIcon name="contentDrip" height={24} width={24} />
+                  {__('Available after days', 'tutor')}
+                  <Tooltip content={__('This quiz will be available after the given number of days.', 'tutor')}>
+                    <SVGIcon name="info" width={20} height={20} />
+                  </Tooltip>
+                </h5>
 
-              <div css={styles.innerCard}>
-                <Controller
-                  name="quiz_option.content_drip_settings.after_xdays_of_enroll"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormInput {...controllerProps} type="number" placeholder="0" selectOnFocus />
-                  )}
-                />
-              </div>
+                <div css={styles.innerCard}>
+                  <Controller
+                    name="quiz_option.content_drip_settings.after_xdays_of_enroll"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormInput {...controllerProps} type="number" placeholder="0" selectOnFocus />
+                    )}
+                  />
+                </div>
+              </Show>
             </Show>
           </div>
         </Show>
