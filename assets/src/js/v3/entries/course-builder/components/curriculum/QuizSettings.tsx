@@ -20,6 +20,7 @@ import type { CourseTopic } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormInputWithPresets from '@TutorShared/components/fields/FormInputWithPresets';
 import { Addons } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -56,18 +57,32 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           <Controller
             name="quiz_option.passing_grade"
             control={form.control}
-            rules={requiredRule()}
+            rules={{
+              ...requiredRule(),
+              validate: (value) => {
+                if (value > 100) {
+                  return __('Passing grade cannot be greater than 100', 'tutor');
+                }
+
+                if (value < 0) {
+                  return __('Passing grade cannot be less than 0', 'tutor');
+                }
+
+                return true;
+              },
+            }}
             render={(controllerProps) => (
               <FormInputWithContent
                 {...controllerProps}
                 isInlineLabel
+                size="small"
                 type="number"
                 label={__('Passing Grade', 'tutor')}
                 helpText={__('Set the minimum score percentage required to pass this quiz', 'tutor')}
+                wrapperCss={styles.maxWidth('67px')}
                 content="%"
                 contentPosition="right"
                 showVerticalBar={false}
-                contentCss={styleUtils.inputCurrencyStyle}
               />
             )}
           />
@@ -79,6 +94,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               <FormSelectInput
                 {...controllerProps}
                 isInlineLabel
+                size="small"
+                wrapperCss={styles.maxWidth('124px')}
                 label={__('Question Order', 'tutor')}
                 placeholder={__('Select an option', 'tutor')}
                 options={[
@@ -94,7 +111,44 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           <hr />
 
           <div css={styles.inlineForm}>
-            <Show when={contentType !== 'tutor_h5p_quiz'}>
+            <Controller
+              name="quiz_option.limit_attempts_allowed"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormCheckbox {...controllerProps} label={__('Limit attempts allowed', 'tutor')} />
+              )}
+            />
+
+            <Show when={form.watch('quiz_option.limit_attempts_allowed')}>
+              <Controller
+                name="quiz_option.attempts_allowed"
+                control={form.control}
+                rules={{
+                  ...requiredRule(),
+                  validate: (value) => {
+                    if (value >= 1 && value <= 20) {
+                      return true;
+                    }
+                    return __('Allowed attempts must be between 0 and 20', 'tutor');
+                  },
+                }}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    type="number"
+                    size="small"
+                    label={<>&nbsp;</>}
+                    selectOnFocus
+                    isInlineLabel
+                    style={styles.maxWidth('99px')}
+                  />
+                )}
+              />
+            </Show>
+          </div>
+
+          <Show when={contentType !== 'tutor_h5p_quiz'}>
+            <div css={styles.inlineForm}>
               <Controller
                 name="quiz_option.limit_questions_to_answer"
                 rules={requiredRule()}
@@ -117,12 +171,20 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   rules={requiredRule()}
                   control={form.control}
                   render={(controllerProps) => (
-                    <FormInput {...controllerProps} type="number" isInlineLabel selectOnFocus />
+                    <FormInput
+                      {...controllerProps}
+                      type="number"
+                      size="small"
+                      label={<>&nbsp;</>}
+                      isInlineLabel
+                      selectOnFocus
+                      style={styles.maxWidth('99px')}
+                    />
                   )}
                 />
               </Show>
-            </Show>
-          </div>
+            </div>
+          </Show>
         </div>
 
         <h5>{__('Timing', 'tutor')}</h5>
@@ -152,9 +214,16 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     },
                   }}
                   render={(controllerProps) => (
-                    <FormInput {...controllerProps} type="number" selectOnFocus dataAttribute="data-time-limit" />
+                    <FormInput
+                      {...controllerProps}
+                      size="small"
+                      type="number"
+                      selectOnFocus
+                      dataAttribute="data-time-limit"
+                    />
                   )}
                 />
+
                 <Controller
                   name="quiz_option.time_limit.time_type"
                   control={form.control}
@@ -162,6 +231,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     <FormSelectInput
                       {...controllerProps}
                       dataAttribute="data-time-limit-unit"
+                      size="small"
                       options={[
                         { label: __('Sec', 'tutor'), value: 'seconds' },
                         { label: __('Min', 'tutor'), value: 'minutes' },
@@ -175,13 +245,15 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               </div>
             </div>
 
-            <Controller
-              name="quiz_option.hide_quiz_time_display"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormSwitch {...controllerProps} label={__('Hide quiz timer from students', 'tutor')} />
-              )}
-            />
+            <Show when={form.watch('quiz_option.enable_time_limit')}>
+              <Controller
+                name="quiz_option.hide_quiz_time_display"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormSwitch {...controllerProps} label={__('Hide quiz timer from students', 'tutor')} />
+                )}
+              />
+            </Show>
 
             <hr />
           </Show>
@@ -194,16 +266,37 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             />
 
             <div css={styles.inlineForm}>
-              <div>{__('After', 'tutor')}</div>
+              <div data-prefix>{__('After', 'tutor')}</div>
               <Controller
                 name="quiz_option.auto_start_delay"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormInputWithContent
+                  <FormInputWithPresets
                     {...controllerProps}
+                    size="small"
                     content={__('secs', 'tutor')}
-                    showVerticalBar={false}
                     contentPosition="right"
+                    wrapperCss={styles.maxWidth('120px')}
+                    contentCss={styles.minWidth('fit-content')}
+                    showVerticalBar={false}
+                    presetOptions={[
+                      {
+                        label: __('2', 'tutor'),
+                        value: '2',
+                      },
+                      {
+                        label: __('5', 'tutor'),
+                        value: '5',
+                      },
+                      {
+                        label: __('7', 'tutor'),
+                        value: '7',
+                      },
+                      {
+                        label: __('10', 'tutor'),
+                        value: '10',
+                      },
+                    ]}
                   />
                 )}
               />
@@ -211,6 +304,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           </div>
         </div>
       </div>
+
       <Card
         title={__('Basic Settings', 'tutor')}
         collapsedAnimationDependencies={[feedbackMode, prerequisites?.length, quizSettingsValidationErrorLength]}
@@ -553,6 +647,12 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 export default QuizSettings;
 
 const styles = {
+  maxWidth: (width: string) => css`
+    max-width: ${width};
+  `,
+  minWidth: (width: string) => css`
+    min-width: ${width};
+  `,
   settings: css`
     display: grid;
     grid-template-columns: 439px 305px;
@@ -590,7 +690,13 @@ const styles = {
   inlineForm: css`
     ${styleUtils.display.flex('row')};
     align-items: center;
+    justify-content: space-between;
     gap: ${spacing[8]};
+
+    [data-prefix] {
+      ${typography.body('regular')};
+      color: ${colorTokens.text.hints};
+    }
   `,
   formWrapper: css`
     ${styleUtils.display.flex('column')}
@@ -604,7 +710,7 @@ const styles = {
   timeLimit: css`
     display: grid;
     align-items: end;
-    grid-template-columns: 1fr 100px;
+    grid-template-columns: 48px 84px;
 
     & input {
       border: 1px solid ${colorTokens.stroke.default};

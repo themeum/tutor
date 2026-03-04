@@ -113,6 +113,7 @@ export interface QuizForm {
     };
     hide_quiz_time_display: boolean;
     feedback_mode: QuizFeedbackMode;
+    limit_attempts_allowed: boolean;
     attempts_allowed: number;
     pass_is_required: boolean;
     passing_grade: number;
@@ -165,6 +166,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       },
       hide_quiz_time_display: quiz.quiz_option.hide_quiz_time_display === '1',
       feedback_mode: quiz.quiz_option.feedback_mode ?? 'retry',
+      limit_attempts_allowed: !!Number(quiz.quiz_option.attempts_allowed),
       attempts_allowed: quiz.quiz_option.attempts_allowed ?? 10,
       pass_is_required: quiz.quiz_option.pass_is_required === '1',
       passing_grade: quiz.quiz_option.passing_grade ?? 80,
