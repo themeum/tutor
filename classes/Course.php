@@ -1703,12 +1703,14 @@ class Course extends Tutor_Base {
 		$sorting_order = Input::post( 'tutor_topics_lessons_sorting', '' );
 		$sorting_order = json_decode( $sorting_order, true ) ?? array();
 
-		if ( tutor_utils()->count( $sorting_order ) ) {
-			foreach ( $sorting_order as $topic ) {
-				if ( isset( $topic['topic_id'] ) && ! tutor_utils()->can_user_manage( 'topic', $topic['topic_id'] ) ) {
-					wp_send_json_error( __( 'Access Denied!', 'tutor' ) );
-					return;
-				}
+		if ( ! tutor_utils()->count( $sorting_order ) ) {
+			wp_send_json_error( __( 'Sorting order is required', 'tutor' ) );
+		}
+
+		foreach ( $sorting_order as $topic ) {
+			if ( isset( $topic['topic_id'] ) && ! tutor_utils()->can_user_manage( 'topic', $topic['topic_id'] ) ) {
+				wp_send_json_error( __( 'Access Denied!', 'tutor' ) );
+				return;
 			}
 		}
 
