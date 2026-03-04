@@ -1,7 +1,7 @@
 import FormInput from '@TutorShared/components/fields/FormInput';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -38,11 +38,61 @@ interface QuizSettingsProps {
   contentDripType: ContentDripType;
 }
 
+const getTimeInSeconds = (value: number, type: QuizForm['quiz_option']['time_limit']['time_type']) => {
+  const timeUnitMap = {
+    seconds: 1,
+    minutes: 60,
+    hours: 60 * 60,
+    days: 60 * 60 * 24,
+    weeks: 60 * 60 * 24 * 7,
+  } as const;
+
+  return value * timeUnitMap[type];
+};
+
+const formatTimePerQuestion = (valueInSeconds: number) => {
+  if (valueInSeconds < 60) {
+    return sprintf(
+      // translators: %s is a second count.
+      __('%ss per question', 'tutor'),
+      valueInSeconds,
+    );
+  }
+
+  if (valueInSeconds < 60 * 60) {
+    return sprintf(
+      // translators: %s is a minute count.
+      __('%sm per question', 'tutor'),
+      Math.round((valueInSeconds / 60) * 10) / 10,
+    );
+  }
+
+  return sprintf(
+    // translators: %s is an hour count.
+    __('%sh per question', 'tutor'),
+    Math.round((valueInSeconds / (60 * 60)) * 10) / 10,
+  );
+};
+
 const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const { quizId, contentType } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
-  const hasOpenEndedQuestions = form.watch('questions').some((question) => question.question_type === 'open_ended');
-  const hasShortAnswerQuestions = form.watch('questions').some((question) => question.question_type === 'short_answer');
+
+  const questions = form.watch('questions');
+  const questionsCount = questions.length;
+  const hasOpenEndedQuestions = questions.some((question) => question.question_type === 'open_ended');
+  const hasShortAnswerQuestions = questions.some((question) => question.question_type === 'short_answer');
+  const hasQuestionLimit = form.watch('quiz_option.limit_questions_to_answer');
+  const hasTimeLimit = form.watch('quiz_option.enable_time_limit');
+  const availableQuestionInPool = Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount);
+  const usedQuestionCountPercentage = (availableQuestionInPool / questionsCount) * 100;
+  const questionCountForStats = hasQuestionLimit ? availableQuestionInPool : questionsCount;
+  const passingGrade = Number(form.watch('quiz_option.passing_grade'));
+  const requiredCorrectAnswers = Math.ceil((passingGrade / 100) * questionCountForStats);
+  const timeLimitValue = Number(form.watch('quiz_option.time_limit.time_value'));
+  const timeLimitType = form.watch('quiz_option.time_limit.time_type');
+  const timePerQuestionInSeconds =
+    questionCountForStats > 0 ? Math.floor(getTimeInSeconds(timeLimitValue, timeLimitType) / questionCountForStats) : 0;
 
   const queryClient = useQueryClient();
 
@@ -166,7 +216,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   )}
                 />
 
-                <Show when={form.watch('quiz_option.limit_questions_to_answer')}>
+                <Show when={hasQuestionLimit}>
                   <Controller
                     name="quiz_option.max_questions_for_answer"
                     rules={requiredRule()}
@@ -469,6 +519,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                           {...controllerProps}
                           type="number"
                           isInlineLabel
+                          size="small"
                           style={styles.maxWidth('80px')}
                           label={__('Open-Ended/Essay Answer', 'tutor')}
                           helpText={__(
@@ -491,6 +542,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         <FormInput
                           {...controllerProps}
                           type="number"
+                          size="small"
                           style={styles.maxWidth('80px')}
                           isInlineLabel
                           label={__('Short Answer', 'tutor')}
@@ -582,9 +634,79 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             </Show>
           </div>
         </Show>
+
+        <CourseBuilderInjectionSlot section="Curriculum.Quiz.bottom_of_settings" form={form} />
       </div>
 
-      <CourseBuilderInjectionSlot section="Curriculum.Quiz.bottom_of_settings" form={form} />
+      <div>
+        <div css={styles.overview}>
+          <div css={styles.questionPool}>
+            <div data-question-pool>
+              <div data-question-pool-label>{__('Total questions in pool', 'tutor')}</div>
+              <div data-question-count>
+                <span>{questions.length}</span>
+                <span>{__('Q', 'tutor')}</span>
+              </div>
+            </div>
+
+            <SVGIcon name="arrowRight2" width={24} height={24} />
+
+            <div data-question-pool>
+              <div data-question-pool-label>{__('Available to answer', 'tutor')}</div>
+              <div data-question-count data-available-count>
+                <span>{availableQuestionInPool}</span>
+                <span>{__('Q', 'tutor')}</span>
+              </div>
+            </div>
+          </div>
+
+          <div css={styles.questionPoolBar(usedQuestionCountPercentage + '%')}>
+            <div data-question-pool-bar />
+            <div>
+              {sprintf(
+                // translators: %1$s is the number of available questions, %2$s is the total number of questions.
+                __('Students will have %1$s out of %2$s questions available to answer.', 'tutor'),
+                availableQuestionInPool,
+                questionsCount,
+              )}
+            </div>
+          </div>
+
+          <div css={styles.infoCardWrapper}>
+            <Show when={hasTimeLimit}>
+              <div css={styles.infoCard}>
+                <div data-title>
+                  {form.watch('quiz_option.time_limit.time_value')} {form.watch('quiz_option.time_limit.time_type')}
+                </div>
+                <div data-subtitle>{__('Time limit', 'tutor')}</div>
+
+                <div data-footer>
+                  <SVGIcon name="stopwatch" width={12} height={12} />
+                  {timePerQuestionInSeconds > 0 ? formatTimePerQuestion(timePerQuestionInSeconds) : __('N/A', 'tutor')}
+                </div>
+              </div>
+            </Show>
+
+            <div css={styles.infoCard}>
+              <div data-title>
+                {form.watch('quiz_option.passing_grade')}
+                {__('%', 'tutor')}
+              </div>
+              <div data-subtitle>{__('Passing grade', 'tutor')}</div>
+
+              <div data-footer>
+                <SVGIcon name="stopwatch" width={12} height={12} />
+                {sprintf(
+                  // translators: %1$s is the number of required correct answers, %2$s is total available questions.
+                  __('%1$s of %2$s correct', 'tutor'),
+                  requiredCorrectAnswers,
+                  questionCountForStats,
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -610,6 +732,119 @@ const styles = {
   left: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[8]};
+  `,
+  overview: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
+    position: sticky;
+    top: 0;
+    align-self: start;
+    border-radius: ${borderRadius[12]};
+    border: 1px solid ${colorTokens.stroke.divider};
+    padding: ${spacing[12]};
+    background-color: ${colorTokens.background.white};
+
+    ${Breakpoint.smallMobile} {
+      position: static;
+    }
+  `,
+  questionPool: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    justify-content: space-between;
+    gap: ${spacing[8]};
+
+    svg {
+      margin-top: ${spacing[20]};
+      color: ${colorTokens.icon.default};
+    }
+
+    [data-question-pool] {
+      ${styleUtils.display.flex('column')};
+      gap: ${spacing[4]};
+
+      [data-question-pool-label] {
+        ${typography.tiny()};
+        color: ${colorTokens.text.subdued};
+      }
+
+      [data-question-count] {
+        ${typography.heading5('medium')};
+        color: ${colorTokens.text.subdued};
+
+        span:last-of-type {
+          ${typography.tiny()};
+          margin-left: ${spacing[2]};
+          color: ${colorTokens.text.hints};
+        }
+
+        &[data-available-count] {
+          color: ${colorTokens.text.success};
+        }
+      }
+    }
+  `,
+  questionPoolBar: (width: string) => css`
+    ${styleUtils.display.flex('column')};
+    ${typography.tiny()};
+    color: ${colorTokens.text.subdued};
+    gap: ${spacing[4]};
+
+    [data-question-pool-bar] {
+      position: relative;
+      width: 100%;
+      height: 5px;
+      background-color: ${colorTokens.action.secondary.gray};
+      border-radius: ${borderRadius[50]};
+      box-shadow: 0px 0px 1.75px 0px #00000029 inset;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: ${width};
+        height: 100%;
+        background-color: ${colorTokens.action.primary.default};
+        border-radius: ${borderRadius[50]};
+      }
+    }
+  `,
+  infoCardWrapper: css`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: ${spacing[8]};
+  `,
+  infoCard: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+    padding: ${spacing[8]};
+    border-radius: ${borderRadius[12]};
+    background-color: ${colorTokens.surface.courseBuilder};
+    height: 106px;
+
+    [data-title] {
+      ${typography.caption('medium')};
+      color: ${colorTokens.text.title};
+    }
+
+    [data-subtitle] {
+      ${typography.tiny()};
+      color: ${colorTokens.text.subdued};
+    }
+
+    [data-footer] {
+      ${styleUtils.display.flex()};
+      align-items: center;
+      ${typography.tiny()};
+      color: ${colorTokens.text.subdued};
+      margin-top: auto;
+
+      svg {
+        color: ${colorTokens.icon.default};
+        margin-right: ${spacing[4]};
+      }
+    }
   `,
   card: css`
     ${styleUtils.display.flex('column')};
@@ -647,15 +882,6 @@ const styles = {
       color: ${colorTokens.text.hints};
     }
   `,
-  formWrapper: css`
-    ${styleUtils.display.flex('column')}
-    gap: ${spacing[20]};
-  `,
-  timeWrapper: css`
-    ${styleUtils.display.flex()}
-    align-items: flex-start;
-    gap: ${spacing[8]};
-  `,
   timeLimit: css`
     display: grid;
     align-items: end;
@@ -676,14 +902,6 @@ const styles = {
       &[data-time-limit-unit] {
         border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
       }
-    }
-  `,
-  questionLayoutAndOrder: css`
-    ${styleUtils.display.flex()}
-    gap: ${spacing[20]};
-
-    ${Breakpoint.smallMobile} {
-      flex-direction: column;
     }
   `,
   contentDripLabel: css`
