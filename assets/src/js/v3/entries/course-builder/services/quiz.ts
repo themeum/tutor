@@ -12,6 +12,7 @@ import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { convertedQuestion } from '@TutorShared/utils/quiz';
 import {
+  isDefined,
   QuizDataStatus,
   type ID,
   type QuizQuestion,
@@ -87,7 +88,11 @@ export interface QuizDetailsResponse {
     quiz_auto_start: '0' | '1';
     auto_start_delay: number;
     question_layout_view: QuizLayoutView;
+    enable_pagination: '0' | '1';
     pagination_type: QuizPaginationType;
+    enable_answer_reveal: '0' | '1';
+    answers_reveal_duration: number;
+    hide_previous_button: '0' | '1';
     questions_order: QuizQuestionsOrder;
     hide_question_number_overview: '0' | '1';
     short_answer_characters_limit: number;
@@ -122,6 +127,10 @@ export interface QuizForm {
     quiz_auto_start: boolean;
     auto_start_delay: string; // in seconds
     question_layout_view: QuizLayoutView;
+    enable_pagination: boolean;
+    enable_answer_reveal: boolean;
+    answers_reveal_duration: string; // in seconds
+    hide_previous_button: boolean;
     questions_order: QuizQuestionsOrder;
     hide_question_number_overview: boolean;
     short_answer_characters_limit: number;
@@ -175,6 +184,14 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       quiz_auto_start: quiz.quiz_option.quiz_auto_start === '1',
       auto_start_delay: String(quiz.quiz_option.auto_start_delay ?? 5),
       question_layout_view: quiz.quiz_option.question_layout_view || 'single_question',
+      enable_pagination: isDefined(quiz.quiz_option.enable_pagination)
+        ? quiz.quiz_option.enable_pagination === '1'
+        : quiz.quiz_option.question_layout_view === 'question_pagination' || false,
+      enable_answer_reveal: isDefined(quiz.quiz_option.enable_answer_reveal)
+        ? quiz.quiz_option.enable_answer_reveal === '1'
+        : quiz.quiz_option.feedback_mode === 'reveal' || false,
+      answers_reveal_duration: String(quiz.quiz_option.answers_reveal_duration ?? 5),
+      hide_previous_button: quiz.quiz_option.hide_previous_button === '1',
       questions_order: quiz.quiz_option.questions_order ?? 'rand',
       show_pagination: quiz.quiz_option.question_layout_view === 'question_pagination',
       pagination_type: quiz.quiz_option.pagination_type ?? 'shape',
@@ -224,6 +241,10 @@ export const convertQuizFormDataToPayload = (
         pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
         passing_grade: formData.quiz_option.passing_grade,
         question_layout_view: formData.quiz_option.question_layout_view,
+        enable_pagination: formData.quiz_option.enable_pagination ? '1' : '0',
+        enable_answer_reveal: formData.quiz_option.enable_answer_reveal ? '1' : '0',
+        answers_reveal_duration: Number(formData.quiz_option.answers_reveal_duration),
+        hide_previous_button: formData.quiz_option.hide_previous_button ? '1' : '0',
         pagination_type: formData.quiz_option.pagination_type,
         questions_order: formData.quiz_option.questions_order,
         quiz_auto_start: formData.quiz_option.quiz_auto_start ? '1' : '0',
