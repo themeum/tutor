@@ -149,9 +149,6 @@ class Quiz {
 		 */
 		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
 
-		// Pin image: process answer via filter (priority 5 so core runs before Pro custom types).
-		add_filter( 'tutor_quiz_process_custom_question_answer', array( $this, 'process_pin_image_question_answer' ), 5, 6 );
-		// Pin/draw image quiz file paths for deletion are added by Tutor Pro via tutor_quiz_quiz_file_paths_for_deletion.
 
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 
@@ -1170,48 +1167,6 @@ class Quiz {
 			__( 'Quiz deleted successfully', 'tutor' ),
 			$quiz_id
 		);
-	}
-
-	/**
-	 * Process pin_image question answer (filter callback).
-	 * Student pin is stored as normalized coordinates JSON; grading is done via tutor_filter_quiz_answer_data (Pro).
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array  $custom_answer_data Array with given_answer and is_answer_was_correct.
-	 * @param string $question_type      Question type.
-	 * @param array  $answers            Answer data from request.
-	 *
-	 * @return array Modified custom_answer_data.
-	 */
-	public function process_pin_image_question_answer( $custom_answer_data, $question_type, $answers ) {
-		if ( 'pin_image' !== $question_type ) {
-			return $custom_answer_data;
-		}
-
-		$given_answer = '';
-
-		// Frontend posts: attempt[attempt_id][quiz_question][question_id][answers][pin][x|y].
-		if ( is_array( $answers ) && isset( $answers['answers']['pin'] ) && is_array( $answers['answers']['pin'] ) ) {
-			$raw_pin = $answers['answers']['pin'];
-			$x       = isset( $raw_pin['x'] ) ? (float) $raw_pin['x'] : 0.0;
-			$y       = isset( $raw_pin['y'] ) ? (float) $raw_pin['y'] : 0.0;
-
-			$x = max( 0.0, min( 1.0, $x ) );
-			$y = max( 0.0, min( 1.0, $y ) );
-
-			$given_answer = wp_json_encode(
-				array(
-					'x' => $x,
-					'y' => $y,
-				)
-			);
-		}
-
-		$custom_answer_data['given_answer']          = $given_answer;
-		$custom_answer_data['is_answer_was_correct'] = false;
-
-		return $custom_answer_data;
 	}
 
 	/**
