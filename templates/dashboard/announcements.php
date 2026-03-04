@@ -36,12 +36,9 @@ $order_filter  = Input::get( 'order', 'DESC' );
 $search_filter = Input::get( 'search', '' );
 
 // Announcement's parent.
-$course_id   = Input::get( 'course-id', '' );
-$date_filter = Input::get( 'date', '' );
-
-$filter_year  = gmdate( 'Y', strtotime( $date_filter ) );
-$filter_month = gmdate( 'm', strtotime( $date_filter ) );
-$filter_day   = gmdate( 'd', strtotime( $date_filter ) );
+$course_id  = Input::get( 'course-id', 0, Input::TYPE_INT );
+$start_date = Input::get( 'start_date', '' );
+$end_date   = Input::get( 'end_date', '' );
 
 $args = array(
 	'post_type'      => 'tutor_announcements',
@@ -54,19 +51,19 @@ $args = array(
 	'order'          => sanitize_text_field( $order_filter ),
 
 );
-if ( ! empty( $date_filter ) ) {
+if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 	$args['date_query'] = array(
 		array(
-			'year'  => $filter_year,
-			'month' => $filter_month,
-			'day'   => $filter_day,
+			'before'    => $end_date,
+			'after'     => $start_date,
+			'inclusive' => true,
 		),
 	);
 }
 if ( ! current_user_can( 'administrator' ) ) {
 	$args['author'] = get_current_user_id();
 }
-$the_query           = new WP_Query( $args );
+$the_query           = new \WP_Query( $args );
 $announcements       = $the_query->have_posts() ? $the_query->posts : array();
 $total_announcements = $the_query->found_posts;
 
