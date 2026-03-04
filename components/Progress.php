@@ -15,6 +15,8 @@ namespace Tutor\Components;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Constants\Size;
+
 /**
  * Progress Component Class.
  *
@@ -73,6 +75,14 @@ class Progress extends BaseComponent {
 	protected $state = 'progress';
 
 	/**
+	 * Progress size (x-small|small|medium|large).
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected $size = 'small';
+
+	/**
 	 * Set progress type.
 	 *
 	 * @since 4.0.0
@@ -111,6 +121,22 @@ class Progress extends BaseComponent {
 	 */
 	public function animated( $animated = true ) {
 		$this->animated = (bool) $animated;
+		return $this;
+	}
+
+	/**
+	 * Set progress size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $size Progress size (x-small|small|medium|large).
+	 * @return $this
+	 */
+	public function size( $size ) {
+		$allowed = array( Size::X_SMALL, Size::SMALL, Size::MEDIUM, Size::LARGE );
+		if ( in_array( $size, $allowed, true ) ) {
+			$this->size = $size;
+		}
 		return $this;
 	}
 
@@ -158,6 +184,8 @@ class Progress extends BaseComponent {
 		} else {
 			$alpine_data['type'] = $this->state;
 		}
+
+		$alpine_data['size'] = $this->size;
 
 		// Convert to JSON for x-data.
 		$alpine_json = wp_json_encode( $alpine_data );
