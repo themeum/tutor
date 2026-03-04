@@ -1777,52 +1777,54 @@ class Course extends Tutor_Base {
 	 * @since 1.0.0
 	 * @since 3.9.8 param $order added.
 	 *
-	 * @param array $order the lesson order array.
+	 * @param array $sort_order the lesson and topic order array.
 	 *
 	 * @return void
 	 */
-	private function save_course_content_order( $order = array() ) {
+	private function save_course_content_order( $sort_order = array() ) {
 		global $wpdb;
 
-		if ( tutor_utils()->count( $order ) ) {
-			$i = 0;
-			foreach ( $order as $topic ) {
-				$i++;
-				$wpdb->update(
-					$wpdb->posts,
-					array( 'menu_order' => $i ),
-					array( 'ID' => $topic['topic_id'] )
-				);
+		if ( ! tutor_utils()->count( $sort_order ) ) {
+			return;
+		}
 
-				/**
-				 * Removing All lesson with topic
-				*/
-				$wpdb->update(
-					$wpdb->posts,
-					array( 'post_parent' => 0 ),
-					array( 'post_parent' => $topic['topic_id'] )
-				);
+		$i = 0;
+		foreach ( $sort_order as $topic ) {
+			$i++;
+			$wpdb->update(
+				$wpdb->posts,
+				array( 'menu_order' => $i ),
+				array( 'ID' => $topic['topic_id'] )
+			);
 
-				/**
-				 * Lesson Attaching with topic ID
-				 * Sorting lesson
-				*/
-				if ( isset( $topic['lesson_ids'] ) ) {
-					$lesson_ids = $topic['lesson_ids'];
-				} else {
-					$lesson_ids = array();
-				}
-				if ( count( $lesson_ids ) ) {
-					foreach ( $lesson_ids as $lesson_key => $lesson_id ) {
-						$wpdb->update(
-							$wpdb->posts,
-							array(
-								'post_parent' => $topic['topic_id'],
-								'menu_order'  => $lesson_key,
-							),
-							array( 'ID' => $lesson_id )
-						);
-					}
+			/**
+			* Removing All lesson with topic
+			*/
+			$wpdb->update(
+				$wpdb->posts,
+				array( 'post_parent' => 0 ),
+				array( 'post_parent' => $topic['topic_id'] )
+			);
+
+			/**
+			* Lesson Attaching with topic ID
+			* Sorting lesson
+			*/
+			if ( isset( $topic['lesson_ids'] ) ) {
+				$lesson_ids = $topic['lesson_ids'];
+			} else {
+				$lesson_ids = array();
+			}
+			if ( count( $lesson_ids ) ) {
+				foreach ( $lesson_ids as $lesson_key => $lesson_id ) {
+					$wpdb->update(
+						$wpdb->posts,
+						array(
+							'post_parent' => $topic['topic_id'],
+							'menu_order'  => $lesson_key,
+						),
+						array( 'ID' => $lesson_id )
+					);
 				}
 			}
 		}
