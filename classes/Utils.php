@@ -7856,11 +7856,10 @@ class Utils {
 	 */
 	public function user_profile_completion( $user_id = 0 ) {
 		$user_id           = $this->get_user_id( $user_id );
-		$instructor        = $this->is_instructor( $user_id );
 		$instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 
-		$settings_url          = $this->tutor_dashboard_url( 'settings' );
-		$withdraw_settings_url = $this->tutor_dashboard_url( 'settings/withdraw-settings' );
+		$settings_url          = $this->tutor_dashboard_url( 'account/settings' );
+		$withdraw_settings_url = $this->tutor_dashboard_url( 'account/settings?tab=withdraw' );
 
 		$required_fields = array(
 			'_tutor_profile_photo' => __( 'Set Your Profile Photo', 'tutor' ),
