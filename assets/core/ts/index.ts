@@ -20,6 +20,7 @@ import { selectMeta } from '@Core/ts/components/select';
 import { selectDropdownMeta } from '@Core/ts/components/select-dropdown';
 import { starRatingMeta } from '@Core/ts/components/star-rating';
 import { staticsMeta } from '@Core/ts/components/statics';
+import { statusSelectMeta } from '@Core/ts/components/status-select';
 import { stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 import { tabsMeta } from '@Core/ts/components/tabs';
 import { timeInputMeta } from '@Core/ts/components/time-input';
@@ -66,6 +67,7 @@ const initializePlugin = () => {
       passwordInputMeta,
       copyToClipboardMeta,
       wpEditorMeta,
+      statusSelectMeta,
     ],
     services: [
       formServiceMeta,
