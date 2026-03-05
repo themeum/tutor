@@ -23,16 +23,17 @@ $quiz_id    = (int) $attempt_data->quiz_id;
 $course_id  = (int) $attempt_data->course_id;
 $topic_id   = (int) wp_get_post_parent_id( $quiz_id );
 
-$attempt_info       = maybe_unserialize( $attempt_data->attempt_info );
-$passing_grade      = is_array( $attempt_info ) ? (int) ( $attempt_info['passing_grade'] ?? 0 ) : 0;
-$allowed_attempts   = is_array( $attempt_info ) ? (int) ( $attempt_info['attempts_allowed'] ?? 0 ) : 0;
-$feedback_mode      = is_array( $attempt_info ) ? (string) ( $attempt_info['feedback_mode'] ?? '' ) : '';
-$total_marks        = (float) $attempt_data->total_marks;
-$earned_marks       = (float) $attempt_data->earned_marks;
-$pass_marks         = ( $total_marks * $passing_grade ) / 100;
-$earned_percentage  = (float) QuizModel::calculate_attempt_earned_percentage( $attempt_data );
-$attempt_result     = QuizModel::get_attempt_result( $attempt_id );
-$attempted_at_label = date_i18n( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) );
+$attempt_info        = maybe_unserialize( $attempt_data->attempt_info );
+$passing_grade       = is_array( $attempt_info ) ? (int) ( $attempt_info['passing_grade'] ?? 0 ) : 0;
+$allowed_attempts    = is_array( $attempt_info ) ? (int) ( $attempt_info['attempts_allowed'] ?? 0 ) : 0;
+$feedback_mode       = is_array( $attempt_info ) ? (string) ( $attempt_info['feedback_mode'] ?? '' ) : '';
+$instructor_feedback = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor_feedback'] ?? '' ) : '';
+$total_marks         = (float) $attempt_data->total_marks;
+$earned_marks        = (float) $attempt_data->earned_marks;
+$pass_marks          = ( $total_marks * $passing_grade ) / 100;
+$earned_percentage   = (float) QuizModel::calculate_attempt_earned_percentage( $attempt_data );
+$attempt_result      = QuizModel::get_attempt_result( $attempt_id );
+$attempted_at_label  = date_i18n( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) );
 
 $timing                 = QuizModel::get_quiz_attempt_timing( $attempt_data );
 $attempt_duration       = $timing['attempt_duration'] ?? '';
@@ -60,7 +61,8 @@ if ( is_array( $attempts ) ) {
 	$attempts_count = count( $attempts );
 }
 
-$can_retry = 'retry' === $feedback_mode && $attempts_count < $allowed_attempts;
+$can_retry               = 'retry' === $feedback_mode && $attempts_count < $allowed_attempts;
+$has_instructor_feedback = '' !== trim( wp_strip_all_tags( $instructor_feedback ) );
 
 $result_badge_class = 'failed';
 $result_label       = __( 'Failed', 'tutor' );
@@ -105,7 +107,8 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 			x-data="tutorStatics({ 
 				value: <?php echo esc_attr( $earned_percentage ); ?>, 
 				size: 'large', 
-				type: 'progress' 
+				type: 'progress' ,
+				animated: true,
 			})"
 		>
 			<div x-html="render()"></div>
@@ -251,4 +254,15 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 		);
 		?>
 	</div>
+
+	<?php if ( $has_instructor_feedback ) : ?>
+		<div class="tutor-quiz-summary-feedback">
+			<div data-title>
+				<?php esc_html_e( 'Instructor Feedback', 'tutor' ); ?>
+			</div>
+			<p data-body>
+				<?php echo wp_kses_post( $instructor_feedback ); ?>
+			</p>
+		</div>
+	<?php endif; ?>
 </div>

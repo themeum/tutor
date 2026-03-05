@@ -187,4 +187,21 @@
     }
   }
 
+  .tutor-quiz-summary-feedback {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-4;
+    margin-top: $tutor-spacing-6;
+    border: 1px solid $tutor-border-brand-secondary;
+    border-radius: $tutor-radius-lg;
+    background-color: $tutor-surface-brand-tertiary;
+    padding: $tutor-spacing-6;
+
+    [data-title] {
+      @include tutor-typography(small, regular, subdued);
+    }
+
+    [data-body] {
+      @include tutor-typography(p1);
+    }
+  }
 }
