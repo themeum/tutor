@@ -118,9 +118,26 @@
   }
 
   .tutor-quiz-review-dnd-grid {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-3;
+  }
+
+  .tutor-quiz-review-dnd-head {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: $tutor-spacing-6;
+  }
+
+  .tutor-quiz-review-dnd-rows {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-3;
+  }
+
+  .tutor-quiz-review-dnd-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $tutor-spacing-6;
+    align-items: stretch;
 
     @include tutor-breakpoint-down(sm) {
       grid-template-columns: 1fr;
@@ -133,24 +150,19 @@
     margin-bottom: $tutor-spacing-3;
   }
 
-  .tutor-quiz-review-list {
-    @include tutor-flex(column);
-    gap: $tutor-spacing-3;
-  }
-
   .tutor-quiz-review-item {
     @include tutor-flex(row, center, flex-start);
     @include tutor-typography(small, semibold);
     gap: $tutor-spacing-3;
-    min-height: 48px;
+    min-height: 38px;
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-md;
     background: $tutor-surface-base;
     padding: $tutor-spacing-4;
     overflow: hidden;
 
-    &:not(:has(img)) {
-      min-height: 38px;
+    &:has(img) {
+      min-height: 48px;
     }
 
     img {
