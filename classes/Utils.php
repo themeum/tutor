@@ -7858,8 +7858,8 @@ class Utils {
 		$user_id           = $this->get_user_id( $user_id );
 		$instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 
-		$settings_url          = $this->tutor_dashboard_url( 'account/settings' );
-		$withdraw_settings_url = $this->tutor_dashboard_url( 'account/settings?tab=withdraw' );
+		$settings_url          = Dashboard::get_account_page_url( 'settings' );
+		$withdraw_settings_url = Dashboard::get_account_page_url( 'settings?tab=withdraw' );
 
 		$required_fields = array(
 			'_tutor_profile_photo' => __( 'Set Your Profile Photo', 'tutor' ),
@@ -9560,7 +9560,7 @@ class Utils {
 	 *
 	 * @param int $topic_id | all contents will be checked that belong to this topic.
 	 * @param int $user_id | user id to check completed contents, if not passed then current user id will be used.
-	 * 
+	 *
 	 * @return array {
 	 *     contents:int,
 	 *     completed:int,
