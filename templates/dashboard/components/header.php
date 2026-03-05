@@ -73,6 +73,13 @@ $display_name = tutor_utils()->display_name( $user_id );
 					x-ref="trigger"
 					@click="toggle()"
 					:class="{ 'active': open }"
+					x-init="
+						$watch('open', value => { if (window.innerWidth <= 768) { document.body.style.overflow = value ? 'hidden' : ''; } })
+					"
+					@resize.window="
+						if (window.innerWidth <= 768 && open) { document.body.style.overflow = open ? 'hidden' : ''; }
+						else if (window.innerWidth >= 768 && open) { document.body.style.overflow = '' }
+					"
 				>
 					<?php echo get_avatar( get_current_user_id(), 32 ); ?>
 				</button>
