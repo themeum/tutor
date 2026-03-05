@@ -8,6 +8,8 @@
  * @since 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\User;
 ?>
 
@@ -117,7 +119,6 @@ $footer_links = array(
 			</div>
 		</div>
 	</div>
-	<?php tutor_load_template( 'demo-components.dashboard.components.nav-mobile' ); ?>
 </div>
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 </body>

@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\Template;
@@ -78,7 +80,7 @@ $active_menu = Input::get( 'subpage', '' );
 						<div role="button" @click="expanded = !expanded" class="tutor-learning-nav-header">
 							<div class="tutor-learning-nav-header-progress">
 								<div x-data="tutorStatics({ 
-									value: 65,
+									value: <?php echo esc_attr( $total_contents['percentage'] ?? 0 ); ?>,
 									size: 'tiny',
 									type: 'progress',
 									showLabel: false,

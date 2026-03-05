@@ -637,7 +637,7 @@ class Quiz_Attempts_List {
 		Popover::make()
 			->trigger( $this->get_kebab_button() )
 			->placement( Positions::BOTTOM_END )
-			->min_width( 120 )
+			->menu_min_width( '120px' )
 			->menu_item( $this->get_details_item( $attempt ) )
 			->menu_item(
 				array(

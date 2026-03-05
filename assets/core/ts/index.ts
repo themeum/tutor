@@ -20,17 +20,20 @@ import { selectMeta } from '@Core/ts/components/select';
 import { selectDropdownMeta } from '@Core/ts/components/select-dropdown';
 import { starRatingMeta } from '@Core/ts/components/star-rating';
 import { staticsMeta } from '@Core/ts/components/statics';
+import { statusSelectMeta } from '@Core/ts/components/status-select';
 import { stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 import { tabsMeta } from '@Core/ts/components/tabs';
+import { timeInputMeta } from '@Core/ts/components/time-input';
 import { toastMeta } from '@Core/ts/components/toast';
 import { tooltipMeta } from '@Core/ts/components/tooltip';
+import { wpEditorMeta } from '@Core/ts/components/wp-editor';
 
 import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
+import { preferenceServiceMeta } from '@Core/ts/services/Preference';
 import { queryServiceMeta } from '@Core/ts/services/Query';
 import { toastServiceMeta } from '@Core/ts/services/Toast';
 import { wpMediaServiceMeta } from '@Core/ts/services/WPMedia';
-import { preferenceServiceMeta } from '@Core/ts/services/Preference';
 
 import { registerLegacyFunctions } from '@Core/ts/legacy';
 import { getNonceData } from '@Core/ts/utils/nonce';
@@ -53,6 +56,7 @@ const initializePlugin = () => {
       accordionMeta,
       formMeta,
       tooltipMeta,
+      timeInputMeta,
       selectDropdownMeta,
       stepperDropdownMeta,
       selectMeta,
@@ -62,6 +66,8 @@ const initializePlugin = () => {
       playerMeta,
       passwordInputMeta,
       copyToClipboardMeta,
+      wpEditorMeta,
+      statusSelectMeta,
     ],
     services: [
       formServiceMeta,

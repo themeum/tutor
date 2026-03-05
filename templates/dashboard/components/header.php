@@ -157,7 +157,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 							$icon = ( $key === $active_nav && isset( $item['icon_active'] ) ) ? $item['icon_active'] : $item['icon'];
 							?>
 							<li>
-								<a href="<?php echo esc_url( $item['url'] ?? '#' ); ?>" class="<?php echo ( $key === $active_nav ) ? 'active' : ''; ?>">
+								<a href="<?php echo esc_url( $item['url'] ?? '#' ); ?>" class="<?php echo ( $key === $active_nav ) ? 'active' : ''; ?> tutor-small">
 									<?php tutor_utils()->render_svg_icon( $icon, 20, 20 ); ?>
 									<span><?php echo esc_html( $item['title'] ); ?></span>
 								</a>

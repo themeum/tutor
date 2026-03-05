@@ -15,12 +15,10 @@ namespace Tutor\Components;
 
 defined( 'ABSPATH' ) || exit;
 
-use ReflectionClass;
-use Tutor\Components\Constants\InputType;
-use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
-use Tutor\Components\Button;
 use TUTOR\Icon;
+use ReflectionClass;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\InputType;
 
 /**
  * InputField Component Class.
@@ -109,7 +107,7 @@ use TUTOR\Icon;
 class InputField extends BaseComponent {
 
 	/**
-	 * InputField type (text|email|password|number|textarea|checkbox|radio|switch).
+	 * InputField type (text|email|password|number|textarea|checkbox|radio|switch|time).
 	 *
 	 * @since 4.0.0
 	 *
@@ -380,7 +378,14 @@ class InputField extends BaseComponent {
 	 */
 	protected $selection_time_mode = null;
 
-
+	/**
+	 * Time input option interval in minutes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var int
+	 */
+	protected $interval = 30;
 
 	/**
 	 * Whether to show password strength meter.
@@ -852,6 +857,21 @@ class InputField extends BaseComponent {
 		$this->selection_time_mode = $mode;
 		return $this;
 	}
+
+	/**
+	 * Set interval for time input options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $interval Interval in minutes.
+	 *
+	 * @return self
+	 */
+	public function interval( int $interval = 30 ): self {
+		$this->interval = max( 1, $interval );
+		return $this;
+	}
+
 	/**
 	 * Set whether to show password strength meter.
 	 *
@@ -1743,6 +1763,101 @@ class InputField extends BaseComponent {
 		return $html;
 	}
 
+	/**
+	 * Render time input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string InputField HTML.
+	 */
+	protected function render_time_input() {
+		$props = array(
+			'name'        => $this->name,
+			'value'       => $this->value,
+			'placeholder' => $this->placeholder,
+			'disabled'    => $this->disabled,
+			'clearable'   => $this->clearable,
+			'required'    => $this->required,
+			'interval'    => $this->interval,
+		);
+
+		$props_json = htmlspecialchars( wp_json_encode( $props ), ENT_QUOTES, 'UTF-8' );
+		$input_icon = $this->left_icon;
+		if ( empty( $input_icon ) ) {
+			$input_icon = tutor_utils()->get_svg_icon( Icon::CLOCK, 20, 20 );
+		}
+		$clear_icon = tutor_utils()->get_svg_icon( Icon::CROSS, 12, 12 );
+
+		return sprintf(
+			'<div
+				x-data="tutorTimeInput(%1$s)"
+				class="tutor-time-input"
+				@click.outside="handleClickOutside()"
+				%2$s
+			>
+				<div class="tutor-input-wrapper" x-ref="trigger">
+					<input
+						type="text"
+						class="tutor-input tutor-input-content-left"
+						:class="{ \'tutor-input-content-clear\': canClear }"
+						:placeholder="placeholder"
+						:disabled="disabled"
+						:value="value"
+						@click.stop="toggleDropdown()"
+						@keydown="onInputKeydown($event)"
+						@input="onInputChange($event)"
+						autocomplete="off"
+						aria-haspopup="listbox"
+						:aria-expanded="open.toString()"
+						:aria-disabled="disabled.toString()"
+					/>
+
+					<span class="tutor-input-content tutor-input-content-left" aria-hidden="true">
+						%3$s
+					</span>
+
+					<button
+						type="button"
+						class="tutor-input-clear-button"
+						x-show="canClear"
+						@click.stop="clearValue()"
+						aria-label="%4$s"
+					>
+						%5$s
+					</button>
+				</div>
+
+				<div
+					x-ref="content"
+					class="tutor-time-input-menu"
+					x-show="open"
+					x-cloak
+					x-transition.opacity.scale.origin.top
+					@keydown="onListKeydown($event)"
+				>
+					<template x-for="(option, index) in options" :key="option">
+						<button
+							type="button"
+							class="tutor-time-input-option"
+							:data-option-index="index"
+							:data-active="(highlightedIndex === index).toString()"
+							:data-selected="(value === option).toString()"
+							@click="selectOption(option)"
+							@mousemove="highlightedIndex = index"
+							@focus="highlightedIndex = index"
+							x-text="option"
+						></button>
+					</template>
+				</div>
+			</div>',
+			$props_json,
+			$this->get_attributes_string(),
+			$input_icon,
+			esc_attr__( 'Clear time', 'tutor' ),
+			$clear_icon
+		);
+	}
+
 
 
 	/**
@@ -1809,6 +1924,9 @@ class InputField extends BaseComponent {
 			case InputType::DATE:
 			case InputType::DATE_TIME:
 				$input_html = $this->render_date_input();
+				break;
+			case InputType::TIME:
+				$input_html = $this->render_time_input();
 				break;
 			case InputType::SELECT:
 				$input_html = $this->render_select_input();
