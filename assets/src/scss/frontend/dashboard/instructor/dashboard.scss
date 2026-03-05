@@ -1,6 +1,41 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
+.tutor-profile-completion {
+  position: relative;
+
+  &-header {
+    @include tutor-flex(row, center, space-between);
+    padding: $tutor-spacing-5;
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+
+    &.tutor-expanded {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  &-body {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-5;
+    padding: $tutor-spacing-5 26px;
+    border: 1px solid $tutor-border-idle;
+    border-top: none;
+    border-bottom-left-radius: $tutor-radius-2xl;
+    border-bottom-right-radius: $tutor-radius-2xl;
+    box-shadow: $tutor-shadow-lg;
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: $tutor-surface-l1;
+    z-index: $tutor-z-dropdown;
+  }
+}
+
 .tutor-dashboard-home {
   &-sort {
     .tutor-input-field .tutor-label {
@@ -11,7 +46,7 @@
       @include tutor-reset;
       @include tutor-flex-center;
       cursor: grab;
-      
+
       svg {
         color: $tutor-icon-secondary;
       }
