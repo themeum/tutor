@@ -98,7 +98,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 								->attr( '@click', 'hide()' )
 								->render();
 							?>
-							<h4 class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4">
+							<h4 class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold">
 								<?php esc_html_e( 'Account', 'tutor' ); ?>
 							</h4>
 							<?php
@@ -143,31 +143,31 @@ $display_name = tutor_utils()->display_name( $user_id );
 								$applied_on = tutor_i18n_get_formated_date( $applied_on, get_option( 'date_format' ) );
 								?>
 								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
-								<div class="tutor-flex tutor-sm-items-center tutor-gap-3 tutor-py-2 tutor-px-4 tutor-surface-l4 tutor-rounded-sm">
-									<span class="tutor-pt-1">
-										<?php tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-warning' ) ); ?>
-									</span>
-									<span class="tutor-p3 tutor-text-warning">
-									<?php
-										echo wp_kses_post(
-											sprintf(
-											/* translators: %s: application date */
-												__( 'Your Application is pending as of <span class="tutor-font-medium">%s</span>', 'tutor' ),
-												esc_html( $applied_on ),
-											)
-										);
-									?>
-									</span>
-								</div>
+									<div class="tutor-flex tutor-sm-items-center tutor-gap-3 tutor-py-2 tutor-px-4 tutor-surface-l4 tutor-rounded-sm">
+										<span class="tutor-pt-1">
+											<?php tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-warning' ) ); ?>
+										</span>
+										<span class="tutor-p3 tutor-text-warning">
+										<?php
+											echo wp_kses_post(
+												sprintf(
+												/* translators: %s: application date */
+													__( 'Your Application is pending as of <span class="tutor-font-medium">%s</span>', 'tutor' ),
+													esc_html( $applied_on ),
+												)
+											);
+										?>
+										</span>
+									</div>
 								</div>
 								<?php
 							} elseif ( Instructors_List::STATUS_BLOCKED !== $instructor_status ) {
 								?>
 								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
-								<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small tutor-gap-2 tutor-btn-block">
-									<?php tutor_utils()->render_svg_icon( Icon::INSTRUCTOR ); ?>
-									<?php esc_html_e( 'Become an Instructor', 'tutor' ); ?>
-								</a>
+									<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small tutor-gap-2 tutor-btn-block">
+										<?php tutor_utils()->render_svg_icon( Icon::INSTRUCTOR ); ?>
+										<?php esc_html_e( 'Become an Instructor', 'tutor' ); ?>
+									</a>
 								</div>
 								<?php
 							}

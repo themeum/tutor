@@ -10,11 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Components\Avatar;
-use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
 use TUTOR\Icon;
-use Tutor\Components\Button;
 use TUTOR\Dashboard;
 
 if ( ! tutor_utils()->count( $dashboard_pages ) ) {
@@ -53,7 +49,6 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 		<li>
 			<a href="<?php echo esc_url( Dashboard::get_account_page_url( 'profile' ) ); ?>">
 				<div class="tutor-user-avatar-mobile tutor-rounded-sm"><?php echo get_avatar( get_current_user_id(), 16 ); ?></div>
-				<!-- <img style="width: 16px; height: 16px; object-fit: cover;" class="tutor-rounded-lg" src="<?php echo esc_url( get_avatar_url( get_current_user_id() ) ); ?>" alt=""> -->
 				<span class="tutor-tiny"><?php esc_html_e( 'Profile', 'tutor' ); ?></span>
 			</a>
 		</li>
@@ -61,22 +56,6 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 		if ( tutor_utils()->count( $more_nav_items ) ) :
 			?>
 			<li x-data="tutorPopover({ placement: 'top-end', offset: 16 })">
-				<?php
-				// Button::make()
-				// ->tag( 'button' )
-				// ->label( 'More' )
-				// ->size( Size::SMALL )
-				// ->variant( Variant::SECONDARY )
-				// ->icon( Icon::THREE_DOTS_VERTICAL, 'left', 16, 16 )
-				// ->attr( 'type', 'button' )
-				// ->attr( 'x-ref', 'trigger' )
-				// ->attr( '@click', 'toggle()' )
-				// ->attr( ':aria-expanded', "open ? 'true' : 'false'" )
-				// ->attr( 'aria-haspopup', 'true' )
-				// ->attr( 'aria-label', esc_attr__( 'More', 'tutor' ) )
-				// ->attr( 'class', 'tutor-tiny' )
-				// ->render();
-				?>
 				<button
 					type="button"
 					x-ref="trigger"
