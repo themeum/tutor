@@ -86,7 +86,6 @@ $display_name = tutor_utils()->display_name( $user_id );
 				>
 					<div class="tutor-dashboard-header-user-popover-profile">
 
-						<!-- mobile header -->
 						<div class="tutor-profile-header-top tutor-flex tutor-hidden tutor-sm-block tutor-items-center tutor-px-7 tutor-py-5">
 							<?php
 							Button::make()
@@ -112,7 +111,6 @@ $display_name = tutor_utils()->display_name( $user_id );
 								->render();
 							?>
 						</div>
-						<!-- end mobile header -->
 
 						<div class="tutor-user-profile-info tutor-flex tutor-flex-column tutor-sm-px-7 tutor-sm-py-5">
 							<div class="tutor-avatar tutor-border tutor-border-brand-secondary">
