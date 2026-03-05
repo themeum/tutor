@@ -740,6 +740,26 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.isValidating = false;
       this.dispatchStateChange();
 
+      // Dispatch custom event for components like WPEditor to listen to
+      if (this.formId) {
+        window.dispatchEvent(
+          new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_RESET, {
+            detail: {
+              formId: this.formId,
+              defaultValues:
+                values ||
+                Object.keys(this.fields).reduce(
+                  (acc, name) => {
+                    acc[name] = this.fields[name].defaultValue;
+                    return acc;
+                  },
+                  {} as Record<string, unknown>,
+                ),
+            },
+          }),
+        );
+      }
+
       setTimeout(() => {
         this.isResetting = false;
       }, 0);
