@@ -48,7 +48,7 @@ $args = array(
 
 );
 
-if ( ! empty( $course_id ) ) {
+if ( $course_id ) {
 	$args['post_parent'] = $course_id;
 }
 
