@@ -22,6 +22,12 @@ if ( ! $quiz_id ) {
 
 $questions           = tutor_utils()->get_questions_by_quiz( $quiz_id );
 $question_status_map = array();
+$default_item_status = ( isset( $attempt_data ) && is_object( $attempt_data ) ) ? 'incorrect' : '';
+$status_priority     = array(
+	'correct'   => 1,
+	'incorrect' => 2,
+	'pending'   => 3,
+);
 $first_question_id   = is_array( $questions ) && ! empty( $questions ) ? (int) ( $questions[0]->question_id ?? 0 ) : 0;
 $first_question_id   = $first_question_id > 0 ? $first_question_id : '';
 
@@ -35,20 +41,12 @@ if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_d
 				continue;
 			}
 
-			if ( ! isset( $question_status_map[ $question_id ] ) ) {
-				$question_status_map[ $question_id ] = array(
-					'has_pending'   => false,
-					'has_incorrect' => false,
-					'has_correct'   => false,
-				);
-			}
+			$answer_status = QuizModel::get_attempt_answer_status( $answer_row );
+			$item_status   = 'correct' === $answer_status ? 'correct' : ( 'pending' === $answer_status ? 'pending' : 'incorrect' );
+			$current       = $question_status_map[ $question_id ] ?? '';
 
-			if ( null === $answer_row->is_correct ) {
-				$question_status_map[ $question_id ]['has_pending'] = true;
-			} elseif ( (bool) $answer_row->is_correct ) {
-				$question_status_map[ $question_id ]['has_correct'] = true;
-			} else {
-				$question_status_map[ $question_id ]['has_incorrect'] = true;
+			if ( ! $current || $status_priority[ $item_status ] > $status_priority[ $current ] ) {
+				$question_status_map[ $question_id ] = $item_status;
 			}
 		}
 	}
@@ -72,16 +70,7 @@ if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_d
 				$question_id       = (int) ( $question->question_id ?? 0 );
 				$item_status_class = '';
 
-				if ( isset( $question_status_map[ $question_id ] ) ) {
-					$question_status_data = $question_status_map[ $question_id ];
-					if ( ! empty( $question_status_data['has_pending'] ) ) {
-						$item_status_class = 'pending';
-					} elseif ( ! empty( $question_status_data['has_incorrect'] ) ) {
-						$item_status_class = 'incorrect';
-					} elseif ( ! empty( $question_status_data['has_correct'] ) ) {
-						$item_status_class = 'correct';
-					}
-				}
+				$item_status_class = $question_status_map[ $question_id ] ?? $default_item_status;
 
 				$classes = array( 'tutor-quiz-sidebar-question-item' );
 				if ( $item_status_class ) {

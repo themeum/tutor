@@ -83,19 +83,21 @@ if ( 'ordering' === $question_type ) {
 		);
 	}
 } elseif ( 'image_answering' === $question_type ) {
-	$given_map = is_array( $given_answer ) ? $given_answer : array();
+	$given_map      = is_array( $given_answer ) ? $given_answer : array();
+	$answer_status  = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'wrong';
+	$row_item_state = 'correct' === $answer_status ? 'correct' : ( 'pending' === $answer_status ? 'pending' : 'incorrect' );
+
 	foreach ( $question_answers as $correct_item ) {
 		$answer_id    = (int) ( $correct_item->answer_id ?? 0 );
 		$given_text   = (string) ( $given_map[ $answer_id ] ?? '' );
 		$correct_text = (string) ( $correct_item->answer_title ?? '' );
-		$is_row_ok    = '' !== trim( $given_text ) && $normalize( $given_text ) === $normalize( $correct_text );
 
 		$rows[] = array(
 			'given_text'    => $given_text,
 			'given_image'   => $get_image_url( $correct_item ),
 			'correct_text'  => $correct_text,
 			'correct_image' => $get_image_url( $correct_item ),
-			'given_status'  => $is_row_ok ? 'correct' : 'incorrect',
+			'given_status'  => $row_item_state,
 		);
 	}
 }

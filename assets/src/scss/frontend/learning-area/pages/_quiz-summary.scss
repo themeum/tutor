@@ -102,6 +102,10 @@
         &.incorrect .tutor-question-number::before {
           background-color: $tutor-icon-critical;
         }
+
+        &.pending .tutor-question-number::before {
+          background-color: $tutor-surface-warning;
+        }
       }
     }
   }
@@ -184,6 +188,12 @@
       color: $tutor-text-critical;
       border-color: $tutor-border-error;
       background: $tutor-surface-critical;
+    }
+
+    &[data-option='pending'] {
+      color: $tutor-text-warning;
+      border-color: $tutor-border-warning-tertiary;
+      background: $tutor-surface-warning-hover;
     }
   }
 

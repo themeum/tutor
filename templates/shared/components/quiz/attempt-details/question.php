@@ -10,6 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Badge;
+use Tutor\Models\QuizModel;
 
 if ( ! isset( $question ) || ! is_object( $question ) || empty( $question_template ) ) {
 	return;
@@ -27,15 +28,12 @@ if ( 'image_matching' === $question_type ) {
 
 $status_label   = __( 'Incorrect', 'tutor' );
 $status_variant = Badge::ERROR;
+$answer_status  = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'wrong';
 
-if ( $attempt_answer && (bool) $attempt_answer->is_correct ) {
+if ( 'correct' === $answer_status ) {
 	$status_label   = __( 'Correct', 'tutor' );
 	$status_variant = Badge::SUCCESS;
-} elseif (
-	$attempt_answer &&
-	null === $attempt_answer->is_correct &&
-	in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true )
-) {
+} elseif ( 'pending' === $answer_status ) {
 	$status_label   = __( 'Pending', 'tutor' );
 	$status_variant = Badge::WARNING;
 }
@@ -45,6 +43,7 @@ $question_wrapper_classes = array( 'tutor-quiz-question' );
 if ( 'review-answer-dnd' === $question_template ) {
 	$question_wrapper_classes[] = 'tutor-quiz-review-dnd';
 }
+
 ?>
 
 <div class="<?php echo esc_attr( implode( ' ', $question_wrapper_classes ) ); ?>" data-question="<?php echo esc_attr( $question_type ); ?>">
@@ -52,6 +51,7 @@ if ( 'review-answer-dnd' === $question_template ) {
 	tutor_load_template(
 		'shared.components.quiz.attempt-details.question-header',
 		array(
+			'question'             => $question,
 			'index'                => $index,
 			'question_title'       => (string) ( $question->question_title ?? '' ),
 			'question_description' => (string) ( $question->question_description ?? '' ),
@@ -70,5 +70,9 @@ if ( 'review-answer-dnd' === $question_template ) {
 			'index'          => $index,
 		)
 	);
+
+	if ( is_object( $attempt_answer ) ) {
+		do_action( 'tutor_quiz_attempt_details_loop_after_row', $attempt_answer, $answer_status, array() );
+	}
 	?>
 </div>

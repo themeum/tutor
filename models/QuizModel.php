@@ -756,6 +756,41 @@ class QuizModel {
 	}
 
 	/**
+	 * Get normalized attempt-answer status.
+	 *
+	 * Status rules follow legacy attempt-details logic:
+	 * - correct: is_correct is truthy.
+	 * - pending: is_correct is null for manually reviewed question types.
+	 * - wrong: all other cases.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $attempt_answer Attempt answer object.
+	 *
+	 * @return string One of: correct, pending, wrong.
+	 */
+	public static function get_attempt_answer_status( $attempt_answer ): string {
+		$question_type = (string) ( $attempt_answer->question_type ?? '' );
+
+		if ( 'image_matching' === $question_type ) {
+			$question_type = 'matching';
+		}
+
+		if ( (bool) ( $attempt_answer->is_correct ?? false ) ) {
+			return 'correct';
+		}
+
+		if (
+			null === ( $attempt_answer->is_correct ?? null ) &&
+			in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true )
+		) {
+			return 'pending';
+		}
+
+		return 'wrong';
+	}
+
+	/**
 	 * Get single answer by answer_id
 	 *
 	 * @since 1.0.0

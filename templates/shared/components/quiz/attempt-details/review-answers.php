@@ -27,17 +27,6 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 		}
 	}
 }
-
-global $tutor_is_started_quiz;
-$previous_started_quiz = $tutor_is_started_quiz ?? null;
-
-if ( ! is_object( $tutor_is_started_quiz ) ) {
-	$tutor_is_started_quiz = (object) array(
-		'quiz_id'        => (int) ( $attempt_data->quiz_id ?? 0 ),
-		'attempt_id'     => (int) ( $attempt_data->attempt_id ?? 0 ),
-		'attempt_status' => (string) ( $attempt_data->attempt_status ?? '' ),
-	);
-}
 ?>
 
 <div class="tutor-quiz tutor-quiz-questions" inert>
@@ -79,13 +68,7 @@ if ( ! is_object( $tutor_is_started_quiz ) ) {
 					)
 				);
 				?>
-			<?php else : ?>
-				<?php Quiz::render_question( $question, (int) $index + 1 ); ?>
 			<?php endif; ?>
 		</div>
 	<?php endforeach; ?>
 </div>
-
-<?php
-$tutor_is_started_quiz = $previous_started_quiz;
-?>

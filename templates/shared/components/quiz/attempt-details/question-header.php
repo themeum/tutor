@@ -16,6 +16,7 @@ $question_title       = (string) ( $question_title ?? '' );
 $question_description = (string) ( $question_description ?? '' );
 $status_label         = (string) ( $status_label ?? '' );
 $status_variant       = (string) ( $status_variant ?? '' );
+$question             = isset( $question ) && is_object( $question ) ? $question : null;
 ?>
 
 <div class="tutor-quiz-question-header">
@@ -32,7 +33,7 @@ $status_variant       = (string) ( $status_variant ?? '' );
 			if ( $description ) {
 				$markup = "<div class='tutor-p2 tutor-text-secondary'>{$description}</div>";
 				if ( function_exists( 'tutor' ) && tutor()->has_pro ) {
-					do_action( 'tutor_quiz_question_desc_render', $markup );
+					do_action( 'tutor_quiz_question_desc_render', $markup, $question );
 				} else {
 					echo wp_kses_post( $markup );
 				}
