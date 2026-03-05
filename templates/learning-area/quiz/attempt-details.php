@@ -11,6 +11,7 @@
 
 use TUTOR\Icon;
 use TUTOR\Quiz_Attempts_List;
+use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use Tutor\Components\Button;
 
@@ -29,8 +30,32 @@ if ( $is_quiz_details_hidden ) {
 $quiz_id = $tutor_current_post->ID;
 $user_id = get_current_user_id();
 
-$attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
-$questions    = tutor_utils()->get_questions_by_quiz( $quiz_id );
+$attempt_id   = Input::get( 'attempt_id', 0, Input::TYPE_INT );
+$attempt_data = null;
+
+if ( $attempt_id > 0 ) {
+	$attempt_data = tutor_utils()->get_attempt( $attempt_id );
+
+	// Enforce ownership and quiz-match in learning area context.
+	if (
+		! $attempt_data ||
+		(int) ( $attempt_data->quiz_id ?? 0 ) !== (int) $quiz_id ||
+		(int) ( $attempt_data->user_id ?? 0 ) !== (int) $user_id
+	) {
+		$attempt_data = null;
+	}
+}
+
+if ( ! $attempt_data ) {
+	$attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
+}
+
+if ( ! $attempt_data || empty( $attempt_data->attempt_id ) ) {
+	tutor_utils()->tutor_empty_state( __( 'Attempt not found', 'tutor' ) );
+	return;
+}
+
+$questions = tutor_utils()->get_questions_by_quiz( $quiz_id );
 
 ?>
 <div class="tutor-quiz-summary-page">

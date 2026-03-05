@@ -25,17 +25,21 @@ if ( 'image_matching' === $question_type ) {
 	$question_type = 'matching';
 }
 
-$status_label   = __( 'Pending', 'tutor' );
-$status_variant = Badge::WARNING;
-if ( $attempt_answer && null !== $attempt_answer->is_correct ) {
-	if ( (int) $attempt_answer->is_correct ) {
-		$status_label   = __( 'Correct', 'tutor' );
-		$status_variant = Badge::SUCCESS;
-	} else {
-		$status_label   = __( 'Incorrect', 'tutor' );
-		$status_variant = Badge::ERROR;
-	}
+$status_label   = __( 'Incorrect', 'tutor' );
+$status_variant = Badge::ERROR;
+
+if ( $attempt_answer && (bool) $attempt_answer->is_correct ) {
+	$status_label   = __( 'Correct', 'tutor' );
+	$status_variant = Badge::SUCCESS;
+} elseif (
+	$attempt_answer &&
+	null === $attempt_answer->is_correct &&
+	in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true )
+) {
+	$status_label   = __( 'Pending', 'tutor' );
+	$status_variant = Badge::WARNING;
 }
+
 
 $question_wrapper_classes = array( 'tutor-quiz-question' );
 if ( 'review-answer-dnd' === $question_template ) {
