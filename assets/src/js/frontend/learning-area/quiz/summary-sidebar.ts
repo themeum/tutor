@@ -4,7 +4,13 @@ interface QuizSummarySidebarConfig {
   firstQuestionId?: string | number;
 }
 
-const HASH_PATTERN = /^#question-(\d+)$/;
+const QUESTION_ID_PREFIX = 'question-';
+const SUMMARY_HEADER_SELECTOR = '.tutor-quiz-summary-header';
+const QUESTION_ID_FALLBACK_SELECTOR = '[data-question-id="%s"]';
+const QUESTION_ID_PREFIX_FALLBACK_SELECTOR = `[data-question-id="${QUESTION_ID_PREFIX}%s"]`;
+const SIDEBAR_ITEM_SELECTOR = '[data-question-id="%s"]';
+const HASH_PATTERN = new RegExp(`^#${QUESTION_ID_PREFIX}(\\d+)$`);
+const QUESTION_SCROLL_GAP = 16;
 
 const quizSummarySidebar = (config: QuizSummarySidebarConfig = {}) => ({
   activeQuestionId: String(config.firstQuestionId ?? ''),
@@ -15,7 +21,6 @@ const quizSummarySidebar = (config: QuizSummarySidebarConfig = {}) => ({
 
     if (hashQuestionId && this.hasQuestionItem(hashQuestionId)) {
       this.activeQuestionId = hashQuestionId;
-      window.requestAnimationFrame(() => this.scrollToQuestionAnswer(hashQuestionId));
     }
   },
 
@@ -29,7 +34,7 @@ const quizSummarySidebar = (config: QuizSummarySidebarConfig = {}) => ({
       return false;
     }
 
-    return !!this.$el.querySelector(`[data-question-id="${questionId}"]`);
+    return !!this.$el.querySelector(SIDEBAR_ITEM_SELECTOR.replace('%s', questionId));
   },
 
   setActiveQuestion(questionId: string | number) {
@@ -40,7 +45,7 @@ const quizSummarySidebar = (config: QuizSummarySidebarConfig = {}) => ({
     }
 
     this.activeQuestionId = resolvedId;
-    history.replaceState(null, '', `#question-${resolvedId}`);
+    history.replaceState(null, '', `#${QUESTION_ID_PREFIX}${resolvedId}`);
     this.scrollToQuestionAnswer(resolvedId);
   },
 
@@ -52,12 +57,22 @@ const quizSummarySidebar = (config: QuizSummarySidebarConfig = {}) => ({
     }
 
     const answerElement =
-      document.getElementById(`question-${resolvedId}`) ||
-      document.querySelector(`[data-question-id="question-${resolvedId}"]`) ||
-      document.querySelector(`[data-question-id="${resolvedId}"]`);
+      document.getElementById(`${QUESTION_ID_PREFIX}${resolvedId}`) ||
+      document.querySelector(QUESTION_ID_PREFIX_FALLBACK_SELECTOR.replace('%s', resolvedId)) ||
+      document.querySelector(QUESTION_ID_FALLBACK_SELECTOR.replace('%s', resolvedId));
 
     if (answerElement instanceof HTMLElement) {
-      answerElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const summaryHeader = document.querySelector(SUMMARY_HEADER_SELECTOR);
+      const headerOffset =
+        summaryHeader instanceof HTMLElement
+          ? summaryHeader.getBoundingClientRect().top + summaryHeader.offsetHeight
+          : 0;
+      const scrollTop = answerElement.getBoundingClientRect().top + window.scrollY - headerOffset - QUESTION_SCROLL_GAP;
+
+      window.scrollTo({
+        top: Math.max(0, scrollTop),
+        behavior: 'smooth',
+      });
     }
   },
 });
