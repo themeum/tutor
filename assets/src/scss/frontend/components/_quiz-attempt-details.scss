@@ -197,18 +197,6 @@
     }
   }
 
-  .tutor-quiz-question[data-question='fill_in_the_blank'] {
-    .tutor-quiz-question-options {
-      gap: $tutor-spacing-5;
-    }
-
-    .tutor-quiz-question-option {
-      border-radius: $tutor-radius-lg;
-      background: $tutor-surface-base;
-      padding: $tutor-spacing-6;
-    }
-  }
-
   .tutor-quiz-summary-feedback {
     @include tutor-flex(column);
     gap: $tutor-spacing-4;
