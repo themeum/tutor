@@ -160,21 +160,16 @@
       max-height: 100% !important;
       overflow-y: auto;
       padding: $tutor-spacing-none;
-      display: flex;
-      flex-direction: column;
-
-      .tutor-dashboard-header-user-popover-profile {}
+      @include tutor-flex(column);
 
       &-profile {
         padding: $tutor-spacing-none $tutor-spacing-none;
         gap: $tutor-spacing-none;
-        margin-bottom: 16px;
+        margin-bottom: $tutor-spacing-6;
 
         .tutor-profile-header-top {
-          // padding: 10px 10px;
           width: 100%;
-          display: flex;
-          justify-content: space-between;
+          @include tutor-flex(row, center, space-between)
         }
 
         .tutor-user-profile-info {
@@ -182,7 +177,6 @@
           flex-direction: row;
           gap: 10px;
           background: $tutor-surface-l1;
-          // padding-top: $tutor-spacing-4;
         }
 
         .tutor-user-profile-name-card {
@@ -200,11 +194,9 @@
       }
 
       &-menu-wrapper {
+        @include tutor-flex(column, stretch, space-between);
         background: $tutor-surface-base;
         height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
       }
 
       &-menu {
@@ -219,7 +211,7 @@
           }
 
           a {
-            padding: 16px 12px;
+            padding: $tutor-spacing-6 $tutor-spacing-5;
             border: 1px solid $tutor-border-idle;
 
             &.active {
@@ -240,8 +232,8 @@
 
         a {
           width: 100%;
-          padding: 16px 12px;
-          border: 1px solid var(--tutor-border-idle);
+          padding: $tutor-spacing-6 $tutor-spacing-5;
+          border: 1px solid $tutor-border-idle;
         }
       }
     }
