@@ -30,6 +30,7 @@ $quiz_id = $tutor_current_post->ID;
 $user_id = get_current_user_id();
 
 $attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
+$questions    = tutor_utils()->get_questions_by_quiz( $quiz_id );
 
 ?>
 <div class="tutor-quiz-summary-page">
@@ -48,13 +49,13 @@ $attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
 	</div>
 
 	<div class="tutor-surface-l1">
-		<?php tutor_load_template( 'learning-area.quiz.attempt-details.summary', array( 'attempt_data' => $attempt_data ) ); ?>
+		<?php tutor_load_template( 'shared.components.quiz.attempt-details.summary', array( 'attempt_data' => $attempt_data ) ); ?>
 	</div>
 
 	<div class="tutor-quiz-summary-body">
 		<?php
 		tutor_load_template(
-			'learning-area.quiz.attempt-details.questions-sidebar',
+			'shared.components.quiz.attempt-details.questions-sidebar',
 			array(
 				'quiz_id'      => $quiz_id,
 				'attempt_data' => $attempt_data,
@@ -65,15 +66,15 @@ $attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
 			<h3 class="tutor-h3 tutor-sm-text-h5 tutor-text-subdued tutor-mb-10 tutor-sm-mb-5">
 				<?php esc_html_e( 'Review your answers', 'tutor' ); ?>
 			</h3>
-			<div class="tutor-quiz tutor-quiz-questions">
-				<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.true-false' ); ?>
-				<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.multiple-choice' ); ?>
-				<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.image-answering' ); ?>
-				<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.ordering' ); ?>
-				<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.matching' ); ?>
-				<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.fill-in-the-blanks' ); ?>
-				<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.openended-short-answer' ); ?>
-			</div>
+			<?php
+			tutor_load_template(
+				'shared.components.quiz.attempt-details.review-answers',
+				array(
+					'questions'    => is_array( $questions ) ? $questions : array(),
+					'attempt_data' => $attempt_data,
+				)
+			);
+			?>
 		</div>
 	</div>
 </div>
