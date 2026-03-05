@@ -18,6 +18,7 @@
 defined( 'ABSPATH' ) || exit;
 
 global $tutor_is_started_quiz;
+global $post;
 
 $default_question = array(
 	'index'                => 1,
@@ -38,6 +39,7 @@ $default_question = array(
 );
 
 $quiz_id            = $tutor_is_started_quiz->quiz_id ?? 0;
+$quiz               = $post instanceof WP_Post ? $post : get_post( $quiz_id );
 $quiz_settings      = tutor_utils()->get_quiz_option( $quiz_id, 'quiz_settings', array() );
 $show_question_mark = $question_settings['show_question_mark'] ?? '0';
 $answer_is_required = '1' === $question_settings['answer_required'] ?? '0';
@@ -58,11 +60,8 @@ $field_name_base    = sprintf( 'attempt[%d][quiz_question][%d]', $attempt_id, $q
 	tutor_load_template(
 		'learning-area.quiz.question-header',
 		array(
-			'index'                => $question->index,
-			'question_title'       => $question->question_title,
-			'question_description' => $question->question_description ?? '',
-			'question_mark'        => $question->question_mark,
-			'show_question_mark'   => $show_question_mark,
+			'question'           => $question,
+			'show_question_mark' => $show_question_mark,
 		)
 	);
 
@@ -70,16 +69,16 @@ $field_name_base    = sprintf( 'attempt[%d][quiz_question][%d]', $attempt_id, $q
 	tutor_load_template(
 		'learning-area.quiz.questions.' . $question_type,
 		array(
-			'question'           => wp_parse_args( (array) $question, $default_question ),
-			'quiz_settings'      => $quiz_settings,
-			'answer_is_required' => $answer_is_required,
-			'required_message'   => $required_message,
+			'question'                 => wp_parse_args( (array) $question, $default_question ),
+			'quiz_settings'            => $quiz_settings,
+			'answer_is_required'       => $answer_is_required,
+			'required_message'         => $required_message,
 			'question_field_name_base' => $field_name_base,
 		)
 	);
 
 	// Fire after-answers actions.
-	do_action( 'tutor_quiz_question_after_answers', $quiz_settings, $question );
+	do_action( 'tutor_quiz_question_after_answers', $quiz, $quiz_settings, $question );
 	do_action( 'tutor_require_question_answer_file', $question_type, $tutor_is_started_quiz, $question );
 
 	?>
