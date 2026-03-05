@@ -94,9 +94,8 @@ $display_name = tutor_utils()->display_name( $user_id );
 								->variant( Variant::GHOST )
 								->size( Size::X_SMALL )
 								->icon( Icon::LEFT, 'left', 20, 20 )
-								->tag( 'a' )
 								->icon_only()
-								->attr( 'href', esc_url( $back_url ) )
+								->attr( '@click', 'hide()' )
 								->render();
 							?>
 							<h4 class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4">
@@ -133,7 +132,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 							</a>
 							<?php endif; ?>
 						</div>
-						<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
+						
 						<?php
 						if ( ! User::is_instructor( $user_id ) && ! User::is_admin( $user_id ) ) {
 							$instructor_status = tutor_utils()->instructor_status( 0, false );
@@ -143,6 +142,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 								$applied_on = get_user_meta( $user_id, '_is_tutor_instructor', true );
 								$applied_on = tutor_i18n_get_formated_date( $applied_on, get_option( 'date_format' ) );
 								?>
+								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
 								<div class="tutor-flex tutor-sm-items-center tutor-gap-3 tutor-py-2 tutor-px-4 tutor-surface-l4 tutor-rounded-sm">
 									<span class="tutor-pt-1">
 										<?php tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-warning' ) ); ?>
@@ -159,37 +159,44 @@ $display_name = tutor_utils()->display_name( $user_id );
 									?>
 									</span>
 								</div>
+								</div>
 								<?php
 							} elseif ( Instructors_List::STATUS_BLOCKED !== $instructor_status ) {
 								?>
-								<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-medium tutor-gap-2 tutor-btn-block">
+								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
+								<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small tutor-gap-2 tutor-btn-block">
 									<?php tutor_utils()->render_svg_icon( Icon::INSTRUCTOR ); ?>
 									<?php esc_html_e( 'Become an Instructor', 'tutor' ); ?>
 								</a>
+								</div>
 								<?php
 							}
 						}
 						?>
-						</div>
-						<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
+						
+						
 							<?php
 							if ( User::can_switch_mode( $user_id ) ) {
 								$current_mode = User::get_current_view_mode();
 								$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'View as student', 'tutor' ) : esc_html__( 'View as instructor', 'tutor' );
-
-								Button::make()
-								->label( $button_label )
-								->size( Size::MEDIUM )
-								->variant( Variant::PRIMARY_SOFT )
-								->icon( Icon::RELOAD )
-								->attr( ':disabled', 'profileSwitchMutation?.isPending' )
-								->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
-								->attr( 'class', 'tutor-w-full' )
-								->attr( '@click', "profileSwitchMutation.mutate('{$current_mode}')" )
-								->render();
+								?>
+								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
+									<?php
+									Button::make()
+									->label( $button_label )
+									->size( Size::MEDIUM )
+									->variant( Variant::PRIMARY_SOFT )
+									->icon( Icon::RELOAD )
+									->attr( ':disabled', 'profileSwitchMutation?.isPending' )
+									->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
+									->attr( 'class', 'tutor-w-full' )
+									->attr( '@click', "profileSwitchMutation.mutate('{$current_mode}')" )
+									->render();
+									?>
+								</div> 
+								<?php
 							}
 							?>
-						</div>
 					</div>
 					<div class="tutor-dashboard-header-user-popover-menu-wrapper">
 						<ul class="tutor-dashboard-header-user-popover-menu">

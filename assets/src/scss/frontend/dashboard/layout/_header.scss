@@ -92,7 +92,7 @@
   }
 
   &-user-popover {
-    width: 220px;
+    width: 230px;
     padding: $tutor-spacing-4;
     z-index: 999999 !important;
 
@@ -102,7 +102,7 @@
       background-color: $tutor-surface-brand-tertiary;
       padding: $tutor-spacing-6 $tutor-spacing-5;
       border-radius: $tutor-radius-md;
-      margin-bottom: $tutor-spacing-4;
+      margin-bottom: $tutor-spacing-5;
 
       .tutor-edit-profile-link {
         color: $tutor-icon-idle;
