@@ -14,6 +14,8 @@ use TUTOR\Quiz_Attempts_List;
 use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -63,13 +65,29 @@ $questions = tutor_utils()->get_questions_by_quiz( $quiz_id );
 		<div class="tutor-quiz-summary-header-inner">
 			<div class="tutor-flex tutor-items-center tutor-gap-4">
 				<?php
-					Button::make()->icon( Icon::ARROW_LEFT_2 )->tag( 'a' )->attr( 'href', $back_url )->attr( 'class', 'tutor-btn-ghost tutor-btn-x-small tutor-btn-icon' )->render();
+					Button::make()
+						->icon( Icon::ARROW_LEFT_2 )
+						->tag( 'a' )
+						->attr( 'href', $back_url )
+						->variant( Variant::GHOST )
+						->size( Size::X_SMALL )
+						->icon_only()
+						->render();
 				?>
 				<h5 class="tutor-h5 tutor-font-semibold"><?php esc_html_e( 'Quiz Summary', 'tutor' ); ?></h5>
 			</div>
-			<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-				<?php tutor_utils()->render_svg_icon( Icon::CROSS ); ?>
-			</button>
+
+			<?php
+				Button::make()
+					->icon( Icon::CROSS )
+					->tag( 'a' )
+					->attr( 'href', $back_url )
+					->attr( 'type', 'button' )
+					->variant( Variant::GHOST )
+					->size( Size::X_SMALL )
+					->icon_only()
+					->render();
+			?>
 		</div>
 	</div>
 
