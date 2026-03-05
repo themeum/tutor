@@ -33,21 +33,25 @@ $order_filter  = Input::get( 'order', 'DESC' );
 $search_filter = Input::get( 'search', '' );
 
 // Announcement's parent.
-$course_id  = Input::get( 'course-id', '' );
+$course_id  = Input::get( 'course-id', 0, Input::TYPE_INT );
 $start_date = Input::get( 'start_date', '' );
 $end_date   = Input::get( 'end_date', '' );
 
 $args = array(
 	'post_type'      => 'tutor_announcements',
 	'post_status'    => 'publish',
-	's'              => sanitize_text_field( $search_filter ),
-	'post_parent'    => sanitize_text_field( $course_id ),
+	's'              => $search_filter,
 	'posts_per_page' => sanitize_text_field( $limit ),
-	'paged'          => sanitize_text_field( $current_page ),
+	'paged'          => $current_page,
 	'orderBy'        => 'ID',
-	'order'          => sanitize_text_field( $order_filter ),
+	'order'          => $order_filter,
 
 );
+
+if ( ! empty( $course_id ) ) {
+	$args['post_parent'] = $course_id;
+}
+
 if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 	$args['date_query'] = array(
 		array(
