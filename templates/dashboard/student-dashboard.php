@@ -52,17 +52,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$completed_course_count = count( $completed_courses );
 	$active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
 
-	// @TODO:: Need to implement this.
-	$enrolled_course_count_this_month  = 0;
-	$completed_course_count_this_month = 0;
-	$active_course_count_this_month    = 0;
-
-	$enrolled_course_link  = tutor_utils()->tutor_dashboard_url( 'enrolled-courses' );
-	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'enrolled-courses/completed-courses' );
-	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'enrolled-courses/active-courses' );
 	?>
 	<div class="tutor-grid tutor-grid-cols-4 tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7">
-		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
+		<div class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Enrolled Courses', 'tutor' ); ?>
@@ -75,15 +67,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<div class="tutor-stat-card-value">
 					<?php echo esc_html( $enrolled_course_count ); ?>
 				</div>
-				<p class="tutor-stat-card-change">
-					<?php
-					// translators: %s is the number of enrolled courses this month.
-					echo esc_html( sprintf( __( '%s this month', 'tutor' ), $enrolled_course_count_this_month ) );
-					?>
-				</p>
 			</div>
-		</a>
-		<a href="<?php echo esc_url( $active_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-active">
+		</div>
+		<div class="tutor-card tutor-stat-card tutor-stat-card-active">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Active', 'tutor' ); ?>
@@ -96,15 +82,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<div class="tutor-stat-card-value">
 					<?php echo esc_html( $enrolled_course_count ); ?>
 				</div>
-				<p class="tutor-stat-card-change">
-					<?php
-					// translators: %s is the number of active courses this month.
-					echo esc_html( sprintf( __( '%s this month', 'tutor' ), $active_course_count_this_month ) );
-					?>
-				</p>
 			</div>
-		</a>
-		<a href="<?php echo esc_url( $completed_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-completed">
+		</div>
+		<div class="tutor-card tutor-stat-card tutor-stat-card-completed">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Completed', 'tutor' ); ?>
@@ -117,14 +97,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<div class="tutor-stat-card-value">
 					<?php echo esc_html( $enrolled_course_count ); ?>
 				</div>
-				<p class="tutor-stat-card-change">
-					<?php
-					// translators: %s is the number of completed courses this month.
-					echo esc_html( sprintf( __( '%s this month', 'tutor' ), $completed_course_count_this_month ) );
-					?>
-				</p>
 			</div>
-		</a>
+		</div>
 		<div 
 			class="tutor-card tutor-stat-card tutor-stat-card-time-spent"
 			@click="TutorCore.modal.showModal('tutor-time-spent-modal')"
