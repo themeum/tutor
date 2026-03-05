@@ -80,7 +80,7 @@ class Progress extends BaseComponent {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	protected $size = 'small';
+	protected $size = Size::SMALL;
 
 	/**
 	 * Set progress type.
