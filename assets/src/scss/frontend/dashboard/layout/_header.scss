@@ -11,7 +11,7 @@
   padding: $tutor-spacing-6 $tutor-spacing-8;
 
   @include tutor-breakpoint-down(sm) {
-    display: none;
+    // display: none;
   }
 
   &-inner {
@@ -66,10 +66,14 @@
     @include tutor-flex(row, center);
   }
 
+  .tutor-avatar {
+    margin: 0 auto;
+  }
+
   &-user-avatar {
     @include tutor-button-reset();
-    width: 32px;
-    height: 32px;
+    width: 22px;
+    height: 22px;
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-full;
     overflow: hidden;
@@ -90,6 +94,7 @@
   &-user-popover {
     width: 220px;
     padding: $tutor-spacing-4;
+    z-index: 999999 !important;
 
     &-profile {
       @include tutor-flex(column, center, flex-start);
@@ -98,6 +103,10 @@
       padding: $tutor-spacing-6 $tutor-spacing-5;
       border-radius: $tutor-radius-md;
       margin-bottom: $tutor-spacing-4;
+
+      .tutor-edit-profile-link {
+        color: $tutor-icon-idle;
+      }
     }
 
     &-menu {
@@ -140,6 +149,103 @@
           svg {
             flex-shrink: 0;
           }
+        }
+      }
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    &-user-popover {
+      top: 0px !important;
+      left: 0px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      overflow-y: auto;
+      padding: $tutor-spacing-none;
+      display: flex;
+      flex-direction: column;
+
+      .tutor-dashboard-header-user-popover-profile {}
+
+      &-profile {
+        padding: $tutor-spacing-none $tutor-spacing-none;
+        gap: $tutor-spacing-none;
+        margin-bottom: 16px;
+
+        .tutor-profile-header-top {
+          // padding: 10px 10px;
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .tutor-user-profile-info {
+          width: 100%;
+          flex-direction: row;
+          gap: 10px;
+          background: $tutor-surface-l1;
+          // padding-top: $tutor-spacing-4;
+        }
+
+        .tutor-user-profile-name-card {
+          align-items: flex-start;
+        }
+
+        .tutor-edit-profile-link {
+          align-self: center;
+          margin-left: auto;
+        }
+
+        .tutor-avatar {
+          margin: unset;
+        }
+      }
+
+      &-menu-wrapper {
+        background: $tutor-surface-base;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      &-menu {
+        gap: 10px;
+        padding: $tutor-spacing-6 $tutor-spacing-7;
+
+        li {
+          &:last-of-type {
+            display: none;
+            border-top: 1px solid $tutor-border-idle;
+            padding-top: $tutor-spacing-2;
+          }
+
+          a {
+            padding: 16px 12px;
+            border: 1px solid $tutor-border-idle;
+
+            &.active {
+              background-color: unset;
+              color: unset;
+            }
+
+            &.focus {
+              background-color: $tutor-tab-sidebar-l2-active;
+              color: $tutor-text-brand;
+            }
+          }
+        }
+      }
+
+      .tutor-mobile-logout-wrapper {
+        margin-top: auto;
+
+        a {
+          width: 100%;
+          padding: 16px 12px;
+          border: 1px solid var(--tutor-border-idle);
         }
       }
     }

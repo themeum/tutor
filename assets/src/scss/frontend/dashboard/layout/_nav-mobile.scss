@@ -36,10 +36,17 @@
         @include tutor-flex(column, center);
         gap: $tutor-spacing-2;
 
-        &.active, 
+        &.active,
         &.active span {
           color: $tutor-text-brand;
         }
+      }
+
+      .tutor-user-avatar-mobile img {
+        width: 16px;
+        height: 16px;
+        object-fit: cover;
+        border-radius: $tutor-radius-full;
       }
     }
   }
@@ -67,7 +74,7 @@
           outline: none;
           box-shadow: none;
 
-          &.active, 
+          &.active,
           &.active span {
             color: $tutor-text-brand;
           }
