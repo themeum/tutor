@@ -4,7 +4,9 @@
 .tutor-quiz-summary-page {
   --tutor-quiz-summary-header-height: 64px;
   --tutor-quiz-summary-header-top: 0px;
-  --tutor-quiz-summary-sidebar-top: calc(var(--tutor-quiz-summary-header-top) + #{$tutor-spacing-13} + var(--tutor-quiz-summary-header-height));
+  --tutor-quiz-summary-sidebar-top: calc(
+    var(--tutor-quiz-summary-header-top) + #{$tutor-spacing-13} + var(--tutor-quiz-summary-header-height)
+  );
 
   body:has(#wpadminbar) & {
     --tutor-quiz-summary-header-top: 46px;
@@ -103,4 +105,86 @@
       }
     }
   }
+
+  .tutor-quiz-review-dnd {
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-8;
+    background: $tutor-surface-l1;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-5;
+    }
+  }
+
+  .tutor-quiz-review-dnd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $tutor-spacing-6;
+
+    @include tutor-breakpoint-down(sm) {
+      grid-template-columns: 1fr;
+      gap: $tutor-spacing-4;
+    }
+  }
+
+  .tutor-quiz-review-col-title {
+    @include tutor-typography(tiny, regular, subdued);
+    margin-bottom: $tutor-spacing-3;
+  }
+
+  .tutor-quiz-review-list {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-3;
+  }
+
+  .tutor-quiz-review-item {
+    @include tutor-flex(row, center, flex-start);
+    @include tutor-typography(small, semibold);
+    gap: $tutor-spacing-3;
+    min-height: 48px;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-md;
+    background: $tutor-surface-base;
+    padding: $tutor-spacing-4;
+    overflow: hidden;
+
+    &:not(:has(img)) {
+      min-height: 38px;
+    }
+
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: $tutor-radius-xs;
+      object-fit: cover;
+      object-position: center;
+      flex-shrink: 0;
+    }
+
+    &[data-option='correct'] {
+      color: $tutor-text-success;
+      border-color: $tutor-border-success;
+      background: $tutor-surface-success;
+    }
+
+    &[data-option='incorrect'] {
+      color: $tutor-text-critical;
+      border-color: $tutor-border-error;
+      background: $tutor-surface-critical;
+    }
+  }
+
+  .tutor-quiz-question[data-question='fill_in_the_blank'] {
+    .tutor-quiz-question-options {
+      gap: $tutor-spacing-5;
+    }
+
+    .tutor-quiz-question-option {
+      border-radius: $tutor-radius-lg;
+      background: $tutor-surface-base;
+      padding: $tutor-spacing-6;
+    }
+  }
+
 }

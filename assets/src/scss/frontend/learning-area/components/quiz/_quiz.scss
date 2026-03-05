@@ -1140,6 +1140,7 @@ $tutor-quiz-content-bottom-offset: calc(
       }
 
       &-input {
+        display: inline-block;
         border: none;
         outline: none;
         border-bottom: 2px solid $tutor-border-idle;
@@ -1147,6 +1148,7 @@ $tutor-quiz-content-bottom-offset: calc(
         border-radius: 0;
         padding: 0 $tutor-spacing-2;
         width: 167px;
+        min-width: 167px;
         color: $tutor-text-brand;
         @include tutor-transition((color, opacity));
 
@@ -1168,6 +1170,18 @@ $tutor-quiz-content-bottom-offset: calc(
         &:focus {
           border-color: $tutor-border-brand;
           box-shadow: none;
+        }
+
+        &[data-option='correct'] {
+          color: $tutor-text-success;
+          border-color: $tutor-border-success;
+          text-align: center;
+        }
+
+        &[data-option='incorrect'] {
+          color: $tutor-text-critical;
+          border-color: $tutor-border-error;
+          text-align: center;
         }
       }
     }
