@@ -9562,20 +9562,21 @@ class Utils {
 	 * Get total number of contents & completed contents that belongs to this topic.
 	 *
 	 * @since 2.0.0
-	 * @since 4.0.0 Return percentage of completed contents.
+	 * @since 4.0.0 Return percentage of completed contents and $user_id parameter added.
 	 *
 	 * @param int $topic_id | all contents will be checked that belong to this topic.
-	 *
+	 * @param int $user_id | user id to check completed contents, if not passed then current user id will be used.
+	 * 
 	 * @return array {
 	 *     contents:int,
 	 *     completed:int,
 	 *     percentage:float
 	 * }
 	 */
-	public function count_completed_contents_by_topic( int $topic_id ): array {
+	public function count_completed_contents_by_topic( int $topic_id, int $user_id = 0 ): array {
 		$topic_id  = sanitize_text_field( $topic_id );
 		$contents  = $this->get_contents_by_topic( $topic_id );
-		$user_id   = get_current_user_id();
+		$user_id   = $this->get_user_id( $user_id );
 		$completed = 0;
 
 		$lesson_post_type      = 'lesson';

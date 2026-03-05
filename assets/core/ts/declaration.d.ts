@@ -96,6 +96,12 @@ declare global {
       };
     };
 
+    // WordPress editor (TinyMCE and QuickTags)
+    tinymce?: {
+      get(id: string): () => unknown;
+    };
+    quicktags?: unknown;
+
     // Tutor object from PHP (extend existing type, don't redeclare)
     _tutorobject?: Record<string, unknown> & {
       nonce_key?: string;

@@ -357,7 +357,7 @@ class DropdownFilter extends BaseComponent {
 			} elseif ( Variant::PRIMARY_SOFT === $this->variant ) {
 				$btn_class = 'tutor-btn tutor-btn-primary-soft tutor-gap-2 ' . $size_class;
 			} else {
-				$btn_class = 'tutor-btn tutor-btn-link tutor-btn-small tutor-font-regular tutor-gap-2 tutor-p-none tutor-min-h-0';
+				$btn_class = 'tutor-btn tutor-text-secondary tutor-btn-small tutor-font-regular tutor-gap-2 tutor-bg-transparent tutor-p-none tutor-min-h-0';
 			}
 		}
 
