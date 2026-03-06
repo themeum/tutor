@@ -406,10 +406,7 @@ class Template extends Tutor_Base {
 						}
 
 						$dashboard_subpage = tutor_utils()->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
-						$is_isolated       = Input::has( 'attempt_id' ) && (
-							Dashboard::QUIZ_ATTEMPTS_PAGE_SLUG === $dashboard_page ||
-							( Dashboard::COURSES_PAGE_SLUG === $dashboard_page && Dashboard::MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG === $dashboard_subpage )
-						);
+						$is_isolated       = Dashboard::is_isolated_page_request( $dashboard_page, $dashboard_subpage );
 
 						if ( $is_isolated ) {
 							$template = tutor_get_template( 'dashboard-isolated' );

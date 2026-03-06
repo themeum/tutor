@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Dashboard;
+use Tutor\Helpers\UrlHelper;
 
 ?>
 <!DOCTYPE html>
@@ -27,18 +28,14 @@ global $wp_query;
 
 $dashboard_page    = tutor_utils()->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
 $dashboard_subpage = tutor_utils()->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
-$page_template     = '';
-$wrapper_class     = 'tutor-quiz-attempt-page-wrapper';
-$back_url          = remove_query_arg( 'attempt_id' );
+$page_key          = Dashboard::get_isolated_page_key( $dashboard_page, $dashboard_subpage );
+$isolated_pages    = Dashboard::get_isolated_pages();
+$page_data         = $isolated_pages[ $page_key ] ?? array();
+$page_template     = $page_data['template'] ?? '';
+$back_url          = UrlHelper::back( tutor_utils()->tutor_dashboard_url() );
 $close_url         = $back_url;
-
-if ( Dashboard::QUIZ_ATTEMPTS_PAGE_SLUG === $dashboard_page ) {
-	$page_template = tutor_get_template( 'dashboard.quiz-attempts.quiz-reviews' );
-} elseif ( Dashboard::COURSES_PAGE_SLUG === $dashboard_page && Dashboard::MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG === $dashboard_subpage ) {
-	$page_template = tutor_get_template( 'dashboard.my-quiz-attempts.attempts-details' );
-}
 ?>
-<div class="<?php echo esc_attr( $wrapper_class ); ?>">
+<div class="tutor-dashboard-isolated-page-wrapper">
 	<?php
 	if ( $page_template && file_exists( $page_template ) ) {
 		require_once $page_template;
