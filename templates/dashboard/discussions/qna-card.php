@@ -317,7 +317,7 @@ $single_url = UrlHelper::add_query_params(
 		'dashboard.discussions.qna-form',
 		array(
 			'form_id'        => 'qna-reply-form-' . (int) $question_id,
-			'submit_handler' => '(data) => replyQnAMutation?.mutate({ ...data, question_id: ' . (int) $question_id . ', course_id: ' . (int) $question->course_id . ', reply_context: \'list\' })',
+			'submit_handler' => '(data) => replyQnAMutation?.mutate({ ...data, question_id: ' . (int) $question_id . ', course_id: ' . (int) $question->course_id . ', reply_context: "list" })',
 			'cancel_handler' => 'setReplying(null)',
 			'is_pending'     => 'replyQnAMutation?.isPending',
 			'placeholder'    => __( 'Just drop your response here!', 'tutor' ),

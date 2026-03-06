@@ -181,7 +181,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 		'dashboard.discussions.qna-form',
 		array(
 			'form_id'        => 'qna-reply-form-' . $question->comment_ID,
-			'submit_handler' => '(data) => replyQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ', course_id: ' . (int) $question->course_id . ', reply_context: \'single\' })',
+			'submit_handler' => '(data) => replyQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ', course_id: ' . (int) $question->course_id . ', reply_context: "single" })',
 			'cancel_handler' => 'reset(); focused = false',
 			'is_pending'     => 'replyQnAMutation?.isPending',
 			'placeholder'    => __( 'Just drop your response here!', 'tutor' ),
