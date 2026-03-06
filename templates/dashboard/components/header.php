@@ -73,9 +73,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 					x-ref="trigger"
 					@click="toggle()"
 					:class="{ 'active': open }"
-					x-init="
-						$watch('open', value => { if (window.innerWidth <= 768) { document.body.style.overflow = value ? 'hidden' : ''; } })
-					"
+					x-init="$watch('open', value => { if (window.innerWidth <= 768) { document.body.style.overflow = value ? 'hidden' : ''; } })"
 					@resize.window="
 						if (window.innerWidth <= 768 && open) { document.body.style.overflow = open ? 'hidden' : ''; }
 						else if (window.innerWidth >= 768 && open) { document.body.style.overflow = '' }
@@ -221,12 +219,14 @@ $display_name = tutor_utils()->display_name( $user_id );
 						</ul>
 						<div class="tutor-mobile-logout-wrapper tutor-text-center tutor-px-7 tutor-hidden tutor-sm-block">
 							<?php
-							$logout_btn = $menu_items['logout'];
-							?>
+							$logout_btn = $menu_items['logout'] ?? '';
+							if ( ! empty( $logout_btn ) ) :
+								?>
 							<a href="<?php echo esc_url( $logout_btn['url'] ?? '#' ); ?>" class="tutor-btn tutor-small">
 								<?php tutor_utils()->render_svg_icon( $icon, 20, 20 ); ?>
 								<span><?php echo esc_html( $logout_btn['title'] ); ?></span>
 							</a>
+							<?php endif; ?>
 							<div class="tutor-tiny tutor-text-secondary tutor-py-5"><?php esc_html_e( 'Version 4.0', 'tutor' ); ?></div>
 						</div>
 					</div>
