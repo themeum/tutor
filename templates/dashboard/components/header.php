@@ -23,9 +23,10 @@ $menu_items['logout'] = array(
 	'url'   => wp_logout_url( home_url() ),
 );
 
-$active_nav   = 'profile';
-$user_id      = get_current_user_id();
-$display_name = tutor_utils()->display_name( $user_id );
+$active_nav       = 'profile';
+$user_id          = get_current_user_id();
+$display_name     = tutor_utils()->display_name( $user_id );
+$edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
 ?>
 
 <div x-data="tutorHeader()" class="tutor-dashboard-header">
@@ -130,7 +131,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 								</div>
 							</div>
 							<?php if ( User::is_student() && User::is_student_view() ) : ?>
-							<a href="<?php echo esc_url( Dashboard::get_account_page_url( 'settings' ) ); ?>" class="tutor-edit-profile-link tutor-hidden tutor-sm-block tutor-">
+							<a href="<?php echo esc_url( $edit_profile_url ); ?>" class="tutor-edit-profile-link tutor-hidden tutor-sm-block tutor-">
 								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
 							</a>
 							<?php endif; ?>
@@ -175,31 +176,25 @@ $display_name = tutor_utils()->display_name( $user_id );
 								<?php
 							}
 						}
-						?>
-						
-						
-							<?php
-							if ( User::can_switch_mode( $user_id ) ) {
+						if ( User::can_switch_mode( $user_id ) ) {
 								$current_mode = User::get_current_view_mode();
 								$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'View as student', 'tutor' ) : esc_html__( 'View as instructor', 'tutor' );
-								?>
-								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
-									<?php
-									Button::make()
-									->label( $button_label )
-									->size( Size::MEDIUM )
-									->variant( Variant::PRIMARY_SOFT )
-									->icon( Icon::RELOAD )
-									->attr( ':disabled', 'profileSwitchMutation?.isPending' )
-									->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
-									->attr( 'class', 'tutor-w-full' )
-									->attr( '@click', "profileSwitchMutation.mutate('{$current_mode}')" )
-									->render();
-									?>
-								</div> 
-								<?php
-							}
 							?>
+							<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
+								<?php
+								Button::make()
+								->label( $button_label )
+								->size( Size::MEDIUM )
+								->variant( Variant::PRIMARY_SOFT )
+								->icon( Icon::RELOAD )
+								->attr( ':disabled', 'profileSwitchMutation?.isPending' )
+								->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
+								->attr( 'class', 'tutor-w-full' )
+								->attr( '@click', "profileSwitchMutation.mutate('{$current_mode}')" )
+								->render();
+								?>
+							</div> 
+						<?php } ?>
 					</div>
 					<div class="tutor-dashboard-header-user-popover-menu-wrapper">
 						<ul class="tutor-dashboard-header-user-popover-menu">

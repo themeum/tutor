@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
 use Tutor\Components\Constants\Size;
+use TUTOR\Dashboard;
 use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\User;
@@ -19,7 +20,7 @@ use TUTOR\User;
 $user_id          = Input::get( 'student_id', get_current_user_id(), Input::TYPE_INT );
 $student_details  = get_userdata( $user_id );
 $student_meta     = get_user_meta( $user_id );
-$edit_profile_url = tutor_utils()->tutor_dashboard_url( 'account/settings' );
+$edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
 $website_url      = $student_meta['_tutor_profile_website'][0] ?? '#';
 $github_url       = $student_meta['_tutor_profile_github'][0] ?? '#';
 $x_url            = $student_meta['_tutor_profile_twitter'][0] ?? '#';
