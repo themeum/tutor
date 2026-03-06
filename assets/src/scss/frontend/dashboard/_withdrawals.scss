@@ -3,15 +3,76 @@
 
 .tutor-user-withdrawals {
     .tutor-withdrawal-status {
-        @include tutor-flex(row, center, space-between);
+        display: flex;
+        justify-content: space-between;
+		position: relative;
         background-color: $tutor-surface-base;
         border: 1px solid $tutor-border-idle;
         border-radius: $tutor-radius-lg;
         padding: $tutor-spacing-6;
         margin-top: $tutor-spacing-6;
 
-        &-item {
-            flex: 1;
+		&::before,
+		&::after {
+			content: '';
+			position: absolute;
+			top: $tutor-spacing-6;
+			bottom: $tutor-spacing-6;
+			width: 1px;
+			background-color: $tutor-border-idle;
+		}
+
+		&::before {
+			left: 33.3333%;
+		}
+
+		&::after {
+			left: 66.6667%;
+		}
+
+		&-item {
+			position: relative;
+			flex: 1;
+
+			&-label {
+				@include tutor-typography('tiny', 'regular', 'secondary', 'body');
+			}
+			&-value {
+				@include tutor-typography('small', 'medium', 'primary', 'body');
+			}
+
+			&-value--pending {
+				@include tutor-typography('small', 'medium', 'warning', 'body');
+			}
+
+			&-info {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				margin-left: $tutor-spacing-1;
+				color: $tutor-text-secondary;
+			}
         }
+
+        &-item:nth-child(2) {
+           padding-left: 10%;
+		}
+
+        &-item:nth-child(3) {
+            display: flex;
+            flex-direction: column;
+            align-items: end;
+		}
     }
+
+	.tutor-billing-card-left {
+		gap: $tutor-spacing-4;
+	}
+}
+
+.tutor-withdrawal-available-balance {
+	background: $tutor-surface-l1-hover;
+	border-radius: $tutor-radius-lg;
+	border: 1px solid $tutor-border-idle;
+	padding: $tutor-spacing-5 $tutor-spacing-6;
 }

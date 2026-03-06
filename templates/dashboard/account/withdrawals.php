@@ -57,6 +57,27 @@ $formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 $saved_account        = WithdrawModel::get_user_withdraw_method();
 $withdraw_method_name = tutor_utils()->avalue_dot( 'withdraw_method_name', $saved_account );
 
+$available_withdraw_methods = apply_filters( 'tutor_withdrawal_methods_available', array() );
+$enabled_method_names       = array();
+
+if ( is_array( $available_withdraw_methods ) ) {
+	foreach ( $available_withdraw_methods as $method ) {
+		$method_name = tutor_utils()->avalue_dot( 'method_name', $method );
+		if ( $method_name ) {
+			$enabled_method_names[] = $method_name;
+		}
+	}
+}
+
+$preferred_method_label = implode( ', ', $enabled_method_names );
+
+if ( '' === $preferred_method_label && $withdraw_method_name ) {
+	$preferred_method_label = $withdraw_method_name;
+}
+
+if ( '' === $preferred_method_label ) {
+	$preferred_method_label = __( 'PayPal', 'tutor' );
+}
 
 $history_count  = $withdral_history->count;
 $method_icons   = WithdrawModel::get_method_icons();
@@ -124,34 +145,55 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 
 			<div class="tutor-withdrawal-status">
 				<div class="tutor-withdrawal-status-item">
-					<div><?php esc_html_e( 'Net Income', 'tutor' ); ?></div>
-					<div><?php echo esc_html( tutor_utils()->tutor_price( $summary_data->total_income ) ); ?></div>
+					<div class="tutor-withdrawal-status-item-label"><?php esc_html_e( 'Net Income', 'tutor' ); ?></div>
+					<div class="tutor-withdrawal-status-item-value"><?php echo esc_html( tutor_utils()->tutor_price( $summary_data->total_income ) ); ?></div>
 				</div>
 				<div class="tutor-withdrawal-status-item">
-					<div><?php esc_html_e( 'Pending Withdrawals', 'tutor' ); ?></div>
-					<div><?php echo esc_html( tutor_utils()->tutor_price( $summary_data->total_pending ) ); ?></div>
+					<div class="tutor-withdrawal-status-item-label tutor-flex tutor-items-center tutor-gap-1">
+						<?php esc_html_e( 'Pending Withdrawals', 'tutor' ); ?>
+						
+					</div>
+					<div class="tutor-withdrawal-status-item-value tutor-withdrawal-status-item-value--pending">
+						<?php echo esc_html( tutor_utils()->tutor_price( $summary_data->total_pending ) ); ?>
+						<?php
+						Tooltip::make()
+							->content( __( 'Total amount requested but not yet processed.', 'tutor' ) )
+							->placement( 'top' )
+							->trigger_element( '<span class="tutor-withdrawal-status-item-info">' . tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON ) . '</span>' )
+							->render();
+						?>
+					</div>
 				</div>
 				<div class="tutor-withdrawal-status-item">
-					<div><?php esc_html_e( 'Withdrawal Total', 'tutor' ); ?></div>
-					<div><?php echo esc_html( tutor_utils()->tutor_price( $summary_data->total_withdraw ) ); ?></div>
+					<div class="tutor-withdrawal-status-item-label"><?php esc_html_e( 'Withdrawal Total', 'tutor' ); ?></div>
+					<div class="tutor-withdrawal-status-item-value"><?php echo esc_html( tutor_utils()->tutor_price( $summary_data->total_withdraw ) ); ?></div>
 				</div>
 			</div>
 		</div>
 
-		<div class="tutor-mt-4 tutor-text-tiny">
+		<div class="tutor-mt-4 tutor-text-tiny tutor-flex tutor-items-center tutor-gap-3">
+			<?php
+			Tooltip::make()
+				->content( __( 'The preferred payment method', 'tutor' ) )
+				->placement( 'top' )
+				->trigger_element( '<span class="tutor-icon-secondary">' . tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON ) . '</span>' )
+				->render();
+			?>
 			<?php
 			$withdrawal_pref_link = Dashboard::get_account_page_url( 'settings?tab=withdraw' );
+
 			echo wp_kses_post(
 				sprintf(
-					/* translators: %s: Withdraw Preference */
-					__( 'The preferred payment method is selected as PayPal. You can change your %s', 'tutor' ),
+					/* translators: 1: Preferred withdraw method, 2: Withdraw Preference. */
+					__( 'The preferred payment method is selected as %1$s. You can change your %2$s', 'tutor' ),
+					esc_html( $preferred_method_label ),
 					'<a href="' . esc_url( $withdrawal_pref_link ) . '">' . __( 'Withdraw Preference', 'tutor' ) . '</a>'
 				)
 			);
 			?>
 		</div>
 
-		<div class="tutor-mt-10 tutor-mb-6 tutor-text-medium">
+		<div class="tutor-mt-10 tutor-mb-5 tutor-medium tutor-font-medium">
 			<?php esc_html_e( 'Withdrawal History', 'tutor' ); ?>
 		</div>
 
@@ -170,16 +212,17 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 						?>
 					<div class="tutor-billing-card">
 						<div class="tutor-billing-card-left">
-							<div class="tutor-flex tutor-gap-6">
+							<div class="tutor-flex tutor-gap-5">
 								<div>
 								<?php
 								Badge::make()
-									->icon( $method_icon )
+									->attr( 'class', 'tutor-py-2' )
+									->icon( $method_icon, 20, 20 )
 									->label( $method_data['withdraw_method_name'] ?? '' )
 									->render();
 								?>
 								</div>
-								<div class="tutor-text-tiny">
+								<div class="tutor-text-tiny tutor-text-secondary tutor-flex tutor-items-center">
 								<?php
 								switch ( $method_key ) {
 									case WithdrawModel::METHOD_BANK_TRANSFER_WITHDRAW:
@@ -193,7 +236,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 								?>
 								</div>
 							</div>
-							<div class="tutor-text-tiny">
+							<div class="tutor-text-tiny tutor-text-secondary">
 								<?php echo esc_html( tutor_i18n_get_formated_date( $withdrawal->created_at ) ); ?>
 							</div>
 						</div>
@@ -202,7 +245,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 							<div class="tutor-billing-card-amount">
 								<?php echo esc_html( tutor_utils()->tutor_price( $withdrawal->amount ) ); ?>
 
-								<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-mt-4">
+								<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mt-4">
 									<?php
 									ComponentHelper::render_status_badge( $withdrawal->status );
 									if ( in_array( $withdrawal->status, array( WithdrawModel::STATUS_PENDING, WithdrawModel::STATUS_REJECTED ), true ) ) {
@@ -213,7 +256,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 										Tooltip::make()
 											->content( $tooltip_content )
 											->placement( 'top' )
-											->trigger_element( tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON ) )
+											->trigger_element( '<span class="tutor-icon-secondary">' . tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON ) . '</span>' )
 											->render();
 									}
 									?>

@@ -26,7 +26,7 @@ $withdraw_method_name = $data['withdraw_method_name'] ?? '';
 
 <div class="tutor-p-8">
 
-<div class="tutor-flex tutor-gap-6 tutor-p-5 tutor-radius-6 tutor-mb-7">
+<div class="tutor-flex tutor-gap-6 tutor-p-5 tutor-radius-6 tutor-mb-7 tutor-withdrawal-available-balance">
 	<div><?php tutor_utils()->render_svg_icon( Icon::WALLET, 24, 24 ); ?></div>
 	<div>
 		<div class="tutor-text-h4 tutor-font-bold"><?php echo esc_html( tutor_utils()->tutor_price( $available_balance ) ); ?></div>
