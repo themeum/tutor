@@ -21,11 +21,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Dashboard {
 
 	/**
-	 * Account page constants
+	 * Dashboard page constants
 	 *
 	 * @since 4.0.0
 	 */
 	const ACCOUNT_PAGE_SLUG = 'account';
+	const COURSES_PAGE_SLUG = 'courses';
+	const QUIZ_ATTEMPTS_PAGE_SLUG = 'quiz-attempts';
+	const MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG = 'my-quiz-attempts';
 
 	/**
 	 * Constructor
