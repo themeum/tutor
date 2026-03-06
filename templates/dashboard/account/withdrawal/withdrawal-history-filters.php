@@ -25,7 +25,7 @@ $status_filter_options = WithdrawModel::get_status_filter_options();
 
 $selected = array_filter(
 	$status_filter_options,
-	function( $item ) use ( $selected_filter ) {
+	function ( $item ) use ( $selected_filter ) {
 		return $item['key'] === $selected_filter || ( empty( $item['key'] ) && 'all' === $selected_filter );
 	}
 );

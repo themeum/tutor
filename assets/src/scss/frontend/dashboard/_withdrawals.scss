@@ -75,4 +75,15 @@
 	border-radius: $tutor-radius-lg;
 	border: 1px solid $tutor-border-idle;
 	padding: $tutor-spacing-5 $tutor-spacing-6;
+
+	&-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		gap: $tutor-spacing-4;
+		border-radius: $tutor-radius-full;
+		background: $tutor-surface-l1;
+	}
 }

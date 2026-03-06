@@ -57,28 +57,6 @@ $formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 $saved_account        = WithdrawModel::get_user_withdraw_method();
 $withdraw_method_name = tutor_utils()->avalue_dot( 'withdraw_method_name', $saved_account );
 
-$available_withdraw_methods = apply_filters( 'tutor_withdrawal_methods_available', array() );
-$enabled_method_names       = array();
-
-if ( is_array( $available_withdraw_methods ) ) {
-	foreach ( $available_withdraw_methods as $method ) {
-		$method_name = tutor_utils()->avalue_dot( 'method_name', $method );
-		if ( $method_name ) {
-			$enabled_method_names[] = $method_name;
-		}
-	}
-}
-
-$preferred_method_label = implode( ', ', $enabled_method_names );
-
-if ( '' === $preferred_method_label && $withdraw_method_name ) {
-	$preferred_method_label = $withdraw_method_name;
-}
-
-if ( '' === $preferred_method_label ) {
-	$preferred_method_label = __( 'PayPal', 'tutor' );
-}
-
 $history_count  = $withdral_history->count;
 $method_icons   = WithdrawModel::get_method_icons();
 $status_message = array(
@@ -86,12 +64,8 @@ $status_message = array(
 	WithdrawModel::STATUS_PENDING  => __( 'Withdrawal request is pending for approval, please hold tight.', 'tutor' ),
 );
 
-$currency_symbol = '';
-if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
-	$currency_symbol = get_woocommerce_currency_symbol();
-} elseif ( function_exists( 'edd_currency_symbol' ) ) {
-	$currency_symbol = edd_currency_symbol();
-}
+$currency_config = tutor_utils()->get_monetization_currency_config();
+$currency_symbol = $currency_config['symbol'] ?? '';
 
 $summary_data                     = WithdrawModel::get_withdraw_summary( $user_id );
 $available_for_withdraw           = $summary_data->available_for_withdraw - $summary_data->total_pending;
@@ -135,6 +109,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 									'available_balance'    => $available_for_withdraw,
 									'min_withdrawal'       => $min_withdraw,
 									'withdraw_method_name' => $withdraw_method_name,
+									'currency_symbol'      => $currency_symbol,
 								)
 							)
 							->render();
@@ -153,13 +128,13 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 						<?php esc_html_e( 'Pending Withdrawals', 'tutor' ); ?>
 						
 					</div>
-					<div class="tutor-withdrawal-status-item-value tutor-withdrawal-status-item-value--pending">
+					<div class="tutor-withdrawal-status-item-value tutor-withdrawal-status-item-value--pending tutor-flex tutor-items-center tutor-gap-3">
 						<?php echo esc_html( tutor_utils()->tutor_price( $summary_data->total_pending ) ); ?>
 						<?php
 						Tooltip::make()
 							->content( __( 'Total amount requested but not yet processed.', 'tutor' ) )
 							->placement( 'top' )
-							->trigger_element( '<span class="tutor-withdrawal-status-item-info">' . tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON ) . '</span>' )
+							->trigger_element( tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ) )
 							->render();
 						?>
 					</div>
@@ -176,7 +151,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 			Tooltip::make()
 				->content( __( 'The preferred payment method', 'tutor' ) )
 				->placement( 'top' )
-				->trigger_element( '<span class="tutor-icon-secondary">' . tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON ) . '</span>' )
+				->trigger_element( tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ) )
 				->render();
 			?>
 			<?php
@@ -186,7 +161,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 				sprintf(
 					/* translators: 1: Preferred withdraw method, 2: Withdraw Preference. */
 					__( 'The preferred payment method is selected as %1$s. You can change your %2$s', 'tutor' ),
-					esc_html( $preferred_method_label ),
+					esc_html( $withdraw_method_name ),
 					'<a href="' . esc_url( $withdrawal_pref_link ) . '">' . __( 'Withdraw Preference', 'tutor' ) . '</a>'
 				)
 			);
