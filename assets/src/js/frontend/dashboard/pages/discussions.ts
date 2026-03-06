@@ -326,7 +326,7 @@ const discussionsPage = () => {
       }
     },
 
-    handleReplyComment(data: { comment: string }, commentId: number, courseId: number, context: 'list' | 'single' = 'single') {
+    handleReplyComment(data: { comment: string }, commentId: number, courseId: number, context: ReplyCommentPayload['reply_context'] = 'single') {
       return this.replyCommentMutation?.mutate({
         comment: data.comment,
         comment_parent: commentId,
