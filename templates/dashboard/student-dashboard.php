@@ -32,7 +32,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<?php echo esc_html( $text ); ?>
 					</span>
 				</div>
-				<a href="<?php echo esc_attr( tutor_utils()->tutor_dashboard_url( 'settings' ) ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small">
+				<a href="<?php echo esc_attr( tutor_utils()->tutor_dashboard_url( 'account/settings' ) ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small">
 					<?php esc_html_e( 'Click Here', 'tutor' ); ?>
 				</a>
 			</div>
