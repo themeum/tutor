@@ -1,0 +1,18 @@
+
+.tutor-course-announcements {
+    background-color: var(--tutor-surface-l1);
+    border: 1px solid var(--tutor-border-idle);
+    
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+
+    .tutor-announcement-item {
+        padding: 16px;
+        &:not(:last-of-type) {
+            border-bottom: 1px solid var(--tutor-border-idle);  
+        }
+    }
+}

@@ -11,6 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Announcements;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
@@ -26,7 +27,7 @@ use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
-$limit        = tutor_utils()->get_option( 'pagination_per_page', 10 );
+$limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 
 $order_filter  = Input::get( 'order', 'DESC' );
@@ -38,16 +39,17 @@ $start_date = Input::get( 'start_date', '' );
 $end_date   = Input::get( 'end_date', '' );
 
 $args = array(
-	'post_type'      => 'tutor_announcements',
-	'post_status'    => 'publish',
 	's'              => sanitize_text_field( $search_filter ),
-	'post_parent'    => sanitize_text_field( $course_id ),
 	'posts_per_page' => sanitize_text_field( $limit ),
 	'paged'          => sanitize_text_field( $current_page ),
 	'orderBy'        => 'ID',
 	'order'          => sanitize_text_field( $order_filter ),
-
 );
+
+if ( $course_id ) {
+	$args['post_parent'] = sanitize_text_field( $course_id );
+}
+
 if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 	$args['date_query'] = array(
 		array(
@@ -60,7 +62,7 @@ if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 if ( ! current_user_can( 'administrator' ) ) {
 	$args['author'] = get_current_user_id();
 }
-$the_query           = new \WP_Query( $args );
+$the_query           = Announcements::get_announcements( $args );
 $announcements       = $the_query->have_posts() ? $the_query->posts : array();
 $total_announcements = $the_query->found_posts;
 
