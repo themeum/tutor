@@ -1,9 +1,9 @@
 import { quizAutoStartMeta } from './auto-start';
+import { quizSummarySidebarMeta } from '@FrontendComponents/quiz/summary-sidebar';
 import { quizLayoutMeta } from './layout';
 import { questionMatchingMeta } from './questions/matching';
 import { questionOrderingMeta } from './questions/ordering';
 import { quizSubmissionMeta } from './submission';
-import { quizSummarySidebarMeta } from './summary-sidebar';
 import { quizTimerMeta } from './timer';
 
 export const initializeQuizInterface = () => {
