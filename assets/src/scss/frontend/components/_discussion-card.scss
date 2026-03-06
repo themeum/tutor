@@ -4,7 +4,7 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-discussion-card {
-  @include tutor-flex(row, flex-start);
+  @include tutor-flex(column, flex-start);
   gap: $tutor-spacing-4;
   background-color: $tutor-surface-l1;
   border: 1px solid $tutor-border-idle;

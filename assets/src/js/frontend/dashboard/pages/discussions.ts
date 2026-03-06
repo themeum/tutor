@@ -8,6 +8,7 @@ interface ReplyCommentPayload {
   comment_post_ID: number;
   comment_parent: number;
   comment: string;
+  reply_context?: 'list' | 'single';
 }
 
 interface DeleteCommentPayload {
@@ -89,6 +90,7 @@ const discussionsPage = () => {
     editingId: null as number | null,
     editingFormId: null as string | null,
     replyingId: null as number | null,
+    replyingCommentId: null as number | null,
     loadingReplies: false,
     repliesOrder: 'DESC',
     $nextTick: undefined as ((callback: () => void) => void) | undefined,
@@ -120,11 +122,18 @@ const discussionsPage = () => {
       this.replyCommentMutation = this.query.useMutation(this.replyComment, {
         onSuccess: (_, payload) => {
           toast.success(__('Reply saved successfully', 'tutor'));
-          this.reloadReplies();
 
           const formId = `${FORM_ID_PREFIXES.COMMENT_REPLY}${payload.comment_parent}`;
           if (form.hasForm(formId)) {
             form.reset(formId);
+          }
+
+          if (payload.reply_context === 'single') {
+            this.reloadReplies();
+          } else {
+            // List view
+            this.setReplyingComment(null);
+            this.updateCommentReplyCount(payload.comment_parent);
           }
         },
         onError: (error: Error) => {
@@ -317,11 +326,12 @@ const discussionsPage = () => {
       }
     },
 
-    handleReplyComment(data: { comment: string }, commentId: number, courseId: number) {
+    handleReplyComment(data: { comment: string }, commentId: number, courseId: number, context: 'list' | 'single' = 'single') {
       return this.replyCommentMutation?.mutate({
         comment: data.comment,
         comment_parent: commentId,
         comment_post_ID: courseId,
+        reply_context: context,
       });
     },
 
@@ -379,6 +389,39 @@ const discussionsPage = () => {
     updateReplyCount(questionId: number) {
       // Find the reply count element and increment it
       const card = document.querySelector(`[data-question-id="${questionId}"]`);
+      if (card) {
+        const countElement = card.querySelector('.tutor-discussion-card-reply-count');
+        if (countElement) {
+          const currentCount = parseInt(countElement.textContent || '0', 10);
+          countElement.textContent = String(currentCount + 1);
+        }
+      }
+    },
+
+    setReplyingComment(id: number | null) {
+      this.replyingCommentId = id;
+
+      if (id) {
+        const formId = `${FORM_ID_PREFIXES.COMMENT_REPLY}${id}`;
+        this.$nextTick?.(() => {
+          if (form.hasForm(formId)) {
+            form.setFocus(formId, 'comment');
+          }
+        });
+      }
+    },
+
+    toggleCommentReply(id: number) {
+      if (this.replyingCommentId === id) {
+        this.setReplyingComment(null);
+      } else {
+        this.setReplyingComment(id);
+      }
+    },
+
+    updateCommentReplyCount(commentId: number) {
+      // Find the reply count element and increment it
+      const card = document.querySelector(`[data-comment-id="${commentId}"]`);
       if (card) {
         const countElement = card.querySelector('.tutor-discussion-card-reply-count');
         if (countElement) {

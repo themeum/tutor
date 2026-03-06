@@ -38,7 +38,7 @@ $single_url = UrlHelper::add_query_params(
 	)
 );
 ?>
-<div class="tutor-discussion-card" x-data="tutorPopover({ placement: 'bottom-end' })" :class="{ 'active': open }">
+<div class="tutor-discussion-card" data-comment-id="<?php echo (int) $lesson_comment->comment_ID; ?>" x-data="tutorPopover({ placement: 'bottom-end' })" :class="{ 'active': open }">
 	<div class="tutor-flex tutor-gap-4 tutor-w-full" x-show="editingId !== <?php echo (int) $lesson_comment->comment_ID; ?>">
 		<?php Avatar::make()->user( $lesson_comment->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
@@ -51,15 +51,19 @@ $single_url = UrlHelper::add_query_params(
 					<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
 				</div>
 			</div>
-			<h6 class="tutor-discussion-card-title" id="tutor-lesson-comment-text-<?php echo (int) $lesson_comment->comment_ID; ?>"><?php echo wp_kses_post( $lesson_comment->comment_content ); ?></h6>
+			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="tutor-lesson-comment-text-<?php echo (int) $lesson_comment->comment_ID; ?>"><?php echo wp_kses_post( $lesson_comment->comment_content ); ?></a>
 			<div class="tutor-discussion-card-meta">
-				<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-meta-reply-button">
+				<button 
+					@click="toggleCommentReply(<?php echo (int) $lesson_comment->comment_ID; ?>)"
+					class="tutor-discussion-card-meta-reply-button"
+					type="button"
+				>
 					<?php esc_html_e( 'Reply', 'tutor' ); ?>
-				</a>
-				<div class="tutor-flex tutor-items-center tutor-gap-2">
+				</button>
+				<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-flex tutor-items-center tutor-gap-2">
 					<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?>
-					<?php echo esc_html( count( $replies ) ); ?>
-				</div>
+					<span class="tutor-discussion-card-reply-count"><?php echo esc_html( count( $replies ) ); ?></span>
+				</a>
 
 				<?php if ( $last_reply ) { ?>
 				<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-sm-ml-2">
@@ -72,9 +76,13 @@ $single_url = UrlHelper::add_query_params(
 			</div>
 		</div>
 		<div class="tutor-discussion-card-actions">
-			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
+			<button 
+				@click="toggleCommentReply(<?php echo (int) $lesson_comment->comment_ID; ?>)"
+				class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden"
+				type="button"
+			>
 				<?php esc_html_e( 'Reply', 'tutor' ); ?>
-			</a>
+			</button>
 			<?php if ( get_current_user_id() === (int) $lesson_comment->user_id ) : ?>
 				<div class="tutor-flex">
 					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
@@ -114,4 +122,21 @@ $single_url = UrlHelper::add_query_params(
 			?>
 		</div>
 	<?php endif; ?>
+
+	<div x-show="replyingCommentId === <?php echo (int) $lesson_comment->comment_ID; ?>" x-cloak class="tutor-w-full tutor-mt-4">
+		<?php
+			tutor_load_template(
+				'dashboard.discussions.comment-form',
+				array(
+					'form_id'        => 'lesson-comment-reply-form-' . (int) $lesson_comment->comment_ID,
+					'submit_handler' => '(data) => handleReplyComment(data, ' . (int) $lesson_comment->comment_ID . ', ' . (int) $course->ID . ', "list")',
+					'cancel_handler' => 'setReplyingComment(null)',
+					'is_pending'     => 'replyCommentMutation?.isPending',
+					'placeholder'    => __( 'Write your reply', 'tutor' ),
+					'label'          => __( 'Reply', 'tutor' ),
+					'submit_label'   => __( 'Save', 'tutor' ),
+				)
+			);
+			?>
+	</div>
 </div>
