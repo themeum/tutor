@@ -3283,4 +3283,37 @@ class Course extends Tutor_Base {
 		echo wp_kses_post( $button );
 		remove_filter( 'wp_kses_allowed_html', array( 'TUTOR\Input', 'allow_svg' ) );
 	}
+
+	/**
+	 * Calculate the total course duration for a set of courses.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<int> $course_ids List of course IDs.
+	 *
+	 * @return array{
+	 *     hours: int,
+	 *     minutes: int,
+	 *     seconds: int
+	 * } Total accumulated duration from all given courses.
+	 */
+	public static function get_total_time_spent_by_user( $course_ids ): array {
+
+		$total_time = array(
+			'hours'   => 0,
+			'minutes' => 0,
+			'seconds' => 0,
+		);
+
+		foreach ( $course_ids as $id ) {
+
+			$duration = tutor_utils()->get_course_duration( (int) $id, true );
+
+			$total_time['hours']   += $duration['durationHours'];
+			$total_time['minutes'] += $duration['durationMinutes'];
+			$total_time['seconds'] += $duration['durationSeconds'];
+		}
+
+		return $total_time;
+	}
 }
