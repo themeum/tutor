@@ -68,8 +68,8 @@
 
   &-user-avatar {
     @include tutor-button-reset();
-    width: 22px;
-    height: 22px;
+    width: 32px;
+    height: 32px;
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-full;
     overflow: hidden;
@@ -151,6 +151,11 @@
   }
 
   @include tutor-breakpoint-down(sm) {
+    &-user-avatar {
+      width: 22px;
+      height: 22px;
+    }
+
     &-user-popover {
       top: 0px !important;
       left: 0px !important;

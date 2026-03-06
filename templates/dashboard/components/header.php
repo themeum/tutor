@@ -148,7 +148,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 								$applied_on = tutor_i18n_get_formated_date( $applied_on, get_option( 'date_format' ) );
 								?>
 								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
-									<div class="tutor-flex tutor-sm-items-center tutor-gap-3 tutor-py-2 tutor-px-4 tutor-surface-l4 tutor-rounded-sm">
+									<div class="tutor-flex tutor-sm-items-center tutor-gap-3 tutor-py-4 tutor-px-4 tutor-surface-warning-hover tutor-rounded-sm">
 										<span class="tutor-pt-1">
 											<?php tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-warning' ) ); ?>
 										</span>
