@@ -465,61 +465,6 @@ class Instructor {
 	}
 
 	/**
-	 * Get the total number of students enrolled in an instructor's courses
-	 * within a given date range.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string|null $start_date Start date (Y-m-d).
-	 * @param string|null $end_date   End date (Y-m-d).
-	 * @param int         $user_id    Instructor user ID.
-	 *
-	 * @return int Total number of enrolled students.
-	 */
-	public static function get_instructor_total_students_by_date_range( $start_date, $end_date, $user_id ) {
-
-		global $wpdb;
-
-		$primary_table  = "{$wpdb->posts} AS enrollment";
-		$joining_table  = array(
-			array(
-				'type'  => 'INNER',
-				'table' => "{$wpdb->posts} AS course",
-				'on'    => 'enrollment.post_parent=course.ID',
-			),
-		);
-		$select_columns = array( 'COUNT(enrollment.ID) AS students' );
-
-		$where = array(
-			'course.post_author'     => $user_id,
-			'course.post_type'       => tutor()->course_post_type,
-			'course.post_status'     => CourseModel::STATUS_PUBLISH,
-			'enrollment.post_type'   => 'tutor_enrolled',
-			'enrollment.post_status' => 'completed',
-		);
-
-		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
-			$where['enrollment.post_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
-		}
-
-		$result = QueryHelper::get_joined_data(
-			$primary_table,
-			$joining_table,
-			$select_columns,
-			$where,
-			array(),
-			'',
-			-1,
-			0,
-			'DESC',
-			OBJECT,
-			true
-		);
-
-		return $result->students ?? 0;
-	}
-
-	/**
 	 * Get course completion distribution data for a specific instructor.
 	 *
 	 * @since 4.0.0

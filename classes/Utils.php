@@ -3487,19 +3487,30 @@ class Utils {
 	 * 1 enrollment = 1 student, so total enrolled for a equivalent total students (Tricks)
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 $args parameter added for additional where clause in query.
 	 *
-	 * @param int $instructor_id instructor id.
+	 * @param int   $instructor_id instructor id.
+	 * @param array $args          Optional additional WHERE conditions.
 	 *
 	 * @return int
 	 */
-	public function get_total_students_by_instructor( $instructor_id ) {
+	public function get_total_students_by_instructor( $instructor_id, $args = array() ) {
 		global $wpdb;
 
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type       = tutor()->course_post_type;
+		$enrollment_date_clause = '';
+
+		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
+			$from = Input::sanitize( $args['from'] );
+			$to   = Input::sanitize( $args['to'] );
+
+			$where['enrollment.post_date'] = array( 'BETWEEN', array( $from, $to ) );
+			$enrollment_date_clause        = ' AND ' . QueryHelper::prepare_where_clause( $where );
+		}
 
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(enrollment.ID)
+				"SELECT COUNT(DISTINCT(enrollment.post_author))
 				FROM {$wpdb->posts} enrollment
 				INNER JOIN {$wpdb->posts} course
 					ON enrollment.post_parent=course.ID
@@ -3507,8 +3518,8 @@ class Utils {
 					AND course.post_type = %s
 					AND course.post_status = %s
 					AND enrollment.post_type = %s
-					AND enrollment.post_status = %s;
-				",
+					AND enrollment.post_status = %s
+					{$enrollment_date_clause}",
 				$instructor_id,
 				$course_post_type,
 				'publish',

@@ -139,9 +139,9 @@ $previous_period_courses = ! $is_all_time
 							: 0;
 
 // Total Students.
-$total_students           = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
+$total_students           = tutor_utils()->get_total_students_by_instructor( $user->ID, $date_range( $start_date, $end_date ) );
 $previous_period_students = ! $is_all_time
-							? Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID )
+							? tutor_utils()->get_total_students_by_instructor( $user->ID, $date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) )
 							: 0;
 
 
