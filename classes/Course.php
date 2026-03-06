@@ -3272,11 +3272,15 @@ class Course extends Tutor_Base {
 		ob_start();
 		?>
 		<a href="<?php echo esc_url( $button_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small">
+			<?php $course_progress['completed_percent'] > 0 ? tutor_utils()->render_svg_icon( Icon::PLAY ) : ''; ?>
 			<?php echo esc_html( $button_text ); ?>
 		</a>
 		<?php
 		$button = ob_get_clean();
 
+		// Allow svg tag.
+		add_filter( 'wp_kses_allowed_html', array( 'TUTOR\Input', 'allow_svg' ) );
 		echo wp_kses_post( $button );
+		remove_filter( 'wp_kses_allowed_html', array( 'TUTOR\Input', 'allow_svg' ) );
 	}
 }
