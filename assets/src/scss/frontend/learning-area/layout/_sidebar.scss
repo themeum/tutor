@@ -105,31 +105,44 @@
           padding-inline-start: $tutor-spacing-5;
           padding-inline-end: $tutor-spacing-3;
           cursor: pointer;
+          border-radius: $tutor-radius-md;
+          @include tutor-transition((color, background-color));
 
-          &-progress {
-            padding: $tutor-spacing-1;
-
-            &-inner {
-              height: 16px;
-              width: 16px;
-              border: 1px solid $tutor-border-hover;
-              border-radius: 100%;
-              background-color: $tutor-actions-gray-empty;
-            }
+          &:hover {
+            background-color: $tutor-tab-l3-active-hover;
+            color: $tutor-text-brand;
           }
 
           &-title {
-            @include tutor-typography(small, medium, subdued);
+            @include tutor-typography(small, medium, secondary);
+            @include tutor-text-truncate();
+          }
+
+          &-actions {
+            display: none;
+
+            @include tutor-breakpoint-down(lg) {
+              @include tutor-flex(row, center);
+              gap: $tutor-spacing-4;
+              margin-inline-start: auto;
+            }
           }
 
           &-arrow {
             @include tutor-flex-center();
-            margin-inline-start: auto;
             color: $tutor-icon-secondary;
             @include tutor-transition(transform);
 
             &.is-expanded {
               transform: rotate(180deg);
+            }
+          }
+
+          @include tutor-breakpoint-up(lg) {
+            &:hover .tutor-learning-nav-header-actions {
+              @include tutor-flex(row, center);
+              gap: $tutor-spacing-4;
+              margin-inline-start: auto;
             }
           }
         }
@@ -142,8 +155,6 @@
       }
 
       .tutor-learning-nav-body {
-        @include tutor-flex(column);
-        gap: $tutor-spacing-1;
         padding-inline-start: 30px;
         position: relative;
 
@@ -159,25 +170,28 @@
       }
 
       .tutor-learning-nav-item {
+        @include tutor-button-reset();
+        @include tutor-typography(small, medium, subdued);
+        @include tutor-flex(row, flex-start);
+        gap: $tutor-spacing-4;
+        padding: $tutor-spacing-4 $tutor-spacing-5;
+        border-radius: $tutor-radius-md;
+        @include tutor-transition((color, background-color));
         position: relative;
+        min-height: 40px;
+        opacity: 1;
 
-        a {
-          @include tutor-button-reset();
-          @include tutor-typography(small, medium, subdued);
-          @include tutor-flex(row, flex-start);
-          gap: $tutor-spacing-4;
-          padding: $tutor-spacing-4 $tutor-spacing-5;
-          min-height: 40px;
-          margin-top: $tutor-spacing-2;
-          svg {
-            margin-top: 3px;
-            color: $tutor-icon-subdued;
-          }
+        svg {
+          margin-top: $tutor-spacing-1;
+          flex-shrink: 0;
+          color: $tutor-icon-secondary;
         }
 
         &.active {
-          a {
-            color: $tutor-text-primary;
+          color: $tutor-text-primary;
+
+          svg {
+            color: $tutor-icon-idle;
           }
 
           &::before {
@@ -188,6 +202,24 @@
             position: absolute;
             top: 5px;
             left: -9px;
+          }
+        }
+
+        &:hover {
+          background-color: $tutor-tab-l3-active-hover;
+          color: $tutor-text-brand;
+
+          svg {
+            color: $tutor-icon-brand;
+          }
+        }
+
+        &.disabled {
+          pointer-events: none;
+          color: $tutor-text-subdued;
+
+          svg {
+            color: $tutor-icon-secondary;
           }
         }
       }
