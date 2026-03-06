@@ -48,7 +48,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 		?>
 		<li>
 			<a href="<?php echo esc_url( Dashboard::get_account_page_url( 'profile' ) ); ?>">
-				<div class="tutor-user-avatar-mobile tutor-rounded-sm"><?php echo get_avatar( get_current_user_id(), 16 ); ?></div>
+				<?php echo get_avatar( get_current_user_id(), 16 ); ?>
 				<span class="tutor-tiny"><?php esc_html_e( 'Profile', 'tutor' ); ?></span>
 			</a>
 		</li>

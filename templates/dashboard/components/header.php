@@ -123,7 +123,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 							<div class="tutor-avatar tutor-border tutor-border-brand-secondary">
 								<?php echo get_avatar( get_current_user_id(), 48 ); ?>
 							</div>
-							<div class="tutor-user-profile-name-card tutor-flex tutor-flex-column tutor-items-center tutor-gap-1">
+							<div class="tutor-user-profile-meta tutor-flex tutor-flex-column tutor-items-center tutor-gap-1">
 								<div class="tutor-text-medium tutor-text-primary tutor-font-semibold">
 									<?php echo esc_html( wp_get_current_user()->display_name ); ?>
 								</div>
