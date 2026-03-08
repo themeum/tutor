@@ -6,6 +6,8 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 import axios from 'axios';
 
+import { quizAttemptFeedbackMeta } from './quiz-attempt-feedback';
+
 interface RetryAttempt {
   quizID: string;
   redirectURL: string;
@@ -67,6 +69,7 @@ export const initializeQuizAttempts = () => {
         name: 'quizAttempts',
         component: quizAttemptsPage,
       },
+      quizAttemptFeedbackMeta,
       quizSummarySidebarMeta,
     ],
   });

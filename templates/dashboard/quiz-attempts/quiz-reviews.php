@@ -10,15 +10,68 @@
  */
 
 use TUTOR\Input;
+use Tutor\Models\QuizModel;
 
 $attempt_id   = Input::get( 'attempt_id', 0, Input::TYPE_INT );
 $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 $user_id      = tutor_utils()->avalue_dot( 'user_id', $attempt_data );
 $quiz_id      = (int) tutor_utils()->avalue_dot( 'quiz_id', $attempt_data );
 $back_url     = remove_query_arg( 'attempt_id' );
+$attempt_info = isset( $attempt_data->attempt_info ) ? maybe_unserialize( $attempt_data->attempt_info ) : array();
+
+$form_id             = 'quiz-attempt-review-form';
+$form_default_values = array(
+	'feedback' => is_array( $attempt_info ) ? (string) ( $attempt_info['instructor_feedback'] ?? '' ) : '',
+);
+
+$attempt_answers_map = array();
+$questions           = tutor_utils()->get_questions_by_quiz( $quiz_id );
+$attempt_answers     = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+
+if ( is_array( $attempt_answers ) ) {
+	foreach ( $attempt_answers as $attempt_answer ) {
+		$question_id = (int) ( $attempt_answer->question_id ?? 0 );
+
+		if ( $question_id > 0 ) {
+			$attempt_answers_map[ $question_id ] = $attempt_answer;
+		}
+	}
+}
+
+if ( is_array( $questions ) ) {
+	foreach ( $questions as $question ) {
+		$question_id    = (int) ( $question->question_id ?? 0 );
+		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
+		$answer_status  = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'pending';
+
+		if ( $question_id > 0 ) {
+			$form_default_values[ "review_statuses[{$question_id}]" ] = $answer_status;
+		}
+	}
+}
 ?>
 
 <div class="wrap">
+	
+	<?php if ( ! is_admin() ) : ?>
+	<form
+		id="<?php echo esc_attr( $form_id ); ?>"
+		x-data='{ 
+			...tutorForm({
+				id: "<?php echo esc_attr( $form_id ); ?>",
+				mode: "onSubmit",
+				defaultValues: <?php echo wp_json_encode( $form_default_values ); ?>
+			}),
+			...tutorQuizAttemptFeedback({
+				attemptId: <?php echo esc_attr( $attempt_id ); ?>,
+				formId: "<?php echo esc_attr( $form_id ); ?>"
+			})
+		}'
+		x-bind="getFormBindings()"
+		@submit.prevent="handleSubmit((data) => handleSaveFeedback(data))($event)"
+	>
+	<?php endif; ?>
+
 	<div class="tutor-quiz-attempt-details-wrapper ">
 		<?php
 		if ( is_admin() ) {
@@ -35,27 +88,34 @@ $back_url     = remove_query_arg( 'attempt_id' );
 			tutor_load_template(
 				'shared.components.quiz.attempt-details',
 				array(
-					'attempt_id'   => $attempt_id,
-					'attempt_data' => $attempt_data,
-					'quiz_id'      => $quiz_id,
-					'user_id'      => (int) $user_id,
-					'back_url'     => $back_url,
+					'attempt_id'           => $attempt_id,
+					'attempt_data'         => $attempt_data,
+					'quiz_id'              => $quiz_id,
+					'user_id'              => (int) $user_id,
+					'back_url'             => $back_url,
+					'is_instructor_review' => true,
+					'context'              => 'frontend-dashboard-students-attempts',
 				)
 			);
 		}
-			?>
+		?>
 	</div>
 
 	<?php
-		/**
-		 * Load Instructor Feedback template
-		 * pass quiz id
-		 *
-		 * @since v2.0.0
-		 */
+	if ( is_admin() ) {
 		tutor_load_template_from_custom_path(
 			tutor()->path . 'views/quiz/instructor-feedback.php',
 			array( 'attempt_data' => $attempt_data )
 		);
-		?>
+	} else {
+		tutor_load_template(
+			'dashboard.quiz-attempts.quiz-attempts-feedback',
+			array( 'attempt_data' => $attempt_data )
+		);
+	}
+	?>
+
+	<?php if ( ! is_admin() ) : ?>
+	</form>
+	<?php endif; ?>
 </div>

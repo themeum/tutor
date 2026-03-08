@@ -10,6 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Badge;
+use TUTOR\Icon;
 
 $index                = (int) ( $index ?? 1 );
 $question_title       = (string) ( $question_title ?? '' );
@@ -17,6 +18,12 @@ $question_description = (string) ( $question_description ?? '' );
 $status_label         = (string) ( $status_label ?? '' );
 $status_variant       = (string) ( $status_variant ?? '' );
 $question             = isset( $question ) && is_object( $question ) ? $question : null;
+$answer_status        = (string) ( $answer_status ?? '' );
+$is_manually_reviewed = ! empty( $is_manually_reviewed );
+$attempt_id           = (int) ( $attempt_id ?? 0 );
+$attempt_answer_id    = (int) ( $attempt_answer_id ?? 0 );
+$is_instructor_review = ! empty( $is_instructor_review );
+$review_field_name    = (string) ( $review_field_name ?? '' );
 ?>
 
 <div class="tutor-quiz-question-header">
@@ -42,13 +49,75 @@ $question             = isset( $question ) && is_object( $question ) ? $question
 		<?php endif; ?>
 	</div>
 
-	<?php if ( ! empty( $status_label ) && ! empty( $status_variant ) ) : ?>
-		<?php
-		Badge::make()
-			->label( $status_label )
-			->variant( $status_variant )
-			->rounded()
-			->render();
-		?>
+	<?php if ( ( ! empty( $status_label ) && ! empty( $status_variant ) ) || ( $is_instructor_review && $attempt_id ) ) : ?>
+		<div class="tutor-quiz-question-header-actions">
+			<?php if ( ! empty( $status_label ) && ! empty( $status_variant ) ) : ?>
+				<div class="tutor-quiz-question-header-status">
+					<?php
+					Badge::make()
+						->label( $status_label )
+						->variant( $status_variant )
+						->rounded()
+						->render();
+					?>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( $is_manually_reviewed && ! $is_instructor_review ) : ?>
+				<div class="tutor-quiz-question-header-divider" aria-hidden="true"></div>
+				<div class="tutor-quiz-question-header-note">
+					<?php esc_html_e( 'Edited by Instructor', 'tutor' ); ?>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( $is_instructor_review && $attempt_id && $review_field_name ) : ?>
+				<div class="tutor-quiz-question-header-divider" aria-hidden="true"></div>
+
+				<div class="tutor-quiz-question-review-actions">
+					<input
+						type="hidden"
+						name="<?php echo esc_attr( $review_field_name ); ?>"
+						value="<?php echo esc_attr( $answer_status ); ?>"
+						x-bind="register('<?php echo esc_attr( $review_field_name ); ?>')"
+					/>
+
+					<label
+						class="tutor-quiz-question-review-action"
+						data-review-status="correct"
+						title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>"
+						@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'correct', { shouldDirty: true })"
+					>
+						<input
+							class="tutor-quiz-question-review-input"
+							type="radio"
+							name="<?php echo esc_attr( $review_field_name ); ?>"
+							value="correct"
+							:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'correct'"
+							tabindex="-1"
+							aria-hidden="true"
+						/>
+						<?php tutor_utils()->render_svg_icon( Icon::CHECK_2, 20, 20 ); ?>
+					</label>
+
+					<label
+						class="tutor-quiz-question-review-action"
+						data-review-status="incorrect"
+						title="<?php esc_attr_e( 'Mark as incorrect', 'tutor' ); ?>"
+						@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'incorrect', { shouldDirty: true })"
+					>
+						<input
+							class="tutor-quiz-question-review-input"
+							type="radio"
+							name="<?php echo esc_attr( $review_field_name ); ?>"
+							value="incorrect"
+							:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'incorrect'"
+							tabindex="-1"
+							aria-hidden="true"
+						/>
+						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 20, 20 ); ?>
+					</label>
+				</div>
+			<?php endif; ?>
+		</div>
 	<?php endif; ?>
 </div>

@@ -14,6 +14,8 @@ use Tutor\Models\QuizModel;
 
 $questions    = isset( $questions ) && is_array( $questions ) ? $questions : array();
 $attempt_data = isset( $attempt_data ) && is_object( $attempt_data ) ? $attempt_data : null;
+$back_url     = isset( $back_url ) ? (string) $back_url : '';
+$context      = isset( $context ) ? (string) $context : '';
 
 $attempt_answers_map = array();
 if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
@@ -29,7 +31,7 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 }
 ?>
 
-<div class="tutor-quiz tutor-quiz-questions" inert>
+<div class="tutor-quiz tutor-quiz-questions">
 	<?php foreach ( $questions as $index => $question ) : ?>
 		<?php
 		$question_type     = $question->question_type ?? '';
@@ -61,10 +63,15 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 				tutor_load_template(
 					'shared.components.quiz.attempt-details.question',
 					array(
-						'question'          => $question,
-						'attempt_answer'    => $attempt_answer,
-						'index'             => (int) $index + 1,
-						'question_template' => $question_template,
+						'question'             => $question,
+						'attempt_answer'       => $attempt_answer,
+						'index'                => (int) $index + 1,
+						'question_template'    => $question_template,
+						'attempt_id'           => (int) ( $attempt_data->attempt_id ?? 0 ),
+						'back_url'             => $back_url,
+						'context'              => $context,
+						'is_instructor_review' => $is_instructor_review,
+						'review_field_name'    => "review_statuses[{$question_id}]",
 					)
 				);
 				?>

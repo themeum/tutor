@@ -16,11 +16,16 @@ if ( ! isset( $question ) || ! is_object( $question ) || empty( $question_templa
 	return;
 }
 
-$index             = (int) ( $index ?? 1 );
-$attempt_answer    = isset( $attempt_answer ) && is_object( $attempt_answer ) ? $attempt_answer : null;
-$question_settings = maybe_unserialize( $question->question_settings );
-$question_settings = is_array( $question_settings ) ? $question_settings : array();
-$question_type     = (string) ( $question->question_type ?? '' );
+$index                = (int) ( $index ?? 1 );
+$attempt_answer       = isset( $attempt_answer ) && is_object( $attempt_answer ) ? $attempt_answer : null;
+$attempt_id           = (int) ( $attempt_id ?? 0 );
+$back_url             = (string) ( $back_url ?? '' );
+$context              = (string) ( $context ?? '' );
+$is_instructor_review = ! empty( $is_instructor_review );
+$review_field_name    = (string) ( $review_field_name ?? '' );
+$question_settings    = maybe_unserialize( $question->question_settings );
+$question_settings    = is_array( $question_settings ) ? $question_settings : array();
+$question_type        = (string) ( $question->question_type ?? '' );
 
 if ( 'image_matching' === $question_type ) {
 	$question_type = 'matching';
@@ -59,6 +64,14 @@ if ( 'review-answer-dnd' === $question_template ) {
 			'show_question_mark'   => '1' === (string) ( $question_settings['show_question_mark'] ?? '1' ),
 			'status_label'         => $status_label,
 			'status_variant'       => $status_variant,
+			'answer_status'        => $answer_status,
+			'is_manually_reviewed' => ! empty( $attempt_answer->is_manually_reviewed ),
+			'attempt_id'           => $attempt_id,
+			'attempt_answer_id'    => (int) ( $attempt_answer->attempt_answer_id ?? 0 ),
+			'back_url'             => $back_url,
+			'context'              => $context,
+			'is_instructor_review' => $is_instructor_review,
+			'review_field_name'    => $review_field_name,
 		)
 	);
 

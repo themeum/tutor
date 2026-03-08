@@ -61,6 +61,8 @@ const endpoints = {
   QUIZ_ABANDON: 'tutor_quiz_abandon',
   QUIZ_TIMEOUT: 'tutor_quiz_timeout',
   QUIZ_ATTEMPT_SUBMIT: 'tutor_answering_quiz_question',
+  REVIEW_QUIZ_ANSWERS: 'tutor_review_quiz_answers',
+  INSTRUCTOR_FEEDBACK: 'tutor_instructor_feedback',
 
   // ZOOM
   GET_ZOOM_MEETING_DETAILS: 'tutor_zoom_meeting_details',

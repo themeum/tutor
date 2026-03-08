@@ -27,11 +27,13 @@ if ( $is_quiz_details_hidden ) {
 	return;
 }
 
-$quiz_id      = isset( $quiz_id ) ? (int) $quiz_id : (int) ( $tutor_current_post->ID ?? 0 );
-$user_id      = isset( $user_id ) ? (int) $user_id : get_current_user_id();
-$attempt_id   = isset( $attempt_id ) ? (int) $attempt_id : Input::get( 'attempt_id', 0, Input::TYPE_INT );
-$attempt_data = isset( $attempt_data ) ? $attempt_data : null;
-$back_url     = isset( $back_url ) ? $back_url : get_permalink( $quiz_id );
+$quiz_id              = isset( $quiz_id ) ? (int) $quiz_id : (int) ( $tutor_current_post->ID ?? 0 );
+$user_id              = isset( $user_id ) ? (int) $user_id : get_current_user_id();
+$attempt_id           = isset( $attempt_id ) ? (int) $attempt_id : Input::get( 'attempt_id', 0, Input::TYPE_INT );
+$attempt_data         = isset( $attempt_data ) ? $attempt_data : null;
+$back_url             = isset( $back_url ) ? $back_url : get_permalink( $quiz_id );
+$context              = isset( $context ) ? (string) $context : '';
+$is_instructor_review = ! empty( $is_instructor_review );
 
 if ( $attempt_id > 0 && ! $attempt_data ) {
 	$attempt_data = tutor_utils()->get_attempt( $attempt_id );
@@ -84,7 +86,15 @@ $questions = tutor_utils()->get_questions_by_quiz( $quiz_id );
 	</div>
 
 	<div class="tutor-surface-l1">
-		<?php tutor_load_template( 'shared.components.quiz.attempt-details.summary', array( 'attempt_data' => $attempt_data ) ); ?>
+		<?php
+		tutor_load_template(
+			'shared.components.quiz.attempt-details.summary',
+			array(
+				'attempt_data'         => $attempt_data,
+				'is_instructor_review' => $is_instructor_review,
+			)
+		);
+		?>
 	</div>
 
 	<div class="tutor-quiz-summary-body">
@@ -105,8 +115,11 @@ $questions = tutor_utils()->get_questions_by_quiz( $quiz_id );
 			tutor_load_template(
 				'shared.components.quiz.attempt-details.review-answers',
 				array(
-					'questions'    => is_array( $questions ) ? $questions : array(),
-					'attempt_data' => $attempt_data,
+					'questions'            => is_array( $questions ) ? $questions : array(),
+					'attempt_data'         => $attempt_data,
+					'back_url'             => $back_url,
+					'context'              => $context,
+					'is_instructor_review' => $is_instructor_review,
 				)
 			);
 			?>

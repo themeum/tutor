@@ -18,10 +18,15 @@ if ( ! isset( $attempt_data ) || ! is_object( $attempt_data ) ) {
 	return;
 }
 
-$attempt_id = (int) $attempt_data->attempt_id;
-$quiz_id    = (int) $attempt_data->quiz_id;
-$course_id  = (int) $attempt_data->course_id;
-$topic_id   = (int) wp_get_post_parent_id( $quiz_id );
+$attempt_id           = (int) $attempt_data->attempt_id;
+$quiz_id              = (int) $attempt_data->quiz_id;
+$course_id            = (int) $attempt_data->course_id;
+$topic_id             = (int) wp_get_post_parent_id( $quiz_id );
+$is_instructor_review = ! empty( $is_instructor_review );
+$student_id           = (int) ( $attempt_data->user_id ?? 0 );
+$student              = $student_id > 0 ? get_userdata( $student_id ) : null;
+$student_name         = $student ? $student->display_name : '';
+$student_profile_url  = $student_id > 0 ? tutor_utils()->profile_url( $student_id, false ) : '';
 
 $attempt_info        = maybe_unserialize( $attempt_data->attempt_info );
 $passing_grade       = is_array( $attempt_info ) ? (int) ( $attempt_info['passing_grade'] ?? 0 ) : 0;
@@ -243,19 +248,33 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 		<?php endif; ?>
 	</div>
 
-	<div class="tutor-tiny tutor-sm-text-tiny tutor-text-subdued tutor-text-center">
-		<?php
-		echo esc_html(
-			sprintf(
-				/* translators: %s: localized attempt date time. */
-				__( 'Attempted on- %s', 'tutor' ),
-				$attempted_at_label
-			)
-		);
-		?>
+	<div class="tutor-quiz-result-footer">
+		<div>
+			<?php
+			echo esc_html(
+				sprintf(
+					/* translators: %s: localized attempt date time. */
+					__( 'Attempted on: %s', 'tutor' ),
+					$attempted_at_label
+				)
+			);
+			?>
+		</div>
+
+		<?php if ( $is_instructor_review && $student_name && $student_profile_url ) : ?>
+			<div>
+				<?php esc_html_e( 'Attempted by:', 'tutor' ); ?>
+				<a
+					href="<?php echo esc_url( $student_profile_url ); ?>"
+					class="tutor-font-semibold tutor-text-brand"
+				>
+					<?php echo esc_html( $student_name ); ?>
+				</a>
+			</div>
+		<?php endif; ?>
 	</div>
 
-	<?php if ( $has_instructor_feedback ) : ?>
+	<?php if ( ! $is_instructor_review && $has_instructor_feedback ) : ?>
 		<div class="tutor-quiz-summary-feedback">
 			<div data-title>
 				<?php esc_html_e( 'Instructor Feedback', 'tutor' ); ?>

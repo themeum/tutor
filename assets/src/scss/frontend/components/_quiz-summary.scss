@@ -99,5 +99,16 @@
         }
       }
     }
+
+    &-footer {
+      @include tutor-flex(row, center, center);
+      @include tutor-typography(tiny, regular, subdued);
+      gap: $tutor-spacing-4;
+      flex-wrap: wrap;
+
+      &:has(> :nth-child(2)) {
+        justify-content: space-between;
+      }
+    }
   }
 }
