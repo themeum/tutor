@@ -1,8 +1,17 @@
+import { __ } from '@wordpress/i18n';
+
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
-import { __ } from '@wordpress/i18n';
+
+const REVIEW_STATUSES = ['correct', 'incorrect'] as const;
+const REVIEW_STATUS_FIELD = 'review_statuses' as const;
+
+type ReviewStatus = (typeof REVIEW_STATUSES)[number];
+type ReviewStatusFieldName = `${typeof REVIEW_STATUS_FIELD}[${string}]`;
+type ReviewStatusMap = Record<string, ReviewStatus>;
+type ReviewStatusesAjaxPayload = Partial<Record<ReviewStatusFieldName, ReviewStatus>>;
 
 interface QuizAttemptFeedbackProps {
   attemptId: number;
@@ -12,13 +21,13 @@ interface QuizAttemptFeedbackProps {
 interface QuizAttemptFeedbackPayload {
   attempt_id: number;
   feedback: string;
-  review_statuses: Record<string, string>;
+  review_statuses: ReviewStatusMap;
 }
 
-interface QuizAttemptFeedbackResponse {
+interface QuizAttemptFeedbackResponse<TData = unknown> {
   success?: boolean;
   message?: string;
-  data?: unknown;
+  data?: TData;
 }
 
 interface QuizAttemptSubmitResponse {
@@ -29,28 +38,31 @@ interface QuizAttemptSubmitResponse {
 const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) => {
   const query = window.TutorCore.query;
   const toast = window.TutorCore.toast;
+  const reviewStatusFieldPattern = new RegExp(`^${REVIEW_STATUS_FIELD}\\[[^\\]]+\\]$`);
+
   const getReviewStatuses = (data: Record<string, unknown>) => {
-    return Object.entries(data).reduce<Record<string, string>>((acc, [key, value]) => {
-      const match = key.match(/^review_statuses\[(.+)\]$/);
-
-      if (!match) {
+    return Object.entries(data).reduce<ReviewStatusMap>((acc, [key, value]) => {
+      if (!reviewStatusFieldPattern.test(key)) {
         return acc;
       }
 
-      const status = String(value ?? '');
-
-      if (!['correct', 'incorrect'].includes(status)) {
+      if (typeof value !== 'string' || !REVIEW_STATUSES.includes(value as ReviewStatus)) {
         return acc;
       }
 
-      acc[match[1]] = status;
+      const fieldName = key as ReviewStatusFieldName;
+      const questionId = fieldName.slice(`${REVIEW_STATUS_FIELD}[`.length, -1);
+      const reviewStatus = value as ReviewStatus;
+
+      acc[questionId] = reviewStatus;
       return acc;
     }, {});
   };
 
-  const getReviewStatusesPayload = (reviewStatuses: Record<string, string>) => {
-    return Object.entries(reviewStatuses).reduce<Record<string, string>>((acc, [questionId, status]) => {
-      acc[`review_statuses[${questionId}]`] = status;
+  const getReviewStatusesPayload = (reviewStatuses: ReviewStatusMap) => {
+    return Object.entries(reviewStatuses).reduce<ReviewStatusesAjaxPayload>((acc, [questionId, status]) => {
+      const fieldName: ReviewStatusFieldName = `${REVIEW_STATUS_FIELD}[${questionId}]`;
+      acc[fieldName] = status;
       return acc;
     }, {});
   };
@@ -63,7 +75,7 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
     init() {
       this.feedbackMutation = query.useMutation(this.saveFeedback, {
         onSuccess: () => {
-          toast.success(__('Updated', 'tutor'));
+          toast.success(__('Quiz feedback updated successfully.', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
