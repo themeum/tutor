@@ -68,6 +68,7 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 						'index'                => (int) $index + 1,
 						'question_template'    => $question_template,
 						'attempt_id'           => (int) ( $attempt_data->attempt_id ?? 0 ),
+						'is_manually_reviewed' => ! empty( $attempt_data->is_manually_reviewed ),
 						'back_url'             => $back_url,
 						'context'              => $context,
 						'is_instructor_review' => $is_instructor_review,

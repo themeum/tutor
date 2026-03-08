@@ -776,6 +776,10 @@ class QuizModel {
 			$question_type = 'matching';
 		}
 
+		if ( 'single_choice' === $question_type ) {
+			$question_type = 'multiple_choice';
+		}
+
 		if ( (bool) ( $attempt_answer->is_correct ?? false ) ) {
 			return 'correct';
 		}
@@ -787,7 +791,7 @@ class QuizModel {
 			return 'pending';
 		}
 
-		return 'wrong';
+		return 'incorrect';
 	}
 
 	/**
@@ -1400,5 +1404,4 @@ class QuizModel {
 
 		return false;
 	}
-
 }

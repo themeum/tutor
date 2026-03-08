@@ -19,6 +19,7 @@ if ( ! isset( $question ) || ! is_object( $question ) || empty( $question_templa
 $index                = (int) ( $index ?? 1 );
 $attempt_answer       = isset( $attempt_answer ) && is_object( $attempt_answer ) ? $attempt_answer : null;
 $attempt_id           = (int) ( $attempt_id ?? 0 );
+$is_manually_reviewed = ! empty( $is_manually_reviewed );
 $back_url             = (string) ( $back_url ?? '' );
 $context              = (string) ( $context ?? '' );
 $is_instructor_review = ! empty( $is_instructor_review );
@@ -29,6 +30,10 @@ $question_type        = (string) ( $question->question_type ?? '' );
 
 if ( 'image_matching' === $question_type ) {
 	$question_type = 'matching';
+}
+
+if ( 'single_choice' === $question_type ) {
+	$question_type = 'multiple_choice';
 }
 
 $status_label   = __( 'Incorrect', 'tutor' );
@@ -65,7 +70,7 @@ if ( 'review-answer-dnd' === $question_template ) {
 			'status_label'         => $status_label,
 			'status_variant'       => $status_variant,
 			'answer_status'        => $answer_status,
-			'is_manually_reviewed' => ! empty( $attempt_answer->is_manually_reviewed ),
+			'is_manually_reviewed' => $is_manually_reviewed,
 			'attempt_id'           => $attempt_id,
 			'attempt_answer_id'    => (int) ( $attempt_answer->attempt_answer_id ?? 0 ),
 			'back_url'             => $back_url,
