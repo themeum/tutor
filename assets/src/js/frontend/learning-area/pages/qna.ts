@@ -108,7 +108,7 @@ const qnaPage = () => {
       this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
         onSuccess: (_, payload) => {
           toast.success(__('Reply saved successfully', 'tutor'));
-          
+
           const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${payload.question_id}`;
           if (form.hasForm(formId)) {
             form.reset(formId);
@@ -251,7 +251,7 @@ const qnaPage = () => {
       const card = (el?.closest('.tutor-discussion-card') ?? el) as HTMLElement | null;
       if (!card) return;
 
-      card.style.outline = '2px solid var(--tutor-color-primary, #3b82f6)';
+      card.style.outline = '2px solid var(--tutor-border-brand)';
       card.style.outlineOffset = '-2px';
       card.style.borderRadius = 'inherit';
 
@@ -260,7 +260,6 @@ const qnaPage = () => {
         card.style.outlineOffset = '';
       }, 300);
     },
-
 
     handleKeydown(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
