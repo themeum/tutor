@@ -199,7 +199,7 @@ class AttachmentCard extends BaseComponent {
 
 				<?php if ( $file_size || $meta_attr ) : ?>
 					<span class="tutor-attachment-card-meta" <?php echo $meta_attr; // phpcs:ignore --already-escaped WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-						<?php echo esc_html( $file_size ); ?>
+						<?php echo esc_html( size_format( $file_size, 2 ) ); ?>
 					</span>
 				<?php endif; ?>
 			</div>
