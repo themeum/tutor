@@ -2,6 +2,31 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-user-withdrawals {
+	.tutor-withdrawal-preference-msg-wrap {
+		@include tutor-breakpoint-down(sm) {
+			flex-wrap: nowrap;
+			align-items: flex-start;
+		}
+	}
+
+	.tutor-withdrawal-preference-msg {
+		flex: 1;
+		min-width: 0;
+		word-break: break-word;
+
+		.tutor-withdrawal-preference-link-inline {
+			white-space: nowrap;
+		}
+	}
+
+	.tutor-withdrawal-available-header {
+		@include tutor-breakpoint-down(sm) {
+			flex-direction: column;
+			align-items: stretch;
+			gap: $tutor-spacing-7;
+		}
+	}
+
     .tutor-withdrawal-status {
         display: flex;
         justify-content: space-between;
@@ -62,6 +87,45 @@
             display: flex;
             flex-direction: column;
             align-items: end;
+		}
+
+		@include tutor-breakpoint-down(sm) {
+			flex-direction: column;
+			gap: 0;
+
+			&::before,
+			&::after {
+				display: none;
+			}
+
+			&-item {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: space-between;
+				flex: none;
+				width: 100%;
+				padding: $tutor-spacing-4 0;
+				border-bottom: 1px solid $tutor-border-idle;
+
+				&:last-child {
+					border-bottom: none;
+					padding-bottom: 0;
+				}
+
+				&:first-child {
+					padding-top: 0;
+				}
+			}
+
+			&-item:nth-child(2) {
+				padding-left: 0;
+			}
+
+			&-item:nth-child(3) {
+				flex-direction: row;
+				align-items: center;
+			}
 		}
     }
 

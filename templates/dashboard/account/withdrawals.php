@@ -79,7 +79,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 <div class="tutor-user-withdrawals tutor-py-9 tutor-sm-py-6" x-data="tutorWithdrawals()">
 	<div class="tutor-profile-container">
 		<div class="tutor-card tutor-card-rounded-2xl">
-			<div class="tutor-flex tutor-items-center tutor-justify-between">
+			<div class="tutor-withdrawal-available-header tutor-flex tutor-items-center tutor-justify-between">
 				<div class="tutor-flex tutor-flex-column tutor-gap-2">
 					<h3 class="tutor-h3"><?php echo wp_kses_post( $available_for_withdraw_formatted ); ?></h3>
 					<div class="tutor-small tutor-text-secondary"><?php esc_html_e( 'Available for Withdrawal', 'tutor' ); ?></div>
@@ -146,7 +146,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 			</div>
 		</div>
 
-		<div class="tutor-mt-4 tutor-text-tiny tutor-flex tutor-items-center tutor-gap-3">
+		<div class="tutor-withdrawal-preference-msg-wrap tutor-mt-4 tutor-text-tiny tutor-flex tutor-items-center tutor-gap-3">
 			<?php
 			Tooltip::make()
 				->content( __( 'The preferred payment method', 'tutor' ) )
@@ -154,18 +154,21 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 				->trigger_element( tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ) )
 				->render();
 			?>
-			<?php
-			$withdrawal_pref_link = Dashboard::get_account_page_url( 'settings?tab=withdraw' );
-
-			echo wp_kses_post(
-				sprintf(
-					/* translators: 1: Preferred withdraw method, 2: Withdraw Preference. */
-					__( 'The preferred payment method is selected as %1$s. You can change your %2$s', 'tutor' ),
-					esc_html( $withdraw_method_name ),
-					'<a href="' . esc_url( $withdrawal_pref_link ) . '">' . __( 'Withdraw Preference', 'tutor' ) . '</a>'
-				)
-			);
-			?>
+			<span class="tutor-withdrawal-preference-msg">
+				<?php
+				$withdrawal_pref_link = Dashboard::get_account_page_url( 'settings?tab=withdraw' );
+				$change_pref_text     = __( 'You can change your', 'tutor' );
+				$pref_link_anchor     = '<a href="' . esc_url( $withdrawal_pref_link ) . '">' . __( 'Withdraw Preference', 'tutor' ) . '</a>';
+				echo wp_kses_post(
+					sprintf(
+						/* translators: 1: Preferred withdraw method, 2: "You can change your" + Withdraw Preference link. */
+						__( 'The preferred payment method is selected as %1$s. %2$s', 'tutor' ),
+						esc_html( $withdraw_method_name ),
+						'<span class="tutor-withdrawal-preference-link-inline">' . esc_html( $change_pref_text ) . ' ' . $pref_link_anchor . '</span>'
+					)
+				);
+				?>
+			</span>
 		</div>
 
 		<div class="tutor-mt-10 tutor-mb-5 tutor-medium tutor-font-medium">
