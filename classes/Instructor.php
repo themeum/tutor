@@ -521,20 +521,31 @@ class Instructor {
 
 		foreach ( $enrollments as $enrollment ) {
 
+			// Cancelled enrollment.
 			if ( in_array( $enrollment->post_status, $cancel_statuses, true ) ) {
 				++$counts['cancelled'];
 				continue;
 			}
 
+			// Completed course.
+			if ( tutor_utils()->is_completed_course( $enrollment->post_parent, $enrollment->post_author ) ) {
+				++$counts['completed'];
+				continue;
+			}
+
 			$course_progress = (int) tutor_utils()->get_course_completed_percent( $enrollment->post_parent, $enrollment->post_author );
 
-			if ( 100 === $course_progress ) {
+			if ( 100 === $course_progress ) { // If progress is 100% but the `Complete Course` button hasn't been clicked.
 				++$counts['completed'];
-			} elseif ( $course_progress > 0 && $course_progress < 100 ) {
-				++$counts['inprogress'];
-			} else {
-				++$counts['inactive'];
+				continue;
 			}
+
+			if ( $course_progress > 0 ) {
+				++$counts['inprogress'];
+				continue;
+			}
+
+			++$counts['inactive'];
 		}
 
 		return $counts;
