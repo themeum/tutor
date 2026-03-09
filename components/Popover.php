@@ -43,6 +43,21 @@ defined( 'ABSPATH' ) || exit;
  */
 class Popover extends BaseComponent {
 
+	/**
+	 * Transform origin map for popover transitions.
+	 *
+	 * @since 4.0.0
+	 */
+	public const TRANSFORM_ORIGIN_MAP = array(
+		Positions::TOP          => 'center.bottom',
+		Positions::TOP_START    => 'left.bottom',
+		Positions::TOP_END      => 'right.bottom',
+		Positions::BOTTOM       => 'center.top',
+		Positions::BOTTOM_START => 'left.top',
+		Positions::BOTTOM_END   => 'right.top',
+		Positions::LEFT         => 'right.center',
+		Positions::RIGHT        => 'left.center',
+	);
 
 	/**
 	 * The popover title.
@@ -514,6 +529,8 @@ class Popover extends BaseComponent {
 
 		$closeable_attr = $this->popover_close_outside ? '@click.outside="handleClickOutside()' : '';
 
+		$origin = self::TRANSFORM_ORIGIN_MAP[ $placement_position ] ?? 'center.top';
+
 		return sprintf(
 			'<div x-data="tutorPopover({ placement: \'%s\' })">
 				%s
@@ -521,6 +538,7 @@ class Popover extends BaseComponent {
 					x-ref="content"
 					x-show="open"
 					x-cloak
+					x-transition.%s
 					class=%s
 					%s"
 				>	
@@ -532,6 +550,7 @@ class Popover extends BaseComponent {
 			</div>',
 			$placement_position,
 			$button,
+			$origin,
 			$class,
 			$closeable_attr,
 			$header,
