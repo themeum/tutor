@@ -171,7 +171,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 			</span>
 		</div>
 
-		<div class="tutor-mt-10 tutor-mb-5 tutor-medium tutor-font-medium">
+		<div class="tutor-withdrawal-history-heading tutor-mt-10 tutor-mb-5 tutor-medium tutor-font-medium">
 			<?php esc_html_e( 'Withdrawal History', 'tutor' ); ?>
 		</div>
 

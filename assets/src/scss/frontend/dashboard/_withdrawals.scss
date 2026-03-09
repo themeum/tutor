@@ -68,6 +68,18 @@
 }
 
 .tutor-user-withdrawals {
+	.tutor-withdrawal-history-heading {
+		@include tutor-breakpoint-down(md) {
+			margin-top: 20px;
+		}
+	}
+
+	.tutor-tooltip-wrap {
+		@include tutor-breakpoint-down(md) {
+			margin-top: $tutor-spacing-1;
+		}
+	}
+
 	.tutor-withdrawal-preference-msg-wrap {
 		@include tutor-breakpoint-down(sm) {
 			flex-wrap: nowrap;
