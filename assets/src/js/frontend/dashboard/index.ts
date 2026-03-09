@@ -4,7 +4,6 @@
 import { initializeHeader } from './header';
 import { initializeAnnouncements } from './pages/announcements';
 import { initializeAssignments } from './pages/assignments';
-import { initializeBilling } from './pages/billing';
 import { initializeCertificates } from './pages/certificates';
 import { initializeDiscussions } from './pages/discussions';
 import { initializeHome } from './pages/instructor/home';
@@ -73,10 +72,6 @@ const getCurrentPage = (): string => {
     return 'withdrawals';
   }
 
-  if (path.includes('/account/billing')) {
-    return 'billing';
-  }
-
   // Default to home when subpage=dashboard
   return 'home';
 };
@@ -121,9 +116,6 @@ const initializeDashboard = () => {
       break;
     case 'withdrawals':
       initializeWithdrawals();
-      break;
-    case 'billing':
-      initializeBilling();
       break;
     default:
       // eslint-disable-next-line no-console

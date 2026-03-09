@@ -42,7 +42,7 @@ $show_tab_nav   = apply_filters( 'tutor_dashboard_account_billing_show_tab_nav',
 $page_nav_items = apply_filters( 'tutor_dashboard_account_billing_page_nav_items', $page_nav_items );
 ?>
 
-<div class="tutor-billing-wrapper" x-data="tutorBilling()" x-cloak>
+<div class="tutor-billing-wrapper" x-data="" x-cloak>
 	<?php require_once tutor_get_template( 'account-header' ); ?>
 
 	<div class="tutor-billing-container">
