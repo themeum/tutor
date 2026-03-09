@@ -60,7 +60,10 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 				?>
 			</button> -->
 			<div>
-				<?php do_action( 'tutor_dashboard/before_header_button' ); ?>
+				<?php
+				// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+				do_action( 'tutor_dashboard/before_header_button' );
+				?>
 			</div>
 			<div 
 				x-data="tutorPopover({
