@@ -11,6 +11,7 @@ interface AnnouncementFormData {
   title: string;
   summary: string;
   tutor_notify_all_students?: boolean;
+  tutor_push_notify_students?: boolean;
   action_type: 'create' | 'update';
 }
 
