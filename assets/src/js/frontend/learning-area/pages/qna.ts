@@ -119,6 +119,7 @@ const qnaPage = () => {
           } else {
             this.setReplying(null);
             this.updateReplyCount(payload.question_id);
+            this.highlightCard(payload.question_id);
           }
         },
         onError: (error: Error) => {
@@ -244,6 +245,22 @@ const qnaPage = () => {
         }
       }
     },
+
+    highlightCard(questionId: number) {
+      const el = document.querySelector(`[data-question-id="${questionId}"]`);
+      const card = (el?.closest('.tutor-discussion-card') ?? el) as HTMLElement | null;
+      if (!card) return;
+
+      card.style.outline = '2px solid var(--tutor-color-primary, #3b82f6)';
+      card.style.outlineOffset = '-2px';
+      card.style.borderRadius = 'inherit';
+
+      setTimeout(() => {
+        card.style.outline = '';
+        card.style.outlineOffset = '';
+      }, 300);
+    },
+
 
     handleKeydown(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
