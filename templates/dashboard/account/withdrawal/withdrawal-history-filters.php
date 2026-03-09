@@ -33,7 +33,9 @@ $dropdown_options = array_map(
 	},
 	$status_filter_options
 );
-
+?>
+<div class="tutor-flex tutor-items-center">
+<?php
 DropdownFilter::make()
 	->options( $dropdown_options )
 	->query_param( 'data' )
@@ -42,6 +44,7 @@ DropdownFilter::make()
 	->popover_size( Size::SMALL )
 	->render();
 ?>
+</div>
 <div class="tutor-qna-filter-right">
 	<div class="tutor-flex tutor-items-center tutor-gap-3">
 		<?php
