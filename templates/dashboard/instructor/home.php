@@ -225,7 +225,11 @@ if ( $is_pro_reports ) {
 	);
 }
 
-// Course Completion Distribution.
+/**
+ * -------------------------------
+ * Course Completion Distribution
+ * -------------------------------
+ */
 $distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
 
 $course_completion_data = array(

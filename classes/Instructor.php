@@ -526,7 +526,7 @@ class Instructor {
 				continue;
 			}
 
-			$course_progress = tutor_utils()->get_course_completed_percent( $enrollment->post_parent, $enrollment->post_author );
+			$course_progress = (int) tutor_utils()->get_course_completed_percent( $enrollment->post_parent, $enrollment->post_author );
 
 			if ( 100 === $course_progress ) {
 				++$counts['completed'];
