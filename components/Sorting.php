@@ -74,6 +74,13 @@ class Sorting extends BaseComponent {
 	protected $active_order = '';
 
 	/**
+	 * Base URL for building sort links (preserves other query params when set).
+	 *
+	 * @var string
+	 */
+	protected $base_url = '';
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -141,6 +148,18 @@ class Sorting extends BaseComponent {
 	}
 
 	/**
+	 * Set base URL for sort links so other query params are preserved (cumulative filtering).
+	 *
+	 * @param string $url Full current page URL including query string.
+	 *
+	 * @return self
+	 */
+	public function base_url( string $url ): self {
+		$this->base_url = $url;
+		return $this;
+	}
+
+	/**
 	 * Get component content
 	 *
 	 * @return string
@@ -183,6 +202,9 @@ class Sorting extends BaseComponent {
 			>
 				<div class="tutor-popover-menu" style="min-width: 108px;">
 					<?php foreach ( $orders as $order => $label ) : ?>
+						<?php
+						$order_url = ! empty( $this->base_url ) ? add_query_arg( 'order', $order, $this->base_url ) : add_query_arg( 'order', $order );
+						?>
 						<?php if ( $this->on_change ) : ?>
 							<button
 								type="button"
@@ -196,7 +218,7 @@ class Sorting extends BaseComponent {
 							</button>
 						<?php else : ?>
 							<a
-								href="<?php echo esc_attr( add_query_arg( 'order', $order ) ); ?>"
+								href="<?php echo esc_attr( $order_url ); ?>"
 								class="tutor-popover-menu-item <?php echo esc_attr( $this->order === $order ? ' tutor-active' : '' ); ?>"
 							>
 								<?php echo esc_html( $label ); ?>

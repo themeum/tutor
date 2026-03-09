@@ -66,34 +66,45 @@ class Dashboard {
 	 */
 	public static function get_account_pages() {
 		$pages = array(
-			'profile'  => array(
+			'profile' => array(
 				'title'       => esc_html__( 'Profile', 'tutor' ),
 				'icon'        => Icon::PROFILE_CIRCLE,
 				'icon_active' => Icon::PROFILE_CIRCLE_FILL,
 				'url'         => self::get_account_page_url( 'profile' ),
 				'template'    => tutor_get_template( 'dashboard.account.profile' ),
 			),
-			'reviews'  => array(
+			'reviews' => array(
 				'title'       => esc_html__( 'Reviews', 'tutor' ),
 				'icon'        => Icon::RATINGS,
 				'icon_active' => Icon::RATINGS,
 				'url'         => self::get_account_page_url( 'reviews' ),
 				'template'    => tutor_get_template( 'dashboard.account.reviews' ),
 			),
-			'billing'  => array(
+			'billing' => array(
 				'title'       => esc_html__( 'Billing', 'tutor' ),
 				'icon'        => Icon::BILLING,
 				'icon_active' => Icon::BILLING,
 				'url'         => self::get_account_page_url( 'billing' ),
 				'template'    => tutor_get_template( 'dashboard.account.billing' ),
 			),
-			'settings' => array(
-				'title'       => esc_html__( 'Settings', 'tutor' ),
-				'icon'        => Icon::SETTING,
-				'icon_active' => Icon::SETTING,
-				'url'         => self::get_account_page_url( 'settings' ),
-				'template'    => tutor_get_template( 'dashboard.account.settings' ),
-			),
+		);
+
+		if ( User::is_instructor_view() ) {
+			$pages['withdrawals'] = array(
+				'title'       => esc_html__( 'Withdrawals', 'tutor' ),
+				'icon'        => Icon::WALLET,
+				'icon_active' => Icon::WALLET,
+				'url'         => self::get_account_page_url( 'withdrawals' ),
+				'template'    => tutor_get_template( 'dashboard.account.withdrawals' ),
+			);
+		}
+
+		$pages['settings'] = array(
+			'title'       => esc_html__( 'Settings', 'tutor' ),
+			'icon'        => Icon::SETTING,
+			'icon_active' => Icon::SETTING,
+			'url'         => self::get_account_page_url( 'settings' ),
+			'template'    => tutor_get_template( 'dashboard.account.settings' ),
 		);
 
 		return apply_filters( 'tutor_dashboard_account_pages', $pages );
