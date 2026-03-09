@@ -5,8 +5,10 @@ import { initializeLesson } from './lesson';
 import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './pages/quiz';
+import { initializeSidebar } from './sidebar';
 
 const initializeLearningArea = () => {
+  initializeSidebar();
   const params = new URLSearchParams(window.location.search);
   const currentPage = params.get('subpage');
 

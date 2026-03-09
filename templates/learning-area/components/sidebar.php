@@ -38,40 +38,9 @@ $menu_items  = Template::make_learning_area_sub_page_nav_items( $current_url );
 $active_menu = Input::get( 'subpage', '' );
 
 ?>
-<div class="tutor-learning-sidebar" 
-	x-data="{ 
-		pagesHeight: null,
-		resizing: false,
-		collapsed: <?php echo empty( $active_menu ) ? 'true' : 'false'; ?>,
-		init() {
-			this.$nextTick(() => {
-				this.pagesHeight = this.$refs.pagesList.scrollHeight;
-			});
-		},
-		startResizing(e) {
-			this.resizing = true;
-			const startY = e.clientY;
-			const currentHeight = this.$refs.pagesList.offsetHeight;
-			const onMouseMove = (moveEvent) => {
-				const delta = startY - moveEvent.clientY;
-				this.pagesHeight = Math.max(36, Math.min(400, currentHeight + delta));
-			};
-			const onMouseUp = () => {
-				this.resizing = false;
-				window.removeEventListener('mousemove', onMouseMove);
-				window.removeEventListener('mouseup', onMouseUp);
-			};
-			window.addEventListener('mousemove', onMouseMove);
-			window.addEventListener('mouseup', onMouseUp);
-		},
-		togglePagesHeight() {
-			if (this.pagesHeight > 36) {
-				this.pagesHeight = 36;
-			} else {
-				this.pagesHeight = this.$refs.pagesList.scrollHeight;
-			}
-		}
-	}"
+<div 
+	class="tutor-learning-sidebar" 
+	x-data="tutorLearningSidebar(<?php echo empty( $active_menu ) ? 'true' : 'false'; ?>)"
 	:class="{ 'is-open': sidebarOpen }" 
 	@click.outside="sidebarOpen = false"
 >
