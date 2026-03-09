@@ -26,7 +26,6 @@
 	}
 
 	.tutor-withdrawal-history-filters-right-group {
-		// Full width when stacked (below md = two-row layout).
 		@include tutor-breakpoint-down(md) {
 			width: 100%;
 		}
@@ -51,10 +50,9 @@
 			.tutor-withdrawal-history-filters-right-group {
 				display: flex;
 				align-items: center;
-				gap: $tutor-spacing-3;
 				justify-content: flex-end;
+				gap: $tutor-spacing-3;
 
-				// When Clear all is visible (3 children), show order: Clear all, Date, Sort.
 				&:has(> *:nth-child(3)) > *:first-child {
 					order: 2;
 				}
@@ -95,15 +93,15 @@
 		}
 	}
 
-    .tutor-withdrawal-status {
-        display: flex;
-        justify-content: space-between;
+	.tutor-withdrawal-status {
 		position: relative;
-        background-color: $tutor-surface-base;
-        border: 1px solid $tutor-border-idle;
-        border-radius: $tutor-radius-lg;
-        padding: $tutor-spacing-6;
-        margin-top: $tutor-spacing-6;
+		display: flex;
+		justify-content: space-between;
+		margin-top: $tutor-spacing-6;
+		padding: $tutor-spacing-6;
+		background-color: $tutor-surface-base;
+		border: 1px solid $tutor-border-idle;
+		border-radius: $tutor-radius-lg;
 
 		&::before,
 		&::after {
@@ -130,6 +128,7 @@
 			&-label {
 				@include tutor-typography('tiny', 'regular', 'secondary', 'body');
 			}
+
 			&-value {
 				@include tutor-typography('small', 'medium', 'primary', 'body');
 			}
@@ -145,16 +144,16 @@
 				margin-left: $tutor-spacing-1;
 				color: $tutor-text-secondary;
 			}
-        }
 
-        &-item:nth-child(2) {
-           padding-left: 10%;
-		}
+			&:nth-child(2) {
+				padding-left: 10%;
+			}
 
-        &-item:nth-child(3) {
-            display: flex;
-            flex-direction: column;
-            align-items: end;
+			&:nth-child(3) {
+				display: flex;
+				flex-direction: column;
+				align-items: end;
+			}
 		}
 
 		@include tutor-breakpoint-down(sm) {
@@ -176,26 +175,26 @@
 				padding: $tutor-spacing-4 0;
 				border-bottom: 1px solid $tutor-border-idle;
 
+				&:first-child {
+					padding-top: 0;
+				}
+
 				&:last-child {
 					border-bottom: none;
 					padding-bottom: 0;
 				}
 
-				&:first-child {
-					padding-top: 0;
+				&:nth-child(2) {
+					padding-left: 0;
+				}
+
+				&:nth-child(3) {
+					flex-direction: row;
+					align-items: center;
 				}
 			}
-
-			&-item:nth-child(2) {
-				padding-left: 0;
-			}
-
-			&-item:nth-child(3) {
-				flex-direction: row;
-				align-items: center;
-			}
 		}
-    }
+	}
 
 	.tutor-billing-card-left {
 		gap: $tutor-spacing-4;
@@ -203,10 +202,10 @@
 }
 
 .tutor-withdrawal-available-balance {
-	background: $tutor-surface-l1-hover;
-	border-radius: $tutor-radius-lg;
-	border: 1px solid $tutor-border-idle;
 	padding: $tutor-spacing-5 $tutor-spacing-6;
+	background: $tutor-surface-l1-hover;
+	border: 1px solid $tutor-border-idle;
+	border-radius: $tutor-radius-lg;
 
 	&-icon {
 		display: flex;
@@ -215,7 +214,7 @@
 		width: 44px;
 		height: 44px;
 		gap: $tutor-spacing-4;
-		border-radius: $tutor-radius-full;
 		background: $tutor-surface-l1;
+		border-radius: $tutor-radius-full;
 	}
 }
