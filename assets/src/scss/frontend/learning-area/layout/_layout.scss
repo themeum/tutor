@@ -40,7 +40,7 @@
     }
 
     @include tutor-breakpoint-down(sm) {
-      padding-bottom: 62px;
+      padding: 0px 16px 62px 16px;
     }
   }
 }

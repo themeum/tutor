@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
 use Tutor\Components\Avatar;
+use Tutor\Components\Button;
 use Tutor\Helpers\UrlHelper;
 
 global $tutor_course_id;
@@ -42,7 +43,7 @@ $single_url = UrlHelper::add_query_params(
 ?>
 <div 
 	class="tutor-discussion-card"
-	data-question-id="<?php echo (int) $question_id; ?>"
+	data-question-id="<?php echo esc_attr( (int) $question_id ); ?>"
 	x-show="editingId !== <?php echo (int) $question_id; ?>"
 	x-data="tutorPopover({ placement: 'bottom-end' })"
 	:class="{'active': open}"
@@ -59,16 +60,18 @@ $single_url = UrlHelper::add_query_params(
 					?>
 				</div>
 			</div>
-			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="tutor-qna-text-<?php echo (int) $question_id; ?>"><?php echo wp_kses_post( $content ); ?></a>
+			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="<?php echo esc_attr( 'tutor-qna-text-' . (int) $question_id ); ?>"><?php echo wp_kses_post( $content ); ?></a>
 			<div class="tutor-flex tutor-items-center tutor-justify-between">
 				<div class="tutor-discussion-card-meta">
-					<button 
-						@click="toggleReply(<?php echo (int) $question_id; ?>)"
-						class="tutor-discussion-card-meta-reply-button"
-						type="button"
-					>
-						<?php esc_html_e( 'Reply', 'tutor' ); ?>
-					</button>
+					<?php
+					Button::make()
+						->label( __( 'Reply', 'tutor' ) )
+						->attr( '@click', 'toggleReply(' . (int) $question_id . ')' )
+						->attr( 'class', 'tutor-discussion-card-meta-reply-button' )
+						->attr( 'type', 'button' )
+						->size( Size::X_SMALL )
+						->render();
+					?>
 					<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-flex tutor-items-center tutor-gap-2">
 						<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 
 						<span class="tutor-discussion-card-reply-count"><?php echo esc_html( $question->answer_count ); ?></span>
@@ -89,21 +92,26 @@ $single_url = UrlHelper::add_query_params(
 			</div>
 		</div>
 		<div class="tutor-discussion-card-actions">
-			<button 
-				@click="toggleReply(<?php echo (int) $question_id; ?>)"
-				class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden"
-				type="button"
-			>
-				<?php esc_html_e( 'Reply', 'tutor' ); ?>
-			</button>
+			<?php
+			Button::make()
+				->label( __( 'Reply', 'tutor' ) )
+				->attr( '@click', 'toggleReply(' . (int) $question_id . ')' )
+				->attr( 'class', 'tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden' )
+				->attr( 'type', 'button' )
+				->size( Size::X_SMALL )
+				->render();
+			?>
 			<?php if ( $is_user_asker ) : ?>
 			<div class="tutor-flex">
-				<button 
-					x-ref="trigger" 
-					@click="toggle()" 
-					class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon tutor-discussion-card-actions-trigger">
-					<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES ); ?>
-				</button>
+				<?php
+				Button::make()
+					->size( Size::X_SMALL )
+					->attr( 'x-ref', 'trigger' )
+					->attr( '@click', 'toggle()' )
+					->attr( 'class', 'tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon tutor-discussion-card-actions-trigger' )
+					->icon( Icon::ELLIPSES )
+					->render()
+				?>
 				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 					<div class="tutor-popover-menu" style="min-width: 110px;">
 						<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $question_id; ?>); hide()">
