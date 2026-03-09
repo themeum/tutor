@@ -38,7 +38,43 @@ $menu_items  = Template::make_learning_area_sub_page_nav_items( $current_url );
 $active_menu = Input::get( 'subpage', '' );
 
 ?>
-<div class="tutor-learning-sidebar" :class="{ 'is-open': sidebarOpen }" @click.outside="sidebarOpen = false">
+<div class="tutor-learning-sidebar" 
+	x-data="{ 
+		pagesHeight: null,
+		resizing: false,
+		collapsed: <?php echo empty( $active_menu ) ? 'true' : 'false'; ?>,
+		init() {
+			this.$nextTick(() => {
+				this.pagesHeight = this.$refs.pagesList.scrollHeight;
+			});
+		},
+		startResizing(e) {
+			this.resizing = true;
+			const startY = e.clientY;
+			const currentHeight = this.$refs.pagesList.offsetHeight;
+			const onMouseMove = (moveEvent) => {
+				const delta = startY - moveEvent.clientY;
+				this.pagesHeight = Math.max(36, Math.min(400, currentHeight + delta));
+			};
+			const onMouseUp = () => {
+				this.resizing = false;
+				window.removeEventListener('mousemove', onMouseMove);
+				window.removeEventListener('mouseup', onMouseUp);
+			};
+			window.addEventListener('mousemove', onMouseMove);
+			window.addEventListener('mouseup', onMouseUp);
+		},
+		togglePagesHeight() {
+			if (this.pagesHeight > 36) {
+				this.pagesHeight = 36;
+			} else {
+				this.pagesHeight = this.$refs.pagesList.scrollHeight;
+			}
+		}
+	}"
+	:class="{ 'is-open': sidebarOpen }" 
+	@click.outside="sidebarOpen = false"
+>
 	<div class="tutor-hidden tutor-lg-flex tutor-items-center tutor-px-4">
 		<h5 class="tutor-learning-header-title">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
@@ -148,8 +184,14 @@ $active_menu = Input::get( 'subpage', '' );
 			?>
 		</div>
 	</div>
-	<div class="tutor-learning-sidebar-pages">
-		<div class="tutor-learning-pages">
+	<div class="tutor-learning-sidebar-pages" :class="{ 'expanded': !collapsed }">
+		<div class="tutor-sidebar-resizer" x-show="!collapsed" @mousedown="startResizing($event)" x-cloak></div>
+		<div class="tutor-sidebar-restore-dropdown" x-show="!collapsed" x-cloak>
+			<button :class="{ 'is-minimized': pagesHeight <= 40 }" @click="togglePagesHeight()">
+				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2 ); ?>
+			</button>
+		</div>
+		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" :style="!collapsed && { height: pagesHeight + 'px' }">
 			<?php
 			ob_start();
 			foreach ( $menu_items as $key => $item ) {
@@ -167,8 +209,10 @@ $active_menu = Input::get( 'subpage', '' );
 				<?php
 			}
 			$menu_html = ob_get_clean();
+			?>
 
-			if ( empty( $active_menu ) ) {
+			<div x-show="collapsed" x-cloak>
+				<?php
 				Popover::make()
 					->body( $menu_html, wp_kses_allowed_html( 'post' ) )
 					->trigger(
@@ -182,10 +226,12 @@ $active_menu = Input::get( 'subpage', '' );
 							->get()
 					)
 					->render();
-			} else {
-				echo $menu_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			}
-			?>
+				?>
+			</div>
+
+			<div x-show="!collapsed" x-cloak>
+				<?php echo $menu_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
 		</div>
 	</div>
 </div>
