@@ -225,7 +225,12 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								<span><?php echo esc_html( $logout_btn['title'] ); ?></span>
 							</a>
 							<?php endif; ?>
-							<div class="tutor-tiny tutor-text-secondary tutor-py-5"><?php esc_html_e( 'Version 4.0', 'tutor' ); ?></div>
+							<div class="tutor-tiny tutor-text-secondary tutor-py-5">
+								<?php
+									/* translators: %s: Tutor LMS version number */
+									echo esc_html( sprintf( __( 'Version %s', 'tutor' ), TUTOR_VERSION ) );
+								?>
+							</div>
 						</div>
 					</div>
 				</div>
