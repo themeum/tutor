@@ -52,14 +52,9 @@
   .tutor-learning-sidebar-curriculum {
     background-color: $tutor-surface-l1;
     border-radius: $tutor-radius-lg;
-
-    @include tutor-breakpoint-up(lg) {
-      max-height: calc(100vh - 344px);
-
-      .tutor-has-admin-bar & {
-        max-height: calc(100vh - 376px);
-      }
-    }
+    @include tutor-flex(column);
+    min-height: 0;
+    flex-grow: 1;
 
     .tutor-learning-progress {
       @include tutor-flex(column);
@@ -88,11 +83,9 @@
       @include tutor-flex(column);
       gap: $tutor-spacing-1;
       padding: $tutor-spacing-6 $tutor-spacing-4;
-
-      @include tutor-breakpoint-up(lg) {
-        max-height: calc(100% - 84px);
-        overflow-y: auto;
-      }
+      flex-grow: 1;
+      min-height: 0;
+      overflow-y: auto;
 
       &-topic {
         @include tutor-flex(column);
@@ -230,12 +223,22 @@
     background-color: $tutor-surface-l1;
     border-radius: $tutor-radius-lg;
     padding: $tutor-spacing-4;
-    height: 100%;
+    height: auto;
+    flex-shrink: 0;
     position: relative;
+
+    @include tutor-breakpoint-up(lg) {
+      padding-bottom: $tutor-spacing-11;
+    }
 
     .tutor-learning-pages {
       @include tutor-flex(column);
       gap: $tutor-spacing-1;
+
+      .tutor-popover {
+        max-width: none;
+        width: 288px;
+      }
 
       &-item {
         @include tutor-button-reset();
@@ -245,6 +248,11 @@
         padding: $tutor-spacing-4 $tutor-spacing-5;
         border-radius: $tutor-radius-md;
         @include tutor-transition(background-color);
+        width: 100%;
+
+        svg {
+          color: $tutor-icon-idle;
+        }
 
         &:hover {
           background-color: $tutor-tab-sidebar-l2-hover;

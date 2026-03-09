@@ -10,7 +10,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\Popover;
 use Tutor\Components\Progress;
 use Tutor\Components\Tooltip;
 use TUTOR\Icon;
@@ -145,28 +148,44 @@ $active_menu = Input::get( 'subpage', '' );
 			?>
 		</div>
 	</div>
-	<!-- <div class="tutor-learning-sidebar-pages">
+	<div class="tutor-learning-sidebar-pages">
 		<div class="tutor-learning-pages">
 			<?php
+			ob_start();
 			foreach ( $menu_items as $key => $item ) {
 				$active_class = ( $key === $active_menu ) ? 'active' : '';
 				?>
-				<a 	href="<?php echo esc_url( $item['url'] ); ?>" 
+				<a href="<?php echo esc_url( $item['url'] ); ?>" 
 					class="tutor-learning-pages-item <?php echo esc_attr( $active_class ); ?>"
-					<?php
-					if ( isset( $item['onclick'] ) ) {
-						?>
+					<?php if ( isset( $item['onclick'] ) ) : ?>
 						onclick="<?php echo esc_attr( $item['onclick'] ); ?>"
-						<?php
-					}
-					?>
+					<?php endif; ?>
 				>
 					<?php tutor_utils()->render_svg_icon( $item['icon'], 20, 20 ); ?>
 					<?php echo esc_html( $item['title'] ); ?>
 				</a>
 				<?php
 			}
+			$menu_html = ob_get_clean();
+
+			if ( empty( $active_menu ) ) {
+				Popover::make()
+					->body( $menu_html, wp_kses_allowed_html( 'post' ) )
+					->trigger(
+						Button::make()
+							->variant( Variant::GHOST )
+							->label( __( 'More', 'tutor' ) )
+							->icon( Icon::THREE_DOTS, 'left', 20, 20 )
+							->attr( 'class', 'tutor-learning-pages-item' )
+							->attr( 'x-ref', 'trigger' )
+							->attr( '@click', 'toggle()' )
+							->get()
+					)
+					->render();
+			} else {
+				echo $menu_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
 			?>
 		</div>
-	</div> -->
+	</div>
 </div>
