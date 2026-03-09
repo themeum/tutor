@@ -22,30 +22,39 @@ use Tutor\Components\Constants\Variant;
 
 global $tutor_is_started_quiz;
 
-$quiz_attempt_info = tutor_utils()->quiz_attempt_info( $tutor_is_started_quiz->attempt_info );
+// Quiz attempt data.
+$quiz_attempt_info                  = tutor_utils()->quiz_attempt_info( $tutor_is_started_quiz->attempt_info );
+$quiz_attempt_info['date_time_now'] = date( 'Y-m-d H:i:s', tutor_time() ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 
-$quiz_attempt_info['date_time_now'] = date( 'Y-m-d H:i:s', tutor_time() );//phpcs:ignore
-$time_limit_seconds                 = tutor_utils()->avalue_dot( 'time_limit.time_limit_seconds', $quiz_attempt_info );
-$remaining_time_secs                = ( strtotime( $tutor_is_started_quiz->attempt_started_at ) + $time_limit_seconds ) - strtotime( $quiz_attempt_info['date_time_now'] );
-$remaining_time_context             = tutor_utils()->seconds_to_time_context( $remaining_time_secs );
-$quiz_when_time_expires             = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
-$has_time_limit                     = $time_limit_seconds > 0;
-$questions                          = tutor_utils()->get_random_questions_by_quiz();
-$question_layout_view               = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_layout_view' );
-$question_layout_view               = $question_layout_view ? $question_layout_view : 'single_question';
-$feedback_mode                      = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'feedback_mode', '' );
-$reveal_wait_ms                     = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
-$is_linear_layout                   = in_array( $question_layout_view, array( 'single_question', 'question_pagination' ), true );
-$pagination_style                   = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_pagination_style', 'number' ); // @TODO: need to implement in quiz options.
-$show_previous_button               = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
-$attempts_allowed                   = (int) tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'attempts_allowed', 0 );
-$previous_attempts                  = tutor_utils()->quiz_attempts();
-$current_attempt_number             = ( is_array( $previous_attempts ) ? count( $previous_attempts ) : 0 );
+// Time limit calculations.
+$time_limit_seconds     = (int) tutor_utils()->avalue_dot( 'time_limit.time_limit_seconds', $quiz_attempt_info );
+$has_time_limit         = $time_limit_seconds > 0;
+$remaining_time_secs    = $has_time_limit
+	? ( strtotime( $tutor_is_started_quiz->attempt_started_at ) + $time_limit_seconds ) - strtotime( $quiz_attempt_info['date_time_now'] )
+	: 0;
+$remaining_time_context = tutor_utils()->seconds_to_time_context( $remaining_time_secs );
 
+// Quiz settings.
+$quiz_when_time_expires = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
+$reveal_wait_ms         = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
+$show_previous_button   = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
+
+// Quiz layout.
+$question_layout_view = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_layout_view' );
+$feedback_mode        = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'feedback_mode', '' );
+$is_linear_layout     = in_array( $question_layout_view, array( 'single_question', 'question_pagination' ), true );
+$is_pagination_layout = 'question_pagination' === $question_layout_view;
+
+// Pagination style — only applies to question_pagination layout.
 $supported_pagination_styles = array( 'shape', 'radio', 'number' );
-if ( ! in_array( $pagination_style, $supported_pagination_styles, true ) ) {
-	$pagination_style = 'question_pagination' === $question_layout_view ? 'shape' : 'number';
-}
+$pagination_style            = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_pagination_style', 'number' );
+
+// Questions and attempts.
+$questions                     = tutor_utils()->get_random_questions_by_quiz();
+$attempts_allowed              = (int) tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'attempts_allowed', 0 );
+$hide_question_number_overview = (bool) tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'hide_question_number_overview', false );
+$previous_attempts             = tutor_utils()->quiz_attempts();
+$current_attempt_number        = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
 
 $reveal_question_types = array( 'true_false', 'single_choice', 'multiple_choice' );
 $quiz_answers          = array();
@@ -144,7 +153,7 @@ $default_values = array(
 		data-question-layout-view="<?php echo esc_attr( $question_layout_view ); ?>"
 		x-cloak
 	>
-		<?php if ( $is_linear_layout ) : ?>
+		<?php if ( $is_linear_layout && ! $hide_question_number_overview ) : ?>
 			<div class="tutor-quiz-question-meta">
 				<div class="tutor-quiz-question-indicator">
 					<?php
@@ -159,18 +168,6 @@ $default_values = array(
 								'x-text' => true,
 							),
 						)
-					);
-					?>
-				</div>
-				<div class="tutor-quiz-attempt-progress">
-					<?php
-					echo wp_kses(
-						sprintf(
-							/* translators: %s: allowed attempts (number or ∞) */
-							__( 'Total Attempt: %s', 'tutor' ),
-							'<strong>' . esc_html( $current_attempt_number ) . '/' . ( 0 === $attempts_allowed ? '&infin;' : esc_html( $attempts_allowed ) ) . '</strong>'
-						),
-						array( 'strong' => array() )
 					);
 					?>
 				</div>
@@ -197,7 +194,7 @@ $default_values = array(
 		}
 		?>
 
-		<?php if ( $is_linear_layout && count( $questions ) > 1 ) : ?>
+		<?php if ( $is_pagination_layout && count( $questions ) > 1 ) : ?>
 			<div
 				class="tutor-quiz-questions-pagination"
 				data-pagination-style="<?php echo esc_attr( $pagination_style ); ?>"
