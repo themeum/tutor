@@ -38,6 +38,8 @@ interface DeleteQnAPayload {
   context?: 'question' | 'reply';
 }
 
+type DiscussionCardType = 'qna' | 'comment';
+
 const FORM_ID_PREFIXES = {
   COMMENT_EDIT: 'lesson-comment-edit-',
   COMMENT_REPLY: 'lesson-comment-reply-form-',
@@ -131,9 +133,9 @@ const discussionsPage = () => {
           if (payload.reply_context === 'single') {
             this.reloadReplies();
           } else {
-            // List view
             this.setReplyingComment(null);
             this.updateCommentReplyCount(payload.comment_parent);
+            this.highlightCard(payload.comment_parent, 'comment');
           }
         },
         onError: (error: Error) => {
@@ -219,6 +221,7 @@ const discussionsPage = () => {
           } else {
             this.setReplying(null);
             this.updateReplyCount(payload.question_id);
+            this.highlightCard(payload.question_id);
           }
         },
         onError: (error: Error) => {
@@ -430,6 +433,23 @@ const discussionsPage = () => {
         }
       }
     },
+
+    highlightCard(id: number, type: DiscussionCardType = 'qna') {
+      const attr = type === 'comment' ? 'data-comment-id' : 'data-question-id';
+      const el = document.querySelector(`[${attr}="${id}"]`);
+      const card = (el?.closest('.tutor-discussion-card') ?? el) as HTMLElement | null;
+      if (!card) return;
+
+      card.style.outline = '2px solid var(--tutor-color-primary, #3b82f6)';
+      card.style.outlineOffset = '-2px';
+      card.style.borderRadius = 'inherit';
+
+      setTimeout(() => {
+        card.style.outline = '';
+        card.style.outlineOffset = '';
+      }, 300);
+    },
+
   };
 };
 
