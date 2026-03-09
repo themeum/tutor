@@ -54,8 +54,8 @@ class Popover extends BaseComponent {
 		Positions::TOP_END      => 'right.bottom',
 		Positions::BOTTOM       => 'center.top',
 		Positions::BOTTOM_START => 'left.top',
-		Positions::BOTTOM_END  => 'right.top',
-		Positions::LEFT        => 'right.center',
+		Positions::BOTTOM_END   => 'right.top',
+		Positions::LEFT         => 'right.center',
 		Positions::RIGHT        => 'left.center',
 	);
 
