@@ -170,7 +170,7 @@ $default_values = array(
 							__( 'Total Attempt: %s', 'tutor' ),
 							'<strong>' . esc_html( $current_attempt_number ) . '/' . ( 0 === $attempts_allowed ? '&infin;' : esc_html( $attempts_allowed ) ) . '</strong>'
 						),
-						array( 'strong' => array() )
+						tutor_utils()->allowed_basic_inline_tags()
 					);
 					?>
 				</div>
