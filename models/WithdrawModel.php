@@ -103,6 +103,13 @@ class WithdrawModel {
 			'user_id' => get_current_user_id(),
 		);
 
+		$start_date = Input::get( 'start_date' );
+		$end_date   = Input::get( 'end_date' );
+
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$where['DATE(created_at)'] = array( 'BETWEEN', array( $start_date, $end_date ) );
+		}
+
 		$tabs [] = array(
 			'key'   => '',
 			'title' => __( 'All', 'tutor' ),
@@ -220,99 +227,58 @@ class WithdrawModel {
 		global $wpdb;
 
 		$filter = (array) $filter;
-		extract( $filter ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
-		$query_by_status_sql = '';
-		$query_by_user_sql   = '';
-
-		if ( ! empty( $status ) ) {
-			$status = (array) $status;
-			$status = QueryHelper::prepare_in_clause( $status );
-
-			$query_by_status_sql = " AND status IN({$status}) ";
-		}
-
+		$where = array();
 		if ( $user_id ) {
-			$query_by_user_sql = " AND user_id = {$user_id} ";
+			$where['withdraw_tbl.user_id'] = $user_id;
 		}
 
-		// Order query @since 2.0.0.
-		$order_query = '';
-		if ( isset( $order ) && '' !== $order ) {
-			$is_valid_sql = sanitize_sql_orderby( $order );
-			if ( $is_valid_sql ) {
-				$order_query = "ORDER BY created_at {$order}";
-			}
-		} else {
-			$order_query = 'ORDER BY created_at DESC';
+		if ( isset( $filter['status'] ) && ! empty( $filter['status'] ) ) {
+			$where['withdraw_tbl.status'] = (array) $filter['status'];
 		}
 
-		// Date query @since 2.0.0.
-		$date_query = '';
-		if ( isset( $date ) && '' !== $date ) {
-			$date_query = "AND DATE(created_at) = CAST( '$date' AS DATE )";
+		if ( isset( $filter['date'] ) && ! empty( $filter['date'] ) ) {
+			$where['DATE(withdraw_tbl.created_at) = %s'] = array( 'RAW', array( $filter['date'] ) );
 		}
 
-		// Date range @since 4.0.0.
-		$date_query = '';
-		if ( isset( $start_date ) && isset( $end_date ) ) {
-			$date_query = "AND DATE(created_at) BETWEEN CAST( '$start_date' AS DATE ) AND CAST( '$end_date' AS DATE )";
+		if ( isset( $filter['start_date'], $filter['end_date'] ) ) {
+			$where['DATE(withdraw_tbl.created_at)'] = array( 'BETWEEN', array( $filter['start_date'], $filter['end_date'] ) );
 		}
 
-		// Search query @since 2.0.0.
-		$search_term_raw = empty( $search ) ? '' : $search;
-		$search_query    = '%%';
-		if ( ! empty( $search_term_raw ) ) {
-			$search_query = '%' . $wpdb->esc_like( $search_term_raw ) . '%';
+		if ( isset( $filter['search'] ) && ! empty( $filter['search'] ) ) {
+			$term = $filter['search'];
+			$like = '%' . $wpdb->esc_like( $term ) . '%';
+
+			$where['(user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email = %s)'] = array(
+				'RAW',
+				array( $like, $like, $like, $term ),
+			);
 		}
 
-		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$count = (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(withdraw_id)
-			FROM 	{$wpdb->prefix}tutor_withdraws  withdraw_tbl
-					INNER JOIN {$wpdb->users} user_tbl
-						ON withdraw_tbl.user_id = user_tbl.ID
-			WHERE 	1 = 1
-					{$query_by_user_sql}
-					{$query_by_status_sql}
-					{$date_query}
-					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email = %s)
-			",
-				$search_query,
-				$search_query,
-				$search_query,
-				$search_term_raw
-			)
+		$orderby = 'withdraw_tbl.created_at';
+		$order   = isset( $filter['order'] ) ? QueryHelper::get_valid_sort_order( $filter['order'] ) : 'DESC';
+
+		$args = array(
+			'select'  => array( 'withdraw_tbl.*', 'user_tbl.display_name AS user_name', 'user_tbl.user_email' ),
+			'alias'   => 'withdraw_tbl',
+			'joins'   => array(
+				array(
+					'type'  => 'INNER',
+					'table' => $wpdb->users . ' AS user_tbl',
+					'on'    => 'withdraw_tbl.user_id = user_tbl.ID',
+				),
+			),
+			'where'   => $where,
+			'orderby' => $orderby,
+			'order'   => $order,
+			'limit'   => (int) $limit,
+			'offset'  => (int) $start,
 		);
 
-		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 	withdraw_tbl.*,
-					user_tbl.display_name AS user_name,
-					user_tbl.user_email
-				FROM {$wpdb->prefix}tutor_withdraws withdraw_tbl
-					INNER JOIN {$wpdb->users} user_tbl
-							ON withdraw_tbl.user_id = user_tbl.ID
-				WHERE 1 = 1
-					{$query_by_user_sql}
-					{$query_by_status_sql}
-					{$date_query}
+		$results = QueryHelper::query( 'tutor_withdraws', $args );
 
-					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email = %s)
-				{$order_query}
-				LIMIT %d, %d
-			",
-				$search_query,
-				$search_query,
-				$search_query,
-				$search_term_raw,
-				$start,
-				$limit
-			)
-		);
-
-		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$args['count'] = true;
+		$count         = QueryHelper::query( 'tutor_withdraws', $args );
 
 		$withdraw_history = array(
 			'count'   => $count ? $count : 0,

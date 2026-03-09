@@ -22,15 +22,16 @@ $modal_id             = $data['modal_id'] ?? '';
 $available_balance    = $data['available_balance'] ?? 0;
 $min_withdrawal       = $data['min_withdrawal'] ?? 0;
 $withdraw_method_name = $data['withdraw_method_name'] ?? '';
+$currency_symbol      = $data['currency_symbol'] ?? '';
 ?>
 
 <div class="tutor-p-8">
 
-<div class="tutor-flex tutor-gap-6 tutor-p-5 tutor-radius-6 tutor-mb-7">
-	<div><?php tutor_utils()->render_svg_icon( Icon::WALLET, 24, 24 ); ?></div>
+<div class="tutor-flex tutor-gap-6 tutor-p-5 tutor-radius-6 tutor-mb-7 tutor-withdrawal-available-balance">
+	<div class="tutor-withdrawal-available-balance-icon"><?php tutor_utils()->render_svg_icon( Icon::WALLET, 24, 24, array( 'class' => 'tutor-icon-brand' ) ); ?></div>
 	<div>
-		<div class="tutor-text-h4 tutor-font-bold"><?php echo esc_html( tutor_utils()->tutor_price( $available_balance ) ); ?></div>
-		<div class="tutor-text-tiny"><?php esc_html_e( 'Available Balance', 'tutor' ); ?></div>
+		<div class="tutor-text-h4 tutor-font-bold tutor-text-primary"><?php echo esc_html( tutor_utils()->tutor_price( $available_balance ) ); ?></div>
+		<div class="tutor-text-tiny tutor-text-secondary"><?php esc_html_e( 'Available Balance', 'tutor' ); ?></div>
 	</div>
 </div>
 
@@ -47,7 +48,7 @@ InputField::make()
 	->name( 'payment_method' )
 	->label( __( 'Selected Payment Method', 'tutor' ) )
 	->value( $withdraw_method_name )
-	->attr( 'readonly', true )
+	->attr( 'disabled', true )
 	->attr( 'class', 'tutor-mb-7' )
 	->render();
 
@@ -55,15 +56,16 @@ InputField::make()
 	->type( InputType::NUMBER )
 	->name( 'amount' )
 	->label( __( 'Amount', 'tutor' ) )
+	->left_icon( '<span class="tutor-input-currency-symbol tutor-font-medium">' . esc_html( $currency_symbol ) . '</span>' )
 	->placeholder( '0.00' )
 	->required()
 	->clearable()
 	->attr( 'x-bind', "register('amount', { required: 'Amount is required' })" )
 	->render();
 ?>
-<div class="tutor-flex tutor-gap-2 tutor-mt-4">
-	<?php tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON ); ?>
-	<div>
+<div class="tutor-flex tutor-gap-2 tutor-mt-4 tutor-items-center">
+	<?php tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+	<div class="tutor-tiny tutor-font-regular tutor-text-secondary">
 	<?php
 	echo esc_html(
 		sprintf(

@@ -12,71 +12,85 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\DateFilter;
+use Tutor\Components\DropdownFilter;
 use Tutor\Components\Sorting;
 use TUTOR\Dashboard;
-use Tutor\Ecommerce\OrderController;
-use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\WithdrawModel;
 
 $status_filter_options = WithdrawModel::get_status_filter_options();
-
-$selected = array_filter(
-	$status_filter_options,
-	function( $item ) use ( $selected_filter ) {
-		return $item['key'] === $selected_filter || ( empty( $item['key'] ) && 'all' === $selected_filter );
-	}
+$dropdown_options      = array_map(
+	function ( $item ) {
+		return array(
+			'label' => $item['title'],
+			'value' => '' === $item['key'] ? 'all' : $item['key'],
+			'count' => (int) $item['value'],
+		);
+	},
+	$status_filter_options
 );
 
-$selected = count( $selected ) ? reset( $selected ) : $status_filter_options[0];
-?>
-<div x-data="tutorPopover({ placement: 'bottom-start', offset: 4 })">
-	<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-p-none tutor-gap-2">
-		<?php echo esc_html( $selected['title'] . ' (' . $selected['value'] . ')' ); ?>
-		<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-	</button>
+// Use Tutor's current URL so dropdown and sort links preserve other filter params (cumulative filtering).
+$withdrawals_base_url = tutor()->current_url;
 
-	<div 
-		x-ref="content"
-		x-cloak 
-		x-show="open" 
-		@click.outside="handleClickOutside()" 
-		class="tutor-popover">
-		<div class="tutor-popover-menu" style="width: 120px;">
-			<?php foreach ( $status_filter_options as $filter ) : ?>
-				<a href="<?php echo esc_url( $filter['url'] ); ?>" class="tutor-popover-menu-item tutor-popover-menu-item-active">
-					<?php
-						printf(
-							// translators: %1$s - Filter label, %2$d - Number of orders.
-							esc_html__( '%1$s (%2$d)', 'tutor' ),
-							esc_html( $filter['title'] ),
-							esc_html( $filter['value'] )
-						);
-					?>
-				</a>
-			<?php endforeach; ?>
+// Reset pagination when changing filters or sorting.
+$withdrawals_base_url = remove_query_arg( 'current_page', $withdrawals_base_url );
+?>
+<div class="tutor-withdrawal-history-filters">
+	<div class="tutor-withdrawal-history-filters-row tutor-withdrawal-history-filters-row--top tutor-flex tutor-items-center tutor-justify-between">
+		<div class="tutor-flex tutor-items-center">
+			<?php
+			DropdownFilter::make()
+				->options( $dropdown_options )
+				->query_param( 'data' )
+				->variant( Variant::LINK )
+				->size( Size::X_SMALL )
+				->popover_size( Size::SMALL )
+				->base_url( $withdrawals_base_url )
+				->render();
+			?>
+		</div>
+		<div class="tutor-withdrawal-history-filters-mobile-right tutor-flex tutor-items-center tutor-gap-3">
+			<div class="tutor-withdrawal-history-filters-calendar-mobile">
+				<?php
+				DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
+				?>
+			</div>
+			<div class="tutor-withdrawal-history-filters-sort-mobile tutor-flex tutor-items-center">
+				<?php
+				Sorting::make()->order( $order_filter )->base_url( $withdrawals_base_url )->render();
+				?>
+			</div>
 		</div>
 	</div>
-</div>
-<div class="tutor-qna-filter-right">
-	<div class="tutor-flex tutor-items-center tutor-gap-3">
-		<?php
-		$query_params = array( 'data', 'order', 'start_date', 'end_date' );
-		if ( Input::has_any( $query_params, Input::GET_REQUEST ) ) {
-			Button::make()
-				->tag( 'a' )
-				->attr( 'href', Dashboard::get_account_page_url( 'withdrawals' ) )
-				->attr( 'class', 'tutor-text-brand' )
-				->label( __( 'Clear all', 'tutor' ) )
-				->variant( Variant::LINK )
-				->render();
-		}
-
-		DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
-		Sorting::make()->order( $order_filter )->render();
-		?>
+	<div class="tutor-withdrawal-history-filters-row tutor-withdrawal-history-filters-row--bottom tutor-flex tutor-items-center tutor-justify-between">
+		<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-justify-between tutor-withdrawal-history-filters-right-group">
+			<div class="tutor-withdrawal-history-filters-calendar-desktop">
+			<?php
+			DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
+			?>
+			</div>
+			<?php
+			$query_params = array( 'data', 'order', 'start_date', 'end_date' );
+			if ( Input::has_any( $query_params, Input::GET_REQUEST ) ) {
+				Button::make()
+					->tag( 'a' )
+					->attr( 'href', Dashboard::get_account_page_url( 'withdrawals' ) )
+					->attr( 'class', 'tutor-text-brand' )
+					->label( __( 'Clear all', 'tutor' ) )
+					->variant( Variant::LINK )
+					->render();
+			}
+			?>
+			<div class="tutor-withdrawal-history-filters-sort-desktop">
+				<?php
+				Sorting::make()->order( $order_filter )->base_url( $withdrawals_base_url )->render();
+				?>
+			</div>
+		</div>
 	</div>
 </div>
 
