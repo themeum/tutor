@@ -81,6 +81,7 @@ $upcoming_tasks          = array();
 $get_upcoming_live_tasks = array();
 $overview_chart_data     = array();
 $recent_reviews          = array();
+$course_completion_data  = array();
 
 $user                  = wp_get_current_user();
 $instructor_course_ids = CourseModel::get_courses_by_args(
