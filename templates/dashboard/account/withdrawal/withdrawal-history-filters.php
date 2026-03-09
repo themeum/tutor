@@ -40,35 +40,47 @@ if ( ! empty( $_SERVER['HTTP_HOST'] ) && isset( $_SERVER['REQUEST_URI'] ) ) {
 	$withdrawals_base_url = esc_url_raw( ( is_ssl() ? 'https://' : 'http://' ) . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) . wp_unslash( $_SERVER['REQUEST_URI'] ) );
 }
 ?>
-<div class="tutor-flex tutor-items-center">
-<?php
-DropdownFilter::make()
-	->options( $dropdown_options )
-	->query_param( 'data' )
-	->variant( Variant::LINK )
-	->size( Size::X_SMALL )
-	->popover_size( Size::SMALL )
-	->base_url( $withdrawals_base_url )
-	->render();
-?>
-</div>
-<div class="tutor-qna-filter-right">
-	<div class="tutor-flex tutor-items-center tutor-gap-3">
-		<?php
-		$query_params = array( 'data', 'order', 'start_date', 'end_date' );
-		if ( Input::has_any( $query_params, Input::GET_REQUEST ) ) {
-			Button::make()
-				->tag( 'a' )
-				->attr( 'href', Dashboard::get_account_page_url( 'withdrawals' ) )
-				->attr( 'class', 'tutor-text-brand' )
-				->label( __( 'Clear all', 'tutor' ) )
+<div class="tutor-withdrawal-history-filters">
+	<div class="tutor-withdrawal-history-filters-row tutor-withdrawal-history-filters-row--top tutor-flex tutor-items-center tutor-justify-between">
+		<div class="tutor-flex tutor-items-center">
+			<?php
+			DropdownFilter::make()
+				->options( $dropdown_options )
+				->query_param( 'data' )
 				->variant( Variant::LINK )
+				->size( Size::X_SMALL )
+				->popover_size( Size::SMALL )
+				->base_url( $withdrawals_base_url )
 				->render();
-		}
-
-		DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
-		Sorting::make()->order( $order_filter )->base_url( $withdrawals_base_url )->render();
-		?>
+			?>
+		</div>
+		<div class="tutor-withdrawal-history-filters-sort-mobile tutor-flex tutor-items-center">
+			<?php
+			Sorting::make()->order( $order_filter )->base_url( $withdrawals_base_url )->render();
+			?>
+		</div>
+	</div>
+	<div class="tutor-withdrawal-history-filters-row tutor-withdrawal-history-filters-row--bottom tutor-flex tutor-items-center tutor-justify-between">
+		<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-justify-between tutor-withdrawal-history-filters-right-group">
+			<?php
+			DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
+			$query_params = array( 'data', 'order', 'start_date', 'end_date' );
+			if ( Input::has_any( $query_params, Input::GET_REQUEST ) ) {
+				Button::make()
+					->tag( 'a' )
+					->attr( 'href', Dashboard::get_account_page_url( 'withdrawals' ) )
+					->attr( 'class', 'tutor-text-brand' )
+					->label( __( 'Clear all', 'tutor' ) )
+					->variant( Variant::LINK )
+					->render();
+			}
+			?>
+			<div class="tutor-withdrawal-history-filters-sort-desktop">
+				<?php
+				Sorting::make()->order( $order_filter )->base_url( $withdrawals_base_url )->render();
+				?>
+			</div>
+		</div>
 	</div>
 </div>
 
