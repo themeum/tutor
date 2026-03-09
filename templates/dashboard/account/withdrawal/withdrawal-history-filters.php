@@ -34,11 +34,8 @@ $dropdown_options = array_map(
 	$status_filter_options
 );
 
-// Build current page URL so dropdown and sort links preserve other filter params (cumulative filtering).
-$withdrawals_base_url = '';
-if ( ! empty( $_SERVER['HTTP_HOST'] ) && isset( $_SERVER['REQUEST_URI'] ) ) {
-	$withdrawals_base_url = esc_url_raw( ( is_ssl() ? 'https://' : 'http://' ) . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) . wp_unslash( $_SERVER['REQUEST_URI'] ) );
-}
+// Use Tutor's current URL so dropdown and sort links preserve other filter params (cumulative filtering).
+$withdrawals_base_url = tutor()->current_url;
 ?>
 <div class="tutor-withdrawal-history-filters">
 	<div class="tutor-withdrawal-history-filters-row tutor-withdrawal-history-filters-row--top tutor-flex tutor-items-center tutor-justify-between">
