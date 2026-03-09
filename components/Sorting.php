@@ -14,6 +14,8 @@
 namespace Tutor\Components;
 
 use Tutor\Helpers\QueryHelper;
+use Tutor\Components\Constants\Positions;
+use Tutor\Components\Popover;
 use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
@@ -168,6 +170,8 @@ class Sorting extends BaseComponent {
 			'ASC'  => $this->label_asc,
 		);
 
+		$origin = Popover::TRANSFORM_ORIGIN_MAP[ Positions::BOTTOM_END ] ?? 'right.top';
+
 		ob_start();
 		?>
 		<div
@@ -192,6 +196,7 @@ class Sorting extends BaseComponent {
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-transition.<?php echo esc_attr( $origin ); ?>
 				@click.outside="handleClickOutside()"
 				class="tutor-popover"
 			>

@@ -324,7 +324,7 @@ class Avatar extends BaseComponent {
 		}
 
 		$this->component_string = sprintf(
-			'<div %1$s><div class="tutor-ratio tutor-ratio-1x1">%2$s</div></div>',
+			'<div %1$s>%2$s</div>',
 			$attributes,
 			$content
 		);
