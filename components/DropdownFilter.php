@@ -12,6 +12,8 @@ namespace Tutor\Components;
 
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Components\Constants\Positions;
+use Tutor\Components\Popover;
 use TUTOR\Icon;
 use TUTOR\Input;
 
@@ -361,6 +363,8 @@ class DropdownFilter extends BaseComponent {
 			}
 		}
 
+		$origin = Popover::TRANSFORM_ORIGIN_MAP[ Positions::BOTTOM_START ] ?? 'left.top';
+
 		ob_start();
 		?>
 		<div
@@ -412,6 +416,7 @@ class DropdownFilter extends BaseComponent {
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-transition.<?php echo esc_attr( $origin ); ?>
 				@click.outside="handleClickOutside()"
 				class="tutor-popover"
 				style="width: <?php echo esc_attr( $this->get_popover_width( $this->popover_size ) ); ?>; max-width: unset;"
