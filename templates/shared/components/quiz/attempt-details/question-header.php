@@ -19,7 +19,6 @@ $status_label         = (string) ( $status_label ?? '' );
 $status_variant       = (string) ( $status_variant ?? '' );
 $question             = isset( $question ) && is_object( $question ) ? $question : null;
 $answer_status        = (string) ( $answer_status ?? '' );
-$is_manually_reviewed = ! empty( $is_manually_reviewed );
 $attempt_id           = (int) ( $attempt_id ?? 0 );
 $attempt_answer_id    = (int) ( $attempt_answer_id ?? 0 );
 $is_instructor_review = ! empty( $is_instructor_review );
@@ -60,13 +59,6 @@ $review_field_name    = (string) ( $review_field_name ?? '' );
 						->rounded()
 						->render();
 					?>
-				</div>
-			<?php endif; ?>
-
-			<?php if ( $is_manually_reviewed && ! $is_instructor_review ) : ?>
-				<div class="tutor-quiz-question-header-divider" aria-hidden="true"></div>
-				<div class="tutor-quiz-question-header-note">
-					<?php esc_html_e( 'Edited by Instructor', 'tutor' ); ?>
 				</div>
 			<?php endif; ?>
 

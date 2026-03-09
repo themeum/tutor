@@ -28,17 +28,18 @@ $student              = $student_id > 0 ? get_userdata( $student_id ) : null;
 $student_name         = $student ? $student->display_name : '';
 $student_profile_url  = $student_id > 0 ? tutor_utils()->profile_url( $student_id, false ) : '';
 
-$attempt_info        = maybe_unserialize( $attempt_data->attempt_info );
-$passing_grade       = is_array( $attempt_info ) ? (int) ( $attempt_info['passing_grade'] ?? 0 ) : 0;
-$allowed_attempts    = is_array( $attempt_info ) ? (int) ( $attempt_info['attempts_allowed'] ?? 0 ) : 0;
-$feedback_mode       = is_array( $attempt_info ) ? (string) ( $attempt_info['feedback_mode'] ?? '' ) : '';
-$instructor_feedback = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor_feedback'] ?? '' ) : '';
-$total_marks         = (float) $attempt_data->total_marks;
-$earned_marks        = (float) $attempt_data->earned_marks;
-$pass_marks          = ( $total_marks * $passing_grade ) / 100;
-$earned_percentage   = (float) QuizModel::calculate_attempt_earned_percentage( $attempt_data );
-$attempt_result      = QuizModel::get_attempt_result( $attempt_id );
-$attempted_at_label  = date_i18n( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) );
+$attempt_info         = maybe_unserialize( $attempt_data->attempt_info );
+$passing_grade        = is_array( $attempt_info ) ? (int) ( $attempt_info['passing_grade'] ?? 0 ) : 0;
+$allowed_attempts     = is_array( $attempt_info ) ? (int) ( $attempt_info['attempts_allowed'] ?? 0 ) : 0;
+$feedback_mode        = is_array( $attempt_info ) ? (string) ( $attempt_info['feedback_mode'] ?? '' ) : '';
+$instructor_feedback  = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor_feedback'] ?? '' ) : '';
+$total_marks          = (float) $attempt_data->total_marks;
+$earned_marks         = (float) $attempt_data->earned_marks;
+$pass_marks           = ( $total_marks * $passing_grade ) / 100;
+$earned_percentage    = (float) QuizModel::calculate_attempt_earned_percentage( $attempt_data );
+$attempt_result       = QuizModel::get_attempt_result( $attempt_id );
+$attempted_at_label   = date_i18n( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) );
+$is_manually_reviewed = ! empty( $attempt_data->is_manually_reviewed );
 
 $timing                 = QuizModel::get_quiz_attempt_timing( $attempt_data );
 $attempt_duration       = $timing['attempt_duration'] ?? '';
@@ -270,6 +271,10 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 				>
 					<?php echo esc_html( $student_name ); ?>
 				</a>
+			</div>
+		<?php elseif ( ! $is_instructor_review && $is_manually_reviewed ) : ?>
+			<div class="tutor-quiz-result-footer-note">
+				<?php esc_html_e( 'Edited by Instructor', 'tutor' ); ?>
 			</div>
 		<?php endif; ?>
 	</div>
