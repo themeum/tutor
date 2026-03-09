@@ -226,34 +226,38 @@ if ( $is_pro_reports ) {
 }
 
 /**
- * -------------------------------
- * Course Completion Distribution
- * -------------------------------
+ * ---------------------------------------------
+ * Course Completion Distribution (For All Time)
+ * ---------------------------------------------
  */
-$distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
 
-$course_completion_data = array(
-	'enrolled'    => array(
-		'label' => esc_html__( 'Enrolled', 'tutor' ),
-		'value' => $distribution['enrolled'],
-	),
-	'completed'   => array(
-		'label' => esc_html__( 'Completed', 'tutor' ),
-		'value' => $distribution['completed'],
-	),
-	'in_progress' => array(
-		'label' => esc_html__( 'In Progress', 'tutor' ),
-		'value' => $distribution['inprogress'],
-	),
-	'inactive'    => array(
-		'label' => esc_html__( 'Inactive', 'tutor' ),
-		'value' => $distribution['inactive'],
-	),
-	'cancelled'   => array(
-		'label' => esc_html__( 'Cancelled', 'tutor' ),
-		'value' => $distribution['cancelled'],
-	),
-);
+if ( $is_all_time ) {
+	$distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
+
+	$course_completion_data = array(
+		'enrolled'    => array(
+			'label' => esc_html__( 'Enrolled', 'tutor' ),
+			'value' => $distribution['enrolled'],
+		),
+		'completed'   => array(
+			'label' => esc_html__( 'Completed', 'tutor' ),
+			'value' => $distribution['completed'],
+		),
+		'in_progress' => array(
+			'label' => esc_html__( 'In Progress', 'tutor' ),
+			'value' => $distribution['inprogress'],
+		),
+		'inactive'    => array(
+			'label' => esc_html__( 'Inactive', 'tutor' ),
+			'value' => $distribution['inactive'],
+		),
+		'cancelled'   => array(
+			'label' => esc_html__( 'Cancelled', 'tutor' ),
+			'value' => $distribution['cancelled'],
+		),
+	);
+}
+
 
 // @todo Will be added on later.
 // $leaderboard_data = array(
@@ -434,6 +438,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 		);
 	endif;
 	?>
+	<?php if ( $is_all_time ) : ?>
 	<div 
 		data-section-id="course_completion_and_leader" 
 		class="tutor-flex tutor-gap-6"
@@ -471,6 +476,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 			</div>
 		</div> -->
 	</div>
+	<?php endif; ?>
 
 	<!-- Top Performing Courses -->
 	<?php if ( ! empty( $top_performing_courses ) ) : ?>
