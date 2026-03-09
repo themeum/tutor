@@ -43,7 +43,7 @@ $total_announcements = $the_query->found_posts;
 		<span><?php tutor_utils()->render_svg_icon( Icon::ANNOUNCEMENT, 20, 20 ); ?></span>
 		<span><?php esc_html_e( 'Announcements', 'tutor-pro' ); ?></span>
 	</h4>
-	<div class="tutor-course-announcements tutor-mt-4 tutor-pt-4 tutor-pb-6">
+	<div class="tutor-course-announcements">
 		<?php if ( empty( $announcements ) ) : ?>
 			<?php EmptyState::make()->title( __( 'No Announcements Found!', 'tutor' ) )->render(); ?>
 		<?php else : ?>
@@ -87,14 +87,12 @@ $total_announcements = $the_query->found_posts;
 		<?php endif; ?>
 
 		<?php
-		if ( $total_announcements > $limit ) :
-			Pagination::make()
-				->current( $current_page )
-				->total( $total_announcements )
-				->limit( $limit )
-				->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-5 tutor-sm-border-t' )
-				->render();
-		endif;
+		Pagination::make()
+			->current( $current_page )
+			->total( $total_announcements )
+			->limit( $limit )
+			->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-5 tutor-sm-border-t' )
+			->render();
 		?>
 	</div>
 </div>

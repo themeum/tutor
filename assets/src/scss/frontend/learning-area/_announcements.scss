@@ -1,18 +1,13 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
 
 .tutor-course-announcements {
-    background-color: var(--tutor-surface-l1);
-    border: 1px solid var(--tutor-border-idle);
-    
-    border-radius: 8px;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    -ms-border-radius: 8px;
-    -o-border-radius: 8px;
-
+    @include tutor-card-base;
+    @include tutor-card-radius;
     .tutor-announcement-item {
-        padding: 16px;
+        padding: $tutor-spacing-6;
         &:not(:last-of-type) {
-            border-bottom: 1px solid var(--tutor-border-idle);  
+            border-bottom: 1px solid $tutor-border-idle;  
         }
     }
 }
