@@ -39,15 +39,15 @@ $start_date = Input::get( 'start_date', '' );
 $end_date   = Input::get( 'end_date', '' );
 
 $args = array(
-	's'              => sanitize_text_field( $search_filter ),
+	's'              => $search_filter,
 	'posts_per_page' => sanitize_text_field( $limit ),
-	'paged'          => sanitize_text_field( $current_page ),
+	'paged'          => $current_page,
 	'orderBy'        => 'ID',
 	'order'          => sanitize_text_field( $order_filter ),
 );
 
 if ( $course_id ) {
-	$args['post_parent'] = sanitize_text_field( $course_id );
+	$args['post_parent'] = $course_id;
 }
 
 if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
