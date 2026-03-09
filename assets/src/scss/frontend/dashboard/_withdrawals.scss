@@ -11,6 +11,24 @@
 		min-width: 0;
 	}
 
+	.tutor-withdrawal-history-filters-mobile-right {
+		@include tutor-breakpoint-up(md) {
+			display: none !important;
+		}
+	}
+
+	.tutor-withdrawal-history-filters-calendar-mobile {
+		@include tutor-breakpoint-up(md) {
+			display: none !important;
+		}
+	}
+
+	.tutor-withdrawal-history-filters-calendar-desktop {
+		@include tutor-breakpoint-down(md) {
+			display: none !important;
+		}
+	}
+
 	.tutor-withdrawal-history-filters-sort-mobile {
 		@include tutor-breakpoint-up(md) {
 			display: none !important;
@@ -28,6 +46,7 @@
 	.tutor-withdrawal-history-filters-right-group {
 		@include tutor-breakpoint-down(md) {
 			width: 100%;
+			justify-content: flex-end;
 		}
 	}
 
@@ -208,8 +227,42 @@
 		}
 	}
 
+	.tutor-billing-card {
+		min-width: 0;
+		align-items: flex-start;
+	}
+
 	.tutor-billing-card-left {
 		gap: $tutor-spacing-4;
+		min-width: 0;
+
+		// Keep badge text in a single line; let adjacent text wrap instead.
+		.tutor-badge {
+			flex-shrink: 0;
+			white-space: nowrap;
+		}
+
+		// Allow long text (e.g. masked PayPal email) to wrap instead of overflowing.
+		.tutor-flex:first-child {
+			min-width: 0;
+
+			// Make the badge wrapper a flex item so shrink / nowrap behave correctly.
+			> div:first-child {
+				display: flex;
+				align-items: baseline;
+				flex-shrink: 0;
+			}
+
+			> div:last-child {
+				min-width: 0;
+				word-break: break-word;
+				overflow-wrap: break-word;
+			}
+		}
+	}
+
+	.tutor-billing-card-right {
+		flex-shrink: 0;
 	}
 }
 
