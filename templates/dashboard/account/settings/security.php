@@ -20,6 +20,7 @@ use Tutor\Components\Constants\InputType;
 
 $user    = wp_get_current_user();
 $form_id = 'tutor-reset-password-form';
+
 ?>
 
 <section class="tutor-flex tutor-flex-column tutor-gap-8">
@@ -34,23 +35,32 @@ $form_id = 'tutor-reset-password-form';
 			})'
 		>
 			<?php
-				InputField::make()
-					->type( InputType::EMAIL )
-					->label( __( 'Account Email', 'tutor' ) )
-					->name( 'account_email' )
-					->id( 'account_email' )
-					->placeholder( __( 'Enter Your Email', 'tutor' ) )
-					->disabled()
-					->attr( 'x-bind', "register('account_email', { required: true })" )
-					->render();
+			echo '<div class="tutor-flex tutor-items-end tutor-gap-3">';
+			echo '<div class="tutor-flex-1">';
 
-				Button::make()
-					->label( __( 'Reset Password', 'tutor' ) )
-					->variant( Variant::SECONDARY )
-					->size( Size::SMALL )
-					->icon( Icon::KEY )
-					->attr( '@click', "TutorCore.modal.showModal('reset-password-modal')" )
-					->render();
+			InputField::make()
+				->type( InputType::EMAIL )
+				->label( __( 'Account Email', 'tutor' ) )
+				->name( 'account_email' )
+				->id( 'account_email' )
+				->placeholder( __( 'Enter Your Email', 'tutor' ) )
+				->disabled()
+				->attr( 'x-bind', "register('account_email', { required: true })" )
+				->render();
+
+			echo '</div>';
+
+			do_action( 'tutor_after_account_email_field' );
+
+			echo '</div>';
+
+			Button::make()
+				->label( __( 'Reset Password', 'tutor' ) )
+				->variant( Variant::SECONDARY )
+				->size( Size::SMALL )
+				->icon( Icon::KEY )
+				->attr( '@click', "TutorCore.modal.showModal('reset-password-modal')" )
+				->render();
 			?>
 		</div>
 	</div>
