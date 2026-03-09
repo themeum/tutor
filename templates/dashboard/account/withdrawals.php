@@ -134,6 +134,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 						Tooltip::make()
 							->content( __( 'Total amount requested but not yet processed.', 'tutor' ) )
 							->placement( 'top' )
+							->arrow( 'center' )
 							->trigger_element( tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ) )
 							->render();
 						?>
@@ -148,11 +149,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 
 		<div class="tutor-withdrawal-preference-msg-wrap tutor-mt-4 tutor-text-tiny tutor-flex tutor-items-center tutor-gap-3">
 			<?php
-			Tooltip::make()
-				->content( __( 'The preferred payment method', 'tutor' ) )
-				->placement( 'top' )
-				->trigger_element( tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ) )
-				->render();
+			tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) );
 			?>
 			<span class="tutor-withdrawal-preference-msg">
 				<?php
@@ -234,6 +231,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 										Tooltip::make()
 											->content( $tooltip_content )
 											->placement( 'top' )
+											->arrow( 'center' )
 											->trigger_element( '<span class="tutor-icon-secondary">' . tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON ) . '</span>' )
 											->render();
 									}

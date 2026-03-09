@@ -48,7 +48,7 @@ InputField::make()
 	->name( 'payment_method' )
 	->label( __( 'Selected Payment Method', 'tutor' ) )
 	->value( $withdraw_method_name )
-	->attr( 'readonly', true )
+	->attr( 'disabled', true )
 	->attr( 'class', 'tutor-mb-7' )
 	->render();
 
