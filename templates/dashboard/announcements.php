@@ -109,17 +109,18 @@ $create_modal_id = 'tutor-announcement-form-modal';
 				->render();
 			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
-				<div class="tutor-quiz-attempts-filter-item">
-					<?php
-						DateFilter::make()
-							->type( DateFilter::TYPE_SINGLE )
-							->placement( Positions::BOTTOM_END )
-							->trigger_size( Size::X_SMALL )
-							->icon_size( 16 )
-							->render();
-					?>
-				</div>
-				<?php Sorting::make()->order( $order_filter )->render(); ?>
+				<?php
+					DateFilter::make()
+						->type( DateFilter::TYPE_SINGLE )
+						->placement( Positions::BOTTOM_END )
+						->trigger_size( Size::X_SMALL )
+						->icon_size( 16 )
+						->render();
+
+					Sorting::make()
+						->order( $order_filter )
+						->render();
+				?>
 			</div>
 		</div>
 
