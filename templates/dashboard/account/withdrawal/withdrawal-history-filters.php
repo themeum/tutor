@@ -22,8 +22,7 @@ use TUTOR\Input;
 use Tutor\Models\WithdrawModel;
 
 $status_filter_options = WithdrawModel::get_status_filter_options();
-
-$dropdown_options = array_map(
+$dropdown_options      = array_map(
 	function ( $item ) {
 		return array(
 			'label' => $item['title'],
@@ -36,6 +35,9 @@ $dropdown_options = array_map(
 
 // Use Tutor's current URL so dropdown and sort links preserve other filter params (cumulative filtering).
 $withdrawals_base_url = tutor()->current_url;
+
+// Reset pagination when changing filters or sorting.
+$withdrawals_base_url = remove_query_arg( 'current_page', $withdrawals_base_url );
 ?>
 <div class="tutor-withdrawal-history-filters">
 	<div class="tutor-withdrawal-history-filters-row tutor-withdrawal-history-filters-row--top tutor-flex tutor-items-center tutor-justify-between">

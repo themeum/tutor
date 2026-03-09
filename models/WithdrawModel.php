@@ -103,6 +103,13 @@ class WithdrawModel {
 			'user_id' => get_current_user_id(),
 		);
 
+		$start_date = Input::get( 'start_date' );
+		$end_date   = Input::get( 'end_date' );
+
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$where['DATE(created_at)'] = array( 'BETWEEN', array( $start_date, $end_date ) );
+		}
+
 		$tabs [] = array(
 			'key'   => '',
 			'title' => __( 'All', 'tutor' ),

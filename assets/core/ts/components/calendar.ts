@@ -95,11 +95,6 @@ const TUTOR_CALENDAR_QUERY_PARAMS = {
   date: 'date',
 } as const;
 
-/**
- * Query params that must be preserved when applying date filter (cumulative filtering).
- */
-const TUTOR_CALENDAR_PRESERVE_PARAMS = ['data', 'order', 'current_page'] as const;
-
 export function calendar({ options, hidePopover }: { options: Options; hidePopover?: () => void }) {
   return {
     $el: undefined as HTMLElement | HTMLInputElement | undefined,
@@ -512,7 +507,6 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
     },
 
     navigateWithParams(params: Record<string, string | null>) {
-      const currentUrl = new URL(window.location.href);
       const url = new URL(window.location.href);
 
       Object.entries(params).forEach(([key, value]) => {
@@ -520,14 +514,6 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
           url.searchParams.delete(key);
         } else {
           url.searchParams.set(key, value);
-        }
-      });
-
-      // Preserve other filter params so date range is applied on top of existing filters.
-      TUTOR_CALENDAR_PRESERVE_PARAMS.forEach((param) => {
-        const existing = currentUrl.searchParams.get(param);
-        if (existing) {
-          url.searchParams.set(param, existing);
         }
       });
 
@@ -583,7 +569,6 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
       if (!this.calendar) return;
 
       const dates = this.getPresetDates(preset);
-      const currentUrl = new URL(window.location.href);
       const url = new URL(window.location.href);
 
       if (dates.length) {
@@ -593,14 +578,6 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
         url.searchParams.delete(TUTOR_CALENDAR_QUERY_PARAMS.startDate);
         url.searchParams.delete(TUTOR_CALENDAR_QUERY_PARAMS.endDate);
       }
-
-      // Preserve other filter params for cumulative filtering.
-      TUTOR_CALENDAR_PRESERVE_PARAMS.forEach((param) => {
-        const existing = currentUrl.searchParams.get(param);
-        if (existing) {
-          url.searchParams.set(param, existing);
-        }
-      });
 
       window.location.href = url.toString();
     },
