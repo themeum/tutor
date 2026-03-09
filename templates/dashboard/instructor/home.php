@@ -330,7 +330,7 @@ if ( $is_all_time && $tutor_pro_enabled ) {
 // );
 
 // Recent Reviews.
-$review_args = array();
+$review_args = array( 'comment_approved' => 'approved' );
 if ( ! $is_all_time ) {
 	$review_args = $date_range( $start_date, $end_date );
 }

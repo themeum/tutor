@@ -4387,14 +4387,18 @@ class Utils {
 
 		$course_query       = '';
 		$date_query         = '';
-		$review_date_clause = '';
+		$extra_where_clause = '';
 
 		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
 			$from = Input::sanitize( $args['from'] );
 			$to   = Input::sanitize( $args['to'] );
 
 			$where['comment_date'] = array( 'BETWEEN', array( $from, $to ) );
-			$review_date_clause    = ' AND ' . QueryHelper::prepare_where_clause( $where );
+			$extra_where_clause    = ' AND ' . QueryHelper::prepare_where_clause( $where );
+		}
+
+		if ( ! empty( $args['comment_approved'] ) ) {
+			$extra_where_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'comment_approved' => $args['comment_approved'] ) );
 		}
 
 		if ( '' !== $course_id ) {
@@ -4427,7 +4431,7 @@ class Utils {
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
-						{$review_date_clause}
+						{$extra_where_clause}
 						{$course_query}
 						{$date_query}
 				",
@@ -4461,7 +4465,7 @@ class Utils {
 					WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
-						{$review_date_clause}
+						{$extra_where_clause}
 						{$course_query}
 						{$date_query}
 					ORDER BY {$order_by} DESC
