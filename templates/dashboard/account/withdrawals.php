@@ -41,7 +41,7 @@ $filters = array(
 	'order'  => QueryHelper::get_valid_sort_order( $order_filter ),
 );
 
-if ( ! empty( $selected_filter ) ) {
+if ( ! empty( $selected_filter ) && 'all' !== $selected_filter ) {
 	$filters['status'] = $selected_filter;
 }
 

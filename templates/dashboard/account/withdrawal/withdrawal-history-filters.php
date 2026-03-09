@@ -33,6 +33,12 @@ $dropdown_options = array_map(
 	},
 	$status_filter_options
 );
+
+// Build current page URL so dropdown and sort links preserve other filter params (cumulative filtering).
+$withdrawals_base_url = '';
+if ( ! empty( $_SERVER['HTTP_HOST'] ) && isset( $_SERVER['REQUEST_URI'] ) ) {
+	$withdrawals_base_url = esc_url_raw( ( is_ssl() ? 'https://' : 'http://' ) . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) . wp_unslash( $_SERVER['REQUEST_URI'] ) );
+}
 ?>
 <div class="tutor-flex tutor-items-center">
 <?php
@@ -42,6 +48,7 @@ DropdownFilter::make()
 	->variant( Variant::LINK )
 	->size( Size::X_SMALL )
 	->popover_size( Size::SMALL )
+	->base_url( $withdrawals_base_url )
 	->render();
 ?>
 </div>
@@ -60,7 +67,7 @@ DropdownFilter::make()
 		}
 
 		DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
-		Sorting::make()->order( $order_filter )->render();
+		Sorting::make()->order( $order_filter )->base_url( $withdrawals_base_url )->render();
 		?>
 	</div>
 </div>
