@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use stdClass;
 use TUTOR\Icon;
 use TUTOR\BaseController;
 use Tutor\Helpers\HttpHelper;
@@ -253,5 +254,46 @@ class BillingController extends BaseController {
 		}
 
 		return ValidationHelper::validate( $validation_rules, $data );
+	}
+
+	/**
+	 * Get country and state options for billing information.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return object An object containing country and state options.
+	 */
+	public static function get_country_state_options() {
+		$countries       = tutor_get_country_list();
+		$country_options = array();
+		$state_mapping   = array();
+
+		foreach ( $countries as $country ) {
+			array_push(
+				$country_options,
+				array(
+					'label' => $country['name'],
+					'value' => $country['name'],
+				)
+			);
+
+			if ( ! empty( $country['states'] ) ) {
+				$state_mapping[ $country['name'] ] = array_map(
+					function ( $state ) {
+						return array(
+							'label' => $state['name'],
+							'value' => $state['name'],
+						);
+					},
+					$country['states']
+				);
+			}
+		}
+
+		$obj                  = new stdClass();
+		$obj->country_options = $country_options;
+		$obj->state_options   = $state_mapping;
+
+		return $obj;
 	}
 }

@@ -15,31 +15,9 @@ use Tutor\Ecommerce\BillingController;
 $billing_controller = new BillingController( false );
 $billing_info       = $billing_controller->get_billing_info();
 
-$countries       = tutor_get_country_list();
-$country_options = array();
-$state_mapping   = array();
-
-foreach ( $countries as $country ) {
-	array_push(
-		$country_options,
-		array(
-			'label' => $country['name'],
-			'value' => $country['name'],
-		)
-	);
-
-	if ( ! empty( $country['states'] ) ) {
-		$state_mapping[ $country['name'] ] = array_map(
-			function ( $state ) {
-				return array(
-					'label' => $state['name'],
-					'value' => $state['name'],
-				);
-			},
-			$country['states']
-		);
-	}
-}
+$country_state_options = $billing_controller->get_country_state_options();
+$country_options       = $country_state_options->country_options;
+$state_mapping         = $country_state_options->state_options;
 
 $billing_country = $billing_info->billing_country ?? tutor_utils()->input_old( 'billing_country', '' );
 $initial_states  = $state_mapping[ $billing_country ] ?? array();
