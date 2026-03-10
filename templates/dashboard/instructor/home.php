@@ -20,7 +20,7 @@ use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 
-$sortable_sections = array(
+$default_sections = array(
 	array(
 		'id'        => 'current_stats',
 		'label'     => esc_html__( 'Current Stats', 'tutor' ),
@@ -58,6 +58,12 @@ $sortable_sections = array(
 		'order'     => 6,
 	),
 );
+
+//$sortable_sections = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', true );
+
+//if ( ! $sortable_sections ) {
+	$sortable_sections = $default_sections;
+//}
 
 $sortable_sections_defaults = array_reduce(
 	$sortable_sections,
