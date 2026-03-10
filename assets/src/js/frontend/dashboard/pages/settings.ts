@@ -311,6 +311,7 @@ const settings = () => {
 
       await this.resetPasswordMutation?.mutate(data);
       form.reset(formId, data as unknown as Record<string, unknown>);
+      window.location.reload();
     },
   };
 };

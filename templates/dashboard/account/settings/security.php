@@ -70,6 +70,8 @@ $update_button = Button::make()
 	->size( Size::SMALL )
 	->attr( 'form', $form_id )
 	->attr( 'type', 'submit' )
+	->attr( ':class', "{ 'tutor-btn-loading': resetPasswordMutation?.isPending }" )
+	->attr( ':disabled', 'resetPasswordMutation?.isPending' )
 	->get();
 
 $modal_footer = sprintf(
