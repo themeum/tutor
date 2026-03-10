@@ -324,8 +324,7 @@ $tutor-quiz-content-bottom-offset: calc(
     }
   }
 
-  &-question-indicator,
-  &-attempt-progress {
+  &-question-indicator{
     @include tutor-typography('small');
 
     strong {
