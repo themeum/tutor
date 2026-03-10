@@ -32,7 +32,7 @@ class ComponentHelper {
 	 *
 	 * @return void
 	 */
-	public static function render_order_status_badge( $status ) : void {
+	public static function render_status_badge( $status ) : void {
 		$badge_class = '';
 		switch ( $status ) {
 			case 'processing':
@@ -42,9 +42,11 @@ class ComponentHelper {
 				break;
 			case 'refunded':
 			case 'cancelled':
+			case 'rejected':
 				$badge_class = 'error';
 				break;
 			case 'completed':
+			case 'approved':
 				$badge_class = 'success';
 				break;
 		}
