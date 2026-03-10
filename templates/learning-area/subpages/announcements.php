@@ -41,7 +41,7 @@ $total_announcements = $the_query->found_posts;
 <div class="tutor-mt-7">
 	<h4 class="tutor-h4 tutor-mb-4 tutor-sm-hidden tutor-flex tutor-items-center tutor-gap-1">
 		<span><?php tutor_utils()->render_svg_icon( Icon::ANNOUNCEMENT, 20, 20 ); ?></span>
-		<span><?php esc_html_e( 'Announcements', 'tutor-pro' ); ?></span>
+		<span><?php esc_html_e( 'Announcements', 'tutor' ); ?></span>
 	</h4>
 	<div class="tutor-course-announcements">
 		<?php if ( empty( $announcements ) ) : ?>
