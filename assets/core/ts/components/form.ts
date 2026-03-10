@@ -69,8 +69,8 @@ export interface FormControlMethods {
   setError(name: string, error: FieldError): void;
   reset(values?: Record<string, unknown>): void;
   handleSubmit(
-    onValid: (data: Record<string, unknown>) => void,
-    onInvalid?: (errors: Record<string, FieldError>) => void,
+    onValid: (data: Record<string, unknown>) => void | Promise<void>,
+    onInvalid?: (errors: Record<string, FieldError>) => void | Promise<void>,
   ): (event: Event) => void;
   getFormState(): FormState;
   isFieldVisible(element: HTMLElement): boolean;
@@ -698,9 +698,9 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
           const isValid = await this.validateAllFields();
 
           if (isValid) {
-            onValid({ ...this.values });
+            await onValid({ ...this.values });
           } else {
-            onInvalid?.({ ...this.errors });
+            await onInvalid?.({ ...this.errors });
 
             if (this.config.shouldFocusError) {
               this.focusFirstError();

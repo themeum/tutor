@@ -91,6 +91,9 @@ declare global {
       course_list_page_url: string;
       course_post_type: string;
       local: string;
+      tutor_pn_vapid_key: string;
+      tutor_pn_client_id: string;
+      tutor_pn_subscription_saved: string;
       coupon_main_content_locales: LocaleData;
       course_builder_basic_locales: LocaleData;
       course_builder_curriculum_locales: LocaleData;
