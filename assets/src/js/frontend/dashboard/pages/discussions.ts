@@ -440,13 +440,10 @@ const discussionsPage = () => {
       const card = (el?.closest('.tutor-discussion-card') ?? el) as HTMLElement | null;
       if (!card) return;
 
-      card.style.outline = '2px solid var(--tutor-color-primary, #3b82f6)';
-      card.style.outlineOffset = '-2px';
-      card.style.borderRadius = 'inherit';
+      card.style.boxShadow = '0 0 0 2px var(--tutor-text-brand-secondary)';
 
       setTimeout(() => {
-        card.style.outline = '';
-        card.style.outlineOffset = '';
+        card.style.boxShadow = '';
       }, 300);
     },
 

@@ -14,6 +14,7 @@ use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
+use Tutor\Components\Constants\Variant;
 use Tutor\Helpers\UrlHelper;
 
 global $tutor_course_id;
@@ -61,11 +62,12 @@ $single_url = UrlHelper::add_query_params(
 				</div>
 			</div>
 			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="<?php echo esc_attr( 'tutor-qna-text-' . (int) $question_id ); ?>"><?php echo wp_kses_post( $content ); ?></a>
-			<div class="tutor-flex tutor-items-center tutor-justify-between">
+			<div class="tutor-flex tutor-items-center tutor-justify-between tutor-sm-mt-4">
 				<div class="tutor-discussion-card-meta">
 					<?php
 					Button::make()
 						->label( __( 'Reply', 'tutor' ) )
+						->variant( Variant::GHOST )
 						->attr( '@click', 'toggleReply(' . (int) $question_id . ')' )
 						->attr( 'class', 'tutor-discussion-card-meta-reply-button' )
 						->attr( 'type', 'button' )
@@ -74,7 +76,7 @@ $single_url = UrlHelper::add_query_params(
 					?>
 					<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-flex tutor-items-center tutor-gap-2">
 						<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 
-						<span class="tutor-discussion-card-reply-count"><?php echo esc_html( $question->answer_count ); ?></span>
+						<span class="tutor-discussion-card-reply-count tutor-text-subdued"><?php echo esc_html( $question->answer_count ); ?></span>
 					</a>
 
 					<?php if ( $last_reply ) : ?>
@@ -91,7 +93,7 @@ $single_url = UrlHelper::add_query_params(
 				</div>
 			</div>
 		</div>
-		<div class="tutor-discussion-card-actions">
+		<div class="tutor-discussion-card-actions" x-show="replyingId !== <?php echo (int) $question_id; ?>">
 			<?php
 			Button::make()
 				->label( __( 'Reply', 'tutor' ) )

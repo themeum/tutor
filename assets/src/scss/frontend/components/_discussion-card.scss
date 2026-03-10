@@ -114,8 +114,13 @@
     &-reply-button {
       @include tutor-button-reset();
       @include tutor-typography(tiny, medium, subdued);
-      padding: $tutor-spacing-none $tutor-spacing-2;
       margin-right: auto;
+      min-height: unset;
+      background: unset !important;
+      &:hover,
+      &:focus {
+        color: $tutor-text-brand !important;
+      }
 
       @include tutor-breakpoint-up(sm) {
         display: none;
