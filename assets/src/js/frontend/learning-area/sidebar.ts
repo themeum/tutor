@@ -4,36 +4,67 @@
  * @since 4.0.0
  */
 
-interface SidebarData {
-  pagesHeight: number;
-  resizing: boolean;
-  collapsed: boolean;
-  $refs: {
-    pagesList: HTMLElement;
-  } & Record<string, HTMLElement>;
-  $nextTick: (callback: () => void) => void;
-  init: () => void;
-  startResizing: (e: MouseEvent) => void;
-  togglePagesHeight: () => void;
+import { type MutationState } from '@Core/ts/services/Query';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
+
+interface ResetProgressPayload {
+  course_id: number;
 }
 
-export const sidebarComponent = (isCollapsed: boolean): SidebarData => {
+interface ResetProgressResponse {
+  success: boolean;
+  message?: string;
+  data?: {
+    redirect_to: string;
+  };
+}
+
+export const sidebarComponent = ({
+  isCollapsed,
+  courseId,
+  resetModalId,
+}: {
+  isCollapsed: boolean;
+  courseId: number;
+  resetModalId: string;
+}) => {
+  const { query, modal, toast } = window.TutorCore;
+
   return {
     pagesHeight: 0,
     resizing: false,
     collapsed: isCollapsed,
-    $refs: {} as SidebarData['$refs'],
-    $nextTick: {} as SidebarData['$nextTick'],
+    courseId: courseId,
+    resetModalId: resetModalId,
+    resetProgressMutation: null as MutationState<ResetProgressResponse, ResetProgressPayload> | null,
+    $refs: {} as Record<string, HTMLElement>,
+    $nextTick: {} as (callback: () => void) => void,
 
-    init(this: SidebarData) {
+    init() {
       this.$nextTick(() => {
         if (this.$refs.pagesList) {
           this.pagesHeight = this.$refs.pagesList.scrollHeight;
         }
       });
+
+      this.resetProgressMutation = query.useMutation(
+        (payload) => wpAjaxInstance.post(endpoints.RESET_COURSE_PROGRESS, payload),
+        {
+          onSuccess: (response) => {
+            if (response.success && response.data?.redirect_to) {
+              window.location.href = response.data.redirect_to;
+            }
+          },
+          onError: (error) => {
+            toast.error(convertToErrorMessage(error));
+          },
+        },
+      );
     },
 
-    startResizing(this: SidebarData, e: MouseEvent) {
+    startResizing(e: MouseEvent) {
       this.resizing = true;
       const startY = e.clientY;
       const currentHeight = this.$refs.pagesList?.offsetHeight || 0;
@@ -54,12 +85,20 @@ export const sidebarComponent = (isCollapsed: boolean): SidebarData => {
       window.addEventListener('mouseup', onMouseUp);
     },
 
-    togglePagesHeight(this: SidebarData) {
+    togglePagesHeight() {
       if (this.pagesHeight > 36) {
         this.pagesHeight = 36;
       } else if (this.$refs.pagesList) {
         this.pagesHeight = this.$refs.pagesList.scrollHeight;
       }
+    },
+
+    confirmReset() {
+      modal.showModal(this.resetModalId);
+    },
+
+    resetProgress() {
+      this.resetProgressMutation?.mutate({ course_id: this.courseId });
     },
   };
 };

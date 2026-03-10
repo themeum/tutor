@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Popover;
 use Tutor\Components\Progress;
 use Tutor\Components\Tooltip;
@@ -34,13 +35,14 @@ $is_preview       = get_post_meta( $tutor_current_post->ID, '_is_preview', true 
 $current_url      = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
 $course_completed = tutor_utils()->get_course_completed_percent( $tutor_course_id, $current_user_id );
 
-$menu_items  = Template::make_learning_area_sub_page_nav_items( $current_url );
-$active_menu = Input::get( 'subpage', '' );
+$menu_items     = Template::make_learning_area_sub_page_nav_items( $current_url );
+$active_menu    = Input::get( 'subpage', '' );
+$reset_modal_id = 'tutor-course-reset-progress-modal';
 
 ?>
 <div 
 	class="tutor-learning-sidebar" 
-	x-data="tutorLearningSidebar(<?php echo empty( $active_menu ) ? 'true' : 'false'; ?>)"
+	x-data="tutorLearningSidebar({ isCollapsed: <?php echo empty( $active_menu ) ? 'true' : 'false'; ?>, courseId: <?php echo (int) $tutor_course->ID; ?>, resetModalId: '<?php echo esc_attr( $reset_modal_id ); ?>' })"
 	:class="{ 'is-open': sidebarOpen }" 
 	@click.outside="sidebarOpen = false"
 >
@@ -61,9 +63,28 @@ $active_menu = Input::get( 'subpage', '' );
 					echo sprintf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $course_completed ) . '%</span>' );
 					?>
 				</div>
-				<button class="tutor-learning-progress-reset">
-					<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2, 20, 20 ); ?>
-				</button>
+				<div>
+					<?php
+					Button::make()
+						->variant( Variant::GHOST )
+						->size( Size::X_SMALL )
+						->icon( Icon::RELOAD_2, 'left', 16, 16, array( 'class' => 'tutor-icon-secondary' ) )
+						->attr( 'class', 'tutor-btn-icon' )
+						->attr( '@click', 'confirmReset()' )
+						->render();
+
+					ConfirmationModal::make()
+						->id( $reset_modal_id )
+						->title( __( 'Are Your Sure?', 'tutor' ) )
+						->message( __( 'This will permanently erase your quiz scores, completed lessons, and certificates for this course.', 'tutor' ) )
+						->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
+						->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
+						->icon( Icon::WARNING_COLORIZED )
+						->confirm_handler( 'resetProgress()' )
+						->mutation_state( 'resetProgressMutation' )
+						->render();
+					?>
+				</div>
 			</div>
 			<div class="tutor-progress-bar" data-tutor-animated="">
 				<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $course_completed ); ?>%;"></div>

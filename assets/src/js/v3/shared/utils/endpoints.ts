@@ -46,6 +46,7 @@ const endpoints = {
   GET_COURSE_DETAILS: 'tutor_course_details',
   UPDATE_COURSE: 'tutor_update_course',
   GET_COURSE_LIST: 'tutor_course_list',
+  RESET_COURSE_PROGRESS: 'tutor_reset_course_progress',
 
   // WOO COMMERCE PRODUCTS
   GET_WC_PRODUCTS: 'tutor_get_wc_products',
