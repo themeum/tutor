@@ -73,11 +73,6 @@
           color: $tutor-text-primary;
         }
       }
-
-      &-reset {
-        @include tutor-button-reset();
-        color: $tutor-icon-secondary;
-      }
     }
 
     .tutor-learning-nav {

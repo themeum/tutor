@@ -69,7 +69,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 						->variant( Variant::GHOST )
 						->size( Size::X_SMALL )
 						->icon( Icon::RELOAD_2, 'left', 16, 16, array( 'class' => 'tutor-icon-secondary' ) )
-						->attr( 'class', 'tutor-btn-icon' )
+						->icon_only()
 						->attr( '@click', 'confirmReset()' )
 						->render();
 
