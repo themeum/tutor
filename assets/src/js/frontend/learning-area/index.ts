@@ -32,6 +32,11 @@ const initializeLearningArea = () => {
   if (lessonContentWrapper) {
     initializeLesson();
   }
+
+  // Ensure all registered components are initialized with Alpine.
+  if (window.TutorComponentRegistry) {
+    window.TutorComponentRegistry.initWithAlpine(window.Alpine);
+  }
 };
 
 if (document.readyState === 'loading') {

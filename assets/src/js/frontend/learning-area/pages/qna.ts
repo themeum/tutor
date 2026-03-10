@@ -220,5 +220,4 @@ export const initializeQna = () => {
       component: qnaPage,
     },
   });
-  window.TutorComponentRegistry.initWithAlpine(window.Alpine);
 };
