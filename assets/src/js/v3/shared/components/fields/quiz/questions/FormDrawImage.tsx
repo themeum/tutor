@@ -1,12 +1,22 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import {
+  borderRadius,
+  Breakpoint,
+  colorTokens,
+  spacing,
+  fontFamily,
+  fontSize,
+  fontWeight,
+  lineHeight,
+  letterSpacing,
+} from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import useWPMedia from '@TutorShared/hooks/useWpMedia';
@@ -34,12 +44,11 @@ interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
       type: QuizValidationErrorType;
     } | null>
   >;
+  precisionControl?: React.ReactNode;
 }
 
-const FormDrawImage = ({ field }: FormDrawImageProps) => {
+const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
   const option = field.value;
-
-  const [isDrawModeActive, setIsDrawModeActive] = useState(false);
 
   const imageRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -51,56 +60,6 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
     },
     [field],
   );
-
-  /** Display-only: sync canvas size and draw saved mask when not in draw mode. */
-  const syncCanvasDisplay = useCallback((maskUrl?: string) => {
-    const img = imageRef.current;
-    const canvas = canvasRef.current;
-
-    if (!img || !canvas) {
-      return;
-    }
-
-    if (!img.complete) {
-      return;
-    }
-
-    const container = img.parentElement;
-    if (!container) {
-      return;
-    }
-
-    const rect = container.getBoundingClientRect();
-    const width = Math.round(rect.width);
-    const height = Math.round(rect.height);
-
-    if (!width || !height) {
-      return;
-    }
-
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.position = 'absolute';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      return;
-    }
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    if (maskUrl) {
-      const maskImg = new Image();
-      maskImg.onload = () => {
-        ctx.drawImage(maskImg, 0, 0, canvas.width, canvas.height);
-      };
-      maskImg.src = maskUrl;
-    }
-  }, []);
 
   const { openMediaLibrary, resetFiles } = useWPMedia({
     options: {
@@ -125,7 +84,6 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
           drawInstanceRef.current.destroy();
           drawInstanceRef.current = null;
         }
-        setIsDrawModeActive(false);
       }
     },
     initialFiles: option?.image_id
@@ -137,64 +95,9 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
       : null,
   });
 
-  /*
-   * Display-only canvas sync (when not in draw mode): we use three separate useEffects
-   * so each one handles a single concern and its own cleanup:
-   * 1) Sync immediately when deps change (image URL, mask, draw mode).
-   * 2) Sync when the <img> fires 'load' (e.g. after src change or first load).
-   * 3) Sync when the container is resized (ResizeObserver).
-   * React runs them in declaration order after commit; merging into one effect would
-   * mix three different triggers and cleanups (addEventListener, ResizeObserver) in one place.
-   */
   useEffect(() => {
-    if (isDrawModeActive) {
-      return;
-    }
-    syncCanvasDisplay(option?.answer_two_gap_match || undefined);
-  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match, syncCanvasDisplay]);
-
-  useEffect(() => {
-    if (isDrawModeActive) {
-      return;
-    }
-    const img = imageRef.current;
-    if (!img) {
-      return;
-    }
-    const handleLoad = () => {
-      syncCanvasDisplay(option?.answer_two_gap_match || undefined);
-    };
-    img.addEventListener('load', handleLoad);
-    return () => {
-      img.removeEventListener('load', handleLoad);
-    };
-  }, [isDrawModeActive, option?.answer_two_gap_match, syncCanvasDisplay]);
-
-  useEffect(() => {
-    if (isDrawModeActive) {
-      return;
-    }
-    const img = imageRef.current;
-    const canvas = canvasRef.current;
-    if (!img || !canvas) {
-      return;
-    }
-    const container = img.parentElement;
-    if (!container) {
-      return;
-    }
-    const resizeObserver = new ResizeObserver(() => {
-      syncCanvasDisplay(option?.answer_two_gap_match || undefined);
-    });
-    resizeObserver.observe(container);
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match, syncCanvasDisplay]);
-
-  // Wire to shared draw-on-image module when draw mode is active (Tutor Pro).
-  useEffect(() => {
-    if (!isDrawModeActive || !option?.image_url) {
+    const imageUrl = option?.image_url;
+    if (!imageUrl) {
       return;
     }
     const img = imageRef.current;
@@ -203,24 +106,34 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
     if (!img || !canvas || !api?.init) {
       return;
     }
+    // Only initialize once per mount; keep the same instance while the instructor is drawing.
     if (drawInstanceRef.current) {
-      drawInstanceRef.current.destroy();
-      drawInstanceRef.current = null;
+      return;
     }
     const brushSize = 1;
+    const currentOption: QuizQuestionOption | null = option ?? null;
     const instance = api.init({
       image: img,
       canvas,
       brushSize,
       strokeStyle: INSTRUCTOR_STROKE_STYLE,
-      initialMaskUrl: option.answer_two_gap_match || undefined,
+      initialMaskUrl: currentOption?.answer_two_gap_match || undefined,
+      onMaskChange: (maskValue: string) => {
+        if (!currentOption) {
+          return;
+        }
+        updateOption({
+          ...currentOption,
+          ...(calculateQuizDataStatus(currentOption._data_status, QuizDataStatus.UPDATE) && {
+            _data_status: calculateQuizDataStatus(currentOption._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
+          }),
+          answer_two_gap_match: maskValue,
+          is_saved: true,
+        });
+      },
     });
     drawInstanceRef.current = instance;
-    return () => {
-      instance.destroy();
-      drawInstanceRef.current = null;
-    };
-  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match]);
+  }, [option, updateOption]);
 
   // Cleanup shared instance on unmount.
   useEffect(() => {
@@ -235,35 +148,6 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
   if (!option) {
     return null;
   }
-
-  const handleSave = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      return;
-    }
-
-    const dataUrl = canvas.toDataURL('image/png');
-    const blank = document.createElement('canvas');
-    blank.width = canvas.width;
-    blank.height = canvas.height;
-    const isEmpty = dataUrl === blank.toDataURL();
-
-    const updated: QuizQuestionOption = {
-      ...option,
-      ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
-        _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
-      }),
-      answer_two_gap_match: isEmpty ? '' : dataUrl,
-      is_saved: true,
-    };
-    updateOption(updated);
-
-    if (drawInstanceRef.current) {
-      drawInstanceRef.current.destroy();
-      drawInstanceRef.current = null;
-    }
-    setIsDrawModeActive(false);
-  };
 
   const handleClear = () => {
     if (drawInstanceRef.current) {
@@ -286,11 +170,6 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
       is_saved: true,
     };
     updateOption(updated);
-    setIsDrawModeActive(false);
-  };
-
-  const handleDraw = () => {
-    setIsDrawModeActive(true);
   };
 
   const clearImage = () => {
@@ -298,8 +177,6 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
       drawInstanceRef.current.destroy();
       drawInstanceRef.current = null;
     }
-    setIsDrawModeActive(false);
-
     const updated: QuizQuestionOption = {
       ...option,
       ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
@@ -344,7 +221,7 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
         </div>
       </div>
 
-      {/* Section 2: Mark the correct area — single reference image + drawing canvas; Save / Clear / Draw buttons */}
+      {/* Section 2: Mark the correct area — single reference image + interactive drawing canvas */}
       <Show when={option?.image_url}>
         <div css={styles.card}>
           <div css={styles.answerHeader}>
@@ -354,6 +231,15 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
               </span>
               {__('Mark the correct area', __TUTOR_TEXT_DOMAIN__)}
             </span>
+            <Button
+              variant="tertiary"
+              size="small"
+              onClick={handleClear}
+              icon={<SVGIcon name="eraser" width={18} height={18} style={styles.clearIcon} />}
+              css={styles.clearButton}
+            >
+              {__('Clear', __TUTOR_TEXT_DOMAIN__)}
+            </Button>
           </div>
           <div css={styles.canvasInner}>
             <img
@@ -364,39 +250,14 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
             />
             <canvas
               ref={canvasRef}
-              css={[styles.canvas, isDrawModeActive ? styles.canvasDrawMode : styles.canvasIdleMode]}
+              css={[styles.canvas, styles.canvasDrawMode]}
               aria-label={__('Draw the correct area with the brush', __TUTOR_TEXT_DOMAIN__)}
             />
+            <div css={styles.drawBadge}>
+              <SVGIcon name="edit" width={18} height={18} aria-hidden />
+            </div>
           </div>
-          <div css={styles.actionsRow}>
-            <Button
-              variant="primary"
-              size="small"
-              onClick={handleSave}
-              icon={<SVGIcon name="save" width={20} height={20} />}
-            >
-              {__('Save', __TUTOR_TEXT_DOMAIN__)}
-            </Button>
-            <Button
-              variant="secondary"
-              size="small"
-              onClick={handleClear}
-              icon={<SVGIcon name="delete" width={20} height={20} />}
-            >
-              {__('Clear', __TUTOR_TEXT_DOMAIN__)}
-            </Button>
-            <Button
-              variant="tertiary"
-              size="small"
-              onClick={handleDraw}
-              icon={<SVGIcon name="edit" width={20} height={20} />}
-            >
-              {__('Draw', __TUTOR_TEXT_DOMAIN__)}
-            </Button>
-          </div>
-          <p css={styles.brushHint}>
-            {__('Use the brush to draw on the image, then click Save to store the answer zone.', __TUTOR_TEXT_DOMAIN__)}
-          </p>
+          {precisionControl && <div>{precisionControl}</div>}
           <Show when={option?.answer_two_gap_match}>
             <p css={styles.savedHint}>
               {__('Answer zone saved. Students will be graded against this area.', __TUTOR_TEXT_DOMAIN__)}
@@ -493,10 +354,50 @@ const styles = {
     pointer-events: auto;
     cursor: crosshair;
   `,
+  drawBadge: css`
+    position: absolute;
+    top: ${spacing[12]};
+    right: ${spacing[12]};
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: ${colorTokens.surface.tutor};
+    border: 1px solid ${colorTokens.stroke.border};
+    ${styleUtils.display.flex('row')};
+    align-items: center;
+    justify-content: center;
+    color: ${colorTokens.text.subdued};
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+  `,
   actionsRow: css`
     ${styleUtils.display.flex('row')};
     gap: ${spacing[12]};
     flex-wrap: wrap;
+  `,
+  clearButton: css`
+    width: 94px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    box-shadow: none;
+    padding: 4px 12px;
+    gap: 4px;
+    background: ${colorTokens.action.secondary.default};
+    color: ${colorTokens.text.brand};
+    font-family: ${fontFamily.sfProDisplay};
+    font-weight: ${fontWeight.medium};
+    font-size: ${fontSize[13]};
+    line-height: ${lineHeight[20]};
+    letter-spacing: ${letterSpacing.normal};
+    text-align: center;
+    &:hover {
+      background: ${colorTokens.action.secondary.hover};
+      border: none;
+      box-shadow: none;
+    }
+  `,
+  clearIcon: css`
+    color: ${colorTokens.text.brand};
   `,
   brushHint: css`
     ${typography.caption()};

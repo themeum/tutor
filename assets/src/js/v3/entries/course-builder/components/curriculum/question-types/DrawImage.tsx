@@ -5,8 +5,8 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormDrawImage from '@TutorShared/components/fields/quiz/questions/FormDrawImage';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import { spacing } from '@TutorShared/config/styles';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -78,37 +78,41 @@ const DrawImage = () => {
   return (
     <div css={styles.optionWrapper}>
       <Controller
-        control={form.control}
-        name={thresholdPath}
-        render={(controllerProps) => (
-          <FormSelectInput
-            {...controllerProps}
-            label={__('Required Coverage', 'tutor')}
-            options={thresholdOptions}
-            helpText={__('Minimum % of the instructor mask the student must cover to be marked correct.', 'tutor')}
-            onChange={(option) => {
-              controllerProps.field.onChange(option.value);
-              if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
-                form.setValue(
-                  `questions.${activeQuestionIndex}._data_status`,
-                  calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                );
-              }
-            }}
-          />
-        )}
-      />
-
-      <Controller
-        key={JSON.stringify(optionsFields[0])}
+        key={optionsFields[0]?.id}
         control={form.control}
         name={`questions.${activeQuestionIndex}.question_answers.0` as 'questions.0.question_answers.0'}
-        render={(controllerProps) => (
-          <FormDrawImage
-            {...controllerProps}
-            questionId={activeQuestionId}
-            validationError={validationError}
-            setValidationError={setValidationError}
+        render={(answerControllerProps) => (
+          <Controller
+            control={form.control}
+            name={thresholdPath}
+            render={(thresholdControllerProps) => (
+              <FormDrawImage
+                {...answerControllerProps}
+                questionId={activeQuestionId}
+                validationError={validationError}
+                setValidationError={setValidationError}
+                precisionControl={
+                  <FormSelectInput
+                    {...thresholdControllerProps}
+                    label={__('Precision Level', 'tutor')}
+                    options={thresholdOptions}
+                    helpText={__(
+                      'Minimum % of the instructor mask the student must cover to be marked correct.',
+                      'tutor',
+                    )}
+                    onChange={(option) => {
+                      thresholdControllerProps.field.onChange(option.value);
+                      if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+                        form.setValue(
+                          `questions.${activeQuestionIndex}._data_status`,
+                          calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                        );
+                      }
+                    }}
+                  />
+                }
+              />
+            )}
           />
         )}
       />
