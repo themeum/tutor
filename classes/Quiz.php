@@ -1688,21 +1688,4 @@ class Quiz {
 			)
 		);
 	}
-
-	/**
-	 * Show Correct Answers
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $attempt_status attempt status.
-	 *
-	 * @return bool
-	 */
-	public static function show_correct_answers( $attempt_status ) {
-		if ( QuizModel::ATTEMPT_STARTED === $attempt_status || QuizModel::ATTEMPT_TIMEOUT === $attempt_status ) {
-			return false;
-		}
-
-		return true;
-	}
 }
