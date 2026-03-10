@@ -207,7 +207,7 @@ const FormDrawImage = ({ field }: FormDrawImageProps) => {
       drawInstanceRef.current.destroy();
       drawInstanceRef.current = null;
     }
-    const brushSize = api.DEFAULT_BRUSH_SIZE ?? 15;
+    const brushSize = 1;
     const instance = api.init({
       image: img,
       canvas,

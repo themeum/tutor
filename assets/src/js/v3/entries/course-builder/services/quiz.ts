@@ -43,6 +43,7 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
     show_question_mark: '0' | '1';
     has_multiple_correct_answer?: '0' | '1';
     is_image_matching?: '0' | '1';
+    draw_image_threshold_percent?: number;
   };
 }
 
@@ -273,6 +274,9 @@ export const convertQuizFormDataToPayload = (
             }),
             ...(question.question_type === 'matching' && {
               is_image_matching: question.question_settings.is_image_matching ? '1' : '0',
+            }),
+            ...(question.question_type === 'draw_image' && {
+              draw_image_threshold_percent: Number(question.question_settings.draw_image_threshold_percent ?? 70),
             }),
           },
           question_answers: question.question_answers.map(
