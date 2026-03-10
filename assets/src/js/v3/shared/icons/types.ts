@@ -388,6 +388,7 @@ export const icons = [
   'visited',
   'wallet',
   'warning',
+  'warningColorized',
   'warningLine',
   'weightBox',
   'wifi',

@@ -52,14 +52,10 @@
   .tutor-learning-sidebar-curriculum {
     background-color: $tutor-surface-l1;
     border-radius: $tutor-radius-lg;
-
-    @include tutor-breakpoint-up(lg) {
-      max-height: calc(100vh - 344px);
-
-      .tutor-has-admin-bar & {
-        max-height: calc(100vh - 376px);
-      }
-    }
+    @include tutor-flex(column);
+    min-height: 0;
+    flex-grow: 1;
+    overflow: hidden;
 
     .tutor-learning-progress {
       @include tutor-flex(column);
@@ -77,22 +73,15 @@
           color: $tutor-text-primary;
         }
       }
-
-      &-reset {
-        @include tutor-button-reset();
-        color: $tutor-icon-secondary;
-      }
     }
 
     .tutor-learning-nav {
       @include tutor-flex(column);
       gap: $tutor-spacing-1;
       padding: $tutor-spacing-6 $tutor-spacing-4;
-
-      @include tutor-breakpoint-up(lg) {
-        max-height: calc(100% - 84px);
-        overflow-y: auto;
-      }
+      flex-grow: 1;
+      min-height: 0;
+      overflow-y: auto;
 
       &-topic {
         @include tutor-flex(column);
@@ -105,31 +94,44 @@
           padding-inline-start: $tutor-spacing-5;
           padding-inline-end: $tutor-spacing-3;
           cursor: pointer;
+          border-radius: $tutor-radius-md;
+          @include tutor-transition((color, background-color));
 
-          &-progress {
-            padding: $tutor-spacing-1;
-
-            &-inner {
-              height: 16px;
-              width: 16px;
-              border: 1px solid $tutor-border-hover;
-              border-radius: 100%;
-              background-color: $tutor-actions-gray-empty;
-            }
+          &:hover {
+            background-color: $tutor-tab-l3-active-hover;
+            color: $tutor-text-brand;
           }
 
           &-title {
-            @include tutor-typography(small, medium, subdued);
+            @include tutor-typography(small, medium, secondary);
+            @include tutor-text-truncate();
+          }
+
+          &-actions {
+            display: none;
+
+            @include tutor-breakpoint-down(lg) {
+              @include tutor-flex(row, center);
+              gap: $tutor-spacing-4;
+              margin-inline-start: auto;
+            }
           }
 
           &-arrow {
             @include tutor-flex-center();
-            margin-inline-start: auto;
             color: $tutor-icon-secondary;
             @include tutor-transition(transform);
 
             &.is-expanded {
               transform: rotate(180deg);
+            }
+          }
+
+          @include tutor-breakpoint-up(lg) {
+            &:hover .tutor-learning-nav-header-actions {
+              @include tutor-flex(row, center);
+              gap: $tutor-spacing-4;
+              margin-inline-start: auto;
             }
           }
         }
@@ -142,8 +144,6 @@
       }
 
       .tutor-learning-nav-body {
-        @include tutor-flex(column);
-        gap: $tutor-spacing-1;
         padding-inline-start: 30px;
         position: relative;
 
@@ -159,25 +159,28 @@
       }
 
       .tutor-learning-nav-item {
+        @include tutor-button-reset();
+        @include tutor-typography(small, medium, subdued);
+        @include tutor-flex(row, flex-start);
+        gap: $tutor-spacing-4;
+        padding: $tutor-spacing-4 $tutor-spacing-5;
+        border-radius: $tutor-radius-md;
+        @include tutor-transition((color, background-color));
         position: relative;
+        min-height: 40px;
+        opacity: 1;
 
-        a {
-          @include tutor-button-reset();
-          @include tutor-typography(small, medium, subdued);
-          @include tutor-flex(row, flex-start);
-          gap: $tutor-spacing-4;
-          padding: $tutor-spacing-4 $tutor-spacing-5;
-          min-height: 40px;
-          margin-top: $tutor-spacing-2;
-          svg {
-            margin-top: 3px;
-            color: $tutor-icon-subdued;
-          }
+        svg {
+          margin-top: $tutor-spacing-1;
+          flex-shrink: 0;
+          color: $tutor-icon-secondary;
         }
 
         &.active {
-          a {
-            color: $tutor-text-primary;
+          color: $tutor-text-primary;
+
+          svg {
+            color: $tutor-icon-idle;
           }
 
           &::before {
@@ -190,6 +193,24 @@
             left: -9px;
           }
         }
+
+        &:hover {
+          background-color: $tutor-tab-l3-active-hover;
+          color: $tutor-text-brand;
+
+          svg {
+            color: $tutor-icon-brand;
+          }
+        }
+
+        &.disabled {
+          pointer-events: none;
+          color: $tutor-text-subdued;
+
+          svg {
+            color: $tutor-icon-secondary;
+          }
+        }
       }
     }
   }
@@ -198,12 +219,115 @@
     background-color: $tutor-surface-l1;
     border-radius: $tutor-radius-lg;
     padding: $tutor-spacing-4;
-    height: 100%;
+    height: auto;
+    flex-shrink: 0;
     position: relative;
+
+    &.expanded {
+      margin-top: 26px;
+
+      @include tutor-breakpoint-down(lg) {
+        margin-top: 34px;
+      }
+    }
+
+    @include tutor-breakpoint-up(lg) {
+      margin-bottom: $tutor-spacing-11;
+    }
+
+    .tutor-sidebar-resizer {
+      position: absolute;
+      top: -14px;
+      left: 0;
+      right: 0;
+      height: 12px;
+      cursor: ns-resize;
+      @include tutor-flex-center();
+      z-index: $tutor-z-sidebar;
+
+      &::before {
+        content: '';
+        width: 68px;
+        height: 3px;
+        background-color: $tutor-surface-l2;
+        border-radius: $tutor-radius-5xl;
+        @include tutor-transition(background-color);
+      }
+
+      &:hover::before {
+        background-color: $tutor-surface-l2-hover;
+      }
+    }
+
+    &.expanded .tutor-sidebar-resizer {
+      top: -40px;
+    }
+
+    .tutor-sidebar-restore-dropdown {
+      @include tutor-flex(row, center, center);
+      position: absolute;
+      width: 100%;
+      left: 0;
+      bottom: 100%;
+
+      button {
+        @include tutor-button-reset();
+        @include tutor-flex(row, center, center);
+        background-color: $tutor-surface-l1;
+        color: $tutor-icon-secondary;
+        border-top-left-radius: $tutor-radius-sm;
+        border-top-right-radius: $tutor-radius-sm;
+        height: 26px;
+        width: 68px;
+        position: relative;
+
+        &::before {
+          content: '';
+          width: 8px;
+          height: 8px;
+          position: absolute;
+          bottom: 0;
+          left: -8px;
+          background: $tutor-surface-l1;
+
+          mask: radial-gradient(circle 8px at top left, transparent 8px, $tutor-surface-l1 8px);
+          -webkit-mask: radial-gradient(circle 8px at top left, transparent 8px, $tutor-surface-l1 8px);
+        }
+
+        &::after {
+          content: '';
+          width: 8px;
+          height: 8px;
+          position: absolute;
+          bottom: 0;
+          right: -8px;
+          background: $tutor-surface-l1;
+
+          mask: radial-gradient(circle 8px at top right, transparent 8px, $tutor-surface-l1 8px);
+          -webkit-mask: radial-gradient(circle 8px at top right, transparent 8px, $tutor-surface-l1 8px);
+        }
+
+        &:hover {
+          color: $tutor-icon-idle;
+        }
+      }
+    }
 
     .tutor-learning-pages {
       @include tutor-flex(column);
       gap: $tutor-spacing-1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      @include tutor-transition(height, 0.3s);
+
+      &.is-resizing {
+        transition: none !important;
+      }
+
+      .tutor-popover {
+        max-width: none;
+        width: 288px;
+      }
 
       &-item {
         @include tutor-button-reset();
@@ -213,6 +337,12 @@
         padding: $tutor-spacing-4 $tutor-spacing-5;
         border-radius: $tutor-radius-md;
         @include tutor-transition(background-color);
+        width: 100%;
+
+        svg {
+          color: $tutor-icon-idle;
+          @include tutor-transition(transform, 0.3s);
+        }
 
         &:hover {
           background-color: $tutor-tab-sidebar-l2-hover;
@@ -222,6 +352,12 @@
           background-color: $tutor-tab-sidebar-l2-active;
           color: $tutor-text-brand;
         }
+      }
+    }
+
+    .tutor-sidebar-restore-dropdown button {
+      &.is-minimized svg {
+        transform: rotate(180deg);
       }
     }
   }
