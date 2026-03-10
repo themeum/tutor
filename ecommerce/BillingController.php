@@ -296,4 +296,30 @@ class BillingController extends BaseController {
 
 		return $obj;
 	}
+
+	/**
+	 * Get default values for billing form.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array An array containing default values for billing information.
+	 */
+	public static function get_default_values() {
+		$billing_info    = ( new BillingController() )->get_billing_info();
+		$billing_country = $billing_info->billing_country ?? tutor_utils()->input_old( 'billing_country', '' );
+
+		$default_values = array(
+			'billing_first_name' => $billing_info->billing_first_name ?? '',
+			'billing_last_name'  => $billing_info->billing_last_name ?? '',
+			'billing_email'      => $billing_info->billing_email ?? '',
+			'billing_country'    => $billing_country,
+			'billing_state'      => $billing_info->billing_state ?? '',
+			'billing_city'       => $billing_info->billing_city ?? '',
+			'billing_phone'      => $billing_info->billing_phone ?? '',
+			'billing_zip_code'   => $billing_info->billing_zip_code ?? '',
+			'billing_address'    => $billing_info->billing_address ?? '',
+		);
+
+		return $default_values;
+	}
 }

@@ -12,27 +12,14 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Ecommerce\BillingController;
 
-$billing_controller = new BillingController( false );
-$billing_info       = $billing_controller->get_billing_info();
+$default_values        = BillingController::get_default_values();
+$country_state_options = BillingController::get_country_state_options();
 
-$country_state_options = $billing_controller->get_country_state_options();
-$country_options       = $country_state_options->country_options;
-$state_mapping         = $country_state_options->state_options;
+$country_options = $country_state_options->country_options;
+$state_mapping   = $country_state_options->state_options;
 
-$billing_country = $billing_info->billing_country ?? tutor_utils()->input_old( 'billing_country', '' );
+$billing_country = $default_values['billing_country'] ?? '';
 $initial_states  = $state_mapping[ $billing_country ] ?? array();
-
-$default_values = array(
-	'billing_first_name' => $billing_info->billing_first_name ?? '',
-	'billing_last_name'  => $billing_info->billing_last_name ?? '',
-	'billing_email'      => $billing_info->billing_email ?? '',
-	'billing_country'    => $billing_country,
-	'billing_state'      => $billing_info->billing_state ?? '',
-	'billing_city'       => $billing_info->billing_city ?? '',
-	'billing_phone'      => $billing_info->billing_phone ?? '',
-	'billing_zip_code'   => $billing_info->billing_zip_code ?? '',
-	'billing_address'    => $billing_info->billing_address ?? '',
-);
 ?>
 
 <section class="tutor-flex tutor-flex-column tutor-gap-4">
