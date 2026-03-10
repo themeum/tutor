@@ -46,13 +46,16 @@ $form_id = 'tutor-reset-password-form';
 				->placeholder( __( 'Enter Your Email', 'tutor' ) )
 				->disabled()
 				->attr( 'x-bind', "register('account_email', { required: true })" )
+				->attr( 'style', 'padding: 7px 12px;' )
 				->render();
 
 			echo '</div>';
 
-			do_action( 'tutor_after_account_email_field' );
+			do_action( 'tutor_beside_account_email_field' );
 
 			echo '</div>';
+
+			do_action( 'tutor_after_change_email_field' );
 
 			Button::make()
 				->label( __( 'Reset Password', 'tutor' ) )
