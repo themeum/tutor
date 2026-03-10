@@ -107,6 +107,31 @@ export const sortSections = (sectionsIds: string[]) => ({
     });
   },
 
+  async handleCheckboxClick() {
+    const items = Array.from(document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')).map((checkbox) => [
+      checkbox.name,
+      checkbox.checked,
+    ]);
+
+    try {
+      const response = await wpAjaxInstance.post<AjaxResponse, AjaxResponse>(
+        'tutor_save_instructor_home_sections_visibility',
+        { items },
+      );
+
+      if (!response.success) {
+        window.TutorCore.toast.error(
+          response?.data || wp.i18n.__('Failed to save instructor home section visibility.', 'tutor'),
+        );
+        return;
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : wp.i18n.__('Unknown error occurred.', 'tutor');
+      window.TutorCore.toast.error(message);
+      return;
+    }
+  },
+
   updateDom() {
     const newOrder = this.getOrder();
     const sectionMap = this.getSortableSections();

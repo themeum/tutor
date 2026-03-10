@@ -20,7 +20,10 @@ use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 
-$default_sections = array(
+$get_saved_order      = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', true );
+$get_saved_visibility = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', true );
+
+$sortable_sections = array(
 	array(
 		'id'        => 'current_stats',
 		'label'     => esc_html__( 'Current Stats', 'tutor' ),
@@ -58,12 +61,6 @@ $default_sections = array(
 		'order'     => 6,
 	),
 );
-
-//$sortable_sections = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', true );
-
-//if ( ! $sortable_sections ) {
-	$sortable_sections = $default_sections;
-//}
 
 $sortable_sections_defaults = array_reduce(
 	$sortable_sections,
@@ -380,7 +377,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 					<?php foreach ( $sortable_sections as $section ) : ?>
 						<div
 							data-id="<?php echo esc_attr( $section['id'] ); ?>"
-							class="tutor-popover-menu-item"
+							class="tutor-popover-menu-item"						
 						>
 							<button data-grab>
 								<?php tutor_utils()->render_svg_icon( Icon::DRAG_VERTICAL, 16, 16 ); ?>
@@ -391,6 +388,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 									->name( "$section[id]" )
 									->label( $section['label'] )
 									->attr( 'x-bind', "register('$section[id]')" )
+									->attr( '@click.stop', 'handleCheckboxClick(event)' )
 									->render();
 							?>
 						</div>

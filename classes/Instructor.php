@@ -76,6 +76,8 @@ class Instructor {
 		add_action( 'wp_loaded', array( $this, 'hide_instructor_notice' ) );
 
 		add_action( 'wp_ajax_tutor_save_instructor_home_sections_order', array( $this, 'save_home_sections_order' ) );
+
+		add_action( 'wp_ajax_tutor_save_instructor_home_sections_visibility', array( $this, 'save_home_section_visibility' ) );
 	}
 
 	/**
@@ -907,5 +909,27 @@ class Instructor {
 		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', $order );
 
 		wp_send_json_success();
+	}
+
+	public function save_home_section_visibility() {
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
+		}
+
+		tutor_utils()->check_nonce();
+
+		$items = Input::post( 'items', array(), Input::TYPE_ARRAY );
+		$items = array_values( array_map( 'sanitize_key', $items ) );
+
+		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', $items );
+
+		wp_send_json_success();
+	}
+
+	public function get_saved_home_sections() {
+
+		$order      = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', true );
+		$visibility = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', true );
 	}
 }
