@@ -55,6 +55,7 @@
     @include tutor-flex(column);
     min-height: 0;
     flex-grow: 1;
+    overflow: hidden;
 
     .tutor-learning-progress {
       @include tutor-flex(column);

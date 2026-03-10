@@ -203,8 +203,13 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 
 			<div x-show="collapsed" x-cloak>
 				<?php
+				$allowed_html = wp_kses_allowed_html( 'post' );
+				if ( isset( $allowed_html['a'] ) ) {
+					$allowed_html['a']['onclick'] = true;
+				}
+
 				Popover::make()
-					->body( $menu_html, wp_kses_allowed_html( 'post' ) )
+					->body( $menu_html, $allowed_html )
 					->trigger(
 						Button::make()
 							->variant( Variant::GHOST )
