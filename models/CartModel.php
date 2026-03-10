@@ -73,13 +73,19 @@ class CartModel {
 			);
 		}
 
+		if ( 'gift' === $item_type ) {
+			$item_details = wp_json_encode( $item_details, JSON_UNESCAPED_UNICODE );
+		} else {
+			$item_details = wp_json_encode( $item_details );
+		}
+
 		return QueryHelper::insert(
 			"{$wpdb->prefix}tutor_cart_items",
 			array(
 				'cart_id'      => $user_cart_id,
 				'course_id'    => $course_id,
 				'item_type'    => $item_type,
-				'item_details' => $item_details ? wp_json_encode( $item_details ) : null,
+				'item_details' => $item_details,
 			)
 		);
 	}
@@ -261,5 +267,4 @@ class CartModel {
 			)
 		);
 	}
-
 }

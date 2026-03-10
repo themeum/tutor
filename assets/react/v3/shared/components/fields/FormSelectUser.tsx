@@ -14,6 +14,7 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 
+import { type CourseDetailsResponse } from '@CourseBuilderServices/course';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import type { User } from '@TutorShared/services/users';
@@ -45,6 +46,7 @@ type FormSelectUserProps = {
   helpText?: string;
   emptyStateText?: string;
   isInstructorMode?: boolean;
+  postAuthor?: CourseDetailsResponse['post_author'];
 } & FormControllerProps<UserOption | UserOption[] | null>;
 
 const userPlaceholderData: UserOption = {
@@ -53,6 +55,8 @@ const userPlaceholderData: UserOption = {
   email: 'example@example.com',
   avatar_url: 'https://gravatar.com/avatar',
 };
+
+const currentUser = tutorConfig.current_user;
 
 const FormSelectUser = ({
   field,
@@ -70,10 +74,12 @@ const FormSelectUser = ({
   helpText,
   emptyStateText = __('No user selected', __TUTOR_TEXT_DOMAIN__),
   isInstructorMode = false,
+  postAuthor,
 }: FormSelectUserProps) => {
   const inputValue = field.value ?? (isMultiSelect ? [] : userPlaceholderData);
   const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => String(item.id)) : [String(inputValue.id)];
-  const isCurrentUserAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
+  const isCurrentUserAdmin = currentUser.roles?.includes(TutorRoles.ADMINISTRATOR);
+  const isCurrentUserAuthor = String(currentUser.data.id) === String(postAuthor?.ID || '');
 
   const triggerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -257,7 +263,7 @@ const FormSelectUser = ({
                           </button>
                         }
                       >
-                        <Show when={isCurrentUserAdmin || instructor.isRemoveAble}>
+                        <Show when={isCurrentUserAdmin || isCurrentUserAuthor || instructor.isRemoveAble}>
                           <button
                             type="button"
                             onClick={() => handleDeleteSelection(instructor.id)}

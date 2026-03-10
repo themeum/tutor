@@ -245,7 +245,13 @@ class User {
 	private function delete_existing_user_photo( $user_id, $type ) {
 		$meta_key = 'cover_photo' == $type ? '_tutor_cover_photo' : '_tutor_profile_photo';
 		$photo_id = get_user_meta( $user_id, $meta_key, true );
-		is_numeric( $photo_id ) ? wp_delete_attachment( $photo_id, true ) : 0;
+		if ( is_numeric( $photo_id ) ) {
+			$attachment  = get_post( $photo_id );
+			$post_author = (int) $attachment->post_author ?? 0;
+			if ( $user_id === $post_author ) {
+				wp_delete_attachment( $photo_id, true );
+			}
+		}
 		delete_user_meta( $user_id, $meta_key );
 	}
 
@@ -281,7 +287,7 @@ class User {
 		/**
 		 * Photo Update from profile
 		 */
-		$photo      = tutor_utils()->array_get( 'photo_file', $_FILES );
+		$photo      = tutor_utils()->array_get( 'photo_file', $_FILES ); //phpcs:ignore -- already sanitized.
 		$photo_size = tutor_utils()->array_get( 'size', $photo );
 		$photo_type = tutor_utils()->array_get( 'type', $photo );
 

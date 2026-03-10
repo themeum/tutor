@@ -856,6 +856,13 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 				'numeric_code' => 643,
 			),
 			array(
+				'code'         => 'RWF',
+				'symbol'       => 'FRw',
+				'name'         => 'Rwandan Franc',
+				'locale'       => 'rw-rw',
+				'numeric_code' => 646,
+			),
+			array(
 				'code'         => 'SAR',
 				'symbol'       => 'SAR',
 				'name'         => 'Saudi Riyal',

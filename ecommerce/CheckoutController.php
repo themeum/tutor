@@ -1057,6 +1057,12 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function pay_incomplete_order() {
+
+		// Authentication check.
+		if ( ! is_user_logged_in() ) {
+			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, 0, __( 'Please log in first', 'tutor' ) );
+		}
+
 		$order_id       = Input::post( 'order_id', 0, Input::TYPE_INT );
 		$payment_method = Input::post( 'payment_method', '' );
 		$request        = Input::sanitize_array( $_POST ); //phpcs:ignore -- $POST sanitized
@@ -1068,10 +1074,11 @@ class CheckoutController {
 			tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'purchase_history' ), tutor_utils()->error_message( 'nonce' ), 'error' );
 			exit;
 		}
+
 		if ( $order_id ) {
 			$order_model = new OrderModel();
 			$order_data  = $order_model->get_order_by_id( $order_id );
-			if ( $order_data ) {
+			if ( $order_data && get_current_user_id() === (int) $order_data->user_id ) {
 				try {
 
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {

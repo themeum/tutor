@@ -252,6 +252,7 @@ class QueryHelper {
 	 * Otherwise the clause would be `WHERE column_name = 'value'`
 	 *
 	 * @since 3.0.0
+	 * @since 3.9.7 added prepared statement for value.
 	 *
 	 * @param array $where  The where clause array. e.g. array( 'id', 'IN', array(1, 2, 3) ) or array( 'id', '=', 1 ).
 	 *
@@ -261,8 +262,16 @@ class QueryHelper {
 		list ( $field, $operator, $value ) = $where;
 
 		$upper_operator = strtoupper( $operator );
+
 		if ( in_array( $upper_operator, array( 'IN', 'NOT IN' ), true ) ) {
 			$value = '(' . self::prepare_in_clause( $value ) . ')';
+		} elseif ( in_array( $upper_operator, array( 'BETWEEN', 'NOT BETWEEN' ), true ) ) {
+			$value = array_map( fn( $val ) => self::prepare_value( $val ), $value );
+			$value = implode( ' AND ', $value );
+		} elseif ( strtoupper( $value ) === 'NULL' ) {
+			$value = 'NULL';
+		} else {
+			$value = self::prepare_value( $value );
 		}
 
 		return "{$field} {$upper_operator} {$value}";
@@ -346,15 +355,13 @@ class QueryHelper {
 					case 'BETWEEN':
 					case 'NOT BETWEEN':
 						if ( is_array( $val ) && count( $val ) === 2 ) {
-							$val1   = is_numeric( $val[0] ) ? $val[0] : "'" . $val[0] . "'";
-							$val2   = is_numeric( $val[1] ) ? $val[1] : "'" . $val[1] . "'";
-							$clause = array( $field, $operator, "{$val1} AND {$val2}" );
+							$clause = array( $field, $operator, $val );
 						}
 						break;
 
 					case 'IS':
 					case 'IS NOT':
-						$val    = strtoupper( $val ) === 'NULL' ? 'NULL' : "'" . $val . "'";
+						$val    = strtoupper( $val ) === 'NULL' ? 'NULL' : $val;
 						$clause = array( $field, $operator, $val );
 						break;
 					case 'RAW':
@@ -365,16 +372,14 @@ class QueryHelper {
 						$clause = $final_query;
 						break;
 					default: // =, !=, <, >, <=, >=, LIKE, NOT LIKE, <>
-						$val    = is_numeric( $val ) ? $val : "'" . $val . "'";
 						$clause = array( $field, $operator, $val );
 						break;
 				}
 			} elseif ( is_array( $value ) ) {
 				$clause = array( $field, 'IN', $value );
 			} elseif ( 'null' === strtolower( $value ) ) {
-					$clause = array( $field, 'IS', 'NULL' );
+				$clause = array( $field, 'IS', 'NULL' );
 			} else {
-				$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
 				$clause = array( $field, '=', $value );
 			}
 
@@ -911,31 +916,40 @@ class QueryHelper {
 	}
 
 	/**
+	 * Prepare value before using in query.
+	 *
+	 * @since 3.9.7
+	 *
+	 * @param string|int|float $value the value to prepare.
+	 *
+	 * @return mixed
+	 */
+	public static function prepare_value( $value ) {
+		global $wpdb;
+		$escaped_value = null;
+		if ( is_int( $value ) ) {
+			$escaped_value = $wpdb->prepare( '%d', $value );
+		} elseif ( is_float( $value ) ) {
+			list( $whole, $decimal ) = explode( '.', $value );
+			$expression = '%.'. strlen( $decimal ) . 'f';
+			$escaped_value = $wpdb->prepare( $expression, $value );
+		} else {
+			$escaped_value = $wpdb->prepare( '%s', $value );
+		}
+		return $escaped_value;
+	}
+
+	/**
 	 * Make sanitized SQL IN clause value from an array
 	 *
-	 * @param array $arr a sequential array.
-	 * @return string
 	 * @since 2.1.1
+	 *
+	 * @param array $arr a sequential array.
+	 *
+	 * @return string
 	 */
 	public static function prepare_in_clause( array $arr ) {
-		$escaped = array_map(
-			function( $value ) {
-				global $wpdb;
-				$escaped_value = null;
-				if ( is_int( $value ) ) {
-					$escaped_value = $wpdb->prepare( '%d', $value );
-				} else if( is_float( $value ) ) {
-					list( $whole, $decimal ) = explode( '.', $value );
-					$expression = '%.'. strlen( $decimal ) . 'f';
-					$escaped_value = $wpdb->prepare( $expression, $value );
-				} else {
-					$escaped_value = $wpdb->prepare( '%s', $value );
-				}
-				return $escaped_value;
-			},
-			$arr
-		);
-	
+		$escaped = array_map( fn( $value ) => self::prepare_value( $value ), $arr );
 		return implode( ',', $escaped );
 	}
 
