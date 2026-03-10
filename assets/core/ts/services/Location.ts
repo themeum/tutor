@@ -5,13 +5,16 @@ import { type ServiceMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
 import endpoints from '@TutorShared/utils/endpoints';
 
-export interface Country {
+interface Country {
   name: string;
   states: { id: number; name: string }[];
 }
 
-export class LocationService {
-  private readonly _24_HOURS = 1000 * 60 * 60 * 24;
+class LocationService {
+  /**
+   * 24 hours in milliseconds
+   */
+  private readonly STEAL_TIME = 1000 * 60 * 60 * 24;
 
   constructor() {
     this.initStore();
@@ -27,8 +30,8 @@ export class LocationService {
           return await axios.get(`${tutorConfig.tutor_url}${endpoints.FETCH_COUNTRIES}`).then((res) => res.data);
         },
         {
-          staleTime: this._24_HOURS,
-          cacheTime: this._24_HOURS,
+          staleTime: this.STEAL_TIME,
+          cacheTime: this.STEAL_TIME,
         },
       ) as QueryState<Country[]>,
     });
