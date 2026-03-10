@@ -51,10 +51,7 @@ $pagination_style            = tutor_utils()->get_quiz_option( $tutor_is_started
 
 // Questions and attempts.
 $questions                     = tutor_utils()->get_random_questions_by_quiz();
-$attempts_allowed              = (int) tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'attempts_allowed', 0 );
 $hide_question_number_overview = (bool) tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'hide_question_number_overview', false );
-$previous_attempts             = tutor_utils()->quiz_attempts();
-$current_attempt_number        = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
 
 $reveal_question_types = array( 'true_false', 'single_choice', 'multiple_choice' );
 $quiz_answers          = array();
