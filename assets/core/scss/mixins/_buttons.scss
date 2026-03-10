@@ -24,7 +24,7 @@
     cursor: not-allowed;
     pointer-events: none;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-disabled;
     }
   }
@@ -35,7 +35,7 @@
     background-color: $tutor-button-primary;
     color: $tutor-text-primary-inverse;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-idle-inverse;
     }
 
@@ -54,7 +54,7 @@
       background-color: $tutor-button-primary-disabled;
       color: $tutor-text-primary-inverse;
 
-      svg {
+      svg:not([class]) {
         color: $tutor-icon-idle-inverse;
       }
     }
@@ -62,7 +62,7 @@
     background-color: $tutor-button-primary-soft;
     color: $tutor-text-brand;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-brand;
     }
 
@@ -84,7 +84,7 @@
     background-color: $tutor-button-destructive;
     color: $tutor-text-primary-inverse;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-idle-inverse;
     }
 
@@ -106,7 +106,7 @@
     background-color: $tutor-button-destructive-soft;
     color: $tutor-text-critical;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-critical;
     }
 
@@ -128,7 +128,7 @@
     background-color: $tutor-button-secondary;
     color: $tutor-text-primary;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-idle;
     }
 
@@ -151,7 +151,7 @@
     color: $tutor-text-primary;
     box-shadow: inset 0 0 0 1px $tutor-border-idle;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-idle;
     }
 
@@ -173,7 +173,7 @@
     background-color: transparent;
     color: $tutor-text-primary;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-secondary;
     }
 
@@ -185,7 +185,7 @@
     background-color: transparent;
     color: $tutor-text-brand;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-brand;
     }
 
@@ -196,14 +196,14 @@
     background-color: transparent;
     color: $tutor-text-brand;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-brand;
     }
 
     &:hover:not(:disabled):not(.disabled) {
       color: $tutor-text-brand-hover;
 
-      svg {
+      svg:not([class]) {
         color: $tutor-icon-brand-hover;
       }
     }
@@ -211,14 +211,14 @@
     background-color: transparent;
     color: $tutor-text-subdued;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-subdued;
     }
 
     &:hover:not(:disabled):not(.disabled) {
       color: $tutor-text-secondary;
 
-      svg {
+      svg:not([class]) {
         color: $tutor-icon-secondary;
       }
     }
@@ -226,14 +226,14 @@
     background-color: transparent;
     color: $tutor-text-critical;
 
-    svg {
+    svg:not([class]) {
       color: $tutor-icon-critical;
     }
 
     &:hover:not(:disabled):not(.disabled) {
       color: $tutor-text-critical-hover;
 
-      svg {
+      svg:not([class]) {
         color: $tutor-icon-critical-hover;
       }
     }
