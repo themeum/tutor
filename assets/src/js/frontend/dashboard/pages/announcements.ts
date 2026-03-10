@@ -1,17 +1,17 @@
+import { __ } from '@wordpress/i18n';
+
 import { type FormControlMethods } from '@Core/ts/components/form';
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { __ } from '@wordpress/i18n';
-
-/**
- * Type Definitions
- */
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 interface AnnouncementFormData {
   id: number;
   course_id: string;
   title: string;
   summary: string;
+  tutor_notify_all_students?: boolean;
+  tutor_push_notify_students?: boolean;
   action_type: 'create' | 'update';
 }
 
@@ -19,6 +19,8 @@ interface AnnouncementPayload extends Record<string, unknown> {
   tutor_announcement_course: string;
   tutor_announcement_title: string;
   tutor_announcement_summary: string;
+  tutor_notify_all_students?: 'on' | 'off';
+  tutor_push_notify_students?: 'on' | 'off';
   action_type: 'create' | 'update';
   announcement_id?: number;
 }
@@ -29,11 +31,23 @@ interface AnnouncementResponse {
   data?: unknown;
 }
 
-/**
- * Announcements Page Component
- */
-const announcementsPage = () => {
+interface AnnouncementProps {
+  formId: string;
+  deleteModalId: string;
+  createModalId: string;
+}
+
+const announcementsPage = ({ formId, deleteModalId, createModalId }: AnnouncementProps) => {
   const query = window.TutorCore.query;
+  const modal = window.TutorCore.modal;
+  const toast = window.TutorCore.toast;
+  const form = window.TutorCore.form;
+
+  const ANNOUNCEMENTS_IDS = {
+    FORM: formId,
+    DELETE: deleteModalId,
+    CREATE: createModalId,
+  };
 
   return {
     query,
@@ -45,6 +59,7 @@ const announcementsPage = () => {
       course_id: '',
       title: '',
       summary: '',
+      tutor_notify_all_students: true,
       action_type: 'create',
     } as AnnouncementFormData,
 
@@ -62,23 +77,23 @@ const announcementsPage = () => {
       // Setup delete mutation
       this.deleteMutation = this.query.useMutation(this.deleteAnnouncement, {
         onSuccess: () => {
-          window.TutorCore.modal.closeModal('tutor-announcement-delete-modal');
+          modal.closeModal(ANNOUNCEMENTS_IDS.DELETE);
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to delete announcement', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
       // Setup create/update mutation
       this.createUpdateMutation = this.query.useMutation(this.createUpdateAnnouncement, {
         onSuccess: (response: AnnouncementResponse) => {
-          window.TutorCore.modal.closeModal('tutor-announcement-form-modal');
-          window.TutorCore.toast.success(response.message || __('Operation successful', 'tutor'));
+          modal.closeModal(ANNOUNCEMENTS_IDS.CREATE);
+          toast.success(response.message || __('Operation successful', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save announcement', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
     },
@@ -102,47 +117,59 @@ const announcementsPage = () => {
     openCreateModal() {
       this.formData.action_type = 'create';
       this.formData.id = 0;
-      window.TutorCore.modal.showModal('tutor-announcement-form-modal');
+      modal.showModal(ANNOUNCEMENTS_IDS.CREATE);
 
-      const formId = 'announcement-form';
-      if (window.TutorCore.form.hasForm(formId)) {
-        window.TutorCore.form.reset(formId);
+      if (form.hasForm(formId)) {
+        form.reset(formId);
       }
     },
 
-    openEditModal(data: { id: number; title: string; summary: string; course_id: number }) {
+    openEditModal(data: {
+      id: number;
+      title: string;
+      summary: string;
+      course_id: number;
+      tutor_notify_all_students: boolean;
+    }) {
       this.formData.id = data.id;
       this.formData.course_id = data.course_id.toString();
       this.formData.title = data.title;
       this.formData.summary = data.summary;
       this.formData.action_type = 'update';
 
-      window.TutorCore.modal.showModal('tutor-announcement-form-modal');
+      modal.showModal(ANNOUNCEMENTS_IDS.CREATE);
 
-      const formId = 'announcement-form';
-      const formEl = document.getElementById('tutor-announcement-form');
+      const formEl = document.getElementById(ANNOUNCEMENTS_IDS.FORM);
 
       if (!formEl) return;
 
       // Manual registration fallback if auto-init hasn't fired yet
-      if (!window.TutorCore.form.hasForm(formId)) {
+      if (!form.hasForm(formId)) {
         const alpineForm = window.Alpine.$data(formEl);
-        window.TutorCore.form.register(formId, alpineForm as unknown as FormControlMethods);
+        form.register(formId, alpineForm as unknown as FormControlMethods);
       }
 
-      if (window.TutorCore.form.hasForm(formId)) {
+      if (form.hasForm(formId)) {
         const values = {
           tutor_announcement_course: String(data.course_id),
           tutor_announcement_title: data.title,
           tutor_announcement_summary: data.summary,
+          tutor_notify_all_students: true,
+          tutor_push_notify_students: true,
         };
 
-        window.TutorCore.form.reset(formId, values);
+        form.reset(formId, values);
       }
     },
 
     async handleFormSubmit(data: AnnouncementPayload) {
       const payload: AnnouncementPayload = {
+        ...(data.tutor_notify_all_students && {
+          tutor_notify_all_students: data.tutor_notify_all_students ? 'on' : 'off',
+        }),
+        ...(data.tutor_push_notify_students && {
+          tutor_push_notify_students: data.tutor_push_notify_students ? 'on' : 'off',
+        }),
         tutor_announcement_course: data.tutor_announcement_course || '',
         tutor_announcement_title: data.tutor_announcement_title || '',
         tutor_announcement_summary: data.tutor_announcement_summary || '',

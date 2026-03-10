@@ -181,6 +181,13 @@ const endpoints = {
   CREATE_ANNOUNCEMENT: 'tutor_announcement_create',
   DELETE_ANNOUNCEMENT: 'tutor_announcement_delete',
 
+  // Notifications
+  PUSH_NOTIFICATION_SAVE_SUBSCRIPTION: 'tutor_pn_save_subscription',
+  GET_ALL_NOTIFICATIONS: 'tutor_get_all_notifications',
+  MARK_ALL_NOTIFICATIONS_AS_READ: 'toggle_all_notifications_status_as_read',
+  MARK_SINGLE_NOTIFICATION_AS_READ: 'toggle_single_notification_status_as_read',
+  MARK_ALL_NOTIFICATIONS_AS_UNREAD: 'tutor_mark_all_notifications_as_unread',
+
   //Reviews
   PLACE_RATING: 'tutor_place_rating',
   DELETE_REVIEW: 'delete_tutor_review',
@@ -198,6 +205,9 @@ const endpoints = {
   UPDATE_USER_PREFERENCES: 'tutor_save_user_preferences',
   REMOVE_DEVICE_MANUALLY: 'tutor_remove_device_manually',
   REMOVE_ALL_ACTIVE_LOGINS: 'tutor_remove_all_active_logins',
+
+  // Withdrawals
+  MAKE_AN_WITHDRAW: 'tutor_make_an_withdraw',
 } as const;
 
 export default endpoints;

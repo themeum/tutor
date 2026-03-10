@@ -22,6 +22,7 @@ use TUTOR\Icon;
 		</p>
 		<div x-data="tutorFileUploader({
 			multiple: true,
+			maxFiles: 3,
 			accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
 			maxSize: 52428800,
 			onFileSelect: (files) => console.log('Files selected:', files),
@@ -51,7 +52,7 @@ use TUTOR\Icon;
 				</div>
 				<div class="tutor-file-uploader-content">
 					<p class="tutor-file-uploader-title">Drop files here or click to upload</p>
-					<p class="tutor-file-uploader-subtitle">PDF, DOC, DOCX, JPG, PNG Formats (Max 50MB)</p>
+					<p class="tutor-file-uploader-subtitle">PDF, DOC, DOCX, JPG, PNG Formats (Max 50MB, up to 3 files)</p>
 				</div>
 				<button type="button" class="tutor-btn tutor-btn-primary-soft" :disabled="isDisabled">
 					Select Files
@@ -66,6 +67,7 @@ use TUTOR\Icon;
 		<div class="tutor-bg-gray-50 tutor-p-4 tutor-rounded-lg">
 			<pre class="tutor-text-sm tutor-text-gray-700"><code>&lt;div x-data="tutorFileUploader({
 	multiple: true,
+	maxFiles: 3,
 	accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
 	maxSize: 52428800, // 50MB in bytes
 	onFileSelect: (files) => console.log('Files selected:', files),

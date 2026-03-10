@@ -9238,8 +9238,8 @@ class Utils {
 			return '';
 		}
 		$mail_part    = explode( '@', $email );
-		$mail_part[0] = str_repeat( '*', strlen( $mail_part[0] ) );
-		return $mail_part[0] . $mail_part[1];
+		$mail_part[0] = $this->asterisks_center_text( $mail_part[0] );
+		return $mail_part[0] . '@' . $mail_part[1];
 	}
 
 	/**
@@ -9247,17 +9247,22 @@ class Utils {
 	 * it will replace character with asterisk from the beginning and ending
 	 *
 	 * @since 2.0.0
+	 * @since 4.0.0 param number_of_asterisks added.
 	 *
 	 * @param string $text | required.
+	 * @param int    $number_of_asterisks | optional. if not provided then it will be length of string minus 2.
 	 *
 	 * @return string
 	 */
-	function asterisks_center_text( string $str ): string {
+	function asterisks_center_text( string $str, $number_of_asterisks = -1 ): string {
 		if ( '' === $str ) {
 			return '';
 		}
-		$str_length = strlen( $str );
-		return substr( $str, 0, 2 ) . str_repeat( '*', $str_length - 2 ) . substr( $str, $str_length - 2, 2 );
+
+		$str_length    = strlen( $str );
+		$astericks_str = str_repeat( '*', $number_of_asterisks > 0 ? $number_of_asterisks : $str_length - 2 );
+
+		return substr( $str, 0, 2 ) . $astericks_str . substr( $str, $str_length - 2, 2 );
 	}
 
 	/**

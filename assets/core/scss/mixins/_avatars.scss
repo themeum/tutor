@@ -1,119 +1,120 @@
 // Avatar Mixins
-@use "../tokens" as *;
-@use "typography" as *;
-@use "layout" as *;
+@use '../tokens' as *;
+@use 'typography' as *;
+@use 'layout' as *;
 
 @mixin tutor-avatar-base {
-	@include tutor-flex-center;
-	position: relative;
-	border-radius: $tutor-radius-full;
-	overflow: hidden;
-	background-color: $tutor-button-primary-soft;
-	color: $tutor-text-primary;
-	flex-shrink: 0;
-	user-select: none;
+  @include tutor-flex-center;
+  position: relative;
+  border-radius: $tutor-radius-full;
+  overflow: hidden;
+  background-color: $tutor-button-primary-soft;
+  color: $tutor-text-primary;
+  flex-shrink: 0;
+  user-select: none;
 }
 
 @mixin tutor-avatar-image {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 1/1;
 }
 
 @mixin tutor-avatar-initials {
-	@include tutor-typography('small', 'medium');
-	color: inherit;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
+  @include tutor-typography('small', 'medium');
+  color: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 // Avatar sizes map
 $tutor-avatar-sizes: (
-	20: (
-		font-size: 'tiny',
-		icon-size: 12px
-	),
-	24: (
-		font-size: 'tiny',
-		icon-size: 12px
-	),
-	32: (
-		font-size: 'tiny',
-		icon-size: 16px
-	),
-	40: (
-		font-size: 'small',
-		icon-size: 20px
-	),
-	48: (
-		font-size: 'small',
-		icon-size: 24px
-	),
-	56: (
-		font-size: 'medium',
-		icon-size: 28px
-	),
-	64: (
-		font-size: 'medium',
-		icon-size: 32px
-	),
-	80: (
-		font-size: $tutor-font-size-h4,
-		icon-size: 40px
-	),
-	104: (
-		font-size: $tutor-font-size-h3,
-		icon-size: 48px
-	)
+  20: (
+    font-size: 'tiny',
+    icon-size: 12px,
+  ),
+  24: (
+    font-size: 'tiny',
+    icon-size: 12px,
+  ),
+  32: (
+    font-size: 'tiny',
+    icon-size: 16px,
+  ),
+  40: (
+    font-size: 'small',
+    icon-size: 20px,
+  ),
+  48: (
+    font-size: 'small',
+    icon-size: 24px,
+  ),
+  56: (
+    font-size: 'medium',
+    icon-size: 28px,
+  ),
+  64: (
+    font-size: 'medium',
+    icon-size: 32px,
+  ),
+  80: (
+    font-size: $tutor-font-size-h4,
+    icon-size: 40px,
+  ),
+  104: (
+    font-size: $tutor-font-size-h3,
+    icon-size: 48px,
+  ),
 );
 
 @mixin tutor-avatar-size($size) {
-	@if map-has-key($tutor-avatar-sizes, $size) {
-		$config: map-get($tutor-avatar-sizes, $size);
-		$font-size: map-get($config, font-size);
-		$icon-size: map-get($config, icon-size);
+  @if map-has-key($tutor-avatar-sizes, $size) {
+    $config: map-get($tutor-avatar-sizes, $size);
+    $font-size: map-get($config, font-size);
+    $icon-size: map-get($config, icon-size);
 
-		width: #{$size}px;
-		height: #{$size}px;
+    width: #{$size}px;
+    height: #{$size}px;
 
-		.tutor-avatar-initials {
-			@if type-of($font-size) == 'string' {
-				@include tutor-typography($font-size, 'medium');
-			} @else {
-				font-size: $font-size;
-				font-weight: $tutor-font-weight-medium;
-			}
-		}
+    .tutor-avatar-initials {
+      @if type-of($font-size) == 'string' {
+        @include tutor-typography($font-size, 'medium');
+      } @else {
+        font-size: $font-size;
+        font-weight: $tutor-font-weight-medium;
+      }
+    }
 
-		svg {
-			width: $icon-size;
-			height: $icon-size;
-		}
-	}
+    svg {
+      width: $icon-size;
+      height: $icon-size;
+    }
+  }
 }
 
 // Avatar variants
 @mixin tutor-avatar-variant($variant: default) {
-	@if $variant == square {
-		border-radius: $tutor-radius-md;
-		
-		svg,
-		.tutor-avatar-image {
-			border-radius: $tutor-radius-md;
-		}
-	} @else if $variant == icon {
-		background-color: $tutor-surface-brand-tertiary;
-		color: $tutor-text-secondary;
-		
-		&:hover {
-			background-color: $tutor-actions-brand-tertiary;
-			color: $tutor-actions-brand-primary;
-		}
-	} @else if $variant == border {
-		border: 2px solid $tutor-surface-l2;
-		svg,
-		.tutor-avatar-image {
-			border-radius: 0px;
-		}
-	}
+  @if $variant == square {
+    border-radius: $tutor-radius-md;
+
+    svg,
+    .tutor-avatar-image {
+      border-radius: $tutor-radius-md;
+    }
+  } @else if $variant == icon {
+    background-color: $tutor-surface-brand-tertiary;
+    color: $tutor-text-secondary;
+
+    &:hover {
+      background-color: $tutor-actions-brand-tertiary;
+      color: $tutor-actions-brand-primary;
+    }
+  } @else if $variant == border {
+    border: 2px solid $tutor-surface-l2;
+    svg,
+    .tutor-avatar-image {
+      border-radius: 0px;
+    }
+  }
 }
