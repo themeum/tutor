@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use stdClass;
 use TUTOR\Icon;
 use TUTOR\BaseController;
 use Tutor\Helpers\HttpHelper;
@@ -253,5 +254,72 @@ class BillingController extends BaseController {
 		}
 
 		return ValidationHelper::validate( $validation_rules, $data );
+	}
+
+	/**
+	 * Get country and state options for billing information.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return object An object containing country and state options.
+	 */
+	public static function get_country_state_options() {
+		$countries       = tutor_get_country_list();
+		$country_options = array();
+		$state_mapping   = array();
+
+		foreach ( $countries as $country ) {
+			array_push(
+				$country_options,
+				array(
+					'label' => $country['name'],
+					'value' => $country['name'],
+				)
+			);
+
+			if ( ! empty( $country['states'] ) ) {
+				$state_mapping[ $country['name'] ] = array_map(
+					function ( $state ) {
+						return array(
+							'label' => $state['name'],
+							'value' => $state['name'],
+						);
+					},
+					$country['states']
+				);
+			}
+		}
+
+		$obj                  = new stdClass();
+		$obj->country_options = $country_options;
+		$obj->state_options   = $state_mapping;
+
+		return $obj;
+	}
+
+	/**
+	 * Get default values for billing form.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array An array containing default values for billing information.
+	 */
+	public static function get_default_values() {
+		$billing_info    = ( new BillingController() )->get_billing_info();
+		$billing_country = $billing_info->billing_country ?? tutor_utils()->input_old( 'billing_country', '' );
+
+		$default_values = array(
+			'billing_first_name' => $billing_info->billing_first_name ?? '',
+			'billing_last_name'  => $billing_info->billing_last_name ?? '',
+			'billing_email'      => $billing_info->billing_email ?? '',
+			'billing_country'    => $billing_country,
+			'billing_state'      => $billing_info->billing_state ?? '',
+			'billing_city'       => $billing_info->billing_city ?? '',
+			'billing_phone'      => $billing_info->billing_phone ?? '',
+			'billing_zip_code'   => $billing_info->billing_zip_code ?? '',
+			'billing_address'    => $billing_info->billing_address ?? '',
+		);
+
+		return $default_values;
 	}
 }
