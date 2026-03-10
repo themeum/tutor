@@ -1,5 +1,5 @@
-import { quizAutoStartMeta } from './auto-start';
 import { quizSummarySidebarMeta } from '@FrontendComponents/quiz/summary-sidebar';
+import { quizAutoStartMeta } from './auto-start';
 import { quizLayoutMeta } from './layout';
 import { questionMatchingMeta } from './questions/matching';
 import { questionOrderingMeta } from './questions/ordering';
