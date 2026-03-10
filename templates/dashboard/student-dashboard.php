@@ -57,9 +57,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$completed_course_count_this_month = 0;
 	$active_course_count_this_month    = 0;
 
-	$enrolled_course_link  = tutor_utils()->tutor_dashboard_url( 'enrolled-courses' );
-	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'enrolled-courses/completed-courses' );
-	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'enrolled-courses/active-courses' );
+	$enrolled_course_link  = tutor_utils()->tutor_dashboard_url( 'courses' );
+	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'courses/completed-courses' );
+	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'courses/active-courses' );
 	?>
 	<div class="tutor-grid tutor-grid-cols-4 tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7">
 		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
@@ -67,7 +67,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Enrolled Courses', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::COURSES, 20, 20 ); ?>
 				</div>
 			</div>
@@ -88,7 +88,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Active', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::PLAY_LINE, 20, 20 ); ?>
 				</div>
 			</div>
@@ -109,7 +109,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Completed', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_CIRCLE, 20, 20 ); ?>
 				</div>
 			</div>
@@ -133,7 +133,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Time Spent', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-d-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::TIME, 20, 20 ); ?>
 				</div>
 			</div>

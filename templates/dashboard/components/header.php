@@ -20,7 +20,7 @@ $menu_items           = Dashboard::get_account_pages();
 $menu_items['logout'] = array(
 	'title' => esc_html__( 'Logout', 'tutor' ),
 	'icon'  => Icon::LOGOUT,
-	'url'   => wp_logout_url( home_url() ),
+	'url'   => wp_logout_url( tutor_utils()->tutor_dashboard_url() ),
 );
 
 $active_nav       = 'profile';
