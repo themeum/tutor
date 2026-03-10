@@ -83,6 +83,46 @@ class Progress extends BaseComponent {
 	protected $size = Size::SMALL;
 
 	/**
+	 * Background color.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected $background = 'none';
+
+	/**
+	 * Stroke color.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected $stroke_color = 'var(--tutor-actions-brand-secondary)';
+
+	/**
+	 * Whether to show label.
+	 *
+	 * @since 4.0.0
+	 * @var bool
+	 */
+	protected $show_label = true;
+
+	/**
+	 * Custom label text.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected $label = '';
+
+	/**
+	 * Animation duration in milliseconds.
+	 *
+	 * @since 4.0.0
+	 * @var int
+	 */
+	protected $duration = 1000;
+
+	/**
 	 * Set progress type.
 	 *
 	 * @since 4.0.0
@@ -141,6 +181,107 @@ class Progress extends BaseComponent {
 	}
 
 	/**
+	 * Set progress state.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $state Progress state (progress|complete|locked).
+	 * @return $this
+	 */
+	public function state( $state ) {
+		$allowed = array( 'progress', 'complete', 'locked' );
+		if ( in_array( $state, $allowed, true ) ) {
+			$this->state = $state;
+		}
+		return $this;
+	}
+
+	/**
+	 * Set progress as complete.
+	 *
+	 * @since 4.0.0
+	 * @return $this
+	 */
+	public function complete() {
+		return $this->state( 'complete' );
+	}
+
+	/**
+	 * Set progress as locked.
+	 *
+	 * @since 4.0.0
+	 * @return $this
+	 */
+	public function locked() {
+		return $this->state( 'locked' );
+	}
+
+	/**
+	 * Set background color.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $background Background color.
+	 * @return $this
+	 */
+	public function background( $background ) {
+		$this->background = $background;
+		return $this;
+	}
+
+	/**
+	 * Set stroke color.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $stroke_color Stroke color.
+	 * @return $this
+	 */
+	public function stroke_color( $stroke_color ) {
+		$this->stroke_color = $stroke_color;
+		return $this;
+	}
+
+	/**
+	 * Set whether to show label.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $show_label Whether to show label.
+	 * @return $this
+	 */
+	public function show_label( $show_label = true ) {
+		$this->show_label = (bool) $show_label;
+		return $this;
+	}
+
+	/**
+	 * Set custom label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $label Custom label text.
+	 * @return $this
+	 */
+	public function label( $label ) {
+		$this->label = $label;
+		return $this;
+	}
+
+	/**
+	 * Set animation duration.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $duration Animation duration in milliseconds.
+	 * @return $this
+	 */
+	public function duration( $duration ) {
+		$this->duration = (int) $duration;
+		return $this;
+	}
+
+	/**
 	 * Render progress bar HTML.
 	 *
 	 * @since 4.0.0
@@ -185,7 +326,13 @@ class Progress extends BaseComponent {
 			$alpine_data['type'] = $this->state;
 		}
 
-		$alpine_data['size'] = $this->size;
+		$alpine_data['size']        = $this->size;
+		$alpine_data['background']  = $this->background;
+		$alpine_data['strokeColor'] = $this->stroke_color;
+		$alpine_data['showLabel']   = $this->show_label;
+		$alpine_data['label']       = $this->label;
+		$alpine_data['animated']    = $this->animated;
+		$alpine_data['duration']    = $this->duration;
 
 		// Convert to JSON for x-data.
 		$alpine_json = wp_json_encode( $alpine_data );
