@@ -295,7 +295,7 @@ class Button extends BaseComponent {
 
 		if ( $this->disabled ) {
 			$this->attributes['disabled'] = 'disabled';
-			$classes                     .= ' is-disabled';
+			$classes                     .= ' disabled';
 		}
 
 		if ( $this->icon_only ) {

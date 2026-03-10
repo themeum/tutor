@@ -18,9 +18,11 @@
   font-family: inherit;
   @include tutor-transition();
 
-  &:disabled {
+  &:disabled,
+  &.disabled {
     color: $tutor-text-subdued;
     cursor: not-allowed;
+    pointer-events: none;
 
     svg {
       color: $tutor-icon-disabled;
@@ -37,17 +39,18 @@
       color: $tutor-icon-idle-inverse;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-primary-hover;
       color: $tutor-text-primary-inverse;
     }
 
-    &:focus:not(:disabled) {
+    &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-primary-focused;
       color: $tutor-text-primary-inverse;
     }
 
-    &:disabled {
+    &:disabled,
+    &.disabled {
       background-color: $tutor-button-primary-disabled;
       color: $tutor-text-primary-inverse;
 
@@ -63,17 +66,18 @@
       color: $tutor-icon-brand;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-primary-soft-hover;
       color: $tutor-text-brand;
     }
 
-    &:focus:not(:disabled) {
+    &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-primary-soft-focused;
       color: $tutor-text-brand;
     }
 
-    &:disabled {
+    &:disabled,
+    &.disabled {
       background-color: $tutor-button-disabled;
     }
   } @else if $variant == destructive {
@@ -84,17 +88,18 @@
       color: $tutor-icon-idle-inverse;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-destructive-hover;
       color: $tutor-text-primary-inverse;
     }
 
-    &:focus:not(:disabled) {
+    &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-destructive-focused;
       color: $tutor-text-primary-inverse;
     }
 
-    &:disabled {
+    &:disabled,
+    &.disabled {
       background-color: $tutor-button-disabled;
     }
   } @else if $variant == destructive-soft {
@@ -105,17 +110,18 @@
       color: $tutor-icon-critical;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-destructive-soft-hover;
       color: $tutor-text-critical;
     }
 
-    &:focus:not(:disabled) {
+    &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-destructive-soft-focused;
       color: $tutor-text-critical;
     }
 
-    &:disabled {
+    &:disabled,
+    &.disabled {
       background-color: $tutor-button-disabled;
     }
   } @else if $variant == secondary {
@@ -126,17 +132,18 @@
       color: $tutor-icon-idle;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-secondary-hover;
       color: $tutor-text-primary;
     }
 
-    &:focus:not(:disabled) {
+    &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-secondary-focused;
       color: $tutor-text-primary;
     }
 
-    &:disabled {
+    &:disabled,
+    &.disabled {
       background-color: $tutor-button-disabled;
     }
   } @else if $variant == outline {
@@ -148,17 +155,18 @@
       color: $tutor-icon-idle;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-outline-hover;
       color: $tutor-text-primary;
     }
 
-    &:focus:not(:disabled) {
+    &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-outline-focused-inverse;
       color: $tutor-text-primary;
     }
 
-    &:disabled {
+    &:disabled,
+    &.disabled {
       background-color: $tutor-button-disabled;
     }
   } @else if $variant == ghost {
@@ -169,7 +177,7 @@
       color: $tutor-icon-secondary;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-ghost-hover;
       color: $tutor-text-primary;
     }
@@ -181,7 +189,7 @@
       color: $tutor-icon-brand;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-primary-soft;
     }
   } @else if $variant == link {
@@ -192,7 +200,7 @@
       color: $tutor-icon-brand;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       color: $tutor-text-brand-hover;
 
       svg {
@@ -207,7 +215,7 @@
       color: $tutor-icon-subdued;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       color: $tutor-text-secondary;
 
       svg {
@@ -222,7 +230,7 @@
       color: $tutor-icon-critical;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.disabled) {
       color: $tutor-text-critical-hover;
 
       svg {
