@@ -14,6 +14,8 @@
 namespace Tutor\Components;
 
 use Tutor\Helpers\QueryHelper;
+use Tutor\Components\Constants\Positions;
+use Tutor\Components\Popover;
 use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
@@ -70,6 +72,13 @@ class Sorting extends BaseComponent {
 	 * @var string
 	 */
 	protected $active_order = '';
+
+	/**
+	 * Base URL for building sort links (preserves other query params when set).
+	 *
+	 * @var string
+	 */
+	protected $base_url = '';
 
 	/**
 	 * Constructor
@@ -139,6 +148,18 @@ class Sorting extends BaseComponent {
 	}
 
 	/**
+	 * Set base URL for sort links so other query params are preserved (cumulative filtering).
+	 *
+	 * @param string $url Full current page URL including query string.
+	 *
+	 * @return self
+	 */
+	public function base_url( string $url ): self {
+		$this->base_url = $url;
+		return $this;
+	}
+
+	/**
 	 * Get component content
 	 *
 	 * @return string
@@ -148,6 +169,8 @@ class Sorting extends BaseComponent {
 			'DESC' => $this->label_desc,
 			'ASC'  => $this->label_asc,
 		);
+
+		$origin = Popover::TRANSFORM_ORIGIN_MAP[ Positions::BOTTOM_END ] ?? 'right.top';
 
 		ob_start();
 		?>
@@ -163,18 +186,25 @@ class Sorting extends BaseComponent {
 				@click="toggle()"
 				class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon"
 			>
-				<?php tutor_utils()->render_svg_icon( Icon::STEPPER, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+				<?php
+					$sorting_icon = 'DESC' === $this->order ? Icon::STEPPER : Icon::DESCENDING;
+					tutor_utils()->render_svg_icon( $sorting_icon, 16, 16, array( 'class' => 'tutor-icon-secondary' ) );
+				?>
 			</button>
 
 			<div
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-transition.<?php echo esc_attr( $origin ); ?>
 				@click.outside="handleClickOutside()"
 				class="tutor-popover"
 			>
 				<div class="tutor-popover-menu" style="min-width: 108px;">
 					<?php foreach ( $orders as $order => $label ) : ?>
+						<?php
+						$order_url = ! empty( $this->base_url ) ? add_query_arg( 'order', $order, $this->base_url ) : add_query_arg( 'order', $order );
+						?>
 						<?php if ( $this->on_change ) : ?>
 							<button
 								type="button"
@@ -188,7 +218,7 @@ class Sorting extends BaseComponent {
 							</button>
 						<?php else : ?>
 							<a
-								href="<?php echo esc_attr( add_query_arg( 'order', $order ) ); ?>"
+								href="<?php echo esc_attr( $order_url ); ?>"
 								class="tutor-popover-menu-item <?php echo esc_attr( $this->order === $order ? ' tutor-active' : '' ); ?>"
 							>
 								<?php echo esc_html( $label ); ?>

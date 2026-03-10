@@ -43,6 +43,21 @@ defined( 'ABSPATH' ) || exit;
  */
 class Popover extends BaseComponent {
 
+	/**
+	 * Transform origin map for popover transitions.
+	 *
+	 * @since 4.0.0
+	 */
+	public const TRANSFORM_ORIGIN_MAP = array(
+		Positions::TOP          => 'center.bottom',
+		Positions::TOP_START    => 'left.bottom',
+		Positions::TOP_END      => 'right.bottom',
+		Positions::BOTTOM       => 'center.top',
+		Positions::BOTTOM_START => 'left.top',
+		Positions::BOTTOM_END   => 'right.top',
+		Positions::LEFT         => 'right.center',
+		Positions::RIGHT        => 'left.center',
+	);
 
 	/**
 	 * The popover title.
@@ -64,6 +79,15 @@ class Popover extends BaseComponent {
 	 * @var string
 	 */
 	protected $popover_body_esc = 'wp_kses_post';
+
+	/**
+	 * Allowed HTML tags and attributes. Keys are tag names and values are allowed attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $allowed_html_tags = array();
 
 	/**
 	 * The popover placement location (left | right | top | bottom ).
@@ -149,6 +173,13 @@ class Popover extends BaseComponent {
 	protected $popover_close_outside = true;
 
 	/**
+	 * Menu min width.
+	 *
+	 * @var string
+	 */
+	protected $menu_min_width;
+
+	/**
 	 * Set Popover title
 	 *
 	 * @since 4.0.0
@@ -168,11 +199,13 @@ class Popover extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $popover_body the popover body html.
+	 * @param array  $allowed_html_tags html tags to allow.
 	 *
 	 * @return self
 	 */
-	public function body( string $popover_body ): self {
-		$this->popover_body = $popover_body;
+	public function body( string $popover_body, array $allowed_html_tags = array() ): self {
+		$this->popover_body      = $popover_body;
+		$this->allowed_html_tags = $allowed_html_tags;
 		return $this;
 	}
 
@@ -186,7 +219,7 @@ class Popover extends BaseComponent {
 	 * @return self
 	 */
 	public function placement( string $popover_placement = 'bottom-start' ): self {
-		$placement_positions = array( Positions::TOP, Positions::LEFT, Positions::RIGHT, Positions::BOTTOM, Positions::BOTTOM_START );
+		$placement_positions = array( Positions::TOP, Positions::LEFT, Positions::RIGHT, Positions::BOTTOM, Positions::BOTTOM_START, Positions::BOTTOM_END );
 		if ( ! in_array( $popover_placement, $placement_positions, true ) ) {
 			$this->popover_placement = Positions::BOTTOM_START;
 		}
@@ -288,6 +321,20 @@ class Popover extends BaseComponent {
 	}
 
 	/**
+	 * Set menu min width.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $width the min width value.
+	 *
+	 * @return self
+	 */
+	public function menu_min_width( string $width ): self {
+		$this->menu_min_width = $width;
+		return $this;
+	}
+
+	/**
 	 * Render popover header element.
 	 *
 	 * @since 4.0.0
@@ -341,7 +388,7 @@ class Popover extends BaseComponent {
 			return '';
 		}
 
-		$body = $this->esc( $this->popover_body, $this->popover_body_esc );
+		$body = wp_kses( $this->popover_body, $this->get_allowed_html_tags( $this->allowed_html_tags ) );
 
 		return sprintf(
 			'<div class="tutor-popover-body">
@@ -436,8 +483,7 @@ class Popover extends BaseComponent {
 					$content,
 					$menu_item_attr
 				);
-			} else {
-				if ( Positions::RIGHT === $icon_alignment ) {
+			} elseif ( Positions::RIGHT === $icon_alignment ) {
 					$menu_items .= sprintf(
 						'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%3$s%4$s</%1$s>',
 						$tag,
@@ -446,20 +492,20 @@ class Popover extends BaseComponent {
 						$icon,
 						$menu_item_attr
 					);
-				} else {
-					$menu_items .= sprintf(
-						'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%4$s%3$s</%1$s>',
-						$tag,
-						$class,
-						$content,
-						$icon,
-						$menu_item_attr
-					);
-				}
+			} else {
+				$menu_items .= sprintf(
+					'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%4$s%3$s</%1$s>',
+					$tag,
+					$class,
+					$content,
+					$icon,
+					$menu_item_attr
+				);
 			}
 		}
 
-		return sprintf( '<div class="tutor-popover-menu">%s</div>', $menu_items );
+		$style = $this->menu_min_width ? " style=\"min-width: {$this->menu_min_width}\"" : '';
+		return sprintf( '<div class="tutor-popover-menu"%s>%s</div>', $style, $menu_items );
 	}
 
 	/**
@@ -483,6 +529,8 @@ class Popover extends BaseComponent {
 
 		$closeable_attr = $this->popover_close_outside ? '@click.outside="handleClickOutside()' : '';
 
+		$origin = self::TRANSFORM_ORIGIN_MAP[ $placement_position ] ?? 'center.top';
+
 		return sprintf(
 			'<div x-data="tutorPopover({ placement: \'%s\' })">
 				%s
@@ -490,6 +538,7 @@ class Popover extends BaseComponent {
 					x-ref="content"
 					x-show="open"
 					x-cloak
+					x-transition.%s
 					class=%s
 					%s"
 				>	
@@ -501,6 +550,7 @@ class Popover extends BaseComponent {
 			</div>',
 			$placement_position,
 			$button,
+			$origin,
 			$class,
 			$closeable_attr,
 			$header,

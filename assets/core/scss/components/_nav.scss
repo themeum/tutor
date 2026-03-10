@@ -6,6 +6,7 @@
 .tutor-nav {
   @include tutor-flex(row, center);
   gap: $tutor-spacing-2;
+  overflow-x: auto;
 
   &-item {
     @include tutor-button-reset();

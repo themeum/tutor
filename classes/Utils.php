@@ -3535,12 +3535,14 @@ class Utils {
 	 * @param string  $order order.
 	 *
 	 * @since 3.4.0
+	 * @since 4.0.0 $args parameter added for additional where clause in query.
 	 *
 	 * @param array   $post_status the post status.
+	 * @param array   $args Optional additional WHERE conditions.
 	 *
 	 * @return array
 	 */
-	public function get_students_by_instructor( int $instructor_id, int $offset, int $limit, $search_filter = '', $course_id = '', $date_filter = '', $order_by = '', $order = '', $post_status = array( 'publish' ) ): array {
+	public function get_students_by_instructor( int $instructor_id, int $offset, int $limit, $search_filter = '', $course_id = '', $date_filter = '', $order_by = '', $order = '', $post_status = array( 'publish' ), $args = array() ): array {
 		global $wpdb;
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$limit         = sanitize_text_field( $limit );
@@ -3566,11 +3568,12 @@ class Utils {
 
 		$course_post_type = tutor()->course_post_type;
 
-		$search_term_raw = $search_filter;
-		$search_query    = '%' . $wpdb->esc_like( $search_filter ) . '%';
-		$course_query    = '';
-		$date_query      = '';
-		$author_query    = '';
+		$search_term_raw          = $search_filter;
+		$search_query             = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$course_query             = '';
+		$date_query               = '';
+		$author_query             = '';
+		$registratipn_date_clause = '';
 
 		if ( $course_id ) {
 			$course_query = " AND course.ID = $course_id ";
@@ -3588,6 +3591,14 @@ class Utils {
 			$author_query = "AND course.post_author = $instructor_id";
 		}
 
+		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
+			$from = Input::sanitize( $args['from'] );
+			$to   = Input::sanitize( $args['to'] );
+
+			$where['user.user_registered'] = array( 'BETWEEN', array( $from, $to ) );
+			$registratipn_date_clause      = ' AND ' . QueryHelper::prepare_where_clause( $where );
+		}
+
 		$post_status    = QueryHelper::prepare_in_clause( $post_status );
 		$students       = $wpdb->get_results(
 			$wpdb->prepare(
@@ -3601,6 +3612,7 @@ class Utils {
 					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
+					{$registratipn_date_clause}
 					{$author_query}
 					{$course_query}
 					{$date_query}
@@ -7849,11 +7861,10 @@ class Utils {
 	 */
 	public function user_profile_completion( $user_id = 0 ) {
 		$user_id           = $this->get_user_id( $user_id );
-		$instructor        = $this->is_instructor( $user_id );
 		$instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 
-		$settings_url          = $this->tutor_dashboard_url( 'settings' );
-		$withdraw_settings_url = $this->tutor_dashboard_url( 'settings/withdraw-settings' );
+		$settings_url          = Dashboard::get_account_page_url( 'settings' );
+		$withdraw_settings_url = Dashboard::get_account_page_url( 'settings?tab=withdraw' );
 
 		$required_fields = array(
 			'_tutor_profile_photo' => __( 'Set Your Profile Photo', 'tutor' ),
@@ -9232,8 +9243,8 @@ class Utils {
 			return '';
 		}
 		$mail_part    = explode( '@', $email );
-		$mail_part[0] = str_repeat( '*', strlen( $mail_part[0] ) );
-		return $mail_part[0] . $mail_part[1];
+		$mail_part[0] = $this->asterisks_center_text( $mail_part[0] );
+		return $mail_part[0] . '@' . $mail_part[1];
 	}
 
 	/**
@@ -9241,17 +9252,22 @@ class Utils {
 	 * it will replace character with asterisk from the beginning and ending
 	 *
 	 * @since 2.0.0
+	 * @since 4.0.0 param number_of_asterisks added.
 	 *
 	 * @param string $text | required.
+	 * @param int    $number_of_asterisks | optional. if not provided then it will be length of string minus 2.
 	 *
 	 * @return string
 	 */
-	function asterisks_center_text( string $str ): string {
+	function asterisks_center_text( string $str, $number_of_asterisks = -1 ): string {
 		if ( '' === $str ) {
 			return '';
 		}
-		$str_length = strlen( $str );
-		return substr( $str, 0, 2 ) . str_repeat( '*', $str_length - 2 ) . substr( $str, $str_length - 2, 2 );
+
+		$str_length    = strlen( $str );
+		$astericks_str = str_repeat( '*', $number_of_asterisks > 0 ? $number_of_asterisks : $str_length - 2 );
+
+		return substr( $str, 0, 2 ) . $astericks_str . substr( $str, $str_length - 2, 2 );
 	}
 
 	/**
@@ -9550,15 +9566,21 @@ class Utils {
 	 * Get total number of contents & completed contents that belongs to this topic.
 	 *
 	 * @since 2.0.0
+	 * @since 4.0.0 Return percentage of completed contents and $user_id parameter added.
 	 *
 	 * @param int $topic_id | all contents will be checked that belong to this topic.
+	 * @param int $user_id | user id to check completed contents, if not passed then current user id will be used.
 	 *
-	 * @return array counted number of contents & completed contents number.
+	 * @return array {
+	 *     contents:int,
+	 *     completed:int,
+	 *     percentage:float
+	 * }
 	 */
-	public function count_completed_contents_by_topic( int $topic_id ): array {
+	public function count_completed_contents_by_topic( int $topic_id, int $user_id = 0 ): array {
 		$topic_id  = sanitize_text_field( $topic_id );
 		$contents  = $this->get_contents_by_topic( $topic_id );
-		$user_id   = get_current_user_id();
+		$user_id   = $this->get_user_id( $user_id );
 		$completed = 0;
 
 		$lesson_post_type      = 'lesson';
@@ -9611,9 +9633,14 @@ class Utils {
 				}
 			}
 		}
+
+		$total_contents = $this->count( $contents );
+		$percentage     = $total_contents > 0 ? ( $completed / $total_contents ) * 100 : 0;
+
 		return array(
-			'contents'  => is_array( $contents ) ? count( $contents ) : 0,
-			'completed' => $completed,
+			'contents'   => $total_contents,
+			'completed'  => $completed,
+			'percentage' => $percentage,
 		);
 	}
 
@@ -10980,5 +11007,31 @@ class Utils {
 			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, true ),
 			'no_of_decimal'      => (int) tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, true ),
 		);
+	}
+
+	/**
+	 * Get the icon constant based on the given post type.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $post_type The post type slug.
+	 *
+	 * @return string Icon constant associated with the post type.
+	 */
+	public static function get_icon_by_post_type( $post_type ): string {
+		switch ( $post_type ) {
+			case 'tutor_assignments':
+				return Icon::ASSIGNMENT;
+			case 'tutor-google-meet':
+				return Icon::GOOGLE_MEET_COLORIZE;
+			case 'tutor_quiz':
+				return Icon::QUIZ;
+			case 'tutor_zoom_meeting':
+				return Icon::ZOOM_COLORIZE;
+			case 'lesson':
+				return Icon::LESSON;
+			default:
+				return '';
+		}
 	}
 }

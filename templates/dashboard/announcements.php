@@ -9,23 +9,25 @@
  * @since 1.7.9
  */
 
-use Tutor\Components\Constants\InputType;
-use Tutor\Components\InputField;
-use Tutor\Components\Constants\Size;
+defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Icon;
+use TUTOR\Input;
+use Tutor\Models\CourseModel;
+use Tutor\Components\Button;
 use Tutor\Components\CourseFilter;
-use Tutor\Components\ConfirmationModal;
+use Tutor\Components\DateFilter;
 use Tutor\Components\EmptyState;
+use Tutor\Components\InputField;
 use Tutor\Components\Pagination;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
-use TUTOR\Icon;
-use TUTOR\Input;
-use Tutor\Models\CourseModel;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Components\Constants\InputType;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\Constants\Positions;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\ConfirmationModal;
 
 $limit        = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
@@ -34,56 +36,72 @@ $order_filter  = Input::get( 'order', 'DESC' );
 $search_filter = Input::get( 'search', '' );
 
 // Announcement's parent.
-$course_id   = Input::get( 'course-id', '' );
-$date_filter = Input::get( 'date', '' );
-
-$filter_year  = gmdate( 'Y', strtotime( $date_filter ) );
-$filter_month = gmdate( 'm', strtotime( $date_filter ) );
-$filter_day   = gmdate( 'd', strtotime( $date_filter ) );
+$course_id  = Input::get( 'course-id', 0, Input::TYPE_INT );
+$start_date = Input::get( 'start_date', '' );
+$end_date   = Input::get( 'end_date', '' );
 
 $args = array(
 	'post_type'      => 'tutor_announcements',
 	'post_status'    => 'publish',
-	's'              => sanitize_text_field( $search_filter ),
-	'post_parent'    => sanitize_text_field( $course_id ),
+	's'              => $search_filter,
 	'posts_per_page' => sanitize_text_field( $limit ),
-	'paged'          => sanitize_text_field( $current_page ),
+	'paged'          => $current_page,
 	'orderBy'        => 'ID',
-	'order'          => sanitize_text_field( $order_filter ),
+	'order'          => $order_filter,
 
 );
-if ( ! empty( $date_filter ) ) {
+
+if ( $course_id ) {
+	$args['post_parent'] = $course_id;
+}
+
+if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 	$args['date_query'] = array(
 		array(
-			'year'  => $filter_year,
-			'month' => $filter_month,
-			'day'   => $filter_day,
+			'before'    => $end_date,
+			'after'     => $start_date,
+			'inclusive' => true,
 		),
 	);
 }
 if ( ! current_user_can( 'administrator' ) ) {
 	$args['author'] = get_current_user_id();
 }
-$the_query           = new WP_Query( $args );
+$the_query           = new \WP_Query( $args );
 $announcements       = $the_query->have_posts() ? $the_query->posts : array();
 $total_announcements = $the_query->found_posts;
 
 $current_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'announcements' );
 $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
+
+$form_id         = 'tutor-announcement-form';
+$delete_modal_id = 'tutor-announcement-delete-modal';
+$create_modal_id = 'tutor-announcement-form-modal';
 ?>
 
-<div class="tutor-dashboard-announcements" x-data="tutorAnnouncements()">
+<div 
+	class="tutor-dashboard-announcements"
+	x-data="tutorAnnouncements({
+		formId: '<?php echo esc_attr( $form_id ); ?>',
+		deleteModalId: '<?php echo esc_attr( $delete_modal_id ); ?>',
+		createModalId: '<?php echo esc_attr( $create_modal_id ); ?>',
+	})"
+>
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
-			<?php CourseFilter::make()->courses( $courses )->count( $total_announcements )->render(); ?>
-			<button 
-				type="button" 
-				class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2"
-				@click="openCreateModal()"
-			>
-				<?php tutor_utils()->render_svg_icon( Icon::ADD ); ?>
-				<?php esc_html_e( 'New Announcement', 'tutor' ); ?>
-			</button>
+			<?php
+				CourseFilter::make()
+					->courses( $courses )
+					->count( $total_announcements )
+					->render();
+
+				Button::make()
+					->label( __( 'New Announcement', 'tutor' ) )
+					->size( Size::X_SMALL )
+					->icon( Icon::ADD )
+					->attr( '@click', 'openCreateModal()' )
+					->render();
+			?>
 		</div>
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-py-5 tutor-px-6 tutor-sm-p-5 tutor-border-b">
 			<?php
@@ -95,10 +113,18 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 				->render();
 			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
-				<button type="button" class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon">
-					<?php tutor_utils()->render_svg_icon( Icon::CALENDAR_2, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-				</button>
-				<?php Sorting::make()->order( $order_filter )->render(); ?>
+				<?php
+					DateFilter::make()
+						->type( DateFilter::TYPE_SINGLE )
+						->placement( Positions::BOTTOM_END )
+						->trigger_size( Size::X_SMALL )
+						->icon_size( 16 )
+						->render();
+
+					Sorting::make()
+						->order( $order_filter )
+						->render();
+				?>
 			</div>
 		</div>
 
@@ -119,25 +145,33 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 							</div>
 							<div class="tutor-announcement-actions">
 								<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-sm-hidden">
-									<button 
-										type="button" 
-										class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon"
-										@click="openEditModal({ 
-											id: <?php echo (int) $announcement->ID; ?>, 
-											title: '<?php echo esc_js( $announcement->post_title ); ?>', 
-											summary: '<?php echo esc_js( $announcement->post_content ); ?>', 
-											course_id: <?php echo (int) $announcement->post_parent; ?> 
-										})"
-									>
-										<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
-									</button>
-									<button 
-										type="button" 
-										class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon"
-										@click="TutorCore.modal.showModal('tutor-announcement-delete-modal', { announcementId: <?php echo esc_html( $announcement->ID ); ?> });"
-									>
-										<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
-									</button>
+									<?php
+										Button::make()
+											->label( __( 'Edit', 'tutor' ) )
+											->size( Size::X_SMALL )
+											->variant( Variant::SECONDARY )
+											->icon( Icon::EDIT_2 )
+											->icon_only()
+											->attr(
+												'@click',
+												"openEditModal({ 
+													id: $announcement->ID, 
+													title: '$announcement->post_title', 
+													summary: '$announcement->post_content', 
+													course_id: $announcement->post_parent, 
+												})"
+											)
+											->render();
+
+										Button::make()
+											->label( __( 'Delete', 'tutor' ) )
+											->size( Size::X_SMALL )
+											->variant( Variant::SECONDARY )
+											->icon( Icon::DELETE_2 )
+											->icon_only()
+											->attr( '@click', "TutorCore.modal.showModal('$delete_modal_id', { announcementId: $announcement->ID });" )
+											->render();
+									?>
 								</div>
 								<!-- Mobile Popover -->
 								<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-hidden tutor-sm-block">
@@ -160,7 +194,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 											</button>
 											<button 
 												class="tutor-popover-menu-item"
-												@click="hide(); TutorCore.modal.showModal('tutor-announcement-delete-modal', { announcementId: <?php echo esc_html( $announcement->ID ); ?> });"
+												@click="hide(); TutorCore.modal.showModal('<?php echo esc_attr( $delete_modal_id ); ?>', { announcementId: <?php echo esc_html( $announcement->ID ); ?> });"
 											>
 												<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
 												<?php esc_html_e( 'Delete', 'tutor' ); ?>
@@ -199,7 +233,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 	<?php if ( ! empty( $announcements ) ) : ?>
 		<?php
 		ConfirmationModal::make()
-			->id( 'tutor-announcement-delete-modal' )
+			->id( $delete_modal_id )
 			->title( __( 'Delete This Announcement?', 'tutor' ) )
 			->message( __( 'Are you sure you want to delete this announcement permanently? Please confirm your choice.', 'tutor' ) )
 			->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
@@ -209,7 +243,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 		?>
 	<?php endif; ?>
 
-	<div x-data="tutorModal({ id: 'tutor-announcement-form-modal' })" x-cloak>
+	<div x-data="tutorModal({ id: '<?php echo esc_attr( $create_modal_id ); ?>' })" x-cloak>
 		<template x-teleport="body">
 			<div x-bind="getModalBindings()">
 				<div x-bind="getBackdropBindings()"></div>
@@ -223,7 +257,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 
 					<?php
 					$course_options = array_map(
-						function( $course ) {
+						function ( $course ) {
 							return array(
 								'label' => $course->post_title,
 								'value' => $course->ID,
@@ -233,8 +267,8 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 					);
 					?>
 					<form 
-						id="tutor-announcement-form"
-						x-data="tutorForm({ id: 'announcement-form' })"
+						id="<?php echo esc_attr( $form_id ); ?>"
+						x-data="tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>' })"
 						x-bind="getFormBindings()"
 						@submit.prevent="handleSubmit((data) => handleFormSubmit(data))($event)"
 					>
@@ -271,20 +305,33 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 								->attr( 'x-bind', "register('tutor_announcement_summary', { required: 'Summary is required' })" )
 								->render();
 							?>
+
+							<?php do_action( 'tutor_announcement_editor/after' ); ?>
 						</div>
 
 						<div class="tutor-modal-footer">
-							<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-small" @click="TutorCore.modal.closeModal('tutor-announcement-form-modal')">
-								<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-							</button>
-							<button 
-								type="submit" 
-								class="tutor-btn tutor-btn-primary tutor-btn-small"
-								:class="createUpdateMutation?.isPending ? 'tutor-btn-loading' : ''"
-								:disabled="createUpdateMutation?.isPending"
-							>
-								<span x-text="formActionText"></span>
-							</button>
+							<?php
+								Button::make()
+									->label( __( 'Cancel', 'tutor' ) )
+									->size( Size::SMALL )
+									->variant( Variant::GHOST )
+									->attr( '@click', sprintf( 'TutorCore.modal.hideModal("%s")', $create_modal_id ) )
+									->render();
+
+								Button::make()
+									->label( __( 'Publish', 'tutor' ) )
+									->size( Size::SMALL )
+									->variant( Variant::PRIMARY )
+									->attr( ':class', "createUpdateMutation?.isPending ? 'tutor-btn-loading' : ''" )
+									->attr( ':disabled', 'createUpdateMutation?.isPending' )
+									->attr(
+										'@click',
+										'handleSubmit((data) => handleFormSubmit(data))($event)'
+									)
+									->attr( 'x-text', 'formActionText' )
+									->render();
+								?>
+							
 						</div>
 					</form>
 				</div>

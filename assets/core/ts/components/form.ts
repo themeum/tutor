@@ -1,4 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
+import { isValid as isValidDate, parse } from 'date-fns';
 
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
@@ -26,6 +27,7 @@ export interface ValidationRules {
   min?: number | { value: number; message: string };
   max?: number | { value: number; message: string };
   pattern?: RegExp | { value: RegExp; message: string };
+  validTime?: boolean | string | { message: string };
   numberOnly: boolean | { allowNegative?: boolean; whole?: boolean };
   validate?: (value: unknown) => boolean | string | Promise<boolean | string>;
 }
@@ -67,8 +69,8 @@ export interface FormControlMethods {
   setError(name: string, error: FieldError): void;
   reset(values?: Record<string, unknown>): void;
   handleSubmit(
-    onValid: (data: Record<string, unknown>) => void,
-    onInvalid?: (errors: Record<string, FieldError>) => void,
+    onValid: (data: Record<string, unknown>) => void | Promise<void>,
+    onInvalid?: (errors: Record<string, FieldError>) => void | Promise<void>,
   ): (event: Event) => void;
   getFormState(): FormState;
   isFieldVisible(element: HTMLElement): boolean;
@@ -123,6 +125,41 @@ const ValidationHelpers = {
     return !pattern.test(value) ? { type: 'pattern', message } : null;
   },
 
+  isValidTimeValue(value: unknown): boolean {
+    if (typeof value !== 'string') {
+      return false;
+    }
+
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return true;
+    }
+
+    // AM/PM marker is required for this rule.
+    if (!/\b(?:AM|PM)\b/i.test(trimmed)) {
+      return false;
+    }
+
+    const parsed12Hour = parse(trimmed, 'hh:mm a', new Date());
+    return isValidDate(parsed12Hour);
+  },
+
+  validateValidTime(value: unknown, rule?: boolean | string | { message: string }): FieldError | null {
+    if (!rule) return null;
+
+    const stringValue = String(value ?? '').trim();
+    if (!stringValue) return null;
+
+    const message =
+      typeof rule === 'string'
+        ? rule
+        : typeof rule === 'object' && 'message' in rule
+          ? rule.message
+          : __('Invalid time entered!', 'tutor');
+
+    return this.isValidTimeValue(value) ? null : { type: 'validTime', message };
+  },
+
   async validateCustom(
     value: unknown,
     validate: (value: unknown) => boolean | string | Promise<boolean | string>,
@@ -174,6 +211,12 @@ async function validateFieldValue(name: string, value: unknown, rules?: Validati
   // Pattern validation
   if (rules.pattern && stringValue) {
     const error = ValidationHelpers.validatePattern(stringValue, rules.pattern);
+    if (error) return error;
+  }
+
+  // Time validation
+  if (rules.validTime) {
+    const error = ValidationHelpers.validateValidTime(value, rules.validTime);
     if (error) return error;
   }
 
@@ -618,6 +661,26 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.isValidating = false;
       this.dispatchStateChange();
 
+      // Dispatch custom event for components like WPEditor to listen to
+      if (this.formId) {
+        window.dispatchEvent(
+          new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_RESET, {
+            detail: {
+              formId: this.formId,
+              defaultValues:
+                values ||
+                Object.keys(this.fields).reduce(
+                  (acc, name) => {
+                    acc[name] = this.fields[name].defaultValue;
+                    return acc;
+                  },
+                  {} as Record<string, unknown>,
+                ),
+            },
+          }),
+        );
+      }
+
       setTimeout(() => {
         this.isResetting = false;
       }, 0);
@@ -635,9 +698,9 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
           const isValid = await this.validateAllFields();
 
           if (isValid) {
-            onValid({ ...this.values });
+            await onValid({ ...this.values });
           } else {
-            onInvalid?.({ ...this.errors });
+            await onInvalid?.({ ...this.errors });
 
             if (this.config.shouldFocusError) {
               this.focusFirstError();

@@ -9,6 +9,8 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
 
 $question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
@@ -38,7 +40,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 						<span class="tutor-text-mute">
 						<?php
 							/* translators: %s: time difference */
-							echo esc_html( wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) ); 
+							echo esc_html( wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 						?>
 					</span>
 					</p>
