@@ -45,6 +45,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 
 ?>
 <div class="tutor-lesson-content">
+	<?php ob_start(); ?>
 	<div 
 		x-data='tutorTabs({
 			tabs: <?php echo wp_json_encode( $tabs_data ); ?>,
@@ -112,6 +113,8 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 		</div>
 		<?php endif; ?>
 	</div>
-
-	<?php tutor_load_template( 'learning-area.lesson.footer' ); ?>
+	<?php
+		echo apply_filters( 'tutor_learning_area_content', ob_get_clean() );
+		tutor_load_template( 'learning-area.lesson.footer' );
+	?>
 </div>

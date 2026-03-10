@@ -47,6 +47,7 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 		->icon( Icon::CHEVRON_LEFT_2, 'left' )
 		->attr( 'href', esc_url( $prev_link ) )
 		->render();
+	ob_start();
 	?>
 	<form method="post" class="tutor-mb-none">
 		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
@@ -74,6 +75,7 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 		?>
 	</form>
 	<?php
+	echo apply_filters( 'tutor_learning_area_lesson_mark_as_complete', ob_get_clean() ); // phpcs:ignore --already sanitized.
 	Button::make()
 		->tag( 'a' )
 		->variant( Variant::GHOST )

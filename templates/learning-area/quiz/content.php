@@ -35,6 +35,7 @@ $attempts   = $quiz_model->quiz_attempts( $quiz_id, $user_id );
 
 ?>
 <div class="tutor-quiz-intro">
+	<?php ob_start(); ?>
 	<div class="tutor-card tutor-quiz-intro-card">
 	<!-- Quiz Icon -->
 	<div class="tutor-quiz-intro-icon tutor-mb-8">
@@ -221,4 +222,5 @@ $attempts   = $quiz_model->quiz_attempts( $quiz_id, $user_id );
 		</form>
 	</div>
 	</div>
+	<?php echo apply_filters( 'tutor_learning_area_content', ob_get_clean() ); //phpcs:ignore --already escaped ?>
 </div>
