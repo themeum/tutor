@@ -251,11 +251,12 @@ const qnaPage = () => {
       const card = (el?.closest('.tutor-discussion-card') ?? el) as HTMLElement | null;
       if (!card) return;
 
-      card.style.boxShadow = '0 0 0 2px var(--tutor-text-brand-secondary)';
-
-      setTimeout(() => {
-        card.style.boxShadow = '';
-      }, 300);
+      if (window.innerWidth > 576) {
+        card.style.boxShadow = '0 0 0 2px var(--tutor-text-brand-secondary)';
+        setTimeout(() => {
+          card.style.boxShadow = '';
+        }, 300);
+      }
     },
 
     handleKeydown(event: KeyboardEvent) {

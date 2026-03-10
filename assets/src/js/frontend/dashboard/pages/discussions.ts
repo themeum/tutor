@@ -210,7 +210,7 @@ const discussionsPage = () => {
       this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
         onSuccess: (_, payload) => {
           toast.success(__('Reply saved successfully', 'tutor'));
-          
+
           const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${payload.question_id}`;
           if (form.hasForm(formId)) {
             form.reset(formId);
@@ -329,7 +329,12 @@ const discussionsPage = () => {
       }
     },
 
-    handleReplyComment(data: { comment: string }, commentId: number, courseId: number, context: ReplyCommentPayload['reply_context'] = 'single') {
+    handleReplyComment(
+      data: { comment: string },
+      commentId: number,
+      courseId: number,
+      context: ReplyCommentPayload['reply_context'] = 'single',
+    ) {
       return this.replyCommentMutation?.mutate({
         comment: data.comment,
         comment_parent: commentId,
@@ -440,13 +445,13 @@ const discussionsPage = () => {
       const card = (el?.closest('.tutor-discussion-card') ?? el) as HTMLElement | null;
       if (!card) return;
 
-      card.style.boxShadow = '0 0 0 2px var(--tutor-text-brand-secondary)';
-
-      setTimeout(() => {
-        card.style.boxShadow = '';
-      }, 300);
+      if (window.innerWidth > 576) {
+        card.style.boxShadow = '0 0 0 2px var(--tutor-text-brand-secondary)';
+        setTimeout(() => {
+          card.style.boxShadow = '';
+        }, 300);
+      }
     },
-
   };
 };
 
