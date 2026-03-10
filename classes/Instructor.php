@@ -906,7 +906,7 @@ class Instructor {
 		$order = Input::post( 'order', array(), Input::TYPE_ARRAY );
 		$order = array_values( array_map( 'sanitize_key', $order ) );
 
-		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', $order );
+		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', array_flip( $order ) );
 
 		wp_send_json_success();
 	}
@@ -919,8 +919,8 @@ class Instructor {
 
 		tutor_utils()->check_nonce();
 
-		$items = Input::post( 'items', array(), Input::TYPE_ARRAY );
-		$items = array_values( array_map( 'sanitize_key', $items ) );
+		$items = Input::post( 'items', '', Input::TYPE_STRING );
+		$items = array_map( 'rest_sanitize_boolean', (array)json_decode($items) );
 
 		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', $items );
 

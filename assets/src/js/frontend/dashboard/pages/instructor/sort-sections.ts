@@ -108,10 +108,13 @@ export const sortSections = (sectionsIds: string[]) => ({
   },
 
   async handleCheckboxClick() {
-    const items = Array.from(document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')).map((checkbox) => [
-      checkbox.name,
-      checkbox.checked,
-    ]);
+    const items = Array.from(document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')).reduce(
+      (acc, checkbox) => {
+        acc[checkbox.name] = checkbox.checked;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    );
 
     try {
       const response = await wpAjaxInstance.post<AjaxResponse, AjaxResponse>(

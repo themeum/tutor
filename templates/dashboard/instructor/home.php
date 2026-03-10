@@ -20,47 +20,51 @@ use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 
-$get_saved_order      = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', true );
-$get_saved_visibility = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', true );
+$saved_order      = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', true );
+$saved_visibility = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', true );
 
 $sortable_sections = array(
 	array(
 		'id'        => 'current_stats',
 		'label'     => esc_html__( 'Current Stats', 'tutor' ),
-		'is_active' => true,
-		'order'     => 0,
+		'is_active' => $saved_visibility['current_stats'] ?? true,
+		'order'     => $saved_order['current_stats'] ?? 0,
 	),
 	array(
 		'id'        => 'overview_chart',
 		'label'     => esc_html__( 'Earning Over Time', 'tutor' ),
-		'is_active' => true,
-		'order'     => 1,
+		'is_active' => $saved_visibility['overview_chart'] ?? true,
+		'order'     => $saved_order['overview_chart'] ?? 1,
 	),
 	array(
 		'id'        => 'course_completion_and_leader',
 		'label'     => esc_html__( 'Course Completion and Leader', 'tutor' ),
-		'is_active' => true,
-		'order'     => 2,
+		'is_active' => $saved_visibility['course_completion_and_leader'] ?? true,
+		'order'     => $saved_order['course_completion_and_leader'] ?? 2,
 	),
 	array(
 		'id'        => 'top_performing_courses',
 		'label'     => esc_html__( 'Top Performing Courses', 'tutor' ),
-		'is_active' => true,
-		'order'     => 3,
+		'is_active' => $saved_visibility['top_performing_courses'] ?? true,
+		'order'     => $saved_order['top_performing_courses'] ?? 3,
 	),
-	// array(
-	// 'id'        => 'upcoming_tasks_and_activity',
-	// 'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
-	// 'is_active' => true,
-	// 'order'     => 4,
-	// ),
+	array(
+		'id'        => 'upcoming_tasks_and_activity',
+		'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
+		'is_active' => true,
+		'order'     => 4,
+	),
 	array(
 		'id'        => 'recent_reviews',
 		'label'     => esc_html__( 'Recent Student Reviews', 'tutor' ),
-		'is_active' => true,
-		'order'     => 6,
+		'is_active' => $saved_visibility['recent_reviews'] ?? true,
+		'order'     => $saved_order['recent_reviews'] ?? 4,
 	),
 );
+
+usort( $sortable_sections, function( $a, $b ) {
+	return $a['order'] <=> $b['order'];
+});
 
 $sortable_sections_defaults = array_reduce(
 	$sortable_sections,
@@ -74,7 +78,7 @@ $sortable_sections_defaults = array_reduce(
 $sortable_sections_ids = array_reduce(
 	$sortable_sections,
 	function ( $carry, $section ) {
-		$carry[] = $section['id'];
+		$carry[$section['order']] = $section['id'];
 		return $carry;
 	},
 	array()
@@ -398,192 +402,199 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 		</div>
 	</div>
 
-	<!-- Stat cards -->
-	<div 
-		data-section-id="current_stats" 
-		class="tutor-flex tutor-flex-wrap tutor-gap-5 tutor-z-positive"					
-		x-show="watch('current_stats')"
-	>
-		<?php foreach ( $stat_cards as $card ) : ?>
-			<div class="tutor-flex-1">
-			<?php
-			tutor_load_template(
-				'dashboard.instructor.analytics.stat-card',
-				array(
-					'variation'     => $card['variation'] ?? 'enrolled',
-					'card_title'    => $card['title'] ?? '',
-					'icon'          => $card['icon'] ?? '',
-					'value'         => $card['value'] ?? '',
-					'content'       => $card['content'] ?? '',
-					'hover_content' => $card['hover_content'] ?? array(),
-				)
-			);
-			?>
-			</div>
-		<?php endforeach; ?>
-	</div>
-
-	<!-- Overview Chart -->
-	<?php
-	if ( $overview_chart_data ) :
-		tutor_load_template(
-			'dashboard.instructor.home.overview-chart',
-			array(
-				'overview_chart_data' => $overview_chart_data,
-			)
-		);
-	endif;
-	?>
-	<div 
-		data-section-id="course_completion_and_leader" 
-		class="tutor-flex tutor-gap-6"
-		x-show="watch('course_completion_and_leader')"
-	>
-		<!-- Course Completion Chart -->
-		<?php
-		tutor_load_template(
-			'dashboard.instructor.home.course-completion-chart',
-			array(
-				'course_completion_data' => $course_completion_data,
-			)
-		);
-		?>
-
-		<!-- @todo Will be added later. -->
-		<!-- Leaderboard -->
-		<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
-			<div class="tutor-small">
-				<?php // esc_html_e( 'Leaderboard', 'tutor' ); ?>
-			</div>
-
-			<div class="tutor-dashboard-home-card-body">
-				<?php // foreach ( $leaderboard_data as $item_key => $item ) : ?>
-					<?php
-					// tutor_load_template(
-					// 'demo-components.dashboard.components.instructor.home.leaderboard-item',
-					// array(
-					// 'item_key' => $item_key,
-					// 'item'     => $item,
-					// )
-					// );
-					?>
-				<?php // endforeach; ?>
-			</div>
-		</div> -->
-	</div>
-
-	<!-- Top Performing Courses -->
-	<?php if ( ! empty( $top_performing_courses ) ) : ?>
-		<div 
-			data-section-id="top_performing_courses"
-			class="tutor-dashboard-home-card"
-			x-show="watch('top_performing_courses')"
-		> 
-			<div class="tutor-flex tutor-row tutor-justify-between tutor-align-center tutor-gap-9">
-				<div class="tutor-small">
-					<?php esc_html_e( 'Top Performing Courses', 'tutor' ); ?>
-				</div>
-
-				<!-- Sorting -->
-				<?php
-				$data = array(
-					'options'  => array(
-						'revenue' => __( 'Revenue', 'tutor' ),
-						'student' => __( 'Student', 'tutor' ),
-					),
-					'selected' => Input::get( 'type', 'revenue' ),
-				);
-				tutor_load_template(
-					'dashboard.instructor.home.top-performing-course-filter',
-					$data,
-				);
-				?>
-			</div>
-
-			<div class="tutor-dashboard-home-card-body tutor-gap-4">
-				<?php foreach ( $top_performing_courses as $item_key => $item ) : ?>
+	<?php foreach ( $sortable_sections as $section ) : ?>
+		<?php if( 'current_stats' === $section['id'] ) : ?>
+			<!-- Stat cards -->
+			<div 
+				data-section-id="current_stats" 
+				class="tutor-flex tutor-flex-wrap tutor-gap-5 tutor-z-positive"					
+				x-show="watch('current_stats')"
+			>
+				<?php foreach ( $stat_cards as $card ) : ?>
+					<div class="tutor-flex-1">
 					<?php
 					tutor_load_template(
-						'dashboard.instructor.home.top-performing-course-item',
+						'dashboard.instructor.analytics.stat-card',
 						array(
-							'item_key' => $item_key,
-							'item'     => $item,
-						),
-					)
+							'variation'     => $card['variation'] ?? 'enrolled',
+							'card_title'    => $card['title'] ?? '',
+							'icon'          => $card['icon'] ?? '',
+							'value'         => $card['value'] ?? '',
+							'content'       => $card['content'] ?? '',
+							'hover_content' => $card['hover_content'] ?? array(),
+						)
+					);
 					?>
+					</div>
 				<?php endforeach; ?>
 			</div>
-		</div>
-	<?php endif; ?>
+		<?php endif; ?>
 
-	<!-- Upcoming Task And Activity -->
-	<?php if ( ! empty( $upcoming_tasks ) ) : ?>
-		<div
-			data-section-id="upcoming_tasks_and_activity"
-			class="tutor-flex tutor-gap-6"
-			x-show="watch('upcoming_tasks_and_activity')"
-		>
-			<!-- Upcoming Tasks -->
-			<div class="tutor-dashboard-home-card tutor-flex-1">
-				<div class="tutor-small">
-					<?php esc_html_e( 'Upcoming Tasks', 'tutor' ); ?>
+		<!-- Overview Chart -->
+		<?php
+		if ( 'overview_chart' === $section['id'] && $overview_chart_data ) :
+			tutor_load_template(
+				'dashboard.instructor.home.overview-chart',
+				array(
+					'overview_chart_data' => $overview_chart_data,
+				)
+			);
+		endif;
+		?>
+
+		<?php if ( 'course_completion_and_leader' === $section['id'] ) : ?>
+			<div 
+				data-section-id="course_completion_and_leader" 
+				class="tutor-flex tutor-gap-6"
+				x-show="watch('course_completion_and_leader')"
+			>
+				<!-- Course Completion Chart -->
+				<?php
+				tutor_load_template(
+					'dashboard.instructor.home.course-completion-chart',
+					array(
+						'course_completion_data' => $course_completion_data,
+					)
+				);
+				?>
+
+				<!-- @todo Will be added later. -->
+				<!-- Leaderboard -->
+				<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
+					<div class="tutor-small">
+						<?php // esc_html_e( 'Leaderboard', 'tutor' ); ?>
+					</div>
+
+					<div class="tutor-dashboard-home-card-body">
+						<?php // foreach ( $leaderboard_data as $item_key => $item ) : ?>
+							<?php
+							// tutor_load_template(
+							// 'demo-components.dashboard.components.instructor.home.leaderboard-item',
+							// array(
+							// 'item_key' => $item_key,
+							// 'item'     => $item,
+							// )
+							// );
+							?>
+						<?php // endforeach; ?>
+					</div>
+				</div> -->
+			</div>
+		<?php endif; ?>
+
+		<!-- Top Performing Courses -->
+		<?php if ( 'top_performing_courses' === $section['id'] && ! empty( $top_performing_courses ) ) : ?>
+			<div 
+				data-section-id="top_performing_courses"
+				class="tutor-dashboard-home-card"
+				x-show="watch('top_performing_courses')"
+			> 
+				<div class="tutor-flex tutor-row tutor-justify-between tutor-align-center tutor-gap-9">
+					<div class="tutor-small">
+						<?php esc_html_e( 'Top Performing Courses', 'tutor' ); ?>
+					</div>
+
+					<!-- Sorting -->
+					<?php
+					$data = array(
+						'options'  => array(
+							'revenue' => __( 'Revenue', 'tutor' ),
+							'student' => __( 'Student', 'tutor' ),
+						),
+						'selected' => Input::get( 'type', 'revenue' ),
+					);
+					tutor_load_template(
+						'dashboard.instructor.home.top-performing-course-filter',
+						$data,
+					);
+					?>
 				</div>
 
 				<div class="tutor-dashboard-home-card-body tutor-gap-4">
-					<?php foreach ( $upcoming_tasks as $item ) : ?>
+					<?php foreach ( $top_performing_courses as $item_key => $item ) : ?>
 						<?php
 						tutor_load_template(
-							'dashboard.instructor.home.upcoming-task-item',
-							array( 'item' => $item )
+							'dashboard.instructor.home.top-performing-course-item',
+							array(
+								'item_key' => $item_key,
+								'item'     => $item,
+							),
+						)
+						?>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		<?php endif; ?>
+
+		<!-- Upcoming Task And Activity -->
+		<?php if ( 'upcoming_tasks_and_activity' === $section['id'] && ! empty( $upcoming_tasks ) ) : ?>
+			<div
+				data-section-id="upcoming_tasks_and_activity"
+				class="tutor-flex tutor-gap-6"
+				x-show="watch('upcoming_tasks_and_activity')"
+			>
+				<!-- Upcoming Tasks -->
+				<div class="tutor-dashboard-home-card tutor-flex-1">
+					<div class="tutor-small">
+						<?php esc_html_e( 'Upcoming Tasks', 'tutor' ); ?>
+					</div>
+
+					<div class="tutor-dashboard-home-card-body tutor-gap-4">
+						<?php foreach ( $upcoming_tasks as $item ) : ?>
+							<?php
+							tutor_load_template(
+								'dashboard.instructor.home.upcoming-task-item',
+								array( 'item' => $item )
+							);
+							?>
+						<?php endforeach; ?>
+					</div>
+				</div>
+
+				<!-- Recent Activity -->
+				<!-- @todo Will be added later. -->
+				<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
+				<div class="tutor-small">
+					<?php // esc_html_e( 'Recent Activity', 'tutor' ); ?>
+				</div>
+
+				<div class="tutor-dashboard-home-card-body">
+					<?php // foreach ( $recent_activity as $item ) : ?>
+						<?php
+						// tutor_load_template(
+						// 'demo-components.dashboard.components.instructor.home.recent-activity-item',
+						// array(
+						// 'item' => $item,
+						// )
+						// );
+						?>
+					<?php // endforeach; ?>
+				</div> -->
+			</div>
+		<?php endif; ?>
+
+		<!-- Recent Student Reviews -->
+		<?php if ( 'recent_reviews' === $section['id'] && ! empty( $recent_reviews ) ) : ?>
+			<div 
+				data-section-id="recent_reviews" 
+				class="tutor-dashboard-home-card"
+				x-show="watch('recent_reviews')"
+			>
+				<div class="tutor-small">
+					<?php esc_html_e( 'Recent Student Reviews', 'tutor' ); ?>
+				</div>
+
+				<div class="tutor-dashboard-home-card-body tutor-gap-6">
+					<?php foreach ( $recent_reviews as $review ) : ?>
+						<?php
+						tutor_load_template(
+							'dashboard.instructor.home.recent-student-review-item',
+							array( 'review' => $review ),
 						);
 						?>
 					<?php endforeach; ?>
 				</div>
 			</div>
-
-			<!-- Recent Activity -->
-			<!-- @todo Will be added later. -->
-			<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
-			<div class="tutor-small">
-				<?php // esc_html_e( 'Recent Activity', 'tutor' ); ?>
-			</div>
-
-			<div class="tutor-dashboard-home-card-body">
-				<?php // foreach ( $recent_activity as $item ) : ?>
-					<?php
-					// tutor_load_template(
-					// 'demo-components.dashboard.components.instructor.home.recent-activity-item',
-					// array(
-					// 'item' => $item,
-					// )
-					// );
-					?>
-				<?php // endforeach; ?>
-			</div> -->
-		</div>
-	<?php endif; ?>
-
-	<!-- Recent Student Reviews -->
-	<?php if ( ! empty( $recent_reviews ) ) : ?>
-		<div 
-			data-section-id="recent_reviews" 
-			class="tutor-dashboard-home-card"
-			x-show="watch('recent_reviews')"
-		>
-			<div class="tutor-small">
-				<?php esc_html_e( 'Recent Student Reviews', 'tutor' ); ?>
-			</div>
-
-			<div class="tutor-dashboard-home-card-body tutor-gap-6">
-				<?php foreach ( $recent_reviews as $review ) : ?>
-					<?php
-					tutor_load_template(
-						'dashboard.instructor.home.recent-student-review-item',
-						array( 'review' => $review ),
-					);
-					?>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	<?php endif; ?>
+		<?php endif; ?>
+	<?php endforeach; ?>
 </form>
