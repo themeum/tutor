@@ -15,6 +15,7 @@ export interface FileUploaderProps {
   maxSize?: number; // in bytes
   onFileSelect?: (files: (File | WPMedia | string)[]) => void;
   onError?: (error: string) => void;
+  onFileRemove?: (file: File | WPMedia | string) => void;
   disabled?: boolean;
   variant?: FileUploaderVariant;
   value?: File | WPMedia | string | (File | WPMedia | string)[] | null;
@@ -273,6 +274,10 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   },
 
   removeFile(index?: number) {
+    if (props.onFileRemove && typeof index === 'number') {
+      props.onFileRemove(this.selectedFiles[index]);
+    }
+
     if (this.multiple && typeof index === 'number') {
       this.selectedFiles = this.selectedFiles.filter((_, i) => i !== index);
     } else {

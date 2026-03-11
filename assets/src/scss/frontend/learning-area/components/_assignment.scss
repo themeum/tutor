@@ -150,16 +150,21 @@
         thead {
           th {
             @include tutor-typography('tiny', 'regular');
-            width: 20%;
+            width: 14.3%;
 
             &:first-of-type {
               width: 42.5%;
+            }
+
+            &:nth-child(4) {
+              width: 18%;
             }
           }
         }
 
         tbody {
           tr {
+            height: $tutor-spacing-13;
             &:hover {
               td {
                 .attempt-list-badge{ 
@@ -167,28 +172,27 @@
                     display: none;
                   }
                 }
-                .attempt_details_button {
+                button {
                   display: block;
                 }
               }
             }
           }
           td {
-            position: relative;
             @include tutor-typography('small', 'regular', 'secondary');
             width: 14.3%;
 
             &:first-of-type {
               color: $tutor-text-brand;
               font-weight: $tutor-font-weight-medium;
-              width: 42.8%;
+              width: 42.5%;
             }
 
-            a.attempt_details_button {
-              position: absolute;
-              right: 0;
-              top: 50%;
-              transform: translate(-50%, -50%);
+            &:nth-child(4) {
+              width: 18%;
+            }
+
+            button{
               display: none;
             }
           }
