@@ -93,6 +93,7 @@ const TUTOR_CALENDAR_QUERY_PARAMS = {
   startDate: 'start_date',
   endDate: 'end_date',
   date: 'date',
+  currentPage: 'current_page',
 } as const;
 
 export function calendar({ options, hidePopover }: { options: Options; hidePopover?: () => void }) {
@@ -509,6 +510,16 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
     navigateWithParams(params: Record<string, string | null>) {
       const url = new URL(window.location.href);
 
+      // Always reset pagination when the date filter changes.
+      url.searchParams.delete(TUTOR_CALENDAR_QUERY_PARAMS.currentPage);
+
+      // Also strip any additional caller-specified params.
+      if (Array.isArray((options as Record<string, unknown>).clearParams)) {
+        ((options as Record<string, unknown>).clearParams as string[]).forEach((key) => {
+          url.searchParams.delete(key);
+        });
+      }
+
       Object.entries(params).forEach(([key, value]) => {
         if (value === null) {
           url.searchParams.delete(key);
@@ -569,17 +580,18 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
       if (!this.calendar) return;
 
       const dates = this.getPresetDates(preset);
-      const url = new URL(window.location.href);
 
       if (dates.length) {
-        url.searchParams.set(TUTOR_CALENDAR_QUERY_PARAMS.startDate, dates[0]);
-        url.searchParams.set(TUTOR_CALENDAR_QUERY_PARAMS.endDate, dates[1]);
+        this.navigateWithParams({
+          [TUTOR_CALENDAR_QUERY_PARAMS.startDate]: dates[0],
+          [TUTOR_CALENDAR_QUERY_PARAMS.endDate]: dates[1],
+        });
       } else {
-        url.searchParams.delete(TUTOR_CALENDAR_QUERY_PARAMS.startDate);
-        url.searchParams.delete(TUTOR_CALENDAR_QUERY_PARAMS.endDate);
+        this.navigateWithParams({
+          [TUTOR_CALENDAR_QUERY_PARAMS.startDate]: null,
+          [TUTOR_CALENDAR_QUERY_PARAMS.endDate]: null,
+        });
       }
-
-      window.location.href = url.toString();
     },
 
     updateActivePreset() {
