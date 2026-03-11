@@ -46,6 +46,7 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 		->label( __( 'Previous', 'tutor' ) )
 		->icon( Icon::CHEVRON_LEFT_2, 'left' )
 		->attr( 'href', esc_url( $prev_link ) )
+		->disabled( $prev_is_locked || ! $previous_id )
 		->render();
 	?>
 	<form method="post" class="tutor-mb-none">
@@ -81,7 +82,7 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 		->label( __( 'Next', 'tutor' ) )
 		->icon( Icon::CHEVRON_RIGHT_2, 'right' )
 		->attr( 'href', esc_url( $next_link ) )
-		->attr( 'class', 'tutor-sm-btn-tiny' )
+		->disabled( $next_is_locked || ! $next_id )
 		->render();
 	?>
 </div>

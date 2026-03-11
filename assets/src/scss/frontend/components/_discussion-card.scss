@@ -4,7 +4,7 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-discussion-card {
-  @include tutor-flex(row, flex-start);
+  @include tutor-flex(column, flex-start);
   gap: $tutor-spacing-4;
   background-color: $tutor-surface-l1;
   border: 1px solid $tutor-border-idle;
@@ -115,6 +115,12 @@
       @include tutor-button-reset();
       @include tutor-typography(tiny, medium, subdued);
       margin-right: auto;
+      min-height: unset;
+      background: unset !important;
+      &:hover,
+      &:focus {
+        color: $tutor-text-brand !important;
+      }
 
       @include tutor-breakpoint-up(sm) {
         display: none;
