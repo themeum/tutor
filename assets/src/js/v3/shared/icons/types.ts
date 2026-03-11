@@ -50,6 +50,7 @@ export const icons = [
   'calendar',
   'calendar2',
   'calendar2Fill',
+  'calendarCheck',
   'calendarLine',
   'calendarLines',
   'callEnd',
