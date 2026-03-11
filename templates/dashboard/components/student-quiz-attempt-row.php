@@ -107,6 +107,5 @@ $attempts_count  = $attempts_count ?? 0;
 		$quiz_attempt_obj->render_quiz_attempt_list_badge( $attempt );
 		$quiz_attempt_obj->render_student_attempt_popover( $attempt, $attempts_count, $quiz_id );
 		?>
-		
 	</div>
 </div>

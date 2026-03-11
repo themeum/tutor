@@ -496,7 +496,7 @@ class DropdownFilter extends BaseComponent {
 							<?php else : ?>
 								<a 
 									href="<?php echo esc_url( $opt_url ); ?>" 
-									class="tutor-popover-menu-item <?php echo $is_active ? 'tutor-active' : ''; ?>"
+									class="tutor-popover-menu-item tutor-gap-2 <?php echo $is_active ? 'tutor-active' : ''; ?>"
 									<?php if ( $this->show_search ) : ?>
 										x-show="search === '' || '<?php echo esc_js( $opt_label ); ?>'.toLowerCase().includes(search.toLowerCase())"
 									<?php endif; ?>
