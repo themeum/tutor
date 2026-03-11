@@ -3305,8 +3305,8 @@ class Course extends Tutor_Base {
 		}
 
 		$hours   = floor( $total_seconds / 3600 );
-		$minutes = floor( ( $total_seconds % 3600 ) / 60 );
-		$seconds = $total_seconds % 60;
+		$minutes = floor( $total_seconds / 60 );
+		$seconds = $total_seconds;
 
 		return array(
 			'hours'   => (int) $hours,
