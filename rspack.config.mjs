@@ -280,6 +280,7 @@ const resolveAliases = {
   '@CouponDetails': path.resolve(__dirname, './assets/src/js/v3/entries/coupon-details/'),
   '@AddonList': path.resolve(__dirname, './assets/src/js/v3/entries/addon-list/'),
   '@ImportExport': path.resolve(__dirname, './assets/src/js/v3/entries/import-export/'),
+  '@FrontendComponents': path.resolve(__dirname, './assets/src/js/frontend/components'),
   '@FrontendTypes': path.resolve(__dirname, './assets/src/js/frontend/types'),
   '@FrontendServices': path.resolve(__dirname, './assets/src/js/frontend/services'),
   '@FrontendDashboard': path.resolve(__dirname, './assets/src/js/frontend/dashboard'),

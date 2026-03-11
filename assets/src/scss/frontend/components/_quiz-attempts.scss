@@ -296,7 +296,19 @@
       }
 
       @include tutor-breakpoint-up(sm) {
-        &:hover {
+        &:has(.tutor-popover[style*='visibility: visible;']) {
+          .tutor-quiz-item-result {
+            .tutor-badge {
+              display: none;
+            }
+          }
+
+          .tutor-quiz-item-result-more {
+            display: flex;
+          }
+        }
+
+        &:hover:has(.tutor-quiz-item-result-more) {
           .tutor-quiz-item-result {
             .tutor-badge {
               display: none;

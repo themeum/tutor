@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use TUTOR\User;
 use Tutor\Cache\QuizAttempts;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
@@ -358,6 +359,19 @@ class Quiz_Attempts_List {
 	}
 
 	/**
+	 * Check if attempt details are hidden.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_attempt_details_hidden(): bool {
+		$is_student_view        = User::is_student_view();
+		$is_quiz_details_hidden = $is_student_view && tutor_utils()->get_option( 'hide_quiz_details' );
+		return $is_quiz_details_hidden;
+	}
+
+	/**
 	 * Check whether to show instructor or student quiz attempt.
 	 *
 	 * @since 4.0.0
@@ -530,8 +544,15 @@ class Quiz_Attempts_List {
 	 * @return void
 	 */
 	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0 ) {
+		$is_quiz_details_hidden = $this->is_attempt_details_hidden();
+
 		// Only add retry option to the first attempt.
 		if ( ! $this->should_retry( $attempt, $attempts_count ) || ! $attempts_count ) {
+
+			if ( $is_quiz_details_hidden ) {
+				return;
+			}
+
 			Popover::make()
 			->trigger( $this->get_kebab_button() )
 			->placement( 'bottom' )

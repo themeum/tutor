@@ -35,6 +35,7 @@
       "@CouponDetails/*": ["assets/src/js/v3/entries/coupon-details/*"],
       "@AddonList/*": ["assets/src/js/v3/entries/addon-list/*"],
       "@ImportExport/*": ["assets/src/js/v3/entries/import-export/*"],
+      "@FrontendComponents/*": ["assets/src/js/frontend/components/*"],
       "@FrontendTypes/*": ["assets/src/js/frontend/types/*"],
       "@FrontendServices/*": ["assets/src/js/frontend/services/*"],
       "@FrontendDashboard/*": ["assets/src/js/frontend/dashboard/*"],
