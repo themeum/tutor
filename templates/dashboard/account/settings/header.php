@@ -17,7 +17,7 @@ use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 
-$back_url = UrlHelper::back();
+$back_url = UrlHelper::back( tutor_utils()->tutor_dashboard_url() );
 
 ?>
 <div class="tutor-profile-header">

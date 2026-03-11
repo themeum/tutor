@@ -5,8 +5,10 @@ import { initializeLesson } from './lesson';
 import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './quiz';
+import { initializeSidebar } from './sidebar';
 
 const initializeLearningArea = () => {
+  initializeSidebar();
   const { pathname, search } = window.location;
 
   // Normalize path segments
@@ -52,6 +54,11 @@ const initializeLearningArea = () => {
   const lessonContentWrapper = document.querySelector('.tutor-lesson-content');
   if (lessonContentWrapper) {
     initializeLesson();
+  }
+
+  // Ensure all registered components are initialized with Alpine.
+  if (window.TutorComponentRegistry) {
+    window.TutorComponentRegistry.initWithAlpine(window.Alpine);
   }
 };
 

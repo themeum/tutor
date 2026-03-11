@@ -66,6 +66,7 @@ final class Icon {
 	const CALENDAR                   = 'calendar';
 	const CALENDAR_2                 = 'calendar-2';
 	const CALENDAR_2_FILL            = 'calendar-2-fill';
+	const CALENDAR_CHECK             = 'calendar-check';
 	const CALENDAR_LINE              = 'calendar-line';
 	const CALENDAR_LINES             = 'calendar-lines';
 	const CALL_END                   = 'call-end';
@@ -405,6 +406,7 @@ final class Icon {
 	const VISITED                    = 'visited';
 	const WALLET                     = 'wallet';
 	const WARNING                    = 'warning';
+	const WARNING_COLORIZED          = 'warning-colorized';
 	const WARNING_LINE               = 'warning-line';
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';

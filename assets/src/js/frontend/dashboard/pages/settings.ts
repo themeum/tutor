@@ -1,10 +1,7 @@
 import { __ } from '@wordpress/i18n';
-import axios from 'axios';
 
-import { type MutationState, type QueryState } from '@Core/ts/services/Query';
-
+import { type MutationState } from '@Core/ts/services/Query';
 import { type WPMedia } from '@Core/ts/services/WPMedia';
-import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
@@ -84,7 +81,6 @@ const settings = () => {
 
   return {
     $el: null as HTMLElement | null,
-    fetchCountriesQuery: null as QueryState<TutorMutationResponse<string>> | null,
     uploadProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     removeProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     updateProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
@@ -117,8 +113,6 @@ const settings = () => {
           toast.error(convertToErrorMessage(error) || __('Failed to update notification settings', 'tutor'));
         },
       });
-
-      this.fetchCountriesQuery = query.useQuery('fetch-countries', () => this.fetchCountries());
 
       this.uploadProfilePhotoMutation = query.useMutation(this.uploadProfilePhoto, {
         onError: (error: Error) => {
@@ -228,10 +222,6 @@ const settings = () => {
       );
 
       return wpAjaxInstance.post(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload).then((res) => res.data);
-    },
-
-    async fetchCountries() {
-      return await axios.get(`${tutorConfig.tutor_url}${endpoints.FETCH_COUNTRIES}`).then((res) => res.data);
     },
 
     async uploadProfilePhoto(payload: ProfilePhotoFormProps) {
