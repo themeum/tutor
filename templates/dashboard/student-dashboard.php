@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Course;
+use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Models\CourseModel;
 
@@ -34,7 +35,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<?php echo esc_html( $text ); ?>
 					</span>
 				</div>
-				<a href="<?php echo esc_attr( tutor_utils()->tutor_dashboard_url( 'account/settings' ) ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small">
+				<a href="<?php echo esc_attr( Dashboard::get_account_page_url( 'settings' ) ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small">
 					<?php esc_html_e( 'Click Here', 'tutor' ); ?>
 				</a>
 			</div>
@@ -54,7 +55,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$completed_course_count = count( $completed_courses );
 	$active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
 
-	$time_spent = Course::get_total_time_spent_by_user( $completed_courses );
+	$time_spent = Course::get_total_course_duration( $completed_courses );
 	$grid_col   = $time_spent['hours'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
 	$seconds    = $time_spent['minutes'] > 0 ? $time_spent['minutes'] * 60 : 0;
 	?>

@@ -3293,7 +3293,7 @@ class Course extends Tutor_Base {
 	 *     seconds: int
 	 * } Total accumulated duration from all given courses.
 	 */
-	public static function get_total_time_spent_by_user( $course_ids ): array {
+	public static function get_total_course_duration( $course_ids ): array {
 
 		$total_time = array(
 			'hours'   => 0,
