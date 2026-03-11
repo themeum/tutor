@@ -17,7 +17,7 @@ use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 
-if ( is_numeric( Input::get( 'view_quiz_attempt_id' ) ) ) {
+if ( is_numeric( Input::get( 'attempt_id' ) ) ) {
 	include tutor()->path . 'views/pages/view_attempt.php';
 	return;
 }

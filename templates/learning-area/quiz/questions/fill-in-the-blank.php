@@ -8,54 +8,86 @@
  * @since 4.0.0
  */
 
-$question = array(
-	'index'             => 1,
-	'question_id'       => 1,
-	'question_title'    => __( 'Fill In The Blanks', 'tutor' ),
-	'question_type'     => 'fill_in_the_blank',
-	'answer_required'   => true,
-	'question_mark'     => 10,
-	'question_settings' => array(
-		'answer_required'    => '0',
-		'question_mark'      => '1',
-		'question_type'      => 'fill_in_the_blank',
-		'randomize_question' => '0',
-		'show_question_mark' => '1',
-		'is_image_matching'  => '0',
-	),
-	'question_answers'  => array(
-		array(
-			'answer_title'         => 'Please make sure to use the variable {dash} in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
-			'answer_two_gap_match' => 'dash | dash',
-			'answer_order'         => 1,
-		),
-	),
-);
+defined( 'ABSPATH' ) || exit;
+
+$base_field_name = ( $question_field_name_base ?? '' ) . '[]';
+$field_name      = '';
+$field_names     = array();
+$register_rules  = '';
+if ( $answer_is_required ) {
+	$register_rules = ", { required: '" . esc_js( $required_message ) . "' }";
+}
 
 ?>
+<div class="tutor-quiz-question-options">
+	<?php foreach ( $question['question_answers'] as $answer ) : ?>
+		<div class="tutor-quiz-question-option">
+			<?php
+			$answer_title = $answer['answer_title'];
+			$dash_count   = substr_count( $answer_title, '{dash}' );
 
-<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
-	<?php
-	tutor_load_template(
-		'demo-components.learning-area.components.quiz.question-header',
-		array(
-			'index'              => $question['index'],
-			'question_title'     => $question['question_title'],
-			'question_mark'      => $question['question_mark'],
-			'show_question_mark' => $question['question_settings']['show_question_mark'],
-		)
-	);
-	?>
+			if ( $dash_count > 0 ) {
+				$input_index = 0;
 
-	<div class="tutor-quiz-question-options" data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>">
-		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<div class="tutor-quiz-question-option">
-				<?php
-				$answer_title = $answer['answer_title'];
-				$answer_title = str_replace( '{dash}', '<input type="text" class="tutor-quiz-question-input" placeholder="Type your answer here" />', $answer_title );
-				echo $answer_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				?>
-			</div>
-		<?php endforeach; ?>
-	</div>
+				$answer_title = preg_replace_callback(
+					'/{dash}/',
+					function () use ( &$input_index, $base_field_name, $register_rules, &$field_name, &$field_names ) {
+
+						$input_name = sprintf( '%s[%d]', $base_field_name, $input_index );
+
+						$register_attr = "register('{$input_name}'{$register_rules})";
+						$input_html    = sprintf(
+							'<input
+								type="text"
+								class="tutor-quiz-question-input"
+								placeholder="%s"
+								name="%s"
+								x-bind="%s"
+							/>',
+							esc_attr__( 'Type your answer here', 'tutor' ),
+							$input_name,
+							esc_attr( $register_attr )
+						);
+
+						$input_index++;
+						if ( '' === $field_name ) {
+							$field_name = $input_name;
+						}
+						$field_names[] = $input_name;
+
+						return $input_html;
+					},
+					$answer_title
+				);
+			}
+
+			echo wp_kses(
+				$answer_title,
+				array(
+					'input' => array(
+						'type'        => true,
+						'class'       => true,
+						'name'        => true,
+						'placeholder' => true,
+						'x-bind'      => true,
+					),
+				)
+			);
+			?>
+		</div>
+	<?php endforeach; ?>
 </div>
+
+<?php if ( $field_name ) : ?>
+	<?php $unique_field_names = array_values( array_unique( $field_names ) ); ?>
+	<div
+		class="tutor-quiz-questions-error"
+		x-data="{ fieldNames: <?php echo esc_attr( wp_json_encode( $unique_field_names ) ); ?> }"
+		x-cloak
+		x-show="fieldNames.some((name) => errors?.[name]?.message)"
+		x-text="(() => {
+			const match = fieldNames.find((name) => errors?.[name]?.message);
+			return match ? errors?.[match]?.message : '';
+		})()"
+	></div>
+<?php endif; ?>

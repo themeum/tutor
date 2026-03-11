@@ -68,6 +68,7 @@
   background-color: $tutor-surface-l1;
   cursor: pointer;
   position: relative;
+  flex-shrink: 0;
   @include tutor-transition((
     background-color,
     border-color,
@@ -155,6 +156,7 @@
   background-color: $tutor-surface-l1;
   cursor: pointer;
   position: relative;
+  flex-shrink: 0;
   @include tutor-transition((
     background-color,
     border-color,

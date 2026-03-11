@@ -157,7 +157,6 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             <Controller
               name="quiz_option.pass_is_required"
               control={form.control}
-              rules={requiredRule()}
               render={(controllerProps) => (
                 <FormSwitch
                   {...controllerProps}

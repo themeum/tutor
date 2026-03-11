@@ -28,7 +28,7 @@ use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
 
-if ( isset( $_GET['view_quiz_attempt_id'] ) ) {
+if ( isset( $_GET['attempt_id'] ) ) {
 	// Load single attempt details if ID provided.
 	include __DIR__ . '/quiz-attempts/quiz-reviews.php';
 	return;

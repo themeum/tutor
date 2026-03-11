@@ -248,7 +248,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 				<div x-bind="getModalContentBindings()" style="max-width: 480px;">
 					<button x-data="tutorIcon({ name: 'cross', width: 16, height: 16})", x-bind="getCloseButtonBindings()"></button>
 
-					<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-px-7 tutor-pt-8 tutor-pb-4">
+					<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-px-7 tutor-pt-8 tutor-pb-7 tutor-border-b">
 						<?php tutor_utils()->render_svg_icon( Icon::ANNOUNCEMENT, 24, 24, array( 'class' => 'tutor-icon-brand' ) ); ?>
 						<h5 class="tutor-modal-title" x-text="formTitle"></h5>
 					</div>
@@ -272,7 +272,6 @@ $create_modal_id = 'tutor-announcement-form-modal';
 					>
 						<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-p-7">
 							<?php
-							// Select Course.
 							InputField::make()
 								->type( InputType::SELECT )
 								->name( 'tutor_announcement_course' )
@@ -283,7 +282,6 @@ $create_modal_id = 'tutor-announcement-form-modal';
 								->attr( 'x-bind', "register('tutor_announcement_course', { required: 'Please select a course' })" )
 								->render();
 
-							// Announcement Title.
 							InputField::make()
 								->type( InputType::TEXT )
 								->name( 'tutor_announcement_title' )
@@ -293,7 +291,6 @@ $create_modal_id = 'tutor-announcement-form-modal';
 								->attr( 'x-bind', "register('tutor_announcement_title', { required: 'Title is required' })" )
 								->render();
 
-							// Summary.
 							InputField::make()
 								->type( InputType::TEXTAREA )
 								->name( 'tutor_announcement_summary' )
