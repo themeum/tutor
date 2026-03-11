@@ -55,17 +55,21 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$completed_course_count = count( $completed_courses );
 	$active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
 
+	$enrolled_course_link  = tutor_utils()->tutor_dashboard_url( 'courses' );
+	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'courses/completed-courses' );
+	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'courses/active-courses' );
+
 	$time_spent = Course::get_total_course_duration( $completed_courses );
 	$grid_col   = $time_spent['hours'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
 	$seconds    = $time_spent['minutes'] > 0 ? $time_spent['minutes'] * 60 : 0;
 	?>
 	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 <?php echo esc_attr( $grid_col ); ?>">
-		<div class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
+		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Enrolled Courses', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::COURSES, 20, 20 ); ?>
 				</div>
 			</div>
@@ -74,14 +78,14 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html( $enrolled_course_count ); ?>
 				</div>
 			</div>
-		</div>
+		</a>
 
-		<div class="tutor-card tutor-stat-card tutor-stat-card-active">
+		<a href="<?php echo esc_url( $active_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-active">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Active', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::PLAY_LINE, 20, 20 ); ?>
 				</div>
 			</div>
@@ -90,14 +94,14 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html( $active_course_count ); ?>
 				</div>
 			</div>
-		</div>
+		</a>
 
-		<div class="tutor-card tutor-stat-card tutor-stat-card-completed">
+		<a href="<?php echo esc_url( $completed_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-completed">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Completed', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_CIRCLE, 20, 20 ); ?>
 				</div>
 			</div>
@@ -106,7 +110,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html( $completed_course_count ); ?>
 				</div>
 			</div>
-		</div>
+		</a>
 		<?php if ( $time_spent['hours'] > 0 ) : ?>
 		<div 
 			class="tutor-card tutor-stat-card tutor-stat-card-time-spent"
@@ -116,7 +120,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Time Spent', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::TIME, 20, 20 ); ?>
 				</div>
 			</div>
