@@ -42,7 +42,7 @@ $show_tab_nav   = apply_filters( 'tutor_dashboard_account_billing_show_tab_nav',
 $page_nav_items = apply_filters( 'tutor_dashboard_account_billing_page_nav_items', $page_nav_items );
 ?>
 
-<div class="tutor-billing-wrapper">
+<div class="tutor-billing-wrapper" x-data="" x-cloak>
 	<?php require_once tutor_get_template( 'account-header' ); ?>
 
 	<div class="tutor-billing-container">
@@ -53,7 +53,7 @@ $page_nav_items = apply_filters( 'tutor_dashboard_account_billing_page_nav_items
 					<?php Nav::make()->items( $page_nav_items )->render(); ?>
 				</div>
 				<?php } ?>
-				<div class="tutor-sm-border tutor-sm-rounded-2xl tutor-sm-mt-4">
+				<div class="tutor-sm-rounded-2xl tutor-sm-mt-4">
 					<?php
 					if ( file_exists( $tab_template ) ) {
 						require_once $tab_template;

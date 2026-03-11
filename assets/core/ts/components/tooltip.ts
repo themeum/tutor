@@ -167,10 +167,14 @@ export const tooltip = (props: TooltipProps = {}) => {
         if (content) {
           content.style.visibility = 'visible';
         }
+        requestAnimationFrame(() => this.updatePosition());
       };
 
       if (this.$nextTick) {
-        this.$nextTick(afterShow);
+        this.$nextTick(() => {
+          this.updatePosition();
+          afterShow();
+        });
       } else {
         requestAnimationFrame(afterShow);
       }
@@ -247,10 +251,38 @@ export const tooltip = (props: TooltipProps = {}) => {
 
       let top = 0;
       let left = 0;
+      let actualPlacement = this.placement;
 
-      const placement = this.actualPlacement;
+      // Smart positioning with flipping
+      if (this.placement === TOOLTIP_PLACEMENTS.TOP) {
+        const spaceAbove = triggerRect.top;
+        const spaceBelow = viewport.height - triggerRect.bottom;
+        if (spaceAbove < contentHeight + this.offset && spaceBelow > spaceAbove) {
+          actualPlacement = TOOLTIP_PLACEMENTS.BOTTOM;
+        }
+      } else if (this.placement === TOOLTIP_PLACEMENTS.BOTTOM) {
+        const spaceBelow = viewport.height - triggerRect.bottom;
+        const spaceAbove = triggerRect.top;
+        if (spaceBelow < contentHeight + this.offset && spaceAbove > spaceBelow) {
+          actualPlacement = TOOLTIP_PLACEMENTS.TOP;
+        }
+      } else if (this.placement === TOOLTIP_PLACEMENTS.START) {
+        const spaceStart = isRTL ? viewport.width - triggerRect.right : triggerRect.left;
+        const spaceEnd = isRTL ? triggerRect.left : viewport.width - triggerRect.right;
+        if (spaceStart < contentWidth + this.offset && spaceEnd > spaceStart) {
+          actualPlacement = TOOLTIP_PLACEMENTS.END;
+        }
+      } else if (this.placement === TOOLTIP_PLACEMENTS.END) {
+        const spaceEnd = isRTL ? triggerRect.left : viewport.width - triggerRect.right;
+        const spaceStart = isRTL ? viewport.width - triggerRect.right : triggerRect.left;
+        if (spaceEnd < contentWidth + this.offset && spaceStart > spaceEnd) {
+          actualPlacement = TOOLTIP_PLACEMENTS.START;
+        }
+      }
 
-      switch (placement) {
+      this.actualPlacement = actualPlacement;
+
+      switch (actualPlacement) {
         case TOOLTIP_PLACEMENTS.TOP:
           top = triggerRect.top - contentHeight - this.offset;
           left = triggerRect.left + (triggerRect.width - contentWidth) / 2;
@@ -286,7 +318,7 @@ export const tooltip = (props: TooltipProps = {}) => {
       content.style.left = `${left}px`;
       content.style.zIndex = '1070';
 
-      this.updatePlacementClasses(content, placement);
+      this.updatePlacementClasses(content, actualPlacement);
     },
 
     updatePlacementClasses(content: HTMLElement, placement: string) {
