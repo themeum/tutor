@@ -59,6 +59,11 @@ const endpoints = {
   QUIZ_EXPORT_DATA: 'quiz_export_data',
   DELETE_QUIZ: 'tutor_quiz_delete',
   START_QUIZ: 'tutor_start_quiz',
+  QUIZ_ABANDON: 'tutor_quiz_abandon',
+  QUIZ_TIMEOUT: 'tutor_quiz_timeout',
+  QUIZ_ATTEMPT_SUBMIT: 'tutor_answering_quiz_question',
+  REVIEW_QUIZ_ANSWERS: 'tutor_review_quiz_answers',
+  INSTRUCTOR_FEEDBACK: 'tutor_instructor_feedback',
 
   // ZOOM
   GET_ZOOM_MEETING_DETAILS: 'tutor_zoom_meeting_details',
@@ -105,6 +110,7 @@ const endpoints = {
   // ASSIGNMENT
   GET_ASSIGNMENT_DETAILS: 'tutor_assignment_details',
   SAVE_ASSIGNMENT: 'tutor_assignment_save',
+  ASSIGNMENT_SUBMIT: 'tutor_assignment_submit',
 
   // TAX SETTINGS
   GET_TAX_SETTINGS: 'tutor_get_tax_settings',

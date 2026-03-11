@@ -4,30 +4,53 @@
 import { initializeLesson } from './lesson';
 import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeQna } from './pages/qna';
-import { initializeQuizInterface } from './pages/quiz';
+import { initializeQuizInterface } from './quiz';
 import { initializeSidebar } from './sidebar';
 
 const initializeLearningArea = () => {
   initializeSidebar();
-  const params = new URLSearchParams(window.location.search);
-  const currentPage = params.get('subpage');
+  const { pathname, search } = window.location;
+
+  // Normalize path segments
+  const pathSegments = pathname.split('/').filter(Boolean);
+
+  let currentPage = null;
+
+  if (pathSegments.includes('assignments')) {
+    currentPage = 'assignment-view';
+  } else if (pathSegments.includes('lessons')) {
+    currentPage = 'lesson';
+  } else if (pathSegments.includes('quizzes')) {
+    currentPage = 'quiz';
+  } else {
+    // fallback to query param (older behavior)
+    const params = new URLSearchParams(search);
+    currentPage = params.get('subpage');
+  }
 
   switch (currentPage) {
     case 'quiz':
       initializeQuizInterface();
       break;
+
     case 'assignment-view':
       initializeAssignmentView();
       break;
+
+    case 'lesson':
+      initializeLesson();
+      break;
+
     case 'qna':
       initializeQna();
       break;
+
     default:
       // eslint-disable-next-line no-console
       console.warn('Unknown learning area page:', currentPage);
   }
 
-  // Initialized lesson contents
+  // Initialize lesson contents (shared)
   const lessonContentWrapper = document.querySelector('.tutor-lesson-content');
   if (lessonContentWrapper) {
     initializeLesson();

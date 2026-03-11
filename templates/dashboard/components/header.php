@@ -1,13 +1,17 @@
 <?php
 /**
  * Tutor dashboard header.
+ * Reusable component for displaying the dashboard header.
  *
  * @package Tutor\Templates
  * @author Themeum <support@themeum.com>
- * @link https://www.themeum.com/
+ * @link https://themeum.com
  * @since 4.0.0
  */
 
+ defined( 'ABSPATH' ) || exit;
+
+use Tutor\Components\Avatar;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
@@ -23,7 +27,7 @@ $menu_items['logout'] = array(
 	'url'   => wp_logout_url( tutor_utils()->tutor_dashboard_url() ),
 );
 
-$active_nav       = 'profile';
+$active_nav       = '';
 $user_id          = get_current_user_id();
 $display_name     = tutor_utils()->display_name( $user_id );
 $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
@@ -83,7 +87,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 						else if (window.innerWidth >= 768 && open) { document.body.style.overflow = '' }
 					"
 				>
-					<?php echo get_avatar( get_current_user_id(), 32 ); ?>
+					<?php Avatar::make()->user( $user_id )->size( Size::SIZE_32 )->render(); ?>
 				</button>
 
 				<div 
@@ -123,7 +127,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 
 						<div class="tutor-user-profile-info tutor-flex tutor-flex-column tutor-sm-px-7 tutor-sm-py-5">
 							<div class="tutor-avatar tutor-border tutor-border-brand-secondary">
-								<?php echo get_avatar( get_current_user_id(), 48 ); ?>
+								<?php Avatar::make()->user( $user_id )->size( Size::SIZE_32 )->render(); ?>
 							</div>
 							<div class="tutor-user-profile-meta tutor-flex tutor-flex-column tutor-items-center tutor-gap-1">
 								<div class="tutor-text-medium tutor-text-primary tutor-font-semibold">

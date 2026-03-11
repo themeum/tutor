@@ -81,7 +81,7 @@
       @include tutor-button-reset();
       @include tutor-flex(row, center, flex-start);
       @include tutor-typography(small);
-      gap: $tutor-spacing-2;
+      gap: $tutor-spacing-5;
       padding: $tutor-spacing-4 $tutor-spacing-5;
       @include tutor-transition((color, background-color));
 

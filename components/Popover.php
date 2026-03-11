@@ -194,6 +194,20 @@ class Popover extends BaseComponent {
 	}
 
 	/**
+	 * Set minimum width for popover
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $min_width the minimum width for popover.
+	 *
+	 * @return self
+	 */
+	public function min_width( int $min_width ): self {
+		$this->min_width = $min_width;
+		return $this;
+	}
+
+	/**
 	 * Set Popover body html.
 	 *
 	 * @since 4.0.0
