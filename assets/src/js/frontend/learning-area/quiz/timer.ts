@@ -1,16 +1,20 @@
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 
+import { QUIZ_LAYOUT_KEYS } from './constants';
+
 const QUIZ_TIMER_CLASSES = {
   PROGRESS_ANIMATE: 'tutor-quiz-progress-animate',
 } as const;
 
 type QuizExpireAction = 'auto_submit' | 'auto_abandon' | 'autosubmit';
+type TimerState = 'initial' | 'warning' | 'critical';
 
 interface QuizTimerConfig {
   duration: number;
   hasLimit?: boolean;
   expiresAction?: QuizExpireAction;
   formId?: string;
+  totalQuestions?: number;
 }
 
 /**
@@ -30,6 +34,9 @@ const quizTimer = (config: QuizTimerConfig) => {
     expiresAction,
     formId: config.formId ?? '',
     timer: null as number | null,
+    shakeTimer: null as number | null,
+    shaking: false,
+    totalQuestions: Number(config.totalQuestions) || 0,
     $el: null as HTMLElement | null,
 
     init() {
@@ -56,6 +63,7 @@ const quizTimer = (config: QuizTimerConfig) => {
         }
       }, 1000);
 
+      this.startShakeInterval();
       this.$el?.classList.add(QUIZ_TIMER_CLASSES.PROGRESS_ANIMATE);
     },
 
@@ -65,6 +73,27 @@ const quizTimer = (config: QuizTimerConfig) => {
         this.timer = null;
         this.$el?.classList.remove(QUIZ_TIMER_CLASSES.PROGRESS_ANIMATE);
       }
+      this.stopShakeInterval();
+    },
+
+    startShakeInterval() {
+      this.stopShakeInterval();
+      this.shakeTimer = window.setInterval(() => {
+        if (this.timerState === 'critical') {
+          this.shaking = true;
+          window.setTimeout(() => {
+            this.shaking = false;
+          }, 500);
+        }
+      }, 2000);
+    },
+
+    stopShakeInterval() {
+      if (this.shakeTimer) {
+        clearInterval(this.shakeTimer);
+        this.shakeTimer = null;
+      }
+      this.shaking = false;
     },
 
     normalizeExpireAction(action: QuizExpireAction) {
@@ -121,6 +150,71 @@ const quizTimer = (config: QuizTimerConfig) => {
       }
 
       return ((this.total - this.remaining) / this.total) * 100;
+    },
+
+    get timerState(): TimerState {
+      if (!this.total || !this.hasLimit) {
+        return 'initial';
+      }
+
+      const remainingPercent = (this.remaining / this.total) * 100;
+
+      if (remainingPercent <= 25) {
+        return 'critical';
+      }
+
+      if (remainingPercent <= 50) {
+        return 'warning';
+      }
+
+      return 'initial';
+    },
+
+    get attemptedCount(): number {
+      const form = window.TutorCore?.form;
+      if (!form || !this.formId || !form.hasForm(this.formId)) {
+        return 0;
+      }
+
+      const values = form.getFormState(this.formId).values ?? {};
+      const questionIdsEntry = Object.entries(values).find(([key]) => key.includes('[quiz_question_ids]'));
+
+      if (!questionIdsEntry) {
+        return 0;
+      }
+
+      const questionIds = Array.isArray(questionIdsEntry[1]) ? questionIdsEntry[1] : [];
+      let count = 0;
+
+      for (const id of questionIds) {
+        const needle = `${QUIZ_LAYOUT_KEYS.QUESTION_VALUE_PREFIX}[${id}]`;
+        const hasAnswer = Object.entries(values).some(([key, val]) => {
+          if (!key.includes(needle)) {
+            return false;
+          }
+          if (val === '' || val === null || val === undefined) {
+            return false;
+          }
+          if (Array.isArray(val) && val.length === 0) {
+            return false;
+          }
+          return true;
+        });
+
+        if (hasAnswer) {
+          count++;
+        }
+      }
+
+      return count;
+    },
+
+    get attemptedProgress(): number {
+      if (!this.totalQuestions) {
+        return 0;
+      }
+
+      return (this.attemptedCount / this.totalQuestions) * 100;
     },
   };
 };

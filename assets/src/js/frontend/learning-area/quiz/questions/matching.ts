@@ -95,6 +95,29 @@ const questionMatching = (
     dropZoneEl.prepend(placeholder);
   },
 
+  _animateDropSnap(dropZoneEl: HTMLElement, droppedOptionEl: HTMLElement) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    dropZoneEl.animate([{ transform: 'scale(0.985)' }, { transform: 'scale(1.02)' }, { transform: 'scale(1)' }], {
+      duration: 220,
+      easing: 'cubic-bezier(0.2, 0.9, 0.2, 1)',
+    });
+
+    droppedOptionEl.animate(
+      [
+        { transform: 'scale(0.94)', opacity: 0.86 },
+        { transform: 'scale(1.015)', opacity: 1 },
+        { transform: 'scale(1)', opacity: 1 },
+      ],
+      {
+        duration: 180,
+        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      },
+    );
+  },
+
   init() {
     if (!this.initialized) {
       this.setupDrag();
@@ -190,6 +213,10 @@ const questionMatching = (
         const dropZoneEl = targetDropZone.element;
         const sourceId = operation.source.id;
 
+        if (!dropZoneEl) {
+          return;
+        }
+
         const clone = document.createElement('div');
         clone.setAttribute(QUESTION_MATCHING_CONSTANTS.ATTRS.OPTION, QUESTION_MATCHING_CONSTANTS.VALUES.DROPPED);
         clone.setAttribute(QUESTION_MATCHING_CONSTANTS.ATTRS.ID, String(sourceId));
@@ -204,6 +231,8 @@ const questionMatching = (
         } else if (droppedOption) {
           droppedOption.replaceWith(clone);
         }
+
+        this._animateDropSnap(dropZoneEl, clone);
 
         this._matches[targetDropZone.id] = String(sourceId);
         const values = this._getValuesFromMatches();

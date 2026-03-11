@@ -63,11 +63,15 @@ $tutor_is_enrolled          = tutor_utils()->is_enrolled( $tutor_course_id );
 $tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
 $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $current_user_id, $tutor_course_id );
 
-$tutor_is_started_quiz = tutor_utils()->is_started_quiz( $tutor_current_content_id );
-if ( tutor()->quiz_post_type === $tutor_current_post_type && $tutor_is_started_quiz ) {
-	tutor_load_template( 'learning-area.quiz.attempt' );
-	wp_footer();
-	exit;
+$tutor_is_started_quiz = false;
+if ( tutor()->quiz_post_type === $tutor_current_post_type ) {
+	$tutor_is_started_quiz = tutor_utils()->is_started_quiz( $tutor_current_content_id );
+
+	if ( $tutor_is_started_quiz ) {
+		tutor_load_template( 'learning-area.quiz.attempt' );
+		wp_footer();
+		exit;
+	}
 }
 
 $attempt_id  = Input::get( 'attempt_id', 0, Input::TYPE_INT );

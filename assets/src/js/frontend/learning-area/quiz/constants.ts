@@ -1,4 +1,3 @@
-export type QuizFooterPosition = 'only' | 'first' | 'middle' | 'last';
 export type RevealQuestionType = (typeof QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES)[number];
 
 export const QUIZ_REVEAL_CONFIG = {
@@ -13,6 +12,7 @@ export const QUIZ_REVEAL_CONFIG = {
   EXPLANATION_CONTENT_DATASET: 'quizExplanationContent',
   DATA_OPTION_ATTR: 'data-option',
   DATA_REVEALED_ATTR: 'data-revealed',
+  DATA_RESULT_ATTR: 'data-reveal-result',
   DATA_OPTION_CORRECT: 'correct',
   DATA_OPTION_INCORRECT: 'incorrect',
 } as const;
@@ -20,13 +20,6 @@ export const QUIZ_REVEAL_CONFIG = {
 export const QUIZ_ABANDON_CONFIG = {
   NAVIGATION_EVENT: 'click',
   IGNORE_ANCHOR_PREFIXES: ['#', 'javascript:'],
-} as const;
-
-export const QUIZ_FOOTER_POSITIONS = {
-  ONLY: 'only',
-  FIRST: 'first',
-  MIDDLE: 'middle',
-  LAST: 'last',
 } as const;
 
 export const QuestionTimeoutAction = {

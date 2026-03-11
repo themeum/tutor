@@ -1,14 +1,7 @@
 import type { AlpineComponentMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
 
-import {
-  QUIZ_FOOTER_POSITIONS,
-  QUIZ_LAYOUT_KEYS,
-  QUIZ_LAYOUT_SELECTORS,
-  QUIZ_REVEAL_CONFIG,
-  QuizLayoutType,
-  type QuizFooterPosition,
-} from './constants';
+import { QUIZ_LAYOUT_KEYS, QUIZ_LAYOUT_SELECTORS, QUIZ_REVEAL_CONFIG, QuizLayoutType } from './constants';
 import { revealQuestionWithAnswers } from './helpers';
 
 export interface QuizLayoutConfig {
@@ -31,6 +24,10 @@ const quizLayout = (config: QuizLayoutConfig) => {
     feedbackMode: config.feedbackMode ?? '',
     revealWaitMs: config.revealWaitMs ?? null,
     revealAnswerIds: [] as number[],
+    answerRequiredByIndex: {} as Record<number, boolean>,
+    revealStateByIndex: {} as Record<number, 'correct' | 'incorrect'>,
+    skippedByIndex: {} as Record<number, boolean>,
+    revealFooterState: '' as '' | 'correct' | 'incorrect',
     isRevealing: false,
 
     $el: null as HTMLElement | null,
@@ -38,10 +35,14 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
     init() {
       this.revealAnswerIds = this.getRevealAnswerIds();
+      this.answerRequiredByIndex = this.getAnswerRequiredMap();
+      this.revealStateByIndex = this.getRevealStateMap();
+      this.skippedByIndex = this.getSkippedStateMap();
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
       this.currentIndex = 1;
+      this.syncCurrentRevealFooterState();
     },
 
     isQuestionActive(index: number) {
@@ -55,11 +56,133 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return false;
       }
+      if (index >= this.totalQuestions) {
+        return false;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(this.answerRequiredByIndex, index)) {
+        return !this.answerRequiredByIndex[index];
+      }
+
       const wrapper = this.getQuestionWrapper(index);
-      if (!wrapper || index >= this.totalQuestions) {
+      if (!wrapper) {
         return false;
       }
       return wrapper.dataset.answerRequired !== '1';
+    },
+
+    hasAttemptedValue(value: unknown): boolean {
+      if (value === null || value === undefined) {
+        return false;
+      }
+
+      if (typeof value === 'string') {
+        return value.trim().length > 0;
+      }
+
+      if (Array.isArray(value)) {
+        return value.some((item) => this.hasAttemptedValue(item));
+      }
+
+      if (typeof value === 'object') {
+        return Object.values(value as Record<string, unknown>).some((item) => this.hasAttemptedValue(item));
+      }
+
+      return true;
+    },
+
+    isQuestionAttempted(index: number): boolean {
+      if (!form || !this.formId || !form.hasForm(this.formId)) {
+        return false;
+      }
+
+      const values = form.getFormState(this.formId).values ?? {};
+      const fieldNames = this.getQuestionFieldNames(values, index);
+
+      if (!fieldNames.length) {
+        return false;
+      }
+
+      return fieldNames.some((fieldName) => this.hasAttemptedValue(values[fieldName]));
+    },
+
+    shouldDisableNextButton(): boolean {
+      if (this.layout !== QuizLayoutType.SINGLE_QUESTION) {
+        return false;
+      }
+
+      return !this.isQuestionAttempted(this.currentIndex);
+    },
+
+    getPaginationState(index: number): 'answered' | 'correct' | 'incorrect' | 'skipped' | null {
+      if (this.revealStateByIndex[index]) {
+        return this.revealStateByIndex[index];
+      }
+
+      if (this.isQuestionAttempted(index)) {
+        return 'answered';
+      }
+
+      if (this.skippedByIndex[index]) {
+        return 'skipped';
+      }
+
+      return null;
+    },
+
+    getPaginationItemClass(index: number) {
+      const state = this.getPaginationState(index);
+
+      return {
+        active: this.currentIndex === index,
+        answered: state === 'answered',
+        correct: state === 'correct',
+        incorrect: state === 'incorrect',
+        skipped: state === 'skipped',
+        upcoming: index > this.currentIndex && state === null,
+      };
+    },
+
+    syncRevealFooterState(wrapper: HTMLElement) {
+      if (!this.isRevealMode()) {
+        this.revealFooterState = '';
+        return;
+      }
+
+      const question = this.getQuestionElement(wrapper);
+      if (!question || question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) !== '1') {
+        this.revealFooterState = '';
+        return;
+      }
+
+      const result = question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_RESULT_ATTR);
+      if (result === QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT) {
+        this.revealStateByIndex[this.currentIndex] = 'correct';
+        this.revealFooterState = 'correct';
+        return;
+      }
+      if (result === QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT) {
+        this.revealStateByIndex[this.currentIndex] = 'incorrect';
+        this.revealFooterState = 'incorrect';
+        return;
+      }
+
+      this.revealFooterState = '';
+    },
+
+    syncCurrentRevealFooterState() {
+      if (!this.isRevealMode()) {
+        this.revealFooterState = '';
+        return;
+      }
+
+      const wrapper = this.getQuestionWrapper(this.currentIndex);
+      if (!wrapper) {
+        this.revealFooterState = '';
+        return;
+      }
+
+      this.syncRevealFooterState(wrapper);
     },
 
     goPrev() {
@@ -67,7 +190,11 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
       if (this.currentIndex > 1) {
-        this.currentIndex -= 1;
+        this.markCurrentAsSkipped();
+        this.runWithViewTransition(() => {
+          this.currentIndex -= 1;
+          this.syncCurrentRevealFooterState();
+        }, 'back');
         this.scrollToQuestion();
       }
     },
@@ -77,6 +204,9 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
       if (this.isRevealing) {
+        return;
+      }
+      if (!skipValidation && this.shouldDisableNextButton()) {
         return;
       }
 
@@ -94,11 +224,16 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (!skipValidation && this.isRevealMode() && this.shouldReveal(wrapper)) {
         this.isRevealing = true;
         this.revealQuestion(wrapper);
+        this.syncRevealFooterState(wrapper);
         const wait = this.getRevealWaitTime();
         window.setTimeout(() => {
           this.isRevealing = false;
           if (this.currentIndex < this.totalQuestions) {
-            this.currentIndex += 1;
+            this.markCurrentAsSkipped();
+            this.runWithViewTransition(() => {
+              this.currentIndex += 1;
+              this.syncCurrentRevealFooterState();
+            });
             this.scrollToQuestion();
           }
         }, wait);
@@ -106,33 +241,36 @@ const quizLayout = (config: QuizLayoutConfig) => {
       }
 
       if (this.currentIndex < this.totalQuestions) {
-        this.currentIndex += 1;
+        this.markCurrentAsSkipped();
+        this.runWithViewTransition(() => {
+          this.currentIndex += 1;
+          this.syncCurrentRevealFooterState();
+        });
         this.scrollToQuestion();
       }
     },
 
     goTo(index: number) {
-      if (this.layout !== QuizLayoutType.QUESTION_PAGINATION) {
+      if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
       if (!index || index < 1 || index > this.totalQuestions) {
         return;
       }
-      this.currentIndex = index;
+      this.markCurrentAsSkipped();
+      this.runWithViewTransition(
+        () => {
+          this.currentIndex = index;
+          this.syncCurrentRevealFooterState();
+        },
+        index < this.currentIndex ? 'back' : 'forward',
+      );
       this.scrollToQuestion();
     },
 
-    getFooterPosition(): QuizFooterPosition {
-      if (this.totalQuestions === 1) {
-        return QUIZ_FOOTER_POSITIONS.ONLY;
-      }
-      if (this.currentIndex === 1) {
-        return QUIZ_FOOTER_POSITIONS.FIRST;
-      }
-      if (this.currentIndex >= this.totalQuestions) {
-        return QUIZ_FOOTER_POSITIONS.LAST;
-      }
-      return QUIZ_FOOTER_POSITIONS.MIDDLE;
+    runWithViewTransition(update: () => void, direction: 'forward' | 'back' = 'forward') {
+      void direction;
+      update();
     },
 
     getRevealWaitTime(): number {
@@ -233,6 +371,94 @@ const quizLayout = (config: QuizLayoutConfig) => {
       return root?.querySelector(
         `${QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER}[${QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER_ATTR}="${index}"]`,
       ) as HTMLElement | null;
+    },
+
+    getAnswerRequiredMap(): Record<number, boolean> {
+      const root = this.$root ?? this.$el;
+      if (!root) {
+        return {};
+      }
+
+      const wrappers = Array.from(root.querySelectorAll<HTMLElement>(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER));
+      const map: Record<number, boolean> = {};
+
+      wrappers.forEach((wrapper) => {
+        const index = Number(wrapper.getAttribute(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER_ATTR));
+        if (Number.isNaN(index) || index < 1) {
+          return;
+        }
+        map[index] = wrapper.dataset.answerRequired === '1';
+      });
+
+      return map;
+    },
+
+    getRevealStateMap(): Record<number, 'correct' | 'incorrect'> {
+      const root = this.$root ?? this.$el;
+      if (!root || !this.isRevealMode()) {
+        return {};
+      }
+
+      const wrappers = Array.from(root.querySelectorAll<HTMLElement>(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER));
+      const map: Record<number, 'correct' | 'incorrect'> = {};
+
+      wrappers.forEach((wrapper) => {
+        const index = Number(wrapper.getAttribute(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER_ATTR));
+        if (Number.isNaN(index) || index < 1) {
+          return;
+        }
+
+        const question = this.getQuestionElement(wrapper);
+        if (!question || question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) !== '1') {
+          return;
+        }
+
+        const result = question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_RESULT_ATTR);
+        if (result === QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT) {
+          map[index] = 'correct';
+          return;
+        }
+        if (result === QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT) {
+          map[index] = 'incorrect';
+        }
+      });
+
+      return map;
+    },
+
+    getSkippedStateMap(): Record<number, boolean> {
+      const root = this.$root ?? this.$el;
+      if (!root) {
+        return {};
+      }
+
+      const wrappers = Array.from(root.querySelectorAll<HTMLElement>(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER));
+      const map: Record<number, boolean> = {};
+
+      wrappers.forEach((wrapper) => {
+        const index = Number(wrapper.getAttribute(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER_ATTR));
+        if (Number.isNaN(index) || index < 1) {
+          return;
+        }
+        map[index] = false;
+      });
+
+      return map;
+    },
+
+    markCurrentAsSkipped() {
+      const index = this.currentIndex;
+      if (!index || index < 1 || index > this.totalQuestions) {
+        return;
+      }
+
+      if (this.revealStateByIndex[index]) {
+        this.skippedByIndex[index] = false;
+        return;
+      }
+
+      const attempted = this.isQuestionAttempted(index);
+      this.skippedByIndex[index] = !attempted;
     },
 
     scrollToQuestion() {
