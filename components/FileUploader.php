@@ -539,6 +539,7 @@ class FileUploader extends BaseComponent {
 		$button_text         = ! empty( $this->uploader_button_text ) ? $this->uploader_button_text : __( 'Select Files', 'tutor' );
 		$on_file_select      = $this->attributes['onFileSelect'] ?? 'null';
 		$on_error            = $this->attributes['onError'] ?? 'null';
+		$on_file_remove      = $this->attributes['onFileRemove'] ?? 'null';
 		$variant             = $this->variant;
 		$uploader_attributes = $this->attributes;
 
@@ -558,6 +559,7 @@ class FileUploader extends BaseComponent {
 				accept: '<?php echo esc_attr( $accept ); ?>',
 				maxSize: <?php echo (int) $max_size; ?>,
 				onFileSelect: <?php echo esc_js( $on_file_select ); ?>,
+				onFileRemove: <?php echo esc_js( $on_file_remove ); ?>,
 				onError: <?php echo esc_js( $on_error ); ?>,
 				variant: '<?php echo esc_attr( $variant ); ?>',
 				value: values.<?php echo esc_attr( $this->name ); ?>,

@@ -111,6 +111,7 @@ const endpoints = {
   GET_ASSIGNMENT_DETAILS: 'tutor_assignment_details',
   SAVE_ASSIGNMENT: 'tutor_assignment_save',
   ASSIGNMENT_SUBMIT: 'tutor_assignment_submit',
+  REMOVE_ATTACHMENT: 'tutor_remove_assignment_attachment',
 
   // TAX SETTINGS
   GET_TAX_SETTINGS: 'tutor_get_tax_settings',
