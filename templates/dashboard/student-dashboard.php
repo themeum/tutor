@@ -265,4 +265,7 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2 )
 			<?php wp_reset_postdata(); ?>
 		</div>
 	</div>
-<?php endif; ?>
+	<?php
+endif;
+	do_action( 'tutor_after_continue_learning_section' );
+?>

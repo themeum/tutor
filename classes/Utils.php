@@ -3487,19 +3487,30 @@ class Utils {
 	 * 1 enrollment = 1 student, so total enrolled for a equivalent total students (Tricks)
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 $args parameter added for additional where clause in query.
 	 *
-	 * @param int $instructor_id instructor id.
+	 * @param int   $instructor_id instructor id.
+	 * @param array $args          Optional additional WHERE conditions.
 	 *
 	 * @return int
 	 */
-	public function get_total_students_by_instructor( $instructor_id ) {
+	public function get_total_students_by_instructor( $instructor_id, $args = array() ) {
 		global $wpdb;
 
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type       = tutor()->course_post_type;
+		$enrollment_date_clause = '';
+
+		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
+			$from = Input::sanitize( $args['from'] );
+			$to   = Input::sanitize( $args['to'] );
+
+			$where['enrollment.post_date'] = array( 'BETWEEN', array( $from, $to ) );
+			$enrollment_date_clause        = ' AND ' . QueryHelper::prepare_where_clause( $where );
+		}
 
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(enrollment.ID)
+				"SELECT COUNT(DISTINCT(enrollment.post_author))
 				FROM {$wpdb->posts} enrollment
 				INNER JOIN {$wpdb->posts} course
 					ON enrollment.post_parent=course.ID
@@ -3507,8 +3518,8 @@ class Utils {
 					AND course.post_type = %s
 					AND course.post_status = %s
 					AND enrollment.post_type = %s
-					AND enrollment.post_status = %s;
-				",
+					AND enrollment.post_status = %s
+					{$enrollment_date_clause}",
 				$instructor_id,
 				$course_post_type,
 				'publish',
@@ -4376,14 +4387,18 @@ class Utils {
 
 		$course_query       = '';
 		$date_query         = '';
-		$review_date_clause = '';
+		$extra_where_clause = '';
 
 		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
 			$from = Input::sanitize( $args['from'] );
 			$to   = Input::sanitize( $args['to'] );
 
 			$where['comment_date'] = array( 'BETWEEN', array( $from, $to ) );
-			$review_date_clause    = ' AND ' . QueryHelper::prepare_where_clause( $where );
+			$extra_where_clause    = ' AND ' . QueryHelper::prepare_where_clause( $where );
+		}
+
+		if ( ! empty( $args['comment_approved'] ) ) {
+			$extra_where_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'comment_approved' => $args['comment_approved'] ) );
 		}
 
 		if ( '' !== $course_id ) {
@@ -4416,7 +4431,7 @@ class Utils {
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
-						{$review_date_clause}
+						{$extra_where_clause}
 						{$course_query}
 						{$date_query}
 				",
@@ -4450,7 +4465,7 @@ class Utils {
 					WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
-						{$review_date_clause}
+						{$extra_where_clause}
 						{$course_query}
 						{$date_query}
 					ORDER BY {$order_by} DESC
@@ -9238,8 +9253,8 @@ class Utils {
 			return '';
 		}
 		$mail_part    = explode( '@', $email );
-		$mail_part[0] = str_repeat( '*', strlen( $mail_part[0] ) );
-		return $mail_part[0] . $mail_part[1];
+		$mail_part[0] = $this->asterisks_center_text( $mail_part[0] );
+		return $mail_part[0] . '@' . $mail_part[1];
 	}
 
 	/**
@@ -9247,17 +9262,22 @@ class Utils {
 	 * it will replace character with asterisk from the beginning and ending
 	 *
 	 * @since 2.0.0
+	 * @since 4.0.0 param number_of_asterisks added.
 	 *
 	 * @param string $text | required.
+	 * @param int    $number_of_asterisks | optional. if not provided then it will be length of string minus 2.
 	 *
 	 * @return string
 	 */
-	function asterisks_center_text( string $str ): string {
+	function asterisks_center_text( string $str, $number_of_asterisks = -1 ): string {
 		if ( '' === $str ) {
 			return '';
 		}
-		$str_length = strlen( $str );
-		return substr( $str, 0, 2 ) . str_repeat( '*', $str_length - 2 ) . substr( $str, $str_length - 2, 2 );
+
+		$str_length    = strlen( $str );
+		$astericks_str = str_repeat( '*', $number_of_asterisks > 0 ? $number_of_asterisks : $str_length - 2 );
+
+		return substr( $str, 0, 2 ) . $astericks_str . substr( $str, $str_length - 2, 2 );
 	}
 
 	/**

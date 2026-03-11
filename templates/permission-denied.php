@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 tutor_utils()->tutor_custom_header();
 ?>
-<div class="tutor-wrap tutor-wrap-parent tutor-page-permission-denied tutor-my-8 tutor-ml-auto tutor-mr-auto tutor-shadow-md" style="max-width: 600px;">
+<div class="tutor-wrap tutor-wrap-parent tutor-page-permission-denied tutor-my-8 tutor-ml-auto tutor-mr-auto" style="max-width: 600px;">
 	<div class="tutor-card tutor-text-center tutor-px-10 tutor-py-14 tutor-m-5">
 		<div class="tutor-svg-img">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/permission-denied.svg' ); ?>" alt="<?php esc_html_e( 'Permission Denied', 'tutor' ); ?>">    

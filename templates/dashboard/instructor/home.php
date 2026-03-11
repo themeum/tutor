@@ -88,6 +88,7 @@ $upcoming_tasks          = array();
 $get_upcoming_live_tasks = array();
 $overview_chart_data     = array();
 $recent_reviews          = array();
+$course_completion_data  = array();
 
 $user                  = wp_get_current_user();
 $instructor_course_ids = CourseModel::get_courses_by_args(
@@ -146,9 +147,9 @@ $previous_period_courses = ! $is_all_time
 							: 0;
 
 // Total Students.
-$total_students           = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
+$total_students           = tutor_utils()->get_total_students_by_instructor( $user->ID, $date_range( $start_date, $end_date ) );
 $previous_period_students = ! $is_all_time
-							? Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID )
+							? tutor_utils()->get_total_students_by_instructor( $user->ID, $date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) )
 							: 0;
 
 
@@ -232,31 +233,39 @@ if ( $is_pro_reports ) {
 	);
 }
 
-// Course Completion Distribution.
-$distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
+/**
+ * ---------------------------------------------
+ * Course Completion Distribution (For All Time)
+ * ---------------------------------------------
+ */
 
-$course_completion_data = array(
-	'enrolled'    => array(
-		'label' => esc_html__( 'Enrolled', 'tutor' ),
-		'value' => $distribution['enrolled'],
-	),
-	'completed'   => array(
-		'label' => esc_html__( 'Completed', 'tutor' ),
-		'value' => $distribution['completed'],
-	),
-	'in_progress' => array(
-		'label' => esc_html__( 'In Progress', 'tutor' ),
-		'value' => $distribution['inprogress'],
-	),
-	'inactive'    => array(
-		'label' => esc_html__( 'Inactive', 'tutor' ),
-		'value' => $distribution['inactive'],
-	),
-	'cancelled'   => array(
-		'label' => esc_html__( 'Cancelled', 'tutor' ),
-		'value' => $distribution['cancelled'],
-	),
-);
+if ( $is_all_time ) {
+	$distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
+
+	$course_completion_data = array(
+		'enrolled'    => array(
+			'label' => esc_html__( 'Enrolled', 'tutor' ),
+			'value' => $distribution['enrolled'],
+		),
+		'completed'   => array(
+			'label' => esc_html__( 'Completed', 'tutor' ),
+			'value' => $distribution['completed'],
+		),
+		'in_progress' => array(
+			'label' => esc_html__( 'In Progress', 'tutor' ),
+			'value' => $distribution['inprogress'],
+		),
+		'inactive'    => array(
+			'label' => esc_html__( 'Inactive', 'tutor' ),
+			'value' => $distribution['inactive'],
+		),
+		'cancelled'   => array(
+			'label' => esc_html__( 'Cancelled', 'tutor' ),
+			'value' => $distribution['cancelled'],
+		),
+	);
+}
+
 
 // @todo Will be added on later.
 // $leaderboard_data = array(
@@ -333,7 +342,7 @@ if ( $is_all_time && $tutor_pro_enabled ) {
 // );
 
 // Recent Reviews.
-$review_args = array();
+$review_args = array( 'comment_approved' => 'approved' );
 if ( ! $is_all_time ) {
 	$review_args = $date_range( $start_date, $end_date );
 }
