@@ -8,13 +8,7 @@
 .tutor-tooltip-wrap {
   position: relative;
   display: inline-block;
-
-  &:hover {
-    .tutor-tooltip:not([x-data]) {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
+  line-height: 0;
 }
 
 .tutor-tooltip {
@@ -28,6 +22,7 @@
   box-shadow: $tutor-shadow-md;
   word-wrap: break-word;
   text-align: center;
+  pointer-events: none;
 
   &-large {
     max-width: 320px;
@@ -73,8 +68,6 @@
   }
 
   &-top {
-    margin-bottom: $tutor-spacing-2;
-
     &::before {
       top: 100%;
       border-top-color: $tutor-surface-dark;
@@ -83,8 +76,6 @@
   }
 
   &-bottom {
-    margin-top: $tutor-spacing-2;
-
     &::before {
       bottom: 100%;
       border-bottom-color: $tutor-surface-dark;
@@ -93,8 +84,6 @@
   }
 
   &-start {
-    margin-inline-end: $tutor-spacing-2;
-
     &::before {
       top: 50%;
       inset-inline-start: 100%;
@@ -104,8 +93,6 @@
   }
 
   &-end {
-    margin-inline-start: $tutor-spacing-2;
-
     &::before {
       top: 50%;
       inset-inline-end: 100%;

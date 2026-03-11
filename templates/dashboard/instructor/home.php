@@ -15,7 +15,6 @@ use TUTOR\Input;
 use TUTOR\Instructor;
 use TUTOR_REPORT\Analytics;
 use Tutor\Models\CourseModel;
-use Tutor\Helpers\QueryHelper;
 use Tutor\Models\WithdrawModel;
 use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
@@ -46,12 +45,12 @@ $sortable_sections = array(
 		'is_active' => true,
 		'order'     => 3,
 	),
-	array(
-		'id'        => 'upcoming_tasks_and_activity',
-		'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
-		'is_active' => true,
-		'order'     => 4,
-	),
+	// array(
+	// 'id'        => 'upcoming_tasks_and_activity',
+	// 'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
+	// 'is_active' => true,
+	// 'order'     => 4,
+	// ),
 	array(
 		'id'        => 'recent_reviews',
 		'label'     => esc_html__( 'Recent Student Reviews', 'tutor' ),
@@ -82,6 +81,7 @@ $upcoming_tasks          = array();
 $get_upcoming_live_tasks = array();
 $overview_chart_data     = array();
 $recent_reviews          = array();
+$course_completion_data  = array();
 
 $user                  = wp_get_current_user();
 $instructor_course_ids = CourseModel::get_courses_by_args(
@@ -140,9 +140,9 @@ $previous_period_courses = ! $is_all_time
 							: 0;
 
 // Total Students.
-$total_students           = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
+$total_students           = tutor_utils()->get_total_students_by_instructor( $user->ID, $date_range( $start_date, $end_date ) );
 $previous_period_students = ! $is_all_time
-							? Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID )
+							? tutor_utils()->get_total_students_by_instructor( $user->ID, $date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) )
 							: 0;
 
 
@@ -226,31 +226,39 @@ if ( $is_pro_reports ) {
 	);
 }
 
-// Course Completion Distribution.
-$distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
+/**
+ * ---------------------------------------------
+ * Course Completion Distribution (For All Time)
+ * ---------------------------------------------
+ */
 
-$course_completion_data = array(
-	'enrolled'    => array(
-		'label' => esc_html__( 'Enrolled', 'tutor' ),
-		'value' => $distribution['enrolled'],
-	),
-	'completed'   => array(
-		'label' => esc_html__( 'Completed', 'tutor' ),
-		'value' => $distribution['completed'],
-	),
-	'in_progress' => array(
-		'label' => esc_html__( 'In Progress', 'tutor' ),
-		'value' => $distribution['inprogress'],
-	),
-	'inactive'    => array(
-		'label' => esc_html__( 'Inactive', 'tutor' ),
-		'value' => $distribution['inactive'],
-	),
-	'cancelled'   => array(
-		'label' => esc_html__( 'Cancelled', 'tutor' ),
-		'value' => $distribution['cancelled'],
-	),
-);
+if ( $is_all_time ) {
+	$distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
+
+	$course_completion_data = array(
+		'enrolled'    => array(
+			'label' => esc_html__( 'Enrolled', 'tutor' ),
+			'value' => $distribution['enrolled'],
+		),
+		'completed'   => array(
+			'label' => esc_html__( 'Completed', 'tutor' ),
+			'value' => $distribution['completed'],
+		),
+		'in_progress' => array(
+			'label' => esc_html__( 'In Progress', 'tutor' ),
+			'value' => $distribution['inprogress'],
+		),
+		'inactive'    => array(
+			'label' => esc_html__( 'Inactive', 'tutor' ),
+			'value' => $distribution['inactive'],
+		),
+		'cancelled'   => array(
+			'label' => esc_html__( 'Cancelled', 'tutor' ),
+			'value' => $distribution['cancelled'],
+		),
+	);
+}
+
 
 // @todo Will be added on later.
 // $leaderboard_data = array(
@@ -327,7 +335,7 @@ if ( $is_all_time && $tutor_pro_enabled ) {
 // );
 
 // Recent Reviews.
-$review_args = array();
+$review_args = array( 'comment_approved' => 'approved' );
 if ( ! $is_all_time ) {
 	$review_args = $date_range( $start_date, $end_date );
 }
@@ -398,8 +406,8 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 	<!-- Stat cards -->
 	<div 
 		data-section-id="current_stats" 
-		class="tutor-flex tutor-gap-5 tutor-z-positive"					
-		:class="{ 'tutor-hidden':  !watch('current_stats')}"
+		class="tutor-flex tutor-flex-wrap tutor-gap-5 tutor-z-positive"					
+		x-show="watch('current_stats')"
 	>
 		<?php foreach ( $stat_cards as $card ) : ?>
 			<div class="tutor-flex-1">
@@ -422,18 +430,20 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 
 	<!-- Overview Chart -->
 	<?php
-	tutor_load_template(
-		'dashboard.instructor.home.overview-chart',
-		array(
-			'overview_chart_data' => $overview_chart_data,
-		)
-	);
+	if ( $overview_chart_data ) :
+		tutor_load_template(
+			'dashboard.instructor.home.overview-chart',
+			array(
+				'overview_chart_data' => $overview_chart_data,
+			)
+		);
+	endif;
 	?>
-
+	<?php if ( $is_all_time ) : ?>
 	<div 
 		data-section-id="course_completion_and_leader" 
 		class="tutor-flex tutor-gap-6"
-		:class="{ 'tutor-hidden':  !watch('course_completion_and_leader')}"
+		x-show="watch('course_completion_and_leader')"
 	>
 		<!-- Course Completion Chart -->
 		<?php
@@ -467,13 +477,14 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 			</div>
 		</div> -->
 	</div>
+	<?php endif; ?>
 
 	<!-- Top Performing Courses -->
 	<?php if ( ! empty( $top_performing_courses ) ) : ?>
 		<div 
 			data-section-id="top_performing_courses"
 			class="tutor-dashboard-home-card"
-			:class="{ 'tutor-hidden':  !watch('top_performing_courses')}"
+			x-show="watch('top_performing_courses')"
 		> 
 			<div class="tutor-flex tutor-row tutor-justify-between tutor-align-center tutor-gap-9">
 				<div class="tutor-small">
@@ -517,7 +528,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 		<div
 			data-section-id="upcoming_tasks_and_activity"
 			class="tutor-flex tutor-gap-6"
-			:class="{ 'tutor-hidden':  !watch('upcoming_tasks_and_activity')}"
+			x-show="watch('upcoming_tasks_and_activity')"
 		>
 			<!-- Upcoming Tasks -->
 			<div class="tutor-dashboard-home-card tutor-flex-1">
@@ -564,7 +575,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 		<div 
 			data-section-id="recent_reviews" 
 			class="tutor-dashboard-home-card"
-			:class="{ 'tutor-hidden':  !watch('recent_reviews')}"
+			x-show="watch('recent_reviews')"
 		>
 			<div class="tutor-small">
 				<?php esc_html_e( 'Recent Student Reviews', 'tutor' ); ?>

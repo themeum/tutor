@@ -164,7 +164,7 @@ class StarRatingInput extends BaseComponent {
 				<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
 					<button 
 						type="button"
-						class="tutor-btn tutor-btn-link tutor-p-none tutor-min-h-0"
+						class="tutor-btn tutor-p-none tutor-min-h-0 tutor-bg-transparent"
 						@click="setRating(<?php echo esc_attr( $i ); ?>, (rating) => setValue('<?php echo esc_attr( $this->field_name ); ?>', rating))"
 						@mouseenter="hoverRating = <?php echo esc_attr( $i ); ?>"
 					>

@@ -9,6 +9,8 @@
  * @version 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
 use Tutor\Components\Pagination;
 use Tutor\Components\EmptyState;

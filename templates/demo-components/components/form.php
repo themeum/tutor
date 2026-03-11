@@ -9,6 +9,8 @@
  */
 
 use Tutor\Icon;
+use Tutor\Components\InputField;
+use Tutor\Components\Constants\InputType;
 
 ?>
 <section class="tutor-bg-white tutor-py-6 tutor-px-8 tutor-rounded-lg tutor-shadow-sm">
@@ -846,7 +848,7 @@ use Tutor\Icon;
 							<div class="tutor-error-text" x-cloak x-show="errors.lastName" x-text="errors?.lastName?.message" role="alert" aria-live="polite"></div>
 						</div>
 
-						<!-- Email -->
+							<!-- Email -->
 						<div class="tutor-input-field tutor-mb-4" :class="{
 							'tutor-input-field-error': errors.profileEmail,
 						}">
@@ -875,6 +877,34 @@ use Tutor\Icon;
 							</div>
 							<div class="tutor-error-text" x-cloak x-show="errors.profileEmail" x-text="errors?.profileEmail?.message" role="alert" aria-live="polite"></div>
 						</div>
+
+						<?php
+							InputField::make()
+								->type( InputType::DATE )
+								->name( 'profilePublishDate' )
+								->id( 'profilePublishDate' )
+								->label( 'Publish Date' )
+								->placeholder( 'Select publish date' )
+								->required()
+								->clearable()
+								->help_text( 'Used for TutorCore.form set/reset Date demo.' )
+								->attr( 'class', 'tutor-mb-4' )
+								->attr( 'x-bind', "register('profilePublishDate', { required: 'Publish date is required' })" )
+								->render();
+
+							InputField::make()
+								->type( InputType::DATE_TIME )
+								->name( 'profilePublishDateTime' )
+								->id( 'profilePublishDateTime' )
+								->label( 'Publish DateTime' )
+								->placeholder( 'Select publish date and time' )
+								->required()
+								->clearable()
+								->help_text( 'Used for TutorCore.form set/reset DateTime demo.' )
+								->attr( 'class', 'tutor-mb-4' )
+								->attr( 'x-bind', "register('profilePublishDateTime', { required: 'Publish date time is required' })" )
+								->render();
+						?>
 
 						<div class="tutor-flex tutor-gap-3">
 							<button 
@@ -910,7 +940,9 @@ use Tutor\Icon;
 								onclick="TutorCore.form.setValues('profile-form', {
 									firstName: 'Jane',
 									lastName: 'Smith',
-									profileEmail: 'jane.smith@example.com'
+									profileEmail: 'jane.smith@example.com',
+									profilePublishDate: '2026-03-25',
+									profilePublishDateTime: '2026-03-25 10:30 AM'
 								}, { shouldValidate: true })"
 								class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
 							>
@@ -928,15 +960,35 @@ use Tutor\Icon;
 							</button>
 						</div>
 
-						<!-- Set Single Value -->
-						<div>
-							<button 
-								onclick="TutorCore.form.setValue('profile-form', 'firstName', 'John', { shouldValidate: true })"
-								class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
-							>
-								✏️ Set First Name
-							</button>
-						</div>
+							<!-- Set Single Value -->
+							<div>
+								<button 
+									onclick="TutorCore.form.setValue('profile-form', 'firstName', 'John', { shouldValidate: true })"
+									class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
+								>
+									✏️ Set First Name
+								</button>
+							</div>
+
+							<!-- Set Date -->
+							<div>
+								<button 
+									onclick="TutorCore.form.setValue('profile-form', 'profilePublishDate', '2026-03-20', { shouldValidate: true, shouldTouch: true })"
+									class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
+								>
+									📅 Set Publish Date
+								</button>
+							</div>
+
+							<!-- Set DateTime -->
+							<div>
+								<button 
+									onclick="TutorCore.form.setValue('profile-form', 'profilePublishDateTime', '2026-03-20 02:45 PM', { shouldValidate: true, shouldTouch: true })"
+									class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
+								>
+									🕒 Set Publish DateTime
+								</button>
+							</div>
 
 						<!-- Validate Form -->
 						<div>
@@ -975,6 +1027,16 @@ use Tutor\Icon;
 								class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
 							>
 								🎯 Focus First Name
+							</button>
+						</div>
+
+						<!-- Focus Date -->
+						<div>
+							<button 
+								onclick="TutorCore.form.setFocus('profile-form', 'profilePublishDate')"
+								class="tutor-btn tutor-btn-outline tutor-btn-small tutor-w-full"
+							>
+								🎯 Focus Publish Date
 							</button>
 						</div>
 

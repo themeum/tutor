@@ -1,10 +1,7 @@
 import { __ } from '@wordpress/i18n';
-import axios from 'axios';
 
-import { type MutationState, type QueryState } from '@Core/ts/services/Query';
-
+import { type MutationState } from '@Core/ts/services/Query';
 import { type WPMedia } from '@Core/ts/services/WPMedia';
-import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
@@ -70,24 +67,27 @@ interface UpdateNotificationProps {
   [key: string]: boolean | string;
 }
 
+interface ResetPasswordResponse {
+  success: boolean;
+  data: {
+    message: string;
+  };
+}
+
 const settings = () => {
   const query = window.TutorCore.query;
   const form = window.TutorCore.form;
   const toast = window.TutorCore.toast;
 
   return {
-    query,
-    form,
-    toast,
     $el: null as HTMLElement | null,
-    fetchCountriesQuery: null as QueryState<TutorMutationResponse<string>> | null,
     uploadProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     removeProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     updateProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
     saveSocialProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
     saveBillingInfoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     saveWithdrawMethodMutation: null as MutationState<TutorMutationResponse<string>> | null,
-    resetPasswordMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    resetPasswordMutation: null as MutationState<ResetPasswordResponse> | null,
     handleUpdateNotification: null as MutationState<unknown, unknown> | null,
     savePreferencesMutation: null as MutationState<TutorMutationResponse<PreferencesFormProps>> | null,
 
@@ -104,82 +104,84 @@ const settings = () => {
       this.handleSaveWithdrawMethod = this.handleSaveWithdrawMethod.bind(this);
       this.handleResetPassword = this.handleResetPassword.bind(this);
 
-      this.handleUpdateNotification = this.query.useMutation(this.updateNotification, {
+      this.handleUpdateNotification = query.useMutation(this.updateNotification, {
         onSuccess: (data: TutorMutationResponse<string>, payload: UpdateNotificationProps) => {
-          this.form.reset(payload?.formId as string, payload as unknown as Record<string, unknown>);
-          this.toast.success(data?.message ?? __('Notification settings updated', 'tutor'));
+          form.reset(payload?.formId as string, payload as unknown as Record<string, unknown>);
+          toast.success(data?.message ?? __('Notification settings updated', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(convertToErrorMessage(error) || __('Failed to update notification settings', 'tutor'));
+          toast.error(convertToErrorMessage(error) || __('Failed to update notification settings', 'tutor'));
         },
       });
 
-      this.fetchCountriesQuery = this.query.useQuery('fetch-countries', () => this.fetchCountries());
-
-      this.uploadProfilePhotoMutation = this.query.useMutation(this.uploadProfilePhoto, {
+      this.uploadProfilePhotoMutation = query.useMutation(this.uploadProfilePhoto, {
         onError: (error: Error) => {
-          this.toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+          toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
         },
       });
 
-      this.removeProfilePhotoMutation = this.query.useMutation(this.removeProfilePhoto, {
+      this.removeProfilePhotoMutation = query.useMutation(this.removeProfilePhoto, {
         onError: (error: Error) => {
-          this.toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+          toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
         },
       });
 
-      this.updateProfileMutation = this.query.useMutation(this.updateProfile, {
+      this.updateProfileMutation = query.useMutation(this.updateProfile, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          this.toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
+          toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+          toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
         },
       });
 
-      this.saveSocialProfileMutation = this.query.useMutation(this.saveSocialProfile, {
+      this.saveSocialProfileMutation = query.useMutation(this.saveSocialProfile, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          this.toast.success(data?.message ?? __('Success successfully saved social profile', 'tutor'));
+          toast.success(data?.message ?? __('Success successfully saved social profile', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(convertToErrorMessage(error) || __('Failed to save social profile', 'tutor'));
+          toast.error(convertToErrorMessage(error) || __('Failed to save social profile', 'tutor'));
         },
       });
 
-      this.saveBillingInfoMutation = this.query.useMutation(this.saveBillingInfo, {
+      this.saveBillingInfoMutation = query.useMutation(this.saveBillingInfo, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          this.toast.success(data?.message ?? __('Success successfully saved billing info', 'tutor'));
+          toast.success(data?.message ?? __('Success successfully saved billing info', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
-      this.saveWithdrawMethodMutation = this.query.useMutation(this.saveWithdrawMethod, {
+      this.saveWithdrawMethodMutation = query.useMutation(this.saveWithdrawMethod, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          this.toast.success(data?.message ?? __('Withdrawal method saved successfully', 'tutor'));
+          toast.success(data?.message ?? __('Withdrawal method saved successfully', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
-      this.resetPasswordMutation = this.query.useMutation(this.resetPassword, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
-          this.toast.success(data?.message ?? __('Password updated successfully', 'tutor'));
+      this.resetPasswordMutation = query.useMutation(this.resetPassword, {
+        onSuccess: (response: ResetPasswordResponse) => {
+          if (response?.success) {
+            toast.success(response.data?.message ?? __('Password updated successfully', 'tutor'));
+          } else {
+            toast.error(response.data?.message ?? __('Password update failed', 'tutor'));
+          }
         },
         onError: (error: Error) => {
-          this.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
-      this.savePreferencesMutation = this.query.useMutation(this.updatePreferences, {
+      this.savePreferencesMutation = query.useMutation(this.updatePreferences, {
         onSuccess: (data: TutorMutationResponse<PreferencesFormProps>, payload: PreferencesFormProps) => {
-          this.form.reset(payload?.formId || '', payload as unknown as Record<string, unknown>);
-          this.toast.success(data?.message ?? __('Preferences saved successfully', 'tutor'));
+          form.reset(payload?.formId || '', payload as unknown as Record<string, unknown>);
+          toast.success(data?.message ?? __('Preferences saved successfully', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
     },
@@ -222,10 +224,6 @@ const settings = () => {
       return wpAjaxInstance.post(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload).then((res) => res.data);
     },
 
-    async fetchCountries() {
-      return await axios.get(`${tutorConfig.tutor_url}${endpoints.FETCH_COUNTRIES}`).then((res) => res.data);
-    },
-
     async uploadProfilePhoto(payload: ProfilePhotoFormProps) {
       return wpAjaxInstance.post(endpoints.UPLOAD_PROFILE_PHOTO, payload).then((res) => res.data);
     },
@@ -256,7 +254,7 @@ const settings = () => {
         tutor_pro_custom_signature_id: data.tutor_pro_custom_signature_id?.id || '',
       };
       await this.updateProfileMutation?.mutate(payload);
-      this.form.reset(formId, data as unknown as Record<string, unknown>);
+      form.reset(formId, data as unknown as Record<string, unknown>);
     },
 
     async saveSocialProfile(payload: SocialFormProps) {
@@ -265,7 +263,7 @@ const settings = () => {
 
     async handleSaveSocialProfile(data: SocialFormProps, formId: string) {
       await this.saveSocialProfileMutation?.mutate(data);
-      this.form.reset(formId, data as unknown as Record<string, unknown>);
+      form.reset(formId, data as unknown as Record<string, unknown>);
     },
 
     async saveBillingInfo(payload: SettingsFormProps) {
@@ -274,8 +272,8 @@ const settings = () => {
 
     async handleSaveBillingInfo(data: SettingsFormProps, formId: string) {
       await this.saveBillingInfoMutation?.mutate(data);
-      if (this.form.hasForm(formId)) {
-        this.form.reset(formId, data as unknown as Record<string, unknown>);
+      if (form.hasForm(formId)) {
+        form.reset(formId, data as unknown as Record<string, unknown>);
       }
     },
 
@@ -298,21 +296,21 @@ const settings = () => {
       });
 
       await this.saveWithdrawMethodMutation?.mutate(payload);
-      this.form.reset(formId, data as unknown as Record<string, unknown>);
+      form.reset(formId, data as unknown as Record<string, unknown>);
     },
 
     async resetPassword(payload: ResetPasswordFormProps) {
-      return wpAjaxInstance.post(endpoints.RESET_PASSWORD, payload).then((res) => res.data);
+      return wpAjaxInstance.post(endpoints.RESET_PASSWORD, payload) as unknown as Promise<ResetPasswordResponse>;
     },
 
     async handleResetPassword(data: ResetPasswordFormProps, formId: string) {
       if (data.new_password !== data.confirm_new_password) {
-        this.toast.error(__('Passwords do not match', 'tutor'));
+        toast.error(__('Passwords do not match', 'tutor'));
         return;
       }
 
       await this.resetPasswordMutation?.mutate(data);
-      this.form.reset(formId, data as unknown as Record<string, unknown>);
+      form.reset(formId, data as unknown as Record<string, unknown>);
     },
   };
 };

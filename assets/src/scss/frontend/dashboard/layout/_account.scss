@@ -3,12 +3,6 @@
 
 .tutor-account-page-wrapper {
   .tutor-account-header {
-    @include tutor-breakpoint-down(sm) {
-      display: none;
-    }
-  }
-
-  .tutor-account-header {
     background-color: $tutor-surface-base;
     border-bottom: 1px solid $tutor-border-idle;
     padding-block: $tutor-spacing-5;

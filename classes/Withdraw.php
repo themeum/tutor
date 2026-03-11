@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Models\WithdrawModel;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,6 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class Withdraw {
+	use JsonResponse;
 
 	/**
 	 * Withdraw method
@@ -228,26 +230,27 @@ class Withdraw {
 	 * @return void
 	 */
 	public function tutor_make_an_withdraw() {
+		tutor_utils()->check_nonce();
+
 		global $wpdb;
-
-		tutor_utils()->checking_nonce();
-
 		$user_id         = get_current_user_id();
-		$withdraw_amount = Input::post( 'tutor_withdraw_amount' );
+		$withdraw_amount = Input::post( 'amount' );
+
+		if ( ! is_numeric( $withdraw_amount ) || $withdraw_amount <= 0 ) {
+			$this->response_bad_request( __( 'Withdrawal amount is required', 'tutor' ) );
+		}
 
 		$earning_summary = WithdrawModel::get_withdraw_summary( $user_id );
 		$min_withdraw    = tutor_utils()->get_option( 'min_withdraw_amount' );
 
 		if ( ( $earning_summary->total_pending + $withdraw_amount ) > $earning_summary->available_for_withdraw ) {
-			wp_send_json_error(
-				array(
-					'msg' => wp_sprintf(
-						/* translators: 1: total pending withdraw request 2: available for withdraw */
-						__( "You have total %1\$s pending withdraw request. You can't make more than %2\$s withdraw request at a time", 'tutor' ),
-						$earning_summary->total_pending,
-						$earning_summary->available_for_withdraw
-					),
-				)
+			$this->response_bad_request(
+				wp_sprintf(
+					/* translators: 1: total pending withdraw request 2: available for withdraw */
+					__( "You have total %1\$s pending withdraw request. You can't make more than %2\$s withdraw request at a time", 'tutor' ),
+					$earning_summary->total_pending,
+					$earning_summary->available_for_withdraw
+				),
 			);
 		}
 
@@ -256,19 +259,18 @@ class Withdraw {
 
 		if ( ! tutor_utils()->count( $saved_withdraw_account ) ) {
 			$no_withdraw_method = apply_filters( 'tutor_no_withdraw_method_msg', __( 'Please save withdraw method ', 'tutor' ) );
-			wp_send_json_error( array( 'msg' => $no_withdraw_method ) );
+			$this->response_bad_request( $no_withdraw_method );
 		}
 
 		if ( ( ! is_numeric( $withdraw_amount ) && ! is_float( $withdraw_amount ) ) || $withdraw_amount < $min_withdraw ) {
 			/* translators: 1: strong tag start 2: min withdrawal amount 3: strong tag end */
 			$required_min_withdraw = apply_filters( 'tutor_required_min_amount_msg', sprintf( __( 'Minimum withdrawal amount is %1$s %2$s %3$s ', 'tutor' ), '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
-			wp_send_json_error( array( 'msg' => $required_min_withdraw ) );
+			$this->response_bad_request( $required_min_withdraw );
 		}
 
 		if ( $earning_summary->available_for_withdraw < $withdraw_amount ) {
 			$insufficient_balence = apply_filters( 'tutor_withdraw_insufficient_balance_msg', __( 'Insufficient balance.', 'tutor' ) );
-
-			wp_send_json_error( array( 'msg' => $insufficient_balence ) );
+			$this->response_bad_request( $insufficient_balence );
 		}
 
 		$date = gmdate( 'Y-m-d H:i:s', tutor_time() );
@@ -279,7 +281,7 @@ class Withdraw {
 				'user_id'     => $user_id,
 				'amount'      => $withdraw_amount,
 				'method_data' => maybe_serialize( $saved_withdraw_account ),
-				'status'      => 'pending',
+				'status'      => WithdrawModel::STATUS_PENDING,
 				'created_at'  => $date,
 			)
 		);
@@ -292,7 +294,7 @@ class Withdraw {
 				'user_id'     => $user_id,
 				'amount'      => $withdraw_amount,
 				'method_data' => maybe_serialize( $saved_withdraw_account ),
-				'status'      => 'pending',
+				'status'      => WithdrawModel::STATUS_PENDING,
 				'created_at'  => $date,
 			)
 		);
@@ -312,10 +314,11 @@ class Withdraw {
 
 		do_action( 'tutor_withdraw_after' );
 
-		$withdraw_successfull_msg = apply_filters( 'tutor_withdraw_successful_msg', __( 'Withdrawal Request Sent!', 'tutor' ) );
-		wp_send_json_success(
+		$success_message = apply_filters( 'tutor_withdraw_successful_msg', __( 'Withdrawal Request Sent!', 'tutor' ) );
+
+		$this->json_response(
+			$success_message,
 			array(
-				'msg'               => $withdraw_successfull_msg,
 				'available_balance' => $new_available_balance,
 			)
 		);

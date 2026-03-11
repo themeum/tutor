@@ -352,5 +352,4 @@ export const initializeLessonComments = () => {
       component: lessonComments,
     },
   });
-  window.TutorComponentRegistry.initWithAlpine(window.Alpine);
 };

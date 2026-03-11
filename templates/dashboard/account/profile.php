@@ -58,13 +58,13 @@ if ( $show_statistics ) {
 			<div class="tutor-user-profile">
 				<div class="tutor-profile-container">
 					<?php tutor_load_template( 'user-profile' ); ?>
-					
+
 					<?php if ( $show_statistics ) : ?>
 					<div class="tutor-user-profile-statistics">
 						<?php tutor_load_template( 'dashboard.instructor.profile-statistics', array( 'statistics' => $statistics ) ); ?>
 					</div>
 					<?php endif; ?>
-					
+
 				</div>
 			</div>
 		</div>

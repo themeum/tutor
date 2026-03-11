@@ -12,6 +12,8 @@ namespace Tutor\Components;
 
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Components\Constants\Positions;
+use Tutor\Components\Popover;
 use TUTOR\Icon;
 use TUTOR\Input;
 
@@ -123,6 +125,13 @@ class DropdownFilter extends BaseComponent {
 	 * @var string
 	 */
 	protected $active_value = '';
+
+	/**
+	 * Base URL for building filter links (preserves other query params when set).
+	 *
+	 * @var string
+	 */
+	protected $base_url = '';
 
 
 	/**
@@ -295,6 +304,18 @@ class DropdownFilter extends BaseComponent {
 		return $this;
 	}
 
+	/**
+	 * Set base URL for filter links so other query params are preserved (cumulative filtering).
+	 *
+	 * @param string $url Full current page URL including query string.
+	 *
+	 * @return self
+	 */
+	public function base_url( string $url ): self {
+		$this->base_url = $url;
+		return $this;
+	}
+
 
 	/**
 	 * Get component content
@@ -307,13 +328,18 @@ class DropdownFilter extends BaseComponent {
 		// Automatically manage active state and URL if query_param is set.
 		if ( ! empty( $this->query_param ) ) {
 			$current_val = Input::get( $this->query_param, '' );
+			$base        = ! empty( $this->base_url ) ? $this->base_url : '';
 			foreach ( $options as &$option ) {
 				$val = isset( $option['value'] ) ? $option['value'] : '';
 				if ( ! isset( $option['active'] ) ) {
 					$option['active'] = (string) $val === (string) $current_val;
 				}
 				if ( ! isset( $option['url'] ) ) {
-					$option['url'] = ! empty( $val ) ? add_query_arg( $this->query_param, $val ) : remove_query_arg( $this->query_param );
+					if ( ! empty( $base ) ) {
+						$option['url'] = ! empty( $val ) ? add_query_arg( $this->query_param, $val, $base ) : remove_query_arg( $this->query_param, $base );
+					} else {
+						$option['url'] = ! empty( $val ) ? add_query_arg( $this->query_param, $val ) : remove_query_arg( $this->query_param );
+					}
 				}
 			}
 			unset( $option );
@@ -357,9 +383,11 @@ class DropdownFilter extends BaseComponent {
 			} elseif ( Variant::PRIMARY_SOFT === $this->variant ) {
 				$btn_class = 'tutor-btn tutor-btn-primary-soft tutor-gap-2 ' . $size_class;
 			} else {
-				$btn_class = 'tutor-btn tutor-btn-link tutor-btn-small tutor-font-regular tutor-gap-2 tutor-p-none tutor-min-h-0';
+				$btn_class = 'tutor-btn tutor-text-secondary tutor-btn-small tutor-font-regular tutor-gap-2 tutor-bg-transparent tutor-p-none tutor-min-h-0';
 			}
 		}
+
+		$origin = Popover::TRANSFORM_ORIGIN_MAP[ Positions::BOTTOM_START ] ?? 'left.top';
 
 		ob_start();
 		?>
@@ -412,6 +440,7 @@ class DropdownFilter extends BaseComponent {
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-transition.<?php echo esc_attr( $origin ); ?>
 				@click.outside="handleClickOutside()"
 				class="tutor-popover"
 				style="width: <?php echo esc_attr( $this->get_popover_width( $this->popover_size ) ); ?>; max-width: unset;"

@@ -72,6 +72,12 @@ $align-self-utils: (
 
 $grid-cols: (1, 2, 3, 4, 5, 6, 12);
 
+$grid-split-utils: (
+  '1-5-1': 1.5fr 1fr,
+  '2-1': 2fr 1fr,
+  '1-2': 1fr 2fr,
+);
+
 // ------------------------
 // Base Utilities
 // ------------------------
@@ -166,12 +172,19 @@ $grid-cols: (1, 2, 3, 4, 5, 6, 12);
   }
 }
 
-// Grid columns
 @each $count in $grid-cols {
   .tutor-grid-cols-#{$count} {
     grid-template-columns: repeat($count, minmax(0, 1fr));
   }
 }
+
+// Custom splits
+@each $name, $value in $grid-split-utils {
+  .tutor-grid-cols-#{$name} {
+    grid-template-columns: $value;
+  }
+}
+
 .tutor-grid-cols-none {
   grid-template-columns: none;
 }
