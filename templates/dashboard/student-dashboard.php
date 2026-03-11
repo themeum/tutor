@@ -94,7 +94,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			</div>
 			<div class="tutor-stat-card-content">
 				<div class="tutor-stat-card-value">
-					<?php echo esc_html( $enrolled_course_count ); ?>
+					<?php echo esc_html( $active_course_count ); ?>
 				</div>
 				<p class="tutor-stat-card-change">
 					<?php
@@ -115,7 +115,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			</div>
 			<div class="tutor-stat-card-content">
 				<div class="tutor-stat-card-value">
-					<?php echo esc_html( $enrolled_course_count ); ?>
+					<?php echo esc_html( $completed_course_count ); ?>
 				</div>
 				<p class="tutor-stat-card-change">
 					<?php
