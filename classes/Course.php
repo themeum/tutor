@@ -3294,22 +3294,24 @@ class Course extends Tutor_Base {
 	 * } Total accumulated duration from all given courses.
 	 */
 	public static function get_total_course_duration( $course_ids ): array {
-
-		$total_time = array(
-			'hours'   => 0,
-			'minutes' => 0,
-			'seconds' => 0,
-		);
+		$total_seconds = 0;
 
 		foreach ( $course_ids as $id ) {
-
 			$duration = tutor_utils()->get_course_duration( (int) $id, true );
 
-			$total_time['hours']   += $duration['durationHours'];
-			$total_time['minutes'] += $duration['durationMinutes'];
-			$total_time['seconds'] += $duration['durationSeconds'];
+			$total_seconds += ( (int) $duration['durationHours'] * 3600 )
+				+ ( (int) $duration['durationMinutes'] * 60 )
+				+ ( (int) $duration['durationSeconds'] );
 		}
 
-		return $total_time;
+		$hours   = floor( $total_seconds / 3600 );
+		$minutes = floor( ( $total_seconds % 3600 ) / 60 );
+		$seconds = $total_seconds % 60;
+
+		return array(
+			'hours'   => (int) $hours,
+			'minutes' => (int) $minutes,
+			'seconds' => (int) $seconds,
+		);
 	}
 }
