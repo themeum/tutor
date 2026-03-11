@@ -512,7 +512,7 @@ class Quiz_Attempts_List {
 		$details_item = array(
 			'tag'     => 'a',
 			'content' => __( 'Details', 'tutor' ),
-			'icon'    => tutor_utils()->get_svg_icon( Icon::RESOURCES ),
+			'icon'    => tutor_utils()->get_svg_icon( Icon::RESOURCES, 20, 20 ),
 			'attr'    => array( 'href' => $url ),
 		);
 		return $details_item;
@@ -536,16 +536,18 @@ class Quiz_Attempts_List {
 			->trigger( $this->get_kebab_button() )
 			->placement( 'bottom' )
 			->menu_item( $this->get_details_item( $attempt ) )
+			->menu_min_width( '110px' )
 			->render();
 		} else {
 			Popover::make()
 			->trigger( $this->get_kebab_button() )
 			->placement( 'bottom' )
+			->menu_min_width( '110px' )
 			->menu_item(
 				array(
 					'tag'     => 'button',
 					'content' => __( 'Retry', 'tutor' ),
-					'icon'    => tutor_utils()->get_svg_icon( Icon::RELOAD ),
+					'icon'    => tutor_utils()->get_svg_icon( Icon::RELOAD, 20, 20 ),
 					'attr'    => array(
 						'@click' => $this->get_retry_attribute( $quiz_id ),
 					),
@@ -622,7 +624,7 @@ class Quiz_Attempts_List {
 				array(
 					'tag'     => 'button',
 					'content' => __( 'Delete', 'tutor' ),
-					'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+					'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2, 20, 20 ),
 					'attr'    => array(
 						'@click' => sprintf(
 							'hide(); TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });',
@@ -631,6 +633,7 @@ class Quiz_Attempts_List {
 					),
 				)
 			)
+			->menu_min_width( '110px' )
 			->render();
 	}
 }
