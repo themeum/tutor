@@ -404,6 +404,13 @@ class Template extends Tutor_Base {
 								$template = tutor_get_template( 'account' );
 							}
 						}
+
+						$dashboard_subpage = tutor_utils()->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
+						$is_isolated       = Dashboard::is_isolated_page_request( $dashboard_page, $dashboard_subpage );
+
+						if ( $is_isolated ) {
+							$template = tutor_get_template( 'dashboard-isolated' );
+						}
 					} else {
 						$template = tutor_get_template( 'login' );
 					}

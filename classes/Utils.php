@@ -10443,6 +10443,29 @@ class Utils {
 	}
 
 	/**
+	 * Get allowed basic inline tags, useful while using wp_kses.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $tags additional tags.
+	 *
+	 * @return array
+	 */
+	public function allowed_basic_inline_tags( array $tags = array() ): array {
+		$defaults = array(
+			'br'     => array(),
+			'b'      => array(),
+			'em'     => array(),
+			'i'      => array(),
+			'span'   => array(),
+			'strong' => array(),
+			'u'      => array(),
+		);
+
+		return wp_parse_args( $tags, $defaults );
+	}
+
+	/**
 	 * Get allowed tags for avatar, useful while using wp_kses
 	 *
 	 * @since 2.1.4

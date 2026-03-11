@@ -1,12 +1,15 @@
 <?php
 /**
  * Tutor dashboard header.
+ * Reusable component for displaying the dashboard header.
  *
  * @package Tutor\Templates
  * @author Themeum <support@themeum.com>
- * @link https://www.themeum.com/
+ * @link https://themeum.com
  * @since 4.0.0
  */
+
+ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;

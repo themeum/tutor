@@ -1,9 +1,12 @@
 // Quiz Attempts Page
 import { type MutationState } from '@Core/ts/services/Query';
+import { quizSummarySidebarMeta } from '@FrontendComponents/quiz/summary-sidebar';
 import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 import axios from 'axios';
+
+import { quizAttemptFeedbackMeta } from './quiz-attempt-feedback';
 
 interface RetryAttempt {
   quizID: string;
@@ -60,12 +63,15 @@ const quizAttemptsPage = () => {
 };
 
 export const initializeQuizAttempts = () => {
-  window.TutorComponentRegistry.register({
-    type: 'component',
-    meta: {
-      name: 'quizAttempts',
-      component: quizAttemptsPage,
-    },
+  window.TutorComponentRegistry.registerAll({
+    components: [
+      {
+        name: 'quizAttempts',
+        component: quizAttemptsPage,
+      },
+      quizAttemptFeedbackMeta,
+      quizSummarySidebarMeta,
+    ],
   });
 
   window.TutorComponentRegistry.initWithAlpine(window.Alpine);

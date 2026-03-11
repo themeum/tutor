@@ -13,4 +13,6 @@ export const TUTOR_CUSTOM_EVENTS = {
   TUTOR_PLAYER_READY: 'tutor-player-ready',
   COMMENT_REPLIED: 'tutor:comment:replied',
   LESSON_PLAYER_READY: 'tutorLessonPlayerReady',
+  QUIZ_TIME_EXPIRED: 'tutor-quiz-time-expired',
+  QUIZ_ABANDON_REQUESTED: 'tutor-quiz-abandon-requested',
 };

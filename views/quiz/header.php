@@ -35,7 +35,7 @@ if ( $context && file_exists( $file_path ) ) {
 	$unserialize_attempt = maybe_unserialize( $attempt_data->attempt_info );
 	$pass_marks          = '';
 	$passing_grade       = isset( $unserialize_attempt['passing_grade'] ) ? $unserialize_attempt['passing_grade'] : 0;
-	$back_url            = isset( $back_url ) ? $back_url : ( isset( $_GET['view_quiz_attempt_id'] ) ? remove_query_arg( 'view_quiz_attempt_id', is_admin() ? admin_url( 'admin.php?page=tutor_quiz_attempts' ) : tutor()->current_url ) : null );
+	$back_url            = isset( $back_url ) ? $back_url : ( isset( $_GET['attempt_id'] ) ? remove_query_arg( 'attempt_id', is_admin() ? admin_url( 'admin.php?page=tutor_quiz_attempts' ) : tutor()->current_url ) : null );
 
 	include $file_path;
 }

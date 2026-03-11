@@ -118,12 +118,16 @@
   grid-template-columns: repeat($min, 1fr);
 
   @for $i from ($min + 1) through $max {
-    // Count all children, then subtract if any are dragging
+    // Count all children to increase column count; ignore drag clones.
     &:has(> #{$selector}:nth-child(#{$i})) {
       grid-template-columns: repeat($i, 1fr);
+    }
+  }
 
-      // If one child is dragging, reduce column count by 1
-      &:has(> #{$selector}[data-dnd-dragging='true']) {
+  // If a drag clone/placeholder is present, keep columns based on item count minus one.
+  &:has(> #{$selector}[data-dnd-dragging='true']) {
+    @for $i from ($min + 1) through ($max + 1) {
+      &:has(> #{$selector}:nth-child(#{$i})) {
         grid-template-columns: repeat(#{$i - 1}, 1fr);
       }
     }

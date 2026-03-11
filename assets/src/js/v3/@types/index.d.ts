@@ -181,6 +181,10 @@ declare global {
       visibility_control?: {
         course_builder?: Record<string, string>;
       };
+      quiz_options?: {
+        quiz_auto_start?: string;
+        feedback_mode?: string;
+      };
     };
     wpApiSettings: {
       nonce: string;

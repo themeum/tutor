@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
 
@@ -21,6 +23,7 @@ $show_quiz_title = $show_quiz_title ?? false;
 $show_course     = $show_course ?? false;
 $attempt_number  = $attempt_number ?? null;
 $attempts_count  = $attempts_count ?? 0;
+$is_previous     = $is_previous ?? false;
 
 ?>
 <div class="tutor-quiz-attempts-item">
@@ -58,14 +61,16 @@ $attempts_count  = $attempts_count ?? 0;
 			</div>
 		<?php endif; ?>
 
-		<div class="tutor-quiz-item-info-course">
-			<?php esc_html_e( 'Course:', 'tutor' ); ?> 
-			<?php
-			PreviewTrigger::make()
-				->id( $course_id ?? 0 )
-				->render()
-			?>
-		</div>
+		<?php if ( ! $is_previous ) : ?>
+			<div class="tutor-quiz-item-info-course">
+				<?php esc_html_e( 'Course:', 'tutor' ); ?> 
+				<?php
+				PreviewTrigger::make()
+					->id( $course_id ?? 0 )
+					->render()
+				?>
+			</div>
+		<?php endif; ?>
 
 		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html( $attempt['date'] ?? '' ); ?></div>
 		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html__( 'Student Name: ', 'tutor' ) . esc_html( $attempt['student'] ); ?></div>

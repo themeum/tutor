@@ -223,21 +223,18 @@
 
           .tutor-quiz-marks-correct,
           .tutor-quiz-marks-incorrect {
-            @include tutor-typography(tiny, medium, secondary);
-            @include tutor-flex(row, center);
-            gap: $tutor-spacing-3;
-            background-color: $tutor-surface-l2;
-            padding: 0 $tutor-spacing-2;
-            border-radius: 40px;
+            @include tutor-badge-base;
+            width: 100%;
+            border-radius: $tutor-radius-full;
 
             &::before {
               content: '';
               display: inline-block;
               width: 8px;
               height: 8px;
-              border-radius: 100%;
+              border-radius: $tutor-radius-full;
               background-color: $tutor-icon-success-primary;
-              margin-inline-start: $tutor-spacing-3;
+              margin-inline-start: $tutor-spacing-1;
             }
           }
 
@@ -299,14 +296,26 @@
       }
 
       @include tutor-breakpoint-up(sm) {
-        &:hover {
+        &:has(.tutor-popover[style*='visibility: visible;']) {
+          .tutor-quiz-item-result {
+            .tutor-badge {
+              display: none;
+            }
+          }
+
+          .tutor-quiz-item-result-more {
+            display: flex;
+          }
+        }
+
+        &:hover:has(.tutor-quiz-item-result-more) {
           .tutor-quiz-item-result {
             .tutor-badge {
               display: none;
             }
 
             .tutor-quiz-item-result-more {
-              display: block;
+              display: flex;
             }
           }
         }
@@ -346,11 +355,15 @@
           background-color: $tutor-surface-base;
         }
 
+        &:not(:last-child) {
+          border-bottom: 1px solid $tutor-border-idle;
+        }
+
         /** for mobile there is button html 
          * so need to capture second to last child 
         **/
-        &:not(:nth-last-child(2)) {
-          @include tutor-breakpoint-up(sm) {
+        @include tutor-breakpoint-up(sm) {
+          &:not(:nth-last-child(2)) {
             border-bottom: 1px solid $tutor-border-idle;
           }
         }

@@ -153,7 +153,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 									?>
 								<?php elseif ( 'details' == $key ) : ?>
 									<?php
-										$url_args  = array( 'view_quiz_attempt_id' => $attempt->attempt_id );
+										$url_args  = array( 'attempt_id' => $attempt->attempt_id );
 										$admin_url = add_query_arg( $url_args, admin_url( 'admin.php?page=tutor_quiz_attempts' ) );
 										$front_url = add_query_arg( $url_args, tutor()->current_url );
 										$url       = is_admin() ? $admin_url : $front_url;
