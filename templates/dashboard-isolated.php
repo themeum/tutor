@@ -24,15 +24,14 @@ use Tutor\Helpers\UrlHelper;
 </head>
 <body <?php body_class( '' ); ?>>
 <?php
-global $wp_query;
 
-$dashboard_page    = tutor_utils()->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
-$dashboard_subpage = tutor_utils()->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
+$dashboard_page    = get_query_var( 'tutor_dashboard_page' );
+$dashboard_subpage = get_query_var( 'tutor_dashboard_sub_page' );
 $page_key          = Dashboard::get_isolated_page_key( $dashboard_page, $dashboard_subpage );
 $isolated_pages    = Dashboard::get_isolated_pages();
 $page_data         = $isolated_pages[ $page_key ] ?? array();
 $page_template     = $page_data['template'] ?? '';
-$back_url          = UrlHelper::back( tutor_utils()->tutor_dashboard_url() );
+$back_url          = tutor_utils()->tutor_dashboard_url();
 $close_url         = $back_url;
 ?>
 <div class="tutor-dashboard-isolated-page-wrapper">
