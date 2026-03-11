@@ -114,7 +114,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 		<?php endif; ?>
 	</div>
 	<?php
-		echo apply_filters( 'tutor_learning_area_content', ob_get_clean() );
+		echo apply_filters( 'tutor_learning_area_content', ob_get_clean() ); //phpcs:ignore --already escaped
 		tutor_load_template( 'learning-area.lesson.footer' );
 	?>
 </div>
