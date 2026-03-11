@@ -1,16 +1,10 @@
 import { courseCompletionChart, overviewChart, statCard } from './home-charts';
 import { sortSections } from './sort-sections';
-// import { sectionCheckbox } from './section-checkbox';
 
 const sortableSectionsMeta = {
   name: 'sortableSections',
   component: sortSections,
 };
-
-// const sectionCheckboxMeta = {
-//   name: 'sectionCheckbox',
-//   component: sectionCheckbox,
-// };
 
 const statCardMeta = {
   name: 'statCard',

@@ -851,6 +851,13 @@ class Instructor {
 		);
 	}
 
+	/**
+	 * Save the instructor home sections order for the current user.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void Sends JSON success or error response and exits.
+	 */
 	public function save_home_sections_order() {
 
 		if ( ! is_user_logged_in() ) {
@@ -867,6 +874,13 @@ class Instructor {
 		wp_send_json_success();
 	}
 
+	/**
+	 * Save the visibility state of instructor home sections.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void Sends JSON success or error response and exits.
+	 */
 	public function save_home_section_visibility() {
 
 		if ( ! is_user_logged_in() ) {
@@ -876,16 +890,10 @@ class Instructor {
 		tutor_utils()->check_nonce();
 
 		$items = Input::post( 'items', '', Input::TYPE_STRING );
-		$items = array_map( 'rest_sanitize_boolean', (array)json_decode($items) );
+		$items = array_map( 'rest_sanitize_boolean', (array) json_decode( $items ) );
 
 		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', $items );
 
 		wp_send_json_success();
-	}
-
-	public function get_saved_home_sections() {
-
-		$order      = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', true );
-		$visibility = get_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', true );
 	}
 }

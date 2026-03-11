@@ -51,20 +51,23 @@ $sortable_sections = array(
 	array(
 		'id'        => 'upcoming_tasks_and_activity',
 		'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
-		'is_active' => true,
-		'order'     => 4,
+		'is_active' => $saved_visibility['upcoming_tasks_and_activity'] ?? true,
+		'order'     => $saved_order['upcoming_tasks_and_activity'] ?? 4,
 	),
 	array(
 		'id'        => 'recent_reviews',
 		'label'     => esc_html__( 'Recent Student Reviews', 'tutor' ),
 		'is_active' => $saved_visibility['recent_reviews'] ?? true,
-		'order'     => $saved_order['recent_reviews'] ?? 4,
+		'order'     => $saved_order['recent_reviews'] ?? 5,
 	),
 );
 
-usort( $sortable_sections, function( $a, $b ) {
-	return $a['order'] <=> $b['order'];
-});
+usort(
+	$sortable_sections,
+	function ( $a, $b ) {
+		return $a['order'] <=> $b['order'];
+	}
+);
 
 $sortable_sections_defaults = array_reduce(
 	$sortable_sections,
@@ -78,7 +81,7 @@ $sortable_sections_defaults = array_reduce(
 $sortable_sections_ids = array_reduce(
 	$sortable_sections,
 	function ( $carry, $section ) {
-		$carry[$section['order']] = $section['id'];
+		$carry[ $section['order'] ] = $section['id'];
 		return $carry;
 	},
 	array()
@@ -412,7 +415,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 	</div>
 
 	<?php foreach ( $sortable_sections as $section ) : ?>
-		<?php if( 'current_stats' === $section['id'] ) : ?>
+		<?php if ( 'current_stats' === $section['id'] ) : ?>
 			<!-- Stat cards -->
 			<div 
 				data-section-id="current_stats" 
