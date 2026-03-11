@@ -53,7 +53,7 @@ $page_nav_items = apply_filters( 'tutor_dashboard_account_billing_page_nav_items
 					<?php Nav::make()->items( $page_nav_items )->render(); ?>
 				</div>
 				<?php } ?>
-				<div class="tutor-sm-border tutor-sm-rounded-2xl tutor-sm-mt-4">
+				<div class="tutor-sm-rounded-2xl tutor-sm-mt-4">
 					<?php
 					if ( file_exists( $tab_template ) ) {
 						require_once $tab_template;
