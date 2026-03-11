@@ -3274,10 +3274,8 @@ class Course extends Tutor_Base {
 		}
 
 		$course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
-
-		$button_text = $course_progress['completed_percent'] > 0 ? __( 'Resume', 'tutor' ) : __( 'Start', 'tutor' );
-
-		$button_url = tutor_utils()->get_course_first_lesson( $course_id );
+		$button_text     = $course_progress['completed_percent'] > 0 ? __( 'Resume', 'tutor' ) : __( 'Start', 'tutor' );
+		$button_url      = tutor_utils()->get_course_first_lesson( $course_id );
 
 		if ( ! $button_url ) {
 			$button_url = get_the_permalink( $course_id );

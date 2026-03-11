@@ -133,7 +133,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Time Spent', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon tutor-d-flex">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::TIME, 20, 20 ); ?>
 				</div>
 			</div>
