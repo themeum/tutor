@@ -1,6 +1,8 @@
 import { DragDropManager, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
 import { RestrictToElement } from '@dnd-kit/dom/modifiers';
 import { Sortable } from '@dnd-kit/dom/sortable';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import type { AjaxResponse } from '@FrontendTypes/index';
 
 export const sortSections = (sectionsIds: string[]) => ({
   _sortables: [] as Sortable[],
@@ -65,7 +67,7 @@ export const sortSections = (sectionsIds: string[]) => ({
       }
     });
 
-    manager.monitor.addEventListener('dragend', (event) => {
+    manager.monitor.addEventListener('dragend', async (event) => {
       const operation = event.operation;
       if (!operation.source) {
         return;
@@ -73,6 +75,25 @@ export const sortSections = (sectionsIds: string[]) => ({
 
       const sourceElement = operation.source.element;
       if (!sourceElement) {
+        return;
+      }
+
+      const order = this.getOrder();
+      try {
+        const response = await wpAjaxInstance.post<AjaxResponse, AjaxResponse>(
+          'tutor_save_instructor_home_sections_order',
+          { order },
+        );
+
+        if (!response.success) {
+          window.TutorCore.toast.error(
+            response?.data || wp.i18n.__('Failed to save instructor home section order.', 'tutor'),
+          );
+          return;
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : wp.i18n.__('Unknown error occurred.', 'tutor');
+        window.TutorCore.toast.error(message);
         return;
       }
 
@@ -84,6 +105,34 @@ export const sortSections = (sectionsIds: string[]) => ({
         this.updateDom();
       }
     });
+  },
+
+  async handleCheckboxClick() {
+    const items = Array.from(document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')).reduce(
+      (acc, checkbox) => {
+        acc[checkbox.name] = checkbox.checked;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    );
+
+    try {
+      const response = await wpAjaxInstance.post<AjaxResponse, AjaxResponse>(
+        'tutor_save_instructor_home_sections_visibility',
+        { items },
+      );
+
+      if (!response.success) {
+        window.TutorCore.toast.error(
+          response?.data || wp.i18n.__('Failed to save instructor home section visibility.', 'tutor'),
+        );
+        return;
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : wp.i18n.__('Unknown error occurred.', 'tutor');
+      window.TutorCore.toast.error(message);
+      return;
+    }
   },
 
   updateDom() {

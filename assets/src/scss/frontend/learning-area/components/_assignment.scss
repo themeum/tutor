@@ -59,7 +59,7 @@
       @include tutor-grid(2, 1fr);
       gap: $tutor-spacing-4;
 
-      @include tutor-breakpoint-down(sm) {
+      @include tutor-breakpoint-down(md) {
         @include tutor-grid(1, 1fr);
       }
     }
@@ -72,7 +72,6 @@
   &-actions {
     @include tutor-flex(row, stretch, flex-end);
     gap: $tutor-spacing-4;
-    margin-top: $tutor-spacing-2;
 
     @include tutor-breakpoint-down(sm) {
       justify-content: space-between;
@@ -141,8 +140,6 @@
     }
 
     &-table {
-      @include tutor-card-base();
-      @include tutor-card-padding(medium);
       @include tutor-card-radius(2xl);
       @include tutor-flex(column, stretch, flex-start);
       gap: $tutor-spacing-6;
@@ -153,7 +150,7 @@
         thead {
           th {
             @include tutor-typography('tiny', 'regular');
-            width: 14.3%;
+            width: 20%;
 
             &:first-of-type {
               width: 42.5%;
@@ -162,7 +159,22 @@
         }
 
         tbody {
+          tr {
+            &:hover {
+              td {
+                .attempt-list-badge{ 
+                  .tutor-badge{
+                    display: none;
+                  }
+                }
+                .attempt_details_button {
+                  display: block;
+                }
+              }
+            }
+          }
           td {
+            position: relative;
             @include tutor-typography('small', 'regular', 'secondary');
             width: 14.3%;
 
@@ -171,12 +183,19 @@
               font-weight: $tutor-font-weight-medium;
               width: 42.8%;
             }
+
+            a.attempt_details_button {
+              position: absolute;
+              right: 0;
+              top: 50%;
+              transform: translate(-50%, -50%);
+              display: none;
+            }
           }
         }
       }
 
       @include tutor-breakpoint-down(sm) {
-        padding: $tutor-spacing-5;
         gap: $tutor-spacing-4;
       }
     }
@@ -240,5 +259,19 @@
       padding: $tutor-spacing-5;
       gap: $tutor-spacing-3;
     }
+  }
+}
+
+.tutor-assignment-pending-warning {
+  display: flex;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: $tutor-spacing-4;
+  padding-right: $tutor-spacing-5;
+  border-radius: $tutor-radius-md;
+  gap: $tutor-spacing-3;
+
+  @include tutor-breakpoint-up(sm) {
+    max-width: max-content;
   }
 }
