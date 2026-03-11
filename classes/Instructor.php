@@ -16,8 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use DateInterval;
 use DateTime;
-use Tutor\Ecommerce\OptionKeys;
-use Tutor\Ecommerce\Settings;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
@@ -76,6 +74,10 @@ class Instructor {
 		 * @since 1.9.2
 		 */
 		add_action( 'wp_loaded', array( $this, 'hide_instructor_notice' ) );
+
+		add_action( 'wp_ajax_tutor_save_instructor_home_sections_order', array( $this, 'save_home_sections_order' ) );
+
+		add_action( 'wp_ajax_tutor_save_instructor_home_sections_visibility', array( $this, 'save_home_section_visibility' ) );
 	}
 
 	/**
@@ -847,5 +849,51 @@ class Instructor {
 			'class'      => $class,
 			'icon_class' => '-tutor-mb-1',
 		);
+	}
+
+	/**
+	 * Save the instructor home sections order for the current user.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void Sends JSON success or error response and exits.
+	 */
+	public function save_home_sections_order() {
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
+		}
+
+		tutor_utils()->check_nonce();
+
+		$order = Input::post( 'order', array(), Input::TYPE_ARRAY );
+		$order = array_values( array_map( 'sanitize_key', $order ) );
+
+		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', array_flip( $order ) );
+
+		wp_send_json_success();
+	}
+
+	/**
+	 * Save the visibility state of instructor home sections.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void Sends JSON success or error response and exits.
+	 */
+	public function save_home_section_visibility() {
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
+		}
+
+		tutor_utils()->check_nonce();
+
+		$items = Input::post( 'items', '', Input::TYPE_STRING );
+		$items = array_map( 'rest_sanitize_boolean', (array) json_decode( $items ) );
+
+		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', $items );
+
+		wp_send_json_success();
 	}
 }
