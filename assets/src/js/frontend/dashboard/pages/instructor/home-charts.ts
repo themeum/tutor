@@ -108,9 +108,13 @@ const CHART_CONFIG = {
 } as const;
 
 const hexToRgba = (hex: string, alpha: number): string => {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
+  // Expand 3-digit hex (#RGB → #RRGGBB)
+  const normalized = hex.length === 4 ? `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}` : hex;
+
+  const r = parseInt(normalized.slice(1, 3), 16) || 0;
+  const g = parseInt(normalized.slice(3, 5), 16) || 0;
+  const b = parseInt(normalized.slice(5, 7), 16) || 0;
+
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
