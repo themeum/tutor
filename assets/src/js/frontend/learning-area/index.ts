@@ -50,12 +50,6 @@ const initializeLearningArea = () => {
       console.warn('Unknown learning area page:', currentPage);
   }
 
-  // Initialize lesson contents (shared)
-  const lessonContentWrapper = document.querySelector('.tutor-lesson-content');
-  if (lessonContentWrapper) {
-    initializeLesson();
-  }
-
   // Ensure all registered components are initialized with Alpine.
   if (window.TutorComponentRegistry) {
     window.TutorComponentRegistry.initWithAlpine(window.Alpine);

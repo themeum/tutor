@@ -2,6 +2,10 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
+.tutor-video-player {
+  aspect-ratio: 16 / 9;
+}
+
 .tutor-lesson-content {
   .tutor-lesson-wrapper {
     @include tutor-typography('p1', 'regular', 'secondary');
