@@ -269,29 +269,6 @@ if ( $is_all_time ) {
 	);
 }
 
-
-// @todo Will be added on later.
-// $leaderboard_data = array(
-// array(
-// 'name'                  => esc_html__( 'John Doe', 'tutor' ),
-// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 'no_of_courses'         => 10,
-// 'completion_percentage' => 50,
-// ),
-// array(
-// 'name'                  => esc_html__( 'Jane Doe', 'tutor' ),
-// 'avatar'                => 'https://i.pravatar.cc/300?u=a042581f4e29026704d',
-// 'no_of_courses'         => 20,
-// 'completion_percentage' => 30,
-// ),
-// array(
-// 'name'                  => esc_html__( 'Bob Doe', 'tutor' ),
-// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826732d',
-// 'no_of_courses'         => 30,
-// 'completion_percentage' => 70,
-// ),
-// );
-
 // Top Performing Courses.
 $args = array(
 	'start_date' => $start_date,
@@ -309,40 +286,6 @@ if ( $is_all_time && $tutor_pro_enabled ) {
 		Instructor::get_instructor_upcoming_live_tasks( $user->ID )
 	);
 }
-
-// @todo will be added later.
-// $recent_activity = array(
-// array(
-// 'course_name' => 'Complete Web Development Bootcamp',
-// 'course_url'  => '#',
-// 'date'        => '2022-01-01 10:00 AM',
-// 'meta'        => 'enrolled in',
-// 'user'        => array(
-// 'name'   => 'John Doe',
-// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// ),
-// ),
-// array(
-// 'course_name' => 'Complete Web Development Bootcamp',
-// 'course_url'  => '#',
-// 'date'        => '2022-01-01 10:00 AM',
-// 'meta'        => 'enrolled in',
-// 'user'        => array(
-// 'name'   => 'John Doe',
-// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// ),
-// ),
-// array(
-// 'course_name' => 'Complete Web Development Bootcamp',
-// 'course_url'  => '#',
-// 'date'        => '2022-01-01 10:00 AM',
-// 'meta'        => 'enrolled in',
-// 'user'        => array(
-// 'name'   => 'John Doe',
-// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// ),
-// ),
-// );
 
 // Recent Reviews.
 $review_args = array( 'comment_approved' => 'approved' );
@@ -469,28 +412,6 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 					)
 				);
 				?>
-
-				<!-- @todo Will be added later. -->
-				<!-- Leaderboard -->
-				<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
-					<div class="tutor-small">
-						<?php // esc_html_e( 'Leaderboard', 'tutor' ); ?>
-					</div>
-
-					<div class="tutor-dashboard-home-card-body">
-						<?php // foreach ( $leaderboard_data as $item_key => $item ) : ?>
-							<?php
-							// tutor_load_template(
-							// 'demo-components.dashboard.components.instructor.home.leaderboard-item',
-							// array(
-							// 'item_key' => $item_key,
-							// 'item'     => $item,
-							// )
-							// );
-							?>
-						<?php // endforeach; ?>
-					</div>
-				</div> -->
 			</div>
 		<?php endif; ?>
 
@@ -562,26 +483,6 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 						<?php endforeach; ?>
 					</div>
 				</div>
-
-				<!-- Recent Activity -->
-				<!-- @todo Will be added later. -->
-				<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
-				<div class="tutor-small">
-					<?php // esc_html_e( 'Recent Activity', 'tutor' ); ?>
-				</div>
-
-				<div class="tutor-dashboard-home-card-body">
-					<?php // foreach ( $recent_activity as $item ) : ?>
-						<?php
-						// tutor_load_template(
-						// 'demo-components.dashboard.components.instructor.home.recent-activity-item',
-						// array(
-						// 'item' => $item,
-						// )
-						// );
-						?>
-					<?php // endforeach; ?>
-				</div> -->
 			</div>
 		<?php endif; ?>
 
