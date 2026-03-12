@@ -50,7 +50,8 @@ $default_values = array(
 	'cover_photo'             => $settings_data['cover_photo_src'],
 );
 
-$default_values = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
+$default_values 					 = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
+$placeholder_profile_photo = tutor()->url . 'assets/images/profile-photo.png';
 
 ?>
 
@@ -87,7 +88,10 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 								imagePreviewPlaceholder: '<?php esc_attr( $settings_data['profile_placeholder'] ); ?>',
 							})"
 							class="tutor-account-avatar" 
-							:class="open ? 'active' : ''"
+							:class="{
+								'active': open,
+								'is-loading': uploadProfilePhotoMutation?.isPending || removeProfilePhotoMutation?.isPending,
+							}"
 						>
 							<input
 								class="tutor-hidden"
@@ -99,7 +103,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 								@change="handleFileSelect($event)"
 							/>
 							<img 
-								:src="imagePreview ? imagePreview : '<?php echo esc_url( $default_values['profile_photo'] ); ?>'"
+								:src="imagePreview ? imagePreview : '<?php echo esc_url( $placeholder_profile_photo ); ?>'"
 								class="tutor-avatar-image"
 								alt="<?php esc_attr_e( 'User Avatar', 'tutor' ); ?>"
 							>
