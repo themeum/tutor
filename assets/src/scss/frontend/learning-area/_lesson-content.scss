@@ -77,6 +77,8 @@
   }
 
   @include tutor-breakpoint-down(sm) {
+    margin-inline: -$tutor-spacing-6;
+
     .tutor-lesson-content-tab {
       padding-inline: $tutor-spacing-6;
 
