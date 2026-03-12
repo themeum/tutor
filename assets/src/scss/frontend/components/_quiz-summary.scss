@@ -106,6 +106,10 @@
       gap: $tutor-spacing-4;
       flex-wrap: wrap;
 
+      a {
+        text-decoration: none;
+      }
+
       &:has(> :nth-child(2)) {
         justify-content: space-between;
       }

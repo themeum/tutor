@@ -50,10 +50,10 @@ body {
 .tutor-account-page-wrapper {
   min-height: 100vh;
   background-color: $tutor-surface-base;
-}
 
-a {
-  all: unset;
+  a {
+    text-decoration: none;
+  }
 }
 
 // Remove default margin in all browsers
