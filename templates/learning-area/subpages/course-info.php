@@ -119,7 +119,7 @@ $default_meta[]           = array(
 
 $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_meta, $tutor_course_id );
 ?>
-<div class="tutor-course-info tutor-pt-7 tutor-pb-12">
+<div class="tutor-course-info tutor-pt-7 tutor-pb-8">
 	<?php do_action( 'tutor_learning_area_before_course_info', $tutor_course_id ); ?>
 
 	<div class="tutor-course-thumb">
@@ -146,7 +146,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 	</div>
 
 	<!-- TODO: sticky behaviour -->
-	<div class="tutor-course-sticky-card tutor-mt-9">
+	<!-- <div class="tutor-course-sticky-card tutor-mt-9">
 		<div class="tutor-course-thumb">
 			<img src="<?php echo esc_url( $course_thumbnail ); ?>" alt="course thumb" />
 		</div>
@@ -164,10 +164,10 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			?>
 		</div>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="tutor-course-description">
-		<div x-data="{ expanded: true }" class="tutor-course-description-item">
+		<div x-data="{ expanded: false }" class="tutor-course-description-item">
 			<div role="button" @click="expanded = !expanded" class="tutor-course-description-header">
 				<div class="tutor-course-description-header-title">
 					<?php esc_html_e( 'About this Course', 'tutor' ); ?>
@@ -183,7 +183,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		<div x-data="{ expanded: false }" class="tutor-course-description-item">
 			<div role="button" @click="expanded = !expanded" class="tutor-course-description-header">
 				<div class="tutor-course-description-header-title">
-					What you'll learn
+					<?php esc_html_e( "What you'll learn", 'tutor' ); ?>
 				</div>
 				<div class="tutor-course-description-header-icon" :class="{ 'is-expanded': expanded }">
 					<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2, 24, 24 ); ?>
