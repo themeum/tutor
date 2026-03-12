@@ -269,7 +269,7 @@ $sortable_sections = array(
 	),
 	array(
 		'id'        => 'upcoming_tasks_and_activity',
-		'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
+		'label'     => esc_html__( 'Upcoming Tasks', 'tutor' ),
 		'is_active' => $saved_visibility['upcoming_tasks_and_activity'] ?? true,
 		'order'     => $saved_order['upcoming_tasks_and_activity'] ?? 4,
 		'data'      => ! empty( $upcoming_tasks ),
