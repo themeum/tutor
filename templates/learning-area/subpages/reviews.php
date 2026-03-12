@@ -120,7 +120,10 @@ $reviews       = tutor_utils()->get_course_reviews( $tutor_course_id, $offset, $
 									<?php echo esc_html( $review->display_name ?? '' ); ?>
 								</div>
 								<div class="tutor-tiny tutor-text-secondary">
-									<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $review->comment_date ?? '', get_option( 'date_format' ) ) ); ?>
+								<?php
+								/* translators: %s: time difference */
+								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ) );
+								?>
 								</div>
 							</div>
 						</div>
