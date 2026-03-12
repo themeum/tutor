@@ -51,7 +51,6 @@ $default_values = array(
 );
 
 $default_values 					 = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
-$placeholder_profile_photo = tutor()->url . 'assets/images/profile-photo.png';
 
 ?>
 
@@ -103,7 +102,7 @@ $placeholder_profile_photo = tutor()->url . 'assets/images/profile-photo.png';
 								@change="handleFileSelect($event)"
 							/>
 							<img 
-								:src="imagePreview ? imagePreview : '<?php echo esc_url( $placeholder_profile_photo ); ?>'"
+								:src="imagePreview ? imagePreview : '<?php echo esc_url( $settings_data['profile_placeholder'] ); ?>'"
 								class="tutor-avatar-image"
 								alt="<?php esc_attr_e( 'User Avatar', 'tutor' ); ?>"
 							>
