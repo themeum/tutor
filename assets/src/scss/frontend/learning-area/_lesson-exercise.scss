@@ -1,0 +1,10 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-resources-list {
+  @include tutor-grid(2, $tutor-spacing-4);
+
+  @include tutor-breakpoint-down(md) {
+    @include tutor-grid(1, $tutor-spacing-4);
+  }
+}
