@@ -22,12 +22,6 @@ use Tutor\Helpers\DateTimeHelper;
 // Get course ID from global variable set in learning-area/index.php .
 global $tutor_course_id;
 
-$disable = ! get_tutor_option( 'enable_course_review' );
-if ( $disable ) {
-	EmptyState::make()->title( __( 'Reviews are disabled', 'tutor' ) )->render();
-	return;
-}
-
 // Pagination setup.
 $review_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page    = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );

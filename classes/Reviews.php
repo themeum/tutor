@@ -39,7 +39,10 @@ class Reviews {
 		add_action( 'wp_ajax_nopriv_tutor_single_course_reviews_load_more', array( $this, 'tutor_single_course_reviews_load_more' ) );
 		add_action( 'wp_ajax_tutor_change_review_status', array( $this, 'tutor_change_review_status' ) );
 
-		add_filter( 'tutor_learning_area_sub_page_nav_item', array( $this, 'add_subpage_nav_item' ), 10, 2 );
+		$is_course_review_enabled = get_option( 'enable_course_review' );
+		if ( $is_course_review_enabled ) {
+			add_filter( 'tutor_learning_area_sub_page_nav_item', array( $this, 'add_subpage_nav_item' ), 10, 2 );
+		}
 	}
 
 	/**
@@ -179,7 +182,6 @@ class Reviews {
 	 * @return array
 	 */
 	public function add_subpage_nav_item( $nav_items, $base_url ): array {
-
 		$nav_items['reviews'] = array(
 			'title'    => __( 'Reviews', 'tutor-pro' ),
 			'icon'     => Icon::STAR_LINE,
