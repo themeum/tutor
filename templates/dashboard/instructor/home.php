@@ -364,6 +364,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 				data-section-id="current_stats" 
 				class="tutor-flex tutor-flex-wrap tutor-gap-5 tutor-z-positive"					
 				x-show="watch('current_stats')"
+				x-cloak
 			>
 				<?php foreach ( $stat_cards as $card ) : ?>
 					<div class="tutor-flex-1">
@@ -402,6 +403,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 				data-section-id="course_completion_and_leader" 
 				class="tutor-flex tutor-gap-6"
 				x-show="watch('course_completion_and_leader')"
+				x-cloak
 			>
 				<!-- Course Completion Chart -->
 				<?php
@@ -421,6 +423,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 				data-section-id="top_performing_courses"
 				class="tutor-dashboard-home-card"
 				x-show="watch('top_performing_courses')"
+				x-cloak
 			> 
 				<div class="tutor-flex tutor-row tutor-justify-between tutor-align-center tutor-gap-9">
 					<div class="tutor-small">
@@ -465,6 +468,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 				data-section-id="upcoming_tasks_and_activity"
 				class="tutor-flex tutor-gap-6"
 				x-show="watch('upcoming_tasks_and_activity')"
+				x-cloak
 			>
 				<!-- Upcoming Tasks -->
 				<div class="tutor-dashboard-home-card tutor-flex-1">
@@ -492,6 +496,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 				data-section-id="recent_reviews" 
 				class="tutor-dashboard-home-card"
 				x-show="watch('recent_reviews')"
+				x-cloak
 			>
 				<div class="tutor-small">
 					<?php esc_html_e( 'Recent Student Reviews', 'tutor' ); ?>
