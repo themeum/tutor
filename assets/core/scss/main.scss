@@ -50,10 +50,10 @@ body {
 .tutor-account-page-wrapper {
   min-height: 100vh;
   background-color: $tutor-surface-base;
+}
 
-  a {
-    text-decoration: none;
-  }
+a {
+  all: unset;
 }
 
 // Remove default margin in all browsers
@@ -77,8 +77,8 @@ ol {
   list-style: none;
 }
 
-li>ol,
-li>ul,
+li > ol,
+li > ul,
 ol,
 ul {
   padding: 0;
