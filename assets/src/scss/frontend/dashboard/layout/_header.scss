@@ -17,10 +17,13 @@
   }
 
   &-inner {
+    @include tutor-frontend-layout();
     @include tutor-flex(row, center, space-between);
     height: 100%;
-    max-width: 726px;
-    margin: 0 auto;
+
+    @include tutor-breakpoint-up(2xl) {
+      padding-inline: $tutor-spacing-6;
+    }
   }
 
   &-left {

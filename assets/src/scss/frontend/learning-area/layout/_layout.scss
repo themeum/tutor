@@ -32,10 +32,9 @@
   }
 
   .tutor-learning-area-container {
-    max-width: 780px;
-    margin: 0 auto;
+    @include tutor-frontend-layout();
 
-    @include tutor-breakpoint-up(sm) {
+    @include tutor-breakpoint-down(md) {
       padding-inline: $tutor-spacing-6;
     }
 
