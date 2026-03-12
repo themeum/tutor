@@ -42,27 +42,8 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 				</span>
 				<?php echo esc_html( $display_name . ' 👋' ); ?>
 			</div>
-			<!-- <ul class="tutor-dashboard-header-user-streaks">
-				@TODO
-				<li><span class="tutor-font-medium tutor-text-primary">24</span>-day learning streak</li>
-				<li>Keep it up!</li>
-			</ul> -->
 		</div>
 		<div class="tutor-dashboard-header-right">
-			
-			<!-- <button class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-gap-2">
-				24 
-				<?php
-				// tutor_utils()->render_svg_icon(
-				// Icon::ENERGY,
-				// 16,
-				// 16,
-				// array(
-				// 'class' => 'tutor-text-brand',
-				// )
-				// );
-				?>
-			</button> -->
 			<div>
 				<?php
 				// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
@@ -143,7 +124,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 							</a>
 							<?php endif; ?>
 						</div>
-						
+
 						<?php
 						if ( ! User::is_instructor( $user_id ) && ! User::is_admin( $user_id ) ) {
 							$instructor_status = tutor_utils()->instructor_status( 0, false );

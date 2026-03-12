@@ -165,6 +165,11 @@
     &-user-avatar {
       width: 22px;
       height: 22px;
+
+      .tutor-avatar {
+        width: 22px;
+        height: 22px;
+      }
     }
 
     &-user-popover {
@@ -185,7 +190,7 @@
 
         .tutor-profile-header-top {
           width: 100%;
-          @include tutor-flex(row, center, space-between)
+          @include tutor-flex(row, center, space-between);
         }
 
         .tutor-user-profile-info {
