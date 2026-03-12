@@ -2,7 +2,7 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-quiz-summary {
-  max-width: 700px;
+  @include tutor-frontend-layout();
   margin: 0 auto;
   padding-block: $tutor-spacing-13;
 
