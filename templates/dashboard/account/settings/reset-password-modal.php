@@ -10,7 +10,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Icon;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 
