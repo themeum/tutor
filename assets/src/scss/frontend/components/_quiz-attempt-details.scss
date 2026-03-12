@@ -239,19 +239,11 @@
       }
 
       &[data-review-status='correct']:has(input:checked) {
-        background-color: $tutor-actions-success-tertiary;
-        color: $tutor-actions-success-primary;
+        @include tutor-button-variant(success);
       }
 
       &[data-review-status='incorrect']:has(input:checked) {
-        background-color: $tutor-actions-critical-secondary;
-        color: $tutor-actions-critical-primary;
-      }
-
-      &:has(input:checked) {
-        svg {
-          color: currentColor;
-        }
+        @include tutor-button-variant(destructive);
       }
     }
 
