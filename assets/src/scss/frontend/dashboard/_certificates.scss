@@ -63,6 +63,10 @@
       @include tutor-button-variant(link);
       @include tutor-button-size(x-small);
       color: $tutor-text-brand;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .tutor-section-separator-vertical {
