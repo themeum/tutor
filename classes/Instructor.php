@@ -721,7 +721,7 @@ class Instructor {
 			array(
 				'post_type'   => $post_types,
 				'post_status' => 'publish',
-				'post_author' => $instructor_id,
+				'author'      => $instructor_id,
 				'numberposts' => 5,
 				'meta_query'  => array(
 					array(

@@ -110,7 +110,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 					);
 					?>
 
-					<div x-data="{ expanded: <?php echo esc_attr( $is_topic_active ? 'true' : 'false' ); ?> }" class="tutor-learning-nav-topic <?php echo esc_attr( $is_topic_active ? 'active' : '' ); ?>">
+					<div x-data="{ expanded: <?php echo esc_attr( ( $is_topic_active || ( 0 === $topics->current_post && ! empty( $active_menu ) ) ) ? 'true' : 'false' ); ?> }" class="tutor-learning-nav-topic <?php echo esc_attr( $is_topic_active ? 'active' : '' ); ?>">
 						<div role="button" @click="expanded = !expanded" class="tutor-learning-nav-header">
 							<div class="tutor-learning-nav-header-progress">
 								<?php
