@@ -24,8 +24,16 @@ import {
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
 
-export const JIGSAW_DEFAULT_NB_PIECES = 12;
-export const JIGSAW_NB_PIECES_OPTIONS = [4, 6, 8, 12, 25, 50, 100, 200] as const;
+export const JIGSAW_DEFAULT_NB_PIECES = 9;
+export const JIGSAW_GRID_OPTIONS = [
+  { value: 4, label: '2×2' },
+  { value: 9, label: '3×3' },
+  { value: 16, label: '4×4' },
+  { value: 25, label: '5×5' },
+  { value: 36, label: '6×6' },
+  { value: 49, label: '7×7' },
+] as const;
+const JIGSAW_ALLOWED_NB_PIECES = [4, 9, 16, 25, 36, 49] as const;
 export const JIGSAW_SHAPE_OPTIONS = [
   { value: 0, label: __('Classic', __TUTOR_TEXT_DOMAIN__) },
   { value: 1, label: __('Triangle', __TUTOR_TEXT_DOMAIN__) },
@@ -54,7 +62,7 @@ export function parseJigsawConfig(raw: string | undefined): JigsawConfig {
     return {
       nbPieces:
         typeof parsed.nbPieces === 'number' &&
-        JIGSAW_NB_PIECES_OPTIONS.includes(parsed.nbPieces as (typeof JIGSAW_NB_PIECES_OPTIONS)[number])
+        JIGSAW_ALLOWED_NB_PIECES.includes(parsed.nbPieces as (typeof JIGSAW_ALLOWED_NB_PIECES)[number])
           ? parsed.nbPieces
           : defaultJigsawConfig.nbPieces,
       shape:
@@ -204,18 +212,18 @@ const FormJigsaw = ({ field }: FormJigsawProps) => {
 
           <div css={styles.configRow}>
             <label css={styles.label} htmlFor="jigsaw-nb-pieces">
-              {__('Number of pieces', __TUTOR_TEXT_DOMAIN__)}
+              {__('Grid size (columns×rows)', __TUTOR_TEXT_DOMAIN__)}
             </label>
             <select
               id="jigsaw-nb-pieces"
               css={styles.select}
               value={config.nbPieces}
               onChange={(e) => setConfig({ nbPieces: Number(e.target.value) })}
-              aria-label={__('Number of pieces', __TUTOR_TEXT_DOMAIN__)}
+              aria-label={__('Grid size (columns×rows)', __TUTOR_TEXT_DOMAIN__)}
             >
-              {JIGSAW_NB_PIECES_OPTIONS.map((n) => (
-                <option key={n} value={n}>
-                  {n}
+              {JIGSAW_GRID_OPTIONS.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
                 </option>
               ))}
             </select>
