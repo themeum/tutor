@@ -1,0 +1,14 @@
+
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-review-summary {
+    border-bottom: 1px solid $tutor-border-idle;  
+    @include tutor-grid(2, $tutor-spacing-4);
+}
+.tutor-single-review {
+    padding: $tutor-spacing-6;
+    &:not(:last-of-type) {
+        border-bottom: 1px solid $tutor-border-idle;  
+    }
+}

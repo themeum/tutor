@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -37,6 +38,8 @@ class Reviews {
 		add_action( 'wp_ajax_tutor_single_course_reviews_load_more', array( $this, 'tutor_single_course_reviews_load_more' ) );
 		add_action( 'wp_ajax_nopriv_tutor_single_course_reviews_load_more', array( $this, 'tutor_single_course_reviews_load_more' ) );
 		add_action( 'wp_ajax_tutor_change_review_status', array( $this, 'tutor_change_review_status' ) );
+
+		add_filter( 'tutor_learning_area_sub_page_nav_item', array( $this, 'add_subpage_nav_item' ), 10, 2 );
 	}
 
 	/**
@@ -164,4 +167,27 @@ class Reviews {
 			$result
 		);
 	}
+
+	/**
+	 * Add Review nav Item to tutor subpage.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $nav_items the array of nav items.
+	 * @param string $base_url the base url.
+	 *
+	 * @return array
+	 */
+	public function add_subpage_nav_item( $nav_items, $base_url ): array {
+
+		$nav_items['reviews'] = array(
+			'title'    => __( 'Reviews', 'tutor-pro' ),
+			'icon'     => Icon::STAR_LINE,
+			'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'reviews' ) ),
+			'template' => tutor()->path . 'templates/learning-area/subpages/reviews.php',
+		);
+
+		return $nav_items;
+	}
+
 }
