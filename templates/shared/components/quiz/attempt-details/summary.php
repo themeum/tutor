@@ -222,7 +222,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 			</div>
 		</div>
 
-		<?php if ( $can_retry ) : ?>
+		<?php if ( ! $is_instructor_review && $can_retry ) : ?>
 			<div class="tutor-quiz-result-retake">
 				<?php
 				Button::make()

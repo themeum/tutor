@@ -37,6 +37,19 @@
   padding: 0 $tutor-spacing-6;
 }
 
+@mixin tutor-frontend-layout {
+  max-width: 760px;
+  margin: 0 auto;
+
+  @include tutor-breakpoint-up(2xl) {
+    max-width: 860px;
+  }
+
+  @include tutor-breakpoint-up(3xl) {
+    max-width: 944px;
+  }
+}
+
 @mixin tutor-visually-hidden {
   position: absolute !important;
   width: 1px !important;
