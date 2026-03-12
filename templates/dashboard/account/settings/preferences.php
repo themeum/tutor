@@ -93,6 +93,7 @@ $user_preferences = UserPreference::get_preferences();
 					<?php
 					InputField::make()
 						->type( InputType::SELECT )
+						->size( Size::SM )
 						->name( 'font_scale' )
 						->options( $font_scale_options )
 						->placeholder( __( 'Select font size...', 'tutor' ) )

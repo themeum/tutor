@@ -60,7 +60,6 @@ foreach ( $social_fields as $key => $field ) {
 						->name( $key )
 						->label( $field['label'] )
 						->clearable()
-						->required()
 						->placeholder( $field['placeholder'] )
 						->attr( 'x-bind', "register('$key', { pattern: { value: /$field[pattern]/i, message: '$message' } })" )
 						->render();
