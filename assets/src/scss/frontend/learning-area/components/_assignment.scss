@@ -56,10 +56,14 @@
     gap: $tutor-spacing-4;
 
     &-cards {
-      @include tutor-grid(2, 1fr);
+      @include tutor-grid(2, auto);
       gap: $tutor-spacing-4;
 
-      @include tutor-breakpoint-down(md) {
+      .tutor-attachment-card-title {
+        max-width: 100px;
+      }
+
+      @include tutor-breakpoint-down(sm) {
         @include tutor-grid(1, 1fr);
       }
     }
