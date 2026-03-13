@@ -13,14 +13,17 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Components\Avatar;
+use Tutor\Components\Badge;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
+use Tutor\Components\Progress;
 use Tutor\Components\StarRating;
-use Tutor\Helpers\DateTimeHelper;
 
 // Get course ID from global variable set in learning-area/index.php .
-global $tutor_course_id;
+global $tutor_course_id,
+$current_user_id;
 
 // Pagination setup.
 $review_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
@@ -28,41 +31,39 @@ $current_page    = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset          = ( $current_page - 1 ) * $review_per_page;
 
 $course_rating = tutor_utils()->get_course_rating( $tutor_course_id );
-$total_items   = (int) tutor_utils()->get_course_reviews( $tutor_course_id, null, null, true, array( 'approved' ) );
-$reviews       = tutor_utils()->get_course_reviews( $tutor_course_id, $offset, $review_per_page, false, array( 'approved' ) );
+$total_items   = (int) tutor_utils()->get_course_reviews( $tutor_course_id, null, null, true, array( 'approved' ), $current_user_id );
+$reviews       = tutor_utils()->get_course_reviews( $tutor_course_id, $offset, $review_per_page, false, array( 'approved' ), $current_user_id );
 
 ?>
 
-<div class="tutor-py-7 tutor-learning-area-reviews">
+<div class="tutor-py-8 tutor-learning-area-reviews">
 	<h4 class="tutor-h4 tutor-mb-5 tutor-flex tutor-items-center tutor-gap-4">
 		<?php tutor_utils()->render_svg_icon( Icon::RATINGS, 24, 24 ); ?>
 		<?php esc_html_e( 'Reviews', 'tutor' ); ?>
 	</h4>
 
+	<div class="tutor-card tutor-card-rounded-2xl tutor-p-none">
 	<?php if ( empty( $reviews ) ) : ?>
 		<?php EmptyState::make()->title( __( 'No Reviews Found', 'tutor' ) )->render(); ?>
 	<?php else : ?>
-		<div class="tutor-card tutor-p-none">
-			<div class="tutor-review-summary tutor-flex tutor-items-start tutor-justify-between tutor-gap-6 tutor-sm-flex-column tutor-sm-items-stretch tutor-p-6 tutor-sm-p-5 tutor-mb-6">
-				<div>
-					<h4 class="tutor-h4 tutor-mb-8">
-						<?php esc_html_e( 'Student Ratings & Reviews', 'tutor' ); ?>
-					</h4>
+		<div class="tutor-grid tutor-grid-cols-2 tutor-sm-grid-cols-1 tutor-gap-4 tutor-sm-gap-6 tutor-p-6">
+			<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-justify-between">
+				<div class="tutor-medium tutor-font-medium" style="max-width: 172px;">
+					<?php esc_html_e( 'Student Ratings & Reviews', 'tutor' ); ?>
+				</div>
+				<div class="tutor-surface-base tutor-rounded-sm tutor-py-3 tutor-px-5 tutor-flex tutor-flex-column tutor-gap-1 tutor-w-fit">
 					<div class="tutor-flex tutor-items-center tutor-gap-5">
-						<div class="tutor-h2 tutor-font-bold">
+						<div class="tutor-h4 tutor-font-bold">
 							<?php echo esc_html( number_format_i18n( (float) $course_rating->rating_avg, 1 ) ); ?>
 						</div>
-						<div>
-							<?php
-							StarRating::make()
-								->rating( $course_rating->rating_avg )
-								->count( $course_rating->rating_count )
-								->show_average( false )
-								->render();
-							?>
-						</div>
+						<?php
+						StarRating::make()
+							->rating( $course_rating->rating_avg )
+							->show_average( false )
+							->render();
+						?>
 					</div>
-					<div class="tutor-small tutor-text-secondary">
+					<div class="tutor-tiny tutor-text-secondary">
 						<?php
 						printf(
 							/* translators: %s is total rating count */
@@ -72,71 +73,78 @@ $reviews       = tutor_utils()->get_course_reviews( $tutor_course_id, $offset, $
 						?>
 					</div>
 				</div>
-				<div class="tutor-flex tutor-flex-column tutor-gap-3 tutor-w-full" style="max-width: 520px;">
-					<?php for ( $i = 5; $i >= 1; $i-- ) : ?>
-						<?php
-						$count   = (int) ( $course_rating->count_by_value[ $i ] ?? 0 );
-						$percent = $course_rating->rating_count > 0 ? ( $count * 100 ) / $course_rating->rating_count : 0;
-						?>
-						<div class="tutor-flex tutor-items-center tutor-gap-3">
-							<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny tutor-text-secondary" style="width: 44px;">
-							<?php tutor_utils()->render_svg_icon( Icon::STAR_FILL, 14, 14, array( 'color' => '#fdb022' ) ); ?>
-							<span class="tutor-text-primary tutor-font-medium"><?php echo esc_html( $i ); ?></span>
-							</div>
-							<div class="tutor-progress-bar tutor-w-full" data-tutor-animated>
-								<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $percent ); ?>%; background: var(--tutor-icon-exception4);"></div>
-							</div>
-							<div class="tutor-tiny tutor-text-secondary" style="width: 88px; text-align: right;">
-								<?php
-								printf(
-									/* translators: %s is rating count */
-									esc_html( _n( '%s rating', '%s ratings', $count, 'tutor' ) ),
-									esc_html( number_format_i18n( $count ) )
-								);
-								?>
-							</div>
-						</div>
-					<?php endfor; ?>
-				</div>
 			</div>
-
-			<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mb-6">
-			<?php foreach ( $reviews as $review ) : ?>
-				<?php
-				$review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review->comment_content ?? '' ) ) );
-				?>
-				<div class="tutor-single-review">
-					<div class="tutor-flex tutor-items-start tutor-justify-between tutor-gap-4 tutor-sm-flex-column">
+			<div class="tutor-flex tutor-flex-column tutor-gap-3">
+				<?php for ( $i = 5; $i >= 1; $i-- ) : ?>
+					<?php
+					$count   = (int) ( $course_rating->count_by_value[ $i ] ?? 0 );
+					$percent = $course_rating->rating_count > 0 ? ( $count * 100 ) / $course_rating->rating_count : 0;
+					?>
+					<div class="tutor-flex tutor-items-center tutor-gap-5">
 						<div class="tutor-flex tutor-items-center tutor-gap-3">
-							<?php Avatar::make()->user( (int) $review->user_id )->size( Size::SIZE_40 )->render(); ?>
-							<div class="tutor-flex tutor-flex-column tutor-gap-1">
-								<div class="tutor-medium tutor-font-medium">
-									<?php echo esc_html( $review->display_name ?? '' ); ?>
-								</div>
-								<div class="tutor-tiny tutor-text-secondary">
-								<?php
-								/* translators: %s: time difference */
-								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ) );
-								?>
-								</div>
-							</div>
+							<?php tutor_utils()->render_svg_icon( Icon::STAR_FILL, 12, 12, array( 'class' => 'tutor-icon-exception4' ) ); ?>
+							<span class="tutor-small"><?php echo esc_html( $i ); ?></span>
 						</div>
-
-						<div class="tutor-mt-1 tutor-sm-mt-0">
-							<?php StarRating::make()->rating( (float) ( $review->rating ?? 0 ) )->render(); ?>
+						<?php Progress::make()->variant( Variant::WARNING )->value( $percent )->animated()->render(); ?>
+						<div class="tutor-small tutor-flex-shrink-0" style="min-width: 80px;">
+							<?php
+							printf(
+								/* translators: %s is rating count */
+								esc_html( _n( '%s rating', '%s ratings', $count, 'tutor' ) ),
+								esc_html( number_format_i18n( $count ) )
+							);
+							?>
 						</div>
 					</div>
-
-					<div class="tutor-mt-4 tutor-text-secondary tutor-small">
-						<?php echo esc_textarea( html_entity_decode( $review->comment_content ?? '' ) ); ?>
-					</div>
-				</div>
-			<?php endforeach; ?>
+				<?php endfor; ?>
 			</div>
 		</div>
 
+		<div>
+		<?php foreach ( $reviews as $review ) : ?>
+			<?php $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review->comment_content ?? '' ) ) ); ?>
+			<div class="tutor-border-t tutor-p-6">
+				<div class="tutor-flex tutor-items-center tutor-justify-between">
+					<div class="tutor-flex tutor-items-center tutor-gap-4">
+						<?php Avatar::make()->user( (int) $review->user_id )->size( Size::SIZE_40 )->render(); ?>
+						<div class="tutor-flex tutor-flex-column">
+							<div class="tutor-flex tutor-items-center tutor-gap-5">
+								<div class="tutor-small"><?php echo esc_html( $review->display_name ?? '' ); ?></div>
+								<?php
+								if ( $current_user_id === (int) $review->user_id ) {
+									Badge::make()->label( __( 'Your Review', 'tutor' ) )->variant( Badge::INFO )->render();
+								}
+								?>
+							</div>
+							<div class="tutor-small tutor-text-subdued">
+							<?php
+							/* translators: %s: time difference */
+							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ) );
+							?>
+							</div>
+						</div>
+					</div>
 
+					<div class="tutor-flex tutor-items-center tutor-gap-5">
+						<?php
+						StarRating::make()->rating( (float) ( $review->rating ?? 0 ) )->render();
+
+						// Show pending badge for on hold reviews.
+						if ( 'hold' === $review->comment_status ) {
+							Badge::make()->label( __( 'Pending', 'tutor' ) )->variant( Badge::WARNING )->render();
+						}
+						?>
+					</div>
+				</div>
+
+				<div class="tutor-p1 tutor-text-secondary tutor-mt-6">
+					<?php echo esc_textarea( html_entity_decode( $review->comment_content ?? '' ) ); ?>
+				</div>
+			</div>
+		<?php endforeach; ?>
+		</div>
 	<?php endif; ?>
+	</div>
 
 	<?php
 	Pagination::make()
@@ -147,4 +155,3 @@ $reviews       = tutor_utils()->get_course_reviews( $tutor_course_id, $offset, $
 		->render();
 	?>
 </div>
-
