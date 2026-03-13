@@ -10,6 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Avatar;
+use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
 use TUTOR\Dashboard;
 
@@ -48,7 +50,13 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 		?>
 		<li>
 			<a href="<?php echo esc_url( Dashboard::get_account_page_url( 'profile' ) ); ?>">
-				<?php echo get_avatar( get_current_user_id(), 16 ); ?>
+				<?php
+				Avatar::make()
+					->user( get_current_user_id() )
+					->size( Size::X_SMALL )
+					->attr( 'style', 'width: 15px; height: 15px;' )
+					->render();
+				?>
 				<span class="tutor-tiny"><?php esc_html_e( 'Profile', 'tutor' ); ?></span>
 			</a>
 		</li>

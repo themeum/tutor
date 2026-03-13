@@ -2,15 +2,11 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-quiz-questions {
+  @include tutor-frontend-layout();
   @include tutor-flex(column);
-  @include tutor-container(792px);
   padding-inline: 0;
   width: 100%;
   gap: $tutor-spacing-5;
-
-  @include tutor-breakpoint-down(sm) {
-    padding-inline: $tutor-spacing-6;
-  }
 }
 
 .tutor-quiz-question {

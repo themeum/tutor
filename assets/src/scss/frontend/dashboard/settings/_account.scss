@@ -15,6 +15,18 @@
       border: 2px solid $tutor-border-brand-secondary;
       position: relative;
 
+      &.is-loading {
+        position: relative;
+        pointer-events: none;
+        -webkit-text-fill-color: transparent;
+
+        & > * {
+          visibility: hidden;
+        }
+
+        @include tutor-loading-spinner($tutor-surface-l1, $tutor-surface-l1-hover);
+      }
+
       .tutor-account-avatar-edit {
         @include tutor-button-reset();
         position: absolute;
