@@ -52,7 +52,6 @@ do_action( 'tutor_before_login_form' );
 	<?php if ( is_single_course() ) : ?>
 		<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo esc_attr( get_the_ID() ); ?>">
 	<?php endif; ?>
-	<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo esc_attr( get_the_ID() ); ?>">
 	<?php tutor_nonce_field(); ?>
 	<input type="hidden" name="tutor_action" value="tutor_user_login" />
 	<input type="hidden" name="redirect_to" value="<?php echo esc_url( apply_filters( 'tutor_after_login_redirect_url', tutor()->current_url ) ); ?>" />
