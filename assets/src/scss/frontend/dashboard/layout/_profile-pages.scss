@@ -32,7 +32,6 @@ body:has(#wpadminbar) {
 }
 
 .tutor-profile-container {
-  max-width: 728px;
-  margin: 0 auto;
+  @include tutor-frontend-layout();
   padding-inline: $tutor-spacing-6;
 }
