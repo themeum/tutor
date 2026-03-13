@@ -49,8 +49,7 @@
         color: $tutor-text-brand;
       }
 
-      &:hover,
-      &:focus {
+      &:hover {
         background-color: $tutor-tab-l3-active-hover;
         color: $tutor-text-primary;
         box-shadow: none;

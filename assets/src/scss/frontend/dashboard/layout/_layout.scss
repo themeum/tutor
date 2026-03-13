@@ -5,10 +5,8 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-dashboard-container {
+  @include tutor-frontend-layout();
   width: 100%;
-  max-width: 728px;
-  // padding-inline: 16px;
-  margin: 0 auto;
 }
 
 .tutor-dashboard-layout {

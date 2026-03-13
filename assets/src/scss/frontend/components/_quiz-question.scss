@@ -7,10 +7,6 @@
   padding-inline: 0;
   width: 100%;
   gap: $tutor-spacing-5;
-
-  @include tutor-breakpoint-down(md) {
-    padding-inline: $tutor-spacing-6;
-  }
 }
 
 .tutor-quiz-question {

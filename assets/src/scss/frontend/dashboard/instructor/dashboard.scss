@@ -107,6 +107,7 @@
         @include tutor-flex(row, start);
         @include tutor-typography('tiny', 'regular', 'subdued');
         gap: $tutor-spacing-2;
+        min-width: 99px;
 
         &::before {
           content: '';

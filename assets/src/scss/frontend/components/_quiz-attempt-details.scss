@@ -30,8 +30,8 @@
     border-bottom: 1px solid $tutor-border-idle;
 
     &-inner {
+      @include tutor-frontend-layout();
       @include tutor-flex(row, center, space-between);
-      max-width: 736px;
       min-height: var(--tutor-quiz-summary-header-height);
       margin: 0 auto;
     }
@@ -40,6 +40,7 @@
   .tutor-quiz-summary-body {
     max-width: 1220px;
     padding-block: $tutor-spacing-13;
+    padding-inline: $tutor-spacing-6;
     margin-inline: auto;
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -47,6 +48,14 @@
 
     @include tutor-breakpoint-down(sm) {
       grid-template-columns: 1fr;
+    }
+
+    @include tutor-breakpoint-down(md) {
+      gap: $tutor-spacing-6;
+    }
+
+    @include tutor-breakpoint-down(lg) {
+      gap: $tutor-spacing-10;
     }
   }
 
@@ -67,6 +76,8 @@
         box-shadow: none;
         gap: $tutor-spacing-5;
         padding: $tutor-spacing-5 $tutor-spacing-8;
+        border-radius: $tutor-radius-md;
+        cursor: pointer;
 
         .tutor-question-number {
           @include tutor-typography(p2, bold);
@@ -88,12 +99,23 @@
 
         .tutor-question-content {
           @include tutor-typography(p2);
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+          -ms-word-break: break-all;
+          word-break: break-all;
+          -ms-hyphens: auto;
+          -moz-hyphens: auto;
+          -webkit-hyphens: auto;
+          hyphens: auto;
+        }
+
+        &:hover {
+          background-color: $tutor-surface-l2;
         }
 
         &.active {
           background-color: $tutor-surface-l1;
           outline: 1px solid $tutor-border-idle;
-          border-radius: $tutor-radius-md;
         }
 
         &.correct .tutor-question-number::before {
@@ -239,19 +261,11 @@
       }
 
       &[data-review-status='correct']:has(input:checked) {
-        background-color: $tutor-actions-success-tertiary;
-        color: $tutor-actions-success-primary;
+        @include tutor-button-variant(success);
       }
 
       &[data-review-status='incorrect']:has(input:checked) {
-        background-color: $tutor-actions-critical-secondary;
-        color: $tutor-actions-critical-primary;
-      }
-
-      &:has(input:checked) {
-        svg {
-          color: currentColor;
-        }
+        @include tutor-button-variant(destructive);
       }
     }
 

@@ -124,6 +124,23 @@
     &.disabled {
       background-color: $tutor-button-disabled;
     }
+  } @else if $variant == success {
+    background-color: $tutor-button-success;
+    color: $tutor-text-primary-inverse;
+
+    svg:not([class]) {
+      color: $tutor-icon-idle-inverse;
+    }
+
+    &:hover:not(:disabled):not(.disabled) {
+      background-color: $tutor-button-success-hover;
+      color: $tutor-text-primary-inverse;
+    }
+
+    &:focus:not(:disabled):not(.disabled) {
+      background-color: $tutor-button-success-focused;
+      color: $tutor-text-primary-inverse;
+    }
   } @else if $variant == secondary {
     background-color: $tutor-button-secondary;
     color: $tutor-text-primary;
