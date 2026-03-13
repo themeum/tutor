@@ -20,8 +20,8 @@ $attachments = tutor_utils()->get_attachments( $tutor_current_content_id );
 
 <div x-show="activeTab === 'exercise_files'" x-cloak class="tutor-tab-panel" role="tabpanel">
 	<div class="tutor-lesson-exercise-files tutor-p-6">
-		<h5 class="h5 tutor-mb-4"><?php esc_html_e( 'Exercise Files', 'tutor' ); ?></h5>
-		<div class="tutor-resources-list">
+		<h5 class="tutor-h5 tutor-mb-4"><?php esc_html_e( 'Exercise Files', 'tutor' ); ?></h5>
+		<div class="tutor-grid tutor-grid-cols-2 tutor-sm-grid-cols-1 tutor-gap-5">
 			<?php foreach ( $attachments as $attachment ) : ?>
 				<div class="tutor-rounded-md tutor-flex tutor-flex-col tutor-gap-2">
 					<div class="tutor-card tutor-attachment-card">
@@ -33,12 +33,14 @@ $attachments = tutor_utils()->get_attachments( $tutor_current_content_id );
 								<?php echo esc_html( $attachment->title ); ?>
 							</div>
 							<span class="tutor-attachment-card-meta">
-							<?php echo esc_html( $attachment->file_size ); ?>			
+								<?php echo esc_html( $attachment->size ); ?>			
 							</span>
 						</div>
-						<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-							<?php tutor_utils()->render_svg_icon( Icon::DOWNLOAD_2 ); ?>
-						</button>
+						<div class="tutor-attachment-card-actions">
+							<a href="<?php echo esc_url( $attachment->url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" download>
+								<?php tutor_utils()->render_svg_icon( Icon::DOWNLOAD_2 ); ?>
+							</a>
+						</div>
 					</div>
 				</div>
 			<?php endforeach; ?>
