@@ -9,6 +9,8 @@
  * @since 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\ConfirmationModal;
@@ -187,7 +189,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							<?php do_action( 'tutor_my_courses_before_meta', get_the_ID() ); ?>
 
 							<div class="tutor-tiny tutor-text-secondary tutor-flex tutor-items-center tutor-gap-2 tutor-mb-2">
-								<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2, 14, 14, array( 'class' => 'tutor-icon-brand' ) ); ?>
+								<?php tutor_utils()->render_svg_icon( Icon::CALENDAR_CHECK, 14, 14, array( 'class' => 'tutor-icon-brand' ) ); ?>
 								<?php echo esc_html( get_the_date() ); ?> - <?php echo esc_html( get_the_time() ); ?>
 							</div>
 

@@ -46,6 +46,7 @@ const endpoints = {
   GET_COURSE_DETAILS: 'tutor_course_details',
   UPDATE_COURSE: 'tutor_update_course',
   GET_COURSE_LIST: 'tutor_course_list',
+  RESET_COURSE_PROGRESS: 'tutor_reset_course_progress',
 
   // WOO COMMERCE PRODUCTS
   GET_WC_PRODUCTS: 'tutor_get_wc_products',
@@ -58,16 +59,26 @@ const endpoints = {
   QUIZ_EXPORT_DATA: 'quiz_export_data',
   DELETE_QUIZ: 'tutor_quiz_delete',
   START_QUIZ: 'tutor_start_quiz',
+  QUIZ_ABANDON: 'tutor_quiz_abandon',
+  QUIZ_TIMEOUT: 'tutor_quiz_timeout',
+  QUIZ_ATTEMPT_SUBMIT: 'tutor_answering_quiz_question',
+  REVIEW_QUIZ_ANSWERS: 'tutor_review_quiz_answers',
+  INSTRUCTOR_FEEDBACK: 'tutor_instructor_feedback',
 
   // ZOOM
   GET_ZOOM_MEETING_DETAILS: 'tutor_zoom_meeting_details',
   SAVE_ZOOM_MEETING: 'tutor_zoom_save_meeting',
   DELETE_ZOOM_MEETING: 'tutor_zoom_delete_meeting',
+  ZOOM_SAVE_API: 'tutor_save_zoom_api',
+  ZOOM_SAVE_SETTINGS: 'tutor_save_zoom_settings',
 
   // GOOGLE MEET
   GET_GOOGLE_MEET_DETAILS: 'tutor_google_meet_meeting_details',
   SAVE_GOOGLE_MEET: 'tutor_google_meet_new_meeting',
   DELETE_GOOGLE_MEET: 'tutor_google_meet_delete',
+  UPLOAD_GOOGLE_MEET_CREDENTIALS: 'tutor_pro_google_meet_credential_upload',
+  RESET_GOOGLE_MEET_CREDENTIALS: 'tutor_google_meet_reset_cred',
+  UPDATE_GOOGLE_MEET_SETTINGS: 'tutor_update_google_meet_settings',
 
   // TOPIC
   GET_COURSE_CONTENTS: 'tutor_course_contents',
@@ -99,6 +110,8 @@ const endpoints = {
   // ASSIGNMENT
   GET_ASSIGNMENT_DETAILS: 'tutor_assignment_details',
   SAVE_ASSIGNMENT: 'tutor_assignment_save',
+  ASSIGNMENT_SUBMIT: 'tutor_assignment_submit',
+  REMOVE_ATTACHMENT: 'tutor_remove_assignment_attachment',
 
   // TAX SETTINGS
   GET_TAX_SETTINGS: 'tutor_get_tax_settings',
@@ -175,6 +188,13 @@ const endpoints = {
   CREATE_ANNOUNCEMENT: 'tutor_announcement_create',
   DELETE_ANNOUNCEMENT: 'tutor_announcement_delete',
 
+  // Notifications
+  PUSH_NOTIFICATION_SAVE_SUBSCRIPTION: 'tutor_pn_save_subscription',
+  GET_ALL_NOTIFICATIONS: 'tutor_get_all_notifications',
+  MARK_ALL_NOTIFICATIONS_AS_READ: 'toggle_all_notifications_status_as_read',
+  MARK_SINGLE_NOTIFICATION_AS_READ: 'toggle_single_notification_status_as_read',
+  MARK_ALL_NOTIFICATIONS_AS_UNREAD: 'tutor_mark_all_notifications_as_unread',
+
   //Reviews
   PLACE_RATING: 'tutor_place_rating',
   DELETE_REVIEW: 'delete_tutor_review',
@@ -192,6 +212,9 @@ const endpoints = {
   UPDATE_USER_PREFERENCES: 'tutor_save_user_preferences',
   REMOVE_DEVICE_MANUALLY: 'tutor_remove_device_manually',
   REMOVE_ALL_ACTIVE_LOGINS: 'tutor_remove_all_active_logins',
+
+  // Withdrawals
+  MAKE_AN_WITHDRAW: 'tutor_make_an_withdraw',
 } as const;
 
 export default endpoints;

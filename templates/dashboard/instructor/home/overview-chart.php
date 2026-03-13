@@ -12,11 +12,12 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <!-- Overview Chart -->
-<?php if ( $overview_chart_data ) : ?>
+
 <div 
 	data-section-id="overview_chart"
 	class="tutor-dashboard-home-chart"
-	:class="{ 'tutor-hidden':  !watch('overview_chart')}"
+	x-show="watch('overview_chart')"
+	x-cloak
 >
 	<div class="tutor-dashboard-home-chart-header">
 		<div class="tutor-small">
@@ -33,4 +34,3 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 	<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorOverviewChart(<?php echo wp_json_encode( $overview_chart_data ); ?>)' x-ref="canvas"></canvas>
 </div>
-<?php endif; ?>

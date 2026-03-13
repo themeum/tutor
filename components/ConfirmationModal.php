@@ -370,9 +370,16 @@ class ConfirmationModal extends BaseComponent {
 			: '';
 
 		// Build icon HTML.
-		ob_start();
-		tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
-		$icon_html = ob_get_clean();
+		$icon_html = '';
+		if ( ! empty( $this->icon ) ) {
+			if ( filter_var( $this->icon, FILTER_VALIDATE_URL ) !== false ) {
+				$icon_html = sprintf( '<img src="%s" style="width:%spx;height:%spx;"/>', $this->icon, $this->icon_width, $this->icon_height );
+			} else {
+				ob_start();
+				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
+				$icon_html = ob_get_clean();
+			}
+		}
 
 		// Prepare message HTML with allowed HTML tags.
 		$message_html = wp_kses( $this->message ?? __( 'Are you sure you want to perform this action? Please confirm your choice.', 'tutor' ), $this->allowed_html_tags );
@@ -412,7 +419,7 @@ class ConfirmationModal extends BaseComponent {
 		}
 
 		$this->component_string = sprintf(
-			'<div x-data="tutorModal(%s)" x-cloak>
+			'<div x-data="tutorModal(%s)" x-cloak style="display: none;">
 				<template x-teleport="body">
 					<div x-bind="getModalBindings()">
 						<div x-bind="getBackdropBindings()"></div>

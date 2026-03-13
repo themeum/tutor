@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\User;
@@ -19,8 +21,6 @@ use Tutor\Components\Modal;
 use Tutor\Components\Pagination;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
-
-defined( 'ABSPATH' ) || exit;
 
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
 $current_page  = max( 1, Input::get( 'current_page', 0, Input::TYPE_INT ) );

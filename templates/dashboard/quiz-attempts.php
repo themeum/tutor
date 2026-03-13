@@ -9,6 +9,9 @@
  * @since 1.4.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Positions;
 use Tutor\Components\Constants\Size;
@@ -19,12 +22,13 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
 
-if ( isset( $_GET['view_quiz_attempt_id'] ) ) {
+if ( isset( $_GET['attempt_id'] ) ) {
 	// Load single attempt details if ID provided.
 	include __DIR__ . '/quiz-attempts/quiz-reviews.php';
 	return;
@@ -45,10 +49,14 @@ $search_filter = Input::get( 'search', '' );
 
 $quiz_attempts           = QuizModel::get_quiz_attempts( 0, 0, $search_filter, '', $date_filter, $order_filter, null, false, true );
 $quiz_attempts_formatted = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter );
-$quiz_attempts_list      = array_slice( $quiz_attempts_formatted, $offset, $item_per_page, true );
 $quiz_attempts_count     = (int) count( $quiz_attempts_formatted );
 
-$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $quiz_attempts_count, get_pagenum_link(), $result_filter );
+if ( Input::has( 'date', Input::GET_REQUEST ) && $quiz_attempts_count <= $offset ) {
+	$offset = 0;
+}
+
+$quiz_attempts_list = array_slice( $quiz_attempts_formatted, $offset, $item_per_page, true );
+$nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $quiz_attempts_count, get_pagenum_link(), $result_filter );
 
 ?>
 
@@ -57,7 +65,6 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 	<?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?>
 	</h4>
 	<div class="tutor-dashboard-page-card">
-		<?php if ( $quiz_attempts_count ) : ?>
 		<div class="tutor-quiz-attempts">
 			<div class="tutor-quiz-attempts-filter">
 				<div class="tutor-quiz-attempts-filter-item">
@@ -67,6 +74,20 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 							->query_param( 'result' )
 							->variant( Variant::PRIMARY_SOFT )
 							->render();
+					?>
+				</div>
+				<div class="tutor-quiz-attempts-filter-item">
+					<?php
+					$query_items = array( 'search', 'date', 'result', 'order' );
+					if ( Input::has_any( $query_items, Input::GET_REQUEST ) ) {
+						Button::make()
+							->tag( 'a' )
+							->attr( 'href', tutor_utils()->tutor_dashboard_url( 'quiz-attempts' ) )
+							->attr( 'class', 'tutor-text-brand' )
+							->label( __( 'Clear all', 'tutor' ) )
+							->variant( Variant::LINK )
+							->render();
+					}
 					?>
 				</div>
 				<div class="tutor-quiz-attempts-filter-item">
@@ -83,7 +104,7 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 					<?php
 						DateFilter::make()
 							->type( DateFilter::TYPE_SINGLE )
-							->placement( Positions::BOTTOM_START )
+							->placement( Positions::BOTTOM_END )
 							->trigger_size( Size::X_SMALL )
 							->icon_size( 15 )
 							->render();
@@ -99,6 +120,7 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
 				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
 			</div>
+			<?php if ( $quiz_attempts_count ) : ?>
 			<div class="tutor-quiz-attempts-list">
 				<?php
 				foreach ( $quiz_attempts_list as $quiz_index => $quiz_attempt ) {
@@ -120,29 +142,19 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 				}
 				?>
 			</div>
+			<?php else : ?>
+				<?php EmptyState::make()->title( __( 'No Quiz Attempts Found', 'tutor' ) )->render(); ?>
+			<?php endif; ?>
 		</div>
-		<?php else : ?>
-			<?php
-			EmptyState::make()
-				->title( __( 'No Quiz Attempts Found', 'tutor' ) )
-				->render();
-			?>
-		<?php endif; ?>
-	</div>
-	<div class="tutor-pt-6">
-		<?php
-		if ( $quiz_attempts_count > $item_per_page ) {
-			Pagination::make()
-			->current( $current_page )
-			->total( $quiz_attempts_count )
-			->limit( $item_per_page )
-			->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
-			->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
-			->render();
-		}
-		?>
 	</div>
 	<?php
+		Pagination::make()
+		->current( $current_page )
+		->total( $quiz_attempts_count )
+		->limit( $item_per_page )
+		->attr( 'class', 'tutor-pt-6' )
+		->render();
+
 	ConfirmationModal::make()
 		->id( 'tutor-quiz-attempt-delete-modal' )
 		->title( __( 'Do You Want to Delete This?', 'tutor' ) )

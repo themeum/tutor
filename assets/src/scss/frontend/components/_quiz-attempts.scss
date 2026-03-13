@@ -11,18 +11,13 @@
 }
 
 .tutor-quiz-attempts {
-  @include tutor-breakpoint-down(sm) {
-    background-color: $tutor-surface-l1;
-    border: 1px solid $tutor-border-idle;
-    border-radius: $tutor-radius-2xl;
-  }
 
   &-filter {
     @include tutor-flex(row, center, space-between);
     padding: $tutor-spacing-5 $tutor-spacing-6;
     border-bottom: 1px solid $tutor-border-idle;
     display: grid;
-    grid-template-areas: 'nav search calender sort';
+    grid-template-areas: 'nav clear_filter search calender sort';
     @include tutor-breakpoint-down(sm) {
       padding: 0;
     }
@@ -32,12 +27,15 @@
         grid-area: nav;
       }
       &:nth-child(2) {
-        grid-area: search;
+        grid-area: clear_filter;
       }
       &:nth-child(3) {
-        grid-area: calender;
+        grid-area: search;
       }
       &:nth-child(4) {
+        grid-area: calender;
+      }
+      &:nth-child(5) {
         grid-area: sort;
       }
     }
@@ -57,28 +55,28 @@
     }
 
     @include tutor-breakpoint-up(sm) {
-      grid-template-columns: 1fr auto auto auto;
+      grid-template-columns: 1fr auto;
       gap: $tutor-spacing-3;
     }
 
     @include tutor-breakpoint-down(sm) {
       grid-template-areas:
-        'search sort'
-        'nav calender';
+        'search search search sort'
+        'nav clear_filter calender calender';
       grid-template-columns: 1fr auto;
       &-item {
-        &:nth-child(2) {
+        &:nth-child(3) {
           border-bottom: 1px solid $tutor-border-idle;
           padding: $tutor-spacing-5 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-5;
         }
-        &:nth-child(4) {
+        &:nth-child(5) {
           border-bottom: 1px solid $tutor-border-idle;
           padding: $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-4;
         }
         &:nth-child(1) {
           padding: $tutor-spacing-5 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-5;
         }
-        &:nth-child(3) {
+        &:nth-child(4) {
           padding: $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-4;
         }
       }
@@ -225,21 +223,18 @@
 
           .tutor-quiz-marks-correct,
           .tutor-quiz-marks-incorrect {
-            @include tutor-typography(tiny, medium, secondary);
-            @include tutor-flex(row, center);
-            gap: $tutor-spacing-3;
-            background-color: $tutor-surface-l2;
-            padding: 0 $tutor-spacing-2;
-            border-radius: 40px;
+            @include tutor-badge-base;
+            width: 100%;
+            border-radius: $tutor-radius-full;
 
             &::before {
               content: '';
               display: inline-block;
               width: 8px;
               height: 8px;
-              border-radius: 100%;
+              border-radius: $tutor-radius-full;
               background-color: $tutor-icon-success-primary;
-              margin-inline-start: $tutor-spacing-3;
+              margin-inline-start: $tutor-spacing-1;
             }
           }
 
@@ -301,14 +296,26 @@
       }
 
       @include tutor-breakpoint-up(sm) {
-        &:hover {
+        &:has(.tutor-popover[style*='visibility: visible;']) {
+          .tutor-quiz-item-result {
+            .tutor-badge {
+              display: none;
+            }
+          }
+
+          .tutor-quiz-item-result-more {
+            display: flex;
+          }
+        }
+
+        &:hover:has(.tutor-quiz-item-result-more) {
           .tutor-quiz-item-result {
             .tutor-badge {
               display: none;
             }
 
             .tutor-quiz-item-result-more {
-              display: block;
+              display: flex;
             }
           }
         }
@@ -348,11 +355,15 @@
           background-color: $tutor-surface-base;
         }
 
+        &:not(:last-child) {
+          border-bottom: 1px solid $tutor-border-idle;
+        }
+
         /** for mobile there is button html 
          * so need to capture second to last child 
         **/
-        &:not(:nth-last-child(2)) {
-          @include tutor-breakpoint-up(sm) {
+        @include tutor-breakpoint-up(sm) {
+          &:not(:nth-last-child(2)) {
             border-bottom: 1px solid $tutor-border-idle;
           }
         }
@@ -373,6 +384,12 @@
     @include tutor-breakpoint-down(sm) {
       padding: $tutor-spacing-5;
     }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
   }
 }
 

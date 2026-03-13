@@ -4,13 +4,13 @@
 
 @mixin tutor-badge-base() {
   @include tutor-typography('tiny', 'medium', 'secondary');
-  width: max-content;
   border-radius: $tutor-radius-sm;
   padding-inline: $tutor-spacing-4;
   display: flex;
   align-items: center;
   gap: $tutor-spacing-3;
   background-color: $tutor-actions-gray-secondary;
+  width: fit-content;
 
   img,
   svg {

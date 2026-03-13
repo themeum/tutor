@@ -7,6 +7,8 @@
  * @author Themeum
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\CourseModel;
 
 $course_permalink = get_the_permalink();
@@ -57,6 +59,7 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 							<?php
 							printf(
 								esc_html(
+									// translators: %1$s is the completed count, %2$s is the total count.
 									_n(
 										'%1$s of %2$s lesson',
 										'%1$s of %2$s lessons',
@@ -72,6 +75,7 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 							<span class="tutor-progress-card-separator">•</span>
 							<?php
 								printf(
+									// translators: %1$s is the completed percent.
 									esc_html__( '%1$s%% Complete', 'tutor' ),
 									esc_html( $course_progress['completed_percent'] )
 								);

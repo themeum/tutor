@@ -1,11 +1,8 @@
-// Quiz Summary Styles
-// @TODO: Move to the quiz file later.
-
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
 .tutor-quiz-summary {
-  max-width: 700px;
+  @include tutor-frontend-layout();
   margin: 0 auto;
   padding-block: $tutor-spacing-13;
 
@@ -22,7 +19,7 @@
       'progress marks statics'
       'progress marks retake';
     gap: $tutor-spacing-8;
-    margin-bottom: $tutor-spacing-6;
+    margin-bottom: $tutor-spacing-4;
 
     @include tutor-breakpoint-up(sm) {
       background-color: $tutor-surface-base;
@@ -100,6 +97,25 @@
         button {
           @include tutor-button-size(large);
         }
+      }
+    }
+
+    &-footer {
+      @include tutor-flex(row, center, center);
+      @include tutor-typography(tiny, regular, subdued);
+      gap: $tutor-spacing-4;
+      flex-wrap: wrap;
+
+      a {
+        text-decoration: none;
+      }
+
+      &:has(> :nth-child(2)) {
+        justify-content: space-between;
+      }
+
+      &-note {
+        font-style: italic;
       }
     }
   }

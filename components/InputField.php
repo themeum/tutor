@@ -107,7 +107,7 @@ use Tutor\Components\Constants\InputType;
 class InputField extends BaseComponent {
 
 	/**
-	 * InputField type (text|email|password|number|textarea|checkbox|radio|switch).
+	 * InputField type (text|email|password|number|textarea|checkbox|radio|switch|time).
 	 *
 	 * @since 4.0.0
 	 *
@@ -378,7 +378,14 @@ class InputField extends BaseComponent {
 	 */
 	protected $selection_time_mode = null;
 
-
+	/**
+	 * Time input option interval in minutes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var int
+	 */
+	protected $interval = 30;
 
 	/**
 	 * Whether to show password strength meter.
@@ -439,7 +446,7 @@ class InputField extends BaseComponent {
 	 * @return $this
 	 */
 	public function name( $name ) {
-		$this->name = sanitize_key( $name );
+		$this->name = sanitize_text_field( $name );
 		return $this;
 	}
 
@@ -453,7 +460,7 @@ class InputField extends BaseComponent {
 	 * @return $this
 	 */
 	public function id( $id ) {
-		$this->id = sanitize_key( $id );
+		$this->id = sanitize_text_field( $id );
 		return $this;
 	}
 
@@ -850,6 +857,21 @@ class InputField extends BaseComponent {
 		$this->selection_time_mode = $mode;
 		return $this;
 	}
+
+	/**
+	 * Set interval for time input options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $interval Interval in minutes.
+	 *
+	 * @return self
+	 */
+	public function interval( int $interval = 30 ): self {
+		$this->interval = max( 1, $interval );
+		return $this;
+	}
+
 	/**
 	 * Set whether to show password strength meter.
 	 *
@@ -1458,7 +1480,7 @@ class InputField extends BaseComponent {
 					class="tutor-input-clear-button"
 					aria-label="Clear input"
 					x-cloak
-					x-show="values.%1$s && String(values.%1$s).length > 0"
+					x-show="values[\'%1$s\'] && String(values[\'%1$s\']).length > 0"
 					@click="setValue(\'%1$s\', \'\')"
 				>%2$s</button>',
 				esc_attr( $this->name ),
@@ -1533,7 +1555,7 @@ class InputField extends BaseComponent {
 					class="tutor-input-clear-button" 
 					aria-label="Clear input"
 					x-cloak
-					x-show="values.%1$s && String(values.%1$s).length > 0"
+					x-show="values[\'%1$s\'] && String(values[\'%1$s\']).length > 0"
 					@click="setValue(\'%1$s\', \'\')"
 				>%2$s</button>',
 				esc_attr( $this->name ),
@@ -1741,6 +1763,101 @@ class InputField extends BaseComponent {
 		return $html;
 	}
 
+	/**
+	 * Render time input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string InputField HTML.
+	 */
+	protected function render_time_input() {
+		$props = array(
+			'name'        => $this->name,
+			'value'       => $this->value,
+			'placeholder' => $this->placeholder,
+			'disabled'    => $this->disabled,
+			'clearable'   => $this->clearable,
+			'required'    => $this->required,
+			'interval'    => $this->interval,
+		);
+
+		$props_json = htmlspecialchars( wp_json_encode( $props ), ENT_QUOTES, 'UTF-8' );
+		$input_icon = $this->left_icon;
+		if ( empty( $input_icon ) ) {
+			$input_icon = tutor_utils()->get_svg_icon( Icon::CLOCK, 20, 20 );
+		}
+		$clear_icon = tutor_utils()->get_svg_icon( Icon::CROSS, 12, 12 );
+
+		return sprintf(
+			'<div
+				x-data="tutorTimeInput(%1$s)"
+				class="tutor-time-input"
+				@click.outside="handleClickOutside()"
+				%2$s
+			>
+				<div class="tutor-input-wrapper" x-ref="trigger">
+					<input
+						type="text"
+						class="tutor-input tutor-input-content-left"
+						:class="{ \'tutor-input-content-clear\': canClear }"
+						:placeholder="placeholder"
+						:disabled="disabled"
+						:value="value"
+						@click.stop="toggleDropdown()"
+						@keydown="onInputKeydown($event)"
+						@input="onInputChange($event)"
+						autocomplete="off"
+						aria-haspopup="listbox"
+						:aria-expanded="open.toString()"
+						:aria-disabled="disabled.toString()"
+					/>
+
+					<span class="tutor-input-content tutor-input-content-left" aria-hidden="true">
+						%3$s
+					</span>
+
+					<button
+						type="button"
+						class="tutor-input-clear-button"
+						x-show="canClear"
+						@click.stop="clearValue()"
+						aria-label="%4$s"
+					>
+						%5$s
+					</button>
+				</div>
+
+				<div
+					x-ref="content"
+					class="tutor-time-input-menu"
+					x-show="open"
+					x-cloak
+					x-transition.opacity.scale.origin.top
+					@keydown="onListKeydown($event)"
+				>
+					<template x-for="(option, index) in options" :key="option">
+						<button
+							type="button"
+							class="tutor-time-input-option"
+							:data-option-index="index"
+							:data-active="(highlightedIndex === index).toString()"
+							:data-selected="(value === option).toString()"
+							@click="selectOption(option)"
+							@mousemove="highlightedIndex = index"
+							@focus="highlightedIndex = index"
+							x-text="option"
+						></button>
+					</template>
+				</div>
+			</div>',
+			$props_json,
+			$this->get_attributes_string(),
+			$input_icon,
+			esc_attr__( 'Clear time', 'tutor' ),
+			$clear_icon
+		);
+	}
+
 
 
 	/**
@@ -1808,6 +1925,9 @@ class InputField extends BaseComponent {
 			case InputType::DATE_TIME:
 				$input_html = $this->render_date_input();
 				break;
+			case InputType::TIME:
+				$input_html = $this->render_time_input();
+				break;
 			case InputType::SELECT:
 				$input_html = $this->render_select_input();
 				break;
@@ -1821,8 +1941,8 @@ class InputField extends BaseComponent {
 			'<div 
 				class="tutor-error-text" 
 				x-cloak 
-				x-show="errors.%1$s" 
-				x-text="errors?.%1$s?.message" 
+				x-show="errors[\'%1$s\']" 
+				x-text="errors?.[\'%1$s\']?.message" 
 				role="alert" 
 				aria-live="polite"
 			></div>',
@@ -1832,7 +1952,7 @@ class InputField extends BaseComponent {
 		$help_html = sprintf(
 			'<div
 				class="tutor-help-text"
-				x-show="!errors?.%1$s?.message"
+				x-show="!errors?.[\'%1$s\']?.message"
 			>%2$s</div>',
 			esc_attr( $this->name ),
 			esc_html( $this->help_text )
@@ -1851,7 +1971,7 @@ class InputField extends BaseComponent {
 		}
 
 		$this->component_string = sprintf(
-			'<div class="%s" :class="{ \'tutor-input-field-error\': errors.%s }" %s>%s%s%s%s%s</div>',
+			'<div class="%s" :class="{ \'tutor-input-field-error\': errors[\'%s\'] }" %s>%s%s%s%s%s</div>',
 			esc_attr( implode( ' ', $field_classes ) ),
 			esc_attr( $this->name ),
 			$root_attrs,

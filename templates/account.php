@@ -38,3 +38,5 @@ $close_url = tutor_utils()->tutor_dashboard_url();
 	<?php require_once $page_template; ?>
 </div>
 <?php wp_footer(); ?>
+</body>
+</html>

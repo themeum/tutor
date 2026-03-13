@@ -9,10 +9,15 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Course;
+use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Models\CourseModel;
 
-$user_id = get_current_user_id();
+$user_id   = get_current_user_id();
+$user_data = get_userdata( $user_id );
 
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion( $user_id );
@@ -30,7 +35,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<?php echo esc_html( $text ); ?>
 					</span>
 				</div>
-				<a href="<?php echo esc_attr( tutor_utils()->tutor_dashboard_url( 'settings' ) ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small">
+				<a href="<?php echo esc_attr( Dashboard::get_account_page_url( 'settings' ) ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small">
 					<?php esc_html_e( 'Click Here', 'tutor' ); ?>
 				</a>
 			</div>
@@ -50,22 +55,21 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$completed_course_count = count( $completed_courses );
 	$active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
 
-	// @TODO:: Need to implement this.
-	$enrolled_course_count_this_month  = 0;
-	$completed_course_count_this_month = 0;
-	$active_course_count_this_month    = 0;
+	$enrolled_course_link  = tutor_utils()->tutor_dashboard_url( 'courses' );
+	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'courses/completed-courses' );
+	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'courses/active-courses' );
 
-	$enrolled_course_link  = tutor_utils()->tutor_dashboard_url( 'enrolled-courses' );
-	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'enrolled-courses/completed-courses' );
-	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'enrolled-courses/active-courses' );
+	$time_spent = Course::get_total_course_duration( $completed_courses );
+	$grid_col   = $time_spent['hours'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
+	$seconds    = $time_spent['minutes'] > 0 ? $time_spent['minutes'] * 60 : 0;
 	?>
-	<div class="tutor-grid tutor-grid-cols-4 tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7">
+	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 <?php echo esc_attr( $grid_col ); ?>">
 		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Enrolled Courses', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::COURSES, 20, 20 ); ?>
 				</div>
 			</div>
@@ -73,56 +77,41 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<div class="tutor-stat-card-value">
 					<?php echo esc_html( $enrolled_course_count ); ?>
 				</div>
-				<p class="tutor-stat-card-change">
-					<?php
-					// translators: %s is the number of enrolled courses this month.
-					echo esc_html( sprintf( __( '%s this month', 'tutor' ), $enrolled_course_count_this_month ) );
-					?>
-				</p>
 			</div>
 		</a>
+
 		<a href="<?php echo esc_url( $active_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-active">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Active', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::PLAY_LINE, 20, 20 ); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
 				<div class="tutor-stat-card-value">
-					<?php echo esc_html( $enrolled_course_count ); ?>
+					<?php echo esc_html( $active_course_count ); ?>
 				</div>
-				<p class="tutor-stat-card-change">
-					<?php
-					// translators: %s is the number of active courses this month.
-					echo esc_html( sprintf( __( '%s this month', 'tutor' ), $active_course_count_this_month ) );
-					?>
-				</p>
 			</div>
 		</a>
+
 		<a href="<?php echo esc_url( $completed_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-completed">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Completed', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_CIRCLE, 20, 20 ); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
 				<div class="tutor-stat-card-value">
-					<?php echo esc_html( $enrolled_course_count ); ?>
+					<?php echo esc_html( $completed_course_count ); ?>
 				</div>
-				<p class="tutor-stat-card-change">
-					<?php
-					// translators: %s is the number of completed courses this month.
-					echo esc_html( sprintf( __( '%s this month', 'tutor' ), $completed_course_count_this_month ) );
-					?>
-				</p>
 			</div>
 		</a>
+		<?php if ( $time_spent['hours'] > 0 ) : ?>
 		<div 
 			class="tutor-card tutor-stat-card tutor-stat-card-time-spent"
 			@click="TutorCore.modal.showModal('tutor-time-spent-modal')"
@@ -131,22 +120,27 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Time Spent', 'tutor' ); ?>
 				</h3>
-				<div class="tutor-stat-card-icon">
+				<div class="tutor-stat-card-icon tutor-flex">
 					<?php tutor_utils()->render_svg_icon( Icon::TIME, 20, 20 ); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
 				<div class="tutor-stat-card-value">
-					375h+
+					<?php
+					echo esc_html(
+						sprintf(
+						/* translators: 1: total hour spent */
+							__( '%1$d h+', 'tutor' ),
+							$time_spent['hours']
+						)
+					);
+					?>
 				</div>
-				<p class="tutor-stat-card-change">
-					+2 this month
-				</p>
 			</div>
 		</div>
+		<?php endif; ?>
 	</div>
 
-	<!-- @TODO:: Need to update this with dynamic data -->
 	<div x-data="tutorModal({ id: 'tutor-time-spent-modal' })" x-cloak>
 		<template x-teleport="body">
 			<div x-bind="getModalBindings()">
@@ -155,15 +149,57 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<div class="tutor-modal-body tutor-px-9 tutor-pt-9 tutor-pb-8 tutor-text-center">
 						<?php tutor_utils()->render_svg_icon( Icon::CONFETTI, 32, 32, array( 'class' => 'tutor-icon-exception2' ) ); ?>
 
-						<h3 class="tutor-h3 tutor-mb-2 tutor-mt-6"><span class="tutor-font-regular">Fantastic,</span> Johny!</h3>
+						<h3 class="tutor-h3 tutor-mb-2 tutor-mt-6">
+							<span class="tutor-font-regular"><?php esc_html_e( 'Fantastic,', 'tutor' ); ?></span> 
+							<?php echo esc_attr( $user_data->display_name ); ?>!
+						</h3>
 
 						<div class="tutor-tiny tutor-text-secondary tutor-mb-6">
 							<?php echo esc_html__( "You've dedicated over", 'tutor' ); ?>
 						</div>
 
-						<h2 class="tutor-h2 tutor-text-exception4 tutor-py-6 tutor-surface-warning tutor-rounded-lg tutor-mb-6">375+ hours</h2>
-
-						<p class="tutor-p2 tutor-mb-7">That's <span class="tutor-font-medium">1,350,000</span> minutes, and <span class="tutor-font-medium">81,000,000</span> seconds! Incredible!</p>
+						<h2 class="tutor-h2 tutor-text-exception4 tutor-py-6 tutor-surface-warning tutor-rounded-lg tutor-mb-6">
+							<?php
+							echo esc_html(
+								sprintf(
+								/* translators: 1: total hour spent */
+									__( '%1$d+ hours', 'tutor' ),
+									$time_spent['hours']
+								)
+							);
+							?>
+						</h2>
+						<p class="tutor-p2 tutor-mb-7">
+							<?php if ( $time_spent['minutes'] > 0 ) : ?>
+								<?php echo esc_html__( "That's", 'tutor' ); ?> 
+							<span class="tutor-font-medium">
+								<?php
+								echo esc_html(
+									sprintf(
+									/* translators: 1: total minutes spent */
+										__( '%1$d+ minutes', 'tutor' ),
+										$time_spent['minutes']
+									)
+								);
+								?>
+							</span> 
+							<?php endif; ?>
+							
+							<?php if ( $seconds > 0 ) : ?>
+							<span class="tutor-font-medium">
+								<?php
+								echo esc_html(
+									sprintf(
+									/* translators: 1: total seconds spent */
+										__( ', and %1$d+ seconds!', 'tutor' ),
+										$seconds
+									)
+								);
+								?>
+							</span>
+							<?php endif; ?>
+							<?php echo esc_html__( 'Incredible!', 'tutor' ); ?>
+						</p>
 
 						<button 
 							class="tutor-btn tutor-btn-primary tutor-btn-large tutor-rounded-full tutor-btn-block tutor-gap-2" 
@@ -263,4 +299,7 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2 )
 			<?php wp_reset_postdata(); ?>
 		</div>
 	</div>
-<?php endif; ?>
+	<?php
+endif;
+	do_action( 'tutor_after_continue_learning_section' );
+?>

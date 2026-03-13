@@ -53,12 +53,6 @@ body {
 
   a {
     text-decoration: none;
-    color: inherit;
-
-    &:hover {
-      text-decoration: none;
-      color: inherit;
-    }
   }
 }
 
@@ -83,8 +77,8 @@ ol {
   list-style: none;
 }
 
-li>ol,
-li>ul,
+li > ol,
+li > ul,
 ol,
 ul {
   padding: 0;

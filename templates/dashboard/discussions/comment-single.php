@@ -118,7 +118,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 		'dashboard.discussions.comment-form',
 		array(
 			'form_id'        => 'lesson-comment-reply-form-' . $lesson_comment->comment_ID,
-			'submit_handler' => '(data) => handleReplyComment(data, ' . (int) $lesson_comment->comment_ID . ', ' . (int) $course->ID . ')',
+			'submit_handler' => '(data) => handleReplyComment(data, ' . (int) $lesson_comment->comment_ID . ', ' . (int) $course->ID . ', "single")',
 			'cancel_handler' => 'reset(); focused = false',
 			'is_pending'     => 'replyCommentMutation?.isPending',
 			'placeholder'    => __( 'Just drop your response here!', 'tutor' ),

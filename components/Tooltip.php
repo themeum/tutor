@@ -116,39 +116,17 @@ class Tooltip extends BaseComponent {
 	);
 
 	/**
-	 * Allowed HTML tags and Alpine.js attributes for wp_kses sanitization.
+	 * Set and sanitize the tooltip content.
 	 *
-	 * @since 4.0.0
-	 *
-	 * @var array
-	 */
-	protected $allowed_attributes = array();
-
-	/**
-	 * Allowed Alpine.js HTML attributes.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var array
-	 */
-	private const ALLOWED_ALPINE_ATTRS = array(
-		'x-data',
-		'x-text',
-		'x-show',
-		'x-cloak',
-		'x-ref',
-		'x-transition',
-	);
-
-	/**
-	 * Set the tooltip content.
-	 *
-	 * @param string $content HTML or text content.
+	 * @param string                             $content HTML or text content.
+	 * @param array<string, array<string, bool>> $extra_tags Optional.
+	 *        Additional HTML tags and attributes in KSES-compatible format.
 	 *
 	 * @return $this
 	 */
-	public function content( string $content ): self {
-		$this->content = $content;
+	public function content( string $content, $extra_tags = array() ): self {
+
+		$this->content = wp_kses( $content, $this->get_allowed_html_tags( $extra_tags ) );
 		return $this;
 	}
 
@@ -266,46 +244,6 @@ class Tooltip extends BaseComponent {
 	}
 
 	/**
-	 * Adds Alpine.js attributes to the wp_kses allow-list.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array $attributes attribute map.
-	 *
-	 * @return $this
-	 */
-	public function add_alpine_attributes( array $attributes ) {
-
-		$this->allowed_attributes = wp_kses_allowed_html( 'post' );
-
-		foreach ( $attributes as $tag => $attr ) {
-			$tag = sanitize_key( $tag );
-
-			if ( ! isset( $this->allowed_attributes[ $tag ][ $attr ] ) && in_array( $attr, self::ALLOWED_ALPINE_ATTRS, true ) ) {
-				$this->allowed_attributes[ $tag ][ $attr ] = true;
-			}
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Returns the allowed HTML configuration for wp_kses().
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return array
-	 */
-	private function allowed_attributes() {
-
-		if ( empty( $this->allowed_attributes ) ) {
-			return wp_kses_allowed_html( 'post' );
-		}
-
-		return $this->allowed_attributes;
-	}
-
-	/**
 	 * Get the final tooltip HTML.
 	 *
 	 * @return string HTML output.
@@ -335,15 +273,17 @@ class Tooltip extends BaseComponent {
 		$this->component_string = sprintf(
 			'<div x-data="%1$s" class="tutor-tooltip-wrap %2$s" %3$s>
 				%4$s
-				<div x-ref="content" x-show="open" x-cloak x-transition class="tutor-tooltip">
-					%5$s
-				</div>
+				<template x-teleport="body">
+					<div x-ref="content" x-show="open" x-cloak x-transition class="tutor-tooltip">
+						%5$s
+					</div>
+				</template>
 			</div>',
 			esc_attr( $x_data ),
 			esc_attr( $this->attributes['class'] ?? '' ),
 			$this->get_attributes_string(),
 			$trigger_html,
-			wp_kses( $this->content, $this->allowed_attributes() )
+			$this->content
 		);
 
 		return $this->component_string;

@@ -66,6 +66,7 @@ final class Icon {
 	const CALENDAR                   = 'calendar';
 	const CALENDAR_2                 = 'calendar-2';
 	const CALENDAR_2_FILL            = 'calendar-2-fill';
+	const CALENDAR_CHECK             = 'calendar-check';
 	const CALENDAR_LINE              = 'calendar-line';
 	const CALENDAR_LINES             = 'calendar-lines';
 	const CALL_END                   = 'call-end';
@@ -94,6 +95,7 @@ final class Icon {
 	const CIRCUM_LOCK                = 'circum-lock';
 	const CLOCK                      = 'clock';
 	const CLOCK_2                    = 'clock-2';
+	const CLOCK_FRAME                = 'clock-frame';
 	const CODING                     = 'coding';
 	const COLLAPSED                  = 'collapsed';
 	const COLOR_OPTION               = 'color-option';
@@ -129,6 +131,7 @@ final class Icon {
 	const DBF                        = 'dbf';
 	const DELETE                     = 'delete';
 	const DELETE_2                   = 'delete-2';
+	const DESCENDING                 = 'descending';
 	const DEVICES                    = 'devices';
 	const DISCOUNT_TYPE              = 'discount-type';
 	const DIVI_COLORIZED             = 'divi-colorized';
@@ -184,6 +187,7 @@ final class Icon {
 	const GIFT_CARD                  = 'gift-card';
 	const GITHUB                     = 'github';
 	const GLOBE                      = 'globe';
+	const GOOGLE_CALENDER_COLORIZE   = 'google-calender-colorize';
 	const GOOGLE_MEET                = 'google-meet';
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
 	const GRAB_HANDLE                = 'grab-handle';
@@ -213,6 +217,7 @@ final class Icon {
 	const ISO                        = 'iso';
 	const JAVASCRIPT                 = 'javascript';
 	const JPG                        = 'jpg';
+	const JSON                       = 'json';
 	const JSON_FILE                  = 'json-file';
 	const KEY                        = 'key';
 	const LANDSCAPE                  = 'landscape';
@@ -395,11 +400,13 @@ final class Icon {
 	const VIDEO_CAMERA               = 'video-camera';
 	const VIDEO_CAMERA_2             = 'video-camera-2';
 	const VIDEO_FILE                 = 'video-file';
+	const VIDEO_FILL                 = 'video-fill';
 	const VIDEO_QUALITY              = 'video-quality';
 	const VIMEO                      = 'vimeo';
 	const VISITED                    = 'visited';
 	const WALLET                     = 'wallet';
 	const WARNING                    = 'warning';
+	const WARNING_COLORIZED          = 'warning-colorized';
 	const WARNING_LINE               = 'warning-line';
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';
@@ -413,31 +420,4 @@ final class Icon {
 	const ZIP                        = 'zip';
 	const ZOOM                       = 'zoom';
 	const ZOOM_COLORIZE              = 'zoom-colorize';
-
-
-	/**
-	 * Get the icon constant based on the given post type.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $post_type The post type slug.
-	 *
-	 * @return string Icon constant associated with the post type.
-	 */
-	public static function get_icon_by_post_type( $post_type ): string {
-		switch ( $post_type ) {
-			case 'tutor_assignments':
-				return self::ASSIGNMENT;
-			case 'tutor-google-meet':
-				return self::GOOGLE_MEET_COLORIZE;
-			case 'tutor_quiz':
-				return self::QUIZ;
-			case 'tutor_zoom_meeting':
-				return self::ZOOM_COLORIZE;
-			case 'lesson':
-				return self::LESSON;
-			default:
-				return '';
-		}
-	}
 }

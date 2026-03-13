@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
@@ -18,8 +20,6 @@ use Tutor\Components\StarRatingInput;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Helpers\DateTimeHelper;
-
-defined( 'ABSPATH' ) || exit;
 
 $default_review = array(
 	'comment_ID'      => '',
@@ -48,24 +48,26 @@ $delete_modal_id = 'review-delete-modal';
 	<div x-show="!isEditMode">
 		<!-- Header Section -->
 		<div class="tutor-review-header">
-			<!-- Type Badge with Icon -->
-			<?php if ( ! empty( $review['is_bundle'] ) ) : ?>
-				<?php
-					Badge::make()
-						->variant( Badge::HIGHLIGHT )
-						->icon( Icon::BUNDLE )
-						->label( __( 'Bundle', 'tutor' ) )
-						->render();
-				?>
-			<?php else : ?>
-				<?php
-					Badge::make()
-						->variant( Badge::INFO )
-						->icon( Icon::COURSES )
-						->label( __( 'Course', 'tutor' ) )
-						->render();
-				?>
-			<?php endif; ?>
+			<div class="tutor-flex tutor-align-center">
+				<!-- Type Badge with Icon -->
+				<?php if ( ! empty( $review['is_bundle'] ) ) : ?>
+					<?php
+						Badge::make()
+							->variant( Badge::HIGHLIGHT )
+							->icon( Icon::BUNDLE )
+							->label( __( 'Bundle', 'tutor' ) )
+							->render();
+					?>
+				<?php else : ?>
+					<?php
+						Badge::make()
+							->variant( Badge::INFO )
+							->icon( Icon::COURSES )
+							->label( __( 'Course', 'tutor' ) )
+							->render();
+					?>
+				<?php endif; ?>
+			</div>
 
 			<!-- Course Title -->
 			<div class="tutor-review-title">

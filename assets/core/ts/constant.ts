@@ -8,7 +8,11 @@ export const TUTOR_CUSTOM_EVENTS = {
   FORM_REGISTER: 'tutor-form-register',
   FORM_UNREGISTER: 'tutor-form-unregister',
   FORM_STATE_CHANGE: 'tutor-form-state-change',
+  FORM_RESET: 'tutor-form-reset',
+  WP_EDITOR_FOCUS: 'wp-editor-focus',
   TUTOR_PLAYER_READY: 'tutor-player-ready',
   COMMENT_REPLIED: 'tutor:comment:replied',
   LESSON_PLAYER_READY: 'tutorLessonPlayerReady',
+  QUIZ_TIME_EXPIRED: 'tutor-quiz-time-expired',
+  QUIZ_ABANDON_REQUESTED: 'tutor-quiz-abandon-requested',
 };
