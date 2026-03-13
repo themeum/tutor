@@ -30,8 +30,3 @@ body:has(#wpadminbar) {
     }
   }
 }
-
-.tutor-profile-container {
-  @include tutor-frontend-layout();
-  padding-inline: $tutor-spacing-6;
-}
