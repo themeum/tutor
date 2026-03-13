@@ -301,16 +301,16 @@ class QuizBuilder {
 		$deleted_answer_ids   = array_filter( $deleted_answer_ids, 'is_numeric' );
 
 		if ( count( $deleted_question_ids ) ) {
-			$in_clause = implode( ',', array_fill( 0, count( $deleted_question_ids ), '%d' ) );
+			$in_clause = QueryHelper::prepare_in_clause( $deleted_question_ids );
             //phpcs:ignore -- sanitized $in_clause.
-            $wpdb->query( $wpdb->prepare(  "DELETE FROM {$wpdb->prefix}tutor_quiz_questions WHERE content_id IS NULL AND question_id IN ({$in_clause})", $deleted_question_ids ) );
+            $wpdb->query( $wpdb->prepare(  "DELETE FROM {$wpdb->prefix}tutor_quiz_questions WHERE content_id IS NULL AND question_id IN ({$in_clause})" ) );
 			do_action( 'tutor_deleted_quiz_question_ids', $deleted_question_ids );
 		}
 
 		if ( count( $deleted_answer_ids ) ) {
-			$in_clause = implode( ',', array_fill( 0, count( $deleted_answer_ids ), '%d' ) );
+			$in_clause = QueryHelper::prepare_in_clause( $deleted_answer_ids );
             //phpcs:ignore -- sanitized $in_clause.
-            $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id IN ({$in_clause})", $deleted_answer_ids ) );
+            $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id IN ({$in_clause})" ) );
 		}
 	}
 
@@ -430,6 +430,5 @@ class QuizBuilder {
 		} else {
 			$this->json_response( __( 'Error', 'tutor' ), $result->errors, HttpHelper::STATUS_BAD_REQUEST );
 		}
-
 	}
 }
