@@ -18,7 +18,7 @@ use Tutor\Components\Constants\Variant;
 
 ?>
 <div class="tutor-account-header">
-	<div class="tutor-profile-container">
+	<div class="tutor-account-container">
 		<div class="tutor-flex tutor-items-center tutor-justify-between">
 			<?php
 				Button::make()

@@ -14,7 +14,7 @@ $page_title = $page_title ?? __( 'Profile', 'tutor' );
 
 ?>
 <div class="tutor-profile-header">
-	<div class="tutor-profile-container">
+	<div class="tutor-account-container">
 		<div class="tutor-flex tutor-items-center tutor-justify-between">
 			<button class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::LEFT ); ?>

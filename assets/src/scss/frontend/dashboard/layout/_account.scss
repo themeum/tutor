@@ -17,3 +17,8 @@
     }
   }
 }
+
+.tutor-account-container {
+  @include tutor-frontend-layout();
+  padding-inline: $tutor-spacing-6;
+}
