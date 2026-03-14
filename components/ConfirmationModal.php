@@ -72,6 +72,25 @@ class ConfirmationModal extends BaseComponent {
 	protected $message;
 
 	/**
+	 * Allowed HTML tags and attributes. Keys are tag names and values are allowed attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $allowed_html_tags = array(
+		'span'   => array(
+			'class'  => true,
+			'x-text' => true,
+		),
+		'b'      => array(),
+		'strong' => array(),
+		'i'      => array(),
+		'em'     => array(),
+		'br'     => array(),
+	);
+
+	/**
 	 * Icon name from Icon class.
 	 *
 	 * @since 4.0.0
@@ -190,16 +209,18 @@ class ConfirmationModal extends BaseComponent {
 	}
 
 	/**
-	 * Set confirmation message.
+	 * Sets the confirmation message.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $message Confirmation message.
+	 * @param string $message The confirmation message text.
+	 * @param array  $allowed_html_tags Optional. Allowed HTML tags and attributes. Keys are tag names and values are allowed attributes.
 	 *
 	 * @return $this
 	 */
-	public function message( string $message ) {
-		$this->message = $message;
+	public function message( string $message, array $allowed_html_tags = array() ) {
+		$this->message           = $message;
+		$this->allowed_html_tags = wp_parse_args( $allowed_html_tags, $this->allowed_html_tags );
 		return $this;
 	}
 
@@ -349,16 +370,26 @@ class ConfirmationModal extends BaseComponent {
 			: '';
 
 		// Build icon HTML.
-		ob_start();
-		tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
-		$icon_html = ob_get_clean();
+		$icon_html = '';
+		if ( ! empty( $this->icon ) ) {
+			if ( filter_var( $this->icon, FILTER_VALIDATE_URL ) !== false ) {
+				$icon_html = sprintf( '<img src="%s" style="width:%spx;height:%spx;"/>', $this->icon, $this->icon_width, $this->icon_height );
+			} else {
+				ob_start();
+				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
+				$icon_html = ob_get_clean();
+			}
+		}
+
+		// Prepare message HTML with allowed HTML tags.
+		$message_html = wp_kses( $this->message ?? __( 'Are you sure you want to perform this action? Please confirm your choice.', 'tutor' ), $this->allowed_html_tags );
 
 		// Prepare confirm button HTML.
 		$confirm_html = $this->confirm_btn;
 		if ( empty( $confirm_html ) ) {
 			$confirm_html = sprintf(
 				'<button 
-					class="tutor-btn tutor-btn-secondary tutor-btn-small"
+					class="tutor-btn tutor-btn-destructive tutor-btn-small"
 					:class="%s?.isPending ? \'tutor-btn-loading\' : \'\'"
 					@click="%s"
 					:disabled="%s?.isPending"
@@ -377,7 +408,7 @@ class ConfirmationModal extends BaseComponent {
 		if ( empty( $cancel_html ) ) {
 			$cancel_html = sprintf(
 				'<button 
-					class="tutor-btn tutor-btn-primary tutor-btn-small" 
+					class="tutor-btn tutor-btn-secondary tutor-btn-small" 
 					@click="TutorCore.modal.closeModal(\'%s\')"
 				>
 					%s
@@ -388,7 +419,7 @@ class ConfirmationModal extends BaseComponent {
 		}
 
 		$this->component_string = sprintf(
-			'<div x-data="tutorModal(%s)" x-cloak>
+			'<div x-data="tutorModal(%s)" x-cloak style="display: none;">
 				<template x-teleport="body">
 					<div x-bind="getModalBindings()">
 						<div x-bind="getBackdropBindings()"></div>
@@ -417,9 +448,9 @@ class ConfirmationModal extends BaseComponent {
 			$style_attr,
 			$icon_html,
 			esc_html( $this->title ?? __( 'Are you sure?', 'tutor' ) ),
-			esc_html( $this->message ?? __( 'Are you sure you want to perform this action? Please confirm your choice.', 'tutor' ) ),
+			$message_html,
+			$cancel_html,
 			$confirm_html,
-			$cancel_html
 		);
 
 		return $this->component_string;

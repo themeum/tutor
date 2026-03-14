@@ -1,53 +1,8 @@
 // Learning Area Certificate Styles
+// @TODO:: Need to shift these style to pro
 
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
-
-.tutor-learning-area-certificate {
-  @include tutor-flex(column);
-  gap: $tutor-spacing-5;
-
-  @include tutor-breakpoint-up(sm) {
-    margin-top: $tutor-spacing-7;
-  }
-
-  .tutor-certificate-header {
-    @include tutor-flex(row, center, space-between);
-    background-color: $tutor-surface-l1;
-
-    @include tutor-breakpoint-up(sm) {
-      border: 1px solid $tutor-border-idle;
-      border-radius: $tutor-radius-2xl;
-      padding: $tutor-spacing-4;
-    }
-
-    @include tutor-breakpoint-down(sm) {
-      position: fixed;
-      width: 100%;
-      bottom: 0;
-      left: 0;
-      border-top: 1px solid $tutor-border-idle;
-      padding: $tutor-spacing-6;
-    }
-  }
-
-  .tutor-certificate-info {
-    @include tutor-grid(2, $tutor-spacing-7);
-    background-color: $tutor-surface-l1;
-    border: 1px solid $tutor-border-idle;
-    border-radius: $tutor-radius-2xl;
-    padding: $tutor-spacing-6;
-
-    &-item {
-      @include tutor-flex(column);
-      gap: $tutor-spacing-7;
-
-      &:last-of-type {
-        justify-self: end;
-      }
-    }
-  }
-}
 
 .tutor-certificate-locked-modal {
   max-width: 560px;

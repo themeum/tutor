@@ -48,7 +48,7 @@ $page_nav_items = array(
 					<?php esc_html_e( 'Questions', 'tutor' ); ?>
 					<span class="tutor-text-primary tutor-font-medium">(3234)</span>
 				</div>
-				<div class="tutor-qna-filter-right">
+				<div class="tutor-discussion-filter-right">
 					<button class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-gap-4 tutor-pr-3">
 						<?php esc_html_e( 'Newest First', 'tutor' ); ?>
 						<?php

@@ -3,13 +3,9 @@ Contributors: themeum
 Donate link: https://tutorlms.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
-<<<<<<< HEAD
 Stable tag: 4.0.0-dev
-=======
-Stable tag: 3.9.3
->>>>>>> a5dd7291aa5fa582e64a050945b7ec437a833cc5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -323,9 +319,34 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.0-dev - N/A
+= 3.9.6 - Jan 28, 2026
 
-Coming soon...
+Update: Removed the autoload option from ‘email_template_data’ to improve site load performance. (Pro)
+Fix: Course content edited with Divi can now be reverted to its original content from the Tutor Course Builder.
+Fix: Improved user email verification by validating the token during Google login. (Pro)
+Fix: Enhanced the security of email verification link generation. (Pro)
+Fix: Added a capability check to the coupon details AJAX request.
+Fix: Restricted instructors from deleting courses created by other admins or instructors. (Pro)
+Fix: Improved WPML compatibility. (Pro)
+
+= 3.9.5 - Jan 08, 2025
+
+New: Added a certificate download button for Admins and Instructors. (Pro)
+Update: Added support for PHP 8.4
+Update: Instructors can remove co-instructors from their own courses. (Pro)
+Update: Multiple improvements and fixes to gift course functionality. (Pro)
+Fix: Fixed security issues.
+Fix: Users can now retry payment after a failed transaction. (Pro)
+Fix: Filters no longer stop working when the category filter is disabled on the course list page.
+Fix: Fixed datepicker style conflict with WooCommerce coupon date picker UI.
+Fix: Unpublished rating count no longer appears on the course details page.
+Fix: Added some missing cities of Spain to the checkout page dropdown.
+Fix: Gift course messages now support special characters. (Pro)
+
+= 3.9.4 - Dec 18, 2025
+
+Update: Compatibility with WordPress 6.9
+Fix: Security vulnerabilities
 
 = 3.9.3 - Nov 27, 2025
 

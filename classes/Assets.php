@@ -102,7 +102,10 @@ class Assets {
 		 *
 		 * @since 4.0.0
 		 */
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), PHP_INT_MAX );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		// Add custom meta.
+		add_action( 'wp_head', array( $this, 'add_custom_data' ) );
 	}
 
 	/**
@@ -849,9 +852,9 @@ class Assets {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		$is_dashboard     = tutor_utils()->is_dashboard_page();
-		$is_learning_area = tutor_utils()->is_learning_area();
-		$is_course_list   = tutor_utils()->is_course_list_page();
+		$is_dashboard       = tutor_utils()->is_dashboard_page();
+		$is_learning_area   = tutor_utils()->is_learning_area();
+		$is_legacy_learning = tutor_utils()->get_option( 'is_legacy_learning_mode' );
 
 		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
 		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
@@ -863,7 +866,7 @@ class Assets {
 
 		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
 
-		if ( $is_dashboard || $is_learning_area || $is_course_list ) {
+		if ( $is_dashboard || ( $is_learning_area && ! $is_legacy_learning ) ) {
 			$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 
 			// Core.
@@ -880,6 +883,11 @@ class Assets {
 			if ( $is_learning_area ) {
 				wp_enqueue_style( 'tutor-learning', $learning_area_css_url, array(), $version );
 				wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+
+				if ( is_single_course( true ) ) {
+					wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
+					wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+				}
 			}
 		}
 	}
@@ -896,6 +904,7 @@ class Assets {
 	 */
 	public function should_load_legacy_scripts(): bool {
 		$load = true;
+
 		if ( tutor_utils()->is_dashboard_page() ) {
 			$load = false;
 		} else {
@@ -907,5 +916,20 @@ class Assets {
 		}
 
 		return apply_filters( 'tutor_should_load_legacy_scripts', $load );
+	}
+
+	/**
+	 * Add custom meta data to the head section.
+	 *
+	 * Outputs a viewport meta tag to improve mobile responsiveness.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function add_custom_data() {
+		if ( tutor_utils()->is_dashboard_page() || tutor_utils()->is_learning_area() ) {
+			echo '<meta name="viewport" content="width=device-width, initial-scale=1" />' . "\n";
+		}
 	}
 }

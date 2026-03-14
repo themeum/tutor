@@ -13,6 +13,8 @@
 
 namespace Tutor\Components;
 
+use TUTOR\Input;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -69,10 +71,25 @@ abstract class BaseComponent {
 	 *
 	 * @param array $attrs Key–value pairs of HTML attributes.
 	 *
-	 * @return self
+	 * @return static
 	 */
-	public function attrs( array $attrs ): self {
+	public function attrs( array $attrs ) {
 		$this->attributes = array_merge( $this->attributes, $attrs );
+		return $this;
+	}
+
+	/**
+	 * Set a custom HTML attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $key   Attribute name.
+	 * @param string $value Attribute value.
+	 *
+	 * @return static
+	 */
+	public function attr( $key, $value ) {
+		$this->attributes[ $key ] = $value;
 		return $this;
 	}
 
@@ -89,7 +106,7 @@ abstract class BaseComponent {
 	 *
 	 * @return string Escaped and concatenated attributes.
 	 */
-	protected function render_attributes(): string {
+	protected function get_attributes_string(): string {
 		$compiled = array();
 
 		foreach ( $this->attributes as $key => $value ) {
@@ -97,6 +114,17 @@ abstract class BaseComponent {
 		}
 
 		return implode( ' ', $compiled );
+	}
+
+	/**
+	 * Render attributes
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	protected function render_attributes(): void {
+		echo $this->get_attributes_string(); //phpcs:ignore -- Sanitization is performed inside get_attributes_string method.
 	}
 
 	/**
@@ -108,11 +136,51 @@ abstract class BaseComponent {
 	 *
 	 * @param mixed  $value Value to escape.
 	 * @param string $esc_fn Callable esc func.
+	 * @param array  $allowed_html additional html values to check.
 	 *
 	 * @return string Escaped string.
 	 */
 	protected function esc( $value, $esc_fn = 'esc_html' ): string {
 		return call_user_func( $esc_fn, $value );
+	}
+
+	/**
+	 * Retrieve the list of allowed HTML tags and attributes.
+	 *
+	 * Provides a base set of safe HTML tags and merges additional
+	 * SVG tags and any custom tags passed
+	 * through the $extra_tags parameter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<string, array<string, bool>> $extra_tags Optional.
+	 *        Additional HTML tags and their allowed attributes
+	 *        in KSES-compatible format.
+	 *
+	 * @return array<string, array<string, bool>> Allowed HTML tags
+	 *         and attributes formatted for wp_kses().
+	 */
+	protected function get_allowed_html_tags( $extra_tags = array() ) {
+
+		$allowed_html_tags = array(
+			'div'    => array(
+				'class' => true,
+			),
+			'span'   => array(
+				'class' => true,
+			),
+			'p'      => array(
+				'class' => true,
+			),
+			'b'      => array(),
+			'strong' => array(),
+			'i'      => array(),
+		);
+
+		$allowed_html_tags = wp_parse_args( Input::allow_svg( array() ), $allowed_html_tags );
+		$allowed_html_tags = wp_parse_args( $extra_tags, $allowed_html_tags );
+
+		return $allowed_html_tags;
 	}
 
 	/**
@@ -138,5 +206,4 @@ abstract class BaseComponent {
 		// phpcs:ignore -- Sanitization is performed within each child class’s `get` method implementation.
 		echo $this->get();
 	}
-
 }

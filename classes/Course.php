@@ -14,8 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use stdClass;
-use TUTOR\Input;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
@@ -23,7 +24,6 @@ use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
-use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * Course Class
@@ -300,6 +300,8 @@ class Course extends Tutor_Base {
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
 		add_filter( 'the_preview', array( $this, 'handle_schedule_courses' ) );
+
+		add_action( 'tutor_course_action_btn', array( $this, 'render_course_action_btn' ) );
 	}
 
 	/**
@@ -1174,6 +1176,19 @@ class Course extends Tutor_Base {
 			delete_post_meta( $course_id, '_elementor_edit_mode' );
 		} elseif ( 'droip' === $builder ) {
 			delete_post_meta( $course_id, 'droip_editor_mode' );
+		} elseif ( 'divi' === $builder ) {
+			$old_post_content     = get_post_meta( $course_id, '_et_pb_old_content', true );
+			$course               = get_post( $course_id );
+			$course->post_content = $old_post_content;
+			$result               = wp_update_post( $course );
+
+			if ( $result && ! is_wp_error( $result ) ) {
+				update_post_meta( $course_id, '_et_pb_use_builder', 'off' );
+				update_post_meta( $course_id, '_et_pb_old_content', '' );
+				delete_post_meta( $course_id, '_et_dynamic_cached_shortcodes' );
+				delete_post_meta( $course_id, '_et_dynamic_cached_attributes' );
+				delete_post_meta( $course_id, '_et_builder_module_features_cache' );
+			}
 		}
 
 		$this->json_response(
@@ -2119,12 +2134,17 @@ class Course extends Tutor_Base {
 			die( esc_html__( 'Please Sign-In', 'tutor' ) );
 		}
 
+		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+			die( esc_html__( 'User is not enrolled in course', 'tutor' ) );
+		}
+
 		/**
 		 * Filter hook provided to restrict course completion. This is useful
 		 * for specific cases like prerequisites. WP_Error should be returned
 		 * from the filter value to prevent the completion.
 		 */
 		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+
 		if ( is_wp_error( $can_complete ) ) {
 			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
 		} else {
@@ -2992,6 +3012,25 @@ class Course extends Tutor_Base {
 			if ( $password_protected ) {
 				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
 			}
+
+			/**
+			 * This check was added to address a security issue where users could
+			 * enroll in a course via an AJAX call without purchasing it.
+			 *
+			 * To prevent this, we now verify whether the course is paid.
+			 * Additionally, we check if the user is already enrolled, since
+			 * Tutor's default behavior enrolls users automatically upon purchase.
+			 *
+			 * @since 3.9.4
+			 */
+			if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
+				$is_enrolled = (bool) tutor_utils()->is_enrolled( $course_id, $user_id );
+
+				if ( ! $is_enrolled ) {
+					wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
+				}
+			}
+
 			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
 			if ( $enroll ) {
 				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
@@ -3206,5 +3245,84 @@ class Course extends Tutor_Base {
 		// Set course regular & sale price.
 		update_post_meta( $post_ID, self::COURSE_PRICE_META, $regular_price );
 		update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $sale_price );
+	}
+
+	/**
+	 * Render start/resume button in enrolled course action btn.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return void
+	 */
+	public function render_course_action_btn( int $course_id ) {
+		$is_completed = tutor_utils()->is_completed_course( $course_id );
+		if ( $is_completed ) {
+			$certificate_addon_active = tutor_utils()->is_addon_enabled( 'tutor-certificate' );
+			if ( ! $certificate_addon_active ) {
+				Button::make()
+					->tag( 'a' )
+					->label( __( 'Completed', 'tutor' ) )
+					->icon( Icon::COMPLETED_CIRCLE )
+					->variant( Variant::PRIMARY )
+					->size( Size::X_SMALL )
+					->attr( 'href', esc_url( get_the_permalink( $course_id ) ) )
+					->render();
+			}
+			return;
+		}
+
+		$course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+		$button_text     = $course_progress['completed_percent'] > 0 ? __( 'Resume', 'tutor' ) : __( 'Start', 'tutor' );
+		$button_url      = tutor_utils()->get_course_first_lesson( $course_id );
+
+		if ( ! $button_url ) {
+			$button_url = get_the_permalink( $course_id );
+		}
+
+		Button::make()
+			->tag( 'a' )
+			->label( $button_text )
+			->icon( Icon::PLAY )
+			->variant( Variant::PRIMARY )
+			->size( Size::X_SMALL )
+			->attr( 'href', esc_url( $button_url ) )
+			->render();
+	}
+
+	/**
+	 * Calculate the total course duration for a set of courses.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<int> $course_ids List of course IDs.
+	 *
+	 * @return array{
+	 *     hours: int,
+	 *     minutes: int,
+	 *     seconds: int
+	 * } Total accumulated duration from all given courses.
+	 */
+	public static function get_total_course_duration( $course_ids ): array {
+		$total_seconds = 0;
+
+		foreach ( $course_ids as $id ) {
+			$duration = tutor_utils()->get_course_duration( (int) $id, true );
+
+			$total_seconds += ( (int) $duration['durationHours'] * 3600 )
+				+ ( (int) $duration['durationMinutes'] * 60 )
+				+ ( (int) $duration['durationSeconds'] );
+		}
+
+		$hours   = floor( $total_seconds / 3600 );
+		$minutes = floor( ( $total_seconds % 3600 ) / 60 );
+		$seconds = $total_seconds % 60;
+
+		return array(
+			'hours'   => (int) $hours,
+			'minutes' => (int) $minutes,
+			'seconds' => (int) $seconds,
+		);
 	}
 }

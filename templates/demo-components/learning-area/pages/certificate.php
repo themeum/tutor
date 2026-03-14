@@ -11,7 +11,7 @@
 use TUTOR\Icon;
 
 ?>
-<div class="tutor-learning-area-certificate">
+<div class="tutor-certificate-wrapper">
 	<div class="tutor-certificate-header">
 		<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-sm-hidden">
 			<button type="button" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon tutor-icon-idle">

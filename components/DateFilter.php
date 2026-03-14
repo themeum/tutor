@@ -12,10 +12,10 @@ namespace Tutor\Components;
 
 use TUTOR\Icon;
 use TUTOR\Input;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Popover;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * DateFilter Component Class.
@@ -25,14 +25,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * ```php
  * DateFilter::make()
  *     ->type( DateFilter::TYPE_RANGE )
- *     ->placement( 'bottom-start' )
+ *     ->placement( DateFilter::PLACEMENT_BOTTOM_START )
  *     ->render();
  * ```
  *
  * ```php
  * DateFilter::make()
  *     ->type( DateFilter::TYPE_SINGLE )
- *     ->placement( 'bottom-end' )
+ *     ->placement( DateFilter::PLACEMENT_BOTTOM_END )
  *     ->render();
  * ```
  *
@@ -49,6 +49,16 @@ class DateFilter extends BaseComponent {
 	 * Date Filter Type Range
 	 */
 	const TYPE_RANGE = 'range';
+
+	/**
+	 * Placement Bottom Start
+	 */
+	const PLACEMENT_BOTTOM_START = 'bottom-start';
+
+	/**
+	 * Placement Bottom End
+	 */
+	const PLACEMENT_BOTTOM_END = 'bottom-end';
 
 	/**
 	 * Component Type
@@ -69,7 +79,39 @@ class DateFilter extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $placement = 'bottom-start';
+	protected $placement = self::PLACEMENT_BOTTOM_START;
+
+	/**
+	 * Button size.
+	 *
+	 * @var string
+	 */
+	protected $size = Size::SMALL;
+
+	/**
+	 * Icon size.
+	 *
+	 * @var integer
+	 */
+	protected $icon_size = 20;
+
+	/**
+	 * Whether to display the label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $show_label = true;
+
+	/**
+	 * Query params to clear when a date filter is applied or cleared (e.g. 'current_page').
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $clear_params = array();
 
 	/**
 	 * Set filter type.
@@ -80,6 +122,37 @@ class DateFilter extends BaseComponent {
 	 */
 	public function type( string $type ): self {
 		$this->type = $type;
+		return $this;
+	}
+
+	/**
+	 * Set Button Size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $size the size type (x-small|small|medium|large).
+	 *
+	 * @return self
+	 */
+	public function trigger_size( string $size ): self {
+		$allowed_sizes = array( Size::X_SMALL, Size::SMALL, Size::MEDIUM, Size::LARGE );
+		if ( in_array( $size, $allowed_sizes, true ) ) {
+			$this->size = $size;
+		}
+		return $this;
+	}
+
+	/**
+	 * Set the button icon size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $size the icon size.
+	 *
+	 * @return self
+	 */
+	public function icon_size( int $size ): self {
+		$this->icon_size = $size;
 		return $this;
 	}
 
@@ -108,6 +181,37 @@ class DateFilter extends BaseComponent {
 	}
 
 	/**
+	 * Enable or disable the display of the label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $show_label True to show the label, false to hide it.
+	 *
+	 * @return $this
+	 */
+	public function show_label( bool $show_label ) {
+		$this->show_label = $show_label;
+		return $this;
+	}
+
+	/**
+	 * Set query params to clear when a date filter is applied or cleared.
+	 *
+	 * Useful for resetting pagination (e.g. 'current_page') or other
+	 * context-specific params whenever the date selection changes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $params List of query param keys to remove on apply/clear.
+	 *
+	 * @return self
+	 */
+	public function clear_params( array $params ): self {
+		$this->clear_params = $params;
+		return $this;
+	}
+
+	/**
 	 * Render the component.
 	 *
 	 * @return string
@@ -115,34 +219,43 @@ class DateFilter extends BaseComponent {
 	public function get(): string {
 		$is_range = self::TYPE_RANGE === $this->type;
 
+		if ( empty( $this->label ) ) {
+			$this->label = $this->calculate_label();
+		}
+
 		// Default settings based on type.
 		$calendar_options = array(
-			'type' => 'default',
+			'type'        => 'default',
+			'clearParams' => $this->clear_params,
 		);
-		$button_classes   = 'tutor-btn tutor-btn-outline tutor-btn-small';
-		$popover_classes  = 'tutor-popover';
-		$icon             = Icon::CALENDAR_2;
+
+		$button_classes = 'tutor-btn tutor-btn-outline';
+
+		if ( $this->size ) {
+			$button_classes .= ' tutor-btn-' . $this->size;
+		}
+
+		$popover_classes = 'tutor-popover';
+		$icon            = Icon::CALENDAR_2;
 
 		if ( $is_range ) {
 			$calendar_options = array(
 				'type'               => 'multiple',
 				'selectionDatesMode' => 'multiple-ranged',
+				'clearParams'        => $this->clear_params,
 			);
-			$button_classes  .= ' tutor-gap-2';
 			$popover_classes .= ' tutor-range-calendar-popover';
+		}
 
-			// Default label for range if not set.
-			if ( empty( $this->label ) ) {
-				$this->label = $this->calculate_label();
-			}
-		} else {
+		if ( empty( $this->label ) ) {
 			$button_classes .= ' tutor-btn-icon';
-			if ( 'bottom-start' === $this->placement ) {
-				$this->placement = 'bottom-end';
-			}
+		} else {
+			$button_classes .= ' tutor-gap-2';
 		}
 
 		$options_json = wp_json_encode( $calendar_options );
+
+		$origin = Popover::TRANSFORM_ORIGIN_MAP[ $this->placement ] ?? 'center.top';
 
 		ob_start();
 		?>
@@ -155,11 +268,17 @@ class DateFilter extends BaseComponent {
 			>
 				<?php
 				if ( function_exists( 'tutor_utils' ) ) {
-					tutor_utils()->render_svg_icon( $icon, 20, 20 );
+					tutor_utils()->render_svg_icon( $icon, $this->icon_size, $this->icon_size );
 				}
 				?>
 				<?php if ( ! empty( $this->label ) ) : ?>
 					<span><?php echo esc_html( $this->label ); ?></span>
+				<?php endif; ?>
+
+				<?php if ( $this->has_selection() ) : ?>
+					<span @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary tutor-flex tutor-align-center">
+						<?php tutor_utils()->render_svg_icon( Icon::CROSS_2 ); ?>
+					</span>
 				<?php endif; ?>
 			</button>
 
@@ -167,6 +286,7 @@ class DateFilter extends BaseComponent {
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-transition.origin.<?php echo esc_attr( $origin ); ?>
 				@click.outside="handleClickOutside()"
 				class="<?php echo esc_attr( $popover_classes ); ?>"
 			>
@@ -178,11 +298,31 @@ class DateFilter extends BaseComponent {
 	}
 
 	/**
+	 * Check if filter has active selection.
+	 *
+	 * @return bool
+	 */
+	protected function has_selection(): bool {
+		if ( self::TYPE_SINGLE === $this->type ) {
+			return ! empty( Input::get( 'date' ) );
+		}
+		return ! empty( Input::get( 'start_date' ) ) && ! empty( Input::get( 'end_date' ) );
+	}
+
+	/**
 	 * Calculate dynamic label based on URL parameters.
 	 *
 	 * @return string
 	 */
 	protected function calculate_label(): string {
+		if ( self::TYPE_SINGLE === $this->type ) {
+			return Input::get( 'date', '' );
+		}
+
+		if ( ! $this->show_label ) {
+			return '';
+		}
+
 		$start_date = Input::get( 'start_date' );
 		$end_date   = Input::get( ( 'end_date' ) );
 

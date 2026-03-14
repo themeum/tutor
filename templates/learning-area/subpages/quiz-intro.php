@@ -9,11 +9,9 @@
  * @since 1.0.0
  */
 
-use TUTOR\Icon;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use TUTOR\Icon;
 
 // Sample quiz data - in real implementation, these would come from quiz settings.
 $quiz_title       = __( 'Quick Quiz', 'tutor' );
@@ -153,7 +151,7 @@ $attempts = array(
 												</div>
 											</div>
 											<div class="tutor-quiz-intro-mobile-result">
-												<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
+												<span class="tutor-badge tutor-badge-success tutor-badge-rounded">
 													<?php echo esc_html( $attempt['result'] ); ?>
 												</span>
 											</div>
@@ -166,7 +164,7 @@ $attempts = array(
 										</div>
 									</td>
 									<td class="tutor-quiz-intro-attempts-cell tutor-quiz-intro-attempts-result-col">
-										<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
+										<span class="tutor-badge tutor-badge-success tutor-badge-rounded">
 											<?php echo esc_html( $attempt['result'] ); ?>
 										</span>
 									</td>

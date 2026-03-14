@@ -210,7 +210,7 @@ class Accordion extends BaseComponent {
 		$this->attributes['x-data'] = sprintf( 'tutorAccordion(%s)', $alpine_json );
 		$this->attributes['class']  = $wrapper_classes;
 
-		$wrapper_attrs = $this->render_attributes();
+		$wrapper_attrs = $this->get_attributes_string();
 
 		// Build items HTML.
 		$items_html = '';

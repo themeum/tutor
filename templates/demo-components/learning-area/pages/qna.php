@@ -12,7 +12,7 @@ use TUTOR\Icon;
 
 ?>
 <div class="tutor-learning-area-qna tutor-mb-9">
-	<div class="tutor-qna-search tutor-p-6 tutor-border-b">
+	<div class="tutor-discussion-search tutor-p-6 tutor-border-b">
 		<div class="tutor-input-field">
 			<div class="tutor-input-wrapper">
 				<!-- @TODO: Input size lg need to apply -->
@@ -34,7 +34,7 @@ use TUTOR\Icon;
 			</div>
 		</div>
 	</div>
-	<form class="tutor-qna-form tutor-p-6 tutor-border-b" x-data="{ focused: false }">
+	<form class="tutor-discussion-form tutor-p-6 tutor-border-b" x-data="{ focused: false }">
 		<div class="tutor-input-field">
 			<label for="name" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4">Question & Answer</label>
 			<div class="tutor-input-wrapper">
@@ -69,7 +69,7 @@ use TUTOR\Icon;
 			<?php esc_html_e( 'Questions', 'tutor' ); ?>
 			<span class="tutor-text-primary tutor-font-medium">(3234)</span>
 		</div>
-		<div class="tutor-qna-filter-right">
+		<div class="tutor-discussion-filter-right">
 			<button class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-gap-4 tutor-pr-3">
 				<?php esc_html_e( 'Newest First', 'tutor' ); ?>
 				<?php
@@ -83,30 +83,30 @@ use TUTOR\Icon;
 			</button>
 		</div>
 	</div>
-	<div class="tutor-qna-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
-		<div class="tutor-qna-card is-important">
+	<div class="tutor-discussion-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
+		<div class="tutor-discussion-card is-important">
 			<?php
 			tutor_utils()->render_svg_icon(
 				Icon::BOOKMARK,
 				20,
 				20,
-				array( 'class' => 'tutor-qna-card-bookmark' )
+				array( 'class' => 'tutor-discussion-card-bookmark' )
 			);
 			?>
 			<div class="tutor-avatar tutor-avatar-32">
 				<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar" class="tutor-avatar-image">
 			</div>
-			<div class="tutor-qna-card-content">
-				<div class="tutor-qna-card-top">
-					<div class="tutor-qna-card-author">Annathoms</div>
+			<div class="tutor-discussion-card-content">
+				<div class="tutor-discussion-card-top">
+					<div class="tutor-discussion-card-author">Annathoms</div>
 					<div>
 						<span class="tutor-text-subdued">asked in</span> 
 						<div class="tutor-preview-trigger">Camera Skills & Photo Theory</div>
 					</div>
 				</div>
-				<h6 class="tutor-qna-card-title">This is the question posted by the student.</h6>
-				<div class="tutor-qna-card-meta">
-					<button class="tutor-qna-card-meta-reply-button"><?php esc_html_e( 'Reply', 'tutor' ); ?></button>
+				<h6 class="tutor-discussion-card-title">This is the question posted by the student.</h6>
+				<div class="tutor-discussion-card-meta">
+					<button class="tutor-discussion-card-meta-reply-button"><?php esc_html_e( 'Reply', 'tutor' ); ?></button>
 					<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::THUMB, 20, 20 ); ?> 0</div>
 					<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::EYE_LINE, 20, 20 ); ?> 6</div>
 					<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 3</div>
@@ -119,21 +119,21 @@ use TUTOR\Icon;
 				</div>
 			</div>
 		</div>
-		<div class="tutor-qna-card">
+		<div class="tutor-discussion-card">
 			<div class="tutor-avatar tutor-avatar-32">
 				<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar" class="tutor-avatar-image">
 			</div>
-			<div class="tutor-qna-card-content">
-				<div class="tutor-qna-card-top">
-					<div class="tutor-qna-card-author">Annathoms</div>
+			<div class="tutor-discussion-card-content">
+				<div class="tutor-discussion-card-top">
+					<div class="tutor-discussion-card-author">Annathoms</div>
 					<div>
 						<span class="tutor-text-subdued">asked in</span> 
 						<div class="tutor-preview-trigger">Camera Skills & Photo Theory</div>
 					</div>
 				</div>
-				<h6 class="tutor-qna-card-title">This is the question posted by the student.</h6>
-				<div class="tutor-qna-card-meta">
-					<button class="tutor-qna-card-meta-reply-button"><?php esc_html_e( 'Reply', 'tutor' ); ?></button>
+				<h6 class="tutor-discussion-card-title">This is the question posted by the student.</h6>
+				<div class="tutor-discussion-card-meta">
+					<button class="tutor-discussion-card-meta-reply-button"><?php esc_html_e( 'Reply', 'tutor' ); ?></button>
 					<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::THUMB, 20, 20 ); ?> 0</div>
 					<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::EYE_LINE, 20, 20 ); ?> 6</div>
 					<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 3</div>
@@ -146,21 +146,21 @@ use TUTOR\Icon;
 				</div>
 			</div>
 		</div>
-		<div class="tutor-qna-card">
+		<div class="tutor-discussion-card">
 			<div class="tutor-avatar tutor-avatar-32">
 				<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar" class="tutor-avatar-image">
 			</div>
-			<div class="tutor-qna-card-content">
-				<div class="tutor-qna-card-top">
-					<div class="tutor-qna-card-author">Annathoms</div>
+			<div class="tutor-discussion-card-content">
+				<div class="tutor-discussion-card-top">
+					<div class="tutor-discussion-card-author">Annathoms</div>
 					<div>
 						<span class="tutor-text-subdued">asked in</span> 
 						<div class="tutor-preview-trigger">Camera Skills & Photo Theory</div>
 					</div>
 				</div>
-				<h6 class="tutor-qna-card-title">This is the question posted by the student.</h6>
-				<div class="tutor-qna-card-meta">
-					<button class="tutor-qna-card-meta-reply-button"><?php esc_html_e( 'Reply', 'tutor' ); ?></button>
+				<h6 class="tutor-discussion-card-title">This is the question posted by the student.</h6>
+				<div class="tutor-discussion-card-meta">
+					<button class="tutor-discussion-card-meta-reply-button"><?php esc_html_e( 'Reply', 'tutor' ); ?></button>
 					<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::THUMB, 20, 20 ); ?> 0</div>
 					<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::EYE_LINE, 20, 20 ); ?> 6</div>
 					<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 3</div>

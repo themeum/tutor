@@ -1,6 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
+import { isValid as isValidDate, parse } from 'date-fns';
 
-import { formServiceMeta } from '@Core/ts/services/Form';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { parseNumberOnly } from '@TutorShared/utils/util';
 
@@ -16,25 +17,28 @@ interface FieldConfig {
   rules?: ValidationRules;
   defaultValue?: unknown;
   ref?: HTMLInputElement;
+  type?: string;
+  isCheckboxArray?: boolean;
 }
 
-interface ValidationRules {
+export interface ValidationRules {
   required?: boolean | string;
   minLength?: number | { value: number; message: string };
   maxLength?: number | { value: number; message: string };
   min?: number | { value: number; message: string };
   max?: number | { value: number; message: string };
   pattern?: RegExp | { value: RegExp; message: string };
+  validTime?: boolean | string | { message: string };
   numberOnly: boolean | { allowNegative?: boolean; whole?: boolean };
   validate?: (value: unknown) => boolean | string | Promise<boolean | string>;
 }
 
-interface FieldError {
+export interface FieldError {
   type: string;
   message: string;
 }
 
-interface SetValueOptions {
+export interface SetValueOptions {
   shouldValidate?: boolean;
   shouldTouch?: boolean;
   shouldDirty?: boolean;
@@ -44,12 +48,13 @@ interface FocusOptions {
   shouldSelect?: boolean;
 }
 
-interface FormState {
+export interface FormState {
   values: Record<string, unknown>;
   errors: Record<string, FieldError>;
   touchedFields: Record<string, boolean>;
   dirtyFields: Record<string, boolean>;
   isValid: boolean;
+  isDirty: boolean;
   isSubmitting: boolean;
   isValidating: boolean;
 }
@@ -65,8 +70,8 @@ export interface FormControlMethods {
   setError(name: string, error: FieldError): void;
   reset(values?: Record<string, unknown>): void;
   handleSubmit(
-    onValid: (data: Record<string, unknown>) => void,
-    onInvalid?: (errors: Record<string, FieldError>) => void,
+    onValid: (data: Record<string, unknown>) => void | Promise<void>,
+    onInvalid?: (errors: Record<string, FieldError>) => void | Promise<void>,
   ): (event: Event) => void;
   getFormState(): FormState;
   isFieldVisible(element: HTMLElement): boolean;
@@ -119,6 +124,41 @@ const ValidationHelpers = {
     const message = typeof rule === 'object' && 'message' in rule ? rule.message : __('Invalid format', 'tutor');
 
     return !pattern.test(value) ? { type: 'pattern', message } : null;
+  },
+
+  isValidTimeValue(value: unknown): boolean {
+    if (typeof value !== 'string') {
+      return false;
+    }
+
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return true;
+    }
+
+    // AM/PM marker is required for this rule.
+    if (!/\b(?:AM|PM)\b/i.test(trimmed)) {
+      return false;
+    }
+
+    const parsed12Hour = parse(trimmed, 'hh:mm a', new Date());
+    return isValidDate(parsed12Hour);
+  },
+
+  validateValidTime(value: unknown, rule?: boolean | string | { message: string }): FieldError | null {
+    if (!rule) return null;
+
+    const stringValue = String(value ?? '').trim();
+    if (!stringValue) return null;
+
+    const message =
+      typeof rule === 'string'
+        ? rule
+        : typeof rule === 'object' && 'message' in rule
+          ? rule.message
+          : __('Invalid time entered!', 'tutor');
+
+    return this.isValidTimeValue(value) ? null : { type: 'validTime', message };
   },
 
   async validateCustom(
@@ -175,6 +215,12 @@ async function validateFieldValue(name: string, value: unknown, rules?: Validati
     if (error) return error;
   }
 
+  // Time validation
+  if (rules.validTime) {
+    const error = ValidationHelpers.validateValidTime(value, rules.validTime);
+    if (error) return error;
+  }
+
   // Custom validation
   if (rules.validate) {
     const error = await ValidationHelpers.validateCustom(value, rules.validate);
@@ -215,7 +261,11 @@ const DOMUtils = {
   },
 
   updateElementValue(element: HTMLElement, value: unknown): void {
-    if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+    if (
+      element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement ||
+      element instanceof HTMLSelectElement
+    ) {
       element.value = String(value ?? '');
     }
   },
@@ -314,25 +364,26 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     isValid: true,
     isSubmitting: false,
     isValidating: false,
+    isResetting: false,
     cleanup: undefined as (() => void) | undefined,
+    lastIsDirty: false,
 
     init(): void {
       this.isValid = true;
       this.isSubmitting = false;
       this.isValidating = false;
+      this.lastIsDirty = false;
 
       if (this.formId) {
-        const globalFormService = window.TutorCore?.form;
-        const service =
-          globalFormService && typeof globalFormService.register === 'function'
-            ? globalFormService
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (formServiceMeta.instance as any);
-
-        service.register(this.formId, this as unknown as FormControlMethods);
+        document.dispatchEvent(
+          new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_REGISTER, {
+            detail: { id: this.formId, instance: this as unknown as FormControlMethods },
+          }),
+        );
       }
 
       this.setupFormListeners();
+      this.dispatchStateChange(); // Initial dispatch
     },
 
     destroy(): void {
@@ -340,41 +391,171 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.clearAllState();
     },
 
+    dispatchStateChange(): void {
+      if (!this.formId) {
+        return;
+      }
+
+      const isDirty = Object.values(this.dirtyFields).some(Boolean);
+
+      if (isDirty === this.lastIsDirty) {
+        return;
+      }
+
+      this.lastIsDirty = isDirty;
+
+      document.dispatchEvent(
+        new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_STATE_CHANGE, {
+          detail: { id: this.formId, isDirty },
+        }),
+      );
+    },
+
     register(name: string, rules?: ValidationRules): Record<string, unknown> {
       const component = this as unknown as AlpineComponent;
+      const element = component.$el as HTMLInputElement;
+
+      const type = element?.type ?? 'text';
+      const isCheckbox = type === 'checkbox';
+      const isFile = type === 'file';
+      const existingField = this.fields[name];
+      const isSameElement = existingField?.ref === element;
+
+      // Treat as checkbox group only when a different checkbox with the same name already exists; avoids upgrading a single checkbox to an array during re-registration (e.g., after DOM reorder).
+      const isCheckboxArray = isCheckbox && existingField?.type === 'checkbox' && !isSameElement;
+
+      let defaultValue: unknown;
+
+      if (isCheckboxArray) {
+        // Ensure array type for checkbox groups and include any existing checked value
+        const currentValue = this.values[name];
+        const aggregatedValues: string[] = Array.isArray(currentValue) ? [...currentValue] : [];
+
+        const existingCheckbox = existingField?.ref;
+        const existingChecked =
+          existingCheckbox?.checked ??
+          (typeof existingField?.defaultValue === 'boolean' ? existingField.defaultValue : false);
+
+        if (existingChecked) {
+          const existingValue = existingCheckbox?.value ?? 'on';
+          if (!aggregatedValues.includes(existingValue)) {
+            aggregatedValues.push(existingValue);
+          }
+        }
+
+        if (element?.checked) {
+          const currentValueToAdd = element.value ?? 'on';
+          if (!aggregatedValues.includes(currentValueToAdd)) {
+            aggregatedValues.push(currentValueToAdd);
+          }
+        }
+
+        defaultValue = aggregatedValues;
+      } else if (isCheckbox) {
+        defaultValue = this.values[name] ?? element?.checked ?? false;
+      } else {
+        defaultValue = this.values[name] ?? '';
+      }
+
       this.fields[name] = {
         name,
         rules,
-        defaultValue: this.values[name] || '',
-        ref: component.$el as HTMLInputElement,
+        defaultValue,
+        ref: element,
+        type,
+        isCheckboxArray,
       };
 
-      if (!(name in this.values)) {
-        this.values[name] = this.fields[name].defaultValue;
+      // Force upgrade value to array if a collision is detected
+      if (isCheckboxArray && !Array.isArray(this.values[name])) {
+        this.values[name] = defaultValue;
+      } else {
+        this.values[name] ??= defaultValue;
       }
 
-      return {
+      const valueExpression = isCheckboxArray
+        ? '$event.target.value'
+        : isCheckbox
+          ? '$event.target.checked'
+          : '$event.target.value';
+
+      const bindings: Record<string, unknown> = {
         name,
-        'x-model': `values.${name}`,
-        '@input': `handleFieldInput('${name}', $event.target.value)`,
-        '@blur': `handleFieldBlur('${name}', $event.target.value)`,
         'x-ref': name,
-        ':aria-invalid': `errors.${name} ? 'true' : 'false'`,
+        ':aria-invalid': `!!errors["${name}"]`,
         ':class': `{
-          'tutor-input-error': errors.${name},
-          'tutor-input-touched': touchedFields.${name},
-          'tutor-input-dirty': dirtyFields.${name}
+          'tutor-input-error': errors["${name}"],
+          'tutor-input-touched': touchedFields["${name}"],
+          'tutor-input-dirty': dirtyFields["${name}"]
         }`,
       };
+
+      if (!isFile) {
+        bindings['x-model'] = `values["${name}"]`;
+
+        bindings['@input'] = `handleFieldInput('${name}', ${valueExpression}, $event.target)`;
+
+        bindings['@blur'] = `handleFieldBlur('${name}', ${valueExpression})`;
+      }
+
+      return bindings;
     },
 
-    handleFieldInput(name: string, value: unknown): void {
-      const isNumber = this.fields[name].rules?.numberOnly;
+    handleCheckboxArrayInput(name: string, element?: HTMLInputElement): void {
+      const field = this.fields[name];
+      const currentValue = this.values[name] as string[];
+      const valueArray = Array.isArray(currentValue) ? [...currentValue] : [];
+
+      // Use the passed element (from $event.target) or try to get from $refs
+      const checkbox = element || ((this as unknown as AlpineComponent).$refs[name] as HTMLInputElement);
+
+      if (!checkbox) return;
+
+      const checkboxValue = checkbox.value;
+      const isChecked = checkbox.checked;
+
+      let newValue: string[];
+      if (isChecked) {
+        newValue = valueArray.includes(checkboxValue) ? valueArray : [...valueArray, checkboxValue];
+      } else {
+        newValue = valueArray.filter((v) => v !== checkboxValue);
+      }
+
+      const defaultArray = Array.isArray(field.defaultValue) ? field.defaultValue : [];
+      // Sort to compare content regardless of order
+      const isActuallyChanged = JSON.stringify(newValue.sort()) !== JSON.stringify(defaultArray.sort());
+
+      this.values[name] = newValue;
+      this.dirtyFields[name] = isActuallyChanged;
+
+      const shouldValidate = this.config.mode === 'onChange' || this.touchedFields[name];
+
+      if (shouldValidate) {
+        this.validateField(name, newValue);
+      } else {
+        this.dispatchStateChange();
+      }
+    },
+
+    handleFieldInput(name: string, value: unknown, element?: HTMLInputElement): void {
+      const field = this.fields[name];
+
+      if (field?.isCheckboxArray) {
+        this.handleCheckboxArrayInput(name, element);
+        return;
+      }
+
+      // Original logic for non-checkbox-array fields
+      const isNumber = field?.rules?.numberOnly;
       const allowNegative = typeof isNumber === 'object' && isNumber.allowNegative;
       const whole = typeof isNumber === 'object' && isNumber.whole;
-      const parsedValue = parseNumberOnly(value as string, allowNegative, whole);
-      this.values[name] = isNumber ? parsedValue : value;
-      this.dirtyFields[name] = true;
+      const parsedValue = isNumber ? parseNumberOnly(value as string, allowNegative, whole) : value;
+
+      // Only mark as dirty if the value is different from the baseline
+      const isActuallyChanged = String(parsedValue) !== String(field?.defaultValue ?? '');
+
+      this.values[name] = parsedValue;
+      this.dirtyFields[name] = isActuallyChanged;
       this.updateFieldRef(name);
 
       if (isNumber) {
@@ -385,10 +566,12 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         }
       }
 
-      const shouldValidate = this.config.mode === 'onChange' || this.touchedFields[name];
+      const shouldValidate = this.config.mode === 'onChange';
 
       if (shouldValidate) {
-        this.validateField(name, value);
+        this.validateField(name, isNumber ? parsedValue : value);
+      } else {
+        this.dispatchStateChange();
       }
     },
 
@@ -396,10 +579,12 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.touchedFields[name] = true;
       this.updateFieldRef(name);
 
-      const shouldValidate = this.config.mode === 'onBlur' || this.touchedFields[name];
+      const shouldValidate = this.config.mode === 'onBlur' || this.config.mode === 'onChange';
 
       if (shouldValidate) {
         this.validateField(name, value);
+      } else {
+        this.dispatchStateChange();
       }
     },
 
@@ -413,15 +598,30 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.values[name] = value;
 
       if (shouldTouch) this.touchedFields[name] = true;
-      if (shouldDirty) this.dirtyFields[name] = true;
+      if (shouldDirty) {
+        const field = this.fields[name];
+        // Handle array comparison for checkbox arrays
+        if (Array.isArray(value) && Array.isArray(field?.defaultValue)) {
+          this.dirtyFields[name] = JSON.stringify(value.sort()) !== JSON.stringify(field.defaultValue.sort());
+        } else {
+          this.dirtyFields[name] = String(value) !== String(field?.defaultValue ?? '');
+        }
+      }
 
       const fieldElement = this.fields[name]?.ref;
-      if (fieldElement) {
-        DOMUtils.updateElementValue(fieldElement, value);
+      if (fieldElement && this.fields[name].type !== 'file') {
+        // For checkbox arrays, we need to update all checkboxes with this name
+        if (Array.isArray(value) && fieldElement.type === 'checkbox') {
+          this.syncCheckboxArray(name, value as string[]);
+        } else {
+          DOMUtils.updateElementValue(fieldElement, value);
+        }
       }
 
       if (shouldValidate) {
         this.validateField(name, value);
+      } else {
+        this.dispatchStateChange();
       }
     },
 
@@ -456,6 +656,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         return await this.validateAllFields();
       } finally {
         this.isValidating = false;
+        this.dispatchStateChange();
       }
     },
 
@@ -471,6 +672,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
       this.updateAriaInvalidState(name);
       this.updateFormValidState();
+      this.dispatchStateChange();
 
       return !error;
     },
@@ -516,19 +718,30 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       }
 
       this.updateFormValidState();
+      this.dispatchStateChange();
     },
 
     setError(name: string, error: FieldError): void {
       this.errors[name] = error;
       this.updateAriaInvalidState(name);
       this.updateFormValidState();
+      this.dispatchStateChange();
     },
 
     reset(values?: Record<string, unknown>): void {
+      this.isResetting = true;
+
       if (values) {
         // Update reactive object props instead of replacing it to maintain bindings
         Object.keys(this.values).forEach((key) => delete this.values[key]);
         Object.assign(this.values, values);
+
+        // Update baseline default values for all fields provided
+        Object.entries(values).forEach(([name, value]) => {
+          if (this.fields[name]) {
+            this.fields[name].defaultValue = value;
+          }
+        });
       } else {
         const defaultValues = Object.keys(this.fields).reduce(
           (acc, name) => {
@@ -548,6 +761,31 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.isValid = true;
       this.isSubmitting = false;
       this.isValidating = false;
+      this.dispatchStateChange();
+
+      // Dispatch custom event for components like WPEditor to listen to
+      if (this.formId) {
+        window.dispatchEvent(
+          new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_RESET, {
+            detail: {
+              formId: this.formId,
+              defaultValues:
+                values ||
+                Object.keys(this.fields).reduce(
+                  (acc, name) => {
+                    acc[name] = this.fields[name].defaultValue;
+                    return acc;
+                  },
+                  {} as Record<string, unknown>,
+                ),
+            },
+          }),
+        );
+      }
+
+      setTimeout(() => {
+        this.isResetting = false;
+      }, 0);
     },
 
     handleSubmit(
@@ -562,9 +800,9 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
           const isValid = await this.validateAllFields();
 
           if (isValid) {
-            onValid({ ...this.values });
+            await onValid({ ...this.values });
           } else {
-            onInvalid?.({ ...this.errors });
+            await onInvalid?.({ ...this.errors });
 
             if (this.config.shouldFocusError) {
               this.focusFirstError();
@@ -572,19 +810,19 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
           }
         } finally {
           this.isSubmitting = false;
+          this.dispatchStateChange();
         }
       };
     },
 
     getFormState(): FormState {
-      this.validateAllFields();
-
       return {
         values: { ...this.values },
         errors: { ...this.errors },
         touchedFields: { ...this.touchedFields },
         dirtyFields: { ...this.dirtyFields },
         isValid: this.isValid,
+        isDirty: Object.values(this.dirtyFields).some(Boolean),
         isSubmitting: this.isSubmitting,
         isValidating: this.isValidating,
       };
@@ -610,8 +848,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       if (!formElement) {
         this.cleanup = () => {
           if (this.formId) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (formServiceMeta.instance as any).unregister(this.formId);
+            document.dispatchEvent(
+              new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_UNREGISTER, {
+                detail: { id: this.formId },
+              }),
+            );
           }
         };
         return;
@@ -626,8 +867,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.cleanup = () => {
         formElement.removeEventListener('submit', handleFormSubmit);
         if (this.formId) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (formServiceMeta.instance as any).unregister(this.formId);
+          document.dispatchEvent(
+            new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_UNREGISTER, {
+              detail: { id: this.formId },
+            }),
+          );
         }
       };
     },
@@ -672,8 +916,26 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       for (const [name, value] of Object.entries(this.values)) {
         const fieldRef = this.fields[name]?.ref;
         if (fieldRef) {
-          DOMUtils.updateElementValue(fieldRef, value);
+          // Handle checkbox arrays specially
+          if (Array.isArray(value) && fieldRef.type === 'checkbox') {
+            this.syncCheckboxArray(name, value as string[]);
+          } else {
+            DOMUtils.updateElementValue(fieldRef, value);
+          }
         }
+      }
+    },
+
+    syncCheckboxArray(name: string, values: string[]): void {
+      const component = this as unknown as AlpineComponent;
+      const formElement = component.$el.closest('form') || component.$el.parentElement;
+      const checkboxes = formElement?.querySelectorAll(`input[type="checkbox"][name="${name}"]`);
+
+      if (checkboxes) {
+        checkboxes.forEach((checkbox) => {
+          const input = checkbox as HTMLInputElement;
+          input.checked = values.includes(input.value);
+        });
       }
     },
 

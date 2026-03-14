@@ -153,7 +153,7 @@ $attempts = array(
 												</div>
 											</div>
 											<div class="tutor-quiz-intro-mobile-result">
-												<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
+												<span class="tutor-badge tutor-badge-success tutor-badge-rounded">
 													<?php echo esc_html( $attempt['result'] ); ?>
 												</span>
 											</div>
@@ -166,7 +166,7 @@ $attempts = array(
 										</div>
 									</td>
 									<td class="tutor-quiz-intro-attempts-cell tutor-quiz-intro-attempts-result-col">
-										<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
+										<span class="tutor-badge tutor-badge-success tutor-badge-rounded">
 											<?php echo esc_html( $attempt['result'] ); ?>
 										</span>
 									</td>

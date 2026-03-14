@@ -12,7 +12,7 @@ use TUTOR\Icon;
 ?>
 <section class="tutor-profile-notification">
 	<h5 class="tutor-mb-4 tutor-mt-4 tutor-md-mt-1 tutor-h5 tutor-sm-hidden">Notifications</h5>
-	<div class="tutor-profile-notification-card tutor-card--rounded-2xl tutor-mt-5" x-data="{ expanded: false }">
+	<div class="tutor-profile-notification-card tutor-card-rounded-2xl tutor-mt-5" x-data="{ expanded: false }">
 		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-gap-8 tutor-p-6">
 			<div class="tutor-flex tutor-items-center tutor-gap-5">
 				<?php tutor_utils()->render_svg_icon( Icon::NOTIFICATION_2, 20, 20 ); ?>
@@ -52,7 +52,7 @@ use TUTOR\Icon;
 			</div>
 		</div>
 	</div>
-	<div class="tutor-profile-notification-card tutor-card--rounded-2xl tutor-mt-5" x-data="{ expanded: false }">
+	<div class="tutor-profile-notification-card tutor-card-rounded-2xl tutor-mt-5" x-data="{ expanded: false }">
 		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-gap-8 tutor-p-6">
 			<div class="tutor-flex tutor-items-center tutor-gap-5">
 				<?php tutor_utils()->render_svg_icon( Icon::NOTIFICATION_2, 20, 20 ); ?>

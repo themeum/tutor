@@ -13,21 +13,21 @@ use TUTOR\Icon;
 $is_unread = $is_unread ?? false;
 
 ?>
-<div class="tutor-qna-card <?php echo esc_attr( $is_unread ? 'unread' : '' ); ?>">
+<div class="tutor-discussion-card <?php echo esc_attr( $is_unread ? 'unread' : '' ); ?>">
 	<div class="tutor-avatar tutor-avatar-32">
 		<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar" class="tutor-avatar-image">
 	</div>
-	<div class="tutor-qna-card-content">
-		<div class="tutor-qna-card-top">
-			<div class="tutor-qna-card-author">Annathoms</div>
+	<div class="tutor-discussion-card-content">
+		<div class="tutor-discussion-card-top">
+			<div class="tutor-discussion-card-author">Annathoms</div>
 			<div>
 				<span class="tutor-text-subdued">asked in</span> 
 				<div class="tutor-preview-trigger">Camera Skills & Photo Theory</div>
 			</div>
 		</div>
-		<h6 class="tutor-qna-card-title">This is the question posted by the student.</h6>
-		<div class="tutor-qna-card-meta">
-			<button class="tutor-qna-card-meta-reply-button"><?php esc_html_e( 'Reply', 'tutor' ); ?></button>
+		<h6 class="tutor-discussion-card-title">This is the question posted by the student.</h6>
+		<div class="tutor-discussion-card-meta">
+			<button class="tutor-discussion-card-meta-reply-button"><?php esc_html_e( 'Reply', 'tutor' ); ?></button>
 			<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::THUMB, 20, 20 ); ?> 0</div>
 			<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::EYE_LINE, 20, 20 ); ?> 6</div>
 			<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 3</div>
@@ -39,7 +39,7 @@ $is_unread = $is_unread ?? false;
 			</div>
 		</div>
 	</div>
-	<div class="tutor-qna-card-actions">
+	<div class="tutor-discussion-card-actions">
 		<button class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
 			<?php esc_html_e( 'Reply', 'tutor' ); ?>
 		</button>
@@ -47,7 +47,7 @@ $is_unread = $is_unread ?? false;
 			<button 
 				x-ref="trigger" 
 				@click="toggle()" 
-				class="tutor-btn tutor-btn-text tutor-btn-x-small tutor-btn-icon tutor-qna-card-actions-more">
+				class="tutor-btn tutor-btn-text tutor-btn-x-small tutor-btn-icon tutor-discussion-card-actions-more">
 				<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES ); ?>
 			</button>
 

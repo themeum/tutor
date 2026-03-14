@@ -9,6 +9,8 @@
  * @since 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $uid  = get_current_user_id();
 $user = get_userdata( $uid );
 

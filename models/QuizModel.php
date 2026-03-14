@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Quiz;
 
@@ -51,6 +52,96 @@ class QuizModel {
 	 */
 	public static function get_manual_review_types() {
 		return array( 'open_ended', 'short_answer' );
+	}
+
+
+	/**
+	 * Format the quiz attempts result obtained from query.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $quiz_attempts the quiz_attempts result obtained from query.
+	 * @param string $filter filter quiz attempt based on result.
+	 *
+	 * @return array
+	 */
+	public static function format_quiz_attempts( array $quiz_attempts, string $filter = '' ): array {
+		$formatted_attempts = array();
+
+		if ( ! count( $quiz_attempts ) ) {
+			return $quiz_attempts;
+		}
+
+		foreach ( $quiz_attempts as $quiz_attempt ) {
+			$quiz_id   = $quiz_attempt->quiz_id ?? 0;
+			$course_id = $quiz_attempt->course_id ?? 0;
+
+			$course_title = $quiz_attempt->course_title ?? '';
+			$quiz_title   = $quiz_attempt->post_title ?? '';
+
+			$quiz_attempt_result = $quiz_attempt->result ?? 'fail';
+			$result_types        = array( self::RESULT_FAIL, self::RESULT_PASS, self::RESULT_PENDING );
+
+			if ( ! empty( $filter ) && in_array( $filter, $result_types, true ) && $quiz_attempt_result !== $filter ) {
+				continue;
+			}
+
+			if ( ! isset( $formatted_attempts[ $quiz_attempt->quiz_id ] ) ) {
+				$formatted_attempts[ $quiz_attempt->quiz_id ] = array(
+					'quiz_title'   => $quiz_title,
+					'course_title' => $course_title,
+					'course_id'    => $course_id,
+				);
+			}
+
+			$start_time = DateTimeHelper::get_gmt_to_user_timezone_date( $quiz_attempt->attempt_started_at ?? '', 'D j M Y, g:i A' );
+
+			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ) - strtotime( $quiz_attempt->attempt_started_at );
+			$attempt_time = tutor_utils()->playtime_string( $attempt_time );
+
+			$earned_percent = self::calculate_attempt_earned_percentage( $quiz_attempt );
+
+			$correct_answers   = 0;
+			$incorrect_answers = 0;
+
+			$answers = self::get_quiz_answers_by_attempt_id( $quiz_attempt->attempt_id );
+
+			if ( tutor_utils()->count( $answers ) ) {
+				foreach ( $answers as $answer ) {
+					$is_correct = (int) $answer->is_correct ?? 0;
+					if ( $is_correct ) {
+						++$correct_answers;
+					} else {
+						++$incorrect_answers;
+					}
+				}
+			}
+
+			$formatted_attempt = array(
+				'attempt_id'        => $quiz_attempt->attempt_id ?? 0,
+				'result'            => $quiz_attempt_result,
+				'marks_percent'     => $earned_percent ?? 0,
+				'correct_answers'   => $correct_answers,
+				'incorrect_answers' => $incorrect_answers,
+				'time_taken'        => $attempt_time ?? '',
+				'date'              => $start_time ?? '',
+				'student'           => $quiz_attempt->display_name ?? '',
+				'attempt_info'      => maybe_unserialize( $quiz_attempt->attempt_info ) ?? array(),
+			);
+
+			if ( ! isset( $formatted_attempts[ $quiz_id ]['attempts'] ) ) {
+				$formatted_attempts[ $quiz_id ]['attempts'] = array(
+					$formatted_attempt,
+				);
+			} else {
+				array_push(
+					$formatted_attempts[ $quiz_id ]['attempts'],
+					$formatted_attempt
+				);
+			}
+		}
+
+		return $formatted_attempts;
 	}
 
 	/**
@@ -395,8 +486,8 @@ class QuizModel {
 		$date_filter = '' !== $date_filter ? $wpdb->prepare( ' AND  DATE(quiz_attempts.attempt_started_at) = %s ', $date_filter ) : '';
 
 		$result_clause  = '';
-		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name';
-		$limit_offset   = $count_only ? '' : $wpdb->prepare( ' LIMIT %d OFFSET %d', $limit, $start );
+		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name, course.post_title as course_title';
+		$limit_offset   = $count_only || ( 0 === $limit && 0 === $start ) ? '' : $wpdb->prepare( ' LIMIT %d OFFSET %d', $limit, $start );
 
 		// Get attempts by instructor ID.
 		$instructor_clause = '';
@@ -455,21 +546,45 @@ class QuizModel {
 	 * @return void
 	 */
 	public static function delete_quiz_attempt( $attempt_ids ) {
-		global $wpdb;
-
 		// Singlular to array.
 		! is_array( $attempt_ids ) ? $attempt_ids = array( $attempt_ids ) : 0;
+		$attempt_ids                              = array_map( 'absint', array_filter( $attempt_ids ) );
 
 		if ( count( $attempt_ids ) ) {
-			$attempt_ids = implode( ',', $attempt_ids );
+			// Collect file paths from all question types that store files (e.g. draw_image). Files deleted after DB for safety.
+			$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
+			$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
 
-			//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			// Deleting attempt (comment), child attempt and attempt meta (comment meta).
-			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
-			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
-			//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			// Delete attempt answers (child) then attempts (parent); use QueryHelper for bulk delete.
+			QueryHelper::bulk_delete(
+				QueryHelper::prepare_table_name( 'tutor_quiz_attempt_answers' ),
+				array( 'quiz_attempt_id' => $attempt_ids )
+			);
+			QueryHelper::bulk_delete(
+				QueryHelper::prepare_table_name( 'tutor_quiz_attempts' ),
+				array( 'attempt_id' => $attempt_ids )
+			);
 
-			do_action( 'tutor_quiz/attempt_deleted', $attempt_ids );
+			self::delete_files_by_paths( $attempt_file_paths );
+
+			do_action( 'tutor_quiz/attempt_deleted', implode( ',', $attempt_ids ) );
+		}
+	}
+
+	/**
+	 * Delete files by absolute path (e.g. after DB rows have been removed).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string[] $paths Array of absolute file paths.
+	 *
+	 * @return void
+	 */
+	public static function delete_files_by_paths( array $paths ) {
+		foreach ( $paths as $path ) {
+			if ( is_string( $path ) && '' !== $path && is_file( $path ) && is_readable( $path ) ) {
+				wp_delete_file( $path );
+			}
 		}
 	}
 
@@ -516,8 +631,8 @@ class QuizModel {
 		$date_filter   = '' != $date_filter ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
 		$user_filter   = $user_id ? ' AND user_id=\'' . esc_sql( $user_id ) . '\' ' : '';
 
-		$limit_offset = $count_only ? '' : " LIMIT 	{$start}, {$limit} ";
-		$select_col   = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, users.*, quiz.* ';
+		$limit_offset = $count_only || ( 0 === $limit && 0 === $start ) ? '' : " LIMIT 	{$start}, {$limit} ";
+		$select_col   = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, quiz.* ';
 
 		$attempt_type = $all_attempt ? '' : " AND quiz_attempts.attempt_status != 'attempt_started' ";
 
@@ -638,6 +753,45 @@ class QuizModel {
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Get normalized attempt-answer status.
+	 *
+	 * Status rules follow legacy attempt-details logic:
+	 * - correct: is_correct is truthy.
+	 * - pending: is_correct is null for manually reviewed question types.
+	 * - wrong: all other cases.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $attempt_answer Attempt answer object.
+	 *
+	 * @return string One of: correct, pending, wrong.
+	 */
+	public static function get_attempt_answer_status( $attempt_answer ): string {
+		$question_type = (string) ( $attempt_answer->question_type ?? '' );
+
+		if ( 'image_matching' === $question_type ) {
+			$question_type = 'matching';
+		}
+
+		if ( 'single_choice' === $question_type ) {
+			$question_type = 'multiple_choice';
+		}
+
+		if ( (bool) ( $attempt_answer->is_correct ?? false ) ) {
+			return 'correct';
+		}
+
+		if (
+			null === ( $attempt_answer->is_correct ?? null ) &&
+			in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true )
+		) {
+			return 'pending';
+		}
+
+		return 'incorrect';
 	}
 
 	/**
@@ -1041,8 +1195,38 @@ class QuizModel {
 				$answer->image_url = wp_get_attachment_url( $answer->image_id );
 			}
 		}
-
 		return $answers;
+	}
+
+	/**
+	 * Get full image URL for a quiz answer.
+	 *
+	 * Uses attachment ID if present; falls back to stored image URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $answer Quiz answer object.
+	 * @param string $size   Image size to retrieve. Default full.
+	 *
+	 * @return string
+	 */
+	public static function get_answer_image_url( $answer, $size = 'full' ) {
+		if ( empty( $answer ) ) {
+			return '';
+		}
+
+		if ( ! empty( $answer->image_id ) ) {
+			$url = wp_get_attachment_image_url( $answer->image_id, $size );
+			if ( $url ) {
+				return $url;
+			}
+		}
+
+		if ( ! empty( $answer->image_url ) ) {
+			return $answer->image_url;
+		}
+
+		return '';
 	}
 
 	/**

@@ -43,7 +43,6 @@ use TUTOR\Input;
 		'learning-area'      => 'Learning Area',
 		'user-profile'       => 'User Profile',
 		'certificates'       => 'Certificates',
-		'reviews'            => 'Reviews',
 		'profile-settings'   => 'Account Settings',
 		'billing'            => 'Billing',
 		'quiz'               => 'Quiz',
@@ -71,10 +70,12 @@ use TUTOR\Input;
 		<?php else : ?>
 		<section>
 			<?php require 'components/table.php'; ?>
+			<?php require 'components/alert.php'; ?>
 			<?php require 'components/avatar.php'; ?>
 			<?php require 'components/pagination.php'; ?>
 			<?php require 'components/button.php'; ?>
 			<?php require 'components/popover.php'; ?>
+			<?php require 'components/tooltip.php'; ?>
 			<?php require 'components/file-uploader.php'; ?>
 			<?php require 'components/preview-trigger.php'; ?>
 			<?php require 'components/tabs.php'; ?>
@@ -90,7 +91,9 @@ use TUTOR\Input;
 			<?php require 'components/modal.php'; ?>
 			<?php require 'components/input.php'; ?>
 			<?php require 'components/form.php'; ?>
+			<?php require 'components/wp-editor.php'; ?>
 			<?php require 'components/select.php'; ?>
+			<?php require 'components/time-input.php'; ?>
 			<?php require 'components/attachment-card.php'; ?>
 			<?php require 'components/query.php'; ?>
 			<?php require 'components/toast.php'; ?>

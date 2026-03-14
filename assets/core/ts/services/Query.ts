@@ -110,6 +110,61 @@ interface MutationOptions<TData = unknown, TVariables = unknown, TError = Error>
  */
 export class QueryService {
   private queryCache = new QueryCache();
+  private queryInstances = new Map<string, Set<QueryState<unknown, unknown>>>();
+
+  private generateKey(queryKey: QueryKey): string {
+    if (typeof queryKey === 'string') return queryKey;
+    return JSON.stringify(queryKey);
+  }
+
+  private registerQueryInstance(queryKey: QueryKey, state: QueryState<unknown, unknown>): void {
+    const key = this.generateKey(queryKey);
+
+    if (!this.queryInstances.has(key)) {
+      this.queryInstances.set(key, new Set());
+    }
+
+    this.queryInstances.get(key)?.add(state);
+  }
+
+  private async refetchQueryInstances(queryKey: QueryKey): Promise<void> {
+    const key = this.generateKey(queryKey);
+    const instances = this.queryInstances.get(key);
+
+    if (!instances?.size) {
+      return;
+    }
+
+    await Promise.all(
+      Array.from(instances).map((instance) => {
+        if (!instance || instance.isFetching) {
+          return Promise.resolve();
+        }
+
+        return instance.refetch();
+      }),
+    );
+  }
+
+  private async refetchQueryInstancesByPattern(pattern: string): Promise<void> {
+    const entries = Array.from(this.queryInstances.entries()).filter(([key]) => key.includes(pattern));
+
+    if (!entries.length) {
+      return;
+    }
+
+    await Promise.all(
+      entries.flatMap(([, instances]) =>
+        Array.from(instances).map((instance) => {
+          if (!instance || instance.isFetching) {
+            return Promise.resolve();
+          }
+
+          return instance.refetch();
+        }),
+      ),
+    );
+  }
 
   /**
    * Create a query with automatic caching and refetching capabilities
@@ -184,6 +239,7 @@ export class QueryService {
 
     // Auto-initialize
     state.init();
+    this.registerQueryInstance(queryKey, state as unknown as QueryState<unknown, unknown>);
 
     return state;
   }
@@ -232,21 +288,16 @@ export class QueryService {
 
           return result;
         } catch (err) {
-          const error = {
-            message: (err as Error).message || 'Mutation failed',
-            code: (err as { code?: string }).code,
-          } as TError;
-
-          (this as unknown as MutationState<TData, TVariables, TError>).error = error;
+          (this as unknown as MutationState<TData, TVariables, TError>).error = err as TError;
           (this as unknown as MutationState<TData, TVariables, TError>).isError = true;
 
           if (options.onError) {
-            options.onError(error, variables);
+            options.onError(err as TError, variables);
           }
 
           // onSettled callback - always called
           if (options.onSettled) {
-            options.onSettled(null, error, variables);
+            options.onSettled(null, err as TError, variables);
           }
 
           throw err;
@@ -277,6 +328,7 @@ export class QueryService {
    */
   invalidateQuery(queryKey: QueryKey): void {
     this.queryCache.invalidate(queryKey);
+    void this.refetchQueryInstances(queryKey);
   }
 
   /**
@@ -285,6 +337,7 @@ export class QueryService {
    */
   invalidateQueries(pattern: string): void {
     this.queryCache.invalidatePattern(pattern);
+    void this.refetchQueryInstancesByPattern(pattern);
   }
 
   /**

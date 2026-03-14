@@ -13,7 +13,7 @@
   right: 0;
   z-index: $tutor-z-footer;
 
-  @include tutor-breakpoint-up(md) {
+  @include tutor-breakpoint-up(sm) {
     display: none;
   }
 
@@ -23,22 +23,30 @@
     margin: 0;
     padding: 0;
 
-    > li {
+    >li {
       @include tutor-flex(column, center);
       min-width: 44px;
       margin: 0;
       padding: 0;
 
-      > a,
-      > button {
+      >a,
+      >button {
         @include tutor-button-reset();
         @include tutor-typography(tiny, medium);
         @include tutor-flex(column, center);
         gap: $tutor-spacing-2;
 
-        &.active {
+        &.active,
+        &.active span {
           color: $tutor-text-brand;
         }
+      }
+
+      img {
+        width: 16px;
+        height: 16px;
+        object-fit: cover;
+        border-radius: $tutor-radius-full;
       }
     }
   }
@@ -66,7 +74,8 @@
           outline: none;
           box-shadow: none;
 
-          &.active {
+          &.active,
+          &.active span {
             color: $tutor-text-brand;
           }
         }

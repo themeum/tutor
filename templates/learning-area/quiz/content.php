@@ -11,74 +11,56 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Icon;
+use TUTOR\Input;
+use TUTOR\Quiz;
+
+global $tutor_current_post, $tutor_course_id;
 
 $quiz = $quiz ?? null;
 if ( ! $quiz || ! is_a( $quiz, 'WP_Post' ) ) {
 	return;
 }
 
-$tabs_data = array(
-	array(
-		'id'    => 'overview',
-		'label' => 'Overview',
-		'icon'  => Icon::COURSES,
-	),
-	array(
-		'id'    => 'notes',
-		'label' => 'Notes',
-		'icon'  => Icon::NOTES,
-	),
-	array(
-		'id'    => 'comments',
-		'label' => 'Comments',
-		'icon'  => Icon::COMMENTS,
-	),
-);
+$quiz_id            = $quiz->ID;
+$total_questions    = (int) tutor_utils()->total_questions_for_student_by_quiz( $quiz_id );
+$quiz_options       = get_post_meta( $quiz_id, 'tutor_quiz_option', true );
+$total_marks        = Quiz::get_quiz_total_marks( $quiz_id );
+$passing_grade      = (int) $quiz_options['passing_grade'] ?? 0;
+$quiz_time          = $quiz_options['time_limit'] ?? null;
+$has_time_limit     = is_array( $quiz_time ) && ! empty( $quiz_time['time_value'] ) && (int) $quiz_time['time_value'] > 0;
+$quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_time['time_type'] : null;
 
 ?>
-<div class="tutor-pt-9">
-	<div 
-		x-data='tutorTabs({
-			tabs: <?php echo wp_json_encode( $tabs_data ); ?>,
-			defaultTab: "overview",
-			urlParams: {
-				paramName: "tab",
-			}
-		})'
-		class="tutor-surface-l1 tutor-border tutor-rounded-lg"
-	>
-		<div x-ref="tablist" class="tutor-tabs-nav tutor-p-6 tutor-border-b" role="tablist" aria-orientation="horizontal">
-			<template x-for="tab in tabs" :key="tab.id">
-				<button
-					type="button" 
-					role="tab" 
-					:class='getTabClass(tab)' 
-					x-bind:aria-selected="isActive(tab.id)" 
-					:disabled="tab.disabled ? true : false" 
-					@click="selectTab(tab.id)"
-					>
-					<span x-data="TutorCore.icon({ name: tab.icon, width: 24, height: 24})"></span>
-					<span x-text="tab.label"></span>
-				</button>
-			</template>
+<div class="tutor-quiz-intro">
+	<?php ob_start(); ?>
+	<div class="tutor-card">
+		<!-- Quiz Icon -->
+		<div class="tutor-quiz-intro-icon tutor-mb-8">
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/quiz-intro.svg' ); ?>" alt="<?php esc_attr_e( 'Quiz', 'tutor' ); ?>">
 		</div>
 
-		<div class="tutor-tabs-content tutor-p-6">
-			<div x-show="activeTab === 'overview'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<h4 class="tutor-heading-4 tutor-mb-4">
-					<?php echo esc_html( $quiz->post_title ); ?>
-				</h4>
-				<?php echo wp_kses_post( $quiz->post_content ); ?>
-			</div>
-			<div x-show="activeTab === 'notes'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<?php esc_html_e( 'Notes', 'tutor' ); ?>
-			</div>
-			<div x-show="activeTab === 'comments'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<?php esc_html_e( 'Comments', 'tutor' ); ?>
-			</div>
+		<!-- Quiz Title -->
+		<h1 class="tutor-quiz-intro-title tutor-mb-5">
+			<?php echo esc_html( $quiz->post_title ); ?>		
+		</h1>
+
+		<!-- Quiz Description -->
+		<p class="tutor-quiz-intro-description tutor-mb-8">
+			<?php echo wp_kses_post( $quiz->post_content ); ?>	
+		</p>
+
+		<!-- Quiz Parameters Table -->
+		<div class="tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-quiz-intro-params tutor-mb-8">
+			<?php
+				Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade );
+			?>
 		</div>
+
+		<!-- Past Attempts Section -->
+		<?php Quiz::render_quiz_attempts( $quiz_id ); ?>
+		
+		<!-- Action Buttons -->
+		<?php Quiz::render_quiz_actions( $quiz_id ); ?>
 	</div>
-
-	<?php tutor_load_template( 'learning-area.components.footer' ); ?>
+	<?php echo apply_filters( 'tutor_learning_area_content', ob_get_clean() ); //phpcs:ignore --already escaped ?>
 </div>

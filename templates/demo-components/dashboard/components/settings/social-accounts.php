@@ -48,7 +48,8 @@ $social_fields = array(
 <section class="tutor-social-accounts">
 	<div class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Social Profile Link', 'tutor' ); ?></div>
 	<form
-		x-data="tutorForm({ id: 'social-profile-form', mode: 'onChange', shouldFocusError: true })"
+		id="social-accounts-form"
+		x-data="tutorForm({ id: 'social-accounts-form', mode: 'onChange', shouldFocusError: true })"
 		x-bind="getFormBindings()"
 		@submit="handleSubmit(
 			(data) => { 

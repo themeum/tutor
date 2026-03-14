@@ -14,7 +14,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use TUTOR\User;
 use Tutor\Cache\QuizAttempts;
+use Tutor\Components\Badge;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Positions;
+use Tutor\Components\Popover;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Models\QuizModel;
 
 /**
@@ -223,6 +230,59 @@ class Quiz_Attempts_List {
 	}
 
 	/**
+	 * Obtain nav data for quiz attempts.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array   $quiz_attempts the quiz attempts list.
+	 * @param integer $quiz_attempts_count the quiz attempts count.
+	 * @param string  $url the page url.
+	 * @param string  $result_filter filter to filter out results.
+	 *
+	 * @return array
+	 */
+	public function get_quiz_attempts_nav_data( array $quiz_attempts = array(), int $quiz_attempts_count = 0, string $url = '', string $result_filter = '' ): array {
+		$all_attempts     = count( QuizModel::format_quiz_attempts( $quiz_attempts ) );
+		$pending_attempts = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_PENDING ) );
+		$passed_attempts  = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_PASS ) );
+		$failed_attempts  = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_FAIL ) );
+
+		$nav_links = array(
+			'type'    => 'dropdown',
+			'active'  => true,
+			'count'   => $quiz_attempts_count,
+			'options' => array(
+				array(
+					'label'  => __( 'All', 'tutor' ),
+					'count'  => $all_attempts,
+					'url'    => remove_query_arg( 'result' ),
+					'active' => '' === $result_filter,
+				),
+				array(
+					'label'  => __( 'Pending', 'tutor' ),
+					'url'    => add_query_arg( array( 'result' => QuizModel::RESULT_PENDING ), $url ),
+					'count'  => $pending_attempts,
+					'active' => QuizModel::RESULT_PENDING === $result_filter,
+				),
+				array(
+					'label'  => __( 'Failed', 'tutor' ),
+					'url'    => add_query_arg( array( 'result' => QuizModel::RESULT_FAIL ), $url ),
+					'count'  => $failed_attempts,
+					'active' => QuizModel::RESULT_FAIL === $result_filter,
+				),
+				array(
+					'label'  => __( 'Passed', 'tutor' ),
+					'url'    => add_query_arg( array( 'result' => QuizModel::RESULT_PASS ), $url ),
+					'count'  => $passed_attempts,
+					'active' => QuizModel::RESULT_PASS === $result_filter,
+				),
+			),
+		);
+
+		return $nav_links;
+	}
+
+	/**
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @since 2.0.0
@@ -258,7 +318,7 @@ class Quiz_Attempts_List {
 		$bulk_ids    = Input::post( 'bulk-ids', '' );
 		$bulk_ids    = explode( ',', $bulk_ids );
 		$bulk_ids    = array_map(
-			function( $id ) {
+			function ( $id ) {
 				return (int) trim( $id );
 			},
 			$bulk_ids
@@ -296,5 +356,305 @@ class Quiz_Attempts_List {
 			'delete' => 'Delete',
 		);
 		return $actions;
+	}
+
+	/**
+	 * Check if attempt details are hidden.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_attempt_details_hidden(): bool {
+		$is_student_view        = User::is_student_view();
+		$is_quiz_details_hidden = $is_student_view && tutor_utils()->get_option( 'hide_quiz_details' );
+		return $is_quiz_details_hidden;
+	}
+
+	/**
+	 * Check whether to show instructor or student quiz attempt.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $course_id the course id.
+	 *
+	 * @return bool
+	 */
+	private function check_is_student( $course_id = 0 ): bool {
+		$is_student_view = User::VIEW_AS_STUDENT === User::get_current_view_mode();
+		$is_student      = tutor_utils()->is_enrolled( $course_id, get_current_user_id(), false ) && $is_student_view;
+
+		return $is_student;
+	}
+
+	/**
+	 * Get attempt row template for quiz attempts.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $course_id the course id.
+	 *
+	 * @return string
+	 */
+	public function get_quiz_attempt_row_template( $course_id = 0 ): string {
+		$template = $this->check_is_student( $course_id ) ? 'shared.components.student-quiz-attempt-row'
+		: 'dashboard.components.quiz-attempt-row';
+		return $template;
+	}
+
+	/**
+	 * Get retry button attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $quiz_id the quiz id.
+	 *
+	 * @return string
+	 */
+	private function get_retry_attribute( $quiz_id = 0 ): string {
+		$retry_attr = sprintf(
+			'TutorCore.modal.showModal("tutor-retry-modal", { data: %s });',
+			wp_json_encode(
+				array(
+					'quizID'      => $quiz_id,
+					'redirectURL' => get_post_permalink( $quiz_id ),
+				)
+			)
+		);
+
+		return $retry_attr;
+	}
+
+	/**
+	 * Get the quiz attempt review url.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attempt Quiz attempt.
+	 * @param array $query_param Query param to add with the URL.
+	 *
+	 * @return string
+	 */
+	public function get_review_url( $attempt = array(), $query_param = array() ): string {
+		$default = array( 'attempt_id' => $attempt['attempt_id'] ?? 0 );
+		$params  = wp_parse_args( $query_param, $default );
+
+		return UrlHelper::add_query_params( get_pagenum_link(), $params );
+	}
+
+	/**
+	 * Render student quiz attempt retry button.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $course_id the course id.
+	 * @param integer $quiz_id the quiz id.
+	 * @param array   $attempt the quiz attempt.
+	 * @param integer $attempts_count the quiz attempt count.
+	 *
+	 * @return void
+	 */
+	public function render_retry_button( $course_id = 0, $quiz_id = 0, $attempt = array(), $attempts_count = 0 ) {
+		if ( $this->check_is_student( $course_id ) && $this->should_retry( $attempt, $attempts_count ) ) {
+			Button::make()
+				->label( __( 'Retry', 'tutor' ) )
+				->icon( Icon::RELOAD )
+				->size( Size::MEDIUM )
+				->variant( 'primary' )
+				->attr( '@click', $this->get_retry_attribute( $quiz_id ) )
+				->render();
+		}
+	}
+
+	/**
+	 * Whether student can retry attempt or not.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array   $attempt the quiz attempt.
+	 * @param integer $attempts_count the quiz attempt count.
+	 *
+	 * @return boolean
+	 */
+	private function should_retry( $attempt = array(), $attempts_count = 0 ): bool {
+		$attempt_info = $attempt['attempt_info'] ?? array();
+
+		$should_retry = false;
+
+		if ( tutor_utils()->count( $attempt_info ) ) {
+			$allowed_attempts = (int) $attempt_info['attempts_allowed'] ?? 0;
+			$feedback_mode    = $attempt_info['feedback_mode'] ?? '';
+			$should_retry     = 'retry' === $feedback_mode && $attempts_count < $allowed_attempts;
+		}
+
+		return $should_retry;
+	}
+
+	/**
+	 * Get kebab button for quiz attempt popover.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	private function get_kebab_button() {
+		$kebab_button = Button::make()
+				->icon( Icon::THREE_DOTS_VERTICAL )
+				->attr( 'x-ref', 'trigger' )
+				->attr( '@click', 'toggle()' )
+				->attr( 'class', 'tutor-quiz-item-result-more' )
+				->variant( 'secondary' )
+				->size( Size::X_SMALL )
+				->get();
+		return $kebab_button;
+	}
+
+	/**
+	 * Get quiz detail item for quiz attempt popover.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attempt the quiz attempt.
+	 *
+	 * @return array
+	 */
+	private function get_details_item( $attempt = array() ) {
+		$query_param = array( 'action' => 'view_details' );
+
+		$url = $this->get_review_url( $attempt, $query_param );
+
+		$details_item = array(
+			'tag'     => 'a',
+			'content' => __( 'Details', 'tutor' ),
+			'icon'    => tutor_utils()->get_svg_icon( Icon::RESOURCES, 20, 20 ),
+			'attr'    => array( 'href' => $url ),
+		);
+		return $details_item;
+	}
+
+	/**
+	 * Render student quiz attempt popover.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array   $attempt the quiz attempt.
+	 * @param integer $attempts_count the quiz attempt count.
+	 * @param integer $quiz_id the quiz id.
+	 *
+	 * @return void
+	 */
+	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0 ) {
+		$is_quiz_details_hidden = $this->is_attempt_details_hidden();
+
+		// Only add retry option to the first attempt.
+		if ( ! $this->should_retry( $attempt, $attempts_count ) || ! $attempts_count ) {
+
+			if ( $is_quiz_details_hidden ) {
+				return;
+			}
+
+			Popover::make()
+			->trigger( $this->get_kebab_button() )
+			->placement( 'bottom' )
+			->menu_item( $this->get_details_item( $attempt ) )
+			->menu_min_width( '110px' )
+			->render();
+		} else {
+			Popover::make()
+			->trigger( $this->get_kebab_button() )
+			->placement( 'bottom' )
+			->menu_min_width( '110px' )
+			->menu_item(
+				array(
+					'tag'     => 'button',
+					'content' => __( 'Retry', 'tutor' ),
+					'icon'    => tutor_utils()->get_svg_icon( Icon::RELOAD, 20, 20 ),
+					'attr'    => array(
+						'@click' => $this->get_retry_attribute( $quiz_id ),
+					),
+				)
+			)
+			->menu_item( $this->get_details_item( $attempt ) )
+			->render();
+		}
+	}
+
+	/**
+	 * Render List Badge for quiz attempts.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attempt the quiz attempt.
+	 *
+	 * @return void
+	 */
+	public function render_quiz_attempt_list_badge( $attempt = array() ) {
+		if ( QuizModel::RESULT_PASS === $attempt['result'] ) {
+			Badge::make()->label( __( 'Passed', 'tutor' ) )->variant( Badge::SUCCESS )->rounded()->render();
+		} elseif ( QuizModel::RESULT_PENDING === $attempt['result'] ) {
+			Badge::make()->label( __( 'Pending', 'tutor' ) )->variant( Badge::WARNING )->rounded()->render();
+		} else {
+			Badge::make()->label( 'Failed' )->variant( Badge::ERROR )->rounded()->render();
+		}
+	}
+
+	/**
+	 * Render quiz attempt mobile view buttons.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attempt the quiz attempt.
+	 *
+	 * @return void
+	 */
+	public function render_quiz_attempt_buttons( $attempt = array() ) {
+		Button::make()
+			->label( __( 'Details', 'tutor' ) )
+			->icon( Icon::RESOURCES, 'left', 20, 20 )
+			->size( Size::MEDIUM )
+			->tag( 'a' )
+			->attr( 'href', $this->get_review_url( $attempt ) )
+			->variant( 'primary' )
+			->render();
+
+		Button::make()
+			->label( __( 'Delete', 'tutor' ) )
+			->icon( Icon::DELETE_2, 'left', 20, 20 )
+			->size( Size::MEDIUM )
+			->attr( '@click', sprintf( 'TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });', $attempt['attempt_id'] ?? 0 ) )
+			->variant( 'secondary' )
+			->render();
+	}
+
+	/**
+	 * Render quiz attempt popover for instructor quiz attempt list.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attempt the quiz attempt.
+	 *
+	 * @return void
+	 */
+	public function render_quiz_attempt_popover( $attempt = array() ) {
+		Popover::make()
+			->trigger( $this->get_kebab_button() )
+			->placement( Positions::BOTTOM_END )
+			->menu_min_width( '120px' )
+			->menu_item( $this->get_details_item( $attempt ) )
+			->menu_item(
+				array(
+					'tag'     => 'button',
+					'content' => __( 'Delete', 'tutor' ),
+					'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2, 20, 20 ),
+					'attr'    => array(
+						'@click' => sprintf(
+							'hide(); TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });',
+							$attempt['attempt_id'] ?? 0
+						),
+					),
+				)
+			)
+			->menu_min_width( '110px' )
+			->render();
 	}
 }

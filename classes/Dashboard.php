@@ -10,8 +10,6 @@
 
 namespace TUTOR;
 
-use Tutor\Helpers\UrlHelper;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,12 +21,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Dashboard {
 
 	/**
-	 * Account page constants
+	 * Dashboard page constants
 	 *
 	 * @since 4.0.0
 	 */
-	const ACCOUNT_PAGE_SLUG        = 'account';
-	const ACCOUNT_PAGE_QUERY_PARAM = 'subpage';
+	const ACCOUNT_PAGE_SLUG = 'account';
+	const COURSES_PAGE_SLUG = 'courses';
+	const QUIZ_ATTEMPTS_PAGE_SLUG = 'quiz-attempts';
+	const MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG = 'my-quiz-attempts';
 
 	/**
 	 * Constructor
@@ -57,7 +57,7 @@ class Dashboard {
 			return $account_page_url;
 		}
 
-		return UrlHelper::add_query_params( $account_page_url, array( self::ACCOUNT_PAGE_QUERY_PARAM => $page ) );
+		return trailingslashit( $account_page_url ) . $page;
 	}
 
 	/**
@@ -69,30 +69,116 @@ class Dashboard {
 	 */
 	public static function get_account_pages() {
 		$pages = array(
-			'profile'  => array(
+			'profile' => array(
 				'title'       => esc_html__( 'Profile', 'tutor' ),
 				'icon'        => Icon::PROFILE_CIRCLE,
 				'icon_active' => Icon::PROFILE_CIRCLE_FILL,
 				'url'         => self::get_account_page_url( 'profile' ),
 				'template'    => tutor_get_template( 'dashboard.account.profile' ),
 			),
-			'reviews'  => array(
+			'reviews' => array(
 				'title'       => esc_html__( 'Reviews', 'tutor' ),
 				'icon'        => Icon::RATINGS,
 				'icon_active' => Icon::RATINGS,
 				'url'         => self::get_account_page_url( 'reviews' ),
 				'template'    => tutor_get_template( 'dashboard.account.reviews' ),
 			),
-			'settings' => array(
-				'title'       => esc_html__( 'Settings', 'tutor' ),
-				'icon'        => Icon::SETTING,
-				'icon_active' => Icon::SETTING,
-				'url'         => self::get_account_page_url( 'settings' ),
-				'template'    => tutor_get_template( 'dashboard.account.settings' ),
+			'billing' => array(
+				'title'       => esc_html__( 'Billing', 'tutor' ),
+				'icon'        => Icon::BILLING,
+				'icon_active' => Icon::BILLING,
+				'url'         => self::get_account_page_url( 'billing' ),
+				'template'    => tutor_get_template( 'dashboard.account.billing' ),
 			),
 		);
 
+		if ( User::is_instructor_view() ) {
+			$pages['withdrawals'] = array(
+				'title'       => esc_html__( 'Withdrawals', 'tutor' ),
+				'icon'        => Icon::WALLET,
+				'icon_active' => Icon::WALLET,
+				'url'         => self::get_account_page_url( 'withdrawals' ),
+				'template'    => tutor_get_template( 'dashboard.account.withdrawals' ),
+			);
+		}
+
+		$pages['settings'] = array(
+			'title'       => esc_html__( 'Settings', 'tutor' ),
+			'icon'        => Icon::SETTING,
+			'icon_active' => Icon::SETTING,
+			'url'         => self::get_account_page_url( 'settings' ),
+			'template'    => tutor_get_template( 'dashboard.account.settings' ),
+		);
+
 		return apply_filters( 'tutor_dashboard_account_pages', $pages );
+	}
+
+	/**
+	 * Get isolated dashboard pages.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_isolated_pages() {
+		$pages = array(
+			self::QUIZ_ATTEMPTS_PAGE_SLUG => array(
+				'template'       => tutor_get_template( 'dashboard.quiz-attempts.quiz-reviews' ),
+				'requires_param' => 'attempt_id',
+			),
+			self::COURSES_PAGE_SLUG . '/' . self::MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG => array(
+				'template'       => tutor_get_template( 'dashboard.my-quiz-attempts.attempts-details' ),
+				'requires_param' => 'attempt_id',
+			),
+		);
+
+		return apply_filters( 'tutor_dashboard_isolated_pages', $pages );
+	}
+
+	/**
+	 * Get isolated dashboard page key.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $dashboard_page Dashboard page slug.
+	 * @param string $dashboard_subpage Dashboard subpage slug.
+	 *
+	 * @return string
+	 */
+	public static function get_isolated_page_key( string $dashboard_page = '', string $dashboard_subpage = '' ): string {
+		if ( self::QUIZ_ATTEMPTS_PAGE_SLUG === $dashboard_page ) {
+			return self::QUIZ_ATTEMPTS_PAGE_SLUG;
+		}
+
+		if ( self::COURSES_PAGE_SLUG === $dashboard_page && self::MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG === $dashboard_subpage ) {
+			return self::COURSES_PAGE_SLUG . '/' . self::MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG;
+		}
+
+		return '';
+	}
+
+	/**
+	 * Check if the current request should use an isolated dashboard page.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $dashboard_page Dashboard page slug.
+	 * @param string $dashboard_subpage Dashboard subpage slug.
+	 *
+	 * @return bool
+	 */
+	public static function is_isolated_page_request( string $dashboard_page = '', string $dashboard_subpage = '' ): bool {
+		$page_key       = self::get_isolated_page_key( $dashboard_page, $dashboard_subpage );
+		$isolated_pages = self::get_isolated_pages();
+		$page_data      = $isolated_pages[ $page_key ] ?? array();
+
+		if ( empty( $page_data ) ) {
+			return false;
+		}
+
+		$required_param = $page_data['requires_param'] ?? '';
+
+		return '' === $required_param ? true : Input::has( $required_param );
 	}
 
 	/**

@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
 
 	use Tutor\Components\Accordion;
 	use Tutor\Components\Avatar;
+	use Tutor\Components\Alert;
 	use Tutor\Components\Badge;
 	use Tutor\Components\Button;
 	use Tutor\Components\Constants\InputType;
@@ -37,6 +38,7 @@ defined( 'ABSPATH' ) || exit;
 	use Tutor\Components\Progress;
 	use Tutor\Components\Tabs;
 	use Tutor\Components\Table;
+	use Tutor\Components\Tooltip;
 	use TUTOR\Icon;
 
 	?>
@@ -68,8 +70,8 @@ defined( 'ABSPATH' ) || exit;
 			Button::make()->label( 'I am a button' )->size( Size::X_SMALL )->variant( Variant::DESTRUCTIVE )->render();
 			Button::make()->label( 'I am a button' )->variant(Variant::DESTRUCTIVE_SOFT )->attr( 'class', 'tutor-btn-loading' )->render(); // phpcs:ignore 
 			Button::make()->label( 'I am a button' )->variant( Variant::OUTLINE )->render(); // phpcs:ignore 
-			Button::make()->label( 'I am a button' )->variant( Variant::PENDING )->render(); // phpcs:ignore 
-			Button::make()->size( Size::LARGE )->icon( Icon::CHECK )->variant( Variant::COMPLETED )->render(); // phpcs:ignore
+			Button::make()->label( 'I am a button' )->variant( Variant::SECONDARY )->render(); // phpcs:ignore 
+			Button::make()->size( Size::LARGE )->icon( Icon::CHECK )->variant( Variant::PRIMARY )->render(); // phpcs:ignore
 
 			Button::make()->attr( 'class', 'tutor-btn-block' )->label( 'I am a block button' )->variant( Variant::PRIMARY_SOFT )->render();
 			?>
@@ -108,20 +110,95 @@ defined( 'ABSPATH' ) || exit;
 		<h2>Badge</h2>
 		<pre><code>
 		&lt;?php
-			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( Icon::CHECK )->render();
-			Badge::make()->label( 'Points: 20' )->variant( Variant::SECONDARY )->render();
-			Badge::make()->label( 'Completed' )->variant( Variant::COMPLETED )->circle()->render();
-			Badge::make()->label( 'Cancelled' )->variant( Variant::CANCELLED )->circle()->render();
+			Badge::make()->label( 'Primary' )->variant( Badge::PRIMARY )->icon( Icon::CHECK )->render();
+			Badge::make()->label( 'Points: 20' )->render();
+			Badge::make()->label( 'Completed' )->variant( Badge::SUCCESS )->rounded()->render();
+			Badge::make()->label( 'Cancelled' )->variant( Badge::ERROR )->rounded()->render();
 		?&gt;
 		</code></pre>
-		<div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
 		<?php
-			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( Icon::CHECK )->render();
-			Badge::make()->label( 'Points: 20' )->variant( Variant::SECONDARY )->render();
-			Badge::make()->label( 'Completed' )->variant( Variant::COMPLETED )->circle()->render();
-			Badge::make()->label( 'Cancelled' )->variant( Variant::CANCELLED )->circle()->render();
+			Badge::make()->label( 'Primary' )->variant( Badge::PRIMARY )->icon( Icon::CHECK )->render();
+			Badge::make()->label( 'Points: 20' )->render();
+			Badge::make()->label( 'Completed' )->variant( Badge::SUCCESS )->rounded()->render();
+			Badge::make()->label( 'Cancelled' )->variant( Badge::ERROR )->rounded()->render();
 		?>
 		</div>
+	</div>
+<br>
+	<div class="alert-wrapper tutor-mb-12">
+		<h2>Alert</h2>
+		<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-mb-4">
+		<?php
+			Alert::make()
+				->text( 'Default alert: This is a neutral alert message for general information.' )
+				->icon( Icon::INFO )
+				->render();
+
+			Alert::make()
+				->variant( Alert::INFO )
+				->text( 'Info alert: This is an informational alert message using brand colors.' )
+				->icon( Icon::INFO_FILL )
+				->render();
+
+			Alert::make()
+				->variant( Alert::SUCCESS )
+				->text( 'Success alert: Your action was completed successfully.' )
+				->icon( Icon::PRIME_CHECK_CIRCLE )
+				->render();
+
+			Alert::make()
+				->variant( Alert::WARNING )
+				->text( 'Your plan will be cancelled on 15 Feb, 2026, 06:30 am. You’ll have access until then and can resume anytime before that.' )
+				->icon( Icon::WARNING_LINE )
+				->action( Button::make()->label( 'Resume plan' )->variant( Variant::PRIMARY )->size( Size::X_SMALL )->get() )
+				->render();
+
+			Alert::make()
+				->variant( Alert::ERROR )
+				->text( 'Error alert: Something went wrong, please try again.' )
+				->icon( Icon::ALERT )
+				->action(
+					Button::make()
+						->variant( Variant::GHOST )
+						->size( Size::X_SMALL )
+						->icon( Icon::CROSS_2 )
+						->get()
+				)
+				->render();
+			?>
+		</div>
+		<pre><code>
+&lt;?php
+	// Success Alert
+	Alert::make()
+		->variant( Alert::SUCCESS )
+		->text( 'Success! Your changes have been saved.' )
+		->icon( Icon::PRIME_CHECK_CIRCLE )
+		->render();
+
+	// Warning with Action
+	Alert::make()
+		->variant( Alert::WARNING )
+		->text( 'Your plan will expire soon.' )
+		->icon( Icon::WARNING_LINE )
+		->action( Button::make()->label( 'Renew Plan' )->variant( Variant::PRIMARY )->size( Size::X_SMALL )->get() )
+		->render();
+
+	// Dismissible Alert
+	Alert::make()
+		->variant( Alert::ERROR )
+		->text( 'An error occurred.' )
+		->icon( Icon::ALERT )
+		->action(
+			Button::make()
+				->variant( Variant::GHOST )
+				->size( Size::X_SMALL )
+				->icon( Icon::CROSS_2 )
+				->get()
+		)
+		->render();
+?&gt;
+		</code></pre>
 	</div>
 
 	<div class="progress-wrapper tutor-mb-12">
@@ -372,10 +449,10 @@ defined( 'ABSPATH' ) || exit;
 				),
 			);
 
-			echo Table::make()
+			Table::make()
 				->headings( $heading )
 				->contents( $content )
-				->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+				->attr( 'class', 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 				->render();
 		</code></pre>
 		<?php
@@ -404,7 +481,7 @@ defined( 'ABSPATH' ) || exit;
 		Table::make()
 			->headings( $heading )
 			->contents( $content )
-			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->attr( 'class', 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();
 		?>
 		<pre><code>&lt;php
@@ -431,9 +508,9 @@ defined( 'ABSPATH' ) || exit;
 				),
 			);
 
-			echo Table::make()
+			Table::make()
 			->contents( $content )
-			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->attr( 'class', 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();php&gt;
 		</code></pre>
 
@@ -463,7 +540,7 @@ defined( 'ABSPATH' ) || exit;
 
 			Table::make()
 			->contents( $content )
-			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->attr( 'class', 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();
 			?>
 
@@ -475,7 +552,7 @@ defined( 'ABSPATH' ) || exit;
 		<h2>Popover</h2>
 		<h3>Basic Popover</h3>
 		<br>
-		<pre><code>echo Popover::make()
+		<pre><code>Popover::make()
 				->title( 'Basic' )
 				->body( '&lt;p&gt;This is a popover component&lt;/p&gt;' )
 				->closeable( true )
@@ -518,22 +595,22 @@ defined( 'ABSPATH' ) || exit;
 		$left_button   = $button->label( 'Left' )->get();
 		$bottom_button = $button->label( 'Bottom' )->get();
 
-		echo Popover::make()
+		Popover::make()
 			->body( '&lt;p&gt;Right component&lt;/p&gt;' )
 			->trigger( $right_button )
 			->placement( 'right' )
 			->render();
-		echo Popover::make()
+		Popover::make()
 			->body( '&lt;p&gt;Left component&lt;/p&gt;' )
 			->trigger( $left_button )
 			->placement( 'left' )
 			->render();
-		echo Popover::make()
+		Popover::make()
 			->body( '&lt;p&gt;Top component&lt;/p&gt;' )
 			->trigger( $top_button )
 			->placement( 'top' )
 			->render();
-		echo Popover::make()
+		Popover::make()
 			->body( '&lt;p&gt;Bottom component&lt;/p&gt;' )
 			->trigger( $bottom_button )
 			->placement( 'bottom' )
@@ -579,7 +656,7 @@ defined( 'ABSPATH' ) || exit;
 			Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->get(),
 		);
 
-		echo Popover::make()
+		Popover::make()
 		->title( 'Confirm Action' )
 		->body( '&lt;p&gt;Are you sure you want to delete this item? This action cannot be undone.&lt;/p&gt;' )
 		->footer( $footer_buttons )
@@ -623,7 +700,7 @@ defined( 'ABSPATH' ) || exit;
 		<h3>Popover with menu</h3>
 		<br>
 		<pre><code>$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
-			echo Popover::make()
+			Popover::make()
 				->trigger( $kebab_button )
 				->menu_item(
 					array(
@@ -1177,7 +1254,71 @@ defined( 'ABSPATH' ) || exit;
 					</button>
 				</div>
 			</form>
+	</div>
+	<div class="tooltip-wrapper tutor-mb-12">
+		<h2>Tooltip</h2>
+		<pre><code>&lt;?php
+Tooltip::make()
+	->content( 'This is a small tooltip' )
+	->placement( Tooltip::PLACEMENT_TOP )
+	->trigger_element( '&lt;button class="tutor-btn tutor-btn-primary"&gt;Small Tooltip&lt;/button&gt;' )
+	->render();
+
+Tooltip::make()
+	->content( 'This is a large tooltip with centered arrow' )
+	->placement( Tooltip::PLACEMENT_BOTTOM )
+	->size( Size::LARGE )
+	->arrow( Tooltip::ARROW_CENTER )
+	->trigger_element( '&lt;button class="tutor-btn tutor-btn-secondary"&gt;Large Tooltip&lt;/button&gt;' )
+	->render();
+?&gt;</code></pre>
+		<div class="tutor-flex tutor-gap-4 tutor-flex-wrap tutor-mt-4">
+			<?php
+			Tooltip::make()
+				->content( 'Top Placement' )
+				->placement( Tooltip::PLACEMENT_TOP )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">Top</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'Bottom Placement' )
+				->placement( Tooltip::PLACEMENT_BOTTOM )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">Bottom</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'Start (Left) Placement' )
+				->placement( Tooltip::PLACEMENT_START )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">Start</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'End (Right) Placement' )
+				->placement( Tooltip::PLACEMENT_END )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">End</button>' )
+				->render();
+			?>
 		</div>
+
+		<div class="tutor-flex tutor-gap-4 tutor-flex-wrap tutor-mt-6">
+			<?php
+			Tooltip::make()
+				->content( 'Large tooltip with centered arrow alignment' )
+				->size( Size::LARGE )
+				->arrow( Tooltip::ARROW_CENTER )
+				->placement( Tooltip::PLACEMENT_TOP )
+				->trigger_element( '<button class="tutor-btn tutor-btn-primary">Large Centered</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'Click to toggle tooltip' )
+				->trigger_on( Tooltip::CLICK )
+				->placement( Tooltip::PLACEMENT_TOP )
+				->trigger_element( '<button class="tutor-btn tutor-btn-secondary">Click Me</button>' )
+				->render();
+			?>
+		</div>
+	</div>
 </div>
 
 

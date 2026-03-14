@@ -1,11 +1,12 @@
 import { Chart, type ChartConfiguration, type ScriptableContext, type TooltipModel } from 'chart.js/auto';
 
-import { formatPrice } from '@TutorShared/utils/currency';
+import { createPriceFormatter, formatPrice } from '@TutorShared/utils/currency';
 
 export interface OverviewChartProps {
   earnings: number[];
   enrolled: number[];
   labels: string[];
+  currency: MonetizationData;
 }
 
 export interface ChartColors {
@@ -40,6 +41,14 @@ export type CourseCompletionChartData = {
     label: string;
     value: number;
   };
+};
+
+type MonetizationData = {
+  symbol: string;
+  position: 'left' | 'right';
+  thousand_separator: string;
+  decimal_separator: string;
+  no_of_decimal: number | string;
 };
 
 const CHART_CONFIG = {
@@ -99,9 +108,13 @@ const CHART_CONFIG = {
 } as const;
 
 const hexToRgba = (hex: string, alpha: number): string => {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
+  // Expand 3-digit hex (#RGB → #RRGGBB)
+  const normalized = hex.length === 4 ? `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}` : hex;
+
+  const r = parseInt(normalized.slice(1, 3), 16) || 0;
+  const g = parseInt(normalized.slice(3, 5), 16) || 0;
+  const b = parseInt(normalized.slice(5, 7), 16) || 0;
+
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
@@ -544,8 +557,8 @@ export const overviewChart = (data: OverviewChartProps) => ({
   },
 
   createChartConfig(data: OverviewChartProps, colors: OverviewChartColors): ChartConfiguration<'line'> {
-    const dataLength = data.earnings.length;
-
+    const dataLength = data?.earnings?.length || data?.enrolled?.length;
+    const currency = data?.currency;
     return {
       type: 'line',
       data: {
@@ -575,7 +588,7 @@ export const overviewChart = (data: OverviewChartProps) => ({
                 if (value === null) {
                   return '';
                 }
-                return context.datasetIndex === 0 ? formatPrice(value) : value.toString();
+                return context.datasetIndex === 0 ? formatPriceByMonetization(currency, value) : value.toString();
               },
             },
           },
@@ -705,3 +718,12 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
     };
   },
 });
+
+const formatPriceByMonetization = (data: MonetizationData, value: number): string =>
+  createPriceFormatter({
+    symbol: data?.symbol ?? '$',
+    position: data?.position ?? 'left',
+    thousandSeparator: data?.thousand_separator ?? ',',
+    decimalSeparator: data?.decimal_separator ?? '.',
+    fraction_digits: Number(data?.no_of_decimal ?? 2),
+  })(value);

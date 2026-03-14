@@ -8,16 +8,26 @@
  * @since 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\User;
+?>
 
+<?php
 $is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
-if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
+if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 	?>
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title><?php bloginfo( 'name' ); ?></title>
+		<?php wp_head(); ?>
+	</head>
+	<body <?php body_class( '' ); ?>>
 	<?php
-	wp_head();
-}
-
+endif;
 global $wp_query;
 
 $dashboard_page_slug = '';
@@ -100,24 +110,17 @@ $footer_links = array(
 					}
 
 					do_action( 'tutor_load_dashboard_template_after', $dashboard_page_name );
-				} else {
-					if ( User::is_student() ) {
-						tutor_load_template( 'dashboard.student-dashboard' );
-					} else {
+				} elseif ( User::is_instructor_view() ) {
 						tutor_load_template( 'dashboard.dashboard' );
-					}
+				} else {
+					tutor_load_template( 'dashboard.student-dashboard' );
 				}
 				?>
 			</div>
 		</div>
 	</div>
-	<?php tutor_load_template( 'demo-components.dashboard.components.nav-mobile' ); ?>
 </div>
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
-<?php
-if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
-	wp_footer();
-}
-
-
-
+</body>
+<?php wp_footer(); ?>
+</html>

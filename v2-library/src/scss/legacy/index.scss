@@ -3,8 +3,11 @@
 @import './dashboard';
 @import './switch.scss';
 @import './toast.scss';
-@import './ui-date-picker.scss';
 @import './slider-input';
+
+.tutor-backend, .tutor-screen-frontend-dashboard {
+    @import './ui-date-picker.scss';
+}
 
 // @todo: to be removed
 .tutorPlayer {

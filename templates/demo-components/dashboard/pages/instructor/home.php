@@ -37,12 +37,12 @@ $sortable_sections = array(
 		'is_active' => true,
 		'order'     => 3,
 	),
-	array(
-		'id'        => 'upcoming_tasks_and_activity',
-		'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
-		'is_active' => true,
-		'order'     => 4,
-	),
+	// array(
+	// 	'id'        => 'upcoming_tasks_and_activity',
+	// 	'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
+	// 	'is_active' => true,
+	// 	'order'     => 4,
+	// ),
 	array(
 		'id'        => 'recent_reviews',
 		'label'     => esc_html__( 'Recent Student Reviews', 'tutor' ),
@@ -97,7 +97,7 @@ $stat_cards = array(
 	array(
 		'variation' => 'exception4',
 		'title'     => esc_html__( 'Avg. Rating', 'tutor' ),
-		'icon'      => Icon::STAR_2,
+		'icon'      => Icon::STAR_LINE,
 		'value'     => '4.2',
 		'change'    => '+2',
 		'data'      => array( 4.5, 4.2, 3, 3, 2.8, 2, 4.5, 4.2, 3, 2, 1, 0 ),
@@ -436,7 +436,7 @@ $recent_reviews = array(
 	<!-- Stat cards -->
 	<div 
 		data-section-id="current_stats" 
-		class="tutor-flex tutor-gap-5"					
+		class="tutor-flex tutor-flex-wrap tutor-gap-5"					
 		:class="{ 'tutor-hidden':  !watch('current_stats')}"
 	>
 		<?php foreach ( $stat_cards as $card ) : ?>

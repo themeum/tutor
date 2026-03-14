@@ -1,7 +1,25 @@
-// Frontend Types
-// TODO: Define TypeScript interfaces and types
+type PlyrYouTubeInstance = Plyr & {
+  embed: {
+    seekTo(time: number): void;
+  };
+};
 
-// Example types (to be implemented):
-// export interface User { ... }
-// export interface Course { ... }
-// export interface Lesson { ... }
+type PlyrVimeoInstance = Plyr & {
+  mute?: () => void;
+  unmute?: () => void;
+};
+
+export function isYouTubePlyr(instance: Plyr): instance is PlyrYouTubeInstance {
+  return instance.provider === 'youtube';
+}
+
+export function isVimeoPlyr(instance: Plyr): instance is PlyrVimeoInstance {
+  return instance.provider === 'vimeo';
+}
+
+export interface AjaxResponse<T = unknown> {
+  status_code: number;
+  success: boolean;
+  message: string;
+  data?: T;
+}

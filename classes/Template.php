@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\UrlHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -164,11 +166,7 @@ class Template extends Tutor_Base {
 		global $wp_query;
 		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === $this->course_post_type ) {
 			// Check if the slug contains subpage of learning area.
-			$learning_area_subpages = self::make_learning_area_sub_page_nav_items();
-			$subpage                = Input::get( 'subpage' );
-			$subpage_slugs          = array_keys( $learning_area_subpages );
-
-			if ( in_array( $subpage, $subpage_slugs, true ) ) {
+			if ( Input::has( 'subpage' ) ) {
 				$template = tutor_get_template( 'learning-area.index' );
 			} else {
 				do_action( 'single_course_template_before_load', get_the_ID() );
@@ -178,7 +176,6 @@ class Template extends Tutor_Base {
 		}
 
 		return $template;
-
 	}
 
 	/**
@@ -398,7 +395,7 @@ class Template extends Tutor_Base {
 						 * @since 4.0.0
 						 */
 						if ( Dashboard::ACCOUNT_PAGE_SLUG === $dashboard_page ) {
-							$subpage       = Input::get( Dashboard::ACCOUNT_PAGE_QUERY_PARAM, 'profile' );
+							$subpage       = tutor_utils()->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars, 'profile' );
 							$account_pages = Dashboard::get_account_pages();
 							$page_data     = $account_pages[ $subpage ] ?? array();
 							$page_template = $page_data['template'] ?? '';
@@ -406,6 +403,13 @@ class Template extends Tutor_Base {
 							if ( file_exists( $page_template ) ) {
 								$template = tutor_get_template( 'account' );
 							}
+						}
+
+						$dashboard_subpage = tutor_utils()->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
+						$is_isolated       = Dashboard::is_isolated_page_request( $dashboard_page, $dashboard_subpage );
+
+						if ( $is_isolated ) {
+							$template = tutor_get_template( 'dashboard-isolated' );
 						}
 					} else {
 						$template = tutor_get_template( 'login' );
@@ -535,33 +539,14 @@ class Template extends Tutor_Base {
 		}
 
 		$menu_items = array(
-			'resources'   => array(
-				'title' => esc_html__( 'Resources', 'tutor' ),
-				'icon'  => Icon::RESOURCES,
-				'url'   => esc_url( add_query_arg( 'subpage', 'resources', $base_url ) ),
-			),
-			'qna'         => array(
-				'title' => esc_html__( 'Q&A', 'tutor' ),
-				'icon'  => Icon::QA,
-				'url'   => esc_url( add_query_arg( 'subpage', 'qna', $base_url ) ),
-			),
 			'course-info' => array(
-				'title' => esc_html__( 'Course Info', 'tutor' ),
-				'icon'  => Icon::INFO_OCTAGON,
-				'url'   => esc_url( add_query_arg( 'subpage', 'course-info', $base_url ) ),
-			),
-			'webinar'     => array(
-				'title' => esc_html__( 'Webinar', 'tutor' ),
-				'icon'  => Icon::VIDEO_CAMERA_2,
-				'url'   => esc_url( add_query_arg( 'subpage', 'webinar', $base_url ) ),
-			),
-			'certificate' => array(
-				'title' => esc_html__( 'Certificate', 'tutor' ),
-				'icon'  => Icon::CERTIFICATE_2,
-				'url'   => esc_url( add_query_arg( 'subpage', 'certificate', $base_url ) ),
+				'title'    => __( 'Course Info', 'tutor' ),
+				'icon'     => Icon::INFO_OCTAGON,
+				'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
+				'template' => tutor_get_template( 'learning-area.subpages.course-info' ),
 			),
 		);
 
-		return apply_filters( 'tutor_learning_area_sub_page_nav_item', $menu_items );
+		return apply_filters( 'tutor_learning_area_sub_page_nav_item', $menu_items, $base_url );
 	}
 }

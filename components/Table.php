@@ -92,13 +92,6 @@ class Table extends BaseComponent {
 	protected $cell_content;
 
 	/**
-	 * Table class names.
-	 *
-	 * @var string
-	 */
-	protected $attribute;
-
-	/**
 	 * Set table column headings.
 	 *
 	 * @since 4.0.0
@@ -119,20 +112,6 @@ class Table extends BaseComponent {
 	 */
 	public function headings( array $headings ): self {
 		$this->cell_headers = $headings;
-		return $this;
-	}
-
-	/**
-	 * Sets the custom table class.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $attribute the attribute string.
-	 *
-	 * @return self
-	 */
-	public function attributes( string $attribute ): self {
-		$this->attribute = $attribute;
 		return $this;
 	}
 
@@ -177,7 +156,8 @@ class Table extends BaseComponent {
 
 		foreach ( $this->cell_headers as $heading ) {
 			$headings .= sprintf(
-				'<th>%1$s</th>',
+				'<th class="%s">%s</th>',
+				$heading['class'],
 				apply_filters( 'tutor_table_heading', $heading['content'] )
 			);
 		}
@@ -222,9 +202,17 @@ class Table extends BaseComponent {
 	 * @return string HTML
 	 */
 	public function get(): string {
+		if ( isset( $this->attributes['class'] ) && ! empty( $this->attributes['class'] ) ) {
+			$this->attributes['class'] = 'tutor-table ' . $this->attributes['class'];
+		} else {
+			$this->attributes['class'] = 'tutor-table';
+		}
+
+		ob_start();
+		$this->render_attributes();
+		$attrs = ob_get_clean();
 		return sprintf(
-			'<div class="%s">
-				<table class="tutor-table">
+			'<table %s>
 					<thead>
 						%s
 					</thead>
@@ -232,8 +220,8 @@ class Table extends BaseComponent {
 						%s
 					</tbody>
 				</table>
-			</div>',
-			esc_attr( $this->attribute ),
+			',
+			$attrs,
 			$this->render_table_headings(),
 			$this->render_table_body()
 		);

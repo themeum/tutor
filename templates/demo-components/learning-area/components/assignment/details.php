@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 
+use Tutor\Components\AttachmentCard;
+
 $assignment_description = "In this assignment, you'll demonstrate your understanding of React fundamentals by building a reusable component from scratch.
 <ul>
  	<li>Create a reusable React component that demonstrates your understanding of:</li>
@@ -49,7 +51,12 @@ $assignment_files = array(
 	</div>
 	<div class="tutor-assignment-attachments-cards">
 		<?php foreach ( $assignment_files as $file ) : ?>
-			<?php tutor_load_template( 'core-components.attachment-card', $file ); ?>
+			<?php
+			AttachmentCard::make()
+				->file_name( $file['file_name'] )
+				->file_size( $file['file_size'] )
+				->render();
+			?>
 		<?php endforeach; ?>
 	</div>
 </div>

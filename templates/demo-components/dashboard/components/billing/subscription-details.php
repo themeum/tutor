@@ -26,18 +26,18 @@ $render_status_badge = function ( $status, $price ) {
 		case 'processing':
 		case 'pending':
 		case 'on-hold':
-			$badge_class = 'pending';
+			$badge_class = 'warning';
 			break;
 		case 'failed':
 		case 'expired':
-			$badge_class = 'cancelled';
+			$badge_class = 'error';
 			break;
 		case 'incomplete':
-			$badge_class = 'secondary';
+			$badge_class = '';
 			break;
 	}
 
-	return '<span class="tutor-capitalize tutor-badge tutor-badge-small tutor-badge-circle tutor-py-none tutor-badge-' . $badge_class . '">' . esc_html( $status ) . '</span>';
+	return '<span class="tutor-capitalize tutor-badge tutor-badge-rounded tutor-badge-' . $badge_class . '">' . esc_html( $status ) . '</span>';
 };
 
 $payments = array(
@@ -240,7 +240,7 @@ $payments = array(
 				<?php tutor_utils()->render_svg_icon( Icon::BILLING, 20, 20 ); ?>
 				<?php esc_html_e( 'Payment History', 'tutor' ); ?>
 			</div>
-			<div class="tutor-badge tutor-badge-secondary tutor-badge-circle tutor-py-none">
+			<div class="tutor-badge tutor-badge-rounded">
 				<?php
 				printf(
 					// translators: %s is either 'On' or 'Off'.

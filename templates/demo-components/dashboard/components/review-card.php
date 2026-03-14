@@ -25,12 +25,12 @@ $review = array(
 	<div class="tutor-review-header">
 		<!-- Type Badge with Icon -->
 		<?php if ( ! empty( $review['is_bundle'] ) ) : ?>
-			<div class="tutor-badge tutor-badge-exception tutor-badge-circle">
+			<div class="tutor-badge tutor-badge-highlight tutor-badge-rounded">
 				<?php tutor_utils()->render_svg_icon( Icon::BUNDLE, 16, 16 ); ?>
 				<span class="tutor-text-sm tutor-font-medium">Bundle</span>
 			</div>
 		<?php else : ?>
-			<div class="tutor-badge tutor-badge-primary-soft tutor-badge-circle">
+			<div class="tutor-badge tutor-badge-info tutor-badge-rounded">
 				<?php tutor_utils()->render_svg_icon( Icon::COURSES, 16, 16 ); ?>
 				<span class="tutor-text-sm tutor-font-medium">Course</span>
 			</div>

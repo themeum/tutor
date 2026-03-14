@@ -31,15 +31,11 @@ abstract class Variant {
 	public const DESTRUCTIVE      = 'destructive';
 	public const DESTRUCTIVE_SOFT = 'destructive-soft';
 
-	public const SECONDARY = 'secondary';
-	public const OUTLINE   = 'outline';
-	public const GHOST     = 'ghost';
-	public const LINK      = 'link';
-
-	// Badge-only variants.
-	public const PENDING   = 'pending';
-	public const COMPLETED = 'completed';
-	public const CANCELLED = 'cancelled';
-	public const EXCEPTION = 'exception';
-
+	public const SECONDARY        = 'secondary';
+	public const OUTLINE          = 'outline';
+	public const GHOST            = 'ghost';
+	public const GHOST_BRAND      = 'ghost-brand';
+	public const LINK             = 'link';
+	public const LINK_GRAY        = 'link-gray';
+	public const LINK_DESTRUCTIVE = 'link-destructive';
 }

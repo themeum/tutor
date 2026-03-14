@@ -11,14 +11,16 @@
 namespace Tutor\Models;
 
 use Exception;
+use Tutor\Components\Badge;
 use TUTOR\Earnings;
-use Tutor\Ecommerce\Tax;
-use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\DateTimeHelper;
 use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\CheckoutController;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OrderActivitiesController;
+use Tutor\Ecommerce\Tax;
+use Tutor\Helpers\DateTimeHelper;
+use Tutor\Helpers\QueryHelper;
+use TUTOR\User;
 
 /**
  * OrderModel Class
@@ -988,21 +990,26 @@ class OrderModel {
 	 * Get order of a user
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 params $order_status and $order added.
 	 *
 	 * @param string $time_period $time_period Sorting time period,
 	 * supported time periods are: today, monthly & yearly.
 	 * @param string $start_date $start_date For date range sorting.
 	 * @param string $end_date $end_date For date range sorting.
+	 * @param string $order_status $order_status Order status.
 	 * @param int    $user_id  User id for fetching order list.
 	 * @param int    $limit  Limit to fetch record.
 	 * @param int    $offset  Offset to fetch record.
+	 * @param string $order  Order to fetch record.
 	 *
 	 * @throws \Exception Throw exception if database error occur.
 	 *
 	 * @return array
 	 */
-	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, int $user_id = 0, $limit = 10, int $offset = 0 ) {
-		$user_id = $user_id ? $user_id : get_current_user_id();
+	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, $order_status = '', int $user_id = 0, $limit = 10, int $offset = 0, $order = 'DESC' ) {
+		$user_id      = tutor_utils()->get_user_id( $user_id );
+		$order        = QueryHelper::get_valid_sort_order( $order );
+		$order_status = esc_sql( $order_status );
 
 		$response = array(
 			'results'     => array(),
@@ -1011,8 +1018,9 @@ class OrderModel {
 
 		global $wpdb;
 
-		$time_period_clause = '';
-		$date_range_clause  = '';
+		$time_period_clause  = '';
+		$date_range_clause   = '';
+		$order_status_clause = ( empty( $order_status ) || 'all' === $order_status ) ? '' : "AND o.order_status = '{$order_status}'";
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
@@ -1035,7 +1043,8 @@ class OrderModel {
 				WHERE o.user_id = %d
 				{$time_period_clause}
 				{$date_range_clause}
-				ORDER BY o.id DESC
+				{$order_status_clause}
+				ORDER BY o.id {$order}
 				LIMIT %d OFFSET %d
 			",
 			$user_id,
@@ -1131,7 +1140,8 @@ class OrderModel {
 								0
 							)
 						) AS total,
-						o.created_at_gmt AS date_format
+						o.created_at_gmt AS date_format,
+						DATE_FORMAT( o.created_at_gmt, '%b' ) AS label_name
 					FROM 
 						{$this->table_name} o
 					JOIN 
@@ -1173,7 +1183,8 @@ class OrderModel {
 							0
 						)
 					) AS total,
-					o.created_at_gmt AS date_format
+					o.created_at_gmt AS date_format,
+					DATE_FORMAT( o.created_at_gmt, '%b' ) AS label_name
 					FROM {$this->table_name} AS o
 					WHERE 1 = %d
 					AND o.order_status = 'completed'
@@ -1206,13 +1217,13 @@ class OrderModel {
 				// Split each discount.
 				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
 
-				$discount->total = is_admin() ? $admin_discount : $instructor_discount;
+				$discount->total = User::is_admin() ? $admin_discount : $instructor_discount;
 			}
 
 			list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
 
 			$response['discounts']       = $discount_items;
-			$response['total_discounts'] = is_admin() ? $admin_total : $instructor_total;
+			$response['total_discounts'] = User::is_admin() ? $admin_total : $instructor_total;
 		}
 
 		return $response;
@@ -1329,7 +1340,8 @@ class OrderModel {
 				$wpdb->prepare(
 					"SELECT 
 					COALESCE(SUM(o.refund_amount), 0) AS total,
-					created_at_gmt AS date_format
+					created_at_gmt AS date_format,
+					DATE_FORMAT(o.created_at_gmt, '%b') AS label_name
 					FROM {$this->table_name} AS o
 					-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
 					-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
@@ -1354,14 +1366,14 @@ class OrderModel {
 
 			// Update total amount from list.
 			$split_refund  = (object) tutor_split_amounts( $refund->total );
-			$refund->total = is_admin() ? $split_refund->admin : $split_refund->instructor;
+			$refund->total = User::is_admin() ? $split_refund->admin : $split_refund->instructor;
 		}
 
 		$split_total_refund = (object) tutor_split_amounts( $total_refund );
 
 		$response = array(
 			'refunds'       => $refunds,
-			'total_refunds' => is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
+			'total_refunds' => User::is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
 		);
 
 		return $response;
@@ -1902,18 +1914,27 @@ class OrderModel {
 	 * Retrieves statements for a specific user.
 	 *
 	 * @since 3.5.0
+	 * @since 4.0.0 Added $order_by and $order option.
 	 *
-	 * @param string $post_type_in_clause SQL clause to filter the course post types.
-	 * @param string $course_query SQL query string to further filter the courses .
-	 * @param string $date_query SQL query string to filter by date range.
-	 * @param int    $user_id The user ID for which the statements are being retrieved.
-	 * @param int    $offset The offset for pagination.
-	 * @param int    $limit The number of rows to return.
+	 * @param string $post_type_in_clause Prepared SQL IN clause containing allowed course post types.
+	 * @param string $course_query        Optional SQL fragment to filter by course ID.
+	 * @param string $date_query          Optional SQL fragment to filter by statement date.
+	 * @param int    $user_id             User (instructor) ID.
+	 * @param int    $offset              Number of records to skip (pagination offset).
+	 * @param int    $limit               Maximum number of records to return.
+	 * @param string $order_by            Column name to order results by.
+	 * @param string $order               Sort direction. Accepts 'ASC' or 'DESC'.
 	 *
 	 * @return array
 	 */
-	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit ): array {
+	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit, $order_by, $order ): array {
 		global $wpdb;
+
+		$order_clause = '';
+
+		if ( sanitize_sql_orderby( $order ) ) {
+			$order_clause = "ORDER BY {$order_by} {$order}";
+		}
 
 		//phpcs:disable
 		$statements = $wpdb->get_results(
@@ -1936,9 +1957,8 @@ class OrderModel {
 				WHERE statements.user_id = %d
 				{$course_query}
 				{$date_query}
-				ORDER BY statements.created_at DESC
-				LIMIT %d, %d
-			",
+				{$order_clause}
+				LIMIT %d, %d",
 				$user_id,
 				$offset,
 				$limit
@@ -1953,8 +1973,7 @@ class OrderModel {
 					AND course.post_type IN ({$post_type_in_clause})
 				WHERE statements.user_id = %d
 				{$course_query}
-				{$date_query}
-			",
+				{$date_query}",
 				$user_id
 			)
 		);
@@ -2126,7 +2145,7 @@ class OrderModel {
 
 		$link =
 			sprintf(
-				'<a href="%s" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+				'<a href="%s" class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit">
 				%s
 			</a>',
 				esc_url( $checkout_url ),

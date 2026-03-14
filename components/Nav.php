@@ -114,22 +114,6 @@ class Nav extends BaseComponent {
 	}
 
 	/**
-	 * Set custom HTML attribute.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $key   Attribute name.
-	 * @param string $value Attribute value.
-	 *
-	 * @return $this
-	 */
-	public function attr( $key, $value ) {
-		$this->attributes[ $key ] = esc_attr( $value );
-		return $this;
-	}
-
-
-	/**
 	 * Set the nav size.
 	 *
 	 * @since 4.0.0
@@ -350,7 +334,7 @@ class Nav extends BaseComponent {
 		// Merge with any custom class attribute.
 		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
 
-		$attributes = $this->render_attributes();
+		$attributes = $this->get_attributes_string();
 
 		return sprintf(
 			'<div %s>

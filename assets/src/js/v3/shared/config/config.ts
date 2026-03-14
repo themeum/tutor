@@ -32,6 +32,9 @@ const defaultTutorConfig = {
   course_list_page_url: '',
   course_post_type: '',
   local: '',
+  tutor_pn_vapid_key: '',
+  tutor_pn_client_id: '',
+  tutor_pn_subscription_saved: '',
   difficulty_levels: [],
   supported_video_sources: [],
   edd_products: [],
@@ -58,7 +61,7 @@ const defaultTutorConfig = {
     filter: null,
   },
   settings: {
-    monetize_by: __TUTOR_TEXT_DOMAIN__,
+    monetize_by: 'tutor',
     enable_course_marketplace: 'off',
     course_permalink_base: '',
     supported_video_sources: '',

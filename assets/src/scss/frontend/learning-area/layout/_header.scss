@@ -4,10 +4,20 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-learning-header {
+  background-color: $tutor-surface-base;
   padding: $tutor-spacing-4;
+  position: sticky;
+  top: 0;
+  z-index: $tutor-z-header;
+
+  @include tutor-breakpoint-up(sm) {
+    .tutor-has-admin-bar & {
+      top: 32px;
+    }
+  }
 
   @include tutor-breakpoint-down(sm) {
-    padding: 0px $tutor-spacing-6 0px $tutor-spacing-6;
+    padding: $tutor-spacing-2 $tutor-spacing-6;
   }
 
   &-inner {
@@ -45,13 +55,10 @@
     }
   }
 
-  &-mobile {
-    margin-inline-start: auto;
-  }
-
   &-toggle-mobile {
     @include tutor-button-reset();
     @include tutor-flex-center();
+    margin-inline-start: auto;
     height: 44px;
     width: 44px;
 
