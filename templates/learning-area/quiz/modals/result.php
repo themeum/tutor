@@ -37,12 +37,20 @@ $action_label  = $data['action_label'] ?? __( 'View Results', 'tutor' );
 
 		<div class="tutor-p3 tutor-text-secondary">
 			<?php if ( $show_attempts ) : ?>
-				<?php esc_html_e( 'You answered', 'tutor' ); ?>
-				<strong x-text="payload?.attempted ?? 0"></strong>
-				<?php esc_html_e( 'of', 'tutor' ); ?>
-				<strong x-text="payload?.total ?? 0"></strong>
-				<?php esc_html_e( 'questions.', 'tutor' ); ?>
-				<?php echo esc_html( $message ); ?>
+				<?php
+				printf(
+					wp_kses(
+						// translators: %s: message.
+						__( 'You answered <strong x-text="payload?.attempted ?? 0"></strong> of <strong x-text="payload?.total ?? 0"></strong> questions. %s', 'tutor' ),
+						array(
+							'strong' => array(
+								'x-text' => true,
+							),
+						)
+					),
+					esc_html( $message )
+				);
+				?>
 			<?php else : ?>
 				<?php echo esc_html( $message ); ?>
 			<?php endif; ?>
