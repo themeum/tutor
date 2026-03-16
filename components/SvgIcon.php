@@ -12,6 +12,8 @@
 
 namespace Tutor\Components;
 
+use Tutor\Components\Constants\Color;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -33,9 +35,11 @@ defined( 'ABSPATH' ) || exit;
  * SvgIcon::make()
  *     ->name( Icon::DELETE )
  *     ->size( 16 )
- *     ->color( 'secondary' )
+ *     ->color( Color::SECONDARY )
  *     ->render();
  * ```
+ *
+ * Note: The color() property only works with the version 4 design system tokens.
  *
  * @since 4.0.0
  */
@@ -69,6 +73,8 @@ class SvgIcon extends BaseComponent {
 	protected $height = 16;
 	/**
 	 * Icon color.
+	 *
+	 * Note: this only works with the version 4 design system tokens.
 	 *
 	 * @since 4.0.0
 	 *
@@ -136,9 +142,11 @@ class SvgIcon extends BaseComponent {
 	/**
 	 * Set icon color.
 	 *
+	 * Note: this only works with the version 4 design system tokens.
+	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $color Icon color (idle|idle-inverse|hover|secondary|subdued|disabled|brand|exception1|exception2|success|exception4|exception5|caution|critical|warning).
+	 * @param string $color Icon color (use \Tutor\Components\Constants\Color).
 	 *
 	 * @return $this
 	 */
@@ -203,7 +211,7 @@ class SvgIcon extends BaseComponent {
 			$this->attributes['class'] = trim( ( $this->attributes['class'] ?? '' ) . " {$color_class}" );
 		}
 
-		$attributes = $this->render_attributes();
+		$attributes = $this->get_attributes_string();
 
 		$this->component_string = sprintf(
 			'<svg %s>%s</svg>',
