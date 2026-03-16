@@ -216,9 +216,7 @@ class Badge extends BaseComponent {
 			} elseif ( filter_var( $this->icon, FILTER_VALIDATE_URL ) !== false ) {
 				$icon_html = sprintf( '<img src="%s" style="width:%spx;height:%spx;"/>', $this->icon, $this->icon_width, $this->icon_height );
 			} else {
-				ob_start();
-				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
-				$icon_html = ob_get_clean();
+				$icon_html = SvgIcon::make()->name( $this->icon )->width( $this->icon_width )->height( $this->icon_height )->get();
 			}
 		}
 

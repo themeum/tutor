@@ -1677,7 +1677,7 @@ class Quiz {
 		$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
 		$can_start_quiz    = $attempt_remaining > 0 || 0 === $attempts_allowed;
 		$quiz_auto_start   = tutor_utils()->get_quiz_option( $quiz_id, 'quiz_auto_start', 0 );
-		$should_auto_start = 1 === (int) $quiz_auto_start && 0 === (int)$attempted_count;
+		$should_auto_start = 1 === (int) $quiz_auto_start && 0 === (int) $attempted_count;
 
 		if ( ! $can_start_quiz ) {
 			return;

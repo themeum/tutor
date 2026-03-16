@@ -257,6 +257,7 @@ class Modal extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $path Template file path.
+	 * @param array  $data Template data.
 	 *
 	 * @return $this
 	 */
@@ -350,7 +351,7 @@ class Modal extends BaseComponent {
 
 		if ( ! empty( $this->title_icon ) ) {
 			ob_start();
-			tutor_utils()->render_svg_icon( $this->title_icon, 24, 24 );
+			SvgIcon::make()->name( $this->title_icon )->size( 24 )->render();
 			$icon = ob_get_clean();
 
 			return sprintf(

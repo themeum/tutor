@@ -185,5 +185,14 @@
         border-color: $tutor-border-error;
       }
     }
+
+    .tutor-wp-editor-container {
+      border: 1px solid $tutor-border-error;
+      box-shadow: $tutor-shadow-xs;
+      &:focus {
+        @include tutor-focus-ring('error');
+        border-color: $tutor-border-error;
+      }
+    }
   }
 }
