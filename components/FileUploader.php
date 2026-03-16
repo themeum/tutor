@@ -648,7 +648,7 @@ class FileUploader extends BaseComponent {
 					<?php echo $this->get_attributes_string(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				>
 				<div class="tutor-file-uploader-icon">
-					<?php tutor_utils()->render_svg_icon( $icon, $this->upload_icon_size, $this->upload_icon_size ); ?>
+					<?php SvgIcon::make()->name( $icon )->size( $this->upload_icon_size )->render(); ?>
 				</div>
 				<div class="tutor-file-uploader-content">
 					<p class="tutor-file-uploader-title"><?php echo esc_html( $title ); ?></p>

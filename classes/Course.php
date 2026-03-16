@@ -302,6 +302,7 @@ class Course extends Tutor_Base {
 		add_filter( 'the_preview', array( $this, 'handle_schedule_courses' ) );
 
 		add_action( 'tutor_course_action_btn', array( $this, 'render_course_action_btn' ) );
+		add_action( 'wp_ajax_tutor_complete_course', array( $this, 'ajax_tutor_complete_course' ) );
 	}
 
 	/**
@@ -2154,6 +2155,48 @@ class Course extends Tutor_Base {
 
 			wp_safe_redirect( $permalink );
 			exit;
+		}
+	}
+
+	/**
+	 * Ajax course complete handler
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_tutor_complete_course() {
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		// Checking nonce.
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'nonce' ) );
+		}
+
+		if ( ! $course_id ) {
+			$this->response_bad_request( __( 'Invalid course', 'tutor' ) );
+		}
+
+		$user_id = get_current_user_id();
+		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+			$this->response_bad_request( __( 'You are not enrolled in this course', 'tutor' ) );
+		}
+
+		/**
+		 * Filter hook provided to restrict course completion. This is useful
+		 * for specific cases like prerequisites. WP_Error should be returned
+		 * from the filter value to prevent the completion.
+		 */
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+
+		if ( is_wp_error( $can_complete ) ) {
+			$this->response_bad_request( $can_complete->get_error_message() );
+		} else {
+			CourseModel::mark_course_as_completed( $course_id, $user_id );
+			// Set temporary identifier to show review pop up.
+			self::set_review_popup_data( $user_id, $course_id );
+
+			$this->response_success( __( 'Course completed successfully', 'tutor' ) );
 		}
 	}
 
