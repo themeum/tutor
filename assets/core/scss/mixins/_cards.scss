@@ -3,10 +3,19 @@
 
 @use '../tokens/' as *;
 @use 'layout' as *;
+@use 'utilities' as *;
 
 @mixin tutor-card-base {
   background-color: $tutor-surface-l1;
   border: 1px solid $tutor-border-idle;
+  box-shadow: none;
+
+  @include tutor-ui-kids {
+    border: none;
+    box-shadow:
+      0 0 0 2px $tutor-border-idle,
+      0 5px 0 0 $tutor-border-idle;
+  }
 }
 
 @mixin tutor-card-padding($size: medium) {
