@@ -42,6 +42,14 @@ defined( 'ABSPATH' ) || exit;
  *     ->closeable( false )
  *     ->body( '<h3>Success!</h3>' )
  *     ->render();
+ *
+ * // Open by default (state is 'closed' by default)
+ * Modal::make()
+ *     ->id( 'welcome-modal' )
+ *     ->title( 'Welcome' )
+ *     ->body( 'Please confirm to continue.' )
+ *     ->state( 'open' )
+ *     ->render();
  * ```
  *
  * @since 4.0.0
@@ -164,6 +172,15 @@ class Modal extends BaseComponent {
 	 * @var bool
 	 */
 	protected $closeable = true;
+
+	/**
+	 * Initial modal state: 'open' or 'closed'.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $state = 'closed';
 
 	/**
 	 * Custom width for modal content.
@@ -313,6 +330,20 @@ class Modal extends BaseComponent {
 	}
 
 	/**
+	 * Set initial modal state (open or closed).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $state Either 'open' or 'closed'. Default is 'closed'.
+	 *
+	 * @return $this
+	 */
+	public function state( string $state ) {
+		$this->state = $state === 'open' ? 'open' : 'closed';
+		return $this;
+	}
+
+	/**
 	 * Set custom width for modal content.
 	 *
 	 * @since 4.0.0
@@ -442,7 +473,10 @@ class Modal extends BaseComponent {
 		}
 
 		// Build Alpine.js x-data.
-		$alpine_data = array( 'id' => $this->id );
+		$alpine_data = array(
+			'id'          => $this->id,
+			'initialOpen' => $this->state === 'open',
+		);
 		if ( ! $this->closeable ) {
 			$alpine_data['isCloseable'] = false;
 		}
