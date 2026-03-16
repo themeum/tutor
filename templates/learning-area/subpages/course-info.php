@@ -11,9 +11,9 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
-use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\StarRating;
+use TUTOR\Course;
 use TUTOR\Icon;
 use Tutor\Models\CourseModel;
 
@@ -150,16 +150,11 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		);
 		?>
 		</div>
-		<?php if ( $can_complete_course ) : ?>
-			<?php
-				Button::make()
-					->label( __( 'Complete the Course', 'tutor' ) )
-					->icon( Icon::TICK_MARK )
-					->attr( 'type', 'button' )
-					->attr( '@click', "TutorCore.modal.showModal('{$course_complete_modal_id}')" )
-					->render();
-			?>
-		<?php endif; ?>
+		<?php
+		if ( $can_complete_course ) {
+			Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $course_progress );
+		}
+		?>
 	</div>
 
 	<!-- TODO: sticky behaviour -->
@@ -243,6 +238,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			<?php endforeach ?>
 		</table>
 	</div>
+
 	<?php
 	if ( $can_complete_course ) {
 		$progress = $course_progress['completed_percent'] ?? 0;
@@ -250,20 +246,9 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			ConfirmationModal::make()
 			->id( $course_complete_modal_id )
 			->title( __( 'Finish Course Early?', 'tutor' ) )
-			->message( __( 'You have not completed all required lessons and assessments.', 'tutor' ) )
+			->message( Course::get_complete_modal_content( $course_progress ), wp_kses_allowed_html( 'post' ) )
 			->cancel_text( __( 'Go Back to Course', 'tutor' ) )
 			->confirm_text( __( 'Complete Anyway', 'tutor' ) )
-			->icon( Icon::WARNING_COLORIZED )
-			->confirm_handler( "handleCourseComplete($tutor_course_id)" )
-			->mutation_state( 'courseCompleteMutation' )
-			->render();
-		} else {
-			ConfirmationModal::make()
-			->id( $course_complete_modal_id )
-			->title( __( 'Are Your Sure?', 'tutor' ) )
-			->message( __( 'You can not undone this action', 'tutor' ) )
-			->cancel_text( __( 'Go Back to Course', 'tutor' ) )
-			->confirm_text( __( 'Complete', 'tutor' ) )
 			->icon( Icon::WARNING_COLORIZED )
 			->confirm_handler( "handleCourseComplete($tutor_course_id)" )
 			->mutation_state( 'courseCompleteMutation' )

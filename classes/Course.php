@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Components\Progress;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
@@ -3367,5 +3368,72 @@ class Course extends Tutor_Base {
 			'minutes' => (int) $minutes,
 			'seconds' => (int) $seconds,
 		);
+	}
+
+	/**
+	 * Get the content for the course completion modal.
+	 *
+	 * This method returns HTML for displaying a modal that informs the user
+	 * that they have not completed all required lessons and assessments. It includes
+	 * the user's current progress shown as a percentage and a progress bar.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_progress The completion percentage of the course.
+	 *
+	 * @return string The rendered HTML content for the modal.
+	 */
+	public static function get_complete_modal_content( float $course_progress = 0 ): string {
+			ob_start();
+		?>
+		<div>
+			<p class="tutor-p3 tutor-text-secondary tutor-text-center tutor-mb-7 tutor-px-11">
+				<?php esc_html_e( 'You have not completed all required lessons and assessments. ', 'tutor-pro' ); ?>
+			</p>
+			<div class="tutor-border-idle tutor-p-5 tutor-flex tutor-flex-column tutor-gap-4 tutor-surface-base tutor-rounded-md">
+				<div class="tutor-flex tutor-items-center tutor-justify-between">
+					<div><?php esc_html_e( 'Your Progress', 'tutor' ); ?></div>
+					<div><?php echo esc_html( number_format_i18n( $course_progress ) . '%' ); ?></div>
+				</div>
+				<?php
+					Progress::make()->type( 'bar' )->value( $course_progress )->render();
+				?>
+			</div>
+		</div>
+			<?php
+			return ob_get_clean();
+	}
+
+	/**
+	 * Render the course complete button.
+	 *
+	 * Displays a button that allows the user to complete the course. If the course
+	 * progress is less than 100%, clicking the button shows a modal informing the user 
+	 * that not all requirements are fulfilled. If the course progress is 100%, 
+	 * clicking the button attempts to complete the course.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $modal_id        The HTML ID of the modal to display if not complete.
+	 * @param int    $course_id       The ID of the course.
+	 * @param float  $course_progress The current completion percentage of the course.
+	 *
+	 * @return void
+	 */
+	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0 ): void {
+		$button = Button::make()
+		->label( __( 'Complete the Course', 'tutor' ) )
+		->icon( Icon::TICK_MARK )
+		->attr( 'type', 'button' );
+
+		if ( $course_progress < 100 ) {
+			$button->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" );
+		} else {
+			$button->attr( '@click', "handleCourseComplete({$course_id})" );
+			$button->attr( ':class', "courseCompleteMutation?.isPending ? 'tutor-btn-loading' : ''" );
+			$button->attr( ':disabled', 'courseCompleteMutation?.isPending' );
+		}
+
+		$button->render();
 	}
 }
