@@ -111,6 +111,12 @@
     @include tutor-flex(column, stretch, flex-start);
     gap: $tutor-spacing-3;
 
+    .tutor-wp-editor-error{
+      .tutor-wp-editor-container {
+        border: 1px solid $tutor-border-error;
+      }
+    }
+
     @include tutor-breakpoint-down(sm) {
       @include tutor-reset;
       gap: $tutor-spacing-1;
