@@ -13,6 +13,7 @@ namespace Tutor\Components;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\Positions;
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Popover;
 use TUTOR\Icon;
 use TUTOR\Input;
@@ -432,7 +433,7 @@ class DropdownFilter extends BaseComponent {
 				if ( null === $icon_size ) {
 					$icon_size = in_array( $this->variant, array( Variant::PRIMARY, Variant::PRIMARY_SOFT ), true ) ? 16 : 20;
 				}
-				tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2, $icon_size, $icon_size, array( 'class' => 'tutor-icon-secondary' ) );
+				SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( $icon_size )->color( Color::SECONDARY )->render();
 				?>
 			</button>
 
@@ -450,7 +451,7 @@ class DropdownFilter extends BaseComponent {
 						<div class="tutor-input-field tutor-px-5 tutor-pt-2 tutor-pb-4">
 							<div class="tutor-input-wrapper">
 								<div class="tutor-input-content tutor-input-content-left">
-									<?php tutor_utils()->render_svg_icon( Icon::SEARCH_2, 16, 16, array( 'class' => 'tutor-icon-idle' ) ); ?>
+									<?php SvgIcon::make()->name( Icon::SEARCH_2 )->size( 16 )->color( Color::IDLE )->render(); ?>
 								</div>
 								<input 
 									type="text" 
