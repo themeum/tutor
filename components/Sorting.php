@@ -15,6 +15,7 @@ namespace Tutor\Components;
 
 use Tutor\Helpers\QueryHelper;
 use Tutor\Components\Constants\Positions;
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Popover;
 use TUTOR\Icon;
 
@@ -188,7 +189,7 @@ class Sorting extends BaseComponent {
 			>
 				<?php
 					$sorting_icon = 'DESC' === $this->order ? Icon::STEPPER : Icon::DESCENDING;
-					tutor_utils()->render_svg_icon( $sorting_icon, 16, 16, array( 'class' => 'tutor-icon-secondary' ) );
+					SvgIcon::make()->name( $sorting_icon )->size( 16 )->color( Color::SECONDARY )->render();
 				?>
 			</button>
 

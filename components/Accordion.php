@@ -13,6 +13,8 @@
 
 namespace Tutor\Components;
 
+use TUTOR\Icon;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -150,12 +152,7 @@ class Accordion extends BaseComponent {
 	 * @return string Icon SVG.
 	 */
 	protected function render_default_icon() {
-		if ( function_exists( 'tutor_utils' ) ) {
-			ob_start();
-			tutor_utils()->render_svg_icon( 'chevron-down', 24, 24 );
-			return ob_get_clean();
-		}
-		return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" role="presentation" aria-hidden="true"><path d="M19.5 8.25L12 15.75L4.5 8.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg>';
+		return SvgIcon::make()->name( Icon::CHEVRON_DOWN )->size( 24 )->get();
 	}
 
 	/**
@@ -172,13 +169,7 @@ class Accordion extends BaseComponent {
 			return $this->render_default_icon();
 		}
 
-		if ( function_exists( 'tutor_utils' ) ) {
-			ob_start();
-			tutor_utils()->render_svg_icon( $icon, 24, 24 );
-			return ob_get_clean();
-		}
-
-		return $icon;
+		return SvgIcon::make()->name( $icon )->size( 24 )->get();
 	}
 
 	/**
