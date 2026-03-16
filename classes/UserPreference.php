@@ -156,6 +156,7 @@ class UserPreference {
 			$theme = self::DEFAULT_THEME;
 		}
 		echo ' data-theme="' . esc_attr( $theme ) . '"';
+		echo ' data-mood="kids"';
 		return $classes;
 	}
 
