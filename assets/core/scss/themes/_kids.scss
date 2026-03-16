@@ -52,8 +52,10 @@
   --tutor-button-ghost-brand-border-shadow-disabled: none;
 
   --tutor-button-outline-border-shadow: inset 0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle);
-  --tutor-button-outline-border-shadow-hover: inset 0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-hover);
-  --tutor-button-outline-border-shadow-focused: inset 0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle);
+  --tutor-button-outline-border-shadow-hover: inset 0 0 0 var(--tutor-button-border-shadow-base)
+    var(--tutor-border-hover);
+  --tutor-button-outline-border-shadow-focused: inset 0 0 0 var(--tutor-button-border-shadow-base)
+    var(--tutor-border-idle);
 
   // Primary / Destructive: allow tokenized text + “border via shadow”
   --tutor-button-primary-text: var(--tutor-text-primary-inverse);
@@ -76,11 +78,11 @@
   // Border shadows must live on the button element so size vars can apply.
   .tutor-btn {
     --tutor-button-primary-border-shadow:
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-secondary},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-secondary};
+    --tutor-button-primary-border-shadow-hover:
       0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-tertiary},
       0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-tertiary};
-    --tutor-button-primary-border-shadow-hover:
-      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand},
-      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand};
     --tutor-button-primary-border-shadow-focused:
       0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand},
       0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand};
@@ -154,28 +156,21 @@
       0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
   }
 
-  // Primary: outlined pill (white surface + brand border/text)
-  --tutor-button-primary: #{$tutor-button-outline-inverse};
-  --tutor-button-primary-hover: #{$tutor-button-primary-soft-hover};
-  --tutor-button-primary-focused: #{$tutor-button-outline-inverse};
-  --tutor-button-primary-text: var(--tutor-text-brand);
-  --tutor-button-primary-text-hover: var(--tutor-text-brand-hover);
-  --tutor-button-primary-text-focused: var(--tutor-text-brand-hover);
   // “Elevated border” (1px around + 3px bottom) using inset shadows:
   // - base outline: 1px
   // - extra bottom thickness: +2px (total 3px at bottom)
   --tutor-button-primary-border-shadow:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-brand-tertiary),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-brand-tertiary);
+    0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-secondary},
+    0 var(--tutor-button-border-shadow-bottom) 0 0 #{tutor-border-brand-secondary};
   --tutor-button-primary-border-shadow-hover:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-brand),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-brand);
+    0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-tertiary},
+    0 var(--tutor-button-border-shadow-bottom) 0 0 #{tutor-border-brand-tertiary};
   --tutor-button-primary-border-shadow-focused:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-brand),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-brand);
+    0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-secondary},
+    0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-secondary};
   --tutor-button-primary-border-shadow-disabled:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
+    0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-secondary},
+    0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-secondary};
 
   // Destructive: outlined pill (white surface + error border/text)
   --tutor-button-destructive: var(--tutor-surface-l1);
