@@ -20,6 +20,7 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Progress;
 use Tutor\Components\StarRating;
+use Tutor\Helpers\UrlHelper;
 
 // Get course ID from global variable set in learning-area/index.php .
 global $tutor_course_id,
@@ -124,6 +125,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 					->id( 'review-delete-modal' )
 					->title( __( 'Delete This Review?', 'tutor' ) )
 					->message( __( 'Are you sure you want to delete this review? Please confirm your choice.', 'tutor' ) )
+					->icon( UrlHelper::asset( 'images/delete-reviews.svg' ) )
 					->confirm_handler( 'handleDeleteReview(payload?.id)' )
 					->mutation_state( 'deleteReviewMutation' )
 					->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
