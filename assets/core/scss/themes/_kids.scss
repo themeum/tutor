@@ -91,214 +91,76 @@
       0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-secondary};
 
     --tutor-button-destructive-border-shadow:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error-secondary),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error-secondary);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-error},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-error};
     --tutor-button-destructive-border-shadow-hover:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error-secondary),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error-secondary);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-error-tertiary},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-error-tertiary};
     --tutor-button-destructive-border-shadow-focused:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error-secondary),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error-secondary);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-error},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-error};
     --tutor-button-destructive-border-shadow-disabled:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
 
     --tutor-button-primary-soft-border-shadow:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-brand-tertiary),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-brand-tertiary);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-secondary},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-secondary};
     --tutor-button-primary-soft-border-shadow-hover:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-brand),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-brand);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-tertiary},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-tertiary};
     --tutor-button-primary-soft-border-shadow-focused:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-brand),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-brand);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-secondary},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-secondary};
     --tutor-button-primary-soft-border-shadow-disabled:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
 
     --tutor-button-destructive-soft-border-shadow:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-error},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-error};
     --tutor-button-destructive-soft-border-shadow-hover:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error-secondary),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error-secondary);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-error-tertiary},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-error-tertiary};
     --tutor-button-destructive-soft-border-shadow-focused:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error-secondary),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error-secondary);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-error},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-error};
     --tutor-button-destructive-soft-border-shadow-disabled:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
 
     --tutor-button-secondary-border-shadow:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-hover},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-hover};
     --tutor-button-secondary-border-shadow-hover:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-hover),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-hover);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-tertiary},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-tertiary};
     --tutor-button-secondary-border-shadow-focused:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-hover),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-hover);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-hover},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-hover};
     --tutor-button-secondary-border-shadow-disabled:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
 
     --tutor-button-outline-border-shadow:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
     --tutor-button-outline-border-shadow-hover:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-hover),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-hover);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-hover},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-hover};
     --tutor-button-outline-border-shadow-focused:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-hover),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-hover);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
     --tutor-button-outline-border-shadow-disabled:
-      0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-      0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
+
+    --tutor-button-ghost-border-shadow-hover:
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-hover},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-hover};
+
+    --tutor-button-ghost-brand-border-shadow-hover:
+      0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-tertiary},
+      0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-tertiary};
   }
-
-  // “Elevated border” (1px around + 3px bottom) using inset shadows:
-  // - base outline: 1px
-  // - extra bottom thickness: +2px (total 3px at bottom)
-  --tutor-button-primary-border-shadow:
-    0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-secondary},
-    0 var(--tutor-button-border-shadow-bottom) 0 0 #{tutor-border-brand-secondary};
-  --tutor-button-primary-border-shadow-hover:
-    0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-tertiary},
-    0 var(--tutor-button-border-shadow-bottom) 0 0 #{tutor-border-brand-tertiary};
-  --tutor-button-primary-border-shadow-focused:
-    0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-secondary},
-    0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-secondary};
-  --tutor-button-primary-border-shadow-disabled:
-    0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-brand-secondary},
-    0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-brand-secondary};
-
-  // Destructive: outlined pill (white surface + error border/text)
-  --tutor-button-destructive: var(--tutor-surface-l1);
-  --tutor-button-destructive-hover: var(--tutor-surface-critical);
-  --tutor-button-destructive-focused: var(--tutor-surface-critical);
-  --tutor-button-destructive-text: var(--tutor-text-critical);
-  --tutor-button-destructive-text-hover: var(--tutor-text-critical-hover);
-  --tutor-button-destructive-text-focused: var(--tutor-text-critical-hover);
-  --tutor-button-destructive-border-shadow:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error-secondary),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error-secondary);
-  --tutor-button-destructive-border-shadow-hover:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error-secondary),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error-secondary);
-  --tutor-button-destructive-border-shadow-focused:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error-secondary),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error-secondary);
-  --tutor-button-destructive-border-shadow-disabled:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
-
-  // Primary-soft: outlined pill (white surface + brand border/text)
-  --tutor-button-primary-soft-background: var(--tutor-surface-l1);
-  --tutor-button-primary-soft-background-hover: var(--tutor-surface-brand-tertiary);
-  --tutor-button-primary-soft-background-focused: var(--tutor-surface-brand-tertiary);
-  --tutor-button-primary-soft-background-disabled: var(--tutor-button-disabled);
-  --tutor-button-primary-soft-text: var(--tutor-text-brand);
-  --tutor-button-primary-soft-text-hover: var(--tutor-text-brand-hover);
-  --tutor-button-primary-soft-text-focused: var(--tutor-text-brand-hover);
-  --tutor-button-primary-soft-text-disabled: var(--tutor-text-disabled);
-  --tutor-button-primary-soft-border-shadow:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-brand-tertiary),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-brand-tertiary);
-  --tutor-button-primary-soft-border-shadow-hover:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-brand),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-brand);
-  --tutor-button-primary-soft-border-shadow-focused:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-brand),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-brand);
-  --tutor-button-primary-soft-border-shadow-disabled:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
-
-  // Destructive-soft: outlined pill (white surface + error border/text)
-  --tutor-button-destructive-soft-background: var(--tutor-surface-l1);
-  --tutor-button-destructive-soft-background-hover: var(--tutor-surface-critical);
-  --tutor-button-destructive-soft-background-focused: var(--tutor-surface-critical);
-  --tutor-button-destructive-soft-background-disabled: var(--tutor-button-disabled);
-  --tutor-button-destructive-soft-text: var(--tutor-text-critical);
-  --tutor-button-destructive-soft-text-hover: var(--tutor-text-critical-hover);
-  --tutor-button-destructive-soft-text-focused: var(--tutor-text-critical-hover);
-  --tutor-button-destructive-soft-text-disabled: var(--tutor-text-disabled);
-  --tutor-button-destructive-soft-border-shadow:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error);
-  --tutor-button-destructive-soft-border-shadow-hover:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error-secondary),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error-secondary);
-  --tutor-button-destructive-soft-border-shadow-focused:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-error-secondary),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-error-secondary);
-  --tutor-button-destructive-soft-border-shadow-disabled:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
-
-  // Secondary: outlined pill (white surface + gray border/text)
-  --tutor-button-secondary-background: var(--tutor-surface-l1);
-  --tutor-button-secondary-background-hover: var(--tutor-surface-l2);
-  --tutor-button-secondary-background-focused: var(--tutor-surface-l2);
-  --tutor-button-secondary-background-disabled: var(--tutor-button-disabled);
-  --tutor-button-secondary-text: var(--tutor-text-primary);
-  --tutor-button-secondary-text-hover: var(--tutor-text-primary);
-  --tutor-button-secondary-text-focused: var(--tutor-text-primary);
-  --tutor-button-secondary-text-disabled: var(--tutor-text-disabled);
-  --tutor-button-secondary-border-shadow:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
-  --tutor-button-secondary-border-shadow-hover:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-hover),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-hover);
-  --tutor-button-secondary-border-shadow-focused:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-hover),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-hover);
-  --tutor-button-secondary-border-shadow-disabled:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
-
-  // Outline: same visual as secondary in kids mode
-  --tutor-button-outline-background: var(--tutor-surface-l1);
-  --tutor-button-outline-background-hover: var(--tutor-surface-l2);
-  --tutor-button-outline-background-focused: var(--tutor-surface-l2);
-  --tutor-button-outline-background-disabled: var(--tutor-button-disabled);
-  --tutor-button-outline-text: var(--tutor-text-primary);
-  --tutor-button-outline-text-hover: var(--tutor-text-primary);
-  --tutor-button-outline-text-focused: var(--tutor-text-primary);
-  --tutor-button-outline-text-disabled: var(--tutor-text-disabled);
-  --tutor-button-outline-border-shadow:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
-  --tutor-button-outline-border-shadow-hover:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-hover),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-hover);
-  --tutor-button-outline-border-shadow-focused:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-hover),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-hover);
-  --tutor-button-outline-border-shadow-disabled:
-    0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle),
-    0 var(--tutor-button-border-shadow-bottom) 0 0 var(--tutor-border-idle);
-
-  // Ghost: transparent pill, no border
-  --tutor-button-ghost-text: var(--tutor-text-primary);
-  --tutor-button-ghost-text-hover: var(--tutor-text-primary);
-  --tutor-button-ghost-text-disabled: var(--tutor-text-disabled);
-  --tutor-button-ghost-background-hover: var(--tutor-surface-l2);
-
-  // Ghost-brand: transparent pill, no border, brand text
-  --tutor-button-ghost-brand-text: var(--tutor-text-brand);
-  --tutor-button-ghost-brand-text-hover: var(--tutor-text-brand-hover);
-  --tutor-button-ghost-brand-text-disabled: var(--tutor-text-disabled);
-  --tutor-button-ghost-brand-background-hover: var(--tutor-surface-brand-tertiary);
-
-  // Link: brand text (inherits pill radius from shared shape tokens)
-  --tutor-button-link-text: var(--tutor-text-brand);
-  --tutor-button-link-text-hover: var(--tutor-text-brand-hover);
-  --tutor-button-link-text-disabled: var(--tutor-text-disabled);
-
-  // Link-gray: subdued text
-  --tutor-button-link-gray-text: var(--tutor-text-subdued);
-  --tutor-button-link-gray-text-hover: var(--tutor-text-secondary);
-  --tutor-button-link-gray-text-disabled: var(--tutor-text-disabled);
 }
