@@ -202,7 +202,7 @@ const FormScale = ({ field }: FormScaleProps) => {
               <label css={styles.configLabel}>{__('Steps', __TUTOR_TEXT_DOMAIN__)}</label>
               <input
                 type="number"
-                step="0.1"
+                step="1"
                 value={config.step}
                 onChange={(e) => handleConfigChange('step', parseFloat(e.target.value) || 1)}
                 className="tutor-scale-config-input"
