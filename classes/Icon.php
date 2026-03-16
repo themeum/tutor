@@ -193,6 +193,7 @@ final class Icon {
 	const GRAB_HANDLE                = 'grab-handle';
 	const GUTENBERG_COLORIZED        = 'gutenberg-colorized';
 	const HAND_COIN                  = 'hand-coin';
+	const HAND_SWIPE_RIGHT           = 'hand-swipe-right';
 	const HAPPY                      = 'happy';
 	const HEART                      = 'heart';
 	const HIGHLIGHTER                = 'highlighter';

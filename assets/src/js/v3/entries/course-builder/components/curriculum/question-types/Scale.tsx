@@ -30,7 +30,10 @@ const Scale = () => {
     }
     const baseAnswer: QuizQuestionOption = {
       _data_status: QuizDataStatus.NEW,
-      is_saved: false,
+      // Treat the initial default configuration as already saved so that
+      // validation doesn’t block adding another question when the instructor
+      // hasn’t interacted with the scale form yet.
+      is_saved: true,
       answer_id: nanoid(),
       belongs_question_id: activeQuestionId,
       belongs_question_type: 'scale' as QuizQuestionOption['belongs_question_type'],

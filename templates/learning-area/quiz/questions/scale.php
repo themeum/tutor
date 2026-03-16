@@ -13,6 +13,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Quiz as QuizClass;
+use TUTOR\Icon;
 
 global $tutor_is_started_quiz;
 
@@ -115,11 +116,9 @@ do_action( 'tutor_enqueue_scale_question_script' );
 
 		<div class="tutor-scale-instructions">
 			<div class="tutor-scale-hand-icon" aria-hidden="true">
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path d="M9 11V6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V11M9 11H11M9 11V10M11 11V10M7 13V8C7 7.44772 7.44772 7 8 7C8.55228 7 9 7.44772 9 8V10M13 11V7C13 6.44772 13.4477 6 14 6C14.5523 6 15 6.44772 15 7V11M15 11V13C15 13.5304 15.2107 14.0391 15.5858 14.4142L17.2929 16.1213C17.9229 16.7513 18 17.2 18 18C18 19.1046 17.1046 20 16 20H11.382C10.5346 20 9.70694 19.7416 9.01155 19.2596L6 17.5V13.5C6 12.6716 6.67157 12 7.5 12C8.32843 12 9 12.6716 9 13.5V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-				</svg>
+				<?php tutor_utils()->render_svg_icon( Icon::HAND_SWIPE_RIGHT, 20, 20, array( 'class' => 'tutor-icon-secondary' ) ); ?>
 			</div>
-			<span class="tutor-scale-instruction-text"><?php esc_html_e( 'Drag the scale to select your answer', 'tutor' ); ?></span>
+			<span class="tutor-scale-instruction-text"><?php esc_html_e( 'Move the scale left or right to set value', 'tutor' ); ?></span>
 		</div>
 	</div>
 
@@ -150,9 +149,5 @@ do_action( 'tutor_enqueue_scale_question_script' );
 		x-bind="<?php echo esc_attr( $register_attr ); ?>"
 		value=""
 	/>
-
-	<p class="tutor-fs-7 tutor-color-secondary tutor-mt-12">
-		<?php esc_html_e( 'Drag the scale to select your answer. Your selection will be saved when you submit the quiz.', 'tutor' ); ?>
-	</p>
 </div>
 

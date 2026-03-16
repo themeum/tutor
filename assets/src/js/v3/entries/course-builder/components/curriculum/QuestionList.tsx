@@ -103,6 +103,7 @@ const questionTypeOptions: {
     icon: 'quizOrdering',
     isPro: true,
   },
+  /*
   {
     label: __('Draw on Image', 'tutor'),
     value: 'draw_image',
@@ -110,6 +111,7 @@ const questionTypeOptions: {
     icon: 'quizImageAnswer',
     isPro: true,
   },
+  */
   {
     label: __('Scale', 'tutor'),
     value: 'scale',

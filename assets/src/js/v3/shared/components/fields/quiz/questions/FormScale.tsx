@@ -9,8 +9,17 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useState } from 'react';
 
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
+import {
+  borderRadius,
+  Breakpoint,
+  colorTokens,
+  fontFamily,
+  fontSize,
+  fontWeight,
+  letterSpacing,
+  lineHeight,
+  spacing,
+} from '@TutorShared/config/styles';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -166,59 +175,56 @@ const FormScale = ({ field }: FormScaleProps) => {
     <div css={styles.wrapper}>
       <div css={styles.card}>
         <div css={styles.answerHeader}>
-          <span css={styles.answerHeaderTitle}>{__('Configure Scale Question', __TUTOR_TEXT_DOMAIN__)}</span>
+          <span css={styles.answerHeaderTitle}>{__('Scale range', __TUTOR_TEXT_DOMAIN__)}</span>
         </div>
         {/* Scale Configuration */}
         <div css={styles.configSection}>
-          <h4 css={styles.sectionTitle}>{__('Scale Configuration', __TUTOR_TEXT_DOMAIN__)}</h4>
           <div css={styles.configGrid}>
             <div css={styles.configField}>
-              <label css={styles.configLabel}>{__('Min Value', __TUTOR_TEXT_DOMAIN__)}</label>
+              <label css={styles.configLabel}>{__('Min value', __TUTOR_TEXT_DOMAIN__)}</label>
               <input
                 type="number"
                 value={config.min}
                 onChange={(e) => handleConfigChange('min', parseFloat(e.target.value) || 0)}
-                css={styles.configInput}
+                className="tutor-scale-config-input"
               />
             </div>
             <div css={styles.configField}>
-              <label css={styles.configLabel}>{__('Max Value', __TUTOR_TEXT_DOMAIN__)}</label>
+              <label css={styles.configLabel}>{__('Max value', __TUTOR_TEXT_DOMAIN__)}</label>
               <input
                 type="number"
                 value={config.max}
                 onChange={(e) => handleConfigChange('max', parseFloat(e.target.value) || 100)}
-                css={styles.configInput}
+                className="tutor-scale-config-input"
               />
             </div>
             <div css={styles.configField}>
-              <label css={styles.configLabel}>{__('Step', __TUTOR_TEXT_DOMAIN__)}</label>
+              <label css={styles.configLabel}>{__('Steps', __TUTOR_TEXT_DOMAIN__)}</label>
               <input
                 type="number"
                 step="0.1"
                 value={config.step}
                 onChange={(e) => handleConfigChange('step', parseFloat(e.target.value) || 1)}
-                css={styles.configInput}
+                className="tutor-scale-config-input"
               />
             </div>
             <div css={styles.configField}>
-              <label css={styles.configLabel}>{__('Label Every', __TUTOR_TEXT_DOMAIN__)}</label>
+              <label css={styles.configLabel}>{__('Label entry', __TUTOR_TEXT_DOMAIN__)}</label>
               <input
                 type="number"
                 value={config.labelEvery}
                 onChange={(e) => handleConfigChange('labelEvery', parseFloat(e.target.value) || 10)}
-                css={styles.configInput}
+                className="tutor-scale-config-input"
               />
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Answer Configuration */}
+      <div css={styles.card}>
         <div css={styles.answerSection}>
-          <h4 css={styles.sectionTitle}>{__('Set Correct Answer', __TUTOR_TEXT_DOMAIN__)}</h4>
-          <p css={styles.hint}>
-            {__('Set the correct value that students should select on the scale.', __TUTOR_TEXT_DOMAIN__)}
-          </p>
-          <div css={styles.answerField}>
+          {/* Answer Configuration */}
+          <div css={styles.configField}>
             <label css={styles.configLabel}>{__('Correct Value', __TUTOR_TEXT_DOMAIN__)}</label>
             <input
               type="number"
@@ -227,14 +233,10 @@ const FormScale = ({ field }: FormScaleProps) => {
               max={config.max}
               value={scaleData.value}
               onChange={(e) => handleValueChange(parseFloat(e.target.value) || config.min)}
-              css={styles.answerInput}
+              className="tutor-scale-config-input"
             />
           </div>
         </div>
-
-        <p css={styles.savedHint}>
-          {__('Configuration saved. Students will see this scale in the quiz.', __TUTOR_TEXT_DOMAIN__)}
-        </p>
       </div>
     </div>
   );
@@ -246,7 +248,6 @@ const styles = {
   wrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[24]};
-    padding-left: ${spacing[40]};
 
     ${Breakpoint.smallMobile} {
       padding-left: ${spacing[8]};
@@ -254,11 +255,10 @@ const styles = {
   `,
   card: css`
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[20]};
-    padding: ${spacing[20]};
+    gap: ${spacing[8]};
+    padding: ${spacing[16]};
     background: ${colorTokens.surface.tutor};
-    border: 1px solid ${colorTokens.stroke.border};
-    border-radius: ${borderRadius.card};
+    border-radius: ${borderRadius.input};
   `,
   answerHeader: css`
     ${styleUtils.display.flex('row')};
@@ -267,8 +267,12 @@ const styles = {
     gap: ${spacing[12]};
   `,
   answerHeaderTitle: css`
-    ${typography.body('medium')};
-    color: ${colorTokens.text.primary};
+    font-family: ${fontFamily.sfProDisplay};
+    font-weight: ${fontWeight.medium};
+    font-size: ${fontSize[15]};
+    line-height: ${lineHeight[24]};
+    letter-spacing: ${letterSpacing.normal};
+    color: ${colorTokens.text.title};
   `,
   configSection: css`
     ${styleUtils.display.flex('column')};
@@ -276,72 +280,38 @@ const styles = {
   `,
   answerSection: css`
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[12]};
-    padding: ${spacing[16]};
-    background: ${colorTokens.surface.tutor};
-    border-radius: ${borderRadius.card};
-  `,
-  previewSection: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[12]};
-    padding: ${spacing[16]};
-    background: ${colorTokens.surface.tutor};
-    border-radius: ${borderRadius.card};
-  `,
-  sectionTitle: css`
-    ${typography.body('medium')};
-    color: ${colorTokens.text.primary};
-    margin: 0;
   `,
   configGrid: css`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: ${spacing[12]};
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: ${spacing[8]};
+
+    ${Breakpoint.smallTablet} {
+      grid-template-columns: 1fr;
+    }
   `,
   configField: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[4]};
-  `,
-  answerField: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[4]};
-    max-width: 200px;
+
+    & .tutor-scale-config-input {
+      padding: ${spacing[8]};
+      border: 1px solid ${colorTokens.stroke.default};
+      border-radius: ${borderRadius.input};
+      font-family: ${fontFamily.sfProDisplay};
+      font-weight: ${fontWeight.regular};
+      font-size: ${fontSize[16]};
+      line-height: ${lineHeight[24]};
+      letter-spacing: ${letterSpacing.normal};
+      color: ${colorTokens.text.subdued};
+    }
   `,
   configLabel: css`
-    ${typography.caption('medium')};
-    color: ${colorTokens.text.primary};
-  `,
-  configInput: css`
-    padding: ${spacing[8]};
-    border: 1px solid ${colorTokens.stroke.border};
-    border-radius: ${borderRadius.input};
-    font-size: 14px;
-
-    &:focus {
-      outline: none;
-      border-color: ${colorTokens.stroke.brand};
-    }
-  `,
-  answerInput: css`
-    padding: ${spacing[12]};
-    border: 1px solid ${colorTokens.stroke.border};
-    border-radius: ${borderRadius.input};
-    font-size: 16px;
-    font-weight: 600;
-
-    &:focus {
-      outline: none;
-      border-color: ${colorTokens.stroke.brand};
-    }
-  `,
-  hint: css`
-    ${typography.caption()};
-    color: ${colorTokens.text.subdued};
-    margin: 0;
-  `,
-  savedHint: css`
-    ${typography.caption()};
-    color: ${colorTokens.text.success};
-    margin: 0;
+    font-family: ${fontFamily.sfProDisplay};
+    font-weight: ${fontWeight.regular};
+    font-size: ${fontSize[15]};
+    line-height: ${lineHeight[24]};
+    letter-spacing: ${letterSpacing.normal};
+    color: ${colorTokens.text.title};
   `,
 };
