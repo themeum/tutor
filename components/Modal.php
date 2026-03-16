@@ -466,7 +466,7 @@ class Modal extends BaseComponent {
 		$footer = $this->render_footer();
 
 		$this->component_string = sprintf(
-			'<div x-data="tutorModal(%s)" x-cloak>
+			'<div x-data="tutorModal(%s)" x-cloak style="display: none;">
 				<template x-teleport="body">
 					<div x-bind="getModalBindings()">
 						<div x-bind="getBackdropBindings()"></div>

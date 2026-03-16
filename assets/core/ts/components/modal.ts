@@ -56,6 +56,11 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
   close(): void {
     this.open = false;
     this.payload = null;
+    document.dispatchEvent(
+      new CustomEvent(TUTOR_CUSTOM_EVENTS.MODAL_CLOSED, {
+        detail: { id: this.id },
+      }),
+    );
   },
 
   getBackdropBindings() {
