@@ -56,19 +56,8 @@
     var(--tutor-border-hover);
   --tutor-button-outline-border-shadow-focused: inset 0 0 0 var(--tutor-button-border-shadow-base)
     var(--tutor-border-idle);
-
-  // Primary / Destructive: allow tokenized text + “border via shadow”
-  --tutor-button-primary-text: var(--tutor-text-primary-inverse);
-  --tutor-button-primary-text-hover: var(--tutor-text-primary-inverse);
-  --tutor-button-primary-text-focused: var(--tutor-text-primary-inverse);
-  --tutor-button-primary-text-disabled: var(--tutor-text-primary-inverse);
-
-  --tutor-button-destructive-text: var(--tutor-text-primary-inverse);
-  --tutor-button-destructive-text-hover: var(--tutor-text-primary-inverse);
-  --tutor-button-destructive-text-focused: var(--tutor-text-primary-inverse);
 }
 
-// Kids mode: token overrides only (no component selectors)
 [data-tutor-ui='kids'] {
   // Shape + elevation
   --tutor-button-radius: #{$tutor-radius-full};
