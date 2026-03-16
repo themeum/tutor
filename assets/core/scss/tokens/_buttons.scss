@@ -10,10 +10,6 @@ $tutor-button-primary: var(--tutor-button-primary);
 $tutor-button-primary-hover: var(--tutor-button-primary-hover);
 $tutor-button-primary-focused: var(--tutor-button-primary-focused);
 $tutor-button-primary-disabled: var(--tutor-button-primary-disabled);
-$tutor-button-primary-text: var(--tutor-button-primary-text);
-$tutor-button-primary-text-hover: var(--tutor-button-primary-text-hover);
-$tutor-button-primary-text-focused: var(--tutor-button-primary-text-focused);
-$tutor-button-primary-text-disabled: var(--tutor-button-primary-text-disabled);
 $tutor-button-primary-border-shadow: var(--tutor-button-primary-border-shadow, none);
 $tutor-button-primary-border-shadow-hover: var(--tutor-button-primary-border-shadow-hover, var(--tutor-button-primary-border-shadow, none));
 $tutor-button-primary-border-shadow-focused: var(--tutor-button-primary-border-shadow-focused, var(--tutor-button-primary-border-shadow, none));
@@ -27,10 +23,6 @@ $tutor-button-primary-soft-background: var(--tutor-button-primary-soft-backgroun
 $tutor-button-primary-soft-background-hover: var(--tutor-button-primary-soft-background-hover, var(--tutor-button-primary-soft-hover));
 $tutor-button-primary-soft-background-focused: var(--tutor-button-primary-soft-background-focused, var(--tutor-button-primary-soft-focused));
 $tutor-button-primary-soft-background-disabled: var(--tutor-button-primary-soft-background-disabled, var(--tutor-button-disabled));
-$tutor-button-primary-soft-text: var(--tutor-button-primary-soft-text, var(--tutor-text-brand));
-$tutor-button-primary-soft-text-hover: var(--tutor-button-primary-soft-text-hover, var(--tutor-button-primary-soft-text, var(--tutor-text-brand)));
-$tutor-button-primary-soft-text-focused: var(--tutor-button-primary-soft-text-focused, var(--tutor-button-primary-soft-text, var(--tutor-text-brand)));
-$tutor-button-primary-soft-text-disabled: var(--tutor-button-primary-soft-text-disabled, var(--tutor-text-subdued));
 $tutor-button-primary-soft-border-shadow: var(--tutor-button-primary-soft-border-shadow, none);
 $tutor-button-primary-soft-border-shadow-hover: var(--tutor-button-primary-soft-border-shadow-hover, var(--tutor-button-primary-soft-border-shadow, none));
 $tutor-button-primary-soft-border-shadow-focused: var(--tutor-button-primary-soft-border-shadow-focused, var(--tutor-button-primary-soft-border-shadow, none));
@@ -40,10 +32,6 @@ $tutor-button-primary-soft-border-shadow-disabled: var(--tutor-button-primary-so
 $tutor-button-destructive: var(--tutor-button-destructive);
 $tutor-button-destructive-hover: var(--tutor-button-destructive-hover);
 $tutor-button-destructive-focused: var(--tutor-button-destructive-focused);
-$tutor-button-destructive-text: var(--tutor-button-destructive-text);
-$tutor-button-destructive-text-hover: var(--tutor-button-destructive-text-hover);
-$tutor-button-destructive-text-focused: var(--tutor-button-destructive-text-focused);
-$tutor-button-destructive-text-disabled: var(--tutor-button-destructive-text-disabled, var(--tutor-text-subdued));
 $tutor-button-destructive-border-shadow: var(--tutor-button-destructive-border-shadow, none);
 $tutor-button-destructive-border-shadow-hover: var(--tutor-button-destructive-border-shadow-hover, var(--tutor-button-destructive-border-shadow, none));
 $tutor-button-destructive-border-shadow-focused: var(--tutor-button-destructive-border-shadow-focused, var(--tutor-button-destructive-border-shadow, none));
@@ -57,10 +45,6 @@ $tutor-button-destructive-soft-background: var(--tutor-button-destructive-soft-b
 $tutor-button-destructive-soft-background-hover: var(--tutor-button-destructive-soft-background-hover, var(--tutor-button-destructive-soft-hover));
 $tutor-button-destructive-soft-background-focused: var(--tutor-button-destructive-soft-background-focused, var(--tutor-button-destructive-soft-focused));
 $tutor-button-destructive-soft-background-disabled: var(--tutor-button-destructive-soft-background-disabled, var(--tutor-button-disabled));
-$tutor-button-destructive-soft-text: var(--tutor-button-destructive-soft-text, var(--tutor-text-critical));
-$tutor-button-destructive-soft-text-hover: var(--tutor-button-destructive-soft-text-hover, var(--tutor-button-destructive-soft-text, var(--tutor-text-critical)));
-$tutor-button-destructive-soft-text-focused: var(--tutor-button-destructive-soft-text-focused, var(--tutor-button-destructive-soft-text, var(--tutor-text-critical)));
-$tutor-button-destructive-soft-text-disabled: var(--tutor-button-destructive-soft-text-disabled, var(--tutor-text-subdued));
 $tutor-button-destructive-soft-border-shadow: var(--tutor-button-destructive-soft-border-shadow, none);
 $tutor-button-destructive-soft-border-shadow-hover: var(--tutor-button-destructive-soft-border-shadow-hover, var(--tutor-button-destructive-soft-border-shadow, none));
 $tutor-button-destructive-soft-border-shadow-focused: var(--tutor-button-destructive-soft-border-shadow-focused, var(--tutor-button-destructive-soft-border-shadow, none));
@@ -74,10 +58,6 @@ $tutor-button-secondary-background: var(--tutor-button-secondary-background, var
 $tutor-button-secondary-background-hover: var(--tutor-button-secondary-background-hover, var(--tutor-button-secondary-hover));
 $tutor-button-secondary-background-focused: var(--tutor-button-secondary-background-focused, var(--tutor-button-secondary-focused));
 $tutor-button-secondary-background-disabled: var(--tutor-button-secondary-background-disabled, var(--tutor-button-disabled));
-$tutor-button-secondary-text: var(--tutor-button-secondary-text, var(--tutor-text-primary));
-$tutor-button-secondary-text-hover: var(--tutor-button-secondary-text-hover, var(--tutor-button-secondary-text, var(--tutor-text-primary)));
-$tutor-button-secondary-text-focused: var(--tutor-button-secondary-text-focused, var(--tutor-button-secondary-text, var(--tutor-text-primary)));
-$tutor-button-secondary-text-disabled: var(--tutor-button-secondary-text-disabled, var(--tutor-text-subdued));
 $tutor-button-secondary-border-shadow: var(--tutor-button-secondary-border-shadow, none);
 $tutor-button-secondary-border-shadow-hover: var(--tutor-button-secondary-border-shadow-hover, var(--tutor-button-secondary-border-shadow, none));
 $tutor-button-secondary-border-shadow-focused: var(--tutor-button-secondary-border-shadow-focused, var(--tutor-button-secondary-border-shadow, none));
@@ -91,10 +71,6 @@ $tutor-button-outline-background: var(--tutor-button-outline-background, var(--t
 $tutor-button-outline-background-hover: var(--tutor-button-outline-background-hover, var(--tutor-button-outline-hover));
 $tutor-button-outline-background-focused: var(--tutor-button-outline-background-focused, var(--tutor-button-outline-focused-inverse));
 $tutor-button-outline-background-disabled: var(--tutor-button-outline-background-disabled, var(--tutor-button-disabled));
-$tutor-button-outline-text: var(--tutor-button-outline-text, var(--tutor-text-primary));
-$tutor-button-outline-text-hover: var(--tutor-button-outline-text-hover, var(--tutor-button-outline-text, var(--tutor-text-primary)));
-$tutor-button-outline-text-focused: var(--tutor-button-outline-text-focused, var(--tutor-button-outline-text, var(--tutor-text-primary)));
-$tutor-button-outline-text-disabled: var(--tutor-button-outline-text-disabled, var(--tutor-text-subdued));
 $tutor-button-outline-border-shadow: var(--tutor-button-outline-border-shadow);
 $tutor-button-outline-border-shadow-hover: var(--tutor-button-outline-border-shadow-hover, var(--tutor-button-outline-border-shadow));
 $tutor-button-outline-border-shadow-focused: var(--tutor-button-outline-border-shadow-focused, var(--tutor-button-outline-border-shadow));
@@ -105,9 +81,6 @@ $tutor-button-ghost-hover: var(--tutor-button-ghost-hover);
 $tutor-button-ghost-background: var(--tutor-button-ghost-background, transparent);
 $tutor-button-ghost-background-hover: var(--tutor-button-ghost-background-hover, var(--tutor-button-ghost-hover));
 $tutor-button-ghost-background-disabled: var(--tutor-button-ghost-background-disabled, transparent);
-$tutor-button-ghost-text: var(--tutor-button-ghost-text, var(--tutor-text-primary));
-$tutor-button-ghost-text-hover: var(--tutor-button-ghost-text-hover, var(--tutor-button-ghost-text, var(--tutor-text-primary)));
-$tutor-button-ghost-text-disabled: var(--tutor-button-ghost-text-disabled, var(--tutor-text-subdued));
 $tutor-button-ghost-border-shadow: var(--tutor-button-ghost-border-shadow, none);
 $tutor-button-ghost-border-shadow-hover: var(--tutor-button-ghost-border-shadow-hover, var(--tutor-button-ghost-border-shadow, none));
 $tutor-button-ghost-border-shadow-disabled: var(--tutor-button-ghost-border-shadow-disabled, var(--tutor-button-ghost-border-shadow, none));
@@ -116,27 +89,9 @@ $tutor-button-ghost-border-shadow-disabled: var(--tutor-button-ghost-border-shad
 $tutor-button-ghost-brand-background: var(--tutor-button-ghost-brand-background, transparent);
 $tutor-button-ghost-brand-background-hover: var(--tutor-button-ghost-brand-background-hover, var(--tutor-button-primary-soft));
 $tutor-button-ghost-brand-background-disabled: var(--tutor-button-ghost-brand-background-disabled, transparent);
-$tutor-button-ghost-brand-text: var(--tutor-button-ghost-brand-text, var(--tutor-text-brand));
-$tutor-button-ghost-brand-text-hover: var(--tutor-button-ghost-brand-text-hover, var(--tutor-button-ghost-brand-text, var(--tutor-text-brand)));
-$tutor-button-ghost-brand-text-disabled: var(--tutor-button-ghost-brand-text-disabled, var(--tutor-text-subdued));
 $tutor-button-ghost-brand-border-shadow: var(--tutor-button-ghost-brand-border-shadow, none);
 $tutor-button-ghost-brand-border-shadow-hover: var(--tutor-button-ghost-brand-border-shadow-hover, var(--tutor-button-ghost-brand-border-shadow, none));
 $tutor-button-ghost-brand-border-shadow-disabled: var(--tutor-button-ghost-brand-border-shadow-disabled, var(--tutor-button-ghost-brand-border-shadow, none));
-
-// --- Link ---
-$tutor-button-link-text: var(--tutor-button-link-text, var(--tutor-text-brand));
-$tutor-button-link-text-hover: var(--tutor-button-link-text-hover, var(--tutor-text-brand-hover));
-$tutor-button-link-text-disabled: var(--tutor-button-link-text-disabled, var(--tutor-text-subdued));
-
-// --- Link Gray ---
-$tutor-button-link-gray-text: var(--tutor-button-link-gray-text, var(--tutor-text-subdued));
-$tutor-button-link-gray-text-hover: var(--tutor-button-link-gray-text-hover, var(--tutor-text-secondary));
-$tutor-button-link-gray-text-disabled: var(--tutor-button-link-gray-text-disabled, var(--tutor-text-subdued));
-
-// --- Link Destructive ---
-$tutor-button-link-destructive-text: var(--tutor-button-link-destructive-text, var(--tutor-text-critical));
-$tutor-button-link-destructive-text-hover: var(--tutor-button-link-destructive-text-hover, var(--tutor-text-critical-hover));
-$tutor-button-link-destructive-text-disabled: var(--tutor-button-link-destructive-text-disabled, var(--tutor-text-subdued));
 
 // --- Shared ---
 $tutor-button-disabled: var(--tutor-button-disabled);
