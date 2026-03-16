@@ -242,6 +242,51 @@ class InputField extends BaseComponent {
 	protected $intermediate = false;
 
 	/**
+	 * Whether to use WordPress media library instead of native file input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $use_wp_media = false;
+
+	/**
+	 * WordPress media modal title.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $wp_media_title = '';
+
+	/**
+	 * WordPress media modal button text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $wp_media_button_text = '';
+
+	/**
+	 * WordPress media library type filter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $wp_media_library_type = '';
+
+	/**
+	 * Component variant.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $variant = '';
+
+	/**
 	 * Whether input has clear button.
 	 *
 	 * @since 4.0.0
