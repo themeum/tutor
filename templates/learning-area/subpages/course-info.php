@@ -152,7 +152,12 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		</div>
 		<?php if ( $can_complete_course ) : ?>
 			<?php
-				Button::make()->label( __( 'Complete the Course', 'tutor' ) )->icon( Icon::TICK_MARK )->attr( 'type', 'button' )->attr( '@click', 'TutorCore.modal.showModal(' . "$tutor_course_complete_modal" . ')' )->render();
+				Button::make()
+					->label( __( 'Complete the Course', 'tutor' ) )
+					->icon( Icon::TICK_MARK )
+					->attr( 'type', 'button' )
+					->attr( '@click', "TutorCore.modal.showModal('{$course_complete_modal_id}')" )
+					->render();
 			?>
 		<?php endif; ?>
 	</div>
