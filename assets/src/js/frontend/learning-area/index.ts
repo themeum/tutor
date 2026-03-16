@@ -1,6 +1,7 @@
 // Learning Area Entry Point
 // Initializes learning area functionality based on current page
 
+import { initializeReviews } from '@FrontendComponents/reviews';
 import { initializeLesson } from './lesson';
 import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeQna } from './pages/qna';
@@ -43,6 +44,10 @@ const initializeLearningArea = () => {
 
     case 'qna':
       initializeQna();
+      break;
+
+    case 'reviews':
+      initializeReviews();
       break;
 
     default:
