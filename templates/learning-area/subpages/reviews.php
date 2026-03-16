@@ -12,18 +12,20 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 use TUTOR\Input;
-use Tutor\Components\Avatar;
-use Tutor\Components\Badge;
+use Tutor\Components\Button;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Progress;
 use Tutor\Components\StarRating;
+use Tutor\Helpers\UrlHelper;
 
 // Get course ID from global variable set in learning-area/index.php .
 global $tutor_course_id,
-$current_user_id;
+$current_user_id,
+$tutor_is_enrolled;
 
 // Pagination setup.
 $review_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
@@ -33,14 +35,25 @@ $offset          = ( $current_page - 1 ) * $review_per_page;
 $course_rating = tutor_utils()->get_course_rating( $tutor_course_id );
 $total_items   = (int) tutor_utils()->get_course_reviews( $tutor_course_id, null, null, true, array( 'approved' ), $current_user_id );
 $reviews       = tutor_utils()->get_course_reviews( $tutor_course_id, $offset, $review_per_page, false, array( 'approved' ), $current_user_id );
+$my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_course_id, array( 'approved', 'hold' ) );
 
 ?>
 
 <div class="tutor-py-8 tutor-learning-area-reviews">
-	<h4 class="tutor-h4 tutor-mb-5 tutor-flex tutor-items-center tutor-gap-4">
-		<?php tutor_utils()->render_svg_icon( Icon::RATINGS, 24, 24 ); ?>
-		<?php esc_html_e( 'Reviews', 'tutor' ); ?>
-	</h4>
+	<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-5">
+		<h4 class="tutor-h4 tutor-flex tutor-items-center tutor-gap-4">
+			<?php tutor_utils()->render_svg_icon( Icon::RATINGS, 24, 24 ); ?>
+			<?php esc_html_e( 'Reviews', 'tutor' ); ?>
+		</h4>
+		<?php
+		if ( $tutor_is_enrolled && empty( $my_rating ) ) {
+			Button::make()
+			->label( __( 'Write a Review', 'tutor' ) )
+			->size( Size::SMALL )
+			->render();
+		}
+		?>
+	</div>
 
 	<div class="tutor-card tutor-card-rounded-2xl tutor-p-none">
 	<?php if ( empty( $reviews ) ) : ?>
@@ -102,46 +115,23 @@ $reviews       = tutor_utils()->get_course_reviews( $tutor_course_id, $offset, $
 
 		<div>
 		<?php foreach ( $reviews as $review ) : ?>
-			<?php $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review->comment_content ?? '' ) ) ); ?>
-			<div class="tutor-border-t tutor-p-6">
-				<div class="tutor-flex tutor-items-center tutor-justify-between">
-					<div class="tutor-flex tutor-items-center tutor-gap-4">
-						<?php Avatar::make()->user( (int) $review->user_id )->size( Size::SIZE_40 )->render(); ?>
-						<div class="tutor-flex tutor-flex-column">
-							<div class="tutor-flex tutor-items-center tutor-gap-5">
-								<div class="tutor-small"><?php echo esc_html( $review->display_name ?? '' ); ?></div>
-								<?php
-								if ( $current_user_id === (int) $review->user_id ) {
-									Badge::make()->label( __( 'Your Review', 'tutor' ) )->variant( Badge::INFO )->render();
-								}
-								?>
-							</div>
-							<div class="tutor-small tutor-text-subdued">
-							<?php
-							/* translators: %s: time difference */
-							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ) );
-							?>
-							</div>
-						</div>
-					</div>
-
-					<div class="tutor-flex tutor-items-center tutor-gap-5">
-						<?php
-						StarRating::make()->rating( (float) ( $review->rating ?? 0 ) )->render();
-
-						// Show pending badge for on hold reviews.
-						if ( 'hold' === $review->comment_status ) {
-							Badge::make()->label( __( 'Pending', 'tutor' ) )->variant( Badge::WARNING )->render();
-						}
-						?>
-					</div>
-				</div>
-
-				<div class="tutor-p1 tutor-text-secondary tutor-mt-6">
-					<?php echo esc_textarea( html_entity_decode( $review->comment_content ?? '' ) ); ?>
-				</div>
-			</div>
+			<?php tutor_load_template( 'learning-area.subpages.reviews.review-card', array( 'review' => $review ) ); ?>
 		<?php endforeach; ?>
+		</div>
+
+		<div x-data="tutorReviewDeleteModal()" x-cloak>
+			<?php
+				ConfirmationModal::make()
+					->id( 'review-delete-modal' )
+					->title( __( 'Delete This Review?', 'tutor' ) )
+					->message( __( 'Are you sure you want to delete this review? Please confirm your choice.', 'tutor' ) )
+					->icon( UrlHelper::asset( 'images/delete-reviews.svg' ) )
+					->confirm_handler( 'handleDeleteReview(payload?.id)' )
+					->mutation_state( 'deleteReviewMutation' )
+					->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
+					->cancel_text( __( 'Cancel', 'tutor' ) )
+					->render();
+			?>
 		</div>
 	<?php endif; ?>
 	</div>
