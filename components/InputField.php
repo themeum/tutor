@@ -1377,8 +1377,8 @@ class InputField extends BaseComponent {
 				class="tutor-input-password-toggle"
 				x-bind="getToggleBindings()"
 			>
-				<span x-show="!showPassword" x-cloak>' . tutor_utils()->get_svg_icon( Icon::EYE_OFF, 16, 16 ) . '</span>
-				<span x-show="showPassword" x-cloak>' . tutor_utils()->get_svg_icon( Icon::EYE, 16, 16 ) . '</span>
+				<span x-show="!showPassword" x-cloak>' . SvgIcon::make()->name( Icon::EYE_OFF )->size( 16 )->get() . '</span>
+				<span x-show="showPassword" x-cloak>' . SvgIcon::make()->name( Icon::EYE )->size( 16 )->get() . '</span>
 			</button>
 		';
 
@@ -1467,12 +1467,7 @@ class InputField extends BaseComponent {
 
 		$clear_button_html = '';
 		if ( ! $this->disabled && $this->clearable ) {
-			$clear_icon = '';
-			if ( function_exists( 'tutor_utils' ) ) {
-				ob_start();
-				tutor_utils()->render_svg_icon( 'cross', 16, 16 );
-				$clear_icon = ob_get_clean();
-			}
+			$clear_icon = SvgIcon::make()->name( Icon::CROSS )->size( 16 )->get();
 
 			$clear_button_html = sprintf(
 				'<button 
@@ -1543,12 +1538,7 @@ class InputField extends BaseComponent {
 
 		$clear_button_html = '';
 		if ( $this->clearable ) {
-			$clear_icon = '';
-			if ( function_exists( 'tutor_utils' ) ) {
-				ob_start();
-				tutor_utils()->render_svg_icon( 'cross', 16, 16 );
-				$clear_icon = ob_get_clean();
-			}
+			$clear_icon        = SvgIcon::make()->name( Icon::CROSS )->size( 16 )->get();
 			$clear_button_html = sprintf(
 				'<button 
 					type="button" 
@@ -1733,8 +1723,8 @@ class InputField extends BaseComponent {
 		$original_left_icon = $this->left_icon;
 		$this->type         = 'text';
 
-		if ( empty( $this->left_icon ) && empty( $this->right_icon ) && function_exists( 'tutor_utils' ) ) {
-			$this->left_icon = tutor_utils()->get_svg_icon( Icon::CALENDAR_2, 20, 20 );
+		if ( empty( $this->left_icon ) && empty( $this->right_icon ) ) {
+			$this->left_icon = SvgIcon::make()->name( Icon::CALENDAR_2 )->size( 20 )->get();
 		}
 
 		$options = array(
@@ -1784,9 +1774,9 @@ class InputField extends BaseComponent {
 		$props_json = htmlspecialchars( wp_json_encode( $props ), ENT_QUOTES, 'UTF-8' );
 		$input_icon = $this->left_icon;
 		if ( empty( $input_icon ) ) {
-			$input_icon = tutor_utils()->get_svg_icon( Icon::CLOCK, 20, 20 );
+			$input_icon = SvgIcon::make()->name( Icon::CLOCK )->size( 20 )->get();
 		}
-		$clear_icon = tutor_utils()->get_svg_icon( Icon::CROSS, 12, 12 );
+		$clear_icon = SvgIcon::make()->name( Icon::CROSS )->size( 12 )->get();
 
 		return sprintf(
 			'<div
