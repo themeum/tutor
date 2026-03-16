@@ -5,6 +5,12 @@
 // CSS VARIABLE REFERENCES (theme-aware)
 // =============================================================================
 
+// --- Base ---
+$tutor-button-radius: var(--tutor-button-radius, #{$tutor-radius-md});
+$tutor-button-font-weight: var(--tutor-button-font-weight, #{$tutor-font-weight-medium});
+$tutor-button-border-shadow: var(--tutor-button-border-shadow, none);
+$tutor-button-elevation-shadow: var(--tutor-button-elevation-shadow, none);
+
 // --- Primary ---
 $tutor-button-primary: var(--tutor-button-primary);
 $tutor-button-primary-hover: var(--tutor-button-primary-hover);

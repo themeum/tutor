@@ -10,15 +10,15 @@
   justify-content: center;
   gap: $tutor-spacing-2;
   border: none;
-  border-radius: var(--tutor-button-radius, #{$tutor-radius-md});
-  font-weight: var(--tutor-button-font-weight, #{$tutor-font-weight-medium});
+  border-radius: $tutor-button-radius;
+  font-weight: $tutor-button-font-weight;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
   font-family: inherit;
   // Inherited “kids mode” elevation + per-variant border shadow.
   --tutor-button-border-shadow: none;
-  box-shadow: var(--tutor-button-border-shadow, none), var(--tutor-button-elevation-shadow, none);
+  box-shadow: $tutor-button-border-shadow, $tutor-button-elevation-shadow;
   @include tutor-transition();
 
   svg {
