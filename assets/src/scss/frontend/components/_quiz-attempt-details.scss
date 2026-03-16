@@ -46,6 +46,15 @@
     grid-template-columns: 300px 1fr;
     gap: 128px;
 
+    // Allow inner content (like scale questions) to shrink
+    // instead of forcing horizontal overflow of the body grid.
+    > * {
+      min-width: 0;
+    }
+
+    // Extra safety: prevent any horizontal scroll caused by wide widgets.
+    overflow-x: hidden;
+
     @include tutor-breakpoint-down(sm) {
       grid-template-columns: 1fr;
     }
@@ -56,6 +65,16 @@
 
     @include tutor-breakpoint-down(lg) {
       gap: $tutor-spacing-10;
+    }
+  }
+
+  // In the summary layout the visible track is centered differently than
+  // in the main quiz-taking layout. Re-center the scale bubble here so
+  // its pointer aligns with the middle tick in attempt/summary views
+  // without affecting the quiz page positioning.
+  .tutor-scale-question {
+    .tutor-scale-bubble {
+      left: 50.5%;
     }
   }
 
@@ -279,6 +298,42 @@
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       border: 0;
+    }
+  }
+}
+
+.tutor-quiz-summary-page {
+  // Ensure the scale UI never visually overflows the question card on summary.
+  .tutor-quiz-question-options {
+    overflow-x: hidden;
+  }
+
+  .tutor-scale-question--summary {
+    margin-top: $tutor-spacing-6;
+  }
+
+  // Bubble always represents the correct answer in summary view.
+  .tutor-scale-question--summary {
+    .tutor-scale-bubble-value {
+      border-color: $tutor-success-600;
+      color: $tutor-text-success;
+    }
+
+    .tutor-scale-bubble-pointer {
+      border-top-color: $tutor-success-600;
+    }
+  }
+
+  // In summary, color the student's selected tick.
+  .tutor-scale-question--summary-wrong {
+    .tick-selected .tick-line {
+      background-color: $tutor-border-error;
+    }
+  }
+
+  .tutor-scale-question--summary-correct {
+    .tick-selected .tick-line {
+      background-color: $tutor-success-600;
     }
   }
 }
