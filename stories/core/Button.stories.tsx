@@ -51,12 +51,28 @@ const labelStyle: CSSProperties = {
   color: 'var(--tutor-text-secondary)',
 };
 
+const iconStyle: CSSProperties = {
+  width: '20px',
+  height: '20px',
+  display: 'block',
+};
+
+const iconSvg = (
+  <svg viewBox="0 0 24 24" aria-hidden="true" style={iconStyle}>
+    <path
+      fill="currentColor"
+      d="M12 4l2.47 4.99 5.5.8-3.98 3.88.94 5.48L12 16.9 7.07 19.15l.94-5.48-3.98-3.88 5.5-.8L12 4z"
+    />
+  </svg>
+);
+
 type PlaygroundArgs = {
   variant: string;
   size: string;
   uiMode: 'default' | 'kids';
   theme: 'light' | 'dark';
   disabled: boolean;
+  iconOnly: boolean;
 };
 
 const meta = {
@@ -95,6 +111,10 @@ const meta = {
       control: 'boolean',
       description: 'Disables the button.',
     },
+    iconOnly: {
+      control: 'boolean',
+      description: 'Renders as icon-only button.',
+    },
   },
   args: {
     variant: 'tutor-btn-primary',
@@ -102,13 +122,19 @@ const meta = {
     uiMode: 'kids',
     theme: 'light',
     disabled: false,
+    iconOnly: false,
   },
   render: (args: PlaygroundArgs) => {
     const dataTutorUi = args.uiMode === 'kids' ? 'kids' : undefined;
+    const isIconOnly = args.iconOnly;
     return (
       <div data-theme={args.theme} data-tutor-ui={dataTutorUi} style={wrapperStyle}>
-        <button className={`tutor-btn ${args.variant} ${args.size}`} disabled={args.disabled}>
-          Core Button
+        <button
+          className={`tutor-btn ${args.variant} ${args.size}${isIconOnly ? ' tutor-btn-icon' : ''}`}
+          disabled={args.disabled}
+          aria-label={isIconOnly ? 'Icon button' : undefined}
+        >
+          {isIconOnly ? iconSvg : 'Core Button'}
         </button>
       </div>
     );
@@ -215,6 +241,25 @@ export const Disabled = {
         {variants.map((variant) => (
           <button key={variant.className} className={`tutor-btn ${variant.className} tutor-btn-medium`} disabled>
             {variant.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  ),
+} satisfies Story;
+
+export const IconOnly = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div data-theme="light" style={wrapperStyle}>
+      <div style={rowStyle}>
+        {sizes.map((size) => (
+          <button
+            key={size.className}
+            className={`tutor-btn tutor-btn-primary tutor-btn-icon ${size.className}`}
+            aria-label={`Icon button ${size.label}`}
+          >
+            {iconSvg}
           </button>
         ))}
       </div>
