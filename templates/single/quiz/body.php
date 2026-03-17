@@ -29,8 +29,9 @@ $attempts_allowed  = tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed
 $passing_grade     = tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
 $feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
 
-$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
-$quiz_answers      = array();
+$attempt_remaining   = (int) $attempts_allowed - (int) $attempted_count;
+$quiz_answers        = array();
+$quiz_scale_correct  = array();
 
 if ( 0 !== $attempted_count ) {
 	?>
@@ -53,6 +54,22 @@ if ( 0 !== $attempted_count ) {
 
 			$remaining_time_context = tutor_utils()->seconds_to_time_context( $remaining_time_secs );
 			$questions              = tutor_utils()->get_random_questions_by_quiz();
+
+			if ( 'reveal' === $feedback_mode && is_array( $questions ) ) {
+				foreach ( $questions as $question ) {
+					if ( 'scale' !== ( $question->question_type ?? '' ) ) {
+						continue;
+					}
+					$scale_answers = \Tutor\Models\QuizModel::get_question_answers( $question->question_id, 'scale' );
+					if ( empty( $scale_answers[0]->answer_two_gap_match ) ) {
+						continue;
+					}
+					$target = json_decode( stripslashes( (string) $scale_answers[0]->answer_two_gap_match ), true );
+					if ( is_array( $target ) && isset( $target['value'] ) ) {
+						$quiz_scale_correct[ (string) $question->question_id ] = (float) $target['value'];
+					}
+				}
+			}
 
 			/* Quiz Meta */
 			require __DIR__ . '/parts/meta.php';
@@ -96,4 +113,5 @@ if ( 0 !== $attempted_count ) {
 
 <script>
 	window.tutor_quiz_context = '<?php echo strrev( json_encode( $quiz_answers ) ); //phpcs:ignore ?>';
+	window.tutor_quiz_scale_context = '<?php echo strrev( wp_json_encode( $quiz_scale_correct ) ); //phpcs:ignore ?>';
 </script>

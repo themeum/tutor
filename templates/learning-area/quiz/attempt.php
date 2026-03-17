@@ -55,15 +55,25 @@ $hide_question_number_overview = (bool) tutor_utils()->get_quiz_option( $tutor_i
 
 $reveal_question_types = array( 'true_false', 'single_choice', 'multiple_choice' );
 $quiz_answers          = array();
-foreach ( $questions as $question ) {
-	if ( ! in_array( $question->question_type, $reveal_question_types, true ) ) {
-		continue;
-	}
+$quiz_scale_correct    = array();
+$is_reveal_mode        = 'reveal' === $feedback_mode;
 
-	$answers = QuizModel::get_answers_by_quiz_question( $question->question_id );
-	foreach ( $answers as $answer ) {
-		if ( ! empty( $answer->is_correct ) ) {
-			$quiz_answers[] = $answer->answer_id;
+foreach ( $questions as $question ) {
+	if ( in_array( $question->question_type, $reveal_question_types, true ) ) {
+		$answers = QuizModel::get_answers_by_quiz_question( $question->question_id );
+		foreach ( $answers as $answer ) {
+			if ( ! empty( $answer->is_correct ) ) {
+				$quiz_answers[] = $answer->answer_id;
+			}
+		}
+	}
+	if ( $is_reveal_mode && 'scale' === $question->question_type ) {
+		$scale_answers = QuizModel::get_question_answers( $question->question_id, 'scale' );
+		if ( ! empty( $scale_answers[0]->answer_two_gap_match ) ) {
+			$target = json_decode( stripslashes( (string) $scale_answers[0]->answer_two_gap_match ), true );
+			if ( is_array( $target ) && isset( $target['value'] ) ) {
+				$quiz_scale_correct[ (string) $question->question_id ] = (float) $target['value'];
+			}
 		}
 	}
 }
@@ -341,3 +351,8 @@ $default_values = array(
 <script type="application/octet-stream" id="tutor-quiz-context">
 	<?php echo esc_html( bin2hex( wp_json_encode( $quiz_answers ) ) ); ?>
 </script>
+<?php if ( ! empty( $quiz_scale_correct ) ) : ?>
+<script type="application/octet-stream" id="tutor-quiz-scale-context">
+	<?php echo esc_html( bin2hex( wp_json_encode( $quiz_scale_correct ) ) ); ?>
+</script>
+<?php endif; ?>

@@ -114,8 +114,18 @@ window.jQuery(document).ready($ => {
             goNext = true;
         }
 
-        // Reveal mode for scale: show correct value reference after submission/next.
+        // Reveal mode for scale: decode context (same as true/false), fill value, then show reference.
         if (is_reveal_mode() && $question_wrap.data('question-type') === 'scale') {
+            var questionId = $question_wrap.attr('id') ? $question_wrap.attr('id').replace('quiz-attempt-single-question-', '') : '';
+            if (questionId && window.tutor_quiz_scale_context) {
+                try {
+                    var scaleContext = JSON.parse(window.tutor_quiz_scale_context.split('').reverse().join(''));
+                    var correctValue = scaleContext[questionId];
+                    if (typeof correctValue === 'number' && !isNaN(correctValue)) {
+                        $question_wrap.find('.tutor-scale-reference-value').text(correctValue);
+                    }
+                } catch (e) {}
+            }
             $question_wrap.find('.tutor-scale-reference-wrapper').removeClass('tutor-d-none');
             goNext = true;
         }

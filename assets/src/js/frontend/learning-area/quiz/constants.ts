@@ -2,6 +2,7 @@ export type RevealQuestionType = (typeof QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES)[num
 
 export const QUIZ_REVEAL_CONFIG = {
   ANSWER_CONTEXT_ID: 'tutor-quiz-context',
+  SCALE_CONTEXT_ID: 'tutor-quiz-scale-context',
   DEFAULT_WAIT_MS: 2000,
   SUPPORTED_TYPES: ['true_false', 'single_choice', 'multiple_choice', 'scale'] as const,
   OPTION_SELECTOR: '.tutor-quiz-question-option',
