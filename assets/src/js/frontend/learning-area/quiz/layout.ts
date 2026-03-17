@@ -328,11 +328,18 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (!this.isRevealMode()) {
         return false;
       }
+      const questionType = this.getQuestionType(wrapper);
+      if (!(QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES as readonly string[]).includes(questionType)) {
+        return false;
+      }
+      // Scale (and similar) types reveal correct/reference without revealAnswerIds.
+      if (['scale'].includes(questionType)) {
+        return true;
+      }
       if (!this.revealAnswerIds.length) {
         return false;
       }
-      const questionType = this.getQuestionType(wrapper);
-      return (QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES as readonly string[]).includes(questionType);
+      return true;
     },
 
     revealQuestion(wrapper: HTMLElement) {

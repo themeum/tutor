@@ -124,16 +124,13 @@ do_action( 'tutor_enqueue_scale_question_script' );
 
 	<?php if ( $is_reveal_mode && $has_correct ) : ?>
 		<?php $correct_value = (float) $target['value']; ?>
-		<div class="tutor-scale-reference-wrapper tutor-d-none tutor-mt-24" aria-hidden="true">
-			<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-12">
-				<?php esc_html_e( 'Reference (correct answer):', 'tutor' ); ?>
-			</p>
-			<p class="tutor-fs-7 tutor-color-secondary">
+		<div class="tutor-scale-reference-wrapper tutor-d-none tutor-mt-24" aria-hidden="true" style="display: none;">
+			<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-0">
 				<?php
 				/* translators: %s: correct scale value. */
 				$correct_value_text = sprintf(
 					// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
-					esc_html__( 'Correct value: %s', 'tutor' ),
+					esc_html__( 'Reference (correct answer): %s', 'tutor' ),
 					$correct_value
 				);
 				echo esc_html( $correct_value_text );

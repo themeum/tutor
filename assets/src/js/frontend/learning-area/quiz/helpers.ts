@@ -36,6 +36,18 @@ export const revealQuestionWithAnswers = (wrapper: HTMLElement, revealAnswerIds:
     return;
   }
 
+  const questionType = question.dataset?.question ?? '';
+  // Scale: show correct value reference after submission/next (no radio/checkbox logic).
+  if (questionType === 'scale') {
+    const refWrapper = wrapper.querySelector<HTMLElement>('.tutor-scale-reference-wrapper');
+    if (refWrapper) {
+      refWrapper.classList.remove('tutor-d-none');
+      refWrapper.style.display = '';
+    }
+    question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
+    return;
+  }
+
   const explanationTrigger = wrapper.querySelector<HTMLButtonElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_TRIGGER_SELECTOR);
   const explanation = wrapper.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_SELECTOR);
   const explanationBody = explanation?.querySelector<HTMLElement>(QUIZ_REVEAL_CONFIG.EXPLANATION_BODY_SELECTOR) ?? null;

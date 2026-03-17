@@ -196,10 +196,6 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 
     revealOnSubmit(): boolean {
       const revealAnswerIds = this.getRevealAnswerIds();
-      if (!revealAnswerIds.length) {
-        return false;
-      }
-
       const root = this.$root ?? this.$el;
       if (!root) {
         return false;
@@ -215,6 +211,10 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         }
         const questionType = question.dataset?.question ?? '';
         if (!(QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES as readonly string[]).includes(questionType)) {
+          return;
+        }
+        // Types like scale do not use revealAnswerIds; still reveal (show correct/reference).
+        if (questionType !== 'scale' && !revealAnswerIds.length) {
           return;
         }
         this.revealQuestion(wrapper, revealAnswerIds);
