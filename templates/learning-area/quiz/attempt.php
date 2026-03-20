@@ -17,8 +17,10 @@ use Tutor\Models\QuizModel;
 use TUTOR\Icon;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Modal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Helpers\UrlHelper;
 
 global $tutor_is_started_quiz;
 
@@ -70,6 +72,15 @@ foreach ( $questions as $question ) {
 
 $form_id             = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
 $modal_id            = 'tutor-quiz-abandon-modal';
+$submitted_modal_id  = 'tutor-quiz-submitted-modal';
+$timeout_modal_id    = 'tutor-quiz-timeout-modal';
+$attempt_details_url = UrlHelper::add_query_params(
+	get_pagenum_link(),
+	array(
+		'action'     => Quiz::ACTION_VIEW_DETAILS,
+		'attempt_id' => (int) $tutor_is_started_quiz->attempt_id,
+	)
+);
 $modal_cancel_button = Button::make()
 	->label( __( 'Stay Here', 'tutor' ) )
 	->variant( Variant::SECONDARY )
@@ -102,6 +113,9 @@ $default_values = array(
 			attemptId: "<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>",
 			quizId: <?php echo esc_attr( $tutor_is_started_quiz->quiz_id ); ?>,
 			abandonModalId: "<?php echo esc_attr( $modal_id ); ?>",
+			submittedModalId: "<?php echo esc_attr( $submitted_modal_id ); ?>",
+			timeoutModalId: "<?php echo esc_attr( $timeout_modal_id ); ?>",
+			totalQuestions: <?php echo esc_attr( count( $questions ) ); ?>,
 			feedbackMode: "<?php echo esc_attr( $feedback_mode ); ?>",
 			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
 		});
@@ -336,6 +350,40 @@ $default_values = array(
 			->cancel_button( $modal_cancel_button )
 			->render();
 	?>
+
+	<?php
+		Modal::make()
+			->id( $submitted_modal_id )
+			->width( '426px' )
+			->template(
+				tutor()->path . 'templates/learning-area/quiz/modals/result.php',
+				array(
+					'title'         => __( 'Quiz Submitted', 'tutor' ),
+					'message'       => __( 'Your responses have been successfully recorded.', 'tutor' ),
+					'icon_url'      => tutor()->url . 'assets/images/quiz-sibmitted.svg',
+					'show_attempts' => false,
+					'action_url'    => $attempt_details_url,
+					'action_label'  => __( 'View Results', 'tutor' ),
+				)
+			)
+			->render();
+
+		Modal::make()
+			->id( $timeout_modal_id )
+			->width( '426px' )
+			->template(
+				tutor()->path . 'templates/learning-area/quiz/modals/result.php',
+				array(
+					'title'         => __( 'Times up!', 'tutor' ),
+					'message'       => __( 'Your quiz has been submitted automatically.', 'tutor' ),
+					'icon_url'      => tutor()->url . 'assets/images/quiz-timeout.svg',
+					'show_attempts' => true,
+					'action_url'    => $attempt_details_url,
+					'action_label'  => __( 'View Results', 'tutor' ),
+				)
+			)
+			->render();
+		?>
 </form>
 
 <script type="application/octet-stream" id="tutor-quiz-context">

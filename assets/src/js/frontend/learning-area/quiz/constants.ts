@@ -47,3 +47,7 @@ export const QUIZ_LAYOUT_SELECTORS = {
 export const QUIZ_LAYOUT_KEYS = {
   QUESTION_VALUE_PREFIX: '[quiz_question]',
 } as const;
+
+export const QUIZ_EVENTS = {
+  AUTO_START_COMPLETE: 'tutor-quiz-autostart-complete',
+} as const;

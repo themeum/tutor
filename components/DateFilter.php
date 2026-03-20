@@ -266,18 +266,14 @@ class DateFilter extends BaseComponent {
 				@click="toggle()"
 				class="<?php echo esc_attr( $button_classes ); ?>"
 			>
-				<?php
-				if ( function_exists( 'tutor_utils' ) ) {
-					tutor_utils()->render_svg_icon( $icon, $this->icon_size, $this->icon_size );
-				}
-				?>
+				<?php SvgIcon::make()->name( $icon )->size( $this->icon_size )->render(); ?>
 				<?php if ( ! empty( $this->label ) ) : ?>
 					<span><?php echo esc_html( $this->label ); ?></span>
 				<?php endif; ?>
 
 				<?php if ( $this->has_selection() ) : ?>
 					<span @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary tutor-flex tutor-align-center">
-						<?php tutor_utils()->render_svg_icon( Icon::CROSS_2 ); ?>
+						<?php SvgIcon::make()->name( Icon::CROSS_2 )->render(); ?>
 					</span>
 				<?php endif; ?>
 			</button>

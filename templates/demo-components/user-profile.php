@@ -18,7 +18,7 @@ use TUTOR\Icon;
 		array( 'page_title' => __( 'Profile', 'tutor' ) )
 	);
 	?>
-	<div class="tutor-profile-container">
+	<div class="tutor-account-container">
 		<h4 class="tutor-profile-page-title"><?php esc_html_e( 'Profile', 'tutor' ); ?></h4>
 		<div class="tutor-profile-card">
 			<div class="tutor-profile-card-header">
