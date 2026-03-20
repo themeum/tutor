@@ -141,13 +141,13 @@ class StatusSelect extends BaseComponent {
 					<?php foreach ( $this->options as $value => $option ) : ?>
 						<?php if ( ! empty( $option['icon'] ) ) : ?>
 							<span x-show="selectedValue === '<?php echo esc_attr( $value ); ?>'" <?php echo $this->selected !== $value ? 'style="display: none;"' : ''; ?>>
-								<?php tutor_utils()->render_svg_icon( $option['icon'] ); ?>
+								<?php SvgIcon::make()->name( $option['icon'] )->render(); ?>
 							</span>
 						<?php endif; ?>
 					<?php endforeach; ?>
 				</div>
 				<span x-show="isLoading" style="display: none;">
-					<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
+					<?php SvgIcon::make()->name( Icon::SPINNER )->size( 14 )->attr( 'class', 'tutor-animate-spin' )->render(); ?>
 				</span>
 			</div>
 
@@ -164,7 +164,7 @@ class StatusSelect extends BaseComponent {
 			</select>
 
 			<div class="tutor-status-select-arrow">
-				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2 ); ?>
+				<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->render(); ?>
 			</div>
 		</div>
 		<?php

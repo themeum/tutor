@@ -44,7 +44,7 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 
 <?php if ( $review_count > 0 ) : ?>
 	<div class="tutor-user-reviews">
-		<div class="tutor-profile-container">
+		<div class="tutor-account-container">
 			<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
 				<?php foreach ( $reviews as $review ) : ?>
 					<?php
