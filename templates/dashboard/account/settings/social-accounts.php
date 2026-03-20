@@ -37,7 +37,7 @@ foreach ( $social_fields as $key => $field ) {
 		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit((data) => handleSaveSocialProfile(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
-		class="tutor-social-form"
+		class="tutor-card tutor-social-form"
 	>
 		<?php do_action( 'tutor_profile_edit_before_social_media', $user ); ?>
 

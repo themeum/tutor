@@ -212,4 +212,25 @@
 			</div>
 		</div>
 	</div>
+	<div class="tutor-mb-8">
+		<h2 class="tutor-text-xl tutor-font-semibold tutor-mb-3">Kids Mode Variants</h2>
+		<p class="tutor-text-gray-600 tutor-mb-4">
+			Button variants with Kids Mode active.
+		</p>
+		<div class="tutor-p-6 tutor-bg-gray-50 tutor-rounded-md" data-tutor-ui="kids">
+			<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-flex-wrap">
+				<button class="tutor-btn tutor-btn-primary">Primary</button>
+				<button class="tutor-btn tutor-btn-primary-soft">Primary Soft</button>
+				<button class="tutor-btn tutor-btn-destructive">Destructive</button>
+				<button class="tutor-btn tutor-btn-destructive-soft">Destructive Soft</button>
+				<button class="tutor-btn tutor-btn-secondary">Secondary</button>
+				<button class="tutor-btn tutor-btn-outline">Outline</button>
+				<button class="tutor-btn tutor-btn-ghost">Ghost</button>
+				<button class="tutor-btn tutor-btn-ghost-brand">Ghost Brand</button>
+				<button class="tutor-btn tutor-btn-link">Link</button>
+				<button class="tutor-btn tutor-btn-link-gray">Link Gray</button>
+				<button class="tutor-btn tutor-btn-link-destructive">Link Destructive</button>
+			</div>
+		</div>
+	</div>
 </section>
