@@ -67,6 +67,12 @@
 		@include tutor-breakpoint-down(sm) {
 			padding: $tutor-spacing-4;
 		}
+
+		.tutor-card {
+			box-shadow: none;
+			background-color: $tutor-surface-l1-hover;
+			border: 1px solid $tutor-border-idle;
+		}
 	}
 
 	.tutor-discussion-single {
