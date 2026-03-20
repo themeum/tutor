@@ -17,11 +17,13 @@
   }
 
   .tutor-profile-card {
-    background-color: $tutor-surface-l1;
-    border: 1px solid $tutor-border-idle;
+    @include tutor-card-base;
     border-radius: $tutor-radius-2xl;
     padding: $tutor-spacing-6;
-    margin-top: $tutor-spacing-6;
+
+    @include tutor-ui-kids {
+      border-radius: $tutor-radius-6xl;
+    }
 
     @include tutor-breakpoint-down(sm) {
       margin-top: $tutor-spacing-5;
@@ -35,6 +37,10 @@
     margin-bottom: $tutor-spacing-7;
     position: relative;
     height: 184px;
+
+    @include tutor-ui-kids {
+      border-radius: $tutor-radius-3xl;
+    }
 
     .tutor-edit-profile-btn {
       @include tutor-button-base();
@@ -119,10 +125,8 @@
       }
 
       li {
-        @include tutor-typography(tiny, regular, subdued);
-        background-color: $tutor-surface-brand-tertiary;
-        padding: 0 $tutor-spacing-4;
-        border-radius: $tutor-radius-sm;
+        @include tutor-badge-base;
+        @include tutor-badge-variant(disabled);
         white-space: nowrap;
         margin: 0;
 
@@ -167,12 +171,17 @@
     }
 
     .tutor-statistic-card {
+      @include tutor-card-base;
       @include tutor-flex(row, flex-start);
       gap: $tutor-spacing-5;
       background-color: $tutor-surface-l1;
       border: 1px solid $tutor-border-idle;
       border-radius: $tutor-radius-2xl;
       padding: $tutor-spacing-6;
+
+      @include tutor-ui-kids {
+        border-radius: $tutor-radius-3xl;
+      }
 
       @include tutor-breakpoint-down(sm) {
         gap: $tutor-spacing-3;
