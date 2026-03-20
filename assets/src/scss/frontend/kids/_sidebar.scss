@@ -1,7 +1,8 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
+@use './mixins' as *;
 
-[data-mood="kids"] {
+[data-tutor-ui="kids"] {
 	.tutor-dashboard-sidebar {
 		background-color: $tutor-surface-brand-tertiary;
 	}

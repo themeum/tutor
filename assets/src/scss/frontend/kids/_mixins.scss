@@ -1,8 +1,14 @@
 @use '@Core/scss/tokens' as *;
 
-@mixin kids-card-border($border-color: $tutor-border-idle) {
+// @mixin tutor-ui-kids {
+//   [data-tutor-ui='kids'] & {
+//     @content;
+//   }
+// }
+
+@mixin kids-card-border($border-color: $tutor-border-idle, $border-radius: $tutor-radius-5xl) {
   border-width: 2px 2px 5px 2px;
   border-style: solid;
   border-color: $border-color;
-  border-radius: $tutor-radius-5xl;
+  border-radius: $border-radius;
 }

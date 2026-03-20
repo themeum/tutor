@@ -2,7 +2,7 @@
 @use '@Core/scss/mixins' as *;
 @use './mixins' as *;
 
-[data-mood="kids"] {
+[data-tutor-ui="kids"] {
 
 	.tutor-stat-card,
 	.tutor-progress-card,
@@ -21,6 +21,7 @@
 			border-radius: $tutor-radius-5xl;
 		}
 	}
+
 	// quiz attempts
 	.tutor-quiz-attempts-list {
 		.tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
