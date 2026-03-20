@@ -116,7 +116,7 @@ $questions   = tutor_utils()->get_qa_questions(
 		<?php if ( empty( $questions ) ) : ?>
 			<?php EmptyState::make()->title( 'No Questions Found!' )->render(); ?>
 		<?php else : ?>
-			<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
+			<div class="tutor-discussion-card-wrapper tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
 				<?php
 				foreach ( $questions as $question ) :
 					tutor_load_template(

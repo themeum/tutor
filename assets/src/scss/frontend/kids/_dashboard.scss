@@ -1,0 +1,66 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+@use './mixins' as *;
+
+[data-tutor-ui="kids"] {
+
+	.tutor-stat-card,
+	.tutor-progress-card,
+	.tutor-upcoming-lesson-card,
+	.tutor-wishlist-grid .tutor-course-card,
+	.tutor-discussion-card,
+	.tutor-review-card {
+		@include kids-shadow;
+	}
+
+	// home
+	.tutor-student-dashboard-courses {
+		.tutor-card.tutor-progress-card:not(:first-child) {
+			margin-top: $tutor-spacing-4;
+		}
+	}
+
+	// wishList
+	.tutor-dashboard-courses-wrapper {
+		.tutor-dashboard-courses,
+		.tutor-wishlist-grid {
+			gap: $tutor-spacing-6 $tutor-spacing-5;
+		}
+	}
+
+	// quiz attempts
+	.tutor-quiz-attempts-list {
+		.tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
+			@include kids-shadow($tutor-border-brand-tertiary);
+			margin-bottom: $tutor-spacing-5;
+		}
+	}
+
+	// user account/profile
+	.tutor-user-profile {
+
+		.tutor-profile-card,
+		.tutor-statistic-card {
+			@include kids-shadow;
+		}
+
+		.tutor-profile-card-header {
+			border-radius: $tutor-radius-5xl;
+		}
+	}
+
+	.tutor-account-billing-wrapper {
+		border-radius: $tutor-radius-5xl;
+	}
+
+	// discussion
+	.tutor-discussion-card-wrapper {
+		gap: $tutor-spacing-6 $tutor-spacing-4;
+		@include tutor-breakpoint-down(sm) { 
+			padding: $tutor-spacing-4;
+		}
+	}
+	.tutor-discussion-single {
+		@include kids-shadow(false);
+	}
+}

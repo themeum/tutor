@@ -26,9 +26,9 @@
     color: $tutor-icon-idle;
   }
 
-  @include tutor-ui-kids {
-    border-radius: $tutor-radius-2xl;
-  }
+  // @include tutor-ui-kids {
+  //   border-radius: $tutor-radius-2xl;
+  // }
 
   &.tutor-badge-rounded {
     border-radius: $tutor-radius-full;
