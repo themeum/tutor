@@ -16,10 +16,9 @@
       }
     }
   }
+}
 
-  .tutor-account-container {
-    max-width: 728px;
-    margin: 0 auto;
-    padding-inline: $tutor-spacing-6;
-  }
+.tutor-account-container {
+  @include tutor-frontend-layout();
+  padding-inline: $tutor-spacing-6;
 }

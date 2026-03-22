@@ -45,7 +45,7 @@ $page_nav_items = apply_filters( 'tutor_dashboard_account_billing_page_nav_items
 <div class="tutor-billing-wrapper" x-data="" x-cloak>
 	<?php require_once tutor_get_template( 'account-header' ); ?>
 
-	<div class="tutor-billing-container">
+	<div class="tutor-account-container">
 		<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
 			<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 				<?php if ( $show_tab_nav ) { ?>
