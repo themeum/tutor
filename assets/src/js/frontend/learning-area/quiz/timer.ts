@@ -1,6 +1,6 @@
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 
-import { QUIZ_LAYOUT_KEYS } from './constants';
+import { getAttemptedQuestionCountFromForm } from './helpers';
 
 const QUIZ_TIMER_CLASSES = {
   PROGRESS_ANIMATE: 'tutor-quiz-progress-animate',
@@ -171,42 +171,7 @@ const quizTimer = (config: QuizTimerConfig) => {
     },
 
     get attemptedCount(): number {
-      const form = window.TutorCore?.form;
-      if (!form || !this.formId || !form.hasForm(this.formId)) {
-        return 0;
-      }
-
-      const values = form.getFormState(this.formId).values ?? {};
-      const questionIdsEntry = Object.entries(values).find(([key]) => key.includes('[quiz_question_ids]'));
-
-      if (!questionIdsEntry) {
-        return 0;
-      }
-
-      const questionIds = Array.isArray(questionIdsEntry[1]) ? questionIdsEntry[1] : [];
-      let count = 0;
-
-      for (const id of questionIds) {
-        const needle = `${QUIZ_LAYOUT_KEYS.QUESTION_VALUE_PREFIX}[${id}]`;
-        const hasAnswer = Object.entries(values).some(([key, val]) => {
-          if (!key.includes(needle)) {
-            return false;
-          }
-          if (val === '' || val === null || val === undefined) {
-            return false;
-          }
-          if (Array.isArray(val) && val.length === 0) {
-            return false;
-          }
-          return true;
-        });
-
-        if (hasAnswer) {
-          count++;
-        }
-      }
-
-      return count;
+      return getAttemptedQuestionCountFromForm(this.formId);
     },
 
     get attemptedProgress(): number {
