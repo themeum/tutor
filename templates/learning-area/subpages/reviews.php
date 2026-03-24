@@ -17,6 +17,7 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
+use Tutor\Components\Modal;
 use Tutor\Components\Pagination;
 use Tutor\Components\Progress;
 use Tutor\Components\StarRating;
@@ -47,10 +48,26 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 		</h4>
 		<?php
 		if ( $tutor_is_enrolled && empty( $my_rating ) ) {
-			Button::make()
-			->label( __( 'Write a Review', 'tutor' ) )
-			->size( Size::SMALL )
-			->render();
+			?>
+			<div>
+				<?php
+				Button::make()
+					->label( __( 'Write a Review', 'tutor' ) )
+					->size( Size::SMALL )
+					->attr( 'x-on:click', 'TutorCore.modal.showModal("create-review-modal")' )
+					->render();
+
+				$modal_template = tutor_get_template( 'learning-area.subpages.reviews.create-review-modal' );
+				Modal::make()
+					->id( 'create-review-modal' )
+					->title( __( 'How Was Your Experience?', 'tutor' ) )
+					->subtitle( __( 'Your feedback helps others find the right course.', 'tutor' ) )
+					->width( '452px' )
+					->template( $modal_template )
+					->render();
+				?>
+			</div>
+			<?php
 		}
 		?>
 	</div>
