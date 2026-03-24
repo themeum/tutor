@@ -3379,37 +3379,41 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param int $course_progress The completion percentage of the course.
+	 * @param float $course_progress The completion percentage of the course.
 	 *
 	 * @return string The rendered HTML content for the modal.
 	 */
 	public static function get_complete_modal_content( float $course_progress = 0 ): string {
-			ob_start();
+		ob_start();
 		?>
 		<div>
 			<p class="tutor-p3 tutor-text-secondary tutor-text-center tutor-mb-7 tutor-px-11">
-				<?php esc_html_e( 'You have not completed all required lessons and assessments. ', 'tutor-pro' ); ?>
+				<?php esc_html_e( 'You have not completed all required lessons and assessments. ', 'tutor' ); ?>
 			</p>
-			<div class="tutor-border-idle tutor-p-5 tutor-flex tutor-flex-column tutor-gap-4 tutor-surface-base tutor-rounded-md">
+			<div class="tutor-border tutor-p-5 tutor-flex tutor-flex-column tutor-gap-4 tutor-surface-base tutor-rounded-md">
 				<div class="tutor-flex tutor-items-center tutor-justify-between">
-					<div><?php esc_html_e( 'Your Progress', 'tutor' ); ?></div>
-					<div><?php echo esc_html( number_format_i18n( $course_progress ) . '%' ); ?></div>
+					<div class="tutor-p3 tutor-text-secondary">
+						<?php esc_html_e( 'Your Progress', 'tutor' ); ?>
+					</div>
+					<div class="tutor-p1 tutor-font-bold">
+						<?php echo esc_html( number_format_i18n( $course_progress ) . '%' ); ?>
+					</div>
 				</div>
 				<?php
 					Progress::make()->type( 'bar' )->value( $course_progress )->render();
 				?>
 			</div>
 		</div>
-			<?php
-			return ob_get_clean();
+		<?php
+		return ob_get_clean();
 	}
 
 	/**
 	 * Render the course complete button.
 	 *
 	 * Displays a button that allows the user to complete the course. If the course
-	 * progress is less than 100%, clicking the button shows a modal informing the user 
-	 * that not all requirements are fulfilled. If the course progress is 100%, 
+	 * progress is less than 100%, clicking the button shows a modal informing the user
+	 * that not all requirements are fulfilled. If the course progress is 100%,
 	 * clicking the button attempts to complete the course.
 	 *
 	 * @since 4.0.0

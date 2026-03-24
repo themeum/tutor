@@ -183,7 +183,7 @@ class Reviews {
 	 */
 	public function add_subpage_nav_item( $nav_items, $base_url ): array {
 		$nav_items['reviews'] = array(
-			'title'    => __( 'Reviews', 'tutor-pro' ),
+			'title'    => __( 'Reviews', 'tutor' ),
 			'icon'     => Icon::STAR_LINE,
 			'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'reviews' ) ),
 			'template' => tutor()->path . 'templates/learning-area/subpages/reviews.php',
