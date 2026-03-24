@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 $field_name     = $question_field_name_base ?? '';
 $register_rules = '';
@@ -31,7 +32,7 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 				value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 				x-bind="<?php echo esc_attr( $register_attr ); ?>"
 			>
-			<?php tutor_utils()->render_svg_icon( $answer['is_correct'] ? Icon::CHECK_2 : Icon::CROSS, 20, 20 ); ?>
+			<?php SvgIcon::make()->name( $answer['is_correct'] ? Icon::CHECK_2 : Icon::CROSS )->size( 20 )->render(); ?>
 			<?php echo esc_html( $answer['answer_title'] ); ?>
 		</label>
 	<?php endforeach; ?>

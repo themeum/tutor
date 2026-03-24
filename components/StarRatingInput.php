@@ -140,9 +140,9 @@ class StarRatingInput extends BaseComponent {
 	 */
 	public function get(): string {
 		$current_rating = $this->current_rating;
-		$star_fill      = tutor_utils()->get_svg_icon( Icon::STAR_FILL, $this->icon_size, $this->icon_size );
-		$star_half      = tutor_utils()->get_svg_icon( Icon::STAR_HALF, $this->icon_size, $this->icon_size );
-		$star           = tutor_utils()->get_svg_icon( Icon::STAR_LINE, $this->icon_size, $this->icon_size );
+		$star_fill      = SvgIcon::make()->name( Icon::STAR_FILL )->size( $this->icon_size )->get();
+		$star_half      = SvgIcon::make()->name( Icon::STAR_HALF )->size( $this->icon_size )->get();
+		$star           = SvgIcon::make()->name( Icon::STAR_LINE )->size( $this->icon_size )->get();
 
 		ob_start();
 		?>

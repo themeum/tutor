@@ -134,9 +134,9 @@ class StarRating extends BaseComponent {
 		$rating    = $this->rating;
 		$icon_size = $this->icon_size;
 
-		$star_fill = tutor_utils()->get_svg_icon( Icon::STAR_FILL, $icon_size, $icon_size );
-		$star_half = tutor_utils()->get_svg_icon( Icon::STAR_HALF, $icon_size, $icon_size );
-		$star      = tutor_utils()->get_svg_icon( Icon::STAR_LINE, $icon_size, $icon_size );
+		$star_fill = SvgIcon::make()->name( Icon::STAR_FILL )->size( $icon_size )->get();
+		$star_half = SvgIcon::make()->name( Icon::STAR_HALF )->size( $icon_size )->get();
+		$star      = SvgIcon::make()->name( Icon::STAR_LINE )->size( $icon_size )->get();
 
 		ob_start();
 		?>

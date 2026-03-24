@@ -11,6 +11,8 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
@@ -87,7 +89,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 
 	<div class="tutor-quiz-question-draggable">
 		<div class="tutor-quiz-question-draggable-header">
-			<?php tutor_utils()->render_svg_icon( Icon::DRAG, 20, 20, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+			<?php SvgIcon::make()->name( Icon::DRAG )->size( 20 )->color( Color::SECONDARY )->render(); ?>
 			<span class="tutor-text-small tutor-font-medium"><?php esc_html_e( 'Drag from here', 'tutor' ); ?></span>
 		</div>
 		<div class="tutor-quiz-question-options">
@@ -101,7 +103,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 						<?php echo esc_html( $answer['answer_two_gap_match'] ); ?>
 					</div>
 					<button type="button" data-grab-handle>
-						<?php tutor_utils()->render_svg_icon( Icon::GRAB_HANDLE, 24, 24 ); ?>
+						<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 24 )->render(); ?>
 					</button>
 				</div>
 			<?php endforeach; ?>

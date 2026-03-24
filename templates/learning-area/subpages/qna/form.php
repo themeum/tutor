@@ -17,6 +17,7 @@ use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\InputField;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 $form_id        = $form_id ?? '';
 $label          = $label ?? '';
@@ -58,9 +59,9 @@ $placeholder    = $placeholder ?? __( 'Write your question', 'tutor' );
 		:class="{ 'tutor-hidden': !focused }"
 	>
 		<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2 tutor-sm-hidden">
-			<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?>
+			<?php SvgIcon::make()->name( Icon::COMMAND )->size( 12 )->render(); ?>
 			<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
-			<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?>
+			<?php SvgIcon::make()->name( Icon::ENTER )->size( 12 )->render(); ?>
 			<?php esc_html_e( 'Enter to Save', 'tutor' ); ?>
 		</div>
 		<div class="tutor-flex tutor-items-center tutor-gap-2">
