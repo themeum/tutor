@@ -70,7 +70,7 @@ class Lesson extends Tutor_Base {
 
 		$this->post_type = tutor()->lesson_post_type;
 
-		$this->is_legacy_learning_mode = tutor_utils()->get_option( 'is_legacy_learning_mode' );
+		$this->is_legacy_learning_mode = 'legacy' === tutor_utils()->get_option( 'learning_mode' );
 
 		if ( ! $register_hooks ) {
 			return;

@@ -1218,12 +1218,16 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'         => 'is_legacy_learning_mode',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Legacy Learning Mode', 'tutor' ),
-								'label_title' => '',
-								'default'     => 'off',
-								'desc'        => __( 'If enabled, the course learning area will be back to the older system.', 'tutor' ),
+								'key'     => 'learning_mode',
+								'type'    => 'radio_horizontal_full',
+								'label'   => __( 'Learning Mode', 'tutor' ),
+								'default' => 'classic',
+								'options' => array(
+									'classic' => __( 'Classic', 'tutor' ),
+									'kids'    => __( 'Kids', 'tutor' ),
+									'legacy'  => __( 'Legacy', 'tutor' ),
+								),
+								'desc'    => __( 'Decide how students will experience the courses you create.', 'tutor' ),
 							),
 						),
 					),

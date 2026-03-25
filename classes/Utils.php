@@ -11068,4 +11068,15 @@ class Utils {
 				return '';
 		}
 	}
+
+	/**
+	 * Is kids mode active?
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_kids_mode(): bool {
+		return 'kids' === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
+	}
 }
