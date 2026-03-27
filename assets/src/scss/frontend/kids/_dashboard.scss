@@ -13,12 +13,13 @@
 
   .tutor-stat-card,
   .tutor-progress-card,
-	.tutor-discussion-card,
+  .tutor-discussion-card,
   .tutor-upcoming-lesson-card,
   .tutor-wishlist-grid .tutor-course-card,
   .tutor-review-card,
   .tutor-dashboard-home-chart,
-  .tutor-dashboard-home-card {
+  .tutor-dashboard-home-card,
+  .tutor-dashboard-home-sort .tutor-popover-bottom {
     @include tutor-kids-shadow;
   }
 
@@ -26,6 +27,14 @@
   .tutor-student-dashboard-courses {
     .tutor-card.tutor-progress-card:not(:first-child) {
       margin-top: $tutor-spacing-4;
+    }
+  }
+
+  .tutor-dashboard-home-sort .tutor-popover-bottom {
+    @include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);
+
+    .tutor-popover-menu-item {
+      border-radius: $tutor-radius-2xl;
     }
   }
 
@@ -37,21 +46,20 @@
     }
   }
 
-	// quiz attempts
-	.tutor-quiz-attempts-list {
-		.tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
-			@include tutor-kids-shadow($tutor-border-brand-tertiary);
-			margin-bottom: $tutor-spacing-5;
-		}
-	}
+  // quiz attempts
+  .tutor-quiz-attempts-list {
+    .tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
+      @include tutor-kids-shadow($tutor-border-brand-tertiary);
+      margin-bottom: $tutor-spacing-5;
+    }
+  }
 
-	// user account/profile
-	.tutor-user-profile {
-
-		.tutor-profile-card,
-		.tutor-statistic-card {
-			@include tutor-kids-shadow;
-		}
+  // user account/profile
+  .tutor-user-profile {
+    .tutor-profile-card,
+    .tutor-statistic-card {
+      @include tutor-kids-shadow;
+    }
 
     .tutor-profile-card-header {
       border-radius: $tutor-radius-5xl;
@@ -66,6 +74,14 @@
     .tutor-review-form {
       border-radius: $tutor-radius-6xl;
     }
+  }
+
+  .tutor-dashboard-header-user-popover {
+    @include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);
+  }
+
+  .tutor-dashboard-header-user-popover-menu li a {
+    border-radius: $tutor-radius-2xl;
   }
 
   // discussions
@@ -85,14 +101,14 @@
 
   .tutor-discussion-single {
     @include tutor-kids-shadow(false);
-	}
+  }
 
-	.tutor-my-courses-card-wrapper {
-		gap: $tutor-spacing-6;
+  .tutor-my-courses-card-wrapper {
+    gap: $tutor-spacing-6;
 
-		.tutor-my-courses-card {
-			@include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-3xl);
-		}
+    .tutor-my-courses-card {
+      @include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-3xl);
+    }
   }
 
   // calendar
