@@ -1,0 +1,13 @@
+@use '@Core/scss/tokens' as *;
+
+:root {
+  --tutor-tab-radius: #{$tutor-radius-lg};
+  --tutor-tab-font-weight: #{$tutor-font-weight-medium};
+  --tutor-tab-active-shadow: none;
+}
+
+[data-tutor-ui='kids'] {
+  --tutor-tab-radius: #{$tutor-radius-full};
+  --tutor-tab-font-weight: #{$tutor-font-weight-bold};
+  --tutor-tab-active-shadow: 0 0 0 1px #{$tutor-border-brand}, 0 3px 0 0 #{$tutor-border-brand};
+}
