@@ -43,6 +43,18 @@
     }
   }
 
+  &.tutor-progress-bar-warning {
+    background-color: $tutor-actions-gray-empty;
+
+    .tutor-progress-bar-fill {
+      background-color: $tutor-actions-warning-primary;
+
+      &::before {
+        background-color: $tutor-actions-warning-tertiary;
+      }
+    }
+  }
+
   &[data-tutor-animated] .tutor-progress-bar-fill {
     animation: tutor-progress-fill-animate 1s ease-out forwards;
   }

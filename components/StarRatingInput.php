@@ -76,6 +76,13 @@ class StarRatingInput extends BaseComponent {
 	protected $icon_size = Size::SIZE_20;
 
 	/**
+	 * View type (star|emoji)
+	 *
+	 * @var string
+	 */
+	protected $view = 'star';
+
+	/**
 	 * Set field name
 	 *
 	 * @since 4.0.0
@@ -132,6 +139,20 @@ class StarRatingInput extends BaseComponent {
 	}
 
 	/**
+	 * Set view type
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $view view type.
+	 *
+	 * @return self
+	 */
+	public function view( string $view ): self {
+		$this->view = $view;
+		return $this;
+	}
+
+	/**
 	 * Get component content
 	 *
 	 * @since 4.0.0
@@ -140,27 +161,72 @@ class StarRatingInput extends BaseComponent {
 	 */
 	public function get(): string {
 		$current_rating = $this->current_rating;
-		$star_fill      = tutor_utils()->get_svg_icon( Icon::STAR_FILL, $this->icon_size, $this->icon_size );
-		$star_half      = tutor_utils()->get_svg_icon( Icon::STAR_HALF, $this->icon_size, $this->icon_size );
-		$star           = tutor_utils()->get_svg_icon( Icon::STAR_LINE, $this->icon_size, $this->icon_size );
+
+		$is_emoji     = 'emoji' === $this->view;
+		$emoji_images = array(
+			1 => 'poor.png',
+			2 => 'fair.png',
+			3 => 'okay.png',
+			4 => 'good.png',
+			5 => 'amazing.png',
+		);
+		$emoji_url    = tutor()->url . 'assets/images/emojis/';
+
+		$labels = array(
+			1 => __( 'Poor', 'tutor' ),
+			2 => __( 'Fair', 'tutor' ),
+			3 => __( 'Okay', 'tutor' ),
+			4 => __( 'Good', 'tutor' ),
+			5 => __( 'Amazing', 'tutor' ),
+		);
+
+		$star_fill = SvgIcon::make()->name( Icon::STAR_FILL )->size( $is_emoji ? Size::SIZE_32 : Size::SIZE_24 )->get();
+		$star_half = SvgIcon::make()->name( Icon::STAR_HALF )->size( $is_emoji ? Size::SIZE_32 : Size::SIZE_24 )->get();
+		$star      = SvgIcon::make()->name( Icon::STAR_LINE )->size( $is_emoji ? Size::SIZE_32 : Size::SIZE_24 )->get();
 
 		ob_start();
 		?>
 		<div 
-			class="tutor-flex tutor-gap-4 tutor-justify-between tutor-items-center"
+			class="tutor-star-rating-container <?php echo $is_emoji ? 'is-emoji-view' : ''; ?>"
 			x-data="tutorStarRatingInput({
 				initialRating: <?php echo esc_attr( $current_rating ); ?>,
 				fieldName: '<?php echo esc_attr( $this->field_name ); ?>'
 			})"
-			@mouseleave="hoverRating = 0"
 		>
 			<input 
 				type="hidden" 
 				name="<?php echo esc_attr( $this->field_name ); ?>" 
 				x-bind="register('<?php echo esc_attr( $this->field_name ); ?>' )"
 			>
-			
-			<div class="tutor-flex tutor-items-center tutor-gap-2">
+
+			<?php if ( $is_emoji ) : ?>
+				<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-justify-center">
+					<?php
+					$rating_classes = array(
+						1 => 'is-poor',
+						2 => 'is-fair',
+						3 => 'is-okay',
+						4 => 'is-good',
+						5 => 'is-amazing',
+					);
+					?>
+					<?php foreach ( $emoji_images as $i => $image ) : ?>
+						<button 
+							type="button"
+							class="tutor-star-rating-emoji-btn <?php echo esc_attr( $rating_classes[ $i ] ); ?>"
+							:class="{'is-active': rating == <?php echo (int) $i; ?>}"
+							@click="setRating(<?php echo esc_attr( $i ); ?>, (rating) => setValue('<?php echo esc_attr( $this->field_name ); ?>', rating))"
+						>
+							<img src="<?php echo esc_url( $emoji_url . $image ); ?>" alt="<?php echo esc_attr( $labels[ $i ] ); ?>" class="tutor-rating-emoji-img" width="32" height="32">
+							<span class="tutor-rating-label">
+								<?php echo esc_html( $labels[ $i ] ); ?>
+							</span>
+						</button>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+
+			<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-justify-center" @mouseleave="hoverRating = 0">
 				<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
 					<button 
 						type="button"
@@ -169,25 +235,27 @@ class StarRatingInput extends BaseComponent {
 						@mouseenter="hoverRating = <?php echo esc_attr( $i ); ?>"
 					>
 						<template x-if="effectiveRating >= <?php echo esc_attr( $i ); ?>">
-							<span class="tutor-icon-exception4 tutor-flex-center">
-												<?php echo $star_fill; // phpcs:ignore ?>
+							<span class="tutor-icon-exception4 tutor-flex">
+								<?php echo $star_fill; // phpcs:ignore ?>
 							</span>
 						</template>
 						<template x-if="effectiveRating > <?php echo esc_attr( $i - 1 ); ?> && effectiveRating < <?php echo esc_attr( $i ); ?>">
-							<span class="tutor-icon-exception4 tutor-flex-center">
-												<?php echo $star_half; // phpcs:ignore ?>
+							<span class="tutor-icon-exception4 tutor-flex">
+								<?php echo $star_half; // phpcs:ignore ?>
 							</span>
 						</template>
 						<template x-if="effectiveRating <= <?php echo esc_attr( $i - 1 ); ?>">
-							<span class="tutor-icon-exception4 tutor-flex-center">
-												<?php echo $star; // phpcs:ignore ?>
+							<span class="tutor-icon-exception4 tutor-flex">
+								<?php echo $star; // phpcs:ignore ?>
 							</span>
 						</template>
 					</button>
 				<?php endfor; ?>
 			</div>
 
-			<span class="tutor-small tutor-font-medium" x-text="feedback"></span>
+			<?php if ( ! $is_emoji ) : ?>
+				<span class="tutor-small tutor-font-medium" x-text="feedback"></span>
+			<?php endif; ?>
 		</div>
 		<?php
 

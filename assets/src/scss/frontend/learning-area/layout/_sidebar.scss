@@ -352,6 +352,10 @@
         &.active {
           background-color: $tutor-tab-sidebar-l2-active;
           color: $tutor-text-brand;
+
+          svg {
+            color: $tutor-icon-brand;
+          }
         }
       }
     }
