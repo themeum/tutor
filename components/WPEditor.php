@@ -332,14 +332,13 @@ class WPEditor extends BaseComponent {
 
 		$wrapper_attrs['class'] = $wrapper_class;
 
-		$wrapper_attr_str = '';
-		foreach ( $wrapper_attrs as $key => $value ) {
-			$wrapper_attr_str .= sprintf( '%s="%s" ', esc_attr( $key ), esc_attr( $value ) );
-		}
-
 		?>
 		<div 
-			<?php echo esc_attr( $wrapper_attr_str ); ?>
+			<?php
+			foreach ( $wrapper_attrs as $key => $value ) {
+				printf( '%s="%s"', esc_attr( $key ), esc_attr( $value ) );
+			}
+			?>
 			x-data="tutorWPEditor({ 
 				name: '<?php echo esc_js( $this->name ); ?>',
 				editorId: '<?php echo esc_js( $editor_id ); ?>',

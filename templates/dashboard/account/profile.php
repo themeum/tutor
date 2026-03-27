@@ -53,10 +53,10 @@ if ( $show_statistics ) {
 <div class="tutor-profile-wrapper">
 	<?php require_once tutor_get_template( 'account-header' ); ?>
 
-	<div class="tutor-profile-container">
+	<div class="tutor-account-container">
 		<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
 			<div class="tutor-user-profile">
-				<div class="tutor-profile-container">
+				<div class="tutor-account-container">
 					<?php tutor_load_template( 'user-profile' ); ?>
 
 					<?php if ( $show_statistics ) : ?>
