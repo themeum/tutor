@@ -9,6 +9,8 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+
+use Tutor\Components\SvgIcon;
 ?>	
 		
 <h5 class="tutor-statistic-title">
@@ -21,12 +23,11 @@ defined( 'ABSPATH' ) || exit;
 	<div class="tutor-statistic-card">
 		<div class="tutor-statistic-card-icon">
 		<?php
-		tutor_utils()->render_svg_icon(
-			$stat['icon'],
-			24,
-			24,
-			array( 'class' => $stat['icon_class'] )
-		);
+		SvgIcon::make()
+			->name( $stat['icon'] )
+			->size( 24 )
+			->attr( 'class', $stat['icon_class'] )
+			->render();
 		?>
 		</div>
 		<div class="tutor-statistic-card-content">

@@ -14,6 +14,8 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Course;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use Tutor\Models\CourseModel;
 
 $user_id   = get_current_user_id();
@@ -30,7 +32,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		<div class="tutor-border tutor-mb-7 tutor-rounded-2xl tutor-surface-l1 tutor-p-5">
 			<div class="tutor-flex tutor-items-center tutor-justify-between">
 				<div class="tutor-flex tutor-items-center tutor-gap-2">
-					<?php tutor_utils()->render_svg_icon( Icon::INFO, 24, 24, array( 'class' => 'tutor-icon-brand' ) ); ?>
+					<?php SvgIcon::make()->name( Icon::INFO )->size( 24 )->color( Color::BRAND )->render(); ?>
 					<span class="tutor-small">
 						<?php echo esc_html( $text ); ?>
 					</span>
@@ -70,7 +72,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html__( 'Enrolled Courses', 'tutor' ); ?>
 				</h3>
 				<div class="tutor-stat-card-icon tutor-flex">
-					<?php tutor_utils()->render_svg_icon( Icon::COURSES, 20, 20 ); ?>
+					<?php SvgIcon::make()->name( Icon::COURSES )->size( 20 )->render(); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
@@ -86,7 +88,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html__( 'Active', 'tutor' ); ?>
 				</h3>
 				<div class="tutor-stat-card-icon tutor-flex">
-					<?php tutor_utils()->render_svg_icon( Icon::PLAY_LINE, 20, 20 ); ?>
+					<?php SvgIcon::make()->name( Icon::PLAY_LINE )->size( 20 )->render(); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
@@ -102,7 +104,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html__( 'Completed', 'tutor' ); ?>
 				</h3>
 				<div class="tutor-stat-card-icon tutor-flex">
-					<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_CIRCLE, 20, 20 ); ?>
+					<?php SvgIcon::make()->name( Icon::COMPLETED_CIRCLE )->size( 20 )->render(); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
@@ -121,7 +123,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html__( 'Time Spent', 'tutor' ); ?>
 				</h3>
 				<div class="tutor-stat-card-icon tutor-flex">
-					<?php tutor_utils()->render_svg_icon( Icon::TIME, 20, 20 ); ?>
+					<?php SvgIcon::make()->name( Icon::TIME )->size( 20 )->render(); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
@@ -147,7 +149,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<div x-bind="getBackdropBindings()"></div>
 				<div x-bind="getModalContentBindings()" style="width: 354px;">
 					<div class="tutor-modal-body tutor-px-9 tutor-pt-9 tutor-pb-8 tutor-text-center">
-						<?php tutor_utils()->render_svg_icon( Icon::CONFETTI, 32, 32, array( 'class' => 'tutor-icon-exception2' ) ); ?>
+						<?php SvgIcon::make()->name( Icon::CONFETTI )->size( 32 )->color( Color::EXCEPTION2 )->render(); ?>
 
 						<h3 class="tutor-h3 tutor-mb-2 tutor-mt-6">
 							<span class="tutor-font-regular"><?php esc_html_e( 'Fantastic,', 'tutor' ); ?></span> 
@@ -205,7 +207,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							class="tutor-btn tutor-btn-primary tutor-btn-large tutor-rounded-full tutor-btn-block tutor-gap-2" 
 							@click="TutorCore.modal.closeModal('tutor-time-spent-modal')"
 						>
-							<?php tutor_utils()->render_svg_icon( Icon::HAPPY, 20, 20 ); ?>
+							<?php SvgIcon::make()->name( Icon::HAPPY )->size( 20 )->render(); ?>
 							<?php esc_html_e( "I'm Happy", 'tutor' ); ?>
 						</button>
 					</div>

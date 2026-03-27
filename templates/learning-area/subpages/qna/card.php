@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Variant;
@@ -75,7 +76,7 @@ $single_url = UrlHelper::add_query_params(
 						->render();
 					?>
 					<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-flex tutor-items-center tutor-gap-2">
-						<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 
+						<?php SvgIcon::make()->name( Icon::COMMENTS )->size( 20 )->render(); ?> 
 						<span class="tutor-discussion-card-reply-count tutor-text-subdued"><?php echo esc_html( $question->answer_count ); ?></span>
 					</a>
 
@@ -117,14 +118,14 @@ $single_url = UrlHelper::add_query_params(
 				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 					<div class="tutor-popover-menu" style="min-width: 110px;">
 						<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $question_id; ?>); hide()">
-							<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
+							<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 							<?php esc_html_e( 'Edit', 'tutor' ); ?>
 						</button>
 						<button
 							class="tutor-popover-menu-item tutor-gap-5 tutor-sm-border-t"
 							@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_html( $question_id ); ?> });"
 						>
-							<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
+							<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 							<?php esc_html_e( 'Delete', 'tutor' ); ?>
 						</button>
 					</div>

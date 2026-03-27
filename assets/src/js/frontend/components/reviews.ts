@@ -59,6 +59,46 @@ const reviewDeleteModal = () => {
   };
 };
 
+const reviewModal = () => {
+  const { query, modal, toast } = window.TutorCore;
+
+  return {
+    query,
+    saveRatingMutation: null as MutationState<TutorMutationResponse<string>> | null,
+
+    init() {
+      this.saveRatingMutation = this.query.useMutation(this.saveRating, {
+        onSuccess: (data: TutorMutationResponse<string>) => {
+          modal.closeModal('create-review-modal');
+          toast.success(data.message);
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
+        },
+      });
+    },
+
+    async handleReviewSubmit(data: ReviewFormProps) {
+      const payload = this.convertFormDataToPayload(data);
+      await this.saveRatingMutation?.mutate(payload);
+    },
+
+    async saveRating(payload: ReviewPayload) {
+      return wpAjaxInstance.post(endpoints.PLACE_RATING, payload).then((res) => res.data);
+    },
+
+    convertFormDataToPayload(data: ReviewFormProps): ReviewPayload {
+      return {
+        ...(data.comment_ID && { comment_id: data.comment_ID }),
+        course_id: data.comment_post_ID,
+        tutor_rating_gen_input: data.rating,
+        review: data.comment_content,
+      };
+    },
+  };
+};
+
 const reviewCard = (id: string) => {
   const query = window.TutorCore.query;
 
@@ -135,6 +175,11 @@ const reviewServicesMeta = {
   component: reviewDeleteModal,
 };
 
+const reviewModalMeta = {
+  name: 'reviewModal',
+  component: reviewModal,
+};
+
 const reviewCardMeta = {
   name: 'reviewCard',
   component: reviewCard,
@@ -142,7 +187,7 @@ const reviewCardMeta = {
 
 export const initializeReviews = () => {
   window.TutorComponentRegistry.registerAll({
-    components: [reviewCardMeta, reviewServicesMeta],
+    components: [reviewCardMeta, reviewServicesMeta, reviewModalMeta],
   });
 
   window.TutorComponentRegistry.initWithAlpine(window.Alpine);

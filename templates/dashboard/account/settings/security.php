@@ -11,6 +11,8 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Button;
 use Tutor\Components\Modal;
 use Tutor\Components\InputField;
@@ -96,7 +98,7 @@ $modal_footer = sprintf(
 
 $modal_title = sprintf(
 	'<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-pt-2 tutor-pb-7">%s%s</div>',
-	tutor_utils()->get_svg_icon( Icon::LOCK_STROKE_2, 24, 24, array( 'class' => 'tutor-icon-secondary' ) ),
+	SvgIcon::make()->name( Icon::LOCK_STROKE_2 )->size( 24 )->color( Color::SECONDARY )->get(),
 	esc_html__( 'Change Account Password', 'tutor' )
 );
 

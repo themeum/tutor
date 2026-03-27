@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 global $tutor_current_content_id;
 
@@ -42,7 +43,7 @@ if ( ! $can_access ) {
 	class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s %s', $active_class, $disabled_class ) ); ?>"
 	<?php echo ! $can_access ? 'aria-disabled="true"' : ''; ?>
 >
-	<?php tutor_utils()->render_svg_icon( $icon_name, 20, 20 ); ?>
+	<?php SvgIcon::make()->name( $icon_name )->size( 20 )->render(); ?>
 	<div class="tutor-overflow-hidden">
 		<div class="tutor-truncate"><?php echo esc_html( $quiz_title ); ?></div>
 		<div class="tutor-tiny-2 tutor-text-subdued"><?php esc_html_e( 'Quiz', 'tutor' ); ?></div>

@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\Avatar;
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use TUTOR\Dashboard;
 
 if ( ! tutor_utils()->count( $dashboard_pages ) ) {
@@ -41,7 +42,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 			?>
 			<li>
 				<a class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $menu_link ?? '#' ); ?>">
-					<?php tutor_utils()->render_svg_icon( $menu_icon_name ); ?>
+					<?php SvgIcon::make()->name( $menu_icon_name )->render(); ?>
 					<span class="tutor-tiny"><?php echo esc_html( $item['title'] ); ?></span>
 				</a>
 			</li>
@@ -71,7 +72,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 					:aria-expanded="open ? 'true' : 'false'"
 					aria-haspopup="true"
 				>
-					<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ); ?>
+					<?php SvgIcon::make()->name( Icon::THREE_DOTS_VERTICAL )->size( 16 )->render(); ?>
 					<span class="tutor-tiny"><?php esc_html_e( 'More', 'tutor' ); ?></span>
 				</button>
 				<!-- Popover panel -->
@@ -99,7 +100,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 							?>
 								<li role="none">
 									<a role="menuitem" class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $menu_link ?? '#' ); ?>" @click="open = false">
-										<?php tutor_utils()->render_svg_icon( $menu_icon_name ); ?>
+										<?php SvgIcon::make()->name( $menu_icon_name )->render(); ?>
 										<span class="tutor-tiny"><?php echo esc_html( $item['title'] ); ?></span>
 									</a>
 								</li>
