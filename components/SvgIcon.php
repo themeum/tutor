@@ -12,7 +12,7 @@
 
 namespace Tutor\Components;
 
-use Tutor\Components\Constants\Color;
+use TUTOR\User;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -183,6 +183,15 @@ class SvgIcon extends BaseComponent {
 		}
 
 		$icon_path = tutor()->path . 'assets/icons/' . $this->name . '.svg';
+
+		// If learning mode is kids, check kids folder first.
+		if ( tutor_utils()->is_kids_mode() ) {
+			$kids_path = tutor()->path . 'assets/icons/kids/' . $this->name . '.svg';
+			if ( file_exists( $kids_path ) ) {
+				$icon_path = $kids_path;
+			}
+		}
+
 		if ( ! file_exists( $icon_path ) ) {
 			return '';
 		}

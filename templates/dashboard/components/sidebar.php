@@ -10,6 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Constants\Size;
 use Tutor\Components\SvgIcon;
 
 global $wp_query;
@@ -102,7 +103,7 @@ $dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
 					?>
 					<li>
 						<a <?php echo esc_html( $data_no_instant ); ?> href="<?php echo esc_url( $menu_link ); ?>" class='<?php echo esc_attr( $active_class ); ?>'>
-							<?php SvgIcon::make()->name( $menu_icon_name )->render(); ?>
+							<?php SvgIcon::make()->name( $menu_icon_name )->size( tutor_utils()->is_kids_mode() ? Size::SIZE_24 : Size::SIZE_20 )->render(); ?>
 							<span>
 								<?php echo esc_html( $menu_title ); ?>
 							</span>
