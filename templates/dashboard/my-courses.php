@@ -159,7 +159,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		<?php if ( empty( $results ) ) : ?>
 			<?php EmptyState::make()->title( 'No Courses Found' )->render(); ?>
 		<?php else : ?>
-		<div class="tutor-p-6 tutor-sm-p-5 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
+		<div class="tutor-my-courses-card-wrapper tutor-p-6 tutor-sm-p-5 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
 			<?php
 			global $post;
 			$tutor_nonce_value = wp_create_nonce( tutor()->nonce_action );
