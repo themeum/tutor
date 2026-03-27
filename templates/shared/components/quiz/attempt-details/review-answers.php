@@ -41,6 +41,7 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 		$is_mc_review      = in_array( $question_type, array( 'single_choice', 'multiple_choice' ), true );
 		$is_oe_review      = in_array( $question_type, array( 'open_ended', 'short_answer' ), true );
 		$is_fib_review     = 'fill_in_the_blank' === $question_type;
+		$is_pin_review     = 'pin_image' === $question_type;
 		$attempt_answer    = $attempt_answers_map[ $question_id ] ?? null;
 		$question_template = '';
 
@@ -54,6 +55,8 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 			$question_template = 'open-ended';
 		} elseif ( $is_fib_review ) {
 			$question_template = 'fill-in-the-blank';
+		} elseif ( $is_pin_review ) {
+			$question_template = 'pin-image';
 		}
 		?>
 
