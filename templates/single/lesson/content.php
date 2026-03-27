@@ -10,6 +10,7 @@
  */
 
 use TUTOR\Lesson;
+use Tutor\Components\SvgIcon;
 use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -129,7 +130,7 @@ tutor_load_template(
 					>
 						<?php
 						if ( isset( $nav_item['icon_type'] ) && 'svg' === $nav_item['icon_type'] ) {
-							tutor_utils()->render_svg_icon( $nav_item['icon'], 20, 20 );
+							SvgIcon::make()->name( $nav_item['icon'] )->size( 20 )->render();
 						} else {
 							?>
 							<span 

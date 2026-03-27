@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\User;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
@@ -33,7 +34,7 @@ foreach ( $reviews as $review ) {
 	$review->user_avatar = tutor_utils()->get_user_avatar_url( $review->user_id );
 }
 
-$bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
+$bin_icon = SvgIcon::make()->name( Icon::BIN )->get();
 
 ?>
 

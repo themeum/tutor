@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 // Sample quiz data - in real implementation, these would come from quiz settings.
 $quiz_title       = __( 'Quick Quiz', 'tutor' );
@@ -67,7 +68,7 @@ $attempts = array(
 					<tbody>
 						<tr>
 							<td class="tutor-quiz-intro-param-label">
-								<?php tutor_utils()->render_svg_icon( Icon::QUESTION_CIRCLE, 20, 20 ); ?>
+								<?php SvgIcon::make()->name( Icon::QUESTION_CIRCLE )->size( 20 )->render(); ?>
 								<span><?php esc_html_e( 'Questions', 'tutor' ); ?></span>
 							</td>
 							<td>
@@ -76,7 +77,7 @@ $attempts = array(
 						</tr>
 						<tr>
 							<td class="tutor-quiz-intro-param-label">
-								<?php tutor_utils()->render_svg_icon( Icon::CLOCK, 20, 20 ); ?>
+								<?php SvgIcon::make()->name( Icon::CLOCK )->size( 20 )->render(); ?>
 								<span><?php esc_html_e( 'Quiz time', 'tutor' ); ?></span>
 							</td>
 							<td>
@@ -85,7 +86,7 @@ $attempts = array(
 						</tr>
 						<tr>
 							<td class="tutor-quiz-intro-param-label">
-								<?php tutor_utils()->render_svg_icon( Icon::CERTIFICATE, 20, 20 ); ?>
+								<?php SvgIcon::make()->name( Icon::CERTIFICATE )->size( 20 )->render(); ?>
 								<span><?php esc_html_e( 'Passing Grade', 'tutor' ); ?></span>
 							</td>
 							<td>
@@ -146,7 +147,7 @@ $attempts = array(
 											</div>
 											<div class="tutor-quiz-intro-mobile-time">
 												<div class="tutor-quiz-intro-time-info">
-													<?php tutor_utils()->render_svg_icon( Icon::STOPWATCH, 20, 20 ); ?>
+													<?php SvgIcon::make()->name( Icon::STOPWATCH )->size( 20 )->render(); ?>
 													<span class="tutor-quiz-intro-time"><?php echo esc_html( $attempt['time_taken'] ); ?></span>
 												</div>
 											</div>
@@ -159,7 +160,7 @@ $attempts = array(
 									</td>
 									<td class="tutor-quiz-intro-attempts-cell tutor-quiz-intro-attempts-time-col">
 										<div class="tutor-quiz-intro-time-info">
-											<?php tutor_utils()->render_svg_icon( Icon::STOPWATCH, 20, 20 ); ?>
+											<?php SvgIcon::make()->name( Icon::STOPWATCH )->size( 20 )->render(); ?>
 											<span class="tutor-quiz-intro-time"><?php echo esc_html( $attempt['time_taken'] ); ?></span>
 										</div>
 									</td>

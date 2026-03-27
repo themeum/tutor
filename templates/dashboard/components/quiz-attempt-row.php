@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 
 if ( empty( $attempt ) ) {
 	return;
@@ -45,7 +47,7 @@ $is_previous     = $is_previous ?? false;
 						);
 						?>
 						<span class="tutor-quiz-attempts-expand-icon">
-							<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 18, 18 ); ?>
+							<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN )->size( 18 )->render(); ?>
 						</span>
 					</button>
 				<?php endif; ?>
@@ -97,7 +99,7 @@ $is_previous     = $is_previous ?? false;
 	</div>
 
 	<div class="tutor-quiz-item-time">
-		<?php tutor_utils()->render_svg_icon( Icon::STOPWATCH, 20, 20, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+		<?php SvgIcon::make()->name( Icon::STOPWATCH )->size( 20 )->color( Color::SECONDARY )->render(); ?>
 		<?php echo esc_html( $attempt['time_taken'] ?? '' ); ?>
 	</div>
 

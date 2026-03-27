@@ -15,6 +15,7 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\StarRating;
 use TUTOR\Course;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\Models\CourseModel;
 
 // Globals inherited from learning-area/index.php template.
@@ -135,7 +136,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 
 	<div class="tutor-course-intro">
 		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-3 tutor-tiny tutor-text-secondary">
-			<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2 ); ?>
+			<?php SvgIcon::make()->name( Icon::RELOAD_2 )->render(); ?>
 			<?php echo esc_html( $tutor_course->post_modified ); ?> Last Updated
 		</div>
 		<h3 class="tutor-h3 tutor-sm-text-h5 tutor-mt-3"><?php echo esc_html( $tutor_course->post_title ); ?></h3>
@@ -185,7 +186,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 					<?php esc_html_e( 'About this Course', 'tutor' ); ?>
 				</div>
 				<div class="tutor-course-description-header-icon" :class="{ 'is-expanded': expanded }">
-					<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2, 24, 24 ); ?>
+					<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 24 )->render(); ?>
 				</div>
 			</div>
 			<div x-show="expanded" x-collapse x-cloak class="tutor-course-description-body">
@@ -198,14 +199,14 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 					<?php esc_html_e( "What you'll learn", 'tutor' ); ?>
 				</div>
 				<div class="tutor-course-description-header-icon" :class="{ 'is-expanded': expanded }">
-					<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2, 24, 24 ); ?>
+					<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 24 )->render(); ?>
 				</div>
 			</div>
 			<div x-show="expanded" x-collapse x-cloak class="tutor-course-description-body">
 				<div class="tutor-course-description-list">
 					<?php foreach ( $course_benefits as $benefit ) : ?>
 						<div class="tutor-course-description-list-item">
-							<?php tutor_utils()->render_svg_icon( Icon::CHECK_2 ); ?>
+							<?php SvgIcon::make()->name( Icon::CHECK_2 )->render(); ?>
 							<div class="tutor-course-description-list-content">
 								<?php echo esc_html( $benefit ); ?>
 							</div>
@@ -222,7 +223,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 				<tr>
 					<td>
 						<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-sm-gap-3">
-							<?php tutor_utils()->render_svg_icon( $meta['icon'], 20, 20 ); ?>
+							<?php SvgIcon::make()->name( $meta['icon'] )->size( 20 )->render(); ?>
 							<?php echo esc_html( $meta['title'] ); ?>
 						</div>
 					</td>

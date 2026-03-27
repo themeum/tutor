@@ -23,6 +23,7 @@ use Tutor\Components\Constants\Positions;
 use Tutor\Components\Popover;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Models\QuizModel;
+use Tutor\Components\SvgIcon;
 
 /**
  * Quiz attempt class
@@ -526,7 +527,7 @@ class Quiz_Attempts_List {
 		$details_item = array(
 			'tag'     => 'a',
 			'content' => __( 'Details', 'tutor' ),
-			'icon'    => tutor_utils()->get_svg_icon( Icon::RESOURCES, 20, 20 ),
+			'icon'    => SvgIcon::make()->name( Icon::RESOURCES )->size( 20 )->get(),
 			'attr'    => array( 'href' => $url ),
 		);
 		return $details_item;
@@ -568,7 +569,7 @@ class Quiz_Attempts_List {
 				array(
 					'tag'     => 'button',
 					'content' => __( 'Retry', 'tutor' ),
-					'icon'    => tutor_utils()->get_svg_icon( Icon::RELOAD, 20, 20 ),
+					'icon'    => SvgIcon::make()->name( Icon::RELOAD )->size( 20 )->get(),
 					'attr'    => array(
 						'@click' => $this->get_retry_attribute( $quiz_id ),
 					),
@@ -645,7 +646,7 @@ class Quiz_Attempts_List {
 				array(
 					'tag'     => 'button',
 					'content' => __( 'Delete', 'tutor' ),
-					'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2, 20, 20 ),
+					'icon'    => SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->get(),
 					'attr'    => array(
 						'@click' => sprintf(
 							'hide(); TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });',
