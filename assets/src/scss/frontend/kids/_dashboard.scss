@@ -3,6 +3,13 @@
 @use './mixins' as *;
 
 [data-tutor-ui="kids"] {
+	.tutor-card {
+		@include kids-shadow;
+	}
+
+	.tutor-badge {
+		border-radius: $tutor-radius-2xl;
+	}
 
 	.tutor-stat-card,
 	.tutor-progress-card,
@@ -60,7 +67,7 @@
 		}
 	}
 
-	// discussion
+	// discussions
 	.tutor-discussion-card-wrapper {
 		gap: $tutor-spacing-6 $tutor-spacing-4;
 

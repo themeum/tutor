@@ -28,12 +28,6 @@
   overflow: hidden;
 }
 
-@mixin tutor-ui-kids {
-  [data-tutor-ui='kids'] & {
-    @content;
-  }
-}
-
 @mixin tutor-scrollbar(
   $width: 8px,
   $thumb-color: $tutor-border-idle,

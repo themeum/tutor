@@ -1,7 +1,6 @@
 @use '../tokens' as *;
 @use 'typography' as *;
 @use 'layout' as *;
-@use 'utilities' as *;
 
 @mixin tutor-badge-base() {
   @include tutor-typography('tiny', 'medium', 'secondary');
@@ -25,10 +24,6 @@
   svg {
     color: $tutor-icon-idle;
   }
-
-  // @include tutor-ui-kids {
-  //   border-radius: $tutor-radius-2xl;
-  // }
 
   &.tutor-badge-rounded {
     border-radius: $tutor-radius-full;
