@@ -20,9 +20,16 @@ $pin_answers    = QuizModel::get_answers_by_quiz_question( (int) $question->ques
 $pin_answers    = is_array( $pin_answers ) ? $pin_answers : array();
 $correct_answer = ! empty( $pin_answers ) ? reset( $pin_answers ) : null;
 
-$background_url = $correct_answer ? QuizModel::get_answer_image_url( $correct_answer ) : '';
-$reference_mask = $correct_answer && ! empty( $correct_answer->answer_two_gap_match ) ? (string) $correct_answer->answer_two_gap_match : '';
-$has_reference  = false !== wp_http_validate_url( $reference_mask );
+$background_url     = $correct_answer ? QuizModel::get_answer_image_url( $correct_answer ) : '';
+$reference_mask     = $correct_answer && ! empty( $correct_answer->answer_two_gap_match ) ? (string) $correct_answer->answer_two_gap_match : '';
+$reference_mask     = trim( $reference_mask );
+$reference_is_url   = false !== wp_http_validate_url( $reference_mask );
+$reference_is_data  =
+	0 === strpos( $reference_mask, 'data:image/' ) &&
+	false !== strpos( $reference_mask, ';base64,' );
+$has_reference      = $reference_is_url || $reference_is_data;
+$reference_mask_css = $reference_is_url ? esc_url_raw( $reference_mask ) : $reference_mask;
+$wrapper_id         = 'tutor-pin-image-attempt-' . (int) $question->question_id;
 
 $coords = null;
 if ( $attempt_answer && ! empty( $attempt_answer->given_answer ) ) {
@@ -51,7 +58,7 @@ if ( $attempt_answer && ! empty( $attempt_answer->given_answer ) ) {
 }
 ?>
 
-<div class="tutor-quiz-question-options">
+<div id="<?php echo esc_attr( $wrapper_id ); ?>" class="tutor-quiz-question-options">
 	<div class="tutor-pin-image-given-answer">
 		<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">
 			<?php esc_html_e( 'Submitted pin vs correct zone:', 'tutor' ); ?>
@@ -61,7 +68,11 @@ if ( $attempt_answer && ! empty( $attempt_answer->given_answer ) ) {
 			<div class="tutor-pin-image-layered">
 				<img src="<?php echo esc_url( $background_url ); ?>" alt="" class="tutor-pin-image-bg" />
 				<?php if ( $has_reference ) : ?>
-					<img src="<?php echo esc_url( $reference_mask ); ?>" alt="" role="presentation" class="tutor-pin-image-overlay" />
+					<span
+						class="tutor-pin-image-overlay tutor-pin-image-overlay--tint"
+						style="<?php echo esc_attr( '--tutor-pin-mask-url: url("' . $reference_mask_css . '"); --tutor-pin-mask-bg: #04C98633;' ); ?>"
+						role="presentation"
+					></span>
 				<?php endif; ?>
 				<?php if ( $coords ) : ?>
 					<span
@@ -80,7 +91,13 @@ if ( $attempt_answer && ! empty( $attempt_answer->given_answer ) ) {
 				<?php endif; ?>
 			</div>
 		<?php elseif ( $has_reference ) : ?>
-			<img src="<?php echo esc_url( $reference_mask ); ?>" alt="" class="tutor-pin-image-single" />
+			<div class="tutor-pin-image-single tutor-pin-image-single--tint">
+				<span
+					class="tutor-pin-image-single-mask"
+					style="<?php echo esc_attr( '--tutor-pin-mask-url: url("' . $reference_mask_css . '"); --tutor-pin-mask-bg: #04C98633;' ); ?>"
+					role="presentation"
+				></span>
+			</div>
 			<div class="tutor-fs-7 tutor-color-secondary tutor-mt-8">
 				<?php esc_html_e( 'Background image not available; showing only the correct zone mask.', 'tutor' ); ?>
 			</div>
@@ -95,3 +112,45 @@ if ( $attempt_answer && ! empty( $attempt_answer->given_answer ) ) {
 		<?php endif; ?>
 	</div>
 </div>
+<style>
+	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-layered {
+		position: relative;
+		display: inline-block;
+		overflow: hidden;
+	}
+
+	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-overlay--tint,
+	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-single-mask {
+		display: block;
+		background: var(--tutor-pin-mask-bg, #04C98633);
+		-webkit-mask-image: var(--tutor-pin-mask-url);
+		-webkit-mask-repeat: no-repeat;
+		-webkit-mask-size: 100% 100%;
+		mask-image: var(--tutor-pin-mask-url);
+		mask-repeat: no-repeat;
+		mask-size: 100% 100%;
+		filter:
+			drop-shadow(1px 0 0 #53B96A)
+			drop-shadow(-1px 0 0 #53B96A)
+			drop-shadow(0 1px 0 #53B96A)
+			drop-shadow(0 -1px 0 #53B96A);
+	}
+
+	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-overlay--tint {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-single--tint {
+		width: min(100%, 420px);
+		aspect-ratio: 4 / 3;
+		background: transparent;
+	}
+
+	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-single-mask {
+		width: 100%;
+		height: 100%;
+	}
+</style>

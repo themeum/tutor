@@ -50,12 +50,18 @@ if ( isset( $answer['image_id'] ) ) {
 	$bg_image_url = QuizModel::get_answer_image_url( (object) $answer );
 }
 
-$question_type          = (string) ( $question['question_type'] ?? 'pin_image' );
-$question_settings      = isset( $question['question_settings'] ) && is_array( $question['question_settings'] ) ? $question['question_settings'] : array();
-$answer_is_required     = isset( $question_settings['answer_required'] ) && '1' === (string) $question_settings['answer_required'];
-$is_reveal_mode         = 'reveal' === tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', '' );
-$instructor_mask        = ! empty( $answer['answer_two_gap_match'] ) ? (string) $answer['answer_two_gap_match'] : '';
-$instructor_mask_is_url = false !== wp_http_validate_url( $instructor_mask );
+$question_type           = (string) ( $question['question_type'] ?? 'pin_image' );
+$question_settings       = isset( $question['question_settings'] ) && is_array( $question['question_settings'] ) ? $question['question_settings'] : array();
+$answer_is_required      = isset( $question_settings['answer_required'] ) && '1' === (string) $question_settings['answer_required'];
+$is_reveal_mode          = 'reveal' === tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', '' );
+$instructor_mask         = ! empty( $answer['answer_two_gap_match'] ) ? (string) $answer['answer_two_gap_match'] : '';
+$instructor_mask         = trim( $instructor_mask );
+$instructor_mask_is_url  = false !== wp_http_validate_url( $instructor_mask );
+$instructor_mask_is_data =
+	0 === strpos( $instructor_mask, 'data:image/' ) &&
+	false !== strpos( $instructor_mask, ';base64,' );
+$instructor_has_mask     = $instructor_mask_is_url || $instructor_mask_is_data;
+$instructor_mask_css     = $instructor_mask_is_url ? esc_url_raw( $instructor_mask ) : $instructor_mask;
 
 $wrapper_id     = 'tutor-pin-image-question-' . $question_id;
 $image_id       = 'tutor-pin-image-bg-' . $question_id;
@@ -86,7 +92,7 @@ $pin_y_register_attr = "register('{$pin_y_field_name}'{$register_rules})";
 			/>
 			<span class="tutor-pin-image-marker" aria-hidden="true"></span>
 		</div>
-		<?php if ( $is_reveal_mode && $instructor_mask_is_url ) : ?>
+		<?php if ( $is_reveal_mode && $instructor_has_mask ) : ?>
 			<div class="tutor-pin-image-reference-wrapper tutor-d-none tutor-mt-24" aria-hidden="true">
 				<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-12">
 					<?php esc_html_e( 'Reference (correct answer zone):', 'tutor' ); ?>
@@ -97,12 +103,11 @@ $pin_y_register_attr = "register('{$pin_y_field_name}'{$register_rules})";
 						src="<?php echo esc_url( $bg_image_url ); ?>"
 						alt="<?php esc_attr_e( 'Reference background', 'tutor' ); ?>"
 					/>
-					<img
-						class="tutor-pin-image-reference-mask"
-						src="<?php echo esc_url( $instructor_mask ); ?>"
-						alt=""
+					<span
+						class="tutor-pin-image-reference-mask tutor-pin-image-reference-mask--tint"
+						style="<?php echo esc_attr( '--tutor-pin-mask-url: url("' . $instructor_mask_css . '"); --tutor-pin-mask-bg: #04C98633;' ); ?>"
 						role="presentation"
-					/>
+					></span>
 				</div>
 			</div>
 		<?php endif; ?>
@@ -131,3 +136,40 @@ $pin_y_register_attr = "register('{$pin_y_field_name}'{$register_rules})";
 		<?php esc_html_e( 'Click on the image to place your pin. You can change it by clicking again. Your answer will be saved when you submit the quiz.', 'tutor' ); ?>
 	</p>
 </div>
+
+<style>
+	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-reference-inner {
+		position: relative;
+		display: inline-block;
+		overflow: hidden;
+	}
+
+	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-reference-bg {
+		display: block;
+		max-width: 100%;
+		height: auto;
+	}
+
+	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-reference-mask {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-reference-mask--tint {
+		display: block;
+		background: var(--tutor-pin-mask-bg, #04C98633);
+		-webkit-mask-image: var(--tutor-pin-mask-url);
+		-webkit-mask-repeat: no-repeat;
+		-webkit-mask-size: 100% 100%;
+		mask-image: var(--tutor-pin-mask-url);
+		mask-repeat: no-repeat;
+		mask-size: 100% 100%;
+		filter:
+			drop-shadow(1px 0 0 #53B96A)
+			drop-shadow(-1px 0 0 #53B96A)
+			drop-shadow(0 1px 0 #53B96A)
+			drop-shadow(0 -1px 0 #53B96A);
+	}
+</style>

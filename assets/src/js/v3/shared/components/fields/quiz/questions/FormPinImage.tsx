@@ -20,7 +20,10 @@ import {
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
 
-const INSTRUCTOR_STROKE_STYLE = 'rgba(0, 120, 255, 0.9)';
+const LASSO_FILL_STYLE = 'rgba(220, 53, 69, 0.45)';
+const LASSO_STROKE_STYLE = 'rgba(220, 53, 69, 0.95)';
+const LASSO_DASH_PATTERN = [8, 6];
+const LASSO_MIN_POINT_DISTANCE = 4;
 
 interface FormPinImageProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
@@ -44,6 +47,9 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
   const imageRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawInstanceRef = useRef<{ destroy: () => void } | null>(null);
+  const isLassoDrawingRef = useRef(false);
+  const lassoPointsRef = useRef<Array<{ x: number; y: number }>>([]);
+  const baseImageDataRef = useRef<ImageData | null>(null);
 
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
@@ -184,30 +190,148 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
     };
   }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match, syncCanvasDisplay]);
 
-  // Wire to shared draw-on-image module when draw mode is active (Tutor Pro).
+  // Pin image uses lasso-style polygon drawing for marking the valid pin zone.
   useEffect(() => {
     if (!isDrawModeActive || !option?.image_url) {
       return;
     }
-    const img = imageRef.current;
     const canvas = canvasRef.current;
-    const api = typeof window !== 'undefined' ? window.TutorCore?.drawOnImage : undefined;
-    if (!img || !canvas || !api?.init) {
+    if (!canvas) {
       return;
     }
+
     if (drawInstanceRef.current) {
       drawInstanceRef.current.destroy();
       drawInstanceRef.current = null;
     }
-    const brushSize = api.DEFAULT_BRUSH_SIZE ?? 15;
-    const instance = api.init({
-      image: img,
-      canvas,
-      brushSize,
-      strokeStyle: INSTRUCTOR_STROKE_STYLE,
-      initialMaskUrl: option.answer_two_gap_match || undefined,
-    });
+
+    const getPointFromEvent = (event: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (event.clientX - rect.left) * scaleX;
+      const y = (event.clientY - rect.top) * scaleY;
+      return {
+        x: Math.max(0, Math.min(canvas.width, x)),
+        y: Math.max(0, Math.min(canvas.height, y)),
+      };
+    };
+
+    const renderPathPreview = () => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        return;
+      }
+
+      const points = lassoPointsRef.current;
+      if (!baseImageDataRef.current || points.length < 2) {
+        return;
+      }
+
+      ctx.putImageData(baseImageDataRef.current, 0, 0);
+      ctx.beginPath();
+      ctx.moveTo(points[0]?.x || 0, points[0]?.y || 0);
+      points.forEach((point, index) => {
+        if (index > 0) {
+          ctx.lineTo(point.x, point.y);
+        }
+      });
+      ctx.lineTo(points[0]?.x || 0, points[0]?.y || 0);
+      ctx.closePath();
+
+      ctx.fillStyle = LASSO_FILL_STYLE;
+      ctx.fill();
+
+      ctx.setLineDash(LASSO_DASH_PATTERN);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = LASSO_STROKE_STYLE;
+      ctx.stroke();
+      ctx.setLineDash([]);
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.button !== 0) {
+        return;
+      }
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        return;
+      }
+      canvas.setPointerCapture(event.pointerId);
+      isLassoDrawingRef.current = true;
+      lassoPointsRef.current = [getPointFromEvent(event)];
+      baseImageDataRef.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!isLassoDrawingRef.current) {
+        return;
+      }
+      const nextPoint = getPointFromEvent(event);
+      const points = lassoPointsRef.current;
+      const lastPoint = points[points.length - 1];
+      if (!lastPoint) {
+        points.push(nextPoint);
+        renderPathPreview();
+        return;
+      }
+      const dx = nextPoint.x - lastPoint.x;
+      const dy = nextPoint.y - lastPoint.y;
+      if (Math.hypot(dx, dy) < LASSO_MIN_POINT_DISTANCE) {
+        return;
+      }
+      points.push(nextPoint);
+      renderPathPreview();
+    };
+
+    const finishLasso = () => {
+      if (!isLassoDrawingRef.current) {
+        return;
+      }
+      isLassoDrawingRef.current = false;
+      const points = lassoPointsRef.current;
+      if (points.length >= 3) {
+        renderPathPreview();
+      } else if (baseImageDataRef.current) {
+        const ctx = canvas.getContext('2d');
+        ctx?.putImageData(baseImageDataRef.current, 0, 0);
+      }
+      lassoPointsRef.current = [];
+      baseImageDataRef.current = null;
+    };
+
+    const onPointerUp = (event: PointerEvent) => {
+      if (canvas.hasPointerCapture(event.pointerId)) {
+        canvas.releasePointerCapture(event.pointerId);
+      }
+      finishLasso();
+    };
+
+    const onPointerCancel = (event: PointerEvent) => {
+      if (canvas.hasPointerCapture(event.pointerId)) {
+        canvas.releasePointerCapture(event.pointerId);
+      }
+      finishLasso();
+    };
+
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerup', onPointerUp);
+    canvas.addEventListener('pointercancel', onPointerCancel);
+
+    const instance = {
+      destroy: () => {
+        canvas.removeEventListener('pointerdown', onPointerDown);
+        canvas.removeEventListener('pointermove', onPointerMove);
+        canvas.removeEventListener('pointerup', onPointerUp);
+        canvas.removeEventListener('pointercancel', onPointerCancel);
+        isLassoDrawingRef.current = false;
+        lassoPointsRef.current = [];
+        baseImageDataRef.current = null;
+      },
+    };
     drawInstanceRef.current = instance;
+
     return () => {
       instance.destroy();
       drawInstanceRef.current = null;
@@ -357,7 +481,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
             <canvas
               ref={canvasRef}
               css={[styles.canvas, isDrawModeActive ? styles.canvasDrawMode : styles.canvasIdleMode]}
-              aria-label={__('Draw the valid pin area with the brush', __TUTOR_TEXT_DOMAIN__)}
+              aria-label={__('Draw a lasso around the valid pin area', __TUTOR_TEXT_DOMAIN__)}
             />
           </div>
           <div css={styles.actionsRow}>
@@ -388,7 +512,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
           </div>
           <p css={styles.brushHint}>
             {__(
-              'Use the brush to draw on the image where a pin should be considered correct, then click Save.',
+              'Use lasso drawing to wrap the valid pin zone. You can draw multiple lasso regions, then click Save.',
               __TUTOR_TEXT_DOMAIN__,
             )}
           </p>

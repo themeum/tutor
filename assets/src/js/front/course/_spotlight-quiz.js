@@ -106,6 +106,7 @@ window.jQuery(document).ready($ => {
         if (is_reveal_mode() && ['draw_image', 'pin_image'].includes($question_wrap.data('question-type'))) {
             $question_wrap.find('.tutor-quiz-explanation-wrapper').removeClass('tutor-d-none');
             $question_wrap.find('.tutor-draw-image-reference-wrapper').removeClass('tutor-d-none');
+            $question_wrap.find('.tutor-pin-image-reference-wrapper').removeClass('tutor-d-none');
             goNext = true;
         }
 
