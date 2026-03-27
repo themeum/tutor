@@ -177,6 +177,7 @@
         }
 
         &.active {
+          background-color: $tutor-tab-l3-active-hover;
           color: $tutor-text-primary;
 
           svg {
@@ -185,11 +186,11 @@
 
           &::before {
             content: '';
-            height: 30px;
+            height: 40px;
             width: 2px;
             background-color: $tutor-actions-brand-primary;
             position: absolute;
-            top: 5px;
+            top: 8px;
             left: -9px;
           }
         }

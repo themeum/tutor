@@ -70,6 +70,7 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 				<div class="tutor-quiz-attempts-filter-item">
 					<?php
 						DropdownFilter::make()
+							->size( Size::SMALL )
 							->options( $nav_links['options'] )
 							->query_param( 'result' )
 							->variant( Variant::PRIMARY_SOFT )
@@ -82,6 +83,7 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 					if ( Input::has_any( $query_items, Input::GET_REQUEST ) ) {
 						Button::make()
 							->tag( 'a' )
+							->size( Size::SMALL )
 							->attr( 'href', tutor_utils()->tutor_dashboard_url( 'quiz-attempts' ) )
 							->attr( 'class', 'tutor-text-brand' )
 							->label( __( 'Clear all', 'tutor' ) )
@@ -105,13 +107,13 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 						DateFilter::make()
 							->type( DateFilter::TYPE_SINGLE )
 							->placement( Positions::BOTTOM_END )
-							->trigger_size( Size::X_SMALL )
-							->icon_size( 15 )
+							->trigger_size( Size::SMALL )
+							->icon_size( Size::SIZE_16 )
 							->render();
 					?>
 				</div>
 				<div class="tutor-quiz-attempts-filter-item">
-					<?php Sorting::make()->order( $order_filter )->render(); ?>
+					<?php Sorting::make()->size( Size::SMALL )->order( $order_filter )->render(); ?>
 				</div>
 			</div>
 			<div class="tutor-quiz-attempts-header">

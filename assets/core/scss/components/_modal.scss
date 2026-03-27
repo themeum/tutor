@@ -101,7 +101,7 @@
   &-footer {
     @include tutor-flex(row, center, flex-end);
     gap: $tutor-spacing-4;
-    padding: $tutor-spacing-6 $tutor-spacing-7 $tutor-spacing-6 $tutor-spacing-7;
+    padding: $tutor-spacing-5 $tutor-spacing-7;
     border-top: 1px solid $tutor-border-idle;
   }
 }

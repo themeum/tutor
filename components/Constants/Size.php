@@ -27,6 +27,7 @@ abstract class Size {
 	 * @var int
 	 */
 
+	public const SIZE_16  = 16;
 	public const SIZE_20  = 20;
 	public const SIZE_24  = 24;
 	public const SIZE_32  = 32;

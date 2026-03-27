@@ -86,16 +86,17 @@ $create_modal_id = 'tutor-announcement-form-modal';
 	})"
 >
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
-		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
+		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-border-b">
 			<?php
 				CourseFilter::make()
+					->size( Size::SMALL )
 					->courses( $courses )
 					->count( $total_announcements )
 					->render();
 
 				Button::make()
 					->label( __( 'New Announcement', 'tutor' ) )
-					->size( Size::X_SMALL )
+					->size( Size::SMALL )
 					->icon( Icon::ADD )
 					->attr( '@click', 'openCreateModal()' )
 					->render();
@@ -107,7 +108,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 				->form_id( 'tutor-my-courses-search-form' )
 				->placeholder( __( 'Search announcements...', 'tutor' ) )
 				->action( $current_url )
-				->size( Size::SMALL )
+				->size( Size::MEDIUM )
 				->render();
 			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
@@ -248,7 +249,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 				<div x-bind="getModalContentBindings()" style="max-width: 480px;">
 					<button x-data="tutorIcon({ name: 'cross', width: 16, height: 16})", x-bind="getCloseButtonBindings()"></button>
 
-					<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-px-7 tutor-pt-8 tutor-pb-7 tutor-border-b">
+					<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-px-7 tutor-py-6 tutor-border-b">
 						<?php tutor_utils()->render_svg_icon( Icon::ANNOUNCEMENT, 24, 24, array( 'class' => 'tutor-icon-brand' ) ); ?>
 						<h5 class="tutor-modal-title" x-text="formTitle"></h5>
 					</div>
@@ -309,7 +310,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 								Button::make()
 									->label( __( 'Cancel', 'tutor' ) )
 									->size( Size::SMALL )
-									->variant( Variant::GHOST )
+									->variant( Variant::SECONDARY )
 									->attr( '@click', sprintf( 'TutorCore.modal.hideModal("%s")', $create_modal_id ) )
 									->render();
 
