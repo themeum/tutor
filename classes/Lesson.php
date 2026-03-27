@@ -945,52 +945,66 @@ class Lesson extends Tutor_Base {
 	 * @return array navigation items array
 	 */
 	public static function get_nav_items( $lesson_id ) {
+		$is_legacy = ( new self( false ) )->is_legacy_learning_mode;
 		$nav_items = array();
 
-		if ( ( new self( false ) )->is_legacy_learning_mode ) {
-			if ( self::has_lesson_content( $lesson_id ) ) {
-				$nav_items['overview'] = array(
+		$attachments = tutor_utils()->get_attachments( $lesson_id );
+
+		$definitions = array(
+			'overview' => array(
+				'condition' => self::has_lesson_content( $lesson_id ),
+				'legacy'    => array(
 					'label'    => __( 'Overview', 'tutor' ),
 					'value'    => 'overview',
 					'icon'     => 'document-text',
 					'template' => 'single.lesson.parts.overview',
-				);
-			}
-
-			if ( self::has_lesson_attachment( $lesson_id ) ) {
-				$nav_items['files'] = array(
-					'label'    => __( 'Exercise Files', 'tutor' ),
-					'value'    => 'files',
-					'icon'     => 'paperclip',
-					'template' => 'single.lesson.parts.files',
-				);
-			}
-
-			if ( self::is_comment_enabled() ) {
-				$nav_items['comments'] = array(
-					'label'    => __( 'Comments', 'tutor' ),
-					'value'    => 'comments',
-					'icon'     => 'comment',
-					'template' => 'single.lesson.parts.comments',
-				);
-			}
-		} else {
-			if ( self::has_lesson_content( $lesson_id ) ) {
-				$nav_items['overview'] = array(
+				),
+				'default'   => array(
 					'id'       => 'overview',
 					'label'    => __( 'Overview', 'tutor' ),
 					'icon'     => Icon::COURSES,
 					'template' => 'learning-area.lesson.overview',
-				);
-			}
-
-			if ( self::is_comment_enabled() ) {
-				$nav_items['comments'] = array(
+				),
+			),
+			'files'    => array(
+				'condition' => tutor_utils()->count( $attachments ),
+				'legacy'    => array(
+					'label'    => __( 'Exercise Files', 'tutor' ),
+					'value'    => 'files',
+					'icon'     => 'paperclip',
+					'template' => 'single.lesson.parts.files',
+				),
+				'default'   => array(
+					'id'       => 'exercise_files',
+					'label'    => __( 'Exercise Files', 'tutor' ),
+					'icon'     => Icon::FILE_ATTACHEMENT,
+					'template' => 'learning-area.lesson.exercise-files',
+				),
+			),
+			'comments' => array(
+				'condition' => self::is_comment_enabled(),
+				'legacy'    => array(
+					'label'    => __( 'Comments', 'tutor' ),
+					'value'    => 'comments',
+					'icon'     => 'comment',
+					'template' => 'single.lesson.parts.comments',
+				),
+				'default'   => array(
 					'id'       => 'comments',
 					'label'    => __( 'Comments', 'tutor' ),
 					'icon'     => Icon::COMMENTS,
 					'template' => 'learning-area.lesson.comments',
-				);
+				),
+			),
+		);
+
+		foreach ( $definitions as $key => $def ) {
+			if ( empty( $def['condition'] ) ) {
+				continue;
+			}
+			$item = $is_legacy ? $def['legacy'] : $def['default'];
+			if ( null !== $item ) {
+				$nav_items[ $key ] = $item;
 			}
 		}
 

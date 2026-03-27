@@ -11,9 +11,12 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\StarRating;
+use TUTOR\Course;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
+use Tutor\Models\CourseModel;
 
 // Globals inherited from learning-area/index.php template.
 global $tutor_course_id,
@@ -28,6 +31,10 @@ $instructors         = tutor_utils()->get_instructors_by_course( $tutor_course_i
 $course_rating       = tutor_utils()->get_course_rating( $tutor_course_id );
 $course_materials    = tutor_course_material_includes( $tutor_course_id );
 $course_attachments  = tutor_utils()->get_attachments( $tutor_course_id );
+$can_complete_course = CourseModel::can_complete_course( $tutor_course_id, $current_user_id ) && ! $is_course_completed;
+$course_progress     = tutor_utils()->get_course_completed_percent( $tutor_course_id, $current_user_id );
+
+$course_complete_modal_id = 'tutor-course-complete-modal';
 
 ob_start();
 foreach ( $instructors as $key => $instructor ) {
@@ -120,7 +127,7 @@ $default_meta[]           = array(
 
 $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_meta, $tutor_course_id );
 ?>
-<div class="tutor-course-info tutor-pt-7 tutor-pb-8">
+<div class="tutor-course-info tutor-pt-7 tutor-pb-8" x-data="tutorCourseCompleteHandler">
 	<?php do_action( 'tutor_learning_area_before_course_info', $tutor_course_id ); ?>
 
 	<div class="tutor-course-thumb">
@@ -133,7 +140,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			<?php echo esc_html( $tutor_course->post_modified ); ?> Last Updated
 		</div>
 		<h3 class="tutor-h3 tutor-sm-text-h5 tutor-mt-3"><?php echo esc_html( $tutor_course->post_title ); ?></h3>
-		<div class="tutor-medium tutor-sm-text-small tutor-text-secondary tutor-mt-4">
+		<div class="tutor-medium tutor-sm-text-small tutor-text-secondary tutor-mt-4 tutor-mb-6">
 		<?php
 		echo esc_html(
 			sprintf(
@@ -143,7 +150,12 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			)
 		);
 		?>
-			</div>
+		</div>
+		<?php
+		if ( $can_complete_course ) {
+			Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $course_progress );
+		}
+		?>
 	</div>
 
 	<!-- TODO: sticky behaviour -->
@@ -227,4 +239,23 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			<?php endforeach ?>
 		</table>
 	</div>
+
+	<?php
+	if ( $can_complete_course ) {
+		$progress = $course_progress['completed_percent'] ?? 0;
+		if ( $progress < 100 ) {
+			ConfirmationModal::make()
+			->id( $course_complete_modal_id )
+			->title( __( 'Finish Course Early?', 'tutor' ) )
+			->message( Course::get_complete_modal_content( $course_progress ), wp_kses_allowed_html( 'post' ) )
+			->cancel_text( __( 'Go Back to Course', 'tutor' ) )
+			->confirm_text( __( 'Complete Anyway', 'tutor' ) )
+			->icon( Icon::WARNING_COLORIZED )
+			->confirm_handler( "handleCourseComplete($tutor_course_id)" )
+			->mutation_state( 'courseCompleteMutation' )
+			->render();
+		}
+	}
+	?>
 </div>
+
