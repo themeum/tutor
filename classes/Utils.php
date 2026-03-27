@@ -11077,6 +11077,6 @@ class Utils {
 	 * @return bool
 	 */
 	public static function is_kids_mode(): bool {
-		return 'kids' === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
+		return Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
 	}
 }

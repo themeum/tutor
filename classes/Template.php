@@ -514,7 +514,7 @@ class Template extends Tutor_Base {
 	public function load_learning_template( string $template ): string {
 		if ( tutor_utils()->is_learning_area() ) {
 			$post_type   = get_post_type();
-			$legacy_mode = 'legacy' === tutor_utils()->get_option( 'learning_mode' );
+			$legacy_mode = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
 
 			$template_path = apply_filters( 'tutor_single_content_template', $template, $post_type );
 
