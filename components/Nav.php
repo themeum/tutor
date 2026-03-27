@@ -316,8 +316,9 @@ class Nav extends BaseComponent {
 
 		$nav_items = '';
 
+		$type = $nav_item['type'] ?? InputType::LINK;
 		foreach ( $this->nav_items as $nav_item ) {
-			if ( InputType::DROPDOWN === $nav_item['type'] ) {
+			if ( InputType::DROPDOWN === $type ) {
 				$nav_items .= $this->render_dropdown_item( $nav_item );
 			} else {
 				$nav_items .= $this->render_link_item( $nav_item );
