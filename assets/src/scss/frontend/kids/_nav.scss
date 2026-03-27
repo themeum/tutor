@@ -1,0 +1,8 @@
+@use '@Core/scss/tokens' as *;
+
+[data-tutor-ui='kids'] {
+  .tutor-nav {
+    padding: 1px 1px 3px;
+    margin: -1px -1px -3px;
+  }
+}

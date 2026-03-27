@@ -115,6 +115,10 @@
   .tutor-calendar {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
 
+    .tutor-calendar-actions {
+      gap: $tutor-spacing-3;
+    }
+
     .tutor-calendar-grid {
       border-radius: $tutor-radius-5xl;
 

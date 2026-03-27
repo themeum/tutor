@@ -24,27 +24,26 @@
   &-tab {
     @include tutor-flex(row, center, flex-start);
     @include tutor-typography('small');
-    border-radius: var(--tutor-tab-radius);
-    font-weight: var(--tutor-tab-font-weight);
+    border-radius: $tutor-tab-radius;
+    font-weight: $tutor-tab-font-weight;
     background: transparent;
     border: none;
-    padding: $tutor-spacing-5 $tutor-spacing-6;
+    padding: $tutor-spacing-4 $tutor-spacing-6;
     gap: $tutor-spacing-4;
     white-space: nowrap;
     cursor: pointer;
     color: $tutor-text-primary;
-    height: 44px;
+    height: $tutor-tab-height;
     @include tutor-transition((background-color, color, box-shadow));
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-text('tiny');
-      height: 40px;
     }
 
     &-active {
       color: $tutor-text-brand;
       background-color: $tutor-tab-l3-active;
-      box-shadow: var(--tutor-tab-active-shadow);
+      box-shadow: $tutor-tab-active-shadow;
 
       svg {
         color: $tutor-text-brand;
@@ -58,7 +57,8 @@
     }
 
     &-sm {
-      height: 32px;
+      $tutor-tab-height: 32px;
+      height: $tutor-tab-height-sm;
     }
 
     &:hover:not(:disabled):not(.tutor-tabs-tab-active),
