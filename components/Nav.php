@@ -12,6 +12,7 @@ namespace Tutor\Components;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
@@ -217,7 +218,7 @@ class Nav extends BaseComponent {
 		$dropdown_icon = SvgIcon::make()
 			->name( Icon::CHEVRON_DOWN_2 )
 			->size( $icon_size )
-			->attr( 'class', 'tutor-icon-subdued' )
+			->color( Color::SUBDUED )
 			->get();
 
 		$dropdown_options = '';
@@ -316,9 +317,8 @@ class Nav extends BaseComponent {
 
 		$nav_items = '';
 
-		$type = $nav_item['type'] ?? InputType::LINK;
 		foreach ( $this->nav_items as $nav_item ) {
-			if ( InputType::DROPDOWN === $type ) {
+			if ( isset( $nav_item['type'] ) && InputType::DROPDOWN === $nav_item['type'] ) {
 				$nav_items .= $this->render_dropdown_item( $nav_item );
 			} else {
 				$nav_items .= $this->render_link_item( $nav_item );
