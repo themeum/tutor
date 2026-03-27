@@ -54,9 +54,8 @@
         }
 
         &.is-okay {
-          // @TODO: Need to adjust background and border color.
-          background-color: $tutor-surface-exception7;
-          border-color: $tutor-border-error;
+          background-color: $tutor-surface-exception6;
+          border-color: $tutor-border-exception6;
 
           .tutor-rating-label {
             color: $tutor-text-exception5;
