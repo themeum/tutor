@@ -68,6 +68,12 @@
 			border-radius: $tutor-radius-6xl;
 		}
 	}
+	.tutor-dashboard-header-user-popover {
+		@include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);	
+	}
+	.tutor-dashboard-header-user-popover-menu li a {
+		border-radius: $tutor-radius-2xl;
+	}
 
 	// discussions
 	.tutor-discussion-card-wrapper {
