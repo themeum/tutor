@@ -144,7 +144,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 								</div>
 								<?php endif; ?>
 								<div class="tutor-learning-nav-header-arrow" :class="{ 'is-expanded': expanded }">
-									<?php SvgIcon::make()->name( Icon::CHEVRON_UP_2 )->size( 20 )->render(); ?>
+									<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 20 )->render(); ?>
 								</div>
 							</div>
 						</div>
