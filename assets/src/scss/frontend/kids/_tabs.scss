@@ -19,7 +19,7 @@
   --tutor-tab-height-sm: 32px;
   --tutor-tab-height-lg: 48px;
 
-  .tutor-tabs-nav {
+  .tutor-tabs-nav:not([class*='tutor-p-']):not([class*='tutor-m-']) {
     padding: 1px 1px 3px;
     margin: -1px -1px -3px;
   }
