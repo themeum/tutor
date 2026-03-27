@@ -5724,7 +5724,12 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_dashboard_page( $subpage = null ): bool {
-		return true;
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			// If user is not login then the dashboard slug show the login screen.
+			return false;
+		}
+
 		if ( $subpage ) {
 			return $this->is_tutor_frontend_dashboard( $subpage );
 		}
