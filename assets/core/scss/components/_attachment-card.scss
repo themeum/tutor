@@ -49,9 +49,16 @@
     @include tutor-typography('tiny', 'regular', 'secondary', 'body');
   }
 
+  &-actions {
+    opacity: 0;
+    visibility: hidden;
+    @include tutor-transition((opacity, visibility));
+  }
+
   &:hover &-actions,
   &:focus-within &-actions,
   &-show-actions &-actions {
     opacity: 1;
+    visibility: visible;
   }
 }

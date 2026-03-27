@@ -4,6 +4,7 @@ import { type AlpineComponentMeta } from '@Core/ts/types';
 export interface ModalConfig {
   id: string;
   isCloseable?: boolean; // if true, the modal can be closed by clicking outside or pressing escape
+  initialOpen?: boolean; // if true, the modal is shown on init (default: false)
 }
 
 const DEFAULT_CONFIG: ModalConfig = {
@@ -12,7 +13,7 @@ const DEFAULT_CONFIG: ModalConfig = {
 };
 
 export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
-  open: false,
+  open: config.initialOpen ?? false,
   payload: null,
   isCloseable: config.isCloseable ?? DEFAULT_CONFIG.isCloseable,
   id: config.id,

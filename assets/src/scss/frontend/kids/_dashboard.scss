@@ -4,7 +4,7 @@
 
 [data-tutor-ui='kids'] {
   .tutor-card {
-    @include kids-shadow;
+    @include tutor-kids-shadow;
   }
 
   .tutor-badge {
@@ -13,12 +13,13 @@
 
   .tutor-stat-card,
   .tutor-progress-card,
+	.tutor-discussion-card,
   .tutor-upcoming-lesson-card,
   .tutor-wishlist-grid .tutor-course-card,
-  .tutor-discussion-card,
-  .tutor-my-courses-card,
-  .tutor-review-card {
-    @include kids-shadow;
+  .tutor-review-card,
+  .tutor-dashboard-home-chart,
+  .tutor-dashboard-home-card {
+    @include tutor-kids-shadow;
   }
 
   // home
@@ -36,20 +37,21 @@
     }
   }
 
-  // quiz attempts
-  .tutor-quiz-attempts-list {
-    .tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
-      @include kids-shadow($tutor-border-brand-tertiary);
-      margin-bottom: $tutor-spacing-5;
-    }
-  }
+	// quiz attempts
+	.tutor-quiz-attempts-list {
+		.tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
+			@include tutor-kids-shadow($tutor-border-brand-tertiary);
+			margin-bottom: $tutor-spacing-5;
+		}
+	}
 
-  // user account/profile
-  .tutor-user-profile {
-    .tutor-profile-card,
-    .tutor-statistic-card {
-      @include kids-shadow;
-    }
+	// user account/profile
+	.tutor-user-profile {
+
+		.tutor-profile-card,
+		.tutor-statistic-card {
+			@include tutor-kids-shadow;
+		}
 
     .tutor-profile-card-header {
       border-radius: $tutor-radius-5xl;
@@ -82,12 +84,20 @@
   }
 
   .tutor-discussion-single {
-    @include kids-shadow(false);
+    @include tutor-kids-shadow(false);
+	}
+
+	.tutor-my-courses-card-wrapper {
+		gap: $tutor-spacing-6;
+
+		.tutor-my-courses-card {
+			@include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-3xl);
+		}
   }
 
   // calendar
   .tutor-calendar {
-    @include kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
 
     .tutor-calendar-grid {
       border-radius: $tutor-radius-5xl;
