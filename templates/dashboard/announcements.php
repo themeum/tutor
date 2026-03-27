@@ -29,6 +29,8 @@ use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\Positions;
+use Tutor\Components\Constants\Color;
+use Tutor\Components\SvgIcon;
 
 $limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
@@ -137,7 +139,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 					<div class="tutor-announcement-item">
 						<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-5">
 							<div class="tutor-flex tutor-items-center tutor-gap-3">
-								<?php tutor_utils()->render_svg_icon( Icon::ANNOUNCEMENT ); ?>
+								<?php SvgIcon::make()->name( Icon::ANNOUNCEMENT )->render(); ?>
 								<div class="tutor-tiny tutor-text-secondary">
 									<?php echo esc_html( tutor_i18n_get_formated_date( $announcement->post_date ) ); ?>
 								</div>
@@ -175,7 +177,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 								<!-- Mobile Popover -->
 								<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-hidden tutor-sm-block">
 									<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-btn-icon">
-										<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+										<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 									</button>
 									<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 										<div class="tutor-popover-menu" style="min-width: 104px;">
@@ -188,14 +190,14 @@ $create_modal_id = 'tutor-announcement-form-modal';
 													course_id: <?php echo (int) $announcement->post_parent; ?> 
 												})"
 											>
-												<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
+												<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
 											</button>
 											<button 
 												class="tutor-popover-menu-item"
 												@click="hide(); TutorCore.modal.showModal('<?php echo esc_attr( $delete_modal_id ); ?>', { announcementId: <?php echo esc_html( $announcement->ID ); ?> });"
 											>
-												<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
+												<?php SvgIcon::make()->name( Icon::DELETE_2 )->render(); ?>
 												<?php esc_html_e( 'Delete', 'tutor' ); ?>
 											</button>
 										</div>
@@ -250,7 +252,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 					<button x-data="tutorIcon({ name: 'cross', width: 16, height: 16})", x-bind="getCloseButtonBindings()"></button>
 
 					<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-px-7 tutor-py-6 tutor-border-b">
-						<?php tutor_utils()->render_svg_icon( Icon::ANNOUNCEMENT, 24, 24, array( 'class' => 'tutor-icon-brand' ) ); ?>
+						<?php SvgIcon::make()->name( Icon::ANNOUNCEMENT )->size( 24 )->color( Color::BRAND )->render(); ?>
 						<h5 class="tutor-modal-title" x-text="formTitle"></h5>
 					</div>
 

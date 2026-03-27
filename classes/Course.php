@@ -3005,7 +3005,7 @@ class Course extends Tutor_Base {
 	 */
 	public function tutor_reset_course_progress() {
 		tutor_utils()->checking_nonce();
-		$course_id = Input::post( 'course_id' );
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		if ( ! $course_id || ! is_numeric( $course_id ) || ! tutor_utils()->is_enrolled( $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid Course ID or Access Denied.', 'tutor' ) ) );
@@ -3439,5 +3439,24 @@ class Course extends Tutor_Base {
 		}
 
 		$button->render();
+	}
+
+	/**
+	 * Render course retake button
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string  $modal_id Modal id.
+	 *
+	 * @return void
+	 */
+	public static function render_course_retake_btn( string $modal_id ): void {
+		Button::make()
+		->label( __( 'Retake this Course', 'tutor' ) )
+		->icon( Icon::RELOAD_3 )
+		->variant( Variant::SECONDARY )
+		->attr( 'type', 'button' )
+		->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" )
+		->render();
 	}
 }

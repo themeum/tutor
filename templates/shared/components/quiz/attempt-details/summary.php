@@ -9,6 +9,7 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\PreviewTrigger;
@@ -122,7 +123,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 
 		<div class="tutor-quiz-result-marks">
 			<div class="tutor-result-badge <?php echo esc_attr( $result_badge_class ); ?>">
-				<?php tutor_utils()->render_svg_icon( $result_icon, 32, 32 ); ?>
+				<?php SvgIcon::make()->name( $result_icon )->size( 32 )->render(); ?>
 				<?php echo esc_html( $result_label ); ?>
 			</div>
 
@@ -149,7 +150,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 			</div>
 
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
-				<?php tutor_utils()->render_svg_icon( Icon::CLOCK_2, 24, 24 ); ?>
+				<?php SvgIcon::make()->name( Icon::CLOCK_2 )->size( 24 )->render(); ?>
 				<span class="tutor-font-semibold tutor-text-primary">
 					<?php echo esc_html( $attempt_duration_taken ); ?>
 				</span>

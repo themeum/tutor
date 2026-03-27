@@ -854,7 +854,7 @@ class Assets {
 	public function enqueue_scripts() {
 		$is_dashboard       = tutor_utils()->is_dashboard_page();
 		$is_learning_area   = tutor_utils()->is_learning_area();
-		$is_legacy_learning = tutor_utils()->get_option( 'is_legacy_learning_mode' );
+		$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
 
 		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
 		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
@@ -909,7 +909,7 @@ class Assets {
 			$load = false;
 		} else {
 			$is_learning_area   = tutor_utils()->is_learning_area();
-			$is_legacy_learning = tutor_utils()->get_option( 'is_legacy_learning_mode' );
+			$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
 			if ( $is_learning_area && ! $is_legacy_learning ) {
 				$load = false;
 			}

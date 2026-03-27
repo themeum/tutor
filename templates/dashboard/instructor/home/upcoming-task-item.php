@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 use Tutor\Components\Badge;
+use Tutor\Components\SvgIcon;
 use TUTOR\Utils;
 
 $label = __( 'Live Session', 'tutor' );
@@ -19,7 +20,7 @@ $label = __( 'Live Session', 'tutor' );
 
 <div class="tutor-dashboard-home-task">
 	<div class="tutor-dashboard-home-task-icon">
-		<?php tutor_utils()->render_svg_icon( Icon::VIDEO_CAMERA ); ?>
+		<?php SvgIcon::make()->name( Icon::VIDEO_CAMERA )->render(); ?>
 	</div>
 	<div class="tutor-flex tutor-flex-column tutor-mt-1">
 		<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny tutor-text-secondary">
@@ -51,7 +52,7 @@ $label = __( 'Live Session', 'tutor' );
 		</div>
 		<a href="<?php echo esc_url( $item['url'] ); ?>" class="tutor-dashboard-home-task-link" data-link>
 			<?php esc_html_e( 'Open', 'tutor' ); ?>
-			<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT_2 ); ?>
+			<?php SvgIcon::make()->name( Icon::CHEVRON_RIGHT_2 )->render(); ?>
 		</a>
 	</div>
 </div>

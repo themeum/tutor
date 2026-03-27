@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
 use Tutor\Components\Badge;
@@ -108,7 +109,7 @@ $delete_modal_id = 'review-delete-modal';
 								->label( __( 'Edit Review', 'tutor' ) )
 								->variant( Variant::SECONDARY )
 								->size( Size::X_SMALL )
-								->icon( tutor_utils()->get_svg_icon( Icon::EDIT_2 ) )
+								->icon( SvgIcon::make()->name( Icon::EDIT_2 )->get() )
 								->icon_only()
 								->attr( 'x-ref', 'edit' )
 								->render();
@@ -118,7 +119,7 @@ $delete_modal_id = 'review-delete-modal';
 								->label( __( 'Delete Review', 'tutor' ) )
 								->variant( Variant::SECONDARY )
 								->size( Size::X_SMALL )
-								->icon( tutor_utils()->get_svg_icon( Icon::DELETE_2 ) )
+								->icon( SvgIcon::make()->name( Icon::DELETE_2 )->get() )
 								->icon_only()
 								->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review['comment_ID'] ) . ' })' )
 								->render();
@@ -194,11 +195,11 @@ $delete_modal_id = 'review-delete-modal';
 			<div class="tutor-flex tutor-justify-between tutor-gap-3">
 				<div class="tutor-flex tutor-gap-3 tutor-tiny tutor-text-subdued tutor-items-center">
 					<span>
-						<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?>
+						<?php SvgIcon::make()->name( Icon::COMMAND )->size( 12 )->render(); ?>
 					</span>
 					<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
 					<span>
-						<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?>
+						<?php SvgIcon::make()->name( Icon::ENTER )->size( 12 )->render(); ?>
 					</span>
 					<?php esc_html_e( 'Enter to Save', 'tutor' ); ?>
 				</div>

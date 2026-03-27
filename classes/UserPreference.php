@@ -147,9 +147,6 @@ class UserPreference {
 	 * @return array
 	 */
 	public function add_theme_attribute( $classes ) {
-		if ( ! tutor_utils()->is_dashboard_page() && ! tutor_utils()->is_learning_area() ) {
-			return $classes;
-		}
 		$prefs = $this->get_preferences();
 		$theme = isset( $prefs['theme'] ) ? (string) $prefs['theme'] : self::DEFAULT_THEME;
 		if ( ! in_array( $theme, self::THEMES, true ) ) {

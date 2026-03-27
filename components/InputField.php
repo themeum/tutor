@@ -1067,10 +1067,10 @@ class InputField extends BaseComponent {
 				</template>
 			</div>
 		',
-			tutor_utils()->get_svg_icon( Icon::CROSS, 12, 12 )
+			SvgIcon::make()->name( Icon::CROSS )->size( 12 )->get()
 		);
 
-		$right_icon_html = $this->right_icon ? $this->right_icon : tutor_utils()->get_svg_icon( Icon::CHEVRON_DOWN, 16, 16 );
+		$right_icon_html = $this->right_icon ? $this->right_icon : SvgIcon::make()->name( Icon::CHEVRON_DOWN )->size( 16 )->get();
 
 		$input_button = $this->multiple ? $multiple_input : $single_input;
 
@@ -1102,7 +1102,7 @@ class InputField extends BaseComponent {
 			',
 			$input_button,
 			esc_attr__( 'Clear selection', 'tutor' ),
-			tutor_utils()->get_svg_icon( Icon::CROSS, 16, 16 ),
+			SvgIcon::make()->name( Icon::CROSS )->size( 16 )->get(),
 			$right_icon_html
 		);
 	}
@@ -1200,7 +1200,7 @@ class InputField extends BaseComponent {
 	 */
 	protected function get_search_input_markup(): string {
 
-		$left_icon_html = $this->left_icon ? $this->left_icon : tutor_utils()->get_svg_icon( Icon::SEARCH_2, 20, 20 );
+		$left_icon_html = $this->left_icon ? $this->left_icon : SvgIcon::make()->name( Icon::SEARCH_2 )->size( 20 )->get();
 
 		$search_input = sprintf(
 			'

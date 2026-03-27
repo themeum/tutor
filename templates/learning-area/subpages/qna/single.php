@@ -15,6 +15,8 @@ use Tutor\Components\Avatar;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use TUTOR\Input;
 
 $question_id   = Input::get( 'question_id', 0, Input::TYPE_INT );
@@ -38,7 +40,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 	<div class="tutor-discussion-single" x-data="tutorQnA()">
 		<div class="tutor-flex tutor-justify-between tutor-p-6 tutor-border-b">
 			<a href="<?php echo esc_url( $back_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
-				<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
+				<?php SvgIcon::make()->name( Icon::ARROW_LEFT_2 )->render(); ?>
 				<?php esc_html_e( 'Back', 'tutor' ); ?>
 			</a>
 		</div>
@@ -60,7 +62,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 				<div class="tutor-ml-auto">
 					<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-quiz-item-result-more">
 						<button class="tutor-btn tutor-btn-ghost tutor-btn-icon tutor-btn-x-small" x-ref="trigger" @click="toggle()">
-							<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+							<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 						</button>
 						<div 
 							x-ref="content"
@@ -71,14 +73,14 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 						>
 							<div class="tutor-popover-menu" style="min-width: 130px;">
 								<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $question->comment_ID; ?>); hide()">
-									<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
+									<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 									<?php esc_html_e( 'Edit', 'tutor' ); ?>
 								</button>
 								<button 
 									class="tutor-popover-menu-item tutor-gap-5"
 									@click="TutorCore.modal.showModal('<?php echo esc_js( $qna_delete_modal_id ); ?>', { question_id: <?php echo esc_html( $question->comment_ID ); ?> }); hide();"
 								>
-									<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
+									<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 								</button>
 							</div>
 						</div>

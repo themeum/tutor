@@ -19,6 +19,8 @@ use Tutor\Components\Progress;
 use Tutor\Components\Tooltip;
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use TUTOR\Input;
 use TUTOR\Template;
 
@@ -52,7 +54,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
 		<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">
-			<?php tutor_utils()->render_svg_icon( Icon::CROSS_2, 20, 20 ); ?>
+			<?php SvgIcon::make()->name( Icon::CROSS_2 )->size( 20 )->render(); ?>
 		</button>
 	</div>
 	<div class="tutor-learning-sidebar-curriculum">
@@ -134,7 +136,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 									<?php
 									Tooltip::make()
 										->content( $topic_summery )
-										->trigger_element( tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ) )
+										->trigger_element( SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 16 )->color( Color::SECONDARY )->get() )
 										->size( Size::LARGE )
 										->arrow( Tooltip::ARROW_CENTER )
 										->render();
@@ -142,7 +144,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 								</div>
 								<?php endif; ?>
 								<div class="tutor-learning-nav-header-arrow" :class="{ 'is-expanded': expanded }">
-									<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP_2, 20, 20 ); ?>
+									<?php SvgIcon::make()->name( Icon::CHEVRON_UP_2 )->size( 20 )->render(); ?>
 								</div>
 							</div>
 						</div>
@@ -179,7 +181,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 		<div class="tutor-sidebar-resizer" x-show="!collapsed" @mousedown="startResizing($event)" x-cloak></div>
 		<div class="tutor-sidebar-restore-dropdown" x-show="!collapsed" x-cloak>
 			<button :class="{ 'is-minimized': pagesHeight <= 40 }" @click="togglePagesHeight()">
-				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2 ); ?>
+				<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->render(); ?>
 			</button>
 		</div>
 		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" :style="!collapsed && { height: pagesHeight + 'px' }">
@@ -194,7 +196,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 						onclick="<?php echo esc_attr( $item['onclick'] ); ?>"
 					<?php endif; ?>
 				>
-					<?php tutor_utils()->render_svg_icon( $item['icon'], 20, 20 ); ?>
+					<?php SvgIcon::make()->name( $item['icon'] )->size( 20 )->render(); ?>
 					<?php echo esc_html( $item['title'] ); ?>
 				</a>
 				<?php

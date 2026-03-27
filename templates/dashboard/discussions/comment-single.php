@@ -18,6 +18,8 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use TUTOR\Input;
 use TUTOR\Lesson;
 
@@ -42,7 +44,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 			href="<?php echo esc_url( UrlHelper::add_query_params( $discussion_url, array( 'tab' => 'lesson-comments' ) ) ); ?>" 
 			class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2"
 		>
-			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
+			<?php SvgIcon::make()->name( Icon::ARROW_LEFT_2 )->render(); ?>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
@@ -70,16 +72,16 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 				<?php if ( $user_id === (int) $lesson_comment->user_id ) : ?>
 				<div x-data="tutorPopover({ placement: 'bottom-end' })">
 					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 					</button>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 						<div class="tutor-popover-menu" style="min-width: 104px;">
 							<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $lesson_comment->comment_ID; ?>); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
+								<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
 							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('<?php echo esc_js( $comment_delete_modal_id ); ?>', { commentId: <?php echo esc_html( $lesson_comment->comment_ID ); ?> }); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
+								<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>
 						</div>

@@ -14,6 +14,7 @@ use TUTOR\Announcements;
 use Tutor\Components\Avatar;
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use TUTOR\Input;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
@@ -40,7 +41,7 @@ $total_announcements = $the_query->found_posts;
 ?>
 <div class="tutor-mt-7">
 	<h4 class="tutor-h4 tutor-mb-5 tutor-flex tutor-items-center tutor-gap-4">
-		<?php tutor_utils()->render_svg_icon( Icon::ANNOUNCEMENT, 24, 24 ); ?>
+		<?php SvgIcon::make()->name( Icon::ANNOUNCEMENT )->size( 24 )->render(); ?>
 		<?php esc_html_e( 'Announcements', 'tutor' ); ?>
 	</h4>
 	<div class="tutor-course-announcements">
@@ -69,7 +70,7 @@ $total_announcements = $the_query->found_posts;
 								</div>
 							</div>
 							<div class="tutor-tiny tutor-text-secondary tutor-flex tutor-items-center tutor-gap-3">
-								<?php tutor_utils()->render_svg_icon( Icon::ANNOUNCEMENT ); ?>
+								<?php SvgIcon::make()->name( Icon::ANNOUNCEMENT )->render(); ?>
 								<?php echo esc_html( tutor_i18n_get_formated_date( $announcement->post_date ) ); ?>
 							</div>
 						</div>

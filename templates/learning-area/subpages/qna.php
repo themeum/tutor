@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use TUTOR\Input;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
@@ -70,7 +71,7 @@ $questions   = tutor_utils()->get_qa_questions(
 ?>
 <div class="tutor-py-7">
 	<h4 class="tutor-h4 tutor-mb-5 tutor-flex tutor-items-center tutor-gap-4">
-		<?php tutor_utils()->render_svg_icon( Icon::QA, 24, 24 ); ?>
+		<?php SvgIcon::make()->name( Icon::QA )->size( 24 )->render(); ?>
 		<?php esc_html_e( 'Q&A', 'tutor' ); ?>
 	</h4>
 	<div class="tutor-learning-area-qna" x-data="tutorQnA()">

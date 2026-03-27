@@ -20,6 +20,8 @@ use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
@@ -108,7 +110,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			@click="handleCreateCourse()"
 			:disabled="createMutation.isPending"
 		>
-			<?php tutor_utils()->render_svg_icon( Icon::ADD ); ?>
+			<?php SvgIcon::make()->name( Icon::ADD )->render(); ?>
 			<?php esc_html_e( 'New Course', 'tutor' ); ?>
 		</button>
 		<?php echo apply_filters( 'tutor_course_create_mobile_button', ob_get_clean() ); //phpcs:ignore ?>
@@ -127,7 +129,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 					@click="handleCreateCourse()"
 					:disabled="createMutation.isPending"
 				>
-					<?php tutor_utils()->render_svg_icon( Icon::ADD ); ?>
+					<?php SvgIcon::make()->name( Icon::ADD )->render(); ?>
 					<?php esc_html_e( 'New Course', 'tutor' ); ?>
 				</button>
 			</div>
@@ -178,10 +180,10 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							<img src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 							<div class="tutor-my-courses-card-actions">
 								<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
-									<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
+									<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
 								</a>
 								<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
-									<?php tutor_utils()->render_svg_icon( Icon::EYE_LINE ); ?>
+									<?php SvgIcon::make()->name( Icon::EYE_LINE )->render(); ?>
 								</a>
 							</div>
 						</div>
@@ -189,7 +191,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							<?php do_action( 'tutor_my_courses_before_meta', get_the_ID() ); ?>
 
 							<div class="tutor-tiny tutor-text-secondary tutor-flex tutor-items-center tutor-gap-2 tutor-mb-2">
-								<?php tutor_utils()->render_svg_icon( Icon::CALENDAR_CHECK, 14, 14, array( 'class' => 'tutor-icon-brand' ) ); ?>
+								<?php SvgIcon::make()->name( Icon::CALENDAR_CHECK )->size( 14 )->color( Color::BRAND )->render(); ?>
 								<?php echo esc_html( get_the_date() ); ?> - <?php echo esc_html( get_the_time() ); ?>
 							</div>
 
@@ -201,14 +203,14 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-6 tutor-mt-4">
 								<?php if ( ! empty( $course_students ) ) : ?>
 								<div class="tutor-flex tutor-items-center tutor-gap-2">
-									<?php tutor_utils()->render_svg_icon( Icon::PASSED, 14, 14 ); ?>
+									<?php SvgIcon::make()->name( Icon::PASSED )->size( 14 )->render(); ?>
 									<?php echo esc_html( $course_students ); ?>
 								</div>
 								<?php endif; ?>
 
 								<?php if ( ! empty( $course_duration ) ) : ?>
 								<div class="tutor-flex tutor-items-center tutor-gap-2">
-									<?php tutor_utils()->render_svg_icon( Icon::TIME, 14, 14 ); ?>
+									<?php SvgIcon::make()->name( Icon::TIME )->size( 14 )->render(); ?>
 									<?php echo esc_html( $course_duration ); ?>
 								</div>
 								<?php endif; ?>
@@ -241,7 +243,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							})"
 						>
 							<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-								<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+								<?php SvgIcon::make()->name( Icon::THREE_DOTS_VERTICAL )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 							</button>
 
 							<div 
@@ -265,7 +267,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 										);
 										?>
 									<a href="?<?php echo esc_attr( $params ); ?>" class="tutor-popover-menu-item">
-										<?php tutor_utils()->render_svg_icon( Icon::PUBLISH, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::PUBLISH )->size( 20 )->render(); ?>
 										<span>
 											<?php
 											$can_publish_course = current_user_can( 'administrator' ) || (bool) tutor_utils()->get_option( 'instructor_can_publish_course' );
@@ -293,7 +295,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 										);
 										?>
 									<a href="?<?php echo esc_attr( $params ); ?>" class="tutor-popover-menu-item">
-										<?php tutor_utils()->render_svg_icon( Icon::CROSS_2, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::CROSS_2 )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Cancel Submission', 'tutor' ); ?>
 									</a>
 									<?php endif; ?>
@@ -301,14 +303,14 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 
 									<!-- Edit Link -->
 									<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-popover-menu-item tutor-hidden tutor-sm-flex">
-										<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</a>
 									<!-- Edit Link -->
 
 									<!-- View Link -->
 									<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-popover-menu-item tutor-hidden tutor-sm-flex">
-										<?php tutor_utils()->render_svg_icon( Icon::EYE_LINE, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::EYE_LINE )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Overview', 'tutor' ); ?>
 									</a>
 									<!-- View Link -->
@@ -324,7 +326,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 										);
 										?>
 									<a href="?<?php echo esc_attr( $params ); ?>" class="tutor-popover-menu-item">
-										<?php tutor_utils()->render_svg_icon( Icon::COPY_2, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::COPY_2 )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Duplicate', 'tutor' ); ?>
 									</a>
 									<?php endif; ?>
@@ -343,7 +345,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 										);
 										?>
 									<a href="?<?php echo esc_attr( $params ); ?>" class="tutor-popover-menu-item">
-										<?php tutor_utils()->render_svg_icon( Icon::MOVE, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::MOVE )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Move to Draft', 'tutor' ); ?>
 									</a>
 									<?php endif; ?>
@@ -355,7 +357,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 											class="tutor-popover-menu-item tutor-border-t"
 											@click="hide(); TutorCore.modal.showModal('tutor-course-delete-modal', { courseId: <?php echo esc_html( $post->ID ); ?> });"
 										>
-											<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
+											<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 											<?php esc_html_e( 'Delete', 'tutor' ); ?>
 										</button>
 									<?php endif; ?>

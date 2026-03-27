@@ -21,6 +21,8 @@ use Tutor\Components\Constants\Variant;
 use Tutor\Components\Modal;
 use Tutor\Components\Tooltip;
 use TUTOR\Dashboard;
+use Tutor\Components\Constants\Color;
+use Tutor\Components\SvgIcon;
 use Tutor\Helpers\ComponentHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Icon;
@@ -135,7 +137,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 							->content( __( 'Total amount requested but not yet processed.', 'tutor' ) )
 							->placement( 'top' )
 							->arrow( 'center' )
-							->trigger_element( tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ) )
+							->trigger_element( SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 16 )->color( Color::SECONDARY )->get() )
 							->render();
 						?>
 					</div>
@@ -149,7 +151,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 
 		<div class="tutor-withdrawal-preference-msg-wrap tutor-mt-4 tutor-text-tiny tutor-flex tutor-items-center tutor-gap-3">
 			<?php
-			tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) );
+			SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 16 )->color( Color::SECONDARY )->render();
 			?>
 			<span class="tutor-withdrawal-preference-msg">
 				<?php
@@ -232,7 +234,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 											->content( $tooltip_content )
 											->placement( 'top' )
 											->arrow( 'center' )
-											->trigger_element( '<span class="tutor-icon-secondary">' . tutor_utils()->get_svg_icon( Icon::INFO_OCTAGON ) . '</span>' )
+											->trigger_element( SvgIcon::make()->name( Icon::INFO_OCTAGON )->color( Color::SECONDARY )->get() )
 											->render();
 									}
 									?>
