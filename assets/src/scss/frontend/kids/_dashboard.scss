@@ -18,7 +18,8 @@
 	.tutor-wishlist-grid .tutor-course-card,
 	.tutor-review-card,
 	.tutor-dashboard-home-chart,
-	.tutor-dashboard-home-card {
+	.tutor-dashboard-home-card,
+	.tutor-dashboard-home-sort .tutor-popover-bottom {
 		@include tutor-kids-shadow;
 	}
 
@@ -26,6 +27,14 @@
 	.tutor-student-dashboard-courses {
 		.tutor-card.tutor-progress-card:not(:first-child) {
 			margin-top: $tutor-spacing-4;
+		}
+	}
+
+	.tutor-dashboard-home-sort .tutor-popover-bottom {
+		@include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);
+
+		.tutor-popover-menu-item {
+			border-radius: $tutor-radius-2xl;
 		}
 	}
 
@@ -68,9 +77,11 @@
 			border-radius: $tutor-radius-6xl;
 		}
 	}
+
 	.tutor-dashboard-header-user-popover {
-		@include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);	
+		@include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);
 	}
+
 	.tutor-dashboard-header-user-popover-menu li a {
 		border-radius: $tutor-radius-2xl;
 	}
