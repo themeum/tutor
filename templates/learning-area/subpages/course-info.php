@@ -16,6 +16,7 @@ use Tutor\Components\StarRating;
 use TUTOR\Course;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 
 // Globals inherited from learning-area/index.php template.
@@ -272,7 +273,8 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		ConfirmationModal::make()
 		->id( $course_retake_modal_id )
 		->title( __( 'Start the Course Again?', 'tutor' ) )
-		->message( __( 'Retaking the course will reset your progress and start everything from the beginning.', 'tutor-pro' ) )
+		->message( __( 'Retaking the course will reset your progress and start everything from the beginning.', 'tutor' ) )
+		->icon( UrlHelper::asset( 'images/illustrations/retake-course.svg' ) )
 		->cancel_text( __( 'Cancel', 'tutor' ) )
 		->confirm_text( __( 'Start Retake', 'tutor' ) )
 		->confirm_handler( "handleCourseRetake($tutor_course_id)" )
