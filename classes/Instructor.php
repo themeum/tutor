@@ -16,8 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use DateInterval;
 use DateTime;
-use Tutor\Ecommerce\OptionKeys;
-use Tutor\Ecommerce\Settings;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
@@ -76,6 +74,10 @@ class Instructor {
 		 * @since 1.9.2
 		 */
 		add_action( 'wp_loaded', array( $this, 'hide_instructor_notice' ) );
+
+		add_action( 'wp_ajax_tutor_save_instructor_home_sections_order', array( $this, 'save_home_sections_order' ) );
+
+		add_action( 'wp_ajax_tutor_save_instructor_home_sections_visibility', array( $this, 'save_home_section_visibility' ) );
 	}
 
 	/**
@@ -465,61 +467,6 @@ class Instructor {
 	}
 
 	/**
-	 * Get the total number of students enrolled in an instructor's courses
-	 * within a given date range.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string|null $start_date Start date (Y-m-d).
-	 * @param string|null $end_date   End date (Y-m-d).
-	 * @param int         $user_id    Instructor user ID.
-	 *
-	 * @return int Total number of enrolled students.
-	 */
-	public static function get_instructor_total_students_by_date_range( $start_date, $end_date, $user_id ) {
-
-		global $wpdb;
-
-		$primary_table  = "{$wpdb->posts} AS enrollment";
-		$joining_table  = array(
-			array(
-				'type'  => 'INNER',
-				'table' => "{$wpdb->posts} AS course",
-				'on'    => 'enrollment.post_parent=course.ID',
-			),
-		);
-		$select_columns = array( 'COUNT(enrollment.ID) AS students' );
-
-		$where = array(
-			'course.post_author'     => $user_id,
-			'course.post_type'       => tutor()->course_post_type,
-			'course.post_status'     => CourseModel::STATUS_PUBLISH,
-			'enrollment.post_type'   => 'tutor_enrolled',
-			'enrollment.post_status' => 'completed',
-		);
-
-		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
-			$where['enrollment.post_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
-		}
-
-		$result = QueryHelper::get_joined_data(
-			$primary_table,
-			$joining_table,
-			$select_columns,
-			$where,
-			array(),
-			'',
-			-1,
-			0,
-			'DESC',
-			OBJECT,
-			true
-		);
-
-		return $result->students ?? 0;
-	}
-
-	/**
 	 * Get course completion distribution data for a specific instructor.
 	 *
 	 * @since 4.0.0
@@ -576,20 +523,31 @@ class Instructor {
 
 		foreach ( $enrollments as $enrollment ) {
 
+			// Cancelled enrollment.
 			if ( in_array( $enrollment->post_status, $cancel_statuses, true ) ) {
 				++$counts['cancelled'];
 				continue;
 			}
 
-			$course_progress = tutor_utils()->get_course_completed_percent( $enrollment->post_parent, $enrollment->post_author );
-
-			if ( 100 === $course_progress ) {
+			// Completed course.
+			if ( tutor_utils()->is_completed_course( $enrollment->post_parent, $enrollment->post_author ) ) {
 				++$counts['completed'];
-			} elseif ( $course_progress > 0 && $course_progress < 100 ) {
-				++$counts['inprogress'];
-			} else {
-				++$counts['inactive'];
+				continue;
 			}
+
+			$course_progress = (int) tutor_utils()->get_course_completed_percent( $enrollment->post_parent, $enrollment->post_author );
+
+			if ( 100 === $course_progress ) { // If progress is 100% but the `Complete Course` button hasn't been clicked.
+				++$counts['completed'];
+				continue;
+			}
+
+			if ( $course_progress > 0 ) {
+				++$counts['inprogress'];
+				continue;
+			}
+
+			++$counts['inactive'];
 		}
 
 		return $counts;
@@ -763,7 +721,7 @@ class Instructor {
 			array(
 				'post_type'   => $post_types,
 				'post_status' => 'publish',
-				'post_author' => $instructor_id,
+				'author'      => $instructor_id,
 				'numberposts' => 5,
 				'meta_query'  => array(
 					array(
@@ -891,5 +849,51 @@ class Instructor {
 			'class'      => $class,
 			'icon_class' => '-tutor-mb-1',
 		);
+	}
+
+	/**
+	 * Save the instructor home sections order for the current user.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void Sends JSON success or error response and exits.
+	 */
+	public function save_home_sections_order() {
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
+		}
+
+		tutor_utils()->check_nonce();
+
+		$order = Input::post( 'order', array(), Input::TYPE_ARRAY );
+		$order = array_values( array_map( 'sanitize_key', $order ) );
+
+		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', array_flip( $order ) );
+
+		wp_send_json_success();
+	}
+
+	/**
+	 * Save the visibility state of instructor home sections.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void Sends JSON success or error response and exits.
+	 */
+	public function save_home_section_visibility() {
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
+		}
+
+		tutor_utils()->check_nonce();
+
+		$items = Input::post( 'items', '', Input::TYPE_STRING );
+		$items = array_map( 'rest_sanitize_boolean', (array) json_decode( $items ) );
+
+		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', $items );
+
+		wp_send_json_success();
 	}
 }

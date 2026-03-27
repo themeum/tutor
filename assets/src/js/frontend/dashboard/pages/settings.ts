@@ -1,10 +1,7 @@
 import { __ } from '@wordpress/i18n';
-import axios from 'axios';
 
-import { type MutationState, type QueryState } from '@Core/ts/services/Query';
-
+import { type MutationState } from '@Core/ts/services/Query';
 import { type WPMedia } from '@Core/ts/services/WPMedia';
-import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
@@ -84,7 +81,6 @@ const settings = () => {
 
   return {
     $el: null as HTMLElement | null,
-    fetchCountriesQuery: null as QueryState<TutorMutationResponse<string>> | null,
     uploadProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     removeProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     updateProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
@@ -118,17 +114,21 @@ const settings = () => {
         },
       });
 
-      this.fetchCountriesQuery = query.useQuery('fetch-countries', () => this.fetchCountries());
-
       this.uploadProfilePhotoMutation = query.useMutation(this.uploadProfilePhoto, {
+        onSuccess: () => {
+          toast.success(__('Successfully updated profile photo.', 'tutor'));
+        },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
       this.removeProfilePhotoMutation = query.useMutation(this.removeProfilePhoto, {
+        onSuccess: () => {
+          toast.success(__('Successfully removed profile photo.', 'tutor'));
+        },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -137,7 +137,7 @@ const settings = () => {
           toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
         },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -146,7 +146,7 @@ const settings = () => {
           toast.success(data?.message ?? __('Success successfully saved social profile', 'tutor'));
         },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error) || __('Failed to save social profile', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -230,15 +230,14 @@ const settings = () => {
       return wpAjaxInstance.post(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload).then((res) => res.data);
     },
 
-    async fetchCountries() {
-      return await axios.get(`${tutorConfig.tutor_url}${endpoints.FETCH_COUNTRIES}`).then((res) => res.data);
-    },
-
     async uploadProfilePhoto(payload: ProfilePhotoFormProps) {
       return wpAjaxInstance.post(endpoints.UPLOAD_PROFILE_PHOTO, payload).then((res) => res.data);
     },
 
     async handleUploadProfilePhoto(files: File[]) {
+      if (files.length === 0) {
+        return;
+      }
       const data = {
         photo_file: files[0],
         photo_type: 'profile_photo',
@@ -321,6 +320,7 @@ const settings = () => {
 
       await this.resetPasswordMutation?.mutate(data);
       form.reset(formId, data as unknown as Record<string, unknown>);
+      window.location.reload();
     },
   };
 };

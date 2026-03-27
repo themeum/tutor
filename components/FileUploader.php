@@ -29,6 +29,7 @@ use Tutor\Components\AttachmentCard;
  *     ->uploader_subtitle( __( 'Support PDF, DOCX (Max 20MB)', 'tutor' ) )
  *     ->accept( '.pdf,.docx' )
  *     ->multiple( true )
+ *     ->max_files( 3 )
  *     ->max_size( 20 * 1024 * 1024 )
  *     ->render();
  *
@@ -99,6 +100,15 @@ class FileUploader extends BaseComponent {
 	 * @var int
 	 */
 	protected $max_size = null;
+
+	/**
+	 * File uploader max files.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var int|null
+	 */
+	protected $max_files = null;
 
 	/**
 	 * File uploader icon.
@@ -267,6 +277,21 @@ class FileUploader extends BaseComponent {
 			$max_size = wp_max_upload_size();
 		}
 		$this->max_size = $max_size;
+
+		return $this;
+	}
+
+	/**
+	 * Set uploader max files.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int|null $max_files Maximum number of selectable files.
+	 *
+	 * @return $this
+	 */
+	public function max_files( $max_files = null ) {
+		$this->max_files = null !== $max_files ? (int) $max_files : null;
 
 		return $this;
 	}
@@ -507,12 +532,14 @@ class FileUploader extends BaseComponent {
 		$multiple            = $this->multiple;
 		$accept              = $this->accept;
 		$max_size            = $this->max_size ?? wp_max_upload_size();
+		$max_files           = $this->max_files;
 		$icon                = $this->uploader_icon;
 		$title               = ! empty( $this->uploader_title ) ? $this->uploader_title : __( 'Drop files here or click to upload', 'tutor' );
 		$subtitle            = ! empty( $this->uploader_subtitle ) ? $this->uploader_subtitle : '';
 		$button_text         = ! empty( $this->uploader_button_text ) ? $this->uploader_button_text : __( 'Select Files', 'tutor' );
 		$on_file_select      = $this->attributes['onFileSelect'] ?? 'null';
 		$on_error            = $this->attributes['onError'] ?? 'null';
+		$on_file_remove      = $this->attributes['onFileRemove'] ?? 'null';
 		$variant             = $this->variant;
 		$uploader_attributes = $this->attributes;
 
@@ -528,9 +555,11 @@ class FileUploader extends BaseComponent {
 			class="tutor-file-uploader-wrapper"
 			x-data="tutorFileUploader({
 				multiple: <?php echo $multiple ? 'true' : 'false'; ?>,
+				maxFiles: <?php echo null !== $max_files ? (int) $max_files : 'undefined'; ?>,
 				accept: '<?php echo esc_attr( $accept ); ?>',
 				maxSize: <?php echo (int) $max_size; ?>,
 				onFileSelect: <?php echo esc_js( $on_file_select ); ?>,
+				onFileRemove: <?php echo esc_js( $on_file_remove ); ?>,
 				onError: <?php echo esc_js( $on_error ); ?>,
 				variant: '<?php echo esc_attr( $variant ); ?>',
 				value: values.<?php echo esc_attr( $this->name ); ?>,
@@ -577,7 +606,7 @@ class FileUploader extends BaseComponent {
 								<?php
 								AttachmentCard::make()
 									->title_attr( 'x-text', 'file.name' )
-									->meta_attr( 'x-text', 'file.size' )
+									->meta_attr( 'x-text', 'formatBytes(file.size)' )
 									->action_attr( '@click.stop', 'removeFile(index)' )
 									->render();
 								?>
@@ -619,7 +648,7 @@ class FileUploader extends BaseComponent {
 					<?php echo $this->get_attributes_string(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				>
 				<div class="tutor-file-uploader-icon">
-					<?php tutor_utils()->render_svg_icon( $icon, $this->upload_icon_size, $this->upload_icon_size ); ?>
+					<?php SvgIcon::make()->name( $icon )->size( $this->upload_icon_size )->render(); ?>
 				</div>
 				<div class="tutor-file-uploader-content">
 					<p class="tutor-file-uploader-title"><?php echo esc_html( $title ); ?></p>

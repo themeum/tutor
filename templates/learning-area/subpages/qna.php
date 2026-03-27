@@ -12,12 +12,8 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 use TUTOR\Input;
-use Tutor\Components\Constants\InputType;
-use Tutor\Components\InputField;
-use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
@@ -72,7 +68,11 @@ $questions   = tutor_utils()->get_qa_questions(
 );
 
 ?>
-<div class="tutor-pt-4 tutor-pb-6">
+<div class="tutor-py-7">
+	<h4 class="tutor-h4 tutor-mb-5 tutor-flex tutor-items-center tutor-gap-4">
+		<?php tutor_utils()->render_svg_icon( Icon::QA, 24, 24 ); ?>
+		<?php esc_html_e( 'Q&A', 'tutor' ); ?>
+	</h4>
 	<div class="tutor-learning-area-qna" x-data="tutorQnA()">
 		<div class="tutor-discussion-search tutor-p-6 tutor-border-b">
 			<?php

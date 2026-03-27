@@ -1,7 +1,7 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
 
 type StaticsType = 'progress' | 'complete' | 'locked';
-type StaticsSize = 'tiny' | 'small' | 'medium' | 'large';
+type StaticsSize = 'x-small' | 'small' | 'medium' | 'large';
 
 export interface StaticsProps {
   value?: number;
@@ -19,7 +19,7 @@ const SIZE_CONFIG = {
   large: { dimension: 144, strokeWidth: 10.8, iconSizes: { check: 80, lock: 104 } },
   medium: { dimension: 56, strokeWidth: 4.3, iconSizes: { check: 24, lock: 32 } },
   small: { dimension: 44, strokeWidth: 3.3, iconSizes: { check: 24, lock: 32 } },
-  tiny: { dimension: 16, strokeWidth: 2, iconSizes: { check: 8, lock: 12 } },
+  'x-small': { dimension: 16, strokeWidth: 2, iconSizes: { check: 8, lock: 12 } },
 } as const;
 
 const DEFAULT_CONFIG = {

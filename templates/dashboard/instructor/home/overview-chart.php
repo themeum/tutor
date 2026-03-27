@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 	data-section-id="overview_chart"
 	class="tutor-dashboard-home-chart"
 	x-show="watch('overview_chart')"
+	x-cloak
 >
 	<div class="tutor-dashboard-home-chart-header">
 		<div class="tutor-small">

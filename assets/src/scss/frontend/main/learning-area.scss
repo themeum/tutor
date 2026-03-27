@@ -5,8 +5,8 @@
 @use '@Core/scss/tokens';
 @use '@Core/scss/mixins';
 
-// Import shared components
-@use '../components';
-
 // Import learning area specific styles
 @use '../learning-area';
+
+// Import shared components
+@use '../components';

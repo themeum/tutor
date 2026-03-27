@@ -11,9 +11,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Constants\Size;
 use Tutor\Components\Nav;
 use TUTOR\Icon;
 use TUTOR\Input;
+use TUTOR\User;
 
 $current_tab   = Input::get( 'tab' );
 $discussion_id = Input::get( 'id', 0, Input::TYPE_INT );
@@ -56,7 +58,7 @@ $page_nav_items = array(
 		?>
 		<div class="tutor-dashboard-page-card">
 			<div class="tutor-dashboard-page-card-header">
-				<?php Nav::make()->items( $page_nav_items )->render(); ?>
+				<?php Nav::make()->items( $page_nav_items )->size( User::is_student_view() ? Size::LARGE : Size::MEDIUM )->render(); ?>
 			</div>
 			<div class="tutor-dashboard-page-card-body">
 				<?php

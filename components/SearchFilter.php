@@ -14,6 +14,7 @@
 namespace Tutor\Components;
 
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Color;
 use TUTOR\Icon;
 use TUTOR\Input;
 
@@ -215,12 +216,11 @@ class SearchFilter extends BaseComponent {
 				<div class="tutor-input-wrapper">
 					<div class="tutor-input-content tutor-input-content-left">
 						<?php
-						tutor_utils()->render_svg_icon(
-							Icon::SEARCH_2,
-							$icon_size,
-							$icon_size,
-							array( 'class' => 'tutor-icon-idle' )
-						)
+						SvgIcon::make()
+							->name( Icon::SEARCH_2 )
+							->size( $icon_size )
+							->color( Color::IDLE )
+							->render();
 						?>
 					</div>
 					<input 
@@ -240,7 +240,7 @@ class SearchFilter extends BaseComponent {
 						aria-label="<?php esc_attr_e( 'Clear search', 'tutor' ); ?>"
 						@click="setValue('<?php echo esc_attr( $input_name ); ?>', ''); $el.closest('form').submit();"
 					>
-						<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ) ); ?>
+						<?php SvgIcon::make()->name( Icon::CROSS )->size( 16 )->render(); ?>
 					</button>
 				</div>
 			</div>

@@ -14,7 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use TUTOR\Input;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
@@ -3257,26 +3259,70 @@ class Course extends Tutor_Base {
 	public function render_course_action_btn( int $course_id ) {
 		$is_completed = tutor_utils()->is_completed_course( $course_id );
 		if ( $is_completed ) {
+			$certificate_addon_active = tutor_utils()->is_addon_enabled( 'tutor-certificate' );
+			if ( ! $certificate_addon_active ) {
+				Button::make()
+					->tag( 'a' )
+					->label( __( 'Completed', 'tutor' ) )
+					->icon( Icon::COMPLETED_CIRCLE )
+					->variant( Variant::PRIMARY )
+					->size( Size::X_SMALL )
+					->attr( 'href', esc_url( get_the_permalink( $course_id ) ) )
+					->render();
+			}
 			return;
 		}
 
 		$course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
-
-		$button_text = $course_progress['completed_percent'] > 0 ? __( 'Resume', 'tutor' ) : __( 'Start', 'tutor' );
-		$button_url  = tutor_utils()->get_course_first_lesson( $course_id );
+		$button_text     = $course_progress['completed_percent'] > 0 ? __( 'Resume', 'tutor' ) : __( 'Start', 'tutor' );
+		$button_url      = tutor_utils()->get_course_first_lesson( $course_id );
 
 		if ( ! $button_url ) {
 			$button_url = get_the_permalink( $course_id );
 		}
 
-		ob_start();
-		?>
-		<a href="<?php echo esc_url( $button_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small">
-			<?php echo esc_html( $button_text ); ?>
-		</a>
-		<?php
-		$button = ob_get_clean();
+		Button::make()
+			->tag( 'a' )
+			->label( $button_text )
+			->icon( Icon::PLAY )
+			->variant( Variant::PRIMARY )
+			->size( Size::X_SMALL )
+			->attr( 'href', esc_url( $button_url ) )
+			->render();
+	}
 
-		echo wp_kses_post( $button );
+	/**
+	 * Calculate the total course duration for a set of courses.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<int> $course_ids List of course IDs.
+	 *
+	 * @return array{
+	 *     hours: int,
+	 *     minutes: int,
+	 *     seconds: int
+	 * } Total accumulated duration from all given courses.
+	 */
+	public static function get_total_course_duration( $course_ids ): array {
+		$total_seconds = 0;
+
+		foreach ( $course_ids as $id ) {
+			$duration = tutor_utils()->get_course_duration( (int) $id, true );
+
+			$total_seconds += ( (int) $duration['durationHours'] * 3600 )
+				+ ( (int) $duration['durationMinutes'] * 60 )
+				+ ( (int) $duration['durationSeconds'] );
+		}
+
+		$hours   = floor( $total_seconds / 3600 );
+		$minutes = floor( ( $total_seconds % 3600 ) / 60 );
+		$seconds = $total_seconds % 60;
+
+		return array(
+			'hours'   => (int) $hours,
+			'minutes' => (int) $minutes,
+			'seconds' => (int) $seconds,
+		);
 	}
 }

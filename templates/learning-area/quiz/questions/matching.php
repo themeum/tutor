@@ -8,80 +8,82 @@
  * @since 4.0.0
  */
 
-use TUTOR\Icon;
+defined( 'ABSPATH' ) || exit;
 
-$question = array(
-	'index'             => 1,
-	'question_id'       => 1,
-	'question_title'    => __( 'Matching', 'tutor' ),
-	'question_type'     => 'matching',
-	'answer_required'   => true,
-	'question_mark'     => 10,
-	'question_settings' => array(
-		'answer_required'    => '0',
-		'question_mark'      => '1',
-		'question_type'      => 'matching',
-		'randomize_question' => '0',
-		'show_question_mark' => '1',
-		'is_image_matching'  => '0',
-	),
-	'question_answers'  => array(
-		array(
-			'answer_id'            => 1,
-			'answer_title'         => __( 'Option 1', 'tutor' ),
-			'is_correct'           => true,
-			'answer_two_gap_match' => 'Matched Option 1',
-			'image_url'            => 'https://placehold.co/600x400',
-			'answer_order'         => 1,
-		),
-		array(
-			'answer_id'            => 2,
-			'answer_title'         => __( 'Option 2', 'tutor' ),
-			'is_correct'           => false,
-			'answer_two_gap_match' => 'Matched Option 2',
-			'image_url'            => 'https://placehold.co/600x400',
-			'answer_order'         => 2,
-		),
-	),
-);
+use TUTOR\Icon;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+
+$answer_field_name = ( $question_field_name_base ?? '' ) . '[answers][]';
+$register_rules    = '';
+if ( $answer_is_required ) {
+	$register_rules = ", { validate: (value) => Array.isArray(value) && value.every((item) => item) || '" . esc_js( $required_message ) . "' }";
+}
+$register_attr = "register('{$answer_field_name}'{$register_rules})";
 
 ?>
 
-<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>" x-data="tutorQuestionMatching('question-<?php echo esc_attr( $question['question_id'] ); ?>')">
-	<?php
-	tutor_load_template(
-		'demo-components.learning-area.components.quiz.question-header',
-		array(
-			'index'              => $question['index'],
-			'question_title'     => $question['question_title'],
-			'question_mark'      => $question['question_mark'],
-			'show_question_mark' => $question['question_settings']['show_question_mark'],
-		)
-	);
-	?>
-
-	<div class="tutor-quiz-question-options" data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>">
+<div
+	x-data="tutorQuestionMatching({
+		questionId: 'question-<?php echo esc_attr( $question['question_id'] ); ?>',
+		onDrop: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
+		onClear: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
+	})"
+	class='tutor-flex tutor-flex-column tutor-gap-7 tutor-sm-gap-5'
+>
+	<div
+		class="tutor-quiz-question-options"
+		data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>"
+	>
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option">
-			<?php if ( $question['question_settings']['is_image_matching'] && ! empty( $answer['image_url'] ) ) : ?>
-			<img src="<?php echo esc_url( $answer['image_url'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
-		<?php else : ?>
-			<div data-title>
-			<div class="tutor-quiz-question-option-number">
-				<?php echo esc_html( $answer['answer_order'] ); ?>
-			</div>
-			<?php echo esc_html( $answer['answer_title'] ); ?>
-			</div>
-		<?php endif; ?>
-		<div placeholder="Drop here" class="tutor-quiz-question-option-drop-zone">
-			<span data-drop-placeholder class="tutor-text-subdued">Drop here</span>
-			<button type="button" class="tutor-hidden tutor-btn tutor-btn-icon tutor-btn-ghost tutor-btn-x-small">
-				<?php tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ); ?>
-			</button>
-		</div>
+				<?php if ( $question['question_settings']['is_image_matching'] && ! empty( $answer['image_id'] ) ) : ?>
+					<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+				<?php else : ?>
+					<div data-title>
+						<div class="tutor-quiz-question-option-number">
+							<?php echo esc_html( $answer['answer_order'] ); ?>
+						</div>
+						<?php echo esc_html( $answer['answer_title'] ); ?>
+					</div>
+				<?php endif; ?>
+				<div
+					class="tutor-quiz-question-option-drop-zone"
+					data-drop-placeholder-text="<?php echo esc_attr__( 'Drop here', 'tutor' ); ?>"
+				>
+					<input
+						class="tutor-hidden"
+						name="<?php echo esc_attr( $answer_field_name ); ?>"
+						x-bind="<?php echo esc_attr( $register_attr ); ?>"
+					>
+					<span data-drop-placeholder class="tutor-text-subdued">
+						<?php esc_html_e( 'Drop here', 'tutor' ); ?>
+					</span>
+					<?php
+						Button::make()
+							->variant( Variant::GHOST )
+							->size( Size::X_SMALL )
+							->icon( Icon::CROSS )
+							->icon_only()
+							->attrs(
+								array(
+									'class'          => 'tutor-hidden',
+									'@click.prevent' => 'clearDropZone',
+								)
+							)
+							->render();
+					?>
+				</div>
 			</div>
 		<?php endforeach; ?>
 	</div>
+	<div
+		class="tutor-quiz-questions-error"
+		x-cloak
+		x-show="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
+		x-text="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
+	></div>
 
 	<div class="tutor-quiz-question-draggable">
 		<div class="tutor-quiz-question-draggable-header">
@@ -90,7 +92,11 @@ $question = array(
 		</div>
 		<div class="tutor-quiz-question-options">
 			<?php foreach ( $question['question_answers'] as $answer ) : ?>
-				<div class="tutor-quiz-question-option" data-option="draggable" data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>">
+				<div
+					class="tutor-quiz-question-option"
+					data-option="draggable"
+					data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>"
+				>
 					<div data-title>
 						<?php echo esc_html( $answer['answer_two_gap_match'] ); ?>
 					</div>
