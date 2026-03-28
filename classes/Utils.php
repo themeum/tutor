@@ -11075,10 +11075,8 @@ class Utils {
 
 		$user_id = get_current_user_id();
 		if ( $user_id ) {
-			$stored = get_user_meta( $user_id, UserPreference::META_KEY, true );
-			if ( is_array( $stored ) && array_key_exists( 'learning_mood', $stored ) ) {
-				return (bool) $stored['learning_mood'];
-			}
+			$user_learning_mood = UserPreference::get('learning_mood');
+			return (bool) $user_learning_mood;
 		}
 
 		return $admin_kids_mode;

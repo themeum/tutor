@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Helpers\HttpHelper;
+use Tutor\Options_V2;
 use Tutor\Traits\JsonResponse;
 
 /**
@@ -299,7 +300,7 @@ class UserPreference {
 				'auto_play_next' => (bool) tutor_utils()->get_option( 'autoload_next_course_content' ),
 				'theme'          => self::DEFAULT_THEME,
 				'font_scale'     => self::DEFAULT_FONT_SCALE,
-				'learning_mood'  => Utils::is_kids_mode(),
+				'learning_mood'  => Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view(),
 			)
 		);
 
