@@ -105,6 +105,24 @@ $user_preferences = UserPreference::get_preferences();
 					?>
 				</div>
 			</div>
+			<div class="tutor-preferences-setting-item">
+				<div class="tutor-preferences-setting-content">
+					<div class="tutor-preferences-setting-icon">
+						<?php SvgIcon::make()->name( Icon::ADDONS )->size( 20 )->render(); ?>
+					</div>
+					<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Learning Mode', 'tutor' ); ?></span>
+				</div>
+				<div class="tutor-preferences-setting-action">
+					<?php
+					InputField::make()
+						->type( InputType::SWITCH )
+						->size( Size::SM )
+						->name( 'learning_mood' )
+						->attr( 'x-bind', "register('learning_mood')" )
+						->render();
+					?>
+				</div>
+			</div>
 		</div>
 	</form>
 </section>

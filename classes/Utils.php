@@ -11071,6 +11071,16 @@ class Utils {
 	 * @return bool
 	 */
 	public static function is_kids_mode(): bool {
-		return Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
+		$admin_kids_mode = Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
+
+		$user_id = get_current_user_id();
+		if ( $user_id ) {
+			$stored = get_user_meta( $user_id, UserPreference::META_KEY, true );
+			if ( is_array( $stored ) && array_key_exists( 'learning_mood', $stored ) ) {
+				return (bool) $stored['learning_mood'];
+			}
+		}
+
+		return $admin_kids_mode;
 	}
 }

@@ -259,11 +259,13 @@ class UserPreference {
 		$auto_play_next = Input::post( 'auto_play_next', false, INPUT::TYPE_BOOL );
 		$theme          = Input::post( 'theme', self::DEFAULT_THEME );
 		$font_scale     = Input::post( 'font_scale', self::DEFAULT_FONT_SCALE, INPUT::TYPE_INT );
+		$learning_mood  = Input::post( 'learning_mood', false, INPUT::TYPE_BOOL );
 
 		$preferences_settings = array(
 			'auto_play_next' => $auto_play_next,
 			'theme'          => $theme,
 			'font_scale'     => $font_scale,
+			'learning_mood'  => $learning_mood,
 		);
 
 		$preference_data = $this->save_preferences( $preferences_settings, get_current_user_id() );
@@ -297,6 +299,7 @@ class UserPreference {
 				'auto_play_next' => (bool) tutor_utils()->get_option( 'autoload_next_course_content' ),
 				'theme'          => self::DEFAULT_THEME,
 				'font_scale'     => self::DEFAULT_FONT_SCALE,
+				'learning_mood'  => Utils::is_kids_mode(),
 			)
 		);
 
