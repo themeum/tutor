@@ -1,0 +1,17 @@
+@use '@Core/scss/tokens' as *;
+
+@mixin tutor-kids-shadow($hover: true, $shadow-color: $tutor-border-idle, $border-radius: $tutor-radius-5xl) {
+  border: none;
+  box-shadow:
+    0 0 0 2px $shadow-color,
+    0 5px 0 0 $shadow-color;
+  border-radius: $border-radius;
+
+  @if $hover {
+    &:hover {
+      box-shadow:
+        0 0 0 2px $tutor-border-brand-tertiary,
+        0 5px 0 0 $tutor-border-brand-tertiary;
+    }
+  }
+}
