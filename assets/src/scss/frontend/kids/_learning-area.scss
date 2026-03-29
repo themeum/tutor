@@ -2,6 +2,9 @@
 @use '@Core/scss/mixins' as *;
 @use './mixins' as *;
 
-[data-tutor-ui="kids"] {
-	
+[data-tutor-ui='kids'] {
+  .tutor-resources-wrapper,
+  .tutor-learning-area-qna {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
+  }
 }
