@@ -160,6 +160,7 @@ class Assets {
 		 */
 		$required_options = array(
 			'monetize_by',
+			'learning_mode',
 		);
 
 		$tutor_settings = Options_V2::get_only( $required_options );

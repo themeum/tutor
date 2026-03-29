@@ -48,6 +48,9 @@ export interface Option<T> {
   disabled?: boolean;
   description?: string;
 }
+
+export type LearningMode = 'kids' | 'classic' | 'legacy';
+
 export type CouponStatus = 'active' | 'inactive';
 export type ProductStatus = 'draft' | 'published' | 'trashed';
 export type ProductDiscount = {
