@@ -173,5 +173,10 @@
     .tutor-dashboard-page-card {
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
     }
+
+    .tutor-lesson-note:hover {
+      @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
+      border-bottom: 1px solid transparent;
+    }
   }
 }
