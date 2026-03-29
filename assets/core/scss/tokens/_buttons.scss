@@ -1,3 +1,6 @@
+@use './borders' as *;
+@use './typography' as *;
+
 // Design Tokens - Button Colors
 // CSS variables for theme-aware button colors
 
@@ -6,8 +9,8 @@
 // =============================================================================
 
 // --- Base ---
-$tutor-button-radius: var(--tutor-button-radius);
-$tutor-button-font-weight: var(--tutor-button-font-weight);
+$tutor-button-radius: var(--tutor-button-radius, $tutor-radius-md);
+$tutor-button-font-weight: var(--tutor-button-font-weight, $tutor-font-weight-regular);
 $tutor-button-border-shadow: var(--tutor-button-border-shadow, none);
 $tutor-button-elevation-shadow: var(--tutor-button-elevation-shadow, none);
 
