@@ -4,7 +4,7 @@
 
 [data-tutor-ui='kids'] {
   .tutor-card {
-    @include tutor-kids-shadow;
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
 
   .tutor-badge {
@@ -90,6 +90,11 @@
 
   .tutor-dashboard-header-user-popover-menu li a {
     border-radius: $tutor-radius-2xl;
+  }
+
+  // user account/notification
+  .tutor-profile-notification-card {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
 
   // discussions
