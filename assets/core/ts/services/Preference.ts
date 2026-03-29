@@ -9,7 +9,7 @@ class PreferenceService {
   private readonly BASE_FONT_SIZE = 16;
   private readonly SCALE_PERCENTAGE_BASE = 100;
   private readonly STYLE_ID = 'tutor-font-scale';
-  private readonly DATA_THEME_ATTR = 'data-theme';
+  private readonly DATA_THEME_ATTR = 'data-tutor-theme';
 
   constructor() {
     this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
