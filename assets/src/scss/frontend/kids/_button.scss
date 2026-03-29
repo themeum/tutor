@@ -9,7 +9,6 @@
 :root {
 	--tutor-button-radius: #{$tutor-radius-md};
 	--tutor-button-font-weight: #{$tutor-font-weight-medium};
-	--tutor-button-elevation-shadow: none;
 	--tutor-button-border-shadow-base: 1px;
 	--tutor-button-border-shadow-bottom: 2px;
 
@@ -38,7 +37,7 @@
 	--tutor-button-secondary-border-shadow-focused: none;
 	--tutor-button-secondary-border-shadow-disabled: none;
 
-	--tutor-button-outline-border-shadow: none;
+	--tutor-button-outline-border-shadow: 0 0 0 1px #{$tutor-border-idle};
 	--tutor-button-outline-border-shadow-hover: none;
 	--tutor-button-outline-border-shadow-focused: none;
 	--tutor-button-outline-border-shadow-disabled: none;
@@ -50,17 +49,12 @@
 	--tutor-button-ghost-brand-border-shadow: none;
 	--tutor-button-ghost-brand-border-shadow-hover: none;
 	--tutor-button-ghost-brand-border-shadow-disabled: none;
-
-	--tutor-button-outline-border-shadow: inset 0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle);
-	--tutor-button-outline-border-shadow-hover: inset 0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-hover);
-	--tutor-button-outline-border-shadow-focused: inset 0 0 0 var(--tutor-button-border-shadow-base) var(--tutor-border-idle);
 }
 
 [data-tutor-ui='kids'] {
 	// Shape + elevation
 	--tutor-button-radius: #{$tutor-radius-full};
 	--tutor-button-font-weight: #{$tutor-font-weight-semibold};
-	--tutor-button-elevation-shadow: var(--tutor-shadow-sm);
 
 	// Border shadows must live on the button element so size vars can apply.
 	.tutor-btn {
