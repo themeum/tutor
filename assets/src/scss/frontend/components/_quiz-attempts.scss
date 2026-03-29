@@ -11,7 +11,6 @@
 }
 
 .tutor-quiz-attempts {
-
   &-filter {
     @include tutor-flex(row, center, space-between);
     padding: $tutor-spacing-5 $tutor-spacing-6;
@@ -386,10 +385,12 @@
     }
   }
 
-  @include tutor-breakpoint-down(sm) {
-    background-color: $tutor-surface-l1;
-    border: 1px solid $tutor-border-idle;
-    border-radius: $tutor-radius-2xl;
+  &.tutor-instructor-quiz-attempts {
+    @include tutor-breakpoint-down(sm) {
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+    }
   }
 }
 

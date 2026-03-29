@@ -16,6 +16,7 @@ use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 
 $user_id   = get_current_user_id();
@@ -149,7 +150,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<div x-bind="getBackdropBindings()"></div>
 				<div x-bind="getModalContentBindings()" style="width: 354px;">
 					<div class="tutor-modal-body tutor-px-9 tutor-pt-9 tutor-pb-8 tutor-text-center">
-						<?php SvgIcon::make()->name( Icon::CONFETTI )->size( 32 )->color( Color::EXCEPTION2 )->render(); ?>
+						<div class="tutor-flex tutor-justify-center">
+							<img src="<?php echo esc_attr( UrlHelper::asset( 'images/illustrations/confetti.svg' ) ); ?>" alt="<?php esc_html_e( 'Confetti', 'tutor' ); ?>" />
+						</div>
 
 						<h3 class="tutor-h3 tutor-mb-2 tutor-mt-6">
 							<span class="tutor-font-regular"><?php esc_html_e( 'Fantastic,', 'tutor' ); ?></span> 
@@ -186,7 +189,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 								?>
 							</span> 
 							<?php endif; ?>
-							
+
 							<?php if ( $seconds > 0 ) : ?>
 							<span class="tutor-font-medium">
 								<?php

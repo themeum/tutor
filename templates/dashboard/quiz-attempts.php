@@ -22,8 +22,6 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
-use Tutor\Helpers\UrlHelper;
-use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
@@ -65,7 +63,7 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 	<?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?>
 	</h4>
 	<div class="tutor-dashboard-page-card">
-		<div class="tutor-quiz-attempts">
+		<div class="tutor-quiz-attempts tutor-instructor-quiz-attempts">
 			<div class="tutor-quiz-attempts-filter">
 				<div class="tutor-quiz-attempts-filter-item">
 					<?php

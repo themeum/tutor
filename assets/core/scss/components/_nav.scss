@@ -29,15 +29,6 @@
     &.active {
       background-color: $tutor-tab-l3-active;
       color: $tutor-text-brand;
-
-      &:hover {
-        background-color: $tutor-tab-l3-active-hover;
-        color: $tutor-text-primary;
-
-        svg:first-of-type:not(:last-of-type) {
-          color: $tutor-icon-brand;
-        }
-      }
     }
 
     svg {
@@ -102,7 +93,7 @@
   &.tutor-nav-small {
     .tutor-nav-item {
       @include tutor-text(tiny);
-      padding: $tutor-spacing-3 $tutor-spacing-5;
+      padding: 7px $tutor-spacing-5;
       border-radius: $tutor-radius-md;
     }
 

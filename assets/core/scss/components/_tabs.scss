@@ -50,14 +50,22 @@
       }
 
       &:hover {
-        background-color: $tutor-tab-l3-active-hover;
-        color: $tutor-text-primary;
         box-shadow: none;
       }
     }
 
+    &-md {
+      height: 34px;
+      @include tutor-text('tiny');
+      padding: 7px $tutor-spacing-5;
+      gap: $tutor-spacing-2;
+    }
+
     &-sm {
       height: 32px;
+      @include tutor-text('tiny');
+      padding: 6px $tutor-spacing-5;
+      gap: $tutor-spacing-2;
     }
 
     &:hover:not(:disabled):not(.tutor-tabs-tab-active),

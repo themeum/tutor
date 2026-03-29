@@ -96,6 +96,10 @@
     position: absolute;
     top: $tutor-spacing-4;
     right: $tutor-spacing-4;
+
+    svg {
+      color: $tutor-icon-idle !important;
+    }
   }
 
   &-footer {
