@@ -85,9 +85,15 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 }
 
 $subpages = Template::make_learning_area_sub_page_nav_items();
+$learning_mode = tutor_utils()->get_option( 'learning_mode', 'classic' );
 ?>
 <body <?php body_class(); ?>>
-	<div class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>" x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
+	<div
+		class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>"
+		data-tutor-ui="<?php echo esc_attr( $learning_mode ); ?>"
+		x-data="{ sidebarOpen: false, isFullScreen: false }"
+		:class="{ 'is-fullscreen': isFullScreen }"
+	>
 		<?php tutor_load_template( 'learning-area.components.header' ); ?>
 		<div class="tutor-learning-area-body">
 			<?php tutor_load_template( 'learning-area.components.sidebar' ); ?>
