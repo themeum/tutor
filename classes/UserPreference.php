@@ -152,7 +152,7 @@ class UserPreference {
 		if ( ! in_array( $theme, self::THEMES, true ) ) {
 			$theme = self::DEFAULT_THEME;
 		}
-		echo ' data-theme="' . esc_attr( $theme ) . '"';
+		echo ' data-tutor-theme="' . esc_attr( $theme ) . '"';
 		return $classes;
 	}
 
