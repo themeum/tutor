@@ -56,9 +56,27 @@
 
   // quiz attempts
   .tutor-quiz-attempts-list {
+    .tutor-quiz-previous-attempts {
+      box-shadow: -2px 0 0 $tutor-border-idle;
+      border-radius: $tutor-radius-3xl;
+
+      .tutor-quiz-attempts-item:hover {
+        &:not(:first-of-type) {
+          @include tutor-kids-shadow($tutor-border-brand-tertiary);
+          border-bottom: 1px solid transparent;
+        }
+      }
+    }
     .tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
+      @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
+    }
+
+    .tutor-quiz-attempts-item-wrapper:hover {
       @include tutor-kids-shadow($tutor-border-brand-tertiary);
-      margin-bottom: $tutor-spacing-5;
+
+      &:not(:last-of-type) {
+        border-bottom: 1px solid transparent;
+      }
     }
   }
 

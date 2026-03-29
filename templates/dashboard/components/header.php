@@ -176,7 +176,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								->label( $button_label )
 								->size( Size::MEDIUM )
 								->variant( Variant::PRIMARY_SOFT )
-								->icon( Icon::RELOAD )
+								->icon( Icon::RELOAD, 'left', 20, 20 )
 								->attr( ':disabled', 'profileSwitchMutation?.isPending' )
 								->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
 								->attr( 'class', 'tutor-w-full' )
