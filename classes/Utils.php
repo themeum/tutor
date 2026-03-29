@@ -11071,14 +11071,13 @@ class Utils {
 	 * @return bool
 	 */
 	public static function is_kids_mode(): bool {
-		$admin_kids_mode = Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
-
 		$user_id = get_current_user_id();
 		if ( $user_id ) {
 			$user_learning_mood = UserPreference::get('learning_mood');
 			return (bool) $user_learning_mood;
 		}
 
+		$admin_kids_mode = Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
 		return $admin_kids_mode;
 	}
 }
