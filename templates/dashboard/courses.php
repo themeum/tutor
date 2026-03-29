@@ -72,7 +72,7 @@ $courses_list = $courses_list_array[ $active_tab ];
 <div class="tutor-dashboard-courses-wrapper">
 
 	<!-- Courses nav  -->
-	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
+	<div class="tutor-dashboard-courses-card tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-p-6 tutor-border-b">
 			<?php Nav::make()->items( $courses_tab )->render(); ?>
 		</div>

@@ -23,6 +23,10 @@
     @include tutor-kids-shadow;
   }
 
+  .tutor-progress-card-thumbnail {
+    border-radius: $tutor-radius-3xl;
+  }
+
   // home
   .tutor-student-dashboard-courses {
     .tutor-card.tutor-progress-card:not(:first-child) {
@@ -40,6 +44,10 @@
 
   // wishList
   .tutor-dashboard-courses-wrapper {
+    .tutor-dashboard-courses-card {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+    }
+
     .tutor-dashboard-courses,
     .tutor-wishlist-grid {
       gap: $tutor-spacing-6 $tutor-spacing-5;
@@ -85,6 +93,9 @@
   }
 
   // discussions
+  .tutor-dashboard-page-card {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+  }
   .tutor-discussion-card-wrapper {
     gap: $tutor-spacing-6 $tutor-spacing-4;
 
@@ -113,7 +124,7 @@
 
   // calendar
   .tutor-calendar {
-    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
 
     .tutor-calendar-actions {
       gap: $tutor-spacing-3;
@@ -134,8 +145,10 @@
     }
   }
 
-  //settings
-  .tutor-profile-settings-tab {
-    padding: $tutor-spacing-5 !important
+  // note
+  .tutor-dashboard-lesson-notes {
+    .tutor-dashboard-page-card {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+    }
   }
 }
