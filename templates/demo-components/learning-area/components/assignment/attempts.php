@@ -9,6 +9,7 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 $assignment_title = 'React Fundamentals: Building Your First Component';
 
@@ -52,7 +53,7 @@ $attempts = array(
 
 	<div class="tutor-assignment-actions">
 		<a href="#" class="tutor-btn tutor-btn-primary tutor-gap-2">
-			<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2, 20, 20 ); ?>
+			<?php SvgIcon::make()->name( Icon::RELOAD_2 )->size( 20 )->render(); ?>
 			<?php esc_html_e( 'Resubmission', 'tutor' ); ?>
 		</a>
 	</div>

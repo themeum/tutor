@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Course_List;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use TUTOR\Quiz;
@@ -113,11 +114,11 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 				@click="isFullScreen = !isFullScreen"
 			>
 				<template x-if="!isFullScreen">
-					<?php tutor_utils()->render_svg_icon( Icon::EXPAND ); ?>
+					<?php SvgIcon::make()->name( Icon::EXPAND )->render(); ?>
 				</template>
 
 				<template x-if="isFullScreen">
-					<?php tutor_utils()->render_svg_icon( Icon::COLLAPSED ); ?>
+					<?php SvgIcon::make()->name( Icon::COLLAPSED )->render(); ?>
 				</template>
 			</button>
 		</div>

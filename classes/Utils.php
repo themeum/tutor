@@ -5724,12 +5724,6 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_dashboard_page( $subpage = null ): bool {
-		$user_id = get_current_user_id();
-		if ( ! $user_id ) {
-			// If user is not login then the dashboard slug show the login screen.
-			return false;
-		}
-
 		if ( $subpage ) {
 			return $this->is_tutor_frontend_dashboard( $subpage );
 		}
@@ -11067,5 +11061,16 @@ class Utils {
 			default:
 				return '';
 		}
+	}
+
+	/**
+	 * Is kids mode active?
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_kids_mode(): bool {
+		return Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
 	}
 }

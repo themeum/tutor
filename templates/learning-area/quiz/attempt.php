@@ -15,6 +15,7 @@
 use Tutor\Quiz;
 use Tutor\Models\QuizModel;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Modal;
@@ -224,10 +225,10 @@ $default_values = array(
 									<?php echo esc_html( $index + 1 ); ?>
 								</span>
 								<span class="tutor-quiz-question-paginate-icon tutor-quiz-question-paginate-icon-correct">
-									<?php tutor_utils()->render_svg_icon( Icon::CHECK_2, 12, 12 ); ?>
+									<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 12 )->render(); ?>
 								</span>
 								<span class="tutor-quiz-question-paginate-icon tutor-quiz-question-paginate-icon-incorrect">
-									<?php tutor_utils()->render_svg_icon( Icon::CROSS, 12, 12 ); ?>
+									<?php SvgIcon::make()->name( Icon::CROSS )->size( 12 )->render(); ?>
 								</span>
 							</button>
 						</li>
@@ -252,13 +253,13 @@ $default_values = array(
 						class="tutor-quiz-footer-feedback-icon"
 						x-show="revealFooterState === 'correct'"
 					>
-						<?php tutor_utils()->render_svg_icon( Icon::CHECK_2, 26, 26 ); ?>
+						<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 26 )->render(); ?>
 					</span>
 					<span
 						class="tutor-quiz-footer-feedback-icon"
 						x-show="revealFooterState === 'incorrect'"
 					>
-						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 26, 26 ); ?>
+						<?php SvgIcon::make()->name( Icon::CROSS )->size( 26 )->render(); ?>
 					</span>
 					<span
 						class="tutor-quiz-footer-feedback-text"

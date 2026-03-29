@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 
@@ -45,7 +46,7 @@ foreach ( $social_fields as $key => $field ) {
 			<div class='tutor-social-field'>
 				<!-- Social icon -->
 				<div class="tutor-social-icon">
-					<?php tutor_utils()->render_svg_icon( $field['svg_icon'], 20, 20 ); ?>
+					<?php SvgIcon::make()->name( $field['svg_icon'] )->size( 20 )->render(); ?>
 				</div>
 				<?php
 					$message = sprintf(

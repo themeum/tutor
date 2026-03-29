@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use TUTOR\UserPreference;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
@@ -45,7 +46,7 @@ $user_preferences = UserPreference::get_preferences();
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">
 					<div class="tutor-preferences-setting-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::PLAY_LINE, 20, 20 ); ?>
+						<?php SvgIcon::make()->name( Icon::PLAY_LINE )->size( 20 )->render(); ?>
 					</div>
 					<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Auto-play next lecture', 'tutor' ); ?></span>
 				</div>
@@ -63,7 +64,7 @@ $user_preferences = UserPreference::get_preferences();
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">
 					<div class="tutor-preferences-setting-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::LIGHT, 20, 20 ); ?>
+						<?php SvgIcon::make()->name( Icon::LIGHT )->size( 20 )->render(); ?>
 					</div>
 					<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Theme', 'tutor' ); ?></span>
 				</div>
@@ -85,7 +86,7 @@ $user_preferences = UserPreference::get_preferences();
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">
 					<div class="tutor-preferences-setting-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::FONT, 20, 20 ); ?>
+						<?php SvgIcon::make()->name( Icon::FONT )->size( 20 )->render(); ?>
 					</div>
 					<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Font size', 'tutor' ); ?></span>
 				</div>

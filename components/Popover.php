@@ -366,7 +366,7 @@ class Popover extends BaseComponent {
 			'<button @click="hide()" class="tutor-popover-close">
 				%s
 			</button>',
-			tutor_utils()->get_svg_icon( Icon::CROSS, 14, 14 )
+			SvgIcon::make()->name( Icon::CROSS )->size( 14 )->get()
 		);
 
 		if ( $this->show_close_button ) {
