@@ -28,7 +28,7 @@ if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 		<title><?php bloginfo( 'name' ); ?></title>
 		<?php wp_head(); ?>
 	</head>
-	<body <?php body_class( '' ); ?> <?php echo $is_kids_mode ? 'data-tutor-ui="kids"' : ''; ?>>
+	<body <?php body_class( '' ); ?>>
 	<?php
 endif;
 global $wp_query;
@@ -86,7 +86,7 @@ $footer_links = array(
 ?>
 
 <?php do_action( 'tutor_dashboard/before/wrap' ); ?>
-<div class="tutor-dashboard-layout" data-tutor-ui="<?php echo esc_attr( $learning_mode ); ?>">
+<div class="tutor-dashboard-layout">
 	<?php tutor_load_template( 'dashboard.components.sidebar' ); ?>
 	<div class="tutor-dashboard-main">
 		<?php tutor_load_template( 'dashboard.components.header' ); ?>
