@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
@@ -348,13 +347,9 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
     };
   }, []);
 
-  if (!option) {
-    return null;
-  }
-
-  const handleSave = () => {
+  const persistCanvasMask = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas) {
+    if (!canvas || !option) {
       return;
     }
 
@@ -373,15 +368,13 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
       is_saved: true,
     };
     updateOption(updated);
-
-    if (drawInstanceRef.current) {
-      drawInstanceRef.current.destroy();
-      drawInstanceRef.current = null;
-    }
-    setIsDrawModeActive(false);
-  };
+  }, [option, updateOption]);
 
   const handleClear = () => {
+    if (!option) {
+      return;
+    }
+
     if (drawInstanceRef.current) {
       drawInstanceRef.current.destroy();
       drawInstanceRef.current = null;
@@ -402,14 +395,23 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
       is_saved: true,
     };
     updateOption(updated);
-    setIsDrawModeActive(false);
   };
 
-  const handleDraw = () => {
+  const handleCanvasMouseEnter = () => {
     setIsDrawModeActive(true);
   };
 
+  const handleCanvasMouseLeave = () => {
+    if (!isLassoDrawingRef.current) {
+      setIsDrawModeActive(false);
+    }
+  };
+
   const clearImage = () => {
+    if (!option) {
+      return;
+    }
+
     if (drawInstanceRef.current) {
       drawInstanceRef.current.destroy();
       drawInstanceRef.current = null;
@@ -435,6 +437,32 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
     }
   };
 
+  useEffect(() => {
+    if (!isDrawModeActive || !option?.image_url) {
+      return;
+    }
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+
+    const onPointerUp = () => {
+      persistCanvasMask();
+    };
+
+    canvas.addEventListener('pointerup', onPointerUp);
+    canvas.addEventListener('pointercancel', onPointerUp);
+
+    return () => {
+      canvas.removeEventListener('pointerup', onPointerUp);
+      canvas.removeEventListener('pointercancel', onPointerUp);
+    };
+  }, [isDrawModeActive, option?.image_url, persistCanvasMask]);
+
+  if (!option) {
+    return null;
+  }
+
   return (
     <div css={styles.wrapper}>
       {/* Section 1: Image upload only — one reference shown for pin-area quizzes */}
@@ -454,13 +482,13 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
             infoText={__('Upload the base image students will pin on.', __TUTOR_TEXT_DOMAIN__)}
             uploadHandler={openMediaLibrary}
             clearHandler={clearImage}
-            emptyImageCss={styles.imageInput}
-            previewImageCss={styles.imageInput}
+            emptyImageCss={styles.imageInputEmpty}
+            previewImageCss={styles.imageInputPreview}
           />
         </div>
       </div>
 
-      {/* Section 2: Mark the valid pin area — single reference image + drawing canvas; Save / Clear / Draw buttons */}
+      {/* Section 2: Mark the valid pin area — drawing auto-enables on image hover */}
       <Show when={option?.image_url}>
         <div css={styles.card}>
           <div css={styles.answerHeader}>
@@ -468,10 +496,16 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
               <span css={styles.headerIcon}>
                 <SVGIcon name="edit" width={20} height={20} aria-hidden />
               </span>
-              {__('Mark the valid pin area', __TUTOR_TEXT_DOMAIN__)}
+              {__('Mark the correct area', __TUTOR_TEXT_DOMAIN__)}
             </span>
+            <div css={styles.actionsRow}>
+              <button type="button" css={styles.clearButton} onClick={handleClear}>
+                <SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />
+                {__('Clear', __TUTOR_TEXT_DOMAIN__)}
+              </button>
+            </div>
           </div>
-          <div css={styles.canvasInner}>
+          <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
             <img
               ref={imageRef}
               src={option?.image_url}
@@ -484,38 +518,6 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
               aria-label={__('Draw a lasso around the valid pin area', __TUTOR_TEXT_DOMAIN__)}
             />
           </div>
-          <div css={styles.actionsRow}>
-            <Button
-              variant="primary"
-              size="small"
-              onClick={handleSave}
-              icon={<SVGIcon name="save" width={20} height={20} />}
-            >
-              {__('Save', __TUTOR_TEXT_DOMAIN__)}
-            </Button>
-            <Button
-              variant="secondary"
-              size="small"
-              onClick={handleClear}
-              icon={<SVGIcon name="delete" width={20} height={20} />}
-            >
-              {__('Clear', __TUTOR_TEXT_DOMAIN__)}
-            </Button>
-            <Button
-              variant="tertiary"
-              size="small"
-              onClick={handleDraw}
-              icon={<SVGIcon name="edit" width={20} height={20} />}
-            >
-              {__('Draw', __TUTOR_TEXT_DOMAIN__)}
-            </Button>
-          </div>
-          <p css={styles.brushHint}>
-            {__(
-              'Use lasso drawing to wrap the valid pin zone. You can draw multiple lasso regions, then click Save.',
-              __TUTOR_TEXT_DOMAIN__,
-            )}
-          </p>
           <Show when={option?.answer_two_gap_match}>
             <p css={styles.savedHint}>
               {__('Pin area saved. Students will be graded against this region.', __TUTOR_TEXT_DOMAIN__)}
@@ -553,14 +555,26 @@ const styles = {
     gap: ${spacing[16]};
     padding: ${spacing[20]};
     background: ${colorTokens.surface.tutor};
-    border: 1px solid ${colorTokens.stroke.border};
     border-radius: ${borderRadius.card};
   `,
   imageInputWrapper: css`
     max-width: 100%;
   `,
-  imageInput: css`
+  imageInputEmpty: css`
     border-radius: ${borderRadius.card};
+  `,
+  imageInputPreview: css`
+    width: fit-content;
+    max-width: 100%;
+    height: auto;
+    border-radius: ${borderRadius.card};
+
+    img {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      object-fit: initial;
+    }
   `,
   answerHeader: css`
     ${styleUtils.display.flex('row')};
@@ -603,6 +617,7 @@ const styles = {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 1;
   `,
   canvasIdleMode: css`
     pointer-events: none;
@@ -616,6 +631,24 @@ const styles = {
     ${styleUtils.display.flex('row')};
     gap: ${spacing[12]};
     flex-wrap: wrap;
+    color: ${colorTokens.text.brand};
+  `,
+  clearButton: css`
+    width: 94px;
+    border: none;
+    border-radius: ${borderRadius.input};
+    background: ${colorTokens.action.secondary.default};
+    ${typography.caption('medium')};
+    color: ${colorTokens.text.brand};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: ${spacing[8]};
+    padding: ${spacing[4]} 0;
+    cursor: pointer;
+  `,
+  clearButtonIcon: css`
+    color: ${colorTokens.text.brand};
   `,
   brushHint: css`
     ${typography.caption()};

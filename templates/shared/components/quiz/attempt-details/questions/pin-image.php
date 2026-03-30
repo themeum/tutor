@@ -60,9 +60,6 @@ if ( $attempt_answer && ! empty( $attempt_answer->given_answer ) ) {
 
 <div id="<?php echo esc_attr( $wrapper_id ); ?>" class="tutor-quiz-question-options">
 	<div class="tutor-pin-image-given-answer">
-		<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">
-			<?php esc_html_e( 'Submitted pin vs correct zone:', 'tutor' ); ?>
-		</p>
 
 		<?php if ( $background_url ) : ?>
 			<div class="tutor-pin-image-layered">
@@ -79,15 +76,6 @@ if ( $attempt_answer && ! empty( $attempt_answer->given_answer ) ) {
 						class="tutor-pin-image-marker"
 						style="--tutor-pin-x: <?php echo esc_attr( $coords['x'] * 100 ); ?>%; --tutor-pin-y: <?php echo esc_attr( $coords['y'] * 100 ); ?>%;"
 					></span>
-				<?php endif; ?>
-			</div>
-			<div class="tutor-fs-7 tutor-color-secondary tutor-mt-8">
-				<?php if ( ! $coords ) : ?>
-					<?php esc_html_e( 'No pin submitted.', 'tutor' ); ?>
-				<?php elseif ( ! $has_reference ) : ?>
-					<?php esc_html_e( 'Correct answer zone is not available.', 'tutor' ); ?>
-				<?php else : ?>
-					<?php esc_html_e( 'The marker shows your submitted pin and the overlay shows the correct zone.', 'tutor' ); ?>
 				<?php endif; ?>
 			</div>
 		<?php elseif ( $has_reference ) : ?>
@@ -112,45 +100,3 @@ if ( $attempt_answer && ! empty( $attempt_answer->given_answer ) ) {
 		<?php endif; ?>
 	</div>
 </div>
-<style>
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-layered {
-		position: relative;
-		display: inline-block;
-		overflow: hidden;
-	}
-
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-overlay--tint,
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-single-mask {
-		display: block;
-		background: var(--tutor-pin-mask-bg, #04C98633);
-		-webkit-mask-image: var(--tutor-pin-mask-url);
-		-webkit-mask-repeat: no-repeat;
-		-webkit-mask-size: 100% 100%;
-		mask-image: var(--tutor-pin-mask-url);
-		mask-repeat: no-repeat;
-		mask-size: 100% 100%;
-		filter:
-			drop-shadow(1px 0 0 #53B96A)
-			drop-shadow(-1px 0 0 #53B96A)
-			drop-shadow(0 1px 0 #53B96A)
-			drop-shadow(0 -1px 0 #53B96A);
-	}
-
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-overlay--tint {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-	}
-
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-single--tint {
-		width: min(100%, 420px);
-		aspect-ratio: 4 / 3;
-		background: transparent;
-	}
-
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-pin-image-single-mask {
-		width: 100%;
-		height: 100%;
-	}
-</style>
