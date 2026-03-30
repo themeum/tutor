@@ -112,6 +112,6 @@ $is_previous     = $is_previous ?? false;
 	</div>
 </div>
 
-<div class="tutor-quiz-item-actions tutor-flex tutor-justify-between">
+<div class="tutor-quiz-item-actions">
 	<?php $quiz_attempt_obj->render_quiz_attempt_buttons( $attempt ); ?>
 </div>
