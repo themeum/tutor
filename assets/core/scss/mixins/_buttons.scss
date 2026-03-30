@@ -363,9 +363,9 @@
     min-width: 32px;
     min-height: 32px;
   } @else if $size == small {
-    padding: $tutor-spacing-4;
-    min-width: 36px;
-    min-height: 36px;
+    padding: 9px;
+    min-width: 34px;
+    min-height: 34px;
   } @else if $size == medium {
     padding: 10px;
     min-width: 40px;

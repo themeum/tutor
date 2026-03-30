@@ -7,7 +7,7 @@
 @mixin tutor-input-base($size: md) {
   @include tutor-typography('small', 'regular');
   width: 100%;
-  padding: $tutor-spacing-4 $tutor-spacing-5;
+  padding: 7px $tutor-spacing-5;
   margin: 0;
   min-height: auto;
   border: 1px solid $tutor-border-idle;
@@ -48,7 +48,7 @@
   }
 
   @if $size == sm {
-    padding: $tutor-spacing-2 $tutor-spacing-4;
+    padding: 5px $tutor-spacing-4;
   }
 
   @if $size == lg {

@@ -14,7 +14,7 @@
   grid-template-columns: 274px 1fr;
 
   @include tutor-breakpoint-down(md) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .tutor-dashboard-page {
@@ -42,7 +42,7 @@
   border-radius: $tutor-radius-2xl;
 
   &-header {
-    padding: $tutor-spacing-6;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
     border-bottom: 1px solid $tutor-border-idle;
   }
 

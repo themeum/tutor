@@ -37,7 +37,6 @@ use TUTOR\Icon;
  *   ),
  *   array(
  *       'type'    => 'dropdown',
- *       'icon'    => Icon::ENROLLED,
  *       'active'  => true,
  *       'options' => array(
  *           array(
@@ -173,9 +172,16 @@ class Nav extends BaseComponent {
 	 * @return string The label of the active option, or the first option's label * if none are active.
 	 */
 	protected function get_active_dropdown_label( array $options ): string {
-		$active_option = $this->get_active_dropdown_option( $options );
-		if ( ! $active_option ) {
+		if ( ! tutor_utils()->count( $options ) ) {
 			return '';
+		}
+
+		$active_option = $options[0];
+		foreach ( $options as $option ) {
+			if ( ! empty( $option['active'] ) ) {
+				$active_option = $option;
+				break;
+			}
 		}
 
 		$label = $active_option['label'] ?? '';
@@ -189,37 +195,15 @@ class Nav extends BaseComponent {
 	/**
 	 * Get the icon of the active dropdown option.
 	 *
-	 * Falls back to the first option's icon when no option is explicitly active.
-	 *
 	 * @since 4.0.0
 	 *
 	 * @param array $options Array of dropdown options.
 	 *
-	 * @return string
+	 * @return string The icon of the active option, or the first option's icon if none are active.
 	 */
 	protected function get_active_dropdown_icon( array $options ): string {
-		$active_option = $this->get_active_dropdown_option( $options );
-		if ( ! $active_option ) {
-			return '';
-		}
-
-		return $active_option['icon'] ?? '';
-	}
-
-	/**
-	 * Get the active dropdown option.
-	 *
-	 * Falls back to the first option when no option is explicitly active.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array $options Array of dropdown options.
-	 *
-	 * @return array
-	 */
-	protected function get_active_dropdown_option( array $options ): array {
 		if ( ! tutor_utils()->count( $options ) ) {
-			return array();
+			return '';
 		}
 
 		$active_option = $options[0];
@@ -230,7 +214,7 @@ class Nav extends BaseComponent {
 			}
 		}
 
-		return $active_option;
+		return $active_option['icon'] ?? '';
 	}
 
 	/**
@@ -253,11 +237,8 @@ class Nav extends BaseComponent {
 		$active_label  = $this->get_active_dropdown_label( $options );
 		$icon_size     = $this->get_icon_size( $this->nav_size );
 		$active_item   = isset( $item['active'] ) && $item['active'] ? 'active' : '';
-		$selected_icon = $this->get_active_dropdown_icon( $options );
-		if ( ! $selected_icon && isset( $item['icon'] ) ) {
-			$selected_icon = $item['icon'];
-		}
-		$trigger_icon  = $selected_icon ? SvgIcon::make()->name( $selected_icon )->size( $icon_size )->get() : '';
+		$active_icon   = $this->get_active_dropdown_icon( $options );
+		$icon          = $active_icon ? SvgIcon::make()->name( $active_icon )->size( $icon_size )->get() : '';
 		$dropdown_icon = SvgIcon::make()
 			->name( Icon::CHEVRON_DOWN_2 )
 			->size( $icon_size )
@@ -295,12 +276,12 @@ class Nav extends BaseComponent {
 				%s
 				%s	
 				</button>
-				<div x-ref="content" x-show="open" x-transition.origin.left.top x-cloak @click.outside="handleClickOutside()" class="tutor-popover tutor-nav-dropdown">
+				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover tutor-nav-dropdown">
 					%s
 				</div>
 			</div>',
 			$active_item,
-			$trigger_icon,
+			$icon,
 			esc_html( $active_label ),
 			$dropdown_icon,
 			$dropdown_options
