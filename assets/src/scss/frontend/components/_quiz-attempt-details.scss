@@ -369,7 +369,6 @@
     display: block;
     max-width: 100%;
     height: auto;
-    vertical-align: top;
   }
 
   .tutor-draw-image-review-mask {
@@ -398,10 +397,10 @@
 
   .tutor-draw-image-review-mask--student {
     filter:
-      drop-shadow(1px 0 0 #e53935)
-      drop-shadow(-1px 0 0 #e53935)
-      drop-shadow(0 1px 0 #e53935)
-      drop-shadow(0 -1px 0 #e53935);
+      drop-shadow(1px 0 0 #F80000)
+      drop-shadow(-1px 0 0 #F80000)
+      drop-shadow(0 1px 0 #F80000)
+      drop-shadow(0 -1px 0 #F80000);
   }
 
   .tutor-draw-image-review-fallback .tutor-draw-image-single {

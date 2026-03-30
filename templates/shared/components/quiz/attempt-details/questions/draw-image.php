@@ -106,7 +106,10 @@ if ( $has_correct_mask ) {
 }
 $student_mask_style = '';
 if ( $has_student_drawn && $has_student_mask ) {
-	$student_mask_style = '--tutor-draw-mask-url: url("' . $given_mask_css . '"); --tutor-draw-mask-bg: rgba(233, 62, 62, 0.2);';
+	// Match the "correct" mask approach: fill color via --tutor-draw-mask-bg,
+	// while the border outline is handled in SCSS via drop-shadow.
+	// Inner tint should be faint (outline-only look). Derived alpha: 0.1608 * 0.16 ~= 0.0257.
+	$student_mask_style = '--tutor-draw-mask-url: url("' . $given_mask_css . '"); --tutor-draw-mask-bg: rgba(248, 0, 0, 0.0257);';
 }
 
 ?>
@@ -127,7 +130,7 @@ if ( $has_student_drawn && $has_student_mask ) {
 					role="presentation"
 				></span>
 			<?php endif; ?>
-			<?php if ( $has_student_drawn ) : ?>
+			<?php if ( $has_student_drawn && $has_student_mask ) : ?>
 				<span
 					class="tutor-draw-image-review-mask tutor-draw-image-review-mask--student"
 					style="<?php echo esc_attr( $student_mask_style ); ?>"
