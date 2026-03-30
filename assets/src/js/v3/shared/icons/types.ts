@@ -373,6 +373,7 @@ export const icons = [
   'tryAgain',
   'txt',
   'undo',
+  'unread',
   'update',
   'upload',
   'upload2',

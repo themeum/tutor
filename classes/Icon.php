@@ -390,6 +390,7 @@ final class Icon {
 	const TRY_AGAIN                  = 'try-again';
 	const TXT                        = 'txt';
 	const UNDO                       = 'undo';
+	const UNREAD                     = 'unread';
 	const UPDATE                     = 'update';
 	const UPLOAD                     = 'upload';
 	const UPLOAD_2                   = 'upload-2';

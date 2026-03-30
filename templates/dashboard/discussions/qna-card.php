@@ -279,7 +279,14 @@ $single_url = UrlHelper::add_query_params(
 								<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 20, 20, array( 'class' => 'tutor-animate-spin tutor-icon-secondary' ) ); ?>
 							</template>
 							<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'read' && currentQuestionId === <?php echo esc_html( $question_id ); ?>)">
-								<?php tutor_utils()->render_svg_icon( Icon::READ, 20, 20 ); ?>
+								<span class="tutor-flex">
+									<template x-if="isUnread">
+										<?php tutor_utils()->render_svg_icon( Icon::READ, 20, 20 ); ?>
+									</template>
+									<template x-if="!isUnread">
+										<?php tutor_utils()->render_svg_icon( Icon::UNREAD, 20, 20 ); ?>
+									</template>
+								</span>
 							</template>
 							<span x-text="isUnread ? '<?php echo esc_js( __( 'Mark as Read', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Mark as Unread', 'tutor' ) ); ?>'"></span>
 						</button>
@@ -321,6 +328,7 @@ $single_url = UrlHelper::add_query_params(
 		?>
 	</div>
 </div>
+<<<<<<< HEAD
 
 <?php if ( $is_user_asker ) : ?>
 <div x-show="editingId === <?php echo (int) $question_id; ?>" x-cloak class="tutor-card tutor-surface-l1-hover">
@@ -338,3 +346,5 @@ $single_url = UrlHelper::add_query_params(
 	?>
 </div>
 <?php endif; ?>
+=======
+>>>>>>> 5366583c1 (fix(qna): update unread action icons)
