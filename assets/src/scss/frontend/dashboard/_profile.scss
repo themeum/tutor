@@ -17,11 +17,9 @@
   }
 
   .tutor-profile-card {
-    background-color: $tutor-surface-l1;
-    border: 1px solid $tutor-border-idle;
+    @include tutor-card-base;
     border-radius: $tutor-radius-2xl;
     padding: $tutor-spacing-6;
-    margin-top: $tutor-spacing-6;
 
     @include tutor-breakpoint-down(sm) {
       margin-top: $tutor-spacing-5;
@@ -119,10 +117,6 @@
       }
 
       li {
-        @include tutor-typography(tiny, regular, subdued);
-        background-color: $tutor-surface-brand-tertiary;
-        padding: 0 $tutor-spacing-4;
-        border-radius: $tutor-radius-sm;
         white-space: nowrap;
         margin: 0;
 
@@ -167,6 +161,7 @@
     }
 
     .tutor-statistic-card {
+      @include tutor-card-base;
       @include tutor-flex(row, flex-start);
       gap: $tutor-spacing-5;
       background-color: $tutor-surface-l1;

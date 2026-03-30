@@ -41,7 +41,7 @@ $bin_icon = SvgIcon::make()->name( Icon::BIN )->get();
 <?php require_once tutor_get_template( 'account-header' ); ?>
 
 <div class="tutor-user-reviews tutor-py-9">
-	<div class="tutor-profile-container">
+	<div class="tutor-account-container">
 	<?php if ( $review_count > 0 ) : ?>
 		<div class="tutor-flex tutor-flex-column tutor-gap-5">
 			<?php foreach ( $reviews as $review ) : ?>
@@ -62,8 +62,8 @@ $bin_icon = SvgIcon::make()->name( Icon::BIN )->get();
 			<?php
 				ConfirmationModal::make()
 					->id( 'review-delete-modal' )
-					->title( __( 'Delete This Review?', 'tutor' ) )
-					->message( __( 'Are you sure you want to delete this review? Please confirm your choice.', 'tutor' ) )
+					->title( __( 'Delete your Review?', 'tutor' ) )
+					->message( __( 'Are you sure you want to delete this review? This action cannot be undone.', 'tutor' ) )
 					->icon( UrlHelper::asset( 'images/delete-reviews.svg' ) )
 					->confirm_handler( 'handleDeleteReview(payload?.id)' )
 					->mutation_state( 'deleteReviewMutation' )

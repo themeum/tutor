@@ -262,6 +262,7 @@ const scssEntries = {
   'tutor-frontend-dashboard-scss': './assets/src/scss/frontend-dashboard/index.scss',
   'tutor-template-import-scss': './assets/src/scss/admin-dashboard/template-import.scss',
   'tutor-core-scss': './assets/core/scss/main.scss',
+  'tutor-kids-scss': './assets/src/scss/frontend/kids/index.scss',
   'tutor-dashboard-scss': './assets/src/scss/frontend/main/dashboard.scss',
   'tutor-learning-area-scss': './assets/src/scss/frontend/main/learning-area.scss',
 };

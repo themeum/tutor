@@ -5800,6 +5800,10 @@ class Utils {
 	 * @return boolean
 	 */
 	public function is_course_details_page() {
+		if ( Input::has( 'subpage' ) ) {
+			return false;
+		}
+
 		return (bool) is_single() && tutor()->course_post_type === get_post_type();
 	}
 

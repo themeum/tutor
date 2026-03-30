@@ -17,6 +17,7 @@ use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Ecommerce\Settings;
 use Tutor\Models\CourseModel;
+use Tutor\Options_V2;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -166,6 +167,17 @@ class Assets {
 
 		$tutor_settings = Options_V2::get_only( $required_options );
 
+		// Load available kids mode icons to avoid frontend 404s if kids mode is active.
+		$kids_icons = array();
+		if ( tutor_utils()->is_kids_mode() ) {
+			$kids_icons = array_map(
+				function ( $file ) {
+					return basename( $file, '.svg' );
+				},
+				glob( tutor()->path . 'assets/icons/kids/*.svg' ) ?: array()
+			);
+		}
+
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => rtrim( get_home_url(), '/' ),
@@ -199,6 +211,8 @@ class Assets {
 			'settings'                     => $tutor_settings,
 			'max_upload_size'              => wp_max_upload_size(),
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
+			'kids_icons_registry'          => $kids_icons,
+			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
 		);
 	}
 
@@ -856,9 +870,11 @@ class Assets {
 	public function enqueue_scripts() {
 		$is_dashboard       = tutor_utils()->is_dashboard_page();
 		$is_learning_area   = tutor_utils()->is_learning_area();
+		$is_kids_mode       = tutor_utils()->is_kids_mode();
 		$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
 
 		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
+		$kids_css_url          = tutor()->assets_url . 'css/tutor-kids.min.css';
 		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
 		$learning_area_css_url = tutor()->assets_url . 'css/tutor-learning-area.min.css';
 
@@ -882,6 +898,14 @@ class Assets {
 		}
 
 		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
+		if ( $is_kids_mode ) {
+			wp_enqueue_style( 'tutor-kids', $kids_css_url, array( 'tutor-core' ), $version );
+		}
+
+		if ( $is_dashboard ) {
+			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
+			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+		}
 
 		// Core.
 		wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );

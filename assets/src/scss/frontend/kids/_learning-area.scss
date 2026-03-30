@@ -1,0 +1,23 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+@use './mixins' as *;
+
+[data-tutor-ui='kids'] {
+  .tutor-resources-wrapper,
+  .tutor-learning-area-qna,
+  .tutor-lesson-content-tab,
+  .tutor-assignment-info,
+  .tutor-assignment-description,
+  .tutor-assignment-attachments,
+  .tutor-assignment-form {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
+  }
+
+  .tutor-assignment-feedback {
+    @include tutor-kids-shadow(false, $tutor-border-brand-secondary, $tutor-radius-5xl, sm);
+  }
+
+  .tutor-learning-footer {
+    margin-top: $tutor-spacing-2;
+  }
+}

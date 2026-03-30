@@ -12,10 +12,13 @@
     @include tutor-button-reset();
     @include tutor-typography(tiny, medium, secondary);
     @include tutor-flex(row, center);
+    border-radius: $tutor-tab-radius;
+    font-weight: $tutor-tab-font-weight;
+    box-shadow: none;
     gap: $tutor-spacing-2;
-    padding: 10px $tutor-spacing-5;
-    border-radius: $tutor-radius-lg;
-    @include tutor-transition((background-color, color));
+    padding: 10px $tutor-spacing-6;
+    height: $tutor-tab-height;
+    @include tutor-transition((background-color, color, box-shadow));
 
     &:hover {
       background-color: $tutor-tab-l3-active-hover;
@@ -29,15 +32,7 @@
     &.active {
       background-color: $tutor-tab-l3-active;
       color: $tutor-text-brand;
-
-      &:hover {
-        background-color: $tutor-tab-l3-active-hover;
-        color: $tutor-text-primary;
-
-        svg:first-of-type:not(:last-of-type) {
-          color: $tutor-icon-brand;
-        }
-      }
+      box-shadow: $tutor-tab-active-shadow;
     }
 
     svg {
@@ -102,8 +97,8 @@
   &.tutor-nav-small {
     .tutor-nav-item {
       @include tutor-text(tiny);
-      padding: $tutor-spacing-3 $tutor-spacing-5;
-      border-radius: $tutor-radius-md;
+      padding: 7px $tutor-spacing-5;
+      border-radius: $tutor-tab-radius-sm;
     }
 
     .tutor-nav-dropdown {
@@ -116,6 +111,7 @@
       @include tutor-text(small);
       gap: $tutor-spacing-4;
       padding: 11px $tutor-spacing-6;
+      height: $tutor-tab-height-lg;
     }
 
     .tutor-nav-dropdown {
@@ -137,7 +133,7 @@
       font-size: $tutor-font-size-tiny;
       line-height: $tutor-line-height-medium;
       padding: $tutor-spacing-4 $tutor-spacing-5;
-      border-radius: $tutor-radius-lg;
+      border-radius: $tutor-tab-radius;
 
       svg {
         width: 16px;

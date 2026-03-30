@@ -16,6 +16,7 @@ use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 
 $user_id   = get_current_user_id();
@@ -63,7 +64,6 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 	$time_spent = Course::get_total_course_duration( $completed_courses );
 	$grid_col   = $time_spent['hours'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
-	$seconds    = $time_spent['minutes'] > 0 ? $time_spent['minutes'] * 60 : 0;
 	?>
 	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 <?php echo esc_attr( $grid_col ); ?>">
 		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
@@ -149,7 +149,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<div x-bind="getBackdropBindings()"></div>
 				<div x-bind="getModalContentBindings()" style="width: 354px;">
 					<div class="tutor-modal-body tutor-px-9 tutor-pt-9 tutor-pb-8 tutor-text-center">
-						<?php SvgIcon::make()->name( Icon::CONFETTI )->size( 32 )->color( Color::EXCEPTION2 )->render(); ?>
+						<div class="tutor-flex tutor-justify-center">
+							<img src="<?php echo esc_attr( UrlHelper::asset( 'images/illustrations/confetti.svg' ) ); ?>" alt="<?php esc_html_e( 'Confetti', 'tutor' ); ?>" />
+						</div>
 
 						<h3 class="tutor-h3 tutor-mb-2 tutor-mt-6">
 							<span class="tutor-font-regular"><?php esc_html_e( 'Fantastic,', 'tutor' ); ?></span> 
@@ -187,19 +189,20 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							</span> 
 							<?php endif; ?>
 							
-							<?php if ( $seconds > 0 ) : ?>
+							<?php if ( $time_spent['seconds'] > 0 ) : ?>
 							<span class="tutor-font-medium">
 								<?php
 								echo esc_html(
 									sprintf(
 									/* translators: 1: total seconds spent */
 										__( ', and %1$d+ seconds!', 'tutor' ),
-										$seconds
+										$time_spent['seconds']
 									)
 								);
 								?>
 							</span>
 							<?php endif; ?>
+							<br>
 							<?php echo esc_html__( 'Incredible!', 'tutor' ); ?>
 						</p>
 

@@ -9,7 +9,7 @@
  * @since 4.0.0
  */
 
- defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
@@ -174,7 +174,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								<?php
 								Button::make()
 								->label( $button_label )
-								->size( Size::MEDIUM )
+								->size( Size::SMALL )
 								->variant( Variant::PRIMARY_SOFT )
 								->icon( Icon::RELOAD )
 								->attr( ':disabled', 'profileSwitchMutation?.isPending' )
