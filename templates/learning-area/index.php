@@ -89,7 +89,6 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 <body <?php body_class(); ?>>
 	<div
 		class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>"
-		<?php echo tutor_utils()->is_kids_mode() ? 'data-tutor-ui="kids"' : ''; ?>
 		x-data="{ sidebarOpen: false, isFullScreen: false }"
 		:class="{ 'is-fullscreen': isFullScreen }"
 	>
