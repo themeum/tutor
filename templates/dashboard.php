@@ -54,7 +54,6 @@ $user_id                   = get_current_user_id();
 $user                      = get_user_by( 'ID', $user_id );
 $enable_profile_completion = tutor_utils()->get_option( 'enable_profile_completion' );
 $is_instructor             = tutor_utils()->is_instructor();
-$learning_mode             = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN );
 
 // URLS.
 $current_url  = tutor()->current_url;
