@@ -9,11 +9,10 @@
   z-index: $tutor-z-dropdown;
   max-width: 276px;
   background-color: $tutor-surface-l1;
-  border: 1px solid $tutor-border-idle;
-  border-radius: $tutor-radius-lg;
-  box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: $tutor-popover-border;
+  border-radius: $tutor-popover-radius;
+  box-shadow: $tutor-popover-shadow;
+  overflow: hidden;
 
   &-header {
     padding: $tutor-spacing-4 $tutor-spacing-4 0;
