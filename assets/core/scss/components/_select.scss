@@ -15,7 +15,10 @@
     padding: $tutor-spacing-4 $tutor-spacing-5;
     background-color: $tutor-surface-base;
     border: 1px solid $tutor-border-idle;
-    border-radius: $tutor-radius-md;
+    border-color: $tutor-input-border-color;
+    border-radius: $tutor-input-radius;
+    --tutor-input-border-shadow-current: #{$tutor-input-border-shadow};
+    box-shadow: var(--tutor-input-border-shadow-current);
     cursor: pointer;
     text-align: left;
     @include tutor-transition();
@@ -24,6 +27,7 @@
       @include tutor-focus-ring();
       border-color: $tutor-border-brand-tertiary;
       background-color: $tutor-surface-l1;
+      --tutor-input-border-shadow-current: none;
     }
 
     &:has(.tutor-select-value-text):not(:has(.tutor-select-value-placeholder)) {
@@ -33,6 +37,7 @@
     &[disabled] {
       background-color: $tutor-surface-l1-hover;
       cursor: not-allowed;
+      --tutor-input-border-shadow-current: none;
     }
 
     .tutor-input-field-error & {

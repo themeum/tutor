@@ -17,6 +17,7 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Popover;
 use Tutor\Components\Progress;
 use Tutor\Components\Tooltip;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
@@ -77,11 +78,11 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 
 					ConfirmationModal::make()
 						->id( $reset_modal_id )
-						->title( __( 'Are Your Sure?', 'tutor' ) )
-						->message( __( 'This will permanently erase your quiz scores, completed lessons, and certificates for this course.', 'tutor' ) )
+						->title( __( 'Reset Course Progress?', 'tutor' ) )
+						->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
 						->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
 						->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
-						->icon( Icon::WARNING_COLORIZED )
+						->icon( UrlHelper::asset( 'images/illustrations/reset-course.svg' ) )
 						->confirm_handler( 'resetProgress()' )
 						->mutation_state( 'resetProgressMutation' )
 						->render();
@@ -143,7 +144,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 								</div>
 								<?php endif; ?>
 								<div class="tutor-learning-nav-header-arrow" :class="{ 'is-expanded': expanded }">
-									<?php SvgIcon::make()->name( Icon::CHEVRON_UP_2 )->size( 20 )->render(); ?>
+									<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 20 )->render(); ?>
 								</div>
 							</div>
 						</div>

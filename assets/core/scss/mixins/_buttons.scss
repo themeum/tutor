@@ -18,7 +18,7 @@
   font-family: inherit;
   // Inherited “kids mode” elevation + per-variant border shadow.
   --tutor-button-border-shadow: none;
-  box-shadow: $tutor-button-border-shadow, $tutor-button-elevation-shadow;
+  box-shadow: $tutor-button-border-shadow;
   @include tutor-transition();
 
   svg {
@@ -64,7 +64,7 @@
       --tutor-button-border-shadow: #{$tutor-button-primary-border-shadow-disabled};
     }
   } @else if $variant == primary-soft {
-    background-color: $tutor-button-primary-soft-background;
+    background-color: $tutor-button-primary-soft;
     color: $tutor-text-brand;
     --tutor-button-border-shadow: #{$tutor-button-primary-soft-border-shadow};
 
@@ -73,18 +73,18 @@
     }
 
     &:hover:not(:disabled):not(.disabled) {
-      background-color: $tutor-button-primary-soft-background-hover;
+      background-color: $tutor-button-primary-soft-hover;
       --tutor-button-border-shadow: #{$tutor-button-primary-soft-border-shadow-hover};
     }
 
     &:focus:not(:disabled):not(.disabled) {
-      background-color: $tutor-button-primary-soft-background-focused;
+      background-color: $tutor-button-primary-soft-focused;
       --tutor-button-border-shadow: #{$tutor-button-primary-soft-border-shadow-focused};
     }
 
     &:disabled,
     &.disabled {
-      background-color: $tutor-button-primary-soft-background-disabled;
+      background-color: $tutor-button-disabled;
       --tutor-button-border-shadow: #{$tutor-button-primary-soft-border-shadow-disabled};
     }
   } @else if $variant == destructive {
@@ -112,7 +112,7 @@
       --tutor-button-border-shadow: #{$tutor-button-destructive-border-shadow-disabled};
     }
   } @else if $variant == destructive-soft {
-    background-color: $tutor-button-destructive-soft-background;
+    background-color: $tutor-button-destructive-soft;
     color: $tutor-text-critical;
     --tutor-button-border-shadow: #{$tutor-button-destructive-soft-border-shadow};
 
@@ -121,18 +121,18 @@
     }
 
     &:hover:not(:disabled):not(.disabled) {
-      background-color: $tutor-button-destructive-soft-background-hover;
+      background-color: $tutor-button-destructive-soft-hover;
       --tutor-button-border-shadow: #{$tutor-button-destructive-soft-border-shadow-hover};
     }
 
     &:focus:not(:disabled):not(.disabled) {
-      background-color: $tutor-button-destructive-soft-background-focused;
+      background-color: $tutor-button-destructive-soft-focused;
       --tutor-button-border-shadow: #{$tutor-button-destructive-soft-border-shadow-focused};
     }
 
     &:disabled,
     &.disabled {
-      background-color: $tutor-button-destructive-soft-background-disabled;
+      background-color: $tutor-button-disabled;
       --tutor-button-border-shadow: #{$tutor-button-destructive-soft-border-shadow-disabled};
     }
   } @else if $variant == success {
@@ -153,7 +153,7 @@
       color: $tutor-text-primary-inverse;
     }
   } @else if $variant == secondary {
-    background-color: $tutor-button-secondary-background;
+    background-color: $tutor-button-secondary;
     color: $tutor-text-primary;
     --tutor-button-border-shadow: #{$tutor-button-secondary-border-shadow};
 
@@ -162,7 +162,7 @@
     }
 
     &:hover:not(:disabled):not(.disabled) {
-      background-color: $tutor-button-secondary-background-hover;
+      background-color: $tutor-button-secondary-hover;
       --tutor-button-border-shadow: #{$tutor-button-secondary-border-shadow-hover};
     }
 
@@ -173,11 +173,11 @@
 
     &:disabled,
     &.disabled {
-      background-color: $tutor-button-secondary-background-disabled;
+      background-color: $tutor-button-disabled;
       --tutor-button-border-shadow: #{$tutor-button-secondary-border-shadow-disabled};
     }
   } @else if $variant == outline {
-    background-color: $tutor-button-outline-background;
+    background-color: $tutor-button-outline-inverse;
     color: $tutor-text-primary;
     --tutor-button-border-shadow: #{$tutor-button-outline-border-shadow};
 
@@ -186,22 +186,22 @@
     }
 
     &:hover:not(:disabled):not(.disabled) {
-      background-color: $tutor-button-outline-background-hover;
+      background-color: $tutor-button-outline-hover;
       --tutor-button-border-shadow: #{$tutor-button-outline-border-shadow-hover};
     }
 
     &:focus:not(:disabled):not(.disabled) {
-      background-color: $tutor-button-outline-background-focused;
+      background-color: $tutor-button-outline-focused-inverse;
       --tutor-button-border-shadow: #{$tutor-button-outline-border-shadow-focused};
     }
 
     &:disabled,
     &.disabled {
-      background-color: $tutor-button-outline-background-disabled;
+      background-color: $tutor-button-disabled;
       --tutor-button-border-shadow: #{$tutor-button-outline-border-shadow-disabled};
     }
   } @else if $variant == ghost {
-    background-color: $tutor-button-ghost-background;
+    background-color: transparent;
     color: $tutor-text-primary;
     --tutor-button-border-shadow: #{$tutor-button-ghost-border-shadow};
 
@@ -210,17 +210,17 @@
     }
 
     &:hover:not(:disabled):not(.disabled) {
-      background-color: $tutor-button-ghost-background-hover;
+      background-color: $tutor-button-ghost-hover;
       --tutor-button-border-shadow: #{$tutor-button-ghost-border-shadow-hover};
     }
 
     &:disabled,
     &.disabled {
-      background-color: $tutor-button-ghost-background-disabled;
+      background-color: transparent;
       --tutor-button-border-shadow: #{$tutor-button-ghost-border-shadow-disabled};
     }
   } @else if $variant == ghost-brand {
-    background-color: $tutor-button-ghost-brand-background;
+    background-color: transparent;
     color: $tutor-text-brand;
     --tutor-button-border-shadow: #{$tutor-button-ghost-brand-border-shadow};
 
@@ -229,13 +229,13 @@
     }
 
     &:hover:not(:disabled):not(.disabled) {
-      background-color: $tutor-button-ghost-brand-background-hover;
+      background-color: $tutor-button-primary-soft;
       --tutor-button-border-shadow: #{$tutor-button-ghost-brand-border-shadow-hover};
     }
 
     &:disabled,
     &.disabled {
-      background-color: $tutor-button-ghost-brand-background-disabled;
+      background-color: transparent;
       --tutor-button-border-shadow: #{$tutor-button-ghost-brand-border-shadow-disabled};
     }
   } @else if $variant == link {
@@ -363,9 +363,9 @@
     min-width: 32px;
     min-height: 32px;
   } @else if $size == small {
-    padding: $tutor-spacing-4;
-    min-width: 36px;
-    min-height: 36px;
+    padding: 9px;
+    min-width: 34px;
+    min-height: 34px;
   } @else if $size == medium {
     padding: 10px;
     min-width: 40px;

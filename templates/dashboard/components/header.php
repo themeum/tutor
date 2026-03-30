@@ -174,7 +174,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								<?php
 								Button::make()
 								->label( $button_label )
-								->size( Size::MEDIUM )
+								->size( Size::SMALL )
 								->variant( Variant::PRIMARY_SOFT )
 								->icon( Icon::RELOAD )
 								->attr( ':disabled', 'profileSwitchMutation?.isPending' )

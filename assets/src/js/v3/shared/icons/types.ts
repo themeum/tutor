@@ -210,6 +210,7 @@ export const icons = [
   'learningMood',
   'left',
   'lesson',
+  'lessonCompleted',
   'level',
   'light',
   'lineCross',

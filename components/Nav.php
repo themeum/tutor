@@ -37,7 +37,6 @@ use TUTOR\Icon;
  *   ),
  *   array(
  *       'type'    => 'dropdown',
- *       'icon'    => Icon::ENROLLED,
  *       'active'  => true,
  *       'options' => array(
  *           array(
@@ -193,6 +192,30 @@ class Nav extends BaseComponent {
 		return $label;
 	}
 
+	/**
+	 * Get the icon of the active dropdown option.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $options Array of dropdown options.
+	 *
+	 * @return string The icon of the active option, or the first option's icon if none are active.
+	 */
+	protected function get_active_dropdown_icon( array $options ): string {
+		if ( ! tutor_utils()->count( $options ) ) {
+			return '';
+		}
+
+		$active_option = $options[0];
+		foreach ( $options as $option ) {
+			if ( ! empty( $option['active'] ) ) {
+				$active_option = $option;
+				break;
+			}
+		}
+
+		return $active_option['icon'] ?? '';
+	}
 
 	/**
 	 * Render dropdown nav if it is selected.
@@ -214,7 +237,8 @@ class Nav extends BaseComponent {
 		$active_label  = $this->get_active_dropdown_label( $options );
 		$icon_size     = $this->get_icon_size( $this->nav_size );
 		$active_item   = isset( $item['active'] ) && $item['active'] ? 'active' : '';
-		$icon          = isset( $item['icon'] ) ? SvgIcon::make()->name( $item['icon'] )->size( $icon_size )->get() : '';
+		$active_icon   = $this->get_active_dropdown_icon( $options );
+		$icon          = $active_icon ? SvgIcon::make()->name( $active_icon )->size( $icon_size )->get() : '';
 		$dropdown_icon = SvgIcon::make()
 			->name( Icon::CHEVRON_DOWN_2 )
 			->size( $icon_size )
@@ -225,11 +249,11 @@ class Nav extends BaseComponent {
 
 		if ( count( $options ) ) {
 			foreach ( $options as $option ) {
-				$icon      = isset( $option['icon'] ) ? SvgIcon::make()->name( $option['icon'] )->size( $icon_size )->get() : '';
-				$is_active = isset( $option['active'] ) && $option['active'] ? 'active' : '';
-				$label     = esc_html( $option['label'] );
-				$label     = isset( $option['count'] ) ? $label . ' (' . esc_html( $option['count'] ) . ')' : $label;
-				$url       = isset( $option['url'] ) ? esc_url( $option['url'] ) : '#';
+				$option_icon = isset( $option['icon'] ) ? SvgIcon::make()->name( $option['icon'] )->size( $icon_size )->get() : '';
+				$is_active   = isset( $option['active'] ) && $option['active'] ? 'active' : '';
+				$label       = esc_html( $option['label'] );
+				$label       = isset( $option['count'] ) ? $label . ' (' . esc_html( $option['count'] ) . ')' : $label;
+				$url         = isset( $option['url'] ) ? esc_url( $option['url'] ) : '#';
 
 				$dropdown_options .= sprintf(
 					'<a href="%s" class="tutor-nav-dropdown-item %s">
@@ -238,7 +262,7 @@ class Nav extends BaseComponent {
 					</a>',
 					$url,
 					$is_active,
-					$icon,
+					$option_icon,
 					$label
 				);
 			}

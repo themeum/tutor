@@ -134,7 +134,7 @@ $default_meta[]           = array(
 
 $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_meta, $tutor_course_id );
 ?>
-<div class="tutor-course-info tutor-pt-7 tutor-pb-8" x-data="tutorCourseCompleteHandler">
+<div class="tutor-course-info tutor-pt-4 tutor-pb-8" x-data="tutorCourseCompleteHandler">
 	<?php do_action( 'tutor_learning_area_before_course_info', $tutor_course_id ); ?>
 
 	<div class="tutor-course-thumb">

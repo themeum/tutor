@@ -12,7 +12,7 @@ export interface TabsConfig {
   tabs: TabItem[];
   defaultTab?: string;
   orientation?: 'horizontal' | 'vertical';
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   onChange?: (tabId: string) => void;
   urlParams?: {
@@ -25,7 +25,7 @@ export const tabs = (config: TabsConfig) => ({
   tabs: config.tabs,
   activeTab: config.defaultTab || config.tabs[0]?.id || '',
   orientation: config.orientation || 'horizontal',
-  size: config.size || 'md',
+  size: config.size || 'lg',
   urlParamsConfig: {
     enabled: config.urlParams?.enabled ?? true,
     paramName: config.urlParams?.paramName || 'page_tab',
@@ -88,6 +88,10 @@ export const tabs = (config: TabsConfig) => ({
     const classes = ['tutor-tabs-tab'];
     if (this.size === 'sm') {
       classes.push('tutor-tabs-tab-sm');
+    }
+
+    if (this.size === 'md') {
+      classes.push('tutor-tabs-tab-md');
     }
 
     if (this.isActive(tab.id)) {
