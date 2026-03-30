@@ -1,0 +1,27 @@
+@use '@Core/scss/tokens' as *;
+
+:root {
+  --tutor-input-radius: #{$tutor-radius-md};
+  --tutor-input-border-color: #{$tutor-border-idle};
+  --tutor-input-border-shadow: none;
+}
+
+[data-tutor-ui='kids'] {
+  .tutor-input {
+    --tutor-input-radius: #{$tutor-radius-full};
+    --tutor-input-border-color: transparent;
+    --tutor-input-border-shadow: 0 0 0 1px #{$tutor-border-idle}, 0 3px 0 0 #{$tutor-border-idle};
+  }
+
+  .tutor-select {
+    --tutor-input-radius: #{$tutor-radius-full};
+    --tutor-input-border-color: transparent;
+    --tutor-input-border-shadow: 0 0 0 1px #{$tutor-border-idle}, 0 3px 0 0 #{$tutor-border-idle};
+  }
+
+  .tutor-text-area {
+    --tutor-input-radius: #{$tutor-radius-4xl};
+    --tutor-input-border-color: transparent;
+    --tutor-input-border-shadow: 0 0 0 1px #{$tutor-border-idle}, 0 3px 0 0 #{$tutor-border-idle};
+  }
+}

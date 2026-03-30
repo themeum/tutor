@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Dashboard;
 use Tutor\Helpers\UrlHelper;
 
+$is_kids_mode = tutor_utils()->is_kids_mode();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +24,7 @@ use Tutor\Helpers\UrlHelper;
 	<title><?php bloginfo( 'name' ); ?></title>
 	<?php wp_head(); ?>
 </head>
-<body <?php body_class( '' ); ?>>
+<body <?php body_class( '' ); ?> <?php echo $is_kids_mode ? 'data-tutor-ui="kids"' : ''; ?>>
 <?php
 
 $dashboard_page    = get_query_var( 'tutor_dashboard_page' );

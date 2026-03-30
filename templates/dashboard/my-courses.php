@@ -22,6 +22,7 @@ use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
@@ -116,7 +117,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		<?php echo apply_filters( 'tutor_course_create_mobile_button', ob_get_clean() ); //phpcs:ignore ?>
 	</div>
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
-		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
+		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-border-b">
 			<?php Nav::make()->variant( Variant::PRIMARY )->size( Size::SMALL )->items( $nav_items )->render(); ?>
 			<div class="tutor-hidden tutor-sm-block">
 				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
@@ -124,7 +125,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-sm-hidden">
 				<?php do_action( 'tutor_course_create_button' ); ?>
 				<button 
-					class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2"
+					class="tutor-btn tutor-btn-primary tutor-btn-small tutor-gap-2"
 					:class="createMutation.isPending ? 'tutor-btn-loading' : ''"
 					@click="handleCreateCourse()"
 					:disabled="createMutation.isPending"
@@ -161,7 +162,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		<?php if ( empty( $results ) ) : ?>
 			<?php EmptyState::make()->title( 'No Courses Found' )->render(); ?>
 		<?php else : ?>
-		<div class="tutor-p-6 tutor-sm-p-5 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
+		<div class="tutor-my-courses-card-wrapper tutor-p-6 tutor-sm-p-5 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
 			<?php
 			global $post;
 			$tutor_nonce_value = wp_create_nonce( tutor()->nonce_action );
@@ -390,6 +391,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			->id( 'tutor-course-delete-modal' )
 			->title( __( 'Delete This Course?', 'tutor' ) )
 			->message( __( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ) )
+			->icon( UrlHelper::asset( 'images/illustrations/delete.svg' ) )
 			->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
 			->confirm_handler( 'handleDeleteCourse(payload?.courseId)' )
 			->mutation_state( 'deleteMutation' )

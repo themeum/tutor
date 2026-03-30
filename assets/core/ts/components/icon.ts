@@ -1,8 +1,7 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
+import { tutorConfig } from '@TutorShared/config/config';
 
 const iconCache = new Map<string, string>();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const baseUrl = (window as any)._tutorobject?.tutor_url || '';
 
 export interface IconProps {
   name: string; // Use PHP Icon::<name> to get the name.
@@ -32,11 +31,17 @@ async function fetchSVG(name: string, width: number, height: number, from: 'php'
   }
 
   const fileName = from === 'php' ? name : name.trim().replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
-  const url = `${baseUrl}assets/icons/${fileName}.svg`;
+  const hasKidsVariant = tutorConfig.is_kids_mode && tutorConfig.kids_icons_registry?.includes(fileName);
+
+  const basePath = hasKidsVariant ? 'assets/icons/kids/' : 'assets/icons/';
+  const url = `${tutorConfig.tutor_url}${basePath}${fileName}.svg`;
   const defaultViewBox = `0 0 ${width} ${height}`;
 
   try {
     const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const svgText = await response.text();
 
     const parser = new DOMParser();

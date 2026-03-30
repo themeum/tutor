@@ -39,7 +39,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 
 ?>
 <div class="tutor-discussion-single">
-	<div class="tutor-flex tutor-justify-between tutor-p-6 tutor-border-b">
+	<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
 		<a 
 			href="<?php echo esc_url( UrlHelper::add_query_params( $discussion_url, array( 'tab' => 'lesson-comments' ) ) ); ?>" 
 			class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2"
