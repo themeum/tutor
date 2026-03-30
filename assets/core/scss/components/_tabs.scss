@@ -62,10 +62,10 @@
     }
 
     &-sm {
-      height: 32px;
       @include tutor-text('tiny');
       padding: 6px $tutor-spacing-5;
       gap: $tutor-spacing-2;
+      height: $tutor-tab-height-sm;
     }
 
     &:hover:not(:disabled):not(.tutor-tabs-tab-active),
