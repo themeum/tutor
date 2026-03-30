@@ -11,6 +11,8 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\User;
+
+$is_kids_mode = tutor_utils()->is_kids_mode();
 ?>
 
 <?php
@@ -25,7 +27,7 @@ if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 		<title><?php bloginfo( 'name' ); ?></title>
 		<?php wp_head(); ?>
 	</head>
-	<body <?php body_class( '' ); ?>>
+	<body <?php body_class( '' ); ?> <?php echo $is_kids_mode ? 'data-tutor-ui="kids"' : ''; ?>>
 	<?php
 endif;
 global $wp_query;

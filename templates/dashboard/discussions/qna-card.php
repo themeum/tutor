@@ -212,7 +212,7 @@ $single_url = UrlHelper::add_query_params(
 					->render();
 				?>
 
-				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
+				<div x-ref="content" x-show="open" x-transition.origin.right.top x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 					<div class="tutor-popover-menu">
 						<?php if ( User::is_instructor_view() ) : ?>
 						<button 

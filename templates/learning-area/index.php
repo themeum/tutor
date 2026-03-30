@@ -85,12 +85,11 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 }
 
 $subpages = Template::make_learning_area_sub_page_nav_items();
-$learning_mode = tutor_utils()->get_option( 'learning_mode', 'classic' );
 ?>
 <body <?php body_class(); ?>>
 	<div
 		class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>"
-		data-tutor-ui="<?php echo esc_attr( $learning_mode ); ?>"
+		<?php echo tutor_utils()->is_kids_mode() ? 'data-tutor-ui="kids"' : ''; ?>
 		x-data="{ sidebarOpen: false, isFullScreen: false }"
 		:class="{ 'is-fullscreen': isFullScreen }"
 	>

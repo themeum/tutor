@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 import '../../assets/css/tutor-core.min.css';
-import '../../assets/css/tutor-core-kids.min.css';
+import '../../assets/css/tutor-kids.min.css';
 
 const variants = [
   { label: 'Primary', className: 'tutor-btn-primary' },
