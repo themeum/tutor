@@ -114,6 +114,7 @@ class UserPreference {
 		}
 
 		add_action( 'wp_ajax_tutor_save_user_preferences', array( $this, 'ajax_save_user_preferences' ) );
+		add_action( 'wp_ajax_tutor_reset_user_preferences', array( $this, 'ajax_reset_user_preferences' ) );
 		add_filter( 'body_class', array( $this, 'add_theme_attribute' ) );
 		add_action( 'wp_head', array( $this, 'apply_font_scale' ) );
 	}
@@ -153,7 +154,7 @@ class UserPreference {
 		if ( ! in_array( $theme, self::THEMES, true ) ) {
 			$theme = self::DEFAULT_THEME;
 		}
-		echo ' data-theme="' . esc_attr( $theme ) . '"';
+		echo ' data-tutor-theme="' . esc_attr( $theme ) . '"';
 		return $classes;
 	}
 
@@ -282,6 +283,47 @@ class UserPreference {
 		$this->json_response(
 			__( 'Preferences saved successfully', 'tutor' ),
 			$preference_data
+		);
+	}
+
+	/**
+	 * AJAX handler: reset current user's preferences back to defaults.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_reset_user_preferences() {
+		tutor_utils()->check_nonce();
+
+		if ( ! is_user_logged_in() ) {
+			$this->json_response(
+				tutor_utils()->error_message( 'forbidden' ),
+				null,
+				HttpHelper::STATUS_UNAUTHORIZED
+			);
+		}
+
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			$this->json_response(
+				__( 'Failed to reset preferences', 'tutor' ),
+				null,
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
+		$defaults = self::get_default_preferences();
+
+		// Clear stored overrides; get_preferences() will fall back to defaults.
+		update_user_meta( $user_id, self::META_KEY, array() );
+
+		// Keep runtime cache consistent for this request.
+		TutorCache::set( 'get_preferences_' . $user_id, $defaults );
+
+		$this->json_response(
+			__( 'Preferences reset successfully', 'tutor' ),
+			$defaults
 		);
 	}
 

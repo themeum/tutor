@@ -211,6 +211,7 @@ const endpoints = {
   RESET_PASSWORD: 'tutor_profile_password_reset',
   UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference',
   UPDATE_USER_PREFERENCES: 'tutor_save_user_preferences',
+  RESET_USER_PREFERENCES: 'tutor_reset_user_preferences',
   REMOVE_DEVICE_MANUALLY: 'tutor_remove_device_manually',
   REMOVE_ALL_ACTIVE_LOGINS: 'tutor_remove_all_active_logins',
 

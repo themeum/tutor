@@ -60,7 +60,13 @@ interface PreferencesFormProps {
   auto_play_next: boolean;
   theme: string;
   font_scale: number;
+  learning_mood: boolean;
   formId?: string;
+}
+
+interface ResetPreferencesPayload {
+  formId: string;
+  modalId: string;
 }
 
 interface UpdateNotificationProps {
@@ -77,6 +83,7 @@ interface ResetPasswordResponse {
 const settings = () => {
   const query = window.TutorCore.query;
   const form = window.TutorCore.form;
+  const modal = window.TutorCore.modal;
   const toast = window.TutorCore.toast;
 
   return {
@@ -90,6 +97,7 @@ const settings = () => {
     resetPasswordMutation: null as MutationState<ResetPasswordResponse> | null,
     handleUpdateNotification: null as MutationState<unknown, unknown> | null,
     savePreferencesMutation: null as MutationState<TutorMutationResponse<PreferencesFormProps>> | null,
+    resetPreferencesMutation: null as MutationState<TutorMutationResponse<PreferencesFormProps>> | null,
 
     init() {
       if (!this.$el) {
@@ -103,6 +111,7 @@ const settings = () => {
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
       this.handleSaveWithdrawMethod = this.handleSaveWithdrawMethod.bind(this);
       this.handleResetPassword = this.handleResetPassword.bind(this);
+      this.resetToDefault = this.resetToDefault.bind(this);
 
       this.handleUpdateNotification = query.useMutation(this.updateNotification, {
         onSuccess: (data: TutorMutationResponse<string>, payload: UpdateNotificationProps) => {
@@ -190,12 +199,37 @@ const settings = () => {
           toast.error(convertToErrorMessage(error));
         },
       });
+
+      this.resetPreferencesMutation = query.useMutation(this.resetPreferences, {
+        onSuccess: (data: TutorMutationResponse<PreferencesFormProps>, payload: ResetPreferencesPayload) => {
+          form.reset(payload?.formId || '', (data?.data || {}) as unknown as Record<string, unknown>);
+          toast.success(data?.message ?? __('Preferences reset successfully', 'tutor'));
+          if (payload?.modalId) {
+            modal.closeModal(payload.modalId);
+          }
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
+        },
+      });
     },
 
     async updatePreferences(payload: PreferencesFormProps) {
       return wpAjaxInstance.post(endpoints.UPDATE_USER_PREFERENCES, payload) as unknown as Promise<
         TutorMutationResponse<PreferencesFormProps>
       >;
+    },
+
+    async resetPreferences(payload: ResetPreferencesPayload) {
+      // Endpoint doesn't need payload data; we use payload only to pass form/modal ids to onSuccess.
+      void payload;
+      return wpAjaxInstance.post(endpoints.RESET_USER_PREFERENCES, {}) as unknown as Promise<
+        TutorMutationResponse<PreferencesFormProps>
+      >;
+    },
+
+    resetToDefault(formId: string, modalId: string) {
+      this.resetPreferencesMutation?.mutate({ formId, modalId });
     },
 
     async updateNotification(payload: UpdateNotificationProps) {
