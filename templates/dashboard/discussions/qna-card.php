@@ -348,19 +348,3 @@ $single_url = UrlHelper::add_query_params(
 	<?php endif; ?>
 	
 </div>
-<?php if ( $is_user_asker ) : ?>
-<div x-show="editingId === <?php echo (int) $question_id; ?>" x-cloak class="tutor-card tutor-surface-l1-hover">
-	<?php
-	tutor_load_template(
-		'dashboard.discussions.qna-form',
-		array(
-			'form_id'        => 'qna-edit-' . (int) $question_id,
-			'default_value'  => $question->comment_content,
-			'submit_handler' => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
-			'cancel_handler' => 'setEditing(null)',
-			'is_pending'     => 'updateQnAMutation?.isPending',
-		)
-	);
-	?>
-</div>
-<?php endif; ?>
