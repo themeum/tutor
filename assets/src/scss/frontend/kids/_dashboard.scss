@@ -2,114 +2,181 @@
 @use '@Core/scss/mixins' as *;
 @use './mixins' as *;
 
-[data-tutor-ui="kids"] {
-	.tutor-card {
-		@include tutor-kids-shadow;
-	}
+[data-tutor-ui='kids'] {
+  .tutor-card {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
+  }
 
-	.tutor-badge {
-		border-radius: $tutor-radius-2xl;
-	}
+  .tutor-badge {
+    border-radius: $tutor-radius-2xl;
+  }
 
-	.tutor-stat-card,
-	.tutor-progress-card,
-	.tutor-discussion-card,
-	.tutor-upcoming-lesson-card,
-	.tutor-wishlist-grid .tutor-course-card,
-	.tutor-review-card,
-	.tutor-dashboard-home-chart,
-	.tutor-dashboard-home-card,
-	.tutor-dashboard-home-sort .tutor-popover-bottom {
-		@include tutor-kids-shadow;
-	}
+  .tutor-stat-card,
+  .tutor-progress-card,
+  .tutor-discussion-card,
+  .tutor-upcoming-lesson-card,
+  .tutor-wishlist-grid .tutor-course-card,
+  .tutor-review-card,
+  .tutor-dashboard-home-chart,
+  .tutor-dashboard-home-card,
+  .tutor-dashboard-home-sort .tutor-popover-bottom {
+    @include tutor-kids-shadow;
+  }
 
-	// home
-	.tutor-student-dashboard-courses {
-		.tutor-card.tutor-progress-card:not(:first-child) {
-			margin-top: $tutor-spacing-4;
-		}
-	}
+  .tutor-progress-card .tutor-progress-card-thumbnail {
+    border-radius: $tutor-radius-3xl;
+  }
 
-	.tutor-dashboard-home-sort .tutor-popover-bottom {
-		@include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);
+  // home
+  .tutor-student-dashboard-courses {
+    .tutor-card.tutor-progress-card:not(:first-child) {
+      margin-top: $tutor-spacing-4;
+    }
+  }
 
-		.tutor-popover-menu-item {
-			border-radius: $tutor-radius-2xl;
-		}
-	}
+  .tutor-dashboard-home-sort .tutor-popover-bottom {
+    @include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);
 
-	// wishList
-	.tutor-dashboard-courses-wrapper {
+    .tutor-popover-menu-item {
+      border-radius: $tutor-radius-2xl;
+    }
+  }
 
-		.tutor-dashboard-courses,
-		.tutor-wishlist-grid {
-			gap: $tutor-spacing-6 $tutor-spacing-5;
-		}
-	}
+  // wishList
+  .tutor-dashboard-courses-wrapper {
+    .tutor-dashboard-courses-card {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+    }
 
-	// quiz attempts
-	.tutor-quiz-attempts-list {
-		.tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
-			@include tutor-kids-shadow($tutor-border-brand-tertiary);
-			margin-bottom: $tutor-spacing-5;
-		}
-	}
+    .tutor-dashboard-courses,
+    .tutor-wishlist-grid {
+      gap: $tutor-spacing-6 $tutor-spacing-5;
+    }
+  }
 
-	// user account/profile
-	.tutor-user-profile {
+  // quiz attempts
+  .tutor-quiz-attempts-list {
+    .tutor-quiz-previous-attempts {
+      box-shadow: -2px 0 0 $tutor-border-idle;
+      border-radius: $tutor-radius-3xl;
 
-		.tutor-profile-card,
-		.tutor-statistic-card {
-			@include tutor-kids-shadow;
-		}
+      .tutor-quiz-attempts-item:hover {
+        &:not(:first-of-type) {
+          @include tutor-kids-shadow($tutor-border-brand-tertiary);
+          border-bottom: 1px solid transparent;
+        }
+      }
+    }
+    .tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
+      @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
+    }
 
-		.tutor-profile-card-header {
-			border-radius: $tutor-radius-5xl;
-		}
-	}
+    .tutor-quiz-attempts-item-wrapper:hover {
+      @include tutor-kids-shadow($tutor-border-brand-tertiary);
 
-	.tutor-account-billing-wrapper {
-		border-radius: $tutor-radius-5xl;
-	}
+      &:not(:last-of-type) {
+        border-bottom: 1px solid transparent;
+      }
+    }
+  }
 
-	.tutor-review-card {
-		.tutor-review-form {
-			border-radius: $tutor-radius-6xl;
-		}
-	}
+  // user account/profile
+  .tutor-user-profile {
+    .tutor-profile-card,
+    .tutor-statistic-card {
+      @include tutor-kids-shadow;
+    }
 
-	.tutor-dashboard-header-user-popover {
-		@include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);
-	}
+    .tutor-profile-card-header {
+      border-radius: $tutor-radius-5xl;
+    }
+  }
 
-	.tutor-dashboard-header-user-popover-menu li a {
-		border-radius: $tutor-radius-2xl;
-	}
+  .tutor-account-billing-wrapper {
+    border-radius: $tutor-radius-5xl;
+  }
 
-	// discussions
-	.tutor-discussion-card-wrapper {
-		gap: $tutor-spacing-6 $tutor-spacing-4;
+  .tutor-review-card {
+    .tutor-review-form {
+      border-radius: $tutor-radius-6xl;
+    }
+  }
 
-		@include tutor-breakpoint-down(sm) {
-			padding: $tutor-spacing-4;
-		}
+  .tutor-dashboard-header-user-popover {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-2xl);
+  }
 
-		.tutor-card {
-			box-shadow: none;
-			background-color: $tutor-surface-l1-hover;
-			border: 1px solid $tutor-border-idle;
-		}
-	}
+  .tutor-dashboard-header-user-popover-menu li a {
+    border-radius: $tutor-radius-2xl;
+  }
 
-	.tutor-discussion-single {
-		@include tutor-kids-shadow(false);
-	}
+  // user account/notification
+  .tutor-profile-notification-card {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
+  }
 
-	.tutor-my-courses-card-wrapper {
-		gap: $tutor-spacing-6;
+  // discussions
+  .tutor-dashboard-page-card {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+  }
+  .tutor-discussion-card-wrapper {
+    gap: $tutor-spacing-6 $tutor-spacing-4;
 
-		.tutor-my-courses-card {
-			@include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-3xl);
-		}
-	}
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-4;
+    }
+
+    .tutor-card {
+      box-shadow: none;
+      background-color: $tutor-surface-l1-hover;
+      border: 1px solid $tutor-border-idle;
+    }
+  }
+
+  .tutor-discussion-single {
+    @include tutor-kids-shadow(false);
+  }
+
+  .tutor-my-courses-card-wrapper {
+    gap: $tutor-spacing-6;
+
+    .tutor-my-courses-card {
+      @include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-3xl);
+    }
+  }
+
+  // calendar
+  .tutor-calendar {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+
+    .tutor-calendar-actions {
+      gap: $tutor-spacing-3;
+    }
+
+    .tutor-calendar-grid {
+      border-radius: $tutor-radius-5xl;
+
+      .tutor-calendar-day {
+        &:first-of-type {
+          border-top-left-radius: $tutor-radius-5xl;
+        }
+
+        &:nth-last-of-type(7) {
+          border-bottom-left-radius: $tutor-radius-5xl;
+        }
+      }
+    }
+  }
+
+  // note
+  .tutor-dashboard-lesson-notes {
+    .tutor-dashboard-page-card {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+    }
+
+    .tutor-lesson-note:hover {
+      @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
+      border-bottom: 1px solid transparent;
+    }
+  }
 }

@@ -1,0 +1,26 @@
+@use '@Core/scss/tokens' as *;
+
+:root {
+  --tutor-tab-radius: #{$tutor-radius-lg};
+  --tutor-tab-radius-sm: #{$tutor-radius-md};
+  --tutor-tab-font-weight: #{$tutor-font-weight-medium};
+  --tutor-tab-active-shadow: none;
+  --tutor-tab-height: 34px;
+  --tutor-tab-height-sm: 32px;
+  --tutor-tab-height-lg: 44px;
+}
+
+[data-tutor-ui='kids'] {
+  --tutor-tab-radius: #{$tutor-radius-full};
+  --tutor-tab-radius-sm: #{$tutor-radius-full};
+  --tutor-tab-font-weight: #{$tutor-font-weight-bold};
+  --tutor-tab-active-shadow: 0 0 0 1px #{$tutor-border-brand}, 0 3px 0 0 #{$tutor-border-brand};
+  --tutor-tab-height: 44px;
+  --tutor-tab-height-sm: 32px;
+  --tutor-tab-height-lg: 48px;
+
+  .tutor-tabs-nav:not([class*='tutor-p-']):not([class*='tutor-m-']) {
+    padding: 1px 1px 3px;
+    margin: -1px -1px -3px;
+  }
+}

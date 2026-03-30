@@ -173,16 +173,9 @@ class Nav extends BaseComponent {
 	 * @return string The label of the active option, or the first option's label * if none are active.
 	 */
 	protected function get_active_dropdown_label( array $options ): string {
-		if ( ! tutor_utils()->count( $options ) ) {
+		$active_option = $this->get_active_dropdown_option( $options );
+		if ( ! $active_option ) {
 			return '';
-		}
-
-		$active_option = $options[0];
-		foreach ( $options as $option ) {
-			if ( ! empty( $option['active'] ) ) {
-				$active_option = $option;
-				break;
-			}
 		}
 
 		$label = $active_option['label'] ?? '';
@@ -193,6 +186,52 @@ class Nav extends BaseComponent {
 		return $label;
 	}
 
+	/**
+	 * Get the icon of the active dropdown option.
+	 *
+	 * Falls back to the first option's icon when no option is explicitly active.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $options Array of dropdown options.
+	 *
+	 * @return string
+	 */
+	protected function get_active_dropdown_icon( array $options ): string {
+		$active_option = $this->get_active_dropdown_option( $options );
+		if ( ! $active_option ) {
+			return '';
+		}
+
+		return $active_option['icon'] ?? '';
+	}
+
+	/**
+	 * Get the active dropdown option.
+	 *
+	 * Falls back to the first option when no option is explicitly active.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $options Array of dropdown options.
+	 *
+	 * @return array
+	 */
+	protected function get_active_dropdown_option( array $options ): array {
+		if ( ! tutor_utils()->count( $options ) ) {
+			return array();
+		}
+
+		$active_option = $options[0];
+		foreach ( $options as $option ) {
+			if ( ! empty( $option['active'] ) ) {
+				$active_option = $option;
+				break;
+			}
+		}
+
+		return $active_option;
+	}
 
 	/**
 	 * Render dropdown nav if it is selected.
@@ -214,7 +253,11 @@ class Nav extends BaseComponent {
 		$active_label  = $this->get_active_dropdown_label( $options );
 		$icon_size     = $this->get_icon_size( $this->nav_size );
 		$active_item   = isset( $item['active'] ) && $item['active'] ? 'active' : '';
-		$icon          = isset( $item['icon'] ) ? SvgIcon::make()->name( $item['icon'] )->size( $icon_size )->get() : '';
+		$selected_icon = $this->get_active_dropdown_icon( $options );
+		if ( ! $selected_icon && isset( $item['icon'] ) ) {
+			$selected_icon = $item['icon'];
+		}
+		$trigger_icon  = $selected_icon ? SvgIcon::make()->name( $selected_icon )->size( $icon_size )->get() : '';
 		$dropdown_icon = SvgIcon::make()
 			->name( Icon::CHEVRON_DOWN_2 )
 			->size( $icon_size )
@@ -225,11 +268,11 @@ class Nav extends BaseComponent {
 
 		if ( count( $options ) ) {
 			foreach ( $options as $option ) {
-				$icon      = isset( $option['icon'] ) ? SvgIcon::make()->name( $option['icon'] )->size( $icon_size )->get() : '';
-				$is_active = isset( $option['active'] ) && $option['active'] ? 'active' : '';
-				$label     = esc_html( $option['label'] );
-				$label     = isset( $option['count'] ) ? $label . ' (' . esc_html( $option['count'] ) . ')' : $label;
-				$url       = isset( $option['url'] ) ? esc_url( $option['url'] ) : '#';
+				$option_icon = isset( $option['icon'] ) ? SvgIcon::make()->name( $option['icon'] )->size( $icon_size )->get() : '';
+				$is_active   = isset( $option['active'] ) && $option['active'] ? 'active' : '';
+				$label       = esc_html( $option['label'] );
+				$label       = isset( $option['count'] ) ? $label . ' (' . esc_html( $option['count'] ) . ')' : $label;
+				$url         = isset( $option['url'] ) ? esc_url( $option['url'] ) : '#';
 
 				$dropdown_options .= sprintf(
 					'<a href="%s" class="tutor-nav-dropdown-item %s">
@@ -238,7 +281,7 @@ class Nav extends BaseComponent {
 					</a>',
 					$url,
 					$is_active,
-					$icon,
+					$option_icon,
 					$label
 				);
 			}
@@ -252,12 +295,12 @@ class Nav extends BaseComponent {
 				%s
 				%s	
 				</button>
-				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover tutor-nav-dropdown">
+				<div x-ref="content" x-show="open" x-transition.origin.left.top x-cloak @click.outside="handleClickOutside()" class="tutor-popover tutor-nav-dropdown">
 					%s
 				</div>
 			</div>',
 			$active_item,
-			$icon,
+			$trigger_icon,
 			esc_html( $active_label ),
 			$dropdown_icon,
 			$dropdown_options

@@ -2,295 +2,299 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-quiz-intro {
-	padding-bottom: $tutor-spacing-7;
+  padding-bottom: $tutor-spacing-7;
 
-	&-icon {
-		@include tutor-flex-center;
-		max-height: 200px;
-		height: 100%;
-		background-color: $tutor-surface-brand-tertiary;
-		border-radius: $tutor-radius-lg;
-	}
+  @include tutor-breakpoint-up(sm) {
+    margin-top: $tutor-spacing-4;
+  }
 
-	&-title {
-		@include tutor-typography('h3', 'semibold', 'primary', 'heading');
-		@include tutor-breakpoint-down(sm) {
-			@include tutor-typography('h5', 'semibold', 'primary', 'heading');
-		}
-	}
+  &-icon {
+    @include tutor-flex-center;
+    max-height: 200px;
+    height: 100%;
+    background-color: $tutor-surface-brand-tertiary;
+    border-radius: $tutor-radius-lg;
+  }
 
-	&-description {
-		@include tutor-typography('p1', 'regular', 'secondary');
-		@include tutor-breakpoint-down(sm) {
-			@include tutor-typography('small', 'regular', 'secondary');
-		}
-	}
+  &-title {
+    @include tutor-typography('h3', 'semibold', 'primary', 'heading');
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-typography('h5', 'semibold', 'primary', 'heading');
+    }
+  }
 
-	&-params {
-		.tutor-table-wrapper {
-			@include tutor-breakpoint-down(sm) {
-				overflow-x: hidden;
-			}
-		}
+  &-description {
+    @include tutor-typography('p1', 'regular', 'secondary');
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-typography('small', 'regular', 'secondary');
+    }
+  }
 
-		.tutor-table {
-			@include tutor-breakpoint-down(sm) {
-				min-width: auto;
-				width: 100%;
-			}
-		}
-	}
+  &-params {
+    .tutor-table-wrapper {
+      @include tutor-breakpoint-down(sm) {
+        overflow-x: hidden;
+      }
+    }
 
-	&-param {
-		&-label {
-			width: 35%;
-			white-space: nowrap;
-			@include tutor-flex(row, center);
-			gap: $tutor-spacing-3;
-		}
-	}
+    .tutor-table {
+      @include tutor-breakpoint-down(sm) {
+        min-width: auto;
+        width: 100%;
+      }
+    }
+  }
 
-	&-attempts,
-	.tutor-quiz-attempts {
-		overflow: hidden;
-		.tutor-quiz-attempts-header {
-			grid-template-columns: 324px 190px 1.5fr 1fr;
-		}
+  &-param {
+    &-label {
+      width: 35%;
+      white-space: nowrap;
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-3;
+    }
+  }
 
-		.tutor-quiz-attempts-item {
-			grid-template-columns: 324px 190px 1.5fr 1fr !important;
-		}
+  &-attempts,
+  .tutor-quiz-attempts {
+    overflow: hidden;
+    .tutor-quiz-attempts-header {
+      grid-template-columns: 324px 190px 1.5fr 1fr;
+    }
 
-		.tutor-table-wrapper {
-			@include tutor-breakpoint-down(sm) {
-				overflow-x: hidden;
-			}
-		}
+    .tutor-quiz-attempts-item {
+      grid-template-columns: 324px 190px 1.5fr 1fr !important;
+    }
 
-		.tutor-table {
-			table-layout: fixed;
+    .tutor-table-wrapper {
+      @include tutor-breakpoint-down(sm) {
+        overflow-x: hidden;
+      }
+    }
 
-			@include tutor-breakpoint-down(sm) {
-				min-width: auto;
-				width: 100%;
-			}
-		}
+    .tutor-table {
+      table-layout: fixed;
 
-		&-head {
-			@include tutor-breakpoint-down(sm) {
-				display: none;
-			}
+      @include tutor-breakpoint-down(sm) {
+        min-width: auto;
+        width: 100%;
+      }
+    }
 
-			th {
-				&.tutor-quiz-intro-attempts-header {
-					@include tutor-typography('tiny', 'regular', 'secondary');
-					letter-spacing: 0;
+    &-head {
+      @include tutor-breakpoint-down(sm) {
+        display: none;
+      }
 
-					&:first-child {
-						width: 40%;
-					}
+      th {
+        &.tutor-quiz-intro-attempts-header {
+          @include tutor-typography('tiny', 'regular', 'secondary');
+          letter-spacing: 0;
 
-					&:nth-child(2) {
-						width: 30%;
-					}
-				}
-			}
-		}
+          &:first-child {
+            width: 40%;
+          }
 
-		&-row {
-			@include tutor-breakpoint-down(sm) {
-				@include tutor-flex(column);
-				padding: $tutor-spacing-5;
-				gap: $tutor-spacing-4;
-			}
-		}
+          &:nth-child(2) {
+            width: 30%;
+          }
+        }
+      }
+    }
 
-		&-cell {
-			@include tutor-breakpoint-down(sm) {
-				padding: 0;
-			}
-		}
+    &-row {
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(column);
+        padding: $tutor-spacing-5;
+        gap: $tutor-spacing-4;
+      }
+    }
 
-		@include tutor-breakpoint-down(sm) {
-			.tutor-table {
-				td.tutor-quiz-intro-attempts-cell {
-					padding: 0;
-				}
-			}
-		}
+    &-cell {
+      @include tutor-breakpoint-down(sm) {
+        padding: 0;
+      }
+    }
 
-		&-date-col {
-			width: 40%;
+    @include tutor-breakpoint-down(sm) {
+      .tutor-table {
+        td.tutor-quiz-intro-attempts-cell {
+          padding: 0;
+        }
+      }
+    }
 
-			@include tutor-breakpoint-down(sm) {
-				width: 100%;
-				@include tutor-flex(column);
-			}
-		}
+    &-date-col {
+      width: 40%;
 
-		&-marks-col {
-			width: 30%;
+      @include tutor-breakpoint-down(sm) {
+        width: 100%;
+        @include tutor-flex(column);
+      }
+    }
 
-			@include tutor-breakpoint-down(sm) {
-				width: 100%;
-				@include tutor-flex(row, center, flex-start, wrap);
+    &-marks-col {
+      width: 30%;
 
-				> div {
-					flex-shrink: 0;
-					background-color: $tutor-gray-25;
-					padding: $tutor-spacing-5;
-					border-radius: $tutor-radius-lg;
-				}
+      @include tutor-breakpoint-down(sm) {
+        width: 100%;
+        @include tutor-flex(row, center, flex-start, wrap);
 
-				.tutor-quiz-marks-breakdown {
-					flex: 1;
-					max-width: 89px;
-				}
-			}
-		}
+        > div {
+          flex-shrink: 0;
+          background-color: $tutor-gray-25;
+          padding: $tutor-spacing-5;
+          border-radius: $tutor-radius-lg;
+        }
 
-		&-time-col {
-			@include tutor-breakpoint-down(sm) {
-				display: none;
-			}
-		}
+        .tutor-quiz-marks-breakdown {
+          flex: 1;
+          max-width: 89px;
+        }
+      }
+    }
 
-		&-result-col {
-			@include tutor-breakpoint-down(sm) {
-				display: none;
-			}
-		}
-	}
+    &-time-col {
+      @include tutor-breakpoint-down(sm) {
+        display: none;
+      }
+    }
 
-	&-attempt {
-		&-number {
-			@include tutor-typography('medium', 'semibold', 'primary');
-			margin-bottom: $tutor-spacing-3;
+    &-result-col {
+      @include tutor-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+  }
 
-			@include tutor-breakpoint-down(sm) {
-				display: none;
-			}
-		}
+  &-attempt {
+    &-number {
+      @include tutor-typography('medium', 'semibold', 'primary');
+      margin-bottom: $tutor-spacing-3;
 
-		&-date {
-			@include tutor-typography('tiny', 'regular', 'subdued');
+      @include tutor-breakpoint-down(sm) {
+        display: none;
+      }
+    }
 
-			@include tutor-breakpoint-down(sm) {
-				@include tutor-typography('small', 'semibold', 'brand');
-			}
-		}
-	}
+    &-date {
+      @include tutor-typography('tiny', 'regular', 'subdued');
 
-	&-time {
-		@include tutor-typography('medium', 'regular', 'subdued');
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-typography('small', 'semibold', 'brand');
+      }
+    }
+  }
 
-		@include tutor-breakpoint-down(sm) {
-			@include tutor-typography('small', 'regular', 'subdued');
-		}
-	}
+  &-time {
+    @include tutor-typography('medium', 'regular', 'subdued');
 
-	&-stats-row {
-		width: 100%;
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-typography('small', 'regular', 'subdued');
+    }
+  }
 
-		@include tutor-flex(row, center);
-		gap: $tutor-spacing-4;
+  &-stats-row {
+    width: 100%;
 
-		@include tutor-breakpoint-down(sm) {
-			border-radius: $tutor-radius-2xl;
-			gap: $tutor-spacing-3;
-		}
-	}
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-4;
 
-	&-time-info {
-		@include tutor-flex(row, center);
-		gap: $tutor-spacing-2;
+    @include tutor-breakpoint-down(sm) {
+      border-radius: $tutor-radius-2xl;
+      gap: $tutor-spacing-3;
+    }
+  }
 
-		svg {
-			color: $tutor-icon-secondary;
-		}
-	}
+  &-time-info {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-2;
 
-	&-mobile-result {
-		display: none;
+    svg {
+      color: $tutor-icon-secondary;
+    }
+  }
 
-		@include tutor-breakpoint-down(sm) {
-			@include tutor-flex();
-			margin-left: $tutor-spacing-4;
-		}
-	}
+  &-mobile-result {
+    display: none;
 
-	&-mobile-time {
-		display: none;
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-flex();
+      margin-left: $tutor-spacing-4;
+    }
+  }
 
-		@include tutor-breakpoint-down(sm) {
-			@include tutor-flex(row, center);
-			margin-left: auto;
-			gap: $tutor-spacing-2;
-			@include tutor-typography('tiny', 'medium', 'secondary');
-		}
-	}
+  &-mobile-time {
+    display: none;
 
-	&-marks {
-		&-breakdown {
-			@include tutor-flex(column);
-			gap: $tutor-spacing-2;
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-flex(row, center);
+      margin-left: auto;
+      gap: $tutor-spacing-2;
+      @include tutor-typography('tiny', 'medium', 'secondary');
+    }
+  }
 
-			@include tutor-breakpoint-down(sm) {
-				flex-direction: column;
-			}
-		}
+  &-marks {
+    &-breakdown {
+      @include tutor-flex(column);
+      gap: $tutor-spacing-2;
 
-		&-correct,
-		&-incorrect {
-			@include tutor-typography('tiny', 'medium', 'primary');
-			@include tutor-flex(row, center);
-			gap: $tutor-spacing-2;
-			background-color: $tutor-gray-200;
-			padding: 0 $tutor-spacing-4;
-			border-radius: 40px;
+      @include tutor-breakpoint-down(sm) {
+        flex-direction: column;
+      }
+    }
 
-			&::before {
-				content: '';
-				width: 6px;
-				height: 6px;
-				border-radius: $tutor-radius-full;
-				display: inline-block;
-			}
-		}
+    &-correct,
+    &-incorrect {
+      @include tutor-typography('tiny', 'medium', 'primary');
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-2;
+      background-color: $tutor-gray-200;
+      padding: 0 $tutor-spacing-4;
+      border-radius: 40px;
 
-		&-correct {
-			&::before {
-				background-color: $tutor-success-700;
-			}
-		}
+      &::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: $tutor-radius-full;
+        display: inline-block;
+      }
+    }
 
-		&-incorrect {
-			&::before {
-				background-color: $tutor-error-600;
-			}
-		}
-	}
+    &-correct {
+      &::before {
+        background-color: $tutor-success-700;
+      }
+    }
 
-	&-actions {
-		@include tutor-breakpoint-down(sm) {
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			@include tutor-flex(row, center);
-			padding: $tutor-spacing-4 $tutor-spacing-5;
-			background-color: $tutor-surface-l1;
-			border-top: 1px solid $tutor-border-idle;
-			gap: $tutor-spacing-3;
-			z-index: $tutor-z-sidebar;
+    &-incorrect {
+      &::before {
+        background-color: $tutor-error-600;
+      }
+    }
+  }
 
-			button {
-				flex: 1 1 auto;
-			}
-		}
-	}
+  &-actions {
+    @include tutor-breakpoint-down(sm) {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      @include tutor-flex(row, center);
+      padding: $tutor-spacing-4 $tutor-spacing-5;
+      background-color: $tutor-surface-l1;
+      border-top: 1px solid $tutor-border-idle;
+      gap: $tutor-spacing-3;
+      z-index: $tutor-z-sidebar;
 
-	@include tutor-breakpoint-down(sm) {
-		padding-bottom: $tutor-spacing-18;
-	}
+      button {
+        flex: 1 1 auto;
+      }
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    padding-bottom: $tutor-spacing-18;
+  }
 }

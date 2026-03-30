@@ -34,7 +34,7 @@ $page_template = $page_data['template'] ?? '';
 $back_url  = UrlHelper::back( tutor_utils()->tutor_dashboard_url() );
 $close_url = tutor_utils()->tutor_dashboard_url();
 ?>
-<div class="tutor-account-page-wrapper">
+<div class="tutor-account-page-wrapper"<?php echo tutor_utils()->is_kids_mode() ? ' data-tutor-ui="kids"' : ''; ?>>
 	<?php require_once $page_template; ?>
 </div>
 <?php wp_footer(); ?>
