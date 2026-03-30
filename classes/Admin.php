@@ -84,6 +84,7 @@ class Admin {
 			foreach ( $options['plugins'] as $plugin ) {
 				if ( $plugin === $our_plugin ) {
 					Permalink::set_permalink_flag();
+					break;
 				}
 			}
 		}
