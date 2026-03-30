@@ -17,7 +17,6 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
-use Tutor\Options_V2;
 
 $user          = wp_get_current_user();
 $settings_data = User::get_profile_settings_data( $user->ID );

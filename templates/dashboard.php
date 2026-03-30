@@ -10,7 +10,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Options_V2;
 use TUTOR\User;
 
 $is_kids_mode = tutor_utils()->is_kids_mode();
