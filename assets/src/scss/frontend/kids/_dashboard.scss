@@ -56,6 +56,8 @@
 
   // quiz attempts
   .tutor-quiz-attempts-list {
+    padding: 2px 2px 7px;
+
     .tutor-quiz-previous-attempts {
       box-shadow: -2px 0 0 $tutor-border-idle;
       border-radius: $tutor-radius-3xl;
