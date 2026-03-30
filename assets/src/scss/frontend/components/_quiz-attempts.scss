@@ -394,6 +394,7 @@
 }
 
 .tutor-quiz-item-actions {
+  @include tutor-flex(row, center, space-between);
   gap: $tutor-spacing-5;
   padding-top: $tutor-spacing-2;
 
