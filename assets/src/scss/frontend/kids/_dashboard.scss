@@ -103,7 +103,7 @@
   }
 
   .tutor-dashboard-header-user-popover {
-    @include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-2xl);
   }
 
   .tutor-dashboard-header-user-popover-menu li a {
