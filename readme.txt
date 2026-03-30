@@ -343,7 +343,7 @@ New: Global design modes to switch between Modern, Kids, or Legacy layouts platf
 New: Lots of Micro-interactions with animations and sound effects to make lessons more fun.
 New: A new button “view as student” has been added to allow admin & instructor to change the dashboard view.
 New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
-Update: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
+New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
 
 = 3.9.7 - Feb 25, 2026
 

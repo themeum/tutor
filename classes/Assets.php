@@ -951,6 +951,7 @@ class Assets {
 		$is_tutor_cart_page        = get_the_ID() === CartController::get_page_id();
 		$is_tutor_checkout_page    = get_the_ID() === CheckoutController::get_page_id();
 		$is_student_public_profile = ! empty( $wp_query->query['tutor_profile_username'] );
+		$is_order_placement_page   = Input::has( 'tutor_order_placement', 'get' ) && ! empty( Input::get( 'tutor_order_placement' ) );
 
 		if ( tutor_utils()->is_course_list_page() || tutor_utils()->is_course_details_page() ) {
 			$load = true;
@@ -959,7 +960,7 @@ class Assets {
 			if ( $is_learning_area && $is_legacy_learning ) {
 				$load = true;
 			}
-		} elseif ( $is_tutor_cart_page || $is_tutor_checkout_page || $is_student_public_profile ) {
+		} elseif ( $is_tutor_cart_page || $is_tutor_checkout_page || $is_student_public_profile || $is_order_placement_page ) {
 			$load = true;
 		}
 
