@@ -19,7 +19,6 @@ import {
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
 
-/** Same lasso visuals as FormPinImage (feat/quiz-type-pin-image) for instructor region marking. */
 const LASSO_FILL_STYLE = 'rgba(220, 53, 69, 0.45)';
 const LASSO_STROKE_STYLE = 'rgba(220, 53, 69, 0.95)';
 const LASSO_DASH_PATTERN = [8, 6];
