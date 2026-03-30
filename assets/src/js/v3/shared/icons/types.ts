@@ -79,7 +79,6 @@ export const icons = [
   'circumLock',
   'clock',
   'clock2',
-  'clockFrame',
   'coding',
   'collapsed',
   'colorOption',

@@ -149,7 +149,6 @@ declare global {
       };
       settings?: {
         monetize_by: 'wc' | 'tutor' | 'edd';
-        learning_mode: 'kids' | 'classic' | 'legacy';
         enable_course_marketplace: 'on' | 'off';
         course_permalink_base: string;
         supported_video_sources: string[] | string;

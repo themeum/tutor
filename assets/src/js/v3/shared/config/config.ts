@@ -62,7 +62,6 @@ const defaultTutorConfig = {
   },
   settings: {
     monetize_by: 'tutor',
-    learning_mode: 'classic',
     enable_course_marketplace: 'off',
     course_permalink_base: '',
     supported_video_sources: '',
