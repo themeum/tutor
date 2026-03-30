@@ -115,14 +115,20 @@ const settings = () => {
       });
 
       this.uploadProfilePhotoMutation = query.useMutation(this.uploadProfilePhoto, {
+        onSuccess: () => {
+          toast.success(__('Successfully updated profile photo.', 'tutor'));
+        },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
       this.removeProfilePhotoMutation = query.useMutation(this.removeProfilePhoto, {
+        onSuccess: () => {
+          toast.success(__('Successfully removed profile photo.', 'tutor'));
+        },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -131,7 +137,7 @@ const settings = () => {
           toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
         },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -140,7 +146,7 @@ const settings = () => {
           toast.success(data?.message ?? __('Success successfully saved social profile', 'tutor'));
         },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error) || __('Failed to save social profile', 'tutor'));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -229,6 +235,9 @@ const settings = () => {
     },
 
     async handleUploadProfilePhoto(files: File[]) {
+      if (files.length === 0) {
+        return;
+      }
       const data = {
         photo_file: files[0],
         photo_type: 'profile_photo',
@@ -311,6 +320,7 @@ const settings = () => {
 
       await this.resetPasswordMutation?.mutate(data);
       form.reset(formId, data as unknown as Record<string, unknown>);
+      window.location.reload();
     },
   };
 };

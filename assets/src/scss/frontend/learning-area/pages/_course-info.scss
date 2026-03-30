@@ -10,6 +10,7 @@
 
     img {
       border-radius: $tutor-radius-lg;
+      width: 100%;
       max-width: 100%;
     }
   }
@@ -76,6 +77,7 @@
       }
 
       .tutor-course-description-body {
+        @include tutor-typography(p3);
         margin-top: $tutor-spacing-5;
       }
     }

@@ -14,7 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use TUTOR\Input;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\Progress;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
@@ -300,6 +303,7 @@ class Course extends Tutor_Base {
 		add_filter( 'the_preview', array( $this, 'handle_schedule_courses' ) );
 
 		add_action( 'tutor_course_action_btn', array( $this, 'render_course_action_btn' ) );
+		add_action( 'wp_ajax_tutor_complete_course', array( $this, 'ajax_tutor_complete_course' ) );
 	}
 
 	/**
@@ -2156,6 +2160,48 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Ajax course complete handler
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_tutor_complete_course() {
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		// Checking nonce.
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'nonce' ) );
+		}
+
+		if ( ! $course_id ) {
+			$this->response_bad_request( __( 'Invalid course', 'tutor' ) );
+		}
+
+		$user_id = get_current_user_id();
+		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+			$this->response_bad_request( __( 'You are not enrolled in this course', 'tutor' ) );
+		}
+
+		/**
+		 * Filter hook provided to restrict course completion. This is useful
+		 * for specific cases like prerequisites. WP_Error should be returned
+		 * from the filter value to prevent the completion.
+		 */
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+
+		if ( is_wp_error( $can_complete ) ) {
+			$this->response_bad_request( $can_complete->get_error_message() );
+		} else {
+			CourseModel::mark_course_as_completed( $course_id, $user_id );
+			// Set temporary identifier to show review pop up.
+			self::set_review_popup_data( $user_id, $course_id );
+
+			$this->response_success( __( 'Course completed successfully', 'tutor' ) );
+		}
+	}
+
+	/**
 	 * Set data for review popup.
 	 *
 	 * @since 2.2.5
@@ -2959,7 +3005,7 @@ class Course extends Tutor_Base {
 	 */
 	public function tutor_reset_course_progress() {
 		tutor_utils()->checking_nonce();
-		$course_id = Input::post( 'course_id' );
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		if ( ! $course_id || ! is_numeric( $course_id ) || ! tutor_utils()->is_enrolled( $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid Course ID or Access Denied.', 'tutor' ) ) );
@@ -3257,26 +3303,160 @@ class Course extends Tutor_Base {
 	public function render_course_action_btn( int $course_id ) {
 		$is_completed = tutor_utils()->is_completed_course( $course_id );
 		if ( $is_completed ) {
+			$certificate_addon_active = tutor_utils()->is_addon_enabled( 'tutor-certificate' );
+			if ( ! $certificate_addon_active ) {
+				Button::make()
+					->tag( 'a' )
+					->label( __( 'Completed', 'tutor' ) )
+					->icon( Icon::COMPLETED_CIRCLE )
+					->variant( Variant::PRIMARY )
+					->size( Size::X_SMALL )
+					->attr( 'href', esc_url( get_the_permalink( $course_id ) ) )
+					->render();
+			}
 			return;
 		}
 
 		$course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
-
-		$button_text = $course_progress['completed_percent'] > 0 ? __( 'Resume', 'tutor' ) : __( 'Start', 'tutor' );
-		$button_url  = tutor_utils()->get_course_first_lesson( $course_id );
+		$button_text     = $course_progress['completed_percent'] > 0 ? __( 'Resume', 'tutor' ) : __( 'Start', 'tutor' );
+		$button_url      = tutor_utils()->get_course_first_lesson( $course_id );
 
 		if ( ! $button_url ) {
 			$button_url = get_the_permalink( $course_id );
 		}
 
+		Button::make()
+			->tag( 'a' )
+			->label( $button_text )
+			->icon( Icon::PLAY )
+			->variant( Variant::PRIMARY )
+			->size( Size::X_SMALL )
+			->attr( 'href', esc_url( $button_url ) )
+			->render();
+	}
+
+	/**
+	 * Calculate the total course duration for a set of courses.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<int> $course_ids List of course IDs.
+	 *
+	 * @return array{
+	 *     hours: int,
+	 *     minutes: int,
+	 *     seconds: int
+	 * } Total accumulated duration from all given courses.
+	 */
+	public static function get_total_course_duration( $course_ids ): array {
+		$total_seconds = 0;
+
+		foreach ( $course_ids as $id ) {
+			$duration = tutor_utils()->get_course_duration( (int) $id, true );
+
+			$total_seconds += ( (int) $duration['durationHours'] * 3600 )
+				+ ( (int) $duration['durationMinutes'] * 60 )
+				+ ( (int) $duration['durationSeconds'] );
+		}
+
+		$hours   = floor( $total_seconds / 3600 );
+		$minutes = floor( $total_seconds / 60 );
+		$seconds = $total_seconds;
+
+		return array(
+			'hours'   => (int) $hours,
+			'minutes' => (int) $minutes,
+			'seconds' => (int) $seconds,
+		);
+	}
+
+	/**
+	 * Get the content for the course completion modal.
+	 *
+	 * This method returns HTML for displaying a modal that informs the user
+	 * that they have not completed all required lessons and assessments. It includes
+	 * the user's current progress shown as a percentage and a progress bar.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param float $course_progress The completion percentage of the course.
+	 *
+	 * @return string The rendered HTML content for the modal.
+	 */
+	public static function get_complete_modal_content( float $course_progress = 0 ): string {
 		ob_start();
 		?>
-		<a href="<?php echo esc_url( $button_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small">
-			<?php echo esc_html( $button_text ); ?>
-		</a>
+		<div>
+			<p class="tutor-p3 tutor-text-secondary tutor-text-center tutor-mb-7 tutor-px-11">
+				<?php esc_html_e( 'You have not completed all required lessons and assessments. ', 'tutor' ); ?>
+			</p>
+			<div class="tutor-border tutor-p-5 tutor-flex tutor-flex-column tutor-gap-4 tutor-surface-base tutor-rounded-md">
+				<div class="tutor-flex tutor-items-center tutor-justify-between">
+					<div class="tutor-p3 tutor-text-secondary">
+						<?php esc_html_e( 'Your Progress', 'tutor' ); ?>
+					</div>
+					<div class="tutor-p1 tutor-font-bold">
+						<?php echo esc_html( number_format_i18n( $course_progress ) . '%' ); ?>
+					</div>
+				</div>
+				<?php
+					Progress::make()->type( 'bar' )->value( $course_progress )->render();
+				?>
+			</div>
+		</div>
 		<?php
-		$button = ob_get_clean();
+		return ob_get_clean();
+	}
 
-		echo wp_kses_post( $button );
+	/**
+	 * Render the course complete button.
+	 *
+	 * Displays a button that allows the user to complete the course. If the course
+	 * progress is less than 100%, clicking the button shows a modal informing the user
+	 * that not all requirements are fulfilled. If the course progress is 100%,
+	 * clicking the button attempts to complete the course.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $modal_id        The HTML ID of the modal to display if not complete.
+	 * @param int    $course_id       The ID of the course.
+	 * @param float  $course_progress The current completion percentage of the course.
+	 *
+	 * @return void
+	 */
+	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0 ): void {
+		$button = Button::make()
+		->label( __( 'Complete the Course', 'tutor' ) )
+		->icon( Icon::TICK_MARK )
+		->attr( 'type', 'button' );
+
+		if ( $course_progress < 100 ) {
+			$button->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" );
+		} else {
+			$button->attr( '@click', "handleCourseComplete({$course_id})" );
+			$button->attr( ':class', "courseCompleteMutation?.isPending ? 'tutor-btn-loading' : ''" );
+			$button->attr( ':disabled', 'courseCompleteMutation?.isPending' );
+		}
+
+		$button->render();
+	}
+
+	/**
+	 * Render course retake button
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string  $modal_id Modal id.
+	 *
+	 * @return void
+	 */
+	public static function render_course_retake_btn( string $modal_id ): void {
+		Button::make()
+		->label( __( 'Retake this Course', 'tutor' ) )
+		->icon( Icon::RELOAD_3 )
+		->variant( Variant::SECONDARY )
+		->attr( 'type', 'button' )
+		->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" )
+		->render();
 	}
 }

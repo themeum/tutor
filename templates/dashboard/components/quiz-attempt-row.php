@@ -9,8 +9,12 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 
 if ( empty( $attempt ) ) {
 	return;
@@ -21,6 +25,7 @@ $show_quiz_title = $show_quiz_title ?? false;
 $show_course     = $show_course ?? false;
 $attempt_number  = $attempt_number ?? null;
 $attempts_count  = $attempts_count ?? 0;
+$is_previous     = $is_previous ?? false;
 
 ?>
 <div class="tutor-quiz-attempts-item">
@@ -42,7 +47,7 @@ $attempts_count  = $attempts_count ?? 0;
 						);
 						?>
 						<span class="tutor-quiz-attempts-expand-icon">
-							<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 18, 18 ); ?>
+							<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN )->size( 18 )->render(); ?>
 						</span>
 					</button>
 				<?php endif; ?>
@@ -58,14 +63,16 @@ $attempts_count  = $attempts_count ?? 0;
 			</div>
 		<?php endif; ?>
 
-		<div class="tutor-quiz-item-info-course">
-			<?php esc_html_e( 'Course:', 'tutor' ); ?> 
-			<?php
-			PreviewTrigger::make()
-				->id( $course_id ?? 0 )
-				->render()
-			?>
-		</div>
+		<?php if ( ! $is_previous ) : ?>
+			<div class="tutor-quiz-item-info-course">
+				<?php esc_html_e( 'Course:', 'tutor' ); ?> 
+				<?php
+				PreviewTrigger::make()
+					->id( $course_id ?? 0 )
+					->render()
+				?>
+			</div>
+		<?php endif; ?>
 
 		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html( $attempt['date'] ?? '' ); ?></div>
 		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html__( 'Student Name: ', 'tutor' ) . esc_html( $attempt['student'] ); ?></div>
@@ -92,7 +99,7 @@ $attempts_count  = $attempts_count ?? 0;
 	</div>
 
 	<div class="tutor-quiz-item-time">
-		<?php tutor_utils()->render_svg_icon( Icon::STOPWATCH, 20, 20, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+		<?php SvgIcon::make()->name( Icon::STOPWATCH )->size( 20 )->color( Color::SECONDARY )->render(); ?>
 		<?php echo esc_html( $attempt['time_taken'] ?? '' ); ?>
 	</div>
 

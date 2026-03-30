@@ -124,6 +124,8 @@ declare global {
         url: string;
         is_enabled: number;
       }[];
+      kids_icons_registry: string[];
+      is_kids_mode: boolean;
       current_user: {
         data: {
           id: string;
@@ -180,6 +182,10 @@ declare global {
       };
       visibility_control?: {
         course_builder?: Record<string, string>;
+      };
+      quiz_options?: {
+        quiz_auto_start?: string;
+        feedback_mode?: string;
       };
     };
     wpApiSettings: {

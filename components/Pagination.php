@@ -26,8 +26,8 @@ defined( 'ABSPATH' ) || exit;
  *   ->current( 2 )
  *   ->total( 200 )
  *   ->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
- *   ->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
- *   ->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+ *   ->prev( SvgIcon::make()->name( Icon::CHEVRON_LEFT_2 )->get() )
+ *   ->next( SvgIcon::make()->name( Icon::CHEVRON_RIGHT_2 )->get() )
  *   ->render();
  * ```
  *
@@ -218,8 +218,8 @@ class Pagination extends BaseComponent {
 		$per_page  = max( ceil( $this->pagination_total / $this->pagination_limit ), 1 );
 		$current   = max( intval( $this->pagination_current ), 1 );
 		$format    = ! empty( $this->format ) ? $this->format : '?current_page=%#%';
-		$prev_text = ! empty( $this->prev ) ? $this->prev : tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 );
-		$next_text = ! empty( $this->next ) ? $this->next : tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 );
+		$prev_text = ! empty( $this->prev ) ? $this->prev : SvgIcon::make()->name( Icon::CHEVRON_LEFT_2 )->get();
+		$next_text = ! empty( $this->next ) ? $this->next : SvgIcon::make()->name( Icon::CHEVRON_RIGHT_2 )->get();
 		return paginate_links(
 			array(
 				'format'    => $format,

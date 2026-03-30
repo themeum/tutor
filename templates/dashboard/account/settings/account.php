@@ -50,11 +50,12 @@ $default_values = array(
 	'cover_photo'             => $settings_data['cover_photo_src'],
 );
 
-$default_values = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
+$default_values 					 = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
+$learning_mode                      = tutor_utils()->get_option( 'learning_mode', 'classic' );
 
 ?>
 
-<div class="tutor-account-section">
+<div class="tutor-account-section" data-tutor-ui="<?php echo esc_attr( $learning_mode ); ?>">
 	<?php do_action( 'tutor_profile_edit_form_before' ); ?>
 
 	<form
@@ -87,7 +88,10 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 								imagePreviewPlaceholder: '<?php esc_attr( $settings_data['profile_placeholder'] ); ?>',
 							})"
 							class="tutor-account-avatar" 
-							:class="open ? 'active' : ''"
+							:class="{
+								'active': open,
+								'is-loading': uploadProfilePhotoMutation?.isPending || removeProfilePhotoMutation?.isPending,
+							}"
 						>
 							<input
 								class="tutor-hidden"
@@ -99,7 +103,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 								@change="handleFileSelect($event)"
 							/>
 							<img 
-								:src="imagePreview ? imagePreview : '<?php echo esc_url( $default_values['profile_photo'] ); ?>'"
+								:src="imagePreview ? imagePreview : '<?php echo esc_url( $settings_data['profile_placeholder'] ); ?>'"
 								class="tutor-avatar-image"
 								alt="<?php esc_attr_e( 'User Avatar', 'tutor' ); ?>"
 							>

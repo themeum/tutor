@@ -81,7 +81,7 @@ use TUTOR\Icon;
 			<h3 class="tutor-h3 tutor-sm-text-h5 tutor-text-subdued tutor-mb-10 tutor-sm-mb-5">
 				<?php esc_html_e( 'Review your answers', 'tutor' ); ?>
 			</h3>
-			<div class="tutor-quiz-questions">
+			<div class="tutor-quiz tutor-quiz-questions">
 				<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.true-false' ); ?>
 				<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.multiple-choice' ); ?>
 				<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.image-answering' ); ?>

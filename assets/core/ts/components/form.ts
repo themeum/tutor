@@ -18,6 +18,7 @@ interface FieldConfig {
   defaultValue?: unknown;
   ref?: HTMLInputElement;
   type?: string;
+  isCheckboxArray?: boolean;
 }
 
 export interface ValidationRules {
@@ -417,8 +418,44 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       const type = element?.type ?? 'text';
       const isCheckbox = type === 'checkbox';
       const isFile = type === 'file';
+      const existingField = this.fields[name];
+      const isSameElement = existingField?.ref === element;
 
-      const defaultValue = this.values[name] ?? (isCheckbox ? (element?.checked ?? false) : '');
+      // Treat as checkbox group only when a different checkbox with the same name already exists; avoids upgrading a single checkbox to an array during re-registration (e.g., after DOM reorder).
+      const isCheckboxArray = isCheckbox && existingField?.type === 'checkbox' && !isSameElement;
+
+      let defaultValue: unknown;
+
+      if (isCheckboxArray) {
+        // Ensure array type for checkbox groups and include any existing checked value
+        const currentValue = this.values[name];
+        const aggregatedValues: string[] = Array.isArray(currentValue) ? [...currentValue] : [];
+
+        const existingCheckbox = existingField?.ref;
+        const existingChecked =
+          existingCheckbox?.checked ??
+          (typeof existingField?.defaultValue === 'boolean' ? existingField.defaultValue : false);
+
+        if (existingChecked) {
+          const existingValue = existingCheckbox?.value ?? 'on';
+          if (!aggregatedValues.includes(existingValue)) {
+            aggregatedValues.push(existingValue);
+          }
+        }
+
+        if (element?.checked) {
+          const currentValueToAdd = element.value ?? 'on';
+          if (!aggregatedValues.includes(currentValueToAdd)) {
+            aggregatedValues.push(currentValueToAdd);
+          }
+        }
+
+        defaultValue = aggregatedValues;
+      } else if (isCheckbox) {
+        defaultValue = this.values[name] ?? element?.checked ?? false;
+      } else {
+        defaultValue = this.values[name] ?? '';
+      }
 
       this.fields[name] = {
         name,
@@ -426,34 +463,89 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         defaultValue,
         ref: element,
         type,
+        isCheckboxArray,
       };
 
-      this.values[name] ??= defaultValue;
+      // Force upgrade value to array if a collision is detected
+      if (isCheckboxArray && !Array.isArray(this.values[name])) {
+        this.values[name] = defaultValue;
+      } else {
+        this.values[name] ??= defaultValue;
+      }
 
-      const valueExpression = isCheckbox ? '$event.target.checked' : '$event.target.value';
+      const valueExpression = isCheckboxArray
+        ? '$event.target.value'
+        : isCheckbox
+          ? '$event.target.checked'
+          : '$event.target.value';
 
       const bindings: Record<string, unknown> = {
         name,
         'x-ref': name,
-        ':aria-invalid': `!!errors.${name}`,
+        ':aria-invalid': `!!errors["${name}"]`,
         ':class': `{
-          'tutor-input-error': errors.${name},
-          'tutor-input-touched': touchedFields.${name},
-          'tutor-input-dirty': dirtyFields.${name}
+          'tutor-input-error': errors["${name}"],
+          'tutor-input-touched': touchedFields["${name}"],
+          'tutor-input-dirty': dirtyFields["${name}"]
         }`,
       };
 
       if (!isFile) {
-        bindings['x-model'] = `values.${name}`;
-        bindings['@input'] = `handleFieldInput('${name}', ${valueExpression})`;
+        bindings['x-model'] = `values["${name}"]`;
+
+        bindings['@input'] = `handleFieldInput('${name}', ${valueExpression}, $event.target)`;
+
         bindings['@blur'] = `handleFieldBlur('${name}', ${valueExpression})`;
       }
 
       return bindings;
     },
 
-    handleFieldInput(name: string, value: unknown): void {
+    handleCheckboxArrayInput(name: string, element?: HTMLInputElement): void {
       const field = this.fields[name];
+      const currentValue = this.values[name] as string[];
+      const valueArray = Array.isArray(currentValue) ? [...currentValue] : [];
+
+      // Use the passed element (from $event.target) or try to get from $refs
+      const checkbox = element || ((this as unknown as AlpineComponent).$refs[name] as HTMLInputElement);
+
+      if (!checkbox) return;
+
+      const checkboxValue = checkbox.value;
+      const isChecked = checkbox.checked;
+
+      let newValue: string[];
+      if (isChecked) {
+        newValue = valueArray.includes(checkboxValue) ? valueArray : [...valueArray, checkboxValue];
+      } else {
+        newValue = valueArray.filter((v) => v !== checkboxValue);
+      }
+
+      const defaultArray = Array.isArray(field.defaultValue) ? field.defaultValue : [];
+      // Sort to compare content regardless of order
+      const isActuallyChanged = JSON.stringify(newValue.sort()) !== JSON.stringify(defaultArray.sort());
+
+      this.values[name] = newValue;
+      this.dirtyFields[name] = isActuallyChanged;
+
+      const shouldValidate = this.config.mode === 'onChange' || this.touchedFields[name];
+
+      if (shouldValidate) {
+        this.validateField(name, newValue);
+      } else {
+        this.dispatchStateChange();
+      }
+    },
+
+    handleFieldInput(name: string, value: unknown, element?: HTMLInputElement): void {
+      const field = this.fields[name];
+
+      if (field?.isCheckboxArray) {
+        this.handleCheckboxArrayInput(name, element);
+        return;
+      }
+
+      // Original logic for non-checkbox-array fields
       const isNumber = field?.rules?.numberOnly;
       const allowNegative = typeof isNumber === 'object' && isNumber.allowNegative;
       const whole = typeof isNumber === 'object' && isNumber.whole;
@@ -508,12 +600,22 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       if (shouldTouch) this.touchedFields[name] = true;
       if (shouldDirty) {
         const field = this.fields[name];
-        this.dirtyFields[name] = String(value) !== String(field?.defaultValue ?? '');
+        // Handle array comparison for checkbox arrays
+        if (Array.isArray(value) && Array.isArray(field?.defaultValue)) {
+          this.dirtyFields[name] = JSON.stringify(value.sort()) !== JSON.stringify(field.defaultValue.sort());
+        } else {
+          this.dirtyFields[name] = String(value) !== String(field?.defaultValue ?? '');
+        }
       }
 
       const fieldElement = this.fields[name]?.ref;
       if (fieldElement && this.fields[name].type !== 'file') {
-        DOMUtils.updateElementValue(fieldElement, value);
+        // For checkbox arrays, we need to update all checkboxes with this name
+        if (Array.isArray(value) && fieldElement.type === 'checkbox') {
+          this.syncCheckboxArray(name, value as string[]);
+        } else {
+          DOMUtils.updateElementValue(fieldElement, value);
+        }
       }
 
       if (shouldValidate) {
@@ -814,8 +916,26 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       for (const [name, value] of Object.entries(this.values)) {
         const fieldRef = this.fields[name]?.ref;
         if (fieldRef) {
-          DOMUtils.updateElementValue(fieldRef, value);
+          // Handle checkbox arrays specially
+          if (Array.isArray(value) && fieldRef.type === 'checkbox') {
+            this.syncCheckboxArray(name, value as string[]);
+          } else {
+            DOMUtils.updateElementValue(fieldRef, value);
+          }
         }
+      }
+    },
+
+    syncCheckboxArray(name: string, values: string[]): void {
+      const component = this as unknown as AlpineComponent;
+      const formElement = component.$el.closest('form') || component.$el.parentElement;
+      const checkboxes = formElement?.querySelectorAll(`input[type="checkbox"][name="${name}"]`);
+
+      if (checkboxes) {
+        checkboxes.forEach((checkbox) => {
+          const input = checkbox as HTMLInputElement;
+          input.checked = values.includes(input.value);
+        });
       }
     },
 

@@ -194,6 +194,20 @@ class Popover extends BaseComponent {
 	}
 
 	/**
+	 * Set minimum width for popover
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $min_width the minimum width for popover.
+	 *
+	 * @return self
+	 */
+	public function min_width( int $min_width ): self {
+		$this->min_width = $min_width;
+		return $this;
+	}
+
+	/**
 	 * Set Popover body html.
 	 *
 	 * @since 4.0.0
@@ -352,7 +366,7 @@ class Popover extends BaseComponent {
 			'<button @click="hide()" class="tutor-popover-close">
 				%s
 			</button>',
-			tutor_utils()->get_svg_icon( Icon::CROSS, 14, 14 )
+			SvgIcon::make()->name( Icon::CROSS )->size( 14 )->get()
 		);
 
 		if ( $this->show_close_button ) {

@@ -10,18 +10,19 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Avatar;
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
 use TUTOR\Icon;
-use Tutor\Components\Button;
+use Tutor\Components\SvgIcon;
+use TUTOR\Dashboard;
 
 if ( ! tutor_utils()->count( $dashboard_pages ) ) {
 	return;
 }
 
 $active_nav        = '';
-$visible_nav_items = array_slice( $dashboard_pages, 0, 4, true );
-$more_nav_items    = array_slice( $dashboard_pages, 4, null, true );
+$visible_nav_items = array_slice( $dashboard_pages, 0, 3, true );
+$more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 
 ?>
 <div class="tutor-dashboard-nav-mobile">
@@ -41,32 +42,39 @@ $more_nav_items    = array_slice( $dashboard_pages, 4, null, true );
 			?>
 			<li>
 				<a class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $menu_link ?? '#' ); ?>">
-					<?php tutor_utils()->render_svg_icon( $menu_icon_name ); ?>
+					<?php SvgIcon::make()->name( $menu_icon_name )->render(); ?>
 					<span class="tutor-tiny"><?php echo esc_html( $item['title'] ); ?></span>
 				</a>
 			</li>
 			<?php
 		}
 		?>
+		<li>
+			<a href="<?php echo esc_url( Dashboard::get_account_page_url( 'profile' ) ); ?>">
+				<?php
+				Avatar::make()
+					->user( get_current_user_id() )
+					->size( Size::X_SMALL )
+					->attr( 'style', 'width: 15px; height: 15px;' )
+					->render();
+				?>
+				<span class="tutor-tiny"><?php esc_html_e( 'Profile', 'tutor' ); ?></span>
+			</a>
+		</li>
 		<?php
 		if ( tutor_utils()->count( $more_nav_items ) ) :
 			?>
 			<li x-data="tutorPopover({ placement: 'top-end', offset: 16 })">
-				<?php
-				Button::make()
-					->tag( 'button' )
-					->size( Size::SMALL )
-					->variant( Variant::SECONDARY )
-					->icon_only( true )
-					->icon( Icon::THREE_DOTS_VERTICAL, 'left', 20, 20 )
-					->attr( 'type', 'button' )
-					->attr( 'x-ref', 'trigger' )
-					->attr( '@click', 'toggle()' )
-					->attr( ':aria-expanded', "open ? 'true' : 'false'" )
-					->attr( 'aria-haspopup', 'true' )
-					->attr( 'aria-label', esc_attr__( 'More', 'tutor' ) )
-					->render();
-				?>
+				<button
+					type="button"
+					x-ref="trigger"
+					@click="toggle()"
+					:aria-expanded="open ? 'true' : 'false'"
+					aria-haspopup="true"
+				>
+					<?php SvgIcon::make()->name( Icon::THREE_DOTS_VERTICAL )->size( 16 )->render(); ?>
+					<span class="tutor-tiny"><?php esc_html_e( 'More', 'tutor' ); ?></span>
+				</button>
 				<!-- Popover panel -->
 				<div
 					x-ref="content"
@@ -92,7 +100,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 4, null, true );
 							?>
 								<li role="none">
 									<a role="menuitem" class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $menu_link ?? '#' ); ?>" @click="open = false">
-										<?php tutor_utils()->render_svg_icon( $menu_icon_name ); ?>
+										<?php SvgIcon::make()->name( $menu_icon_name )->render(); ?>
 										<span class="tutor-tiny"><?php echo esc_html( $item['title'] ); ?></span>
 									</a>
 								</li>

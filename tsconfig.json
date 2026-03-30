@@ -11,8 +11,8 @@
     "noEmit": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "module": "Node16",
-    "moduleResolution": "node16",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
@@ -35,10 +35,11 @@
       "@CouponDetails/*": ["assets/src/js/v3/entries/coupon-details/*"],
       "@AddonList/*": ["assets/src/js/v3/entries/addon-list/*"],
       "@ImportExport/*": ["assets/src/js/v3/entries/import-export/*"],
+      "@FrontendComponents/*": ["assets/src/js/frontend/components/*"],
       "@FrontendTypes/*": ["assets/src/js/frontend/types/*"],
       "@FrontendServices/*": ["assets/src/js/frontend/services/*"],
       "@FrontendDashboard/*": ["assets/src/js/frontend/dashboard/*"],
-      "@LearningArea/*": ["assets/src/js/frontend/learning-area/*"],
+      "@LearningArea/*": ["assets/src/js/frontend/learning-area/*"]
     }
   },
   "include": [
