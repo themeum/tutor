@@ -5769,6 +5769,41 @@ class Utils {
 	}
 
 	/**
+	 * Check if the current page is course list page
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_course_list_page(): bool {
+		$is_course_list_page = false;
+
+		$post_type = get_query_var( 'post_type' );
+		if ( ! is_array( $post_type ) ) {
+			$post_type = array( $post_type );
+		}
+
+		$course_category = get_query_var( 'course-category' );
+
+		if ( ( in_array( tutor()->course_post_type, $post_type, true ) || ! empty( $course_category ) ) && is_archive() ) {
+			$is_course_list_page = true;
+		}
+
+		return $is_course_list_page;
+	}
+
+	/**
+	 * Check if the current page is course details page
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_course_details_page() {
+		return (bool) is_single() && tutor()->course_post_type === get_post_type();
+	}
+
+	/**
 	 * Check is wishlisted.
 	 *
 	 * @since 1.0.0
