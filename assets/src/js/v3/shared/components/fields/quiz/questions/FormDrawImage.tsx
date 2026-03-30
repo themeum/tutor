@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
@@ -30,7 +30,11 @@ import {
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
 
-const INSTRUCTOR_STROKE_STYLE = 'rgba(255, 0, 0, 0.9)';
+/** Same lasso visuals as FormPinImage (feat/quiz-type-pin-image) for instructor region marking. */
+const LASSO_FILL_STYLE = 'rgba(220, 53, 69, 0.45)';
+const LASSO_STROKE_STYLE = 'rgba(220, 53, 69, 0.95)';
+const LASSO_DASH_PATTERN = [8, 6];
+const LASSO_MIN_POINT_DISTANCE = 4;
 
 interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
@@ -50,9 +54,14 @@ interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
 const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
   const option = field.value;
 
+  const [isDrawModeActive, setIsDrawModeActive] = useState(false);
+
   const imageRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawInstanceRef = useRef<{ destroy: () => void } | null>(null);
+  const isLassoDrawingRef = useRef(false);
+  const lassoPointsRef = useRef<Array<{ x: number; y: number }>>([]);
+  const baseImageDataRef = useRef<ImageData | null>(null);
 
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
@@ -61,6 +70,56 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
     [field],
   );
 
+  /** Display-only: sync canvas size and draw saved mask when not in draw mode. */
+  const syncCanvasDisplay = useCallback((maskUrl?: string) => {
+    const img = imageRef.current;
+    const canvas = canvasRef.current;
+
+    if (!img || !canvas) {
+      return;
+    }
+
+    if (!img.complete) {
+      return;
+    }
+
+    const container = img.parentElement;
+    if (!container) {
+      return;
+    }
+
+    const rect = container.getBoundingClientRect();
+    const width = Math.round(rect.width);
+    const height = Math.round(rect.height);
+
+    if (!width || !height) {
+      return;
+    }
+
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (maskUrl) {
+      const maskImg = new Image();
+      maskImg.onload = () => {
+        ctx.drawImage(maskImg, 0, 0, canvas.width, canvas.height);
+      };
+      maskImg.src = maskUrl;
+    }
+  }, []);
+
   const { openMediaLibrary, resetFiles } = useWPMedia({
     options: {
       type: 'image',
@@ -68,7 +127,6 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
     onChange: (file) => {
       if (file && !Array.isArray(file) && option) {
         const { id, url } = file;
-        // Clear previous draw when image is replaced — the saved mask was for the old image.
         const updated: QuizQuestionOption = {
           ...option,
           ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
@@ -79,11 +137,11 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
           answer_two_gap_match: '',
         };
         updateOption(updated);
-        // Clean up draw instance and canvas so the new image shows without the old mask.
         if (drawInstanceRef.current) {
           drawInstanceRef.current.destroy();
           drawInstanceRef.current = null;
         }
+        setIsDrawModeActive(false);
       }
     },
     initialFiles: option?.image_id
@@ -96,46 +154,199 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
   });
 
   useEffect(() => {
-    const imageUrl = option?.image_url;
-    if (!imageUrl) {
+    if (isDrawModeActive) {
+      return;
+    }
+    syncCanvasDisplay(option?.answer_two_gap_match || undefined);
+  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match, syncCanvasDisplay]);
+
+  useEffect(() => {
+    if (isDrawModeActive) {
+      return;
+    }
+    const img = imageRef.current;
+    if (!img) {
+      return;
+    }
+    const handleLoad = () => {
+      syncCanvasDisplay(option?.answer_two_gap_match || undefined);
+    };
+    img.addEventListener('load', handleLoad);
+    return () => {
+      img.removeEventListener('load', handleLoad);
+    };
+  }, [isDrawModeActive, option?.answer_two_gap_match, syncCanvasDisplay]);
+
+  useEffect(() => {
+    if (isDrawModeActive) {
       return;
     }
     const img = imageRef.current;
     const canvas = canvasRef.current;
-    const api = typeof window !== 'undefined' ? window.TutorCore?.drawOnImage : undefined;
-    if (!img || !canvas || !api?.init) {
+    if (!img || !canvas) {
       return;
     }
-    // Only initialize once per mount; keep the same instance while the instructor is drawing.
-    if (drawInstanceRef.current) {
+    const container = img.parentElement;
+    if (!container) {
       return;
     }
-    const brushSize = 1;
-    const currentOption: QuizQuestionOption | null = option ?? null;
-    const instance = api.init({
-      image: img,
-      canvas,
-      brushSize,
-      strokeStyle: INSTRUCTOR_STROKE_STYLE,
-      initialMaskUrl: currentOption?.answer_two_gap_match || undefined,
-      onMaskChange: (maskValue: string) => {
-        if (!currentOption) {
-          return;
-        }
-        updateOption({
-          ...currentOption,
-          ...(calculateQuizDataStatus(currentOption._data_status, QuizDataStatus.UPDATE) && {
-            _data_status: calculateQuizDataStatus(currentOption._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
-          }),
-          answer_two_gap_match: maskValue,
-          is_saved: true,
-        });
-      },
+    const resizeObserver = new ResizeObserver(() => {
+      syncCanvasDisplay(option?.answer_two_gap_match || undefined);
     });
-    drawInstanceRef.current = instance;
-  }, [option, updateOption]);
+    resizeObserver.observe(container);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match, syncCanvasDisplay]);
 
-  // Cleanup shared instance on unmount.
+  // Draw-image instructor UI: same lasso polygon flow as FormPinImage (feat/quiz-type-pin-image).
+  useEffect(() => {
+    if (!isDrawModeActive || !option?.image_url) {
+      return;
+    }
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+
+    if (drawInstanceRef.current) {
+      drawInstanceRef.current.destroy();
+      drawInstanceRef.current = null;
+    }
+
+    const getPointFromEvent = (event: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (event.clientX - rect.left) * scaleX;
+      const y = (event.clientY - rect.top) * scaleY;
+      return {
+        x: Math.max(0, Math.min(canvas.width, x)),
+        y: Math.max(0, Math.min(canvas.height, y)),
+      };
+    };
+
+    const renderPathPreview = () => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        return;
+      }
+
+      const points = lassoPointsRef.current;
+      if (!baseImageDataRef.current || points.length < 2) {
+        return;
+      }
+
+      ctx.putImageData(baseImageDataRef.current, 0, 0);
+      ctx.beginPath();
+      ctx.moveTo(points[0]?.x || 0, points[0]?.y || 0);
+      points.forEach((point, index) => {
+        if (index > 0) {
+          ctx.lineTo(point.x, point.y);
+        }
+      });
+      ctx.lineTo(points[0]?.x || 0, points[0]?.y || 0);
+      ctx.closePath();
+
+      ctx.fillStyle = LASSO_FILL_STYLE;
+      ctx.fill();
+
+      ctx.setLineDash(LASSO_DASH_PATTERN);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = LASSO_STROKE_STYLE;
+      ctx.stroke();
+      ctx.setLineDash([]);
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.button !== 0) {
+        return;
+      }
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        return;
+      }
+      canvas.setPointerCapture(event.pointerId);
+      isLassoDrawingRef.current = true;
+      lassoPointsRef.current = [getPointFromEvent(event)];
+      baseImageDataRef.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!isLassoDrawingRef.current) {
+        return;
+      }
+      const nextPoint = getPointFromEvent(event);
+      const points = lassoPointsRef.current;
+      const lastPoint = points[points.length - 1];
+      if (!lastPoint) {
+        points.push(nextPoint);
+        renderPathPreview();
+        return;
+      }
+      const dx = nextPoint.x - lastPoint.x;
+      const dy = nextPoint.y - lastPoint.y;
+      if (Math.hypot(dx, dy) < LASSO_MIN_POINT_DISTANCE) {
+        return;
+      }
+      points.push(nextPoint);
+      renderPathPreview();
+    };
+
+    const finishLasso = () => {
+      if (!isLassoDrawingRef.current) {
+        return;
+      }
+      isLassoDrawingRef.current = false;
+      const points = lassoPointsRef.current;
+      if (points.length >= 3) {
+        renderPathPreview();
+      } else if (baseImageDataRef.current) {
+        const ctx = canvas.getContext('2d');
+        ctx?.putImageData(baseImageDataRef.current, 0, 0);
+      }
+      lassoPointsRef.current = [];
+      baseImageDataRef.current = null;
+    };
+
+    const onPointerUp = (event: PointerEvent) => {
+      if (canvas.hasPointerCapture(event.pointerId)) {
+        canvas.releasePointerCapture(event.pointerId);
+      }
+      finishLasso();
+    };
+
+    const onPointerCancel = (event: PointerEvent) => {
+      if (canvas.hasPointerCapture(event.pointerId)) {
+        canvas.releasePointerCapture(event.pointerId);
+      }
+      finishLasso();
+    };
+
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerup', onPointerUp);
+    canvas.addEventListener('pointercancel', onPointerCancel);
+
+    const instance = {
+      destroy: () => {
+        canvas.removeEventListener('pointerdown', onPointerDown);
+        canvas.removeEventListener('pointermove', onPointerMove);
+        canvas.removeEventListener('pointerup', onPointerUp);
+        canvas.removeEventListener('pointercancel', onPointerCancel);
+        isLassoDrawingRef.current = false;
+        lassoPointsRef.current = [];
+        baseImageDataRef.current = null;
+      },
+    };
+    drawInstanceRef.current = instance;
+
+    return () => {
+      instance.destroy();
+      drawInstanceRef.current = null;
+    };
+  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match]);
+
   useEffect(() => {
     return () => {
       if (drawInstanceRef.current) {
@@ -145,11 +356,34 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
     };
   }, []);
 
-  if (!option) {
-    return null;
-  }
+  const persistCanvasMask = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !option) {
+      return;
+    }
+
+    const dataUrl = canvas.toDataURL('image/png');
+    const blank = document.createElement('canvas');
+    blank.width = canvas.width;
+    blank.height = canvas.height;
+    const isEmpty = dataUrl === blank.toDataURL();
+
+    const updated: QuizQuestionOption = {
+      ...option,
+      ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
+        _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
+      }),
+      answer_two_gap_match: isEmpty ? '' : dataUrl,
+      is_saved: true,
+    };
+    updateOption(updated);
+  }, [option, updateOption]);
 
   const handleClear = () => {
+    if (!option) {
+      return;
+    }
+
     if (drawInstanceRef.current) {
       drawInstanceRef.current.destroy();
       drawInstanceRef.current = null;
@@ -172,11 +406,27 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
     updateOption(updated);
   };
 
+  const handleCanvasMouseEnter = () => {
+    setIsDrawModeActive(true);
+  };
+
+  const handleCanvasMouseLeave = () => {
+    if (!isLassoDrawingRef.current) {
+      setIsDrawModeActive(false);
+    }
+  };
+
   const clearImage = () => {
+    if (!option) {
+      return;
+    }
+
     if (drawInstanceRef.current) {
       drawInstanceRef.current.destroy();
       drawInstanceRef.current = null;
     }
+    setIsDrawModeActive(false);
+
     const updated: QuizQuestionOption = {
       ...option,
       ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
@@ -196,9 +446,34 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
     }
   };
 
+  useEffect(() => {
+    if (!isDrawModeActive || !option?.image_url) {
+      return;
+    }
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+
+    const onPointerUp = () => {
+      persistCanvasMask();
+    };
+
+    canvas.addEventListener('pointerup', onPointerUp);
+    canvas.addEventListener('pointercancel', onPointerUp);
+
+    return () => {
+      canvas.removeEventListener('pointerup', onPointerUp);
+      canvas.removeEventListener('pointercancel', onPointerUp);
+    };
+  }, [isDrawModeActive, option?.image_url, persistCanvasMask]);
+
+  if (!option) {
+    return null;
+  }
+
   return (
     <div css={styles.wrapper}>
-      {/* Section 1: Image upload only — one reference shown in Mark the correct area */}
       <div css={styles.card}>
         <div css={styles.imageInputWrapper}>
           <ImageInput
@@ -221,7 +496,6 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
         </div>
       </div>
 
-      {/* Section 2: Mark the correct area — single reference image + interactive drawing canvas */}
       <Show when={option?.image_url}>
         <div css={styles.card}>
           <div css={styles.answerHeader}>
@@ -241,7 +515,7 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
               {__('Clear', __TUTOR_TEXT_DOMAIN__)}
             </Button>
           </div>
-          <div css={styles.canvasInner}>
+          <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
             <img
               ref={imageRef}
               src={option?.image_url}
@@ -250,8 +524,8 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
             />
             <canvas
               ref={canvasRef}
-              css={[styles.canvas, styles.canvasDrawMode]}
-              aria-label={__('Draw the correct area with the brush', __TUTOR_TEXT_DOMAIN__)}
+              css={[styles.canvas, isDrawModeActive ? styles.canvasDrawMode : styles.canvasIdleMode]}
+              aria-label={__('Draw a lasso around the correct answer area', __TUTOR_TEXT_DOMAIN__)}
             />
             <div css={styles.drawBadge}>
               <SVGIcon name="edit" width={18} height={18} aria-hidden />
@@ -345,6 +619,7 @@ const styles = {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 1;
   `,
   canvasIdleMode: css`
     pointer-events: none;
@@ -358,6 +633,7 @@ const styles = {
     position: absolute;
     top: ${spacing[12]};
     right: ${spacing[12]};
+    z-index: 2;
     width: 32px;
     height: 32px;
     border-radius: 999px;
@@ -368,11 +644,6 @@ const styles = {
     justify-content: center;
     color: ${colorTokens.text.subdued};
     box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
-  `,
-  actionsRow: css`
-    ${styleUtils.display.flex('row')};
-    gap: ${spacing[12]};
-    flex-wrap: wrap;
   `,
   clearButton: css`
     width: 94px;
@@ -398,11 +669,6 @@ const styles = {
   `,
   clearIcon: css`
     color: ${colorTokens.text.brand};
-  `,
-  brushHint: css`
-    ${typography.caption()};
-    color: ${colorTokens.text.subdued};
-    margin: 0;
   `,
   savedHint: css`
     ${typography.caption()};
