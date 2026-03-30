@@ -124,6 +124,8 @@ declare global {
         url: string;
         is_enabled: number;
       }[];
+      kids_icons_registry: string[];
+      is_kids_mode: boolean;
       current_user: {
         data: {
           id: string;

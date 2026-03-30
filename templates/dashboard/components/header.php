@@ -78,6 +78,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 					x-show="open"
 					x-cloak
 					@click.outside="handleClickOutside()"
+					x-transition.origin.top.right
 					class="tutor-popover tutor-dashboard-header-user-popover"
 				>
 					<div class="tutor-dashboard-header-user-popover-profile">
@@ -174,9 +175,9 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								<?php
 								Button::make()
 								->label( $button_label )
-								->size( Size::MEDIUM )
+								->size( Size::SMALL )
 								->variant( Variant::PRIMARY_SOFT )
-								->icon( Icon::RELOAD, 'left', 20, 20 )
+								->icon( Icon::RELOAD )
 								->attr( ':disabled', 'profileSwitchMutation?.isPending' )
 								->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
 								->attr( 'class', 'tutor-w-full' )
