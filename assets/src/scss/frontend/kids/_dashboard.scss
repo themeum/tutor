@@ -27,6 +27,10 @@
     border-radius: $tutor-radius-3xl;
   }
 
+  .tutor-dashboard-header-user-popover-profile {
+    border-radius: $tutor-radius-3xl;
+  }
+
   // home
   .tutor-student-dashboard-courses {
     .tutor-card.tutor-progress-card:not(:first-child) {

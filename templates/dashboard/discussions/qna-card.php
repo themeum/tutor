@@ -283,10 +283,10 @@ $single_url = UrlHelper::add_query_params(
 							<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'read' && currentQuestionId === <?php echo esc_html( $question_id ); ?>)">
 								<span class="tutor-flex">
 									<template x-if="isUnread">
-										<?php tutor_utils()->render_svg_icon( Icon::READ, 20, 20 ); ?>
+										<?php SVGIcon::make()->name( Icon::READ )->size( 20 )->render(); ?>
 									</template>
 									<template x-if="!isUnread">
-										<?php tutor_utils()->render_svg_icon( Icon::UNREAD, 20, 20 ); ?>
+										<?php SVGIcon::make()->name( Icon::UNREAD )->size( 20 )->render(); ?>
 									</template>
 								</span>
 							</template>
