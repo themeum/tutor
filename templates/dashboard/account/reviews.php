@@ -41,7 +41,7 @@ $bin_icon = SvgIcon::make()->name( Icon::BIN )->get();
 <?php require_once tutor_get_template( 'account-header' ); ?>
 
 <div class="tutor-user-reviews tutor-py-9">
-	<div class="tutor-profile-container">
+	<div class="tutor-account-container">
 	<?php if ( $review_count > 0 ) : ?>
 		<div class="tutor-flex tutor-flex-column tutor-gap-5">
 			<?php foreach ( $reviews as $review ) : ?>

@@ -11,8 +11,12 @@
   margin: 0;
   min-height: auto;
   border: 1px solid $tutor-border-idle;
-  border-radius: $tutor-radius-md;
+  border-color: $tutor-input-border-color;
+  border-radius: $tutor-input-radius;
   background-color: $tutor-surface-l1;
+  font-weight: $tutor-input-font-weight;
+  --tutor-input-border-shadow-current: #{$tutor-input-border-shadow};
+  box-shadow: var(--tutor-input-border-shadow-current);
   @include tutor-transition(all);
 
   -moz-appearance: textfield;
@@ -34,11 +38,13 @@
   &:focus {
     @include tutor-focus-ring();
     border-color: $tutor-border-brand-tertiary;
+    --tutor-input-border-shadow-current: none;
   }
 
   &:disabled {
     background-color: $tutor-surface-l1-hover;
     cursor: not-allowed;
+    --tutor-input-border-shadow-current: none;
   }
 
   @if $size == sm {

@@ -1288,11 +1288,6 @@ class InputField extends BaseComponent {
 	 * @return string
 	 */
 	protected function render_select_input(): string {
-
-		if ( ! count( $this->options ) && ! count( $this->groups ) ) {
-			return '';
-		}
-
 		$props = array(
 			'options'           => $this->options,
 			'groups'            => $this->groups,
