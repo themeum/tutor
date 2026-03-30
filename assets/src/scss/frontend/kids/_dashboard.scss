@@ -82,9 +82,12 @@
 
   // user account/profile
   .tutor-user-profile {
-    .tutor-profile-card,
-    .tutor-statistic-card {
-      @include tutor-kids-shadow;
+    .tutor-profile-card {
+      @include tutor-kids-shadow(false);
+    }
+
+    .tutor-user-profile-statistics .tutor-statistic-card {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-3xl);
     }
 
     .tutor-profile-card-header {
