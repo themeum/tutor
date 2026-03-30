@@ -13,6 +13,8 @@
 
 namespace Tutor\Components;
 
+use Tutor\Helpers\UrlHelper;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -274,7 +276,7 @@ class WPEditor extends BaseComponent {
 			'textarea_name' => $this->name,
 			'tinymce'       => array(
 				'skin'        => 'light',
-				'skin_url'    => tutor()->url . 'assets/lib/tinymce/light',
+				'skin_url'    => UrlHelper::asset( 'lib/tinymce/light' ),
 				'content_css' => $this->get_content_css(),
 			),
 		);
@@ -296,7 +298,7 @@ class WPEditor extends BaseComponent {
 			array(
 				includes_url( 'css/dashicons.min.css' ),
 				includes_url( 'js/tinymce/skins/wordpress/wp-content.css' ),
-				tutor()->url . 'assets/lib/tinymce/light/content.min.css',
+				UrlHelper::asset( 'lib/tinymce/light/content.min.css' ),
 			)
 		);
 	}
