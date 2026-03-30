@@ -108,7 +108,7 @@ $user_preferences = UserPreference::get_preferences();
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">
 					<div class="tutor-preferences-setting-icon">
-						<?php SvgIcon::make()->name( Icon::ADDONS )->size( 20 )->render(); ?>
+						<?php SvgIcon::make()->name( Icon::LEARNING_MOOD )->size( 20 )->render(); ?>
 					</div>
 					<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Learning Mode', 'tutor' ); ?></span>
 				</div>
