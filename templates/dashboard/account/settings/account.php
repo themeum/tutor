@@ -17,6 +17,7 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
+use Tutor\Options_V2;
 
 $user          = wp_get_current_user();
 $settings_data = User::get_profile_settings_data( $user->ID );
@@ -50,8 +51,8 @@ $default_values = array(
 	'cover_photo'             => $settings_data['cover_photo_src'],
 );
 
-$default_values 					 = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
-$learning_mode                      = tutor_utils()->get_option( 'learning_mode', 'classic' );
+$default_values = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
+$learning_mode  = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN );
 
 ?>
 
