@@ -15,6 +15,7 @@ use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Ecommerce\Settings;
 use Tutor\Models\CourseModel;
+use Tutor\Options_V2;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -164,6 +165,17 @@ class Assets {
 
 		$tutor_settings = Options_V2::get_only( $required_options );
 
+		// Load available kids mode icons to avoid frontend 404s if kids mode is active.
+		$kids_icons = array();
+		if ( tutor_utils()->is_kids_mode() ) {
+			$kids_icons = array_map(
+				function ( $file ) {
+					return basename( $file, '.svg' );
+				},
+				glob( tutor()->path . 'assets/icons/kids/*.svg' ) ?: array()
+			);
+		}
+
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => rtrim( get_home_url(), '/' ),
@@ -197,6 +209,8 @@ class Assets {
 			'settings'                     => $tutor_settings,
 			'max_upload_size'              => wp_max_upload_size(),
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
+			'kids_icons_registry'          => $kids_icons,
+			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
 		);
 	}
 

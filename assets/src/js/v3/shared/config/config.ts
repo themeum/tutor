@@ -41,6 +41,8 @@ const defaultTutorConfig = {
   bp_groups: [],
   timezones: {},
   addons_data: [],
+  kids_icons_registry: [],
+  is_kids_mode: false,
   current_user: {
     data: {
       id: '',
