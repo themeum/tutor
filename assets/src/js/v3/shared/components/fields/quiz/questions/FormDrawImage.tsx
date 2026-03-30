@@ -474,27 +474,50 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
 
   return (
     <div css={styles.wrapper}>
-      <div css={styles.card}>
-        <div css={styles.imageInputWrapper}>
-          <ImageInput
-            value={
-              option?.image_id
-                ? {
-                    id: Number(option.image_id),
-                    url: option.image_url || '',
-                    title: option.image_url || '',
-                  }
-                : null
-            }
-            buttonText={__('Upload Image', __TUTOR_TEXT_DOMAIN__)}
-            infoText={__('Upload the base image students will draw on.', __TUTOR_TEXT_DOMAIN__)}
-            uploadHandler={openMediaLibrary}
-            clearHandler={clearImage}
-            emptyImageCss={styles.imageInput}
-            previewImageCss={styles.imageInput}
-          />
+      <Show when={!option?.image_url}>
+        <div css={styles.card}>
+          <div css={styles.imageInputWrapper}>
+            <ImageInput
+              value={
+                option?.image_id
+                  ? {
+                      id: Number(option.image_id),
+                      url: option.image_url || '',
+                      title: option.image_url || '',
+                    }
+                  : null
+              }
+              buttonText={__('Upload Image', __TUTOR_TEXT_DOMAIN__)}
+              infoText={__('Upload the base image students will draw on.', __TUTOR_TEXT_DOMAIN__)}
+              uploadHandler={openMediaLibrary}
+              clearHandler={clearImage}
+              emptyImageCss={styles.imageInput}
+              previewImageCss={styles.imageInput}
+            />
+          </div>
         </div>
-      </div>
+      </Show>
+
+      <Show when={option?.image_url}>
+        <div css={styles.card}>
+          <div css={styles.uploadedImageWrapper}>
+            <img
+              src={option?.image_url}
+              alt={__('Background image for marking correct area', __TUTOR_TEXT_DOMAIN__)}
+              css={styles.uploadedImage}
+              onClick={openMediaLibrary}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  openMediaLibrary();
+                }
+              }}
+            />
+          </div>
+        </div>
+      </Show>
 
       <Show when={option?.image_url}>
         <div css={styles.card}>
@@ -527,9 +550,6 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
               css={[styles.canvas, isDrawModeActive ? styles.canvasDrawMode : styles.canvasIdleMode]}
               aria-label={__('Draw a lasso around the correct answer area', __TUTOR_TEXT_DOMAIN__)}
             />
-            <div css={styles.drawBadge}>
-              <SVGIcon name="edit" width={18} height={18} aria-hidden />
-            </div>
           </div>
           {precisionControl && <div>{precisionControl}</div>}
           <Show when={option?.answer_two_gap_match}>
@@ -576,6 +596,16 @@ const styles = {
     max-width: 100%;
   `,
   imageInput: css`
+    border-radius: ${borderRadius.card};
+  `,
+  uploadedImageWrapper: css`
+    max-width: 100%;
+  `,
+  uploadedImage: css`
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: pointer;
     border-radius: ${borderRadius.card};
   `,
   answerHeader: css`
