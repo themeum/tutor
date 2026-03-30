@@ -17,9 +17,9 @@ $attempts_allowed  = tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed
 $attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
 $feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
 
-if ( Input::has( 'view_quiz_attempt_id' ) ) {
+if ( Input::has( 'attempt_id' ) ) {
 	// Load single attempt details if ID provided.
-	$attempt_id = Input::get( 'view_quiz_attempt_id', 0, Input::TYPE_INT );
+	$attempt_id = Input::get( 'attempt_id', 0, Input::TYPE_INT );
 	if ( $attempt_id ) {
 		$user_id      = get_current_user_id();
 		$attempt_data = tutils()->get_attempt( $attempt_id );

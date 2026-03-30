@@ -1,0 +1,210 @@
+import { DragDropManager, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
+import { RestrictToElement } from '@dnd-kit/dom/modifiers';
+import { Sortable } from '@dnd-kit/dom/sortable';
+import type { AjaxResponse } from '@FrontendTypes/index';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { __ } from '@wordpress/i18n';
+
+export const sortSections = (sectionsIds: string[]) => {
+  const toast = window.TutorCore.toast;
+
+  return {
+    _sortables: [] as Sortable[],
+    _sortableSections: [] as HTMLElement[],
+    initialized: false,
+    sectionsIds: sectionsIds,
+    $el: null as HTMLElement | null,
+
+    init() {
+      if (!this.initialized) {
+        this.setupDrag();
+        this.initialized = true;
+      }
+    },
+
+    setupDrag() {
+      const container = this.$el;
+      if (!container) {
+        return;
+      }
+
+      const manager = new DragDropManager({
+        sensors: [PointerSensor, KeyboardSensor],
+      });
+
+      const items = Array.from(container.querySelectorAll<HTMLElement>('.tutor-popover-menu-item'));
+
+      this._sortables = [];
+      this._sortableSections = [];
+
+      for (const [idx, element] of items.entries()) {
+        const handle = element.querySelector('[data-grab]') as HTMLElement | null;
+        const id = element.dataset.id ?? String(idx);
+
+        const sortable = new Sortable(
+          {
+            id,
+            index: idx,
+            element: element,
+            handle: handle ?? undefined,
+            modifiers: [
+              RestrictToElement.configure({
+                element: this.$el,
+              }),
+            ],
+          },
+          manager,
+        );
+
+        this._sortables.push(sortable);
+      }
+
+      manager.monitor.addEventListener('dragstart', (event) => {
+        const operation = event.operation;
+        if (!operation.source) {
+          return;
+        }
+
+        const sourceElement = operation.source.element;
+        if (!sourceElement) {
+          return;
+        }
+      });
+
+      manager.monitor.addEventListener('dragend', async (event) => {
+        const operation = event.operation;
+        if (!operation.source) {
+          return;
+        }
+
+        const sourceElement = operation.source.element;
+        if (!sourceElement) {
+          return;
+        }
+
+        const order = this.getOrder();
+        try {
+          const response = await wpAjaxInstance.post<undefined, AjaxResponse>(
+            'tutor_save_instructor_home_sections_order',
+            { order },
+          );
+
+          if (!response.success) {
+            toast.error((response?.data as string) || __('Failed to save instructor home section order.', 'tutor'));
+            return;
+          }
+        } catch (error) {
+          const message = error instanceof Error ? error.message : __('Unknown error occurred.', 'tutor');
+          toast.error(message);
+          return;
+        }
+
+        if ('startViewTransition' in document) {
+          setTimeout(() => {
+            document.startViewTransition(() => this.updateDom());
+          }, 260);
+        } else {
+          this.updateDom();
+        }
+      });
+    },
+
+    async handleCheckboxClick() {
+      const items = Array.from(document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')).reduce(
+        (acc, checkbox) => {
+          acc[checkbox.name] = checkbox.checked;
+          return acc;
+        },
+        {} as Record<string, boolean>,
+      );
+
+      try {
+        const response = await wpAjaxInstance.post<undefined, AjaxResponse>(
+          'tutor_save_instructor_home_sections_visibility',
+          { items },
+        );
+
+        if (!response.success) {
+          toast.error((response?.data as string) || __('Failed to save instructor home section visibility.', 'tutor'));
+          return;
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : __('Unknown error occurred.', 'tutor');
+        toast.error(message);
+        return;
+      }
+    },
+
+    updateDom() {
+      const newOrder = this.getOrder();
+      const sectionMap = this.getSortableSections();
+
+      const firstSectionId = Object.keys(sectionMap)[0];
+      const parentContainer = firstSectionId ? sectionMap[firstSectionId]?.parentElement : null;
+
+      if (!parentContainer) {
+        return;
+      }
+
+      const existingOrder = Array.from(
+        new Set(
+          Array.from(parentContainer.querySelectorAll<HTMLElement>('[data-section-id]'))
+            .map((el) => el.dataset.sectionId)
+            .filter((id): id is string => id !== undefined),
+        ),
+      );
+
+      if (newOrder.length === existingOrder.length && newOrder.every((id, index) => id === existingOrder[index])) {
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+
+      for (const id of newOrder) {
+        const section = sectionMap[id];
+        if (section) {
+          section.remove();
+          fragment.appendChild(section);
+        }
+      }
+
+      parentContainer.appendChild(fragment);
+    },
+
+    getOrder() {
+      const container = this.$el;
+      if (!container) {
+        return [];
+      }
+      const ids = Array.from(container.querySelectorAll<HTMLElement>('.tutor-popover-menu-item'))
+        .map((el) => el.dataset.id)
+        .filter((id): id is string => id !== undefined);
+
+      return Array.from(new Set(ids));
+    },
+
+    getSortableSections() {
+      const sections = document.querySelectorAll<HTMLElement>('[data-section-id]');
+
+      return Array.from(sections).reduce(
+        (acc, section) => {
+          const sectionId = section.dataset.sectionId;
+          if (sectionId) {
+            acc[sectionId] = section;
+          }
+          return acc;
+        },
+        {} as Record<string, HTMLElement>,
+      );
+    },
+
+    destroy() {
+      for (const sortable of this._sortables) {
+        sortable.destroy();
+      }
+      this._sortables = [];
+
+      this.initialized = false;
+    },
+  };
+};

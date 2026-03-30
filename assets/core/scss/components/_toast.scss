@@ -1,0 +1,148 @@
+// Toast Component
+
+@use '../mixins' as *;
+@use '../tokens' as *;
+
+.tutor-toast-container {
+  position: fixed;
+  z-index: $tutor-z-highest;
+  pointer-events: none;
+
+  // Position variants
+  &-top-right {
+    top: $tutor-spacing-6;
+    inset-inline-end: $tutor-spacing-6;
+  }
+
+  &-top-left {
+    top: $tutor-spacing-6;
+    inset-inline-start: $tutor-spacing-6;
+  }
+
+  &-top-center {
+    top: $tutor-spacing-6;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &-bottom-right {
+    bottom: $tutor-spacing-6;
+    inset-inline-end: $tutor-spacing-6;
+  }
+
+  &-bottom-left {
+    bottom: $tutor-spacing-6;
+    inset-inline-start: $tutor-spacing-6;
+  }
+
+  &-bottom-center {
+    bottom: $tutor-spacing-6;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  // Stacking
+  .tutor-toast {
+    margin-bottom: $tutor-spacing-4;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.tutor-toast {
+  @include tutor-flex(row, center, flex-start);
+  gap: $tutor-spacing-4;
+  width: 320px;
+  padding: $tutor-spacing-5 $tutor-spacing-6;
+  border-radius: $tutor-radius-full;
+  pointer-events: auto;
+  position: relative;
+
+  // RTL support
+  [dir='rtl'] & {
+    flex-direction: row-reverse;
+  }
+
+  &-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    @include tutor-flex(row, center, center);
+    border-radius: $tutor-radius-full;
+    color: $tutor-icon-idle-inverse;
+  }
+
+  &-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &-title {
+    @include tutor-typography(medium, medium);
+  }
+
+  &-message {
+    @include tutor-typography(tiny, regular, secondary);
+  }
+
+  &-close {
+    @include tutor-button-reset();
+    width: 32px;
+    height: 32px;
+    border-radius: $tutor-radius-full;
+    color: $tutor-icon-idle;
+    flex-shrink: 0;
+  }
+
+  // Type variants
+  &-success {
+    background-color: $tutor-surface-success;
+
+    .tutor-toast-icon {
+      background-color: $tutor-icon-success-primary;
+    }
+
+    .tutor-toast-title {
+      color: $tutor-text-success;
+    }
+  }
+
+  &-warning {
+    background-color: $tutor-surface-warning;
+
+    .tutor-toast-icon {
+      background-color: $tutor-icon-caution;
+    }
+
+    .tutor-toast-title {
+      color: $tutor-text-caution;
+    }
+  }
+
+  &-error {
+    background-color: $tutor-surface-critical;
+
+    .tutor-toast-icon {
+      background-color: $tutor-icon-critical;
+    }
+
+    .tutor-toast-title {
+      color: $tutor-text-critical;
+    }
+  }
+
+  &-info {
+    background-color: $tutor-surface-brand-quaternary;
+
+    .tutor-toast-icon {
+      background-color: $tutor-icon-brand;
+    }
+
+    .tutor-toast-title {
+      color: $tutor-text-brand;
+    }
+  }
+}
+

@@ -14,8 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use stdClass;
-use TUTOR\Input;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\Progress;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
@@ -23,7 +25,6 @@ use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
-use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * Course Class
@@ -249,7 +250,7 @@ class Course extends Tutor_Base {
 		 */
 		add_action( 'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 2 );
 
-		add_action( 'wp_ajax_tutor_update_course_content_order', array( $this, 'tutor_update_course_content_order' ) );
+		add_action( 'wp_ajax_tutor_update_course_content_order', array( $this, 'ajax_update_course_content_order' ) );
 
 		add_action( 'wp_ajax_tutor_get_wc_product', array( $this, 'get_wc_product' ) );
 		add_action( 'wp_ajax_tutor_get_wc_products', array( $this, 'get_wc_products' ) );
@@ -300,6 +301,9 @@ class Course extends Tutor_Base {
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
 		add_filter( 'the_preview', array( $this, 'handle_schedule_courses' ) );
+
+		add_action( 'tutor_course_action_btn', array( $this, 'render_course_action_btn' ) );
+		add_action( 'wp_ajax_tutor_complete_course', array( $this, 'ajax_tutor_complete_course' ) );
 	}
 
 	/**
@@ -1697,8 +1701,22 @@ class Course extends Tutor_Base {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function tutor_update_course_content_order() {
+	public function ajax_update_course_content_order() {
 		tutor_utils()->checking_nonce();
+
+		$sorting_order = Input::post( 'tutor_topics_lessons_sorting', '' );
+		$sorting_order = json_decode( $sorting_order, true ) ?? array();
+
+		if ( ! tutor_utils()->count( $sorting_order ) ) {
+			wp_send_json_error( __( 'Sorting order is required', 'tutor' ) );
+		}
+
+		foreach ( $sorting_order as $topic ) {
+			if ( isset( $topic['topic_id'] ) && ! tutor_utils()->can_user_manage( 'topic', $topic['topic_id'] ) ) {
+				wp_send_json_error( __( 'Access Denied!', 'tutor' ) );
+				return;
+			}
+		}
 
 		if ( Input::has( 'content_parent' ) ) {
 			$content_parent = Input::post( 'content_parent', array(), Input::TYPE_ARRAY );
@@ -1716,7 +1734,7 @@ class Course extends Tutor_Base {
 		}
 
 		// Save course content order.
-		$this->save_course_content_order();
+		$this->save_course_content_order( $sorting_order );
 
 		wp_send_json_success();
 	}
@@ -1763,56 +1781,56 @@ class Course extends Tutor_Base {
 	 * Save course content order
 	 *
 	 * @since 1.0.0
+	 * @since 3.9.8 param $order added.
+	 *
+	 * @param array $sort_order the lesson and topic order array.
+	 *
 	 * @return void
 	 */
-	private function save_course_content_order() {
+	private function save_course_content_order( $sort_order = array() ) {
 		global $wpdb;
 
-		$new_order = Input::post( 'tutor_topics_lessons_sorting' );
-		if ( ! empty( $new_order ) ) {
-			$order = json_decode( $new_order, true );
+		if ( ! tutor_utils()->count( $sort_order ) ) {
+			return;
+		}
 
-			if ( is_array( $order ) && count( $order ) ) {
-				$i = 0;
-				foreach ( $order as $topic ) {
-					$i++;
+		$i = 0;
+		foreach ( $sort_order as $topic ) {
+			$i++;
+			$wpdb->update(
+				$wpdb->posts,
+				array( 'menu_order' => $i ),
+				array( 'ID' => $topic['topic_id'] )
+			);
+
+			/**
+			* Removing All lesson with topic
+			*/
+			$wpdb->update(
+				$wpdb->posts,
+				array( 'post_parent' => 0 ),
+				array( 'post_parent' => $topic['topic_id'] )
+			);
+
+			/**
+			* Lesson Attaching with topic ID
+			* Sorting lesson
+			*/
+			if ( isset( $topic['lesson_ids'] ) ) {
+				$lesson_ids = $topic['lesson_ids'];
+			} else {
+				$lesson_ids = array();
+			}
+			if ( count( $lesson_ids ) ) {
+				foreach ( $lesson_ids as $lesson_key => $lesson_id ) {
 					$wpdb->update(
 						$wpdb->posts,
-						array( 'menu_order' => $i ),
-						array( 'ID' => $topic['topic_id'] )
+						array(
+							'post_parent' => $topic['topic_id'],
+							'menu_order'  => $lesson_key,
+						),
+						array( 'ID' => $lesson_id )
 					);
-
-					/**
-					 * Removing All lesson with topic
-					 */
-
-					$wpdb->update(
-						$wpdb->posts,
-						array( 'post_parent' => 0 ),
-						array( 'post_parent' => $topic['topic_id'] )
-					);
-
-					/**
-					 * Lesson Attaching with topic ID
-					 * Sorting lesson
-					 */
-					if ( isset( $topic['lesson_ids'] ) ) {
-						$lesson_ids = $topic['lesson_ids'];
-					} else {
-						$lesson_ids = array();
-					}
-					if ( count( $lesson_ids ) ) {
-						foreach ( $lesson_ids as $lesson_key => $lesson_id ) {
-							$wpdb->update(
-								$wpdb->posts,
-								array(
-									'post_parent' => $topic['topic_id'],
-									'menu_order'  => $lesson_key,
-								),
-								array( 'ID' => $lesson_id )
-							);
-						}
-					}
 				}
 			}
 		}
@@ -1885,10 +1903,12 @@ class Course extends Tutor_Base {
 			//phpcs:enable WordPress.Security.NonceVerification.Missing
 		}
 
+		$sorting_order = Input::post( 'tutor_topics_lessons_sorting', '' );
+		$sorting_order = json_decode( $sorting_order, true ) ?? array();
 		/**
 		 * Sorting Topics and lesson
 		 */
-		$this->save_course_content_order();
+		$this->save_course_content_order( $sorting_order );
 
 		// Additional data like course intro video.
 		if ( $additional_data_edit ) {
@@ -2085,6 +2105,12 @@ class Course extends Tutor_Base {
 
 		$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
 
+		$course = get_post( $course_id );
+
+		if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
+			wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
+		}
+
 		/**
 		 * If is is not purchasable, it's free, and enroll right now
 		 * If purchasable, then process purchase.
@@ -2152,6 +2178,48 @@ class Course extends Tutor_Base {
 
 			wp_safe_redirect( $permalink );
 			exit;
+		}
+	}
+
+	/**
+	 * Ajax course complete handler
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_tutor_complete_course() {
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		// Checking nonce.
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'nonce' ) );
+		}
+
+		if ( ! $course_id ) {
+			$this->response_bad_request( __( 'Invalid course', 'tutor' ) );
+		}
+
+		$user_id = get_current_user_id();
+		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+			$this->response_bad_request( __( 'You are not enrolled in this course', 'tutor' ) );
+		}
+
+		/**
+		 * Filter hook provided to restrict course completion. This is useful
+		 * for specific cases like prerequisites. WP_Error should be returned
+		 * from the filter value to prevent the completion.
+		 */
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+
+		if ( is_wp_error( $can_complete ) ) {
+			$this->response_bad_request( $can_complete->get_error_message() );
+		} else {
+			CourseModel::mark_course_as_completed( $course_id, $user_id );
+			// Set temporary identifier to show review pop up.
+			self::set_review_popup_data( $user_id, $course_id );
+
+			$this->response_success( __( 'Course completed successfully', 'tutor' ) );
 		}
 	}
 
@@ -2959,7 +3027,7 @@ class Course extends Tutor_Base {
 	 */
 	public function tutor_reset_course_progress() {
 		tutor_utils()->checking_nonce();
-		$course_id = Input::post( 'course_id' );
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		if ( ! $course_id || ! is_numeric( $course_id ) || ! tutor_utils()->is_enrolled( $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid Course ID or Access Denied.', 'tutor' ) ) );
@@ -3009,6 +3077,12 @@ class Course extends Tutor_Base {
 			$password_protected = post_password_required( $course_id );
 			if ( $password_protected ) {
 				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
+			}
+
+			$course = get_post( $course_id );
+
+			if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
+				wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
 			}
 
 			/**
@@ -3243,5 +3317,174 @@ class Course extends Tutor_Base {
 		// Set course regular & sale price.
 		update_post_meta( $post_ID, self::COURSE_PRICE_META, $regular_price );
 		update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $sale_price );
+	}
+
+	/**
+	 * Render start/resume button in enrolled course action btn.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return void
+	 */
+	public function render_course_action_btn( int $course_id ) {
+		$is_completed = tutor_utils()->is_completed_course( $course_id );
+		if ( $is_completed ) {
+			$certificate_addon_active = tutor_utils()->is_addon_enabled( 'tutor-certificate' );
+			if ( ! $certificate_addon_active ) {
+				Button::make()
+					->tag( 'a' )
+					->label( __( 'Completed', 'tutor' ) )
+					->icon( Icon::COMPLETED_CIRCLE )
+					->variant( Variant::PRIMARY )
+					->size( Size::X_SMALL )
+					->attr( 'href', esc_url( get_the_permalink( $course_id ) ) )
+					->render();
+			}
+			return;
+		}
+
+		$course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+		$button_text     = $course_progress['completed_percent'] > 0 ? __( 'Resume', 'tutor' ) : __( 'Start', 'tutor' );
+		$button_url      = tutor_utils()->get_course_first_lesson( $course_id );
+
+		if ( ! $button_url ) {
+			$button_url = get_the_permalink( $course_id );
+		}
+
+		Button::make()
+			->tag( 'a' )
+			->label( $button_text )
+			->icon( Icon::PLAY )
+			->variant( Variant::PRIMARY )
+			->size( Size::X_SMALL )
+			->attr( 'href', esc_url( $button_url ) )
+			->render();
+	}
+
+	/**
+	 * Calculate the total course duration for a set of courses.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<int> $course_ids List of course IDs.
+	 *
+	 * @return array{
+	 *     hours: int,
+	 *     minutes: int,
+	 *     seconds: int
+	 * } Total accumulated duration from all given courses.
+	 */
+	public static function get_total_course_duration( $course_ids ): array {
+		$total_seconds = 0;
+
+		foreach ( $course_ids as $id ) {
+			$duration = tutor_utils()->get_course_duration( (int) $id, true );
+
+			$total_seconds += ( (int) $duration['durationHours'] * 3600 )
+				+ ( (int) $duration['durationMinutes'] * 60 )
+				+ ( (int) $duration['durationSeconds'] );
+		}
+
+		$hours   = floor( $total_seconds / 3600 );
+		$minutes = floor( $total_seconds / 60 );
+		$seconds = $total_seconds;
+
+		return array(
+			'hours'   => (int) $hours,
+			'minutes' => (int) $minutes,
+			'seconds' => (int) $seconds,
+		);
+	}
+
+	/**
+	 * Get the content for the course completion modal.
+	 *
+	 * This method returns HTML for displaying a modal that informs the user
+	 * that they have not completed all required lessons and assessments. It includes
+	 * the user's current progress shown as a percentage and a progress bar.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param float $course_progress The completion percentage of the course.
+	 *
+	 * @return string The rendered HTML content for the modal.
+	 */
+	public static function get_complete_modal_content( float $course_progress = 0 ): string {
+		ob_start();
+		?>
+		<div>
+			<p class="tutor-p3 tutor-text-secondary tutor-text-center tutor-mb-7 tutor-px-11">
+				<?php esc_html_e( 'You have not completed all required lessons and assessments. ', 'tutor' ); ?>
+			</p>
+			<div class="tutor-border tutor-p-5 tutor-flex tutor-flex-column tutor-gap-4 tutor-surface-base tutor-rounded-md">
+				<div class="tutor-flex tutor-items-center tutor-justify-between">
+					<div class="tutor-p3 tutor-text-secondary">
+						<?php esc_html_e( 'Your Progress', 'tutor' ); ?>
+					</div>
+					<div class="tutor-p1 tutor-font-bold">
+						<?php echo esc_html( number_format_i18n( $course_progress ) . '%' ); ?>
+					</div>
+				</div>
+				<?php
+					Progress::make()->type( 'bar' )->value( $course_progress )->render();
+				?>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render the course complete button.
+	 *
+	 * Displays a button that allows the user to complete the course. If the course
+	 * progress is less than 100%, clicking the button shows a modal informing the user
+	 * that not all requirements are fulfilled. If the course progress is 100%,
+	 * clicking the button attempts to complete the course.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $modal_id        The HTML ID of the modal to display if not complete.
+	 * @param int    $course_id       The ID of the course.
+	 * @param float  $course_progress The current completion percentage of the course.
+	 *
+	 * @return void
+	 */
+	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0 ): void {
+		$button = Button::make()
+		->label( __( 'Complete the Course', 'tutor' ) )
+		->icon( Icon::TICK_MARK )
+		->attr( 'type', 'button' );
+
+		if ( $course_progress < 100 ) {
+			$button->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" );
+		} else {
+			$button->attr( '@click', "handleCourseComplete({$course_id})" );
+			$button->attr( ':class', "courseCompleteMutation?.isPending ? 'tutor-btn-loading' : ''" );
+			$button->attr( ':disabled', 'courseCompleteMutation?.isPending' );
+		}
+
+		$button->render();
+	}
+
+	/**
+	 * Render course retake button
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string  $modal_id Modal id.
+	 *
+	 * @return void
+	 */
+	public static function render_course_retake_btn( string $modal_id ): void {
+		Button::make()
+		->label( __( 'Retake this Course', 'tutor' ) )
+		->icon( Icon::RELOAD_3 )
+		->variant( Variant::SECONDARY )
+		->attr( 'type', 'button' )
+		->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" )
+		->render();
 	}
 }

@@ -10,11 +10,14 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Ecommerce\Settings;
 use Tutor\Models\CourseModel;
+use Tutor\Options_V2;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -96,6 +99,16 @@ class Assets {
 		 * @since v2.0.5
 		 */
 		add_action( 'enqueue_block_editor_assets', __CLASS__ . '::add_frontend_editor_button' );
+
+		/**
+		 * Enqueue styles & scripts
+		 *
+		 * @since 4.0.0
+		 */
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		// Add custom meta.
+		add_action( 'wp_head', array( $this, 'add_custom_data' ) );
 	}
 
 	/**
@@ -154,6 +167,17 @@ class Assets {
 
 		$tutor_settings = Options_V2::get_only( $required_options );
 
+		// Load available kids mode icons to avoid frontend 404s if kids mode is active.
+		$kids_icons = array();
+		if ( tutor_utils()->is_kids_mode() ) {
+			$kids_icons = array_map(
+				function ( $file ) {
+					return basename( $file, '.svg' );
+				},
+				glob( tutor()->path . 'assets/icons/kids/*.svg' ) ?: array()
+			);
+		}
+
 		return array(
 			'ajaxurl'                       => admin_url( 'admin-ajax.php' ),
 			'home_url'                      => rtrim( get_home_url(), '/' ),
@@ -194,6 +218,8 @@ class Assets {
 			'settings'                      => $tutor_settings,
 			'max_upload_size'               => wp_max_upload_size(),
 			'monetize_by'                   => tutor_utils()->get_option( 'monetize_by' ),
+			'kids_icons_registry'          => $kids_icons,
+			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
 		);
 	}
 
@@ -203,11 +229,15 @@ class Assets {
 	 * @since 1.0.0
 	 * @since 3.0.0 Order details & coupon scripts added.
 	 *
+	 * @param string $slug The page slug.
+	 *
 	 * @return void
 	 */
-	public function admin_scripts() {
-		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
-		wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION );
+	public function admin_scripts( $slug ) {
+		if ( 'tutor-lms-pro_page_playground' !== $slug ) {
+			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
+			wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION );
+		}
 		/**
 		 * Scripts
 		 */
@@ -258,15 +288,87 @@ class Assets {
 			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
 			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 		}
+
+		if ( 'tutor-lms-pro_page_playground' === $slug ) {
+			$subpage = Input::get( 'subpage' );
+
+			// Dashboard pages.
+			$dashboard_pages = array( 'dashboard', 'profile-settings', 'user-profile', 'certificates', 'reviews', 'billing' );
+			if ( in_array( $subpage, $dashboard_pages, true ) ) {
+				$dashboard_css_path = tutor()->path . 'assets/css/tutor-dashboard.min.css';
+				$dashboard_css_url  = tutor()->url . 'assets/css/tutor-dashboard.min.css';
+				$dashboard_js_url   = tutor()->url . 'assets/js/tutor-dashboard.js';
+				$dashboard_js_path  = tutor()->path . 'assets/js/tutor-dashboard.js';
+
+				wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), filemtime( $dashboard_css_path ), 'all' );
+				wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array(), filemtime( $dashboard_js_path ), true );
+			}
+
+			// Learning area pages.
+			$learning_pages = array( 'learning-area', 'quiz', 'quiz-summary', 'assignment' );
+			if ( in_array( $subpage, $learning_pages, true ) ) {
+
+				$learning_area_css_path = tutor()->path . 'assets/css/tutor-learning-area.min.css';
+				$learning_area_css_url  = tutor()->url . 'assets/css/tutor-learning-area.min.css';
+
+				$learning_area_js_path = tutor()->path . 'assets/js/tutor-learning-area.js';
+				$learning_area_js_url  = tutor()->url . 'assets/js/tutor-learning-area.js';
+
+				wp_enqueue_style(
+					'tutor-learning-area',
+					$learning_area_css_url,
+					array(),
+					filemtime( $learning_area_css_path ),
+					'all'
+				);
+
+				wp_enqueue_script(
+					'tutor-learning-area',
+					$learning_area_js_url,
+					array( 'wp-i18n' ),
+					filemtime( $learning_area_js_path ),
+					true
+				);
+			}
+
+			$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';
+			$core_css_url  = tutor()->url . 'assets/css/tutor-core.min.css';
+
+			$core_js_path = tutor()->path . 'assets/js/tutor-core.js';
+			$core_js_url  = tutor()->url . 'assets/js/tutor-core.js';
+
+			wp_enqueue_style(
+				'tutor-core',
+				$core_css_url,
+				array(),
+				filemtime( $core_css_path ),
+				'all'
+			);
+
+			wp_enqueue_script(
+				'tutor-core',
+				$core_js_url,
+				array( 'wp-i18n' ),
+				filemtime( $core_js_path ),
+				true
+			);
+		}
 	}
 
 	/**
 	 * Load frontend scripts
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 4.0.0 Legacy scripts loading check added.
+	 *
 	 * @return void
 	 */
 	public function frontend_scripts() {
+		if ( ! $this->should_load_legacy_scripts() ) {
+			return;
+		}
+
 		global $post, $wp_query;
 
 		/**
@@ -413,9 +515,17 @@ class Assets {
 	 * Load common scripts for frontend and backend
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 4.0.0 Legacy scripts loading check added.
+	 *
+	 * @param string $slug The page slug.
+	 *
 	 * @return void
 	 */
-	public function common_scripts() {
+	public function common_scripts( $slug ) {
+		if ( ! $this->should_load_legacy_scripts() ) {
+			return;
+		}
 
 		/**
 		 * Load TinyMCE for tutor settings page if tutor pro is not available.
@@ -432,10 +542,12 @@ class Assets {
 		wp_enqueue_style( 'tutor-icon', tutor()->url . 'assets/css/tutor-icon.min.css', array(), TUTOR_VERSION );
 
 		// Common css library.
-		if ( is_rtl() ) {
-			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
-		} else {
-			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
+		if ( 'tutor-lms-pro_page_playground' !== $slug ) {
+			if ( is_rtl() ) {
+				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
+			} else {
+				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
+			}
 		}
 
 		/**
@@ -752,6 +864,127 @@ class Assets {
 				'const tutorInlineData =' . json_encode( $data ),
 				'before'
 			);
+		}
+	}
+
+	/**
+	 * Enqueue styles & scripts for latest design system
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function enqueue_scripts() {
+		$is_dashboard       = tutor_utils()->is_dashboard_page();
+		$is_learning_area   = tutor_utils()->is_learning_area();
+		$is_kids_mode       = tutor_utils()->is_kids_mode();
+		$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
+
+		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
+		$kids_css_url          = tutor()->assets_url . 'css/tutor-kids.min.css';
+		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
+		$learning_area_css_url = tutor()->assets_url . 'css/tutor-learning-area.min.css';
+
+		$core_js_url          = tutor()->assets_url . 'js/tutor-core.js';
+		$dashboard_js_url     = tutor()->assets_url . 'js/tutor-dashboard.js';
+		$learning_area_js_url = tutor()->assets_url . 'js/tutor-learning-area.js';
+
+		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
+
+		// Return if it is learning area the & on the legacy mode.
+		if ( $is_learning_area && $is_legacy_learning ) {
+			return;
+		}
+
+		$is_course_list_page    = tutor_utils()->is_course_list_page();
+		$is_course_details_page = tutor_utils()->is_course_details_page();
+
+		// Return if it is course list or course details page.
+		if ( $is_course_list_page || $is_course_details_page ) {
+			return;
+		}
+
+		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
+		if ( $is_kids_mode ) {
+			wp_enqueue_style( 'tutor-kids', $kids_css_url, array( 'tutor-core' ), $version );
+		}
+
+		if ( $is_dashboard ) {
+			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
+			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+		}
+
+		// Core.
+		wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );
+		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), TUTOR_VERSION, true );
+
+		wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
+
+		if ( $is_dashboard ) {
+			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
+			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+		}
+
+		if ( $is_learning_area ) {
+			wp_enqueue_style( 'tutor-learning', $learning_area_css_url, array(), $version );
+			wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+
+			if ( is_single_course( true ) ) {
+				wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
+				wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+			}
+		}
+	}
+
+	/**
+	 * Check if need to load legacy scripts
+	 *
+	 * If the current screen is dashboard or new learning area
+	 * then this method will return false to avoid loading legacy css & js files
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return boolean
+	 */
+	public function should_load_legacy_scripts(): bool {
+		if ( is_admin() ) {
+			return true;
+		}
+
+		$load = false;
+		global $wp_query;
+
+		$is_learning_area          = tutor_utils()->is_learning_area();
+		$is_tutor_cart_page        = get_the_ID() === CartController::get_page_id();
+		$is_tutor_checkout_page    = get_the_ID() === CheckoutController::get_page_id();
+		$is_student_public_profile = ! empty( $wp_query->query['tutor_profile_username'] );
+
+		if ( tutor_utils()->is_course_list_page() || tutor_utils()->is_course_details_page() ) {
+			$load = true;
+		} elseif ( $is_learning_area ) {
+			$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
+			if ( $is_learning_area && $is_legacy_learning ) {
+				$load = true;
+			}
+		} elseif ( $is_tutor_cart_page || $is_tutor_checkout_page || $is_student_public_profile ) {
+			$load = true;
+		}
+
+		return apply_filters( 'tutor_should_load_legacy_scripts', $load );
+	}
+
+	/**
+	 * Add custom meta data to the head section.
+	 *
+	 * Outputs a viewport meta tag to improve mobile responsiveness.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function add_custom_data() {
+		if ( tutor_utils()->is_dashboard_page() || tutor_utils()->is_learning_area() ) {
+			echo '<meta name="viewport" content="width=device-width, initial-scale=1" />' . "\n";
 		}
 	}
 }

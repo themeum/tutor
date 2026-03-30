@@ -10,6 +10,8 @@
  * @since 2.0.6
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $current_url = tutor()->current_url;
 
 $default_class = 'tutor-btn tutor-btn-outline-primary page-numbers tutor-mr-16';

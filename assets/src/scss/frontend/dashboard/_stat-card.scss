@@ -1,0 +1,315 @@
+// Stat Card Component
+// Dashboard statistics card with variations
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-stat-card {
+  @include tutor-flex(column, stretch, space-between);
+  padding: $tutor-spacing-6;
+  height: 146px;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+  cursor: pointer;
+  @include tutor-transition(background-color);
+
+  &:hover {
+    background-color: $tutor-surface-l1-hover;
+  }
+
+  &-header {
+    @include tutor-flex(row, center, space-between);
+  }
+
+  &-title {
+    @include tutor-typography('small');
+    margin: 0;
+  }
+
+  &-value {
+    @include tutor-typography('h2', 'bold', 'primary', 'heading');
+    margin: 0;
+  }
+
+  &-change {
+    @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+    margin-top: $tutor-spacing-1;
+    margin-bottom: 0;
+  }
+
+  // Color variations
+  &-enrolled {
+    .tutor-stat-card-icon {
+      color: $tutor-text-brand;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-brand;
+    }
+  }
+
+  &-active {
+    .tutor-stat-card-icon {
+      color: $tutor-exception-1;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-exception-1;
+    }
+  }
+
+  &-completed {
+    .tutor-stat-card-icon {
+      color: $tutor-text-success;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-success;
+    }
+  }
+
+  // Color variations
+  &-brand {
+    .tutor-stat-card-icon {
+      color: $tutor-text-brand;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-brand;
+    }
+  }
+
+  &:has(canvas) {
+    height: 179px;
+    .tutor-stat-card {
+      &-content {
+        margin-top: 38px;
+      }
+
+      &-value {
+        @include tutor-text('h3');
+      }
+    }
+  }
+
+	&-time-spent {
+		.tutor-stat-card-icon {
+			color: $tutor-text-exception4;
+		}
+        
+		.tutor-stat-card-value {
+			color: $tutor-text-exception4;
+		}
+	}
+
+	&-courses {
+    .tutor-stat-card-icon {
+        color: $tutor-text-success;
+    }
+
+		.tutor-stat-card-value {
+			color: $tutor-text-success;
+		}
+	}
+
+  &-passed,
+	&-students {
+    .tutor-stat-card-icon {
+        color: $tutor-text-brand;
+    }
+
+		.tutor-stat-card-value {
+			color: $tutor-text-brand;
+		}
+	}
+
+  &-star-line,
+  &-star-fill,
+	&-reviews {
+    .tutor-stat-card-icon {
+        color: $tutor-warning-400;
+    }
+
+		.tutor-stat-card-value {
+			color: $tutor-warning-400;
+		}
+	}
+
+	&-passed {
+    .tutor-stat-card-icon {
+        color: $tutor-text-brand;
+    }
+
+		.tutor-stat-card-value {
+			color: $tutor-text-brand;
+		}
+	}
+
+	&-progress {
+    .tutor-stat-card-icon {
+        color: $tutor-exception-5;
+    }
+
+		.tutor-stat-card-value {
+			color: $tutor-exception-5;
+		}
+	}
+
+	&-completed {
+    .tutor-stat-card-icon {
+        color: $tutor-text-success;
+    }
+
+		.tutor-stat-card-value {
+			color: $tutor-text-success;
+		}
+	}
+
+	&-qa {
+    .tutor-stat-card-icon {
+        color: $tutor-exception-2;
+    }
+
+		.tutor-stat-card-value {
+			color: $tutor-exception-2;
+		}
+	}
+
+	&-book-2 {
+    .tutor-stat-card-icon {
+        color: $tutor-exception-1;
+    }
+
+		.tutor-stat-card-value {
+			color: $tutor-exception-1;
+		}
+	}
+
+  &-exception1 {
+    .tutor-stat-card-icon {
+      color: $tutor-exception-1;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-exception-1;
+    }
+  }
+
+  &-success {
+    .tutor-stat-card-icon {
+      color: $tutor-text-success;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-success;
+    }
+  }
+
+  &-exception4,
+  &-time-spent {
+    .tutor-stat-card-icon {
+      color: $tutor-text-exception4;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-exception4;
+    }
+  }
+
+  &-exception5 {
+    .tutor-stat-card-icon {
+      color: $tutor-icon-exception5;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-exception5;
+    }
+  }
+
+  &-earning {
+    .tutor-stat-card-icon {
+      color: $tutor-text-success;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-success;
+    }
+  }
+
+  &-wallet {
+    .tutor-stat-card-icon {
+      color: $tutor-text-brand;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-brand;
+    }
+  }
+
+  &-withdraw {
+    .tutor-stat-card-icon {
+      color: $tutor-text-exception5;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-exception5;
+    }
+  }
+
+  &-sale {
+    .tutor-stat-card-icon {
+      color: $tutor-text-exception1;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-exception1;
+    }
+  }
+
+  &-commission {
+    .tutor-stat-card-icon {
+      color: $tutor-text-exception2;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-exception2;
+    }
+  }
+
+  &-fees {
+    .tutor-stat-card-icon {
+      color: $tutor-text-exception4;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-exception4;
+    }
+  }
+}
+
+.tutor-stat-card-hover {
+
+  &-wrap{
+    position: relative;
+    display: inline-block;
+    margin-top: $tutor-spacing-1;
+
+    &:hover .tutor-stat-card-hover-card  {
+      display: block;
+    }
+  }
+
+  &-card {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    min-width: 213px;
+    background: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;;
+    border-radius: $tutor-radius-lg;
+    box-shadow: $tutor-shadow-lg;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
+    white-space: nowrap;
+  }
+}

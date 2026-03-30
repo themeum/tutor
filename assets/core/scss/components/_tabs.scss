@@ -1,0 +1,131 @@
+@use '../mixins' as *;
+@use '../tokens' as *;
+@use '../mixins/rtl' as rtl;
+
+.tutor-tabs {
+  &-nav {
+    @include tutor-flex(row, center, flex-start);
+    gap: $tutor-spacing-2;
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    [dir='rtl'] & {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &-tab {
+    @include tutor-flex(row, center, flex-start);
+    @include tutor-typography('small');
+    border-radius: $tutor-tab-radius;
+    font-weight: $tutor-tab-font-weight;
+    background: transparent;
+    border: none;
+    padding: $tutor-spacing-4 $tutor-spacing-6;
+    gap: $tutor-spacing-4;
+    white-space: nowrap;
+    cursor: pointer;
+    color: $tutor-text-primary;
+    height: $tutor-tab-height;
+    @include tutor-transition((background-color, color, box-shadow));
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-text('tiny');
+    }
+
+    &-active {
+      color: $tutor-text-brand;
+      background-color: $tutor-tab-l3-active;
+      box-shadow: $tutor-tab-active-shadow;
+
+      svg {
+        color: $tutor-text-brand;
+      }
+
+      &:hover {
+        box-shadow: none;
+      }
+    }
+
+    &-md {
+      height: 34px;
+      @include tutor-text('tiny');
+      padding: 7px $tutor-spacing-5;
+      gap: $tutor-spacing-2;
+    }
+
+    &-sm {
+      height: 32px;
+      @include tutor-text('tiny');
+      padding: 6px $tutor-spacing-5;
+      gap: $tutor-spacing-2;
+    }
+
+    &:hover:not(:disabled):not(.tutor-tabs-tab-active),
+    &:focus:not(:disabled):not(.tutor-tabs-tab-active) {
+      color: $tutor-text-primary;
+      background-color: $tutor-tab-l3-active-hover;
+      box-shadow: none;
+
+      svg {
+        color: $tutor-text-primary;
+      }
+    }
+
+    &:disabled {
+      color: $tutor-text-subdued;
+      cursor: not-allowed;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+
+  &-content {
+    min-height: 100px;
+  }
+
+  // Vertical variant
+  &-vertical {
+    @include tutor-flex(row, flex-start, flex-start);
+
+    [dir='rtl'] & {
+      flex-direction: row-reverse;
+    }
+
+    .tutor-tabs-nav {
+      @include tutor-flex-column;
+      align-items: stretch;
+      min-width: 200px;
+    }
+
+    .tutor-tabs-content {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+}
+
+@include tutor-breakpoint-down(md) {
+  .tutor-tabs {
+    &-vertical {
+      display: unset;
+      flex-direction: column;
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      .tutor-tabs-nav {
+        flex-direction: row;
+        overflow-x: auto;
+      }
+    }
+  }
+}

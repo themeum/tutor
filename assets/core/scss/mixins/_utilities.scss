@@ -1,0 +1,335 @@
+@use '../tokens' as *;
+
+@mixin tutor-reset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  background-color: transparent;
+  color: inherit;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+@mixin tutor-text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin tutor-text-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@mixin tutor-scrollbar(
+  $width: 8px,
+  $thumb-color: $tutor-border-idle,
+  $thumb-hover-color: $tutor-icon-secondary,
+  $track-color: transparent,
+  $radius: $tutor-radius-full
+) {
+  scrollbar-width: thin;
+  scrollbar-color: $thumb-color $track-color;
+
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: $radius;
+
+    &:hover {
+      background: $thumb-hover-color;
+    }
+  }
+}
+
+@mixin tutor-focus-ring($color: 'brand') {
+  $shadow: none;
+
+  @if $color =='brand' {
+    $shadow: $tutor-ring-brand-shadow-xs;
+  }
+
+  @if $color =='error' {
+    $shadow: $tutor-error-shadow-xs;
+  }
+
+  outline: none;
+  box-shadow: $shadow;
+
+}
+
+@mixin tutor-transition(
+  $properties: all,
+  $duration: 0.25s,
+  $timing: ease-in-out,
+  $delay: 0s
+) {
+  @if $properties == all {
+    transition: all $duration $timing $delay;
+  } @else {
+    $transitions: ();
+
+    @each $property in $properties {
+      $transitions: append(
+        $transitions,
+        $property $duration $timing $delay,
+        comma
+      );
+    }
+
+    transition: $transitions;
+  }
+}
+
+
+@mixin tutor-hover-lift {
+  @include tutor-transition(transform);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@mixin tutor-loading-skeleton {
+  background: linear-gradient(90deg, tutor-surface-l2 25%, tutor-surface-l1 50%, tutor-surface-l2 75%);
+  background-size: 200% 100%;
+  animation: tutor-skeleton-loading 1.5s infinite;
+}
+
+@keyframes tutor-skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@mixin tutor-aspect-ratio($ratio: 16/9) {
+  aspect-ratio: $ratio;
+
+  // Fallback for older browsers
+  @supports not (aspect-ratio: 1) {
+    position: relative;
+
+    &::before {
+      content: "";
+      display: block;
+      padding-top: percentage(1 / $ratio);
+    }
+
+    >* {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+// Loading Spinner
+@mixin tutor-loading-spinner($lineColor: #ababab, $lineBgColor: #f1f1f1, $size: 20px) {
+	&::before {
+		content: '';
+		box-sizing: border-box;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: #{$size};
+		height: #{$size};
+		margin-top: calc(-1 * #{$size} / 2);
+		margin-left: calc(-1 * #{$size} / 2);
+		border-radius: 50%;
+		border: 2px solid $lineBgColor;
+		border-top-color: $lineColor;
+		animation: tutor-spin 0.8s linear infinite;
+	}
+}
+
+
+// Animation and Transition Mixins for consistent motion design
+@mixin tutor-fade-in($duration: 0.3s, $timing: ease-out) {
+  opacity: 0;
+  animation: tutor-fade-in $duration $timing forwards;
+}
+
+@mixin tutor-fade-out($duration: 0.3s, $timing: ease-in) {
+  animation: tutor-fade-out $duration $timing forwards;
+}
+
+@mixin tutor-slide-in-up($duration: 0.3s, $timing: ease-out, $distance: 20px) {
+  transform: translateY($distance);
+  opacity: 0;
+  animation: tutor-slide-in-up $duration $timing forwards;
+}
+
+@mixin tutor-slide-in-down($duration: 0.3s, $timing: ease-out, $distance: 20px) {
+  transform: translateY(-$distance);
+  opacity: 0;
+  animation: tutor-slide-in-down $duration $timing forwards;
+}
+
+@mixin tutor-slide-in-left($duration: 0.3s, $timing: ease-out, $distance: 20px) {
+  transform: translateX(-$distance);
+  opacity: 0;
+  animation: tutor-slide-in-left $duration $timing forwards;
+}
+
+@mixin tutor-slide-in-right($duration: 0.3s, $timing: ease-out, $distance: 20px) {
+  transform: translateX($distance);
+  opacity: 0;
+  animation: tutor-slide-in-right $duration $timing forwards;
+}
+
+@mixin tutor-scale-in($duration: 0.3s, $timing: ease-out, $scale: 0.95) {
+  transform: scale($scale);
+  opacity: 0;
+  animation: tutor-scale-in $duration $timing forwards;
+}
+
+@mixin tutor-bounce-in($duration: 0.6s) {
+  transform: scale(0.3);
+  opacity: 0;
+  animation: tutor-bounce-in $duration cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+@mixin tutor-pulse($duration: 2s) {
+  animation: tutor-pulse $duration infinite;
+}
+
+@mixin tutor-spin($duration: 1s) {
+  animation: tutor-spin $duration linear infinite;
+}
+
+@mixin tutor-shake($duration: 0.5s) {
+  animation: tutor-shake $duration ease-in-out;
+}
+
+// Keyframe animations
+@keyframes tutor-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tutor-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes tutor-slide-in-up {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes tutor-slide-in-down {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes tutor-slide-in-left {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes tutor-slide-in-right {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes tutor-scale-in {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes tutor-bounce-in {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  70% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes tutor-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes tutor-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes tutor-shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-10px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(10px);
+  }
+}

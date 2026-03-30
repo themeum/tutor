@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 // Pagination.
 $paged                    = $data['paged'];
 $per_page                 = $data['per_page'];

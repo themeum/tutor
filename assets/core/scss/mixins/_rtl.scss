@@ -1,0 +1,135 @@
+// RTL (Right-to-Left) Mixins
+// Provides directional-aware mixins for RTL language support
+
+// Directional margin mixins
+@mixin margin-start($value) {
+  margin-inline-start: $value;
+}
+@mixin margin-end($value) {
+  margin-inline-end: $value;
+}
+
+// Directional padding mixins
+@mixin padding-start($value) {
+  padding-inline-start: $value;
+}
+@mixin padding-end($value) {
+  padding-inline-end: $value;
+}
+
+// Directional border mixins
+@mixin border-start($value) {
+  border-inline-start: $value;
+}
+@mixin border-end($value) {
+  border-inline-end: $value;
+}
+@mixin border-start-width($value) {
+  border-inline-start-width: $value;
+}
+@mixin border-end-width($value) {
+  border-inline-end-width: $value;
+}
+@mixin border-start-color($value) {
+  border-inline-start-color: $value;
+}
+@mixin border-end-color($value) {
+  border-inline-end-color: $value;
+}
+
+// Directional border radius mixins
+@mixin border-radius-start($value) {
+  border-start-start-radius: $value;
+  border-end-start-radius: $value;
+}
+@mixin border-radius-end($value) {
+  border-start-end-radius: $value;
+  border-end-end-radius: $value;
+}
+@mixin border-top-start-radius($value) {
+  border-start-start-radius: $value;
+}
+@mixin border-top-end-radius($value) {
+  border-start-end-radius: $value;
+}
+@mixin border-bottom-start-radius($value) {
+  border-end-start-radius: $value;
+}
+@mixin border-bottom-end-radius($value) {
+  border-end-end-radius: $value;
+}
+
+// Directional positioning mixins
+@mixin left($value) {
+  inset-inline-start: $value;
+}
+@mixin right($value) {
+  inset-inline-end: $value;
+}
+
+// Text alignment mixins
+@mixin text-align-start() {
+  text-align: start;
+}
+@mixin text-align-end() {
+  text-align: end;
+}
+
+// Float mixins
+@mixin float-start() {
+  float: inline-start;
+}
+@mixin float-end() {
+  float: inline-end;
+}
+
+// Transform mixins for RTL-aware animations
+@mixin transform-translate-x($value) {
+  transform: translateX($value);
+}
+@mixin transform-rotate-y($value) {
+  transform: rotateY($value);
+}
+
+// Flexbox direction mixins
+@mixin flex-direction-row() {
+  flex-direction: row;
+}
+@mixin flex-direction-row-reverse() {
+  flex-direction: row-reverse;
+}
+
+// Background position mixins
+@mixin background-position-x($value) {
+  background-position-inline-start: $value;
+}
+
+// Component-specific RTL mixins
+@mixin dropdown-position-start() {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+}
+@mixin dropdown-position-end() {
+  inset-inline-end: 0;
+  inset-inline-start: auto;
+}
+
+// Icon positioning for buttons and inputs
+@mixin icon-start($spacing: 4px) {
+  margin-inline-end: $spacing;
+  margin-inline-start: 0;
+}
+@mixin icon-end($spacing: 4px) {
+  margin-inline-start: $spacing;
+  margin-inline-end: 0;
+}
+
+// Tooltip and popover arrow positioning
+@mixin arrow-start($size: 8px) {
+  inset-inline-start: $size;
+  inset-inline-end: auto;
+}
+@mixin arrow-end($size: 8px) {
+  inset-inline-end: $size;
+  inset-inline-start: auto;
+}

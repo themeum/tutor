@@ -1,0 +1,96 @@
+// Preview Trigger Component
+// Styles for course/lesson preview on hover
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-preview-trigger {
+  display: inline;
+  position: relative;
+
+  &-text {
+    font-style: italic;
+    text-decoration: underline dashed $tutor-border-hover;
+    text-underline-offset: 4px;
+    color: $tutor-text-secondary;
+    cursor: pointer;
+    @include tutor-transition(color);
+  }
+}
+
+.tutor-preview-card {
+  background: $tutor-surface-l1;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+  box-shadow: $tutor-shadow-lg;
+  padding: $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-4;
+  width: 194px;
+  max-width: calc(100vw - 16px);
+  overflow: hidden;
+  animation: tutor-preview-fade-in 0.2s ease;
+}
+
+.tutor-preview-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: $tutor-spacing-4;
+}
+
+.tutor-preview-card-thumbnail {
+  width: 100%;
+  height: 90px;
+  border-radius: $tutor-radius-md;
+  object-fit: cover;
+  display: block;
+}
+
+.tutor-preview-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: $tutor-spacing-1;
+}
+
+.tutor-preview-card-title {
+  @include tutor-typography(p2, medium, primary, heading);
+  margin: 0;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    @include tutor-transition(color);
+
+    &:hover {
+      color: $tutor-text-brand;
+    }
+  }
+}
+
+.tutor-preview-card-instructor {
+  @include tutor-typography(tiny, regular, subdued);
+
+  a {
+    color: $tutor-text-secondary;
+    text-decoration: none;
+    @include tutor-transition(color);
+
+    &:hover {
+      color: $tutor-text-brand;
+    }
+  }
+}
+
+@keyframes tutor-preview-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

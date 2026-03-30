@@ -9,6 +9,7 @@
  * @since 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <?php if ( ! get_option( 'users_can_register', false ) ) : ?> 
@@ -27,7 +28,7 @@
 		?>
 <?php else : ?>
 
-	<div id="tutor-registration-wrap">
+	<div id="tutor-registration-wrap" class="tutor-card" style="max-width: 520px; margin: 10px auto;">
 
 		<?php do_action( 'tutor_before_student_reg_form' ); ?>
 
@@ -59,8 +60,9 @@
 						<label>
 							<?php esc_html_e( 'First Name', 'tutor' ); ?>
 						</label>
-
-						<input type="text" name="first_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'first_name' ) ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>" required autocomplete="given-name">
+						<div class="tutor-input-field tutor-mb-8">
+							<input class="tutor-form-control tutor-input" type="text" name="first_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'first_name' ) ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>" required autocomplete="given-name">
+						</div>
 					</div>
 				</div>
 
@@ -69,8 +71,9 @@
 						<label>
 							<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 						</label>
-
-						<input type="text" name="last_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'last_name' ) ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>" required autocomplete="family-name">
+						<div class="tutor-input-field tutor-mb-8">
+							<input class="tutor-form-control tutor-input" type="text" name="last_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'last_name' ) ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>" required autocomplete="family-name">
+						</div>
 					</div>
 				</div>
 
@@ -82,8 +85,9 @@
 						<label>
 							<?php esc_html_e( 'User Name', 'tutor' ); ?>
 						</label>
-
-						<input type="text" name="user_login" class="tutor_user_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'user_login' ) ); ?>" placeholder="<?php esc_html_e( 'User Name', 'tutor' ); ?>" required autocomplete="username">
+						<div class="tutor-input-field tutor-mb-8">
+							<input class="tutor-form-control tutor-input" type="text" name="user_login" class="tutor_user_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'user_login' ) ); ?>" placeholder="<?php esc_html_e( 'User Name', 'tutor' ); ?>" required autocomplete="username">
+						</div>
 					</div>
 				</div>
 
@@ -92,8 +96,9 @@
 						<label>
 							<?php esc_html_e( 'E-Mail', 'tutor' ); ?>
 						</label>
-
-						<input type="text" name="email" value="<?php echo esc_attr( tutor_utils()->input_old( 'email' ) ); ?>" placeholder="<?php esc_html_e( 'E-Mail', 'tutor' ); ?>" required autocomplete="email">
+						<div class="tutor-input-field tutor-mb-8">
+							<input class="tutor-form-control tutor-input" type="text" name="email" value="<?php echo esc_attr( tutor_utils()->input_old( 'email' ) ); ?>" placeholder="<?php esc_html_e( 'E-Mail', 'tutor' ); ?>" required autocomplete="email">
+						</div>
 					</div>
 				</div>
 
@@ -107,8 +112,9 @@
 								<label>
 									<?php esc_html_e( 'Password', 'tutor' ); ?>
 								</label>
-
-								<input class="password-checker" id="tutor-new-password" type="password" name="password" value="<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" required autocomplete="new-password" style="margin-bottom: 0;">
+								<div class="tutor-input-field tutor-mb-8">
+									<input class="tutor-form-control tutor-input" class="password-checker" id="tutor-new-password" type="password" name="password" value="<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" required autocomplete="new-password" style="margin-bottom: 0;">
+								</div>
 								<span class="show-hide-btn"></span>
 							</div>
 
@@ -132,7 +138,9 @@
 
 						<div class="tutor-form-wrap">
 							<span class="tutor-validation-icon tutor-icon-mark tutor-color-success tutor-form-icon tutor-form-icon-reverse" style="display: none;"></span>
-							<input type="password" name="password_confirmation" value="<?php echo esc_attr( tutor_utils()->input_old( 'password_confirmation' ) ); ?>" placeholder="<?php esc_html_e( 'Password Confirmation', 'tutor' ); ?>" required autocomplete="new-password" style="margin-bottom: 0;">
+							<div class="tutor-input-field tutor-mb-8">
+								<input class="tutor-form-control tutor-input" type="password" name="password_confirmation" value="<?php echo esc_attr( tutor_utils()->input_old( 'password_confirmation' ) ); ?>" placeholder="<?php esc_html_e( 'Password Confirmation', 'tutor' ); ?>" required autocomplete="new-password" style="margin-bottom: 0;">
+							</div>
 						</div>
 					</div>
 				</div>
@@ -164,6 +172,14 @@
 
 			<div>
 				<button type="submit" name="tutor_register_student_btn" value="register" class="tutor-btn tutor-btn-primary tutor-btn-block"><?php esc_html_e( 'Register', 'tutor' ); ?></button>
+				<div class="tutor-flex tutor-items-center tutor-justify-center tutor-text-center tutor-fs-6 tutor-color-secondary tutor-mt-8">
+					<div class="tutor-small">
+						<?php esc_html_e( 'Don\'t have an account?', 'tutor' ); ?>
+					</div>
+					<a href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ); ?>" class="tutor-btn tutor-btn-link">
+						<?php esc_html_e( 'Login', 'tutor' ); ?>
+					</a>
+				</div>
 			</div>
 			<?php do_action( 'tutor_after_register_button' ); ?>
 			

@@ -1,0 +1,379 @@
+// Layout Utilities
+// Flexbox, grid, positioning, display, and responsive utilities
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+// ------------------------
+// Utility Maps
+// ------------------------
+
+$display-utils: (
+  block: block,
+  inline-block: inline-block,
+  inline: inline,
+  flex: flex,
+  inline-flex: inline-flex,
+  grid: grid,
+  inline-grid: inline-grid,
+  hidden: none,
+);
+
+$flex-direction-utils: (
+  flex-row: row,
+  flex-row-reverse: row-reverse,
+  flex-column: column,
+  flex-column-reverse: column-reverse,
+);
+
+$flex-wrap-utils: (
+  wrap: wrap,
+  wrap-reverse: wrap-reverse,
+  nowrap: nowrap,
+);
+
+$flex-grow-utils: (0, 1);
+$flex-shrink-utils: (0, 1);
+
+$justify-utils: (
+  justify-start: flex-start,
+  justify-end: flex-end,
+  justify-center: center,
+  justify-between: space-between,
+  justify-around: space-around,
+  justify-evenly: space-evenly,
+);
+
+$align-items-utils: (
+  items-start: flex-start,
+  items-end: flex-end,
+  items-center: center,
+  items-baseline: baseline,
+  items-stretch: stretch,
+);
+
+$align-content-utils: (
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  between: space-between,
+  around: space-around,
+  evenly: space-evenly,
+);
+
+$align-self-utils: (
+  auto: auto,
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  stretch: stretch,
+  baseline: baseline,
+);
+
+$grid-cols: (1, 2, 3, 4, 5, 6, 12);
+
+$grid-split-utils: (
+  '1-5-1': 1.5fr 1fr,
+  '2-1': 2fr 1fr,
+  '1-2': 1fr 2fr,
+);
+
+// ------------------------
+// Base Utilities
+// ------------------------
+
+// Display
+@each $name, $value in $display-utils {
+  .tutor-#{$name} {
+    display: $value;
+  }
+}
+
+// Flex direction
+@each $name, $dir in $flex-direction-utils {
+  .tutor-#{$name} {
+    flex-direction: $dir;
+  }
+}
+
+// Flex wrap
+@each $name, $dir in $flex-wrap-utils {
+  .tutor-flex-#{$name} {
+    flex-wrap: $dir;
+  }
+}
+
+// Flex grow
+@each $value in $flex-grow-utils {
+  .tutor-flex-grow-#{$value} {
+    flex-grow: $value;
+  }
+}
+
+// Flex shrink
+@each $value in $flex-shrink-utils {
+  .tutor-flex-shrink-#{$value} {
+    flex-shrink: $value;
+  }
+}
+
+// Flex shorthand
+.tutor-flex-1 {
+  flex: 1 1 0%;
+}
+.tutor-flex-auto {
+  flex: 1 1 auto;
+}
+.tutor-flex-initial {
+  flex: 0 1 auto;
+}
+.tutor-flex-none {
+  flex: none;
+}
+
+// Justify content
+@each $name, $value in $justify-utils {
+  .tutor-#{$name} {
+    justify-content: $value;
+  }
+}
+
+// Align items
+@each $name, $value in $align-items-utils {
+  .tutor-#{$name} {
+    align-items: $value;
+  }
+}
+
+// Align content
+@each $name, $value in $align-content-utils {
+  .tutor-content-#{$name} {
+    align-content: $value;
+  }
+}
+
+// Align self
+@each $name, $value in $align-self-utils {
+  .tutor-self-#{$name} {
+    align-self: $value;
+  }
+}
+
+// Gap utilities
+@each $key, $value in $tutor-spacing {
+  .tutor-gap-#{$key} {
+    gap: $value;
+  }
+  .tutor-gap-x-#{$key} {
+    column-gap: $value;
+  }
+  .tutor-gap-y-#{$key} {
+    row-gap: $value;
+  }
+}
+
+@each $count in $grid-cols {
+  .tutor-grid-cols-#{$count} {
+    grid-template-columns: repeat($count, minmax(0, 1fr));
+  }
+}
+
+// Custom splits
+@each $name, $value in $grid-split-utils {
+  .tutor-grid-cols-#{$name} {
+    grid-template-columns: $value;
+  }
+}
+
+.tutor-grid-cols-none {
+  grid-template-columns: none;
+}
+
+// Grid column span
+@for $i from 1 through 6 {
+  .tutor-col-span-#{$i} {
+    grid-column: span #{$i} / span #{$i};
+  }
+}
+.tutor-col-span-full {
+  grid-column: 1 / -1;
+}
+.tutor-col-auto {
+  grid-column: auto;
+}
+
+// ------------------------
+// Positioning Utilities
+// ------------------------
+
+$position-values: static, fixed, absolute, relative, sticky;
+@each $pos in $position-values {
+  .tutor-#{$pos} {
+    position: $pos;
+  }
+}
+
+// Insets
+$inset-sides: top, right, bottom, left;
+@each $side in $inset-sides {
+  .tutor-#{$side}-0 {
+    @if $side == 'right' {
+      inset-inline-end: 0;
+    } @else if $side == 'left' {
+      inset-inline-start: 0;
+    } @else {
+      #{$side}: 0;
+    }
+  }
+  .tutor-#{$side}-auto {
+    @if $side == 'right' {
+      inset-inline-end: auto;
+    } @else if $side == 'left' {
+      inset-inline-start: auto;
+    } @else {
+      #{$side}: auto;
+    }
+  }
+}
+@each $key, $value in $tutor-spacing {
+  @each $side in $inset-sides {
+    .tutor-#{$side}-#{$key} {
+      @if $side == 'right' {
+        inset-inline-end: $value;
+      } @else if $side == 'left' {
+        inset-inline-start: $value;
+      } @else {
+        #{$side}: $value;
+      }
+    }
+  }
+}
+
+.tutor-inset-0 {
+  top: 0;
+  inset-inline-start: 0;
+  bottom: 0;
+  inset-inline-end: 0;
+}
+.tutor-inset-auto {
+  top: auto;
+  inset-inline-start: auto;
+  bottom: auto;
+  inset-inline-end: auto;
+}
+
+// ------------------------
+// Overflow Utilities
+// ------------------------
+
+$overflow-types: auto, hidden, visible, scroll;
+@each $type in $overflow-types {
+  .tutor-overflow-#{$type} {
+    overflow: $type;
+  }
+  .tutor-overflow-x-#{$type} {
+    overflow-x: $type;
+  }
+  .tutor-overflow-y-#{$type} {
+    overflow-y: $type;
+  }
+}
+
+// ------------------------
+// Float Utilities
+// ------------------------
+
+.tutor-float-start {
+  float: inline-start;
+}
+.tutor-float-end {
+  float: inline-end;
+}
+.tutor-float-left {
+  float: left;
+}
+.tutor-float-right {
+  float: right;
+}
+.tutor-float-none {
+  float: none;
+}
+
+// ------------------------
+// Icon utility
+// ------------------------
+
+.tutor-icon {
+  @include tutor-flex(row, center, center);
+  flex-shrink: 0;
+}
+
+// ------------------------
+// Responsive Utilities
+// ------------------------
+
+@each $breakpoint, $min-width in $tutor-breakpoints {
+  @include tutor-breakpoint-down($breakpoint) {
+    // Display utilities
+    @each $name, $value in $display-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        display: $value;
+      }
+    }
+
+    // Flex direction utilities
+    @each $name, $dir in $flex-direction-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        flex-direction: $dir;
+      }
+    }
+
+    // Justify content utilities
+    @each $name, $value in $justify-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        justify-content: $value;
+      }
+    }
+
+    // Align items utilities
+    @each $name, $value in $align-items-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        align-items: $value;
+      }
+    }
+
+    // Gap utilities
+    @each $name, $value in $tutor-spacing {
+      .tutor-#{$breakpoint}-gap-#{$name} {
+        gap: $value;
+      }
+      .tutor-#{$breakpoint}-gap-x-#{$name} {
+        column-gap: $value;
+      }
+      .tutor-#{$breakpoint}-gap-y-#{$name} {
+        row-gap: $value;
+      }
+    }
+
+    // Grid column utilities
+    @each $count in $grid-cols {
+      .tutor-#{$breakpoint}-grid-cols-#{$count} {
+        grid-template-columns: repeat($count, minmax(0, 1fr));
+      }
+    }
+
+    // Flex shorthand
+    .tutor-#{$breakpoint}-flex-1 {
+      flex: 1 1 0%;
+    }
+    .tutor-#{$breakpoint}-flex-auto {
+      flex: 1 1 auto;
+    }
+    .tutor-#{$breakpoint}-flex-initial {
+      flex: 0 1 auto;
+    }
+    .tutor-#{$breakpoint}-flex-none {
+      flex: none;
+    }
+  }
+}
