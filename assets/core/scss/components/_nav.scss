@@ -99,6 +99,7 @@
       @include tutor-text(tiny);
       padding: 7px $tutor-spacing-5;
       border-radius: $tutor-tab-radius-sm;
+      height: $tutor-tab-height-sm;
     }
 
     .tutor-nav-dropdown {
