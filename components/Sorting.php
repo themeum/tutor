@@ -16,6 +16,7 @@ namespace Tutor\Components;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Components\Constants\Positions;
 use Tutor\Components\Constants\Color;
+use Tutor\Components\Constants\Size;
 use Tutor\Components\Popover;
 use TUTOR\Icon;
 
@@ -80,6 +81,13 @@ class Sorting extends BaseComponent {
 	 * @var string
 	 */
 	protected $base_url = '';
+
+	/**
+	 * Component size
+	 *
+	 * @var string
+	 */
+	protected $size = Size::X_SMALL;
 
 	/**
 	 * Constructor
@@ -161,6 +169,18 @@ class Sorting extends BaseComponent {
 	}
 
 	/**
+	 * Set component size
+	 *
+	 * @param string $size size.
+	 *
+	 * @return self
+	 */
+	public function size( string $size ): self {
+		$this->size = $size;
+		return $this;
+	}
+
+	/**
 	 * Get component content
 	 *
 	 * @return string
@@ -185,7 +205,7 @@ class Sorting extends BaseComponent {
 				type="button"
 				x-ref="trigger"
 				@click="toggle()"
-				class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon"
+				class="tutor-btn tutor-btn-outline tutor-btn-<?php echo esc_attr( $this->size ); ?> tutor-btn-icon"
 			>
 				<?php
 					$sorting_icon = 'DESC' === $this->order ? Icon::STEPPER : Icon::DESCENDING;

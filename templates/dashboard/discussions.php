@@ -58,7 +58,7 @@ $page_nav_items = array(
 		?>
 		<div class="tutor-dashboard-page-card">
 			<div class="tutor-dashboard-page-card-header">
-				<?php Nav::make()->items( $page_nav_items )->render(); ?>
+				<?php Nav::make()->items( $page_nav_items )->size( Size::SMALL )->render(); ?>
 			</div>
 			<div class="tutor-dashboard-page-card-body">
 				<?php

@@ -38,7 +38,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 ?>
 <div class="tutor-pt-4 tutor-pb-6">
 	<div class="tutor-discussion-single" x-data="tutorQnA()">
-		<div class="tutor-flex tutor-justify-between tutor-p-6 tutor-border-b">
+		<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
 			<a href="<?php echo esc_url( $back_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
 				<?php SvgIcon::make()->name( Icon::ARROW_LEFT_2 )->render(); ?>
 				<?php esc_html_e( 'Back', 'tutor' ); ?>

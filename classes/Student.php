@@ -355,7 +355,6 @@ class Student {
 		$courses_tab = array(
 			array(
 				'type'    => 'dropdown',
-				'icon'    => Icon::ENROLLED,
 				'active'  => ( ( 'courses' === $active_tab ) || ( 'courses/active-courses' === $active_tab ) || ( 'courses/completed-courses' === $active_tab ) ) ? true : false,
 				'options' => array(
 					array(

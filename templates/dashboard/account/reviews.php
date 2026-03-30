@@ -62,8 +62,8 @@ $bin_icon = SvgIcon::make()->name( Icon::BIN )->get();
 			<?php
 				ConfirmationModal::make()
 					->id( 'review-delete-modal' )
-					->title( __( 'Delete This Review?', 'tutor' ) )
-					->message( __( 'Are you sure you want to delete this review? Please confirm your choice.', 'tutor' ) )
+					->title( __( 'Delete your Review?', 'tutor' ) )
+					->message( __( 'Are you sure you want to delete this review? This action cannot be undone.', 'tutor' ) )
 					->icon( UrlHelper::asset( 'images/delete-reviews.svg' ) )
 					->confirm_handler( 'handleDeleteReview(payload?.id)' )
 					->mutation_state( 'deleteReviewMutation' )
