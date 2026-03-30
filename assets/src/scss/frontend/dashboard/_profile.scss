@@ -117,8 +117,6 @@
       }
 
       li {
-        @include tutor-badge-base;
-        @include tutor-badge-variant(disabled);
         white-space: nowrap;
         margin: 0;
 
