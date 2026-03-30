@@ -14,6 +14,9 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Course;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 
 $user_id   = get_current_user_id();
@@ -30,7 +33,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		<div class="tutor-border tutor-mb-7 tutor-rounded-2xl tutor-surface-l1 tutor-p-5">
 			<div class="tutor-flex tutor-items-center tutor-justify-between">
 				<div class="tutor-flex tutor-items-center tutor-gap-2">
-					<?php tutor_utils()->render_svg_icon( Icon::INFO, 24, 24, array( 'class' => 'tutor-icon-brand' ) ); ?>
+					<?php SvgIcon::make()->name( Icon::INFO )->size( 24 )->color( Color::BRAND )->render(); ?>
 					<span class="tutor-small">
 						<?php echo esc_html( $text ); ?>
 					</span>
@@ -61,7 +64,6 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 	$time_spent = Course::get_total_course_duration( $completed_courses );
 	$grid_col   = $time_spent['hours'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
-	$seconds    = $time_spent['minutes'] > 0 ? $time_spent['minutes'] * 60 : 0;
 	?>
 	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 <?php echo esc_attr( $grid_col ); ?>">
 		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
@@ -70,7 +72,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html__( 'Enrolled Courses', 'tutor' ); ?>
 				</h3>
 				<div class="tutor-stat-card-icon tutor-flex">
-					<?php tutor_utils()->render_svg_icon( Icon::COURSES, 20, 20 ); ?>
+					<?php SvgIcon::make()->name( Icon::COURSES )->size( 20 )->render(); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
@@ -86,7 +88,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html__( 'Active', 'tutor' ); ?>
 				</h3>
 				<div class="tutor-stat-card-icon tutor-flex">
-					<?php tutor_utils()->render_svg_icon( Icon::PLAY_LINE, 20, 20 ); ?>
+					<?php SvgIcon::make()->name( Icon::PLAY_LINE )->size( 20 )->render(); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
@@ -102,7 +104,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html__( 'Completed', 'tutor' ); ?>
 				</h3>
 				<div class="tutor-stat-card-icon tutor-flex">
-					<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_CIRCLE, 20, 20 ); ?>
+					<?php SvgIcon::make()->name( Icon::COMPLETED_CIRCLE )->size( 20 )->render(); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
@@ -121,7 +123,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<?php echo esc_html__( 'Time Spent', 'tutor' ); ?>
 				</h3>
 				<div class="tutor-stat-card-icon tutor-flex">
-					<?php tutor_utils()->render_svg_icon( Icon::TIME, 20, 20 ); ?>
+					<?php SvgIcon::make()->name( Icon::TIME )->size( 20 )->render(); ?>
 				</div>
 			</div>
 			<div class="tutor-stat-card-content">
@@ -147,7 +149,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<div x-bind="getBackdropBindings()"></div>
 				<div x-bind="getModalContentBindings()" style="width: 354px;">
 					<div class="tutor-modal-body tutor-px-9 tutor-pt-9 tutor-pb-8 tutor-text-center">
-						<?php tutor_utils()->render_svg_icon( Icon::CONFETTI, 32, 32, array( 'class' => 'tutor-icon-exception2' ) ); ?>
+						<div class="tutor-flex tutor-justify-center">
+							<img src="<?php echo esc_attr( UrlHelper::asset( 'images/illustrations/confetti.svg' ) ); ?>" alt="<?php esc_html_e( 'Confetti', 'tutor' ); ?>" />
+						</div>
 
 						<h3 class="tutor-h3 tutor-mb-2 tutor-mt-6">
 							<span class="tutor-font-regular"><?php esc_html_e( 'Fantastic,', 'tutor' ); ?></span> 
@@ -185,19 +189,20 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							</span> 
 							<?php endif; ?>
 							
-							<?php if ( $seconds > 0 ) : ?>
+							<?php if ( $time_spent['seconds'] > 0 ) : ?>
 							<span class="tutor-font-medium">
 								<?php
 								echo esc_html(
 									sprintf(
 									/* translators: 1: total seconds spent */
 										__( ', and %1$d+ seconds!', 'tutor' ),
-										$seconds
+										$time_spent['seconds']
 									)
 								);
 								?>
 							</span>
 							<?php endif; ?>
+							<br>
 							<?php echo esc_html__( 'Incredible!', 'tutor' ); ?>
 						</p>
 
@@ -205,7 +210,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							class="tutor-btn tutor-btn-primary tutor-btn-large tutor-rounded-full tutor-btn-block tutor-gap-2" 
 							@click="TutorCore.modal.closeModal('tutor-time-spent-modal')"
 						>
-							<?php tutor_utils()->render_svg_icon( Icon::HAPPY, 20, 20 ); ?>
+							<?php SvgIcon::make()->name( Icon::HAPPY )->size( 20 )->render(); ?>
 							<?php esc_html_e( "I'm Happy", 'tutor' ); ?>
 						</button>
 					</div>

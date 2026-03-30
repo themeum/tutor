@@ -12,6 +12,8 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Progress;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use TUTOR\Icon;
 
 if ( ! tutor_utils()->get_option( 'enable_profile_completion' ) ) {
@@ -68,7 +70,7 @@ unset( $rest_of_the_items[ $first_incomplete_key ] );
 					<a href="<?php echo esc_url( $first_incomplete_item['url'] ); ?>"
 						class="tutor-tiny tutor-font-medium tutor-text-brand tutor-flex tutor-items-center tutor-gap-3">
 						<?php echo esc_html( $first_incomplete_item['text'] ); ?>
-						<?php tutor_utils()->render_svg_icon( Icon::ARROW_RIGHT_2 ); ?>
+						<?php SvgIcon::make()->name( Icon::ARROW_RIGHT_2 )->render(); ?>
 					</a>
 				<?php } ?>
 			</div>
@@ -76,7 +78,7 @@ unset( $rest_of_the_items[ $first_incomplete_key ] );
 
 		<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-small tutor-btn-icon" @click="expanded = !expanded">
 			<span :class="expanded && 'tutor-rotate-180'" class="tutor-flex tutor-transition-all">
-				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2, 20, 20, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+				<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 20 )->color( Color::SECONDARY )->render(); ?>
 			</span>
 		</button>
 	</div>
@@ -86,18 +88,18 @@ unset( $rest_of_the_items[ $first_incomplete_key ] );
 			<div class="tutor-flex tutor-items-center tutor-gap-8">
 				<?php if ( $data['is_set'] ) : ?>
 					<div class="tutor-flex tutor-p-3 tutor-surface-brand-primary tutor-border tutor-border-brand tutor-rounded-full">
-						<?php tutor_utils()->render_svg_icon( Icon::CHECK_2, 16, 16, array( 'class' => 'tutor-icon-idle-inverse' ) ); ?>
+						<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 16 )->color( Color::IDLE_INVERSE )->render(); ?>
 					</div>
 					<div class="tutor-tiny tutor-font-medium tutor-text-subdued">
 						<?php echo esc_html( $data['text'] ); ?>
 					</div>
 				<?php else : ?>
 					<div class="tutor-flex tutor-p-3 tutor-border tutor-rounded-full">
-						<?php tutor_utils()->render_svg_icon( Icon::CHECK_2, 16, 16, array( 'class' => 'tutor-icon-disabled' ) ); ?>
+						<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 16 )->color( Color::DISABLED )->render(); ?>
 					</div>
 					<a href="<?php echo esc_url( $data['url'] ); ?>" class="tutor-tiny tutor-font-medium tutor-text-brand tutor-flex tutor-items-center tutor-gap-3">
 						<?php echo esc_html( $data['text'] ); ?>
-						<?php tutor_utils()->render_svg_icon( Icon::ARROW_RIGHT_2 ); ?>
+						<?php SvgIcon::make()->name( Icon::ARROW_RIGHT_2 )->render(); ?>
 					</a>
 				<?php endif; ?>
 			</div>

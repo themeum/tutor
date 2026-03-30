@@ -225,6 +225,7 @@ final class Icon {
 	const LEAGUE                     = 'league';
 	const LEFT                       = 'left';
 	const LESSON                     = 'lesson';
+	const LESSON_COMPLETED           = 'lesson-completed';
 	const LEVEL                      = 'level';
 	const LIGHT                      = 'light';
 	const LINE_CROSS                 = 'line-cross';

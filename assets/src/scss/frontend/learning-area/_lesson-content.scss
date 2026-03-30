@@ -7,6 +7,48 @@
 }
 
 .tutor-lesson-content {
+  .tutor-mark-as-complete-button {
+    @include tutor-button-reset();
+    @include tutor-typography(tiny, medium, secondary);
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-5;
+    background-color: $tutor-surface-l2;
+    padding: $tutor-spacing-4 $tutor-spacing-6;
+    padding-right: 10px;
+    min-width: 160px;
+    height: 40px;
+    justify-content: space-between;
+    border-radius: $tutor-radius-full;
+    position: relative;
+    @include tutor-transition(background-color);
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    &:hover:not(.completed) {
+      background-color: $tutor-surface-l1;
+
+      svg {
+        color: $tutor-icon-success-primary;
+      }
+    }
+
+    &.completed {
+      background-color: $tutor-actions-success-primary;
+      color: $tutor-text-primary-inverse;
+      padding-right: 40px;
+      cursor: default;
+
+      svg {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: $tutor-icon-idle-inverse;
+      }
+    }
+  }
+
   .tutor-lesson-wrapper {
     @include tutor-typography('p1', 'regular', 'secondary');
 

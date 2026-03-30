@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Modal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Table;
@@ -25,6 +26,7 @@ use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
 use WP_Post;
+use Tutor\Components\SvgIcon;
 
 /**
  * Manage quiz operations.
@@ -1526,7 +1528,7 @@ class Quiz {
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE, 20, 20 ) . __( 'Questions', 'tutor' ) . '
+							' . SvgIcon::make()->name( Icon::QUESTION_CIRCLE )->size( 20 )->get() . __( 'Questions', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $total_questions ),
@@ -1539,7 +1541,7 @@ class Quiz {
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::TIME, 20, 20 ) . __( 'Quiz Time', 'tutor' ) . '
+							' . SvgIcon::make()->name( Icon::TIME )->size( 20 )->get() . __( 'Quiz Time', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $quiz_item_readable ),
@@ -1551,7 +1553,7 @@ class Quiz {
 			'columns' => array(
 				array(
 					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . tutor_utils()->get_svg_icon( Icon::PRIME_CHECK_CIRCLE, 20, 20 ) . __( 'Total Marks', 'tutor' ) . '
+						' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
 					</div>',
 				),
 				array( 'content' => $total_questions ),
@@ -1562,7 +1564,7 @@ class Quiz {
 			'columns' => array(
 				array(
 					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . tutor_utils()->get_svg_icon( Icon::PASSED, 20, 20 ) . __( 'Passing Marks', 'tutor' ) . '
+						' . SvgIcon::make()->name( Icon::PASSED )->size( 20 )->get() . __( 'Passing Marks', 'tutor' ) . '
 					</div>',
 				),
 				array( 'content' => $passing_grade . '%' ),
@@ -1676,18 +1678,21 @@ class Quiz {
 		$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
 		$can_start_quiz    = $attempt_remaining > 0 || 0 === $attempts_allowed;
 		$quiz_auto_start   = tutor_utils()->get_quiz_option( $quiz_id, 'quiz_auto_start', 0 );
+		$should_auto_start = 1 === (int) $quiz_auto_start && 0 === (int) $attempted_count;
 
 		if ( ! $can_start_quiz ) {
 			return;
 		}
 
 		global $tutor_current_post, $tutor_course_id;
-		$current_content_id = $tutor_current_post ? $tutor_current_post->ID : $quiz_id;
-		$course_id          = $tutor_course_id ? $tutor_course_id : tutor_utils()->get_course_id_by_subcontent( $current_content_id );
-		$contents           = tutor_utils()->get_course_prev_next_contents_by_id( $current_content_id );
-		$next_id            = $contents ? $contents->next_id : 0;
-		$skip_url           = get_the_permalink( $next_id ? $next_id : $course_id );
-		$skip_modal_id      = 'tutor-quiz-skip-to-next';
+		$current_content_id  = $tutor_current_post ? $tutor_current_post->ID : $quiz_id;
+		$course_id           = $tutor_course_id ? $tutor_course_id : tutor_utils()->get_course_id_by_subcontent( $current_content_id );
+		$contents            = tutor_utils()->get_course_prev_next_contents_by_id( $current_content_id );
+		$next_id             = $contents ? $contents->next_id : 0;
+		$skip_url            = get_the_permalink( $next_id ? $next_id : $course_id );
+		$skip_modal_id       = 'tutor-quiz-skip-to-next';
+		$auto_start_modal_id = 'tutor-quiz-autostart-modal';
+		$countdown_seconds   = 5;
 
 		$skip_modal_cancel_button = Button::make()
 			->label( __( 'Cancel', 'tutor' ) )
@@ -1718,7 +1723,9 @@ class Quiz {
 			<form
 				x-data="tutorQuizAutoStart({
 					quizID: <?php echo esc_attr( $quiz_id ); ?>,
-					autoStart: <?php echo $quiz_auto_start ? 'true' : 'false'; ?>,
+					autoStart: <?php echo $should_auto_start ? 'true' : 'false'; ?>,
+					autoStartModalId: '<?php echo esc_attr( $auto_start_modal_id ); ?>',
+					countdownSeconds: <?php echo esc_attr( $countdown_seconds ); ?>,
 				})"
 				@submit.prevent="handleStartQuiz()"
 			>
@@ -1743,6 +1750,21 @@ class Quiz {
 				->render();
 			?>
 		<?php endif; ?>
+
+		<?php
+		Modal::make()
+			->id( $auto_start_modal_id )
+			->closeable( false )
+			->width( '268px' )
+			->template(
+				tutor()->path . 'templates/learning-area/quiz/modals/auto-start.php',
+				array(
+					'countdown_seconds' => $countdown_seconds,
+					'modal_id'          => $auto_start_modal_id,
+				)
+			)
+			->render();
+		?>
 		<?php
 	}
 

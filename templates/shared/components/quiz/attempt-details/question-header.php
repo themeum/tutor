@@ -11,6 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Badge;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 $index                = (int) ( $index ?? 1 );
 $question_title       = (string) ( $question_title ?? '' );
@@ -88,7 +89,7 @@ $review_field_name    = (string) ( $review_field_name ?? '' );
 							tabindex="-1"
 							aria-hidden="true"
 						/>
-						<?php tutor_utils()->render_svg_icon( Icon::CHECK_2, 20, 20 ); ?>
+						<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->render(); ?>
 					</label>
 
 					<label
@@ -106,7 +107,7 @@ $review_field_name    = (string) ( $review_field_name ?? '' );
 							tabindex="-1"
 							aria-hidden="true"
 						/>
-						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 20, 20 ); ?>
+						<?php SvgIcon::make()->name( Icon::CROSS )->size( 20 )->render(); ?>
 					</label>
 				</div>
 			<?php endif; ?>

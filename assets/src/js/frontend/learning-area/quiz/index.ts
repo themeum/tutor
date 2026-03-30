@@ -1,5 +1,6 @@
 import { quizSummarySidebarMeta } from '@FrontendComponents/quiz/summary-sidebar';
 import { quizAutoStartMeta } from './auto-start';
+import { quizRadarMeta } from './radar';
 import { quizLayoutMeta } from './layout';
 import { questionMatchingMeta } from './questions/matching';
 import { questionOrderingMeta } from './questions/ordering';
@@ -14,6 +15,7 @@ export const initializeQuizInterface = () => {
       questionMatchingMeta,
       quizSubmissionMeta,
       quizAutoStartMeta,
+      quizRadarMeta,
       quizLayoutMeta,
       quizSummarySidebarMeta,
     ],

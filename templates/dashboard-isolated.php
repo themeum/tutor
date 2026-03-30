@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Dashboard;
 use Tutor\Helpers\UrlHelper;
 
+$is_kids_mode = tutor_utils()->is_kids_mode();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -18,6 +18,7 @@ body:has(#wpadminbar) {
   border-bottom: 1px solid $tutor-border-idle;
   padding-block: $tutor-spacing-5;
   position: sticky;
+  top: 0;
   z-index: $tutor-z-positive;
   width: 100%;
 
@@ -29,10 +30,4 @@ body:has(#wpadminbar) {
       margin-inline-start: $tutor-spacing-4;
     }
   }
-}
-
-.tutor-profile-container {
-  max-width: 728px;
-  margin: 0 auto;
-  padding-inline: $tutor-spacing-6;
 }

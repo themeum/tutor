@@ -1,6 +1,7 @@
 // Dashboard Entry Point
 // Initializes dashboard functionality based on current page
 
+import { initializeReviews } from '@FrontendComponents/reviews';
 import { initializeHeader } from './header';
 import { initializeAnnouncements } from './pages/announcements';
 import { initializeAssignments } from './pages/assignments';
@@ -10,7 +11,6 @@ import { initializeHome } from './pages/instructor/home';
 import { initializeMyCourses } from './pages/my-courses';
 import { initializeOverview } from './pages/overview';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
-import { initializeReviews } from './pages/reviews';
 import { initializeSettings } from './pages/settings';
 import { initializeWithdrawals } from './pages/withdrawals';
 

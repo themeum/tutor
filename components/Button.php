@@ -15,6 +15,7 @@ namespace Tutor\Components;
 
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Components\Constants\Color;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -316,7 +317,12 @@ class Button extends BaseComponent {
 				$icon_html = $this->icon;
 			} else {
 				ob_start();
-				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height, $this->icon_attributes );
+				SvgIcon::make()
+					->name( $this->icon )
+					->width( $this->icon_width )
+					->height( $this->icon_height )
+					->attrs( $this->icon_attributes )
+					->render();
 				$icon_html = ob_get_clean();
 			}
 		}
