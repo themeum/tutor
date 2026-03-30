@@ -46,20 +46,18 @@ $page_nav_items = apply_filters( 'tutor_dashboard_account_billing_page_nav_items
 	<?php require_once tutor_get_template( 'account-header' ); ?>
 
 	<div class="tutor-account-container">
-		<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
-			<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
-				<?php if ( $show_tab_nav ) { ?>
-				<div class="tutor-p-6 tutor-border-b">
-					<?php Nav::make()->items( $page_nav_items )->render(); ?>
-				</div>
-				<?php } ?>
-				<div class="tutor-sm-rounded-2xl tutor-sm-mt-4">
-					<?php
-					if ( file_exists( $tab_template ) ) {
-						require_once $tab_template;
-					}
-					?>
-				</div>
+		<div class="tutor-account-billing-wrapper tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9 tutor-surface-l1 tutor-border tutor-rounded-2xl">
+			<?php if ( $show_tab_nav ) { ?>
+			<div class="tutor-p-6 tutor-border-b">
+				<?php Nav::make()->items( $page_nav_items )->render(); ?>
+			</div>
+			<?php } ?>
+			<div class="tutor-sm-rounded-2xl tutor-sm-mt-4">
+				<?php
+				if ( file_exists( $tab_template ) ) {
+					require_once $tab_template;
+				}
+				?>
 			</div>
 		</div>
 	</div>
