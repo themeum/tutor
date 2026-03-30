@@ -14,7 +14,7 @@ body:has(#wpadminbar) {
   flex-direction: column;
   position: relative;
 
-  .tutor-tabs-vertical {
+  &.tutor-tabs-vertical {
     display: block;
   }
 
