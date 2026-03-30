@@ -10,7 +10,7 @@
   .tutor-assignment-description,
   .tutor-assignment-attachments,
   .tutor-assignment-form {
-    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm)
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
 
   .tutor-assignment-feedback {
