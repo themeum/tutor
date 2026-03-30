@@ -2,21 +2,10 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import {
-  borderRadius,
-  Breakpoint,
-  colorTokens,
-  spacing,
-  fontFamily,
-  fontSize,
-  fontWeight,
-  lineHeight,
-  letterSpacing,
-} from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import useWPMedia from '@TutorShared/hooks/useWpMedia';
@@ -528,15 +517,10 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
               </span>
               {__('Mark the correct area', __TUTOR_TEXT_DOMAIN__)}
             </span>
-            <Button
-              variant="tertiary"
-              size="small"
-              onClick={handleClear}
-              icon={<SVGIcon name="eraser" width={18} height={18} style={styles.clearIcon} />}
-              css={styles.clearButton}
-            >
+            <button type="button" css={styles.clearButton} onClick={handleClear}>
+              <SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />
               {__('Clear', __TUTOR_TEXT_DOMAIN__)}
-            </Button>
+            </button>
           </div>
           <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
             <img
@@ -677,25 +661,19 @@ const styles = {
   `,
   clearButton: css`
     width: 94px;
-    height: 32px;
-    border-radius: 6px;
     border: none;
-    box-shadow: none;
-    padding: 4px 12px;
-    gap: 4px;
+    border-radius: ${borderRadius.input};
     background: ${colorTokens.action.secondary.default};
+    ${typography.caption('medium')};
     color: ${colorTokens.text.brand};
-    font-family: ${fontFamily.sfProDisplay};
-    font-weight: ${fontWeight.medium};
-    font-size: ${fontSize[13]};
-    line-height: ${lineHeight[20]};
-    letter-spacing: ${letterSpacing.normal};
-    text-align: center;
-    &:hover {
-      background: ${colorTokens.action.secondary.hover};
-      border: none;
-      box-shadow: none;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: ${spacing[8]};
+    padding: ${spacing[4]} 0;
+  `,
+  clearButtonIcon: css`
+    color: ${colorTokens.text.brand};
   `,
   clearIcon: css`
     color: ${colorTokens.text.brand};
