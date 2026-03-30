@@ -24,7 +24,7 @@ $is_kids_mode = tutor_utils()->is_kids_mode();
 	<title><?php bloginfo( 'name' ); ?></title>
 	<?php wp_head(); ?>
 </head>
-<body <?php body_class( '' ); ?> <?php echo $is_kids_mode ? 'data-tutor-ui="kids"' : ''; ?>>
+<body <?php body_class( '' ); ?>>
 <?php
 
 $dashboard_page    = get_query_var( 'tutor_dashboard_page' );
