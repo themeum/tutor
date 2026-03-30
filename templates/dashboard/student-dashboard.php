@@ -63,7 +63,6 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 	$time_spent = Course::get_total_course_duration( $completed_courses );
 	$grid_col   = $time_spent['hours'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
-	$seconds    = $time_spent['minutes'] > 0 ? $time_spent['minutes'] * 60 : 0;
 	?>
 	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 <?php echo esc_attr( $grid_col ); ?>">
 		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
@@ -187,19 +186,20 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							</span> 
 							<?php endif; ?>
 							
-							<?php if ( $seconds > 0 ) : ?>
+							<?php if ( $time_spent['seconds'] > 0 ) : ?>
 							<span class="tutor-font-medium">
 								<?php
 								echo esc_html(
 									sprintf(
 									/* translators: 1: total seconds spent */
 										__( ', and %1$d+ seconds!', 'tutor' ),
-										$seconds
+										$time_spent['seconds']
 									)
 								);
 								?>
 							</span>
 							<?php endif; ?>
+							<br>
 							<?php echo esc_html__( 'Incredible!', 'tutor' ); ?>
 						</p>
 
