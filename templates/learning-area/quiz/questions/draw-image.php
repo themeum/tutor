@@ -34,7 +34,7 @@ $answer_obj = is_array( $answer ) ? (object) $answer : $answer;
 
 $bg_image_url = QuizModel::get_answer_image_url( $answer_obj );
 
-$quiz_id_attempt = isset( $tutor_is_started_quiz->quiz_id ) ? (int) $tutor_is_started_quiz->quiz_id : 0;
+$quiz_id_attempt = is_object( $tutor_is_started_quiz ) && isset( $tutor_is_started_quiz->quiz_id ) ? (int) $tutor_is_started_quiz->quiz_id : 0;
 $is_reveal_mode  = $quiz_id_attempt > 0 && QuizClass::QUIZ_FEEDBACK_MODE_REVEAL === tutor_utils()->get_quiz_option( $quiz_id_attempt, 'feedback_mode', '' );
 
 $instructor_mask         = ! empty( $answer_obj->answer_two_gap_match ) ? (string) $answer_obj->answer_two_gap_match : '';
@@ -132,56 +132,3 @@ do_action( 'tutor_enqueue_draw_image_question_script' );
 	x-text="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
 ></div>
 
-<style>
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-draw-image-wrapper {
-		position: relative;
-		display: inline-block;
-	}
-
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-draw-image-wrapper img {
-		display: block;
-		max-width: 100%;
-		height: auto;
-	}
-
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-draw-image-canvas {
-		position: absolute;
-		top: 0;
-		left: 0;
-	}
-
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-draw-image-reference-inner {
-		position: relative;
-		display: inline-block;
-		overflow: hidden;
-	}
-
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-draw-image-reference-bg {
-		display: block;
-		max-width: 100%;
-		height: auto;
-	}
-
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-draw-image-reference-mask {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-	}
-
-	#<?php echo esc_html( $wrapper_id ); ?> .tutor-draw-image-reference-mask--tint {
-		display: block;
-		background: var(--tutor-draw-mask-bg, #04C98633);
-		-webkit-mask-image: var(--tutor-draw-mask-url);
-		-webkit-mask-repeat: no-repeat;
-		-webkit-mask-size: 100% 100%;
-		mask-image: var(--tutor-draw-mask-url);
-		mask-repeat: no-repeat;
-		mask-size: 100% 100%;
-		filter:
-			drop-shadow(1px 0 0 #53B96A)
-			drop-shadow(-1px 0 0 #53B96A)
-			drop-shadow(0 1px 0 #53B96A)
-			drop-shadow(0 -1px 0 #53B96A);
-	}
-</style>
