@@ -63,16 +63,16 @@ $phone_number     = $student_meta['phone_number'][0] ?? '';
 				<?php echo esc_html( $student_meta['_tutor_profile_bio'][0] ?? '' ); ?>
 			</div>
 			<ul class="tutor-user-profile-details">
-				<li>
+				<li class="tutor-badge tutor-badge-disabled">
 					<?php echo esc_html__( 'Username', 'tutor' ); ?> : 
 					<span><?php echo esc_html( $student_details->user_login ); ?></span>
 				</li>
-				<li>
+				<li class="tutor-badge tutor-badge-disabled">
 					<?php echo esc_html__( 'Email', 'tutor' ); ?> : 
 					<span><?php echo esc_html( $student_details->user_email ); ?></span>
 				</li>
 				<?php if ( ! empty( $phone_number ) ) : ?>
-				<li>
+				<li class="tutor-badge tutor-badge-disabled">
 					<?php echo esc_html__( 'Phone', 'tutor' ); ?> : 
 					<span><?php echo esc_html( $phone_number ); ?></span>
 				</li>
