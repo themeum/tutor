@@ -26,7 +26,11 @@ require_once __DIR__ . '/vendor/autoload.php';
  *
  * @since 1.0.0
  */
+<<<<<<< HEAD
 define( 'TUTOR_VERSION', '4.0.0-dev' );
+=======
+define( 'TUTOR_VERSION', '3.9.7' );
+>>>>>>> 012374a2870258a4a43594382cf66d83a9ce9021
 define( 'TUTOR_FILE', __FILE__ );
 define( 'TUTOR_ENV', 'DEV' ); // DEV || PROD.
 
