@@ -118,22 +118,6 @@ if ( $has_student_drawn && $has_student_mask ) {
 				<?php esc_html_e( 'No drawing submitted.', 'tutor' ); ?>
 			</p>
 		<?php endif; ?>
-		<?php if ( $has_correct_mask || $has_student_drawn ) : ?>
-			<ul class="tutor-draw-image-review-legend tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8" role="list">
-				<?php if ( $has_correct_mask ) : ?>
-					<li class="tutor-draw-image-review-legend__item">
-						<span class="tutor-draw-image-review-swatch tutor-draw-image-review-swatch--correct" aria-hidden="true"></span>
-						<?php esc_html_e( 'Correct answer zone', 'tutor' ); ?>
-					</li>
-				<?php endif; ?>
-				<?php if ( $has_student_drawn ) : ?>
-					<li class="tutor-draw-image-review-legend__item">
-						<span class="tutor-draw-image-review-swatch tutor-draw-image-review-swatch--student" aria-hidden="true"></span>
-						<?php esc_html_e( 'Your answer', 'tutor' ); ?>
-					</li>
-				<?php endif; ?>
-			</ul>
-		<?php endif; ?>
 		<div class="tutor-draw-image-review-inner">
 			<img src="<?php echo esc_url( $ref_bg ); ?>" alt="" class="tutor-draw-image-bg" />
 			<?php if ( $has_correct_mask ) : ?>
@@ -154,9 +138,6 @@ if ( $has_student_drawn && $has_student_mask ) {
 	<?php elseif ( $has_student_drawn || $has_correct_mask ) : ?>
 		<?php if ( $has_student_drawn ) : ?>
 			<div class="tutor-draw-image-given-answer tutor-mb-12">
-				<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">
-					<?php esc_html_e( 'Your drawing:', 'tutor' ); ?>
-				</p>
 				<div class="tutor-draw-image-review-fallback">
 					<?php
 					$given_src_for_img = trim( $given_mask_raw );
@@ -176,9 +157,6 @@ if ( $has_student_drawn && $has_student_mask ) {
 
 		<?php if ( $has_correct_mask ) : ?>
 			<div class="tutor-draw-image-correct-answer tutor-mt-12">
-				<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">
-					<?php esc_html_e( 'Reference (correct answer zones):', 'tutor' ); ?>
-				</p>
 				<div class="tutor-draw-image-review-fallback">
 					<?php
 					$ref_src_for_img = trim( $ref_mask_raw );
