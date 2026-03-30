@@ -63,7 +63,7 @@ class Admin {
 
 		add_action( 'wp_ajax_tutor_do_not_show_feature_page', array( $this, 'handle_do_not_show_feature_page' ) );
 
-		add_action( 'upgrader_process_complete', array( $this, 'reset_permalink' ), 10, 2 );
+		add_action( 'upgrader_process_complete', array( $this, 'set_reset_permalink_flag' ), 10, 2 );
 	}
 
 	/**
@@ -76,7 +76,7 @@ class Admin {
 	 *
 	 * @return void
 	 */
-	public function reset_permalink( $upgrader_object, $options ) {
+	public function set_reset_permalink_flag( $upgrader_object, $options ) {
 		$our_plugin = tutor()->basename;
 
 		if ( 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
