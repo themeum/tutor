@@ -319,6 +319,11 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 3.9.7 - Feb 25, 2026
+
+Fix: Resolved SQL injection security vulnerabilities to enhance system security.
+Fix: Fixed an issue where Stripe orders were automatically canceled in certain cases.
+
 = 3.9.6 - Jan 28, 2026
 
 Update: Removed the autoload option from ‘email_template_data’ to improve site load performance. (Pro)
