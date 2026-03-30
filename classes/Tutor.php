@@ -12,6 +12,7 @@ namespace TUTOR;
 
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Migrations\Migration;
 use Tutor\TemplateImport\TemplateImportInit;
 
@@ -1359,8 +1360,8 @@ final class Tutor extends Singleton {
 				'tutor_announcements',
 			);
 
-			$post_type_strings = "'" . implode( "','", $post_types ) . "'";
-			$tutor_posts       = $wpdb->get_col( "SELECT ID from {$wpdb->posts} WHERE post_type in({$post_type_strings}) ;" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$in_clause   = QueryHelper::prepare_in_clause( $post_types );
+			$tutor_posts = $wpdb->get_col( $wpdb->prepare( "SELECT ID from {$wpdb->posts} WHERE post_type IN({$in_clause}) ;" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			if ( is_array( $tutor_posts ) && count( $tutor_posts ) ) {
 				foreach ( $tutor_posts as $post_id ) {
@@ -1385,10 +1386,10 @@ final class Tutor extends Singleton {
 			/**
 			 * Deleting Comments (reviews, questions, quiz_answers, etc)
 			 */
-			$tutor_comments       = $wpdb->get_col( "SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;" );
-			$comments_ids_strings = "'" . implode( "','", $tutor_comments ) . "'";
+			$tutor_comments = $wpdb->get_col( "SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;" );
 			if ( is_array( $tutor_comments ) && count( $tutor_comments ) ) {
-				$wpdb->query( "DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$comments_ids_strings}) " ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$in_clause = QueryHelper::prepare_in_clause( $tutor_comments );
+				$wpdb->query( $wpdb->prepare( "DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$in_clause}) " ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			}
 			$wpdb->delete( $wpdb->comments, array( 'comment_agent' => 'comment_agent' ) );
 

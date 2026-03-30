@@ -446,7 +446,7 @@ class QuizModel {
 	}
 
 	/**
-	 * Delete quizattempt for user
+	 * Delete quiz attempt for user
 	 *
 	 * @since 1.9.5
 	 *
@@ -457,17 +457,15 @@ class QuizModel {
 	public static function delete_quiz_attempt( $attempt_ids ) {
 		global $wpdb;
 
-		// Singlular to array.
+		// Singular to array.
 		! is_array( $attempt_ids ) ? $attempt_ids = array( $attempt_ids ) : 0;
 
 		if ( count( $attempt_ids ) ) {
-			$attempt_ids = implode( ',', $attempt_ids );
+			$attempt_ids = QueryHelper::prepare_in_clause( $attempt_ids );
 
-			//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			// Deleting attempt (comment), child attempt and attempt meta (comment meta).
-			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
-			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
-			//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN({$attempt_ids})" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN({$attempt_ids})" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			do_action( 'tutor_quiz/attempt_deleted', $attempt_ids );
 		}
