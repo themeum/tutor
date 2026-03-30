@@ -14,7 +14,7 @@ body:has(#wpadminbar) {
   flex-direction: column;
   position: relative;
 
-  .tutor-tabs-vertical {
+  &.tutor-tabs-vertical {
     display: block;
   }
 
@@ -77,7 +77,7 @@ body:has(#wpadminbar) {
   }
 }
 
-.tutor-profile-settings-tab {
+.tutor-profile-settings-tab.tutor-tabs-nav {
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
   background-color: $tutor-surface-l1;

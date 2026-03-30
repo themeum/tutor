@@ -189,7 +189,15 @@ class HooksHandler {
 		$transaction_id     = $res->transaction_id;
 
 		$order_details = $this->order_model->get_order_by_id( $order_id );
-		if ( $order_details ) {
+
+		/**
+		 * Ignore canceled/failed webhooks for old/failed payment session to avoid unenrolling paid users.
+		 *
+		 * @since 3.9.7
+		 */
+		$is_valid_paid_order = OrderModel::ORDER_COMPLETED === $order_details && OrderModel::PAYMENT_PAID === $order_details->payment_status;
+
+		if ( $order_details && ! $is_valid_paid_order ) {
 			$prev_payment_status = $order_details->payment_status;
 
 			$order_data = array(

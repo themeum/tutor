@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\OrderController;
@@ -882,32 +884,47 @@ class Assets {
 
 		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
 
-		if ( $is_dashboard || ( $is_learning_area && ! $is_legacy_learning ) ) {
-			$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
+		// Return if it is learning area the & on the legacy mode.
+		if ( $is_learning_area && $is_legacy_learning ) {
+			return;
+		}
 
-			// Core.
-			wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );
-			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), TUTOR_VERSION, true );
+		$is_course_list_page    = tutor_utils()->is_course_list_page();
+		$is_course_details_page = tutor_utils()->is_course_details_page();
 
-			wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
+		// Return if it is course list or course details page.
+		if ( $is_course_list_page || $is_course_details_page ) {
+			return;
+		}
 
-			if ( $is_kids_mode ) {
-				wp_enqueue_style( 'tutor-kids', $kids_css_url, array( 'tutor-core' ), $version );
-			}
+		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
+		if ( $is_kids_mode ) {
+			wp_enqueue_style( 'tutor-kids', $kids_css_url, array( 'tutor-core' ), $version );
+		}
 
-			if ( $is_dashboard ) {
-				wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
-				wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
-			}
+		if ( $is_dashboard ) {
+			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
+			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+		}
 
-			if ( $is_learning_area ) {
-				wp_enqueue_style( 'tutor-learning', $learning_area_css_url, array(), $version );
-				wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+		// Core.
+		wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );
+		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), TUTOR_VERSION, true );
 
-				if ( is_single_course( true ) ) {
-					wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
-					wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-				}
+		wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
+
+		if ( $is_dashboard ) {
+			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
+			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+		}
+
+		if ( $is_learning_area ) {
+			wp_enqueue_style( 'tutor-learning', $learning_area_css_url, array(), $version );
+			wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+
+			if ( is_single_course( true ) ) {
+				wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
+				wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 			}
 		}
 	}
@@ -923,16 +940,27 @@ class Assets {
 	 * @return boolean
 	 */
 	public function should_load_legacy_scripts(): bool {
-		$load = true;
+		if ( is_admin() ) {
+			return true;
+		}
 
-		if ( tutor_utils()->is_dashboard_page() ) {
-			$load = false;
-		} else {
-			$is_learning_area   = tutor_utils()->is_learning_area();
+		$load = false;
+		global $wp_query;
+
+		$is_learning_area          = tutor_utils()->is_learning_area();
+		$is_tutor_cart_page        = get_the_ID() === CartController::get_page_id();
+		$is_tutor_checkout_page    = get_the_ID() === CheckoutController::get_page_id();
+		$is_student_public_profile = ! empty( $wp_query->query['tutor_profile_username'] );
+
+		if ( tutor_utils()->is_course_list_page() || tutor_utils()->is_course_details_page() ) {
+			$load = true;
+		} elseif ( $is_learning_area ) {
 			$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
-			if ( $is_learning_area && ! $is_legacy_learning ) {
-				$load = false;
+			if ( $is_learning_area && $is_legacy_learning ) {
+				$load = true;
 			}
+		} elseif ( $is_tutor_cart_page || $is_tutor_checkout_page || $is_student_public_profile ) {
+			$load = true;
 		}
 
 		return apply_filters( 'tutor_should_load_legacy_scripts', $load );
