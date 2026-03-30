@@ -3,6 +3,7 @@
 
 .tutor-assignment {
   @include tutor-container(780px);
+  margin-top: $tutor-spacing-4;
 
   &-overview {
     @include tutor-flex(column, stretch, flex-start);
@@ -171,8 +172,8 @@
             height: $tutor-spacing-13;
             &:hover {
               td {
-                .attempt-list-badge{ 
-                  .tutor-badge{
+                .attempt-list-badge {
+                  .tutor-badge {
                     display: none;
                   }
                 }
@@ -196,7 +197,7 @@
               width: 18%;
             }
 
-            button{
+            button {
               display: none;
             }
           }

@@ -178,6 +178,7 @@
   &-error {
     .tutor-input {
       border: 1px solid $tutor-border-error;
+      --tutor-input-border-shadow-current: none;
       box-shadow: $tutor-shadow-xs;
 
       &:focus {
@@ -189,6 +190,7 @@
     .tutor-wp-editor-container {
       border: 1px solid $tutor-border-error;
       box-shadow: $tutor-shadow-xs;
+
       &:focus {
         @include tutor-focus-ring('error');
         border-color: $tutor-border-error;

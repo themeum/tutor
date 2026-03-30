@@ -11,6 +11,8 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\User;
+
+$is_kids_mode = tutor_utils()->is_kids_mode();
 ?>
 
 <?php
@@ -25,7 +27,7 @@ if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 		<title><?php bloginfo( 'name' ); ?></title>
 		<?php wp_head(); ?>
 	</head>
-	<body <?php body_class( '' ); ?>>
+	<body <?php body_class( '' ); ?> <?php echo $is_kids_mode ? 'data-tutor-ui="kids"' : ''; ?>>
 	<?php
 endif;
 global $wp_query;
@@ -51,6 +53,7 @@ $user_id                   = get_current_user_id();
 $user                      = get_user_by( 'ID', $user_id );
 $enable_profile_completion = tutor_utils()->get_option( 'enable_profile_completion' );
 $is_instructor             = tutor_utils()->is_instructor();
+$learning_mode             = tutor_utils()->get_option( 'learning_mode', 'classic' );
 
 // URLS.
 $current_url  = tutor()->current_url;
@@ -82,7 +85,7 @@ $footer_links = array(
 ?>
 
 <?php do_action( 'tutor_dashboard/before/wrap' ); ?>
-<div class="tutor-dashboard-layout">
+<div class="tutor-dashboard-layout" data-tutor-ui="<?php echo esc_attr( $learning_mode ); ?>">
 	<?php tutor_load_template( 'dashboard.components.sidebar' ); ?>
 	<div class="tutor-dashboard-main">
 		<?php tutor_load_template( 'dashboard.components.header' ); ?>

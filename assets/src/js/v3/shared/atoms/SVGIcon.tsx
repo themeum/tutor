@@ -1,7 +1,9 @@
-import { tutorConfig } from '@TutorShared/config/config';
-import { type IconCollection } from '@TutorShared/icons/types';
 import { type SerializedStyles, css } from '@emotion/react';
 import { memo, useEffect, useState } from 'react';
+
+import { tutorConfig } from '@TutorShared/config/config';
+import { type IconCollection } from '@TutorShared/icons/types';
+import { type LearningMode } from '@TutorShared/utils/types';
 
 interface SVGIconProps {
   name: IconCollection;
@@ -9,6 +11,7 @@ interface SVGIconProps {
   height?: number;
   style?: SerializedStyles;
   isColorIcon?: boolean;
+  learningMode?: LearningMode;
 }
 
 interface Icon {
@@ -27,20 +30,42 @@ interface IconCacheEntry {
 
 const iconCache: Record<string, IconCacheEntry> = {};
 
-const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ...rest }: SVGIconProps) => {
-  const [icon, setIcon] = useState<Icon | null>(iconCache[name]?.icon || null);
-  const [isLoading, setIsLoading] = useState(!iconCache[name]?.icon);
+const getResolvedLearningMode = (learningMode?: LearningMode): LearningMode => {
+  return learningMode ?? tutorConfig.settings?.learning_mode ?? 'classic';
+};
+
+const getFileName = (name: string) => {
+  return name.trim().replace(/[A-Z0-9]/g, (m) => '-' + m.toLowerCase());
+};
+
+const getIconCacheKey = (name: string, learningMode: LearningMode) => {
+  return `${learningMode}:${name}`;
+};
+
+const SVGIcon = ({
+  name,
+  width = 16,
+  height = 16,
+  style,
+  isColorIcon = false,
+  learningMode,
+  ...rest
+}: SVGIconProps) => {
+  const resolvedLearningMode = getResolvedLearningMode(learningMode);
+  const cacheKey = getIconCacheKey(name, resolvedLearningMode);
+  const [icon, setIcon] = useState<Icon | null>(iconCache[cacheKey]?.icon || null);
+  const [isLoading, setIsLoading] = useState(!iconCache[cacheKey]?.icon);
 
   useEffect(() => {
-    if (iconCache[name]?.icon) {
-      setIcon(iconCache[name]!.icon!);
+    if (iconCache[cacheKey]?.icon) {
+      setIcon(iconCache[cacheKey]!.icon!);
       setIsLoading(false);
       return;
     }
 
     setIsLoading(true);
 
-    fetchIcon(name, width, height)
+    fetchIcon(name, width, height, resolvedLearningMode)
       .then((loadedIcon) => {
         setIcon(loadedIcon);
       })
@@ -50,7 +75,7 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ..
       .finally(() => {
         setIsLoading(false);
       });
-  }, [name, width, height]);
+  }, [cacheKey, name, resolvedLearningMode, width, height]);
 
   const additionalAttributes = {
     ...(isColorIcon && { 'data-colorize': true }),
@@ -82,28 +107,37 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ..
   );
 };
 
-function fetchIcon(name: string, width: number, height: number): Promise<Icon> {
-  if (iconCache[name]?.icon) {
+function fetchIcon(name: string, width: number, height: number, learningMode: LearningMode): Promise<Icon> {
+  const cacheKey = getIconCacheKey(name, learningMode);
+
+  if (iconCache[cacheKey]?.icon) {
     // Icon already loaded
-    return Promise.resolve(iconCache[name]!.icon!);
+    return Promise.resolve(iconCache[cacheKey]!.icon!);
   }
 
-  if (iconCache[name]?.promise) {
+  if (iconCache[cacheKey]?.promise) {
     // Fetch already in progress, return existing promise
-    return iconCache[name]!.promise!;
+    return iconCache[cacheKey]!.promise!;
   }
 
-  const fileName = name.trim().replace(/[A-Z0-9]/g, (m) => '-' + m.toLowerCase());
-  const url = `${tutorConfig.tutor_url}/assets/icons/${fileName}.svg`;
+  const fileName = getFileName(name);
+  const iconUrls =
+    learningMode === 'kids'
+      ? [
+          `${tutorConfig.tutor_url}/assets/icons/kids/${fileName}.svg`,
+          `${tutorConfig.tutor_url}/assets/icons/${fileName}.svg`,
+        ]
+      : [`${tutorConfig.tutor_url}/assets/icons/${fileName}.svg`];
 
-  const promise = fetch(url)
-    .then((res) => {
+  const promise = (async () => {
+    for (const url of iconUrls) {
+      const res = await fetch(url);
+
       if (!res.ok) {
-        throw new Error(`Failed to load icon: ${name}`);
+        continue;
       }
-      return res.text();
-    })
-    .then((svgText) => {
+
+      const svgText = await res.text();
       const parser = new DOMParser();
       const doc = parser.parseFromString(svgText, 'image/svg+xml');
       const svgEl = doc.querySelector('svg');
@@ -112,15 +146,17 @@ function fetchIcon(name: string, width: number, height: number): Promise<Icon> {
       const innerHTML = svgEl?.innerHTML || '';
 
       const loadedIcon = { viewBox, fill, icon: innerHTML };
-      iconCache[name] = { icon: loadedIcon };
+      iconCache[cacheKey] = { icon: loadedIcon };
       return loadedIcon;
-    })
-    .catch((err) => {
-      iconCache[name] = { error: err };
-      throw err;
-    });
+    }
 
-  iconCache[name] = { loading: true, promise };
+    throw new Error(`Failed to load icon: ${name}`);
+  })().catch((err) => {
+    iconCache[cacheKey] = { error: err };
+    throw err;
+  });
+
+  iconCache[cacheKey] = { loading: true, promise };
   return promise;
 }
 
@@ -130,8 +166,9 @@ export default memo(SVGIcon, (prev, next) => {
   return (
     prev.name === next.name &&
     prev.height === next.height &&
-    prev.width === next.height &&
+    prev.width === next.width &&
     prev.isColorIcon === next.isColorIcon &&
+    prev.learningMode === next.learningMode &&
     prev.style?.name === next.style?.name
   );
 });
