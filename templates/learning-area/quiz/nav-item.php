@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 global $tutor_current_content_id;
 
@@ -25,38 +26,26 @@ if ( ! $quiz && ! is_a( $quiz, 'WP_Post' ) ) {
 $is_completed = tutor_utils()->is_completed_lesson( $quiz->ID );
 $quiz_title   = $quiz->post_title;
 
-$active_class = $tutor_current_content_id === $quiz->ID ? 'active' : '';
-$content_type = __( 'Quiz', 'tutor' );
+$active_class   = $tutor_current_content_id === $quiz->ID ? 'active' : '';
+$disabled_class = $can_access ? '' : 'disabled';
 
-$quiz_title_html = '<div>
-	<div>' . esc_html( $quiz_title ) . '</div>
-	<div class="tutor-tiny tutor-text-subdued">' . esc_html( $content_type ) . '</div>
-</div>';
+$icon_name = Icon::QUIZ_2;
+if ( ! $can_access ) {
+	$icon_name = Icon::LOCK_STROKE_2;
+} elseif ( $is_completed ) {
+	$icon_name = Icon::COMPLETED_COLORIZE;
+}
 ?>
 
-<div class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s', $active_class ) ); ?>">
-	<?php if ( $is_completed ) : ?>
-	<a href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>">
-		<?php
-		tutor_utils()->render_svg_icon( Icon::COMPLETED_COLORIZE, 20, 20 );
-		echo $quiz_title_html; //phpcs:ignore -- already-escaped
-		?>
-	</a>
-	<?php else : ?>
-	<a href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>">
-		<div class="tutor-learning-nav-progress">
-			<div x-data="tutorStatics({ 
-				value: 0,
-				size: 'tiny',
-				type: 'progress',
-				showLabel: false,
-				background: 'var(--tutor-actions-gray-empty)',
-				strokeColor: 'var(--tutor-border-hover)' })">
-				<div x-html="render()"></div>
-			</div>
-		</div>
-		<?php echo $quiz_title_html; //phpcs:ignore -- already-escaped ?>
-	</a>
-	<?php endif; ?>
-</div>
-
+<a
+	href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>" 
+	title="<?php echo esc_attr( $quiz_title ); ?>"
+	class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s %s', $active_class, $disabled_class ) ); ?>"
+	<?php echo ! $can_access ? 'aria-disabled="true"' : ''; ?>
+>
+	<?php SvgIcon::make()->name( $icon_name )->size( 20 )->render(); ?>
+	<div class="tutor-overflow-hidden">
+		<div class="tutor-truncate"><?php echo esc_html( $quiz_title ); ?></div>
+		<div class="tutor-tiny-2 tutor-text-subdued"><?php esc_html_e( 'Quiz', 'tutor' ); ?></div>
+	</div>
+</a>

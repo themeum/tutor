@@ -17,6 +17,11 @@ $quiz_options                  = $quiz_id ? tutor_utils()->get_quiz_option( (int
 $hide_question_number_overview = (string) ( $quiz_options['hide_question_number_overview'] ?? '0' );
 $show_question_number          = '1' !== $hide_question_number_overview;
 
+$index                = $question->index;
+$question_title       = $question->question_title ?? '';
+$question_description = $question->question_description ?? '';
+$question_mark        = $question->question_mark ?? '';
+
 ?>
 
 <div class="tutor-quiz-question-header">
@@ -35,7 +40,7 @@ $show_question_number          = '1' !== $hide_question_number_overview;
 			if ( $description ) {
 				$markup = "<div class='tutor-p2 tutor-text-secondary'>{$description}</div>";
 				if ( function_exists( 'tutor' ) && tutor()->has_pro ) {
-					do_action( 'tutor_quiz_question_desc_render', $markup );
+					do_action( 'tutor_quiz_question_desc_render', $markup, $question );
 				} else {
 					echo wp_kses_post( $markup );
 				}

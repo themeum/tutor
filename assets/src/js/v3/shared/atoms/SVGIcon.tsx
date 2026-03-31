@@ -94,7 +94,10 @@ function fetchIcon(name: string, width: number, height: number): Promise<Icon> {
   }
 
   const fileName = name.trim().replace(/[A-Z0-9]/g, (m) => '-' + m.toLowerCase());
-  const url = `${tutorConfig.tutor_url}/assets/icons/${fileName}.svg`;
+  const hasKidsVariant = tutorConfig.is_kids_mode && tutorConfig.kids_icons_registry?.includes(fileName);
+
+  const basePath = hasKidsVariant ? 'assets/icons/kids/' : 'assets/icons/';
+  const url = `${tutorConfig.tutor_url}${basePath}${fileName}.svg`;
 
   const promise = fetch(url)
     .then((res) => {

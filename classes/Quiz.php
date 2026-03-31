@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Modal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Table;
@@ -25,6 +26,7 @@ use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
 use WP_Post;
+use Tutor\Components\SvgIcon;
 
 /**
  * Manage quiz operations.
@@ -133,6 +135,7 @@ class Quiz {
 		 * Instructor quiz review and feedback Ajax API.
 		 */
 		add_action( 'wp_ajax_review_quiz_answer', array( $this, 'review_quiz_answer' ) );
+		add_action( 'wp_ajax_tutor_review_quiz_answers', array( $this, 'review_quiz_answers' ) );
 		add_action( 'wp_ajax_tutor_instructor_feedback', array( $this, 'tutor_instructor_feedback' ) );
 
 		/**
@@ -777,8 +780,6 @@ class Quiz {
 					$question_mark = $is_answer_was_correct ? $question->question_mark : 0;
 					$total_marks  += $question_mark;
 
-					$total_marks = apply_filters( 'tutor_filter_quiz_total_marks', $total_marks, $question_id, $question_type, $user_id, $attempt_id );
-
 					$answers_data = array(
 						'user_id'         => $user_id,
 						'quiz_id'         => $attempt->quiz_id,
@@ -802,9 +803,9 @@ class Quiz {
 
 					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 
-					// Allow Pro to grade draw_image (and other custom types) and set achieved_mark / is_correct.
-					$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
-					$total_marks  = apply_filters( 'tutor_quiz_adjust_total_marks_for_question', $total_marks, $question_mark, $answers_data, $question_type, $question_id );
+					// Filter total marks after grading. Runs after answers_data is built and graded,
+					// so add-ons (e.g. H5P, pin_image, draw_image) can add their achieved marks.
+					$total_marks = apply_filters( 'tutor_filter_quiz_total_marks', $total_marks, $question_id, $question_type, $user_id, $attempt_id, $answers_data );
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 				}
@@ -940,8 +941,6 @@ class Quiz {
 
 		tutor_utils()->checking_nonce();
 
-		global $wpdb;
-
 		$attempt_id        = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$context           = Input::post( 'context' );
 		$attempt_answer_id = Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
@@ -951,21 +950,149 @@ class Quiz {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		$attempt_answer = $wpdb->get_row(
+		$attempt_answer = $this->get_attempt_answer( $attempt_answer_id );
+		$review_data    = $attempt_answer ? $this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as ) : null;
+
+		if ( ! $review_data ) {
+			wp_send_json_error( array( 'message' => __( 'Review update failed', 'tutor' ) ) );
+		}
+
+		QuizModel::update_attempt_result( $attempt_id );
+
+		ob_start();
+		tutor_load_template_from_custom_path(
+			tutor()->path . '/views/quiz/attempt-details.php',
+			array(
+				'attempt_id' => $attempt_id,
+				'user_id'    => $review_data['student_id'],
+				'context'    => $context,
+				'back_url'   => Input::post( 'back_url' ),
+			)
+		);
+		wp_send_json_success( array( 'html' => ob_get_clean() ) );
+	}
+
+	/**
+	 * Review quiz answers in bulk for v4 dashboard flow.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function review_quiz_answers() {
+		tutor_utils()->checking_nonce();
+
+		$attempt_id      = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$review_statuses = Input::post( 'review_statuses', array(), Input::TYPE_ARRAY );
+
+		$this->review_quiz_answers_bulk( $attempt_id, $review_statuses );
+	}
+
+	/**
+	 * Review quiz answers in bulk for v4 dashboard flow.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int   $attempt_id Attempt ID.
+	 * @param array $review_statuses Review statuses keyed by question ID.
+	 *
+	 * @return void
+	 */
+	private function review_quiz_answers_bulk( int $attempt_id, array $review_statuses ) {
+		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
+			$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
+		}
+
+		$attempt_answers        = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+		$answers_by_question_id = array();
+
+		if ( is_array( $attempt_answers ) ) {
+			foreach ( $attempt_answers as $attempt_answer ) {
+				$question_id = (int) ( $attempt_answer->question_id ?? 0 );
+
+				if ( $question_id > 0 ) {
+					$answers_by_question_id[ $question_id ] = $attempt_answer;
+				}
+			}
+		}
+
+		foreach ( $review_statuses as $question_id => $mark_as ) {
+			$question_id = (int) $question_id;
+			$mark_as     = (string) $mark_as;
+
+			if ( ! in_array( $mark_as, array( 'correct', 'incorrect' ), true ) ) {
+				continue;
+			}
+
+			$attempt_answer = $answers_by_question_id[ $question_id ] ?? null;
+
+			if ( ! $attempt_answer ) {
+				continue;
+			}
+
+			if ( ! tutor_utils()->can_user_manage( 'attempt_answer', $attempt_answer->attempt_answer_id ) ) {
+				$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
+			}
+
+			$this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
+		}
+
+		QuizModel::update_attempt_result( $attempt_id );
+
+		$this->response_success( __( 'Review updated successfully', 'tutor' ) );
+	}
+
+	/**
+	 * Get attempt answer record by ID.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $attempt_answer_id Attempt answer ID.
+	 *
+	 * @return object|null
+	 */
+	private function get_attempt_answer( int $attempt_answer_id ) {
+		global $wpdb;
+
+		return $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT * 
-					FROM {$wpdb->prefix}tutor_quiz_attempt_answers
-					WHERE attempt_answer_id = %d
-				",
+				"SELECT *
+				FROM {$wpdb->prefix}tutor_quiz_attempt_answers
+				WHERE attempt_answer_id = %d",
 				$attempt_answer_id
 			)
 		);
+	}
 
-		$attempt      = tutor_utils()->get_attempt( $attempt_id );
-		$question     = QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
-		$course_id    = $attempt->course_id;
-		$student_id   = $attempt->user_id;
-		$previous_ans = $attempt_answer->is_correct;
+	/**
+	 * Apply quiz answer review update.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int    $attempt_id Attempt ID.
+	 * @param object $attempt_answer Attempt answer row.
+	 * @param string $mark_as Review status.
+	 *
+	 * @return array|null
+	 */
+	private function apply_quiz_answer_review( int $attempt_id, $attempt_answer, string $mark_as ) {
+		global $wpdb;
+
+		if ( ! $attempt_answer || ! in_array( $mark_as, array( 'correct', 'incorrect' ), true ) ) {
+			return null;
+		}
+
+		$attempt = tutor_utils()->get_attempt( $attempt_id );
+
+		if ( ! $attempt ) {
+			return null;
+		}
+
+		$attempt_answer_id = (int) $attempt_answer->attempt_answer_id;
+		$question          = QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
+		$course_id         = (int) $attempt->course_id;
+		$student_id        = (int) $attempt->user_id;
+		$previous_ans      = $attempt_answer->is_correct;
 
 		do_action( 'tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as );
 
@@ -979,7 +1106,6 @@ class Quiz {
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
 
 			if ( 0 == $previous_ans || null == $previous_ans ) {
-				// if previous answer was wrong or in review then add point as correct.
 				$attempt_update_data = array(
 					'earned_marks'         => $attempt->earned_marks + $attempt_answer->question_mark,
 					'is_manually_reviewed' => 1,
@@ -1004,11 +1130,10 @@ class Quiz {
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
 
 			if ( 1 == $previous_ans ) {
-				// If previous ans was right then mynus.
 				$attempt_update_data = array(
 					'earned_marks'         => $attempt->earned_marks - $attempt_answer->question_mark,
 					'is_manually_reviewed' => 1,
-					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ),//phpcs:ignore
+					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 				);
 			}
 
@@ -1021,22 +1146,13 @@ class Quiz {
 			}
 		}
 
-		QuizModel::update_attempt_result( $attempt_id );
-
 		do_action( 'tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as );
 		do_action( 'tutor_quiz/answer/review/after', $attempt_answer_id, $course_id, $student_id );
 
-		ob_start();
-		tutor_load_template_from_custom_path(
-			tutor()->path . '/views/quiz/attempt-details.php',
-			array(
-				'attempt_id' => $attempt_id,
-				'user_id'    => $student_id,
-				'context'    => $context,
-				'back_url'   => Input::post( 'back_url' ),
-			)
+		return array(
+			'course_id'  => $course_id,
+			'student_id' => $student_id,
 		);
-		wp_send_json_success( array( 'html' => ob_get_clean() ) );
 	}
 
 	/**
@@ -1412,7 +1528,7 @@ class Quiz {
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE, 20, 20 ) . __( 'Questions', 'tutor' ) . '
+							' . SvgIcon::make()->name( Icon::QUESTION_CIRCLE )->size( 20 )->get() . __( 'Questions', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $total_questions ),
@@ -1425,7 +1541,7 @@ class Quiz {
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::TIME, 20, 20 ) . __( 'Quiz Time', 'tutor' ) . '
+							' . SvgIcon::make()->name( Icon::TIME )->size( 20 )->get() . __( 'Quiz Time', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $quiz_item_readable ),
@@ -1437,7 +1553,7 @@ class Quiz {
 			'columns' => array(
 				array(
 					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . tutor_utils()->get_svg_icon( Icon::PRIME_CHECK_CIRCLE, 20, 20 ) . __( 'Total Marks', 'tutor' ) . '
+						' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
 					</div>',
 				),
 				array( 'content' => $total_questions ),
@@ -1448,7 +1564,7 @@ class Quiz {
 			'columns' => array(
 				array(
 					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . tutor_utils()->get_svg_icon( Icon::PASSED, 20, 20 ) . __( 'Passing Marks', 'tutor' ) . '
+						' . SvgIcon::make()->name( Icon::PASSED )->size( 20 )->get() . __( 'Passing Marks', 'tutor' ) . '
 					</div>',
 				),
 				array( 'content' => $passing_grade . '%' ),
@@ -1562,18 +1678,21 @@ class Quiz {
 		$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
 		$can_start_quiz    = $attempt_remaining > 0 || 0 === $attempts_allowed;
 		$quiz_auto_start   = tutor_utils()->get_quiz_option( $quiz_id, 'quiz_auto_start', 0 );
+		$should_auto_start = 1 === (int) $quiz_auto_start && 0 === (int) $attempted_count;
 
 		if ( ! $can_start_quiz ) {
 			return;
 		}
 
 		global $tutor_current_post, $tutor_course_id;
-		$current_content_id = $tutor_current_post ? $tutor_current_post->ID : $quiz_id;
-		$course_id          = $tutor_course_id ? $tutor_course_id : tutor_utils()->get_course_id_by_subcontent( $current_content_id );
-		$contents           = tutor_utils()->get_course_prev_next_contents_by_id( $current_content_id );
-		$next_id            = $contents ? $contents->next_id : 0;
-		$skip_url           = get_the_permalink( $next_id ? $next_id : $course_id );
-		$skip_modal_id      = 'tutor-quiz-skip-to-next';
+		$current_content_id  = $tutor_current_post ? $tutor_current_post->ID : $quiz_id;
+		$course_id           = $tutor_course_id ? $tutor_course_id : tutor_utils()->get_course_id_by_subcontent( $current_content_id );
+		$contents            = tutor_utils()->get_course_prev_next_contents_by_id( $current_content_id );
+		$next_id             = $contents ? $contents->next_id : 0;
+		$skip_url            = get_the_permalink( $next_id ? $next_id : $course_id );
+		$skip_modal_id       = 'tutor-quiz-skip-to-next';
+		$auto_start_modal_id = 'tutor-quiz-autostart-modal';
+		$countdown_seconds   = 5;
 
 		$skip_modal_cancel_button = Button::make()
 			->label( __( 'Cancel', 'tutor' ) )
@@ -1604,7 +1723,9 @@ class Quiz {
 			<form
 				x-data="tutorQuizAutoStart({
 					quizID: <?php echo esc_attr( $quiz_id ); ?>,
-					autoStart: <?php echo $quiz_auto_start ? 'true' : 'false'; ?>,
+					autoStart: <?php echo $should_auto_start ? 'true' : 'false'; ?>,
+					autoStartModalId: '<?php echo esc_attr( $auto_start_modal_id ); ?>',
+					countdownSeconds: <?php echo esc_attr( $countdown_seconds ); ?>,
 				})"
 				@submit.prevent="handleStartQuiz()"
 			>
@@ -1629,6 +1750,21 @@ class Quiz {
 				->render();
 			?>
 		<?php endif; ?>
+
+		<?php
+		Modal::make()
+			->id( $auto_start_modal_id )
+			->closeable( false )
+			->width( '268px' )
+			->template(
+				tutor()->path . 'templates/learning-area/quiz/modals/auto-start.php',
+				array(
+					'countdown_seconds' => $countdown_seconds,
+					'modal_id'          => $auto_start_modal_id,
+				)
+			)
+			->render();
+		?>
 		<?php
 	}
 
@@ -1689,22 +1825,5 @@ class Quiz {
 				'question_type'     => $template,
 			)
 		);
-	}
-
-	/**
-	 * Show Correct Answers
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $attempt_status attempt status.
-	 *
-	 * @return bool
-	 */
-	public static function show_correct_answers( $attempt_status ) {
-		if ( QuizModel::ATTEMPT_STARTED === $attempt_status || QuizModel::ATTEMPT_TIMEOUT === $attempt_status ) {
-			return false;
-		}
-
-		return true;
 	}
 }

@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 $answer_field_name = ( $question_field_name_base ?? '' ) . '[answers][]';
 $register_rules    = '';
@@ -51,7 +52,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 				</div>
 
 				<button type="button" data-grab-handle>
-					<?php tutor_utils()->render_svg_icon( Icon::GRAB_HANDLE, 40, 40 ); ?>
+					<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 40 )->render(); ?>
 				</button>
 			</div>
 		<?php endforeach; ?>

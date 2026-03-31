@@ -18,6 +18,7 @@
 defined( 'ABSPATH' ) || exit;
 
 global $tutor_is_started_quiz;
+global $post;
 
 $default_question = array(
 	'index'                => 1,
@@ -38,6 +39,7 @@ $default_question = array(
 );
 
 $quiz_id            = $tutor_is_started_quiz->quiz_id ?? 0;
+$quiz               = $post instanceof WP_Post ? $post : get_post( $quiz_id );
 $quiz_settings      = tutor_utils()->get_quiz_option( $quiz_id, 'quiz_settings', array() );
 $show_question_mark = $question_settings['show_question_mark'] ?? '0';
 $attempt_id         = (int) ( $tutor_is_started_quiz->attempt_id ?? 0 );
@@ -58,11 +60,8 @@ $required_message   = __( 'The answer for this question is required', 'tutor' );
 	tutor_load_template(
 		'learning-area.quiz.question-header',
 		array(
-			'index'                => $question->index,
-			'question_title'       => $question->question_title,
-			'question_description' => $question->question_description ?? '',
-			'question_mark'        => $question->question_mark,
-			'show_question_mark'   => $show_question_mark,
+			'question'           => $question,
+			'show_question_mark' => $show_question_mark,
 		)
 	);
 
@@ -79,7 +78,7 @@ $required_message   = __( 'The answer for this question is required', 'tutor' );
 	);
 
 	// Fire after-answers actions.
-	do_action( 'tutor_quiz_question_after_answers', $quiz_settings, $question );
+	do_action( 'tutor_quiz_question_after_answers', $quiz, $quiz_settings, $question );
 	do_action( 'tutor_require_question_answer_file', $question_type, $tutor_is_started_quiz, $question );
 
 	?>

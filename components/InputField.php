@@ -242,6 +242,51 @@ class InputField extends BaseComponent {
 	protected $intermediate = false;
 
 	/**
+	 * Whether to use WordPress media library instead of native file input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $use_wp_media = false;
+
+	/**
+	 * WordPress media modal title.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $wp_media_title = '';
+
+	/**
+	 * WordPress media modal button text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $wp_media_button_text = '';
+
+	/**
+	 * WordPress media library type filter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $wp_media_library_type = '';
+
+	/**
+	 * Component variant.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $variant = '';
+
+	/**
 	 * Whether input has clear button.
 	 *
 	 * @since 4.0.0
@@ -1022,10 +1067,10 @@ class InputField extends BaseComponent {
 				</template>
 			</div>
 		',
-			tutor_utils()->get_svg_icon( Icon::CROSS, 12, 12 )
+			SvgIcon::make()->name( Icon::CROSS )->size( 12 )->get()
 		);
 
-		$right_icon_html = $this->right_icon ? $this->right_icon : tutor_utils()->get_svg_icon( Icon::CHEVRON_DOWN, 16, 16 );
+		$right_icon_html = $this->right_icon ? $this->right_icon : SvgIcon::make()->name( Icon::CHEVRON_DOWN )->size( 16 )->get();
 
 		$input_button = $this->multiple ? $multiple_input : $single_input;
 
@@ -1057,7 +1102,7 @@ class InputField extends BaseComponent {
 			',
 			$input_button,
 			esc_attr__( 'Clear selection', 'tutor' ),
-			tutor_utils()->get_svg_icon( Icon::CROSS, 16, 16 ),
+			SvgIcon::make()->name( Icon::CROSS )->size( 16 )->get(),
 			$right_icon_html
 		);
 	}
@@ -1155,7 +1200,7 @@ class InputField extends BaseComponent {
 	 */
 	protected function get_search_input_markup(): string {
 
-		$left_icon_html = $this->left_icon ? $this->left_icon : tutor_utils()->get_svg_icon( Icon::SEARCH_2, 20, 20 );
+		$left_icon_html = $this->left_icon ? $this->left_icon : SvgIcon::make()->name( Icon::SEARCH_2 )->size( 20 )->get();
 
 		$search_input = sprintf(
 			'
@@ -1243,11 +1288,6 @@ class InputField extends BaseComponent {
 	 * @return string
 	 */
 	protected function render_select_input(): string {
-
-		if ( ! count( $this->options ) && ! count( $this->groups ) ) {
-			return '';
-		}
-
 		$props = array(
 			'options'           => $this->options,
 			'groups'            => $this->groups,
@@ -1377,8 +1417,8 @@ class InputField extends BaseComponent {
 				class="tutor-input-password-toggle"
 				x-bind="getToggleBindings()"
 			>
-				<span x-show="!showPassword" x-cloak>' . tutor_utils()->get_svg_icon( Icon::EYE_OFF, 16, 16 ) . '</span>
-				<span x-show="showPassword" x-cloak>' . tutor_utils()->get_svg_icon( Icon::EYE, 16, 16 ) . '</span>
+				<span x-show="!showPassword" x-cloak>' . SvgIcon::make()->name( Icon::EYE_OFF )->size( 16 )->get() . '</span>
+				<span x-show="showPassword" x-cloak>' . SvgIcon::make()->name( Icon::EYE )->size( 16 )->get() . '</span>
 			</button>
 		';
 
@@ -1467,12 +1507,7 @@ class InputField extends BaseComponent {
 
 		$clear_button_html = '';
 		if ( ! $this->disabled && $this->clearable ) {
-			$clear_icon = '';
-			if ( function_exists( 'tutor_utils' ) ) {
-				ob_start();
-				tutor_utils()->render_svg_icon( 'cross', 16, 16 );
-				$clear_icon = ob_get_clean();
-			}
+			$clear_icon = SvgIcon::make()->name( Icon::CROSS )->size( 16 )->get();
 
 			$clear_button_html = sprintf(
 				'<button 
@@ -1543,12 +1578,7 @@ class InputField extends BaseComponent {
 
 		$clear_button_html = '';
 		if ( $this->clearable ) {
-			$clear_icon = '';
-			if ( function_exists( 'tutor_utils' ) ) {
-				ob_start();
-				tutor_utils()->render_svg_icon( 'cross', 16, 16 );
-				$clear_icon = ob_get_clean();
-			}
+			$clear_icon        = SvgIcon::make()->name( Icon::CROSS )->size( 16 )->get();
 			$clear_button_html = sprintf(
 				'<button 
 					type="button" 
@@ -1733,8 +1763,8 @@ class InputField extends BaseComponent {
 		$original_left_icon = $this->left_icon;
 		$this->type         = 'text';
 
-		if ( empty( $this->left_icon ) && empty( $this->right_icon ) && function_exists( 'tutor_utils' ) ) {
-			$this->left_icon = tutor_utils()->get_svg_icon( Icon::CALENDAR_2, 20, 20 );
+		if ( empty( $this->left_icon ) && empty( $this->right_icon ) ) {
+			$this->left_icon = SvgIcon::make()->name( Icon::CALENDAR_2 )->size( 20 )->get();
 		}
 
 		$options = array(
@@ -1784,9 +1814,9 @@ class InputField extends BaseComponent {
 		$props_json = htmlspecialchars( wp_json_encode( $props ), ENT_QUOTES, 'UTF-8' );
 		$input_icon = $this->left_icon;
 		if ( empty( $input_icon ) ) {
-			$input_icon = tutor_utils()->get_svg_icon( Icon::CLOCK, 20, 20 );
+			$input_icon = SvgIcon::make()->name( Icon::CLOCK )->size( 20 )->get();
 		}
-		$clear_icon = tutor_utils()->get_svg_icon( Icon::CROSS, 12, 12 );
+		$clear_icon = SvgIcon::make()->name( Icon::CROSS )->size( 12 )->get();
 
 		return sprintf(
 			'<div

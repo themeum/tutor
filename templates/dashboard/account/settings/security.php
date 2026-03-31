@@ -11,6 +11,8 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Button;
 use Tutor\Components\Modal;
 use Tutor\Components\InputField;
@@ -20,6 +22,7 @@ use Tutor\Components\Constants\InputType;
 
 $user    = wp_get_current_user();
 $form_id = 'tutor-reset-password-form';
+
 ?>
 
 <section class="tutor-flex tutor-flex-column tutor-gap-8">
@@ -34,23 +37,36 @@ $form_id = 'tutor-reset-password-form';
 			})'
 		>
 			<?php
-				InputField::make()
-					->type( InputType::EMAIL )
-					->label( __( 'Account Email', 'tutor' ) )
-					->name( 'account_email' )
-					->id( 'account_email' )
-					->placeholder( __( 'Enter Your Email', 'tutor' ) )
-					->disabled()
-					->attr( 'x-bind', "register('account_email', { required: true })" )
-					->render();
+			echo '<div class="tutor-flex tutor-items-end tutor-gap-3">';
+			echo '<div class="tutor-flex-1">';
 
-				Button::make()
-					->label( __( 'Reset Password', 'tutor' ) )
-					->variant( Variant::SECONDARY )
-					->size( Size::SMALL )
-					->icon( Icon::KEY )
-					->attr( '@click', "TutorCore.modal.showModal('reset-password-modal')" )
-					->render();
+			InputField::make()
+				->type( InputType::EMAIL )
+				->label( __( 'Account Email', 'tutor' ) )
+				->name( 'account_email' )
+				->id( 'account_email' )
+				->placeholder( __( 'Enter Your Email', 'tutor' ) )
+				->disabled()
+				->attr( 'x-bind', "register('account_email', { required: true })" )
+				// ->attr( 'style', 'padding: 7px 12px;' )
+				->size( Size::SM )
+				->render();
+
+			echo '</div>';
+
+			do_action( 'tutor_beside_account_email_field' );
+
+			echo '</div>';
+
+			do_action( 'tutor_after_change_email_field' );
+
+			Button::make()
+				->label( __( 'Reset Password', 'tutor' ) )
+				->variant( Variant::SECONDARY )
+				->size( Size::SMALL )
+				->icon( Icon::KEY )
+				->attr( '@click', "TutorCore.modal.showModal('reset-password-modal')" )
+				->render();
 			?>
 		</div>
 	</div>
@@ -70,6 +86,8 @@ $update_button = Button::make()
 	->size( Size::SMALL )
 	->attr( 'form', $form_id )
 	->attr( 'type', 'submit' )
+	->attr( ':class', "{ 'tutor-btn-loading': resetPasswordMutation?.isPending }" )
+	->attr( ':disabled', 'resetPasswordMutation?.isPending' )
 	->get();
 
 $modal_footer = sprintf(
@@ -79,8 +97,8 @@ $modal_footer = sprintf(
 );
 
 $modal_title = sprintf(
-	'<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-pb-7">%s%s</div>',
-	tutor_utils()->get_svg_icon( Icon::LOCK_STROKE_2, 24, 24 ),
+	'<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-pt-2 tutor-pb-7">%s%s</div>',
+	SvgIcon::make()->name( Icon::LOCK_STROKE_2 )->size( 24 )->color( Color::SECONDARY )->get(),
 	esc_html__( 'Change Account Password', 'tutor' )
 );
 

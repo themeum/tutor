@@ -96,7 +96,7 @@ $is_checkout_page = true;
 						</h5>
 
 						<div class="tutor-billing-fields">
-							<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
+							<?php require tutor()->path . 'templates/ecommerce/checkout-billing-form-fields.php'; ?>
 						</div>
 						<div class="tutor-payment-method-wrapper tutor-mt-20 <?php echo esc_attr( $show_payment_methods ? '' : 'tutor-d-none' ); ?>">
 							<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">

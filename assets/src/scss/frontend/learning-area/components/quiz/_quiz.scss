@@ -1,9 +1,9 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
-$tutor-quiz-header-offset: calc(44px + (#{$tutor-spacing-8} * 2));
-$tutor-quiz-header-offset-admin: calc(44px + (#{$tutor-spacing-8} * 2) + 46px);
-$tutor-quiz-header-offset-admin-sm: calc(44px + (#{$tutor-spacing-8} * 2) + 32px);
+$tutor-quiz-header-offset: calc((#{$tutor-spacing-8} * 2));
+$tutor-quiz-header-offset-admin: calc((#{$tutor-spacing-8} * 2) + 46px);
+$tutor-quiz-header-offset-admin-sm: calc((#{$tutor-spacing-8} * 2) + 32px);
 $tutor-quiz-footer-offset: 96px;
 $tutor-quiz-pagination-gap-from-footer: 32px;
 $tutor-quiz-pagination-height: 48px;
@@ -17,8 +17,8 @@ $tutor-quiz-content-bottom-offset: calc(
   &-submission {
     @include tutor-flex(column);
     gap: $tutor-spacing-11;
-    height: 100%;
-    padding-top: calc((#{$tutor-spacing-8} * 2) + 44px + #{$tutor-spacing-14});
+    height: fit-content;
+    padding-top: calc((#{$tutor-spacing-8} * 2) + #{$tutor-spacing-14});
     background-color: $tutor-surface-base;
 
     @include tutor-breakpoint-down(sm) {
@@ -29,6 +29,7 @@ $tutor-quiz-content-bottom-offset: calc(
     &[data-question-layout-view='question_pagination'] {
       max-height: 100dvh;
       padding-top: 0;
+      height: 100%;
     }
 
     &[data-question-layout-view='single_question'] .tutor-quiz-questions-pagination,
@@ -150,12 +151,12 @@ $tutor-quiz-content-bottom-offset: calc(
 
   &-progress {
     @include tutor-flex(column);
-    @include tutor-container(792px);
+    @include tutor-frontend-layout();
     padding-inline: 0;
     padding-block: $tutor-spacing-5;
     gap: $tutor-spacing-5;
 
-    @include tutor-breakpoint-down(sm) {
+    @include tutor-breakpoint-down(md) {
       padding: $tutor-spacing-6;
     }
 
@@ -314,17 +315,17 @@ $tutor-quiz-content-bottom-offset: calc(
   }
 
   &-question-meta {
+    @include tutor-frontend-layout();
     @include tutor-flex(row, center, space-between);
-    @include tutor-container(792px);
+    width: 100%;
     padding-inline: 0;
 
-    @include tutor-breakpoint-down(sm) {
+    @include tutor-breakpoint-down(md) {
       padding-inline: $tutor-spacing-6;
     }
   }
 
-  &-question-indicator,
-  &-attempt-progress {
+  &-question-indicator{
     @include tutor-typography('small');
 
     strong {
@@ -638,64 +639,8 @@ $tutor-quiz-content-bottom-offset: calc(
   }
 
   &-question {
-    @include tutor-flex(column);
-    gap: $tutor-spacing-7;
-    background-color: $tutor-surface-l1;
-    border: 1px solid $tutor-border-idle;
-    border-radius: $tutor-radius-2xl;
-    padding: $tutor-spacing-8;
-
-    @include tutor-breakpoint-down(sm) {
-      padding: $tutor-spacing-5;
-      gap: $tutor-spacing-5;
-    }
-
-    &-header {
-      @include tutor-flex(row, flex-start, space-between);
-      gap: $tutor-spacing-4;
-    }
-
-    &-number {
-      @include tutor-flex(row, center, center);
-      @include tutor-typography('medium', 'semibold');
-      border: 1px solid $tutor-border-idle;
-      border-radius: $tutor-radius-sm;
-      width: 24px;
-      height: 24px;
-
-      @include tutor-breakpoint-down(sm) {
-        @include tutor-typography('tiny', 'semibold');
-        width: 20px;
-        height: 20px;
-      }
-    }
-
-    &-title {
-      @include tutor-flex(column);
-      @include tutor-typography('medium', 'semibold');
-      gap: $tutor-spacing-4;
-      flex: 1;
-
-      @include tutor-breakpoint-down(sm) {
-        @include tutor-typography('p2', 'semibold');
-        gap: $tutor-spacing-2;
-      }
-    }
-
-    &-options {
-      @include tutor-flex(row);
-      gap: $tutor-spacing-6;
-      width: 100%;
-    }
-
     &-option {
-      @include tutor-typography('small');
-      border: 1px solid $tutor-border-idle;
-      border-radius: $tutor-radius-md;
-      background-color: $tutor-surface-l1;
       cursor: pointer;
-      overflow: hidden;
-      @include tutor-transition((background-color, border-color, color));
 
       &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not(
           [data-option='draggable']
@@ -716,91 +661,11 @@ $tutor-quiz-content-bottom-offset: calc(
       }
 
       &[data-option='correct'] {
-        font-weight: $tutor-font-weight-medium;
-        border-color: $tutor-border-success;
-        background-color: $tutor-actions-success-tertiary;
-        color: $tutor-text-success;
         cursor: default;
-
-        .tutor-label {
-          color: $tutor-text-success;
-        }
-
-        .tutor-checkbox,
-        .tutor-radio {
-          opacity: 1;
-          border-color: $tutor-actions-success-primary;
-          background-color: $tutor-actions-success-primary;
-          accent-color: $tutor-actions-success-primary;
-          color: $tutor-icon-idle-inverse;
-        }
-
-        .tutor-checkbox:disabled,
-        .tutor-radio:disabled {
-          background-color: $tutor-actions-success-primary;
-          color: $tutor-icon-idle-inverse;
-        }
-
-        .tutor-checkbox::after {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-
-        .tutor-radio::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 6px;
-          height: 6px;
-          transform: translate(-50%, -50%);
-          border-radius: $tutor-radius-full;
-          background-color: $tutor-surface-l1;
-        }
       }
 
       &[data-option='incorrect'] {
-        font-weight: $tutor-font-weight-medium;
-        border-color: $tutor-border-error;
-        background-color: $tutor-actions-critical-secondary;
-        color: $tutor-text-critical;
         cursor: default;
-
-        .tutor-label {
-          color: $tutor-text-critical;
-        }
-
-        .tutor-checkbox,
-        .tutor-radio {
-          opacity: 1;
-          border-color: $tutor-actions-critical-primary;
-          background-color: $tutor-actions-critical-primary;
-          accent-color: $tutor-actions-critical-primary;
-          color: $tutor-icon-idle-inverse;
-        }
-
-        .tutor-checkbox:disabled,
-        .tutor-radio:disabled {
-          background-color: $tutor-actions-critical-primary;
-          color: $tutor-icon-idle-inverse;
-        }
-
-        .tutor-checkbox::after {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-
-        .tutor-radio::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 6px;
-          height: 6px;
-          transform: translate(-50%, -50%);
-          border-radius: $tutor-radius-full;
-          background-color: $tutor-surface-l1;
-        }
       }
 
       &[data-option='draggable'] {
@@ -822,75 +687,6 @@ $tutor-quiz-content-bottom-offset: calc(
   &-questions-error {
     @include tutor-typography('tiny', 'regular', 'critical');
     margin-top: $tutor-spacing-3;
-  }
-
-  [data-question='true_false'] {
-    .tutor-quiz-question {
-      &-options {
-        @include tutor-grid-auto-columns(2, 2);
-
-        @include tutor-breakpoint-down(sm) {
-          @include tutor-grid-auto-columns(1, 1);
-          gap: $tutor-spacing-5;
-        }
-      }
-
-      &-option {
-        @include tutor-flex-center;
-        gap: $tutor-spacing-3;
-        padding: $tutor-spacing-3;
-      }
-    }
-  }
-
-  [data-question='multiple_choice'] {
-    .tutor-quiz-question {
-      &-options {
-        @include tutor-grid-auto-columns(2, 4);
-
-        &:not(:has(img)) {
-          @include tutor-grid-auto-columns(2, 2);
-        }
-
-        @include tutor-breakpoint-down(sm) {
-          &:has(img) {
-            @include tutor-grid-auto-columns(2, 2);
-            gap: $tutor-spacing-5;
-          }
-
-          &:not(:has(img)) {
-            @include tutor-grid-auto-columns(1, 1);
-            gap: $tutor-spacing-5;
-          }
-        }
-      }
-
-      &-option {
-        @include tutor-flex(row, center, flex-start);
-        gap: $tutor-spacing-3;
-        padding: $tutor-spacing-3;
-
-        &:has(img) {
-          @include tutor-flex(column, flex-start, center);
-          padding: 0;
-          gap: 0;
-
-          img {
-            border-end-start-radius: $tutor-radius-md;
-            border-end-end-radius: $tutor-radius-md;
-            height: 160px;
-            width: 100%;
-            object-fit: cover;
-            object-position: center;
-          }
-
-          [data-title] {
-            padding: $tutor-spacing-3 $tutor-spacing-4;
-            text-align: left;
-          }
-        }
-      }
-    }
   }
 
   [data-question='image_answering'] {
@@ -1124,32 +920,7 @@ $tutor-quiz-content-bottom-offset: calc(
 
   [data-question='fill_in_the_blank'] {
     .tutor-quiz-question {
-      &-options {
-        @include tutor-grid-auto-columns(1, 1);
-      }
-
-      &-option {
-        @include tutor-typography('small', 'regular');
-        border: none;
-        line-height: 2.5;
-
-        &:hover {
-          background-color: transparent !important;
-          cursor: default;
-        }
-      }
-
       &-input {
-        border: none;
-        outline: none;
-        border-bottom: 2px solid $tutor-border-idle;
-        background-color: transparent;
-        border-radius: 0;
-        padding: 0 $tutor-spacing-2;
-        width: 167px;
-        color: $tutor-text-brand;
-        @include tutor-transition((color, opacity));
-
         &::placeholder {
           opacity: 0;
         }
@@ -1169,16 +940,6 @@ $tutor-quiz-content-bottom-offset: calc(
           border-color: $tutor-border-brand;
           box-shadow: none;
         }
-      }
-    }
-  }
-
-  [data-question='open_ended'],
-  [data-question='short_answer'] {
-    .tutor-quiz-question {
-      &-options {
-        @include tutor-grid-auto-columns(1, 1);
-        gap: $tutor-spacing-3;
       }
     }
   }
@@ -1255,6 +1016,66 @@ $tutor-quiz-content-bottom-offset: calc(
     &-content {
       @include tutor-flex(column, stretch, space-between);
       gap: $tutor-spacing-2;
+    }
+  }
+
+  &-autostart-modal {
+    @include tutor-flex(row, center, center);
+    padding: 0;
+  }
+
+  &-autostart-card {
+    position: relative;
+    width: 268px;
+    height: 320px;
+    border-radius: $tutor-radius-3xl;
+    box-shadow: $tutor-shadow-xl;
+    background-color: $tutor-surface-l1;
+    overflow: hidden;
+
+    canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
+
+  &-autostart-title {
+    @include tutor-typography('h4', 'semibold');
+    position: absolute;
+    top: $tutor-spacing-9;
+    inset-inline: 0;
+    text-align: center;
+    z-index: $tutor-z-positive;
+  }
+
+  &-autostart-digit {
+    @include tutor-flex(row, center, center);
+    @include tutor-typography('d1', 'bold');
+    position: absolute;
+    inset: 0;
+    color: $tutor-text-brand;
+    z-index: $tutor-z-positive;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &-result-modal {
+    @include tutor-flex(column, center, center);
+    gap: $tutor-spacing-4;
+    text-align: center;
+    padding: $tutor-spacing-10 $tutor-spacing-7 $tutor-spacing-7 $tutor-spacing-7;
+  }
+
+  &-result-modal-icon {
+    @include tutor-flex(row, center, center);
+
+    img {
+      width: 88px;
+      height: 88px;
+      display: block;
+      object-fit: contain;
     }
   }
 }

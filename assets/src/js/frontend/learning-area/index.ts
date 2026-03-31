@@ -1,12 +1,16 @@
 // Learning Area Entry Point
 // Initializes learning area functionality based on current page
 
+import { initializeReviews } from '@FrontendComponents/reviews';
 import { initializeLesson } from './lesson';
 import { initializeAssignmentView } from './pages/assignment-view';
+import { initializeCourseCourseInfo } from './pages/course-info';
 import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './quiz';
+import { initializeSidebar } from './sidebar';
 
 const initializeLearningArea = () => {
+  initializeSidebar();
   const { pathname, search } = window.location;
 
   // Normalize path segments
@@ -42,16 +46,22 @@ const initializeLearningArea = () => {
     case 'qna':
       initializeQna();
       break;
+    case 'course-info':
+      initializeCourseCourseInfo();
+      break;
+
+    case 'reviews':
+      initializeReviews();
+      break;
 
     default:
       // eslint-disable-next-line no-console
       console.warn('Unknown learning area page:', currentPage);
   }
 
-  // Initialize lesson contents (shared)
-  const lessonContentWrapper = document.querySelector('.tutor-lesson-content');
-  if (lessonContentWrapper) {
-    initializeLesson();
+  // Ensure all registered components are initialized with Alpine.
+  if (window.TutorComponentRegistry) {
+    window.TutorComponentRegistry.initWithAlpine(window.Alpine);
   }
 };
 

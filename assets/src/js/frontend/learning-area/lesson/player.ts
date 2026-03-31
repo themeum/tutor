@@ -370,6 +370,9 @@ class LessonPlayer {
     const player = document.querySelector('.tutor-lesson-video-wrapper .tutorPlayer') as HTMLElement;
     if (player) {
       new LessonPlayer(player);
+    } else {
+      // Remove loading spinner
+      document.querySelector('.tutor-video-player .loading-spinner')?.remove();
     }
   }
 }

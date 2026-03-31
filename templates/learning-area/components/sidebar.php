@@ -10,7 +10,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Popover;
+use Tutor\Components\Progress;
+use Tutor\Components\Tooltip;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use TUTOR\Input;
 use TUTOR\Template;
 
@@ -20,23 +30,31 @@ $tutor_course_id,
 $tutor_course_list_url,
 $tutor_current_content_id,
 $tutor_is_enrolled,
+$tutor_is_public_course,
+$tutor_is_course_instructor,
 $tutor_current_post;
 
 $is_preview       = get_post_meta( $tutor_current_post->ID, '_is_preview', true );
 $current_url      = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
 $course_completed = tutor_utils()->get_course_completed_percent( $tutor_course_id, $current_user_id );
 
-$menu_items  = Template::make_learning_area_sub_page_nav_items( $current_url );
-$active_menu = Input::get( 'subpage', '' );
+$menu_items     = Template::make_learning_area_sub_page_nav_items( $current_url );
+$active_menu    = Input::get( 'subpage', '' );
+$reset_modal_id = 'tutor-course-reset-progress-modal';
 
 ?>
-<div class="tutor-learning-sidebar" :class="{ 'is-open': sidebarOpen }" @click.outside="sidebarOpen = false">
+<div 
+	class="tutor-learning-sidebar" 
+	x-data="tutorLearningSidebar({ isCollapsed: <?php echo empty( $active_menu ) ? 'true' : 'false'; ?>, courseId: <?php echo (int) $tutor_course->ID; ?>, resetModalId: '<?php echo esc_attr( $reset_modal_id ); ?>' })"
+	:class="{ 'is-open': sidebarOpen }" 
+	@click.outside="sidebarOpen = false"
+>
 	<div class="tutor-hidden tutor-lg-flex tutor-items-center tutor-px-4">
 		<h5 class="tutor-learning-header-title">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
 		<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">
-			<?php tutor_utils()->render_svg_icon( Icon::CROSS_2, 20, 20 ); ?>
+			<?php SvgIcon::make()->name( Icon::CROSS_2 )->size( 20 )->render(); ?>
 		</button>
 	</div>
 	<div class="tutor-learning-sidebar-curriculum">
@@ -48,9 +66,28 @@ $active_menu = Input::get( 'subpage', '' );
 					echo sprintf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $course_completed ) . '%</span>' );
 					?>
 				</div>
-				<button class="tutor-learning-progress-reset">
-					<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2, 20, 20 ); ?>
-				</button>
+				<div>
+					<?php
+					Button::make()
+						->variant( Variant::GHOST )
+						->size( Size::X_SMALL )
+						->icon( Icon::RELOAD_2, 'left', 16, 16, array( 'class' => 'tutor-icon-secondary' ) )
+						->icon_only()
+						->attr( '@click', 'confirmReset()' )
+						->render();
+
+					ConfirmationModal::make()
+						->id( $reset_modal_id )
+						->title( __( 'Reset Course Progress?', 'tutor' ) )
+						->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
+						->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
+						->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
+						->icon( UrlHelper::asset( 'images/illustrations/reset-course.svg' ) )
+						->confirm_handler( 'resetProgress()' )
+						->mutation_state( 'resetProgressMutation' )
+						->render();
+					?>
+				</div>
 			</div>
 			<div class="tutor-progress-bar" data-tutor-animated="">
 				<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $course_completed ); ?>%;"></div>
@@ -76,25 +113,39 @@ $active_menu = Input::get( 'subpage', '' );
 					);
 					?>
 
-					<div x-data="{ expanded: true }" class="tutor-learning-nav-topic active">
+					<div x-data="{ expanded: <?php echo esc_attr( ( $is_topic_active || ( 0 === $topics->current_post && ! empty( $active_menu ) ) ) ? 'true' : 'false' ); ?> }" class="tutor-learning-nav-topic <?php echo esc_attr( $is_topic_active ? 'active' : '' ); ?>">
 						<div role="button" @click="expanded = !expanded" class="tutor-learning-nav-header">
 							<div class="tutor-learning-nav-header-progress">
-								<div x-data="tutorStatics({ 
-									value: <?php echo esc_attr( $total_contents['percentage'] ?? 0 ); ?>,
-									size: 'tiny',
-									type: 'progress',
-									showLabel: false,
-									background: 'var(--tutor-actions-gray-empty)',
-									strokeColor: 'var(--tutor-border-hover)' })">
-									<div x-html="render()"></div>
-								</div>
-								<!-- <div class="tutor-learning-nav-header-progress-inner"></div> -->
+								<?php
+								Progress::make()
+									->value( $total_contents['percentage'] ?? 0 )
+									->type( 'circle' )
+									->size( Size::X_SMALL )
+									->show_label( false )
+									->background( 'var(--tutor-actions-gray-empty)' )
+									->stroke_color( 'var(--tutor-border-hover)' )
+									->render();
+								?>
 							</div>
-							<div class="tutor-learning-nav-header-title">
+							<div class="tutor-learning-nav-header-title" title="<?php the_title(); ?>">
 								<?php the_title(); ?>
 							</div>
-							<div class="tutor-learning-nav-header-arrow" :class="{ 'is-expanded': expanded }">
-								<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP_2, 20, 20 ); ?>
+							<div class="tutor-learning-nav-header-actions">
+								<?php if ( ! empty( $topic_summery ) ) : ?>
+								<div class="tutor-learning-nav-header-summary">
+									<?php
+									Tooltip::make()
+										->content( $topic_summery )
+										->trigger_element( SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 16 )->color( Color::SECONDARY )->get() )
+										->size( Size::LARGE )
+										->arrow( Tooltip::ARROW_CENTER )
+										->render();
+									?>
+								</div>
+								<?php endif; ?>
+								<div class="tutor-learning-nav-header-arrow" :class="{ 'is-expanded': expanded }">
+									<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 20 )->render(); ?>
+								</div>
 							</div>
 						</div>
 						<div x-show="expanded" x-collapse x-cloak class="tutor-learning-nav-body">
@@ -107,7 +158,7 @@ $active_menu = Input::get( 'subpage', '' );
 
 								$topic_item = get_post();
 
-								$can_access = ! $is_preview || $tutor_is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course || $is_instructor_of_this_course;
+								$can_access = ! $is_preview || $tutor_is_enrolled || get_post_meta( $topic_item->ID, '_is_preview', true ) || $tutor_is_public_course || $tutor_is_course_instructor;
 								$can_access = apply_filters( 'tutor_course/single/content/show_permalink', $can_access, get_the_ID() );
 								$can_access = null === $can_access ? true : $can_access;
 
@@ -126,28 +177,59 @@ $active_menu = Input::get( 'subpage', '' );
 			?>
 		</div>
 	</div>
-	<div class="tutor-learning-sidebar-pages">
-		<div class="tutor-learning-pages">
+	<div class="tutor-learning-sidebar-pages" :class="{ 'expanded': !collapsed }">
+		<div class="tutor-sidebar-resizer" x-show="!collapsed" @mousedown="startResizing($event)" x-cloak></div>
+		<div class="tutor-sidebar-restore-dropdown" x-show="!collapsed" x-cloak>
+			<button :class="{ 'is-minimized': pagesHeight <= 40 }" @click="togglePagesHeight()">
+				<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->render(); ?>
+			</button>
+		</div>
+		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" :style="!collapsed && { height: pagesHeight + 'px' }">
 			<?php
+			ob_start();
 			foreach ( $menu_items as $key => $item ) {
 				$active_class = ( $key === $active_menu ) ? 'active' : '';
 				?>
-				<a 	href="<?php echo esc_url( $item['url'] ); ?>" 
+				<a href="<?php echo esc_url( $item['url'] ); ?>" 
 					class="tutor-learning-pages-item <?php echo esc_attr( $active_class ); ?>"
-					<?php
-					if ( isset( $item['onclick'] ) ) {
-						?>
+					<?php if ( isset( $item['onclick'] ) ) : ?>
 						onclick="<?php echo esc_attr( $item['onclick'] ); ?>"
-						<?php
-					}
-					?>
+					<?php endif; ?>
 				>
-					<?php tutor_utils()->render_svg_icon( $item['icon'], 20, 20 ); ?>
+					<?php SvgIcon::make()->name( $item['icon'] )->size( 20 )->render(); ?>
 					<?php echo esc_html( $item['title'] ); ?>
 				</a>
 				<?php
 			}
+			$menu_html = ob_get_clean();
 			?>
+
+			<div x-show="collapsed" x-cloak>
+				<?php
+				$allowed_html = wp_kses_allowed_html( 'post' );
+				if ( isset( $allowed_html['a'] ) ) {
+					$allowed_html['a']['onclick'] = true;
+				}
+
+				Popover::make()
+					->body( $menu_html, $allowed_html )
+					->trigger(
+						Button::make()
+							->variant( Variant::GHOST )
+							->label( __( 'More', 'tutor' ) )
+							->icon( Icon::THREE_DOTS, 'left', 20, 20 )
+							->attr( 'class', 'tutor-learning-pages-item' )
+							->attr( 'x-ref', 'trigger' )
+							->attr( '@click', 'toggle()' )
+							->get()
+					)
+					->render();
+				?>
+			</div>
+
+			<div x-show="!collapsed" x-cloak>
+				<?php echo $menu_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
 		</div>
 	</div>
 </div>

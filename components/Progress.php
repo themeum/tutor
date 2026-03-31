@@ -15,6 +15,9 @@ namespace Tutor\Components;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+
 /**
  * Progress Component Class.
  *
@@ -73,6 +76,65 @@ class Progress extends BaseComponent {
 	protected $state = 'progress';
 
 	/**
+	 * Progress size (x-small|small|medium|large).
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected $size = Size::SMALL;
+
+	/**
+	 * Progress variant style (brand|warning, etc).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @see Variant constants
+	 *
+	 * @var string
+	 */
+	protected $variant = '';
+
+	/**
+	 * Background color.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected $background = 'none';
+
+	/**
+	 * Stroke color.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected $stroke_color = 'var(--tutor-actions-brand-secondary)';
+
+	/**
+	 * Whether to show label.
+	 *
+	 * @since 4.0.0
+	 * @var bool
+	 */
+	protected $show_label = true;
+
+	/**
+	 * Custom label text.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected $label = '';
+
+	/**
+	 * Animation duration in milliseconds.
+	 *
+	 * @since 4.0.0
+	 * @var int
+	 */
+	protected $duration = 1000;
+
+	/**
 	 * Set progress type.
 	 *
 	 * @since 4.0.0
@@ -115,6 +177,136 @@ class Progress extends BaseComponent {
 	}
 
 	/**
+	 * Set progress size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $size Progress size (x-small|small|medium|large).
+	 * @return $this
+	 */
+	public function size( $size ) {
+		$allowed = array( Size::X_SMALL, Size::SMALL, Size::MEDIUM, Size::LARGE );
+		if ( in_array( $size, $allowed, true ) ) {
+			$this->size = $size;
+		}
+		return $this;
+	}
+
+	/**
+	 * Set progress variant style.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $variant Progress variant (brand|warning, etc).
+	 * @return $this
+	 */
+	public function variant( $variant ) {
+		$this->variant = sanitize_html_class( $variant );
+		return $this;
+	}
+
+	/**
+	 * Set progress state.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $state Progress state (progress|complete|locked).
+	 * @return $this
+	 */
+	public function state( $state ) {
+		$allowed = array( 'progress', 'complete', 'locked' );
+		if ( in_array( $state, $allowed, true ) ) {
+			$this->state = $state;
+		}
+		return $this;
+	}
+
+	/**
+	 * Set progress as complete.
+	 *
+	 * @since 4.0.0
+	 * @return $this
+	 */
+	public function complete() {
+		return $this->state( 'complete' );
+	}
+
+	/**
+	 * Set progress as locked.
+	 *
+	 * @since 4.0.0
+	 * @return $this
+	 */
+	public function locked() {
+		return $this->state( 'locked' );
+	}
+
+	/**
+	 * Set background color.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $background Background color.
+	 * @return $this
+	 */
+	public function background( $background ) {
+		$this->background = $background;
+		return $this;
+	}
+
+	/**
+	 * Set stroke color.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $stroke_color Stroke color.
+	 * @return $this
+	 */
+	public function stroke_color( $stroke_color ) {
+		$this->stroke_color = $stroke_color;
+		return $this;
+	}
+
+	/**
+	 * Set whether to show label.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $show_label Whether to show label.
+	 * @return $this
+	 */
+	public function show_label( $show_label = true ) {
+		$this->show_label = (bool) $show_label;
+		return $this;
+	}
+
+	/**
+	 * Set custom label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $label Custom label text.
+	 * @return $this
+	 */
+	public function label( $label ) {
+		$this->label = $label;
+		return $this;
+	}
+
+	/**
+	 * Set animation duration.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $duration Animation duration in milliseconds.
+	 * @return $this
+	 */
+	public function duration( $duration ) {
+		$this->duration = (int) $duration;
+		return $this;
+	}
+
+	/**
 	 * Render progress bar HTML.
 	 *
 	 * @since 4.0.0
@@ -123,6 +315,10 @@ class Progress extends BaseComponent {
 	 */
 	protected function render_bar() {
 		$classes = 'tutor-progress-bar';
+
+		if ( ! empty( $this->variant ) ) {
+			$classes .= " tutor-progress-bar-{$this->variant}";
+		}
 
 		// Add animated attribute if enabled.
 		if ( $this->animated ) {
@@ -158,6 +354,14 @@ class Progress extends BaseComponent {
 		} else {
 			$alpine_data['type'] = $this->state;
 		}
+
+		$alpine_data['size']        = $this->size;
+		$alpine_data['background']  = $this->background;
+		$alpine_data['strokeColor'] = $this->stroke_color;
+		$alpine_data['showLabel']   = $this->show_label;
+		$alpine_data['label']       = $this->label;
+		$alpine_data['animated']    = $this->animated;
+		$alpine_data['duration']    = $this->duration;
 
 		// Convert to JSON for x-data.
 		$alpine_json = wp_json_encode( $alpine_data );

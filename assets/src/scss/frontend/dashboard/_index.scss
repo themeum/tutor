@@ -14,7 +14,6 @@
 @forward "stat-card";
 @forward "progress-card";
 @forward "course-card";
-@forward "star-rating";
 
 // Page components
 @forward 'pages/my-courses';
@@ -26,6 +25,7 @@
 @forward 'profile';
 @forward 'enrollment-history';
 @forward 'billing';
+@forward 'withdrawals';
 @forward 'subscription-history';
 @forward 'announcement-notice';
 @forward 'wishlist';

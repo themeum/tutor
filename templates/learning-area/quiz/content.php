@@ -32,6 +32,7 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 
 ?>
 <div class="tutor-quiz-intro">
+	<?php ob_start(); ?>
 	<div class="tutor-card">
 		<!-- Quiz Icon -->
 		<div class="tutor-quiz-intro-icon tutor-mb-8">
@@ -61,4 +62,5 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 		<!-- Action Buttons -->
 		<?php Quiz::render_quiz_actions( $quiz_id ); ?>
 	</div>
+	<?php echo apply_filters( 'tutor_learning_area_content', ob_get_clean() ); //phpcs:ignore --already escaped ?>
 </div>

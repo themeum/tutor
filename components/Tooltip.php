@@ -273,9 +273,11 @@ class Tooltip extends BaseComponent {
 		$this->component_string = sprintf(
 			'<div x-data="%1$s" class="tutor-tooltip-wrap %2$s" %3$s>
 				%4$s
-				<div x-ref="content" x-show="open" x-cloak x-transition class="tutor-tooltip">
-					%5$s
-				</div>
+				<template x-teleport="body">
+					<div x-ref="content" x-show="open" x-cloak x-transition class="tutor-tooltip">
+						%5$s
+					</div>
+				</template>
 			</div>',
 			esc_attr( $x_data ),
 			esc_attr( $this->attributes['class'] ?? '' ),

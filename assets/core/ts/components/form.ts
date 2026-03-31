@@ -70,8 +70,8 @@ export interface FormControlMethods {
   setError(name: string, error: FieldError): void;
   reset(values?: Record<string, unknown>): void;
   handleSubmit(
-    onValid: (data: Record<string, unknown>) => void,
-    onInvalid?: (errors: Record<string, FieldError>) => void,
+    onValid: (data: Record<string, unknown>) => void | Promise<void>,
+    onInvalid?: (errors: Record<string, FieldError>) => void | Promise<void>,
   ): (event: Event) => void;
   getFormState(): FormState;
   isFieldVisible(element: HTMLElement): boolean;
@@ -418,16 +418,39 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       const type = element?.type ?? 'text';
       const isCheckbox = type === 'checkbox';
       const isFile = type === 'file';
+      const existingField = this.fields[name];
+      const isSameElement = existingField?.ref === element;
 
-      // Check if a checkbox with this name is already registered (indicates multiple checkboxes)
-      const isCheckboxArray = isCheckbox && this.fields[name]?.type === 'checkbox';
+      // Treat as checkbox group only when a different checkbox with the same name already exists; avoids upgrading a single checkbox to an array during re-registration (e.g., after DOM reorder).
+      const isCheckboxArray = isCheckbox && existingField?.type === 'checkbox' && !isSameElement;
 
       let defaultValue: unknown;
 
       if (isCheckboxArray) {
-        // Ensure array type for checkbox groups
+        // Ensure array type for checkbox groups and include any existing checked value
         const currentValue = this.values[name];
-        defaultValue = Array.isArray(currentValue) ? currentValue : [];
+        const aggregatedValues: string[] = Array.isArray(currentValue) ? [...currentValue] : [];
+
+        const existingCheckbox = existingField?.ref;
+        const existingChecked =
+          existingCheckbox?.checked ??
+          (typeof existingField?.defaultValue === 'boolean' ? existingField.defaultValue : false);
+
+        if (existingChecked) {
+          const existingValue = existingCheckbox?.value ?? 'on';
+          if (!aggregatedValues.includes(existingValue)) {
+            aggregatedValues.push(existingValue);
+          }
+        }
+
+        if (element?.checked) {
+          const currentValueToAdd = element.value ?? 'on';
+          if (!aggregatedValues.includes(currentValueToAdd)) {
+            aggregatedValues.push(currentValueToAdd);
+          }
+        }
+
+        defaultValue = aggregatedValues;
       } else if (isCheckbox) {
         defaultValue = this.values[name] ?? element?.checked ?? false;
       } else {
@@ -740,6 +763,26 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.isValidating = false;
       this.dispatchStateChange();
 
+      // Dispatch custom event for components like WPEditor to listen to
+      if (this.formId) {
+        window.dispatchEvent(
+          new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_RESET, {
+            detail: {
+              formId: this.formId,
+              defaultValues:
+                values ||
+                Object.keys(this.fields).reduce(
+                  (acc, name) => {
+                    acc[name] = this.fields[name].defaultValue;
+                    return acc;
+                  },
+                  {} as Record<string, unknown>,
+                ),
+            },
+          }),
+        );
+      }
+
       setTimeout(() => {
         this.isResetting = false;
       }, 0);
@@ -757,9 +800,9 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
           const isValid = await this.validateAllFields();
 
           if (isValid) {
-            onValid({ ...this.values });
+            await onValid({ ...this.values });
           } else {
-            onInvalid?.({ ...this.errors });
+            await onInvalid?.({ ...this.errors });
 
             if (this.config.shouldFocusError) {
               this.focusFirstError();

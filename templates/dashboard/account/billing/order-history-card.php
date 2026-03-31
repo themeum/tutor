@@ -19,7 +19,7 @@ use Tutor\Models\OrderModel;
 	<div class="tutor-billing-card-left">
 		<div class="tutor-billing-card-title">
 			<div class="tutor-hidden tutor-sm-block">
-				<?php ComponentHelper::render_order_status_badge( $order->order_status ); ?>
+				<?php ComponentHelper::render_status_badge( $order->order_status ); ?>
 			</div>
 			<ul class="tutor-pl-1">
 				<?php
@@ -42,7 +42,7 @@ use Tutor\Models\OrderModel;
 				<?php endforeach; ?>
 			</ul>
 			<div class="tutor-sm-hidden">
-				<div class="tutor-ml-6"><?php ComponentHelper::render_order_status_badge( $order->order_status ); ?></div>
+				<div class="tutor-ml-6"><?php ComponentHelper::render_status_badge( $order->order_status ); ?></div>
 			</div>
 		</div>
 		<div class="tutor-billing-card-details">

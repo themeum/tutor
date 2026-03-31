@@ -11,7 +11,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\DropdownFilter;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
@@ -48,7 +50,7 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 <div class="tutor-my-quiz-attempts-wrapper" x-data="tutorQuizAttempts()">
 	<?php if ( $quiz_attempts_count ) : ?>
 		<div class="tutor-quiz-attempts">
-			<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-sm-p-5 tutor-p-6 tutor-items-center tutor-sm-border-b">
+			<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-items-center tutor-border-b">
 				<div class="tutor-quiz-students-attempts-filter-item">
 				<?php
 					DropdownFilter::make()
@@ -57,8 +59,21 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 						->render();
 				?>
 				</div>
-				<div class="tutor-quiz-students-attempts-filter-item">
-					<?php Sorting::make()->order( $order_filter )->render(); ?>
+				<div class="tutor-quiz-students-attempts-filter-item tutor-flex tutor-items-center tutor-gap-4">
+					<?php
+
+					if ( Input::has_any( array( 'result', 'order' ), Input::GET_REQUEST ) ) {
+						Button::make()
+						->tag( 'a' )
+						->attr( 'href', tutor_utils()->tutor_dashboard_url( 'courses/my-quiz-attempts' ) )
+						->attr( 'class', 'tutor-text-brand' )
+						->label( __( 'Clear all', 'tutor' ) )
+						->variant( Variant::LINK )
+						->render();
+					}
+					Sorting::make()->order( $order_filter )->render();
+
+					?>
 				</div>
 			</div>
 			<div class="tutor-quiz-attempts-header">

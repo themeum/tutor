@@ -15,37 +15,46 @@
 use Tutor\Quiz;
 use Tutor\Models\QuizModel;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Modal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Helpers\UrlHelper;
 
 global $tutor_is_started_quiz;
 
-$quiz_attempt_info = tutor_utils()->quiz_attempt_info( $tutor_is_started_quiz->attempt_info );
+// Quiz attempt data.
+$quiz_attempt_info                  = tutor_utils()->quiz_attempt_info( $tutor_is_started_quiz->attempt_info );
+$quiz_attempt_info['date_time_now'] = date( 'Y-m-d H:i:s', tutor_time() ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 
-$quiz_attempt_info['date_time_now'] = date( 'Y-m-d H:i:s', tutor_time() );//phpcs:ignore
-$time_limit_seconds                 = tutor_utils()->avalue_dot( 'time_limit.time_limit_seconds', $quiz_attempt_info );
-$remaining_time_secs                = ( strtotime( $tutor_is_started_quiz->attempt_started_at ) + $time_limit_seconds ) - strtotime( $quiz_attempt_info['date_time_now'] );
-$remaining_time_context             = tutor_utils()->seconds_to_time_context( $remaining_time_secs );
-$quiz_when_time_expires             = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
-$has_time_limit                     = $time_limit_seconds > 0;
-$questions                          = tutor_utils()->get_random_questions_by_quiz();
-$question_layout_view               = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_layout_view' );
-$question_layout_view               = $question_layout_view ? $question_layout_view : 'single_question';
-$feedback_mode                      = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'feedback_mode', '' );
-$reveal_wait_ms                     = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
-$is_linear_layout                   = in_array( $question_layout_view, array( 'single_question', 'question_pagination' ), true );
-$pagination_style                   = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_pagination_style', 'number' ); // @TODO: need to implement in quiz options.
-$show_previous_button               = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
-$attempts_allowed                   = (int) tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'attempts_allowed', 0 );
-$previous_attempts                  = tutor_utils()->quiz_attempts();
-$current_attempt_number             = ( is_array( $previous_attempts ) ? count( $previous_attempts ) : 0 );
+// Time limit calculations.
+$time_limit_seconds     = (int) tutor_utils()->avalue_dot( 'time_limit.time_limit_seconds', $quiz_attempt_info );
+$has_time_limit         = $time_limit_seconds > 0;
+$remaining_time_secs    = $has_time_limit
+	? ( strtotime( $tutor_is_started_quiz->attempt_started_at ) + $time_limit_seconds ) - strtotime( $quiz_attempt_info['date_time_now'] )
+	: 0;
+$remaining_time_context = tutor_utils()->seconds_to_time_context( $remaining_time_secs );
 
+// Quiz settings.
+$quiz_when_time_expires = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
+$reveal_wait_ms         = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
+$show_previous_button   = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
+
+// Quiz layout.
+$question_layout_view = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_layout_view' );
+$feedback_mode        = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'feedback_mode', '' );
+$is_linear_layout     = in_array( $question_layout_view, array( 'single_question', 'question_pagination' ), true );
+$is_pagination_layout = 'question_pagination' === $question_layout_view;
+
+// Pagination style — only applies to question_pagination layout.
 $supported_pagination_styles = array( 'shape', 'radio', 'number' );
-if ( ! in_array( $pagination_style, $supported_pagination_styles, true ) ) {
-	$pagination_style = 'question_pagination' === $question_layout_view ? 'shape' : 'number';
-}
+$pagination_style            = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_pagination_style', 'number' );
+
+// Questions and attempts.
+$questions                     = tutor_utils()->get_random_questions_by_quiz();
+$hide_question_number_overview = (bool) tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'hide_question_number_overview', false );
 
 $reveal_question_types = array( 'true_false', 'single_choice', 'multiple_choice' );
 $quiz_answers          = array();
@@ -64,6 +73,15 @@ foreach ( $questions as $question ) {
 
 $form_id             = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
 $modal_id            = 'tutor-quiz-abandon-modal';
+$submitted_modal_id  = 'tutor-quiz-submitted-modal';
+$timeout_modal_id    = 'tutor-quiz-timeout-modal';
+$attempt_details_url = UrlHelper::add_query_params(
+	get_pagenum_link(),
+	array(
+		'action'     => Quiz::ACTION_VIEW_DETAILS,
+		'attempt_id' => (int) $tutor_is_started_quiz->attempt_id,
+	)
+);
 $modal_cancel_button = Button::make()
 	->label( __( 'Stay Here', 'tutor' ) )
 	->variant( Variant::SECONDARY )
@@ -96,6 +114,9 @@ $default_values = array(
 			attemptId: "<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>",
 			quizId: <?php echo esc_attr( $tutor_is_started_quiz->quiz_id ); ?>,
 			abandonModalId: "<?php echo esc_attr( $modal_id ); ?>",
+			submittedModalId: "<?php echo esc_attr( $submitted_modal_id ); ?>",
+			timeoutModalId: "<?php echo esc_attr( $timeout_modal_id ); ?>",
+			totalQuestions: <?php echo esc_attr( count( $questions ) ); ?>,
 			feedbackMode: "<?php echo esc_attr( $feedback_mode ); ?>",
 			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
 		});
@@ -144,7 +165,7 @@ $default_values = array(
 		data-question-layout-view="<?php echo esc_attr( $question_layout_view ); ?>"
 		x-cloak
 	>
-		<?php if ( $is_linear_layout ) : ?>
+		<?php if ( $is_linear_layout && ! $hide_question_number_overview ) : ?>
 			<div class="tutor-quiz-question-meta">
 				<div class="tutor-quiz-question-indicator">
 					<?php
@@ -159,18 +180,6 @@ $default_values = array(
 								'x-text' => true,
 							),
 						)
-					);
-					?>
-				</div>
-				<div class="tutor-quiz-attempt-progress">
-					<?php
-					echo wp_kses(
-						sprintf(
-							/* translators: %s: allowed attempts (number or ∞) */
-							__( 'Total Attempt: %s', 'tutor' ),
-							'<strong>' . esc_html( $current_attempt_number ) . '/' . ( 0 === $attempts_allowed ? '&infin;' : esc_html( $attempts_allowed ) ) . '</strong>'
-						),
-						array( 'strong' => array() )
 					);
 					?>
 				</div>
@@ -197,7 +206,7 @@ $default_values = array(
 		}
 		?>
 
-		<?php if ( $is_linear_layout && count( $questions ) > 1 ) : ?>
+		<?php if ( $is_pagination_layout && count( $questions ) > 1 ) : ?>
 			<div
 				class="tutor-quiz-questions-pagination"
 				data-pagination-style="<?php echo esc_attr( $pagination_style ); ?>"
@@ -216,10 +225,10 @@ $default_values = array(
 									<?php echo esc_html( $index + 1 ); ?>
 								</span>
 								<span class="tutor-quiz-question-paginate-icon tutor-quiz-question-paginate-icon-correct">
-									<?php tutor_utils()->render_svg_icon( Icon::CHECK_2, 12, 12 ); ?>
+									<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 12 )->render(); ?>
 								</span>
 								<span class="tutor-quiz-question-paginate-icon tutor-quiz-question-paginate-icon-incorrect">
-									<?php tutor_utils()->render_svg_icon( Icon::CROSS, 12, 12 ); ?>
+									<?php SvgIcon::make()->name( Icon::CROSS )->size( 12 )->render(); ?>
 								</span>
 							</button>
 						</li>
@@ -244,13 +253,13 @@ $default_values = array(
 						class="tutor-quiz-footer-feedback-icon"
 						x-show="revealFooterState === 'correct'"
 					>
-						<?php tutor_utils()->render_svg_icon( Icon::CHECK_2, 26, 26 ); ?>
+						<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 26 )->render(); ?>
 					</span>
 					<span
 						class="tutor-quiz-footer-feedback-icon"
 						x-show="revealFooterState === 'incorrect'"
 					>
-						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 26, 26 ); ?>
+						<?php SvgIcon::make()->name( Icon::CROSS )->size( 26 )->render(); ?>
 					</span>
 					<span
 						class="tutor-quiz-footer-feedback-text"
@@ -342,6 +351,40 @@ $default_values = array(
 			->cancel_button( $modal_cancel_button )
 			->render();
 	?>
+
+	<?php
+		Modal::make()
+			->id( $submitted_modal_id )
+			->width( '426px' )
+			->template(
+				tutor()->path . 'templates/learning-area/quiz/modals/result.php',
+				array(
+					'title'         => __( 'Quiz Submitted', 'tutor' ),
+					'message'       => __( 'Your responses have been successfully recorded.', 'tutor' ),
+					'icon_url'      => tutor()->url . 'assets/images/quiz-sibmitted.svg',
+					'show_attempts' => false,
+					'action_url'    => $attempt_details_url,
+					'action_label'  => __( 'View Results', 'tutor' ),
+				)
+			)
+			->render();
+
+		Modal::make()
+			->id( $timeout_modal_id )
+			->width( '426px' )
+			->template(
+				tutor()->path . 'templates/learning-area/quiz/modals/result.php',
+				array(
+					'title'         => __( 'Times up!', 'tutor' ),
+					'message'       => __( 'Your quiz has been submitted automatically.', 'tutor' ),
+					'icon_url'      => tutor()->url . 'assets/images/quiz-timeout.svg',
+					'show_attempts' => true,
+					'action_url'    => $attempt_details_url,
+					'action_label'  => __( 'View Results', 'tutor' ),
+				)
+			)
+			->render();
+		?>
 </form>
 
 <script type="application/octet-stream" id="tutor-quiz-context">

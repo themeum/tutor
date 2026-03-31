@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use TUTOR\User;
 use Tutor\Cache\QuizAttempts;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
@@ -22,6 +23,7 @@ use Tutor\Components\Constants\Positions;
 use Tutor\Components\Popover;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Models\QuizModel;
+use Tutor\Components\SvgIcon;
 
 /**
  * Quiz attempt class
@@ -358,6 +360,19 @@ class Quiz_Attempts_List {
 	}
 
 	/**
+	 * Check if attempt details are hidden.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_attempt_details_hidden(): bool {
+		$is_student_view        = User::is_student_view();
+		$is_quiz_details_hidden = $is_student_view && tutor_utils()->get_option( 'hide_quiz_details' );
+		return $is_quiz_details_hidden;
+	}
+
+	/**
 	 * Check whether to show instructor or student quiz attempt.
 	 *
 	 * @since 4.0.0
@@ -512,7 +527,7 @@ class Quiz_Attempts_List {
 		$details_item = array(
 			'tag'     => 'a',
 			'content' => __( 'Details', 'tutor' ),
-			'icon'    => tutor_utils()->get_svg_icon( Icon::RESOURCES ),
+			'icon'    => SvgIcon::make()->name( Icon::RESOURCES )->size( 20 )->get(),
 			'attr'    => array( 'href' => $url ),
 		);
 		return $details_item;
@@ -530,22 +545,31 @@ class Quiz_Attempts_List {
 	 * @return void
 	 */
 	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0 ) {
+		$is_quiz_details_hidden = $this->is_attempt_details_hidden();
+
 		// Only add retry option to the first attempt.
 		if ( ! $this->should_retry( $attempt, $attempts_count ) || ! $attempts_count ) {
+
+			if ( $is_quiz_details_hidden ) {
+				return;
+			}
+
 			Popover::make()
 			->trigger( $this->get_kebab_button() )
 			->placement( 'bottom' )
 			->menu_item( $this->get_details_item( $attempt ) )
+			->menu_min_width( '110px' )
 			->render();
 		} else {
 			Popover::make()
 			->trigger( $this->get_kebab_button() )
 			->placement( 'bottom' )
+			->menu_min_width( '110px' )
 			->menu_item(
 				array(
 					'tag'     => 'button',
 					'content' => __( 'Retry', 'tutor' ),
-					'icon'    => tutor_utils()->get_svg_icon( Icon::RELOAD ),
+					'icon'    => SvgIcon::make()->name( Icon::RELOAD )->size( 20 )->get(),
 					'attr'    => array(
 						'@click' => $this->get_retry_attribute( $quiz_id ),
 					),
@@ -616,13 +640,13 @@ class Quiz_Attempts_List {
 		Popover::make()
 			->trigger( $this->get_kebab_button() )
 			->placement( Positions::BOTTOM_END )
-			->min_width( 120 )
+			->menu_min_width( '120px' )
 			->menu_item( $this->get_details_item( $attempt ) )
 			->menu_item(
 				array(
 					'tag'     => 'button',
 					'content' => __( 'Delete', 'tutor' ),
-					'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+					'icon'    => SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->get(),
 					'attr'    => array(
 						'@click' => sprintf(
 							'hide(); TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });',
@@ -631,6 +655,7 @@ class Quiz_Attempts_List {
 					),
 				)
 			)
+			->menu_min_width( '110px' )
 			->render();
 	}
 }

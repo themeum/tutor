@@ -10,10 +10,12 @@ type FileUploaderVariant = 'file-uploader' | 'image-uploader';
 
 export interface FileUploaderProps {
   multiple?: boolean;
+  maxFiles?: number;
   accept?: string;
   maxSize?: number; // in bytes
   onFileSelect?: (files: (File | WPMedia | string)[]) => void;
   onError?: (error: string) => void;
+  onFileRemove?: (file: File | WPMedia | string) => void;
   disabled?: boolean;
   variant?: FileUploaderVariant;
   value?: File | WPMedia | string | (File | WPMedia | string)[] | null;
@@ -28,6 +30,7 @@ export interface FileUploaderProps {
 
 const defaultProps = {
   multiple: false,
+  maxFiles: undefined,
   accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
   maxSize: Number(tutorConfig.max_upload_size),
   variant: 'file-uploader',
@@ -81,6 +84,7 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   isDragOver: false,
   isDisabled: props.disabled,
   multiple: !!props.multiple,
+  maxFiles: props.maxFiles,
   accept: props.accept,
   maxSize: props.maxSize || 52428800,
   variant: props.variant,
@@ -170,6 +174,7 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
         multiple: this.multiple,
         library: this.wpMediaLibraryType ? { type: this.wpMediaLibraryType } : undefined,
         maxFileSize: this.maxSize,
+        maxFiles: this.maxFiles,
       },
       (files: WPMedia[]) => {
         this.processFiles(files);
@@ -228,7 +233,20 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
       }
 
       if (this.multiple) {
-        this.selectedFiles = this.mergeFileLists(this.selectedFiles, validFiles);
+        const mergedFiles = this.mergeFileLists(this.selectedFiles, validFiles);
+
+        if (this.maxFiles && mergedFiles.length > this.maxFiles) {
+          this.showError(
+            sprintf(
+              // translators: %d is the maximum number of files allowed
+              __('Cannot select more than %d files', 'tutor'),
+              this.maxFiles,
+            ),
+          );
+          return;
+        }
+
+        this.selectedFiles = mergedFiles;
       } else {
         this.selectedFiles = [validFiles[0]];
       }
@@ -256,6 +274,10 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   },
 
   removeFile(index?: number) {
+    if (props.onFileRemove && typeof index === 'number') {
+      props.onFileRemove(this.selectedFiles[index]);
+    }
+
     if (this.multiple && typeof index === 'number') {
       this.selectedFiles = this.selectedFiles.filter((_, i) => i !== index);
     } else {

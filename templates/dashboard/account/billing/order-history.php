@@ -32,9 +32,7 @@ if ( tutor_utils()->is_monetize_by_tutor() ) {
 }
 ?>
 
-<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
-	<?php require_once tutor_get_template( 'dashboard.account.billing.order-history-filters' ); ?>
-</div>
+<?php require_once tutor_get_template( 'dashboard.account.billing.order-history-filters' ); ?>
 
 <?php
 if ( empty( $orders ) ) :
