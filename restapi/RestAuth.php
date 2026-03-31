@@ -303,7 +303,7 @@ class RestAuth {
 	 * @return boolean
 	 */
 	public static function process_api_request() {
-		$headers = apache_request_headers();
+		$headers = tutor_getallheaders();
 
 		if ( isset( $headers['Authorization'] ) ) {
 			$authorization_header = $headers['Authorization'];
