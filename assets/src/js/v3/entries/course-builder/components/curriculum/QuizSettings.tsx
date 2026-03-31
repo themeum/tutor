@@ -33,6 +33,7 @@ import FormQuizLayoutSelect from './FormQuizLayoutSelect';
 import QuizFullPageSvg from '@SharedImages/quiz-fullpage.svg';
 import QuizSingleLayoutSvg from '@SharedImages/quiz-single-question.svg';
 import Tooltip from '@TutorShared/atoms/Tooltip';
+import { type IconCollection } from '@TutorShared/icons/types';
 
 const courseId = getCourseId();
 
@@ -74,6 +75,19 @@ const formatTimePerQuestion = (valueInSeconds: number) => {
     __('%sh per question', 'tutor'),
     Math.round((valueInSeconds / (60 * 60)) * 10) / 10,
   );
+};
+
+const getPaginationTypeIcon = (type: string): IconCollection => {
+  switch (type) {
+    case 'shape':
+      return 'quizShape';
+    case 'number':
+      return 'quizNumber';
+    case 'radio':
+      return 'quizRadio';
+    default:
+      return 'quizShape';
+  }
 };
 
 const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
@@ -193,10 +207,13 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       {...controllerProps}
                       type="number"
                       size="small"
-                      label={<>&nbsp;</>}
                       selectOnFocus
                       isInlineLabel
                       style={styles.maxWidth('99px')}
+                      formFieldWrapperCss={css`
+                        width: auto;
+                      `}
+                      inputContainerCss={styles.justifyContent('flex-end')}
                     />
                   )}
                 />
@@ -231,10 +248,13 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         {...controllerProps}
                         type="number"
                         size="small"
-                        label={<>&nbsp;</>}
                         isInlineLabel
                         selectOnFocus
                         style={styles.maxWidth('99px')}
+                        formFieldWrapperCss={css`
+                          width: auto;
+                        `}
+                        inputContainerCss={styles.justifyContent('flex-end')}
                       />
                     )}
                   />
@@ -334,7 +354,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               />
 
               <Show when={form.watch('quiz_option.quiz_auto_start')}>
-                <div css={styles.inlineForm}>
+                <div css={styles.inlineForm({ withPrefix: true })}>
                   <div data-prefix>{__('After', 'tutor')}</div>
                   <Controller
                     name="quiz_option.auto_start_delay"
@@ -345,8 +365,11 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         size="small"
                         content={__('secs', 'tutor')}
                         contentPosition="right"
-                        wrapperCss={styles.maxWidth('120px')}
+                        wrapperCss={styles.maxWidth('80px')}
                         contentCss={styles.minWidth('fit-content')}
+                        formFieldWrapperCss={css`
+                          width: auto;
+                        `}
                         showVerticalBar={false}
                         presetOptions={[
                           {
@@ -416,6 +439,13 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 />
 
                 <Show when={form.watch('quiz_option.enable_pagination')}>
+                  <div css={styles.paginationIcons}>
+                    <SVGIcon
+                      name={getPaginationTypeIcon(form.watch('quiz_option.pagination_type'))}
+                      width={40}
+                      height={32}
+                    />
+                  </div>
                   <Controller
                     control={form.control}
                     name="quiz_option.pagination_type"
@@ -424,22 +454,21 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         {...controllerProps}
                         size="small"
                         isInlineLabel
-                        label={<>&nbsp;</>}
                         options={[
                           {
                             label: __('Shapes', 'tutor'),
                             value: 'shape',
-                            icon: 'quizShape',
+                            // icon: 'quizShape',
                           },
                           {
                             label: __('Numbers', 'tutor'),
                             value: 'number',
-                            icon: 'quizNumber',
+                            // icon: 'quizNumber',
                           },
                           {
                             label: __('Radio', 'tutor'),
                             value: 'radio',
-                            icon: 'quizRadio',
+                            // icon: 'quizRadio',
                           },
                         ]}
                       />
@@ -458,7 +487,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 />
 
                 <Show when={form.watch('quiz_option.enable_answer_reveal')}>
-                  <div css={styles.inlineForm}>
+                  <div css={styles.inlineForm({ withPrefix: true })}>
                     <div data-prefix>{__('For', 'tutor')}</div>
                     <Controller
                       name="quiz_option.answers_reveal_duration"
@@ -469,8 +498,11 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                           size="small"
                           content={__('secs', 'tutor')}
                           contentPosition="right"
-                          wrapperCss={styles.maxWidth('120px')}
+                          wrapperCss={styles.maxWidth('80px')}
                           contentCss={styles.minWidth('fit-content')}
+                          formFieldWrapperCss={css`
+                            width: auto;
+                          `}
                           showVerticalBar={false}
                           presetOptions={[
                             {
@@ -741,6 +773,9 @@ const styles = {
   minWidth: (width: string) => css`
     min-width: ${width};
   `,
+  justifyContent: (justifyContent: string) => css`
+    justify-content: ${justifyContent};
+  `,
   settings: css`
     display: grid;
     grid-template-columns: 439px 305px;
@@ -762,7 +797,7 @@ const styles = {
     align-self: start;
     border-radius: ${borderRadius[12]};
     border: 1px solid ${colorTokens.stroke.divider};
-    padding: ${spacing[12]};
+    padding: ${spacing[16]};
     background-color: ${colorTokens.background.white};
 
     ${Breakpoint.smallMobile} {
@@ -892,16 +927,28 @@ const styles = {
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.surface.courseBuilder};
   `,
-  inlineForm: css`
+  inlineForm: ({ withPrefix }: { withPrefix?: boolean } = {}) => css`
     ${styleUtils.display.flex('row')};
+    width: 100%;
     align-items: center;
     justify-content: space-between;
     gap: ${spacing[8]};
 
-    [data-prefix] {
-      ${typography.body('regular')};
-      color: ${colorTokens.text.hints};
-    }
+    ${withPrefix &&
+    css`
+      justify-content: flex-end;
+
+      [data-prefix] {
+        ${typography.body('regular')};
+        color: ${colorTokens.text.hints};
+      }
+    `}
+  `,
+  paginationIcons: css`
+    ${styleUtils.flexCenter()};
+    background-color: ${colorTokens.bg.white};
+    border: 1px solid ${colorTokens.stroke.divider};
+    border-radius: ${borderRadius[4]};
   `,
   timeLimit: css`
     display: grid;
