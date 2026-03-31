@@ -15,6 +15,7 @@ namespace Tutor\Components;
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Options_V2;
 
 /**
  * Class StarRating
@@ -134,9 +135,9 @@ class StarRating extends BaseComponent {
 		$rating    = $this->rating;
 		$icon_size = $this->icon_size;
 
-		$star_fill = SvgIcon::make()->name( Icon::STAR_FILL )->size( $icon_size )->get();
-		$star_half = SvgIcon::make()->name( Icon::STAR_HALF )->size( $icon_size )->get();
-		$star      = SvgIcon::make()->name( Icon::STAR_LINE )->size( $icon_size )->get();
+		$star_fill = SvgIcon::make()->name( Icon::STAR_FILL )->size( $icon_size )->learning_mode( Options_V2::LEARNING_MODE_MODERN )->get();
+		$star_half = SvgIcon::make()->name( Icon::STAR_HALF )->size( $icon_size )->learning_mode( Options_V2::LEARNING_MODE_MODERN )->get();
+		$star      = SvgIcon::make()->name( Icon::STAR_LINE )->size( $icon_size )->learning_mode( Options_V2::LEARNING_MODE_MODERN )->get();
 
 		ob_start();
 		?>

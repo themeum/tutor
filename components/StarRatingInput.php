@@ -15,6 +15,7 @@ namespace Tutor\Components;
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Options_V2;
 use Tutor\components\Constants\Size;
 
 /**
@@ -180,9 +181,9 @@ class StarRatingInput extends BaseComponent {
 			5 => __( 'Amazing', 'tutor' ),
 		);
 
-		$star_fill = SvgIcon::make()->name( Icon::STAR_FILL )->size( $is_emoji ? Size::SIZE_32 : Size::SIZE_24 )->get();
-		$star_half = SvgIcon::make()->name( Icon::STAR_HALF )->size( $is_emoji ? Size::SIZE_32 : Size::SIZE_24 )->get();
-		$star      = SvgIcon::make()->name( Icon::STAR_LINE )->size( $is_emoji ? Size::SIZE_32 : Size::SIZE_24 )->get();
+		$star_fill = SvgIcon::make()->name( Icon::STAR_FILL )->size( $is_emoji ? Size::SIZE_32 : Size::SIZE_24 )->learning_mode( Options_V2::LEARNING_MODE_MODERN )->get();
+		$star_half = SvgIcon::make()->name( Icon::STAR_HALF )->size( $is_emoji ? Size::SIZE_32 : Size::SIZE_24 )->learning_mode( Options_V2::LEARNING_MODE_MODERN )->get();
+		$star      = SvgIcon::make()->name( Icon::STAR_LINE )->size( $is_emoji ? Size::SIZE_32 : Size::SIZE_24 )->learning_mode( Options_V2::LEARNING_MODE_MODERN )->get();
 
 		ob_start();
 		?>
