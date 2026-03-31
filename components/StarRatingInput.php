@@ -15,7 +15,6 @@ namespace Tutor\Components;
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
-use Tutor\Options_V2;
 use Tutor\components\Constants\Size;
 
 /**
