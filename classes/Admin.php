@@ -62,6 +62,32 @@ class Admin {
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
 
 		add_action( 'wp_ajax_tutor_do_not_show_feature_page', array( $this, 'handle_do_not_show_feature_page' ) );
+
+		add_action( 'upgrader_process_complete', array( $this, 'set_reset_permalink_flag' ), 10, 2 );
+	}
+
+	/**
+	 * Flush Tutor permalink rewrite rules after updates.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param mixed $upgrader_object Upgrader instance.
+	 * @param array $options      Extra arguments passed to the hook.
+	 *
+	 * @return void
+	 */
+	public function set_reset_permalink_flag( $upgrader_object, $options ) {
+		$our_plugin = tutor()->basename;
+
+		if ( 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
+			// Iterate through the plugins being updated and check if ours is there.
+			foreach ( $options['plugins'] as $plugin ) {
+				if ( $plugin === $our_plugin ) {
+					Permalink::set_permalink_flag();
+					break;
+				}
+			}
+		}
 	}
 
 	/**

@@ -12,7 +12,6 @@
 
 namespace Tutor\Components;
 
-use Tutor\Options_V2;
 use TUTOR\User;
 
 defined( 'ABSPATH' ) || exit;
@@ -72,7 +71,6 @@ class SvgIcon extends BaseComponent {
 	 * @var int
 	 */
 	protected $height = 16;
-
 	/**
 	 * Icon color.
 	 *
@@ -85,15 +83,13 @@ class SvgIcon extends BaseComponent {
 	protected $color = '';
 
 	/**
-	 * Learning mode for icon lookup.
-	 *
-	 * If provided, the icon is resolved for the specified learning mode.
+	 * Ignore kids mode variant.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var string
+	 * @var bool
 	 */
-	protected $learning_mode = '';
+	protected $ignore_kids = false;
 
 	/**
 	 * Set icon name.
@@ -169,16 +165,16 @@ class SvgIcon extends BaseComponent {
 	}
 
 	/**
-	 * Set learning mode.
+	 * Set to ignore kids variant.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $learning_mode Learning mode.
+	 * @param bool $ignore_kids Ignore kids mode variant.
 	 *
 	 * @return $this
 	 */
-	public function learning_mode( string $learning_mode ): self {
-		$this->learning_mode = $learning_mode;
+	public function ignore_kids( bool $ignore_kids = true ): self {
+		$this->ignore_kids = $ignore_kids;
 		return $this;
 	}
 
@@ -211,8 +207,8 @@ class SvgIcon extends BaseComponent {
 
 		$icon_path = tutor()->path . 'assets/icons/' . $this->name . '.svg';
 
-		// Kids mode has a dedicated icon directory; other modes use the default set.
-		if ( Options_V2::LEARNING_MODE_KIDS === $this->learning_mode || ( empty( $this->learning_mode ) && tutor_utils()->is_kids_mode() ) ) {
+		// If learning mode is kids, check kids folder first.
+		if ( tutor_utils()->is_kids_mode() && ! $this->ignore_kids ) {
 			$kids_path = tutor()->path . 'assets/icons/kids/' . $this->name . '.svg';
 			if ( file_exists( $kids_path ) ) {
 				$icon_path = $kids_path;
@@ -223,7 +219,7 @@ class SvgIcon extends BaseComponent {
 			return '';
 		}
 
-		$svg = file_get_contents( $icon_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading a local SVG asset from the plugin directory.
+		$svg = file_get_contents( $icon_path );
 		if ( ! $svg ) {
 			return '';
 		}
