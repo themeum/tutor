@@ -1,0 +1,122 @@
+// Button Component
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-btn {
+  @include tutor-button-base;
+  @include tutor-button-size(medium);
+}
+
+// Button variants
+.tutor-btn-primary {
+  @include tutor-button-variant(primary);
+}
+
+.tutor-btn-primary-soft {
+  @include tutor-button-variant(primary-soft);
+}
+
+.tutor-btn-destructive {
+  @include tutor-button-variant(destructive);
+}
+
+.tutor-btn-destructive-soft {
+  @include tutor-button-variant(destructive-soft);
+}
+
+.tutor-btn-secondary {
+  @include tutor-button-variant(secondary);
+}
+
+.tutor-btn-outline {
+  @include tutor-button-variant(outline);
+}
+
+.tutor-btn-ghost {
+  @include tutor-button-variant(ghost);
+}
+
+.tutor-btn-ghost-brand {
+  @include tutor-button-variant(ghost-brand);
+}
+
+.tutor-btn-link {
+  @include tutor-button-variant(link);
+}
+
+.tutor-btn-link-gray {
+  @include tutor-button-variant(link-gray);
+}
+
+.tutor-btn-link-destructive {
+  @include tutor-button-variant(link-destructive);
+}
+
+// Button sizes
+.tutor-btn-x-small {
+  @include tutor-button-size(x-small);
+
+  &.tutor-btn-loading::before {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.tutor-btn-small {
+  @include tutor-button-size(small);
+
+  &.tutor-btn-loading::before {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.tutor-btn-medium {
+  @include tutor-button-size(medium);
+}
+
+.tutor-btn-large {
+  @include tutor-button-size(large);
+
+  &.tutor-btn-loading::before {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Button states
+.tutor-btn-loading {
+  @include tutor-button-loading;
+}
+
+// Button with full width
+.tutor-btn-block {
+  @include tutor-button-block();
+}
+
+// Button group
+.tutor-btn-group {
+  @include tutor-button-group(horizontal);
+}
+
+// Button group vertical
+.tutor-btn-group-vertical {
+  @include tutor-button-group(vertical);
+}
+
+// Icon-only button
+.tutor-btn-icon {
+  @include tutor-button-icon-size(medium);
+
+  &.tutor-btn-x-small {
+    @include tutor-button-icon-size(x-small);
+  }
+
+  &.tutor-btn-small {
+    @include tutor-button-icon-size(small);
+  }
+
+  &.tutor-btn-large {
+    @include tutor-button-icon-size(large);
+  }
+}

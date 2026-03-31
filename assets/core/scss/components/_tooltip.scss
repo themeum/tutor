@@ -1,0 +1,128 @@
+// Tooltip Component
+// RTL-aware tooltip positioning and styling
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+@use '../mixins/rtl' as rtl;
+
+.tutor-tooltip-wrap {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+.tutor-tooltip {
+  @include tutor-typography('tiny', 'regular', 'primary-inverse');
+  position: fixed;
+  z-index: 1070;
+  max-width: 180px;
+  padding: $tutor-spacing-4;
+  background-color: $tutor-surface-dark;
+  border-radius: $tutor-radius-sm;
+  box-shadow: $tutor-shadow-md;
+  word-wrap: break-word;
+  text-align: center;
+  pointer-events: none;
+
+  &-large {
+    max-width: 320px;
+    padding: $tutor-spacing-5;
+    text-align: start;
+  }
+
+  &-arrow-start {
+    &.tutor-tooltip-top,
+    &.tutor-tooltip-bottom {
+      &::before {
+        @include rtl.arrow-start($tutor-spacing-5);
+      }
+    }
+  }
+
+  &-arrow-center {
+    &.tutor-tooltip-top,
+    &.tutor-tooltip-bottom {
+      &::before {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+      }
+    }
+  }
+
+  &-arrow-end {
+    &.tutor-tooltip-top,
+    &.tutor-tooltip-bottom {
+      &::before {
+        @include rtl.arrow-end($tutor-spacing-5);
+      }
+    }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+  }
+
+  &-top {
+    &::before {
+      top: 100%;
+      border-top-color: $tutor-surface-dark;
+      border-bottom: none;
+    }
+  }
+
+  &-bottom {
+    &::before {
+      bottom: 100%;
+      border-bottom-color: $tutor-surface-dark;
+      border-top: none;
+    }
+  }
+
+  &-start {
+    &::before {
+      top: 50%;
+      inset-inline-start: 100%;
+      border-inline-start-color: $tutor-surface-dark;
+      transform: translateY(-50%);
+    }
+  }
+
+  &-end {
+    &::before {
+      top: 50%;
+      inset-inline-end: 100%;
+      border-inline-end-color: $tutor-surface-dark;
+      transform: translateY(-50%);
+    }
+  }
+}
+
+// Animation classes for Alpine.js
+.tutor-tooltip {
+  &-enter {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  &-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    @include tutor-transition((opacity, transform), 0.15s);
+  }
+
+  &-leave {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &-leave-active {
+    opacity: 0;
+    transform: scale(0.8);
+    @include tutor-transition((opacity, transform), 0.15s);
+  }
+}

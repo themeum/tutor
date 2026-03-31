@@ -1,0 +1,34 @@
+// Dashboard Profile header
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-profile-header {
+  border-bottom: 1px solid $tutor-border-idle;
+  padding-block: $tutor-spacing-5;
+  margin-bottom: $tutor-spacing-9;
+  
+  @include tutor-breakpoint-down(md) {
+    position: relative;
+    border: unset;
+    padding-inline: $tutor-spacing-5;
+    margin-bottom: $tutor-spacing-4;
+
+    &-left {
+      width: 100%;
+
+      .tutor-profile-header-title {
+        width: 100%;
+        text-align: center;
+        text-transform: capitalize;
+      }
+    }
+
+    &-right {
+      flex-shrink: 0;
+      width: max-content;
+      position: absolute;
+      right: $tutor-spacing-6;
+    }
+  }
+}

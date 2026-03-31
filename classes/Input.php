@@ -28,8 +28,8 @@ class Input {
 	const TYPE_TEXTAREA  = 'textarea';
 	const TYPE_KSES_POST = 'kses-post';
 
-	private const GET_REQUEST  = 'get';
-	private const POST_REQUEST = 'post';
+	const GET_REQUEST  = 'get';
+	const POST_REQUEST = 'post';
 
 	/**
 	 * Common data sanitizer method
@@ -218,13 +218,61 @@ class Input {
 	 * Check input has key or not
 	 *
 	 * @since 2.0.2
+	 * @since 4.0.0 param $method added.
 	 *
 	 * @param string $key input key name.
+	 * @param string $method request method.
+	 *
 	 * @return boolean
 	 */
-	public static function has( $key ) {
+	public static function has( $key, $method = '' ) {
+		if ( empty( $method ) ) {
+			//phpcs:ignore WordPress.Security.NonceVerification
+			return isset( $_REQUEST[ $key ] );
+		}
+
 		//phpcs:ignore WordPress.Security.NonceVerification
-		return isset( $_REQUEST[ $key ] );
+		return self::GET_REQUEST === $method ? isset( $_GET[ $key ] ) : isset( $_POST[ $key ] );
+	}
+
+	/**
+	 * Check input has any keys.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $keys keys.
+	 * @param string $method request method.
+	 *
+	 * @return boolean
+	 */
+	public static function has_any( array $keys, $method = '' ) {
+		foreach ( $keys as $key ) {
+			if ( self::has( $key, $method ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check input has all keys.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $keys keys.
+	 * @param string $method request method.
+	 *
+	 * @return boolean
+	 */
+	public static function has_all( array $keys, $method = '' ) {
+		foreach ( $keys as $key ) {
+			if ( ! self::has( $key, $method ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -317,5 +365,65 @@ class Input {
 			'style'           => true,
 		);
 		return $tags;
+	}
+
+	/**
+	 * This method is used with wp_kses_allowed_html filter
+	 * to allow svg tags.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $allowed_tags allowed HTML tags.
+	 *
+	 * @return array
+	 */
+	public static function allow_svg( $allowed_tags ) {
+		$svg_tags = array(
+			'svg'      => array(
+				'class'       => true,
+				'aria-hidden' => true,
+				'aria-label'  => true,
+				'role'        => true,
+				'xmlns'       => true,
+				'width'       => true,
+				'height'      => true,
+				'viewbox'     => true,
+				'fill'        => true,
+			),
+			'g'        => array(
+				'fill' => true,
+			),
+			'path'     => array(
+				'd'            => true,
+				'fill'         => true,
+				'stroke'       => true,
+				'stroke-width' => true,
+			),
+			'circle'   => array(
+				'cx' => true,
+				'cy' => true,
+				'r'  => true,
+			),
+			'rect'     => array(
+				'x'      => true,
+				'y'      => true,
+				'width'  => true,
+				'height' => true,
+			),
+			'line'     => array(
+				'x1' => true,
+				'x2' => true,
+				'y1' => true,
+				'y2' => true,
+			),
+			'polyline' => array(
+				'points' => true,
+			),
+			'polygon'  => array(
+				'points' => true,
+			),
+		);
+
+		return array_merge( $allowed_tags, $svg_tags );
 	}
 }

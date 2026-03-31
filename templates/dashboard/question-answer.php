@@ -9,6 +9,8 @@
  * @version 1.6.4
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
 use TUTOR\Instructor;
 use TUTOR\Q_And_A;

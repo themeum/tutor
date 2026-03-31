@@ -86,12 +86,15 @@ class QuizBuilder {
 	 * @return array
 	 */
 	public function prepare_answer_data( $question_id, $question_type, $input ) {
-		$answer_title         = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
-		$is_correct           = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
-		$image_id             = Input::sanitize( $input['image_id'] ?? null );
-		$answer_two_gap_match = Input::sanitize( $input['answer_two_gap_match'] ?? '' );
-		$answer_view_format   = Input::sanitize( $input['answer_view_format'] ?? '' );
-		$answer_settings      = null;
+		$answer_title = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
+		$is_correct   = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
+		$image_id     = Input::sanitize( $input['image_id'] ?? null );
+		// Let the hook handle special cases (e.g. draw_image) and return a normalized value.
+		$answer_two_gap_match_raw = isset( $input['answer_two_gap_match'] ) ? wp_unslash( $input['answer_two_gap_match'] ) : '';
+		$answer_two_gap_match_raw = apply_filters( 'tutor_save_quiz_draw_image_mask', $answer_two_gap_match_raw, $question_type );
+		$answer_two_gap_match     = Input::sanitize( $answer_two_gap_match_raw ?? '', '' );
+		$answer_view_format       = Input::sanitize( $input['answer_view_format'] ?? '' );
+		$answer_settings          = null;
 
 		$answer_data = array(
 			'belongs_question_id'   => $question_id,
@@ -301,16 +304,16 @@ class QuizBuilder {
 		$deleted_answer_ids   = array_filter( $deleted_answer_ids, 'is_numeric' );
 
 		if ( count( $deleted_question_ids ) ) {
-			$id_str = QueryHelper::prepare_in_clause( $deleted_question_ids );
-            //phpcs:ignore -- sanitized $id_str.
-            $wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_questions WHERE content_id IS NULL AND question_id IN (" . $id_str . ')' );
+			$in_clause = QueryHelper::prepare_in_clause( $deleted_question_ids );
+            //phpcs:ignore -- sanitized $in_clause.
+            $wpdb->query( $wpdb->prepare(  "DELETE FROM {$wpdb->prefix}tutor_quiz_questions WHERE content_id IS NULL AND question_id IN ({$in_clause})" ) );
 			do_action( 'tutor_deleted_quiz_question_ids', $deleted_question_ids );
 		}
 
 		if ( count( $deleted_answer_ids ) ) {
-			$id_str = QueryHelper::prepare_in_clause( $deleted_answer_ids );
-            //phpcs:ignore -- sanitized $id_str.
-            $wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id IN (" . $id_str . ')' );
+			$in_clause = QueryHelper::prepare_in_clause( $deleted_answer_ids );
+            //phpcs:ignore -- sanitized $in_clause.
+            $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id IN ({$in_clause})" ) );
 		}
 	}
 
@@ -430,6 +433,5 @@ class QuizBuilder {
 		} else {
 			$this->json_response( __( 'Error', 'tutor' ), $result->errors, HttpHelper::STATUS_BAD_REQUEST );
 		}
-
 	}
 }

@@ -28,6 +28,15 @@ class Options_V2 {
 	use JsonResponse;
 
 	/**
+	 * Learning modes.
+	 *
+	 * @since 4.0.0
+	 */
+	const LEARNING_MODE_MODERN = 'modern';
+	const LEARNING_MODE_KIDS   = 'kids';
+	const LEARNING_MODE_LEGACY = 'legacy';
+
+	/**
 	 * Undocumented variable
 	 *
 	 * @since 2.0.0
@@ -1211,7 +1220,27 @@ class Options_V2 {
 				'template' => 'design',
 				'icon'     => 'tutor-icon-color-palette',
 				'blocks'   => array(
-					'block_course'   => array(
+					// Experimental.
+					'block_appearance' => array(
+						'label'      => __( 'Appearance', 'tutor' ),
+						'slug'       => 'appearance',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'learning_mode',
+								'type'    => 'radio_horizontal_full',
+								'label'   => __( 'Learning Mode', 'tutor' ),
+								'default' => self::LEARNING_MODE_MODERN,
+								'options' => array(
+									self::LEARNING_MODE_MODERN => __( 'Modern', 'tutor' ),
+									self::LEARNING_MODE_KIDS   => __( 'Kids', 'tutor' ),
+									self::LEARNING_MODE_LEGACY => __( 'Legacy', 'tutor' ),
+								),
+								'desc'    => __( 'Decide how students will experience the courses you create.', 'tutor' ),
+							),
+						),
+					),
+					'block_course'     => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
 						'block_type' => 'uniform',
@@ -1270,7 +1299,7 @@ class Options_V2 {
 							),
 						),
 					),
-					'layout'         => array(
+					'layout'           => array(
 						'label'      => __( 'Layout', 'tutor' ),
 						'slug'       => 'layout',
 						'block_type' => 'uniform',
@@ -1360,7 +1389,7 @@ class Options_V2 {
 							),
 						),
 					),
-					'course-details' => array(
+					'course-details'   => array(
 						'label'      => __( 'Course Details', 'tutor' ),
 						'slug'       => 'course-details',
 						'block_type' => 'isolate',
@@ -1511,12 +1540,12 @@ class Options_V2 {
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
 										'desc'        => __( 'Enable to show course review section', 'tutor' ),
-									)
+									),
 								),
 							),
 						),
 					),
-					'colors'         => array(
+					'colors'           => array(
 						'label'        => __( 'Colors', 'tutor' ),
 						'slug'         => 'colors',
 						'block_type'   => 'color_picker',

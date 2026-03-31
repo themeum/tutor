@@ -1,0 +1,230 @@
+@use 'sass:map';
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+$text-align-utils: (
+  left: start,
+  right: end,
+  start: start,
+  end: end,
+  center: center,
+  justify: justify,
+);
+
+.tutor-h1 {
+  @include tutor-typography('h1', 'bold', 'primary', 'heading');
+}
+
+.tutor-h2 {
+  @include tutor-typography('h2', 'bold', 'primary', 'heading');
+}
+
+.tutor-h3 {
+  @include tutor-typography('h3', 'semibold', 'primary', 'heading');
+}
+
+.tutor-h4 {
+  @include tutor-typography('h4', 'semibold', 'primary', 'heading');
+}
+
+.tutor-h5 {
+  @include tutor-typography('h5', 'medium', 'primary', 'heading');
+}
+
+.tutor-p1 {
+  @include tutor-typography('p1');
+}
+
+.tutor-p2 {
+  @include tutor-typography('p2');
+}
+
+.tutor-p3 {
+  @include tutor-typography('p3');
+}
+
+.tutor-medium {
+  @include tutor-typography('medium');
+}
+
+.tutor-small {
+  @include tutor-typography('small');
+}
+
+.tutor-tiny {
+  @include tutor-typography('tiny');
+}
+
+.tutor-tiny-2 {
+  @include tutor-typography('tiny-2');
+}
+
+// Font size utilities
+@each $key, $value in $tutor-font-sizes {
+  .tutor-text-#{$key} {
+    font-size: $value;
+    line-height: map.get($tutor-line-heights, $key);
+  }
+}
+
+// Font weight utilities
+@each $key, $value in $tutor-font-weights {
+  .tutor-font-#{$key} {
+    font-weight: $value;
+  }
+}
+
+// Text alignment (RTL-aware)
+@each $name, $value in $text-align-utils {
+  .tutor-text-#{$name} {
+    text-align: $value;
+  }
+}
+
+// Text decoration
+.tutor-underline {
+  text-decoration: underline;
+}
+
+.tutor-line-through {
+  text-decoration: line-through;
+}
+
+.tutor-no-underline {
+  text-decoration: none;
+}
+
+// Text transform
+.tutor-uppercase {
+  text-transform: uppercase;
+}
+
+.tutor-lowercase {
+  text-transform: lowercase;
+}
+
+.tutor-capitalize {
+  text-transform: capitalize;
+}
+
+.tutor-normal-case {
+  text-transform: none;
+}
+
+// Text overflow
+.tutor-truncate {
+  @include tutor-text-truncate;
+}
+
+.tutor-text-ellipsis {
+  text-overflow: ellipsis;
+}
+
+.tutor-text-clip {
+  text-overflow: clip;
+}
+
+// Line clamp utilities
+.tutor-line-clamp-1 {
+  @include tutor-text-clamp(1);
+}
+
+.tutor-line-clamp-2 {
+  @include tutor-text-clamp(2);
+}
+
+.tutor-line-clamp-3 {
+  @include tutor-text-clamp(3);
+}
+
+.tutor-line-clamp-4 {
+  @include tutor-text-clamp(4);
+}
+
+.tutor-line-clamp-5 {
+  @include tutor-text-clamp(5);
+}
+
+.tutor-line-clamp-6 {
+  @include tutor-text-clamp(6);
+}
+
+// White space
+.tutor-whitespace-normal {
+  white-space: normal;
+}
+
+.tutor-whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.tutor-whitespace-pre {
+  white-space: pre;
+}
+
+.tutor-whitespace-pre-line {
+  white-space: pre-line;
+}
+
+.tutor-whitespace-pre-wrap {
+  white-space: pre-wrap;
+}
+
+// Word break
+.tutor-break-normal {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.tutor-break-words {
+  overflow-wrap: break-word;
+}
+
+.tutor-break-all {
+  word-break: break-all;
+}
+
+// List styles
+.tutor-list-none {
+  list-style-type: none;
+}
+
+.tutor-list-disc {
+  list-style-type: disc;
+}
+
+.tutor-list-decimal {
+  list-style-type: decimal;
+}
+
+.tutor-list-inside {
+  list-style-position: inside;
+}
+
+.tutor-list-outside {
+  list-style-position: outside;
+}
+
+// Responsive typography utilities
+@each $breakpoint, $min-width in $tutor-breakpoints {
+  @include tutor-breakpoint-down($breakpoint) {
+    @each $size-key, $size-value in $tutor-font-sizes {
+      .tutor-#{$breakpoint}-text-#{$size-key} {
+        font-size: $size-value;
+        line-height: map.get($tutor-line-heights, $size-key);
+      }
+    }
+
+    @each $weight-key, $weight-value in $tutor-font-weights {
+      .tutor-#{$breakpoint}-font-#{$weight-key} {
+        font-weight: $weight-value;
+      }
+    }
+
+    @each $name, $align-value in $text-align-utils {
+      .tutor-#{$breakpoint}-text-#{$name} {
+        text-align: $align-value;
+      }
+    }
+  }
+}

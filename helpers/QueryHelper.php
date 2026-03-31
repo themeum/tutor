@@ -482,9 +482,9 @@ class QueryHelper {
 		$ids = $wpdb->get_col( "SELECT comment_id FROM {$wpdb->comments} WHERE {$where}" );//phpcs:ignore
 
 		if ( is_array( $ids ) && count( $ids ) ) {
-			$ids_str = "'" . implode( "','", $ids ) . "'";
+			$in_clause = self::prepare_in_clause( $ids );
 			// delete comment metas.
-			$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN({$ids_str}) " );//phpcs:ignore
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN({$in_clause}) " ) );//phpcs:ignore
 			// delete comment.
 			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$where}" );//phpcs:ignore
 
@@ -514,9 +514,9 @@ class QueryHelper {
 		$ids = $wpdb->get_col( "SELECT id FROM {$wpdb->posts} WHERE {$where}" );//phpcs:ignore
 
 		if ( is_array( $ids ) && count( $ids ) ) {
-			$ids_str = "'" . implode( "','", $ids ) . "'";
+			$in_clause = self::prepare_in_clause( $ids );
 			// delete post metas.
-			$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE post_id IN({$ids_str}) " );//phpcs:ignore
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE post_id IN({$in_clause}) " ) );//phpcs:ignore
 			// delete post.
 			$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE {$where}" );//phpcs:ignore
 

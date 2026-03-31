@@ -1,0 +1,369 @@
+// Learning Area Sidebar Styles
+
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-learning-sidebar {
+  @include tutor-flex(column);
+  gap: $tutor-spacing-6;
+  padding: $tutor-spacing-4;
+  position: fixed;
+  height: calc(100vh - 62px);
+  top: 62px;
+  width: 320px;
+  inset-inline-start: 0;
+  overflow: hidden;
+  @include tutor-transition((opacity, transform));
+
+  .tutor-has-admin-bar & {
+    height: calc(100vh - 92px);
+    top: 92px;
+  }
+
+  .is-fullscreen & {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-100%);
+  }
+
+  @include tutor-breakpoint-down(lg) {
+    inset-inline-start: auto;
+    inset-inline-end: 0px;
+    gap: $tutor-spacing-4;
+    top: 0px;
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: $tutor-surface-base;
+    z-index: $tutor-z-header;
+    transform: translateX(100%);
+    @include tutor-transition(transform, 0.3s);
+
+    .tutor-has-admin-bar & {
+      top: 46px;
+      height: calc(100vh - 46px);
+    }
+
+    &.is-open {
+      transform: translateX(0);
+    }
+  }
+
+  .tutor-learning-sidebar-curriculum {
+    background-color: $tutor-surface-l1;
+    border-radius: $tutor-radius-lg;
+    @include tutor-flex(column);
+    min-height: 0;
+    flex-grow: 1;
+    overflow: hidden;
+
+    .tutor-learning-progress {
+      @include tutor-flex(column);
+      gap: $tutor-spacing-4;
+      padding: $tutor-spacing-6 $tutor-spacing-7;
+
+      &-content {
+        @include tutor-flex(row, center, space-between);
+      }
+
+      &-text {
+        @include tutor-typography(medium, medium, secondary);
+
+        span {
+          color: $tutor-text-primary;
+        }
+      }
+    }
+
+    .tutor-learning-nav {
+      @include tutor-flex(column);
+      gap: $tutor-spacing-1;
+      padding: $tutor-spacing-6 $tutor-spacing-4;
+      flex-grow: 1;
+      min-height: 0;
+      overflow-y: auto;
+
+      &-topic {
+        @include tutor-flex(column);
+        gap: $tutor-spacing-1;
+
+        .tutor-learning-nav-header {
+          @include tutor-flex(row, center);
+          gap: $tutor-spacing-4;
+          padding-block: $tutor-spacing-4;
+          padding-inline-start: $tutor-spacing-5;
+          padding-inline-end: $tutor-spacing-3;
+          cursor: pointer;
+          border-radius: $tutor-radius-md;
+          @include tutor-transition((color, background-color));
+
+          &:hover {
+            background-color: $tutor-tab-l3-active-hover;
+            color: $tutor-text-brand;
+          }
+
+          &-title {
+            @include tutor-typography(small, medium, secondary);
+            @include tutor-text-truncate();
+          }
+
+          &-actions {
+            display: none;
+
+            @include tutor-breakpoint-down(lg) {
+              @include tutor-flex(row, center);
+              gap: $tutor-spacing-4;
+              margin-inline-start: auto;
+            }
+          }
+
+          &-arrow {
+            @include tutor-flex-center();
+            color: $tutor-icon-secondary;
+            @include tutor-transition(transform);
+
+            &.is-expanded {
+              transform: rotate(180deg);
+            }
+          }
+
+          @include tutor-breakpoint-up(lg) {
+            &:hover .tutor-learning-nav-header-actions {
+              @include tutor-flex(row, center);
+              gap: $tutor-spacing-4;
+              margin-inline-start: auto;
+            }
+          }
+        }
+
+        &.active {
+          .tutor-learning-nav-header-title {
+            color: $tutor-text-primary;
+          }
+        }
+      }
+
+      .tutor-learning-nav-body {
+        padding-inline-start: 30px;
+        position: relative;
+
+        &::before {
+          content: '';
+          height: calc(100% - 20px);
+          width: 1.5px;
+          position: absolute;
+          top: 0;
+          left: 21px;
+          background-color: $tutor-surface-l1-hover;
+        }
+      }
+
+      .tutor-learning-nav-item {
+        @include tutor-button-reset();
+        @include tutor-typography(small, medium, secondary);
+        @include tutor-flex(row, flex-start);
+        gap: $tutor-spacing-4;
+        padding: $tutor-spacing-4 $tutor-spacing-5;
+        border-radius: $tutor-radius-md;
+        @include tutor-transition((color, background-color));
+        position: relative;
+        min-height: 40px;
+        opacity: 1;
+
+        svg {
+          margin-top: $tutor-spacing-1;
+          flex-shrink: 0;
+          color: $tutor-icon-secondary;
+        }
+
+        &.active {
+          background-color: $tutor-tab-l3-active-hover;
+          color: $tutor-text-primary;
+
+          svg {
+            color: $tutor-icon-idle;
+          }
+
+          &::before {
+            content: '';
+            height: 40px;
+            width: 2px;
+            background-color: $tutor-actions-brand-primary;
+            position: absolute;
+            top: 8px;
+            left: -9px;
+          }
+        }
+
+        &:hover {
+          background-color: $tutor-tab-l3-active-hover;
+          color: $tutor-text-brand;
+
+          svg {
+            color: $tutor-icon-brand;
+          }
+        }
+
+        &.disabled {
+          pointer-events: none;
+          color: $tutor-text-subdued;
+
+          svg {
+            color: $tutor-icon-secondary;
+          }
+        }
+      }
+    }
+  }
+
+  .tutor-learning-sidebar-pages {
+    background-color: $tutor-surface-l1;
+    border-radius: $tutor-radius-lg;
+    padding: $tutor-spacing-4;
+    height: auto;
+    flex-shrink: 0;
+    position: relative;
+
+    &.expanded {
+      margin-top: 26px;
+
+      @include tutor-breakpoint-down(lg) {
+        margin-top: 34px;
+      }
+    }
+
+    @include tutor-breakpoint-up(lg) {
+      margin-bottom: $tutor-spacing-11;
+    }
+
+    .tutor-sidebar-resizer {
+      position: absolute;
+      top: -14px;
+      left: 0;
+      right: 0;
+      height: 12px;
+      cursor: ns-resize;
+      @include tutor-flex-center();
+      z-index: $tutor-z-sidebar;
+
+      &::before {
+        content: '';
+        width: 68px;
+        height: 3px;
+        background-color: $tutor-surface-l2;
+        border-radius: $tutor-radius-5xl;
+        @include tutor-transition(background-color);
+      }
+
+      &:hover::before {
+        background-color: $tutor-surface-l2-hover;
+      }
+    }
+
+    &.expanded .tutor-sidebar-resizer {
+      top: -40px;
+    }
+
+    .tutor-sidebar-restore-dropdown {
+      @include tutor-flex(row, center, center);
+      position: absolute;
+      width: 100%;
+      left: 0;
+      bottom: 100%;
+
+      button {
+        @include tutor-button-reset();
+        @include tutor-flex(row, center, center);
+        background-color: $tutor-surface-l1;
+        color: $tutor-icon-secondary;
+        border-top-left-radius: $tutor-radius-sm;
+        border-top-right-radius: $tutor-radius-sm;
+        height: 26px;
+        width: 68px;
+        position: relative;
+
+        &::before {
+          content: '';
+          width: 8px;
+          height: 8px;
+          position: absolute;
+          bottom: 0;
+          left: -8px;
+          background: $tutor-surface-l1;
+
+          mask: radial-gradient(circle 8px at top left, transparent 8px, $tutor-surface-l1 8px);
+          -webkit-mask: radial-gradient(circle 8px at top left, transparent 8px, $tutor-surface-l1 8px);
+        }
+
+        &::after {
+          content: '';
+          width: 8px;
+          height: 8px;
+          position: absolute;
+          bottom: 0;
+          right: -8px;
+          background: $tutor-surface-l1;
+
+          mask: radial-gradient(circle 8px at top right, transparent 8px, $tutor-surface-l1 8px);
+          -webkit-mask: radial-gradient(circle 8px at top right, transparent 8px, $tutor-surface-l1 8px);
+        }
+
+        &:hover {
+          color: $tutor-icon-idle;
+        }
+      }
+    }
+
+    .tutor-learning-pages {
+      @include tutor-flex(column);
+      gap: $tutor-spacing-1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      @include tutor-transition(height, 0.3s);
+
+      &.is-resizing {
+        transition: none !important;
+      }
+
+      .tutor-popover {
+        max-width: none;
+        width: 288px;
+      }
+
+      &-item {
+        @include tutor-button-reset();
+        @include tutor-typography(small);
+        @include tutor-flex(row, center);
+        gap: $tutor-spacing-5;
+        padding: $tutor-spacing-4 $tutor-spacing-5;
+        border-radius: $tutor-radius-md;
+        @include tutor-transition(background-color);
+        width: 100%;
+
+        svg {
+          color: $tutor-icon-idle;
+          @include tutor-transition(transform, 0.3s);
+        }
+
+        &:hover {
+          background-color: $tutor-tab-sidebar-l2-hover;
+        }
+
+        &.active {
+          background-color: $tutor-tab-sidebar-l2-active;
+          color: $tutor-text-brand;
+
+          svg {
+            color: $tutor-icon-brand;
+          }
+        }
+      }
+    }
+
+    .tutor-sidebar-restore-dropdown button {
+      &.is-minimized svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}

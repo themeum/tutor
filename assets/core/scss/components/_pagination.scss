@@ -1,0 +1,33 @@
+// Pagination scss
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-pagination {
+	@include tutor-pagination-base;
+}
+
+.tutor-pagination-info {
+	@include tutor-pagination-info;
+}
+
+.tutor-pagination-list {
+	@include tutor-pagination-list;
+}
+
+.tutor-pagination-item {
+	@include tutor-pagination-item;
+
+	&-active {
+		@include tutor-pagination-item-variant(active);
+	}
+
+	&-prev,
+	&-next {
+		@include tutor-pagination-item-variant(prev-next);
+	}
+}
+
+.tutor-pagination-ellipsis {
+	@include tutor-pagination-ellipsis;
+}

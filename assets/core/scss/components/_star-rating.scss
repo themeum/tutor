@@ -1,0 +1,90 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-star-rating-container {
+  @include tutor-flex(row, center, space-between);
+  &.is-emoji-view {
+    @include tutor-flex-column;
+    gap: $tutor-spacing-7;
+
+    .tutor-star-rating-emoji-btn {
+      @include tutor-button-reset;
+      width: 74px;
+      height: 74px;
+      background-color: $tutor-surface-base;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+      @include tutor-flex-column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      @include tutor-transition(background-color);
+
+      .tutor-rating-emoji-img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+      }
+
+      .tutor-rating-label {
+        @include tutor-typography(p3, medium, subdued);
+      }
+
+      &:hover {
+        background-color: $tutor-surface-l1-hover;
+      }
+
+      &.is-active {
+        &.is-poor {
+          background-color: $tutor-surface-critical;
+          border-color: $tutor-border-error-secondary;
+
+          .tutor-rating-label {
+            color: $tutor-text-critical;
+          }
+        }
+
+        &.is-fair {
+          background-color: $tutor-surface-warning-hover;
+          border-color: $tutor-border-warning-tertiary;
+
+          .tutor-rating-label {
+            color: $tutor-text-warning;
+          }
+        }
+
+        &.is-okay {
+          background-color: $tutor-surface-exception6;
+          border-color: $tutor-border-exception6;
+
+          .tutor-rating-label {
+            color: $tutor-text-exception5;
+          }
+        }
+
+        &.is-good {
+          background-color: $tutor-surface-brand-quaternary;
+          border-color: $tutor-border-brand;
+
+          .tutor-rating-label {
+            color: $tutor-text-brand;
+          }
+        }
+
+        &.is-amazing {
+          background-color: $tutor-surface-success;
+          border-color: $tutor-border-success-secondary;
+
+          .tutor-rating-label {
+            color: $tutor-text-success;
+          }
+        }
+      }
+
+      @include tutor-breakpoint-down(md) {
+        width: 54px;
+        height: 54px;
+      }
+    }
+  }
+}

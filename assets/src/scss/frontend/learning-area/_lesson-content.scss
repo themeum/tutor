@@ -1,0 +1,151 @@
+// Lesson Content Styles
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-video-player {
+  aspect-ratio: 16 / 9;
+}
+
+.tutor-lesson-content {
+  .tutor-mark-as-complete-button {
+    @include tutor-button-reset();
+    @include tutor-typography(tiny, medium, secondary);
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-5;
+    background-color: $tutor-surface-l2;
+    padding: $tutor-spacing-4 $tutor-spacing-6;
+    padding-right: 10px;
+    min-width: 160px;
+    height: 40px;
+    justify-content: space-between;
+    border-radius: $tutor-radius-full;
+    position: relative;
+    @include tutor-transition(background-color);
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    &:hover:not(.completed) {
+      background-color: $tutor-surface-l1;
+
+      svg {
+        color: $tutor-icon-success-primary;
+      }
+    }
+
+    &.completed {
+      background-color: $tutor-actions-success-primary;
+      color: $tutor-text-primary-inverse;
+      padding-right: 40px;
+      cursor: default;
+
+      svg {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: $tutor-icon-idle-inverse;
+      }
+    }
+  }
+
+  .tutor-lesson-wrapper {
+    @include tutor-typography('p1', 'regular', 'secondary');
+
+    h1 {
+      @include tutor-typography('h1', 'bold', 'primary', 'heading');
+
+      &:not(:last-child) {
+        margin-bottom: $tutor-spacing-4;
+      }
+    }
+
+    h2 {
+      @include tutor-typography('h2', 'bold', 'primary', 'heading');
+
+      &:not(:last-child) {
+        margin-bottom: $tutor-spacing-4;
+      }
+    }
+
+    h3 {
+      @include tutor-typography('h3', 'bold', 'primary', 'heading');
+
+      &:not(:last-child) {
+        margin-bottom: $tutor-spacing-4;
+      }
+    }
+
+    h4 {
+      @include tutor-typography('h4', 'bold', 'primary', 'heading');
+
+      &:not(:last-child) {
+        margin-bottom: $tutor-spacing-4;
+      }
+    }
+
+    h5 {
+      @include tutor-typography('h5', 'bold', 'primary', 'heading');
+
+      &:not(:last-child) {
+        margin-bottom: $tutor-spacing-4;
+      }
+    }
+
+    p:not(:last-child) {
+      margin-bottom: $tutor-spacing-8;
+    }
+
+    ul,
+    ol {
+      list-style: revert;
+      padding-inline-start: $tutor-spacing-6;
+
+      &:not(:last-child) {
+        margin-bottom: $tutor-spacing-8;
+      }
+    }
+  }
+
+  @include tutor-breakpoint-up(sm) {
+    margin-top: $tutor-spacing-4;
+
+    .tutor-lesson-content-tab {
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-lg;
+      overflow: hidden;
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    margin-inline: -$tutor-spacing-6;
+
+    .tutor-lesson-content-tab {
+      padding-inline: $tutor-spacing-6;
+
+      .tutor-lesson-video-wrapper {
+        margin-inline: -$tutor-spacing-6;
+        margin-bottom: $tutor-spacing-6;
+      }
+
+      .tutor-tabs-nav {
+        background-color: $tutor-surface-l1;
+        padding: $tutor-spacing-2;
+        border: 1px solid $tutor-border-idle;
+        border-radius: $tutor-radius-2xl;
+        margin-bottom: $tutor-spacing-5;
+      }
+
+      .tutor-tabs-tab {
+        flex: 1;
+      }
+
+      .tutor-tabs-content {
+        background-color: $tutor-surface-l1;
+        border: 1px solid $tutor-border-idle;
+        border-radius: $tutor-radius-2xl;
+      }
+    }
+  }
+}

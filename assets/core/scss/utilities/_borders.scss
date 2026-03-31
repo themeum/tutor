@@ -1,0 +1,181 @@
+// Border Utilities
+// DRY, RTL-aware, width, style, color, radius, responsive
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+// =============================================================================
+// VARIABLES
+// =============================================================================
+$border-widths: (
+  2: 2px,
+  4: 4px,
+  8: 8px,
+);
+
+$border-directions: (
+  border: border,
+  border-t: border-top,
+  border-r: border-inline-end,
+  border-b: border-bottom,
+  border-l: border-inline-start,
+);
+
+$border-styles: (solid, dashed, dotted, double, none);
+
+$radius-directions: (
+  '': (
+    border-radius,
+  ),
+  't': (
+    border-start-start-radius,
+    border-start-end-radius,
+  ),
+  'b': (
+    border-end-start-radius,
+    border-end-end-radius,
+  ),
+  'r': (
+    border-start-end-radius,
+    border-end-end-radius,
+  ),
+  'l': (
+    border-start-start-radius,
+    border-end-start-radius,
+  ),
+  'tl': (
+    border-start-start-radius,
+  ),
+  'tr': (
+    border-start-end-radius,
+  ),
+  'br': (
+    border-end-end-radius,
+  ),
+  'bl': (
+    border-end-start-radius,
+  ),
+);
+
+// =============================================================================
+// SMART BORDER UTILITIES
+// =============================================================================
+// Generate border-width utilities
+@each $width-key, $width-value in $border-widths {
+  .tutor-border-#{$width-key} {
+    border: #{$width-value} solid $tutor-border-idle;
+  }
+}
+
+// Directional borders (default width 1px)
+@each $dir, $property in $border-directions {
+  .tutor-#{$dir} {
+    #{$property}: 1px solid $tutor-border-idle;
+  }
+  .tutor-#{$dir}-0 {
+    #{$property}: none;
+  }
+
+  @each $width-key, $width-value in $border-widths {
+    .tutor-#{$dir}-#{$width-key} {
+      #{$property}: #{$width-value} solid $tutor-border-idle;
+    }
+  }
+}
+
+// =============================================================================
+// BORDER STYLES
+// =============================================================================
+@each $style in $border-styles {
+  .tutor-border-#{$style} {
+    border-style: $style;
+  }
+}
+
+// =============================================================================
+// BORDER COLORS
+// =============================================================================
+.tutor-border-transparent {
+  border-color: transparent;
+}
+.tutor-border-current {
+  border-color: currentColor;
+}
+
+@each $key, $value in $tutor-border-colors {
+  .tutor-border-#{$key} {
+    border-color: $value;
+  }
+}
+
+// =============================================================================
+// BORDER RADIUS (RTL-aware)
+// =============================================================================
+@each $key, $value in $tutor-radius {
+  @each $abbr, $props in $radius-directions {
+    $prefix: if($abbr == '', '', $abbr + '-');
+
+    .tutor-rounded-#{$prefix}#{$key} {
+      @each $prop in $props {
+        #{$prop}: $value;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// SEMANTIC BORDERS
+// =============================================================================
+.tutor-border-card {
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-lg;
+}
+
+.tutor-border-input {
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-md;
+
+  &:focus {
+    border-color: $tutor-border-brand-tertiary;
+  }
+}
+
+.tutor-border-divider {
+  border-bottom: 1px solid $tutor-border-idle;
+}
+
+// =============================================================================
+// RESPONSIVE BORDER UTILITIES
+// =============================================================================
+@each $breakpoint, $min-width in $tutor-breakpoints {
+  @include tutor-breakpoint-down($breakpoint) {
+    // Border widths & directional borders
+    @each $dir, $property in $border-directions {
+      .tutor-#{$breakpoint}-#{$dir} {
+        #{$property}: 1px solid $tutor-border-idle;
+      }
+      .tutor-#{$breakpoint}-#{$dir}-0 {
+        #{$property}: none;
+      }
+
+      @each $width-key, $width-value in $border-widths {
+        .tutor-#{$breakpoint}-#{$dir}-#{$width-key} {
+          #{$property}: #{$width-value} solid $tutor-border-idle;
+        }
+      }
+    }
+
+    // Border radius
+    @each $key, $value in $tutor-radius {
+      @each $abbr, $props in $radius-directions {
+        $prefix: if($abbr == '', '', $abbr + '-');
+
+        .tutor-#{$breakpoint}-rounded-#{$prefix}#{$key} {
+          @each $prop in $props {
+            #{$prop}: $value;
+          }
+        }
+      }
+    }
+  }
+}

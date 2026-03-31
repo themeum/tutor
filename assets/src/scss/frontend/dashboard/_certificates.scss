@@ -1,0 +1,72 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-certificates {
+  @include tutor-flex(column);
+  gap: $tutor-spacing-5;
+}
+
+.tutor-certificate {
+  &-card {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-4;
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-lg;
+    padding: $tutor-spacing-4 $tutor-spacing-5;
+    @include tutor-transition((background-color, border-color));
+
+    &:hover {
+      background-color: $tutor-surface-l1-hover;
+      border-color: $tutor-border-hover;
+    }
+  }
+
+  &-icon {
+    @include tutor-flex-center;
+    background-color: $tutor-surface-l2;
+    border-radius: $tutor-radius-sm;
+    color: $tutor-icon-idle;
+    width: 40px;
+    height: 40px;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+  }
+
+  &-info {
+    @include tutor-flex(column, flex-start);
+    gap: $tutor-spacing-1;
+    flex: 1 1 0%;
+    min-width: 0;
+
+  }
+
+  &-type {
+    @include tutor-typography('tiny', 'regular', 'secondary');
+
+    &-bundle {
+      color: $tutor-text-exception2;
+    }
+  }
+
+  &-title {
+    @include tutor-typography('medium', 'medium');
+    @include tutor-text-truncate;
+  }
+
+  &-actions {
+    @include tutor-flex(row, center, flex-end);
+    flex-shrink: 0;
+
+    &-button {
+      @include tutor-button-base;
+      @include tutor-button-variant(link);
+      @include tutor-button-size(x-small);
+      color: $tutor-text-brand;
+    }
+
+    .tutor-section-separator-vertical {
+      background-color: $tutor-border-hover;
+    }
+  }
+}

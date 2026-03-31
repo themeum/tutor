@@ -15,9 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\LessonModel;
 use Tutor\Traits\JsonResponse;
+use WP_Post;
 
 /**
  * Lesson class
@@ -26,6 +28,32 @@ use Tutor\Traits\JsonResponse;
  */
 class Lesson extends Tutor_Base {
 	use JsonResponse;
+
+	/**
+	 * Preview meta key
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	const PREVIEW_META_KEY = '_is_preview';
+
+	/**
+	 * Lesson post type
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	private $post_type;
+
+	/**
+	 * Determine if legacy mode is enabled or not
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	private $is_legacy_learning_mode = false;
 
 	/**
 	 * Register hooks
@@ -39,6 +67,10 @@ class Lesson extends Tutor_Base {
 	 */
 	public function __construct( $register_hooks = true ) {
 		parent::__construct();
+
+		$this->post_type = tutor()->lesson_post_type;
+
+		$this->is_legacy_learning_mode = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
 
 		if ( ! $register_hooks ) {
 			return;
@@ -85,31 +117,187 @@ class Lesson extends Tutor_Base {
 		 */
 		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'tutor_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'tutor_single_course_lesson_load_more' ) );
+		add_action( 'wp_ajax_tutor_delete_lesson_comment', array( $this, 'ajax_delete_lesson_comment' ) );
+		add_action( 'wp_ajax_tutor_update_lesson_comment', array( $this, 'ajax_update_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'reply_lesson_comment' ) );
+		add_action( 'wp_ajax_tutor_load_lesson_comments', array( $this, 'load_lesson_comments' ) );
+		add_action( 'wp_ajax_tutor_load_comment_replies', array( $this, 'load_comment_replies' ) );
+
+		// Add lesson title as nav item & render single content on the learning area.
+		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
+		add_action( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
 	}
 
 	/**
 	 * Manage load more & comment create
 	 *
 	 * @since 2.0.6
+	 *
+	 * @since 4.0.0 different template returned
+	 *
 	 * @return void  send wp json data
 	 */
 	public function tutor_single_course_lesson_load_more() {
 		tutor_utils()->checking_nonce();
-		$comment = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+
+		$comment_id = 0;
+		$comment    = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		$lesson_id  = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
+
 		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
 			$comment_data = array(
 				'comment_content' => $comment,
-				'comment_post_ID' => Input::post( 'comment_post_ID', 0, Input::TYPE_INT ),
+				'comment_post_ID' => $lesson_id,
 				'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 			);
-			self::create_comment( $comment_data );
+			$comment_id   = self::create_comment( $comment_data );
 			do_action( 'tutor_new_comment_added', $comment_data );
 		}
+
+		if ( ! $this->is_legacy_learning_mode ) {
+			$html = '';
+			if ( $comment_id ) {
+				ob_start();
+				tutor_load_template(
+					'learning-area.lesson.comment-card',
+					array(
+						'comment_item' => get_comment( $comment_id ),
+						'lesson_id'    => $lesson_id,
+						'user_id'      => get_current_user_id(),
+					)
+				);
+				$html = ob_get_clean();
+			}
+
+			$count = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => 0,
+					'count'   => true,
+				)
+			);
+
+			wp_send_json_success(
+				array(
+					'html'  => $html,
+					'count' => $count,
+				)
+			);
+		}
+
 		ob_start();
 		tutor_load_template( 'single.lesson.comment' );
 		$html = ob_get_clean();
 		wp_send_json_success( array( 'html' => $html ) );
+	}
+
+	/**
+	 * Delete lesson comment by AJAX
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_delete_lesson_comment() {
+		tutor_utils()->check_nonce();
+		$comment_id = Input::post( 'comment_id', 0, Input::TYPE_INT );
+		if ( ! $comment_id ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$comment = get_comment( $comment_id );
+		if ( ! $comment ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$lesson_id = $comment->comment_post_ID;
+		$parent_id = $comment->comment_parent;
+		$is_reply  = $parent_id > 0;
+
+		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+			wp_delete_comment( $comment_id, true );
+
+			$total_comments = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => 0,
+					'count'   => true,
+				)
+			);
+
+			wp_send_json_success(
+				array(
+					'message'    => __( 'Comment deleted successfully', 'tutor' ),
+					'count'      => $total_comments,
+					'is_reply'   => $is_reply,
+					'parent_id'  => $parent_id,
+					'comment_id' => $comment_id,
+				)
+			);
+		} else {
+			$this->response_bad_request( __( 'You are not allowed to delete this comment', 'tutor' ) );
+		}
+	}
+
+	/**
+	 * Update lesson comment by AJAX
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_update_lesson_comment() {
+		tutor_utils()->check_nonce();
+
+		$comment_id = Input::post( 'comment_id', 0, Input::TYPE_INT );
+		if ( ! $comment_id ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$comment = get_comment( $comment_id );
+		if ( ! $comment ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$comment_content = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		$user_id         = get_current_user_id();
+
+		if ( $user_id === (int) $comment->user_id ) {
+			wp_update_comment(
+				array(
+					'comment_ID'      => $comment_id,
+					'comment_content' => $comment_content,
+				)
+			);
+
+			$comment->comment_content = $comment_content;
+
+			$lesson_id = $comment->comment_post_ID;
+			$is_reply  = $comment->comment_parent > 0;
+
+			ob_start();
+			tutor_load_template(
+				'learning-area.lesson.comment-card',
+				array(
+					'comment_item' => $comment,
+					'lesson_id'    => $lesson_id,
+					'user_id'      => $user_id,
+					'is_reply'     => $is_reply,
+				)
+			);
+			$html = ob_get_clean();
+
+			wp_send_json_success(
+				array(
+					'html'       => $html,
+					'is_reply'   => $is_reply,
+					'parent_id'  => $is_reply ? $comment->comment_parent : 0,
+					'comment_id' => $comment_id,
+				)
+			);
+		} else {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
 	}
 
 	/**
@@ -543,6 +731,65 @@ class Lesson extends Tutor_Base {
 		$reply = get_comment( $comment_id );
 		do_action( 'tutor_reply_lesson_comment_thread', $comment_id, $comment_data );
 
+		if ( ! $this->is_legacy_learning_mode ) {
+			$lesson_id    = $comment_data['comment_post_ID'];
+			$parent_id    = $comment_data['comment_parent'];
+			$comment_item = get_comment( $parent_id );
+			$user_id      = get_current_user_id();
+
+			$replies = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => $parent_id,
+					'order'   => 'ASC',
+				)
+			);
+
+			$is_first_reply = ( is_array( $replies ) ? count( $replies ) : 0 ) === 1;
+
+			ob_start();
+			if ( $is_first_reply ) {
+				// For the first reply, we need the wrapper and the toggle button.
+				tutor_load_template(
+					'learning-area.lesson.comment-replies',
+					array(
+						'lesson_id'    => $lesson_id,
+						'comment_item' => $comment_item,
+						'user_id'      => $user_id,
+						'replies'      => $replies,
+					)
+				);
+			} else {
+				// Just the card for subsequent replies.
+				tutor_load_template(
+					'learning-area.lesson.comment-card',
+					array(
+						'comment_item' => get_comment( $comment_id ),
+						'lesson_id'    => $lesson_id,
+						'user_id'      => $user_id,
+						'is_reply'     => true,
+					)
+				);
+			}
+			$html = ob_get_clean();
+
+			$total_comments = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => 0,
+					'count'   => true,
+				)
+			);
+
+			wp_send_json_success(
+				array(
+					'html'           => $html,
+					'count'          => $total_comments,
+					'is_first_reply' => $is_first_reply,
+				)
+			);
+		}
+
 		ob_start();
 		?>
 		<div class="tutor-comments-list tutor-child-comment tutor-mt-32" id="lesson-comment-<?php echo esc_attr( $reply->comment_ID ); ?>">
@@ -583,6 +830,25 @@ class Lesson extends Tutor_Base {
 		$args['type'] = 'comment';
 		$comments     = get_comments( $args );
 		return $comments;
+	}
+
+	/**
+	 * Get comment replies
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int    $comment_id comment id.
+	 * @param string $order order.
+	 *
+	 * @return mixed comment replies on success, false on failure
+	 */
+	public static function get_comment_replies( int $comment_id, string $order = 'DESC' ) {
+		return get_comments(
+			array(
+				'parent' => $comment_id,
+				'order'  => QueryHelper::get_valid_sort_order( $order ),
+			)
+		);
 	}
 
 	/**
@@ -679,30 +945,67 @@ class Lesson extends Tutor_Base {
 	 * @return array navigation items array
 	 */
 	public static function get_nav_items( $lesson_id ) {
+		$is_legacy = ( new self( false ) )->is_legacy_learning_mode;
 		$nav_items = array();
 
-		if ( self::has_lesson_content( $lesson_id ) ) {
-			$nav_items['overview'] = array(
-				'label' => __( 'Overview', 'tutor' ),
-				'value' => 'overview',
-				'icon'  => 'document-text',
-			);
-		}
+		$attachments = tutor_utils()->get_attachments( $lesson_id );
 
-		if ( self::has_lesson_attachment( $lesson_id ) ) {
-			$nav_items['files'] = array(
-				'label' => __( 'Exercise Files', 'tutor' ),
-				'value' => 'files',
-				'icon'  => 'paperclip',
-			);
-		}
+		$definitions = array(
+			'overview' => array(
+				'condition' => self::has_lesson_content( $lesson_id ),
+				'legacy'    => array(
+					'label'    => __( 'Overview', 'tutor' ),
+					'value'    => 'overview',
+					'icon'     => 'document-text',
+					'template' => 'single.lesson.parts.overview',
+				),
+				'default'   => array(
+					'id'       => 'overview',
+					'label'    => __( 'Overview', 'tutor' ),
+					'icon'     => Icon::COURSES,
+					'template' => 'learning-area.lesson.overview',
+				),
+			),
+			'files'    => array(
+				'condition' => tutor_utils()->count( $attachments ),
+				'legacy'    => array(
+					'label'    => __( 'Exercise Files', 'tutor' ),
+					'value'    => 'files',
+					'icon'     => 'paperclip',
+					'template' => 'single.lesson.parts.files',
+				),
+				'default'   => array(
+					'id'       => 'exercise_files',
+					'label'    => __( 'Exercise Files', 'tutor' ),
+					'icon'     => Icon::FILE_ATTACHEMENT,
+					'template' => 'learning-area.lesson.exercise-files',
+				),
+			),
+			'comments' => array(
+				'condition' => self::is_comment_enabled(),
+				'legacy'    => array(
+					'label'    => __( 'Comments', 'tutor' ),
+					'value'    => 'comments',
+					'icon'     => 'comment',
+					'template' => 'single.lesson.parts.comments',
+				),
+				'default'   => array(
+					'id'       => 'comments',
+					'label'    => __( 'Comments', 'tutor' ),
+					'icon'     => Icon::COMMENTS,
+					'template' => 'learning-area.lesson.comments',
+				),
+			),
+		);
 
-		if ( self::is_comment_enabled() ) {
-			$nav_items['comments'] = array(
-				'label' => __( 'Comments', 'tutor' ),
-				'value' => 'comments',
-				'icon'  => 'comment',
-			);
+		foreach ( $definitions as $key => $def ) {
+			if ( empty( $def['condition'] ) ) {
+				continue;
+			}
+			$item = $is_legacy ? $def['legacy'] : $def['default'];
+			if ( null !== $item ) {
+				$nav_items[ $key ] = $item;
+			}
 		}
 
 		$nav_items = apply_filters( 'tutor_lesson_single_nav_items', $nav_items );
@@ -712,43 +1015,166 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
-	 * Get navigation contents for lesson single page
+	 * Return lesson title as nav item to print on the learning area
 	 *
-	 * @since 3.9.0
+	 * @since 4.0.0
 	 *
-	 * @param int $lesson_id Lesson ID.
+	 * @param WP_Post $lesson Lesson post object.
+	 * @param bool    $can_access Can user access this content.
 	 *
-	 * @return array navigation contents array
+	 * @return void
 	 */
-	public static function get_nav_contents( $lesson_id ) {
-		$nav_contents = array();
+	public function render_nav_item( $lesson, $can_access ): void {
+		tutor_load_template(
+			'learning-area.lesson.nav-item',
+			array(
+				'lesson'     => $lesson,
+				'can_access' => $can_access,
+			)
+		);
+	}
 
-		if ( self::has_lesson_content( $lesson_id ) ) {
-			$nav_contents['overview'] = array(
-				'label'         => __( 'Overview', 'tutor' ),
-				'value'         => 'overview',
-				'template_path' => 'single.lesson.parts.overview',
-			);
+	/**
+	 * Render content for the a single lesson
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_Post $lesson Lesson post object.
+	 *
+	 * @return void
+	 */
+	public function render_single_content( $lesson ): void {
+		tutor_load_template(
+			'learning-area.lesson.content',
+			array(
+				'lesson' => $lesson,
+			)
+		);
+	}
+
+	/**
+	 * Load lesson comments
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function load_lesson_comments() {
+		$lesson_id    = Input::post( 'lesson_id', 0, Input::TYPE_INT );
+		$current_page = Input::post( 'current_page', 1, Input::TYPE_INT );
+		$offset       = Input::post( 'offset', -1, Input::TYPE_INT );
+		$order        = QueryHelper::get_valid_sort_order( Input::post( 'order', 'DESC' ) );
+
+		$user_id = get_current_user_id();
+
+		$item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
+
+		$query_args = array(
+			'post_id' => $lesson_id,
+			'parent'  => 0,
+			'number'  => $item_per_page,
+			'order'   => $order,
+		);
+
+		if ( $offset >= 0 ) {
+			$query_args['offset'] = $offset;
+		} else {
+			$query_args['paged'] = $current_page;
 		}
 
-		if ( self::has_lesson_attachment( $lesson_id ) ) {
-			$nav_contents['files'] = array(
-				'label'         => __( 'Files', 'tutor' ),
-				'value'         => 'files',
-				'template_path' => 'single.lesson.parts.files',
-			);
+		$comment_list = self::get_comments( $query_args );
+
+		// Get total comment count to determine if there are more pages.
+		$total_comments = self::get_comments(
+			array(
+				'post_id' => $lesson_id,
+				'parent'  => 0,
+				'count'   => true,
+			)
+		);
+
+		ob_start();
+		tutor_load_template(
+			'learning-area.lesson.comment-list',
+			compact( 'comment_list', 'lesson_id', 'user_id' )
+		);
+		$html = ob_get_clean();
+
+		// Calculate if there are more items.
+		if ( $offset >= 0 ) {
+			$items_loaded = $offset + count( $comment_list );
+		} else {
+			$items_loaded = $current_page * $item_per_page;
+		}
+		$has_more = $items_loaded < $total_comments;
+
+		wp_send_json_success(
+			array(
+				'html'     => $html,
+				'has_more' => $has_more,
+				'count'    => $total_comments,
+			)
+		);
+	}
+
+	/**
+	 * Load comment replies for dashboard.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function load_comment_replies() {
+		tutor_utils()->check_nonce();
+
+		$comment_id    = Input::post( 'comment_id', 0, Input::TYPE_INT );
+		$replies_order = Input::post( 'order', 'DESC' );
+
+		if ( ! $comment_id ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
 		}
 
-		if ( self::is_comment_enabled() ) {
-			$nav_contents['comments'] = array(
-				'label'         => __( 'Comments', 'tutor' ),
-				'value'         => 'comments',
-				'template_path' => 'single.lesson.parts.comments',
-			);
+		$user_id = get_current_user_id();
+		$replies = self::get_comment_replies( $comment_id, $replies_order );
+
+		ob_start();
+		tutor_load_template(
+			'dashboard.discussions.comment-replies',
+			array(
+				'replies'       => $replies,
+				'replies_order' => $replies_order,
+				'user_id'       => $user_id,
+			)
+		);
+		$html = ob_get_clean();
+
+		wp_send_json_success( array( 'html' => $html ) );
+	}
+
+	/**
+	 * Get lesson content type info with video duration
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_Post $lesson Lesson post.
+	 *
+	 * @return string
+	 */
+	public static function get_content_type_info( WP_Post $lesson ) {
+		$video_info  = tutor_utils()->get_video_info( $lesson->ID );
+		$lesson_type = __( 'Reading', 'tutor' );
+
+		if ( $video_info ) {
+			$lesson_type = __( 'Video', 'tutor' );
+			$playtime    = $video_info->playtime ?? '';
+
+			// Check if the playtime is actually a valid, positive duration.
+			if ( ! empty( $playtime ) ) {
+				/* translators: %s: duration in minutes */
+				$lesson_type = sprintf( __( 'Video - %s mins', 'tutor' ), $playtime );
+			}
 		}
 
-		$nav_contents = apply_filters( 'tutor_lesson_single_nav_contents', $nav_contents );
-
-		return $nav_contents;
+		return $lesson_type;
 	}
 }

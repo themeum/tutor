@@ -10,6 +10,7 @@
  */
 
 use TUTOR\Lesson;
+use Tutor\Components\SvgIcon;
 use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -98,8 +99,7 @@ tutor_load_template(
 	$is_comment_enabled = Lesson::is_comment_enabled();
 	$has_lesson_comment = Lesson::has_lesson_comment( $course_content_id );
 
-	$nav_items    = Lesson::get_nav_items( $course_content_id );
-	$nav_contents = Lesson::get_nav_contents( $course_content_id );
+	$nav_items = Lesson::get_nav_items( $course_content_id );
 
 	$active_tab = $page_tab;
 	$valid_tabs = wp_list_pluck( $nav_items, 'value' );
@@ -130,7 +130,7 @@ tutor_load_template(
 					>
 						<?php
 						if ( isset( $nav_item['icon_type'] ) && 'svg' === $nav_item['icon_type'] ) {
-							tutor_utils()->render_svg_icon( $nav_item['icon'], 20, 20 );
+							SvgIcon::make()->name( $nav_item['icon'] )->size( 20 )->render();
 						} else {
 							?>
 							<span 
@@ -151,11 +151,11 @@ tutor_load_template(
 
 		<div class="tutor-tab tutor-course-spotlight-tab">
 			<?php
-			if ( ! empty( $nav_contents ) ) {
-				foreach ( $nav_contents as $key => $content ) {
+			if ( ! empty( $nav_items ) ) {
+				foreach ( $nav_items as $key => $content ) {
 					$is_pro = isset( $content['is_pro'] ) && true === $content['is_pro'];
 					tutor_load_template(
-						$content['template_path'],
+						$content['template'],
 						array(
 							'is_active' => $content['value'] === $active_tab,
 							'post'      => $post,

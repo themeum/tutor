@@ -1,0 +1,28 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+@use './mixins' as *;
+
+[data-tutor-ui="kids"] {
+	.tutor-dashboard-sidebar {
+		background-color: $tutor-surface-brand-tertiary;
+	}
+
+	.tutor-dashboard-sidebar-nav {
+		ul {
+			a {
+				border-width: 1px 1px 3px 1px;
+				border-style: solid;
+				border-color: transparent;
+
+				&:hover {
+					border-radius: $tutor-radius-5xl;
+				}
+
+				&.active {
+					border-color: $tutor-border-brand;
+					border-radius: $tutor-radius-5xl;
+				}
+			}
+		}
+	}
+}

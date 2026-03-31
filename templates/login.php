@@ -27,10 +27,9 @@ $login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null, true,
 do_action( 'tutor/template/login/before/wrap' );
 ?>
 <div <?php tutor_post_class( 'tutor-page-wrap' ); ?>>
-	<div class="tutor-template-segment tutor-login-wrap">
-
+	<div class="tutor-template-segment tutor-login-wrap tutor-card tutor-p-8 tutor-shadow-md" style="max-width: 520px; margin: 40px auto;">
 		<div class="tutor-login-form-wrapper">
-			<div class="tutor-fs-5 tutor-color-black tutor-mb-32">
+			<div class="tutor-fs-5 tutor-color-black tutor-mb-8">
 				<?php esc_html_e( 'Hi, Welcome back!', 'tutor' ); ?>
 			</div>
 			<?php

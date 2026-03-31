@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Start Guide - Tutor Design System</title>
+    <link rel="stylesheet" href="../../css/tutor-core.min.css">
+    <link rel="stylesheet" href="./assets/docs.css">
+    <style>
+        .quick-start-hero {
+            background: linear-gradient(135deg, var(--tutor-actions-brand-primary), var(--tutor-actions-brand-secondary));
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        
+        .quick-start-hero h1 {
+            margin: 0 0 1rem 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .quick-start-hero p {
+            margin: 0 0 2rem 0;
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+        
+        .step-card {
+            background: var(--tutor-surface-l1);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 2rem;
+            background: var(--tutor-actions-brand-primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .step-title {
+            margin: 0 0 1rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--tutor-text-primary);
+        }
+        
+        .step-description {
+            margin: 0 0 1.5rem 0;
+            color: var(--tutor-text-secondary);
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: var(--tutor-surface-l2);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--tutor-surface-base);
+            border: 1px solid var(--tutor-border-idle);
+            color: var(--tutor-text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn:hover {
+            background: var(--tutor-surface-l1);
+            border-color: var(--tutor-border-brand);
+            color: var(--tutor-text-primary);
+        }
+        
+        .example-preview {
+            background: var(--tutor-surface-base);
+            border: 2px dashed var(--tutor-border-brand);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .checklist {
+            background: var(--tutor-actions-success-tertiary);
+            border: 1px solid var(--tutor-actions-success-primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .checklist h3 {
+            margin: 0 0 1rem 0;
+            color: var(--tutor-text-success);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .checklist ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .checklist li {
+            margin-bottom: 0.5rem;
+            color: var(--tutor-text-success);
+        }
+        
+        .next-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .next-step-card {
+            background: var(--tutor-surface-l1);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .next-step-card:hover {
+            border-color: var(--tutor-border-brand);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .next-step-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .next-step-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--tutor-text-primary);
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .next-step-description {
+            color: var(--tutor-text-secondary);
+            margin: 0;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="tutor-container" x-data="quickStartApp()">
+        <!-- Header -->
+        <header style="text-align: center; margin: 2rem 0;">
+            <div class="tutor-flex tutor-gap-3 tutor-justify-center tutor-mb-4">
+                <button @click="toggleTheme()" class="tutor-btn tutor-btn--outline tutor-btn--small">
+                    <span x-text="theme === 'light' ? '🌙 Dark' : '☀️ Light'"></span>
+                </button>
+                <a href="index.html" class="tutor-btn tutor-btn--ghost tutor-btn--small">
+                    ← Back to Docs
+                </a>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <div class="quick-start-hero">
+            <h1>Quick Start Guide</h1>
+            <p>Get up and running with the Tutor Design System in minutes</p>
+            <div class="tutor-flex tutor-gap-3 tutor-justify-center">
+                <a href="#step-1" class="tutor-btn tutor-btn--secondary tutor-btn--large">Start Building</a>
+                <a href="components.html" class="tutor-btn tutor-btn--outline tutor-btn--large" style="color: white; border-color: rgba(255,255,255,0.3);">View Components</a>
+            </div>
+        </div>
+
+        <!-- Step 1: Installation -->
+        <div id="step-1" class="step-card">
+            <div class="step-number">1</div>
+            <h2 class="step-title">Include the Design System Files</h2>
+            <p class="step-description">
+                Add the compiled CSS and JavaScript files to your HTML document. The design system provides minified versions for production use.
+            </p>
+            
+            <div class="code-block">
+                <button @click="copyToClipboard($event)" class="copy-btn">Copy</button>
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en" dir="ltr" data-theme="light"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My Tutor App&lt;/title&gt;
+    
+    &lt;!-- Tutor Design System CSS --&gt;
+    &lt;link rel="stylesheet" href="assets/css/tutor-core.min.css"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!-- Your content here --&gt;
+    
+    &lt;!-- Alpine.js (required for interactive components) --&gt;
+    &lt;script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"&gt;&lt;/script&gt;
+    
+    &lt;!-- Tutor Design System JS --&gt;
+    &lt;script src="assets/js/tutor-core.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+
+            <div class="tutor-flex tutor-gap-2 tutor-mt-4">
+                <span class="tutor-text-p3 tutor-text-secondary">💡 Tip:</span>
+                <span class="tutor-text-p3">Use the minified versions (.min.css and .min.js) in production for better performance.</span>
+            </div>
+        </div>
+
+        <!-- Step 2: Basic Components -->
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <h2 class="step-title">Add Your First Components</h2>
+            <p class="step-description">
+                Start with basic components like buttons, cards, and form elements. All components follow consistent naming conventions and work seamlessly together.
+            </p>
+            
+            <div class="code-block">
+                <button @click="copyToClipboard($event)" class="copy-btn">Copy</button>
+                <pre><code>&lt;!-- Buttons --&gt;
+&lt;button class="tutor-btn tutor-btn--primary"&gt;Primary Button&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn--secondary"&gt;Secondary Button&lt;/button&gt;
+
+&lt;!-- Card Component --&gt;
+&lt;div class="tutor-card"&gt;
+  &lt;div class="tutor-card__header"&gt;
+    &lt;h3 class="tutor-card__title"&gt;Welcome to Tutor&lt;/h3&gt;
+    &lt;p class="tutor-card__subtitle"&gt;Start learning today&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="tutor-card__body"&gt;
+    &lt;p&gt;Discover thousands of courses and start your learning journey.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="tutor-card__footer"&gt;
+    &lt;button class="tutor-btn tutor-btn--primary"&gt;Get Started&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+
+            <div class="example-preview">
+                <h4 style="margin-top: 0;">Live Preview:</h4>
+                <div class="tutor-flex tutor-gap-3 tutor-mb-4">
+                    <button class="tutor-btn tutor-btn--primary">Primary Button</button>
+                    <button class="tutor-btn tutor-btn--secondary">Secondary Button</button>
+                </div>
+                
+                <div class="tutor-card" style="max-width: 400px;">
+                    <div class="tutor-card__header">
+                        <h3 class="tutor-card__title">Welcome to Tutor</h3>
+                        <p class="tutor-card__subtitle">Start learning today</p>
+                    </div>
+                    <div class="tutor-card__body">
+                        <p>Discover thousands of courses and start your learning journey.</p>
+                    </div>
+                    <div class="tutor-card__footer">
+                        <button class="tutor-btn tutor-btn--primary">Get Started</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Interactive Components -->
+        <div class="step-card">
+            <div class="step-number">3</div>
+            <h2 class="step-title">Add Interactive Components</h2>
+            <p class="step-description">
+                Use Alpine.js powered components for advanced interactions. The TutorCore class provides factory methods for creating component data objects.
+            </p>
+            
+            <div class="code-block">
+                <button @click="copyToClipboard($event)" class="copy-btn">Copy</button>
+                <pre><code>&lt;!-- Dropdown Component --&gt;
+&lt;div x-data="TutorCore.dropdown()" class="tutor-dropdown"&gt;
+  &lt;button @click="toggle()" class="tutor-btn tutor-btn--primary"&gt;
+    Options &lt;span x-text="open ? '▲' : '▼'"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;div x-show="open" @click.outside="close()" class="tutor-dropdown__menu"&gt;
+    &lt;a href="#" class="tutor-dropdown__item"&gt;Profile&lt;/a&gt;
+    &lt;a href="#" class="tutor-dropdown__item"&gt;Settings&lt;/a&gt;
+    &lt;a href="#" class="tutor-dropdown__item"&gt;Logout&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Modal Component --&gt;
+&lt;div x-data="TutorCore.modal()"&gt;
+  &lt;button @click="show()" class="tutor-btn tutor-btn--secondary"&gt;Open Modal&lt;/button&gt;
+  
+  &lt;div x-show="open" class="tutor-modal"&gt;
+    &lt;div class="tutor-modal__backdrop" @click="hide()"&gt;&lt;/div&gt;
+    &lt;div class="tutor-modal__content"&gt;
+      &lt;div class="tutor-modal__header"&gt;
+        &lt;h3&gt;Modal Title&lt;/h3&gt;
+        &lt;button @click="hide()" class="tutor-modal__close"&gt;&times;&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class="tutor-modal__body"&gt;
+        &lt;p&gt;Modal content goes here...&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+
+            <div class="example-preview">
+                <h4 style="margin-top: 0;">Live Preview:</h4>
+                <div class="tutor-flex tutor-gap-3">
+                    <div x-data="TutorCore.dropdown()" class="tutor-dropdown" style="position: relative;">
+                        <button @click="toggle()" class="tutor-btn tutor-btn--primary">
+                            Options <span x-text="open ? '▲' : '▼'"></span>
+                        </button>
+                        <div x-show="open" 
+                             x-transition
+                             @click.outside="close()" 
+                             style="position: absolute; top: 100%; left: 0; margin-top: 8px; background: var(--tutor-surface-l1); border: 1px solid var(--tutor-border-idle); border-radius: 8px; padding: 0.5rem 0; min-width: 150px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); z-index: 50;">
+                            <a href="#" @click.prevent="close()" style="display: block; padding: 0.5rem 1rem; color: var(--tutor-text-primary); text-decoration: none;">Profile</a>
+                            <a href="#" @click.prevent="close()" style="display: block; padding: 0.5rem 1rem; color: var(--tutor-text-primary); text-decoration: none;">Settings</a>
+                            <a href="#" @click.prevent="close()" style="display: block; padding: 0.5rem 1rem; color: var(--tutor-text-primary); text-decoration: none;">Logout</a>
+                        </div>
+                    </div>
+                    
+                    <div x-data="TutorCore.modal()">
+                        <button @click="show()" class="tutor-btn tutor-btn--secondary">Open Modal</button>
+                        
+                        <div x-show="open" 
+                             x-transition
+                             style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5);" @click="hide()"></div>
+                            <div style="position: relative; background: var(--tutor-surface-l1); border-radius: 12px; max-width: 400px; width: 90%;">
+                                <div style="padding: 1.5rem; border-bottom: 1px solid var(--tutor-border-idle); display: flex; align-items: center; justify-content: space-between;">
+                                    <h3 style="margin: 0;">Modal Title</h3>
+                                    <button @click="hide()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+                                </div>
+                                <div style="padding: 1.5rem;">
+                                    <p style="margin: 0;">This is a modal dialog example.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Theming and Customization -->
+        <div class="step-card">
+            <div class="step-number">4</div>
+            <h2 class="step-title">Configure Themes and Features</h2>
+            <p class="step-description">
+                Enable theme switching, RTL support, and font scaling for a complete user experience. All features work together seamlessly.
+            </p>
+            
+            <div class="code-block">
+                <button @click="copyToClipboard($event)" class="copy-btn">Copy</button>
+                <pre><code>&lt;script&gt;
+// Theme switching
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', newTheme);
+}
+
+// RTL support
+function toggleRTL() {
+  const html = document.documentElement;
+  const currentDir = html.getAttribute('dir');
+  const newDir = currentDir === 'ltr' ? 'rtl' : 'ltr';
+  html.setAttribute('dir', newDir);
+}
+
+// Font scaling for accessibility
+function setFontScale(scale) {
+  // Remove existing classes
+  document.documentElement.classList.remove(
+    'tutor-font-scale-80', 'tutor-font-scale-90', 
+    'tutor-font-scale-100', 'tutor-font-scale-110', 
+    'tutor-font-scale-120'
+  );
+  
+  // Add new scale class
+  if (scale !== 100) {
+    document.documentElement.classList.add(`tutor-font-scale-${scale}`);
+  }
+}
+&lt;/script&gt;
+
+&lt;!-- Theme controls --&gt;
+&lt;div class="theme-controls"&gt;
+  &lt;button onclick="toggleTheme()" class="tutor-btn tutor-btn--outline"&gt;
+    🌓 Toggle Theme
+  &lt;/button&gt;
+  &lt;button onclick="toggleRTL()" class="tutor-btn tutor-btn--outline"&gt;
+    🔄 Toggle RTL
+  &lt;/button&gt;
+  &lt;select onchange="setFontScale(this.value)" class="tutor-select"&gt;
+    &lt;option value="80"&gt;80% Font Size&lt;/option&gt;
+    &lt;option value="90"&gt;90% Font Size&lt;/option&gt;
+    &lt;option value="100" selected&gt;100% Font Size&lt;/option&gt;
+    &lt;option value="110"&gt;110% Font Size&lt;/option&gt;
+    &lt;option value="120"&gt;120% Font Size&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+
+            <div class="example-preview">
+                <h4 style="margin-top: 0;">Live Preview:</h4>
+                <div class="tutor-flex tutor-gap-3" style="flex-wrap: wrap;">
+                    <button @click="toggleTheme()" class="tutor-btn tutor-btn--outline">
+                        🌓 Toggle Theme
+                    </button>
+                    <button @click="toggleRTL()" class="tutor-btn tutor-btn--outline">
+                        🔄 Toggle RTL
+                    </button>
+                    <select @change="setFontScale($event.target.value)" class="tutor-select">
+                        <option value="80">80% Font Size</option>
+                        <option value="90">90% Font Size</option>
+                        <option value="100" selected>100% Font Size</option>
+                        <option value="110">110% Font Size</option>
+                        <option value="120">120% Font Size</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Checklist -->
+        <div class="checklist">
+            <h3>✅ You're Ready to Build!</h3>
+            <ul>
+                <li>Design system files are included in your project</li>
+                <li>Basic components are working correctly</li>
+                <li>Interactive components respond to user actions</li>
+                <li>Theme switching and accessibility features are enabled</li>
+                <li>Your app supports both LTR and RTL layouts</li>
+            </ul>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="next-steps">
+            <a href="components.html" class="next-step-card">
+                <div class="next-step-icon">🧩</div>
+                <h3 class="next-step-title">Explore Components</h3>
+                <p class="next-step-description">Browse all available components with live examples and code snippets</p>
+            </a>
+            
+            <a href="design-tokens.html" class="next-step-card">
+                <div class="next-step-icon">🎨</div>
+                <h3 class="next-step-title">Design Tokens</h3>
+                <p class="next-step-description">Learn about the complete design token system and color scales</p>
+            </a>
+            
+            <a href="index.html#sass-development" class="next-step-card">
+                <div class="next-step-icon">⚙️</div>
+                <h3 class="next-step-title">SASS Development</h3>
+                <p class="next-step-description">Build custom components using SASS mixins and design tokens</p>
+            </a>
+            
+            <a href="index.html#custom-components" class="next-step-card">
+                <div class="next-step-icon">🛠️</div>
+                <h3 class="next-step-title">Custom Components</h3>
+                <p class="next-step-description">Create your own components following design system patterns</p>
+            </a>
+        </div>
+
+        <!-- Additional Resources -->
+        <div style="background: var(--tutor-surface-l1); border: 1px solid var(--tutor-border-idle); border-radius: 12px; padding: 2rem; margin: 3rem 0; text-align: center;">
+            <h2 style="margin: 0 0 1rem 0;">Need Help?</h2>
+            <p style="margin: 0 0 2rem 0; color: var(--tutor-text-secondary);">
+                Check out these resources for additional support and advanced usage patterns.
+            </p>
+            <div class="tutor-flex tutor-gap-3 tutor-justify-center" style="flex-wrap: wrap;">
+                <a href="../README.md" class="tutor-btn tutor-btn--outline">📖 Full Documentation</a>
+                <a href="../examples/" class="tutor-btn tutor-btn--outline">💡 More Examples</a>
+                <a href="https://github.com/themeum/tutor" class="tutor-btn tutor-btn--outline">🐙 GitHub Repository</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="../../js/tutor-core.js"></script>
+    <script>
+        function quickStartApp() {
+            return {
+                theme: 'light',
+                isRTL: false,
+
+                init() {
+                    this.detectTheme();
+                    this.detectRTL();
+                },
+
+                toggleTheme() {
+                    this.theme = this.theme === 'light' ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', this.theme);
+                },
+
+                toggleRTL() {
+                    this.isRTL = !this.isRTL;
+                    document.documentElement.setAttribute('dir', this.isRTL ? 'rtl' : 'ltr');
+                },
+
+                setFontScale(scale) {
+                    // Remove existing classes
+                    document.documentElement.classList.remove(
+                        'tutor-font-scale-80', 'tutor-font-scale-90', 
+                        'tutor-font-scale-100', 'tutor-font-scale-110', 
+                        'tutor-font-scale-120'
+                    );
+                    
+                    // Add new scale class
+                    if (scale !== '100') {
+                        document.documentElement.classList.add(`tutor-font-scale-${scale}`);
+                    }
+                },
+
+                detectTheme() {
+                    this.theme = document.documentElement.getAttribute('data-theme') || 'light';
+                },
+
+                detectRTL() {
+                    this.isRTL = document.documentElement.getAttribute('dir') === 'rtl';
+                },
+
+                copyToClipboard(event) {
+                    const codeBlock = event.target.closest('.code-block');
+                    const code = codeBlock.querySelector('code');
+                    
+                    if (code) {
+                        const text = code.textContent;
+                        
+                        if (navigator.clipboard) {
+                            navigator.clipboard.writeText(text).then(() => {
+                                this.showCopyFeedback(event.target);
+                            });
+                        } else {
+                            // Fallback for older browsers
+                            const textarea = document.createElement('textarea');
+                            textarea.value = text;
+                            document.body.appendChild(textarea);
+                            textarea.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(textarea);
+                            this.showCopyFeedback(event.target);
+                        }
+                    }
+                },
+
+                showCopyFeedback(button) {
+                    const originalText = button.textContent;
+                    button.textContent = 'Copied!';
+                    button.style.background = 'var(--tutor-actions-success-primary)';
+                    button.style.color = 'white';
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = '';
+                        button.style.color = '';
+                    }, 2000);
+                }
+            };
+        }
+    </script>
+</body>
+</html>

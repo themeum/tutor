@@ -1,0 +1,10 @@
+@use './borders' as *;
+@use './typography' as *;
+
+// Design Tokens - Input
+// CSS variables for theme-aware input styling
+
+$tutor-input-radius: var(--tutor-input-radius, $tutor-radius-md);
+$tutor-input-font-weight: var(--tutor-input-font-weight, $tutor-font-weight-regular);
+$tutor-input-border-color: var(--tutor-input-border-color, $tutor-border-idle);
+$tutor-input-border-shadow: var(--tutor-input-border-shadow, none);

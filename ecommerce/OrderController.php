@@ -18,6 +18,7 @@ use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\OrderActivitiesModel;
@@ -714,11 +715,14 @@ class OrderController {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
-	 * @return array
-	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 param $context added.
+	 *
+	 * @param string $context context.
+	 *
+	 * @return array
 	 */
-	public function tabs_key_value(): array {
+	public function tabs_key_value( $context = '' ): array {
 		$url = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 
 		$date           = Input::get( 'date', '' );
@@ -729,8 +733,28 @@ class OrderController {
 			'order_type' => OrderModel::TYPE_SINGLE_ORDER,
 		);
 
+		if ( ! is_admin() ) {
+			$where['o.user_id'] = get_current_user_id();
+		}
+
 		if ( ! empty( $date ) ) {
 			$where['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
+		}
+
+		if ( 'dashboard' === $context ) {
+			/**
+			 * Frontend dashboard will show all orders under `Billing > Order History` section.
+			 * So we need to remove order_type from where clause.
+			 *
+			 * @since 4.0.0
+			 */
+			unset( $where['order_type'] );
+
+			$start_date = Input::get( 'start_date', '' );
+			$end_date   = Input::get( 'end_date', '' );
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$where['date(o.created_at_gmt)'] = array( 'BETWEEN', array( tutor_get_formated_date( '', $start_date ), tutor_get_formated_date( '', $end_date ) ) );
+			}
 		}
 
 		if ( ! empty( $payment_status ) ) {
@@ -745,7 +769,7 @@ class OrderController {
 			'key'   => '',
 			'title' => __( 'All', 'tutor' ),
 			'value' => $this->model->get_order_count( $where, $search ),
-			'url'   => $url . '&data=all',
+			'url'   => UrlHelper::add_query_params( $url, array( 'data' => 'all' ) ),
 		);
 
 		foreach ( $order_status as $key => $value ) {
@@ -755,7 +779,7 @@ class OrderController {
 				'key'   => $key,
 				'title' => $value,
 				'value' => $this->model->get_order_count( $where, $search ),
-				'url'   => $url . '&data=' . $key,
+				'url'   => UrlHelper::add_query_params( $url, array( 'data' => $key ) ),
 			);
 		}
 
