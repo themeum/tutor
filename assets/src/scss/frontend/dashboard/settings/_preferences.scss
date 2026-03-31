@@ -2,12 +2,11 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-preferences {
-  &-section-header {
-    @include tutor-typography('h5', 'semibold', 'primary', 'heading');
-
-    @include tutor-breakpoint-down(sm) {
-      @include tutor-typography('medium', 'semibold', 'primary', 'heading');
-    }
+  &-reset-default {
+    @include tutor-flex(row, center, flex-end);
+    color: $tutor-text-secondary;
+    gap: $tutor-spacing-2;
+    cursor: pointer;
   }
 
   &-setting-item {

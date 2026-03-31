@@ -46,10 +46,10 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 	>
 		<!-- Course Content Section -->
 		<div class="tutor-flex tutor-gap-3 tutor-justify-between">
-			<h5 class="tutor-preferences-section-header">
+			<h5 class="tutor-h5 tutor-md-hidden">
 				<?php esc_html_e( 'Preferences', 'tutor' ); ?>
 			</h5>
-			<div class="tutor-preferences-section-reset tutor-flex tutor-items-center" @click="TutorCore.modal.showModal('<?php echo esc_js( $reset_modal_id ); ?>')" role="button">
+			<div class="tutor-preferences-reset-default" @click="TutorCore.modal.showModal('<?php echo esc_js( $reset_modal_id ); ?>')">
 				<?php SvgIcon::make()->name( Icon::RELOAD_3 )->size( 16 )->render(); ?>
 				<span class="tutor-text-small tutor-ml-2"><?php esc_html_e( 'Reset to Default', 'tutor' ); ?></span>
 			</div>
@@ -61,8 +61,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 			->message( __( 'This will reset your learning preferences to the default settings. Your progress and account data won’t be affected.', 'tutor' ) )
 			->cancel_text( __( 'Cancel', 'tutor' ) )
 			->confirm_text( __( 'Reset Preferences', 'tutor' ) )
-			// ->icon( tutor()->url . 'assets/images/illustrations/reset-preferences.svg' )
-			->icon( UrlHelper::asset( 'images/illustrations/reset-preferences.svg' ) )
+			->icon( tutor_utils()->is_kids_mode() ? UrlHelper::asset( 'images/illustrations/reset-preference.svg' ) : Icon::BIN )
 			->confirm_handler( "handleResetPreferences('" . esc_js( $form_id ) . "','" . esc_js( $reset_modal_id ) . "')" )
 			->mutation_state( 'resetPreferencesMutation' )
 			->render();

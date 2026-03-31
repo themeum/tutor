@@ -313,17 +313,12 @@ class UserPreference {
 			);
 		}
 
-		$defaults = self::get_default_preferences();
-
-		// Clear stored overrides; get_preferences() will fall back to defaults.
-		update_user_meta( $user_id, self::META_KEY, array() );
-
-		// Keep runtime cache consistent for this request.
-		TutorCache::set( 'get_preferences_' . $user_id, $defaults );
+		// Delete user meta.
+		delete_user_meta( $user_id, self::META_KEY );
 
 		$this->json_response(
 			__( 'Preferences reset successfully', 'tutor' ),
-			$defaults
+			null
 		);
 	}
 
