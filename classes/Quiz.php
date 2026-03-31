@@ -1612,7 +1612,7 @@ class Quiz {
 			<div class="tutor-quiz-attempts tutor-border tutor-rounded-2xl">
 				<div class="tutor-quiz-attempts-header">
 					<div class="tutor-quiz-attempts-header-item">
-						<?php esc_html_e( 'Attempts Date', 'tutor' ); ?>
+						<?php esc_html_e( 'Attempts', 'tutor' ); ?>
 					</div>
 					<div class="tutor-quiz-attempts-header-item">
 						<?php esc_html_e( 'Marks', 'tutor' ); ?>

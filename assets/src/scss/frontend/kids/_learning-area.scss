@@ -6,15 +6,45 @@
   .tutor-resources-wrapper,
   .tutor-learning-area-qna,
   .tutor-lesson-content .tutor-lesson-content-tab,
+  .tutor-quiz-intro .tutor-card,
   .tutor-assignment-info,
   .tutor-assignment-description,
   .tutor-assignment-attachments,
   .tutor-assignment-form {
-    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
   }
 
   .tutor-assignment-feedback {
-    @include tutor-kids-shadow(false, $tutor-border-brand-secondary, $tutor-radius-5xl, sm);
+    border-radius: $tutor-radius-5xl;
+  }
+
+  .tutor-quiz-summary .tutor-quiz-result {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-4xl, sm);
+  }
+
+  .tutor-assignment-attachments .tutor-attachment-card {
+    box-shadow: none;
+    border-radius: $tutor-radius-3xl;
+    border: 1px solid $tutor-border-idle;
+    padding: $tutor-spacing-4;
+
+    .tutor-attachment-card-icon {
+      border-radius: $tutor-radius-lg;
+    }
+  }
+
+  .tutor-quiz-intro-icon,
+  .tutor-table-wrapper,
+  .tutor-quiz-attempts,
+  .tutor-file-uploader {
+    border-radius: $tutor-radius-4xl;
+  }
+
+  .tutor-assignment-info,
+  .tutor-assignment-description,
+  .tutor-assignment-attachments,
+  .tutor-assignment-form {
+    padding: $tutor-spacing-8;
   }
 
   .tutor-learning-footer {
