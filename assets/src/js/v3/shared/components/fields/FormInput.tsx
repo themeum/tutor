@@ -43,6 +43,8 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   isInlineLabel?: boolean;
   isPassword?: boolean;
   style?: SerializedStyles;
+  formFieldWrapperCss?: SerializedStyles;
+  inputContainerCss?: SerializedStyles;
   selectOnFocus?: boolean;
   autoFocus?: boolean;
   generateWithAi?: boolean;
@@ -76,6 +78,8 @@ const FormInput = ({
   isInlineLabel = false,
   isPassword = false,
   style,
+  formFieldWrapperCss,
+  inputContainerCss,
   selectOnFocus = false,
   autoFocus = false,
   generateWithAi = false,
@@ -159,6 +163,8 @@ const FormInput = ({
       removeBorder={removeBorder}
       isInlineLabel={isInlineLabel}
       inputStyle={style}
+      wrapperCss={formFieldWrapperCss}
+      inputContainerCss={inputContainerCss}
       generateWithAi={generateWithAi}
       onClickAiButton={handleAiButtonClick}
       isMagicAi={isMagicAi}

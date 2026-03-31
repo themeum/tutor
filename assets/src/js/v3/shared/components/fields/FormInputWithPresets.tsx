@@ -43,6 +43,7 @@ interface FormInputWithPresetsProps extends FormControllerProps<string | null> {
   selectOnFocus?: boolean;
   wrapperCss?: SerializedStyles;
   contentCss?: SerializedStyles;
+  formFieldWrapperCss?: SerializedStyles;
   removeBorder?: boolean;
 }
 
@@ -66,6 +67,7 @@ const FormInputWithPresets = ({
   selectOnFocus = false,
   wrapperCss,
   contentCss,
+  formFieldWrapperCss,
   removeBorder = false,
 }: FormInputWithPresetsProps) => {
   const fieldValue = field.value ?? '';
@@ -84,6 +86,7 @@ const FormInputWithPresets = ({
       loading={loading}
       helpText={helpText}
       removeBorder={removeBorder}
+      wrapperCss={formFieldWrapperCss}
       placeholder={placeholder}
     >
       {(inputProps) => {
