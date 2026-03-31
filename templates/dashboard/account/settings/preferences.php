@@ -17,6 +17,7 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
+use Tutor\Helpers\UrlHelper;
 
 $theme_options = UserPreference::get_theme_options();
 
@@ -33,6 +34,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 <section class="tutor-preferences-section">
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
+		class="tutor-flex tutor-flex-column tutor-gap-5"
 		x-data='tutorForm({ 
 			id: "<?php echo esc_attr( $form_id ); ?>", 
 			mode: "onChange", 
@@ -43,25 +45,25 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 		@submit="handleSubmit((data) => { savePreferencesMutation?.mutate({...data, formId: '<?php echo esc_attr( $form_id ); ?>'}); })($event)"
 	>
 		<!-- Course Content Section -->
-		<div class="tutor-flex tutor-justify-between">
+		<div class="tutor-flex tutor-gap-3 tutor-justify-between">
 			<h5 class="tutor-preferences-section-header">
 				<?php esc_html_e( 'Preferences', 'tutor' ); ?>
 			</h5>
-			<div class="tutor-preferences-section-reset tutor-flex tutor-items-center cursor-pointer" @click="TutorCore.modal.showModal('<?php echo esc_js( $reset_modal_id ); ?>')">
+			<div class="tutor-preferences-section-reset tutor-flex tutor-items-center" @click="TutorCore.modal.showModal('<?php echo esc_js( $reset_modal_id ); ?>')" role="button">
 				<?php SvgIcon::make()->name( Icon::RELOAD_3 )->size( 16 )->render(); ?>
 				<span class="tutor-text-small tutor-ml-2"><?php esc_html_e( 'Reset to Default', 'tutor' ); ?></span>
 			</div>
 		</div>
-
 		<?php
-		echo ConfirmationModal::make()
+		ConfirmationModal::make()
 			->id( $reset_modal_id )
-			->title( __( 'Reset Preferences?', 'tutor' ) )
-			->message( __( 'This will reset your Tutor preferences back to the default values.', 'tutor' ) )
+			->title( __( 'Reset your Preferences?', 'tutor' ) )
+			->message( __( 'This will reset your learning preferences to the default settings. Your progress and account data won’t be affected.', 'tutor' ) )
 			->cancel_text( __( 'Cancel', 'tutor' ) )
-			->confirm_text( __( 'Yes, Reset', 'tutor' ) )
-			->icon( Icon::RELOAD_3, 80, 80 )
-			->confirm_handler( "resetToDefault('" . esc_js( $form_id ) . "','" . esc_js( $reset_modal_id ) . "')" )
+			->confirm_text( __( 'Reset Preferences', 'tutor' ) )
+			// ->icon( tutor()->url . 'assets/images/illustrations/reset-preferences.svg' )
+			->icon( UrlHelper::asset( 'images/illustrations/reset-preferences.svg' ) )
+			->confirm_handler( "handleResetPreferences('" . esc_js( $form_id ) . "','" . esc_js( $reset_modal_id ) . "')" )
 			->mutation_state( 'resetPreferencesMutation' )
 			->render();
 		?>

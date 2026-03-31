@@ -111,7 +111,7 @@ const settings = () => {
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
       this.handleSaveWithdrawMethod = this.handleSaveWithdrawMethod.bind(this);
       this.handleResetPassword = this.handleResetPassword.bind(this);
-      this.resetToDefault = this.resetToDefault.bind(this);
+      this.handleResetPreferences = this.handleResetPreferences.bind(this);
 
       this.handleUpdateNotification = query.useMutation(this.updateNotification, {
         onSuccess: (data: TutorMutationResponse<string>, payload: UpdateNotificationProps) => {
@@ -201,12 +201,9 @@ const settings = () => {
       });
 
       this.resetPreferencesMutation = query.useMutation(this.resetPreferences, {
-        onSuccess: (data: TutorMutationResponse<PreferencesFormProps>, payload: ResetPreferencesPayload) => {
-          form.reset(payload?.formId || '', (data?.data || {}) as unknown as Record<string, unknown>);
+        onSuccess: (data: TutorMutationResponse<PreferencesFormProps>) => {
           toast.success(data?.message ?? __('Preferences reset successfully', 'tutor'));
-          if (payload?.modalId) {
-            modal.closeModal(payload.modalId);
-          }
+          window.location.reload();
         },
         onError: (error: Error) => {
           toast.error(convertToErrorMessage(error));
@@ -221,14 +218,12 @@ const settings = () => {
     },
 
     async resetPreferences(payload: ResetPreferencesPayload) {
-      // Endpoint doesn't need payload data; we use payload only to pass form/modal ids to onSuccess.
-      void payload;
-      return wpAjaxInstance.post(endpoints.RESET_USER_PREFERENCES, {}) as unknown as Promise<
+      return wpAjaxInstance.post(endpoints.RESET_USER_PREFERENCES, payload) as unknown as Promise<
         TutorMutationResponse<PreferencesFormProps>
       >;
     },
 
-    resetToDefault(formId: string, modalId: string) {
+    handleResetPreferences(formId: string, modalId: string) {
       this.resetPreferencesMutation?.mutate({ formId, modalId });
     },
 
