@@ -55,10 +55,9 @@
   }
 
   &-actions {
-    @include tutor-flex(row);
     gap: $tutor-spacing-4;
-    @include tutor-transition(opacity);
     opacity: 0;
+    @include tutor-transition(opacity);
   }
 
   &-text {
