@@ -60,7 +60,7 @@ $phone_number     = $student_meta['phone_number'][0] ?? '';
 		</div>
 		<div class="tutor-profile-card-body-right">
 			<div class="tutor-user-profile-bio">
-				<?php echo esc_html( $student_meta['_tutor_profile_bio'][0] ?? '' ); ?>
+				<?php echo wp_kses_post( $student_meta['_tutor_profile_bio'][0] ?? '' ); ?>
 			</div>
 			<ul class="tutor-user-profile-details">
 				<li class="tutor-badge tutor-badge-disabled">
