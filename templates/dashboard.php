@@ -12,7 +12,6 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\User;
 
-$is_kids_mode = tutor_utils()->is_kids_mode();
 ?>
 
 <?php
