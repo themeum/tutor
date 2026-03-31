@@ -507,7 +507,7 @@ class QuizModel {
 
 		$search_filter   = $search_filter ? '%' . $wpdb->esc_like( $search_filter ) . '%' : '';
 		$search_term_raw = $search_filter;
-		$search_filter   = $search_filter ? "AND ( users.user_email = '{$search_term_raw}' OR users.display_name LIKE {$search_filter} OR quiz.post_title LIKE {$search_filter} OR course.post_title LIKE {$search_filter} )" : '';
+		$search_filter   = $search_filter ? $wpdb->prepare( "AND ( users.user_email = %s OR users.display_name LIKE %s OR quiz.post_title LIKE %s OR course.post_title LIKE %s )", $search_term_raw, $search_filter, $search_filter, $search_filter ) : '';
 
 		$course_filter = 0 !== $course_filter ? " AND quiz_attempts.course_id = $course_filter " : '';
 		$date_filter   = '' != $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
