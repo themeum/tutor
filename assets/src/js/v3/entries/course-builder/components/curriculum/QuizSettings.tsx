@@ -210,9 +210,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       selectOnFocus
                       isInlineLabel
                       style={styles.maxWidth('99px')}
-                      formFieldWrapperCss={css`
-                        width: auto;
-                      `}
+                      formFieldWrapperCss={styles.width('auto')}
                       inputContainerCss={styles.justifyContent('flex-end')}
                     />
                   )}
@@ -500,9 +498,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                           contentPosition="right"
                           wrapperCss={styles.maxWidth('80px')}
                           contentCss={styles.minWidth('fit-content')}
-                          formFieldWrapperCss={css`
-                            width: auto;
-                          `}
+                          formFieldWrapperCss={styles.width('auto')}
                           showVerticalBar={false}
                           presetOptions={[
                             {
@@ -775,6 +771,9 @@ const styles = {
   `,
   justifyContent: (justifyContent: string) => css`
     justify-content: ${justifyContent};
+  `,
+  width: (width: string) => css`
+    width: ${width};
   `,
   settings: css`
     display: grid;
