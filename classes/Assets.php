@@ -891,7 +891,7 @@ class Assets {
 
 		$is_course_list_page    = tutor_utils()->is_course_list_page();
 		$is_course_details_page = tutor_utils()->is_course_details_page();
-		$is_single_bundle_page  = tutor_utils()->is_addon_enabled( 'course-bundle' ) && \TutorPro\CourseBundle\Utils::is_bundle_single_page();
+		$is_single_bundle_page  = apply_filters( 'tutor_is_bundle_single_page', false );
 
 		// Return if it is course list or course details page.
 		if ( $is_course_list_page || $is_course_details_page || $is_single_bundle_page ) {
@@ -953,7 +953,7 @@ class Assets {
 		$is_tutor_checkout_page    = get_the_ID() === CheckoutController::get_page_id();
 		$is_student_public_profile = ! empty( $wp_query->query['tutor_profile_username'] );
 		$is_order_placement_page   = Input::has( 'tutor_order_placement', 'get' ) && ! empty( Input::get( 'tutor_order_placement' ) );
-		$is_single_bundle_page     = tutor_utils()->is_addon_enabled( 'course-bundle' ) && \TutorPro\CourseBundle\Utils::is_bundle_single_page();
+		$is_single_bundle_page     = apply_filters( 'tutor_is_bundle_single_page', false );
 
 		if ( tutor_utils()->is_course_list_page() || tutor_utils()->is_course_details_page() || $is_single_bundle_page ) {
 			$load = true;
