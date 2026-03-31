@@ -220,6 +220,32 @@
     }
   }
 
+  [data-question='fill_in_the_blank'] {
+    .tutor-quiz-question-option {
+      background-color: $tutor-surface-base;
+      padding: $tutor-spacing-6;
+      border-radius: $tutor-radius-lg;
+
+      &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not(
+          [data-option='draggable']
+        ) {
+        background-color: $tutor-surface-base;
+      }
+
+      .tutor-quiz-question-input[data-option='incorrect'] {
+        color: $tutor-text-critical;
+        border-color: $tutor-border-error;
+        text-align: center;
+      }
+
+      .tutor-quiz-question-input[data-option='correct'] {
+        color: $tutor-text-success;
+        border-color: $tutor-border-success;
+        text-align: center;
+      }
+    }
+  }
+
   .tutor-quiz-question {
     &-header {
       &-actions {
