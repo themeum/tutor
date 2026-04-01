@@ -8,7 +8,7 @@ export interface QuizLayoutConfig {
   layout: (typeof QuizLayoutType)[keyof typeof QuizLayoutType];
   formId: string;
   totalQuestions: number;
-  feedbackMode?: string;
+  enableAnswerReveal?: boolean;
   revealWaitMs?: number;
 }
 
@@ -21,7 +21,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
     totalQuestions: Number(config.totalQuestions) || 0,
     currentIndex: 1,
-    feedbackMode: config.feedbackMode ?? '',
+    enableAnswerReveal: config.enableAnswerReveal ?? false,
     revealWaitMs: config.revealWaitMs ?? null,
     revealAnswerIds: [] as number[],
     answerRequiredByIndex: {} as Record<number, boolean>,
@@ -286,9 +286,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
     },
 
     isRevealMode(): boolean {
-      const feedbackMode =
-        this.feedbackMode || (tutorConfig as { quiz_options?: { feedback_mode?: string } }).quiz_options?.feedback_mode;
-      return feedbackMode === 'reveal';
+      return this.enableAnswerReveal;
     },
 
     getRevealAnswerIds(): number[] {
