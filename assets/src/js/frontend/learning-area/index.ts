@@ -11,6 +11,7 @@ import { initializeSidebar } from './sidebar';
 
 const initializeLearningArea = () => {
   initializeSidebar();
+  initializeReviews();
   const { pathname, search } = window.location;
 
   // Normalize path segments
@@ -48,10 +49,6 @@ const initializeLearningArea = () => {
       break;
     case 'course-info':
       initializeCourseCourseInfo();
-      break;
-
-    case 'reviews':
-      initializeReviews();
       break;
 
     default:

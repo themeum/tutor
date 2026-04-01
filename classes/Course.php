@@ -25,6 +25,7 @@ use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
+use Tutor\Options_V2;
 
 /**
  * Course Class
@@ -2251,15 +2252,27 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function popup_review_form() {
-		if ( is_user_logged_in() ) {
-			$user_id          = get_current_user_id();
-			$course_id        = get_the_ID();
-			$meta_key         = User::get_review_popup_meta( $course_id );
-			$review_course_id = (int) get_user_meta( $user_id, $meta_key, true );
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
 
-			if ( is_single() && $course_id === $review_course_id ) {
-				include tutor()->path . 'views/modal/review.php';
-			}
+		$is_learning_area   = tutor_utils()->is_learning_area();
+		$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
+		if ( $is_legacy_learning && $is_learning_area ) {
+			return;
+		}
+
+		$course_id = get_the_ID();
+
+		if ( $is_learning_area && ! Input::has( 'subpage' ) ) {
+			$course_id = wp_get_post_parent_id( wp_get_post_parent_id( get_the_ID() ) );
+		}
+
+		$user_id          = get_current_user_id();
+		$meta_key         = User::get_review_popup_meta( $course_id );
+		$review_course_id = (int) get_user_meta( $user_id, $meta_key, true );
+		if ( is_single() && $course_id === $review_course_id ) {
+			include tutor()->path . 'views/modal/review.php';
 		}
 	}
 
@@ -3474,7 +3487,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string  $modal_id Modal id.
+	 * @param string $modal_id Modal id.
 	 *
 	 * @return void
 	 */
