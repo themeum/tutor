@@ -43,6 +43,7 @@ $reveal_wait_ms         = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_d
 $quiz_settings          = tutor_utils()->get_quiz_option( (int) $tutor_is_started_quiz->quiz_id );
 $show_previous_button   = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
 $hide_previous_button   = '1' === (string) ( $quiz_settings['hide_previous_button'] ?? '0' );
+$hide_quiz_time_display = '1' === (string) ( $quiz_settings['hide_quiz_time_display'] ?? '0' );
 $show_previous_button   = $show_previous_button && ! $hide_previous_button;
 
 // Quiz layout.
@@ -158,6 +159,7 @@ $default_values = array(
 			'remaining_time_secs'    => max( 0, (int) $remaining_time_secs ),
 			'quiz_when_time_expires' => $quiz_when_time_expires,
 			'has_time_limit'         => $has_time_limit,
+			'hide_quiz_time_display' => $hide_quiz_time_display,
 			'form_id'                => $form_id,
 			'modal_id'               => $modal_id,
 			'total_questions'        => count( $questions ),
