@@ -9,7 +9,7 @@
   );
 
   body:has(#wpadminbar) & {
-    --tutor-quiz-summary-header-top: 46px;
+    --tutor-quiz-summary-header-top: 0px;
   }
 
   @include tutor-breakpoint-up(sm) {
@@ -303,7 +303,7 @@
 
 .tutor-quiz-review-feedback-wrapper {
   max-width: 1220px;
-  padding-block: $tutor-spacing-13;
+  padding: $tutor-spacing-13 $tutor-spacing-6;
   margin-inline: auto;
   display: grid;
   grid-template-columns: 300px 1fr;
