@@ -133,6 +133,14 @@
     }
   }
 
+  .tutor-quiz-questions {
+    @include tutor-frontend-layout();
+    @include tutor-flex(column);
+    padding-inline: 0;
+    width: 100%;
+    gap: $tutor-spacing-5;
+  }
+
   .tutor-quiz-review-dnd {
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-2xl;
