@@ -18,8 +18,11 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 use Tutor\Helpers\UrlHelper;
+use Tutor\Options_V2;
 
 $theme_options = UserPreference::get_theme_options();
+
+$learning_mood_options = UserPreference::get_learning_mood_options();
 
 $font_scale_options = UserPreference::get_font_scale_options();
 
@@ -28,6 +31,8 @@ $user_preferences = UserPreference::get_preferences();
 
 // Confirmation modal id for resetting user preferences.
 $reset_modal_id = 'tutor-preferences-reset-modal';
+
+$saf = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN );
 
 ?>
 
@@ -55,13 +60,14 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 			</div>
 		</div>
 		<?php
+		$reset_modal_illustration = tutor_utils()->is_kids_mode() ? UrlHelper::asset( 'images/illustrations/kids-reset-preference.svg' ) : UrlHelper::asset( 'images/illustrations/reset-preference.svg' );
 		ConfirmationModal::make()
 			->id( $reset_modal_id )
 			->title( __( 'Reset your Preferences?', 'tutor' ) )
 			->message( __( 'This will reset your learning preferences to the default settings. Your progress and account data won’t be affected.', 'tutor' ) )
 			->cancel_text( __( 'Cancel', 'tutor' ) )
 			->confirm_text( __( 'Reset Preferences', 'tutor' ) )
-			->icon( tutor_utils()->is_kids_mode() ? UrlHelper::asset( 'images/illustrations/reset-preference.svg' ) : Icon::BIN )
+			->icon( $reset_modal_illustration )
 			->confirm_handler( "handleResetPreferences('" . esc_js( $form_id ) . "','" . esc_js( $reset_modal_id ) . "')" )
 			->mutation_state( 'resetPreferencesMutation' )
 			->render();
@@ -140,10 +146,14 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 				<div class="tutor-preferences-setting-action">
 					<?php
 					InputField::make()
-						->type( InputType::SWITCH )
+						->type( InputType::SELECT )
 						->size( Size::SM )
 						->name( 'learning_mood' )
+						->options( $learning_mood_options )
+						->value( $user_preferences['learning_mood'] ?? Options_V2::LEARNING_MODE_MODERN )
+						->placeholder( __( 'Select mode...', 'tutor' ) )
 						->attr( 'x-bind', "register('learning_mood')" )
+						->attr( 'style', 'min-width: 140px;' )
 						->render();
 					?>
 				</div>

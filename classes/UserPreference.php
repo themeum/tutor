@@ -261,7 +261,13 @@ class UserPreference {
 		$auto_play_next = Input::post( 'auto_play_next', false, INPUT::TYPE_BOOL );
 		$theme          = Input::post( 'theme', self::DEFAULT_THEME );
 		$font_scale     = Input::post( 'font_scale', self::DEFAULT_FONT_SCALE, INPUT::TYPE_INT );
-		$learning_mood  = Input::post( 'learning_mood', false, INPUT::TYPE_BOOL );
+		$learning_mood  = Input::post( 'learning_mood', Options_V2::LEARNING_MODE_MODERN );
+
+		// Validate learning_mood against allowed values.
+		$allowed_moods = array( Options_V2::LEARNING_MODE_MODERN, Options_V2::LEARNING_MODE_KIDS );
+		if ( ! in_array( $learning_mood, $allowed_moods, true ) ) {
+			$learning_mood = Options_V2::LEARNING_MODE_MODERN;
+		}
 
 		$preferences_settings = array(
 			'auto_play_next' => $auto_play_next,
@@ -337,7 +343,7 @@ class UserPreference {
 				'auto_play_next' => (bool) tutor_utils()->get_option( 'autoload_next_course_content' ),
 				'theme'          => self::DEFAULT_THEME,
 				'font_scale'     => self::DEFAULT_FONT_SCALE,
-				'learning_mood'  => Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view(),
+				'learning_mood'  => User::is_student_view() ? tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN ) : Options_V2::LEARNING_MODE_MODERN,
 			)
 		);
 
@@ -364,6 +370,26 @@ class UserPreference {
 			array(
 				'label' => __( 'System Default', 'tutor' ),
 				'value' => self::THEME_SYSTEM,
+			),
+		);
+	}
+
+	/**
+	 * Get learning mood options for UI selects.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<int,array{label:string,value:string}>
+	 */
+	public static function get_learning_mood_options() {
+		return array(
+			array(
+				'label' => __( 'Modern', 'tutor' ),
+				'value' => Options_V2::LEARNING_MODE_MODERN,
+			),
+			array(
+				'label' => __( 'Kids', 'tutor' ),
+				'value' => Options_V2::LEARNING_MODE_KIDS,
 			),
 		);
 	}
