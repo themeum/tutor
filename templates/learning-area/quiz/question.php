@@ -40,7 +40,7 @@ $default_question = array(
 
 $quiz_id            = $tutor_is_started_quiz->quiz_id ?? 0;
 $quiz               = $post instanceof WP_Post ? $post : get_post( $quiz_id );
-$quiz_settings      = tutor_utils()->get_quiz_option( $quiz_id, 'quiz_settings', array() );
+$quiz_settings      = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
 $show_question_mark = $question_settings['show_question_mark'] ?? '0';
 $attempt_id         = (int) ( $tutor_is_started_quiz->attempt_id ?? 0 );
 $question_id        = (int) ( $question->question_id ?? 0 );
