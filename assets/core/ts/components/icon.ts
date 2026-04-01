@@ -8,6 +8,7 @@ export interface IconProps {
   width?: number;
   height?: number;
   from: 'php' | 'ts';
+  ignoreKids?: boolean;
 }
 
 const createSvg = ({
@@ -25,17 +26,17 @@ const createSvg = ({
 }) =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox || '0 0 ' + width + ' ' + height}" fill="${fill}">${content}</svg>`;
 
-async function fetchSVG(name: string, width: number, height: number, from: 'php' | 'ts' = 'ts') {
-  if (iconCache.has(name)) {
-    return iconCache.get(name)!;
-  }
-
+async function fetchSVG(name: string, width: number, height: number, from: 'php' | 'ts' = 'ts', ignoreKids = false) {
   const fileName = from === 'php' ? name : name.trim().replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
-  const hasKidsVariant = tutorConfig.is_kids_mode && tutorConfig.kids_icons_registry?.includes(fileName);
+  const hasKidsVariant = !ignoreKids && tutorConfig.is_kids_mode && tutorConfig.kids_icons_registry?.includes(fileName);
 
   const basePath = hasKidsVariant ? 'assets/icons/kids/' : 'assets/icons/';
   const url = `${tutorConfig.tutor_url}${basePath}${fileName}.svg`;
   const defaultViewBox = `0 0 ${width} ${height}`;
+
+  if (iconCache.has(url)) {
+    return iconCache.get(url)!;
+  }
 
   try {
     const response = await fetch(url);
@@ -53,7 +54,7 @@ async function fetchSVG(name: string, width: number, height: number, from: 'php'
 
     const svgMarkup = createSvg({ width, height, viewBox, fill, content });
 
-    iconCache.set(fileName, svgMarkup);
+    iconCache.set(url, svgMarkup);
     return svgMarkup;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -67,6 +68,7 @@ export const icon = (props: IconProps) => ({
   width: props.width || 16,
   height: props.height || 16,
   from: props.from || 'php',
+  ignoreKids: props.ignoreKids || false,
 
   async init() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -78,7 +80,7 @@ export const icon = (props: IconProps) => ({
       return;
     }
 
-    const svg = await fetchSVG(this.name, this.width, this.height);
+    const svg = await fetchSVG(this.name, this.width, this.height, this.from, this.ignoreKids);
 
     $el.innerHTML = svg;
   },
@@ -90,7 +92,7 @@ export const icon = (props: IconProps) => ({
 
     $el.innerHTML = createSvg({ width: this.width, height: this.height });
 
-    const svg = await fetchSVG(this.name, this.width, this.height);
+    const svg = await fetchSVG(this.name, this.width, this.height, this.from, this.ignoreKids);
     $el.innerHTML = svg;
   },
 });

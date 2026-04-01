@@ -16,9 +16,12 @@ use Tutor\Components\Avatar;
 use Tutor\Components\Button;
 use Tutor\Components\Badge;
 use Tutor\Components\InputField;
+use Tutor\Components\Popover;
 use Tutor\Components\StarRating;
 use Tutor\Components\StarRatingInput;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Color;
+use Tutor\Components\Constants\Positions;
 use Tutor\Components\Constants\Variant;
 use Tutor\Helpers\DateTimeHelper;
 
@@ -103,7 +106,7 @@ $delete_modal_id = 'review-delete-modal';
 
 				<!-- Actions -->
 				<?php if ( $review['is_editable'] ) : ?>
-					<div class="tutor-review-actions">
+					<div class="tutor-flex tutor-review-actions tutor-sm-hidden">
 						<?php
 							Button::make()
 								->label( __( 'Edit Review', 'tutor' ) )
@@ -122,6 +125,46 @@ $delete_modal_id = 'review-delete-modal';
 								->icon( SvgIcon::make()->name( Icon::DELETE_2 )->get() )
 								->icon_only()
 								->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review['comment_ID'] ) . ' })' )
+								->render();
+						?>
+					</div>
+					<div class="tutor-review-actions tutor-hidden tutor-sm-flex">
+						<?php
+							Popover::make()
+								->placement( Positions::BOTTOM_END )
+								->menu_min_width( '104px' )
+								->menu_item(
+									array(
+										'tag'     => 'button',
+										'icon'    => SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->get(),
+										'content' => __( 'Edit', 'tutor' ),
+										'attr'    => array(
+											'@click' => '$refs.edit.click(); hide()',
+										),
+									)
+								)
+								->menu_item(
+									array(
+										'tag'     => 'button',
+										'icon'    => SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->get(),
+										'content' => __( 'Delete', 'tutor' ),
+										'attr'    => array(
+											'@click' => "hide(); TutorCore.modal.showModal('{$delete_modal_id}', { id: " . (int) $review['comment_ID'] . ' })',
+										),
+									)
+								)
+								->trigger(
+									Button::make()
+										->label( __( 'Review Actions', 'tutor' ) )
+										->variant( Variant::GHOST )
+										->size( Size::X_SMALL )
+										->icon( SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->get() )
+										->icon_only()
+										->attr( 'x-ref', 'trigger' )
+										->attr( '@click', 'toggle()' )
+										->attr( 'type', 'button' )
+										->get()
+								)
 								->render();
 						?>
 					</div>
