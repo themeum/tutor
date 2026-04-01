@@ -77,6 +77,7 @@ class Admin {
 	 * @return void
 	 */
 	public function set_reset_permalink_flag( $upgrader_object, $options ) {
+		error_log('set_reset_permalink_flag');
 		$our_plugin = tutor()->basename;
 
 		if ( 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
