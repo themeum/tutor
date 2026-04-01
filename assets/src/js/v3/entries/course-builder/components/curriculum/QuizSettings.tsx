@@ -497,17 +497,14 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                           {
                             label: __('Shapes', 'tutor'),
                             value: 'shape',
-                            // icon: 'quizShape',
                           },
                           {
                             label: __('Numbers', 'tutor'),
                             value: 'number',
-                            // icon: 'quizNumber',
                           },
                           {
                             label: __('Radio', 'tutor'),
                             value: 'radio',
-                            // icon: 'quizRadio',
                           },
                         ]}
                       />
