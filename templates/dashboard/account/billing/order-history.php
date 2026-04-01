@@ -41,7 +41,13 @@ else :
 	?>
 <div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-order-history">
 	<?php foreach ( $orders as $order ) : //phpcs:ignore ?>
-		<?php include tutor_get_template( 'dashboard.account.billing.order-history-card' ); ?>	
+		<?php
+		if ( OrderModel::TYPE_SINGLE_ORDER !== $order->order_type && ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+			continue;
+		}
+
+		include tutor_get_template( 'dashboard.account.billing.order-history-card' );
+		?>
 	<?php endforeach; ?>
 </div>
 
