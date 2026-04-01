@@ -11,6 +11,7 @@
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Models\QuizModel;
@@ -70,6 +71,7 @@ if ( is_array( $attempts ) ) {
 
 $can_retry               = 'retry' === $feedback_mode && $attempts_count < $allowed_attempts;
 $has_instructor_feedback = '' !== trim( wp_strip_all_tags( $instructor_feedback ) );
+$retry_modal_id          = 'tutor-retry-modal-' . $attempt_id;
 
 $result_badge_class = 'failed';
 $result_label       = __( 'Failed', 'tutor' );
@@ -84,7 +86,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 	$result_label       = __( 'Pending', 'tutor' );
 }
 ?>
-<div class="tutor-quiz-summary">
+<div class="tutor-quiz-summary" x-data="tutorQuizRetryAttempt()" x-init="init()">
 	<h2 class="tutor-h2 tutor-sm-text-h3 tutor-mb-3 tutor-sm-mb-2 tutor-text-center">
 		<?php echo esc_html( get_the_title( $quiz_id ) ); ?>
 	</h2>
@@ -235,7 +237,8 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 					->attr(
 						'@click',
 						sprintf(
-							'TutorCore.modal.showModal("tutor-retry-modal", { data: %s });',
+							'TutorCore.modal.showModal("%s", { data: %s });',
+							$retry_modal_id,
 							wp_json_encode(
 								array(
 									'quizID'      => $quiz_id,
@@ -289,5 +292,18 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 				<?php echo wp_kses_post( $instructor_feedback ); ?>
 			</p>
 		</div>
+	<?php endif; ?>
+
+	<?php if ( ! $is_instructor_review && $can_retry ) : ?>
+		<?php
+		ConfirmationModal::make()
+			->id( $retry_modal_id )
+			->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+			->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
+			->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
+			->confirm_text( __( 'Retry Quiz', 'tutor' ) )
+			->mutation_state( 'retryMutation' )
+			->render();
+		?>
 	<?php endif; ?>
 </div>
