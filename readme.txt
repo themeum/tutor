@@ -321,7 +321,12 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.9.8 - Apr 01, 2026
 
-coming soon...
+Update: Added proper authorization check while updating the lessons.
+Update: Strengthen SQL queries across multiple deletion and update operations.
+Update: Improved security in quiz attempts search by preventing SQL injection.
+Fix: Fixed private course enrollment via AJAX without proper validation.
+Fix: Resolved the billing profile overwrite issue in Tutor LMS native eCommerce.
+Fix: Replaced wp_remote_get with wp_safe_remote_get for safer course import with media files.
 
 = 3.9.7 - Feb 25, 2026
 
