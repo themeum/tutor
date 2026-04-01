@@ -15,6 +15,7 @@
 use Tutor\Quiz;
 use Tutor\Models\QuizModel;
 use TUTOR\Icon;
+use TUTOR\Quiz_Attempts_List;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
@@ -81,13 +82,15 @@ $form_id             = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id
 $modal_id            = 'tutor-quiz-abandon-modal';
 $submitted_modal_id  = 'tutor-quiz-submitted-modal';
 $timeout_modal_id    = 'tutor-quiz-timeout-modal';
-$attempt_details_url = UrlHelper::add_query_params(
-	get_pagenum_link(),
-	array(
-		'action'     => Quiz::ACTION_VIEW_DETAILS,
-		'attempt_id' => (int) $tutor_is_started_quiz->attempt_id,
-	)
-);
+$attempt_details_url = Quiz_Attempts_List::is_attempt_details_hidden()
+	? ''
+	: UrlHelper::add_query_params(
+		get_pagenum_link(),
+		array(
+			'action'     => Quiz::ACTION_VIEW_DETAILS,
+			'attempt_id' => (int) $tutor_is_started_quiz->attempt_id,
+		)
+	);
 $modal_cancel_button = Button::make()
 	->label( __( 'Stay Here', 'tutor' ) )
 	->variant( Variant::SECONDARY )
@@ -366,6 +369,7 @@ $default_values = array(
 			->template(
 				tutor()->path . 'templates/learning-area/quiz/modals/result.php',
 				array(
+					'modal_id'      => $submitted_modal_id,
 					'title'         => __( 'Quiz Submitted', 'tutor' ),
 					'message'       => __( 'Your responses have been successfully recorded.', 'tutor' ),
 					'icon_url'      => tutor()->url . 'assets/images/quiz-sibmitted.svg',
@@ -382,6 +386,7 @@ $default_values = array(
 			->template(
 				tutor()->path . 'templates/learning-area/quiz/modals/result.php',
 				array(
+					'modal_id'      => $timeout_modal_id,
 					'title'         => __( 'Times up!', 'tutor' ),
 					'message'       => __( 'Your quiz has been submitted automatically.', 'tutor' ),
 					'icon_url'      => tutor()->url . 'assets/images/quiz-timeout.svg',

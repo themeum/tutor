@@ -18,6 +18,7 @@ use Tutor\Components\Constants\Variant;
 $modal_title   = $data['title'] ?? '';
 $message       = $data['message'] ?? '';
 $icon_url      = $data['icon_url'] ?? '';
+$modal_id      = $data['modal_id'] ?? '';
 $show_attempts = isset( $data['show_attempts'] ) ? (bool) $data['show_attempts'] : false;
 $action_url    = $data['action_url'] ?? '';
 $action_label  = $data['action_label'] ?? __( 'View Results', 'tutor' );
@@ -66,6 +67,15 @@ $action_label  = $data['action_label'] ?? __( 'View Results', 'tutor' );
 			->size( Size::SMALL )
 			->attr( 'class', 'tutor-btn-block' )
 			->attr( 'href', esc_url( $action_url ) )
+			->render();
+	} else {
+		Button::make()
+			->label( __( 'OK', 'tutor' ) )
+			->variant( Variant::PRIMARY )
+			->size( Size::SMALL )
+			->attr( 'type', 'button' )
+			->attr( 'class', 'tutor-btn-block' )
+			->attr( '@click', sprintf( 'TutorCore.modal.closeModal("%s")', esc_js( $modal_id ) ) )
 			->render();
 	}
 	?>
