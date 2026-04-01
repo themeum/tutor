@@ -343,7 +343,7 @@ class UserPreference {
 				'auto_play_next' => (bool) tutor_utils()->get_option( 'autoload_next_course_content' ),
 				'theme'          => self::DEFAULT_THEME,
 				'font_scale'     => self::DEFAULT_FONT_SCALE,
-				'learning_mood'  => User::is_student_view() ? tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN ) : Options_V2::LEARNING_MODE_MODERN,
+				'learning_mood'  => tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN ),
 			)
 		);
 

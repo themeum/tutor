@@ -151,7 +151,7 @@ $saf = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MOD
 						->name( 'learning_mood' )
 						->options( $learning_mood_options )
 						->value( $user_preferences['learning_mood'] ?? Options_V2::LEARNING_MODE_MODERN )
-						->placeholder( __( 'Select mode...', 'tutor' ) )
+						->placeholder( __( 'Select mode', 'tutor' ) )
 						->attr( 'x-bind', "register('learning_mood')" )
 						->attr( 'style', 'min-width: 140px;' )
 						->render();
