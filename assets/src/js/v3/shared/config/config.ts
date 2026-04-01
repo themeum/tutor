@@ -63,6 +63,7 @@ const defaultTutorConfig = {
     filter: null,
   },
   settings: {
+    learning_mode: '',
     monetize_by: 'tutor',
     enable_course_marketplace: 'off',
     course_permalink_base: '',

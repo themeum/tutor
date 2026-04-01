@@ -20,6 +20,7 @@ import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithPresets from '@TutorShared/components/fields/FormInputWithPresets';
+import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -93,6 +94,7 @@ const getPaginationTypeIcon = (type: string): IconCollection => {
 const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const { quizId, contentType } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
+  const isLegacyLearningMode = tutorConfig.settings?.learning_mode === 'legacy';
 
   const questions = form.watch('questions');
   const questionsCount = questions.length;
@@ -473,7 +475,15 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   control={form.control}
                   name="quiz_option.enable_pagination"
                   render={(controllerProps) => (
-                    <FormCheckbox {...controllerProps} label={__('Show pagination', 'tutor')} />
+                    <FormCheckbox
+                      {...controllerProps}
+                      label={__('Show pagination', 'tutor')}
+                      helpText={
+                        isLegacyLearningMode
+                          ? __('Pagination style is unavailable while learning mode is set to Legacy.', 'tutor')
+                          : undefined
+                      }
+                    />
                   )}
                 />
 
@@ -493,6 +503,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         {...controllerProps}
                         size="small"
                         isInlineLabel
+                        disabled={isLegacyLearningMode}
                         options={[
                           {
                             label: __('Shapes', 'tutor'),
