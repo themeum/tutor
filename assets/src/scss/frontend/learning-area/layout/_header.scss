@@ -24,7 +24,6 @@
     @include tutor-flex(row, center);
 
     @include tutor-breakpoint-up(sm) {
-      gap: $tutor-spacing-5;
       background-color: $tutor-surface-l1;
       border-radius: $tutor-radius-md;
       overflow: hidden;
@@ -34,8 +33,9 @@
   &-back {
     @include tutor-button-reset();
     @include tutor-flex-center();
-    height: 44px;
-    width: 44px;
+    flex-shrink: 0;
+    height: 48px;
+    width: 48px;
 
     @include tutor-breakpoint-up(sm) {
       border-inline-end: 1px solid $tutor-border-idle;

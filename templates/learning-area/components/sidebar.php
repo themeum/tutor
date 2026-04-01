@@ -21,6 +21,7 @@ use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use TUTOR\Course;
 use TUTOR\Input;
 use TUTOR\Template;
 
@@ -32,11 +33,15 @@ $tutor_current_content_id,
 $tutor_is_enrolled,
 $tutor_is_public_course,
 $tutor_is_course_instructor,
-$tutor_current_post;
+$tutor_current_post,
+$tutor_course_progress,
+$tutor_can_complete_course,
+$tutor_can_retake_course,
+$course_complete_modal_id,
+$course_retake_modal_id;
 
-$is_preview       = get_post_meta( $tutor_current_post->ID, '_is_preview', true );
-$current_url      = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
-$course_completed = tutor_utils()->get_course_completed_percent( $tutor_course_id, $current_user_id );
+$is_preview  = get_post_meta( $tutor_current_post->ID, '_is_preview', true );
+$current_url = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
 
 $menu_items     = Template::make_learning_area_sub_page_nav_items( $current_url );
 $active_menu    = Input::get( 'subpage', '' );
@@ -63,7 +68,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 				<div class="tutor-learning-progress-text">
 					<?php
 					// translators: %s: course completed percentage.
-					echo sprintf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $course_completed ) . '%</span>' );
+					echo sprintf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $tutor_course_progress ) . '%</span>' );
 					?>
 				</div>
 				<div>
@@ -90,7 +95,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 				</div>
 			</div>
 			<div class="tutor-progress-bar" data-tutor-animated="">
-				<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $course_completed ); ?>%;"></div>
+				<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $tutor_course_progress ); ?>%;"></div>
 			</div>
 		</div>
 		<div class="tutor-learning-nav">
@@ -231,5 +236,15 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 				<?php echo $menu_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 		</div>
+	</div>
+	<div class="tutor-hidden tutor-md-flex tutor-flex-column tutor-gap-2">
+	<?php
+	if ( $tutor_can_complete_course ) {
+		Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $tutor_course_progress );
+	}
+	if ( $tutor_can_retake_course ) {
+		Course::render_course_retake_btn( $course_retake_modal_id );
+	}
+	?>
 	</div>
 </div>

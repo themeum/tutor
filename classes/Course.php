@@ -3462,13 +3462,15 @@ class Course extends Tutor_Base {
 	 * @param string $modal_id        The HTML ID of the modal to display if not complete.
 	 * @param int    $course_id       The ID of the course.
 	 * @param float  $course_progress The current completion percentage of the course.
+	 * @param string $size            The button size.
 	 *
 	 * @return void
 	 */
-	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0 ): void {
+	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0, string $size = Size::MEDIUM ): void {
 		$button = Button::make()
 		->label( __( 'Complete the Course', 'tutor' ) )
 		->icon( Icon::TICK_MARK )
+		->size( $size )
 		->attr( 'type', 'button' );
 
 		if ( $course_progress < 100 ) {
@@ -3488,14 +3490,15 @@ class Course extends Tutor_Base {
 	 * @since 4.0.0
 	 *
 	 * @param string $modal_id Modal id.
+	 * @param string $size     The button size.
 	 *
 	 * @return void
 	 */
-	public static function render_course_retake_btn( string $modal_id ): void {
+	public static function render_course_retake_btn( string $modal_id, string $size = Size::MEDIUM ): void {
 		Button::make()
 		->label( __( 'Retake this Course', 'tutor' ) )
-		->icon( Icon::RELOAD_3 )
-		->variant( Variant::SECONDARY )
+		->icon( Icon::RELOAD_4 )
+		->size( $size )
 		->attr( 'type', 'button' )
 		->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" )
 		->render();
