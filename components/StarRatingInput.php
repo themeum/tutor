@@ -15,7 +15,7 @@ namespace Tutor\Components;
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
-use Tutor\components\Constants\Size;
+use Tutor\Components\Constants\Size;
 
 /**
  * Class StarRatingInput
