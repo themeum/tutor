@@ -103,11 +103,51 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
     isAddonEnabled(Addons.CONTENT_DRIP) && contentDripType === 'unlock_sequentially' && hasAttemptsLimit;
   const hasQuestionLimit = form.watch('quiz_option.limit_questions_to_answer');
   const hasTimeLimit = form.watch('quiz_option.enable_time_limit');
+  const questionsOrder = form.watch('quiz_option.questions_order');
   const availableQuestionInPool = Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount);
   const usedQuestionCountPercentage = (availableQuestionInPool / questionsCount) * 100;
-  const questionCountForStats = hasQuestionLimit ? availableQuestionInPool : questionsCount;
+  const orderedQuestions = (() => {
+    if (questionsOrder === 'sorting') {
+      return questions;
+    }
+
+    if (questionsOrder === 'asc') {
+      return [...questions].sort((a, b) => Number(a.question_id) - Number(b.question_id));
+    }
+
+    if (questionsOrder === 'desc') {
+      return [...questions].sort((a, b) => Number(b.question_id) - Number(a.question_id));
+    }
+
+    return [];
+  })();
+  const questionsForStats = hasQuestionLimit ? orderedQuestions.slice(0, availableQuestionInPool) : orderedQuestions;
+  const questionCountForStats = questionsForStats.length;
   const passingGrade = Number(form.watch('quiz_option.passing_grade'));
-  const requiredCorrectAnswers = Math.ceil((passingGrade / 100) * questionCountForStats);
+  const totalMarksForStats = questionsForStats.reduce(
+    (sum, question) => sum + Number(question.question_settings.question_mark || 0),
+    0,
+  );
+  const requiredPassMarks = Math.ceil((passingGrade / 100) * totalMarksForStats);
+  const requiredCorrectAnswers = (() => {
+    if (questionsOrder === 'rand') {
+      return '-';
+    }
+
+    if (requiredPassMarks <= 0) {
+      return 0;
+    }
+
+    let accumulatedMarks = 0;
+    for (const [index, question] of questionsForStats.entries()) {
+      accumulatedMarks += Number(question.question_settings.question_mark || 0);
+      if (accumulatedMarks >= requiredPassMarks) {
+        return index + 1;
+      }
+    }
+
+    return questionCountForStats;
+  })();
   const timeLimitValue = Number(form.watch('quiz_option.time_limit.time_value'));
   const timeLimitType = form.watch('quiz_option.time_limit.time_type');
   const timePerQuestionInSeconds =
@@ -279,54 +319,55 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 <Controller
                   name="quiz_option.enable_time_limit"
                   control={form.control}
-                  rules={requiredRule()}
                   render={(controllerProps) => (
                     <FormCheckbox {...controllerProps} label={__('Set Time Limit', 'tutor')} />
                   )}
                 />
-                <div css={styles.timeLimit}>
-                  <Controller
-                    name="quiz_option.time_limit.time_value"
-                    control={form.control}
-                    rules={{
-                      ...requiredRule(),
-                      validate: (value) => {
-                        if (value <= 0) {
-                          return __('Time limit must be greater than 0', 'tutor');
-                        }
-                        return true;
-                      },
-                    }}
-                    render={(controllerProps) => (
-                      <FormInput
-                        {...controllerProps}
-                        size="small"
-                        type="number"
-                        selectOnFocus
-                        dataAttribute="data-time-limit"
-                      />
-                    )}
-                  />
+                <Show when={form.watch('quiz_option.enable_time_limit')}>
+                  <div css={styles.timeLimit}>
+                    <Controller
+                      name="quiz_option.time_limit.time_value"
+                      control={form.control}
+                      rules={{
+                        ...requiredRule(),
+                        validate: (value) => {
+                          if (value <= 0) {
+                            return __('Time limit must be greater than 0', 'tutor');
+                          }
+                          return true;
+                        },
+                      }}
+                      render={(controllerProps) => (
+                        <FormInput
+                          {...controllerProps}
+                          size="small"
+                          type="number"
+                          selectOnFocus
+                          dataAttribute="data-time-limit"
+                        />
+                      )}
+                    />
 
-                  <Controller
-                    name="quiz_option.time_limit.time_type"
-                    control={form.control}
-                    render={(controllerProps) => (
-                      <FormSelectInput
-                        {...controllerProps}
-                        dataAttribute="data-time-limit-unit"
-                        size="small"
-                        options={[
-                          { label: __('Sec', 'tutor'), value: 'seconds' },
-                          { label: __('Min', 'tutor'), value: 'minutes' },
-                          { label: __('Hour', 'tutor'), value: 'hours' },
-                          { label: __('Days', 'tutor'), value: 'days' },
-                          { label: __('Weeks', 'tutor'), value: 'weeks' },
-                        ]}
-                      />
-                    )}
-                  />
-                </div>
+                    <Controller
+                      name="quiz_option.time_limit.time_type"
+                      control={form.control}
+                      render={(controllerProps) => (
+                        <FormSelectInput
+                          {...controllerProps}
+                          dataAttribute="data-time-limit-unit"
+                          size="small"
+                          options={[
+                            { label: __('Sec', 'tutor'), value: 'seconds' },
+                            { label: __('Min', 'tutor'), value: 'minutes' },
+                            { label: __('Hour', 'tutor'), value: 'hours' },
+                            { label: __('Days', 'tutor'), value: 'days' },
+                            { label: __('Weeks', 'tutor'), value: 'weeks' },
+                          ]}
+                        />
+                      )}
+                    />
+                  </div>
+                </Show>
               </div>
 
               <Show when={form.watch('quiz_option.enable_time_limit')}>
@@ -416,7 +457,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     },
                     {
                       label: __('Full Page', 'tutor'),
-                      value: 'question_pagination',
+                      value: 'question_below_each_other',
                       image: <QuizFullPageSvg width={72} height={92} />,
                     },
                   ]}
@@ -745,12 +786,14 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
               <div data-footer>
                 <SVGIcon name="stopwatch" width={12} height={12} />
-                {sprintf(
-                  // translators: %1$s is the number of required correct answers, %2$s is total available questions.
-                  __('%1$s of %2$s correct', 'tutor'),
-                  requiredCorrectAnswers,
-                  questionCountForStats,
-                )}
+                {questionsOrder === 'rand'
+                  ? '-'
+                  : sprintf(
+                      // translators: %1$s is the number of required correct answers, %2$s is total available questions.
+                      __('%1$s of %2$s correct', 'tutor'),
+                      requiredCorrectAnswers,
+                      questionCountForStats,
+                    )}
               </div>
             </div>
           </div>
@@ -951,7 +994,7 @@ const styles = {
   `,
   timeLimit: css`
     display: grid;
-    align-items: end;
+    align-items: start;
     grid-template-columns: 48px 84px;
 
     & input {

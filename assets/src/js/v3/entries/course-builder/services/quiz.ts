@@ -168,7 +168,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
     quiz_title: quiz.post_title ?? '',
     quiz_description: quiz.post_content ?? '',
     quiz_option: {
-      enable_time_limit: quiz.quiz_option.time_limit.time_value > 0,
+      enable_time_limit: Number(quiz.quiz_option.time_limit.time_value) > 0,
       time_limit: {
         time_value: quiz.quiz_option.time_limit.time_value ?? 0,
         time_type: quiz.quiz_option.time_limit.time_type ?? 'minutes',
@@ -252,7 +252,7 @@ export const convertQuizFormDataToPayload = (
         short_answer_characters_limit: formData.quiz_option.short_answer_characters_limit,
         time_limit: {
           time_type: formData.quiz_option.time_limit.time_type,
-          time_value: formData.quiz_option.time_limit.time_value,
+          time_value: formData.quiz_option.enable_time_limit ? formData.quiz_option.time_limit.time_value : 0,
         },
         ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
           contentDripType === 'unlock_sequentially' &&
