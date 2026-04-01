@@ -27,6 +27,10 @@
     border-radius: $tutor-radius-3xl;
   }
 
+  .tutor-dashboard-header-user-popover-profile {
+    border-radius: $tutor-radius-3xl;
+  }
+
   // home
   .tutor-student-dashboard-courses {
     .tutor-card.tutor-progress-card:not(:first-child) {
@@ -105,10 +109,6 @@
     .tutor-review-form {
       border-radius: $tutor-radius-6xl;
     }
-  }
-
-  .tutor-dashboard-header-user-popover {
-    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-2xl);
   }
 
   .tutor-dashboard-header-user-popover-menu li a {

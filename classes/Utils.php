@@ -2934,12 +2934,14 @@ class Utils {
 	public function default_menus(): array {
 		$items = array(
 			'index'             => array(
-				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME,
+				'title'       => __( 'Home', 'tutor' ),
+				'icon'        => Icon::HOME,
+				'active_icon' => Icon::HOME_FILL,
 			),
 			'courses'           => array(
-				'title' => __( 'Courses', 'tutor' ),
-				'icon'  => Icon::COURSES,
+				'title'       => __( 'Courses', 'tutor' ),
+				'icon'        => Icon::COURSES,
+				'active_icon' => Icon::COURSES_FILL,
 			),
 			'retrieve-password' => array(
 				'title'         => __( 'Retrieve Password', 'tutor' ),
@@ -2954,8 +2956,9 @@ class Utils {
 
 		if ( $this->should_show_dicussion_menu() ) {
 			$items['discussions'] = array(
-				'title' => __( 'Discussions', 'tutor' ),
-				'icon'  => Icon::QA,
+				'title'       => __( 'Discussions', 'tutor' ),
+				'icon'        => Icon::QA,
+				'active_icon' => Icon::QA_FILL,
 			);
 		}
 
@@ -2972,13 +2975,15 @@ class Utils {
 	public function instructor_menus(): array {
 		$menus = array(
 			'index'         => array(
-				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME,
+				'title'       => __( 'Home', 'tutor' ),
+				'icon'        => Icon::HOME,
+				'active_icon' => Icon::HOME_FILL,
 			),
 			'my-courses'    => array(
-				'title'    => __( 'Courses', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::COURSES,
+				'title'       => __( 'Courses', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::COURSES,
+				'active_icon' => Icon::COURSES_FILL,
 			),
 			// Hidden menu.
 			'create-course' => array(
@@ -2997,22 +3002,25 @@ class Utils {
 
 		$other_menus = array(
 			'announcements' => array(
-				'title'    => __( 'Announcements', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::ANNOUNCEMENT,
+				'title'       => __( 'Announcements', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::ANNOUNCEMENT,
+				'active_icon' => Icon::ANNOUNCEMENT_FILL,
 			),
 			'quiz-attempts' => array(
-				'title'    => __( 'Quiz Attempts', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QUIZ,
+				'title'       => __( 'Quiz Attempts', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::QUIZ_2,
+				'active_icon' => Icon::QUIZ_2_FILL,
 			),
 		);
 
 		if ( $this->should_show_dicussion_menu() ) {
 			$other_menus['discussions'] = array(
-				'title'    => __( 'Discussions', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QA,
+				'title'       => __( 'Discussions', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::QA,
+				'active_icon' => Icon::QA_FILL,
 			);
 		}
 
