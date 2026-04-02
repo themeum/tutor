@@ -7325,8 +7325,8 @@ class Utils {
 
 		// Add course id in where clause.
 		$course_query = '';
-		if ( '' !== $course_id ) {
-			$course_query = "AND course.ID = $course_id";
+		if ( $course_id > 0 ) {
+			$course_query = $wpdb->prepare( 'AND course.ID = %d', $course_id );
 		}
 
 		// Add date in where clause.
