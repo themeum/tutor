@@ -38,9 +38,11 @@ $is_preview       = get_post_meta( $tutor_current_post->ID, '_is_preview', true 
 $current_url      = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
 $course_completed = tutor_utils()->get_course_completed_percent( $tutor_course_id, $current_user_id );
 
-$menu_items     = Template::make_learning_area_sub_page_nav_items( $current_url );
-$active_menu    = Input::get( 'subpage', '' );
-$reset_modal_id = 'tutor-course-reset-progress-modal';
+$menu_items  = Template::make_learning_area_sub_page_nav_items( $current_url );
+$active_menu = Input::get( 'subpage', '' );
+
+$course_reset_progress = tutor_utils()->get_option( 'course_reset_progress', false );
+$reset_modal_id        = 'tutor-course-reset-progress-modal';
 
 ?>
 <div 
@@ -60,15 +62,16 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 	<div class="tutor-learning-sidebar-curriculum">
 		<div class="tutor-learning-progress">
 			<div class="tutor-learning-progress-content">
-				<div class="tutor-learning-progress-text">
+				<div class="tutor-learning-progress-text tutor-py-2">
 					<?php
 					// translators: %s: course completed percentage.
 					echo sprintf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $course_completed ) . '%</span>' );
 					?>
 				</div>
-				<div>
+				<div class="tutor-flex">
 					<?php
-					Button::make()
+					if ( $course_reset_progress ) {
+						Button::make()
 						->variant( Variant::GHOST )
 						->size( Size::X_SMALL )
 						->icon( Icon::RELOAD_2, 'left', 16, 16, array( 'class' => 'tutor-icon-secondary' ) )
@@ -76,7 +79,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 						->attr( '@click', 'confirmReset()' )
 						->render();
 
-					ConfirmationModal::make()
+						ConfirmationModal::make()
 						->id( $reset_modal_id )
 						->title( __( 'Reset Course Progress?', 'tutor' ) )
 						->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
@@ -86,6 +89,7 @@ $reset_modal_id = 'tutor-course-reset-progress-modal';
 						->confirm_handler( 'resetProgress()' )
 						->mutation_state( 'resetProgressMutation' )
 						->render();
+					}
 					?>
 				</div>
 			</div>
