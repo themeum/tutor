@@ -47,8 +47,8 @@
     max-width: 500px;
     max-height: 90vh;
     background-color: $tutor-surface-l1;
-    border-radius: $tutor-radius-3xl;
-    box-shadow: $tutor-shadow-modal;
+    border-radius: $tutor-modal-radius;
+    box-shadow: $tutor-modal-shadow;
     overflow-y: auto;
 
     // Transitions

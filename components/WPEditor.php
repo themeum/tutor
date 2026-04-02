@@ -13,6 +13,8 @@
 
 namespace Tutor\Components;
 
+use Tutor\Helpers\UrlHelper;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -272,6 +274,32 @@ class WPEditor extends BaseComponent {
 			'quicktags'     => true,
 			'editor_height' => 150,
 			'textarea_name' => $this->name,
+			'tinymce'       => array(
+				'skin'        => 'light',
+				'skin_url'    => UrlHelper::asset( 'lib/tinymce/light' ),
+				'content_css' => $this->get_content_css(),
+			),
+		);
+	}
+
+	/**
+	 * Get TinyMCE content styles used inside the editor iframe.
+	 *
+	 * Mirrors the stylesheet list used by the React WPEditor component so both
+	 * entry points render editor content consistently.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	protected function get_content_css() {
+		return implode(
+			',',
+			array(
+				includes_url( 'css/dashicons.min.css' ),
+				includes_url( 'js/tinymce/skins/wordpress/wp-content.css' ),
+				UrlHelper::asset( 'lib/tinymce/light/content.min.css' ),
+			)
 		);
 	}
 
@@ -313,8 +341,16 @@ class WPEditor extends BaseComponent {
 
 		ob_start();
 
-		$editor_id     = ! empty( $this->id ) ? $this->id : $this->name;
-		$config        = array_merge( $this->get_default_config(), $this->editor_config );
+		$editor_id      = ! empty( $this->id ) ? $this->id : $this->name;
+		$default_config = $this->get_default_config();
+		$config         = array_merge( $default_config, $this->editor_config );
+
+		if ( isset( $default_config['tinymce'] ) || isset( $this->editor_config['tinymce'] ) ) {
+			$config['tinymce'] = array_merge(
+				$default_config['tinymce'] ?? array(),
+				$this->editor_config['tinymce'] ?? array()
+			);
+		}
 		$wrapper_class = 'tutor-wp-editor-wrapper tutor-input-field';
 
 		if ( isset( $this->attributes['class'] ) ) {

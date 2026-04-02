@@ -23,6 +23,8 @@ $tooltip_desc     = ! empty( $field['tooltip'] ) ? $field['tooltip'] : null;
 $send_test_button = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm send_test_email"
 data-to="' . esc_attr( $field_key ) . '" data-label="' . $field_label . '" data-key="' . esc_attr( $field_event ) . '" data-template="' . esc_attr( $field_template ) . '"
 >' . esc_attr( 'Send Test' ) . '</button>';
+
+$editable = $field['editable'] ?? true;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label <?php echo $tooltip_desc ? 'has-tooltip' : ''; ?>">
@@ -51,11 +53,14 @@ data-to="' . esc_attr( $field_key ) . '" data-label="' . $field_label . '" data-
 		}
 		echo $total_btn ? '</div>' : '';
 	}
-	?>
+
+	if ( $editable ) {
+		?>
 	<label class="tutor-form-toggle">
 		<input type="hidden" name="tutor_option[<?php echo esc_attr( $field_key ); ?>][<?php echo esc_attr( $field['event'] ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
 		<input type="checkbox" value="on" <?php esc_attr( checked( $option_value, 'on' ) ); ?> class="tutor-form-toggle-input">
 		<span class="tutor-form-toggle-control"></span>
 	</label>
+	<?php } ?>
 	</div>
 </div>

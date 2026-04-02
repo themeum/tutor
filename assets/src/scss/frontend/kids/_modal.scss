@@ -1,0 +1,6 @@
+@use '@Core/scss/tokens' as *;
+
+[data-tutor-ui='kids'] {
+  --tutor-modal-shadow: 0 0 0 1px #{$tutor-border-idle}, 0 3px 0 0 #{$tutor-border-idle}, #{$tutor-shadow-modal};
+  --tutor-modal-radius: #{$tutor-radius-5xl};
+}
