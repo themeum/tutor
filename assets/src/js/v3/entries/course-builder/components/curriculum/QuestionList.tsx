@@ -130,7 +130,9 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   const questionTypeOptionsForUi = useMemo(() => {
     if (tutorConfig.is_legacy_learning_mode) {
-      return questionTypeOptions.filter((option) => option.value !== 'draw_image' && option.value !== 'pin_image');
+      return questionTypeOptions.filter(
+        (option) => option.value !== 'draw_image' && option.value !== 'pin_image' && option.value !== 'scale',
+      );
     }
     return questionTypeOptions;
   }, []);
