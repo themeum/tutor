@@ -1254,7 +1254,7 @@ class Quiz {
 
 		QuizModel::delete_files_by_paths( $attempt_file_paths );
 
-		// Collect instructor file paths before deleting question data (e.g. draw_image masks).
+		// Collect instructor file paths before deleting question data (e.g. draw_image / pin_image masks).
 		/**
 		 * Filter to get file paths for quiz deletion.
 		 * Pro and other add-ons register their question types via this filter.

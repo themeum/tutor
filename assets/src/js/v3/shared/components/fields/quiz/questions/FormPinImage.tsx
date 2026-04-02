@@ -24,7 +24,7 @@ const LASSO_STROKE_STYLE = 'rgba(220, 53, 69, 0.95)';
 const LASSO_DASH_PATTERN = [8, 6];
 const LASSO_MIN_POINT_DISTANCE = 4;
 
-interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
+interface FormPinImageProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
   validationError?: {
     message: string;
@@ -36,10 +36,9 @@ interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
       type: QuizValidationErrorType;
     } | null>
   >;
-  precisionControl?: React.ReactNode;
 }
 
-const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
+const FormPinImage = ({ field }: FormPinImageProps) => {
   const option = field.value;
 
   const [isDrawModeActive, setIsDrawModeActive] = useState(false);
@@ -115,6 +114,7 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
     onChange: (file) => {
       if (file && !Array.isArray(file) && option) {
         const { id, url } = file;
+        // Clear previous draw when image is replaced — the saved mask was for the old image.
         const updated: QuizQuestionOption = {
           ...option,
           ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
@@ -125,6 +125,7 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
           answer_two_gap_match: '',
         };
         updateOption(updated);
+        // Clean up draw instance and canvas so the new image shows without the old mask.
         if (drawInstanceRef.current) {
           drawInstanceRef.current.destroy();
           drawInstanceRef.current = null;
@@ -141,6 +142,7 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
       : null,
   });
 
+  // Display-only sync when not in draw mode (saved mask + canvas size).
   useEffect(() => {
     if (isDrawModeActive) {
       return;
@@ -187,7 +189,7 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
     };
   }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match, syncCanvasDisplay]);
 
-  // Draw-image instructor UI: same lasso polygon flow as FormPinImage (feat/quiz-type-pin-image).
+  // Pin image uses lasso-style polygon drawing for marking the valid pin zone.
   useEffect(() => {
     if (!isDrawModeActive || !option?.image_url) {
       return;
@@ -335,6 +337,7 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
     };
   }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match]);
 
+  // Cleanup shared instance on unmount.
   useEffect(() => {
     return () => {
       if (drawInstanceRef.current) {
@@ -462,51 +465,30 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
 
   return (
     <div css={styles.wrapper}>
-      <Show when={!option?.image_url}>
-        <div css={styles.card}>
-          <div css={styles.imageInputWrapper}>
-            <ImageInput
-              value={
-                option?.image_id
-                  ? {
-                      id: Number(option.image_id),
-                      url: option.image_url || '',
-                      title: option.image_url || '',
-                    }
-                  : null
-              }
-              buttonText={__('Upload Image', __TUTOR_TEXT_DOMAIN__)}
-              infoText={__('Upload the base image students will draw on.', __TUTOR_TEXT_DOMAIN__)}
-              uploadHandler={openMediaLibrary}
-              clearHandler={clearImage}
-              emptyImageCss={styles.imageInput}
-              previewImageCss={styles.imageInput}
-            />
-          </div>
+      {/* Section 1: Image upload only — one reference shown for pin-area quizzes */}
+      <div css={styles.card}>
+        <div css={styles.imageInputWrapper}>
+          <ImageInput
+            value={
+              option?.image_id
+                ? {
+                    id: Number(option.image_id),
+                    url: option.image_url || '',
+                    title: option.image_url || '',
+                  }
+                : null
+            }
+            buttonText={__('Upload Image', __TUTOR_TEXT_DOMAIN__)}
+            infoText={__('Upload the base image students will pin on.', __TUTOR_TEXT_DOMAIN__)}
+            uploadHandler={openMediaLibrary}
+            clearHandler={clearImage}
+            emptyImageCss={styles.imageInputEmpty}
+            previewImageCss={styles.imageInputPreview}
+          />
         </div>
-      </Show>
+      </div>
 
-      <Show when={option?.image_url}>
-        <div css={styles.card}>
-          <div css={styles.uploadedImageWrapper}>
-            <img
-              src={option?.image_url}
-              alt={__('Background image for marking correct area', __TUTOR_TEXT_DOMAIN__)}
-              css={styles.uploadedImage}
-              onClick={openMediaLibrary}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  openMediaLibrary();
-                }
-              }}
-            />
-          </div>
-        </div>
-      </Show>
-
+      {/* Section 2: Mark the valid pin area — drawing auto-enables on image hover */}
       <Show when={option?.image_url}>
         <div css={styles.card}>
           <div css={styles.answerHeader}>
@@ -516,28 +498,29 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
               </span>
               {__('Mark the correct area', __TUTOR_TEXT_DOMAIN__)}
             </span>
-            <button type="button" css={styles.clearButton} onClick={handleClear}>
-              <SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />
-              {__('Clear', __TUTOR_TEXT_DOMAIN__)}
-            </button>
+            <div css={styles.actionsRow}>
+              <button type="button" css={styles.clearButton} onClick={handleClear}>
+                <SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />
+                {__('Clear', __TUTOR_TEXT_DOMAIN__)}
+              </button>
+            </div>
           </div>
           <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
             <img
               ref={imageRef}
               src={option?.image_url}
-              alt={__('Background image for marking correct area', __TUTOR_TEXT_DOMAIN__)}
+              alt={__('Background image for pin area', __TUTOR_TEXT_DOMAIN__)}
               css={[styles.image, styles.answerImage]}
             />
             <canvas
               ref={canvasRef}
               css={[styles.canvas, isDrawModeActive ? styles.canvasDrawMode : styles.canvasIdleMode]}
-              aria-label={__('Draw a lasso around the correct answer area', __TUTOR_TEXT_DOMAIN__)}
+              aria-label={__('Draw a lasso around the valid pin area', __TUTOR_TEXT_DOMAIN__)}
             />
           </div>
-          {precisionControl && <div>{precisionControl}</div>}
           <Show when={option?.answer_two_gap_match}>
             <p css={styles.savedHint}>
-              {__('Answer zone saved. Students will be graded against this area.', __TUTOR_TEXT_DOMAIN__)}
+              {__('Pin area saved. Students will be graded against this region.', __TUTOR_TEXT_DOMAIN__)}
             </p>
           </Show>
         </div>
@@ -546,7 +529,7 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
       <Show when={!option?.image_url}>
         <p css={styles.placeholder}>
           {__(
-            'Upload an image to define the area students must draw on. Then mark the correct zone in the next section.',
+            'Upload an image to define where students must drop a pin. Then mark the valid area in the next section.',
             __TUTOR_TEXT_DOMAIN__,
           )}
         </p>
@@ -555,7 +538,7 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
   );
 };
 
-export default FormDrawImage;
+export default FormPinImage;
 
 const styles = {
   wrapper: css`
@@ -572,24 +555,26 @@ const styles = {
     gap: ${spacing[16]};
     padding: ${spacing[20]};
     background: ${colorTokens.surface.tutor};
-    border: 1px solid ${colorTokens.stroke.border};
     border-radius: ${borderRadius.card};
   `,
   imageInputWrapper: css`
     max-width: 100%;
   `,
-  imageInput: css`
+  imageInputEmpty: css`
     border-radius: ${borderRadius.card};
   `,
-  uploadedImageWrapper: css`
+  imageInputPreview: css`
+    width: fit-content;
     max-width: 100%;
-  `,
-  uploadedImage: css`
-    display: block;
-    width: 100%;
     height: auto;
-    cursor: pointer;
     border-radius: ${borderRadius.card};
+
+    img {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      object-fit: initial;
+    }
   `,
   answerHeader: css`
     ${styleUtils.display.flex('row')};
@@ -626,7 +611,7 @@ const styles = {
     height: auto;
   `,
   answerImage: css`
-    filter: grayscale(0.15);
+    filter: grayscale(0.1);
   `,
   canvas: css`
     position: absolute;
@@ -642,21 +627,11 @@ const styles = {
     pointer-events: auto;
     cursor: crosshair;
   `,
-  drawBadge: css`
-    position: absolute;
-    top: ${spacing[12]};
-    right: ${spacing[12]};
-    z-index: 2;
-    width: 32px;
-    height: 32px;
-    border-radius: 999px;
-    background: ${colorTokens.surface.tutor};
-    border: 1px solid ${colorTokens.stroke.border};
+  actionsRow: css`
     ${styleUtils.display.flex('row')};
-    align-items: center;
-    justify-content: center;
-    color: ${colorTokens.text.subdued};
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+    gap: ${spacing[12]};
+    flex-wrap: wrap;
+    color: ${colorTokens.text.brand};
   `,
   clearButton: css`
     width: 94px;
@@ -670,12 +645,15 @@ const styles = {
     align-items: center;
     gap: ${spacing[8]};
     padding: ${spacing[4]} 0;
+    cursor: pointer;
   `,
   clearButtonIcon: css`
     color: ${colorTokens.text.brand};
   `,
-  clearIcon: css`
-    color: ${colorTokens.text.brand};
+  brushHint: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
+    margin: 0;
   `,
   savedHint: css`
     ${typography.caption()};

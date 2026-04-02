@@ -89,7 +89,7 @@ class QuizBuilder {
 		$answer_title = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
 		$is_correct   = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
 		$image_id     = Input::sanitize( $input['image_id'] ?? null );
-		// Let the hook handle special cases (e.g. draw_image) and return a normalized value.
+		// Let the hook handle special cases (e.g. draw_image, pin_image) and return a normalized value (URL).
 		$answer_two_gap_match_raw = isset( $input['answer_two_gap_match'] ) ? wp_unslash( $input['answer_two_gap_match'] ) : '';
 		$answer_two_gap_match_raw = apply_filters( 'tutor_save_quiz_draw_image_mask', $answer_two_gap_match_raw, $question_type );
 		$answer_two_gap_match     = Input::sanitize( $answer_two_gap_match_raw ?? '', '' );
@@ -169,6 +169,8 @@ class QuizBuilder {
 	 * @param array $questions questions data.
 	 *
 	 * @return void
+	 *
+	 * @throws \Exception When saving a draw_image question while Legacy learning mode is enabled.
 	 */
 	public function save_questions( $quiz_id, $questions ) {
 		global $wpdb;
@@ -185,6 +187,14 @@ class QuizBuilder {
 			}
 
 			$question_type    = Input::sanitize( $question['question_type'] );
+			if ( 'draw_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
+				$legacy_draw_image_message = __( 'Draw on Image questions are not available when Legacy learning mode is enabled.', 'tutor' );
+				throw new \Exception( $legacy_draw_image_message );
+			}
+			if ( 'pin_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
+				$legacy_pin_image_message = __( 'Pin on Image questions are not available when Legacy learning mode is enabled.', 'tutor' );
+				throw new \Exception( $legacy_pin_image_message );
+			}
 			$question_data    = $this->prepare_question_data( $quiz_id, $question );
 			$question_answers = isset( $question['question_answers'] ) ? $question['question_answers'] : array();
 

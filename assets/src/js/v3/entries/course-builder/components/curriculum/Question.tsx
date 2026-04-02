@@ -41,6 +41,7 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   ordering: 'quizOrdering',
   draw_image: 'quizImageAnswer',
   scale: 'quizImageAnswer',
+  pin_image: 'quizImageAnswer',
   h5p: 'quizH5p',
 };
 
