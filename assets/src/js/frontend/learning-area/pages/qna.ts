@@ -115,7 +115,8 @@ const qnaPage = () => {
           }
 
           if (payload.reply_context === 'single') {
-            this.reloadReplies();
+            // this.reloadReplies();
+            window.location.reload();
           } else {
             this.setReplying(null);
             this.updateReplyCount(payload.question_id);
@@ -132,7 +133,8 @@ const qnaPage = () => {
           if (payload.context === 'reply') {
             toast.success(__('Reply deleted successfully', 'tutor'));
             modal.closeModal(MODALS.QNA_DELETE);
-            this.reloadReplies();
+            // this.reloadReplies();
+            window.location.reload();
           } else {
             toast.success(__('Question deleted successfully', 'tutor'));
             modal.closeModal(MODALS.QNA_DELETE);

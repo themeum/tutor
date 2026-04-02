@@ -28,8 +28,8 @@ use Tutor\Components\Constants\Color;
 	<?php
 	Sorting::make()
 		->order( $replies_order )
-		->on_change( 'reloadReplies' )
-		->bind_active_order( 'repliesOrder' )
+		// ->on_change( 'reloadReplies' )
+		// ->bind_active_order( 'repliesOrder' )
 		->render();
 	?>
 </div>

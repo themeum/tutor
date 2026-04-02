@@ -29,8 +29,8 @@ use TUTOR\User;
 	<?php
 	Sorting::make()
 		->order( $replies_order )
-		->on_change( 'reloadReplies' )
-		->bind_active_order( 'repliesOrder' )
+		// ->on_change( 'reloadReplies' )
+		// ->bind_active_order( 'repliesOrder' )
 		->render();
 	?>
 </div>

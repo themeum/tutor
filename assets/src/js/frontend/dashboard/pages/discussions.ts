@@ -196,7 +196,8 @@ const discussionsPage = () => {
           if (payload.context === 'reply') {
             toast.success(__('Reply deleted successfully', 'tutor'));
             modal.closeModal(MODALS.QNA_DELETE);
-            this.reloadReplies();
+            // this.reloadReplies();
+            window.location.reload();
           } else {
             const url = new URL(window.location.href);
             url.searchParams.delete(URL_PARAMS.ID);
@@ -219,7 +220,8 @@ const discussionsPage = () => {
           }
 
           if (payload.reply_context === 'single') {
-            this.reloadReplies();
+            // this.reloadReplies();
+            window.location.reload();
           } else {
             this.setReplying(null);
             this.updateReplyCount(payload.question_id);
