@@ -95,12 +95,13 @@ use TUTOR\User;
 					tutor_load_template(
 						'dashboard.discussions.qna-form',
 						array(
-							'form_id'        => 'qna-edit-' . (int) $reply->comment_ID,
-							'default_value'  => $reply->comment_content,
-							'submit_handler' => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $reply->comment_ID . ' })',
-							'cancel_handler' => 'setEditing(null)',
-							'is_pending'     => 'updateQnAMutation?.isPending',
-							'placeholder'    => __( 'Write your answer', 'tutor' ),
+							'form_id'             => 'qna-edit-' . (int) $reply->comment_ID,
+							'default_value'       => $reply->comment_content,
+							'submit_handler'      => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $reply->comment_ID . ' })',
+							'cancel_handler'      => 'setEditing(null)',
+							'is_pending'          => 'updateQnAMutation?.isPending',
+							'placeholder'         => __( 'Write your answer', 'tutor' ),
+							'keep_footer_visible' => true,
 						)
 					);
 					?>
