@@ -76,7 +76,28 @@ class Admin {
 	 * @return void
 	 */
 	public function set_permalink_flag_on_upgrade( $upgrader_object, $options ) {
-		$our_plugin = tutor()->basename;
+		self::set_permalink_reset_flag( $upgrader_object, $options );
+	}
+
+	/**
+	 * Set or reset the permalink flag for Tutor LMS.
+	 *
+	 * Used to trigger permalink flush for Tutor LMS when certain upgrade
+	 * processes are completed. This function is typically called during
+	 * the upgrader_process_complete action hook.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param mixed  $upgrader_object Upgrader instance.
+	 * @param array  $options         Extra arguments passed to the hook.
+	 * @param string $basename         Plugin basename.
+	 * @param array  $text_domain         Text domain.
+	 *
+	 * @return void
+	 */
+	public static function set_permalink_reset_flag( $upgrader_object, $options, $basename = '', $text_domain = '' ) {
+		$our_plugin  = empty( $basename ) ? tutor()->basename : $basename;
+		$text_domain = empty( $text_domain ) ? 'tutor' : $text_domain;
 
 		if ( ! is_a( $upgrader_object, 'WP_Upgrader' ) ) {
 			return;
@@ -93,8 +114,8 @@ class Admin {
 		} else {
 			$plugin_data = $upgrader_object->new_plugin_data ?? null;
 			if ( is_array( $plugin_data ) && ! empty( $plugin_data['TextDomain'] ) ) {
-				$text_domain = strtolower( $plugin_data['TextDomain'] );
-				if ( 'tutor' === $text_domain ) {
+				$new_text_domain = strtolower( $plugin_data['TextDomain'] );
+				if ( $text_domain === $new_text_domain ) {
 					Permalink::set_permalink_flag();
 				}
 			}
