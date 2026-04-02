@@ -19,6 +19,7 @@ use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Options_V2;
+use TUTOR\User;
 
 $theme_options = UserPreference::get_theme_options();
 
@@ -31,8 +32,6 @@ $user_preferences = UserPreference::get_preferences();
 
 // Confirmation modal id for resetting user preferences.
 $reset_modal_id = 'tutor-preferences-reset-modal';
-
-$saf = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN );
 
 ?>
 
@@ -56,7 +55,7 @@ $saf = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MOD
 			</h5>
 			<div class="tutor-preferences-reset-default" @click="TutorCore.modal.showModal('<?php echo esc_js( $reset_modal_id ); ?>')">
 				<?php SvgIcon::make()->name( Icon::RELOAD_3 )->size( 16 )->render(); ?>
-				<span class="tutor-text-small tutor-ml-2"><?php esc_html_e( 'Reset to Default', 'tutor' ); ?></span>
+				<span class="tutor-text-small"><?php esc_html_e( 'Reset to Default', 'tutor' ); ?></span>
 			</div>
 		</div>
 		<?php
@@ -136,6 +135,7 @@ $saf = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MOD
 					?>
 				</div>
 			</div>
+			<?php if ( User::is_student_view() ) : ?>
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">
 					<div class="tutor-preferences-setting-icon">
@@ -145,7 +145,7 @@ $saf = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MOD
 				</div>
 				<div class="tutor-preferences-setting-action">
 					<?php
-					InputField::make()
+						InputField::make()
 						->type( InputType::SELECT )
 						->size( Size::SM )
 						->name( 'learning_mood' )
@@ -158,6 +158,7 @@ $saf = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MOD
 					?>
 				</div>
 			</div>
+			<?php endif ?>
 		</div>
 	</form>
 </section>

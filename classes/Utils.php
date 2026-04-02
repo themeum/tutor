@@ -11121,7 +11121,7 @@ class Utils {
 		$user_id = get_current_user_id();
 		if ( $user_id ) {
 			$user_learning_mood = UserPreference::get( 'learning_mood', Options_V2::LEARNING_MODE_MODERN );
-			return Options_V2::LEARNING_MODE_KIDS === $user_learning_mood;
+			return Options_V2::LEARNING_MODE_KIDS === $user_learning_mood && User::is_student_view();
 		}
 
 		$admin_kids_mode = Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
