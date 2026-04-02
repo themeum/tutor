@@ -35,7 +35,6 @@ class Admin {
 	 * @return void
 	 */
 	public function __construct() {
-
 		add_action( 'admin_notices', array( $this, 'show_unstable_version_admin_notice' ) );
 
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
@@ -77,15 +76,26 @@ class Admin {
 	 * @return void
 	 */
 	public function set_reset_permalink_flag( $upgrader_object, $options ) {
-		error_log('set_reset_permalink_flag');
 		$our_plugin = tutor()->basename;
 
-		if ( 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
+		if ( ! is_a( 'WP_Upgrader', $upgrader_object ) ) {
+			return;
+		}
+
+		if ( is_array( $options ) && 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
 			// Iterate through the plugins being updated and check if ours is there.
 			foreach ( $options['plugins'] as $plugin ) {
 				if ( $plugin === $our_plugin ) {
 					Permalink::set_permalink_flag();
 					break;
+				}
+			}
+		} else {
+			$plugin_data = $upgrader_object->new_plugin_data ?? null;
+			if ( is_array( $plugin_data ) && ! empty( $plugin_data['TextDomain'] ) ) {
+				$text_domain = strtolower( $plugin_data['TextDomain'] );
+				if ( 'tutor' === $text_domain ) {
+					Permalink::set_permalink_flag();
 				}
 			}
 		}
