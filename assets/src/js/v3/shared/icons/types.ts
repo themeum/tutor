@@ -180,6 +180,7 @@ export const icons = [
   'googleMeet',
   'googleMeetColorize',
   'grabHandle',
+  'gradebook',
   'gutenbergColorized',
   'handCoin',
   'happy',
