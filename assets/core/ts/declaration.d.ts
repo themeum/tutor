@@ -111,6 +111,7 @@ declare global {
       ajaxurl?: string;
       tutor_url?: string;
       wp_date_format?: string;
+      is_legacy_learning_mode?: boolean;
     };
   }
 }

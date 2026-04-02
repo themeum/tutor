@@ -112,6 +112,75 @@ if ( $has_student_drawn && $has_student_mask ) {
 	$student_mask_style = '--tutor-draw-mask-url: url("' . $given_mask_css . '"); --tutor-draw-mask-bg: rgba(248, 0, 0, 0.0257);';
 }
 
+$draw_image_review_column = isset( $draw_image_review_column ) ? $draw_image_review_column : null;
+
+/**
+ * Dashboard quiz attempt details table: split "Given answer" vs "Correct answer" columns.
+ * Learning-area review keeps full combined layout (column null).
+ */
+if ( 'given' === $draw_image_review_column ) {
+	$given_bg_url = '';
+	if ( $instructor_answer_bg ) {
+		$given_bg_url = QuizModel::get_answer_image_url( $instructor_answer_bg );
+	}
+	if ( ! $given_bg_url && $ref_bg ) {
+		$given_bg_url = $ref_bg;
+	}
+	?>
+<div class="tutor-quiz-question-options tutor-quiz-draw-image-review">
+	<?php if ( $has_student_drawn && is_string( $given_mask_raw ) && '' !== trim( $given_mask_raw ) ) : ?>
+		<?php $given_src_for_img = trim( $given_mask_raw ); ?>
+	<div class="tutor-draw-image-given-answer tutor-mb-12">
+		<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">
+			<?php esc_html_e( 'Your drawing:', 'tutor' ); ?>
+		</p>
+		<div class="tutor-draw-image-layered">
+			<?php if ( $given_bg_url ) : ?>
+				<img src="<?php echo esc_url( $given_bg_url ); ?>" alt="" class="tutor-draw-image-bg" />
+				<img src="<?php echo 0 === strpos( $given_src_for_img, 'data:image/' ) ? esc_attr( $given_src_for_img ) : esc_url( $given_src_for_img ); ?>" alt="" role="presentation" class="tutor-draw-image-overlay" />
+			<?php else : ?>
+				<img src="<?php echo 0 === strpos( $given_src_for_img, 'data:image/' ) ? esc_attr( $given_src_for_img ) : esc_url( $given_src_for_img ); ?>" alt="" class="tutor-draw-image-single" />
+			<?php endif; ?>
+		</div>
+	</div>
+	<?php else : ?>
+	<span class="tutor-fs-7 tutor-color-secondary">
+		<?php esc_html_e( 'No drawing submitted.', 'tutor' ); ?>
+	</span>
+	<?php endif; ?>
+</div>
+	<?php
+	return;
+}
+
+if ( 'correct' === $draw_image_review_column ) {
+	$ref_mask_for_correct = $instructor_answer_mask && ! empty( $instructor_answer_mask->answer_two_gap_match ) ? trim( (string) $instructor_answer_mask->answer_two_gap_match ) : '';
+	$ref_mask_is_url      = is_string( $ref_mask_for_correct ) && false !== wp_http_validate_url( $ref_mask_for_correct );
+	?>
+<div class="tutor-quiz-question-options tutor-quiz-draw-image-review">
+	<?php if ( $instructor_answer_mask && $ref_mask_is_url ) : ?>
+		<?php
+		$ref_bg_correct = $instructor_answer_mask ? QuizModel::get_answer_image_url( $instructor_answer_mask ) : '';
+		?>
+	<div class="tutor-draw-image-correct-answer">
+		<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">
+			<?php esc_html_e( 'Reference (correct answer zones):', 'tutor' ); ?>
+		</p>
+		<?php if ( $ref_bg_correct ) : ?>
+			<div class="tutor-draw-image-layered">
+				<img src="<?php echo esc_url( $ref_bg_correct ); ?>" alt="" class="tutor-draw-image-bg" />
+				<img src="<?php echo esc_url( $ref_mask_for_correct ); ?>" alt="" role="presentation" class="tutor-draw-image-overlay" />
+			</div>
+		<?php else : ?>
+			<img src="<?php echo esc_url( $ref_mask_for_correct ); ?>" alt="" class="tutor-draw-image-single" />
+		<?php endif; ?>
+	</div>
+	<?php endif; ?>
+</div>
+	<?php
+	return;
+}
+
 ?>
 
 <div class="tutor-quiz-question-options tutor-quiz-draw-image-review">

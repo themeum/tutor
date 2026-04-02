@@ -115,6 +115,12 @@ const questionTypeOptions: {
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
+  const questionTypeOptionsForUi = useMemo(() => {
+    if (tutorConfig.is_legacy_learning_mode) {
+      return questionTypeOptions.filter((option) => option.value !== 'draw_image');
+    }
+    return questionTypeOptions;
+  }, []);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const questionListRef = useRef<HTMLDivElement>(null);
@@ -446,7 +452,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         >
           <div css={styles.questionOptionsWrapper}>
             <span css={styles.questionTypeOptionsTitle}>{__('Select Question Type', 'tutor')}</span>
-            {questionTypeOptions.map((option) => (
+            {questionTypeOptionsForUi.map((option) => (
               <Show
                 key={option.value}
                 when={option.isPro && !isTutorPro}

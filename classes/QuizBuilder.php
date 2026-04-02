@@ -169,6 +169,8 @@ class QuizBuilder {
 	 * @param array $questions questions data.
 	 *
 	 * @return void
+	 *
+	 * @throws \Exception When saving a draw_image question while Legacy learning mode is enabled.
 	 */
 	public function save_questions( $quiz_id, $questions ) {
 		global $wpdb;
@@ -185,6 +187,10 @@ class QuizBuilder {
 			}
 
 			$question_type    = Input::sanitize( $question['question_type'] );
+			if ( 'draw_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
+				$legacy_draw_image_message = __( 'Draw on Image questions are not available when Legacy learning mode is enabled.', 'tutor' );
+				throw new \Exception( $legacy_draw_image_message );
+			}
 			$question_data    = $this->prepare_question_data( $quiz_id, $question );
 			$question_answers = isset( $question['question_answers'] ) ? $question['question_answers'] : array();
 
