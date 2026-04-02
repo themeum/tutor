@@ -189,7 +189,7 @@ class AttachmentCard extends BaseComponent {
 		?>
 		<div class="tutor-card tutor-attachment-card">
 			<div class="<?php echo esc_attr( $icon_class_attr ); ?>" aria-hidden="true">
-				<?php tutor_utils()->render_svg_icon( Icon::RESOURCES, 24, 24 ); ?>
+				<?php SvgIcon::make()->name( Icon::RESOURCES )->size( 24 )->render(); ?>
 			</div>
 
 			<div class="tutor-attachment-card-body">
@@ -199,13 +199,13 @@ class AttachmentCard extends BaseComponent {
 
 				<?php if ( $file_size || $meta_attr ) : ?>
 					<span class="tutor-attachment-card-meta" <?php echo $meta_attr; // phpcs:ignore --already-escaped WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-						<?php echo esc_html( $file_size ); ?>
+						<?php echo esc_html( size_format( $file_size, 2 ) ); ?>
 					</span>
 				<?php endif; ?>
 			</div>
 
 			<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" <?php echo $action_attr; // phpcs:ignore --already-escaped WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-				<?php tutor_utils()->render_svg_icon( $action_icon, 16, 16 ); ?>
+				<?php SvgIcon::make()->name( $action_icon )->size( 16 )->render(); ?>
 			</button>
 		</div>
 		<?php

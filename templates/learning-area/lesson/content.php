@@ -45,6 +45,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 
 ?>
 <div class="tutor-lesson-content">
+	<?php ob_start(); ?>
 	<div 
 		x-data='tutorTabs({
 			tabs: <?php echo wp_json_encode( $tabs_data ); ?>,
@@ -73,7 +74,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 		<?php endif; ?>
 
 		<?php if ( count( $tabs_data ) > 1 ) : ?>
-		<div x-ref="tablist" class="tutor-tabs-nav tutor-p-6 tutor-border-b" role="tablist" aria-orientation="horizontal">
+		<div x-ref="tablist" class="tutor-tabs-nav tutor-px-6 tutor-py-5 tutor-border-b" role="tablist" aria-orientation="horizontal">
 			<template x-for="tab in tabs" :key="tab.id">
 				<button
 					type="button" 
@@ -112,6 +113,8 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 		</div>
 		<?php endif; ?>
 	</div>
-
-	<?php tutor_load_template( 'learning-area.lesson.footer' ); ?>
+	<?php
+		echo apply_filters( 'tutor_learning_area_content', ob_get_clean() ); //phpcs:ignore --already escaped
+		tutor_load_template( 'learning-area.lesson.footer' );
+	?>
 </div>

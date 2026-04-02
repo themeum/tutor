@@ -32,12 +32,17 @@ const defaultTutorConfig = {
   course_list_page_url: '',
   course_post_type: '',
   local: '',
+  tutor_pn_vapid_key: '',
+  tutor_pn_client_id: '',
+  tutor_pn_subscription_saved: '',
   difficulty_levels: [],
   supported_video_sources: [],
   edd_products: [],
   bp_groups: [],
   timezones: {},
   addons_data: [],
+  kids_icons_registry: [],
+  is_kids_mode: false,
   current_user: {
     data: {
       id: '',

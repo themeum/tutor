@@ -561,9 +561,9 @@ class CourseModel {
 
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
-							$in_question_ids = "'" . implode( "','", $questions_ids ) . "'";
+							$in_clause = QueryHelper::prepare_in_clause( $questions_ids );
 							//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-							$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) " );
+							$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_clause}) " ) );
 						}
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $content_id ) );
 
@@ -1453,120 +1453,52 @@ class CourseModel {
 	 *
 	 * @return array[] Topic progress data.
 	 */
-	public static function get_topic_progress_by_course_id( $course_id, $student_id ) {
+	public static function get_course_progress_details( $course_id, $student_id ) {
 
 		$topics_query = tutor_utils()->get_topics( $course_id );
-
-		$topic_list = array();
+		$topic_list   = array();
 
 		if ( empty( $topics_query ) || ! $topics_query->have_posts() ) {
 			return $topic_list;
 		}
 
 		foreach ( $topics_query->posts as $topic_post ) {
-			$topic_id = (int) $topic_post->ID;
-
-			$topic = array(
-				'topic_id'        => $topic_id,
-				'topic_summary'   => $topic_post->post_content,
-				'topic_title'     => get_the_title( $topic_id ),
-				'items'           => array(),
-				'topic_completed' => true,
-				'topic_started'   => false,
-			);
+			$topic_id                    = (int) $topic_post->ID;
+			$total_topic_items           = 0;
+			$total_topic_items_completed = 0;
+			$items                       = array();
 
 			$contents_query = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
 
 			if ( ! empty( $contents_query ) && $contents_query->have_posts() ) {
 				foreach ( $contents_query->posts as $content_post ) {
-					$post_id      = (int) $content_post->ID;
-					$post_type    = $content_post->post_type;
-					$is_completed = true;
-
-					if ( tutor()->quiz_post_type === $post_type ) {
-
-						$is_completed = (bool) tutor_utils()->has_attempted_quiz( $student_id, $post_id );
-
-						$topic['items'][] = array(
-							'type'         => 'quiz',
-							'id'           => $post_id,
-							'link'         => esc_url_raw( get_permalink( $post_id ) ),
-							'title'        => $content_post->post_title,
-							'is_completed' => $is_completed,
-							'time_limit'   => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_value' ),
-							'time_type'    => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_type' ),
-							'label'        => __( 'Quiz', 'tutor' ),
-							'icon'         => Icon::QUIZ_2,
-						);
-
-					} elseif ( tutor()->assignment_post_type === $post_type ) {
-
-						$submitted_count = tutor_utils()->get_submitted_assignment_count( $post_id, $student_id );
-						$is_completed    = $submitted_count > 0;
-
-						$topic['items'][] = array(
-							'type'         => 'assignment',
-							'id'           => $post_id,
-							'link'         => esc_url_raw( get_permalink( $post_id ) ),
-							'title'        => $content_post->post_title,
-							'is_completed' => $is_completed,
-							'label'        => __( 'Assignment', 'tutor' ),
-							'icon'         => Icon::BOOK_2,
-						);
-
-					} elseif ( tutor()->zoom_post_type === $post_type ) {
-						$topic['items'][] = array(
-							'type'  => 'zoom_meeting',
-							'id'    => $post_id,
-							'title' => $content_post->post_title,
-							'link'  => esc_url_raw( get_permalink( $post_id ) ),
-							'label' => __( 'Live Class', 'tutor' ),
-							'icon'  => Icon::ZOOM,
-						);
-
-					} elseif ( tutor()->meet_post_type === $post_type ) {
-						$topic['items'][] = array(
-							'type'  => 'google_meet',
-							'id'    => $post_id,
-							'title' => $content_post->post_title,
-							'link'  => esc_url_raw( get_permalink( $post_id ) ),
-							'label' => __( 'Live Class', 'tutor' ),
-							'icon'  => Icon::GOOGLE_MEET,
-						);
-
-					} else {
-						$video        = tutor_utils()->get_video_info( $post_id );
-						$is_completed = (bool) tutor_utils()->is_completed_lesson( $post_id, $student_id );
-
-						$topic['items'][] = array(
-							'type'            => 'lesson',
-							'id'              => $post_id,
-							'link'            => esc_url_raw( get_permalink( $post_id ) ),
-							'title'           => $content_post->post_title,
-							'video'           => $video,
-							'video_play_time' => isset( $video->playtime ) ? $video->playtime : '',
-							'is_completed'    => $is_completed,
-							'label'           => __( 'Reading', 'tutor' ),
-							'icon'            => Icon::COURSES,
-						);
-					}
-
-					if ( ! $is_completed ) {
-						$topic['topic_completed'] = false;
-					} else {
-						$topic['topic_started'] = true;
-					}
+					$items[] = ( new self() )->build_course_progress_item( $content_post, $student_id );
 				}
+				$total_topic_items = count( $contents_query->posts );
 			}
 
-			$topic_list[] = $topic;
+			$total_topic_items_completed = count(
+				array_filter( $items, fn( $item ) => $item['is_completed'] )
+			);
+
+			$percentage = $total_topic_items > 0 && $total_topic_items_completed > 0
+							? round( ( $total_topic_items_completed / $total_topic_items ) * 100, 2 )
+							: 0;
+
+			$topic_list[] = array(
+				'id'                    => $topic_id,
+				'summary'               => $topic_post->post_content,
+				'title'                 => get_the_title( $topic_id ),
+				'items'                 => $items,
+				'completion_percentage' => $percentage,
+			);
 		}
 
 		wp_reset_postdata();
 
 		return $topic_list;
 	}
-	
+
 	/**
 	 * Check if the current user has course content access
 	 *
@@ -1629,5 +1561,89 @@ class CourseModel {
 		}
 
 		return apply_filters( 'tutor_course_content_access', $has_access, $args );
+	}
+
+	/**
+	 * Build course progress item data for a specific lesson, quiz, assignment, or meeting.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param \WP_Post $post    The course content post object.
+	 * @param int      $user_id The user ID for whom progress is being calculated.
+	 *
+	 * @return array Associative array of progress item data
+	 */
+	private function build_course_progress_item( \WP_Post $post, $user_id ) {
+
+		$base_items = array(
+			'id'    => $post->ID,
+			'type'  => $post->post_type,
+			'link'  => esc_url_raw( get_permalink( $post->ID ) ),
+			'title' => $post->post_title,
+		);
+
+		switch ( $post->post_type ) {
+			case tutor()->quiz_post_type:
+				return array_merge(
+					$base_items,
+					array(
+						'is_completed' => tutor_utils()->has_attempted_quiz( $user_id, $post->ID ),
+						'label'        => __( 'Quiz', 'tutor' ),
+						'icon'         => Icon::QUIZ_2,
+					)
+				);
+
+			case tutor()->assignment_post_type:
+				return array_merge(
+					$base_items,
+					array(
+						'is_completed' => tutor_utils()->get_submitted_assignment_count( $post->ID, $user_id ) > 0,
+						'label'        => __( 'Assignment', 'tutor' ),
+						'icon'         => Icon::BOOK_2,
+					)
+				);
+
+			case tutor()->zoom_post_type:
+				if ( ! tutor_utils()->is_addon_enabled( 'tutor-zoom' ) ) {
+					return $base_items;
+				}
+
+				return array_merge(
+					$base_items,
+					array(
+						'label'        => __( 'Zoom', 'tutor' ),
+						'icon'         => Icon::ZOOM,
+						'is_completed' => \TUTOR_ZOOM\Zoom::is_zoom_lesson_done( '', $post->ID, $user_id ),
+					)
+				);
+
+			case tutor()->meet_post_type:
+				if ( ! tutor_utils()->is_addon_enabled( 'google-meet' ) ) {
+					return $base_items;
+				}
+
+				return array_merge(
+					$base_items,
+					array(
+						'label'        => __( 'Google Meet', 'tutor' ),
+						'icon'         => Icon::GOOGLE_MEET,
+						'is_completed' => \TutorPro\GoogleMeet\Frontend\Frontend::is_lesson_completed( false, $post->ID, $user_id ),
+					)
+				);
+
+			default:
+				$video = tutor_utils()->get_video_info( $post->ID );
+
+				return array_merge(
+					$base_items,
+					array(
+						'video'           => $video,
+						'video_play_time' => isset( $video->playtime ) ? $video->playtime : '',
+						'is_completed'    => (bool) tutor_utils()->is_completed_lesson( $post->ID, $user_id ),
+						'label'           => empty( $video ) ? __( 'Reading', 'tutor' ) : __( 'Video', 'tutor' ),
+						'icon'            => empty( $video ) ? Icon::COURSES : Icon::VIDEO_CAMERA,
+					)
+				);
+		}
 	}
 }

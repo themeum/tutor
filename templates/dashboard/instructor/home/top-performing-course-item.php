@@ -11,6 +11,8 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\Constants\Color;
+use Tutor\Components\SvgIcon;
 ?>
 
 <div class="tutor-dashboard-home-course">
@@ -27,7 +29,7 @@ use TUTOR\Icon;
 		<!-- Revenue -->
 		<div class="tutor-flex tutor-flex-column tutor-items-center">
 			<div class="tutor-flex tutor-items-center tutor-gap-2">
-				<?php tutor_utils()->render_svg_icon( Icon::DOLLAR, 12, 12, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+				<?php SvgIcon::make()->name( Icon::DOLLAR )->size( 12 )->color( Color::SECONDARY )->render(); ?>
 				<div class="tutor-tiny tutor-text-subdued">
 					<?php esc_html_e( 'Revenue', 'tutor' ); ?>
 				</div>
@@ -42,7 +44,7 @@ use TUTOR\Icon;
 		<div class="tutor-flex tutor-flex-column tutor-items-center">
 			<div class="tutor-flex tutor-items-center tutor-gap-2">
 				<!-- @TODO: Add students icon -->
-				<?php tutor_utils()->render_svg_icon( Icon::STUDENT, 12, 12, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+				<?php SvgIcon::make()->name( Icon::STUDENT )->size( 12 )->color( Color::SECONDARY )->render(); ?>
 				<div class="tutor-tiny tutor-text-subdued">
 					<?php esc_html_e( 'Students', 'tutor' ); ?>
 				</div>

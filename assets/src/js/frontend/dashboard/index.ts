@@ -1,6 +1,7 @@
 // Dashboard Entry Point
 // Initializes dashboard functionality based on current page
 
+import { initializeReviews } from '@FrontendComponents/reviews';
 import { initializeHeader } from './header';
 import { initializeAnnouncements } from './pages/announcements';
 import { initializeAssignments } from './pages/assignments';
@@ -10,8 +11,8 @@ import { initializeHome } from './pages/instructor/home';
 import { initializeMyCourses } from './pages/my-courses';
 import { initializeOverview } from './pages/overview';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
-import { initializeReviews } from './pages/reviews';
 import { initializeSettings } from './pages/settings';
+import { initializeWithdrawals } from './pages/withdrawals';
 
 /**
  * Get current dashboard page from URL
@@ -67,6 +68,9 @@ const getCurrentPage = (): string => {
   if (path.includes('/reviews')) {
     return 'reviews';
   }
+  if (path.includes('/account/withdrawals')) {
+    return 'withdrawals';
+  }
 
   // Default to home when subpage=dashboard
   return 'home';
@@ -109,6 +113,9 @@ const initializeDashboard = () => {
       break;
     case 'reviews':
       initializeReviews();
+      break;
+    case 'withdrawals':
+      initializeWithdrawals();
       break;
     default:
       // eslint-disable-next-line no-console

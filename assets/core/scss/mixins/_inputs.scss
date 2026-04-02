@@ -7,12 +7,16 @@
 @mixin tutor-input-base($size: md) {
   @include tutor-typography('small', 'regular');
   width: 100%;
-  padding: $tutor-spacing-4 $tutor-spacing-5;
+  padding: 7px $tutor-spacing-5;
   margin: 0;
   min-height: auto;
   border: 1px solid $tutor-border-idle;
-  border-radius: $tutor-radius-md;
+  border-color: $tutor-input-border-color;
+  border-radius: $tutor-input-radius;
   background-color: $tutor-surface-l1;
+  font-weight: $tutor-input-font-weight;
+  --tutor-input-border-shadow-current: #{$tutor-input-border-shadow};
+  box-shadow: var(--tutor-input-border-shadow-current);
   @include tutor-transition(all);
 
   -moz-appearance: textfield;
@@ -34,15 +38,17 @@
   &:focus {
     @include tutor-focus-ring();
     border-color: $tutor-border-brand-tertiary;
+    --tutor-input-border-shadow-current: none;
   }
 
   &:disabled {
     background-color: $tutor-surface-l1-hover;
     cursor: not-allowed;
+    --tutor-input-border-shadow-current: none;
   }
 
   @if $size == sm {
-    padding: $tutor-spacing-2 $tutor-spacing-4;
+    padding: 5px $tutor-spacing-4;
   }
 
   @if $size == lg {
@@ -68,6 +74,7 @@
   background-color: $tutor-surface-l1;
   cursor: pointer;
   position: relative;
+  flex-shrink: 0;
   @include tutor-transition((
     background-color,
     border-color,
@@ -155,6 +162,7 @@
   background-color: $tutor-surface-l1;
   cursor: pointer;
   position: relative;
+  flex-shrink: 0;
   @include tutor-transition((
     background-color,
     border-color,

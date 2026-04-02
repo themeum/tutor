@@ -44,6 +44,7 @@
 	&-content {
 		flex: 1 1 calc(100% - 224px);
 		@include tutor-flex(column, stretch, space-between);
+		max-width: 352px;
 	}
 
 	&-header {

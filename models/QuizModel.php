@@ -537,7 +537,7 @@ class QuizModel {
 	}
 
 	/**
-	 * Delete quizattempt for user
+	 * Delete quiz attempt for user
 	 *
 	 * @since 1.9.5
 	 *
@@ -547,6 +547,9 @@ class QuizModel {
 	 */
 	public static function delete_quiz_attempt( $attempt_ids ) {
 		// Singlular to array.
+		global $wpdb;
+
+		// Singular to array.
 		! is_array( $attempt_ids ) ? $attempt_ids = array( $attempt_ids ) : 0;
 		$attempt_ids                              = array_map( 'absint', array_filter( $attempt_ids ) );
 
@@ -555,15 +558,11 @@ class QuizModel {
 			$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
 			$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
 
-			// Delete attempt answers (child) then attempts (parent); use QueryHelper for bulk delete.
-			QueryHelper::bulk_delete(
-				QueryHelper::prepare_table_name( 'tutor_quiz_attempt_answers' ),
-				array( 'quiz_attempt_id' => $attempt_ids )
-			);
-			QueryHelper::bulk_delete(
-				QueryHelper::prepare_table_name( 'tutor_quiz_attempts' ),
-				array( 'attempt_id' => $attempt_ids )
-			);
+			$attempt_ids = QueryHelper::prepare_in_clause( $attempt_ids );
+
+			// Deleting attempt (comment), child attempt and attempt meta (comment meta).
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN({$attempt_ids})" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN({$attempt_ids})" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			self::delete_files_by_paths( $attempt_file_paths );
 
@@ -753,6 +752,45 @@ class QuizModel {
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Get normalized attempt-answer status.
+	 *
+	 * Status rules follow legacy attempt-details logic:
+	 * - correct: is_correct is truthy.
+	 * - pending: is_correct is null for manually reviewed question types.
+	 * - wrong: all other cases.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $attempt_answer Attempt answer object.
+	 *
+	 * @return string One of: correct, pending, wrong.
+	 */
+	public static function get_attempt_answer_status( $attempt_answer ): string {
+		$question_type = (string) ( $attempt_answer->question_type ?? '' );
+
+		if ( 'image_matching' === $question_type ) {
+			$question_type = 'matching';
+		}
+
+		if ( 'single_choice' === $question_type ) {
+			$question_type = 'multiple_choice';
+		}
+
+		if ( (bool) ( $attempt_answer->is_correct ?? false ) ) {
+			return 'correct';
+		}
+
+		if (
+			null === ( $attempt_answer->is_correct ?? null ) &&
+			in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true )
+		) {
+			return 'pending';
+		}
+
+		return 'incorrect';
 	}
 
 	/**
@@ -1365,5 +1403,4 @@ class QuizModel {
 
 		return false;
 	}
-
 }

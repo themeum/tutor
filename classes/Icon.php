@@ -25,10 +25,13 @@ final class Icon {
 	const ALARM                      = 'alarm';
 	const ALERT                      = 'alert';
 	const ALL                        = 'all';
+	const ANALYTICS                  = 'analytics';
+	const ANALYTICS_FILL             = 'analytics-fill';
 	const ANDROID_PHONE              = 'android-phone';
 	const ANGLES_RIGHT               = 'angles-right';
 	const ANIMATION                  = 'animation';
 	const ANNOUNCEMENT               = 'announcement';
+	const ANNOUNCEMENT_FILL          = 'announcement-fill';
 	const ARCHIVE                    = 'archive';
 	const ARCHIVE_2                  = 'archive-2';
 	const ARROWS_IN                  = 'arrows-in';
@@ -56,6 +59,7 @@ final class Icon {
 	const BOOKMARK                   = 'bookmark';
 	const BOOKMARK_FILL              = 'bookmark-fill';
 	const BOOK_2                     = 'book-2';
+	const BOOK_2_FILL                = 'book_2_fill';
 	const BOX_PRICE                  = 'box-price';
 	const BUDDY_PRESS                = 'buddy-press';
 	const BULB                       = 'bulb';
@@ -66,12 +70,14 @@ final class Icon {
 	const CALENDAR                   = 'calendar';
 	const CALENDAR_2                 = 'calendar-2';
 	const CALENDAR_2_FILL            = 'calendar-2-fill';
+	const CALENDAR_CHECK             = 'calendar-check';
 	const CALENDAR_LINE              = 'calendar-line';
 	const CALENDAR_LINES             = 'calendar-lines';
 	const CALL_END                   = 'call-end';
 	const CART                       = 'cart';
 	const CERTIFICATE                = 'certificate';
 	const CERTIFICATE_2              = 'certificate-2';
+	const CERTIFICATE_2_FILL         = 'certificate_2_fill';
 	const CERTIFICATE_COLORIZE       = 'certificate-colorize';
 	const CHANGE                     = 'change';
 	const CHECK                      = 'check';
@@ -94,6 +100,7 @@ final class Icon {
 	const CIRCUM_LOCK                = 'circum-lock';
 	const CLOCK                      = 'clock';
 	const CLOCK_2                    = 'clock-2';
+	const CLOCK_FRAME                = 'clock-frame';
 	const CODING                     = 'coding';
 	const COLLAPSED                  = 'collapsed';
 	const COLOR_OPTION               = 'color-option';
@@ -223,6 +230,7 @@ final class Icon {
 	const LEAGUE                     = 'league';
 	const LEFT                       = 'left';
 	const LESSON                     = 'lesson';
+	const LESSON_COMPLETED           = 'lesson-completed';
 	const LEVEL                      = 'level';
 	const LIGHT                      = 'light';
 	const LINE_CROSS                 = 'line-cross';
@@ -388,6 +396,7 @@ final class Icon {
 	const TRY_AGAIN                  = 'try-again';
 	const TXT                        = 'txt';
 	const UNDO                       = 'undo';
+	const UNREAD                     = 'unread';
 	const UPDATE                     = 'update';
 	const UPLOAD                     = 'upload';
 	const UPLOAD_2                   = 'upload-2';
@@ -397,6 +406,7 @@ final class Icon {
 	const VIDEO                      = 'video';
 	const VIDEO_CAMERA               = 'video-camera';
 	const VIDEO_CAMERA_2             = 'video-camera-2';
+	const VIDEO_CAMERA_FILL          = 'video-camera-fill';
 	const VIDEO_FILE                 = 'video-file';
 	const VIDEO_FILL                 = 'video-fill';
 	const VIDEO_QUALITY              = 'video-quality';
@@ -404,6 +414,7 @@ final class Icon {
 	const VISITED                    = 'visited';
 	const WALLET                     = 'wallet';
 	const WARNING                    = 'warning';
+	const WARNING_COLORIZED          = 'warning-colorized';
 	const WARNING_LINE               = 'warning-line';
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';

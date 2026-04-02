@@ -91,6 +91,9 @@ declare global {
       course_list_page_url: string;
       course_post_type: string;
       local: string;
+      tutor_pn_vapid_key: string;
+      tutor_pn_client_id: string;
+      tutor_pn_subscription_saved: string;
       coupon_main_content_locales: LocaleData;
       course_builder_basic_locales: LocaleData;
       course_builder_curriculum_locales: LocaleData;
@@ -121,6 +124,8 @@ declare global {
         url: string;
         is_enabled: number;
       }[];
+      kids_icons_registry: string[];
+      is_kids_mode: boolean;
       current_user: {
         data: {
           id: string;
@@ -177,6 +182,10 @@ declare global {
       };
       visibility_control?: {
         course_builder?: Record<string, string>;
+      };
+      quiz_options?: {
+        quiz_auto_start?: string;
+        feedback_mode?: string;
       };
     };
     wpApiSettings: {

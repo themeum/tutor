@@ -9,7 +9,15 @@
  * @since 1.0.0
  */
 
+use Tutor\Components\Button;
+use Tutor\Components\Modal;
+use TUTOR\Input;
+use Tutor\Options_V2;
+
+$is_course_info_page = 'course-info' === Input::get( 'subpage' );
+$is_legacy_learning  = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
 ?>
+<?php if ( $is_legacy_learning ) : ?> 
 <form class="tutor-modal tutor-is-active tutor-course-review-popup-form">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
@@ -46,3 +54,18 @@
 		</div>
 	</div>
 </form>
+<?php else : ?>
+
+	<?php
+	// Modal::make()
+	// ->id( 'tutor-course-review-form' )
+	// ->title( 'Review Modal' )
+	// ->subtitle( 'Are you sure you want to submit?' )
+	// ->body( 'This action cannot be undone.' )
+	// ->footer_buttons( Button::make()->label( 'Close' )->variant( 'secondary' )->size( 'sm' )->attr( '@click', 'TutorCore.modal.closeModal("tutor-course-review-form")' )->get() )
+	// ->footer_alignment( 'right' )
+	// ->state( 'open' )
+	// ->render();
+	?>
+
+<?php endif; ?>

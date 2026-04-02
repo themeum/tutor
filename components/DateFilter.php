@@ -13,6 +13,7 @@ namespace Tutor\Components;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Popover;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -104,6 +105,15 @@ class DateFilter extends BaseComponent {
 	protected $show_label = true;
 
 	/**
+	 * Query params to clear when a date filter is applied or cleared (e.g. 'current_page').
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $clear_params = array();
+
+	/**
 	 * Set filter type.
 	 *
 	 * @param string $type Filter type (single|range).
@@ -185,6 +195,23 @@ class DateFilter extends BaseComponent {
 	}
 
 	/**
+	 * Set query params to clear when a date filter is applied or cleared.
+	 *
+	 * Useful for resetting pagination (e.g. 'current_page') or other
+	 * context-specific params whenever the date selection changes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $params List of query param keys to remove on apply/clear.
+	 *
+	 * @return self
+	 */
+	public function clear_params( array $params ): self {
+		$this->clear_params = $params;
+		return $this;
+	}
+
+	/**
 	 * Render the component.
 	 *
 	 * @return string
@@ -198,7 +225,8 @@ class DateFilter extends BaseComponent {
 
 		// Default settings based on type.
 		$calendar_options = array(
-			'type' => 'default',
+			'type'        => 'default',
+			'clearParams' => $this->clear_params,
 		);
 
 		$button_classes = 'tutor-btn tutor-btn-outline';
@@ -214,6 +242,7 @@ class DateFilter extends BaseComponent {
 			$calendar_options = array(
 				'type'               => 'multiple',
 				'selectionDatesMode' => 'multiple-ranged',
+				'clearParams'        => $this->clear_params,
 			);
 			$popover_classes .= ' tutor-range-calendar-popover';
 		}
@@ -226,6 +255,8 @@ class DateFilter extends BaseComponent {
 
 		$options_json = wp_json_encode( $calendar_options );
 
+		$origin = Popover::TRANSFORM_ORIGIN_MAP[ $this->placement ] ?? 'center.top';
+
 		ob_start();
 		?>
 		<div x-data="tutorPopover({ placement: '<?php echo esc_attr( $this->placement ); ?>' })">
@@ -235,18 +266,14 @@ class DateFilter extends BaseComponent {
 				@click="toggle()"
 				class="<?php echo esc_attr( $button_classes ); ?>"
 			>
-				<?php
-				if ( function_exists( 'tutor_utils' ) ) {
-					tutor_utils()->render_svg_icon( $icon, $this->icon_size, $this->icon_size );
-				}
-				?>
+				<?php SvgIcon::make()->name( $icon )->size( $this->icon_size )->render(); ?>
 				<?php if ( ! empty( $this->label ) ) : ?>
 					<span><?php echo esc_html( $this->label ); ?></span>
 				<?php endif; ?>
 
 				<?php if ( $this->has_selection() ) : ?>
 					<span @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary tutor-flex tutor-align-center">
-						<?php tutor_utils()->render_svg_icon( Icon::CROSS_2 ); ?>
+						<?php SvgIcon::make()->name( Icon::CROSS_2 )->render(); ?>
 					</span>
 				<?php endif; ?>
 			</button>
@@ -255,6 +282,7 @@ class DateFilter extends BaseComponent {
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-transition.origin.<?php echo esc_attr( $origin ); ?>
 				@click.outside="handleClickOutside()"
 				class="<?php echo esc_attr( $popover_classes ); ?>"
 			>

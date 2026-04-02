@@ -43,6 +43,21 @@ defined( 'ABSPATH' ) || exit;
  */
 class Popover extends BaseComponent {
 
+	/**
+	 * Transform origin map for popover transitions.
+	 *
+	 * @since 4.0.0
+	 */
+	public const TRANSFORM_ORIGIN_MAP = array(
+		Positions::TOP          => 'center.bottom',
+		Positions::TOP_START    => 'left.bottom',
+		Positions::TOP_END      => 'right.bottom',
+		Positions::BOTTOM       => 'center.top',
+		Positions::BOTTOM_START => 'left.top',
+		Positions::BOTTOM_END   => 'right.top',
+		Positions::LEFT         => 'right.center',
+		Positions::RIGHT        => 'left.center',
+	);
 
 	/**
 	 * The popover title.
@@ -158,6 +173,13 @@ class Popover extends BaseComponent {
 	protected $popover_close_outside = true;
 
 	/**
+	 * Menu min width.
+	 *
+	 * @var string
+	 */
+	protected $menu_min_width;
+
+	/**
 	 * Set Popover title
 	 *
 	 * @since 4.0.0
@@ -168,6 +190,20 @@ class Popover extends BaseComponent {
 	 */
 	public function title( string $popover_title ): self {
 		$this->popover_title = $popover_title;
+		return $this;
+	}
+
+	/**
+	 * Set minimum width for popover
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $min_width the minimum width for popover.
+	 *
+	 * @return self
+	 */
+	public function min_width( int $min_width ): self {
+		$this->min_width = $min_width;
 		return $this;
 	}
 
@@ -197,7 +233,7 @@ class Popover extends BaseComponent {
 	 * @return self
 	 */
 	public function placement( string $popover_placement = 'bottom-start' ): self {
-		$placement_positions = array( Positions::TOP, Positions::LEFT, Positions::RIGHT, Positions::BOTTOM, Positions::BOTTOM_START );
+		$placement_positions = array( Positions::TOP, Positions::LEFT, Positions::RIGHT, Positions::BOTTOM, Positions::BOTTOM_START, Positions::BOTTOM_END );
 		if ( ! in_array( $popover_placement, $placement_positions, true ) ) {
 			$this->popover_placement = Positions::BOTTOM_START;
 		}
@@ -299,6 +335,20 @@ class Popover extends BaseComponent {
 	}
 
 	/**
+	 * Set menu min width.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $width the min width value.
+	 *
+	 * @return self
+	 */
+	public function menu_min_width( string $width ): self {
+		$this->menu_min_width = $width;
+		return $this;
+	}
+
+	/**
 	 * Render popover header element.
 	 *
 	 * @since 4.0.0
@@ -316,7 +366,7 @@ class Popover extends BaseComponent {
 			'<button @click="hide()" class="tutor-popover-close">
 				%s
 			</button>',
-			tutor_utils()->get_svg_icon( Icon::CROSS, 14, 14 )
+			SvgIcon::make()->name( Icon::CROSS )->size( 14 )->get()
 		);
 
 		if ( $this->show_close_button ) {
@@ -468,7 +518,8 @@ class Popover extends BaseComponent {
 			}
 		}
 
-		return sprintf( '<div class="tutor-popover-menu">%s</div>', $menu_items );
+		$style = $this->menu_min_width ? " style=\"min-width: {$this->menu_min_width}\"" : '';
+		return sprintf( '<div class="tutor-popover-menu"%s>%s</div>', $style, $menu_items );
 	}
 
 	/**
@@ -492,6 +543,8 @@ class Popover extends BaseComponent {
 
 		$closeable_attr = $this->popover_close_outside ? '@click.outside="handleClickOutside()' : '';
 
+		$origin = self::TRANSFORM_ORIGIN_MAP[ $placement_position ] ?? 'center.top';
+
 		return sprintf(
 			'<div x-data="tutorPopover({ placement: \'%s\' })">
 				%s
@@ -499,6 +552,7 @@ class Popover extends BaseComponent {
 					x-ref="content"
 					x-show="open"
 					x-cloak
+					x-transition.%s
 					class=%s
 					%s"
 				>	
@@ -510,6 +564,7 @@ class Popover extends BaseComponent {
 			</div>',
 			$placement_position,
 			$button,
+			$origin,
 			$class,
 			$closeable_attr,
 			$header,

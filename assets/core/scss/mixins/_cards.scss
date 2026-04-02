@@ -5,8 +5,9 @@
 @use 'layout' as *;
 
 @mixin tutor-card-base {
-  background-color: var(--tutor-surface-l1);
-  border: 1px solid var(--tutor-border-idle);
+  background-color: $tutor-surface-l1;
+  border: 1px solid $tutor-border-idle;
+  box-shadow: none;
 }
 
 @mixin tutor-card-padding($size: medium) {
