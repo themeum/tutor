@@ -112,6 +112,18 @@ export const wpEditor = (config: WPEditorConfig): WPEditorComponent => {
           editor.on('focus', () => {
             this.$el.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.WP_EDITOR_FOCUS, { bubbles: true }));
           });
+
+          // Handle Cmd/Ctrl + Enter for form submission
+          editor.on('keydown', (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.keyCode === 13) {
+              e.preventDefault();
+              this.syncEditorToForm();
+              const formEl = this.$el.closest('form');
+              if (formEl) {
+                formEl.requestSubmit();
+              }
+            }
+          });
         } else {
           // Retry after a short delay
           setTimeout(checkEditor, 100);
