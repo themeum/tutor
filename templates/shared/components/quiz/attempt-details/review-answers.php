@@ -50,6 +50,8 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 
 		$is_draw_image_review = 'draw_image' === $question_type;
 
+		$is_pin_review        = 'pin_image' === $question_type;
+
 		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
 
 		$question_template = '';
