@@ -990,7 +990,7 @@ class OrderModel {
 	 * Get order of a user
 	 *
 	 * @since 3.0.0
-	 * @since 4.0.0 params $order_status and $order added.
+	 * @since 4.0.0 params $order_status, $order and $args added.
 	 *
 	 * @param string $time_period $time_period Sorting time period,
 	 * supported time periods are: today, monthly & yearly.
@@ -1001,15 +1001,17 @@ class OrderModel {
 	 * @param int    $limit  Limit to fetch record.
 	 * @param int    $offset  Offset to fetch record.
 	 * @param string $order  Order to fetch record.
+	 * @param array  $args Optional additional WHERE conditions.
 	 *
 	 * @throws \Exception Throw exception if database error occur.
 	 *
 	 * @return array
 	 */
-	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, $order_status = '', int $user_id = 0, $limit = 10, int $offset = 0, $order = 'DESC' ) {
-		$user_id      = tutor_utils()->get_user_id( $user_id );
-		$order        = QueryHelper::get_valid_sort_order( $order );
-		$order_status = esc_sql( $order_status );
+	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, $order_status = '', int $user_id = 0, $limit = 10, int $offset = 0, $order = 'DESC', $args ) {
+		$user_id           = tutor_utils()->get_user_id( $user_id );
+		$order             = QueryHelper::get_valid_sort_order( $order );
+		$order_status      = esc_sql( $order_status );
+		$order_type_clause = '';
 
 		$response = array(
 			'results'     => array(),
@@ -1034,6 +1036,10 @@ class OrderModel {
 			}
 		}
 
+		if ( ! empty( $args['order_type'] ) ) {
+			$order_type_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'o.order_type' => esc_sql( $args['order_type'] ) ) );
+		}
+
 		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT
@@ -1041,6 +1047,7 @@ class OrderModel {
 				o.* 
 				FROM $this->table_name AS o
 				WHERE o.user_id = %d
+				{$order_type_clause}
 				{$time_period_clause}
 				{$date_range_clause}
 				{$order_status_clause}

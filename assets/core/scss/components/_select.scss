@@ -163,9 +163,9 @@
     @include right(0);
     z-index: $tutor-z-dropdown;
     background: $tutor-surface-l1;
-    border: 1px solid $tutor-border-idle;
-    border-radius: $tutor-radius-md;
-    box-shadow: $tutor-shadow-lg;
+    border: $tutor-popover-border;
+    border-radius: $tutor-popover-radius;
+    box-shadow: $tutor-popover-shadow;
     overflow: hidden;
     display: flex;
     flex-direction: column;

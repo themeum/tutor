@@ -343,6 +343,7 @@ $sortable_sections_ids = array_reduce(
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-transition.origin.top.right
 				@click.outside="handleClickOutside()"
 				class="tutor-popover tutor-popover-bottom"
 			>

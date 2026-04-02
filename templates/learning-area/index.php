@@ -22,6 +22,19 @@ use Tutor\Models\CourseModel;
 use TUTOR\Quiz;
 use TUTOR\Template;
 
+?>
+<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title><?php bloginfo( 'name' ); ?></title>
+		<?php wp_head(); ?>
+	</head>
+	<body <?php body_class( '' ); ?> x-data="tutorCourseCompleteHandler()">
+<?php
+
+
 // Tutor global variable for using inside learning area.
 $current_user_id            = get_current_user_id();
 $tutor_current_post_type    = get_post_type();
@@ -61,8 +74,6 @@ if ( ! $tutor_course_content_access ) {
 	return;
 }
 
-wp_head();
-
 $current_user_id = get_current_user_id();
 $subpages        = Template::make_learning_area_sub_page_nav_items();
 
@@ -88,7 +99,6 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 
 $subpages = Template::make_learning_area_sub_page_nav_items();
 ?>
-<body <?php body_class(); ?> x-data="tutorCourseCompleteHandler()">
 	<div
 		class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>"
 		x-data="{ sidebarOpen: false, isFullScreen: false }"
@@ -161,3 +171,4 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 	}
 	?>
 </body>
+</html>
