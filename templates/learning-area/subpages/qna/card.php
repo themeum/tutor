@@ -159,11 +159,12 @@ $single_url = UrlHelper::add_query_params(
 	tutor_load_template(
 		'learning-area.subpages.qna.form',
 		array(
-			'form_id'        => 'qna-edit-' . (int) $question_id,
-			'default_value'  => $question->comment_content,
-			'submit_handler' => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
-			'cancel_handler' => 'setEditing(null)',
-			'is_pending'     => 'updateQnAMutation?.isPending',
+			'form_id'             => 'qna-edit-' . (int) $question_id,
+			'default_value'       => $question->comment_content,
+			'submit_handler'      => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
+			'cancel_handler'      => 'setEditing(null)',
+			'is_pending'          => 'updateQnAMutation?.isPending',
+			'keep_footer_visible' => true,
 		)
 	);
 	?>

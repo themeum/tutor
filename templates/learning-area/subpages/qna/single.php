@@ -97,11 +97,12 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 						tutor_load_template(
 							'learning-area.subpages.qna.form',
 							array(
-								'form_id'        => 'qna-edit-' . (int) $question->comment_ID,
-								'default_value'  => $question->comment_content,
-								'submit_handler' => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
-								'cancel_handler' => 'reset(); setEditing(null)',
-								'is_pending'     => 'updateQnAMutation?.isPending',
+								'form_id'             => 'qna-edit-' . (int) $question->comment_ID,
+								'default_value'       => $question->comment_content,
+								'submit_handler'      => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
+								'cancel_handler'      => 'reset(); setEditing(null)',
+								'is_pending'          => 'updateQnAMutation?.isPending',
+								'keep_footer_visible' => true,
 							)
 						);
 					?>

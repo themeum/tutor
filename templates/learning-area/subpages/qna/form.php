@@ -19,15 +19,16 @@ use Tutor\Components\InputField;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 
-$form_id        = $form_id ?? '';
-$label          = $label ?? '';
-$submit_label   = $submit_label ?? __( 'Update', 'tutor' );
-$form_class     = $form_class ?? '';
-$default_value  = $default_value ?? '';
-$submit_handler = $submit_handler ?? '';
-$cancel_handler = $cancel_handler ?? '';
-$is_pending     = $is_pending ?? '';
-$placeholder    = $placeholder ?? __( 'Write your question', 'tutor' );
+$form_id             = $form_id ?? '';
+$label               = $label ?? '';
+$submit_label        = $submit_label ?? __( 'Update', 'tutor' );
+$form_class          = $form_class ?? '';
+$default_value       = $default_value ?? '';
+$submit_handler      = $submit_handler ?? '';
+$cancel_handler      = $cancel_handler ?? '';
+$is_pending          = $is_pending ?? '';
+$placeholder         = $placeholder ?? __( 'Write your question', 'tutor' );
+$keep_footer_visible = $keep_footer_visible ?? false;
 
 ?>
 
@@ -72,7 +73,7 @@ $placeholder    = $placeholder ?? __( 'Write your question', 'tutor' );
 	<div
 		class="tutor-flex tutor-items-center tutor-mt-5 tutor-justify-between tutor-sm-justify-end"
 		x-cloak
-		:class="{ 'tutor-hidden': !focused }"
+		<?php echo ! $keep_footer_visible ? ":class=\"{ 'tutor-hidden': !focused }\"" : ''; ?>
 	>
 		<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2 tutor-sm-hidden">
 			<?php SvgIcon::make()->name( Icon::COMMAND )->size( 12 )->render(); ?>
