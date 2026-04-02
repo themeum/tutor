@@ -103,13 +103,12 @@ const questionTypeOptions: {
     icon: 'quizOrdering',
     isPro: true,
   },
-  // {
-  //   label: __('Draw on Image', 'tutor'),
-  //   value: 'draw_image',
-  //   // TODO: icon is not final.
-  //   icon: 'quizImageAnswer',
-  //   isPro: true,
-  // },
+  {
+    label: __('Draw on Image', 'tutor'),
+    value: 'draw_image',
+    icon: 'quizImageAnswer',
+    isPro: true,
+  },
 ];
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
