@@ -154,15 +154,15 @@ class EmptyState extends BaseComponent {
 		$subtitle_html = '';
 		if ( ! empty( $subtitle ) ) {
 			$subtitle_html = sprintf(
-				'<p class="tutor-small tutor-text-subdued tutor-mt-2 tutor-mb-0">%s</p>',
+				'<div class="tutor-tiny tutor-text-subdued tutor-mt-2 tutor-mb-0">%s</div>',
 				esc_html( $subtitle )
 			);
 		}
 
 		$this->component_string = sprintf(
-			'<div class="tutor-px-9 tutor-py-12 tutor-text-center" %s>
+			'<div class="tutor-px-9 tutor-py-10 tutor-text-center" %s>
 				%s
-				<h6 class="tutor-medium tutor-font-bold tutor-mt-8">%s</h6>
+				<div class="tutor-small tutor-text-subdued tutor-mt-4">%s</div>
 				%s
 			</div>',
 			$this->get_attributes_string(),
