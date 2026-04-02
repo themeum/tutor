@@ -94,6 +94,12 @@ const qnaPage = () => {
           const element = document.getElementById(`${ELEMENT_IDS.QNA_TEXT_PREFIX}${payload.question_id}`);
           if (element) {
             element.innerHTML = payload.answer;
+
+            // Re-trigger syntax highlighting if Prism is available.
+            const Prism = (window as any).Prism;
+            if (Prism && typeof Prism.highlightAllUnder === 'function') {
+              Prism.highlightAllUnder(element);
+            }
           }
 
           if (this.editingId === payload.question_id) {
@@ -188,6 +194,12 @@ const qnaPage = () => {
         const container = document.getElementById(ELEMENT_IDS.REPLIES_LIST_CONTAINER);
         if (container && typeof response.data?.html === 'string') {
           container.innerHTML = response.data.html;
+
+          // Re-trigger syntax highlighting if Prism is available.
+          const Prism = (window as any).Prism;
+          if (Prism && typeof Prism.highlightAllUnder === 'function') {
+            Prism.highlightAllUnder(container);
+          }
 
           // Update URL without reload
           const url = new URL(window.location.href);
