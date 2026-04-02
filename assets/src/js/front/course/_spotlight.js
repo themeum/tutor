@@ -275,6 +275,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			parseInt(document.querySelector('input[name="tutor_assignment_upload_limit"]')?.value) || 0;
 		let message = '';
 		const maxAllowedFiles = window._tutorobject.assignment_max_file_allowed;
+		const allowedFileTypes = window._tutorobject.assignment_allowed_file_types;
 		let alreadyUploaded = document.querySelectorAll(
 			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card'
 		).length;
@@ -313,6 +314,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				for (let i = 0; i < allowedToUpload; i++) {
 					let file = fileUploadField.files[i];
 					if (!file) {
+						continue;
+					}
+					let extension = file.name.split('.').pop().toLowerCase();
+					if (!allowedFileTypes.includes(`${extension}`)) {
+						tutor_toast(
+							__('Warning', 'tutor'),
+							__(`File type .${extension} is not allowed.`, 'tutor'),
+							'error'
+						);
 						continue;
 					}
 					let editWrapClass = assignmentEditFilePreview ? 'tutor-col-sm-5 tutor-py-16 tutor-mr-16' : '';
