@@ -11139,7 +11139,6 @@ class Utils {
 			return Options_V2::LEARNING_MODE_KIDS === $user_learning_mood && User::is_student_view();
 		}
 
-		$admin_kids_mode = Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
-		return $admin_kids_mode;
+		return Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
 	}
 }
