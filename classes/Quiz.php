@@ -26,6 +26,7 @@ use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
 use WP_Post;
+use Tutor\Components\SvgIcon;
 
 /**
  * Manage quiz operations.
@@ -1527,7 +1528,7 @@ class Quiz {
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE, 20, 20 ) . __( 'Questions', 'tutor' ) . '
+							' . SvgIcon::make()->name( Icon::QUESTION_CIRCLE )->size( 20 )->get() . __( 'Questions', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $total_questions ),
@@ -1540,7 +1541,7 @@ class Quiz {
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::TIME, 20, 20 ) . __( 'Quiz Time', 'tutor' ) . '
+							' . SvgIcon::make()->name( Icon::TIME )->size( 20 )->get() . __( 'Quiz Time', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $quiz_item_readable ),
@@ -1552,7 +1553,7 @@ class Quiz {
 			'columns' => array(
 				array(
 					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . tutor_utils()->get_svg_icon( Icon::PRIME_CHECK_CIRCLE, 20, 20 ) . __( 'Total Marks', 'tutor' ) . '
+						' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
 					</div>',
 				),
 				array( 'content' => $total_questions ),
@@ -1563,7 +1564,7 @@ class Quiz {
 			'columns' => array(
 				array(
 					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . tutor_utils()->get_svg_icon( Icon::PASSED, 20, 20 ) . __( 'Passing Marks', 'tutor' ) . '
+						' . SvgIcon::make()->name( Icon::PASSED )->size( 20 )->get() . __( 'Passing Marks', 'tutor' ) . '
 					</div>',
 				),
 				array( 'content' => $passing_grade . '%' ),
@@ -1611,7 +1612,7 @@ class Quiz {
 			<div class="tutor-quiz-attempts tutor-border tutor-rounded-2xl">
 				<div class="tutor-quiz-attempts-header">
 					<div class="tutor-quiz-attempts-header-item">
-						<?php esc_html_e( 'Attempts Date', 'tutor' ); ?>
+						<?php esc_html_e( 'Attempts', 'tutor' ); ?>
 					</div>
 					<div class="tutor-quiz-attempts-header-item">
 						<?php esc_html_e( 'Marks', 'tutor' ); ?>

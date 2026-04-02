@@ -40,9 +40,9 @@
           &::after {
             content: '';
             display: block;
-            padding-left: 24px;
             border-bottom: 1px solid $tutor-border-idle;
-            margin: 4px 0px 4px 24px;
+            padding-left: $tutor-spacing-8;
+            margin: $tutor-spacing-4 $tutor-spacing-none $tutor-spacing-2 $tutor-spacing-8;
             width: calc(100% - 48px);
           }
         }

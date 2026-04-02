@@ -13,7 +13,9 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Color;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 /**
  * Variables available:
@@ -63,16 +65,16 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 				<?php if ( $user_id === (int) $comment_item->user_id ) : ?>
 				<div x-data="tutorPopover({ placement: 'bottom-end' })">
 					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 					</button>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 						<div class="tutor-popover-menu" style="min-width: 104px;">
 							<button class="tutor-popover-menu-item" @click="editingId = <?php echo (int) $comment_item->comment_ID; ?>; $nextTick(() => $dispatch('tutor-focus-form-<?php echo esc_attr( $id_prefix . 'edit-form-' . (int) $comment_item->comment_ID ); ?>')); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
+								<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
 							<button class="tutor-popover-menu-item" @click="handleDeleteComment({commentId: <?php echo esc_html( $comment_item->comment_ID ); ?>}); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
+								<?php SvgIcon::make()->name( Icon::DELETE_2 )->render(); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>
 						</div>
@@ -84,7 +86,7 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 			<?php if ( ! $is_reply ) : ?>
 				<div class="tutor-mt-6">
 					<button class="tutor-comment-action-btn tutor-comment-action-btn-reply" @click="replyingId = replyingId === <?php echo (int) $comment_item->comment_ID; ?> ? null : <?php echo (int) $comment_item->comment_ID; ?>; if (replyingId) $nextTick(() => $dispatch('tutor-focus-form-lesson-comment-reply-form-<?php echo (int) $comment_item->comment_ID; ?>'))">
-						<?php tutor_utils()->render_svg_icon( Icon::COMMENTS ); ?>
+						<?php SvgIcon::make()->name( Icon::COMMENTS )->render(); ?>
 						<?php esc_html_e( 'Reply', 'tutor' ); ?>
 					</button>
 				</div>

@@ -10,6 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\Models\QuizModel;
 
 if ( ! isset( $question ) || ! is_object( $question ) ) {
@@ -43,7 +44,7 @@ $given_ids = array_map( 'intval', array_filter( $given_ids ) );
 		}
 		?>
 		<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $option_attr ); ?>">
-			<?php tutor_utils()->render_svg_icon( ! empty( $answer->is_correct ) ? Icon::CHECK_2 : Icon::CROSS, 20, 20 ); ?>
+			<?php SvgIcon::make()->name( ! empty( $answer->is_correct ) ? Icon::CHECK_2 : Icon::CROSS )->size( 20 )->render(); ?>
 			<?php echo esc_html( $answer->answer_title ?? '' ); ?>
 		</div>
 	<?php endforeach; ?>

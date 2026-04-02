@@ -74,7 +74,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 		<?php endif; ?>
 
 		<?php if ( count( $tabs_data ) > 1 ) : ?>
-		<div x-ref="tablist" class="tutor-tabs-nav tutor-p-6 tutor-border-b" role="tablist" aria-orientation="horizontal">
+		<div x-ref="tablist" class="tutor-tabs-nav tutor-px-6 tutor-py-5 tutor-border-b" role="tablist" aria-orientation="horizontal">
 			<template x-for="tab in tabs" :key="tab.id">
 				<button
 					type="button" 

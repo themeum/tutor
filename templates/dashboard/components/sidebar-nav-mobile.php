@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\Avatar;
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use TUTOR\Dashboard;
 
 if ( ! tutor_utils()->count( $dashboard_pages ) ) {
@@ -31,18 +32,34 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 			if ( 'index' === $key ) {
 				$key = '';
 			}
-			$active_class = $key === $dashboard_page_slug ? 'active' : '';
-			$menu_link    = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
-			// Add new menu item property "url" for custom link.
-			if ( isset( $item['url'] ) ) {
-				$menu_link = $item['url'];
+
+			$menu_title = $item;
+			$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
+
+			if ( is_array( $item ) ) {
+				$menu_title       = tutor_utils()->array_get( 'title', $item );
+				$menu_icon_name   = tutor_utils()->array_get( 'icon', $item, ( isset( $item['icon'] ) ? $item['icon'] : '' ) );
+				$active_icon_name = tutor_utils()->array_get( 'active_icon', $item, ( isset( $item['active_icon'] ) ? $item['active_icon'] : $menu_icon_name ) );
+
+				// Add new menu item property "url" for custom link.
+				if ( isset( $item['url'] ) ) {
+					$menu_link = $item['url'];
+				}
 			}
-			$menu_icon_name = tutor_utils()->array_get( 'icon', $item, ( isset( $item['icon'] ) ? $item['icon'] : '' ) );
+
+			$is_active_menu = $key === $dashboard_page_slug;
+			$active_class   = $is_active_menu ? 'active' : '';
+			$menu_link      = apply_filters( 'tutor_dashboard_menu_link', $menu_link, $menu_title );
 			?>
 			<li>
 				<a class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $menu_link ?? '#' ); ?>">
-					<?php tutor_utils()->render_svg_icon( $menu_icon_name ); ?>
-					<span class="tutor-tiny"><?php echo esc_html( $item['title'] ); ?></span>
+					<?php
+					SvgIcon::make()
+						->name( ( $is_active_menu && ! tutor_utils()->is_kids_mode() ) ? $active_icon_name : $menu_icon_name )
+						->size( tutor_utils()->is_kids_mode() ? Size::SIZE_20 : Size::SIZE_16 )
+						->render();
+					?>
+					<span class="tutor-tiny"><?php echo esc_html( $menu_title ); ?></span>
 				</a>
 			</li>
 			<?php
@@ -71,7 +88,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 					:aria-expanded="open ? 'true' : 'false'"
 					aria-haspopup="true"
 				>
-					<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ); ?>
+					<?php SvgIcon::make()->name( Icon::THREE_DOTS_VERTICAL )->size( 16 )->render(); ?>
 					<span class="tutor-tiny"><?php esc_html_e( 'More', 'tutor' ); ?></span>
 				</button>
 				<!-- Popover panel -->
@@ -87,20 +104,33 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 					<ul>
 						<?php
 						foreach ( $more_nav_items as $key => $item ) {
-							$active_class = ( $key === $active_nav ) ? 'active' : '';
-							$icon         = ( $key === $active_nav ) ? $item['active_icon'] : $item['icon'];
-							$menu_link    = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
-							// Add new menu item property "url" for custom link.
-							if ( isset( $item['url'] ) ) {
-								$menu_link = $item['url'];
+							$menu_title = $item;
+							$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
+
+							if ( is_array( $item ) ) {
+								$menu_title       = tutor_utils()->array_get( 'title', $item );
+								$menu_icon_name   = tutor_utils()->array_get( 'icon', $item, ( isset( $item['icon'] ) ? $item['icon'] : '' ) );
+								$active_icon_name = tutor_utils()->array_get( 'active_icon', $item, ( isset( $item['active_icon'] ) ? $item['active_icon'] : $menu_icon_name ) );
+
+								// Add new menu item property "url" for custom link.
+								if ( isset( $item['url'] ) ) {
+									$menu_link = $item['url'];
+								}
 							}
-							$menu_icon_name = tutor_utils()->array_get( 'icon', $item, ( isset( $item['icon'] ) ? $item['icon'] : '' ) );
-							$active_class   = $key === $dashboard_page_slug ? 'active' : '';
+
+							$is_active_menu = $key === $dashboard_page_slug;
+							$active_class   = $is_active_menu ? 'active' : '';
+							$menu_link      = apply_filters( 'tutor_dashboard_menu_link', $menu_link, $menu_title );
 							?>
 								<li role="none">
 									<a role="menuitem" class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $menu_link ?? '#' ); ?>" @click="open = false">
-										<?php tutor_utils()->render_svg_icon( $menu_icon_name ); ?>
-										<span class="tutor-tiny"><?php echo esc_html( $item['title'] ); ?></span>
+										<?php
+										SvgIcon::make()
+											->name( ( $is_active_menu && ! tutor_utils()->is_kids_mode() ) ? $active_icon_name : $menu_icon_name )
+											->size( tutor_utils()->is_kids_mode() ? Size::SIZE_24 : Size::SIZE_20 )
+											->render();
+										?>
+										<span class="tutor-tiny"><?php echo esc_html( $menu_title ); ?></span>
 									</a>
 								</li>
 							<?php

@@ -16,6 +16,7 @@ namespace Tutor\Components;
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 
 /**
  * Progress Component Class.
@@ -81,6 +82,17 @@ class Progress extends BaseComponent {
 	 * @var string
 	 */
 	protected $size = Size::SMALL;
+
+	/**
+	 * Progress variant style (brand|warning, etc).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @see Variant constants
+	 *
+	 * @var string
+	 */
+	protected $variant = '';
 
 	/**
 	 * Background color.
@@ -177,6 +189,19 @@ class Progress extends BaseComponent {
 		if ( in_array( $size, $allowed, true ) ) {
 			$this->size = $size;
 		}
+		return $this;
+	}
+
+	/**
+	 * Set progress variant style.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $variant Progress variant (brand|warning, etc).
+	 * @return $this
+	 */
+	public function variant( $variant ) {
+		$this->variant = sanitize_html_class( $variant );
 		return $this;
 	}
 
@@ -290,6 +315,10 @@ class Progress extends BaseComponent {
 	 */
 	protected function render_bar() {
 		$classes = 'tutor-progress-bar';
+
+		if ( ! empty( $this->variant ) ) {
+			$classes .= " tutor-progress-bar-{$this->variant}";
+		}
 
 		// Add animated attribute if enabled.
 		if ( $this->animated ) {

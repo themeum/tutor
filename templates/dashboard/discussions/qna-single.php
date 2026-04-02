@@ -16,6 +16,8 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use TUTOR\Input;
 use TUTOR\User;
 
@@ -38,9 +40,9 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 
 ?>
 <div class="tutor-discussion-single" x-init="isSolved = <?php echo $is_solved ? 'true' : 'false'; ?>; isImportant = <?php echo $is_important ? 'true' : 'false'; ?>; isArchived = <?php echo $is_archived ? 'true' : 'false'; ?>;">
-	<div class="tutor-flex tutor-justify-between tutor-p-6 tutor-border-b">
+	<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
 		<a href="<?php echo esc_url( $discussion_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
-			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
+			<?php SvgIcon::make()->name( Icon::ARROW_LEFT_2 )->render(); ?>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 		<?php if ( User::is_instructor_view() ) : ?>
@@ -51,15 +53,15 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 				:disabled="qnaSingleActionMutation?.isPending"
 			>
 				<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'solved'">
-					<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
+					<?php SvgIcon::make()->name( Icon::SPINNER )->size( 14 )->attr( 'class', 'tutor-animate-spin' )->render(); ?>
 				</template>
 				<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'solved')">
 					<span class="tutor-flex">
 						<template x-if="isSolved">
-							<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_FILL, 16, 16, array( 'class' => 'tutor-icon-success-primary' ) ); ?>
+							<?php SvgIcon::make()->name( Icon::COMPLETED_FILL )->size( 16 )->color( Color::SUCCESS_PRIMARY )->render(); ?>
 						</template>
 						<template x-if="!isSolved">
-							<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_CIRCLE ); ?>
+							<?php SvgIcon::make()->name( Icon::COMPLETED_CIRCLE )->render(); ?>
 						</template>
 					</span>
 				</template>
@@ -72,15 +74,15 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 				:disabled="qnaSingleActionMutation?.isPending"
 			>
 				<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'important'">
-					<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
+					<?php SvgIcon::make()->name( Icon::SPINNER )->size( 14 )->attr( 'class', 'tutor-animate-spin' )->render(); ?>
 				</template>
 				<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'important')">
 					<span class="tutor-flex">
 						<template x-if="isImportant">
-							<?php tutor_utils()->render_svg_icon( Icon::BOOKMARK_FILL, 16, 16, array( 'class' => 'tutor-icon-exception4' ) ); ?>
+							<?php SvgIcon::make()->name( Icon::BOOKMARK_FILL )->size( 16 )->color( Color::EXCEPTION4 )->render(); ?>
 						</template>
 						<template x-if="!isImportant">
-							<?php tutor_utils()->render_svg_icon( Icon::BOOKMARK ); ?>
+							<?php SvgIcon::make()->name( Icon::BOOKMARK )->render(); ?>
 						</template>
 					</span>
 				</template>
@@ -110,7 +112,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 			<div class="tutor-ml-auto">
 				<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-quiz-item-result-more">
 					<button class="tutor-btn tutor-btn-ghost tutor-btn-icon tutor-btn-x-small" x-ref="trigger" @click="toggle()">
-						<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 					</button>
 
 					<div 
@@ -128,17 +130,17 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 								:disabled="qnaSingleActionMutation?.isPending"
 							>
 								<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'archived'">
-									<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 20, 20, array( 'class' => 'tutor-animate-spin tutor-icon-secondary' ) ); ?>
+									<?php SvgIcon::make()->name( Icon::SPINNER )->size( 20 )->color( Color::SECONDARY )->attr( 'class', 'tutor-animate-spin' )->render(); ?>
 								</template>
 								<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'archived')">
-									<?php tutor_utils()->render_svg_icon( Icon::ARCHIVE_2, 20, 20 ); ?> 
+									<?php SvgIcon::make()->name( Icon::ARCHIVE_2 )->size( 20 )->render(); ?> 
 								</template>
 								<span x-text="isArchived ? '<?php echo esc_js( __( 'Un-Archive', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Archive', 'tutor' ) ); ?>'"></span>
 							</button>
 							<?php endif; ?>
 							<?php if ( $is_user_asker ) : ?>
 							<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $question->comment_ID; ?>, 'qna'); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
+								<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
 							<?php endif; ?>
@@ -146,7 +148,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 								class="tutor-popover-menu-item tutor-gap-5"
 								@click="TutorCore.modal.showModal('<?php echo esc_js( $qna_delete_modal_id ); ?>', { question_id: <?php echo esc_html( $question->comment_ID ); ?> }); hide();"
 							>
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
+								<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>
 						</div>
 					</div>

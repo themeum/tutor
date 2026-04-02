@@ -28,6 +28,15 @@ class Options_V2 {
 	use JsonResponse;
 
 	/**
+	 * Learning modes.
+	 *
+	 * @since 4.0.0
+	 */
+	const LEARNING_MODE_MODERN = 'modern';
+	const LEARNING_MODE_KIDS   = 'kids';
+	const LEARNING_MODE_LEGACY = 'legacy';
+
+	/**
 	 * Undocumented variable
 	 *
 	 * @since 2.0.0
@@ -1218,16 +1227,20 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'         => 'is_legacy_learning_mode',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Legacy Learning Mode', 'tutor' ),
-								'label_title' => '',
-								'default'     => 'off',
-								'desc'        => __( 'If enabled, the course learning area will be back to the older system.', 'tutor' ),
+								'key'     => 'learning_mode',
+								'type'    => 'radio_horizontal_full',
+								'label'   => __( 'Learning Mode', 'tutor' ),
+								'default' => self::LEARNING_MODE_MODERN,
+								'options' => array(
+									self::LEARNING_MODE_MODERN => __( 'Modern', 'tutor' ),
+									self::LEARNING_MODE_KIDS   => __( 'Kids', 'tutor' ),
+									self::LEARNING_MODE_LEGACY => __( 'Legacy', 'tutor' ),
+								),
+								'desc'    => __( 'Decide how students will experience the courses you create.', 'tutor' ),
 							),
 						),
 					),
-					'block_course'    => array(
+					'block_course'     => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
 						'block_type' => 'uniform',

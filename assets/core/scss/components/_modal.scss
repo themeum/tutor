@@ -47,8 +47,8 @@
     max-width: 500px;
     max-height: 90vh;
     background-color: $tutor-surface-l1;
-    border-radius: $tutor-radius-3xl;
-    box-shadow: $tutor-shadow-modal;
+    border-radius: $tutor-modal-radius;
+    box-shadow: $tutor-modal-shadow;
     overflow-y: auto;
 
     // Transitions
@@ -96,12 +96,16 @@
     position: absolute;
     top: $tutor-spacing-4;
     right: $tutor-spacing-4;
+
+    svg {
+      color: $tutor-icon-idle !important;
+    }
   }
 
   &-footer {
     @include tutor-flex(row, center, flex-end);
     gap: $tutor-spacing-4;
-    padding: $tutor-spacing-6 $tutor-spacing-7 $tutor-spacing-6 $tutor-spacing-7;
+    padding: $tutor-spacing-5 $tutor-spacing-7;
     border-top: 1px solid $tutor-border-idle;
   }
 }

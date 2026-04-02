@@ -12,7 +12,7 @@
 
 namespace Tutor\Components;
 
-use Tutor\Components\Constants\Color;
+use TUTOR\User;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -81,6 +81,15 @@ class SvgIcon extends BaseComponent {
 	 * @var string
 	 */
 	protected $color = '';
+
+	/**
+	 * Ignore kids mode variant.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $ignore_kids = false;
 
 	/**
 	 * Set icon name.
@@ -156,6 +165,20 @@ class SvgIcon extends BaseComponent {
 	}
 
 	/**
+	 * Set to ignore kids variant.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $ignore_kids Ignore kids mode variant.
+	 *
+	 * @return $this
+	 */
+	public function ignore_kids( bool $ignore_kids = true ): self {
+		$this->ignore_kids = $ignore_kids;
+		return $this;
+	}
+
+	/**
 	 * Set custom HTML attribute.
 	 *
 	 * @since 4.0.0
@@ -183,6 +206,15 @@ class SvgIcon extends BaseComponent {
 		}
 
 		$icon_path = tutor()->path . 'assets/icons/' . $this->name . '.svg';
+
+		// If learning mode is kids, check kids folder first.
+		if ( tutor_utils()->is_kids_mode() && ! $this->ignore_kids ) {
+			$kids_path = tutor()->path . 'assets/icons/kids/' . $this->name . '.svg';
+			if ( file_exists( $kids_path ) ) {
+				$icon_path = $kids_path;
+			}
+		}
+
 		if ( ! file_exists( $icon_path ) ) {
 			return '';
 		}

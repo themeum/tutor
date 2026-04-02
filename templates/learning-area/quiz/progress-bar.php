@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Variant;
 
@@ -42,7 +43,13 @@ $quiz_title             = get_the_title( $tutor_is_started_quiz->quiz_id );
 			<div class="tutor-quiz-progress-meta">
 				<?php if ( $has_time_limit ) : ?>
 					<div class="tutor-quiz-timer-frame" :class="'is-' + timerState" :data-shaking="shaking ? '1' : '0'">
-						<?php tutor_utils()->render_svg_icon( Icon::CLOCK_FRAME, 66, 33 ); ?>
+						<?php
+							SvgIcon::make()
+								->name( Icon::CLOCK_FRAME )
+								->width( 66 )
+								->height( 33 )
+								->render();
+						?>
 
 						<div class="tutor-quiz-timer-text" :class="'is-' + timerState">
 							<?php

@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.0.0-dev
+Stable tag: 3.9.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,6 +318,37 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.0-alpha.1 - 30 March, 2026
+
+New: Fully redesigned with a learner-first approach to improve focus, discoverability, and engagement.
+New: Optimized interface for Mobile-First Experience and fluid lesson transitions.
+New: Thumb-zone navigation for a smoother mobile experience.
+New: Continuous learning environment without leaving lessons.
+New: Kids Mode with a playful and colorful interface.
+New: Redesigned student Dashboard showing live lessons, progress, and tasks at a glance.
+New: Five interactive quiz types: Scaling, Draw Image, Pin Map, Puzzle, Graph. (Pro)
+New: Students' profile management with certificate signature and personal info updates.
+New: Light/Dark mode and improved contrast for accessibility.
+New: Centralized notes for all lessons and videos.
+New: Unified discussion and Q&A across courses.
+New: Live Lesson Hub for upcoming and previous lessons. (Pro)
+New: Smarter Course Calendar with milestones and a visual roadmap. (Pro)
+New: Unified Resource Center for PDFs and downloadable assets.
+New: Certificates linked to progress with dynamic unlocking. (Pro)
+New: Preferences for autoplay lessons, manage downloads, and other accessibility settings.
+New: Centralized course billing with subscriptions, history, and renewals.
+New: Clearer analytics for engagement, progress, and course performance. (Pro)
+New: Global design modes to switch between Modern, Kids, or Legacy layouts platform-wide.
+New: Lots of Micro-interactions with animations and sound effects to make lessons more fun.
+New: A new button “view as student” has been added to allow admin & instructor to change the dashboard view.
+New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
+New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
+
+= 3.9.7 - Feb 25, 2026
+
+Fix: Resolved SQL injection security vulnerabilities to enhance system security.
+Fix: Fixed an issue where Stripe orders were automatically canceled in certain cases.
 
 = 3.9.6 - Jan 28, 2026
 

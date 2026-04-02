@@ -9,6 +9,7 @@ interface SVGIconProps {
   height?: number;
   style?: SerializedStyles;
   isColorIcon?: boolean;
+  ignoreKids?: boolean;
 }
 
 interface Icon {
@@ -27,20 +28,29 @@ interface IconCacheEntry {
 
 const iconCache: Record<string, IconCacheEntry> = {};
 
-const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ...rest }: SVGIconProps) => {
-  const [icon, setIcon] = useState<Icon | null>(iconCache[name]?.icon || null);
-  const [isLoading, setIsLoading] = useState(!iconCache[name]?.icon);
+const SVGIcon = ({
+  name,
+  width = 16,
+  height = 16,
+  style,
+  isColorIcon = false,
+  ignoreKids = false,
+  ...rest
+}: SVGIconProps) => {
+  const cacheKey = ignoreKids ? `${name}-ignoreKids` : name;
+  const [icon, setIcon] = useState<Icon | null>(iconCache[cacheKey]?.icon || null);
+  const [isLoading, setIsLoading] = useState(!iconCache[cacheKey]?.icon);
 
   useEffect(() => {
-    if (iconCache[name]?.icon) {
-      setIcon(iconCache[name]!.icon!);
+    if (iconCache[cacheKey]?.icon) {
+      setIcon(iconCache[cacheKey]!.icon!);
       setIsLoading(false);
       return;
     }
 
     setIsLoading(true);
 
-    fetchIcon(name, width, height)
+    fetchIcon(name, cacheKey, width, height, ignoreKids)
       .then((loadedIcon) => {
         setIcon(loadedIcon);
       })
@@ -50,7 +60,7 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ..
       .finally(() => {
         setIsLoading(false);
       });
-  }, [name, width, height]);
+  }, [name, width, height, ignoreKids, cacheKey]);
 
   const additionalAttributes = {
     ...(isColorIcon && { 'data-colorize': true }),
@@ -82,19 +92,22 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ..
   );
 };
 
-function fetchIcon(name: string, width: number, height: number): Promise<Icon> {
-  if (iconCache[name]?.icon) {
+function fetchIcon(name: string, cacheKey: string, width: number, height: number, ignoreKids: boolean): Promise<Icon> {
+  if (iconCache[cacheKey]?.icon) {
     // Icon already loaded
-    return Promise.resolve(iconCache[name]!.icon!);
+    return Promise.resolve(iconCache[cacheKey]!.icon!);
   }
 
-  if (iconCache[name]?.promise) {
+  if (iconCache[cacheKey]?.promise) {
     // Fetch already in progress, return existing promise
-    return iconCache[name]!.promise!;
+    return iconCache[cacheKey]!.promise!;
   }
 
   const fileName = name.trim().replace(/[A-Z0-9]/g, (m) => '-' + m.toLowerCase());
-  const url = `${tutorConfig.tutor_url}/assets/icons/${fileName}.svg`;
+  const hasKidsVariant = !ignoreKids && tutorConfig.is_kids_mode && tutorConfig.kids_icons_registry?.includes(fileName);
+
+  const basePath = hasKidsVariant ? 'assets/icons/kids/' : 'assets/icons/';
+  const url = `${tutorConfig.tutor_url}${basePath}${fileName}.svg`;
 
   const promise = fetch(url)
     .then((res) => {
@@ -112,15 +125,15 @@ function fetchIcon(name: string, width: number, height: number): Promise<Icon> {
       const innerHTML = svgEl?.innerHTML || '';
 
       const loadedIcon = { viewBox, fill, icon: innerHTML };
-      iconCache[name] = { icon: loadedIcon };
+      iconCache[cacheKey] = { icon: loadedIcon };
       return loadedIcon;
     })
     .catch((err) => {
-      iconCache[name] = { error: err };
+      iconCache[cacheKey] = { error: err };
       throw err;
     });
 
-  iconCache[name] = { loading: true, promise };
+  iconCache[cacheKey] = { loading: true, promise };
   return promise;
 }
 
@@ -132,6 +145,7 @@ export default memo(SVGIcon, (prev, next) => {
     prev.height === next.height &&
     prev.width === next.height &&
     prev.isColorIcon === next.isColorIcon &&
+    prev.ignoreKids === next.ignoreKids &&
     prev.style?.name === next.style?.name
   );
 });

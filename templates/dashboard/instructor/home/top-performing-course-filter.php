@@ -12,6 +12,8 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 ?>
 
 <div
@@ -25,7 +27,7 @@ use TUTOR\Icon;
 			<span class="tutor-text-subdued tutor-sm-hidden"><?php esc_html_e( 'By: ', 'tutor-pro' ); ?></span>
 			<span class="tutor-text-normal"><?php echo esc_html( $options[ $selected ] ); ?></span>
 		</div>
-		<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+		<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 	</button>
 	<div 
 		x-ref="content"
