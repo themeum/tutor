@@ -23,41 +23,49 @@
 
   &-tab {
     @include tutor-flex(row, center, flex-start);
-    @include tutor-typography('small', 'medium');
+    @include tutor-typography('small');
+    border-radius: $tutor-tab-radius;
+    font-weight: $tutor-tab-font-weight;
     background: transparent;
     border: none;
-    border-radius: $tutor-radius-lg;
-    padding: $tutor-spacing-5 $tutor-spacing-6;
+    padding: $tutor-spacing-4 $tutor-spacing-6;
     gap: $tutor-spacing-4;
     white-space: nowrap;
     cursor: pointer;
     color: $tutor-text-primary;
-    font-weight: $tutor-font-weight-medium;
-    height: 44px;
-    @include tutor-transition((background-color, color));
+    height: $tutor-tab-height;
+    @include tutor-transition((background-color, color, box-shadow));
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-text('tiny');
-      height: 40px;
     }
 
     &-active {
       color: $tutor-text-brand;
       background-color: $tutor-tab-l3-active;
+      box-shadow: $tutor-tab-active-shadow;
 
       svg {
         color: $tutor-text-brand;
       }
 
       &:hover {
-        background-color: $tutor-tab-l3-active-hover;
-        color: $tutor-text-primary;
         box-shadow: none;
       }
     }
 
+    &-md {
+      height: 34px;
+      @include tutor-text('tiny');
+      padding: 7px $tutor-spacing-5;
+      gap: $tutor-spacing-2;
+    }
+
     &-sm {
-      height: 32px;
+      @include tutor-text('tiny');
+      padding: 6px $tutor-spacing-5;
+      gap: $tutor-spacing-2;
+      height: $tutor-tab-height-sm;
     }
 
     &:hover:not(:disabled):not(.tutor-tabs-tab-active),

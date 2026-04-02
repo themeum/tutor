@@ -50,7 +50,7 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 <div class="tutor-my-quiz-attempts-wrapper" x-data="tutorQuizAttempts()">
 	<?php if ( $quiz_attempts_count ) : ?>
 		<div class="tutor-quiz-attempts">
-			<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-sm-p-5 tutor-p-6 tutor-items-center tutor-sm-border-b">
+			<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-items-center tutor-border-b">
 				<div class="tutor-quiz-students-attempts-filter-item">
 				<?php
 					DropdownFilter::make()

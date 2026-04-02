@@ -376,7 +376,7 @@ class ConfirmationModal extends BaseComponent {
 				$icon_html = sprintf( '<img src="%s" style="width:%spx;height:%spx;"/>', $this->icon, $this->icon_width, $this->icon_height );
 			} else {
 				ob_start();
-				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
+				SvgIcon::make()->name( $this->icon )->width( $this->icon_width )->height( $this->icon_height )->render();
 				$icon_html = ob_get_clean();
 			}
 		}

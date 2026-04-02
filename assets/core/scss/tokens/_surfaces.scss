@@ -19,6 +19,7 @@ $tutor-surface-sidebar-l1: var(--tutor-surface-sidebar-l1);
 $tutor-surface-exception2-secondary: var(--tutor-surface-exception2-secondary);
 $tutor-surface-exception3-highlight: var(--tutor-surface-exception3-highlight);
 $tutor-surface-dark: var(--tutor-surface-dark);
+$tutor-surface-exception6: var(--tutor-surface-exception6);
 $tutor-surface-exception7: var(--tutor-surface-exception7);
 $tutor-surface-warning: var(--tutor-surface-warning);
 $tutor-surface-warning-hover: var(--tutor-surface-warning-hover);
@@ -44,6 +45,7 @@ $tutor-surfaces: (
   exception2-secondary: $tutor-surface-exception2-secondary,
   exception3-highlight: $tutor-surface-exception3-highlight,
   dark: $tutor-surface-dark,
+  exception6: $tutor-surface-exception6,
   exception7: $tutor-surface-exception7,
   warning: $tutor-surface-warning,
   warning-hover: $tutor-surface-warning-hover,

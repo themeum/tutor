@@ -13,10 +13,24 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Course_List;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use TUTOR\Quiz;
 use TUTOR\Template;
+
+?>
+<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title><?php bloginfo( 'name' ); ?></title>
+		<?php wp_head(); ?>
+	</head>
+	<body <?php body_class( '' ); ?>>
+<?php
+
 
 // Tutor global variable for using inside learning area.
 $current_user_id          = get_current_user_id();
@@ -46,8 +60,6 @@ if ( ! $tutor_course_content_access ) {
 	}
 	return;
 }
-
-wp_head();
 
 $current_user_id = get_current_user_id();
 $subpages        = Template::make_learning_area_sub_page_nav_items();
@@ -85,8 +97,11 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 
 $subpages = Template::make_learning_area_sub_page_nav_items();
 ?>
-<body <?php body_class(); ?>>
-	<div class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>" x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
+	<div
+		class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>"
+		x-data="{ sidebarOpen: false, isFullScreen: false }"
+		:class="{ 'is-fullscreen': isFullScreen }"
+	>
 		<?php tutor_load_template( 'learning-area.components.header' ); ?>
 		<div class="tutor-learning-area-body">
 			<?php tutor_load_template( 'learning-area.components.sidebar' ); ?>
@@ -113,14 +128,15 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 				@click="isFullScreen = !isFullScreen"
 			>
 				<template x-if="!isFullScreen">
-					<?php tutor_utils()->render_svg_icon( Icon::EXPAND ); ?>
+					<?php SvgIcon::make()->name( Icon::EXPAND )->render(); ?>
 				</template>
 
 				<template x-if="isFullScreen">
-					<?php tutor_utils()->render_svg_icon( Icon::COLLAPSED ); ?>
+					<?php SvgIcon::make()->name( Icon::COLLAPSED )->render(); ?>
 				</template>
 			</button>
 		</div>
 	</div>
 	<?php wp_footer(); ?>
 </body>
+</html>

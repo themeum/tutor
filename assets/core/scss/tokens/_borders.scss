@@ -19,6 +19,9 @@ $tutor-border-warning-secondary: var(--tutor-border-warning-secondary);
 $tutor-border-warning-tertiary: var(--tutor-border-warning-tertiary);
 $tutor-border-error: var(--tutor-border-error);
 $tutor-border-error-secondary: var(--tutor-border-error-secondary);
+$tutor-border-exception6: var(--tutor-border-exception6);
+$tutor-border-error-tertiary: var(--tutor-border-error-tertiary);
+$tutor-border-tertiary: var(--tutor-border-tertiary);
 
 // =============================================================================
 // RADIUS SCALE
@@ -33,6 +36,7 @@ $tutor-radius-2xl: 12px;
 $tutor-radius-3xl: 16px;
 $tutor-radius-4xl: 20px;
 $tutor-radius-5xl: 24px;
+$tutor-radius-6xl: 32px;
 $tutor-radius-full: 1000px;
 
 // =============================================================================
@@ -54,6 +58,7 @@ $tutor-border-colors: (
   warning-tertiary: $tutor-border-warning-tertiary,
   error: $tutor-border-error,
   error-secondary: $tutor-border-error-secondary,
+  exception6: $tutor-border-exception6,
 );
 
 // =============================================================================
@@ -70,5 +75,6 @@ $tutor-radius: (
   3xl: $tutor-radius-3xl,
   4xl: $tutor-radius-4xl,
   5xl: $tutor-radius-5xl,
+  6xl: $tutor-radius-6xl,
   full: $tutor-radius-full,
 );

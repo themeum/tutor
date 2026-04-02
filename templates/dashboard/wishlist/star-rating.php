@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 // Default values - all data must be passed from parent.
 $rating_count        = isset( $course_rating->rating_count ) ? floatval( $course_rating->rating_count ) : 0.00;
@@ -23,11 +24,11 @@ $show_course_ratings = apply_filters( 'tutor_show_course_ratings', true, get_the
 	if ( $show_course_ratings ) :
 		for ( $i = 1; $i <= 5; $i++ ) :
 			if ( (int) $rating_count >= $i ) {
-				tutor_utils()->render_svg_icon( Icon::STAR_FILL, 12 );
+				SvgIcon::make()->name( Icon::STAR_FILL )->size( 12 )->render();
 			} elseif ( ( $rating_count - $i ) >= -0.5 ) {
-				tutor_utils()->render_svg_icon( Icon::STAR_HALF, 12 );
+				SvgIcon::make()->name( Icon::STAR_HALF )->size( 12 )->render();
 			} else {
-				tutor_utils()->render_svg_icon( Icon::STAR_LINE, 12 );
+				SvgIcon::make()->name( Icon::STAR_LINE )->size( 12 )->render();
 			}
 		endfor;
 		if ( $rating_average > 0 ) :

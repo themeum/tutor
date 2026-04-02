@@ -2934,12 +2934,14 @@ class Utils {
 	public function default_menus(): array {
 		$items = array(
 			'index'             => array(
-				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME,
+				'title'       => __( 'Home', 'tutor' ),
+				'icon'        => Icon::HOME,
+				'active_icon' => Icon::HOME_FILL,
 			),
 			'courses'           => array(
-				'title' => __( 'Courses', 'tutor' ),
-				'icon'  => Icon::COURSES,
+				'title'       => __( 'Courses', 'tutor' ),
+				'icon'        => Icon::COURSES,
+				'active_icon' => Icon::COURSES_FILL,
 			),
 			'retrieve-password' => array(
 				'title'         => __( 'Retrieve Password', 'tutor' ),
@@ -2954,8 +2956,9 @@ class Utils {
 
 		if ( $this->should_show_dicussion_menu() ) {
 			$items['discussions'] = array(
-				'title' => __( 'Discussions', 'tutor' ),
-				'icon'  => Icon::QA,
+				'title'       => __( 'Discussions', 'tutor' ),
+				'icon'        => Icon::QA,
+				'active_icon' => Icon::QA_FILL,
 			);
 		}
 
@@ -2972,13 +2975,15 @@ class Utils {
 	public function instructor_menus(): array {
 		$menus = array(
 			'index'         => array(
-				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME,
+				'title'       => __( 'Home', 'tutor' ),
+				'icon'        => Icon::HOME,
+				'active_icon' => Icon::HOME_FILL,
 			),
 			'my-courses'    => array(
-				'title'    => __( 'Courses', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::COURSES,
+				'title'       => __( 'Courses', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::COURSES,
+				'active_icon' => Icon::COURSES_FILL,
 			),
 			// Hidden menu.
 			'create-course' => array(
@@ -2997,22 +3002,25 @@ class Utils {
 
 		$other_menus = array(
 			'announcements' => array(
-				'title'    => __( 'Announcements', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::ANNOUNCEMENT,
+				'title'       => __( 'Announcements', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::ANNOUNCEMENT,
+				'active_icon' => Icon::ANNOUNCEMENT_FILL,
 			),
 			'quiz-attempts' => array(
-				'title'    => __( 'Quiz Attempts', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QUIZ,
+				'title'       => __( 'Quiz Attempts', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::QUIZ_2,
+				'active_icon' => Icon::QUIZ_2_FILL,
 			),
 		);
 
 		if ( $this->should_show_dicussion_menu() ) {
 			$other_menus['discussions'] = array(
-				'title'    => __( 'Discussions', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QA,
+				'title'       => __( 'Discussions', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::QA,
+				'active_icon' => Icon::QA_FILL,
 			);
 		}
 
@@ -5729,12 +5737,6 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_dashboard_page( $subpage = null ): bool {
-		$user_id = get_current_user_id();
-		if ( ! $user_id ) {
-			// If user is not login then the dashboard slug show the login screen.
-			return false;
-		}
-
 		if ( $subpage ) {
 			return $this->is_tutor_frontend_dashboard( $subpage );
 		}
@@ -5777,6 +5779,45 @@ class Utils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if the current page is course list page
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_course_list_page(): bool {
+		$is_course_list_page = false;
+
+		$post_type = get_query_var( 'post_type' );
+		if ( ! is_array( $post_type ) ) {
+			$post_type = array( $post_type );
+		}
+
+		$course_category = get_query_var( 'course-category' );
+
+		if ( ( in_array( tutor()->course_post_type, $post_type, true ) || ! empty( $course_category ) ) && is_archive() ) {
+			$is_course_list_page = true;
+		}
+
+		return $is_course_list_page;
+	}
+
+	/**
+	 * Check if the current page is course details page
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_course_details_page() {
+		if ( Input::has( 'subpage' ) ) {
+			return false;
+		}
+
+		return (bool) is_single() && tutor()->course_post_type === get_post_type();
 	}
 
 	/**
@@ -7342,7 +7383,22 @@ class Utils {
 		return (int) $count;
 	}
 
-	public function get_enrolments( $status, $start = 0, $limit = 10, $search_term = '', $course_id = '', $date = '', $order = 'DESC' ) {
+	/**
+	 * Get enrollments
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $status status.
+	 * @param int    $start start.
+	 * @param int    $limit limit.
+	 * @param string $search_term search term.
+	 * @param int    $course_id course id.
+	 * @param string $date date.
+	 * @param string $order order.
+	 *
+	 * @return array
+	 */
+	public function get_enrolments( $status, $start = 0, $limit = 10, $search_term = '', $course_id = 0, $date = '', $order = 'DESC' ) {
 		global $wpdb;
 		$status      = sanitize_text_field( $status );
 		$course_id   = sanitize_text_field( $course_id );
@@ -7354,8 +7410,8 @@ class Utils {
 
 		// add course id in where clause.
 		$course_query = '';
-		if ( '' !== $course_id ) {
-			$course_query = "AND course.ID = $course_id";
+		if ( $course_id > 0 ) {
+			$course_query = $wpdb->prepare( 'AND course.ID = %d', $course_id );
 		}
 
 		// add date in where clause.
@@ -10906,6 +10962,7 @@ class Utils {
 	 * Render SVG icon
 	 *
 	 * @since 3.7.0
+	 * @deprecated 4.0.0 Use \Tutor\Components\SvgIcon::make()->name( $name )->render() instead.
 	 *
 	 * @param string  $name Icon name.
 	 * @param integer $width Icon width.
@@ -11071,5 +11128,16 @@ class Utils {
 			default:
 				return '';
 		}
+	}
+
+	/**
+	 * Is kids mode active?
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_kids_mode(): bool {
+		return Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
 	}
 }

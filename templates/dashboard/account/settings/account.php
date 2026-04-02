@@ -50,7 +50,7 @@ $default_values = array(
 	'cover_photo'             => $settings_data['cover_photo_src'],
 );
 
-$default_values 					 = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
+$default_values = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
 
 ?>
 

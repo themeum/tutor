@@ -105,7 +105,7 @@ $settings_tab_data = array_values(
 				class="tutor-gap-8"
 			>
 				<div class="tutor-flex tutor-gap-8 tutor-mb-9">
-					<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab">
+					<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab tutor-p-5">
 						<template x-for="tab in tabs" :key="tab.id">
 							<button
 								type="button"

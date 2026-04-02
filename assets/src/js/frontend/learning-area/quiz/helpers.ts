@@ -1,4 +1,4 @@
-import { QUIZ_REVEAL_CONFIG } from './constants';
+import { QUIZ_LAYOUT_KEYS, QUIZ_REVEAL_CONFIG } from './constants';
 
 export const decodeHexString = (encoded: string): string | null => {
   const bytes = encoded.match(/.{1,2}/g);
@@ -133,4 +133,46 @@ export const revealQuestionWithAnswers = (wrapper: HTMLElement, revealAnswerIds:
     hasMatchingSelection ? QUIZ_REVEAL_CONFIG.DATA_OPTION_CORRECT : QUIZ_REVEAL_CONFIG.DATA_OPTION_INCORRECT,
   );
   question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
+};
+
+export const getAttemptedQuestionCount = (values: Record<string, unknown>): number => {
+  const questionIdsEntry = Object.entries(values).find(([key]) => key.includes('[quiz_question_ids]'));
+  if (!questionIdsEntry) {
+    return 0;
+  }
+
+  const questionIds = Array.isArray(questionIdsEntry[1]) ? questionIdsEntry[1] : [];
+  let count = 0;
+
+  for (const id of questionIds) {
+    const needle = `${QUIZ_LAYOUT_KEYS.QUESTION_VALUE_PREFIX}[${id}]`;
+    const hasAnswer = Object.entries(values).some(([key, val]) => {
+      if (!key.includes(needle)) {
+        return false;
+      }
+      if (val === '' || val === null || val === undefined) {
+        return false;
+      }
+      if (Array.isArray(val) && val.length === 0) {
+        return false;
+      }
+      return true;
+    });
+
+    if (hasAnswer) {
+      count++;
+    }
+  }
+
+  return count;
+};
+
+export const getAttemptedQuestionCountFromForm = (formId: string): number => {
+  const form = window.TutorCore?.form;
+  if (!form || !formId || !form.hasForm(formId)) {
+    return 0;
+  }
+
+  const values = form.getFormState(formId).values ?? {};
+  return getAttemptedQuestionCount(values);
 };

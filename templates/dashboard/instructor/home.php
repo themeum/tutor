@@ -19,6 +19,7 @@ use Tutor\Models\WithdrawModel;
 use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
+use Tutor\Components\SvgIcon;
 
 $upcoming_tasks          = array();
 $get_upcoming_live_tasks = array();
@@ -335,13 +336,14 @@ $sortable_sections_ids = array_reduce(
 				@click="toggle()"
 				class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon"
 			>
-				<?php tutor_utils()->render_svg_icon( Icon::FILTER_2 ); ?>
+				<?php SvgIcon::make()->name( Icon::FILTER_2 )->render(); ?>
 			</button>
 
 			<div
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-transition.origin.top.right
 				@click.outside="handleClickOutside()"
 				class="tutor-popover tutor-popover-bottom"
 			>
@@ -357,7 +359,7 @@ $sortable_sections_ids = array_reduce(
 							class="tutor-popover-menu-item"						
 						>
 							<button data-grab>
-								<?php tutor_utils()->render_svg_icon( Icon::DRAG_VERTICAL, 16, 16 ); ?>
+								<?php SvgIcon::make()->name( Icon::DRAG_VERTICAL )->size( 16 )->render(); ?>
 							</button>
 							<?php
 								InputField::make()

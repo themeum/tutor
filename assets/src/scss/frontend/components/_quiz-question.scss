@@ -1,14 +1,6 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
-.tutor-quiz-questions {
-  @include tutor-frontend-layout();
-  @include tutor-flex(column);
-  padding-inline: 0;
-  width: 100%;
-  gap: $tutor-spacing-5;
-}
-
 .tutor-quiz-question {
   @include tutor-flex(column);
   gap: $tutor-spacing-7;
@@ -239,8 +231,10 @@
       border: none;
       line-height: 2.5;
 
-      &:hover {
-        background-color: transparent !important;
+      &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not(
+          [data-option='draggable']
+        ) {
+        background-color: transparent;
         cursor: default;
       }
     }
@@ -257,18 +251,6 @@
       min-width: 167px;
       color: $tutor-text-brand;
       @include tutor-transition((color, opacity));
-
-      &[data-option='correct'] {
-        color: $tutor-text-success;
-        border-color: $tutor-border-success;
-        text-align: center;
-      }
-
-      &[data-option='incorrect'] {
-        color: $tutor-text-critical;
-        border-color: $tutor-border-error;
-        text-align: center;
-      }
     }
   }
 }

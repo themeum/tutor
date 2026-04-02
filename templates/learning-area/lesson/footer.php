@@ -54,26 +54,18 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 		<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="lesson_id" />
 		<input type="hidden" value="tutor_complete_lesson" name="tutor_action" />
-		<?php
-		Button::make()
-			->variant( Variant::SECONDARY )
-			->size( Size::LARGE )
-			->label( __( 'Mark as complete', 'tutor' ) )
-			->icon(
-				Icon::CHECK_2,
-				'right',
-				20,
-				20,
-				array(
-					'class' => $is_completed_lesson ? 'tutor-icon-success-primary' : 'tutor-icon-secondary',
-				)
-			)
-			->attr( 'type', 'submit' )
-			->attr( 'name', 'complete_lesson_btn' )
-			->attr( 'class', 'tutor-rounded-full tutor-gap-5' )
-			->disabled( $is_completed_lesson )
-			->render();
-		?>
+		<button type="submit" name="complete_lesson_btn" class="tutor-mark-as-complete-button <?php echo esc_attr( $is_completed_lesson ? 'completed' : '' ); ?>" <?php echo esc_attr( $is_completed_lesson ? 'disabled' : '' ); ?>>
+			<div class="tutor-text-center tutor-w-full">
+				<?php echo esc_html( $is_completed_lesson ? __( 'Completed', 'tutor' ) : __( 'Mark as complete', 'tutor' ) ); ?>
+			</div>
+			<?php
+			if ( $is_completed_lesson ) {
+				tutor_utils()->render_svg_icon( Icon::LESSON_COMPLETED, 40, 40 );
+			} else {
+				tutor_utils()->render_svg_icon( Icon::CHECK_2, 20, 20, array( 'class' => 'tutor-icon-secondary' ) );
+			}
+			?>
+		</button>
 	</form>
 	<?php
 	echo apply_filters( 'tutor_learning_area_lesson_mark_as_complete', ob_get_clean() ); // phpcs:ignore --already sanitized.

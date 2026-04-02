@@ -15,15 +15,18 @@ import {
   QUIZ_REVEAL_CONFIG,
   QuestionTimeoutAction,
 } from './constants';
-import { revealQuestionWithAnswers } from './helpers';
+import { getAttemptedQuestionCountFromForm, revealQuestionWithAnswers } from './helpers';
 
 export interface QuizSubmissionConfig {
   formId: string;
   attemptId: string;
   quizId: number;
   abandonModalId: string;
+  totalQuestions: number;
   feedbackMode?: string;
   revealWaitMs?: number;
+  submittedModalId?: string;
+  timeoutModalId?: string;
 }
 
 const quizSubmission = (config: QuizSubmissionConfig) => {
@@ -37,8 +40,11 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     attemptId: config.attemptId,
     quizId: config.quizId,
     abandonModalId: config.abandonModalId,
+    totalQuestions: Number(config.totalQuestions) || 0,
     feedbackMode: config.feedbackMode ?? '',
     revealWaitMs: config.revealWaitMs ?? null,
+    submittedModalId: config.submittedModalId ?? '',
+    timeoutModalId: config.timeoutModalId ?? '',
 
     submitQuizMutation: null as MutationState<{ success?: boolean; data?: unknown }, Record<string, unknown>> | null,
     abandonQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
@@ -51,6 +57,9 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     skipBeforeUnload: false,
     pendingNavigationAction: '' as 'reload' | 'navigate' | '',
     pendingNavigationUrl: '',
+    pendingTimeoutSubmission: false,
+    resultModalOpenId: '',
+    modalCloseHandler: null as ((event: Event) => void) | null,
 
     beforeUnloadHandler: null as ((event: BeforeUnloadEvent) => string | void) | null,
     navigationHandler: null as ((event: MouseEvent) => void) | null,
@@ -81,15 +90,20 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 
       this.beforeUnloadHandler = this.handleBeforeUnload.bind(this);
       this.navigationHandler = this.handleNavigationAttempt.bind(this);
+      this.modalCloseHandler = this.handleModalClose.bind(this);
 
       window.addEventListener('beforeunload', this.beforeUnloadHandler);
       document.addEventListener(QUIZ_ABANDON_CONFIG.NAVIGATION_EVENT, this.navigationHandler, true);
+      document.addEventListener(TUTOR_CUSTOM_EVENTS.MODAL_CLOSED, this.modalCloseHandler);
 
       this.submitQuizMutation = query.useMutation(this.submitQuizAttempt, {
         onSuccess: () => {
-          this.performSafeReload();
+          const isTimeout = this.pendingTimeoutSubmission;
+          this.pendingTimeoutSubmission = false;
+          this.handleSubmissionSuccess(isTimeout);
         },
         onError: (error: Error) => {
+          this.pendingTimeoutSubmission = false;
           toast.error(convertToErrorMessage(error));
         },
       });
@@ -117,7 +131,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 
       this.timeoutQuizMutation = query.useMutation(this.timeoutQuizAttempt, {
         onSuccess: () => {
-          this.performSafeReload();
+          this.handleTimeoutSuccess();
         },
         onError: (error: Error) => {
           toast.error(convertToErrorMessage(error));
@@ -341,6 +355,56 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       window.location.assign(url);
     },
 
+    getAttemptedCount(): number {
+      return getAttemptedQuestionCountFromForm(this.formId);
+    },
+
+    openResultModal(modalId: string, payload?: { attempted?: number; total?: number }) {
+      if (!modalId) {
+        this.performSafeReload();
+        return;
+      }
+      this.prepareForNavigation();
+      this.resultModalOpenId = modalId;
+      modal?.showModal?.(modalId, payload ?? null);
+    },
+
+    handleSubmissionSuccess(isTimeout: boolean) {
+      if (isTimeout) {
+        this.openResultModal(this.timeoutModalId, {
+          attempted: this.getAttemptedCount(),
+          total: this.totalQuestions,
+        });
+        return;
+      }
+
+      this.openResultModal(this.submittedModalId);
+    },
+
+    handleTimeoutSuccess() {
+      this.openResultModal(this.timeoutModalId, {
+        attempted: this.getAttemptedCount(),
+        total: this.totalQuestions,
+      });
+    },
+
+    handleModalClose(event: Event) {
+      const detail = (event as CustomEvent)?.detail ?? {};
+      const targetId = detail?.id as string | undefined;
+      if (!this.resultModalOpenId) {
+        return;
+      }
+      if (targetId && targetId !== this.resultModalOpenId) {
+        return;
+      }
+      const shouldReload =
+        this.resultModalOpenId === this.submittedModalId || this.resultModalOpenId === this.timeoutModalId;
+      this.resultModalOpenId = '';
+      if (shouldReload) {
+        this.performSafeReload();
+      }
+    },
+
     handleQuizTimeoutAbandon() {
       if (!this.quizId) {
         return;
@@ -374,6 +438,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 
       if (action === QuestionTimeoutAction.AUTO_SUBMIT) {
         this.hasTimedOut = true;
+        this.pendingTimeoutSubmission = true;
         this.handleQuizSubmit(data);
         return;
       }
@@ -454,6 +519,18 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
           ...payload,
         })
         .then((data) => data as { success?: boolean; data?: unknown });
+    },
+
+    destroy() {
+      if (this.beforeUnloadHandler) {
+        window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+      }
+      if (this.navigationHandler) {
+        document.removeEventListener(QUIZ_ABANDON_CONFIG.NAVIGATION_EVENT, this.navigationHandler, true);
+      }
+      if (this.modalCloseHandler) {
+        document.removeEventListener(TUTOR_CUSTOM_EVENTS.MODAL_CLOSED, this.modalCloseHandler);
+      }
     },
   };
 };

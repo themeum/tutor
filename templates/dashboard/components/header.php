@@ -9,13 +9,15 @@
  * @since 4.0.0
  */
 
- defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use TUTOR\Dashboard;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use TUTOR\Icon;
 use TUTOR\Instructors_List;
 use TUTOR\User;
@@ -76,6 +78,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 					x-show="open"
 					x-cloak
 					@click.outside="handleClickOutside()"
+					x-transition.origin.top.right
 					class="tutor-popover tutor-dashboard-header-user-popover"
 				>
 					<div class="tutor-dashboard-header-user-popover-profile">
@@ -120,7 +123,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 							</div>
 							<?php if ( User::is_student() && User::is_student_view() ) : ?>
 							<a href="<?php echo esc_url( $edit_profile_url ); ?>" class="tutor-edit-profile-link tutor-hidden tutor-sm-block tutor-">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
+								<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
 							</a>
 							<?php endif; ?>
 						</div>
@@ -137,7 +140,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
 									<div class="tutor-flex tutor-sm-items-center tutor-gap-3 tutor-py-4 tutor-px-4 tutor-surface-warning-hover tutor-rounded-sm">
 										<span class="tutor-pt-1">
-											<?php tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-warning' ) ); ?>
+											<?php SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 16 )->color( Color::WARNING )->render(); ?>
 										</span>
 										<span class="tutor-p3 tutor-text-warning">
 										<?php
@@ -157,7 +160,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								?>
 								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
 									<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small tutor-gap-2 tutor-btn-block">
-										<?php tutor_utils()->render_svg_icon( Icon::INSTRUCTOR ); ?>
+										<?php SvgIcon::make()->name( Icon::INSTRUCTOR )->render(); ?>
 										<?php esc_html_e( 'Become an Instructor', 'tutor' ); ?>
 									</a>
 								</div>
@@ -172,7 +175,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								<?php
 								Button::make()
 								->label( $button_label )
-								->size( Size::MEDIUM )
+								->size( Size::SMALL )
 								->variant( Variant::PRIMARY_SOFT )
 								->icon( Icon::RELOAD )
 								->attr( ':disabled', 'profileSwitchMutation?.isPending' )
@@ -192,7 +195,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								?>
 								<li>
 									<a href="<?php echo esc_url( $item['url'] ?? '#' ); ?>" class="<?php echo ( $key === $active_nav ) ? 'active' : ''; ?> tutor-small">
-										<?php tutor_utils()->render_svg_icon( $icon, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( $icon )->size( 20 )->render(); ?>
 										<span><?php echo esc_html( $item['title'] ); ?></span>
 									</a>
 								</li>
@@ -206,7 +209,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 							if ( ! empty( $logout_btn ) ) :
 								?>
 							<a href="<?php echo esc_url( $logout_btn['url'] ?? '#' ); ?>" class="tutor-btn tutor-small">
-								<?php tutor_utils()->render_svg_icon( $icon, 20, 20 ); ?>
+								<?php SvgIcon::make()->name( $icon )->size( 20 )->render(); ?>
 								<span><?php echo esc_html( $logout_btn['title'] ); ?></span>
 							</a>
 							<?php endif; ?>

@@ -112,6 +112,7 @@ const endpoints = {
   SAVE_ASSIGNMENT: 'tutor_assignment_save',
   ASSIGNMENT_SUBMIT: 'tutor_assignment_submit',
   REMOVE_ATTACHMENT: 'tutor_remove_assignment_attachment',
+  REMOVE_ASSIGNMENT_ATTEMPT: 'tutor_remove_assignment_attempt',
 
   // TAX SETTINGS
   GET_TAX_SETTINGS: 'tutor_get_tax_settings',
@@ -215,6 +216,9 @@ const endpoints = {
 
   // Withdrawals
   MAKE_AN_WITHDRAW: 'tutor_make_an_withdraw',
+
+  // Certificate
+  VERIFY_CERTIFICATE: 'tutor_verify_certificate',
 } as const;
 
 export default endpoints;

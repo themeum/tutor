@@ -12,12 +12,6 @@
     }
   }
 
-  &-container {
-    max-width: 728px;
-    margin: 0 auto;
-    padding-inline: $tutor-spacing-6;
-  }
-
   &-body {
     @include tutor-card-base;
     @include tutor-card-radius(lg);

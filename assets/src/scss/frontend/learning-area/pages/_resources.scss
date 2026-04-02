@@ -3,7 +3,7 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-learning-area-resources {
-  padding-block: $tutor-spacing-7;
+  padding-block: $tutor-spacing-8;
 
   .tutor-resources-list {
     @include tutor-flex(column);
@@ -17,7 +17,7 @@
     }
 
     .tutor-tabs-nav {
-      padding: $tutor-spacing-6;
+      padding: $tutor-spacing-5 $tutor-spacing-6;
     }
 
     .tutor-tabs-content {
