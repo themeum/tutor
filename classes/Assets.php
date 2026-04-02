@@ -890,10 +890,9 @@ class Assets {
 
 		$is_course_list_page    = tutor_utils()->is_course_list_page();
 		$is_course_details_page = tutor_utils()->is_course_details_page();
-		$is_single_bundle_page  = apply_filters( 'tutor_should_load_legacy_scripts', false );
 
 		// Return if it is course list or course details page.
-		if ( $is_course_list_page || $is_course_details_page || $is_single_bundle_page ) {
+		if ( $is_course_list_page || $is_course_details_page ) {
 			return;
 		}
 
