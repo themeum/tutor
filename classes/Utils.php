@@ -6572,7 +6572,7 @@ class Utils {
 			}
 		}
 
-		if ( '' !== $start_date && '' !== $end_date ) {
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$period_query = " AND  DATE($dt_column) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
 		}
 
