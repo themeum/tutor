@@ -7352,20 +7352,34 @@ class Utils {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
+		$bundle_query = '';
+		if ( ! tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
+			$bundle_query = "AND course.post_type != 'course-bundle' ";
+		}
+
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(enrol.ID)
 			FROM 	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.ID
-							AND course.post_type != 'course-bundle'
+							{$bundle_query}
 					INNER JOIN {$wpdb->users} student
 							ON enrol.post_author = student.ID
 			WHERE 	enrol.post_type = %s
 					{$status_query}
 					{$course_query}
 					{$date_query}
-					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s );
+					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
+					AND NOT EXISTS ( 
+						SELECT 1 
+						FROM {$wpdb->posts} AS p 
+						INNER JOIN {$wpdb->postmeta} AS pm 
+								ON p.ID = pm.post_id 
+						WHERE p.post_type = 'course-bundle' 
+						AND pm.meta_key = 'bundle-course-ids' 
+						AND FIND_IN_SET(enrol.post_parent, pm.meta_value) > 0 
+               		 )
 			",
 				'tutor_enrolled',
 				$search_term,
@@ -7432,6 +7446,11 @@ class Utils {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
+		$bundle_query = '';
+		if ( ! tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
+			$bundle_query = "AND course.post_type != 'course-bundle' ";
+		}
+
 		$enrolments = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT enrol.ID AS enrol_id,
@@ -7448,7 +7467,7 @@ class Utils {
 			FROM 	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.ID
-							AND course.post_type != 'course-bundle'
+						   {$bundle_query}
 					INNER JOIN {$wpdb->users} student
 							ON enrol.post_author = student.ID
 			WHERE 	enrol.post_type = %s
@@ -7456,6 +7475,15 @@ class Utils {
 					{$course_query}
 					{$date_query}
 					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
+					AND NOT EXISTS ( 
+						SELECT 1 
+						FROM {$wpdb->posts} AS p 
+						INNER JOIN {$wpdb->postmeta} AS pm 
+								ON p.ID = pm.post_id 
+						WHERE p.post_type = 'course-bundle' 
+						AND pm.meta_key = 'bundle-course-ids' 
+						AND FIND_IN_SET(enrol.post_parent, pm.meta_value) > 0 
+               		 )
 			ORDER BY enrol_id {$order}
 			LIMIT 	%d, %d;
 			",
