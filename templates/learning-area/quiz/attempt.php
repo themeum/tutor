@@ -65,14 +65,15 @@ $hide_question_number_overview = (bool) ( $quiz_settings['hide_question_number_o
 
 $reveal_question_types = array( 'true_false', 'single_choice', 'multiple_choice' );
 $quiz_answers          = array();
-
 foreach ( $questions as $question ) {
-	if ( in_array( $question->question_type, $reveal_question_types, true ) ) {
-		$answers = QuizModel::get_answers_by_quiz_question( $question->question_id );
-		foreach ( $answers as $answer ) {
-			if ( ! empty( $answer->is_correct ) ) {
-				$quiz_answers[] = $answer->answer_id;
-			}
+	if ( ! in_array( $question->question_type, $reveal_question_types, true ) ) {
+		continue;
+	}
+
+	$answers = QuizModel::get_answers_by_quiz_question( $question->question_id );
+	foreach ( $answers as $answer ) {
+		if ( ! empty( $answer->is_correct ) ) {
+			$quiz_answers[] = $answer->answer_id;
 		}
 	}
 }
