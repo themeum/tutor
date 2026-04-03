@@ -114,6 +114,12 @@ export const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>):
     question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
     question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
     question.question_settings.randomize_question = !!Number(question.question_settings.randomize_question);
+    if (question.question_type === 'draw_image') {
+      const rawThreshold = question.question_settings.draw_image_threshold_percent;
+      if (rawThreshold !== undefined && rawThreshold !== null && !Number.isNaN(Number(rawThreshold))) {
+        question.question_settings.draw_image_threshold_percent = Number(rawThreshold);
+      }
+    }
   }
   question.question_answers = question.question_answers.map((answer) => ({
     ...answer,
