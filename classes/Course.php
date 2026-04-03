@@ -2257,7 +2257,7 @@ class Course extends Tutor_Base {
 		}
 
 		$is_learning_area   = tutor_utils()->is_learning_area();
-		$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
+		$is_legacy_learning = tutor_utils()->is_legacy_learning_mode();
 		if ( $is_legacy_learning && $is_learning_area ) {
 			return;
 		}
