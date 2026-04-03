@@ -212,6 +212,7 @@ class Assets {
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
 			'kids_icons_registry'          => $kids_icons,
 			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
+			'is_legacy_learning_mode'      => tutor_utils()->is_legacy_learning_mode(),
 		);
 	}
 
@@ -226,10 +227,9 @@ class Assets {
 	 * @return void
 	 */
 	public function admin_scripts( $slug ) {
-		if ( 'tutor-lms-pro_page_playground' !== $slug ) {
-			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
-			wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION );
-		}
+		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
+		wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION );
+
 		/**
 		 * Scripts
 		 */
@@ -280,71 +280,6 @@ class Assets {
 			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
 			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 		}
-
-		if ( 'tutor-lms-pro_page_playground' === $slug ) {
-			$subpage = Input::get( 'subpage' );
-
-			// Dashboard pages.
-			$dashboard_pages = array( 'dashboard', 'profile-settings', 'user-profile', 'certificates', 'reviews', 'billing' );
-			if ( in_array( $subpage, $dashboard_pages, true ) ) {
-				$dashboard_css_path = tutor()->path . 'assets/css/tutor-dashboard.min.css';
-				$dashboard_css_url  = tutor()->url . 'assets/css/tutor-dashboard.min.css';
-				$dashboard_js_url   = tutor()->url . 'assets/js/tutor-dashboard.js';
-				$dashboard_js_path  = tutor()->path . 'assets/js/tutor-dashboard.js';
-
-				wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), filemtime( $dashboard_css_path ), 'all' );
-				wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array(), filemtime( $dashboard_js_path ), true );
-			}
-
-			// Learning area pages.
-			$learning_pages = array( 'learning-area', 'quiz', 'quiz-summary', 'assignment' );
-			if ( in_array( $subpage, $learning_pages, true ) ) {
-
-				$learning_area_css_path = tutor()->path . 'assets/css/tutor-learning-area.min.css';
-				$learning_area_css_url  = tutor()->url . 'assets/css/tutor-learning-area.min.css';
-
-				$learning_area_js_path = tutor()->path . 'assets/js/tutor-learning-area.js';
-				$learning_area_js_url  = tutor()->url . 'assets/js/tutor-learning-area.js';
-
-				wp_enqueue_style(
-					'tutor-learning-area',
-					$learning_area_css_url,
-					array(),
-					filemtime( $learning_area_css_path ),
-					'all'
-				);
-
-				wp_enqueue_script(
-					'tutor-learning-area',
-					$learning_area_js_url,
-					array( 'wp-i18n' ),
-					filemtime( $learning_area_js_path ),
-					true
-				);
-			}
-
-			$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';
-			$core_css_url  = tutor()->url . 'assets/css/tutor-core.min.css';
-
-			$core_js_path = tutor()->path . 'assets/js/tutor-core.js';
-			$core_js_url  = tutor()->url . 'assets/js/tutor-core.js';
-
-			wp_enqueue_style(
-				'tutor-core',
-				$core_css_url,
-				array(),
-				filemtime( $core_css_path ),
-				'all'
-			);
-
-			wp_enqueue_script(
-				'tutor-core',
-				$core_js_url,
-				array( 'wp-i18n' ),
-				filemtime( $core_js_path ),
-				true
-			);
-		}
 	}
 
 	/**
@@ -357,7 +292,8 @@ class Assets {
 	 * @return void
 	 */
 	public function frontend_scripts() {
-		if ( ! $this->should_load_legacy_scripts() ) {
+		$load_legacy_srcipts = $this->should_load_legacy_scripts();
+		if ( ! $load_legacy_srcipts ) {
 			return;
 		}
 
@@ -867,6 +803,10 @@ class Assets {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
+		if ( $this->should_load_legacy_scripts() ) {
+			return;
+		}
+
 		$is_dashboard       = tutor_utils()->is_dashboard_page();
 		$is_learning_area   = tutor_utils()->is_learning_area();
 		$is_kids_mode       = tutor_utils()->is_kids_mode();
@@ -883,18 +823,8 @@ class Assets {
 
 		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
 
-		// Return if it is learning area the & on the legacy mode.
-		if ( $is_learning_area && $is_legacy_learning ) {
-			return;
-		}
-
 		$is_course_list_page    = tutor_utils()->is_course_list_page();
 		$is_course_details_page = tutor_utils()->is_course_details_page();
-
-		// Return if it is course list or course details page.
-		if ( $is_course_list_page || $is_course_details_page ) {
-			return;
-		}
 
 		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 		if ( $is_kids_mode ) {
@@ -939,28 +869,45 @@ class Assets {
 	 * @return boolean
 	 */
 	public function should_load_legacy_scripts(): bool {
-		if ( is_admin() ) {
-			return true;
-		}
+		$load = true;
 
-		$load = false;
-		global $wp_query;
+		$post_id = get_the_ID();
+		$post    = get_post();
 
-		$is_learning_area          = tutor_utils()->is_learning_area();
-		$is_tutor_cart_page        = get_the_ID() === CartController::get_page_id();
-		$is_tutor_checkout_page    = get_the_ID() === CheckoutController::get_page_id();
-		$is_student_public_profile = ! empty( $wp_query->query['tutor_profile_username'] );
-		$is_order_placement_page   = Input::has( 'tutor_order_placement', 'get' ) && ! empty( Input::get( 'tutor_order_placement' ) );
+		$is_learning_area   = tutor_utils()->is_learning_area();
+		$is_legacy_learning = tutor_utils()->is_legacy_learning_mode();
+		$is_dashboard       = tutor_utils()->is_dashboard_page();
 
-		if ( tutor_utils()->is_course_list_page() || tutor_utils()->is_course_details_page() ) {
-			$load = true;
-		} elseif ( $is_learning_area ) {
-			$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
-			if ( $is_learning_area && $is_legacy_learning ) {
-				$load = true;
+		$page_ids = array(
+			(int) tutor_utils()->get_option( 'student_register_page' ),
+			(int) tutor_utils()->get_option( 'instructor_register_page' ),
+		);
+
+		// Ignore loading legacy scripts on specific case.
+		if ( $is_learning_area && ! $is_legacy_learning ) {
+			$load = false;
+		} elseif ( $is_dashboard ) {
+			$load = false;
+		} elseif ( in_array( $post_id, $page_ids, true ) ) {
+			$load = false;
+		} else {
+			// Ignore loading legacy scripts for these shortcodes.
+			$has_shortcode = false;
+
+			$shortcdes = array(
+				'tutor_student_registration_form',
+				'tutor_instructor_registration_form',
+				'tutor_dashboard',
+				'tutor_login',
+			);
+
+			foreach ( $shortcdes as $shortcde ) {
+				$has_shortcode = has_shortcode( $post->post_content, $shortcde );
+				if ( $has_shortcode ) {
+					$load = false;
+					break;
+				}
 			}
-		} elseif ( $is_tutor_cart_page || $is_tutor_checkout_page || $is_student_public_profile || $is_order_placement_page ) {
-			$load = true;
 		}
 
 		return apply_filters( 'tutor_should_load_legacy_scripts', $load );
