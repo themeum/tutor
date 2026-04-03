@@ -62,6 +62,30 @@ class Q_And_A {
 	}
 
 	/**
+	 * Check if Q&A feature is enabled.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_enabled() {
+		return (bool) get_tutor_option( 'enable_q_and_a_on_course' );
+	}
+
+	/**
+	 * Check if Q&A is enabled for a specific course.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return bool
+	 */
+	public static function is_enabled_for_course( $course_id ) {
+		return (bool) get_post_meta( $course_id, '_tutor_enable_qa', true );
+	}
+
+	/**
 	 * Add learning area menu
 	 *
 	 * @since 4.0.0
