@@ -5782,17 +5782,6 @@ class Utils {
 	}
 
 	/**
-	 * Check if the learning area is on legacy mode
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return bool
-	 */
-	public function is_legacy_learning(): bool {
-		return Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
-	}
-
-	/**
 	 * Check if the current page is course list page
 	 *
 	 * @since 4.0.0
@@ -11153,4 +11142,14 @@ class Utils {
 		return Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
 	}
 
+	/**
+	 * Is legacy learning mode active?
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_legacy_learning_mode(): bool {
+		return Options_V2::LEARNING_MODE_LEGACY === $this->get_option( 'learning_mode' );
+	}
 }

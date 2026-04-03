@@ -126,6 +126,7 @@ declare global {
       }[];
       kids_icons_registry: string[];
       is_kids_mode: boolean;
+      is_legacy_learning_mode: boolean;
       current_user: {
         data: {
           id: string;
