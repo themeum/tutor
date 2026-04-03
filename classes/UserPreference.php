@@ -255,15 +255,7 @@ class UserPreference {
 	public function ajax_save_user_preferences() {
 		tutor_utils()->check_nonce();
 
-		if ( ! is_user_logged_in() ) {
-			$this->json_response(
-				tutor_utils()->error_message( 'forbidden' ),
-				null,
-				HttpHelper::STATUS_UNAUTHORIZED
-			);
-		}
-
-		$auto_play_next = Input::post( 'auto_play_next', null );
+		$auto_play_next = Input::post( 'auto_play_next', null, 'boolean' );
 		$theme          = Input::post( 'theme', null );
 		$font_scale     = Input::post( 'font_scale', null );
 		$learning_mood  = Input::post( 'learning_mood', null );
@@ -272,8 +264,9 @@ class UserPreference {
 
 		if ( null !== $auto_play_next ) {
 			$default_auto_play_next = (bool) tutor_utils()->get_option( 'autoload_next_course_content' );
-			if ( (bool) $auto_play_next !== $default_auto_play_next ) {
-				$preferences_settings['auto_play_next'] = (bool) $auto_play_next;
+			$auto_play_next         = 'true' === $auto_play_next ? true : false;
+			if ( $auto_play_next !== $default_auto_play_next ) {
+				$preferences_settings['auto_play_next'] = $auto_play_next;
 			}
 		}
 
@@ -330,14 +323,6 @@ class UserPreference {
 	 */
 	public function ajax_reset_user_preferences() {
 		tutor_utils()->check_nonce();
-
-		if ( ! is_user_logged_in() ) {
-			$this->json_response(
-				tutor_utils()->error_message( 'forbidden' ),
-				null,
-				HttpHelper::STATUS_UNAUTHORIZED
-			);
-		}
 
 		$user_id = get_current_user_id();
 		if ( ! $user_id ) {

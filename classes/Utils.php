@@ -11134,7 +11134,7 @@ class Utils {
 	 */
 	public function is_kids_mode(): bool {
 		$user_id = get_current_user_id();
-		if ( User::is_student_view() && $user_id ) {
+		if ( $user_id && User::is_student_view() ) {
 			$user_learning_mood = UserPreference::get( 'learning_mood', Options_V2::LEARNING_MODE_MODERN );
 			return Options_V2::LEARNING_MODE_KIDS === $user_learning_mood;
 		}
