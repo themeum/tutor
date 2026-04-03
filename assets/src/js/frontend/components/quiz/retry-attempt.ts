@@ -20,10 +20,6 @@ const quizRetryAttempt = () => {
     retryMutation: null as MutationState<unknown, RetryAttemptPayload> | null,
 
     init() {
-      if (this.retryMutation) {
-        return;
-      }
-
       this.retryMutation = query.useMutation(this.retryAttempt, {
         onSuccess: (_, payload) => {
           window.location.href = payload.redirectURL;
