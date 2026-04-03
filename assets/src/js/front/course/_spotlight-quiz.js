@@ -19,15 +19,24 @@ window.jQuery(document).ready($ => {
 
 
     function get_reveal_wait_time() {
+        const quizLevelWait = Number(quiz_options.answers_reveal_duration || 0);
+        if (quizLevelWait > 0) {
+            return quizLevelWait * 1000;
+        }
+
         return Number(_tutorobject.quiz_answer_display_time) || 2000;
     }
 
     function is_reveal_mode() {
-        return 'reveal' === quiz_options.feedback_mode
+        return Number(quiz_options.enable_answer_reveal || 0) === 1;
     }
 
     function get_quiz_layout_view() {
         return _tutorobject.quiz_options.question_layout_view
+    }
+
+    function has_pagination_enabled() {
+        return Number(_tutorobject.quiz_options.enable_pagination || 0) === 1;
     }
 
     function get_hint_markup(text) {
@@ -294,7 +303,11 @@ window.jQuery(document).ready($ => {
                  * @since 1.8.10
                  */
 
-                if (is_reveal_mode() && revealModeSupportedQuestions.includes($question_wrap.data('question-type'))) {
+                if (
+                    is_reveal_mode() &&
+                    get_quiz_layout_view() === 'single_question' &&
+                    revealModeSupportedQuestions.includes($question_wrap.data('question-type'))
+                ) {
                     setTimeout(() => {
                         $('.quiz-attempt-single-question').hide();
                         $nextQuestion.show();
@@ -310,7 +323,7 @@ window.jQuery(document).ready($ => {
                  * If pagination exists, set active class
                  */
 
-                if ($('.tutor-quiz-questions-pagination').length) {
+                if (has_pagination_enabled() && $('.tutor-quiz-questions-pagination').length) {
                     $('.tutor-quiz-question-paginate-item').removeClass('active');
                     $('.tutor-quiz-questions-pagination a[href="' + next_question_id + '"]').addClass('active');
                 }

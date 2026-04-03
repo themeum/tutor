@@ -483,9 +483,13 @@ class Quiz_Attempts_List {
 		$should_retry = false;
 
 		if ( tutor_utils()->count( $attempt_info ) ) {
-			$allowed_attempts = (int) $attempt_info['attempts_allowed'] ?? 0;
-			$feedback_mode    = $attempt_info['feedback_mode'] ?? '';
-			$should_retry     = 'retry' === $feedback_mode && $attempts_count < $allowed_attempts;
+			if ( array_key_exists( 'limit_attempts_allowed', $attempt_info ) ) {
+				$limit_attempts_allowed = '1' === (string) $attempt_info['limit_attempts_allowed'];
+				$allowed_attempts       = (int) ( $attempt_info['attempts_allowed'] ?? 0 );
+				$should_retry           = Quiz::can_retry_quiz( $limit_attempts_allowed, $allowed_attempts, $attempts_count );
+			} else {
+				$should_retry = 'retry' === ( $attempt_info['feedback_mode'] ?? '' );
+			}
 		}
 
 		return $should_retry;

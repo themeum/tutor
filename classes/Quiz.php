@@ -25,7 +25,6 @@ use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
-use Tutor\Options_V2;
 use Tutor\Traits\JsonResponse;
 use WP_Post;
 
@@ -211,6 +210,7 @@ class Quiz {
 			'hide_question_number_overview'      => 0,
 			'hide_previous_button'               => '0',
 			'hide_quiz_time_display'             => 0,
+			'limit_attempts_allowed'             => '0',
 			'max_questions_for_answer'           => 10,
 			'open_ended_answer_characters_limit' => 500,
 			'pass_is_required'                   => 0,
@@ -229,8 +229,7 @@ class Quiz {
 	 * Normalize quiz settings.
 	 *
 	 * V4 stores reveal and pagination as explicit flags, but older quizzes may
-	 * still contain legacy keys. When learning mode is legacy, normalize back
-	 * to the legacy effective contract for legacy quiz consumers.
+	 * still contain legacy keys.
 	 *
 	 * @since 4.0.0
 	 *
@@ -239,7 +238,10 @@ class Quiz {
 	 * @return array
 	 */
 	public static function normalize_quiz_settings( array $settings ): array {
-		$defaults = self::get_default_quiz_settings();
+		$defaults                   = self::get_default_quiz_settings();
+		$has_enable_pagination      = array_key_exists( 'enable_pagination', $settings );
+		$has_enable_answer_reveal   = array_key_exists( 'enable_answer_reveal', $settings );
+		$has_limit_attempts_allowed = array_key_exists( 'limit_attempts_allowed', $settings );
 
 		$settings = wp_parse_args( $settings, $defaults );
 
@@ -248,7 +250,6 @@ class Quiz {
 			$defaults['time_limit']
 		);
 
-		$learning_mode        = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN );
 		$question_layout_view = (string) ( $settings['question_layout_view'] ?? '' );
 		$question_layout_view = '' !== $question_layout_view ? $question_layout_view : 'single_question';
 
@@ -256,39 +257,66 @@ class Quiz {
 		$pagination_type            = $settings['pagination_type'] ?? $settings['question_pagination_style'] ?? 'shape';
 		$pagination_type            = in_array( $pagination_type, $supported_pagination_types, true ) ? $pagination_type : 'shape';
 
-		$enable_pagination = array_key_exists( 'enable_pagination', $settings )
+		$enable_pagination = $has_enable_pagination
 			? '1' === (string) $settings['enable_pagination']
 			: 'question_pagination' === $question_layout_view;
 
-		$enable_answer_reveal = array_key_exists( 'enable_answer_reveal', $settings )
+		$enable_answer_reveal   = $has_enable_answer_reveal
 			? '1' === (string) $settings['enable_answer_reveal']
 			: self::QUIZ_FEEDBACK_MODE_REVEAL === (string) ( $settings['feedback_mode'] ?? '' );
+		$limit_attempts_allowed = $has_limit_attempts_allowed
+			? '1' === (string) $settings['limit_attempts_allowed']
+			: self::QUIZ_FEEDBACK_MODE_RETRY === (string) ( $settings['feedback_mode'] ?? '' );
 
 		if ( 'question_pagination' === $question_layout_view ) {
 			$question_layout_view = 'single_question';
 			$enable_pagination    = true;
 		}
 
-		$settings['question_layout_view'] = $question_layout_view;
-		$settings['enable_pagination']    = $enable_pagination ? '1' : '0';
-		$settings['pagination_type']      = $pagination_type;
-		$settings['enable_answer_reveal'] = $enable_answer_reveal ? '1' : '0';
-
-		if ( Options_V2::LEARNING_MODE_LEGACY === $learning_mode ) {
-			if ( $enable_pagination && 'single_question' === $settings['question_layout_view'] ) {
-				$settings['question_layout_view'] = 'question_pagination';
-			}
-
-			$settings['feedback_mode'] = $enable_answer_reveal
-				? self::QUIZ_FEEDBACK_MODE_REVEAL
-				: self::QUIZ_FEEDBACK_MODE_RETRY;
-
-			return apply_filters( 'tutor_quiz_normalized_settings', $settings );
-		}
+		$settings['question_layout_view']   = $question_layout_view;
+		$settings['enable_pagination']      = $enable_pagination ? '1' : '0';
+		$settings['pagination_type']        = $pagination_type;
+		$settings['enable_answer_reveal']   = $enable_answer_reveal ? '1' : '0';
+		$settings['limit_attempts_allowed'] = $limit_attempts_allowed ? '1' : '0';
 
 		unset( $settings['feedback_mode'], $settings['question_pagination_style'] );
 
 		return apply_filters( 'tutor_quiz_normalized_settings', $settings );
+	}
+
+	/**
+	 * Determine if quiz retry is allowed for the current attempt count.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param mixed $limit_attempts_allowed If attempts are limited.
+	 * @param int   $attempts_allowed Allowed attempts.
+	 * @param int   $attempted_count Attempted count.
+	 *
+	 * @return bool
+	 */
+	public static function can_retry_quiz( $limit_attempts_allowed, int $attempts_allowed, int $attempted_count ): bool {
+		$limit_attempts_allowed = '1' === (string) $limit_attempts_allowed;
+
+		if ( ! $limit_attempts_allowed ) {
+			return false;
+		}
+
+		return 0 === $attempts_allowed || $attempted_count < $attempts_allowed;
+	}
+
+	/**
+	 * Get effective attempt count for quiz display/runtime.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $limit_attempts_allowed If attempts are limited.
+	 * @param int  $attempts_allowed Allowed attempts.
+	 *
+	 * @return int
+	 */
+	public static function get_effective_attempts_allowed( bool $limit_attempts_allowed, int $attempts_allowed ): int {
+		return $limit_attempts_allowed ? $attempts_allowed : 1;
 	}
 
 	/**
@@ -490,8 +518,7 @@ class Quiz {
 
 		$date = date( 'Y-m-d H:i:s', tutor_time() ); //phpcs:ignore
 
-		$tutor_quiz_option = (array) maybe_unserialize( get_post_meta( $quiz_id, 'tutor_quiz_option', true ) );
-		$attempts_allowed  = tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed', 0 );
+		$tutor_quiz_option = (array) tutor_utils()->get_quiz_option( $quiz_id );
 
 		$time_limit         = tutor_utils()->get_quiz_option( $quiz_id, 'time_limit.time_value' );
 		$time_limit_seconds = 0;
@@ -1741,17 +1768,17 @@ class Quiz {
 			return;
 		}
 
-		$quiz_settings     = tutor_utils()->get_quiz_option( $quiz_id );
-		$user_id           = get_current_user_id();
-		$quiz_model        = new QuizModel();
-		$attempts          = $quiz_model->quiz_attempts( $quiz_id, $user_id );
-		$attempted_count   = tutor_utils()->count( $attempts );
-		$attempts_allowed  = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
-		$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
-		$can_start_quiz    = $attempt_remaining > 0 || 0 === $attempts_allowed;
-		$quiz_auto_start   = $quiz_settings['quiz_auto_start'] ?? 0;
-		$auto_start_delay  = (int) ( $quiz_settings['auto_start_delay'] ?? 5 );
-		$should_auto_start = 1 === (int) $quiz_auto_start && 0 === (int) $attempted_count;
+		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id );
+		$user_id                = get_current_user_id();
+		$quiz_model             = new QuizModel();
+		$attempts               = $quiz_model->quiz_attempts( $quiz_id, $user_id );
+		$attempted_count        = (int) tutor_utils()->count( $attempts );
+		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
+		$attempts_allowed       = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
+		$can_start_quiz         = 0 === $attempted_count || self::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempted_count );
+		$quiz_auto_start        = $quiz_settings['quiz_auto_start'] ?? 0;
+		$auto_start_delay       = (int) ( $quiz_settings['auto_start_delay'] ?? 5 );
+		$should_auto_start      = 1 === (int) $quiz_auto_start && 0 === (int) $attempted_count;
 
 		if ( ! $can_start_quiz ) {
 			return;
