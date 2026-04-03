@@ -23,14 +23,20 @@ $tutor_course_id;
 $form_id = 'create-review-form';
 
 ?>
-<div x-data="tutorReviewModal()">
+<div
+	x-data="tutorReviewModal()"
+	<?php echo ! empty( $data['clear_review_popup_data'] ) ? 'x-on:tutor-modal-closed.document="if ($event.detail.id === \'create-review-modal\') clearReviewPopupData(' . esc_js( $tutor_course_id ) . ')"' : ''; ?>
+>
 	<form
 		class="tutor-flex tutor-flex-column tutor-gap-6"
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data='tutorForm({
 			id: "<?php echo esc_attr( $form_id ); ?>",
 			mode: "onChange",
-			defaultValues: { comment_post_ID: <?php echo esc_html( $tutor_course_id ); ?> },
+			defaultValues: {
+				comment_post_ID: <?php echo esc_html( $tutor_course_id ); ?>,
+				clear_review_popup_data: <?php echo ! empty( $data['clear_review_popup_data'] ) ? 'true' : 'false'; ?>
+			},
 		})'
 		x-bind="getFormBindings()"
 		@submit.prevent="handleSubmit(
