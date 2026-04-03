@@ -1637,7 +1637,6 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 	 * @since 3.0.0
 	 *
 	 * @param mixed $price Raw price.
-	 * @param bool  $html_markup  Whether to include HTML markup ( Only for wooCommerce as it returns html markup ).
 	 *
 	 * @return string|void
 	 */
