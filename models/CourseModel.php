@@ -549,7 +549,7 @@ class CourseModel {
 
 						do_action( 'tutor_before_delete_quiz_content', $content_id, null );
 
-						// Collect instructor file paths before deleting question data (e.g. draw_image masks).
+						// Collect instructor file paths before deleting question data (e.g. draw_image / pin_image masks).
 						/**
 						 * Filter to get file paths for quiz deletion.
 						 * Pro and other add-ons register their question types via this filter.

@@ -196,7 +196,9 @@ class Quiz {
 			'tutor_quiz_templates_not_in_core',
 			array(
 				'learning-area.quiz.questions.draw-image',
+				'learning-area.quiz.questions.pin-image',
 				'shared.components.quiz.attempt-details.questions.draw-image',
+				'shared.components.quiz.attempt-details.questions.pin-image',
 			),
 			$template,
 			$variables
@@ -1293,7 +1295,7 @@ class Quiz {
 
 		QuizModel::delete_files_by_paths( $attempt_file_paths );
 
-		// Collect instructor file paths before deleting question data (e.g. draw_image masks).
+		// Collect instructor file paths before deleting question data (e.g. draw_image / pin_image masks).
 		/**
 		 * Filter to get file paths for quiz deletion.
 		 * Pro and other add-ons register their question types via this filter.
