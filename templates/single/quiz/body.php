@@ -10,6 +10,7 @@
  */
 
 use Tutor\Models\CourseModel;
+use TUTOR\Quiz;
 
 global $post;
 
@@ -21,13 +22,15 @@ $quiz_time_limit = ( isset( $quiz_details['time_limit'] ) && is_array( $quiz_det
 $quiz_time_value = isset( $quiz_time_limit['time_value'] ) ? $quiz_time_limit['time_value'] : 0;
 $quiz_time_type  = isset( $quiz_time_limit['time_type'] ) ? $quiz_time_limit['time_type'] : 'minutes';
 
-$is_started_quiz   = tutor_utils()->is_started_quiz();
-$previous_attempts = tutor_utils()->quiz_attempts();
-$attempted_count   = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
-$questions_order   = tutor_utils()->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
-$attempts_allowed  = tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed', 0 );
-$passing_grade     = tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
-$feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
+$is_started_quiz             = tutor_utils()->is_started_quiz();
+$previous_attempts           = tutor_utils()->quiz_attempts();
+$attempted_count             = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
+$questions_order             = $quiz_details['questions_order'] ?? 'rand';
+$limit_attempts_allowed      = '1' === (string) ( $quiz_details['limit_attempts_allowed'] ?? '0' );
+$configured_attempts_allowed = (int) ( $quiz_details['attempts_allowed'] ?? 0 );
+$attempts_allowed            = Quiz::get_effective_attempts_allowed( $limit_attempts_allowed, $configured_attempts_allowed );
+$passing_grade               = (int) ( $quiz_details['passing_grade'] ?? 0 );
+$can_retry_quiz              = Quiz::can_retry_quiz( $limit_attempts_allowed, $configured_attempts_allowed, $attempted_count );
 
 $attempt_remaining   = (int) $attempts_allowed - (int) $attempted_count;
 $quiz_answers        = array();
@@ -41,14 +44,17 @@ if ( 0 !== $attempted_count ) {
 			do_action( 'tutor_quiz/body/before', $quiz_id );
 
 		if ( $is_started_quiz ) {
-			$quiz_attempt_info                              = tutor_utils()->quiz_attempt_info( $is_started_quiz->attempt_info );
+			$quiz_attempt_info                  = tutor_utils()->quiz_attempt_info( $is_started_quiz->attempt_info );
 			$quiz_attempt_info['date_time_now']             = date( 'Y-m-d H:i:s', tutor_time() );//phpcs:ignore
-			$time_limit_seconds                             = tutor_utils()->avalue_dot( 'time_limit.time_limit_seconds', $quiz_attempt_info );
-			$question_layout_view                           = tutor_utils()->get_quiz_option( $quiz_id, 'question_layout_view' );
-			! $question_layout_view ? $question_layout_view = 'single_question' : 0;
-
-			$hide_quiz_time_display        = (bool) tutor_utils()->get_quiz_option( $quiz_id, 'hide_quiz_time_display' );
-			$hide_question_number_overview = (bool) tutor_utils()->get_quiz_option( $quiz_id, 'hide_question_number_overview' );
+			$time_limit_seconds                 = tutor_utils()->avalue_dot( 'time_limit.time_limit_seconds', $quiz_attempt_info );
+			$question_layout_view               = $quiz_details['question_layout_view'] ?? 'single_question';
+			$enable_pagination                  = '1' === (string) ( $quiz_details['enable_pagination'] ?? '0' );
+			$pagination_type                    = $quiz_details['pagination_type'] ?? 'shape';
+			$enable_answer_reveal               = '1' === (string) ( $quiz_details['enable_answer_reveal'] ?? '0' );
+			$answers_reveal_duration            = (int) ( $quiz_details['answers_reveal_duration'] ?? 0 );
+			$hide_previous_button               = '1' === (string) ( $quiz_details['hide_previous_button'] ?? '0' );
+			$hide_quiz_time_display             = (bool) ( $quiz_details['hide_quiz_time_display'] ?? false );
+			$hide_question_number_overview      = (bool) ( $quiz_details['hide_question_number_overview'] ?? false );
 
 			$remaining_time_secs = ( strtotime( $is_started_quiz->attempt_started_at ) + $time_limit_seconds ) - strtotime( $quiz_attempt_info['date_time_now'] );
 

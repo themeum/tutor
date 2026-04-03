@@ -27,6 +27,7 @@ const meta = {
   component: FormSelectInput,
   args: {
     label: 'Select Framework',
+    size: 'regular',
     options: selectOptionsWithoutDescription,
     placeholder: '',
     disabled: false,
@@ -56,6 +57,11 @@ const meta = {
     label: {
       control: 'text',
       description: 'Label for the select input. Can be a string or ReactNode.',
+    },
+    size: {
+      control: 'select',
+      options: ['regular', 'small'],
+      description: 'Controls input density.',
     },
     options: {
       control: false,
@@ -172,6 +178,13 @@ export const Default = {} satisfies Story;
 export const WithPlaceholder = {
   args: {
     placeholder: 'Search frameworks...',
+  },
+} satisfies Story;
+
+export const Small = {
+  args: {
+    size: 'small',
+    placeholder: 'Compact select',
   },
 } satisfies Story;
 

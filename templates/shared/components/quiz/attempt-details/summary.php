@@ -11,9 +11,11 @@
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Models\QuizModel;
+use TUTOR\Quiz;
 
 if ( ! isset( $attempt_data ) || ! is_object( $attempt_data ) ) {
 	return;
@@ -29,18 +31,19 @@ $student              = $student_id > 0 ? get_userdata( $student_id ) : null;
 $student_name         = $student ? $student->display_name : '';
 $student_profile_url  = $student_id > 0 ? tutor_utils()->profile_url( $student_id, false ) : '';
 
-$attempt_info         = maybe_unserialize( $attempt_data->attempt_info );
-$passing_grade        = is_array( $attempt_info ) ? (int) ( $attempt_info['passing_grade'] ?? 0 ) : 0;
-$allowed_attempts     = is_array( $attempt_info ) ? (int) ( $attempt_info['attempts_allowed'] ?? 0 ) : 0;
-$feedback_mode        = is_array( $attempt_info ) ? (string) ( $attempt_info['feedback_mode'] ?? '' ) : '';
-$instructor_feedback  = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor_feedback'] ?? '' ) : '';
-$total_marks          = (float) $attempt_data->total_marks;
-$earned_marks         = (float) $attempt_data->earned_marks;
-$pass_marks           = ( $total_marks * $passing_grade ) / 100;
-$earned_percentage    = (float) QuizModel::calculate_attempt_earned_percentage( $attempt_data );
-$attempt_result       = QuizModel::get_attempt_result( $attempt_id );
-$attempted_at_label   = date_i18n( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) );
-$is_manually_reviewed = ! empty( $attempt_data->is_manually_reviewed );
+$attempt_info           = maybe_unserialize( $attempt_data->attempt_info );
+$passing_grade          = is_array( $attempt_info ) ? (int) ( $attempt_info['passing_grade'] ?? 0 ) : 0;
+$limit_attempts_allowed = is_array( $attempt_info ) ? '1' === (string) ( $attempt_info['limit_attempts_allowed'] ?? '0' ) : false;
+$allowed_attempts       = is_array( $attempt_info ) ? (int) ( $attempt_info['attempts_allowed'] ?? 0 ) : 0;
+$legacy_feedback_mode   = is_array( $attempt_info ) ? (string) ( $attempt_info['feedback_mode'] ?? '' ) : '';
+$instructor_feedback    = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor_feedback'] ?? '' ) : '';
+$total_marks            = (float) $attempt_data->total_marks;
+$earned_marks           = (float) $attempt_data->earned_marks;
+$pass_marks             = ( $total_marks * $passing_grade ) / 100;
+$earned_percentage      = (float) QuizModel::calculate_attempt_earned_percentage( $attempt_data );
+$attempt_result         = QuizModel::get_attempt_result( $attempt_id );
+$attempted_at_label     = date_i18n( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) );
+$is_manually_reviewed   = ! empty( $attempt_data->is_manually_reviewed );
 
 $timing                 = QuizModel::get_quiz_attempt_timing( $attempt_data );
 $attempt_duration       = $timing['attempt_duration'] ?? '';
@@ -68,8 +71,11 @@ if ( is_array( $attempts ) ) {
 	$attempts_count = count( $attempts );
 }
 
-$can_retry               = 'retry' === $feedback_mode && $attempts_count < $allowed_attempts;
+$can_retry               = is_array( $attempt_info ) && array_key_exists( 'limit_attempts_allowed', $attempt_info )
+	? Quiz::can_retry_quiz( $limit_attempts_allowed, $allowed_attempts, $attempts_count )
+	: 'retry' === $legacy_feedback_mode;
 $has_instructor_feedback = '' !== trim( wp_strip_all_tags( $instructor_feedback ) );
+$retry_modal_id          = 'tutor-retry-modal-' . $attempt_id;
 
 $result_badge_class = 'failed';
 $result_label       = __( 'Failed', 'tutor' );
@@ -84,7 +90,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 	$result_label       = __( 'Pending', 'tutor' );
 }
 ?>
-<div class="tutor-quiz-summary">
+<div class="tutor-quiz-summary" x-data="tutorQuizRetryAttempt()" x-init="init()">
 	<h2 class="tutor-h2 tutor-sm-text-h3 tutor-mb-3 tutor-sm-mb-2 tutor-text-center">
 		<?php echo esc_html( get_the_title( $quiz_id ) ); ?>
 	</h2>
@@ -235,7 +241,8 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 					->attr(
 						'@click',
 						sprintf(
-							'TutorCore.modal.showModal("tutor-retry-modal", { data: %s });',
+							'TutorCore.modal.showModal("%s", { data: %s });',
+							$retry_modal_id,
 							wp_json_encode(
 								array(
 									'quizID'      => $quiz_id,
@@ -289,5 +296,18 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 				<?php echo wp_kses_post( $instructor_feedback ); ?>
 			</p>
 		</div>
+	<?php endif; ?>
+
+	<?php if ( ! $is_instructor_review && $can_retry ) : ?>
+		<?php
+		ConfirmationModal::make()
+			->id( $retry_modal_id )
+			->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+			->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
+			->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
+			->confirm_text( __( 'Retry Quiz', 'tutor' ) )
+			->mutation_state( 'retryMutation' )
+			->render();
+		?>
 	<?php endif; ?>
 </div>

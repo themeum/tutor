@@ -67,7 +67,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['regular', 'large'],
+      options: ['small', 'regular', 'large'],
       defaultValue: 'regular',
       description: 'Size of the input field.',
     },
@@ -175,6 +175,16 @@ export const LargeSize = {
   args: {
     size: 'large',
     label: 'Large Input',
+    content: 'USD',
+    presetOptions,
+    placeholder: 'Enter amount',
+  },
+} satisfies Story;
+
+export const SmallSize = {
+  args: {
+    size: 'small',
+    label: 'Small Input',
     content: 'USD',
     presetOptions,
     placeholder: 'Enter amount',

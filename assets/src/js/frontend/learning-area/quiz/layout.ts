@@ -8,7 +8,7 @@ export interface QuizLayoutConfig {
   layout: (typeof QuizLayoutType)[keyof typeof QuizLayoutType];
   formId: string;
   totalQuestions: number;
-  feedbackMode?: string;
+  enableAnswerReveal?: boolean;
   revealWaitMs?: number;
 }
 
@@ -21,7 +21,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
     totalQuestions: Number(config.totalQuestions) || 0,
     currentIndex: 1,
-    feedbackMode: config.feedbackMode ?? '',
+    enableAnswerReveal: config.enableAnswerReveal ?? false,
     revealWaitMs: config.revealWaitMs ?? null,
     revealAnswerIds: [] as number[],
     answerRequiredByIndex: {} as Record<number, boolean>,
@@ -29,6 +29,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
     skippedByIndex: {} as Record<number, boolean>,
     revealFooterState: '' as '' | 'correct' | 'incorrect',
     isRevealing: false,
+    revealTimeoutId: null as number | null,
 
     $el: null as HTMLElement | null,
     $root: null as HTMLElement | null,
@@ -190,6 +191,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
       if (this.currentIndex > 1) {
+        this.clearRevealTimeout();
         this.markCurrentAsSkipped();
         this.runWithViewTransition(() => {
           this.currentIndex -= 1;
@@ -201,9 +203,6 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
     async goNext({ skipValidation = false }: { skipValidation?: boolean } = {}) {
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
-        return;
-      }
-      if (this.isRevealing) {
         return;
       }
       if (!skipValidation && this.shouldDisableNextButton()) {
@@ -222,32 +221,25 @@ const quizLayout = (config: QuizLayoutConfig) => {
       }
 
       if (!skipValidation && this.isRevealMode() && this.shouldReveal(wrapper)) {
+        if (this.isQuestionRevealed(wrapper)) {
+          this.clearRevealTimeout();
+          this.moveToNextQuestion();
+          return;
+        }
+
         this.isRevealing = true;
         this.revealQuestion(wrapper);
         this.syncRevealFooterState(wrapper);
         const wait = this.getRevealWaitTime();
-        window.setTimeout(() => {
+        this.revealTimeoutId = window.setTimeout(() => {
           this.isRevealing = false;
-          if (this.currentIndex < this.totalQuestions) {
-            this.markCurrentAsSkipped();
-            this.runWithViewTransition(() => {
-              this.currentIndex += 1;
-              this.syncCurrentRevealFooterState();
-            });
-            this.scrollToQuestion();
-          }
+          this.revealTimeoutId = null;
+          this.moveToNextQuestion();
         }, wait);
         return;
       }
 
-      if (this.currentIndex < this.totalQuestions) {
-        this.markCurrentAsSkipped();
-        this.runWithViewTransition(() => {
-          this.currentIndex += 1;
-          this.syncCurrentRevealFooterState();
-        });
-        this.scrollToQuestion();
-      }
+      this.moveToNextQuestion();
     },
 
     goTo(index: number) {
@@ -257,6 +249,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (!index || index < 1 || index > this.totalQuestions) {
         return;
       }
+      this.clearRevealTimeout();
       this.markCurrentAsSkipped();
       this.runWithViewTransition(
         () => {
@@ -273,6 +266,25 @@ const quizLayout = (config: QuizLayoutConfig) => {
       update();
     },
 
+    clearRevealTimeout() {
+      if (this.revealTimeoutId !== null) {
+        window.clearTimeout(this.revealTimeoutId);
+        this.revealTimeoutId = null;
+      }
+      this.isRevealing = false;
+    },
+
+    moveToNextQuestion() {
+      if (this.currentIndex < this.totalQuestions) {
+        this.markCurrentAsSkipped();
+        this.runWithViewTransition(() => {
+          this.currentIndex += 1;
+          this.syncCurrentRevealFooterState();
+        });
+        this.scrollToQuestion();
+      }
+    },
+
     getRevealWaitTime(): number {
       const feedbackWaitMs = Number(this.revealWaitMs ?? '');
       if (!Number.isNaN(feedbackWaitMs) && feedbackWaitMs > 0) {
@@ -286,9 +298,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
     },
 
     isRevealMode(): boolean {
-      const feedbackMode =
-        this.feedbackMode || (tutorConfig as { quiz_options?: { feedback_mode?: string } }).quiz_options?.feedback_mode;
-      return feedbackMode === 'reveal';
+      return this.enableAnswerReveal;
     },
 
     getRevealAnswerIds(): number[] {
@@ -318,6 +328,11 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
     getQuestionElement(wrapper: HTMLElement): HTMLElement | null {
       return wrapper.querySelector(QUIZ_REVEAL_CONFIG.QUESTION_SELECTOR);
+    },
+
+    isQuestionRevealed(wrapper: HTMLElement): boolean {
+      const question = this.getQuestionElement(wrapper);
+      return question?.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) === '1';
     },
 
     getQuestionType(wrapper: HTMLElement): string {

@@ -2,7 +2,7 @@ window.jQuery(document).ready($ => {
     const { __ } = window.wp.i18n;
 
     // Currently only these types of question supports answer reveal mode.
-    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice', 'draw_image', 'pin_image', 'scale'];
+    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice'];
 
     let quiz_options = _tutorobject.quiz_options || {};
     let interactions = new Map();
@@ -19,20 +19,26 @@ window.jQuery(document).ready($ => {
 
 
     function get_reveal_wait_time() {
+        const quizLevelWait = Number(quiz_options.answers_reveal_duration || 0);
+        if (quizLevelWait > 0) {
+            return quizLevelWait * 1000;
+        }
+
         return Number(_tutorobject.quiz_answer_display_time) || 2000;
     }
 
     function is_reveal_mode() {
-        const feedbackMode = quiz_options.feedback_mode ||
-            $('.quiz-attempt-single-question').first().data('quiz-feedback-mode') ||
-            '';
-        return 'reveal' === feedbackMode;
+        return Number(quiz_options.enable_answer_reveal || 0) === 1;
     }
 
     function get_quiz_layout_view() {
         return quiz_options.question_layout_view ||
             $('#tutor-quiz-attempt-questions-wrap').data('question-layout-view') ||
             'single_question';
+    }
+
+    function has_pagination_enabled() {
+        return Number(_tutorobject.quiz_options.enable_pagination || 0) === 1;
     }
 
     function get_hint_markup(text) {
@@ -107,33 +113,6 @@ window.jQuery(document).ready($ => {
             });
         }
 
-        // Reveal mode for draw_image & pin_image: show reference (instructor mask) and explanation.
-        if (is_reveal_mode() && ['draw_image', 'pin_image'].includes($question_wrap.data('question-type'))) {
-            $question_wrap.find('.tutor-quiz-explanation-wrapper').removeClass('tutor-d-none');
-            $question_wrap.find('.tutor-draw-image-reference-wrapper').removeClass('tutor-d-none');
-            $question_wrap.find('.tutor-pin-image-reference-wrapper').removeClass('tutor-d-none');
-            goNext = true;
-        }
-
-        // Reveal mode for scale: decode context (same as true/false), fill value, then show reference.
-        if (is_reveal_mode() && $question_wrap.data('question-type') === 'scale') {
-            var questionId = $question_wrap.attr('id') ? $question_wrap.attr('id').replace('quiz-attempt-single-question-', '') : '';
-            if (questionId && window.tutor_quiz_scale_context) {
-                try {
-                    var scaleContext = JSON.parse(window.tutor_quiz_scale_context.split('').reverse().join(''));
-                    var correctValue = scaleContext[questionId];
-                    if (typeof correctValue === 'number' && !isNaN(correctValue)) {
-                        $question_wrap.find('.tutor-scale-reference-value').text(correctValue);
-                    }
-                } catch (e) {}
-            }
-            // The template hides the reference via BOTH `tutor-d-none` and `style="display: none;"`.
-            // Remove both so the element becomes visible in reveal mode.
-            var $referenceWrapper = $question_wrap.find('.tutor-scale-reference-wrapper');
-            $referenceWrapper.removeClass('tutor-d-none').removeAttr('style');
-            goNext = true;
-        }
-
         if (validatedTrue) {
             goNext = true;
         }
@@ -192,25 +171,7 @@ window.jQuery(document).ready($ => {
             var $inputs = $required_answer_wrap.find('input');
             if ($inputs.length) {
                 var $type = $inputs.attr('type');
-                // Draw image: require mask (hidden input with [answers][mask]) to have a value.
-                if ($question_wrap.data('question-type') === 'draw_image') {
-                    var $maskInput = $required_answer_wrap.find('input[name*="[answers][mask]"]');
-                    if ($maskInput.length && !$maskInput.val().trim().length) {
-                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please draw on the image to answer this question.', 'tutor')}</p>`);
-                        validated = false;
-                    }
-                } else if ($question_wrap.data('question-type') === 'pin_image') {
-                    // Pin image: require normalized pin coordinates (hidden inputs [answers][pin][x|y]).
-                    var $pinX = $required_answer_wrap.find('input[name*="[answers][pin][x]"]');
-                    var $pinY = $required_answer_wrap.find('input[name*="[answers][pin][y]"]');
-                    if (
-                        !$pinX.length || !$pinY.length ||
-                        !$pinX.val().trim().length || !$pinY.val().trim().length
-                    ) {
-                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please drop a pin on the image to answer this question.', 'tutor')}</p>`);
-                        validated = false;
-                    }
-                } else if ($type === 'radio') {
+                if ($type === 'radio') {
                     if ($required_answer_wrap.find('input[type="radio"]:checked').length == 0) {
                         $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please select an option to answer', 'tutor')}</p>`);
                         validated = false;
@@ -265,12 +226,6 @@ window.jQuery(document).ready($ => {
     $('.tutor-quiz-next-btn-all').prop('disabled', false);
     $('.quiz-attempt-single-question input').filter('[type="radio"], [type="checkbox"]').change(function () {
         if ($('.tutor-quiz-time-expired').length === 0) {
-            $('.tutor-quiz-next-btn-all').prop('disabled', false);
-        }
-    });
-
-    $(document).on('change', '.quiz-attempt-single-question input[name*="[answers][mask]"]', function () {
-        if ($('.tutor-quiz-time-expired').length === 0 && $(this).val().trim().length) {
             $('.tutor-quiz-next-btn-all').prop('disabled', false);
         }
     });
@@ -330,7 +285,11 @@ window.jQuery(document).ready($ => {
                  * @since 1.8.10
                  */
 
-                if (is_reveal_mode() && revealModeSupportedQuestions.includes($question_wrap.data('question-type'))) {
+                if (
+                    is_reveal_mode() &&
+                    get_quiz_layout_view() === 'single_question' &&
+                    revealModeSupportedQuestions.includes($question_wrap.data('question-type'))
+                ) {
                     setTimeout(() => {
                         $('.quiz-attempt-single-question').hide();
                         $nextQuestion.show();
@@ -346,7 +305,7 @@ window.jQuery(document).ready($ => {
                  * If pagination exists, set active class
                  */
 
-                if ($('.tutor-quiz-questions-pagination').length) {
+                if (has_pagination_enabled() && $('.tutor-quiz-questions-pagination').length) {
                     $('.tutor-quiz-question-paginate-item').removeClass('active');
                     $('.tutor-quiz-questions-pagination a[href="' + next_question_id + '"]').addClass('active');
                 }

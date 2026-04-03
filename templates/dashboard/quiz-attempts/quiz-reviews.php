@@ -10,6 +10,7 @@
  */
 
 use TUTOR\Input;
+use Tutor\Components\EmptyState;
 use Tutor\Models\QuizModel;
 
 $attempt_id   = Input::get( 'attempt_id', 0, Input::TYPE_INT );
@@ -18,6 +19,14 @@ $user_id      = tutor_utils()->avalue_dot( 'user_id', $attempt_data );
 $quiz_id      = (int) tutor_utils()->avalue_dot( 'quiz_id', $attempt_data );
 $back_url     = remove_query_arg( 'attempt_id' );
 $attempt_info = isset( $attempt_data->attempt_info ) ? maybe_unserialize( $attempt_data->attempt_info ) : array();
+$can_review   = $attempt_id > 0 && tutor_utils()->can_user_manage( 'attempt', $attempt_id );
+
+if ( ! $attempt_data || ! $can_review ) {
+	EmptyState::make()
+		->title( __( 'Attempt not found or access permission denied', 'tutor' ) )
+		->render();
+	return;
+}
 
 $form_id             = 'quiz-attempt-review-form';
 $form_default_values = array(

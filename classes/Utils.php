@@ -5180,6 +5180,10 @@ class Utils {
 		$post_id         = $this->get_post_id( $post_id );
 		$get_option_meta = maybe_unserialize( get_post_meta( $post_id, 'tutor_quiz_option', true ) );
 
+		if ( is_array( $get_option_meta ) ) {
+			$get_option_meta = Quiz::normalize_quiz_settings( $get_option_meta );
+		}
+
 		if ( ! $option_key && ! empty( $get_option_meta ) ) {
 			return $get_option_meta;
 		}
@@ -5744,6 +5748,11 @@ class Utils {
 	public function is_dashboard_page( $subpage = null ): bool {
 		if ( $subpage ) {
 			return $this->is_tutor_frontend_dashboard( $subpage );
+		}
+
+		$has_shortcode = has_shortcode( get_the_content(), 'tutor_dashboard' );
+		if ( $has_shortcode ) {
+			return true;
 		}
 
 		$current_id        = get_the_ID();
@@ -8766,6 +8775,7 @@ class Utils {
 	 */
 	public function is_tutor_frontend_dashboard( $subpage = '' ) {
 		global $wp_query;
+
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
 
@@ -11136,13 +11146,19 @@ class Utils {
 	}
 
 	/**
-	 * Is kids mode active?
+	 * Is kids mode active
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return bool
 	 */
-	public static function is_kids_mode(): bool {
+	public function is_kids_mode(): bool {
+		$user_id = get_current_user_id();
+		if ( $user_id && User::is_student_view() ) {
+			$user_learning_mood = UserPreference::get( 'learning_mood', Options_V2::LEARNING_MODE_MODERN );
+			return Options_V2::LEARNING_MODE_KIDS === $user_learning_mood;
+		}
+
 		return Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
 	}
 

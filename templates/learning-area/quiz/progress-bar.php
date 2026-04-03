@@ -22,6 +22,7 @@ $quiz_when_time_expires = $quiz_when_time_expires ?? 'auto_abandon';
 $form_id                = $form_id ?? '';
 $modal_id               = $modal_id ?? '';
 $has_time_limit         = isset( $has_time_limit ) ? (bool) $has_time_limit : $remaining_time_secs > 0;
+$hide_quiz_time_display = isset( $hide_quiz_time_display ) ? (bool) $hide_quiz_time_display : false;
 $total_questions        = isset( $total_questions ) ? (int) $total_questions : 0;
 $quiz_title             = get_the_title( $tutor_is_started_quiz->quiz_id );
 
@@ -41,7 +42,7 @@ $quiz_title             = get_the_title( $tutor_is_started_quiz->quiz_id );
 	>
 		<div class="tutor-quiz-progress-header">
 			<div class="tutor-quiz-progress-meta">
-				<?php if ( $has_time_limit ) : ?>
+				<?php if ( $has_time_limit && ! $hide_quiz_time_display ) : ?>
 					<div class="tutor-quiz-timer-frame" :class="'is-' + timerState" :data-shaking="shaking ? '1' : '0'">
 						<?php
 							SvgIcon::make()

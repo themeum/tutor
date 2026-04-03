@@ -29,22 +29,22 @@
 		}
 		?>
 		<div class="quiz-total-attempt tutor-d-flex d-xs-none">
-		<?php if ( 'retry' === $feedback_mode ) : ?>
-			<span class="tutor-fs-6 tutor-color-muted tutor-mr-12"><?php esc_html_e( 'Total Attempted', 'tutor' ); ?>:</span>
-			<span class="tutor-fs-6 tutor-fw-bold tutor-color-secondary">
-			<?php
-			if ( 0 != $attempts_allowed ) {
-				if ( $attempted_count ) {
-					echo esc_html( $attempted_count ) . '/';
-				}
-			}
-				echo 0 == $attempts_allowed ? esc_html__( 'No limit', 'tutor' ) : esc_html( $attempts_allowed );
-			?>
+			<span class="tutor-fs-6 tutor-color-muted tutor-mr-12">
+				<?php echo esc_html( $limit_attempts_allowed ? __( 'Total Attempted', 'tutor' ) : __( 'Attempts Allowed', 'tutor' ) ); ?>:
 			</span>
-		<?php else : ?>
-			<span class="tutor-fs-6 tutor-color-muted tutor-mr-12"><?php esc_html_e( 'Attempts Allowed', 'tutor' ); ?>:</span>
-			<span class="tutor-fs-6 tutor-fw-bold tutor-color-secondary">1</span>
-		<?php endif; ?>
+			<span class="tutor-fs-6 tutor-fw-bold tutor-color-secondary">
+				<?php
+				if ( $limit_attempts_allowed ) {
+					if ( 0 != $attempts_allowed && $attempted_count ) {
+						echo esc_html( $attempted_count ) . '/';
+					}
+
+					echo 0 == $attempts_allowed ? esc_html__( 'No limit', 'tutor' ) : esc_html( $attempts_allowed );
+				} else {
+					echo '1';
+				}
+				?>
+			</span>
 		</div>
 	</div>
 	<?php if ( ! $hide_quiz_time_display ) : ?>
@@ -73,8 +73,8 @@
 				
 				<span id="tutor-quiz-time-update" 
 					class="tutor-fs-6 tutor-fw-medium tutor-text-nowrap <?php $remaining_time_secs < 0 ? 'color-text-error' : ''; ?>" 
-					data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" 
-					data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>" 
+					data-attempt-settings="<?php echo esc_attr( wp_json_encode( $is_started_quiz ) ); ?>" 
+					data-attempt-meta="<?php echo esc_attr( wp_json_encode( $quiz_attempt_info ) ); ?>" 
 					data-quiz-duration="<?php echo esc_attr( tutor_utils()->quiz_time_duration_in_seconds( $quiz_time_type, $quiz_time_value ) ); ?>">
 				
 				</span>
@@ -83,11 +83,7 @@
 	<?php endif; ?>
 </div>
 
-<?php
-	$feedback_mode = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
-?>
-
-<?php if ( 'retry' == $feedback_mode ) : ?>
+<?php if ( $can_retry_quiz ) : ?>
 	<div class="quiz-flash-message">
 		<div id="tutor-quiz-time-expire-wrapper" class="tutor-mt-20 tutor-quiz-warning-box time-remaining-warning tutor-align-center tutor-justify-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
 			<div class="flash-info tutor-d-flex tutor-align-center">
