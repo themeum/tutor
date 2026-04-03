@@ -127,7 +127,10 @@ window.jQuery(document).ready($ => {
                     }
                 } catch (e) {}
             }
-            $question_wrap.find('.tutor-scale-reference-wrapper').removeClass('tutor-d-none');
+            // The template hides the reference via BOTH `tutor-d-none` and `style="display: none;"`.
+            // Remove both so the element becomes visible in reveal mode.
+            var $referenceWrapper = $question_wrap.find('.tutor-scale-reference-wrapper');
+            $referenceWrapper.removeClass('tutor-d-none').removeAttr('style');
             goNext = true;
         }
 
