@@ -5736,6 +5736,11 @@ class Utils {
 			return $this->is_tutor_frontend_dashboard( $subpage );
 		}
 
+		$has_shortcode = has_shortcode( get_the_content(), 'tutor_dashboard' );
+		if ( $has_shortcode ) {
+			return true;
+		}
+
 		$current_id        = get_the_ID();
 		$dashboard_page_id = $this->dashboard_page_id();
 
@@ -8756,6 +8761,7 @@ class Utils {
 	 */
 	public function is_tutor_frontend_dashboard( $subpage = '' ) {
 		global $wp_query;
+
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
 
