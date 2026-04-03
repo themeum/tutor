@@ -833,7 +833,7 @@ class Quiz {
 						/**
 						 * Answers from user input
 						 */
-						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
+						$given_answer = is_array( $answers ) ? array_map( 'sanitize_text_field', $answers ) : array( sanitize_text_field( $answers ) );
 						$given_answer = maybe_serialize( $given_answer );
 
 						/**
