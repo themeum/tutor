@@ -255,7 +255,7 @@ class UserPreference {
 	public function ajax_save_user_preferences() {
 		tutor_utils()->check_nonce();
 
-		$auto_play_next = Input::post( 'auto_play_next', null, 'boolean' );
+		$auto_play_next = Input::post( 'auto_play_next', null );
 		$theme          = Input::post( 'theme', null );
 		$font_scale     = Input::post( 'font_scale', null );
 		$learning_mood  = Input::post( 'learning_mood', null );
