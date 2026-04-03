@@ -7330,8 +7330,8 @@ class Utils {
 
 		// Add course id in where clause.
 		$course_query = '';
-		if ( '' !== $course_id ) {
-			$course_query = "AND course.ID = $course_id";
+		if ( $course_id > 0 ) {
+			$course_query = $wpdb->prepare( 'AND course.ID = %d', $course_id );
 		}
 
 		// Add date in where clause.
@@ -11148,7 +11148,7 @@ class Utils {
 	 *
 	 * @return bool
 	 */
-	public static function is_legacy_learning_mode(): bool {
-		return Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
+	public function is_legacy_learning_mode(): bool {
+		return Options_V2::LEARNING_MODE_LEGACY === $this->get_option( 'learning_mode' );
 	}
 }

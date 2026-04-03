@@ -894,6 +894,14 @@ class Options_V2 {
 								'desc'        => __( 'Enabling this feature will allow students to reset course progress and start over.', 'tutor' ),
 							),
 							array(
+								'key'         => 'course_reset_progress',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Course Reset Progress', 'tutor' ),
+								'default'     => 'off',
+								'label_title' => '',
+								'desc'        => __( 'Enabling this feature will allow students to reset course progress and start over.', 'tutor' ),
+							),
+							array(
 								'key'         => 'enable_course_review_moderation',
 								'type'        => 'toggle_switch',
 								'label'       => __( "Publish Course Review on Admin's Approval", 'tutor' ),
