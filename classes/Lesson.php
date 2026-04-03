@@ -113,8 +113,8 @@ class Lesson extends Tutor_Base {
 		 *
 		 * @since 2.0.0
 		 */
-		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'tutor_single_course_lesson_load_more' ) );
-		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'tutor_single_course_lesson_load_more' ) );
+		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'ajax_single_course_lesson_load_more' ) );
+		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'ajax_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_delete_lesson_comment', array( $this, 'ajax_delete_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_update_lesson_comment', array( $this, 'ajax_update_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'ajax_reply_lesson_comment' ) );
@@ -135,12 +135,16 @@ class Lesson extends Tutor_Base {
 	 *
 	 * @return void  send wp json data
 	 */
-	public function tutor_single_course_lesson_load_more() {
+	public function ajax_single_course_lesson_load_more() {
 		tutor_utils()->checking_nonce();
 
 		$comment_id = 0;
 		$comment    = Input::post( 'comment', '', Input::TYPE_KSES_POST );
 		$lesson_id  = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
+
+		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
 
 		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
 			$comment_data = array(
