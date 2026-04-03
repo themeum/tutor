@@ -11143,7 +11143,7 @@ class Utils {
 	 *
 	 * @return bool
 	 */
-	public static function is_legacy_learning_mode(): bool {
-		return Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
+	public function is_legacy_learning_mode(): bool {
+		return Options_V2::LEARNING_MODE_LEGACY === $this->get_option( 'learning_mode' );
 	}
 }
