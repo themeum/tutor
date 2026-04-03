@@ -66,12 +66,15 @@ declare global {
       };
       drawOnImage?: {
         init: (options: {
-          image: HTMLImageElement;
+          image: HTMLImageElement | null;
           canvas: HTMLCanvasElement;
+          hiddenInput?: HTMLInputElement | null;
           brushSize?: number;
           strokeStyle?: string;
           initialMaskUrl?: string;
           onMaskChange?: (value: string) => void;
+          interactionRoot?: HTMLElement | null;
+          activateOnHover?: boolean;
         }) => { destroy: () => void };
         DEFAULT_BRUSH_SIZE?: number;
         DEFAULT_STROKE_STYLE?: string;
@@ -108,6 +111,7 @@ declare global {
       ajaxurl?: string;
       tutor_url?: string;
       wp_date_format?: string;
+      is_legacy_learning_mode?: boolean;
     };
   }
 }
