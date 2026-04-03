@@ -63,7 +63,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 		x-data='tutorForm({ 
 			id: "<?php echo esc_attr( $form_id ); ?>",
 			mode: "onChange",
-			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
+			defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>,
 		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit((data) => handleUpdateProfile(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
@@ -85,7 +85,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 								variant: 'image-uploader',
 								accept: '.png,.jpg,.jpeg',
 								onFileSelect: handleUploadProfilePhoto,
-								imagePreviewPlaceholder: '<?php esc_attr( $settings_data['profile_placeholder'] ); ?>',
+								imagePreviewPlaceholder: '<?php echo esc_attr( $settings_data['profile_placeholder'] ); ?>',
 							})"
 							class="tutor-account-avatar" 
 							:class="{
@@ -151,7 +151,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
 					<?php
 						InputField::make()
