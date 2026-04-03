@@ -2,7 +2,7 @@ window.jQuery(document).ready($ => {
     const { __ } = window.wp.i18n;
 
     // Currently only these types of question supports answer reveal mode.
-    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice', 'draw_image', 'pin_image'];
+    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice'];
 
     let quiz_options = _tutorobject.quiz_options
     let interactions = new Map();
@@ -102,14 +102,6 @@ window.jQuery(document).ready($ => {
             });
         }
 
-        // Reveal mode for draw_image & pin_image: show reference (instructor mask) and explanation.
-        if (is_reveal_mode() && ['draw_image', 'pin_image'].includes($question_wrap.data('question-type'))) {
-            $question_wrap.find('.tutor-quiz-explanation-wrapper').removeClass('tutor-d-none');
-            $question_wrap.find('.tutor-draw-image-reference-wrapper').removeClass('tutor-d-none');
-            $question_wrap.find('.tutor-pin-image-reference-wrapper').removeClass('tutor-d-none');
-            goNext = true;
-        }
-
         if (validatedTrue) {
             goNext = true;
         }
@@ -168,25 +160,7 @@ window.jQuery(document).ready($ => {
             var $inputs = $required_answer_wrap.find('input');
             if ($inputs.length) {
                 var $type = $inputs.attr('type');
-                // Draw image: require mask (hidden input with [answers][mask]) to have a value.
-                if ($question_wrap.data('question-type') === 'draw_image') {
-                    var $maskInput = $required_answer_wrap.find('input[name*="[answers][mask]"]');
-                    if ($maskInput.length && !$maskInput.val().trim().length) {
-                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please draw on the image to answer this question.', 'tutor')}</p>`);
-                        validated = false;
-                    }
-                } else if ($question_wrap.data('question-type') === 'pin_image') {
-                    // Pin image: require normalized pin coordinates (hidden inputs [answers][pin][x|y]).
-                    var $pinX = $required_answer_wrap.find('input[name*="[answers][pin][x]"]');
-                    var $pinY = $required_answer_wrap.find('input[name*="[answers][pin][y]"]');
-                    if (
-                        !$pinX.length || !$pinY.length ||
-                        !$pinX.val().trim().length || !$pinY.val().trim().length
-                    ) {
-                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please drop a pin on the image to answer this question.', 'tutor')}</p>`);
-                        validated = false;
-                    }
-                } else if ($type === 'radio') {
+                if ($type === 'radio') {
                     if ($required_answer_wrap.find('input[type="radio"]:checked').length == 0) {
                         $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please select an option to answer', 'tutor')}</p>`);
                         validated = false;
@@ -241,12 +215,6 @@ window.jQuery(document).ready($ => {
     $('.tutor-quiz-next-btn-all').prop('disabled', false);
     $('.quiz-attempt-single-question input').filter('[type="radio"], [type="checkbox"]').change(function () {
         if ($('.tutor-quiz-time-expired').length === 0) {
-            $('.tutor-quiz-next-btn-all').prop('disabled', false);
-        }
-    });
-
-    $(document).on('change', '.quiz-attempt-single-question input[name*="[answers][mask]"]', function () {
-        if ($('.tutor-quiz-time-expired').length === 0 && $(this).val().trim().length) {
             $('.tutor-quiz-next-btn-all').prop('disabled', false);
         }
     });
