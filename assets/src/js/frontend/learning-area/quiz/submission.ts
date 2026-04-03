@@ -209,6 +209,10 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 
     revealOnSubmit(): boolean {
       const revealAnswerIds = this.getRevealAnswerIds();
+      if (!revealAnswerIds.length) {
+        return false;
+      }
+
       const root = this.$root ?? this.$el;
       if (!root) {
         return false;
@@ -224,9 +228,6 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         }
         const questionType = question.dataset?.question ?? '';
         if (!(QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES as readonly string[]).includes(questionType)) {
-          return;
-        }
-        if (!revealAnswerIds.length) {
           return;
         }
         this.revealQuestion(wrapper, revealAnswerIds);
