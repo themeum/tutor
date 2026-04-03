@@ -10,13 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Traits\JsonResponse;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 /**
  * Question answer management
  *
@@ -59,6 +57,30 @@ class Q_And_A {
 		add_action( 'wp_ajax_tutor_qna_bulk_action', array( $this, 'process_bulk_action' ) );
 		add_action( 'wp_ajax_tutor_q_and_a_load_more', array( $this, 'load_more' ) );
 		add_action( 'wp_ajax_tutor_qna_load_replies', array( $this, 'load_replies' ) );
+	}
+
+	/**
+	 * Check if Q&A feature is enabled.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_enabled() {
+		return (bool) get_tutor_option( 'enable_q_and_a_on_course' );
+	}
+
+	/**
+	 * Check if Q&A is enabled for a specific course.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return bool
+	 */
+	public static function is_enabled_for_course( $course_id ) {
+		return self::is_enabled() && (bool) get_post_meta( $course_id, '_tutor_enable_qa', true );
 	}
 
 	/**
