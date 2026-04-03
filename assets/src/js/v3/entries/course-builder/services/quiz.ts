@@ -24,7 +24,6 @@ import {
 import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
 
 type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
-type QuizFeedbackMode = 'default' | 'reveal' | 'retry';
 type QuizLayoutView = '' | 'single_question' | 'question_pagination' | 'question_below_each_other'; // question_pagination will be deprecated
 type QuizQuestionsOrder = 'rand' | 'sorting' | 'asc' | 'desc';
 type QuizPaginationType = 'shape' | 'radio' | 'number';
@@ -80,7 +79,7 @@ export interface QuizDetailsResponse {
       time_type: QuizTimeLimit;
     };
     hide_quiz_time_display: '0' | '1';
-    feedback_mode: QuizFeedbackMode;
+    limit_attempts_allowed: '0' | '1';
     attempts_allowed: number;
     pass_is_required: '0' | '1';
     passing_grade: number;
@@ -117,7 +116,6 @@ export interface QuizForm {
       time_type: QuizTimeLimit;
     };
     hide_quiz_time_display: boolean;
-    feedback_mode: QuizFeedbackMode;
     limit_attempts_allowed: boolean;
     attempts_allowed: number;
     pass_is_required: boolean;
@@ -162,6 +160,10 @@ interface QuizUpdateQuestionPayload {
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFields: string[]): QuizForm => {
+  const legacyQuizOption = quiz.quiz_option as QuizDetailsResponse['quiz_option'] & {
+    feedback_mode?: 'default' | 'reveal' | 'retry';
+  };
+
   return {
     ID: quiz.ID,
     _data_status: QuizDataStatus.NO_CHANGE,
@@ -174,8 +176,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
         time_type: quiz.quiz_option.time_limit.time_type ?? 'minutes',
       },
       hide_quiz_time_display: quiz.quiz_option.hide_quiz_time_display === '1',
-      feedback_mode: quiz.quiz_option.feedback_mode ?? 'retry',
-      limit_attempts_allowed: !!Number(quiz.quiz_option.attempts_allowed),
+      limit_attempts_allowed: isDefined(quiz.quiz_option.limit_attempts_allowed)
+        ? quiz.quiz_option.limit_attempts_allowed === '1'
+        : legacyQuizOption.feedback_mode === 'retry',
       attempts_allowed: quiz.quiz_option.attempts_allowed ?? 10,
       pass_is_required: quiz.quiz_option.pass_is_required === '1',
       passing_grade: quiz.quiz_option.passing_grade ?? 80,
@@ -189,7 +192,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
         : quiz.quiz_option.question_layout_view === 'question_pagination' || false,
       enable_answer_reveal: isDefined(quiz.quiz_option.enable_answer_reveal)
         ? quiz.quiz_option.enable_answer_reveal === '1'
-        : quiz.quiz_option.feedback_mode === 'reveal' || false,
+        : legacyQuizOption.feedback_mode === 'reveal' || false,
       answers_reveal_duration: String(quiz.quiz_option.answers_reveal_duration ?? 5),
       hide_previous_button: quiz.quiz_option.hide_previous_button === '1',
       questions_order: quiz.quiz_option.questions_order ?? 'rand',
@@ -228,8 +231,8 @@ export const convertQuizFormDataToPayload = (
       post_title: formData.quiz_title,
       post_content: formData.quiz_description,
       quiz_option: {
+        limit_attempts_allowed: formData.quiz_option.limit_attempts_allowed ? '1' : '0',
         attempts_allowed: formData.quiz_option.attempts_allowed,
-        feedback_mode: formData.quiz_option.feedback_mode,
         hide_question_number_overview: formData.quiz_option.hide_question_number_overview ? '1' : '0',
         hide_quiz_time_display: formData.quiz_option.hide_quiz_time_display ? '1' : '0',
         max_questions_for_answer:
@@ -256,7 +259,7 @@ export const convertQuizFormDataToPayload = (
         },
         ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
           contentDripType === 'unlock_sequentially' &&
-          formData.quiz_option.feedback_mode === 'retry' && {
+          formData.quiz_option.limit_attempts_allowed && {
             pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
           }),
         ...(isAddonEnabled(Addons.CONTENT_DRIP) && {

@@ -227,7 +227,11 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 name="quiz_option.limit_attempts_allowed"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormCheckbox {...controllerProps} label={__('Limit attempts allowed', 'tutor')} />
+                  <FormCheckbox
+                    {...controllerProps}
+                    label={__('Limit attempts allowed', 'tutor')}
+                    helpText={__('Set the number of attempts allowed for this quiz. 0 means unlimited.', 'tutor')}
+                  />
                 )}
               />
 
@@ -238,7 +242,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   rules={{
                     ...requiredRule(),
                     validate: (value) => {
-                      if (value >= 1 && value <= 20) {
+                      if (value >= 0 && value <= 20) {
                         return true;
                       }
                       return __('Allowed attempts must be between 0 and 20', 'tutor');

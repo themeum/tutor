@@ -87,7 +87,7 @@ const QuizModal = ({
           time_type: 'minutes',
         },
         hide_quiz_time_display: false,
-        feedback_mode: 'retry',
+        limit_attempts_allowed: false,
         attempts_allowed: 10,
         passing_grade: 80,
         max_questions_for_answer: contentType === 'tutor_h5p_quiz' ? 0 : 10,
