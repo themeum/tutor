@@ -1,4 +1,5 @@
 import { quizSummarySidebarMeta } from '@FrontendComponents/quiz/summary-sidebar';
+import { quizRetryAttemptMeta } from '@FrontendComponents/quiz/retry-attempt';
 import { quizAutoStartMeta } from './auto-start';
 import { quizRadarMeta } from './radar';
 import { quizLayoutMeta } from './layout';
@@ -17,6 +18,7 @@ export const initializeQuizInterface = () => {
       quizAutoStartMeta,
       quizRadarMeta,
       quizLayoutMeta,
+      quizRetryAttemptMeta,
       quizSummarySidebarMeta,
     ],
   });

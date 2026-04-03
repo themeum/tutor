@@ -544,7 +544,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												} else {
 													/**
 													 * Allow Pro and add-ons to render given answer for custom question types.
-													 * Pro handles draw_image via this action.
+													 * Pro handles draw_image and pin_image via this action.
 													 *
 													 * @param object $answer Answer object.
 													 */
@@ -722,7 +722,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													else {
 														/**
 														 * Allow Pro and add-ons to render correct answer for custom question types.
-														 * Pro handles draw_image via this action.
+														 * Pro handles draw_image and pin_image via this action.
 														 *
 														 * @param object $answer Answer object.
 														 */

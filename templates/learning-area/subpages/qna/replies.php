@@ -28,8 +28,8 @@ use Tutor\Components\Constants\Color;
 	<?php
 	Sorting::make()
 		->order( $replies_order )
-		->on_change( 'reloadReplies' )
-		->bind_active_order( 'repliesOrder' )
+		// ->on_change( 'reloadReplies' )
+		// ->bind_active_order( 'repliesOrder' )
 		->render();
 	?>
 </div>
@@ -82,14 +82,15 @@ use Tutor\Components\Constants\Color;
 				<div x-show="editingId === <?php echo (int) $reply->comment_ID; ?>" x-cloak class="tutor-mt-5 tutor-w-full">
 					<?php
 					tutor_load_template(
-						'dashboard.discussions.qna-form',
+						'learning-area.subpages.qna.form',
 						array(
-							'form_id'        => 'qna-edit-' . (int) $reply->comment_ID,
-							'default_value'  => $reply->comment_content,
-							'submit_handler' => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $reply->comment_ID . ' })',
-							'cancel_handler' => 'setEditing(null)',
-							'is_pending'     => 'updateQnAMutation?.isPending',
-							'placeholder'    => __( 'Write your answer', 'tutor' ),
+							'form_id'             => 'qna-edit-' . (int) $reply->comment_ID,
+							'default_value'       => $reply->comment_content,
+							'submit_handler'      => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $reply->comment_ID . ' })',
+							'cancel_handler'      => 'setEditing(null)',
+							'is_pending'          => 'updateQnAMutation?.isPending',
+							'placeholder'         => __( 'Write your answer', 'tutor' ),
+							'keep_footer_visible' => true,
 						)
 					);
 					?>

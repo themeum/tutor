@@ -196,12 +196,17 @@ class SearchFilter extends BaseComponent {
 			$current_url = add_query_arg( $_GET, home_url( $wp->request ) );
 		}
 
-		$this->attributes['action']  = esc_url( $current_url );
-		$this->attributes['method']  = $method;
-		$this->attributes['id']      = $form_id;
-		$this->attributes['x-data']  = "tutorForm({ id: '" . esc_attr( $form_id ) . "', mode: 'onSubmit' })";
-		$this->attributes['x-bind']  = 'getFormBindings()';
-		$this->attributes['@submit'] = 'handleSubmit((data) => { $el.submit(); })($event)';
+		$this->attributes = array_merge(
+			array(
+				'action'  => esc_url( $current_url ),
+				'method'  => $method,
+				'id'      => $form_id,
+				'x-data'  => "tutorForm({ id: '" . esc_attr( $form_id ) . "', mode: 'onSubmit' })",
+				'x-bind'  => 'getFormBindings()',
+				'@submit' => 'handleSubmit((data) => { $el.submit(); })($event)',
+			),
+			$this->attributes
+		);
 
 		ob_start();
 		?>

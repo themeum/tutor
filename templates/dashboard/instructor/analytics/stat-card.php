@@ -75,7 +75,7 @@ if ( ! empty( $hover_content ) ) {
 		<?php endif; ?>
 	</div>
 	<?php if ( $show_graph ) : ?>
-		<div class="tutor-stat-card-chart" x-data="tutorStatCard(<?php echo wp_json_encode( $data ); ?>)">
+		<div class="tutor-stat-card-chart" x-data="tutorStatCard(<?php echo esc_attr( wp_json_encode( $data ) ); ?>)">
 			<canvas x-ref="canvas" hright="33" width="100%"></canvas>
 		</div>
 	<?php endif; ?>

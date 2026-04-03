@@ -96,7 +96,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
     modal.classList.add('tutor-modal-content');
 
     return {
-      'x-trap.noscroll.inert.noautofocus': 'open',
+      'x-trap.noscroll.inert': 'open',
       '@click.outside': this.isCloseable ? 'close()' : '',
       'x-show': 'open',
       'x-transition:enter': 'tutor-modal-content-enter',

@@ -151,6 +151,7 @@ declare global {
         filter: null;
       };
       settings?: {
+        learning_mode: 'modern' | 'legacy' | 'kids' | '';
         monetize_by: 'wc' | 'tutor' | 'edd';
         enable_course_marketplace: 'on' | 'off';
         course_permalink_base: string;

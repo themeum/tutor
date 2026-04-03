@@ -5180,6 +5180,10 @@ class Utils {
 		$post_id         = $this->get_post_id( $post_id );
 		$get_option_meta = maybe_unserialize( get_post_meta( $post_id, 'tutor_quiz_option', true ) );
 
+		if ( is_array( $get_option_meta ) ) {
+			$get_option_meta = Quiz::normalize_quiz_settings( $get_option_meta );
+		}
+
 		if ( ! $option_key && ! empty( $get_option_meta ) ) {
 			return $get_option_meta;
 		}
@@ -5291,6 +5295,11 @@ class Utils {
 			'draw_image'        => array(
 				'name'   => __( 'Draw on Image', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
+				'is_pro' => true,
+			),
+			'pin_image'         => array(
+				'name'   => __( 'Pin on Image', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),
 		);
@@ -6577,7 +6586,7 @@ class Utils {
 			}
 		}
 
-		if ( '' !== $start_date && '' !== $end_date ) {
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$period_query = " AND  DATE($dt_column) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
 		}
 

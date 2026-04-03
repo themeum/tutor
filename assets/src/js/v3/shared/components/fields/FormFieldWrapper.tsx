@@ -49,6 +49,8 @@ interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
   characterCount?: { maxLimit: number; inputCharacter: number };
   isSecondary?: boolean;
   inputStyle?: SerializedStyles;
+  wrapperCss?: SerializedStyles;
+  inputContainerCss?: SerializedStyles;
   generateWithAi?: boolean;
   onClickAiButton?: () => void;
   isMagicAi?: boolean;
@@ -72,6 +74,8 @@ const FormFieldWrapper = <T,>({
   characterCount,
   isSecondary = false,
   inputStyle,
+  wrapperCss,
+  inputContainerCss,
   onClickAiButton,
   isMagicAi = false,
   generateWithAi = false,
@@ -117,8 +121,8 @@ const FormFieldWrapper = <T,>({
   );
 
   return (
-    <div css={styles.container({ disabled, isHidden })} data-cy="form-field-wrapper">
-      <div css={styles.inputContainer(isInlineLabel)}>
+    <div css={[styles.container({ disabled, isHidden }), wrapperCss]} data-cy="form-field-wrapper">
+      <div css={[styles.inputContainer(isInlineLabel), inputContainerCss]}>
         {(label || helpText) && (
           <div css={styles.labelContainer}>
             {label && (

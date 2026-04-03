@@ -70,8 +70,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 				<?php
 				Avatar::make()
 					->user( get_current_user_id() )
-					->size( Size::X_SMALL )
-					->attr( 'style', 'width: 15px; height: 15px;' )
+					->size( Size::SIZE_20 )
 					->render();
 				?>
 				<span class="tutor-tiny"><?php esc_html_e( 'Profile', 'tutor' ); ?></span>

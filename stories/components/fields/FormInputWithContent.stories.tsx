@@ -59,7 +59,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['regular', 'large'],
+      options: ['small', 'regular', 'large'],
       defaultValue: 'regular',
       description: 'Size of the input field.',
     },

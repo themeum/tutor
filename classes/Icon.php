@@ -322,7 +322,10 @@ final class Icon {
 	const QUIZ_IMAGE_ANSWER          = 'quiz-image-answer';
 	const QUIZ_IMAGE_MATCHING        = 'quiz-image-matching';
 	const QUIZ_MULTI_CHOICE          = 'quiz-multi-choice';
+	const QUIZ_NUMBER                = 'quiz-number';
 	const QUIZ_ORDERING              = 'quiz-ordering';
+	const QUIZ_RADIO                 = 'quiz-radio';
+	const QUIZ_SHAPE                 = 'quiz-shape';
 	const QUIZ_SHORT_ANSWER          = 'quiz-short-answer';
 	const QUIZ_TRUE_FALSE            = 'quiz-true-false';
 	const RATINGS                    = 'ratings';

@@ -47,16 +47,14 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 		<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
 			<div class="tutor-flex tutor-gap-5 tutor-mb-5">
 				<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_40 )->render(); ?>
-				<div>
-					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-						<span class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></span> 
-						<span class="tutor-text-secondary">
-							<?php
-								// Translators: %s is the time of comment.
-								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
-							?>
-						</span>
-					</div>
+				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
+					<span class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></span> 
+					<span class="tutor-text-secondary">
+						<?php
+							// Translators: %s is the time of comment.
+							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
+						?>
+					</span>
 				</div>
 				<?php if ( $is_user_asker ) : ?>
 				<div class="tutor-ml-auto">
@@ -99,11 +97,12 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 						tutor_load_template(
 							'learning-area.subpages.qna.form',
 							array(
-								'form_id'        => 'qna-edit-' . (int) $question->comment_ID,
-								'default_value'  => $question->comment_content,
-								'submit_handler' => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
-								'cancel_handler' => 'setEditing(null)',
-								'is_pending'     => 'updateQnAMutation?.isPending',
+								'form_id'             => 'qna-edit-' . (int) $question->comment_ID,
+								'default_value'       => $question->comment_content,
+								'submit_handler'      => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
+								'cancel_handler'      => 'reset(); setEditing(null)',
+								'is_pending'          => 'updateQnAMutation?.isPending',
+								'keep_footer_visible' => true,
 							)
 						);
 					?>
