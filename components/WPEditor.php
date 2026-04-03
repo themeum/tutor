@@ -41,11 +41,20 @@ defined( 'ABSPATH' ) || exit;
  * WPEditor::make()
  *     ->name( 'bio' )
  *     ->content( $user_bio )
- *     ->editor_config( array(
- *         'media_buttons' => true,
- *         'teeny' => false,
- *         'editor_height' => 300,
- *     ) )
+ *     ->editor_config(
+ *         array(
+ *             'teeny'         => false,
+ *             'media_buttons' => false,
+ *             'quicktags'     => false,
+ *             'editor_height' => 150,
+ *             'tinymce'       => array(
+ *                 'toolbar1' => 'bold,italic,underline,link,unlink,removeformat,image,bullist,codesample',
+ *                 'toolbar2' => '',
+ *                 'toolbar3' => '',
+ *                 'plugins'  => 'link,image,lists,codesample',
+ *             ),
+ *         )
+ *     );
  *     ->render();
  * ```
  *
