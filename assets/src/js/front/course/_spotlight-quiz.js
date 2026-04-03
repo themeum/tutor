@@ -4,7 +4,7 @@ window.jQuery(document).ready($ => {
     // Currently only these types of question supports answer reveal mode.
     const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice'];
 
-    let quiz_options = _tutorobject.quiz_options || {};
+    let quiz_options = _tutorobject.quiz_options
     let interactions = new Map();
 
     $('.tutor-sortable-list').on('sortchange', handleSort);
@@ -32,9 +32,7 @@ window.jQuery(document).ready($ => {
     }
 
     function get_quiz_layout_view() {
-        return quiz_options.question_layout_view ||
-            $('#tutor-quiz-attempt-questions-wrap').data('question-layout-view') ||
-            'single_question';
+        return _tutorobject.quiz_options.question_layout_view
     }
 
     function has_pagination_enabled() {
@@ -335,8 +333,8 @@ window.jQuery(document).ready($ => {
         var $that = $(this);
         var value = $that.val();
         var limit = $that.hasClass('question_type_short_answer')
-            ? quiz_options.short_answer_characters_limit
-            : quiz_options.open_ended_answer_characters_limit;
+            ? _tutorobject.quiz_options.short_answer_characters_limit
+            : _tutorobject.quiz_options.open_ended_answer_characters_limit;
 
         if (!limit) {
             return;
@@ -377,7 +375,7 @@ window.jQuery(document).ready($ => {
             });
         }
         //If auto submit option is enabled after time expire submit current progress
-        if (quiz_options.quiz_when_time_expires === 'auto_submit' && $('#tutor-quiz-time-update').hasClass('tutor-quiz-time-expired')) {
+        if (_tutorobject.quiz_options.quiz_when_time_expires === 'auto_submit' && $('#tutor-quiz-time-update').hasClass('tutor-quiz-time-expired')) {
             quiz_validated = true;
             feedback_validated = true;
         }
