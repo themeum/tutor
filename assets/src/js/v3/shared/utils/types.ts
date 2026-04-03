@@ -331,6 +331,7 @@ export interface QuizQuestion {
     show_question_mark: boolean;
     has_multiple_correct_answer: boolean;
     is_image_matching: boolean;
+    draw_image_threshold_percent?: number;
   };
   question_answers: QuizQuestionOption[];
 }
@@ -345,6 +346,7 @@ export interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_se
     show_question_mark: '0' | '1';
     has_multiple_correct_answer?: '0' | '1';
     is_image_matching?: '0' | '1';
+    draw_image_threshold_percent?: number;
   };
 }
 

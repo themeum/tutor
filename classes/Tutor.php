@@ -675,8 +675,13 @@ final class Tutor extends Singleton {
 
 	/**
 	 * Do some task during plugin activation
+	 *
+	 * @since 4.0.0 Flush rewrite rules on activation.
 	 */
 	public static function tutor_activate() {
+		// Rewrite Flush.
+		Permalink::set_permalink_flag();
+
 		$version = get_option( 'tutor_version' );
 		if ( ! function_exists( 'tutor_time' ) ) {
 			include tutor()->path . 'includes/tutor-general-functions.php';
@@ -691,8 +696,6 @@ final class Tutor extends Singleton {
 			$options = self::default_options();
 			update_option( 'tutor_option', $options );
 
-			// Rewrite Flush.
-			Permalink::set_permalink_flag();
 			self::manage_tutor_roles_and_permissions();
 
 			// Save initial Page.
@@ -715,8 +718,6 @@ final class Tutor extends Singleton {
 			self::create_withdraw_database();
 			// Update the tutor version.
 			update_option( 'tutor_version', '1.2.0' );
-			// Rewrite Flush.
-			Permalink::set_permalink_flag();
 		}
 
 		/**
@@ -729,7 +730,6 @@ final class Tutor extends Singleton {
 				$wpdb->update( $wpdb->posts, array( 'post_type' => tutor()->course_post_type ), array( 'post_type' => 'course' ) );
 				update_option( 'is_course_post_type_updated', true );
 				update_option( 'tutor_version', '1.3.1' );
-				Permalink::set_permalink_flag();
 			}
 		}
 
