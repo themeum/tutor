@@ -15,6 +15,7 @@
 use Tutor\Quiz;
 use Tutor\Models\QuizModel;
 use TUTOR\Icon;
+use TUTOR\Quiz_Attempts_List;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
@@ -40,21 +41,27 @@ $remaining_time_context = tutor_utils()->seconds_to_time_context( $remaining_tim
 // Quiz settings.
 $quiz_when_time_expires = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
 $reveal_wait_ms         = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
+$quiz_settings          = tutor_utils()->get_quiz_option( (int) $tutor_is_started_quiz->quiz_id );
 $show_previous_button   = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
+$hide_previous_button   = '1' === (string) ( $quiz_settings['hide_previous_button'] ?? '0' );
+$hide_quiz_time_display = '1' === (string) ( $quiz_settings['hide_quiz_time_display'] ?? '0' );
+$show_previous_button   = $show_previous_button && ! $hide_previous_button;
 
 // Quiz layout.
-$question_layout_view = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_layout_view' );
-$feedback_mode        = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'feedback_mode', '' );
-$is_linear_layout     = in_array( $question_layout_view, array( 'single_question', 'question_pagination' ), true );
-$is_pagination_layout = 'question_pagination' === $question_layout_view;
+$question_layout_view = $quiz_settings['question_layout_view'] ?? 'single_question';
+$enable_pagination    = '1' === (string) ( $quiz_settings['enable_pagination'] ?? '0' );
+$enable_answer_reveal = '1' === (string) ( $quiz_settings['enable_answer_reveal'] ?? '0' );
+$is_linear_layout     = 'single_question' === $question_layout_view;
+$is_pagination_layout = 'single_question' === $question_layout_view && $enable_pagination;
 
-// Pagination style — only applies to question_pagination layout.
+// Pagination style — only applies to single question layout with pagination enabled.
 $supported_pagination_styles = array( 'shape', 'radio', 'number' );
-$pagination_style            = tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'question_pagination_style', 'number' );
+$pagination_style            = $quiz_settings['pagination_type'] ?? 'shape';
+$pagination_style            = in_array( $pagination_style, $supported_pagination_styles, true ) ? $pagination_style : 'shape';
 
 // Questions and attempts.
 $questions                     = tutor_utils()->get_random_questions_by_quiz();
-$hide_question_number_overview = (bool) tutor_utils()->get_quiz_option( $tutor_is_started_quiz->quiz_id, 'hide_question_number_overview', false );
+$hide_question_number_overview = (bool) ( $quiz_settings['hide_question_number_overview'] ?? false );
 
 $reveal_question_types = array( 'true_false', 'single_choice', 'multiple_choice' );
 $quiz_answers          = array();
@@ -75,13 +82,15 @@ $form_id             = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id
 $modal_id            = 'tutor-quiz-abandon-modal';
 $submitted_modal_id  = 'tutor-quiz-submitted-modal';
 $timeout_modal_id    = 'tutor-quiz-timeout-modal';
-$attempt_details_url = UrlHelper::add_query_params(
-	get_pagenum_link(),
-	array(
-		'action'     => Quiz::ACTION_VIEW_DETAILS,
-		'attempt_id' => (int) $tutor_is_started_quiz->attempt_id,
-	)
-);
+$attempt_details_url = Quiz_Attempts_List::is_attempt_details_hidden()
+	? ''
+	: UrlHelper::add_query_params(
+		get_pagenum_link(),
+		array(
+			'action'     => Quiz::ACTION_VIEW_DETAILS,
+			'attempt_id' => (int) $tutor_is_started_quiz->attempt_id,
+		)
+	);
 $modal_cancel_button = Button::make()
 	->label( __( 'Stay Here', 'tutor' ) )
 	->variant( Variant::SECONDARY )
@@ -117,7 +126,7 @@ $default_values = array(
 			submittedModalId: "<?php echo esc_attr( $submitted_modal_id ); ?>",
 			timeoutModalId: "<?php echo esc_attr( $timeout_modal_id ); ?>",
 			totalQuestions: <?php echo esc_attr( count( $questions ) ); ?>,
-			feedbackMode: "<?php echo esc_attr( $feedback_mode ); ?>",
+			enableAnswerReveal: <?php echo $enable_answer_reveal ? 'true' : 'false'; ?>,
 			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
 		});
 
@@ -125,7 +134,7 @@ $default_values = array(
 			layout: "<?php echo esc_attr( $question_layout_view ); ?>",
 			formId: "<?php echo esc_attr( $form_id ); ?>",
 			totalQuestions: <?php echo esc_attr( count( $questions ) ); ?>,
-			feedbackMode: "<?php echo esc_attr( $feedback_mode ); ?>",
+			enableAnswerReveal: <?php echo $enable_answer_reveal ? 'true' : 'false'; ?>,
 			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
 		});
 
@@ -153,6 +162,7 @@ $default_values = array(
 			'remaining_time_secs'    => max( 0, (int) $remaining_time_secs ),
 			'quiz_when_time_expires' => $quiz_when_time_expires,
 			'has_time_limit'         => $has_time_limit,
+			'hide_quiz_time_display' => $hide_quiz_time_display,
 			'form_id'                => $form_id,
 			'modal_id'               => $modal_id,
 			'total_questions'        => count( $questions ),
@@ -296,7 +306,7 @@ $default_values = array(
 						->variant( Variant::OUTLINE )
 						->icon( Icon::ARROW_LEFT_2, 'left', 20, 20 )
 						->attr( 'type', 'button' )
-						->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+						->attr( ':disabled', 'isRevealSubmitting' )
 						->attr( '@click', 'goPrev()' )
 						->attr( 'x-show', $show_previous_button ? 'currentIndex > 1' : 'false' )
 						->attr( 'class', 'tutor-quiz-answer-previous-btn' )
@@ -306,7 +316,7 @@ $default_values = array(
 						->label( __( 'Next', 'tutor' ) )
 						->size( Size::LARGE )
 						->attr( 'type', 'button' )
-						->attr( ':disabled', 'isRevealSubmitting || isRevealing || shouldDisableNextButton()' )
+						->attr( ':disabled', 'isRevealSubmitting || shouldDisableNextButton()' )
 						->attr( '@click', 'goNext()' )
 						->attr( 'x-show', 'currentIndex < totalQuestions' )
 						->attr( 'class', 'tutor-quiz-answer-next-btn' )
@@ -359,6 +369,7 @@ $default_values = array(
 			->template(
 				tutor()->path . 'templates/learning-area/quiz/modals/result.php',
 				array(
+					'modal_id'      => $submitted_modal_id,
 					'title'         => __( 'Quiz Submitted', 'tutor' ),
 					'message'       => __( 'Your responses have been successfully recorded.', 'tutor' ),
 					'icon_url'      => tutor()->url . 'assets/images/quiz-sibmitted.svg',
@@ -375,6 +386,7 @@ $default_values = array(
 			->template(
 				tutor()->path . 'templates/learning-area/quiz/modals/result.php',
 				array(
+					'modal_id'      => $timeout_modal_id,
 					'title'         => __( 'Times up!', 'tutor' ),
 					'message'       => __( 'Your quiz has been submitted automatically.', 'tutor' ),
 					'icon_url'      => tutor()->url . 'assets/images/quiz-timeout.svg',

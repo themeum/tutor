@@ -2,12 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 
-import type {
-  QuizFeedbackMode,
-  QuizLayoutView,
-  QuizQuestionsOrder,
-  QuizTimeLimit,
-} from '@CourseBuilderComponents/modals/QuizModal';
 import { useToast } from '@TutorShared/atoms/Toast';
 
 import type { ContentDripType } from '@CourseBuilderServices/course';
@@ -18,6 +12,7 @@ import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { convertedQuestion } from '@TutorShared/utils/quiz';
 import {
+  isDefined,
   QuizDataStatus,
   type ID,
   type QuizQuestion,
@@ -27,6 +22,11 @@ import {
   type TutorMutationResponse,
 } from '@TutorShared/utils/types';
 import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
+
+type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
+type QuizLayoutView = '' | 'single_question' | 'question_pagination' | 'question_below_each_other'; // question_pagination will be deprecated
+type QuizQuestionsOrder = 'rand' | 'sorting' | 'asc' | 'desc';
+type QuizPaginationType = 'shape' | 'radio' | 'number';
 
 interface ImportQuizPayload {
   topic_id: ID;
@@ -80,13 +80,19 @@ export interface QuizDetailsResponse {
       time_type: QuizTimeLimit;
     };
     hide_quiz_time_display: '0' | '1';
-    feedback_mode: QuizFeedbackMode;
+    limit_attempts_allowed: '0' | '1';
     attempts_allowed: number;
     pass_is_required: '0' | '1';
     passing_grade: number;
     max_questions_for_answer: number;
     quiz_auto_start: '0' | '1';
+    auto_start_delay: number;
     question_layout_view: QuizLayoutView;
+    enable_pagination: '0' | '1';
+    pagination_type: QuizPaginationType;
+    enable_answer_reveal: '0' | '1';
+    answers_reveal_duration: number;
+    hide_previous_button: '0' | '1';
     questions_order: QuizQuestionsOrder;
     hide_question_number_overview: '0' | '1';
     short_answer_characters_limit: number;
@@ -105,22 +111,31 @@ export interface QuizForm {
   quiz_title: string;
   quiz_description: string;
   quiz_option: {
+    enable_time_limit: boolean;
     time_limit: {
       time_value: number;
       time_type: QuizTimeLimit;
     };
     hide_quiz_time_display: boolean;
-    feedback_mode: QuizFeedbackMode;
+    limit_attempts_allowed: boolean;
     attempts_allowed: number;
     pass_is_required: boolean;
     passing_grade: number;
+    limit_questions_to_answer: boolean;
     max_questions_for_answer: number;
     quiz_auto_start: boolean;
+    auto_start_delay: string; // in seconds
     question_layout_view: QuizLayoutView;
+    enable_pagination: boolean;
+    enable_answer_reveal: boolean;
+    answers_reveal_duration: string; // in seconds
+    hide_previous_button: boolean;
     questions_order: QuizQuestionsOrder;
     hide_question_number_overview: boolean;
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
+    show_pagination: boolean;
+    pagination_type: QuizPaginationType;
     content_drip_settings: {
       unlock_date: string;
       after_xdays_of_enroll: number;
@@ -146,25 +161,44 @@ interface QuizUpdateQuestionPayload {
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFields: string[]): QuizForm => {
+  const legacyQuizOption = quiz.quiz_option as QuizDetailsResponse['quiz_option'] & {
+    feedback_mode?: 'default' | 'reveal' | 'retry';
+  };
+
   return {
     ID: quiz.ID,
     _data_status: QuizDataStatus.NO_CHANGE,
     quiz_title: quiz.post_title ?? '',
     quiz_description: quiz.post_content ?? '',
     quiz_option: {
+      enable_time_limit: Number(quiz.quiz_option.time_limit.time_value) > 0,
       time_limit: {
         time_value: quiz.quiz_option.time_limit.time_value ?? 0,
         time_type: quiz.quiz_option.time_limit.time_type ?? 'minutes',
       },
       hide_quiz_time_display: quiz.quiz_option.hide_quiz_time_display === '1',
-      feedback_mode: quiz.quiz_option.feedback_mode ?? 'retry',
+      limit_attempts_allowed: isDefined(quiz.quiz_option.limit_attempts_allowed)
+        ? quiz.quiz_option.limit_attempts_allowed === '1'
+        : legacyQuizOption.feedback_mode === 'retry',
       attempts_allowed: quiz.quiz_option.attempts_allowed ?? 10,
       pass_is_required: quiz.quiz_option.pass_is_required === '1',
       passing_grade: quiz.quiz_option.passing_grade ?? 80,
+      limit_questions_to_answer: !!Number(quiz.quiz_option.max_questions_for_answer),
       max_questions_for_answer: quiz.quiz_option.max_questions_for_answer ?? 10,
       quiz_auto_start: quiz.quiz_option.quiz_auto_start === '1',
+      auto_start_delay: String(quiz.quiz_option.auto_start_delay ?? 5),
       question_layout_view: quiz.quiz_option.question_layout_view || 'single_question',
+      enable_pagination: isDefined(quiz.quiz_option.enable_pagination)
+        ? quiz.quiz_option.enable_pagination === '1'
+        : quiz.quiz_option.question_layout_view === 'question_pagination' || false,
+      enable_answer_reveal: isDefined(quiz.quiz_option.enable_answer_reveal)
+        ? quiz.quiz_option.enable_answer_reveal === '1'
+        : legacyQuizOption.feedback_mode === 'reveal' || false,
+      answers_reveal_duration: String(quiz.quiz_option.answers_reveal_duration ?? 5),
+      hide_previous_button: quiz.quiz_option.hide_previous_button === '1',
       questions_order: quiz.quiz_option.questions_order ?? 'rand',
+      show_pagination: quiz.quiz_option.question_layout_view === 'question_pagination',
+      pagination_type: quiz.quiz_option.pagination_type ?? 'shape',
       hide_question_number_overview: quiz.quiz_option.hide_question_number_overview === '1',
       short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit ?? 200,
       open_ended_answer_characters_limit: quiz.quiz_option.open_ended_answer_characters_limit ?? 500,
@@ -198,8 +232,8 @@ export const convertQuizFormDataToPayload = (
       post_title: formData.quiz_title,
       post_content: formData.quiz_description,
       quiz_option: {
+        limit_attempts_allowed: formData.quiz_option.limit_attempts_allowed ? '1' : '0',
         attempts_allowed: formData.quiz_option.attempts_allowed,
-        feedback_mode: formData.quiz_option.feedback_mode,
         hide_question_number_overview: formData.quiz_option.hide_question_number_overview ? '1' : '0',
         hide_quiz_time_display: formData.quiz_option.hide_quiz_time_display ? '1' : '0',
         max_questions_for_answer:
@@ -211,16 +245,22 @@ export const convertQuizFormDataToPayload = (
         pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
         passing_grade: formData.quiz_option.passing_grade,
         question_layout_view: formData.quiz_option.question_layout_view,
+        enable_pagination: formData.quiz_option.enable_pagination ? '1' : '0',
+        enable_answer_reveal: formData.quiz_option.enable_answer_reveal ? '1' : '0',
+        answers_reveal_duration: Number(formData.quiz_option.answers_reveal_duration),
+        hide_previous_button: formData.quiz_option.hide_previous_button ? '1' : '0',
+        pagination_type: formData.quiz_option.pagination_type,
         questions_order: formData.quiz_option.questions_order,
         quiz_auto_start: formData.quiz_option.quiz_auto_start ? '1' : '0',
+        auto_start_delay: Number(formData.quiz_option.auto_start_delay),
         short_answer_characters_limit: formData.quiz_option.short_answer_characters_limit,
         time_limit: {
           time_type: formData.quiz_option.time_limit.time_type,
-          time_value: formData.quiz_option.time_limit.time_value,
+          time_value: formData.quiz_option.enable_time_limit ? formData.quiz_option.time_limit.time_value : 0,
         },
         ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
           contentDripType === 'unlock_sequentially' &&
-          formData.quiz_option.feedback_mode === 'retry' && {
+          formData.quiz_option.limit_attempts_allowed && {
             pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
           }),
         ...(isAddonEnabled(Addons.CONTENT_DRIP) && {

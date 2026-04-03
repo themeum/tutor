@@ -1496,6 +1496,7 @@ class Course extends Tutor_Base {
 		 * Localized only options to protect sensitive info like API keys.
 		 */
 		$required_options = array(
+			'learning_mode',
 			'monetize_by',
 			'enable_course_marketplace',
 			'course_permalink_base',

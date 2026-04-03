@@ -10,6 +10,7 @@
  */
 
 use Tutor\Models\CourseModel;
+use TUTOR\Quiz;
 
 global $post;
 global $next_id;
@@ -23,16 +24,18 @@ $previous_id = $contents->previous_id;
 $next_id     = $contents->next_id;
 
 $currentPost       = $post; //phpcs:ignore
-$quiz_id           = get_the_ID();
-$is_started_quiz   = tutor_utils()->is_started_quiz();
-$course            = CourseModel::get_course_by_quiz( get_the_ID() );
-$previous_attempts = tutor_utils()->quiz_attempts();
-$attempted_count   = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
-
-$feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
-$attempts_allowed  = 'retry' != $feedback_mode ? 1 : tutor_utils()->get_quiz_option( get_the_ID(), 'attempts_allowed', 0 );
-$passing_grade     = tutor_utils()->get_quiz_option( get_the_ID(), 'passing_grade', 0 );
-$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
+$quiz_id                     = get_the_ID();
+$is_started_quiz             = tutor_utils()->is_started_quiz();
+$course                      = CourseModel::get_course_by_quiz( get_the_ID() );
+$previous_attempts           = tutor_utils()->quiz_attempts();
+$attempted_count             = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
+$quiz_options                = tutor_utils()->get_quiz_option( $quiz_id );
+$limit_attempts_allowed      = '1' === (string) ( $quiz_options['limit_attempts_allowed'] ?? '0' );
+$configured_attempts_allowed = (int) ( $quiz_options['attempts_allowed'] ?? 0 );
+$attempts_allowed            = Quiz::get_effective_attempts_allowed( $limit_attempts_allowed, $configured_attempts_allowed );
+$passing_grade               = (int) ( $quiz_options['passing_grade'] ?? 0 );
+$attempt_remaining           = (int) $attempts_allowed - (int) $attempted_count;
+$can_retry_quiz              = Quiz::can_retry_quiz( $limit_attempts_allowed, $configured_attempts_allowed, $attempted_count );
 
 do_action( 'tutor_quiz/single/before/top' );
 ?>
@@ -114,7 +117,7 @@ do_action( 'tutor_quiz/single/before/top' );
 		</div>
 
 		<?php
-		if ( $attempt_remaining > 0 || 0 == $attempts_allowed ) :
+		if ( 0 === $attempted_count || $can_retry_quiz ) :
 			do_action( 'tutor_quiz/start_form/before', $quiz_id );
 			$skip_url = get_the_permalink( $next_id ? $next_id : $course_id );
 			?>
