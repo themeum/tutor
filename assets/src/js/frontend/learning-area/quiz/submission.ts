@@ -226,8 +226,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         if (!(QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES as readonly string[]).includes(questionType)) {
           return;
         }
-        // Types like scale do not use revealAnswerIds; still reveal (show correct/reference).
-        if (questionType !== 'scale' && !revealAnswerIds.length) {
+        if (!revealAnswerIds.length) {
           return;
         }
         this.revealQuestion(wrapper, revealAnswerIds);

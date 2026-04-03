@@ -8,26 +8,6 @@ export const decodeHexString = (encoded: string): string | null => {
   return bytes.map((byte) => String.fromCharCode(parseInt(byte, 16))).join('');
 };
 
-/**
- * Decode scale correct values from encoded script (same pattern as tutor-quiz-context for choice types).
- */
-export const getScaleCorrectContext = (): Record<string, number> => {
-  const script = document.getElementById(QUIZ_REVEAL_CONFIG.SCALE_CONTEXT_ID);
-  if (!script?.textContent?.trim()) {
-    return {};
-  }
-  try {
-    const decoded = decodeHexString(script.textContent.trim());
-    if (!decoded) {
-      return {};
-    }
-    const parsed = JSON.parse(decoded) as Record<string, number>;
-    return typeof parsed === 'object' && parsed !== null ? parsed : {};
-  } catch {
-    return {};
-  }
-};
-
 export const decodeExplanationContent = (encoded: string): string => {
   if (!encoded) {
     return '';
@@ -53,26 +33,6 @@ export const revealQuestionWithAnswers = (wrapper: HTMLElement, revealAnswerIds:
     return;
   }
   if (question.getAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR) === '1') {
-    return;
-  }
-
-  const questionType = question.dataset?.question ?? '';
-  // Scale: show correct value from encoded context (same as true/false), then reveal wrapper.
-  if (questionType === 'scale') {
-    const scaleEl = wrapper.querySelector<HTMLElement>('.tutor-scale-question');
-    const questionId = scaleEl?.dataset?.questionId;
-    const refWrapper = wrapper.querySelector<HTMLElement>('.tutor-scale-reference-wrapper');
-    const valueEl = refWrapper?.querySelector<HTMLElement>('.tutor-scale-reference-value');
-    if (refWrapper && questionId !== undefined) {
-      const scaleContext = getScaleCorrectContext();
-      const correctValue = scaleContext[questionId];
-      if (valueEl && typeof correctValue === 'number' && !Number.isNaN(correctValue)) {
-        valueEl.textContent = String(correctValue);
-      }
-      refWrapper.classList.remove('tutor-d-none');
-      refWrapper.style.display = '';
-    }
-    question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
     return;
   }
 

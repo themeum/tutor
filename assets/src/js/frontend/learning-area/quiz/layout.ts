@@ -347,10 +347,6 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (!(QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES as readonly string[]).includes(questionType)) {
         return false;
       }
-      // Scale (and similar) types reveal correct/reference without revealAnswerIds.
-      if (['scale'].includes(questionType)) {
-        return true;
-      }
       if (!this.revealAnswerIds.length) {
         return false;
       }
