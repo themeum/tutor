@@ -872,7 +872,6 @@ class Assets {
 		$load = true;
 
 		$post_id = get_the_ID();
-		$post    = get_post();
 
 		$is_learning_area   = tutor_utils()->is_learning_area();
 		$is_legacy_learning = tutor_utils()->is_legacy_learning_mode();
@@ -901,8 +900,10 @@ class Assets {
 				'tutor_login',
 			);
 
+			$post_content = get_the_content();
+
 			foreach ( $shortcdes as $shortcde ) {
-				$has_shortcode = has_shortcode( $post->post_content, $shortcde );
+				$has_shortcode = has_shortcode( $post_content, $shortcde );
 				if ( $has_shortcode ) {
 					$load = false;
 					break;
