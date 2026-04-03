@@ -21,6 +21,7 @@ use Tutor\Components\Modal;
 use Tutor\Components\Pagination;
 use Tutor\Components\Progress;
 use Tutor\Components\StarRating;
+use Tutor\Components\SvgIcon;
 use Tutor\Helpers\UrlHelper;
 
 // Get course ID from global variable set in learning-area/index.php .
@@ -43,7 +44,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 <div class="tutor-py-8 tutor-learning-area-reviews">
 	<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-5">
 		<h4 class="tutor-h4 tutor-flex tutor-items-center tutor-gap-4">
-			<?php tutor_utils()->render_svg_icon( Icon::RATINGS, 24, 24 ); ?>
+			<?php SvgIcon::make()->name( Icon::RATINGS )->size( 24 )->render(); ?>
 			<?php esc_html_e( 'Reviews', 'tutor' ); ?>
 		</h4>
 		<?php
