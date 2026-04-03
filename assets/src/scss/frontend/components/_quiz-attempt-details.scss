@@ -46,15 +46,6 @@
     grid-template-columns: 300px 1fr;
     gap: 128px;
 
-    // Allow inner content (e.g. wide question widgets) to shrink
-    // instead of forcing horizontal overflow of the body grid.
-    > * {
-      min-width: 0;
-    }
-
-    // Extra safety: prevent any horizontal scroll caused by wide widgets.
-    overflow-x: hidden;
-
     @include tutor-breakpoint-down(sm) {
       grid-template-columns: 1fr;
     }
