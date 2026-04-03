@@ -919,7 +919,20 @@ class Lesson extends Tutor_Base {
 	 * @return bool True if comments are enabled, false otherwise.
 	 */
 	public static function is_comment_enabled() {
-		return tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open() && is_user_logged_in();
+		return tutor_utils()->get_option( 'enable_comment_for_lesson' );
+	}
+
+	/**
+	 * Check if comments are enabled for lessons
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int|object $lesson Lesson ID or object. If null, current lesson will be used.
+	 *
+	 * @return bool True if comments are enabled, false otherwise.
+	 */
+	public static function is_comment_enabled_for_lesson( $lesson = null ) {
+		return self::is_comment_enabled() && comments_open( $lesson );
 	}
 
 	/**
@@ -982,7 +995,7 @@ class Lesson extends Tutor_Base {
 				),
 			),
 			'comments' => array(
-				'condition' => self::is_comment_enabled(),
+				'condition' => self::is_comment_enabled_for_lesson( $lesson_id ) && is_user_logged_in(),
 				'legacy'    => array(
 					'label'    => __( 'Comments', 'tutor' ),
 					'value'    => 'comments',

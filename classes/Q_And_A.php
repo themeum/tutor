@@ -82,7 +82,7 @@ class Q_And_A {
 	 * @return bool
 	 */
 	public static function is_enabled_for_course( $course_id ) {
-		return (bool) get_post_meta( $course_id, '_tutor_enable_qa', true );
+		return self::is_enabled() && (bool) get_post_meta( $course_id, '_tutor_enable_qa', true );
 	}
 
 	/**
