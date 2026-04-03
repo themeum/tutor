@@ -212,6 +212,7 @@ class Assets {
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
 			'kids_icons_registry'          => $kids_icons,
 			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
+			'is_legacy_learning_mode'      => tutor_utils()->is_legacy_learning_mode(),
 		);
 	}
 

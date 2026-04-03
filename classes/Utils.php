@@ -11163,4 +11163,15 @@ class Utils {
 	public static function is_kids_mode(): bool {
 		return Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
 	}
+
+	/**
+	 * Is legacy learning mode active?
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_legacy_learning_mode(): bool {
+		return Options_V2::LEARNING_MODE_LEGACY === $this->get_option( 'learning_mode' );
+	}
 }
