@@ -312,19 +312,20 @@ $single_url = UrlHelper::add_query_params(
 			</div>
 		</div>
 	</div>
-	
+
 	<div x-show="replyingId === <?php echo (int) $question_id; ?>" x-cloak class="tutor-card tutor-surface-l1-hover tutor-mt-4 tutor-w-full">
 		<?php
 		tutor_load_template(
 			'dashboard.discussions.qna-form',
 			array(
-				'form_id'        => 'qna-reply-form-' . (int) $question_id,
-				'submit_handler' => '(data) => replyQnAMutation?.mutate({ ...data, question_id: ' . (int) $question_id . ', course_id: ' . (int) $question->course_id . ', reply_context: "list" })',
-				'cancel_handler' => 'setReplying(null)',
-				'is_pending'     => 'replyQnAMutation?.isPending',
-				'placeholder'    => __( 'Just drop your response here!', 'tutor' ),
-				'label'          => __( 'Reply', 'tutor' ),
-				'submit_label'   => __( 'Save', 'tutor' ),
+				'form_id'             => 'qna-reply-form-' . (int) $question_id,
+				'submit_handler'      => '(data) => replyQnAMutation?.mutate({ ...data, question_id: ' . (int) $question_id . ', course_id: ' . (int) $question->course_id . ', reply_context: "list" })',
+				'cancel_handler'      => 'setReplying(null)',
+				'is_pending'          => 'replyQnAMutation?.isPending',
+				'placeholder'         => __( 'Just drop your response here!', 'tutor' ),
+				'label'               => __( 'Reply', 'tutor' ),
+				'submit_label'        => __( 'Save', 'tutor' ),
+				'keep_footer_visible' => true,
 			)
 		);
 		?>
@@ -336,15 +337,15 @@ $single_url = UrlHelper::add_query_params(
 		tutor_load_template(
 			'dashboard.discussions.qna-form',
 			array(
-				'form_id'        => 'qna-edit-' . (int) $question_id,
-				'default_value'  => $question->comment_content,
-				'submit_handler' => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
-				'cancel_handler' => 'setEditing(null)',
-				'is_pending'     => 'updateQnAMutation?.isPending',
+				'form_id'             => 'qna-edit-' . (int) $question_id,
+				'default_value'       => $question->comment_content,
+				'submit_handler'      => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
+				'cancel_handler'      => 'setEditing(null)',
+				'is_pending'          => 'updateQnAMutation?.isPending',
+				'keep_footer_visible' => true,
 			)
 		);
 		?>
 	</div>
 	<?php endif; ?>
-	
 </div>
