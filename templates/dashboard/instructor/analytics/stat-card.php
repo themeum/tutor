@@ -61,7 +61,7 @@ if ( ! empty( $hover_content ) ) {
 	</div>
 	<div class="tutor-stat-card-content">
 		<div class="tutor-stat-card-value">
-			<?php echo esc_html( $value ); ?>
+			<?php echo wp_kses_post( $value ); ?>
 		</div>
 
 		<?php if ( ! empty( $content_display ) ) : ?>

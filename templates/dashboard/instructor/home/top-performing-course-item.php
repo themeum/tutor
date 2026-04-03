@@ -36,7 +36,7 @@ use Tutor\Components\SvgIcon;
 			</div>
 
 			<div class="tutor-tiny tutor-font-semibold">
-				<?php echo esc_html( $item['revenue'] ); ?>
+				<?php echo wp_kses_post( $item['revenue'] ); ?>
 			</div>
 		</div>
 

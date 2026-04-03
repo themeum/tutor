@@ -677,7 +677,7 @@ class Instructor {
 				return array(
 					'name'     => $course->course_title,
 					'url'      => get_permalink( $course->course_id ),
-					'revenue'  => wp_kses_post( tutor_utils()->tutor_price( $course->total_revenue ?? 0, false ) ),
+					'revenue'  => tutor_utils()->tutor_price( $course->total_revenue ?? 0 ),
 					'students' => $course->total_student ?? 0,
 				);
 			},
