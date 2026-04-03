@@ -212,6 +212,7 @@ export const icons = [
   'landscape',
   'landscapeFilled',
   'league',
+  'learningMood',
   'left',
   'lesson',
   'lessonCompleted',

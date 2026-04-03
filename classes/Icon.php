@@ -228,6 +228,7 @@ final class Icon {
 	const LANDSCAPE                  = 'landscape';
 	const LANDSCAPE_FILLED           = 'landscape-filled';
 	const LEAGUE                     = 'league';
+	const LEARNING_MOOD              = 'learning-mood';
 	const LEFT                       = 'left';
 	const LESSON                     = 'lesson';
 	const LESSON_COMPLETED           = 'lesson-completed';
