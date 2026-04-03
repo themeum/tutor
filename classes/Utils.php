@@ -7325,8 +7325,8 @@ class Utils {
 
 		// Add course id in where clause.
 		$course_query = '';
-		if ( '' !== $course_id ) {
-			$course_query = "AND course.ID = $course_id";
+		if ( $course_id > 0 ) {
+			$course_query = $wpdb->prepare( 'AND course.ID = %d', $course_id );
 		}
 
 		// Add date in where clause.
@@ -7378,7 +7378,22 @@ class Utils {
 		return (int) $count;
 	}
 
-	public function get_enrolments( $status, $start = 0, $limit = 10, $search_term = '', $course_id = '', $date = '', $order = 'DESC' ) {
+	/**
+	 * Get enrollments
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $status status.
+	 * @param int    $start start.
+	 * @param int    $limit limit.
+	 * @param string $search_term search term.
+	 * @param int    $course_id course id.
+	 * @param string $date date.
+	 * @param string $order order.
+	 *
+	 * @return array
+	 */
+	public function get_enrolments( $status, $start = 0, $limit = 10, $search_term = '', $course_id = 0, $date = '', $order = 'DESC' ) {
 		global $wpdb;
 		$status      = sanitize_text_field( $status );
 		$course_id   = sanitize_text_field( $course_id );
@@ -7390,8 +7405,8 @@ class Utils {
 
 		// add course id in where clause.
 		$course_query = '';
-		if ( '' !== $course_id ) {
-			$course_query = "AND course.ID = $course_id";
+		if ( $course_id > 0 ) {
+			$course_query = $wpdb->prepare( 'AND course.ID = %d', $course_id );
 		}
 
 		// add date in where clause.
@@ -11119,5 +11134,16 @@ class Utils {
 	 */
 	public static function is_kids_mode(): bool {
 		return Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
+	}
+
+	/**
+	 * Is legacy learning mode active?
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_legacy_learning_mode(): bool {
+		return Options_V2::LEARNING_MODE_LEGACY === $this->get_option( 'learning_mode' );
 	}
 }

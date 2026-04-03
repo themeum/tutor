@@ -168,6 +168,45 @@ class Quiz {
 		// Add quiz title as nav item & render single content on the learning area.
 		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
 		add_action( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
+
+		/**
+		 * Slugs listed in tutor_quiz_templates_not_in_core have no file under wp-content/plugins/tutor/templates/.
+		 * Without this, tutor_load_template() still runs from generic quiz templates and tutor_get_template()
+		 * prints "The file you are trying to load does not exist…". Returning false here exits before that lookup.
+		 * Add-ons ship their own files and load them outside this path (e.g. direct include from the add-on).
+		 *
+		 * @since 4.0.0
+		 */
+		add_filter( 'should_tutor_load_template', array( $this, 'skip_addon_only_question_partials' ), 5, 3 );
+	}
+
+	/**
+	 * Skip loading templates that are not packaged with core Tutor LMS.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool   $load      Whether to load the template.
+	 * @param string $template  Template name in dot notation.
+	 * @param array  $variables Template variables.
+	 *
+	 * @return bool
+	 */
+	public function skip_addon_only_question_partials( $load, $template, $variables ) {
+		$addons_only = apply_filters(
+			'tutor_quiz_templates_not_in_core',
+			array(
+				'learning-area.quiz.questions.draw-image',
+				'shared.components.quiz.attempt-details.questions.draw-image',
+			),
+			$template,
+			$variables
+		);
+
+		if ( in_array( $template, $addons_only, true ) ) {
+			return false;
+		}
+
+		return $load;
 	}
 
 	/**
@@ -1612,7 +1651,7 @@ class Quiz {
 			<div class="tutor-quiz-attempts tutor-border tutor-rounded-2xl">
 				<div class="tutor-quiz-attempts-header">
 					<div class="tutor-quiz-attempts-header-item">
-						<?php esc_html_e( 'Attempts Date', 'tutor' ); ?>
+						<?php esc_html_e( 'Attempts', 'tutor' ); ?>
 					</div>
 					<div class="tutor-quiz-attempts-header-item">
 						<?php esc_html_e( 'Marks', 'tutor' ); ?>

@@ -200,7 +200,6 @@ class Assets {
 			'current_user'                 => $current_user,
 			'content_change_event'         => 'tutor_content_changed_event',
 			'is_tutor_course_edit'         => isset( $_GET['action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) ? true : false,
-			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
 			'current_page'                 => $current_page,
 			'quiz_answer_display_time'     => 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' ),
 			'is_ssl'                       => is_ssl(),
@@ -213,6 +212,7 @@ class Assets {
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
 			'kids_icons_registry'          => $kids_icons,
 			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
+			'is_legacy_learning_mode'      => tutor_utils()->is_legacy_learning_mode(),
 		);
 	}
 
@@ -891,10 +891,9 @@ class Assets {
 
 		$is_course_list_page    = tutor_utils()->is_course_list_page();
 		$is_course_details_page = tutor_utils()->is_course_details_page();
-		$is_single_bundle_page  = apply_filters( 'tutor_is_bundle_single_page', false );
 
 		// Return if it is course list or course details page.
-		if ( $is_course_list_page || $is_course_details_page || $is_single_bundle_page ) {
+		if ( $is_course_list_page || $is_course_details_page ) {
 			return;
 		}
 
@@ -953,9 +952,8 @@ class Assets {
 		$is_tutor_checkout_page    = get_the_ID() === CheckoutController::get_page_id();
 		$is_student_public_profile = ! empty( $wp_query->query['tutor_profile_username'] );
 		$is_order_placement_page   = Input::has( 'tutor_order_placement', 'get' ) && ! empty( Input::get( 'tutor_order_placement' ) );
-		$is_single_bundle_page     = apply_filters( 'tutor_is_bundle_single_page', false );
 
-		if ( tutor_utils()->is_course_list_page() || tutor_utils()->is_course_details_page() || $is_single_bundle_page ) {
+		if ( tutor_utils()->is_course_list_page() || tutor_utils()->is_course_details_page() ) {
 			$load = true;
 		} elseif ( $is_learning_area ) {
 			$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );

@@ -96,7 +96,7 @@ $single_url = UrlHelper::add_query_params(
 			?>
 			<?php if ( get_current_user_id() === (int) $lesson_comment->user_id ) : ?>
 				<div class="tutor-flex">
-					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
+					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
 						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 					</button>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">

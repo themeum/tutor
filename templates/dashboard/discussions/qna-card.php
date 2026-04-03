@@ -281,7 +281,14 @@ $single_url = UrlHelper::add_query_params(
 								<?php SvgIcon::make()->name( Icon::SPINNER )->size( 20 )->color( Color::SECONDARY )->attr( 'class', 'tutor-animate-spin' )->render(); ?>
 							</template>
 							<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'read' && currentQuestionId === <?php echo esc_html( $question_id ); ?>)">
-								<?php SvgIcon::make()->name( Icon::READ )->size( 20 )->render(); ?>
+								<span class="tutor-flex">
+									<template x-if="isUnread">
+										<?php SVGIcon::make()->name( Icon::READ )->size( 20 )->render(); ?>
+									</template>
+									<template x-if="!isUnread">
+										<?php SVGIcon::make()->name( Icon::UNREAD )->size( 20 )->render(); ?>
+									</template>
+								</span>
 							</template>
 							<span x-text="isUnread ? '<?php echo esc_js( __( 'Mark as Read', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Mark as Unread', 'tutor' ) ); ?>'"></span>
 						</button>
@@ -341,4 +348,3 @@ $single_url = UrlHelper::add_query_params(
 	<?php endif; ?>
 	
 </div>
-

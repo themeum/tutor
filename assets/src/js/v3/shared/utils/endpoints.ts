@@ -216,6 +216,9 @@ const endpoints = {
 
   // Withdrawals
   MAKE_AN_WITHDRAW: 'tutor_make_an_withdraw',
+
+  // Certificate
+  VERIFY_CERTIFICATE: 'tutor_verify_certificate',
 } as const;
 
 export default endpoints;
