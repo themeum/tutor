@@ -566,7 +566,7 @@ class QuizModel {
 
 			self::delete_files_by_paths( $attempt_file_paths );
 
-			do_action( 'tutor_quiz/attempt_deleted', implode( ',', $attempt_ids ) );
+			do_action( 'tutor_quiz/attempt_deleted', $attempt_ids );
 		}
 	}
 

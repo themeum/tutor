@@ -483,9 +483,13 @@ class Quiz_Attempts_List {
 		$should_retry = false;
 
 		if ( tutor_utils()->count( $attempt_info ) ) {
-			$allowed_attempts = (int) $attempt_info['attempts_allowed'] ?? 0;
-			$feedback_mode    = $attempt_info['feedback_mode'] ?? '';
-			$should_retry     = 'retry' === $feedback_mode && $attempts_count < $allowed_attempts;
+			if ( array_key_exists( 'limit_attempts_allowed', $attempt_info ) ) {
+				$limit_attempts_allowed = '1' === (string) $attempt_info['limit_attempts_allowed'];
+				$allowed_attempts       = (int) ( $attempt_info['attempts_allowed'] ?? 0 );
+				$should_retry           = Quiz::can_retry_quiz( $limit_attempts_allowed, $allowed_attempts, $attempts_count );
+			} else {
+				$should_retry = 'retry' === ( $attempt_info['feedback_mode'] ?? '' );
+			}
 		}
 
 		return $should_retry;
@@ -561,22 +565,26 @@ class Quiz_Attempts_List {
 			->menu_min_width( '110px' )
 			->render();
 		} else {
-			Popover::make()
-			->trigger( $this->get_kebab_button() )
-			->placement( 'bottom' )
-			->menu_min_width( '110px' )
-			->menu_item(
-				array(
-					'tag'     => 'button',
-					'content' => __( 'Retry', 'tutor' ),
-					'icon'    => SvgIcon::make()->name( Icon::RELOAD )->size( 20 )->get(),
-					'attr'    => array(
-						'@click' => $this->get_retry_attribute( $quiz_id ),
-					),
-				)
-			)
-			->menu_item( $this->get_details_item( $attempt ) )
-			->render();
+			$popover = Popover::make()
+				->trigger( $this->get_kebab_button() )
+				->placement( 'bottom' )
+				->menu_min_width( '110px' )
+				->menu_item(
+					array(
+						'tag'     => 'button',
+						'content' => __( 'Retry', 'tutor' ),
+						'icon'    => SvgIcon::make()->name( Icon::RELOAD )->size( 20 )->get(),
+						'attr'    => array(
+							'@click' => $this->get_retry_attribute( $quiz_id ),
+						),
+					)
+				);
+
+			if ( ! $is_quiz_details_hidden ) {
+				$popover->menu_item( $this->get_details_item( $attempt ) );
+			}
+
+			$popover->render();
 		}
 	}
 

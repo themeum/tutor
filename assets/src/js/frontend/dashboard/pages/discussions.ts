@@ -1,7 +1,7 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { convertToErrorMessage, decodeHtmlEntities } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
 
 interface ReplyCommentPayload {
@@ -63,6 +63,8 @@ const URL_PARAMS = {
   ID: 'id',
   ORDER: 'order',
 };
+
+const CARD_TITLE_WORD_LIMIT = 60;
 
 /**
  * Discussions Page Component
@@ -194,7 +196,8 @@ const discussionsPage = () => {
           if (payload.context === 'reply') {
             toast.success(__('Reply deleted successfully', 'tutor'));
             modal.closeModal(MODALS.QNA_DELETE);
-            this.reloadReplies();
+            // this.reloadReplies();
+            window.location.reload();
           } else {
             const url = new URL(window.location.href);
             url.searchParams.delete(URL_PARAMS.ID);
@@ -217,7 +220,8 @@ const discussionsPage = () => {
           }
 
           if (payload.reply_context === 'single') {
-            this.reloadReplies();
+            // this.reloadReplies();
+            window.location.reload();
           } else {
             this.setReplying(null);
             this.updateReplyCount(payload.question_id);
@@ -237,7 +241,21 @@ const discussionsPage = () => {
           // Update DOM directly for immediate feedback
           const element = document.getElementById(`${ELEMENT_IDS.QNA_TEXT_PREFIX}${payload.question_id}`);
           if (element) {
-            element.innerHTML = payload.answer;
+            if (element.closest('.tutor-discussion-card')) {
+              const striped_answer = decodeHtmlEntities(payload.answer);
+              element.innerHTML =
+                striped_answer.length > CARD_TITLE_WORD_LIMIT
+                  ? `${striped_answer.substring(0, 60)}...`
+                  : striped_answer;
+            } else {
+              element.innerHTML = payload.answer;
+            }
+
+            // Re-trigger syntax highlighting if Prism is available.
+            const Prism = (window as any).Prism;
+            if (Prism && typeof Prism.highlightAllUnder === 'function') {
+              Prism.highlightAllUnder(element);
+            }
           }
 
           if (this.editingId === payload.question_id) {
@@ -272,6 +290,12 @@ const discussionsPage = () => {
         const container = document.getElementById(ELEMENT_IDS.REPLIES_LIST_CONTAINER);
         if (container && typeof response.data?.html === 'string') {
           container.innerHTML = response.data.html;
+
+          // Re-trigger syntax highlighting if Prism is available.
+          const Prism = (window as any).Prism;
+          if (Prism && typeof Prism.highlightAllUnder === 'function') {
+            Prism.highlightAllUnder(container);
+          }
 
           // Update URL without reload
           const url = new URL(window.location.href);

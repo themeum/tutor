@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Helpers\HttpHelper;
+use Tutor\Options_V2;
 use Tutor\Traits\JsonResponse;
 
 /**
@@ -113,6 +114,7 @@ class UserPreference {
 		}
 
 		add_action( 'wp_ajax_tutor_save_user_preferences', array( $this, 'ajax_save_user_preferences' ) );
+		add_action( 'wp_ajax_tutor_reset_user_preferences', array( $this, 'ajax_reset_user_preferences' ) );
 		add_filter( 'body_class', array( $this, 'add_theme_attribute' ) );
 		add_action( 'wp_head', array( $this, 'apply_font_scale' ) );
 	}
@@ -152,7 +154,7 @@ class UserPreference {
 		if ( ! in_array( $theme, self::THEMES, true ) ) {
 			$theme = self::DEFAULT_THEME;
 		}
-		echo ' data-theme="' . esc_attr( $theme ) . '"';
+		echo ' data-tutor-theme="' . esc_attr( $theme ) . '"';
 		return $classes;
 	}
 
@@ -226,10 +228,15 @@ class UserPreference {
 			return false;
 		}
 
-		$current_preferences = $this->get_preferences( $user_id );
-		$preferences         = array_merge( $current_preferences, $prefs );
+		// Get from database.
+		$current_preferences = get_user_meta( $user_id, self::META_KEY, true );
+		if ( ! is_array( $current_preferences ) ) {
+			$current_preferences = array();
+		}
 
-		$preferences = apply_filters( 'tutor_user_preference_data', $preferences, $user_id );
+		$combined_preferences = array_merge( $current_preferences, $prefs );
+
+		$preferences = apply_filters( 'tutor_user_preference_data', $combined_preferences, $user_id );
 
 		update_user_meta( $user_id, self::META_KEY, $preferences );
 
@@ -248,23 +255,48 @@ class UserPreference {
 	public function ajax_save_user_preferences() {
 		tutor_utils()->check_nonce();
 
-		if ( ! is_user_logged_in() ) {
-			$this->json_response(
-				tutor_utils()->error_message( 'forbidden' ),
-				null,
-				HttpHelper::STATUS_UNAUTHORIZED
-			);
+		$auto_play_next = Input::post( 'auto_play_next', null );
+		$theme          = Input::post( 'theme', null );
+		$font_scale     = Input::post( 'font_scale', null );
+		$learning_mood  = Input::post( 'learning_mood', null );
+
+		$preferences_settings = array();
+
+		if ( null !== $auto_play_next ) {
+			$default_auto_play_next = (bool) tutor_utils()->get_option( 'autoload_next_course_content' );
+			$auto_play_next         = 'true' === $auto_play_next ? true : false;
+			if ( $auto_play_next !== $default_auto_play_next ) {
+				$preferences_settings['auto_play_next'] = $auto_play_next;
+			}
 		}
 
-		$auto_play_next = Input::post( 'auto_play_next', false, INPUT::TYPE_BOOL );
-		$theme          = Input::post( 'theme', self::DEFAULT_THEME );
-		$font_scale     = Input::post( 'font_scale', self::DEFAULT_FONT_SCALE, INPUT::TYPE_INT );
+		if ( null !== $theme ) {
+			$preferences_settings['theme'] = $theme;
+		}
 
-		$preferences_settings = array(
-			'auto_play_next' => $auto_play_next,
-			'theme'          => $theme,
-			'font_scale'     => $font_scale,
-		);
+		if ( null !== $font_scale ) {
+			$preferences_settings['font_scale'] = (int) $font_scale;
+		}
+
+		if ( null !== $learning_mood ) {
+			// Validate learning_mood against allowed values.
+			$allowed_moods = array( Options_V2::LEARNING_MODE_MODERN, Options_V2::LEARNING_MODE_KIDS );
+			if ( ! in_array( $learning_mood, $allowed_moods, true ) ) {
+				$learning_mood = Options_V2::LEARNING_MODE_MODERN;
+			}
+			$default_learning_mood = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN );
+			if ( $learning_mood !== $default_learning_mood ) {
+				$preferences_settings['learning_mood'] = $learning_mood;
+			}
+		}
+
+		if ( empty( $preferences_settings ) ) {
+			$this->json_response(
+				__( 'No changes detected', 'tutor' ),
+				null,
+				HttpHelper::STATUS_OK
+			);
+		}
 
 		$preference_data = $this->save_preferences( $preferences_settings, get_current_user_id() );
 
@@ -283,6 +315,34 @@ class UserPreference {
 	}
 
 	/**
+	 * AJAX handler: reset current user's preferences back to defaults.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_reset_user_preferences() {
+		tutor_utils()->check_nonce();
+
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			$this->json_response(
+				__( 'Failed to reset preferences', 'tutor' ),
+				null,
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
+		// Delete user meta.
+		delete_user_meta( $user_id, self::META_KEY );
+
+		$this->json_response(
+			__( 'Preferences reset successfully', 'tutor' ),
+			null
+		);
+	}
+
+	/**
 	 * Get default preferences.
 	 *
 	 * @since 4.0.0
@@ -297,6 +357,7 @@ class UserPreference {
 				'auto_play_next' => (bool) tutor_utils()->get_option( 'autoload_next_course_content' ),
 				'theme'          => self::DEFAULT_THEME,
 				'font_scale'     => self::DEFAULT_FONT_SCALE,
+				'learning_mood'  => tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN ),
 			)
 		);
 
@@ -323,6 +384,26 @@ class UserPreference {
 			array(
 				'label' => __( 'System Default', 'tutor' ),
 				'value' => self::THEME_SYSTEM,
+			),
+		);
+	}
+
+	/**
+	 * Get learning mood options for UI selects.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<int,array{label:string,value:string}>
+	 */
+	public static function get_learning_mood_options() {
+		return array(
+			array(
+				'label' => __( 'Modern', 'tutor' ),
+				'value' => Options_V2::LEARNING_MODE_MODERN,
+			),
+			array(
+				'label' => __( 'Kids', 'tutor' ),
+				'value' => Options_V2::LEARNING_MODE_KIDS,
 			),
 		);
 	}

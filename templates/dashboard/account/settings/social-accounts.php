@@ -34,7 +34,7 @@ foreach ( $social_fields as $key => $field ) {
 			id: "<?php echo esc_attr( $form_id ); ?>",
 			mode: "onChange",
 			shouldFocusError: true,
-			defaultValues: <?php echo wp_json_encode( $social_links ); ?>
+			defaultValues: <?php echo esc_attr( wp_json_encode( $social_links ) ); ?>
 		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit((data) => handleSaveSocialProfile(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
@@ -62,7 +62,7 @@ foreach ( $social_fields as $key => $field ) {
 						->label( $field['label'] )
 						->clearable()
 						->placeholder( $field['placeholder'] )
-						->attr( 'x-bind', "register('$key', { pattern: { value: /$field[pattern]/i, message: '$message' } })" )
+						->attr( 'x-bind', "register('$key', { pattern: { value: /$field[pattern]/i, message: '" . esc_js( $message ) . "' } })" )
 						->render();
 				?>
 			</div>

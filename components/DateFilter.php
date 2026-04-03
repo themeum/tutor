@@ -259,7 +259,8 @@ class DateFilter extends BaseComponent {
 
 		ob_start();
 		?>
-		<div x-data="tutorPopover({ placement: '<?php echo esc_attr( $this->placement ); ?>' })">
+		<div x-data="tutorPopover({ placement: '<?php echo esc_attr( $this->placement ); ?>' })" <?php echo $this->get_attributes_string(); //phpcs:ignore -- Sanitization is performed inside get_attributes_string. ?>>
+
 			<button 
 				type="button"
 				x-ref="trigger"

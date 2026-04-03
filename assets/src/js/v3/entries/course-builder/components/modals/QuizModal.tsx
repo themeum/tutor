@@ -53,11 +53,6 @@ interface QuizModalProps extends ModalProps {
   contentType?: TopicContentType;
 }
 
-export type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
-export type QuizFeedbackMode = 'default' | 'reveal' | 'retry';
-export type QuizLayoutView = '' | 'single_question' | 'question_pagination' | 'question_below_each_other';
-export type QuizQuestionsOrder = 'rand' | 'sorting' | 'asc' | 'desc';
-
 type QuizTabs = 'details' | 'settings';
 
 const courseId = getCourseId();
@@ -92,7 +87,7 @@ const QuizModal = ({
           time_type: 'minutes',
         },
         hide_quiz_time_display: false,
-        feedback_mode: 'retry',
+        limit_attempts_allowed: false,
         attempts_allowed: 10,
         passing_grade: 80,
         max_questions_for_answer: contentType === 'tutor_h5p_quiz' ? 0 : 10,
@@ -461,7 +456,7 @@ const styles = {
     ${activeTab === 'settings' &&
     css`
       padding-top: ${spacing[24]};
-      padding-inline: 352px 352px; // 352px is the width of the left and right side
+      margin-inline: auto;
 
       ${Breakpoint.smallTablet} {
         padding: ${spacing[16]} ${spacing[8]} ${spacing[24]} ${spacing[8]};

@@ -102,7 +102,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 ?>
 
 <div class="tutor-dashboard-my-courses" x-data="tutorMyCourses()">
-	<div class="tutor-hidden tutor-sm-flex tutor-items-center tutor-justify-between tutor-mb-6">
+	<div class="tutor-hidden tutor-sm-flex tutor-items-center tutor-justify-between tutor-mb-5">
 		<h4 class="tutor-h4"><?php esc_html_e( 'Courses', 'tutor' ); ?></h4>
 		<?php ob_start(); ?>
 		<button 

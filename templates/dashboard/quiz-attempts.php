@@ -59,8 +59,8 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 ?>
 
 <div class="tutor-dashboard-quiz-attempts-wrapper" x-data="tutorQuizAttempts()">
-	<h4 class="tutor-quiz-attempts-mobile-heading tutor-h4 tutor-pt-3 tutor-pb-3">
-	<?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?>
+	<h4 class="tutor-quiz-attempts-mobile-heading tutor-h4 tutor-mb-5">
+		<?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?>
 	</h4>
 	<div class="tutor-dashboard-page-card">
 		<div class="tutor-quiz-attempts tutor-instructor-quiz-attempts">

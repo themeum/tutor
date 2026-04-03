@@ -11,6 +11,7 @@ const meta = {
   component: FormInput,
   args: {
     label: 'Course Title',
+    size: 'regular',
     type: 'text',
     maxLimit: undefined,
     disabled: false,
@@ -42,6 +43,11 @@ const meta = {
     label: {
       control: 'text',
       description: 'Label for the input field. Can be a string or ReactNode.',
+    },
+    size: {
+      control: 'select',
+      options: ['regular', 'small'],
+      description: 'Controls input density.',
     },
     type: {
       control: 'select',
@@ -168,6 +174,13 @@ export const Default = {} satisfies Story;
 export const WithPlaceholder = {
   args: {
     placeholder: 'Enter course title...',
+  },
+} satisfies Story;
+
+export const Small = {
+  args: {
+    size: 'small',
+    placeholder: 'Compact input',
   },
 } satisfies Story;
 

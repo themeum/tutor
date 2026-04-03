@@ -71,7 +71,7 @@ const TUTOR_CALENDAR_VALUES = {
   apply: 'apply',
   clear: 'clear',
   calendarZIndex: '100001',
-  themeAttrDetect: 'body[data-theme]',
+  themeAttrDetect: 'body[data-tutor-theme]',
   calendarClasses: 'vc tutor-vc-calendar',
 } as const;
 

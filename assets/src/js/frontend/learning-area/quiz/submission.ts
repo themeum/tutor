@@ -3,11 +3,11 @@ import axios from 'axios';
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
-import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
+import { tutorConfig } from '@TutorShared/config/config';
 import {
   ERROR_MESSAGES,
   QUIZ_ABANDON_CONFIG,
@@ -23,7 +23,7 @@ export interface QuizSubmissionConfig {
   quizId: number;
   abandonModalId: string;
   totalQuestions: number;
-  feedbackMode?: string;
+  enableAnswerReveal?: boolean;
   revealWaitMs?: number;
   submittedModalId?: string;
   timeoutModalId?: string;
@@ -41,7 +41,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     quizId: config.quizId,
     abandonModalId: config.abandonModalId,
     totalQuestions: Number(config.totalQuestions) || 0,
-    feedbackMode: config.feedbackMode ?? '',
+    enableAnswerReveal: config.enableAnswerReveal ?? false,
     revealWaitMs: config.revealWaitMs ?? null,
     submittedModalId: config.submittedModalId ?? '',
     timeoutModalId: config.timeoutModalId ?? '',
@@ -175,8 +175,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     },
 
     isRevealMode(): boolean {
-      const feedbackMode = this.feedbackMode || tutorConfig.quiz_options?.feedback_mode;
-      return feedbackMode === 'reveal';
+      return this.enableAnswerReveal;
     },
 
     getRevealAnswerIds(): number[] {

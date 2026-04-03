@@ -12,6 +12,7 @@ interface ReviewFormProps {
   comment_post_ID: string;
   rating: string;
   comment_content: string;
+  clear_review_popup_data?: boolean;
 }
 
 interface ReviewPayload {
@@ -65,10 +66,14 @@ const reviewModal = () => {
   return {
     query,
     saveRatingMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    clear_review_popup_data: false as boolean,
 
     init() {
       this.saveRatingMutation = this.query.useMutation(this.saveRating, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: async (data: TutorMutationResponse<string>, variables: ReviewPayload) => {
+          if (this.clear_review_popup_data) {
+            await this.clearReviewPopupData(variables.course_id);
+          }
           modal.closeModal('create-review-modal');
           toast.success(data.message);
           window.location.reload();
@@ -80,12 +85,21 @@ const reviewModal = () => {
     },
 
     async handleReviewSubmit(data: ReviewFormProps) {
+      this.clear_review_popup_data = !!data.clear_review_popup_data;
       const payload = this.convertFormDataToPayload(data);
       await this.saveRatingMutation?.mutate(payload);
     },
 
     async saveRating(payload: ReviewPayload) {
       return wpAjaxInstance.post(endpoints.PLACE_RATING, payload).then((res) => res.data);
+    },
+
+    async clearReviewPopupData(courseId: string | number) {
+      return wpAjaxInstance
+        .post(endpoints.CLEAR_REVIEW_POPUP_DATA, {
+          course_id: courseId,
+        })
+        .then((res) => res.data);
     },
 
     convertFormDataToPayload(data: ReviewFormProps): ReviewPayload {
