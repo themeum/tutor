@@ -268,7 +268,6 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               <div css={styles.inlineForm}>
                 <Controller
                   name="quiz_option.limit_questions_to_answer"
-                  rules={requiredRule()}
                   control={form.control}
                   render={(controllerProps) => (
                     <FormCheckbox
