@@ -94,7 +94,8 @@ class QuizModel {
 				);
 			}
 
-			$start_time = DateTimeHelper::get_gmt_to_user_timezone_date( $quiz_attempt->attempt_started_at ?? '', 'D j M Y, g:i A' );
+			$start_time = DateTimeHelper::create( $quiz_attempt->attempt_started_at ?? '' )
+				->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 
 			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ) - strtotime( $quiz_attempt->attempt_started_at );
 			$attempt_time = tutor_utils()->playtime_string( $attempt_time );
