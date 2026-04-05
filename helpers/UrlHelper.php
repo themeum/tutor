@@ -24,7 +24,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function ajax() : string {
+	public static function ajax(): string {
 		return admin_url( 'admin-ajax.php' );
 	}
 
@@ -36,7 +36,7 @@ class UrlHelper {
 	 * @param string $path Relative asset path.
 	 * @return string
 	 */
-	public static function asset( $path = '' ) : string {
+	public static function asset( $path = '' ): string {
 		return tutor()->assets_url . $path;
 	}
 
@@ -47,7 +47,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function current() : string {
+	public static function current(): string {
 		global $wp;
 
 		return home_url(
@@ -65,7 +65,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function add_query_params( $url, array $query_params = array() ) : string {
+	public static function add_query_params( $url, array $query_params = array() ): string {
 		$url = ltrim( $url, '/' );
 
 		if ( ! empty( $query_params ) ) {
@@ -85,7 +85,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function remove_query_params( $url, array $query_params = array() ) : string {
+	public static function remove_query_params( $url, array $query_params = array() ): string {
 		return remove_query_arg( $query_params, $url );
 	}
 
@@ -98,7 +98,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function back( $fallback = '' ) : string {
+	public static function back( $fallback = '' ): string {
 		$back_url = wp_get_referer();
 		if ( empty( $back_url ) ) {
 			$back_url = empty( $fallback ) ? self::current() : $fallback;
@@ -106,4 +106,3 @@ class UrlHelper {
 		return $back_url;
 	}
 }
-
