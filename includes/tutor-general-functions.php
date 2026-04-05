@@ -399,7 +399,6 @@ if ( ! function_exists( '__tutor_generate_categories_checkbox' ) ) {
 		}
 
 		return $output;
-
 	}
 }
 /**
@@ -1082,7 +1081,7 @@ if ( ! function_exists( 'tutor_meta_box_wrapper' ) ) {
 			$post_type = tutor()->course_post_type;
 			add_filter(
 				"postbox_classes_{$post_type}_{$id}",
-				function( $classes ) use ( $custom_class ) {
+				function ( $classes ) use ( $custom_class ) {
 					if ( ! in_array( $custom_class, $classes ) ) {
 						$classes[] = $custom_class;
 					}
@@ -1636,12 +1635,14 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 	 * Formatting as per ecommerce price settings
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 Added $html_markup for wooCommerce
 	 *
 	 * @param mixed $price Raw price.
+	 * @param bool  $html_markup  Whether to include HTML markup ( Only for wooCommerce as it returns html markup ).
 	 *
 	 * @return string|void
 	 */
-	function tutor_get_formatted_price( $price ) {
+	function tutor_get_formatted_price( $price, $html_markup = true ) {
 		$price       = floatval( Input::sanitize( $price ) );
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
@@ -1654,7 +1655,7 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 			$price = number_format( $price, $no_of_decimal, $decimal_separator, $thousand_separator );
 			$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;
 		} elseif ( 'wc' === $monetize_by ) {
-			$price = wc_price( $price );
+			$price = wc_price( $price, array( 'in_span' => $html_markup ) );
 		} elseif ( 'edd' === $monetize_by ) {
 			$price = edd_currency_filter( edd_format_amount( $price ) );
 		}

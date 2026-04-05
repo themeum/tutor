@@ -32,5 +32,5 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		</div>
 	</div>
-	<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorOverviewChart(<?php echo wp_json_encode( $overview_chart_data ); ?>)' x-ref="canvas"></canvas>
+	<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorOverviewChart(<?php echo esc_attr( wp_json_encode( $overview_chart_data ) ); ?>)' x-ref="canvas"></canvas>
 </div>

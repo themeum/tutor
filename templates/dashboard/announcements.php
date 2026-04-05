@@ -87,7 +87,18 @@ $create_modal_id = 'tutor-announcement-form-modal';
 		createModalId: '<?php echo esc_attr( $create_modal_id ); ?>',
 	})"
 >
-	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
+	<div class="tutor-hidden tutor-sm-flex tutor-items-center tutor-justify-between tutor-mb-5">
+		<h4 class="tutor-h4"><?php esc_html_e( 'Announcements', 'tutor' ); ?></h4>
+		<?php
+		Button::make()
+			->label( __( 'New Announcement', 'tutor' ) )
+			->size( Size::SMALL )
+			->icon( Icon::ADD )
+			->attr( '@click', 'openCreateModal()' )
+			->render();
+		?>
+	</div>
+	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl tutor-overflow-hidden">
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-border-b">
 			<?php
 				CourseFilter::make()
@@ -96,11 +107,20 @@ $create_modal_id = 'tutor-announcement-form-modal';
 					->count( $total_announcements )
 					->render();
 
+				DateFilter::make()
+						->type( DateFilter::TYPE_SINGLE )
+						->placement( Positions::BOTTOM_END )
+						->trigger_size( Size::SMALL )
+						->icon_size( 16 )
+						->attr( 'class', 'tutor-hidden tutor-sm-flex' )
+						->render();
+
 				Button::make()
 					->label( __( 'New Announcement', 'tutor' ) )
 					->size( Size::SMALL )
 					->icon( Icon::ADD )
 					->attr( '@click', 'openCreateModal()' )
+					->attr( 'class', 'tutor-sm-hidden' )
 					->render();
 			?>
 		</div>
@@ -108,9 +128,11 @@ $create_modal_id = 'tutor-announcement-form-modal';
 			<?php
 			SearchFilter::make()
 				->form_id( 'tutor-my-courses-search-form' )
+				->size( Size::SMALL )
 				->placeholder( __( 'Search announcements...', 'tutor' ) )
 				->action( $current_url )
-				->size( Size::MEDIUM )
+				->size( Size::SMALL )
+				->attr( 'class', 'tutor-sm-flex-1' )
 				->render();
 			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
@@ -118,12 +140,14 @@ $create_modal_id = 'tutor-announcement-form-modal';
 					DateFilter::make()
 						->type( DateFilter::TYPE_SINGLE )
 						->placement( Positions::BOTTOM_END )
-						->trigger_size( Size::X_SMALL )
+						->trigger_size( Size::SMALL )
 						->icon_size( 16 )
+						->attr( 'class', 'tutor-sm-hidden' )
 						->render();
 
 					Sorting::make()
 						->order( $order_filter )
+						->size( Size::SMALL )
 						->render();
 				?>
 			</div>
@@ -155,12 +179,17 @@ $create_modal_id = 'tutor-announcement-form-modal';
 											->icon_only()
 											->attr(
 												'@click',
-												"openEditModal({ 
-													id: $announcement->ID, 
-													title: '$announcement->post_title', 
-													summary: '$announcement->post_content', 
-													course_id: $announcement->post_parent, 
-												})"
+												sprintf(
+													'openEditModal(%s)',
+													wp_json_encode(
+														array(
+															'id'        => (int) $announcement->ID,
+															'title'     => $announcement->post_title,
+															'summary'   => $announcement->post_content,
+															'course_id' => (int) $announcement->post_parent,
+														)
+													)
+												)
 											)
 											->render();
 
@@ -176,19 +205,27 @@ $create_modal_id = 'tutor-announcement-form-modal';
 								</div>
 								<!-- Mobile Popover -->
 								<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-hidden tutor-sm-block">
-									<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-btn-icon">
+									<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
 										<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 									</button>
 									<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 										<div class="tutor-popover-menu" style="min-width: 104px;">
 											<button 
 												class="tutor-popover-menu-item"
-												@click="hide(); openEditModal({ 
-													id: <?php echo (int) $announcement->ID; ?>, 
-													title: '<?php echo esc_js( $announcement->post_title ); ?>', 
-													summary: '<?php echo esc_js( $announcement->post_content ); ?>', 
-													course_id: <?php echo (int) $announcement->post_parent; ?> 
-												})"
+												@click="hide(); openEditModal(
+												<?php
+												echo esc_attr(
+													wp_json_encode(
+														array(
+															'id'        => (int) $announcement->ID,
+															'title'     => $announcement->post_title,
+															'summary'   => $announcement->post_content,
+															'course_id' => (int) $announcement->post_parent,
+														)
+													)
+												);
+												?>
+												)"
 											>
 												<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
@@ -313,7 +350,8 @@ $create_modal_id = 'tutor-announcement-form-modal';
 									->label( __( 'Cancel', 'tutor' ) )
 									->size( Size::SMALL )
 									->variant( Variant::SECONDARY )
-									->attr( '@click', sprintf( 'TutorCore.modal.hideModal("%s")', $create_modal_id ) )
+									->attr( 'type', 'button' )
+									->attr( '@click', sprintf( 'TutorCore.modal.closeModal("%s")', $create_modal_id ) )
 									->render();
 
 								Button::make()

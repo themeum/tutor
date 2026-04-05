@@ -21,7 +21,7 @@
   box-shadow: $tutor-button-border-shadow;
   @include tutor-transition();
 
-  svg {
+  svg:not([class]) {
     color: currentColor;
   }
 
