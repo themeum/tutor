@@ -263,11 +263,9 @@ class UserPreference {
 		$preferences_settings = array();
 
 		if ( null !== $auto_play_next ) {
-			$default_auto_play_next = (bool) tutor_utils()->get_option( 'autoload_next_course_content' );
 			$auto_play_next         = 'true' === $auto_play_next ? true : false;
-			if ( $auto_play_next !== $default_auto_play_next ) {
-				$preferences_settings['auto_play_next'] = $auto_play_next;
-			}
+			$default_auto_play_next = (bool) tutor_utils()->get_option( 'autoload_next_course_content' );
+			$preferences_settings   = array_merge( $preferences_settings, self::prepare_preference_setting( 'auto_play_next', $auto_play_next, $default_auto_play_next ) );
 		}
 
 		if ( null !== $theme ) {
@@ -284,10 +282,9 @@ class UserPreference {
 			if ( ! in_array( $learning_mood, $allowed_moods, true ) ) {
 				$learning_mood = Options_V2::LEARNING_MODE_MODERN;
 			}
+
 			$default_learning_mood = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN );
-			if ( $learning_mood !== $default_learning_mood ) {
-				$preferences_settings['learning_mood'] = $learning_mood;
-			}
+			$preferences_settings  = array_merge( $preferences_settings, self::prepare_preference_setting( 'learning_mood', $learning_mood, $default_learning_mood ) );
 		}
 
 		if ( empty( $preferences_settings ) ) {
@@ -340,6 +337,50 @@ class UserPreference {
 			__( 'Preferences reset successfully', 'tutor' ),
 			null
 		);
+	}
+
+	/**
+	 * Prepare a single preference setting for saving.
+	 *
+	 * Only includes the setting if it already exists in user meta OR if it differs from the default.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $key           Preference key.
+	 * @param mixed  $value         New value to save.
+	 * @param mixed  $default_value Global default value for this setting.
+	 *
+	 * @return array<string,mixed> Key-value pair if it should be saved, empty array otherwise.
+	 */
+	private static function prepare_preference_setting( $key, $value, $default_value ) {
+		if ( self::has_preference( $key ) || $value !== $default_value ) {
+			return array( $key => $value );
+		}
+		return array();
+	}
+
+	/**
+	 * Check if a preference key exists for a user.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $key     Preference key.
+	 * @param int    $user_id Optional user ID.
+	 *
+	 * @return bool
+	 */
+	public static function has_preference( $key, $user_id = 0 ) {
+		$user_id = tutor_utils()->get_user_id( $user_id );
+		if ( ! $user_id ) {
+			return false;
+		}
+
+		$preferences = get_user_meta( $user_id, self::META_KEY, true );
+		if ( ! is_array( $preferences ) ) {
+			return false;
+		}
+
+		return array_key_exists( $key, $preferences );
 	}
 
 	/**
