@@ -55,10 +55,9 @@ class UrlHelper {
 	public static function themed_asset( $path = '' ): string {
 		static $resolved_paths = array();
 
-		$path                 = ltrim( (string) $path, '/' );
-		$is_themed_asset_path = false !== strpos( $path, '/kids/' ) || 0 === strpos( pathinfo( $path, PATHINFO_BASENAME ), 'kids-' );
+		$path = ltrim( (string) $path, '/' );
 
-		if ( '' === $path || ! tutor_utils()->is_kids_mode() || $is_themed_asset_path ) {
+		if ( '' === $path || ! tutor_utils()->is_kids_mode() || false !== strpos( $path, '/kids/' ) ) {
 			return self::asset( $path );
 		}
 
@@ -66,24 +65,14 @@ class UrlHelper {
 			return $resolved_paths[ $path ];
 		}
 
-		$directory      = pathinfo( $path, PATHINFO_DIRNAME );
-		$basename       = pathinfo( $path, PATHINFO_BASENAME );
-		$candidate_path = '';
-
+		$directory = pathinfo( $path, PATHINFO_DIRNAME );
+		$basename  = pathinfo( $path, PATHINFO_BASENAME );
 		if ( '' !== $basename ) {
-			$candidate_path = ( '.' === $directory || '' === $directory )
+			$candidate_path = '.' === $directory || '' === $directory
 				? 'kids/' . $basename
 				: trailingslashit( $directory ) . 'kids/' . $basename;
-		}
 
-		$candidate_paths = array_filter(
-			array(
-				$candidate_path,
-			)
-		);
-
-		foreach ( $candidate_paths as $candidate_path ) {
-			if ( file_exists( tutor()->path . 'assets/' . ltrim( $candidate_path, '/' ) ) ) {
+			if ( file_exists( tutor()->path . 'assets/' . $candidate_path ) ) {
 				$resolved_paths[ $path ] = self::asset( $candidate_path );
 				return $resolved_paths[ $path ];
 			}
