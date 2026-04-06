@@ -62,7 +62,7 @@ $remaining_attempts = array_slice( $attempts, 1 );
 		</div>
 	<?php endif; ?>
 
-	<div class="tutor-quiz-item-actions tutor-flex">
+	<div class="tutor-quiz-item-actions">
 		<?php
 		$quiz_attempt_obj->render_retry_button(
 			$course_id,

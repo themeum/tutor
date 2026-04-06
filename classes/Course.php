@@ -25,6 +25,7 @@ use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
+use Tutor\Options_V2;
 
 /**
  * Course Class
@@ -2252,15 +2253,27 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function popup_review_form() {
-		if ( is_user_logged_in() ) {
-			$user_id          = get_current_user_id();
-			$course_id        = get_the_ID();
-			$meta_key         = User::get_review_popup_meta( $course_id );
-			$review_course_id = (int) get_user_meta( $user_id, $meta_key, true );
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
 
-			if ( is_single() && $course_id === $review_course_id ) {
-				include tutor()->path . 'views/modal/review.php';
-			}
+		$is_learning_area   = tutor_utils()->is_learning_area();
+		$is_legacy_learning = tutor_utils()->is_legacy_learning_mode();
+		if ( $is_legacy_learning && $is_learning_area ) {
+			return;
+		}
+
+		$course_id = get_the_ID();
+
+		if ( $is_learning_area && ! Input::has( 'subpage' ) ) {
+			$course_id = wp_get_post_parent_id( wp_get_post_parent_id( get_the_ID() ) );
+		}
+
+		$user_id          = get_current_user_id();
+		$meta_key         = User::get_review_popup_meta( $course_id );
+		$review_course_id = (int) get_user_meta( $user_id, $meta_key, true );
+		if ( is_single() && $course_id === $review_course_id ) {
+			include tutor()->path . 'views/modal/review.php';
 		}
 	}
 
@@ -3450,13 +3463,15 @@ class Course extends Tutor_Base {
 	 * @param string $modal_id        The HTML ID of the modal to display if not complete.
 	 * @param int    $course_id       The ID of the course.
 	 * @param float  $course_progress The current completion percentage of the course.
+	 * @param string $size            The button size.
 	 *
 	 * @return void
 	 */
-	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0 ): void {
+	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0, string $size = Size::MEDIUM ): void {
 		$button = Button::make()
 		->label( __( 'Complete the Course', 'tutor' ) )
 		->icon( Icon::TICK_MARK )
+		->size( $size )
 		->attr( 'type', 'button' );
 
 		if ( $course_progress < 100 ) {
@@ -3475,15 +3490,16 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string  $modal_id Modal id.
+	 * @param string $modal_id Modal id.
+	 * @param string $size     The button size.
 	 *
 	 * @return void
 	 */
-	public static function render_course_retake_btn( string $modal_id ): void {
+	public static function render_course_retake_btn( string $modal_id, string $size = Size::MEDIUM ): void {
 		Button::make()
 		->label( __( 'Retake this Course', 'tutor' ) )
-		->icon( Icon::RELOAD_3 )
-		->variant( Variant::SECONDARY )
+		->icon( Icon::RELOAD_4 )
+		->size( $size )
 		->attr( 'type', 'button' )
 		->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" )
 		->render();
