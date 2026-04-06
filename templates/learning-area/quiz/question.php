@@ -21,26 +21,28 @@ global $tutor_is_started_quiz;
 global $post;
 
 $default_question = array(
-	'index'                => 1,
-	'question_id'          => 0,
-	'question_title'       => '',
-	'question_description' => '',
-	'question_type'        => 'true_false',
-	'answer_required'      => true,
-	'question_mark'        => 10,
-	'answer_explanation'   => '',
-	'question_settings'    => array(
+	'index'                       => 1,
+	'question_id'                 => 0,
+	'question_title'              => '',
+	'question_description'        => '',
+	'question_type'               => 'true_false',
+	'answer_required'             => true,
+	'question_mark'               => 10,
+	'answer_explanation'          => '',
+	'question_settings'           => array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
 		'question_type'      => 'true_false',
 		'randomize_question' => '1',
 		'show_question_mark' => '1',
 	),
+	'question_answers'            => array(),
+	'question_randomized_answers' => array(),
 );
 
 $quiz_id            = $tutor_is_started_quiz->quiz_id ?? 0;
 $quiz               = $post instanceof WP_Post ? $post : get_post( $quiz_id );
-$quiz_settings      = tutor_utils()->get_quiz_option( $quiz_id, 'quiz_settings', array() );
+$quiz_settings      = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
 $show_question_mark = $question_settings['show_question_mark'] ?? '0';
 $attempt_id         = (int) ( $tutor_is_started_quiz->attempt_id ?? 0 );
 $question_id        = (int) ( $question->question_id ?? 0 );

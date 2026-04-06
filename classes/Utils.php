@@ -2934,12 +2934,14 @@ class Utils {
 	public function default_menus(): array {
 		$items = array(
 			'index'             => array(
-				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME,
+				'title'       => __( 'Home', 'tutor' ),
+				'icon'        => Icon::HOME,
+				'active_icon' => Icon::HOME_FILL,
 			),
 			'courses'           => array(
-				'title' => __( 'Courses', 'tutor' ),
-				'icon'  => Icon::COURSES,
+				'title'       => __( 'Courses', 'tutor' ),
+				'icon'        => Icon::COURSES,
+				'active_icon' => Icon::COURSES_FILL,
 			),
 			'retrieve-password' => array(
 				'title'         => __( 'Retrieve Password', 'tutor' ),
@@ -2954,8 +2956,9 @@ class Utils {
 
 		if ( $this->should_show_dicussion_menu() ) {
 			$items['discussions'] = array(
-				'title' => __( 'Discussions', 'tutor' ),
-				'icon'  => Icon::QA,
+				'title'       => __( 'Discussions', 'tutor' ),
+				'icon'        => Icon::QA,
+				'active_icon' => Icon::QA_FILL,
 			);
 		}
 
@@ -2972,13 +2975,15 @@ class Utils {
 	public function instructor_menus(): array {
 		$menus = array(
 			'index'         => array(
-				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME,
+				'title'       => __( 'Home', 'tutor' ),
+				'icon'        => Icon::HOME,
+				'active_icon' => Icon::HOME_FILL,
 			),
 			'my-courses'    => array(
-				'title'    => __( 'Courses', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::COURSES,
+				'title'       => __( 'Courses', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::COURSES,
+				'active_icon' => Icon::COURSES_FILL,
 			),
 			// Hidden menu.
 			'create-course' => array(
@@ -2997,22 +3002,25 @@ class Utils {
 
 		$other_menus = array(
 			'announcements' => array(
-				'title'    => __( 'Announcements', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::ANNOUNCEMENT,
+				'title'       => __( 'Announcements', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::ANNOUNCEMENT,
+				'active_icon' => Icon::ANNOUNCEMENT_FILL,
 			),
 			'quiz-attempts' => array(
-				'title'    => __( 'Quiz Attempts', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QUIZ,
+				'title'       => __( 'Quiz Attempts', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::QUIZ_2,
+				'active_icon' => Icon::QUIZ_2_FILL,
 			),
 		);
 
 		if ( $this->should_show_dicussion_menu() ) {
 			$other_menus['discussions'] = array(
-				'title'    => __( 'Discussions', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QA,
+				'title'       => __( 'Discussions', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::QA,
+				'active_icon' => Icon::QA_FILL,
 			);
 		}
 
@@ -5172,6 +5180,10 @@ class Utils {
 		$post_id         = $this->get_post_id( $post_id );
 		$get_option_meta = maybe_unserialize( get_post_meta( $post_id, 'tutor_quiz_option', true ) );
 
+		if ( is_array( $get_option_meta ) ) {
+			$get_option_meta = Quiz::normalize_quiz_settings( $get_option_meta );
+		}
+
 		if ( ! $option_key && ! empty( $get_option_meta ) ) {
 			return $get_option_meta;
 		}
@@ -5281,8 +5293,18 @@ class Utils {
 				'is_pro' => true,
 			),
 			'draw_image'        => array(
-				'name'   => __( 'Draw on Image', 'tutor' ),
+				'name'   => __( 'Mark in the Image', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
+				'is_pro' => true,
+			),
+			'scale'             => array(
+				'name'   => __( 'Range', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-scale tutor-icon-slider-horizontal"></i></span>',
+				'is_pro' => true,
+			),
+			'pin_image'         => array(
+				'name'   => __( 'Pin', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),
 		);
@@ -5728,6 +5750,11 @@ class Utils {
 			return $this->is_tutor_frontend_dashboard( $subpage );
 		}
 
+		$has_shortcode = has_shortcode( get_the_content(), 'tutor_dashboard' );
+		if ( $has_shortcode ) {
+			return true;
+		}
+
 		$current_id        = get_the_ID();
 		$dashboard_page_id = $this->dashboard_page_id();
 
@@ -5766,6 +5793,45 @@ class Utils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if the current page is course list page
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_course_list_page(): bool {
+		$is_course_list_page = false;
+
+		$post_type = get_query_var( 'post_type' );
+		if ( ! is_array( $post_type ) ) {
+			$post_type = array( $post_type );
+		}
+
+		$course_category = get_query_var( 'course-category' );
+
+		if ( ( in_array( tutor()->course_post_type, $post_type, true ) || ! empty( $course_category ) ) && is_archive() ) {
+			$is_course_list_page = true;
+		}
+
+		return $is_course_list_page;
+	}
+
+	/**
+	 * Check if the current page is course details page
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_course_details_page() {
+		if ( Input::has( 'subpage' ) ) {
+			return false;
+		}
+
+		return (bool) is_single() && tutor()->course_post_type === get_post_type();
 	}
 
 	/**
@@ -6525,7 +6591,7 @@ class Utils {
 			}
 		}
 
-		if ( '' !== $start_date && '' !== $end_date ) {
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$period_query = " AND  DATE($dt_column) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
 		}
 
@@ -7278,8 +7344,8 @@ class Utils {
 
 		// Add course id in where clause.
 		$course_query = '';
-		if ( '' !== $course_id ) {
-			$course_query = "AND course.ID = $course_id";
+		if ( $course_id > 0 ) {
+			$course_query = $wpdb->prepare( 'AND course.ID = %d', $course_id );
 		}
 
 		// Add date in where clause.
@@ -7305,20 +7371,54 @@ class Utils {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
+		$post_types   = array( tutor()->course_post_type );
+		if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
+			$post_types[] = tutor()->bundle_post_type;
+		}
+		$post_type_query = QueryHelper::prepare_in_clause( $post_types );
+
+		$exclude_courses = QueryHelper::get_joined_data(
+			'posts as p',
+			array(
+				array(
+					'type'  => 'LEFT',
+					'table' => 'postmeta as pm',
+					'on'    => 'p.ID = pm.post_id',
+				),
+			),
+			array( 'ID' ),
+			array(
+				'p.post_type' => 'tutor_enrolled',
+				'pm.meta_key' => '_tutor_bundle_id',
+				// TODO: need to check if we need to exclude subscription enrollments under bundle as well.
+				// '(pm.meta_key = %s OR pm.meta_key = %s)' => array( 'RAW', array( '_tutor_bundle_id', '_tutor_subscription_id' ) ),
+			),
+			array(),
+			'',
+			0,
+			0,
+			'DESC',
+			'ARRAY_A',
+		);
+
+		$exclude_enroll_course_ids = $exclude_courses['results'] ? array_column( $exclude_courses['results'], 'ID' ) : array();
+		$exclude_enroll_course_ids = QueryHelper::prepare_in_clause( $exclude_enroll_course_ids );
+
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(enrol.ID)
 			FROM 	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.ID
-							AND course.post_type != 'course-bundle'
+							AND course.post_type IN ({$post_type_query})
 					INNER JOIN {$wpdb->users} student
 							ON enrol.post_author = student.ID
 			WHERE 	enrol.post_type = %s
 					{$status_query}
 					{$course_query}
 					{$date_query}
-					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s );
+					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
+					AND ( enrol.ID NOT IN ({$exclude_enroll_course_ids}) )
 			",
 				'tutor_enrolled',
 				$search_term,
@@ -7331,7 +7431,22 @@ class Utils {
 		return (int) $count;
 	}
 
-	public function get_enrolments( $status, $start = 0, $limit = 10, $search_term = '', $course_id = '', $date = '', $order = 'DESC' ) {
+	/**
+	 * Get enrollments
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $status status.
+	 * @param int    $start start.
+	 * @param int    $limit limit.
+	 * @param string $search_term search term.
+	 * @param int    $course_id course id.
+	 * @param string $date date.
+	 * @param string $order order.
+	 *
+	 * @return array
+	 */
+	public function get_enrolments( $status, $start = 0, $limit = 10, $search_term = '', $course_id = 0, $date = '', $order = 'DESC' ) {
 		global $wpdb;
 		$status      = sanitize_text_field( $status );
 		$course_id   = sanitize_text_field( $course_id );
@@ -7343,8 +7458,8 @@ class Utils {
 
 		// add course id in where clause.
 		$course_query = '';
-		if ( '' !== $course_id ) {
-			$course_query = "AND course.ID = $course_id";
+		if ( $course_id > 0 ) {
+			$course_query = $wpdb->prepare( 'AND course.ID = %d', $course_id );
 		}
 
 		// add date in where clause.
@@ -7370,6 +7485,43 @@ class Utils {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
+		$post_types      = array( tutor()->course_post_type );
+
+		$exclude_courses = QueryHelper::get_joined_data(
+			'posts as p',
+			array(
+				array(
+					'type'  => 'LEFT',
+					'table' => 'postmeta as pm',
+					'on'    => 'p.ID = pm.post_id',
+				),
+			),
+			array( 'ID' ),
+			array(
+				'p.post_type' => 'tutor_enrolled',
+				'pm.meta_key' => '_tutor_bundle_id',
+				// TODO: need to check if we need to exclude subscription enrollments under bundle as well.
+				// '(pm.meta_key = %s OR pm.meta_key = %s)' => array( 'RAW', array( '_tutor_bundle_id', '_tutor_subscription_id' ) ),
+			),
+			array(),
+			'',
+			0,
+			0,
+			'DESC',
+			'ARRAY_A',
+		);
+
+		$exclude_enroll_course_ids = $exclude_courses['results'] ? array_column( $exclude_courses['results'], 'ID' ) : array();
+		$exclude_enroll_course_ids = QueryHelper::prepare_in_clause( $exclude_enroll_course_ids );
+
+		
+
+		if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
+			$post_types[] = tutor()->bundle_post_type;
+		}
+
+		$post_type_query = QueryHelper::prepare_in_clause( $post_types );
+
 		$enrolments = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT enrol.ID AS enrol_id,
@@ -7386,7 +7538,7 @@ class Utils {
 			FROM 	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.ID
-							AND course.post_type != 'course-bundle'
+						   AND course.post_type IN ({$post_type_query})
 					INNER JOIN {$wpdb->users} student
 							ON enrol.post_author = student.ID
 			WHERE 	enrol.post_type = %s
@@ -7394,6 +7546,7 @@ class Utils {
 					{$course_query}
 					{$date_query}
 					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
+					AND ( enrol.ID NOT IN ({$exclude_enroll_course_ids}) )
 			ORDER BY enrol_id {$order}
 			LIMIT 	%d, %d;
 			",
@@ -8694,6 +8847,7 @@ class Utils {
 	 */
 	public function is_tutor_frontend_dashboard( $subpage = '' ) {
 		global $wp_query;
+
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
 
@@ -11064,13 +11218,30 @@ class Utils {
 	}
 
 	/**
-	 * Is kids mode active?
+	 * Is kids mode active
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return bool
 	 */
-	public static function is_kids_mode(): bool {
+	public function is_kids_mode(): bool {
+		$user_id = get_current_user_id();
+		if ( $user_id && User::is_student_view() ) {
+			$user_learning_mood = UserPreference::get( 'learning_mood', Options_V2::LEARNING_MODE_MODERN );
+			return Options_V2::LEARNING_MODE_KIDS === $user_learning_mood;
+		}
+
 		return Options_V2::LEARNING_MODE_KIDS === tutor_utils()->get_option( 'learning_mode' ) && User::is_student_view();
+	}
+
+	/**
+	 * Is legacy learning mode active?
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_legacy_learning_mode(): bool {
+		return Options_V2::LEARNING_MODE_LEGACY === $this->get_option( 'learning_mode' );
 	}
 }

@@ -14,11 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Modal;
-use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\Table;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
@@ -26,7 +27,6 @@ use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
 use WP_Post;
-use Tutor\Components\SvgIcon;
 
 /**
  * Manage quiz operations.
@@ -168,6 +168,49 @@ class Quiz {
 		// Add quiz title as nav item & render single content on the learning area.
 		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
 		add_action( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
+
+		/**
+		 * Slugs listed in tutor_quiz_templates_not_in_core have no file under wp-content/plugins/tutor/templates/.
+		 * Without this, tutor_load_template() still runs from generic quiz templates and tutor_get_template()
+		 * prints "The file you are trying to load does not exist…". Returning false here exits before that lookup.
+		 * Add-ons ship their own files and load them outside this path (e.g. direct include from the add-on).
+		 *
+		 * @since 4.0.0
+		 */
+		add_filter( 'should_tutor_load_template', array( $this, 'skip_addon_only_question_partials' ), 5, 3 );
+	}
+
+	/**
+	 * Skip loading templates that are not packaged with core Tutor LMS.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool   $load      Whether to load the template.
+	 * @param string $template  Template name in dot notation.
+	 * @param array  $variables Template variables.
+	 *
+	 * @return bool
+	 */
+	public function skip_addon_only_question_partials( $load, $template, $variables ) {
+		$addons_only = apply_filters(
+			'tutor_quiz_templates_not_in_core',
+			array(
+				'learning-area.quiz.questions.draw-image',
+				'learning-area.quiz.questions.scale',
+				'learning-area.quiz.questions.pin-image',
+				'shared.components.quiz.attempt-details.questions.draw-image',
+				'shared.components.quiz.attempt-details.questions.scale',
+				'shared.components.quiz.attempt-details.questions.pin-image',
+			),
+			$template,
+			$variables
+		);
+
+		if ( in_array( $template, $addons_only, true ) ) {
+			return false;
+		}
+
+		return $load;
 	}
 
 	/**
@@ -203,12 +246,18 @@ class Quiz {
 				'time_value' => 0,
 			),
 			'attempts_allowed'                   => 10,
-			'feedback_mode'                      => 'retry',
+			'answers_reveal_duration'            => 5,
+			'auto_start_delay'                   => 5,
+			'enable_answer_reveal'               => '0',
+			'enable_pagination'                  => '0',
 			'hide_question_number_overview'      => 0,
+			'hide_previous_button'               => '0',
 			'hide_quiz_time_display'             => 0,
+			'limit_attempts_allowed'             => '0',
 			'max_questions_for_answer'           => 10,
 			'open_ended_answer_characters_limit' => 500,
 			'pass_is_required'                   => 0,
+			'pagination_type'                    => 'shape',
 			'passing_grade'                      => 80,
 			'question_layout_view'               => '',
 			'questions_order'                    => 'rand',
@@ -217,6 +266,100 @@ class Quiz {
 		);
 
 		return apply_filters( 'tutor_quiz_default_settings', $settings );
+	}
+
+	/**
+	 * Normalize quiz settings.
+	 *
+	 * V4 stores reveal and pagination as explicit flags, but older quizzes may
+	 * still contain legacy keys.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $settings Quiz settings.
+	 *
+	 * @return array
+	 */
+	public static function normalize_quiz_settings( array $settings ): array {
+		$defaults                   = self::get_default_quiz_settings();
+		$has_enable_pagination      = array_key_exists( 'enable_pagination', $settings );
+		$has_enable_answer_reveal   = array_key_exists( 'enable_answer_reveal', $settings );
+		$has_limit_attempts_allowed = array_key_exists( 'limit_attempts_allowed', $settings );
+
+		$settings = wp_parse_args( $settings, $defaults );
+
+		$settings['time_limit'] = wp_parse_args(
+			is_array( $settings['time_limit'] ?? null ) ? $settings['time_limit'] : array(),
+			$defaults['time_limit']
+		);
+
+		$question_layout_view = (string) ( $settings['question_layout_view'] ?? '' );
+		$question_layout_view = '' !== $question_layout_view ? $question_layout_view : 'single_question';
+
+		$supported_pagination_types = array( 'shape', 'radio', 'number' );
+		$pagination_type            = $settings['pagination_type'] ?? $settings['question_pagination_style'] ?? 'shape';
+		$pagination_type            = in_array( $pagination_type, $supported_pagination_types, true ) ? $pagination_type : 'shape';
+
+		$enable_pagination = $has_enable_pagination
+			? '1' === (string) $settings['enable_pagination']
+			: 'question_pagination' === $question_layout_view;
+
+		$enable_answer_reveal   = $has_enable_answer_reveal
+			? '1' === (string) $settings['enable_answer_reveal']
+			: self::QUIZ_FEEDBACK_MODE_REVEAL === (string) ( $settings['feedback_mode'] ?? '' );
+		$limit_attempts_allowed = $has_limit_attempts_allowed
+			? '1' === (string) $settings['limit_attempts_allowed']
+			: self::QUIZ_FEEDBACK_MODE_RETRY === (string) ( $settings['feedback_mode'] ?? '' );
+
+		if ( 'question_pagination' === $question_layout_view ) {
+			$question_layout_view = 'single_question';
+			$enable_pagination    = true;
+		}
+
+		$settings['question_layout_view']   = $question_layout_view;
+		$settings['enable_pagination']      = $enable_pagination ? '1' : '0';
+		$settings['pagination_type']        = $pagination_type;
+		$settings['enable_answer_reveal']   = $enable_answer_reveal ? '1' : '0';
+		$settings['limit_attempts_allowed'] = $limit_attempts_allowed ? '1' : '0';
+
+		unset( $settings['feedback_mode'], $settings['question_pagination_style'] );
+
+		return apply_filters( 'tutor_quiz_normalized_settings', $settings );
+	}
+
+	/**
+	 * Determine if quiz retry is allowed for the current attempt count.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param mixed $limit_attempts_allowed If attempts are limited.
+	 * @param int   $attempts_allowed Allowed attempts.
+	 * @param int   $attempted_count Attempted count.
+	 *
+	 * @return bool
+	 */
+	public static function can_retry_quiz( $limit_attempts_allowed, int $attempts_allowed, int $attempted_count ): bool {
+		$limit_attempts_allowed = '1' === (string) $limit_attempts_allowed;
+
+		if ( ! $limit_attempts_allowed ) {
+			return false;
+		}
+
+		return 0 === $attempts_allowed || $attempted_count < $attempts_allowed;
+	}
+
+	/**
+	 * Get effective attempt count for quiz display/runtime.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $limit_attempts_allowed If attempts are limited.
+	 * @param int  $attempts_allowed Allowed attempts.
+	 *
+	 * @return int
+	 */
+	public static function get_effective_attempts_allowed( bool $limit_attempts_allowed, int $attempts_allowed ): int {
+		return $limit_attempts_allowed ? $attempts_allowed : 1;
 	}
 
 	/**
@@ -418,8 +561,7 @@ class Quiz {
 
 		$date = date( 'Y-m-d H:i:s', tutor_time() ); //phpcs:ignore
 
-		$tutor_quiz_option = (array) maybe_unserialize( get_post_meta( $quiz_id, 'tutor_quiz_option', true ) );
-		$attempts_allowed  = tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed', 0 );
+		$tutor_quiz_option = (array) tutor_utils()->get_quiz_option( $quiz_id );
 
 		$time_limit         = tutor_utils()->get_quiz_option( $quiz_id, 'time_limit.time_value' );
 		$time_limit_seconds = 0;
@@ -693,7 +835,7 @@ class Quiz {
 						/**
 						 * Answers from user input
 						 */
-						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
+						$given_answer = is_array( $answers ) ? array_map( 'sanitize_text_field', $answers ) : array( sanitize_text_field( $answers ) );
 						$given_answer = maybe_serialize( $given_answer );
 
 						/**
@@ -1254,7 +1396,7 @@ class Quiz {
 
 		QuizModel::delete_files_by_paths( $attempt_file_paths );
 
-		// Collect instructor file paths before deleting question data (e.g. draw_image masks).
+		// Collect instructor file paths before deleting question data (e.g. draw_image / pin_image masks).
 		/**
 		 * Filter to get file paths for quiz deletion.
 		 * Pro and other add-ons register their question types via this filter.
@@ -1612,7 +1754,7 @@ class Quiz {
 			<div class="tutor-quiz-attempts tutor-border tutor-rounded-2xl">
 				<div class="tutor-quiz-attempts-header">
 					<div class="tutor-quiz-attempts-header-item">
-						<?php esc_html_e( 'Attempts Date', 'tutor' ); ?>
+						<?php esc_html_e( 'Attempts', 'tutor' ); ?>
 					</div>
 					<div class="tutor-quiz-attempts-header-item">
 						<?php esc_html_e( 'Marks', 'tutor' ); ?>
@@ -1669,16 +1811,17 @@ class Quiz {
 			return;
 		}
 
-		$user_id           = get_current_user_id();
-		$quiz_model        = new QuizModel();
-		$attempts          = $quiz_model->quiz_attempts( $quiz_id, $user_id );
-		$attempted_count   = tutor_utils()->count( $attempts );
-		$feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
-		$attempts_allowed  = 'retry' !== $feedback_mode ? 1 : (int) tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed', 0 );
-		$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
-		$can_start_quiz    = $attempt_remaining > 0 || 0 === $attempts_allowed;
-		$quiz_auto_start   = tutor_utils()->get_quiz_option( $quiz_id, 'quiz_auto_start', 0 );
-		$should_auto_start = 1 === (int) $quiz_auto_start && 0 === (int) $attempted_count;
+		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id );
+		$user_id                = get_current_user_id();
+		$quiz_model             = new QuizModel();
+		$attempts               = $quiz_model->quiz_attempts( $quiz_id, $user_id );
+		$attempted_count        = (int) tutor_utils()->count( $attempts );
+		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
+		$attempts_allowed       = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
+		$can_start_quiz         = 0 === $attempted_count || self::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempted_count );
+		$quiz_auto_start        = $quiz_settings['quiz_auto_start'] ?? 0;
+		$auto_start_delay       = (int) ( $quiz_settings['auto_start_delay'] ?? 5 );
+		$should_auto_start      = 1 === (int) $quiz_auto_start && 0 === (int) $attempted_count;
 
 		if ( ! $can_start_quiz ) {
 			return;
@@ -1692,7 +1835,6 @@ class Quiz {
 		$skip_url            = get_the_permalink( $next_id ? $next_id : $course_id );
 		$skip_modal_id       = 'tutor-quiz-skip-to-next';
 		$auto_start_modal_id = 'tutor-quiz-autostart-modal';
-		$countdown_seconds   = 5;
 
 		$skip_modal_cancel_button = Button::make()
 			->label( __( 'Cancel', 'tutor' ) )
@@ -1725,7 +1867,7 @@ class Quiz {
 					quizID: <?php echo esc_attr( $quiz_id ); ?>,
 					autoStart: <?php echo $should_auto_start ? 'true' : 'false'; ?>,
 					autoStartModalId: '<?php echo esc_attr( $auto_start_modal_id ); ?>',
-					countdownSeconds: <?php echo esc_attr( $countdown_seconds ); ?>,
+					countdownSeconds: <?php echo esc_attr( $auto_start_delay ); ?>,
 				})"
 				@submit.prevent="handleStartQuiz()"
 			>
@@ -1759,7 +1901,7 @@ class Quiz {
 			->template(
 				tutor()->path . 'templates/learning-area/quiz/modals/auto-start.php',
 				array(
-					'countdown_seconds' => $countdown_seconds,
+					'countdown_seconds' => $auto_start_delay,
 					'modal_id'          => $auto_start_modal_id,
 				)
 			)
@@ -1781,6 +1923,9 @@ class Quiz {
 	 */
 	public static function render_question( $question, $index = 0 ) {
 		$question_settings = maybe_unserialize( $question->question_settings );
+		$question_type     = $question->question_type;
+		$rand_choice       = ! empty( $question_settings['randomize_question'] )
+			&& '1' === $question_settings['randomize_question'];
 
 		// Normalize question type + settings.
 		switch ( $question->question_type ) {
@@ -1800,22 +1945,12 @@ class Quiz {
 		}
 
 		$template = str_replace( '_', '-', $question->question_type );
+		$answers  = self::prepare_question_answers( (int) $question->question_id, $question_type, $rand_choice );
 
-		$rand_choice = ! empty( $question_settings['randomize_question'] )
-		&& '1' === $question_settings['randomize_question'];
-
-		$question->index             = $index;
-		$question->question_settings = $question_settings;
-
-		$answers = QuizModel::get_answers_by_quiz_question(
-			$question->question_id,
-			$rand_choice
-		);
-
-		$question->question_answers = array_map(
-			static fn( $answer ) => (array) $answer,
-			$answers
-		);
+		$question->index                       = $index;
+		$question->question_settings           = $question_settings;
+		$question->question_answers            = $answers['question_answers'];
+		$question->question_randomized_answers = $answers['question_randomized_answers'];
 
 		tutor_load_template(
 			'learning-area.quiz.question',
@@ -1824,6 +1959,47 @@ class Quiz {
 				'question_settings' => $question_settings,
 				'question_type'     => $template,
 			)
+		);
+	}
+
+	/**
+	 * Get question answers prepared for render.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int    $question_id  Question ID.
+	 * @param string $question_type Original question type.
+	 * @param bool   $rand_choice  Whether randomized choices are enabled.
+	 *
+	 * @return array{question_answers: array, question_randomized_answers: array}
+	 */
+	private static function prepare_question_answers( int $question_id, string $question_type, bool $rand_choice ): array {
+		$question_answers            = QuizModel::get_answers_by_quiz_question( $question_id );
+		$question_randomized_answers = array();
+
+		// Ordering questions always use a randomized answer list.
+		// Matching and image matching keep the drop-zone items ordered and only shuffle the draggable choices.
+
+		if ( 'ordering' === $question_type ) {
+			$question_answers = QuizModel::get_answers_by_quiz_question( $question_id, true );
+		} elseif ( 'matching' === $question_type || 'image_matching' === $question_type ) {
+			$question_randomized_answers = QuizModel::get_answers_by_quiz_question( $question_id, $rand_choice );
+		} elseif ( $rand_choice ) {
+			$question_answers = QuizModel::get_answers_by_quiz_question( $question_id, true );
+		}
+
+		$question_answers            = array_map(
+			static fn( $answer ) => (array) $answer,
+			$question_answers
+		);
+		$question_randomized_answers = array_map(
+			static fn( $answer ) => (array) $answer,
+			$question_randomized_answers
+		);
+
+		return array(
+			'question_answers'            => $question_answers,
+			'question_randomized_answers' => $question_randomized_answers,
 		);
 	}
 }

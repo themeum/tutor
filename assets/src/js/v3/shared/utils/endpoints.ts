@@ -47,6 +47,7 @@ const endpoints = {
   UPDATE_COURSE: 'tutor_update_course',
   GET_COURSE_LIST: 'tutor_course_list',
   RESET_COURSE_PROGRESS: 'tutor_reset_course_progress',
+  TUTOR_COMPLETE_COURSE: 'tutor_complete_course',
 
   // WOO COMMERCE PRODUCTS
   GET_WC_PRODUCTS: 'tutor_get_wc_products',
@@ -199,6 +200,7 @@ const endpoints = {
   //Reviews
   PLACE_RATING: 'tutor_place_rating',
   DELETE_REVIEW: 'delete_tutor_review',
+  CLEAR_REVIEW_POPUP_DATA: 'tutor_clear_review_popup_data',
 
   // Settings
   FETCH_COUNTRIES: '/assets/json/countries.json',
@@ -211,11 +213,15 @@ const endpoints = {
   RESET_PASSWORD: 'tutor_profile_password_reset',
   UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference',
   UPDATE_USER_PREFERENCES: 'tutor_save_user_preferences',
+  RESET_USER_PREFERENCES: 'tutor_reset_user_preferences',
   REMOVE_DEVICE_MANUALLY: 'tutor_remove_device_manually',
   REMOVE_ALL_ACTIVE_LOGINS: 'tutor_remove_all_active_logins',
 
   // Withdrawals
   MAKE_AN_WITHDRAW: 'tutor_make_an_withdraw',
+
+  // Certificate
+  VERIFY_CERTIFICATE: 'tutor_verify_certificate',
 } as const;
 
 export default endpoints;

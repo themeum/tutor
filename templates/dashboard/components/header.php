@@ -78,6 +78,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 					x-show="open"
 					x-cloak
 					@click.outside="handleClickOutside()"
+					x-transition.origin.top.right
 					class="tutor-popover tutor-dashboard-header-user-popover"
 				>
 					<div class="tutor-dashboard-header-user-popover-profile">

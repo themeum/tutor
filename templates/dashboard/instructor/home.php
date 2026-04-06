@@ -322,7 +322,7 @@ $sortable_sections_ids = array_reduce(
 		defaultValues: <?php echo wp_json_encode( $sortable_sections_defaults ); ?>
 	})' 
 	x-bind="getFormBindings()"
-	class="tutor-flex tutor-flex-column tutor-gap-6 tutor-mt-7"
+	class="tutor-flex tutor-flex-column tutor-gap-6"
 >
 	<!-- Filters -->
 	<div class="tutor-flex tutor-justify-between tutor-align-center">
@@ -343,6 +343,7 @@ $sortable_sections_ids = array_reduce(
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-transition.origin.top.right
 				@click.outside="handleClickOutside()"
 				class="tutor-popover tutor-popover-bottom"
 			>

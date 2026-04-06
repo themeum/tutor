@@ -17,6 +17,7 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
+use Tutor\Components\WPEditor;
 
 $user          = wp_get_current_user();
 $settings_data = User::get_profile_settings_data( $user->ID );
@@ -50,12 +51,11 @@ $default_values = array(
 	'cover_photo'             => $settings_data['cover_photo_src'],
 );
 
-$default_values 					 = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
-$learning_mode                      = tutor_utils()->get_option( 'learning_mode', 'classic' );
+$default_values = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
 
 ?>
 
-<div class="tutor-account-section" data-tutor-ui="<?php echo esc_attr( $learning_mode ); ?>">
+<div class="tutor-account-section">
 	<?php do_action( 'tutor_profile_edit_form_before' ); ?>
 
 	<form
@@ -63,7 +63,7 @@ $learning_mode                      = tutor_utils()->get_option( 'learning_mode'
 		x-data='tutorForm({ 
 			id: "<?php echo esc_attr( $form_id ); ?>",
 			mode: "onChange",
-			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
+			defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>,
 		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit((data) => handleUpdateProfile(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
@@ -85,7 +85,7 @@ $learning_mode                      = tutor_utils()->get_option( 'learning_mode'
 								variant: 'image-uploader',
 								accept: '.png,.jpg,.jpeg',
 								onFileSelect: handleUploadProfilePhoto,
-								imagePreviewPlaceholder: '<?php esc_attr( $settings_data['profile_placeholder'] ); ?>',
+								imagePreviewPlaceholder: '<?php echo esc_attr( $settings_data['profile_placeholder'] ); ?>',
 							})"
 							class="tutor-account-avatar" 
 							:class="{
@@ -151,7 +151,7 @@ $learning_mode                      = tutor_utils()->get_option( 'learning_mode'
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
 					<?php
 						InputField::make()
@@ -242,14 +242,13 @@ $learning_mode                      = tutor_utils()->get_option( 'learning_mode'
 						->attr( 'x-bind', "register('display_name')" )
 						->render();
 
-					InputField::make()
-						->type( InputType::TEXTAREA )
+					WPEditor::make()
 						->label( __( 'Bio', 'tutor' ) )
 						->name( 'tutor_profile_bio' )
-						->clearable()
-						->id( 'tutor_profile_bio' )
 						->placeholder( __( 'Enter your bio', 'tutor' ) )
+						->content( $default_values['tutor_profile_bio'] )
 						->attr( 'x-bind', "register('tutor_profile_bio')" )
+						->editor_config( tutor_utils()->get_profile_bio_editor_config( 'tutor_profile_bio' ) )
 						->render();
 				?>
 			</div>

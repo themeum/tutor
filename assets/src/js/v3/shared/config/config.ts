@@ -43,6 +43,7 @@ const defaultTutorConfig = {
   addons_data: [],
   kids_icons_registry: [],
   is_kids_mode: false,
+  is_legacy_learning_mode: false,
   current_user: {
     data: {
       id: '',
@@ -63,6 +64,7 @@ const defaultTutorConfig = {
     filter: null,
   },
   settings: {
+    learning_mode: '',
     monetize_by: 'tutor',
     enable_course_marketplace: 'off',
     course_permalink_base: '',

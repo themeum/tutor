@@ -45,7 +45,6 @@ $content      = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor
 						)
 					)
 					->attr( 'x-bind', "register('feedback')" )
-					->wrapper_attr( 'class', 'tutor-mb-16' )
 					->render();
 				?>
 			</div>

@@ -14,6 +14,12 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Helpers\ComponentHelper;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Models\OrderModel;
+
+$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+$html_markup = 'wc' !== $monetize_by;
+$titles      = OrderModel::get_order_history_titles( $order );
+$pay_link    = OrderModel::get_order_history_pay_link( $order );
+
 ?>
 <div class="tutor-billing-card">
 	<div class="tutor-billing-card-left">
@@ -22,23 +28,8 @@ use Tutor\Models\OrderModel;
 				<?php ComponentHelper::render_status_badge( $order->order_status ); ?>
 			</div>
 			<ul class="tutor-pl-1">
-				<?php
-				$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
-				foreach ( $items as $item ) :
-					$course_id    = $item->id; // For single order course, bundle.
-					$object_title = get_the_title( $course_id );
-					if ( OrderModel::TYPE_SINGLE_ORDER !== $order->order_type ) {
-						$object_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
-						$plan_info = apply_filters( 'tutor_get_plan_info', null, $item->id );
-						if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
-							$object_title = $plan_info->plan_name;
-						} else {
-							$object_title = get_the_title( $object_id );
-						}
-					}
-
-					?>
-					<li><span><?php echo esc_html( $object_title ); ?></span></li>
+				<?php foreach ( $titles as $item_title ) : ?>
+					<li><span><?php echo esc_html( $item_title ); ?></span></li>
 				<?php endforeach; ?>
 			</ul>
 			<div class="tutor-sm-hidden">
@@ -64,12 +55,23 @@ use Tutor\Models\OrderModel;
 
 	<div class="tutor-billing-card-right">
 		<div class="tutor-billing-card-amount">
-			<?php echo esc_html( tutor_get_formatted_price( $order->total_price ) ); ?>
+			<?php echo esc_html( tutor_get_formatted_price( $order->total_price, $html_markup ) ); ?>
 		</div>
 
 		<?php
-			OrderModel::render_pay_button( $order );
-			do_action( 'tutor_dashboard_invoice_button', $order );
+		echo wp_kses(
+			$pay_link,
+			array(
+				'a' => array(
+					'href'  => true,
+					'class' => true,
+				),
+			)
+		);
+
+		$order->titles = $titles;
+
+		OrderModel::render_billing_receipt_action( $order );
 		?>
 	</div>
 </div>

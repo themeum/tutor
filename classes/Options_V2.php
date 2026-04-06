@@ -32,9 +32,9 @@ class Options_V2 {
 	 *
 	 * @since 4.0.0
 	 */
-	const LEARNING_MODE_CLASSIC = 'classic';
-	const LEARNING_MODE_KIDS    = 'kids';
-	const LEARNING_MODE_LEGACY  = 'legacy';
+	const LEARNING_MODE_MODERN = 'modern';
+	const LEARNING_MODE_KIDS   = 'kids';
+	const LEARNING_MODE_LEGACY = 'legacy';
 
 	/**
 	 * Undocumented variable
@@ -894,6 +894,14 @@ class Options_V2 {
 								'desc'        => __( 'Enabling this feature will allow students to reset course progress and start over.', 'tutor' ),
 							),
 							array(
+								'key'         => 'course_reset_progress',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Course Reset Progress', 'tutor' ),
+								'default'     => 'off',
+								'label_title' => '',
+								'desc'        => __( 'Enabling this feature will allow students to reset course progress and start over.', 'tutor' ),
+							),
+							array(
 								'key'         => 'enable_course_review_moderation',
 								'type'        => 'toggle_switch',
 								'label'       => __( "Publish Course Review on Admin's Approval", 'tutor' ),
@@ -1230,17 +1238,17 @@ class Options_V2 {
 								'key'     => 'learning_mode',
 								'type'    => 'radio_horizontal_full',
 								'label'   => __( 'Learning Mode', 'tutor' ),
-								'default' => self::LEARNING_MODE_CLASSIC,
+								'default' => self::LEARNING_MODE_MODERN,
 								'options' => array(
-									self::LEARNING_MODE_CLASSIC => __( 'Classic', 'tutor' ),
-									self::LEARNING_MODE_KIDS    => __( 'Kids', 'tutor' ),
-									self::LEARNING_MODE_LEGACY  => __( 'Legacy', 'tutor' ),
+									self::LEARNING_MODE_MODERN => __( 'Modern', 'tutor' ),
+									self::LEARNING_MODE_KIDS   => __( 'Kids', 'tutor' ),
+									self::LEARNING_MODE_LEGACY => __( 'Legacy', 'tutor' ),
 								),
 								'desc'    => __( 'Decide how students will experience the courses you create.', 'tutor' ),
 							),
 						),
 					),
-					'block_course'    => array(
+					'block_course'     => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
 						'block_type' => 'uniform',

@@ -39,7 +39,7 @@
 
 	--tutor-button-outline-border-shadow: 0 0 0 1px #{$tutor-border-idle};
 	--tutor-button-outline-border-shadow-hover: none;
-	--tutor-button-outline-border-shadow-focused: none;
+	--tutor-button-outline-border-shadow-focused: 0 0 0 1px #{$tutor-border-idle};
 	--tutor-button-outline-border-shadow-disabled: none;
 
 	--tutor-button-ghost-border-shadow: none;

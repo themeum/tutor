@@ -94,7 +94,8 @@ class QuizModel {
 				);
 			}
 
-			$start_time = DateTimeHelper::get_gmt_to_user_timezone_date( $quiz_attempt->attempt_started_at ?? '', 'D j M Y, g:i A' );
+			$start_time = DateTimeHelper::create( $quiz_attempt->attempt_started_at ?? '' )
+				->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 
 			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ) - strtotime( $quiz_attempt->attempt_started_at );
 			$attempt_time = tutor_utils()->playtime_string( $attempt_time );
@@ -537,7 +538,7 @@ class QuizModel {
 	}
 
 	/**
-	 * Delete quizattempt for user
+	 * Delete quiz attempt for user
 	 *
 	 * @since 1.9.5
 	 *
@@ -547,6 +548,9 @@ class QuizModel {
 	 */
 	public static function delete_quiz_attempt( $attempt_ids ) {
 		// Singlular to array.
+		global $wpdb;
+
+		// Singular to array.
 		! is_array( $attempt_ids ) ? $attempt_ids = array( $attempt_ids ) : 0;
 		$attempt_ids                              = array_map( 'absint', array_filter( $attempt_ids ) );
 
@@ -555,19 +559,15 @@ class QuizModel {
 			$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
 			$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
 
-			// Delete attempt answers (child) then attempts (parent); use QueryHelper for bulk delete.
-			QueryHelper::bulk_delete(
-				QueryHelper::prepare_table_name( 'tutor_quiz_attempt_answers' ),
-				array( 'quiz_attempt_id' => $attempt_ids )
-			);
-			QueryHelper::bulk_delete(
-				QueryHelper::prepare_table_name( 'tutor_quiz_attempts' ),
-				array( 'attempt_id' => $attempt_ids )
-			);
+			$attempt_ids = QueryHelper::prepare_in_clause( $attempt_ids );
+
+			// Deleting attempt (comment), child attempt and attempt meta (comment meta).
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN({$attempt_ids})" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN({$attempt_ids})" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			self::delete_files_by_paths( $attempt_file_paths );
 
-			do_action( 'tutor_quiz/attempt_deleted', implode( ',', $attempt_ids ) );
+			do_action( 'tutor_quiz/attempt_deleted', $attempt_ids );
 		}
 	}
 
@@ -624,7 +624,7 @@ class QuizModel {
 
 		$search_filter   = $search_filter ? '%' . $wpdb->esc_like( $search_filter ) . '%' : '';
 		$search_term_raw = $search_filter;
-		$search_filter   = $search_filter ? "AND ( users.user_email = '{$search_term_raw}' OR users.display_name LIKE {$search_filter} OR quiz.post_title LIKE {$search_filter} OR course.post_title LIKE {$search_filter} )" : '';
+		$search_filter   = $search_filter ? $wpdb->prepare( 'AND ( users.user_email = %s OR users.display_name LIKE %s OR quiz.post_title LIKE %s OR course.post_title LIKE %s )', $search_term_raw, $search_filter, $search_filter, $search_filter ) : '';
 
 		$course_filter = 0 !== $course_filter ? " AND quiz_attempts.course_id = $course_filter " : '';
 		$date_filter   = '' != $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';

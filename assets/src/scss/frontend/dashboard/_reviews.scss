@@ -21,6 +21,12 @@
         opacity: 1;
       }
     }
+
+    @include tutor-breakpoint-down(sm) {
+      .tutor-review-actions {
+        opacity: 1;
+      }
+    }
   }
 
   &-header {
@@ -55,10 +61,9 @@
   }
 
   &-actions {
-    @include tutor-flex(row);
     gap: $tutor-spacing-4;
-    @include tutor-transition(opacity);
     opacity: 0;
+    @include tutor-transition(opacity);
   }
 
   &-text {

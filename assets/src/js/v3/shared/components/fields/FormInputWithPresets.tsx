@@ -29,7 +29,7 @@ interface FormInputWithPresetsProps extends FormControllerProps<string | null> {
   contentPosition?: 'left' | 'right';
   showVerticalBar?: boolean;
   type?: 'number' | 'text';
-  size?: 'regular' | 'large';
+  size?: 'small' | 'regular' | 'large';
   label?: string;
   placeholder?: string;
   disabled?: boolean;
@@ -43,6 +43,7 @@ interface FormInputWithPresetsProps extends FormControllerProps<string | null> {
   selectOnFocus?: boolean;
   wrapperCss?: SerializedStyles;
   contentCss?: SerializedStyles;
+  formFieldWrapperCss?: SerializedStyles;
   removeBorder?: boolean;
 }
 
@@ -66,6 +67,7 @@ const FormInputWithPresets = ({
   selectOnFocus = false,
   wrapperCss,
   contentCss,
+  formFieldWrapperCss,
   removeBorder = false,
 }: FormInputWithPresetsProps) => {
   const fieldValue = field.value ?? '';
@@ -84,6 +86,7 @@ const FormInputWithPresets = ({
       loading={loading}
       helpText={helpText}
       removeBorder={removeBorder}
+      wrapperCss={formFieldWrapperCss}
       placeholder={placeholder}
     >
       {(inputProps) => {
@@ -133,40 +136,42 @@ const FormInputWithPresets = ({
               )}
             </div>
 
-            <Popover
-              triggerRef={triggerRef}
-              isOpen={isOpen}
-              closePopover={() => setIsOpen(false)}
-              animationType={AnimationType.slideDown}
-            >
-              <div css={[styles.optionsWrapper]}>
-                <ul css={[styles.options(removeOptionsMinWidth)]}>
-                  {presetOptions.map((option) => (
-                    <li
-                      key={String(option.value)}
-                      css={styles.optionItem({
-                        isSelected: option.value === field.value,
-                      })}
-                    >
-                      <button
-                        type="button"
-                        css={styles.label}
-                        onClick={() => {
-                          field.onChange(option.value);
-                          onChange?.(option.value);
-                          setIsOpen(false);
-                        }}
+            <Show when={presetOptions.length > 0}>
+              <Popover
+                triggerRef={triggerRef}
+                isOpen={isOpen}
+                closePopover={() => setIsOpen(false)}
+                animationType={AnimationType.slideDown}
+              >
+                <div css={[styles.optionsWrapper]}>
+                  <ul css={[styles.options(removeOptionsMinWidth)]}>
+                    {presetOptions.map((option) => (
+                      <li
+                        key={String(option.value)}
+                        css={styles.optionItem({
+                          isSelected: option.value === field.value,
+                        })}
                       >
-                        <Show when={option.icon}>
-                          <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
-                        </Show>
-                        <span>{option.label}</span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Popover>
+                        <button
+                          type="button"
+                          css={styles.label}
+                          onClick={() => {
+                            field.onChange(option.value);
+                            onChange?.(option.value);
+                            setIsOpen(false);
+                          }}
+                        >
+                          <Show when={option.icon}>
+                            <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
+                          </Show>
+                          <span>{option.label}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Popover>
+            </Show>
           </>
         );
       }}
@@ -209,7 +214,7 @@ const styles = {
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
     /** Increasing the css specificity */
-    &[data-input] {
+    &.tutor-input-field:not(textarea) {
       ${typography.body()};
       border: none;
       box-shadow: none;
@@ -230,6 +235,15 @@ const styles = {
         css`
               padding-${contentPosition}: ${spacing[12]};
             `};
+      `}
+
+      ${size === 'small' &&
+      css`
+        height: 32px;
+        ${showVerticalBar &&
+        css`
+          padding-${contentPosition}: ${spacing[4]};
+        `};
       `}
 
       &:focus {
@@ -320,6 +334,13 @@ const styles = {
       ${typography.body()}
     `}
 
+    ${size === 'small' &&
+    css`
+      min-width: 32px;
+      height: 32px;
+      padding-inline: ${spacing[6]};
+    `}
+
     ${showVerticalBar &&
     css`
       border-right: 1px solid ${colorTokens.stroke.default};
@@ -336,6 +357,13 @@ const styles = {
     ${size === 'large' &&
     css`
       ${typography.body()}
+    `}
+
+    ${size === 'small' &&
+    css`
+      min-width: 32px;
+      height: 32px;
+      padding-inline: ${spacing[6]};
     `}
 
     ${showVerticalBar &&

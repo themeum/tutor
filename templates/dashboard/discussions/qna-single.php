@@ -166,11 +166,12 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 					tutor_load_template(
 						'dashboard.discussions.qna-form',
 						array(
-							'form_id'        => 'qna-edit-' . (int) $question->comment_ID,
-							'default_value'  => $question->comment_content,
-							'submit_handler' => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
-							'cancel_handler' => 'setEditing(null)',
-							'is_pending'     => 'updateQnAMutation?.isPending',
+							'form_id'             => 'qna-edit-' . (int) $question->comment_ID,
+							'default_value'       => $question->comment_content,
+							'submit_handler'      => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $question->comment_ID . ' })',
+							'cancel_handler'      => 'setEditing(null)',
+							'is_pending'          => 'updateQnAMutation?.isPending',
+							'keep_footer_visible' => true,
 						)
 					);
 				?>

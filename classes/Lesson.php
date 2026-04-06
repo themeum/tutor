@@ -10,9 +10,7 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
@@ -115,13 +113,13 @@ class Lesson extends Tutor_Base {
 		 *
 		 * @since 2.0.0
 		 */
-		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'tutor_single_course_lesson_load_more' ) );
-		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'tutor_single_course_lesson_load_more' ) );
+		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'ajax_single_course_lesson_load_more' ) );
+		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'ajax_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_delete_lesson_comment', array( $this, 'ajax_delete_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_update_lesson_comment', array( $this, 'ajax_update_lesson_comment' ) );
-		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'reply_lesson_comment' ) );
-		add_action( 'wp_ajax_tutor_load_lesson_comments', array( $this, 'load_lesson_comments' ) );
-		add_action( 'wp_ajax_tutor_load_comment_replies', array( $this, 'load_comment_replies' ) );
+		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'ajax_reply_lesson_comment' ) );
+		add_action( 'wp_ajax_tutor_load_lesson_comments', array( $this, 'ajax_load_lesson_comments' ) );
+		add_action( 'wp_ajax_tutor_load_comment_replies', array( $this, 'ajax_load_comment_replies' ) );
 
 		// Add lesson title as nav item & render single content on the learning area.
 		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
@@ -137,12 +135,16 @@ class Lesson extends Tutor_Base {
 	 *
 	 * @return void  send wp json data
 	 */
-	public function tutor_single_course_lesson_load_more() {
+	public function ajax_single_course_lesson_load_more() {
 		tutor_utils()->checking_nonce();
 
 		$comment_id = 0;
 		$comment    = Input::post( 'comment', '', Input::TYPE_KSES_POST );
 		$lesson_id  = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
+
+		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
 
 		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
 			$comment_data = array(
@@ -214,6 +216,10 @@ class Lesson extends Tutor_Base {
 		$parent_id = $comment->comment_parent;
 		$is_reply  = $parent_id > 0;
 
+		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
+
 		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
 			wp_delete_comment( $comment_id, true );
 
@@ -261,6 +267,11 @@ class Lesson extends Tutor_Base {
 
 		$comment_content = Input::post( 'comment', '', Input::TYPE_KSES_POST );
 		$user_id         = get_current_user_id();
+		$lesson_id       = $comment->comment_post_ID;
+
+		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
 
 		if ( $user_id === (int) $comment->user_id ) {
 			wp_update_comment(
@@ -271,9 +282,7 @@ class Lesson extends Tutor_Base {
 			);
 
 			$comment->comment_content = $comment_content;
-
-			$lesson_id = $comment->comment_post_ID;
-			$is_reply  = $comment->comment_parent > 0;
+			$is_reply                 = $comment->comment_parent > 0;
 
 			ob_start();
 			tutor_load_template(
@@ -710,7 +719,7 @@ class Lesson extends Tutor_Base {
 	 *
 	 * @return void|null
 	 */
-	public function reply_lesson_comment() {
+	public function ajax_reply_lesson_comment() {
 		tutor_utils()->checking_nonce();
 		$comment = Input::post( 'comment', '', Input::TYPE_KSES_POST );
 		if ( 0 === strlen( $comment ) ) {
@@ -723,11 +732,17 @@ class Lesson extends Tutor_Base {
 			'comment_post_ID' => Input::post( 'comment_post_ID', 0, Input::TYPE_INT ),
 			'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 		);
-		$comment_id   = self::create_comment( $comment_data );
+
+		if ( ! self::is_comment_enabled_for_lesson( $comment_data['comment_post_ID'] ) ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
+
+		$comment_id = self::create_comment( $comment_data );
 		if ( false === $comment_id ) {
 			wp_send_json_error();
 			return;
 		}
+
 		$reply = get_comment( $comment_id );
 		do_action( 'tutor_reply_lesson_comment_thread', $comment_id, $comment_data );
 
@@ -919,7 +934,20 @@ class Lesson extends Tutor_Base {
 	 * @return bool True if comments are enabled, false otherwise.
 	 */
 	public static function is_comment_enabled() {
-		return tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open() && is_user_logged_in();
+		return tutor_utils()->get_option( 'enable_comment_for_lesson' );
+	}
+
+	/**
+	 * Check if comments are enabled for lessons
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int|object $lesson Lesson ID or object. If null, current lesson will be used.
+	 *
+	 * @return bool True if comments are enabled, false otherwise.
+	 */
+	public static function is_comment_enabled_for_lesson( $lesson = null ) {
+		return self::is_comment_enabled() && comments_open( $lesson );
 	}
 
 	/**
@@ -982,7 +1010,7 @@ class Lesson extends Tutor_Base {
 				),
 			),
 			'comments' => array(
-				'condition' => self::is_comment_enabled(),
+				'condition' => self::is_comment_enabled_for_lesson( $lesson_id ) && is_user_logged_in(),
 				'legacy'    => array(
 					'label'    => __( 'Comments', 'tutor' ),
 					'value'    => 'comments',
@@ -1059,14 +1087,19 @@ class Lesson extends Tutor_Base {
 	 *
 	 * @return void
 	 */
-	public function load_lesson_comments() {
+	public function ajax_load_lesson_comments() {
+		tutor_utils()->check_nonce();
+
 		$lesson_id    = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 		$current_page = Input::post( 'current_page', 1, Input::TYPE_INT );
 		$offset       = Input::post( 'offset', -1, Input::TYPE_INT );
 		$order        = QueryHelper::get_valid_sort_order( Input::post( 'order', 'DESC' ) );
 
-		$user_id = get_current_user_id();
+		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
 
+		$user_id       = get_current_user_id();
 		$item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 
 		$query_args = array(
@@ -1124,7 +1157,7 @@ class Lesson extends Tutor_Base {
 	 *
 	 * @return void
 	 */
-	public function load_comment_replies() {
+	public function ajax_load_comment_replies() {
 		tutor_utils()->check_nonce();
 
 		$comment_id    = Input::post( 'comment_id', 0, Input::TYPE_INT );

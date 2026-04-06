@@ -12,6 +12,7 @@
 use TUTOR\Icon;
 use TUTOR\Quiz_Attempts_List;
 use TUTOR\Input;
+use Tutor\Components\EmptyState;
 use Tutor\Models\QuizModel;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
@@ -43,8 +44,24 @@ if ( ! $attempt_data && $quiz_id > 0 ) {
 	$attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
 }
 
+$render_attempt_not_found = static function ( string $title ) {
+	EmptyState::make()
+		->title( $title )
+		->render();
+};
+
 if ( ! $attempt_data || empty( $attempt_data->attempt_id ) ) {
-	tutor_utils()->tutor_empty_state( __( 'Attempt not found', 'tutor' ) );
+	$render_attempt_not_found( __( 'Attempt not found', 'tutor' ) );
+	return;
+}
+
+if ( $is_instructor_review ) {
+	if ( ! tutor_utils()->can_user_manage( 'attempt', (int) $attempt_data->attempt_id ) ) {
+		$render_attempt_not_found( __( 'Attempt not found or access permission denied', 'tutor' ) );
+		return;
+	}
+} elseif ( $user_id > 0 && (int) $attempt_data->user_id !== $user_id ) {
+	$render_attempt_not_found( __( 'Attempt not found or access permission denied', 'tutor' ) );
 	return;
 }
 

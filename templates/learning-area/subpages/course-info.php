@@ -11,37 +11,22 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
-use Tutor\Components\ConfirmationModal;
 use Tutor\Components\StarRating;
-use TUTOR\Course;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
-use Tutor\Helpers\UrlHelper;
-use Tutor\Models\CourseModel;
 
 // Globals inherited from learning-area/index.php template.
 global $tutor_course_id,
 $tutor_course,
 $current_user_id;
 
-$is_course_completed = tutor_utils()->is_completed_course( $tutor_course_id, $current_user_id );
-$course_thumbnail    = get_tutor_course_thumbnail_src( 'full', $tutor_course_id );
-$course_author       = get_user( $tutor_course->post_author );
-$course_benefits     = tutor_course_benefits( $tutor_course_id );
-$instructors         = tutor_utils()->get_instructors_by_course( $tutor_course_id );
-$course_rating       = tutor_utils()->get_course_rating( $tutor_course_id );
-$course_materials    = tutor_course_material_includes( $tutor_course_id );
-$course_attachments  = tutor_utils()->get_attachments( $tutor_course_id );
-$can_complete_course = CourseModel::can_complete_course( $tutor_course_id, $current_user_id ) && ! $is_course_completed;
-$course_progress     = tutor_utils()->get_course_completed_percent( $tutor_course_id, $current_user_id );
-
-$completion_mode = tutor_utils()->get_option( 'course_completion_process' );
-$retake_course   = tutor_utils()->can_user_retake_course();
-
-$can_retake_course = $retake_course && ( CourseModel::MODE_FLEXIBLE === $completion_mode || $is_completed_course );
-
-$course_complete_modal_id = 'tutor-course-complete-modal';
-$course_retake_modal_id   = 'tutor-course-retake-modal';
+$course_thumbnail   = get_tutor_course_thumbnail_src( 'full', $tutor_course_id );
+$course_author      = get_user( $tutor_course->post_author );
+$course_benefits    = tutor_course_benefits( $tutor_course_id );
+$instructors        = tutor_utils()->get_instructors_by_course( $tutor_course_id );
+$course_rating      = tutor_utils()->get_course_rating( $tutor_course_id );
+$course_materials   = tutor_course_material_includes( $tutor_course_id );
+$course_attachments = tutor_utils()->get_attachments( $tutor_course_id );
 
 ob_start();
 foreach ( $instructors as $key => $instructor ) {
@@ -158,17 +143,6 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		);
 		?>
 		</div>
-		<div class="tutor-items-center tutor-flex tutor-gap-2 tutor-items-center tutor-justify-center">
-		<?php
-		if ( $can_complete_course ) {
-			Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $course_progress );
-		}
-		if ( $can_retake_course ) {
-			Course::render_course_retake_btn( $course_retake_modal_id );
-		}
-		?>
-		</div>
-
 	</div>
 
 	<!-- TODO: sticky behaviour -->
@@ -252,35 +226,4 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			<?php endforeach ?>
 		</table>
 	</div>
-
-	<?php
-	if ( $can_complete_course ) {
-		$progress = $course_progress['completed_percent'] ?? 0;
-		if ( $progress < 100 ) {
-			ConfirmationModal::make()
-			->id( $course_complete_modal_id )
-			->title( __( 'Finish Course Early?', 'tutor' ) )
-			->message( Course::get_complete_modal_content( $course_progress ), wp_kses_allowed_html( 'post' ) )
-			->cancel_text( __( 'Go Back to Course', 'tutor' ) )
-			->confirm_text( __( 'Complete Anyway', 'tutor' ) )
-			->icon( Icon::WARNING_COLORIZED )
-			->confirm_handler( "handleCourseComplete($tutor_course_id)" )
-			->mutation_state( 'courseCompleteMutation' )
-			->render();
-		}
-	}
-	if ( $can_retake_course ) {
-		ConfirmationModal::make()
-		->id( $course_retake_modal_id )
-		->title( __( 'Start the Course Again?', 'tutor' ) )
-		->message( __( 'Retaking the course will reset your progress and start everything from the beginning.', 'tutor' ) )
-		->icon( UrlHelper::asset( 'images/illustrations/retake-course.svg' ) )
-		->cancel_text( __( 'Cancel', 'tutor' ) )
-		->confirm_text( __( 'Start Retake', 'tutor' ) )
-		->confirm_handler( "handleCourseRetake($tutor_course_id)" )
-		->mutation_state( 'courseRetakeMutation' )
-		->render();
-	}
-	?>
 </div>
-

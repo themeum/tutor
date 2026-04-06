@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.0.0-dev
+Stable tag: 3.9.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,6 +318,70 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.0-beta.1 - 06 April, 2026
+
+New: Introduced 3 new quiz types: Draw Image, Pin Image, and Scale. (Pro)
+New: Added certificate verification feature. (Pro)
+New: Added course bundle expiry functionality. (Pro)
+New: Added forgot password email template. (Pro)
+Update: Learning area updated to now show Gradebook. (Pro)
+Update: Improved translation compatibility.
+Update: Lesson Note enable/disable option added in admin settings.
+Update: Improved overall assignment functionality.
+Fix: Fixed issue where enrolment emails were not triggered via Tutor REST API. (Pro)
+Fix: Resolved critical errors affecting Quiz Submit and Quiz Quit actions.
+Fix: Fixed dashboard subpages showing "not found" without permalink reset.
+Fix: Resolved issue where account page information was missing in specific cases.
+Fix: Fixed assignment search and filtering issues.
+Fix: Fixed Hide Quiz Time feature not working.
+Fix: Fixed Retake Quiz button not working on the Quiz Summary page.
+Fix: Fixed security issue where unauthenticated users could access invoices. (Pro)
+Fix: Fixed database error in the report admin panel when monetization is disabled.
+Fix: Resolved 2FA login nonce error. (Pro)
+Fix: Fixed error when deleting quiz attempts.
+Fix: Fixed blank billing page when WooCommerce or EDD is active.
+Fix: Fixed issue where YouTube videos would not play when Tutor Player is disabled.
+
+= 4.0.0-alpha.1 - 30 March, 2026
+
+New: Fully redesigned with a learner-first approach to improve focus, discoverability, and engagement.
+New: Optimized interface for Mobile-First Experience and fluid lesson transitions.
+New: Thumb-zone navigation for a smoother mobile experience.
+New: Continuous learning environment without leaving lessons.
+New: Kids Mode with a playful and colorful interface.
+New: Redesigned student Dashboard showing live lessons, progress, and tasks at a glance.
+New: Five interactive quiz types: Scaling, Draw Image, Pin Map, Puzzle, Graph. (Pro)
+New: Students' profile management with certificate signature and personal info updates.
+New: Light/Dark mode and improved contrast for accessibility.
+New: Centralized notes for all lessons and videos.
+New: Unified discussion and Q&A across courses.
+New: Live Lesson Hub for upcoming and previous lessons. (Pro)
+New: Smarter Course Calendar with milestones and a visual roadmap. (Pro)
+New: Unified Resource Center for PDFs and downloadable assets.
+New: Certificates linked to progress with dynamic unlocking. (Pro)
+New: Preferences for autoplay lessons, manage downloads, and other accessibility settings.
+New: Centralized course billing with subscriptions, history, and renewals.
+New: Clearer analytics for engagement, progress, and course performance. (Pro)
+New: Global design modes to switch between Modern, Kids, or Legacy layouts platform-wide.
+New: Lots of Micro-interactions with animations and sound effects to make lessons more fun.
+New: A new button “view as student” has been added to allow admin & instructor to change the dashboard view.
+New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
+New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
+
+= 3.9.8 - Apr 01, 2026
+
+Update: Added proper authorization check while updating the lessons.
+Update: Strengthen SQL queries across multiple deletion and update operations.
+Update: Improved security in quiz attempts search by preventing SQL injection.
+Fix: Fixed private course enrollment via AJAX without proper validation.
+Fix: Resolved the billing profile overwrite issue in Tutor LMS native eCommerce.
+Fix: Replaced wp_remote_get with wp_safe_remote_get for safer course import with media files.
+
+= 3.9.7 - Feb 25, 2026
+
+Fix: Resolved SQL injection security vulnerabilities to enhance system security.
+Fix: Fixed an issue where Stripe orders were automatically canceled in certain cases.
 
 = 3.9.6 - Jan 28, 2026
 

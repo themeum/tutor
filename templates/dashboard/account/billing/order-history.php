@@ -22,7 +22,12 @@ $end_date        = Input::get( 'end_date' );
 $selected_filter = Input::get( 'data', 'all' );
 
 if ( tutor_utils()->is_monetize_by_tutor() ) {
-	$response    = ( new OrderModel() )->get_user_orders( $time_period, $start_date, $end_date, $selected_filter, $user_id, $item_per_page, $offset, $order_filter );
+
+	$args = array();
+	if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+		$args['order_type'] = OrderModel::TYPE_SINGLE_ORDER;
+	}
+	$response    = ( new OrderModel() )->get_user_orders( $time_period, $start_date, $end_date, $selected_filter, $user_id, $item_per_page, $offset, $order_filter, $args );
 	$orders      = $response['results'];
 	$total_items = $response['total_count'];
 } else {
@@ -41,7 +46,10 @@ else :
 	?>
 <div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-order-history">
 	<?php foreach ( $orders as $order ) : //phpcs:ignore ?>
-		<?php include tutor_get_template( 'dashboard.account.billing.order-history-card' ); ?>	
+		<?php
+		$order = OrderModel::normalize_order_for_history( $order ); //phpcs:ignore
+		include tutor_get_template( 'dashboard.account.billing.order-history-card' );
+		?>
 	<?php endforeach; ?>
 </div>
 

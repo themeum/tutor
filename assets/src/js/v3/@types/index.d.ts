@@ -126,6 +126,7 @@ declare global {
       }[];
       kids_icons_registry: string[];
       is_kids_mode: boolean;
+      is_legacy_learning_mode: boolean;
       current_user: {
         data: {
           id: string;
@@ -150,6 +151,7 @@ declare global {
         filter: null;
       };
       settings?: {
+        learning_mode: 'modern' | 'legacy' | 'kids' | '';
         monetize_by: 'wc' | 'tutor' | 'edd';
         enable_course_marketplace: 'on' | 'off';
         course_permalink_base: string;

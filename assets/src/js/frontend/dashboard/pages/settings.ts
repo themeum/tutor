@@ -60,7 +60,13 @@ interface PreferencesFormProps {
   auto_play_next: boolean;
   theme: string;
   font_scale: number;
+  learning_mood: boolean;
   formId?: string;
+}
+
+interface ResetPreferencesPayload {
+  formId: string;
+  modalId: string;
 }
 
 interface UpdateNotificationProps {
@@ -90,6 +96,7 @@ const settings = () => {
     resetPasswordMutation: null as MutationState<ResetPasswordResponse> | null,
     handleUpdateNotification: null as MutationState<unknown, unknown> | null,
     savePreferencesMutation: null as MutationState<TutorMutationResponse<PreferencesFormProps>> | null,
+    resetPreferencesMutation: null as MutationState<TutorMutationResponse<PreferencesFormProps>> | null,
 
     init() {
       if (!this.$el) {
@@ -103,6 +110,7 @@ const settings = () => {
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
       this.handleSaveWithdrawMethod = this.handleSaveWithdrawMethod.bind(this);
       this.handleResetPassword = this.handleResetPassword.bind(this);
+      this.handleResetPreferences = this.handleResetPreferences.bind(this);
 
       this.handleUpdateNotification = query.useMutation(this.updateNotification, {
         onSuccess: (data: TutorMutationResponse<string>, payload: UpdateNotificationProps) => {
@@ -190,12 +198,32 @@ const settings = () => {
           toast.error(convertToErrorMessage(error));
         },
       });
+
+      this.resetPreferencesMutation = query.useMutation(this.resetPreferences, {
+        onSuccess: (data: TutorMutationResponse<PreferencesFormProps>) => {
+          toast.success(data?.message ?? __('Preferences reset successfully', 'tutor'));
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
+        },
+      });
     },
 
     async updatePreferences(payload: PreferencesFormProps) {
       return wpAjaxInstance.post(endpoints.UPDATE_USER_PREFERENCES, payload) as unknown as Promise<
         TutorMutationResponse<PreferencesFormProps>
       >;
+    },
+
+    async resetPreferences(payload: ResetPreferencesPayload) {
+      return wpAjaxInstance.post(endpoints.RESET_USER_PREFERENCES, payload) as unknown as Promise<
+        TutorMutationResponse<PreferencesFormProps>
+      >;
+    },
+
+    handleResetPreferences(formId: string, modalId: string) {
+      this.resetPreferencesMutation?.mutate({ formId, modalId });
     },
 
     async updateNotification(payload: UpdateNotificationProps) {
