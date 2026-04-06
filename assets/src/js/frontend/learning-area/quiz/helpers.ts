@@ -119,9 +119,9 @@ const getFieldElementsByName = (formId: string, fieldName: string): HTMLElement[
     return [];
   }
 
-  const escapedName =
-    typeof CSS !== 'undefined' && typeof CSS.escape === 'function' ? CSS.escape(fieldName) : fieldName;
-  return Array.from(formElement.querySelectorAll<HTMLElement>(`[name="${escapedName}"]`));
+  return Array.from(formElement.querySelectorAll<HTMLElement>('[name]')).filter(
+    (element) => element.getAttribute('name') === fieldName,
+  );
 };
 
 const isScaleFieldName = (formId: string, fieldName: string): boolean => {
