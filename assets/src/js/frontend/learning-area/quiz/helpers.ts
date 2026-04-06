@@ -107,60 +107,9 @@ const hasRenderableAnswerValue = (value: unknown): boolean => {
   return true;
 };
 
-const SCALE_INTERACTION_DATA_ATTR = 'data-tutor-scale-interacted';
-
-const getFieldElementsByName = (formId: string, fieldName: string): HTMLElement[] => {
-  if (!formId || !fieldName || typeof document === 'undefined') {
-    return [];
-  }
-
-  const formElement = document.getElementById(formId);
-  if (!formElement) {
-    return [];
-  }
-
-  return Array.from(formElement.querySelectorAll<HTMLElement>('[name]')).filter(
-    (element) => element.getAttribute('name') === fieldName,
-  );
-};
-
-const isScaleFieldName = (formId: string, fieldName: string): boolean => {
-  const fieldElements = getFieldElementsByName(formId, fieldName);
-
-  if (!fieldElements.length) {
+export const hasAttemptedFieldValue = (args: { formId?: string; fieldName: string; value: unknown }): boolean => {
+  if (!hasRenderableAnswerValue(args.value)) {
     return false;
-  }
-
-  return fieldElements.some(
-    (element) => element.closest('.tutor-quiz-question')?.getAttribute('data-question') === 'scale',
-  );
-};
-
-const isScaleValueChangedByUser = (formId: string, fieldName: string): boolean => {
-  const fieldElements = getFieldElementsByName(formId, fieldName);
-  if (!fieldElements.length) {
-    return false;
-  }
-
-  return fieldElements.some((element) => element.getAttribute(SCALE_INTERACTION_DATA_ATTR) === '1');
-};
-
-export const hasAttemptedFieldValue = ({
-  formId,
-  fieldName,
-  value,
-}: {
-  formId?: string;
-  fieldName: string;
-  value: unknown;
-}): boolean => {
-  if (!hasRenderableAnswerValue(value)) {
-    return false;
-  }
-
-  // Scale questions can have prefilled defaults; Tutor Pro marks user interaction on the hidden field.
-  if (formId && isScaleFieldName(formId, fieldName)) {
-    return isScaleValueChangedByUser(formId, fieldName);
   }
 
   return true;
