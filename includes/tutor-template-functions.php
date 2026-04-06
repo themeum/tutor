@@ -1105,7 +1105,7 @@ if ( ! function_exists( 'tutor_course_lead_info' ) ) {
 
 		$course_id        = get_the_ID();
 		$course_post_type = tutor()->course_post_type;
-		$queryCourse      = new WP_Query(
+		$query_course     = new WP_Query(
 			apply_filters(
 				'tutor_course_lead_info_args',
 				array(
@@ -1115,9 +1115,9 @@ if ( ! function_exists( 'tutor_course_lead_info' ) ) {
 			)
 		);
 
-		if ( $queryCourse->have_posts() ) {
-			while ( $queryCourse->have_posts() ) {
-				$queryCourse->the_post();
+		if ( $query_course->have_posts() ) {
+			while ( $query_course->have_posts() ) {
+				$query_course->the_post();
 				tutor_load_template( 'single.course.lead-info' );
 			}
 			wp_reset_postdata();
@@ -1147,16 +1147,16 @@ if ( ! function_exists( 'tutor_course_enrolled_lead_info' ) ) {
 
 		$course_id        = get_the_ID();
 		$course_post_type = tutor()->course_post_type;
-		$queryCourse      = new WP_Query(
+		$query_course     = new WP_Query(
 			array(
 				'p'         => $course_id,
 				'post_type' => $course_post_type,
 			)
 		);
 
-		if ( $queryCourse->have_posts() ) {
-			while ( $queryCourse->have_posts() ) {
-				$queryCourse->the_post();
+		if ( $query_course->have_posts() ) {
+			while ( $query_course->have_posts() ) {
+				$query_course->the_post();
 				tutor_load_template( 'single.course.lead-info' );
 			}
 			wp_reset_postdata();
@@ -1191,16 +1191,16 @@ if ( ! function_exists( 'tutor_lesson_lead_info' ) ) {
 		ob_start();
 		$course_id        = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
 		$course_post_type = tutor()->course_post_type;
-		$queryCourse      = new WP_Query(
+		$query_course     = new WP_Query(
 			array(
 				'p'         => $course_id,
 				'post_type' => $course_post_type,
 			)
 		);
 
-		if ( $queryCourse->have_posts() ) {
-			while ( $queryCourse->have_posts() ) {
-				$queryCourse->the_post();
+		if ( $query_course->have_posts() ) {
+			while ( $query_course->have_posts() ) {
+				$query_course->the_post();
 				tutor_load_template( 'single.course.lead-info' );
 			}
 			wp_reset_postdata();
@@ -1530,26 +1530,26 @@ if ( ! function_exists( 'get_tutor_course_duration_context' ) ) {
 			return '';
 		}
 		$duration        = get_post_meta( $course_id, '_course_duration', true );
-		$durationHours   = tutor_utils()->avalue_dot( 'hours', $duration );
-		$durationMinutes = tutor_utils()->avalue_dot( 'minutes', $duration );
-		$durationSeconds = tutor_utils()->avalue_dot( 'seconds', $duration );
+		$duration_hours   = tutor_utils()->avalue_dot( 'hours', $duration );
+		$duration_minutes = tutor_utils()->avalue_dot( 'minutes', $duration );
+		$duration_seconds = tutor_utils()->avalue_dot( 'seconds', $duration );
 
-		$hour_format   = $short_form ? __( 'h', 'tutor' ) : ' ' . ( $durationHours > 1 ? __( 'hours', 'tutor' ) : __( 'hour', 'tutor' ) );
-		$minute_format = $short_form ? __( 'm', 'tutor' ) : ' ' . ( $durationMinutes > 1 ? __( 'minutes', 'tutor' ) : __( 'minute', 'tutor' ) );
-		$second_format = $short_form ? __( 's', 'tutor' ) : ' ' . ( $durationSeconds > 1 ? __( 'seconds', 'tutor' ) : __( 'second', 'tutor' ) );
+		$hour_format   = $short_form ? __( 'h', 'tutor' ) : ' ' . ( $duration_hours > 1 ? __( 'hours', 'tutor' ) : __( 'hour', 'tutor' ) );
+		$minute_format = $short_form ? __( 'm', 'tutor' ) : ' ' . ( $duration_minutes > 1 ? __( 'minutes', 'tutor' ) : __( 'minute', 'tutor' ) );
+		$second_format = $short_form ? __( 's', 'tutor' ) : ' ' . ( $duration_seconds > 1 ? __( 'seconds', 'tutor' ) : __( 'second', 'tutor' ) );
 
 		if ( $duration ) {
 			$output = '';
-			if ( $durationHours > 0 ) {
-				$output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $hour_format . '</span>';
+			if ( $duration_hours > 0 ) {
+				$output .= '<span class="tutor-meta-level">' . ' ' . $duration_hours . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $hour_format . '</span>';
 			}
 
-			if ( $durationMinutes > 0 ) {
-				$output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $minute_format . '</span>';
+			if ( $duration_minutes > 0 ) {
+				$output .= '<span class="tutor-meta-level">' . ' ' . $duration_minutes . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $minute_format . '</span>';
 			}
 
-			if ( ! $durationHours && ! $durationMinutes && $durationSeconds > 0 ) {
-				$output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $second_format . '</span>';
+			if ( ! $duration_hours && ! $duration_minutes && $duration_seconds > 0 ) {
+				$output .= '<span class="tutor-meta-level">' . ' ' . $duration_seconds . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $second_format . '</span>';
 			}
 
 			return $output;
