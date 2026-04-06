@@ -9,8 +9,6 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useState } from 'react';
 
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-
 import {
   borderRadius,
   Breakpoint,
@@ -22,8 +20,6 @@ import {
   lineHeight,
   spacing,
 } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -240,12 +236,6 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
             </div>
           </div>
         </div>
-        <Show when={isRangeInvalid}>
-          <div css={styles.errorMessage}>
-            <SVGIcon name="info" height={20} width={20} />
-            <p>{scaleRangeErrorMessage}</p>
-          </div>
-        </Show>
       </div>
 
       <div css={styles.card}>
@@ -342,17 +332,5 @@ const styles = {
     line-height: ${lineHeight[24]};
     letter-spacing: ${letterSpacing.normal};
     color: ${colorTokens.text.title};
-  `,
-  errorMessage: css`
-    display: flex;
-    gap: ${spacing[4]};
-    ${typography.small()};
-    color: ${colorTokens.text.error};
-    align-items: flex-start;
-
-    svg {
-      flex-shrink: 0;
-      color: ${colorTokens.icon.error};
-    }
   `,
 };
