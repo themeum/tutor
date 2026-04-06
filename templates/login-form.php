@@ -9,6 +9,7 @@
  */
 
 use TUTOR\Ajax;
+use Tutor\Components\Alert;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
 
@@ -21,31 +22,12 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
  */
 $login_errors = get_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ) ? get_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ) : array();
 foreach ( $login_errors as $login_error ) {
-	?>
-	<div class="tutor-alert tutor-warning tutor-mb-10" style="display:block; grid-gap: 0px 10px; border: 1px solid var(--tutor-text-critical)">
-		<?php
-		echo wp_kses(
-			$login_error,
-			array(
-				'strong' => true,
-				'a'      => array(
-					'href'  => true,
-					'class' => true,
-					'id'    => true,
-				),
-				'p'      => array(
-					'class' => true,
-					'id'    => true,
-				),
-				'div'    => array(
-					'class' => true,
-					'id'    => true,
-				),
-			)
-		);
-		?>
-	</div>
-	<?php
+	Alert::make()
+		->text( $login_error )
+		->variant( Alert::ERROR )
+		->icon( Icon::WARNING )
+		->attr( 'class', 'tutor-mb-8' )
+		->render();
 }
 
 do_action( 'tutor_before_login_form' );
