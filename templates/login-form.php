@@ -9,6 +9,8 @@
  */
 
 use TUTOR\Ajax;
+use Tutor\Components\SvgIcon;
+use TUTOR\Icon;
 
 
 $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
@@ -68,10 +70,10 @@ do_action( 'tutor_before_login_form' );
 			@click="show = !show"
 		>
 			<template x-if="!show">
-				<?php \Tutor\Components\SvgIcon::make()->name( \TUTOR\Icon::EYE )->size( 20 )->render(); ?>
+				<?php SvgIcon::make()->name( Icon::EYE )->size( 20 )->render(); ?>
 			</template>
 			<template x-if="show">
-				<?php \Tutor\Components\SvgIcon::make()->name( \TUTOR\Icon::EYE_OFF )->size( 20 )->render(); ?>
+				<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
 			</template>
 		</span>
 		<input :type="show ? 'text' : 'password'" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" x-model="value" size="20" required style="padding-right: 45px;"/>
