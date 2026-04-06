@@ -9,6 +9,8 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useState } from 'react';
 
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import {
   borderRadius,
   Breakpoint,
@@ -20,6 +22,8 @@ import {
   lineHeight,
   spacing,
 } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -85,7 +89,13 @@ function parseStoredScaleData(value: string): ScaleData | null {
   return null;
 }
 
-const FormScale = ({ field }: FormScaleProps) => {
+const scaleRangeErrorMessage = __('The maximum value must be greater than the minimum value.', __TUTOR_TEXT_DOMAIN__);
+
+function clearScaleRangeValidationError(setValidationError: FormScaleProps['setValidationError']) {
+  setValidationError?.((prev) => (prev?.type === 'question' && prev?.message === scaleRangeErrorMessage ? null : prev));
+}
+
+const FormScale = ({ field, setValidationError }: FormScaleProps) => {
   const option = field.value;
   const [scaleData, setScaleData] = useState<ScaleData>(() => {
     const parsed = parseStoredScaleData(option?.answer_two_gap_match ?? '');
@@ -116,6 +126,17 @@ const FormScale = ({ field }: FormScaleProps) => {
     }
   }, [option?.answer_two_gap_match]);
 
+  useEffect(() => {
+    if (config.max <= config.min) {
+      setValidationError?.({
+        message: scaleRangeErrorMessage,
+        type: 'question',
+      });
+    } else {
+      clearScaleRangeValidationError(setValidationError);
+    }
+  }, [config.min, config.max, setValidationError]);
+
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
       field.onChange(updated);
@@ -141,16 +162,14 @@ const FormScale = ({ field }: FormScaleProps) => {
   );
 
   const handleConfigChange = useCallback(
-    (field: keyof ScaleConfig, value: number) => {
-      const newConfig = { ...config, [field]: value };
+    (fieldKey: keyof ScaleConfig, value: number) => {
+      const newConfig = { ...config, [fieldKey]: value };
       setConfig(newConfig);
 
-      // Update scale data with new config
       const newScaleData = {
         ...scaleData,
         config: newConfig,
-        // Ensure value is within new range
-        value: Math.max(newConfig.min, Math.min(newConfig.max, scaleData.value)),
+        value: scaleData.value,
       };
       setScaleData(newScaleData);
       saveScaleData(newScaleData);
@@ -170,6 +189,8 @@ const FormScale = ({ field }: FormScaleProps) => {
   if (!option) {
     return null;
   }
+
+  const isRangeInvalid = config.max <= config.min;
 
   return (
     <div css={styles.wrapper}>
@@ -219,6 +240,12 @@ const FormScale = ({ field }: FormScaleProps) => {
             </div>
           </div>
         </div>
+        <Show when={isRangeInvalid}>
+          <div css={styles.errorMessage}>
+            <SVGIcon name="info" height={20} width={20} />
+            <p>{scaleRangeErrorMessage}</p>
+          </div>
+        </Show>
       </div>
 
       <div css={styles.card}>
@@ -229,10 +256,12 @@ const FormScale = ({ field }: FormScaleProps) => {
             <input
               type="number"
               step={config.step}
-              min={config.min}
-              max={config.max}
+              {...(!isRangeInvalid && { min: config.min, max: config.max })}
               value={scaleData.value}
-              onChange={(e) => handleValueChange(parseFloat(e.target.value) || config.min)}
+              onChange={(e) => {
+                const v = parseFloat(e.target.value);
+                handleValueChange(Number.isNaN(v) ? config.min : v);
+              }}
               className="tutor-scale-config-input"
             />
           </div>
@@ -313,5 +342,17 @@ const styles = {
     line-height: ${lineHeight[24]};
     letter-spacing: ${letterSpacing.normal};
     color: ${colorTokens.text.title};
+  `,
+  errorMessage: css`
+    display: flex;
+    gap: ${spacing[4]};
+    ${typography.small()};
+    color: ${colorTokens.text.error};
+    align-items: flex-start;
+
+    svg {
+      flex-shrink: 0;
+      color: ${colorTokens.icon.error};
+    }
   `,
 };
