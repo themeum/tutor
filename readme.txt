@@ -369,6 +369,15 @@ New: A new button “view as student” has been added to allow admin & instruct
 New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
 New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
 
+= 3.9.8 - Apr 01, 2026
+
+Update: Added proper authorization check while updating the lessons.
+Update: Strengthen SQL queries across multiple deletion and update operations.
+Update: Improved security in quiz attempts search by preventing SQL injection.
+Fix: Fixed private course enrollment via AJAX without proper validation.
+Fix: Resolved the billing profile overwrite issue in Tutor LMS native eCommerce.
+Fix: Replaced wp_remote_get with wp_safe_remote_get for safer course import with media files.
+
 = 3.9.7 - Feb 25, 2026
 
 Fix: Resolved SQL injection security vulnerabilities to enhance system security.
