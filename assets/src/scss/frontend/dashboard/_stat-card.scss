@@ -13,8 +13,15 @@
   background-color: $tutor-surface-l1;
   @include tutor-transition(background-color);
 
-  &:hover {
-    background-color: $tutor-surface-l1-hover;
+  &[href],
+  &[onclick],
+  &[\@click],
+  &[x-on\:click] {
+    cursor: pointer;
+
+    &:hover {
+      background-color: $tutor-surface-l1-hover;
+    }
   }
 
   &-header {
@@ -81,6 +88,7 @@
 
   &:has(canvas) {
     height: 179px;
+
     .tutor-stat-card {
       &-content {
         margin-top: 38px;
@@ -92,99 +100,100 @@
     }
   }
 
-	&-time-spent {
+  &-time-spent {
     cursor: pointer;
-		.tutor-stat-card-icon {
-			color: $tutor-text-exception4;
-		}
-        
-		.tutor-stat-card-value {
-			color: $tutor-text-exception4;
-		}
-	}
 
-	&-courses {
     .tutor-stat-card-icon {
-        color: $tutor-text-success;
+      color: $tutor-text-exception4;
     }
 
-		.tutor-stat-card-value {
-			color: $tutor-text-success;
-		}
-	}
+    .tutor-stat-card-value {
+      color: $tutor-text-exception4;
+    }
+  }
+
+  &-courses {
+    .tutor-stat-card-icon {
+      color: $tutor-text-success;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-success;
+    }
+  }
 
   &-passed,
-	&-students {
+  &-students {
     .tutor-stat-card-icon {
-        color: $tutor-text-brand;
+      color: $tutor-text-brand;
     }
 
-		.tutor-stat-card-value {
-			color: $tutor-text-brand;
-		}
-	}
+    .tutor-stat-card-value {
+      color: $tutor-text-brand;
+    }
+  }
 
   &-star-line,
   &-star-fill,
-	&-reviews {
+  &-reviews {
     .tutor-stat-card-icon {
-        color: $tutor-warning-400;
+      color: $tutor-warning-400;
     }
 
-		.tutor-stat-card-value {
-			color: $tutor-warning-400;
-		}
-	}
+    .tutor-stat-card-value {
+      color: $tutor-warning-400;
+    }
+  }
 
-	&-passed {
+  &-passed {
     .tutor-stat-card-icon {
-        color: $tutor-text-brand;
+      color: $tutor-text-brand;
     }
 
-		.tutor-stat-card-value {
-			color: $tutor-text-brand;
-		}
-	}
+    .tutor-stat-card-value {
+      color: $tutor-text-brand;
+    }
+  }
 
-	&-progress {
+  &-progress {
     .tutor-stat-card-icon {
-        color: $tutor-exception-5;
+      color: $tutor-exception-5;
     }
 
-		.tutor-stat-card-value {
-			color: $tutor-exception-5;
-		}
-	}
+    .tutor-stat-card-value {
+      color: $tutor-exception-5;
+    }
+  }
 
-	&-completed {
+  &-completed {
     .tutor-stat-card-icon {
-        color: $tutor-text-success;
+      color: $tutor-text-success;
     }
 
-		.tutor-stat-card-value {
-			color: $tutor-text-success;
-		}
-	}
+    .tutor-stat-card-value {
+      color: $tutor-text-success;
+    }
+  }
 
-	&-qa {
+  &-qa {
     .tutor-stat-card-icon {
-        color: $tutor-exception-2;
+      color: $tutor-exception-2;
     }
 
-		.tutor-stat-card-value {
-			color: $tutor-exception-2;
-		}
-	}
+    .tutor-stat-card-value {
+      color: $tutor-exception-2;
+    }
+  }
 
-	&-book-2 {
+  &-book-2 {
     .tutor-stat-card-icon {
-        color: $tutor-exception-1;
+      color: $tutor-exception-1;
     }
 
-		.tutor-stat-card-value {
-			color: $tutor-exception-1;
-		}
-	}
+    .tutor-stat-card-value {
+      color: $tutor-exception-1;
+    }
+  }
 
   &-exception1 {
     .tutor-stat-card-icon {
@@ -289,13 +298,12 @@
 }
 
 .tutor-stat-card-hover {
-
-  &-wrap{
+  &-wrap {
     position: relative;
     display: inline-block;
     margin-top: $tutor-spacing-1;
 
-    &:hover .tutor-stat-card-hover-card  {
+    &:hover .tutor-stat-card-hover-card {
       display: block;
     }
   }
@@ -307,7 +315,8 @@
     left: 100%;
     min-width: 213px;
     background: $tutor-surface-l1;
-    border: 1px solid $tutor-border-idle;;
+    border: 1px solid $tutor-border-idle;
+    ;
     border-radius: $tutor-radius-lg;
     box-shadow: $tutor-shadow-lg;
     padding: $tutor-spacing-5 $tutor-spacing-6;
