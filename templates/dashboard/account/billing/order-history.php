@@ -46,7 +46,10 @@ else :
 	?>
 <div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-order-history">
 	<?php foreach ( $orders as $order ) : //phpcs:ignore ?>
-		<?php include tutor_get_template( 'dashboard.account.billing.order-history-card' ); ?>
+		<?php
+		$order = OrderModel::normalize_order_for_history( $order ); //phpcs:ignore
+		include tutor_get_template( 'dashboard.account.billing.order-history-card' );
+		?>
 	<?php endforeach; ?>
 </div>
 

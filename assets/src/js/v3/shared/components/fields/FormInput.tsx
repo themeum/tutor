@@ -24,6 +24,7 @@ import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
+  size?: 'small' | 'regular';
   label?: string | React.ReactNode;
   type?: 'number' | 'text' | 'password';
   maxLimit?: number;
@@ -42,6 +43,8 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   isInlineLabel?: boolean;
   isPassword?: boolean;
   style?: SerializedStyles;
+  formFieldWrapperCss?: SerializedStyles;
+  inputContainerCss?: SerializedStyles;
   selectOnFocus?: boolean;
   autoFocus?: boolean;
   generateWithAi?: boolean;
@@ -54,6 +57,7 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
 
 const FormInput = ({
+  size = 'regular',
   label,
   type = 'text',
   maxLimit,
@@ -74,6 +78,8 @@ const FormInput = ({
   isInlineLabel = false,
   isPassword = false,
   style,
+  formFieldWrapperCss,
+  inputContainerCss,
   selectOnFocus = false,
   autoFocus = false,
   generateWithAi = false,
@@ -157,6 +163,8 @@ const FormInput = ({
       removeBorder={removeBorder}
       isInlineLabel={isInlineLabel}
       inputStyle={style}
+      wrapperCss={formFieldWrapperCss}
+      inputContainerCss={inputContainerCss}
       generateWithAi={generateWithAi}
       onClickAiButton={handleAiButtonClick}
       isMagicAi={isMagicAi}
@@ -169,6 +177,7 @@ const FormInput = ({
                 {...field}
                 {...inputProps}
                 {...additionalAttributes}
+                css={[inputProps.css, styles.input(size)]}
                 type={fieldType === 'number' ? 'text' : fieldType}
                 value={inputValue}
                 autoFocus={autoFocus}
@@ -236,6 +245,15 @@ const FormInput = ({
 export default withVisibilityControl(FormInput);
 
 const styles = {
+  input: (size: 'small' | 'regular') => css`
+    &.tutor-input-field:not(textarea) {
+      ${size === 'small' &&
+      css`
+        height: 32px;
+        padding: ${spacing[6]} ${spacing[12]};
+      `}
+    }
+  `,
   container: (isClearable: boolean) => css`
     position: relative;
     display: flex;

@@ -50,6 +50,10 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 
 		$is_draw_image_review = 'draw_image' === $question_type;
 
+		$is_pin_review        = 'pin_image' === $question_type;
+
+		$is_scale_review      = 'scale' === $question_type;
+
 		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
 
 		$question_template = '';
@@ -64,6 +68,10 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 			$question_template = 'open-ended';
 		} elseif ( $is_fib_review ) {
 			$question_template = 'fill-in-the-blank';
+		} elseif ( $is_scale_review ) {
+			$question_template = 'scale';
+		} elseif ( $is_pin_review ) {
+			$question_template = 'pin-image';
 		} elseif ( $is_draw_image_review ) {
 			$question_template = 'draw-image';
 		}

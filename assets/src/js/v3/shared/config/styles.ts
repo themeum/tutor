@@ -157,6 +157,7 @@ export const colorTokens = {
       default: '#e9edfb',
       hover: '#d6dffa',
       active: '#d0d9f2',
+      gray: '#f0f1f1',
     },
     outline: {
       default: '#ffffff',

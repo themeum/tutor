@@ -17,6 +17,7 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
+use Tutor\Components\WPEditor;
 
 $user          = wp_get_current_user();
 $settings_data = User::get_profile_settings_data( $user->ID );
@@ -241,14 +242,13 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 						->attr( 'x-bind', "register('display_name')" )
 						->render();
 
-					InputField::make()
-						->type( InputType::TEXTAREA )
+					WPEditor::make()
 						->label( __( 'Bio', 'tutor' ) )
 						->name( 'tutor_profile_bio' )
-						->clearable()
-						->id( 'tutor_profile_bio' )
 						->placeholder( __( 'Enter your bio', 'tutor' ) )
+						->content( $default_values['tutor_profile_bio'] )
 						->attr( 'x-bind', "register('tutor_profile_bio')" )
+						->editor_config( tutor_utils()->get_profile_bio_editor_config( 'tutor_profile_bio' ) )
 						->render();
 				?>
 			</div>

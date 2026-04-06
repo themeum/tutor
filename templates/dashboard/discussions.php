@@ -13,9 +13,15 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Nav;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use TUTOR\Input;
-use TUTOR\User;
+use TUTOR\Lesson;
+use TUTOR\Q_And_A;
+
+if ( ! Q_And_A::is_enabled() && ! Lesson::is_comment_enabled() ) {
+	return;
+}
 
 $current_tab   = Input::get( 'tab' );
 $discussion_id = Input::get( 'id', 0, Input::TYPE_INT );
@@ -25,22 +31,27 @@ $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset        = ( $current_page - 1 ) * $item_per_page;
 
 $discussion_url = tutor_utils()->tutor_dashboard_url( 'discussions' );
-$page_nav_items = array(
-	array(
+$page_nav_items = array();
+
+if ( Q_And_A::is_enabled() ) {
+	$page_nav_items[] = array(
 		'type'   => 'link',
 		'label'  => __( 'Q&A', 'tutor' ),
 		'icon'   => Icon::QA,
 		'url'    => esc_url( $discussion_url ),
 		'active' => 'qna' === $current_tab || empty( $current_tab ),
-	),
-	array(
+	);
+}
+
+if ( Lesson::is_comment_enabled() ) {
+	$page_nav_items[] = array(
 		'type'   => 'link',
 		'label'  => __( 'Lesson Comments', 'tutor' ),
 		'icon'   => Icon::COMMENTS,
-		'url'    => esc_url( add_query_arg( 'tab', 'lesson-comments', $discussion_url ) ),
+		'url'    => UrlHelper::add_query_params( $discussion_url, array( 'tab' => 'lesson-comments' ) ),
 		'active' => 'lesson-comments' === $current_tab,
-	),
-);
+	);
+}
 ?>
 <div class="tutor-dashboard-discussions" x-data="tutorDiscussions()">
 	<h4 class="tutor-h4 tutor-mb-5 tutor-hidden tutor-sm-block">
@@ -50,7 +61,7 @@ $page_nav_items = array(
 	<?php
 	if ( $discussion_id ) {
 		$template = tutor()->path . 'templates/dashboard/discussions/qna-single.php';
-		if ( 'lesson-comments' === $current_tab ) {
+		if ( 'lesson-comments' === $current_tab && Lesson::is_comment_enabled() ) {
 			$template = tutor()->path . 'templates/dashboard/discussions/comment-single.php';
 		}
 		require_once $template;
@@ -63,7 +74,7 @@ $page_nav_items = array(
 			<div class="tutor-dashboard-page-card-body">
 				<?php
 				$template = tutor()->path . 'templates/dashboard/discussions/qna-list.php';
-				if ( 'lesson-comments' === $current_tab ) {
+				if ( 'lesson-comments' === $current_tab && Lesson::is_comment_enabled() ) {
 					$template = tutor()->path . 'templates/dashboard/discussions/comment-list.php';
 				}
 

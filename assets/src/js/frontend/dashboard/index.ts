@@ -13,6 +13,7 @@ import { initializeOverview } from './pages/overview';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
 import { initializeSettings } from './pages/settings';
 import { initializeWithdrawals } from './pages/withdrawals';
+import { initBillingCsvExport } from './pages/billing';
 
 /**
  * Get current dashboard page from URL
@@ -71,6 +72,9 @@ const getCurrentPage = (): string => {
   if (path.includes('/account/withdrawals')) {
     return 'withdrawals';
   }
+  if (path.includes('/account/billing')) {
+    return 'billing';
+  }
 
   // Default to home when subpage=dashboard
   return 'home';
@@ -116,6 +120,9 @@ const initializeDashboard = () => {
       break;
     case 'withdrawals':
       initializeWithdrawals();
+      break;
+    case 'billing':
+      initBillingCsvExport();
       break;
     default:
       // eslint-disable-next-line no-console

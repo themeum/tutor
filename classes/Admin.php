@@ -35,7 +35,6 @@ class Admin {
 	 * @return void
 	 */
 	public function __construct() {
-
 		add_action( 'admin_notices', array( $this, 'show_unstable_version_admin_notice' ) );
 
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
@@ -63,7 +62,7 @@ class Admin {
 
 		add_action( 'wp_ajax_tutor_do_not_show_feature_page', array( $this, 'handle_do_not_show_feature_page' ) );
 
-		add_action( 'upgrader_process_complete', array( $this, 'set_reset_permalink_flag' ), 10, 2 );
+		add_action( 'upgrader_process_complete', array( $this, 'set_permalink_flag_on_upgrade' ), 10, 2 );
 	}
 
 	/**
@@ -76,18 +75,8 @@ class Admin {
 	 *
 	 * @return void
 	 */
-	public function set_reset_permalink_flag( $upgrader_object, $options ) {
-		$our_plugin = tutor()->basename;
-
-		if ( 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
-			// Iterate through the plugins being updated and check if ours is there.
-			foreach ( $options['plugins'] as $plugin ) {
-				if ( $plugin === $our_plugin ) {
-					Permalink::set_permalink_flag();
-					break;
-				}
-			}
-		}
+	public function set_permalink_flag_on_upgrade( $upgrader_object, $options ) {
+		Permalink::set_permalink_reset_flag( $upgrader_object, $options );
 	}
 
 	/**

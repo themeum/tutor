@@ -20,6 +20,8 @@ import { noop } from '@TutorShared/utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormSelectInputProps<T> = {
+  size?: 'small' | 'regular';
+  wrapperCss?: SerializedStyles;
   label?: React.ReactNode;
   options: Option<T>[];
   placeholder?: string;
@@ -48,6 +50,8 @@ type FormSelectInputProps<T> = {
 } & FormControllerProps<T | null>;
 
 const FormSelectInput = <T,>({
+  size = 'regular',
+  wrapperCss,
   options,
   field,
   fieldState,
@@ -73,6 +77,8 @@ const FormSelectInput = <T,>({
   selectOnFocus,
   optionItemCss,
 }: FormSelectInputProps<T>) => {
+  const iconSize = size === 'small' ? 20 : 32;
+
   const getInitialValue = useCallback(
     () =>
       options.find((item) => item.value === field.value) || {
@@ -177,7 +183,7 @@ const FormSelectInput = <T,>({
               <div css={styles.leftIcon}>
                 <Show when={leftIcon}>{leftIcon}</Show>
                 <Show when={selectedItem?.icon}>
-                  {(iconName) => <SVGIcon name={iconName as IconCollection} width={32} height={32} />}
+                  {(iconName) => <SVGIcon name={iconName as IconCollection} width={iconSize} height={iconSize} />}
                 </Show>
               </div>
 
@@ -193,12 +199,14 @@ const FormSelectInput = <T,>({
                   className="tutor-input-field"
                   css={[
                     inputCss,
+                    wrapperCss,
                     styles.input({
                       hasLeftIcon: !!leftIcon || !!selectedItem?.icon,
                       hasDescription,
                       hasError: !!fieldState.error,
                       isMagicAi,
                       isAiOutline,
+                      size,
                     }),
                   ]}
                   autoComplete="off"
@@ -241,7 +249,10 @@ const FormSelectInput = <T,>({
                 />
 
                 <Show when={hasDescription}>
-                  <span css={styles.description({ hasLeftIcon: !!leftIcon })} title={getInitialValue()?.description}>
+                  <span
+                    css={styles.description({ hasLeftIcon: !!leftIcon, size })}
+                    title={getInitialValue()?.description}
+                  >
                     {getInitialValue()?.description}
                   </span>
                 </Show>
@@ -258,7 +269,7 @@ const FormSelectInput = <T,>({
                   }}
                   disabled={disabled || readOnly || options.length === 0}
                 >
-                  <SVGIcon name="chevronDown" width={20} height={20} />
+                  <SVGIcon name="chevronDown" width={size === 'small' ? 16 : 20} height={size === 'small' ? 16 : 20} />
                 </button>
               )}
             </div>
@@ -309,7 +320,7 @@ const FormSelectInput = <T,>({
                         aria-selected={activeIndex === index}
                       >
                         <Show when={option.icon}>
-                          <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
+                          <SVGIcon name={option.icon as IconCollection} width={iconSize} height={iconSize} />
                         </Show>
                         <span>{option.label}</span>
                       </button>
@@ -392,14 +403,16 @@ const styles = {
     hasError = false,
     isMagicAi = false,
     isAiOutline = false,
+    size,
   }: {
     hasLeftIcon: boolean;
     hasDescription: boolean;
     hasError: boolean;
     isMagicAi: boolean;
     isAiOutline: boolean;
+    size: 'small' | 'regular';
   }) => css`
-    &[data-select] {
+    &.tutor-input-field:not(textarea) {
       ${typography.body()};
       width: 100%;
       cursor: pointer;
@@ -408,6 +421,13 @@ const styles = {
       background-color: transparent;
       background-color: ${colorTokens.background.white};
 
+      ${size === 'small' &&
+      css`
+        height: 32px;
+        padding-top: ${spacing[6]};
+        padding-bottom: ${spacing[6]};
+      `}
+
       ${hasLeftIcon &&
       css`
         padding-left: ${spacing[48]};
@@ -415,10 +435,14 @@ const styles = {
 
       ${hasDescription &&
       css`
-        &.tutor-input-field {
-          height: 56px;
-          padding-bottom: ${spacing[24]};
-        }
+        height: 56px;
+        padding-bottom: ${spacing[24]};
+
+        ${size === 'small' &&
+        css`
+          height: 48px;
+          padding-bottom: ${spacing[20]};
+        `}
       `}
 
       ${hasError &&
@@ -450,13 +474,18 @@ const styles = {
       }
     }
   `,
-  description: ({ hasLeftIcon }: { hasLeftIcon: boolean }) => css`
+  description: ({ hasLeftIcon, size }: { hasLeftIcon: boolean; size: 'small' | 'regular' }) => css`
     ${typography.small()};
     ${styleUtils.text.ellipsis(1)}
     color: ${colorTokens.text.hints};
     position: absolute;
     bottom: ${spacing[8]};
     padding-inline: calc(${spacing[16]} + 1px) ${spacing[32]};
+
+    ${size === 'small' &&
+    css`
+      bottom: ${spacing[4]};
+    `}
 
     ${hasLeftIcon &&
     css`
