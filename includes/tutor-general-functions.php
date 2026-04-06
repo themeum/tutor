@@ -734,7 +734,7 @@ if ( ! function_exists( 'tutor_flash_get' ) ) {
 	 */
 	function tutor_flash_get( $key = null ) {
 		if ( $key ) {
-			// ensure session is started
+			// ensure session is started.
 			if ( session_status() !== PHP_SESSION_ACTIVE ) {
 				@session_start();
 			}
@@ -921,7 +921,7 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	 * @return string
 	 */
 	function tutor_get_formated_date( string $require_format = '', string $user_date = '' ) {
-		$require_format = $require_format ?: 'Y-m-d';
+		$require_format = empty( $require_format ) ? 'Y-m-d' : $require_format;
 
 		$date = date_create( str_replace( '/', '-', $user_date ) );
 		if ( is_a( $date, 'DateTime' ) ) {
@@ -1320,7 +1320,7 @@ if ( ! function_exists( 'tutor_is_rest' ) ) {
 		// (#3)
 		global $wp_rewrite;
 		if ( null === $wp_rewrite ) {
-			$wp_rewrite = new WP_Rewrite();
+			$wp_rewrite = new WP_Rewrite(); //phpcs:ignore
 		}
 
 		// (#4)
