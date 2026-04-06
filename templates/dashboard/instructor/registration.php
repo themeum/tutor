@@ -9,13 +9,13 @@
  * @since 1.4.3
  */
 
+use Tutor\Components\Alert;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
 
 ?>
 
 <?php if ( ! get_option( 'users_can_register', false ) ) : ?>
-
 	<?php
 		$args = array(
 			'image_path'  => tutor()->url . 'assets/images/construction.png',
@@ -29,7 +29,6 @@ use TUTOR\Icon;
 		);
 		tutor_load_template( 'feature_disabled', $args );
 		?>
-
 <?php else : ?>
 
 	<div id="tutor-registration-wrap" class="tutor-card" style="max-width: 520px; margin: 40px auto;">
@@ -45,15 +44,17 @@ use TUTOR\Icon;
 
 			<?php
 			$errors = apply_filters( 'tutor_instructor_register_validation_errors', array() ); //phpcs:ignore
-			if ( is_array( $errors ) && count( $errors ) ) {
-				echo '<div class="tutor-alert tutor-warning tutor-mb-5" style="border: 1px solid var(--tutor-text-critical)"><ul class="tutor-required-fields tutor-p-none">';
-				foreach ( $errors as $error_key => $error_value ) {
-					echo wp_kses( "<li>{$error_value}</li>", array( 'li' => array() ) );
-				}
-				echo '</ul></div>';
-			}
+			if ( is_array( $errors ) && count( $errors ) ) :
+				foreach ( $errors as $error_key => $error_value ) :
+					Alert::make()
+						->text( $error_value )
+						->variant( Alert::ERROR )
+						->icon( Icon::WARNING )
+						->attr( 'class', 'tutor-mb-8' )
+						->render();
+					endforeach;
+				endif;
 			?>
-			
 			<div class="tutor-input-field tutor-mb-8">
 				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'First Name', 'tutor' ); ?></label>
 				<input class="tutor-form-control tutor-input" type="text" name="first_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'first_name' ) ); ?>" placeholder="<?php esc_html_e( 'First Name', 'tutor' ); ?>" required autocomplete="given-name">
@@ -84,12 +85,12 @@ use TUTOR\Icon;
 							x-show="value.length > 0"
 							@click="show = !show"
 						>
-							<template x-if="!show">
-								<?php SvgIcon::make()->name( Icon::EYE )->size( 20 )->render(); ?>
-							</template>
-							<template x-if="show">
-								<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
-							</template>
+						<template x-if="!show">
+							<?php SvgIcon::make()->name( Icon::EYE )->size( 20 )->render(); ?>
+						</template>
+						<template x-if="show">
+							<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
+						</template>
 						</span>
 						<input 
 							class="tutor-form-control tutor-input" 
@@ -133,19 +134,15 @@ use TUTOR\Icon;
 
 			<?php do_action( 'tutor_instructor_reg_form_end' ); ?>
 
-			<?php
-				$tutor_toc_page_link = tutor_utils()->get_toc_page_link();
-			?>
+			<?php $tutor_toc_page_link = tutor_utils()->get_toc_page_link(); ?>
 
 			<?php if ( null !== $tutor_toc_page_link ) : ?>
-				<div class="tutor-small tutor-mb-6">
-					<?php esc_html_e( 'By signing up, I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_attr_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
-				</div>
+			<div class="tutor-small tutor-mb-6">
+				<?php esc_html_e( 'By signing up, I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_attr_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
+			</div>
 			<?php endif; ?>
 
-			<div>
-				<button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-btn tutor-btn-primary tutor-btn-block"><?php esc_html_e( 'Register as instructor', 'tutor' ); ?></button>
-			</div>
+			<button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-btn tutor-btn-primary tutor-btn-block"><?php esc_html_e( 'Register as instructor', 'tutor' ); ?></button>
 			<?php do_action( 'tutor_after_register_button' ); ?>
 
 		</form>
