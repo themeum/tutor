@@ -9,9 +9,11 @@
  */
 
 use Tutor\Cache\FlashMessage;
+use Tutor\Components\Alert;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
+use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
@@ -573,22 +575,23 @@ if ( ! function_exists( 'get_item_content_drip_settings' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_alert' ) ) {
 	/**
-	 * @param null $msg
-	 * @param string $type
-	 * @param bool $echo
-	 *
-	 * @return string
-	 *
 	 * Print Alert by tutor_alert()
 	 *
-	 * @since v.1.4.1
+	 * @since 1.4.1
+	 * @since 4.0.0 Added $use_component parameter.
+	 *
+	 * @param null   $msg    Message to display.
+	 * @param string $type   Type of alert.
+	 * @param bool   $echo   Whether to echo the alert.
+	 * @param bool   $use_component   Whether to use new core PHP component.
+	 *
+	 * @return string
 	 */
-if ( ! function_exists( 'tutor_alert' ) ) {
-	function tutor_alert( $msg = null, $type = 'warning', $echo = true ) {
+	function tutor_alert( $msg = null, $type = 'warning', $echo = true, $use_component = false ) {
 		if ( ! $msg ) {
-
-			if ( $type === 'any' ) {
+			if ( 'any' === $type ) {
 				if ( ! $msg ) {
 					$type = 'warning';
 					$msg  = tutor_flash_get( $type );
@@ -605,8 +608,31 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 				$msg = tutor_flash_get( $type );
 			}
 		}
+
 		if ( ! $msg ) {
 			return $msg;
+		}
+
+		if ( $use_component ) {
+			if ( 'danger' === $type ) {
+				$type = Alert::ERROR;
+			}
+
+			switch ( $type ) {
+				case Alert::SUCCESS:
+					$icon = Icon::CHECK;
+					break;
+				case Alert::WARNING:
+				case Alert::ERROR:
+					$icon = Icon::WARNING;
+					break;
+				default:
+					$icon = Icon::INFO;
+					break;
+			}
+
+			$html = Alert::make()->variant( $type )->text( $msg )->icon( $icon );
+			return $echo ? $html->render() : $html;
 		}
 
 		$html = '<div class="tutor-alert tutor-' . esc_attr( $type ) . '">

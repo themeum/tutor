@@ -9,7 +9,7 @@
  * @since 1.4.3
  */
 
-use Tutor\Components\SvgIcon;
+use Tutor\Components\Alert;
 use TUTOR\Icon;
 
 $user_id           = get_current_user_id();
@@ -17,12 +17,11 @@ $is_instructor     = tutor_utils()->is_instructor( $user_id );
 $instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 
 if ( 'try_again' === $instructor_status ) {
-	?>
-	<div class="tutor-flex tutor-flex-column tutor-items-center tutor-justify-center tutor-p-6" style="border: 1px solid var(--tutor-text-critical); max-width: 500px; margin: 10px auto;">
-		<span class="tutor-icon-circle-info tutor-color-warning"></span>
-		<span><?php esc_html_e( 'You have been rejected from being an instructor.', 'tutor' ); ?></span>
-	</div>
-	<?php
+	Alert::make()
+		->text( 'You have been rejected from being an instructor.' )
+		->variant( Alert::WARNING )
+		->icon( Icon::WARNING )
+		->render();
 	tutor_load_template( 'dashboard.instructor.apply_for_instructor' );
 	return;
 }
@@ -32,22 +31,21 @@ if ( $is_instructor ) {
 	<div class="tutor-container">
 		<div class="tutor-instructor-application-process tutor-pt-48 tutor-pb-48">
 			<div class="tutor-app-process-alert tutor-mb-10">
-				<div class="tutor-p-3 tutor-radius-sm" style="border:1px solid var(--tutor-text-brand);">
-					<div class="tutor-alert-text tutor-flex tutor-gap-2 tutor-items-center">
-					<?php SvgIcon::make()->name( Icon::INFO )->size( 20 )->render(); ?>
-					<span>
-					<?php
-					if ( 'pending' === $instructor_status ) {
-						esc_html_e( 'Your application will be reviewed and the results will be sent to you by email.', 'tutor' );
-					} elseif ( 'approved' === $instructor_status ) {
-						esc_html_e( 'Your application has been accepted. Further necessary details have been sent to your registered email account.', 'tutor' );
-					} elseif ( 'blocked' === $instructor_status ) {
-						esc_html_e( 'You have been blocked from being an instructor.', 'tutor' );
-					}
-					?>
-					</span>
-					</div>
-				</div>
+				<?php
+				$instructor_status_text = '';
+				if ( 'pending' === $instructor_status ) {
+					$instructor_status_text = 'Your application will be reviewed and the results will be sent to you by email.';
+				} elseif ( 'approved' === $instructor_status ) {
+					$instructor_status_text = 'Your application has been accepted. Further necessary details have been sent to your registered email account.';
+				} elseif ( 'blocked' === $instructor_status ) {
+					$instructor_status_text = 'You have been blocked from being an instructor.';
+				}
+				Alert::make()
+					->text( $instructor_status_text )
+					->variant( Alert::INFO )
+					->icon( Icon::INFO )
+					->render();
+				?>
 			</div>
 			<div class="tutor-app-process-image tutor-m-auto tutor-d-flex tutor-justify-center tutor-align-center">
 				<span class="tutor-app-process-img">

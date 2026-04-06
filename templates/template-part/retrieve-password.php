@@ -20,10 +20,9 @@ if ( Input::get( 'reset_key' ) && Input::get( 'user_id' ) ) {
 	?>
 	<div class="tutor-card" style="max-width: 520px; margin: 20px auto;">
 		<form method="post" class="tutor-forgot-password-form tutor-ResetPassword lost_reset_password" style="padding: 10px;">
-			<?php
-				tutor_alert( null, 'any' );
-				tutor_nonce_field();
-			?>
+
+			<div class="tutor-mb-8"><?php tutor_alert( null, 'any', true, true ); ?></div>
+			<?php tutor_nonce_field(); ?>
 
 			<input type="hidden" name="tutor_action" value="tutor_retrieve_password">
 			<p class="tutor-small tutor-mb-5"><?php echo apply_filters( 'tutor_lost_password_message', esc_html__( 'Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.', 'tutor' ) ); ?></p><?php // @codingStandardsIgnoreLine ?>

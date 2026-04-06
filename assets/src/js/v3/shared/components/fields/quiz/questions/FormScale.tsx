@@ -9,6 +9,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useState } from 'react';
 
+import TextInput from '@TutorShared/atoms/TextInput';
 import {
   borderRadius,
   Breakpoint,
@@ -114,28 +115,13 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
 
   const [config, setConfig] = useState<ScaleConfig>(scaleData.config);
 
-  const validateScaleRange = useCallback(
-    (nextConfig: ScaleConfig) => {
-      if (nextConfig.max <= nextConfig.min) {
-        setValidationError?.({
-          message: scaleRangeErrorMessage,
-          type: 'question',
-        });
-      } else {
-        clearScaleRangeValidationError(setValidationError);
-      }
-    },
-    [setValidationError],
-  );
-
   useEffect(() => {
     const parsed = parseStoredScaleData(option?.answer_two_gap_match ?? '');
     if (parsed) {
       setScaleData(parsed);
       setConfig(parsed.config);
-      validateScaleRange(parsed.config);
     }
-  }, [option?.answer_two_gap_match, validateScaleRange]);
+  }, [option?.answer_two_gap_match]);
 
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
@@ -164,7 +150,16 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
   const handleConfigChange = useCallback(
     (fieldKey: keyof ScaleConfig, value: number) => {
       const newConfig = { ...config, [fieldKey]: value };
-      validateScaleRange(newConfig);
+
+      if (newConfig.max <= newConfig.min) {
+        setValidationError?.({
+          message: scaleRangeErrorMessage,
+          type: 'question',
+        });
+      } else {
+        clearScaleRangeValidationError(setValidationError);
+      }
+
       setConfig(newConfig);
 
       const newScaleData = {
@@ -175,8 +170,13 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
       setScaleData(newScaleData);
       saveScaleData(newScaleData);
     },
-    [config, scaleData, saveScaleData, validateScaleRange],
+    [config, scaleData, saveScaleData, setValidationError],
   );
+
+  const parseConfigNumber = (raw: string, fallback: number) => {
+    const n = parseFloat(String(raw));
+    return Number.isFinite(n) ? n : fallback;
+  };
 
   const handleValueChange = useCallback(
     (value: number) => {
@@ -204,39 +204,38 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
           <div css={styles.configGrid}>
             <div css={styles.configField}>
               <label css={styles.configLabel}>{__('Min value', __TUTOR_TEXT_DOMAIN__)}</label>
-              <input
+              <TextInput
                 type="number"
-                value={config.min}
-                onChange={(e) => handleConfigChange('min', parseFloat(e.target.value) || 0)}
-                className="tutor-scale-config-input"
+                size="small"
+                value={String(config.min)}
+                onChange={(v) => handleConfigChange('min', parseConfigNumber(v, 0))}
               />
             </div>
             <div css={styles.configField}>
               <label css={styles.configLabel}>{__('Max value', __TUTOR_TEXT_DOMAIN__)}</label>
-              <input
+              <TextInput
                 type="number"
-                value={config.max}
-                onChange={(e) => handleConfigChange('max', parseFloat(e.target.value) || 100)}
-                className="tutor-scale-config-input"
+                size="small"
+                value={String(config.max)}
+                onChange={(v) => handleConfigChange('max', parseConfigNumber(v, 100))}
               />
             </div>
             <div css={styles.configField}>
               <label css={styles.configLabel}>{__('Steps', __TUTOR_TEXT_DOMAIN__)}</label>
-              <input
+              <TextInput
                 type="number"
-                step="1"
-                value={config.step}
-                onChange={(e) => handleConfigChange('step', parseFloat(e.target.value) || 1)}
-                className="tutor-scale-config-input"
+                size="small"
+                value={String(config.step)}
+                onChange={(v) => handleConfigChange('step', parseConfigNumber(v, 1))}
               />
             </div>
             <div css={styles.configField}>
               <label css={styles.configLabel}>{__('Label entry', __TUTOR_TEXT_DOMAIN__)}</label>
-              <input
+              <TextInput
                 type="number"
-                value={config.labelEvery}
-                onChange={(e) => handleConfigChange('labelEvery', parseFloat(e.target.value) || 10)}
-                className="tutor-scale-config-input"
+                size="small"
+                value={String(config.labelEvery)}
+                onChange={(v) => handleConfigChange('labelEvery', parseConfigNumber(v, 10))}
               />
             </div>
           </div>
@@ -248,16 +247,12 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
           {/* Answer Configuration */}
           <div css={styles.configField}>
             <label css={styles.configLabel}>{__('Correct Value', __TUTOR_TEXT_DOMAIN__)}</label>
-            <input
+            <TextInput
               type="number"
-              step={config.step}
+              size="small"
+              value={String(scaleData.value)}
+              onChange={(v) => handleValueChange(parseConfigNumber(v, config.min))}
               {...(!isRangeInvalid && { min: config.min, max: config.max })}
-              value={scaleData.value}
-              onChange={(e) => {
-                const v = parseFloat(e.target.value);
-                handleValueChange(Number.isNaN(v) ? config.min : v);
-              }}
-              className="tutor-scale-config-input"
             />
           </div>
         </div>
@@ -317,18 +312,6 @@ const styles = {
   configField: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[4]};
-
-    & .tutor-scale-config-input {
-      padding: ${spacing[8]};
-      border: 1px solid ${colorTokens.stroke.default};
-      border-radius: ${borderRadius.input};
-      font-family: ${fontFamily.sfProDisplay};
-      font-weight: ${fontWeight.regular};
-      font-size: ${fontSize[16]};
-      line-height: ${lineHeight[24]};
-      letter-spacing: ${letterSpacing.normal};
-      color: ${colorTokens.text.subdued};
-    }
   `,
   configLabel: css`
     font-family: ${fontFamily.sfProDisplay};

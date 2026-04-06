@@ -368,7 +368,21 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       modal?.showModal?.(modalId, payload ?? null);
     },
 
+    notifyAttemptCompleted() {
+      document.dispatchEvent(
+        new CustomEvent(TUTOR_CUSTOM_EVENTS.QUIZ_ATTEMPT_COMPLETED, {
+          detail: {
+            formId: this.formId,
+            attemptId: this.attemptId,
+            quizId: this.quizId,
+          },
+        }),
+      );
+    },
+
     handleSubmissionSuccess(isTimeout: boolean) {
+      this.notifyAttemptCompleted();
+
       if (isTimeout) {
         this.openResultModal(this.timeoutModalId, {
           attempted: this.getAttemptedCount(),
@@ -381,6 +395,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     },
 
     handleTimeoutSuccess() {
+      this.notifyAttemptCompleted();
       this.openResultModal(this.timeoutModalId, {
         attempted: this.getAttemptedCount(),
         total: this.totalQuestions,
