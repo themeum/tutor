@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.9.7
+Stable tag: 3.9.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,6 +318,30 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.0-beta.1 - 06 April, 2026
+
+New: Introduced 3 new quiz types: Draw Image, Pin Image, and Scale. (Pro)
+New: Added certificate verification feature. (Pro)
+New: Added course bundle expiry functionality. (Pro)
+New: Added forgot password email template. (Pro)
+Update: Learning area updated to now show Gradebook. (Pro)
+Update: Improved translation compatibility.
+Update: Lesson Note enable/disable option added in admin settings.
+Update: Improved overall assignment functionality.
+Fix: Fixed issue where enrolment emails were not triggered via Tutor REST API. (Pro)
+Fix: Resolved critical errors affecting Quiz Submit and Quiz Quit actions.
+Fix: Fixed dashboard subpages showing "not found" without permalink reset.
+Fix: Resolved issue where account page information was missing in specific cases.
+Fix: Fixed assignment search and filtering issues.
+Fix: Fixed Hide Quiz Time feature not working.
+Fix: Fixed Retake Quiz button not working on the Quiz Summary page.
+Fix: Fixed security issue where unauthenticated users could access invoices. (Pro)
+Fix: Fixed database error in the report admin panel when monetization is disabled.
+Fix: Resolved 2FA login nonce error. (Pro)
+Fix: Fixed error when deleting quiz attempts.
+Fix: Fixed blank billing page when WooCommerce or EDD is active.
+Fix: Fixed issue where YouTube videos would not play when Tutor Player is disabled.
 
 = 4.0.0-alpha.1 - 30 March, 2026
 
