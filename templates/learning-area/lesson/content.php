@@ -58,7 +58,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 	>
 		<!-- Load Lesson Video -->
 		<?php if ( $has_source ) : ?>
-		<div class="tutor-lesson-video-wrapper">
+		<div class="tutor-lesson-video-wrapper tutor-border-b">
 			<?php
 				$completion_mode                              = tutor_utils()->get_option( 'course_completion_process' );
 				$json_data['strict_mode']                     = ( 'strict' === $completion_mode );
