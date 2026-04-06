@@ -21,6 +21,7 @@ use Tutor\Components\Modal;
 use Tutor\Components\Pagination;
 use Tutor\Components\Progress;
 use Tutor\Components\StarRating;
+use Tutor\Components\SvgIcon;
 use Tutor\Helpers\UrlHelper;
 
 // Get course ID from global variable set in learning-area/index.php .
@@ -43,7 +44,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 <div class="tutor-py-8 tutor-learning-area-reviews">
 	<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-5">
 		<h4 class="tutor-h4 tutor-flex tutor-items-center tutor-gap-4">
-			<?php tutor_utils()->render_svg_icon( Icon::RATINGS, 24, 24 ); ?>
+			<?php SvgIcon::make()->name( Icon::RATINGS )->size( 24 )->render(); ?>
 			<?php esc_html_e( 'Reviews', 'tutor' ); ?>
 		</h4>
 		<?php
@@ -81,7 +82,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 				<div class="tutor-medium tutor-font-medium" style="max-width: 172px;">
 					<?php esc_html_e( 'Student Ratings & Reviews', 'tutor' ); ?>
 				</div>
-				<div class="tutor-surface-base tutor-rounded-sm tutor-py-3 tutor-px-5 tutor-flex tutor-flex-column tutor-gap-1 tutor-w-fit">
+				<div class="tutor-average-rating tutor-surface-base tutor-rounded-sm tutor-py-3 tutor-px-5 tutor-flex tutor-flex-column tutor-gap-1 tutor-w-fit">
 					<div class="tutor-flex tutor-items-center tutor-gap-5">
 						<div class="tutor-h4 tutor-font-bold">
 							<?php echo esc_html( number_format_i18n( (float) $course_rating->rating_avg, 1 ) ); ?>
@@ -113,7 +114,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 					<div class="tutor-flex tutor-items-center tutor-gap-5">
 						<div class="tutor-flex tutor-items-center tutor-gap-3">
 							<?php tutor_utils()->render_svg_icon( Icon::STAR_FILL, 12, 12, array( 'class' => 'tutor-icon-exception4' ) ); ?>
-							<span class="tutor-small"><?php echo esc_html( $i ); ?></span>
+							<span class="tutor-small" style="font-variant-numeric: tabular-nums;"><?php echo esc_html( $i ); ?></span>
 						</div>
 						<?php Progress::make()->variant( Variant::WARNING )->value( $percent )->animated()->render(); ?>
 						<div class="tutor-small tutor-flex-shrink-0" style="min-width: 80px;">

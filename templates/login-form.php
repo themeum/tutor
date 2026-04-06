@@ -9,6 +9,9 @@
  */
 
 use TUTOR\Ajax;
+use Tutor\Components\Alert;
+use Tutor\Components\SvgIcon;
+use TUTOR\Icon;
 
 
 $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
@@ -19,31 +22,12 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
  */
 $login_errors = get_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ) ? get_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ) : array();
 foreach ( $login_errors as $login_error ) {
-	?>
-	<div class="tutor-alert tutor-warning tutor-mb-12" style="display:block; grid-gap: 0px 10px;">
-		<?php
-		echo wp_kses(
-			$login_error,
-			array(
-				'strong' => true,
-				'a'      => array(
-					'href'  => true,
-					'class' => true,
-					'id'    => true,
-				),
-				'p'      => array(
-					'class' => true,
-					'id'    => true,
-				),
-				'div'    => array(
-					'class' => true,
-					'id'    => true,
-				),
-			)
-		);
-		?>
-	</div>
-	<?php
+	Alert::make()
+		->text( $login_error )
+		->variant( Alert::ERROR )
+		->icon( Icon::WARNING )
+		->attr( 'class', 'tutor-mb-8' )
+		->render();
 }
 
 do_action( 'tutor_before_login_form' );
@@ -60,8 +44,21 @@ do_action( 'tutor_before_login_form' );
 		<input type="text" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" required/>
 	</div>
 
-	<div class="tutor-input-field tutor-mb-8">
-		<input type="password" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" value="" size="20" required/>
+	<div class="tutor-input-field tutor-mb-8" x-data="{ show: false, value: '' }" style="position: relative;">
+		<span 
+			class="tutor-flex tutor-items-center tutor-justify-center"
+			style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
+			x-show="value.length > 0"
+			@click="show = !show"
+		>
+			<template x-if="!show">
+				<?php SvgIcon::make()->name( Icon::EYE )->size( 20 )->render(); ?>
+			</template>
+			<template x-if="show">
+				<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
+			</template>
+		</span>
+		<input :type="show ? 'text' : 'password'" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" x-model="value" size="20" required style="padding-right: 45px;"/>
 	</div>
 
 	<div class="tutor-login-error"></div>

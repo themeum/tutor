@@ -32,7 +32,7 @@ $question_mark        = $question->question_mark ?? '';
 	<?php endif; ?>
 
 	<div class="tutor-quiz-question-title">
-		<?php echo esc_html( $question_title ); ?>
+		<?php echo esc_html( wp_unslash( $question_title ) ); ?>
 
 		<?php if ( ! empty( $question_description ) ) : ?>
 			<?php

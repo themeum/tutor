@@ -19,6 +19,7 @@ use Tutor\Components\Constants\Variant;
 
 $answer_field_name = ( $question_field_name_base ?? '' ) . '[answers][]';
 $register_rules    = '';
+$draggable_answers = $question['question_randomized_answers'] ?? $question['question_answers'] ?? array();
 if ( $answer_is_required ) {
 	$register_rules = ", { validate: (value) => Array.isArray(value) && value.every((item) => item) || '" . esc_js( $required_message ) . "' }";
 }
@@ -93,7 +94,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 			<span class="tutor-text-small tutor-font-medium"><?php esc_html_e( 'Drag from here', 'tutor' ); ?></span>
 		</div>
 		<div class="tutor-quiz-question-options">
-			<?php foreach ( $question['question_answers'] as $answer ) : ?>
+			<?php foreach ( $draggable_answers as $answer ) : ?>
 				<div
 					class="tutor-quiz-question-option"
 					data-option="draggable"

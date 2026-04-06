@@ -21,6 +21,12 @@
         opacity: 1;
       }
     }
+
+    @include tutor-breakpoint-down(sm) {
+      .tutor-review-actions {
+        opacity: 1;
+      }
+    }
   }
 
   &-header {

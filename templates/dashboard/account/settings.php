@@ -50,7 +50,7 @@ $settings_tab_data = array(
 	'preferences'     => array(
 		'id'       => 'preferences',
 		'label'    => __( 'Preferences', 'tutor' ),
-		'icon'     => Icon::PREFERENCE,
+		'icon'     => Icon::FILTER_2,
 		'text'     => __( 'Sound effects, animations, theme', 'tutor' ),
 		'template' => 'dashboard.account.settings.preferences',
 		'role'     => false,
@@ -64,7 +64,7 @@ $settings_tab_data = array_values(
 	array_filter(
 		$settings_tab_data,
 		function ( $tab ) {
-			return 'account' === $tab['id'] || ! $tab['role'] || ( User::INSTRUCTOR === $tab['role'] && current_user_can( tutor()->instructor_role ) );
+			return 'account' === $tab['id'] || ! $tab['role'] || ( User::INSTRUCTOR === $tab['role'] && current_user_can( tutor()->instructor_role ) && User::is_instructor_view() );
 		}
 	)
 );

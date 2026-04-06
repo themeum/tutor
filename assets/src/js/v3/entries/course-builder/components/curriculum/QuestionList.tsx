@@ -104,17 +104,21 @@ const questionTypeOptions: {
     isPro: true,
   },
   {
-    label: __('Draw on Image', 'tutor'),
+    label: __('Mark in the Image', 'tutor'),
     value: 'draw_image',
-    // TODO: icon is not final.
-    icon: 'quizImageAnswer',
+    icon: 'quizMarkInTheImage',
     isPro: true,
   },
   {
-    label: __('Pin on Image', 'tutor'),
+    label: __('Range', 'tutor'),
+    value: 'scale',
+    icon: 'quizRange',
+    isPro: true,
+  },
+  {
+    label: __('Pin', 'tutor'),
     value: 'pin_image',
-    // TODO: icon is not final.
-    icon: 'quizImageAnswer',
+    icon: 'quizPin',
     isPro: true,
   },
 ];
@@ -124,7 +128,9 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   const questionTypeOptionsForUi = useMemo(() => {
     if (tutorConfig.is_legacy_learning_mode) {
-      return questionTypeOptions.filter((option) => option.value !== 'draw_image' && option.value !== 'pin_image');
+      return questionTypeOptions.filter(
+        (option) => option.value !== 'draw_image' && option.value !== 'pin_image' && option.value !== 'scale',
+      );
     }
     return questionTypeOptions;
   }, []);
