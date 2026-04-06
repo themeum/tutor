@@ -7367,15 +7367,18 @@ class Utils {
 		}
 
 		$post_types   = array( tutor()->course_post_type );
-		$bundle_query = "AND NOT EXISTS ( 
+		$bundle_query = $wpdb->prepare(
+			"AND NOT EXISTS ( 
 						SELECT 1
 						FROM {$wpdb->posts} AS p 
 						INNER JOIN {$wpdb->postmeta} AS pm 
 								ON p.ID = pm.post_id 
-						WHERE p.post_type = 'course-bundle' 
+						WHERE p.post_type = %s
 						AND pm.meta_key = 'bundle-course-ids' 
 						AND FIND_IN_SET(enrol.post_parent, pm.meta_value) > 0 
-               		 )";
+               		 )",
+			tutor()->bundle_post_type
+		);
 		if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
 			$post_types[] = tutor()->bundle_post_type;
 		}
@@ -7463,15 +7466,18 @@ class Utils {
 		}
 
 		$post_types   = array( tutor()->course_post_type );
-		$bundle_query = "AND NOT EXISTS ( 
+		$bundle_query = $wpdb->prepare(
+			"AND NOT EXISTS ( 
 						SELECT 1
 						FROM {$wpdb->posts} AS p 
 						INNER JOIN {$wpdb->postmeta} AS pm 
 								ON p.ID = pm.post_id 
-						WHERE p.post_type = 'course-bundle' 
+						WHERE p.post_type = %s
 						AND pm.meta_key = 'bundle-course-ids' 
 						AND FIND_IN_SET(enrol.post_parent, pm.meta_value) > 0 
-               		 )";
+               		 )",
+			tutor()->bundle_post_type
+		);
 		if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
 			$post_types[] = tutor()->bundle_post_type;
 		}
