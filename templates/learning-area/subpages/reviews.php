@@ -114,7 +114,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 					<div class="tutor-flex tutor-items-center tutor-gap-5">
 						<div class="tutor-flex tutor-items-center tutor-gap-3">
 							<?php tutor_utils()->render_svg_icon( Icon::STAR_FILL, 12, 12, array( 'class' => 'tutor-icon-exception4' ) ); ?>
-							<span class="tutor-small"><?php echo esc_html( $i ); ?></span>
+							<span class="tutor-small" style="font-variant-numeric: tabular-nums;"><?php echo esc_html( $i ); ?></span>
 						</div>
 						<?php Progress::make()->variant( Variant::WARNING )->value( $percent )->animated()->render(); ?>
 						<div class="tutor-small tutor-flex-shrink-0" style="min-width: 80px;">
