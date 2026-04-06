@@ -3,7 +3,7 @@
 
 .tutor-progress-bar {
   width: 100%;
-  height: $tutor-spacing-4;
+  height: $tutor-progress-height;
   background-color: $tutor-actions-gray-secondary;
   box-shadow: inset 0 0 1.75px rgba(0, 0, 0, 0.16);
   border-radius: $tutor-radius-full;
@@ -22,12 +22,26 @@
     &::before {
       content: '';
       position: absolute;
-      top: $tutor-spacing-1;
+      top: $tutor-progress-indicator-top;
       right: $tutor-spacing-2;
-      height: 1.5px;
+      height: $tutor-progress-indicator-height;
       width: 8.16px;
       background-color: $tutor-actions-success-secondary;
       border-radius: inherit;
+      opacity: 0.4;
+    }
+
+    &::after {
+      content: '';
+      display: $tutor-progress-indicator-secondary-display;
+      position: absolute;
+      top: $tutor-progress-indicator-top;
+      left: $tutor-spacing-2;
+      right: calc(#{$tutor-spacing-2} + 8.16px + 1px);
+      height: $tutor-progress-indicator-height;
+      background-color: $tutor-actions-success-secondary;
+      border-radius: inherit;
+      opacity: 0.4;
     }
   }
 
@@ -38,18 +52,26 @@
       background-color: $tutor-actions-brand-primary;
 
       &::before {
-        background-color: $tutor-surface-brand-secondary;
+        background-color: $tutor-actions-brand-secondary
+      }
+
+      &::after {
+        background-color: $tutor-actions-brand-secondary;
       }
     }
   }
 
   &.tutor-progress-bar-warning {
-    background-color: $tutor-actions-gray-empty;
+    background-color: $tutor-actions-warning-tertiary;
 
     .tutor-progress-bar-fill {
       background-color: $tutor-actions-warning-primary;
 
       &::before {
+        background-color: $tutor-actions-warning-tertiary;
+      }
+
+      &::after {
         background-color: $tutor-actions-warning-tertiary;
       }
     }
