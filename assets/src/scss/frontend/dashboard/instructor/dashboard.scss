@@ -3,6 +3,7 @@
 
 .tutor-profile-completion {
   position: relative;
+  margin-bottom: $tutor-spacing-6;
 
   &-header {
     @include tutor-flex(row, center, space-between);

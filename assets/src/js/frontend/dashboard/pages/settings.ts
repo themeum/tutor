@@ -83,7 +83,6 @@ interface ResetPasswordResponse {
 const settings = () => {
   const query = window.TutorCore.query;
   const form = window.TutorCore.form;
-  const modal = window.TutorCore.modal;
   const toast = window.TutorCore.toast;
 
   return {

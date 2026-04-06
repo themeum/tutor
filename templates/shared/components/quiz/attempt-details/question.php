@@ -90,5 +90,8 @@ if ( 'review-answer-dnd' === $question_template ) {
 	if ( is_object( $attempt_answer ) ) {
 		do_action( 'tutor_quiz_attempt_details_loop_after_row', $attempt_answer, $answer_status, array() );
 	}
+
+	// Add-ons may output Pro-only attempt-details partials (scale, draw-image, pin-image) before the wrapper closes.
+	do_action( 'tutor_quiz_attempt_details_before_question_wrapper_close', $question, $question_template, $attempt_answer, $index );
 	?>
 </div>

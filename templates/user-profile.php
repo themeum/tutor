@@ -16,7 +16,6 @@ use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use TUTOR\Input;
-use TUTOR\User;
 
 $user_id          = Input::get( 'student_id', get_current_user_id(), Input::TYPE_INT );
 $student_details  = get_userdata( $user_id );
@@ -33,7 +32,7 @@ $phone_number     = $student_meta['phone_number'][0] ?? '';
 <div class="tutor-profile-card">
 	<div class="tutor-profile-card-header">
 		<?php Avatar::make()->user( $user_id )->size( Size::SIZE_104 )->render(); ?>
-		<?php if ( User::is_student() && User::is_student_view() ) : ?>
+		<?php if ( tutor_utils()->is_dashboard_page( 'account/profile' ) ) : ?>
 		<a href="<?php echo esc_url( $edit_profile_url ); ?>" class="tutor-edit-profile-btn">
 			<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
 			<span><?php esc_html_e( 'Edit Profile', 'tutor' ); ?></span>

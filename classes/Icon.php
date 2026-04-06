@@ -199,6 +199,7 @@ final class Icon {
 	const GRADEBOOK                  = 'gradebook';
 	const GUTENBERG_COLORIZED        = 'gutenberg-colorized';
 	const HAND_COIN                  = 'hand-coin';
+	const HAND_SWIPE_RIGHT           = 'hand-swipe-right';
 	const HAPPY                      = 'happy';
 	const HEART                      = 'heart';
 	const HIGHLIGHTER                = 'highlighter';
@@ -318,10 +319,13 @@ final class Icon {
 	const QUIZ_H5P                   = 'quiz-h5p';
 	const QUIZ_IMAGE_ANSWER          = 'quiz-image-answer';
 	const QUIZ_IMAGE_MATCHING        = 'quiz-image-matching';
+	const QUIZ_MARK_IN_THE_IMAGE     = 'quiz-mark-in-the-image';
 	const QUIZ_MULTI_CHOICE          = 'quiz-multi-choice';
 	const QUIZ_NUMBER                = 'quiz-number';
 	const QUIZ_ORDERING              = 'quiz-ordering';
+	const QUIZ_PIN                   = 'quiz-pin';
 	const QUIZ_RADIO                 = 'quiz-radio';
+	const QUIZ_RANGE                 = 'quiz-range';
 	const QUIZ_SHAPE                 = 'quiz-shape';
 	const QUIZ_SHORT_ANSWER          = 'quiz-short-answer';
 	const QUIZ_TRUE_FALSE            = 'quiz-true-false';
