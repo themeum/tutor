@@ -95,27 +95,7 @@ export const revealQuestionWithAnswers = (wrapper: HTMLElement, revealAnswerIds:
   question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
 };
 
-const hasRenderableAnswerValue = (value: unknown): boolean => {
-  if (value === '' || value === null || value === undefined) {
-    return false;
-  }
-
-  if (Array.isArray(value) && value.length === 0) {
-    return false;
-  }
-
-  return true;
-};
-
-export const hasAttemptedFieldValue = (args: { formId?: string; fieldName: string; value: unknown }): boolean => {
-  if (!hasRenderableAnswerValue(args.value)) {
-    return false;
-  }
-
-  return true;
-};
-
-export const getAttemptedQuestionCount = (values: Record<string, unknown>, options?: { formId?: string }): number => {
+export const getAttemptedQuestionCount = (values: Record<string, unknown>): number => {
   const questionIdsEntry = Object.entries(values).find(([key]) => key.includes('[quiz_question_ids]'));
   if (!questionIdsEntry) {
     return 0;
@@ -131,11 +111,13 @@ export const getAttemptedQuestionCount = (values: Record<string, unknown>, optio
         return false;
       }
 
-      return hasAttemptedFieldValue({
-        formId: options?.formId,
-        fieldName: key,
-        value: val,
-      });
+      if (val === '' || val === null || val === undefined) {
+        return false;
+      }
+      if (Array.isArray(val) && val.length === 0) {
+        return false;
+      }
+      return true;
     });
 
     if (hasAnswer) {
@@ -152,7 +134,6 @@ export const getAttemptedQuestionCountFromForm = (formId: string): number => {
     return 0;
   }
 
-  const formState = form.getFormState(formId);
-  const values = formState.values ?? {};
-  return getAttemptedQuestionCount(values, { formId });
+  const values = form.getFormState(formId).values ?? {};
+  return getAttemptedQuestionCount(values);
 };
