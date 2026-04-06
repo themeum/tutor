@@ -21,6 +21,7 @@ use Tutor\Components\Sorting;
 use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
+use Tutor\Helpers\UrlHelper;
 
 if ( Input::has( 'attempt_id' ) ) {
 	// Load single attempt details if ID provided.
@@ -125,6 +126,7 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 				ConfirmationModal::make()
 					->id( 'tutor-retry-modal' )
 					->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+					->icon( UrlHelper::themed_asset( 'images/illustrations/quiz-retry.webp' ) )
 					->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
 					->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
 					->confirm_text( __( 'Retry Quiz', 'tutor' ) )

@@ -57,11 +57,37 @@ class UrlHelper {
 
 		$path = ltrim( (string) $path, '/' );
 
-		if ( '' === $path || ! tutor_utils()->is_kids_mode() || false !== strpos( $path, '/kids/' ) ) {
+		if ( '' === $path ) {
 			return self::asset( $path );
 		}
 
 		if ( isset( $resolved_paths[ $path ] ) ) {
+			return $resolved_paths[ $path ];
+		}
+
+		$asset_sources = array(
+			array(
+				'path' => tutor()->path . 'assets/',
+				'url'  => tutor()->assets_url,
+			),
+		);
+
+		if ( function_exists( 'tutor_pro' ) ) {
+			$asset_sources[] = array(
+				'path' => tutor_pro()->path . 'assets/',
+				'url'  => tutor_pro()->assets,
+			);
+		}
+
+		if ( ! tutor_utils()->is_kids_mode() || false !== strpos( $path, '/kids/' ) ) {
+			foreach ( $asset_sources as $asset_source ) {
+				if ( file_exists( $asset_source['path'] . $path ) ) {
+					$resolved_paths[ $path ] = $asset_source['url'] . $path;
+					return $resolved_paths[ $path ];
+				}
+			}
+
+			$resolved_paths[ $path ] = self::asset( $path );
 			return $resolved_paths[ $path ];
 		}
 
@@ -72,8 +98,17 @@ class UrlHelper {
 				? 'kids/' . $basename
 				: trailingslashit( $directory ) . 'kids/' . $basename;
 
-			if ( file_exists( tutor()->path . 'assets/' . $candidate_path ) ) {
-				$resolved_paths[ $path ] = self::asset( $candidate_path );
+			foreach ( $asset_sources as $asset_source ) {
+				if ( file_exists( $asset_source['path'] . $candidate_path ) ) {
+					$resolved_paths[ $path ] = $asset_source['url'] . $candidate_path;
+					return $resolved_paths[ $path ];
+				}
+			}
+		}
+
+		foreach ( $asset_sources as $asset_source ) {
+			if ( file_exists( $asset_source['path'] . $path ) ) {
+				$resolved_paths[ $path ] = $asset_source['url'] . $path;
 				return $resolved_paths[ $path ];
 			}
 		}
