@@ -107,19 +107,25 @@ const hasRenderableAnswerValue = (value: unknown): boolean => {
   return true;
 };
 
-const isScaleFieldName = (formId: string, fieldName: string): boolean => {
+const SCALE_INTERACTION_DATA_ATTR = 'data-tutor-scale-interacted';
+
+const getFieldElementsByName = (formId: string, fieldName: string): HTMLElement[] => {
   if (!formId || !fieldName || typeof document === 'undefined') {
-    return false;
+    return [];
   }
 
   const formElement = document.getElementById(formId);
   if (!formElement) {
-    return false;
+    return [];
   }
 
   const escapedName =
     typeof CSS !== 'undefined' && typeof CSS.escape === 'function' ? CSS.escape(fieldName) : fieldName;
-  const fieldElements = Array.from(formElement.querySelectorAll<HTMLElement>(`[name="${escapedName}"]`));
+  return Array.from(formElement.querySelectorAll<HTMLElement>(`[name="${escapedName}"]`));
+};
+
+const isScaleFieldName = (formId: string, fieldName: string): boolean => {
+  const fieldElements = getFieldElementsByName(formId, fieldName);
 
   if (!fieldElements.length) {
     return false;
@@ -130,27 +136,13 @@ const isScaleFieldName = (formId: string, fieldName: string): boolean => {
   );
 };
 
-const scaleInteractionByForm = new Map<
-  string,
-  {
-    initialValueByField: Record<string, string>;
-    interactedByField: Record<string, boolean>;
-  }
->();
-
-const getScaleInteractionState = (formId: string) => {
-  const existing = scaleInteractionByForm.get(formId);
-  if (existing) {
-    return existing;
+const isScaleValueChangedByUser = (formId: string, fieldName: string): boolean => {
+  const fieldElements = getFieldElementsByName(formId, fieldName);
+  if (!fieldElements.length) {
+    return false;
   }
 
-  const initialState = {
-    initialValueByField: {} as Record<string, string>,
-    interactedByField: {} as Record<string, boolean>,
-  };
-
-  scaleInteractionByForm.set(formId, initialState);
-  return initialState;
+  return fieldElements.some((element) => element.getAttribute(SCALE_INTERACTION_DATA_ATTR) === '1');
 };
 
 export const hasAttemptedFieldValue = ({
@@ -166,22 +158,9 @@ export const hasAttemptedFieldValue = ({
     return false;
   }
 
-  // Scale questions can have prefilled defaults; count only after at least one value change.
+  // Scale questions can have prefilled defaults; Tutor Pro marks user interaction on the hidden field.
   if (formId && isScaleFieldName(formId, fieldName)) {
-    const state = getScaleInteractionState(formId);
-    const currentValue = String(value);
-
-    if (!(fieldName in state.initialValueByField)) {
-      state.initialValueByField[fieldName] = currentValue;
-      state.interactedByField[fieldName] = false;
-      return false;
-    }
-
-    if (!state.interactedByField[fieldName] && state.initialValueByField[fieldName] !== currentValue) {
-      state.interactedByField[fieldName] = true;
-    }
-
-    return state.interactedByField[fieldName];
+    return isScaleValueChangedByUser(formId, fieldName);
   }
 
   return true;
