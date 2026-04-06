@@ -31,6 +31,7 @@ $default_question = array(
 	'answer_explanation'          => '',
 	'question_settings'           => array(
 		'answer_required'    => '0',
+		'is_image_matching'  => '0',
 		'question_mark'      => '1',
 		'question_type'      => 'true_false',
 		'randomize_question' => '1',
