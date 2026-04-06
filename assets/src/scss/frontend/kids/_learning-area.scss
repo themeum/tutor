@@ -10,18 +10,58 @@
   .tutor-assignment-info,
   .tutor-assignment-description,
   .tutor-assignment-attachments,
-  .tutor-assignment-form {
+  .tutor-assignment-form,
+  .tutor-meeting,
+  .tutor-certificate-wrapper .tutor-certificate-header,
+  .tutor-pro-certificate-preview-container,
+  .tutor-certificate-wrapper .tutor-certificate-info,
+  .tutor-course-info-table,
+  .tutor-webinar-card,
+  .tutor-course-announcements,
+  .tutor-learning-area-resources .tutor-resources-wrapper {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
   }
 
-  .tutor-assignment-feedback {
+  .tutor-course-info .tutor-course-thumb {
+    border-radius: $tutor-radius-6xl;
+  }
+
+  .tutor-assignment-feedback,
+  .tutor-pro-certificate-preview-wrapper,
+  .tutor-learning-sidebar .tutor-learning-sidebar-pages,
+  .tutor-learning-sidebar .tutor-learning-sidebar-curriculum {
     border-radius: $tutor-radius-5xl;
   }
 
   .tutor-quiz-summary .tutor-quiz-result,
   .tutor-quiz-question,
-  .tutor-quiz-summary-page .tutor-quiz-review-dnd {
+  .tutor-quiz-summary-page .tutor-quiz-review-dnd,
+  .tutor-course-info .tutor-course-info-certificate {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-4xl, sm);
+  }
+
+  .tutor-learning-sidebar .tutor-learning-sidebar-curriculum .tutor-learning-nav .tutor-learning-nav-item {
+    &:hover,
+    &.active {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-2xl, sm);
+    }
+  }
+
+  .tutor-course-info .tutor-course-description-item {
+    border-radius: $tutor-radius-4xl;
+
+    &:has([style*='height: auto']) {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-4xl, sm);
+    }
+
+    &:not(:first-of-type) {
+      margin-top: $tutor-spacing-2;
+    }
+  }
+
+  .tutor-learning-sidebar .tutor-learning-sidebar-pages .tutor-sidebar-restore-dropdown button {
+    border-top-left-radius: $tutor-radius-md;
+    border-bottom-right-radius: $tutor-radius-md;
   }
 
   .tutor-quiz-submission[data-question-layout-view='single_question'],
@@ -115,12 +155,20 @@
     }
   }
 
+  .tutor-meeting-hero,
+  .tutor-meeting-countdown,
   .tutor-quiz-intro-icon,
   .tutor-table-wrapper,
   .tutor-quiz-attempts,
   .tutor-quiz-summary-feedback,
-  .tutor-quiz-summary-page .tutor-quiz-summary-sidebar .tutor-quiz-sidebar-questions .tutor-quiz-sidebar-question-item {
+  .tutor-quiz-summary-page .tutor-quiz-summary-sidebar .tutor-quiz-sidebar-questions .tutor-quiz-sidebar-question-item,
+  .tutor-learning-header-inner,
+  .tutor-notification-tabs-wrapper {
     border-radius: $tutor-radius-4xl;
+  }
+
+  .tutor-average-rating {
+    border-radius: $tutor-radius-2xl;
   }
 
   .tutor-quiz-intro .tutor-card,
