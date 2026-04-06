@@ -199,6 +199,7 @@ final class Icon {
 	const GRADEBOOK                  = 'gradebook';
 	const GUTENBERG_COLORIZED        = 'gutenberg-colorized';
 	const HAND_COIN                  = 'hand-coin';
+	const HAND_SWIPE_RIGHT           = 'hand-swipe-right';
 	const HAPPY                      = 'happy';
 	const HEART                      = 'heart';
 	const HIGHLIGHTER                = 'highlighter';

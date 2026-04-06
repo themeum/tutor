@@ -196,8 +196,10 @@ class Quiz {
 			'tutor_quiz_templates_not_in_core',
 			array(
 				'learning-area.quiz.questions.draw-image',
+				'learning-area.quiz.questions.scale',
 				'learning-area.quiz.questions.pin-image',
 				'shared.components.quiz.attempt-details.questions.draw-image',
+				'shared.components.quiz.attempt-details.questions.scale',
 				'shared.components.quiz.attempt-details.questions.pin-image',
 			),
 			$template,
