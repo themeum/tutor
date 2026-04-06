@@ -5,7 +5,7 @@
  * @package Tutor\ThemeCompatibility\Astra
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.2.0
+ * @since 1.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,7 +17,7 @@ if ( ! function_exists( 'tutor_astra_scripts' ) ) {
 	/**
 	 * Enqueue Astra theme compatibility scripts.
 	 *
-	 * @since 2.2.0
+	 * @since 1.0.0
 	 */
 	function tutor_astra_scripts() {
 		$dir_url = plugin_dir_url( __FILE__ );
