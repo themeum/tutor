@@ -47,7 +47,7 @@ $bin_icon = SvgIcon::make()->name( Icon::BIN )->get();
 	<?php if ( $review_count > 0 ) : ?>
 		<div class="tutor-flex tutor-flex-column tutor-gap-5">
 			<?php foreach ( $reviews as $review ) : ?>
-				<?php tutor_load_template( 'dashboard.reviews.review-card', array( 'review' => $review ) ); ?>
+				<?php tutor_load_template( 'dashboard.account.reviews.review-card', array( 'review' => $review ) ); ?>
 			<?php endforeach; ?>
 		</div>
 
