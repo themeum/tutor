@@ -9,6 +9,9 @@
  * @since 1.4.3
  */
 
+use Tutor\Components\SvgIcon;
+use TUTOR\Icon;
+
 ?>
 
 <?php if ( ! get_option( 'users_can_register', false ) ) : ?>
@@ -16,7 +19,7 @@
 	<?php
 		$args = array(
 			'image_path'  => tutor()->url . 'assets/images/construction.png',
-			'title'       => __( 'Oooh! Access Denied', 'tutor' ),
+			'title'       => __( 'Ooh! Access Denied', 'tutor' ),
 			'description' => __( 'You do not have access to this area of the application. Please refer to your system  administrator.', 'tutor' ),
 			'button'      => array(
 				'text'  => __( 'Go to Home', 'tutor' ),
@@ -29,7 +32,7 @@
 
 <?php else : ?>
 
-	<div id="tutor-registration-wrap">
+	<div id="tutor-registration-wrap" class="tutor-card" style="max-width: 520px; margin: 40px auto;">
 
 		<?php do_action( 'tutor_before_instructor_reg_form' ); ?>
 
@@ -43,97 +46,77 @@
 			<?php
 			$errors = apply_filters( 'tutor_instructor_register_validation_errors', array() );//phpcs:ignore
 			if ( is_array( $errors ) && count( $errors ) ) {
-				echo '<div class="tutor-alert tutor-warning"><ul class="tutor-required-fields">';
+				echo '<div class="tutor-alert tutor-warning tutor-mb-5" style="border: 1px solid var(--tutor-text-critical)"><ul class="tutor-required-fields tutor-p-none">';
 				foreach ( $errors as $error_key => $error_value ) {
 					echo wp_kses( "<li>{$error_value}</li>", array( 'li' => array() ) );
 				}
 				echo '</ul></div>';
 			}
 			?>
-
-			<div class="tutor-form-row">
-				<div class="tutor-form-col-6">
-					<div class="tutor-form-group">
-						<label>
-							<?php esc_html_e( 'First Name', 'tutor' ); ?>
-						</label>
-
-						<input type="text" name="first_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'first_name' ) ); ?>" placeholder="<?php esc_html_e( 'First Name', 'tutor' ); ?>" required autocomplete="given-name">
-					</div>
-				</div>
-
-				<div class="tutor-form-col-6">
-					<div class="tutor-form-group">
-						<label>
-							<?php esc_html_e( 'Last Name', 'tutor' ); ?>
-						</label>
-
-						<input type="text" name="last_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'last_name' ) ); ?>" placeholder="<?php esc_html_e( 'Last Name', 'tutor' ); ?>" required autocomplete="family-name">
-					</div>
-				</div>
-
-
+			
+			<div class="tutor-input-field tutor-mb-8">
+				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'First Name', 'tutor' ); ?></label>
+				<input class="tutor-form-control tutor-input" type="text" name="first_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'first_name' ) ); ?>" placeholder="<?php esc_html_e( 'First Name', 'tutor' ); ?>" required autocomplete="given-name">
 			</div>
 
-			<div class="tutor-form-row">
-
-				<div class="tutor-form-col-6">
-					<div class="tutor-form-group">
-						<label>
-							<?php esc_html_e( 'User Name', 'tutor' ); ?>
-						</label>
-
-						<input type="text" name="user_login" class="tutor_user_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'user_login' ) ); ?>" placeholder="<?php esc_html_e( 'User Name', 'tutor' ); ?>" required autocomplete="username">
-					</div>
-				</div>
-
-				<div class="tutor-form-col-6">
-					<div class="tutor-form-group">
-						<label>
-							<?php esc_html_e( 'E-Mail', 'tutor' ); ?>
-						</label>
-
-						<input type="text" name="email" value="<?php echo esc_attr( tutor_utils()->input_old( 'email' ) ); ?>" placeholder="<?php esc_html_e( 'E-Mail', 'tutor' ); ?>" required autocomplete="email">
-					</div>
-				</div>
-
+			<div class="tutor-input-field tutor-mb-8">
+				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'Last Name', 'tutor' ); ?></label>
+				<input class="tutor-form-control tutor-input" type="text" name="last_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'last_name' ) ); ?>" placeholder="<?php esc_html_e( 'Last Name', 'tutor' ); ?>" required autocomplete="family-name">
 			</div>
 
-			<div class="tutor-form-row">
-				<div class="tutor-form-col-6">
-					<div class="tutor-form-group">
-						<div class="tutor-password-strength-checker">
-							<div class="tutor-password-field">
-								<label>
-									<?php esc_html_e( 'Password', 'tutor' ); ?>
-								</label>
+			<div class="tutor-input-field tutor-mb-8">
+				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'User Name', 'tutor' ); ?></label>
+				<input class="tutor-form-control tutor-input" type="text" name="user_login" value="<?php echo esc_attr( tutor_utils()->input_old( 'user_login' ) ); ?>" placeholder="<?php esc_html_e( 'User Name', 'tutor' ); ?>" required autocomplete="username">
+			</div>
 
-								<input class="password-checker" id="tutor-new-password" type="password" name="password" value="<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" required autocomplete="new-password">
-								<span class="show-hide-btn"></span>
-							</div>
-							<div class="tutor-password-strength-hint">
-								<div class="indicator">
-									<span class="weak"></span>
-									<span class="medium"></span>
-									<span class="strong"></span>
-								</div>
-								<div class="text tutor-fs-7 tutor-color-muted"></div>
-							</div>
-						</div>
+			<div class="tutor-input-field tutor-mb-8">
+				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'E-Mail', 'tutor' ); ?></label>
+				<input class="tutor-form-control tutor-input" type="text" name="email" value="<?php echo esc_attr( tutor_utils()->input_old( 'email' ) ); ?>" placeholder="<?php esc_html_e( 'E-Mail', 'tutor' ); ?>" required autocomplete="email">
+			</div>
+
+			<div class="tutor-password-strength-checker tutor-mb-8" x-data="{ show: false, value: '<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>' }">
+				<div class="tutor-input-field">
+					<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
+					<div class="tutor-form-wrap" style="position: relative;">
+						<span 
+							class="tutor-flex"
+							style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
+							x-show="value.length > 0"
+							@click="show = !show"
+						>
+							<template x-if="!show">
+								<?php SvgIcon::make()->name( Icon::EYE )->size( 20 )->render(); ?>
+							</template>
+							<template x-if="show">
+								<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
+							</template>
+						</span>
+						<input 
+							class="tutor-form-control tutor-input" 
+							id="tutor-new-password" 
+							:type="show ? 'text' : 'password'" 
+							name="password" 
+							x-model="value" 
+							placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" 
+							required 
+							autocomplete="new-password"
+							style="padding-right: 45px; margin-bottom: 0;"
+						>
 					</div>
 				</div>
+			</div>
 
-				<div class="tutor-form-col-6">
-					<div class="tutor-form-group">
-						<label>
-							<?php esc_html_e( 'Password confirmation', 'tutor' ); ?>
-						</label>
-
-						<div class="tutor-form-wrap">
-							<span class="tutor-validation-icon tutor-icon-mark tutor-color-success tutor-form-icon tutor-form-icon-reverse" style="display: none;"></span>
-							<input type="password" name="password_confirmation" value="<?php echo esc_attr( tutor_utils()->input_old( 'password_confirmation' ) ); ?>" placeholder="<?php esc_html_e( 'Password Confirmation', 'tutor' ); ?>" required autocomplete="new-password" style="margin-bottom: 0;">
-						</div>
-					</div>
+			<div class="tutor-input-field tutor-mb-8">
+				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'Password confirmation', 'tutor' ); ?></label>
+				<div class="tutor-form-wrap">
+					<input 
+						class="tutor-form-control tutor-input" 
+						type="password"
+						name="password_confirmation" 
+						placeholder="<?php esc_html_e( 'Password Confirmation', 'tutor' ); ?>" 
+						required 
+						autocomplete="new-password" 
+					>
 				</div>
 			</div>
 
