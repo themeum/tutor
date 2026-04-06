@@ -104,23 +104,21 @@ const questionTypeOptions: {
     isPro: true,
   },
   {
-    label: __('Draw on Image', 'tutor'),
+    label: __('Mark in the Image', 'tutor'),
     value: 'draw_image',
-    // TODO: icon is not final.
-    icon: 'quizImageAnswer',
+    icon: 'quizMarkInTheImage',
     isPro: true,
   },
   {
-    label: __('Scale', 'tutor'),
+    label: __('Range', 'tutor'),
     value: 'scale',
-    icon: 'quizImageAnswer',
+    icon: 'quizRange',
     isPro: true,
   },
   {
-    label: __('Pin on Image', 'tutor'),
+    label: __('Pin', 'tutor'),
     value: 'pin_image',
-    // TODO: icon is not final.
-    icon: 'quizImageAnswer',
+    icon: 'quizPin',
     isPro: true,
   },
 ];
