@@ -110,6 +110,7 @@ export const getAttemptedQuestionCount = (values: Record<string, unknown>): numb
       if (!key.includes(needle)) {
         return false;
       }
+
       if (val === '' || val === null || val === undefined) {
         return false;
       }
