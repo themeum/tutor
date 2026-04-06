@@ -8,12 +8,9 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\CourseModel;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 
 if ( ! function_exists( 'tutor_get_template' ) ) {
 	/**
@@ -117,10 +114,10 @@ if ( ! function_exists( 'tutor_load_template' ) ) {
 	function tutor_load_template( $template = null, $variables = array(), $tutor_pro = false ) {
 		$variables = (array) $variables;
 		$variables = apply_filters( 'get_tutor_load_template_variables', $variables );
-		extract( $variables );
+		extract( $variables ); //phpcs:ignore
 
-		$isLoad = apply_filters( 'should_tutor_load_template', true, $template, $variables );
-		if ( ! $isLoad ) {
+		$is_load = apply_filters( 'should_tutor_load_template', true, $template, $variables );
+		if ( ! $is_load ) {
 			return;
 		}
 
@@ -150,7 +147,7 @@ if ( ! function_exists( 'tutor_load_template_part' ) ) {
 	function tutor_load_template_part( $template = null, $variables = array(), $tutor_pro = false ) {
 		$variables = (array) $variables;
 		$variables = apply_filters( 'get_tutor_load_template_variables', $variables );
-		extract( $variables );
+		extract( $variables ); //phpcs:ignore
 
 		/**
 		 * Get template first from child-theme if exists
@@ -178,9 +175,9 @@ if ( ! function_exists( 'tutor_get_template_html' ) ) {
 	 *
 	 * @since 1.4.3
 	 *
-	 * @param null  $template template.
-	 * @param array $variables variables.
-	 * @param bool  $tutor_pro is tutor pro.
+	 * @param string $template_name template name.
+	 * @param array  $variables variables.
+	 * @param bool   $tutor_pro is tutor pro.
 	 *
 	 * @return string
 	 */
@@ -387,13 +384,13 @@ if ( ! function_exists( 'tutor_course_loop_wrap_classes' ) ) {
 	 * @return mixed
 	 */
 	function tutor_course_loop_wrap_classes( $echo = true ) {
-		$courseID = get_the_ID();
-		$classes  = apply_filters(
+		$course_id = get_the_ID();
+		$classes   = apply_filters(
 			'tutor_course_loop_wrap_classes',
 			array(
 				'tutor-course',
 				'tutor-course-loop',
-				'tutor-course-loop-' . $courseID,
+				'tutor-course-loop-' . $course_id,
 			)
 		);
 
@@ -419,7 +416,7 @@ if ( ! function_exists( 'tutor_course_loop_col_classes' ) ) {
 	function tutor_course_loop_col_classes( $echo = true ) {
 		$course_filter      = (bool) tutor_utils()->get_option( 'course_archive_filter', false );
 		$course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
-		$course_cols        = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
+		$course_cols        = null === $course_archive_arg ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
 		$classes            = apply_filters(
 			'tutor_course_loop_col_classes',
 			array(
