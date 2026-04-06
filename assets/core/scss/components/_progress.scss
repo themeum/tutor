@@ -28,7 +28,7 @@
       width: 8.16px;
       background-color: $tutor-actions-success-secondary;
       border-radius: inherit;
-      opacity: 0.7;
+      opacity: 0.4;
     }
 
     &::after {
@@ -41,7 +41,7 @@
       height: $tutor-progress-indicator-height;
       background-color: $tutor-actions-success-secondary;
       border-radius: inherit;
-      opacity: 0.7;
+      opacity: 0.4;
     }
   }
 
@@ -52,17 +52,17 @@
       background-color: $tutor-actions-brand-primary;
 
       &::before {
-        background-color: $tutor-surface-brand-secondary;
+        background-color: $tutor-actions-brand-secondary
       }
 
       &::after {
-        background-color: $tutor-surface-brand-secondary;
+        background-color: $tutor-actions-brand-secondary;
       }
     }
   }
 
   &.tutor-progress-bar-warning {
-    background-color: $tutor-actions-gray-empty;
+    background-color: $tutor-actions-warning-tertiary;
 
     .tutor-progress-bar-fill {
       background-color: $tutor-actions-warning-primary;
