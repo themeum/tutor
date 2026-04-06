@@ -375,7 +375,7 @@ if ( ! function_exists( 'tutor_course_tags_checkbox' ) ) {
 
 		$tags    = tutor_utils()->get_course_tags();
 		$output  = '';
-		$output .= __tutor_generate_tags_checkbox( $post_ID, $tags, $args );
+		$output .= tutor_generate_tags_checkbox( $post_ID, $tags, $args );
 
 		return $output;
 	}
@@ -417,7 +417,7 @@ if ( ! function_exists( 'tutor_generate_categories_checkbox' ) ) {
 		return $output;
 	}
 }
-if ( ! function_exists( '__tutor_generate_tags_checkbox' ) ) {
+if ( ! function_exists( 'tutor_generate_tags_checkbox' ) ) {
 	/**
 	 * Internal function to generate course tags checkbox.
 	 *
@@ -429,7 +429,7 @@ if ( ! function_exists( '__tutor_generate_tags_checkbox' ) ) {
 	 *
 	 * @return string
 	 */
-	function __tutor_generate_tags_checkbox( $post_ID = 0, $tags = array(), $args = array() ) {
+	function tutor_generate_tags_checkbox( $post_ID = 0, $tags = array(), $args = array() ) {
 
 		$output     = '';
 		$input_name = tutor_utils()->array_get( 'name', $args );
