@@ -24,7 +24,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function ajax() : string {
+	public static function ajax(): string {
 		return admin_url( 'admin-ajax.php' );
 	}
 
@@ -36,8 +36,50 @@ class UrlHelper {
 	 * @param string $path Relative asset path.
 	 * @return string
 	 */
-	public static function asset( $path = '' ) : string {
+	public static function asset( $path = '' ): string {
 		return tutor()->assets_url . $path;
+	}
+
+	/**
+	 * Get a theme-aware plugin asset URL.
+	 *
+	 * In kids mode, this looks for a matching kids variant before falling back
+	 * to the default asset path.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $path Relative asset path.
+	 *
+	 * @return string
+	 */
+	public static function themed_asset( $path = '' ): string {
+		static $resolved_paths = array();
+
+		$path = ltrim( (string) $path, '/' );
+
+		if ( '' === $path || ! tutor_utils()->is_kids_mode() || false !== strpos( $path, '/kids/' ) ) {
+			return self::asset( $path );
+		}
+
+		if ( isset( $resolved_paths[ $path ] ) ) {
+			return $resolved_paths[ $path ];
+		}
+
+		$directory = pathinfo( $path, PATHINFO_DIRNAME );
+		$basename  = pathinfo( $path, PATHINFO_BASENAME );
+		if ( '' !== $basename ) {
+			$candidate_path = '.' === $directory || '' === $directory
+				? 'kids/' . $basename
+				: trailingslashit( $directory ) . 'kids/' . $basename;
+
+			if ( file_exists( tutor()->path . 'assets/' . $candidate_path ) ) {
+				$resolved_paths[ $path ] = self::asset( $candidate_path );
+				return $resolved_paths[ $path ];
+			}
+		}
+
+		$resolved_paths[ $path ] = self::asset( $path );
+		return $resolved_paths[ $path ];
 	}
 
 	/**
@@ -47,7 +89,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function current() : string {
+	public static function current(): string {
 		global $wp;
 
 		return home_url(
@@ -65,7 +107,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function add_query_params( $url, array $query_params = array() ) : string {
+	public static function add_query_params( $url, array $query_params = array() ): string {
 		$url = ltrim( $url, '/' );
 
 		if ( ! empty( $query_params ) ) {
@@ -85,7 +127,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function remove_query_params( $url, array $query_params = array() ) : string {
+	public static function remove_query_params( $url, array $query_params = array() ): string {
 		return remove_query_arg( $query_params, $url );
 	}
 
@@ -98,7 +140,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function back( $fallback = '' ) : string {
+	public static function back( $fallback = '' ): string {
 		$back_url = wp_get_referer();
 		if ( empty( $back_url ) ) {
 			$back_url = empty( $fallback ) ? self::current() : $fallback;
@@ -106,4 +148,3 @@ class UrlHelper {
 		return $back_url;
 	}
 }
-
