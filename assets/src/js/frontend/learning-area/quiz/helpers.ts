@@ -95,7 +95,99 @@ export const revealQuestionWithAnswers = (wrapper: HTMLElement, revealAnswerIds:
   question.setAttribute(QUIZ_REVEAL_CONFIG.DATA_REVEALED_ATTR, '1');
 };
 
-export const getAttemptedQuestionCount = (values: Record<string, unknown>): number => {
+const hasRenderableAnswerValue = (value: unknown): boolean => {
+  if (value === '' || value === null || value === undefined) {
+    return false;
+  }
+
+  if (Array.isArray(value) && value.length === 0) {
+    return false;
+  }
+
+  return true;
+};
+
+const isScaleFieldName = (formId: string, fieldName: string): boolean => {
+  if (!formId || !fieldName || typeof document === 'undefined') {
+    return false;
+  }
+
+  const formElement = document.getElementById(formId);
+  if (!formElement) {
+    return false;
+  }
+
+  const escapedName =
+    typeof CSS !== 'undefined' && typeof CSS.escape === 'function' ? CSS.escape(fieldName) : fieldName;
+  const fieldElements = Array.from(formElement.querySelectorAll<HTMLElement>(`[name="${escapedName}"]`));
+
+  if (!fieldElements.length) {
+    return false;
+  }
+
+  return fieldElements.some(
+    (element) => element.closest('.tutor-quiz-question')?.getAttribute('data-question') === 'scale',
+  );
+};
+
+const scaleInteractionByForm = new Map<
+  string,
+  {
+    initialValueByField: Record<string, string>;
+    interactedByField: Record<string, boolean>;
+  }
+>();
+
+const getScaleInteractionState = (formId: string) => {
+  const existing = scaleInteractionByForm.get(formId);
+  if (existing) {
+    return existing;
+  }
+
+  const initialState = {
+    initialValueByField: {} as Record<string, string>,
+    interactedByField: {} as Record<string, boolean>,
+  };
+
+  scaleInteractionByForm.set(formId, initialState);
+  return initialState;
+};
+
+export const hasAttemptedFieldValue = ({
+  formId,
+  fieldName,
+  value,
+}: {
+  formId?: string;
+  fieldName: string;
+  value: unknown;
+}): boolean => {
+  if (!hasRenderableAnswerValue(value)) {
+    return false;
+  }
+
+  // Scale questions can have prefilled defaults; count only after at least one value change.
+  if (formId && isScaleFieldName(formId, fieldName)) {
+    const state = getScaleInteractionState(formId);
+    const currentValue = String(value);
+
+    if (!(fieldName in state.initialValueByField)) {
+      state.initialValueByField[fieldName] = currentValue;
+      state.interactedByField[fieldName] = false;
+      return false;
+    }
+
+    if (!state.interactedByField[fieldName] && state.initialValueByField[fieldName] !== currentValue) {
+      state.interactedByField[fieldName] = true;
+    }
+
+    return state.interactedByField[fieldName];
+  }
+
+  return true;
+};
+
+export const getAttemptedQuestionCount = (values: Record<string, unknown>, options?: { formId?: string }): number => {
   const questionIdsEntry = Object.entries(values).find(([key]) => key.includes('[quiz_question_ids]'));
   if (!questionIdsEntry) {
     return 0;
@@ -110,13 +202,12 @@ export const getAttemptedQuestionCount = (values: Record<string, unknown>): numb
       if (!key.includes(needle)) {
         return false;
       }
-      if (val === '' || val === null || val === undefined) {
-        return false;
-      }
-      if (Array.isArray(val) && val.length === 0) {
-        return false;
-      }
-      return true;
+
+      return hasAttemptedFieldValue({
+        formId: options?.formId,
+        fieldName: key,
+        value: val,
+      });
     });
 
     if (hasAnswer) {
@@ -133,6 +224,7 @@ export const getAttemptedQuestionCountFromForm = (formId: string): number => {
     return 0;
   }
 
-  const values = form.getFormState(formId).values ?? {};
-  return getAttemptedQuestionCount(values);
+  const formState = form.getFormState(formId);
+  const values = formState.values ?? {};
+  return getAttemptedQuestionCount(values, { formId });
 };

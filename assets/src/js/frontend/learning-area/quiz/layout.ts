@@ -2,7 +2,7 @@ import type { AlpineComponentMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
 
 import { QUIZ_LAYOUT_KEYS, QUIZ_LAYOUT_SELECTORS, QUIZ_REVEAL_CONFIG, QuizLayoutType } from './constants';
-import { revealQuestionWithAnswers } from './helpers';
+import { hasAttemptedFieldValue, revealQuestionWithAnswers } from './helpers';
 
 export interface QuizLayoutConfig {
   layout: (typeof QuizLayoutType)[keyof typeof QuizLayoutType];
@@ -72,24 +72,12 @@ const quizLayout = (config: QuizLayoutConfig) => {
       return wrapper.dataset.answerRequired !== '1';
     },
 
-    hasAttemptedValue(value: unknown): boolean {
-      if (value === null || value === undefined) {
-        return false;
-      }
-
-      if (typeof value === 'string') {
-        return value.trim().length > 0;
-      }
-
-      if (Array.isArray(value)) {
-        return value.some((item) => this.hasAttemptedValue(item));
-      }
-
-      if (typeof value === 'object') {
-        return Object.values(value as Record<string, unknown>).some((item) => this.hasAttemptedValue(item));
-      }
-
-      return true;
+    hasAttemptedValue(fieldName: string, value: unknown): boolean {
+      return hasAttemptedFieldValue({
+        formId: this.formId,
+        fieldName,
+        value,
+      });
     },
 
     isQuestionAttempted(index: number): boolean {
@@ -97,14 +85,15 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return false;
       }
 
-      const values = form.getFormState(this.formId).values ?? {};
+      const formState = form.getFormState(this.formId);
+      const values = formState.values ?? {};
       const fieldNames = this.getQuestionFieldNames(values, index);
 
       if (!fieldNames.length) {
         return false;
       }
 
-      return fieldNames.some((fieldName) => this.hasAttemptedValue(values[fieldName]));
+      return fieldNames.some((fieldName) => this.hasAttemptedValue(fieldName, values[fieldName]));
     },
 
     shouldDisableNextButton(): boolean {

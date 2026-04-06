@@ -114,24 +114,28 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
 
   const [config, setConfig] = useState<ScaleConfig>(scaleData.config);
 
+  const validateScaleRange = useCallback(
+    (nextConfig: ScaleConfig) => {
+      if (nextConfig.max <= nextConfig.min) {
+        setValidationError?.({
+          message: scaleRangeErrorMessage,
+          type: 'question',
+        });
+      } else {
+        clearScaleRangeValidationError(setValidationError);
+      }
+    },
+    [setValidationError],
+  );
+
   useEffect(() => {
     const parsed = parseStoredScaleData(option?.answer_two_gap_match ?? '');
     if (parsed) {
       setScaleData(parsed);
       setConfig(parsed.config);
+      validateScaleRange(parsed.config);
     }
-  }, [option?.answer_two_gap_match]);
-
-  useEffect(() => {
-    if (config.max <= config.min) {
-      setValidationError?.({
-        message: scaleRangeErrorMessage,
-        type: 'question',
-      });
-    } else {
-      clearScaleRangeValidationError(setValidationError);
-    }
-  }, [config.min, config.max, setValidationError]);
+  }, [option?.answer_two_gap_match, validateScaleRange]);
 
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
@@ -160,6 +164,7 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
   const handleConfigChange = useCallback(
     (fieldKey: keyof ScaleConfig, value: number) => {
       const newConfig = { ...config, [fieldKey]: value };
+      validateScaleRange(newConfig);
       setConfig(newConfig);
 
       const newScaleData = {
@@ -170,7 +175,7 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
       setScaleData(newScaleData);
       saveScaleData(newScaleData);
     },
-    [config, scaleData, saveScaleData],
+    [config, scaleData, saveScaleData, validateScaleRange],
   );
 
   const handleValueChange = useCallback(
