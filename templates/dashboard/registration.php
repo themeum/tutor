@@ -99,10 +99,10 @@ use TUTOR\Icon;
 							@click="show = !show"
 						>
 							<template x-if="!show">
-								<?php SvgIcon::make()->name( \TUTOR\Icon::EYE )->size( 20 )->render(); ?>
+								<?php SvgIcon::make()->name( Icon::EYE )->size( 20 )->render(); ?>
 							</template>
 							<template x-if="show">
-								<?php SvgIcon::make()->name( \TUTOR\Icon::EYE_OFF )->size( 20 )->render(); ?>
+								<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
 							</template>
 						</span>
 						<input 
@@ -114,7 +114,6 @@ use TUTOR\Icon;
 							placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" 
 							required 
 							autocomplete="new-password" 
-							style="margin-bottom: 0; padding-right: 45px;"
 						>
 					</div>
 				</div>
@@ -154,8 +153,9 @@ use TUTOR\Icon;
 				$tutor_toc_page_link = tutor_utils()->get_toc_page_link();
 			?>
 			<?php if ( null !== $tutor_toc_page_link ) : ?>
-				<div class="tutor-mb-24">
-					<?php esc_html_e( 'By signing up, I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
+				<div class="tutor-small tutor-mb-6">
+					<?php esc_html_e( 'By signing up, I agree with the website\'s', 'tutor' ); ?> 
+					<a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
 				</div>
 			<?php endif; ?>
 

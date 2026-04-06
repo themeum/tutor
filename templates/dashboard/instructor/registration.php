@@ -44,7 +44,7 @@ use TUTOR\Icon;
 			<input type="hidden" value="tutor_register_instructor" name="tutor_action"/>
 
 			<?php
-			$errors = apply_filters( 'tutor_instructor_register_validation_errors', array() );//phpcs:ignore
+			$errors = apply_filters( 'tutor_instructor_register_validation_errors', array() ); //phpcs:ignore
 			if ( is_array( $errors ) && count( $errors ) ) {
 				echo '<div class="tutor-alert tutor-warning tutor-mb-5" style="border: 1px solid var(--tutor-text-critical)"><ul class="tutor-required-fields tutor-p-none">';
 				foreach ( $errors as $error_key => $error_value ) {
@@ -100,7 +100,6 @@ use TUTOR\Icon;
 							placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" 
 							required 
 							autocomplete="new-password"
-							style="padding-right: 45px; margin-bottom: 0;"
 						>
 					</div>
 				</div>
@@ -139,7 +138,7 @@ use TUTOR\Icon;
 			?>
 
 			<?php if ( null !== $tutor_toc_page_link ) : ?>
-				<div class="tutor-mb-24">
+				<div class="tutor-small tutor-mb-6">
 					<?php esc_html_e( 'By signing up, I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_attr_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
 				</div>
 			<?php endif; ?>
