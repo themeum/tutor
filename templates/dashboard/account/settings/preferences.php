@@ -59,14 +59,13 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 			</div>
 		</div>
 		<?php
-		$reset_modal_illustration = tutor_utils()->is_kids_mode() ? UrlHelper::asset( 'images/illustrations/kids-reset-preference.svg' ) : UrlHelper::asset( 'images/illustrations/reset-preference.svg' );
 		ConfirmationModal::make()
 			->id( $reset_modal_id )
 			->title( __( 'Reset your Preferences?', 'tutor' ) )
 			->message( __( 'This will reset your learning preferences to the default settings. Your progress and account data won’t be affected.', 'tutor' ) )
 			->cancel_text( __( 'Cancel', 'tutor' ) )
 			->confirm_text( __( 'Reset Preferences', 'tutor' ) )
-			->icon( $reset_modal_illustration )
+			->icon( UrlHelper::themed_asset( 'images/illustrations/reset-preference.webp' ) )
 			->confirm_handler( "handleResetPreferences('" . esc_js( $form_id ) . "','" . esc_js( $reset_modal_id ) . "')" )
 			->mutation_state( 'resetPreferencesMutation' )
 			->render();
@@ -139,7 +138,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">
 					<div class="tutor-preferences-setting-icon">
-						<?php SvgIcon::make()->name( Icon::LEARNING_MOOD )->size( 20 )->render(); ?>
+						<?php SvgIcon::make()->name( Icon::INTERFACE )->size( 20 )->render(); ?>
 					</div>
 					<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Learning Mode', 'tutor' ); ?></span>
 				</div>

@@ -71,8 +71,8 @@ class Dashboard {
 		$pages = array(
 			'profile' => array(
 				'title'       => esc_html__( 'Profile', 'tutor' ),
-				'icon'        => Icon::PROFILE_CIRCLE,
-				'icon_active' => Icon::PROFILE_CIRCLE_FILL,
+				'icon'        => Icon::USER_CIRCLE,
+				'icon_active' => Icon::USER_CIRCLE_FILL,
 				'url'         => self::get_account_page_url( 'profile' ),
 				'template'    => tutor_get_template( 'dashboard.account.profile' ),
 			),

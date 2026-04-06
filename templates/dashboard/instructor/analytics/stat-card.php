@@ -50,7 +50,7 @@ if ( ! empty( $hover_content ) ) {
 }
 
 ?>
-<div class="tutor-card tutor-stat-card tutor-stat-card-<?php echo esc_attr( $variation ); ?>">
+<div class="tutor-stat-card tutor-stat-card-<?php echo esc_attr( $variation ); ?>">
 	<div class="tutor-stat-card-header">
 		<div class="tutor-stat-card-title">
 			<?php echo esc_html( $card_title ); ?>

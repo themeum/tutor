@@ -171,7 +171,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								$current_mode = User::get_current_view_mode();
 								$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'View as student', 'tutor' ) : esc_html__( 'View as instructor', 'tutor' );
 							?>
-							<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
+							<div class="tutor-w-full tutor-sm-px-7">
 								<?php
 								Button::make()
 								->label( $button_label )

@@ -21,21 +21,24 @@ global $tutor_is_started_quiz;
 global $post;
 
 $default_question = array(
-	'index'                => 1,
-	'question_id'          => 0,
-	'question_title'       => '',
-	'question_description' => '',
-	'question_type'        => 'true_false',
-	'answer_required'      => true,
-	'question_mark'        => 10,
-	'answer_explanation'   => '',
-	'question_settings'    => array(
+	'index'                       => 1,
+	'question_id'                 => 0,
+	'question_title'              => '',
+	'question_description'        => '',
+	'question_type'               => 'true_false',
+	'answer_required'             => true,
+	'question_mark'               => 10,
+	'answer_explanation'          => '',
+	'question_settings'           => array(
 		'answer_required'    => '0',
+		'is_image_matching'  => '0',
 		'question_mark'      => '1',
 		'question_type'      => 'true_false',
 		'randomize_question' => '1',
 		'show_question_mark' => '1',
 	),
+	'question_answers'            => array(),
+	'question_randomized_answers' => array(),
 );
 
 $quiz_id            = $tutor_is_started_quiz->quiz_id ?? 0;

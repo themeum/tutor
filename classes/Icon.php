@@ -46,6 +46,7 @@ final class Icon {
 	const ATTACH                     = 'attach';
 	const ATTACHMENT_LINE            = 'attachment-line';
 	const AUDIO                      = 'audio';
+	const AUDIENCE                   = 'audience';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
 	const BADGE                      = 'badge';
@@ -67,6 +68,7 @@ final class Icon {
 	const BULB_LINE                  = 'bulb-line';
 	const BUNDLE                     = 'bundle';
 	const BUY_GET_TYPE               = 'buy-get-type';
+	const CATEGORIES                 = 'categories';
 	const CALENDAR                   = 'calendar';
 	const CALENDAR_2                 = 'calendar-2';
 	const CALENDAR_2_FILL            = 'calendar-2-fill';
@@ -196,8 +198,10 @@ final class Icon {
 	const GOOGLE_MEET                = 'google-meet';
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
 	const GRAB_HANDLE                = 'grab-handle';
+	const GRADEBOOK                  = 'gradebook';
 	const GUTENBERG_COLORIZED        = 'gutenberg-colorized';
 	const HAND_COIN                  = 'hand-coin';
+	const HAND_SWIPE_RIGHT           = 'hand-swipe-right';
 	const HAPPY                      = 'happy';
 	const HEART                      = 'heart';
 	const HIGHLIGHTER                = 'highlighter';
@@ -217,6 +221,7 @@ final class Icon {
 	const INFO_OCTAGON               = 'info-octagon';
 	const INSTRUCTOR                 = 'instructor';
 	const INTERACTIVE_QUIZ           = 'interactive-quiz';
+	const INTERFACE                  = 'interface';
 	const IOS_PHONE                  = 'ios-phone';
 	const IPAD_TABLET                = 'ipad-tablet';
 	const ISO                        = 'iso';
@@ -228,7 +233,6 @@ final class Icon {
 	const LANDSCAPE                  = 'landscape';
 	const LANDSCAPE_FILLED           = 'landscape-filled';
 	const LEAGUE                     = 'league';
-	const LEARNING_MOOD              = 'learning-mood';
 	const LEFT                       = 'left';
 	const LESSON                     = 'lesson';
 	const LESSON_COMPLETED           = 'lesson-completed';
@@ -296,14 +300,11 @@ final class Icon {
 	const PORTRAIT                   = 'portrait';
 	const PORTRAIT_FILLED            = 'portrait-filled';
 	const PPT                        = 'ppt';
-	const PREFERENCE                 = 'preference';
 	const PREVIEW                    = 'preview';
 	const PRICE_TAG                  = 'price-tag';
 	const PRIME_CHECK_CIRCLE         = 'prime-check-circle';
 	const PRINTER                    = 'printer';
 	const PROFILE                    = 'profile';
-	const PROFILE_CIRCLE             = 'profile-circle';
-	const PROFILE_CIRCLE_FILL        = 'profile-circle-fill';
 	const PROGRESS                   = 'progress';
 	const PSD                        = 'psd';
 	const PUBLISH                    = 'publish';
@@ -320,10 +321,13 @@ final class Icon {
 	const QUIZ_H5P                   = 'quiz-h5p';
 	const QUIZ_IMAGE_ANSWER          = 'quiz-image-answer';
 	const QUIZ_IMAGE_MATCHING        = 'quiz-image-matching';
+	const QUIZ_MARK_IN_THE_IMAGE     = 'quiz-mark-in-the-image';
 	const QUIZ_MULTI_CHOICE          = 'quiz-multi-choice';
 	const QUIZ_NUMBER                = 'quiz-number';
 	const QUIZ_ORDERING              = 'quiz-ordering';
+	const QUIZ_PIN                   = 'quiz-pin';
 	const QUIZ_RADIO                 = 'quiz-radio';
+	const QUIZ_RANGE                 = 'quiz-range';
 	const QUIZ_SHAPE                 = 'quiz-shape';
 	const QUIZ_SHORT_ANSWER          = 'quiz-short-answer';
 	const QUIZ_TRUE_FALSE            = 'quiz-true-false';
@@ -338,6 +342,7 @@ final class Icon {
 	const RELOAD_4                   = 'reload-4';
 	const REMOVE_IMAGE               = 'remove-image';
 	const REPORT                     = 'report';
+	const REQUIREMENTS               = 'requirements';
 	const RESOURCES                  = 'resources';
 	const ROTATE                     = 'rotate';
 	const RTF                        = 'rtf';
@@ -383,6 +388,7 @@ final class Icon {
 	const SUBSCRIPTION               = 'subscription';
 	const SUBTITLE                   = 'subtitle';
 	const SVG                        = 'svg';
+	const TAG                        = 'tag';
 	const TAG_OUTLINE                = 'tag-outline';
 	const TEXT                       = 'text';
 	const TEXT_FIELD_EXPAND          = 'text-field-expand';
@@ -407,6 +413,7 @@ final class Icon {
 	const UPLOAD_FILE                = 'upload-file';
 	const USER                       = 'user';
 	const USER_CIRCLE                = 'user-circle';
+	const USER_CIRCLE_FILL           = 'user-circle-fill';
 	const VIDEO                      = 'video';
 	const VIDEO_CAMERA               = 'video-camera';
 	const VIDEO_CAMERA_2             = 'video-camera-2';

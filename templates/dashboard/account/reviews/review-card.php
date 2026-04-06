@@ -98,11 +98,16 @@ $delete_modal_id = 'review-delete-modal';
 			<!-- Actions and Rating -->
 			<div class="tutor-review-rating-wrapper">
 				<!-- Rating -->
+				<div class="tutor-flex tutor-items-center tutor-gap-5">
 					<?php
-						StarRating::make()
-							->rating( $review['rating'] ?? 0 )
-							->render();
+					StarRating::make()->rating( (float) ( $review['rating'] ?? 0 ) )->render();
+
+					// Show pending badge for on hold reviews.
+					if ( 'hold' === $review['comment_status'] ) {
+						Badge::make()->label( __( 'Pending', 'tutor' ) )->variant( Badge::WARNING )->render();
+					}
 					?>
+				</div>
 
 				<!-- Actions -->
 				<?php if ( $review['is_editable'] ) : ?>

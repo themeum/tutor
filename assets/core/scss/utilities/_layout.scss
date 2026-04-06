@@ -309,6 +309,49 @@ $overflow-types: auto, hidden, visible, scroll;
 }
 
 // ------------------------
+// Aspect ratio utility
+// ------------------------
+.tutor-ratio {
+	content: ' ';
+	position: relative;
+	width: 100%;
+	display: block;
+
+	&-16x9 {
+		padding-top: 56.25%;
+	}
+
+	&-4x3 {
+		padding-top: 75%;
+	}
+
+	&-3x2 {
+		padding-top: 66.66%;
+	}
+
+	&-3x1 {
+		padding-top: 33.33%;
+	}
+
+	&-1x1 {
+		padding-top: 100%;
+	}
+
+	> * {
+		position: absolute !important;
+		top: 0 !important;
+		left: 0 !important;
+		width: 100% !important;
+		height: 100% !important;
+	}
+
+	> img {
+		object-fit: cover;
+		object-position: center;
+	}
+}
+
+// ------------------------
 // Responsive Utilities
 // ------------------------
 
