@@ -10,7 +10,7 @@
   height: 146px;
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
-  cursor: pointer;
+  background-color: $tutor-surface-l1;
   @include tutor-transition(background-color);
 
   &:hover {
@@ -93,6 +93,7 @@
   }
 
 	&-time-spent {
+    cursor: pointer;
 		.tutor-stat-card-icon {
 			color: $tutor-text-exception4;
 		}
