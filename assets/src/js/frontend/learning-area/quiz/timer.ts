@@ -44,6 +44,15 @@ const quizTimer = (config: QuizTimerConfig) => {
         return;
       }
 
+      document.addEventListener(TUTOR_CUSTOM_EVENTS.QUIZ_ATTEMPT_COMPLETED, ((event: Event) => {
+        const detail = (event as CustomEvent)?.detail ?? {};
+        if (detail?.formId && detail.formId !== this.formId) {
+          return;
+        }
+
+        this.stop();
+      }) as EventListener);
+
       if (this.remaining <= 0) {
         this.handleExpire();
         return;
