@@ -12,8 +12,12 @@
     @include tutor-flex-center;
     max-height: 200px;
     height: 100%;
-    background-color: $tutor-surface-brand-tertiary;
+    background-color: $tutor-surface-l1-hover;
     border-radius: $tutor-radius-lg;
+
+    img {
+      max-height: 200px;
+    }
   }
 
   &-title {
