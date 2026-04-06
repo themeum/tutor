@@ -18,7 +18,8 @@
   .tutor-course-info-table,
   .tutor-webinar-card,
   .tutor-course-announcements,
-  .tutor-learning-area-resources .tutor-resources-wrapper {
+  .tutor-learning-area-resources .tutor-resources-wrapper,
+  .tutor-dashboard-header-user-popover {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
   }
 
@@ -29,7 +30,7 @@
   .tutor-assignment-feedback,
   .tutor-pro-certificate-preview-wrapper,
   .tutor-learning-sidebar .tutor-learning-sidebar-pages,
-  .tutor-learning-sidebar .tutor-learning-sidebar-curriculum {
+  .tutor-learning-sidebar .tutor-learning-sidebar-curriculum , .tutor-dashboard-header-user-popover-profile{
     border-radius: $tutor-radius-5xl;
   }
 

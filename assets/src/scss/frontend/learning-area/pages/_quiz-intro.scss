@@ -10,8 +10,7 @@
 
   &-icon {
     @include tutor-flex-center;
-    max-height: 200px;
-    height: 100%;
+    height: 200px;
     background-color: $tutor-surface-l1-hover;
     border-radius: $tutor-radius-lg;
 
