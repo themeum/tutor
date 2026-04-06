@@ -46,6 +46,7 @@ final class Icon {
 	const ATTACH                     = 'attach';
 	const ATTACHMENT_LINE            = 'attachment-line';
 	const AUDIO                      = 'audio';
+	const AUDIENCE                   = 'audience';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
 	const BADGE                      = 'badge';
@@ -67,6 +68,7 @@ final class Icon {
 	const BULB_LINE                  = 'bulb-line';
 	const BUNDLE                     = 'bundle';
 	const BUY_GET_TYPE               = 'buy-get-type';
+	const CATEGORIES                 = 'categories';
 	const CALENDAR                   = 'calendar';
 	const CALENDAR_2                 = 'calendar-2';
 	const CALENDAR_2_FILL            = 'calendar-2-fill';
@@ -340,6 +342,7 @@ final class Icon {
 	const RELOAD_4                   = 'reload-4';
 	const REMOVE_IMAGE               = 'remove-image';
 	const REPORT                     = 'report';
+	const REQUIREMENTS               = 'requirements';
 	const RESOURCES                  = 'resources';
 	const ROTATE                     = 'rotate';
 	const RTF                        = 'rtf';
@@ -385,6 +388,7 @@ final class Icon {
 	const SUBSCRIPTION               = 'subscription';
 	const SUBTITLE                   = 'subtitle';
 	const SVG                        = 'svg';
+	const TAG                        = 'tag';
 	const TAG_OUTLINE                = 'tag-outline';
 	const TEXT                       = 'text';
 	const TEXT_FIELD_EXPAND          = 'text-field-expand';
