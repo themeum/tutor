@@ -11,22 +11,30 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
+use Tutor\Components\Badge;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\StarRating;
-use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
+use TUTOR\Icon;
 
 // Globals inherited from learning-area/index.php template.
 global $tutor_course_id,
 $tutor_course,
 $current_user_id;
 
-$course_thumbnail   = get_tutor_course_thumbnail_src( 'full', $tutor_course_id );
-$course_author      = get_user( $tutor_course->post_author );
-$course_benefits    = tutor_course_benefits( $tutor_course_id );
-$instructors        = tutor_utils()->get_instructors_by_course( $tutor_course_id );
-$course_rating      = tutor_utils()->get_course_rating( $tutor_course_id );
-$course_materials   = tutor_course_material_includes( $tutor_course_id );
-$course_attachments = tutor_utils()->get_attachments( $tutor_course_id );
+$course_thumbnail       = get_tutor_course_thumbnail_src( 'full', $tutor_course_id );
+$course_author          = get_user( $tutor_course->post_author );
+$course_benefits        = tutor_course_benefits( $tutor_course_id );
+$instructors            = tutor_utils()->get_instructors_by_course( $tutor_course_id );
+$course_rating          = tutor_utils()->get_course_rating( $tutor_course_id );
+$course_materials       = tutor_course_material_includes( $tutor_course_id );
+$course_attachments     = tutor_utils()->get_attachments( $tutor_course_id );
+$course_tags            = get_tutor_course_tags( $tutor_course_id );
+$course_categories      = get_tutor_course_categories( $tutor_course_id );
+$category_list          = ! empty( $course_categories ) && is_array( $course_categories )
+						? implode( ', ', array_column( $course_categories, 'name' ) ) : '';
+$course_requirements    = tutor_course_requirements( $tutor_course_id );
+$course_target_audience = tutor_course_target_audience( $tutor_course_id );
 
 ob_start();
 foreach ( $instructors as $key => $instructor ) {
@@ -58,64 +66,101 @@ $default_meta = array(
 	),
 );
 
-if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) {
-	$default_meta[] = array(
-		'icon'    => Icon::PASSED,
-		'title'   => __( 'Total Enrolled', 'tutor' ),
-		'content' => sprintf(
-			// translators: %s is the total enrolled users count.
-			_n( '%s Student', '%s Students', tutor_utils()->count_enrolled_users_by_course(), 'tutor' ),
-			tutor_utils()->count_enrolled_users_by_course()
-		),
+// Helper function to add meta to the default meta array.
+$add_meta = function ( string $icon, string $title, string $content ) use ( &$default_meta ) {
+	if ( ! empty( $content ) ) {
+		$default_meta[] = array(
+			'icon'    => $icon,
+			'title'   => $title,
+			'content' => $content,
+		);
+	}
+};
+
+// Helper function to render list content.
+$render_list = function ( $items ) {
+	$list = implode(
+		'',
+		array_map(
+			fn( $item ) => '<li>' . esc_html( $item ) . '</li>',
+			$items
+		)
 	);
+	return "<ul>{$list}</ul>";
+};
+
+// Course categories.
+if ( ! empty( $category_list ) ) {
+	$add_meta( Icon::CATEGORIES, __( 'Categories', 'tutor' ), $category_list );
+}
+
+if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) {
+
+	$course_enrolled_count = sprintf(
+		// translators: %s is the total enrolled users count.
+		_n( '%s Student', '%s Students', tutor_utils()->count_enrolled_users_by_course(), 'tutor' ),
+		tutor_utils()->count_enrolled_users_by_course()
+	);
+
+	$add_meta( Icon::PASSED, __( 'Total Enrolled', 'tutor' ), $course_enrolled_count );
 }
 
 if ( tutor_utils()->get_option( 'enable_course_level', true, true ) ) {
-	$default_meta[] = array(
-		'icon'    => Icon::LEVEL,
-		'title'   => __( 'Level', 'tutor' ),
-		'content' => get_tutor_course_level( $tutor_course_id ),
-	);
+	$add_meta( Icon::LEVEL, __( 'Level', 'tutor' ), get_tutor_course_level( $tutor_course_id ) );
 }
 
 if ( tutor_utils()->get_option( 'enable_course_duration', true, true ) ) {
-	$default_meta[] = array(
-		'icon'    => Icon::TIME,
-		'title'   => __( 'Duration', 'tutor' ),
-		'content' => get_tutor_course_duration_context( $tutor_course_id ),
-	);
+	$add_meta( Icon::TIME, __( 'Duration', 'tutor' ), get_tutor_course_duration_context( $tutor_course_id ) );
 }
 
-$default_meta[] = array(
-	'icon'    => Icon::RATINGS,
-	'title'   => __( 'Student Ratings', 'tutor' ),
-	'content' => StarRating::make()->count( $course_rating->rating_count )->rating( $course_rating->rating_avg )->show_average( true )->get(),
-);
+// Ratings.
+$rating_content = StarRating::make()->count( $course_rating->rating_count )->rating( $course_rating->rating_avg )->show_average( true )->get();
+$add_meta( Icon::RATINGS, __( 'Student Ratings', 'tutor' ), $rating_content );
 
-$default_meta[] = array(
-	'icon'    => Icon::RESOURCES,
-	'title'   => __( 'Resources', 'tutor' ),
-	'content' => sprintf(
-		// translators: %s is the total attachments count.
-		_n( '%s File', '%s Files', count( $course_attachments ), 'tutor' ),
-		count( $course_attachments )
-	),
+// Resources.
+$resource_content = sprintf(
+	// translators: %s is the total attachments count.
+	_n( '%s File', '%s Files', count( $course_attachments ), 'tutor' ),
+	count( $course_attachments )
 );
+$add_meta( Icon::RESOURCES, __( 'Resources', 'tutor' ), $resource_content );
 
+// Course Tags Contents.
 ob_start();
-?>
-<ul>
-	<?php foreach ( $course_materials as $material ) : ?>
-		<li><?php echo esc_html( $material ); ?></li>
-	<?php endforeach; ?>
-</ul>
-<?php
-$course_materials_content = ob_get_clean();
-$default_meta[]           = array(
-	'icon'    => Icon::MATERIAL,
-	'title'   => __( 'Materials', 'tutor' ),
-	'content' => $course_materials_content,
-);
+if ( ! empty( $course_tags ) && is_array( $course_tags ) ) {
+	?>
+	<div class="tutor-flex tutor-items-start tutor-gap-3">
+		<?php
+		foreach ( $course_tags as $key => $tags ) {
+			Badge::make()
+			->label( $tags->name )
+			->variant( Variant::SECONDARY )
+			->render();
+		}
+		?>
+	</div>
+	<?php
+}
+$course_tag_contents = ob_get_clean();
+
+if ( ! empty( $course_tag_contents ) ) {
+	$add_meta( Icon::TAG, __( 'Tags', 'tutor' ), $course_tag_contents );
+}
+
+// Course materials.
+if ( ! empty( $course_materials ) && is_array( $course_materials ) ) {
+	$add_meta( Icon::MATERIAL, __( 'Materials', 'tutor' ), $render_list( $course_materials ) );
+}
+
+// Course Requirements.
+if ( ! empty( $course_requirements ) && is_array( $course_requirements ) ) {
+	$add_meta( Icon::REQUIREMENTS, __( 'Requirements', 'tutor' ), $render_list( $course_requirements ) );
+}
+
+// Course Target Audience.
+if ( ! empty( $course_target_audience ) && is_array( $course_target_audience ) ) {
+	$add_meta( Icon::AUDIENCE, __( 'Audience', 'tutor' ), $render_list( $course_target_audience ) );
+}
 
 $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_meta, $tutor_course_id );
 ?>
