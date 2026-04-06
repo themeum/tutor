@@ -21,7 +21,9 @@
   .tutor-learning-area-resources .tutor-resources-wrapper,
   .tutor-dashboard-header-user-popover,
   .tutor-content-drip-card,
-  .tutor-dashboard-notification .tutor-popover {
+  .tutor-dashboard-notification .tutor-popover,
+  .tutor-profile-settings-tab.tutor-tabs-nav,
+  .tutor-devices {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
   }
 
