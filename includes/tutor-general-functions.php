@@ -1996,3 +1996,53 @@ if ( ! function_exists( 'tutor_decode_unicode_sequences' ) ) {
 		return $str;
 	}
 }
+
+if ( ! function_exists( 'tutor_price_allowed_html' ) ) {
+
+	/**
+	 * Get the allowed HTML tags for price formatting.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array Allowed HTML tags and their attributes for price output.
+	 */
+	function tutor_price_allowed_html() {
+
+		if ( 'edd' === tutor_utils()->get_option( 'monetize_by' ) && function_exists( 'edd_get_allowed_tags' ) ) {
+			return edd_get_allowed_tags();
+		}
+
+		return array(
+			'span'   => array(
+				'class'       => true,
+				'id'          => true,
+				'style'       => true,
+				'aria-hidden' => true,
+			),
+			'del'    => array(
+				'class' => true,
+			),
+			'ins'    => array(
+				'class' => true,
+			),
+			'bdi'    => array(
+				'class' => true,
+			),
+			'small'  => array(
+				'class' => true,
+			),
+			'strong' => array(
+				'class' => true,
+			),
+			'em'     => array(
+				'class' => true,
+			),
+			'sup'    => array(
+				'class' => true,
+			),
+			'sub'    => array(
+				'class' => true,
+			),
+		);
+	}
+}

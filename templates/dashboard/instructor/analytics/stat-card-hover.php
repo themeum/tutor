@@ -41,7 +41,7 @@ $previous_end_date   = $hover_content['previous_end_date'] ?? '';
 			</div>
 			<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-justify-between tutor-mt-5">
 				<span class="tutor-font-semibold tutor-text-primary tutor-tiny">
-					<?php echo wp_kses_post( $hover_amount ); ?>
+					<?php echo wp_kses( $hover_amount, tutor_price_allowed_html() ); ?>
 				</span>
 				<span class="stat-hover-trigger <?php echo esc_attr( $hover_content['class'] ?? '' ); ?>">
 					<?php echo esc_html( $hover_content['percentage'] ); ?>

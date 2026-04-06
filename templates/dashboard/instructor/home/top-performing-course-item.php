@@ -36,7 +36,7 @@ use Tutor\Components\SvgIcon;
 			</div>
 
 			<div class="tutor-tiny tutor-font-semibold">
-				<?php echo wp_kses_post( $item['revenue'] ); ?>
+				<?php echo wp_kses( $item['revenue'], tutor_price_allowed_html() ); ?>
 			</div>
 		</div>
 

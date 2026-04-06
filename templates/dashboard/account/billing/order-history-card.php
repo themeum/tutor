@@ -53,7 +53,7 @@ $pay_link = OrderModel::get_order_history_pay_link( $order );
 
 	<div class="tutor-billing-card-right">
 		<div class="tutor-billing-card-amount">
-			<?php echo wp_kses_post( tutor_get_formatted_price( $order->total_price ) ); ?>
+			<?php echo wp_kses( tutor_get_formatted_price( $order->total_price ), tutor_price_allowed_html() ); ?>
 		</div>
 
 		<?php
