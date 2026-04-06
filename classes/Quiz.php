@@ -14,6 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\Button;
+use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Modal;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\Table;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
@@ -61,6 +67,13 @@ class Quiz {
 	 * @since 4.0.0
 	 */
 	const QUIZ_FEEDBACK_MODE_DEFAULT = 'default';
+
+	/**
+	 * URL Query param
+	 *
+	 * @since 4.0.0
+	 */
+	const ACTION_VIEW_DETAILS = 'view_details';
 
 	/**
 	 * Allowed attrs
@@ -122,6 +135,7 @@ class Quiz {
 		 * Instructor quiz review and feedback Ajax API.
 		 */
 		add_action( 'wp_ajax_review_quiz_answer', array( $this, 'review_quiz_answer' ) );
+		add_action( 'wp_ajax_tutor_review_quiz_answers', array( $this, 'review_quiz_answers' ) );
 		add_action( 'wp_ajax_tutor_instructor_feedback', array( $this, 'tutor_instructor_feedback' ) );
 
 		/**
@@ -149,12 +163,52 @@ class Quiz {
 		 */
 		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
 
-
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 
 		// Add quiz title as nav item & render single content on the learning area.
 		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
 		add_action( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
+
+		/**
+		 * Slugs listed in tutor_quiz_templates_not_in_core have no file under wp-content/plugins/tutor/templates/.
+		 * Without this, tutor_load_template() still runs from generic quiz templates and tutor_get_template()
+		 * prints "The file you are trying to load does not exist…". Returning false here exits before that lookup.
+		 * Add-ons ship their own files and load them outside this path (e.g. direct include from the add-on).
+		 *
+		 * @since 4.0.0
+		 */
+		add_filter( 'should_tutor_load_template', array( $this, 'skip_addon_only_question_partials' ), 5, 3 );
+	}
+
+	/**
+	 * Skip loading templates that are not packaged with core Tutor LMS.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool   $load      Whether to load the template.
+	 * @param string $template  Template name in dot notation.
+	 * @param array  $variables Template variables.
+	 *
+	 * @return bool
+	 */
+	public function skip_addon_only_question_partials( $load, $template, $variables ) {
+		$addons_only = apply_filters(
+			'tutor_quiz_templates_not_in_core',
+			array(
+				'learning-area.quiz.questions.draw-image',
+				'learning-area.quiz.questions.pin-image',
+				'shared.components.quiz.attempt-details.questions.draw-image',
+				'shared.components.quiz.attempt-details.questions.pin-image',
+			),
+			$template,
+			$variables
+		);
+
+		if ( in_array( $template, $addons_only, true ) ) {
+			return false;
+		}
+
+		return $load;
 	}
 
 	/**
@@ -190,12 +244,18 @@ class Quiz {
 				'time_value' => 0,
 			),
 			'attempts_allowed'                   => 10,
-			'feedback_mode'                      => 'retry',
+			'answers_reveal_duration'            => 5,
+			'auto_start_delay'                   => 5,
+			'enable_answer_reveal'               => '0',
+			'enable_pagination'                  => '0',
 			'hide_question_number_overview'      => 0,
+			'hide_previous_button'               => '0',
 			'hide_quiz_time_display'             => 0,
+			'limit_attempts_allowed'             => '0',
 			'max_questions_for_answer'           => 10,
 			'open_ended_answer_characters_limit' => 500,
 			'pass_is_required'                   => 0,
+			'pagination_type'                    => 'shape',
 			'passing_grade'                      => 80,
 			'question_layout_view'               => '',
 			'questions_order'                    => 'rand',
@@ -204,6 +264,100 @@ class Quiz {
 		);
 
 		return apply_filters( 'tutor_quiz_default_settings', $settings );
+	}
+
+	/**
+	 * Normalize quiz settings.
+	 *
+	 * V4 stores reveal and pagination as explicit flags, but older quizzes may
+	 * still contain legacy keys.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $settings Quiz settings.
+	 *
+	 * @return array
+	 */
+	public static function normalize_quiz_settings( array $settings ): array {
+		$defaults                   = self::get_default_quiz_settings();
+		$has_enable_pagination      = array_key_exists( 'enable_pagination', $settings );
+		$has_enable_answer_reveal   = array_key_exists( 'enable_answer_reveal', $settings );
+		$has_limit_attempts_allowed = array_key_exists( 'limit_attempts_allowed', $settings );
+
+		$settings = wp_parse_args( $settings, $defaults );
+
+		$settings['time_limit'] = wp_parse_args(
+			is_array( $settings['time_limit'] ?? null ) ? $settings['time_limit'] : array(),
+			$defaults['time_limit']
+		);
+
+		$question_layout_view = (string) ( $settings['question_layout_view'] ?? '' );
+		$question_layout_view = '' !== $question_layout_view ? $question_layout_view : 'single_question';
+
+		$supported_pagination_types = array( 'shape', 'radio', 'number' );
+		$pagination_type            = $settings['pagination_type'] ?? $settings['question_pagination_style'] ?? 'shape';
+		$pagination_type            = in_array( $pagination_type, $supported_pagination_types, true ) ? $pagination_type : 'shape';
+
+		$enable_pagination = $has_enable_pagination
+			? '1' === (string) $settings['enable_pagination']
+			: 'question_pagination' === $question_layout_view;
+
+		$enable_answer_reveal   = $has_enable_answer_reveal
+			? '1' === (string) $settings['enable_answer_reveal']
+			: self::QUIZ_FEEDBACK_MODE_REVEAL === (string) ( $settings['feedback_mode'] ?? '' );
+		$limit_attempts_allowed = $has_limit_attempts_allowed
+			? '1' === (string) $settings['limit_attempts_allowed']
+			: self::QUIZ_FEEDBACK_MODE_RETRY === (string) ( $settings['feedback_mode'] ?? '' );
+
+		if ( 'question_pagination' === $question_layout_view ) {
+			$question_layout_view = 'single_question';
+			$enable_pagination    = true;
+		}
+
+		$settings['question_layout_view']   = $question_layout_view;
+		$settings['enable_pagination']      = $enable_pagination ? '1' : '0';
+		$settings['pagination_type']        = $pagination_type;
+		$settings['enable_answer_reveal']   = $enable_answer_reveal ? '1' : '0';
+		$settings['limit_attempts_allowed'] = $limit_attempts_allowed ? '1' : '0';
+
+		unset( $settings['feedback_mode'], $settings['question_pagination_style'] );
+
+		return apply_filters( 'tutor_quiz_normalized_settings', $settings );
+	}
+
+	/**
+	 * Determine if quiz retry is allowed for the current attempt count.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param mixed $limit_attempts_allowed If attempts are limited.
+	 * @param int   $attempts_allowed Allowed attempts.
+	 * @param int   $attempted_count Attempted count.
+	 *
+	 * @return bool
+	 */
+	public static function can_retry_quiz( $limit_attempts_allowed, int $attempts_allowed, int $attempted_count ): bool {
+		$limit_attempts_allowed = '1' === (string) $limit_attempts_allowed;
+
+		if ( ! $limit_attempts_allowed ) {
+			return false;
+		}
+
+		return 0 === $attempts_allowed || $attempted_count < $attempts_allowed;
+	}
+
+	/**
+	 * Get effective attempt count for quiz display/runtime.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $limit_attempts_allowed If attempts are limited.
+	 * @param int  $attempts_allowed Allowed attempts.
+	 *
+	 * @return int
+	 */
+	public static function get_effective_attempts_allowed( bool $limit_attempts_allowed, int $attempts_allowed ): int {
+		return $limit_attempts_allowed ? $attempts_allowed : 1;
 	}
 
 	/**
@@ -405,8 +559,7 @@ class Quiz {
 
 		$date = date( 'Y-m-d H:i:s', tutor_time() ); //phpcs:ignore
 
-		$tutor_quiz_option = (array) maybe_unserialize( get_post_meta( $quiz_id, 'tutor_quiz_option', true ) );
-		$attempts_allowed  = tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed', 0 );
+		$tutor_quiz_option = (array) tutor_utils()->get_quiz_option( $quiz_id );
 
 		$time_limit         = tutor_utils()->get_quiz_option( $quiz_id, 'time_limit.time_value' );
 		$time_limit_seconds = 0;
@@ -609,12 +762,6 @@ class Quiz {
 					$given_answer          = '';
 
 					if ( 'true_false' === $question_type || 'single_choice' === $question_type ) {
-
-						if ( ! is_numeric( $answers ) || ! $answers ) {
-							wp_send_json_error();
-							exit;
-						}
-
 						$given_answer          = $answers;
 						$is_answer_was_correct = (bool) $wpdb->get_var(
 							$wpdb->prepare(
@@ -686,7 +833,7 @@ class Quiz {
 						/**
 						 * Answers from user input
 						 */
-						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
+						$given_answer = is_array( $answers ) ? array_map( 'sanitize_text_field', $answers ) : array( sanitize_text_field( $answers ) );
 						$given_answer = maybe_serialize( $given_answer );
 
 						/**
@@ -700,8 +847,9 @@ class Quiz {
 						$given_answer    = wp_kses_post( $answers );
 
 					} elseif ( 'ordering' === $question_type || 'matching' === $question_type || 'image_matching' === $question_type ) {
+						$answers = (array) tutor_utils()->avalue_dot( 'answers', $answers );
 
-						$given_answer = (array) array_map( 'sanitize_text_field', tutor_utils()->avalue_dot( 'answers', $answers ) );
+						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
 						$given_answer = maybe_serialize( $given_answer );
 
 						$get_original_answers = (array) $wpdb->get_col(
@@ -945,8 +1093,6 @@ class Quiz {
 
 		tutor_utils()->checking_nonce();
 
-		global $wpdb;
-
 		$attempt_id        = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$context           = Input::post( 'context' );
 		$attempt_answer_id = Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
@@ -956,21 +1102,149 @@ class Quiz {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		$attempt_answer = $wpdb->get_row(
+		$attempt_answer = $this->get_attempt_answer( $attempt_answer_id );
+		$review_data    = $attempt_answer ? $this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as ) : null;
+
+		if ( ! $review_data ) {
+			wp_send_json_error( array( 'message' => __( 'Review update failed', 'tutor' ) ) );
+		}
+
+		QuizModel::update_attempt_result( $attempt_id );
+
+		ob_start();
+		tutor_load_template_from_custom_path(
+			tutor()->path . '/views/quiz/attempt-details.php',
+			array(
+				'attempt_id' => $attempt_id,
+				'user_id'    => $review_data['student_id'],
+				'context'    => $context,
+				'back_url'   => Input::post( 'back_url' ),
+			)
+		);
+		wp_send_json_success( array( 'html' => ob_get_clean() ) );
+	}
+
+	/**
+	 * Review quiz answers in bulk for v4 dashboard flow.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function review_quiz_answers() {
+		tutor_utils()->checking_nonce();
+
+		$attempt_id      = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$review_statuses = Input::post( 'review_statuses', array(), Input::TYPE_ARRAY );
+
+		$this->review_quiz_answers_bulk( $attempt_id, $review_statuses );
+	}
+
+	/**
+	 * Review quiz answers in bulk for v4 dashboard flow.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int   $attempt_id Attempt ID.
+	 * @param array $review_statuses Review statuses keyed by question ID.
+	 *
+	 * @return void
+	 */
+	private function review_quiz_answers_bulk( int $attempt_id, array $review_statuses ) {
+		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
+			$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
+		}
+
+		$attempt_answers        = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+		$answers_by_question_id = array();
+
+		if ( is_array( $attempt_answers ) ) {
+			foreach ( $attempt_answers as $attempt_answer ) {
+				$question_id = (int) ( $attempt_answer->question_id ?? 0 );
+
+				if ( $question_id > 0 ) {
+					$answers_by_question_id[ $question_id ] = $attempt_answer;
+				}
+			}
+		}
+
+		foreach ( $review_statuses as $question_id => $mark_as ) {
+			$question_id = (int) $question_id;
+			$mark_as     = (string) $mark_as;
+
+			if ( ! in_array( $mark_as, array( 'correct', 'incorrect' ), true ) ) {
+				continue;
+			}
+
+			$attempt_answer = $answers_by_question_id[ $question_id ] ?? null;
+
+			if ( ! $attempt_answer ) {
+				continue;
+			}
+
+			if ( ! tutor_utils()->can_user_manage( 'attempt_answer', $attempt_answer->attempt_answer_id ) ) {
+				$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
+			}
+
+			$this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
+		}
+
+		QuizModel::update_attempt_result( $attempt_id );
+
+		$this->response_success( __( 'Review updated successfully', 'tutor' ) );
+	}
+
+	/**
+	 * Get attempt answer record by ID.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $attempt_answer_id Attempt answer ID.
+	 *
+	 * @return object|null
+	 */
+	private function get_attempt_answer( int $attempt_answer_id ) {
+		global $wpdb;
+
+		return $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT * 
-					FROM {$wpdb->prefix}tutor_quiz_attempt_answers
-					WHERE attempt_answer_id = %d
-				",
+				"SELECT *
+				FROM {$wpdb->prefix}tutor_quiz_attempt_answers
+				WHERE attempt_answer_id = %d",
 				$attempt_answer_id
 			)
 		);
+	}
 
-		$attempt      = tutor_utils()->get_attempt( $attempt_id );
-		$question     = QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
-		$course_id    = $attempt->course_id;
-		$student_id   = $attempt->user_id;
-		$previous_ans = $attempt_answer->is_correct;
+	/**
+	 * Apply quiz answer review update.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int    $attempt_id Attempt ID.
+	 * @param object $attempt_answer Attempt answer row.
+	 * @param string $mark_as Review status.
+	 *
+	 * @return array|null
+	 */
+	private function apply_quiz_answer_review( int $attempt_id, $attempt_answer, string $mark_as ) {
+		global $wpdb;
+
+		if ( ! $attempt_answer || ! in_array( $mark_as, array( 'correct', 'incorrect' ), true ) ) {
+			return null;
+		}
+
+		$attempt = tutor_utils()->get_attempt( $attempt_id );
+
+		if ( ! $attempt ) {
+			return null;
+		}
+
+		$attempt_answer_id = (int) $attempt_answer->attempt_answer_id;
+		$question          = QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
+		$course_id         = (int) $attempt->course_id;
+		$student_id        = (int) $attempt->user_id;
+		$previous_ans      = $attempt_answer->is_correct;
 
 		do_action( 'tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as );
 
@@ -984,7 +1258,6 @@ class Quiz {
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
 
 			if ( 0 == $previous_ans || null == $previous_ans ) {
-				// if previous answer was wrong or in review then add point as correct.
 				$attempt_update_data = array(
 					'earned_marks'         => $attempt->earned_marks + $attempt_answer->question_mark,
 					'is_manually_reviewed' => 1,
@@ -1009,11 +1282,10 @@ class Quiz {
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
 
 			if ( 1 == $previous_ans ) {
-				// If previous ans was right then mynus.
 				$attempt_update_data = array(
 					'earned_marks'         => $attempt->earned_marks - $attempt_answer->question_mark,
 					'is_manually_reviewed' => 1,
-					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ),//phpcs:ignore
+					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 				);
 			}
 
@@ -1026,22 +1298,13 @@ class Quiz {
 			}
 		}
 
-		QuizModel::update_attempt_result( $attempt_id );
-
 		do_action( 'tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as );
 		do_action( 'tutor_quiz/answer/review/after', $attempt_answer_id, $course_id, $student_id );
 
-		ob_start();
-		tutor_load_template_from_custom_path(
-			tutor()->path . '/views/quiz/attempt-details.php',
-			array(
-				'attempt_id' => $attempt_id,
-				'user_id'    => $student_id,
-				'context'    => $context,
-				'back_url'   => Input::post( 'back_url' ),
-			)
+		return array(
+			'course_id'  => $course_id,
+			'student_id' => $student_id,
 		);
-		wp_send_json_success( array( 'html' => ob_get_clean() ) );
 	}
 
 	/**
@@ -1143,7 +1406,7 @@ class Quiz {
 
 		QuizModel::delete_files_by_paths( $attempt_file_paths );
 
-		// Collect instructor file paths before deleting question data (e.g. draw_image masks).
+		// Collect instructor file paths before deleting question data (e.g. draw_image / pin_image masks).
 		/**
 		 * Filter to get file paths for quiz deletion.
 		 * Pro and other add-ons register their question types via this filter.
@@ -1319,7 +1582,6 @@ class Quiz {
 	 * @since 3.8.1
 	 *
 	 * @param int $course_id The ID of the course.
-	 * @param int $user_id The ID of the user.
 	 *
 	 * @return array Returns an array of quiz attempt objects with their answers, or an empty array on error.
 	 */
@@ -1407,41 +1669,57 @@ class Quiz {
 	 *
 	 * @param int    $total_questions Total questions.
 	 * @param string $quiz_item_readable Readable time.
+	 * @param int    $total_marks Total Marks.
 	 * @param string $passing_grade Passing grade.
 	 *
 	 * @return void
 	 */
-	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $passing_grade ) {
+	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade ) {
 		$quiz_summary = array(
 			array(
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ) . __( 'Questions', 'tutor' ) . '
+							' . SvgIcon::make()->name( Icon::QUESTION_CIRCLE )->size( 20 )->get() . __( 'Questions', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $total_questions ),
 				),
 			),
-			array(
+		);
+
+		if ( ! empty( $quiz_item_readable ) ) {
+			$quiz_summary[] = array(
 				'columns' => array(
 					array(
 						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::CLOCK ) . __( 'Quiz Time', 'tutor' ) . '
+							' . SvgIcon::make()->name( Icon::TIME )->size( 20 )->get() . __( 'Quiz Time', 'tutor' ) . '
 						</div>',
 					),
 					array( 'content' => $quiz_item_readable ),
 				),
-			),
-			array(
-				'columns' => array(
-					array(
-						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-							' . tutor_utils()->get_svg_icon( Icon::PASSED ) . __( 'Passing Marks', 'tutor' ) . '
-						</div>',
-					),
-					array( 'content' => $passing_grade ),
+			);
+		}
+
+		$quiz_summary[] = array(
+			'columns' => array(
+				array(
+					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+						' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
+					</div>',
 				),
+				array( 'content' => $total_questions ),
+			),
+		);
+
+		$quiz_summary[] = array(
+			'columns' => array(
+				array(
+					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+						' . SvgIcon::make()->name( Icon::PASSED )->size( 20 )->get() . __( 'Passing Marks', 'tutor' ) . '
+					</div>',
+				),
+				array( 'content' => $passing_grade . '%' ),
 			),
 		);
 
@@ -1458,6 +1736,246 @@ class Quiz {
 	 * @return void
 	 */
 	public static function render_quiz_attempts( $quiz_id ) {
-		// @TODO.
+		$quiz_id = tutor_utils()->get_post_id( $quiz_id );
+		if ( ! $quiz_id ) {
+			return;
+		}
+
+		$user_id    = get_current_user_id();
+		$quiz_model = new QuizModel();
+		$attempts   = $quiz_model->quiz_attempts( $quiz_id, $user_id );
+
+		if ( empty( $attempts ) ) {
+			return;
+		}
+
+		$formatted_attempts = QuizModel::format_quiz_attempts( $attempts );
+		$quiz_attempts      = $formatted_attempts[ $quiz_id ] ?? reset( $formatted_attempts );
+		$attempts_list      = $quiz_attempts['attempts'] ?? array();
+
+		if ( empty( $attempts_list ) ) {
+			return;
+		}
+
+		$attempts_count   = count( $attempts_list );
+		$quiz_attempt_obj = new Quiz_Attempts_List( false );
+		$course_id        = $quiz_attempts['course_id'] ?? 0;
+		?>
+			<div class="tutor-quiz-attempts tutor-border tutor-rounded-2xl">
+				<div class="tutor-quiz-attempts-header">
+					<div class="tutor-quiz-attempts-header-item">
+						<?php esc_html_e( 'Attempts', 'tutor' ); ?>
+					</div>
+					<div class="tutor-quiz-attempts-header-item">
+						<?php esc_html_e( 'Marks', 'tutor' ); ?>
+					</div>
+					<div class="tutor-quiz-attempts-header-item">
+						<?php esc_html_e( 'Time', 'tutor' ); ?>
+					</div>
+					<div class="tutor-quiz-attempts-header-item">
+						<?php esc_html_e( 'Result', 'tutor' ); ?>
+					</div>
+				</div>
+				
+				<div class="tutor-quiz-attempts-list">
+					<?php
+					foreach ( $attempts_list as $index => $attempt ) {
+						$attempt_number = $attempts_count - $index;
+						?>
+						<div class="tutor-quiz-attempts-item-wrapper">
+							<?php
+							tutor_load_template(
+								'shared.components.student-quiz-attempt-row',
+								array(
+									'attempt'          => $attempt,
+									'attempt_number'   => $attempt_number,
+									'quiz_id'          => $quiz_id,
+									'course_id'        => $course_id,
+									'quiz_attempt_obj' => $quiz_attempt_obj,
+									'attempts_count'   => $attempts_count,
+									'is_previous'      => true,
+								)
+							);
+							?>
+						</div>
+						<?php
+					}
+					?>
+				</div>
+			</div>
+		<?php
+	}
+
+	/**
+	 * Render quiz actions
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $quiz_id Quiz ID.
+	 *
+	 * @return void
+	 */
+	public static function render_quiz_actions( $quiz_id ) {
+		$quiz_id = tutor_utils()->get_post_id( $quiz_id );
+		if ( ! $quiz_id ) {
+			return;
+		}
+
+		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id );
+		$user_id                = get_current_user_id();
+		$quiz_model             = new QuizModel();
+		$attempts               = $quiz_model->quiz_attempts( $quiz_id, $user_id );
+		$attempted_count        = (int) tutor_utils()->count( $attempts );
+		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
+		$attempts_allowed       = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
+		$can_start_quiz         = 0 === $attempted_count || self::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempted_count );
+		$quiz_auto_start        = $quiz_settings['quiz_auto_start'] ?? 0;
+		$auto_start_delay       = (int) ( $quiz_settings['auto_start_delay'] ?? 5 );
+		$should_auto_start      = 1 === (int) $quiz_auto_start && 0 === (int) $attempted_count;
+
+		if ( ! $can_start_quiz ) {
+			return;
+		}
+
+		global $tutor_current_post, $tutor_course_id;
+		$current_content_id  = $tutor_current_post ? $tutor_current_post->ID : $quiz_id;
+		$course_id           = $tutor_course_id ? $tutor_course_id : tutor_utils()->get_course_id_by_subcontent( $current_content_id );
+		$contents            = tutor_utils()->get_course_prev_next_contents_by_id( $current_content_id );
+		$next_id             = $contents ? $contents->next_id : 0;
+		$skip_url            = get_the_permalink( $next_id ? $next_id : $course_id );
+		$skip_modal_id       = 'tutor-quiz-skip-to-next';
+		$auto_start_modal_id = 'tutor-quiz-autostart-modal';
+
+		$skip_modal_cancel_button = Button::make()
+			->label( __( 'Cancel', 'tutor' ) )
+			->variant( Variant::SECONDARY )
+			->size( Size::SMALL )
+			->attr( '@click', "TutorCore.modal.closeModal('$skip_modal_id')" )
+			->get();
+
+		$skip_modal_confirm_button = Button::make()
+			->tag( 'a' )
+			->label( __( 'Yes, Skip This', 'tutor' ) )
+			->variant( Variant::DESTRUCTIVE )
+			->size( Size::SMALL )
+			->attr( 'href', esc_url( $skip_url ) )
+			->get();
+		?>
+		<div class="tutor-quiz-intro-actions tutor-flex tutor-justify-end tutor-gap-3 tutor-mt-8">
+			<?php
+			if ( 0 === $attempted_count ) {
+				Button::make()
+					->label( __( 'Skip Quiz', 'tutor' ) )
+					->variant( Variant::GHOST )
+					->attr( '@click', "TutorCore.modal.showModal('$skip_modal_id')" )
+					->render();
+			}
+			?>
+			
+			<form
+				x-data="tutorQuizAutoStart({
+					quizID: <?php echo esc_attr( $quiz_id ); ?>,
+					autoStart: <?php echo $should_auto_start ? 'true' : 'false'; ?>,
+					autoStartModalId: '<?php echo esc_attr( $auto_start_modal_id ); ?>',
+					countdownSeconds: <?php echo esc_attr( $auto_start_delay ); ?>,
+				})"
+				@submit.prevent="handleStartQuiz()"
+			>
+				<?php
+				Button::make()
+					->label( __( 'Start Quiz', 'tutor' ) )
+					->attr( 'x-bind:disabled', 'startQuizMutation?.isPending' )
+					->attr( ':class', "{ 'tutor-btn-loading': startQuizMutation?.isPending }" )
+					->render();
+				?>
+			</form>
+		</div>
+
+		<?php if ( 0 === $attempted_count ) : ?>
+			<?php
+			ConfirmationModal::make()
+				->id( $skip_modal_id )
+				->title( __( 'Do You Want to Skip This Quiz?', 'tutor' ) )
+				->message( __( 'Are you sure you want to skip this quiz? Please confirm your choice.', 'tutor' ) )
+				->confirm_button( $skip_modal_confirm_button )
+				->cancel_button( $skip_modal_cancel_button )
+				->render();
+			?>
+		<?php endif; ?>
+
+		<?php
+		Modal::make()
+			->id( $auto_start_modal_id )
+			->closeable( false )
+			->width( '268px' )
+			->template(
+				tutor()->path . 'templates/learning-area/quiz/modals/auto-start.php',
+				array(
+					'countdown_seconds' => $auto_start_delay,
+					'modal_id'          => $auto_start_modal_id,
+				)
+			)
+			->render();
+		?>
+		<?php
+	}
+
+
+	/**
+	 * Render individual question template
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $question Question data.
+	 * @param int    $index Question index.
+	 *
+	 * @return void
+	 */
+	public static function render_question( $question, $index = 0 ) {
+		$question_settings = maybe_unserialize( $question->question_settings );
+
+		// Normalize question type + settings.
+		switch ( $question->question_type ) {
+			case 'short_answer':
+				$question->question_type = 'open_ended';
+				break;
+
+			case 'single_choice':
+				$question->question_type                          = 'multiple_choice';
+				$question_settings['has_multiple_correct_answer'] = '0';
+				break;
+
+			case 'image_matching':
+				$question->question_type                = 'matching';
+				$question_settings['is_image_matching'] = '1';
+				break;
+		}
+
+		$template = str_replace( '_', '-', $question->question_type );
+
+		$rand_choice = ! empty( $question_settings['randomize_question'] )
+		&& '1' === $question_settings['randomize_question'];
+
+		$question->index             = $index;
+		$question->question_settings = $question_settings;
+
+		$answers = QuizModel::get_answers_by_quiz_question(
+			$question->question_id,
+			$rand_choice
+		);
+
+		$question->question_answers = array_map(
+			static fn( $answer ) => (array) $answer,
+			$answers
+		);
+
+		tutor_load_template(
+			'learning-area.quiz.question',
+			array(
+				'question'          => $question,
+				'question_settings' => $question_settings,
+				'question_type'     => $template,
+			)
+		);
 	}
 }

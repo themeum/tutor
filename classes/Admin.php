@@ -35,7 +35,6 @@ class Admin {
 	 * @return void
 	 */
 	public function __construct() {
-
 		add_action( 'admin_notices', array( $this, 'show_unstable_version_admin_notice' ) );
 
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
@@ -62,6 +61,22 @@ class Admin {
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
 
 		add_action( 'wp_ajax_tutor_do_not_show_feature_page', array( $this, 'handle_do_not_show_feature_page' ) );
+
+		add_action( 'upgrader_process_complete', array( $this, 'set_permalink_flag_on_upgrade' ), 10, 2 );
+	}
+
+	/**
+	 * Flush Tutor permalink rewrite rules after updates.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param mixed $upgrader_object Upgrader instance.
+	 * @param array $options      Extra arguments passed to the hook.
+	 *
+	 * @return void
+	 */
+	public function set_permalink_flag_on_upgrade( $upgrader_object, $options ) {
+		Permalink::set_permalink_reset_flag( $upgrader_object, $options );
 	}
 
 	/**
@@ -310,9 +325,6 @@ class Admin {
 				add_submenu_page( 'tutor', '', '<span class="tutor-admin-menu-separator"></span>', 'manage_tutor_instructor', '#' );
 			}
 		}
-
-		// Add playground menu to preview components.
-		$this->add_playground_menu();
 	}
 
 	/**
@@ -855,23 +867,5 @@ class Admin {
 		}
 
 		return $admin_bar;
-	}
-
-	/**
-	 * Add playground page
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	private function add_playground_menu() {
-		add_submenu_page(
-			'tutor',
-			'Playground',
-			'Playground',
-			'manage_options',
-			'playground',
-			fn () => include tutor()->path . 'templates/demo-components/playground.php',
-		);
 	}
 }

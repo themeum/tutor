@@ -34,6 +34,19 @@
       padding: 0;
 
       li {
+        &:nth-of-type(5):not(:nth-last-of-type(1)) {
+          position: relative;
+
+          &::after {
+            content: '';
+            display: block;
+            border-bottom: 1px solid $tutor-border-idle;
+            padding-left: $tutor-spacing-8;
+            margin: $tutor-spacing-4 $tutor-spacing-none $tutor-spacing-2 $tutor-spacing-8;
+            width: calc(100% - 48px);
+          }
+        }
+
         a {
           @include tutor-typography(small, medium);
           @include tutor-flex(row, center);

@@ -15,6 +15,8 @@ use Tutor\Components\Avatar;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 
 ?>
 <?php if ( ! empty( $replies ) ) : ?>
@@ -26,8 +28,8 @@ use TUTOR\Icon;
 	<?php
 	Sorting::make()
 		->order( $replies_order )
-		->on_change( 'reloadReplies' )
-		->bind_active_order( 'repliesOrder' )
+		// ->on_change( 'reloadReplies' )
+		// ->bind_active_order( 'repliesOrder' )
 		->render();
 	?>
 </div>
@@ -56,18 +58,18 @@ use TUTOR\Icon;
 				<?php if ( $user_id === (int) $reply->user_id ) : ?>
 				<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-ml-auto">
 					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 					</button>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 						<div class="tutor-popover-menu" style="min-width: 110px;">
 							<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $reply->comment_ID; ?>); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
+								<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
 							<button 
 								class="tutor-popover-menu-item tutor-gap-5" 
 								@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_html( $reply->comment_ID ); ?>, context: 'reply' }); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
+								<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>
 						</div>
@@ -80,14 +82,15 @@ use TUTOR\Icon;
 				<div x-show="editingId === <?php echo (int) $reply->comment_ID; ?>" x-cloak class="tutor-mt-5 tutor-w-full">
 					<?php
 					tutor_load_template(
-						'dashboard.discussions.qna-form',
+						'learning-area.subpages.qna.form',
 						array(
-							'form_id'        => 'qna-edit-' . (int) $reply->comment_ID,
-							'default_value'  => $reply->comment_content,
-							'submit_handler' => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $reply->comment_ID . ' })',
-							'cancel_handler' => 'setEditing(null)',
-							'is_pending'     => 'updateQnAMutation?.isPending',
-							'placeholder'    => __( 'Write your answer', 'tutor' ),
+							'form_id'             => 'qna-edit-' . (int) $reply->comment_ID,
+							'default_value'       => $reply->comment_content,
+							'submit_handler'      => '(data) => updateQnAMutation?.mutate({ ...data, question_id: ' . (int) $reply->comment_ID . ' })',
+							'cancel_handler'      => 'setEditing(null)',
+							'is_pending'          => 'updateQnAMutation?.isPending',
+							'placeholder'         => __( 'Write your answer', 'tutor' ),
+							'keep_footer_visible' => true,
 						)
 					);
 					?>

@@ -1,13 +1,14 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { convertToErrorMessage, decodeHtmlEntities } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
 
 interface ReplyCommentPayload {
   comment_post_ID: number;
   comment_parent: number;
   comment: string;
+  reply_context?: 'list' | 'single';
 }
 
 interface DeleteCommentPayload {
@@ -25,6 +26,7 @@ interface ReplyQnAPayload {
   course_id: number;
   question_id: number;
   answer: string;
+  reply_context?: 'list' | 'single';
 }
 interface UpdateQnAPayload {
   question_id: number;
@@ -35,6 +37,8 @@ interface DeleteQnAPayload {
   question_id: number;
   context?: 'question' | 'reply';
 }
+
+type DiscussionCardType = 'qna' | 'comment';
 
 const FORM_ID_PREFIXES = {
   COMMENT_EDIT: 'lesson-comment-edit-',
@@ -59,6 +63,8 @@ const URL_PARAMS = {
   ID: 'id',
   ORDER: 'order',
 };
+
+const CARD_TITLE_WORD_LIMIT = 60;
 
 /**
  * Discussions Page Component
@@ -87,6 +93,8 @@ const discussionsPage = () => {
     isArchived: false,
     editingId: null as number | null,
     editingFormId: null as string | null,
+    replyingId: null as number | null,
+    replyingCommentId: null as number | null,
     loadingReplies: false,
     repliesOrder: 'DESC',
     $nextTick: undefined as ((callback: () => void) => void) | undefined,
@@ -118,11 +126,18 @@ const discussionsPage = () => {
       this.replyCommentMutation = this.query.useMutation(this.replyComment, {
         onSuccess: (_, payload) => {
           toast.success(__('Reply saved successfully', 'tutor'));
-          this.reloadReplies();
 
           const formId = `${FORM_ID_PREFIXES.COMMENT_REPLY}${payload.comment_parent}`;
           if (form.hasForm(formId)) {
             form.reset(formId);
+          }
+
+          if (payload.reply_context === 'single') {
+            this.reloadReplies();
+          } else {
+            this.setReplyingComment(null);
+            this.updateCommentReplyCount(payload.comment_parent);
+            this.highlightCard(payload.comment_parent, 'comment');
           }
         },
         onError: (error: Error) => {
@@ -181,7 +196,8 @@ const discussionsPage = () => {
           if (payload.context === 'reply') {
             toast.success(__('Reply deleted successfully', 'tutor'));
             modal.closeModal(MODALS.QNA_DELETE);
-            this.reloadReplies();
+            // this.reloadReplies();
+            window.location.reload();
           } else {
             const url = new URL(window.location.href);
             url.searchParams.delete(URL_PARAMS.ID);
@@ -197,10 +213,19 @@ const discussionsPage = () => {
       this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
         onSuccess: (_, payload) => {
           toast.success(__('Reply saved successfully', 'tutor'));
-          this.reloadReplies();
+
           const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${payload.question_id}`;
           if (form.hasForm(formId)) {
             form.reset(formId);
+          }
+
+          if (payload.reply_context === 'single') {
+            // this.reloadReplies();
+            window.location.reload();
+          } else {
+            this.setReplying(null);
+            this.updateReplyCount(payload.question_id);
+            this.highlightCard(payload.question_id);
           }
         },
         onError: (error: Error) => {
@@ -216,7 +241,21 @@ const discussionsPage = () => {
           // Update DOM directly for immediate feedback
           const element = document.getElementById(`${ELEMENT_IDS.QNA_TEXT_PREFIX}${payload.question_id}`);
           if (element) {
-            element.innerHTML = payload.answer;
+            if (element.closest('.tutor-discussion-card')) {
+              const striped_answer = decodeHtmlEntities(payload.answer);
+              element.innerHTML =
+                striped_answer.length > CARD_TITLE_WORD_LIMIT
+                  ? `${striped_answer.substring(0, 60)}...`
+                  : striped_answer;
+            } else {
+              element.innerHTML = payload.answer;
+            }
+
+            // Re-trigger syntax highlighting if Prism is available.
+            const Prism = (window as Window & { Prism?: { highlightAllUnder?: (root: Element) => void } }).Prism;
+            if (Prism?.highlightAllUnder) {
+              Prism.highlightAllUnder(element);
+            }
           }
 
           if (this.editingId === payload.question_id) {
@@ -251,6 +290,12 @@ const discussionsPage = () => {
         const container = document.getElementById(ELEMENT_IDS.REPLIES_LIST_CONTAINER);
         if (container && typeof response.data?.html === 'string') {
           container.innerHTML = response.data.html;
+
+          // Re-trigger syntax highlighting if Prism is available.
+          const Prism = (window as Window & { Prism?: { highlightAllUnder?: (root: Element) => void } }).Prism;
+          if (Prism?.highlightAllUnder) {
+            Prism.highlightAllUnder(container);
+          }
 
           // Update URL without reload
           const url = new URL(window.location.href);
@@ -308,11 +353,17 @@ const discussionsPage = () => {
       }
     },
 
-    handleReplyComment(data: { comment: string }, commentId: number, courseId: number) {
+    handleReplyComment(
+      data: { comment: string },
+      commentId: number,
+      courseId: number,
+      context: ReplyCommentPayload['reply_context'] = 'single',
+    ) {
       return this.replyCommentMutation?.mutate({
         comment: data.comment,
         comment_parent: commentId,
         comment_post_ID: courseId,
+        reply_context: context,
       });
     },
 
@@ -343,6 +394,86 @@ const discussionsPage = () => {
             form.setFocus(formId, field);
           }
         });
+      }
+    },
+
+    setReplying(id: number | null) {
+      this.replyingId = id;
+
+      if (id) {
+        const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${id}`;
+        this.$nextTick?.(() => {
+          if (form.hasForm(formId)) {
+            form.setFocus(formId, 'answer');
+          }
+        });
+      }
+    },
+
+    toggleReply(id: number) {
+      if (this.replyingId === id) {
+        this.setReplying(null);
+      } else {
+        this.setReplying(id);
+      }
+    },
+
+    updateReplyCount(questionId: number) {
+      // Find the reply count element and increment it
+      const card = document.querySelector(`[data-question-id="${questionId}"]`);
+      if (card) {
+        const countElement = card.querySelector('.tutor-discussion-card-reply-count');
+        if (countElement) {
+          const currentCount = parseInt(countElement.textContent || '0', 10);
+          countElement.textContent = String(currentCount + 1);
+        }
+      }
+    },
+
+    setReplyingComment(id: number | null) {
+      this.replyingCommentId = id;
+
+      if (id) {
+        const formId = `${FORM_ID_PREFIXES.COMMENT_REPLY}${id}`;
+        this.$nextTick?.(() => {
+          if (form.hasForm(formId)) {
+            form.setFocus(formId, 'comment');
+          }
+        });
+      }
+    },
+
+    toggleCommentReply(id: number) {
+      if (this.replyingCommentId === id) {
+        this.setReplyingComment(null);
+      } else {
+        this.setReplyingComment(id);
+      }
+    },
+
+    updateCommentReplyCount(commentId: number) {
+      // Find the reply count element and increment it
+      const card = document.querySelector(`[data-comment-id="${commentId}"]`);
+      if (card) {
+        const countElement = card.querySelector('.tutor-discussion-card-reply-count');
+        if (countElement) {
+          const currentCount = parseInt(countElement.textContent || '0', 10);
+          countElement.textContent = String(currentCount + 1);
+        }
+      }
+    },
+
+    highlightCard(id: number, type: DiscussionCardType = 'qna') {
+      const attr = type === 'comment' ? 'data-comment-id' : 'data-question-id';
+      const el = document.querySelector(`[${attr}="${id}"]`);
+      const card = (el?.closest('.tutor-discussion-card') ?? el) as HTMLElement | null;
+      if (!card) return;
+
+      if (window.innerWidth > 576) {
+        card.style.boxShadow = '0 0 0 2px var(--tutor-text-brand-secondary)';
+        setTimeout(() => {
+          card.style.boxShadow = '';
+        }, 300);
       }
     },
   };

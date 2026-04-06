@@ -262,6 +262,7 @@ const scssEntries = {
   'tutor-frontend-dashboard-scss': './assets/src/scss/frontend-dashboard/index.scss',
   'tutor-template-import-scss': './assets/src/scss/admin-dashboard/template-import.scss',
   'tutor-core-scss': './assets/core/scss/main.scss',
+  'tutor-kids-scss': './assets/src/scss/frontend/kids/index.scss',
   'tutor-dashboard-scss': './assets/src/scss/frontend/main/dashboard.scss',
   'tutor-learning-area-scss': './assets/src/scss/frontend/main/learning-area.scss',
 };
@@ -280,6 +281,7 @@ const resolveAliases = {
   '@CouponDetails': path.resolve(__dirname, './assets/src/js/v3/entries/coupon-details/'),
   '@AddonList': path.resolve(__dirname, './assets/src/js/v3/entries/addon-list/'),
   '@ImportExport': path.resolve(__dirname, './assets/src/js/v3/entries/import-export/'),
+  '@FrontendComponents': path.resolve(__dirname, './assets/src/js/frontend/components'),
   '@FrontendTypes': path.resolve(__dirname, './assets/src/js/frontend/types'),
   '@FrontendServices': path.resolve(__dirname, './assets/src/js/frontend/services'),
   '@FrontendDashboard': path.resolve(__dirname, './assets/src/js/frontend/dashboard'),

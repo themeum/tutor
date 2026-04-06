@@ -23,7 +23,7 @@ const starRatingInput = (config: StarRatingConfig) => ({
     const labels: Record<number, string> = {
       1: __('Poor', 'tutor'),
       2: __('Fair', 'tutor'),
-      3: __('Average', 'tutor'),
+      3: __('Okay', 'tutor'),
       4: __('Good', 'tutor'),
       5: __('Amazing', 'tutor'),
     };

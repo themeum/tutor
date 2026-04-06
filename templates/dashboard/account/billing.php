@@ -11,6 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Constants\Size;
 use Tutor\Components\Nav;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
@@ -45,15 +46,15 @@ $page_nav_items = apply_filters( 'tutor_dashboard_account_billing_page_nav_items
 <div class="tutor-billing-wrapper" x-data="" x-cloak>
 	<?php require_once tutor_get_template( 'account-header' ); ?>
 
-	<div class="tutor-billing-container">
-		<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
+	<div class="tutor-account-container">
+		<div class="tutor-account-billing-wrapper tutor-flex tutor-flex-column tutor-gap-5 tutor-py-9">
 			<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 				<?php if ( $show_tab_nav ) { ?>
-				<div class="tutor-p-6 tutor-border-b">
-					<?php Nav::make()->items( $page_nav_items )->render(); ?>
+				<div class="tutor-px-6 tutor-py-5 tutor-border-b">
+					<?php Nav::make()->items( $page_nav_items )->size( Size::SMALL )->render(); ?>
 				</div>
 				<?php } ?>
-				<div class="tutor-sm-border tutor-sm-rounded-2xl tutor-sm-mt-4">
+				<div class="tutor-sm-rounded-2xl tutor-sm-mt-4">
 					<?php
 					if ( file_exists( $tab_template ) ) {
 						require_once $tab_template;

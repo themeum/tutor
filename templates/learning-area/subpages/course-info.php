@@ -13,20 +13,20 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\Avatar;
 use Tutor\Components\StarRating;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
 // Globals inherited from learning-area/index.php template.
 global $tutor_course_id,
 $tutor_course,
 $current_user_id;
 
-$is_course_completed = tutor_utils()->is_completed_course( $tutor_course_id, $current_user_id );
-$course_thumbnail    = get_tutor_course_thumbnail_src( 'full', $tutor_course_id );
-$course_author       = get_user( $tutor_course->post_author );
-$course_benefits     = tutor_course_benefits( $tutor_course_id );
-$instructors         = tutor_utils()->get_instructors_by_course( $tutor_course_id );
-$course_rating       = tutor_utils()->get_course_rating( $tutor_course_id );
-$course_materials    = tutor_course_material_includes( $tutor_course_id );
-$course_attachments  = tutor_utils()->get_attachments( $tutor_course_id );
+$course_thumbnail   = get_tutor_course_thumbnail_src( 'full', $tutor_course_id );
+$course_author      = get_user( $tutor_course->post_author );
+$course_benefits    = tutor_course_benefits( $tutor_course_id );
+$instructors        = tutor_utils()->get_instructors_by_course( $tutor_course_id );
+$course_rating      = tutor_utils()->get_course_rating( $tutor_course_id );
+$course_materials   = tutor_course_material_includes( $tutor_course_id );
+$course_attachments = tutor_utils()->get_attachments( $tutor_course_id );
 
 ob_start();
 foreach ( $instructors as $key => $instructor ) {
@@ -119,7 +119,7 @@ $default_meta[]           = array(
 
 $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_meta, $tutor_course_id );
 ?>
-<div class="tutor-course-info tutor-pt-7 tutor-pb-12">
+<div class="tutor-course-info tutor-pt-4 tutor-pb-8" x-data="tutorCourseCompleteHandler">
 	<?php do_action( 'tutor_learning_area_before_course_info', $tutor_course_id ); ?>
 
 	<div class="tutor-course-thumb">
@@ -128,11 +128,11 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 
 	<div class="tutor-course-intro">
 		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-3 tutor-tiny tutor-text-secondary">
-			<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2 ); ?>
+			<?php SvgIcon::make()->name( Icon::RELOAD_2 )->render(); ?>
 			<?php echo esc_html( $tutor_course->post_modified ); ?> Last Updated
 		</div>
 		<h3 class="tutor-h3 tutor-sm-text-h5 tutor-mt-3"><?php echo esc_html( $tutor_course->post_title ); ?></h3>
-		<div class="tutor-medium tutor-sm-text-small tutor-text-secondary tutor-mt-4">
+		<div class="tutor-medium tutor-sm-text-small tutor-text-secondary tutor-mt-4 tutor-mb-6">
 		<?php
 		echo esc_html(
 			sprintf(
@@ -142,11 +142,11 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			)
 		);
 		?>
-			</div>
+		</div>
 	</div>
 
 	<!-- TODO: sticky behaviour -->
-	<div class="tutor-course-sticky-card tutor-mt-9">
+	<!-- <div class="tutor-course-sticky-card tutor-mt-9">
 		<div class="tutor-course-thumb">
 			<img src="<?php echo esc_url( $course_thumbnail ); ?>" alt="course thumb" />
 		</div>
@@ -164,16 +164,16 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			?>
 		</div>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="tutor-course-description">
-		<div x-data="{ expanded: true }" class="tutor-course-description-item">
+		<div x-data="{ expanded: false }" class="tutor-course-description-item">
 			<div role="button" @click="expanded = !expanded" class="tutor-course-description-header">
 				<div class="tutor-course-description-header-title">
 					<?php esc_html_e( 'About this Course', 'tutor' ); ?>
 				</div>
 				<div class="tutor-course-description-header-icon" :class="{ 'is-expanded': expanded }">
-					<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2, 24, 24 ); ?>
+					<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 24 )->render(); ?>
 				</div>
 			</div>
 			<div x-show="expanded" x-collapse x-cloak class="tutor-course-description-body">
@@ -183,17 +183,17 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		<div x-data="{ expanded: false }" class="tutor-course-description-item">
 			<div role="button" @click="expanded = !expanded" class="tutor-course-description-header">
 				<div class="tutor-course-description-header-title">
-					What you'll learn
+					<?php esc_html_e( "What you'll learn", 'tutor' ); ?>
 				</div>
 				<div class="tutor-course-description-header-icon" :class="{ 'is-expanded': expanded }">
-					<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2, 24, 24 ); ?>
+					<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 24 )->render(); ?>
 				</div>
 			</div>
 			<div x-show="expanded" x-collapse x-cloak class="tutor-course-description-body">
 				<div class="tutor-course-description-list">
 					<?php foreach ( $course_benefits as $benefit ) : ?>
 						<div class="tutor-course-description-list-item">
-							<?php tutor_utils()->render_svg_icon( Icon::CHECK_2 ); ?>
+							<?php SvgIcon::make()->name( Icon::CHECK_2 )->render(); ?>
 							<div class="tutor-course-description-list-content">
 								<?php echo esc_html( $benefit ); ?>
 							</div>
@@ -210,7 +210,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 				<tr>
 					<td>
 						<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-sm-gap-3">
-							<?php tutor_utils()->render_svg_icon( $meta['icon'], 20, 20 ); ?>
+							<?php SvgIcon::make()->name( $meta['icon'] )->size( 20 )->render(); ?>
 							<?php echo esc_html( $meta['title'] ); ?>
 						</div>
 					</td>

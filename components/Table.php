@@ -59,7 +59,7 @@ defined( 'ABSPATH' ) || exit;
  *       array(
  *           'columns' => array(
  *               array(
- *                   'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ) . __( 'Questions', 'tutor' ) . '</div>',
+ *                   'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">' . SvgIcon::make()->name( Icon::QUESTION_CIRCLE )->render() . __( 'Questions', 'tutor' ) . '</div>',
  *               ),
  *               array( 'content' => 20 ),
  *           ),

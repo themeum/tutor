@@ -54,6 +54,7 @@ $remaining_attempts = array_slice( $attempts, 1 );
 						'attempt_id'       => $attempt['attempt_id'] ?? 0,
 						'course_id'        => $course_id,
 						'quiz_attempt_obj' => $quiz_attempt_obj,
+						'is_previous'      => true,
 					)
 				);
 				?>
@@ -61,7 +62,7 @@ $remaining_attempts = array_slice( $attempts, 1 );
 		</div>
 	<?php endif; ?>
 
-	<div class="tutor-quiz-item-actions tutor-flex">
+	<div class="tutor-quiz-item-actions">
 		<?php
 		$quiz_attempt_obj->render_retry_button(
 			$course_id,

@@ -18,6 +18,7 @@ interface ReplyQnaPayload {
   course_id: number;
   question_id: number;
   answer: string;
+  reply_context?: 'list' | 'single';
 }
 
 interface DeleteQnaPayload {
@@ -63,6 +64,7 @@ const qnaPage = () => {
     deleteQnAMutation: null as MutationState<unknown, unknown> | null,
     editingId: null as number | null,
     editingFormId: null as string | null,
+    replyingId: null as number | null,
     loadingReplies: false,
     repliesOrder: 'DESC',
     $nextTick: undefined as ((callback: () => void) => void) | undefined,
@@ -92,6 +94,12 @@ const qnaPage = () => {
           const element = document.getElementById(`${ELEMENT_IDS.QNA_TEXT_PREFIX}${payload.question_id}`);
           if (element) {
             element.innerHTML = payload.answer;
+
+            // Re-trigger syntax highlighting if Prism is available.
+            const Prism = (window as Window & { Prism?: { highlightAllUnder?: (root: Element) => void } }).Prism;
+            if (Prism?.highlightAllUnder) {
+              Prism.highlightAllUnder(element);
+            }
           }
 
           if (this.editingId === payload.question_id) {
@@ -106,10 +114,19 @@ const qnaPage = () => {
       this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
         onSuccess: (_, payload) => {
           toast.success(__('Reply saved successfully', 'tutor'));
-          this.reloadReplies();
+
           const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${payload.question_id}`;
           if (form.hasForm(formId)) {
             form.reset(formId);
+          }
+
+          if (payload.reply_context === 'single') {
+            // this.reloadReplies();
+            window.location.reload();
+          } else {
+            this.setReplying(null);
+            this.updateReplyCount(payload.question_id);
+            this.highlightCard(payload.question_id);
           }
         },
         onError: (error: Error) => {
@@ -122,7 +139,8 @@ const qnaPage = () => {
           if (payload.context === 'reply') {
             toast.success(__('Reply deleted successfully', 'tutor'));
             modal.closeModal(MODALS.QNA_DELETE);
-            this.reloadReplies();
+            // this.reloadReplies();
+            window.location.reload();
           } else {
             toast.success(__('Question deleted successfully', 'tutor'));
             modal.closeModal(MODALS.QNA_DELETE);
@@ -177,6 +195,12 @@ const qnaPage = () => {
         if (container && typeof response.data?.html === 'string') {
           container.innerHTML = response.data.html;
 
+          // Re-trigger syntax highlighting if Prism is available.
+          const Prism = (window as Window & { Prism?: { highlightAllUnder?: (root: Element) => void } }).Prism;
+          if (Prism?.highlightAllUnder) {
+            Prism.highlightAllUnder(container);
+          }
+
           // Update URL without reload
           const url = new URL(window.location.href);
           url.searchParams.set(URL_PARAMS.ORDER, this.repliesOrder);
@@ -204,6 +228,51 @@ const qnaPage = () => {
       }
     },
 
+    setReplying(id: number | null) {
+      this.replyingId = id;
+
+      if (id) {
+        const formId = `${FORM_ID_PREFIXES.QNA_REPLY}${id}`;
+        this.$nextTick?.(() => {
+          if (form.hasForm(formId)) {
+            form.setFocus(formId, 'answer');
+          }
+        });
+      }
+    },
+
+    toggleReply(id: number) {
+      if (this.replyingId === id) {
+        this.setReplying(null);
+      } else {
+        this.setReplying(id);
+      }
+    },
+
+    updateReplyCount(questionId: number) {
+      const card = document.querySelector(`[data-question-id="${questionId}"]`);
+      if (card) {
+        const countElement = card.querySelector('.tutor-discussion-card-reply-count');
+        if (countElement) {
+          const currentCount = parseInt(countElement.textContent || '0', 10);
+          countElement.textContent = String(currentCount + 1);
+        }
+      }
+    },
+
+    highlightCard(questionId: number) {
+      const el = document.querySelector(`[data-question-id="${questionId}"]`);
+      const card = (el?.closest('.tutor-discussion-card') ?? el) as HTMLElement | null;
+      if (!card) return;
+
+      if (window.innerWidth > 576) {
+        card.style.boxShadow = '0 0 0 2px var(--tutor-text-brand-secondary)';
+        setTimeout(() => {
+          card.style.boxShadow = '';
+        }, 300);
+      }
+    },
+
     handleKeydown(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
         (event.target as HTMLFormElement).closest('form')?.requestSubmit();
@@ -220,5 +289,4 @@ export const initializeQna = () => {
       component: qnaPage,
     },
   });
-  window.TutorComponentRegistry.initWithAlpine(window.Alpine);
 };

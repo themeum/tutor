@@ -19,7 +19,7 @@ if ( ! $lesson || ! is_a( $lesson, 'WP_Post' ) ) {
 	return;
 }
 
-global $tutor_course_id, $tutor_current_content_id, $post;
+global $tutor_course_id, $tutor_current_content_id, $tutor_completion_mode, $post;
 
 $tabs_data = Lesson::get_nav_items( $lesson->ID );
 
@@ -45,6 +45,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 
 ?>
 <div class="tutor-lesson-content">
+	<?php ob_start(); ?>
 	<div 
 		x-data='tutorTabs({
 			tabs: <?php echo wp_json_encode( $tabs_data ); ?>,
@@ -59,8 +60,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 		<?php if ( $has_source ) : ?>
 		<div class="tutor-lesson-video-wrapper">
 			<?php
-				$completion_mode                              = tutor_utils()->get_option( 'course_completion_process' );
-				$json_data['strict_mode']                     = ( 'strict' === $completion_mode );
+				$json_data['strict_mode']                     = ( 'strict' === $tutor_completion_mode );
 				$json_data['control_video_lesson_completion'] = (bool) tutor_utils()->get_option( 'control_video_lesson_completion', false );
 				$json_data['required_percentage']             = (int) tutor_utils()->get_option( 'required_percentage_to_complete_video_lesson', 80 );
 				$json_data['video_duration']                  = $video_info->duration_sec ?? 0;
@@ -73,7 +73,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 		<?php endif; ?>
 
 		<?php if ( count( $tabs_data ) > 1 ) : ?>
-		<div x-ref="tablist" class="tutor-tabs-nav tutor-p-6 tutor-border-b" role="tablist" aria-orientation="horizontal">
+		<div x-ref="tablist" class="tutor-tabs-nav tutor-px-6 tutor-py-5 tutor-border-b" role="tablist" aria-orientation="horizontal">
 			<template x-for="tab in tabs" :key="tab.id">
 				<button
 					type="button" 
@@ -112,6 +112,8 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 		</div>
 		<?php endif; ?>
 	</div>
-
-	<?php tutor_load_template( 'learning-area.lesson.footer' ); ?>
+	<?php
+		echo apply_filters( 'tutor_learning_area_content', ob_get_clean() ); //phpcs:ignore --already escaped
+		tutor_load_template( 'learning-area.lesson.footer' );
+	?>
 </div>

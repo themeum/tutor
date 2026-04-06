@@ -22,7 +22,7 @@ use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
 
-if ( Input::has( 'view_quiz_attempt_id' ) ) {
+if ( Input::has( 'attempt_id' ) ) {
 	// Load single attempt details if ID provided.
 	include __DIR__ . '/my-quiz-attempts/attempts-details.php';
 	return;
@@ -50,7 +50,7 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 <div class="tutor-my-quiz-attempts-wrapper" x-data="tutorQuizAttempts()">
 	<?php if ( $quiz_attempts_count ) : ?>
 		<div class="tutor-quiz-attempts">
-			<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-sm-p-5 tutor-p-6 tutor-items-center tutor-sm-border-b">
+			<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-items-center tutor-border-b">
 				<div class="tutor-quiz-students-attempts-filter-item">
 				<?php
 					DropdownFilter::make()
@@ -119,14 +119,17 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 				->attr( 'class', 'tutor-p-6' )
 				->render();
 			?>
-	<?php
-	ConfirmationModal::make()
-		->id( 'tutor-retry-modal' )
-		->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
-		->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
-		->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
-		->confirm_text( __( 'Retry Quiz', 'tutor' ) )
-		->mutation_state( 'retryMutation' )
-		->render();
-	?>
+
+			<div x-data="tutorQuizRetryAttempt()" x-init="init()">
+				<?php
+				ConfirmationModal::make()
+					->id( 'tutor-retry-modal' )
+					->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+					->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
+					->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
+					->confirm_text( __( 'Retry Quiz', 'tutor' ) )
+					->mutation_state( 'retryMutation' )
+					->render();
+				?>
+			</div>
 </div>

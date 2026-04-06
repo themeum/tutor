@@ -3,7 +3,7 @@
 
 @use '../tokens' as *;
 
-[data-theme='dark'] {
+[data-tutor-theme='dark'] {
   // =============================================================================
   // SURFACE COLORS
   // =============================================================================
@@ -22,6 +22,7 @@
   --tutor-surface-exception2-secondary: #{$tutor-exception-2-tertiary};
   --tutor-surface-exception3-highlight: #{$tutor-exception-3};
   --tutor-surface-dark: #{$tutor-gray-800};
+  --tutor-surface-exception6: #{$tutor-exception-6};
   --tutor-surface-exception7: #{$tutor-brand-900};
   --tutor-surface-warning: #{$tutor-warning-950};
   --tutor-surface-warning-hover: #{$tutor-warning-900};
@@ -51,6 +52,7 @@
   --tutor-text-exception4: #{$tutor-warning-400};
   --tutor-text-exception5: #{$tutor-exception-5};
   --tutor-text-highlighted-hover: #{$tutor-gray-700};
+  --tutor-text-disabled: #{$tutor-gray-300};
 
   // =============================================================================
   // ICON COLORS
@@ -64,6 +66,7 @@
   --tutor-icon-disabled: #{$tutor-gray-600};
   --tutor-icon-brand: #{$tutor-brand-600};
   --tutor-icon-brand-hover: #{$tutor-brand-700};
+  --tutor-icon-brand-secondary: #{$tutor-brand-300};
   --tutor-icon-exception1: #{$tutor-exception-1};
   --tutor-icon-exception2: #{$tutor-exception-2};
   --tutor-icon-success-primary: #{$tutor-success-600};
@@ -100,6 +103,9 @@
   --tutor-button-outline-focused-inverse: #{$tutor-gray-950};
   --tutor-button-ghost-hover: #{$tutor-gray-700};
   --tutor-button-caution: #{$tutor-yellow-400};
+  --tutor-button-success: #{$tutor-success-600};
+  --tutor-button-success-hover: #{$tutor-success-700};
+  --tutor-button-success-focused: #{$tutor-success-600};
 
   // =============================================================================
   // BORDER COLORS
@@ -119,6 +125,9 @@
   --tutor-border-warning-tertiary: #{$tutor-warning-400};
   --tutor-border-error: #{$tutor-error-300};
   --tutor-border-error-secondary: #{$tutor-error-700};
+  --tutor-border-exception6: #{$tutor-exception-5};
+  --tutor-border-error-tertiary: #{$tutor-error-400};
+  --tutor-border-tertiary: #{$tutor-gray-400};
 
   // =============================================================================
   // TAB COLORS

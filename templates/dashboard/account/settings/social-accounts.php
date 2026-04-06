@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 
@@ -33,11 +34,11 @@ foreach ( $social_fields as $key => $field ) {
 			id: "<?php echo esc_attr( $form_id ); ?>",
 			mode: "onChange",
 			shouldFocusError: true,
-			defaultValues: <?php echo wp_json_encode( $social_links ); ?>
+			defaultValues: <?php echo esc_attr( wp_json_encode( $social_links ) ); ?>
 		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit((data) => handleSaveSocialProfile(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
-		class="tutor-social-form"
+		class="tutor-card tutor-social-form"
 	>
 		<?php do_action( 'tutor_profile_edit_before_social_media', $user ); ?>
 
@@ -45,7 +46,7 @@ foreach ( $social_fields as $key => $field ) {
 			<div class='tutor-social-field'>
 				<!-- Social icon -->
 				<div class="tutor-social-icon">
-					<?php tutor_utils()->render_svg_icon( $field['svg_icon'], 20, 20 ); ?>
+					<?php SvgIcon::make()->name( $field['svg_icon'] )->size( 20 )->render(); ?>
 				</div>
 				<?php
 					$message = sprintf(
@@ -60,9 +61,8 @@ foreach ( $social_fields as $key => $field ) {
 						->name( $key )
 						->label( $field['label'] )
 						->clearable()
-						->required()
 						->placeholder( $field['placeholder'] )
-						->attr( 'x-bind', "register('$key', { pattern: { value: /$field[pattern]/i, message: '$message' } })" )
+						->attr( 'x-bind', "register('$key', { pattern: { value: /$field[pattern]/i, message: '" . esc_js( $message ) . "' } })" )
 						->render();
 				?>
 			</div>

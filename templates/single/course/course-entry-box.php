@@ -230,13 +230,14 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 			$price = apply_filters( 'get_tutor_course_price', null, get_the_ID() );
 
 			if ( tutor_utils()->is_course_fully_booked( null ) ) {
+				$alert_message = apply_filters( 'tutor_course_fully_booked_message', __( 'This course is full right now. We limit the number of students to create an optimized and productive group dynamic.', 'tutor' ) );
 				ob_start();
 				?>
 					<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
 							<span class="tutor-icon-circle-info tutor-alert-icon tutor-mr-12" area-hidden="true"></span>
 							<span>
-								<?php esc_html_e( 'This course is full right now. We limit the number of students to create an optimized and productive group dynamic.', 'tutor' ); ?>
+								<?php echo wp_kses_post( $alert_message ); ?>
 							</span>
 						</div>
 					</div>

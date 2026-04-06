@@ -9,7 +9,12 @@
  * @since 1.0.0
  */
 
+use Tutor\Components\Modal;
+use Tutor\Options_V2;
+
+$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
 ?>
+<?php if ( $is_legacy_learning ) : ?> 
 <form class="tutor-modal tutor-is-active tutor-course-review-popup-form">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
@@ -46,3 +51,19 @@
 		</div>
 	</div>
 </form>
+<?php else : ?>
+
+	<?php
+	$modal_template = tutor_get_template( 'learning-area.subpages.reviews.create-review-modal' );
+	Modal::make()
+		->id( 'create-review-modal' )
+		->title( __( 'How Was Your Experience?', 'tutor' ) )
+		->subtitle( __( 'Your feedback helps others find the right course.', 'tutor' ) )
+		->template( $modal_template, array( 'clear_review_popup_data' => true ) )
+		->width( '452px' )
+		->state( 'open' )
+		->closeable( false )
+		->render();
+	?>
+
+<?php endif; ?>

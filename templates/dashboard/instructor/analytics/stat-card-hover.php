@@ -8,6 +8,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\SvgIcon;
+
 $start_date          = $data['start_date'] ?? '';
 $end_date            = $data['end_date'] ?? '';
 $hover_content       = $data['hover_content'];
@@ -22,7 +24,7 @@ $previous_end_date   = $hover_content['previous_end_date'] ?? '';
 	<div class="tutor-stat-card-hover-wrap">
 		<span class="stat-hover-trigger <?php echo esc_attr( $hover_content['class'] ?? '' ); ?>">
 			<?php echo esc_html( $hover_content['percentage'] ); ?>
-			<?php tutor_utils()->render_svg_icon( $hover_content['icon'], 16, 16, array( 'class' => $hover_content['icon_class'] ?? '' ) ); ?>
+			<?php SvgIcon::make()->name( $hover_content['icon'] )->size( 16 )->attr( 'class', $hover_content['icon_class'] ?? '' )->render(); ?>
 		</span>
 
 		<div class="tutor-stat-card-hover-card">
@@ -43,7 +45,7 @@ $previous_end_date   = $hover_content['previous_end_date'] ?? '';
 				</span>
 				<span class="stat-hover-trigger <?php echo esc_attr( $hover_content['class'] ?? '' ); ?>">
 					<?php echo esc_html( $hover_content['percentage'] ); ?>
-					<?php tutor_utils()->render_svg_icon( $hover_content['icon'], 16, 16, array( 'class' => $hover_content['icon_class'] ?? '' ) ); ?>
+					<?php SvgIcon::make()->name( $hover_content['icon'] )->size( 16 )->attr( 'class', $hover_content['icon_class'] ?? '' )->render(); ?>
 				</span>
 			</div>
 		</div>

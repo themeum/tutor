@@ -385,7 +385,7 @@ class Template extends Tutor_Base {
 						$dashboard_pages     = tutor_utils()->tutor_dashboard_pages();
 						$dashboard_page_item = tutor_utils()->array_get( $query_var, $dashboard_pages );
 						$auth_cap            = tutor_utils()->array_get( 'auth_cap', $dashboard_page_item );
-						if ( $auth_cap && ! current_user_can( $auth_cap ) ) {
+						if ( $auth_cap && ! User::is_admin() && ! current_user_can( $auth_cap ) ) {
 							$template = tutor_get_template( 'permission-denied' );
 						}
 
@@ -403,6 +403,13 @@ class Template extends Tutor_Base {
 							if ( file_exists( $page_template ) ) {
 								$template = tutor_get_template( 'account' );
 							}
+						}
+
+						$dashboard_subpage = tutor_utils()->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
+						$is_isolated       = Dashboard::is_isolated_page_request( $dashboard_page, $dashboard_subpage );
+
+						if ( $is_isolated ) {
+							$template = tutor_get_template( 'dashboard-isolated' );
 						}
 					} else {
 						$template = tutor_get_template( 'login' );
@@ -507,7 +514,7 @@ class Template extends Tutor_Base {
 	public function load_learning_template( string $template ): string {
 		if ( tutor_utils()->is_learning_area() ) {
 			$post_type   = get_post_type();
-			$legacy_mode = tutor_utils()->get_option( 'is_legacy_learning_mode' );
+			$legacy_mode = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
 
 			$template_path = apply_filters( 'tutor_single_content_template', $template, $post_type );
 

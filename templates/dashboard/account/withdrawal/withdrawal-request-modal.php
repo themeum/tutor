@@ -13,6 +13,8 @@ use Tutor\Components\Button;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\InputField;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
@@ -28,7 +30,7 @@ $currency_symbol      = $data['currency_symbol'] ?? '';
 <div class="tutor-p-8">
 
 <div class="tutor-flex tutor-gap-6 tutor-p-5 tutor-radius-6 tutor-mb-7 tutor-withdrawal-available-balance">
-	<div class="tutor-withdrawal-available-balance-icon"><?php tutor_utils()->render_svg_icon( Icon::WALLET, 24, 24, array( 'class' => 'tutor-icon-brand' ) ); ?></div>
+	<div class="tutor-withdrawal-available-balance-icon"><?php SvgIcon::make()->name( Icon::WALLET )->size( 24 )->color( Color::BRAND )->render(); ?></div>
 	<div>
 		<div class="tutor-text-h4 tutor-font-bold tutor-text-primary"><?php echo esc_html( tutor_utils()->tutor_price( $available_balance ) ); ?></div>
 		<div class="tutor-text-tiny tutor-text-secondary"><?php esc_html_e( 'Available Balance', 'tutor' ); ?></div>
@@ -64,7 +66,7 @@ InputField::make()
 	->render();
 ?>
 <div class="tutor-flex tutor-gap-2 tutor-mt-4 tutor-items-center">
-	<?php tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+	<?php SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 	<div class="tutor-tiny tutor-font-regular tutor-text-secondary">
 	<?php
 	echo esc_html(

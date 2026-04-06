@@ -11,6 +11,7 @@
 
 use TUTOR\Input;
 use TUTOR\Instructor;
+use Tutor\Components\SvgIcon;
 
 
 defined( 'ABSPATH' ) || exit;
@@ -55,7 +56,7 @@ if ( ! empty( $hover_content ) ) {
 			<?php echo esc_html( $card_title ); ?>
 		</div>
 		<div class="tutor-stat-card-icon">
-			<?php tutor_utils()->render_svg_icon( $icon, $icon_size, $icon_size ); ?>
+			<?php SvgIcon::make()->name( $icon )->size( $icon_size )->render(); ?>
 		</div>
 	</div>
 	<div class="tutor-stat-card-content">
@@ -74,7 +75,7 @@ if ( ! empty( $hover_content ) ) {
 		<?php endif; ?>
 	</div>
 	<?php if ( $show_graph ) : ?>
-		<div class="tutor-stat-card-chart" x-data="tutorStatCard(<?php echo wp_json_encode( $data ); ?>)">
+		<div class="tutor-stat-card-chart" x-data="tutorStatCard(<?php echo esc_attr( wp_json_encode( $data ) ); ?>)">
 			<canvas x-ref="canvas" hright="33" width="100%"></canvas>
 		</div>
 	<?php endif; ?>

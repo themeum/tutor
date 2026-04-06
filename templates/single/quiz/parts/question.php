@@ -20,11 +20,12 @@
 			'multiple_choice' => 'checkbox',
 		);
 		$show_previous_button = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
+		$show_previous_button = $show_previous_button && ! $hide_previous_button;
 
-		if ( 'question_pagination' === $question_layout_view ) {
+		if ( 'single_question' === $question_layout_view && $enable_pagination ) {
 			$question_i = 0;
 			?>
-			<div class="tutor-quiz-questions-pagination">
+			<div class="tutor-quiz-questions-pagination" data-pagination-style="<?php echo esc_attr( $pagination_type ); ?>">
 				<ul>
 					<?php
 					foreach ( $questions as $question ) {
@@ -70,7 +71,7 @@
 					style="display: <?php echo esc_attr( $style_display ); ?> ;" 
 					<?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-" . esc_attr( $next_question->question_id ) . "'" : ''; ?> 
 					<?php echo 'h5p' === $question->question_type ? 'data-h5p-quiz-content-id=' . esc_attr( $question->question_description ) : ''; ?>
-					data-quiz-feedback-mode="<?php echo esc_attr( $feedback_mode ); ?>"  
+					data-enable-answer-reveal="<?php echo esc_attr( $enable_answer_reveal ? '1' : '0' ); ?>"
 					data-question_index="<?php echo esc_attr( $question_i ); ?>"
 					data-question-type="<?php echo esc_attr( $question->question_type ); ?>">
 

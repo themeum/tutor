@@ -38,4 +38,7 @@ abstract class Variant {
 	public const LINK             = 'link';
 	public const LINK_GRAY        = 'link-gray';
 	public const LINK_DESTRUCTIVE = 'link-destructive';
+
+	public const BRAND   = 'brand';
+	public const WARNING = 'warning';
 }

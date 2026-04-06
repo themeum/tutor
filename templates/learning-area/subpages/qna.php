@@ -11,13 +11,10 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use TUTOR\Input;
-use Tutor\Components\Constants\InputType;
-use Tutor\Components\InputField;
-use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
@@ -72,7 +69,11 @@ $questions   = tutor_utils()->get_qa_questions(
 );
 
 ?>
-<div class="tutor-pt-4 tutor-pb-6">
+<div class="tutor-py-8">
+	<h4 class="tutor-h4 tutor-mb-5 tutor-flex tutor-items-center tutor-gap-4">
+		<?php SvgIcon::make()->name( Icon::QA )->size( 24 )->render(); ?>
+		<?php esc_html_e( 'Q&A', 'tutor' ); ?>
+	</h4>
 	<div class="tutor-learning-area-qna" x-data="tutorQnA()">
 		<div class="tutor-discussion-search tutor-p-6 tutor-border-b">
 			<?php
@@ -116,7 +117,7 @@ $questions   = tutor_utils()->get_qa_questions(
 		<?php if ( empty( $questions ) ) : ?>
 			<?php EmptyState::make()->title( 'No Questions Found!' )->render(); ?>
 		<?php else : ?>
-			<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
+			<div class="tutor-discussion-card-wrapper tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
 				<?php
 				foreach ( $questions as $question ) :
 					tutor_load_template(

@@ -51,6 +51,28 @@
     @include tutor-textarea;
   }
 
+  .tutor-wp-editor-container {
+    .wp-editor-container,
+    .mce-tinymce {
+      border-radius: $tutor-input-radius;
+    }
+
+    .mce-toolbar-grp,
+    .quicktags-toolbar {
+      border-top-left-radius: $tutor-input-radius;
+      border-top-right-radius: $tutor-input-radius;
+    }
+
+    .mce-toolbar:last-of-type {
+      border-top: none;
+    }
+
+    .mce-statusbar {
+      border-bottom-left-radius: $tutor-input-radius;
+      border-bottom-right-radius: $tutor-input-radius;
+    }
+  }
+
   .tutor-checkbox {
     @include tutor-checkbox;
 
@@ -178,6 +200,18 @@
   &-error {
     .tutor-input {
       border: 1px solid $tutor-border-error;
+      --tutor-input-border-shadow-current: none;
+      box-shadow: $tutor-shadow-xs;
+
+      &:focus {
+        @include tutor-focus-ring('error');
+        border-color: $tutor-border-error;
+      }
+    }
+
+    .tutor-wp-editor-container {
+      outline: 1px solid $tutor-border-error;
+      border-radius: $tutor-input-radius;
       box-shadow: $tutor-shadow-xs;
 
       &:focus {

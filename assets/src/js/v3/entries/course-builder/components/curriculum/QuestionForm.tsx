@@ -17,6 +17,7 @@ import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/questio
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import DrawImage from '@CourseBuilderComponents/curriculum/question-types/DrawImage';
 import Coordinates from '@CourseBuilderComponents/curriculum/question-types/Coordinates';
+import PinImage from '@CourseBuilderComponents/curriculum/question-types/PinImage';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { tutorConfig } from '@TutorShared/config/config';
@@ -58,6 +59,7 @@ const QuestionForm = () => {
     ordering: <MultipleChoiceAndOrdering key={activeQuestionId} />,
     draw_image: <DrawImage key={activeQuestionId} />,
     coordinates: <Coordinates key={activeQuestionId} />,
+    pin_image: <PinImage key={activeQuestionId} />,
   } as const;
 
   useEffect(() => {

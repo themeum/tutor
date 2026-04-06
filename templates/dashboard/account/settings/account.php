@@ -17,6 +17,7 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
+use Tutor\Components\WPEditor;
 
 $user          = wp_get_current_user();
 $settings_data = User::get_profile_settings_data( $user->ID );
@@ -62,7 +63,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 		x-data='tutorForm({ 
 			id: "<?php echo esc_attr( $form_id ); ?>",
 			mode: "onChange",
-			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
+			defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>,
 		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit((data) => handleUpdateProfile(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
@@ -84,10 +85,13 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 								variant: 'image-uploader',
 								accept: '.png,.jpg,.jpeg',
 								onFileSelect: handleUploadProfilePhoto,
-								imagePreviewPlaceholder: '<?php esc_attr( $settings_data['profile_placeholder'] ); ?>',
+								imagePreviewPlaceholder: '<?php echo esc_attr( $settings_data['profile_placeholder'] ); ?>',
 							})"
 							class="tutor-account-avatar" 
-							:class="open ? 'active' : ''"
+							:class="{
+								'active': open,
+								'is-loading': uploadProfilePhotoMutation?.isPending || removeProfilePhotoMutation?.isPending,
+							}"
 						>
 							<input
 								class="tutor-hidden"
@@ -99,7 +103,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 								@change="handleFileSelect($event)"
 							/>
 							<img 
-								:src="imagePreview ? imagePreview : '<?php echo esc_url( $default_values['profile_photo'] ); ?>'"
+								:src="imagePreview ? imagePreview : '<?php echo esc_url( $settings_data['profile_placeholder'] ); ?>'"
 								class="tutor-avatar-image"
 								alt="<?php esc_attr_e( 'User Avatar', 'tutor' ); ?>"
 							>
@@ -147,7 +151,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
 					<?php
 						InputField::make()
@@ -238,14 +242,13 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 						->attr( 'x-bind', "register('display_name')" )
 						->render();
 
-					InputField::make()
-						->type( InputType::TEXTAREA )
+					WPEditor::make()
 						->label( __( 'Bio', 'tutor' ) )
 						->name( 'tutor_profile_bio' )
-						->clearable()
-						->id( 'tutor_profile_bio' )
 						->placeholder( __( 'Enter your bio', 'tutor' ) )
+						->content( $default_values['tutor_profile_bio'] )
 						->attr( 'x-bind', "register('tutor_profile_bio')" )
+						->editor_config( tutor_utils()->get_profile_bio_editor_config( 'tutor_profile_bio' ) )
 						->render();
 				?>
 			</div>

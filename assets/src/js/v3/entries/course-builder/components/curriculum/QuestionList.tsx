@@ -116,11 +116,24 @@ const questionTypeOptions: {
     icon: 'quizImageAnswer',
     isPro: true,
   },
+  {
+    label: __('Pin on Image', 'tutor'),
+    value: 'pin_image',
+    // TODO: icon is not final.
+    icon: 'quizImageAnswer',
+    isPro: true,
+  },
 ];
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
+  const questionTypeOptionsForUi = useMemo(() => {
+    if (tutorConfig.is_legacy_learning_mode) {
+      return questionTypeOptions.filter((option) => option.value !== 'draw_image' && option.value !== 'pin_image');
+    }
+    return questionTypeOptions;
+  }, []);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const questionListRef = useRef<HTMLDivElement>(null);
@@ -251,7 +264,22 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                       is_correct: '1',
                     },
                   ]
-                : [],
+                : questionType === 'pin_image'
+                  ? [
+                      {
+                        _data_status: QuizDataStatus.NEW,
+                        is_saved: true,
+                        answer_id: nanoid(),
+                        answer_title: '',
+                        belongs_question_id: questionId,
+                        belongs_question_type: 'pin_image',
+                        answer_two_gap_match: '',
+                        answer_view_format: 'pin_image',
+                        answer_order: 0,
+                        is_correct: '1',
+                      },
+                    ]
+                  : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,
@@ -467,7 +495,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         >
           <div css={styles.questionOptionsWrapper}>
             <span css={styles.questionTypeOptionsTitle}>{__('Select Question Type', 'tutor')}</span>
-            {questionTypeOptions.map((option) => (
+            {questionTypeOptionsForUi.map((option) => (
               <Show
                 key={option.value}
                 when={option.isPro && !isTutorPro}

@@ -1,0 +1,36 @@
+@use '@Core/scss/tokens' as *;
+
+:root {
+  --tutor-input-radius: #{$tutor-radius-md};
+  --tutor-input-border-color: #{$tutor-border-idle};
+  --tutor-input-border-shadow: none;
+}
+
+[data-tutor-ui='kids'] {
+  .tutor-input {
+    --tutor-input-radius: #{$tutor-radius-full};
+    --tutor-input-border-color: transparent;
+    --tutor-input-border-shadow: 0 0 0 1px #{$tutor-border-idle}, 0 3px 0 0 #{$tutor-border-idle};
+  }
+
+  .tutor-select {
+    --tutor-input-radius: #{$tutor-radius-full};
+    --tutor-input-border-color: transparent;
+    --tutor-input-border-shadow: 0 0 0 1px #{$tutor-border-idle}, 0 3px 0 0 #{$tutor-border-idle};
+  }
+
+  .tutor-text-area {
+    --tutor-input-radius: #{$tutor-radius-4xl};
+    --tutor-input-border-color: transparent;
+    --tutor-input-border-shadow: 0 0 0 1px #{$tutor-border-idle}, 0 3px 0 0 #{$tutor-border-idle};
+  }
+
+  .tutor-wp-editor-container,
+  .tutor-file-uploader {
+    --tutor-input-radius: #{$tutor-radius-4xl};
+  }
+
+  .tutor-file-uploader {
+    --tutor-file-uploader-background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='%23A4BCF4FF' stroke-width='3' stroke-dasharray='6%2c8' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  }
+}

@@ -107,6 +107,7 @@
         @include tutor-flex(row, start);
         @include tutor-typography('tiny', 'regular', 'subdued');
         gap: $tutor-spacing-2;
+        min-width: 99px;
 
         &::before {
           content: '';
@@ -257,7 +258,7 @@
       @include tutor-button-variant(link);
       min-height: unset;
       padding: 0;
-      margin-top: $tutor-spacing-6;
+      margin-top: $tutor-spacing-5;
       color: $tutor-text-brand;
       width: fit-content;
     }

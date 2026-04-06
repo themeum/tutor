@@ -124,6 +124,9 @@ declare global {
         url: string;
         is_enabled: number;
       }[];
+      kids_icons_registry: string[];
+      is_kids_mode: boolean;
+      is_legacy_learning_mode: boolean;
       current_user: {
         data: {
           id: string;
@@ -148,6 +151,7 @@ declare global {
         filter: null;
       };
       settings?: {
+        learning_mode: 'modern' | 'legacy' | 'kids' | '';
         monetize_by: 'wc' | 'tutor' | 'edd';
         enable_course_marketplace: 'on' | 'off';
         course_permalink_base: string;
@@ -180,6 +184,10 @@ declare global {
       };
       visibility_control?: {
         course_builder?: Record<string, string>;
+      };
+      quiz_options?: {
+        quiz_auto_start?: string;
+        feedback_mode?: string;
       };
     };
     wpApiSettings: {

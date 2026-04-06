@@ -14,6 +14,7 @@
 namespace Tutor\Components;
 
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Color;
 use TUTOR\Icon;
 use TUTOR\Input;
 
@@ -195,12 +196,17 @@ class SearchFilter extends BaseComponent {
 			$current_url = add_query_arg( $_GET, home_url( $wp->request ) );
 		}
 
-		$this->attributes['action']  = esc_url( $current_url );
-		$this->attributes['method']  = $method;
-		$this->attributes['id']      = $form_id;
-		$this->attributes['x-data']  = "tutorForm({ id: '" . esc_attr( $form_id ) . "', mode: 'onSubmit' })";
-		$this->attributes['x-bind']  = 'getFormBindings()';
-		$this->attributes['@submit'] = 'handleSubmit((data) => { $el.submit(); })($event)';
+		$this->attributes = array_merge(
+			array(
+				'action'  => esc_url( $current_url ),
+				'method'  => $method,
+				'id'      => $form_id,
+				'x-data'  => "tutorForm({ id: '" . esc_attr( $form_id ) . "', mode: 'onSubmit' })",
+				'x-bind'  => 'getFormBindings()',
+				'@submit' => 'handleSubmit((data) => { $el.submit(); })($event)',
+			),
+			$this->attributes
+		);
 
 		ob_start();
 		?>
@@ -215,12 +221,11 @@ class SearchFilter extends BaseComponent {
 				<div class="tutor-input-wrapper">
 					<div class="tutor-input-content tutor-input-content-left">
 						<?php
-						tutor_utils()->render_svg_icon(
-							Icon::SEARCH_2,
-							$icon_size,
-							$icon_size,
-							array( 'class' => 'tutor-icon-idle' )
-						)
+						SvgIcon::make()
+							->name( Icon::SEARCH_2 )
+							->size( $icon_size )
+							->color( Color::IDLE )
+							->render();
 						?>
 					</div>
 					<input 
@@ -240,7 +245,7 @@ class SearchFilter extends BaseComponent {
 						aria-label="<?php esc_attr_e( 'Clear search', 'tutor' ); ?>"
 						@click="setValue('<?php echo esc_attr( $input_name ); ?>', ''); $el.closest('form').submit();"
 					>
-						<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ) ); ?>
+						<?php SvgIcon::make()->name( Icon::CROSS )->size( 16 )->render(); ?>
 					</button>
 				</div>
 			</div>

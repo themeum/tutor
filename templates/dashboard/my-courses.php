@@ -20,6 +20,9 @@ use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
@@ -99,7 +102,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 ?>
 
 <div class="tutor-dashboard-my-courses" x-data="tutorMyCourses()">
-	<div class="tutor-hidden tutor-sm-flex tutor-items-center tutor-justify-between tutor-mb-6">
+	<div class="tutor-hidden tutor-sm-flex tutor-items-center tutor-justify-between tutor-mb-5">
 		<h4 class="tutor-h4"><?php esc_html_e( 'Courses', 'tutor' ); ?></h4>
 		<?php ob_start(); ?>
 		<button 
@@ -108,13 +111,13 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			@click="handleCreateCourse()"
 			:disabled="createMutation.isPending"
 		>
-			<?php tutor_utils()->render_svg_icon( Icon::ADD ); ?>
+			<?php SvgIcon::make()->name( Icon::ADD )->render(); ?>
 			<?php esc_html_e( 'New Course', 'tutor' ); ?>
 		</button>
 		<?php echo apply_filters( 'tutor_course_create_mobile_button', ob_get_clean() ); //phpcs:ignore ?>
 	</div>
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
-		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
+		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-border-b">
 			<?php Nav::make()->variant( Variant::PRIMARY )->size( Size::SMALL )->items( $nav_items )->render(); ?>
 			<div class="tutor-hidden tutor-sm-block">
 				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
@@ -122,12 +125,12 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-sm-hidden">
 				<?php do_action( 'tutor_course_create_button' ); ?>
 				<button 
-					class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2"
+					class="tutor-btn tutor-btn-primary tutor-btn-small tutor-gap-2"
 					:class="createMutation.isPending ? 'tutor-btn-loading' : ''"
 					@click="handleCreateCourse()"
 					:disabled="createMutation.isPending"
 				>
-					<?php tutor_utils()->render_svg_icon( Icon::ADD ); ?>
+					<?php SvgIcon::make()->name( Icon::ADD )->render(); ?>
 					<?php esc_html_e( 'New Course', 'tutor' ); ?>
 				</button>
 			</div>
@@ -159,7 +162,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		<?php if ( empty( $results ) ) : ?>
 			<?php EmptyState::make()->title( 'No Courses Found' )->render(); ?>
 		<?php else : ?>
-		<div class="tutor-p-6 tutor-sm-p-5 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
+		<div class="tutor-my-courses-card-wrapper tutor-p-6 tutor-sm-p-5 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
 			<?php
 			global $post;
 			$tutor_nonce_value = wp_create_nonce( tutor()->nonce_action );
@@ -178,10 +181,10 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							<img src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 							<div class="tutor-my-courses-card-actions">
 								<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
-									<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
+									<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
 								</a>
 								<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
-									<?php tutor_utils()->render_svg_icon( Icon::EYE_LINE ); ?>
+									<?php SvgIcon::make()->name( Icon::EYE_LINE )->render(); ?>
 								</a>
 							</div>
 						</div>
@@ -189,7 +192,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							<?php do_action( 'tutor_my_courses_before_meta', get_the_ID() ); ?>
 
 							<div class="tutor-tiny tutor-text-secondary tutor-flex tutor-items-center tutor-gap-2 tutor-mb-2">
-								<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2, 14, 14, array( 'class' => 'tutor-icon-brand' ) ); ?>
+								<?php SvgIcon::make()->name( Icon::CALENDAR_CHECK )->size( 14 )->color( Color::BRAND )->render(); ?>
 								<?php echo esc_html( get_the_date() ); ?> - <?php echo esc_html( get_the_time() ); ?>
 							</div>
 
@@ -201,14 +204,14 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-6 tutor-mt-4">
 								<?php if ( ! empty( $course_students ) ) : ?>
 								<div class="tutor-flex tutor-items-center tutor-gap-2">
-									<?php tutor_utils()->render_svg_icon( Icon::PASSED, 14, 14 ); ?>
+									<?php SvgIcon::make()->name( Icon::PASSED )->size( 14 )->render(); ?>
 									<?php echo esc_html( $course_students ); ?>
 								</div>
 								<?php endif; ?>
 
 								<?php if ( ! empty( $course_duration ) ) : ?>
 								<div class="tutor-flex tutor-items-center tutor-gap-2">
-									<?php tutor_utils()->render_svg_icon( Icon::TIME, 14, 14 ); ?>
+									<?php SvgIcon::make()->name( Icon::TIME )->size( 14 )->render(); ?>
 									<?php echo esc_html( $course_duration ); ?>
 								</div>
 								<?php endif; ?>
@@ -241,7 +244,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							})"
 						>
 							<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-								<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+								<?php SvgIcon::make()->name( Icon::THREE_DOTS_VERTICAL )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 							</button>
 
 							<div 
@@ -265,7 +268,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 										);
 										?>
 									<a href="?<?php echo esc_attr( $params ); ?>" class="tutor-popover-menu-item">
-										<?php tutor_utils()->render_svg_icon( Icon::PUBLISH, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::PUBLISH )->size( 20 )->render(); ?>
 										<span>
 											<?php
 											$can_publish_course = current_user_can( 'administrator' ) || (bool) tutor_utils()->get_option( 'instructor_can_publish_course' );
@@ -293,7 +296,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 										);
 										?>
 									<a href="?<?php echo esc_attr( $params ); ?>" class="tutor-popover-menu-item">
-										<?php tutor_utils()->render_svg_icon( Icon::CROSS_2, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::CROSS_2 )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Cancel Submission', 'tutor' ); ?>
 									</a>
 									<?php endif; ?>
@@ -301,14 +304,14 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 
 									<!-- Edit Link -->
 									<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-popover-menu-item tutor-hidden tutor-sm-flex">
-										<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</a>
 									<!-- Edit Link -->
 
 									<!-- View Link -->
 									<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-popover-menu-item tutor-hidden tutor-sm-flex">
-										<?php tutor_utils()->render_svg_icon( Icon::EYE_LINE, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::EYE_LINE )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Overview', 'tutor' ); ?>
 									</a>
 									<!-- View Link -->
@@ -324,7 +327,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 										);
 										?>
 									<a href="?<?php echo esc_attr( $params ); ?>" class="tutor-popover-menu-item">
-										<?php tutor_utils()->render_svg_icon( Icon::COPY_2, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::COPY_2 )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Duplicate', 'tutor' ); ?>
 									</a>
 									<?php endif; ?>
@@ -343,7 +346,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 										);
 										?>
 									<a href="?<?php echo esc_attr( $params ); ?>" class="tutor-popover-menu-item">
-										<?php tutor_utils()->render_svg_icon( Icon::MOVE, 20, 20 ); ?>
+										<?php SvgIcon::make()->name( Icon::MOVE )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Move to Draft', 'tutor' ); ?>
 									</a>
 									<?php endif; ?>
@@ -355,7 +358,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 											class="tutor-popover-menu-item tutor-border-t"
 											@click="hide(); TutorCore.modal.showModal('tutor-course-delete-modal', { courseId: <?php echo esc_html( $post->ID ); ?> });"
 										>
-											<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
+											<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 											<?php esc_html_e( 'Delete', 'tutor' ); ?>
 										</button>
 									<?php endif; ?>
@@ -388,6 +391,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			->id( 'tutor-course-delete-modal' )
 			->title( __( 'Delete This Course?', 'tutor' ) )
 			->message( __( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ) )
+			->icon( UrlHelper::asset( 'images/illustrations/delete.svg' ) )
 			->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
 			->confirm_handler( 'handleDeleteCourse(payload?.courseId)' )
 			->mutation_state( 'deleteMutation' )

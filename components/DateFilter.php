@@ -105,6 +105,15 @@ class DateFilter extends BaseComponent {
 	protected $show_label = true;
 
 	/**
+	 * Query params to clear when a date filter is applied or cleared (e.g. 'current_page').
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $clear_params = array();
+
+	/**
 	 * Set filter type.
 	 *
 	 * @param string $type Filter type (single|range).
@@ -186,6 +195,23 @@ class DateFilter extends BaseComponent {
 	}
 
 	/**
+	 * Set query params to clear when a date filter is applied or cleared.
+	 *
+	 * Useful for resetting pagination (e.g. 'current_page') or other
+	 * context-specific params whenever the date selection changes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $params List of query param keys to remove on apply/clear.
+	 *
+	 * @return self
+	 */
+	public function clear_params( array $params ): self {
+		$this->clear_params = $params;
+		return $this;
+	}
+
+	/**
 	 * Render the component.
 	 *
 	 * @return string
@@ -199,7 +225,8 @@ class DateFilter extends BaseComponent {
 
 		// Default settings based on type.
 		$calendar_options = array(
-			'type' => 'default',
+			'type'        => 'default',
+			'clearParams' => $this->clear_params,
 		);
 
 		$button_classes = 'tutor-btn tutor-btn-outline';
@@ -215,6 +242,7 @@ class DateFilter extends BaseComponent {
 			$calendar_options = array(
 				'type'               => 'multiple',
 				'selectionDatesMode' => 'multiple-ranged',
+				'clearParams'        => $this->clear_params,
 			);
 			$popover_classes .= ' tutor-range-calendar-popover';
 		}
@@ -231,25 +259,22 @@ class DateFilter extends BaseComponent {
 
 		ob_start();
 		?>
-		<div x-data="tutorPopover({ placement: '<?php echo esc_attr( $this->placement ); ?>' })">
+		<div x-data="tutorPopover({ placement: '<?php echo esc_attr( $this->placement ); ?>' })" <?php echo $this->get_attributes_string(); //phpcs:ignore -- Sanitization is performed inside get_attributes_string. ?>>
+
 			<button 
 				type="button"
 				x-ref="trigger"
 				@click="toggle()"
 				class="<?php echo esc_attr( $button_classes ); ?>"
 			>
-				<?php
-				if ( function_exists( 'tutor_utils' ) ) {
-					tutor_utils()->render_svg_icon( $icon, $this->icon_size, $this->icon_size );
-				}
-				?>
+				<?php SvgIcon::make()->name( $icon )->size( $this->icon_size )->render(); ?>
 				<?php if ( ! empty( $this->label ) ) : ?>
 					<span><?php echo esc_html( $this->label ); ?></span>
 				<?php endif; ?>
 
 				<?php if ( $this->has_selection() ) : ?>
 					<span @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary tutor-flex tutor-align-center">
-						<?php tutor_utils()->render_svg_icon( Icon::CROSS_2 ); ?>
+						<?php SvgIcon::make()->name( Icon::CROSS_2 )->render(); ?>
 					</span>
 				<?php endif; ?>
 			</button>

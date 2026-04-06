@@ -17,16 +17,18 @@ use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\InputField;
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 
-$form_id        = $form_id ?? '';
-$label          = $label ?? '';
-$submit_label   = $submit_label ?? __( 'Update', 'tutor' );
-$form_class     = $form_class ?? '';
-$default_value  = $default_value ?? '';
-$submit_handler = $submit_handler ?? '';
-$cancel_handler = $cancel_handler ?? '';
-$is_pending     = $is_pending ?? '';
-$placeholder    = $placeholder ?? __( 'Write your question', 'tutor' );
+$form_id             = $form_id ?? '';
+$label               = $label ?? '';
+$submit_label        = $submit_label ?? __( 'Update', 'tutor' );
+$form_class          = $form_class ?? '';
+$default_value       = $default_value ?? '';
+$submit_handler      = $submit_handler ?? '';
+$cancel_handler      = $cancel_handler ?? '';
+$is_pending          = $is_pending ?? '';
+$placeholder         = $placeholder ?? __( 'Write your question', 'tutor' );
+$keep_footer_visible = $keep_footer_visible ?? false;
 
 ?>
 
@@ -35,32 +37,48 @@ $placeholder    = $placeholder ?? __( 'Write your question', 'tutor' );
 	x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>', mode: 'onSubmit', defaultValues: { answer: '<?php echo esc_js( $default_value ); ?>' } }), focused: false }"
 	x-bind="getFormBindings()"
 	@submit.prevent="handleSubmit(<?php echo esc_js( $submit_handler ); ?>)($event)"
+	@wp-editor-focus="focused = true"
 >
 	<?php
-	$input = InputField::make()
-		->type( InputType::TEXTAREA )
-		->name( 'answer' )
-		->placeholder( $placeholder )
-		->attr( 'x-bind', "register('answer', { required: '" . esc_js( __( 'Please enter your response.', 'tutor' ) ) . "' })" )
-		->attr( '@keydown', 'handleKeydown($event)' )
-		->attr( '@focus', 'focused = true' );
+	$custom_editor = apply_filters(
+		'tutor_qna_editor',
+		array(
+			'form_id'       => $form_id,
+			'default_value' => $default_value,
+			'placeholder'   => $placeholder,
+			'label'         => $label,
+		)
+	);
 
-	if ( $label ) {
-		$input->label( $label );
+	if ( ! $custom_editor ) {
+		$input = InputField::make()
+			->type( InputType::TEXTAREA )
+			->name( 'answer' )
+			->placeholder( $placeholder )
+			->attr( 'x-bind', "register('answer', { required: '" . esc_js( __( 'Please enter your response.', 'tutor' ) ) . "' })" )
+			->attr( '@keydown', 'handleKeydown($event)' )
+			->attr( '@focus', 'focused = true' );
+
+		if ( $label ) {
+			$input->label( $label );
+		}
+
+		$input->render();
 	}
 
-	$input->render();
+	//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo $custom_editor;
 	?>
 
 	<div
 		class="tutor-flex tutor-items-center tutor-mt-5 tutor-justify-between tutor-sm-justify-end"
 		x-cloak
-		:class="{ 'tutor-hidden': !focused }"
+		<?php echo ! $keep_footer_visible ? ":class=\"{ 'tutor-hidden': !focused }\"" : ''; ?>
 	>
 		<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2 tutor-sm-hidden">
-			<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?>
+			<?php SvgIcon::make()->name( Icon::COMMAND )->size( 12 )->render(); ?>
 			<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
-			<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?>
+			<?php SvgIcon::make()->name( Icon::ENTER )->size( 12 )->render(); ?>
 			<?php esc_html_e( 'Enter to Save', 'tutor' ); ?>
 		</div>
 		<div class="tutor-flex tutor-items-center tutor-gap-2">
