@@ -97,8 +97,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return false;
       }
 
-      const formState = form.getFormState(this.formId);
-      const values = formState.values ?? {};
+      const values = form.getFormState(this.formId).values ?? {};
       const fieldNames = this.getQuestionFieldNames(values, index);
 
       if (!fieldNames.length) {
