@@ -96,6 +96,27 @@ export const validateQuizQuestion = (
         }
       }
     }
+
+    if (currentQuestionType === 'scale') {
+      const firstAnswer = answers[0];
+      if (firstAnswer?.answer_two_gap_match) {
+        try {
+          const data = JSON.parse(firstAnswer.answer_two_gap_match) as {
+            config?: { min?: number; max?: number };
+          };
+          const min = Number(data.config?.min ?? 0);
+          const max = Number(data.config?.max ?? 100);
+          if (!Number.isNaN(min) && !Number.isNaN(max) && max <= min) {
+            return {
+              message: __('The maximum value must be greater than the minimum value.', __TUTOR_TEXT_DOMAIN__),
+              type: 'question',
+            };
+          }
+        } catch {
+          // Invalid JSON; other validation may apply elsewhere.
+        }
+      }
+    }
   }
 
   return true;

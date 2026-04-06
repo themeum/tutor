@@ -61,51 +61,23 @@ interface ScaleData {
   config: ScaleConfig;
 }
 
-const DEFAULT_SCALE_MIN = 1;
-
-function normalizeScaleConfig(cfg: ScaleConfig, changedField?: keyof ScaleConfig): ScaleConfig {
-  const step = cfg.step > 0 ? cfg.step : 1;
-  let min = Math.max(DEFAULT_SCALE_MIN, cfg.min);
-  let max = cfg.max;
-
-  if (max <= min) {
-    if (changedField === 'max') {
-      min = Math.max(DEFAULT_SCALE_MIN, max - step);
-      if (min >= max) {
-        max = min + step;
-      }
-    } else {
-      max = min + step;
-    }
-  }
-
-  return {
-    ...cfg,
-    min,
-    max,
-    step,
-  };
-}
-
 function parseStoredScaleData(value: string): ScaleData | null {
   if (!value || typeof value !== 'string') return null;
   try {
     const data = JSON.parse(value) as Partial<ScaleData>;
     if (typeof data.value === 'number' && data.config) {
-      const rawConfig: ScaleConfig = {
-        min: data.config.min ?? DEFAULT_SCALE_MIN,
-        max: data.config.max ?? 100,
-        step: data.config.step ?? 1,
-        defaultValue: data.config.defaultValue ?? 50,
-        pxPerUnit: data.config.pxPerUnit ?? 10,
-        labelEvery: data.config.labelEvery ?? 10,
-        minorTickEvery: data.config.minorTickEvery ?? 5,
-        precision: data.config.precision ?? 0,
-      };
-      const config = normalizeScaleConfig(rawConfig);
       return {
-        value: Math.max(config.min, Math.min(config.max, data.value)),
-        config,
+        value: data.value,
+        config: {
+          min: data.config.min ?? 0,
+          max: data.config.max ?? 100,
+          step: data.config.step ?? 1,
+          defaultValue: data.config.defaultValue ?? 50,
+          pxPerUnit: data.config.pxPerUnit ?? 10,
+          labelEvery: data.config.labelEvery ?? 10,
+          minorTickEvery: data.config.minorTickEvery ?? 5,
+          precision: data.config.precision ?? 0,
+        },
       };
     }
   } catch {
@@ -114,7 +86,13 @@ function parseStoredScaleData(value: string): ScaleData | null {
   return null;
 }
 
-const FormScale = ({ field }: FormScaleProps) => {
+const scaleRangeErrorMessage = __('The maximum value must be greater than the minimum value.', __TUTOR_TEXT_DOMAIN__);
+
+function clearScaleRangeValidationError(setValidationError: FormScaleProps['setValidationError']) {
+  setValidationError?.((prev) => (prev?.type === 'question' && prev?.message === scaleRangeErrorMessage ? null : prev));
+}
+
+const FormScale = ({ field, setValidationError }: FormScaleProps) => {
   const option = field.value;
   const [scaleData, setScaleData] = useState<ScaleData>(() => {
     const parsed = parseStoredScaleData(option?.answer_two_gap_match ?? '');
@@ -122,7 +100,7 @@ const FormScale = ({ field }: FormScaleProps) => {
       parsed || {
         value: 50,
         config: {
-          min: DEFAULT_SCALE_MIN,
+          min: 0,
           max: 100,
           step: 1,
           defaultValue: 50,
@@ -171,18 +149,28 @@ const FormScale = ({ field }: FormScaleProps) => {
 
   const handleConfigChange = useCallback(
     (fieldKey: keyof ScaleConfig, value: number) => {
-      const newConfig = normalizeScaleConfig({ ...config, [fieldKey]: value }, fieldKey);
+      const newConfig = { ...config, [fieldKey]: value };
+
+      if (newConfig.max <= newConfig.min) {
+        setValidationError?.({
+          message: scaleRangeErrorMessage,
+          type: 'question',
+        });
+      } else {
+        clearScaleRangeValidationError(setValidationError);
+      }
+
       setConfig(newConfig);
 
       const newScaleData = {
         ...scaleData,
         config: newConfig,
-        value: Math.max(newConfig.min, Math.min(newConfig.max, scaleData.value)),
+        value: scaleData.value,
       };
       setScaleData(newScaleData);
       saveScaleData(newScaleData);
     },
-    [config, scaleData, saveScaleData],
+    [config, scaleData, saveScaleData, setValidationError],
   );
 
   const parseConfigNumber = (raw: string, fallback: number) => {
@@ -192,17 +180,18 @@ const FormScale = ({ field }: FormScaleProps) => {
 
   const handleValueChange = useCallback(
     (value: number) => {
-      const clamped = Math.max(config.min, Math.min(config.max, value));
-      const newScaleData = { ...scaleData, value: clamped };
+      const newScaleData = { ...scaleData, value };
       setScaleData(newScaleData);
       saveScaleData(newScaleData);
     },
-    [config.min, config.max, scaleData, saveScaleData],
+    [scaleData, saveScaleData],
   );
 
   if (!option) {
     return null;
   }
+
+  const isRangeInvalid = config.max <= config.min;
 
   return (
     <div css={styles.wrapper}>
@@ -218,8 +207,8 @@ const FormScale = ({ field }: FormScaleProps) => {
               <TextInput
                 type="number"
                 size="small"
-                value={config.min}
-                onChange={(v) => handleConfigChange('min', parseConfigNumber(v, DEFAULT_SCALE_MIN))}
+                value={String(config.min)}
+                onChange={(v) => handleConfigChange('min', parseConfigNumber(v, 0))}
               />
             </div>
             <div css={styles.configField}>
@@ -227,7 +216,7 @@ const FormScale = ({ field }: FormScaleProps) => {
               <TextInput
                 type="number"
                 size="small"
-                value={config.max}
+                value={String(config.max)}
                 onChange={(v) => handleConfigChange('max', parseConfigNumber(v, 100))}
               />
             </div>
@@ -236,7 +225,7 @@ const FormScale = ({ field }: FormScaleProps) => {
               <TextInput
                 type="number"
                 size="small"
-                value={config.step}
+                value={String(config.step)}
                 onChange={(v) => handleConfigChange('step', parseConfigNumber(v, 1))}
               />
             </div>
@@ -245,7 +234,7 @@ const FormScale = ({ field }: FormScaleProps) => {
               <TextInput
                 type="number"
                 size="small"
-                value={config.labelEvery}
+                value={String(config.labelEvery)}
                 onChange={(v) => handleConfigChange('labelEvery', parseConfigNumber(v, 10))}
               />
             </div>
@@ -261,8 +250,9 @@ const FormScale = ({ field }: FormScaleProps) => {
             <TextInput
               type="number"
               size="small"
-              value={scaleData.value}
+              value={String(scaleData.value)}
               onChange={(v) => handleValueChange(parseConfigNumber(v, config.min))}
+              {...(!isRangeInvalid && { min: config.min, max: config.max })}
             />
           </div>
         </div>
