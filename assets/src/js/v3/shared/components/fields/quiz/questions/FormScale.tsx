@@ -9,6 +9,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useState } from 'react';
 
+import TextInput from '@TutorShared/atoms/TextInput';
 import {
   borderRadius,
   Breakpoint,
@@ -60,23 +61,51 @@ interface ScaleData {
   config: ScaleConfig;
 }
 
+const DEFAULT_SCALE_MIN = 1;
+
+function normalizeScaleConfig(cfg: ScaleConfig, changedField?: keyof ScaleConfig): ScaleConfig {
+  const step = cfg.step > 0 ? cfg.step : 1;
+  let min = Math.max(DEFAULT_SCALE_MIN, cfg.min);
+  let max = cfg.max;
+
+  if (max <= min) {
+    if (changedField === 'max') {
+      min = Math.max(DEFAULT_SCALE_MIN, max - step);
+      if (min >= max) {
+        max = min + step;
+      }
+    } else {
+      max = min + step;
+    }
+  }
+
+  return {
+    ...cfg,
+    min,
+    max,
+    step,
+  };
+}
+
 function parseStoredScaleData(value: string): ScaleData | null {
   if (!value || typeof value !== 'string') return null;
   try {
     const data = JSON.parse(value) as Partial<ScaleData>;
     if (typeof data.value === 'number' && data.config) {
+      const rawConfig: ScaleConfig = {
+        min: data.config.min ?? DEFAULT_SCALE_MIN,
+        max: data.config.max ?? 100,
+        step: data.config.step ?? 1,
+        defaultValue: data.config.defaultValue ?? 50,
+        pxPerUnit: data.config.pxPerUnit ?? 10,
+        labelEvery: data.config.labelEvery ?? 10,
+        minorTickEvery: data.config.minorTickEvery ?? 5,
+        precision: data.config.precision ?? 0,
+      };
+      const config = normalizeScaleConfig(rawConfig);
       return {
-        value: data.value,
-        config: {
-          min: data.config.min ?? 0,
-          max: data.config.max ?? 100,
-          step: data.config.step ?? 1,
-          defaultValue: data.config.defaultValue ?? 50,
-          pxPerUnit: data.config.pxPerUnit ?? 10,
-          labelEvery: data.config.labelEvery ?? 10,
-          minorTickEvery: data.config.minorTickEvery ?? 5,
-          precision: data.config.precision ?? 0,
-        },
+        value: Math.max(config.min, Math.min(config.max, data.value)),
+        config,
       };
     }
   } catch {
@@ -93,7 +122,7 @@ const FormScale = ({ field }: FormScaleProps) => {
       parsed || {
         value: 50,
         config: {
-          min: 0,
+          min: DEFAULT_SCALE_MIN,
           max: 100,
           step: 1,
           defaultValue: 50,
@@ -141,15 +170,13 @@ const FormScale = ({ field }: FormScaleProps) => {
   );
 
   const handleConfigChange = useCallback(
-    (field: keyof ScaleConfig, value: number) => {
-      const newConfig = { ...config, [field]: value };
+    (fieldKey: keyof ScaleConfig, value: number) => {
+      const newConfig = normalizeScaleConfig({ ...config, [fieldKey]: value }, fieldKey);
       setConfig(newConfig);
 
-      // Update scale data with new config
       const newScaleData = {
         ...scaleData,
         config: newConfig,
-        // Ensure value is within new range
         value: Math.max(newConfig.min, Math.min(newConfig.max, scaleData.value)),
       };
       setScaleData(newScaleData);
@@ -158,13 +185,19 @@ const FormScale = ({ field }: FormScaleProps) => {
     [config, scaleData, saveScaleData],
   );
 
+  const parseConfigNumber = (raw: string, fallback: number) => {
+    const n = parseFloat(String(raw));
+    return Number.isFinite(n) ? n : fallback;
+  };
+
   const handleValueChange = useCallback(
     (value: number) => {
-      const newScaleData = { ...scaleData, value };
+      const clamped = Math.max(config.min, Math.min(config.max, value));
+      const newScaleData = { ...scaleData, value: clamped };
       setScaleData(newScaleData);
       saveScaleData(newScaleData);
     },
-    [scaleData, saveScaleData],
+    [config.min, config.max, scaleData, saveScaleData],
   );
 
   if (!option) {
@@ -182,39 +215,38 @@ const FormScale = ({ field }: FormScaleProps) => {
           <div css={styles.configGrid}>
             <div css={styles.configField}>
               <label css={styles.configLabel}>{__('Min value', __TUTOR_TEXT_DOMAIN__)}</label>
-              <input
+              <TextInput
                 type="number"
+                size="small"
                 value={config.min}
-                onChange={(e) => handleConfigChange('min', parseFloat(e.target.value) || 0)}
-                className="tutor-scale-config-input"
+                onChange={(v) => handleConfigChange('min', parseConfigNumber(v, DEFAULT_SCALE_MIN))}
               />
             </div>
             <div css={styles.configField}>
               <label css={styles.configLabel}>{__('Max value', __TUTOR_TEXT_DOMAIN__)}</label>
-              <input
+              <TextInput
                 type="number"
+                size="small"
                 value={config.max}
-                onChange={(e) => handleConfigChange('max', parseFloat(e.target.value) || 100)}
-                className="tutor-scale-config-input"
+                onChange={(v) => handleConfigChange('max', parseConfigNumber(v, 100))}
               />
             </div>
             <div css={styles.configField}>
               <label css={styles.configLabel}>{__('Steps', __TUTOR_TEXT_DOMAIN__)}</label>
-              <input
+              <TextInput
                 type="number"
-                step="1"
+                size="small"
                 value={config.step}
-                onChange={(e) => handleConfigChange('step', parseFloat(e.target.value) || 1)}
-                className="tutor-scale-config-input"
+                onChange={(v) => handleConfigChange('step', parseConfigNumber(v, 1))}
               />
             </div>
             <div css={styles.configField}>
               <label css={styles.configLabel}>{__('Label entry', __TUTOR_TEXT_DOMAIN__)}</label>
-              <input
+              <TextInput
                 type="number"
+                size="small"
                 value={config.labelEvery}
-                onChange={(e) => handleConfigChange('labelEvery', parseFloat(e.target.value) || 10)}
-                className="tutor-scale-config-input"
+                onChange={(v) => handleConfigChange('labelEvery', parseConfigNumber(v, 10))}
               />
             </div>
           </div>
@@ -226,14 +258,11 @@ const FormScale = ({ field }: FormScaleProps) => {
           {/* Answer Configuration */}
           <div css={styles.configField}>
             <label css={styles.configLabel}>{__('Correct Value', __TUTOR_TEXT_DOMAIN__)}</label>
-            <input
+            <TextInput
               type="number"
-              step={config.step}
-              min={config.min}
-              max={config.max}
+              size="small"
               value={scaleData.value}
-              onChange={(e) => handleValueChange(parseFloat(e.target.value) || config.min)}
-              className="tutor-scale-config-input"
+              onChange={(v) => handleValueChange(parseConfigNumber(v, config.min))}
             />
           </div>
         </div>
@@ -293,18 +322,6 @@ const styles = {
   configField: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[4]};
-
-    & .tutor-scale-config-input {
-      padding: ${spacing[8]};
-      border: 1px solid ${colorTokens.stroke.default};
-      border-radius: ${borderRadius.input};
-      font-family: ${fontFamily.sfProDisplay};
-      font-weight: ${fontWeight.regular};
-      font-size: ${fontSize[16]};
-      line-height: ${lineHeight[24]};
-      letter-spacing: ${letterSpacing.normal};
-      color: ${colorTokens.text.subdued};
-    }
   `,
   configLabel: css`
     font-family: ${fontFamily.sfProDisplay};

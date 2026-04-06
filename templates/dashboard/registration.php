@@ -11,11 +11,15 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Alert;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
 ?>
 
-<?php if ( ! get_option( 'users_can_register', false ) ) : ?> 
+<?php
+if ( ! get_option( 'users_can_register', false ) ) :
+	?>
+
 	<?php
 		$args = array(
 			'image_path'  => tutor()->url . 'assets/images/construction.png',
@@ -45,21 +49,16 @@ use TUTOR\Icon;
 			<?php
 			$validation_errors = apply_filters( 'tutor_student_register_validation_errors', array() );
 			if ( is_array( $validation_errors ) && count( $validation_errors ) ) :
-				?>
-				<div class="tutor-alert tutor-warning tutor-mb-6" style="border: 1px solid var(--tutor-text-critical);">
-					<ul class="tutor-required-fields tutor-p-none">
-						<?php foreach ( $validation_errors as $validation_error ) : ?>
-							<li>
-								<?php echo esc_html( $validation_error ); ?>
-							</li>
-							<li>
-								<?php echo esc_html( $validation_error ); ?>
-							</li>
-						<?php endforeach; ?>
-					</ul>
-				</div>
-			<?php endif; ?>
-
+				foreach ( $validation_errors as $validation_error ) :
+					Alert::make()
+						->text( $validation_error )
+						->variant( Alert::ERROR )
+						->icon( Icon::WARNING )
+						->attr( 'class', 'tutor-mb-8' )
+						->render();
+				endforeach;
+			endif;
+			?>
 			<div class="tutor-form-group">
 				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'First Name', 'tutor' ); ?></label>
 				<div class="tutor-input-field tutor-mb-8">
@@ -147,12 +146,12 @@ use TUTOR\Icon;
 				</div>
 			</div>    
 
-			<?php do_action( 'tutor_student_reg_form_end' ); ?>
+				<?php do_action( 'tutor_student_reg_form_end' ); ?>
 
-			<?php
+				<?php
 				$tutor_toc_page_link = tutor_utils()->get_toc_page_link();
-			?>
-			<?php if ( null !== $tutor_toc_page_link ) : ?>
+				?>
+				<?php if ( null !== $tutor_toc_page_link ) : ?>
 				<div class="tutor-small tutor-mb-6">
 					<?php esc_html_e( 'By signing up, I agree with the website\'s', 'tutor' ); ?> 
 					<a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
@@ -170,11 +169,11 @@ use TUTOR\Icon;
 					</a>
 				</div>
 			</div>
-			<?php do_action( 'tutor_after_register_button' ); ?>
+				<?php do_action( 'tutor_after_register_button' ); ?>
 			
 		</form>
-		<?php do_action( 'tutor_after_registration_form_wrap' ); ?>
+				<?php do_action( 'tutor_after_registration_form_wrap' ); ?>
 		
 	</div>
-	<?php do_action( 'tutor_after_student_reg_form' ); ?>
+				<?php do_action( 'tutor_after_student_reg_form' ); ?>
 <?php endif; ?>
