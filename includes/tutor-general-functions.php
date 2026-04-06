@@ -66,18 +66,15 @@ if ( ! function_exists( 'tutils' ) ) {
 	}
 }
 
-/**
- * Tutor input sanitization
- */
-
 if ( ! function_exists( 'tutor_sanitize_data' ) ) {
 	/**
 	 * Escaping for Sanitize data.
 	 *
 	 * @since 1.9.13
 	 *
-	 * @param  string $input.
-	 * @param  string $type.
+	 * @param  string $input input data.
+	 * @param  string $type type of input.
+	 *
 	 * @return string|array|object
 	 */
 	function tutor_sanitize_data( $input = null, $type = null ) {
@@ -86,9 +83,9 @@ if ( ! function_exists( 'tutor_sanitize_data' ) ) {
 
 		if ( is_string( $input ) ) {
 
-			if ( 'textarea' == $type ) {
+			if ( 'textarea' === $type ) {
 				$input = sanitize_textarea_field( $input );
-			} elseif ( 'kses' == $type ) {
+			} elseif ( 'kses' === $type ) {
 				$input = wp_kses_post( $input );
 			} else {
 				$input = sanitize_text_field( $input );
@@ -125,21 +122,30 @@ if ( ! function_exists( 'tutor_sanitize_data' ) ) {
 }
 
 if ( ! function_exists( 'tutor_placeholder_img_src' ) ) {
+	/**
+	 * Get placeholder image src.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
 	function tutor_placeholder_img_src() {
 		$src = tutor()->url . 'assets/images/placeholder.svg';
 		return apply_filters( 'tutor_placeholder_img_src', $src );
 	}
 }
 
-/**
- * @return string
- *
- * Get course categories selecting UI
- *
- * @since v.1.3.4
- */
-
 if ( ! function_exists( 'tutor_course_categories_dropdown' ) ) {
+	/**
+	 * Get course categories selecting UI.
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $args arguments.
+	 *
+	 * @return string
+	 */
 	function tutor_course_categories_dropdown( $post_ID = 0, $args = array() ) {
 
 		$default = array(
@@ -159,7 +165,7 @@ if ( ! function_exists( 'tutor_course_categories_dropdown' ) ) {
 			$multiple_select = "multiple='multiple'";
 		}
 
-		extract( $args );
+		extract( $args ); //phpcs:ignore
 
 		$classes = (array) $classes;
 		$classes = implode( ' ', $classes );
@@ -176,15 +182,18 @@ if ( ! function_exists( 'tutor_course_categories_dropdown' ) ) {
 	}
 }
 
-/**
- * @return string
- *
- * Get course tags selecting UI
- *
- * @since v.1.3.4
- */
 
 if ( ! function_exists( 'tutor_course_tags_dropdown' ) ) {
+	/**
+	 * Get course tags selecting UI.
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $args arguments.
+	 *
+	 * @return string
+	 */
 	function tutor_course_tags_dropdown( $post_ID = 0, $args = array() ) {
 
 		$default = array(
@@ -204,7 +213,7 @@ if ( ! function_exists( 'tutor_course_tags_dropdown' ) ) {
 			$multiple_select = "multiple='multiple'";
 		}
 
-		extract( $args );
+		extract( $args ); //phpcs:ignore
 
 		$classes = (array) $classes;
 		$classes = implode( ' ', $classes );
@@ -221,18 +230,19 @@ if ( ! function_exists( 'tutor_course_tags_dropdown' ) ) {
 	}
 }
 
-/**
- * @param $categories
- * @param string $parent_name
- *
- * @return string
- *
- * Get selecting options, recursive supports
- *
- * @since v.1.3.4
- */
-
 if ( ! function_exists( '_generate_categories_dropdown_option' ) ) {
+	/**
+	 * Get selecting options, recursive supports.
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $categories categories.
+	 * @param array $args arguments.
+	 * @param int   $depth depth.
+	 *
+	 * @return string
+	 */
 	function _generate_categories_dropdown_option( $post_ID = 0, $categories = array(), $args = array(), $depth = 0 ) {
 		$output = '';
 
@@ -270,18 +280,20 @@ if ( ! function_exists( '_generate_categories_dropdown_option' ) ) {
 		return $output;
 	}
 }
-/**
- * @param $tags
- * @param string $parent_name
- *
- * @return string
- *
- * Get selecting options, recursive supports
- *
- * @since v.1.3.4
- */
 
 if ( ! function_exists( '_generate_tags_dropdown_option' ) ) {
+	/**
+	 * Get selecting options, recursive supports
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $tags tags.
+	 * @param array $args arguments.
+	 * @param int   $depth depth.
+	 *
+	 * @return string
+	 */
 	function _generate_tags_dropdown_option( $post_ID = 0, $tags = array(), $args = array(), $depth = 0 ) {
 		$output = '';
 
@@ -305,16 +317,17 @@ if ( ! function_exists( '_generate_tags_dropdown_option' ) ) {
 	}
 }
 
-/**
- * @param array $args
- *
- * @return string
- *
- * Generate course categories checkbox
- * @since  v.1.3.4
- */
-
 if ( ! function_exists( 'tutor_course_categories_checkbox' ) ) {
+	/**
+	 * Generate course categories checkbox
+	 *
+	 * @since  1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $args arguments.
+	 *
+	 * @return string
+	 */
 	function tutor_course_categories_checkbox( $post_ID = 0, $args = array() ) {
 		$default = array(
 			'name' => 'tax_input[course-category]',
@@ -326,7 +339,7 @@ if ( ! function_exists( 'tutor_course_categories_checkbox' ) ) {
 			$args['name'] = $args['name'] . '[]';
 		}
 
-		extract( $args );
+		extract( $args ); //phpcs:ignore
 
 		$categories = tutor_utils()->get_course_categories();
 		$output     = '';
