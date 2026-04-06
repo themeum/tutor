@@ -11,6 +11,7 @@
 	border-radius: $tutor-radius-2xl;
 	transition: all 0.2s ease;
 	cursor: pointer;
+	background-color: $tutor-surface-l1;
 	overflow: hidden;
 
 	&:hover {
@@ -42,9 +43,8 @@
 	}
 
 	&-content {
-		flex: 1 1 calc(100% - 224px);
+		flex: 0 0 calc(100% - 350px);
 		@include tutor-flex(column, stretch, space-between);
-		max-width: 352px;
 	}
 
 	&-header {
@@ -124,6 +124,12 @@
 
 	.tutor-btn-ghost {
 		color: $tutor-text-primary;
+	}
+
+	@include tutor-breakpoint-down(lg) {
+		&-content {
+			flex: 0 0 calc(100% - 250px);
+		}
 	}
 
 	// Mobile styles

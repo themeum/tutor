@@ -37,7 +37,7 @@ $initial_states  = $state_mapping[ $billing_country ] ?? array();
 			x-bind="getFormBindings()"
 			x-init="$watch('values.billing_country', () => !isResetting && setValue('billing_state', '', { shouldDirty: true }))"
 			@submit="handleSubmit((data) => handleSaveBillingInfo(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
-			class="tutor-flex tutor-flex-column tutor-gap-2"
+			class="tutor-flex tutor-flex-column tutor-gap-5"
 		>
 			<?php require tutor_get_template( 'ecommerce.billing-form-fields' ); ?>
 		</form>

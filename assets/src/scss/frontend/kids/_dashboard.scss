@@ -33,7 +33,7 @@
 
   // home
   .tutor-student-dashboard-courses {
-    .tutor-card.tutor-progress-card:not(:first-child) {
+    .tutor-progress-card:not(:first-child) {
       margin-top: $tutor-spacing-4;
     }
   }
