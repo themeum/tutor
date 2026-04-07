@@ -55,8 +55,10 @@ $tutor_can_retake_course    = $tutor_retake_course && ( CourseModel::MODE_FLEXIB
 
 // Auto complete course.
 if ( CourseModel::can_autocomplete_course( $tutor_course_id, $current_user_id ) ) {
-	CourseModel::mark_course_as_completed( $tutor_course_id, $current_user_id );
-	Course::set_review_popup_data( $current_user_id, $tutor_course_id );
+	$mark_completed = CourseModel::mark_course_as_completed( $tutor_course_id, $current_user_id );
+	if ( $mark_completed ) {
+		Course::set_review_popup_data( $current_user_id, $tutor_course_id );
+	}
 }
 
 $course_complete_modal_id = 'tutor-course-complete-modal';
