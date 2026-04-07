@@ -53,6 +53,14 @@ $tutor_completion_mode      = tutor_utils()->get_option( 'course_completion_proc
 $tutor_retake_course        = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $tutor_is_course_completed || $tutor_course_progress >= 100 );
 $tutor_can_retake_course    = $tutor_retake_course && ( CourseModel::MODE_FLEXIBLE === $tutor_completion_mode || $tutor_is_course_completed );
 
+// Auto complete course.
+if ( CourseModel::can_autocomplete_course( $tutor_course_id, $current_user_id ) ) {
+	$mark_completed = CourseModel::mark_course_as_completed( $tutor_course_id, $current_user_id );
+	if ( $mark_completed ) {
+		Course::set_review_popup_data( $current_user_id, $tutor_course_id );
+	}
+}
+
 $course_complete_modal_id = 'tutor-course-complete-modal';
 $course_retake_modal_id   = 'tutor-course-retake-modal';
 
