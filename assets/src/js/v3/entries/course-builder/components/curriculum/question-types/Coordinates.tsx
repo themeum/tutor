@@ -30,7 +30,7 @@ const Coordinates = () => {
     }
     const baseAnswer: QuizQuestionOption = {
       _data_status: QuizDataStatus.NEW,
-      is_saved: false,
+      is_saved: true,
       answer_id: nanoid(),
       belongs_question_id: activeQuestionId,
       belongs_question_type: 'coordinates' as QuizQuestionOption['belongs_question_type'],
@@ -38,7 +38,7 @@ const Coordinates = () => {
       is_correct: '1',
       image_id: undefined,
       image_url: '',
-      answer_two_gap_match: '',
+      answer_two_gap_match: JSON.stringify([{ x: 0, y: 0 }]),
       answer_view_format: 'coordinates',
       answer_order: 0,
     };

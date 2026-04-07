@@ -117,6 +117,43 @@ export const validateQuizQuestion = (
         }
       }
     }
+
+    if (currentQuestionType === 'coordinates') {
+      const firstAnswer = answers[0];
+      const raw = firstAnswer?.answer_two_gap_match || '';
+      try {
+        const parsed = JSON.parse(raw) as unknown;
+        const pts = Array.isArray(parsed) ? parsed : parsed && typeof parsed === 'object' ? [parsed] : [];
+        const valid =
+          pts.length > 0 &&
+          pts.length <= 5 &&
+          pts.every((p) => {
+            if (!p || typeof p !== 'object') return false;
+            const o = p as { x?: unknown; y?: unknown };
+            return (
+              typeof o.x === 'number' &&
+              typeof o.y === 'number' &&
+              Number.isInteger(o.x) &&
+              Number.isInteger(o.y) &&
+              o.x >= -10 &&
+              o.x <= 10 &&
+              o.y >= -10 &&
+              o.y <= 10
+            );
+          });
+        if (!valid) {
+          return {
+            message: __('Please add valid coordinates in the range -10 to 10.', __TUTOR_TEXT_DOMAIN__),
+            type: 'question',
+          };
+        }
+      } catch {
+        return {
+          message: __('Please add valid coordinates in the range -10 to 10.', __TUTOR_TEXT_DOMAIN__),
+          type: 'question',
+        };
+      }
+    }
   }
 
   return true;

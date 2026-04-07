@@ -9,6 +9,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
@@ -26,6 +27,7 @@ const MIN_COORD = -10;
 const MAX_COORD = 10;
 const SNAP_THRESHOLD = 0.3;
 const CANVAS_SIZE = 420;
+const MAX_COORDINATES = 5;
 
 interface FormCoordinatesProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
@@ -41,32 +43,81 @@ interface FormCoordinatesProps extends FormControllerProps<QuizQuestionOption> {
   >;
 }
 
-function parseStoredCoordinate(value: string): { x: number; y: number } | null {
-  if (!value || typeof value !== 'string') return null;
+type CoordinatePoint = { x: number; y: number };
+
+function clampIntToRange(n: number): number {
+  const rounded = Math.round(n);
+  return Math.max(MIN_COORD, Math.min(MAX_COORD, rounded));
+}
+
+function sanitizePoint(p: CoordinatePoint): CoordinatePoint {
+  return {
+    x: clampIntToRange(p.x),
+    y: clampIntToRange(p.y),
+  };
+}
+
+function parseStoredCoordinates(value: string): CoordinatePoint[] {
+  if (!value || typeof value !== 'string') return [];
   try {
-    const o = JSON.parse(value) as { x?: number; y?: number };
-    if (typeof o.x === 'number' && typeof o.y === 'number') {
-      return {
-        x: Math.max(MIN_COORD, Math.min(MAX_COORD, Math.round(o.x))),
-        y: Math.max(MIN_COORD, Math.min(MAX_COORD, Math.round(o.y))),
-      };
+    const parsed = JSON.parse(value) as unknown;
+    if (Array.isArray(parsed)) {
+      const pts = parsed
+        .map((p) => {
+          if (!p || typeof p !== 'object') return null;
+          const maybe = p as { x?: unknown; y?: unknown };
+          if (typeof maybe.x !== 'number' || typeof maybe.y !== 'number') return null;
+          return sanitizePoint({ x: maybe.x, y: maybe.y });
+        })
+        .filter(Boolean) as CoordinatePoint[];
+      return pts.slice(0, MAX_COORDINATES);
+    }
+    if (parsed && typeof parsed === 'object') {
+      const o = parsed as { x?: unknown; y?: unknown };
+      if (typeof o.x === 'number' && typeof o.y === 'number') {
+        return [sanitizePoint({ x: o.x, y: o.y })];
+      }
     }
   } catch {
     // ignore
   }
-  return null;
+  return [];
+}
+
+function parseCoordinateText(value: string): CoordinatePoint | null {
+  const raw = (value ?? '').trim();
+  if (!raw) return null;
+  const parts = raw.split(',').map((p) => p.trim());
+  if (parts.length !== 2) return null;
+  const x = Number(parts[0]);
+  const y = Number(parts[1]);
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+  if (!Number.isInteger(x) || !Number.isInteger(y)) return null;
+  if (x < MIN_COORD || x > MAX_COORD || y < MIN_COORD || y > MAX_COORD) return null;
+  return { x, y };
+}
+
+function formatCoordinateText(pt: CoordinatePoint): string {
+  return `${pt.x},${pt.y}`;
 }
 
 const FormCoordinates = ({ field }: FormCoordinatesProps) => {
   const option = field.value;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [targetPoint, setTargetPoint] = useState<{ x: number; y: number } | null>(() =>
-    parseStoredCoordinate(option?.answer_two_gap_match ?? ''),
-  );
+  const [coordinates, setCoordinates] = useState<CoordinatePoint[]>(() => {
+    const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '');
+    return parsed.length ? parsed : [{ x: 0, y: 0 }];
+  });
+  const [drafts, setDrafts] = useState<string[]>(() => coordinates.map(formatCoordinateText));
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activePoint = coordinates[activeIndex] ?? null;
 
   useEffect(() => {
-    const parsed = parseStoredCoordinate(option?.answer_two_gap_match ?? '');
-    setTargetPoint(parsed);
+    const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '');
+    const next = parsed.length ? parsed : [{ x: 0, y: 0 }];
+    setCoordinates(next);
+    setDrafts(next.map(formatCoordinateText));
+    setActiveIndex((idx) => Math.max(0, Math.min(next.length - 1, idx)));
   }, [option?.answer_two_gap_match]);
 
   const updateOption = useCallback(
@@ -74,6 +125,27 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       field.onChange(updated);
     },
     [field],
+  );
+
+  const commitCoordinates = useCallback(
+    (nextCoords: CoordinatePoint[]) => {
+      if (!option) return;
+      const normalized = (nextCoords.length ? nextCoords : [{ x: 0, y: 0 }])
+        .slice(0, MAX_COORDINATES)
+        .map(sanitizePoint);
+      setCoordinates(normalized);
+      setDrafts(normalized.map(formatCoordinateText));
+      setActiveIndex((idx) => Math.max(0, Math.min(normalized.length - 1, idx)));
+      updateOption({
+        ...option,
+        ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
+          _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
+        }),
+        answer_two_gap_match: JSON.stringify(normalized),
+        is_saved: true,
+      });
+    },
+    [option, updateOption],
   );
 
   const drawGrid = useCallback(
@@ -143,8 +215,8 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       ctx.textBaseline = 'top';
       ctx.fillText('0', centerX - 5, centerY + 5);
 
-      if (targetPoint !== null) {
-        const pt = graphToPixel(targetPoint.x, targetPoint.y);
+      if (activePoint !== null) {
+        const pt = graphToPixel(activePoint.x, activePoint.y);
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, 8, 0, 2 * Math.PI);
         ctx.fillStyle = '#2196F3';
@@ -158,7 +230,7 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
         ctx.fill();
       }
     },
-    [targetPoint],
+    [activePoint],
   );
 
   useEffect(() => {
@@ -203,20 +275,12 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
         snappedY >= MIN_COORD &&
         snappedY <= MAX_COORD
       ) {
-        const point = { x: snappedX, y: snappedY };
-        setTargetPoint(point);
-        const json = JSON.stringify(point);
-        updateOption({
-          ...option,
-          ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
-            _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
-          }),
-          answer_two_gap_match: json,
-          is_saved: true,
-        });
+        const next = coordinates.slice();
+        next[activeIndex] = { x: snappedX, y: snappedY };
+        commitCoordinates(next);
       }
     },
-    [option, updateOption],
+    [activeIndex, commitCoordinates, coordinates, option],
   );
 
   if (!option) {
@@ -227,14 +291,120 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
     <div css={styles.wrapper}>
       <div css={styles.card}>
         <div css={styles.answerHeader}>
-          <span css={styles.answerHeaderTitle}>{__('Set the correct coordinate', __TUTOR_TEXT_DOMAIN__)}</span>
+          <span css={styles.answerHeaderTitle}>{__('Coordinations', __TUTOR_TEXT_DOMAIN__)}</span>
         </div>
         <p css={styles.hint}>
           {__(
-            'Click on a grid intersection to set the target coordinate. Students must select the same point.',
+            'Enter up to 5 coordinates as “x,y”. Click a row to select it, then use the grid to set that row.',
             __TUTOR_TEXT_DOMAIN__,
           )}
         </p>
+        <div css={styles.list}>
+          {coordinates.map((pt, idx) => {
+            const isActive = idx === activeIndex;
+            const isAtLimit = coordinates.length >= MAX_COORDINATES;
+            const isOnlyOne = coordinates.length <= 1;
+
+            return (
+              <div
+                key={`coord-${idx}`}
+                css={styles.listRow({ isActive })}
+                onClick={() => setActiveIndex(idx)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    setActiveIndex(idx);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                <div css={styles.rowIndex}>{idx + 1}</div>
+                <input
+                  css={styles.rowInput}
+                  value={drafts[idx] ?? formatCoordinateText(pt)}
+                  inputMode="numeric"
+                  onChange={(event) => {
+                    const next = drafts.slice();
+                    next[idx] = event.target.value;
+                    setDrafts(next);
+                  }}
+                  onBlur={() => {
+                    const parsed = parseCoordinateText(drafts[idx] ?? '');
+                    if (!parsed) {
+                      setDrafts((prev) => {
+                        const next = prev.slice();
+                        next[idx] = formatCoordinateText(coordinates[idx] ?? { x: 0, y: 0 });
+                        return next;
+                      });
+                      return;
+                    }
+                    const nextCoords = coordinates.slice();
+                    nextCoords[idx] = parsed;
+                    commitCoordinates(nextCoords);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key !== 'Enter') return;
+                    (event.currentTarget as HTMLInputElement).blur();
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                  aria-label={__('Coordinate (x,y)', __TUTOR_TEXT_DOMAIN__)}
+                />
+                <div css={styles.rowActions}>
+                  <button
+                    type="button"
+                    css={styles.iconButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (isAtLimit) return;
+                      const next = coordinates.slice();
+                      next.splice(idx + 1, 0, { ...coordinates[idx] });
+                      commitCoordinates(next);
+                      setActiveIndex(idx + 1);
+                    }}
+                    disabled={isAtLimit}
+                    aria-label={__('Copy coordinate', __TUTOR_TEXT_DOMAIN__)}
+                  >
+                    <SVGIcon name="copy" width={20} height={20} />
+                  </button>
+                  <button
+                    type="button"
+                    css={styles.iconButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (isOnlyOne) return;
+                      const next = coordinates.slice();
+                      next.splice(idx, 1);
+                      commitCoordinates(next);
+                      setActiveIndex((current) => {
+                        if (current > idx) return current - 1;
+                        if (current === idx) return Math.max(0, idx - 1);
+                        return current;
+                      });
+                    }}
+                    disabled={isOnlyOne}
+                    aria-label={__('Delete coordinate', __TUTOR_TEXT_DOMAIN__)}
+                  >
+                    <SVGIcon name="delete" width={20} height={20} />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <button
+          type="button"
+          css={styles.addButton}
+          onClick={() => {
+            if (coordinates.length >= MAX_COORDINATES) return;
+            const next = coordinates.concat([{ x: 0, y: 0 }]);
+            commitCoordinates(next);
+            setActiveIndex(next.length - 1);
+          }}
+          disabled={coordinates.length >= MAX_COORDINATES}
+        >
+          <SVGIcon name="plus" width={18} height={18} />
+          {__('Add Coordination', __TUTOR_TEXT_DOMAIN__)}
+        </button>
         <div css={styles.canvasWrap}>
           <canvas
             ref={canvasRef}
@@ -245,9 +415,9 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
             aria-label={__('Coordinate grid: click to set the correct answer point.', __TUTOR_TEXT_DOMAIN__)}
           />
         </div>
-        {targetPoint !== null && (
+        {activePoint !== null && (
           <p css={styles.savedHint}>
-            {__('Target coordinate:', __TUTOR_TEXT_DOMAIN__)} ({targetPoint.x}, {targetPoint.y})
+            {__('Selected coordinate:', __TUTOR_TEXT_DOMAIN__)} ({activePoint.x}, {activePoint.y})
           </p>
         )}
       </div>
@@ -289,6 +459,89 @@ const styles = {
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
     margin: 0;
+  `,
+  list: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[12]};
+  `,
+  listRow: ({ isActive }: { isActive: boolean }) => css`
+    ${styleUtils.display.flex('row')};
+    align-items: center;
+    gap: ${spacing[12]};
+    padding: ${spacing[12]};
+    border-radius: ${borderRadius.card};
+    border: 1px solid ${isActive ? colorTokens.stroke.brand : colorTokens.stroke.border};
+    background: ${colorTokens.background.white};
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 0;
+    }
+  `,
+  rowIndex: css`
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    ${styleUtils.flexCenter()};
+    ${typography.caption('medium')};
+    color: ${colorTokens.text.primary};
+    background: ${colorTokens.background.hover};
+    flex-shrink: 0;
+  `,
+  rowInput: css`
+    ${styleUtils.resetInput};
+    ${typography.small()};
+    flex-grow: 1;
+    padding: ${spacing[10]} ${spacing[12]};
+    border: 1px solid ${colorTokens.stroke.border};
+    border-radius: 8px;
+    color: ${colorTokens.text.primary};
+    background: ${colorTokens.background.white};
+
+    &:focus {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+  `,
+  rowActions: css`
+    ${styleUtils.display.flex('row')};
+    align-items: center;
+    gap: ${spacing[8]};
+    flex-shrink: 0;
+  `,
+  iconButton: css`
+    ${styleUtils.resetButton};
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid ${colorTokens.stroke.border};
+    ${styleUtils.flexCenter()};
+    color: ${colorTokens.icon.default};
+    background: ${colorTokens.background.white};
+
+    &:hover:enabled {
+      background: ${colorTokens.background.hover};
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  `,
+  addButton: css`
+    ${styleUtils.resetButton};
+    ${typography.small('medium')};
+    ${styleUtils.display.inlineFlex('row')};
+    align-items: center;
+    gap: ${spacing[8]};
+    width: fit-content;
+    color: ${colorTokens.text.brand};
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   `,
   canvasWrap: css`
     display: inline-block;
