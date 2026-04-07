@@ -9,6 +9,7 @@ import { initializeCourseCourseInfo } from './pages/course-info';
 import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './quiz';
 import { initializeSidebar } from './sidebar';
+import { tutorConfig } from '@TutorShared/config/config';
 
 const initializeLearningArea = () => {
   initializeCommon();
@@ -18,7 +19,7 @@ const initializeLearningArea = () => {
 
   // Normalize path segments
   const pathSegments = pathname.split('/').filter(Boolean);
-  const { lesson_slug = 'lessons', quiz_slug = 'quizzes', assignment_slug = 'assignments' } = window._tutorobject || {};
+  const { lesson_slug = 'lessons', quiz_slug = 'quizzes', assignment_slug = 'assignments' } = tutorConfig || {};
 
   let currentPage = null;
 
