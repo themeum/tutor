@@ -852,14 +852,6 @@ class Options_V2 {
 								'desc'    => __( 'Enabling this feature will show a course content summary on the Course Details page.', 'tutor' ),
 							),
 							array(
-								'key'         => 'enable_spotlight_mode',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Spotlight Mode', 'tutor' ),
-								'default'     => 'off',
-								'label_title' => '',
-								'desc'        => __( 'This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons.', 'tutor' ),
-							),
-							array(
 								'key'         => 'auto_course_complete_on_all_lesson_completion',
 								'type'        => 'toggle_switch',
 								'label'       => __( 'Auto Complete Course on All Lesson Completion', 'tutor' ),

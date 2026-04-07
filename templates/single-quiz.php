@@ -13,13 +13,12 @@ use Tutor\Models\CourseModel;
 global $previous_id;
 
 // Get the ID of this content and the corresponding course.
-$course_content_id     = get_the_ID();
-$course_id             = tutor_utils()->get_course_id_by_subcontent( $course_content_id );
-$content_id            = tutor_utils()->get_post_id( $course_content_id );
-$contents              = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
-$previous_id           = $contents->previous_id;
-$course                = CourseModel::get_course_by_quiz( get_the_ID() );
-$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
+$course_content_id = get_the_ID();
+$course_id         = tutor_utils()->get_course_id_by_subcontent( $course_content_id );
+$content_id        = tutor_utils()->get_post_id( $course_content_id );
+$contents          = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
+$previous_id       = $contents->previous_id;
+$course            = CourseModel::get_course_by_quiz( get_the_ID() );
 ob_start();
 ?>
 <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">

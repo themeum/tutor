@@ -495,9 +495,7 @@ if ( ! function_exists( 'get_tutor_header' ) ) {
 	 * @return void
 	 */
 	function get_tutor_header( $full_screen = false ) {
-		$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
-
-		if ( $enable_spotlight_mode || $full_screen ) {
+		if ( $full_screen ) {
 			?>
 			<!doctype html>
 			<html <?php language_attributes(); ?>>
@@ -529,8 +527,7 @@ if ( ! function_exists( 'get_tutor_footer' ) ) {
 	 * @return void
 	 */
 	function get_tutor_footer( $full_screen = false ) {
-		$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
-		if ( $enable_spotlight_mode || $full_screen ) {
+		if ( $full_screen ) {
 			?>
 				</div>
 			<?php wp_footer(); ?>
