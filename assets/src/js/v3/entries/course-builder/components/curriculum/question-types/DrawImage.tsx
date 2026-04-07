@@ -97,7 +97,7 @@ const DrawImage = () => {
                     label={__('Precision Level', 'tutor')}
                     options={thresholdOptions}
                     helpText={__(
-                      'Minimum % of the instructor mask the student must cover to be marked correct.',
+                      'Minimum overlap score between student and instructor markings. Larger or smaller marked areas lower the score.',
                       'tutor',
                     )}
                     onChange={(option) => {
