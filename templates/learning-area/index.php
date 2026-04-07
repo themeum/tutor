@@ -56,6 +56,8 @@ $tutor_can_retake_course    = $tutor_retake_course && ( CourseModel::MODE_FLEXIB
 $course_complete_modal_id = 'tutor-course-complete-modal';
 $course_retake_modal_id   = 'tutor-course-retake-modal';
 
+do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
+
 $args = array(
 	'current_post_type' => $tutor_current_post_type,
 	'current_post_id'   => $tutor_current_content_id,
