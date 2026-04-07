@@ -111,15 +111,15 @@ $tutor-button-outline-focused-inverse: var(--tutor-button-outline-focused-invers
 $tutor-button-outline-border-shadow: var(--tutor-button-outline-border-shadow, 0 0 0 1px #{$tutor-border-idle});
 $tutor-button-outline-border-shadow-hover: var(
   --tutor-button-outline-border-shadow-hover,
-  var(--tutor-button-outline-border-shadow)
+  #{$tutor-button-outline-border-shadow}
 );
 $tutor-button-outline-border-shadow-focused: var(
   --tutor-button-outline-border-shadow-focused,
-  var(--tutor-button-outline-border-shadow)
+  #{$tutor-button-outline-border-shadow}
 );
 $tutor-button-outline-border-shadow-disabled: var(
   --tutor-button-outline-border-shadow-disabled,
-  var(--tutor-button-outline-border-shadow)
+  #{$tutor-button-outline-border-shadow}
 );
 
 // --- Ghost ---
