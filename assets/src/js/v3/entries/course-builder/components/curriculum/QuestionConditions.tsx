@@ -60,7 +60,7 @@ const questionTypes = {
   },
   coordinates: {
     label: __('Coordinates', 'tutor'),
-    icon: 'quizImageAnswer',
+    icon: 'quizShape',
   },
   pin_image: {
     label: __('Pin', 'tutor'),
