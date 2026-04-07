@@ -947,20 +947,8 @@ class Quiz {
 
 					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 
-					// Allow Pro (or add-ons) to grade draw_image and set achieved_mark / is_correct.
-					$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
-
-					/**
-					 * Filter total marks after grading. Runs after answers_data is built and graded,
-					 * so add-ons (e.g. H5P, draw_image, coordinates) can add their achieved marks.
-					 *
-					 * @param float      $total_marks   Current total marks.
-					 * @param int        $question_id   Question ID.
-					 * @param string     $question_type Question type.
-					 * @param int        $user_id       User ID.
-					 * @param int        $attempt_id    Attempt ID.
-					 * @param array|null $answers_data  Answer data with achieved_mark (optional, 6th param).
-					 */
+					// Filter total marks after grading. Runs after answers_data is built and graded,
+					// so add-ons (e.g. H5P, pin_image, draw_image) can add their achieved marks.
 					$total_marks = apply_filters( 'tutor_filter_quiz_total_marks', $total_marks, $question_id, $question_type, $user_id, $attempt_id, $answers_data );
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
