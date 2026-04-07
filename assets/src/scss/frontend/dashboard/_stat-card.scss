@@ -12,7 +12,7 @@
   border-radius: $tutor-radius-2xl;
   background-color: $tutor-surface-l1;
   @include tutor-transition(background-color);
-  
+
   &[href],
   &[onclick],
   &[\@click],
@@ -316,7 +316,6 @@
     min-width: 213px;
     background: $tutor-surface-l1;
     border: 1px solid $tutor-border-idle;
-    ;
     border-radius: $tutor-radius-lg;
     box-shadow: $tutor-shadow-lg;
     padding: $tutor-spacing-5 $tutor-spacing-6;
