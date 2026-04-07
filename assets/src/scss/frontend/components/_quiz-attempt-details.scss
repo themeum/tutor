@@ -133,11 +133,18 @@
     }
   }
 
+  // Allow the main column to shrink on narrow viewports (avoids wide children e.g. scale track forcing overflow).
+  .tutor-quiz-summary-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .tutor-quiz-questions {
     @include tutor-frontend-layout();
     @include tutor-flex(column);
     padding-inline: 0;
     width: 100%;
+    min-width: 0;
     gap: $tutor-spacing-5;
   }
 
@@ -255,6 +262,10 @@
   }
 
   .tutor-quiz-question {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+
     &-header {
       &-actions {
         @include tutor-flex(row, center);
