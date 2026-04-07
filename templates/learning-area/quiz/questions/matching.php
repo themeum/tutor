@@ -96,13 +96,17 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 		</div>
 		<div class="tutor-quiz-question-options">
 			<?php foreach ( $draggable_answers as $answer ) : ?>
+				<?php
+				$draggable_title = $is_image_matching
+					? $answer['answer_title'] : $answer['answer_two_gap_match'];
+				?>
 				<div
 					class="tutor-quiz-question-option"
 					data-option="draggable"
 					data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 				>
 					<div data-title>
-						<?php echo esc_html( $answer['answer_two_gap_match'] ); ?>
+						<?php echo esc_html( $draggable_title ); ?>
 					</div>
 					<button type="button" data-grab-handle>
 						<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 24 )->render(); ?>
