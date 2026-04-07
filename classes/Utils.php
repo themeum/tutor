@@ -7370,7 +7370,7 @@ class Utils {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
-		$post_types   = array( tutor()->course_post_type );
+		$post_types = array( tutor()->course_post_type );
 		if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
 			$post_types[] = tutor()->bundle_post_type;
 		}
@@ -7400,8 +7400,9 @@ class Utils {
 			'ARRAY_A',
 		);
 
-		$exclude_enroll_course_ids = $exclude_courses['results'] ? array_column( $exclude_courses['results'], 'ID' ) : array();
-		$exclude_enroll_course_ids = QueryHelper::prepare_in_clause( $exclude_enroll_course_ids );
+		$exclude_enroll_course_ids       = $exclude_courses['results'] ? array_column( $exclude_courses['results'], 'ID' ) : array();
+		$exclude_enroll_course_ids       = QueryHelper::prepare_in_clause( $exclude_enroll_course_ids );
+		$exclude_enroll_course_ids_query = $exclude_enroll_course_ids ? "AND ( enrol.ID NOT IN ({$exclude_enroll_course_ids}) )" : '';
 
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
@@ -7417,7 +7418,7 @@ class Utils {
 					{$course_query}
 					{$date_query}
 					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
-					AND ( enrol.ID NOT IN ({$exclude_enroll_course_ids}) )
+					{$exclude_enroll_course_ids_query}
 			",
 				'tutor_enrolled',
 				$search_term,
@@ -7484,7 +7485,7 @@ class Utils {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
-		$post_types      = array( tutor()->course_post_type );
+		$post_types = array( tutor()->course_post_type );
 
 		$exclude_courses = QueryHelper::get_joined_data(
 			'posts as p',
@@ -7510,10 +7511,9 @@ class Utils {
 			'ARRAY_A',
 		);
 
-		$exclude_enroll_course_ids = $exclude_courses['results'] ? array_column( $exclude_courses['results'], 'ID' ) : array();
-		$exclude_enroll_course_ids = QueryHelper::prepare_in_clause( $exclude_enroll_course_ids );
-
-		
+		$exclude_enroll_course_ids       = $exclude_courses['results'] ? array_column( $exclude_courses['results'], 'ID' ) : array();
+		$exclude_enroll_course_ids       = QueryHelper::prepare_in_clause( $exclude_enroll_course_ids );
+		$exclude_enroll_course_ids_query = $exclude_enroll_course_ids ? "AND ( enrol.ID NOT IN ({$exclude_enroll_course_ids}) )" : '';
 
 		if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
 			$post_types[] = tutor()->bundle_post_type;
@@ -7545,7 +7545,7 @@ class Utils {
 					{$course_query}
 					{$date_query}
 					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
-					AND ( enrol.ID NOT IN ({$exclude_enroll_course_ids}) )
+					{$exclude_enroll_course_ids_query}
 			ORDER BY enrol_id {$order}
 			LIMIT 	%d, %d;
 			",
