@@ -138,6 +138,7 @@
     @include tutor-flex(column);
     padding-inline: 0;
     width: 100%;
+    min-width: 0;
     gap: $tutor-spacing-5;
   }
 
@@ -190,11 +191,18 @@
     @include tutor-typography(small, semibold);
     gap: $tutor-spacing-3;
     min-height: 38px;
+    min-width: 0;
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-md;
     background: $tutor-surface-base;
     padding: $tutor-spacing-4;
     overflow: hidden;
+
+    span {
+      min-width: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
 
     &:has(img) {
       min-height: 48px;
@@ -256,6 +264,8 @@
 
   .tutor-quiz-question {
     &-header {
+      min-width: 0;
+
       &-actions {
         @include tutor-flex(row, center);
         gap: $tutor-spacing-7;
