@@ -140,7 +140,7 @@ $single_url = UrlHelper::add_query_params(
 				'dashboard.discussions.comment-form',
 				array(
 					'form_id'        => 'lesson-comment-reply-form-' . (int) $lesson_comment->comment_ID,
-					'submit_handler' => '(data) => handleReplyComment(data, ' . (int) $lesson_comment->comment_ID . ', ' . (int) $course->ID . ', "list")',
+					'submit_handler' => '(data) => handleReplyComment(data, ' . (int) $lesson_comment->comment_ID . ', ' . (int) $lesson_comment->comment_post_ID . ', "list")',
 					'cancel_handler' => 'setReplyingComment(null)',
 					'is_pending'     => 'replyCommentMutation?.isPending',
 					'placeholder'    => __( 'Write your reply', 'tutor' ),
