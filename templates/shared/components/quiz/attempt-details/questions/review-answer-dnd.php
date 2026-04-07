@@ -20,7 +20,7 @@ if ( ! isset( $question ) || ! is_object( $question ) ) {
 $question_settings = maybe_unserialize( $question->question_settings );
 $question_settings = is_array( $question_settings ) ? $question_settings : array();
 $question_type     = (string) ( $question->question_type ?? '' );
-$is_image_matching = 'image_matching' === $question_type;
+$is_image_matching = 'image_matching' === $question_type || '1' === (string) ( $question_settings['is_image_matching'] ?? '0' );
 
 if ( $is_image_matching ) {
 	$question_type = 'matching';
