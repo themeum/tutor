@@ -718,8 +718,9 @@ class WooCommerce extends Tutor_Base {
 	 * Course placing order from customer
 	 *
 	 * @since 1.6.7
-	 *
 	 * @since 3.8.0 Filter hook: tutor_is_gift_item added
+	 * @since 4.0.0 Filter hook: tutor_wc_should_process_checkout_order_item added
+	 *              Prevent duplicate enrollment on checkout.
 	 *
 	 * @param int   $item_id item id.
 	 * @param mixed $item order item.
@@ -743,6 +744,14 @@ class WooCommerce extends Tutor_Base {
 
 		if ( $if_has_course ) {
 			$order = wc_get_order( $order_id );
+			if ( ! is_object( $order ) ) {
+				return;
+			}
+
+			$should_process = apply_filters( 'tutor_wc_should_process_checkout_order_item', true, $item, $order );
+			if ( ! $should_process ) {
+				return;
+			}
 
 			/**
 			 * Get customer ID from from order
@@ -757,7 +766,7 @@ class WooCommerce extends Tutor_Base {
 				return;
 			}
 
-			$has_enrollment = tutor_utils()->is_enrolled( $course_id, $customer_id, true );
+			$has_enrollment = tutor_utils()->is_enrolled( $course_id, $customer_id, false );
 			if ( ! $has_enrollment ) {
 				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
 			}
