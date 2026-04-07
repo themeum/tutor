@@ -8,9 +8,7 @@
  * @since 2.1.7
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Get translate text array
@@ -194,10 +192,10 @@ function tutor_get_translate_text() {
 		'second'             => array(
 			'text' => __( 'Second', 'tutor' ),
 		),
-		'exclusive' 		 => array(
+		'exclusive'          => array(
 			'text' => __( 'Exclusive', 'tutor' ),
 		),
-		'inclusive' 		 => array(
+		'inclusive'          => array(
 			'text' => __( 'Inclusive', 'tutor' ),
 		),
 
