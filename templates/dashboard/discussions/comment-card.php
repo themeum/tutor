@@ -57,17 +57,13 @@ $single_url = UrlHelper::add_query_params(
 			</div>
 			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="<?php echo esc_attr( 'tutor-lesson-comment-text-' . (int) $lesson_comment->comment_ID ); ?>"><?php echo wp_kses_post( $lesson_comment->comment_content ); ?></a>
 			<div class="tutor-discussion-card-meta tutor-sm-mt-4">
-				<?php
-				Button::make()
-					->label( __( 'Reply', 'tutor' ) )
-					->size( Size::X_SMALL )
-					->variant( Variant::GHOST )
-					->attr( '@click', 'toggleCommentReply(' . (int) $lesson_comment->comment_ID . ')' )
-					->attr( 'class', 'tutor-discussion-card-meta-reply-button' )
-					->attr( 'type', 'button' )
-					->size( Size::X_SMALL )
-					->render();
-				?>
+				<button 
+					@click="toggleCommentReply(<?php echo (int) $lesson_comment->comment_ID; ?>)"
+					class="tutor-discussion-card-meta-reply-button"
+					type="button"
+				>
+					<?php esc_html_e( 'Reply', 'tutor' ); ?>
+				</button>
 
 				<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-flex tutor-items-center tutor-gap-2">
 					<?php SvgIcon::make()->name( Icon::COMMENTS )->size( 20 )->render(); ?>
