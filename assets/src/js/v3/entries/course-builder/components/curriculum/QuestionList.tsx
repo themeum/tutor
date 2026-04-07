@@ -122,9 +122,9 @@ const questionTypeOptions: {
     isPro: true,
   },
   {
-    label: __('Coordinates', 'tutor'),
+    label: __('Graph', 'tutor'),
     value: 'coordinates',
-    icon: 'quizShape',
+    icon: 'quizGraph',
     isPro: true,
   },
 ];

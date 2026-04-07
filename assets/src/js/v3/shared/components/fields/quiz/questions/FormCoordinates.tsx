@@ -9,7 +9,9 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import TextInput from '@TutorShared/atoms/TextInput';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
@@ -293,12 +295,6 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
         <div css={styles.answerHeader}>
           <span css={styles.answerHeaderTitle}>{__('Coordinations', __TUTOR_TEXT_DOMAIN__)}</span>
         </div>
-        <p css={styles.hint}>
-          {__(
-            'Enter up to 5 coordinates as “x,y”. Click a row to select it, then use the grid to set that row.',
-            __TUTOR_TEXT_DOMAIN__,
-          )}
-        </p>
         <div css={styles.list}>
           {coordinates.map((pt, idx) => {
             const isActive = idx === activeIndex;
@@ -318,18 +314,60 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
                 role="button"
                 tabIndex={0}
               >
-                <div css={styles.rowIndex}>{idx + 1}</div>
-                <input
-                  css={styles.rowInput}
+                <div css={styles.rowTop}>
+                  <div css={styles.rowIndex}>{idx + 1}</div>
+                  <div css={styles.rowActions}>
+                    <Button
+                      isIconOnly
+                      variant="tertiary"
+                      size="small"
+                      buttonCss={styles.rowActionButton}
+                      icon={<SVGIcon name="copy" width={20} height={20} />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isAtLimit) return;
+                        const next = coordinates.slice();
+                        next.splice(idx + 1, 0, { ...coordinates[idx] });
+                        commitCoordinates(next);
+                        setActiveIndex(idx + 1);
+                      }}
+                      disabled={isAtLimit}
+                      aria-label={__('Copy coordinate', __TUTOR_TEXT_DOMAIN__)}
+                    />
+                    <Button
+                      isIconOnly
+                      variant="tertiary"
+                      size="small"
+                      buttonCss={styles.rowActionButton}
+                      icon={<SVGIcon name="delete" width={20} height={20} />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isOnlyOne) return;
+                        const next = coordinates.slice();
+                        next.splice(idx, 1);
+                        commitCoordinates(next);
+                        setActiveIndex((current) => {
+                          if (current > idx) return current - 1;
+                          if (current === idx) return Math.max(0, idx - 1);
+                          return current;
+                        });
+                      }}
+                      disabled={isOnlyOne}
+                      aria-label={__('Delete coordinate', __TUTOR_TEXT_DOMAIN__)}
+                    />
+                  </div>
+                </div>
+                <TextInput
                   value={drafts[idx] ?? formatCoordinateText(pt)}
-                  inputMode="numeric"
-                  onChange={(event) => {
+                  size="small"
+                  inputCss={styles.rowInput}
+                  onChange={(value) => {
                     const next = drafts.slice();
-                    next[idx] = event.target.value;
+                    next[idx] = value;
                     setDrafts(next);
                   }}
-                  onBlur={() => {
-                    const parsed = parseCoordinateText(drafts[idx] ?? '');
+                  onBlur={(value) => {
+                    const parsed = parseCoordinateText(value ?? '');
                     if (!parsed) {
                       setDrafts((prev) => {
                         const next = prev.slice();
@@ -342,58 +380,21 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
                     nextCoords[idx] = parsed;
                     commitCoordinates(nextCoords);
                   }}
-                  onKeyDown={(event) => {
-                    if (event.key !== 'Enter') return;
-                    (event.currentTarget as HTMLInputElement).blur();
+                  onKeyDown={(keyName, event) => {
+                    if (keyName !== 'Enter') return;
+                    event.currentTarget.blur();
                   }}
-                  onClick={(e) => e.stopPropagation()}
-                  aria-label={__('Coordinate (x,y)', __TUTOR_TEXT_DOMAIN__)}
+                  placeholder={__('x,y', __TUTOR_TEXT_DOMAIN__)}
                 />
-                <div css={styles.rowActions}>
-                  <button
-                    type="button"
-                    css={styles.iconButton}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (isAtLimit) return;
-                      const next = coordinates.slice();
-                      next.splice(idx + 1, 0, { ...coordinates[idx] });
-                      commitCoordinates(next);
-                      setActiveIndex(idx + 1);
-                    }}
-                    disabled={isAtLimit}
-                    aria-label={__('Copy coordinate', __TUTOR_TEXT_DOMAIN__)}
-                  >
-                    <SVGIcon name="copy" width={20} height={20} />
-                  </button>
-                  <button
-                    type="button"
-                    css={styles.iconButton}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (isOnlyOne) return;
-                      const next = coordinates.slice();
-                      next.splice(idx, 1);
-                      commitCoordinates(next);
-                      setActiveIndex((current) => {
-                        if (current > idx) return current - 1;
-                        if (current === idx) return Math.max(0, idx - 1);
-                        return current;
-                      });
-                    }}
-                    disabled={isOnlyOne}
-                    aria-label={__('Delete coordinate', __TUTOR_TEXT_DOMAIN__)}
-                  >
-                    <SVGIcon name="delete" width={20} height={20} />
-                  </button>
-                </div>
               </div>
             );
           })}
         </div>
-        <button
-          type="button"
-          css={styles.addButton}
+        <Button
+          variant="text"
+          size="small"
+          icon={<SVGIcon name="plus" width={18} height={18} />}
+          buttonCss={styles.addButton}
           onClick={() => {
             if (coordinates.length >= MAX_COORDINATES) return;
             const next = coordinates.concat([{ x: 0, y: 0 }]);
@@ -402,9 +403,8 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
           }}
           disabled={coordinates.length >= MAX_COORDINATES}
         >
-          <SVGIcon name="plus" width={18} height={18} />
           {__('Add Coordination', __TUTOR_TEXT_DOMAIN__)}
-        </button>
+        </Button>
         <div css={styles.canvasWrap}>
           <canvas
             ref={canvasRef}
@@ -415,11 +415,6 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
             aria-label={__('Coordinate grid: click to set the correct answer point.', __TUTOR_TEXT_DOMAIN__)}
           />
         </div>
-        {activePoint !== null && (
-          <p css={styles.savedHint}>
-            {__('Selected coordinate:', __TUTOR_TEXT_DOMAIN__)} ({activePoint.x}, {activePoint.y})
-          </p>
-        )}
       </div>
     </div>
   );
@@ -431,7 +426,6 @@ const styles = {
   wrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[24]};
-    padding-left: ${spacing[40]};
 
     ${Breakpoint.smallMobile} {
       padding-left: ${spacing[8]};
@@ -441,9 +435,6 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
     padding: ${spacing[20]};
-    background: ${colorTokens.surface.tutor};
-    border: 1px solid ${colorTokens.stroke.border};
-    border-radius: ${borderRadius.card};
   `,
   answerHeader: css`
     ${styleUtils.display.flex('row')};
@@ -465,12 +456,11 @@ const styles = {
     gap: ${spacing[12]};
   `,
   listRow: ({ isActive }: { isActive: boolean }) => css`
-    ${styleUtils.display.flex('row')};
-    align-items: center;
+    ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
     padding: ${spacing[12]};
     border-radius: ${borderRadius.card};
-    border: 1px solid ${isActive ? colorTokens.stroke.brand : colorTokens.stroke.border};
+    border: ${isActive ? `1px solid ${colorTokens.stroke.brand}` : 'none'};
     background: ${colorTokens.background.white};
     cursor: pointer;
 
@@ -478,6 +468,13 @@ const styles = {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 0;
     }
+  `,
+  rowTop: css`
+    ${styleUtils.display.flex('row')};
+    align-items: center;
+    justify-content: space-between;
+    gap: ${spacing[8]};
+    width: 100%;
   `,
   rowIndex: css`
     width: 26px;
@@ -490,11 +487,9 @@ const styles = {
     flex-shrink: 0;
   `,
   rowInput: css`
-    ${styleUtils.resetInput};
     ${typography.small()};
-    flex-grow: 1;
+    width: 100%;
     padding: ${spacing[10]} ${spacing[12]};
-    border: 1px solid ${colorTokens.stroke.border};
     border-radius: 8px;
     color: ${colorTokens.text.primary};
     background: ${colorTokens.background.white};
@@ -507,36 +502,32 @@ const styles = {
   rowActions: css`
     ${styleUtils.display.flex('row')};
     align-items: center;
-    gap: ${spacing[8]};
     flex-shrink: 0;
   `,
-  iconButton: css`
-    ${styleUtils.resetButton};
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    border: 1px solid ${colorTokens.stroke.border};
-    ${styleUtils.flexCenter()};
-    color: ${colorTokens.icon.default};
-    background: ${colorTokens.background.white};
+  rowActionButton: css`
+    border: none;
+    box-shadow: none;
 
-    &:hover:enabled {
-      background: ${colorTokens.background.hover};
-    }
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:active {
+      border: none;
+      box-shadow: none;
     }
   `,
   addButton: css`
-    ${styleUtils.resetButton};
     ${typography.small('medium')};
-    ${styleUtils.display.inlineFlex('row')};
-    align-items: center;
-    gap: ${spacing[8]};
     width: fit-content;
+    border: none;
     color: ${colorTokens.text.brand};
+
+    &:focus,
+    &:focus-visible {
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
 
     &:disabled {
       opacity: 0.5;
@@ -553,12 +544,7 @@ const styles = {
     max-width: 100%;
     height: auto;
     cursor: crosshair;
-    border: 2px solid ${colorTokens.stroke.border};
-    border-radius: 8px;
-  `,
-  savedHint: css`
-    ${typography.caption()};
-    color: ${colorTokens.text.success};
-    margin: 0;
+    border: 1px solid ${colorTokens.stroke.border};
+    border-radius: 6px;
   `,
 };

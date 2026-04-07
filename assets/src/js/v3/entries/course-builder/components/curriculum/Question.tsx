@@ -42,7 +42,7 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   draw_image: 'quizMarkInTheImage',
   scale: 'quizRange',
   pin_image: 'quizPin',
-  coordinates: 'quizShape',
+  coordinates: 'quizGraph',
   h5p: 'quizH5p',
 };
 
