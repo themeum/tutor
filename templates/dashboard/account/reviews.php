@@ -36,8 +36,6 @@ foreach ( $reviews as $review ) {
 	$review->user_avatar = tutor_utils()->get_user_avatar_url( $review->user_id );
 }
 
-$bin_icon = SvgIcon::make()->name( Icon::BIN )->get();
-
 ?>
 
 <?php require_once tutor_get_template( 'account-header' ); ?>
