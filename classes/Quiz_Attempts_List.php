@@ -573,7 +573,7 @@ class Quiz_Attempts_List {
 					array(
 						'tag'     => 'button',
 						'content' => __( 'Retry', 'tutor' ),
-						'icon'    => SvgIcon::make()->name( Icon::RELOAD )->size( 20 )->get(),
+						'icon'    => SvgIcon::make()->name( Icon::RELOAD_3 )->size( 20 )->get(),
 						'attr'    => array(
 							'@click' => $this->get_retry_attribute( $quiz_id ),
 						),

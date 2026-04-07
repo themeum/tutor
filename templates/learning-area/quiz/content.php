@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Input;
 use TUTOR\Quiz;
+use Tutor\Helpers\UrlHelper;
 
 global $tutor_current_post, $tutor_course_id;
 
@@ -36,7 +37,7 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 	<div class="tutor-card">
 		<!-- Quiz Icon -->
 		<div class="tutor-quiz-intro-icon tutor-mb-8">
-			<img src="<?php echo esc_url( tutor()->url . 'assets/images/quiz-intro.svg' ); ?>" alt="<?php esc_attr_e( 'Quiz', 'tutor' ); ?>">
+			<img src="<?php echo esc_url( UrlHelper::themed_asset( 'images/illustrations/quiz-intro.webp' ) ); ?>" alt="<?php esc_attr_e( 'Quiz', 'tutor' ); ?>">
 		</div>
 
 		<!-- Quiz Title -->

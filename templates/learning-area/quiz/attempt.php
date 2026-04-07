@@ -353,8 +353,9 @@ $default_values = array(
 	<?php
 		ConfirmationModal::make()
 			->id( $modal_id )
-			->title( __( 'Abandon Quiz?', 'tutor' ) )
-			->message( __( 'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor' ) )
+			->icon( UrlHelper::themed_asset( 'images/illustrations/warning.webp' ) )
+			->title( __( 'Leave this Quiz?', 'tutor' ) )
+			->message( __( 'If you leave now, your quiz will be submitted with the answers completed so far.', 'tutor' ) )
 			->confirm_text( __( 'Yes, Leave Quiz', 'tutor' ) )
 			->confirm_handler( "handleAbandonConfirm(); TutorCore.modal.closeModal('$modal_id')" )
 			->mutation_state( 'abandonQuizMutation' )
@@ -372,7 +373,7 @@ $default_values = array(
 					'modal_id'      => $submitted_modal_id,
 					'title'         => __( 'Quiz Submitted', 'tutor' ),
 					'message'       => __( 'Your responses have been successfully recorded.', 'tutor' ),
-					'icon_url'      => tutor()->url . 'assets/images/quiz-submitted.svg',
+					'icon_url'      => UrlHelper::themed_asset( 'images/illustrations/quiz-submitted.webp' ),
 					'show_attempts' => false,
 					'action_url'    => $attempt_details_url,
 					'action_label'  => __( 'View Results', 'tutor' ),
@@ -389,7 +390,7 @@ $default_values = array(
 					'modal_id'      => $timeout_modal_id,
 					'title'         => __( 'Times up!', 'tutor' ),
 					'message'       => __( 'Your quiz has been submitted automatically.', 'tutor' ),
-					'icon_url'      => tutor()->url . 'assets/images/quiz-timeout.svg',
+					'icon_url'      => UrlHelper::themed_asset( 'images/illustrations/quiz-timeout.webp' ),
 					'show_attempts' => true,
 					'action_url'    => $attempt_details_url,
 					'action_label'  => __( 'View Results', 'tutor' ),

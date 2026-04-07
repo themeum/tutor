@@ -20,6 +20,7 @@ use Tutor\Components\Constants\Variant;
 $answer_field_name = ( $question_field_name_base ?? '' ) . '[answers][]';
 $register_rules    = '';
 $draggable_answers = $question['question_randomized_answers'] ?? $question['question_answers'] ?? array();
+$is_image_matching = isset( $question['question_settings']['is_image_matching'] ) && '1' === (string) $question['question_settings']['is_image_matching'];
 if ( $answer_is_required ) {
 	$register_rules = ", { validate: (value) => Array.isArray(value) && value.every((item) => item) || '" . esc_js( $required_message ) . "' }";
 }
@@ -37,11 +38,11 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 >
 	<div
 		class="tutor-quiz-question-options"
-		data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>"
+		data-image-matching="<?php echo esc_attr( $is_image_matching ? '1' : '0' ); ?>"
 	>
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option">
-				<?php if ( $question['question_settings']['is_image_matching'] && ! empty( $answer['image_id'] ) ) : ?>
+				<?php if ( $is_image_matching && ! empty( $answer['image_id'] ) ) : ?>
 					<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
 				<?php else : ?>
 					<div data-title>
