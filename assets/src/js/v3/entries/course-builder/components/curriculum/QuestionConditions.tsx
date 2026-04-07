@@ -51,16 +51,20 @@ const questionTypes = {
     icon: 'quizOrdering',
   },
   draw_image: {
-    label: __('Draw on Image', 'tutor'),
-    icon: 'quizImageAnswer',
+    label: __('Mark in the Image', 'tutor'),
+    icon: 'quizMarkInTheImage',
+  },
+  scale: {
+    label: __('Range', 'tutor'),
+    icon: 'quizRange',
   },
   coordinates: {
     label: __('Coordinates', 'tutor'),
     icon: 'quizImageAnswer',
   },
   pin_image: {
-    label: __('Pin on Image', 'tutor'),
-    icon: 'quizImageAnswer',
+    label: __('Pin', 'tutor'),
+    icon: 'quizPin',
   },
   h5p: {
     label: __('H5P', 'tutor'),

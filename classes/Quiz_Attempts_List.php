@@ -573,7 +573,7 @@ class Quiz_Attempts_List {
 					array(
 						'tag'     => 'button',
 						'content' => __( 'Retry', 'tutor' ),
-						'icon'    => SvgIcon::make()->name( Icon::RELOAD )->size( 20 )->get(),
+						'icon'    => SvgIcon::make()->name( Icon::RELOAD_3 )->size( 20 )->get(),
 						'attr'    => array(
 							'@click' => $this->get_retry_attribute( $quiz_id ),
 						),
@@ -648,7 +648,7 @@ class Quiz_Attempts_List {
 		Popover::make()
 			->trigger( $this->get_kebab_button() )
 			->placement( Positions::BOTTOM_END )
-			->menu_min_width( '120px' )
+			->menu_min_width( '110px' )
 			->menu_item( $this->get_details_item( $attempt ) )
 			->menu_item(
 				array(
@@ -663,7 +663,6 @@ class Quiz_Attempts_List {
 					),
 				)
 			)
-			->menu_min_width( '110px' )
 			->render();
 	}
 }

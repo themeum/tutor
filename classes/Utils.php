@@ -5293,17 +5293,17 @@ class Utils {
 				'is_pro' => true,
 			),
 			'draw_image'        => array(
-				'name'   => __( 'Draw on Image', 'tutor' ),
+				'name'   => __( 'Mark in the Image', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),
-			'coordinates'       => array(
-				'name'   => __( 'Coordinates', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-coordinates tutor-icon-image"></i></span>',
+			'scale'             => array(
+				'name'   => __( 'Range', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-scale tutor-icon-slider-horizontal"></i></span>',
 				'is_pro' => true,
 			),
 			'pin_image'         => array(
-				'name'   => __( 'Pin on Image', 'tutor' ),
+				'name'   => __( 'Pin', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),
@@ -7371,20 +7371,55 @@ class Utils {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
+		$post_types = array( tutor()->course_post_type );
+		if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
+			$post_types[] = tutor()->bundle_post_type;
+		}
+		$post_type_query = QueryHelper::prepare_in_clause( $post_types );
+
+		$exclude_courses = QueryHelper::get_joined_data(
+			'posts as p',
+			array(
+				array(
+					'type'  => 'LEFT',
+					'table' => 'postmeta as pm',
+					'on'    => 'p.ID = pm.post_id',
+				),
+			),
+			array( 'ID' ),
+			array(
+				'p.post_type' => 'tutor_enrolled',
+				'pm.meta_key' => '_tutor_bundle_id',
+				// TODO: need to check if we need to exclude subscription enrollments under bundle as well.
+				// '(pm.meta_key = %s OR pm.meta_key = %s)' => array( 'RAW', array( '_tutor_bundle_id', '_tutor_subscription_id' ) ),
+			),
+			array(),
+			'',
+			0,
+			0,
+			'DESC',
+			'ARRAY_A',
+		);
+
+		$exclude_enroll_course_ids       = $exclude_courses['results'] ? array_column( $exclude_courses['results'], 'ID' ) : array();
+		$exclude_enroll_course_ids       = QueryHelper::prepare_in_clause( $exclude_enroll_course_ids );
+		$exclude_enroll_course_ids_query = $exclude_enroll_course_ids ? "AND ( enrol.ID NOT IN ({$exclude_enroll_course_ids}) )" : '';
+
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(enrol.ID)
 			FROM 	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.ID
-							AND course.post_type != 'course-bundle'
+							AND course.post_type IN ({$post_type_query})
 					INNER JOIN {$wpdb->users} student
 							ON enrol.post_author = student.ID
 			WHERE 	enrol.post_type = %s
 					{$status_query}
 					{$course_query}
 					{$date_query}
-					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s );
+					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
+					{$exclude_enroll_course_ids_query}
 			",
 				'tutor_enrolled',
 				$search_term,
@@ -7451,6 +7486,42 @@ class Utils {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
+		$post_types = array( tutor()->course_post_type );
+
+		$exclude_courses = QueryHelper::get_joined_data(
+			'posts as p',
+			array(
+				array(
+					'type'  => 'LEFT',
+					'table' => 'postmeta as pm',
+					'on'    => 'p.ID = pm.post_id',
+				),
+			),
+			array( 'ID' ),
+			array(
+				'p.post_type' => 'tutor_enrolled',
+				'pm.meta_key' => '_tutor_bundle_id',
+				// TODO: need to check if we need to exclude subscription enrollments under bundle as well.
+				// '(pm.meta_key = %s OR pm.meta_key = %s)' => array( 'RAW', array( '_tutor_bundle_id', '_tutor_subscription_id' ) ),
+			),
+			array(),
+			'',
+			0,
+			0,
+			'DESC',
+			'ARRAY_A',
+		);
+
+		$exclude_enroll_course_ids       = $exclude_courses['results'] ? array_column( $exclude_courses['results'], 'ID' ) : array();
+		$exclude_enroll_course_ids       = QueryHelper::prepare_in_clause( $exclude_enroll_course_ids );
+		$exclude_enroll_course_ids_query = $exclude_enroll_course_ids ? "AND ( enrol.ID NOT IN ({$exclude_enroll_course_ids}) )" : '';
+
+		if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
+			$post_types[] = tutor()->bundle_post_type;
+		}
+
+		$post_type_query = QueryHelper::prepare_in_clause( $post_types );
+
 		$enrolments = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT enrol.ID AS enrol_id,
@@ -7467,7 +7538,7 @@ class Utils {
 			FROM 	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.ID
-							AND course.post_type != 'course-bundle'
+						   AND course.post_type IN ({$post_type_query})
 					INNER JOIN {$wpdb->users} student
 							ON enrol.post_author = student.ID
 			WHERE 	enrol.post_type = %s
@@ -7475,6 +7546,7 @@ class Utils {
 					{$course_query}
 					{$date_query}
 					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
+					{$exclude_enroll_course_ids_query}
 			ORDER BY enrol_id {$order}
 			LIMIT 	%d, %d;
 			",

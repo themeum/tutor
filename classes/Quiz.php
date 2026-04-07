@@ -196,8 +196,10 @@ class Quiz {
 			'tutor_quiz_templates_not_in_core',
 			array(
 				'learning-area.quiz.questions.draw-image',
+				'learning-area.quiz.questions.scale',
 				'learning-area.quiz.questions.pin-image',
 				'shared.components.quiz.attempt-details.questions.draw-image',
+				'shared.components.quiz.attempt-details.questions.scale',
 				'shared.components.quiz.attempt-details.questions.pin-image',
 			),
 			$template,
@@ -1933,6 +1935,9 @@ class Quiz {
 	 */
 	public static function render_question( $question, $index = 0 ) {
 		$question_settings = maybe_unserialize( $question->question_settings );
+		$question_type     = $question->question_type;
+		$rand_choice       = ! empty( $question_settings['randomize_question'] )
+			&& '1' === $question_settings['randomize_question'];
 
 		// Normalize question type + settings.
 		switch ( $question->question_type ) {
@@ -1952,22 +1957,12 @@ class Quiz {
 		}
 
 		$template = str_replace( '_', '-', $question->question_type );
+		$answers  = self::prepare_question_answers( (int) $question->question_id, $question_type, $rand_choice );
 
-		$rand_choice = ! empty( $question_settings['randomize_question'] )
-		&& '1' === $question_settings['randomize_question'];
-
-		$question->index             = $index;
-		$question->question_settings = $question_settings;
-
-		$answers = QuizModel::get_answers_by_quiz_question(
-			$question->question_id,
-			$rand_choice
-		);
-
-		$question->question_answers = array_map(
-			static fn( $answer ) => (array) $answer,
-			$answers
-		);
+		$question->index                       = $index;
+		$question->question_settings           = $question_settings;
+		$question->question_answers            = $answers['question_answers'];
+		$question->question_randomized_answers = $answers['question_randomized_answers'];
 
 		tutor_load_template(
 			'learning-area.quiz.question',
@@ -1976,6 +1971,47 @@ class Quiz {
 				'question_settings' => $question_settings,
 				'question_type'     => $template,
 			)
+		);
+	}
+
+	/**
+	 * Get question answers prepared for render.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int    $question_id  Question ID.
+	 * @param string $question_type Original question type.
+	 * @param bool   $rand_choice  Whether randomized choices are enabled.
+	 *
+	 * @return array{question_answers: array, question_randomized_answers: array}
+	 */
+	private static function prepare_question_answers( int $question_id, string $question_type, bool $rand_choice ): array {
+		$question_answers            = QuizModel::get_answers_by_quiz_question( $question_id );
+		$question_randomized_answers = array();
+
+		// Ordering questions always use a randomized answer list.
+		// Matching and image matching keep the drop-zone items ordered and only shuffle the draggable choices.
+
+		if ( 'ordering' === $question_type ) {
+			$question_answers = QuizModel::get_answers_by_quiz_question( $question_id, true );
+		} elseif ( 'matching' === $question_type || 'image_matching' === $question_type ) {
+			$question_randomized_answers = QuizModel::get_answers_by_quiz_question( $question_id, $rand_choice );
+		} elseif ( $rand_choice ) {
+			$question_answers = QuizModel::get_answers_by_quiz_question( $question_id, true );
+		}
+
+		$question_answers            = array_map(
+			static fn( $answer ) => (array) $answer,
+			$question_answers
+		);
+		$question_randomized_answers = array_map(
+			static fn( $answer ) => (array) $answer,
+			$question_randomized_answers
+		);
+
+		return array(
+			'question_answers'            => $question_answers,
+			'question_randomized_answers' => $question_randomized_answers,
 		);
 	}
 }

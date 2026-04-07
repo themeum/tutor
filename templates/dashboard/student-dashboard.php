@@ -66,7 +66,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$grid_col   = $time_spent['hours'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
 	?>
 	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 <?php echo esc_attr( $grid_col ); ?>">
-		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
+		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-stat-card tutor-stat-card-enrolled">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Enrolled Courses', 'tutor' ); ?>
@@ -82,7 +82,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			</div>
 		</a>
 
-		<a href="<?php echo esc_url( $active_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-active">
+		<a href="<?php echo esc_url( $active_course_link ); ?>" class="tutor-stat-card tutor-stat-card-active">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Active', 'tutor' ); ?>
@@ -98,7 +98,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			</div>
 		</a>
 
-		<a href="<?php echo esc_url( $completed_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-completed">
+		<a href="<?php echo esc_url( $completed_course_link ); ?>" class="tutor-stat-card tutor-stat-card-completed">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
 					<?php echo esc_html__( 'Completed', 'tutor' ); ?>
@@ -115,7 +115,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		</a>
 		<?php if ( $time_spent['hours'] > 0 ) : ?>
 		<div 
-			class="tutor-card tutor-stat-card tutor-stat-card-time-spent"
+			class="tutor-stat-card tutor-stat-card-time-spent"
 			@click="TutorCore.modal.showModal('tutor-time-spent-modal')"
 		>
 			<div class="tutor-stat-card-header">
@@ -253,7 +253,7 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2 )
 				$course_learning_url = get_permalink();
 			}
 			?>
-			<div class="tutor-card tutor-progress-card">
+			<div class="tutor-progress-card">
 				<div class="tutor-progress-card-inner" onclick="window.location.href = '<?php echo esc_url( $course_learning_url ); ?>';">
 					<div class="tutor-progress-card-thumbnail">
 						<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">

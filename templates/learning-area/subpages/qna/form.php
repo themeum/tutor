@@ -40,8 +40,10 @@ $keep_footer_visible = $keep_footer_visible ?? false;
 	@wp-editor-focus="focused = true"
 >
 	<?php
+	$editor_html   = '';
 	$custom_editor = apply_filters(
 		'tutor_qna_editor',
+		$editor_html,
 		array(
 			'form_id'       => $form_id,
 			'default_value' => $default_value,

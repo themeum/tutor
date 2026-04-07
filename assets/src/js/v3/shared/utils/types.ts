@@ -296,7 +296,7 @@ export type QuizQuestionType =
   | 'image_answering'
   | 'ordering'
   | 'draw_image'
-  | 'coordinates'
+  | 'scale'
   | 'pin_image'
   | 'h5p';
 

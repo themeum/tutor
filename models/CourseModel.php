@@ -1175,7 +1175,7 @@ class CourseModel {
 			}
 		}
 
-		return $course_options;
+		return apply_filters( 'tutor_course_dropdown_options', $course_options );
 	}
 
 	/**

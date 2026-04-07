@@ -16,7 +16,7 @@ import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/quest
 import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/question-types/OpenEndedAndShortAnswer';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import DrawImage from '@CourseBuilderComponents/curriculum/question-types/DrawImage';
-import Coordinates from '@CourseBuilderComponents/curriculum/question-types/Coordinates';
+import Scale from '@CourseBuilderComponents/curriculum/question-types/Scale';
 import PinImage from '@CourseBuilderComponents/curriculum/question-types/PinImage';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
@@ -58,7 +58,7 @@ const QuestionForm = () => {
     image_answering: <ImageAnswering key={activeQuestionId} />,
     ordering: <MultipleChoiceAndOrdering key={activeQuestionId} />,
     draw_image: <DrawImage key={activeQuestionId} />,
-    coordinates: <Coordinates key={activeQuestionId} />,
+    scale: <Scale key={activeQuestionId} />,
     pin_image: <PinImage key={activeQuestionId} />,
   } as const;
 

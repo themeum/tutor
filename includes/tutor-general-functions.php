@@ -9,9 +9,11 @@
  */
 
 use Tutor\Cache\FlashMessage;
+use Tutor\Components\Alert;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
+use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
@@ -34,7 +36,7 @@ if ( ! function_exists( 'tutor' ) ) {
 
 if ( ! function_exists( 'tutor_utils' ) ) {
 	/**
-	 * Access tutor utils functions
+	 * Access tutor utils functions.
 	 *
 	 * @since 1.0.0
 	 *
@@ -53,7 +55,7 @@ if ( ! function_exists( 'tutor_utils' ) ) {
 
 if ( ! function_exists( 'tutils' ) ) {
 	/**
-	 * Alias of tutor_utils()
+	 * Alias of tutor_utils().
 	 *
 	 * @since 1.3.4
 	 *
@@ -64,18 +66,15 @@ if ( ! function_exists( 'tutils' ) ) {
 	}
 }
 
-/**
- * Tutor input sanitization
- */
-
 if ( ! function_exists( 'tutor_sanitize_data' ) ) {
 	/**
 	 * Escaping for Sanitize data.
 	 *
 	 * @since 1.9.13
 	 *
-	 * @param  string $input.
-	 * @param  string $type.
+	 * @param string $input input data.
+	 * @param string $type type of input.
+	 *
 	 * @return string|array|object
 	 */
 	function tutor_sanitize_data( $input = null, $type = null ) {
@@ -84,9 +83,9 @@ if ( ! function_exists( 'tutor_sanitize_data' ) ) {
 
 		if ( is_string( $input ) ) {
 
-			if ( 'textarea' == $type ) {
+			if ( 'textarea' === $type ) {
 				$input = sanitize_textarea_field( $input );
-			} elseif ( 'kses' == $type ) {
+			} elseif ( 'kses' === $type ) {
 				$input = wp_kses_post( $input );
 			} else {
 				$input = sanitize_text_field( $input );
@@ -123,21 +122,30 @@ if ( ! function_exists( 'tutor_sanitize_data' ) ) {
 }
 
 if ( ! function_exists( 'tutor_placeholder_img_src' ) ) {
+	/**
+	 * Get placeholder image src.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
 	function tutor_placeholder_img_src() {
 		$src = tutor()->url . 'assets/images/placeholder.svg';
 		return apply_filters( 'tutor_placeholder_img_src', $src );
 	}
 }
 
-/**
- * @return string
- *
- * Get course categories selecting UI
- *
- * @since v.1.3.4
- */
-
 if ( ! function_exists( 'tutor_course_categories_dropdown' ) ) {
+	/**
+	 * Get course categories selecting UI.
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $args arguments.
+	 *
+	 * @return string
+	 */
 	function tutor_course_categories_dropdown( $post_ID = 0, $args = array() ) {
 
 		$default = array(
@@ -157,7 +165,7 @@ if ( ! function_exists( 'tutor_course_categories_dropdown' ) ) {
 			$multiple_select = "multiple='multiple'";
 		}
 
-		extract( $args );
+		extract( $args ); //phpcs:ignore
 
 		$classes = (array) $classes;
 		$classes = implode( ' ', $classes );
@@ -174,15 +182,18 @@ if ( ! function_exists( 'tutor_course_categories_dropdown' ) ) {
 	}
 }
 
-/**
- * @return string
- *
- * Get course tags selecting UI
- *
- * @since v.1.3.4
- */
 
 if ( ! function_exists( 'tutor_course_tags_dropdown' ) ) {
+	/**
+	 * Get course tags selecting UI.
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $args arguments.
+	 *
+	 * @return string
+	 */
 	function tutor_course_tags_dropdown( $post_ID = 0, $args = array() ) {
 
 		$default = array(
@@ -202,7 +213,7 @@ if ( ! function_exists( 'tutor_course_tags_dropdown' ) ) {
 			$multiple_select = "multiple='multiple'";
 		}
 
-		extract( $args );
+		extract( $args ); //phpcs:ignore
 
 		$classes = (array) $classes;
 		$classes = implode( ' ', $classes );
@@ -219,18 +230,19 @@ if ( ! function_exists( 'tutor_course_tags_dropdown' ) ) {
 	}
 }
 
-/**
- * @param $categories
- * @param string $parent_name
- *
- * @return string
- *
- * Get selecting options, recursive supports
- *
- * @since v.1.3.4
- */
-
 if ( ! function_exists( '_generate_categories_dropdown_option' ) ) {
+	/**
+	 * Get selecting options, recursive supports.
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $categories categories.
+	 * @param array $args arguments.
+	 * @param int   $depth depth.
+	 *
+	 * @return string
+	 */
 	function _generate_categories_dropdown_option( $post_ID = 0, $categories = array(), $args = array(), $depth = 0 ) {
 		$output = '';
 
@@ -268,18 +280,20 @@ if ( ! function_exists( '_generate_categories_dropdown_option' ) ) {
 		return $output;
 	}
 }
-/**
- * @param $tags
- * @param string $parent_name
- *
- * @return string
- *
- * Get selecting options, recursive supports
- *
- * @since v.1.3.4
- */
 
 if ( ! function_exists( '_generate_tags_dropdown_option' ) ) {
+	/**
+	 * Get selecting options, recursive supports
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $tags tags.
+	 * @param array $args arguments.
+	 * @param int   $depth depth.
+	 *
+	 * @return string
+	 */
 	function _generate_tags_dropdown_option( $post_ID = 0, $tags = array(), $args = array(), $depth = 0 ) {
 		$output = '';
 
@@ -303,16 +317,17 @@ if ( ! function_exists( '_generate_tags_dropdown_option' ) ) {
 	}
 }
 
-/**
- * @param array $args
- *
- * @return string
- *
- * Generate course categories checkbox
- * @since  v.1.3.4
- */
-
 if ( ! function_exists( 'tutor_course_categories_checkbox' ) ) {
+	/**
+	 * Generate course categories checkbox
+	 *
+	 * @since  1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $args arguments.
+	 *
+	 * @return string
+	 */
 	function tutor_course_categories_checkbox( $post_ID = 0, $args = array() ) {
 		$default = array(
 			'name' => 'tax_input[course-category]',
@@ -324,26 +339,27 @@ if ( ! function_exists( 'tutor_course_categories_checkbox' ) ) {
 			$args['name'] = $args['name'] . '[]';
 		}
 
-		extract( $args );
+		extract( $args ); //phpcs:ignore
 
 		$categories = tutor_utils()->get_course_categories();
 		$output     = '';
-		$output    .= __tutor_generate_categories_checkbox( $post_ID, $categories, $args );
+		$output    .= tutor_generate_categories_checkbox( $post_ID, $categories, $args );
 
 		return $output;
 	}
 }
 
-/**
- * @param array $args
- *
- * @return string
- *
- * Generate course tags checkbox
- * @since  v.1.3.4
- */
-
 if ( ! function_exists( 'tutor_course_tags_checkbox' ) ) {
+	/**
+	 * Generate course tags checkbox.
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $args arguments.
+	 *
+	 * @return string
+	 */
 	function tutor_course_tags_checkbox( $post_ID = 0, $args = array() ) {
 		$default = array(
 			'name' => 'tax_input[course-tag]',
@@ -355,29 +371,29 @@ if ( ! function_exists( 'tutor_course_tags_checkbox' ) ) {
 			$args['name'] = $args['name'] . '[]';
 		}
 
-		extract( $args );
+		extract( $args ); //phpcs:ignore
 
 		$tags    = tutor_utils()->get_course_tags();
 		$output  = '';
-		$output .= __tutor_generate_tags_checkbox( $post_ID, $tags, $args );
+		$output .= tutor_generate_tags_checkbox( $post_ID, $tags, $args );
 
 		return $output;
 	}
 }
 
-/**
- * @param $categories
- * @param string $parent_name
- * @param array $args
- *
- * @return string
- *
- * Internal function to generate course categories checkbox
- *
- * @since v.1.3.4
- */
-if ( ! function_exists( '__tutor_generate_categories_checkbox' ) ) {
-	function __tutor_generate_categories_checkbox( $post_ID = 0, $categories = array(), $args = array() ) {
+if ( ! function_exists( 'tutor_generate_categories_checkbox' ) ) {
+	/**
+	 * Internal function to generate course categories checkbox.
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $categories categories list.
+	 * @param array $args arguments.
+	 *
+	 * @return string
+	 */
+	function tutor_generate_categories_checkbox( $post_ID = 0, $categories = array(), $args = array() ) {
 
 		$output     = '';
 		$input_name = tutor_utils()->array_get( 'name', $args );
@@ -391,7 +407,7 @@ if ( ! function_exists( '__tutor_generate_categories_checkbox' ) ) {
 				$output .= '<li class="tax-input-course-category-item tax-input-course-category-item-' . $category->term_id . '"><label class="course-category-checkbox"> <input type="checkbox" name="' . $input_name . '" value="' . $category->term_id . '" ' . checked( $has_in_term, true, false ) . '/> <span>' . $category->name . '</span> </label>';
 
 				if ( tutor_utils()->count( $childrens ) ) {
-					$output .= __tutor_generate_categories_checkbox( $post_ID, $childrens, $args );
+					$output .= tutor_generate_categories_checkbox( $post_ID, $childrens, $args );
 				}
 				$output .= ' </li>';
 			}
@@ -401,19 +417,19 @@ if ( ! function_exists( '__tutor_generate_categories_checkbox' ) ) {
 		return $output;
 	}
 }
-/**
- * @param $tags
- * @param string $parent_name
- * @param array $args
- *
- * @return string
- *
- * Internal function to generate course tags checkbox
- *
- * @since v.1.3.4
- */
-if ( ! function_exists( '__tutor_generate_tags_checkbox' ) ) {
-	function __tutor_generate_tags_checkbox( $post_ID = 0, $tags = array(), $args = array() ) {
+if ( ! function_exists( 'tutor_generate_tags_checkbox' ) ) {
+	/**
+	 * Internal function to generate course tags checkbox.
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param int   $post_ID post ID.
+	 * @param array $tags tags list.
+	 * @param array $args arguments.
+	 *
+	 * @return string
+	 */
+	function tutor_generate_tags_checkbox( $post_ID = 0, $tags = array(), $args = array() ) {
 
 		$output     = '';
 		$input_name = tutor_utils()->array_get( 'name', $args );
@@ -434,18 +450,18 @@ if ( ! function_exists( '__tutor_generate_tags_checkbox' ) ) {
 	}
 }
 
-/**
- * @param string $content
- * @param string $title
- *
- * @return string
- *
- * Wrap course builder sections within div for frontend
- *
- * @since v.1.3.4
- */
-
 if ( ! function_exists( 'course_builder_section_wrap' ) ) {
+	/**
+	 * Wrap course builder sections within div for frontend.
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param string $content content to wrap.
+	 * @param string $title title.
+	 * @param bool   $echo whether to echo.
+	 *
+	 * @return string
+	 */
 	function course_builder_section_wrap( $content = '', $title = '', $echo = true ) {
 		$template = trailingslashit( tutor()->path . 'templates' ) . 'metabox-wrapper.php';
 		if ( $echo ) {
@@ -469,10 +485,19 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 
 
 if ( ! function_exists( 'get_tutor_header' ) ) {
-	function get_tutor_header( $fullScreen = false ) {
+	/**
+	 * Get Tutor Header.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $full_screen whether it is full screen.
+	 *
+	 * @return void
+	 */
+	function get_tutor_header( $full_screen = false ) {
 		$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 
-		if ( $enable_spotlight_mode || $fullScreen ) {
+		if ( $enable_spotlight_mode || $full_screen ) {
 			?>
 			<!doctype html>
 			<html <?php language_attributes(); ?>>
@@ -494,9 +519,18 @@ if ( ! function_exists( 'get_tutor_header' ) ) {
 }
 
 if ( ! function_exists( 'get_tutor_footer' ) ) {
-	function get_tutor_footer( $fullScreen = false ) {
+	/**
+	 * Get Tutor Footer.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $full_screen whether it is full screen.
+	 *
+	 * @return void
+	 */
+	function get_tutor_footer( $full_screen = false ) {
 		$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
-		if ( $enable_spotlight_mode || $fullScreen ) {
+		if ( $enable_spotlight_mode || $full_screen ) {
 			?>
 				</div>
 			<?php wp_footer(); ?>
@@ -511,84 +545,88 @@ if ( ! function_exists( 'get_tutor_footer' ) ) {
 	}
 }
 
+if ( ! function_exists( 'get_tutor_option' ) ) {
 	/**
-	 * @param null $key
-	 * @param bool $default
+	 * Get tutor option by this helper function.
+	 *
+	 * @since 1.3.6
+	 *
+	 * @param string $key option key.
+	 * @param mixed  $default default value.
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * Get tutor option by this helper function
-	 *
-	 * @since v.1.3.6
 	 */
-if ( ! function_exists( 'get_tutor_option' ) ) {
 	function get_tutor_option( $key = null, $default = false ) {
 		return tutor_utils()->get_option( $key, $default );
 	}
 }
 
-	/**
-	 * @param null $key
-	 * @param bool $value
-	 *
-	 * Update tutor option by this helper function
-	 *
-	 * @since v.1.3.6
-	 */
 if ( ! function_exists( 'update_tutor_option' ) ) {
+	/**
+	 * Update tutor option by this helper function.
+	 *
+	 * @since 1.3.6
+	 *
+	 * @param string $key option key.
+	 * @param mixed  $value option value.
+	 *
+	 * @return void
+	 */
 	function update_tutor_option( $key = null, $value = false ) {
 		tutor_utils()->update_option( $key, $value );
 	}
 }
+if ( ! function_exists( 'get_tutor_course_settings' ) ) {
 	/**
-	 * @param int $course_id
-	 * @param null $key
-	 * @param bool $default
+	 * Get tutor course settings by course ID.
+	 *
+	 * @since 1.4.1
+	 *
+	 * @param int    $course_id course ID.
+	 * @param string $key setting key.
+	 * @param mixed  $default default value.
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * Get tutor course settings by course ID
-	 *
-	 * @since v.1.4.1
 	 */
-if ( ! function_exists( 'get_tutor_course_settings' ) ) {
 	function get_tutor_course_settings( $course_id = 0, $key = null, $default = false ) {
 		return tutor_utils()->get_course_settings( $course_id, $key, $default );
 	}
 }
 
+if ( ! function_exists( 'get_item_content_drip_settings' ) ) {
 	/**
-	 * @param int $lesson_id
-	 * @param null $key
-	 * @param bool $default
+	 * Get lesson content drip settings.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int    $lesson_id lesson ID.
+	 * @param string $key setting key.
+	 * @param mixed  $default default value.
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * Get lesson content drip settings
 	 */
-
-if ( ! function_exists( 'get_item_content_drip_settings' ) ) {
 	function get_item_content_drip_settings( $lesson_id = 0, $key = null, $default = false ) {
 		return tutor_utils()->get_item_content_drip_settings( $lesson_id, $key, $default );
 	}
 }
 
+if ( ! function_exists( 'tutor_alert' ) ) {
 	/**
-	 * @param null $msg
-	 * @param string $type
-	 * @param bool $echo
-	 *
-	 * @return string
-	 *
 	 * Print Alert by tutor_alert()
 	 *
-	 * @since v.1.4.1
+	 * @since 1.4.1
+	 * @since 4.0.0 Added $use_component parameter.
+	 *
+	 * @param null   $msg    Message to display.
+	 * @param string $type   Type of alert.
+	 * @param bool   $echo   Whether to echo the alert.
+	 * @param bool   $use_component   Whether to use new core PHP component.
+	 *
+	 * @return string
 	 */
-if ( ! function_exists( 'tutor_alert' ) ) {
-	function tutor_alert( $msg = null, $type = 'warning', $echo = true ) {
+	function tutor_alert( $msg = null, $type = 'warning', $echo = true, $use_component = false ) {
 		if ( ! $msg ) {
-
-			if ( $type === 'any' ) {
+			if ( 'any' === $type ) {
 				if ( ! $msg ) {
 					$type = 'warning';
 					$msg  = tutor_flash_get( $type );
@@ -605,8 +643,31 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 				$msg = tutor_flash_get( $type );
 			}
 		}
+
 		if ( ! $msg ) {
 			return $msg;
+		}
+
+		if ( $use_component ) {
+			if ( 'danger' === $type ) {
+				$type = Alert::ERROR;
+			}
+
+			switch ( $type ) {
+				case Alert::SUCCESS:
+					$icon = Icon::CHECK;
+					break;
+				case Alert::WARNING:
+				case Alert::ERROR:
+					$icon = Icon::WARNING;
+					break;
+				default:
+					$icon = Icon::INFO;
+					break;
+			}
+
+			$html = Alert::make()->variant( $type )->text( $msg )->icon( $icon );
+			return $echo ? $html->render() : $html;
 		}
 
 		$html = '<div class="tutor-alert tutor-' . esc_attr( $type ) . '">
@@ -623,33 +684,37 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 }
 
 
-	/**
-	 * @param bool $echo
-	 *
-	 * Simply call tutor_nonce_field() to generate nonce field
-	 *
-	 * @since v.1.4.2
-	 */
-
 if ( ! function_exists( 'tutor_nonce_field' ) ) {
+	/**
+	 * Simply call tutor_nonce_field() to generate nonce field.
+	 *
+	 * @since 1.4.2
+	 *
+	 * @param bool $echo whether to echo.
+	 *
+	 * @return void
+	 */
 	function tutor_nonce_field( $echo = true ) {
 		wp_nonce_field( tutor()->nonce_action, tutor()->nonce, $echo );
 	}
 }
 
-	/**
-	 * @param null $key
-	 * @param string $message
-	 *
-	 * Set Flash Message
-	 */
-
 if ( ! function_exists( 'tutor_flash_set' ) ) {
+	/**
+	 * Set Flash Message.
+	 *
+	 * @since 1.4.2
+	 *
+	 * @param string $key message key.
+	 * @param string $message message content.
+	 *
+	 * @return void
+	 */
 	function tutor_flash_set( $key = null, $message = '' ) {
 		if ( ! $key ) {
 			return;
 		}
-		// ensure session is started
+		// ensure session is started.
 		if ( session_status() !== PHP_SESSION_ACTIVE ) {
 			session_start();
 		}
@@ -657,20 +722,19 @@ if ( ! function_exists( 'tutor_flash_set' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_flash_get' ) ) {
 	/**
-	 * @param null $key
+	 * Get flash message.
+	 *
+	 * @since 1.4.2
+	 *
+	 * @param string $key message key.
 	 *
 	 * @return array|bool|mixed|null
-	 *
-	 * @since v.1.4.2
-	 *
-	 * Get flash message
 	 */
-
-if ( ! function_exists( 'tutor_flash_get' ) ) {
 	function tutor_flash_get( $key = null ) {
 		if ( $key ) {
-			// ensure session is started
+			// ensure session is started.
 			if ( session_status() !== PHP_SESSION_ACTIVE ) {
 				@session_start();
 			}
@@ -689,11 +753,13 @@ if ( ! function_exists( 'tutor_flash_get' ) ) {
 
 if ( ! function_exists( 'tutor_redirect_back' ) ) {
 	/**
-	 * @param null $url
+	 * Redirect to back or a specific URL and terminate.
 	 *
-	 * Redirect to back or a specific URL and terminate
+	 * @since 1.4.3
 	 *
-	 * @since v.1.4.3
+	 * @param string $url redirect URL.
+	 *
+	 * @return void
 	 */
 	function tutor_redirect_back( $url = null ) {
 		if ( ! $url ) {
@@ -704,16 +770,17 @@ if ( ! function_exists( 'tutor_redirect_back' ) ) {
 	}
 }
 
-	/**
-	 * @param string $action
-	 * @param bool $echo
-	 *
-	 * @return string
-	 *
-	 * @since v.1.4.3
-	 */
-
 if ( ! function_exists( 'tutor_action_field' ) ) {
+	/**
+	 * Tutor action field.
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param string $action action name.
+	 * @param bool   $echo whether to echo.
+	 *
+	 * @return string|void
+	 */
 	function tutor_action_field( $action = '', $echo = true ) {
 		$output = '';
 		if ( $action ) {
@@ -740,10 +807,11 @@ if ( ! function_exists( 'tutor_action_field' ) ) {
 
 if ( ! function_exists( 'tutor_time' ) ) {
 	/**
-	 * Return current Time from WordPress time
+	 * Return current Time from WordPress time.
+	 *
+	 * @since 1.4.3
 	 *
 	 * @return int|string
-	 * @since v.1.4.3
 	 */
 	function tutor_time() {
 		$gmt_offset = get_option( 'gmt_offset' );
@@ -751,22 +819,22 @@ if ( ! function_exists( 'tutor_time' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_maintenance_mode' ) ) {
 	/**
 	 * Toggle maintenance mode for the site.
 	 *
 	 * Creates/deletes the maintenance file to enable/disable maintenance mode.
 	 *
-	 * @since v.1.4.6
+	 * @since 1.4.6
 	 *
-	 * @global WP_Filesystem_Base $wp_filesystem Subclass
+	 * @param bool $enable true to enable maintenance mode, false to disable.
 	 *
-	 * @param bool $enable True to enable maintenance mode, false to disable.
+	 * @return void
 	 */
-if ( ! function_exists( 'tutor_maintenance_mode' ) ) {
 	function tutor_maintenance_mode( $enable = false ) {
 		$file = ABSPATH . '.tutor_maintenance';
 		if ( $enable ) {
-			// Create maintenance file to signal that we are upgrading
+			// Create maintenance file to signal that we are upgrading.
 			$maintenance_string = '<?php $upgrading = ' . time() . '; ?>';
 
 			if ( ! file_exists( $file ) ) {
@@ -780,15 +848,16 @@ if ( ! function_exists( 'tutor_maintenance_mode' ) ) {
 	}
 }
 
-	/**
-	 * @return bool
-	 *
-	 * Check if the current page is course single page
-	 *
-	 * @since v.1.6.0
-	 */
-
 if ( ! function_exists( 'is_single_course' ) ) {
+	/**
+	 * Check if the current page is course single page.
+	 *
+	 * @since 1.6.0
+	 *
+	 * @param bool $check_spotlight whether to check spotlight.
+	 *
+	 * @return bool
+	 */
 	function is_single_course( $check_spotlight = false ) {
 		global $wp_query;
 		$course_post_type = tutor()->course_post_type;
@@ -813,15 +882,15 @@ if ( ! function_exists( 'is_single_course' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 	/**
 	 * Require wp_date form return js date format.
-	 * this is helpful for date picker
-	 *
-	 * @return string
+	 * This is helpful for date picker.
 	 *
 	 * @since 1.9.7
+	 *
+	 * @return string
 	 */
-if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 	function tutor_js_date_format_against_wp() {
 		$wp_date_format = get_option( 'date_format' );
 		$default_format = 'Y-M-d';
@@ -839,18 +908,20 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 
 if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	/**
-	 * Convert date to desire format
+	 * Convert date to desired format.
 	 *
-	 * NOTE: mysql query use formated date from here
-	 * that's why date_i18n need to be ignore
+	 * NOTE: mysql query use formatted date from here
+	 * that's why date_i18n need to be ignore.
 	 *
-	 * @param string $require_format string If empty Y-m-d is used.
-	 * @param string $user_date string Date.
+	 * @since 1.0.0
 	 *
-	 * @return string ( date )
+	 * @param string $require_format if empty Y-m-d is used.
+	 * @param string $user_date date.
+	 *
+	 * @return string
 	 */
 	function tutor_get_formated_date( string $require_format = '', string $user_date = '' ) {
-		$require_format = $require_format ?: 'Y-m-d';
+		$require_format = empty( $require_format ) ? 'Y-m-d' : $require_format;
 
 		$date = date_create( str_replace( '/', '-', $user_date ) );
 		if ( is_a( $date, 'DateTime' ) ) {
@@ -862,17 +933,17 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	}
 }
 
-/**
- * Get translated date
- *
- * @since v2.0.2
- *
- * @param string $date  date in string from to translate & format.
- * @param string $format optional date format, default is wp date time format.
- *
- * @return string translated date
- */
 if ( ! function_exists( 'tutor_i18n_get_formated_date' ) ) {
+	/**
+	 * Get translated date.
+	 *
+	 * @since 2.0.2
+	 *
+	 * @param string $date date in string from to translate & format.
+	 * @param string $format optional date format, default is wp date time format.
+	 *
+	 * @return string translated date.
+	 */
 	function tutor_i18n_get_formated_date( string $date, string $format = '' ) {
 		if ( '' === $format ) {
 			$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
@@ -885,10 +956,13 @@ if ( ! function_exists( '_tutor_search_by_title_only' ) ) {
 	/**
 	 * Search SQL filter for matching against post title only.
 	 *
-	 * @link    http://wordpress.stackexchange.com/a/11826/1685
+	 * @since 1.0.0
+	 * @link  http://wordpress.stackexchange.com/a/11826/1685
 	 *
-	 * @param   string   $search
-	 * @param   WP_Query $wp_query
+	 * @param string   $search search string.
+	 * @param WP_Query $wp_query wp query.
+	 *
+	 * @return string
 	 */
 	function _tutor_search_by_title_only( $search, $wp_query ) {
 		if ( ! empty( $search ) && ! empty( $wp_query->query_vars['search_terms'] ) ) {
@@ -916,18 +990,31 @@ if ( ! function_exists( '_tutor_search_by_title_only' ) ) {
 
 if ( ! function_exists( 'get_request' ) ) {
 	/**
-	 * Function to get_request
+	 * Function to get_request.
 	 *
-	 * @param  array $var .
-	 * @return array
+	 * @since 1.0.0
+	 *
+	 * @param mixed $var variable name.
+	 *
+	 * @return mixed
 	 */
 	function get_request( $var ) {
-		return isset( $_REQUEST[ $var ] ) ? sanitize_text_field( $_REQUEST[ $var ] ) : false;
+		return isset( $_REQUEST[ $var ] ) ? sanitize_text_field( $_REQUEST[ $var ] ) : false;//phpcs:ignore
 
 	}
 }
 
 if ( ! function_exists( 'tutor_kses_allowed_html' ) ) {
+	/**
+	 * Add custom allowed tags to KSES.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array  $allowed_tags allowed tags.
+	 * @param string $context context.
+	 *
+	 * @return array
+	 */
 	function tutor_kses_allowed_html( $allowed_tags, $context ) {
 		$tags = array( 'input', 'style', 'script', 'select', 'form', 'option', 'optgroup', 'iframe', 'bdi', 'source', 'a' );
 		$atts = array( 'min', 'max', 'maxlength', 'type', 'method', 'enctype', 'action', 'selected', 'class', 'id', 'disabled', 'checked', 'readonly', 'name', 'aria-*', 'style', 'role', 'placeholder', 'value', 'data-*', 'src', 'width', 'height', 'frameborder', 'allow', 'fullscreen', 'title', 'multiple', 'tutor-hide-course-single-sidebar', 'href' );
@@ -947,6 +1034,15 @@ if ( ! function_exists( 'tutor_kses_allowed_html' ) ) {
 }
 
 if ( ! function_exists( 'tutor_kses_allowed_css' ) ) {
+	/**
+	 * Add custom allowed CSS to KSES.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $styles styles.
+	 *
+	 * @return array
+	 */
 	function tutor_kses_allowed_css( $styles ) {
 		$styles[] = 'display';
 		$styles[] = '--progress-value';
@@ -955,6 +1051,15 @@ if ( ! function_exists( 'tutor_kses_allowed_css' ) ) {
 }
 
 if ( ! function_exists( 'tutor_kses_html' ) ) {
+	/**
+	 * Tutor KSES HTML wrapper.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $content HTML content.
+	 *
+	 * @return string
+	 */
 	function tutor_kses_html( $content ) {
 
 		return $content;
@@ -972,14 +1077,14 @@ if ( ! function_exists( 'tutor_kses_html' ) ) {
 	}
 }
 
-/**
- * @return array
- *
- * Get all Withdraw Methods available on this system
- *
- * @since v.1.5.7
- */
 if ( ! function_exists( 'get_tutor_all_withdrawal_methods' ) ) {
+	/**
+	 * Get all Withdraw Methods available on this system.
+	 *
+	 * @since 1.5.7
+	 *
+	 * @return array
+	 */
 	function get_tutor_all_withdrawal_methods() {
 		return apply_filters( 'tutor_withdrawal_methods_all', array() );
 	}
@@ -1014,6 +1119,15 @@ if ( ! function_exists( 'tutor_log' ) ) {
 }
 
 if ( ! function_exists( 'tutor_wc_price_currency_format' ) ) {
+	/**
+	 * WooCommerce price currency format.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed $amount amount.
+	 *
+	 * @return string
+	 */
 	function tutor_wc_price_currency_format( $amount ) {
 
 		$symbol   = get_woocommerce_currency_symbol();
@@ -1206,7 +1320,7 @@ if ( ! function_exists( 'tutor_is_rest' ) ) {
 		// (#3)
 		global $wp_rewrite;
 		if ( null === $wp_rewrite ) {
-			$wp_rewrite = new WP_Rewrite();
+			$wp_rewrite = new WP_Rewrite(); //phpcs:ignore
 		}
 
 		// (#4)
@@ -1334,7 +1448,9 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 
 if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 	/**
-	 * Get list of global timezones
+	 * Get list of global timezones.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return array
 	 */
@@ -1480,7 +1596,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 
 	if ( ! function_exists( 'tutor_get_all_active_payment_gateways' ) ) {
 		/**
-		 * Get all active payment gateways including manual & automate
+		 * Get all active payment gateways including manual & automate.
 		 *
 		 * @since 3.0.0
 		 *
@@ -1524,13 +1640,13 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 
 	if ( ! function_exists( 'tutor_get_subscription_supported_payment_gateways' ) ) {
 		/**
-		 * Get all supported gateways
+		 * Get all supported gateways.
 		 *
 		 * This function will return only subscription supported gateways if
 		 * plan id provided.
 		 *
 		 * @since 3.0.0
-		 * @since 3.4.0 plan_id param removed
+		 * @since 3.4.0 plan_id param removed.
 		 *
 		 * @return array
 		 */
@@ -1562,7 +1678,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 
 	if ( ! function_exists( 'tutor_get_manual_payment_gateways' ) ) {
 		/**
-		 * Get manual payment gateways
+		 * Get manual payment gateways.
 		 *
 		 * @since 3.0.0
 		 *
@@ -1589,13 +1705,13 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 
 if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 	/**
-	 * Get course formatted price
+	 * Get course formatted price.
 	 * Only for monetized by tutor.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int     $course_id Course price.
-	 * @param boolean $echo Whether to echo content.
+	 * @param int  $course_id course ID.
+	 * @param bool $echo whether to echo content.
 	 *
 	 * @return string|void
 	 */
@@ -1630,15 +1746,15 @@ if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 
 if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 	/**
-	 * Get course formatted price
+	 * Get course formatted price.
 	 *
-	 * Formatting as per ecommerce price settings
+	 * Formatting as per ecommerce price settings.
 	 *
 	 * @since 3.0.0
-	 * @since 4.0.0 Added $html_markup for wooCommerce
+	 * @since 4.0.0 added $html_markup for wooCommerce.
 	 *
-	 * @param mixed $price Raw price.
-	 * @param bool  $html_markup  Whether to include HTML markup ( Only for wooCommerce as it returns html markup ).
+	 * @param mixed $price raw price.
+	 * @param bool  $html_markup whether to include HTML markup (only for WooCommerce).
 	 *
 	 * @return string|void
 	 */
@@ -1666,8 +1782,8 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 
 if ( ! function_exists( 'tutor_print_formatted_price' ) ) {
 	/**
-	 * A clone copy of `tutor_get_formatted_price` helper
-	 * To print formated price with output scaping.
+	 * A clone copy of `tutor_get_formatted_price` helper.
+	 * To print formatted price with output escaping.
 	 *
 	 * @since 3.0.0
 	 *
@@ -1682,13 +1798,13 @@ if ( ! function_exists( 'tutor_print_formatted_price' ) ) {
 
 if ( ! function_exists( 'tutor_get_locale_price' ) ) {
 	/**
-	 * Get price as per locale format
+	 * Get price as per locale format.
 	 *
-	 * For locale settings currency code will be used
+	 * For locale settings currency code will be used.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param mixed $price Raw price.
+	 * @param mixed $price raw price.
 	 *
 	 * @return mixed raw price.
 	 */
@@ -1700,11 +1816,13 @@ if ( ! function_exists( 'tutor_get_locale_price' ) ) {
 
 if ( ! function_exists( 'tutor_is_json' ) ) {
 	/**
-	 * Check a string is valid JSON.
+	 * Check if a string is valid JSON.
 	 *
-	 * @param string $string string.
+	 * @since 1.0.0
 	 *
-	 * @return boolean
+	 * @param string $string input string.
+	 *
+	 * @return bool
 	 */
 	function tutor_is_json( $string ) {
 		json_decode( $string );
@@ -1727,13 +1845,13 @@ if ( ! function_exists( 'tutor_is_dev_mode' ) ) {
 
 if ( ! function_exists( 'tutor_redirect_after_payment' ) ) {
 	/**
-	 * Redirect after payment with status and message
+	 * Redirect after payment with status and message.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param string $status Success or error status of payment.
-	 * @param int    $order_id Order ID.
-	 * @param string $message Success/error message to display.
+	 * @param string $status success or error status of payment.
+	 * @param int    $order_id order ID.
+	 * @param string $message success/error message to display.
 	 *
 	 * @return void
 	 */
@@ -1758,14 +1876,14 @@ if ( ! function_exists( 'tutor_redirect_after_payment' ) ) {
 
 if ( ! function_exists( 'tutor_split_amounts' ) ) {
 	/**
-	 * Split amounts into parts for admin & instructor
+	 * Split amounts into parts for admin & instructor.
 	 *
 	 * Amount split will be proportionally based on
 	 * admin commission rate & instructor commission rate.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $amounts Single amount or list of amount array. For ex: [12,20,100].
+	 * @param array $amounts single amount or list of amount array. For ex: [12,20,100].
 	 *
 	 * @return array
 	 */
@@ -1812,11 +1930,11 @@ if ( ! function_exists( 'tutor_is_local_env' ) ) {
 
 if ( ! function_exists( 'get_tutor_post_types' ) ) {
 	/**
-	 * Get tutor post type list
+	 * Get tutor post type list.
 	 *
 	 * @since 3.6.0
 	 *
-	 * @param string $post_type the post type to get single tutor valid post type
+	 * @param string $post_type the post type to get single tutor valid post type.
 	 *
 	 * @return array|string
 	 */
@@ -1854,8 +1972,11 @@ if ( ! function_exists( 'tutor_decode_unicode_sequences' ) ) {
 	 * - Input and output are expected to be UTF-8 encoded.
 	 * - Behavior for malformed sequences is to preserve the original bytes rather than throw.
 	 *
-	 * @param string $str The input string possibly containing Unicode escape sequences.
-	 * @return string The string with Unicode escape sequences decoded into UTF-8 characters.
+	 * @since 3.6.0
+	 *
+	 * @param string $str the input string possibly containing Unicode escape sequences.
+	 *
+	 * @return string the string with Unicode escape sequences decoded into UTF-8 characters.
 	 */
 	function tutor_decode_unicode_sequences( $str ) {
 		if ( empty( $str ) ) {

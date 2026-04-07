@@ -86,7 +86,7 @@ if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_d
 				>
 					<div class="tutor-question-number"><?php echo esc_html( (int) $index + 1 ); ?>.</div>
 					<div class="tutor-question-content">
-						<?php echo esc_html( wp_strip_all_tags( (string) ( $question->question_title ?? '' ) ) ); ?>
+						<?php echo esc_html( wp_strip_all_tags( wp_unslash( (string) ( $question->question_title ?? '' ) ) ) ); ?>
 					</div>
 				</a>
 			<?php endforeach; ?>
