@@ -33,6 +33,10 @@
     margin: 0;
   }
 
+  &-icon {
+    @include tutor-flex();
+  }
+
   &-value {
     @include tutor-typography('h2', 'bold', 'primary', 'heading');
     margin: 0;
