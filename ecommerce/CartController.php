@@ -107,7 +107,7 @@ class CartController {
 	public function restrict_add_to_cart_course_list( $add_to_cart_btn, $course_id ) {
 
 		$selling_option = Course::get_selling_option( $course_id );
-		$btn_class = apply_filters( 'tutor_enroll_required_login_class', ! is_user_logged_in() ? 'tutor-open-login-modal' : '' );
+		$btn_class      = apply_filters( 'tutor_enroll_required_login_class', ! is_user_logged_in() ? 'tutor-open-login-modal' : '' );
 
 		if ( tutor_utils()->is_addon_enabled( 'subscription' ) && Course::SELLING_OPTION_ONE_TIME !== $selling_option ) {
 			return $add_to_cart_btn;
