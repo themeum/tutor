@@ -77,8 +77,6 @@
 
   &-user-avatar {
     @include tutor-button-reset();
-    width: 32px;
-    height: 32px;
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-full;
     overflow: hidden;
@@ -87,12 +85,6 @@
     &:hover,
     &.active {
       border-color: $tutor-border-brand;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
   }
 

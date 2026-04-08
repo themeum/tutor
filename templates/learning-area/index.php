@@ -82,9 +82,6 @@ if ( ! $tutor_course_content_access ) {
 	return;
 }
 
-$current_user_id = get_current_user_id();
-$subpages        = Template::make_learning_area_sub_page_nav_items();
-
 $tutor_is_started_quiz = false;
 if ( tutor()->quiz_post_type === $tutor_current_post_type ) {
 	$tutor_is_started_quiz = tutor_utils()->is_started_quiz( $tutor_current_content_id );
