@@ -42,6 +42,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
   const option = field.value;
 
   const [isDrawModeActive, setIsDrawModeActive] = useState(false);
+  const [hasStartedLassoDraw, setHasStartedLassoDraw] = useState(false);
 
   const imageRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -131,6 +132,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
           drawInstanceRef.current = null;
         }
         setIsDrawModeActive(false);
+        setHasStartedLassoDraw(false);
       }
     },
     initialFiles: option?.image_id
@@ -256,10 +258,13 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
       if (!ctx) {
         return;
       }
+      // Only one lasso at a time: starting a new stroke clears any previous polygon.
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       canvas.setPointerCapture(event.pointerId);
       isLassoDrawingRef.current = true;
       lassoPointsRef.current = [getPointFromEvent(event)];
       baseImageDataRef.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      setHasStartedLassoDraw(true);
     };
 
     const onPointerMove = (event: PointerEvent) => {
@@ -395,6 +400,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
       is_saved: true,
     };
     updateOption(updated);
+    setHasStartedLassoDraw(false);
   };
 
   const handleCanvasMouseEnter = () => {
@@ -429,6 +435,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
 
     updateOption(updated);
     resetFiles();
+    setHasStartedLassoDraw(false);
 
     const canvas = canvasRef.current;
     if (canvas) {
@@ -499,10 +506,12 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
               {__('Mark the correct area', __TUTOR_TEXT_DOMAIN__)}
             </span>
             <div css={styles.actionsRow}>
-              <button type="button" css={styles.clearButton} onClick={handleClear}>
-                <SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />
-                {__('Clear', __TUTOR_TEXT_DOMAIN__)}
-              </button>
+              <Show when={hasStartedLassoDraw || Boolean(option?.answer_two_gap_match)}>
+                <button type="button" css={styles.clearButton} onClick={handleClear}>
+                  <SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />
+                  {__('Clear', __TUTOR_TEXT_DOMAIN__)}
+                </button>
+              </Show>
             </div>
           </div>
           <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
