@@ -47,8 +47,11 @@ export const initializeCommon = () => {
     createCourseButton.setAttribute('disabled', 'true');
     const target = e.target as HTMLElement;
     target.innerHTML = 'Creating...';
-    await handler.handleCreateCourse();
-    createCourseButton.classList.remove('tutor-loading');
-    createCourseButton.removeAttribute('disabled');
+    try {
+      await handler.handleCreateCourse();
+    } finally {
+      createCourseButton.classList.remove('tutor-loading');
+      createCourseButton.removeAttribute('disabled');
+    }
   });
 };

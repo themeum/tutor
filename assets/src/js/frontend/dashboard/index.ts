@@ -14,7 +14,7 @@ import { initializeQuizAttempts } from './pages/quiz-attempts';
 import { initializeSettings } from './pages/settings';
 import { initializeWithdrawals } from './pages/withdrawals';
 import { initBillingCsvExport } from './pages/billing';
-import { initializeCommon } from './pages/instructor/common';
+import { initializeCommon } from '@FrontendServices/common';
 
 /**
  * Get current dashboard page from URL
