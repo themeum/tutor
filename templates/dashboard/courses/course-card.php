@@ -32,7 +32,7 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 <div class="tutor-progress-card">
 	<div class="tutor-progress-card-inner" onclick="window.location.href = '<?php echo esc_url( $course_learning_url ); ?>';">
 		<div class="tutor-progress-card-thumbnail">
-			<?php do_action( 'tutor_my_courses_before_thumbnail', $course_id ); ?>
+			<?php do_action( 'tutor_courses_card_before_thumbnail', $course_id ); ?>
 			<?php if ( ! empty( $tutor_course_img ) ) : ?>
 				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" />
 			<?php endif; ?>

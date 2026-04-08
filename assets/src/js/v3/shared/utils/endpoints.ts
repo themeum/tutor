@@ -15,6 +15,7 @@ const endpoints = {
   CATEGORY_LIST: 'category_list',
   CREATED_COURSE: 'tutor_create_course',
   TUTOR_INSTRUCTOR_SEARCH: 'tutor_course_instructor_search',
+  CREATE_DRAFT_COURSE: 'tutor_create_new_draft_course',
 
   TUTOR_YOUTUBE_VIDEO_DURATION: 'tutor_youtube_video_duration',
   TUTOR_UNLINK_PAGE_BUILDER: 'tutor_unlink_page_builder',
