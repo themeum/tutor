@@ -298,6 +298,7 @@ export type QuizQuestionType =
   | 'draw_image'
   | 'scale'
   | 'pin_image'
+  | 'coordinates'
   | 'h5p';
 
 export interface QuizQuestionOption {

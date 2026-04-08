@@ -47,7 +47,7 @@ if ( $is_instructor ) {
 					->render();
 				?>
 			</div>
-			<div class="tutor-app-process-image tutor-m-auto tutor-d-flex tutor-justify-center tutor-align-center">
+			<div class="tutor-app-process-image tutor-m-auto tutor-flex tutor-justify-center tutor-align-center">
 				<span class="tutor-app-process-img">
 					<img
 						src="<?php echo esc_url( tutor()->url . 'assets/images/instructor-thankyou.png' ); ?>"
