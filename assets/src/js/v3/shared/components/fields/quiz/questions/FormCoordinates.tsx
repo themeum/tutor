@@ -12,6 +12,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import TextInput from '@TutorShared/atoms/TextInput';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
@@ -317,44 +318,46 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
                 <div css={styles.rowTop}>
                   <div css={styles.rowIndex}>{idx + 1}</div>
                   <div css={styles.rowActions}>
-                    <Button
-                      isIconOnly
-                      variant="tertiary"
-                      size="small"
-                      buttonCss={styles.rowActionButton}
-                      icon={<SVGIcon name="copy" width={20} height={20} />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isAtLimit) return;
-                        const next = coordinates.slice();
-                        next.splice(idx + 1, 0, { ...coordinates[idx] });
-                        commitCoordinates(next);
-                        setActiveIndex(idx + 1);
-                      }}
-                      disabled={isAtLimit}
-                      aria-label={__('Copy coordinate', __TUTOR_TEXT_DOMAIN__)}
-                    />
-                    <Button
-                      isIconOnly
-                      variant="tertiary"
-                      size="small"
-                      buttonCss={styles.rowActionButton}
-                      icon={<SVGIcon name="delete" width={20} height={20} />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isOnlyOne) return;
-                        const next = coordinates.slice();
-                        next.splice(idx, 1);
-                        commitCoordinates(next);
-                        setActiveIndex((current) => {
-                          if (current > idx) return current - 1;
-                          if (current === idx) return Math.max(0, idx - 1);
-                          return current;
-                        });
-                      }}
-                      disabled={isOnlyOne}
-                      aria-label={__('Delete coordinate', __TUTOR_TEXT_DOMAIN__)}
-                    />
+                    <Tooltip content={__('Duplicate', __TUTOR_TEXT_DOMAIN__)} delay={200}>
+                      <button
+                        type="button"
+                        css={styleUtils.actionButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (isAtLimit) return;
+                          const next = coordinates.slice();
+                          next.splice(idx + 1, 0, { ...coordinates[idx] });
+                          commitCoordinates(next);
+                          setActiveIndex(idx + 1);
+                        }}
+                        disabled={isAtLimit}
+                        aria-label={__('Copy coordinate', __TUTOR_TEXT_DOMAIN__)}
+                      >
+                        <SVGIcon name="copyPaste" width={24} height={24} />
+                      </button>
+                    </Tooltip>
+                    <Tooltip content={__('Delete', __TUTOR_TEXT_DOMAIN__)} delay={200}>
+                      <button
+                        type="button"
+                        css={styleUtils.actionButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (isOnlyOne) return;
+                          const next = coordinates.slice();
+                          next.splice(idx, 1);
+                          commitCoordinates(next);
+                          setActiveIndex((current) => {
+                            if (current > idx) return current - 1;
+                            if (current === idx) return Math.max(0, idx - 1);
+                            return current;
+                          });
+                        }}
+                        disabled={isOnlyOne}
+                        aria-label={__('Delete coordinate', __TUTOR_TEXT_DOMAIN__)}
+                      >
+                        <SVGIcon name="delete" width={24} height={24} />
+                      </button>
+                    </Tooltip>
                   </div>
                 </div>
                 <TextInput
@@ -503,18 +506,7 @@ const styles = {
     ${styleUtils.display.flex('row')};
     align-items: center;
     flex-shrink: 0;
-  `,
-  rowActionButton: css`
-    border: none;
-    box-shadow: none;
-
-    &:hover,
-    &:focus,
-    &:focus-visible,
-    &:active {
-      border: none;
-      box-shadow: none;
-    }
+    gap: ${spacing[8]};
   `,
   addButton: css`
     ${typography.small('medium')};
