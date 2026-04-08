@@ -43,7 +43,7 @@ $given_ids = array_map( 'intval', array_filter( $given_ids ) );
 			$option_attr = 'correct';
 		}
 		?>
-		<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $option_attr ); ?>">
+		<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $option_attr ); ?>" data-readonly="true">
 			<?php SvgIcon::make()->name( ! empty( $answer->is_correct ) ? Icon::CHECK_2 : Icon::CROSS )->size( 20 )->render(); ?>
 			<?php echo esc_html( $answer->answer_title ?? '' ); ?>
 		</div>

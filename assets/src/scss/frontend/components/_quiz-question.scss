@@ -256,9 +256,9 @@
       border: none;
       line-height: 2.5;
 
-      &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not(
-          [data-option='draggable']
-        ) {
+      &:hover:not(:has(:checked)):not(:has(:disabled)):not([data-readonly='true']):not([data-option='correct']):not(
+          [data-option='incorrect']
+        ):not([data-option='draggable']) {
         background-color: transparent;
         cursor: default;
       }

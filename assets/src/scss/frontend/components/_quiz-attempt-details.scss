@@ -241,6 +241,11 @@
       background: $tutor-surface-warning-hover;
     }
   }
+  .tutor-quiz-question-option {
+    &[data-readonly='true'] {
+      cursor: default;
+    }
+  }
 
   [data-question='fill_in_the_blank'] {
     .tutor-quiz-question-option {
