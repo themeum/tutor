@@ -506,12 +506,20 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
               {__('Mark the correct area', __TUTOR_TEXT_DOMAIN__)}
             </span>
             <div css={styles.actionsRow}>
-              <Show when={hasStartedLassoDraw || Boolean(option?.answer_two_gap_match)}>
-                <button type="button" css={styles.clearButton} onClick={handleClear}>
-                  <SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />
-                  {__('Clear', __TUTOR_TEXT_DOMAIN__)}
-                </button>
-              </Show>
+              <button
+                type="button"
+                css={[
+                  styles.clearButton,
+                  !(hasStartedLassoDraw || Boolean(option?.answer_two_gap_match)) && styles.clearButtonHidden,
+                ]}
+                onClick={handleClear}
+                disabled={!(hasStartedLassoDraw || Boolean(option?.answer_two_gap_match))}
+                aria-hidden={!(hasStartedLassoDraw || Boolean(option?.answer_two_gap_match))}
+                tabIndex={hasStartedLassoDraw || Boolean(option?.answer_two_gap_match) ? 0 : -1}
+              >
+                <SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />
+                {__('Clear', __TUTOR_TEXT_DOMAIN__)}
+              </button>
             </div>
           </div>
           <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
@@ -553,7 +561,6 @@ const styles = {
   wrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[24]};
-    padding-left: ${spacing[40]};
 
     ${Breakpoint.smallMobile} {
       padding-left: ${spacing[8]};
@@ -638,6 +645,8 @@ const styles = {
   `,
   actionsRow: css`
     ${styleUtils.display.flex('row')};
+    justify-content: flex-end;
+    min-width: 94px;
     gap: ${spacing[12]};
     flex-wrap: wrap;
     color: ${colorTokens.text.brand};
@@ -655,6 +664,10 @@ const styles = {
     gap: ${spacing[8]};
     padding: ${spacing[4]} 0;
     cursor: pointer;
+  `,
+  clearButtonHidden: css`
+    visibility: hidden;
+    pointer-events: none;
   `,
   clearButtonIcon: css`
     color: ${colorTokens.text.brand};
