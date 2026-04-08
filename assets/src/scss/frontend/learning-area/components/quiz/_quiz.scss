@@ -295,7 +295,7 @@ $tutor-quiz-content-bottom-offset: calc(
 
   &-questions {
     @include tutor-flex(column);
-    @include tutor-container(792px);
+    @include tutor-frontend-layout();
     padding-inline: 0;
     width: 100%;
     gap: $tutor-spacing-10;
