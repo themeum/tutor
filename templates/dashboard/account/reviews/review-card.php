@@ -36,6 +36,7 @@ $default_review = array(
 	'is_editable'     => false,
 	'user_avatar'     => '',
 	'display_name'    => '',
+	'comment_status'  => '',
 );
 
 $review = wp_parse_args( $review, $default_review );

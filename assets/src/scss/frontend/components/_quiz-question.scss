@@ -8,6 +8,8 @@
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
   padding: $tutor-spacing-8;
+  width: 100%;
+  min-width: 0;
 
   @include tutor-breakpoint-down(sm) {
     padding: $tutor-spacing-5;
@@ -17,6 +19,7 @@
   &-header {
     @include tutor-flex(row, flex-start, space-between);
     gap: $tutor-spacing-4;
+    min-width: 0;
   }
 
   &-number {
@@ -26,6 +29,7 @@
     border-radius: $tutor-radius-sm;
     width: 24px;
     height: 24px;
+    flex-shrink: 0;
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography('tiny', 'semibold');
@@ -39,6 +43,9 @@
     @include tutor-typography('medium', 'semibold');
     gap: $tutor-spacing-4;
     flex: 1;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography('p2', 'semibold');
@@ -50,6 +57,7 @@
     @include tutor-flex(row);
     gap: $tutor-spacing-6;
     width: 100%;
+    min-width: 0;
   }
 
   &-option {
@@ -58,6 +66,7 @@
     border-radius: $tutor-radius-md;
     background-color: $tutor-surface-l1;
     overflow: hidden;
+    min-width: 0;
     @include tutor-transition((background-color, border-color, color));
 
     &[data-option='correct'] {
@@ -147,6 +156,22 @@
         background-color: $tutor-surface-l1;
       }
     }
+  }
+
+  img,
+  video,
+  iframe,
+  object,
+  embed {
+    max-width: 100%;
+  }
+
+  video,
+  iframe,
+  object,
+  embed {
+    display: block;
+    width: 100%;
   }
 }
 

@@ -538,15 +538,15 @@ class Template extends Tutor_Base {
 			$base_url = get_permalink();
 		}
 
-		$menu_items = array(
-			'course-info' => array(
-				'title'    => __( 'Course Info', 'tutor' ),
-				'icon'     => Icon::INFO_OCTAGON,
-				'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
-				'template' => tutor_get_template( 'learning-area.subpages.course-info' ),
-			),
+		$menu_items = apply_filters( 'tutor_learning_area_sub_page_nav_item', array(), $base_url );
+
+		$menu_items['course-info'] = array(
+			'title'    => __( 'Course Info', 'tutor' ),
+			'icon'     => Icon::INFO_OCTAGON,
+			'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
+			'template' => tutor_get_template( 'learning-area.subpages.course-info' ),
 		);
 
-		return apply_filters( 'tutor_learning_area_sub_page_nav_item', $menu_items, $base_url );
+		return $menu_items;
 	}
 }

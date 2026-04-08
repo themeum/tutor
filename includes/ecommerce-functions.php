@@ -8,6 +8,8 @@
  * @since 3.5.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Ecommerce\Cart\CartFactory;
 use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 

@@ -65,16 +65,13 @@ $single_url = UrlHelper::add_query_params(
 			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="<?php echo esc_attr( 'tutor-qna-text-' . (int) $question_id ); ?>"><?php echo wp_kses_post( $content ); ?></a>
 			<div class="tutor-flex tutor-items-center tutor-justify-between tutor-sm-mt-4">
 				<div class="tutor-discussion-card-meta">
-					<?php
-					Button::make()
-						->label( __( 'Reply', 'tutor' ) )
-						->variant( Variant::GHOST )
-						->attr( '@click', 'toggleReply(' . (int) $question_id . ')' )
-						->attr( 'class', 'tutor-discussion-card-meta-reply-button' )
-						->attr( 'type', 'button' )
-						->size( Size::X_SMALL )
-						->render();
-					?>
+					<button 
+						@click="toggleReply(<?php echo (int) $question_id; ?>)"
+						class="tutor-discussion-card-meta-reply-button"
+						type="button"
+					>
+						<?php esc_html_e( 'Reply', 'tutor' ); ?>
+					</button>
 					<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-flex tutor-items-center tutor-gap-2">
 						<?php SvgIcon::make()->name( Icon::COMMENTS )->size( 20 )->render(); ?> 
 						<span class="tutor-discussion-card-reply-count tutor-text-subdued"><?php echo esc_html( $question->answer_count ); ?></span>
