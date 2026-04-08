@@ -2,16 +2,18 @@
 // Initializes learning area functionality based on current page
 
 import { initializeReviews } from '@FrontendComponents/reviews';
-import { initializeCommon } from './common';
+import { initializeCommon as initializeLearningAreaCommon } from './common';
 import { initializeLesson } from './lesson';
 import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeCourseCourseInfo } from './pages/course-info';
 import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './quiz';
 import { initializeSidebar } from './sidebar';
+import { initializeCommon } from '@FrontendServices/common';
 import { tutorConfig } from '@TutorShared/config/config';
 
 const initializeLearningArea = () => {
+  initializeLearningAreaCommon();
   initializeCommon();
   initializeSidebar();
   initializeReviews();
