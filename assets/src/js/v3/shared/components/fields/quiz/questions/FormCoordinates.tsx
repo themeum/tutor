@@ -25,7 +25,7 @@ import {
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
 
-const PADDING = 45;
+const PADDING = 12;
 const MIN_COORD = -10;
 const MAX_COORD = 10;
 const SNAP_THRESHOLD = 0.3;
@@ -47,6 +47,18 @@ interface FormCoordinatesProps extends FormControllerProps<QuizQuestionOption> {
 }
 
 type CoordinatePoint = { x: number; y: number };
+
+function getTutorCssColor(varNames: string[], fallback: string): string {
+  if (typeof window === 'undefined' || !window.getComputedStyle || !document?.documentElement) {
+    return fallback;
+  }
+  const computed = window.getComputedStyle(document.documentElement);
+  for (const name of varNames) {
+    const value = computed.getPropertyValue(name);
+    if (value && value.trim()) return value.trim();
+  }
+  return fallback;
+}
 
 function clampIntToRange(n: number): number {
   const rounded = Math.round(n);
@@ -113,7 +125,6 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
   });
   const [drafts, setDrafts] = useState<string[]>(() => coordinates.map(formatCoordinateText));
   const [activeIndex, setActiveIndex] = useState(0);
-  const activePoint = coordinates[activeIndex] ?? null;
 
   useEffect(() => {
     const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '');
@@ -218,22 +229,37 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       ctx.textBaseline = 'top';
       ctx.fillText('0', centerX - 5, centerY + 5);
 
-      if (activePoint !== null) {
-        const pt = graphToPixel(activePoint.x, activePoint.y);
+      const markerOuterLayer = getTutorCssColor(['--tutor-gray-300', '--tutor-color-gray-300'], '#CECFD2');
+      const markerMiddleLayer = getTutorCssColor(['--tutor-gray-1', '--tutor-color-gray-1'], '#FFFFFF');
+      const markerFillActive = getTutorCssColor(['--tutor-stroke-brand', '--tutor-color-brand'], '#2196F3');
+      const markerFillIdle = getTutorCssColor(['--tutor-gray-400', '--tutor-color-gray-400'], '#94969C');
+
+      const drawPointMarker = (pt: { x: number; y: number }, fillColor: string, scale = 1) => {
+        const s = Number.isFinite(scale) ? scale : 1;
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 8, 0, 2 * Math.PI);
-        ctx.fillStyle = '#2196F3';
+        ctx.arc(pt.x, pt.y, 14 * s, 0, 2 * Math.PI);
+        ctx.fillStyle = markerOuterLayer;
         ctx.fill();
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 2;
-        ctx.stroke();
+
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 3, 0, 2 * Math.PI);
-        ctx.fillStyle = '#fff';
+        ctx.arc(pt.x, pt.y, 10 * s, 0, 2 * Math.PI);
+        ctx.fillStyle = markerMiddleLayer;
         ctx.fill();
-      }
+
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 6 * s, 0, 2 * Math.PI);
+        ctx.fillStyle = fillColor;
+        ctx.fill();
+      };
+
+      // Always show all set coordinates. Highlight the active one.
+      coordinates.forEach((coord, idx) => {
+        const isActive = idx === activeIndex;
+        const pt = graphToPixel(coord.x, coord.y);
+        drawPointMarker(pt, isActive ? markerFillActive : markerFillIdle, isActive ? 1.05 : 1);
+      });
     },
-    [activePoint],
+    [activeIndex, coordinates],
   );
 
   useEffect(() => {
@@ -278,6 +304,12 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
         snappedY >= MIN_COORD &&
         snappedY <= MAX_COORD
       ) {
+        const existingIdx = coordinates.findIndex((p) => p.x === snappedX && p.y === snappedY);
+        if (existingIdx !== -1) {
+          setActiveIndex(existingIdx);
+          return;
+        }
+
         const next = coordinates.slice();
         next[activeIndex] = { x: snappedX, y: snappedY };
         commitCoordinates(next);
@@ -528,15 +560,17 @@ const styles = {
   `,
   canvasWrap: css`
     display: inline-block;
-    border-radius: ${borderRadius.card};
+    width: ${CANVAS_SIZE}px;
+    height: ${CANVAS_SIZE}px;
     overflow: hidden;
+    background-color: ${colorTokens.background.white};
   `,
   canvas: css`
     display: block;
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    height: 100%;
     cursor: crosshair;
     border: 1px solid ${colorTokens.stroke.border};
-    border-radius: 6px;
+    border-radius: ${borderRadius.card};
   `,
 };
