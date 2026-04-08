@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
@@ -524,20 +525,22 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
               {__('Mark the correct area', __TUTOR_TEXT_DOMAIN__)}
             </span>
             <div css={styles.actionsRow}>
-              <button
+              <Button
                 type="button"
-                css={[
+                variant="secondary"
+                size="small"
+                icon={<SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />}
+                buttonCss={css([
                   styles.clearButton,
                   !(hasStartedLassoDraw || Boolean(option?.answer_two_gap_match)) && styles.clearButtonHidden,
-                ]}
+                ])}
                 onClick={handleClear}
                 disabled={!(hasStartedLassoDraw || Boolean(option?.answer_two_gap_match))}
                 aria-hidden={!(hasStartedLassoDraw || Boolean(option?.answer_two_gap_match))}
                 tabIndex={hasStartedLassoDraw || Boolean(option?.answer_two_gap_match) ? 0 : -1}
               >
-                <SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />
                 {__('Clear', __TUTOR_TEXT_DOMAIN__)}
-              </button>
+              </Button>
             </div>
           </div>
           <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
