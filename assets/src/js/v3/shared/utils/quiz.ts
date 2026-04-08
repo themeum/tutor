@@ -102,6 +102,7 @@ export const validateQuizQuestion = (
       if (firstAnswer?.answer_two_gap_match) {
         try {
           const data = JSON.parse(firstAnswer.answer_two_gap_match) as {
+            value?: number;
             config?: { min?: number; max?: number };
           };
           const min = Number(data.config?.min ?? 0);
@@ -109,6 +110,19 @@ export const validateQuizQuestion = (
           if (!Number.isNaN(min) && !Number.isNaN(max) && max <= min) {
             return {
               message: __('The maximum value must be greater than the minimum value.', __TUTOR_TEXT_DOMAIN__),
+              type: 'question',
+            };
+          }
+
+          const correctValue = Number(data.value);
+          if (
+            !Number.isNaN(min) &&
+            !Number.isNaN(max) &&
+            !Number.isNaN(correctValue) &&
+            (correctValue < min || correctValue > max)
+          ) {
+            return {
+              message: __('The correct value must be between the minimum and maximum values.', __TUTOR_TEXT_DOMAIN__),
               type: 'question',
             };
           }

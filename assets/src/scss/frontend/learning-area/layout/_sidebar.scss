@@ -140,6 +140,15 @@
           .tutor-learning-nav-header-title {
             color: $tutor-text-primary;
           }
+
+          &:not(.expanded) {
+            background-color: $tutor-tab-l3-active-hover;
+            border-radius: $tutor-radius-md;
+
+            .tutor-learning-nav-header-title {
+              color: $tutor-text-brand;
+            }
+          }
         }
       }
 

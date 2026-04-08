@@ -12,6 +12,7 @@
 
 namespace Tutor\Components;
 
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
@@ -97,7 +98,7 @@ class ConfirmationModal extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $icon = Icon::BIN;
+	protected $icon = '';
 
 	/**
 	 * Icon width.
@@ -350,6 +351,10 @@ class ConfirmationModal extends BaseComponent {
 	public function get(): string {
 		if ( empty( $this->id ) ) {
 			return '';
+		}
+
+		if ( empty( $this->icon ) ) {
+			$this->icon = UrlHelper::themed_asset( 'images/illustrations/delete.webp' );
 		}
 
 		// Set default button texts if not provided.

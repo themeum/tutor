@@ -10,6 +10,7 @@ import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './quiz';
 import { initializeSidebar } from './sidebar';
 import { initializeCommon } from '@FrontendServices/common';
+import { tutorConfig } from '@TutorShared/config/config';
 
 const initializeLearningArea = () => {
   initializeLearningAreaCommon();
@@ -20,14 +21,15 @@ const initializeLearningArea = () => {
 
   // Normalize path segments
   const pathSegments = pathname.split('/').filter(Boolean);
+  const { lesson_slug = 'lessons', quiz_slug = 'quizzes', assignment_slug = 'assignments' } = tutorConfig || {};
 
   let currentPage = null;
 
-  if (pathSegments.includes('assignments')) {
+  if (pathSegments.includes(assignment_slug)) {
     currentPage = 'assignment-view';
-  } else if (pathSegments.includes('lessons')) {
+  } else if (pathSegments.includes(lesson_slug)) {
     currentPage = 'lesson';
-  } else if (pathSegments.includes('quizzes')) {
+  } else if (pathSegments.includes(quiz_slug)) {
     currentPage = 'quiz';
   } else {
     // fallback to query param (older behavior)

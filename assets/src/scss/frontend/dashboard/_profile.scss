@@ -126,6 +126,12 @@
       }
     }
 
+    &-left {
+      @include tutor-breakpoint-up(sm) {
+        min-height: 120px;
+      }
+    }
+
     &-right {
       @include tutor-flex(column, flex-start, space-between);
 

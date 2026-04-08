@@ -74,6 +74,7 @@
   .tutor-quiz-submission[data-question-layout-view='single_question'],
   .tutor-quiz-submission[data-question-layout-view='question_pagination'] {
     .tutor-quiz-question {
+      width: calc(100% - 2px);
       margin: 1px 1px 0 1px;
     }
   }
@@ -97,6 +98,10 @@
     }
     .tutor-quiz-question-option {
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-2xl, sm);
+
+      &:has(.tutor-quiz-question-option-drop-zone) {
+        border-radius: $tutor-radius-lg;
+      }
     }
 
     .tutor-quiz-question-option:has(:checked) {
