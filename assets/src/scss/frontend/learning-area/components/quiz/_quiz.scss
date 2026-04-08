@@ -976,9 +976,9 @@ $tutor-quiz-content-bottom-offset: calc(
 
     &-inner {
       @include tutor-flex(row, center, flex-start);
+      @include tutor-frontend-layout();
       gap: $tutor-spacing-4;
       width: 100%;
-      max-width: 792px;
       margin-inline: auto;
     }
 
