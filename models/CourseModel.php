@@ -16,6 +16,7 @@ use TUTOR\Lesson;
 use Tutor\Ecommerce\Tax;
 use InvalidArgumentException;
 use Tutor\Helpers\QueryHelper;
+use TUTOR\User;
 use TUTOR_ASSIGNMENTS\Assignments;
 
 /**
@@ -1519,6 +1520,10 @@ class CourseModel {
 	 * @return bool
 	 */
 	public static function has_course_content_access( array $args = array() ): bool {
+		if ( User::is_admin() ) {
+			return true;
+		}
+
 		$defaults = array(
 			'current_post_type' => '',
 			'current_post_id'   => 0,
