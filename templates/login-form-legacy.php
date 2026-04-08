@@ -106,7 +106,8 @@ do_action( 'tutor_before_login_form' );
 </form>
 <?php
 do_action( 'tutor_after_login_form' );
-if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) : ?>
+if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) :
+	?>
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 		var { __ } = wp.i18n;
