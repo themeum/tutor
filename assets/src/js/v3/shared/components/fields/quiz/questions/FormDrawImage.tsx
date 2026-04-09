@@ -468,6 +468,8 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
     return null;
   }
 
+  const canClearSelection = hasStartedLassoDraw || Boolean(option?.answer_two_gap_match);
+
   return (
     <div css={styles.wrapper}>
       <Show when={!option?.image_url}>
@@ -525,22 +527,18 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
               {__('Mark the correct area', __TUTOR_TEXT_DOMAIN__)}
             </span>
             <div css={styles.actionsRow}>
-              <Button
-                type="button"
-                variant="secondary"
-                size="small"
-                icon={<SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />}
-                buttonCss={css([
-                  styles.clearButton,
-                  !(hasStartedLassoDraw || Boolean(option?.answer_two_gap_match)) && styles.clearButtonHidden,
-                ])}
-                onClick={handleClear}
-                disabled={!(hasStartedLassoDraw || Boolean(option?.answer_two_gap_match))}
-                aria-hidden={!(hasStartedLassoDraw || Boolean(option?.answer_two_gap_match))}
-                tabIndex={hasStartedLassoDraw || Boolean(option?.answer_two_gap_match) ? 0 : -1}
-              >
-                {__('Clear', __TUTOR_TEXT_DOMAIN__)}
-              </Button>
+              <Show when={canClearSelection}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="small"
+                  icon={<SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />}
+                  buttonCss={styles.clearButton}
+                  onClick={handleClear}
+                >
+                  {__('Clear', __TUTOR_TEXT_DOMAIN__)}
+                </Button>
+              </Show>
             </div>
           </div>
           <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
@@ -631,8 +629,10 @@ const styles = {
   `,
   actionsRow: css`
     ${styleUtils.display.flex('row')};
+    align-items: center;
     justify-content: flex-end;
     min-width: 94px;
+    min-height: 32px;
   `,
   canvasInner: css`
     position: relative;
@@ -697,10 +697,6 @@ const styles = {
     gap: ${spacing[8]};
     padding: ${spacing[4]} 0;
     cursor: pointer;
-  `,
-  clearButtonHidden: css`
-    visibility: hidden;
-    pointer-events: none;
   `,
   clearButtonIcon: css`
     color: ${colorTokens.text.brand};
