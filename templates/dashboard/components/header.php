@@ -29,10 +29,11 @@ $menu_items['logout'] = array(
 	'url'   => wp_logout_url( tutor_utils()->tutor_dashboard_url() ),
 );
 
-$active_nav       = '';
-$user_id          = get_current_user_id();
-$display_name     = tutor_utils()->display_name( $user_id );
-$edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
+$active_nav                   = '';
+$user_id                      = get_current_user_id();
+$display_name                 = tutor_utils()->display_name( $user_id );
+$edit_profile_url             = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
+$is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instructor_btn' );
 ?>
 
 <div x-data="tutorHeader()" class="tutor-dashboard-header">
@@ -154,7 +155,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 									</div>
 								</div>
 								<?php
-							} elseif ( Instructors_List::STATUS_BLOCKED !== $instructor_status ) {
+							} elseif ( Instructors_List::STATUS_BLOCKED !== $instructor_status && $is_become_instructor_enabled ) {
 								?>
 								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
 									<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small tutor-gap-2 tutor-btn-block">

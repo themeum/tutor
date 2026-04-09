@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
@@ -42,6 +43,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
   const option = field.value;
 
   const [isDrawModeActive, setIsDrawModeActive] = useState(false);
+  const [hasStartedLassoDraw, setHasStartedLassoDraw] = useState(false);
 
   const imageRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -131,6 +133,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
           drawInstanceRef.current = null;
         }
         setIsDrawModeActive(false);
+        setHasStartedLassoDraw(false);
       }
     },
     initialFiles: option?.image_id
@@ -256,10 +259,13 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
       if (!ctx) {
         return;
       }
+      // Only one lasso at a time: starting a new stroke clears any previous polygon.
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       canvas.setPointerCapture(event.pointerId);
       isLassoDrawingRef.current = true;
       lassoPointsRef.current = [getPointFromEvent(event)];
       baseImageDataRef.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      setHasStartedLassoDraw(true);
     };
 
     const onPointerMove = (event: PointerEvent) => {
@@ -395,6 +401,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
       is_saved: true,
     };
     updateOption(updated);
+    setHasStartedLassoDraw(false);
   };
 
   const handleCanvasMouseEnter = () => {
@@ -429,6 +436,7 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
 
     updateOption(updated);
     resetFiles();
+    setHasStartedLassoDraw(false);
 
     const canvas = canvasRef.current;
     if (canvas) {
@@ -462,6 +470,8 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
   if (!option) {
     return null;
   }
+
+  const canClearSelection = hasStartedLassoDraw || Boolean(option?.answer_two_gap_match);
 
   return (
     <div css={styles.wrapper}>
@@ -498,12 +508,19 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
               </span>
               {__('Mark the correct area', __TUTOR_TEXT_DOMAIN__)}
             </span>
-            <div css={styles.actionsRow}>
-              <button type="button" css={styles.clearButton} onClick={handleClear}>
-                <SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />
-                {__('Clear', __TUTOR_TEXT_DOMAIN__)}
-              </button>
-            </div>
+            <Show when={canClearSelection}>
+              <div css={styles.actionsRow}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="small"
+                  icon={<SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />}
+                  onClick={handleClear}
+                >
+                  {__('Clear', __TUTOR_TEXT_DOMAIN__)}
+                </Button>
+              </div>
+            </Show>
           </div>
           <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
             <img
@@ -544,7 +561,6 @@ const styles = {
   wrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[24]};
-    padding-left: ${spacing[40]};
 
     ${Breakpoint.smallMobile} {
       padding-left: ${spacing[8]};
@@ -581,6 +597,7 @@ const styles = {
     align-items: center;
     justify-content: space-between;
     gap: ${spacing[12]};
+    min-height: 32px;
   `,
   answerHeaderTitle: css`
     ${typography.body('medium')};
@@ -629,31 +646,16 @@ const styles = {
   `,
   actionsRow: css`
     ${styleUtils.display.flex('row')};
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 94px;
+    min-height: 32px;
     gap: ${spacing[12]};
     flex-wrap: wrap;
     color: ${colorTokens.text.brand};
   `,
-  clearButton: css`
-    width: 94px;
-    border: none;
-    border-radius: ${borderRadius.input};
-    background: ${colorTokens.action.secondary.default};
-    ${typography.caption('medium')};
-    color: ${colorTokens.text.brand};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: ${spacing[8]};
-    padding: ${spacing[4]} 0;
-    cursor: pointer;
-  `,
   clearButtonIcon: css`
     color: ${colorTokens.text.brand};
-  `,
-  brushHint: css`
-    ${typography.caption()};
-    color: ${colorTokens.text.subdued};
-    margin: 0;
   `,
   savedHint: css`
     ${typography.caption()};
