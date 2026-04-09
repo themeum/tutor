@@ -66,6 +66,10 @@ const questionTypes = {
     label: __('Pin', 'tutor'),
     icon: 'quizPin',
   },
+  puzzle: {
+    label: __('Puzzle', 'tutor'),
+    icon: 'quizImageMatching',
+  },
   h5p: {
     label: __('H5P', 'tutor'),
     icon: 'quizTrueFalse',

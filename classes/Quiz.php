@@ -199,10 +199,12 @@ class Quiz {
 				'learning-area.quiz.questions.scale',
 				'learning-area.quiz.questions.pin-image',
 				'learning-area.quiz.questions.coordinates',
+				'learning-area.quiz.questions.puzzle',
 				'shared.components.quiz.attempt-details.questions.draw-image',
 				'shared.components.quiz.attempt-details.questions.scale',
 				'shared.components.quiz.attempt-details.questions.pin-image',
 				'shared.components.quiz.attempt-details.questions.coordinates',
+				'shared.components.quiz.attempt-details.questions.puzzle',
 			),
 			$template,
 			$variables

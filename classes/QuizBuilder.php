@@ -196,6 +196,9 @@ class QuizBuilder {
 			if ( 'scale' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
 				throw new \Exception( esc_html__( 'Range questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
 			}
+			if ( 'puzzle' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
+				throw new \Exception( esc_html__( 'Puzzle questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
+			}
 			$question_data    = $this->prepare_question_data( $quiz_id, $question );
 			$question_answers = isset( $question['question_answers'] ) ? $question['question_answers'] : array();
 

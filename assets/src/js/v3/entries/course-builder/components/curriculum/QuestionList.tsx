@@ -127,6 +127,12 @@ const questionTypeOptions: {
     icon: 'quizGraph',
     isPro: true,
   },
+  {
+    label: __('Puzzle', 'tutor'),
+    value: 'puzzle',
+    icon: 'quizImageMatching',
+    isPro: true,
+  },
 ];
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -139,7 +145,8 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
           option.value !== 'draw_image' &&
           option.value !== 'pin_image' &&
           option.value !== 'scale' &&
-          option.value !== 'coordinates',
+          option.value !== 'coordinates' &&
+          option.value !== 'puzzle',
       );
     }
     return questionTypeOptions;
@@ -289,7 +296,22 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                         is_correct: '1',
                       },
                     ]
-                  : [],
+                  : questionType === 'puzzle'
+                    ? [
+                        {
+                          _data_status: QuizDataStatus.NEW,
+                          is_saved: true,
+                          answer_id: nanoid(),
+                          answer_title: '',
+                          belongs_question_id: questionId,
+                          belongs_question_type: 'puzzle',
+                          answer_two_gap_match: '',
+                          answer_view_format: 'puzzle',
+                          answer_order: 0,
+                          is_correct: '1',
+                        },
+                      ]
+                    : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,

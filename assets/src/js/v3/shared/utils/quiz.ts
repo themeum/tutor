@@ -169,11 +169,18 @@ export const validateQuizQuestion = (
       }
     }
 
-    if (currentQuestionType === 'draw_image' || currentQuestionType === 'pin_image') {
+    if (
+      currentQuestionType === 'draw_image' ||
+      currentQuestionType === 'pin_image' ||
+      currentQuestionType === 'puzzle'
+    ) {
       const hasMarkedArea = answers.some((answer) => Boolean(answer.answer_two_gap_match));
       if (!hasMarkedArea) {
         return {
-          message: __('Please mark a valid area on the image.', __TUTOR_TEXT_DOMAIN__),
+          message:
+            currentQuestionType === 'puzzle'
+              ? __('Please upload a valid puzzle image.', __TUTOR_TEXT_DOMAIN__)
+              : __('Please mark a valid area on the image.', __TUTOR_TEXT_DOMAIN__),
           type: 'question',
         };
       }
