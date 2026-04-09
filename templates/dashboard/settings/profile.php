@@ -74,7 +74,7 @@ $max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 )
 			</span>
 			<div class="tutor_overlay">
 				<button class="tutor_cover_uploader tutor-btn tutor-btn-primary">
-					<i class="tutor-icon-camera tutor-mr-12" area-hidden="true"></i>
+					<i class="tutor-icon-camera tutor-mr-12" aria-hidden="true"></i>
 					<span><?php echo $profile_photo_id ? esc_html__( 'Update Cover Photo', 'tutor' ) : esc_html__( 'Upload Cover Photo', 'tutor' ); ?></span>
 				</button>
 			</div>
