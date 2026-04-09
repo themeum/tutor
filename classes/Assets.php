@@ -213,6 +213,9 @@ class Assets {
 			'kids_icons_registry'          => $kids_icons,
 			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
 			'is_legacy_learning_mode'      => tutor_utils()->is_legacy_learning_mode(),
+			'course_slug'                  => tutor_utils()->get_option( 'course_permalink_base', 'courses' ),
+			'lesson_slug'                  => tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ),
+			'quiz_slug'                    => tutor_utils()->get_option( 'quiz_permalink_base', 'quizzes' ),
 		);
 	}
 

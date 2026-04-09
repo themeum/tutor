@@ -193,6 +193,7 @@ const settings = () => {
         onSuccess: (data: TutorMutationResponse<PreferencesFormProps>, payload: PreferencesFormProps) => {
           form.reset(payload?.formId || '', payload as unknown as Record<string, unknown>);
           toast.success(data?.message ?? __('Preferences saved successfully', 'tutor'));
+          window.location.reload();
         },
         onError: (error: Error) => {
           toast.error(convertToErrorMessage(error));

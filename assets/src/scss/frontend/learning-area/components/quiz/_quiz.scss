@@ -67,6 +67,26 @@ $tutor-quiz-content-bottom-offset: calc(
       padding-bottom: $tutor-quiz-content-bottom-offset;
     }
 
+    &[data-question-layout-view='single_question']
+      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='draw_image']),
+    &[data-question-layout-view='question_pagination']
+      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='draw_image']),
+    &[data-question-layout-view='single_question']
+      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='pin_image']),
+    &[data-question-layout-view='question_pagination']
+      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='pin_image']) {
+      max-height: none;
+      overflow: visible;
+    }
+
+    &[data-question-layout-view='single_question']
+      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='coordinates']),
+    &[data-question-layout-view='question_pagination']
+      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='coordinates']) {
+      max-height: none;
+      overflow: visible;
+    }
+
     &[data-question-layout-view='single_question'] .tutor-quiz-question,
     &[data-question-layout-view='question_pagination'] .tutor-quiz-question {
       margin-block: auto;
@@ -295,7 +315,7 @@ $tutor-quiz-content-bottom-offset: calc(
 
   &-questions {
     @include tutor-flex(column);
-    @include tutor-container(792px);
+    @include tutor-frontend-layout();
     padding-inline: 0;
     width: 100%;
     gap: $tutor-spacing-10;

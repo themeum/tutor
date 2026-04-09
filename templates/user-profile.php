@@ -43,7 +43,7 @@ $phone_number     = $student_meta['phone_number'][0] ?? '';
 		<div class="tutor-profile-card-body-left">
 			<div>
 				<h3 class="tutor-user-profile-title">
-					<?php esc_html( $student_details->display_name ); ?>
+					<?php echo esc_html( $student_details->display_name ); ?>
 				</h3>
 				<div class="tutor-user-profile-designation">
 					<?php echo esc_html( $student_meta['_tutor_profile_job_title'][0] ?? '' ); ?>

@@ -54,6 +54,8 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 
 		$is_scale_review      = 'scale' === $question_type;
 
+		$is_coordinates_review = 'coordinates' === $question_type;
+
 		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
 
 		$question_template = '';
@@ -74,6 +76,8 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 			$question_template = 'pin-image';
 		} elseif ( $is_draw_image_review ) {
 			$question_template = 'draw-image';
+		} elseif ( $is_coordinates_review ) {
+			$question_template = 'coordinates';
 		}
 		?>
 
