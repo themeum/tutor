@@ -30,7 +30,7 @@ if ( ! $attempt_data || ! $can_review ) {
 
 $form_id             = 'quiz-attempt-review-form';
 $form_default_values = array(
-	'feedback' => is_array( $attempt_info ) ? (string) ( $attempt_info['instructor_feedback'] ?? '' ) : '',
+	'feedback' => is_array( $attempt_info ) ? (string) ( wp_json_encode( $attempt_info['feedback'] ?? '', JSON_HEX_APOS ) ) : '',
 );
 
 $attempt_answers_map = array();

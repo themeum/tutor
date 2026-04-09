@@ -661,9 +661,9 @@ $tutor-quiz-content-bottom-offset: calc(
     &-option {
       cursor: pointer;
 
-      &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not(
-          [data-option='draggable']
-        ) {
+      &:hover:not(:has(:checked)):not(:has(:disabled)):not([data-readonly='true']):not([data-option='correct']):not(
+          [data-option='incorrect']
+        ):not([data-option='draggable']) {
         border-color: $tutor-border-hover;
         background-color: $tutor-surface-l1-hover;
       }
@@ -996,9 +996,9 @@ $tutor-quiz-content-bottom-offset: calc(
 
     &-inner {
       @include tutor-flex(row, center, flex-start);
+      @include tutor-frontend-layout();
       gap: $tutor-spacing-4;
       width: 100%;
-      max-width: 792px;
       margin-inline: auto;
     }
 

@@ -5378,7 +5378,7 @@ class Utils {
 			)
 		);
 
-		return min( $max_questions_count, $total_question );
+		return min( $max_questions_count, $total_question ) <= 0 ? $total_question : min( $max_questions_count, $total_question );
 	}
 
 	/**
@@ -5445,6 +5445,10 @@ class Utils {
 		);
 
 		$max_mentioned = (int) $this->get_quiz_option( $quiz_id, 'max_questions_for_answer', 10 );
+
+		if ( $max_mentioned <= 0 ) {
+			return $max_questions;
+		}
 
 		if ( $max_mentioned < $max_questions ) {
 			return $max_mentioned;

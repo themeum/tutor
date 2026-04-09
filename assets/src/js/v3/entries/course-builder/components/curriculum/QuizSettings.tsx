@@ -106,7 +106,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const hasQuestionLimit = form.watch('quiz_option.limit_questions_to_answer');
   const hasTimeLimit = form.watch('quiz_option.enable_time_limit');
   const questionsOrder = form.watch('quiz_option.questions_order');
-  const availableQuestionInPool = Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount);
+  const availableQuestionInPool =
+    Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount) || questionsCount;
   const usedQuestionCountPercentage = (availableQuestionInPool / questionsCount) * 100;
   const orderedQuestions = (() => {
     if (questionsOrder === 'sorting') {
@@ -284,7 +285,15 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 <Show when={hasQuestionLimit}>
                   <Controller
                     name="quiz_option.max_questions_for_answer"
-                    rules={requiredRule()}
+                    rules={{
+                      ...requiredRule(),
+                      validate: (value) => {
+                        if (value <= 0) {
+                          return __('Question limit must be greater than 0', 'tutor');
+                        }
+                        return true;
+                      },
+                    }}
                     control={form.control}
                     render={(controllerProps) => (
                       <FormInput
@@ -294,9 +303,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         isInlineLabel
                         selectOnFocus
                         style={styles.maxWidth('99px')}
-                        formFieldWrapperCss={css`
-                          width: auto;
-                        `}
+                        formFieldWrapperCss={styles.width('auto')}
                         inputContainerCss={styles.justifyContent('flex-end')}
                       />
                     )}
@@ -411,9 +418,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         contentPosition="right"
                         wrapperCss={styles.maxWidth('80px')}
                         contentCss={styles.minWidth('fit-content')}
-                        formFieldWrapperCss={css`
-                          width: auto;
-                        `}
+                        formFieldWrapperCss={styles.width('auto')}
                         showVerticalBar={false}
                         presetOptions={[
                           {
