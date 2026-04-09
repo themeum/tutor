@@ -57,7 +57,7 @@ if ( Input::has( 'date', Input::GET_REQUEST ) && $quiz_attempts_count <= $offset
 }
 
 $quiz_attempts_list = array_slice( $quiz_attempts_formatted, $offset, $item_per_page, true );
-$nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $quiz_attempts_count, get_pagenum_link(), $result_filter );
+$nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $quiz_attempts_count, get_pagenum_link(), $result_filter, $is_student_view );
 
 ?>
 
