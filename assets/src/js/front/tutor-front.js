@@ -992,4 +992,32 @@ jQuery(document).ready(function($) {
         
         jQuery(this).parent().find('.tutor-validation-icon')[matched ? 'show' : 'hide']();
     });
+
+	const initTinyMceFilter = () => {
+        if (typeof tinymce === 'undefined') {
+            setTimeout(initTinyMceFilter, 100);
+            return;
+        }
+
+		tinymce.editors.forEach((e) =>{
+			e.on('paste', function(e){
+				const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+
+				if (!items) return; 
+
+				for( let i =0; i<items.length; i++) {
+					if ( items[i].type.indexOf('image') !== -1 ) {
+						e.preventDefault();
+						return false;
+					}
+				}
+			})
+		})
+
+    };
+
+	const assignment_submit_button = document.getElementById('tutor_assignment_submit_btn');
+	if ( assignment_submit_button ) {
+    	initTinyMceFilter();
+	}
 });

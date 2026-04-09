@@ -15,6 +15,7 @@ interface WPEditorConfig {
   name: string;
   editorId: string;
   placeholder?: string;
+  pasteImage: boolean;
 }
 
 interface AlpineComponent {
@@ -42,7 +43,7 @@ interface WPEditorComponent {
 }
 
 export const wpEditor = (config: WPEditorConfig): WPEditorComponent => {
-  const { name, editorId, placeholder = '' } = config;
+  const { name, editorId, placeholder = '', pasteImage } = config;
 
   return {
     name,
@@ -89,6 +90,21 @@ export const wpEditor = (config: WPEditorConfig): WPEditorComponent => {
 
           // Sync editor content with form value on change
           editor.on('change keyup', () => {
+            this.syncEditorToForm();
+          });
+
+          editor.on('paste', (e: ClipboardEvent) => {
+            if (!pasteImage) {
+              const items = e.clipboardData?.items;
+              if (!items) return;
+              for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                  e.preventDefault();
+                  return false;
+                }
+              }
+            }
+
             this.syncEditorToForm();
           });
 

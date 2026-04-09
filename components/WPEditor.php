@@ -144,6 +144,15 @@ class WPEditor extends BaseComponent {
 	protected $editor_config = array();
 
 	/**
+	 * Whether editor supports pasting image.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var boolean
+	 */
+	protected $paste_image = true;
+
+	/**
 	 * Set editor name.
 	 *
 	 * @since 4.0.0
@@ -154,6 +163,20 @@ class WPEditor extends BaseComponent {
 	 */
 	public function name( $name ) {
 		$this->name = sanitize_key( $name );
+		return $this;
+	}
+
+	/**
+	 * Set whether to paste images.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param boolean $should_paste whether to paste images.
+	 *
+	 * @return $this
+	 */
+	public function pasteImage( $should_paste = true ) {
+		$this->paste_image = $should_paste;
 		return $this;
 	}
 
@@ -387,7 +410,8 @@ class WPEditor extends BaseComponent {
 			x-data="tutorWPEditor({ 
 				name: '<?php echo esc_js( $this->name ); ?>',
 				editorId: '<?php echo esc_js( $editor_id ); ?>',
-				placeholder: '<?php echo esc_js( $this->placeholder ); ?>'
+				placeholder: '<?php echo esc_js( $this->placeholder ); ?>',
+				pasteImage: <?php echo $this->paste_image ? 'true' : 'false'; ?>
 			})"
 			x-init="init()"
 		>
