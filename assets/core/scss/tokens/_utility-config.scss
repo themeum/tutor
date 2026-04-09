@@ -1,0 +1,49 @@
+// Utility Generation Configuration
+// Use these maps to limit which utilities are generated for responsive breakpoints
+// to keep the build size small.
+
+@use 'sass:map';
+@use 'breakpoints' as b;
+@use 'spacing' as s;
+@use 'borders' as bor;
+
+// Breakpoints to include in responsive utility generation
+$tutor-responsive-breakpoints: (
+  xl: map.get(b.$tutor-breakpoints, xl),
+  lg: map.get(b.$tutor-breakpoints, lg),
+  md: map.get(b.$tutor-breakpoints, md),
+  sm: map.get(b.$tutor-breakpoints, sm),
+);
+
+// Spacing values to include in responsive utility generation (subset of full scale)
+$tutor-responsive-spacing: (
+  none: map.get(s.$tutor-spacing, none),
+  1: map.get(s.$tutor-spacing, 1),
+  2: map.get(s.$tutor-spacing, 2),
+  3: map.get(s.$tutor-spacing, 3),
+  4: map.get(s.$tutor-spacing, 4),
+  5: map.get(s.$tutor-spacing, 5),
+  6: map.get(s.$tutor-spacing, 6),
+  8: map.get(s.$tutor-spacing, 8),
+  10: map.get(s.$tutor-spacing, 10),
+  12: map.get(s.$tutor-spacing, 12),
+  16: map.get(s.$tutor-spacing, 16),
+);
+
+// Radius values to include in responsive utility generation
+$tutor-responsive-radius: (
+  none: map.get(bor.$tutor-radius, none),
+  sm: map.get(bor.$tutor-radius, sm),
+  md: map.get(bor.$tutor-radius, md),
+  lg: map.get(bor.$tutor-radius, lg),
+  2xl: map.get(bor.$tutor-radius, 2xl),
+  full: map.get(bor.$tutor-radius, full),
+);
+
+// Toggle flags for responsive utility groups
+$tutor-enable-responsive-spacing: true;
+$tutor-enable-responsive-layout: true;
+$tutor-enable-responsive-sizing: true;
+$tutor-enable-responsive-typography: true;
+$tutor-enable-responsive-borders: true;
+$tutor-enable-responsive-colors: false; // Disabled by default to save space

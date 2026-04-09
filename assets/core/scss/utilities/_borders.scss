@@ -1,8 +1,10 @@
 // Border Utilities
 // DRY, RTL-aware, width, style, color, radius, responsive
 
+@use 'sass:map';
 @use '../tokens' as *;
 @use '../mixins' as *;
+
 
 // =============================================================================
 // VARIABLES
@@ -147,35 +149,56 @@ $radius-directions: (
 // =============================================================================
 // RESPONSIVE BORDER UTILITIES
 // =============================================================================
-@each $breakpoint, $min-width in $tutor-breakpoints {
-  @include tutor-breakpoint-down($breakpoint) {
-    // Border widths & directional borders
-    @each $dir, $property in $border-directions {
-      .tutor-#{$breakpoint}-#{$dir} {
-        #{$property}: 1px solid $tutor-border-idle;
-      }
-      .tutor-#{$breakpoint}-#{$dir}-0 {
-        #{$property}: none;
-      }
+// =============================================================================
+// RESPONSIVE BORDER UTILITIES
+// =============================================================================
+@if $tutor-enable-responsive-borders {
+  $responsive-border-dirs: (
+    border: border,
+    border-t: border-top,
+    border-b: border-bottom,
+  );
 
-      @each $width-key, $width-value in $border-widths {
-        .tutor-#{$breakpoint}-#{$dir}-#{$width-key} {
-          #{$property}: #{$width-value} solid $tutor-border-idle;
+  $responsive-radius-dirs: (
+    '': ( border-radius, ),
+    't': ( border-start-start-radius, border-start-end-radius, ),
+    'b': ( border-end-start-radius, border-end-end-radius, ),
+  );
+
+  @each $breakpoint, $min-width in $tutor-responsive-breakpoints {
+    @include tutor-breakpoint-down($breakpoint) {
+      // Border widths & directional borders (Restricted to All, Top, Bottom)
+      @each $dir, $property in $responsive-border-dirs {
+        .tutor-#{$breakpoint}-#{$dir} {
+          #{$property}: 1px solid $tutor-border-idle;
+        }
+        .tutor-#{$breakpoint}-#{$dir}-0 {
+          #{$property}: none;
+        }
+
+        @each $width-key, $width-value in $border-widths {
+          .tutor-#{$breakpoint}-#{$dir}-#{$width-key} {
+            #{$property}: #{$width-value} solid $tutor-border-idle;
+          }
         }
       }
-    }
 
-    // Border radius
-    @each $key, $value in $tutor-radius {
-      @each $abbr, $props in $radius-directions {
-        $prefix: if($abbr == '', '', $abbr + '-');
+      // Border radius (Restricted to All, Top, Bottom + Subset of values)
+      @each $key, $value in $tutor-responsive-radius {
+        @each $abbr, $props in $radius-directions {
+           // We only generate for specific abbreviations to save space
+           @if map.has-key($responsive-radius-dirs, $abbr) {
+              $prefix: if($abbr == '', '', $abbr + '-');
 
-        .tutor-#{$breakpoint}-rounded-#{$prefix}#{$key} {
-          @each $prop in $props {
-            #{$prop}: $value;
-          }
+              .tutor-#{$breakpoint}-rounded-#{$prefix}#{$key} {
+                @each $prop in $props {
+                  #{$prop}: $value;
+                }
+              }
+           }
         }
       }
     }
   }
 }
+
