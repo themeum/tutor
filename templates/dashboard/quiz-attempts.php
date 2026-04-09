@@ -16,6 +16,7 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Positions;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Components\CourseFilter;
 use Tutor\Components\DateFilter;
 use Tutor\Components\DropdownFilter;
 use Tutor\Components\EmptyState;
@@ -26,7 +27,7 @@ use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
 
-if ( isset( $_GET['attempt_id'] ) ) {
+if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 	// Load single attempt details if ID provided.
 	include __DIR__ . '/quiz-attempts/quiz-reviews.php';
 	return;
@@ -39,15 +40,15 @@ $offset           = ( $current_page - 1 ) * $item_per_page;
 $quiz_attempt_obj = new Quiz_Attempts_List( false );
 
 // Filter params.
+$course_id     = Input::get( 'course-id', 0, Input::TYPE_INT );
 $order_filter  = Input::get( 'order', 'DESC' );
 $date_filter   = Input::get( 'date', '' );
 $result_filter = Input::get( 'result', '' );
 $search_filter = Input::get( 'search', '' );
 
-
-$quiz_attempts           = QuizModel::get_quiz_attempts( 0, 0, $search_filter, '', $date_filter, $order_filter, null, false, true );
-$quiz_attempts_formatted = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter );
-$quiz_attempts_count     = (int) count( $quiz_attempts_formatted );
+$quiz_attempts           = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, null, false, true );
+$quiz_attempts_formatted = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter, false );
+$quiz_attempts_count     = count( $quiz_attempts_formatted );
 
 if ( Input::has( 'date', Input::GET_REQUEST ) && $quiz_attempts_count <= $offset ) {
 	$offset = 0;
@@ -77,7 +78,7 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 				</div>
 				<div class="tutor-quiz-attempts-filter-item">
 					<?php
-					$query_items = array( 'search', 'date', 'result', 'order' );
+					$query_items = array( 'course-id', 'search', 'date', 'result', 'order' );
 					if ( Input::has_any( $query_items, Input::GET_REQUEST ) ) {
 						Button::make()
 							->tag( 'a' )
@@ -89,16 +90,6 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 							->render();
 					}
 					?>
-				</div>
-				<div class="tutor-quiz-attempts-filter-item">
-						<?php
-							SearchFilter::make()
-								->form_id( 'tutor-quiz-attempt-search-form' )
-								->hidden_inputs( array( 'result' => $result_filter ) )
-								->placeholder( __( 'Search quizzes...', 'tutor' ) )
-								->size( Size::SMALL )
-								->render();
-						?>
 				</div>
 				<div class="tutor-quiz-attempts-filter-item">
 					<?php
@@ -113,6 +104,21 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 				<div class="tutor-quiz-attempts-filter-item">
 					<?php Sorting::make()->size( Size::SMALL )->order( $order_filter )->render(); ?>
 				</div>
+			</div>
+			<div class="tutor-p-6 tutor-flex tutor-justify-between">
+				<?php
+				SearchFilter::make()
+					->form_id( 'tutor-quiz-attempt-search-form' )
+					->hidden_inputs( array( 'result' => $result_filter ) )
+					->placeholder( __( 'Search quizzes...', 'tutor' ) )
+					->size( Size::SMALL )
+					->render();
+
+				CourseFilter::make()
+					->size( Size::SMALL )
+					->button_class( 'tutor-btn tutor-btn-outline tutor-gap-2 tutor-btn-small' )
+					->render();
+				?>
 			</div>
 			<div class="tutor-quiz-attempts-header">
 				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>

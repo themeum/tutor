@@ -74,8 +74,8 @@ $is_previous     = $is_previous ?? false;
 			</div>
 		<?php endif; ?>
 
-		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html( $attempt['date'] ?? '' ); ?></div>
-		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html__( 'Student Name: ', 'tutor' ) . esc_html( $attempt['student'] ); ?></div>
+		<div class="tutor-quiz-item-info-student"><?php echo esc_html__( 'Student: ', 'tutor' ) . esc_html( $attempt['student'] ); ?></div>
+		<div class="tutor-quiz-item-info-date"><?php echo esc_html( $attempt['date'] ?? '' ); ?></div>
 	</div>
 
 	<div class="tutor-quiz-item-marks">
