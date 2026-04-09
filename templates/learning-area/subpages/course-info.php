@@ -224,14 +224,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 				</div>
 			</div>
 			<div x-show="expanded" x-collapse x-cloak class="tutor-course-description-body">
-				<?php
-				global $post;
-
-				$post = $tutor_course;
-				setup_postdata( $post );
-				the_content();
-				wp_reset_postdata();
-				?>
+				<?php the_content(); ?>
 			</div>
 		</div>
 		<div x-data="{ expanded: false }" class="tutor-course-description-item">
