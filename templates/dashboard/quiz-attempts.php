@@ -131,7 +131,7 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 			<?php if ( $quiz_attempts_count ) : ?>
 			<div class="tutor-quiz-attempts-list">
 				<?php
-				foreach ( $quiz_attempts_list as $quiz_index => $quiz_attempt ) {
+				foreach ( $quiz_attempts_list as $quiz_attempt ) {
 					$attempts       = $quiz_attempt['attempts'];
 					$attempts_count = count( $attempts );
 
