@@ -220,7 +220,7 @@ const QuizModal = ({
             icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
             title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
             subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
-            maxWidth={1218}
+            fullScreen
             headerChildren={
               <Tabs
                 wrapperCss={styles.tabsWrapper}
@@ -452,6 +452,9 @@ const styles = {
   content: ({ activeTab }: { activeTab: QuizTabs }) => css`
     ${styleUtils.overflowYAuto};
     padding: ${spacing[32]} 0 ${spacing[48]} ${spacing[6]};
+    max-width: 800px;
+    width: 100%;
+    margin-inline: auto;
 
     ${activeTab === 'settings' &&
     css`
