@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
