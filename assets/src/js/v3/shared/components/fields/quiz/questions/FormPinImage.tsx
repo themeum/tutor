@@ -515,7 +515,6 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
                   variant="secondary"
                   size="small"
                   icon={<SVGIcon name="eraser" style={styles.clearButtonIcon} width={18} height={18} />}
-                  buttonCss={styles.clearButton}
                   onClick={handleClear}
                 >
                   {__('Clear', __TUTOR_TEXT_DOMAIN__)}
@@ -655,27 +654,8 @@ const styles = {
     flex-wrap: wrap;
     color: ${colorTokens.text.brand};
   `,
-  clearButton: css`
-    width: 94px;
-    border: none;
-    border-radius: ${borderRadius.input};
-    background: ${colorTokens.action.secondary.default};
-    ${typography.caption('medium')};
-    color: ${colorTokens.text.brand};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: ${spacing[8]};
-    padding: ${spacing[4]} 0;
-    cursor: pointer;
-  `,
   clearButtonIcon: css`
     color: ${colorTokens.text.brand};
-  `,
-  brushHint: css`
-    ${typography.caption()};
-    color: ${colorTokens.text.subdued};
-    margin: 0;
   `,
   savedHint: css`
     ${typography.caption()};
