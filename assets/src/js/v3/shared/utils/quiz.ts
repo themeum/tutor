@@ -209,6 +209,12 @@ export const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>):
         question.question_settings.draw_image_threshold_percent = Number(rawThreshold);
       }
     }
+    if (question.question_type === 'puzzle') {
+      const rawGridSize = question.question_settings.puzzle_grid_size;
+      if (rawGridSize !== undefined && rawGridSize !== null && !Number.isNaN(Number(rawGridSize))) {
+        question.question_settings.puzzle_grid_size = Number(rawGridSize);
+      }
+    }
   }
   question.question_answers = question.question_answers.map((answer) => ({
     ...answer,
