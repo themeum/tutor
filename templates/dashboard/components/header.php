@@ -29,10 +29,11 @@ $menu_items['logout'] = array(
 	'url'   => wp_logout_url( tutor_utils()->tutor_dashboard_url() ),
 );
 
-$active_nav       = '';
-$user_id          = get_current_user_id();
-$display_name     = tutor_utils()->display_name( $user_id );
-$edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
+$active_nav                   = '';
+$user_id                      = get_current_user_id();
+$display_name                 = tutor_utils()->display_name( $user_id );
+$edit_profile_url             = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
+$is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instructor_btn' );
 ?>
 
 <div x-data="tutorHeader()" class="tutor-dashboard-header">
@@ -110,9 +111,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 						</div>
 
 						<div class="tutor-user-profile-info tutor-flex tutor-flex-column tutor-sm-px-7 tutor-sm-py-5">
-							<div class="tutor-avatar tutor-border tutor-border-brand-secondary">
-								<?php Avatar::make()->user( $user_id )->size( Size::SIZE_32 )->render(); ?>
-							</div>
+							<?php Avatar::make()->user( $user_id )->size( Size::SIZE_48 )->bordered()->render(); ?>
 							<div class="tutor-user-profile-meta tutor-flex tutor-flex-column tutor-items-center tutor-gap-1">
 								<div class="tutor-text-medium tutor-text-primary tutor-font-semibold">
 									<?php echo esc_html( wp_get_current_user()->display_name ); ?>
@@ -156,7 +155,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 									</div>
 								</div>
 								<?php
-							} elseif ( Instructors_List::STATUS_BLOCKED !== $instructor_status ) {
+							} elseif ( Instructors_List::STATUS_BLOCKED !== $instructor_status && $is_become_instructor_enabled ) {
 								?>
 								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
 									<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small tutor-gap-2 tutor-btn-block">
@@ -169,7 +168,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 						}
 						if ( User::can_switch_mode( $user_id ) ) {
 								$current_mode = User::get_current_view_mode();
-								$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'View as student', 'tutor' ) : esc_html__( 'View as instructor', 'tutor' );
+								$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'Switch to Learner', 'tutor' ) : esc_html__( 'Switch to Instructor', 'tutor' );
 							?>
 							<div class="tutor-w-full tutor-sm-px-7">
 								<?php
@@ -177,7 +176,7 @@ $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=accoun
 								->label( $button_label )
 								->size( Size::SMALL )
 								->variant( Variant::PRIMARY_SOFT )
-								->icon( Icon::RELOAD )
+								->icon( Icon::RELOAD_2 )
 								->attr( ':disabled', 'profileSwitchMutation?.isPending' )
 								->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
 								->attr( 'class', 'tutor-w-full' )

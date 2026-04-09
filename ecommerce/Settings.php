@@ -359,6 +359,16 @@ class Settings {
 	 */
 	public static function get_payment_settings() {
 		$settings = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
+
+		// Check for image tags in the settings and escape them before decoding JSON.
+		$settings = preg_replace_callback(
+			'/<img[^>]+>/',
+			function ( $matches ) {
+				return addslashes( $matches[0] );
+			},
+			$settings
+		);
+
 		$settings = json_decode( $settings, true );
 
 		return $settings;

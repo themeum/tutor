@@ -98,6 +98,10 @@ declare global {
       course_builder_basic_locales: LocaleData;
       course_builder_curriculum_locales: LocaleData;
       course_builder_additional_locales: LocaleData;
+      course_slug: string;
+      lesson_slug: string;
+      quiz_slug: string;
+      assignment_slug: string;
       difficulty_levels: {
         label: string;
         value: string;

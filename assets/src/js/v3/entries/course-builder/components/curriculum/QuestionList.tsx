@@ -121,6 +121,12 @@ const questionTypeOptions: {
     icon: 'quizPin',
     isPro: true,
   },
+  {
+    label: __('Graph', 'tutor'),
+    value: 'coordinates',
+    icon: 'quizGraph',
+    isPro: true,
+  },
 ];
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -129,7 +135,11 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   const questionTypeOptionsForUi = useMemo(() => {
     if (tutorConfig.is_legacy_learning_mode) {
       return questionTypeOptions.filter(
-        (option) => option.value !== 'draw_image' && option.value !== 'pin_image' && option.value !== 'scale',
+        (option) =>
+          option.value !== 'draw_image' &&
+          option.value !== 'pin_image' &&
+          option.value !== 'scale' &&
+          option.value !== 'coordinates',
       );
     }
     return questionTypeOptions;
@@ -249,22 +259,37 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                     is_correct: '1',
                   },
                 ]
-              : questionType === 'pin_image'
+              : questionType === 'coordinates'
                 ? [
                     {
                       _data_status: QuizDataStatus.NEW,
-                      is_saved: true,
+                      is_saved: false,
                       answer_id: nanoid(),
                       answer_title: '',
                       belongs_question_id: questionId,
-                      belongs_question_type: 'pin_image',
+                      belongs_question_type: 'coordinates',
                       answer_two_gap_match: '',
-                      answer_view_format: 'pin_image',
+                      answer_view_format: 'coordinates',
                       answer_order: 0,
                       is_correct: '1',
                     },
                   ]
-                : [],
+                : questionType === 'pin_image'
+                  ? [
+                      {
+                        _data_status: QuizDataStatus.NEW,
+                        is_saved: true,
+                        answer_id: nanoid(),
+                        answer_title: '',
+                        belongs_question_id: questionId,
+                        belongs_question_type: 'pin_image',
+                        answer_two_gap_match: '',
+                        answer_view_format: 'pin_image',
+                        answer_order: 0,
+                        is_correct: '1',
+                      },
+                    ]
+                  : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,

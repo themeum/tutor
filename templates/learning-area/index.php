@@ -53,6 +53,14 @@ $tutor_completion_mode      = tutor_utils()->get_option( 'course_completion_proc
 $tutor_retake_course        = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $tutor_is_course_completed || $tutor_course_progress >= 100 );
 $tutor_can_retake_course    = $tutor_retake_course && ( CourseModel::MODE_FLEXIBLE === $tutor_completion_mode || $tutor_is_course_completed );
 
+// Auto complete course.
+if ( CourseModel::can_autocomplete_course( $tutor_course_id, $current_user_id ) ) {
+	$mark_completed = CourseModel::mark_course_as_completed( $tutor_course_id, $current_user_id );
+	if ( $mark_completed ) {
+		Course::set_review_popup_data( $current_user_id, $tutor_course_id );
+	}
+}
+
 $course_complete_modal_id = 'tutor-course-complete-modal';
 $course_retake_modal_id   = 'tutor-course-retake-modal';
 
@@ -75,9 +83,6 @@ if ( ! $tutor_course_content_access ) {
 	}
 	return;
 }
-
-$current_user_id = get_current_user_id();
-$subpages        = Template::make_learning_area_sub_page_nav_items();
 
 $tutor_is_started_quiz = false;
 if ( tutor()->quiz_post_type === $tutor_current_post_type ) {
@@ -153,7 +158,7 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 			->message( Course::get_complete_modal_content( $tutor_course_progress ), wp_kses_allowed_html( 'post' ) )
 			->cancel_text( __( 'Go Back to Course', 'tutor' ) )
 			->confirm_text( __( 'Complete Anyway', 'tutor' ) )
-			->icon( Icon::WARNING_COLORIZED )
+			->icon( UrlHelper::themed_asset( 'images/illustrations/warning.webp' ) )
 			->confirm_handler( "handleCourseComplete($tutor_course_id)" )
 			->mutation_state( 'courseCompleteMutation' )
 			->render();
@@ -164,7 +169,7 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 		->id( $course_retake_modal_id )
 		->title( __( 'Start the Course Again?', 'tutor' ) )
 		->message( __( 'Retaking the course will reset your progress and start everything from the beginning.', 'tutor' ) )
-		->icon( UrlHelper::asset( 'images/illustrations/retake-course.svg' ) )
+		->icon( UrlHelper::themed_asset( 'images/illustrations/retake-course.webp' ) )
 		->cancel_text( __( 'Cancel', 'tutor' ) )
 		->confirm_text( __( 'Start Retake', 'tutor' ) )
 		->confirm_handler( "handleCourseRetake($tutor_course_id)" )

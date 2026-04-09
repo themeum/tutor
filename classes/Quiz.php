@@ -198,9 +198,11 @@ class Quiz {
 				'learning-area.quiz.questions.draw-image',
 				'learning-area.quiz.questions.scale',
 				'learning-area.quiz.questions.pin-image',
+				'learning-area.quiz.questions.coordinates',
 				'shared.components.quiz.attempt-details.questions.draw-image',
 				'shared.components.quiz.attempt-details.questions.scale',
 				'shared.components.quiz.attempt-details.questions.pin-image',
+				'shared.components.quiz.attempt-details.questions.coordinates',
 			),
 			$template,
 			$variables
@@ -1698,7 +1700,7 @@ class Quiz {
 						' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
 					</div>',
 				),
-				array( 'content' => $total_questions ),
+				array( 'content' => $total_marks ),
 			),
 		);
 

@@ -353,7 +353,7 @@ $default_values = array(
 	<?php
 		ConfirmationModal::make()
 			->id( $modal_id )
-			->icon( UrlHelper::themed_asset( 'images/illustrations/quiz-abandon.webp' ) )
+			->icon( UrlHelper::themed_asset( 'images/illustrations/warning.webp' ) )
 			->title( __( 'Leave this Quiz?', 'tutor' ) )
 			->message( __( 'If you leave now, your quiz will be submitted with the answers completed so far.', 'tutor' ) )
 			->confirm_text( __( 'Yes, Leave Quiz', 'tutor' ) )

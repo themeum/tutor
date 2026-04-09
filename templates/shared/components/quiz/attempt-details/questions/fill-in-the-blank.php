@@ -103,13 +103,13 @@ $correct_lines      = array();
 <?php endforeach; ?>
 
 <div class="tutor-quiz-question-options">
-	<div class="tutor-quiz-question-option">
+	<div class="tutor-quiz-question-option" data-readonly="true">
 		<div class="tutor-quiz-review-col-title"><?php esc_html_e( 'Given Answer', 'tutor' ); ?></div>
 		<?php foreach ( $given_markup_lines as $line ) : ?>
 			<p><?php echo wp_kses_post( $line ); ?></p>
 		<?php endforeach; ?>
 	</div>
-	<div class="tutor-quiz-question-option">
+	<div class="tutor-quiz-question-option" data-readonly="true">
 		<div class="tutor-quiz-review-col-title"><?php esc_html_e( 'Correct Answer', 'tutor' ); ?></div>
 		<?php foreach ( $correct_lines as $line ) : ?>
 			<p><?php echo wp_kses_post( $line ); ?></p>
