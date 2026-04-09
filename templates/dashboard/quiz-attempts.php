@@ -26,6 +26,7 @@ use Tutor\Components\Sorting;
 use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
+use TUTOR\User;
 
 if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 	// Load single attempt details if ID provided.
@@ -46,8 +47,9 @@ $date_filter   = Input::get( 'date', '' );
 $result_filter = Input::get( 'result', '' );
 $search_filter = Input::get( 'search', '' );
 
+$is_student_view         = User::VIEW_AS_STUDENT === User::get_current_view_mode();
 $quiz_attempts           = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, null, false, true );
-$quiz_attempts_formatted = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter, false );
+$quiz_attempts_formatted = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter, $is_student_view );
 $quiz_attempts_count     = count( $quiz_attempts_formatted );
 
 if ( Input::has( 'date', Input::GET_REQUEST ) && $quiz_attempts_count <= $offset ) {
@@ -136,7 +138,7 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 					tutor_load_template(
 						'dashboard.components.quiz-attempts-group',
 						array(
-							'quiz_id'          => $quiz_index,
+							'quiz_id'          => $quiz_attempt['quiz_id'],
 							'quiz_title'       => $quiz_attempt['quiz_title'],
 							'course_title'     => $quiz_attempt['course_title'],
 							'attempts'         => $attempts,
