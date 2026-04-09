@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokens &amp; SCSS — Tutor Core Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/docs.css">
+  <style>
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; margin: 16px 0 28px; }
+    .swatch { border-radius: 10px; height: 48px; border: 1px solid var(--doc-border); position: relative; }
+    .swatch-label { font-size: 10px; color: var(--doc-text-3); text-align: center; margin-top: 4px; font-family: var(--doc-mono); }
+    .token-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; }
+    @media (max-width: 700px) { .token-cols { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="index.html" class="doc-header__logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="currentColor"/><path d="M8 10h12M8 14h8M8 18h10" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    Tutor Core Docs
+  </a>
+  <nav class="doc-header__nav">
+    <a href="index.html" class="doc-header__link">Overview</a>
+    <a href="architecture.html" class="doc-header__link">Architecture</a>
+    <a href="components.html" class="doc-header__link">Components</a>
+    <a href="services.html" class="doc-header__link">Services</a>
+    <a href="tokens.html" class="doc-header__link active">Tokens &amp; SCSS</a>
+    <button id="themeToggle" class="doc-theme-toggle" aria-label="Toggle theme">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="moon hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<aside class="doc-sidebar">
+  <div class="doc-sidebar__group">
+    <div class="doc-sidebar__title">Token System</div>
+    <a href="#overview" class="doc-sidebar__link active">Overview</a>
+    <a href="#sass-vs-css" class="doc-sidebar__link">SASS vs CSS Variables</a>
+  </div>
+  <div class="doc-sidebar__group">
+    <div class="doc-sidebar__title">Tokens</div>
+    <a href="#colors" class="doc-sidebar__link">Colors</a>
+    <a href="#typography" class="doc-sidebar__link">Typography</a>
+    <a href="#spacing" class="doc-sidebar__link">Spacing</a>
+    <a href="#borders" class="doc-sidebar__link">Borders &amp; Radius</a>
+    <a href="#shadows" class="doc-sidebar__link">Shadows</a>
+    <a href="#breakpoints" class="doc-sidebar__link">Breakpoints</a>
+  </div>
+  <div class="doc-sidebar__group">
+    <div class="doc-sidebar__title">Architecture</div>
+    <a href="#themes" class="doc-sidebar__link">Theme System</a>
+    <a href="#mixins" class="doc-sidebar__link">Mixins</a>
+    <a href="#components-scss" class="doc-sidebar__link">Component Styles</a>
+    <a href="#utilities" class="doc-sidebar__link">Utility Classes</a>
+  </div>
+</aside>
+
+<main class="doc-main">
+  <h1>Tokens &amp; SCSS</h1>
+  <p class="doc-lead">19 token files, light/dark themes, 11 mixin files, 32 component stylesheets, and utility class generators.</p>
+
+  <!-- Overview -->
+  <section id="overview">
+    <h2>Build Pipeline</h2>
+    <pre><code>scss/main.scss
+  ├── @use <span class="str">'tokens'</span>       → All design token variables &amp; maps
+  ├── @use <span class="str">'themes'</span>       → Light + Dark CSS custom properties
+  ├── @use <span class="str">'mixins'</span>       → Reusable mixins (RTL, buttons, layout…)
+  ├── @use <span class="str">'components'</span>   → 32 component stylesheets
+  └── @use <span class="str">'utilities'</span>    → Utility classes from token maps</code></pre>
+  </section>
+
+  <!-- SASS vs CSS -->
+  <section id="sass-vs-css">
+    <h2>SASS Variables vs CSS Custom Properties</h2>
+    <p>The token system uses a <strong>hybrid approach</strong>:</p>
+    <table>
+      <thead><tr><th>Use</th><th>Type</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Typography, Spacing, Radius, Shadows</td><td><span class="doc-badge doc-badge--gray">SASS variables</span></td><td>Static — don't change between themes</td></tr>
+        <tr><td>Colors, Surfaces, Borders, Actions, Text</td><td><span class="doc-badge doc-badge--brand">CSS custom properties</span></td><td>Dynamic — change between light/dark</td></tr>
+      </tbody>
+    </table>
+    <pre><code><span class="cm">// ✅ Static values → SASS variables</span>
+padding: $tutor-spacing-6;          <span class="cm">// 16px</span>
+font-size: $tutor-font-size-p1;     <span class="cm">// 1rem</span>
+border-radius: $tutor-radius-lg;    <span class="cm">// 8px</span>
+
+<span class="cm">// ✅ Theme-aware → CSS custom properties</span>
+color: $tutor-text-primary;         <span class="cm">// var(--tutor-text-primary)</span>
+background: $tutor-surface-l1;      <span class="cm">// var(--tutor-surface-l1)</span>
+border-color: $tutor-border-idle;   <span class="cm">// var(--tutor-border-idle)</span></code></pre>
+  </section>
+
+  <!-- Colors -->
+  <section id="colors">
+    <h2>Color Tokens</h2>
+
+    <h3>Brand</h3>
+    <div class="swatch-grid">
+      <div><div class="swatch" style="background:#f6f8fe"></div><div class="swatch-label">100</div></div>
+      <div><div class="swatch" style="background:#e4ebfc"></div><div class="swatch-label">200</div></div>
+      <div><div class="swatch" style="background:#dbe4fa"></div><div class="swatch-label">300</div></div>
+      <div><div class="swatch" style="background:#a4bcf4"></div><div class="swatch-label">400</div></div>
+      <div><div class="swatch" style="background:#4979e8"></div><div class="swatch-label">500</div></div>
+      <div><div class="swatch" style="background:#3e64de"></div><div class="swatch-label">600</div></div>
+      <div><div class="swatch" style="background:#2b49ca"></div><div class="swatch-label">700</div></div>
+      <div><div class="swatch" style="background:#293da4"></div><div class="swatch-label">800</div></div>
+      <div><div class="swatch" style="background:#263782"></div><div class="swatch-label">900</div></div>
+      <div><div class="swatch" style="background:#1c234f"></div><div class="swatch-label">950</div></div>
+    </div>
+
+    <h3>Gray</h3>
+    <div class="swatch-grid">
+      <div><div class="swatch" style="background:#ffffff"></div><div class="swatch-label">1</div></div>
+      <div><div class="swatch" style="background:#fafafa"></div><div class="swatch-label">25</div></div>
+      <div><div class="swatch" style="background:#f5f5f6"></div><div class="swatch-label">50</div></div>
+      <div><div class="swatch" style="background:#f0f1f1"></div><div class="swatch-label">100</div></div>
+      <div><div class="swatch" style="background:#ececed"></div><div class="swatch-label">200</div></div>
+      <div><div class="swatch" style="background:#cecfd2"></div><div class="swatch-label">300</div></div>
+      <div><div class="swatch" style="background:#94969c"></div><div class="swatch-label">400</div></div>
+      <div><div class="swatch" style="background:#61646c"></div><div class="swatch-label">600</div></div>
+      <div><div class="swatch" style="background:#333741"></div><div class="swatch-label">700</div></div>
+      <div><div class="swatch" style="background:#1f242f"></div><div class="swatch-label">800</div></div>
+      <div><div class="swatch" style="background:#161b26"></div><div class="swatch-label">900</div></div>
+      <div><div class="swatch" style="background:#0c111d"></div><div class="swatch-label">950</div></div>
+    </div>
+
+    <h3>Semantic</h3>
+    <div class="swatch-grid">
+      <div><div class="swatch" style="background:#28a745"></div><div class="swatch-label">success</div></div>
+      <div><div class="swatch" style="background:#f79009"></div><div class="swatch-label">warning</div></div>
+      <div><div class="swatch" style="background:#f04438"></div><div class="swatch-label">error</div></div>
+      <div><div class="swatch" style="background:#fac515"></div><div class="swatch-label">yellow</div></div>
+      <div><div class="swatch" style="background:#00acc2"></div><div class="swatch-label">exc-1</div></div>
+      <div><div class="swatch" style="background:#ee0097"></div><div class="swatch-label">exc-2</div></div>
+      <div><div class="swatch" style="background:#9747ff"></div><div class="swatch-label">exc-5</div></div>
+    </div>
+
+    <h3>Semantic Text Colors <span class="doc-badge doc-badge--brand">CSS var</span></h3>
+    <table>
+      <thead><tr><th>Token</th><th>Usage</th></tr></thead>
+      <tbody>
+        <tr><td><code>$tutor-text-primary</code></td><td>Main body text</td></tr>
+        <tr><td><code>$tutor-text-secondary</code></td><td>Secondary/muted text</td></tr>
+        <tr><td><code>$tutor-text-subdued</code></td><td>Subdued/placeholder text</td></tr>
+        <tr><td><code>$tutor-text-brand</code></td><td>Brand-colored text</td></tr>
+        <tr><td><code>$tutor-text-success</code></td><td>Success messages</td></tr>
+        <tr><td><code>$tutor-text-critical</code></td><td>Error messages</td></tr>
+        <tr><td><code>$tutor-text-warning</code></td><td>Warning messages</td></tr>
+        <tr><td><code>$tutor-text-disabled</code></td><td>Disabled elements</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Typography -->
+  <section id="typography">
+    <h2>Typography Tokens</h2>
+    <p>All sizes use <code>rem</code> units for font scaling support via <code>PreferenceService.applyFontScale()</code>.</p>
+    <table>
+      <thead><tr><th>Token</th><th>Size</th><th>Line Height</th><th>Px Equiv.</th></tr></thead>
+      <tbody>
+        <tr><td><code>$tutor-font-size-d1</code></td><td>4rem</td><td>4.5rem</td><td>64px</td></tr>
+        <tr><td><code>$tutor-font-size-h1</code></td><td>2.5rem</td><td>3rem</td><td>40px</td></tr>
+        <tr><td><code>$tutor-font-size-h2</code></td><td>2rem</td><td>2.5rem</td><td>32px</td></tr>
+        <tr><td><code>$tutor-font-size-h3</code></td><td>1.5rem</td><td>2rem</td><td>24px</td></tr>
+        <tr><td><code>$tutor-font-size-h4</code></td><td>1.25rem</td><td>1.75rem</td><td>20px</td></tr>
+        <tr><td><code>$tutor-font-size-h5</code></td><td>1.125rem</td><td>1.625rem</td><td>18px</td></tr>
+        <tr><td><code>$tutor-font-size-p1</code></td><td>1rem</td><td>1.375rem</td><td>16px</td></tr>
+        <tr><td><code>$tutor-font-size-p2</code></td><td>0.875rem</td><td>1.125rem</td><td>14px</td></tr>
+        <tr><td><code>$tutor-font-size-p3</code></td><td>0.75rem</td><td>1.125rem</td><td>12px</td></tr>
+      </tbody>
+    </table>
+    <h3>Font Weights</h3>
+    <table>
+      <thead><tr><th>Token</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td><code>$tutor-font-weight-regular</code></td><td>400</td></tr>
+        <tr><td><code>$tutor-font-weight-medium</code></td><td>500</td></tr>
+        <tr><td><code>$tutor-font-weight-semibold</code></td><td>600</td></tr>
+        <tr><td><code>$tutor-font-weight-bold</code></td><td>700</td></tr>
+      </tbody>
+    </table>
+    <p>Font family: <code>'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif</code></p>
+  </section>
+
+  <!-- Spacing -->
+  <section id="spacing">
+    <h2>Spacing Tokens</h2>
+    <p>22-step scale from 0px to 200px.</p>
+    <div class="token-cols">
+      <table>
+        <thead><tr><th>Token</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td><code>$tutor-spacing-none</code></td><td>0px</td></tr>
+          <tr><td><code>$tutor-spacing-1</code></td><td>2px</td></tr>
+          <tr><td><code>$tutor-spacing-2</code></td><td>4px</td></tr>
+          <tr><td><code>$tutor-spacing-3</code></td><td>6px</td></tr>
+          <tr><td><code>$tutor-spacing-4</code></td><td>8px</td></tr>
+          <tr><td><code>$tutor-spacing-5</code></td><td>12px</td></tr>
+          <tr><td><code>$tutor-spacing-6</code></td><td>16px</td></tr>
+          <tr><td><code>$tutor-spacing-7</code></td><td>20px</td></tr>
+          <tr><td><code>$tutor-spacing-8</code></td><td>24px</td></tr>
+          <tr><td><code>$tutor-spacing-9</code></td><td>32px</td></tr>
+          <tr><td><code>$tutor-spacing-10</code></td><td>40px</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <thead><tr><th>Token</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td><code>$tutor-spacing-11</code></td><td>48px</td></tr>
+          <tr><td><code>$tutor-spacing-12</code></td><td>56px</td></tr>
+          <tr><td><code>$tutor-spacing-13</code></td><td>64px</td></tr>
+          <tr><td><code>$tutor-spacing-14</code></td><td>72px</td></tr>
+          <tr><td><code>$tutor-spacing-15</code></td><td>80px</td></tr>
+          <tr><td><code>$tutor-spacing-16</code></td><td>88px</td></tr>
+          <tr><td><code>$tutor-spacing-17</code></td><td>96px</td></tr>
+          <tr><td><code>$tutor-spacing-18</code></td><td>104px</td></tr>
+          <tr><td><code>$tutor-spacing-19</code></td><td>112px</td></tr>
+          <tr><td><code>$tutor-spacing-20</code></td><td>120px</td></tr>
+          <tr><td><code>$tutor-spacing-21</code></td><td>200px</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Borders -->
+  <section id="borders">
+    <h2>Border &amp; Radius Tokens</h2>
+    <h3>Radius Scale</h3>
+    <table>
+      <thead><tr><th>Token</th><th>Value</th><th>Visual</th></tr></thead>
+      <tbody>
+        <tr><td><code>$tutor-radius-none</code></td><td>0px</td><td><div style="width:32px;height:32px;background:var(--doc-brand);border-radius:0"></div></td></tr>
+        <tr><td><code>$tutor-radius-sm</code></td><td>4px</td><td><div style="width:32px;height:32px;background:var(--doc-brand);border-radius:4px"></div></td></tr>
+        <tr><td><code>$tutor-radius-md</code></td><td>6px</td><td><div style="width:32px;height:32px;background:var(--doc-brand);border-radius:6px"></div></td></tr>
+        <tr><td><code>$tutor-radius-lg</code></td><td>8px</td><td><div style="width:32px;height:32px;background:var(--doc-brand);border-radius:8px"></div></td></tr>
+        <tr><td><code>$tutor-radius-2xl</code></td><td>12px</td><td><div style="width:32px;height:32px;background:var(--doc-brand);border-radius:12px"></div></td></tr>
+        <tr><td><code>$tutor-radius-3xl</code></td><td>16px</td><td><div style="width:32px;height:32px;background:var(--doc-brand);border-radius:16px"></div></td></tr>
+        <tr><td><code>$tutor-radius-full</code></td><td>1000px</td><td><div style="width:32px;height:32px;background:var(--doc-brand);border-radius:1000px"></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Shadows -->
+  <section id="shadows">
+    <h2>Shadow Tokens</h2>
+    <table>
+      <thead><tr><th>Token</th><th>Visual</th></tr></thead>
+      <tbody>
+        <tr><td><code>$tutor-shadow-xs</code></td><td><div style="width:80px;height:32px;background:var(--doc-surface);border-radius:8px;box-shadow:0px 1px 2px 0px #1018280D"></div></td></tr>
+        <tr><td><code>$tutor-shadow-sm</code></td><td><div style="width:80px;height:32px;background:var(--doc-surface);border-radius:8px;box-shadow:0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A"></div></td></tr>
+        <tr><td><code>$tutor-shadow-md</code></td><td><div style="width:80px;height:32px;background:var(--doc-surface);border-radius:8px;box-shadow:0px 2px 4px -2px #1018280F, 0px 4px 8px -2px #1018281A"></div></td></tr>
+        <tr><td><code>$tutor-shadow-lg</code></td><td><div style="width:80px;height:32px;background:var(--doc-surface);border-radius:8px;box-shadow:0px 4px 6px -2px #10182808, 0px 12px 16px -4px #10182814"></div></td></tr>
+        <tr><td><code>$tutor-shadow-xl</code></td><td><div style="width:80px;height:32px;background:var(--doc-surface);border-radius:8px;box-shadow:0px 8px 8px -4px #10182808, 0px 20px 24px -4px #10182814"></div></td></tr>
+        <tr><td><code>$tutor-shadow-2xl</code></td><td><div style="width:80px;height:32px;background:var(--doc-surface);border-radius:8px;box-shadow:0px 24px 48px -12px #1018282E"></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Breakpoints -->
+  <section id="breakpoints">
+    <h2>Breakpoint Tokens</h2>
+    <table>
+      <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+      <tbody>
+        <tr><td><code>$tutor-breakpoint-xs</code></td><td>480px</td><td>Small phones</td></tr>
+        <tr><td><code>$tutor-breakpoint-sm</code></td><td>576px</td><td>Large phones</td></tr>
+        <tr><td><code>$tutor-breakpoint-md</code></td><td>768px</td><td>Tablets</td></tr>
+        <tr><td><code>$tutor-breakpoint-lg</code></td><td>992px</td><td>Small desktops</td></tr>
+        <tr><td><code>$tutor-breakpoint-xl</code></td><td>1200px</td><td>Large desktops</td></tr>
+        <tr><td><code>$tutor-breakpoint-2xl</code></td><td>1400px</td><td>Wide screens</td></tr>
+        <tr><td><code>$tutor-breakpoint-3xl</code></td><td>1920px</td><td>Ultra-wide</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Themes -->
+  <section id="themes">
+    <h2>Theme System</h2>
+    <p>Themes set CSS custom properties on <code>[data-tutor-theme="light"]</code> and <code>[data-tutor-theme="dark"]</code>. All semantic tokens resolve to different primitive values per theme.</p>
+    <pre><code><span class="cm">// themes/_light.scss</span>
+[data-tutor-theme=<span class="str">'light'</span>] {
+  --tutor-text-primary: #{$tutor-gray-950};
+  --tutor-surface-base: #{$tutor-gray-50};
+  --tutor-surface-l1: #{$tutor-gray-1};
+  --tutor-border-idle: #{$tutor-gray-200};
+  --tutor-actions-brand-primary: #{$tutor-brand-600};
+}
+
+<span class="cm">// themes/_dark.scss</span>
+[data-tutor-theme=<span class="str">'dark'</span>] {
+  --tutor-text-primary: #{$tutor-gray-50};
+  --tutor-surface-base: #{$tutor-gray-950};
+  --tutor-surface-l1: #{$tutor-gray-900};
+  --tutor-border-idle: #{$tutor-gray-700};
+  --tutor-actions-brand-primary: #{$tutor-brand-500};
+}</code></pre>
+  </section>
+
+  <!-- Mixins -->
+  <section id="mixins">
+    <h2>Mixins <span class="doc-badge doc-badge--gray">11 files</span></h2>
+    <h3>RTL Mixins</h3>
+    <p>All directional properties should use RTL mixins for automatic <code>dir="rtl"</code> support:</p>
+    <pre><code>@include margin-start($tutor-spacing-4);   <span class="cm">// margin-left → margin-right in RTL</span>
+@include margin-end($tutor-spacing-4);     <span class="cm">// margin-right → margin-left in RTL</span>
+@include padding-start($tutor-spacing-4);  <span class="cm">// padding-left → padding-right in RTL</span>
+@include border-start(1px solid red);      <span class="cm">// border-left → border-right in RTL</span>
+@include text-align-start;                 <span class="cm">// text-align: left → right in RTL</span>
+@include inset-inline-start(0);            <span class="cm">// left: 0 → right: 0 in RTL</span></code></pre>
+
+    <h3>All Mixin Files</h3>
+    <table>
+      <thead><tr><th>File</th><th>Key Mixins</th></tr></thead>
+      <tbody>
+        <tr><td><code>_rtl.scss</code></td><td><code>margin-start</code>, <code>padding-end</code>, <code>border-start</code>, <code>text-align-start</code>, <code>inset-inline-start</code></td></tr>
+        <tr><td><code>_buttons.scss</code></td><td><code>tutor-button-base</code>, <code>tutor-button-variant($type)</code>, <code>tutor-button-size($size)</code></td></tr>
+        <tr><td><code>_cards.scss</code></td><td><code>tutor-card-base</code>, <code>tutor-card-elevation($level)</code></td></tr>
+        <tr><td><code>_inputs.scss</code></td><td><code>tutor-input-base</code>, <code>tutor-input-size($size)</code>, <code>tutor-input-validation($state)</code></td></tr>
+        <tr><td><code>_layout.scss</code></td><td><code>tutor-flex</code>, <code>tutor-flex-center</code>, <code>tutor-grid</code>, <code>tutor-grid-columns($n)</code></td></tr>
+        <tr><td><code>_typography.scss</code></td><td>Typography component mixins</td></tr>
+        <tr><td><code>_utilities.scss</code></td><td><code>tutor-visually-hidden</code>, <code>tutor-truncate</code>, <code>tutor-focus-ring</code>, <code>tutor-transition($props)</code></td></tr>
+        <tr><td><code>_avatars.scss</code></td><td>Avatar size mixins</td></tr>
+        <tr><td><code>_badges.scss</code></td><td>Badge variant mixins</td></tr>
+        <tr><td><code>_paginations.scss</code></td><td>Pagination style mixins</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Component SCSS -->
+  <section id="components-scss">
+    <h2>Component Stylesheets <span class="doc-badge doc-badge--gray">32 files</span></h2>
+    <p>Each component has a dedicated SCSS file in <code>scss/components/</code>. They use BEM naming: <code>.tutor-{component}-{element}--{modifier}</code>.</p>
+    <div class="token-cols">
+      <table>
+        <thead><tr><th>File</th><th>Prefix</th></tr></thead>
+        <tbody>
+          <tr><td><code>_accordion.scss</code></td><td><code>.tutor-accordion-*</code></td></tr>
+          <tr><td><code>_alert.scss</code></td><td><code>.tutor-alert-*</code></td></tr>
+          <tr><td><code>_avatar.scss</code></td><td><code>.tutor-avatar-*</code></td></tr>
+          <tr><td><code>_badge.scss</code></td><td><code>.tutor-badge-*</code></td></tr>
+          <tr><td><code>_button.scss</code></td><td><code>.tutor-btn-*</code></td></tr>
+          <tr><td><code>_calendar.scss</code></td><td><code>.tutor-calendar-*</code></td></tr>
+          <tr><td><code>_card.scss</code></td><td><code>.tutor-card-*</code></td></tr>
+          <tr><td><code>_file-uploader.scss</code></td><td><code>.tutor-file-uploader-*</code></td></tr>
+          <tr><td><code>_input.scss</code></td><td><code>.tutor-input-*</code></td></tr>
+          <tr><td><code>_modal.scss</code></td><td><code>.tutor-modal-*</code></td></tr>
+          <tr><td><code>_nav.scss</code></td><td><code>.tutor-nav-*</code></td></tr>
+          <tr><td><code>_pagination.scss</code></td><td><code>.tutor-pagination-*</code></td></tr>
+          <tr><td><code>_popover.scss</code></td><td><code>.tutor-popover-*</code></td></tr>
+          <tr><td><code>_progress.scss</code></td><td><code>.tutor-progress-*</code></td></tr>
+          <tr><td><code>_select.scss</code></td><td><code>.tutor-select-*</code></td></tr>
+          <tr><td><code>_skeleton.scss</code></td><td><code>.tutor-skeleton-*</code></td></tr>
+        </tbody>
+      </table>
+      <table>
+        <thead><tr><th>File</th><th>Prefix</th></tr></thead>
+        <tbody>
+          <tr><td><code>_star-rating.scss</code></td><td><code>.tutor-star-rating-*</code></td></tr>
+          <tr><td><code>_status-select.scss</code></td><td><code>.tutor-status-select-*</code></td></tr>
+          <tr><td><code>_stepper-dropdown.scss</code></td><td><code>.tutor-stepper-*</code></td></tr>
+          <tr><td><code>_table.scss</code></td><td><code>.tutor-table-*</code></td></tr>
+          <tr><td><code>_tabs.scss</code></td><td><code>.tutor-tabs-*</code></td></tr>
+          <tr><td><code>_time-input.scss</code></td><td><code>.tutor-time-input-*</code></td></tr>
+          <tr><td><code>_toast.scss</code></td><td><code>.tutor-toast-*</code></td></tr>
+          <tr><td><code>_tooltip.scss</code></td><td><code>.tutor-tooltip-*</code></td></tr>
+          <tr><td><code>_attachment-card.scss</code></td><td><code>.tutor-attachment-*</code></td></tr>
+          <tr><td><code>_loading-spinner.scss</code></td><td><code>.tutor-loading-*</code></td></tr>
+          <tr><td><code>_preview-trigger.scss</code></td><td><code>.tutor-preview-*</code></td></tr>
+          <tr><td><code>_result-badge.scss</code></td><td><code>.tutor-result-badge-*</code></td></tr>
+          <tr><td><code>_section-separator.scss</code></td><td><code>.tutor-section-separator-*</code></td></tr>
+          <tr><td><code>_select-dropdown.scss</code></td><td><code>.tutor-select-dropdown-*</code></td></tr>
+          <tr><td><code>_statics.scss</code></td><td><code>.tutor-statics-*</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Utility Classes -->
+  <section id="utilities">
+    <h2>Utility Classes <span class="doc-badge doc-badge--gray">10 files</span></h2>
+    <p>Generated from token maps in <code>scss/utilities/</code>:</p>
+
+    <h3>Spacing</h3>
+    <p>Pattern: <code>.tutor-{property}-{size}</code> — sizes: <code>none</code>, <code>1</code>–<code>21</code></p>
+    <table>
+      <thead><tr><th>Prefix</th><th>Property</th></tr></thead>
+      <tbody>
+        <tr><td><code>.tutor-m-</code> <code>.tutor-mt-</code> <code>.tutor-mb-</code></td><td>margin, margin-top, margin-bottom</td></tr>
+        <tr><td><code>.tutor-ms-</code> <code>.tutor-me-</code></td><td>margin-inline-start/end (RTL-aware)</td></tr>
+        <tr><td><code>.tutor-p-</code> <code>.tutor-pt-</code> <code>.tutor-pb-</code></td><td>padding, padding-top, padding-bottom</td></tr>
+        <tr><td><code>.tutor-ps-</code> <code>.tutor-pe-</code></td><td>padding-inline-start/end (RTL-aware)</td></tr>
+        <tr><td><code>.tutor-mx-</code> <code>.tutor-my-</code></td><td>margin horizontal/vertical</td></tr>
+        <tr><td><code>.tutor-px-</code> <code>.tutor-py-</code></td><td>padding horizontal/vertical</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Typography</h3>
+    <table>
+      <thead><tr><th>Utility</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Font size</td><td><code>.tutor-fs-h1</code>, <code>.tutor-fs-p2</code>, <code>.tutor-fs-tiny</code></td></tr>
+        <tr><td>Font weight</td><td><code>.tutor-fw-medium</code>, <code>.tutor-fw-bold</code></td></tr>
+        <tr><td>Text align</td><td><code>.tutor-text-center</code>, <code>.tutor-text-start</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Colors &amp; Layout</h3>
+    <table>
+      <thead><tr><th>Utility</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Text color</td><td><code>.tutor-color-primary</code>, <code>.tutor-color-brand</code></td></tr>
+        <tr><td>Background</td><td><code>.tutor-bg-brand-600</code>, <code>.tutor-bg-base</code>, <code>.tutor-bg-action-brand-primary</code></td></tr>
+        <tr><td>Border color</td><td><code>.tutor-border-idle</code>, <code>.tutor-border-brand</code></td></tr>
+        <tr><td>Border radius</td><td><code>.tutor-radius-lg</code>, <code>.tutor-radius-full</code></td></tr>
+        <tr><td>Display</td><td><code>.tutor-d-flex</code>, <code>.tutor-d-none</code>, <code>.tutor-d-grid</code></td></tr>
+        <tr><td>Flexbox</td><td><code>.tutor-justify-center</code>, <code>.tutor-align-center</code></td></tr>
+        <tr><td>Gap</td><td><code>.tutor-gap-4</code>, <code>.tutor-gap-8</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+<script src="assets/docs.js"></script>
+</body>
+</html>

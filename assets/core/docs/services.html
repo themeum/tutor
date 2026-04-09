@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services — Tutor Core Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="index.html" class="doc-header__logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="currentColor"/><path d="M8 10h12M8 14h8M8 18h10" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    Tutor Core Docs
+  </a>
+  <nav class="doc-header__nav">
+    <a href="index.html" class="doc-header__link">Overview</a>
+    <a href="architecture.html" class="doc-header__link">Architecture</a>
+    <a href="components.html" class="doc-header__link">Components</a>
+    <a href="services.html" class="doc-header__link active">Services</a>
+    <a href="tokens.html" class="doc-header__link">Tokens &amp; SCSS</a>
+    <button id="themeToggle" class="doc-theme-toggle" aria-label="Toggle theme">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="moon hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<aside class="doc-sidebar">
+  <div class="doc-sidebar__group">
+    <div class="doc-sidebar__title">Services</div>
+    <a href="#toast" class="doc-sidebar__link active">ToastService</a>
+    <a href="#modal" class="doc-sidebar__link">ModalService</a>
+    <a href="#form" class="doc-sidebar__link">FormService</a>
+    <a href="#query" class="doc-sidebar__link">QueryService</a>
+    <a href="#wpmedia" class="doc-sidebar__link">WPMediaService</a>
+    <a href="#preference" class="doc-sidebar__link">PreferenceService</a>
+  </div>
+</aside>
+
+<main class="doc-main">
+  <h1>Services API</h1>
+  <p class="doc-lead">Global service singletons exposed on <code>window.TutorCore</code>. Call these imperatively from anywhere — they are not tied to DOM elements.</p>
+
+  <!-- ToastService -->
+  <section id="toast">
+    <h2>ToastService <code>TutorCore.toast</code></h2>
+    <p>Programmatic API for showing toast notifications. Automatically injects a container into the DOM on first use and handles fullscreen mode.</p>
+
+    <h3>Methods</h3>
+    <div class="doc-api-item"><div class="doc-api-name">show(message: string, config?: ToastConfig)</div><div class="doc-api-desc">Show a toast with custom configuration</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">success(message: string, duration?: number)</div><div class="doc-api-desc">Show a success toast (green)</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">error(message: string, duration?: number)</div><div class="doc-api-desc">Show an error toast (red)</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">warning(message: string, duration?: number)</div><div class="doc-api-desc">Show a warning toast (orange)</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">info(message: string, duration?: number)</div><div class="doc-api-desc">Show an info toast (blue)</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">clear()</div><div class="doc-api-desc">Remove all active toasts</div></div>
+
+    <h3>ToastConfig</h3>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>type</code></td><td><code>'success' | 'error' | 'warning' | 'info'</code></td><td><code>'info'</code></td><td>Toast variant</td></tr>
+        <tr><td><code>duration</code></td><td><code>number</code></td><td><code>5000</code></td><td>Auto-dismiss in ms (0 = persistent)</td></tr>
+        <tr><td><code>title</code></td><td><code>string</code></td><td>Localized type</td><td>Custom toast title</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Usage</h3>
+    <pre><code>TutorCore.toast.success(<span class="str">'Course saved successfully!'</span>);
+TutorCore.toast.error(<span class="str">'Failed to delete course'</span>);
+
+<span class="cm">// Custom config</span>
+TutorCore.toast.show(<span class="str">'Processing...'</span>, {
+  type: <span class="str">'info'</span>,
+  duration: <span class="num">0</span>,       <span class="cm">// Persistent</span>
+  title: <span class="str">'Please wait'</span>
+});
+
+TutorCore.toast.clear();</code></pre>
+  </section>
+
+  <!-- ModalService -->
+  <section id="modal">
+    <h2>ModalService <code>TutorCore.modal</code></h2>
+    <p>Programmatic API for opening, updating, and closing modals by ID. Emits DOM CustomEvents consumed by Alpine <code>tutorModal</code> instances.</p>
+
+    <h3>Methods</h3>
+    <div class="doc-api-item"><div class="doc-api-name">showModal(id?: string, data?: unknown)</div><div class="doc-api-desc">Open a modal. Data is available as <code>payload</code> in the component. Dispatches <code>tutor-modal-open</code>.</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">updateModal(id: string, data: unknown)</div><div class="doc-api-desc">Update modal data without re-opening. Dispatches <code>tutor-modal-update</code>.</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">closeModal(id?: string)</div><div class="doc-api-desc">Close a modal by ID. Omit to close the active one. Dispatches <code>tutor-modal-close</code>.</div></div>
+
+    <h3>Usage</h3>
+    <pre><code><span class="cm">// Open with data</span>
+TutorCore.modal.showModal(<span class="str">'delete-confirm'</span>, {
+  courseId: <span class="num">123</span>,
+  courseName: <span class="str">'React Basics'</span>
+});
+
+<span class="cm">// Close</span>
+TutorCore.modal.closeModal(<span class="str">'delete-confirm'</span>);
+
+<span class="cm">// Listen for close</span>
+document.addEventListener(<span class="str">'tutor-modal-closed'</span>, (e) =&gt; {
+  console.log(<span class="str">'Closed:'</span>, e.detail.id);
+});</code></pre>
+  </section>
+
+  <!-- FormService -->
+  <section id="form">
+    <h2>FormService <code>TutorCore.form</code></h2>
+    <p>External access to <code>tutorForm</code> instances by ID. Forms auto-register via the <code>tutor-form-register</code> event when initialized with an <code>id</code>.</p>
+
+    <h3>Methods</h3>
+    <div class="doc-api-item"><div class="doc-api-name">getValues(id) → Record&lt;string, unknown&gt;</div><div class="doc-api-desc">Get all form field values</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">getValue(id, name) → unknown</div><div class="doc-api-desc">Get a single field value</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">setValue(id, name, value, options?)</div><div class="doc-api-desc">Set a field value. Options: <code>{ shouldValidate, shouldTouch, shouldDirty }</code></div></div>
+    <div class="doc-api-item"><div class="doc-api-name">setValues(id, values, options?)</div><div class="doc-api-desc">Set multiple field values at once</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">reset(id, values?)</div><div class="doc-api-desc">Reset form to defaults or provided values</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">trigger(id, name?) → Promise&lt;boolean&gt;</div><div class="doc-api-desc">Trigger validation for field(s) or all fields</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">clearErrors(id, name?)</div><div class="doc-api-desc">Clear validation errors</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">setError(id, name, error)</div><div class="doc-api-desc">Set custom error: <code>{ type, message }</code></div></div>
+    <div class="doc-api-item"><div class="doc-api-name">setFocus(id, name, options?)</div><div class="doc-api-desc">Focus a specific field</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">getFormState(id) → FormState</div><div class="doc-api-desc">Complete state snapshot: values, errors, touched, dirty, isValid, etc.</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">watch(id, name) → unknown</div><div class="doc-api-desc">Watch a field value</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">hasForm(id) → boolean</div><div class="doc-api-desc">Check if a form is registered</div></div>
+
+    <h3>Usage</h3>
+    <pre><code><span class="kw">if</span> (TutorCore.form.hasForm(<span class="str">'course-form'</span>)) {
+  <span class="kw">const</span> values = TutorCore.form.getValues(<span class="str">'course-form'</span>);
+
+  TutorCore.form.setValue(<span class="str">'course-form'</span>, <span class="str">'price'</span>, <span class="num">29.99</span>, {
+    shouldValidate: <span class="num">true</span>,
+    shouldDirty: <span class="num">true</span>
+  });
+
+  <span class="kw">const</span> isValid = <span class="kw">await</span> TutorCore.form.trigger(<span class="str">'course-form'</span>);
+  TutorCore.form.reset(<span class="str">'course-form'</span>);
+}</code></pre>
+  </section>
+
+  <!-- QueryService -->
+  <section id="query">
+    <h2>QueryService <code>TutorCore.query</code></h2>
+    <p>TanStack Query-inspired data fetching with caching, stale detection, and mutations. Uses <code>Alpine.reactive()</code> for reactive state.</p>
+
+    <h3>useQuery(queryKey, queryFn, options?)</h3>
+    <p>Create a reactive query with automatic caching and refetching.</p>
+    <table>
+      <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>staleTime</code></td><td><code>number</code></td><td><code>0</code></td><td>Time (ms) before data is considered stale</td></tr>
+        <tr><td><code>enabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Whether to auto-fetch on init</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Returned State (reactive)</h4>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>data</code></td><td><code>T | null</code></td><td>Fetched data</td></tr>
+        <tr><td><code>error</code></td><td><code>Error | null</code></td><td>Fetch error</td></tr>
+        <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td>First load in progress</td></tr>
+        <tr><td><code>isFetching</code></td><td><code>boolean</code></td><td>Any fetch in progress (including refetch)</td></tr>
+        <tr><td><code>isStale</code></td><td><code>boolean</code></td><td>Data exists but is stale</td></tr>
+      </tbody>
+    </table>
+
+    <pre><code><span class="kw">const</span> query = TutorCore.query.useQuery(
+  [<span class="str">'courses'</span>, { page: <span class="num">1</span> }],
+  () =&gt; fetch(<span class="str">'/api/courses?page=1'</span>).then(r =&gt; r.json()),
+  { staleTime: <span class="num">30000</span> }
+);
+
+<span class="cm">// Reactive — updates automatically</span>
+console.log(query.data);       <span class="cm">// null → courses[]</span>
+console.log(query.isLoading);  <span class="cm">// true → false</span></code></pre>
+
+    <h3>useMutation(mutationFn, options?)</h3>
+    <p>Create a mutation for data modification operations.</p>
+    <table>
+      <thead><tr><th>Callback</th><th>Signature</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>onMutate</code></td><td><code>(vars) → void</code></td><td>Before mutation (optimistic updates)</td></tr>
+        <tr><td><code>onSuccess</code></td><td><code>(data, vars) → void</code></td><td>After successful mutation</td></tr>
+        <tr><td><code>onError</code></td><td><code>(error, vars) → void</code></td><td>After failed mutation</td></tr>
+        <tr><td><code>onSettled</code></td><td><code>(data, error, vars) → void</code></td><td>Always called (success or error)</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Returned State (reactive)</h4>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td><code>data</code></td><td><code>T | null</code></td></tr>
+        <tr><td><code>error</code></td><td><code>Error | null</code></td></tr>
+        <tr><td><code>isPending</code></td><td><code>boolean</code></td></tr>
+        <tr><td><code>isError</code></td><td><code>boolean</code></td></tr>
+        <tr><td><code>isSuccess</code></td><td><code>boolean</code></td></tr>
+      </tbody>
+    </table>
+
+    <pre><code><span class="kw">const</span> mutation = TutorCore.query.useMutation(
+  (data) =&gt; fetch(<span class="str">'/api/courses'</span>, {
+    method: <span class="str">'POST'</span>,
+    body: JSON.stringify(data)
+  }).then(r =&gt; r.json()),
+  {
+    onSuccess: () =&gt; {
+      TutorCore.toast.success(<span class="str">'Saved!'</span>);
+      TutorCore.query.invalidateQueries(<span class="str">'courses'</span>);
+    }
+  }
+);
+
+<span class="kw">await</span> mutation.mutate({ title: <span class="str">'New Course'</span> });</code></pre>
+
+    <h3>Cache Management</h3>
+    <div class="doc-api-item"><div class="doc-api-name">invalidateQuery(queryKey)</div><div class="doc-api-desc">Invalidate cache and refetch a specific query</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">invalidateQueries(pattern: string)</div><div class="doc-api-desc">Invalidate all queries whose key contains the pattern</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">getCacheInfo(queryKey) → string</div><div class="doc-api-desc">Get status string, e.g. <code>"Cached 15s ago"</code></div></div>
+    <div class="doc-api-item"><div class="doc-api-name">clearCache()</div><div class="doc-api-desc">Clear all cached data</div></div>
+  </section>
+
+  <!-- WPMediaService -->
+  <section id="wpmedia">
+    <h2>WPMediaService <code>TutorCore.wpMedia</code></h2>
+    <p>Type-safe wrapper around WordPress <code>wp.media</code> modal for file selection.</p>
+
+    <h3>Methods</h3>
+    <div class="doc-api-item"><div class="doc-api-name">isAvailable() → boolean</div><div class="doc-api-desc">Check if <code>wp.media</code> exists</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">open(options, onSelect, existingIds?) → cleanup | null</div><div class="doc-api-desc">Open the media library modal. Returns a cleanup function.</div></div>
+
+    <h3>WPMediaOptions</h3>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Default</th></tr></thead>
+      <tbody>
+        <tr><td><code>title</code></td><td><code>string</code></td><td><code>'Select File'</code></td></tr>
+        <tr><td><code>button.text</code></td><td><code>string</code></td><td><code>'Use this file'</code></td></tr>
+        <tr><td><code>multiple</code></td><td><code>boolean</code></td><td><code>false</code></td></tr>
+        <tr><td><code>library.type</code></td><td><code>'image' | 'video' | 'audio' | string</code></td><td>—</td></tr>
+        <tr><td><code>maxFileSize</code></td><td><code>number</code></td><td>—</td></tr>
+        <tr><td><code>maxFiles</code></td><td><code>number</code></td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Selected File Shape</h3>
+    <pre><code><span class="kw">interface</span> <span class="type">WPMedia</span> {
+  id: <span class="type">number</span>;
+  title: <span class="type">string</span>;
+  url: <span class="type">string</span>;
+  name?: <span class="type">string</span>;        <span class="cm">// filename</span>
+  size?: <span class="type">string</span>;        <span class="cm">// human-readable</span>
+  size_bytes?: <span class="type">number</span>;
+  ext?: <span class="type">string</span>;
+  mime?: <span class="type">string</span>;
+}</code></pre>
+
+    <h3>Usage</h3>
+    <pre><code><span class="kw">const</span> cleanup = TutorCore.wpMedia.open(
+  {
+    title: <span class="str">'Select Thumbnail'</span>,
+    library: { type: <span class="str">'image'</span> },
+    maxFileSize: <span class="num">5</span> * <span class="num">1024</span> * <span class="num">1024</span>  <span class="cm">// 5MB</span>
+  },
+  (files) =&gt; {
+    console.log(<span class="str">'Selected:'</span>, files[<span class="num">0</span>].url);
+  },
+  [existingId]  <span class="cm">// Pre-select</span>
+);
+
+<span class="cm">// Later: cleanup event listeners</span>
+cleanup?.();</code></pre>
+  </section>
+
+  <!-- PreferenceService -->
+  <section id="preference">
+    <h2>PreferenceService <code>TutorCore.preference</code></h2>
+    <p>Manages theme switching (light/dark/system) and font scaling for accessibility.</p>
+
+    <h3>Methods</h3>
+    <div class="doc-api-item"><div class="doc-api-name">applyTheme(theme: 'dark' | 'light' | 'system')</div><div class="doc-api-desc">Apply a theme to <code>[data-tutor-theme]</code>. <code>'system'</code> auto-detects from OS and listens for changes.</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">applyFontScale(scale: number | string)</div><div class="doc-api-desc">Set root font size as percentage. E.g. <code>120</code> = 120% (larger text).</div></div>
+
+    <h3>Properties</h3>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>activeTheme</code></td><td><code>'dark' | 'light'</code></td><td>Currently applied theme (resolved, never <code>'system'</code>)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Usage</h3>
+    <pre><code><span class="cm">// Theme switching</span>
+TutorCore.preference.applyTheme(<span class="str">'dark'</span>);
+TutorCore.preference.applyTheme(<span class="str">'system'</span>); <span class="cm">// Auto-detect from OS</span>
+
+<span class="cm">// Font scaling for accessibility</span>
+TutorCore.preference.applyFontScale(<span class="num">120</span>); <span class="cm">// 120% = larger text</span>
+TutorCore.preference.applyFontScale(<span class="num">80</span>);  <span class="cm">// 80% = smaller text</span>
+
+<span class="cm">// Read current theme</span>
+console.log(TutorCore.preference.activeTheme); <span class="cm">// 'dark' or 'light'</span></code></pre>
+
+    <div class="doc-callout doc-callout--info">
+      <p><strong>System theme detection:</strong> When <code>applyTheme('system')</code> is called, the service reads the <code>prefers-color-scheme</code> media query, applies the matching theme, and adds a <code>change</code> listener to auto-switch when the OS preference changes.</p>
+    </div>
+  </section>
+
+</main>
+<script src="assets/docs.js"></script>
+</body>
+</html>

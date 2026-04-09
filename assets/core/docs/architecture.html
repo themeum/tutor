@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture — Tutor Core Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="index.html" class="doc-header__logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="currentColor"/><path d="M8 10h12M8 14h8M8 18h10" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    Tutor Core Docs
+  </a>
+  <nav class="doc-header__nav">
+    <a href="index.html" class="doc-header__link">Overview</a>
+    <a href="architecture.html" class="doc-header__link active">Architecture</a>
+    <a href="components.html" class="doc-header__link">Components</a>
+    <a href="services.html" class="doc-header__link">Services</a>
+    <a href="tokens.html" class="doc-header__link">Tokens &amp; SCSS</a>
+    <button id="themeToggle" class="doc-theme-toggle" aria-label="Toggle theme">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="moon hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<aside class="doc-sidebar">
+  <div class="doc-sidebar__group">
+    <div class="doc-sidebar__title">Architecture</div>
+    <a href="#init-flow" class="doc-sidebar__link active">Initialization Flow</a>
+    <a href="#registry" class="doc-sidebar__link">Component Registry</a>
+    <a href="#alpine-naming" class="doc-sidebar__link">Alpine Naming</a>
+    <a href="#type-system" class="doc-sidebar__link">Type System</a>
+    <a href="#events" class="doc-sidebar__link">Custom Events</a>
+    <a href="#entry-point" class="doc-sidebar__link">Entry Point</a>
+  </div>
+</aside>
+
+<main class="doc-main">
+  <h1>Architecture</h1>
+  <p class="doc-lead">How the core library initializes, registers components, and exposes APIs.</p>
+
+  <section id="init-flow">
+    <h2>Initialization Flow</h2>
+    <p>The entry point is <code>ts/index.ts</code>. On <code>DOMContentLoaded</code> (or immediately if the DOM is ready), <code>initializePlugin()</code> runs the following sequence:</p>
+    <div style="background:var(--doc-surface);border:1px solid var(--doc-border);border-radius:12px;padding:24px;margin:16px 0 24px;font-size:14px;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div><span class="doc-badge doc-badge--gray">1</span>&nbsp; Alpine plugins loaded → <code>focus</code>, <code>collapse</code></div>
+        <div><span class="doc-badge doc-badge--gray">2</span>&nbsp; <code>Registry.registerAll()</code> → 23 components + 7 services</div>
+        <div><span class="doc-badge doc-badge--gray">3</span>&nbsp; <code>Registry.initWithAlpine()</code> → <code>Alpine.data('tutorModal', fn)</code> × 23</div>
+        <div><span class="doc-badge doc-badge--gray">4</span>&nbsp; <code>window.TutorCore</code> assigned → services + security + nonce helpers</div>
+        <div><span class="doc-badge doc-badge--gray">5</span>&nbsp; Legacy functions bridged → <code>registerLegacyFunctions()</code></div>
+        <div><span class="doc-badge doc-badge--gray">6</span>&nbsp; <code>Alpine.start()</code> → Alpine processes <code>x-data</code> directives in the DOM</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="registry">
+    <h2>Component Registry</h2>
+    <p>The <code>Registry</code> class (<code>ts/ComponentRegistry.ts</code>) is the central coordinator. It maintains two <code>Map</code>s:</p>
+    <table>
+      <thead><tr><th>Map</th><th>Key</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td><code>components</code></td><td>Component name (e.g. <code>'modal'</code>)</td><td><code>AlpineComponentMeta</code> — <code>{ name, component, global? }</code></td></tr>
+        <tr><td><code>services</code></td><td>Service name (e.g. <code>'toast'</code>)</td><td><code>ServiceMeta</code> — <code>{ name, instance }</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Key Methods</h3>
+    <div class="doc-api-item">
+      <div class="doc-api-name">register({ type, meta })</div>
+      <div class="doc-api-desc">Register a single component or service. Services are immediately exposed on <code>window.TutorCore</code>.</div>
+    </div>
+    <div class="doc-api-item">
+      <div class="doc-api-name">registerAll({ components[], services[] })</div>
+      <div class="doc-api-desc">Bulk-register all components and services at initialization.</div>
+    </div>
+    <div class="doc-api-item">
+      <div class="doc-api-name">get&lt;T&gt;({ name, type }) → meta | instance</div>
+      <div class="doc-api-desc">Look up a component meta or service instance by name.</div>
+    </div>
+    <div class="doc-api-item">
+      <div class="doc-api-name">has({ name, type }) → boolean</div>
+      <div class="doc-api-desc">Check if a component or service is registered.</div>
+    </div>
+    <div class="doc-api-item">
+      <div class="doc-api-name">initWithAlpine(Alpine)</div>
+      <div class="doc-api-desc">Register all components as Alpine data functions and expose globals on <code>window.TutorCore</code>.</div>
+    </div>
+  </section>
+
+  <section id="alpine-naming">
+    <h2>Alpine Naming Convention</h2>
+    <p>Each component is registered as <code>tutor</code> + PascalCase(name). For example:</p>
+    <table>
+      <thead><tr><th>Registry Name</th><th>Alpine Directive</th><th>Usage</th></tr></thead>
+      <tbody>
+        <tr><td><code>modal</code></td><td><code>tutorModal</code></td><td><code>x-data="tutorModal({ id: 'my-modal' })"</code></td></tr>
+        <tr><td><code>form</code></td><td><code>tutorForm</code></td><td><code>x-data="tutorForm({ id: 'course-form' })"</code></td></tr>
+        <tr><td><code>select</code></td><td><code>tutorSelect</code></td><td><code>x-data="tutorSelect({ options: [...] })"</code></td></tr>
+        <tr><td><code>tabs</code></td><td><code>tutorTabs</code></td><td><code>x-data="tutorTabs({ tabs: [...] })"</code></td></tr>
+        <tr><td><code>accordion</code></td><td><code>tutorAccordion</code></td><td><code>x-data="tutorAccordion({ multiple: false })"</code></td></tr>
+        <tr><td><code>tooltip</code></td><td><code>tutorTooltip</code></td><td><code>x-data="tutorTooltip({ placement: 'top' })"</code></td></tr>
+        <tr><td><code>popover</code></td><td><code>tutorPopover</code></td><td><code>x-data="tutorPopover({ placement: 'bottom-start' })"</code></td></tr>
+        <tr><td><code>fileUploader</code></td><td><code>tutorFileUploader</code></td><td><code>x-data="tutorFileUploader({ ... })"</code></td></tr>
+        <tr><td><code>timeInput</code></td><td><code>tutorTimeInput</code></td><td><code>x-data="tutorTimeInput({ ... })"</code></td></tr>
+        <tr><td><code>wpEditor</code></td><td><code>tutorWpEditor</code></td><td><code>x-data="tutorWpEditor({ ... })"</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="type-system">
+    <h2>Type System</h2>
+    <p>Core interfaces defined in <code>ts/types/index.ts</code>:</p>
+    <pre><code><span class="cm">// All components implement this shape</span>
+<span class="kw">interface</span> <span class="type">AlpineComponentMeta</span>&lt;TProps&gt; {
+  name: <span class="type">string</span>;
+  component: (props: TProps) =&gt; Record&lt;<span class="type">string</span>, <span class="type">any</span>&gt;;
+  global?: <span class="type">boolean</span>;  <span class="cm">// If true, factory exposed on window.TutorCore</span>
+}
+
+<span class="cm">// All services implement this shape</span>
+<span class="kw">interface</span> <span class="type">ServiceMeta</span>&lt;T&gt; {
+  name: <span class="type">string</span>;
+  instance: T;
+}
+
+<span class="cm">// Standard AJAX response envelope</span>
+<span class="kw">interface</span> <span class="type">AjaxResponse</span>&lt;T&gt; {
+  status_code: <span class="type">number</span>;
+  success: <span class="type">boolean</span>;
+  message: <span class="type">string</span>;
+  data?: T;
+}</code></pre>
+
+    <h3>TutorCore Interface</h3>
+    <p>Describes the full shape of <code>window.TutorCore</code>, including typed service instances:</p>
+    <pre><code><span class="kw">interface</span> <span class="type">TutorCore</span> {
+  <span class="cm">// Component factories</span>
+  button: ExtractComponent&lt;...&gt;;
+  tabs: ExtractComponent&lt;...&gt;;
+  icon: ExtractComponent&lt;...&gt;;
+
+  <span class="cm">// Service instances</span>
+  form: <span class="type">FormService</span>;
+  toast: <span class="type">ToastService</span>;
+  query: <span class="type">QueryService</span>;
+  modal: <span class="type">ModalService</span>;
+  wpMedia: <span class="type">WPMediaService</span>;
+
+  <span class="cm">// Utilities (added in index.ts)</span>
+  security: { escapeHtml, escapeAttr };
+  nonce: { getNonceData };
+}</code></pre>
+  </section>
+
+  <section id="events">
+    <h2>Custom Events</h2>
+    <p>Components communicate via <code>CustomEvent</code>s dispatched on <code>document</code>. All event names are defined as constants in <code>ts/constant.ts</code>:</p>
+    <table>
+      <thead><tr><th>Constant</th><th>Event Name</th><th>Payload</th></tr></thead>
+      <tbody>
+        <tr><td><code>TAB_CHANGE</code></td><td><code>tutor-tab-change</code></td><td><code>{ tabId, tab }</code></td></tr>
+        <tr><td><code>MODAL_OPEN</code></td><td><code>tutor-modal-open</code></td><td><code>{ id?, data? }</code></td></tr>
+        <tr><td><code>MODAL_UPDATE</code></td><td><code>tutor-modal-update</code></td><td><code>{ id, data }</code></td></tr>
+        <tr><td><code>MODAL_CLOSE</code></td><td><code>tutor-modal-close</code></td><td><code>{ id? }</code></td></tr>
+        <tr><td><code>MODAL_CLOSED</code></td><td><code>tutor-modal-closed</code></td><td><code>{ id }</code></td></tr>
+        <tr><td><code>TOAST_SHOW</code></td><td><code>tutor-toast-show</code></td><td><code>{ message, config }</code></td></tr>
+        <tr><td><code>TOAST_CLEAR</code></td><td><code>tutor-toast-clear</code></td><td>—</td></tr>
+        <tr><td><code>FORM_REGISTER</code></td><td><code>tutor-form-register</code></td><td><code>{ id, instance }</code></td></tr>
+        <tr><td><code>FORM_UNREGISTER</code></td><td><code>tutor-form-unregister</code></td><td><code>{ id }</code></td></tr>
+        <tr><td><code>FORM_STATE_CHANGE</code></td><td><code>tutor-form-state-change</code></td><td><code>{ id, isDirty }</code></td></tr>
+        <tr><td><code>FORM_RESET</code></td><td><code>tutor-form-reset</code></td><td><code>{ formId, defaultValues }</code></td></tr>
+        <tr><td><code>WP_EDITOR_FOCUS</code></td><td><code>wp-editor-focus</code></td><td>—</td></tr>
+        <tr><td><code>TUTOR_PLAYER_READY</code></td><td><code>tutor-player-ready</code></td><td>—</td></tr>
+        <tr><td><code>QUIZ_TIME_EXPIRED</code></td><td><code>tutor-quiz-time-expired</code></td><td>—</td></tr>
+        <tr><td><code>QUIZ_ABANDON_REQUESTED</code></td><td><code>tutor-quiz-abandon-requested</code></td><td>—</td></tr>
+        <tr><td><code>QUIZ_ATTEMPT_COMPLETED</code></td><td><code>tutor-quiz-attempt-completed</code></td><td>—</td></tr>
+      </tbody>
+    </table>
+    <h3>Listening Example</h3>
+    <pre><code>document.addEventListener(<span class="str">'tutor-modal-closed'</span>, (event) =&gt; {
+  console.log(<span class="str">'Modal closed:'</span>, event.detail.id);
+});</code></pre>
+  </section>
+
+  <section id="entry-point">
+    <h2>Entry Point Code</h2>
+    <p>The full initialization happens in <code>ts/index.ts</code>:</p>
+    <pre><code><span class="kw">import</span> collapse <span class="kw">from</span> <span class="str">'@alpinejs/collapse'</span>;
+<span class="kw">import</span> focus <span class="kw">from</span> <span class="str">'@alpinejs/focus'</span>;
+<span class="kw">import</span> Alpine <span class="kw">from</span> <span class="str">'alpinejs'</span>;
+
+Alpine.plugin(focus);
+Alpine.plugin(collapse);
+
+<span class="kw">const</span> <span class="fn">initializePlugin</span> = () =&gt; {
+  TutorComponentRegistry.registerAll({
+    components: [modalMeta, tabsMeta, selectMeta, <span class="cm">/* ...21 more */</span>],
+    services: [toastServiceMeta, queryServiceMeta, <span class="cm">/* ...5 more */</span>],
+  });
+
+  TutorComponentRegistry.initWithAlpine(Alpine);
+
+  window.TutorComponentRegistry = TutorComponentRegistry;
+  window.Alpine = Alpine;
+  window.TutorCore = Object.assign(window.TutorCore || {}, {
+    toast: toastServiceMeta.instance,
+    security: { escapeHtml, escapeAttr },
+    nonce: { getNonceData },
+  });
+
+  registerLegacyFunctions();
+  Alpine.start();
+};</code></pre>
+  </section>
+</main>
+
+<script src="assets/docs.js"></script>
+</body>
+</html>

@@ -1,576 +1,291 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="light">
-
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Components - Tutor Design System</title>
-    <link rel="stylesheet" href="../../css/tutor-core.min.css">
-    <link rel="stylesheet" href="./assets/docs.css">
-    <style>
-        .component-showcase {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .component-demo {
-            background: var(--tutor-surface-l1);
-            border: 1px solid var(--tutor-border-idle);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .component-demo__header {
-            padding: 1rem 1.5rem;
-            background: var(--tutor-surface-l2);
-            border-bottom: 1px solid var(--tutor-border-idle);
-        }
-
-        .component-demo__title {
-            margin: 0;
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--tutor-text-primary);
-        }
-
-        .component-demo__body {
-            padding: 1.5rem;
-        }
-
-        .component-demo__example {
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: var(--tutor-surface-base);
-            border: 1px dashed var(--tutor-border-brand);
-            border-radius: 8px;
-        }
-
-        .interactive-demo {
-            margin: 2rem 0;
-            padding: 2rem;
-            background: var(--tutor-surface-l1);
-            border: 1px solid var(--tutor-border-idle);
-            border-radius: 12px;
-        }
-
-        .demo-controls {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .demo-output {
-            padding: 1.5rem;
-            background: var(--tutor-surface-base);
-            border: 1px solid var(--tutor-border-idle);
-            border-radius: 8px;
-            min-height: 200px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Components — Tutor Core Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/docs.css">
 </head>
-
 <body>
-    <div class="tutor-container" x-data="componentShowcase()">
-        <!-- Header -->
-        <header style="text-align: center; margin: 2rem 0;">
-            <h1 class="tutor-h1">Component Showcase</h1>
-            <p class="tutor-p1 tutor-text-secondary">Interactive examples of all Tutor Design System components</p>
 
-            <div class="tutor-flex tutor-gap-3 tutor-justify-center tutor-mt-4">
-                <button onclick="toggleTheme()" class="tutor-btn tutor-btn--outline tutor-btn--small">
-                    🌓 Toggle Theme
-                </button>
-                <button onclick="toggleRTL()" class="tutor-btn tutor-btn--outline tutor-btn--small">
-                    🔄 Toggle RTL
-                </button>
-                <a href="index.html" class="tutor-btn tutor-btn--ghost tutor-btn--small">
-                    ← Back to Docs
-                </a>
-            </div>
-        </header>
+<header class="doc-header">
+  <a href="index.html" class="doc-header__logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="currentColor"/><path d="M8 10h12M8 14h8M8 18h10" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    Tutor Core Docs
+  </a>
+  <nav class="doc-header__nav">
+    <a href="index.html" class="doc-header__link">Overview</a>
+    <a href="architecture.html" class="doc-header__link">Architecture</a>
+    <a href="components.html" class="doc-header__link active">Components</a>
+    <a href="services.html" class="doc-header__link">Services</a>
+    <a href="tokens.html" class="doc-header__link">Tokens &amp; SCSS</a>
+    <button id="themeToggle" class="doc-theme-toggle" aria-label="Toggle theme">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="moon hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+    </button>
+  </nav>
+</header>
 
-        <!-- Button Components -->
-        <section class="tutor-mb-8">
-            <h2 class="tutor-h2">Buttons</h2>
+<aside class="doc-sidebar">
+  <div class="doc-sidebar__group">
+    <div class="doc-sidebar__title">Components</div>
+    <a href="#modal" class="doc-sidebar__link active">Modal</a>
+    <a href="#form" class="doc-sidebar__link">Form</a>
+    <a href="#select" class="doc-sidebar__link">Select</a>
+    <a href="#tabs" class="doc-sidebar__link">Tabs</a>
+    <a href="#accordion" class="doc-sidebar__link">Accordion</a>
+    <a href="#tooltip" class="doc-sidebar__link">Tooltip</a>
+    <a href="#popover" class="doc-sidebar__link">Popover</a>
+    <a href="#toast" class="doc-sidebar__link">Toast</a>
+  </div>
+</aside>
 
-            <div class="component-showcase">
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Button Variants</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <div class="tutor-flex tutor-gap-3 tutor-flex-wrap">
-                                <button class="tutor-btn tutor-btn-primary">Primary</button>
-                                <button class="tutor-btn tutor-btn-secondary">Secondary</button>
-                                <button class="tutor-btn tutor-btn-outline">Outline</button>
-                                <button class="tutor-btn tutor-btn-ghost">Ghost</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<main class="doc-main">
+  <h1>Components API</h1>
+  <p class="doc-lead">Full API reference for the main Alpine.js UI components.</p>
 
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Button Sizes</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
-                                <button class="tutor-btn tutor-btn-primary tutor-btn-small">Small</button>
-                                <button class="tutor-btn tutor-btn-primary tutor-btn-medium">Medium</button>
-                                <button class="tutor-btn tutor-btn-primary tutor-btn-large">Large</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <!-- Modal -->
+  <section id="modal">
+    <h2>Modal <span class="doc-badge doc-badge--brand">tutorModal</span></h2>
+    <p>Dialog overlay with focus trapping, ESC-to-close, backdrop transitions, and programmatic open/close via custom events.</p>
 
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Button States</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <div class="tutor-flex tutor-gap-3" style="flex-wrap: wrap;">
-                                <button class="tutor-btn tutor-btn-primary">Normal</button>
-                                <button class="tutor-btn tutor-btn-primary" disabled>Disabled</button>
-                                <button class="tutor-btn tutor-btn-primary tutor-btn-loading">Loading</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <h3>Config</h3>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td><code>'tutor-modal'</code></td><td>Unique modal identifier</td></tr>
+        <tr><td><code>isCloseable</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Allow close via ESC / click-outside</td></tr>
+        <tr><td><code>initialOpen</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Open on initialization</td></tr>
+      </tbody>
+    </table>
 
-        <!-- Card Components -->
-        <section class="tutor-mb-8">
-            <h2 class="tutor-h2">Cards</h2>
+    <h3>Methods</h3>
+    <div class="doc-api-item"><div class="doc-api-name">show()</div><div class="doc-api-desc">Open the modal</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">close()</div><div class="doc-api-desc">Close modal and dispatch <code>tutor-modal-closed</code></div></div>
+    <div class="doc-api-item"><div class="doc-api-name">getBackdropBindings()</div><div class="doc-api-desc">Alpine attribute bindings for backdrop element</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">getModalBindings()</div><div class="doc-api-desc">Bindings for modal wrapper (role, aria-modal, ESC handler)</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">getModalContentBindings()</div><div class="doc-api-desc">Bindings with focus trap (<code>x-trap.noscroll.inert</code>)</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">getCloseButtonBindings()</div><div class="doc-api-desc">Bindings for the close button</div></div>
 
-            <div class="component-showcase">
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Basic Card</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <div class="tutor-card">
-                                <div class="tutor-card__header">
-                                    <h4 class="tutor-card__title">Card Title</h4>
-                                    <p class="tutor-card__subtitle">This is a subtitle</p>
-                                </div>
-                                <div class="tutor-card__body">
-                                    <p class="tutor-p2">This is the card content. It can contain any HTML elements.</p>
-                                </div>
-                                <div class="tutor-card__footer">
-                                    <button class="tutor-btn tutor-btn--primary tutor-btn--small">Action</button>
-                                    <button class="tutor-btn tutor-btn--ghost tutor-btn--small">Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <h3>Usage</h3>
+    <pre><code>&lt;<span class="kw">div</span> x-data="<span class="fn">tutorModal</span>({ id: <span class="str">'confirm'</span>, isCloseable: <span class="num">true</span> })"&gt;
+  &lt;<span class="kw">div</span> x-bind="getBackdropBindings()"&gt;&lt;/<span class="kw">div</span>&gt;
+  &lt;<span class="kw">div</span> x-bind="getModalBindings()"&gt;
+    &lt;<span class="kw">div</span> x-bind="getModalContentBindings()"&gt;
+      &lt;h2&gt;Confirm?&lt;/h2&gt;
+      &lt;p x-text="payload?.message"&gt;&lt;/p&gt;
+      &lt;<span class="kw">button</span> @click="close()"&gt;Cancel&lt;/<span class="kw">button</span>&gt;
+    &lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;</code></pre>
+  </section>
 
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Elevated Card</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <div class="tutor-card tutor-card-elevated">
-                                <div class="tutor-card__body">
-                                    <h4 style="margin-top: 0;">Elevated Card</h4>
-                                    <p class="tutor-p2">This card has more elevation for emphasis.</p>
-                                    <button class="tutor-btn tutor-btn--outline tutor-btn--small">Learn More</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <!-- Form -->
+  <section id="form">
+    <h2>Form <span class="doc-badge doc-badge--brand">tutorForm</span></h2>
+    <p>React Hook Form-inspired form management with field registration, validation, dirty/touched tracking, and submit handling.</p>
 
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Interactive Card</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <div class="tutor-card tutor-card-interactive" style="cursor: pointer;">
-                                <div class="tutor-card__body">
-                                    <h4 style="margin-top: 0;">Interactive Card</h4>
-                                    <p class="tutor-p2">This card responds to hover and click interactions.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <h3>Config</h3>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>—</td><td>Form ID for external access via FormService</td></tr>
+        <tr><td><code>mode</code></td><td><code>'onChange' | 'onBlur' | 'onSubmit'</code></td><td><code>'onBlur'</code></td><td>When validation runs</td></tr>
+        <tr><td><code>shouldFocusError</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Auto-focus first error field</td></tr>
+        <tr><td><code>shouldScrollToError</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Auto-scroll to first error</td></tr>
+        <tr><td><code>defaultValues</code></td><td><code>Record&lt;string, unknown&gt;</code></td><td><code>{}</code></td><td>Initial field values</td></tr>
+      </tbody>
+    </table>
 
-        <!-- Form Components -->
-        <section class="tutor-mb-8">
-            <h2 class="tutor-h2">Form Elements</h2>
+    <h3>Validation Rules</h3>
+    <table>
+      <thead><tr><th>Rule</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>required</code></td><td><code>boolean | string</code></td><td>Required field (string = custom message)</td></tr>
+        <tr><td><code>minLength</code></td><td><code>number | {value, message}</code></td><td>Minimum string length</td></tr>
+        <tr><td><code>maxLength</code></td><td><code>number | {value, message}</code></td><td>Maximum string length</td></tr>
+        <tr><td><code>min</code></td><td><code>number | {value, message}</code></td><td>Minimum numeric value</td></tr>
+        <tr><td><code>max</code></td><td><code>number | {value, message}</code></td><td>Maximum numeric value</td></tr>
+        <tr><td><code>pattern</code></td><td><code>RegExp | {value, message}</code></td><td>Regex pattern match</td></tr>
+        <tr><td><code>validTime</code></td><td><code>boolean | string</code></td><td>Valid 12-hour time format</td></tr>
+        <tr><td><code>numberOnly</code></td><td><code>boolean | {allowNegative?, whole?}</code></td><td>Restrict to numbers</td></tr>
+        <tr><td><code>validate</code></td><td><code>(value) → bool | string | Promise</code></td><td>Custom async validation</td></tr>
+      </tbody>
+    </table>
 
-            <div class="component-showcase">
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Input Fields</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <div class="tutor-form-group">
-                                <label class="tutor-label" for="demo-name">Full Name</label>
-                                <input type="text" id="demo-name" class="tutor-input" placeholder="Enter your name">
-                                <p class="tutor-help-text">This field is required</p>
-                            </div>
+    <h3>Key Methods</h3>
+    <div class="doc-api-item"><div class="doc-api-name">register(name, rules?) → bindings</div><div class="doc-api-desc">Register a field and return Alpine attribute bindings (x-model, @input, @blur, :class, etc.)</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">handleSubmit(onValid, onInvalid?) → handler</div><div class="doc-api-desc">Returns an event handler for form submission with full validation</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">setValue(name, value, options?)</div><div class="doc-api-desc">Set field value programmatically; options: <code>shouldValidate</code>, <code>shouldTouch</code>, <code>shouldDirty</code></div></div>
+    <div class="doc-api-item"><div class="doc-api-name">trigger(name?) → Promise&lt;boolean&gt;</div><div class="doc-api-desc">Trigger validation for one field, multiple fields, or all</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">reset(values?)</div><div class="doc-api-desc">Reset form to defaults or provided values</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">watch(name?) → value</div><div class="doc-api-desc">Watch a single field or all values reactively</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">clearErrors(name?)</div><div class="doc-api-desc">Clear validation errors for specific field(s) or all</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">setError(name, error)</div><div class="doc-api-desc">Set a custom error: <code>{ type: string, message: string }</code></div></div>
 
-                            <div class="tutor-form-group">
-                                <label class="tutor-label" for="demo-email">Email Address</label>
-                                <input type="email" id="demo-email" class="tutor-input" placeholder="Enter your email">
-                            </div>
+    <h3>Reactive State</h3>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>values</code></td><td><code>Record</code></td><td>All field values</td></tr>
+        <tr><td><code>errors</code></td><td><code>Record</code></td><td>Current validation errors</td></tr>
+        <tr><td><code>touchedFields</code></td><td><code>Record</code></td><td>Fields that have been blurred</td></tr>
+        <tr><td><code>dirtyFields</code></td><td><code>Record</code></td><td>Fields differing from defaults</td></tr>
+        <tr><td><code>isValid</code></td><td><code>boolean</code></td><td>All validations pass</td></tr>
+        <tr><td><code>isSubmitting</code></td><td><code>boolean</code></td><td>Submission in progress</td></tr>
+      </tbody>
+    </table>
 
-                            <div class="tutor-form-group">
-                                <label class="tutor-label" for="demo-message">Message</label>
-                                <textarea id="demo-message" class="tutor-textarea" placeholder="Enter your message"
-                                    rows="3"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <h3>Usage</h3>
+    <pre><code>&lt;<span class="kw">form</span> x-data="<span class="fn">tutorForm</span>({ id: <span class="str">'course-form'</span>, mode: <span class="str">'onBlur'</span> })"
+      @submit="handleSubmit(save, handleErrors)($event)"&gt;
 
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Form States</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <div class="tutor-form-group">
-                                <label class="tutor-label">Normal State</label>
-                                <input type="text" class="tutor-input" placeholder="Normal input">
-                            </div>
+  &lt;<span class="kw">input</span> x-bind="register(<span class="str">'title'</span>, {
+    required: <span class="str">'Title is required'</span>,
+    minLength: <span class="num">3</span>
+  })" /&gt;
+  &lt;<span class="kw">span</span> x-show="errors.title" x-text="errors.title?.message"&gt;&lt;/<span class="kw">span</span>&gt;
 
-                            <div class="tutor-form-group">
-                                <label class="tutor-label">Error State</label>
-                                <input type="text" class="tutor-input tutor-input--error" placeholder="Error input">
-                                <p class="tutor-error-text">This field has an error</p>
-                            </div>
+  &lt;<span class="kw">input</span> x-bind="register(<span class="str">'price'</span>, {
+    required: <span class="num">true</span>,
+    min: <span class="num">0</span>,
+    numberOnly: <span class="num">true</span>
+  })" /&gt;
 
-                            <div class="tutor-form-group">
-                                <label class="tutor-label">Success State</label>
-                                <input type="text" class="tutor-input tutor-input--success" placeholder="Success input">
-                                <p class="tutor-success-text">This field is valid</p>
-                            </div>
+  &lt;<span class="kw">button</span> type="submit" :disabled="isSubmitting || !isValid"&gt;Save&lt;/<span class="kw">button</span>&gt;
+&lt;/<span class="kw">form</span>&gt;</code></pre>
+  </section>
 
-                            <div class="tutor-form-group">
-                                <label class="tutor-label">Disabled State</label>
-                                <input type="text" class="tutor-input" placeholder="Disabled input" disabled>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <!-- Select -->
+  <section id="select">
+    <h2>Select <span class="doc-badge doc-badge--brand">tutorSelect</span></h2>
+    <p>Full-featured select with search, multi-select, grouping, keyboard navigation, and form integration.</p>
 
-        <!-- Alpine.js Components -->
-        <section class="tutor-mb-8">
-            <h2 class="tutor-h2">Alpine.js Components</h2>
+    <h3>Config Highlights</h3>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>options</code></td><td><code>SelectOption[]</code></td><td>Array of <code>{ label, value, disabled?, icon?, description? }</code></td></tr>
+        <tr><td><code>groups</code></td><td><code>SelectGroup[]</code></td><td>Grouped options: <code>{ label, options[] }</code></td></tr>
+        <tr><td><code>multiple</code></td><td><code>boolean</code></td><td>Enable multi-select</td></tr>
+        <tr><td><code>searchable</code></td><td><code>boolean</code></td><td>Enable search filtering</td></tr>
+        <tr><td><code>clearable</code></td><td><code>boolean</code></td><td>Show clear button</td></tr>
+        <tr><td><code>maxSelections</code></td><td><code>number</code></td><td>Limit multi-select count</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td>Auto-register with parent <code>tutorForm</code></td></tr>
+        <tr><td><code>onSearch</code></td><td><code>(query) → Promise&lt;Option[]&gt;</code></td><td>Async search callback</td></tr>
+      </tbody>
+    </table>
 
-            <!-- Dropdown Demo -->
-            <div class="interactive-demo">
-                <h3 class="tutor-h3">Dropdown Component</h3>
-                <p class="tutor-p2 tutor-text-secondary">Interactive dropdown with RTL support and keyboard navigation.
-                </p>
+    <h3>Key Methods</h3>
+    <div class="doc-api-item"><div class="doc-api-name">open() / close() / toggle()</div><div class="doc-api-desc">Control dropdown visibility</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">selectOption(option)</div><div class="doc-api-desc">Select or toggle an option</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">clear(event?)</div><div class="doc-api-desc">Clear all selections</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">handleSearch(query)</div><div class="doc-api-desc">Filter options; triggers async <code>onSearch</code> if provided</div></div>
 
-                <div class="demo-output">
-                    <div x-data="TutorCore.dropdown({ placement: 'bottom-start', offset: 8 })" class="tutor-dropdown">
-                        <button @click="toggle()" class="tutor-btn tutor-btn--primary">
-                            Options <span x-text="open ? '▲' : '▼'"></span>
-                        </button>
-                        <div x-show="open" x-transition:enter="transition ease-out duration-100"
-                            x-transition:enter-start="transform opacity-0 scale-95"
-                            x-transition:enter-end="transform opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-75"
-                            x-transition:leave-start="transform opacity-100 scale-100"
-                            x-transition:leave-end="transform opacity-0 scale-95" @click.outside="close()"
-                            class="tutor-dropdown__menu"
-                            style="position: absolute; top: 100%; left: 0; margin-top: 8px; background: var(--tutor-surface-l1); border: 1px solid var(--tutor-border-idle); border-radius: 8px; padding: 0.5rem 0; min-width: 200px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); z-index: 50;">
-                            <a href="#" @click.prevent="close()" class="tutor-dropdown__item"
-                                style="display: block; padding: 0.5rem 1rem; color: var(--tutor-text-primary); text-decoration: none; transition: background 0.2s;">Profile</a>
-                            <a href="#" @click.prevent="close()" class="tutor-dropdown__item"
-                                style="display: block; padding: 0.5rem 1rem; color: var(--tutor-text-primary); text-decoration: none; transition: background 0.2s;">Settings</a>
-                            <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid var(--tutor-border-idle);">
-                            <a href="#" @click.prevent="close()" class="tutor-dropdown__item"
-                                style="display: block; padding: 0.5rem 1rem; color: var(--tutor-text-critical); text-decoration: none; transition: background 0.2s;">Logout</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Demo -->
-            <div class="interactive-demo">
-                <h3 class="tutor-h3">Modal Component</h3>
-                <p class="tutor-p2 tutor-text-secondary">Modal with focus management and accessibility features.</p>
-
-                <div class="demo-output">
-                    <div x-data="TutorCore.modal({ closable: true, backdrop: true, keyboard: true })">
-                        <button @click="show()" class="tutor-btn tutor-btn--primary">Open Modal</button>
-
-                        <div x-show="open" x-transition:enter="transition ease-out duration-300"
-                            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-                            x-transition:leave-end="opacity-0" class="tutor-modal"
-                            style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;">
-                            <div class="tutor-modal__backdrop" @click="hide()"
-                                style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5);">
-                            </div>
-                            <div class="tutor-modal__content" @keydown.escape="hide()"
-                                style="position: relative; background: var(--tutor-surface-l1); border-radius: 12px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
-                                <div class="tutor-modal__header"
-                                    style="padding: 1.5rem; border-bottom: 1px solid var(--tutor-border-idle); display: flex; align-items: center; justify-content: space-between;">
-                                    <h3 style="margin: 0; color: var(--tutor-text-primary);">Modal Title</h3>
-                                    <button @click="hide()" class="tutor-modal__close"
-                                        style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--tutor-text-secondary);">&times;</button>
-                                </div>
-                                <div class="tutor-modal__body" style="padding: 1.5rem;">
-                                    <p style="margin: 0; color: var(--tutor-text-primary);">This is a modal dialog. You
-                                        can close it by clicking the X button, pressing Escape, or clicking outside.</p>
-                                </div>
-                                <div class="tutor-modal__footer"
-                                    style="padding: 1.5rem; border-top: 1px solid var(--tutor-border-idle); display: flex; gap: 1rem; justify-content: flex-end;">
-                                    <button @click="hide()" class="tutor-btn tutor-btn--secondary">Cancel</button>
-                                    <button @click="hide()" class="tutor-btn tutor-btn--primary">Confirm</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tabs Demo -->
-            <div class="interactive-demo">
-                <h3 class="tutor-h3">Tabs Component</h3>
-                <p class="tutor-p2 tutor-text-secondary">Tab component with keyboard navigation and ARIA support.</p>
-
-                <div class="demo-output">
-                    <div x-data="TutorCore.tabs({ defaultTab: 0 })" class="tutor-tabs">
-                        <div class="tutor-tabs__nav"
-                            style="display: flex; border-bottom: 1px solid var(--tutor-border-idle); margin-bottom: 1rem;">
-                            <button @click="setTab(0)" :class="{'active': isActive(0)}" class="tutor-tab"
-                                style="padding: 0.75rem 1.5rem; border: none; background: none; color: var(--tutor-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;"
-                                :style="isActive(0) ? 'color: var(--tutor-text-brand); border-bottom-color: var(--tutor-actions-brand-primary);' : ''">
-                                Overview
-                            </button>
-                            <button @click="setTab(1)" :class="{'active': isActive(1)}" class="tutor-tab"
-                                style="padding: 0.75rem 1.5rem; border: none; background: none; color: var(--tutor-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;"
-                                :style="isActive(1) ? 'color: var(--tutor-text-brand); border-bottom-color: var(--tutor-actions-brand-primary);' : ''">
-                                Details
-                            </button>
-                            <button @click="setTab(2)" :class="{'active': isActive(2)}" class="tutor-tab"
-                                style="padding: 0.75rem 1.5rem; border: none; background: none; color: var(--tutor-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;"
-                                :style="isActive(2) ? 'color: var(--tutor-text-brand); border-bottom-color: var(--tutor-actions-brand-primary);' : ''">
-                                Reviews
-                            </button>
-                        </div>
-                        <div class="tutor-tabs__content">
-                            <div x-show="isActive(0)" x-transition:enter="transition ease-out duration-200"
-                                x-transition:enter-start="opacity-0 transform translate-x-4"
-                                x-transition:enter-end="opacity-100 transform translate-x-0" class="tutor-tab-panel">
-                                <h4 style="margin-top: 0;">Overview</h4>
-                                <p>This is the overview content. It provides a general introduction to the topic.</p>
-                            </div>
-                            <div x-show="isActive(1)" x-transition:enter="transition ease-out duration-200"
-                                x-transition:enter-start="opacity-0 transform translate-x-4"
-                                x-transition:enter-end="opacity-100 transform translate-x-0" class="tutor-tab-panel">
-                                <h4 style="margin-top: 0;">Details</h4>
-                                <p>Here are the detailed specifications and technical information.</p>
-                            </div>
-                            <div x-show="isActive(2)" x-transition:enter="transition ease-out duration-200"
-                                x-transition:enter-start="opacity-0 transform translate-x-4"
-                                x-transition:enter-end="opacity-100 transform translate-x-0" class="tutor-tab-panel">
-                                <h4 style="margin-top: 0;">Reviews</h4>
-                                <p>Customer reviews and feedback will be displayed here.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Toast Demo -->
-            <div class="interactive-demo">
-                <h3 class="tutor-h3">Toast Notifications</h3>
-                <p class="tutor-p2 tutor-text-secondary">Toast notification system with stacking and auto-dismiss.</p>
-
-                <div class="demo-output">
-                    <div x-data="TutorCore.toast()">
-                        <div class="tutor-flex tutor-gap-2" style="flex-wrap: wrap;">
-                            <button @click="success('Operation completed successfully!')"
-                                class="tutor-btn tutor-btn--primary tutor-btn--small">
-                                Success Toast
-                            </button>
-                            <button @click="error('Something went wrong!')"
-                                class="tutor-btn tutor-btn--secondary tutor-btn--small">
-                                Error Toast
-                            </button>
-                            <button @click="warning('Please check your input!')"
-                                class="tutor-btn tutor-btn--outline tutor-btn--small">
-                                Warning Toast
-                            </button>
-                            <button @click="info('Here is some information.')"
-                                class="tutor-btn tutor-btn--ghost tutor-btn--small">
-                                Info Toast
-                            </button>
-                        </div>
-
-                        <div class="tutor-toast-container"
-                            style="position: fixed; top: 1rem; right: 1rem; z-index: 1080; pointer-events: none;">
-                            <template x-for="toast in toasts" :key="toast.id">
-                                <div class="tutor-toast" :class="`tutor-toast--${toast.type}`"
-                                    x-transition:enter="transition ease-out duration-300"
-                                    x-transition:enter-start="opacity-0 transform translate-x-full"
-                                    x-transition:enter-end="opacity-100 transform translate-x-0"
-                                    x-transition:leave="transition ease-in duration-200"
-                                    x-transition:leave-start="opacity-100 transform translate-x-0"
-                                    x-transition:leave-end="opacity-0 transform translate-x-full"
-                                    style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); pointer-events: auto; min-width: 300px;"
-                                    :style="getToastStyles(toast.type)">
-                                    <span x-text="toast.message" style="flex: 1;"></span>
-                                    <button @click="remove(toast.id)" class="tutor-toast__close"
-                                        style="background: none; border: none; font-size: 1.25rem; cursor: pointer; margin-left: 0.5rem; opacity: 0.7;">&times;</button>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Typography Showcase -->
-        <section class="tutor-mb-8">
-            <h2 class="tutor-h2">Typography</h2>
-
-            <div class="interactive-demo">
-                <h3 class="tutor-h3">Typography Scale</h3>
-                <p class="tutor-p2 tutor-text-secondary">Complete typography system with consistent spacing and line
-                    heights.</p>
-
-                <div class="demo-output">
-                    <h1 class="tutor-h1">Heading 1 (40px)</h1>
-                    <h2 class="tutor-h2">Heading 2 (32px)</h2>
-                    <h3 class="tutor-h3">Heading 3 (24px)</h3>
-                    <h4 class="tutor-h4">Heading 4 (20px)</h4>
-                    <h5 class="tutor-h5">Heading 5 (18px)</h5>
-                    <p class="tutor-p1">Paragraph 1 (16px) - This is the default paragraph size for body text with
-                        optimal line height for readability.</p>
-                    <p class="tutor-p2">Paragraph 2 (14px) - This is smaller text for secondary content and supporting
-                        information.</p>
-                    <p class="tutor-p3">Paragraph 3 (12px) - This is the smallest text size for captions, labels, and
-                        fine print.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Utility Classes -->
-        <section class="tutor-mb-8">
-            <h2 class="tutor-h2">Utility Classes</h2>
-
-            <div class="component-showcase">
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Spacing Utilities</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <div style="background: var(--tutor-surface-l2); padding: 1rem;">
-                                <div class="tutor-p-4"
-                                    style="background: var(--tutor-surface-l1); margin-bottom: 0.5rem;">Padding 4 (8px)
-                                </div>
-                                <div class="tutor-p-6"
-                                    style="background: var(--tutor-surface-l1); margin-bottom: 0.5rem;">Padding 6 (16px)
-                                </div>
-                                <div class="tutor-p-8" style="background: var(--tutor-surface-l1);">Padding 8 (24px)
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Color Utilities</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <p class="tutor-text-primary">Primary Text</p>
-                            <p class="tutor-text-secondary">Secondary Text</p>
-                            <p class="tutor-text-brand">Brand Text</p>
-                            <p class="tutor-text-success">Success Text</p>
-                            <p class="tutor-text-warning">Warning Text</p>
-                            <p class="tutor-text-error">Error Text</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="component-demo">
-                    <div class="component-demo__header">
-                        <h3 class="component-demo__title">Layout Utilities</h3>
-                    </div>
-                    <div class="component-demo__body">
-                        <div class="component-demo__example">
-                            <div class="tutor-flex tutor-flex-between tutor-mb-3"
-                                style="background: var(--tutor-surface-l2); padding: 1rem;">
-                                <span>Left</span>
-                                <span>Right</span>
-                            </div>
-                            <div class="tutor-flex tutor-flex-center tutor-mb-3"
-                                style="background: var(--tutor-surface-l2); padding: 1rem;">
-                                <span>Centered</span>
-                            </div>
-                            <div class="tutor-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
-                                <div style="background: var(--tutor-surface-l2); padding: 1rem; text-align: center;">
-                                    Grid 1</div>
-                                <div style="background: var(--tutor-surface-l2); padding: 1rem; text-align: center;">
-                                    Grid 2</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <div class="doc-callout doc-callout--tip">
+      <p><strong>Form Integration:</strong> When <code>name</code> is provided inside a <code>tutorForm</code>, the select auto-registers for validation, syncs values bidirectionally, and manages hidden <code>&lt;input&gt;</code> elements for native form submission.</p>
     </div>
+  </section>
 
-    <!-- Scripts -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="../../js/tutor-core.js"></script>
-    <script>
-        function componentShowcase() {
-            return {
-                getToastStyles(type) {
-                    const styles = {
-                        success: 'background: var(--tutor-actions-success-secondary); color: var(--tutor-text-success); border: 1px solid var(--tutor-actions-success-primary);',
-                        error: 'background: var(--tutor-actions-critical-secondary); color: var(--tutor-text-critical); border: 1px solid var(--tutor-actions-critical-primary);',
-                        warning: 'background: var(--tutor-actions-warning-secondary); color: var(--tutor-text-warning); border: 1px solid var(--tutor-actions-warning-primary);',
-                        info: 'background: var(--tutor-actions-brand-tertiary); color: var(--tutor-text-brand); border: 1px solid var(--tutor-actions-brand-primary);'
-                    };
-                    return styles[type] || styles.info;
-                }
-            };
-        }
+  <!-- Tabs -->
+  <section id="tabs">
+    <h2>Tabs <span class="doc-badge doc-badge--brand">tutorTabs</span></h2>
+    <p>Tab navigation with URL parameter sync and keyboard support.</p>
+    <table>
+      <thead><tr><th>Config</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>tabs</code></td><td><code>TabItem[]</code></td><td>—</td><td>Required: <code>{ id, label, icon?, disabled?, href? }</code></td></tr>
+        <tr><td><code>defaultTab</code></td><td><code>string</code></td><td>First tab</td><td>Initial active tab ID</td></tr>
+        <tr><td><code>orientation</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'horizontal'</code></td><td>Layout direction</td></tr>
+        <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'lg'</code></td><td>Tab button size</td></tr>
+        <tr><td><code>urlParams.enabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Sync active tab with URL params</td></tr>
+        <tr><td><code>urlParams.paramName</code></td><td><code>string</code></td><td><code>'page_tab'</code></td><td>URL parameter name</td></tr>
+      </tbody>
+    </table>
+    <div class="doc-api-item"><div class="doc-api-name">selectTab(tabId)</div><div class="doc-api-desc">Switch to tab, update URL, dispatch <code>tutor-tab-change</code></div></div>
+    <div class="doc-api-item"><div class="doc-api-name">isActive(tabId) → boolean</div><div class="doc-api-desc">Check if tab is currently active</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">getTabClass(tab) → string</div><div class="doc-api-desc">CSS class string for tab button (includes size and active state)</div></div>
+  </section>
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            html.setAttribute('data-theme', newTheme);
-        }
+  <!-- Accordion -->
+  <section id="accordion">
+    <h2>Accordion <span class="doc-badge doc-badge--brand">tutorAccordion</span></h2>
+    <p>Expandable panels with single or multi-expand support and full keyboard navigation (Arrow keys, Home, End, Enter, Space).</p>
+    <table>
+      <thead><tr><th>Config</th><th>Type</th><th>Default</th></tr></thead>
+      <tbody>
+        <tr><td><code>multiple</code></td><td><code>boolean</code></td><td><code>true</code></td></tr>
+        <tr><td><code>defaultOpen</code></td><td><code>number[]</code></td><td><code>[]</code></td></tr>
+      </tbody>
+    </table>
+    <div class="doc-api-item"><div class="doc-api-name">toggle(index)</div><div class="doc-api-desc">Toggle panel open/closed</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">isOpen(index) → boolean</div><div class="doc-api-desc">Check if panel is expanded</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">handleKeydown(event, index)</div><div class="doc-api-desc">Keyboard handler for accessibility</div></div>
+  </section>
 
-        function toggleRTL() {
-            const html = document.documentElement;
-            const currentDir = html.getAttribute('dir');
-            const newDir = currentDir === 'ltr' ? 'rtl' : 'ltr';
-            html.setAttribute('dir', newDir);
-        }
-    </script>
+  <!-- Tooltip -->
+  <section id="tooltip">
+    <h2>Tooltip <span class="doc-badge doc-badge--brand">tutorTooltip</span></h2>
+    <p>Smart-positioned tooltip with auto-flip, RTL support (<code>start</code>/<code>end</code> instead of <code>left</code>/<code>right</code>), and multiple trigger modes.</p>
+    <table>
+      <thead><tr><th>Config</th><th>Type</th><th>Default</th></tr></thead>
+      <tbody>
+        <tr><td><code>placement</code></td><td><code>'top' | 'bottom' | 'start' | 'end'</code></td><td><code>'top'</code></td></tr>
+        <tr><td><code>trigger</code></td><td><code>'hover' | 'focus' | 'click'</code></td><td><code>'hover'</code></td></tr>
+        <tr><td><code>size</code></td><td><code>'small' | 'large'</code></td><td><code>'small'</code></td></tr>
+        <tr><td><code>arrow</code></td><td><code>'start' | 'center' | 'end'</code></td><td><code>'start'</code></td></tr>
+        <tr><td><code>offset</code></td><td><code>number</code></td><td><code>8</code></td></tr>
+        <tr><td><code>delay</code></td><td><code>{ show?, hide? }</code></td><td><code>{ 0, 0 }</code></td></tr>
+      </tbody>
+    </table>
+    <pre><code>&lt;<span class="kw">div</span> x-data="<span class="fn">tutorTooltip</span>({ placement: <span class="str">'top'</span>, trigger: <span class="str">'hover'</span> })"&gt;
+  &lt;<span class="kw">button</span> x-ref="trigger"&gt;Hover me&lt;/<span class="kw">button</span>&gt;
+  &lt;<span class="kw">div</span> x-ref="content" x-show="open" x-cloak&gt;
+    Tooltip text
+  &lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;</code></pre>
+  </section>
+
+  <!-- Popover -->
+  <section id="popover">
+    <h2>Popover <span class="doc-badge doc-badge--brand">tutorPopover</span></h2>
+    <p>Rich-content floating panel with automatic position flipping and RTL adaptation.</p>
+    <table>
+      <thead><tr><th>Config</th><th>Type</th><th>Default</th></tr></thead>
+      <tbody>
+        <tr><td><code>placement</code></td><td><code>'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'right'</code></td><td><code>'bottom-start'</code></td></tr>
+        <tr><td><code>offset</code></td><td><code>number</code></td><td><code>4</code></td></tr>
+        <tr><td><code>onShow</code></td><td><code>() → void</code></td><td>—</td></tr>
+        <tr><td><code>onHide</code></td><td><code>() → void</code></td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="doc-api-item"><div class="doc-api-name">show() / hide() / toggle()</div><div class="doc-api-desc">Control visibility with smart positioning</div></div>
+    <div class="doc-api-item"><div class="doc-api-name">handleClickOutside()</div><div class="doc-api-desc">Close if open — bind to <code>@click.outside</code></div></div>
+  </section>
+
+  <!-- Toast -->
+  <section id="toast">
+    <h2>Toast <span class="doc-badge doc-badge--brand">tutorToast</span></h2>
+    <p>DOM-side component that renders toast notifications. Listens for <code>tutor-toast-show</code> and <code>tutor-toast-clear</code> events.</p>
+    <div class="doc-callout doc-callout--info">
+      <p>You rarely create this manually. The <code>ToastService</code> auto-injects the container into the DOM on first use.</p>
+    </div>
+    <h3>Toast Item</h3>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>number</code></td><td>Unique ID</td></tr>
+        <tr><td><code>message</code></td><td><code>string</code></td><td>Toast message</td></tr>
+        <tr><td><code>type</code></td><td><code>'success' | 'error' | 'warning' | 'info'</code></td><td>Toast variant</td></tr>
+        <tr><td><code>duration</code></td><td><code>number</code></td><td>Auto-dismiss (ms), 0 = persistent</td></tr>
+        <tr><td><code>title</code></td><td><code>string</code></td><td>Toast title (defaults to localized type)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+<script src="assets/docs.js"></script>
 </body>
-
 </html>
