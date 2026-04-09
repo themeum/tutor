@@ -96,8 +96,8 @@ const qnaPage = () => {
             element.innerHTML = payload.answer;
 
             // Re-trigger syntax highlighting if Prism is available.
-            const Prism = (window as any).Prism;
-            if (Prism && typeof Prism.highlightAllUnder === 'function') {
+            const Prism = (window as Window & { Prism?: { highlightAllUnder?: (root: Element) => void } }).Prism;
+            if (Prism?.highlightAllUnder) {
               Prism.highlightAllUnder(element);
             }
           }
@@ -196,8 +196,8 @@ const qnaPage = () => {
           container.innerHTML = response.data.html;
 
           // Re-trigger syntax highlighting if Prism is available.
-          const Prism = (window as any).Prism;
-          if (Prism && typeof Prism.highlightAllUnder === 'function') {
+          const Prism = (window as Window & { Prism?: { highlightAllUnder?: (root: Element) => void } }).Prism;
+          if (Prism?.highlightAllUnder) {
             Prism.highlightAllUnder(container);
           }
 
