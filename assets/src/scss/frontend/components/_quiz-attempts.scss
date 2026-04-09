@@ -154,9 +154,17 @@
           }
         }
 
-        &-date {
+        &-student {
           @include tutor-typography(tiny, regular, secondary);
 
+          @include tutor-breakpoint-down(sm) {
+            color: $tutor-text-secondary;
+          }
+        }
+
+        &-date {
+          @include tutor-typography(tiny, regular, secondary);
+          color: $tutor-text-subdued;
           @include tutor-breakpoint-down(sm) {
             color: $tutor-text-subdued;
           }
@@ -250,6 +258,7 @@
         gap: $tutor-spacing-2;
         @include tutor-typography(medium, regular, secondary);
         white-space: nowrap;
+        color: $tutor-text-subdued;
 
         @include tutor-breakpoint-down(sm) {
           @include tutor-typography(small, regular, subdued);
