@@ -107,13 +107,19 @@
     }
   }
 
-  .tutor-lesson-feature-image {
-    display: block;
-    width: auto;
-    height: auto;
-    max-height: 100%;
-    max-width: 100%;
-    margin: 0 auto;
+  .tutor-lesson-image-wrapper {
+    @include tutor-flex-center();
+    aspect-ratio: 16 / 9;
+    height: 100%;
+
+    .tutor-lesson-feature-image {
+      display: block;
+      width: auto;
+      height: auto;
+      max-height: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+    }
   }
 
   @include tutor-breakpoint-up(sm) {
