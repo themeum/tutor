@@ -107,7 +107,7 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 					<?php Sorting::make()->size( Size::SMALL )->order( $order_filter )->render(); ?>
 				</div>
 			</div>
-			<div class="tutor-p-6 tutor-flex tutor-justify-between">
+			<div class="tutor-p-6 tutor-flex tutor-justify-between tutor-border-b">
 				<?php
 				SearchFilter::make()
 					->form_id( 'tutor-quiz-attempt-search-form' )
@@ -122,13 +122,13 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 					->render();
 				?>
 			</div>
+			<?php if ( $quiz_attempts_count ) : ?>
 			<div class="tutor-quiz-attempts-header">
 				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
 				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
 				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
 				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
 			</div>
-			<?php if ( $quiz_attempts_count ) : ?>
 			<div class="tutor-quiz-attempts-list">
 				<?php
 				foreach ( $quiz_attempts_list as $quiz_attempt ) {
