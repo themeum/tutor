@@ -508,8 +508,8 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
               </span>
               {__('Mark the correct area', __TUTOR_TEXT_DOMAIN__)}
             </span>
-            <div css={styles.actionsRow}>
-              <Show when={canClearSelection}>
+            <Show when={canClearSelection}>
+              <div css={styles.actionsRow}>
                 <Button
                   type="button"
                   variant="secondary"
@@ -520,8 +520,8 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
                 >
                   {__('Clear', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
-              </Show>
-            </div>
+              </div>
+            </Show>
           </div>
           <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
             <img
@@ -598,6 +598,7 @@ const styles = {
     align-items: center;
     justify-content: space-between;
     gap: ${spacing[12]};
+    min-height: 32px;
   `,
   answerHeaderTitle: css`
     ${typography.body('medium')};
