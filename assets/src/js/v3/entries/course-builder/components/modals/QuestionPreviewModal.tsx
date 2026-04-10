@@ -5,12 +5,14 @@ import { createPortal } from 'react-dom';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import WPEditor from '@TutorShared/atoms/WPEditor';
+import Tabs from '@TutorShared/molecules/Tabs';
+
 import FocusTrap from '@TutorShared/components/FocusTrap';
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
-import Tabs from '@TutorShared/molecules/Tabs';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestion, type QuizQuestionOption, type QuizQuestionType } from '@TutorShared/utils/types';
 
