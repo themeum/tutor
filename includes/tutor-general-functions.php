@@ -1751,14 +1751,12 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 	 * Formatting as per ecommerce price settings.
 	 *
 	 * @since 3.0.0
-	 * @since 4.0.0 added $html_markup for wooCommerce.
 	 *
-	 * @param mixed $price raw price.
-	 * @param bool  $html_markup whether to include HTML markup (only for WooCommerce).
+	 * @param mixed $price Raw price.
 	 *
 	 * @return string|void
 	 */
-	function tutor_get_formatted_price( $price, $html_markup = true ) {
+	function tutor_get_formatted_price( $price ) {
 		$price       = floatval( Input::sanitize( $price ) );
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
@@ -1771,7 +1769,7 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 			$price = number_format( $price, $no_of_decimal, $decimal_separator, $thousand_separator );
 			$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;
 		} elseif ( 'wc' === $monetize_by ) {
-			$price = wc_price( $price, array( 'in_span' => $html_markup ) );
+			$price = wc_price( $price );
 		} elseif ( 'edd' === $monetize_by ) {
 			$price = edd_currency_filter( edd_format_amount( $price ) );
 		}
@@ -1996,5 +1994,55 @@ if ( ! function_exists( 'tutor_decode_unicode_sequences' ) ) {
 		$str = html_entity_decode( $str, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 
 		return $str;
+	}
+}
+
+if ( ! function_exists( 'tutor_price_allowed_html' ) ) {
+
+	/**
+	 * Get the allowed HTML tags for price formatting.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array Allowed HTML tags and their attributes for price output.
+	 */
+	function tutor_price_allowed_html() {
+
+		if ( 'edd' === tutor_utils()->get_option( 'monetize_by' ) && function_exists( 'edd_get_allowed_tags' ) ) {
+			return edd_get_allowed_tags();
+		}
+
+		return array(
+			'span'   => array(
+				'class'       => true,
+				'id'          => true,
+				'style'       => true,
+				'aria-hidden' => true,
+			),
+			'del'    => array(
+				'class' => true,
+			),
+			'ins'    => array(
+				'class' => true,
+			),
+			'bdi'    => array(
+				'class' => true,
+			),
+			'small'  => array(
+				'class' => true,
+			),
+			'strong' => array(
+				'class' => true,
+			),
+			'em'     => array(
+				'class' => true,
+			),
+			'sup'    => array(
+				'class' => true,
+			),
+			'sub'    => array(
+				'class' => true,
+			),
+		);
 	}
 }

@@ -5378,7 +5378,7 @@ class Utils {
 			)
 		);
 
-		return min( $max_questions_count, $total_question );
+		return min( $max_questions_count, $total_question ) <= 0 ? $total_question : min( $max_questions_count, $total_question );
 	}
 
 	/**
@@ -5445,6 +5445,10 @@ class Utils {
 		);
 
 		$max_mentioned = (int) $this->get_quiz_option( $quiz_id, 'max_questions_for_answer', 10 );
+
+		if ( $max_mentioned <= 0 ) {
+			return $max_questions;
+		}
 
 		if ( $max_mentioned < $max_questions ) {
 			return $max_mentioned;
@@ -6446,21 +6450,20 @@ class Utils {
 	 * Get the price format
 	 *
 	 * @since 1.1.2
-	 * @since 4.0.0 Condition added for different monetizations and also added $html_markup for woocommece
+	 * @since 4.0.0 Condition added for different monetizations.
 	 *
 	 * @param int  $price price.
-	 * @param bool $html_markup  Whether to include HTML markup ( Only for woocommerce as it returns html markup ).
 	 *
 	 * @return int|string
 	 */
-	public function tutor_price( $price = 0, $html_markup = true ) {
+	public function tutor_price( $price = 0 ) {
 
 		$monetize_by = $this->get_option( 'monetize_by' );
 
 		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			return tutor_get_formatted_price( $price );
 		} elseif ( function_exists( 'wc_price' ) && 'wc' === $monetize_by ) {
-			return wc_price( $price, array( 'in_span' => $html_markup ) );
+			return wc_price( $price );
 		} elseif ( function_exists( 'edd_currency_filter' ) && 'edd' === $monetize_by ) {
 			return edd_currency_filter( edd_format_amount( $price ) );
 		} elseif ( function_exists( 'pmpro_formatPrice' ) && 'pmpro' === $monetize_by ) {
@@ -7319,249 +7322,6 @@ class Utils {
 		return false;
 	}
 
-
-	/**
-	 * Get total Enrolments
-	 *
-	 * @since 1.4.0
-	 *
-	 * @param string $status status.
-	 * @param string $search_term search term.
-	 * @param string $course_id course id.
-	 * @param string $date date.
-	 *
-	 * @return int
-	 */
-	public function get_total_enrolments( $status, $search_term = '', $course_id = '', $date = '' ) {
-		global $wpdb;
-		$status      = sanitize_text_field( $status );
-		$course_id   = sanitize_text_field( $course_id );
-		$date        = sanitize_text_field( $date );
-		$search_term = sanitize_text_field( $search_term );
-
-		$search_term_raw = $search_term;
-		$search_term     = '%' . $wpdb->esc_like( $search_term ) . '%';
-
-		// Add course id in where clause.
-		$course_query = '';
-		if ( $course_id > 0 ) {
-			$course_query = $wpdb->prepare( 'AND course.ID = %d', $course_id );
-		}
-
-		// Add date in where clause.
-		$date_query = '';
-		if ( '' !== $date ) {
-			$date_query = "AND DATE(enrol.post_date) = CAST('$date' AS DATE) ";
-		}
-
-		// Add status in where clause.
-		if ( 'approved' === $status ) {
-			$status = 'completed';
-		} elseif ( 'cancelled' === $status ) {
-			$status = array( 'cancel', 'canceled', 'cancelled' );
-		} elseif ( 'all' === $status ) {
-			$status = '';
-		}
-
-		$status_query = '';
-		if ( is_array( $status ) && count( $status ) ) {
-			$in_clause    = QueryHelper::prepare_in_clause( $status );
-			$status_query = "AND enrol.post_status IN ({$in_clause})";
-		} elseif ( ! empty( $status ) ) {
-			$status_query = "AND enrol.post_status = '$status' ";
-		}
-
-		$post_types = array( tutor()->course_post_type );
-		if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
-			$post_types[] = tutor()->bundle_post_type;
-		}
-		$post_type_query = QueryHelper::prepare_in_clause( $post_types );
-
-		$exclude_courses = QueryHelper::get_joined_data(
-			'posts as p',
-			array(
-				array(
-					'type'  => 'LEFT',
-					'table' => 'postmeta as pm',
-					'on'    => 'p.ID = pm.post_id',
-				),
-			),
-			array( 'ID' ),
-			array(
-				'p.post_type' => 'tutor_enrolled',
-				'pm.meta_key' => '_tutor_bundle_id',
-				// TODO: need to check if we need to exclude subscription enrollments under bundle as well.
-				// '(pm.meta_key = %s OR pm.meta_key = %s)' => array( 'RAW', array( '_tutor_bundle_id', '_tutor_subscription_id' ) ),
-			),
-			array(),
-			'',
-			0,
-			0,
-			'DESC',
-			'ARRAY_A',
-		);
-
-		$exclude_enroll_course_ids       = $exclude_courses['results'] ? array_column( $exclude_courses['results'], 'ID' ) : array();
-		$exclude_enroll_course_ids       = QueryHelper::prepare_in_clause( $exclude_enroll_course_ids );
-		$exclude_enroll_course_ids_query = $exclude_enroll_course_ids ? "AND ( enrol.ID NOT IN ({$exclude_enroll_course_ids}) )" : '';
-
-		$count = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(enrol.ID)
-			FROM 	{$wpdb->posts} enrol
-					INNER JOIN {$wpdb->posts} course
-							ON enrol.post_parent = course.ID
-							AND course.post_type IN ({$post_type_query})
-					INNER JOIN {$wpdb->users} student
-							ON enrol.post_author = student.ID
-			WHERE 	enrol.post_type = %s
-					{$status_query}
-					{$course_query}
-					{$date_query}
-					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
-					{$exclude_enroll_course_ids_query}
-			",
-				'tutor_enrolled',
-				$search_term,
-				$search_term,
-				$search_term_raw,
-				$search_term
-			)
-		);
-
-		return (int) $count;
-	}
-
-	/**
-	 * Get enrollments
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $status status.
-	 * @param int    $start start.
-	 * @param int    $limit limit.
-	 * @param string $search_term search term.
-	 * @param int    $course_id course id.
-	 * @param string $date date.
-	 * @param string $order order.
-	 *
-	 * @return array
-	 */
-	public function get_enrolments( $status, $start = 0, $limit = 10, $search_term = '', $course_id = 0, $date = '', $order = 'DESC' ) {
-		global $wpdb;
-		$status      = sanitize_text_field( $status );
-		$course_id   = sanitize_text_field( $course_id );
-		$date        = sanitize_text_field( $date );
-		$search_term = sanitize_text_field( $search_term );
-
-		$search_term_raw = $search_term;
-		$search_term     = '%' . $wpdb->esc_like( $search_term ) . '%';
-
-		// add course id in where clause.
-		$course_query = '';
-		if ( $course_id > 0 ) {
-			$course_query = $wpdb->prepare( 'AND course.ID = %d', $course_id );
-		}
-
-		// add date in where clause.
-		$date_query = '';
-		if ( '' !== $date ) {
-			$date_query = "AND DATE(enrol.post_date) = CAST('$date' AS DATE) ";
-		}
-
-		// add status in where clause.
-		if ( 'approved' === $status ) {
-			$status = 'completed';
-		} elseif ( 'cancelled' === $status ) {
-			$status = array( 'cancel', 'canceled', 'cancelled' );
-		} elseif ( 'all' === $status ) {
-			$status = '';
-		}
-
-		$status_query = '';
-		if ( is_array( $status ) && count( $status ) ) {
-			$in_clause    = QueryHelper::prepare_in_clause( $status );
-			$status_query = "AND enrol.post_status IN ({$in_clause})";
-		} elseif ( ! empty( $status ) ) {
-			$status_query = "AND enrol.post_status = '$status' ";
-		}
-
-		$post_types = array( tutor()->course_post_type );
-
-		$exclude_courses = QueryHelper::get_joined_data(
-			'posts as p',
-			array(
-				array(
-					'type'  => 'LEFT',
-					'table' => 'postmeta as pm',
-					'on'    => 'p.ID = pm.post_id',
-				),
-			),
-			array( 'ID' ),
-			array(
-				'p.post_type' => 'tutor_enrolled',
-				'pm.meta_key' => '_tutor_bundle_id',
-				// TODO: need to check if we need to exclude subscription enrollments under bundle as well.
-				// '(pm.meta_key = %s OR pm.meta_key = %s)' => array( 'RAW', array( '_tutor_bundle_id', '_tutor_subscription_id' ) ),
-			),
-			array(),
-			'',
-			0,
-			0,
-			'DESC',
-			'ARRAY_A',
-		);
-
-		$exclude_enroll_course_ids       = $exclude_courses['results'] ? array_column( $exclude_courses['results'], 'ID' ) : array();
-		$exclude_enroll_course_ids       = QueryHelper::prepare_in_clause( $exclude_enroll_course_ids );
-		$exclude_enroll_course_ids_query = $exclude_enroll_course_ids ? "AND ( enrol.ID NOT IN ({$exclude_enroll_course_ids}) )" : '';
-
-		if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
-			$post_types[] = tutor()->bundle_post_type;
-		}
-
-		$post_type_query = QueryHelper::prepare_in_clause( $post_types );
-
-		$enrolments = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT enrol.ID AS enrol_id,
-					enrol.post_author AS student_id,
-					enrol.post_date AS enrol_date,
-					enrol.post_title AS enrol_title,
-					enrol.post_status AS status,
-					enrol.post_parent AS course_id,
-					course.post_title AS course_title,
-					course.guid,
-					student.user_nicename,
-					student.user_email,
-					student.display_name
-			FROM 	{$wpdb->posts} enrol
-					INNER JOIN {$wpdb->posts} course
-							ON enrol.post_parent = course.ID
-						   AND course.post_type IN ({$post_type_query})
-					INNER JOIN {$wpdb->users} student
-							ON enrol.post_author = student.ID
-			WHERE 	enrol.post_type = %s
-					{$status_query}
-					{$course_query}
-					{$date_query}
-					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
-					{$exclude_enroll_course_ids_query}
-			ORDER BY enrol_id {$order}
-			LIMIT 	%d, %d;
-			",
-				'tutor_enrolled',
-				$search_term,
-				$search_term,
-				$search_term_raw,
-				$search_term,
-				$start,
-				$limit
-			)
-		);
-
-		return $enrolments;
-	}
 
 	/**
 	 * Get current URL

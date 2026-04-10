@@ -36,6 +36,8 @@ $category_list          = ! empty( $course_categories ) && is_array( $course_cat
 $course_requirements    = tutor_course_requirements( $tutor_course_id );
 $course_target_audience = tutor_course_target_audience( $tutor_course_id );
 
+
+
 ob_start();
 foreach ( $instructors as $key => $instructor ) {
 	?>
@@ -222,7 +224,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 				</div>
 			</div>
 			<div x-show="expanded" x-collapse x-cloak class="tutor-course-description-body">
-				<?php echo wp_kses_post( $tutor_course->post_content ); ?>
+				<?php the_content(); ?>
 			</div>
 		</div>
 		<div x-data="{ expanded: false }" class="tutor-course-description-item">

@@ -302,6 +302,7 @@ export const icons = [
   'quiz2Fill',
   'quizEssay',
   'quizFillInTheBlanks',
+  'quizGraph',
   'quizH5p',
   'quizImageAnswer',
   'quizImageMatching',

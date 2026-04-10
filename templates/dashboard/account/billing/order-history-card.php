@@ -15,10 +15,8 @@ use Tutor\Helpers\ComponentHelper;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Models\OrderModel;
 
-$monetize_by = tutor_utils()->get_option( 'monetize_by' );
-$html_markup = 'wc' !== $monetize_by;
-$titles      = OrderModel::get_order_history_titles( $order );
-$pay_link    = OrderModel::get_order_history_pay_link( $order );
+$titles   = OrderModel::get_order_history_titles( $order );
+$pay_link = OrderModel::get_order_history_pay_link( $order );
 
 ?>
 <div class="tutor-billing-card">
@@ -55,7 +53,7 @@ $pay_link    = OrderModel::get_order_history_pay_link( $order );
 
 	<div class="tutor-billing-card-right">
 		<div class="tutor-billing-card-amount">
-			<?php echo esc_html( tutor_get_formatted_price( $order->total_price, $html_markup ) ); ?>
+			<?php echo wp_kses( tutor_get_formatted_price( $order->total_price ), tutor_price_allowed_html() ); ?>
 		</div>
 
 		<?php
@@ -70,7 +68,6 @@ $pay_link    = OrderModel::get_order_history_pay_link( $order );
 		);
 
 		$order->titles = $titles;
-
 		OrderModel::render_billing_receipt_action( $order );
 		?>
 	</div>

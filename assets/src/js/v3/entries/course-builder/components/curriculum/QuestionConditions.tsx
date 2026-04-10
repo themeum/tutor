@@ -61,6 +61,10 @@ const questionTypes = {
     label: __('Range', 'tutor'),
     icon: 'quizRange',
   },
+  coordinates: {
+    label: __('Graph', 'tutor'),
+    icon: 'quizGraph',
+  },
   pin_image: {
     label: __('Pin', 'tutor'),
     icon: 'quizPin',

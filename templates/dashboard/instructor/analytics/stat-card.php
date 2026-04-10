@@ -55,13 +55,13 @@ if ( ! empty( $hover_content ) ) {
 		<div class="tutor-stat-card-title">
 			<?php echo esc_html( $card_title ); ?>
 		</div>
-		<div class="tutor-stat-card-icon">
+		<div class="tutor-stat-card-icon tutor-flex">
 			<?php SvgIcon::make()->name( $icon )->size( $icon_size )->render(); ?>
 		</div>
 	</div>
 	<div class="tutor-stat-card-content">
 		<div class="tutor-stat-card-value">
-			<?php echo esc_html( $value ); ?>
+			<?php echo wp_kses( $value, tutor_price_allowed_html() ); ?>
 		</div>
 
 		<?php if ( ! empty( $content_display ) ) : ?>
