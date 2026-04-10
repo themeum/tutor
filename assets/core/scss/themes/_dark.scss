@@ -3,7 +3,7 @@
 
 @use '../tokens' as *;
 
-[data-tutor-theme='dark'] {
+[data-tutor-theme^='dark'] {
   // =============================================================================
   // SURFACE COLORS
   // =============================================================================
@@ -70,12 +70,14 @@
   --tutor-icon-exception1: #{$tutor-exception-1};
   --tutor-icon-exception2: #{$tutor-exception-2};
   --tutor-icon-success-primary: #{$tutor-success-600};
+  --tutor-icon-success-secondary: #{$tutor-success-300};
   --tutor-icon-exception4: #{$tutor-warning-400};
   --tutor-icon-exception5: #{$tutor-exception-5};
   --tutor-icon-caution: #{$tutor-yellow-400};
   --tutor-icon-critical: #{$tutor-error-600};
   --tutor-icon-critical-hover: #{$tutor-error-700};
   --tutor-icon-warning: #{$tutor-warning-600};
+  --tutor-icon-warning-secondary: #{$tutor-warning-400};
 
   // =============================================================================
   // BUTTON COLORS
@@ -148,9 +150,11 @@
   --tutor-actions-success-primary: #{$tutor-success-600};
   --tutor-actions-success-secondary: #{$tutor-success-200};
   --tutor-actions-success-tertiary: #{$tutor-success-950};
+  --tutor-actions-success-exception: #{$tutor-success-500};
   --tutor-actions-warning-primary: #{$tutor-warning-400};
   --tutor-actions-warning-secondary: #{$tutor-warning-950};
   --tutor-actions-warning-tertiary: #{$tutor-warning-50};
+  --tutor-actions-warning-exception: #{$tutor-warning-500};
   --tutor-actions-brand-primary: #{$tutor-brand-600};
   --tutor-actions-brand-secondary: #{$tutor-brand-950};
   --tutor-actions-brand-tertiary: #{$tutor-brand-950};
