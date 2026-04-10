@@ -318,6 +318,7 @@ const styles = {
     ${styleUtils.display.flex('row')};
     align-items: center;
     gap: ${spacing[10]};
+    justify-content: space-between;
     width: 100%;
   `,
   questionType: css`
