@@ -6450,21 +6450,20 @@ class Utils {
 	 * Get the price format
 	 *
 	 * @since 1.1.2
-	 * @since 4.0.0 Condition added for different monetizations and also added $html_markup for woocommece
+	 * @since 4.0.0 Condition added for different monetizations.
 	 *
 	 * @param int  $price price.
-	 * @param bool $html_markup  Whether to include HTML markup ( Only for woocommerce as it returns html markup ).
 	 *
 	 * @return int|string
 	 */
-	public function tutor_price( $price = 0, $html_markup = true ) {
+	public function tutor_price( $price = 0 ) {
 
 		$monetize_by = $this->get_option( 'monetize_by' );
 
 		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			return tutor_get_formatted_price( $price );
 		} elseif ( function_exists( 'wc_price' ) && 'wc' === $monetize_by ) {
-			return wc_price( $price, array( 'in_span' => $html_markup ) );
+			return wc_price( $price );
 		} elseif ( function_exists( 'edd_currency_filter' ) && 'edd' === $monetize_by ) {
 			return edd_currency_filter( edd_format_amount( $price ) );
 		} elseif ( function_exists( 'pmpro_formatPrice' ) && 'pmpro' === $monetize_by ) {
