@@ -1,5 +1,5 @@
-import { __ } from '@wordpress/i18n';
 import { type QuizQuestionOption } from '@TutorShared/utils/types';
+import { __ } from '@wordpress/i18n';
 
 const PinImagePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
   const imageUrl = answers[0]?.image_url;

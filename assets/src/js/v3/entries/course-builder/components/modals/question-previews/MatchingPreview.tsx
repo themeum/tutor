@@ -1,7 +1,7 @@
-import { __ } from '@wordpress/i18n';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Show from '@TutorShared/controls/Show';
 import { type QuizQuestionOption } from '@TutorShared/utils/types';
+import { __ } from '@wordpress/i18n';
 
 const MatchingPreview = ({ answers, isImageMatching }: { answers: QuizQuestionOption[]; isImageMatching: boolean }) => {
   const draggableAnswers = [...answers].sort((first, second) => first.answer_order - second.answer_order);

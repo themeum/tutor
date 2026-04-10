@@ -1,5 +1,5 @@
-import { __ } from '@wordpress/i18n';
 import { type QuizQuestionOption } from '@TutorShared/utils/types';
+import { __ } from '@wordpress/i18n';
 
 const renderFillInBlankText = (answer: QuizQuestionOption, index: number) => {
   const parts = (answer.answer_title || '').split('{dash}');

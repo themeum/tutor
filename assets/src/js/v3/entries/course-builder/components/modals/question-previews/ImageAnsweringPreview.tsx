@@ -1,6 +1,6 @@
-import { __ } from '@wordpress/i18n';
 import Show from '@TutorShared/controls/Show';
 import { type QuizQuestionOption } from '@TutorShared/utils/types';
+import { __ } from '@wordpress/i18n';
 
 const ImageAnsweringPreview = ({ answers }: { answers: QuizQuestionOption[] }) => (
   <div className="tutor-quiz-question-options">

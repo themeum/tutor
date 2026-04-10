@@ -1,5 +1,5 @@
-import { __ } from '@wordpress/i18n';
 import { type QuizQuestionType } from '@TutorShared/utils/types';
+import { __ } from '@wordpress/i18n';
 
 const OpenEndedPreview = ({ questionType }: { questionType: QuizQuestionType }) => (
   <div className="tutor-quiz-question-options">
