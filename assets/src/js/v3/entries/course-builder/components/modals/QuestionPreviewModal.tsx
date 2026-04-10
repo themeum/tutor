@@ -27,8 +27,24 @@ const PREVIEW_STYLESHEET_PATHS = [
   '/wp-content/plugins/tutor/assets/css/tutor-kids.min.css',
 ];
 
+// Prefetch the stylesheets automatically so they are loaded in the background
+// before the user even opens the preview modal.
+if (typeof document !== 'undefined') {
+  const siteUrl = tutorConfig.site_url.replace(/\/$/, '');
+  if (siteUrl) {
+    PREVIEW_STYLESHEET_PATHS.forEach((path) => {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.as = 'style';
+      link.href = `${siteUrl}${path}`;
+      document.head.appendChild(link);
+    });
+  }
+}
+
 const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) => {
   const [activeTab, setActiveTab] = useState<'desktop' | 'mobile'>('desktop');
+  const [cssLoaded, setCssLoaded] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [iframeDocument, setIframeDocument] = useState<Document | null>(null);
   const previewQuestionStyleType = getPreviewQuestionStyleType(question);
@@ -68,15 +84,30 @@ const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) 
 
     const siteUrl = tutorConfig.site_url.replace(/\/$/, '');
 
-    if (siteUrl) {
-      PREVIEW_STYLESHEET_PATHS.forEach((path) => {
-        const link = iframeDocument.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = `${siteUrl}${path}`;
-        link.setAttribute('data-preview-external-style', 'true');
-        iframeDocument.head.appendChild(link);
-      });
+    if (!siteUrl || PREVIEW_STYLESHEET_PATHS.length === 0) {
+      setCssLoaded(true);
+      return;
     }
+
+    let loadedCount = 0;
+    const totalLinks = PREVIEW_STYLESHEET_PATHS.length;
+
+    const handleLoadOrError = () => {
+      loadedCount++;
+      if (loadedCount === totalLinks) {
+        setCssLoaded(true);
+      }
+    };
+
+    PREVIEW_STYLESHEET_PATHS.forEach((path) => {
+      const link = iframeDocument.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = `${siteUrl}${path}`;
+      link.setAttribute('data-preview-external-style', 'true');
+      link.onload = handleLoadOrError;
+      link.onerror = handleLoadOrError;
+      iframeDocument.head.appendChild(link);
+    });
   }, [iframeDocument]);
 
   useEffect(() => {
@@ -107,7 +138,7 @@ const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) 
     }
 
     const syncHeight = () => {
-      iframe.style.height = `${Math.max(root.scrollHeight, activeTab === 'mobile' ? 520 : 620)}px`;
+      iframe.style.height = `${root.scrollHeight}px`;
     };
 
     syncHeight();
@@ -140,22 +171,24 @@ const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) 
           </button>
 
           <div css={styles.questionPreviewWrapper({ activeTab })}>
-            <iframe
-              ref={iframeRef}
-              title={__('Question preview', 'tutor')}
-              srcDoc={IFRAME_SRC_DOC}
-              css={styles.previewIframe({ activeTab })}
-            />
-            {iframeDocument?.getElementById('preview-root')
-              ? createPortal(
-                  <PreviewDocumentContent
-                    activeTab={activeTab}
-                    question={question}
-                    previewQuestionStyleType={previewQuestionStyleType}
-                  />,
-                  iframeDocument.getElementById('preview-root') as HTMLElement,
-                )
-              : null}
+            <div css={styles.scrollContainer}>
+              <iframe
+                ref={iframeRef}
+                title={__('Question preview', 'tutor')}
+                srcDoc={IFRAME_SRC_DOC}
+                css={styles.previewIframe({ activeTab, cssLoaded })}
+              />
+              {iframeDocument?.getElementById('preview-root')
+                ? createPortal(
+                    <PreviewDocumentContent
+                      activeTab={activeTab}
+                      question={question}
+                      previewQuestionStyleType={previewQuestionStyleType}
+                    />,
+                    iframeDocument.getElementById('preview-root') as HTMLElement,
+                  )
+                : null}
+            </div>
           </div>
 
           <div css={styles.tabsWrapper}>
@@ -203,10 +236,7 @@ const PreviewDocumentContent = ({
                 <div className="tutor-quiz-question-title">
                   {question.question_title}
                   <Show when={question.question_description}>
-                    <div
-                      className="tutor-p2 tutor-text-secondary tutor-preview-description"
-                      // dangerouslySetInnerHTML={{ __html: question.question_description }}
-                    >
+                    <div className="tutor-p2 tutor-text-secondary tutor-preview-description">
                       <WPEditor value={question.question_description} readonly min_height={24} onChange={() => {}} />
                     </div>
                   </Show>
@@ -512,7 +542,6 @@ const getPreviewFrameStyles = () => `
   #preview-root {
     box-sizing: border-box;
     width: 100%;
-    padding: 12px;
   }
 
   .tutor-preview-stage {
@@ -549,34 +578,41 @@ const styles = {
     align-items: center;
   `,
   questionPreviewWrapper: ({ activeTab }: { activeTab: 'desktop' | 'mobile' }) => css`
-    ${styleUtils.overflowYAuto};
     display: flex;
-    justify-content: center;
-    align-items: ${activeTab === 'mobile' ? 'flex-start' : 'center'};
+    flex-direction: column;
+    overflow: hidden;
     max-width: ${activeTab === 'mobile' ? '444px' : '1220px'};
-    max-height: min(80vh, 900px);
+    height: 686px;
     margin-inline: auto;
-    min-height: 578px;
     width: 100%;
-    padding: ${spacing[12]};
     background-color: ${colorTokens.surface.courseBuilder};
     border-radius: ${borderRadius[14]};
-    transition:
-      max-width 240ms cubic-bezier(0.22, 1, 0.36, 1),
-      min-height 240ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: max-width 240ms cubic-bezier(0.22, 1, 0.36, 1);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
     }
   `,
-  previewIframe: ({ activeTab }: { activeTab: 'desktop' | 'mobile' }) => css`
+  scrollContainer: css`
+    ${styleUtils.overflowYAuto};
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: ${spacing[12]};
+  `,
+  previewIframe: ({ activeTab, cssLoaded }: { activeTab: 'desktop' | 'mobile'; cssLoaded: boolean }) => css`
     width: 100%;
     max-width: ${activeTab === 'mobile' ? '420px' : '960px'};
     border: 0;
+    min-height: 100%;
     background: transparent;
     display: block;
     margin-inline: auto;
     flex: 0 0 auto;
+    opacity: ${cssLoaded ? 1 : 0};
     transition:
       max-width 240ms cubic-bezier(0.22, 1, 0.36, 1),
       opacity 160ms ease;
