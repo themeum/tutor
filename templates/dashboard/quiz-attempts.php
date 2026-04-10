@@ -68,17 +68,32 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 	<div class="tutor-dashboard-page-card">
 		<div class="tutor-quiz-attempts tutor-instructor-quiz-attempts">
 			<div class="tutor-quiz-attempts-filter">
-				<div class="tutor-quiz-attempts-filter-item">
-					<?php
-						DropdownFilter::make()
-							->size( Size::SMALL )
-							->options( $nav_links['options'] )
-							->query_param( 'result' )
-							->variant( Variant::PRIMARY_SOFT )
-							->render();
-					?>
-				</div>
-				<div class="tutor-quiz-attempts-filter-item">
+				<?php
+				CourseFilter::make()
+					->size( Size::SMALL )
+					->variant( Variant::PRIMARY_SOFT )
+					->render();
+
+				DropdownFilter::make()
+					->size( Size::SMALL )
+					->options( $nav_links['options'] )
+					->query_param( 'result' )
+					->variant( Variant::OUTLINE )
+					->position( Positions::BOTTOM_END )
+					->render();
+				?>
+			</div>
+			<div class="tutor-px-6 tutor-py-5 tutor-flex tutor-justify-between tutor-border-b">
+				<?php
+				SearchFilter::make()
+					->form_id( 'tutor-quiz-attempt-search-form' )
+					->hidden_inputs( array( 'result' => $result_filter ) )
+					->placeholder( __( 'Search quizzes...', 'tutor' ) )
+					->size( Size::SMALL )
+					->render();
+				?>
+
+				<div class="tutor-flex tutor-gap-4">
 					<?php
 					$query_items = array( 'course-id', 'search', 'date', 'result', 'order' );
 					if ( Input::has_any( $query_items, Input::GET_REQUEST ) ) {
@@ -91,36 +106,17 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 							->variant( Variant::LINK )
 							->render();
 					}
-					?>
-				</div>
-				<div class="tutor-quiz-attempts-filter-item">
-					<?php
-						DateFilter::make()
-							->type( DateFilter::TYPE_SINGLE )
-							->placement( Positions::BOTTOM_END )
-							->trigger_size( Size::SMALL )
-							->icon_size( Size::SIZE_16 )
-							->render();
-					?>
-				</div>
-				<div class="tutor-quiz-attempts-filter-item">
-					<?php Sorting::make()->size( Size::SMALL )->order( $order_filter )->render(); ?>
-				</div>
-			</div>
-			<div class="tutor-p-6 tutor-flex tutor-justify-between tutor-border-b">
-				<?php
-				SearchFilter::make()
-					->form_id( 'tutor-quiz-attempt-search-form' )
-					->hidden_inputs( array( 'result' => $result_filter ) )
-					->placeholder( __( 'Search quizzes...', 'tutor' ) )
-					->size( Size::SMALL )
-					->render();
 
-				CourseFilter::make()
-					->size( Size::SMALL )
-					->button_class( 'tutor-btn tutor-btn-outline tutor-gap-2 tutor-btn-small' )
-					->render();
-				?>
+					DateFilter::make()
+						->type( DateFilter::TYPE_SINGLE )
+						->placement( Positions::BOTTOM_END )
+						->trigger_size( Size::SMALL )
+						->icon_size( Size::SIZE_16 )
+						->render();
+
+					Sorting::make()->size( Size::SMALL )->order( $order_filter )->render();
+					?>
+				</div>
 			</div>
 			<?php if ( $quiz_attempts_count ) : ?>
 			<div class="tutor-quiz-attempts-header">
