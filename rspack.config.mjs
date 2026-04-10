@@ -66,34 +66,6 @@ const createConfig = (env, options) => {
       rules: [
         {
           test: /\.s[ac]ss$/i,
-          resourceQuery: /inline/,
-          use: [
-            'style-loader',
-            {
-              loader: 'css-loader',
-              options: {
-                url: {
-                  filter: (url) => {
-                    return /\.(woff2?|woff|ttf|otf|eot)(\?.*)?$/i.test(url);
-                  },
-                },
-              },
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                implementation: 'sass',
-                sassOptions: {
-                  outputStyle: isDevelopment ? 'expanded' : 'compressed',
-                  silenceDeprecations: ['abs-percent', 'color-functions', 'global-builtin', 'import', 'legacy-js-api'],
-                },
-              },
-              webpackImporter: false,
-            },
-          ],
-        },
-        {
-          test: /\.s[ac]ss$/i,
           use: [
             rspack.CssExtractRspackPlugin.loader,
             {
