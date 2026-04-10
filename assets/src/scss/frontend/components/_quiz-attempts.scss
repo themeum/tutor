@@ -15,71 +15,6 @@
     @include tutor-flex(row, center, space-between);
     padding: $tutor-spacing-5 $tutor-spacing-6;
     border-bottom: 1px solid $tutor-border-idle;
-    display: grid;
-    grid-template-areas: 'nav clear_filter search calender sort';
-    @include tutor-breakpoint-down(sm) {
-      padding: 0;
-    }
-
-    &-item {
-      &:nth-child(1) {
-        grid-area: nav;
-      }
-      &:nth-child(2) {
-        grid-area: clear_filter;
-      }
-      &:nth-child(3) {
-        grid-area: search;
-      }
-      &:nth-child(4) {
-        grid-area: calender;
-      }
-      &:nth-child(5) {
-        grid-area: sort;
-      }
-    }
-
-    &-button {
-      @include tutor-button-reset();
-      @include tutor-flex(row, center);
-      gap: $tutor-spacing-2;
-      @include tutor-typography(small, regular, secondary);
-      cursor: pointer;
-      white-space: nowrap;
-
-      @include tutor-breakpoint-down(sm) {
-        font-size: $tutor-font-size-tiny;
-        line-height: $tutor-line-height-tiny;
-      }
-    }
-
-    @include tutor-breakpoint-up(sm) {
-      grid-template-columns: 1fr auto;
-      gap: $tutor-spacing-3;
-    }
-
-    @include tutor-breakpoint-down(sm) {
-      grid-template-areas:
-        'search search search sort'
-        'nav clear_filter calender calender';
-      grid-template-columns: 1fr auto;
-      &-item {
-        &:nth-child(3) {
-          border-bottom: 1px solid $tutor-border-idle;
-          padding: $tutor-spacing-5 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-5;
-        }
-        &:nth-child(5) {
-          border-bottom: 1px solid $tutor-border-idle;
-          padding: $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-4;
-        }
-        &:nth-child(1) {
-          padding: $tutor-spacing-5 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-5;
-        }
-        &:nth-child(4) {
-          padding: $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-4;
-        }
-      }
-    }
   }
 
   &-header {
@@ -138,6 +73,7 @@
 
         &-title {
           @include tutor-typography(medium, semibold);
+          margin-bottom: $tutor-spacing-2;
 
           @include tutor-breakpoint-down(sm) {
             font-size: $tutor-font-size-small;
@@ -154,12 +90,14 @@
           }
         }
 
-        &-date {
+        &-student {
           @include tutor-typography(tiny, regular, secondary);
+          margin-top: $tutor-spacing-3;
+        }
 
-          @include tutor-breakpoint-down(sm) {
-            color: $tutor-text-subdued;
-          }
+        &-date {
+          @include tutor-typography(tiny, regular, subdued);
+          margin-top: $tutor-spacing-3;
         }
 
         .tutor-quiz-attempts-expand-btn {
@@ -185,12 +123,6 @@
               width: 16px;
               height: 16px;
             }
-          }
-        }
-
-        .tutor-flex {
-          @include tutor-breakpoint-down(sm) {
-            justify-content: space-between;
           }
         }
 
@@ -247,8 +179,8 @@
       .tutor-quiz-item-time {
         grid-area: time;
         @include tutor-flex(row, center);
-        gap: $tutor-spacing-2;
-        @include tutor-typography(medium, regular, secondary);
+        gap: $tutor-spacing-3;
+        @include tutor-typography(medium, regular, subdued);
         white-space: nowrap;
 
         @include tutor-breakpoint-down(sm) {

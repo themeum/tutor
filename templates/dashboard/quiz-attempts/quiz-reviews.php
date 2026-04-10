@@ -9,6 +9,8 @@
  * @since 1.4.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
 use Tutor\Components\EmptyState;
 use Tutor\Models\QuizModel;
@@ -61,7 +63,7 @@ if ( is_array( $questions ) ) {
 ?>
 
 <div class="wrap">
-	
+
 	<?php if ( ! is_admin() ) : ?>
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
