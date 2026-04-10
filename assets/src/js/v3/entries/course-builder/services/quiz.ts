@@ -240,7 +240,9 @@ export const convertQuizFormDataToPayload = (
           isAddonEnabled(Addons.H5P_INTEGRATION) &&
           formData.questions.every((question) => question.question_type === 'h5p')
             ? formData.questions.length
-            : formData.quiz_option.max_questions_for_answer,
+            : formData.quiz_option.limit_questions_to_answer
+              ? formData.quiz_option.max_questions_for_answer
+              : 0,
         open_ended_answer_characters_limit: formData.quiz_option.open_ended_answer_characters_limit,
         pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
         passing_grade: formData.quiz_option.passing_grade,

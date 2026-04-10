@@ -1700,7 +1700,7 @@ class Quiz {
 						' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
 					</div>',
 				),
-				array( 'content' => $total_questions ),
+				array( 'content' => $total_marks ),
 			),
 		);
 
