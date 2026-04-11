@@ -9,8 +9,6 @@
   // SURFACE COLORS
   // =============================================================================
 
-  --tutor-surface-warning: #{$tutor-warning-950};
-  --tutor-surface-warning-hover: #{$tutor-warning-900};
   --tutor-surface-success: #{$tutor-cyan-900};
   --tutor-surface-critical: #{$tutor-orange-900};
 
@@ -22,7 +20,6 @@
   --tutor-text-critical: #{$tutor-orange-500};
   --tutor-text-critical-hover: #{$tutor-orange-600};
   --tutor-text-warning: #{$tutor-orange-600};
-  --tutor-text-caution: #{$tutor-yellow-600};
 
   // =============================================================================
   // ICON COLORS
@@ -30,7 +27,6 @@
 
   --tutor-icon-success-primary: #{$tutor-cyan-600};
   --tutor-icon-success-secondary: #{$tutor-cyan-700};
-  --tutor-icon-exception4: #{$tutor-warning-400};
   --tutor-icon-caution: #{$tutor-yellow-500};
   --tutor-icon-critical: #{$tutor-orange-500};
   --tutor-icon-critical-hover: #{$tutor-orange-600};
@@ -77,7 +73,5 @@
   --tutor-actions-warning-tertiary: #{$tutor-orange-50};
   --tutor-actions-warning-exception: #{$tutor-orange-50};
   --tutor-actions-critical-primary: #{$tutor-orange-600};
-  --tutor-actions-critical-secondary: #{$tutor-error-950};
   --tutor-actions-caution: #{$tutor-yellow-500};
-  --tutor-actions-caution-secondary: #{$tutor-yellow-100};
 }
