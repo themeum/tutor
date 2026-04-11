@@ -126,7 +126,7 @@ $stat_cards = array(
 		'variation'     => 'success',
 		'title'         => esc_html__( 'Total Earnings', 'tutor' ),
 		'icon'          => Icon::EARNING,
-		'value'         => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ?? 0, false ) ),
+		'value'         => tutor_utils()->tutor_price( $total_earnings ?? 0 ),
 		'hover_content' => $total_earnings_state_card_details,
 	),
 	array(

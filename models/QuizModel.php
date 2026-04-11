@@ -62,10 +62,11 @@ class QuizModel {
 	 *
 	 * @param array  $quiz_attempts the quiz_attempts result obtained from query.
 	 * @param string $filter filter quiz attempt based on result.
+	 * @param bool   $make_group whether to group attempts by quiz.
 	 *
 	 * @return array
 	 */
-	public static function format_quiz_attempts( array $quiz_attempts, string $filter = '' ): array {
+	public static function format_quiz_attempts( array $quiz_attempts, string $filter = '', $make_group = true ): array {
 		$formatted_attempts = array();
 
 		if ( ! count( $quiz_attempts ) ) {
@@ -86,14 +87,7 @@ class QuizModel {
 				continue;
 			}
 
-			if ( ! isset( $formatted_attempts[ $quiz_attempt->quiz_id ] ) ) {
-				$formatted_attempts[ $quiz_attempt->quiz_id ] = array(
-					'quiz_title'   => $quiz_title,
-					'course_title' => $course_title,
-					'course_id'    => $course_id,
-				);
-			}
-
+			// Common formatting logic.
 			$start_time = DateTimeHelper::create( $quiz_attempt->attempt_started_at ?? '' )
 				->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 
@@ -130,14 +124,25 @@ class QuizModel {
 				'attempt_info'      => maybe_unserialize( $quiz_attempt->attempt_info ) ?? array(),
 			);
 
-			if ( ! isset( $formatted_attempts[ $quiz_id ]['attempts'] ) ) {
-				$formatted_attempts[ $quiz_id ]['attempts'] = array(
-					$formatted_attempt,
-				);
+			if ( $make_group ) {
+				if ( ! isset( $formatted_attempts[ $quiz_id ] ) ) {
+					$formatted_attempts[ $quiz_id ] = array(
+						'quiz_id'      => $quiz_id,
+						'quiz_title'   => $quiz_title,
+						'course_title' => $course_title,
+						'course_id'    => $course_id,
+						'attempts'     => array(),
+					);
+				}
+
+				$formatted_attempts[ $quiz_id ]['attempts'][] = $formatted_attempt;
 			} else {
-				array_push(
-					$formatted_attempts[ $quiz_id ]['attempts'],
-					$formatted_attempt
+				$formatted_attempts[ $quiz_attempt->attempt_id ] = array(
+					'quiz_id'      => $quiz_id,
+					'quiz_title'   => $quiz_title,
+					'course_title' => $course_title,
+					'course_id'    => $course_id,
+					'attempts'     => array( $formatted_attempt ),
 				);
 			}
 		}
