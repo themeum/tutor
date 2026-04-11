@@ -175,7 +175,7 @@ class WPEditor extends BaseComponent {
 	 *
 	 * @return $this
 	 */
-	public function pasteImage( $should_paste = true ) {
+	public function paste_image( $should_paste = true ) {
 		$this->paste_image = $should_paste;
 		return $this;
 	}
