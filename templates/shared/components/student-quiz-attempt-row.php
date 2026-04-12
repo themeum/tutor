@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
@@ -30,7 +32,7 @@ $is_previous     = $is_previous ?? false;
 		<?php
 		if ( $show_quiz_title && ! empty( $quiz_title ) ) :
 			?>
-			<div class="tutor-flex tutor-items-start tutor-justify-start tutor-gap-4">
+			<div class="tutor-flex tutor-sm-justify-between tutor-gap-4">
 				<div class="tutor-quiz-item-info-title">
 					<?php echo esc_html( $quiz_title ); ?>
 				</div>
@@ -86,15 +88,9 @@ $is_previous     = $is_previous ?? false;
 			</div>
 		<?php endif; ?>
 
-		<div class="tutor-quiz-item-info-date tutor-text-subdued">
+		<div class="tutor-quiz-item-info-date">
 			<?php echo esc_html( $attempt['date'] ?? '' ); ?>
 		</div>
-
-		<?php if ( ! empty( $attempt['student'] ) ) : ?>
-		<div class="tutor-quiz-item-info-date tutor-text-subdued">
-			<?php esc_html_e( 'Student Name: ', 'tutor' ) . esc_html( $attempt['student'] ); ?>
-		</div>
-		<?php endif; ?>
 	</div>
 
 	<div class="tutor-quiz-item-marks">

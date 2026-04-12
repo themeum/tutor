@@ -42,6 +42,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->variant( Variant::PRIMARY_SOFT )
  *     ->size( Size::X_SMALL )
  *     ->popover_size( Size::MEDIUM )
+ *     ->position( Positions::BOTTOM_END )
  *     ->placeholder( __( 'Search Course', 'tutor' ) )
  *     ->render();
  * ```
@@ -141,6 +142,13 @@ class DropdownFilter extends BaseComponent {
 	 * @var int|null
 	 */
 	protected $icon_size = null;
+
+	/**
+	 * Popover placement position
+	 *
+	 * @var string
+	 */
+	protected $position = Positions::BOTTOM_START;
 
 	/**
 	 * Set options list
@@ -247,6 +255,18 @@ class DropdownFilter extends BaseComponent {
 	 */
 	public function icon_size( int $size ): self {
 		$this->icon_size = $size;
+		return $this;
+	}
+
+	/**
+	 * Set popover placement position.
+	 *
+	 * @param string $position placement position (Positions::TOP, Positions::BOTTOM, etc).
+	 *
+	 * @return self
+	 */
+	public function position( string $position ): self {
+		$this->position = $position;
 		return $this;
 	}
 
@@ -383,12 +403,14 @@ class DropdownFilter extends BaseComponent {
 				$btn_class = 'tutor-btn tutor-btn-primary tutor-gap-2 ' . $size_class;
 			} elseif ( Variant::PRIMARY_SOFT === $this->variant ) {
 				$btn_class = 'tutor-btn tutor-btn-primary-soft tutor-gap-2 ' . $size_class;
+			} elseif ( Variant::OUTLINE === $this->variant ) {
+				$btn_class = 'tutor-btn tutor-btn-outline tutor-gap-2 ' . $size_class;
 			} else {
 				$btn_class = 'tutor-btn tutor-text-secondary tutor-btn-small tutor-font-regular tutor-gap-2 tutor-bg-transparent tutor-p-none tutor-min-h-0';
 			}
 		}
 
-		$origin = Popover::TRANSFORM_ORIGIN_MAP[ Positions::BOTTOM_START ] ?? 'left.top';
+		$origin = Popover::TRANSFORM_ORIGIN_MAP[ $this->position ] ?? 'left.top';
 
 		ob_start();
 		?>
@@ -396,7 +418,7 @@ class DropdownFilter extends BaseComponent {
 			class="tutor-dropdown-filter"
 			x-data="{
 				...tutorPopover({
-					placement: 'bottom-start',
+					placement: '<?php echo esc_js( $this->position ); ?>',
 					offset: 4,
 				}),
 				<?php if ( $this->active_value ) : ?>
