@@ -344,7 +344,7 @@ $tutor-quiz-content-bottom-offset: calc(
     }
   }
 
-  &-question-indicator{
+  &-question-indicator {
     @include tutor-typography('small');
 
     strong {
@@ -654,6 +654,21 @@ $tutor-quiz-content-bottom-offset: calc(
       border-color: $tutor-button-disabled;
       color: $tutor-text-subdued;
       opacity: 1;
+      cursor: default;
+    }
+  }
+
+  &-answer-next-btn {
+    &.disabled {
+      background-color: $tutor-button-disabled;
+      border-color: $tutor-button-disabled;
+      color: $tutor-text-subdued;
+      cursor: default;
+      pointer-events: all;
+
+      &.is-shaking {
+        animation: tutor-shake 0.5s ease-in-out both;
+      }
     }
   }
 
