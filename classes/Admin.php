@@ -106,7 +106,7 @@ class Admin {
 					<p><?php esc_html_e( 'Explore the upcoming features of Tutor LMS 4.0, test the experience, and help us improve with your valuable feedback.', 'tutor' ); ?></p>
 				</div>
 				<div class="tutor-v4-beta-notice-right-buttons">
-					<a href="https://tutorlms.com/blog/first-look-into-tutor-lms-4-0/?nocache=1" target="_blank" class="tutor-btn tutor-btn-tertiary tutor-gap-4px tutor-text-nowrap">
+					<a href="https://tutorlms.com/blog/first-look-into-tutor-lms-4-0/?nocache=<?php echo esc_attr( wp_rand() ); ?>" target="_blank" class="tutor-btn tutor-btn-tertiary tutor-gap-4px tutor-text-nowrap">
 						<?php esc_html_e( 'Try now', 'tutor' ); ?>
 					</a>
 				</div>
