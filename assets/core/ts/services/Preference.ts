@@ -56,9 +56,7 @@ class PreferenceService {
       }
     };
 
-    // @ts-ignore
     if (withTransition && document.startViewTransition) {
-      // @ts-ignore
       document.startViewTransition(() => {
         applyLogic();
       });
