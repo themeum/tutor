@@ -110,8 +110,8 @@ const FormPuzzle = ({ field, gridSizeControl }: FormPuzzleProps) => {
             infoText={__('Upload the source image that will be split into puzzle pieces.', __TUTOR_TEXT_DOMAIN__)}
             uploadHandler={openMediaLibrary}
             clearHandler={clearImage}
-            emptyImageCss={styles.imageInput}
-            previewImageCss={styles.imageInput}
+            emptyImageCss={styles.imageInputEmpty}
+            previewImageCss={styles.imageInputPreview}
           />
         </div>
       </div>
@@ -170,8 +170,21 @@ const styles = {
   imageInputWrapper: css`
     max-width: 100%;
   `,
-  imageInput: css`
+  imageInputEmpty: css`
     border-radius: ${borderRadius.card};
+  `,
+  imageInputPreview: css`
+    width: fit-content;
+    max-width: 100%;
+    height: auto;
+    border-radius: ${borderRadius.card};
+
+    img {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      object-fit: initial;
+    }
   `,
   previewLabel: css`
     ${typography.body('medium')};
