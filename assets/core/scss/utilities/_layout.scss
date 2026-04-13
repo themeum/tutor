@@ -130,6 +130,12 @@ $grid-split-utils: (
 .tutor-flex-none {
   flex: none;
 }
+.tutor-flex-center {
+  @include tutor-flex(row, center, center);
+}
+.tutor-flex-center-col {
+  @include tutor-flex(column, center, center);
+}
 
 // Justify content
 @each $name, $value in $justify-utils {

@@ -24,7 +24,7 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
 					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-32"><?php esc_html_e( 'Hi, Welcome back!', 'tutor' ); ?></div>
 					<?php
 						// load form template.
-						$login_form = trailingslashit( tutor()->path ) . 'templates/login-form.php';
+						$login_form = trailingslashit( tutor()->path ) . 'templates/login-form-legacy.php';
 						tutor_load_template_from_custom_path(
 							$login_form,
 							false

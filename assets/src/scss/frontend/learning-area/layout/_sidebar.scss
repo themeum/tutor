@@ -117,6 +117,10 @@
             }
           }
 
+          &-summary {
+            @include tutor-flex-center();
+          }
+
           &-arrow {
             @include tutor-flex-center();
             color: $tutor-icon-secondary;
