@@ -561,19 +561,22 @@ class CheckoutController {
 			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert', $errors );
 			return;
 		}
+
 		global $wpdb;
 		$order_data      = null;
 		$billing_model   = new BillingModel();
 		$current_user_id = get_current_user_id();
 
-		$is_guest_checkout = class_exists( 'TutorPro\Ecommerce\GuestCheckout\GuestCheckout' ) && GuestCheckout::is_enable();
+		$is_guest_checkout_endabled = class_exists( 'TutorPro\Ecommerce\GuestCheckout\GuestCheckout' ) && GuestCheckout::is_enable();
 
 		// Pevent invalid request.
-		if ( ! $current_user_id && ! $is_guest_checkout ) {
-			wp_die( esc_html( tutor_utils()->error_message( 'invalid_req' ) ) );
-		} else {
-			// Guest user.
-			$current_user_id = wp_generate_uuid4(); // A random id to iniquely indentify.
+		if ( ! $current_user_id ) {
+			if ( $is_guest_checkout_endabled ) {
+				// Guest user.
+				$current_user_id = wp_rand(); // A random id to iniquely indentify.
+			} else {
+				wp_die( esc_html( tutor_utils()->error_message( 'invalid_req' ) ) );
+			}
 		}
 
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
