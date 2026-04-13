@@ -60,7 +60,7 @@ if ( tutor_utils()->is_course_purchasable() && 'wc' === $monetization ) {
 
                     <div class="tutor-course-booking-progress tutor-d-flex tutor-align-center">
                         <div class="tutor-mr-8">
-                            <div class="tutor-progress-circle" style="--pro: ' . esc_html( $b_total ) . '%;" area-hidden="true"></div>
+                            <div class="tutor-progress-circle" style="--pro: ' . esc_html( $b_total ) . '%;" aria-hidden="true"></div>
                         </div>
                         <div class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
 						esc_html( $b_total ) . __( '% Booked', 'tutor' ) . '

@@ -91,7 +91,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 									<div class="tutor-col-auto">
 										<div class="tutor-ratings">
 											<div class="tutor-ratings-stars">
-												<span class="tutor-icon-star-line" area-hidden="true"></span>
+												<span class="tutor-icon-star-line" aria-hidden="true"></span>
 											</div>
 											<div class="tutor-ratings-average">
 												<?php echo esc_html( $key ); ?>
@@ -101,7 +101,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 
 									<div class="tutor-col">
 										<div class="tutor-progress-bar tutor-ratings-progress-bar" style="--tutor-progress-value: <?php echo esc_attr( $rating_count_percent ); ?>%">
-											<span class="tutor-progress-value" area-hidden="true"></span>
+											<span class="tutor-progress-value" aria-hidden="true"></span>
 										</div>
 									</div>
 
@@ -120,7 +120,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 				</div>
 			</div>
 
-			<div class="tutor-hr" area-hidden="true"></div>
+			<div class="tutor-hr" aria-hidden="true"></div>
 			
 			<div class="tutor-reviews tutor-card-list tutor-pagination-content-appendable">
 				<?php tutor_load_template( 'single.course.reviews-loop', array( 'reviews' => $reviews ) ); ?>

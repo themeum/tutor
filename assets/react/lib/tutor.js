@@ -26,7 +26,7 @@ window.tutor_popup = function($, icon) {
 			html += '<div class="tutor-modal-overlay"></div>';
 			html += '<div class="tutor-modal-window">';
 				html += '<div class="tutor-modal-content tutor-modal-content-white">';
-					html += '<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close><span class="tutor-icon-times" area-hidden="true"></span></button>';
+					html += '<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close><span class="tutor-icon-times" aria-hidden="true"></span></button>';
 					html += '<div class="tutor-modal-body tutor-text-center">';
 						html += '<div class="tutor-px-lg-48 tutor-py-lg-24">';
 						

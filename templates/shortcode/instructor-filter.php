@@ -40,13 +40,13 @@ foreach ( $attributes as $key => $value ) {
 		<aside class="tutor-col-lg-3 tutor-mb-32 tutor-mb-lg-0" tutor-instructors-filters>
 			<div class="tutor-d-flex tutor-align-center">
 				<div>
-					<span class="tutor-icon-slider-vertical tutor-color-primary tutor-mr-8" area-hidden="true"></span>
+					<span class="tutor-icon-slider-vertical tutor-color-primary tutor-mr-8" aria-hidden="true"></span>
 					<span class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Filters', 'tutor' ); ?></span>
 				</div>
 
 				<div class="tutor-ml-32">
 					<a href="#" class="tutor-btn tutor-btn-ghost" tutor-instructors-filter-clear>
-						<span class="tutor-icon-times tutor-mr-8" area-hidden="true"></span>
+						<span class="tutor-icon-times tutor-mr-8" aria-hidden="true"></span>
 						<span class="tutor-fw-medium"><?php esc_html_e( 'Clear', 'tutor' ); ?></span>
 					</a>
 				</div>
@@ -73,7 +73,7 @@ foreach ( $attributes as $key => $value ) {
 
 					<?php if ( $show_more ) : ?>
 						<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
-							<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
+							<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" aria-hidden="true"></span>
 							<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
 						</a>
 					<?php endif; ?>
@@ -89,7 +89,7 @@ foreach ( $attributes as $key => $value ) {
 				<div class="tutor-ratings tutor-ratings-lg tutor-ratings-selectable">
 						<div class="tutor-ratings-stars">
 							<?php for ( $i = 1; $i < 6; $i++ ) : ?>
-								<i class="tutor-icon-star-line" tutor-instructors-filter-rating data-value="<?php echo esc_attr( $i ); ?>" area-hidden="true"></i>
+								<i class="tutor-icon-star-line" tutor-instructors-filter-rating data-value="<?php echo esc_attr( $i ); ?>" aria-hidden="true"></i>
 							<?php endfor; ?> 
 						</div>
 						<span class="tutor-ratings-count tutor-instructor-rating-filter" tutor-instructors-filter-rating-count></span>  
@@ -99,12 +99,12 @@ foreach ( $attributes as $key => $value ) {
 		</aside>
 
 		<?php if ( $columns < 3 ) : ?>
-		<div class="tutor-col-1 tutor-d-none tutor-d-xl-block" area-hidden="true"></div>
+		<div class="tutor-col-1 tutor-d-none tutor-d-xl-block" aria-hidden="true"></div>
 		<?php endif; ?>
 
 		<main class="tutor-col-lg-9 tutor-col-xl-<?php echo $columns < 3 ? 8 : 9; ?>">
 			<div class="tutor-form-wrap tutor-mb-24">
-				<span class="tutor-icon-search tutor-form-icon" area-hidden="true"></span>
+				<span class="tutor-icon-search tutor-form-icon" aria-hidden="true"></span>
 				<input type="text" class="tutor-form-control" name="keyword" placeholder="<?php esc_html_e( 'Search any instructor...', 'tutor' ); ?>" tutor-instructors-filter-search />
 			</div>
 			<div class="tutor-d-flex tutor-align-center tutor-mb-24">
