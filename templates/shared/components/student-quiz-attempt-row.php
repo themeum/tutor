@@ -11,9 +11,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
+use TUTOR\Quiz_Attempts_List;
 use Tutor\Components\SvgIcon;
+use Tutor\Components\PreviewTrigger;
 use Tutor\Components\Constants\Color;
 
 if ( empty( $attempt ) ) {
@@ -94,9 +95,7 @@ $is_previous     = $is_previous ?? false;
 	</div>
 
 	<div class="tutor-quiz-item-marks">
-		<div x-data="tutorStatics({ value: <?php echo esc_attr( $attempt['marks_percent'] ?? 0 ); ?>, type: 'progress' })">
-			<div x-html="render()"></div>
-		</div>
+		<?php Quiz_Attempts_List::render_quiz_attempt_marks_percentage( $attempt['result'], $attempt['marks_percent'] ); ?>
 		<div class="tutor-quiz-marks-breakdown">
 			<div class="tutor-quiz-marks-correct">
 				<?php

@@ -591,6 +591,46 @@ class Quiz_Attempts_List {
 	}
 
 	/**
+	 * Render quiz attempt marks percentage.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $attempt_result the quiz attempt `QuizModel::RESULT_PASS | QuizModel::RESULT_PENDING | QuizModel::RESULT_FAIL`.
+	 * @param int    $earned_percentage the earned percentage.
+	 * @param string $size the size of the component.
+	 * @param string $wrapper_class the wrapper class of the component.
+	 *
+	 * @return void
+	 */
+	public static function render_quiz_attempt_marks_percentage( $attempt_result = '', $earned_percentage = 0, $size = 'small', $wrapper_class = '' ) {
+		$statics_stroke_color = 'var(--tutor-icon-critical)';
+
+		if ( QuizModel::RESULT_PASS === $attempt_result ) {
+			$statics_stroke_color = 'var(--tutor-icon-success-secondary)';
+
+			if ( 100 === (int) $earned_percentage ) {
+				$statics_stroke_color = 'var(--tutor-icon-success-primary)';
+			}
+		} elseif ( QuizModel::RESULT_PENDING === $attempt_result ) {
+			$statics_stroke_color = 'var(--tutor-icon-warning-secondary)';
+		}
+
+		$config = array(
+			'value'               => $earned_percentage,
+			'strokeColor'         => 'var(--tutor-border-idle)',
+			'progressStrokeColor' => $statics_stroke_color,
+			'type'                => 'progress',
+			'size'                => $size,
+			'animated'            => true,
+		);
+		?>
+		<div x-data="tutorStatics(<?php echo esc_attr( wp_json_encode( $config ) ); ?>)" class="<?php echo esc_attr( $wrapper_class ); ?>">
+			<div x-html="render()"></div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Render List Badge for quiz attempts.
 	 *
 	 * @since 4.0.0

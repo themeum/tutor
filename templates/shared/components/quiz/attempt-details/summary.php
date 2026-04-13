@@ -19,6 +19,7 @@ use Tutor\Components\PreviewTrigger;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz;
 use Tutor\Helpers\UrlHelper;
+use TUTOR\Quiz_Attempts_List;
 
 if ( ! isset( $attempt_data ) || ! is_object( $attempt_data ) ) {
 	return;
@@ -118,17 +119,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 	</div>
 
 	<div class="tutor-quiz-result">
-		<div 
-			class="tutor-quiz-result-progress"
-			x-data="tutorStatics({ 
-				value: <?php echo esc_attr( $earned_percentage ); ?>, 
-				size: 'large', 
-				type: 'progress' ,
-				animated: true,
-			})"
-		>
-			<div x-html="render()"></div>
-		</div>
+		<?php Quiz_Attempts_List::render_quiz_attempt_marks_percentage( $attempt_result, $earned_percentage, 'large', 'tutor-quiz-result-progress' ); ?>
 
 		<div class="tutor-quiz-result-marks">
 			<div class="tutor-result-badge <?php echo esc_attr( $result_badge_class ); ?>">
