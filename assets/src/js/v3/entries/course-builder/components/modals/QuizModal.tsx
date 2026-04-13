@@ -221,7 +221,7 @@ const QuizModal = ({
             icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
             title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
             subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
-            maxWidth={1218}
+            fullScreen
             headerChildren={
               <Tabs
                 wrapperCss={styles.tabsWrapper}
@@ -369,10 +369,12 @@ const QuizModal = ({
                     </Show>
                   </div>
                 </Show>
-                <div css={styles.content({ activeTab })}>
-                  <Show when={activeTab === 'settings'} fallback={<QuestionForm />}>
-                    <QuizSettings contentDripType={contentDripType} />
-                  </Show>
+                <div css={styles.centerColumn}>
+                  <div css={styles.content({ activeTab })}>
+                    <Show when={activeTab === 'settings'} fallback={<QuestionForm />}>
+                      <QuizSettings contentDripType={contentDripType} />
+                    </Show>
+                  </div>
                 </div>
                 <Show when={activeTab === 'details' && contentType !== 'tutor_h5p_quiz'}>
                   <div css={styles.right}>
@@ -429,8 +431,9 @@ const styles = {
   wrapper: ({ activeTab, isH5pQuiz }: { activeTab: QuizTabs; isH5pQuiz: boolean }) => css`
     width: 100%;
     display: grid;
-    grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr' : '352px 1fr 280px') : '1fr'};
+    grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr' : '400px 1fr 400px') : '1fr'};
     height: 100%;
+    overflow: hidden;
 
     ${Breakpoint.smallTablet} {
       width: 100%;
@@ -449,10 +452,18 @@ const styles = {
   `,
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
+    ${styleUtils.overflowYAuto};
+  `,
+  centerColumn: css`
+    ${styleUtils.overflowYAuto};
+    height: 100%;
+    width: 100%;
   `,
   content: ({ activeTab }: { activeTab: QuizTabs }) => css`
-    ${styleUtils.overflowYAuto};
     padding: ${spacing[32]} 0 ${spacing[48]} ${spacing[6]};
+    max-width: 800px;
+    width: 100%;
+    margin-inline: auto;
 
     ${activeTab === 'settings' &&
     css`

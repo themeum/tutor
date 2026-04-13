@@ -45,8 +45,8 @@ final class Icon {
 	const ASSIGNMENT                 = 'assignment';
 	const ATTACH                     = 'attach';
 	const ATTACHMENT_LINE            = 'attachment-line';
-	const AUDIO                      = 'audio';
 	const AUDIENCE                   = 'audience';
+	const AUDIO                      = 'audio';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
 	const BADGE                      = 'badge';
@@ -55,7 +55,6 @@ final class Icon {
 	const BARS                       = 'bars';
 	const BAR_LEGEND                 = 'bar-legend';
 	const BILLING                    = 'billing';
-	const BIN                        = 'bin';
 	const BOOK                       = 'book';
 	const BOOKMARK                   = 'bookmark';
 	const BOOKMARK_FILL              = 'bookmark-fill';
@@ -68,7 +67,6 @@ final class Icon {
 	const BULB_LINE                  = 'bulb-line';
 	const BUNDLE                     = 'bundle';
 	const BUY_GET_TYPE               = 'buy-get-type';
-	const CATEGORIES                 = 'categories';
 	const CALENDAR                   = 'calendar';
 	const CALENDAR_2                 = 'calendar-2';
 	const CALENDAR_2_FILL            = 'calendar-2-fill';
@@ -77,6 +75,7 @@ final class Icon {
 	const CALENDAR_LINES             = 'calendar-lines';
 	const CALL_END                   = 'call-end';
 	const CART                       = 'cart';
+	const CATEGORIES                 = 'categories';
 	const CERTIFICATE                = 'certificate';
 	const CERTIFICATE_2              = 'certificate-2';
 	const CERTIFICATE_2_FILL         = 'certificate_2_fill';
@@ -301,6 +300,7 @@ final class Icon {
 	const PORTRAIT_FILLED            = 'portrait-filled';
 	const PPT                        = 'ppt';
 	const PREVIEW                    = 'preview';
+	const PREVIEW_2                  = 'preview-2';
 	const PRICE_TAG                  = 'price-tag';
 	const PRIME_CHECK_CIRCLE         = 'prime-check-circle';
 	const PRINTER                    = 'printer';
@@ -425,7 +425,6 @@ final class Icon {
 	const VISITED                    = 'visited';
 	const WALLET                     = 'wallet';
 	const WARNING                    = 'warning';
-	const WARNING_COLORIZED          = 'warning-colorized';
 	const WARNING_LINE               = 'warning-line';
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';

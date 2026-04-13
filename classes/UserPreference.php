@@ -115,18 +115,18 @@ class UserPreference {
 
 		add_action( 'wp_ajax_tutor_save_user_preferences', array( $this, 'ajax_save_user_preferences' ) );
 		add_action( 'wp_ajax_tutor_reset_user_preferences', array( $this, 'ajax_reset_user_preferences' ) );
-		add_filter( 'body_class', array( $this, 'add_theme_attribute' ) );
-		add_action( 'wp_head', array( $this, 'apply_font_scale' ) );
+		add_filter( 'language_attributes', array( $this, 'add_theme_attribute' ) );
+		add_action( 'wp_head', array( $this, 'apply_inline_styles' ) );
 	}
 
 	/**
-	 * Apply font scale to the document root.
+	 * Apply user preference inline styles (font scale, background color).
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return void
 	 */
-	public function apply_font_scale() {
+	public function apply_inline_styles() {
 		if ( ! tutor_utils()->is_dashboard_page() && ! tutor_utils()->is_learning_area() ) {
 			return;
 		}
@@ -134,28 +134,25 @@ class UserPreference {
 		$font_scale     = isset( $prefs['font_scale'] ) ? (int) $prefs['font_scale'] : self::DEFAULT_FONT_SCALE;
 		$base_font_size = 16;
 		$font_size      = ( $base_font_size * $font_scale ) / self::DEFAULT_FONT_SCALE;
-		echo '<style>:root { font-size: ' . esc_attr( $font_size ) . 'px; }</style>';
+		echo '<style>html { background-color: var(--tutor-surface-base); } :root { font-size: ' . esc_attr( $font_size ) . 'px; }</style>';
 	}
 
 	/**
-	 * Add a theme class to the <body> tag.
-	 *
-	 * Note: body_class filter only accepts class names, not attributes.
+	 * Add a theme attribute to the <html> tag.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $classes Body classes.
+	 * @param string $output Language attributes.
 	 *
-	 * @return array
+	 * @return string
 	 */
-	public function add_theme_attribute( $classes ) {
+	public function add_theme_attribute( $output ) {
 		$prefs = $this->get_preferences();
 		$theme = isset( $prefs['theme'] ) ? (string) $prefs['theme'] : self::DEFAULT_THEME;
 		if ( ! in_array( $theme, self::THEMES, true ) ) {
 			$theme = self::DEFAULT_THEME;
 		}
-		echo ' data-tutor-theme="' . esc_attr( $theme ) . '"';
-		return $classes;
+		return $output . ' data-tutor-theme="' . esc_attr( $theme ) . '"';
 	}
 
 	/**
