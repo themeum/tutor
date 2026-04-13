@@ -77,3 +77,9 @@
   --tutor-actions-critical-secondary: #{$tutor-orange-100};
   --tutor-actions-caution: #{$tutor-yellow-500};
 }
+
+
+[data-tutor-theme="light-protanopia"][data-tutor-contrast="high"] {
+  --tutor-icon-success-secondary: #{$tutor-cyan-600};
+  --tutor-actions-success-exception: #{$tutor-cyan-400};
+}

@@ -76,3 +76,16 @@
   --tutor-actions-critical-primary: #{$tutor-orange-600};
   --tutor-actions-caution: #{$tutor-yellow-500};
 }
+
+
+[data-tutor-theme="dark-protanopia"][data-tutor-contrast="high"] {
+  --tutor-icon-success-secondary: #{$tutor-cyan-500};
+  --tutor-button-success: #{$tutor-cyan-500};
+  --tutor-button-success-hover: #{$tutor-cyan-600};
+  --tutor-button-success-focused: #{$tutor-cyan-500};
+  --tutor-border-warning: #{$tutor-yellow-200};
+  --tutor-border-success-secondary: #{$tutor-cyan-600};
+  --tutor-border-error-secondary: #{$tutor-orange-600};
+  --tutor-actions-success-exception: #{$tutor-cyan-950};
+  --tutor-actions-warning-exception: #{$tutor-orange-50};
+}
