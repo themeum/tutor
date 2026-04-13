@@ -325,6 +325,7 @@ Update: Updated Tutor LMS modals and icons for better WCAG 2 accessibility suppo
 Update: Added a terms and conditions agreement checkbox to the signup page.
 Update: Strengthened security for the eCommerce checkout process.
 Fix: Resolved an SQL injection vulnerability on the instructor listing page.
+Fix: Resolved Stripe pending status issue for delayed payments. (Pro)
 
 = 3.9.8 - Apr 01, 2026
 
