@@ -1113,7 +1113,7 @@ if ( ! function_exists( 'tutor_closeable_alert_msg' ) ) {
 			<span>
 				<?php echo is_array( $allowed_tags ) && count( $allowed_tags ) ? wp_kses( $message, $allowed_tags ) : esc_html( $message ); ?>
 			</span>
-			<span class="tutor-icon-times" area-hidden="true" onclick="this.closest('div').remove()" style="cursor: pointer;"></span>
+			<span class="tutor-icon-times" aria-hidden="true" onclick="this.closest('div').remove()" style="cursor: pointer;"></span>
 		</div>
 		<?php
 	}
@@ -1174,7 +1174,7 @@ if ( ! function_exists( 'tutor_snackbar' ) ) {
 							<?php echo esc_html( isset( $button['title'] ) ? $button['title'] : '' ); ?>
 						</a>
 					<?php endforeach; ?>
-					<span class="tutor-icon-times" area-hidden="true" onclick="this.closest('#tutor-reuseable-snackbar').remove()" style="cursor: pointer;"></span>
+					<span class="tutor-icon-times" aria-hidden="true" onclick="this.closest('#tutor-reuseable-snackbar').remove()" style="cursor: pointer;"></span>
 				</div>
 			</div>
 		</div>

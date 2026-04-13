@@ -99,7 +99,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 							</span>
 						</div>
 						<div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo esc_attr( $completed_percent ); ?>%;">
-							<span class="tutor-progress-value" area-hidden="true"></span>
+							<span class="tutor-progress-value" aria-hidden="true"></span>
 						</div>
 					</div>
 				</div>
@@ -234,7 +234,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 				?>
 					<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
-							<span class="tutor-icon-circle-info tutor-alert-icon tutor-mr-12" area-hidden="true"></span>
+							<span class="tutor-icon-circle-info tutor-alert-icon tutor-mr-12" aria-hidden="true"></span>
 							<span>
 								<?php esc_html_e( 'This course is full right now. We limit the number of students to create an optimized and productive group dynamic.', 'tutor' ); ?>
 							</span>
