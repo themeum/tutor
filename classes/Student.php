@@ -68,6 +68,7 @@ class Student {
 				'user_login'            => __( 'User Name field is required', 'tutor' ),
 				'password'              => __( 'Password field is required', 'tutor' ),
 				'password_confirmation' => __( 'Password Confirmation field is required', 'tutor' ),
+				'terms_conditions'      => __( 'Please accept the Terms and Conditions to continue', 'tutor' ),
 			)
 		);
 
@@ -85,6 +86,7 @@ class Student {
 				$validation_errors[ $required_key ] = $required_value;
 			}
 		}
+
 
 		if ( ! filter_var( tutor_utils()->input_old( 'email' ), FILTER_VALIDATE_EMAIL ) ) {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
