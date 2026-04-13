@@ -858,11 +858,6 @@ class Instructor {
 	 * @return void Sends JSON success or error response and exits.
 	 */
 	public function ajax_save_home_sections_order() {
-
-		if ( ! is_user_logged_in() ) {
-			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
-		}
-
 		tutor_utils()->check_nonce();
 
 		$order = Input::post( 'order', array(), Input::TYPE_ARRAY );
@@ -881,11 +876,6 @@ class Instructor {
 	 * @return void Sends JSON success or error response and exits.
 	 */
 	public function ajax_save_home_section_visibility() {
-
-		if ( ! is_user_logged_in() ) {
-			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
-		}
-
 		tutor_utils()->check_nonce();
 
 		$items = Input::post( 'items', '', Input::TYPE_STRING );
