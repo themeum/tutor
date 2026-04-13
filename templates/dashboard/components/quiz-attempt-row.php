@@ -20,62 +20,26 @@ if ( empty( $attempt ) ) {
 	return;
 }
 
-
-$show_quiz_title = $show_quiz_title ?? false;
-$show_course     = $show_course ?? false;
-$attempt_number  = $attempt_number ?? null;
-$attempts_count  = $attempts_count ?? 0;
-$is_previous     = $is_previous ?? false;
-
 ?>
 <div class="tutor-quiz-attempts-item">
 	<div class="tutor-quiz-item-info">
-		<?php
-		if ( $show_quiz_title && ! empty( $quiz_title ) ) :
+		<?php if ( ! empty( $quiz_title ) ) : ?>
+		<div class="tutor-quiz-item-info-title">
+			<?php echo esc_html( $quiz_title ); ?>
+		</div>
+		<?php endif; ?>
+
+		<div class="tutor-quiz-item-info-course">
+			<?php esc_html_e( 'Course:', 'tutor' ); ?> 
+			<?php
+			PreviewTrigger::make()
+				->id( $course_id ?? 0 )
+				->render()
 			?>
-			<div class="tutor-flex tutor-items-start tutor-justify-start tutor-gap-4">
-				<div class="tutor-quiz-item-info-title">
-					<?php echo esc_html( $quiz_title ); ?>
-				</div>
-				<?php if ( $attempts_count > 1 ) : ?>
-					<button @click="expanded = !expanded" class="tutor-quiz-attempts-expand-btn">
-						<?php
-						printf(
-							/* translators: %d: number of attempts */
-							esc_html__( '%d Attempts', 'tutor' ),
-							esc_attr( $attempts_count )
-						);
-						?>
-						<span class="tutor-quiz-attempts-expand-icon">
-							<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN )->size( 18 )->render(); ?>
-						</span>
-					</button>
-				<?php endif; ?>
-			</div>
-		<?php endif; ?>
+		</div>
 
-		<?php if ( $attempt_number ) : ?>
-			<div class="tutor-quiz-item-info-title">
-				<?php
-				/* translators: %d: attempt number */
-				echo esc_html( sprintf( __( 'Attempt %d', 'tutor' ), $attempt_number ) );
-				?>
-			</div>
-		<?php endif; ?>
-
-		<?php if ( ! $is_previous ) : ?>
-			<div class="tutor-quiz-item-info-course">
-				<?php esc_html_e( 'Course:', 'tutor' ); ?> 
-				<?php
-				PreviewTrigger::make()
-					->id( $course_id ?? 0 )
-					->render()
-				?>
-			</div>
-		<?php endif; ?>
-
-		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html( $attempt['date'] ?? '' ); ?></div>
-		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html__( 'Student Name: ', 'tutor' ) . esc_html( $attempt['student'] ); ?></div>
+		<div class="tutor-quiz-item-info-student"><?php echo esc_html__( 'Student: ', 'tutor' ) . esc_html( $attempt['student'] ); ?></div>
+		<div class="tutor-quiz-item-info-date"><?php echo esc_html( $attempt['date'] ?? '' ); ?></div>
 	</div>
 
 	<div class="tutor-quiz-item-marks">

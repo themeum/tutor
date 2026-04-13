@@ -1327,6 +1327,7 @@ class Utils {
 	 *               false then it will just check record.
 	 *
 	 * @since 3.3.0  param $is_complete added to cache key.
+	 * @since 4.0.0  enrollment order_id and product_id added to enrollment info.
 	 *
 	 * @param int  $course_id course id.
 	 * @param int  $user_id user id.
@@ -1369,6 +1370,12 @@ class Utils {
 					$user_id
 				)
 			);
+
+			if ( $get_enrolled_info ) {
+				$get_enrolled_info->order_id   = (int) get_post_meta( $get_enrolled_info->ID, Course::ENROLLMENT_ORDER_ID_META, true );
+				$get_enrolled_info->product_id = (int) get_post_meta( $get_enrolled_info->ID, Course::ENROLLMENT_PRODUCT_ID_META, true );
+			}
+
 			TutorCache::set( $cache_key, $get_enrolled_info );
 		}
 

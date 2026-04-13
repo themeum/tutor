@@ -239,14 +239,15 @@ class Quiz_Attempts_List {
 	 * @param integer $quiz_attempts_count the quiz attempts count.
 	 * @param string  $url the page url.
 	 * @param string  $result_filter filter to filter out results.
+	 * @param bool    $make_group whether to group the quiz attempts by quiz.
 	 *
 	 * @return array
 	 */
-	public function get_quiz_attempts_nav_data( array $quiz_attempts = array(), int $quiz_attempts_count = 0, string $url = '', string $result_filter = '' ): array {
-		$all_attempts     = count( QuizModel::format_quiz_attempts( $quiz_attempts ) );
-		$pending_attempts = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_PENDING ) );
-		$passed_attempts  = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_PASS ) );
-		$failed_attempts  = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_FAIL ) );
+	public function get_quiz_attempts_nav_data( array $quiz_attempts = array(), int $quiz_attempts_count = 0, string $url = '', string $result_filter = '', $make_group = true ): array {
+		$all_attempts     = count( QuizModel::format_quiz_attempts( $quiz_attempts, '', $make_group ) );
+		$pending_attempts = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_PENDING, $make_group ) );
+		$passed_attempts  = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_PASS, $make_group ) );
+		$failed_attempts  = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_FAIL, $make_group ) );
 
 		$nav_links = array(
 			'type'    => 'dropdown',
@@ -398,8 +399,9 @@ class Quiz_Attempts_List {
 	 * @return string
 	 */
 	public function get_quiz_attempt_row_template( $course_id = 0 ): string {
-		$template = $this->check_is_student( $course_id ) ? 'shared.components.student-quiz-attempt-row'
-		: 'dashboard.components.quiz-attempt-row';
+		$template = $this->check_is_student( $course_id )
+					? 'shared.components.student-quiz-attempt-row'
+					: 'dashboard.components.quiz-attempt-row';
 		return $template;
 	}
 

@@ -58,6 +58,14 @@ class Course extends Tutor_Base {
 	const COURSE_PRODUCT_ID_META     = '_tutor_course_product_id';
 
 	/**
+	 * Enrollment meta
+	 *
+	 * @since 4.0.0
+	 */
+	const ENROLLMENT_ORDER_ID_META   = '_tutor_enrolled_by_order_id';
+	const ENROLLMENT_PRODUCT_ID_META = '_tutor_enrolled_by_product_id';
+
+	/**
 	 * Selling option constants
 	 *
 	 * @since 3.0.0
