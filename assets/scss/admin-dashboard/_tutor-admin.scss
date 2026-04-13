@@ -2044,6 +2044,19 @@ h2.tutor-page-heading {
       color: #ffffff;
       margin: 0px;
       padding: 0px;
+
+      a {
+        color: #ffffff;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &:visited {
+          color: #ffffff;
+        }
+      }
     }
 
     &-buttons {

@@ -103,7 +103,21 @@ class Admin {
 			<div class="tutor-v4-beta-notice-right">
 				<div class="tutor-v4-beta-notice-right-content">
 					<h3><?php esc_html_e( 'Be the First to Try Tutor LMS 4.0 Beta!', 'tutor' ); ?></h3>
-					<p><?php esc_html_e( 'Explore the upcoming features of Tutor LMS 4.0, test the experience, and help us improve with your valuable feedback.', 'tutor' ); ?></p>
+					<p>
+						<?php
+						echo wp_kses_post(
+							sprintf(
+								/* translators: 1: opening anchor tag, 2: closing anchor tag */
+								__(
+									'Explore the upcoming features of Tutor LMS 4.0, test the experience, and help us improve with your valuable %1$sfeedback%2$s.',
+									'tutor'
+								),
+								'<a href="https://forms.gle/Dxc1CWT63UcEAJGR9" target="_blank">',
+								' <i class="tutor-icon-external-link" aria-hidden="true"></i></a>'
+							)
+						);
+						?>
+					</p>
 				</div>
 				<div class="tutor-v4-beta-notice-right-buttons">
 					<a href="https://tutorlms.com/blog/first-look-into-tutor-lms-4-0/?nocache=1" target="_blank" class="tutor-btn tutor-btn-tertiary tutor-gap-4px tutor-text-nowrap">
