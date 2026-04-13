@@ -9,6 +9,8 @@
  * @since 1.4.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
 use Tutor\Components\EmptyState;
 use Tutor\Models\QuizModel;
@@ -30,7 +32,7 @@ if ( ! $attempt_data || ! $can_review ) {
 
 $form_id             = 'quiz-attempt-review-form';
 $form_default_values = array(
-	'feedback' => is_array( $attempt_info ) ? (string) ( $attempt_info['instructor_feedback'] ?? '' ) : '',
+	'feedback' => is_array( $attempt_info ) ? (string) ( wp_json_encode( $attempt_info['feedback'] ?? '', JSON_HEX_APOS ) ) : '',
 );
 
 $attempt_answers_map = array();
@@ -61,7 +63,7 @@ if ( is_array( $questions ) ) {
 ?>
 
 <div class="wrap">
-	
+
 	<?php if ( ! is_admin() ) : ?>
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"

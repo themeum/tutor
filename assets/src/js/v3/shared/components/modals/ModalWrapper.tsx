@@ -5,8 +5,8 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
 import FocusTrap from '@TutorShared/components/FocusTrap';
 
-import { modal } from '@TutorShared/config/constants';
-import { Breakpoint, borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { modal, WP_ADMIN_BAR_HEIGHT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useScrollLock } from '@TutorShared/hooks/useScrollLock';
@@ -23,6 +23,7 @@ interface ModalWrapperProps {
   entireHeader?: React.ReactNode;
   maxWidth?: number;
   blurTriggerElement?: boolean;
+  fullScreen?: boolean;
 }
 
 const ModalWrapper = ({
@@ -36,6 +37,7 @@ const ModalWrapper = ({
   actions,
   maxWidth = 1218,
   blurTriggerElement = true,
+  fullScreen = false,
 }: ModalWrapperProps) => {
   useScrollLock();
 
@@ -44,6 +46,7 @@ const ModalWrapper = ({
       <div
         css={styles.container({
           maxWidth,
+          isFullScreen: fullScreen,
         })}
       >
         <div
@@ -89,7 +92,7 @@ const ModalWrapper = ({
             {entireHeader}
           </Show>
         </div>
-        <div css={styles.content}>
+        <div css={styles.content({ isFullScreen: fullScreen })}>
           <ErrorBoundary>{children}</ErrorBoundary>
         </div>
       </div>
@@ -100,7 +103,7 @@ const ModalWrapper = ({
 export default ModalWrapper;
 
 const styles = {
-  container: ({ maxWidth }: { maxWidth?: number }) => css`
+  container: ({ maxWidth, isFullScreen }: { maxWidth?: number; isFullScreen?: boolean }) => css`
     position: relative;
     background: ${colorTokens.background.white};
     margin: ${modal.MARGIN_TOP}px auto ${spacing[24]};
@@ -112,6 +115,14 @@ const styles = {
     bottom: 0;
     z-index: ${zIndex.modal};
     width: 100%;
+
+    ${isFullScreen &&
+    css`
+      max-width: 100vw;
+      width: 100vw;
+      height: 100vh;
+      margin-top: ${WP_ADMIN_BAR_HEIGHT};
+    `}
 
     ${Breakpoint.smallTablet} {
       width: 90%;
@@ -203,10 +214,15 @@ const styles = {
       box-shadow: ${shadow.focus};
     }
   `,
-  content: css`
+  content: ({ isFullScreen }: { isFullScreen?: boolean }) => css`
     height: calc(100% - ${modal.HEADER_HEIGHT + modal.MARGIN_TOP}px);
     background-color: ${colorTokens.surface.courseBuilder};
     overflow-x: hidden;
     ${styleUtils.overflowYAuto}
+
+    ${isFullScreen &&
+    css`
+      height: calc(100% - ${modal.HEADER_HEIGHT}px);
+    `}
   `,
 };

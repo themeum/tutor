@@ -1327,6 +1327,7 @@ class Utils {
 	 *               false then it will just check record.
 	 *
 	 * @since 3.3.0  param $is_complete added to cache key.
+	 * @since 4.0.0  enrollment order_id and product_id added to enrollment info.
 	 *
 	 * @param int  $course_id course id.
 	 * @param int  $user_id user id.
@@ -1369,6 +1370,12 @@ class Utils {
 					$user_id
 				)
 			);
+
+			if ( $get_enrolled_info ) {
+				$get_enrolled_info->order_id   = (int) get_post_meta( $get_enrolled_info->ID, Course::ENROLLMENT_ORDER_ID_META, true );
+				$get_enrolled_info->product_id = (int) get_post_meta( $get_enrolled_info->ID, Course::ENROLLMENT_PRODUCT_ID_META, true );
+			}
+
 			TutorCache::set( $cache_key, $get_enrolled_info );
 		}
 
@@ -5383,7 +5390,7 @@ class Utils {
 			)
 		);
 
-		return min( $max_questions_count, $total_question );
+		return min( $max_questions_count, $total_question ) <= 0 ? $total_question : min( $max_questions_count, $total_question );
 	}
 
 	/**
@@ -5450,6 +5457,10 @@ class Utils {
 		);
 
 		$max_mentioned = (int) $this->get_quiz_option( $quiz_id, 'max_questions_for_answer', 10 );
+
+		if ( $max_mentioned <= 0 ) {
+			return $max_questions;
+		}
 
 		if ( $max_mentioned < $max_questions ) {
 			return $max_mentioned;
@@ -6451,21 +6462,20 @@ class Utils {
 	 * Get the price format
 	 *
 	 * @since 1.1.2
-	 * @since 4.0.0 Condition added for different monetizations and also added $html_markup for woocommece
+	 * @since 4.0.0 Condition added for different monetizations.
 	 *
 	 * @param int  $price price.
-	 * @param bool $html_markup  Whether to include HTML markup ( Only for woocommerce as it returns html markup ).
 	 *
 	 * @return int|string
 	 */
-	public function tutor_price( $price = 0, $html_markup = true ) {
+	public function tutor_price( $price = 0 ) {
 
 		$monetize_by = $this->get_option( 'monetize_by' );
 
 		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			return tutor_get_formatted_price( $price );
 		} elseif ( function_exists( 'wc_price' ) && 'wc' === $monetize_by ) {
-			return wc_price( $price, array( 'in_span' => $html_markup ) );
+			return wc_price( $price );
 		} elseif ( function_exists( 'edd_currency_filter' ) && 'edd' === $monetize_by ) {
 			return edd_currency_filter( edd_format_amount( $price ) );
 		} elseif ( function_exists( 'pmpro_formatPrice' ) && 'pmpro' === $monetize_by ) {

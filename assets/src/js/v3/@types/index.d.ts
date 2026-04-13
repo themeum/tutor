@@ -47,6 +47,7 @@ declare module '*.png';
 declare module '*.svg';
 declare module '*.jpeg';
 declare module '*.jpg';
+declare module '*.scss?inline';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

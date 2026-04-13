@@ -160,7 +160,7 @@ class EmptyState extends BaseComponent {
 		}
 
 		$this->component_string = sprintf(
-			'<div class="tutor-px-9 tutor-py-10 tutor-text-center" %s>
+			'<div class="tutor-px-9 tutor-py-10 tutor-flex-center-col" %s>
 				%s
 				<div class="tutor-small tutor-text-subdued tutor-mt-4">%s</div>
 				%s

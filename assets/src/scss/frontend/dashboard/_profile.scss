@@ -81,12 +81,12 @@
 
     .tutor-user-profile-designation {
       @include tutor-typography(small, regular, subdued);
-      margin-bottom: $tutor-spacing-6;
     }
 
     .tutor-user-profile-social {
       @include tutor-flex(row, center);
       gap: $tutor-spacing-6;
+      margin-top: $tutor-spacing-6;
 
       a {
         height: 16px;
@@ -128,7 +128,7 @@
 
     &-left {
       @include tutor-breakpoint-up(sm) {
-        min-height: 120px;
+        min-height: 140px;
       }
     }
 

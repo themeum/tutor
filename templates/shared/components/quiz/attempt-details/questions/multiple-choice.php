@@ -44,7 +44,7 @@ $given_ids = array_map( 'intval', array_filter( $given_ids ) );
 			$option_attr = 'correct';
 		}
 		?>
-		<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $option_attr ); ?>">
+		<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $option_attr ); ?>" data-readonly="true">
 			<?php if ( ! empty( $answer->image_id ) ) : ?>
 				<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer->image_id, 'full' ) ); ?>" alt="<?php echo esc_attr( $answer->answer_title ?? '' ); ?>">
 				<div data-title><?php echo esc_html( $answer->answer_title ?? '' ); ?></div>

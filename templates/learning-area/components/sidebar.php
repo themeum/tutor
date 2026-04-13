@@ -90,7 +90,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
 						->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
 						->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
-						->icon( UrlHelper::asset( 'images/illustrations/reset-course.svg' ) )
+						->icon( UrlHelper::themed_asset( 'images/illustrations/reset-course.webp' ) )
 						->confirm_handler( 'resetProgress()' )
 						->mutation_state( 'resetProgressMutation' )
 						->render();
