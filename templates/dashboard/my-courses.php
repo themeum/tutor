@@ -315,7 +315,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 
 									<div class="tutor-modal-body tutor-text-center">
 										<div class="tutor-mt-48">
-											<img class="tutor-d-inline-block" src="<?php echo esc_attr( tutor()->url ); ?>assets/images/icon-trash.svg" alt="" aria-hidden="true" />
+											<img class="tutor-d-inline-block" src="<?php echo esc_attr( tutor()->url ); ?>assets/images/icon-trash.svg" alt="<?php esc_attr_e( 'Delete This Course?', 'tutor' ); ?>" aria-hidden="true" />
 										</div>
 
 										<div id="<?php echo esc_attr( $id_string_delete ); ?>-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Course?', 'tutor' ); ?></div>
