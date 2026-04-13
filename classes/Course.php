@@ -1709,7 +1709,7 @@ class Course extends Tutor_Base {
 			wp_send_json_error( __( 'Sorting order is required', 'tutor' ) );
 		}
 
-		$topic_id  = (int) isset( $sorting_order[0] ) && isset( $sorting_order[0]['topic_id'] ) ? $sorting_order[0]['topic_id'] : 0;
+		$topic_id  = (int) isset( $sorting_order[0], $sorting_order[0]['topic_id'] ) ? $sorting_order[0]['topic_id'] : 0;
 		$course_id = wp_get_post_parent_id( $topic_id );
 
 		if ( ! $topic_id || ! $course_id ) {
