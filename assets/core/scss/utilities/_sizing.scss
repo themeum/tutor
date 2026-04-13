@@ -170,30 +170,27 @@ $max-heights: (
 $responsive-widths: map-merge($fixed-widths, $fractional-widths);
 $responsive-heights: $fixed-heights;
 
-@if $tutor-enable-responsive-sizing {
-  @each $breakpoint, $min-width in $tutor-responsive-breakpoints {
-    @include tutor-breakpoint-down($breakpoint) {
-      // Width
-      @each $key, $value in $responsive-widths {
-        .tutor-#{$breakpoint}-w-#{$key} {
-          width: $value;
-        }
+@each $breakpoint, $min-width in $tutor-responsive-breakpoints {
+  @include tutor-breakpoint-down($breakpoint) {
+    // Width
+    @each $key, $value in $responsive-widths {
+      .tutor-#{$breakpoint}-w-#{$key} {
+        width: $value;
       }
+    }
 
-      // Height
-      @each $key, $value in $responsive-heights {
-        .tutor-#{$breakpoint}-h-#{$key} {
-          height: $value;
-        }
+    // Height
+    @each $key, $value in $responsive-heights {
+      .tutor-#{$breakpoint}-h-#{$key} {
+        height: $value;
       }
+    }
 
-      // Max-width
-      @each $key, $value in $max-widths {
-        .tutor-#{$breakpoint}-max-w-#{$key} {
-          max-width: $value;
-        }
+    // Max-width
+    @each $key, $value in $max-widths {
+      .tutor-#{$breakpoint}-max-w-#{$key} {
+        max-width: $value;
       }
     }
   }
 }
-

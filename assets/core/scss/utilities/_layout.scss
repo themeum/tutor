@@ -355,70 +355,62 @@ $overflow-types: auto, hidden, visible, scroll;
 // Responsive Utilities
 // ------------------------
 
-@if $tutor-enable-responsive-layout {
-  @each $breakpoint, $min-width in $tutor-responsive-breakpoints {
-    @include tutor-breakpoint-down($breakpoint) {
-      // Display utilities
-      @each $name, $value in $display-utils {
-        .tutor-#{$breakpoint}-#{$name} {
-          display: $value;
-        }
+@each $breakpoint, $min-width in $tutor-responsive-breakpoints {
+  @include tutor-breakpoint-down($breakpoint) {
+    // Display utilities
+    @each $name, $value in $display-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        display: $value;
       }
+    }
 
-      // Flex direction utilities
-      @each $name, $dir in $flex-direction-utils {
-        .tutor-#{$breakpoint}-#{$name} {
-          flex-direction: $dir;
-        }
+    // Flex direction utilities
+    @each $name, $dir in $flex-direction-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        flex-direction: $dir;
       }
+    }
 
-      // Justify content utilities
-      @each $name, $value in $justify-utils {
-        .tutor-#{$breakpoint}-#{$name} {
-          justify-content: $value;
-        }
+    // Justify content utilities
+    @each $name, $value in $justify-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        justify-content: $value;
       }
+    }
 
-      // Align items utilities
-      @each $name, $value in $align-items-utils {
-        .tutor-#{$breakpoint}-#{$name} {
-          align-items: $value;
-        }
+    // Align items utilities
+    @each $name, $value in $align-items-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        align-items: $value;
       }
+    }
 
-      // Gap utilities
-      @each $name, $value in $tutor-responsive-spacing {
-        .tutor-#{$breakpoint}-gap-#{$name} {
-          gap: $value;
-        }
-        .tutor-#{$breakpoint}-gap-x-#{$name} {
-          column-gap: $value;
-        }
-        .tutor-#{$breakpoint}-gap-y-#{$name} {
-          row-gap: $value;
-        }
+    // Gap utilities
+    @each $name, $value in $tutor-responsive-spacing {
+      .tutor-#{$breakpoint}-gap-#{$name} {
+        gap: $value;
       }
+    }
 
-      // Grid column utilities
-      @each $count in $grid-cols {
-        .tutor-#{$breakpoint}-grid-cols-#{$count} {
-          grid-template-columns: repeat($count, minmax(0, 1fr));
-        }
+    // Grid column utilities
+    @each $count in $grid-cols {
+      .tutor-#{$breakpoint}-grid-cols-#{$count} {
+        grid-template-columns: repeat($count, minmax(0, 1fr));
       }
+    }
 
-      // Flex shorthand
-      .tutor-#{$breakpoint}-flex-1 {
-        flex: 1 1 0%;
-      }
-      .tutor-#{$breakpoint}-flex-auto {
-        flex: 1 1 auto;
-      }
-      .tutor-#{$breakpoint}-flex-initial {
-        flex: 0 1 auto;
-      }
-      .tutor-#{$breakpoint}-flex-none {
-        flex: none;
-      }
+    // Flex shorthand
+    .tutor-#{$breakpoint}-flex-1 {
+      flex: 1 1 0%;
+    }
+    .tutor-#{$breakpoint}-flex-auto {
+      flex: 1 1 auto;
+    }
+    .tutor-#{$breakpoint}-flex-initial {
+      flex: 0 1 auto;
+    }
+    .tutor-#{$breakpoint}-flex-none {
+      flex: none;
     }
   }
 }
