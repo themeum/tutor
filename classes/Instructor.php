@@ -10,9 +10,7 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use DateInterval;
 use DateTime;
@@ -75,9 +73,8 @@ class Instructor {
 		 */
 		add_action( 'wp_loaded', array( $this, 'hide_instructor_notice' ) );
 
-		add_action( 'wp_ajax_tutor_save_instructor_home_sections_order', array( $this, 'save_home_sections_order' ) );
-
-		add_action( 'wp_ajax_tutor_save_instructor_home_sections_visibility', array( $this, 'save_home_section_visibility' ) );
+		add_action( 'wp_ajax_tutor_save_instructor_home_sections_order', array( $this, 'ajax_save_home_sections_order' ) );
+		add_action( 'wp_ajax_tutor_save_instructor_home_sections_visibility', array( $this, 'ajax_save_home_section_visibility' ) );
 	}
 
 	/**
@@ -629,6 +626,7 @@ class Instructor {
 			array()
 		);
 
+		//phpcs:disabled
 		$result = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT
@@ -648,6 +646,7 @@ class Instructor {
 				$limit
 			)
 		);
+		//phpcs:enable
 
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
@@ -858,7 +857,7 @@ class Instructor {
 	 *
 	 * @return void Sends JSON success or error response and exits.
 	 */
-	public function save_home_sections_order() {
+	public function ajax_save_home_sections_order() {
 
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
@@ -881,7 +880,7 @@ class Instructor {
 	 *
 	 * @return void Sends JSON success or error response and exits.
 	 */
-	public function save_home_section_visibility() {
+	public function ajax_save_home_section_visibility() {
 
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
