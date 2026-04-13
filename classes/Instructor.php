@@ -95,6 +95,7 @@ class Instructor {
 				'user_login'            => __( 'User Name field is required', 'tutor' ),
 				'password'              => __( 'Password field is required', 'tutor' ),
 				'password_confirmation' => __( 'Password Confirmation field is required', 'tutor' ),
+				'terms_conditions'      => __( 'Please accept the Terms and Conditions to continue', 'tutor' ),
 			)
 		);
 

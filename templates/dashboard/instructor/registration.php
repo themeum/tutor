@@ -156,9 +156,18 @@
 			?>
 
 			<?php if ( null !== $tutor_toc_page_link ) : ?>
-				<div class="tutor-mb-24">
-					<?php esc_html_e( 'By signing up, I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_attr_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
-				</div>
+				<div class="tutor-form-row tutor-mb-24">
+					<div class="tutor-form-col-12">
+						<div class="tutor-d-flex tutor-gap-1 tutor-align-center">
+							<div class="tutor-form-wrap">
+								<input type="checkbox" id="tutor-terms-conditions" name="terms_conditions" required>
+							</div>
+							<label for="tutor-terms-conditions">
+								<?php esc_html_e( 'By signing up, you agree to the', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
+							</label>
+						</div>
+					</div>
+				</div> 
 			<?php endif; ?>
 
 			<div>
