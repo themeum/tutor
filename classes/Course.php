@@ -1695,7 +1695,7 @@ class Course extends Tutor_Base {
 	 * Update course content order
 	 *
 	 * @since 1.0.0
-	 * @since 4.0.0 Check if user can manage course before updating order.
+	 * @since 3.9.9 Check if user can manage course before updating order.
 	 *
 	 * @return void
 	 */
