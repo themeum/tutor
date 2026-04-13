@@ -1,3 +1,4 @@
+import purgecss from '@fullhuman/postcss-purgecss';
 import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
 import { rspack } from '@rspack/core';
 import fs from 'node:fs';
@@ -59,6 +60,116 @@ const createConfig = (env, options) => {
   const isDevelopment = mode === 'development';
   const isMakePot = env?.['make-pot'];
 
+  const cssLoaderConfig = {
+    loader: 'css-loader',
+    options: {
+      url: {
+        filter: (url) => {
+          return /\.(woff2?|woff|ttf|otf|eot)(\?.*)?$/i.test(url);
+        },
+      },
+    },
+  };
+
+  const sassLoaderConfig = {
+    loader: 'sass-loader',
+    options: {
+      implementation: 'sass',
+      sassOptions: {
+        outputStyle: isDevelopment ? 'expanded' : 'compressed',
+        silenceDeprecations: ['abs-percent', 'color-functions', 'global-builtin', 'import', 'legacy-js-api'],
+      },
+    },
+  };
+
+  // Breakpoint first segment for responsive utilities — keep in sync with
+  // assets/core/scss/tokens/_utility-config.scss ($tutor-responsive-breakpoints).
+  const tutorUtilityBreakpoints = ['xl', 'lg', 'md', 'sm'];
+  const tutorResponsiveUtilityPrefix = `(?:${tutorUtilityBreakpoints.join('|')})-`;
+
+  // Prefixes after `tutor-` (or after `tutor-{bp}-`) from assets/core/scss/utilities.
+  // Used by PurgeCSS so real utilities are not treated as component safelist entries.
+  const utilityPrefixes = [
+    'm[trblxy]?',
+    'p[trblxy]?',
+    'p[1-3]',
+    'w',
+    'h',
+    'min-w',
+    'min-h',
+    'max-w',
+    'max-h',
+    'bg',
+    'text',
+    'surface',
+    'icon',
+    'actions',
+    'shadow',
+    'opacity',
+    'border',
+    'rounded',
+    'block',
+    'inline',
+    'flex',
+    'grid',
+    'hidden',
+    'justify',
+    'items',
+    'content',
+    'self',
+    'gap',
+    'gap-x',
+    'gap-y',
+    'col',
+    'static',
+    'fixed',
+    'absolute',
+    'relative',
+    'sticky',
+    'top',
+    'bottom',
+    'left',
+    'right',
+    'inset',
+    'z',
+    'overflow',
+    'float',
+    'ratio',
+    'h[1-5]',
+    'medium',
+    'small',
+    'tiny',
+    'font',
+    'underline',
+    'line-through',
+    'no-underline',
+    'uppercase',
+    'lowercase',
+    'capitalize',
+    'normal-case',
+    'truncate',
+    'whitespace',
+    'break',
+    'list',
+    'hover',
+    'focus',
+    'transition',
+    'duration',
+    'delay',
+    'animate',
+    'origin',
+    'scale',
+    'rotate',
+    'translate',
+    'skew',
+    'transform',
+    'backface',
+  ];
+  const utilityPrefixPattern = utilityPrefixes.join('|');
+  const tutorComponentsRegex = new RegExp(
+    `^tutor-(?!(${tutorResponsiveUtilityPrefix})?(${utilityPrefixPattern})(-|$))`,
+  );
+
   const baseConfig = {
     mode,
     cache: false,
@@ -66,29 +177,76 @@ const createConfig = (env, options) => {
       rules: [
         {
           test: /\.s[ac]ss$/i,
+          include: [path.resolve(__dirname, 'assets/core/scss')],
           use: [
             rspack.CssExtractRspackPlugin.loader,
+            cssLoaderConfig,
             {
-              loader: 'css-loader',
+              loader: 'postcss-loader',
               options: {
-                url: {
-                  filter: (url) => {
-                    return /\.(woff2?|woff|ttf|otf|eot)(\?.*)?$/i.test(url);
-                  },
+                postcssOptions: {
+                  plugins: [
+                    !isDevelopment &&
+                      purgecss({
+                        content: [
+                          // Tutor LMS paths
+                          path.resolve(__dirname, './components/**/*.php'),
+                          path.resolve(__dirname, './templates/**/*.php'),
+                          path.resolve(__dirname, './views/**/*.php'),
+                          path.resolve(__dirname, './classes/**/*.php'),
+                          path.resolve(__dirname, './assets/src/js/**/*.{js,ts,jsx,tsx}'),
+                          path.resolve(__dirname, './assets/core/ts/**/*.{ts,tsx}'),
+                          path.resolve(__dirname, './includes/**/*.php'),
+                          path.resolve(__dirname, './ecommerce/**/*.php'),
+                          path.resolve(__dirname, './tutor.php'),
+                          // Third Party Scripts
+                          path.resolve(__dirname, './node_modules/vanilla-calendar-pro/**/*.js'),
+                          // Tutor LMS Pro paths
+                          path.resolve(__dirname, '../tutor-pro/templates/**/*.php'),
+                          path.resolve(__dirname, '../tutor-pro/classes/**/*.php'),
+                          path.resolve(__dirname, '../tutor-pro/views/**/*.php'),
+                          path.resolve(__dirname, '../tutor-pro/assets/src/js/**/*.{js,ts,jsx,tsx}'),
+                          path.resolve(__dirname, '../tutor-pro/includes/**/*.php'),
+                          path.resolve(__dirname, '../tutor-pro/addons/**/*.php'),
+                          path.resolve(__dirname, '../tutor-pro/addons/**/*.{js,ts,jsx,tsx}'),
+                          path.resolve(__dirname, '../tutor-pro/ecommerce/**/*.php'),
+                          path.resolve(__dirname, '../tutor-pro/gift-course/**/*.php'),
+                          path.resolve(__dirname, '../tutor-pro/tutor-pro.php'),
+                        ],
+                        defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+                        safelist: {
+                          standard: [
+                            /^is-/,
+                            /^has-/,
+                            /^show-/,
+                            /^tutor-theme-/,
+                            /^vc-/,
+                            /^wp-editor-/,
+                            /^mce-/,
+                            /^quicktags-/,
+                            /^arrow-/,
+                            tutorComponentsRegex,
+                            'active',
+                            'disabled',
+                            'failed',
+                            'passed',
+                            'pending',
+                          ],
+                          deep: [/^vc-/, /^tutor-vc-/, /^tutor-range-calendar/],
+                          greedy: [/data-vc/, /data-active/],
+                        },
+                      }),
+                  ].filter(Boolean),
                 },
               },
             },
-            {
-              loader: 'sass-loader',
-              options: {
-                implementation: 'sass',
-                sassOptions: {
-                  outputStyle: isDevelopment ? 'expanded' : 'compressed',
-                  silenceDeprecations: ['abs-percent', 'color-functions', 'global-builtin', 'import', 'legacy-js-api'],
-                },
-              },
-            },
+            sassLoaderConfig,
           ],
+        },
+        {
+          test: /\.s[ac]ss$/i,
+          exclude: [path.resolve(__dirname, 'assets/core/scss')],
+          use: [rspack.CssExtractRspackPlugin.loader, cssLoaderConfig, sassLoaderConfig],
         },
         {
           test: /\.css$/i,
