@@ -18,16 +18,16 @@ class PreferenceService {
   }
 
   initialize(): void {
-    const wrapper = document.querySelector(`[${this.DATA_THEME_ATTR}]`) || document.body;
+    const wrapper = document.querySelector(`[${this.DATA_THEME_ATTR}]`) || document.documentElement;
     const attrTheme = wrapper.getAttribute(this.DATA_THEME_ATTR);
     if (attrTheme === this.THEME.SYSTEM) {
-      this.applyTheme(this.THEME.SYSTEM);
+      this.applyTheme(this.THEME.SYSTEM, false);
     }
   }
 
-  applyTheme(theme: Theme): void {
+  applyTheme(theme: Theme, withTransition: boolean = true): void {
     if (!theme) return;
-    const wrapper = document.querySelector(`[${this.DATA_THEME_ATTR}]`) || document.body;
+    const wrapper = document.querySelector(`[${this.DATA_THEME_ATTR}]`) || document.documentElement;
 
     if (this.systemThemeListener) {
       this.mediaQuery.removeEventListener('change', this.systemThemeListener);
@@ -42,16 +42,28 @@ class PreferenceService {
       }
     };
 
-    updateTheme();
+    const applyLogic = () => {
+      updateTheme();
 
-    if (theme === this.THEME.SYSTEM) {
-      this.systemThemeListener = () => updateTheme();
-      this.mediaQuery.addEventListener('change', this.systemThemeListener);
-    }
+      if (theme === this.THEME.SYSTEM) {
+        this.systemThemeListener = () => updateTheme();
+        this.mediaQuery.addEventListener('change', this.systemThemeListener);
+      }
 
-    const applied = wrapper.getAttribute(this.DATA_THEME_ATTR);
-    if (applied === this.THEME.DARK || applied === this.THEME.LIGHT) {
-      this.activeTheme = applied;
+      const applied = wrapper.getAttribute(this.DATA_THEME_ATTR);
+      if (applied === this.THEME.DARK || applied === this.THEME.LIGHT) {
+        this.activeTheme = applied;
+      }
+    };
+
+    // @ts-ignore
+    if (withTransition && document.startViewTransition) {
+      // @ts-ignore
+      document.startViewTransition(() => {
+        applyLogic();
+      });
+    } else {
+      applyLogic();
     }
   }
   applyFontScale(fontScale: string | number): void {
