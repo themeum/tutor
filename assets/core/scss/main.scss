@@ -95,3 +95,44 @@ ul {
 [x-cloak] {
   display: none !important;
 }
+
+// View Transitions for Theme Toggle
+::view-transition-group(root) {
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-new(root) {
+  animation-name: tutor-theme-reveal-light;
+  animation-fill-mode: both;
+}
+
+::view-transition-old(root),
+[data-tutor-theme="dark"]::view-transition-old(root) {
+  animation: none;
+  animation-fill-mode: both;
+  z-index: -1;
+}
+
+[data-tutor-theme="dark"]::view-transition-new(root) {
+  animation-name: tutor-theme-reveal-dark;
+  animation-fill-mode: both;
+}
+
+@keyframes tutor-theme-reveal-dark {
+  from {
+    clip-path: polygon(50% -71%, -50% 71%, -50% 71%, 50% -71%);
+  }
+  to {
+    clip-path: polygon(50% -71%, -50% 71%, 50% 171%, 171% 50%);
+  }
+}
+
+@keyframes tutor-theme-reveal-light {
+  from {
+    clip-path: polygon(171% 50%, 50% 171%, 50% 171%, 171% 50%);
+  }
+  to {
+    clip-path: polygon(171% 50%, 50% 171%, -50% 71%, 50% -71%);
+  }
+}
