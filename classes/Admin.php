@@ -112,7 +112,7 @@ class Admin {
 				</div>
 			</div>
 		</div>
-		<?php
+			<?php
 		}
 	}
 
