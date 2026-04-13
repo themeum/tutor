@@ -124,6 +124,40 @@ export const wpEditor = (config: WPEditorConfig): WPEditorComponent => {
               }
             }
           });
+
+          // Sync theme to iframe
+          const setupThemeSync = () => {
+            const syncTheme = () => {
+              const iframeDoc = editor.getDoc && editor.getDoc();
+              if (!iframeDoc || !iframeDoc.body) return;
+
+              const theme = document.documentElement.getAttribute('data-tutor-theme') || 'light';
+              iframeDoc.documentElement.setAttribute('data-tutor-theme', theme);
+
+              const body = iframeDoc.body;
+              const computed = window.getComputedStyle(document.body);
+              const textColor = computed.getPropertyValue('--tutor-text-primary').trim();
+
+              body.style.backgroundColor = 'transparent';
+              body.style.color = textColor;
+            };
+
+            syncTheme();
+            const observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'data-tutor-theme') {
+                  syncTheme();
+                }
+              });
+            });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-tutor-theme'] });
+          };
+
+          if (editor.initialized) {
+            setupThemeSync();
+          } else {
+            editor.on('init', setupThemeSync);
+          }
         } else {
           // Retry after a short delay
           setTimeout(checkEditor, 100);
