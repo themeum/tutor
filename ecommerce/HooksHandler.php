@@ -219,6 +219,9 @@ class HooksHandler {
 				case $this->order_model::PAYMENT_REFUNDED:
 					$order_data['order_status'] = $this->order_model::ORDER_CANCELLED;
 					break;
+				case $this->order_model::PAYMENT_PENDING:
+					$order_data['order_status'] = $this->order_model::ORDER_PENDING;
+					break;
 			}
 
 			$update = $this->order_model->update_order( $order_id, $order_data );
