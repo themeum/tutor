@@ -3,6 +3,7 @@ import { RestrictToElement } from '@dnd-kit/dom/modifiers';
 import { Sortable } from '@dnd-kit/dom/sortable';
 import type { AjaxResponse } from '@FrontendTypes/index';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
 import { __ } from '@wordpress/i18n';
 
 export const sortSections = (sectionsIds: string[]) => {
@@ -85,7 +86,7 @@ export const sortSections = (sectionsIds: string[]) => {
         const order = this.getOrder();
         try {
           wpAjaxInstance
-            .post<undefined, AjaxResponse>('tutor_save_instructor_home_sections_order', { order })
+            .post<undefined, AjaxResponse>(endpoints.SAVE_INSTRUCTOR_HOME_SECTIONS_ORDER, { order })
             .then((response) => {
               if (!response.success) {
                 toast.error((response?.data as string) || __('Failed to save instructor home section order.', 'tutor'));
@@ -119,7 +120,7 @@ export const sortSections = (sectionsIds: string[]) => {
 
       try {
         wpAjaxInstance
-          .post<undefined, AjaxResponse>('tutor_save_instructor_home_sections_visibility', { items })
+          .post<undefined, AjaxResponse>(endpoints.SAVE_INSTRUCTOR_HOME_SECTIONS_VISIBILITY, { items })
           .then((response) => {
             if (!response.success) {
               toast.error(
