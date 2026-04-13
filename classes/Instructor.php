@@ -16,7 +16,7 @@ use DateInterval;
 use DateTime;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
-use Tutor\Models\CourseModel;
+use Tutor\Traits\JsonResponse;
 
 /**
  * Instructor class
@@ -24,6 +24,7 @@ use Tutor\Models\CourseModel;
  * @since 1.0.0
  */
 class Instructor {
+	use JsonResponse;
 
 	/**
 	 * Error message
@@ -860,12 +861,16 @@ class Instructor {
 	public function ajax_save_home_sections_order() {
 		tutor_utils()->check_nonce();
 
+		if ( ! User::is_instructor() ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
 		$order = Input::post( 'order', array(), Input::TYPE_ARRAY );
 		$order = array_values( array_map( 'sanitize_key', $order ) );
 
 		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', array_flip( $order ) );
 
-		wp_send_json_success();
+		$this->response_success( __( 'Settings saved successfully', 'tutor' ) );
 	}
 
 	/**
@@ -878,11 +883,15 @@ class Instructor {
 	public function ajax_save_home_section_visibility() {
 		tutor_utils()->check_nonce();
 
+		if ( ! User::is_instructor() ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
 		$items = Input::post( 'items', '', Input::TYPE_STRING );
 		$items = array_map( 'rest_sanitize_boolean', (array) json_decode( $items ) );
 
 		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', $items );
 
-		wp_send_json_success();
+		$this->response_success( __( 'Settings saved successfully', 'tutor' ) );
 	}
 }
