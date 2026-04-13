@@ -72,12 +72,12 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 							<div class="tutor-col-auto">
 								<div class="tutor-given-review-actions tutor-d-flex">
 									<span class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" role="button">
-										<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+										<i class="tutor-icon-edit tutor-mr-8" aria-hidden="true"></i>
 										<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 									</span>
 
 									<span class="tutor-btn tutor-btn-ghost tutor-ml-16" data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" role="button">
-										<i class="tutor-icon-trash-can-line tutor-mr-8"  area-hidden="true"></i>
+										<i class="tutor-icon-trash-can-line tutor-mr-8" aria-hidden="true"></i>
 										<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 									</span>
 								</div>
@@ -90,16 +90,16 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					</div>
 
 					<!-- Edit Review Modal -->
-					<form class="tutor-modal" id="<?php echo esc_html( $update_id ); ?>">
+					<form class="tutor-modal" id="<?php echo esc_html( $update_id ); ?>" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_html( $update_id ); ?>-title" aria-hidden="true">
 						<div class="tutor-modal-overlay"></div>
 						<div class="tutor-modal-window">
 							<div class="tutor-modal-content tutor-modal-content-white">
-								<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-									<span class="tutor-icon-times" area-hidden="true"></span>
+								<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+									<span class="tutor-icon-times" aria-hidden="true"></span>
 								</button>
 
 								<div class="tutor-modal-body tutor-text-center">
-									<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mt-48 tutor-mb-12"><?php esc_html_e( 'How would you rate this course?', 'tutor' ); ?></div>
+									<div id="<?php echo esc_html( $update_id ); ?>-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mt-48 tutor-mb-12"><?php esc_html_e( 'How would you rate this course?', 'tutor' ); ?></div>
 									<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Select Rating', 'tutor' ); ?></div>
 
 									<input type="hidden" name="course_id" value="<?php echo esc_html( $review->comment_post_ID ); ?>"/>
@@ -112,7 +112,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 									?>
 									</div>
 
-									<textarea class="tutor-form-control tutor-mt-28" name="review" placeholder="<?php esc_html_e( 'write a review', 'tutor' ); ?>"><?php echo esc_html( stripslashes( $review->comment_content ) ); ?></textarea>
+									<textarea class="tutor-form-control tutor-mt-28" name="review" aria-label="<?php esc_attr_e( 'Update your review', 'tutor' ); ?>" placeholder="<?php esc_html_e( 'write a review', 'tutor' ); ?>"><?php echo esc_html( stripslashes( $review->comment_content ) ); ?></textarea>
 
 									<div class="tutor-d-flex tutor-justify-center tutor-my-48">
 										<button type="button" class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close data-action="back">

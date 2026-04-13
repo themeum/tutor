@@ -32,7 +32,7 @@ if ( is_array( $attachments ) && count( $attachments ) ) : ?>
 
 							<div class="tutor-col-auto">
 								<a href="<?php echo esc_url( $attachment->url ); ?>" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-stretched-link" <?php echo esc_attr( $open_mode_view ? $open_mode_view : "download={$attachment->name}" ); ?>>
-									<span class="tutor-icon-download" area-hidden="true"></span>
+									<span class="tutor-icon-download" aria-hidden="true"></span>
 								</a>
 							</div>
 						</div>

@@ -30,7 +30,7 @@ do_action( 'tutor_lesson/single/before/video/vimeo' );
 
 <?php if ( $video_id ) : ?>
 	<div class="tutor-video-player">
-		<div class="loading-spinner" area-hidden="true"></div>
+		<div class="loading-spinner" aria-hidden="true"></div>
 		<div class="<?php echo $disable_default_player_vimeo ? 'plyr__video-embed tutorPlayer' : 'tutor-ratio tutor-ratio-16x9'; ?>">
 			<?php if ( ! $disable_default_player_vimeo ) : ?>
 				<iframe src="https://player.vimeo.com/video/<?php echo esc_attr( $video_id ); ?>" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
