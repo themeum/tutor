@@ -84,15 +84,14 @@ export const sortSections = (sectionsIds: string[]) => {
 
         const order = this.getOrder();
         try {
-          const response = await wpAjaxInstance.post<undefined, AjaxResponse>(
-            'tutor_save_instructor_home_sections_order',
-            { order },
-          );
-
-          if (!response.success) {
-            toast.error((response?.data as string) || __('Failed to save instructor home section order.', 'tutor'));
-            return;
-          }
+          wpAjaxInstance
+            .post<undefined, AjaxResponse>('tutor_save_instructor_home_sections_order', { order })
+            .then((response) => {
+              if (!response.success) {
+                toast.error((response?.data as string) || __('Failed to save instructor home section order.', 'tutor'));
+                return;
+              }
+            });
         } catch (error) {
           const message = error instanceof Error ? error.message : __('Unknown error occurred.', 'tutor');
           toast.error(message);
@@ -119,15 +118,16 @@ export const sortSections = (sectionsIds: string[]) => {
       );
 
       try {
-        const response = await wpAjaxInstance.post<undefined, AjaxResponse>(
-          'tutor_save_instructor_home_sections_visibility',
-          { items },
-        );
-
-        if (!response.success) {
-          toast.error((response?.data as string) || __('Failed to save instructor home section visibility.', 'tutor'));
-          return;
-        }
+        wpAjaxInstance
+          .post<undefined, AjaxResponse>('tutor_save_instructor_home_sections_visibility', { items })
+          .then((response) => {
+            if (!response.success) {
+              toast.error(
+                (response?.data as string) || __('Failed to save instructor home section visibility.', 'tutor'),
+              );
+              return;
+            }
+          });
       } catch (error) {
         const message = error instanceof Error ? error.message : __('Unknown error occurred.', 'tutor');
         toast.error(message);
