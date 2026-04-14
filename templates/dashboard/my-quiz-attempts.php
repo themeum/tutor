@@ -29,10 +29,12 @@ if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 	return;
 }
 
+$url              = get_pagenum_link();
 $item_per_page    = tutor_utils()->get_option( 'pagination_per_page' );
 $current_page     = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset           = ( $current_page - 1 ) * $item_per_page;
 $quiz_attempt_obj = new Quiz_Attempts_List( false );
+$quiz_model       = new QuizModel();
 
 
 // Filter params.
@@ -40,12 +42,28 @@ $order_filter  = Input::get( 'order', 'DESC' );
 $course_id     = isset( $course_id ) ? $course_id : array();
 $result_filter = Input::get( 'result', '' );
 
-$quiz_attempts           = QuizModel::get_quiz_attempts_by_course_ids( 0, 0, $course_id, '', '', '', $order_filter, get_current_user_id() );
-$quiz_attempts_formatted = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter );
-$quiz_attempts_list      = array_slice( $quiz_attempts_formatted, $offset, $item_per_page, true );
-$quiz_attempts_count     = (int) count( $quiz_attempts_formatted );
+$quiz_ids_query     = QuizModel::get_quiz_id_by_user_quiz_attempts( get_current_user_id(), $course_id, $offset, $item_per_page, $order_filter, $result_filter );
+$all_quiz_ids_query = QuizModel::get_quiz_id_by_user_quiz_attempts( get_current_user_id(), $course_id, 0, 0, $order_filter );
 
-$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $quiz_attempts_count, get_pagenum_link(), $result_filter );
+$quiz_attempts_list  = array();
+$quiz_attempts_count = 0;
+$nav_links           = array();
+
+if ( tutor_utils()->count( $quiz_ids_query ) ) {
+	$quiz_attempts_count = isset( $quiz_ids_query['total_count'] ) ? $quiz_ids_query['total_count'] : 0;
+	$quiz_ids            = isset( $quiz_ids_query['results'] ) ? $quiz_ids_query['results'] : array();
+	$quiz_attempts_list  = $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $quiz_ids, $result_filter );
+}
+
+if ( tutor_utils()->count( $all_quiz_ids_query ) ) {
+	$ids                    = isset( $all_quiz_ids_query['results'] ) ? $all_quiz_ids_query['results'] : array();
+	$total_count            = isset( $all_quiz_ids_query['total_count'] ) ? $all_quiz_ids_query['total_count'] : 0;
+	$passed_attempts_count  = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $ids, QuizModel::RESULT_PASS ) );
+	$fail_attempts_count    = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $ids, QuizModel::RESULT_FAIL ) );
+	$pending_attempts_count = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $ids, QuizModel::RESULT_PENDING ) );
+
+	$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $total_count, $pending_attempts_count, $fail_attempts_count, $passed_attempts_count, $total_count, $url, $result_filter );
+}
 
 ?>
 <div class="tutor-my-quiz-attempts-wrapper" x-data="tutorQuizAttempts()">
@@ -53,10 +71,12 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 			<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-items-center tutor-border-b">
 				<div class="tutor-quiz-students-attempts-filter-item">
 				<?php
+				if ( isset( $nav_links['options'] ) ) {
 					DropdownFilter::make()
 						->options( $nav_links['options'] )
 						->query_param( 'result' )
 						->render();
+				}
 				?>
 				</div>
 				<div class="tutor-quiz-students-attempts-filter-item tutor-flex tutor-items-center tutor-gap-4">
@@ -64,12 +84,12 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 
 					if ( Input::has_any( array( 'result', 'order' ), Input::GET_REQUEST ) ) {
 						Button::make()
-						->tag( 'a' )
-						->attr( 'href', tutor_utils()->tutor_dashboard_url( 'courses/my-quiz-attempts' ) )
-						->attr( 'class', 'tutor-text-brand' )
-						->label( __( 'Clear all', 'tutor' ) )
-						->variant( Variant::LINK )
-						->render();
+							->tag( 'a' )
+							->attr( 'href', tutor_utils()->tutor_dashboard_url( 'courses/my-quiz-attempts' ) )
+							->attr( 'class', 'tutor-text-brand' )
+							->label( __( 'Clear all', 'tutor' ) )
+							->variant( Variant::LINK )
+							->render();
 					}
 					Sorting::make()->order( $order_filter )->render();
 

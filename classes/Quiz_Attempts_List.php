@@ -235,20 +235,17 @@ class Quiz_Attempts_List {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array   $quiz_attempts the quiz attempts list.
-	 * @param integer $quiz_attempts_count the quiz attempts count.
-	 * @param string  $url the page url.
-	 * @param string  $result_filter filter to filter out results.
-	 * @param bool    $make_group whether to group the quiz attempts by quiz.
+	 * @param int    $all_attempts all attempts count.
+	 * @param int    $pending_attempts pending attempts count.
+	 * @param int    $failed_attempts failed attempts count.
+	 * @param int    $passed_attempts passed attempts count.
+	 * @param int    $quiz_attempts_count the quiz attempt count.
+	 * @param string $url the url.
+	 * @param string $result_filter the current result state.
 	 *
 	 * @return array
 	 */
-	public function get_quiz_attempts_nav_data( array $quiz_attempts = array(), int $quiz_attempts_count = 0, string $url = '', string $result_filter = '', $make_group = true ): array {
-		$all_attempts     = count( QuizModel::format_quiz_attempts( $quiz_attempts, '', $make_group ) );
-		$pending_attempts = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_PENDING, $make_group ) );
-		$passed_attempts  = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_PASS, $make_group ) );
-		$failed_attempts  = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_FAIL, $make_group ) );
-
+	public function get_quiz_attempts_nav_data( $all_attempts = 0, $pending_attempts = 0, $failed_attempts = 0, $passed_attempts = 0, $quiz_attempts_count = 0, $url = '', $result_filter = '' ): array {
 		$nav_links = array(
 			'type'    => 'dropdown',
 			'active'  => true,
@@ -378,15 +375,10 @@ class Quiz_Attempts_List {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param integer $course_id the course id.
-	 *
 	 * @return bool
 	 */
-	private function check_is_student( $course_id = 0 ): bool {
-		$is_student_view = User::VIEW_AS_STUDENT === User::get_current_view_mode();
-		$is_student      = tutor_utils()->is_enrolled( $course_id, get_current_user_id(), false ) && $is_student_view;
-
-		return $is_student;
+	private function check_is_student(): bool {
+		return User::VIEW_AS_STUDENT === User::get_current_view_mode();
 	}
 
 	/**

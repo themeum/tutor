@@ -47,17 +47,23 @@ $date_filter   = Input::get( 'date', '' );
 $result_filter = Input::get( 'result', '' );
 $search_filter = Input::get( 'search', '' );
 
-$is_student_view         = User::VIEW_AS_STUDENT === User::get_current_view_mode();
-$quiz_attempts           = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, null, false, true );
-$quiz_attempts_formatted = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter, $is_student_view );
-$quiz_attempts_count     = count( $quiz_attempts_formatted );
+$is_student_view     = User::VIEW_AS_STUDENT === User::get_current_view_mode();
+$quiz_attempts       = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, false, true );
+$quiz_attempts_list  = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter, $is_student_view );
+$quiz_attempts_count = QuizModel::get_quiz_attempts( $offset, $item_per_page, '', $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, true, true );
+
 
 if ( Input::has( 'date', Input::GET_REQUEST ) && $quiz_attempts_count <= $offset ) {
 	$offset = 0;
 }
 
-$quiz_attempts_list = array_slice( $quiz_attempts_formatted, $offset, $item_per_page, true );
-$nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $quiz_attempts_count, get_pagenum_link(), $result_filter, $is_student_view );
+$all_attempts     = QuizModel::get_quiz_attempts( $offset, $item_per_page, '', $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, true, true );
+$pending_attempts = QuizModel::get_quiz_attempts( $offset, $item_per_page, '', $course_id > 0 ? $course_id : '', $date_filter, $order_filter, QuizModel::RESULT_PENDING, true, true );
+$passed_attempts  = QuizModel::get_quiz_attempts( $offset, $item_per_page, '', $course_id > 0 ? $course_id : '', $date_filter, $order_filter, QuizModel::RESULT_PASS, true, true );
+$failed_attempts  = QuizModel::get_quiz_attempts( $offset, $item_per_page, '', $course_id > 0 ? $course_id : '', $date_filter, $order_filter, QuizModel::RESULT_FAIL, true, true );
+
+
+$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $all_attempts, $pending_attempts, $failed_attempts, $passed_attempts, $quiz_attempts_count, $url, $result_filter );
 
 ?>
 

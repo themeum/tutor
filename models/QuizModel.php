@@ -31,6 +31,8 @@ class QuizModel {
 	const RESULT_FAIL    = 'fail';
 	const RESULT_PENDING = 'pending';
 
+	const TABLE_NAME = 'tutor_quiz_attempts';
+
 	/**
 	 * Get quiz table name
 	 *
@@ -40,7 +42,7 @@ class QuizModel {
 	 */
 	public function get_table(): string {
 		global $wpdb;
-		return $wpdb->prefix . 'tutor_quiz_attempts';
+		return $wpdb->prefix . self::TABLE_NAME;
 	}
 
 	/**
@@ -63,10 +65,12 @@ class QuizModel {
 	 * @param array  $quiz_attempts the quiz_attempts result obtained from query.
 	 * @param string $filter filter quiz attempt based on result.
 	 * @param bool   $make_group whether to group attempts by quiz.
+	 * @param int    $quiz_id the quiz id.
+	 * @param int    $course_id the course id.
 	 *
 	 * @return array
 	 */
-	public static function format_quiz_attempts( array $quiz_attempts, string $filter = '', $make_group = true ): array {
+	public static function format_quiz_attempts( array $quiz_attempts, string $filter = '', $make_group = true, $quiz_id = 0, $course_id = 0 ): array {
 		$formatted_attempts = array();
 
 		if ( ! count( $quiz_attempts ) ) {
@@ -74,9 +78,6 @@ class QuizModel {
 		}
 
 		foreach ( $quiz_attempts as $quiz_attempt ) {
-			$quiz_id   = $quiz_attempt->quiz_id ?? 0;
-			$course_id = $quiz_attempt->course_id ?? 0;
-
 			$course_title = $quiz_attempt->course_title ?? '';
 			$quiz_title   = $quiz_attempt->post_title ?? '';
 
@@ -125,29 +126,77 @@ class QuizModel {
 			);
 
 			if ( $make_group ) {
-				if ( ! isset( $formatted_attempts[ $quiz_id ] ) ) {
-					$formatted_attempts[ $quiz_id ] = array(
-						'quiz_id'      => $quiz_id,
-						'quiz_title'   => $quiz_title,
-						'course_title' => $course_title,
-						'course_id'    => $course_id,
-						'attempts'     => array(),
-					);
-				}
+				if ( $quiz_id && $course_id ) {
+					$formatted_attempts[] = $formatted_attempt;
+				} else {
+					if ( ! isset( $formatted_attempts[ $quiz_attempt->quiz_id ] ) ) {
+						$formatted_attempts[ $quiz_attempt->quiz_id ] = array(
+							'quiz_id'      => $quiz_attempt->quiz_id ?? 0,
+							'quiz_title'   => $quiz_title,
+							'course_title' => $course_title,
+							'course_id'    => $quiz_attempt->course_id ?? 0,
+							'attempts'     => array(),
+						);
+					}
 
-				$formatted_attempts[ $quiz_id ]['attempts'][] = $formatted_attempt;
+					$formatted_attempts[ $quiz_id ]['attempts'][] = $formatted_attempt;
+				}
 			} else {
 				$formatted_attempts[ $quiz_attempt->attempt_id ] = array(
-					'quiz_id'      => $quiz_id,
+					'quiz_id'      => $quiz_attempt->quiz_id ?? 0,
 					'quiz_title'   => $quiz_title,
 					'course_title' => $course_title,
-					'course_id'    => $course_id,
+					'course_id'    => $quiz_attempt->course_id ?? 0,
 					'attempts'     => array( $formatted_attempt ),
 				);
 			}
 		}
 
 		return $formatted_attempts;
+	}
+
+	/**
+	 * Get formatted quiz attempt list by quiz ids.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $quiz_ids list of quiz ids.
+	 * @param string $filter the query filter.
+	 *
+	 * @return array
+	 */
+	public function get_formatted_quiz_attempt_list_by_quiz_id( $quiz_ids, $filter = '' ) {
+		$quiz_attempts_list = array();
+
+		if ( ! tutor_utils()->count( $quiz_ids ) ) {
+			return $quiz_attempts_list;
+		}
+
+		foreach ( $quiz_ids as $quiz_info ) {
+			$quiz_id   = $quiz_info['quiz_id'] ?? 0;
+			$course_id = $quiz_info['course_id'] ?? 0;
+
+			$quiz_attempts           = $this->quiz_attempts( $quiz_id, get_current_user_id() );
+			$formatted_quiz_attempts = self::format_quiz_attempts( $quiz_attempts, $filter, true, $quiz_id, $course_id );
+
+			if ( ! tutor_utils()->count( $formatted_quiz_attempts ) ) {
+				continue;
+			}
+
+			$quiz_attempts_list[ $quiz_id ] = array(
+				'quiz_id'      => $quiz_id,
+				'quiz_title'   => get_the_title( $quiz_id ),
+				'course_title' => get_the_title( $course_id ),
+				'course_id'    => $course_id,
+				'attempts'     => array(),
+			);
+
+			foreach ( $formatted_quiz_attempts as $attempt ) {
+				$quiz_attempts_list[ $quiz_id ]['attempts'][] = $attempt;
+			}
+		}
+
+		return $quiz_attempts_list;
 	}
 
 	/**
@@ -660,6 +709,72 @@ class QuizModel {
 
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query );
+	}
+
+	/**
+	 * Obtain quiz id based on student quiz attempts.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $user_id the user id.
+	 * @param integer $course_id the course id.
+	 * @param integer $start the query offset.
+	 * @param integer $limit the query limit.
+	 * @param string  $order_filter filter for ASC or DESC order.
+	 * @param string  $result_filter filter for result status.
+	 *
+	 * @return array
+	 */
+	public static function get_quiz_id_by_user_quiz_attempts( $user_id = 0, $course_id = 0, $start = 0, $limit = 0, $order_filter = 'DESC', $result_filter = '' ) {
+		$quiz_table    = 'posts as quiz';
+		$user_table    = 'users as users';
+		$courses_table = 'posts as course';
+
+		$join_conditions = array(
+			array(
+				'type'  => 'INNER',
+				'table' => $quiz_table,
+				'on'    => 'quiz_attempts.quiz_id = quiz.ID',
+			),
+			array(
+				'type'  => 'INNER',
+				'table' => $user_table,
+				'on'    => 'quiz_attempts.user_id = users.ID',
+			),
+			array(
+				'type'  => 'INNER',
+				'table' => $courses_table,
+				'on'    => 'course.ID = quiz_attempts.course_id',
+			),
+		);
+
+		$where_conditions = array(
+			'quiz_attempts.attempt_status' => array( '!=', 'attempt_started' ),
+			'user_id'                      => $user_id,
+		);
+
+		if ( $course_id ) {
+			$where_conditions['quiz_attempts.course_id'] = $course_id;
+		}
+
+		if ( ! empty( $result_filter ) ) {
+			$where_conditions['quiz_attempts.result'] = $result_filter;
+		}
+
+		$quiz_ids = QueryHelper::get_joined_data(
+			self::TABLE_NAME . ' as quiz_attempts',
+			$join_conditions,
+			array( 'DISTINCT quiz_attempts.quiz_id,quiz_attempts.course_id' ),
+			$where_conditions,
+			array(),
+			'quiz_attempts.quiz_id',
+			$limit,
+			$start,
+			$order_filter,
+			'ARRAY_A',
+		);
+
+		return $quiz_ids;
 	}
 
 	/**
