@@ -17,6 +17,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 
 import DrawImagePreview from './question-previews/DrawImagePreview';
+import CoordinatesPreview from './question-previews/CoordinatesPreview';
 import FillInTheBlankPreview from './question-previews/FillInTheBlankPreview';
 import ImageAnsweringPreview from './question-previews/ImageAnsweringPreview';
 import MatchingPreview from './question-previews/MatchingPreview';
@@ -333,6 +334,8 @@ const renderQuestionPreview = (question: QuizQuestion) => {
       return <DrawImagePreview answers={question.question_answers} />;
     case 'scale':
       return <ScalePreview answers={question.question_answers} />;
+    case 'coordinates':
+      return <CoordinatesPreview />;
     default:
       return <UnsupportedPreview />;
   }

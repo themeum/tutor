@@ -48,18 +48,6 @@ interface FormCoordinatesProps extends FormControllerProps<QuizQuestionOption> {
 
 type CoordinatePoint = { x: number; y: number };
 
-function getTutorCssColor(varNames: string[], fallback: string): string {
-  if (typeof window === 'undefined' || !window.getComputedStyle || !document?.documentElement) {
-    return fallback;
-  }
-  const computed = window.getComputedStyle(document.documentElement);
-  for (const name of varNames) {
-    const value = computed.getPropertyValue(name);
-    if (value && value.trim()) return value.trim();
-  }
-  return fallback;
-}
-
 function clampIntToRange(n: number): number {
   const rounded = Math.round(n);
   return Math.max(MIN_COORD, Math.min(MAX_COORD, rounded));
@@ -182,7 +170,7 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       const topEdge = graphToPixel(0, MAX_COORD).y;
       const bottomEdge = graphToPixel(0, MIN_COORD).y;
 
-      ctx.strokeStyle = '#e0e0e0';
+      ctx.strokeStyle = colorTokens.stroke.divider;
       ctx.lineWidth = 0.5;
       for (let i = MIN_COORD; i <= MAX_COORD; i++) {
         if (i === 0) continue;
@@ -198,7 +186,7 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
         ctx.stroke();
       }
 
-      ctx.strokeStyle = '#000';
+      ctx.strokeStyle = colorTokens.background.black;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.moveTo(leftEdge, centerY);
@@ -209,7 +197,7 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       ctx.lineTo(centerX, bottomEdge);
       ctx.stroke();
 
-      ctx.fillStyle = '#666';
+      ctx.fillStyle = colorTokens.text.subdued;
       ctx.font = '11px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
@@ -229,10 +217,10 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       ctx.textBaseline = 'top';
       ctx.fillText('0', centerX - 5, centerY + 5);
 
-      const markerOuterLayer = getTutorCssColor(['--tutor-gray-300', '--tutor-color-gray-300'], '#CECFD2');
-      const markerMiddleLayer = getTutorCssColor(['--tutor-gray-1', '--tutor-color-gray-1'], '#FFFFFF');
-      const markerFillActive = getTutorCssColor(['--tutor-stroke-brand', '--tutor-color-brand'], '#2196F3');
-      const markerFillIdle = getTutorCssColor(['--tutor-gray-400', '--tutor-color-gray-400'], '#94969C');
+      const markerOuterLayer = colorTokens.color.black[20];
+      const markerMiddleLayer = colorTokens.background.white;
+      const markerFillActive = colorTokens.stroke.brand;
+      const markerFillIdle = colorTokens.text.disable;
 
       const drawPointMarker = (pt: { x: number; y: number }, fillColor: string, scale = 1) => {
         const s = Number.isFinite(scale) ? scale : 1;
@@ -559,9 +547,9 @@ const styles = {
     }
   `,
   canvasWrap: css`
-    display: inline-block;
-    width: ${CANVAS_SIZE}px;
-    height: ${CANVAS_SIZE}px;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     background-color: ${colorTokens.background.white};
   `,
