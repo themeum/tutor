@@ -125,7 +125,7 @@ class QuizModel {
 			if ( $make_group ) {
 				$formatted_attempts[] = $formatted_attempt;
 			} else {
-				$formatted_attempts[ $quiz_attempt->attempt_id ] = array(
+				$formatted_attempts[] = array(
 					'quiz_id'      => $quiz_attempt->quiz_id ?? 0,
 					'quiz_title'   => $quiz_title,
 					'course_title' => $course_title,
