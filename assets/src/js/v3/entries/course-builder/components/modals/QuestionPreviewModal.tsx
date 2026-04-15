@@ -25,6 +25,7 @@ import MultipleChoicePreview from './question-previews/MultipleChoicePreview';
 import OpenEndedPreview from './question-previews/OpenEndedPreview';
 import OrderingPreview from './question-previews/OrderingPreview';
 import PinImagePreview from './question-previews/PinImagePreview';
+import PuzzlePreview from './question-previews/PuzzlePreview';
 import ScalePreview from './question-previews/ScalePreview';
 import TrueFalsePreview from './question-previews/TrueFalsePreview';
 import UnsupportedPreview from './question-previews/UnsupportedPreview';
@@ -336,6 +337,10 @@ const renderQuestionPreview = (question: QuizQuestion) => {
       return <ScalePreview answers={question.question_answers} />;
     case 'coordinates':
       return <CoordinatesPreview />;
+    case 'puzzle':
+      return (
+        <PuzzlePreview answers={question.question_answers} gridSize={question.question_settings.puzzle_grid_size} />
+      );
     default:
       return <UnsupportedPreview />;
   }
@@ -376,6 +381,103 @@ const getPreviewFrameStyles = () => `
 
   [data-question=fill_in_the_blank] .tutor-quiz-question-input {
     box-shadow: none;
+  }
+
+  /*
+   * Puzzle (Tutor Pro): match learning-area markup + tutor-pro/_quiz_puzzle.scss and
+   * runtime layout from puzzle-question.js (enforceScatterHorizontalLayout / enforcePlaygroundConstraints).
+   * Scoped under .tutor-preview-stage so tutor-learning-area .tutor-quiz-question-options row flex never applies.
+   */
+  .tutor-preview-stage .quiz-question-ans-choice-area.tutor-puzzle-question {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    min-width: 0;
+    margin-top: 40px;
+    align-items: stretch;
+    flex-wrap: nowrap;
+  }
+
+  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-playground {
+    position: relative !important;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--tutor-border-idle, #d0d5dd);
+    border-radius: 6px;
+    overflow: hidden !important;
+    touch-action: none !important;
+    background: var(--tutor-surface-l1, #ffffff);
+    box-sizing: border-box;
+  }
+
+  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-reference-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill !important;
+    pointer-events: none;
+  }
+
+  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-slots {
+    position: absolute;
+    inset: 0;
+    pointer-events: none !important;
+  }
+
+  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-scatter {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+    align-content: flex-start !important;
+    margin-top: 16px !important;
+    column-gap: 12px !important;
+    row-gap: 12px !important;
+    padding: 12px !important;
+    border: 2px dashed var(--tutor-border-idle, #d0d5dd) !important;
+    border-radius: 8px !important;
+    min-height: 150px !important;
+    background: var(--tutor-surface-l1, #ffffff) !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-piece {
+    position: relative;
+    flex: 0 0 auto !important;
+    width: auto;
+    max-width: none;
+    box-sizing: border-box;
+    overflow: visible;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    touch-action: none;
+    z-index: 2;
+    transform-origin: center;
+    transition:
+      transform 0.2s ease-out,
+      width 0.2s ease-out,
+      box-shadow 0.2s ease-out;
+    backface-visibility: hidden;
+    box-shadow: none;
+  }
+
+  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-piece.is-small {
+    z-index: 2;
+  }
+
+  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-piece--preview-static {
+    cursor: default !important;
+    pointer-events: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
   }
 `;
 
