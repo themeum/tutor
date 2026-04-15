@@ -2047,8 +2047,8 @@ h2.tutor-page-heading {
 
       a {
         color: #ffffff;
-		text-decoration: underline;
-		text-underline-offset: 3px;
+        text-decoration: underline;
+        text-underline-offset: 3px;
 
         &:hover,
         &:focus,
@@ -2075,14 +2075,16 @@ h2.tutor-page-heading {
   }
 
   .notice-dismiss {
+    box-sizing: border-box;
     right: 42px;
     top: 37px;
     width: 40px;
     height: 40px;
     border: 1px solid #ffffff;
     border-radius: 4px;
-    padding: 10px;
+    padding: 9px;
     color: #ffffff;
+    text-decoration: none;
 
     &::before {
       content: '\e91e';

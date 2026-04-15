@@ -38,6 +38,7 @@ class Admin {
 
 		add_action( 'admin_notices', array( $this, 'show_unstable_version_admin_notice' ) );
 		add_action( 'admin_notices', array( $this, 'show_v4_beta_notice' ) );
+		add_action( 'admin_init', array( $this, 'dismiss_v4_beta_notice' ) );
 
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
 		// Force activate menu for necessary.
@@ -95,8 +96,13 @@ class Admin {
 	 */
 	public function show_v4_beta_notice() {
 		if ( version_compare( TUTOR_VERSION, '4', '<' ) ) {
+			$user_id   = get_current_user_id();
+			$dismissed = get_user_meta( $user_id, 'tutor_v4_beta_notice_dismissed', true );
+			if ( $dismissed ) {
+				return;
+			}
 			?>
-			<div class="tutor-v4-beta-notice notice is-dismissible">
+			<div class="tutor-v4-beta-notice notice">
 				<div class="tutor-v4-beta-notice-left">
 					<img src="<?php echo esc_url( tutor()->url . 'assets/images/v4-notice-logo.svg' ); ?>" alt="Tutor LMS 4.0 Beta">
 				</div>
@@ -136,9 +142,33 @@ class Admin {
 					</a>
 				</div>
 			</div>
+			<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'tutor_dismiss_v4_beta_notice', '1' ), 'tutor_dismiss_v4_beta_notice' ) ); ?>" class="notice-dismiss">
+				<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'tutor' ); ?></span>
+			</a>
 		</div>
 			<?php
 		}
+	}
+
+	/**
+	 * Persist the dismissal of the v4 beta notice for the current user.
+	 * Triggered via a query param on any admin page, then redirects to clean the URL.
+	 *
+	 * @since 3.9.9
+	 *
+	 * @return void
+	 */
+	public function dismiss_v4_beta_notice() {
+		if ( ! isset( $_GET['tutor_dismiss_v4_beta_notice'] ) ) {
+			return;
+		}
+
+		check_admin_referer( 'tutor_dismiss_v4_beta_notice' );
+		update_user_meta( get_current_user_id(), 'tutor_v4_beta_notice_dismissed', true );
+
+		$redirect = remove_query_arg( array( 'tutor_dismiss_v4_beta_notice', '_wpnonce' ) );
+		wp_safe_redirect( $redirect );
+		exit;
 	}
 
 	/**
