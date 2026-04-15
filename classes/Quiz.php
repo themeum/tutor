@@ -1088,13 +1088,18 @@ class Quiz {
 		$attempt_id        = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$context           = Input::post( 'context' );
 		$attempt_answer_id = Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
+		$question_id       = Input::post( 'question_id', 0, Input::TYPE_INT );
 		$mark_as           = Input::post( 'mark_as' );
 
-		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) || ! tutor_utils()->can_user_manage( 'attempt_answer', $attempt_answer_id ) ) {
+		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		$attempt_answer = $this->get_attempt_answer( $attempt_answer_id );
+		if ( $attempt_answer_id && ! tutor_utils()->can_user_manage( 'attempt_answer', $attempt_answer_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		}
+
+		$attempt_answer = $this->resolve_attempt_answer_for_review( $attempt_id, $attempt_answer_id, $question_id );
 		$review_data    = $attempt_answer ? $this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as ) : null;
 
 		if ( ! $review_data ) {
@@ -1171,11 +1176,11 @@ class Quiz {
 			$attempt_answer = $answers_by_question_id[ $question_id ] ?? null;
 
 			if ( ! $attempt_answer ) {
-				continue;
+				$attempt_answer = $this->resolve_attempt_answer_for_review( $attempt_id, 0, $question_id );
 			}
 
-			if ( ! tutor_utils()->can_user_manage( 'attempt_answer', $attempt_answer->attempt_answer_id ) ) {
-				$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
+			if ( ! $attempt_answer ) {
+				continue;
 			}
 
 			$this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
@@ -1206,6 +1211,115 @@ class Quiz {
 				$attempt_answer_id
 			)
 		);
+	}
+
+	/**
+	 * Get attempt answer by attempt and question IDs.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $attempt_id  Attempt ID.
+	 * @param int $question_id Question ID.
+	 *
+	 * @return object|null
+	 */
+	private function get_attempt_answer_by_attempt_and_question( int $attempt_id, int $question_id ) {
+		if ( $attempt_id <= 0 || $question_id <= 0 ) {
+			return null;
+		}
+
+		return QueryHelper::get_row(
+			'tutor_quiz_attempt_answers',
+			array(
+				'quiz_attempt_id' => $attempt_id,
+				'question_id'     => $question_id,
+			),
+			'attempt_answer_id',
+			'ASC'
+		);
+	}
+
+	/**
+	 * Create a placeholder attempt answer for a skipped question.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $attempt_id  Attempt ID.
+	 * @param int $question_id Question ID.
+	 *
+	 * @return object|null
+	 */
+	private function create_skipped_attempt_answer( int $attempt_id, int $question_id ) {
+		$attempt = tutor_utils()->get_attempt( $attempt_id );
+		if ( ! $attempt ) {
+			return null;
+		}
+
+		$question = QuizModel::get_quiz_question_by_id( $question_id );
+		if ( ! $question || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
+			return null;
+		}
+
+		$attempt_answer = $this->get_attempt_answer_by_attempt_and_question( $attempt_id, $question_id );
+		if ( $attempt_answer ) {
+			return $attempt_answer;
+		}
+
+		try {
+			$inserted_id = QueryHelper::insert(
+				'tutor_quiz_attempt_answers',
+				array(
+					'user_id'         => (int) $attempt->user_id,
+					'quiz_id'         => (int) $attempt->quiz_id,
+					'question_id'     => $question_id,
+					'quiz_attempt_id' => $attempt_id,
+					'given_answer'    => '',
+					'question_mark'   => $question->question_mark,
+					'achieved_mark'   => 0,
+					'minus_mark'      => 0,
+					'is_correct'      => 0,
+				)
+			);
+		} catch ( \Exception $exception ) {
+			return null;
+		}
+
+		if ( $inserted_id <= 0 ) {
+			return null;
+		}
+
+		return $this->get_attempt_answer( $inserted_id );
+	}
+
+	/**
+	 * Resolve the attempt answer used for instructor review.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $attempt_id        Attempt ID.
+	 * @param int $attempt_answer_id Attempt answer ID.
+	 * @param int $question_id       Question ID.
+	 *
+	 * @return object|null
+	 */
+	private function resolve_attempt_answer_for_review( int $attempt_id, int $attempt_answer_id = 0, int $question_id = 0 ) {
+		$attempt_answer = $attempt_answer_id ? $this->get_attempt_answer( $attempt_answer_id ) : null;
+
+		if ( $attempt_answer ) {
+			return $attempt_answer;
+		}
+
+		if ( $question_id <= 0 ) {
+			return null;
+		}
+
+		$attempt_answer = $this->get_attempt_answer_by_attempt_and_question( $attempt_id, $question_id );
+
+		if ( $attempt_answer ) {
+			return $attempt_answer;
+		}
+
+		return $this->create_skipped_attempt_answer( $attempt_id, $question_id );
 	}
 
 	/**
