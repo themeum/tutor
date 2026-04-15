@@ -95,7 +95,7 @@ class Admin {
 	 * @return void
 	 */
 	public function show_v4_beta_notice() {
-		if ( version_compare( TUTOR_VERSION, '4', '<' ) ) {
+		if ( current_user_can( 'manage_options' ) && version_compare( TUTOR_VERSION, '4', '<' ) ) {
 			$user_id   = get_current_user_id();
 			$dismissed = get_user_meta( $user_id, 'tutor_v4_beta_notice_dismissed', true );
 			if ( $dismissed ) {
@@ -159,7 +159,7 @@ class Admin {
 	 * @return void
 	 */
 	public function dismiss_v4_beta_notice() {
-		if ( ! isset( $_GET['tutor_dismiss_v4_beta_notice'] ) ) {
+		if ( ! current_user_can( 'manage_options' ) || ! Input::has( 'tutor_dismiss_v4_beta_notice' ) ) {
 			return;
 		}
 
