@@ -385,20 +385,6 @@ class Quiz_Attempts_List {
 	}
 
 	/**
-	 * Get attempt row template for quiz attempts.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return string
-	 */
-	public function get_quiz_attempt_row_template(): string {
-		$template = User::is_student_view()
-					? 'shared.components.student-quiz-attempt-row'
-					: 'dashboard.components.quiz-attempt-row';
-		return $template;
-	}
-
-	/**
 	 * Get retry button attributes.
 	 *
 	 * @since 4.0.0

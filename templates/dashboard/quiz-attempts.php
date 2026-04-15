@@ -128,23 +128,33 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts_count
 			</div>
 			<div class="tutor-quiz-attempts-list">
 				<?php
-				foreach ( $quiz_attempts_list as $quiz_attempt ) {
+				foreach ( $quiz_attempts_list as $quiz_attempt ) :
 					$attempts       = $quiz_attempt['attempts'];
+					$attempt        = $attempts[0] ?? array();
 					$attempts_count = count( $attempts );
+					?>
+				<div class="tutor-quiz-attempts-item-wrapper">
+					<?php
+						tutor_load_template(
+							'dashboard.components.quiz-attempt-row',
+							array(
+								'attempt'          => $attempt,
+								'quiz_title'       => $quiz_attempt['quiz_title'],
+								'course_title'     => $quiz_attempt['course_title'],
+								'course_id'        => $quiz_attempt['course_id'],
+								'show_quiz_title'  => true,
+								'show_course'      => true,
+								'quiz_id'          => $quiz_attempt['quiz_id'],
+								'attempts_count'   => $attempts_count,
+								'attempt_id'       => $attempt['attempt_id'] ?? 0,
+								'quiz_attempt_obj' => $quiz_attempt_obj,
+							)
+						);
 
-					tutor_load_template(
-						'dashboard.components.quiz-attempts-group',
-						array(
-							'quiz_id'          => $quiz_attempt['quiz_id'],
-							'quiz_title'       => $quiz_attempt['quiz_title'],
-							'course_title'     => $quiz_attempt['course_title'],
-							'attempts'         => $attempts,
-							'course_id'        => $quiz_attempt['course_id'],
-							'quiz_attempt_obj' => $quiz_attempt_obj,
-							'attempts_count'   => $attempts_count,
-						)
-					);
-				}
+					?>
+				</div>
+					<?php
+				endforeach;
 				?>
 			</div>
 			<?php else : ?>

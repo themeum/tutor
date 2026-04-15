@@ -21,7 +21,7 @@ $remaining_attempts = array_slice( $attempts, 1 );
 	<!-- First Attempt (Always Visible with Quiz Title & Expand Button) -->
 	<?php
 	tutor_load_template(
-		$quiz_attempt_obj->get_quiz_attempt_row_template( $course_id ),
+		'shared.components.student-quiz-attempt-row',
 		array(
 			'attempt'          => $first_attempt,
 			'quiz_title'       => $quiz_title,
@@ -46,7 +46,7 @@ $remaining_attempts = array_slice( $attempts, 1 );
 			<?php foreach ( $remaining_attempts as $key => $attempt ) : ?>
 				<?php
 				tutor_load_template(
-					$quiz_attempt_obj->get_quiz_attempt_row_template( $course_id ),
+					'shared.components.student-quiz-attempt-row',
 					array(
 						'attempt'          => $attempt,
 						'attempt_number'   => count( $remaining_attempts ) - $key,
