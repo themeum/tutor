@@ -57,13 +57,8 @@ if ( Input::has( 'date', Input::GET_REQUEST ) && $quiz_attempts_count <= $offset
 	$offset = 0;
 }
 
-$all_attempts     = QuizModel::get_quiz_attempts( $offset, $item_per_page, '', $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, true, true );
-$pending_attempts = QuizModel::get_quiz_attempts( $offset, $item_per_page, '', $course_id > 0 ? $course_id : '', $date_filter, $order_filter, QuizModel::RESULT_PENDING, true, true );
-$passed_attempts  = QuizModel::get_quiz_attempts( $offset, $item_per_page, '', $course_id > 0 ? $course_id : '', $date_filter, $order_filter, QuizModel::RESULT_PASS, true, true );
-$failed_attempts  = QuizModel::get_quiz_attempts( $offset, $item_per_page, '', $course_id > 0 ? $course_id : '', $date_filter, $order_filter, QuizModel::RESULT_FAIL, true, true );
 
-
-$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $all_attempts, $pending_attempts, $failed_attempts, $passed_attempts, $quiz_attempts_count, $url, $result_filter );
+$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts_count, $url, $result_filter );
 
 ?>
 

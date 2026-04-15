@@ -235,17 +235,31 @@ class Quiz_Attempts_List {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param int    $all_attempts all attempts count.
-	 * @param int    $pending_attempts pending attempts count.
-	 * @param int    $failed_attempts failed attempts count.
-	 * @param int    $passed_attempts passed attempts count.
 	 * @param int    $quiz_attempts_count the quiz attempt count.
 	 * @param string $url the url.
 	 * @param string $result_filter the current result state.
+	 * @param array  $all_quizzes all quiz data for student.
 	 *
 	 * @return array
 	 */
-	public function get_quiz_attempts_nav_data( $all_attempts = 0, $pending_attempts = 0, $failed_attempts = 0, $passed_attempts = 0, $quiz_attempts_count = 0, $url = '', $result_filter = '' ): array {
+	public function get_quiz_attempts_nav_data( $quiz_attempts_count = 0, $url = '', $result_filter = '', $all_quizzes = array() ): array {
+		$quiz_model = new QuizModel();
+
+		if ( tutor_utils()->count( $all_quizzes ) ) {
+			$results             = isset( $all_quizzes['results'] ) ? $all_quizzes['results'] : array();
+			$all_attempts        = isset( $all_quizzes['total_count'] ) ? $all_quizzes['total_count'] : 0;
+			$quiz_attempts_count = $all_attempts;
+			$passed_attempts     = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_PASS ) );
+			$failed_attempts     = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_FAIL ) );
+			$pending_attempts    = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_PENDING ) );
+		} else {
+			$all_attempts     = QuizModel::get_quiz_attempts( 0, 0, '', '', '', '', '', true, true );
+			$pending_attempts = QuizModel::get_quiz_attempts( 0, 0, '', '', '', '', QuizModel::RESULT_PENDING, true, true );
+			$passed_attempts  = QuizModel::get_quiz_attempts( 0, 0, '', '', '', '', QuizModel::RESULT_PASS, true, true );
+			$failed_attempts  = QuizModel::get_quiz_attempts( 0, 0, '', '', '', '', QuizModel::RESULT_FAIL, true, true );
+
+		}
+
 		$nav_links = array(
 			'type'    => 'dropdown',
 			'active'  => true,
@@ -371,27 +385,14 @@ class Quiz_Attempts_List {
 	}
 
 	/**
-	 * Check whether to show instructor or student quiz attempt.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return bool
-	 */
-	private function check_is_student(): bool {
-		return User::VIEW_AS_STUDENT === User::get_current_view_mode();
-	}
-
-	/**
 	 * Get attempt row template for quiz attempts.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param integer $course_id the course id.
-	 *
 	 * @return string
 	 */
-	public function get_quiz_attempt_row_template( $course_id = 0 ): string {
-		$template = $this->check_is_student( $course_id )
+	public function get_quiz_attempt_row_template(): string {
+		$template = User::is_student_view()
 					? 'shared.components.student-quiz-attempt-row'
 					: 'dashboard.components.quiz-attempt-row';
 		return $template;
@@ -450,7 +451,7 @@ class Quiz_Attempts_List {
 	 * @return void
 	 */
 	public function render_retry_button( $course_id = 0, $quiz_id = 0, $attempt = array(), $attempts_count = 0 ) {
-		if ( $this->check_is_student( $course_id ) && $this->should_retry( $attempt, $attempts_count ) ) {
+		if ( User::is_student_view() && $this->should_retry( $attempt, $attempts_count ) ) {
 			Button::make()
 				->label( __( 'Retry', 'tutor' ) )
 				->icon( Icon::RELOAD )

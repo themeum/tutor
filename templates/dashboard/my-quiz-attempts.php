@@ -42,27 +42,21 @@ $order_filter  = Input::get( 'order', 'DESC' );
 $course_id     = isset( $course_id ) ? $course_id : array();
 $result_filter = Input::get( 'result', '' );
 
-$quiz_ids_query     = QuizModel::get_quiz_id_by_user_quiz_attempts( get_current_user_id(), $course_id, $offset, $item_per_page, $order_filter, $result_filter );
-$all_quiz_ids_query = QuizModel::get_quiz_id_by_user_quiz_attempts( get_current_user_id(), $course_id, 0, 0, $order_filter );
+$quizzes     = QuizModel::get_attempted_quizzes( get_current_user_id(), $course_id, $offset, $item_per_page, $order_filter, array( 'status' => $result_filter ) );
+$all_quizzes = QuizModel::get_attempted_quizzes( get_current_user_id(), $course_id, 0, 0, $order_filter );
 
 $quiz_attempts_list  = array();
 $quiz_attempts_count = 0;
 $nav_links           = array();
 
-if ( tutor_utils()->count( $quiz_ids_query ) ) {
-	$quiz_attempts_count = isset( $quiz_ids_query['total_count'] ) ? $quiz_ids_query['total_count'] : 0;
-	$quiz_ids            = isset( $quiz_ids_query['results'] ) ? $quiz_ids_query['results'] : array();
-	$quiz_attempts_list  = $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $quiz_ids, $result_filter );
+if ( tutor_utils()->count( $quizzes ) ) {
+	$quiz_attempts_count = isset( $quizzes['total_count'] ) ? $quizzes['total_count'] : 0;
+	$results             = isset( $quizzes['results'] ) ? $quizzes['results'] : array();
+	$quiz_attempts_list  = $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, $result_filter );
 }
 
-if ( tutor_utils()->count( $all_quiz_ids_query ) ) {
-	$ids                    = isset( $all_quiz_ids_query['results'] ) ? $all_quiz_ids_query['results'] : array();
-	$total_count            = isset( $all_quiz_ids_query['total_count'] ) ? $all_quiz_ids_query['total_count'] : 0;
-	$passed_attempts_count  = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $ids, QuizModel::RESULT_PASS ) );
-	$fail_attempts_count    = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $ids, QuizModel::RESULT_FAIL ) );
-	$pending_attempts_count = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $ids, QuizModel::RESULT_PENDING ) );
-
-	$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $total_count, $pending_attempts_count, $fail_attempts_count, $passed_attempts_count, $total_count, $url, $result_filter );
+if ( tutor_utils()->count( $all_quizzes ) ) {
+	$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts_count, $url, $result_filter, $all_quizzes );
 }
 
 ?>

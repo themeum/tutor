@@ -31,7 +31,7 @@ class QuizModel {
 	const RESULT_FAIL    = 'fail';
 	const RESULT_PENDING = 'pending';
 
-	const TABLE_NAME = 'tutor_quiz_attempts';
+	const ATTEMPTS_TABLE = 'tutor_quiz_attempts';
 
 	/**
 	 * Get quiz table name
@@ -41,8 +41,7 @@ class QuizModel {
 	 * @return string
 	 */
 	public function get_table(): string {
-		global $wpdb;
-		return $wpdb->prefix . self::TABLE_NAME;
+		return QueryHelper::prepare_table_name( self::ATTEMPTS_TABLE );
 	}
 
 	/**
@@ -156,23 +155,23 @@ class QuizModel {
 	}
 
 	/**
-	 * Get formatted quiz attempt list by quiz ids.
+	 * Get formatted quiz attempt list by quiz data.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array  $quiz_ids list of quiz ids.
+	 * @param array  $quizzes list of quiz data.
 	 * @param string $filter the query filter.
 	 *
 	 * @return array
 	 */
-	public function get_formatted_quiz_attempt_list_by_quiz_id( $quiz_ids, $filter = '' ) {
+	public function get_formatted_quiz_attempt_list_by_quiz_id( $quizzes, $filter = '' ) {
 		$quiz_attempts_list = array();
 
-		if ( ! tutor_utils()->count( $quiz_ids ) ) {
+		if ( ! tutor_utils()->count( $quizzes ) ) {
 			return $quiz_attempts_list;
 		}
 
-		foreach ( $quiz_ids as $quiz_info ) {
+		foreach ( $quizzes as $quiz_info ) {
 			$quiz_id   = $quiz_info['quiz_id'] ?? 0;
 			$course_id = $quiz_info['course_id'] ?? 0;
 
@@ -712,7 +711,7 @@ class QuizModel {
 	}
 
 	/**
-	 * Obtain quiz id based on student quiz attempts.
+	 * Obtain quiz data based on student quiz attempts.
 	 *
 	 * @since 4.0.0
 	 *
@@ -721,11 +720,11 @@ class QuizModel {
 	 * @param integer $start the query offset.
 	 * @param integer $limit the query limit.
 	 * @param string  $order_filter filter for ASC or DESC order.
-	 * @param string  $result_filter filter for result status.
+	 * @param array   $args list of filters to apply.
 	 *
 	 * @return array
 	 */
-	public static function get_quiz_id_by_user_quiz_attempts( $user_id = 0, $course_id = 0, $start = 0, $limit = 0, $order_filter = 'DESC', $result_filter = '' ) {
+	public static function get_attempted_quizzes( $user_id = 0, $course_id = 0, $start = 0, $limit = 0, $order_filter = 'DESC', $args = array() ) {
 		$quiz_table    = 'posts as quiz';
 		$user_table    = 'users as users';
 		$courses_table = 'posts as course';
@@ -757,12 +756,12 @@ class QuizModel {
 			$where_conditions['quiz_attempts.course_id'] = $course_id;
 		}
 
-		if ( ! empty( $result_filter ) ) {
-			$where_conditions['quiz_attempts.result'] = $result_filter;
+		if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
+			$where_conditions['quiz_attempts.result'] = $args['status'];
 		}
 
 		$quiz_ids = QueryHelper::get_joined_data(
-			self::TABLE_NAME . ' as quiz_attempts',
+			self::ATTEMPTS_TABLE . ' as quiz_attempts',
 			$join_conditions,
 			array( 'DISTINCT quiz_attempts.quiz_id,quiz_attempts.course_id' ),
 			$where_conditions,
