@@ -383,11 +383,6 @@ const getPreviewFrameStyles = () => `
     box-shadow: none;
   }
 
-  /*
-   * Puzzle (Tutor Pro): match learning-area markup + tutor-pro/_quiz_puzzle.scss and
-   * runtime layout from puzzle-question.js (enforceScatterHorizontalLayout / enforcePlaygroundConstraints).
-   * Scoped under .tutor-preview-stage so tutor-learning-area .tutor-quiz-question-options row flex never applies.
-   */
   .tutor-preview-stage .quiz-question-ans-choice-area.tutor-puzzle-question {
     display: flex;
     flex-direction: column;
