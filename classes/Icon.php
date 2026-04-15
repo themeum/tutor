@@ -302,6 +302,7 @@ final class Icon {
 	const PORTRAIT_FILLED            = 'portrait-filled';
 	const PPT                        = 'ppt';
 	const PREVIEW                    = 'preview';
+	const PREVIEW_2                  = 'preview-2';
 	const PRICE_TAG                  = 'price-tag';
 	const PRIME_CHECK_CIRCLE         = 'prime-check-circle';
 	const PRINTER                    = 'printer';

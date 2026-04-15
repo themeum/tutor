@@ -280,25 +280,104 @@ const WPEditor = ({
 
   useEffect(() => {
     if (typeof window.wp !== 'undefined' && window.wp.editor) {
-      window.wp.editor.remove(editorId);
-      window.wp.editor.initialize(
-        editorId,
-        editorConfig(
-          isFocused,
-          onChange,
-          setIsFocused,
-          isMinimal,
-          hideMediaButtons,
-          hideQuickTags,
-          onFullScreenChange,
-          readonly,
-          min_height,
-          max_height,
-          CURRENT_VIEWPORT.isAboveMobile,
-          toolbar1,
-          toolbar2,
-        ),
+      const config = editorConfig(
+        isFocused,
+        onChange,
+        setIsFocused,
+        isMinimal,
+        hideMediaButtons,
+        hideQuickTags,
+        onFullScreenChange,
+        readonly,
+        min_height,
+        max_height,
+        CURRENT_VIEWPORT.isAboveMobile,
+        toolbar1,
+        toolbar2,
       );
+
+      // When rendered inside an iframe (e.g., via createPortal),
+      // wp.editor.initialize() fails because it uses document.getElementById()
+      // which only searches the parent document. Additionally, standard TinyMCE
+      // mode creates a content iframe internally using parent document DOM APIs,
+      // causing editor.getBody() to return undefined in cross-document contexts.
+      // Using inline mode with the `target` option avoids both issues:
+      // TinyMCE renders directly into the target element without a content iframe.
+      const isInIframe = editorRef.current && editorRef.current.ownerDocument !== document;
+
+      if (isInIframe) {
+        const existingEditor = window.tinymce.get(editorId);
+        if (existingEditor) {
+          existingEditor.remove();
+        }
+
+        // TinyMCE inline mode requires a block-level element (not textarea).
+        // Create a div in the iframe's document to serve as the inline editor target.
+        const iframeDoc = editorRef.current.ownerDocument;
+        const inlineTarget = iframeDoc.createElement('div');
+        inlineTarget.id = editorId;
+        inlineTarget.innerHTML = value;
+
+        // Hide textarea and transfer its id to the div (TinyMCE uses element id for registration)
+        editorRef.current.removeAttribute('id');
+        editorRef.current.style.display = 'none';
+        editorRef.current.parentNode?.insertBefore(inlineTarget, editorRef.current.nextSibling);
+
+        // Filter out plugins that require TinyMCE's content iframe (unavailable in inline mode)
+        const iframeOnlyPlugins = ['wpautoresize', 'fullscreen', 'tabfocus'];
+        const inlinePlugins = config.tinymce.plugins
+          ?.split(',')
+          .map((p: string) => p.trim())
+          .filter((p: string) => !iframeOnlyPlugins.includes(p))
+          .join(',');
+
+        window.tinymce.init({
+          ...config.tinymce,
+          target: inlineTarget,
+          inline: true,
+          plugins: inlinePlugins,
+          // Simplified setup: inline mode has no iframeElement or contentDocument
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setup: (editor: any) => {
+            editor.on('init', () => {
+              if (readonly) {
+                editor.setMode('readonly');
+              }
+
+              const body = editor.getBody();
+              if (body) {
+                body.style.backgroundColor = 'transparent';
+              }
+
+              if (isFocused && !readonly) {
+                body?.focus();
+              }
+            });
+
+            editor.on('change keyup paste', () => {
+              onChange(editor.getContent());
+            });
+            editor.on('focus', () => setIsFocused(true));
+            editor.on('blur', () => setIsFocused(false));
+          },
+        });
+
+        return () => {
+          const editorInstance = window.tinymce.get(editorId);
+          if (editorInstance) {
+            editorInstance.remove();
+          }
+          inlineTarget.remove();
+          // Restore textarea
+          if (editorRef.current) {
+            editorRef.current.id = editorId;
+            editorRef.current.style.display = '';
+          }
+        };
+      }
+
+      window.wp.editor.remove(editorId);
+      window.wp.editor.initialize(editorId, config);
 
       const currentRef = editorRef.current;
       currentRef?.addEventListener('change', handleOnChange);

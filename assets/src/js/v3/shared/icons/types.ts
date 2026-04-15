@@ -286,6 +286,7 @@ export const icons = [
   'portraitFilled',
   'ppt',
   'preview',
+  'preview2',
   'priceTag',
   'primeCheckCircle',
   'printer',

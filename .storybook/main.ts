@@ -10,6 +10,12 @@ const config: StorybookConfig = {
   rsbuildFinal: async (rsbuildConfig, { configType }) => {
     // Ensure SWC loader uses the Emotion plugin, matching your main Rspack config
     const isDevelopment = configType === 'DEVELOPMENT';
+    rsbuildConfig.dev = {
+      ...rsbuildConfig.dev,
+      // Prevent sporadic "factory is undefined" errors in Storybook dev
+      // caused by lazy-compiled module registration timing.
+      lazyCompilation: false,
+    };
 
     rsbuildConfig.tools = rsbuildConfig.tools || {};
     rsbuildConfig.tools.bundlerChain = (chain, { rspack }) => {

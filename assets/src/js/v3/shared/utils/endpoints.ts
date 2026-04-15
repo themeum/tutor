@@ -223,6 +223,10 @@ const endpoints = {
 
   // Certificate
   VERIFY_CERTIFICATE: 'tutor_verify_certificate',
+
+  // Instructor Dashboard
+  SAVE_INSTRUCTOR_HOME_SECTIONS_ORDER: 'tutor_save_instructor_home_sections_order',
+  SAVE_INSTRUCTOR_HOME_SECTIONS_VISIBILITY: 'tutor_save_instructor_home_sections_visibility',
 } as const;
 
 export default endpoints;
