@@ -223,29 +223,10 @@ export const convertQuizFormDataToPayload = (
   questionsSlotFields: string[],
   settingsSlotFields: string[],
 ): QuizPayload => {
-  const deletedAnswerIdsSet = new Set(formData.deleted_answer_ids || []);
-  const normalizedQuestions = formData.questions.map((question) => {
-    if (question.question_type !== 'draw_image' && question.question_type !== 'pin_image') {
-      return question;
-    }
-
-    const answers = Array.isArray(question.question_answers) ? question.question_answers : [];
-    if (answers.length <= 1) {
-      return question;
-    }
-
-    const [keptAnswer, ...extraAnswers] = answers;
-    extraAnswers.forEach((answer) => {
-      if (answer._data_status !== QuizDataStatus.NEW && answer.answer_id) {
-        deletedAnswerIdsSet.add(answer.answer_id);
-      }
-    });
-
-    return {
-      ...question,
-      question_answers: keptAnswer ? [keptAnswer] : [],
-    };
-  });
+  const { normalizedQuestions, deletedAnswerIds } = normalizeSingleMaskQuestionAnswers(
+    formData.questions,
+    formData.deleted_answer_ids,
+  );
 
   return {
     course_id: courseId,
@@ -372,7 +353,7 @@ export const convertQuizFormDataToPayload = (
       }),
     },
     deleted_question_ids: formData.deleted_question_ids,
-    deleted_answer_ids: Array.from(deletedAnswerIdsSet),
+    deleted_answer_ids: deletedAnswerIds,
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'unlock_by_date' && {
         'content_drip_settings[unlock_date]': formData.quiz_option.content_drip_settings.unlock_date,
@@ -389,6 +370,38 @@ export const convertQuizFormDataToPayload = (
           : '',
       }),
     ...Object.fromEntries(settingsSlotFields.map((key) => [key, formData[key as keyof QuizForm]])),
+  };
+};
+
+const normalizeSingleMaskQuestionAnswers = (questions: QuizQuestion[], deletedAnswerIds: ID[] = []) => {
+  const deletedAnswerIdsSet = new Set(deletedAnswerIds);
+
+  const normalizedQuestions = questions.map((question) => {
+    if (question.question_type !== 'draw_image' && question.question_type !== 'pin_image') {
+      return question;
+    }
+
+    const answers = Array.isArray(question.question_answers) ? question.question_answers : [];
+    if (answers.length <= 1) {
+      return question;
+    }
+
+    const [keptAnswer, ...extraAnswers] = answers;
+    extraAnswers.forEach((answer) => {
+      if (answer._data_status !== QuizDataStatus.NEW && answer.answer_id) {
+        deletedAnswerIdsSet.add(answer.answer_id);
+      }
+    });
+
+    return {
+      ...question,
+      question_answers: keptAnswer ? [keptAnswer] : [],
+    };
+  });
+
+  return {
+    normalizedQuestions,
+    deletedAnswerIds: Array.from(deletedAnswerIdsSet),
   };
 };
 
