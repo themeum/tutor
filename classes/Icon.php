@@ -127,6 +127,7 @@ final class Icon {
 	const CROSS                      = 'cross';
 	const CROSS_2                    = 'cross-2';
 	const CROSS_CIRCLE               = 'cross-circle';
+	const CROSS_CIRCLE_LINE          = 'cross-circle-line';
 	const CROWN                      = 'crown';
 	const CROWN_OUTLINED             = 'crown-outlined';
 	const CROWN_ROUNDED              = 'crown-rounded';
@@ -216,6 +217,7 @@ final class Icon {
 	const IMPORT_COLORIZED           = 'import-colorized';
 	const INACTIVE                   = 'inactive';
 	const INFO                       = 'info';
+	const INFO_2                     = 'info-2';
 	const INFO_FILL                  = 'info-fill';
 	const INFO_OCTAGON               = 'info-octagon';
 	const INSTRUCTOR                 = 'instructor';
@@ -318,6 +320,7 @@ final class Icon {
 	const QUIZ_2_FILL                = 'quiz-2-fill';
 	const QUIZ_ESSAY                 = 'quiz-essay';
 	const QUIZ_FILL_IN_THE_BLANKS    = 'quiz-fill-in-the-blanks';
+	const QUIZ_GRAPH                 = 'quiz-graph';
 	const QUIZ_H5P                   = 'quiz-h5p';
 	const QUIZ_IMAGE_ANSWER          = 'quiz-image-answer';
 	const QUIZ_IMAGE_MATCHING        = 'quiz-image-matching';
