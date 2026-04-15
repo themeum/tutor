@@ -23,6 +23,7 @@
 
       .tutor-preferences-setting-icon {
         @include tutor-flex-center;
+        color: $tutor-icon-idle;
       }
 
       .tutor-preferences-setting-title {
