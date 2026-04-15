@@ -1,5 +1,8 @@
 import { type ServiceMeta } from '@Core/ts/types';
 type Theme = 'dark' | 'light' | 'system';
+type Vision = 'normal' | 'protanopia' | 'deuteranopia' | 'deuteranomaly';
+type Contrast = '' | 'high';
+type Motion = '' | 'reduce';
 
 class PreferenceService {
   private readonly THEME = { DARK: 'dark', LIGHT: 'light', SYSTEM: 'system' } as const;
@@ -10,6 +13,9 @@ class PreferenceService {
   private readonly SCALE_PERCENTAGE_BASE = 100;
   private readonly STYLE_ID = 'tutor-font-scale';
   private readonly DATA_THEME_ATTR = 'data-tutor-theme';
+  private readonly DATA_VISION_ATTR = 'data-tutor-vision';
+  private readonly DATA_CONTRAST_ATTR = 'data-tutor-contrast';
+  private readonly DATA_MOTION_ATTR = 'data-tutor-motion';
 
   constructor() {
     this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -17,17 +23,52 @@ class PreferenceService {
     this.initialize();
   }
 
+  private getWrapper(): HTMLElement {
+    return (document.querySelector(`[${this.DATA_THEME_ATTR}]`) as HTMLElement | null) || document.documentElement;
+  }
+
+  private computeThemeAttr(base: 'dark' | 'light', vision: Vision): string {
+    return vision === 'normal' ? base : `${base}-${vision}`;
+  }
+
+  private inferBase(themeAttr: string | null): 'dark' | 'light' {
+    return themeAttr?.startsWith('dark') ? 'dark' : 'light';
+  }
+
+  private inferVision(themeAttr: string | null): Vision {
+    if (!themeAttr) return 'normal';
+    const parts = themeAttr.split('-');
+    const v = parts[1] as Vision | undefined;
+    if (v === 'protanopia' || v === 'deuteranopia' || v === 'deuteranomaly') return v;
+    return 'normal';
+  }
+
   initialize(): void {
-    const wrapper = document.querySelector(`[${this.DATA_THEME_ATTR}]`) || document.documentElement;
+    const wrapper = this.getWrapper();
     const attrTheme = wrapper.getAttribute(this.DATA_THEME_ATTR);
-    if (attrTheme === this.THEME.SYSTEM) {
-      this.applyTheme(this.THEME.SYSTEM, false);
+
+    // Seed vision state if HTML came pre-computed (e.g. "dark-protanopia").
+    const existingVision =
+      (wrapper.getAttribute(this.DATA_VISION_ATTR) as Vision | null) ?? this.inferVision(attrTheme);
+    wrapper.setAttribute(this.DATA_VISION_ATTR, existingVision);
+
+    // If the saved preference is "system", re-apply to attach listener and compute correct attr.
+    if (attrTheme === this.THEME.SYSTEM) this.applyTheme(this.THEME.SYSTEM, false);
+
+    const contrast = (wrapper.getAttribute(this.DATA_CONTRAST_ATTR) as Contrast | null) ?? '';
+    if (contrast) {
+      this.applyContrast(contrast);
+    }
+
+    const motion = (wrapper.getAttribute(this.DATA_MOTION_ATTR) as Motion | null) ?? '';
+    if (motion) {
+      this.applyReduceMotion(true);
     }
   }
 
   applyTheme(theme: Theme, withTransition: boolean = true): void {
     if (!theme) return;
-    const wrapper = document.querySelector(`[${this.DATA_THEME_ATTR}]`) || document.documentElement;
+    const wrapper = this.getWrapper();
 
     if (this.systemThemeListener) {
       this.mediaQuery.removeEventListener('change', this.systemThemeListener);
@@ -35,10 +76,12 @@ class PreferenceService {
     }
 
     const updateTheme = () => {
+      const vision = (wrapper.getAttribute(this.DATA_VISION_ATTR) as Vision | null) ?? 'normal';
       if (theme === this.THEME.SYSTEM) {
-        wrapper.setAttribute(this.DATA_THEME_ATTR, this.mediaQuery.matches ? this.THEME.DARK : this.THEME.LIGHT);
+        const base = this.mediaQuery.matches ? this.THEME.DARK : this.THEME.LIGHT;
+        wrapper.setAttribute(this.DATA_THEME_ATTR, this.computeThemeAttr(base, vision));
       } else {
-        wrapper.setAttribute(this.DATA_THEME_ATTR, theme);
+        wrapper.setAttribute(this.DATA_THEME_ATTR, this.computeThemeAttr(theme, vision));
       }
     };
 
@@ -51,9 +94,7 @@ class PreferenceService {
       }
 
       const applied = wrapper.getAttribute(this.DATA_THEME_ATTR);
-      if (applied === this.THEME.DARK || applied === this.THEME.LIGHT) {
-        this.activeTheme = applied;
-      }
+      this.activeTheme = this.inferBase(applied);
     };
 
     if (withTransition && document.startViewTransition) {
@@ -64,6 +105,35 @@ class PreferenceService {
       applyLogic();
     }
   }
+
+  applyContrast(contrast: Contrast): void {
+    const wrapper = this.getWrapper();
+    if (contrast === 'high') {
+      wrapper.setAttribute(this.DATA_CONTRAST_ATTR, 'high');
+    } else {
+      wrapper.removeAttribute(this.DATA_CONTRAST_ATTR);
+    }
+  }
+
+  applyVision(vision: Vision): void {
+    const wrapper = this.getWrapper();
+    const safeVision: Vision =
+      vision === 'protanopia' || vision === 'deuteranopia' || vision === 'deuteranomaly' ? vision : 'normal';
+
+    wrapper.setAttribute(this.DATA_VISION_ATTR, safeVision);
+    const base = this.inferBase(wrapper.getAttribute(this.DATA_THEME_ATTR));
+    wrapper.setAttribute(this.DATA_THEME_ATTR, this.computeThemeAttr(base, safeVision));
+  }
+
+  applyReduceMotion(enabled: boolean): void {
+    const wrapper = this.getWrapper();
+    if (enabled) {
+      wrapper.setAttribute(this.DATA_MOTION_ATTR, 'reduce');
+    } else {
+      wrapper.removeAttribute(this.DATA_MOTION_ATTR);
+    }
+  }
+
   applyFontScale(fontScale: string | number): void {
     if (!fontScale) return;
 

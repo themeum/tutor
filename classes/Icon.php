@@ -318,6 +318,7 @@ final class Icon {
 	const QUIZ_2_FILL                = 'quiz-2-fill';
 	const QUIZ_ESSAY                 = 'quiz-essay';
 	const QUIZ_FILL_IN_THE_BLANKS    = 'quiz-fill-in-the-blanks';
+	const QUIZ_GRAPH                 = 'quiz-graph';
 	const QUIZ_H5P                   = 'quiz-h5p';
 	const QUIZ_IMAGE_ANSWER          = 'quiz-image-answer';
 	const QUIZ_IMAGE_MATCHING        = 'quiz-image-matching';
@@ -422,6 +423,7 @@ final class Icon {
 	const VIDEO_FILL                 = 'video-fill';
 	const VIDEO_QUALITY              = 'video-quality';
 	const VIMEO                      = 'vimeo';
+	const VISION                     = 'vision';
 	const VISITED                    = 'visited';
 	const WALLET                     = 'wallet';
 	const WARNING                    = 'warning';
