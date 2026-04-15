@@ -377,6 +377,10 @@ const getPreviewFrameStyles = () => `
   [data-question=fill_in_the_blank] .tutor-quiz-question-input {
     box-shadow: none;
   }
+
+  .tutor-quiz-question-option {
+    cursor: default;
+  }
 `;
 
 export default QuestionPreviewModal;
