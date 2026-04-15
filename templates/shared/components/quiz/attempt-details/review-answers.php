@@ -50,10 +50,6 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 
 		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
 
-		if ( empty( $attempt_answer ) ) {
-			continue;
-		}
-
 		$question_template = '';
 
 		if ( $is_dnd ) {
