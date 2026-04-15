@@ -472,50 +472,27 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
 
   return (
     <div css={styles.wrapper}>
-      <Show when={!option?.image_url}>
-        <div css={styles.card}>
-          <div css={styles.imageInputWrapper}>
-            <ImageInput
-              value={
-                option?.image_id
-                  ? {
-                      id: Number(option.image_id),
-                      url: option.image_url || '',
-                      title: option.image_url || '',
-                    }
-                  : null
-              }
-              buttonText={__('Upload Image', __TUTOR_TEXT_DOMAIN__)}
-              infoText={__('Upload the base image students will draw on.', __TUTOR_TEXT_DOMAIN__)}
-              uploadHandler={openMediaLibrary}
-              clearHandler={clearImage}
-              emptyImageCss={styles.imageInput}
-              previewImageCss={styles.imageInput}
-            />
-          </div>
+      <div css={styles.card}>
+        <div css={styles.imageInputWrapper}>
+          <ImageInput
+            value={
+              option?.image_id
+                ? {
+                    id: Number(option.image_id),
+                    url: option.image_url || '',
+                    title: option.image_url || '',
+                  }
+                : null
+            }
+            buttonText={__('Upload Image', __TUTOR_TEXT_DOMAIN__)}
+            infoText={__('Upload the base image students will draw on.', __TUTOR_TEXT_DOMAIN__)}
+            uploadHandler={openMediaLibrary}
+            clearHandler={clearImage}
+            emptyImageCss={styles.imageInputEmpty}
+            previewImageCss={styles.imageInputPreview}
+          />
         </div>
-      </Show>
-
-      <Show when={option?.image_url}>
-        <div css={styles.card}>
-          <div css={styles.uploadedImageWrapper}>
-            <img
-              src={option?.image_url}
-              alt={__('Background image for marking correct area', __TUTOR_TEXT_DOMAIN__)}
-              css={styles.uploadedImage}
-              onClick={openMediaLibrary}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  openMediaLibrary();
-                }
-              }}
-            />
-          </div>
-        </div>
-      </Show>
+      </div>
 
       <Show when={option?.image_url}>
         <div css={styles.card}>
@@ -596,18 +573,21 @@ const styles = {
   imageInputWrapper: css`
     max-width: 100%;
   `,
-  imageInput: css`
+  imageInputEmpty: css`
     border-radius: ${borderRadius.card};
   `,
-  uploadedImageWrapper: css`
+  imageInputPreview: css`
+    width: fit-content;
     max-width: 100%;
-  `,
-  uploadedImage: css`
-    display: block;
-    width: 100%;
     height: auto;
-    cursor: pointer;
     border-radius: ${borderRadius.card};
+
+    img {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      object-fit: initial;
+    }
   `,
   answerHeader: css`
     ${styleUtils.display.flex('row')};

@@ -19,7 +19,7 @@ $is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 	?>
 	<!DOCTYPE html>
-	<html lang="en">
+	<html <?php language_attributes(); ?>>
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -19,6 +19,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
+use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -560,12 +561,26 @@ class CheckoutController {
 			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert', $errors );
 			return;
 		}
+
 		global $wpdb;
 		$order_data      = null;
 		$billing_model   = new BillingModel();
-		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
+		$current_user_id = get_current_user_id();
+
+		$is_guest_checkout_endabled = class_exists( 'TutorPro\Ecommerce\GuestCheckout\GuestCheckout' ) && GuestCheckout::is_enable();
+
+		// Pevent invalid request.
+		if ( ! $current_user_id ) {
+			if ( $is_guest_checkout_endabled ) {
+				// Guest user.
+				$current_user_id = wp_rand(); // A random id to iniquely indentify.
+			} else {
+				wp_die( esc_html( tutor_utils()->error_message( 'invalid_req' ) ) );
+			}
+		}
+
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
-		$order_id        = Input::get( 'order_id', 0, Input::TYPE_INT );
+		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
 
 		if ( $order_id ) {
 			$order_data = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id(), true );
@@ -621,6 +636,30 @@ class CheckoutController {
 
 		if ( empty( $object_ids ) ) {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
+		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
+			foreach ( $object_ids as $object_id ) {
+				if ( ! in_array( get_post_type( $object_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
+					// translators: %s is the course title.
+					array_push( $errors, sprintf( __( 'Invalid item: %s', 'tutor' ), get_the_title( $object_id ) ) );
+				}
+			}
+		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+			$item_id = $object_ids[0] ?? 0;
+			if ( $item_id ) {
+				$plan = apply_filters( 'tutor_get_plan_info', null, $item_id );
+				if ( ! $plan ) {
+					array_push( $errors, __( 'Invalid plan', 'tutor' ) );
+				}
+			} else {
+				array_push( $errors, __( 'Invalid plan', 'tutor' ) );
+			}
+		} else {
+			array_push( $errors, __( 'Invalid order type', 'tutor' ) );
+		}
+
+		if ( ! empty( $errors ) ) {
+			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
+			return;
 		}
 
 		$billing_info = $billing_model->get_info( $current_user_id );

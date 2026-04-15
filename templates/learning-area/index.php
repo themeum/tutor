@@ -24,7 +24,7 @@ use TUTOR\Template;
 
 ?>
 <!DOCTYPE html>
-	<html lang="en">
+	<html <?php language_attributes(); ?>>
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -34,13 +34,15 @@ use TUTOR\Template;
 	<body <?php body_class( '' ); ?> x-data="tutorCourseCompleteHandler()">
 <?php
 
-
 // Tutor global variable for using inside learning area.
+$tutor_current_post_type  = get_post_type();
+$tutor_current_content_id = get_the_ID();
+$tutor_course_id          = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
+
+do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
+
 $current_user_id            = get_current_user_id();
-$tutor_current_post_type    = get_post_type();
 $tutor_current_post         = get_post();
-$tutor_current_content_id   = get_the_ID();
-$tutor_course_id            = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
 $tutor_course               = get_post( $tutor_course_id );
 $tutor_course_list_url      = tutor_utils()->course_archive_page_url();
 $tutor_is_enrolled          = tutor_utils()->is_enrolled( $tutor_course_id );

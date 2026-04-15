@@ -139,7 +139,7 @@ do_action( 'tutor_course/single/before/topics' );
 											<span class="tutor-course-content-list-item-duration tutor-fs-7 tutor-color-muted">
 												<?php echo esc_html( $play_time ? tutor_utils()->get_optimized_duration( $play_time ) : '' ); ?>
 											</span>
-											<span class="tutor-course-content-list-item-status <?php echo $is_locked ? 'tutor-icon-lock-line' : 'tutor-icon-eye-line'; ?> tutor-color-muted tutor-ml-20" area-hidden="true"></span>
+											<span class="tutor-course-content-list-item-status <?php echo $is_locked ? 'tutor-icon-lock-line' : 'tutor-icon-eye-line'; ?> tutor-color-muted tutor-ml-20" aria-hidden="true"></span>
 										</div>
 									</li>
 								<?php endwhile; ?>

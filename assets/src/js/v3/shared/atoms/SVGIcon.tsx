@@ -143,7 +143,7 @@ export default memo(SVGIcon, (prev, next) => {
   return (
     prev.name === next.name &&
     prev.height === next.height &&
-    prev.width === next.height &&
+    prev.width === next.width &&
     prev.isColorIcon === next.isColorIcon &&
     prev.ignoreKids === next.ignoreKids &&
     prev.style?.name === next.style?.name
