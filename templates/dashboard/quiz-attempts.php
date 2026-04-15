@@ -34,7 +34,7 @@ if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 	return;
 }
 
-$url              = get_pagenum_link();
+$url              = get_pagenum_link( 1, false );
 $item_per_page    = tutor_utils()->get_option( 'pagination_per_page' );
 $current_page     = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset           = ( $current_page - 1 ) * $item_per_page;
@@ -50,7 +50,7 @@ $search_filter = Input::get( 'search', '' );
 $is_student_view     = User::VIEW_AS_STUDENT === User::get_current_view_mode();
 $quiz_attempts       = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, false, true );
 $quiz_attempts_list  = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter, $is_student_view );
-$quiz_attempts_count = QuizModel::get_quiz_attempts( $offset, $item_per_page, '', $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, true, true );
+$quiz_attempts_count = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, true, true );
 
 
 if ( Input::has( 'date', Input::GET_REQUEST ) && $quiz_attempts_count <= $offset ) {
@@ -58,7 +58,23 @@ if ( Input::has( 'date', Input::GET_REQUEST ) && $quiz_attempts_count <= $offset
 }
 
 
-$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts_count, $url, $result_filter );
+$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data(
+	$quiz_attempts_count,
+	$url,
+	$result_filter,
+	$search_filter,
+	$course_id,
+	$date_filter,
+	$order_filter
+);
+
+$hidden_inputs = array(
+	'order'     => $order_filter,
+	'search'    => $search_filter,
+	'date'      => $date_filter,
+	'result'    => $result_filter,
+	'course-id' => $course_id,
+)
 
 ?>
 
@@ -88,7 +104,7 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts_count
 				<?php
 				SearchFilter::make()
 					->form_id( 'tutor-quiz-attempt-search-form' )
-					->hidden_inputs( array( 'result' => $result_filter ) )
+					->hidden_inputs( $hidden_inputs )
 					->placeholder( __( 'Search quizzes...', 'tutor' ) )
 					->size( Size::SMALL )
 					->render();
