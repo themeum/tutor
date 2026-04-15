@@ -1741,7 +1741,7 @@ class Quiz {
 			return;
 		}
 
-		$attempts_list = QuizModel::format_quiz_attempts( $attempts, '', true );
+		$attempts_list = QuizModel::format_quiz_attempts( $attempts, '' );
 
 		if ( empty( $attempts_list ) ) {
 			return;

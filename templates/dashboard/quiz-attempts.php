@@ -47,9 +47,8 @@ $date_filter   = Input::get( 'date', '' );
 $result_filter = Input::get( 'result', '' );
 $search_filter = Input::get( 'search', '' );
 
-$is_student_view     = User::VIEW_AS_STUDENT === User::get_current_view_mode();
 $quiz_attempts       = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, false, true );
-$quiz_attempts_list  = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter, $is_student_view );
+$quiz_attempts_list  = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter );
 $quiz_attempts_count = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, true, true );
 
 
@@ -145,24 +144,21 @@ $hidden_inputs = array(
 			<div class="tutor-quiz-attempts-list">
 				<?php
 				foreach ( $quiz_attempts_list as $quiz_attempt ) :
-					$attempts       = $quiz_attempt['attempts'];
-					$attempt        = $attempts[0] ?? array();
-					$attempts_count = count( $attempts );
 					?>
 				<div class="tutor-quiz-attempts-item-wrapper">
 					<?php
 						tutor_load_template(
 							'dashboard.components.quiz-attempt-row',
 							array(
-								'attempt'          => $attempt,
+								'attempt'          => $quiz_attempt,
 								'quiz_title'       => $quiz_attempt['quiz_title'],
 								'course_title'     => $quiz_attempt['course_title'],
 								'course_id'        => $quiz_attempt['course_id'],
 								'show_quiz_title'  => true,
 								'show_course'      => true,
 								'quiz_id'          => $quiz_attempt['quiz_id'],
-								'attempts_count'   => $attempts_count,
-								'attempt_id'       => $attempt['attempt_id'] ?? 0,
+								'attempts_count'   => 1,
+								'attempt_id'       => $quiz_attempt['attempt_id'] ?? 0,
 								'quiz_attempt_obj' => $quiz_attempt_obj,
 							)
 						);

@@ -63,11 +63,10 @@ class QuizModel {
 	 *
 	 * @param array  $quiz_attempts the quiz_attempts result obtained from query.
 	 * @param string $filter filter quiz attempt based on result.
-	 * @param bool   $make_group whether to group attempts by quiz.
 	 *
 	 * @return array
 	 */
-	public static function format_quiz_attempts( array $quiz_attempts, string $filter = '', $make_group = true ): array {
+	public static function format_quiz_attempts( array $quiz_attempts, string $filter = '' ): array {
 		$formatted_attempts = array();
 
 		if ( ! count( $quiz_attempts ) ) {
@@ -118,21 +117,15 @@ class QuizModel {
 				'incorrect_answers' => $incorrect_answers,
 				'time_taken'        => $attempt_time ?? '',
 				'date'              => $start_time ?? '',
+				'quiz_title'        => $quiz_title,
+				'course_title'      => $course_title,
+				'quiz_id'           => $quiz_attempt->quiz_id ?? 0,
+				'course_id'         => $quiz_attempt->course_id ?? 0,
 				'student'           => $quiz_attempt->display_name ?? '',
 				'attempt_info'      => maybe_unserialize( $quiz_attempt->attempt_info ) ?? array(),
 			);
 
-			if ( $make_group ) {
-				$formatted_attempts[] = $formatted_attempt;
-			} else {
-				$formatted_attempts[] = array(
-					'quiz_id'      => $quiz_attempt->quiz_id ?? 0,
-					'quiz_title'   => $quiz_title,
-					'course_title' => $course_title,
-					'course_id'    => $quiz_attempt->course_id ?? 0,
-					'attempts'     => array( $formatted_attempt ),
-				);
-			}
+			$formatted_attempts[] = $formatted_attempt;
 		}
 
 		return $formatted_attempts;
@@ -160,7 +153,7 @@ class QuizModel {
 			$course_id = $quiz_info['course_id'] ?? 0;
 
 			$quiz_attempts           = $this->quiz_attempts( $quiz_id, get_current_user_id() );
-			$formatted_quiz_attempts = self::format_quiz_attempts( $quiz_attempts, $filter, true );
+			$formatted_quiz_attempts = self::format_quiz_attempts( $quiz_attempts, $filter );
 
 			if ( ! tutor_utils()->count( $formatted_quiz_attempts ) ) {
 				continue;
