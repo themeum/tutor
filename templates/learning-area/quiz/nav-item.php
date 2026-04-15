@@ -11,9 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Icon;
-use Tutor\Components\SvgIcon;
-use Tutor\Models\QuizModel;
+use TUTOR\Quiz;
 
 global $tutor_current_content_id;
 
@@ -24,43 +22,4 @@ if ( ! $quiz && ! is_a( $quiz, 'WP_Post' ) ) {
 	return;
 }
 
-$quiz_title = $quiz->post_title;
-
-$active_class   = $tutor_current_content_id === $quiz->ID ? 'active' : '';
-$disabled_class = $can_access ? '' : 'disabled';
-
-$result_class = '';
-$icon_name    = Icon::QUIZ_2;
-if ( ! $can_access ) {
-	$icon_name = Icon::LOCK_STROKE_2;
-} else {
-	$last_attempt  = ( new QuizModel() )->get_first_or_last_attempt( $quiz->ID );
-	$attempt_ended = is_object( $last_attempt ) && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status;
-
-	$quiz_result = QuizModel::get_quiz_result( $quiz->ID );
-	if ( $attempt_ended && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status ) {
-		if ( QuizModel::RESULT_FAIL === $quiz_result ) {
-			$icon_name    = Icon::CROSS_CIRCLE_LINE;
-			$result_class = QuizModel::RESULT_FAIL;
-		} elseif ( QuizModel::RESULT_PENDING === $quiz_result ) {
-			$icon_name    = Icon::INFO_2;
-			$result_class = QuizModel::RESULT_PENDING;
-		} elseif ( QuizModel::RESULT_PASS === $quiz_result ) {
-			$icon_name = Icon::COMPLETED_COLORIZE;
-		}
-	}
-}
-?>
-
-<a
-	href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>" 
-	title="<?php echo esc_attr( $quiz_title ); ?>"
-	class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s %s %s', $active_class, $disabled_class, $result_class ) ); ?>"
-	<?php echo ! $can_access ? 'aria-disabled="true"' : ''; ?>
->
-	<?php SvgIcon::make()->name( $icon_name )->size( 20 )->render(); ?>
-	<div class="tutor-overflow-hidden">
-		<div class="tutor-truncate"><?php echo esc_html( $quiz_title ); ?></div>
-		<div class="tutor-tiny-2 tutor-text-subdued"><?php esc_html_e( 'Quiz', 'tutor' ); ?></div>
-	</div>
-</a>
+Quiz::render_sidebar_nav( $quiz, $can_access, $tutor_current_content_id );
