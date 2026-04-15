@@ -82,7 +82,7 @@ if ( isset( $data ) ) : ?>
 
 						?>
 						<a class="tutor-btn tutor-btn-ghost tutor-mt-sm-28" href="<?php echo esc_url( $url ); ?>">
-							<i class="tutor-icon-refresh tutor-mr-8" area-hidden="true"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
+							<i class="tutor-icon-refresh tutor-mr-8" aria-hidden="true"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
 						</a>
 					</div>
 					<?php
@@ -214,7 +214,7 @@ if ( isset( $data ) ) : ?>
 								<?php esc_html_e( 'Search', 'tutor' ); ?>
 							</label>
 							<div class="tutor-form-wrap">
-								<span class="tutor-form-icon"><span class="tutor-icon-search" area-hidden="true"></span></span>
+								<span class="tutor-form-icon"><span class="tutor-icon-search" aria-hidden="true"></span></span>
 								<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...', 'tutor' ); ?>" value="<?php echo esc_html( wp_unslash( $search ) ); ?>" />
 							</div>
 						</form>

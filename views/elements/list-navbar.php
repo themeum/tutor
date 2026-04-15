@@ -19,7 +19,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 				</span>
 
 				<?php if ( isset( $data['sub_page_title'] ) ) : ?>
-					<span class="tutor-mx-8" area-hidden="true">/</span>
+					<span class="tutor-mx-8" aria-hidden="true">/</span>
 					<span class="tutor-fs-7 tutor-color-muted">
 						<?php echo esc_html( $data['sub_page_title'] ); ?>
 					</span>

@@ -12,7 +12,7 @@
 <div class="tutor-course-builder-section">
 	<div class="tutor-course-builder-section-title">
 		<span class="tutor-fs-5 tutor-fw-bold tutor-color-secondary">
-			<i class="tutor-icon-angle-up" area-hidden="true"></i>
+			<i class="tutor-icon-angle-up" aria-hidden="true"></i>
 			<span><?php echo esc_html( $title ); ?></span>
 		</span>
 	</div>
