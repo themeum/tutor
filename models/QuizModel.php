@@ -139,7 +139,7 @@ class QuizModel {
 						);
 					}
 
-					$formatted_attempts[ $quiz_id ]['attempts'][] = $formatted_attempt;
+					$formatted_attempts[ $quiz_attempt->quiz_id ]['attempts'][] = $formatted_attempt;
 				}
 			} else {
 				$formatted_attempts[ $quiz_attempt->attempt_id ] = array(
