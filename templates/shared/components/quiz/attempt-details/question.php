@@ -35,16 +35,33 @@ if ( 'single_choice' === $question_type ) {
 	$question_type = 'multiple_choice';
 }
 
-$status_label   = __( 'Incorrect', 'tutor' );
-$status_variant = Badge::ERROR;
-$answer_status  = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'wrong';
+$is_skipped    = QuizModel::is_attempt_answer_skipped( $attempt_answer );
+$review_status = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'skipped';
+$answer_status = $review_status;
+$status_badges = array();
 
-if ( 'correct' === $answer_status ) {
-	$status_label   = __( 'Correct', 'tutor' );
-	$status_variant = Badge::SUCCESS;
-} elseif ( 'pending' === $answer_status ) {
-	$status_label   = __( 'Pending', 'tutor' );
-	$status_variant = Badge::WARNING;
+if ( $is_skipped ) {
+	$status_badges[] = array(
+		'label'   => __( 'Skipped', 'tutor' ),
+		'variant' => Badge::INFO,
+	);
+}
+
+if ( 'correct' === $review_status ) {
+	$status_badges[] = array(
+		'label'   => __( 'Correct', 'tutor' ),
+		'variant' => Badge::SUCCESS,
+	);
+} elseif ( 'pending' === $review_status ) {
+	$status_badges[] = array(
+		'label'   => __( 'Pending', 'tutor' ),
+		'variant' => Badge::WARNING,
+	);
+} elseif ( 'incorrect' === $review_status ) {
+	$status_badges[] = array(
+		'label'   => __( 'Incorrect', 'tutor' ),
+		'variant' => Badge::ERROR,
+	);
 }
 
 
@@ -66,8 +83,7 @@ if ( 'review-answer-dnd' === $question_template ) {
 			'question_description' => (string) ( $question->question_description ?? '' ),
 			'question_mark'        => (string) ( $question->question_mark ?? '' ),
 			'show_question_mark'   => '1' === (string) ( $question_settings['show_question_mark'] ?? '1' ),
-			'status_label'         => $status_label,
-			'status_variant'       => $status_variant,
+			'status_badges'        => $status_badges,
 			'answer_status'        => $answer_status,
 			'attempt_id'           => $attempt_id,
 			'attempt_answer_id'    => (int) ( $attempt_answer->attempt_answer_id ?? 0 ),
