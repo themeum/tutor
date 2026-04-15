@@ -233,7 +233,7 @@ const createConfig = (env, options) => {
                             'pending',
                           ],
                           deep: [/^vc-/, /^tutor-vc-/, /^tutor-range-calendar/],
-                          greedy: [/data-vc/, /data-active/],
+                          greedy: [/data-vc/, /data-active/, /data-tutor-theme/, /data-tutor-contrast/],
                         },
                       }),
                   ].filter(Boolean),
