@@ -28,28 +28,6 @@ const DrawImage = () => {
     name: answersPath,
   });
 
-  // Frontend-only stale cleanup: if legacy/buggy payload brings multiple draw answers,
-  // keep the first one and mark the rest for deletion.
-  useEffect(() => {
-    if (optionsFields.length <= 1) {
-      return;
-    }
-
-    const removableIds = optionsFields
-      .slice(1)
-      .filter((answer) => answer._data_status !== QuizDataStatus.NEW)
-      .map((answer) => answer.answer_id)
-      .filter(Boolean);
-
-    if (removableIds.length > 0) {
-      const prevDeleted = form.getValues('deleted_answer_ids') || [];
-      const nextDeleted = Array.from(new Set([...prevDeleted, ...removableIds]));
-      form.setValue('deleted_answer_ids', nextDeleted, { shouldDirty: true });
-    }
-
-    form.setValue(answersPath, [optionsFields[0] as QuizQuestionOption], { shouldDirty: true });
-  }, [answersPath, form, optionsFields]);
-
   const thresholdOptions = useMemo(
     () =>
       [40, 50, 60, 70, 80, 90, 100].map((value) => ({
