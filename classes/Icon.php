@@ -127,6 +127,7 @@ final class Icon {
 	const CROSS                      = 'cross';
 	const CROSS_2                    = 'cross-2';
 	const CROSS_CIRCLE               = 'cross-circle';
+	const CROSS_CIRCLE_LINE          = 'cross-circle-line';
 	const CROWN                      = 'crown';
 	const CROWN_OUTLINED             = 'crown-outlined';
 	const CROWN_ROUNDED              = 'crown-rounded';
@@ -216,6 +217,7 @@ final class Icon {
 	const IMPORT_COLORIZED           = 'import-colorized';
 	const INACTIVE                   = 'inactive';
 	const INFO                       = 'info';
+	const INFO_2                     = 'info-2';
 	const INFO_FILL                  = 'info-fill';
 	const INFO_OCTAGON               = 'info-octagon';
 	const INSTRUCTOR                 = 'instructor';

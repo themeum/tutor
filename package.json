@@ -7,7 +7,7 @@
     "node": ">=14.17.5"
   },
   "scripts": {
-    "build": "rm *.zip && composer install --no-dev && npm run make-pot && rspack --mode=production && npm run tutor-droip && gulp build",
+    "build": "rm -f *.zip && composer install --no-dev && npm run make-pot && rspack --mode=production && npm run tutor-droip && gulp build",
     "build-dev": "composer install --no-dev --no-scripts && rspack --mode=production && gulp build",
     "build-analysis": "RSDOCTOR=true pnpm exec rspack --mode=production",
     "watch": "rspack --watch --mode=development",
