@@ -10,7 +10,6 @@
  */
 
 use Tutor\Components\Alert;
-use Tutor\Components\InputField;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
 

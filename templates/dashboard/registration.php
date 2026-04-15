@@ -12,10 +12,8 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Alert;
-use Tutor\Components\InputField;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
-use TUTOR\Input;
 
 ?>
 
