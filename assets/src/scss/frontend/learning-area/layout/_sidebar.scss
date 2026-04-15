@@ -225,10 +225,10 @@
             color: $tutor-icon-secondary;
           }
         }
-        svg.pending {
+        &.pending svg {
           color: $tutor-icon-warning-secondary;
         }
-        svg.fail {
+        &.fail svg {
           color: $tutor-icon-critical;
         }
       }

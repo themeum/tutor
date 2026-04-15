@@ -29,13 +29,13 @@ $quiz_title = $quiz->post_title;
 $active_class   = $tutor_current_content_id === $quiz->ID ? 'active' : '';
 $disabled_class = $can_access ? '' : 'disabled';
 
-$icon_name = Icon::QUIZ_2;
+$result_class = '';
+$icon_name    = Icon::QUIZ_2;
 if ( ! $can_access ) {
 	$icon_name = Icon::LOCK_STROKE_2;
 } else {
 	$last_attempt  = ( new QuizModel() )->get_first_or_last_attempt( $quiz->ID );
 	$attempt_ended = is_object( $last_attempt ) && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status;
-	$result_class  = '';
 
 	$quiz_result = QuizModel::get_quiz_result( $quiz->ID );
 	if ( $attempt_ended && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status ) {
@@ -55,10 +55,10 @@ if ( ! $can_access ) {
 <a
 	href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>" 
 	title="<?php echo esc_attr( $quiz_title ); ?>"
-	class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s %s', $active_class, $disabled_class ) ); ?>"
+	class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s %s %s', $active_class, $disabled_class, $result_class ) ); ?>"
 	<?php echo ! $can_access ? 'aria-disabled="true"' : ''; ?>
 >
-	<?php SvgIcon::make()->name( $icon_name )->attr( 'class', $result_class )->size( 20 )->render(); ?>
+	<?php SvgIcon::make()->name( $icon_name )->size( 20 )->render(); ?>
 	<div class="tutor-overflow-hidden">
 		<div class="tutor-truncate"><?php echo esc_html( $quiz_title ); ?></div>
 		<div class="tutor-tiny-2 tutor-text-subdued"><?php esc_html_e( 'Quiz', 'tutor' ); ?></div>
