@@ -9,6 +9,8 @@
   // SURFACE COLORS
   // =============================================================================
 
+  --tutor-surface-warning: #{$tutor-gray-750};
+  --tutor-surface-warning-hover: #{$tutor-warning-900};
   --tutor-surface-success: #{$tutor-cyan-900};
   --tutor-surface-critical: #{$tutor-orange-900};
 
@@ -20,6 +22,7 @@
   --tutor-text-critical: #{$tutor-orange-500};
   --tutor-text-critical-hover: #{$tutor-orange-600};
   --tutor-text-warning: #{$tutor-orange-600};
+  --tutor-text-caution: #{$tutor-yellow-600};
 
   // =============================================================================
   // ICON COLORS
@@ -27,6 +30,7 @@
 
   --tutor-icon-success-primary: #{$tutor-cyan-600};
   --tutor-icon-success-secondary: #{$tutor-cyan-700};
+  --tutor-icon-exception4: #{$tutor-warning-400};
   --tutor-icon-caution: #{$tutor-yellow-500};
   --tutor-icon-critical: #{$tutor-orange-500};
   --tutor-icon-critical-hover: #{$tutor-orange-600};
@@ -66,25 +70,20 @@
 
   --tutor-actions-success-primary: #{$tutor-cyan-500};
   --tutor-actions-success-secondary: #{$tutor-cyan-400};
-  --tutor-actions-success-tertiary: #{$tutor-cyan-900};
+  --tutor-actions-success-tertiary: #{$tutor-gray-700};
   --tutor-actions-success-exception: #{$tutor-cyan-950};
   --tutor-actions-warning-primary: #{$tutor-orange-300};
-  --tutor-actions-warning-secondary: #{$tutor-orange-900};
+  --tutor-actions-warning-secondary: #{$tutor-gray-700};
   --tutor-actions-warning-tertiary: #{$tutor-orange-50};
   --tutor-actions-warning-exception: #{$tutor-orange-50};
   --tutor-actions-critical-primary: #{$tutor-orange-600};
+  --tutor-actions-critical-secondary: #{$tutor-gray-700};
   --tutor-actions-caution: #{$tutor-yellow-500};
+  --tutor-actions-caution-secondary: #{$tutor-yellow-100};
 }
 
-
 [data-tutor-theme="dark-deuteranopia"][data-tutor-contrast="high"] {
-  --tutor-icon-success-secondary: #{$tutor-cyan-500};
-  --tutor-button-success: #{$tutor-cyan-500};
-  --tutor-button-success-hover: #{$tutor-cyan-600};
-  --tutor-button-success-focused: #{$tutor-cyan-500};
-  --tutor-border-warning: #{$tutor-yellow-200};
-  --tutor-border-success-secondary: #{$tutor-cyan-600};
-  --tutor-border-error-secondary: #{$tutor-orange-600};
-  --tutor-actions-success-exception: #{$tutor-cyan-950};
-  --tutor-actions-warning-exception: #{$tutor-orange-50};
+  --tutor-actions-success-tertiary: #{$tutor-gray-700};
+  --tutor-actions-warning-secondary: #{$tutor-gray-700};
+  --tutor-actions-critical-secondary: #{$tutor-gray-700};
 }
