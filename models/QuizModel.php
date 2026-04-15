@@ -761,12 +761,47 @@ class QuizModel {
 	}
 
 	/**
+	 * Check whether an attempt answer should be treated as skipped.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object|null $attempt_answer Attempt answer object.
+	 *
+	 * @return bool
+	 */
+	public static function is_attempt_answer_skipped( $attempt_answer ): bool {
+		if ( ! is_object( $attempt_answer ) ) {
+			return true;
+		}
+
+		$given_answer = maybe_unserialize( $attempt_answer->given_answer ?? '' );
+
+		if ( is_array( $given_answer ) ) {
+			$given_answer = array_filter(
+				array_map(
+					static function ( $item ) {
+						return trim( wp_strip_all_tags( (string) $item ) );
+					},
+					$given_answer
+				),
+				static function ( string $item ) {
+					return '' !== $item;
+				}
+			);
+
+			return empty( $given_answer );
+		}
+
+		return '' === trim( wp_strip_all_tags( (string) $given_answer ) );
+	}
+
+	/**
 	 * Get normalized attempt-answer status.
 	 *
 	 * Status rules follow legacy attempt-details logic:
 	 * - correct: is_correct is truthy.
 	 * - pending: is_correct is null for manually reviewed question types.
-	 * - wrong: all other cases.
+	 * - incorrect: all other cases.
 	 *
 	 * @since 4.0.0
 	 *
