@@ -13,6 +13,11 @@
 	box-shadow: var(--tutor-tab-active-shadow, none);
 }
 
+.tutor-btn-outline:focus:not(:disabled):not(.disabled) {
+	color: var(--tutor-text-brand) !important;
+}
+
+.tutor-btn-link,
 .tutor-cart-empty-state a {
 	text-decoration: none !important;
 }

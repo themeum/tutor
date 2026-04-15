@@ -65,14 +65,14 @@ $course_students = apply_filters( 'tutor_course_students', tutor_utils()->count_
 								</div>
 							</div>
 
-							<div class="tutor-course-card-title tutor-mt-2 tutor-line-clamp-3">
+							<div class="tutor-course-card-title tutor-my-2 tutor-line-clamp-3">
 								<a href="<?php the_permalink(); ?>">
 									<?php the_title(); ?>
 								</a>
 							</div>
 
 							<?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) || ! empty( $course_duration ) ) : ?>
-							<div class="tutor-meta tutor-course-card-meta tutor-mt-2 tutor-mb-2">
+							<div class="tutor-meta tutor-course-card-meta tutor-my-2">
 								<?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
 									<span class="tutor-course-meta-value"><?php echo esc_html( $course_students ); ?></span>
 									<span><?php esc_html_e( 'Learners', 'tutor' ); ?></span>

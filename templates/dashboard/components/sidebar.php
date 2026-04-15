@@ -45,7 +45,7 @@ $dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
 				?>
 				<img src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
 			<?php else : ?>
-				<span class="site-title"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
+				<span class="site-title tutor-h4"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
 			<?php endif; ?>
 		</a>
 	</div>

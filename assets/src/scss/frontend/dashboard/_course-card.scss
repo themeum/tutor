@@ -70,12 +70,13 @@
     }
   }
 
-  &-title {
+  &-title,
+  &-title a {
     @include tutor-typography('small', 'medium', 'primary');
-    margin-bottom: $tutor-spacing-2;
   }
 
-  &-meta {
+  &-meta,
+  &-meta a {
     @include tutor-flex(row, center, flex-start, wrap);
     gap: $tutor-spacing-1 $tutor-spacing-3;
     @include tutor-typography('tiny', 'regular', 'secondary', 'body');

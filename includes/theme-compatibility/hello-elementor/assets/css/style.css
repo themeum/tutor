@@ -1,0 +1,140 @@
+.wp-theme-hello-elementor {
+
+    /* a {
+        background-color: transparent;
+        color: #c36;
+        text-decoration: none;
+    } */
+
+    .tutor-btn-block {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .tutor-btn-primary {
+        background-color: var(--tutor-button-primary) !important;
+        color: var(--tutor-text-primary-inverse) !important;
+        --tutor-button-border-shadow: var(--tutor-button-primary-border-shadow, none) !important;
+    }
+
+    .tutor-btn-secondary {
+        background-color: var(--tutor-button-secondary) !important;
+        color: var(--tutor-text-primary) !important;
+        --tutor-button-border-shadow: var(--tutor-button-secondary-border-shadow, none) !important;
+    }
+
+    .tutor-btn-primary-soft {
+        background-color: var(--tutor-button-primary-soft) !important;
+        color: var(--tutor-text-brand) !important;
+        --tutor-button-border-shadow: var(--tutor-button-primary-soft-border-shadow, none) !important;
+    }
+
+    .tutor-btn,
+    .tutor-modal-close {
+        display: flex;
+        border-radius: var(--tutor-button-radius, 6px);
+        border: none !important;
+        text-decoration: none;
+        font-weight: var(--tutor-button-font-weight, 500);
+    }
+
+    .tutor-btn-medium {
+        padding: 8px 12px !important;
+        font-size: 0.875rem;
+        line-height: 1.375rem;
+    }
+
+    .tutor-modal-close:focus {
+        background-color: unset;
+    }
+
+    .tutor-btn-primary:hover:not(:disabled):not(.disabled) {
+        background-color: var(--tutor-button-primary-hover);
+        --tutor-button-border-shadow: var(--tutor-button-primary-border-shadow-hover, var(--tutor-button-primary-border-shadow, none)) !important;
+    }
+
+    .tutor-btn-secondary:hover:not(:disabled):not(.disabled) {
+        background-color: var(--tutor-button-secondary-hover) !important;
+        --tutor-button-border-shadow: var(--tutor-button-secondary-border-shadow-hover, var(--tutor-button-secondary-border-shadow, none)) !important;
+    }
+
+    .tutor-btn-primary-soft:hover:not(:disabled):not(.disabled) {
+        background-color: var(--tutor-button-primary-soft-hover) !important;
+        --tutor-button-border-shadow: var(--tutor-button-primary-soft-border-shadow-hover, var(--tutor-button-primary-soft-border-shadow, none)) !important;
+    }
+
+    .tutor-btn-link:hover:not(:disabled):not(.disabled),
+    .tutor-btn-link:focus {
+        color: var(--tutor-text-brand-hover) !important;
+        background-color: unset !important;
+    }
+
+
+    /* .tutor-p-none {
+        padding: 0px !important;
+    }
+
+    .tutor-bg-transparent {
+        background-color: transparent !important;
+    }
+
+    .tutor-btn,
+    .tutor-tabs-tab {
+        color: var(--tutor-text-primary) !important;
+        border-radius: var(--tutor-tab-radius, 8px) !important;
+        border: none !important;
+    }
+
+    .tutor-tabs-tab-active {
+        background-color: var(--tutor-tab-l3-active) !important;
+    }
+
+    .tutor-btn,
+    .tutor-modal-close {
+        display: inline-flex !important;
+        font-size: 0.875rem !important;
+    }
+
+    .tutor-btn-small {
+        font-size: .875rem !important;
+        line-height: 1.375rem !important;
+    }
+
+    .tutor-btn-link:hover:not(:disabled):not(.disabled),
+    .tutor-btn-link:focus {
+        color: var(--tutor-text-brand-hover) !important;
+        background-color: unset !important;
+    }
+
+    .tutor-btn-primary-soft {
+        background-color: var(--tutor-button-primary-soft) !important;
+        color: var(--tutor-text-brand) !important;
+    }
+
+    .tutor-tabs-tab-sm {
+        font-size: .75rem !important;
+    }
+
+    .tutor-tabs-tab {
+        display: flex !important;
+    }
+
+    .tutor-select-trigger {
+        display: flex !important;
+        width: 100% !important;
+        background-color: var(--tutor-surface-base) !important;
+        border: 1px solid var(--tutor-border-idle) !important;
+        border-radius: var(--tutor-input-radius, 6px) !important;
+        padding: 8px 12px !important;
+
+        .tutor-select-value-text {
+            color: var(--tutor-text-primary) !important;
+        }
+    }
+    .tutor-select-clear {
+        color: var(--tutor-icon-secondary) !important;
+        border: none !important;
+        padding: 0px !important;
+        display: flex !important;
+    } */
+}
