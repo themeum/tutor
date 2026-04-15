@@ -117,6 +117,10 @@
             }
           }
 
+          &-summary {
+            @include tutor-flex-center();
+          }
+
           &-arrow {
             @include tutor-flex-center();
             color: $tutor-icon-secondary;
@@ -220,6 +224,12 @@
           svg {
             color: $tutor-icon-secondary;
           }
+        }
+        &.pending svg {
+          color: $tutor-icon-warning-secondary;
+        }
+        &.fail svg {
+          color: $tutor-icon-critical;
         }
       }
     }

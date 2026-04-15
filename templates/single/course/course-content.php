@@ -37,7 +37,7 @@ if ( tutor_utils()->get_option( 'enable_course_about', true, true ) ) {
 
 		<?php if ( $has_show_more ) : ?>
 		<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
-			<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
+			<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" aria-hidden="true"></span>
 			<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
 		</a>
 	<?php endif; ?>

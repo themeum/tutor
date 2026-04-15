@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\QuizModel;
 
 if ( ! isset( $quiz_id ) ) {

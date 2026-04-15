@@ -11,20 +11,20 @@
 
 ?>
 
-<div id="tutor-modal-bulk-action" class="tutor-modal tutor-modal-confirmation">
+<div id="tutor-modal-bulk-action" class="tutor-modal tutor-modal-confirmation" role="dialog" aria-modal="true" aria-labelledby="tutor-modal-bulk-action-title" aria-hidden="true">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
 		<div class="tutor-modal-content tutor-modal-content-white">
-			<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-				<span class="tutor-icon-times" area-hidden="true"></span>
+			<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+				<span class="tutor-icon-times" aria-hidden="true"></span>
 			</button>
 			<div class="tutor-modal-body tutor-text-center">
 				<div class="tutor-px-lg-48 tutor-py-lg-24">
 					<div class="tutor-mt-24">
-						<img class="tutor-d-inline-block" src="<?php echo esc_url( tutor()->icon_dir . 'reset.svg' ); ?>" />
+						<img class="tutor-d-inline-block" src="<?php echo esc_url( tutor()->icon_dir . 'reset.svg' ); ?>" alt="" aria-hidden="true" />
 					</div>
 
-					<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12" data-modal-dynamic-title></div>
+					<div id="tutor-modal-bulk-action-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12" data-modal-dynamic-title></div>
 
 					<div class="tutor-alert tutor-warning tutor-mt-32">
 						<div class="tutor-alert-text">

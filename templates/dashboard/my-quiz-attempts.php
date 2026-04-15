@@ -23,7 +23,7 @@ use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
 use Tutor\Helpers\UrlHelper;
 
-if ( Input::has( 'attempt_id' ) ) {
+if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 	// Load single attempt details if ID provided.
 	include __DIR__ . '/my-quiz-attempts/attempts-details.php';
 	return;
@@ -49,7 +49,6 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 
 ?>
 <div class="tutor-my-quiz-attempts-wrapper" x-data="tutorQuizAttempts()">
-	<?php if ( $quiz_attempts_count ) : ?>
 		<div class="tutor-quiz-attempts">
 			<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-items-center tutor-border-b">
 				<div class="tutor-quiz-students-attempts-filter-item">
@@ -77,6 +76,7 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 					?>
 				</div>
 			</div>
+			<?php if ( $quiz_attempts_count ) : ?>
 			<div class="tutor-quiz-attempts-header">
 				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
 				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
@@ -104,14 +104,13 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 				}
 				?>
 			</div>
-		</div>
-	<?php else : ?>
-		<?php
-		EmptyState::make()
-			->title( __( 'No Quiz Attempts Found', 'tutor' ) )
-			->render();
-		?>
-	<?php endif; ?>
+		<?php else : ?>
+			<?php
+			EmptyState::make()
+				->title( __( 'No Quiz Attempts Found', 'tutor' ) )
+				->render();
+			?>
+		<?php endif; ?>
 			<?php
 			Pagination::make()
 				->current( $current_page )

@@ -141,17 +141,25 @@ const quizRadar = (config: QuizRadarConfig) => ({
     const centerX = width / 2;
     const centerY = height / 2;
     const radius = Math.sqrt(centerX * centerX + centerY * centerY);
-    const rad = (this.angle * Math.PI) / 180;
-    const trailLen = (135 * Math.PI) / 180;
+
+    // Fixed anchor: 12 o'clock
+    const START_DEG = -90;
+    const startRad = (START_DEG * Math.PI) / 180;
+
+    // Moving end: goes from 0° → 360° (i.e. -90° clockwise back to -90°) over 1 s
+    const progress = this.angle / 360; // 0..1
+    const sweepRad = startRad + progress * Math.PI * 2;
+
     const steps = 340;
     const colorStart = [197, 208, 245];
     const colorEnd = [241, 245, 254];
 
     ctx.clearRect(0, 0, width, height);
 
+    // Draw gradient fan from the fixed anchor to the moving arm
     for (let i = steps; i >= 0; i--) {
-      const t = i / steps;
-      const a = rad - trailLen * t;
+      const t = i / steps; // 1 = near moving arm, 0 = near anchor
+      const a = sweepRad - (sweepRad - startRad) * t;
       const colorT = t < 0.3 ? 0 : (t - 0.3) / 0.7;
       const rgb = [
         Math.round(colorStart[0] + (colorEnd[0] - colorStart[0]) * colorT),
@@ -168,19 +176,29 @@ const quizRadar = (config: QuizRadarConfig) => ({
       ctx.fill();
     }
 
+    // Draw moving arm
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
-    ctx.lineTo(centerX + Math.cos(rad) * radius, centerY + Math.sin(rad) * radius);
+    ctx.lineTo(centerX + Math.cos(sweepRad) * radius, centerY + Math.sin(sweepRad) * radius);
     ctx.strokeStyle = 'rgba(62,100,222,0.30)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
   },
 
   startRadarAnimation() {
+    // this.angle tracks degrees elapsed within the current 1-second cycle (0..360)
+    this.angle = 0;
+
     const tick = (timestamp: number) => {
       if (this.lastTick !== null) {
         const dt = timestamp - this.lastTick;
+        // Complete one full revolution per second
         this.angle += (360 / 1000) * dt;
+
+        // Reset to beginning of next cycle (stays in sync with 1-s countdown)
+        if (this.angle >= 360) {
+          this.angle -= 360;
+        }
       }
 
       this.drawSweep();

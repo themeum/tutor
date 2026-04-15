@@ -340,7 +340,7 @@ class Modal extends BaseComponent {
 	 * @return $this
 	 */
 	public function state( string $state ) {
-		$this->state = $state === 'open' ? 'open' : 'closed';
+		$this->state = 'open' === $state ? 'open' : 'closed';
 		return $this;
 	}
 
@@ -476,7 +476,7 @@ class Modal extends BaseComponent {
 		// Build Alpine.js x-data.
 		$alpine_data = array(
 			'id'          => $this->id,
-			'initialOpen' => $this->state === 'open',
+			'initialOpen' => 'open' === $this->state,
 		);
 		if ( ! $this->closeable ) {
 			$alpine_data['isCloseable'] = false;
@@ -491,7 +491,7 @@ class Modal extends BaseComponent {
 
 		// Build style attribute for custom width.
 		$style_attr = $this->width
-			? sprintf( ' style="width: %s;"', esc_attr( $this->width ) )
+			? sprintf( ' style="max-width: %s;"', esc_attr( $this->width ) )
 			: '';
 
 		// Build modal content.

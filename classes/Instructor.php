@@ -10,15 +10,13 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use DateInterval;
 use DateTime;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
-use Tutor\Models\CourseModel;
+use Tutor\Traits\JsonResponse;
 
 /**
  * Instructor class
@@ -26,6 +24,7 @@ use Tutor\Models\CourseModel;
  * @since 1.0.0
  */
 class Instructor {
+	use JsonResponse;
 
 	/**
 	 * Error message
@@ -75,9 +74,8 @@ class Instructor {
 		 */
 		add_action( 'wp_loaded', array( $this, 'hide_instructor_notice' ) );
 
-		add_action( 'wp_ajax_tutor_save_instructor_home_sections_order', array( $this, 'save_home_sections_order' ) );
-
-		add_action( 'wp_ajax_tutor_save_instructor_home_sections_visibility', array( $this, 'save_home_section_visibility' ) );
+		add_action( 'wp_ajax_tutor_save_instructor_home_sections_order', array( $this, 'ajax_save_home_sections_order' ) );
+		add_action( 'wp_ajax_tutor_save_instructor_home_sections_visibility', array( $this, 'ajax_save_home_section_visibility' ) );
 	}
 
 	/**
@@ -105,8 +103,14 @@ class Instructor {
 				'user_login'            => __( 'User Name field is required', 'tutor' ),
 				'password'              => __( 'Password field is required', 'tutor' ),
 				'password_confirmation' => __( 'Password Confirmation field is required', 'tutor' ),
+
 			)
 		);
+
+		$terms_conditions_link = tutor_utils()->get_toc_page_link();
+		if ( $terms_conditions_link ) {
+			$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
+		}
 
 		$validation_errors = array();
 
@@ -629,6 +633,7 @@ class Instructor {
 			array()
 		);
 
+		//phpcs:disabled
 		$result = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT
@@ -648,6 +653,7 @@ class Instructor {
 				$limit
 			)
 		);
+		//phpcs:enable
 
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
@@ -858,20 +864,19 @@ class Instructor {
 	 *
 	 * @return void Sends JSON success or error response and exits.
 	 */
-	public function save_home_sections_order() {
-
-		if ( ! is_user_logged_in() ) {
-			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
-		}
-
+	public function ajax_save_home_sections_order() {
 		tutor_utils()->check_nonce();
+
+		if ( ! User::is_instructor() ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
 
 		$order = Input::post( 'order', array(), Input::TYPE_ARRAY );
 		$order = array_values( array_map( 'sanitize_key', $order ) );
 
 		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_order', array_flip( $order ) );
 
-		wp_send_json_success();
+		$this->response_success( __( 'Settings saved successfully', 'tutor' ) );
 	}
 
 	/**
@@ -881,19 +886,18 @@ class Instructor {
 	 *
 	 * @return void Sends JSON success or error response and exits.
 	 */
-	public function save_home_section_visibility() {
-
-		if ( ! is_user_logged_in() ) {
-			wp_send_json_error( __( 'Sorry, you are not allowed to perform this action.', 'tutor' ) );
-		}
-
+	public function ajax_save_home_section_visibility() {
 		tutor_utils()->check_nonce();
+
+		if ( ! User::is_instructor() ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
 
 		$items = Input::post( 'items', '', Input::TYPE_STRING );
 		$items = array_map( 'rest_sanitize_boolean', (array) json_decode( $items ) );
 
 		update_user_meta( get_current_user_id(), '_tutor_instructor_home_sections_visibility', $items );
 
-		wp_send_json_success();
+		$this->response_success( __( 'Settings saved successfully', 'tutor' ) );
 	}
 }

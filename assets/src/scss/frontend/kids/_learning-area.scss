@@ -194,4 +194,8 @@
   .tutor-learning-footer {
     margin-top: $tutor-spacing-2;
   }
+
+  .tutor-upcoming-lesson-card:not(:last-of-type) {
+    margin-bottom: $tutor-spacing-4;
+  }
 }

@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use TUTOR\Quiz_Attempts_List;
 use TUTOR\Input;
@@ -17,8 +19,6 @@ use Tutor\Models\QuizModel;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
-
-defined( 'ABSPATH' ) || exit;
 
 global $tutor_current_post;
 
