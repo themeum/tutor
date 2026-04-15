@@ -154,6 +154,15 @@ class Button extends BaseComponent {
 	protected $icon_only = false;
 
 	/**
+	 * Whether button is a block button.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $block = false;
+
+	/**
 	 * Set button label text.
 	 *
 	 * @since 4.0.0
@@ -181,6 +190,20 @@ class Button extends BaseComponent {
 		if ( in_array( $size, $allowed, true ) ) {
 			$this->size = $size;
 		}
+		return $this;
+	}
+
+	/**
+	 * Set button block state.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $block Whether the button is a block button.
+	 *
+	 * @return $this
+	 */
+	public function block( bool $block = true ): self {
+		$this->block = $block;
 		return $this;
 	}
 
@@ -297,6 +320,10 @@ class Button extends BaseComponent {
 		if ( $this->disabled ) {
 			$this->attributes['disabled'] = 'disabled';
 			$classes                     .= ' disabled';
+		}
+
+		if ( $this->block ) {
+			$classes .= ' tutor-btn-block';
 		}
 
 		if ( $this->icon_only ) {

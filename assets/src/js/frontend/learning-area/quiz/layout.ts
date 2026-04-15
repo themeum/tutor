@@ -1,3 +1,5 @@
+import { __ } from '@wordpress/i18n';
+
 import type { AlpineComponentMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
 
@@ -30,6 +32,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
     revealFooterState: '' as '' | 'correct' | 'incorrect',
     isRevealing: false,
     revealTimeoutId: null as number | null,
+    nextButtonShaking: false,
 
     $el: null as HTMLElement | null,
     $root: null as HTMLElement | null,
@@ -205,7 +208,15 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
-      if (!skipValidation && this.shouldDisableNextButton()) {
+
+      // When the question is required and unanswered, shake the button and
+      // show a warning toast instead of silently eating the click.
+      if (!this.nextButtonShaking && !skipValidation && this.shouldDisableNextButton()) {
+        window.TutorCore?.toast?.warning(__('Please answer the question first.', 'tutor'));
+        this.nextButtonShaking = true;
+        window.setTimeout(() => {
+          this.nextButtonShaking = false;
+        }, 500);
         return;
       }
 

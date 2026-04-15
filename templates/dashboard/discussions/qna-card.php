@@ -83,7 +83,7 @@ $single_url = UrlHelper::add_query_params(
 					<?php PreviewTrigger::make()->id( $question->course_id )->render(); ?>
 				</div>
 			</div>
-			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="<?php echo esc_attr( 'tutor-qna-text' . (int) $question_id ); ?>"><?php echo wp_kses_post( $content ); ?></a>
+			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="<?php echo esc_attr( 'tutor-qna-text-' . (int) $question_id ); ?>"><?php echo wp_kses_post( $content ); ?></a>
 			<div class="tutor-flex tutor-items-center tutor-justify-between tutor-sm-mt-4">
 				<div class="tutor-discussion-card-meta">
 					<button 

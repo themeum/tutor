@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Nav;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use TUTOR\Input;
@@ -25,7 +26,7 @@ if ( ! Q_And_A::is_enabled() && ! Lesson::is_comment_enabled() ) {
 
 $current_tab   = Input::get( 'tab' );
 $discussion_id = Input::get( 'id', 0, Input::TYPE_INT );
-$order_filter  = Input::get( 'order', 'DESC' );
+$order_filter  = QueryHelper::get_valid_sort_order( Input::get( 'order', 'DESC' ) );
 $current_page  = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset        = ( $current_page - 1 ) * $item_per_page;
@@ -51,6 +52,15 @@ if ( Lesson::is_comment_enabled() ) {
 		'url'    => UrlHelper::add_query_params( $discussion_url, array( 'tab' => 'lesson-comments' ) ),
 		'active' => 'lesson-comments' === $current_tab,
 	);
+}
+
+$number_of_tabs = tutor_utils()->count( $page_nav_items );
+if ( $number_of_tabs <= 0 ) {
+	return;
+}
+
+if ( 1 === $number_of_tabs ) {
+	$page_nav_items[0]['active'] = true;
 }
 ?>
 <div class="tutor-dashboard-discussions" x-data="tutorDiscussions()">

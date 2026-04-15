@@ -7,8 +7,11 @@ import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
 import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import QuestionPreviewModal from '@CourseBuilderComponents/modals/QuestionPreviewModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
+import Button from '@TutorShared/atoms/Button';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -79,7 +82,9 @@ const supportRandomize: QuestionTypes[] = ['multiple_choice', 'matching', 'image
 const QuestionConditions = () => {
   const { activeQuestionIndex, activeQuestionId, validationError, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
+  const { showModal, closeModal } = useModal();
 
+  const activeQuestion = form.watch(`questions.${activeQuestionIndex}` as 'questions.0');
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as QuestionTypes;
   const activeDataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
 
@@ -91,17 +96,39 @@ const QuestionConditions = () => {
     <div key={`${activeQuestionId}-${activeQuestionIndex}`}>
       <div css={styles.questionTypeWrapper}>
         <div css={typography.caption('medium')}>{__('Question Type', 'tutor')}</div>
-        <div css={styles.questionType}>
-          <SVGIcon
-            name={
-              activeQuestionType
-                ? (questionTypes[activeQuestionType as keyof typeof questionTypes].icon as IconCollection)
-                : 'quizTrueFalse'
-            }
-            width={32}
-            height={32}
-          />
-          <span>{activeQuestionType ? questionTypes[activeQuestionType as keyof typeof questionTypes].label : ''}</span>
+        <div css={styles.questionTypeRow}>
+          <div css={styles.questionType}>
+            <SVGIcon
+              name={
+                activeQuestionType
+                  ? (questionTypes[activeQuestionType as keyof typeof questionTypes].icon as IconCollection)
+                  : 'quizTrueFalse'
+              }
+              width={32}
+              height={32}
+            />
+            <span>
+              {activeQuestionType ? questionTypes[activeQuestionType as keyof typeof questionTypes].label : ''}
+            </span>
+          </div>
+
+          <Button
+            isOutlined
+            variant="primary"
+            size="small"
+            icon={<SVGIcon name="preview2" width={24} height={24} />}
+            onClick={() => {
+              showModal({
+                component: QuestionPreviewModal,
+                props: {
+                  question: activeQuestion,
+                  onClose: () => closeModal(),
+                },
+              });
+            }}
+          >
+            {__('Preview', 'tutor')}
+          </Button>
         </div>
       </div>
 
@@ -285,12 +312,18 @@ const styles = {
     padding: ${spacing[12]} ${spacing[32]} ${spacing[24]} ${spacing[24]};
     ${typography.caption('medium')};
   `,
-
   questionTypeWrapper: css`
     ${styleUtils.display.flex('column')};
     padding: ${spacing[8]} ${spacing[32]} ${spacing[24]} ${spacing[24]};
     gap: ${spacing[10]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
+  `,
+  questionTypeRow: css`
+    ${styleUtils.display.flex('row')};
+    align-items: center;
+    gap: ${spacing[10]};
+    justify-content: space-between;
+    width: 100%;
   `,
   questionType: css`
     display: flex;
