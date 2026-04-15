@@ -99,7 +99,7 @@ $filters = array(
 							</th>
 							<th class="tutor-table-rows-sorting">
 								<?php esc_html_e( 'Request By', 'tutor' ); ?>
-								<span class="tutor-icon-ordering-a-z  a-to-z-sort-icon tutor-color-secondary"></span>
+								<span class="tutor-icon-ordering-a-z  a-to-z-sort-icon tutor-color-secondary" aria-hidden="true"></span>
 							</th>
 							<th>
 								<?php esc_html_e( 'Withdraw Method', 'tutor' ); ?>
@@ -290,7 +290,7 @@ $filters = array(
 										</div>
 										<div class="tooltip-wrap tutor-ml-lg-20 tutor-ml-0">
 											<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-												<i class="tutor-icon-circle-info tutor-color-muted"></i>
+												<i class="tutor-icon-circle-info tutor-color-muted" aria-hidden="true"></i>
 											</span>
 											<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt <?php echo esc_attr( is_rtl() ? 'tooltip-right' : 'tooltip-left' ); ?>">
 												<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center">
@@ -339,18 +339,18 @@ $filters = array(
 				?>
 			</div>
 
-			<div id="tutor-admin-withdraw-approve" class="tutor-modal">
+			<div id="tutor-admin-withdraw-approve" class="tutor-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-withdraw-approve-title" aria-hidden="true">
 				<div class="tutor-modal-overlay"></div>
 				<div class="tutor-modal-window">
 					<form id="tutor-admin-withdraw-approve-form" class="tutor-modal-content tutor-modal-content-white">
-						<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-							<span class="tutor-icon-times" area-hidden="true"></span>
+						<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+							<span class="tutor-icon-times" aria-hidden="true"></span>
 						</button>
 
 						<div class="tutor-modal-body tutor-text-center">
 							<div class="tutor-mt-48">
 								<span class="tutor-d-inline-block">
-									<svg width="100" height="93" viewBox="0 0 100 93" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<svg width="100" height="93" viewBox="0 0 100 93" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 										<path d="M79.0555 32.8059L72.9167 29.5281H27.0833L20.9444 32.8059C19.6111 33.5281 18.75 34.9447 18.75 36.4725V70.0836C18.75 72.3892 20.6111 74.2503 22.9167 74.2503H77.0833C79.3889 74.2503 81.25 72.3892 81.25 70.0836V36.4725C81.25 34.9447 80.3889 33.5281 79.0555 32.8059Z" fill="#F3F3F1"/>
 										<path d="M25 70.0836V36.4725C25 34.9447 25.8611 33.5281 27.1944 32.8059L33.3333 29.5281H27.0833L20.9444 32.8059C19.6111 33.5281 18.75 34.9447 18.75 36.4725V70.0836C18.75 72.3892 20.6111 74.2503 22.9167 74.2503H29.1667C26.8611 74.2503 25 72.3892 25 70.0836Z" fill="#D5DBE1"/>
 										<path d="M34.0742 18.7509L65.9075 18.7713V42.0905L49.9909 50.3967L34.0742 42.0905V18.7509Z" stroke="white" stroke-width="14"/>
@@ -373,7 +373,7 @@ $filters = array(
 								<input type="hidden" name="action-type" value="approved">
 							</div>
 
-							<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Approve Withdrawal?', 'tutor' ); ?></div>
+							<div id="tutor-withdraw-approve-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Approve Withdrawal?', 'tutor' ); ?></div>
 							<div id="tutor-admin-withdraw-approve-content" class="tutor-fs-6 tutor-color-muted"></div>
 							
 							<div class="tutor-d-flex tutor-justify-center tutor-my-48">
@@ -390,18 +390,18 @@ $filters = array(
 			</div>
 
 			<!-- withdraw reject modal-->
-			<div id="tutor-admin-withdraw-reject" class="tutor-modal">
+			<div id="tutor-admin-withdraw-reject" class="tutor-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-withdraw-reject-title" aria-hidden="true">
 				<div class="tutor-modal-overlay"></div>
 				<div class="tutor-modal-window">
 					<form id="tutor-admin-withdraw-reject-form" class="tutor-modal-content tutor-modal-content-white">
-						<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-							<span class="tutor-icon-times" area-hidden="true"></span>
+						<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+							<span class="tutor-icon-times" aria-hidden="true"></span>
 						</button>
 
 						<div class="tutor-modal-body tutor-text-center">
 							<div class="tutor-mt-48">
 								<span class="tutor-d-inline-block">
-									<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 										<path d="M63.6328 89.2495L68.0532 85.8843L69.7341 88.0922L65.3137 91.4575L63.6328 89.2495Z" fill="#A4AFC1"/>
 										<path d="M76.3477 79.5718L80.768 76.2066L82.4489 78.4145L78.0286 81.7797L76.3477 79.5718Z" fill="#A4AFC1"/>
 										<path d="M75.0312 89.293L77.2414 87.6104L80.6067 92.0307L78.3965 93.7133L75.0312 89.293Z" fill="#A4AFC1"/>
@@ -417,7 +417,7 @@ $filters = array(
 								<input type="hidden" name="action-type" value="<?php echo esc_html( 'rejected' ); ?>">
 							</div>
 
-							<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Reject Withdrawal?', 'tutor' ); ?></div>
+							<div id="tutor-withdraw-reject-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Reject Withdrawal?', 'tutor' ); ?></div>
 							<div id="tutor-admin-withdraw-reject-content" class="tutor-fs-6 tutor-color-muted tutor-mb-16"></div>
 
 							<select class="tutor-form-select" name="reject-type" id="tutor-admin-withdraw-reject-type">

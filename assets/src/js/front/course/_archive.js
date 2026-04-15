@@ -123,7 +123,7 @@ window.jQuery(document).ready($ => {
             pushFilterToState(filter_criteria);
         }
 
-        content_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
+        content_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" aria-hidden="true"></span></div>');
         course_filter_container.find('[action-tutor-clear-filter]').closest('.tutor-widget-course-filter').removeClass('tutor-d-none');
         
         if (!('category' in filter_criteria.supported_filters)) {
@@ -192,7 +192,7 @@ window.jQuery(document).ready($ => {
         $('body').toggleClass('tutor-course-filter-open');
 
         if ($('.tutor-course-filter-backdrop').length == 0) {
-            $('body').append($('<div class="tutor-course-filter-backdrop" area-hidden="true"></div>').hide().fadeIn(150));
+            $('body').append($('<div class="tutor-course-filter-backdrop" aria-hidden="true"></div>').hide().fadeIn(150));
         }
     });
 

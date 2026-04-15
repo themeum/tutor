@@ -378,7 +378,7 @@ class Instructors_List {
 			}
 		}
 
-		$date_clause = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
+		$date_clause = '' !== $date ? $wpdb->prepare( 'AND DATE(user.user_registered) = %s', $date ) : '';
 		$in_clause   = QueryHelper::prepare_in_clause( $status );
 
 		$query  = "SELECT
@@ -453,7 +453,8 @@ class Instructors_List {
 			$course_id     = (int) $course_id;
 			$course_clause = "AND umeta.meta_value = {$course_id}";
 		}
-		$date_clause = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
+
+		$date_clause = '' !== $date ? $wpdb->prepare( 'AND DATE(user.user_registered) = %s', $date ) : '';
 		$in_clause   = QueryHelper::prepare_in_clause( $status );
 
 		$query  = "SELECT

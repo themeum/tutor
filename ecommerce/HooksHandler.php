@@ -195,7 +195,7 @@ class HooksHandler {
 		 *
 		 * @since 3.9.7
 		 */
-		$is_valid_paid_order = OrderModel::ORDER_COMPLETED === $order_details && OrderModel::PAYMENT_PAID === $order_details->payment_status;
+		$is_valid_paid_order = OrderModel::ORDER_COMPLETED === $order_details->order_status && OrderModel::PAYMENT_PAID === $order_details->payment_status;
 
 		if ( $order_details && ! $is_valid_paid_order ) {
 			$prev_payment_status = $order_details->payment_status;
@@ -218,6 +218,9 @@ class HooksHandler {
 				case $this->order_model::PAYMENT_FAILED:
 				case $this->order_model::PAYMENT_REFUNDED:
 					$order_data['order_status'] = $this->order_model::ORDER_CANCELLED;
+					break;
+				case $this->order_model::PAYMENT_PENDING:
+					$order_data['order_status'] = $this->order_model::ORDER_PENDING;
 					break;
 			}
 
