@@ -291,6 +291,11 @@
         }
       }
 
+      &-status {
+        @include tutor-flex(row, center, flex-start, wrap);
+        gap: $tutor-spacing-3;
+      }
+
       &-divider {
         width: 1px;
         align-self: stretch;

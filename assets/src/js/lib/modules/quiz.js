@@ -13,6 +13,7 @@ window.jQuery(document).ready(($) => {
 		var $that = $(this);
 		var attempt_id = $that.attr('data-attempt-id');
 		var attempt_answer_id = $that.attr('data-attempt-answer-id');
+		var question_id = $that.attr('data-question-id');
 		var mark_as = $that.attr('data-mark-as');
 		var context = $that.attr('data-context');
 		var back_url = $that.attr('data-back-url');
@@ -23,6 +24,7 @@ window.jQuery(document).ready(($) => {
 			data: {
 				attempt_id,
 				attempt_answer_id,
+				question_id,
 				mark_as,
 				context,
 				back_url,
