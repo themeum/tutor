@@ -84,7 +84,7 @@ if ( 'ordering' === $question_type ) {
 	}
 } elseif ( 'image_answering' === $question_type ) {
 	$given_map      = is_array( $given_answer ) ? $given_answer : array();
-	$answer_status  = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'wrong';
+	$answer_status  = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'incorrect';
 	$row_item_state = 'correct' === $answer_status ? 'correct' : ( 'pending' === $answer_status ? 'pending' : 'incorrect' );
 
 	foreach ( $question_answers as $correct_item ) {
