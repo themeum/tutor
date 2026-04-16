@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -37,10 +38,22 @@ interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
       type: QuizValidationErrorType;
     } | null>
   >;
-  precisionControl?: React.ReactNode;
+  precisionControllerProps?: FormControllerProps<number | null>;
+  precisionTextDomain?: string;
+  onPrecisionChange?: (value: number) => void;
 }
 
-const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
+const THRESHOLD_OPTIONS = [40, 50, 60, 70, 80, 90, 100].map((value) => ({
+  label: `${value}%`,
+  value,
+}));
+
+const FormDrawImage = ({
+  field,
+  precisionControllerProps,
+  precisionTextDomain,
+  onPrecisionChange,
+}: FormDrawImageProps) => {
   const option = field.value;
 
   const [isDrawModeActive, setIsDrawModeActive] = useState(false);
@@ -530,7 +543,21 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
               aria-label={__('Draw a lasso around the correct answer area', __TUTOR_TEXT_DOMAIN__)}
             />
           </div>
-          {precisionControl && <div>{precisionControl}</div>}
+          {precisionControllerProps && precisionTextDomain && (
+            <FormSelectInput
+              {...precisionControllerProps}
+              label={__('Precision Level', precisionTextDomain)}
+              options={THRESHOLD_OPTIONS}
+              helpText={__(
+                'Minimum overlap score between student and instructor markings. Larger or smaller marked areas lower the score.',
+                precisionTextDomain,
+              )}
+              onChange={(option) => {
+                precisionControllerProps.field.onChange(option.value);
+                onPrecisionChange?.(option.value);
+              }}
+            />
+          )}
           <Show when={option?.answer_two_gap_match}>
             <p css={styles.savedHint}>
               {__('Answer zone saved. Students will be graded against this area.', __TUTOR_TEXT_DOMAIN__)}

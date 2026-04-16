@@ -25,6 +25,98 @@ import SearchField from './SearchField';
 
 type SortDirection = 'asc' | 'desc';
 
+type QuestionTypeOption = {
+  label: string;
+  value: QuizQuestionType;
+  icon: IconCollection;
+  isPro: boolean;
+};
+
+const ALL_QUESTION_TYPE_OPTIONS: QuestionTypeOption[] = [
+  {
+    label: __('True/False', 'tutor'),
+    value: 'true_false',
+    icon: 'quizTrueFalse',
+    isPro: false,
+  },
+  {
+    label: __('Multiple Choice', 'tutor'),
+    value: 'multiple_choice',
+    icon: 'quizMultiChoice',
+    isPro: false,
+  },
+  {
+    label: __('Open Ended/Essay', 'tutor'),
+    value: 'open_ended',
+    icon: 'quizEssay',
+    isPro: false,
+  },
+  {
+    label: __('Fill in the Blanks', 'tutor'),
+    value: 'fill_in_the_blank',
+    icon: 'quizFillInTheBlanks',
+    isPro: false,
+  },
+  {
+    label: __('Short Answer', 'tutor'),
+    value: 'short_answer',
+    icon: 'quizShortAnswer',
+    isPro: true,
+  },
+  {
+    label: __('Matching', 'tutor'),
+    value: 'matching',
+    icon: 'quizImageMatching',
+    isPro: true,
+  },
+  {
+    label: __('Image Answering', 'tutor'),
+    value: 'image_answering',
+    icon: 'quizImageAnswer',
+    isPro: true,
+  },
+  {
+    label: __('Ordering', 'tutor'),
+    value: 'ordering',
+    icon: 'quizOrdering',
+    isPro: true,
+  },
+  {
+    label: __('Mark in the Image', 'tutor'),
+    value: 'draw_image',
+    icon: 'quizMarkInTheImage',
+    isPro: true,
+  },
+  {
+    label: __('Range', 'tutor'),
+    value: 'scale',
+    icon: 'quizRange',
+    isPro: true,
+  },
+  {
+    label: __('Pin', 'tutor'),
+    value: 'pin_image',
+    icon: 'quizPin',
+    isPro: true,
+  },
+  {
+    label: __('Graph', 'tutor'),
+    value: 'coordinates',
+    icon: 'quizGraph',
+    isPro: true,
+  },
+];
+
+const questionTypeOptions = tutorConfig.is_legacy_learning_mode
+  ? ALL_QUESTION_TYPE_OPTIONS.filter(
+      (option) =>
+        option.value !== 'draw_image' &&
+        option.value !== 'pin_image' &&
+        option.value !== 'scale' &&
+        option.value !== 'coordinates',
+    )
+  : ALL_QUESTION_TYPE_OPTIONS;
+
 const QuestionListTable = () => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const form = useFormContext<ContentSelectionForm>();
@@ -83,104 +175,6 @@ const QuestionListTable = () => {
         : b.post_title.localeCompare(a.post_title);
     });
   };
-
-  const questionTypeOptions: {
-    label: string;
-    value: QuizQuestionType;
-    icon: IconCollection;
-    isPro: boolean;
-  }[] = useMemo(() => {
-    const all: {
-      label: string;
-      value: QuizQuestionType;
-      icon: IconCollection;
-      isPro: boolean;
-    }[] = [
-      {
-        label: __('True/False', 'tutor'),
-        value: 'true_false',
-        icon: 'quizTrueFalse',
-        isPro: false,
-      },
-      {
-        label: __('Multiple Choice', 'tutor'),
-        value: 'multiple_choice',
-        icon: 'quizMultiChoice',
-        isPro: false,
-      },
-      {
-        label: __('Open Ended/Essay', 'tutor'),
-        value: 'open_ended',
-        icon: 'quizEssay',
-        isPro: false,
-      },
-      {
-        label: __('Fill in the Blanks', 'tutor'),
-        value: 'fill_in_the_blank',
-        icon: 'quizFillInTheBlanks',
-        isPro: false,
-      },
-      {
-        label: __('Short Answer', 'tutor'),
-        value: 'short_answer',
-        icon: 'quizShortAnswer',
-        isPro: true,
-      },
-      {
-        label: __('Matching', 'tutor'),
-        value: 'matching',
-        icon: 'quizImageMatching',
-        isPro: true,
-      },
-      {
-        label: __('Image Answering', 'tutor'),
-        value: 'image_answering',
-        icon: 'quizImageAnswer',
-        isPro: true,
-      },
-      {
-        label: __('Ordering', 'tutor'),
-        value: 'ordering',
-        icon: 'quizOrdering',
-        isPro: true,
-      },
-      {
-        label: __('Mark in the Image', 'tutor'),
-        value: 'draw_image',
-        icon: 'quizMarkInTheImage',
-        isPro: true,
-      },
-      {
-        label: __('Range', 'tutor'),
-        value: 'scale',
-        icon: 'quizRange',
-        isPro: true,
-      },
-      {
-        label: __('Pin', 'tutor'),
-        value: 'pin_image',
-        icon: 'quizPin',
-        isPro: true,
-      },
-      {
-        label: __('Graph', 'tutor'),
-        value: 'coordinates',
-        icon: 'quizGraph',
-        isPro: true,
-      },
-    ];
-
-    if (tutorConfig.is_legacy_learning_mode) {
-      return all.filter(
-        (option) =>
-          option.value !== 'draw_image' &&
-          option.value !== 'pin_image' &&
-          option.value !== 'scale' &&
-          option.value !== 'coordinates',
-      );
-    }
-    return all;
-  }, []);
 
   const columns: Column<ContentBankContent>[] = [
     {

@@ -1,12 +1,10 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import FormDrawImage from '@TutorShared/components/fields/quiz/questions/FormDrawImage';
-import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import { spacing } from '@TutorShared/config/styles';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -27,15 +25,6 @@ const DrawImage = () => {
     control: form.control,
     name: answersPath,
   });
-
-  const thresholdOptions = useMemo(
-    () =>
-      [40, 50, 60, 70, 80, 90, 100].map((value) => ({
-        label: `${value}%`,
-        value,
-      })),
-    [],
-  );
 
   // Ensure there is always a single option for this question type.
   useEffect(() => {
@@ -91,26 +80,16 @@ const DrawImage = () => {
                 questionId={activeQuestionId}
                 validationError={validationError}
                 setValidationError={setValidationError}
-                precisionControl={
-                  <FormSelectInput
-                    {...thresholdControllerProps}
-                    label={__('Precision Level', 'tutor')}
-                    options={thresholdOptions}
-                    helpText={__(
-                      'Minimum overlap score between student and instructor markings. Larger or smaller marked areas lower the score.',
-                      'tutor',
-                    )}
-                    onChange={(option) => {
-                      thresholdControllerProps.field.onChange(option.value);
-                      if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
-                        form.setValue(
-                          `questions.${activeQuestionIndex}._data_status`,
-                          calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                        );
-                      }
-                    }}
-                  />
-                }
+                precisionControllerProps={thresholdControllerProps}
+                precisionTextDomain={'tutor'}
+                onPrecisionChange={() => {
+                  if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+                    form.setValue(
+                      `questions.${activeQuestionIndex}._data_status`,
+                      calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                    );
+                  }
+                }}
               />
             )}
           />
