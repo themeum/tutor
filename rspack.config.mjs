@@ -6,6 +6,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import nodeExternals from 'webpack-node-externals';
+import { purgecssContent, purgecssSafelist } from './purgecss.config.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -82,94 +83,6 @@ const createConfig = (env, options) => {
     },
   };
 
-  // Breakpoint first segment for responsive utilities — keep in sync with
-  // assets/core/scss/tokens/_utility-config.scss ($tutor-responsive-breakpoints).
-  const tutorUtilityBreakpoints = ['xl', 'lg', 'md', 'sm'];
-  const tutorResponsiveUtilityPrefix = `(?:${tutorUtilityBreakpoints.join('|')})-`;
-
-  // Prefixes after `tutor-` (or after `tutor-{bp}-`) from assets/core/scss/utilities.
-  // Used by PurgeCSS so real utilities are not treated as component safelist entries.
-  const utilityPrefixes = [
-    'm[trblxy]?',
-    'p[trblxy]?',
-    'p[1-3]',
-    'w',
-    'h',
-    'min-w',
-    'min-h',
-    'max-w',
-    'max-h',
-    'bg',
-    'text',
-    'surface',
-    'icon',
-    'actions',
-    'shadow',
-    'opacity',
-    'border',
-    'rounded',
-    'block',
-    'inline',
-    'flex',
-    'grid',
-    'hidden',
-    'justify',
-    'items',
-    'content',
-    'self',
-    'gap',
-    'gap-x',
-    'gap-y',
-    'col',
-    'static',
-    'fixed',
-    'absolute',
-    'relative',
-    'sticky',
-    'top',
-    'bottom',
-    'left',
-    'right',
-    'inset',
-    'z',
-    'overflow',
-    'float',
-    'ratio',
-    'h[1-5]',
-    'medium',
-    'small',
-    'tiny',
-    'font',
-    'underline',
-    'line-through',
-    'no-underline',
-    'uppercase',
-    'lowercase',
-    'capitalize',
-    'normal-case',
-    'truncate',
-    'whitespace',
-    'break',
-    'list',
-    'hover',
-    'focus',
-    'transition',
-    'duration',
-    'delay',
-    'animate',
-    'origin',
-    'scale',
-    'rotate',
-    'translate',
-    'skew',
-    'transform',
-    'backface',
-  ];
-  const utilityPrefixPattern = utilityPrefixes.join('|');
-  const tutorComponentsRegex = new RegExp(
-    `^tutor-(?!(${tutorResponsiveUtilityPrefix})?(${utilityPrefixPattern})(-|$))`,
-  );
-
   const baseConfig = {
     mode,
     cache: false,
@@ -188,53 +101,9 @@ const createConfig = (env, options) => {
                   plugins: [
                     !isDevelopment &&
                       purgecss({
-                        content: [
-                          // Tutor LMS paths
-                          path.resolve(__dirname, './components/**/*.php'),
-                          path.resolve(__dirname, './templates/**/*.php'),
-                          path.resolve(__dirname, './views/**/*.php'),
-                          path.resolve(__dirname, './classes/**/*.php'),
-                          path.resolve(__dirname, './assets/src/js/**/*.{js,ts,jsx,tsx}'),
-                          path.resolve(__dirname, './assets/core/ts/**/*.{ts,tsx}'),
-                          path.resolve(__dirname, './includes/**/*.php'),
-                          path.resolve(__dirname, './ecommerce/**/*.php'),
-                          path.resolve(__dirname, './tutor.php'),
-                          // Third Party Scripts
-                          path.resolve(__dirname, './node_modules/vanilla-calendar-pro/**/*.js'),
-                          // Tutor LMS Pro paths
-                          path.resolve(__dirname, '../tutor-pro/templates/**/*.php'),
-                          path.resolve(__dirname, '../tutor-pro/classes/**/*.php'),
-                          path.resolve(__dirname, '../tutor-pro/views/**/*.php'),
-                          path.resolve(__dirname, '../tutor-pro/assets/src/js/**/*.{js,ts,jsx,tsx}'),
-                          path.resolve(__dirname, '../tutor-pro/includes/**/*.php'),
-                          path.resolve(__dirname, '../tutor-pro/addons/**/*.php'),
-                          path.resolve(__dirname, '../tutor-pro/addons/**/*.{js,ts,jsx,tsx}'),
-                          path.resolve(__dirname, '../tutor-pro/ecommerce/**/*.php'),
-                          path.resolve(__dirname, '../tutor-pro/gift-course/**/*.php'),
-                          path.resolve(__dirname, '../tutor-pro/tutor-pro.php'),
-                        ],
+                        content: purgecssContent,
                         defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
-                        safelist: {
-                          standard: [
-                            /^is-/,
-                            /^has-/,
-                            /^show-/,
-                            /^tutor-theme-/,
-                            /^vc-/,
-                            /^wp-editor-/,
-                            /^mce-/,
-                            /^quicktags-/,
-                            /^arrow-/,
-                            tutorComponentsRegex,
-                            'active',
-                            'disabled',
-                            'failed',
-                            'passed',
-                            'pending',
-                          ],
-                          deep: [/^vc-/, /^tutor-vc-/, /^tutor-range-calendar/],
-                          greedy: [/data-vc/, /data-active/, /data-tutor-theme/, /data-tutor-contrast/],
-                        },
+                        safelist: purgecssSafelist,
                       }),
                   ].filter(Boolean),
                 },
