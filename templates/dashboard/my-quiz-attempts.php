@@ -185,7 +185,7 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 				->render();
 			?>
 
-			<div x-data="tutorQuizRetryAttempt()" x-init="init()">
+			<div x-data="tutorQuizRetryAttempt()">
 				<?php
 				ConfirmationModal::make()
 					->id( 'tutor-retry-modal' )
