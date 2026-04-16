@@ -179,14 +179,20 @@ const QuestionListTable = () => {
   const columns: Column<ContentBankContent>[] = [
     {
       Header: totalItems ? (
-        <Checkbox
-          onChange={handleToggleSelection}
-          checked={getContentsQuery.isLoading || getContentsQuery.isRefetching ? false : handleAllIsChecked()}
-          label={__('Title', 'tutor')}
-          labelCss={styles.tableTitle}
-          isIndeterminate={fetchedContents.length > 0 && !handleAllIsChecked() && selectedContents.length > 0}
-          aria-label={__('Select all questions', 'tutor')}
-        />
+        <div
+          onClick={(event) => event.stopPropagation()}
+          onMouseDown={(event) => event.stopPropagation()}
+          css={styles.headerCheckboxWrapper}
+        >
+          <Checkbox
+            onChange={handleToggleSelection}
+            checked={getContentsQuery.isLoading || getContentsQuery.isRefetching ? false : handleAllIsChecked()}
+            label={__('Title', 'tutor')}
+            labelCss={styles.tableTitle}
+            isIndeterminate={fetchedContents.length > 0 && !handleAllIsChecked() && selectedContents.length > 0}
+            aria-label={__('Select all questions', 'tutor')}
+          />
+        </div>
       ) : (
         __('# Title', 'tutor')
       ),
@@ -378,6 +384,10 @@ const styles = {
   tableTitle: css`
     ${typography.small('regular')};
     color: ${colorTokens.text.hints};
+  `,
+  headerCheckboxWrapper: css`
+    display: flex;
+    align-items: center;
   `,
   checkboxLabel: css`
     ${styleUtils.display.flex()};
