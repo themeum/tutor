@@ -374,6 +374,15 @@ const getPreviewFrameStyles = () => `
     padding-top: 0;
   }
 
+  .tutor-quiz-question-option, 
+  .tutor-quiz-question-draggable-header {
+    svg {
+      width: 20px;
+      height: 20px;
+      color: var(--tutor-icon-idle);
+    }
+  }
+
   [data-question=fill_in_the_blank] .tutor-quiz-question-input {
     box-shadow: none;
   }
