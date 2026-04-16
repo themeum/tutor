@@ -213,43 +213,50 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		</div>
 	</div> -->
 
-	<div class="tutor-course-description">
-		<div x-data="{ expanded: false }" class="tutor-course-description-item">
-			<div role="button" @click="expanded = !expanded" class="tutor-course-description-header">
-				<div class="tutor-course-description-header-title">
-					<?php esc_html_e( 'About this Course', 'tutor' ); ?>
-				</div>
-				<div class="tutor-course-description-header-icon" :class="{ 'is-expanded': expanded }">
-					<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 24 )->render(); ?>
-				</div>
-			</div>
-			<div x-show="expanded" x-collapse x-cloak class="tutor-course-description-body">
-				<?php the_content(); ?>
-			</div>
-		</div>
-		<div x-data="{ expanded: false }" class="tutor-course-description-item">
-			<div role="button" @click="expanded = !expanded" class="tutor-course-description-header">
-				<div class="tutor-course-description-header-title">
-					<?php esc_html_e( "What you'll learn", 'tutor' ); ?>
-				</div>
-				<div class="tutor-course-description-header-icon" :class="{ 'is-expanded': expanded }">
-					<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 24 )->render(); ?>
-				</div>
-			</div>
-			<div x-show="expanded" x-collapse x-cloak class="tutor-course-description-body">
-				<div class="tutor-course-description-list">
-					<?php foreach ( $course_benefits as $benefit ) : ?>
-						<div class="tutor-course-description-list-item">
-							<?php SvgIcon::make()->name( Icon::CHECK_2 )->render(); ?>
-							<div class="tutor-course-description-list-content">
-								<?php echo esc_html( $benefit ); ?>
-							</div>
+	<?php if ( ! empty( get_the_content() ) || ! empty( $course_description ) ) : ?>
+		<div class="tutor-course-description">
+			<?php if ( ! empty( get_the_content() ) ) : ?>
+				<div x-data="{ expanded: false }" class="tutor-course-description-item">
+					<div role="button" @click="expanded = !expanded" class="tutor-course-description-header">
+						<div class="tutor-course-description-header-title">
+							<?php esc_html_e( 'About this Course', 'tutor' ); ?>
 						</div>
-					<?php endforeach; ?>
+						<div class="tutor-course-description-header-icon" :class="{ 'is-expanded': expanded }">
+							<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 24 )->render(); ?>
+						</div>
+					</div>
+					<div x-show="expanded" x-collapse x-cloak class="tutor-course-description-body">
+						<?php the_content(); ?>
+					</div>
 				</div>
-			</div>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $course_benefits ) && is_array( $course_benefits ) ) : ?>
+				<div x-data="{ expanded: false }" class="tutor-course-description-item">
+					<div role="button" @click="expanded = !expanded" class="tutor-course-description-header">
+						<div class="tutor-course-description-header-title">
+							<?php esc_html_e( "What you'll learn", 'tutor' ); ?>
+						</div>
+						<div class="tutor-course-description-header-icon" :class="{ 'is-expanded': expanded }">
+							<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 24 )->render(); ?>
+						</div>
+					</div>
+					<div x-show="expanded" x-collapse x-cloak class="tutor-course-description-body">
+						<div class="tutor-course-description-list">
+							<?php foreach ( $course_benefits as $benefit ) : ?>
+								<div class="tutor-course-description-list-item">
+									<?php SvgIcon::make()->name( Icon::CHECK_2 )->render(); ?>
+									<div class="tutor-course-description-list-content">
+										<?php echo esc_html( $benefit ); ?>
+									</div>
+								</div>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
 		</div>
-	</div>
+	<?php endif; ?>
 
 	<div class="tutor-course-info-table tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-mt-6">
 		<table class="tutor-table tutor-surface-l1">
