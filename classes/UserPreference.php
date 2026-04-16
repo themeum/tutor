@@ -381,7 +381,7 @@ class UserPreference {
 		}
 
 		if ( null !== $reduce_motion ) {
-			$reduce_motion = in_array( (string) $reduce_motion, array( 'true', 'on', '1' ), true );
+			$reduce_motion        = in_array( (string) $reduce_motion, array( 'true', 'on', '1' ), true );
 			$preferences_settings = array_merge( $preferences_settings, self::prepare_preference_setting( 'reduce_motion', $reduce_motion, false ) );
 		}
 
@@ -606,11 +606,21 @@ class UserPreference {
 		$values  = apply_filters( 'tutor_user_preference_font_scale_values', self::FONT_SCALE_OPTIONS );
 		$options = array();
 		foreach ( $values as $value ) {
-			$value     = (int) $value;
-			$options[] = array(
+			$value  = (int) $value;
+			$option = array(
 				'label' => $value . '%',
 				'value' => $value,
 			);
+
+			if ( self::DEFAULT_FONT_SCALE === $value ) {
+				$option['html_label']    = $value . '% <span class="tutor-badge tutor-ml-4">' . esc_html__( 'Default', 'tutor' ) . '</span>';
+				$option['display_label'] = __( 'Default', 'tutor' );
+			} elseif ( 140 === $value ) {
+				$option['html_label']    = $value . '% <span class="tutor-badge tutor-ml-4">' . esc_html__( 'Large', 'tutor' ) . '</span>';
+				$option['display_label'] = __( 'Large', 'tutor' );
+			}
+
+			$options[] = $option;
 		}
 		return $options;
 	}
