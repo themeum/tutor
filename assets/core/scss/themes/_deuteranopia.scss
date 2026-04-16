@@ -32,7 +32,10 @@
 
   // BORDER COLORS
   --tutor-border-warning-tertiary: #{$tutor-orange-300};
+  --tutor-border-success: #{$tutor-cyan-400};
   --tutor-border-success-secondary: #{$tutor-cyan-600};
+  --tutor-border-error: #{$tutor-orange-400};
+  --tutor-border-error-secondary: #{$tutor-orange-600};
   --tutor-border-error-tertiary: #{$tutor-orange-300};
 
   // ACTION COLORS
@@ -65,9 +68,6 @@
   // BORDER COLORS
   --tutor-border-warning: #{$tutor-yellow-400};
   --tutor-border-warning-secondary: #{$tutor-orange-600};
-  --tutor-border-success: #{$tutor-cyan-400};
-  --tutor-border-error: #{$tutor-orange-400};
-  --tutor-border-error-secondary: #{$tutor-orange-600};
 
   // ACTION COLORS
   --tutor-actions-success-primary: #{$tutor-cyan-600};
@@ -101,9 +101,6 @@
   // BORDER COLORS
   --tutor-border-warning: #{$tutor-yellow-300};
   --tutor-border-warning-secondary: #{$tutor-orange-700};
-  --tutor-border-success: #{$tutor-cyan-400};
-  --tutor-border-error: #{$tutor-orange-400};
-  --tutor-border-error-secondary: #{$tutor-orange-600};
 
   // ACTION COLORS
   --tutor-actions-success-primary: #{$tutor-cyan-500};
@@ -114,6 +111,7 @@
   --tutor-actions-warning-exception: #{$tutor-orange-50};
   --tutor-actions-critical-primary: #{$tutor-orange-600};
   --tutor-actions-critical-secondary: #{$tutor-gray-700};
+  --tutor-actions-caution: #{$tutor-yellow-500};
 }
 
 // =============================================================================
