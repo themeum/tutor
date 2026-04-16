@@ -34,7 +34,7 @@ if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 	return;
 }
 
-$url              = get_pagenum_link();
+$url              = get_pagenum_link( 1, false );
 $item_per_page    = tutor_utils()->get_option( 'pagination_per_page' );
 $current_page     = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset           = ( $current_page - 1 ) * $item_per_page;
@@ -47,17 +47,33 @@ $date_filter   = Input::get( 'date', '' );
 $result_filter = Input::get( 'result', '' );
 $search_filter = Input::get( 'search', '' );
 
-$is_student_view         = User::VIEW_AS_STUDENT === User::get_current_view_mode();
-$quiz_attempts           = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, null, false, true );
-$quiz_attempts_formatted = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter, $is_student_view );
-$quiz_attempts_count     = count( $quiz_attempts_formatted );
+$quiz_attempts       = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, false, true );
+$quiz_attempts_list  = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter );
+$quiz_attempts_count = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, true, true );
+
 
 if ( Input::has( 'date', Input::GET_REQUEST ) && $quiz_attempts_count <= $offset ) {
 	$offset = 0;
 }
 
-$quiz_attempts_list = array_slice( $quiz_attempts_formatted, $offset, $item_per_page, true );
-$nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $quiz_attempts_count, get_pagenum_link(), $result_filter, $is_student_view );
+
+$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data(
+	$quiz_attempts_count,
+	$url,
+	$result_filter,
+	$search_filter,
+	$course_id,
+	$date_filter,
+	$order_filter
+);
+
+$hidden_inputs = array(
+	'order'     => $order_filter,
+	'search'    => $search_filter,
+	'date'      => $date_filter,
+	'result'    => $result_filter,
+	'course-id' => $course_id,
+)
 
 ?>
 
@@ -87,7 +103,7 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 				<?php
 				SearchFilter::make()
 					->form_id( 'tutor-quiz-attempt-search-form' )
-					->hidden_inputs( array( 'result' => $result_filter ) )
+					->hidden_inputs( $hidden_inputs )
 					->placeholder( __( 'Search quizzes...', 'tutor' ) )
 					->size( Size::SMALL )
 					->render();
@@ -127,23 +143,30 @@ $nav_links          = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attem
 			</div>
 			<div class="tutor-quiz-attempts-list">
 				<?php
-				foreach ( $quiz_attempts_list as $quiz_attempt ) {
-					$attempts       = $quiz_attempt['attempts'];
-					$attempts_count = count( $attempts );
+				foreach ( $quiz_attempts_list as $quiz_attempt ) :
+					?>
+				<div class="tutor-quiz-attempts-item-wrapper">
+					<?php
+						tutor_load_template(
+							'dashboard.components.quiz-attempt-row',
+							array(
+								'attempt'          => $quiz_attempt,
+								'quiz_title'       => $quiz_attempt['quiz_title'],
+								'course_title'     => $quiz_attempt['course_title'],
+								'course_id'        => $quiz_attempt['course_id'],
+								'show_quiz_title'  => true,
+								'show_course'      => true,
+								'quiz_id'          => $quiz_attempt['quiz_id'],
+								'attempts_count'   => 1,
+								'attempt_id'       => $quiz_attempt['attempt_id'] ?? 0,
+								'quiz_attempt_obj' => $quiz_attempt_obj,
+							)
+						);
 
-					tutor_load_template(
-						'dashboard.components.quiz-attempts-group',
-						array(
-							'quiz_id'          => $quiz_attempt['quiz_id'],
-							'quiz_title'       => $quiz_attempt['quiz_title'],
-							'course_title'     => $quiz_attempt['course_title'],
-							'attempts'         => $attempts,
-							'course_id'        => $quiz_attempt['course_id'],
-							'quiz_attempt_obj' => $quiz_attempt_obj,
-							'attempts_count'   => $attempts_count,
-						)
-					);
-				}
+					?>
+				</div>
+					<?php
+				endforeach;
 				?>
 			</div>
 			<?php else : ?>

@@ -16,6 +16,7 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { type Calendar, type Options, Calendar as VanillaCalendar } from 'vanilla-calendar-pro';
 
+// @ts-ignore
 import 'vanilla-calendar-pro/styles/index.css';
 
 const PRESETS = {
@@ -71,7 +72,7 @@ const TUTOR_CALENDAR_VALUES = {
   apply: 'apply',
   clear: 'clear',
   calendarZIndex: '100001',
-  themeAttrDetect: 'body[data-tutor-theme]',
+  themeAttrDetect: '[data-tutor-theme]',
   calendarClasses: 'vc tutor-vc-calendar',
 } as const;
 
