@@ -78,7 +78,7 @@ foreach ( $questions as $question ) {
 	}
 }
 
-$form_id             = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
+$form_id             = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id . '-' . $tutor_is_started_quiz->quiz_id;
 $modal_id            = 'tutor-quiz-abandon-modal';
 $submitted_modal_id  = 'tutor-quiz-submitted-modal';
 $timeout_modal_id    = 'tutor-quiz-timeout-modal';
@@ -197,6 +197,7 @@ $default_values = array(
 		<?php endif; ?>
 
 		<?php
+		do_action( 'tutor_quiz/body/before', $tutor_is_started_quiz->quiz_id );
 		foreach ( $questions as $index => $question ) {
 			$question_settings = maybe_unserialize( $question->question_settings );
 			$answer_required   = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
