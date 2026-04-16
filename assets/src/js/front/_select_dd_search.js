@@ -163,7 +163,7 @@ window.selectSearchField = (selectElement) => {
 				<div class="tutor-form-select-search tutor-pt-8 tutor-px-8">
 					<div class="tutor-form-wrap">
 						<span class="tutor-form-icon">
-							<i class="tutor-icon-search" area-hidden="true"></i>
+							<i class="tutor-icon-search" aria-hidden="true"></i>
 						</span>
 						<input type="search" class="tutor-form-control" placeholder="${window.wp.i18n.__('Search ...', 'tutor')}" />
 					</div>

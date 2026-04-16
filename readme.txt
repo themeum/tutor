@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.9.8
+Stable tag: 3.9.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,7 +14,6 @@ A complete WordPress LMS plugin to create any eLearning website easily.
 == Description ==
 
 Tutor LMS is a lightweight, feature-packed, and robust WordPress LMS plugin to create and sell courses online easily. All the features of this learning management system hit all the checkpoints for a full-fledged online course marketplace.
-
 You can create unlimited courses, quizzes, interactive lessons, generate reports, making Tutor LMS the best free WordPress LMS plugin. So, it’s become a breeze to manage educational institutes, online courses, or eLearning websites without writing a single line of code.
 
 👉 [Tutor LMS Pro](https://tutorlms.com/pricing/)
@@ -319,6 +318,34 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 4.0.0-beta.2 - 15 April, 2026
+
+New: Graph quiz type. (Pro)
+New: Question preview in Quiz Builder.
+Update: Course Bundle expiry feature improved. (Pro)
+Update: Updat the UX of Quiz Attempts Instructor view.
+Update: Show subscription expiry date for WC Subscription enrollment. (Pro)
+Fix: Default lesson comment is showing on a new site.
+Fix: The marketplace feature and the "Become an Instructor" option are turned off in the Tutor LMS settings, but the "Become an Instructor" button still appears on the student dashboard.
+Fix: If we include Payment Instructions (media) in the manual payment option, the checkout page will not display any payment gateways.
+FIx: The quick link to create a course is not functioning when accessed from the front-end pages.
+Fix: Report Page: Individual courses are not showing, only bundle courses are visible.
+Fix: Student quiz attempt list data missing.
+Fix: Gift course feature isn't working.
+Fix: Lesson comment replies or updates do not display changes immediately unless the page is reloaded.
+Fix: Multiple order is getting created when user checkout via WooCommerce.
+Fix: The reset password email template does not include the site logo, even though it has been configured.
+Fix: Gift course is showing for enrolled subscription courses
+Fix: Missing information on the course info page
+Fix: Add to cart button is not working in some conditions
+Fix: The info icon doesn't display a tooltip on hover in Student progress modal on Instructor Analytics .
+Fix: Missing Edit Profile button on instructor profile.
+Fix: In the quiz, total marks are showing incorrectly
+Fix: Design breaks in quiz attempt details page
+Fix: Calendar - The meeting count is inaccurate
+Fix: White flash when reloading a page in dark mode
+Fix: Notification icons not rendering correctly
+
 = 4.0.0-beta.1 - 06 April, 2026
 
 New: Introduced 3 new quiz types: Draw Image, Pin Image, and Scale. (Pro)
@@ -368,6 +395,14 @@ New: Lots of Micro-interactions with animations and sound effects to make lesson
 New: A new button “view as student” has been added to allow admin & instructor to change the dashboard view.
 New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
 New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
+
+= 3.9.9 - Apr 13, 2026
+
+Update: Updated Tutor LMS modals and icons for better WCAG 2 accessibility support.
+Update: Added a terms and conditions agreement checkbox to the signup page.
+Update: Strengthened security for the eCommerce checkout process.
+Fix: Resolved an SQL injection vulnerability on the instructor listing page.
+Fix: Resolved Stripe pending status issue for delayed payments. (Pro)
 
 = 3.9.8 - Apr 01, 2026
 

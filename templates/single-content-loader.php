@@ -97,7 +97,7 @@ if ( tutor()->lesson_post_type === $post->post_type ) {
 				</div>
 				<div class="list-item-progress tutor-my-16">
 					<div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo esc_attr( $course_stats['completed_percent'] ); ?>%;">
-						<span class="tutor-progress-value" area-hidden="true"></span>
+						<span class="tutor-progress-value" aria-hidden="true"></span>
 					</div>
 				</div>
 			</div>
