@@ -34,7 +34,7 @@ $size_below  = isset( $data['size_below'] ) && true == $data['size_below'];
 
 							<div class="tutor-col-auto">
 								<span class="tutor-delete-attachment tutor-iconic-btn tutor-iconic-btn-secondary" role="button">
-									<span class="tutor-icon-times" area-hidden="true"></span>
+									<span class="tutor-icon-times" aria-hidden="true"></span>
 								</span>
 							</div>
 						</div>

@@ -31,16 +31,16 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 	// Assign fallback course id.
 	( ! $course_id && count( $courses ) ) ? $course_id = $courses[0]->ID : 0;
 	?>
-	<form class="tutor-modal tutor-modal-scrollable tutor-announcements-form" id="<?php echo esc_attr( $id ); ?>">
+	<form class="tutor-modal tutor-modal-scrollable tutor-announcements-form" id="<?php echo esc_attr( $id ); ?>" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $id ); ?>-title" aria-hidden="true">
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window">
 			<div class="tutor-modal-content">
 				<div class="tutor-modal-header">
-					<div class="tutor-modal-title">
+					<div class="tutor-modal-title" id="<?php echo esc_attr( $id ); ?>-title">
 						<?php echo esc_html( $title ); ?>
 					</div>
-					<button class="tutor-modal-close tutor-iconic-btn" data-tutor-modal-close role="button">
-						<span class="tutor-icon-times" area-hidden="true"></span>
+					<button type="button" class="tutor-modal-close tutor-iconic-btn" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+						<span class="tutor-icon-times" aria-hidden="true"></span>
 					</button>
 				</div>
 
@@ -114,20 +114,20 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
  */
 function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_id, $announcement, $course_title, $publish_date, $publish_time ) {
 	?>
-	<div id="<?php echo esc_attr( $id ); ?>" class="tutor-modal">
+	<div id="<?php echo esc_attr( $id ); ?>" class="tutor-modal" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $id ); ?>-title" aria-hidden="true">
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window">
 			<div class="tutor-modal-content tutor-modal-content-white">
-				<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+				<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 
 				<div class="tutor-modal-body">
 					<div class="tutor-py-20 tutor-px-24">
 						<span class="tutor-round-box tutor-round-box-lg tutor-mb-32">
-							<i class="tutor-icon-bullhorn" area-hidden="true"></i>
+							<i class="tutor-icon-bullhorn" aria-hidden="true"></i>
 						</span>
-						<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-24">
+						<div id="<?php echo esc_attr( $id ); ?>-title" class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-24">
 							<?php echo esc_html( $announcement->post_title ); ?>
 						</div>
 						<div class="tutor-fs-6 tutor-color-muted">
@@ -135,7 +135,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 						</div>
 					</div>
 
-					<div class="tutor-mx-n32 tutor-my-32"><div class="tutor-hr" area-hidden="true"></div></div>
+					<div class="tutor-mx-n32 tutor-my-32"><div class="tutor-hr" aria-hidden="true"></div></div>
 
 					<div class="tutor-py-20 tutor-px-24">
 						<div class="tutor-row tutor-mb-60">
@@ -197,20 +197,20 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
  */
 function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 	?>
-	<div id="<?php echo esc_attr( $id ); ?>" class="tutor-modal">
+	<div id="<?php echo esc_attr( $id ); ?>" class="tutor-modal" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $id ); ?>-title" aria-hidden="true">
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window">
 			<div class="tutor-modal-content tutor-modal-content-white">
-				<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+				<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-mt-48">
-						<img class="tutor-d-inline-block" src="<?php echo esc_url( tutor()->url ); ?>assets/images/icon-trash.svg" />
+						<img class="tutor-d-inline-block" src="<?php echo esc_url( tutor()->url ); ?>assets/images/icon-trash.svg" alt="" aria-hidden="true" />
 					</div>
 
-					<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Announcement?', 'tutor' ); ?></div>
+					<div id="<?php echo esc_attr( $id ); ?>-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Announcement?', 'tutor' ); ?></div>
 					<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Are you sure you want to delete this Announcement permanently from the site? Please confirm your choice.', 'tutor' ); ?></div>
 					<div class="tutor-d-flex tutor-justify-center tutor-my-48">
 						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
@@ -312,18 +312,18 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 
 							<div class="tutor-dropdown-parent">
 								<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-									<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+									<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 								</button>
 								<ul class="tutor-dropdown tutor-dropdown-dark">
 									<li>
 										<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo esc_attr( $update_modal_id ); ?>">
-											<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+											<i class="tutor-icon-edit tutor-mr-8" aria-hidden="true"></i>
 											<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 										</a>
 									</li>
 									<li>
 										<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo esc_attr( $delete_modal_id ); ?>">
-											<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+											<i class="tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true"></i>
 											<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 										</a>
 									</li>
@@ -333,8 +333,8 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 
 						<?php
 							$course_title = isset( $course->post_title ) ? $course->post_title : '';
-							tutor_announcement_modal( $update_modal_id, __( 'Edit Announcement', 'tutor' ), $courses, $announcement );
 							tutor_announcement_modal_details( $details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course_title, $date_format, $time_format );
+							tutor_announcement_modal( $update_modal_id, __( 'Edit Announcement', 'tutor' ), $courses, $announcement );
 							tutor_announcement_modal_delete( $delete_modal_id, $announcement->ID, $row_id );
 						?>
 					</td>

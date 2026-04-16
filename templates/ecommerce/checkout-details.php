@@ -100,7 +100,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 											</h6>
 										</div>
 										<div class="tutor-checkout-coupon-badge <?php echo esc_attr( $item->is_coupon_applied ? '' : 'tutor-d-none' ); ?>">
-											<i class="tutor-icon-tag" area-hidden="true"></i>
+											<i class="tutor-icon-tag" aria-hidden="true"></i>
 											<span><?php echo esc_html( $item->is_coupon_applied ? $checkout_data->coupon_title : '' ); ?></span>
 										</div>
 									</div>
@@ -170,12 +170,12 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 
 			<div class="tutor-checkout-summary-item tutor-checkout-coupon-wrapper <?php echo esc_attr( $checkout_data->is_coupon_applied ? '' : 'tutor-d-none' ); ?>">
 				<div class="tutor-checkout-coupon-badge tutor-has-delete-button">
-					<i class="tutor-icon-tag" area-hidden="true"></i>
+					<i class="tutor-icon-tag" aria-hidden="true"></i>
 					<span><?php echo esc_html( $checkout_data->coupon_title ); ?></span>
 
 					<?php if ( $checkout_data->is_coupon_applied ) : ?>
 					<button type="button" id="tutor-checkout-remove-coupon" class="tutor-btn">
-						<i class="tutor-icon-times" area-hidden="true"></i>
+						<i class="tutor-icon-times" aria-hidden="true"></i>
 					</button>
 					<?php endif; ?>
 				</div>

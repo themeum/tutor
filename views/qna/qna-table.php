@@ -60,7 +60,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 												data-action="important"
 												data-state-class-selector="i"
 											>
-												<i class="<?php echo $is_important ? 'tutor-icon-important-bold' : 'tutor-icon-important-line'; ?>  tutor-cursor-pointer" area-hidden="true"></i>
+												<i class="<?php echo $is_important ? 'tutor-icon-important-bold' : 'tutor-icon-important-line'; ?>  tutor-cursor-pointer" aria-hidden="true"></i>
 											</span>
 
 											<span class="tooltip-txt tooltip-right arrow-center">
@@ -88,7 +88,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 									<?php $content = ( stripslashes( $qna->comment_content ) ); ?>
 									<a href="<?php echo esc_url( add_query_arg( array( 'question_id' => $qna->comment_ID ), tutor()->current_url ) ); ?>">
 										<div class="tutor-form-feedback tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
-											<i class="tutor-icon-bullet-point tutor-form-feedback-icon" area-hidden="true"></i>
+											<i class="tutor-icon-bullet-point tutor-form-feedback-icon" aria-hidden="true"></i>
 											<div class="tutor-qna-desc">
 												<div class="tutor-qna-content tutor-fs-6 tutor-fw-bold tutor-color-black">
 													<?php
@@ -130,7 +130,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 
 										<div class="tutor-dropdown-parent">
 											<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-												<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+												<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 											</button>
 											<ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 												<?php if ( 'frontend-dashboard-qna-table-student' != $context ) : ?>
@@ -161,20 +161,20 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 										</div>
 
 										<!-- Delete confirmation modal -->
-										<div id="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-modal">
+										<div id="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-modal" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $id_string_delete ); ?>-title" aria-hidden="true">
 											<div class="tutor-modal-overlay"></div>
 											<div class="tutor-modal-window">
 												<div class="tutor-modal-content tutor-modal-content-white">
-													<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-														<span class="tutor-icon-times" area-hidden="true"></span>
+													<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+														<span class="tutor-icon-times" aria-hidden="true"></span>
 													</button>
 
 													<div class="tutor-modal-body tutor-text-center">
 														<div class="tutor-mt-48">
-															<img class="tutor-d-inline-block" src="<?php echo esc_url( trailingslashit( tutor()->url ) . 'assets/images/icon-trash.svg' ); ?>" />
+															<img class="tutor-d-inline-block" src="<?php echo esc_url( trailingslashit( tutor()->url ) . 'assets/images/icon-trash.svg' ); ?>" alt="" aria-hidden="true" />
 														</div>
 
-														<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Question?', 'tutor' ); ?></div>
+														<div id="<?php echo esc_attr( $id_string_delete ); ?>-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Question?', 'tutor' ); ?></div>
 														<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?></div>
 														
 														<div class="tutor-d-flex tutor-justify-center tutor-my-48">

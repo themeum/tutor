@@ -16,7 +16,7 @@ if ( empty( $back_url ) ) {
 <header class="tutor-wp-dashboard-header tutor-justify-between tutor-align-center tutor-px-32 tutor-py-20 tutor-mb-24 tutor-pt-16 tutor-pb-16">
 	<div class="tutor-mb-24">
 		<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $back_url ); ?>">
-			<span class="tutor-icon-previous" area-hidden="true"></span>
+			<span class="tutor-icon-previous" aria-hidden="true"></span>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
