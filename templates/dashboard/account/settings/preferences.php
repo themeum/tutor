@@ -241,7 +241,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 				</div>
 			</div>
 			<div class="tutor-preferences-vision-preview">
-				<img :src="'<?php echo esc_attr( UrlHelper::asset( 'images/vision/' ) ); ?>' + (watch('vision') ?? 'normal') + '.png'" />
+				<img :src="'<?php echo esc_attr( UrlHelper::asset( 'images/vision/' ) ); ?>' + (watch('vision') ?? 'normal') + '.webp'" />
 			</div>
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">
