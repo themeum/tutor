@@ -6570,6 +6570,7 @@ class Utils {
 	public function get_orders_by_user_id( $user_id = 0, $period = '', $start_date = '', $end_date = '', $offset = '', $per_page = '', $order = 'DESC' ) {
 		global $wpdb;
 
+		$orders      = array();
 		$user_id     = $this->get_user_id( $user_id );
 		$monetize_by = $this->get_option( 'monetize_by' );
 		$order       = QueryHelper::get_valid_sort_order( $order );
@@ -6610,47 +6611,49 @@ class Utils {
 			$offset_limit_query = "LIMIT $offset, $per_page";
 		}
 
-		if ( $wc_hpos ) {
-			$orders = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT orders.id AS ID, orders.status AS post_status, orders.date_created_gmt AS post_date, orders.* 
-					FROM 	{$wpdb->prefix}wc_orders orders 
-					  		INNER JOIN {$wpdb->prefix}wc_orders_meta order_meta 
-									ON orders.id = order_meta.order_id
-					  				AND order_meta.meta_key = '_is_tutor_order_for_course' 
-					WHERE 	orders.type = %s 
-					  		AND orders.customer_id = %d 
+		if ( 'wc' === $monetize_by ) {
+			if ( $wc_hpos ) {
+				$orders = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT orders.id AS ID, orders.status AS post_status, orders.date_created_gmt AS post_date, orders.* 
+						FROM 	{$wpdb->prefix}wc_orders orders 
+								INNER JOIN {$wpdb->prefix}wc_orders_meta order_meta 
+										ON orders.id = order_meta.order_id
+										AND order_meta.meta_key = '_is_tutor_order_for_course' 
+						WHERE 	orders.type = %s 
+								AND orders.customer_id = %d 
+								{$period_query}
+						ORDER BY orders.id {$order}
+						{$offset_limit_query}",
+						$post_type,
+						$user_id
+					)
+				);
+			} else {
+				$orders = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT {$wpdb->posts}.*
+					FROM	{$wpdb->posts}
+							INNER JOIN {$wpdb->postmeta} customer
+									ON id = customer.post_id
+								AND customer.meta_key = '{$user_meta}'
+							INNER JOIN {$wpdb->postmeta} tutor_order
+									ON id = tutor_order.post_id
+								AND tutor_order.meta_key = '_is_tutor_order_for_course'
+					WHERE	post_type = %s
+							AND customer.meta_value = %d
 							{$period_query}
-					ORDER BY orders.id {$order}
-					{$offset_limit_query}",
-					$post_type,
-					$user_id
-				)
-			);
-		} else {
-			$orders = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT {$wpdb->posts}.*
-				FROM	{$wpdb->posts}
-						INNER JOIN {$wpdb->postmeta} customer
-								ON id = customer.post_id
-							   AND customer.meta_key = '{$user_meta}'
-						INNER JOIN {$wpdb->postmeta} tutor_order
-								ON id = tutor_order.post_id
-							   AND tutor_order.meta_key = '_is_tutor_order_for_course'
-				WHERE	post_type = %s
-						AND customer.meta_value = %d
-						{$period_query}
-				ORDER BY {$wpdb->posts}.id {$order}
-				{$offset_limit_query}
-				",
-					$post_type,
-					$user_id
-				)
-			);
+					ORDER BY {$wpdb->posts}.id {$order}
+					{$offset_limit_query}
+					",
+						$post_type,
+						$user_id
+					)
+				);
+			}
 		}
 
-		return $orders;
+		return apply_filters( 'tutor_get_orders_by_user_id', $orders, $user_id, $period, $start_date, $end_date, $offset, $per_page, $order );
 	}
 
 	/**

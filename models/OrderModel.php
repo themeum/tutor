@@ -2192,7 +2192,8 @@ class OrderModel {
 	 */
 	public static function normalize_order_for_history( $order ) {
 
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+		$monetize_by      = tutor_utils()->get_option( 'monetize_by' );
+		$normalized_order = $order;
 
 		if ( 'wc' === $monetize_by ) {
 			$wc_order = wc_get_order( $order->ID );
@@ -2207,7 +2208,7 @@ class OrderModel {
 			$order->payment_method = $wc_order->get_payment_method_title();
 			$order->created_at_gmt = $order->post_date_gmt ?? $order->post_date;
 
-			return $order;
+			$normalized_order = $order;
 		} elseif ( 'edd' === $monetize_by ) {
 			$edd_order = edd_get_payment( $order->ID );
 
@@ -2221,10 +2222,10 @@ class OrderModel {
 			$order->created_at_gmt = $order->post_date_gmt ?? $order->post_date;
 			$order->payment_method = '';
 
-			return $order;
+			$normalized_order = $order;
 		}
 
-		return $order;
+		return apply_filters( 'tutor_normalize_order_for_history', $normalized_order );
 	}
 
 	/**
