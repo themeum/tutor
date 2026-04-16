@@ -27,30 +27,13 @@ class PreferenceService {
     return (document.querySelector(`[${this.DATA_THEME_ATTR}]`) as HTMLElement | null) || document.documentElement;
   }
 
-  private computeThemeAttr(base: 'dark' | 'light', vision: Vision): string {
-    return vision === 'normal' ? base : `${base}-${vision}`;
-  }
-
   private inferBase(themeAttr: string | null): 'dark' | 'light' {
     return themeAttr?.startsWith('dark') ? 'dark' : 'light';
   }
 
-  private inferVision(themeAttr: string | null): Vision {
-    if (!themeAttr) return 'normal';
-    const parts = themeAttr.split('-');
-    const v = parts[1] as Vision | undefined;
-    if (v === 'protanopia' || v === 'deuteranopia' || v === 'deuteranomaly') return v;
-    return 'normal';
-  }
-
   initialize(): void {
     const wrapper = this.getWrapper();
-    const attrTheme = wrapper.getAttribute(this.DATA_THEME_ATTR);
-
-    // Seed vision state if HTML came pre-computed (e.g. "dark-protanopia").
-    const existingVision =
-      (wrapper.getAttribute(this.DATA_VISION_ATTR) as Vision | null) ?? this.inferVision(attrTheme);
-    wrapper.setAttribute(this.DATA_VISION_ATTR, existingVision);
+    const attrTheme = wrapper.getAttribute(this.DATA_THEME_ATTR) as Theme | null;
 
     // If the saved preference is "system", re-apply to attach listener and compute correct attr.
     if (attrTheme === this.THEME.SYSTEM) this.applyTheme(this.THEME.SYSTEM, false);
@@ -76,12 +59,11 @@ class PreferenceService {
     }
 
     const updateTheme = () => {
-      const vision = (wrapper.getAttribute(this.DATA_VISION_ATTR) as Vision | null) ?? 'normal';
       if (theme === this.THEME.SYSTEM) {
         const base = this.mediaQuery.matches ? this.THEME.DARK : this.THEME.LIGHT;
-        wrapper.setAttribute(this.DATA_THEME_ATTR, this.computeThemeAttr(base, vision));
+        wrapper.setAttribute(this.DATA_THEME_ATTR, base);
       } else {
-        wrapper.setAttribute(this.DATA_THEME_ATTR, this.computeThemeAttr(theme, vision));
+        wrapper.setAttribute(this.DATA_THEME_ATTR, theme);
       }
     };
 
@@ -120,9 +102,12 @@ class PreferenceService {
     const safeVision: Vision =
       vision === 'protanopia' || vision === 'deuteranopia' || vision === 'deuteranomaly' ? vision : 'normal';
 
-    wrapper.setAttribute(this.DATA_VISION_ATTR, safeVision);
-    const base = this.inferBase(wrapper.getAttribute(this.DATA_THEME_ATTR));
-    wrapper.setAttribute(this.DATA_THEME_ATTR, this.computeThemeAttr(base, safeVision));
+    if (safeVision === 'normal') {
+      wrapper.removeAttribute(this.DATA_VISION_ATTR);
+    } else {
+      wrapper.setAttribute(this.DATA_VISION_ATTR, safeVision);
+    }
+    // data-tutor-theme is untouched — vision is now independent
   }
 
   applyReduceMotion(enabled: boolean): void {

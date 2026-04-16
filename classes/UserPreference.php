@@ -221,11 +221,6 @@ class UserPreference {
 		// Resolve actual theme for 'system' (PHP fallback is light; JS applies real system preference).
 		$resolved_theme = self::THEME_SYSTEM === $theme ? self::THEME_LIGHT : $theme;
 
-		$computed_theme = $resolved_theme;
-		if ( self::VISION_NORMAL !== $vision ) {
-			$computed_theme = $resolved_theme . '-' . $vision;
-		}
-
 		$contrast      = isset( $prefs['contrast'] ) ? (string) $prefs['contrast'] : '';
 		$contrast_attr = '';
 		if ( self::CONTRAST_HIGH === $contrast ) {
@@ -235,9 +230,11 @@ class UserPreference {
 		$reduce_motion      = ! empty( $prefs['reduce_motion'] );
 		$reduce_motion_attr = $reduce_motion ? ' data-tutor-motion="' . esc_attr( self::REDUCE_MOTION ) . '"' : '';
 
-		$vision_attr = ' data-tutor-vision="' . esc_attr( $vision ) . '"';
+		$vision_attr = self::VISION_NORMAL !== $vision
+			? ' data-tutor-vision="' . esc_attr( $vision ) . '"'
+			: '';
 
-		return $output . ' data-tutor-theme="' . esc_attr( $computed_theme ) . '"' . $vision_attr . $contrast_attr . $reduce_motion_attr;
+		return $output . ' data-tutor-theme="' . esc_attr( $resolved_theme ) . '"' . $vision_attr . $contrast_attr . $reduce_motion_attr;
 	}
 
 	/**
