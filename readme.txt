@@ -318,33 +318,33 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.0-beta.2 - 15 April, 2026
+= 4.0.0-beta.2 - 16 April, 2026
 
-New: Graph quiz type. (Pro)
-New: Question preview in Quiz Builder.
-Update: Course Bundle expiry feature improved. (Pro)
-Update: Updat the UX of Quiz Attempts Instructor view.
-Update: Show subscription expiry date for WC Subscription enrollment. (Pro)
-Fix: Default lesson comment is showing on a new site.
-Fix: The marketplace feature and the "Become an Instructor" option are turned off in the Tutor LMS settings, but the "Become an Instructor" button still appears on the student dashboard.
-Fix: If we include Payment Instructions (media) in the manual payment option, the checkout page will not display any payment gateways.
-FIx: The quick link to create a course is not functioning when accessed from the front-end pages.
-Fix: Report Page: Individual courses are not showing, only bundle courses are visible.
-Fix: Student quiz attempt list data missing.
-Fix: Gift course feature isn't working.
-Fix: Lesson comment replies or updates do not display changes immediately unless the page is reloaded.
-Fix: Multiple order is getting created when user checkout via WooCommerce.
-Fix: The reset password email template does not include the site logo, even though it has been configured.
-Fix: Gift course is showing for enrolled subscription courses
-Fix: Missing information on the course info page
-Fix: Add to cart button is not working in some conditions
-Fix: The info icon doesn't display a tooltip on hover in Student progress modal on Instructor Analytics .
-Fix: Missing Edit Profile button on instructor profile.
-Fix: In the quiz, total marks are showing incorrectly
-Fix: Design breaks in quiz attempt details page
-Fix: Calendar - The meeting count is inaccurate
-Fix: White flash when reloading a page in dark mode
-Fix: Notification icons not rendering correctly
+New: Introduced the new Graph Quiz type. (Pro)
+New: Added question preview to the Quiz Builder.
+Updates: Enhanced the Course Bundle expiry feature. (Pro)
+Updates: Refined the Instructor Quiz Attempts preview for better usability.
+Updates: Displayed the subscription expiry date for WooCommerce Subscription enrollments. (Pro)
+Fix: Fixed the issue of the default lesson comment appearing on new sites.
+Fix: Fixed lesson comment replies not updating instantly.
+Fix: Resolved an issue where total quiz marks were displayed incorrectly.
+Fix: Fixed the layout breaking on the Quiz Attempt Details page.
+Fix: Resolved the missing student quiz attempt list data issue.
+Fix: Resolved the Become an Instructor button appearing even when disabled in settings.
+Fix: Restored the missing Edit Profile button on the instructor profile page.
+Fix: Resolved the course creation quick link issue.
+Fix: Fixed the Report page showing only bundle courses instead of all individual and bundle courses.
+Fix: Restored missing information on the Course Info page.
+Fix: Fixed payment gateways not appearing when media was added to Payment Instructions on custom payment gateways.
+Fix: Fixed the duplicate order creation issue during WooCommerce checkout.
+Fix: Fixed the Add to Cart button not responding under certain scenarios.
+Fix: Fixed the Gift Course feature not functioning properly.
+Fix: Prevented the Gift Course button from appearing for already-enrolled subscription courses.
+Fix: Resolved the missing logo issue in password reset emails.
+Fix: Fixed notification icons not rendering correctly.
+Fix: Resolved the tooltip not appearing on hover in the Student Progress modal.
+Fix: Resolved inaccurate Calendar meeting counts.
+Fix: Fixed the white flash occurring during page reload in Dark Mode.
 
 = 4.0.0-beta.1 - 06 April, 2026
 
