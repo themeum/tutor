@@ -18,6 +18,7 @@ use Tutor\Components\DropdownFilter;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
+use Tutor\Helpers\QueryHelper;
 use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
@@ -32,18 +33,19 @@ if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 $url              = get_pagenum_link( 1, false );
 $item_per_page    = tutor_utils()->get_option( 'pagination_per_page' );
 $current_page     = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
+$current_user_id  = get_current_user_id();
 $offset           = ( $current_page - 1 ) * $item_per_page;
 $quiz_attempt_obj = new Quiz_Attempts_List( false );
 $quiz_model       = new QuizModel();
 
 
 // Filter params.
-$order_filter  = Input::get( 'order', 'DESC' );
+$order_filter  = QueryHelper::get_valid_sort_order( Input::get( 'order', 'DESC' ) );
 $course_id     = isset( $course_id ) ? $course_id : array();
 $result_filter = Input::get( 'result', '' );
 
-$quizzes     = QuizModel::get_attempted_quizzes( get_current_user_id(), $course_id, $offset, $item_per_page, $order_filter, array( 'status' => $result_filter ) );
-$all_quizzes = QuizModel::get_attempted_quizzes( get_current_user_id(), $course_id, 0, 0, $order_filter );
+$quizzes     = QuizModel::get_attempted_quizzes( $current_user_id, $course_id, $offset, $item_per_page, $order_filter, array( 'status' => $result_filter ) );
+$all_quizzes = QuizModel::get_attempted_quizzes( $current_user_id, $course_id, 0, 0, $order_filter );
 
 $quiz_attempts_list  = array();
 $quiz_attempts_count = 0;
