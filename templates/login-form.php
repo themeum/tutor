@@ -61,7 +61,7 @@ do_action( 'tutor_before_login_form' );
 		<input :type="show ? 'text' : 'password'" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" x-model="value" size="20" required style="padding-right: 45px;"/>
 	</div>
 
-	<div class="tutor-login-error"></div>
+	<div class="tutor-login-error" role="alert" aria-live="polite"></div>
 	<?php
 		do_action( 'tutor_login_form_middle' );
 		do_action( 'login_form' );
@@ -83,7 +83,7 @@ do_action( 'tutor_before_login_form' );
 	<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block tutor-mt-8">
 		<?php esc_html_e( 'Sign In', 'tutor' ); ?>
 	</button>
-	
+
 	<?php if ( get_option( 'users_can_register', false ) ) : ?>
 		<?php
 			$url_arg = array(
@@ -110,7 +110,6 @@ if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) :
 	?>
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
-		var { __ } = wp.i18n;
 		var loginModal = document.querySelector('.tutor-modal.tutor-login-modal');
 		var errors = <?php echo wp_json_encode( $login_errors ); ?>;
 		if (loginModal && errors.length) {

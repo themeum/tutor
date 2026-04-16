@@ -56,7 +56,7 @@ window.jQuery(document).ready($=>{
                     link_el.addClass('is-loading');
                 } else {
                     // Otherwise replace the content container with loading icon
-                    content_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
+                    content_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" aria-hidden="true"></span></div>');
                 }
                 
                 // move to top

@@ -137,8 +137,15 @@ use TUTOR\Icon;
 			<?php $tutor_toc_page_link = tutor_utils()->get_toc_page_link(); ?>
 
 			<?php if ( null !== $tutor_toc_page_link ) : ?>
-			<div class="tutor-small tutor-mb-6">
-				<?php esc_html_e( 'By signing up, I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_attr_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
+			<div class="tutor-form-row tutor-mb-8">
+				<div class="tutor-input-field">
+					<div class="tutor-input-wrapper">
+						<input type="checkbox" id="tutor-terms-conditions" name="terms_conditions" class="tutor-checkbox" required>
+						<label for="tutor-terms-conditions" class="tutor-label">
+							<?php esc_html_e( 'By signing up, you agree to the ', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
+						</label>
+					</div>
+				</div>
 			</div>
 			<?php endif; ?>
 

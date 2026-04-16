@@ -15,8 +15,7 @@ use Tutor\Helpers\ComponentHelper;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Models\OrderModel;
 
-$titles   = OrderModel::get_order_history_titles( $order );
-$pay_link = OrderModel::get_order_history_pay_link( $order );
+$titles = OrderModel::get_order_history_titles( $order );
 
 ?>
 <div class="tutor-billing-card">
@@ -57,15 +56,7 @@ $pay_link = OrderModel::get_order_history_pay_link( $order );
 		</div>
 
 		<?php
-		echo wp_kses(
-			$pay_link,
-			array(
-				'a' => array(
-					'href'  => true,
-					'class' => true,
-				),
-			)
-		);
+		OrderModel::render_order_history_pay_link( $order );
 
 		$order->titles = $titles;
 		OrderModel::render_billing_receipt_action( $order );

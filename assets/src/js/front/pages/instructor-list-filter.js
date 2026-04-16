@@ -28,7 +28,7 @@ jQuery(document).ready(function($) {
 			filter_args.action = 'load_filtered_instructor';
 
 			// Append spinner
-			result_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
+			result_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" aria-hidden="true"></span></div>');
 
 			$.ajax({
 				url: window._tutorobject.ajaxurl,

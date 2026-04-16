@@ -225,6 +225,12 @@
             color: $tutor-icon-secondary;
           }
         }
+        &.pending svg {
+          color: $tutor-icon-warning-secondary;
+        }
+        &.fail svg {
+          color: $tutor-icon-critical;
+        }
       }
     }
   }

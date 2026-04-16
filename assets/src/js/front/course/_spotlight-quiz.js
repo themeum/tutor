@@ -41,7 +41,7 @@ window.jQuery(document).ready($ => {
 
     function get_hint_markup(text) {
         return `<span class="tutor-quiz-answer-single-info tutor-color-success tutor-mt-8">
-            <i class="tutor-icon-mark tutor-color-success" area-hidden="true"></i>
+            <i class="tutor-icon-mark tutor-color-success" aria-hidden="true"></i>
             ${text}
         </span>`
     }
