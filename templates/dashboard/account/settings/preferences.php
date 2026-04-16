@@ -165,7 +165,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 							<?php esc_html_e( 'Reduce Motion', 'tutor' ); ?>
 						</div>
 						<div class="tutor-preferences-setting-subtitle">
-							<?php esc_html_e( 'Reduce the amount of intensity of animation, hover effects & other moving effects.', 'tutor' ); ?>
+							<?php esc_html_e( 'Limit animations and motion effects to reduce visual strain.', 'tutor' ); ?>
 						</div>
 					</div>
 				</div>
@@ -193,7 +193,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 							<?php esc_html_e( 'Font size', 'tutor' ); ?>
 						</div>
 						<div class="tutor-preferences-setting-subtitle">
-							<?php esc_html_e( 'Enhance visibility with bold colors and sharp contrast.', 'tutor' ); ?>
+							<?php esc_html_e( 'Adjust the text size for better readability.', 'tutor' ); ?>
 						</div>
 					</div>
 				</div>
@@ -222,7 +222,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 							<?php esc_html_e( 'High Contrast', 'tutor' ); ?>
 						</div>
 						<div class="tutor-preferences-setting-subtitle">
-							<?php esc_html_e( 'Enhance visibility with bold colors and sharp contrast.', 'tutor' ); ?>
+							<?php esc_html_e( 'Increase contrast to improve text and element visibility.', 'tutor' ); ?>
 						</div>
 					</div>
 				</div>
@@ -253,7 +253,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 							<?php esc_html_e( 'Vision', 'tutor' ); ?>
 						</div>
 						<div class="tutor-preferences-setting-subtitle">
-							<?php esc_html_e( 'Choose color filter according to the needs.', 'tutor' ); ?>
+							<?php esc_html_e( 'Choose a color filter based on your visual needs.', 'tutor' ); ?>
 						</div>
 					</div>
 				</div>
