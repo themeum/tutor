@@ -287,6 +287,10 @@
       background: $tutor-surface-l2;
     }
 
+    &[data-selected='true'] {
+      background: $tutor-surface-l2;
+    }
+
     &[data-disabled='true'] {
       color: $tutor-text-subdued;
       cursor: not-allowed;
