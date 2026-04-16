@@ -62,11 +62,11 @@ class QuizModel {
 	 * @since 4.0.0
 	 *
 	 * @param array  $quiz_attempts the quiz_attempts result obtained from query.
-	 * @param string $filter filter quiz attempt based on result.
+	 * @param string $result attempt result type.
 	 *
 	 * @return array
 	 */
-	public static function format_quiz_attempts( array $quiz_attempts, string $filter = '' ): array {
+	public static function format_quiz_attempts( array $quiz_attempts, string $result = '' ): array {
 		$formatted_attempts = array();
 
 		if ( ! count( $quiz_attempts ) ) {
@@ -80,7 +80,7 @@ class QuizModel {
 			$quiz_attempt_result = $quiz_attempt->result ?? 'fail';
 			$result_types        = array( self::RESULT_FAIL, self::RESULT_PASS, self::RESULT_PENDING );
 
-			if ( ! empty( $filter ) && in_array( $filter, $result_types, true ) && $quiz_attempt_result !== $filter ) {
+			if ( ! empty( $result ) && in_array( $result, $result_types, true ) && $quiz_attempt_result !== $result ) {
 				continue;
 			}
 
@@ -137,11 +137,11 @@ class QuizModel {
 	 * @since 4.0.0
 	 *
 	 * @param array  $quizzes list of quiz data.
-	 * @param string $filter the query filter.
+	 * @param string $result attempt result type.
 	 *
 	 * @return array
 	 */
-	public function get_formatted_quiz_attempt_list_by_quiz_id( $quizzes, $filter = '' ) {
+	public function get_formatted_quiz_attempt_list_by_quiz_id( $quizzes, $result = '' ) {
 		$quiz_attempts_list = array();
 
 		if ( ! tutor_utils()->count( $quizzes ) ) {
@@ -153,7 +153,7 @@ class QuizModel {
 			$course_id = $quiz_info['course_id'] ?? 0;
 
 			$quiz_attempts           = $this->quiz_attempts( $quiz_id, get_current_user_id() );
-			$formatted_quiz_attempts = self::format_quiz_attempts( $quiz_attempts, $filter );
+			$formatted_quiz_attempts = self::format_quiz_attempts( $quiz_attempts, $result );
 
 			if ( ! tutor_utils()->count( $formatted_quiz_attempts ) ) {
 				continue;
