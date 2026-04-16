@@ -15,6 +15,7 @@ export interface SelectOption {
   icon?: string;
   description?: string;
   group?: string;
+  display_label?: string;
 }
 
 export interface SelectGroup {
@@ -152,13 +153,13 @@ export const select = (props: SelectProps = {}) => {
         const count = this.selectedValues.size;
         if (count === 1) {
           const opt = this.selectedOptions[0];
-          return opt ? opt.label : this.placeholder;
+          return opt ? (opt.display_label ?? opt.label) : this.placeholder;
         }
         return `${count} selected`;
       }
 
       const opt = this.selectedOptions[0];
-      return opt ? opt.label : this.placeholder;
+      return opt ? (opt.display_label ?? opt.label) : this.placeholder;
     },
 
     get canClear(): boolean {
