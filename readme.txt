@@ -14,7 +14,6 @@ A complete WordPress LMS plugin to create any eLearning website easily.
 == Description ==
 
 Tutor LMS is a lightweight, feature-packed, and robust WordPress LMS plugin to create and sell courses online easily. All the features of this learning management system hit all the checkpoints for a full-fledged online course marketplace.
-
 You can create unlimited courses, quizzes, interactive lessons, generate reports, making Tutor LMS the best free WordPress LMS plugin. So, it’s become a breeze to manage educational institutes, online courses, or eLearning websites without writing a single line of code.
 
 👉 [Tutor LMS Pro](https://tutorlms.com/pricing/)
@@ -318,6 +317,34 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.0-beta.2 - 15 April, 2026
+
+New: Graph quiz type. (Pro)
+New: Question preview in Quiz Builder.
+Update: Course Bundle expiry feature improved. (Pro)
+Update: Updat the UX of Quiz Attempts Instructor view.
+Update: Show subscription expiry date for WC Subscription enrollment. (Pro)
+Fix: Default lesson comment is showing on a new site.
+Fix: The marketplace feature and the "Become an Instructor" option are turned off in the Tutor LMS settings, but the "Become an Instructor" button still appears on the student dashboard.
+Fix: If we include Payment Instructions (media) in the manual payment option, the checkout page will not display any payment gateways.
+FIx: The quick link to create a course is not functioning when accessed from the front-end pages.
+Fix: Report Page: Individual courses are not showing, only bundle courses are visible.
+Fix: Student quiz attempt list data missing.
+Fix: Gift course feature isn't working.
+Fix: Lesson comment replies or updates do not display changes immediately unless the page is reloaded.
+Fix: Multiple order is getting created when user checkout via WooCommerce.
+Fix: The reset password email template does not include the site logo, even though it has been configured.
+Fix: Gift course is showing for enrolled subscription courses
+Fix: Missing information on the course info page
+Fix: Add to cart button is not working in some conditions
+Fix: The info icon doesn't display a tooltip on hover in Student progress modal on Instructor Analytics .
+Fix: Missing Edit Profile button on instructor profile.
+Fix: In the quiz, total marks are showing incorrectly
+Fix: Design breaks in quiz attempt details page
+Fix: Calendar - The meeting count is inaccurate
+Fix: White flash when reloading a page in dark mode
+Fix: Notification icons not rendering correctly
 
 = 4.0.0-beta.1 - 06 April, 2026
 
