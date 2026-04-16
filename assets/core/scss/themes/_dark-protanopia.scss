@@ -4,7 +4,7 @@
 
 @use '../tokens' as *;
 
-[data-tutor-theme="dark-protanopia"] {
+[data-tutor-theme='dark-protanopia'] {
   // =============================================================================
   // SURFACE COLORS
   // =============================================================================
@@ -82,7 +82,7 @@
   --tutor-actions-caution-secondary: #{$tutor-yellow-100};
 }
 
-[data-tutor-theme="dark-protanopia"][data-tutor-contrast="high"] {
+[data-tutor-theme='dark-protanopia'][data-tutor-contrast='high'] {
   --tutor-actions-success-tertiary: #{$tutor-gray-700};
   --tutor-actions-warning-secondary: #{$tutor-gray-700};
   --tutor-actions-critical-secondary: #{$tutor-gray-700};

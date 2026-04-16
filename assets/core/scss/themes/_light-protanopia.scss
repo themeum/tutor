@@ -4,11 +4,13 @@
 
 @use '../tokens' as *;
 
-[data-tutor-theme="light-protanopia"] {
+[data-tutor-theme='light-protanopia'] {
   // =============================================================================
   // SURFACE COLORS
   // =============================================================================
 
+  --tutor-surface-warning: #{$tutor-warning-50};
+  --tutor-surface-warning-hover: #{$tutor-warning-100};
   --tutor-surface-success: #{$tutor-cyan-50};
   --tutor-surface-critical: #{$tutor-orange-100};
 
@@ -76,4 +78,5 @@
   --tutor-actions-critical-primary: #{$tutor-orange-600};
   --tutor-actions-critical-secondary: #{$tutor-orange-100};
   --tutor-actions-caution: #{$tutor-yellow-500};
+  --tutor-actions-caution-secondary: #{$tutor-yellow-100};
 }
