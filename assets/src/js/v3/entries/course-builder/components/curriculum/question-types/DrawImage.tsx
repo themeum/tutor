@@ -16,6 +16,8 @@ const DrawImage = () => {
   const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
   const activeQuestionDataStatus =
     form.watch(`questions.${activeQuestionIndex}._data_status`) ?? QuizDataStatus.NO_CHANGE;
+  const updatedQuestionDataStatus = calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE);
+  const nextQuestionDataStatus = updatedQuestionDataStatus as QuizDataStatus;
 
   const answersPath = `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers';
   const thresholdPath =
@@ -83,11 +85,8 @@ const DrawImage = () => {
                 precisionControllerProps={thresholdControllerProps}
                 precisionTextDomain={'tutor'}
                 onPrecisionChange={() => {
-                  if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
-                    form.setValue(
-                      `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                    );
+                  if (updatedQuestionDataStatus) {
+                    form.setValue(`questions.${activeQuestionIndex}._data_status`, nextQuestionDataStatus);
                   }
                 }}
               />
