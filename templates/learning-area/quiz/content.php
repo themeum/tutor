@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Input;
 use TUTOR\Quiz;
 use Tutor\Helpers\UrlHelper;
+use Tutor\Components\ConfirmationModal;
 
 global $tutor_current_post, $tutor_course_id;
 
@@ -62,6 +63,21 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 		
 		<!-- Action Buttons -->
 		<?php Quiz::render_quiz_actions( $quiz_id ); ?>
+
+		<!-- Retry Modal -->
+		<div x-data="tutorQuizRetryAttempt()" x-init="init()">
+			<?php
+			ConfirmationModal::make()
+				->id( 'tutor-retry-modal' )
+				->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+				->icon( UrlHelper::themed_asset( 'images/illustrations/quiz-retry.webp' ) )
+				->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
+				->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
+				->confirm_text( __( 'Retry Quiz', 'tutor' ) )
+				->mutation_state( 'retryMutation' )
+				->render();
+			?>
+		</div>
 	</div>
 	<?php echo apply_filters( 'tutor_learning_area_content', ob_get_clean() ); //phpcs:ignore --already escaped ?>
 </div>
