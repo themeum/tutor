@@ -6565,12 +6565,14 @@ class Utils {
 	 * @param string  $per_page per page.
 	 * @param string  $order order.
 	 *
-	 * @return mixed
+	 * @return array {results: array, total_count: int}
 	 */
 	public function get_orders_by_user_id( $user_id = 0, $period = '', $start_date = '', $end_date = '', $offset = '', $per_page = '', $order = 'DESC' ) {
 		global $wpdb;
 
-		$orders      = array();
+		$results     = array();
+		$total_count = 0;
+
 		$user_id     = $this->get_user_id( $user_id );
 		$monetize_by = $this->get_option( 'monetize_by' );
 		$order       = QueryHelper::get_valid_sort_order( $order );
@@ -6613,9 +6615,9 @@ class Utils {
 
 		if ( 'wc' === $monetize_by ) {
 			if ( $wc_hpos ) {
-				$orders = $wpdb->get_results(
+				$results = $wpdb->get_results(
 					$wpdb->prepare(
-						"SELECT orders.id AS ID, orders.status AS post_status, orders.date_created_gmt AS post_date, orders.* 
+						"SELECT SQL_CALC_FOUND_ROWS orders.id AS ID, orders.status AS post_status, orders.date_created_gmt AS post_date, orders.* 
 						FROM 	{$wpdb->prefix}wc_orders orders 
 								INNER JOIN {$wpdb->prefix}wc_orders_meta order_meta 
 										ON orders.id = order_meta.order_id
@@ -6630,9 +6632,9 @@ class Utils {
 					)
 				);
 			} else {
-				$orders = $wpdb->get_results(
+				$results = $wpdb->get_results(
 					$wpdb->prepare(
-						"SELECT {$wpdb->posts}.*
+						"SELECT SQL_CALC_FOUND_ROWS {$wpdb->posts}.*
 					FROM	{$wpdb->posts}
 							INNER JOIN {$wpdb->postmeta} customer
 									ON id = customer.post_id
@@ -6651,9 +6653,16 @@ class Utils {
 					)
 				);
 			}
+
+			$total_count = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
 		}
 
-		return apply_filters( 'tutor_get_orders_by_user_id', $orders, $user_id, $period, $start_date, $end_date, $offset, $per_page, $order );
+		$data = array(
+			'results'     => $results,
+			'total_count' => $total_count,
+		);
+
+		return apply_filters( 'tutor_get_orders_by_user_id', $data, $user_id, $period, $start_date, $end_date, $offset, $per_page, $order );
 	}
 
 	/**
