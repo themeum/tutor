@@ -34,7 +34,7 @@ $payment_method = $wc_order->get_payment_method_title();
 $order_date     = $wc_order->get_date_created();
 
 $titles  = array();
-$courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order->ID );
+$courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order_id );
 if ( tutor_utils()->count( $courses ) ) {
 	foreach ( $courses as $course ) {
 		if ( empty( $course['course_id'] ) ) {
