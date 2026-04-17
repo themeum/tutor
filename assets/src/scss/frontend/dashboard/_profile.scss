@@ -200,6 +200,7 @@
 
       &-value {
         @include tutor-typography(h3, semibold, primary, heading);
+        margin: $tutor-spacing-none;
 
         @include tutor-breakpoint-down(sm) {
           @include tutor-typography(h5, semibold, primary, heading);

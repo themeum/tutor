@@ -59,7 +59,7 @@ $back_url = UrlHelper::back( tutor_utils()->tutor_dashboard_url() );
 			?>
 		</div>
 		<div class="tutor-profile-header-right tutor-flex tutor-items-center">
-			<div x-show="activeTab !== 'none' && isDirty[`tutor-${activeTab}-form`]" x-cloak>
+			<div class="tutor-flex" x-show="activeTab !== 'none' && isDirty[`tutor-${activeTab}-form`]" x-cloak>
 				<?php
 				Button::make()
 					->label( __( 'Discard', 'tutor' ) )
