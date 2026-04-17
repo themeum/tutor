@@ -197,7 +197,7 @@ $default_values = array(
 		<?php endif; ?>
 
 		<?php
-		do_action( 'tutor_quiz/body/before', $tutor_is_started_quiz->quiz_id );
+		do_action( 'tutor_quiz/body/before', $tutor_is_started_quiz->quiz_id, $quiz_attempt_info );
 		foreach ( $questions as $index => $question ) {
 			$question_settings = maybe_unserialize( $question->question_settings );
 			$answer_required   = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
