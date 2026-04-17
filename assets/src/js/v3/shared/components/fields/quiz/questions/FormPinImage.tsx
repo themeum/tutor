@@ -585,11 +585,19 @@ const styles = {
     height: auto;
     border-radius: ${borderRadius.card};
 
+    ${Breakpoint.smallMobile} {
+      width: 100%;
+    }
+
     img {
       width: auto;
       max-width: 100%;
       height: auto;
       object-fit: initial;
+
+      ${Breakpoint.smallMobile} {
+        width: 100%;
+      }
     }
   `,
   answerHeader: css`
@@ -613,13 +621,24 @@ const styles = {
   canvasInner: css`
     position: relative;
     display: inline-block;
+    max-width: 100%;
     border-radius: ${borderRadius.card};
     overflow: hidden;
 
+    ${Breakpoint.smallMobile} {
+      display: block;
+      width: 100%;
+    }
+
     img {
       display: block;
+      width: auto;
       max-width: 100%;
       height: auto;
+
+      ${Breakpoint.smallMobile} {
+        width: 100%;
+      }
     }
   `,
   image: css`

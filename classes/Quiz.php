@@ -1743,9 +1743,7 @@ class Quiz {
 			return;
 		}
 
-		$formatted_attempts = QuizModel::format_quiz_attempts( $attempts );
-		$quiz_attempts      = $formatted_attempts[ $quiz_id ] ?? reset( $formatted_attempts );
-		$attempts_list      = $quiz_attempts['attempts'] ?? array();
+		$attempts_list = QuizModel::format_quiz_attempts( $attempts, '' );
 
 		if ( empty( $attempts_list ) ) {
 			return;
@@ -1753,7 +1751,6 @@ class Quiz {
 
 		$attempts_count   = count( $attempts_list );
 		$quiz_attempt_obj = new Quiz_Attempts_List( false );
-		$course_id        = $quiz_attempts['course_id'] ?? 0;
 		?>
 			<div class="tutor-quiz-attempts tutor-border tutor-rounded-2xl">
 				<div class="tutor-quiz-attempts-header">
@@ -1783,8 +1780,8 @@ class Quiz {
 								array(
 									'attempt'          => $attempt,
 									'attempt_number'   => $attempt_number,
-									'quiz_id'          => $quiz_id,
-									'course_id'        => $course_id,
+									'quiz_id'          => $attempt['quiz_id'] ?? 0,
+									'course_id'        => $attempt['course_id'] ?? 0,
 									'quiz_attempt_obj' => $quiz_attempt_obj,
 									'attempts_count'   => $attempts_count,
 									'is_previous'      => true,
@@ -2005,5 +2002,61 @@ class Quiz {
 			'question_answers'            => $question_answers,
 			'question_randomized_answers' => $question_randomized_answers,
 		);
+	}
+
+	/**
+	 * Renders the assignment status icon for the learning area navigation.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_Post $quiz The assignment post object.
+	 * @param bool    $can_access Whether the current user can access the assignment.
+	 * @param int     $tutor_current_content_id Current content id.
+	 *
+	 * @return void
+	 */
+	public static function render_sidebar_nav( WP_Post $quiz, $can_access, $tutor_current_content_id ) {
+		$quiz_title = $quiz->post_title;
+
+		$active_class   = $tutor_current_content_id === $quiz->ID ? 'active' : '';
+		$disabled_class = $can_access ? '' : 'disabled';
+
+		$quiz_status = '';
+		$icon_name   = Icon::QUIZ_2;
+		if ( ! $can_access ) {
+			$icon_name = Icon::LOCK_STROKE_2;
+		} else {
+			$last_attempt  = ( new QuizModel() )->get_first_or_last_attempt( $quiz->ID );
+			$attempt_ended = is_object( $last_attempt ) && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status;
+
+			$quiz_result = QuizModel::get_quiz_result( $quiz->ID );
+			if ( $attempt_ended && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status ) {
+				if ( QuizModel::RESULT_FAIL === $quiz_result ) {
+					$icon_name   = Icon::CROSS_CIRCLE_LINE;
+					$quiz_status = QuizModel::RESULT_FAIL;
+				} elseif ( QuizModel::RESULT_PENDING === $quiz_result ) {
+					$icon_name   = Icon::INFO_2;
+					$quiz_status = QuizModel::RESULT_PENDING;
+				} elseif ( QuizModel::RESULT_PASS === $quiz_result ) {
+					$icon_name = Icon::COMPLETED_COLORIZE;
+				}
+			}
+		}
+		?>
+
+		
+		<a
+			href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>" 
+			title="<?php echo esc_attr( $quiz_title ); ?>"
+			class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s %s %s', $active_class, $disabled_class, $quiz_status ) ); ?>"
+			<?php echo ! $can_access ? 'aria-disabled="true"' : ''; ?>
+		>
+			<?php SvgIcon::make()->name( $icon_name )->size( 20 )->render(); ?>
+			<div class="tutor-overflow-hidden">
+				<div class="tutor-truncate"><?php echo esc_html( $quiz_title ); ?></div>
+				<div class="tutor-tiny-2 tutor-text-subdued"><?php esc_html_e( 'Quiz', 'tutor' ); ?></div>
+			</div>
+		</a>
+		<?php
 	}
 }

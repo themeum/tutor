@@ -43,6 +43,7 @@ class OrderModel {
 	const ORDER_COMPLETED  = 'completed';
 	const ORDER_CANCELLED  = 'cancelled';
 	const ORDER_TRASH      = 'trash';
+	const ORDER_PENDING    = 'pending';
 
 	/**
 	 * Payment status
@@ -56,6 +57,7 @@ class OrderModel {
 	const PAYMENT_UNPAID             = 'unpaid';
 	const PAYMENT_REFUNDED           = 'refunded';
 	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
+	const PAYMENT_PENDING            = 'pending';
 
 	/**
 	 * Payment methods
@@ -296,6 +298,7 @@ class OrderModel {
 			self::ORDER_COMPLETED  => __( 'Completed', 'tutor' ),
 			self::ORDER_CANCELLED  => __( 'Cancelled', 'tutor' ),
 			self::ORDER_TRASH      => __( 'Trash', 'tutor' ),
+			self::ORDER_PENDING    => __( 'Pending', 'tutor' ),
 		);
 	}
 
@@ -328,6 +331,7 @@ class OrderModel {
 			self::PAYMENT_FAILED             => __( 'Failed', 'tutor' ),
 			self::PAYMENT_REFUNDED           => __( 'Refunded', 'tutor' ),
 			self::PAYMENT_PARTIALLY_REFUNDED => __( 'Partially Refunded', 'tutor' ),
+			self::PAYMENT_PENDING            => __( 'Pending', 'tutor' ),
 		);
 	}
 
@@ -2241,7 +2245,7 @@ class OrderModel {
 			$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
 			foreach ( $items as $item ) {
 
-				if ( self::TYPE_SINGLE_ORDER !== $order->order_type ) {
+				if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
 					$titles[] = get_the_title( $item->id );
 					continue;
 				}
@@ -2273,37 +2277,33 @@ class OrderModel {
 	}
 
 	/**
-	 * Generate pay link or payment button HTML for an order.
+	 * Render pay link or payment button HTML for an order.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @param object $order Order object.
 	 *
-	 * @return string HTML markup for payment action, or empty string if not applicable.
+	 * @return void
 	 */
-	public static function get_order_history_pay_link( $order ) {
+	public static function render_order_history_pay_link( $order ) {
 
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 
 		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
-			ob_start();
 			self::render_pay_button( $order );
-			return ob_get_clean();
 		}
 
 		if ( 'wc' === $monetize_by && 'pending' === $order->order_status ) {
 			$wc_order = wc_get_order( $order->ID );
 
 			if ( $wc_order ) {
-				return sprintf(
+				printf(
 					'<a href="%s" class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit">%s</a>',
 					esc_url( $wc_order->get_checkout_payment_url() ),
 					esc_html__( 'Pay', 'tutor' )
 				);
 			}
 		}
-
-		return '';
 	}
 
 	/**

@@ -139,11 +139,20 @@ class QuizBuilder {
 			// Update answer.
 			if ( self::FLAG_UPDATE === $data_status ) {
 				$answer_id = $answer['answer_id'];
+				$old_mask  = '';
+				if ( $this->is_mask_image_question_type( $question_type ) ) {
+					$old_answer = QueryHelper::get_row( $answers_table, array( 'answer_id' => (int) $answer_id ), 'answer_id' );
+					$old_mask   = is_object( $old_answer ) ? (string) ( $old_answer->answer_two_gap_match ?? '' ) : '';
+				}
 				$wpdb->update(
 					$answers_table,
 					$answer_data,
 					array( 'answer_id' => $answer_id )
 				);
+				if ( $this->is_mask_image_question_type( $question_type ) ) {
+					$new_mask = (string) ( $answer_data['answer_two_gap_match'] ?? '' );
+					$this->delete_replaced_mask_file( $old_mask, $new_mask );
+				}
 			}
 
 			if ( self::FLAG_NO_CHANGE === $data_status ) {
@@ -157,6 +166,60 @@ class QuizBuilder {
 				array( 'answer_order' => $answer_order ),
 				array( 'answer_id' => $answer_id )
 			);
+		}
+	}
+
+	/**
+	 * Whether question type stores a mask image URL in answer_two_gap_match.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $question_type Question type.
+	 *
+	 * @return bool
+	 */
+	private function is_mask_image_question_type( $question_type ) {
+		return in_array( $question_type, array( 'draw_image', 'pin_image' ), true );
+	}
+
+	/**
+	 * Delete old mask file if it was replaced with a different mask URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $old_mask Previous mask URL.
+	 * @param string $new_mask New mask URL.
+	 *
+	 * @return void
+	 */
+	private function delete_replaced_mask_file( $old_mask, $new_mask ) {
+		$old_mask = trim( (string) $old_mask );
+		$new_mask = trim( (string) $new_mask );
+
+		if ( '' === $old_mask || $old_mask === $new_mask ) {
+			return;
+		}
+
+		if ( false === wp_http_validate_url( $old_mask ) ) {
+			return;
+		}
+
+		$upload_dir = wp_upload_dir();
+		if ( ! empty( $upload_dir['error'] ) ) {
+			return;
+		}
+
+		$uploads_base_url = trailingslashit( $upload_dir['baseurl'] );
+		$uploads_base_dir = trailingslashit( $upload_dir['basedir'] );
+		$quiz_image_url   = $uploads_base_url . 'tutor/quiz-images/';
+
+		if ( 0 !== strpos( $old_mask, $quiz_image_url ) ) {
+			return;
+		}
+
+		$old_path = str_replace( $uploads_base_url, $uploads_base_dir, $old_mask );
+		if ( is_string( $old_path ) && '' !== $old_path && is_file( $old_path ) && is_readable( $old_path ) ) {
+			wp_delete_file( $old_path );
 		}
 	}
 
