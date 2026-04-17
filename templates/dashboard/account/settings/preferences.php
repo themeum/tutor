@@ -22,12 +22,11 @@ use Tutor\Helpers\UrlHelper;
 use Tutor\Options_V2;
 use TUTOR\User;
 
-$theme_options  = UserPreference::get_theme_options();
-$vision_options = UserPreference::get_vision_options();
-
-$learning_mood_options = UserPreference::get_learning_mood_options();
-
-$font_scale_options = UserPreference::get_font_scale_options();
+$theme_options          = UserPreference::get_theme_options();
+$vision_options         = UserPreference::get_vision_options();
+$motion_effects_options = UserPreference::get_motion_effects_options();
+$learning_mood_options  = UserPreference::get_learning_mood_options();
+$font_scale_options     = UserPreference::get_font_scale_options();
 
 // Load current user preferences to seed the form.
 $user_preferences = UserPreference::get_preferences();
@@ -96,6 +95,40 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 		</div>
 
 		<h5 class="tutor-h5 tutor-font-semibold tutor-mb-4">
+			<?php esc_html_e( 'Interactive Effects', 'tutor' ); ?>
+		</h5>
+		<div class="tutor-card tutor-card-rounded-2xl tutor-mb-7">
+			<div class="tutor-preferences-setting-item">
+				<div class="tutor-preferences-setting-content">
+					<div class="tutor-preferences-setting-icon">
+						<?php SvgIcon::make()->name( Icon::ANIMATION )->size( 20 )->render(); ?>
+					</div>
+					<div>
+						<div class="tutor-preferences-setting-title">
+							<?php esc_html_e( 'Motion Effects', 'tutor' ); ?>
+						</div>
+						<div class="tutor-preferences-setting-subtitle">
+							<?php esc_html_e( 'Limit animations and motion effects to reduce visual strain.', 'tutor' ); ?>
+						</div>
+					</div>
+				</div>
+				<div class="tutor-preferences-setting-action">
+					<?php
+					InputField::make()
+						->type( InputType::SELECT )
+						->size( Size::SM )
+						->name( 'motion_effects' )
+						->options( $motion_effects_options )
+						->attr( 'x-bind', "register('motion_effects')" )
+						->attr( 'x-effect', 'TutorCore.preference.applyMotionEffects(watch("motion_effects"))' )
+						->attr( 'style', 'min-width: 140px;' )
+						->render();
+					?>
+				</div>
+			</div>
+		</div>
+
+		<h5 class="tutor-h5 tutor-font-semibold tutor-mb-4">
 			<?php esc_html_e( 'Appearance', 'tutor' ); ?>
 		</h5>
 		<div class="tutor-card tutor-card-rounded-2xl tutor-mb-7">
@@ -155,34 +188,6 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 			<?php esc_html_e( 'Accessibility', 'tutor' ); ?>
 		</h5>
 		<div class="tutor-card tutor-card-rounded-2xl">
-			<div class="tutor-preferences-setting-item">
-				<div class="tutor-preferences-setting-content">
-					<div class="tutor-preferences-setting-icon">
-						<?php SvgIcon::make()->name( Icon::ANIMATION )->size( 20 )->render(); ?>
-					</div>
-					<div>
-						<div class="tutor-preferences-setting-title">
-							<?php esc_html_e( 'Reduce Motion', 'tutor' ); ?>
-						</div>
-						<div class="tutor-preferences-setting-subtitle">
-							<?php esc_html_e( 'Limit animations and motion effects to reduce visual strain.', 'tutor' ); ?>
-						</div>
-					</div>
-				</div>
-				<div class="tutor-preferences-setting-action">
-					<?php
-					InputField::make()
-						->type( InputType::SWITCH )
-						->size( Size::SM )
-						->name( 'reduce_motion' )
-						->value( 'true' )
-						->checked( ! empty( $user_preferences['reduce_motion'] ) )
-						->attr( 'x-bind', "register('reduce_motion')" )
-						->attr( 'x-effect', 'TutorCore.preference.applyReduceMotion(!!watch("reduce_motion"))' )
-						->render();
-					?>
-				</div>
-			</div>
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">
 					<div class="tutor-preferences-setting-icon">

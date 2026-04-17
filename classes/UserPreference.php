@@ -123,7 +123,46 @@ class UserPreference {
 	 * @var string
 	 */
 	const CONTRAST_HIGH = 'high';
-	const REDUCE_MOTION = 'reduce';
+
+	/**
+	 * Motion effects option: auto (follow system).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const MOTION_EFFECTS_AUTO = 'auto';
+
+	/**
+	 * Motion effects option: reduce.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const MOTION_EFFECTS_REDUCE = 'reduce';
+
+	/**
+	 * Motion effects option: standard (no reduction).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const MOTION_EFFECTS_STANDARD = 'standard';
+
+	/**
+	 * Available motion effects options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array<string>
+	 */
+	const MOTION_EFFECTS_OPTIONS = array(
+		self::MOTION_EFFECTS_AUTO,
+		self::MOTION_EFFECTS_REDUCE,
+		self::MOTION_EFFECTS_STANDARD,
+	);
 
 	/**
 	 * Default theme value.
@@ -227,14 +266,24 @@ class UserPreference {
 			$contrast_attr = ' data-tutor-contrast="' . esc_attr( self::CONTRAST_HIGH ) . '"';
 		}
 
-		$reduce_motion      = ! empty( $prefs['reduce_motion'] );
-		$reduce_motion_attr = $reduce_motion ? ' data-tutor-motion="' . esc_attr( self::REDUCE_MOTION ) . '"' : '';
+		$motion_effects = isset( $prefs['motion_effects'] ) ? (string) $prefs['motion_effects'] : self::MOTION_EFFECTS_AUTO;
+		if ( ! in_array( $motion_effects, self::MOTION_EFFECTS_OPTIONS, true ) ) {
+			$motion_effects = self::MOTION_EFFECTS_AUTO;
+		}
+
+		$motion_effects_attr = '';
+		if ( self::MOTION_EFFECTS_REDUCE === $motion_effects ) {
+			$motion_effects_attr = ' data-tutor-motion="reduce"';
+		} elseif ( self::MOTION_EFFECTS_AUTO === $motion_effects ) {
+			// Let CSS handle it via prefers-reduced-motion media query.
+			$motion_effects_attr = ' data-tutor-motion="auto"';
+		}
 
 		$vision_attr = self::VISION_NORMAL !== $vision
 			? ' data-tutor-vision="' . esc_attr( $vision ) . '"'
 			: '';
 
-		return $output . ' data-tutor-theme="' . esc_attr( $resolved_theme ) . '"' . $vision_attr . $contrast_attr . $reduce_motion_attr;
+		return $output . ' data-tutor-theme="' . esc_attr( $resolved_theme ) . '"' . $vision_attr . $contrast_attr . $motion_effects_attr;
 	}
 
 	/**
@@ -338,7 +387,7 @@ class UserPreference {
 		$theme          = Input::post( 'theme', null );
 		$vision         = Input::post( 'vision', null );
 		$contrast       = Input::post( 'contrast', null );
-		$reduce_motion  = Input::post( 'reduce_motion', null );
+		$motion_effects = Input::post( 'motion_effects', null );
 		$font_scale     = Input::post( 'font_scale', null );
 		$learning_mood  = Input::post( 'learning_mood', null );
 
@@ -377,9 +426,12 @@ class UserPreference {
 			$preferences_settings = array_merge( $preferences_settings, self::prepare_preference_setting( 'contrast', $contrast, '' ) );
 		}
 
-		if ( null !== $reduce_motion ) {
-			$reduce_motion        = in_array( (string) $reduce_motion, array( 'true', 'on', '1' ), true );
-			$preferences_settings = array_merge( $preferences_settings, self::prepare_preference_setting( 'reduce_motion', $reduce_motion, false ) );
+		if ( null !== $motion_effects ) {
+			$motion_effects = (string) $motion_effects;
+			if ( ! in_array( $motion_effects, self::MOTION_EFFECTS_OPTIONS, true ) ) {
+				$motion_effects = self::MOTION_EFFECTS_AUTO;
+			}
+			$preferences_settings = array_merge( $preferences_settings, self::prepare_preference_setting( 'motion_effects', $motion_effects, self::MOTION_EFFECTS_AUTO ) );
 		}
 
 		if ( null !== $font_scale ) {
@@ -509,7 +561,7 @@ class UserPreference {
 				'theme'          => self::DEFAULT_THEME,
 				'vision'         => self::VISION_NORMAL,
 				'contrast'       => '',
-				'reduce_motion'  => false,
+				'motion_effects' => self::MOTION_EFFECTS_AUTO,
 				'font_scale'     => self::DEFAULT_FONT_SCALE,
 				'learning_mood'  => tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN ),
 			)
@@ -586,6 +638,30 @@ class UserPreference {
 			array(
 				'label' => __( 'Kids', 'tutor' ),
 				'value' => Options_V2::LEARNING_MODE_KIDS,
+			),
+		);
+	}
+
+	/**
+	 * Get motion effects options for UI selects.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<int,array{label:string,value:string}>
+	 */
+	public static function get_motion_effects_options() {
+		return array(
+			array(
+				'label' => __( 'Auto (System Default)', 'tutor' ),
+				'value' => self::MOTION_EFFECTS_AUTO,
+			),
+			array(
+				'label' => __( 'Reduced Motion', 'tutor' ),
+				'value' => self::MOTION_EFFECTS_REDUCE,
+			),
+			array(
+				'label' => __( 'Standard Motion', 'tutor' ),
+				'value' => self::MOTION_EFFECTS_STANDARD,
 			),
 		);
 	}

@@ -2,7 +2,7 @@ import { type ServiceMeta } from '@Core/ts/types';
 type Theme = 'dark' | 'light' | 'system';
 type Vision = 'normal' | 'protanopia' | 'deuteranopia' | 'deuteranomaly';
 type Contrast = '' | 'high';
-type Motion = '' | 'reduce';
+type Motion = '' | 'auto' | 'reduce' | 'standard';
 
 class PreferenceService {
   private readonly THEME = { DARK: 'dark', LIGHT: 'light', SYSTEM: 'system' } as const;
@@ -43,15 +43,24 @@ class PreferenceService {
       this.applyContrast(contrast);
     }
 
-    const motion = (wrapper.getAttribute(this.DATA_MOTION_ATTR) as Motion | null) ?? '';
-    if (motion) {
-      this.applyReduceMotion(true);
-    }
+    const motion = (wrapper.getAttribute(this.DATA_MOTION_ATTR) as Motion | null) ?? 'auto';
+    this.applyMotionEffects(motion as Motion);
   }
 
   applyTheme(theme: Theme, withTransition: boolean = true): void {
     if (!theme) return;
     const wrapper = this.getWrapper();
+
+    // Resolve what the new effective theme would be.
+    const incomingEffectiveTheme =
+      theme === this.THEME.SYSTEM ? (this.mediaQuery.matches ? this.THEME.DARK : this.THEME.LIGHT) : theme;
+
+    // Skip transition if the effective theme hasn't changed.
+    const currentAttr = wrapper.getAttribute(this.DATA_THEME_ATTR);
+    const effectiveCurrent = this.inferBase(currentAttr);
+    if (incomingEffectiveTheme === effectiveCurrent && theme !== this.THEME.SYSTEM) {
+      return;
+    }
 
     if (this.systemThemeListener) {
       this.mediaQuery.removeEventListener('change', this.systemThemeListener);
@@ -109,10 +118,12 @@ class PreferenceService {
     }
   }
 
-  applyReduceMotion(enabled: boolean): void {
+  applyMotionEffects(motion: Motion): void {
     const wrapper = this.getWrapper();
-    if (enabled) {
+    if (motion === 'reduce') {
       wrapper.setAttribute(this.DATA_MOTION_ATTR, 'reduce');
+    } else if (motion === 'auto') {
+      wrapper.setAttribute(this.DATA_MOTION_ATTR, 'auto');
     } else {
       wrapper.removeAttribute(this.DATA_MOTION_ATTR);
     }
