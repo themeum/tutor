@@ -130,6 +130,9 @@ class OrderController {
 			add_action( 'wp_ajax_tutor_order_bulk_action', array( $this, 'bulk_action_handler' ) );
 
 			add_filter( 'tutor_calculate_order_tax_amount', array( $this, 'filter_calculate_single_order_tax_amount' ), 10, 5 );
+
+			add_filter( 'tutor_get_orders_by_user_id', array( $this, 'filter_get_orders_by_user_id' ), 10, 8 );
+			add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ) );
 		}
 	}
 
@@ -1302,5 +1305,46 @@ class OrderController {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Filter get orders by user id.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $data Order data.
+	 * @param int   $user_id User ID.
+	 * @param mixed $period Period.
+	 * @param mixed $start_date Start date.
+	 * @param mixed $end_date End date.
+	 * @param mixed $offset Offset.
+	 * @param mixed $per_page Per page.
+	 * @param mixed $order Order.
+	 *
+	 * @return array {results: array, total_count: int}
+	 */
+	public function filter_get_orders_by_user_id( $data, $user_id, $period, $start_date, $end_date, $offset, $per_page, $order ) {
+		$args = array();
+		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+			$args['order_type'] = OrderModel::TYPE_SINGLE_ORDER;
+		}
+
+		$order_status = Input::get( 'data', 'all' );
+		$orders       = $this->model->get_user_orders( $period, $start_date, $end_date, $order_status, $user_id, $per_page, $offset, $order, $args );
+		return $orders;
+	}
+
+	/**
+	 * Filter order history status options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $options Order history status options.
+	 *
+	 * @return array
+	 */
+	public function filter_order_history_status_options( $options ) {
+		$options = $this->tabs_key_value( 'dashboard' );
+		return $options;
 	}
 }

@@ -33,24 +33,11 @@ $time_period     = null;
 $start_date      = Input::get( 'start_date' );
 $end_date        = Input::get( 'end_date' );
 $selected_filter = Input::get( 'data', 'all' );
-$status_options  = array();
 
-if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
-	$args = array();
-	if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
-		$args['order_type'] = OrderModel::TYPE_SINGLE_ORDER;
-	}
-	$response    = ( new OrderModel() )->get_user_orders( $time_period, $start_date, $end_date, $selected_filter, $user_id, $item_per_page, $offset, $order_filter, $args );
-	$orders      = $response['results'];
-	$total_items = $response['total_count'];
-
-	$status_options = ( new OrderController( false ) )->tabs_key_value( 'dashboard' );
-} else {
-	$orders      = tutor_utils()->get_orders_by_user_id( $user_id, $time_period, $start_date, $end_date, $offset, $item_per_page, $order_filter );
-	$total_items = tutor_utils()->get_total_orders_by_user_id( $user_id, $time_period, $start_date, $end_date );
-}
-
-$status_options = apply_filters( 'tutor_order_history_status_options', $status_options );
+$response       = tutor_utils()->get_orders_by_user_id( $user_id, $time_period, $start_date, $end_date, $offset, $item_per_page, $order_filter );
+$orders         = $response['results'] ?? array();
+$total_items    = $response['total_count'] ?? 0;
+$status_options = apply_filters( 'tutor_order_history_status_options', array() );
 
 $status_options = array_map(
 	function( $filter ) use ( $selected_filter ) {
