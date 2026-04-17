@@ -125,6 +125,9 @@ class WooCommerce extends Tutor_Base {
 		add_filter( 'woocommerce_shortcode_products_query_results', array( $this, 'filter_products_query_results' ), 10, 2 );
 
 		add_filter( 'woocommerce_shortcode_products_query', array( $this, 'filter_tutor_course_products' ) );
+
+		// @since 4.0.0
+		add_filter( 'tutor_order_history_card_template', fn( $template ) => tutor_get_template( 'dashboard.account.billing.wc-order-history-card' ) );
 	}
 
 	/**

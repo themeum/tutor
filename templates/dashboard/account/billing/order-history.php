@@ -19,19 +19,23 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Dashboard;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
+
+$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+if ( 'free' === $monetize_by ) {
+	return;
+}
 
 $time_period     = null;
 $start_date      = Input::get( 'start_date' );
 $end_date        = Input::get( 'end_date' );
 $selected_filter = Input::get( 'data', 'all' );
+$status_options  = array();
 
-$filter_options = array();
-
-if ( tutor_utils()->is_monetize_by_tutor() ) {
-
+if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 	$args = array();
 	if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
 		$args['order_type'] = OrderModel::TYPE_SINGLE_ORDER;
@@ -40,14 +44,15 @@ if ( tutor_utils()->is_monetize_by_tutor() ) {
 	$orders      = $response['results'];
 	$total_items = $response['total_count'];
 
-	$filter_options = ( new OrderController( false ) )->tabs_key_value( 'dashboard' );
+	$status_options = ( new OrderController( false ) )->tabs_key_value( 'dashboard' );
 } else {
 	$orders      = tutor_utils()->get_orders_by_user_id( $user_id, $time_period, $start_date, $end_date, $offset, $item_per_page, $order_filter );
 	$total_items = tutor_utils()->get_total_orders_by_user_id( $user_id, $time_period, $start_date, $end_date );
-	$total_items = ! empty( $total_items ) ? count( $total_items ) : 0;
 }
 
-$dropdown_options = array_map(
+$status_options = apply_filters( 'tutor_order_history_status_options', $status_options );
+
+$status_options = array_map(
 	function( $filter ) use ( $selected_filter ) {
 		$key = $filter['key'] ?? '';
 		return array(
@@ -58,12 +63,12 @@ $dropdown_options = array_map(
 			'active' => $key === $selected_filter || ( empty( $key ) && 'all' === $selected_filter ),
 		);
 	},
-	$filter_options
+	$status_options
 );
 ?>
 
 <div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
-	<?php DropdownFilter::make()->options( $dropdown_options )->render(); ?>
+	<?php DropdownFilter::make()->options( $status_options )->render(); ?>
 	<div class="tutor-flex tutor-items-center tutor-gap-3">
 		<?php
 		$query_params = array( 'data', 'order', 'start_date', 'end_date' );
@@ -89,12 +94,15 @@ if ( empty( $orders ) ) :
 else :
 	?>
 <div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-order-history">
-	<?php foreach ( $orders as $order_data ) : ?>
-		<?php
-		$order = OrderModel::normalize_order_for_history( $order_data );
-		include tutor_get_template( 'dashboard.account.billing.order-history-card' );
-		?>
-	<?php endforeach; ?>
+	<?php
+	$default_card_template       = Ecommerce::MONETIZE_BY === $monetize_by ? tutor_get_template( 'dashboard.account.billing.native-order-history-card' ) : '';
+	$order_history_card_template = apply_filters( 'tutor_order_history_card_template', $default_card_template );
+	foreach ( $orders as $order_data ) :
+		if ( file_exists( $order_history_card_template ) ) {
+			tutor_load_template_from_custom_path( $order_history_card_template, array( 'order_data' => $order_data ) );
+		}
+	endforeach;
+	?>
 </div>
 
 	<?php
