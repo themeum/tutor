@@ -409,6 +409,7 @@ export const icons = [
   'videoFill',
   'videoQuality',
   'vimeo',
+  'vision',
   'visited',
   'wallet',
   'warning',

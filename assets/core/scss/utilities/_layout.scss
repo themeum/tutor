@@ -361,7 +361,7 @@ $overflow-types: auto, hidden, visible, scroll;
 // Responsive Utilities
 // ------------------------
 
-@each $breakpoint, $min-width in $tutor-breakpoints {
+@each $breakpoint, $min-width in $tutor-responsive-breakpoints {
   @include tutor-breakpoint-down($breakpoint) {
     // Display utilities
     @each $name, $value in $display-utils {
@@ -392,15 +392,9 @@ $overflow-types: auto, hidden, visible, scroll;
     }
 
     // Gap utilities
-    @each $name, $value in $tutor-spacing {
+    @each $name, $value in $tutor-responsive-spacing {
       .tutor-#{$breakpoint}-gap-#{$name} {
         gap: $value;
-      }
-      .tutor-#{$breakpoint}-gap-x-#{$name} {
-        column-gap: $value;
-      }
-      .tutor-#{$breakpoint}-gap-y-#{$name} {
-        row-gap: $value;
       }
     }
 
@@ -426,3 +420,4 @@ $overflow-types: auto, hidden, visible, scroll;
     }
   }
 }
+

@@ -14,6 +14,7 @@ $tutor-icon-brand: var(--tutor-icon-brand);
 $tutor-icon-brand-hover: var(--tutor-icon-brand-hover);
 $tutor-icon-brand-secondary: var(--tutor-icon-brand-secondary);
 $tutor-icon-success-primary: var(--tutor-icon-success-primary);
+$tutor-icon-success-secondary: var(--tutor-icon-success-secondary);
 $tutor-icon-critical: var(--tutor-icon-critical);
 $tutor-icon-critical-hover: var(--tutor-icon-critical-hover);
 $tutor-icon-warning: var(--tutor-icon-warning);
@@ -39,6 +40,7 @@ $tutor-icons: (
   brand-hover: $tutor-icon-brand-hover,
   brand-secondary: $tutor-icon-brand-secondary,
   success-primary: $tutor-icon-success-primary,
+  success-secondary: $tutor-icon-success-secondary,
   critical: $tutor-icon-critical,
   critical-hover: $tutor-icon-critical-hover,
   warning: $tutor-icon-warning,

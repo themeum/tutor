@@ -170,7 +170,7 @@ $max-heights: (
 $responsive-widths: map-merge($fixed-widths, $fractional-widths);
 $responsive-heights: $fixed-heights;
 
-@each $breakpoint, $min-width in $tutor-breakpoints {
+@each $breakpoint, $min-width in $tutor-responsive-breakpoints {
   @include tutor-breakpoint-down($breakpoint) {
     // Width
     @each $key, $value in $responsive-widths {
