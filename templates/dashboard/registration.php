@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\Alert;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
+
 ?>
 
 <?php
@@ -152,18 +153,16 @@ if ( ! get_option( 'users_can_register', false ) ) :
 				$tutor_toc_page_link = tutor_utils()->get_toc_page_link();
 				?>
 			<?php if ( null !== $tutor_toc_page_link ) : ?>
-				<div class="tutor-form-row tutor-mb-24">
-					<div class="tutor-form-col-12">
-						<div class="tutor-d-flex tutor-gap-1 tutor-align-center">
-							<div class="tutor-form-wrap">
-								<input type="checkbox" id="tutor-terms-conditions" name="terms_conditions" required>
-							</div>
-							<label for="tutor-terms-conditions">
-								<?php esc_html_e( 'By signing up, you agree to the ', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
-							</label>
-						</div>
+			<div class="tutor-form-row tutor-mb-8">
+				<div class="tutor-input-field">
+					<div class="tutor-input-wrapper">
+						<input type="checkbox" id="tutor-terms-conditions" name="terms_conditions" class="tutor-checkbox tutor-checkbox-md" required>
+						<label for="tutor-terms-conditions" class="tutor-label">
+							<?php esc_html_e( 'By signing up, you agree to the ', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
+						</label>
 					</div>
-				</div> 
+				</div>
+			</div>
 			<?php endif; ?>
 
 			<div>

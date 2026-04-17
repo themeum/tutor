@@ -14,7 +14,6 @@ A complete WordPress LMS plugin to create any eLearning website easily.
 == Description ==
 
 Tutor LMS is a lightweight, feature-packed, and robust WordPress LMS plugin to create and sell courses online easily. All the features of this learning management system hit all the checkpoints for a full-fledged online course marketplace.
-
 You can create unlimited courses, quizzes, interactive lessons, generate reports, making Tutor LMS the best free WordPress LMS plugin. So, it’s become a breeze to manage educational institutes, online courses, or eLearning websites without writing a single line of code.
 
 👉 [Tutor LMS Pro](https://tutorlms.com/pricing/)
@@ -318,6 +317,34 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.0-beta.2 - 16 April, 2026
+
+New: Introduced the new Graph Quiz type. (Pro)
+New: Added question preview to the Quiz Builder.
+Updates: Enhanced the Course Bundle expiry feature. (Pro)
+Updates: Refined the Instructor Quiz Attempts preview for better usability.
+Updates: Displayed the subscription expiry date for WooCommerce Subscription enrollments. (Pro)
+Fix: Fixed the issue of the default lesson comment appearing on new sites.
+Fix: Fixed lesson comment replies not updating instantly.
+Fix: Resolved an issue where total quiz marks were displayed incorrectly.
+Fix: Fixed the layout breaking on the Quiz Attempt Details page.
+Fix: Resolved the missing student quiz attempt list data issue.
+Fix: Resolved the Become an Instructor button appearing even when disabled in settings.
+Fix: Restored the missing Edit Profile button on the instructor profile page.
+Fix: Resolved the course creation quick link issue.
+Fix: Fixed the Report page showing only bundle courses instead of all individual and bundle courses.
+Fix: Restored missing information on the Course Info page.
+Fix: Fixed payment gateways not appearing when media was added to Payment Instructions on custom payment gateways.
+Fix: Fixed the duplicate order creation issue during WooCommerce checkout.
+Fix: Fixed the Add to Cart button not responding under certain scenarios.
+Fix: Fixed the Gift Course feature not functioning properly.
+Fix: Prevented the Gift Course button from appearing for already-enrolled subscription courses.
+Fix: Resolved the missing logo issue in password reset emails.
+Fix: Fixed notification icons not rendering correctly.
+Fix: Resolved the tooltip not appearing on hover in the Student Progress modal.
+Fix: Resolved inaccurate Calendar meeting counts.
+Fix: Fixed the white flash occurring during page reload in Dark Mode.
 
 = 4.0.0-beta.1 - 06 April, 2026
 
