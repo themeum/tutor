@@ -117,26 +117,7 @@ const FormPuzzle = ({ field, gridSizeControl }: FormPuzzleProps) => {
       </div>
 
       <Show when={option?.image_url}>
-        <div css={styles.card}>
-          <span css={styles.previewLabel}>{__('Puzzle image preview', __TUTOR_TEXT_DOMAIN__)}</span>
-          <div css={styles.previewWrap}>
-            <img
-              src={option?.image_url}
-              alt={__('Puzzle image preview', __TUTOR_TEXT_DOMAIN__)}
-              css={styles.previewImage}
-              onClick={openMediaLibrary}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  openMediaLibrary();
-                }
-              }}
-            />
-          </div>
-          {gridSizeControl && <div>{gridSizeControl}</div>}
-        </div>
+        <div css={styles.card}>{gridSizeControl && <div>{gridSizeControl}</div>}</div>
       </Show>
 
       <Show when={!option?.image_url}>

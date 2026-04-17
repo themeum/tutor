@@ -7,7 +7,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormPuzzle from '@TutorShared/components/fields/quiz/questions/FormPuzzle';
-import { spacing } from '@TutorShared/config/styles';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { QuizDataStatus, type QuizQuestionOption } from '@TutorShared/utils/types';
@@ -30,8 +30,15 @@ const Puzzle = () => {
 
   const gridSizeOptions = useMemo(
     () =>
-      [2, 3, 4, 5, 6, 7].map((value) => ({
-        label: `${value} x ${value}`,
+      [
+        { value: 2, difficulty: __('Easy', 'tutor') },
+        { value: 3, difficulty: __('Easy', 'tutor') },
+        { value: 4, difficulty: __('Medium', 'tutor') },
+        { value: 5, difficulty: __('Medium', 'tutor') },
+        { value: 6, difficulty: __('Hard', 'tutor') },
+        { value: 7, difficulty: __('Hard', 'tutor') },
+      ].map(({ value, difficulty }) => ({
+        label: `${difficulty} - ${value}×${value} (${value * value} ${__('pieces', 'tutor')})`,
         value,
       })),
     [],
@@ -63,7 +70,8 @@ const Puzzle = () => {
 
   useEffect(() => {
     const currentValue = form.getValues(gridSizePath);
-    if (currentValue === undefined || currentValue === null || Number.isNaN(Number(currentValue))) {
+    const validGridSizes = [2, 3, 4, 5, 6, 7];
+    if (!validGridSizes.includes(Number(currentValue))) {
       form.setValue(gridSizePath, 4);
     }
   }, [form, gridSizePath]);
@@ -91,9 +99,10 @@ const Puzzle = () => {
                 gridSizeControl={
                   <FormSelectInput
                     {...gridSizeControllerProps}
-                    label={__('Grid Size', 'tutor')}
+                    label={__('Difficulty Level', 'tutor')}
                     options={gridSizeOptions}
-                    helpText={__('Choose puzzle density from 2 x 2 to 7 x 7.', 'tutor')}
+                    wrapperCss={styles.dropdownText}
+                    optionItemCss={styles.dropdownOptionText}
                     onChange={(option) => {
                       gridSizeControllerProps.field.onChange(option.value);
                       if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
@@ -121,5 +130,16 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
     padding-left: ${spacing[40]};
+  `,
+  dropdownText: css`
+    color: ${colorTokens.text.subdued} !important;
+  `,
+  dropdownOptionText: css`
+    button,
+    button:hover,
+    button:focus,
+    button:active {
+      color: ${colorTokens.text.subdued};
+    }
   `,
 };
