@@ -81,8 +81,7 @@ $back_url = UrlHelper::back( tutor_utils()->tutor_dashboard_url() );
 			</div>
 			<div 
 				class="tutor-profile-header-close tutor-md-hidden"
-				@click="activeTab = 'none'"
-				x-show="activeTab === 'none' || !isDirty[`tutor-${activeTab}-form`]"
+				x-show="!isDirty[`tutor-${activeTab}-form`]"
 			>
 				<?php
 				Button::make()
