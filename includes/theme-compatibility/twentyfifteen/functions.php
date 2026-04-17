@@ -23,6 +23,3 @@ if ( ! function_exists( 'tutor_twentyfifteen_scripts' ) ) {
 		wp_enqueue_style( 'tutor_twentyfifteen', $dir_url . 'assets/css/style.css', array(), tutor()->version );
 	}
 }
-
-
-

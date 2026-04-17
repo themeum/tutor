@@ -34,6 +34,5 @@ class Theme_Compatibility {
 		if ( file_exists( $compatibility_theme_path ) ) {
 			include $compatibility_theme_path;
 		}
-
 	}
 }

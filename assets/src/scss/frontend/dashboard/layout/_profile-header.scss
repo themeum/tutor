@@ -7,6 +7,10 @@
   border-bottom: 1px solid $tutor-border-idle;
   padding-block: $tutor-spacing-5;
   margin-bottom: $tutor-spacing-9;
+
+  .tutor-profile-header-title {
+    margin: $tutor-spacing-none;
+  }
   
   @include tutor-breakpoint-down(md) {
     position: relative;
