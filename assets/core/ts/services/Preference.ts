@@ -107,7 +107,6 @@ class PreferenceService {
     } else {
       wrapper.setAttribute(this.DATA_VISION_ATTR, safeVision);
     }
-    // data-tutor-theme is untouched — vision is now independent
   }
 
   applyReduceMotion(enabled: boolean): void {
