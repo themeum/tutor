@@ -195,38 +195,3 @@ $opacities: (
 .tutor-focus-outline-none:focus {
   outline: none;
 }
-
-// ------------------------------------------------------------
-// Responsive Color Utilities
-// ------------------------------------------------------------
-@each $breakpoint, $min-width in $tutor-breakpoints {
-  @include tutor-breakpoint-down($breakpoint) {
-    // Surface Colors
-    @each $key, $surface-color in $tutor-surfaces {
-      .tutor-#{$breakpoint}-surface-#{$key} {
-        background-color: $surface-color;
-      }
-    }
-
-    // Text Colors
-    @each $key, $text-color in $tutor-text-colors {
-      .tutor-#{$breakpoint}-text-#{$key} {
-        color: $text-color;
-      }
-    }
-
-    // Icon Colors
-    @each $key, $icon-color in $tutor-icons {
-      .tutor-#{$breakpoint}-icon-#{$key} {
-        color: $icon-color;
-      }
-    }
-
-    // Actions Colors
-    @each $key, $action-color in $tutor-actions {
-      .tutor-#{$breakpoint}-actions-#{$key} {
-        color: $action-color;
-      }
-    }
-  }
-}

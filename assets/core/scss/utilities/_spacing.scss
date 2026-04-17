@@ -5,6 +5,7 @@
 @use '../mixins' as *;
 
 // Margin utilities
+
 @each $key, $value in $tutor-spacing {
   .tutor-m-#{$key} {
     margin: $value;
@@ -133,9 +134,9 @@
 }
 
 // Responsive spacing utilities
-@each $breakpoint, $min-width in $tutor-breakpoints {
+@each $breakpoint, $min-width in $tutor-responsive-breakpoints {
   @include tutor-breakpoint-down($breakpoint) {
-    @each $space-key, $space-value in $tutor-spacing {
+    @each $space-key, $space-value in $tutor-responsive-spacing {
       .tutor-#{$breakpoint}-m-#{$space-key} {
         margin: $space-value;
       }
