@@ -275,7 +275,6 @@ class UserPreference {
 		if ( self::MOTION_EFFECTS_REDUCE === $motion_effects ) {
 			$motion_effects_attr = ' data-tutor-motion="reduce"';
 		} elseif ( self::MOTION_EFFECTS_AUTO === $motion_effects ) {
-			// Let CSS handle it via prefers-reduced-motion media query.
 			$motion_effects_attr = ' data-tutor-motion="auto"';
 		}
 

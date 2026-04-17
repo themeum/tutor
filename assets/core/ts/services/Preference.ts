@@ -43,7 +43,7 @@ class PreferenceService {
       this.applyContrast(contrast);
     }
 
-    const motion = (wrapper.getAttribute(this.DATA_MOTION_ATTR) as Motion | null) ?? 'auto';
+    const motion = (wrapper.getAttribute(this.DATA_MOTION_ATTR) as Motion | null) ?? '';
     this.applyMotionEffects(motion as Motion);
   }
 
