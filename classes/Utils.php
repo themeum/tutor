@@ -6660,13 +6660,14 @@ class Utils {
 	 * Get total purchase history by customer id
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 filter hook added.
 	 *
 	 * @param int    $user_id user id.
 	 * @param string $period period.
 	 * @param string $start_date start date.
 	 * @param string $end_date end date.
 	 *
-	 * @return mixed
+	 * @return int
 	 */
 	public function get_total_orders_by_user_id( $user_id, $period, $start_date, $end_date ) {
 		global $wpdb;
@@ -6701,27 +6702,30 @@ class Utils {
 			$period_query = " AND  DATE(post_date) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
 		}
 
-		$orders = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT {$wpdb->posts}.*
-			FROM	{$wpdb->posts}
-					INNER JOIN {$wpdb->postmeta} customer
-							ON id = customer.post_id
-						   AND customer.meta_key = '{$user_meta}'
-					INNER JOIN {$wpdb->postmeta} tutor_order
-							ON id = tutor_order.post_id
-						   AND tutor_order.meta_key = '_is_tutor_order_for_course'
-			WHERE	post_type = %s
-					AND customer.meta_value = %d
-					{$period_query}
-			ORDER BY {$wpdb->posts}.id DESC
-			",
-				$post_type,
-				$user_id
-			)
-		);
+		$total = 0;
+		if ( 'wc' === $monetize_by ) {
+			$total = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT(*)
+				FROM	{$wpdb->posts}
+						INNER JOIN {$wpdb->postmeta} customer
+								ON id = customer.post_id
+							AND customer.meta_key = '{$user_meta}'
+						INNER JOIN {$wpdb->postmeta} tutor_order
+								ON id = tutor_order.post_id
+							AND tutor_order.meta_key = '_is_tutor_order_for_course'
+				WHERE	post_type = %s
+						AND customer.meta_value = %d
+						{$period_query}
+				ORDER BY {$wpdb->posts}.id DESC
+				",
+					$post_type,
+					$user_id
+				)
+			);
+		}
 
-		return $orders;
+		return apply_filters( 'tutor_get_total_orders_by_user_id', $total, $user_id, $period, $start_date, $end_date );
 	}
 
 	/**
