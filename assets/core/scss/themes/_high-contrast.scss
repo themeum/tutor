@@ -1,0 +1,68 @@
+// High Contrast Theme
+// Accessibility variant with increased contrast ratios for users who need
+// higher foreground/background differentiation.
+// Applies on top of the active light or dark base theme via data-tutor-contrast.
+
+@use '../tokens' as *;
+
+// =============================================================================
+// LIGHT — overrides specific to the light base theme
+// =============================================================================
+
+[data-tutor-theme='light'][data-tutor-contrast='high'] {
+  // TEXT COLORS
+  --tutor-text-primary: #{$tutor-gray-950};
+  --tutor-text-secondary: #{$tutor-gray-950};
+  --tutor-text-subdued: #{$tutor-gray-950};
+  --tutor-text-disabled: #{$tutor-gray-500};
+
+  // ICON COLORS
+  --tutor-icon-idle: #{$tutor-gray-750};
+  --tutor-icon-hover: #{$tutor-gray-900};
+  --tutor-icon-secondary: #{$tutor-gray-700};
+  --tutor-icon-subdued: #{$tutor-gray-700};
+  --tutor-icon-disabled: #{$tutor-gray-400};
+
+  // BORDER COLORS
+  --tutor-border-idle: #{$tutor-gray-800};
+  --tutor-border-hover: #{$tutor-gray-900};
+  --tutor-border-tertiary: #{$tutor-gray-800};
+  --tutor-border-brand: #{$tutor-brand-600};
+  --tutor-border-brand-secondary: #{$tutor-brand-800};
+  --tutor-border-brand-tertiary: #{$tutor-brand-800};
+}
+
+// =============================================================================
+// DARK — overrides specific to the dark base theme
+// =============================================================================
+
+[data-tutor-theme='dark'][data-tutor-contrast='high'] {
+  // SURFACE COLORS
+  --tutor-surface-warning: #{$tutor-gray-750};
+
+  // TEXT COLORS
+  --tutor-text-primary: #{$tutor-gray-100};
+  --tutor-text-secondary: #{$tutor-gray-50};
+  --tutor-text-subdued: #{$tutor-gray-50};
+  --tutor-text-disabled: #{$tutor-gray-300};
+
+  // ICON COLORS
+  --tutor-icon-idle: #{$tutor-gray-300};
+  --tutor-icon-hover: #{$tutor-gray-1};
+  --tutor-icon-secondary: #{$tutor-gray-500};
+  --tutor-icon-subdued: #{$tutor-gray-600};
+  --tutor-icon-disabled: #{$tutor-gray-600};
+
+  // BORDER COLORS
+  --tutor-border-idle: #{$tutor-gray-400};
+  --tutor-border-hover: #{$tutor-gray-300};
+  --tutor-border-tertiary: #{$tutor-gray-300};
+  --tutor-border-brand: #{$tutor-brand-200};
+  --tutor-border-brand-secondary: #{$tutor-brand-800};
+  --tutor-border-brand-tertiary: #{$tutor-brand-700};
+
+  // ACTION COLORS
+  --tutor-actions-success-tertiary: #{$tutor-gray-700};
+  --tutor-actions-warning-secondary: #{$tutor-gray-700};
+  --tutor-actions-critical-secondary: #{$tutor-gray-700};
+}
