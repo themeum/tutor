@@ -324,37 +324,4 @@
       }
     }
   }
-
-  &-actions {
-    @include tutor-breakpoint-down(sm) {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      margin: 0;
-      padding: $tutor-spacing-6;
-      background-color: $tutor-surface-l1;
-      border-top: 1px solid $tutor-border-idle;
-      gap: $tutor-spacing-3;
-      z-index: $tutor-z-sidebar;
-
-      form {
-        width: 100%;
-
-        &:only-child {
-          width: 100%;
-        }
-      }
-
-      button,
-      a {
-        @include tutor-button-size(large);
-        width: 50%;
-
-        &:is(:only-child) {
-          width: 100%;
-        }
-      }
-    }
-  }
 }
