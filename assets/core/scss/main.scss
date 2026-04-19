@@ -52,6 +52,10 @@ body {
   min-height: 100vh;
   background-color: $tutor-surface-base;
 
+  body:has(#wpadminbar) & {
+    min-height: calc(100vh - 32px);
+  }
+
   a {
     text-decoration: none;
 
