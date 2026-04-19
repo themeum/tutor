@@ -94,170 +94,172 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 }
 ?>
 <div class="tutor-quiz-summary" x-data="tutorQuizRetryAttempt()" x-init="init()">
-	<h2 class="tutor-h2 tutor-sm-text-h3 tutor-mb-3 tutor-sm-mb-2 tutor-text-center">
-		<?php echo esc_html( get_the_title( $quiz_id ) ); ?>
-	</h2>
+	<div class="tutor-quiz-summary-overview">
+		<h2 class="tutor-h2 tutor-sm-text-h3 tutor-mb-3 tutor-sm-mb-2 tutor-text-center">
+			<?php echo esc_html( get_the_title( $quiz_id ) ); ?>
+		</h2>
 
-	<div class="tutor-medium tutor-sm-text-tiny tutor-text-subdued tutor-text-center tutor-mb-6">
-		<?php esc_html_e( 'Topic', 'tutor' ); ?>
-		<?php
-		if ( $topic_id ) {
-			PreviewTrigger::make()->id( $topic_id )->render();
-		} else {
-			echo esc_html( get_the_title( $quiz_id ) );
-		}
-		?>
-		<?php esc_html_e( 'in', 'tutor' ); ?>
-		<?php
-		if ( $course_id ) {
-			PreviewTrigger::make()->id( $course_id )->render();
-		} else {
-			echo esc_html__( 'Course', 'tutor' );
-		}
-		?>
-	</div>
-
-	<div class="tutor-quiz-result">
-		<div 
-			class="tutor-quiz-result-progress"
-			x-data="tutorStatics({ 
-				value: <?php echo esc_attr( $earned_percentage ); ?>, 
-				size: 'large', 
-				type: 'progress' ,
-				animated: true,
-			})"
-		>
-			<div x-html="render()"></div>
+		<div class="tutor-medium tutor-sm-text-tiny tutor-text-subdued tutor-text-center tutor-mb-6">
+			<?php esc_html_e( 'Topic', 'tutor' ); ?>
+			<?php
+			if ( $topic_id ) {
+				PreviewTrigger::make()->id( $topic_id )->render();
+			} else {
+				echo esc_html( get_the_title( $quiz_id ) );
+			}
+			?>
+			<?php esc_html_e( 'in', 'tutor' ); ?>
+			<?php
+			if ( $course_id ) {
+				PreviewTrigger::make()->id( $course_id )->render();
+			} else {
+				echo esc_html__( 'Course', 'tutor' );
+			}
+			?>
 		</div>
 
-		<div class="tutor-quiz-result-marks">
-			<div class="tutor-result-badge <?php echo esc_attr( $result_badge_class ); ?>">
-				<?php SvgIcon::make()->name( $result_icon )->size( 32 )->render(); ?>
-				<?php echo esc_html( $result_label ); ?>
+		<div class="tutor-quiz-result">
+			<div 
+				class="tutor-quiz-result-progress"
+				x-data="tutorStatics({ 
+					value: <?php echo esc_attr( $earned_percentage ); ?>, 
+					size: 'large', 
+					type: 'progress' ,
+					animated: true,
+				})"
+			>
+				<div x-html="render()"></div>
 			</div>
 
-			<div class="tutor-flex tutor-flex-column tutor-gap-2 tutor-sm-gap-1">
-				<div class="tutor-flex tutor-items-center tutor-gap-3">
-					<?php esc_html_e( 'Earned Marks', 'tutor' ); ?>
-					<span class="tutor-font-semibold tutor-text-primary">
-						<?php echo esc_html( number_format_i18n( $earned_marks, 2 ) ); ?>
-					</span>
-					<span>
-						<?php echo esc_html( '(' . number_format_i18n( $earned_percentage, 0 ) . '%)' ); ?>
-					</span>
+			<div class="tutor-quiz-result-marks">
+				<div class="tutor-result-badge <?php echo esc_attr( $result_badge_class ); ?>">
+					<?php SvgIcon::make()->name( $result_icon )->size( 32 )->render(); ?>
+					<?php echo esc_html( $result_label ); ?>
+				</div>
+
+				<div class="tutor-flex tutor-flex-column tutor-gap-2 tutor-sm-gap-1">
+					<div class="tutor-flex tutor-items-center tutor-gap-3">
+						<?php esc_html_e( 'Earned Marks', 'tutor' ); ?>
+						<span class="tutor-font-semibold tutor-text-primary">
+							<?php echo esc_html( number_format_i18n( $earned_marks, 2 ) ); ?>
+						</span>
+						<span>
+							<?php echo esc_html( '(' . number_format_i18n( $earned_percentage, 0 ) . '%)' ); ?>
+						</span>
+					</div>
+
+					<div class="tutor-flex tutor-items-center tutor-gap-3">
+						<?php esc_html_e( 'Pass Marks', 'tutor' ); ?>
+						<span class="tutor-font-semibold tutor-text-primary">
+							<?php echo esc_html( number_format_i18n( $pass_marks, 2 ) ); ?>
+						</span>
+						<span>
+							<?php echo esc_html( '(' . number_format_i18n( $passing_grade, 0 ) . '%)' ); ?>
+						</span>
+					</div>
 				</div>
 
 				<div class="tutor-flex tutor-items-center tutor-gap-3">
-					<?php esc_html_e( 'Pass Marks', 'tutor' ); ?>
+					<?php SvgIcon::make()->name( Icon::CLOCK_2 )->size( 24 )->render(); ?>
 					<span class="tutor-font-semibold tutor-text-primary">
-						<?php echo esc_html( number_format_i18n( $pass_marks, 2 ) ); ?>
+						<?php echo esc_html( $attempt_duration_taken ); ?>
 					</span>
-					<span>
-						<?php echo esc_html( '(' . number_format_i18n( $passing_grade, 0 ) . '%)' ); ?>
-					</span>
+					<?php if ( $attempt_duration ) : ?>
+						<span>
+							<?php
+								echo esc_html(
+									sprintf(
+										// translators: %s: localized attempt duration.
+										__( 'of %s', 'tutor' ),
+										$attempt_duration
+									)
+								);
+							?>
+						</span>
+					<?php endif; ?>
 				</div>
 			</div>
 
-			<div class="tutor-flex tutor-items-center tutor-gap-3">
-				<?php SvgIcon::make()->name( Icon::CLOCK_2 )->size( 24 )->render(); ?>
-				<span class="tutor-font-semibold tutor-text-primary">
-					<?php echo esc_html( $attempt_duration_taken ); ?>
-				</span>
-				<?php if ( $attempt_duration ) : ?>
-					<span>
-						<?php
-							echo esc_html(
-								sprintf(
-									// translators: %s: localized attempt duration.
-									__( 'of %s', 'tutor' ),
-									$attempt_duration
-								)
-							);
-						?>
-					</span>
-				<?php endif; ?>
-			</div>
-		</div>
+			<div class="tutor-quiz-result-statics">
+				<div class="tutor-quiz-result-static-item correct">
+					<?php
+					printf(
+						wp_kses(
+							/* translators: %d: number of correct answers. */
+							__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> correct', 'tutor' ),
+							array(
+								'span' => array(
+									'class' => true,
+								),
+							)
+						),
+						esc_html( $correct )
+					);
+					?>
+				</div>
 
-		<div class="tutor-quiz-result-statics">
-			<div class="tutor-quiz-result-static-item correct">
-				<?php
-				printf(
-					wp_kses(
-						/* translators: %d: number of correct answers. */
-						__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> correct', 'tutor' ),
-						array(
-							'span' => array(
-								'class' => true,
-							),
-						)
-					),
-					esc_html( $correct )
-				);
-				?>
-			</div>
+				<div class="tutor-quiz-result-static-item incorrect">
+					<?php
+					printf(
+						wp_kses(
+							/* translators: %d: number of incorrect answers. */
+							__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> incorrect', 'tutor' ),
+							array(
+								'span' => array(
+									'class' => true,
+								),
+							)
+						),
+						esc_html( $incorrect )
+					);
+					?>
+				</div>
 
-			<div class="tutor-quiz-result-static-item incorrect">
-				<?php
-				printf(
-					wp_kses(
-						/* translators: %d: number of incorrect answers. */
-						__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> incorrect', 'tutor' ),
-						array(
-							'span' => array(
-								'class' => true,
-							),
-						)
-					),
-					esc_html( $incorrect )
-				);
-				?>
+				<div class="tutor-quiz-result-static-item total">
+					<?php
+					printf(
+						wp_kses(
+							/* translators: %d: number of total questions. */
+							__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> total', 'tutor' ),
+							array(
+								'span' => array(
+									'class' => true,
+								),
+							)
+						),
+						esc_html( $total_questions )
+					);
+					?>
+				</div>
 			</div>
 
-			<div class="tutor-quiz-result-static-item total">
-				<?php
-				printf(
-					wp_kses(
-						/* translators: %d: number of total questions. */
-						__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> total', 'tutor' ),
-						array(
-							'span' => array(
-								'class' => true,
-							),
-						)
-					),
-					esc_html( $total_questions )
-				);
-				?>
-			</div>
-		</div>
-
-		<?php if ( ! $is_instructor_review && $can_retry ) : ?>
-			<div class="tutor-quiz-result-retake">
-				<?php
-				Button::make()
-					->label( __( 'Retake Quiz', 'tutor' ) )
-					->variant( Variant::PRIMARY_SOFT )
-					->icon( Icon::RELOAD_3, 'left', 20, 20 )
-					->attr( 'type', 'button' )
-					->attr( 'class', 'tutor-gap-2 tutor-btn-block' )
-					->attr(
-						'@click',
-						sprintf(
-							'TutorCore.modal.showModal("%s", { data: %s });',
-							$retry_modal_id,
-							wp_json_encode(
-								array(
-									'quizID'      => $quiz_id,
-									'redirectURL' => get_post_permalink( $quiz_id ),
+			<?php if ( ! $is_instructor_review && $can_retry ) : ?>
+				<div class="tutor-quiz-result-retake">
+					<?php
+					Button::make()
+						->label( __( 'Retake Quiz', 'tutor' ) )
+						->variant( Variant::PRIMARY_SOFT )
+						->icon( Icon::RELOAD_3, 'left', 20, 20 )
+						->attr( 'type', 'button' )
+						->attr( 'class', 'tutor-gap-2 tutor-btn-block' )
+						->attr(
+							'@click',
+							sprintf(
+								'TutorCore.modal.showModal("%s", { data: %s });',
+								$retry_modal_id,
+								wp_json_encode(
+									array(
+										'quizID'      => $quiz_id,
+										'redirectURL' => get_post_permalink( $quiz_id ),
+									)
 								)
 							)
 						)
-					)
-					->render();
-				?>
-			</div>
-		<?php endif; ?>
+						->render();
+					?>
+				</div>
+			<?php endif; ?>
+		</div>
 	</div>
 
 	<div class="tutor-quiz-result-footer">
