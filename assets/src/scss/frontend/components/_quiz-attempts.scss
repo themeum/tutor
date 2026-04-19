@@ -66,6 +66,18 @@
           'buttons buttons buttons';
         row-gap: $tutor-spacing-4;
         column-gap: 0px;
+
+        &[data-learning-area='true'] {
+          .tutor-quiz-item-info {
+            div:first-of-type {
+              @include tutor-visually-hidden;
+            }
+
+            .tutor-quiz-item-info-date {
+              @include tutor-typography('small', 'semibold', 'brand');
+            }
+          }
+        }
       }
 
       .tutor-quiz-item-info {
