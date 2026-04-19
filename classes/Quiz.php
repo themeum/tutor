@@ -1850,7 +1850,7 @@ class Quiz {
 			->attr( 'href', esc_url( $skip_url ) )
 			->get();
 		?>
-		<div class="tutor-quiz-intro-actions tutor-flex tutor-justify-end tutor-gap-3 tutor-mt-8">
+		<div class="tutor-quiz-intro-actions tutor-flex tutor-justify-end tutor-gap-3 tutor-mt-6">
 			<?php
 			if ( 0 === $attempted_count ) {
 				Button::make()
