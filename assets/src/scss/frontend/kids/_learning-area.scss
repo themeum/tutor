@@ -102,6 +102,11 @@
       &:has(.tutor-quiz-question-option-drop-zone) {
         border-radius: $tutor-radius-lg;
       }
+
+      &[data-option='dragging'] {
+        border-color: $tutor-border-brand;
+        box-shadow: -6px 7px 0px 0px #00000014;
+      }
     }
 
     .tutor-quiz-question-option:has(:checked) {

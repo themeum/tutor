@@ -28,7 +28,7 @@ $tutor-quiz-content-bottom-offset: calc(
       height: 100dvh;
 
       body:has(#wpadminbar) & {
-        height: calc(100dvh - 46px);
+        height: calc(100dvh - #{$tutor-admin-bar-height});
       }
     }
 
@@ -56,7 +56,6 @@ $tutor-quiz-content-bottom-offset: calc(
       &:has(.tutor-quiz-questions-pagination) {
         .tutor-quiz-question-wrapper {
           margin-bottom: $tutor-quiz-content-bottom-offset;
-          // max-height: calc(100dvh - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset} - #{$tutor-quiz-pagination-offset});
         }
       }
     }
@@ -932,7 +931,7 @@ $tutor-quiz-content-bottom-offset: calc(
             border-radius: $tutor-radius-sm;
             width: 28px;
             height: 28px;
-            background-color: #fafafa;
+            background-color: $tutor-surface-base;
           }
 
           [data-title] {
