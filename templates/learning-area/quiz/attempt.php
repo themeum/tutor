@@ -215,38 +215,38 @@ $default_values = array(
 			<?php
 		}
 		?>
-
-		<?php if ( $is_pagination_layout && count( $questions ) > 1 ) : ?>
-			<div
-				class="tutor-quiz-questions-pagination"
-				data-pagination-style="<?php echo esc_attr( $pagination_style ); ?>"
-			>
-				<ul>
-					<?php foreach ( $questions as $index => $question ) : ?>
-						<li>
-							<button
-								type="button"
-								class="tutor-quiz-question-paginate-item"
-								:class="getPaginationItemClass(<?php echo esc_attr( $index + 1 ); ?>)"
-								:data-state="getPaginationState(<?php echo esc_attr( $index + 1 ); ?>)"
-								@click="goTo(<?php echo esc_attr( $index + 1 ); ?>)"
-							>
-								<span class="tutor-quiz-question-paginate-label">
-									<?php echo esc_html( $index + 1 ); ?>
-								</span>
-								<span class="tutor-quiz-question-paginate-icon tutor-quiz-question-paginate-icon-correct">
-									<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 12 )->render(); ?>
-								</span>
-								<span class="tutor-quiz-question-paginate-icon tutor-quiz-question-paginate-icon-incorrect">
-									<?php SvgIcon::make()->name( Icon::CROSS )->size( 12 )->render(); ?>
-								</span>
-							</button>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-			</div>
-		<?php endif; ?>
 	</div>
+
+	<?php if ( $is_pagination_layout && count( $questions ) > 1 ) : ?>
+		<div
+			class="tutor-quiz-questions-pagination"
+			data-pagination-style="<?php echo esc_attr( $pagination_style ); ?>"
+		>
+			<ul>
+				<?php foreach ( $questions as $index => $question ) : ?>
+					<li>
+						<button
+							type="button"
+							class="tutor-quiz-question-paginate-item"
+							:class="getPaginationItemClass(<?php echo esc_attr( $index + 1 ); ?>)"
+							:data-state="getPaginationState(<?php echo esc_attr( $index + 1 ); ?>)"
+							@click="goTo(<?php echo esc_attr( $index + 1 ); ?>)"
+						>
+							<span class="tutor-quiz-question-paginate-label">
+								<?php echo esc_html( $index + 1 ); ?>
+							</span>
+							<span class="tutor-quiz-question-paginate-icon tutor-quiz-question-paginate-icon-correct">
+								<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 12 )->render(); ?>
+							</span>
+							<span class="tutor-quiz-question-paginate-icon tutor-quiz-question-paginate-icon-incorrect">
+								<?php SvgIcon::make()->name( Icon::CROSS )->size( 12 )->render(); ?>
+							</span>
+						</button>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+	<?php endif; ?>
 
 	<?php if ( $is_linear_layout ) : ?>
 		<div
