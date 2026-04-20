@@ -6,7 +6,7 @@
   @include tutor-typography('tiny', 'medium', 'secondary');
   border-radius: $tutor-radius-sm;
   padding-inline: $tutor-spacing-4;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: $tutor-spacing-3;
   background-color: $tutor-actions-gray-secondary;

@@ -191,9 +191,15 @@ const settings = () => {
 
       this.savePreferencesMutation = query.useMutation(this.updatePreferences, {
         onSuccess: (data: TutorMutationResponse<PreferencesFormProps>, payload: PreferencesFormProps) => {
+          const previousLearningMood = form.getValue(payload?.formId || '', 'learning_mood');
+          const learningMoodChanged = previousLearningMood !== payload.learning_mood;
+
           form.reset(payload?.formId || '', payload as unknown as Record<string, unknown>);
           toast.success(data?.message ?? __('Preferences saved successfully', 'tutor'));
-          window.location.reload();
+
+          if (learningMoodChanged) {
+            window.location.reload();
+          }
         },
         onError: (error: Error) => {
           toast.error(convertToErrorMessage(error));

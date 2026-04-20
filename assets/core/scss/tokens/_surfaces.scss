@@ -12,6 +12,7 @@ $tutor-surface-l2: var(--tutor-surface-l2);
 $tutor-surface-l2-hover: var(--tutor-surface-l2-hover);
 $tutor-surface-brand-dark: var(--tutor-surface-brand-dark);
 $tutor-surface-brand-primary: var(--tutor-surface-brand-primary);
+$tutor-surface-brand-primary-2: var(--tutor-surface-brand-primary-2);
 $tutor-surface-brand-secondary: var(--tutor-surface-brand-secondary);
 $tutor-surface-brand-tertiary: var(--tutor-surface-brand-tertiary);
 $tutor-surface-brand-quaternary: var(--tutor-surface-brand-quaternary);
@@ -38,6 +39,7 @@ $tutor-surfaces: (
   l2-hover: $tutor-surface-l2-hover,
   brand-dark: $tutor-surface-brand-dark,
   brand-primary: $tutor-surface-brand-primary,
+  brand-primary-2: $tutor-surface-brand-primary-2,
   brand-secondary: $tutor-surface-brand-secondary,
   brand-tertiary: $tutor-surface-brand-tertiary,
   brand-quaternary: $tutor-surface-brand-quaternary,

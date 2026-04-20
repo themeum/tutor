@@ -206,7 +206,7 @@ $text-align-utils: (
 }
 
 // Responsive typography utilities
-@each $breakpoint, $min-width in $tutor-breakpoints {
+@each $breakpoint, $min-width in $tutor-responsive-breakpoints {
   @include tutor-breakpoint-down($breakpoint) {
     @each $size-key, $size-value in $tutor-font-sizes {
       .tutor-#{$breakpoint}-text-#{$size-key} {
@@ -228,3 +228,4 @@ $text-align-utils: (
     }
   }
 }
+
