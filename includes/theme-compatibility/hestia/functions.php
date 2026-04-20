@@ -23,6 +23,3 @@ if ( ! function_exists( 'tutor_hestia_scripts' ) ) {
 		wp_enqueue_style( 'tutor_hestia', $dir_url . 'assets/css/style.css', array(), tutor()->version );
 	}
 }
-
-
-
