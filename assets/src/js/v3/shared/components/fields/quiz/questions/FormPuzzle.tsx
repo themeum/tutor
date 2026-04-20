@@ -1,8 +1,11 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
+import type { QuizForm } from '@CourseBuilderServices/quiz';
 import ImageInput from '@TutorShared/atoms/ImageInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import Show from '@TutorShared/controls/Show';
 import useWPMedia from '@TutorShared/hooks/useWpMedia';
 import type { FormControllerProps } from '@TutorShared/utils/form';
@@ -19,6 +22,7 @@ import { typography } from '@TutorShared/config/typography';
 
 interface FormPuzzleProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
+  activeQuestionIndex: number;
   validationError?: {
     message: string;
     type: QuizValidationErrorType;
@@ -29,11 +33,31 @@ interface FormPuzzleProps extends FormControllerProps<QuizQuestionOption> {
       type: QuizValidationErrorType;
     } | null>
   >;
-  gridSizeControl?: React.ReactNode;
 }
 
-const FormPuzzle = ({ field, gridSizeControl }: FormPuzzleProps) => {
+const FormPuzzle = ({ field, activeQuestionIndex }: FormPuzzleProps) => {
+  const form = useFormContext<QuizForm>();
   const option = field.value;
+  const activeQuestionDataStatus =
+    form.watch(`questions.${activeQuestionIndex}._data_status`) ?? QuizDataStatus.NO_CHANGE;
+  const gridSizePath =
+    `questions.${activeQuestionIndex}.question_settings.puzzle_grid_size` as 'questions.0.question_settings.puzzle_grid_size';
+
+  const gridSizeOptions = useMemo(
+    () =>
+      [
+        { value: 2, difficulty: __('Easy', __TUTOR_TEXT_DOMAIN__) },
+        { value: 3, difficulty: __('Easy', __TUTOR_TEXT_DOMAIN__) },
+        { value: 4, difficulty: __('Medium', __TUTOR_TEXT_DOMAIN__) },
+        { value: 5, difficulty: __('Medium', __TUTOR_TEXT_DOMAIN__) },
+        { value: 6, difficulty: __('Hard', __TUTOR_TEXT_DOMAIN__) },
+        { value: 7, difficulty: __('Hard', __TUTOR_TEXT_DOMAIN__) },
+      ].map(({ value, difficulty }) => ({
+        label: `${difficulty} - ${value}×${value} (${value * value} ${__('pieces', __TUTOR_TEXT_DOMAIN__)})`,
+        value,
+      })),
+    [],
+  );
 
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
@@ -117,7 +141,30 @@ const FormPuzzle = ({ field, gridSizeControl }: FormPuzzleProps) => {
       </div>
 
       <Show when={option?.image_url}>
-        <div css={styles.card}>{gridSizeControl && <div>{gridSizeControl}</div>}</div>
+        <div css={styles.card}>
+          <Controller
+            control={form.control}
+            name={gridSizePath}
+            render={(gridSizeControllerProps) => (
+              <FormSelectInput
+                {...gridSizeControllerProps}
+                label={__('Difficulty Level', __TUTOR_TEXT_DOMAIN__)}
+                options={gridSizeOptions}
+                wrapperCss={styles.dropdownText}
+                optionItemCss={styles.dropdownOptionText}
+                onChange={(selectedOption) => {
+                  gridSizeControllerProps.field.onChange(selectedOption.value);
+                  if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+                    form.setValue(
+                      `questions.${activeQuestionIndex}._data_status`,
+                      calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                    );
+                  }
+                }}
+              />
+            )}
+          />
+        </div>
       </Show>
 
       <Show when={!option?.image_url}>
@@ -187,5 +234,16 @@ const styles = {
   placeholder: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
+  `,
+  dropdownText: css`
+    color: ${colorTokens.text.subdued} !important;
+  `,
+  dropdownOptionText: css`
+    button,
+    button:hover,
+    button:focus,
+    button:active {
+      color: ${colorTokens.text.subdued};
+    }
   `,
 };

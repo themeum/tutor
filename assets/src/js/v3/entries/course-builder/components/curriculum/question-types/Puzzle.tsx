@@ -1,22 +1,16 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormPuzzle from '@TutorShared/components/fields/quiz/questions/FormPuzzle';
-import { colorTokens, spacing } from '@TutorShared/config/styles';
-import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
+import { spacing } from '@TutorShared/config/styles';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { QuizDataStatus } from '@TutorShared/utils/types';
 
 const Puzzle = () => {
   const form = useFormContext<QuizForm>();
   const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
-  const activeQuestionDataStatus =
-    form.watch(`questions.${activeQuestionIndex}._data_status`) ?? QuizDataStatus.NO_CHANGE;
 
   const answersPath = `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers';
   const gridSizePath =
@@ -26,22 +20,6 @@ const Puzzle = () => {
     control: form.control,
     name: answersPath,
   });
-
-  const gridSizeOptions = useMemo(
-    () =>
-      [
-        { value: 2, difficulty: __('Easy', 'tutor') },
-        { value: 3, difficulty: __('Easy', 'tutor') },
-        { value: 4, difficulty: __('Medium', 'tutor') },
-        { value: 5, difficulty: __('Medium', 'tutor') },
-        { value: 6, difficulty: __('Hard', 'tutor') },
-        { value: 7, difficulty: __('Hard', 'tutor') },
-      ].map(({ value, difficulty }) => ({
-        label: `${difficulty} - ${value}×${value} (${value * value} ${__('pieces', 'tutor')})`,
-        value,
-      })),
-    [],
-  );
 
   useEffect(() => {
     const currentValue = form.getValues(gridSizePath);
@@ -62,35 +40,12 @@ const Puzzle = () => {
         control={form.control}
         name={`questions.${activeQuestionIndex}.question_answers.0` as 'questions.0.question_answers.0'}
         render={(answerControllerProps) => (
-          <Controller
-            control={form.control}
-            name={gridSizePath}
-            render={(gridSizeControllerProps) => (
-              <FormPuzzle
-                {...answerControllerProps}
-                questionId={activeQuestionId}
-                validationError={validationError}
-                setValidationError={setValidationError}
-                gridSizeControl={
-                  <FormSelectInput
-                    {...gridSizeControllerProps}
-                    label={__('Difficulty Level', 'tutor')}
-                    options={gridSizeOptions}
-                    wrapperCss={styles.dropdownText}
-                    optionItemCss={styles.dropdownOptionText}
-                    onChange={(option) => {
-                      gridSizeControllerProps.field.onChange(option.value);
-                      if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
-                        form.setValue(
-                          `questions.${activeQuestionIndex}._data_status`,
-                          calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                        );
-                      }
-                    }}
-                  />
-                }
-              />
-            )}
+          <FormPuzzle
+            {...answerControllerProps}
+            questionId={activeQuestionId}
+            activeQuestionIndex={activeQuestionIndex}
+            validationError={validationError}
+            setValidationError={setValidationError}
           />
         )}
       />
@@ -105,16 +60,5 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
     padding-left: ${spacing[40]};
-  `,
-  dropdownText: css`
-    color: ${colorTokens.text.subdued} !important;
-  `,
-  dropdownOptionText: css`
-    button,
-    button:hover,
-    button:focus,
-    button:active {
-      color: ${colorTokens.text.subdued};
-    }
   `,
 };
