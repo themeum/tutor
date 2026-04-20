@@ -19,6 +19,7 @@ import DrawImage from '@CourseBuilderComponents/curriculum/question-types/DrawIm
 import Scale from '@CourseBuilderComponents/curriculum/question-types/Scale';
 import PinImage from '@CourseBuilderComponents/curriculum/question-types/PinImage';
 import Coordinates from '@CourseBuilderComponents/curriculum/question-types/Coordinates';
+import Puzzle from '@CourseBuilderComponents/curriculum/question-types/Puzzle';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { tutorConfig } from '@TutorShared/config/config';
@@ -62,6 +63,7 @@ const QuestionForm = () => {
     scale: <Scale key={activeQuestionId} />,
     pin_image: <PinImage key={activeQuestionId} />,
     coordinates: <Coordinates key={activeQuestionId} />,
+    puzzle: <Puzzle key={activeQuestionId} />,
   } as const;
 
   useEffect(() => {
