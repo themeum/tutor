@@ -360,7 +360,10 @@ const renderJigsawPieceDataUrl = (
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
   ctx.strokeStyle = '#000000';
+  ctx.globalCompositeOperation = 'source-atop';
   ctx.stroke();
+  ctx.globalCompositeOperation = 'source-over';
+
   ctx.restore();
 
   let dataUrl = '';

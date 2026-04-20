@@ -456,17 +456,13 @@ const getPreviewFrameStyles = () => `
     box-sizing: border-box;
     overflow: visible;
     border: none;
-    border-radius: 0;
     background: transparent;
     background-repeat: no-repeat;
     background-position: center;
     touch-action: none;
     z-index: 2;
     transform-origin: center;
-    transition:
-      transform 0.2s ease-out,
-      width 0.2s ease-out,
-      box-shadow 0.2s ease-out;
+    transition: transform 0.2s ease-out, width 0.2s ease-out;
     backface-visibility: hidden;
     box-shadow: none;
   }
@@ -478,8 +474,6 @@ const getPreviewFrameStyles = () => `
   .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-piece--preview-static {
     cursor: default !important;
     pointer-events: none !important;
-    border: none !important;
-    border-radius: 0 !important;
     box-shadow: none !important;
     background: transparent !important;
   }
@@ -524,6 +518,28 @@ const getPreviewFrameStyles = () => `
     height: auto;
     max-width: 100%;
     max-height: min(52vh, 460px);
+  }
+
+  /* Keep puzzle board + scatter within the preview modal viewport. */
+  .tutor-quiz-question[data-question='puzzle'] .quiz-question-ans-choice-area.tutor-puzzle-question {
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-playground {
+    width: min(100%, min(52vh, 460px));
+    max-width: 100%;
+    max-height: min(52vh, 460px);
+    height: auto;
+    margin-inline: auto;
+    flex-shrink: 0;
+  }
+
+  .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-scatter {
+    max-width: min(100%, min(52vh, 460px));
+    max-height: min(30vh, 220px);
+    min-height: 96px !important;
+    margin-top: 12px !important;
   }
 `;
 
