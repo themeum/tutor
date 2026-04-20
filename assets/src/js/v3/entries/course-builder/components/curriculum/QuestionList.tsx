@@ -130,7 +130,7 @@ const questionTypeOptions: {
   {
     label: __('Puzzle', 'tutor'),
     value: 'puzzle',
-    icon: 'quizImageMatching',
+    icon: 'quizPuzzle',
     isPro: true,
   },
 ];

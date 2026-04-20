@@ -105,6 +105,12 @@ const ALL_QUESTION_TYPE_OPTIONS: QuestionTypeOption[] = [
     icon: 'quizGraph',
     isPro: true,
   },
+  {
+    label: __('Puzzle', 'tutor'),
+    value: 'puzzle',
+    icon: 'quizPuzzle',
+    isPro: true,
+  },
 ];
 
 const questionTypeOptions = tutorConfig.is_legacy_learning_mode
@@ -113,7 +119,8 @@ const questionTypeOptions = tutorConfig.is_legacy_learning_mode
         option.value !== 'draw_image' &&
         option.value !== 'pin_image' &&
         option.value !== 'scale' &&
-        option.value !== 'coordinates',
+        option.value !== 'coordinates' &&
+        option.value !== 'puzzle',
     )
   : ALL_QUESTION_TYPE_OPTIONS;
 
