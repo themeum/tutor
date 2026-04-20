@@ -6,7 +6,6 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import FormDrawImage from '@TutorShared/components/fields/quiz/questions/FormDrawImage';
 import { spacing } from '@TutorShared/config/styles';
-import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { QuizDataStatus, type QuizQuestionOption } from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
@@ -14,10 +13,6 @@ import { nanoid } from '@TutorShared/utils/util';
 const DrawImage = () => {
   const form = useFormContext<QuizForm>();
   const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
-  const activeQuestionDataStatus =
-    form.watch(`questions.${activeQuestionIndex}._data_status`) ?? QuizDataStatus.NO_CHANGE;
-  const updatedQuestionDataStatus = calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE);
-  const nextQuestionDataStatus = updatedQuestionDataStatus as QuizDataStatus;
 
   const answersPath = `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers';
   const thresholdPath =
@@ -84,11 +79,7 @@ const DrawImage = () => {
                 setValidationError={setValidationError}
                 precisionControllerProps={thresholdControllerProps}
                 precisionTextDomain={'tutor'}
-                onPrecisionChange={() => {
-                  if (updatedQuestionDataStatus) {
-                    form.setValue(`questions.${activeQuestionIndex}._data_status`, nextQuestionDataStatus);
-                  }
-                }}
+                questionDataStatusPath={`questions.${activeQuestionIndex}._data_status`}
               />
             )}
           />

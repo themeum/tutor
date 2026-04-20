@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
@@ -40,7 +41,7 @@ interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
   >;
   precisionControllerProps?: FormControllerProps<number | null>;
   precisionTextDomain?: string;
-  onPrecisionChange?: (value: number) => void;
+  questionDataStatusPath?: string;
 }
 
 const THRESHOLD_OPTIONS = [40, 50, 60, 70, 80, 90, 100].map((value) => ({
@@ -52,8 +53,9 @@ const FormDrawImage = ({
   field,
   precisionControllerProps,
   precisionTextDomain,
-  onPrecisionChange,
+  questionDataStatusPath,
 }: FormDrawImageProps) => {
+  const form = useFormContext();
   const option = field.value;
 
   const [isDrawModeActive, setIsDrawModeActive] = useState(false);
@@ -481,6 +483,10 @@ const FormDrawImage = ({
     return null;
   }
 
+  const currentQuestionDataStatus = questionDataStatusPath
+    ? ((form.watch(questionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
+    : null;
+
   const canClearSelection = hasStartedLassoDraw || Boolean(option?.answer_two_gap_match);
 
   return (
@@ -554,7 +560,16 @@ const FormDrawImage = ({
               )}
               onChange={(option) => {
                 precisionControllerProps.field.onChange(option.value);
-                onPrecisionChange?.(option.value);
+                if (!questionDataStatusPath || !currentQuestionDataStatus) {
+                  return;
+                }
+                const nextQuestionDataStatus = calculateQuizDataStatus(
+                  currentQuestionDataStatus,
+                  QuizDataStatus.UPDATE,
+                );
+                if (nextQuestionDataStatus) {
+                  form.setValue(questionDataStatusPath, nextQuestionDataStatus as QuizDataStatus);
+                }
               }}
             />
           )}
