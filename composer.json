@@ -7,6 +7,7 @@
       "TUTOR\\": "classes/",
       "Tutor\\Components\\": "components/",
       "Tutor\\Cache\\": "cache/",
+      "Tutor\\GDPR\\": "GDPR/",
       "Tutor\\Migrations\\":"migrations/",
       "Tutor\\Models\\": "models/",
       "Tutor\\Helpers\\": "helpers/",

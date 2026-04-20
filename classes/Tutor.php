@@ -485,6 +485,9 @@ final class Tutor extends Singleton {
 
 		do_action( 'tutor_before_load' );
 
+		// GDPR module bootstrap.
+		\Tutor\GDPR\GDPR::get_instance();
+
 		$this->addons                = new Addons();
 		$this->post_types            = new Post_types();
 		$this->taxonomies            = new Taxonomies();
