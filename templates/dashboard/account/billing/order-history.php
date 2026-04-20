@@ -20,9 +20,7 @@ use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Dashboard;
 use Tutor\Ecommerce\Ecommerce;
-use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
-use Tutor\Models\OrderModel;
 
 $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 if ( 'free' === $monetize_by ) {
@@ -43,10 +41,10 @@ $status_options = array_map(
 	function( $filter ) use ( $selected_filter ) {
 		$key = $filter['key'] ?? '';
 		return array(
-			'label'  => $filter['title'],
+			'label'  => $filter['title'] ?? '',
 			'value'  => $key,
-			'count'  => (int) $filter['value'],
-			'url'    => $filter['url'],
+			'count'  => (int) $filter['value'] ?? 0,
+			'url'    => $filter['url'] ?? '',
 			'active' => $key === $selected_filter || ( empty( $key ) && 'all' === $selected_filter ),
 		);
 	},
