@@ -10,8 +10,7 @@ import FormPuzzle from '@TutorShared/components/fields/quiz/questions/FormPuzzle
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { QuizDataStatus, type QuizQuestionOption } from '@TutorShared/utils/types';
-import { nanoid } from '@TutorShared/utils/util';
+import { QuizDataStatus } from '@TutorShared/utils/types';
 
 const Puzzle = () => {
   const form = useFormContext<QuizForm>();
@@ -43,30 +42,6 @@ const Puzzle = () => {
       })),
     [],
   );
-
-  useEffect(() => {
-    if (!activeQuestionId) {
-      return;
-    }
-    if (optionsFields.length > 0) {
-      return;
-    }
-    const baseAnswer: QuizQuestionOption = {
-      _data_status: QuizDataStatus.NEW,
-      is_saved: true,
-      answer_id: nanoid(),
-      belongs_question_id: activeQuestionId,
-      belongs_question_type: 'puzzle' as QuizQuestionOption['belongs_question_type'],
-      answer_title: '',
-      is_correct: '1',
-      image_id: undefined,
-      image_url: '',
-      answer_two_gap_match: '',
-      answer_view_format: 'puzzle',
-      answer_order: 0,
-    };
-    form.setValue(answersPath, [baseAnswer]);
-  }, [activeQuestionId, optionsFields.length, answersPath, form]);
 
   useEffect(() => {
     const currentValue = form.getValues(gridSizePath);
