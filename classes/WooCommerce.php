@@ -1035,9 +1035,9 @@ class WooCommerce extends Tutor_Base {
 		$status     = Input::sanitize( $args['status'] ?? 'all' );
 		$start_date = Input::sanitize( $args['start_date'] ?? '' );
 		$end_date   = Input::sanitize( $args['end_date'] ?? '' );
-		$limit      = Input::sanitize( $args['limit'] ?? 0, Input::TYPE_INT );
-		$offset     = Input::sanitize( $args['offset'] ?? 0, Input::TYPE_INT );
-		$order      = QueryHelper::get_valid_sort_order( $args['order'] ?? '', 'DESC' );
+		$order      = QueryHelper::get_valid_sort_order( $args['order'] ?? 'DESC' );
+		$limit      = intval( $args['limit'] ?? 0 );
+		$offset     = intval( $args['offset'] ?? 0 );
 
 		$post_type = 'shop_order';
 		$user_meta = '_customer_user';
