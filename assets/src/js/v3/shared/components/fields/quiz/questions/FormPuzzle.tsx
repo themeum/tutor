@@ -3,7 +3,6 @@ import { __ } from '@wordpress/i18n';
 import { useCallback, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import type { QuizForm } from '@CourseBuilderServices/quiz';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import Show from '@TutorShared/controls/Show';
@@ -22,7 +21,7 @@ import { typography } from '@TutorShared/config/typography';
 
 interface FormPuzzleProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
-  activeQuestionIndex: number;
+  activeQuestionIndex?: number;
   validationError?: {
     message: string;
     type: QuizValidationErrorType;
@@ -33,30 +32,44 @@ interface FormPuzzleProps extends FormControllerProps<QuizQuestionOption> {
       type: QuizValidationErrorType;
     } | null>
   >;
+  gridSizeControllerProps?: FormControllerProps<number | null>;
+  gridSizePath?: string;
+  gridSizeTextDomain?: string;
+  questionDataStatusPath?: string;
 }
 
-const FormPuzzle = ({ field, activeQuestionIndex }: FormPuzzleProps) => {
-  const form = useFormContext<QuizForm>();
+const FormPuzzle = ({
+  field,
+  activeQuestionIndex = 0,
+  gridSizeControllerProps,
+  gridSizePath,
+  gridSizeTextDomain,
+  questionDataStatusPath,
+}: FormPuzzleProps) => {
+  const form = useFormContext();
   const option = field.value;
-  const activeQuestionDataStatus =
-    form.watch(`questions.${activeQuestionIndex}._data_status`) ?? QuizDataStatus.NO_CHANGE;
-  const gridSizePath =
-    `questions.${activeQuestionIndex}.question_settings.puzzle_grid_size` as 'questions.0.question_settings.puzzle_grid_size';
+  const resolvedGridSizePath =
+    gridSizePath ?? (`questions.${activeQuestionIndex}.question_settings.puzzle_grid_size` as const);
+  const resolvedQuestionDataStatusPath = questionDataStatusPath ?? `questions.${activeQuestionIndex}._data_status`;
+  const activeQuestionDataStatus = form
+    ? ((form.watch(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
+    : QuizDataStatus.NO_CHANGE;
+  const textDomain = gridSizeTextDomain ?? __TUTOR_TEXT_DOMAIN__;
 
   const gridSizeOptions = useMemo(
     () =>
       [
-        { value: 2, difficulty: __('Easy', __TUTOR_TEXT_DOMAIN__) },
-        { value: 3, difficulty: __('Easy', __TUTOR_TEXT_DOMAIN__) },
-        { value: 4, difficulty: __('Medium', __TUTOR_TEXT_DOMAIN__) },
-        { value: 5, difficulty: __('Medium', __TUTOR_TEXT_DOMAIN__) },
-        { value: 6, difficulty: __('Hard', __TUTOR_TEXT_DOMAIN__) },
-        { value: 7, difficulty: __('Hard', __TUTOR_TEXT_DOMAIN__) },
+        { value: 2, difficulty: __('Easy', textDomain) },
+        { value: 3, difficulty: __('Easy', textDomain) },
+        { value: 4, difficulty: __('Medium', textDomain) },
+        { value: 5, difficulty: __('Medium', textDomain) },
+        { value: 6, difficulty: __('Hard', textDomain) },
+        { value: 7, difficulty: __('Hard', textDomain) },
       ].map(({ value, difficulty }) => ({
-        label: `${difficulty} - ${value}×${value} (${value * value} ${__('pieces', __TUTOR_TEXT_DOMAIN__)})`,
+        label: `${difficulty} - ${value}×${value} (${value * value} ${__('pieces', textDomain)})`,
         value,
       })),
-    [],
+    [textDomain],
   );
 
   const updateOption = useCallback(
@@ -142,28 +155,47 @@ const FormPuzzle = ({ field, activeQuestionIndex }: FormPuzzleProps) => {
 
       <Show when={option?.image_url}>
         <div css={styles.card}>
-          <Controller
-            control={form.control}
-            name={gridSizePath}
-            render={(gridSizeControllerProps) => (
-              <FormSelectInput
-                {...gridSizeControllerProps}
-                label={__('Difficulty Level', __TUTOR_TEXT_DOMAIN__)}
-                options={gridSizeOptions}
-                wrapperCss={styles.dropdownText}
-                optionItemCss={styles.dropdownOptionText}
-                onChange={(selectedOption) => {
-                  gridSizeControllerProps.field.onChange(selectedOption.value);
-                  if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
-                    form.setValue(
-                      `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                    );
-                  }
-                }}
-              />
-            )}
-          />
+          {gridSizeControllerProps ? (
+            <FormSelectInput
+              {...gridSizeControllerProps}
+              label={__('Difficulty Level', textDomain)}
+              options={gridSizeOptions}
+              wrapperCss={styles.dropdownText}
+              optionItemCss={styles.dropdownOptionText}
+              onChange={(selectedOption) => {
+                gridSizeControllerProps.field.onChange(selectedOption.value);
+                if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+                  form.setValue(
+                    resolvedQuestionDataStatusPath,
+                    calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                  );
+                }
+              }}
+            />
+          ) : (
+            <Controller
+              control={form.control}
+              name={resolvedGridSizePath}
+              render={(gridSizeControllerProps) => (
+                <FormSelectInput
+                  {...gridSizeControllerProps}
+                  label={__('Difficulty Level', textDomain)}
+                  options={gridSizeOptions}
+                  wrapperCss={styles.dropdownText}
+                  optionItemCss={styles.dropdownOptionText}
+                  onChange={(selectedOption) => {
+                    gridSizeControllerProps.field.onChange(selectedOption.value);
+                    if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+                      form.setValue(
+                        resolvedQuestionDataStatusPath,
+                        calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                      );
+                    }
+                  }}
+                />
+              )}
+            />
+          )}
         </div>
       </Show>
 

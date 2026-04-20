@@ -483,9 +483,10 @@ const FormDrawImage = ({
     return null;
   }
 
-  const currentQuestionDataStatus = questionDataStatusPath
-    ? ((form.watch(questionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
-    : null;
+  const currentQuestionDataStatus =
+    questionDataStatusPath && form
+      ? ((form.watch(questionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
+      : null;
 
   const canClearSelection = hasStartedLassoDraw || Boolean(option?.answer_two_gap_match);
 
@@ -560,7 +561,7 @@ const FormDrawImage = ({
               )}
               onChange={(option) => {
                 precisionControllerProps.field.onChange(option.value);
-                if (!questionDataStatusPath || !currentQuestionDataStatus) {
+                if (!questionDataStatusPath || !currentQuestionDataStatus || !form) {
                   return;
                 }
                 const nextQuestionDataStatus = calculateQuizDataStatus(
