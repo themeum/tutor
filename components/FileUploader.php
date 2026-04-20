@@ -599,8 +599,8 @@ class FileUploader extends BaseComponent {
 			</template>
 
 			<template x-if="variant === 'file-uploader' && selectedFiles.length > 0">
-				<div class="tutor-flex tutor-flex-column tutor-gap-3">
-					<div class="tutor-grid tutor-grid-cols-2 tutor-sm-grid-col-1 tutor-gap-5">
+				<div class="tutor-flex tutor-flex-column tutor-gap-5">
+					<div class="tutor-grid tutor-grid-cols-2 tutor-sm-grid-cols-1 tutor-gap-5">
 						<template x-for="(file, index) in selectedFiles" :key="index">
 							<div class="tutor-attachment-card-wrapper">
 								<?php
@@ -614,7 +614,7 @@ class FileUploader extends BaseComponent {
 						</template>
 					</div>
 					<div class="tutor-mt-1">
-						<button type="button" class="tutor-btn tutor-btn-primary-soft tutor-btn-sm" @click="openFileDialog()">
+						<button type="button" class="tutor-btn tutor-btn-primary-soft tutor-sm-w-full" @click="openFileDialog()">
 							<?php $this->multiple ? esc_html_e( 'Upload More Files', 'tutor' ) : esc_html_e( 'Upload Again', 'tutor' ); ?>
 						</button>
 					</div>

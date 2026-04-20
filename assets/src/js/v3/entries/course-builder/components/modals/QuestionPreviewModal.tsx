@@ -25,6 +25,7 @@ import MultipleChoicePreview from './question-previews/MultipleChoicePreview';
 import OpenEndedPreview from './question-previews/OpenEndedPreview';
 import OrderingPreview from './question-previews/OrderingPreview';
 import PinImagePreview from './question-previews/PinImagePreview';
+import PuzzlePreview from './question-previews/PuzzlePreview';
 import ScalePreview from './question-previews/ScalePreview';
 import TrueFalsePreview from './question-previews/TrueFalsePreview';
 import UnsupportedPreview from './question-previews/UnsupportedPreview';
@@ -35,6 +36,11 @@ interface QuestionPreviewModalProps extends ModalProps {
 }
 
 const isTutorPro = tutorConfig.tutor_pro_url;
+/**
+ * Tutor Pro bundles several quiz question styles in `front.css`, including puzzle
+ * (`tutor-pro/assets/src/scss/quiz/_quiz_puzzle.scss` → `front.css`), same pattern as the live quiz UI.
+ */
+const TUTOR_PRO_FRONT_STYLESHEET_PATH = '/wp-content/plugins/tutor-pro/assets/css/front.css';
 const IFRAME_SRC_DOC =
   '<!doctype html><html><head><meta charset="utf-8" /></head><body><div id="preview-root"></div></body></html>';
 const PREVIEW_STYLESHEET_PATHS = [
@@ -44,7 +50,7 @@ const PREVIEW_STYLESHEET_PATHS = [
 ];
 
 if (isTutorPro) {
-  PREVIEW_STYLESHEET_PATHS.push('/wp-content/plugins/tutor-pro/assets/css/front.css');
+  PREVIEW_STYLESHEET_PATHS.push(TUTOR_PRO_FRONT_STYLESHEET_PATH);
 }
 
 // Prefetch the stylesheets automatically so they are loaded in the background
@@ -336,6 +342,10 @@ const renderQuestionPreview = (question: QuizQuestion) => {
       return <ScalePreview answers={question.question_answers} />;
     case 'coordinates':
       return <CoordinatesPreview />;
+    case 'puzzle':
+      return (
+        <PuzzlePreview answers={question.question_answers} gridSize={question.question_settings.puzzle_grid_size} />
+      );
     default:
       return <UnsupportedPreview />;
   }
@@ -374,8 +384,103 @@ const getPreviewFrameStyles = () => `
     padding-top: 0;
   }
 
+  .tutor-quiz-question-option, 
+  .tutor-quiz-question-draggable-header {
+    svg {
+      width: 20px;
+      height: 20px;
+      color: var(--tutor-icon-idle);
+    }
+  }
+
   [data-question=fill_in_the_blank] .tutor-quiz-question-input {
     box-shadow: none;
+  }
+
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-wrapper,
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-reference-inner,
+  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-wrapper,
+  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-reference-inner {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-wrapper > img,
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-reference-bg,
+  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-wrapper > img,
+  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-reference-bg {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Keep draw/pin previews fully visible inside modal viewport. */
+  .tutor-quiz-question[data-question='draw_image'] .tutor-draw-image-wrapper,
+  .tutor-quiz-question[data-question='draw_image'] .tutor-draw-image-reference-inner,
+  .tutor-quiz-question[data-question='pin_image'] .tutor-pin-image-wrapper,
+  .tutor-quiz-question[data-question='pin_image'] .tutor-pin-image-reference-inner {
+    height: auto;
+    max-height: min(52vh, 460px);
+  }
+
+  .tutor-quiz-question[data-question='draw_image'] .tutor-draw-image-wrapper > img,
+  .tutor-quiz-question[data-question='draw_image'] .tutor-draw-image-reference-bg,
+  .tutor-quiz-question[data-question='pin_image'] .tutor-pin-image-wrapper > img,
+  .tutor-quiz-question[data-question='pin_image'] .tutor-pin-image-reference-bg {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(52vh, 460px);
+  }
+
+  /*
+   * Puzzle preview: same viewport idea as draw/pin above — board capped at min(52vh, 460px),
+   * scatter scroll area capped so header + board + pieces fit the modal column.
+   */
+  .tutor-quiz-question[data-question='puzzle'] .quiz-question-ans-choice-area.tutor-puzzle-question {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-playground {
+    box-sizing: border-box;
+    width: auto;
+    max-width: 100%;
+    max-height: min(52vh, 460px);
+    height: auto;
+    flex-shrink: 0;
+    margin-inline: auto;
+    overflow: hidden;
+  }
+
+  .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-reference-image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(52vh, 460px);
+    object-fit: contain;
+  }
+
+  .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-scatter {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    max-height: min(30vh, 220px);
+    min-height: 96px;
+    margin-top: 12px;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 `;
 
