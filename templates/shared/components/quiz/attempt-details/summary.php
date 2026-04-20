@@ -17,7 +17,7 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Models\QuizModel;
-use TUTOR\Quiz_Attempts_List;
+use TUTOR\Quiz;
 use Tutor\Helpers\UrlHelper;
 
 if ( ! isset( $attempt_data ) || ! is_object( $attempt_data ) ) {
@@ -71,7 +71,10 @@ if ( is_array( $attempts ) ) {
 	$attempts_count = count( $attempts );
 }
 
-$can_retry               = Quiz_Attempts_List::can_retry_quiz( $quiz_id, $attempts_count );
+$quiz_settings           = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
+$limit_attempts_allowed  = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
+$attempts_allowed        = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
+$can_retry               = Quiz::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempts_count );
 $has_instructor_feedback = '' !== trim( wp_strip_all_tags( $instructor_feedback ) );
 $retry_modal_id          = 'tutor-retry-modal-' . $attempt_id;
 

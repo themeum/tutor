@@ -440,7 +440,12 @@ class Quiz_Attempts_List {
 	 * @return void
 	 */
 	public function render_retry_button( $course_id = 0, $quiz_id = 0, $attempt = array(), $attempts_count = 0 ) {
-		if ( User::is_student_view() && self::can_retry_quiz( $quiz_id, $attempts_count ) ) {
+		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
+		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
+		$attempts_allowed       = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
+		$can_retry              = Quiz::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempts_count );
+
+		if ( User::is_student_view() && $can_retry ) {
 			Button::make()
 				->label( __( 'Retry', 'tutor' ) )
 				->icon( Icon::RELOAD )
@@ -449,30 +454,6 @@ class Quiz_Attempts_List {
 				->attr( '@click', $this->get_retry_attribute( $quiz_id ) )
 				->render();
 		}
-	}
-
-	/**
-	 * Whether student can retry attempt or not.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int     $quiz_id the quiz id.
-	 * @param integer $attempts_count the quiz attempt count.
-	 *
-	 * @return boolean
-	 */
-	public static function can_retry_quiz( int $quiz_id = 0, int $attempts_count = 0 ): bool {
-		$quiz_id = tutor_utils()->get_post_id( $quiz_id );
-
-		if ( ! $quiz_id ) {
-			return false;
-		}
-
-		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
-		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
-		$attempts_allowed       = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
-
-		return Quiz::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempts_count );
 	}
 
 	/**
@@ -530,7 +511,10 @@ class Quiz_Attempts_List {
 	 */
 	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0 ) {
 		$is_quiz_details_hidden = $this->is_attempt_details_hidden();
-		$can_retry              = self::can_retry_quiz( $quiz_id, $attempts_count );
+		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
+		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
+		$attempts_allowed       = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
+		$can_retry              = Quiz::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempts_count );
 
 		// Only add retry option to the first attempt.
 		if ( ! $can_retry || ! $attempts_count ) {
