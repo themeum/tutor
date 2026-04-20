@@ -127,11 +127,7 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 				->required()
 				->attr( 'x-bind', "register('withdraw_method', { required: true })" )
 				->help_text(
-					sprintf(
-						/* translators: %s: minimum withdraw amount */
-						__( 'Minimum withdraw amount is %s', 'tutor' ),
-						$formatted_min
-					)
+					wp_kses( __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . $formatted_min, array() )
 				)
 				->render();
 			?>
