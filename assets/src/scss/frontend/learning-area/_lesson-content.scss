@@ -26,7 +26,16 @@
       flex-shrink: 0;
     }
 
-    &:hover:not(.completed) {
+    &:disabled {
+      cursor: not-allowed;
+      background-color: $tutor-button-disabled;
+      color: $tutor-text-disabled;
+      svg{
+        color: $tutor-icon-disabled;
+      }
+    }
+
+    &:hover:not(.completed):not(:disabled) {
       background-color: $tutor-surface-l1;
 
       svg {
