@@ -405,8 +405,11 @@ const getPreviewFrameStyles = () => `
 
   .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-playground {
     position: relative !important;
-    width: 100%;
-    aspect-ratio: 1 / 1;
+    width: fit-content;
+    max-width: 100%;
+    height: auto;
+    max-height: min(52vh, 460px);
+    margin-inline: auto;
     border: 1px solid var(--tutor-border-idle, #d0d5dd);
     border-radius: 6px;
     overflow: hidden !important;
@@ -417,9 +420,11 @@ const getPreviewFrameStyles = () => `
 
   .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-reference-image {
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: fill !important;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(52vh, 460px);
+    object-fit: contain !important;
     pointer-events: none;
   }
 

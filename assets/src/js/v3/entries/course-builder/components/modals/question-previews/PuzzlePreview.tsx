@@ -8,6 +8,44 @@ const clampGridSize = (raw: number | undefined) => {
   return Math.max(2, Math.min(7, n));
 };
 
+/** Match `puzzle-question.js` scatter sizing constants. */
+const SCATTER_SIZE_MIN = 56;
+const SCATTER_SIZE_MAX = 80;
+const SCATTER_SIZE_RATIO = 0.6;
+const SCATTER_SIZE_FALLBACK = 60;
+
+const computeScatterCellFromBoard = (playgroundWidth: number, playgroundHeight: number, gridSize: number) => {
+  if (!gridSize || playgroundWidth <= 0 || playgroundHeight <= 0) {
+    return { width: SCATTER_SIZE_FALLBACK, height: SCATTER_SIZE_FALLBACK };
+  }
+  const cellW = playgroundWidth / gridSize;
+  const cellH = playgroundHeight / gridSize;
+  let sw = cellW * SCATTER_SIZE_RATIO;
+  let sh = cellH * SCATTER_SIZE_RATIO;
+
+  const maxDim = Math.max(sw, sh);
+  if (maxDim > SCATTER_SIZE_MAX) {
+    const factor = SCATTER_SIZE_MAX / maxDim;
+    sw *= factor;
+    sh *= factor;
+  }
+
+  const minDim = Math.min(sw, sh);
+  if (minDim > 0 && minDim < SCATTER_SIZE_MIN) {
+    const factor = SCATTER_SIZE_MIN / minDim;
+    sw *= factor;
+    sh *= factor;
+    const maxAfter = Math.max(sw, sh);
+    if (maxAfter > SCATTER_SIZE_MAX) {
+      const factor2 = SCATTER_SIZE_MAX / maxAfter;
+      sw *= factor2;
+      sh *= factor2;
+    }
+  }
+
+  return { width: sw, height: sh };
+};
+
 interface PuzzlePreviewProps {
   answers: QuizQuestionOption[];
   gridSize?: number;
@@ -390,7 +428,7 @@ const PuzzlePreview = ({ answers, gridSize: gridSizeProp }: PuzzlePreviewProps) 
 
   const outerClassName = 'quiz-question-ans-choice-area tutor-mt-40 tutor-puzzle-question question-type-puzzle';
   const playgroundRef = useRef<HTMLDivElement>(null);
-  const [scatterCell, setScatterCell] = useState(60);
+  const [scatterCell, setScatterCell] = useState({ width: SCATTER_SIZE_FALLBACK, height: SCATTER_SIZE_FALLBACK });
   const [pieces, setPieces] = useState<PieceEntry[]>([]);
 
   useLayoutEffect(() => {
@@ -399,10 +437,7 @@ const PuzzlePreview = ({ answers, gridSize: gridSizeProp }: PuzzlePreviewProps) 
       return;
     }
     const update = () => {
-      const side = Math.min(el.clientWidth, el.clientHeight);
-      const targetPiece = gridSize > 0 && side > 0 ? side / gridSize : 0;
-      const scatter = targetPiece > 0 ? Math.max(56, Math.min(80, targetPiece * 0.6)) : 60;
-      setScatterCell(scatter);
+      setScatterCell(computeScatterCellFromBoard(el.clientWidth, el.clientHeight, gridSize));
     };
     update();
     const ro = new ResizeObserver(update);
@@ -444,8 +479,8 @@ const PuzzlePreview = ({ answers, gridSize: gridSizeProp }: PuzzlePreviewProps) 
           sh,
           spw,
           sph,
-          scatterCell,
-          scatterCell,
+          scatterCell.width,
+          scatterCell.height,
         );
         if (!dataUrl) {
           continue;
@@ -469,7 +504,7 @@ const PuzzlePreview = ({ answers, gridSize: gridSizeProp }: PuzzlePreviewProps) 
     return () => {
       cancelled = true;
     };
-  }, [imageUrl, gridSize, scatterCell]);
+  }, [imageUrl, gridSize, scatterCell.width, scatterCell.height]);
 
   if (!imageUrl) {
     return (
