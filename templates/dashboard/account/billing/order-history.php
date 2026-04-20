@@ -35,8 +35,8 @@ $args = array(
 	'status'     => $selected_filter,
 	'start_date' => $start_date,
 	'end_date'   => $end_date,
+	'limit'      => $item_per_page,
 	'offset'     => $offset,
-	'per_page'   => $item_per_page,
 	'order'      => $order_filter,
 );
 

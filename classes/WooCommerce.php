@@ -1035,8 +1035,8 @@ class WooCommerce extends Tutor_Base {
 		$status     = Input::sanitize( $args['status'] ?? 'all' );
 		$start_date = Input::sanitize( $args['start_date'] ?? '' );
 		$end_date   = Input::sanitize( $args['end_date'] ?? '' );
+		$limit      = Input::sanitize( $args['limit'] ?? 0, Input::TYPE_INT );
 		$offset     = Input::sanitize( $args['offset'] ?? 0, Input::TYPE_INT );
-		$per_page   = Input::sanitize( $args['per_page'] ?? 0, Input::TYPE_INT );
 		$order      = QueryHelper::get_valid_sort_order( $args['order'] ?? '', 'DESC' );
 
 		$post_type = 'shop_order';
@@ -1065,8 +1065,8 @@ class WooCommerce extends Tutor_Base {
 		}
 
 		$offset_limit_query = '';
-		if ( $offset && $per_page ) {
-			$offset_limit_query = "LIMIT {$offset}, {$per_page}";
+		if ( $offset && $limit ) {
+			$offset_limit_query = "LIMIT {$offset}, {$limit}";
 		}
 
 		$status_query = '';

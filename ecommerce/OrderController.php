@@ -131,7 +131,7 @@ class OrderController {
 
 			add_filter( 'tutor_calculate_order_tax_amount', array( $this, 'filter_calculate_single_order_tax_amount' ), 10, 5 );
 
-			add_filter( 'tutor_get_orders_by_user_id', array( $this, 'filter_get_orders_by_user_id' ), 10, 8 );
+			add_filter( 'tutor_get_orders_by_user_id', array( $this, 'filter_get_orders_by_user_id' ), 10, 3 );
 			add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ), 10, 2 );
 		}
 	}
@@ -1312,26 +1312,29 @@ class OrderController {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $data Order data.
-	 * @param int   $user_id User ID.
-	 * @param mixed $period Period.
-	 * @param mixed $start_date Start date.
-	 * @param mixed $end_date End date.
-	 * @param mixed $offset Offset.
-	 * @param mixed $per_page Per page.
-	 * @param mixed $order Order.
+	 * @param object $data Order data.
+	 * @param int    $user_id User ID.
+	 * @param array  $args Array of arguments.
 	 *
-	 * @return array {results: array, total_count: int}
+	 * @return object {results: array, total_count: int}
 	 */
-	public function filter_get_orders_by_user_id( $data, $user_id, $period, $start_date, $end_date, $offset, $per_page, $order ) {
-		$args = array();
+	public function filter_get_orders_by_user_id( $data, $user_id, $args ) {
+		$other_params = array();
 		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
-			$args['order_type'] = OrderModel::TYPE_SINGLE_ORDER;
+			$other_params['order_type'] = OrderModel::TYPE_SINGLE_ORDER;
 		}
 
-		$order_status = Input::get( 'data', 'all' );
-		$orders       = $this->model->get_user_orders( $period, $start_date, $end_date, $order_status, $user_id, $per_page, $offset, $order, $args );
-		return $orders;
+		$order_status = Input::sanitize( $args['status'] ?? 'all' );
+		$period       = isset( $args['period'] ) ? Input::sanitize( $args['period'] ) : null;
+		$start_date   = isset( $args['start_date'] ) ? Input::sanitize( $args['start_date'] ) : null;
+		$end_date     = isset( $args['end_date'] ) ? Input::sanitize( $args['end_date'] ) : null;
+		$offset       = isset( $args['offset'] ) ? (int) Input::sanitize( $args['offset'] ) : 0;
+		$limit        = isset( $args['limit'] ) ? (int) Input::sanitize( $args['limit'] ) : 0;
+		$order        = QueryHelper::get_valid_sort_order( $args['order'] ?? 'DESC' );
+
+		$data = $this->model->get_user_orders( $period, $start_date, $end_date, $order_status, $user_id, $limit, $offset, $order, $other_params );
+
+		return (object) $data;
 	}
 
 	/**
