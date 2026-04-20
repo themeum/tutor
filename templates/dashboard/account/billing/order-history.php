@@ -35,21 +35,7 @@ $selected_filter = Input::get( 'data', 'all' );
 $response       = tutor_utils()->get_orders_by_user_id( $user_id, $time_period, $start_date, $end_date, $offset, $item_per_page, $order_filter );
 $orders         = $response['results'] ?? array();
 $total_items    = $response['total_count'] ?? 0;
-$status_options = apply_filters( 'tutor_order_history_status_options', array() );
-
-$status_options = array_map(
-	function( $filter ) use ( $selected_filter ) {
-		$key = $filter['key'] ?? '';
-		return array(
-			'label'  => $filter['title'] ?? '',
-			'value'  => $key,
-			'count'  => (int) $filter['value'] ?? 0,
-			'url'    => $filter['url'] ?? '',
-			'active' => $key === $selected_filter || ( empty( $key ) && 'all' === $selected_filter ),
-		);
-	},
-	$status_options
-);
+$status_options = apply_filters( 'tutor_order_history_status_options', array(), $selected_filter );
 ?>
 
 <div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
