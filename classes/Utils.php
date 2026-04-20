@@ -6577,6 +6577,7 @@ class Utils {
 		$monetize_by = $this->get_option( 'monetize_by' );
 		$order       = QueryHelper::get_valid_sort_order( $order );
 
+		$status    = '';
 		$post_type = '';
 		$user_meta = '';
 		$wc_hpos   = false;
@@ -6587,6 +6588,7 @@ class Utils {
 			$user_meta = '_customer_user';
 			$wc_hpos   = WooCommerce::hpos_enabled();
 			$dt_column = $wc_hpos ? 'date_created_gmt' : 'post_date';
+			$status    = Input::get( 'data', 'all' );
 		} elseif ( 'edd' === $monetize_by ) {
 			$post_type = 'edd_payment';
 			$user_meta = '_edd_payment_user_id';
@@ -6613,6 +6615,11 @@ class Utils {
 			$offset_limit_query = "LIMIT $offset, $per_page";
 		}
 
+		$status_query = '';
+		if ( 'all' !== $status ) {
+			$status_query = $wc_hpos ? $wpdb->prepare( 'AND status = %s', $status ) : $wpdb->prepare( 'AND post_status = %s', $status );
+		}
+
 		if ( 'wc' === $monetize_by ) {
 			if ( $wc_hpos ) {
 				$results = $wpdb->get_results(
@@ -6624,6 +6631,7 @@ class Utils {
 										AND order_meta.meta_key = '_is_tutor_order_for_course' 
 						WHERE 	orders.type = %s 
 								AND orders.customer_id = %d 
+								{$status_query}
 								{$period_query}
 						ORDER BY orders.id {$order}
 						{$offset_limit_query}",
@@ -6644,6 +6652,7 @@ class Utils {
 								AND tutor_order.meta_key = '_is_tutor_order_for_course'
 					WHERE	post_type = %s
 							AND customer.meta_value = %d
+							{$status_query}
 							{$period_query}
 					ORDER BY {$wpdb->posts}.id {$order}
 					{$offset_limit_query}

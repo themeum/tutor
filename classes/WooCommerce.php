@@ -10,9 +10,9 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Helpers\UrlHelper;
 
 /**
  * Handle woocommerce hooks
@@ -128,6 +128,7 @@ class WooCommerce extends Tutor_Base {
 
 		// @since 4.0.0
 		add_filter( 'tutor_order_history_card_template', fn( $template ) => tutor_get_template( 'dashboard.account.billing.wc-order-history-card' ) );
+		add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ) );
 	}
 
 	/**
@@ -941,5 +942,70 @@ class WooCommerce extends Tutor_Base {
 
 		return $auto_complete;
 	}
-}
 
+	/**
+	 * Count orders for a user.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $args  array of arguments.
+	 *
+	 * @return int  return count of orders.
+	 */
+	public static function get_count( $args = array() ): int {
+		$query = wc_get_orders(
+			array(
+				'customer'   => $args['user_id'] ?? 0,
+				'status'     => $args['status'] ?? 'all',
+				'meta_query' => array(
+					array(
+						'key'     => '_is_tutor_order_for_course',
+						'compare' => 'EXISTS',
+					),
+				),
+				// Limit 1 for query performance.
+				'limit'      => 1,
+				'paginate'   => true,
+			)
+		);
+
+		return $query->total;
+	}
+
+	/**
+	 * Filter order history status options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $options the status options.
+	 *
+	 * @return array
+	 */
+	public function filter_order_history_status_options( $options ) {
+		$url     = get_pagenum_link();
+		$user_id = get_current_user_id();
+
+		$statuses = array_merge( array( 'all' => 'All' ), wc_get_order_statuses() );
+		if ( isset( $statuses['wc-checkout-draft'] ) ) {
+			unset( $statuses['wc-checkout-draft'] );
+		}
+
+		$options = array();
+
+		foreach ( $statuses as $key => $status ) {
+			$params = array(
+				'user_id' => $user_id,
+				'status'  => $key,
+			);
+
+			$options[] = array(
+				'key'   => $key,
+				'title' => ucfirst( $status ),
+				'value' => self::get_count( $params ),
+				'url'   => UrlHelper::add_query_params( $url, array( 'data' => $key ) ),
+			);
+		}
+
+		return $options;
+	}
+}
