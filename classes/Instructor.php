@@ -641,7 +641,7 @@ class Instructor {
 					post.post_title AS course_title,
 					COALESCE(earnings.total_revenue, 0)  AS total_revenue,
 					COALESCE(enrollments.total_student, 0) AS total_student
-				FROM wp_posts post
+				FROM {$wpdb->posts} post
 				INNER JOIN ({$earnings_sql}) earnings 
 					ON earnings.course_id = post.ID
 				LEFT JOIN ({$enrollment_sql}) enrollments 

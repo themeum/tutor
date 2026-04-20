@@ -1137,7 +1137,12 @@ class InputField extends BaseComponent {
 						<span class="tutor-select-option-icon" x-data="tutorIcon({ name: option.icon })"></span>
 					</template>
 					<div class="tutor-select-option-content">
-						<div class="tutor-select-option-label" x-text="option.label"></div>
+						<template x-if="option.html_label">
+							<div class="tutor-select-option-label" x-html="option.html_label"></div>
+						</template>
+						<template x-if="!option.html_label">
+							<div class="tutor-select-option-label" x-text="option.label"></div>
+						</template>
 						<template x-if="option.description">
 							<div class="tutor-select-option-description" x-text="option.description"></div>
 						</template>

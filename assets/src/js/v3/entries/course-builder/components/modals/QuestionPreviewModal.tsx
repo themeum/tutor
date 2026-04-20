@@ -374,8 +374,59 @@ const getPreviewFrameStyles = () => `
     padding-top: 0;
   }
 
+  .tutor-quiz-question-option, 
+  .tutor-quiz-question-draggable-header {
+    svg {
+      width: 20px;
+      height: 20px;
+      color: var(--tutor-icon-idle);
+    }
+  }
+
   [data-question=fill_in_the_blank] .tutor-quiz-question-input {
     box-shadow: none;
+  }
+
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-wrapper,
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-reference-inner,
+  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-wrapper,
+  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-reference-inner {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-wrapper > img,
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-reference-bg,
+  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-wrapper > img,
+  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-reference-bg {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Keep draw/pin previews fully visible inside modal viewport. */
+  .tutor-quiz-question[data-question='draw_image'] .tutor-draw-image-wrapper,
+  .tutor-quiz-question[data-question='draw_image'] .tutor-draw-image-reference-inner,
+  .tutor-quiz-question[data-question='pin_image'] .tutor-pin-image-wrapper,
+  .tutor-quiz-question[data-question='pin_image'] .tutor-pin-image-reference-inner {
+    height: auto;
+    max-height: min(52vh, 460px);
+  }
+
+  .tutor-quiz-question[data-question='draw_image'] .tutor-draw-image-wrapper > img,
+  .tutor-quiz-question[data-question='draw_image'] .tutor-draw-image-reference-bg,
+  .tutor-quiz-question[data-question='pin_image'] .tutor-pin-image-wrapper > img,
+  .tutor-quiz-question[data-question='pin_image'] .tutor-pin-image-reference-bg {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(52vh, 460px);
   }
 `;
 
