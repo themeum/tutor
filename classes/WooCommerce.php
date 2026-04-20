@@ -12,6 +12,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
 
 /**
@@ -129,6 +130,7 @@ class WooCommerce extends Tutor_Base {
 		// @since 4.0.0
 		add_filter( 'tutor_order_history_card_template', fn( $template ) => tutor_get_template( 'dashboard.account.billing.wc-order-history-card' ) );
 		add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ), 10, 2 );
+		add_filter( 'tutor_get_orders_by_user_id', array( $this, 'filter_tutor_get_orders_by_user_id' ), 10, 3 );
 	}
 
 	/**
@@ -1009,5 +1011,122 @@ class WooCommerce extends Tutor_Base {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Filter tutor get orders by user id.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $data  data.
+	 * @param int    $user_id  user id.
+	 * @param array  $args  array of arguments.
+	 *
+	 * @return object {results: array, total_count: int}
+	 */
+	public function filter_tutor_get_orders_by_user_id( $data, $user_id, $args ) {
+		if ( ! $user_id ) {
+			return $data;
+		}
+
+		global $wpdb;
+
+		$period     = Input::sanitize( $args['period'] ?? '' );
+		$status     = Input::sanitize( $args['status'] ?? 'all' );
+		$start_date = Input::sanitize( $args['start_date'] ?? '' );
+		$end_date   = Input::sanitize( $args['end_date'] ?? '' );
+		$offset     = Input::sanitize( $args['offset'] ?? 0, Input::TYPE_INT );
+		$per_page   = Input::sanitize( $args['per_page'] ?? 0, Input::TYPE_INT );
+		$order      = QueryHelper::get_valid_sort_order( $args['order'] ?? '', 'DESC' );
+
+		$post_type = 'shop_order';
+		$user_meta = '_customer_user';
+		$wc_hpos   = self::hpos_enabled();
+		$dt_column = $wc_hpos ? 'date_created_gmt' : 'post_date';
+
+		$period_query = '';
+		if ( ! empty( $period ) ) {
+			if ( 'today' === $period ) {
+				$period_query = ' AND  DATE(' . $dt_column . ') = CURDATE() ';
+			} elseif ( 'monthly' === $period ) {
+				$period_query = ' AND  MONTH(' . $dt_column . ') = MONTH(CURDATE()) ';
+			} else {
+				$period_query = ' AND  YEAR(' . $dt_column . ') = YEAR(CURDATE()) ';
+			}
+		}
+
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$period_query = $wpdb->prepare(
+				//phpcs:ignore -- $dt_column is static value
+				" AND  DATE($dt_column) BETWEEN CAST(%s AS DATE) AND CAST(%s AS DATE) ",
+				$start_date,
+				$end_date
+			);
+		}
+
+		$offset_limit_query = '';
+		if ( $offset && $per_page ) {
+			$offset_limit_query = "LIMIT {$offset}, {$per_page}";
+		}
+
+		$status_query = '';
+		if ( 'all' !== $status ) {
+			$status_query = $wc_hpos
+							? $wpdb->prepare( 'AND status = %s', $status )
+							: $wpdb->prepare( 'AND post_status = %s', $status );
+		}
+
+		if ( $wc_hpos ) {
+			//phpcs:disable
+			$results = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT SQL_CALC_FOUND_ROWS orders.id AS ID, orders.status AS post_status, orders.date_created_gmt AS post_date, orders.* 
+					FROM 	{$wpdb->prefix}wc_orders orders 
+							INNER JOIN {$wpdb->prefix}wc_orders_meta order_meta 
+									ON orders.id = order_meta.order_id
+									AND order_meta.meta_key = '_is_tutor_order_for_course' 
+					WHERE 	orders.type = %s 
+							AND orders.customer_id = %d 
+							{$status_query}
+							{$period_query}
+					ORDER BY orders.id {$order}
+					{$offset_limit_query}",
+					$post_type,
+					$user_id
+				)
+			);
+			//phpcs:enable
+		} else {
+			//phpcs:disable
+			$results = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT SQL_CALC_FOUND_ROWS {$wpdb->posts}.*
+					FROM	{$wpdb->posts}
+							INNER JOIN {$wpdb->postmeta} customer
+									ON id = customer.post_id
+								AND customer.meta_key = '{$user_meta}'
+							INNER JOIN {$wpdb->postmeta} tutor_order
+									ON id = tutor_order.post_id
+								AND tutor_order.meta_key = '_is_tutor_order_for_course'
+					WHERE	post_type = %s
+							AND customer.meta_value = %d
+							{$status_query}
+							{$period_query}
+					ORDER BY {$wpdb->posts}.id {$order}
+					{$offset_limit_query}
+					",
+					$post_type,
+					$user_id
+				)
+			);
+			//phpcs:enable
+		}
+
+		$total_count = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
+
+		$data->results     = $results;
+		$data->total_count = $total_count;
+
+		return $data;
 	}
 }

@@ -27,14 +27,23 @@ if ( 'free' === $monetize_by ) {
 	return;
 }
 
-$time_period     = null;
 $start_date      = Input::get( 'start_date' );
 $end_date        = Input::get( 'end_date' );
 $selected_filter = Input::get( 'data', 'all' );
 
-$response       = tutor_utils()->get_orders_by_user_id( $user_id, $time_period, $start_date, $end_date, $offset, $item_per_page, $order_filter );
-$orders         = $response['results'] ?? array();
-$total_items    = $response['total_count'] ?? 0;
+$args = array(
+	'status'     => $selected_filter,
+	'start_date' => $start_date,
+	'end_date'   => $end_date,
+	'offset'     => $offset,
+	'per_page'   => $item_per_page,
+	'order'      => $order_filter,
+);
+
+$response    = tutor_utils()->get_orders_by_user_id( $user_id, $args );
+$orders      = $response->results ?? array();
+$total_items = $response->total_count ?? 0;
+
 $status_options = apply_filters( 'tutor_order_history_status_options', array(), $selected_filter );
 ?>
 

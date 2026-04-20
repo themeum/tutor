@@ -6555,123 +6555,20 @@ class Utils {
 	 * Get purchase history by customer id
 	 *
 	 * @since 1.0.0
-	 * @since 4.0.0 param $order added.
+	 * @since 4.0.0 Added $args parameter.
 	 *
 	 * @param integer $user_id user id.
-	 * @param string  $period period.
-	 * @param string  $start_date start date.
-	 * @param string  $end_date end date.
-	 * @param string  $offset offset.
-	 * @param string  $per_page per page.
-	 * @param string  $order order.
+	 * @param array   $args array of arguments.
 	 *
-	 * @return array {results: array, total_count: int}
+	 * @return object {results: array, total_count: int}
 	 */
-	public function get_orders_by_user_id( $user_id = 0, $period = '', $start_date = '', $end_date = '', $offset = '', $per_page = '', $order = 'DESC' ) {
-		global $wpdb;
-
-		$results     = array();
-		$total_count = 0;
-
-		$user_id     = $this->get_user_id( $user_id );
-		$monetize_by = $this->get_option( 'monetize_by' );
-		$order       = QueryHelper::get_valid_sort_order( $order );
-
-		$status    = '';
-		$post_type = '';
-		$user_meta = '';
-		$wc_hpos   = false;
-		$dt_column = 'post_date';
-
-		if ( 'wc' === $monetize_by ) {
-			$post_type = 'shop_order';
-			$user_meta = '_customer_user';
-			$wc_hpos   = WooCommerce::hpos_enabled();
-			$dt_column = $wc_hpos ? 'date_created_gmt' : 'post_date';
-			$status    = Input::get( 'data', 'all' );
-		} elseif ( 'edd' === $monetize_by ) {
-			$post_type = 'edd_payment';
-			$user_meta = '_edd_payment_user_id';
-		}
-
-		$period_query = '';
-
-		if ( '' !== $period ) {
-			if ( 'today' === $period ) {
-				$period_query = ' AND  DATE(' . $dt_column . ') = CURDATE() ';
-			} elseif ( 'monthly' === $period ) {
-				$period_query = ' AND  MONTH(' . $dt_column . ') = MONTH(CURDATE()) ';
-			} else {
-				$period_query = ' AND  YEAR(' . $dt_column . ') = YEAR(CURDATE()) ';
-			}
-		}
-
-		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
-			$period_query = " AND  DATE($dt_column) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
-		}
-
-		$offset_limit_query = '';
-		if ( '' !== $offset && '' !== $per_page ) {
-			$offset_limit_query = "LIMIT $offset, $per_page";
-		}
-
-		$status_query = '';
-		if ( 'all' !== $status ) {
-			$status_query = $wc_hpos ? $wpdb->prepare( 'AND status = %s', $status ) : $wpdb->prepare( 'AND post_status = %s', $status );
-		}
-
-		if ( 'wc' === $monetize_by ) {
-			if ( $wc_hpos ) {
-				$results = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT SQL_CALC_FOUND_ROWS orders.id AS ID, orders.status AS post_status, orders.date_created_gmt AS post_date, orders.* 
-						FROM 	{$wpdb->prefix}wc_orders orders 
-								INNER JOIN {$wpdb->prefix}wc_orders_meta order_meta 
-										ON orders.id = order_meta.order_id
-										AND order_meta.meta_key = '_is_tutor_order_for_course' 
-						WHERE 	orders.type = %s 
-								AND orders.customer_id = %d 
-								{$status_query}
-								{$period_query}
-						ORDER BY orders.id {$order}
-						{$offset_limit_query}",
-						$post_type,
-						$user_id
-					)
-				);
-			} else {
-				$results = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT SQL_CALC_FOUND_ROWS {$wpdb->posts}.*
-					FROM	{$wpdb->posts}
-							INNER JOIN {$wpdb->postmeta} customer
-									ON id = customer.post_id
-								AND customer.meta_key = '{$user_meta}'
-							INNER JOIN {$wpdb->postmeta} tutor_order
-									ON id = tutor_order.post_id
-								AND tutor_order.meta_key = '_is_tutor_order_for_course'
-					WHERE	post_type = %s
-							AND customer.meta_value = %d
-							{$status_query}
-							{$period_query}
-					ORDER BY {$wpdb->posts}.id {$order}
-					{$offset_limit_query}
-					",
-						$post_type,
-						$user_id
-					)
-				);
-			}
-
-			$total_count = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
-		}
-
-		$data = array(
-			'results'     => $results,
-			'total_count' => $total_count,
+	public function get_orders_by_user_id( $user_id = 0, $args = array() ) {
+		$data = (object) array(
+			'results'     => array(),
+			'total_count' => 0,
 		);
 
-		return apply_filters( 'tutor_get_orders_by_user_id', $data, $user_id, $period, $start_date, $end_date, $offset, $per_page, $order );
+		return apply_filters( 'tutor_get_orders_by_user_id', $data, $user_id, $args );
 	}
 
 	/**
