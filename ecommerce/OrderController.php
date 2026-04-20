@@ -132,7 +132,7 @@ class OrderController {
 			add_filter( 'tutor_calculate_order_tax_amount', array( $this, 'filter_calculate_single_order_tax_amount' ), 10, 5 );
 
 			add_filter( 'tutor_get_orders_by_user_id', array( $this, 'filter_get_orders_by_user_id' ), 10, 8 );
-			add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ) );
+			add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ), 10, 2 );
 		}
 	}
 
@@ -1339,12 +1339,26 @@ class OrderController {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $options Order history status options.
+	 * @param array  $options Order history status options.
+	 * @param string $selected Selected status.
 	 *
-	 * @return array
+	 * @return array<array{label: string, value: string, count: int, url: string, active: bool}>
 	 */
-	public function filter_order_history_status_options( $options ) {
+	public function filter_order_history_status_options( $options, $selected ) {
 		$options = $this->tabs_key_value( 'dashboard' );
+		$options = array_map(
+			function( $option ) use ( $selected ) {
+				$key = $option['key'] ?? '';
+				return array(
+					'label'  => $option['title'] ?? '',
+					'value'  => $key,
+					'count'  => (int) $option['value'] ?? 0,
+					'url'    => $option['url'] ?? '',
+					'active' => $key === $selected || ( empty( $key ) && 'all' === $selected ),
+				);
+			},
+			$options
+		);
 		return $options;
 	}
 }
