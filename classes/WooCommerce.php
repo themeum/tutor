@@ -128,7 +128,7 @@ class WooCommerce extends Tutor_Base {
 
 		// @since 4.0.0
 		add_filter( 'tutor_order_history_card_template', fn( $template ) => tutor_get_template( 'dashboard.account.billing.wc-order-history-card' ) );
-		add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ) );
+		add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ), 10, 2 );
 	}
 
 	/**
@@ -977,11 +977,12 @@ class WooCommerce extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $options the status options.
+	 * @param array  $options the status options.
+	 * @param string $seleted the selected status.
 	 *
-	 * @return array
+	 * @return array<array{label: string, value: string, count: int, url: string, active: bool}>
 	 */
-	public function filter_order_history_status_options( $options ) {
+	public function filter_order_history_status_options( $options, $seleted ) {
 		$url     = get_pagenum_link();
 		$user_id = get_current_user_id();
 
@@ -999,10 +1000,11 @@ class WooCommerce extends Tutor_Base {
 			);
 
 			$options[] = array(
-				'key'   => $key,
-				'title' => ucfirst( $status ),
-				'value' => self::get_count( $params ),
-				'url'   => UrlHelper::add_query_params( $url, array( 'data' => $key ) ),
+				'label'  => $status,
+				'value'  => $key,
+				'count'  => self::get_count( $params ),
+				'url'    => UrlHelper::add_query_params( $url, array( 'data' => $key ) ),
+				'active' => $key === $seleted || ( empty( $key ) && 'all' === $seleted ),
 			);
 		}
 
