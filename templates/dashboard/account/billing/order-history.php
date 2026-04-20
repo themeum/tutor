@@ -86,7 +86,7 @@ else :
 	$order_history_card_template = apply_filters( 'tutor_order_history_card_template', $default_card_template );
 	foreach ( $orders as $order_data ) :
 		if ( file_exists( $order_history_card_template ) ) {
-			tutor_load_template_from_custom_path( $order_history_card_template, array( 'order_data' => $order_data ) );
+			tutor_load_template_from_custom_path( $order_history_card_template, array( 'order_data' => $order_data ), false );
 		}
 	endforeach;
 	?>
