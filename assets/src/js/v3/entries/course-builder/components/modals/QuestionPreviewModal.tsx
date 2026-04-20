@@ -36,6 +36,11 @@ interface QuestionPreviewModalProps extends ModalProps {
 }
 
 const isTutorPro = tutorConfig.tutor_pro_url;
+/**
+ * Tutor Pro bundles several quiz question styles in `front.css`, including puzzle
+ * (`tutor-pro/assets/src/scss/quiz/_quiz_puzzle.scss` → `front.css`), same pattern as the live quiz UI.
+ */
+const TUTOR_PRO_FRONT_STYLESHEET_PATH = '/wp-content/plugins/tutor-pro/assets/css/front.css';
 const IFRAME_SRC_DOC =
   '<!doctype html><html><head><meta charset="utf-8" /></head><body><div id="preview-root"></div></body></html>';
 const PREVIEW_STYLESHEET_PATHS = [
@@ -45,7 +50,7 @@ const PREVIEW_STYLESHEET_PATHS = [
 ];
 
 if (isTutorPro) {
-  PREVIEW_STYLESHEET_PATHS.push('/wp-content/plugins/tutor-pro/assets/css/front.css');
+  PREVIEW_STYLESHEET_PATHS.push(TUTOR_PRO_FRONT_STYLESHEET_PATH);
 }
 
 // Prefetch the stylesheets automatically so they are loaded in the background
@@ -392,97 +397,6 @@ const getPreviewFrameStyles = () => `
     box-shadow: none;
   }
 
-  .tutor-preview-stage .quiz-question-ans-choice-area.tutor-puzzle-question {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    width: 100%;
-    min-width: 0;
-    margin-top: 40px;
-    align-items: stretch;
-    flex-wrap: nowrap;
-  }
-
-  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-playground {
-    position: relative !important;
-    width: fit-content;
-    max-width: 100%;
-    height: auto;
-    max-height: min(52vh, 460px);
-    margin-inline: auto;
-    border: 1px solid var(--tutor-border-idle, #d0d5dd);
-    border-radius: 6px;
-    overflow: hidden !important;
-    touch-action: none !important;
-    background: var(--tutor-surface-l1, #ffffff);
-    box-sizing: border-box;
-  }
-
-  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-reference-image {
-    display: block;
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: min(52vh, 460px);
-    object-fit: contain !important;
-    pointer-events: none;
-  }
-
-  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-slots {
-    position: absolute;
-    inset: 0;
-    pointer-events: none !important;
-  }
-
-  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-scatter {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: flex-start !important;
-    align-content: flex-start !important;
-    margin-top: 16px !important;
-    column-gap: 12px !important;
-    row-gap: 12px !important;
-    padding: 12px !important;
-    border: 2px dashed var(--tutor-border-idle, #d0d5dd) !important;
-    border-radius: 8px !important;
-    min-height: 150px !important;
-    background: var(--tutor-surface-l1, #ffffff) !important;
-    box-sizing: border-box !important;
-    width: 100% !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-  }
-
-  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-piece {
-    position: relative;
-    flex: 0 0 auto !important;
-    width: auto;
-    max-width: none;
-    box-sizing: border-box;
-    overflow: visible;
-    border: none;
-    background: transparent;
-    background-repeat: no-repeat;
-    background-position: center;
-    touch-action: none;
-    z-index: 2;
-    transform-origin: center;
-    transition: transform 0.2s ease-out, width 0.2s ease-out;
-    backface-visibility: hidden;
-    box-shadow: none;
-  }
-
-  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-piece.is-small {
-    z-index: 2;
-  }
-
-  .tutor-preview-stage .tutor-puzzle-question .tutor-puzzle-piece--preview-static {
-    cursor: default !important;
-    pointer-events: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-  }
-
   body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-wrapper,
   body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-reference-inner,
   body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-wrapper,
@@ -525,26 +439,48 @@ const getPreviewFrameStyles = () => `
     max-height: min(52vh, 460px);
   }
 
-  /* Keep puzzle board + scatter within the preview modal viewport. */
+  /*
+   * Puzzle preview: same viewport idea as draw/pin above — board capped at min(52vh, 460px),
+   * scatter scroll area capped so header + board + pieces fit the modal column.
+   */
   .tutor-quiz-question[data-question='puzzle'] .quiz-question-ans-choice-area.tutor-puzzle-question {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     align-items: center;
     margin-top: 24px;
   }
 
   .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-playground {
-    width: min(100%, min(52vh, 460px));
+    box-sizing: border-box;
+    width: auto;
     max-width: 100%;
     max-height: min(52vh, 460px);
     height: auto;
-    margin-inline: auto;
     flex-shrink: 0;
+    margin-inline: auto;
+    overflow: hidden;
+  }
+
+  .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-reference-image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(52vh, 460px);
+    object-fit: contain;
   }
 
   .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-scatter {
-    max-width: min(100%, min(52vh, 460px));
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
     max-height: min(30vh, 220px);
-    min-height: 96px !important;
-    margin-top: 12px !important;
+    min-height: 96px;
+    margin-top: 12px;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 `;
 
