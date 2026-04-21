@@ -345,6 +345,9 @@ class DropdownFilter extends BaseComponent {
 	 */
 	public function get(): string {
 		$options = $this->options;
+		if ( empty( $options ) ) {
+			return '';
+		}
 
 		// Automatically manage active state and URL if query_param is set.
 		if ( ! empty( $this->query_param ) ) {
