@@ -16,7 +16,7 @@ use Tutor\Helpers\DateTimeHelper;
 use Tutor\Models\OrderModel;
 
 $order_data = $data['order_data'] ?? null;
-if ( ! $order_data ) {
+if ( ! $order_data || ! is_object( $order_data ) ) {
 	return;
 }
 

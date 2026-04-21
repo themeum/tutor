@@ -1334,8 +1334,8 @@ class OrderController {
 		$period       = isset( $args['period'] ) ? Input::sanitize( $args['period'] ) : null;
 		$start_date   = isset( $args['start_date'] ) ? Input::sanitize( $args['start_date'] ) : null;
 		$end_date     = isset( $args['end_date'] ) ? Input::sanitize( $args['end_date'] ) : null;
-		$offset       = isset( $args['offset'] ) ? (int) Input::sanitize( $args['offset'] ) : 0;
-		$limit        = isset( $args['limit'] ) ? (int) Input::sanitize( $args['limit'] ) : 0;
+		$offset       = (int) $args['offset'] ?? 0;
+		$limit        = (int) $args['limit'] ?? 0;
 		$order        = QueryHelper::get_valid_sort_order( $args['order'] ?? 'DESC' );
 
 		$data = $this->model->get_user_orders( $period, $start_date, $end_date, $order_status, $user_id, $limit, $offset, $order, $other_params );
