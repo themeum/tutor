@@ -110,7 +110,7 @@ const FormQuestionDescription = ({
                     isTutorPro ? ' codesample' : ''
                   } | wp_adv`}
                   toolbar2={
-                    'strikethrough hr wp_more forecolor pastetext removeformat charmap outdent indent undo redo wp_help fullscreen tutor_button undoRedoDropdown'
+                    'strikethrough hr wp_more forecolor pastetext removeformat charmap outdent indent undo redo wp_help fullscreen'
                   }
                 />
               </Show>

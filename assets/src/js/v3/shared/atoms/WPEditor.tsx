@@ -54,7 +54,7 @@ function editorConfig(
 
   const toolbar2 =
     propsToolbar2 ??
-    'strikethrough hr | forecolor pastetext removeformat | charmap | outdent indent | undo redo | wp_help | fullscreen | tutor_button | undoRedoDropdown';
+    'strikethrough hr | forecolor pastetext removeformat | charmap | outdent indent | undo redo | wp_help | fullscreen';
 
   toolbar1 = isAboveMobile ? toolbar1 : toolbar1.replaceAll(' | ', ' ');
 
