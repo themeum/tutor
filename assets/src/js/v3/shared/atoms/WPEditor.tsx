@@ -279,6 +279,8 @@ const WPEditor = ({
   }, [value]);
 
   useEffect(() => {
+    const currentRef = editorRef.current;
+
     if (typeof window.wp !== 'undefined' && window.wp.editor) {
       const config = editorConfig(
         isFocused,
@@ -303,7 +305,7 @@ const WPEditor = ({
       // causing editor.getBody() to return undefined in cross-document contexts.
       // Using inline mode with the `target` option avoids both issues:
       // TinyMCE renders directly into the target element without a content iframe.
-      const isInIframe = editorRef.current && editorRef.current.ownerDocument !== document;
+      const isInIframe = currentRef && currentRef.ownerDocument !== document;
 
       if (isInIframe) {
         const existingEditor = window.tinymce.get(editorId);
@@ -313,15 +315,15 @@ const WPEditor = ({
 
         // TinyMCE inline mode requires a block-level element (not textarea).
         // Create a div in the iframe's document to serve as the inline editor target.
-        const iframeDoc = editorRef.current.ownerDocument;
+        const iframeDoc = currentRef.ownerDocument;
         const inlineTarget = iframeDoc.createElement('div');
         inlineTarget.id = editorId;
         inlineTarget.innerHTML = value;
 
         // Hide textarea and transfer its id to the div (TinyMCE uses element id for registration)
-        editorRef.current.removeAttribute('id');
-        editorRef.current.style.display = 'none';
-        editorRef.current.parentNode?.insertBefore(inlineTarget, editorRef.current.nextSibling);
+        currentRef.removeAttribute('id');
+        currentRef.style.display = 'none';
+        currentRef.parentNode?.insertBefore(inlineTarget, currentRef.nextSibling);
 
         // Filter out plugins that require TinyMCE's content iframe (unavailable in inline mode)
         const iframeOnlyPlugins = ['wpautoresize', 'fullscreen', 'tabfocus'];
@@ -369,9 +371,9 @@ const WPEditor = ({
           }
           inlineTarget.remove();
           // Restore textarea
-          if (editorRef.current) {
-            editorRef.current.id = editorId;
-            editorRef.current.style.display = '';
+          if (currentRef) {
+            currentRef.id = editorId;
+            currentRef.style.display = '';
           }
         };
       }
@@ -379,7 +381,6 @@ const WPEditor = ({
       window.wp.editor.remove(editorId);
       window.wp.editor.initialize(editorId, config);
 
-      const currentRef = editorRef.current;
       currentRef?.addEventListener('change', handleOnChange);
       currentRef?.addEventListener('input', handleOnChange);
 
