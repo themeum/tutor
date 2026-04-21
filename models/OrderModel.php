@@ -2182,52 +2182,6 @@ class OrderModel {
 	}
 
 	/**
-	 * Normalize order data for order history display.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param object $order Order object.
-	 *
-	 * @return object Modified order object with normalized properties.
-	 */
-	public static function normalize_order_for_history( $order ) {
-
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
-
-		if ( 'wc' === $monetize_by ) {
-			$wc_order = wc_get_order( $order->ID );
-
-			if ( ! $wc_order ) {
-				return $order;
-			}
-
-			$order->total_price    = (float) $wc_order->get_total();
-			$order->order_status   = $wc_order->get_status();
-			$order->payment_status = $wc_order->get_status();
-			$order->payment_method = $wc_order->get_payment_method_title();
-			$order->created_at_gmt = $order->post_date_gmt ?? $order->post_date;
-
-			return $order;
-		} elseif ( 'edd' === $monetize_by ) {
-			$edd_order = edd_get_payment( $order->ID );
-
-			if ( ! $edd_order ) {
-				return $order;
-			}
-
-			$order->total_price    = (float) $edd_order->total;
-			$order->order_status   = $edd_order->status_nicename;
-			$order->payment_status = $edd_order->status_nicename;
-			$order->created_at_gmt = $order->post_date_gmt ?? $order->post_date;
-			$order->payment_method = '';
-
-			return $order;
-		}
-
-		return $order;
-	}
-
-	/**
 	 * Get order item titles for order history display.
 	 *
 	 * @since 4.0.0
@@ -2237,106 +2191,24 @@ class OrderModel {
 	 * @return array<int, string> List of item titles.
 	 */
 	public static function get_order_history_titles( $order ) {
+		$titles = array();
+		$items  = ( new OrderModel() )->get_order_items_by_id( $order->id );
+		foreach ( $items as $item ) {
 
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
-		$titles      = array();
-
-		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
-			$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
-			foreach ( $items as $item ) {
-
-				if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
-					$titles[] = get_the_title( $item->id );
-					continue;
-				}
-
-				$object_id     = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
-					$plan_info = apply_filters( 'tutor_get_plan_info', null, $item->id );
-				if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
-					$titles[] = $plan_info->plan_name;
-				} else {
-					$titles[] = get_the_title( $object_id );
-				}
+			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
+				$titles[] = get_the_title( $item->id );
+				continue;
 			}
 
-			return $titles;
-		}
-
-		$courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order->ID );
-		if ( tutor_utils()->count( $courses ) ) {
-			foreach ( $courses as $course ) {
-				if ( empty( $course['course_id'] ) ) {
-					continue;
-				}
-
-				$titles[] = get_the_title( $course['course_id'] );
+			$object_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
+			$plan_info = apply_filters( 'tutor_get_plan_info', null, $item->id );
+			if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
+				$titles[] = $plan_info->plan_name;
+			} else {
+				$titles[] = get_the_title( $object_id );
 			}
 		}
 
 		return $titles;
-	}
-
-	/**
-	 * Render pay link or payment button HTML for an order.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param object $order Order object.
-	 *
-	 * @return void
-	 */
-	public static function render_order_history_pay_link( $order ) {
-
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
-
-		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
-			self::render_pay_button( $order );
-		}
-
-		if ( 'wc' === $monetize_by && 'pending' === $order->order_status ) {
-			$wc_order = wc_get_order( $order->ID );
-
-			if ( $wc_order ) {
-				printf(
-					'<a href="%s" class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit">%s</a>',
-					esc_url( $wc_order->get_checkout_payment_url() ),
-					esc_html__( 'Pay', 'tutor' )
-				);
-			}
-		}
-	}
-
-	/**
-	 * Render billing receipt action button.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param object $order Order object.
-	 *
-	 * @return void
-	 */
-	public static function render_billing_receipt_action( $order ) {
-
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
-
-		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
-			do_action( 'tutor_dashboard_invoice_button', $order );
-			return;
-		}
-
-		if ( Invoice::should_show_invoice( $order ) ) {
-			Button::make()
-				->tag( 'button' )
-				->label( __( 'Receipt', 'tutor' ) )
-				->variant( Variant::LINK )
-				->attr( 'type', 'button' )
-				->attr( 'class', 'tutor-export-purchase-history tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit' )
-				->attr( 'data-order', $order->id ?? $order->ID )
-				->attr( 'data-course-name', implode( ', ', $order->titles ) )
-				->attr( 'data-price', (string) $order->total_price )
-				->attr( 'data-date', $order->created_at_gmt )
-				->attr( 'data-status', $order->order_status )
-				->render();
-		}
 	}
 }

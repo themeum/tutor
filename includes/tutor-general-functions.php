@@ -1772,6 +1772,8 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 			$price = wc_price( $price );
 		} elseif ( 'edd' === $monetize_by ) {
 			$price = edd_currency_filter( edd_format_amount( $price ) );
+		} elseif ( 'pmpro' === $monetize_by ) {
+			$price = pmpro_formatPrice( $price );
 		}
 
 		return $price;

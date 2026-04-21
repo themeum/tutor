@@ -169,11 +169,18 @@ export const validateQuizQuestion = (
       }
     }
 
-    if (currentQuestionType === 'draw_image' || currentQuestionType === 'pin_image') {
+    if (
+      currentQuestionType === 'draw_image' ||
+      currentQuestionType === 'pin_image' ||
+      currentQuestionType === 'puzzle'
+    ) {
       const hasMarkedArea = answers.some((answer) => Boolean(answer.answer_two_gap_match));
       if (!hasMarkedArea) {
         return {
-          message: __('Please mark a valid area on the image.', __TUTOR_TEXT_DOMAIN__),
+          message:
+            currentQuestionType === 'puzzle'
+              ? __('Please upload a valid puzzle image.', __TUTOR_TEXT_DOMAIN__)
+              : __('Please mark a valid area on the image.', __TUTOR_TEXT_DOMAIN__),
           type: 'question',
         };
       }
@@ -200,6 +207,12 @@ export const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>):
       const rawThreshold = question.question_settings.draw_image_threshold_percent;
       if (rawThreshold !== undefined && rawThreshold !== null && !Number.isNaN(Number(rawThreshold))) {
         question.question_settings.draw_image_threshold_percent = Number(rawThreshold);
+      }
+    }
+    if (question.question_type === 'puzzle') {
+      const rawGridSize = question.question_settings.puzzle_grid_size;
+      if (rawGridSize !== undefined && rawGridSize !== null && !Number.isNaN(Number(rawGridSize))) {
+        question.question_settings.puzzle_grid_size = Number(rawGridSize);
       }
     }
   }

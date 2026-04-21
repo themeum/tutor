@@ -299,6 +299,7 @@ export type QuizQuestionType =
   | 'scale'
   | 'pin_image'
   | 'coordinates'
+  | 'puzzle'
   | 'h5p';
 
 export interface QuizQuestionOption {
@@ -335,6 +336,7 @@ export interface QuizQuestion {
     has_multiple_correct_answer: boolean;
     is_image_matching: boolean;
     draw_image_threshold_percent?: number;
+    puzzle_grid_size?: number;
   };
   question_answers: QuizQuestionOption[];
 }
@@ -350,6 +352,7 @@ export interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_se
     has_multiple_correct_answer?: '0' | '1';
     is_image_matching?: '0' | '1';
     draw_image_threshold_percent?: number;
+    puzzle_grid_size?: number;
   };
 }
 
