@@ -447,7 +447,6 @@ if ( is_array( $answers ) && count( $answers ) ) {
 															SvgIcon::make()
 																->name( $question_icon_name )
 																->size( 32 )
-																->attr( 'class', 'tutor-icon tutor-cursor-pointer' )
 																->render();
 														}
 														?>
