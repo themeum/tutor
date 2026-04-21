@@ -200,6 +200,7 @@ if ( ! function_exists( 'tutor_render_question_type_icon' ) ) {
 			'draw_image'        => Icon::QUIZ_MARK_IN_THE_IMAGE,
 			'scale'             => Icon::QUIZ_RANGE,
 			'pin_image'         => Icon::QUIZ_PIN,
+			'puzzle'            => Icon::QUIZ_PUZZLE,
 			'coordinates'       => Icon::QUIZ_GRAPH,
 			'h5p'               => Icon::QUIZ_H5P,
 		);
