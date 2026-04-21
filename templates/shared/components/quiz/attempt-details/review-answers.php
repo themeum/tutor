@@ -50,11 +50,13 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 
 		$is_draw_image_review = 'draw_image' === $question_type;
 
-		$is_pin_review        = 'pin_image' === $question_type;
+		$is_pin_review = 'pin_image' === $question_type;
 
-		$is_scale_review      = 'scale' === $question_type;
+		$is_scale_review = 'scale' === $question_type;
 
 		$is_coordinates_review = 'coordinates' === $question_type;
+
+		$is_puzzle_review = 'puzzle' === $question_type;
 
 		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
 
@@ -78,6 +80,8 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 			$question_template = 'draw-image';
 		} elseif ( $is_coordinates_review ) {
 			$question_template = 'coordinates';
+		} elseif ( $is_puzzle_review ) {
+			$question_template = 'puzzle';
 		}
 		?>
 

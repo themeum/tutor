@@ -1,3 +1,4 @@
+import purgecss from '@fullhuman/postcss-purgecss';
 import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
 import { rspack } from '@rspack/core';
 import fs from 'node:fs';
@@ -5,6 +6,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import nodeExternals from 'webpack-node-externals';
+import { purgecssContent, purgecssSafelist } from './purgecss.config.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,6 +61,28 @@ const createConfig = (env, options) => {
   const isDevelopment = mode === 'development';
   const isMakePot = env?.['make-pot'];
 
+  const cssLoaderConfig = {
+    loader: 'css-loader',
+    options: {
+      url: {
+        filter: (url) => {
+          return /\.(woff2?|woff|ttf|otf|eot)(\?.*)?$/i.test(url);
+        },
+      },
+    },
+  };
+
+  const sassLoaderConfig = {
+    loader: 'sass-loader',
+    options: {
+      implementation: 'sass',
+      sassOptions: {
+        outputStyle: isDevelopment ? 'expanded' : 'compressed',
+        silenceDeprecations: ['abs-percent', 'color-functions', 'global-builtin', 'import', 'legacy-js-api'],
+      },
+    },
+  };
+
   const baseConfig = {
     mode,
     cache: false,
@@ -66,29 +90,32 @@ const createConfig = (env, options) => {
       rules: [
         {
           test: /\.s[ac]ss$/i,
+          include: [path.resolve(__dirname, 'assets/core/scss')],
           use: [
             rspack.CssExtractRspackPlugin.loader,
+            cssLoaderConfig,
             {
-              loader: 'css-loader',
+              loader: 'postcss-loader',
               options: {
-                url: {
-                  filter: (url) => {
-                    return /\.(woff2?|woff|ttf|otf|eot)(\?.*)?$/i.test(url);
-                  },
+                postcssOptions: {
+                  plugins: [
+                    !isDevelopment &&
+                      purgecss({
+                        content: purgecssContent,
+                        defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+                        safelist: purgecssSafelist,
+                      }),
+                  ].filter(Boolean),
                 },
               },
             },
-            {
-              loader: 'sass-loader',
-              options: {
-                implementation: 'sass',
-                sassOptions: {
-                  outputStyle: isDevelopment ? 'expanded' : 'compressed',
-                  silenceDeprecations: ['abs-percent', 'color-functions', 'global-builtin', 'import', 'legacy-js-api'],
-                },
-              },
-            },
+            sassLoaderConfig,
           ],
+        },
+        {
+          test: /\.s[ac]ss$/i,
+          exclude: [path.resolve(__dirname, 'assets/core/scss')],
+          use: [rspack.CssExtractRspackPlugin.loader, cssLoaderConfig, sassLoaderConfig],
         },
         {
           test: /\.css$/i,

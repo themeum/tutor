@@ -45,10 +45,23 @@
         td {
           &:first-of-type {
             width: 31.71%;
+            svg {
+              flex-shrink: 0;
+            }
           }
 
           &:last-of-type {
             width: 68.28%;
+          }
+
+          @include tutor-breakpoint-down(sm) {
+            &:first-of-type {
+              width: 50%;
+            }
+
+            &:last-of-type {
+              width: 50%;
+            }
           }
         }
       }

@@ -66,6 +66,105 @@ class UserPreference {
 	const THEME_SYSTEM = 'system';
 
 	/**
+	 * Vision option: normal.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const VISION_NORMAL = 'normal';
+
+	/**
+	 * Vision option: protanopia.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const VISION_PROTANOPIA = 'protanopia';
+
+	/**
+	 * Vision option: deuteranopia.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const VISION_DEUTERANOPIA = 'deuteranopia';
+
+	/**
+	 * Vision option: deuteranomaly.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const VISION_DEUTERANOMALY = 'deuteranomaly';
+
+	/**
+	 * Available vision options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array<string>
+	 */
+	const VISIONS = array(
+		self::VISION_NORMAL,
+		self::VISION_PROTANOPIA,
+		self::VISION_DEUTERANOPIA,
+		self::VISION_DEUTERANOMALY,
+	);
+
+	/**
+	 * Contrast option: high.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const CONTRAST_HIGH = 'high';
+
+	/**
+	 * Motion effects option: auto (follow system).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const MOTION_EFFECTS_AUTO = 'auto';
+
+	/**
+	 * Motion effects option: reduce.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const MOTION_EFFECTS_REDUCE = 'reduce';
+
+	/**
+	 * Motion effects option: standard (no reduction).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const MOTION_EFFECTS_STANDARD = 'standard';
+
+	/**
+	 * Available motion effects options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array<string>
+	 */
+	const MOTION_EFFECTS_OPTIONS = array(
+		self::MOTION_EFFECTS_AUTO,
+		self::MOTION_EFFECTS_REDUCE,
+		self::MOTION_EFFECTS_STANDARD,
+	);
+
+	/**
 	 * Default theme value.
 	 *
 	 * @since 4.0.0
@@ -99,7 +198,7 @@ class UserPreference {
 	 *
 	 * @var array<int>
 	 */
-	const FONT_SCALE_OPTIONS = array( 70, 80, 90, 100, 110, 120 );
+	const FONT_SCALE_OPTIONS = array( 60, 80, 100, 120, 140, 160, 180, 200 );
 
 	/**
 	 * Register hooks.
@@ -152,7 +251,38 @@ class UserPreference {
 		if ( ! in_array( $theme, self::THEMES, true ) ) {
 			$theme = self::DEFAULT_THEME;
 		}
-		return $output . ' data-tutor-theme="' . esc_attr( $theme ) . '"';
+
+		$vision = isset( $prefs['vision'] ) ? (string) $prefs['vision'] : self::VISION_NORMAL;
+		if ( ! in_array( $vision, self::VISIONS, true ) ) {
+			$vision = self::VISION_NORMAL;
+		}
+
+		// Resolve actual theme for 'system' (PHP fallback is light; JS applies real system preference).
+		$resolved_theme = self::THEME_SYSTEM === $theme ? self::THEME_LIGHT : $theme;
+
+		$contrast      = isset( $prefs['contrast'] ) ? (string) $prefs['contrast'] : '';
+		$contrast_attr = '';
+		if ( self::CONTRAST_HIGH === $contrast ) {
+			$contrast_attr = ' data-tutor-contrast="' . esc_attr( self::CONTRAST_HIGH ) . '"';
+		}
+
+		$motion_effects = isset( $prefs['motion_effects'] ) ? (string) $prefs['motion_effects'] : self::MOTION_EFFECTS_AUTO;
+		if ( ! in_array( $motion_effects, self::MOTION_EFFECTS_OPTIONS, true ) ) {
+			$motion_effects = self::MOTION_EFFECTS_AUTO;
+		}
+
+		$motion_effects_attr = '';
+		if ( self::MOTION_EFFECTS_REDUCE === $motion_effects ) {
+			$motion_effects_attr = ' data-tutor-motion="reduce"';
+		} elseif ( self::MOTION_EFFECTS_AUTO === $motion_effects ) {
+			$motion_effects_attr = ' data-tutor-motion="auto"';
+		}
+
+		$vision_attr = self::VISION_NORMAL !== $vision
+			? ' data-tutor-vision="' . esc_attr( $vision ) . '"'
+			: '';
+
+		return $output . ' data-tutor-theme="' . esc_attr( $resolved_theme ) . '"' . $vision_attr . $contrast_attr . $motion_effects_attr;
 	}
 
 	/**
@@ -254,6 +384,9 @@ class UserPreference {
 
 		$auto_play_next = Input::post( 'auto_play_next', null );
 		$theme          = Input::post( 'theme', null );
+		$vision         = Input::post( 'vision', null );
+		$contrast       = Input::post( 'contrast', null );
+		$motion_effects = Input::post( 'motion_effects', null );
 		$font_scale     = Input::post( 'font_scale', null );
 		$learning_mood  = Input::post( 'learning_mood', null );
 
@@ -266,7 +399,38 @@ class UserPreference {
 		}
 
 		if ( null !== $theme ) {
+			if ( ! in_array( $theme, self::THEMES, true ) ) {
+				$theme = self::DEFAULT_THEME;
+			}
 			$preferences_settings['theme'] = $theme;
+		}
+
+		if ( null !== $vision ) {
+			$vision = (string) $vision;
+			if ( ! in_array( $vision, self::VISIONS, true ) ) {
+				$vision = self::VISION_NORMAL;
+			}
+			$preferences_settings = array_merge( $preferences_settings, self::prepare_preference_setting( 'vision', $vision, self::VISION_NORMAL ) );
+		}
+
+		if ( null !== $contrast ) {
+			$contrast = (string) $contrast;
+			// Switch inputs often post "true" when checked.
+			if ( 'true' === $contrast ) {
+				$contrast = self::CONTRAST_HIGH;
+			}
+			if ( self::CONTRAST_HIGH !== $contrast ) {
+				$contrast = '';
+			}
+			$preferences_settings = array_merge( $preferences_settings, self::prepare_preference_setting( 'contrast', $contrast, '' ) );
+		}
+
+		if ( null !== $motion_effects ) {
+			$motion_effects = (string) $motion_effects;
+			if ( ! in_array( $motion_effects, self::MOTION_EFFECTS_OPTIONS, true ) ) {
+				$motion_effects = self::MOTION_EFFECTS_AUTO;
+			}
+			$preferences_settings = array_merge( $preferences_settings, self::prepare_preference_setting( 'motion_effects', $motion_effects, self::MOTION_EFFECTS_AUTO ) );
 		}
 
 		if ( null !== $font_scale ) {
@@ -394,6 +558,9 @@ class UserPreference {
 			array(
 				'auto_play_next' => (bool) tutor_utils()->get_option( 'autoload_next_course_content' ),
 				'theme'          => self::DEFAULT_THEME,
+				'vision'         => self::VISION_NORMAL,
+				'contrast'       => '',
+				'motion_effects' => self::MOTION_EFFECTS_AUTO,
 				'font_scale'     => self::DEFAULT_FONT_SCALE,
 				'learning_mood'  => tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN ),
 			)
@@ -427,6 +594,34 @@ class UserPreference {
 	}
 
 	/**
+	 * Get vision options for UI selects.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<int,array{label:string,value:string}>
+	 */
+	public static function get_vision_options() {
+		return array(
+			array(
+				'label' => __( 'Normal', 'tutor' ),
+				'value' => self::VISION_NORMAL,
+			),
+			array(
+				'label' => __( 'Protanopia', 'tutor' ),
+				'value' => self::VISION_PROTANOPIA,
+			),
+			array(
+				'label' => __( 'Deuteranopia', 'tutor' ),
+				'value' => self::VISION_DEUTERANOPIA,
+			),
+			array(
+				'label' => __( 'Deuteranomaly', 'tutor' ),
+				'value' => self::VISION_DEUTERANOMALY,
+			),
+		);
+	}
+
+	/**
 	 * Get learning mood options for UI selects.
 	 *
 	 * @since 4.0.0
@@ -447,6 +642,30 @@ class UserPreference {
 	}
 
 	/**
+	 * Get motion effects options for UI selects.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<int,array{label:string,value:string}>
+	 */
+	public static function get_motion_effects_options() {
+		return array(
+			array(
+				'label' => __( 'Auto (System Default)', 'tutor' ),
+				'value' => self::MOTION_EFFECTS_AUTO,
+			),
+			array(
+				'label' => __( 'Reduced Motion', 'tutor' ),
+				'value' => self::MOTION_EFFECTS_REDUCE,
+			),
+			array(
+				'label' => __( 'Standard Motion', 'tutor' ),
+				'value' => self::MOTION_EFFECTS_STANDARD,
+			),
+		);
+	}
+
+	/**
 	 * Get font scale options for UI selects.
 	 *
 	 * Uses a filter to allow customization of available values.
@@ -459,11 +678,21 @@ class UserPreference {
 		$values  = apply_filters( 'tutor_user_preference_font_scale_values', self::FONT_SCALE_OPTIONS );
 		$options = array();
 		foreach ( $values as $value ) {
-			$value     = (int) $value;
-			$options[] = array(
+			$value  = (int) $value;
+			$option = array(
 				'label' => $value . '%',
 				'value' => $value,
 			);
+
+			if ( self::DEFAULT_FONT_SCALE === $value ) {
+				$option['html_label']    = $value . '% <span class="tutor-badge tutor-ml-4">' . esc_html__( 'Default', 'tutor' ) . '</span>';
+				$option['display_label'] = __( 'Default', 'tutor' );
+			} elseif ( 140 === $value ) {
+				$option['html_label']    = $value . '% <span class="tutor-badge tutor-ml-4">' . esc_html__( 'Large', 'tutor' ) . '</span>';
+				$option['display_label'] = __( 'Large', 'tutor' );
+			}
+
+			$options[] = $option;
 		}
 		return $options;
 	}
