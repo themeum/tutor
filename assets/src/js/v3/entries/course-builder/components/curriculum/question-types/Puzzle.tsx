@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { useEffect } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
@@ -13,21 +12,10 @@ const Puzzle = () => {
   const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
 
   const answersPath = `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers';
-  const gridSizePath =
-    `questions.${activeQuestionIndex}.question_settings.puzzle_grid_size` as 'questions.0.question_settings.puzzle_grid_size';
-
   const { fields: optionsFields } = useFieldArray({
     control: form.control,
     name: answersPath,
   });
-
-  useEffect(() => {
-    const currentValue = form.getValues(gridSizePath);
-    const validGridSizes = [2, 3, 4, 5, 6, 7];
-    if (!validGridSizes.includes(Number(currentValue))) {
-      form.setValue(gridSizePath, 4);
-    }
-  }, [form, gridSizePath]);
 
   if (optionsFields.length === 0) {
     return null;
