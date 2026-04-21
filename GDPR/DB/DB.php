@@ -60,8 +60,8 @@ abstract class DB {
 	 */
 	protected static function tables() {
 		return array(
-			Compliances::class,
-			Consents::class,
+			LegalConsents::class,
+			UserContents::class,
 			Logs::class,
 		);
 	}

@@ -10,6 +10,9 @@
 
 namespace Tutor\GDPR;
 
+use Tutor\GDPR\Controllers\ComplianceLogs;
+use Tutor\GDPR\Controllers\LegalConsent;
+use Tutor\GDPR\Controllers\UserContent;
 use Tutor\GDPR\DB\DB;
 use TUTOR\Singleton;
 
@@ -40,7 +43,7 @@ final class GDPR extends Singleton {
 	 *
 	 * @var string
 	 */
-	private const DB_SCHEMA_VERSION = '1.0.0';
+	private const DB_SCHEMA_VERSION = '1.1.0';
 
 	/**
 	 * Constructor.
@@ -71,6 +74,9 @@ final class GDPR extends Singleton {
 	 */
 	public function init() {
 		$this->maybe_install_db();
+		new LegalConsent();
+		new UserContent();
+		new ComplianceLogs();
 	}
 
 	/**
