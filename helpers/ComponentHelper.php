@@ -47,6 +47,7 @@ class ComponentHelper {
 				break;
 			case 'completed':
 			case 'approved':
+			case 'success':
 				$badge_class = 'success';
 				break;
 		}

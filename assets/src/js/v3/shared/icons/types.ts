@@ -308,6 +308,7 @@ export const icons = [
   'quizH5p',
   'quizImageAnswer',
   'quizImageMatching',
+  'quizPuzzle',
   'quizMarkInTheImage',
   'quizMultiChoice',
   'quizNumber',
