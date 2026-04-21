@@ -51,11 +51,11 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 <div class="tutor-student-dashboard" x-data>
 	<?php
 	$enrolled_course   = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
-	$completed_courses = tutor_utils()->get_completed_courses_ids_by_user();
+	$completed_courses = CourseModel::get_completed_courses_by_user( $user_id );
 	$active_courses    = CourseModel::get_active_courses_by_user( $user_id );
 
 	$enrolled_course_count  = $enrolled_course ? $enrolled_course->post_count : 0;
-	$completed_course_count = count( $completed_courses );
+	$completed_course_count = is_object( $completed_courses ) && $completed_courses->have_posts() ? $completed_courses->post_count : 0;
 	$active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
 
 	$enrolled_course_link  = tutor_utils()->tutor_dashboard_url( 'courses' );
