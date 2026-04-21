@@ -10,10 +10,10 @@
 
 namespace Tutor\GDPR;
 
-use Tutor\GDPR\Controllers\ComplianceLogs;
+use Tutor\GDPR\Controllers\LegalConsentLogs;
 use Tutor\GDPR\Controllers\LegalConsent;
-use Tutor\GDPR\Controllers\UserContent;
 use Tutor\GDPR\DB\DB;
+use Tutor\GDPR\DB\UserConsents;
 use TUTOR\Singleton;
 
 defined( 'ABSPATH' ) || exit;
@@ -75,8 +75,8 @@ final class GDPR extends Singleton {
 	public function init() {
 		$this->maybe_install_db();
 		new LegalConsent();
-		new UserContent();
-		new ComplianceLogs();
+		new UserConsents();
+		new LegalConsentLogs();
 	}
 
 	/**

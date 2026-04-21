@@ -61,7 +61,7 @@ abstract class DB {
 	protected static function tables() {
 		return array(
 			LegalConsents::class,
-			UserContents::class,
+			UserConsents::class,
 			Logs::class,
 		);
 	}

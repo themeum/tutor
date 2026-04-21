@@ -1,6 +1,6 @@
 <?php
 /**
- * GDPR compliance logs table.
+ * GDPR legal consents table.
  *
  * @package Tutor\GDPR\DB
  * @author Themeum <support@themeum.com>
@@ -13,9 +13,9 @@ namespace Tutor\GDPR\DB;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Consents table class.
+ * Legal consents table class.
  */
-class Logs extends DB {
+class LegalConsents extends DB {
 
 	/**
 	 * Get table name.
@@ -26,7 +26,7 @@ class Logs extends DB {
 	 */
 	public static function get_table_name() {
 		global $wpdb;
-		return $wpdb->prefix . 'tutor_legal_consent_logs';
+		return $wpdb->prefix . 'tutor_legal_consents';
 	}
 
 	/**
@@ -44,11 +44,19 @@ class Logs extends DB {
 
 		return "CREATE TABLE {$table_name} (
 			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-			compliance_id BIGINT UNSIGNED NOT NULL,
-			action VARCHAR(50), -- created, updated, deleted
-			old_data JSON NULL,
-			new_data JSON NULL,
-			created_at_utc DATETIME NOT NULL
+			compliance_key VARCHAR(100) NOT NULL,
+			title VARCHAR(255) NOT NULL,
+			label_text TEXT NOT NULL,
+			policy_url TEXT NULL,
+			version VARCHAR(20) NOT NULL,
+			is_required TINYINT(1) DEFAULT 0,
+			is_active TINYINT(1) DEFAULT 1,
+			placements TEXT NULL,
+			settings JSON NULL,
+			created_at_utc DATETIME NOT NULL,
+			updated_at_utc DATETIME NULL,
+			INDEX (compliance_key),
+			INDEX (is_active)
 		) {$charset_collate};";
 	}
 }
