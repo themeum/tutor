@@ -228,6 +228,8 @@ class LegalConsent {
 	 * @return void
 	 */
 	private function update_legal_consent( int $id, array $request ) {
+		global $wpdb;
+
 		if ( ! $id ) {
 			$this->response_fail( __( 'Invalid legal consent id.', 'tutor' ), 400 );
 		}
@@ -239,20 +241,37 @@ class LegalConsent {
 
 		$data = $this->prepare_legal_consent_data( $request, false );
 		if ( is_wp_error( $data ) ) {
-			$this->response_fail( $data->get_error_message(), 400 );
+			$this->json_response( '', $data->errors, 400 );
 		}
 
 		if ( empty( $data ) ) {
 			$this->response_fail( __( 'No update data found.', 'tutor' ), 400 );
 		}
 
+		$wpdb->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+
 		$data['updated_at_utc'] = current_time( 'mysql', true );
 		$updated                = $this->model->update( $id, $data );
 		if ( ! $updated ) {
+			$wpdb->query( 'ROLLBACK' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$this->response_fail( __( 'Failed to update legal consent.', 'tutor' ), 500 );
 		}
 
-		$this->log_model->create_log( $id, 'updated', (array) $existing, $data );
+		$log_id = $this->log_model->create(
+			array(
+				'legal_consent_id' => $id,
+				'action'           => 'updated',
+				'old_data'         => wp_json_encode( (array) $existing ),
+				'new_data'         => wp_json_encode( $data ),
+				'created_at_utc'   => current_time( 'mysql', true ),
+			)
+		);
+		if ( ! $log_id ) {
+			$wpdb->query( 'ROLLBACK' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$this->response_fail( __( 'Failed to create legal consent log.', 'tutor' ), 500 );
+		}
+
+		$wpdb->query( 'COMMIT' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		$this->response_success( __( 'Legal consent updated successfully.', 'tutor' ) );
 	}
@@ -267,6 +286,8 @@ class LegalConsent {
 	 * @return void
 	 */
 	private function delete_legal_consent( int $id ) {
+		global $wpdb;
+
 		if ( ! $id ) {
 			$this->response_fail( __( 'Invalid legal consent id.', 'tutor' ), 400 );
 		}
@@ -276,12 +297,29 @@ class LegalConsent {
 			$this->response_fail( __( 'Legal consent not found.', 'tutor' ), 404 );
 		}
 
+		$wpdb->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+
 		$deleted = $this->model->delete( $id );
 		if ( ! $deleted ) {
+			$wpdb->query( 'ROLLBACK' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$this->response_fail( __( 'Failed to delete legal consent.', 'tutor' ), 500 );
 		}
 
-		$this->log_model->create( $id, 'deleted', (array) $existing, null );
+		$log_id = $this->log_model->create(
+			array(
+				'compliance_id'   => $id,
+				'action'          => 'deleted',
+				'old_data'        => wp_json_encode( (array) $existing ),
+				'new_data'        => null,
+				'created_at_utc'  => current_time( 'mysql', true ),
+			)
+		);
+		if ( ! $log_id ) {
+			$wpdb->query( 'ROLLBACK' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$this->response_fail( __( 'Failed to create legal consent log.', 'tutor' ), 500 );
+		}
+
+		$wpdb->query( 'COMMIT' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		$this->response_success( __( 'Legal consent deleted successfully.', 'tutor' ) );
 	}
@@ -309,15 +347,7 @@ class LegalConsent {
 		);
 
 		if ( $is_create ) {
-			$rules = array(
-				'consent_title'   => 'required',
-				'display_on'      => 'required',
-				'consent_message' => 'required',
-				'version'         => 'required',
-				'is_required'     => 'required',
-			);
-
-			$validation = ValidationHelper::validate( $rules, $data );
+			$validation = ValidationHelper::validate( $this->get_legal_consent_validation_rules(), $data );
 			if ( ! $validation->success ) {
 				return new WP_Error( 'validation_error', $validation->errors );
 			}
@@ -333,6 +363,23 @@ class LegalConsent {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Get legal consent validation rules.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	private function get_legal_consent_validation_rules(): array {
+		return array(
+			'consent_title'   => 'required',
+			'display_on'      => 'required',
+			'consent_message' => 'required',
+			'version'         => 'required',
+			'is_required'     => 'required',
+		);
 	}
 
 	/**
