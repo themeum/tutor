@@ -39,14 +39,13 @@ class LegalConsents extends BaseModel {
 	 * @var array
 	 */
 	protected $fillable = array(
-		'compliance_key',
-		'title',
-		'label_text',
-		'policy_url',
+		'consent_title',
+		'display_on',
+		'consent_message',
+		'policy_urls',
 		'version',
 		'is_required',
 		'is_active',
-		'placements',
 		'settings',
 		'created_at_utc',
 		'updated_at_utc',

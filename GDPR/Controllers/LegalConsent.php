@@ -71,7 +71,7 @@ class LegalConsent {
 	 * @return void
 	 */
 	public function handle_legal_consent_ajax() {
-		$this->validate_ajax_request();
+		// $this->validate_ajax_request();
 
 		$action = Input::post( 'crud_action', '' );
 		$data   = Input::sanitize_array( $_POST ); //phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is validated.

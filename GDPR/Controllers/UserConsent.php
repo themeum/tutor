@@ -10,7 +10,7 @@
 
 namespace Tutor\GDPR\Controllers;
 
-use Tutor\GDPR\Models\UserContents;
+use Tutor\GDPR\Models\UserConsents;
 use TUTOR\Input;
 
 defined( 'ABSPATH' ) || exit;
@@ -29,7 +29,7 @@ class UserConsent {
 	 *
 	 * @var UserContents
 	 */
-	private $user_contents;
+	private $model;
 
 	/**
 	 * Constructor.
@@ -37,7 +37,7 @@ class UserConsent {
 	 * @since 4.0.0
 	 */
 	public function __construct() {
-		$this->user_contents = new UserContents();
+		$this->model = new UserConsents();
 		$this->register_hooks();
 	}
 
@@ -118,7 +118,7 @@ class UserConsent {
 			wp_send_json_error( $data->get_error_message() );
 		}
 
-		$user_content_id = $this->user_contents->create( $data );
+		$user_content_id = $this->model->create( $data );
 		if ( ! $user_content_id ) {
 			wp_send_json_error( __( 'Failed to create user content.', 'tutor' ) );
 		}
@@ -145,7 +145,7 @@ class UserConsent {
 			wp_send_json_error( __( 'Invalid user content id.', 'tutor' ) );
 		}
 
-		$item = $this->user_contents->get_row( array( 'id' => $id ) );
+		$item = $this->model->get_row( array( 'id' => $id ) );
 		if ( ! $item ) {
 			wp_send_json_error( __( 'User content not found.', 'tutor' ) );
 		}
@@ -176,7 +176,7 @@ class UserConsent {
 			$where['accepted'] = (int) $request['accepted'];
 		}
 
-		$items = $this->user_contents->get_all( $where );
+		$items = $this->model->get_all( $where );
 		wp_send_json_success( $items );
 	}
 
@@ -195,7 +195,7 @@ class UserConsent {
 			wp_send_json_error( __( 'Invalid user content id.', 'tutor' ) );
 		}
 
-		$existing = $this->user_contents->get_row( array( 'id' => $id ) );
+		$existing = $this->model->get_row( array( 'id' => $id ) );
 		if ( ! $existing ) {
 			wp_send_json_error( __( 'User content not found.', 'tutor' ) );
 		}
@@ -209,7 +209,7 @@ class UserConsent {
 			wp_send_json_error( __( 'No update data found.', 'tutor' ) );
 		}
 
-		$updated = $this->user_contents->update( $id, $data );
+		$updated = $this->model->update( $id, $data );
 		if ( ! $updated ) {
 			wp_send_json_error( __( 'Failed to update user content.', 'tutor' ) );
 		}
@@ -231,7 +231,7 @@ class UserConsent {
 			wp_send_json_error( __( 'Invalid user content id.', 'tutor' ) );
 		}
 
-		$deleted = $this->user_contents->delete( $id );
+		$deleted = $this->model->delete( $id );
 		if ( ! $deleted ) {
 			wp_send_json_error( __( 'Failed to delete user content.', 'tutor' ) );
 		}

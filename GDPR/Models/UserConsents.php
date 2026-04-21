@@ -10,7 +10,7 @@
 
 namespace Tutor\GDPR\Models;
 
-use Tutor\GDPR\DB\UserContents as Table;
+use Tutor\GDPR\DB\UserConsents as Table;
 use Tutor\Models\BaseModel;
 
 defined( 'ABSPATH' ) || exit;
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 4.0.0
  */
-class UserContents extends BaseModel {
+class UserConsents extends BaseModel {
 
 	/**
 	 * Table name without prefix.
@@ -41,9 +41,9 @@ class UserContents extends BaseModel {
 	protected $fillable = array(
 		'user_id',
 		'user_email',
-		'compliance_key',
+		'consent_title',
 		'label_snapshot',
-		'policy_url',
+		'policy_urls',
 		'version',
 		'accepted',
 		'ip_address',
