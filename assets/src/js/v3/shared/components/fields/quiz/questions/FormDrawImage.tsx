@@ -40,7 +40,6 @@ interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
     } | null>
   >;
   precisionControllerProps?: FormControllerProps<number | null>;
-  precisionTextDomain?: string;
   questionDataStatusPath?: string;
 }
 
@@ -49,12 +48,7 @@ const THRESHOLD_OPTIONS = [40, 50, 60, 70, 80, 90, 100].map((value) => ({
   value,
 }));
 
-const FormDrawImage = ({
-  field,
-  precisionControllerProps,
-  precisionTextDomain,
-  questionDataStatusPath,
-}: FormDrawImageProps) => {
+const FormDrawImage = ({ field, precisionControllerProps, questionDataStatusPath }: FormDrawImageProps) => {
   const form = useFormContext();
   const option = field.value;
 
@@ -550,14 +544,14 @@ const FormDrawImage = ({
               aria-label={__('Draw a lasso around the correct answer area', __TUTOR_TEXT_DOMAIN__)}
             />
           </div>
-          {precisionControllerProps && precisionTextDomain && (
+          {precisionControllerProps && (
             <FormSelectInput
               {...precisionControllerProps}
-              label={__('Precision Level', precisionTextDomain)}
+              label={__('Precision Level', __TUTOR_TEXT_DOMAIN__)}
               options={THRESHOLD_OPTIONS}
               helpText={__(
                 'Minimum overlap score between student and instructor markings. Larger or smaller marked areas lower the score.',
-                precisionTextDomain,
+                __TUTOR_TEXT_DOMAIN__,
               )}
               onChange={(option) => {
                 precisionControllerProps.field.onChange(option.value);

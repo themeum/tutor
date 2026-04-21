@@ -78,7 +78,6 @@ const DrawImage = () => {
                 validationError={validationError}
                 setValidationError={setValidationError}
                 precisionControllerProps={thresholdControllerProps}
-                precisionTextDomain={'tutor'}
                 questionDataStatusPath={`questions.${activeQuestionIndex}._data_status`}
               />
             )}

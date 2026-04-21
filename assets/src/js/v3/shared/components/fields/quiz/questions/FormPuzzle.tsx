@@ -34,7 +34,6 @@ interface FormPuzzleProps extends FormControllerProps<QuizQuestionOption> {
   >;
   gridSizeControllerProps?: FormControllerProps<number | null>;
   gridSizePath?: string;
-  gridSizeTextDomain?: string;
   questionDataStatusPath?: string;
 }
 
@@ -43,7 +42,6 @@ const FormPuzzle = ({
   activeQuestionIndex = 0,
   gridSizeControllerProps,
   gridSizePath,
-  gridSizeTextDomain,
   questionDataStatusPath,
 }: FormPuzzleProps) => {
   const form = useFormContext();
@@ -54,22 +52,20 @@ const FormPuzzle = ({
   const activeQuestionDataStatus = form
     ? ((form.watch(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
     : QuizDataStatus.NO_CHANGE;
-  const textDomain = gridSizeTextDomain ?? __TUTOR_TEXT_DOMAIN__;
-
   const gridSizeOptions = useMemo(
     () =>
       [
-        { value: 2, difficulty: __('Easy', textDomain) },
-        { value: 3, difficulty: __('Easy', textDomain) },
-        { value: 4, difficulty: __('Medium', textDomain) },
-        { value: 5, difficulty: __('Medium', textDomain) },
-        { value: 6, difficulty: __('Hard', textDomain) },
-        { value: 7, difficulty: __('Hard', textDomain) },
+        { value: 2, difficulty: __('Easy', __TUTOR_TEXT_DOMAIN__) },
+        { value: 3, difficulty: __('Easy', __TUTOR_TEXT_DOMAIN__) },
+        { value: 4, difficulty: __('Medium', __TUTOR_TEXT_DOMAIN__) },
+        { value: 5, difficulty: __('Medium', __TUTOR_TEXT_DOMAIN__) },
+        { value: 6, difficulty: __('Hard', __TUTOR_TEXT_DOMAIN__) },
+        { value: 7, difficulty: __('Hard', __TUTOR_TEXT_DOMAIN__) },
       ].map(({ value, difficulty }) => ({
-        label: `${difficulty} - ${value}×${value} (${value * value} ${__('pieces', textDomain)})`,
+        label: `${difficulty} - ${value}×${value} (${value * value} ${__('pieces', __TUTOR_TEXT_DOMAIN__)})`,
         value,
       })),
-    [textDomain],
+    [],
   );
 
   const updateOption = useCallback(
@@ -158,7 +154,7 @@ const FormPuzzle = ({
           {gridSizeControllerProps ? (
             <FormSelectInput
               {...gridSizeControllerProps}
-              label={__('Difficulty Level', textDomain)}
+              label={__('Difficulty Level', __TUTOR_TEXT_DOMAIN__)}
               options={gridSizeOptions}
               wrapperCss={styles.dropdownText}
               optionItemCss={styles.dropdownOptionText}
@@ -179,7 +175,7 @@ const FormPuzzle = ({
               render={(gridSizeControllerProps) => (
                 <FormSelectInput
                   {...gridSizeControllerProps}
-                  label={__('Difficulty Level', textDomain)}
+                  label={__('Difficulty Level', __TUTOR_TEXT_DOMAIN__)}
                   options={gridSizeOptions}
                   wrapperCss={styles.dropdownText}
                   optionItemCss={styles.dropdownOptionText}
