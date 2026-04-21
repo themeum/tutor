@@ -751,7 +751,9 @@ class OrderController {
 			 *
 			 * @since 4.0.0
 			 */
-			unset( $where['order_type'] );
+			if ( tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+				unset( $where['order_type'] );
+			}
 
 			$start_date = Input::get( 'start_date', '' );
 			$end_date   = Input::get( 'end_date', '' );
