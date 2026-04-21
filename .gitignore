@@ -50,6 +50,8 @@ cypress/fixtures/*
 launch.json
 /tutor-droip
 /includes/droip
+/tutor-kirki
+/includes/kirki
 
 # Copilot Instructions
 .github/copilot-instructions.md
