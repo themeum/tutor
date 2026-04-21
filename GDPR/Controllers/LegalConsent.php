@@ -13,6 +13,7 @@ namespace Tutor\GDPR\Controllers;
 use Tutor\GDPR\Models\{LegalConsents, LegalConsentLogs};
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
+use Tutor\Traits\JsonResponse;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
@@ -23,6 +24,8 @@ defined( 'ABSPATH' ) || exit;
  * @since 4.0.0
  */
 class LegalConsent {
+
+	use JsonResponse;
 
 	/**
 	 * Legal consent model.
@@ -100,7 +103,7 @@ class LegalConsent {
 				break;
 
 			default:
-				wp_send_json_error( __( 'Invalid legal consent action.', 'tutor' ) );
+				$this->response_fail( __( 'Invalid legal consent action.', 'tutor' ), 400 );
 		}
 	}
 
@@ -132,7 +135,7 @@ class LegalConsent {
 
 		$data = $this->prepare_legal_consent_data( $request, true );
 		if ( is_wp_error( $data ) ) {
-			wp_send_json_error( $data->errors );
+			$this->json_response( '', $data->errors, 400 );
 		}
 
 		$wpdb->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -140,7 +143,7 @@ class LegalConsent {
 		$legal_consent_id = $this->model->create( $data );
 		if ( ! $legal_consent_id ) {
 			$wpdb->query( 'ROLLBACK' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			wp_send_json_error( __( 'Failed to create legal consent.', 'tutor' ) );
+			$this->response_fail( __( 'Failed to create legal consent.', 'tutor' ), 500 );
 		}
 
 		$log_id = $this->log_model->create(
@@ -155,16 +158,17 @@ class LegalConsent {
 
 		if ( ! $log_id ) {
 			$wpdb->query( 'ROLLBACK' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			wp_send_json_error( __( 'Failed to create legal consent log.', 'tutor' ) );
+			$this->response_fail( __( 'Failed to create legal consent log.', 'tutor' ), 500 );
 		}
 
 		$wpdb->query( 'COMMIT' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
-		wp_send_json_success(
+		$this->json_response(
+			__( 'Legal consent created successfully.', 'tutor' ),
 			array(
-				'message' => __( 'Legal consent created successfully.', 'tutor' ),
-				'id'      => $legal_consent_id,
-			)
+				'id' => $legal_consent_id,
+			),
+			200
 		);
 	}
 
@@ -179,15 +183,15 @@ class LegalConsent {
 	 */
 	private function get_legal_consent( int $id ) {
 		if ( ! $id ) {
-			wp_send_json_error( __( 'Invalid legal consent id.', 'tutor' ) );
+			$this->response_fail( __( 'Invalid legal consent id.', 'tutor' ), 400 );
 		}
 
 		$item = $this->model->get_row( array( 'id' => $id ) );
 		if ( ! $item ) {
-			wp_send_json_error( __( 'Legal consent not found.', 'tutor' ) );
+			$this->response_fail( __( 'Legal consent not found.', 'tutor' ), 404 );
 		}
 
-		wp_send_json_success( $item );
+		$this->response_data( $item );
 	}
 
 	/**
@@ -210,7 +214,7 @@ class LegalConsent {
 		}
 
 		$items = $this->model->get_all( $where );
-		wp_send_json_success( $items );
+		$this->response_data( $items );
 	}
 
 	/**
@@ -225,32 +229,32 @@ class LegalConsent {
 	 */
 	private function update_legal_consent( int $id, array $request ) {
 		if ( ! $id ) {
-			wp_send_json_error( __( 'Invalid legal consent id.', 'tutor' ) );
+			$this->response_fail( __( 'Invalid legal consent id.', 'tutor' ), 400 );
 		}
 
 		$existing = $this->model->get_row( array( 'id' => $id ) );
 		if ( ! $existing ) {
-			wp_send_json_error( __( 'Legal consent not found.', 'tutor' ) );
+			$this->response_fail( __( 'Legal consent not found.', 'tutor' ), 404 );
 		}
 
 		$data = $this->prepare_legal_consent_data( $request, false );
 		if ( is_wp_error( $data ) ) {
-			wp_send_json_error( $data->get_error_message() );
+			$this->response_fail( $data->get_error_message(), 400 );
 		}
 
 		if ( empty( $data ) ) {
-			wp_send_json_error( __( 'No update data found.', 'tutor' ) );
+			$this->response_fail( __( 'No update data found.', 'tutor' ), 400 );
 		}
 
 		$data['updated_at_utc'] = current_time( 'mysql', true );
 		$updated                = $this->model->update( $id, $data );
 		if ( ! $updated ) {
-			wp_send_json_error( __( 'Failed to update legal consent.', 'tutor' ) );
+			$this->response_fail( __( 'Failed to update legal consent.', 'tutor' ), 500 );
 		}
 
 		$this->log_model->create_log( $id, 'updated', (array) $existing, $data );
 
-		wp_send_json_success( __( 'Legal consent updated successfully.', 'tutor' ) );
+		$this->response_success( __( 'Legal consent updated successfully.', 'tutor' ) );
 	}
 
 	/**
@@ -264,22 +268,22 @@ class LegalConsent {
 	 */
 	private function delete_legal_consent( int $id ) {
 		if ( ! $id ) {
-			wp_send_json_error( __( 'Invalid legal consent id.', 'tutor' ) );
+			$this->response_fail( __( 'Invalid legal consent id.', 'tutor' ), 400 );
 		}
 
 		$existing = $this->model->get_row( array( 'id' => $id ) );
 		if ( ! $existing ) {
-			wp_send_json_error( __( 'Legal consent not found.', 'tutor' ) );
+			$this->response_fail( __( 'Legal consent not found.', 'tutor' ), 404 );
 		}
 
 		$deleted = $this->model->delete( $id );
 		if ( ! $deleted ) {
-			wp_send_json_error( __( 'Failed to delete legal consent.', 'tutor' ) );
+			$this->response_fail( __( 'Failed to delete legal consent.', 'tutor' ), 500 );
 		}
 
 		$this->log_model->create( $id, 'deleted', (array) $existing, null );
 
-		wp_send_json_success( __( 'Legal consent deleted successfully.', 'tutor' ) );
+		$this->response_success( __( 'Legal consent deleted successfully.', 'tutor' ) );
 	}
 
 	/**
