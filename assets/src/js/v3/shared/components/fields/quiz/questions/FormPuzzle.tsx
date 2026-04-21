@@ -167,6 +167,7 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
             <Controller
               control={form.control}
               name={resolvedGridSizePath}
+              defaultValue={4}
               render={(gridSizeControllerProps) => (
                 <FormSelectInput
                   {...gridSizeControllerProps}

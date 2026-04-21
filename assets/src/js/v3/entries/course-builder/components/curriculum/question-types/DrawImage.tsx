@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { useEffect } from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useController, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
@@ -21,6 +21,11 @@ const DrawImage = () => {
   const { fields: optionsFields } = useFieldArray({
     control: form.control,
     name: answersPath,
+  });
+  const thresholdControllerProps = useController({
+    control: form.control,
+    name: thresholdPath,
+    defaultValue: 70,
   });
 
   // Ensure there is always a single option for this question type.
@@ -60,19 +65,13 @@ const DrawImage = () => {
         control={form.control}
         name={`questions.${activeQuestionIndex}.question_answers.0` as 'questions.0.question_answers.0'}
         render={(answerControllerProps) => (
-          <Controller
-            control={form.control}
-            name={thresholdPath}
-            render={(thresholdControllerProps) => (
-              <FormDrawImage
-                {...answerControllerProps}
-                questionId={activeQuestionId}
-                activeQuestionIndex={activeQuestionIndex}
-                validationError={validationError}
-                setValidationError={setValidationError}
-                precisionControllerProps={thresholdControllerProps}
-              />
-            )}
+          <FormDrawImage
+            {...answerControllerProps}
+            questionId={activeQuestionId}
+            activeQuestionIndex={activeQuestionIndex}
+            validationError={validationError}
+            setValidationError={setValidationError}
+            precisionControllerProps={thresholdControllerProps}
           />
         )}
       />

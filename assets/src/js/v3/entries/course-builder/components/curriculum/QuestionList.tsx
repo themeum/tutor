@@ -349,6 +349,12 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         question_type: questionType,
         randomize_question: false,
         show_question_mark: false,
+        ...(questionType === 'draw_image' && {
+          draw_image_threshold_percent: 70,
+        }),
+        ...(questionType === 'puzzle' && {
+          puzzle_grid_size: 4,
+        }),
       },
     } as QuizQuestion);
     setValidationError(null);
