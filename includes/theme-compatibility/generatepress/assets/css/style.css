@@ -29,6 +29,7 @@
 		border: 1px solid transparent;
 		text-decoration: none;
 		font-weight: var(--tutor-button-font-weight, 500);
+		text-transform: none !important;
 	}
 
 	.tutor-dropdown-filter .tutor-btn:hover {
