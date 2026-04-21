@@ -130,8 +130,9 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 					sprintf(
 						/* translators: %s: minimum withdraw amount */
 						__( 'Minimum withdraw amount is %s', 'tutor' ),
-						wp_kses( $formatted_min, array() )
-					)
+						$formatted_min
+					),
+					tutor_price_allowed_html()
 				)
 				->render();
 			?>
