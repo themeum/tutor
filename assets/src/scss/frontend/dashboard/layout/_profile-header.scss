@@ -9,8 +9,7 @@
   margin-bottom: $tutor-spacing-9;
 
   .tutor-profile-header-title {
-    margin-top: $tutor-spacing-none;
-    margin-bottom: $tutor-spacing-none;
+    margin-block: $tutor-spacing-none;
   }
 
   @include tutor-breakpoint-down(md) {

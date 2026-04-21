@@ -9,7 +9,7 @@
 
     &-title {
       @include tutor-typography(h4, semibold, primary, heading);  
-      margin: $tutor-spacing-none;
+      margin-block: $tutor-spacing-none;
 
       @include tutor-breakpoint-up(sm) {
         margin-inline-end: auto;

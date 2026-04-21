@@ -28,7 +28,6 @@
   font-size: $font-size;
   line-height: $line-height;
   color: $color;
-  // margin: $tutor-spacing-none;
 }
 
 @mixin tutor-text($size: 'medium') {
@@ -45,5 +44,4 @@
 
   font-size: $font-size;
   line-height: $line-height;
-  // margin: $tutor-spacing-none;
 }

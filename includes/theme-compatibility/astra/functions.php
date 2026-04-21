@@ -20,8 +20,6 @@ if ( ! function_exists( 'tutor_astra_scripts' ) ) {
 	 */
 	function tutor_astra_scripts() {
 		$dir_url        = plugin_dir_url( __FILE__ );
-		$common_dir_url = plugin_dir_url( __DIR__ );
-		wp_enqueue_style( 'tutor_theme_compat_common', $common_dir_url . 'common/assets/css/style.css', array(), tutor()->version );
-		wp_enqueue_style( 'tutor_astra', $dir_url . 'assets/css/style.css', array( 'tutor_theme_compat_common' ), tutor()->version );
+		wp_enqueue_style( 'tutor_astra', $dir_url . 'assets/css/style.css', array(), tutor()->version );
 	}
 }
