@@ -118,7 +118,7 @@ const questionOrdering = (
     });
   },
 
-  getOrder() {
+  getOrder(): string[] {
     const container = this.$el;
     if (!container) {
       return [];
@@ -128,7 +128,13 @@ const questionOrdering = (
       container.querySelectorAll<HTMLElement>(`.${QUESTION_ORDERING_CONSTANTS.CLASSES.QUESTION_OPTION}`),
     );
 
-    return options.map((option) => option.dataset[QUESTION_ORDERING_CONSTANTS.DATASET.ID] ?? '').filter(Boolean);
+    return [
+      ...new Set(
+        options
+          .map((option) => option.dataset[QUESTION_ORDERING_CONSTANTS.DATASET.ID])
+          .filter((id): id is string => typeof id === 'string'),
+      ),
+    ];
   },
 
   destroy() {
