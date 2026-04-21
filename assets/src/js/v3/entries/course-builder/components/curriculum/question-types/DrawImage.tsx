@@ -48,14 +48,6 @@ const DrawImage = () => {
     form.setValue(answersPath, [baseAnswer]);
   }, [activeQuestionId, optionsFields.length, answersPath, form]);
 
-  // Default threshold for draw-image questions if not set.
-  useEffect(() => {
-    const currentValue = form.getValues(thresholdPath);
-    if (currentValue === undefined || currentValue === null || Number.isNaN(Number(currentValue))) {
-      form.setValue(thresholdPath, 70);
-    }
-  }, [form, thresholdPath]);
-
   // Only render Controller when the value exists to ensure field.value is always defined
   if (optionsFields.length === 0) {
     return null;
@@ -75,10 +67,10 @@ const DrawImage = () => {
               <FormDrawImage
                 {...answerControllerProps}
                 questionId={activeQuestionId}
+                activeQuestionIndex={activeQuestionIndex}
                 validationError={validationError}
                 setValidationError={setValidationError}
                 precisionControllerProps={thresholdControllerProps}
-                questionDataStatusPath={`questions.${activeQuestionIndex}._data_status`}
               />
             )}
           />

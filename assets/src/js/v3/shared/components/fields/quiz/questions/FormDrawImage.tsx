@@ -29,6 +29,7 @@ const LASSO_MIN_POINT_DISTANCE = 4;
 
 interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
+  activeQuestionIndex?: number;
   validationError?: {
     message: string;
     type: QuizValidationErrorType;
@@ -40,7 +41,6 @@ interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
     } | null>
   >;
   precisionControllerProps?: FormControllerProps<number | null>;
-  questionDataStatusPath?: string;
 }
 
 const THRESHOLD_OPTIONS = [40, 50, 60, 70, 80, 90, 100].map((value) => ({
@@ -48,9 +48,15 @@ const THRESHOLD_OPTIONS = [40, 50, 60, 70, 80, 90, 100].map((value) => ({
   value,
 }));
 
-const FormDrawImage = ({ field, precisionControllerProps, questionDataStatusPath }: FormDrawImageProps) => {
+const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 0 }: FormDrawImageProps) => {
   const form = useFormContext();
   const option = field.value;
+  const resolvedQuestionDataStatusPath = Array.isArray(form?.getValues?.('questions'))
+    ? (`questions.${activeQuestionIndex}._data_status` as const)
+    : ('_data_status' as const);
+  const activeQuestionDataStatus = form
+    ? ((form.watch(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
+    : QuizDataStatus.NO_CHANGE;
 
   const [isDrawModeActive, setIsDrawModeActive] = useState(false);
   const [hasStartedLassoDraw, setHasStartedLassoDraw] = useState(false);
@@ -477,11 +483,6 @@ const FormDrawImage = ({ field, precisionControllerProps, questionDataStatusPath
     return null;
   }
 
-  const currentQuestionDataStatus =
-    questionDataStatusPath && form
-      ? ((form.watch(questionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
-      : null;
-
   const canClearSelection = hasStartedLassoDraw || Boolean(option?.answer_two_gap_match);
 
   return (
@@ -555,15 +556,14 @@ const FormDrawImage = ({ field, precisionControllerProps, questionDataStatusPath
               )}
               onChange={(option) => {
                 precisionControllerProps.field.onChange(option.value);
-                if (!questionDataStatusPath || !currentQuestionDataStatus || !form) {
+                if (!form) {
                   return;
                 }
-                const nextQuestionDataStatus = calculateQuizDataStatus(
-                  currentQuestionDataStatus,
-                  QuizDataStatus.UPDATE,
-                );
-                if (nextQuestionDataStatus) {
-                  form.setValue(questionDataStatusPath, nextQuestionDataStatus as QuizDataStatus);
+                if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+                  form.setValue(
+                    resolvedQuestionDataStatusPath,
+                    calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                  );
                 }
               }}
             />

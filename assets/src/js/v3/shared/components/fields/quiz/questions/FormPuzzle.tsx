@@ -34,21 +34,16 @@ interface FormPuzzleProps extends FormControllerProps<QuizQuestionOption> {
   >;
   gridSizeControllerProps?: FormControllerProps<number | null>;
   gridSizePath?: string;
-  questionDataStatusPath?: string;
 }
 
-const FormPuzzle = ({
-  field,
-  activeQuestionIndex = 0,
-  gridSizeControllerProps,
-  gridSizePath,
-  questionDataStatusPath,
-}: FormPuzzleProps) => {
+const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, gridSizePath }: FormPuzzleProps) => {
   const form = useFormContext();
   const option = field.value;
   const resolvedGridSizePath =
     gridSizePath ?? (`questions.${activeQuestionIndex}.question_settings.puzzle_grid_size` as const);
-  const resolvedQuestionDataStatusPath = questionDataStatusPath ?? `questions.${activeQuestionIndex}._data_status`;
+  const resolvedQuestionDataStatusPath = Array.isArray(form?.getValues?.('questions'))
+    ? (`questions.${activeQuestionIndex}._data_status` as const)
+    : ('_data_status' as const);
   const activeQuestionDataStatus = form
     ? ((form.watch(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
     : QuizDataStatus.NO_CHANGE;
