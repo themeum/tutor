@@ -196,6 +196,18 @@ class SearchFilter extends BaseComponent {
 			$current_url = add_query_arg( $_GET, home_url( $wp->request ) );
 		}
 
+		$clear_url = add_query_arg(
+			array_merge(
+				$this->hidden_inputs,
+				array( 'paged' => 1 )
+			),
+			remove_query_arg( $input_name, $current_url )
+		);
+
+		$clear_action = 'GET' === strtoupper( $method )
+			? 'window.location.href = ' . wp_json_encode( $clear_url )
+			: "setValue('" . esc_js( $input_name ) . "', ''); \$el.closest('form').submit();";
+
 		$this->attributes = array_merge(
 			array(
 				'action'  => esc_url( $current_url ),
@@ -243,7 +255,7 @@ class SearchFilter extends BaseComponent {
 						x-show="values.<?php echo esc_attr( $input_name ); ?> && String(values.<?php echo esc_attr( $input_name ); ?>).length > 0"
 						x-cloak
 						aria-label="<?php esc_attr_e( 'Clear search', 'tutor' ); ?>"
-						@click="setValue('<?php echo esc_attr( $input_name ); ?>', ''); $el.closest('form').submit();"
+						@click="<?php echo esc_attr( $clear_action ); ?>"
 					>
 						<?php SvgIcon::make()->name( Icon::CROSS )->size( 16 )->render(); ?>
 					</button>
