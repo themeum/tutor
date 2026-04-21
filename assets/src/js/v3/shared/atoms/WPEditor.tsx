@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { tutorConfig } from '@TutorShared/config/config';
@@ -110,92 +109,6 @@ function editorConfig(
             }, 500);
           }
         });
-
-        if (!isMinimal) {
-          editor.addButton('tutor_button', {
-            text: __('Tutor ShortCode', __TUTOR_TEXT_DOMAIN__),
-            icon: false,
-            type: 'menubutton',
-            menu: [
-              {
-                text: __('Student Registration Form', __TUTOR_TEXT_DOMAIN__),
-                onclick: () => {
-                  editor.insertContent('[tutor_student_registration_form]');
-                },
-              },
-              {
-                text: __('Instructor Registration Form', __TUTOR_TEXT_DOMAIN__),
-                onclick: () => {
-                  editor.insertContent('[tutor_instructor_registration_form]');
-                },
-              },
-              {
-                text: __('Courses', __TUTOR_TEXT_DOMAIN__),
-                onclick: () => {
-                  editor.windowManager.open({
-                    title: __('Courses Shortcode', __TUTOR_TEXT_DOMAIN__),
-                    body: [
-                      {
-                        type: 'textbox',
-                        name: 'id',
-                        label: __('Course id, separate by (,) comma', __TUTOR_TEXT_DOMAIN__),
-                        value: '',
-                      },
-                      {
-                        type: 'textbox',
-                        name: 'exclude_ids',
-                        label: __('Exclude Course IDS', __TUTOR_TEXT_DOMAIN__),
-                        value: '',
-                      },
-                      {
-                        type: 'textbox',
-                        name: 'category',
-                        label: __('Category IDS', __TUTOR_TEXT_DOMAIN__),
-                        value: '',
-                      },
-                      {
-                        type: 'listbox',
-                        name: 'orderby',
-                        label: __('Order By', __TUTOR_TEXT_DOMAIN__),
-                        onselect: () => {},
-                        values: [
-                          { text: 'ID', value: 'ID' },
-                          { text: 'title', value: 'title' },
-                          { text: 'rand', value: 'rand' },
-                          { text: 'date', value: 'date' },
-                          { text: 'menu_order', value: 'menu_order' },
-                          { text: 'post__in', value: 'post__in' },
-                        ],
-                      },
-                      {
-                        type: 'listbox',
-                        name: 'order',
-                        label: __('Order', __TUTOR_TEXT_DOMAIN__),
-                        onselect: () => {},
-                        values: [
-                          { text: 'DESC', value: 'DESC' },
-                          { text: 'ASC', value: 'ASC' },
-                        ],
-                      },
-                      {
-                        type: 'textbox',
-                        name: 'count',
-                        label: __('Count', __TUTOR_TEXT_DOMAIN__),
-                        value: '6',
-                      },
-                    ],
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    onsubmit: (e: any) => {
-                      editor.insertContent(
-                        `[tutor_course id="${e.data.id}" exclude_ids="${e.data.exclude_ids}" category="${e.data.category}" orderby="${e.data.orderby}" order="${e.data.order}" count="${e.data.count}"]`,
-                      );
-                    },
-                  });
-                },
-              },
-            ],
-          });
-        }
         editor.on('change keyup paste', () => {
           onChange(editor.getContent());
         });
