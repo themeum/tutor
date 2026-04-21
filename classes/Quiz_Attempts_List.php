@@ -263,6 +263,8 @@ class Quiz_Attempts_List {
 			$failed_attempts  = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $date_filter, $order_filter, QuizModel::RESULT_FAIL, true, true );
 		}
 
+		$filter_url = remove_query_arg( 'current_page', $url );
+
 		$nav_links = array(
 			'type'    => 'dropdown',
 			'active'  => true,
@@ -271,24 +273,24 @@ class Quiz_Attempts_List {
 				array(
 					'label'  => __( 'All', 'tutor' ),
 					'count'  => $all_attempts,
-					'url'    => remove_query_arg( 'result' ),
+					'url'    => remove_query_arg( 'result', $filter_url ),
 					'active' => '' === $result_filter,
 				),
 				array(
 					'label'  => __( 'Pending', 'tutor' ),
-					'url'    => UrlHelper::add_query_params( $url, array( 'result' => QuizModel::RESULT_PENDING ) ),
+					'url'    => UrlHelper::add_query_params( $filter_url, array( 'result' => QuizModel::RESULT_PENDING ) ),
 					'count'  => $pending_attempts,
 					'active' => QuizModel::RESULT_PENDING === $result_filter,
 				),
 				array(
 					'label'  => __( 'Failed', 'tutor' ),
-					'url'    => UrlHelper::add_query_params( $url, array( 'result' => QuizModel::RESULT_FAIL ) ),
+					'url'    => UrlHelper::add_query_params( $filter_url, array( 'result' => QuizModel::RESULT_FAIL ) ),
 					'count'  => $failed_attempts,
 					'active' => QuizModel::RESULT_FAIL === $result_filter,
 				),
 				array(
 					'label'  => __( 'Passed', 'tutor' ),
-					'url'    => UrlHelper::add_query_params( $url, array( 'result' => QuizModel::RESULT_PASS ) ),
+					'url'    => UrlHelper::add_query_params( $filter_url, array( 'result' => QuizModel::RESULT_PASS ) ),
 					'count'  => $passed_attempts,
 					'active' => QuizModel::RESULT_PASS === $result_filter,
 				),
