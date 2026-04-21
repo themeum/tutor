@@ -47,11 +47,13 @@ $titles = OrderModel::get_order_history_titles( $order_data );
 				<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->created_at_gmt ) ); ?>
 			</span>
 
+			<?php if ( ! empty( $order_data->payment_method ) ) : ?>
 			<span class="tutor-section-separator-vertical tutor-sm-hidden"></span>
 
 			<div class="tutor-billing-card-payment-method">
 				<?php ComponentHelper::render_payment_method_badge( $order_data->payment_method ); ?>
 			</div>
+			<?php endif; ?>
 		</div>
 	</div>
 
