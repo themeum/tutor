@@ -1321,6 +1321,10 @@ class OrderController {
 	 * @return object {results: array, total_count: int}
 	 */
 	public function filter_get_orders_by_user_id( $data, $user_id, $args ) {
+		if ( ! $user_id ) {
+			return $data;
+		}
+
 		$other_params = array();
 		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
 			$other_params['order_type'] = OrderModel::TYPE_SINGLE_ORDER;
