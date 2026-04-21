@@ -1,10 +1,12 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -27,6 +29,7 @@ const LASSO_MIN_POINT_DISTANCE = 4;
 
 interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
+  activeQuestionIndex?: number;
   validationError?: {
     message: string;
     type: QuizValidationErrorType;
@@ -37,11 +40,23 @@ interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
       type: QuizValidationErrorType;
     } | null>
   >;
-  precisionControl?: React.ReactNode;
+  precisionControllerProps?: FormControllerProps<number | null>;
 }
 
-const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
+const THRESHOLD_OPTIONS = [40, 50, 60, 70, 80, 90, 100].map((value) => ({
+  label: `${value}%`,
+  value,
+}));
+
+const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 0 }: FormDrawImageProps) => {
+  const form = useFormContext();
   const option = field.value;
+  const resolvedQuestionDataStatusPath = Array.isArray(form?.getValues?.('questions'))
+    ? (`questions.${activeQuestionIndex}._data_status` as const)
+    : ('_data_status' as const);
+  const activeQuestionDataStatus = form
+    ? ((form.watch(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
+    : QuizDataStatus.NO_CHANGE;
 
   const [isDrawModeActive, setIsDrawModeActive] = useState(false);
   const [hasStartedLassoDraw, setHasStartedLassoDraw] = useState(false);
@@ -530,7 +545,29 @@ const FormDrawImage = ({ field, precisionControl }: FormDrawImageProps) => {
               aria-label={__('Draw a lasso around the correct answer area', __TUTOR_TEXT_DOMAIN__)}
             />
           </div>
-          {precisionControl && <div>{precisionControl}</div>}
+          {precisionControllerProps && (
+            <FormSelectInput
+              {...precisionControllerProps}
+              label={__('Precision Level', __TUTOR_TEXT_DOMAIN__)}
+              options={THRESHOLD_OPTIONS}
+              helpText={__(
+                'Minimum overlap score between student and instructor markings. Larger or smaller marked areas lower the score.',
+                __TUTOR_TEXT_DOMAIN__,
+              )}
+              onChange={(option) => {
+                precisionControllerProps.field.onChange(option.value);
+                if (!form) {
+                  return;
+                }
+                if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+                  form.setValue(
+                    resolvedQuestionDataStatusPath,
+                    calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                  );
+                }
+              }}
+            />
+          )}
           <Show when={option?.answer_two_gap_match}>
             <p css={styles.savedHint}>
               {__('Answer zone saved. Students will be graded against this area.', __TUTOR_TEXT_DOMAIN__)}
@@ -582,11 +619,19 @@ const styles = {
     height: auto;
     border-radius: ${borderRadius.card};
 
+    ${Breakpoint.smallMobile} {
+      width: 100%;
+    }
+
     img {
       width: auto;
       max-width: 100%;
       height: auto;
       object-fit: initial;
+
+      ${Breakpoint.smallMobile} {
+        width: 100%;
+      }
     }
   `,
   answerHeader: css`
@@ -617,13 +662,24 @@ const styles = {
   canvasInner: css`
     position: relative;
     display: inline-block;
+    max-width: 100%;
     border-radius: ${borderRadius.card};
     overflow: hidden;
 
+    ${Breakpoint.smallMobile} {
+      display: block;
+      width: 100%;
+    }
+
     img {
       display: block;
+      width: auto;
       max-width: 100%;
       height: auto;
+
+      ${Breakpoint.smallMobile} {
+        width: 100%;
+      }
     }
   `,
   image: css`

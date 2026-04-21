@@ -47,6 +47,7 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 		$is_pin                = 'pin_image' === $question_type;
 		$is_scale              = 'scale' === $question_type;
 		$is_coordinates        = 'coordinates' === $question_type;
+		$is_puzzle             = 'puzzle' === $question_type;
 
 		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
 
@@ -70,6 +71,8 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 			$question_template = 'draw-image';
 		} elseif ( $is_coordinates ) {
 			$question_template = 'coordinates';
+		} elseif ( $is_puzzle ) {
+			$question_template = 'puzzle';
 		}
 		?>
 

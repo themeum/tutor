@@ -329,6 +329,7 @@ final class Icon {
 	const QUIZ_NUMBER                = 'quiz-number';
 	const QUIZ_ORDERING              = 'quiz-ordering';
 	const QUIZ_PIN                   = 'quiz-pin';
+	const QUIZ_PUZZLE                = 'quiz-puzzle';
 	const QUIZ_RADIO                 = 'quiz-radio';
 	const QUIZ_RANGE                 = 'quiz-range';
 	const QUIZ_SHAPE                 = 'quiz-shape';
@@ -425,6 +426,7 @@ final class Icon {
 	const VIDEO_FILL                 = 'video-fill';
 	const VIDEO_QUALITY              = 'video-quality';
 	const VIMEO                      = 'vimeo';
+	const VISION                     = 'vision';
 	const VISITED                    = 'visited';
 	const WALLET                     = 'wallet';
 	const WARNING                    = 'warning';

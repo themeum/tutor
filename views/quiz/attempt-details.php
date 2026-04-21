@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Models\QuizModel;
+use Tutor\Components\SvgIcon;
+use TUTOR\Icon;
 
 $enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
 if ( ! is_admin() && ! current_user_can( 'tutor_instructor' ) && true === $enabled_hide_quiz_details ) {
@@ -153,6 +155,57 @@ function tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $an
 				)
 			);
 		}
+	}
+}
+
+/**
+ * Render question type icon using v4 icon component.
+ *
+ * @since 4.0.0
+ *
+ * @param string $question_type Question type slug.
+ *
+ * @return string
+ */
+if ( ! function_exists( 'tutor_render_question_type_icon' ) ) {
+	/**
+	 * Render question type icon using v4 icon component.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $question_type Question type slug.
+	 *
+	 * @return string
+	 */
+	function tutor_render_question_type_icon( $question_type ) {
+		$normalized_type = (string) $question_type;
+
+		if ( 'single_choice' === $normalized_type ) {
+			$normalized_type = 'multiple_choice';
+		}
+
+		if ( 'image_matching' === $normalized_type ) {
+			$normalized_type = 'matching';
+		}
+
+		$question_type_icon_map = array(
+			'true_false'        => Icon::QUIZ_TRUE_FALSE,
+			'multiple_choice'   => Icon::QUIZ_MULTI_CHOICE,
+			'open_ended'        => Icon::QUIZ_ESSAY,
+			'fill_in_the_blank' => Icon::QUIZ_FILL_IN_THE_BLANKS,
+			'short_answer'      => Icon::QUIZ_SHORT_ANSWER,
+			'matching'          => Icon::QUIZ_IMAGE_MATCHING,
+			'image_answering'   => Icon::QUIZ_IMAGE_ANSWER,
+			'ordering'          => Icon::QUIZ_ORDERING,
+			'draw_image'        => Icon::QUIZ_MARK_IN_THE_IMAGE,
+			'scale'             => Icon::QUIZ_RANGE,
+			'pin_image'         => Icon::QUIZ_PIN,
+			'puzzle'            => Icon::QUIZ_PUZZLE,
+			'coordinates'       => Icon::QUIZ_GRAPH,
+			'h5p'               => Icon::QUIZ_H5P,
+		);
+
+		return $question_type_icon_map[ $normalized_type ] ?? '';
 	}
 }
 
@@ -388,22 +441,20 @@ if ( is_array( $answers ) && count( $answers ) ) {
 										case 'type':
 											?>
 												<td class="type" data-title="<?php echo esc_attr( $column ); ?>">
-												<?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-													<?php ob_start(); ?>
-														<div class="tooltip-wrap tooltip-icon tutor-d-flex tutor-align-center">
-															<?php
-																echo wp_kses(
-																	$question_type['icon'] ?? '',
-																	tutor_utils()->allowed_icon_tags()
-																);
-															?>
-															<span class="tooltip-txt tooltip-top">
+													<div class="tooltip-wrap tutor-d-inline-flex tutor-align-center">
 														<?php
-															echo esc_html( $type['name'] ?? '' );
+														$question_icon_name = tutor_render_question_type_icon( $answer->question_type );
+														if ( ! empty( $question_icon_name ) ) {
+															SvgIcon::make()
+																->name( $question_icon_name )
+																->size( 32 )
+																->render();
+														}
 														?>
-															</span>
-														</div>
-													<?php echo wp_kses_post( apply_filters( 'tutor_question_type_icon', ob_get_clean(), $answer ) ); ?>
+														<span class="tooltip-txt tooltip-top">
+															<?php echo esc_html( tutor_utils()->get_question_types( $answer->question_type )['name'] ?? '' ); ?>
+														</span>
+													</div>
 												</td>
 												<?php
 											break;

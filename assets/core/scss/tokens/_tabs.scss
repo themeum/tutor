@@ -18,6 +18,8 @@ $tutor-tab-height-lg: var(--tutor-tab-height-lg, 44px);
 $tutor-tab-sidebar-l2: var(--tutor-tab-sidebar-l2);
 $tutor-tab-sidebar-l2-hover: var(--tutor-tab-sidebar-l2-hover);
 $tutor-tab-sidebar-l2-active: var(--tutor-tab-sidebar-l2-active);
+$tutor-tab-sidebar-l4-hover: var(--tutor-tab-sidebar-l4-hover);
+$tutor-tab-sidebar-l4-active: var(--tutor-tab-sidebar-l4-active);
 $tutor-tab-l3: var(--tutor-tab-l3);
 $tutor-tab-l3-hover: var(--tutor-tab-l3-hover);
 $tutor-tab-l3-active: var(--tutor-tab-l3-active);
@@ -31,6 +33,8 @@ $tutor-tabs: (
   sidebar-l2: $tutor-tab-sidebar-l2,
   sidebar-l2-hover: $tutor-tab-sidebar-l2-hover,
   sidebar-l2-active: $tutor-tab-sidebar-l2-active,
+  sidebar-l4-hover: $tutor-tab-sidebar-l4-hover,
+  sidebar-l4-active: $tutor-tab-sidebar-l4-active,
   l3: $tutor-tab-l3,
   l3-hover: $tutor-tab-l3-hover,
   l3-active: $tutor-tab-l3-active,

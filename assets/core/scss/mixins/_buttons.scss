@@ -391,21 +391,48 @@
     position: absolute;
     left: 50%;
     top: 50%;
+    transform: translate(-50%, -50%);
     width: 16px;
     height: 16px;
     border: 2px solid currentColor;
     border-radius: 50%;
     border-top-color: transparent;
     animation: tutor-button-spin 1s linear infinite;
+
+    [data-tutor-motion='reduce'] & {
+      animation: tutor-button-pulse 1.5s ease-in-out infinite !important;
+      border-top-color: currentColor;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-tutor-motion='auto'] & {
+        animation: tutor-button-pulse 1.5s ease-in-out infinite !important;
+        border-top-color: currentColor;
+      }
+    }
   }
 }
 
+// Keyframes for the standard spin
 @keyframes tutor-button-spin {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
   }
   100% {
     transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+// Keyframes for the reduced motion "Pulse"
+@keyframes tutor-button-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(0.9);
   }
 }
 

@@ -90,6 +90,31 @@ $tutor-yellow-800: #854a0e;
 $tutor-yellow-900: #713b12;
 $tutor-yellow-950: #542c0d;
 
+// Cyan Colors (CVD accessibility - replaces green/success)
+$tutor-cyan-50:  #ecfeff;
+$tutor-cyan-100: #cefafe;
+$tutor-cyan-200: #a2f4fd;
+$tutor-cyan-300: #53eafd;
+$tutor-cyan-400: #00d3f2;
+$tutor-cyan-500: #00b8db;
+$tutor-cyan-600: #0092b8;
+$tutor-cyan-700: #007595;
+$tutor-cyan-800: #005f78;
+$tutor-cyan-900: #104e64;
+$tutor-cyan-950: #053345;
+
+// Orange Colors (CVD accessibility - replaces red/error)
+$tutor-orange-50:  #fefbe8;
+$tutor-orange-100: #ffedd4;
+$tutor-orange-200: #ffd6a7;
+$tutor-orange-300: #ffb86a;
+$tutor-orange-400: #ff8904;
+$tutor-orange-500: #ff6900;
+$tutor-orange-600: #f54900;
+$tutor-orange-700: #ca3500;
+$tutor-orange-800: #9f2d00;
+$tutor-orange-900: #7e2a0c;
+
 // Exception Colors
 $tutor-exception-1: #00acc2;
 $tutor-exception-2: #ee0097;
@@ -202,4 +227,31 @@ $tutor-exception-colors: (
   3: $tutor-exception-3,
   5: $tutor-exception-5,
   6: $tutor-exception-6,
+);
+
+$tutor-cyan-colors: (
+  50:  $tutor-cyan-50,
+  100: $tutor-cyan-100,
+  200: $tutor-cyan-200,
+  300: $tutor-cyan-300,
+  400: $tutor-cyan-400,
+  500: $tutor-cyan-500,
+  600: $tutor-cyan-600,
+  700: $tutor-cyan-700,
+  800: $tutor-cyan-800,
+  900: $tutor-cyan-900,
+  950: $tutor-cyan-950,
+);
+
+$tutor-orange-colors: (
+  50:  $tutor-orange-50,
+  100: $tutor-orange-100,
+  200: $tutor-orange-200,
+  300: $tutor-orange-300,
+  400: $tutor-orange-400,
+  500: $tutor-orange-500,
+  600: $tutor-orange-600,
+  700: $tutor-orange-700,
+  800: $tutor-orange-800,
+  900: $tutor-orange-900,
 );

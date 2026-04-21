@@ -4,7 +4,7 @@
 @use '../tokens' as *;
 
 :root,
-[data-tutor-theme="light"] {
+[data-tutor-theme='light'] {
   // =============================================================================
   // SURFACE COLORS
   // =============================================================================
@@ -16,6 +16,7 @@
   --tutor-surface-l2-hover: #{$tutor-gray-300};
   --tutor-surface-brand-dark: #{$tutor-brand-950};
   --tutor-surface-brand-primary: #{$tutor-brand-600};
+  --tutor-surface-brand-primary-2: #{$tutor-brand-800};
   --tutor-surface-brand-secondary: #{$tutor-brand-300};
   --tutor-surface-brand-tertiary: #{$tutor-brand-100};
   --tutor-surface-brand-quaternary: #{$tutor-brand-200};
@@ -37,8 +38,8 @@
   --tutor-text-primary: #{$tutor-gray-950};
   --tutor-text-primary-inverse: #{$tutor-gray-1};
   --tutor-text-secondary: #{$tutor-gray-700};
-  --tutor-text-disabled: #{$tutor-gray-500};
   --tutor-text-subdued: #{$tutor-gray-500};
+  --tutor-text-disabled: #{$tutor-gray-300};
   --tutor-text-brand: #{$tutor-brand-600};
   --tutor-text-brand-hover: #{$tutor-brand-700};
   --tutor-text-brand-secondary: #{$tutor-brand-400};
@@ -53,7 +54,6 @@
   --tutor-text-exception4: #{$tutor-warning-400};
   --tutor-text-exception5: #{$tutor-exception-5};
   --tutor-text-highlighted-hover: #{$tutor-gray-700};
-  --tutor-text-disabled: #{$tutor-gray-300};
 
   // =============================================================================
   // ICON COLORS
@@ -98,6 +98,9 @@
   --tutor-button-destructive-soft: #{$tutor-error-100};
   --tutor-button-destructive-soft-hover: #{$tutor-error-200};
   --tutor-button-destructive-soft-focused: #{$tutor-error-100};
+  --tutor-button-success: #{$tutor-success-600};
+  --tutor-button-success-hover: #{$tutor-success-700};
+  --tutor-button-success-focused: #{$tutor-success-600};
   --tutor-button-secondary: #{$tutor-gray-200};
   --tutor-button-secondary-hover: #{$tutor-gray-300};
   --tutor-button-secondary-focused: #{$tutor-gray-200};
@@ -106,9 +109,6 @@
   --tutor-button-outline-focused-inverse: #{$tutor-gray-1};
   --tutor-button-ghost-hover: #{$tutor-gray-200};
   --tutor-button-caution: #{$tutor-yellow-400};
-  --tutor-button-success: #{$tutor-success-600};
-  --tutor-button-success-hover: #{$tutor-success-700};
-  --tutor-button-success-focused: #{$tutor-success-600};
 
   // =============================================================================
   // BORDER COLORS
@@ -116,6 +116,7 @@
 
   --tutor-border-idle: #{$tutor-gray-200};
   --tutor-border-hover: #{$tutor-gray-300};
+  --tutor-border-tertiary: #{$tutor-gray-400};
   --tutor-border-inverse: #{$tutor-gray-1};
   --tutor-border-brand: #{$tutor-brand-600};
   --tutor-border-brand-secondary: #{$tutor-brand-300};
@@ -128,9 +129,8 @@
   --tutor-border-warning-tertiary: #{$tutor-warning-400};
   --tutor-border-error: #{$tutor-error-300};
   --tutor-border-error-secondary: #{$tutor-error-700};
-  --tutor-border-exception6: #{$tutor-exception-5};
   --tutor-border-error-tertiary: #{$tutor-error-400};
-  --tutor-border-tertiary: #{$tutor-gray-400};
+  --tutor-border-exception6: #{$tutor-exception-5};
 
   // =============================================================================
   // TAB COLORS
@@ -143,6 +143,8 @@
   --tutor-tab-l3-active-hover: #{$tutor-gray-100};
   --tutor-tab-l3: #{$tutor-brand-200};
   --tutor-tab-l3-hover: #{$tutor-brand-300};
+  --tutor-tab-sidebar-l4-hover: #{$tutor-gray-200};
+  --tutor-tab-sidebar-l4-active: #{$tutor-brand-200};
 
   // =============================================================================
   // ACTION COLORS
@@ -151,9 +153,11 @@
   --tutor-actions-success-primary: #{$tutor-success-600};
   --tutor-actions-success-secondary: #{$tutor-success-200};
   --tutor-actions-success-tertiary: #{$tutor-success-50};
+  --tutor-actions-success-exception: #{$tutor-success-500};
   --tutor-actions-warning-primary: #{$tutor-warning-400};
   --tutor-actions-warning-secondary: #{$tutor-warning-100};
   --tutor-actions-warning-tertiary: #{$tutor-warning-50};
+  --tutor-actions-warning-exception: #{$tutor-warning-500};
   --tutor-actions-brand-primary: #{$tutor-brand-600};
   --tutor-actions-brand-secondary: #{$tutor-brand-300};
   --tutor-actions-brand-tertiary: #{$tutor-brand-200};

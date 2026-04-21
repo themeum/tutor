@@ -199,10 +199,12 @@ class Quiz {
 				'learning-area.quiz.questions.scale',
 				'learning-area.quiz.questions.pin-image',
 				'learning-area.quiz.questions.coordinates',
+				'learning-area.quiz.questions.puzzle',
 				'shared.components.quiz.attempt-details.questions.draw-image',
 				'shared.components.quiz.attempt-details.questions.scale',
 				'shared.components.quiz.attempt-details.questions.pin-image',
 				'shared.components.quiz.attempt-details.questions.coordinates',
+				'shared.components.quiz.attempt-details.questions.puzzle',
 			),
 			$template,
 			$variables
@@ -1855,9 +1857,7 @@ class Quiz {
 			return;
 		}
 
-		$formatted_attempts = QuizModel::format_quiz_attempts( $attempts );
-		$quiz_attempts      = $formatted_attempts[ $quiz_id ] ?? reset( $formatted_attempts );
-		$attempts_list      = $quiz_attempts['attempts'] ?? array();
+		$attempts_list = QuizModel::format_quiz_attempts( $attempts, '' );
 
 		if ( empty( $attempts_list ) ) {
 			return;
@@ -1865,7 +1865,6 @@ class Quiz {
 
 		$attempts_count   = count( $attempts_list );
 		$quiz_attempt_obj = new Quiz_Attempts_List( false );
-		$course_id        = $quiz_attempts['course_id'] ?? 0;
 		?>
 			<div class="tutor-quiz-attempts tutor-border tutor-rounded-2xl">
 				<div class="tutor-quiz-attempts-header">
@@ -1895,8 +1894,8 @@ class Quiz {
 								array(
 									'attempt'          => $attempt,
 									'attempt_number'   => $attempt_number,
-									'quiz_id'          => $quiz_id,
-									'course_id'        => $course_id,
+									'quiz_id'          => $attempt['quiz_id'] ?? 0,
+									'course_id'        => $attempt['course_id'] ?? 0,
 									'quiz_attempt_obj' => $quiz_attempt_obj,
 									'attempts_count'   => $attempts_count,
 									'is_previous'      => true,
