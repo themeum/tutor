@@ -45,7 +45,7 @@ class LegalConsents extends DB {
 		return "CREATE TABLE {$table_name} (
 			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 			consent_title VARCHAR(255) NOT NULL,
-			display_on TEXT NOT NULL, --comma separate value for multiple scopes
+			display_on TEXT NOT NULL, -- comma separate value for multiple scopes
 			consent_message TEXT NOT NULL,
 			policy_urls TEXT, -- comma separate value for multiple url
 			version VARCHAR(20) NOT NULL,
@@ -54,7 +54,7 @@ class LegalConsents extends DB {
 			settings JSON,
 			created_at_utc DATETIME NOT NULL,
 			updated_at_utc DATETIME,
-			INDEX (compliance_key),
+			INDEX (consent_title),
 			INDEX (is_active)
 		) {$charset_collate};";
 	}

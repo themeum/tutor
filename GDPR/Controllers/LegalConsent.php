@@ -1,6 +1,6 @@
 <?php
 /**
- * GDPR legal consent controller.
+ * GDPR legal consent controller for managing consents.
  *
  * @package Tutor\GDPR\Controllers
  * @author Themeum <support@themeum.com>
@@ -11,7 +11,9 @@
 namespace Tutor\GDPR\Controllers;
 
 use Tutor\GDPR\Models\{LegalConsents, LegalConsentLogs};
+use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
+use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,13 +34,13 @@ class LegalConsent {
 	private $model;
 
 	/**
-	 * Compliance logs controller.
+	 * Consent update logs model.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @var LegalConsentLogs
 	 */
-	private $logs;
+	private $log_model;
 
 	/**
 	 * Constructor.
@@ -46,8 +48,8 @@ class LegalConsent {
 	 * @since 4.0.0
 	 */
 	public function __construct() {
-		$this->model = new LegalConsents();
-		$this->log_model           = new LegalConsentLogs();
+		$this->model     = new LegalConsents();
+		$this->log_model = new LegalConsentLogs();
 
 		$this->register_hooks();
 	}
@@ -73,7 +75,7 @@ class LegalConsent {
 	public function handle_legal_consent_ajax() {
 		// $this->validate_ajax_request();
 
-		$action = Input::post( 'crud_action', '' );
+		$action = Input::post( 'action', '' );
 		$data   = Input::sanitize_array( $_POST ); //phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is validated.
 
 		switch ( $action ) {
@@ -124,17 +126,39 @@ class LegalConsent {
 	 * @return void
 	 */
 	private function create_legal_consent( array $request ) {
+		global $wpdb;
+
+		$request['version'] = 1;
+
 		$data = $this->prepare_legal_consent_data( $request, true );
 		if ( is_wp_error( $data ) ) {
-			wp_send_json_error( $data->get_error_message() );
+			wp_send_json_error( $data->errors );
 		}
+
+		$wpdb->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		$legal_consent_id = $this->model->create( $data );
 		if ( ! $legal_consent_id ) {
+			$wpdb->query( 'ROLLBACK' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			wp_send_json_error( __( 'Failed to create legal consent.', 'tutor' ) );
 		}
 
-		$this->log_model->create_log( $legal_consent_id, 'created', null, $data );
+		$log_id = $this->log_model->create(
+			array(
+				'legal_consent_id' => (int) $legal_consent_id,
+				'action'           => 'created',
+				'old_data'         => null,
+				'new_data'         => wp_json_encode( $data ),
+				'created_at_utc'   => current_time( 'mysql', true ),
+			)
+		);
+
+		if ( ! $log_id ) {
+			$wpdb->query( 'ROLLBACK' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			wp_send_json_error( __( 'Failed to create legal consent log.', 'tutor' ) );
+		}
+
+		$wpdb->query( 'COMMIT' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		wp_send_json_success(
 			array(
@@ -253,7 +277,7 @@ class LegalConsent {
 			wp_send_json_error( __( 'Failed to delete legal consent.', 'tutor' ) );
 		}
 
-		$this->log_model->create_log( $id, 'deleted', (array) $existing, null );
+		$this->log_model->create( $id, 'deleted', (array) $existing, null );
 
 		wp_send_json_success( __( 'Legal consent deleted successfully.', 'tutor' ) );
 	}
@@ -270,30 +294,35 @@ class LegalConsent {
 	 */
 	private function prepare_legal_consent_data( array $request, bool $is_create ) {
 		$data = array(
-			'compliance_key' => isset( $request['compliance_key'] ) ? sanitize_key( $request['compliance_key'] ) : '',
-			'title'          => isset( $request['title'] ) ? sanitize_text_field( $request['title'] ) : '',
-			'label_text'     => isset( $request['label_text'] ) ? wp_kses_post( $request['label_text'] ) : '',
-			'policy_url'     => isset( $request['policy_url'] ) ? esc_url_raw( $request['policy_url'] ) : '',
-			'version'        => isset( $request['version'] ) ? sanitize_text_field( $request['version'] ) : '',
-			'is_required'    => isset( $request['is_required'] ) ? (int) (bool) $request['is_required'] : 0,
-			'is_active'      => isset( $request['is_active'] ) ? (int) (bool) $request['is_active'] : 1,
-			'placements'     => isset( $request['placements'] ) ? sanitize_text_field( $request['placements'] ) : '',
-			'settings'       => $this->sanitize_json_field( $request['settings'] ?? '' ),
+			'consent_title'   => Input::sanitize( $request['consent_title'] ?? '', '', Input::TYPE_STRING ),
+			'display_on'      => Input::sanitize( $request['display_on'] ?? '', '', Input::TYPE_STRING ),
+			'consent_message' => Input::sanitize( $request['consent_message'] ?? '', '', Input::TYPE_KSES_POST ),
+			'policy_urls'     => Input::sanitize( $request['policy_urls'] ?? '', '', Input::TYPE_STRING ),
+			'version'         => Input::sanitize( $request['version'] ?? '', '', Input::TYPE_STRING ),
+			'is_required'     => (int) Input::sanitize( $request['is_required'] ?? false, false, Input::TYPE_BOOL ),
+			'is_active'       => (int) Input::sanitize( $request['is_active'] ?? true, true, Input::TYPE_BOOL ),
+			'settings'        => $this->sanitize_json_field( $request['settings'] ?? '' ),
 		);
 
 		if ( $is_create ) {
-			$required = array( 'compliance_key', 'title', 'label_text', 'version' );
-			foreach ( $required as $field ) {
-				if ( empty( $data[ $field ] ) ) {
-					return new \WP_Error( 'validation_error', __( 'Required legal consent fields are missing.', 'tutor' ) );
-				}
+			$rules = array(
+				'consent_title'   => 'required',
+				'display_on'      => 'required',
+				'consent_message' => 'required',
+				'version'         => 'required',
+				'is_required'     => 'required',
+			);
+
+			$validation = ValidationHelper::validate( $rules, $data );
+			if ( ! $validation->success ) {
+				return new WP_Error( 'validation_error', $validation->errors );
 			}
 
 			$data['created_at_utc'] = current_time( 'mysql', true );
 		} else {
 			$data = array_filter(
 				$data,
-				function( $value ) {
+				function ( $value ) {
 					return '' !== $value && null !== $value;
 				}
 			);

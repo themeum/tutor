@@ -56,7 +56,7 @@ class UserConsents extends DB {
 			source VARCHAR(50),
 			created_at_utc DATETIME NOT NULL,
 			INDEX (user_id),
-			INDEX (compliance_key),
+			INDEX (consent_title),
 			INDEX (created_at_utc)
 		) {$charset_collate};";
 	}

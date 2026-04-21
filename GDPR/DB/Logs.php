@@ -44,7 +44,7 @@ class Logs extends DB {
 
 		return "CREATE TABLE {$table_name} (
 			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-			compliance_id BIGINT UNSIGNED NOT NULL,
+			legal_consent_id BIGINT UNSIGNED NOT NULL,
 			action VARCHAR(50), -- created, updated, deleted
 			old_data JSON NULL,
 			new_data JSON NULL,
