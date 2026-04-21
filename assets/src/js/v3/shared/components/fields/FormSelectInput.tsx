@@ -131,11 +131,11 @@ const FormSelectInput = <T,>({
     event?.stopPropagation();
 
     if (!option.disabled) {
+      setIsOpen(false);
+      setIsSearching(false);
+      setSearchText('');
       field.onChange(option.value);
       onChange(option);
-      setSearchText('');
-      setIsSearching(false);
-      setIsOpen(false);
     }
   };
 

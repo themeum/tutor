@@ -100,14 +100,20 @@ const ContentListTable = () => {
   const columns: Column<ContentBankContent>[] = [
     {
       Header: totalItems ? (
-        <Checkbox
-          onChange={toggleSelection}
-          checked={getContentsQuery.isLoading || getContentsQuery.isRefetching ? false : handleAllIsChecked()}
-          label={__('Title', 'tutor')}
-          labelCss={styles.tableTitle}
-          isIndeterminate={fetchedContents.length > 0 && !handleAllIsChecked() && selectedContents.length > 0}
-          aria-label={__('Select all contents', 'tutor')}
-        />
+        <div
+          onClick={(event) => event.stopPropagation()}
+          onMouseDown={(event) => event.stopPropagation()}
+          css={styles.headerCheckboxWrapper}
+        >
+          <Checkbox
+            onChange={toggleSelection}
+            checked={getContentsQuery.isLoading || getContentsQuery.isRefetching ? false : handleAllIsChecked()}
+            label={__('Title', 'tutor')}
+            labelCss={styles.tableTitle}
+            isIndeterminate={fetchedContents.length > 0 && !handleAllIsChecked() && selectedContents.length > 0}
+            aria-label={__('Select all contents', 'tutor')}
+          />
+        </div>
       ) : (
         __('# Title', 'tutor')
       ),
@@ -315,6 +321,10 @@ const styles = {
   tableTitle: css`
     ${typography.small('medium')};
     color: ${colorTokens.text.hints};
+  `,
+  headerCheckboxWrapper: css`
+    display: flex;
+    align-items: center;
   `,
   checkboxLabel: css`
     ${typography.caption('medium')};
