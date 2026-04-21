@@ -431,7 +431,7 @@ const styles = {
   wrapper: ({ activeTab, isH5pQuiz }: { activeTab: QuizTabs; isH5pQuiz: boolean }) => css`
     width: 100%;
     display: grid;
-    grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr' : '400px 1fr 400px') : '1fr'};
+    grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '510px 1fr' : '400px 1fr 340px') : '1fr'};
     height: 100%;
     overflow: hidden;
 
