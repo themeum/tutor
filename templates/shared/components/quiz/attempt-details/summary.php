@@ -34,19 +34,16 @@ $student              = $student_id > 0 ? get_userdata( $student_id ) : null;
 $student_name         = $student ? $student->display_name : '';
 $student_profile_url  = $student_id > 0 ? tutor_utils()->profile_url( $student_id, false ) : '';
 
-$attempt_info           = maybe_unserialize( $attempt_data->attempt_info );
-$passing_grade          = is_array( $attempt_info ) ? (int) ( $attempt_info['passing_grade'] ?? 0 ) : 0;
-$limit_attempts_allowed = is_array( $attempt_info ) ? '1' === (string) ( $attempt_info['limit_attempts_allowed'] ?? '0' ) : false;
-$allowed_attempts       = is_array( $attempt_info ) ? (int) ( $attempt_info['attempts_allowed'] ?? 0 ) : 0;
-$legacy_feedback_mode   = is_array( $attempt_info ) ? (string) ( $attempt_info['feedback_mode'] ?? '' ) : '';
-$instructor_feedback    = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor_feedback'] ?? '' ) : '';
-$total_marks            = (float) $attempt_data->total_marks;
-$earned_marks           = (float) $attempt_data->earned_marks;
-$pass_marks             = ( $total_marks * $passing_grade ) / 100;
-$earned_percentage      = (float) QuizModel::calculate_attempt_earned_percentage( $attempt_data );
-$attempt_result         = QuizModel::get_attempt_result( $attempt_id );
-$attempted_at_label     = date_i18n( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) );
-$is_manually_reviewed   = ! empty( $attempt_data->is_manually_reviewed );
+$attempt_info         = maybe_unserialize( $attempt_data->attempt_info );
+$passing_grade        = is_array( $attempt_info ) ? (int) ( $attempt_info['passing_grade'] ?? 0 ) : 0;
+$instructor_feedback  = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor_feedback'] ?? '' ) : '';
+$total_marks          = (float) $attempt_data->total_marks;
+$earned_marks         = (float) $attempt_data->earned_marks;
+$pass_marks           = ( $total_marks * $passing_grade ) / 100;
+$earned_percentage    = (float) QuizModel::calculate_attempt_earned_percentage( $attempt_data );
+$attempt_result       = QuizModel::get_attempt_result( $attempt_id );
+$attempted_at_label   = date_i18n( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) );
+$is_manually_reviewed = ! empty( $attempt_data->is_manually_reviewed );
 
 $timing                 = QuizModel::get_quiz_attempt_timing( $attempt_data );
 $attempt_duration       = $timing['attempt_duration'] ?? '';
@@ -74,9 +71,10 @@ if ( is_array( $attempts ) ) {
 	$attempts_count = count( $attempts );
 }
 
-$can_retry               = is_array( $attempt_info ) && array_key_exists( 'limit_attempts_allowed', $attempt_info )
-	? Quiz::can_retry_quiz( $limit_attempts_allowed, $allowed_attempts, $attempts_count )
-	: 'retry' === $legacy_feedback_mode;
+$quiz_settings           = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
+$limit_attempts_allowed  = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
+$attempts_allowed        = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
+$can_retry               = Quiz::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempts_count );
 $has_instructor_feedback = '' !== trim( wp_strip_all_tags( $instructor_feedback ) );
 $retry_modal_id          = 'tutor-retry-modal-' . $attempt_id;
 
