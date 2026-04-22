@@ -453,6 +453,7 @@ const styles = {
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
     ${styleUtils.overflowYAuto};
+    scrollbar-gutter: auto;
   `,
   centerColumn: css`
     ${styleUtils.overflowYAuto};

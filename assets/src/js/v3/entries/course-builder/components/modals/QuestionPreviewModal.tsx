@@ -16,8 +16,8 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 
-import DrawImagePreview from './question-previews/DrawImagePreview';
 import CoordinatesPreview from './question-previews/CoordinatesPreview';
+import DrawImagePreview from './question-previews/DrawImagePreview';
 import FillInTheBlankPreview from './question-previews/FillInTheBlankPreview';
 import ImageAnsweringPreview from './question-previews/ImageAnsweringPreview';
 import MatchingPreview from './question-previews/MatchingPreview';
@@ -391,6 +391,13 @@ const getPreviewFrameStyles = () => `
       height: 20px;
       color: var(--tutor-icon-idle);
     }
+
+    .tutor-quiz-question-wrapper:has([data-question="ordering"]) & {
+      svg {
+        width: 40px;
+        height: 40px;
+      }
+    }
   }
 
   [data-question=fill_in_the_blank] .tutor-quiz-question-input {
@@ -493,6 +500,12 @@ const styles = {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    max-height: 100vh;
+
+    body:has(#wpadminbar) & {
+      top: calc(50% + 16px); // Half of admin bar height (32px/2 = 16px)
+      max-height: calc(100vh - 32px);
+    }
 
     ${Breakpoint.smallTablet} {
       width: 90%;
@@ -508,7 +521,7 @@ const styles = {
     flex-direction: column;
     overflow: hidden;
     max-width: ${activeTab === 'mobile' ? '444px' : '1220px'};
-    height: 686px;
+    height: calc(100vh - 180px);
     margin-inline: auto;
     width: 100%;
     background-color: ${colorTokens.surface.courseBuilder};
