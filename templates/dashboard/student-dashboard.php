@@ -50,19 +50,21 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 <?php do_action( 'tutor_before_dashboard_content' ); ?>
 <div class="tutor-student-dashboard" x-data>
 	<?php
-	$enrolled_course   = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
-	$completed_courses = CourseModel::get_completed_courses_by_user( $user_id );
-	$active_courses    = CourseModel::get_active_courses_by_user( $user_id );
+	$enrolled_course       = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
+	$completed_courses     = CourseModel::get_completed_courses_by_user( $user_id );
+	$has_completed_courses = is_object( $completed_courses ) && $completed_courses->have_posts();
+	$completed_courses_ids = $has_completed_courses ? wp_list_pluck( $completed_courses->posts, 'ID' ) : array();
+	$active_courses        = CourseModel::get_active_courses_by_user( $user_id );
 
 	$enrolled_course_count  = $enrolled_course ? $enrolled_course->post_count : 0;
-	$completed_course_count = is_object( $completed_courses ) && $completed_courses->have_posts() ? $completed_courses->post_count : 0;
+	$completed_course_count = $has_completed_courses ? $completed_courses->post_count : 0;
 	$active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
 
 	$enrolled_course_link  = tutor_utils()->tutor_dashboard_url( 'courses' );
 	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'courses/completed-courses' );
 	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'courses/active-courses' );
 
-	$time_spent = Course::get_total_course_duration( $completed_courses );
+	$time_spent = Course::get_total_course_duration( $completed_courses_ids );
 	$grid_col   = $time_spent['hours'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
 	?>
 	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 <?php echo esc_attr( $grid_col ); ?>">
