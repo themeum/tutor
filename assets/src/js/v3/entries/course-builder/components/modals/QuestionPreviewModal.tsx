@@ -404,6 +404,10 @@ const getPreviewFrameStyles = () => `
     box-shadow: none;
   }
 
+  .tutor-quiz-question-option {
+    cursor: default;
+  }
+
   body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-wrapper,
   body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-reference-inner,
   body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-wrapper,

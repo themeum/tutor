@@ -24,6 +24,7 @@ use Tutor\Components\Popover;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Components\SvgIcon;
+use Tutor\Components\Progress;
 
 /**
  * Quiz attempt class
@@ -553,6 +554,42 @@ class Quiz_Attempts_List {
 
 			$popover->render();
 		}
+	}
+
+	/**
+	 * Render quiz attempt marks percentage.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $attempt_result the quiz attempt `QuizModel::RESULT_PASS | QuizModel::RESULT_PENDING | QuizModel::RESULT_FAIL`.
+	 * @param int    $earned_percentage the earned percentage.
+	 * @param string $size the size of the component.
+	 * @param string $wrapper_class the wrapper class of the component.
+	 *
+	 * @return void
+	 */
+	public static function render_quiz_attempt_marks_percentage( $attempt_result = '', $earned_percentage = 0, $size = 'small', $wrapper_class = '' ) {
+		$statics_stroke_color = 'var(--tutor-icon-critical)';
+
+		if ( QuizModel::RESULT_PASS === $attempt_result ) {
+			$statics_stroke_color = 'var(--tutor-icon-success-secondary)';
+
+			if ( 100 === (int) $earned_percentage ) {
+				$statics_stroke_color = 'var(--tutor-icon-success-primary)';
+			}
+		} elseif ( QuizModel::RESULT_PENDING === $attempt_result ) {
+			$statics_stroke_color = 'var(--tutor-icon-warning-secondary)';
+		}
+
+		Progress::make()
+			->type( 'circle' )
+			->value( $earned_percentage )
+			->size( $size )
+			->stroke_color( 'var(--tutor-border-idle)' )
+			->progress_stroke_color( $statics_stroke_color )
+			->animated()
+			->attr( 'class', $wrapper_class )
+			->render();
 	}
 
 	/**
