@@ -281,41 +281,43 @@ class Template extends Tutor_Base {
 	/**
 	 * Tutor Dashboard Page, Responsible to show dashboard stuffs
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
 	 *
 	 * @param string $content page content.
 	 *
 	 * @return mixed
 	 */
 	public function convert_static_page_to_template( $content ) {
+		$page_id = get_the_ID();
+
 		// Dashboard Page.
 		$student_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
-		if ( get_the_ID() === $student_dashboard_page_id ) {
+		if ( $page_id === $student_dashboard_page_id ) {
 			$shortcode = new Shortcode( false );
 			return $shortcode->tutor_dashboard();
 		}
 
 		// Instructor Registration Page.
 		$instructor_register_page_page_id = (int) tutor_utils()->get_option( 'instructor_register_page' );
-		if ( get_the_ID() === $instructor_register_page_page_id ) {
+		if ( $page_id === $instructor_register_page_page_id ) {
 			$shortcode = new Shortcode( false );
 			return $shortcode->instructor_registration_form();
 		}
 
 		$student_register_page_id = (int) tutor_utils()->get_option( 'student_register_page' );
-		if ( get_the_ID() === $student_register_page_id ) {
+		if ( $page_id === $student_register_page_id ) {
 			$shortcode = new Shortcode( false );
 			return $shortcode->student_registration_form();
 		}
 
 		$tutor_cart_page_id = (int) tutor_utils()->get_option( 'tutor_cart_page_id' );
-		if ( get_the_ID() === $tutor_cart_page_id ) {
+		if ( $page_id === $tutor_cart_page_id ) {
 			$shortcode = new Shortcode( false );
 			return $shortcode->tutor_cart_page();
 		}
 
 		$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
-		if ( get_the_ID() === $tutor_checkout_page_id ) {
+		if ( $page_id === $tutor_checkout_page_id ) {
 			if ( ! apply_filters( 'tutor_should_load_checkout_page', true ) ) {
 				return;
 			}
