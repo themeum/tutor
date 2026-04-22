@@ -126,13 +126,16 @@ const bindCard = (card) => {
 				formData.append('consent_method', methodSelect.value);
 			}
 
-			const contentMapCheckboxes = card.querySelectorAll('[data-page-checkbox]');
-			if (contentMapCheckboxes.length) {
-				const selectedPages = Array.from(contentMapCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
-				formData.append('consent_map', JSON.stringify(selectedPages.reduce((acc, val, idx) => {
-					acc[`page_${idx + 1}`] = val;
-					return acc;
-				}, {})));
+			const contentMapButtons = card.querySelectorAll('[data-page-btn]');
+			if (contentMapButtons.length) {
+				const selectedPages = {};
+				contentMapButtons.forEach(btn => {
+					if (!btn.disabled) return;
+					const pageId = btn.value;
+					const pageSlug = btn.dataset.pageSlug;
+					selectedPages[pageSlug] = pageId;
+				});
+				formData.append('consent_map', Object.keys(selectedPages).length > 0 ? JSON.stringify(selectedPages) : '{}');
 			}
 
 			saveButton.classList.add('is-loading');
@@ -215,31 +218,26 @@ const initLegalConsents = () => {
 		});
 
 		const parent = button.closest('.tutor-option-field-input');
-		const checkboxes = parent.querySelectorAll('[data-page-checkbox]');
+		const pageButtons = parent.querySelectorAll('[data-page-btn]');
 		const textarea = parent.querySelector('textarea');
-		const toggleBtn = parent.querySelector('[data-page-dropdown-toggle]');
 
-		if (checkboxes.length && textarea) {
-			checkboxes.forEach(checkbox => {
-				checkbox.addEventListener('change', () => {
-					const checkedOptions = Array.from(checkboxes).filter(cb => cb.checked);
-					const currentValues = new Set(checkedOptions.map(cb => cb.value));
-					const previousValues = new Set([...checkedOptions.map(cb => cb.value), ...Array.from(checkboxes).filter(cb => !cb.checked).map(cb => cb.value)]);
+		if (pageButtons.length && textarea) {
+			pageButtons.forEach(btn => {
+				btn.addEventListener('click', () => {
+					const pageId = btn.value;
+					const pageSlug = btn.dataset.pageSlug;
+					const pageTitle = btn.textContent.trim();
 
-					const newlySelected = [...currentValues].filter(val => !previousValues.has(val) || (previousValues.has(val) && checkbox.checked && checkbox.dataset.previousChecked === 'true'));
+					// Append page link to textarea
+					const linkText = `{{${pageSlug}|${pageId}}}`;
+					textarea.value = textarea.value ? `${textarea.value} ${linkText}` : linkText;
 
-					if (newlySelected.length > 0) {
-						const newLinks = newlySelected.map(val => {
-							const cb = Array.from(checkboxes).find(c => c.value === val);
-							const pageTitle = cb ? cb.nextElementSibling?.textContent || '' : '';
-							const slug = pageTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-							return `{{${slug}|${val}}`;
-						});
-						textarea.value = textarea.value ? `${textarea.value} ${newLinks.join(' ')}` : newLinks.join(' ');
-						markSettingsAsChanged();
-					}
+					// Disable button and change style
+					btn.disabled = true;
+					btn.classList.remove('tutor-btn-ghost');
+					btn.classList.add('tutor-btn-primary');
 
-					checkedOptions.forEach(cb => cb.dataset.previousChecked = 'true');
+					markSettingsAsChanged();
 				});
 			});
 		}

@@ -206,10 +206,13 @@ $render_card = function ( $consent, $index ) use ( $display_options, $method_opt
 							}
 							?>
 							<?php foreach ( $wp_pages as $page ) : ?>
-								<label class="tutor-form-check tutor-flex tutor-items-center tutor-mb-2" style="cursor: pointer;">
-									<input type="checkbox" name="tutor_option[legal_consents][<?php echo esc_attr( $index ); ?>][content_map][]" value="<?php echo esc_attr( $page->ID ); ?>" <?php echo in_array( (string) $page->ID, $current_map, true ) ? 'checked' : ''; ?> data-page-checkbox>
-									<span class="tutor-ml-2"><?php echo esc_html( $page->post_title ); ?></span>
-								</label>
+								<?php
+								$page_slug = strtolower( preg_replace( '/[^a-z0-9]+/', '_', sanitize_title( $page->post_title ) ) );
+								$is_selected = isset( $current_map[ $page_slug ] ) || in_array( (string) $page->ID, $current_map, true );
+								?>
+								<button type="button" class="tutor-btn tutor-btn-sm <?php echo $is_selected ? 'tutor-btn-primary' : 'tutor-btn-ghost'; ?> tutor-btn-block tutor-mb-1" data-page-btn value="<?php echo esc_attr( $page->ID ); ?>" data-page-slug="<?php echo esc_attr( $page_slug ); ?>" <?php echo $is_selected ? 'disabled' : ''; ?>>
+									<?php echo esc_html( $page->post_title ); ?>
+								</button>
 							<?php endforeach; ?>
 						</div>
 					</div>
