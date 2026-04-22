@@ -175,7 +175,7 @@ const initLegalConsents = () => {
 
 	container.querySelectorAll('[data-page-select-toggle]').forEach((button) => {
 		button.addEventListener('click', () => {
-			const select = button.closest('[data-consent-content]').querySelector('[data-page-select]');
+			const select = button.closest('.tutor-option-field-input').querySelector('[data-page-select]');
 			if (select) {
 				select.click();
 			}
