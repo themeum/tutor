@@ -58,6 +58,10 @@
       gap: $tutor-spacing-4;
       align-items: center;
 
+      .tutor-quiz-item-info-date a {
+        color: $tutor-text-subdued;
+      }
+
       @include tutor-breakpoint-down(sm) {
         grid-template-columns: 2fr 1fr 1fr;
         grid-template-areas:
@@ -73,7 +77,7 @@
               @include tutor-visually-hidden;
             }
 
-            .tutor-quiz-item-info-date {
+            .tutor-quiz-item-info-date a {
               @include tutor-typography('small', 'semibold', 'brand');
             }
           }
