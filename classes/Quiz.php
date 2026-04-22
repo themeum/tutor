@@ -1767,7 +1767,7 @@ class Quiz {
 						<?php esc_html_e( 'Result', 'tutor' ); ?>
 					</div>
 				</div>
-				
+
 				<div class="tutor-quiz-attempts-list">
 					<?php
 					foreach ( $attempts_list as $index => $attempt ) {
@@ -1785,6 +1785,7 @@ class Quiz {
 									'quiz_attempt_obj' => $quiz_attempt_obj,
 									'attempts_count'   => $attempts_count,
 									'is_previous'      => true,
+									'is_learning_area' => true,
 								)
 							);
 							?>
@@ -1824,10 +1825,6 @@ class Quiz {
 		$auto_start_delay       = (int) ( $quiz_settings['auto_start_delay'] ?? 5 );
 		$should_auto_start      = 1 === (int) $quiz_auto_start && 0 === (int) $attempted_count;
 
-		if ( ! $can_start_quiz ) {
-			return;
-		}
-
 		global $tutor_current_post, $tutor_course_id;
 		$current_content_id  = $tutor_current_post ? $tutor_current_post->ID : $quiz_id;
 		$course_id           = $tutor_course_id ? $tutor_course_id : tutor_utils()->get_course_id_by_subcontent( $current_content_id );
@@ -1837,32 +1834,58 @@ class Quiz {
 		$skip_modal_id       = 'tutor-quiz-skip-to-next';
 		$auto_start_modal_id = 'tutor-quiz-autostart-modal';
 
-		$skip_modal_cancel_button = Button::make()
-			->label( __( 'Cancel', 'tutor' ) )
-			->variant( Variant::SECONDARY )
-			->size( Size::SMALL )
-			->attr( '@click', "TutorCore.modal.closeModal('$skip_modal_id')" )
-			->get();
+		$can_skip_quiz  = ( 0 === $attempted_count );
+		$show_continue  = ( $attempted_count > 0 && $next_id );
+		$has_any_action = $can_skip_quiz || $show_continue || $can_start_quiz;
 
-		$skip_modal_confirm_button = Button::make()
-			->tag( 'a' )
-			->label( __( 'Yes, Skip This', 'tutor' ) )
-			->variant( Variant::DESTRUCTIVE )
-			->size( Size::SMALL )
-			->attr( 'href', esc_url( $skip_url ) )
-			->get();
+		if ( ! $has_any_action ) {
+			return;
+		}
 		?>
 		<div class="tutor-quiz-intro-actions tutor-flex tutor-justify-end tutor-gap-3 tutor-mt-8">
 			<?php
-			if ( 0 === $attempted_count ) {
+			if ( $can_skip_quiz ) {
 				Button::make()
 					->label( __( 'Skip Quiz', 'tutor' ) )
 					->variant( Variant::GHOST )
 					->attr( '@click', "TutorCore.modal.showModal('$skip_modal_id')" )
 					->render();
+
+				$skip_modal_confirm_button = Button::make()
+					->tag( 'a' )
+					->label( __( 'Yes, Skip This', 'tutor' ) )
+					->variant( Variant::DESTRUCTIVE )
+					->size( Size::SMALL )
+					->attr( 'href', esc_url( $skip_url ) )
+					->get();
+
+				$skip_modal_cancel_button = Button::make()
+					->label( __( 'Cancel', 'tutor' ) )
+					->variant( Variant::SECONDARY )
+					->size( Size::SMALL )
+					->attr( '@click', "TutorCore.modal.closeModal('$skip_modal_id')" )
+					->get();
+
+				ConfirmationModal::make()
+					->id( $skip_modal_id )
+					->title( __( 'Do You Want to Skip This Quiz?', 'tutor' ) )
+					->message( __( 'Are you sure you want to skip this quiz? Please confirm your choice.', 'tutor' ) )
+					->confirm_button( $skip_modal_confirm_button )
+					->cancel_button( $skip_modal_cancel_button )
+					->render();
+			}
+
+			if ( $show_continue ) {
+				Button::make()
+				->tag( 'a' )
+				->label( __( 'Continue Lesson', 'tutor' ) )
+				->variant( $can_start_quiz ? Variant::GHOST : Variant::PRIMARY )
+				->attr( 'href', esc_url( get_the_permalink( $next_id ) ) )
+				->render();
 			}
 			?>
-			
+
+			<?php if ( $can_start_quiz ) : ?>
 			<form
 				x-data="tutorQuizAutoStart({
 					quizID: <?php echo esc_attr( $quiz_id ); ?>,
@@ -1874,25 +1897,14 @@ class Quiz {
 			>
 				<?php
 				Button::make()
-					->label( __( 'Start Quiz', 'tutor' ) )
+					->label( $attempted_count > 0 ? __( 'Retake Quiz', 'tutor' ) : __( 'Start Quiz', 'tutor' ) )
 					->attr( 'x-bind:disabled', 'startQuizMutation?.isPending' )
 					->attr( ':class', "{ 'tutor-btn-loading': startQuizMutation?.isPending }" )
 					->render();
 				?>
 			</form>
+			<?php endif; ?>
 		</div>
-
-		<?php if ( 0 === $attempted_count ) : ?>
-			<?php
-			ConfirmationModal::make()
-				->id( $skip_modal_id )
-				->title( __( 'Do You Want to Skip This Quiz?', 'tutor' ) )
-				->message( __( 'Are you sure you want to skip this quiz? Please confirm your choice.', 'tutor' ) )
-				->confirm_button( $skip_modal_confirm_button )
-				->cancel_button( $skip_modal_cancel_button )
-				->render();
-			?>
-		<?php endif; ?>
 
 		<?php
 		Modal::make()
@@ -1910,7 +1922,6 @@ class Quiz {
 		?>
 		<?php
 	}
-
 
 	/**
 	 * Render individual question template
@@ -2044,7 +2055,6 @@ class Quiz {
 		}
 		?>
 
-		
 		<a
 			href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>" 
 			title="<?php echo esc_attr( $quiz_title ); ?>"

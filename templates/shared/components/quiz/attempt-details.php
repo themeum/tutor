@@ -69,7 +69,8 @@ if ( ! $quiz_id ) {
 	$quiz_id = (int) ( $attempt_data->quiz_id ?? 0 );
 }
 
-$questions = tutor_utils()->get_questions_by_quiz( $quiz_id );
+$questions       = tutor_utils()->get_questions_by_quiz( $quiz_id );
+$course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id );
 ?>
 <div class="tutor-quiz-summary-page">
 	<div class="tutor-quiz-summary-header">
@@ -142,4 +143,17 @@ $questions = tutor_utils()->get_questions_by_quiz( $quiz_id );
 			?>
 		</div>
 	</div>
+	<?php if ( $course_contents->next_id ) : ?>
+	<div class="tutor-quiz-summary-footer">
+		<?php
+			Button::make()
+			->tag( 'a' )
+			->label( __( 'Continue Lesson', 'tutor' ) )
+			->variant( Variant::PRIMARY )
+			->size( Size::LARGE )
+			->attr( 'href', esc_url( get_the_permalink( $course_contents->next_id ) ) )
+			->render();
+		?>
+	</div>
+	<?php endif; ?>
 </div>
