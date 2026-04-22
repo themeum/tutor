@@ -49,12 +49,16 @@ class LegalConsent {
 	 * Constructor.
 	 *
 	 * @since 4.0.0
+	 *
+	 * @param bool $trigger_hooks Trigger hooks or not.
 	 */
-	public function __construct() {
+	public function __construct( $trigger_hooks = true ) {
 		$this->model     = new LegalConsents();
 		$this->log_model = new LegalConsentLogs();
 
-		$this->register_hooks();
+		if ( $trigger_hooks ) {
+			$this->register_hooks();
+		}
 	}
 
 	/**
@@ -76,7 +80,7 @@ class LegalConsent {
 	 * @return void
 	 */
 	public function handle_legal_consent_ajax() {
-		// $this->validate_ajax_request();
+		$this->validate_ajax_request();
 
 		$action = Input::post( 'action', '' );
 		$data   = Input::sanitize_array( $_POST ); //phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is validated.
