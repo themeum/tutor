@@ -531,44 +531,47 @@ class Quiz_Attempts_List {
 	 * @param array   $attempt the quiz attempt.
 	 * @param integer $attempts_count the quiz attempt count.
 	 * @param integer $quiz_id the quiz id.
-	 * @param bool    $is_learning_area is learning area list item.
 	 *
 	 * @return void
 	 */
-	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0, $is_learning_area = false ) {
+	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0 ) {
 		$is_quiz_details_hidden = $this->is_attempt_details_hidden();
-		$can_retry              = ! $is_learning_area && $this->should_retry( $attempt, $attempts_count ) && $attempts_count;
 
-		// If nothing to show, bail early.
-		if ( ! $can_retry && $is_quiz_details_hidden ) {
-			return;
-		}
+		// Only add retry option to the first attempt.
+		if ( ! $this->should_retry( $attempt, $attempts_count ) || ! $attempts_count ) {
 
-		$popover = Popover::make()
+			if ( $is_quiz_details_hidden ) {
+				return;
+			}
+
+			Popover::make()
 			->trigger( $this->get_kebab_button() )
 			->placement( 'bottom' )
-			->menu_min_width( '110px' );
+			->menu_item( $this->get_details_item( $attempt ) )
+			->menu_min_width( '110px' )
+			->render();
+		} else {
+			$popover = Popover::make()
+				->trigger( $this->get_kebab_button() )
+				->placement( 'bottom' )
+				->menu_min_width( '110px' )
+				->menu_item(
+					array(
+						'tag'     => 'button',
+						'content' => __( 'Retry', 'tutor' ),
+						'icon'    => SvgIcon::make()->name( Icon::RELOAD_3 )->size( 20 )->get(),
+						'attr'    => array(
+							'@click' => $this->get_retry_attribute( $quiz_id ),
+						),
+					)
+				);
 
-		// Add retry option if applicable.
-		if ( $can_retry ) {
-			$popover->menu_item(
-				array(
-					'tag'     => 'button',
-					'content' => __( 'Retry', 'tutor' ),
-					'icon'    => SvgIcon::make()->name( Icon::RELOAD_3 )->size( 20 )->get(),
-					'attr'    => array(
-						'@click' => $this->get_retry_attribute( $quiz_id ),
-					),
-				)
-			);
+			if ( ! $is_quiz_details_hidden ) {
+				$popover->menu_item( $this->get_details_item( $attempt ) );
+			}
+
+			$popover->render();
 		}
-
-		// Add details option if visible.
-		if ( ! $is_quiz_details_hidden ) {
-			$popover->menu_item( $this->get_details_item( $attempt ) );
-		}
-
-		$popover->render();
 	}
 
 	/**

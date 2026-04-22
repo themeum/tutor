@@ -20,12 +20,11 @@ if ( empty( $attempt ) ) {
 	return;
 }
 
-$show_quiz_title  = $show_quiz_title ?? false;
-$show_course      = $show_course ?? false;
-$attempt_number   = $attempt_number ?? null;
-$attempts_count   = $attempts_count ?? 0;
-$is_previous      = $is_previous ?? false;
-$is_learning_area = $is_learning_area ?? false;
+$show_quiz_title = $show_quiz_title ?? false;
+$show_course     = $show_course ?? false;
+$attempt_number  = $attempt_number ?? null;
+$attempts_count  = $attempts_count ?? 0;
+$is_previous     = $is_previous ?? false;
 
 ?>
 <div class="tutor-quiz-attempts-item">
@@ -122,7 +121,7 @@ $is_learning_area = $is_learning_area ?? false;
 	<div class="tutor-quiz-item-result">
 		<?php
 		$quiz_attempt_obj->render_quiz_attempt_list_badge( $attempt );
-		$quiz_attempt_obj->render_student_attempt_popover( $attempt, $attempts_count, $quiz_id, $is_learning_area );
+		$quiz_attempt_obj->render_student_attempt_popover( $attempt, $attempts_count, $quiz_id );
 		?>
 	</div>
 </div>
