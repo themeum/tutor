@@ -170,7 +170,7 @@ $render_card = function ( $consent, $index ) use ( $display_options, $method_opt
 					</div>
 				</div>
 
-				<div class="tutor-option-field-row tutor-d-block" id="field_legal_consents_message_<?php echo esc_attr( $index ); ?>">
+				<div class="tutor-option-field-row" id="field_legal_consents_message_<?php echo esc_attr( $index ); ?>">
 					<div class="tutor-option-field-label">
 						<div class="tutor-fs-6 tutor-fw-medium" tutor-option-name><?php esc_html_e( 'Consent Message', 'tutor' ); ?></div>
 						<div class="tutor-fs-7 tutor-color-muted tutor-mt-8"><?php esc_html_e( 'Message shown to users', 'tutor' ); ?></div>
@@ -201,16 +201,16 @@ $render_card = function ( $consent, $index ) use ( $display_options, $method_opt
 			</div>
 
 			<div class="tutor-legal-consent-card-footer">
-				<button type="button" class="tutor-btn tutor-legal-consent-delete-btn" data-consent-delete>
+				<button type="button" class="tutor-btn tutor-btn-sm tutor-legal-consent-delete-btn" data-consent-delete>
 					<?php esc_html_e( 'Delete', 'tutor' ); ?>
 				</button>
 
 				<div class="tutor-legal-consent-card-footer-actions">
-					<button type="button" class="tutor-legal-consent-cancel-btn" data-consent-cancel>
+					<button type="button" class="tutor-btn tutor-btn-sm tutor-btn-ghost" data-consent-cancel>
 						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 					</button>
 
-					<button type="button" class="tutor-btn tutor-btn-primary" data-consent-save>
+					<button type="button" class="tutor-btn tutor-btn-sm tutor-btn-primary" data-consent-save>
 						<?php esc_html_e( 'Save Changes', 'tutor' ); ?>
 					</button>
 				</div>
