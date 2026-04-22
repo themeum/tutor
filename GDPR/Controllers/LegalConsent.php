@@ -186,6 +186,12 @@ class LegalConsent {
 		$request['version'] = 1;
 
 		$data = $this->prepare_legal_consent_data( $request, true );
+
+		$consent_map = tutor_is_json( $data['consent_map'] ) ? $data['consent_map'] : null;
+		if ( is_null( $consent_map ) ) {
+			$this->json_response( __( 'Invalid consent map', 'tutor' ), '', 400 );
+		}
+
 		if ( is_wp_error( $data ) ) {
 			$this->json_response( '', $data->errors, 400 );
 		}
@@ -298,6 +304,10 @@ class LegalConsent {
 			$this->json_response( '', $data->errors, 400 );
 		}
 
+		if ( isset( $data['consent_map'] ) && ! tutor_is_json( $data['consent_map'] ) ) {
+			$this->response_fail( __( 'Invalid consent map.', 'tutor' ), 400 );
+		}
+
 		if ( empty( $data ) ) {
 			$this->response_fail( __( 'No update data found.', 'tutor' ), 400 );
 		}
@@ -397,7 +407,7 @@ class LegalConsent {
 			'consent_title'   => Input::sanitize( $request['consent_title'] ?? '', '', Input::TYPE_STRING ),
 			'display_on'      => Input::sanitize( $request['display_on'] ?? '', '', Input::TYPE_STRING ),
 			'consent_message' => Input::sanitize( $request['consent_message'] ?? '', '', Input::TYPE_KSES_POST ),
-			'consent_maps'     => Input::sanitize( $request['consent_maps'] ?? '', '', Input::TYPE_STRING ),
+			'consent_map'     => Input::sanitize( $request['consent_map'] ?? '', '', Input::TYPE_STRING ),
 			'version'         => Input::sanitize( $request['version'] ?? '', '', Input::TYPE_STRING ),
 			'is_required'     => (int) Input::sanitize( $request['is_required'] ?? false, false, Input::TYPE_BOOL ),
 			'is_active'       => (int) Input::sanitize( $request['is_active'] ?? true, true, Input::TYPE_BOOL ),
@@ -436,7 +446,7 @@ class LegalConsent {
 
 		return array(
 			'consent_title'   => 'required',
-			'display_on'      => "required|match_string:{$allowed_display_places}",
+			'display_on'      => 'required',
 			'consent_message' => 'required',
 			'version'         => 'required',
 			'is_required'     => 'required',

@@ -42,7 +42,7 @@ class LegalConsents extends BaseModel {
 		'consent_title',
 		'display_on',
 		'consent_message',
-		'consent_maps',
+		'consent_map',
 		'version',
 		'is_required',
 		'is_active',

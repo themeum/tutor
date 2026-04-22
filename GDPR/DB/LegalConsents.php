@@ -47,7 +47,7 @@ class LegalConsents extends DB {
 			consent_title VARCHAR(255) NOT NULL,
 			display_on TEXT NOT NULL, -- comma separate value for multiple scopes
 			consent_message TEXT NOT NULL,
-			consent_maps JSON, -- JSON map [terms_conditions => 1]
+			consent_map JSON, -- JSON map [terms_conditions => 1]
 			version VARCHAR(20) NOT NULL,
 			is_required TINYINT(1) DEFAULT 0,
 			is_active TINYINT(1) DEFAULT 1,
