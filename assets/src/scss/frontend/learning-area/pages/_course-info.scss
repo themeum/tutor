@@ -34,7 +34,7 @@
     margin-top: $tutor-spacing-8;
   }
 
-  .tutor-course-description {
+  .tutor-course-accordion {
     @include tutor-flex(column);
     gap: $tutor-spacing-2;
     margin-top: $tutor-spacing-9;
@@ -45,7 +45,7 @@
       border-radius: $tutor-radius-lg;
       padding: $tutor-spacing-5 $tutor-spacing-6;
 
-      .tutor-course-description-header {
+      .tutor-course-accordion-header {
         @include tutor-flex(row, center, space-between);
         cursor: pointer;
 
@@ -76,13 +76,13 @@
         }
       }
 
-      .tutor-course-description-body {
+      .tutor-course-accordion-body {
         @include tutor-typography(p3);
         margin-top: $tutor-spacing-5;
       }
     }
 
-    .tutor-course-description-list {
+    .tutor-course-accordion-list {
       @include tutor-grid(2, $tutor-spacing-6);
 
       @include tutor-breakpoint-down(sm) {

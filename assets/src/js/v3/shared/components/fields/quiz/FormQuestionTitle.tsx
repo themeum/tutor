@@ -366,7 +366,6 @@ const styles = {
     `}
   `,
   actionButton: css`
-    padding: 0;
     color: ${colorTokens.icon.subdued};
   `,
 };

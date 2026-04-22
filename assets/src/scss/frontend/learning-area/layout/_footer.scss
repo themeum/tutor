@@ -1,27 +1,70 @@
-// Learning Area Footer Styles
-
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
-.tutor-learning-footer {
-  @include tutor-flex(row, center, space-between);
-  background-color: $tutor-surface-base;
-  padding-block: $tutor-spacing-6;
-  position: sticky;
-  bottom: 0;
+.tutor-learning-area-footer {
+  margin-top: $tutor-spacing-6;
+  @include tutor-flex(row, stretch, flex-end);
+  gap: $tutor-spacing-4;
 
   @include tutor-breakpoint-down(sm) {
     position: fixed;
-    padding-block: $tutor-spacing-5;
-    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: $tutor-spacing-6;
+    margin: 0;
+    background-color: $tutor-surface-l1;
+    border-top: 1px solid $tutor-border-idle;
+    gap: $tutor-spacing-3;
+    z-index: $tutor-z-sidebar;
+    justify-content: space-between;
 
-    a.tutor-btn {
-      @include tutor-button-size(x-small);
+    form {
+      width: 50%;
+
+      &:only-child {
+        width: 100%;
+      }
     }
 
-    button.tutor-btn {
-      @include tutor-button-size(medium);
-      gap: $tutor-spacing-4;
+    button:not(.tutor-mark-as-complete-button),
+    a {
+      @include tutor-button-size(large);
+      width: 50%;
+
+      &:is(:only-child) {
+        width: 100%;
+      }
+    }
+  }
+
+  &[data-lesson] {
+    @include tutor-flex(row, center, space-between);
+    background-color: $tutor-surface-base;
+    padding: $tutor-spacing-6 0;
+    position: sticky;
+    bottom: 0;
+    gap: 0;
+
+    @include tutor-breakpoint-down(sm) {
+      position: fixed;
+      padding-block: $tutor-spacing-5;
+      width: 100%;
+
+      form {
+        width: auto;
+      }
+
+      a.tutor-btn {
+        @include tutor-button-size(x-small);
+        width: auto;
+      }
+
+      button.tutor-btn {
+        @include tutor-button-size(medium);
+        width: auto;
+        gap: $tutor-spacing-4;
+      }
     }
   }
 }

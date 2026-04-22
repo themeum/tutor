@@ -71,7 +71,7 @@ const questionTypes = {
   },
   puzzle: {
     label: __('Puzzle', 'tutor'),
-    icon: 'quizImageMatching',
+    icon: 'quizPuzzle',
   },
   h5p: {
     label: __('H5P', 'tutor'),

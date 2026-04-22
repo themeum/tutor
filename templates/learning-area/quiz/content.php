@@ -31,23 +31,27 @@ $has_time_limit     = is_array( $quiz_time ) && ! empty( $quiz_time['time_value'
 $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_time['time_type'] : null;
 
 ?>
-<div class="tutor-quiz-intro">
+<div class="tutor-quiz">
 	<?php ob_start(); ?>
-	<div class="tutor-card">
-		<!-- Quiz Icon -->
-		<div class="tutor-quiz-intro-icon tutor-mb-8">
-			<img src="<?php echo esc_url( UrlHelper::themed_asset( 'images/illustrations/quiz-intro.webp' ) ); ?>" alt="<?php esc_attr_e( 'Quiz', 'tutor' ); ?>">
+	<div class="tutor-quiz-intro">
+		<div class="tutor-quiz-intro-overview">
+			<!-- Quiz Icon -->
+			<div class="tutor-quiz-intro-icon">
+				<img src="<?php echo esc_url( UrlHelper::themed_asset( 'images/illustrations/quiz-intro.webp' ) ); ?>" alt="<?php esc_attr_e( 'Quiz', 'tutor' ); ?>">
+			</div>
+
+			<!-- Quiz Title -->
+			<h3 class="tutor-quiz-intro-title">
+				<?php echo esc_html( $quiz->post_title ); ?>		
+			</h3>
+
+			<?php if ( $quiz->post_content ) : ?>
+				<!-- Quiz Description -->
+				<p class="tutor-quiz-intro-description">
+					<?php echo wp_kses_post( $quiz->post_content ); ?>	
+				</p>
+			<?php endif; ?>
 		</div>
-
-		<!-- Quiz Title -->
-		<h1 class="tutor-quiz-intro-title tutor-mb-5">
-			<?php echo esc_html( $quiz->post_title ); ?>		
-		</h1>
-
-		<!-- Quiz Description -->
-		<p class="tutor-quiz-intro-description tutor-mb-8">
-			<?php echo wp_kses_post( $quiz->post_content ); ?>	
-		</p>
 
 		<!-- Quiz Parameters Table -->
 		<div class="tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-quiz-intro-params tutor-mb-8">
