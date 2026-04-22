@@ -14,6 +14,7 @@ use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Progress;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Models\QuizModel;

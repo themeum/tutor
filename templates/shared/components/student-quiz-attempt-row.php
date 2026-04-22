@@ -16,6 +16,8 @@ use TUTOR\Quiz_Attempts_List;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Components\Constants\Color;
+use Tutor\Components\Progress;
+use Tutor\Models\QuizModel;
 
 if ( empty( $attempt ) ) {
 	return;

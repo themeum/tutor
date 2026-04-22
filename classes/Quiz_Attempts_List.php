@@ -24,6 +24,7 @@ use Tutor\Components\Popover;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Components\SvgIcon;
+use Tutor\Components\Progress;
 
 /**
  * Quiz attempt class
@@ -580,19 +581,15 @@ class Quiz_Attempts_List {
 			$statics_stroke_color = 'var(--tutor-icon-warning-secondary)';
 		}
 
-		$config = array(
-			'value'               => $earned_percentage,
-			'strokeColor'         => 'var(--tutor-border-idle)',
-			'progressStrokeColor' => $statics_stroke_color,
-			'type'                => 'progress',
-			'size'                => $size,
-			'animated'            => true,
-		);
-		?>
-		<div x-data="tutorStatics(<?php echo esc_attr( wp_json_encode( $config ) ); ?>)" class="<?php echo esc_attr( $wrapper_class ); ?>">
-			<div x-html="render()"></div>
-		</div>
-		<?php
+		Progress::make()
+			->type( 'circle' )
+			->value( $earned_percentage )
+			->size( $size )
+			->stroke_color( 'var(--tutor-border-idle)' )
+			->progress_stroke_color( $statics_stroke_color )
+			->animated()
+			->attr( 'class', $wrapper_class )
+			->render();
 	}
 
 	/**
