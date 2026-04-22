@@ -75,6 +75,8 @@ function copy() {
         '!phpcs.xml.dist',
         '!./tutor-droip/**',
         '!./includes/droip/**',
+        '!./tutor-kirki/**',
+        '!./includes/kirki/**',
         '!./cypress/**',
         '!./cypress.config.ts',
         '!.husky',
