@@ -10,6 +10,7 @@
 
 namespace Tutor\GDPR;
 
+use AllowDynamicProperties;
 use Tutor\GDPR\Controllers\LegalConsentLogs;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\GDPR\DB\DB;
@@ -23,6 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 4.0.0
  */
+#[AllowDynamicProperties]
 final class GDPR extends Singleton {
 
 	/**
@@ -74,9 +76,10 @@ final class GDPR extends Singleton {
 	 */
 	public function init() {
 		$this->maybe_install_db();
-		new LegalConsent();
-		new UserConsents();
-		new LegalConsentLogs();
+
+		$this->legal_consent = new LegalConsent();
+		$this->user_content  = new UserConsents();
+		$this->log           = new LegalConsentLogs();
 	}
 
 	/**

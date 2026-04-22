@@ -205,11 +205,13 @@ class LegalConsent {
 	 */
 	private function list_legal_consents( array $request ) {
 		$where = array();
-		if ( isset( $request['compliance_key'] ) && '' !== $request['compliance_key'] ) {
-			$where['compliance_key'] = sanitize_text_field( $request['compliance_key'] );
+
+		$consent_title = $request['consent_title'] ?? '';
+		if ( ! empty( $consent_title ) ) {
+			$where['consent_title'] = Input::sanitize( $consent_title );
 		}
 
-		if ( isset( $request['is_active'] ) && '' !== $request['is_active'] ) {
+		if ( Input::has( 'is_active' ) ) {
 			$where['is_active'] = (int) $request['is_active'];
 		}
 
@@ -257,12 +259,14 @@ class LegalConsent {
 			$this->response_fail( __( 'Failed to update legal consent.', 'tutor' ), 500 );
 		}
 
+		$new_data = array_merge( (array) $existing, $data );
+
 		$log_id = $this->log_model->create(
 			array(
 				'legal_consent_id' => $id,
 				'action'           => 'updated',
 				'old_data'         => wp_json_encode( (array) $existing ),
-				'new_data'         => wp_json_encode( $data ),
+				'new_data'         => wp_json_encode( $new_data ),
 				'created_at_utc'   => current_time( 'mysql', true ),
 			)
 		);
@@ -307,11 +311,11 @@ class LegalConsent {
 
 		$log_id = $this->log_model->create(
 			array(
-				'compliance_id'   => $id,
-				'action'          => 'deleted',
-				'old_data'        => wp_json_encode( (array) $existing ),
-				'new_data'        => null,
-				'created_at_utc'  => current_time( 'mysql', true ),
+				'legal_consent_id' => $id,
+				'action'           => 'deleted',
+				'old_data'         => wp_json_encode( (array) $existing ),
+				'new_data'         => null,
+				'created_at_utc'   => current_time( 'mysql', true ),
 			)
 		);
 		if ( ! $log_id ) {
@@ -335,6 +339,8 @@ class LegalConsent {
 	 * @return array|\WP_Error
 	 */
 	private function prepare_legal_consent_data( array $request, bool $is_create ) {
+		$request = array_intersect_key( $request, array_flip( $this->model->get_fillable_fields() ) );
+
 		$data = array(
 			'consent_title'   => Input::sanitize( $request['consent_title'] ?? '', '', Input::TYPE_STRING ),
 			'display_on'      => Input::sanitize( $request['display_on'] ?? '', '', Input::TYPE_STRING ),
@@ -355,11 +361,12 @@ class LegalConsent {
 			$data['created_at_utc'] = current_time( 'mysql', true );
 		} else {
 			$data = array_filter(
-				$data,
+				$request,
 				function ( $value ) {
 					return '' !== $value && null !== $value;
 				}
 			);
+			$data = array_map( 'sanitize_text_field', $data );
 		}
 
 		return $data;

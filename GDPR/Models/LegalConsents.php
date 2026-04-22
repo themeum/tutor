@@ -60,4 +60,15 @@ class LegalConsents extends BaseModel {
 		$this->table_name = Table::get_table_name();
 		parent::__construct();
 	}
+
+	/**
+	 * Get fillable fields
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public function get_fillable_fields() {
+		return $this->fillable;
+	}
 }

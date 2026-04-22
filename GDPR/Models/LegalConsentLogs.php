@@ -40,7 +40,7 @@ class LegalConsentLogs extends BaseModel {
 	 */
 	protected $fillable = array(
 		'id',
-		'compliance_id',
+		'legal_consent_id',
 		'action',
 		'old_data',
 		'new_data',
