@@ -112,14 +112,46 @@ const bindCard = (card) => {
 
 	if (saveButton) {
 		saveButton.addEventListener('click', () => {
-			const headerSaveButton = getHeaderSaveButton();
-			if (!headerSaveButton) {
-				return;
+			const formData = new FormData();
+			formData.append('action', 'create');
+			formData.append('consent_title', card.querySelector('[data-consent-title-input]')?.value || '');
+			formData.append('consent_message', card.querySelector('textarea[name*="message"]')?.value || '');
+
+			const displayOnCheckboxes = card.querySelectorAll('[name*="display_on"]');
+			const displayOnValues = Array.from(displayOnCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+			formData.append('display_on', displayOnValues.join(','));
+
+			const methodSelect = card.querySelector('select[name*="method"]');
+			if (methodSelect) {
+				formData.append('consent_method', methodSelect.value);
 			}
 
-			headerSaveButton.removeAttribute('disabled');
-			headerSaveButton.click();
-			syncFooterSaveButtons();
+			const contentMapSelect = card.querySelector('[data-page-select]');
+			if (contentMapSelect) {
+				const selectedPages = Array.from(contentMapSelect.selectedOptions).filter(opt => opt.value).map(opt => opt.value);
+				formData.append('consent_map', JSON.stringify(selectedPages.reduce((acc, val, idx) => {
+					acc[`page_${idx + 1}`] = val;
+					return acc;
+				}, {})));
+			}
+
+			saveButton.classList.add('is-loading');
+			saveButton.disabled = true;
+
+			fetch(ajaxurl, {
+				method: 'POST',
+				body: formData,
+			})
+				.then(res => res.json())
+				.then(data => {
+					if (data.success) {
+						window.location.reload();
+					}
+				})
+				.finally(() => {
+					saveButton.classList.remove('is-loading');
+					saveButton.disabled = false;
+				});
 		});
 	}
 };
