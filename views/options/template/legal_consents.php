@@ -190,11 +190,15 @@ $render_card = function ( $consent, $index ) use ( $display_options, $method_opt
 							class="tutor-form-control"
 							rows="5"
 							placeholder="<?php esc_attr_e( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ); ?>"
+							style="padding-right: 44px;"
 						><?php echo esc_textarea( $message_value ); ?></textarea>
-						<select name="tutor_option[legal_consents][<?php echo esc_attr( $index ); ?>][page_id]" class="tutor-form-select" style="position: absolute; right: 12px; bottom: 12px; width: auto; z-index: 1;" data-consent-page-select>
-							<option value=""><?php esc_html_e( '+ Add Page Link', 'tutor' ); ?></option>
+						<button type="button" class="tutor-btn tutor-btn-ghost tutor-p-3 tutor-rounded" style="position: absolute; right: 8px; bottom: 8px; z-index: 1;" data-page-select-toggle title="<?php esc_attr_e( 'Add Page Link', 'tutor' ); ?>">
+							<i class="tutor-icon-link" aria-hidden="true"></i>
+						</button>
+						<select name="tutor_option[legal_consents][<?php echo esc_attr( $index ); ?>][page_id]" class="tutor-form-select" style="position: absolute; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; pointer-events: none;" data-page-select hidden>
+							<option value=""><?php esc_html_e( 'Select a page', 'tutor' ); ?></option>
 							<?php foreach ( $wp_pages as $page ) : ?>
-								<option value="<?php echo esc_attr( $page->ID ); ?>"><?php echo esc_html( $page->post_title ); ?></option>
+								<option value="<?php echo esc_attr( $page->ID ); ?>" <?php selected( $consent['page_id'] ?? '', $page->ID ); ?>><?php echo esc_html( $page->post_title ); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</div>
