@@ -198,10 +198,16 @@ $render_card = function ( $consent, $index ) use ( $display_options, $method_opt
 								<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
 							</svg>
 						</button>
-						<select name="tutor_option[legal_consents][<?php echo esc_attr( $index ); ?>][page_id]" class="tutor-form-select" style="position: absolute; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; pointer-events: none;" data-page-select hidden>
-							<option value=""><?php esc_html_e( 'Select a page', 'tutor' ); ?></option>
+						<select name="tutor_option[legal_consents][<?php echo esc_attr( $index ); ?>][content_map]" class="tutor-form-select" style="position: absolute; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; pointer-events: none;" data-page-select multiple hidden>
+							<option value=""><?php esc_html_e( 'Select pages', 'tutor' ); ?></option>
+							<?php
+							$current_map = isset( $consent['content_map'] ) ? json_decode( $consent['content_map'], true ) : array();
+							if ( ! is_array( $current_map ) ) {
+								$current_map = array();
+							}
+							?>
 							<?php foreach ( $wp_pages as $page ) : ?>
-								<option value="<?php echo esc_attr( $page->ID ); ?>" <?php selected( $consent['page_id'] ?? '', $page->ID ); ?>><?php echo esc_html( $page->post_title ); ?></option>
+								<option value="<?php echo esc_attr( $page->ID ); ?>" <?php echo in_array( (string) $page->ID, $current_map, true ) ? 'selected' : ''; ?>><?php echo esc_html( $page->post_title ); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</div>

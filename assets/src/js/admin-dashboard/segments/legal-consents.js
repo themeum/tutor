@@ -187,12 +187,15 @@ const initLegalConsents = () => {
 
 		if (select && textarea) {
 			select.addEventListener('change', () => {
-				if (select.value) {
-					const option = select.options[select.selectedIndex];
-					const pageTitle = option.textContent;
-					const snakeCaseTitle = pageTitle.toLowerCase().replace(/\s+/g, '-');
-					const linkText = `{{page_link id=${select.value} text=${snakeCaseTitle}}}`;
-					textarea.value = textarea.value ? `${textarea.value} ${linkText}` : linkText;
+				const selectedOptions = Array.from(select.selectedOptions).filter(opt => opt.value);
+				if (selectedOptions.length > 0) {
+					let linkTexts = selectedOptions.map(opt => {
+						const pageTitle = opt.textContent;
+						const pageId = opt.value;
+						const slug = pageTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+						return `{{${slug}|${pageId}}`;
+					});
+					textarea.value = linkTexts.join(' ');
 					markSettingsAsChanged();
 				}
 			});
