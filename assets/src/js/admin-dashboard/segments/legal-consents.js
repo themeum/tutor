@@ -182,22 +182,11 @@ const initLegalConsents = () => {
 		});
 
 		const parent = button.closest('.tutor-option-field-input');
-		const select = parent.querySelector('[data-page-select]');
-		const textarea = parent.querySelector('textarea');
+		const selectEl = parent.querySelector('[data-page-select]');
 
-		if (select && textarea) {
-			select.addEventListener('change', () => {
-				const selectedOptions = Array.from(select.selectedOptions).filter(opt => opt.value);
-				if (selectedOptions.length > 0) {
-					let linkTexts = selectedOptions.map(opt => {
-						const pageTitle = opt.textContent;
-						const pageId = opt.value;
-						const slug = pageTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-						return `{{${slug}|${pageId}}`;
-					});
-					textarea.value = linkTexts.join(' ');
-					markSettingsAsChanged();
-				}
+		if (selectEl) {
+			selectEl.addEventListener('change', () => {
+				markSettingsAsChanged();
 			});
 		}
 	});
