@@ -35,6 +35,7 @@ $tutor_is_public_course,
 $tutor_is_course_instructor,
 $tutor_current_post,
 $tutor_course_progress,
+$tutor_is_course_completed,
 $tutor_can_complete_course,
 $tutor_can_retake_course,
 $course_complete_modal_id,
@@ -75,7 +76,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 				</div>
 				<div class="tutor-flex">
 					<?php
-					if ( $course_reset_progress ) {
+					if ( $course_reset_progress && ! $tutor_is_course_completed ) {
 						Button::make()
 						->variant( Variant::GHOST )
 						->size( Size::X_SMALL )

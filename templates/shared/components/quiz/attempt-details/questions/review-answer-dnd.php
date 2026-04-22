@@ -105,20 +105,20 @@ if ( 'ordering' === $question_type ) {
 
 <div class="tutor-quiz-review-dnd-grid">
 	<div class="tutor-quiz-review-dnd-head">
-		<div class="tutor-quiz-review-col-title"><?php esc_html_e( 'Given Answer', 'tutor' ); ?></div>
-		<div class="tutor-quiz-review-col-title"><?php esc_html_e( 'Correct Answer', 'tutor' ); ?></div>
+		<div class="tutor-quiz-review-col-title tutor-quiz-review-given"><?php esc_html_e( 'Given Answer', 'tutor' ); ?></div>
+		<div class="tutor-quiz-review-col-title tutor-quiz-review-correct"><?php esc_html_e( 'Correct Answer', 'tutor' ); ?></div>
 	</div>
 
 	<div class="tutor-quiz-review-dnd-rows">
 		<?php foreach ( $rows as $row ) : ?>
 			<div class="tutor-quiz-review-dnd-row">
-				<div class="tutor-quiz-review-item" data-option="<?php echo esc_attr( $row['given_status'] ); ?>">
+				<div class="tutor-quiz-review-item tutor-quiz-review-given" data-option="<?php echo esc_attr( $row['given_status'] ); ?>">
 					<?php if ( ! empty( $row['given_image'] ) ) : ?>
 						<img src="<?php echo esc_url( $row['given_image'] ); ?>" alt="<?php echo esc_attr( $row['given_text'] ); ?>">
 					<?php endif; ?>
 					<span><?php echo esc_html( $row['given_text'] ); ?></span>
 				</div>
-				<div class="tutor-quiz-review-item" data-option="neutral">
+				<div class="tutor-quiz-review-item tutor-quiz-review-correct" data-option="neutral">
 					<?php if ( ! empty( $row['correct_image'] ) ) : ?>
 						<img src="<?php echo esc_url( $row['correct_image'] ); ?>" alt="<?php echo esc_attr( $row['correct_text'] ); ?>">
 					<?php endif; ?>

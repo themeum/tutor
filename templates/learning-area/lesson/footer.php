@@ -38,7 +38,7 @@ $next_link = $next_is_locked || ! $next_id ? '#' : get_the_permalink( $next_id )
 $is_completed_lesson = tutor_utils()->is_completed_lesson();
 
 ?>
-<div class="tutor-learning-footer">
+<div class="tutor-learning-area-footer" data-lesson>
 	<?php
 	Button::make()
 	->tag( 'a' )
