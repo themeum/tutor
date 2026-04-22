@@ -10,7 +10,7 @@ import { Addons } from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import { convertedQuestion } from '@TutorShared/utils/quiz';
+import { convertedQuestion, normalizeSingleMaskQuestionAnswers } from '@TutorShared/utils/quiz';
 import {
   isDefined,
   QuizDataStatus,
@@ -44,6 +44,7 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
     has_multiple_correct_answer?: '0' | '1';
     is_image_matching?: '0' | '1';
     draw_image_threshold_percent?: number;
+    puzzle_grid_size?: number;
   };
 }
 
@@ -325,6 +326,9 @@ export const convertQuizFormDataToPayload = (
             ...(question.question_type === 'draw_image' && {
               draw_image_threshold_percent: Number(question.question_settings.draw_image_threshold_percent ?? 70),
             }),
+            ...(question.question_type === 'puzzle' && {
+              puzzle_grid_size: Number(question.question_settings.puzzle_grid_size ?? 4),
+            }),
           },
           question_answers: question.question_answers.map(
             (answer) =>
@@ -370,38 +374,6 @@ export const convertQuizFormDataToPayload = (
           : '',
       }),
     ...Object.fromEntries(settingsSlotFields.map((key) => [key, formData[key as keyof QuizForm]])),
-  };
-};
-
-const normalizeSingleMaskQuestionAnswers = (questions: QuizQuestion[], deletedAnswerIds: ID[] = []) => {
-  const deletedAnswerIdsSet = new Set(deletedAnswerIds);
-
-  const normalizedQuestions = questions.map((question) => {
-    if (question.question_type !== 'draw_image' && question.question_type !== 'pin_image') {
-      return question;
-    }
-
-    const answers = Array.isArray(question.question_answers) ? question.question_answers : [];
-    if (answers.length <= 1) {
-      return question;
-    }
-
-    const [keptAnswer, ...extraAnswers] = answers;
-    extraAnswers.forEach((answer) => {
-      if (answer._data_status !== QuizDataStatus.NEW && answer.answer_id) {
-        deletedAnswerIdsSet.add(answer.answer_id);
-      }
-    });
-
-    return {
-      ...question,
-      question_answers: keptAnswer ? [keptAnswer] : [],
-    };
-  });
-
-  return {
-    normalizedQuestions,
-    deletedAnswerIds: Array.from(deletedAnswerIdsSet),
   };
 };
 

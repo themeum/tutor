@@ -9,6 +9,7 @@ export interface StaticsProps {
   size?: StaticsSize;
   background?: string;
   strokeColor?: string;
+  progressStrokeColor?: string;
   showLabel?: boolean;
   label?: string;
   animated?: boolean;
@@ -28,6 +29,7 @@ const DEFAULT_CONFIG = {
   size: 'small' as StaticsSize,
   background: 'none',
   strokeColor: 'var(--tutor-actions-brand-secondary)',
+  progressStrokeColor: 'var(--tutor-actions-brand-primary)',
   showLabel: true,
   label: '',
   animated: false,
@@ -44,6 +46,7 @@ export const statics = (config: StaticsProps) => ({
   type: config.type ?? DEFAULT_CONFIG.type,
   background: config.background ?? DEFAULT_CONFIG.background,
   strokeColor: config.strokeColor ?? DEFAULT_CONFIG.strokeColor,
+  progressStrokeColor: config.progressStrokeColor ?? DEFAULT_CONFIG.progressStrokeColor,
   showLabel: config.showLabel ?? DEFAULT_CONFIG.showLabel,
   label: config.label ?? DEFAULT_CONFIG.label,
   animated: config.animated ?? DEFAULT_CONFIG.animated,
@@ -170,7 +173,7 @@ export const statics = (config: StaticsProps) => ({
         cy="${this.center}" 
         r="${this.radius}"
         fill="none"
-        stroke="var(--tutor-actions-brand-primary)"
+        stroke="${this.progressStrokeColor}"
         stroke-width="${this.strokeWidth}"
         stroke-linecap="round"
         stroke-dasharray="${this.circumference}"

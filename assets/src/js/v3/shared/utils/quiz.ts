@@ -1,5 +1,6 @@
 import {
   QuizDataStatus,
+  type ID,
   type QuizQuestion,
   type QuizQuestionOption,
   type QuizValidationErrorType,
@@ -169,11 +170,18 @@ export const validateQuizQuestion = (
       }
     }
 
-    if (currentQuestionType === 'draw_image' || currentQuestionType === 'pin_image') {
+    if (
+      currentQuestionType === 'draw_image' ||
+      currentQuestionType === 'pin_image' ||
+      currentQuestionType === 'puzzle'
+    ) {
       const hasMarkedArea = answers.some((answer) => Boolean(answer.answer_two_gap_match));
       if (!hasMarkedArea) {
         return {
-          message: __('Please mark a valid area on the image.', __TUTOR_TEXT_DOMAIN__),
+          message:
+            currentQuestionType === 'puzzle'
+              ? __('Please upload a valid puzzle image.', __TUTOR_TEXT_DOMAIN__)
+              : __('Please mark a valid area on the image.', __TUTOR_TEXT_DOMAIN__),
           type: 'question',
         };
       }
@@ -200,6 +208,12 @@ export const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>):
       const rawThreshold = question.question_settings.draw_image_threshold_percent;
       if (rawThreshold !== undefined && rawThreshold !== null && !Number.isNaN(Number(rawThreshold))) {
         question.question_settings.draw_image_threshold_percent = Number(rawThreshold);
+      }
+    }
+    if (question.question_type === 'puzzle') {
+      const rawGridSize = question.question_settings.puzzle_grid_size;
+      if (rawGridSize !== undefined && rawGridSize !== null && !Number.isNaN(Number(rawGridSize))) {
+        question.question_settings.puzzle_grid_size = Number(rawGridSize);
       }
     }
   }
@@ -280,4 +294,36 @@ export const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>):
         _data_status: QuizDataStatus.NO_CHANGE,
       } as QuizQuestion;
   }
+};
+
+export const normalizeSingleMaskQuestionAnswers = (questions: QuizQuestion[], deletedAnswerIds: ID[] = []) => {
+  const deletedAnswerIdsSet = new Set(deletedAnswerIds);
+
+  const normalizedQuestions = questions.map((question) => {
+    if (question.question_type !== 'draw_image' && question.question_type !== 'pin_image') {
+      return question;
+    }
+
+    const answers = Array.isArray(question.question_answers) ? question.question_answers : [];
+    if (answers.length <= 1) {
+      return question;
+    }
+
+    const [keptAnswer, ...extraAnswers] = answers;
+    extraAnswers.forEach((answer) => {
+      if (answer._data_status !== QuizDataStatus.NEW && answer.answer_id) {
+        deletedAnswerIdsSet.add(answer.answer_id);
+      }
+    });
+
+    return {
+      ...question,
+      question_answers: keptAnswer ? [keptAnswer] : [],
+    };
+  });
+
+  return {
+    normalizedQuestions,
+    deletedAnswerIds: Array.from(deletedAnswerIdsSet),
+  };
 };

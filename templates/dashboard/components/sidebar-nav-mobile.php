@@ -99,6 +99,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 					class="tutor-popover tutor-dashboard-nav-mobile-more-popover"
 					role="menu"
 					aria-label="<?php echo esc_attr( $item['title'] ); ?>"
+					x-transition.origin.bottom.right
 				>
 					<ul>
 						<?php

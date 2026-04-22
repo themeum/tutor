@@ -11,33 +11,62 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\DateFilter;
+use Tutor\Components\DropdownFilter;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
+use Tutor\Components\Sorting;
+use TUTOR\Dashboard;
+use Tutor\Ecommerce\Ecommerce;
 use TUTOR\Input;
-use Tutor\Models\OrderModel;
 
-$time_period     = null;
+$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+if ( 'free' === $monetize_by ) {
+	return;
+}
+
 $start_date      = Input::get( 'start_date' );
 $end_date        = Input::get( 'end_date' );
 $selected_filter = Input::get( 'data', 'all' );
 
-if ( tutor_utils()->is_monetize_by_tutor() ) {
+$args = array(
+	'status'     => $selected_filter,
+	'start_date' => $start_date,
+	'end_date'   => $end_date,
+	'limit'      => $item_per_page,
+	'offset'     => $offset,
+	'order'      => $order_filter,
+);
 
-	$args = array();
-	if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
-		$args['order_type'] = OrderModel::TYPE_SINGLE_ORDER;
-	}
-	$response    = ( new OrderModel() )->get_user_orders( $time_period, $start_date, $end_date, $selected_filter, $user_id, $item_per_page, $offset, $order_filter, $args );
-	$orders      = $response['results'];
-	$total_items = $response['total_count'];
-} else {
-	$orders      = tutor_utils()->get_orders_by_user_id( $user_id, $time_period, $start_date, $end_date, $offset, $item_per_page, $order_filter );
-	$total_items = tutor_utils()->get_total_orders_by_user_id( $user_id, $time_period, $start_date, $end_date );
-	$total_items = ! empty( $total_items ) ? count( $total_items ) : 0;
-}
+$response    = tutor_utils()->get_orders_by_user_id( $user_id, $args );
+$orders      = $response->results ?? array();
+$total_items = $response->total_count ?? 0;
+
+$status_options = apply_filters( 'tutor_order_history_status_options', array(), $selected_filter );
 ?>
 
-<?php require_once tutor_get_template( 'dashboard.account.billing.order-history-filters' ); ?>
+<div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
+	<?php DropdownFilter::make()->options( $status_options )->render(); ?>
+	<div class="tutor-flex tutor-items-center tutor-gap-3">
+		<?php
+		$query_params = array( 'data', 'order', 'start_date', 'end_date' );
+		if ( Input::has_any( $query_params, Input::GET_REQUEST ) ) {
+			Button::make()
+				->tag( 'a' )
+				->attr( 'href', Dashboard::get_account_page_url( 'billing' ) )
+				->attr( 'class', 'tutor-text-brand' )
+				->label( __( 'Clear all', 'tutor' ) )
+				->variant( Variant::LINK )
+				->render();
+		}
+
+		DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
+		Sorting::make()->order( $order_filter )->render();
+		?>
+	</div>
+</div>
 
 <?php
 if ( empty( $orders ) ) :
@@ -45,12 +74,15 @@ if ( empty( $orders ) ) :
 else :
 	?>
 <div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-order-history">
-	<?php foreach ( $orders as $order ) : //phpcs:ignore ?>
-		<?php
-		$order = OrderModel::normalize_order_for_history( $order ); //phpcs:ignore
-		include tutor_get_template( 'dashboard.account.billing.order-history-card' );
-		?>
-	<?php endforeach; ?>
+	<?php
+	$default_card_template       = Ecommerce::MONETIZE_BY === $monetize_by ? tutor_get_template( 'dashboard.account.billing.native-order-history-card' ) : '';
+	$order_history_card_template = apply_filters( 'tutor_order_history_card_template', $default_card_template );
+	foreach ( $orders as $order_data ) :
+		if ( file_exists( $order_history_card_template ) ) {
+			tutor_load_template_from_custom_path( $order_history_card_template, array( 'order_data' => $order_data ), false );
+		}
+	endforeach;
+	?>
 </div>
 
 	<?php
