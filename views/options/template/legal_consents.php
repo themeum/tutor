@@ -66,9 +66,18 @@ $display_options = array(
 );
 
 $method_options = array(
-	'required_checkbox' => __( 'Mandatory Checkbox', 'tutor' ),
-	'optional_checkbox' => __( 'Optional Checkbox', 'tutor' ),
-	'text_only'         => __( 'Display Text Only', 'tutor' ),
+	'required_checkbox' => __( 'Required & Comes with a checkbox', 'tutor' ),
+	'optional_checkbox' => __( 'Optional & Comes with a checkbox', 'tutor' ),
+	'implicit'          => __( 'Implicit by continuing', 'tutor' ),
+);
+
+$wp_pages = get_pages(
+	array(
+		'post_type'   => 'page',
+		'post_status' => 'publish',
+		'sort_order'  => 'ASC',
+		'sort_col'   => 'post_title',
+	)
 );
 
 $default_item = $default_consents[0] ?? array(
@@ -90,7 +99,7 @@ $default_item = $default_consents[0] ?? array(
  *
  * @return void
  */
-$render_card = function ( $consent, $index ) use ( $display_options, $method_options ) {
+$render_card = function ( $consent, $index ) use ( $display_options, $method_options, $wp_pages ) {
 	$enabled_value = $consent['enabled'] ?? 'on';
 	$enabled_value = ( 1 === (int) $enabled_value || 'on' === $enabled_value ) ? 'on' : 'off';
 	$title_value   = $consent['title'] ?? '';
@@ -175,13 +184,19 @@ $render_card = function ( $consent, $index ) use ( $display_options, $method_opt
 						<div class="tutor-fs-6 tutor-fw-medium" tutor-option-name><?php esc_html_e( 'Consent Message', 'tutor' ); ?></div>
 						<div class="tutor-fs-7 tutor-color-muted tutor-mt-8"><?php esc_html_e( 'Message shown to users', 'tutor' ); ?></div>
 					</div>
-					<div class="tutor-option-field-input">
+					<div class="tutor-option-field-input" style="position: relative;">
 						<textarea
 							name="tutor_option[legal_consents][<?php echo esc_attr( $index ); ?>][message]"
 							class="tutor-form-control"
 							rows="5"
 							placeholder="<?php esc_attr_e( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ); ?>"
 						><?php echo esc_textarea( $message_value ); ?></textarea>
+						<select name="tutor_option[legal_consents][<?php echo esc_attr( $index ); ?>][page_id]" class="tutor-form-select" style="position: absolute; right: 12px; bottom: 12px; width: auto; z-index: 1;" data-consent-page-select>
+							<option value=""><?php esc_html_e( '+ Add Page Link', 'tutor' ); ?></option>
+							<?php foreach ( $wp_pages as $page ) : ?>
+								<option value="<?php echo esc_attr( $page->ID ); ?>"><?php echo esc_html( $page->post_title ); ?></option>
+							<?php endforeach; ?>
+						</select>
 					</div>
 				</div>
 
