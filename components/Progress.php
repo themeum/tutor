@@ -393,5 +393,4 @@ class Progress extends BaseComponent {
 
 		return $this->component_string;
 	}
-
 }

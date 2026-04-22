@@ -1,0 +1,252 @@
+.tutor-option-nav-page#legal_consents {
+  .tutor-option-main-title {
+    margin-bottom: 40px;
+  }
+
+  .tutor-option-main-title + .tutor-legal-consents {
+    margin-top: 0;
+  }
+
+  .tutor-legal-consents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .tutor-legal-consent-card {
+    border: 1px solid #d9deea;
+    border-radius: 24px;
+    background: #ffffff;
+    overflow: hidden;
+  }
+
+  .tutor-legal-consent-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .tutor-legal-consent-card-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .tutor-icon-legal-consent {
+      font-size: 36px;
+      color: #8a90a5;
+    }
+
+    // h4 {
+    // 	margin: 0;
+    // 	font-size: 24px;
+    // 	font-weight: 500;
+    // 	line-height: 1.33;
+    // 	color: #252933;
+    // }
+  }
+
+  .tutor-legal-consent-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .tutor-legal-consent-settings-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: transparent;
+    color: #8a90a5;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .tutor-legal-consent-card-content {
+    display: block;
+  }
+
+  .tutor-legal-consent-card.is-collapsed {
+    .tutor-legal-consent-card-content {
+      display: none;
+    }
+  }
+
+  .tutor-legal-consent-card-body {
+    margin: 0 32px;
+    padding: 30px;
+    border: 1px solid #d9deea;
+    border-radius: 24px;
+  }
+
+  .tutor-legal-consent-card-body .tutor-option-field-row {
+    border-bottom: 0 !important;
+    padding: 0 !important;
+    grid-template-columns: minmax(220px, 1fr) minmax(320px, 840px);
+    grid-auto-flow: initial;
+    align-items: start;
+  }
+
+  .tutor-legal-consent-card-body .tutor-option-field-row + .tutor-option-field-row {
+    margin-top: 34px;
+  }
+
+  .tutor-legal-consent-card-body .tutor-option-field-input {
+    width: 100%;
+    text-align: left;
+    justify-self: stretch;
+  }
+
+  .tutor-legal-consent-card-body .tutor-form-control,
+  .tutor-legal-consent-card-body .tutor-form-select {
+    width: 100%;
+    max-width: 100%;
+    height: 80px;
+    padding: 0 28px;
+    border-color: #bcc3d0;
+    border-radius: 14px;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #5c6376;
+    background-color: #fff;
+  }
+
+  .tutor-legal-consent-card-body textarea.tutor-form-control {
+    height: auto;
+    min-height: 240px;
+    padding: 18px 20px;
+    font-size: 20px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+
+  .tutor-legal-consent-card-body .tutor-option-field-label {
+    padding-top: 8px;
+  }
+
+  .tutor-legal-consent-card-body [tutor-option-name] {
+    font-size: 28px;
+    line-height: 1.28;
+    color: #41454f;
+  }
+
+  .tutor-legal-consent-card-body .tutor-option-field-label .tutor-color-muted {
+    font-size: 18px;
+    line-height: 1.5;
+    color: #5c6376;
+  }
+
+  .tutor-legal-consent-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(140px, 1fr));
+    gap: 24px 28px;
+    padding-top: 12px;
+  }
+
+  .tutor-legal-consent-checkbox-grid .tutor-form-check {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+  }
+
+  .tutor-legal-consent-checkbox-grid .tutor-form-check-input {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+  }
+
+  .tutor-legal-consent-checkbox-grid label {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #41454f;
+  }
+
+  .tutor-legal-consent-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 32px 32px;
+  }
+
+  .tutor-legal-consent-card-footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-left: auto;
+  }
+
+  .tutor-legal-consent-delete-btn {
+    background: #fde9e8;
+    border-color: #fde9e8;
+    color: #ff4b3e;
+  }
+
+  .tutor-legal-consent-cancel-btn {
+    border: 0;
+    background: transparent;
+    color: #5c6376;
+    padding: 0;
+    font-size: 20px;
+    line-height: 1.4;
+    cursor: pointer;
+  }
+
+  .tutor-legal-consents-footer {
+    margin-top: 32px;
+  }
+
+  .tutor-legal-consents-footer .tutor-btn {
+    min-width: 220px;
+  }
+
+  @media (max-width: 1199px) {
+    .tutor-legal-consent-card-body .tutor-option-field-row {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .tutor-legal-consent-card-header,
+    .tutor-legal-consent-card-footer {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    .tutor-legal-consent-card-body {
+      margin-left: 24px;
+      margin-right: 24px;
+      padding: 24px;
+    }
+
+    .tutor-legal-consent-checkbox-grid {
+      grid-template-columns: repeat(2, minmax(140px, 1fr));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .tutor-legal-consent-card-header,
+    .tutor-legal-consent-card-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .tutor-legal-consent-card-footer-actions {
+      margin-left: 0;
+    }
+
+    .tutor-legal-consent-checkbox-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

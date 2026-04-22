@@ -6,6 +6,7 @@ import './segments/editor_full';
 import './segments/filter';
 import './segments/image-preview';
 import './segments/import-export';
+import './segments/legal-consents';
 import './segments/lib';
 import './segments/manage-api-keys';
 import './segments/multiple_email_input';
