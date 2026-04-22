@@ -16,8 +16,8 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 
-import DrawImagePreview from './question-previews/DrawImagePreview';
 import CoordinatesPreview from './question-previews/CoordinatesPreview';
+import DrawImagePreview from './question-previews/DrawImagePreview';
 import FillInTheBlankPreview from './question-previews/FillInTheBlankPreview';
 import ImageAnsweringPreview from './question-previews/ImageAnsweringPreview';
 import MatchingPreview from './question-previews/MatchingPreview';
@@ -521,7 +521,7 @@ const styles = {
     flex-direction: column;
     overflow: hidden;
     max-width: ${activeTab === 'mobile' ? '444px' : '1220px'};
-    height: 586px;
+    height: calc(100vh - 180px);
     margin-inline: auto;
     width: 100%;
     background-color: ${colorTokens.surface.courseBuilder};
