@@ -177,9 +177,26 @@ const initLegalConsents = () => {
 		button.addEventListener('click', () => {
 			const select = button.closest('.tutor-option-field-input').querySelector('[data-page-select]');
 			if (select) {
-				select.click();
+				select.focus();
 			}
 		});
+
+		const parent = button.closest('.tutor-option-field-input');
+		const select = parent.querySelector('[data-page-select]');
+		const textarea = parent.querySelector('textarea');
+
+		if (select && textarea) {
+			select.addEventListener('change', () => {
+				if (select.value) {
+					const option = select.options[select.selectedIndex];
+					const pageTitle = option.textContent;
+					const snakeCaseTitle = pageTitle.toLowerCase().replace(/\s+/g, '-');
+					const linkText = `{{page_link id=${select.value} text=${snakeCaseTitle}}}`;
+					textarea.value = textarea.value ? `${textarea.value} ${linkText}` : linkText;
+					markSettingsAsChanged();
+				}
+			});
+		}
 	});
 
 	toggleHeaderSaveVisibility();

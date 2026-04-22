@@ -76,7 +76,7 @@ $wp_pages = get_pages(
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'sort_order'  => 'ASC',
-		'sort_col'   => 'post_title',
+		'sort_col'    => 'post_title',
 	)
 );
 
