@@ -310,20 +310,22 @@ class Template extends Tutor_Base {
 			return $shortcode->student_registration_form();
 		}
 
-		$tutor_cart_page_id = (int) tutor_utils()->get_option( 'tutor_cart_page_id' );
-		if ( $page_id === $tutor_cart_page_id ) {
-			$shortcode = new Shortcode( false );
-			return $shortcode->tutor_cart_page();
-		}
-
-		$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
-		if ( $page_id === $tutor_checkout_page_id ) {
-			if ( ! apply_filters( 'tutor_should_load_checkout_page', true ) ) {
-				return;
+		if ( tutor_utils()->is_monetize_by_tutor() ) {
+			$tutor_cart_page_id = (int) tutor_utils()->get_option( 'tutor_cart_page_id' );
+			if ( $page_id === $tutor_cart_page_id ) {
+				$shortcode = new Shortcode( false );
+				return $shortcode->tutor_cart_page();
 			}
 
-			$shortcode = new Shortcode( false );
-			return $shortcode->tutor_checkout_page();
+			$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
+			if ( $page_id === $tutor_checkout_page_id ) {
+				if ( ! apply_filters( 'tutor_should_load_checkout_page', true ) ) {
+					return;
+				}
+
+				$shortcode = new Shortcode( false );
+				return $shortcode->tutor_checkout_page();
+			}
 		}
 
 		return $content;
