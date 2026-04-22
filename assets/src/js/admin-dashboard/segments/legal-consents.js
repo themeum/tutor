@@ -183,10 +183,28 @@ const initLegalConsents = () => {
 
 		const parent = button.closest('.tutor-option-field-input');
 		const selectEl = parent.querySelector('[data-page-select]');
+		const textarea = parent.querySelector('textarea');
 
-		if (selectEl) {
+		if (selectEl && textarea) {
+			let previousValues = new Set(Array.from(selectEl.selectedOptions).filter(opt => opt.value).map(opt => opt.value));
 			selectEl.addEventListener('change', () => {
-				markSettingsAsChanged();
+				const selectedOptions = Array.from(selectEl.selectedOptions).filter(opt => opt.value);
+				const currentValues = new Set(selectedOptions.map(opt => opt.value));
+				const newSelections = [...currentValues].filter(val => !previousValues.has(val) && val);
+
+				if (newSelections.length > 0) {
+					const newLinks = newSelections.map(val => {
+						const opt = selectEl.querySelector(`option[value="${val}"]`);
+						const pageTitle = opt ? opt.textContent : '';
+						const slug = pageTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+						return `{{${slug}|${val}}`;
+					});
+					textarea.value = textarea.value ? `${textarea.value} ${newLinks.join(' ')}` : newLinks.join(' ');
+					previousValues = currentValues;
+					markSettingsAsChanged();
+				} else {
+					previousValues = currentValues;
+				}
 			});
 		}
 	});
