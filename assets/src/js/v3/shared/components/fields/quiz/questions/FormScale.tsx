@@ -62,6 +62,7 @@ interface ScaleData {
 }
 
 function normalizeScaleConfig(config: ScaleConfig): ScaleConfig {
+  // Step is intentionally fixed at 1 for now; configurable increments are reserved for a future extension.
   return {
     ...config,
     step: 1,
