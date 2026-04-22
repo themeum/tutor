@@ -64,11 +64,16 @@
 
   .tutor-legal-consent-card-content {
     display: block;
+    max-height: 600px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
+    opacity: 1;
   }
 
   .tutor-legal-consent-card.is-collapsed {
     .tutor-legal-consent-card-content {
-      display: none;
+      max-height: 0;
+      opacity: 0;
     }
   }
 

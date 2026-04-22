@@ -66,9 +66,9 @@ $display_options = array(
 );
 
 $method_options = array(
-	'required_checkbox' => __( 'Required & Comes with a checkbox', 'tutor' ),
-	'optional_checkbox' => __( 'Optional & Comes with a checkbox', 'tutor' ),
-	'implicit'          => __( 'Implicit by continuing', 'tutor' ),
+	'required_checkbox' => __( 'Mandatory Checkbox', 'tutor' ),
+	'optional_checkbox' => __( 'Optional Checkbox', 'tutor' ),
+	'implicit'          => __( 'Display Text Only', 'tutor' ),
 );
 
 $default_item = $default_consents[0] ?? array(
