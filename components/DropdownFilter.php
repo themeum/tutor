@@ -337,6 +337,21 @@ class DropdownFilter extends BaseComponent {
 		return $this;
 	}
 
+	/**
+	 * Get the base URL used for auto-generated filter links.
+	 *
+	 * Removes transient pagination state so changing filters resets pagination.
+	 *
+	 * @return string
+	 */
+	protected function get_filter_base_url(): string {
+		if ( ! empty( $this->base_url ) ) {
+			return remove_query_arg( 'current_page', $this->base_url );
+		}
+
+		return remove_query_arg( 'current_page' );
+	}
+
 
 	/**
 	 * Get component content
@@ -352,7 +367,7 @@ class DropdownFilter extends BaseComponent {
 		// Automatically manage active state and URL if query_param is set.
 		if ( ! empty( $this->query_param ) ) {
 			$current_val = Input::get( $this->query_param, '' );
-			$base        = ! empty( $this->base_url ) ? $this->base_url : '';
+			$base        = $this->get_filter_base_url();
 			foreach ( $options as &$option ) {
 				$val = isset( $option['value'] ) ? $option['value'] : '';
 				if ( ! isset( $option['active'] ) ) {
