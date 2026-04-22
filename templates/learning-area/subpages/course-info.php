@@ -213,7 +213,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		</div>
 	</div> -->
 
-	<?php if ( ! empty( get_the_content() ) || ! empty( $course_description ) ) : ?>
+	<?php if ( ! empty( get_the_content() ) || ! empty( $course_benefits ) ) : ?>
 		<div class="tutor-course-description">
 			<?php if ( ! empty( get_the_content() ) ) : ?>
 				<div x-data="{ expanded: false }" class="tutor-course-description-item">
