@@ -10,6 +10,7 @@
 
 namespace Tutor\GDPR\Controllers;
 
+use Exception;
 use Tutor\GDPR\Models\{LegalConsents, LegalConsentLogs};
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
@@ -157,6 +158,31 @@ class LegalConsent {
 			default:
 				$this->response_fail( __( 'Invalid legal consent action.', 'tutor' ), 400 );
 		}
+	}
+
+	/**
+	 * Get legal consents by scope
+	 *
+	 * @since 4.0.0
+	 *
+	 * @throws Exception If place_key is invalid.
+	 *
+	 * @param string $place_key Place key like signup, signin, etc.
+	 *
+	 * @return array Consent places.
+	 */
+	public static function get_consent_by_place_key( string $place_key ): array {
+		if ( ! in_array( $place_key, self::get_consent_places(), true ) ) {
+			throw new Exception( esc_html__( 'Invalid place key', 'tutor' ) );
+		}
+
+		$where = array(
+			array( 'display_on', 'IN', $place_key ),
+		);
+
+		$res = ( new self( false ) )->model->get_all( $where );
+
+		return $res ? $res : array();
 	}
 
 	/**
@@ -442,8 +468,6 @@ class LegalConsent {
 	 * @return array
 	 */
 	private function get_legal_consent_validation_rules(): array {
-		$allowed_display_places = implode( ',', self::get_consent_places() );
-
 		return array(
 			'consent_title'   => 'required',
 			'display_on'      => 'required',
