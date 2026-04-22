@@ -43,7 +43,7 @@ class UserConsents extends BaseModel {
 		'user_email',
 		'consent_title',
 		'label_snapshot',
-		'policy_urls',
+		'consent_maps',
 		'version',
 		'accepted',
 		'ip_address',

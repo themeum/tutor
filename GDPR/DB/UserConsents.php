@@ -48,7 +48,7 @@ class UserConsents extends DB {
 			user_email VARCHAR(190) NOT NULL,
 			consent_title VARCHAR(100) NOT NULL,
 			label_snapshot TEXT NOT NULL,
-			policy_urls TEXT NULL, -- comma separate values for multiple url
+			consent_maps JSON NULL,
 			version VARCHAR(20) NOT NULL,
 			accepted TINYINT(1) NOT NULL,
 			ip_address VARCHAR(45),

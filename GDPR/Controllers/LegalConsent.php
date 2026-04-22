@@ -28,6 +28,19 @@ class LegalConsent {
 	use JsonResponse;
 
 	/**
+	 * Consent display places
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const DISPLAY_ON_SIGNUP       = 'signup';
+	const DISPLAY_ON_SIGNIN       = 'signin';
+	const DISPLAY_ON_CHECKOUT     = 'checkout';
+	const DISPLAY_ON_SUBSCRIPTION = 'subscription';
+	const DISPLAY_ON_ENROLLMENT   = 'enrollment';
+
+	/**
 	 * Legal consent model.
 	 *
 	 * @since 4.0.0
@@ -70,6 +83,41 @@ class LegalConsent {
 	 */
 	private function register_hooks() {
 		add_action( 'wp_ajax_tutor_gdpr_compliance_ajax', array( $this, 'handle_legal_consent_ajax' ) );
+		add_filter( 'tutor_localize_data', array( $this, 'extend_localize_data' ) );
+	}
+
+	/**
+	 * Add legal consent display places to localized data.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $localize_data Localized data array.
+	 *
+	 * @return array
+	 */
+	public function extend_localize_data( $localize_data ) {
+		$localize_data['legal_consent_display_places'] = self::get_consent_places();
+
+		return $localize_data;
+	}
+
+	/**
+	 * Get the list of display places for legal consent.
+	 *
+	 * The list is filterable with the 'tutor_legal_consent_display_places' filter hook.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array List of display place keys.
+	 */
+	public static function get_consent_places() {
+		$places = array(
+			self::DISPLAY_ON_SIGNUP,
+			self::DISPLAY_ON_SIGNIN,
+			self::DISPLAY_ON_CHECKOUT,
+		);
+
+		return apply_filters( 'tutor_legal_consent_display_places', $places );
 	}
 
 	/**
@@ -349,7 +397,7 @@ class LegalConsent {
 			'consent_title'   => Input::sanitize( $request['consent_title'] ?? '', '', Input::TYPE_STRING ),
 			'display_on'      => Input::sanitize( $request['display_on'] ?? '', '', Input::TYPE_STRING ),
 			'consent_message' => Input::sanitize( $request['consent_message'] ?? '', '', Input::TYPE_KSES_POST ),
-			'policy_urls'     => Input::sanitize( $request['policy_urls'] ?? '', '', Input::TYPE_STRING ),
+			'consent_maps'     => Input::sanitize( $request['consent_maps'] ?? '', '', Input::TYPE_STRING ),
 			'version'         => Input::sanitize( $request['version'] ?? '', '', Input::TYPE_STRING ),
 			'is_required'     => (int) Input::sanitize( $request['is_required'] ?? false, false, Input::TYPE_BOOL ),
 			'is_active'       => (int) Input::sanitize( $request['is_active'] ?? true, true, Input::TYPE_BOOL ),
@@ -384,9 +432,11 @@ class LegalConsent {
 	 * @return array
 	 */
 	private function get_legal_consent_validation_rules(): array {
+		$allowed_display_places = implode( ',', self::get_consent_places() );
+
 		return array(
 			'consent_title'   => 'required',
-			'display_on'      => 'required',
+			'display_on'      => "required|match_string:{$allowed_display_places}",
 			'consent_message' => 'required',
 			'version'         => 'required',
 			'is_required'     => 'required',
