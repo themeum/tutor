@@ -13,27 +13,24 @@ $product_id = tutor_utils()->get_course_product_id();
 $download   = new EDD_Download( $product_id );
 
 if ( $download->ID ) {
-	if ( ! is_user_logged_in() ) {
-		/**
-		 * Add required logged in class
-		 *
-		 * @since v 1.5.5
-		 */
-		$button_behavior = edd_get_download_button_behavior( $download->ID );
-		$args            = apply_filters(
-			'edd_purchase_link_defaults',
-			array(
-				'text'  => 'direct' == $button_behavior ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'tutor' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'tutor' ) ),
-				'style' => edd_get_option( 'button_style', 'button' ),
-				'color' => edd_get_option( 'checkout_color', 'blue' ),
-				'class' => 'edd-submit tutor-open-login-modal',
-			)
-		);
-		$button_text     = edd_currency_filter( edd_format_amount( $download->price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
-		$button_class    = implode( ' ', array( $args['style'], $args['color'], $args['class'] ) );
 
-		echo '<button class="' . esc_attr( $button_class ) . '">' . $button_text . '</button>'; //phpcs:ignore
-	} else {
-		echo edd_get_purchase_link( array( 'download_id' => $download->ID ) ); //phpcs:ignore
+	$args = array( 'download_id' => $download->ID );
+
+	/**
+	 * Improved purchase link rendering using EDD native helper.
+	 *
+	 * @since 4.0.0
+	 */
+	add_filter(
+		'edd_download_redirect_to_checkout',
+		function ( $redirect ) {
+			return is_user_logged_in() ? $redirect : false;
+		}
+	);
+
+	if ( ! is_user_logged_in() ) {
+		$args['class'] = 'tutor-open-login-modal';
 	}
+
+	echo edd_get_purchase_link( $args ); //phpcs:ignore
 }

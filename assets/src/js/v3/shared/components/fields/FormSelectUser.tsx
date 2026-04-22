@@ -516,12 +516,12 @@ const styles = {
     }
   `,
   options: css`
+    ${styleUtils.ulReset};
     z-index: ${zIndex.dropdown};
     background-color: ${colorTokens.background.white};
     list-style-type: none;
     box-shadow: ${shadow.popover};
     margin: ${spacing[4]} 0;
-    margin: 0;
     max-height: 400px;
     border: 1px solid ${colorTokens.stroke.border};
     border-radius: ${borderRadius[6]};

@@ -1,16 +1,13 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
-$tutor-quiz-header-offset: calc((#{$tutor-spacing-8} * 2));
-$tutor-quiz-header-offset-admin: calc((#{$tutor-spacing-8} * 2) + 46px);
-$tutor-quiz-header-offset-admin-sm: calc((#{$tutor-spacing-8} * 2) + 32px);
+$tutor-admin-bar-height: 46px;
+$tutor-quiz-header-offset: 96px;
 $tutor-quiz-footer-offset: 96px;
 $tutor-quiz-pagination-gap-from-footer: 32px;
 $tutor-quiz-pagination-height: 48px;
-$tutor-quiz-pagination-offset: calc(#{$tutor-quiz-footer-offset} + #{$tutor-quiz-pagination-gap-from-footer});
 $tutor-quiz-content-bottom-offset: calc(
-  #{$tutor-quiz-footer-offset} + #{$tutor-quiz-pagination-gap-from-footer} + #{$tutor-quiz-pagination-height} +
-    #{$tutor-spacing-2}
+  #{$tutor-quiz-pagination-gap-from-footer} + #{$tutor-quiz-pagination-height} + #{$tutor-spacing-2}
 );
 
 .tutor-quiz {
@@ -29,18 +26,10 @@ $tutor-quiz-content-bottom-offset: calc(
     &[data-question-layout-view='question_pagination'] {
       padding-top: 0;
       height: 100dvh;
-    }
 
-    &[data-question-layout-view='single_question'] .tutor-quiz-questions-pagination,
-    &[data-question-layout-view='question_pagination'] .tutor-quiz-questions-pagination {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: calc(#{$tutor-quiz-pagination-offset} + env(safe-area-inset-bottom, 0px));
-      z-index: $tutor-z-header;
-      background-color: transparent;
-      padding: 0;
-      margin-bottom: 0;
+      body:has(#wpadminbar) & {
+        height: calc(100dvh - #{$tutor-admin-bar-height});
+      }
     }
 
     &[data-question-layout-view='single_question'] .tutor-quiz-footer,
@@ -58,13 +47,17 @@ $tutor-quiz-content-bottom-offset: calc(
 
     &[data-question-layout-view='single_question'] .tutor-quiz-question-wrapper,
     &[data-question-layout-view='question_pagination'] .tutor-quiz-question-wrapper {
-      max-height: calc(100dvh - #{$tutor-quiz-header-offset} - #{$tutor-quiz-content-bottom-offset});
-      max-height: calc(100vh - #{$tutor-quiz-header-offset} - #{$tutor-quiz-content-bottom-offset});
-      display: flex;
-      flex-direction: column;
+      @include tutor-flex(column);
+      max-height: calc(100dvh - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset});
       overflow: auto;
-      scroll-margin-top: $tutor-quiz-header-offset;
-      padding-bottom: $tutor-quiz-content-bottom-offset;
+    }
+
+    &[data-question-layout-view='single_question'] {
+      &:has(.tutor-quiz-questions-pagination) {
+        .tutor-quiz-question-wrapper {
+          margin-bottom: $tutor-quiz-content-bottom-offset;
+        }
+      }
     }
 
     &[data-question-layout-view='single_question']
@@ -126,28 +119,6 @@ $tutor-quiz-content-bottom-offset: calc(
     &[data-question-layout-view='question_pagination'] .tutor-quiz-footer[data-reveal-state='incorrect'] {
       border-top-color: $tutor-border-error;
     }
-
-    body:has(#wpadminbar) & {
-      .tutor-quiz-question-wrapper {
-        max-height: calc(100dvh - #{$tutor-quiz-header-offset-admin} - #{$tutor-quiz-content-bottom-offset});
-        max-height: calc(100vh - #{$tutor-quiz-header-offset-admin} - #{$tutor-quiz-content-bottom-offset});
-        scroll-margin-top: $tutor-quiz-header-offset-admin;
-      }
-    }
-
-    @include tutor-breakpoint-down(sm) {
-      body:has(#wpadminbar) & {
-        .tutor-quiz-question-wrapper {
-          max-height: calc(100dvh - #{$tutor-quiz-header-offset-admin-sm} - #{$tutor-quiz-content-bottom-offset});
-          max-height: calc(100vh - #{$tutor-quiz-header-offset-admin-sm} - #{$tutor-quiz-content-bottom-offset});
-          scroll-margin-top: $tutor-quiz-header-offset-admin-sm;
-        }
-
-        .tutor-quiz-questions {
-          padding-top: $tutor-quiz-header-offset-admin-sm;
-        }
-      }
-    }
   }
 
   &-header {
@@ -156,10 +127,6 @@ $tutor-quiz-content-bottom-offset: calc(
     top: 0;
     inset-inline: 0;
     z-index: $tutor-z-header;
-
-    body:has(#wpadminbar) & {
-      top: 46px;
-    }
 
     @include tutor-breakpoint-up(sm) {
       body:has(#wpadminbar) & {
@@ -195,8 +162,6 @@ $tutor-quiz-content-bottom-offset: calc(
       flex: 1;
 
       @include tutor-breakpoint-down(sm) {
-        align-items: flex-start;
-        flex-direction: column;
         gap: $tutor-spacing-3;
       }
     }
@@ -328,8 +293,31 @@ $tutor-quiz-content-bottom-offset: calc(
     &[data-question-layout-view='question_pagination'] {
       gap: $tutor-spacing-5;
       justify-content: center;
-      height: 100%;
       max-height: 100dvh;
+      position: absolute;
+      top: $tutor-quiz-header-offset;
+      bottom: $tutor-quiz-footer-offset;
+      left: 50%;
+      transform: translateX(-50%);
+
+      &:has(.tutor-quiz-questions-pagination) {
+        bottom: calc(#{$tutor-quiz-footer-offset} + #{$tutor-quiz-pagination-gap-from-footer});
+      }
+
+      body:has(#wpadminbar) & {
+        top: calc(#{$tutor-quiz-header-offset} + #{$tutor-admin-bar-height});
+        height: calc(100% - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset} - #{$tutor-admin-bar-height});
+
+        @include tutor-breakpoint-down(sm) {
+          top: $tutor-quiz-header-offset;
+          height: calc(100% - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset});
+        }
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        top: $tutor-quiz-header-offset;
+        height: calc(100% - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset});
+      }
     }
   }
 
@@ -357,6 +345,12 @@ $tutor-quiz-content-bottom-offset: calc(
     width: max-content;
     max-width: calc(100vw - #{$tutor-spacing-8});
     overflow: visible;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(#{$tutor-quiz-footer-offset} + #{$tutor-quiz-pagination-gap-from-footer});
+    z-index: $tutor-z-header;
+    background-color: transparent;
 
     ul {
       @include tutor-flex(row, center, center);
@@ -935,7 +929,7 @@ $tutor-quiz-content-bottom-offset: calc(
             border-radius: $tutor-radius-sm;
             width: 28px;
             height: 28px;
-            background-color: #fafafa;
+            background-color: $tutor-surface-base;
           }
 
           [data-title] {
@@ -975,6 +969,26 @@ $tutor-quiz-content-bottom-offset: calc(
           box-shadow: none;
         }
       }
+    }
+  }
+
+  [data-question='draw_image'],
+  [data-question='pin_image'] {
+    .tutor-quiz-question-options {
+      @include tutor-flex(column, center, center);
+      width: 100%;
+    }
+
+    img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    canvas {
+      max-width: 100%;
     }
   }
 

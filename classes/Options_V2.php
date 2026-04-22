@@ -899,7 +899,7 @@ class Options_V2 {
 								'label'       => __( 'Course Reset Progress', 'tutor' ),
 								'default'     => 'off',
 								'label_title' => '',
-								'desc'        => __( 'Enabling this feature will allow students to reset course progress and start over.', 'tutor' ),
+								'desc'        => __( 'Enabling this feature allows students to reset their progress and start over before completing the course.', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_course_review_moderation',

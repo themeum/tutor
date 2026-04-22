@@ -276,7 +276,7 @@ class Nav extends BaseComponent {
 				%s
 				%s	
 				</button>
-				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover tutor-nav-dropdown">
+				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover tutor-nav-dropdown" x-transition.origin.top.left>
 					%s
 				</div>
 			</div>',
