@@ -192,14 +192,13 @@ $render_card = function ( $consent, $index ) use ( $display_options, $method_opt
 							placeholder="<?php esc_attr_e( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ); ?>"
 							style="padding-right: 44px;"
 						><?php echo esc_textarea( $message_value ); ?></textarea>
-						<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-sm" style="position: absolute; right: 8px; bottom: 12px; z-index: 1;" data-page-select-toggle title="<?php esc_attr_e( 'Add Page Link', 'tutor' ); ?>">
+						<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-sm" style="position: absolute; right: 8px; bottom: 12px; z-index: 1;" data-page-dropdown-toggle title="<?php esc_attr_e( 'Add Page Link', 'tutor' ); ?>">
 							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 								<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
 								<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
 							</svg>
 						</button>
-						<select name="tutor_option[legal_consents][<?php echo esc_attr( $index ); ?>][content_map]" class="tutor-form-select" style="position: absolute; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; pointer-events: none;" data-page-select multiple hidden>
-							<option value=""><?php esc_html_e( 'Select pages', 'tutor' ); ?></option>
+						<div class="tutor-option-dropdown" data-page-dropdown style="display: none; position: absolute; right: 8px; top: -200px; z-index: 10; width: 200px; max-height: 200px; overflow-y: auto; background: var(--tutor-surface-modal); border: 1px solid var(--tutor-border-secondary); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); padding: 8px;">
 							<?php
 							$current_map = isset( $consent['content_map'] ) ? json_decode( $consent['content_map'], true ) : array();
 							if ( ! is_array( $current_map ) ) {
@@ -207,9 +206,12 @@ $render_card = function ( $consent, $index ) use ( $display_options, $method_opt
 							}
 							?>
 							<?php foreach ( $wp_pages as $page ) : ?>
-								<option value="<?php echo esc_attr( $page->ID ); ?>" <?php echo in_array( (string) $page->ID, $current_map, true ) ? 'selected' : ''; ?>><?php echo esc_html( $page->post_title ); ?></option>
+								<label class="tutor-form-check tutor-flex tutor-items-center tutor-mb-2" style="cursor: pointer;">
+									<input type="checkbox" name="tutor_option[legal_consents][<?php echo esc_attr( $index ); ?>][content_map][]" value="<?php echo esc_attr( $page->ID ); ?>" <?php echo in_array( (string) $page->ID, $current_map, true ) ? 'checked' : ''; ?> data-page-checkbox>
+									<span class="tutor-ml-2"><?php echo esc_html( $page->post_title ); ?></span>
+								</label>
 							<?php endforeach; ?>
-						</select>
+						</div>
 					</div>
 				</div>
 

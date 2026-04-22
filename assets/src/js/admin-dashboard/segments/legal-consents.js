@@ -126,9 +126,9 @@ const bindCard = (card) => {
 				formData.append('consent_method', methodSelect.value);
 			}
 
-			const contentMapSelect = card.querySelector('[data-page-select]');
-			if (contentMapSelect) {
-				const selectedPages = Array.from(contentMapSelect.selectedOptions).filter(opt => opt.value).map(opt => opt.value);
+			const contentMapCheckboxes = card.querySelectorAll('[data-page-checkbox]');
+			if (contentMapCheckboxes.length) {
+				const selectedPages = Array.from(contentMapCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
 				formData.append('consent_map', JSON.stringify(selectedPages.reduce((acc, val, idx) => {
 					acc[`page_${idx + 1}`] = val;
 					return acc;
@@ -205,40 +205,53 @@ const initLegalConsents = () => {
 		appendConsentCard(container);
 	});
 
-	container.querySelectorAll('[data-page-select-toggle]').forEach((button) => {
-		button.addEventListener('click', () => {
-			const select = button.closest('.tutor-option-field-input').querySelector('[data-page-select]');
-			if (select) {
-				select.focus();
+	container.querySelectorAll('[data-page-dropdown-toggle]').forEach((button) => {
+		button.addEventListener('click', (e) => {
+			e.stopPropagation();
+			const dropdown = button.closest('.tutor-option-field-input').querySelector('[data-page-dropdown]');
+			if (dropdown) {
+				dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
 			}
 		});
 
 		const parent = button.closest('.tutor-option-field-input');
-		const selectEl = parent.querySelector('[data-page-select]');
+		const checkboxes = parent.querySelectorAll('[data-page-checkbox]');
 		const textarea = parent.querySelector('textarea');
+		const toggleBtn = parent.querySelector('[data-page-dropdown-toggle]');
 
-		if (selectEl && textarea) {
-			let previousValues = new Set(Array.from(selectEl.selectedOptions).filter(opt => opt.value).map(opt => opt.value));
-			selectEl.addEventListener('change', () => {
-				const selectedOptions = Array.from(selectEl.selectedOptions).filter(opt => opt.value);
-				const currentValues = new Set(selectedOptions.map(opt => opt.value));
-				const newSelections = [...currentValues].filter(val => !previousValues.has(val) && val);
+		if (checkboxes.length && textarea) {
+			checkboxes.forEach(checkbox => {
+				checkbox.addEventListener('change', () => {
+					const checkedOptions = Array.from(checkboxes).filter(cb => cb.checked);
+					const currentValues = new Set(checkedOptions.map(cb => cb.value));
+					const previousValues = new Set([...checkedOptions.map(cb => cb.value), ...Array.from(checkboxes).filter(cb => !cb.checked).map(cb => cb.value)]);
 
-				if (newSelections.length > 0) {
-					const newLinks = newSelections.map(val => {
-						const opt = selectEl.querySelector(`option[value="${val}"]`);
-						const pageTitle = opt ? opt.textContent : '';
-						const slug = pageTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-						return `{{${slug}|${val}}`;
-					});
-					textarea.value = textarea.value ? `${textarea.value} ${newLinks.join(' ')}` : newLinks.join(' ');
-					previousValues = currentValues;
-					markSettingsAsChanged();
-				} else {
-					previousValues = currentValues;
-				}
+					const newlySelected = [...currentValues].filter(val => !previousValues.has(val) || (previousValues.has(val) && checkbox.checked && checkbox.dataset.previousChecked === 'true'));
+
+					if (newlySelected.length > 0) {
+						const newLinks = newlySelected.map(val => {
+							const cb = Array.from(checkboxes).find(c => c.value === val);
+							const pageTitle = cb ? cb.nextElementSibling?.textContent || '' : '';
+							const slug = pageTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+							return `{{${slug}|${val}}`;
+						});
+						textarea.value = textarea.value ? `${textarea.value} ${newLinks.join(' ')}` : newLinks.join(' ');
+						markSettingsAsChanged();
+					}
+
+					checkedOptions.forEach(cb => cb.dataset.previousChecked = 'true');
+				});
 			});
 		}
+
+		document.addEventListener('click', (e) => {
+			if (!button.contains(e.target) && !button.closest('.tutor-option-field-input').querySelector('[data-page-dropdown]')?.contains(e.target)) {
+				const dropdown = parent.querySelector('[data-page-dropdown]');
+				if (dropdown) {
+					dropdown.style.display = 'none';
+				}
+			}
+		});
 	});
 
 	toggleHeaderSaveVisibility();
