@@ -103,6 +103,7 @@ class LegalConsent {
 				return $styles;
 			}
 		);
+		add_action( 'tutor_login_form_end', array( $this, 'show_consent_field_on_login_form' ) );
 	}
 
 	/**
@@ -118,6 +119,20 @@ class LegalConsent {
 		$localize_data['legal_consent_display_places'] = self::get_consent_places();
 
 		return $localize_data;
+	}
+
+	/**
+	 * Show consent field on the login form if available
+	 *
+	 * @since 4.0.0
+	 */
+	public function show_consent_field_on_login_form() {
+		$consents = self::get_consent_by_display_key( self::DISPLAY_ON_SIGNIN );
+		if ( tutor_utils()->count( $consents ) ) {
+			foreach ( $consents as $consent ) {
+				self::render_consent_field( $consent, 'tutor-mt-8' );
+			}
+		}
 	}
 
 	/**
@@ -524,16 +539,17 @@ class LegalConsent {
 	 * @since 4.0.0
 	 *
 	 * @param object $consent Consent settings object.
+	 * @param string $wrapper_cs_class Wrapper css class for styleing.
 	 *
 	 * @return void
 	 */
-	public static function render_consent_field( object $consent ): void {
+	public static function render_consent_field( object $consent, string $wrapper_cs_class = '' ): void {
 		$is_required  = self::is_required( $consent );
 		$is_text_only = self::METHOD_TEXT_ONLY === $consent->consent_method;
 		$field_name   = self::get_field_name( $consent );
 
 		?>
-		<div class="tutor-form-row tutor-mb-8">
+		<div class="tutor-form-row <?php echo esc_attr( $wrapper_cs_class ); ?>">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<?php if ( ! $is_text_only ) : ?>
