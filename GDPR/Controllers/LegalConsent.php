@@ -42,6 +42,17 @@ class LegalConsent {
 	const DISPLAY_ON_ENROLLMENT   = 'enrollment';
 
 	/**
+	 * Consent method
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const METHOD_MANDATORY_CHECK = 'mandatory_checkbox';
+	const METHOD_OPTIONAL_CHECK  = 'optional_checkbox';
+	const METHOD_TEXT_ONLY       = 'text_only';
+
+	/**
 	 * Legal consent model.
 	 *
 	 * @since 4.0.0
@@ -435,7 +446,7 @@ class LegalConsent {
 			'consent_message' => Input::sanitize( $request['consent_message'] ?? '', '', Input::TYPE_KSES_POST ),
 			'consent_map'     => Input::sanitize( $request['consent_map'] ?? '', '', Input::TYPE_STRING ),
 			'version'         => Input::sanitize( $request['version'] ?? '', '', Input::TYPE_STRING ),
-			'is_required'     => (int) Input::sanitize( $request['is_required'] ?? false, false, Input::TYPE_BOOL ),
+			'consent_method'  => Input::sanitize( $request['consent_method'] ?? '' ),
 			'is_active'       => (int) Input::sanitize( $request['is_active'] ?? true, true, Input::TYPE_BOOL ),
 			'settings'        => $this->sanitize_json_field( $request['settings'] ?? '' ),
 		);
@@ -473,7 +484,7 @@ class LegalConsent {
 			'display_on'      => 'required',
 			'consent_message' => 'required',
 			'version'         => 'required',
-			'is_required'     => 'required',
+			'consent_method'  => 'required',
 		);
 	}
 
@@ -498,5 +509,91 @@ class LegalConsent {
 
 		$decoded = json_decode( $value, true );
 		return JSON_ERROR_NONE === json_last_error() ? wp_json_encode( $decoded ) : sanitize_text_field( $value );
+	}
+
+	public static function render_consent_field( object $consent ): void {
+		$is_required  = self::is_required( $consent );
+		$is_text_only = self::METHOD_TEXT_ONLY === $consent->consent_method;
+		$field_name   = strtolower( str_replace( ' ', '_', $consent->consent_title ) );
+
+		?>
+		<div class="tutor-form-row tutor-mb-8">
+			<div class="tutor-input-field">
+				<div class="tutor-input-wrapper">
+					<?php if ( ! $is_text_only ) : ?>
+						<input type="checkbox" id="<?php echo esc_attr( $field_name ); ?>" name="<?php echo esc_attr( $field_name ); ?>" class="tutor-checkbox tutor-checkbox-md" <?php echo esc_attr( $is_required ? 'required' : '' ); ?>>
+					<?php endif; ?>
+					<label for="<?php echo esc_attr( $field_name ); ?>" class="tutor-label">
+						<?php self::render_constructed_label_text( $consent ); ?>
+					</label>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	public static function is_required( object $consent ): bool {
+		return self::METHOD_MANDATORY_CHECK === $consent->consent_method;
+	}
+
+	public static function render_constructed_label_text( object $consent ): void {
+		if ( empty( $consent ) || empty( $consent->consent_message ) ) {
+			return;
+		}
+
+		// Decode message (fix &amp; etc).
+		$message = html_entity_decode( $consent->consent_message );
+
+		// Normalize map (JSON → array).
+		$map = is_array( $consent->consent_map )
+			? $consent->consent_map
+			: json_decode( $consent->consent_map, true );
+
+		if ( empty( $map ) || ! is_array( $map ) ) {
+			echo esc_html( $message );
+		}
+
+		// Find all {placeholders}.
+		preg_match_all( '/\{([a-zA-Z0-9_\-]+)\}/', $message, $matches );
+
+		if ( empty( $matches[1] ) ) {
+			echo esc_html( $message );
+		}
+
+		foreach ( $matches[1] as $key ) {
+
+			if ( empty( $map[ $key ] ) ) {
+				continue;
+			}
+
+			$page_id = (int) $map[ $key ];
+
+			if ( ! $page_id || 'publish' !== get_post_status( $page_id ) ) {
+				continue;
+			}
+
+			$url   = get_permalink( $page_id );
+			$title = get_the_title( $page_id );
+
+			$anchor = sprintf(
+				'<a href="%s" target="_blank" rel="noopener noreferrer" class="tutor-consent-link">%s</a>',
+				esc_url( $url ),
+				esc_html( $title )
+			);
+
+			$message = str_replace( '{' . $key . '}', $anchor, $message );
+		}
+
+		echo wp_kses(
+			$message,
+			array(
+				'a' => array(
+					'href'   => array(),
+					'target' => array(),
+					'rel'    => array(),
+					'class'  => array(),
+				),
+			)
+		);
 	}
 }
