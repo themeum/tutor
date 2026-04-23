@@ -5472,7 +5472,7 @@ class Utils {
 	/**
 	 * Normalize question ids.
 	 *
-	 * @since 4.2.0
+	 * @since 4.0.0
 	 *
 	 * @param array $question_ids Question ids.
 	 *
@@ -5493,7 +5493,7 @@ class Utils {
 	/**
 	 * Get questions by question ids while preserving order.
 	 *
-	 * @since 4.2.0
+	 * @since 4.0.0
 	 *
 	 * @param array $question_ids Question ids.
 	 *
@@ -5537,7 +5537,7 @@ class Utils {
 	/**
 	 * Get stored question ids for an attempt.
 	 *
-	 * @since 4.2.0
+	 * @since 4.0.0
 	 *
 	 * @param int $attempt_id Attempt id.
 	 *
@@ -5573,7 +5573,7 @@ class Utils {
 	/**
 	 * Persist question ids for an attempt.
 	 *
-	 * @since 4.2.0
+	 * @since 4.0.0
 	 *
 	 * @param int   $attempt_id    Attempt id.
 	 * @param array $question_ids  Question ids.
@@ -5611,7 +5611,7 @@ class Utils {
 	/**
 	 * Get questions used in an attempt.
 	 *
-	 * @since 4.2.0
+	 * @since 4.0.0
 	 *
 	 * @param int $attempt_id Attempt id.
 	 *
