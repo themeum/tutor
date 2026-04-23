@@ -143,7 +143,7 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 			?>
 		</div>
 	</div>
-	<?php if ( $course_contents->next_id ) : ?>
+	<?php if ( ! empty( $is_learning_area ) && $course_contents->next_id ) : ?>
 	<div class="tutor-quiz-summary-footer">
 		<?php
 			Button::make()
