@@ -44,7 +44,7 @@ class LegalConsents extends BaseModel {
 		'consent_message',
 		'consent_map',
 		'version',
-		'is_required',
+		'consent_method',
 		'is_active',
 		'settings',
 		'created_at_utc',

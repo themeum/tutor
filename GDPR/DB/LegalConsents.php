@@ -49,7 +49,7 @@ class LegalConsents extends DB {
 			consent_message TEXT NOT NULL,
 			consent_map JSON, -- JSON map [terms_conditions => 1]
 			version VARCHAR(20) NOT NULL,
-			is_required TINYINT(1) DEFAULT 0,
+			consent_method VARCHAR(255) NOT NULL,
 			is_active TINYINT(1) DEFAULT 1,
 			settings JSON,
 			created_at_utc DATETIME NOT NULL,
