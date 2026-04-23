@@ -50,9 +50,9 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 	>
 		<!-- Course Content Section -->
 		<div class="tutor-flex tutor-justify-between tutor-mb-4">
-			<h5 class="tutor-h5 tutor-font-semibold">
+			<div class="tutor-h5 tutor-font-semibold">
 				<?php esc_html_e( 'Course Content', 'tutor' ); ?>
-			</h5>
+			</div>
 			<div class="tutor-preferences-reset-default" @click="TutorCore.modal.showModal('<?php echo esc_js( $reset_modal_id ); ?>')">
 				<?php SvgIcon::make()->name( Icon::RELOAD_3 )->color( Color::SUBDUED )->render(); ?>
 				<span class="tutor-text-small tutor-text-subdued"><?php esc_html_e( 'Reset to Default', 'tutor' ); ?></span>
