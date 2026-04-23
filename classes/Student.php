@@ -10,6 +10,9 @@
 
 namespace TUTOR;
 
+use Tutor\GDPR\Controllers\LegalConsent;
+use Tutor\GDPR\Controllers\LegalConsentLogs;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -71,11 +74,6 @@ class Student {
 			)
 		);
 
-		$terms_conditions_link = tutor_utils()->get_toc_page_link();
-		if ( $terms_conditions_link ) {
-			$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
-		}
-
 		$validation_errors = array();
 
 		// Registration error push into validation_errors.
@@ -91,6 +89,11 @@ class Student {
 			}
 		}
 
+		// @since 4.0.0 legal consent added.
+		$has_consent = LegalConsent::has_consent( LegalConsent::DISPLAY_ON_SIGNUP, $_POST );
+		if ( is_wp_error( $has_consent ) ) {
+			$validation_errors[ $has_consent['code'] ] = $has_consent['message'];
+		}
 
 		if ( ! filter_var( tutor_utils()->input_old( 'email' ), FILTER_VALIDATE_EMAIL ) ) {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
