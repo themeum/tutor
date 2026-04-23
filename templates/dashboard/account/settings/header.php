@@ -27,9 +27,11 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 			isDirty: {}
 		}"
 		class="tutor-dashboard-container tutor-flex tutor-items-center tutor-justify-between">
-		<div class="tutor-profile-header-left tutor-flex tutor-items-center"
+		<div 
+			class="tutor-profile-header-left tutor-flex tutor-items-center"
 			@resize.window="windowWidth = window.innerWidth"
 			@tutor-form-state-change.document="if ($event.detail.id === `tutor-${activeTab}-form`) isDirty[$event.detail.id] = $event.detail.isDirty"
+			:style="{ width: isDirty[`tutor-${activeTab}-form`] ? 'auto' : 'calc(100% - 36px)' }"
 		>
 			<?php
 			Button::make()

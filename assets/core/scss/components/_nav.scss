@@ -18,6 +18,7 @@
     gap: $tutor-spacing-2;
     padding: 10px $tutor-spacing-6;
     height: $tutor-tab-height;
+    white-space: nowrap;
     @include tutor-transition((background-color, color, box-shadow));
 
     &:hover {
