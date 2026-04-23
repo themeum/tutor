@@ -171,7 +171,7 @@ const extractCompletionChartColors = (element: HTMLElement) => {
   return {
     enrolled: getCSSProperty(element, '--tutor-actions-exception5'),
     completed: getCSSProperty(element, '--tutor-actions-success-primary'),
-    in_progress: getCSSProperty(element, '--tutor-button-caution'),
+    in_progress: getCSSProperty(element, '--tutor-actions-caution'),
     inactive: getCSSProperty(element, '--tutor-surface-l2-hover'),
     cancelled: getCSSProperty(element, '--tutor-actions-critical-primary'),
     tooltip: {

@@ -128,7 +128,7 @@
         }
 
         &[data-color='in_progress']::before {
-          background-color: $tutor-button-caution;
+          background-color: $tutor-actions-caution;
         }
 
         &[data-color='inactive']::before {
