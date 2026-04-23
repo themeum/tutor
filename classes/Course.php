@@ -3441,7 +3441,7 @@ class Course extends Tutor_Base {
 			<p class="tutor-p3 tutor-text-secondary tutor-text-center tutor-mb-7 tutor-px-11">
 				<?php esc_html_e( 'You have not completed all required lessons and assessments. ', 'tutor' ); ?>
 			</p>
-			<div class="tutor-border tutor-p-5 tutor-flex tutor-flex-column tutor-gap-4 tutor-surface-base tutor-rounded-md">
+			<div class="tutor-finish-course-progress tutor-border tutor-p-5 tutor-flex tutor-flex-column tutor-gap-4 tutor-surface-base tutor-rounded-md">
 				<div class="tutor-flex tutor-items-center tutor-justify-between">
 					<div class="tutor-p3 tutor-text-secondary">
 						<?php esc_html_e( 'Your Progress', 'tutor' ); ?>
