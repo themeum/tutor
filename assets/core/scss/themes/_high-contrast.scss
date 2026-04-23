@@ -37,9 +37,6 @@
 // =============================================================================
 
 [data-tutor-theme='dark'][data-tutor-contrast='high'] {
-  // SURFACE COLORS
-  --tutor-surface-warning: #{$tutor-gray-750};
-
   // TEXT COLORS
   --tutor-text-primary: #{$tutor-gray-100};
   --tutor-text-secondary: #{$tutor-gray-50};
@@ -60,9 +57,4 @@
   --tutor-border-brand: #{$tutor-brand-200};
   --tutor-border-brand-secondary: #{$tutor-brand-800};
   --tutor-border-brand-tertiary: #{$tutor-brand-700};
-
-  // ACTION COLORS
-  --tutor-actions-success-tertiary: #{$tutor-gray-700};
-  --tutor-actions-warning-secondary: #{$tutor-gray-700};
-  --tutor-actions-critical-secondary: #{$tutor-gray-700};
 }

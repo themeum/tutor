@@ -3,6 +3,9 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
+$tutor-fixed-footer-height: 80px;
+$tutor-fixed-footer-offset: $tutor-spacing-6;
+
 .tutor-learning-area {
   background-color: $tutor-surface-base;
 
@@ -33,13 +36,14 @@
 
   .tutor-learning-area-container {
     @include tutor-frontend-layout();
+    padding-bottom: $tutor-spacing-6;
 
     @include tutor-breakpoint-down(md) {
       padding-inline: $tutor-spacing-6;
     }
 
     @include tutor-breakpoint-down(sm) {
-      padding-bottom : 62px;
+      padding-bottom: calc(#{$tutor-fixed-footer-height} + #{$tutor-fixed-footer-offset});
     }
   }
 }

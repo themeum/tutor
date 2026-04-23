@@ -99,6 +99,11 @@ body:has(#wpadminbar) {
     border: 1px solid $tutor-border-idle;
     overflow: hidden;
 
+    svg {
+      color: $tutor-icon-idle;
+      flex-shrink: 0;
+    }
+
     &:hover {
       .tutor-profile-notification-toggle {
         visibility: visible;

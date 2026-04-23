@@ -10,9 +10,7 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
@@ -23,6 +21,7 @@ use Tutor\Components\SvgIcon;
 use Tutor\Components\Table;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
@@ -199,10 +198,12 @@ class Quiz {
 				'learning-area.quiz.questions.scale',
 				'learning-area.quiz.questions.pin-image',
 				'learning-area.quiz.questions.coordinates',
+				'learning-area.quiz.questions.puzzle',
 				'shared.components.quiz.attempt-details.questions.draw-image',
 				'shared.components.quiz.attempt-details.questions.scale',
 				'shared.components.quiz.attempt-details.questions.pin-image',
 				'shared.components.quiz.attempt-details.questions.coordinates',
+				'shared.components.quiz.attempt-details.questions.puzzle',
 			),
 			$template,
 			$variables
@@ -1088,13 +1089,18 @@ class Quiz {
 		$attempt_id        = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$context           = Input::post( 'context' );
 		$attempt_answer_id = Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
+		$question_id       = Input::post( 'question_id', 0, Input::TYPE_INT );
 		$mark_as           = Input::post( 'mark_as' );
 
-		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) || ! tutor_utils()->can_user_manage( 'attempt_answer', $attempt_answer_id ) ) {
+		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		$attempt_answer = $this->get_attempt_answer( $attempt_answer_id );
+		if ( $attempt_answer_id && ! tutor_utils()->can_user_manage( 'attempt_answer', $attempt_answer_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		}
+
+		$attempt_answer = $this->resolve_attempt_answer_for_review( $attempt_id, $attempt_answer_id, $question_id );
 		$review_data    = $attempt_answer ? $this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as ) : null;
 
 		if ( ! $review_data ) {
@@ -1171,11 +1177,11 @@ class Quiz {
 			$attempt_answer = $answers_by_question_id[ $question_id ] ?? null;
 
 			if ( ! $attempt_answer ) {
-				continue;
+				$attempt_answer = $this->resolve_attempt_answer_for_review( $attempt_id, 0, $question_id );
 			}
 
-			if ( ! tutor_utils()->can_user_manage( 'attempt_answer', $attempt_answer->attempt_answer_id ) ) {
-				$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
+			if ( ! $attempt_answer ) {
+				continue;
 			}
 
 			$this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
@@ -1206,6 +1212,115 @@ class Quiz {
 				$attempt_answer_id
 			)
 		);
+	}
+
+	/**
+	 * Get attempt answer by attempt and question IDs.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $attempt_id  Attempt ID.
+	 * @param int $question_id Question ID.
+	 *
+	 * @return object|null
+	 */
+	private function get_attempt_answer_by_attempt_and_question( int $attempt_id, int $question_id ) {
+		if ( $attempt_id <= 0 || $question_id <= 0 ) {
+			return null;
+		}
+
+		return QueryHelper::get_row(
+			'tutor_quiz_attempt_answers',
+			array(
+				'quiz_attempt_id' => $attempt_id,
+				'question_id'     => $question_id,
+			),
+			'attempt_answer_id',
+			'ASC'
+		);
+	}
+
+	/**
+	 * Create a placeholder attempt answer for a skipped question.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $attempt_id  Attempt ID.
+	 * @param int $question_id Question ID.
+	 *
+	 * @return object|null
+	 */
+	private function create_skipped_attempt_answer( int $attempt_id, int $question_id ) {
+		$attempt = tutor_utils()->get_attempt( $attempt_id );
+		if ( ! $attempt ) {
+			return null;
+		}
+
+		$question = QuizModel::get_quiz_question_by_id( $question_id );
+		if ( ! $question || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
+			return null;
+		}
+
+		$attempt_answer = $this->get_attempt_answer_by_attempt_and_question( $attempt_id, $question_id );
+		if ( $attempt_answer ) {
+			return $attempt_answer;
+		}
+
+		try {
+			$inserted_id = QueryHelper::insert(
+				'tutor_quiz_attempt_answers',
+				array(
+					'user_id'         => (int) $attempt->user_id,
+					'quiz_id'         => (int) $attempt->quiz_id,
+					'question_id'     => $question_id,
+					'quiz_attempt_id' => $attempt_id,
+					'given_answer'    => '',
+					'question_mark'   => $question->question_mark,
+					'achieved_mark'   => 0,
+					'minus_mark'      => 0,
+					'is_correct'      => 0,
+				)
+			);
+		} catch ( \Exception $exception ) {
+			return null;
+		}
+
+		if ( $inserted_id <= 0 ) {
+			return null;
+		}
+
+		return $this->get_attempt_answer( $inserted_id );
+	}
+
+	/**
+	 * Resolve the attempt answer used for instructor review.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $attempt_id        Attempt ID.
+	 * @param int $attempt_answer_id Attempt answer ID.
+	 * @param int $question_id       Question ID.
+	 *
+	 * @return object|null
+	 */
+	private function resolve_attempt_answer_for_review( int $attempt_id, int $attempt_answer_id = 0, int $question_id = 0 ) {
+		$attempt_answer = $attempt_answer_id ? $this->get_attempt_answer( $attempt_answer_id ) : null;
+
+		if ( $attempt_answer ) {
+			return $attempt_answer;
+		}
+
+		if ( $question_id <= 0 ) {
+			return null;
+		}
+
+		$attempt_answer = $this->get_attempt_answer_by_attempt_and_question( $attempt_id, $question_id );
+
+		if ( $attempt_answer ) {
+			return $attempt_answer;
+		}
+
+		return $this->create_skipped_attempt_answer( $attempt_id, $question_id );
 	}
 
 	/**
@@ -1765,7 +1880,7 @@ class Quiz {
 						<?php esc_html_e( 'Result', 'tutor' ); ?>
 					</div>
 				</div>
-				
+
 				<div class="tutor-quiz-attempts-list">
 					<?php
 					foreach ( $attempts_list as $index => $attempt ) {
@@ -1783,6 +1898,7 @@ class Quiz {
 									'quiz_attempt_obj' => $quiz_attempt_obj,
 									'attempts_count'   => $attempts_count,
 									'is_previous'      => true,
+									'is_learning_area' => true,
 								)
 							);
 							?>
@@ -1822,10 +1938,6 @@ class Quiz {
 		$auto_start_delay       = (int) ( $quiz_settings['auto_start_delay'] ?? 5 );
 		$should_auto_start      = 1 === (int) $quiz_auto_start && 0 === (int) $attempted_count;
 
-		if ( ! $can_start_quiz ) {
-			return;
-		}
-
 		global $tutor_current_post, $tutor_course_id;
 		$current_content_id  = $tutor_current_post ? $tutor_current_post->ID : $quiz_id;
 		$course_id           = $tutor_course_id ? $tutor_course_id : tutor_utils()->get_course_id_by_subcontent( $current_content_id );
@@ -1834,62 +1946,118 @@ class Quiz {
 		$skip_url            = get_the_permalink( $next_id ? $next_id : $course_id );
 		$skip_modal_id       = 'tutor-quiz-skip-to-next';
 		$auto_start_modal_id = 'tutor-quiz-autostart-modal';
+		$retry_modal_id      = 'tutor-quiz-retry-modal-' . $quiz_id;
+		$show_retry_modal    = $attempted_count > 0;
 
-		$skip_modal_cancel_button = Button::make()
-			->label( __( 'Cancel', 'tutor' ) )
-			->variant( Variant::SECONDARY )
-			->size( Size::SMALL )
-			->attr( '@click', "TutorCore.modal.closeModal('$skip_modal_id')" )
-			->get();
+		$can_skip_quiz  = ( 0 === $attempted_count );
+		$show_continue  = ( $attempted_count > 0 && $next_id );
+		$has_any_action = $can_skip_quiz || $show_continue || $can_start_quiz;
 
-		$skip_modal_confirm_button = Button::make()
-			->tag( 'a' )
-			->label( __( 'Yes, Skip This', 'tutor' ) )
-			->variant( Variant::DESTRUCTIVE )
-			->size( Size::SMALL )
-			->attr( 'href', esc_url( $skip_url ) )
-			->get();
+		if ( ! $has_any_action ) {
+			return;
+		}
 		?>
-		<div class="tutor-quiz-intro-actions tutor-flex tutor-justify-end tutor-gap-3 tutor-mt-8">
+		<div class="tutor-learning-area-footer">
 			<?php
-			if ( 0 === $attempted_count ) {
+			if ( $can_skip_quiz ) {
 				Button::make()
 					->label( __( 'Skip Quiz', 'tutor' ) )
 					->variant( Variant::GHOST )
 					->attr( '@click', "TutorCore.modal.showModal('$skip_modal_id')" )
 					->render();
+
+				$skip_modal_confirm_button = Button::make()
+					->tag( 'a' )
+					->label( __( 'Yes, Skip This', 'tutor' ) )
+					->variant( Variant::DESTRUCTIVE )
+					->size( Size::SMALL )
+					->attr( 'href', esc_url( $skip_url ) )
+					->get();
+
+				$skip_modal_cancel_button = Button::make()
+					->label( __( 'Cancel', 'tutor' ) )
+					->variant( Variant::SECONDARY )
+					->size( Size::SMALL )
+					->attr( '@click', "TutorCore.modal.closeModal('$skip_modal_id')" )
+					->get();
+
+				ConfirmationModal::make()
+					->id( $skip_modal_id )
+					->title( __( 'Do You Want to Skip This Quiz?', 'tutor' ) )
+					->message( __( 'Are you sure you want to skip this quiz? Please confirm your choice.', 'tutor' ) )
+					->confirm_button( $skip_modal_confirm_button )
+					->cancel_button( $skip_modal_cancel_button )
+					->render();
+			}
+
+			if ( $show_continue ) {
+				Button::make()
+				->tag( 'a' )
+				->label( __( 'Continue Lesson', 'tutor' ) )
+				->variant( $can_start_quiz ? Variant::GHOST : Variant::PRIMARY )
+				->attr( 'href', esc_url( get_the_permalink( $next_id ) ) )
+				->render();
 			}
 			?>
-			
-			<form
-				x-data="tutorQuizAutoStart({
-					quizID: <?php echo esc_attr( $quiz_id ); ?>,
-					autoStart: <?php echo $should_auto_start ? 'true' : 'false'; ?>,
-					autoStartModalId: '<?php echo esc_attr( $auto_start_modal_id ); ?>',
-					countdownSeconds: <?php echo esc_attr( $auto_start_delay ); ?>,
-				})"
-				@submit.prevent="handleStartQuiz()"
-			>
-				<?php
-				Button::make()
-					->label( __( 'Start Quiz', 'tutor' ) )
-					->attr( 'x-bind:disabled', 'startQuizMutation?.isPending' )
-					->attr( ':class', "{ 'tutor-btn-loading': startQuizMutation?.isPending }" )
-					->render();
-				?>
-			</form>
+
+			<?php if ( $can_start_quiz ) : ?>
+				<?php if ( $show_retry_modal ) : ?>
+					<?php
+					Button::make()
+						->label( __( 'Retry Quiz', 'tutor' ) )
+						->attr( 'type', 'button' )
+						->icon( Icon::RELOAD_3, 'left', 20, 20 )
+						->attr(
+							'@click',
+							sprintf(
+								'TutorCore.modal.showModal("%s", { data: %s });',
+								$retry_modal_id,
+								wp_json_encode(
+									array(
+										'quizID'      => $quiz_id,
+										'redirectURL' => get_post_permalink( $quiz_id ),
+									)
+								)
+							)
+						)
+						->render();
+					?>
+				<?php else : ?>
+				<form
+					x-data="tutorQuizAutoStart({
+						quizID: <?php echo esc_attr( $quiz_id ); ?>,
+						autoStart: <?php echo $should_auto_start ? 'true' : 'false'; ?>,
+						autoStartModalId: '<?php echo esc_attr( $auto_start_modal_id ); ?>',
+						countdownSeconds: <?php echo esc_attr( $auto_start_delay ); ?>,
+					})"
+					@submit.prevent="handleStartQuiz()"
+				>
+					<?php
+					Button::make()
+						->label( __( 'Start Quiz', 'tutor' ) )
+						->attr( 'x-bind:disabled', 'startQuizMutation?.isPending' )
+						->attr( ':class', "{ 'tutor-btn-loading': startQuizMutation?.isPending }" )
+						->render();
+					?>
+				</form>
+				<?php endif; ?>
+			<?php endif; ?>
 		</div>
 
-		<?php if ( 0 === $attempted_count ) : ?>
+		<?php if ( $show_retry_modal ) : ?>
+		<div x-data="tutorQuizRetryAttempt()">
 			<?php
 			ConfirmationModal::make()
-				->id( $skip_modal_id )
-				->title( __( 'Do You Want to Skip This Quiz?', 'tutor' ) )
-				->message( __( 'Are you sure you want to skip this quiz? Please confirm your choice.', 'tutor' ) )
-				->confirm_button( $skip_modal_confirm_button )
-				->cancel_button( $skip_modal_cancel_button )
+				->id( $retry_modal_id )
+				->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+				->icon( UrlHelper::themed_asset( 'images/illustrations/quiz-retry.webp' ) )
+				->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
+				->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
+				->confirm_text( __( 'Retry Quiz', 'tutor' ) )
+				->mutation_state( 'retryMutation' )
 				->render();
 			?>
+		</div>
 		<?php endif; ?>
 
 		<?php
@@ -1908,7 +2076,6 @@ class Quiz {
 		?>
 		<?php
 	}
-
 
 	/**
 	 * Render individual question template
@@ -2042,7 +2209,6 @@ class Quiz {
 		}
 		?>
 
-		
 		<a
 			href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>" 
 			title="<?php echo esc_attr( $quiz_title ); ?>"

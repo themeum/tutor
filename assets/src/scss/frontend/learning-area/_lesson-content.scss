@@ -107,6 +107,21 @@
     }
   }
 
+  .tutor-lesson-image-wrapper {
+    @include tutor-flex-center();
+    aspect-ratio: 16 / 9;
+    height: 100%;
+
+    .tutor-lesson-feature-image {
+      display: block;
+      width: auto;
+      height: auto;
+      max-height: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+  }
+
   @include tutor-breakpoint-up(sm) {
     margin-top: $tutor-spacing-4;
 
@@ -124,7 +139,7 @@
     .tutor-lesson-content-tab {
       padding-inline: $tutor-spacing-6;
 
-      .tutor-lesson-video-wrapper {
+      .tutor-lesson-video-wrapper, .tutor-lesson-image-wrapper {
         margin-inline: -$tutor-spacing-6;
         margin-bottom: $tutor-spacing-6;
       }

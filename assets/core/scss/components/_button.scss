@@ -106,6 +106,7 @@
 
 // Icon-only button
 .tutor-btn-icon {
+  flex-shrink: 0;
   @include tutor-button-icon-size(medium);
 
   &.tutor-btn-x-small {

@@ -43,6 +43,9 @@ $video_info = tutor_utils()->get_video_info();
 $source_key = is_object( $video_info ) && 'html5' !== $video_info->source ? 'source_' . $video_info->source : null;
 $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( isset( $source_key ) ? $video_info->$source_key : null );
 
+$feature_image = get_post_meta( get_the_ID(), '_thumbnail_id', true );
+$feature_url   = $feature_image ? wp_get_attachment_url( $feature_image ) : null;
+
 ?>
 <div class="tutor-lesson-content">
 	<?php ob_start(); ?>
@@ -69,6 +72,10 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 			?>
 			<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $json_data ) ); ?>">
 			<?php echo apply_filters( 'tutor_single_lesson_video', tutor_lesson_video( false ), $video_info, $source_key ); //phpcs:ignore ?>
+		</div>
+		<?php elseif ( $feature_url ) : ?>
+		<div class="tutor-lesson-image-wrapper">
+			<img class="tutor-lesson-feature-image" src="<?php echo esc_url( $feature_url ); ?>" alt="<?php echo esc_attr( get_the_title( $lesson->ID ) ); ?>">
 		</div>
 		<?php endif; ?>
 

@@ -11,23 +11,29 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
+use TUTOR\Quiz_Attempts_List;
 use Tutor\Components\SvgIcon;
+use Tutor\Components\PreviewTrigger;
 use Tutor\Components\Constants\Color;
 
 if ( empty( $attempt ) ) {
 	return;
 }
 
-$show_quiz_title = $show_quiz_title ?? false;
-$show_course     = $show_course ?? false;
-$attempt_number  = $attempt_number ?? null;
-$attempts_count  = $attempts_count ?? 0;
-$is_previous     = $is_previous ?? false;
+$show_quiz_title  = $show_quiz_title ?? false;
+$show_course      = $show_course ?? false;
+$attempt_number   = $attempt_number ?? null;
+$attempts_count   = $attempts_count ?? 0;
+$is_previous      = $is_previous ?? false;
+$is_learning_area = $is_learning_area ?? false;
+$details_url      = $quiz_attempt_obj->get_review_url(
+	$attempt,
+	array( 'action' => 'view_details' )
+) ?? '#';
 
 ?>
-<div class="tutor-quiz-attempts-item">
+<div class="tutor-quiz-attempts-item" data-learning-area="<?php echo esc_attr( $is_learning_area ? 'true' : 'false' ); ?>">
 	<div class="tutor-quiz-item-info">
 		<?php
 		if ( $show_quiz_title && ! empty( $quiz_title ) ) :
@@ -89,14 +95,16 @@ $is_previous     = $is_previous ?? false;
 		<?php endif; ?>
 
 		<div class="tutor-quiz-item-info-date">
-			<?php echo esc_html( $attempt['date'] ?? '' ); ?>
+			<?php
+			echo $is_learning_area
+				? '<a href="' . esc_url( $details_url ) . '">' . esc_html( $attempt['date'] ?? '' ) . '</a>'
+				: esc_html( $attempt['date'] ?? '' );
+			?>
 		</div>
 	</div>
 
 	<div class="tutor-quiz-item-marks">
-		<div x-data="tutorStatics({ value: <?php echo esc_attr( $attempt['marks_percent'] ?? 0 ); ?>, type: 'progress' })">
-			<div x-html="render()"></div>
-		</div>
+		<?php Quiz_Attempts_List::render_quiz_attempt_marks_percentage( $attempt['result'], $attempt['marks_percent'] ); ?>
 		<div class="tutor-quiz-marks-breakdown">
 			<div class="tutor-quiz-marks-correct">
 				<?php
@@ -121,7 +129,7 @@ $is_previous     = $is_previous ?? false;
 	<div class="tutor-quiz-item-result">
 		<?php
 		$quiz_attempt_obj->render_quiz_attempt_list_badge( $attempt );
-		$quiz_attempt_obj->render_student_attempt_popover( $attempt, $attempts_count, $quiz_id );
+		$quiz_attempt_obj->render_student_attempt_popover( $attempt, $attempts_count, $quiz_id, $is_learning_area );
 		?>
 	</div>
 </div>

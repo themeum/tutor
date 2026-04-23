@@ -63,8 +63,6 @@
 
 [data-tutor-theme='light'][data-tutor-vision='protanopia'] {
   // SURFACE COLORS
-  --tutor-surface-warning: #{$tutor-warning-50};
-  --tutor-surface-warning-hover: #{$tutor-warning-100};
   --tutor-surface-success: #{$tutor-cyan-50};
   --tutor-surface-critical: #{$tutor-orange-100};
 
@@ -84,31 +82,13 @@
 
 [data-tutor-theme='dark'][data-tutor-vision='protanopia'] {
   // SURFACE COLORS
-  --tutor-surface-warning: #{$tutor-gray-750};
-  --tutor-surface-warning-hover: #{$tutor-warning-900};
   --tutor-surface-success: #{$tutor-cyan-900};
   --tutor-surface-critical: #{$tutor-orange-900};
 
   // TEXT COLORS
   --tutor-text-success: #{$tutor-cyan-400};
 
-  // ICON COLORS
-  --tutor-icon-exception4: #{$tutor-warning-400};
-
   // ACTION COLORS
-  --tutor-actions-success-tertiary: #{$tutor-gray-700};
   --tutor-actions-success-exception: #{$tutor-cyan-950};
-  --tutor-actions-warning-secondary: #{$tutor-gray-700};
   --tutor-actions-warning-exception: #{$tutor-orange-50};
-  --tutor-actions-critical-secondary: #{$tutor-gray-700};
-}
-
-// =============================================================================
-// HIGH CONTRAST — applies on top of either light or dark + protanopia
-// =============================================================================
-
-[data-tutor-vision='protanopia'][data-tutor-contrast='high'] {
-  --tutor-actions-success-tertiary: #{$tutor-gray-700};
-  --tutor-actions-warning-secondary: #{$tutor-gray-700};
-  --tutor-actions-critical-secondary: #{$tutor-gray-700};
 }

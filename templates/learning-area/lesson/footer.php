@@ -15,6 +15,7 @@ use TUTOR\Icon;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Components\SvgIcon;
 
 global $tutor_course_id,
 $tutor_current_post,
@@ -37,17 +38,19 @@ $next_link = $next_is_locked || ! $next_id ? '#' : get_the_permalink( $next_id )
 $is_completed_lesson = tutor_utils()->is_completed_lesson();
 
 ?>
-<div class="tutor-learning-footer">
+<div class="tutor-learning-area-footer" data-lesson>
 	<?php
 	Button::make()
-		->tag( 'a' )
-		->variant( Variant::GHOST )
-		->size( Size::SMALL )
-		->label( __( 'Previous', 'tutor' ) )
-		->icon( Icon::CHEVRON_LEFT_2, 'left' )
-		->attr( 'href', esc_url( $prev_link ) )
-		->disabled( $prev_is_locked || ! $previous_id )
-		->render();
+	->tag( 'a' )
+	->variant( Variant::GHOST )
+	->size( Size::SMALL )
+	->label( __( 'Previous', 'tutor' ) )
+	->icon( Icon::CHEVRON_LEFT_2, 'left' )
+	->attr( 'href', esc_url( $prev_link ) )
+	->attr( 'style', 'visibility:' . ( $previous_id ? 'visible' : 'hidden' ) )
+	->disabled( $prev_is_locked )
+	->render();
+
 	ob_start();
 	?>
 	<form method="post" class="tutor-mb-none">
@@ -60,23 +63,25 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 			</div>
 			<?php
 			if ( $is_completed_lesson ) {
-				tutor_utils()->render_svg_icon( Icon::LESSON_COMPLETED, 40, 40 );
+				SvgIcon::make()->name( Icon::LESSON_COMPLETED )->size( 40 )->render();
 			} else {
-				tutor_utils()->render_svg_icon( Icon::CHECK_2, 20, 20, array( 'class' => 'tutor-icon-secondary' ) );
+				SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->attr( 'class', 'tutor-icon-secondary' )->render();
 			}
 			?>
 		</button>
 	</form>
 	<?php
 	echo apply_filters( 'tutor_learning_area_lesson_mark_as_complete', ob_get_clean() ); // phpcs:ignore --already sanitized.
+
 	Button::make()
-		->tag( 'a' )
-		->variant( Variant::GHOST )
-		->size( Size::SMALL )
-		->label( __( 'Next', 'tutor' ) )
-		->icon( Icon::CHEVRON_RIGHT_2, 'right' )
-		->attr( 'href', esc_url( $next_link ) )
-		->disabled( $next_is_locked || ! $next_id )
-		->render();
+	->tag( 'a' )
+	->variant( Variant::GHOST )
+	->size( Size::SMALL )
+	->label( __( 'Next', 'tutor' ) )
+	->icon( Icon::CHEVRON_RIGHT_2, 'right' )
+	->attr( 'href', esc_url( $next_link ) )
+	->attr( 'style', 'visibility:' . ( $next_id ? 'visible' : 'hidden' ) )
+	->disabled( $next_is_locked )
+	->render();
 	?>
 </div>

@@ -52,6 +52,7 @@
   &-title {
     @include tutor-typography('medium', 'medium');
     @include tutor-text-truncate;
+    width: stretch;
   }
 
   &-actions {

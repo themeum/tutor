@@ -16,8 +16,8 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 
-import DrawImagePreview from './question-previews/DrawImagePreview';
 import CoordinatesPreview from './question-previews/CoordinatesPreview';
+import DrawImagePreview from './question-previews/DrawImagePreview';
 import FillInTheBlankPreview from './question-previews/FillInTheBlankPreview';
 import ImageAnsweringPreview from './question-previews/ImageAnsweringPreview';
 import MatchingPreview from './question-previews/MatchingPreview';
@@ -25,6 +25,7 @@ import MultipleChoicePreview from './question-previews/MultipleChoicePreview';
 import OpenEndedPreview from './question-previews/OpenEndedPreview';
 import OrderingPreview from './question-previews/OrderingPreview';
 import PinImagePreview from './question-previews/PinImagePreview';
+import PuzzlePreview from './question-previews/PuzzlePreview';
 import ScalePreview from './question-previews/ScalePreview';
 import TrueFalsePreview from './question-previews/TrueFalsePreview';
 import UnsupportedPreview from './question-previews/UnsupportedPreview';
@@ -35,6 +36,11 @@ interface QuestionPreviewModalProps extends ModalProps {
 }
 
 const isTutorPro = tutorConfig.tutor_pro_url;
+/**
+ * Tutor Pro bundles several quiz question styles in `front.css`, including puzzle
+ * (`tutor-pro/assets/src/scss/quiz/_quiz_puzzle.scss` → `front.css`), same pattern as the live quiz UI.
+ */
+const TUTOR_PRO_FRONT_STYLESHEET_PATH = '/wp-content/plugins/tutor-pro/assets/css/front.css';
 const IFRAME_SRC_DOC =
   '<!doctype html><html><head><meta charset="utf-8" /></head><body><div id="preview-root"></div></body></html>';
 const PREVIEW_STYLESHEET_PATHS = [
@@ -44,7 +50,7 @@ const PREVIEW_STYLESHEET_PATHS = [
 ];
 
 if (isTutorPro) {
-  PREVIEW_STYLESHEET_PATHS.push('/wp-content/plugins/tutor-pro/assets/css/front.css');
+  PREVIEW_STYLESHEET_PATHS.push(TUTOR_PRO_FRONT_STYLESHEET_PATH);
 }
 
 // Prefetch the stylesheets automatically so they are loaded in the background
@@ -336,6 +342,10 @@ const renderQuestionPreview = (question: QuizQuestion) => {
       return <ScalePreview answers={question.question_answers} />;
     case 'coordinates':
       return <CoordinatesPreview />;
+    case 'puzzle':
+      return (
+        <PuzzlePreview answers={question.question_answers} gridSize={question.question_settings.puzzle_grid_size} />
+      );
     default:
       return <UnsupportedPreview />;
   }
@@ -381,10 +391,21 @@ const getPreviewFrameStyles = () => `
       height: 20px;
       color: var(--tutor-icon-idle);
     }
+
+    .tutor-quiz-question-wrapper:has([data-question="ordering"]) & {
+      svg {
+        width: 40px;
+        height: 40px;
+      }
+    }
   }
 
   [data-question=fill_in_the_blank] .tutor-quiz-question-input {
     box-shadow: none;
+  }
+
+  .tutor-quiz-question-option {
+    cursor: default;
   }
 
   body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-wrapper,
@@ -427,6 +448,51 @@ const getPreviewFrameStyles = () => `
     height: auto;
     max-width: 100%;
     max-height: min(52vh, 460px);
+    object-fit: contain;
+  }
+
+  /*
+   * Puzzle preview: same viewport idea as draw/pin above — board capped at min(52vh, 460px),
+   * scatter scroll area capped so header + board + pieces fit the modal column.
+   */
+  .tutor-quiz-question[data-question='puzzle'] .quiz-question-ans-choice-area.tutor-puzzle-question {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-playground {
+    box-sizing: border-box;
+    width: auto;
+    max-width: 100%;
+    max-height: min(52vh, 460px);
+    height: auto;
+    flex-shrink: 0;
+    margin-inline: auto;
+    overflow: hidden;
+  }
+
+  .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-reference-image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(52vh, 460px);
+    object-fit: contain;
+  }
+
+  .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-scatter {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    max-height: min(30vh, 220px);
+    min-height: 96px;
+    margin-top: 12px;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 `;
 
@@ -439,6 +505,12 @@ const styles = {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    max-height: 100vh;
+
+    body:has(#wpadminbar) & {
+      top: calc(50% + 16px); // Half of admin bar height (32px/2 = 16px)
+      max-height: calc(100vh - 32px);
+    }
 
     ${Breakpoint.smallTablet} {
       width: 90%;
@@ -454,7 +526,7 @@ const styles = {
     flex-direction: column;
     overflow: hidden;
     max-width: ${activeTab === 'mobile' ? '444px' : '1220px'};
-    height: 686px;
+    height: calc(100vh - 180px);
     margin-inline: auto;
     width: 100%;
     background-color: ${colorTokens.surface.courseBuilder};

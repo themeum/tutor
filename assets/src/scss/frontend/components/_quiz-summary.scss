@@ -7,14 +7,20 @@
   padding-block: $tutor-spacing-13;
 
   @include tutor-breakpoint-down(sm) {
-    background-color: $tutor-surface-base;
-    border-radius: $tutor-radius-2xl;
-    padding: $tutor-spacing-5;
+    padding: $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-8 $tutor-spacing-5;
+  }
+
+  .tutor-quiz-summary-overview {
+    @include tutor-breakpoint-down(sm) {
+      background-color: $tutor-surface-base;
+      border-radius: $tutor-radius-2xl;
+      padding: $tutor-spacing-5;
+    }
   }
 
   .tutor-quiz-result {
     display: grid;
-    grid-template-columns: 1fr 3fr 1.2fr;
+    grid-template-columns: 1fr 3fr 1fr;
     grid-template-areas:
       'progress marks statics'
       'progress marks retake';
@@ -116,6 +122,10 @@
 
       &-note {
         font-style: italic;
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        margin-top: $tutor-spacing-5;
       }
     }
   }
