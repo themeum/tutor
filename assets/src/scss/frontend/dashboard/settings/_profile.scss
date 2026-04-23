@@ -101,6 +101,7 @@ body:has(#wpadminbar) {
 
     svg {
       color: $tutor-icon-idle;
+      flex-shrink: 0;
     }
 
     &:hover {
