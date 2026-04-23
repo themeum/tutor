@@ -21,6 +21,7 @@ use Tutor\Components\SvgIcon;
 use Tutor\Components\Table;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
@@ -1945,6 +1946,8 @@ class Quiz {
 		$skip_url            = get_the_permalink( $next_id ? $next_id : $course_id );
 		$skip_modal_id       = 'tutor-quiz-skip-to-next';
 		$auto_start_modal_id = 'tutor-quiz-autostart-modal';
+		$retry_modal_id      = 'tutor-quiz-retry-modal-' . $quiz_id;
+		$show_retry_modal    = $attempted_count > 0;
 
 		$can_skip_quiz  = ( 0 === $attempted_count );
 		$show_continue  = ( $attempted_count > 0 && $next_id );
@@ -1998,25 +2001,64 @@ class Quiz {
 			?>
 
 			<?php if ( $can_start_quiz ) : ?>
-			<form
-				x-data="tutorQuizAutoStart({
-					quizID: <?php echo esc_attr( $quiz_id ); ?>,
-					autoStart: <?php echo $should_auto_start ? 'true' : 'false'; ?>,
-					autoStartModalId: '<?php echo esc_attr( $auto_start_modal_id ); ?>',
-					countdownSeconds: <?php echo esc_attr( $auto_start_delay ); ?>,
-				})"
-				@submit.prevent="handleStartQuiz()"
-			>
-				<?php
-				Button::make()
-					->label( $attempted_count > 0 ? __( 'Retake Quiz', 'tutor' ) : __( 'Start Quiz', 'tutor' ) )
-					->attr( 'x-bind:disabled', 'startQuizMutation?.isPending' )
-					->attr( ':class', "{ 'tutor-btn-loading': startQuizMutation?.isPending }" )
-					->render();
-				?>
-			</form>
+				<?php if ( $show_retry_modal ) : ?>
+					<?php
+					Button::make()
+						->label( __( 'Retry Quiz', 'tutor' ) )
+						->attr( 'type', 'button' )
+						->icon( Icon::RELOAD_3, 'left', 20, 20 )
+						->attr(
+							'@click',
+							sprintf(
+								'TutorCore.modal.showModal("%s", { data: %s });',
+								$retry_modal_id,
+								wp_json_encode(
+									array(
+										'quizID'      => $quiz_id,
+										'redirectURL' => get_post_permalink( $quiz_id ),
+									)
+								)
+							)
+						)
+						->render();
+					?>
+				<?php else : ?>
+				<form
+					x-data="tutorQuizAutoStart({
+						quizID: <?php echo esc_attr( $quiz_id ); ?>,
+						autoStart: <?php echo $should_auto_start ? 'true' : 'false'; ?>,
+						autoStartModalId: '<?php echo esc_attr( $auto_start_modal_id ); ?>',
+						countdownSeconds: <?php echo esc_attr( $auto_start_delay ); ?>,
+					})"
+					@submit.prevent="handleStartQuiz()"
+				>
+					<?php
+					Button::make()
+						->label( __( 'Start Quiz', 'tutor' ) )
+						->attr( 'x-bind:disabled', 'startQuizMutation?.isPending' )
+						->attr( ':class', "{ 'tutor-btn-loading': startQuizMutation?.isPending }" )
+						->render();
+					?>
+				</form>
+				<?php endif; ?>
 			<?php endif; ?>
 		</div>
+
+		<?php if ( $show_retry_modal ) : ?>
+		<div x-data="tutorQuizRetryAttempt()">
+			<?php
+			ConfirmationModal::make()
+				->id( $retry_modal_id )
+				->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+				->icon( UrlHelper::themed_asset( 'images/illustrations/quiz-retry.webp' ) )
+				->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
+				->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
+				->confirm_text( __( 'Retry Quiz', 'tutor' ) )
+				->mutation_state( 'retryMutation' )
+				->render();
+			?>
+		</div>
+		<?php endif; ?>
 
 		<?php
 		Modal::make()
