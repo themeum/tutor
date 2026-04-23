@@ -318,6 +318,27 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 4.0.0-beta.3 - 23 April, 2026
+
+New: Introduced a new Puzzle quiz type. (Pro)
+New: Accessibility support added for users with visual impairments.
+Update: Design compatibility improved for the TutorStarter theme.
+Update: WPML compatibility updated. (Pro)
+Update: Content Bank now supports all the new Quiz question types. (Pro)
+Update: UI improvements made to the assignment module. (Pro)
+Update: User navigation from the notification list has been improved. (Pro)
+Update: Order history list added for the PMPRO monetization. (Pro)
+Fix: Resolved a critical PHP error on the instructor dashboard.
+Fix: Fixed multiple mobile responsiveness issues.
+Fix: Lesson feature images now display correctly in the learning area.
+Fix: Course builder author dropdown styling restored.
+Fix: Design rendering fixed for new quiz types on the admin quiz review screen. (Pro)
+Fix: Blocked or pending instructors are now correctly redirected to the student dashboard.
+Fix: Purchase button now works on the course archive page for EDD monetization.
+Fix: Retry button in the Quiz attempt list three-dot menu is now functional.
+Fix: Retake/Retry option no longer appears when the attempt limit has been reached.
+Fix: Order history status dropdown now shows valid statuses for WooCommerce orders.
+
 = 4.0.0-beta.2 - 16 April, 2026
 
 New: Introduced the new Graph Quiz type. (Pro)
