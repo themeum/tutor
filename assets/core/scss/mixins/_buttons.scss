@@ -23,6 +23,7 @@
 
   svg:not([class]) {
     color: currentColor;
+    flex-shrink: 0;
   }
 
   &:disabled,

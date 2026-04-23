@@ -80,9 +80,14 @@
       @include tutor-button-reset();
       @include tutor-flex(row, center, flex-start);
       @include tutor-typography(small);
+      @include tutor-text-truncate();
       gap: $tutor-spacing-5;
       padding: $tutor-spacing-4 $tutor-spacing-5;
       @include tutor-transition((color, background-color));
+
+      svg {
+        flex-shrink: 0;
+      }
 
       &:hover {
         background-color: $tutor-tab-sidebar-l2-hover;

@@ -28,7 +28,7 @@ $course_retake_modal_id;
 ?>
 <div class="tutor-learning-header">
 	<div class="tutor-learning-header-inner">
-		<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-w-full">
+		<div class="tutor-learning-header-content">
 			<a class="tutor-learning-header-back" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ); ?>">
 				<?php SvgIcon::make()->name( Icon::LEFT )->size( 20 )->render(); ?>
 			</a>

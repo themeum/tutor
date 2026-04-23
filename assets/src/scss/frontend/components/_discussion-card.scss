@@ -22,6 +22,10 @@
     &:not(:last-of-type) {
       border-bottom: 1px solid $tutor-border-idle;
     }
+
+    .tutor-card {
+      padding: 0;
+    }
   }
 
   &.unread {

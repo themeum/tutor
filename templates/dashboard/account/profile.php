@@ -52,21 +52,17 @@ if ( $show_statistics ) {
 
 <div class="tutor-profile-wrapper">
 	<?php require_once tutor_get_template( 'account-header' ); ?>
+	
+	<div class="tutor-user-profile">
+		<div class="tutor-account-container">
+			<?php tutor_load_template( 'user-profile' ); ?>
 
-	<div class="tutor-account-container">
-		<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
-			<div class="tutor-user-profile">
-				<div class="tutor-account-container">
-					<?php tutor_load_template( 'user-profile' ); ?>
-
-					<?php if ( $show_statistics ) : ?>
-					<div class="tutor-user-profile-statistics">
-						<?php tutor_load_template( 'dashboard.instructor.profile-statistics', array( 'statistics' => $statistics ) ); ?>
-					</div>
-					<?php endif; ?>
-
-				</div>
+			<?php if ( $show_statistics ) : ?>
+			<div class="tutor-user-profile-statistics">
+				<?php tutor_load_template( 'dashboard.instructor.profile-statistics', array( 'statistics' => $statistics ) ); ?>
 			</div>
+			<?php endif; ?>
+
 		</div>
 	</div>
 </div>	
