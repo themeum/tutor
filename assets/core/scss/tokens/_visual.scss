@@ -1,0 +1,30 @@
+// Design Tokens - Visual Colors
+// CSS variables for theme-aware visual colors
+
+// =============================================================================
+// CSS VARIABLE REFERENCES (theme-aware)
+// =============================================================================
+
+$tutor-visual-gray-1: var(--tutor-visual-gray-1);
+$tutor-visual-gray-2: var(--tutor-visual-gray-2);
+$tutor-visual-gray-3: var(--tutor-visual-gray-3);
+$tutor-visual-brand-1: var(--tutor-visual-brand-1);
+$tutor-visual-brand-2: var(--tutor-visual-brand-2);
+$tutor-visual-success-1: var(--tutor-visual-success-1);
+$tutor-visual-critical-1: var(--tutor-visual-critical-1);
+$tutor-visual-caution-1: var(--tutor-visual-caution-1);
+
+// =============================================================================
+// VISUAL COLOR MAP (for utility generation)
+// =============================================================================
+
+$tutor-visual-colors: (
+  gray-1: $tutor-visual-gray-1,
+  gray-2: $tutor-visual-gray-2,
+  gray-3: $tutor-visual-gray-3,
+  brand-1: $tutor-visual-brand-1,
+  brand-2: $tutor-visual-brand-2,
+  success-1: $tutor-visual-success-1,
+  critical-1: $tutor-visual-critical-1,
+  caution-1: $tutor-visual-caution-1,
+);
