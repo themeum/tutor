@@ -11,9 +11,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Input;
-use TUTOR\Quiz;
 use Tutor\Helpers\UrlHelper;
+use TUTOR\Quiz;
 
 global $tutor_current_post, $tutor_course_id;
 
@@ -63,7 +62,7 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 
 		<!-- Past Attempts Section -->
 		<?php Quiz::render_quiz_attempts( $quiz_id ); ?>
-		
+
 		<!-- Action Buttons -->
 		<?php Quiz::render_quiz_actions( $quiz_id ); ?>
 	</div>

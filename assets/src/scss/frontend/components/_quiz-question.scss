@@ -25,6 +25,7 @@
   &-number {
     @include tutor-flex(row, center, center);
     @include tutor-typography('medium', 'semibold');
+    background-color: $tutor-surface-l1-hover;
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-sm;
     width: 24px;
