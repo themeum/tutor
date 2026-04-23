@@ -448,6 +448,7 @@ const getPreviewFrameStyles = () => `
     height: auto;
     max-width: 100%;
     max-height: min(52vh, 460px);
+    object-fit: contain;
   }
 
   /*

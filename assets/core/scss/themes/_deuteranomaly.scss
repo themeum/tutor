@@ -120,13 +120,3 @@
   --tutor-actions-warning-exception: #{$tutor-orange-50};
   --tutor-actions-critical-secondary: #{$tutor-gray-700};
 }
-
-// =============================================================================
-// HIGH CONTRAST — applies on top of either light or dark + deuteranomaly
-// =============================================================================
-
-[data-tutor-vision='deuteranomaly'][data-tutor-contrast='high'] {
-  --tutor-actions-success-tertiary: #{$tutor-gray-700};
-  --tutor-actions-warning-secondary: #{$tutor-gray-700};
-  --tutor-actions-critical-secondary: #{$tutor-gray-700};
-}

@@ -972,6 +972,26 @@ $tutor-quiz-content-bottom-offset: calc(
     }
   }
 
+  [data-question='draw_image'],
+  [data-question='pin_image'] {
+    .tutor-quiz-question-options {
+      @include tutor-flex(column, center, center);
+      width: 100%;
+    }
+
+    img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+  }
+
   &-footer {
     padding-block: $tutor-spacing-8;
     margin-top: auto;
