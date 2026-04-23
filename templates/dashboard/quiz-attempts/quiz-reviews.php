@@ -36,7 +36,7 @@ $form_default_values = array(
 );
 
 $attempt_answers_map = array();
-$questions           = tutor_utils()->get_questions_by_quiz( $quiz_id );
+$questions           = tutor_utils()->get_questions_by_attempt( $attempt_id );
 $attempt_answers     = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 
 if ( is_array( $attempt_answers ) ) {

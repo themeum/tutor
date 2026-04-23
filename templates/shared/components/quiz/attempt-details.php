@@ -69,7 +69,7 @@ if ( ! $quiz_id ) {
 	$quiz_id = (int) ( $attempt_data->quiz_id ?? 0 );
 }
 
-$questions       = tutor_utils()->get_questions_by_quiz( $quiz_id );
+$questions       = tutor_utils()->get_questions_by_attempt( (int) $attempt_data->attempt_id );
 $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id );
 ?>
 <div class="tutor-quiz-summary-page">

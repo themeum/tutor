@@ -5470,6 +5470,172 @@ class Utils {
 	}
 
 	/**
+	 * Normalize question ids.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $question_ids Question ids.
+	 *
+	 * @return array
+	 */
+	private function normalize_question_ids( array $question_ids ): array {
+		$question_ids = array_map( 'intval', $question_ids );
+		$question_ids = array_filter(
+			$question_ids,
+			function ( int $question_id ) {
+				return $question_id > 0;
+			}
+		);
+
+		return array_values( array_unique( $question_ids ) );
+	}
+
+	/**
+	 * Get questions by question ids while preserving order.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $question_ids Question ids.
+	 *
+	 * @return array
+	 */
+	public function get_questions_by_ids( array $question_ids ): array {
+		$question_ids = $this->normalize_question_ids( $question_ids );
+
+		if ( empty( $question_ids ) ) {
+			return array();
+		}
+
+		$questions = QueryHelper::get_all(
+			'tutor_quiz_questions',
+			array(
+				'question_id' => array( 'IN', $question_ids ),
+			),
+			'question_order',
+			-1,
+			'ASC'
+		);
+
+		$questions_by_id = array();
+		foreach ( $questions as $question ) {
+			$question->question_title       = stripslashes( $question->question_title );
+			$question->question_description = stripslashes( $question->question_description );
+			$question->answer_explanation   = stripslashes( $question->answer_explanation );
+			$questions_by_id[ (int) $question->question_id ] = $question;
+		}
+
+		$ordered_questions = array();
+		foreach ( $question_ids as $question_id ) {
+			if ( isset( $questions_by_id[ $question_id ] ) ) {
+				$ordered_questions[] = $questions_by_id[ $question_id ];
+			}
+		}
+
+		return $ordered_questions;
+	}
+
+	/**
+	 * Get stored question ids for an attempt.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $attempt_id Attempt id.
+	 *
+	 * @return array
+	 */
+	public function get_attempt_question_ids( int $attempt_id ): array {
+		$attempt = $this->get_attempt( $attempt_id );
+
+		if ( ! $attempt ) {
+			return array();
+		}
+
+		$attempt_info = maybe_unserialize( $attempt->attempt_info ?? '' );
+		if ( is_array( $attempt_info ) && ! empty( $attempt_info['attempt_question_ids'] ) && is_array( $attempt_info['attempt_question_ids'] ) ) {
+			return $this->normalize_question_ids( $attempt_info['attempt_question_ids'] );
+		}
+
+		$attempt_answers = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+		if ( ! is_array( $attempt_answers ) || empty( $attempt_answers ) ) {
+			return array();
+		}
+
+		$question_ids = array_map(
+			function ( $attempt_answer ) {
+				return (int) ( $attempt_answer->question_id ?? 0 );
+			},
+			$attempt_answers
+		);
+
+		return $this->normalize_question_ids( $question_ids );
+	}
+
+	/**
+	 * Persist question ids for an attempt.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int   $attempt_id    Attempt id.
+	 * @param array $question_ids  Question ids.
+	 *
+	 * @return bool
+	 */
+	public function persist_attempt_question_ids( int $attempt_id, array $question_ids ): bool {
+		$question_ids = $this->normalize_question_ids( $question_ids );
+
+		if ( $attempt_id <= 0 || empty( $question_ids ) ) {
+			return false;
+		}
+
+		$attempt = $this->get_attempt( $attempt_id );
+		if ( ! $attempt ) {
+			return false;
+		}
+
+		$attempt_info = maybe_unserialize( $attempt->attempt_info ?? '' );
+		$attempt_info = is_array( $attempt_info ) ? $attempt_info : array();
+
+		$stored_question_ids = isset( $attempt_info['attempt_question_ids'] ) && is_array( $attempt_info['attempt_question_ids'] )
+			? $this->normalize_question_ids( $attempt_info['attempt_question_ids'] )
+			: array();
+
+		if ( $stored_question_ids === $question_ids ) {
+			return true;
+		}
+
+		$attempt_info['attempt_question_ids'] = $question_ids;
+
+		return (bool) Quiz::update_attempt_info( $attempt_id, maybe_serialize( $attempt_info ) );
+	}
+
+	/**
+	 * Get questions used in an attempt.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $attempt_id Attempt id.
+	 *
+	 * @return array|bool
+	 */
+	public function get_questions_by_attempt( int $attempt_id ) {
+		$attempt = $this->get_attempt( $attempt_id );
+
+		if ( ! $attempt ) {
+			return false;
+		}
+
+		$question_ids = $this->get_attempt_question_ids( $attempt_id );
+		if ( ! empty( $question_ids ) ) {
+			$questions = $this->get_questions_by_ids( $question_ids );
+			if ( ! empty( $questions ) ) {
+				return $questions;
+			}
+		}
+
+		return $this->get_questions_by_quiz( (int) $attempt->quiz_id );
+	}
+
+	/**
 	 * Get single quiz attempt
 	 *
 	 * @since 1.0.0
@@ -5576,12 +5742,17 @@ class Utils {
 
 		$quiz_id         = $this->get_post_id( $quiz_id );
 		$attempt         = $this->is_started_quiz( $quiz_id );
-		$total_questions = (int) $attempt->total_questions;
 		if ( ! $attempt ) {
 			return false;
 		}
 
-		$questions_order = $this->get_quiz_option( get_the_ID(), 'questions_order', 'rand' );
+		$total_questions    = (int) $attempt->total_questions;
+		$stored_question_ids = $this->get_attempt_question_ids( (int) $attempt->attempt_id );
+		if ( ! empty( $stored_question_ids ) ) {
+			return $this->get_questions_by_ids( $stored_question_ids );
+		}
+
+		$questions_order = $this->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
 
 		$order_by = '';
 		if ( 'rand' === $questions_order ) {
@@ -5608,6 +5779,16 @@ class Utils {
 			{$limit}
 			",
 				$quiz_id
+			)
+		);
+
+		$this->persist_attempt_question_ids(
+			(int) $attempt->attempt_id,
+			array_map(
+				function ( $question ) {
+					return (int) ( $question->question_id ?? 0 );
+				},
+				is_array( $questions ) ? $questions : array()
 			)
 		);
 

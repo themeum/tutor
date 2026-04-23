@@ -22,7 +22,9 @@ if ( ! $quiz_id ) {
 	return;
 }
 
-$questions           = tutor_utils()->get_questions_by_quiz( $quiz_id );
+$questions           = isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_data->attempt_id )
+	? tutor_utils()->get_questions_by_attempt( (int) $attempt_data->attempt_id )
+	: tutor_utils()->get_questions_by_quiz( $quiz_id );
 $question_status_map = array();
 $default_item_status = ( isset( $attempt_data ) && is_object( $attempt_data ) ) ? 'incorrect' : '';
 $status_priority     = array(
