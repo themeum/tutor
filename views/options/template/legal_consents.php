@@ -6,8 +6,10 @@
  * @subpackage Tutor\Settings
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 3.8.0
+ * @since 4.0.0
  */
+
+use Tutor\GDPR\Controllers\LegalConsent;
 
 $consent_definition = array();
 
@@ -24,8 +26,9 @@ foreach ( $section['blocks'] as $block ) {
 	}
 }
 
-$default_consents = $consent_definition['default'] ?? array();
-$stored_consents  = $this->get( 'legal_consents', $default_consents );
+$default_consents    = $consent_definition['default'] ?? array();
+$controller_consents = LegalConsent::get_consents();
+$stored_consents     = ! empty( $controller_consents ) ? $controller_consents : $this->get( 'legal_consents', $default_consents );
 
 if ( ! is_array( $stored_consents ) || empty( $stored_consents ) ) {
 	$stored_consents = $default_consents;
@@ -35,41 +38,24 @@ if ( isset( $stored_consents['enabled'] ) || isset( $stored_consents['title'] ) 
 	$stored_consents = array( $stored_consents );
 }
 
-// Temporary compatibility with the single-consent keys used during early implementation.
-if ( empty( $stored_consents ) || ! isset( $stored_consents[0]['title'] ) ) {
-	$legacy_title      = $this->get( 'legal_consents_title', '' );
-	$legacy_message    = $this->get( 'legal_consents_message', '' );
-	$legacy_method     = $this->get( 'legal_consents_method', '' );
-	$legacy_enabled    = $this->get( 'legal_consents_enabled', 'on' );
-	$legacy_display_on = $this->get( 'legal_consents_display_on', array() );
+$stored_consents = array_map(
+	function ( $consent ) {
+		$display_on = $consent['display_on'] ?? array();
+		if ( ! is_array( $display_on ) ) {
+			$display_on = array_filter( array_map( 'trim', explode( ',', (string) $display_on ) ) );
+			$display_on = array_combine( $display_on, $display_on ) ?: array();
+		}
+		$consent['display_on'] = $display_on;
+		$consent['method']     = $consent['method'] ?? LegalConsent::METHOD_MANDATORY_CHECK;
+		$consent['collapsed']  = 'on';
 
-	if ( $legacy_title || $legacy_message || $legacy_method || ! empty( $legacy_display_on ) ) {
-		$stored_consents = array(
-			array(
-				'enabled'    => $legacy_enabled,
-				'title'      => $legacy_title ? $legacy_title : __( 'Registration Consent', 'tutor' ),
-				'display_on' => is_array( $legacy_display_on ) ? $legacy_display_on : array(),
-				'message'    => $legacy_message ? $legacy_message : __( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ),
-				'method'     => $legacy_method ? $legacy_method : 'required_checkbox',
-				'collapsed'  => 'off',
-			),
-		);
-	}
-}
-
-$display_options = array(
-	'signup_page'  => __( 'Sign up page', 'tutor' ),
-	'login_page'   => __( 'Login Page', 'tutor' ),
-	'checkout'     => __( 'Checkout', 'tutor' ),
-	'subscription' => __( 'Subscription', 'tutor' ),
-	'enrollment'   => __( 'Enrollment', 'tutor' ),
+		return $consent;
+	},
+	$stored_consents
 );
 
-$method_options = array(
-	'required_checkbox' => __( 'Required & Comes with a checkbox', 'tutor' ),
-	'optional_checkbox' => __( 'Optional & Comes with a checkbox', 'tutor' ),
-	'implicit'          => __( 'Implicit by continuing', 'tutor' ),
-);
+$display_options = LegalConsent::get_display_place_options();
+$method_options  = LegalConsent::get_consent_method_options();
 
 $wp_pages = get_pages(
 	array(
@@ -84,11 +70,11 @@ $default_item = $default_consents[0] ?? array(
 	'enabled'    => 'on',
 	'title'      => __( 'Registration Consent', 'tutor' ),
 	'display_on' => array(
-		'signup_page' => 'signup_page',
+		LegalConsent::DISPLAY_ON_SIGNUP => LegalConsent::DISPLAY_ON_SIGNUP,
 	),
 	'message'    => __( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ),
-	'method'     => 'required_checkbox',
-	'collapsed'  => 'off',
+	'method'     => LegalConsent::METHOD_MANDATORY_CHECK,
+	'collapsed'  => 'on',
 );
 
 /**
@@ -102,19 +88,29 @@ $default_item = $default_consents[0] ?? array(
 $render_card = function ( $consent, $index ) use ( $display_options, $method_options, $wp_pages ) {
 	$enabled_value = $consent['enabled'] ?? 'on';
 	$enabled_value = ( 1 === (int) $enabled_value || 'on' === $enabled_value ) ? 'on' : 'off';
+	$consent_id    = isset( $consent['id'] ) ? (int) $consent['id'] : 0;
 	$title_value   = $consent['title'] ?? '';
 	$message_value = $consent['message'] ?? '';
-	$method_value  = $consent['method'] ?? 'required_checkbox';
-	$collapsed     = $consent['collapsed'] ?? 'off';
+	$method_value  = $consent['method'] ?? LegalConsent::METHOD_MANDATORY_CHECK;
+	$collapsed     = $consent['collapsed'] ?? 'on';
 	$is_collapsed  = 'on' === $collapsed;
 	$display_on    = $consent['display_on'] ?? array();
 
 	if ( ! is_array( $display_on ) ) {
 		$display_on = array();
 	}
+
+	$current_map = $consent['content_map'] ?? array();
+	if ( ! is_array( $current_map ) ) {
+		$current_map = json_decode( (string) $current_map, true );
+	}
+	if ( ! is_array( $current_map ) ) {
+		$current_map = array();
+	}
 	?>
-	<div class="tutor-legal-consent-card<?php echo $is_collapsed ? ' is-collapsed' : ''; ?>" data-consent-card data-consent-index="<?php echo esc_attr( $index ); ?>">
+	<div class="tutor-legal-consent-card<?php echo $is_collapsed ? ' is-collapsed' : ''; ?>" data-consent-card data-consent-index="<?php echo esc_attr( $index ); ?>" data-consent-id="<?php echo esc_attr( $consent_id ); ?>">
 		<input type="hidden" name="tutor_option[legal_consents][<?php echo esc_attr( $index ); ?>][collapsed]" value="<?php echo esc_attr( $collapsed ); ?>" data-consent-collapsed>
+		<?php tutor_nonce_field(); ?>
 
 		<div class="tutor-legal-consent-card-header">
 			<div class="tutor-legal-consent-card-title tutor-fs-6">
@@ -192,28 +188,22 @@ $render_card = function ( $consent, $index ) use ( $display_options, $method_opt
 							placeholder="<?php esc_attr_e( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ); ?>"
 							style="padding-right: 44px;"
 						><?php echo esc_textarea( $message_value ); ?></textarea>
-						<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-sm" style="position: absolute; right: 8px; bottom: 12px; z-index: 1;" data-page-dropdown-toggle title="<?php esc_attr_e( 'Add Page Link', 'tutor' ); ?>">
-							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-								<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-							</svg>
-						</button>
-						<div class="tutor-option-dropdown" data-page-dropdown style="display: none; position: absolute; right: 8px; top: -200px; z-index: 10; width: 200px; max-height: 200px; overflow-y: auto; background: var(--tutor-surface-modal); border: 1px solid var(--tutor-border-secondary); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); padding: 8px;">
-							<?php
-							$current_map = isset( $consent['content_map'] ) ? json_decode( $consent['content_map'], true ) : array();
-							if ( ! is_array( $current_map ) ) {
-								$current_map = array();
-							}
-							?>
+						<div class="tutor-legal-consent-page-link-control">
+							<button type="button" class="tutor-iconic-btn tutor-legal-consent-page-link-trigger" data-page-dropdown-toggle aria-expanded="false" aria-label="<?php esc_attr_e( 'Add Page Link', 'tutor' ); ?>" title="<?php esc_attr_e( 'Add Page Link', 'tutor' ); ?>">
+								<i class="tutor-icon-plus-light" aria-hidden="true"></i>
+							</button>
+							<div class="tutor-option-dropdown tutor-legal-consent-page-dropdown" data-page-dropdown hidden>
 							<?php foreach ( $wp_pages as $page ) : ?>
 								<?php
-								$page_slug = strtolower( preg_replace( '/[^a-z0-9]+/', '_', sanitize_title( $page->post_title ) ) );
-								$is_selected = isset( $current_map[ $page_slug ] ) || in_array( (string) $page->ID, $current_map, true );
+								$page_slug   = strtolower( preg_replace( '/[^a-z0-9]+/', '_', sanitize_title( $page->post_title ) ) );
+								$page_key    = $page_slug . '_' . $page->ID;
+								$is_selected = isset( $current_map[ $page_key ] );
 								?>
-								<button type="button" class="tutor-btn tutor-btn-sm <?php echo $is_selected ? 'tutor-btn-primary' : 'tutor-btn-ghost'; ?> tutor-btn-block tutor-mb-1" data-page-btn value="<?php echo esc_attr( $page->ID ); ?>" data-page-slug="<?php echo esc_attr( $page_slug ); ?>" <?php echo $is_selected ? 'disabled' : ''; ?>>
+								<button type="button" class="tutor-legal-consent-page-dropdown-item<?php echo $is_selected ? ' is-selected' : ''; ?>" data-page-btn value="<?php echo esc_attr( $page->ID ); ?>" data-page-slug="<?php echo esc_attr( $page_slug ); ?>" data-page-key="<?php echo esc_attr( $page_key ); ?>" <?php echo $is_selected ? 'disabled' : ''; ?>>
 									<?php echo esc_html( $page->post_title ); ?>
 								</button>
 							<?php endforeach; ?>
+						</div>
 						</div>
 					</div>
 				</div>

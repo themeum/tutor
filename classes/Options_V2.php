@@ -1904,10 +1904,10 @@ class Options_V2 {
 										'enabled'    => 'on',
 										'title'      => __( 'Registration Consent', 'tutor' ),
 										'display_on' => array(
-											'signup_page' => 'signup_page',
+											'signup' => 'signup',
 										),
 										'message'    => __( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ),
-										'method'     => 'required_checkbox',
+										'method'     => 'mandatory_checkbox',
 										'collapsed'  => 'off',
 									),
 								),

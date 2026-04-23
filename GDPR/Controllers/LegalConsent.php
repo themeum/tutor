@@ -133,6 +133,78 @@ class LegalConsent {
 	}
 
 	/**
+	 * Get admin display place options for the legal consent settings screen.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<string, string>
+	 */
+	public static function get_display_place_options(): array {
+		$labels  = array(
+			self::DISPLAY_ON_SIGNUP       => __( 'Sign up page', 'tutor' ),
+			self::DISPLAY_ON_SIGNIN       => __( 'Login Page', 'tutor' ),
+			self::DISPLAY_ON_CHECKOUT     => __( 'Checkout', 'tutor' ),
+			self::DISPLAY_ON_SUBSCRIPTION => __( 'Subscription', 'tutor' ),
+			self::DISPLAY_ON_ENROLLMENT   => __( 'Enrollment', 'tutor' ),
+		);
+		$options = array();
+
+		foreach ( self::get_consent_places() as $place ) {
+			$options[ $place ] = $labels[ $place ] ?? ucwords( str_replace( '_', ' ', $place ) );
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Get admin consent method options for the legal consent settings screen.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<string, string>
+	 */
+	public static function get_consent_method_options(): array {
+		return array(
+			self::METHOD_MANDATORY_CHECK => __( 'Mandatory Checkbox', 'tutor' ),
+			self::METHOD_OPTIONAL_CHECK  => __( 'Optional Checkbox', 'tutor' ),
+			self::METHOD_TEXT_ONLY       => __( 'Display Text Only', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Get normalized legal consent items for admin rendering.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function get_consents(): array {
+		$items = ( new self( false ) )->model->get_all( array() );
+
+		if ( ! is_array( $items ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+				$item = (array) $item;
+
+				return array(
+					'id'          => isset( $item['id'] ) ? (int) $item['id'] : 0,
+					'enabled'     => ! empty( $item['is_active'] ) ? 'on' : 'off',
+					'title'       => $item['consent_title'] ?? '',
+					'display_on'  => $item['display_on'] ?? '',
+					'message'     => $item['consent_message'] ?? '',
+					'method'      => $item['consent_method'] ?? '',
+					'collapsed'   => 'off',
+					'content_map' => $item['consent_map'] ?? array(),
+				);
+			},
+			$items
+		);
+	}
+
+	/**
 	 * Handle legal consent CRUD AJAX requests.
 	 *
 	 * @since 4.0.0
@@ -142,7 +214,7 @@ class LegalConsent {
 	public function handle_legal_consent_ajax() {
 		$this->validate_ajax_request();
 
-		$action = Input::post( 'action', '' );
+		$action = Input::post( 'crud_action', '' );
 		$data   = Input::sanitize_array( $_POST ); //phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is validated.
 
 		switch ( $action ) {
@@ -460,12 +532,11 @@ class LegalConsent {
 			$data['created_at_utc'] = current_time( 'mysql', true );
 		} else {
 			$data = array_filter(
-				$request,
+				$data,
 				function ( $value ) {
 					return '' !== $value && null !== $value;
 				}
 			);
-			$data = array_map( 'sanitize_text_field', $data );
 		}
 
 		return $data;

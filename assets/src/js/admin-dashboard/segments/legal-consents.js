@@ -4,6 +4,29 @@ const getLegalConsentPage = () => document.getElementById(legalConsentPageId);
 
 const getHeaderSaveButton = () => document.getElementById('save_tutor_option');
 
+const showToast = (title, message, type = 'success') => {
+	if (typeof window.tutor_toast === 'function') {
+		window.tutor_toast(title, message, type);
+	}
+};
+
+const getResponseMessage = (data, fallbackMessage) => {
+	if (typeof data?.message === 'string' && data.message.length) {
+		return data.message;
+	}
+
+	if (typeof data?.data === 'string' && data.data.length) {
+		return data.data;
+	}
+
+	return fallbackMessage;
+};
+
+const isSuccessfulResponse = (data) => Boolean(
+	data?.success === true
+	|| (typeof data?.status_code === 'number' && data.status_code >= 200 && data.status_code < 300)
+);
+
 const isLegalConsentsPageActive = () => {
 	const page = getLegalConsentPage();
 	return !!page && page.classList.contains('is-active');
@@ -28,7 +51,6 @@ const syncFooterSaveButtons = () => {
 	}
 
 	page.querySelectorAll('[data-consent-save]').forEach((button) => {
-		button.disabled = headerSaveButton.disabled;
 		button.classList.toggle('is-loading', headerSaveButton.classList.contains('is-loading'));
 	});
 };
@@ -42,6 +64,65 @@ const updateConsentTitle = (card, value) => {
 	title.textContent = value.trim() || 'Registration Consent';
 };
 
+const captureCardState = (card) => ({
+	title: card.querySelector('[data-consent-title-input]')?.value || '',
+	enabled: Boolean(card.querySelector('[data-consent-enabled]')?.checked),
+	message: card.querySelector('textarea[name*="message"]')?.value || '',
+	method: card.querySelector('select[name*="method"]')?.value || '',
+	collapsed: card.classList.contains('is-collapsed'),
+	displayOn: Array.from(card.querySelectorAll('[name*="display_on"]'))
+		.filter((checkbox) => checkbox.checked)
+		.map((checkbox) => checkbox.value),
+});
+
+const isSameCardState = (left, right) => {
+	if (!left || !right) {
+		return false;
+	}
+
+	return left.title === right.title
+		&& left.enabled === right.enabled
+		&& left.message === right.message
+		&& left.method === right.method
+		&& left.collapsed === right.collapsed
+		&& left.displayOn.length === right.displayOn.length
+		&& left.displayOn.every((value, index) => value === right.displayOn[index]);
+};
+
+const applyCardState = (card, state) => {
+	const titleInput = card.querySelector('[data-consent-title-input]');
+	const enabledInput = card.querySelector('[data-consent-enabled]');
+	const enabledHiddenInput = card.querySelector('[data-consent-enabled-hidden]');
+	const messageInput = card.querySelector('textarea[name*="message"]');
+	const methodSelect = card.querySelector('select[name*="method"]');
+
+	if (titleInput) {
+		titleInput.value = state.title || '';
+		updateConsentTitle(card, titleInput.value);
+	}
+
+	if (enabledInput) {
+		enabledInput.checked = Boolean(state.enabled);
+	}
+
+	if (enabledHiddenInput) {
+		enabledHiddenInput.value = state.enabled ? 'on' : 'off';
+	}
+
+	if (messageInput) {
+		messageInput.value = state.message || '';
+		messageInput.dispatchEvent(new Event('input', { bubbles: true }));
+	}
+
+	if (methodSelect) {
+		methodSelect.value = state.method || methodSelect.value;
+	}
+
+	card.querySelectorAll('[name*="display_on"]').forEach((checkbox) => {
+		checkbox.checked = state.displayOn.includes(checkbox.value);
+	});
+};
+
 const markSettingsAsChanged = () => {
 	const headerSaveButton = getHeaderSaveButton();
 
@@ -51,6 +132,15 @@ const markSettingsAsChanged = () => {
 
 	headerSaveButton.removeAttribute('disabled');
 	syncFooterSaveButtons();
+};
+
+const syncCardSaveButton = (card, savedState) => {
+	const saveButton = card.querySelector('[data-consent-save]');
+	if (!saveButton || saveButton.classList.contains('is-loading')) {
+		return;
+	}
+
+	saveButton.disabled = isSameCardState(captureCardState(card), savedState);
 };
 
 const toggleConsentCard = (card, collapsed) => {
@@ -69,6 +159,87 @@ const toggleConsentCard = (card, collapsed) => {
 	markSettingsAsChanged();
 };
 
+const closePageDropdown = (dropdown, toggleButton) => {
+	if (!dropdown) {
+		return;
+	}
+
+	dropdown.hidden = true;
+
+	if (toggleButton) {
+		toggleButton.setAttribute('aria-expanded', 'false');
+	}
+};
+
+const closeAllPageDropdowns = (scope = document, exceptDropdown = null) => {
+	scope.querySelectorAll('[data-page-dropdown]').forEach((dropdown) => {
+		if (dropdown === exceptDropdown) {
+			return;
+		}
+
+		closePageDropdown(dropdown, dropdown.parentElement?.querySelector('[data-page-dropdown-toggle]'));
+	});
+};
+
+const bindPageLinkControl = (card) => {
+	const fieldInput = card.querySelector('[data-page-dropdown-toggle]')?.closest('.tutor-option-field-input');
+	const toggleButton = fieldInput?.querySelector('[data-page-dropdown-toggle]');
+	const dropdown = fieldInput?.querySelector('[data-page-dropdown]');
+	const textarea = fieldInput?.querySelector('textarea');
+	const pageButtons = fieldInput?.querySelectorAll('[data-page-btn]') || [];
+
+	if (!fieldInput || !toggleButton || !dropdown || !textarea) {
+		return;
+	}
+
+	const syncPageButtons = () => {
+		pageButtons.forEach((button) => {
+			const pageKey = button.dataset.pageKey;
+			const placeholder = pageKey ? `{${pageKey}}` : '';
+			const isSelected = placeholder && textarea.value.includes(placeholder);
+
+			button.disabled = Boolean(isSelected);
+			button.classList.toggle('is-selected', Boolean(isSelected));
+		});
+	};
+
+	toggleButton.addEventListener('click', (event) => {
+		event.stopPropagation();
+
+		const isOpening = dropdown.hidden;
+		closeAllPageDropdowns(card.closest('[data-legal-consents]') || document, isOpening ? dropdown : null);
+		dropdown.hidden = !isOpening;
+		toggleButton.setAttribute('aria-expanded', isOpening ? 'true' : 'false');
+	});
+
+	pageButtons.forEach((button) => {
+		button.addEventListener('click', () => {
+			const pageKey = button.dataset.pageKey;
+
+			if (!pageKey) {
+				return;
+			}
+
+			const placeholder = `{${pageKey}}`;
+			const currentValue = textarea.value.trim();
+
+			if (!currentValue.includes(placeholder)) {
+				textarea.value = currentValue ? `${currentValue} ${placeholder}` : placeholder;
+			}
+
+			syncPageButtons();
+			closePageDropdown(dropdown, toggleButton);
+			textarea.dispatchEvent(new Event('input', { bubbles: true }));
+		});
+	});
+
+	textarea.addEventListener('input', () => {
+		syncPageButtons();
+	});
+
+	syncPageButtons();
+};
+
 const bindCard = (card) => {
 	const titleInput = card.querySelector('[data-consent-title-input]');
 	const enabledInput = card.querySelector('[data-consent-enabled]');
@@ -77,10 +248,14 @@ const bindCard = (card) => {
 	const deleteButton = card.querySelector('[data-consent-delete]');
 	const cancelButton = card.querySelector('[data-consent-cancel]');
 	const saveButton = card.querySelector('[data-consent-save]');
+	let consentId = Number(card.dataset.consentId || 0);
+	let savedState = captureCardState(card);
+	syncCardSaveButton(card, savedState);
 
 	if (titleInput) {
 		titleInput.addEventListener('input', (event) => {
 			updateConsentTitle(card, event.target.value);
+			syncCardSaveButton(card, savedState);
 		});
 	}
 
@@ -88,37 +263,97 @@ const bindCard = (card) => {
 		enabledInput.addEventListener('change', () => {
 			enabledHiddenInput.value = enabledInput.checked ? 'on' : 'off';
 			markSettingsAsChanged();
+			syncCardSaveButton(card, savedState);
 		});
 	}
+
+	card.querySelectorAll('[name*="display_on"]').forEach((checkbox) => {
+		checkbox.addEventListener('change', () => {
+			markSettingsAsChanged();
+			syncCardSaveButton(card, savedState);
+		});
+	});
 
 	if (toggleButton) {
 		toggleButton.addEventListener('click', () => {
 			toggleConsentCard(card, !card.classList.contains('is-collapsed'));
+			syncCardSaveButton(card, savedState);
 		});
 	}
 
 	if (deleteButton) {
 		deleteButton.addEventListener('click', () => {
-			card.remove();
-			markSettingsAsChanged();
+			if (!consentId) {
+				card.remove();
+				showToast('Success', 'Legal consent removed.', 'success');
+				markSettingsAsChanged();
+				return;
+			}
+
+			const formData = new FormData();
+			formData.append('action', 'tutor_gdpr_legal_consents');
+			formData.append('crud_action', 'delete');
+			formData.append('_tutor_nonce', document.querySelector('input[name="_tutor_nonce"]').value);
+			formData.append('id', String(consentId));
+
+			deleteButton.classList.add('is-loading');
+			deleteButton.disabled = true;
+
+			fetch(ajaxurl, {
+				method: 'POST',
+				body: formData,
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					if (data.success) {
+						card.remove();
+						showToast('Success', getResponseMessage(data, 'Legal consent deleted successfully.'), 'success');
+						return;
+					}
+
+					showToast('Failed', getResponseMessage(data, 'Failed to delete legal consent.'), 'error');
+				})
+				.catch(() => {
+					showToast('Failed', 'Failed to delete legal consent.', 'error');
+				})
+				.finally(() => {
+					deleteButton.classList.remove('is-loading');
+					deleteButton.disabled = false;
+				});
 		});
 	}
 
 	if (cancelButton) {
 		cancelButton.addEventListener('click', () => {
-			window.location.reload();
+			applyCardState(card, savedState);
+			syncCardSaveButton(card, savedState);
 		});
 	}
+
+	card.querySelector('textarea[name*="message"]')?.addEventListener('input', () => {
+		markSettingsAsChanged();
+		syncCardSaveButton(card, savedState);
+	});
+
+	card.querySelector('select[name*="method"]')?.addEventListener('change', () => {
+		markSettingsAsChanged();
+		syncCardSaveButton(card, savedState);
+	});
 
 	if (saveButton) {
 		saveButton.addEventListener('click', () => {
 			const formData = new FormData();
-			formData.append('action', 'create');
+			formData.append('action', 'tutor_gdpr_legal_consents');
+			formData.append('crud_action', consentId ? 'update' : 'create');
+			formData.append('_tutor_nonce', document.querySelector('input[name="_tutor_nonce"]').value);
+			if (consentId) {
+				formData.append('id', String(consentId));
+			}
 			formData.append('consent_title', card.querySelector('[data-consent-title-input]')?.value || '');
 			formData.append('consent_message', card.querySelector('textarea[name*="message"]')?.value || '');
 
 			const displayOnCheckboxes = card.querySelectorAll('[name*="display_on"]');
-			const displayOnValues = Array.from(displayOnCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+			const displayOnValues = Array.from(displayOnCheckboxes).filter((cb) => cb.checked).map((cb) => cb.value);
 			formData.append('display_on', displayOnValues.join(','));
 
 			const methodSelect = card.querySelector('select[name*="method"]');
@@ -126,17 +361,22 @@ const bindCard = (card) => {
 				formData.append('consent_method', methodSelect.value);
 			}
 
-			const contentMapButtons = card.querySelectorAll('[data-page-btn]');
-			if (contentMapButtons.length) {
-				const selectedPages = {};
-				contentMapButtons.forEach(btn => {
-					if (!btn.disabled) return;
-					const pageId = btn.value;
-					const pageSlug = btn.dataset.pageSlug;
-					selectedPages[pageSlug] = pageId;
-				});
-				formData.append('consent_map', Object.keys(selectedPages).length > 0 ? JSON.stringify(selectedPages) : '{}');
-			}
+			const messageValue = card.querySelector('textarea[name*="message"]')?.value || '';
+			const usedPlaceholders = new Set(Array.from(messageValue.matchAll(/\{([a-zA-Z0-9_-]+)\}/g), (match) => match[1]));
+			const selectedPages = {};
+
+			card.querySelectorAll('[data-page-btn]').forEach((button) => {
+				const pageKey = button.dataset.pageKey;
+				if (!pageKey || !usedPlaceholders.has(pageKey)) {
+					return;
+				}
+
+				selectedPages[pageKey] = button.value;
+			});
+
+			formData.append('consent_map', Object.keys(selectedPages).length > 0 ? JSON.stringify(selectedPages) : '{}');
+
+			formData.append('is_active', enabledInput?.checked ? '1' : '0');
 
 			saveButton.classList.add('is-loading');
 			saveButton.disabled = true;
@@ -145,11 +385,27 @@ const bindCard = (card) => {
 				method: 'POST',
 				body: formData,
 			})
-				.then(res => res.json())
-				.then(data => {
-					if (data.success) {
-						window.location.reload();
+				.then((res) => res.json())
+				.then((data) => {
+					if (isSuccessfulResponse(data)) {
+						const returnedId = Number(data?.data?.id || 0);
+
+						if (!consentId && returnedId) {
+							consentId = returnedId;
+							card.dataset.consentId = String(returnedId);
+						}
+
+						toggleConsentCard(card, true);
+						savedState = captureCardState(card);
+						syncCardSaveButton(card, savedState);
+						showToast('Success', getResponseMessage(data, 'Legal consent saved successfully.'), 'success');
+						return;
 					}
+
+					showToast('Failed', getResponseMessage(data, 'Failed to save legal consent.'), 'error');
+				})
+				.catch(() => {
+					showToast('Failed', 'Failed to save legal consent.', 'error');
 				})
 				.finally(() => {
 					saveButton.classList.remove('is-loading');
@@ -157,6 +413,8 @@ const bindCard = (card) => {
 				});
 		});
 	}
+
+	bindPageLinkControl(card);
 };
 
 const appendConsentCard = (container) => {
@@ -208,48 +466,15 @@ const initLegalConsents = () => {
 		appendConsentCard(container);
 	});
 
-	container.querySelectorAll('[data-page-dropdown-toggle]').forEach((button) => {
-		button.addEventListener('click', (e) => {
-			e.stopPropagation();
-			const dropdown = button.closest('.tutor-option-field-input').querySelector('[data-page-dropdown]');
-			if (dropdown) {
-				dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-			}
-		});
-
-		const parent = button.closest('.tutor-option-field-input');
-		const pageButtons = parent.querySelectorAll('[data-page-btn]');
-		const textarea = parent.querySelector('textarea');
-
-		if (pageButtons.length && textarea) {
-			pageButtons.forEach(btn => {
-				btn.addEventListener('click', () => {
-					const pageId = btn.value;
-					const pageSlug = btn.dataset.pageSlug;
-					const pageTitle = btn.textContent.trim();
-
-					// Append page link to textarea
-					const linkText = `{{${pageSlug}|${pageId}}}`;
-					textarea.value = textarea.value ? `${textarea.value} ${linkText}` : linkText;
-
-					// Disable button and change style
-					btn.disabled = true;
-					btn.classList.remove('tutor-btn-ghost');
-					btn.classList.add('tutor-btn-primary');
-
-					markSettingsAsChanged();
-				});
-			});
+	document.addEventListener('click', (event) => {
+		const target = event.target;
+		if (!(target instanceof Element)) {
+			return;
 		}
 
-		document.addEventListener('click', (e) => {
-			if (!button.contains(e.target) && !button.closest('.tutor-option-field-input').querySelector('[data-page-dropdown]')?.contains(e.target)) {
-				const dropdown = parent.querySelector('[data-page-dropdown]');
-				if (dropdown) {
-					dropdown.style.display = 'none';
-				}
-			}
-		});
+		if (!target.closest('[data-page-dropdown]') && !target.closest('[data-page-dropdown-toggle]')) {
+			closeAllPageDropdowns(container);
+		}
 	});
 
 	toggleHeaderSaveVisibility();
