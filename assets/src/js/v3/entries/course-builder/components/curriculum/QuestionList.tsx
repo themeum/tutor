@@ -127,6 +127,12 @@ const questionTypeOptions: {
     icon: 'quizGraph',
     isPro: true,
   },
+  {
+    label: __('Puzzle', 'tutor'),
+    value: 'puzzle',
+    icon: 'quizPuzzle',
+    isPro: true,
+  },
 ];
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -139,7 +145,8 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
           option.value !== 'draw_image' &&
           option.value !== 'pin_image' &&
           option.value !== 'scale' &&
-          option.value !== 'coordinates',
+          option.value !== 'coordinates' &&
+          option.value !== 'puzzle',
       );
     }
     return questionTypeOptions;
@@ -289,7 +296,50 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                         is_correct: '1',
                       },
                     ]
-                  : [],
+                  : questionType === 'scale'
+                    ? [
+                        {
+                          _data_status: QuizDataStatus.NEW,
+                          // Keep the initial default scale config valid for immediate save flow.
+                          is_saved: true,
+                          answer_id: nanoid(),
+                          answer_title: '',
+                          belongs_question_id: questionId,
+                          belongs_question_type: 'scale',
+                          answer_two_gap_match: JSON.stringify({
+                            value: 50,
+                            config: {
+                              min: 0,
+                              max: 100,
+                              step: 1,
+                              defaultValue: 50,
+                              pxPerUnit: 10,
+                              labelEvery: 10,
+                              minorTickEvery: 5,
+                              precision: 0,
+                            },
+                          }),
+                          answer_view_format: 'scale',
+                          answer_order: 0,
+                          is_correct: '1',
+                        },
+                      ]
+                    : questionType === 'puzzle'
+                      ? [
+                          {
+                            _data_status: QuizDataStatus.NEW,
+                            is_saved: true,
+                            answer_id: nanoid(),
+                            answer_title: '',
+                            belongs_question_id: questionId,
+                            belongs_question_type: 'puzzle',
+                            answer_two_gap_match: '',
+                            answer_view_format: 'puzzle',
+                            answer_order: 0,
+                            is_correct: '1',
+                          },
+                        ]
+                      : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,
@@ -299,6 +349,12 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         question_type: questionType,
         randomize_question: false,
         show_question_mark: false,
+        ...(questionType === 'draw_image' && {
+          draw_image_threshold_percent: 70,
+        }),
+        ...(questionType === 'puzzle' && {
+          puzzle_grid_size: 4,
+        }),
       },
     } as QuizQuestion);
     setValidationError(null);

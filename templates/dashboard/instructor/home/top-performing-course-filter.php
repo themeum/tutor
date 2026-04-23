@@ -21,10 +21,11 @@ use Tutor\Components\Constants\Color;
 		placement: 'bottom-end',
 		offset: 4,
 	})"
+	x-transition.origin.top.right
 >
 	<button type="button" x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-gap-4">
 		<div>
-			<span class="tutor-text-subdued tutor-sm-hidden"><?php esc_html_e( 'By: ', 'tutor-pro' ); ?></span>
+			<span class="tutor-text-subdued tutor-sm-hidden"><?php esc_html_e( 'By: ', 'tutor' ); ?></span>
 			<span class="tutor-text-normal"><?php echo esc_html( $options[ $selected ] ); ?></span>
 		</div>
 		<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 16 )->color( Color::SECONDARY )->render(); ?>
@@ -35,6 +36,7 @@ use Tutor\Components\Constants\Color;
 		x-cloak
 		@click.outside="handleClickOutside()"
 		class="tutor-popover"
+		x-transition.origin.top.right
 	>
 		<div class="tutor-popover-menu" style="min-width: 108px;">
 			<?php foreach ( $options as $key => $option ) : ?>

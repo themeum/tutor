@@ -61,6 +61,13 @@ interface ScaleData {
   config: ScaleConfig;
 }
 
+function normalizeScaleConfig(config: ScaleConfig): ScaleConfig {
+  return {
+    ...config,
+    step: 1,
+  };
+}
+
 function parseStoredScaleData(value: string): ScaleData | null {
   if (!value || typeof value !== 'string') return null;
   try {
@@ -68,16 +75,16 @@ function parseStoredScaleData(value: string): ScaleData | null {
     if (typeof data.value === 'number' && data.config) {
       return {
         value: data.value,
-        config: {
+        config: normalizeScaleConfig({
           min: data.config.min ?? 0,
           max: data.config.max ?? 100,
-          step: data.config.step ?? 1,
+          step: 1,
           defaultValue: data.config.defaultValue ?? 50,
           pxPerUnit: data.config.pxPerUnit ?? 10,
           labelEvery: data.config.labelEvery ?? 10,
           minorTickEvery: data.config.minorTickEvery ?? 5,
           precision: data.config.precision ?? 0,
-        },
+        }),
       };
     }
   } catch {
@@ -99,7 +106,7 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
     return (
       parsed || {
         value: 50,
-        config: {
+        config: normalizeScaleConfig({
           min: 0,
           max: 100,
           step: 1,
@@ -108,18 +115,18 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
           labelEvery: 10,
           minorTickEvery: 5,
           precision: 0,
-        },
+        }),
       }
     );
   });
 
-  const [config, setConfig] = useState<ScaleConfig>(scaleData.config);
+  const [config, setConfig] = useState<ScaleConfig>(normalizeScaleConfig(scaleData.config));
 
   useEffect(() => {
     const parsed = parseStoredScaleData(option?.answer_two_gap_match ?? '');
     if (parsed) {
       setScaleData(parsed);
-      setConfig(parsed.config);
+      setConfig(normalizeScaleConfig(parsed.config));
     }
   }, [option?.answer_two_gap_match]);
 
@@ -149,7 +156,7 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
 
   const handleConfigChange = useCallback(
     (fieldKey: keyof ScaleConfig, value: number) => {
-      const newConfig = { ...config, [fieldKey]: value };
+      const newConfig = normalizeScaleConfig({ ...config, [fieldKey]: value });
 
       if (newConfig.max <= newConfig.min) {
         setValidationError?.({
@@ -218,15 +225,6 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
                 size="small"
                 value={String(config.max)}
                 onChange={(v) => handleConfigChange('max', parseConfigNumber(v, 100))}
-              />
-            </div>
-            <div css={styles.configField}>
-              <label css={styles.configLabel}>{__('Steps', __TUTOR_TEXT_DOMAIN__)}</label>
-              <TextInput
-                type="number"
-                size="small"
-                value={String(config.step)}
-                onChange={(v) => handleConfigChange('step', parseConfigNumber(v, 1))}
               />
             </div>
             <div css={styles.configField}>
