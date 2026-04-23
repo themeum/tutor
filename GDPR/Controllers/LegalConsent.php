@@ -149,7 +149,7 @@ class LegalConsent {
 	public function handle_legal_consent_ajax() {
 		$this->validate_ajax_request();
 
-		$action = Input::post( 'action', '' );
+		$action = Input::post( 'crud_action', '' );
 		$data   = Input::sanitize_array( $_POST ); //phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is validated.
 
 		switch ( $action ) {
@@ -530,7 +530,7 @@ class LegalConsent {
 	public static function render_consent_field( object $consent ): void {
 		$is_required  = self::is_required( $consent );
 		$is_text_only = self::METHOD_TEXT_ONLY === $consent->consent_method;
-		$field_name   = strtolower( str_replace( ' ', '_', $consent->consent_title ) );
+		$field_name   = self::get_field_name( $consent );
 
 		?>
 		<div class="tutor-form-row tutor-mb-8">
@@ -559,6 +559,19 @@ class LegalConsent {
 	 */
 	public static function is_required( object $consent ): bool {
 		return self::METHOD_MANDATORY_CHECK === $consent->consent_method;
+	}
+
+	/**
+	 * Get the consent field name
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $consent Consent settings object.
+	 *
+	 * @return string
+	 */
+	public static function get_field_name( object $consent ): string {
+		return strtolower( str_replace( ' ', '_', $consent->consent_title ) );
 	}
 
 
@@ -644,10 +657,18 @@ class LegalConsent {
 	 * @return WP_Error|true WP_Error when the consent is required but not present in the req.
 	 */
 	public static function has_consent( string $display_key, array $request ) {
-
 		$consents = self::get_consent_by_display_key( $display_key );
 		if ( tutor_utils()->count( $consents ) ) {
-			// @TODO.
+			foreach ( $consents as $consent ) {
+				$is_required = self::is_required( $consent );
+				$field_name  = self::get_field_name( $consent );
+				if ( $is_required ) {
+					$is_checked = $request[ $field_name ] ?? 0;
+					if ( ! $is_checked ) {
+						return new WP_Error( 'consent_error', __( 'Please accept the consent field', 'tutor' ) );
+					}
+				}
+			}
 		} else {
 			$terms_conditions_link = tutor_utils()->get_toc_page_link();
 			if ( $terms_conditions_link ) {
