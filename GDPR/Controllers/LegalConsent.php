@@ -83,7 +83,7 @@ class LegalConsent {
 	 * @return void
 	 */
 	private function register_hooks() {
-		add_action( 'wp_ajax_tutor_gdpr_compliance_ajax', array( $this, 'handle_legal_consent_ajax' ) );
+		add_action( 'wp_ajax_tutor_gdpr_legal_consents', array( $this, 'handle_legal_consent_ajax' ) );
 		add_filter( 'tutor_localize_data', array( $this, 'extend_localize_data' ) );
 	}
 
@@ -171,7 +171,7 @@ class LegalConsent {
 	 *
 	 * @return array Consent places.
 	 */
-	public static function get_consent_by_place_key( string $place_key ): array {
+	public static function get_consent_by_display_key( string $place_key ): array {
 		if ( ! in_array( $place_key, self::get_consent_places(), true ) ) {
 			throw new Exception( esc_html__( 'Invalid place key', 'tutor' ) );
 		}
