@@ -15,7 +15,7 @@ use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
-use Tutor\Components\Nav;
+use Tutor\Components\DropdownFilter;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
@@ -63,36 +63,30 @@ $post_type_args     = $post_type_query ? array( 'type' => $post_type_query ) : a
 
 $current_url = add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( $active_tab ) );
 
-$nav_items = array(
+$dropdown_options = array(
 	array(
-		'type'    => 'dropdown',
-		'active'  => true,
-		'options' => array(
-			array(
-				'label'  => __( 'Published', 'tutor' ),
-				'count'  => $count_map['publish'] ?? 0,
-				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses' ) ),
-				'active' => 'my-courses' === $active_tab,
-			),
-			array(
-				'label'  => __( 'Pending', 'tutor' ),
-				'count'  => $count_map['pending'] ?? 0,
-				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/pending-courses' ) ),
-				'active' => 'my-courses/pending-courses' === $active_tab,
-			),
-			array(
-				'label'  => __( 'Draft', 'tutor' ),
-				'count'  => $count_map['draft'] ?? 0,
-				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/draft-courses' ) ),
-				'active' => 'my-courses/draft-courses' === $active_tab,
-			),
-			array(
-				'label'  => __( 'Schedule', 'tutor' ),
-				'count'  => $count_map['future'] ?? 0,
-				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/schedule-courses' ) ),
-				'active' => 'my-courses/schedule-courses' === $active_tab,
-			),
-		),
+		'label'  => __( 'Published', 'tutor' ),
+		'count'  => $count_map['publish'] ?? 0,
+		'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses' ) ),
+		'active' => 'my-courses' === $active_tab,
+	),
+	array(
+		'label'  => __( 'Pending', 'tutor' ),
+		'count'  => $count_map['pending'] ?? 0,
+		'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/pending-courses' ) ),
+		'active' => 'my-courses/pending-courses' === $active_tab,
+	),
+	array(
+		'label'  => __( 'Draft', 'tutor' ),
+		'count'  => $count_map['draft'] ?? 0,
+		'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/draft-courses' ) ),
+		'active' => 'my-courses/draft-courses' === $active_tab,
+	),
+	array(
+		'label'  => __( 'Schedule', 'tutor' ),
+		'count'  => $count_map['future'] ?? 0,
+		'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/schedule-courses' ) ),
+		'active' => 'my-courses/schedule-courses' === $active_tab,
 	),
 );
 
@@ -118,7 +112,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 	</div>
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-border-b">
-			<?php Nav::make()->variant( Variant::PRIMARY )->size( Size::SMALL )->items( $nav_items )->render(); ?>
+			<?php DropdownFilter::make()->variant( Variant::PRIMARY_SOFT )->size( Size::SMALL )->options( $dropdown_options )->render(); ?>
 			<div class="tutor-hidden tutor-sm-block">
 				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
 			</div>

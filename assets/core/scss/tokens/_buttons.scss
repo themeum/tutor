@@ -147,7 +147,6 @@ $tutor-button-ghost-brand-border-shadow-disabled: var(
 
 // --- Shared ---
 $tutor-button-disabled: var(--tutor-button-disabled);
-$tutor-button-caution: var(--tutor-button-caution);
 $tutor-button-success: var(--tutor-button-success);
 $tutor-button-success-hover: var(--tutor-button-success-hover);
 $tutor-button-success-focused: var(--tutor-button-success-focused);
@@ -178,7 +177,6 @@ $tutor-buttons: (
   outline-hover: $tutor-button-outline-hover,
   outline-focused-inverse: $tutor-button-outline-focused-inverse,
   ghost-hover: $tutor-button-ghost-hover,
-  caution: $tutor-button-caution,
   success: $tutor-button-success,
   success-hover: $tutor-button-success-hover,
   success-focused: $tutor-button-success-focused,

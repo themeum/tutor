@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 global $tutor_current_content_id;
 
 $attachments = tutor_utils()->get_attachments( $tutor_current_content_id );
@@ -26,11 +27,11 @@ $attachments = tutor_utils()->get_attachments( $tutor_current_content_id );
 				<div class="tutor-rounded-md tutor-flex tutor-flex-col tutor-gap-2">
 					<div class="tutor-card tutor-attachment-card">
 						<div class="tutor-attachment-card-icon" aria-hidden="true">
-							<?php tutor_utils()->render_svg_icon( Icon::RESOURCES ); ?>
+							<?php SvgIcon::make()->name( Icon::RESOURCES )->render(); ?>
 						</div>
 						<div class="tutor-attachment-card-body">
 							<div class="tutor-attachment-card-title">
-								<?php echo esc_html( $attachment->title ); ?>
+								<?php echo esc_html( sprintf( '%s (%s)', $attachment->title, $attachment->ext ) ); ?>
 							</div>
 							<span class="tutor-attachment-card-meta">
 								<?php echo esc_html( $attachment->size ); ?>			
@@ -38,7 +39,7 @@ $attachments = tutor_utils()->get_attachments( $tutor_current_content_id );
 						</div>
 						<div class="tutor-attachment-card-actions">
 							<a href="<?php echo esc_url( $attachment->url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" download>
-								<?php tutor_utils()->render_svg_icon( Icon::DOWNLOAD_2 ); ?>
+								<?php SvgIcon::make()->name( Icon::DOWNLOAD_2 )->render(); ?>
 							</a>
 						</div>
 					</div>

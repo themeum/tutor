@@ -1,0 +1,18 @@
+// Design Tokens - Quiz Colors
+// CSS variables for theme-aware quiz colors
+
+// =============================================================================
+// CSS VARIABLE REFERENCES (theme-aware)
+// =============================================================================
+
+$tutor-quiz-idle: var(--tutor-quiz-idle);
+$tutor-quiz-hover: var(--tutor-quiz-hover);
+
+// =============================================================================
+// QUIZ COLOR MAP (for utility generation)
+// =============================================================================
+
+$tutor-quiz-colors: (
+  idle: $tutor-quiz-idle,
+  hover: $tutor-quiz-hover,
+);
