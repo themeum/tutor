@@ -828,14 +828,19 @@ class QueryHelper {
 		global $wpdb;
 
 		$table        = self::prepare_table_name( $table );
-		$where_clause = self::prepare_where_clause( $where );
+		$where_clause = '';
+		$where        = self::prepare_where_clause( $where );
+		if ( ! empty( $where ) ) {
+			$where_clause = "WHERE $where";
+		}
+
 		$limit        = (int) sanitize_text_field( $limit );
 		$limit_clause = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
 
 		//phpcs:disable
 		$query = "SELECT *
 				FROM {$table}
-				WHERE {$where_clause}
+				{$where_clause}
 				ORDER BY {$order_by} {$order}
 				{$limit_clause}";
 

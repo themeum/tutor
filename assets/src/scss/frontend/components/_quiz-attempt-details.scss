@@ -134,6 +134,28 @@
     }
   }
 
+  .tutor-quiz-summary-footer {
+    @include tutor-flex(row, center, center);
+    padding: $tutor-spacing-7;
+    background-color: $tutor-surface-base;
+    border-top: 1px solid $tutor-border-idle;
+    box-shadow: 0px -4px 13px -2px #1018280f;
+    position: sticky;
+    bottom: 0;
+
+    a.tutor-btn {
+      min-width: 320px;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-6;
+
+      a.tutor-btn {
+        width: 100%;
+      }
+    }
+  }
+
   // Allow the main column to shrink on narrow viewports (avoids wide children e.g. scale track forcing overflow).
   .tutor-quiz-summary-content {
     min-width: 0;

@@ -509,51 +509,46 @@ class Quiz_Attempts_List {
 	 * @param array   $attempt the quiz attempt.
 	 * @param integer $attempts_count the quiz attempt count.
 	 * @param integer $quiz_id the quiz id.
+	 * @param bool    $is_learning_area is learning area list item.
 	 *
 	 * @return void
 	 */
-	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0 ) {
+	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0, $is_learning_area = false ) {
 		$is_quiz_details_hidden = $this->is_attempt_details_hidden();
 		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
 		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
 		$attempts_allowed       = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
-		$can_retry              = Quiz::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempts_count );
 
-		// Only add retry option to the first attempt.
-		if ( ! $can_retry || ! $attempts_count ) {
+		$can_retry  = ! $is_learning_area && Quiz::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempts_count );
+		$show_retry = $can_retry && $attempts_count > 0;
 
-			if ( $is_quiz_details_hidden ) {
-				return;
-			}
+		if ( ! $show_retry && $is_quiz_details_hidden ) {
+			return;
+		}
 
-			Popover::make()
+		$popover = Popover::make()
 			->trigger( $this->get_kebab_button() )
 			->placement( 'bottom' )
-			->menu_item( $this->get_details_item( $attempt ) )
-			->menu_min_width( '110px' )
-			->render();
-		} else {
-			$popover = Popover::make()
-				->trigger( $this->get_kebab_button() )
-				->placement( 'bottom' )
-				->menu_min_width( '110px' )
-				->menu_item(
-					array(
-						'tag'     => 'button',
-						'content' => __( 'Retry', 'tutor' ),
-						'icon'    => SvgIcon::make()->name( Icon::RELOAD_3 )->size( 20 )->get(),
-						'attr'    => array(
-							'@click' => $this->get_retry_attribute( $quiz_id ),
-						),
-					)
-				);
+			->menu_min_width( '110px' );
 
-			if ( ! $is_quiz_details_hidden ) {
-				$popover->menu_item( $this->get_details_item( $attempt ) );
-			}
-
-			$popover->render();
+		if ( $show_retry ) {
+			$popover->menu_item(
+				array(
+					'tag'     => 'button',
+					'content' => __( 'Retry', 'tutor' ),
+					'icon'    => SvgIcon::make()->name( Icon::RELOAD_3 )->size( 20 )->get(),
+					'attr'    => array(
+						'@click' => $this->get_retry_attribute( $quiz_id ),
+					),
+				)
+			);
 		}
+
+		if ( ! $is_quiz_details_hidden ) {
+			$popover->menu_item( $this->get_details_item( $attempt ) );
+		}
+
+		$popover->render();
 	}
 
 	/**
