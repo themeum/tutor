@@ -23,7 +23,8 @@
   .tutor-content-drip-card,
   .tutor-dashboard-notification .tutor-popover,
   .tutor-profile-settings-tab.tutor-tabs-nav,
-  .tutor-devices {
+  .tutor-devices,
+  .tutor-certificate-share-modal .tutor-certificate-link-wrapper input {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
   }
 
@@ -43,7 +44,8 @@
   .tutor-quiz-summary .tutor-quiz-result,
   .tutor-quiz-question,
   .tutor-quiz-summary-page .tutor-quiz-review-dnd,
-  .tutor-course-info .tutor-course-info-certificate {
+  .tutor-course-info .tutor-course-info-certificate,
+  .tutor-certificate-card {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-4xl, sm);
   }
 
@@ -185,7 +187,8 @@
     border-radius: $tutor-radius-4xl;
   }
 
-  .tutor-average-rating {
+  .tutor-average-rating,
+  .tutor-certificate-icon {
     border-radius: $tutor-radius-2xl;
   }
 

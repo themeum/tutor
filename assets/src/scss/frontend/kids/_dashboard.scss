@@ -7,7 +7,8 @@
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
 
-  .tutor-badge {
+  .tutor-badge,
+  .tutor-file-preview {
     border-radius: $tutor-radius-2xl;
   }
 
@@ -127,10 +128,6 @@
   .tutor-discussion-card-wrapper {
     gap: $tutor-spacing-6 $tutor-spacing-4;
 
-    @include tutor-breakpoint-down(sm) {
-      padding: $tutor-spacing-4;
-    }
-
     .tutor-card {
       box-shadow: none;
       background-color: $tutor-surface-l1-hover;
@@ -182,6 +179,44 @@
     .tutor-lesson-note:hover {
       @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
       border-bottom: 1px solid transparent;
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    .tutor-dashboard-header-user-popover,
+    .tutor-profile-settings-tab.tutor-tabs-nav {
+      border-radius: 0px !important;
+      box-shadow: none !important;
+    }
+
+    .tutor-discussion-card-wrapper {
+      padding: $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-4;
+      gap: $tutor-spacing-5;
+    }
+
+    .tutor-dashboard-page-card,
+    .tutor-calendar {
+      border-radius: 0px;
+      box-shadow: none;
+    }
+
+    .tutor-dashboard-page-card-header {
+      margin-bottom: $tutor-spacing-5;
+    }
+
+    .tutor-profile-settings-tab button .tutor-icon,
+    .tutor-dashboard-page-card-header,
+    .tutor-calendar-tabs {
+      @include tutor-kids-shadow(false);
+    }
+
+    .tutor-dashboard-page-card-body,
+    .tutor-calendar-content {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
+    }
+
+    .tutor-dashboard-page-card-header {
+      border-radius: $tutor-radius-6xl;
     }
   }
 }
