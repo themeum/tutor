@@ -3441,7 +3441,7 @@ class Course extends Tutor_Base {
 			<p class="tutor-p3 tutor-text-secondary tutor-text-center tutor-mb-7 tutor-px-11">
 				<?php esc_html_e( 'You have not completed all required lessons and assessments. ', 'tutor' ); ?>
 			</p>
-			<div class="tutor-border tutor-p-5 tutor-flex tutor-flex-column tutor-gap-4 tutor-surface-base tutor-rounded-md">
+			<div class="tutor-finish-course-progress tutor-border tutor-p-5 tutor-flex tutor-flex-column tutor-gap-4 tutor-surface-base tutor-rounded-md">
 				<div class="tutor-flex tutor-items-center tutor-justify-between">
 					<div class="tutor-p3 tutor-text-secondary">
 						<?php esc_html_e( 'Your Progress', 'tutor' ); ?>
@@ -3478,6 +3478,7 @@ class Course extends Tutor_Base {
 	 */
 	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0, string $size = Size::MEDIUM ): void {
 		$button = Button::make()
+		->variant( Variant::SECONDARY )
 		->label( __( 'Complete the Course', 'tutor' ) )
 		->icon( Icon::TICK_MARK )
 		->size( $size )
@@ -3506,6 +3507,7 @@ class Course extends Tutor_Base {
 	 */
 	public static function render_course_retake_btn( string $modal_id, string $size = Size::MEDIUM ): void {
 		Button::make()
+		->variant( Variant::SECONDARY )
 		->label( __( 'Retake this Course', 'tutor' ) )
 		->icon( Icon::RELOAD_4 )
 		->size( $size )

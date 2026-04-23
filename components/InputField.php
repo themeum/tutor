@@ -557,16 +557,23 @@ class InputField extends BaseComponent {
 	}
 
 	/**
-	 * Set help text.
+	 * Set the help text with HTML sanitization.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @param string $text Help text.
+	 * @param array  $allowed_tags Optional. Allowed HTML tags and attributes for wp_kses().
 	 *
 	 * @return $this
 	 */
-	public function help_text( $text ) {
-		$this->help_text = $text;
+	public function help_text( $text, $allowed_tags = array() ) {
+
+		if ( ! empty( $allowed_tags ) && is_array( $allowed_tags ) ) {
+			$this->help_text = wp_kses( $text, $allowed_tags );
+			return $this;
+		}
+
+		$this->help_text = esc_html( $text );
 		return $this;
 	}
 
@@ -1990,7 +1997,7 @@ class InputField extends BaseComponent {
 				x-show="!errors?.[\'%1$s\']?.message"
 			>%2$s</div>',
 			esc_attr( $this->name ),
-			esc_html( $this->help_text )
+			$this->help_text
 		);
 
 		$strength_meter_html = '';

@@ -24,6 +24,7 @@ use Tutor\Components\Popover;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Components\SvgIcon;
+use Tutor\Components\Progress;
 
 /**
  * Quiz attempt class
@@ -263,6 +264,8 @@ class Quiz_Attempts_List {
 			$failed_attempts  = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $date_filter, $order_filter, QuizModel::RESULT_FAIL, true, true );
 		}
 
+		$filter_url = remove_query_arg( 'current_page', $url );
+
 		$nav_links = array(
 			'type'    => 'dropdown',
 			'active'  => true,
@@ -271,24 +274,24 @@ class Quiz_Attempts_List {
 				array(
 					'label'  => __( 'All', 'tutor' ),
 					'count'  => $all_attempts,
-					'url'    => remove_query_arg( 'result' ),
+					'url'    => remove_query_arg( 'result', $filter_url ),
 					'active' => '' === $result_filter,
 				),
 				array(
 					'label'  => __( 'Pending', 'tutor' ),
-					'url'    => UrlHelper::add_query_params( $url, array( 'result' => QuizModel::RESULT_PENDING ) ),
+					'url'    => UrlHelper::add_query_params( $filter_url, array( 'result' => QuizModel::RESULT_PENDING ) ),
 					'count'  => $pending_attempts,
 					'active' => QuizModel::RESULT_PENDING === $result_filter,
 				),
 				array(
 					'label'  => __( 'Failed', 'tutor' ),
-					'url'    => UrlHelper::add_query_params( $url, array( 'result' => QuizModel::RESULT_FAIL ) ),
+					'url'    => UrlHelper::add_query_params( $filter_url, array( 'result' => QuizModel::RESULT_FAIL ) ),
 					'count'  => $failed_attempts,
 					'active' => QuizModel::RESULT_FAIL === $result_filter,
 				),
 				array(
 					'label'  => __( 'Passed', 'tutor' ),
-					'url'    => UrlHelper::add_query_params( $url, array( 'result' => QuizModel::RESULT_PASS ) ),
+					'url'    => UrlHelper::add_query_params( $filter_url, array( 'result' => QuizModel::RESULT_PASS ) ),
 					'count'  => $passed_attempts,
 					'active' => QuizModel::RESULT_PASS === $result_filter,
 				),
@@ -440,7 +443,12 @@ class Quiz_Attempts_List {
 	 * @return void
 	 */
 	public function render_retry_button( $course_id = 0, $quiz_id = 0, $attempt = array(), $attempts_count = 0 ) {
-		if ( User::is_student_view() && $this->should_retry( $attempt, $attempts_count ) ) {
+		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
+		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
+		$attempts_allowed       = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
+		$can_retry              = Quiz::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempts_count );
+
+		if ( User::is_student_view() && $can_retry ) {
 			Button::make()
 				->label( __( 'Retry', 'tutor' ) )
 				->icon( Icon::RELOAD )
@@ -449,34 +457,6 @@ class Quiz_Attempts_List {
 				->attr( '@click', $this->get_retry_attribute( $quiz_id ) )
 				->render();
 		}
-	}
-
-	/**
-	 * Whether student can retry attempt or not.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array   $attempt the quiz attempt.
-	 * @param integer $attempts_count the quiz attempt count.
-	 *
-	 * @return boolean
-	 */
-	private function should_retry( $attempt = array(), $attempts_count = 0 ): bool {
-		$attempt_info = $attempt['attempt_info'] ?? array();
-
-		$should_retry = false;
-
-		if ( tutor_utils()->count( $attempt_info ) ) {
-			if ( array_key_exists( 'limit_attempts_allowed', $attempt_info ) ) {
-				$limit_attempts_allowed = '1' === (string) $attempt_info['limit_attempts_allowed'];
-				$allowed_attempts       = (int) ( $attempt_info['attempts_allowed'] ?? 0 );
-				$should_retry           = Quiz::can_retry_quiz( $limit_attempts_allowed, $allowed_attempts, $attempts_count );
-			} else {
-				$should_retry = 'retry' === ( $attempt_info['feedback_mode'] ?? '' );
-			}
-		}
-
-		return $should_retry;
 	}
 
 	/**
@@ -529,47 +509,82 @@ class Quiz_Attempts_List {
 	 * @param array   $attempt the quiz attempt.
 	 * @param integer $attempts_count the quiz attempt count.
 	 * @param integer $quiz_id the quiz id.
+	 * @param bool    $is_learning_area is learning area list item.
 	 *
 	 * @return void
 	 */
-	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0 ) {
+	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0, $is_learning_area = false ) {
 		$is_quiz_details_hidden = $this->is_attempt_details_hidden();
+		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
+		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
+		$attempts_allowed       = (int) ( $quiz_settings['attempts_allowed'] ?? 0 );
 
-		// Only add retry option to the first attempt.
-		if ( ! $this->should_retry( $attempt, $attempts_count ) || ! $attempts_count ) {
+		$can_retry  = ! $is_learning_area && Quiz::can_retry_quiz( $limit_attempts_allowed, $attempts_allowed, $attempts_count );
+		$show_retry = $can_retry && $attempts_count > 0;
 
-			if ( $is_quiz_details_hidden ) {
-				return;
-			}
+		if ( ! $show_retry && $is_quiz_details_hidden ) {
+			return;
+		}
 
-			Popover::make()
+		$popover = Popover::make()
 			->trigger( $this->get_kebab_button() )
 			->placement( 'bottom' )
-			->menu_item( $this->get_details_item( $attempt ) )
-			->menu_min_width( '110px' )
-			->render();
-		} else {
-			$popover = Popover::make()
-				->trigger( $this->get_kebab_button() )
-				->placement( 'bottom' )
-				->menu_min_width( '110px' )
-				->menu_item(
-					array(
-						'tag'     => 'button',
-						'content' => __( 'Retry', 'tutor' ),
-						'icon'    => SvgIcon::make()->name( Icon::RELOAD_3 )->size( 20 )->get(),
-						'attr'    => array(
-							'@click' => $this->get_retry_attribute( $quiz_id ),
-						),
-					)
-				);
+			->menu_min_width( '110px' );
 
-			if ( ! $is_quiz_details_hidden ) {
-				$popover->menu_item( $this->get_details_item( $attempt ) );
-			}
-
-			$popover->render();
+		if ( $show_retry ) {
+			$popover->menu_item(
+				array(
+					'tag'     => 'button',
+					'content' => __( 'Retry', 'tutor' ),
+					'icon'    => SvgIcon::make()->name( Icon::RELOAD_3 )->size( 20 )->get(),
+					'attr'    => array(
+						'@click' => $this->get_retry_attribute( $quiz_id ),
+					),
+				)
+			);
 		}
+
+		if ( ! $is_quiz_details_hidden ) {
+			$popover->menu_item( $this->get_details_item( $attempt ) );
+		}
+
+		$popover->render();
+	}
+
+	/**
+	 * Render quiz attempt marks percentage.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $attempt_result the quiz attempt `QuizModel::RESULT_PASS | QuizModel::RESULT_PENDING | QuizModel::RESULT_FAIL`.
+	 * @param int    $earned_percentage the earned percentage.
+	 * @param string $size the size of the component.
+	 * @param string $wrapper_class the wrapper class of the component.
+	 *
+	 * @return void
+	 */
+	public static function render_quiz_attempt_marks_percentage( $attempt_result = '', $earned_percentage = 0, $size = 'small', $wrapper_class = '' ) {
+		$statics_stroke_color = 'var(--tutor-icon-critical)';
+
+		if ( QuizModel::RESULT_PASS === $attempt_result ) {
+			$statics_stroke_color = 'var(--tutor-icon-success-secondary)';
+
+			if ( 100 === (int) $earned_percentage ) {
+				$statics_stroke_color = 'var(--tutor-icon-success-primary)';
+			}
+		} elseif ( QuizModel::RESULT_PENDING === $attempt_result ) {
+			$statics_stroke_color = 'var(--tutor-icon-warning-secondary)';
+		}
+
+		Progress::make()
+			->type( 'circle' )
+			->value( $earned_percentage )
+			->size( $size )
+			->stroke_color( 'var(--tutor-border-idle)' )
+			->progress_stroke_color( $statics_stroke_color )
+			->animated()
+			->attr( 'class', $wrapper_class )
+			->render();
 	}
 
 	/**

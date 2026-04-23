@@ -1,9 +1,12 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
-.tutor-reviews {
-  @include tutor-flex(column);
-  gap: $tutor-spacing-5;
+.tutor-user-reviews {
+  margin-block: $tutor-spacing-9;
+
+  @include tutor-breakpoint-down(sm) {
+    margin-block: $tutor-spacing-6;
+  }
 }
 
 .tutor-review {

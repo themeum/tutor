@@ -303,6 +303,8 @@ class Instructors_List {
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$status        = sanitize_text_field( $status );
 		update_user_meta( $instructor_id, '_tutor_instructor_status', $status );
+		// Set view as student for blocked and pending instructor.
+		update_user_meta( $instructor_id, User::VIEW_MODE_USER_META, User::VIEW_AS_STUDENT );
 		$instructor = new \WP_User( $instructor_id );
 		$instructor->remove_role( tutor()->instructor_role );
 	}

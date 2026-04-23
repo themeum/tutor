@@ -37,7 +37,7 @@
 
   button.plyr__control,
   .plyr__control {
-    color: #fff;
+    color: $tutor-text-primary-inverse;
     border: none;
   }
 
@@ -49,6 +49,18 @@
     background: var(--plyr-video-control-background-hover, var(--plyr-color-main, var(--plyr-color-main, #00b3ff)));
     color: #fff;
     color: var(--plyr-video-control-color-hover, #fff);
+  }
+
+  .plyr__controls__item.plyr__menu {
+    .plyr__menu__container {
+      [role=menu] button {
+        color: $tutor-text-primary;
+        &:hover,
+        &:focus {
+          color: $tutor-text-primary-inverse;
+        }
+      }
+    }
   }
 
   .plyr__control--overlaid {

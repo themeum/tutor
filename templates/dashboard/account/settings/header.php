@@ -17,7 +17,7 @@ use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 
-$back_url = UrlHelper::back( tutor_utils()->tutor_dashboard_url() );
+$back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_utils()->tutor_dashboard_url() ) );
 
 ?>
 <div class="tutor-profile-header">
@@ -27,9 +27,11 @@ $back_url = UrlHelper::back( tutor_utils()->tutor_dashboard_url() );
 			isDirty: {}
 		}"
 		class="tutor-dashboard-container tutor-flex tutor-items-center tutor-justify-between">
-		<div class="tutor-profile-header-left tutor-flex tutor-items-center"
+		<div 
+			class="tutor-profile-header-left tutor-flex tutor-items-center"
 			@resize.window="windowWidth = window.innerWidth"
 			@tutor-form-state-change.document="if ($event.detail.id === `tutor-${activeTab}-form`) isDirty[$event.detail.id] = $event.detail.isDirty"
+			:style="{ width: isDirty[`tutor-${activeTab}-form`] ? 'auto' : 'calc(100% - 36px)' }"
 		>
 			<?php
 			Button::make()

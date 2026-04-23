@@ -6,6 +6,7 @@
 // =============================================================================
 
 $tutor-border-idle: var(--tutor-border-idle);
+$tutor-border-idle2: var(--tutor-border-idle2);
 $tutor-border-hover: var(--tutor-border-hover);
 $tutor-border-inverse: var(--tutor-border-inverse);
 $tutor-border-brand: var(--tutor-border-brand);
@@ -45,6 +46,7 @@ $tutor-radius-full: 1000px;
 
 $tutor-border-colors: (
   idle: $tutor-border-idle,
+  idle2: $tutor-border-idle2,
   hover: $tutor-border-hover,
   inverse: $tutor-border-inverse,
   brand: $tutor-border-brand,

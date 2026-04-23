@@ -32,7 +32,9 @@ $currency_symbol      = $data['currency_symbol'] ?? '';
 <div class="tutor-flex tutor-gap-6 tutor-p-5 tutor-radius-6 tutor-mb-7 tutor-withdrawal-available-balance">
 	<div class="tutor-withdrawal-available-balance-icon"><?php SvgIcon::make()->name( Icon::WALLET )->size( 24 )->color( Color::BRAND )->render(); ?></div>
 	<div>
-		<div class="tutor-text-h4 tutor-font-bold tutor-text-primary"><?php echo esc_html( tutor_utils()->tutor_price( $available_balance ) ); ?></div>
+		<div class="tutor-text-h4 tutor-font-bold tutor-text-primary">
+			<?php echo wp_kses( tutor_utils()->tutor_price( $available_balance ), tutor_price_allowed_html() ); ?>
+		</div>
 		<div class="tutor-text-tiny tutor-text-secondary"><?php esc_html_e( 'Available Balance', 'tutor' ); ?></div>
 	</div>
 </div>
@@ -69,12 +71,13 @@ InputField::make()
 	<?php SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 	<div class="tutor-tiny tutor-font-regular tutor-text-secondary">
 	<?php
-	echo esc_html(
+	echo wp_kses(
 		sprintf(
 			// translators: %s: Minimum withdrawal amount.
 			__( 'Minimum withdrawal amount is: %s', 'tutor' ),
 			tutor_utils()->tutor_price( $min_withdrawal )
 		),
+		tutor_price_allowed_html()
 	);
 	?>
 	</div>

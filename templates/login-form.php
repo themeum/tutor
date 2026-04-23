@@ -58,7 +58,7 @@ do_action( 'tutor_before_login_form' );
 				<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
 			</template>
 		</span>
-		<input :type="show ? 'text' : 'password'" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" x-model="value" size="20" required style="padding-right: 45px;"/>
+		<input :type="show ? 'text' : 'password'" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" x-model="value" size="20" required style="padding-right: 45px;" autocomplete="off"/>
 	</div>
 
 	<div class="tutor-login-error" role="alert" aria-live="polite"></div>

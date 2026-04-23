@@ -32,7 +32,7 @@ if ( ! $attempt_data || ! $can_review ) {
 
 $form_id             = 'quiz-attempt-review-form';
 $form_default_values = array(
-	'feedback' => is_array( $attempt_info ) ? (string) ( wp_json_encode( $attempt_info['feedback'] ?? '', JSON_HEX_APOS ) ) : '',
+	'feedback' => is_array( $attempt_info ) ? (string) ( wp_json_encode( $attempt_info['instructor_feedback'] ?? '', JSON_HEX_APOS ) ) : '',
 );
 
 $attempt_answers_map = array();
@@ -53,7 +53,7 @@ if ( is_array( $questions ) ) {
 	foreach ( $questions as $question ) {
 		$question_id    = (int) ( $question->question_id ?? 0 );
 		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
-		$answer_status  = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'pending';
+		$answer_status  = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'skipped';
 
 		if ( $question_id > 0 ) {
 			$form_default_values[ "review_statuses[{$question_id}]" ] = $answer_status;
