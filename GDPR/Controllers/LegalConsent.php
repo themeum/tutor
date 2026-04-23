@@ -532,7 +532,7 @@ class LegalConsent {
 			$data['created_at_utc'] = current_time( 'mysql', true );
 		} else {
 			$data = array_filter(
-				$data,
+				$request,
 				function ( $value ) {
 					return '' !== $value && null !== $value;
 				}
