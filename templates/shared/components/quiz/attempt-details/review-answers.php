@@ -77,8 +77,8 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 		?>
 
 		<div id="question-<?php echo esc_attr( $question_id ); ?>">
-			<?php if ( ! empty( $question_template ) ) : ?>
-				<?php
+			<?php
+			if ( ! empty( $question_template ) ) {
 				tutor_load_template(
 					'shared.components.quiz.attempt-details.question',
 					array(
@@ -94,8 +94,9 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 						'review_field_name'    => "review_statuses[{$question_id}]",
 					)
 				);
-				?>
-			<?php endif; ?>
+			}
+			do_action( 'tutor_review_answer_after_question_template', $question, $attempt_answer, $index );
+			?>
 		</div>
 	<?php endforeach; ?>
 </div>
