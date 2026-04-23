@@ -96,6 +96,13 @@ class LegalConsent {
 	private function register_hooks() {
 		add_action( 'wp_ajax_tutor_gdpr_legal_consents', array( $this, 'handle_legal_consent_ajax' ) );
 		add_filter( 'tutor_localize_data', array( $this, 'extend_localize_data' ) );
+		add_filter(
+			'safe_style_css',
+			function ( $styles ) {
+				$styles[] = 'display';
+				return $styles;
+			}
+		);
 	}
 
 	/**
@@ -582,6 +589,15 @@ class LegalConsent {
 		return JSON_ERROR_NONE === json_last_error() ? wp_json_encode( $decoded ) : sanitize_text_field( $value );
 	}
 
+	/**
+	 * Render consent field markup.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $consent Consent settings object.
+	 *
+	 * @return void
+	 */
 	public static function render_consent_field( object $consent ): void {
 		$is_required  = self::is_required( $consent );
 		$is_text_only = self::METHOD_TEXT_ONLY === $consent->consent_method;
@@ -603,10 +619,29 @@ class LegalConsent {
 		<?php
 	}
 
+	/**
+	 * Check whether a consent is required.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $consent Consent settings object.
+	 *
+	 * @return bool
+	 */
 	public static function is_required( object $consent ): bool {
 		return self::METHOD_MANDATORY_CHECK === $consent->consent_method;
 	}
 
+
+	/**
+	 * Render consent label text with optional linked placeholders.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $consent Consent settings object.
+	 *
+	 * @return void
+	 */
 	public static function render_constructed_label_text( object $consent ): void {
 		if ( empty( $consent ) || empty( $consent->consent_message ) ) {
 			return;
@@ -647,7 +682,7 @@ class LegalConsent {
 			$title = get_the_title( $page_id );
 
 			$anchor = sprintf(
-				'<a href="%s" target="_blank" rel="noopener noreferrer" class="tutor-consent-link">%s</a>',
+				'<a href="%s" target="_blank" rel="noopener noreferrer" class="tutor-consent-link" style="display:contents;">%s</a>',
 				esc_url( $url ),
 				esc_html( $title )
 			);
@@ -663,8 +698,37 @@ class LegalConsent {
 					'target' => array(),
 					'rel'    => array(),
 					'class'  => array(),
+					'style'  => true,
 				),
 			)
 		);
+	}
+
+	/**
+	 * Check if the display place has consent
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $display_key Display key.
+	 * @param array  $request Input request.
+	 *
+	 * @return WP_Error|true WP_Error when the consent is required but not present in the req.
+	 */
+	public static function has_consent( string $display_key, array $request ) {
+
+		$consents = self::get_consent_by_display_key( $display_key );
+		if ( tutor_utils()->count( $consents ) ) {
+			// @TODO.
+		} else {
+			$terms_conditions_link = tutor_utils()->get_toc_page_link();
+			if ( $terms_conditions_link ) {
+				$is_checked = $request['terms_conditions'] ?? 0;
+				if ( ! $is_checked ) {
+					$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
+				}
+			}
+		}
+
+		return true;
 	}
 }
