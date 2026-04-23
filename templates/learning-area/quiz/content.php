@@ -55,7 +55,7 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 		</div>
 
 		<!-- Quiz Parameters Table -->
-		<div class="tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-quiz-intro-params tutor-mb-8">
+		<div class="tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-quiz-intro-params tutor-mb-8 tutor-sm-mb-5">
 			<?php
 				Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade );
 			?>
