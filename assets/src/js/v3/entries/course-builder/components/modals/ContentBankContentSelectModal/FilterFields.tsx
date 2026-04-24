@@ -90,6 +90,11 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
       value: 'ordering',
       icon: 'quizOrdering',
     },
+    {
+      label: __('Puzzle', 'tutor'),
+      value: 'puzzle',
+      icon: 'quizPuzzle',
+    },
   ];
 
   return (

@@ -313,6 +313,7 @@ export const icons = [
   'quizNumber',
   'quizOrdering',
   'quizPin',
+  'quizPuzzle',
   'quizRadio',
   'quizRange',
   'quizShape',

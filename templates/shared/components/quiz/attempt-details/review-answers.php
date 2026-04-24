@@ -38,49 +38,40 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 
 		$question_id = (int) ( $question->question_id ?? 0 );
 
-		$is_dnd_review = in_array( $question_type, array( 'image_answering', 'ordering', 'matching', 'image_matching' ), true );
-
-		$is_tf_review = 'true_false' === $question_type;
-
-		$is_mc_review = in_array( $question_type, array( 'single_choice', 'multiple_choice' ), true );
-
-		$is_oe_review = in_array( $question_type, array( 'open_ended', 'short_answer' ), true );
-
-		$is_fib_review = 'fill_in_the_blank' === $question_type;
-
-		$is_draw_image_review = 'draw_image' === $question_type;
-
-		$is_pin_review = 'pin_image' === $question_type;
-
-		$is_scale_review = 'scale' === $question_type;
-
-		$is_coordinates_review = 'coordinates' === $question_type;
-
-		$is_puzzle_review = 'puzzle' === $question_type;
+		$is_dnd                = in_array( $question_type, array( 'image_answering', 'ordering', 'matching', 'image_matching' ), true );
+		$is_true_false         = 'true_false' === $question_type;
+		$is_multiple_choice    = in_array( $question_type, array( 'single_choice', 'multiple_choice' ), true );
+		$is_open_ended         = in_array( $question_type, array( 'open_ended', 'short_answer' ), true );
+		$is_fill_in_the_blanks = 'fill_in_the_blank' === $question_type;
+		$is_draw_image         = 'draw_image' === $question_type;
+		$is_pin                = 'pin_image' === $question_type;
+		$is_scale              = 'scale' === $question_type;
+		$is_coordinates        = 'coordinates' === $question_type;
+		$is_puzzle             = 'puzzle' === $question_type;
 
 		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
 
 		$question_template = '';
 
-		if ( $is_dnd_review ) {
+		if ( $is_dnd ) {
 			$question_template = 'review-answer-dnd';
-		} elseif ( $is_tf_review ) {
+		} elseif ( $is_true_false ) {
 			$question_template = 'true-false';
-		} elseif ( $is_mc_review ) {
+		} elseif ( $is_multiple_choice ) {
 			$question_template = 'multiple-choice';
-		} elseif ( $is_oe_review ) {
+		} elseif ( $is_open_ended ) {
 			$question_template = 'open-ended';
-		} elseif ( $is_fib_review ) {
+		} elseif ( $is_fill_in_the_blanks ) {
 			$question_template = 'fill-in-the-blank';
-		} elseif ( $is_scale_review ) {
+		} elseif ( $is_scale ) {
 			$question_template = 'scale';
-		} elseif ( $is_pin_review ) {
+		} elseif ( $is_pin ) {
 			$question_template = 'pin-image';
-		} elseif ( $is_draw_image_review ) {
+		} elseif ( $is_draw_image ) {
 			$question_template = 'draw-image';
-		} elseif ( $is_coordinates_review ) {
+		} elseif ( $is_coordinates ) {
 			$question_template = 'coordinates';
-		} elseif ( $is_puzzle_review ) {
+		} elseif ( $is_puzzle ) {
 			$question_template = 'puzzle';
 		}
 		?>

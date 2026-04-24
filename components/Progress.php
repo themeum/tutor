@@ -103,12 +103,20 @@ class Progress extends BaseComponent {
 	protected $background = 'none';
 
 	/**
-	 * Stroke color.
+	 * Stroke color (background circle).
 	 *
 	 * @since 4.0.0
 	 * @var string
 	 */
 	protected $stroke_color = 'var(--tutor-actions-brand-secondary)';
+
+	/**
+	 * Progress stroke color (progress arc).
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected $progress_stroke_color = 'var(--tutor-actions-brand-primary)';
 
 	/**
 	 * Whether to show label.
@@ -255,7 +263,7 @@ class Progress extends BaseComponent {
 	}
 
 	/**
-	 * Set stroke color.
+	 * Set stroke color (background circle).
 	 *
 	 * @since 4.0.0
 	 *
@@ -264,6 +272,19 @@ class Progress extends BaseComponent {
 	 */
 	public function stroke_color( $stroke_color ) {
 		$this->stroke_color = $stroke_color;
+		return $this;
+	}
+
+	/**
+	 * Set progress stroke color (progress arc).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $progress_stroke_color Progress stroke color.
+	 * @return $this
+	 */
+	public function progress_stroke_color( $progress_stroke_color ) {
+		$this->progress_stroke_color = $progress_stroke_color;
 		return $this;
 	}
 
@@ -355,13 +376,14 @@ class Progress extends BaseComponent {
 			$alpine_data['type'] = $this->state;
 		}
 
-		$alpine_data['size']        = $this->size;
-		$alpine_data['background']  = $this->background;
-		$alpine_data['strokeColor'] = $this->stroke_color;
-		$alpine_data['showLabel']   = $this->show_label;
-		$alpine_data['label']       = $this->label;
-		$alpine_data['animated']    = $this->animated;
-		$alpine_data['duration']    = $this->duration;
+		$alpine_data['size']                = $this->size;
+		$alpine_data['background']          = $this->background;
+		$alpine_data['strokeColor']         = $this->stroke_color;
+		$alpine_data['progressStrokeColor'] = $this->progress_stroke_color;
+		$alpine_data['showLabel']           = $this->show_label;
+		$alpine_data['label']               = $this->label;
+		$alpine_data['animated']            = $this->animated;
+		$alpine_data['duration']            = $this->duration;
 
 		// Convert to JSON for x-data.
 		$alpine_json = wp_json_encode( $alpine_data );
@@ -393,5 +415,4 @@ class Progress extends BaseComponent {
 
 		return $this->component_string;
 	}
-
 }

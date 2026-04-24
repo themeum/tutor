@@ -16,8 +16,7 @@ use Tutor\Components\SvgIcon;
 $index                = (int) ( $index ?? 1 );
 $question_title       = (string) ( $question_title ?? '' );
 $question_description = (string) ( $question_description ?? '' );
-$status_label         = (string) ( $status_label ?? '' );
-$status_variant       = (string) ( $status_variant ?? '' );
+$status_badges        = isset( $status_badges ) && is_array( $status_badges ) ? $status_badges : array();
 $question             = isset( $question ) && is_object( $question ) ? $question : null;
 $answer_status        = (string) ( $answer_status ?? '' );
 $attempt_id           = (int) ( $attempt_id ?? 0 );
@@ -49,17 +48,26 @@ $review_field_name    = (string) ( $review_field_name ?? '' );
 		<?php endif; ?>
 	</div>
 
-	<?php if ( ( ! empty( $status_label ) && ! empty( $status_variant ) ) || ( $is_instructor_review && $attempt_id ) ) : ?>
+	<?php if ( ! empty( $status_badges ) || ( $is_instructor_review && $attempt_id ) ) : ?>
 		<div class="tutor-quiz-question-header-actions">
-			<?php if ( ! empty( $status_label ) && ! empty( $status_variant ) ) : ?>
+			<?php if ( ! empty( $status_badges ) ) : ?>
 				<div class="tutor-quiz-question-header-status">
-					<?php
-					Badge::make()
-						->label( $status_label )
-						->variant( $status_variant )
-						->rounded()
-						->render();
-					?>
+					<?php foreach ( $status_badges as $badge ) : ?>
+						<?php
+						$badge_label   = (string) ( $badge['label'] ?? '' );
+						$badge_variant = (string) ( $badge['variant'] ?? '' );
+
+						if ( '' === $badge_label || '' === $badge_variant ) {
+							continue;
+						}
+
+						Badge::make()
+							->label( $badge_label )
+							->variant( $badge_variant )
+							->rounded()
+							->render();
+						?>
+					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
 

@@ -836,7 +836,7 @@ const styles = {
   `,
   settings: css`
     display: grid;
-    grid-template-columns: 439px 305px;
+    grid-template-columns: 1.5fr 1fr;
     gap: ${spacing[12]};
 
     ${Breakpoint.smallMobile} {

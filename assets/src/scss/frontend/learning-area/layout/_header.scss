@@ -16,10 +16,6 @@
     }
   }
 
-  @include tutor-breakpoint-down(sm) {
-    padding: $tutor-spacing-2 $tutor-spacing-6;
-  }
-
   &-inner {
     @include tutor-flex(row, center);
 
@@ -27,6 +23,16 @@
       background-color: $tutor-surface-l1;
       border-radius: $tutor-radius-md;
       overflow: hidden;
+    }
+  }
+
+  &-content {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-5;
+    width: 100%;
+
+    @include tutor-breakpoint-down(sm) {
+      width: calc(100dvw - 44px - #{$tutor-spacing-6}); // 100dvw + toggle button width + padding
     }
   }
 
@@ -49,6 +55,7 @@
 
   &-title {
     @include tutor-typography(h5, semibold, primary, heading);
+    @include tutor-text-truncate();
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography(medium, semibold);
@@ -58,6 +65,7 @@
   &-toggle-mobile {
     @include tutor-button-reset();
     @include tutor-flex-center();
+    flex-shrink: 0;
     margin-inline-start: auto;
     height: 44px;
     width: 44px;
