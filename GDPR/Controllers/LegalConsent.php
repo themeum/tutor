@@ -676,6 +676,11 @@ class LegalConsent {
 		$consents = self::get_consent_by_display_key( $display_key );
 		if ( tutor_utils()->count( $consents ) ) {
 			foreach ( $consents as $consent ) {
+				$is_active = (int) $consent->is_active;
+				if ( ! $is_active ) {
+					continue;
+				}
+
 				$is_required = self::is_required( $consent );
 				$field_name  = self::get_field_name( $consent );
 				if ( $is_required ) {
