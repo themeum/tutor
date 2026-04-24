@@ -11,7 +11,6 @@
 namespace TUTOR;
 
 use Tutor\GDPR\Controllers\LegalConsent;
-use Tutor\GDPR\Controllers\LegalConsentLogs;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
