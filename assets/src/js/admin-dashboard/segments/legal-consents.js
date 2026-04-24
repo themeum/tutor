@@ -363,6 +363,7 @@ const buildSavePayload = ({ card, consentId, enabledInput, savedState }) => {
 		[FORM_FIELDS.displayOn]: currentState.displayOn.join(','),
 		[FORM_FIELDS.method]: currentState.method,
 		[FORM_FIELDS.consentMap]: JSON.stringify(currentState.consentMap),
+		[FORM_FIELDS.method]: currentState.method,
 		[FORM_FIELDS.isActive]: enabledInput?.checked ? '1' : '0',
 	};
 
@@ -479,14 +480,14 @@ const saveConsent = ({ card, consentId, saveButton, enabledInput, savedState, on
 		.then((data) => {
 			if (isSuccessfulResponse(data)) {
 				onSuccess(Number(data?.data?.id || 0));
-				showToast('Success', getResponseMessage(data, 'Legal consent saved successfully.'), 'success');
+				showToast(__('Success', 'tutor'), getResponseMessage(data, __('Legal consent saved successfully.', 'tutor')), 'success');
 				return;
 			}
 
-			showToast('Failed', getResponseMessage(data, 'Failed to save legal consent.'), 'error');
+			showToast(__('Failed', 'tutor'), getResponseMessage(data, __('Failed to save legal consent.', 'tutor')), 'error');
 		})
 		.catch(() => {
-			showToast('Failed', 'Failed to save legal consent.', 'error');
+			showToast(__('Failed', 'tutor'), __('Failed to save legal consent.', 'tutor'), 'error');
 		})
 		.finally(() => {
 			saveButton.classList.remove(CSS_CLASSES.loading);
@@ -556,7 +557,7 @@ const bindCard = (card) => {
 	deleteButton?.addEventListener('click', () => {
 		if (!consentId) {
 			card.remove();
-			showToast('Success', 'Legal consent removed.', 'success');
+			showToast(__('Success', 'tutor'), __('Legal consent removed.', 'tutor'), 'success');
 			syncEmptyState(container);
 			markSettingsAsChanged();
 			return;
