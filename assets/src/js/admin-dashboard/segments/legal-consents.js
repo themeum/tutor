@@ -1,8 +1,77 @@
-const legalConsentPageId = 'legal_consents';
+const SELECTORS = {
+	legalConsentPage: 'legal_consents',
+	headerSaveButton: 'save_tutor_option',
+	tutorOptionForm: 'tutor-option-form',
+	tabLinks: '[tutor-option-tabs] a',
+	nonceInput: 'input[name="_tutor_nonce"]',
+	legalConsentsContainer: '[data-legal-consents]',
+	consentList: '[data-consent-list]',
+	consentTemplate: '[data-consent-template]',
+	consentCard: '[data-consent-card]',
+	addConsent: '[data-add-consent]',
+	consentTitleDisplay: '[data-consent-title]',
+	consentTitleInput: '[data-consent-title-input]',
+	consentEnabled: '[data-consent-enabled]',
+	consentEnabledHidden: '[data-consent-enabled-hidden]',
+	consentToggleButton: '[data-consent-toggle]',
+	consentDeleteButton: '[data-consent-delete]',
+	consentCancelButton: '[data-consent-cancel]',
+	consentSaveButton: '[data-consent-save]',
+	consentMessageTextarea: 'textarea[name="consent_message"]',
+	consentMethodSelect: 'select[name="consent_method"]',
+	displayOnCheckboxes: '[name="display_on[]"]',
+	pageDropdownToggle: '[data-page-dropdown-toggle]',
+	pageDropdown: '[data-page-dropdown]',
+	pageButton: '[data-page-btn]',
+};
 
-const getLegalConsentPage = () => document.getElementById(legalConsentPageId);
+const CSS_CLASSES = {
+	active: 'is-active',
+	collapsed: 'is-collapsed',
+	loading: 'is-loading',
+};
 
-const getHeaderSaveButton = () => document.getElementById('save_tutor_option');
+const ARIA = {
+	expanded: 'aria-expanded',
+};
+
+const DATA_ATTRIBUTES = {
+	consentId: 'consentId',
+	nextIndex: 'nextIndex',
+	pageKey: 'pageKey',
+};
+
+const AJAX_ACTIONS = {
+	legalConsents: 'tutor_gdpr_legal_consents',
+};
+
+const CRUD_ACTIONS = {
+	create: 'create',
+	update: 'update',
+	delete: 'delete',
+};
+
+const FORM_FIELDS = {
+	action: 'action',
+	crudAction: 'crud_action',
+	nonce: '_tutor_nonce',
+	id: 'id',
+	title: 'consent_title',
+	message: 'consent_message',
+	displayOn: 'display_on',
+	method: 'consent_method',
+	consentMap: 'consent_map',
+	isActive: 'is_active',
+};
+
+const DEFAULT_CONSENT_TITLE = 'Registration Consent';
+const PLACEHOLDER_PATTERN = /\{([a-zA-Z0-9_-]+)\}/g;
+const TEMPLATE_INDEX_PLACEHOLDER = '__INDEX__';
+const TUTOR_OPTION_SAVED_EVENT = 'tutor_option_saved';
+
+const getLegalConsentPage = () => document.getElementById(SELECTORS.legalConsentPage);
+
+const getHeaderSaveButton = () => document.getElementById(SELECTORS.headerSaveButton);
 
 const showToast = (title, message, type = 'success') => {
 	if (typeof window.tutor_toast === 'function') {
@@ -29,7 +98,21 @@ const isSuccessfulResponse = (data) => Boolean(
 
 const isLegalConsentsPageActive = () => {
 	const page = getLegalConsentPage();
-	return !!page && page.classList.contains('is-active');
+	return !!page && page.classList.contains(CSS_CLASSES.active);
+};
+
+const syncFooterSaveButtons = () => {
+	const page = getLegalConsentPage();
+	const headerSaveButton = getHeaderSaveButton();
+
+	if (!page || !headerSaveButton) {
+		return;
+	}
+
+	const isLoading = headerSaveButton.classList.contains(CSS_CLASSES.loading);
+	page.querySelectorAll(SELECTORS.consentSaveButton).forEach((button) => {
+		button.classList.toggle(CSS_CLASSES.loading, isLoading);
+	});
 };
 
 const toggleHeaderSaveVisibility = () => {
@@ -42,38 +125,52 @@ const toggleHeaderSaveVisibility = () => {
 	headerSaveButton.style.display = isLegalConsentsPageActive() ? 'none' : '';
 };
 
-const syncFooterSaveButtons = () => {
-	const page = getLegalConsentPage();
+const markSettingsAsChanged = () => {
 	const headerSaveButton = getHeaderSaveButton();
 
-	if (!page || !headerSaveButton) {
+	if (!headerSaveButton) {
 		return;
 	}
 
-	page.querySelectorAll('[data-consent-save]').forEach((button) => {
-		button.classList.toggle('is-loading', headerSaveButton.classList.contains('is-loading'));
-	});
+	headerSaveButton.removeAttribute('disabled');
+	syncFooterSaveButtons();
 };
 
 const updateConsentTitle = (card, value) => {
-	const title = card.querySelector('[data-consent-title]');
-	if (!title) {
-		return;
+	const title = card.querySelector(SELECTORS.consentTitleDisplay);
+	if (title) {
+		title.textContent = value.trim() || DEFAULT_CONSENT_TITLE;
 	}
-
-	title.textContent = value.trim() || 'Registration Consent';
 };
 
-const captureCardState = (card) => ({
-	title: card.querySelector('[data-consent-title-input]')?.value || '',
-	enabled: Boolean(card.querySelector('[data-consent-enabled]')?.checked),
-	message: card.querySelector('textarea[name*="message"]')?.value || '',
-	method: card.querySelector('select[name*="method"]')?.value || '',
-	collapsed: card.classList.contains('is-collapsed'),
-	displayOn: Array.from(card.querySelectorAll('[name*="display_on"]'))
+const getCardFormState = (card) => ({
+	title: card.querySelector(SELECTORS.consentTitleInput)?.value || '',
+	enabled: Boolean(card.querySelector(SELECTORS.consentEnabled)?.checked),
+	message: card.querySelector(SELECTORS.consentMessageTextarea)?.value || '',
+	method: card.querySelector(SELECTORS.consentMethodSelect)?.value || '',
+	displayOn: Array.from(card.querySelectorAll(SELECTORS.displayOnCheckboxes))
 		.filter((checkbox) => checkbox.checked)
-		.map((checkbox) => checkbox.value),
+		.map((checkbox) => checkbox.value)
+		.sort(),
+	consentMap: getSelectedPagesMap(card),
 });
+
+function getSelectedPagesMap(card) {
+	const messageValue = card.querySelector(SELECTORS.consentMessageTextarea)?.value || '';
+	const usedPlaceholders = new Set(Array.from(messageValue.matchAll(PLACEHOLDER_PATTERN), (match) => match[1]));
+	const selectedPages = {};
+
+	card.querySelectorAll(SELECTORS.pageButton).forEach((button) => {
+		const pageKey = button.dataset[DATA_ATTRIBUTES.pageKey];
+		if (pageKey && usedPlaceholders.has(pageKey)) {
+			selectedPages[pageKey] = button.value;
+		}
+	});
+
+	return selectedPages;
+}
+
+const captureCardState = (card) => getCardFormState(card);
 
 const isSameCardState = (left, right) => {
 	if (!left || !right) {
@@ -84,17 +181,16 @@ const isSameCardState = (left, right) => {
 		&& left.enabled === right.enabled
 		&& left.message === right.message
 		&& left.method === right.method
-		&& left.collapsed === right.collapsed
-		&& left.displayOn.length === right.displayOn.length
-		&& left.displayOn.every((value, index) => value === right.displayOn[index]);
+		&& JSON.stringify(left.displayOn) === JSON.stringify(right.displayOn)
+		&& JSON.stringify(left.consentMap) === JSON.stringify(right.consentMap);
 };
 
 const applyCardState = (card, state) => {
-	const titleInput = card.querySelector('[data-consent-title-input]');
-	const enabledInput = card.querySelector('[data-consent-enabled]');
-	const enabledHiddenInput = card.querySelector('[data-consent-enabled-hidden]');
-	const messageInput = card.querySelector('textarea[name*="message"]');
-	const methodSelect = card.querySelector('select[name*="method"]');
+	const titleInput = card.querySelector(SELECTORS.consentTitleInput);
+	const enabledInput = card.querySelector(SELECTORS.consentEnabled);
+	const enabledHiddenInput = card.querySelector(SELECTORS.consentEnabledHidden);
+	const messageInput = card.querySelector(SELECTORS.consentMessageTextarea);
+	const methodSelect = card.querySelector(SELECTORS.consentMethodSelect);
 
 	if (titleInput) {
 		titleInput.value = state.title || '';
@@ -118,25 +214,14 @@ const applyCardState = (card, state) => {
 		methodSelect.value = state.method || methodSelect.value;
 	}
 
-	card.querySelectorAll('[name*="display_on"]').forEach((checkbox) => {
+	card.querySelectorAll(SELECTORS.displayOnCheckboxes).forEach((checkbox) => {
 		checkbox.checked = state.displayOn.includes(checkbox.value);
 	});
 };
 
-const markSettingsAsChanged = () => {
-	const headerSaveButton = getHeaderSaveButton();
-
-	if (!headerSaveButton) {
-		return;
-	}
-
-	headerSaveButton.removeAttribute('disabled');
-	syncFooterSaveButtons();
-};
-
 const syncCardSaveButton = (card, savedState) => {
-	const saveButton = card.querySelector('[data-consent-save]');
-	if (!saveButton || saveButton.classList.contains('is-loading')) {
+	const saveButton = card.querySelector(SELECTORS.consentSaveButton);
+	if (!saveButton || saveButton.classList.contains(CSS_CLASSES.loading)) {
 		return;
 	}
 
@@ -144,19 +229,16 @@ const syncCardSaveButton = (card, savedState) => {
 };
 
 const toggleConsentCard = (card, collapsed) => {
-	card.classList.toggle('is-collapsed', collapsed);
-
-	const collapsedInput = card.querySelector('[data-consent-collapsed]');
-	if (collapsedInput) {
-		collapsedInput.value = collapsed ? 'on' : 'off';
+	if (0 === Number(card.dataset[DATA_ATTRIBUTES.consentId] || 0)) {
+		return;
 	}
 
-	const toggleButton = card.querySelector('[data-consent-toggle]');
+	card.classList.toggle(CSS_CLASSES.collapsed, collapsed);
+
+	const toggleButton = card.querySelector(SELECTORS.consentToggleButton);
 	if (toggleButton) {
-		toggleButton.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+		toggleButton.setAttribute(ARIA.expanded, String(!collapsed));
 	}
-
-	markSettingsAsChanged();
 };
 
 const closePageDropdown = (dropdown, toggleButton) => {
@@ -167,26 +249,26 @@ const closePageDropdown = (dropdown, toggleButton) => {
 	dropdown.hidden = true;
 
 	if (toggleButton) {
-		toggleButton.setAttribute('aria-expanded', 'false');
+		toggleButton.setAttribute(ARIA.expanded, 'false');
 	}
 };
 
 const closeAllPageDropdowns = (scope = document, exceptDropdown = null) => {
-	scope.querySelectorAll('[data-page-dropdown]').forEach((dropdown) => {
+	scope.querySelectorAll(SELECTORS.pageDropdown).forEach((dropdown) => {
 		if (dropdown === exceptDropdown) {
 			return;
 		}
 
-		closePageDropdown(dropdown, dropdown.parentElement?.querySelector('[data-page-dropdown-toggle]'));
+		closePageDropdown(dropdown, dropdown.parentElement?.querySelector(SELECTORS.pageDropdownToggle));
 	});
 };
 
-const bindPageLinkControl = (card) => {
-	const fieldInput = card.querySelector('[data-page-dropdown-toggle]')?.closest('.tutor-option-field-input');
-	const toggleButton = fieldInput?.querySelector('[data-page-dropdown-toggle]');
-	const dropdown = fieldInput?.querySelector('[data-page-dropdown]');
-	const textarea = fieldInput?.querySelector('textarea');
-	const pageButtons = fieldInput?.querySelectorAll('[data-page-btn]') || [];
+const bindPageLinkControl = (card, onCardChange) => {
+	const fieldInput = card.querySelector(SELECTORS.pageDropdownToggle)?.closest('.tutor-option-field-input');
+	const toggleButton = fieldInput?.querySelector(SELECTORS.pageDropdownToggle);
+	const dropdown = fieldInput?.querySelector(SELECTORS.pageDropdown);
+	const textarea = fieldInput?.querySelector(SELECTORS.consentMessageTextarea);
+	const pageButtons = fieldInput?.querySelectorAll(SELECTORS.pageButton) || [];
 
 	if (!fieldInput || !toggleButton || !dropdown || !textarea) {
 		return;
@@ -194,12 +276,12 @@ const bindPageLinkControl = (card) => {
 
 	const syncPageButtons = () => {
 		pageButtons.forEach((button) => {
-			const pageKey = button.dataset.pageKey;
+			const pageKey = button.dataset[DATA_ATTRIBUTES.pageKey];
 			const placeholder = pageKey ? `{${pageKey}}` : '';
-			const isSelected = placeholder && textarea.value.includes(placeholder);
+			const isSelected = Boolean(placeholder && textarea.value.includes(placeholder));
 
-			button.disabled = Boolean(isSelected);
-			button.classList.toggle('is-selected', Boolean(isSelected));
+			button.disabled = isSelected;
+			button.classList.toggle('is-selected', isSelected);
 		});
 	};
 
@@ -207,14 +289,14 @@ const bindPageLinkControl = (card) => {
 		event.stopPropagation();
 
 		const isOpening = dropdown.hidden;
-		closeAllPageDropdowns(card.closest('[data-legal-consents]') || document, isOpening ? dropdown : null);
+		closeAllPageDropdowns(card.closest(SELECTORS.legalConsentsContainer) || document, isOpening ? dropdown : null);
 		dropdown.hidden = !isOpening;
-		toggleButton.setAttribute('aria-expanded', isOpening ? 'true' : 'false');
+		toggleButton.setAttribute(ARIA.expanded, String(isOpening));
 	});
 
 	pageButtons.forEach((button) => {
 		button.addEventListener('click', () => {
-			const pageKey = button.dataset.pageKey;
+			const pageKey = button.dataset[DATA_ATTRIBUTES.pageKey];
 
 			if (!pageKey) {
 				return;
@@ -225,210 +307,281 @@ const bindPageLinkControl = (card) => {
 
 			if (!currentValue.includes(placeholder)) {
 				textarea.value = currentValue ? `${currentValue} ${placeholder}` : placeholder;
+				textarea.dispatchEvent(new Event('input', { bubbles: true }));
 			}
 
 			syncPageButtons();
 			closePageDropdown(dropdown, toggleButton);
-			textarea.dispatchEvent(new Event('input', { bubbles: true }));
 		});
 	});
 
 	textarea.addEventListener('input', () => {
 		syncPageButtons();
+		onCardChange();
 	});
 
 	syncPageButtons();
 };
 
+const buildSavePayload = ({ card, consentId, enabledInput, savedState }) => {
+	const currentState = captureCardState(card);
+	const payload = new FormData();
+
+	payload.append(FORM_FIELDS.action, AJAX_ACTIONS.legalConsents);
+	payload.append(FORM_FIELDS.crudAction, consentId ? CRUD_ACTIONS.update : CRUD_ACTIONS.create);
+	payload.append(FORM_FIELDS.nonce, document.querySelector(SELECTORS.nonceInput).value);
+
+	if (consentId) {
+		payload.append(FORM_FIELDS.id, String(consentId));
+	}
+
+	const fields = {
+		[FORM_FIELDS.title]: currentState.title,
+		[FORM_FIELDS.message]: currentState.message,
+		[FORM_FIELDS.displayOn]: currentState.displayOn.join(','),
+		[FORM_FIELDS.method]: currentState.method,
+		[FORM_FIELDS.consentMap]: JSON.stringify(currentState.consentMap),
+		[FORM_FIELDS.isActive]: enabledInput?.checked ? '1' : '0',
+	};
+
+	if (!consentId) {
+		Object.entries(fields).forEach(([key, value]) => {
+			payload.append(key, value);
+		});
+
+		return payload;
+	}
+
+	const previousDisplayOn = savedState.displayOn.join(',');
+	const previousConsentMap = JSON.stringify(savedState.consentMap);
+
+	if (fields[FORM_FIELDS.title] !== savedState.title) {
+		payload.append(FORM_FIELDS.title, fields[FORM_FIELDS.title]);
+	}
+
+	if (fields[FORM_FIELDS.message] !== savedState.message) {
+		payload.append(FORM_FIELDS.message, fields[FORM_FIELDS.message]);
+	}
+
+	if (fields[FORM_FIELDS.displayOn] !== previousDisplayOn) {
+		payload.append(FORM_FIELDS.displayOn, fields[FORM_FIELDS.displayOn]);
+	}
+
+	if (fields[FORM_FIELDS.method] !== savedState.method) {
+		payload.append(FORM_FIELDS.method, fields[FORM_FIELDS.method]);
+	}
+
+	if (fields[FORM_FIELDS.consentMap] !== previousConsentMap) {
+		payload.append(FORM_FIELDS.consentMap, fields[FORM_FIELDS.consentMap]);
+	}
+
+	if (fields[FORM_FIELDS.isActive] !== ( savedState.enabled ? '1' : '0' )) {
+		payload.append(FORM_FIELDS.isActive, fields[FORM_FIELDS.isActive]);
+	}
+
+	return payload;
+};
+
+const deleteConsent = ({ card, consentId, deleteButton }) => {
+	const formData = new FormData();
+	formData.append(FORM_FIELDS.action, AJAX_ACTIONS.legalConsents);
+	formData.append(FORM_FIELDS.crudAction, CRUD_ACTIONS.delete);
+	formData.append(FORM_FIELDS.nonce, document.querySelector(SELECTORS.nonceInput).value);
+	formData.append(FORM_FIELDS.id, String(consentId));
+
+	deleteButton.classList.add(CSS_CLASSES.loading);
+	deleteButton.disabled = true;
+
+	fetch(ajaxurl, { method: 'POST', body: formData })
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.success) {
+				card.remove();
+				showToast('Success', getResponseMessage(data, 'Legal consent deleted successfully.'), 'success');
+				return;
+			}
+
+			showToast('Failed', getResponseMessage(data, 'Failed to delete legal consent.'), 'error');
+		})
+		.catch(() => {
+			showToast('Failed', 'Failed to delete legal consent.', 'error');
+		})
+		.finally(() => {
+			deleteButton.classList.remove(CSS_CLASSES.loading);
+			deleteButton.disabled = false;
+		});
+};
+
+const updateConsentEnabledState = ({ consentId, enabledInput, enabledHiddenInput, onSuccess }) => {
+	const formData = new FormData();
+	formData.append(FORM_FIELDS.action, AJAX_ACTIONS.legalConsents);
+	formData.append(FORM_FIELDS.crudAction, CRUD_ACTIONS.update);
+	formData.append(FORM_FIELDS.nonce, document.querySelector(SELECTORS.nonceInput).value);
+	formData.append(FORM_FIELDS.id, String(consentId));
+	formData.append(FORM_FIELDS.isActive, enabledInput.checked ? '1' : '0');
+
+	enabledInput.disabled = true;
+
+	fetch(ajaxurl, { method: 'POST', body: formData })
+		.then((response) => response.json())
+		.then((data) => {
+			if (isSuccessfulResponse(data)) {
+				onSuccess();
+				showToast('Success', getResponseMessage(data, 'Legal consent updated successfully.'), 'success');
+				return;
+			}
+
+			enabledInput.checked = !enabledInput.checked;
+			enabledHiddenInput.value = enabledInput.checked ? 'on' : 'off';
+			showToast('Failed', getResponseMessage(data, 'Failed to update legal consent.'), 'error');
+		})
+		.catch(() => {
+			enabledInput.checked = !enabledInput.checked;
+			enabledHiddenInput.value = enabledInput.checked ? 'on' : 'off';
+			showToast('Failed', 'Failed to update legal consent.', 'error');
+		})
+		.finally(() => {
+			enabledInput.disabled = false;
+		});
+};
+
+const saveConsent = ({ card, consentId, saveButton, enabledInput, savedState, onSuccess }) => {
+	const formData = buildSavePayload({ card, consentId, enabledInput, savedState });
+
+	saveButton.classList.add(CSS_CLASSES.loading);
+	saveButton.disabled = true;
+
+	fetch(ajaxurl, { method: 'POST', body: formData })
+		.then((response) => response.json())
+		.then((data) => {
+			if (isSuccessfulResponse(data)) {
+				onSuccess(Number(data?.data?.id || 0));
+				showToast('Success', getResponseMessage(data, 'Legal consent saved successfully.'), 'success');
+				return;
+			}
+
+			showToast('Failed', getResponseMessage(data, 'Failed to save legal consent.'), 'error');
+		})
+		.catch(() => {
+			showToast('Failed', 'Failed to save legal consent.', 'error');
+		})
+		.finally(() => {
+			saveButton.classList.remove(CSS_CLASSES.loading);
+			saveButton.disabled = false;
+		});
+};
+
 const bindCard = (card) => {
-	const titleInput = card.querySelector('[data-consent-title-input]');
-	const enabledInput = card.querySelector('[data-consent-enabled]');
-	const enabledHiddenInput = card.querySelector('[data-consent-enabled-hidden]');
-	const toggleButton = card.querySelector('[data-consent-toggle]');
-	const deleteButton = card.querySelector('[data-consent-delete]');
-	const cancelButton = card.querySelector('[data-consent-cancel]');
-	const saveButton = card.querySelector('[data-consent-save]');
-	let consentId = Number(card.dataset.consentId || 0);
+	const titleInput = card.querySelector(SELECTORS.consentTitleInput);
+	const enabledInput = card.querySelector(SELECTORS.consentEnabled);
+	const enabledHiddenInput = card.querySelector(SELECTORS.consentEnabledHidden);
+	const toggleButton = card.querySelector(SELECTORS.consentToggleButton);
+	const deleteButton = card.querySelector(SELECTORS.consentDeleteButton);
+	const cancelButton = card.querySelector(SELECTORS.consentCancelButton);
+	const saveButton = card.querySelector(SELECTORS.consentSaveButton);
+
+	let consentId = Number(card.dataset[DATA_ATTRIBUTES.consentId] || 0);
 	let savedState = captureCardState(card);
 	syncCardSaveButton(card, savedState);
 
-	if (titleInput) {
-		titleInput.addEventListener('input', (event) => {
-			updateConsentTitle(card, event.target.value);
-			syncCardSaveButton(card, savedState);
-		});
-	}
+	const onCardChange = () => {
+		markSettingsAsChanged();
+		syncCardSaveButton(card, savedState);
+	};
+
+	titleInput?.addEventListener('input', (event) => {
+		updateConsentTitle(card, event.target.value);
+		onCardChange();
+	});
 
 	if (enabledInput && enabledHiddenInput) {
 		enabledInput.addEventListener('change', () => {
 			enabledHiddenInput.value = enabledInput.checked ? 'on' : 'off';
-			markSettingsAsChanged();
-			syncCardSaveButton(card, savedState);
-		});
-	}
 
-	card.querySelectorAll('[name*="display_on"]').forEach((checkbox) => {
-		checkbox.addEventListener('change', () => {
-			markSettingsAsChanged();
-			syncCardSaveButton(card, savedState);
-		});
-	});
-
-	if (toggleButton) {
-		toggleButton.addEventListener('click', () => {
-			toggleConsentCard(card, !card.classList.contains('is-collapsed'));
-			syncCardSaveButton(card, savedState);
-		});
-	}
-
-	if (deleteButton) {
-		deleteButton.addEventListener('click', () => {
 			if (!consentId) {
-				card.remove();
-				showToast('Success', 'Legal consent removed.', 'success');
-				markSettingsAsChanged();
+				onCardChange();
 				return;
 			}
 
-			const formData = new FormData();
-			formData.append('action', 'tutor_gdpr_legal_consents');
-			formData.append('crud_action', 'delete');
-			formData.append('_tutor_nonce', document.querySelector('input[name="_tutor_nonce"]').value);
-			formData.append('id', String(consentId));
+			updateConsentEnabledState({
+				consentId,
+				enabledInput,
+				enabledHiddenInput,
+				onSuccess: () => {
+					savedState = captureCardState(card);
+					syncCardSaveButton(card, savedState);
+				},
+			});
+		});
+	}
 
-			deleteButton.classList.add('is-loading');
-			deleteButton.disabled = true;
+	card.querySelectorAll(SELECTORS.displayOnCheckboxes).forEach((checkbox) => {
+		checkbox.addEventListener('change', onCardChange);
+	});
 
-			fetch(ajaxurl, {
-				method: 'POST',
-				body: formData,
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					if (data.success) {
-						card.remove();
-						showToast('Success', getResponseMessage(data, 'Legal consent deleted successfully.'), 'success');
-						return;
+	card.querySelector(SELECTORS.consentMethodSelect)?.addEventListener('change', onCardChange);
+
+	toggleButton?.addEventListener('click', () => {
+		if (toggleButton.disabled) {
+			return;
+		}
+
+		toggleConsentCard(card, !card.classList.contains(CSS_CLASSES.collapsed));
+	});
+
+	deleteButton?.addEventListener('click', () => {
+		if (!consentId) {
+			card.remove();
+			showToast('Success', 'Legal consent removed.', 'success');
+			markSettingsAsChanged();
+			return;
+		}
+
+		deleteConsent({ card, consentId, deleteButton });
+	});
+
+	cancelButton?.addEventListener('click', () => {
+		applyCardState(card, savedState);
+		syncCardSaveButton(card, savedState);
+	});
+
+	saveButton?.addEventListener('click', () => {
+		saveConsent({
+			card,
+			consentId,
+			saveButton,
+			enabledInput,
+			savedState,
+			onSuccess: (returnedId) => {
+				if (!consentId && returnedId) {
+					consentId = returnedId;
+					card.dataset[DATA_ATTRIBUTES.consentId] = String(returnedId);
+					if (toggleButton) {
+						toggleButton.disabled = false;
 					}
-
-					showToast('Failed', getResponseMessage(data, 'Failed to delete legal consent.'), 'error');
-				})
-				.catch(() => {
-					showToast('Failed', 'Failed to delete legal consent.', 'error');
-				})
-				.finally(() => {
-					deleteButton.classList.remove('is-loading');
-					deleteButton.disabled = false;
-				});
-		});
-	}
-
-	if (cancelButton) {
-		cancelButton.addEventListener('click', () => {
-			applyCardState(card, savedState);
-			syncCardSaveButton(card, savedState);
-		});
-	}
-
-	card.querySelector('textarea[name*="message"]')?.addEventListener('input', () => {
-		markSettingsAsChanged();
-		syncCardSaveButton(card, savedState);
-	});
-
-	card.querySelector('select[name*="method"]')?.addEventListener('change', () => {
-		markSettingsAsChanged();
-		syncCardSaveButton(card, savedState);
-	});
-
-	if (saveButton) {
-		saveButton.addEventListener('click', () => {
-			const formData = new FormData();
-			formData.append('action', 'tutor_gdpr_legal_consents');
-			formData.append('crud_action', consentId ? 'update' : 'create');
-			formData.append('_tutor_nonce', document.querySelector('input[name="_tutor_nonce"]').value);
-			if (consentId) {
-				formData.append('id', String(consentId));
-			}
-			formData.append('consent_title', card.querySelector('[data-consent-title-input]')?.value || '');
-			formData.append('consent_message', card.querySelector('textarea[name*="message"]')?.value || '');
-
-			const displayOnCheckboxes = card.querySelectorAll('[name*="display_on"]');
-			const displayOnValues = Array.from(displayOnCheckboxes).filter((cb) => cb.checked).map((cb) => cb.value);
-			formData.append('display_on', displayOnValues.join(','));
-
-			const methodSelect = card.querySelector('select[name*="method"]');
-			if (methodSelect) {
-				formData.append('consent_method', methodSelect.value);
-			}
-
-			const messageValue = card.querySelector('textarea[name*="message"]')?.value || '';
-			const usedPlaceholders = new Set(Array.from(messageValue.matchAll(/\{([a-zA-Z0-9_-]+)\}/g), (match) => match[1]));
-			const selectedPages = {};
-
-			card.querySelectorAll('[data-page-btn]').forEach((button) => {
-				const pageKey = button.dataset.pageKey;
-				if (!pageKey || !usedPlaceholders.has(pageKey)) {
-					return;
 				}
 
-				selectedPages[pageKey] = button.value;
-			});
-
-			formData.append('consent_map', Object.keys(selectedPages).length > 0 ? JSON.stringify(selectedPages) : '{}');
-
-			formData.append('is_active', enabledInput?.checked ? '1' : '0');
-
-			saveButton.classList.add('is-loading');
-			saveButton.disabled = true;
-
-			fetch(ajaxurl, {
-				method: 'POST',
-				body: formData,
-			})
-				.then((res) => res.json())
-				.then((data) => {
-					if (isSuccessfulResponse(data)) {
-						const returnedId = Number(data?.data?.id || 0);
-
-						if (!consentId && returnedId) {
-							consentId = returnedId;
-							card.dataset.consentId = String(returnedId);
-						}
-
-						toggleConsentCard(card, true);
-						savedState = captureCardState(card);
-						syncCardSaveButton(card, savedState);
-						showToast('Success', getResponseMessage(data, 'Legal consent saved successfully.'), 'success');
-						return;
-					}
-
-					showToast('Failed', getResponseMessage(data, 'Failed to save legal consent.'), 'error');
-				})
-				.catch(() => {
-					showToast('Failed', 'Failed to save legal consent.', 'error');
-				})
-				.finally(() => {
-					saveButton.classList.remove('is-loading');
-					saveButton.disabled = false;
-				});
+				toggleConsentCard(card, true);
+				savedState = captureCardState(card);
+				syncCardSaveButton(card, savedState);
+			},
 		});
-	}
+	});
 
-	bindPageLinkControl(card);
+	bindPageLinkControl(card, onCardChange);
 };
 
 const appendConsentCard = (container) => {
-	const template = container.querySelector('[data-consent-template]');
-	const list = container.querySelector('[data-consent-list]');
+	const template = container.querySelector(SELECTORS.consentTemplate);
+	const list = container.querySelector(SELECTORS.consentList);
 
 	if (!template || !list) {
 		return;
 	}
 
-	const nextIndex = Number(container.dataset.nextIndex || list.children.length || 0);
-	const markup = template.innerHTML.replaceAll('__INDEX__', String(nextIndex));
+	const nextIndex = Number(container.dataset[DATA_ATTRIBUTES.nextIndex] || list.children.length || 0);
+	const markup = template.innerHTML.replaceAll(TEMPLATE_INDEX_PLACEHOLDER, String(nextIndex));
 	const wrapper = document.createElement('div');
-
 	wrapper.innerHTML = markup.trim();
 
 	const card = wrapper.firstElementChild;
@@ -437,9 +590,9 @@ const appendConsentCard = (container) => {
 	}
 
 	list.appendChild(card);
-	container.dataset.nextIndex = String(nextIndex + 1);
+	container.dataset[DATA_ATTRIBUTES.nextIndex] = String(nextIndex + 1);
 	bindCard(card);
-	updateConsentTitle(card, card.querySelector('[data-consent-title-input]')?.value || '');
+	updateConsentTitle(card, card.querySelector(SELECTORS.consentTitleInput)?.value || '');
 	markSettingsAsChanged();
 };
 
@@ -449,20 +602,20 @@ const initLegalConsents = () => {
 		return;
 	}
 
-	const container = page.querySelector('[data-legal-consents]');
+	const container = page.querySelector(SELECTORS.legalConsentsContainer);
 	if (!container) {
 		return;
 	}
 
-	const cards = container.querySelectorAll('[data-consent-card]');
-	container.dataset.nextIndex = String(cards.length);
+	const cards = container.querySelectorAll(SELECTORS.consentCard);
+	container.dataset[DATA_ATTRIBUTES.nextIndex] = String(cards.length);
 
 	cards.forEach((card) => {
 		bindCard(card);
-		updateConsentTitle(card, card.querySelector('[data-consent-title-input]')?.value || '');
+		updateConsentTitle(card, card.querySelector(SELECTORS.consentTitleInput)?.value || '');
 	});
 
-	container.querySelector('[data-add-consent]')?.addEventListener('click', () => {
+	container.querySelector(SELECTORS.addConsent)?.addEventListener('click', () => {
 		appendConsentCard(container);
 	});
 
@@ -472,7 +625,7 @@ const initLegalConsents = () => {
 			return;
 		}
 
-		if (!target.closest('[data-page-dropdown]') && !target.closest('[data-page-dropdown-toggle]')) {
+		if (!target.closest(SELECTORS.pageDropdown) && !target.closest(SELECTORS.pageDropdownToggle)) {
 			closeAllPageDropdowns(container);
 		}
 	});
@@ -493,7 +646,7 @@ const initLegalConsents = () => {
 		});
 	}
 
-	document.querySelectorAll('[tutor-option-tabs] a').forEach((tab) => {
+	document.querySelectorAll(SELECTORS.tabLinks).forEach((tab) => {
 		tab.addEventListener('click', () => {
 			window.setTimeout(() => {
 				toggleHeaderSaveVisibility();
@@ -502,9 +655,10 @@ const initLegalConsents = () => {
 		});
 	});
 
-	document.getElementById('tutor-option-form')?.addEventListener('input', syncFooterSaveButtons);
-	document.getElementById('tutor-option-form')?.addEventListener('change', syncFooterSaveButtons);
-	window.addEventListener('tutor_option_saved', syncFooterSaveButtons);
+	const optionForm = document.getElementById(SELECTORS.tutorOptionForm);
+	optionForm?.addEventListener('input', syncFooterSaveButtons);
+	optionForm?.addEventListener('change', syncFooterSaveButtons);
+	window.addEventListener(TUTOR_OPTION_SAVED_EVENT, syncFooterSaveButtons);
 };
 
 document.addEventListener('DOMContentLoaded', initLegalConsents);
