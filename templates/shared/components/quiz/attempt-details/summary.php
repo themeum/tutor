@@ -227,7 +227,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 				<div class="tutor-quiz-result-retake">
 					<?php
 					Button::make()
-						->label( __( 'Retake Quiz', 'tutor' ) )
+						->label( __( 'Retry Quiz', 'tutor' ) )
 						->variant( Variant::PRIMARY_SOFT )
 						->icon( Icon::RELOAD_3, 'left', 20, 20 )
 						->attr( 'type', 'button' )
