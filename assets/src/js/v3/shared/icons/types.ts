@@ -231,6 +231,7 @@ export const icons = [
   'listOption',
   'loading',
   'lock',
+  'lockCircle',
   'lockFill',
   'lockStroke',
   'lockStroke2',

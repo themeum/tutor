@@ -358,6 +358,7 @@
         border-radius: $tutor-radius-md;
         @include tutor-transition(background-color);
         width: 100%;
+        position: relative;
 
         svg {
           color: $tutor-icon-idle;
@@ -375,6 +376,13 @@
           svg {
             color: $tutor-icon-brand;
           }
+        }
+
+        .tutor-lock-icon {
+          color: $tutor-actions-success-primary;
+          position: absolute;
+          left: 7px;
+          top: 7px;
         }
       }
     }
