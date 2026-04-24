@@ -590,7 +590,7 @@ class LegalConsent extends BaseController {
 	 *
 	 * @return void
 	 */
-	public static function render_constructed_label_text( object $consent ): void {
+	private static function render_constructed_label_text( object $consent ): void {
 		if ( empty( $consent ) || empty( $consent->consent_message ) ) {
 			return;
 		}
