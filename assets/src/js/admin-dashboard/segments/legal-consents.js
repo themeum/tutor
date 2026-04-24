@@ -8,6 +8,8 @@ const SELECTORS = {
 	consentList: '[data-consent-list]',
 	consentTemplate: '[data-consent-template]',
 	consentCard: '[data-consent-card]',
+	consentEmptyState: '[data-consent-empty-state]',
+	consentFooter: '[data-consent-footer]',
 	addConsent: '[data-add-consent]',
 	consentTitleDisplay: '[data-consent-title]',
 	consentTitleInput: '[data-consent-title-input]',
@@ -140,6 +142,24 @@ const updateConsentTitle = (card, value) => {
 	const title = card.querySelector(SELECTORS.consentTitleDisplay);
 	if (title) {
 		title.textContent = value.trim() || DEFAULT_CONSENT_TITLE;
+	}
+};
+
+const syncEmptyState = (container) => {
+	const list = container?.querySelector(SELECTORS.consentList);
+	const emptyState = container?.querySelector(SELECTORS.consentEmptyState);
+	const footer = container?.querySelector(SELECTORS.consentFooter);
+
+	if (!list || !emptyState) {
+		return;
+	}
+
+	const hasCards = list.querySelectorAll(SELECTORS.consentCard).length > 0;
+
+	emptyState.hidden = hasCards;
+
+	if (footer) {
+		footer.hidden = !hasCards;
 	}
 };
 
@@ -382,7 +402,7 @@ const buildSavePayload = ({ card, consentId, enabledInput, savedState }) => {
 	return payload;
 };
 
-const deleteConsent = ({ card, consentId, deleteButton }) => {
+const deleteConsent = ({ card, consentId, deleteButton, onSuccess = () => {} }) => {
 	const formData = new FormData();
 	formData.append(FORM_FIELDS.action, AJAX_ACTIONS.legalConsents);
 	formData.append(FORM_FIELDS.crudAction, CRUD_ACTIONS.delete);
@@ -397,6 +417,7 @@ const deleteConsent = ({ card, consentId, deleteButton }) => {
 		.then((data) => {
 			if (data.success) {
 				card.remove();
+				onSuccess();
 				showToast('Success', getResponseMessage(data, 'Legal consent deleted successfully.'), 'success');
 				return;
 			}
@@ -479,6 +500,7 @@ const bindCard = (card) => {
 	const deleteButton = card.querySelector(SELECTORS.consentDeleteButton);
 	const cancelButton = card.querySelector(SELECTORS.consentCancelButton);
 	const saveButton = card.querySelector(SELECTORS.consentSaveButton);
+	const container = card.closest(SELECTORS.legalConsentsContainer);
 
 	let consentId = Number(card.dataset[DATA_ATTRIBUTES.consentId] || 0);
 	let savedState = captureCardState(card);
@@ -533,11 +555,17 @@ const bindCard = (card) => {
 		if (!consentId) {
 			card.remove();
 			showToast('Success', 'Legal consent removed.', 'success');
+			syncEmptyState(container);
 			markSettingsAsChanged();
 			return;
 		}
 
-		deleteConsent({ card, consentId, deleteButton });
+		deleteConsent({
+			card,
+			consentId,
+			deleteButton,
+			onSuccess: () => syncEmptyState(container),
+		});
 	});
 
 	cancelButton?.addEventListener('click', () => {
@@ -558,6 +586,9 @@ const bindCard = (card) => {
 					card.dataset[DATA_ATTRIBUTES.consentId] = String(returnedId);
 					if (toggleButton) {
 						toggleButton.disabled = false;
+					}
+					if (enabledInput) {
+						enabledInput.disabled = false;
 					}
 				}
 
@@ -593,6 +624,7 @@ const appendConsentCard = (container) => {
 	container.dataset[DATA_ATTRIBUTES.nextIndex] = String(nextIndex + 1);
 	bindCard(card);
 	updateConsentTitle(card, card.querySelector(SELECTORS.consentTitleInput)?.value || '');
+	syncEmptyState(container);
 	markSettingsAsChanged();
 };
 
@@ -615,8 +647,12 @@ const initLegalConsents = () => {
 		updateConsentTitle(card, card.querySelector(SELECTORS.consentTitleInput)?.value || '');
 	});
 
-	container.querySelector(SELECTORS.addConsent)?.addEventListener('click', () => {
+	syncEmptyState(container);
+
+	container.querySelectorAll(SELECTORS.addConsent).forEach((button) => {
+		button.addEventListener('click', () => {
 		appendConsentCard(container);
+	});
 	});
 
 	document.addEventListener('click', (event) => {

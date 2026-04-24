@@ -30,11 +30,11 @@ $default_consents = $consent_field['default'] ?? array();
 $consents         = LegalConsent::get_consents();
 
 if ( empty( $consents ) ) {
-	$consents = $this->get( 'legal_consents', $default_consents );
+	$consents = $this->get( 'legal_consents', array() );
 }
 
-if ( ! is_array( $consents ) || empty( $consents ) ) {
-	$consents = $default_consents;
+if ( ! is_array( $consents ) ) {
+	$consents = array();
 }
 
 if ( isset( $consents['enabled'] ) || isset( $consents['title'] ) ) {
@@ -89,7 +89,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 			<div class="tutor-legal-consent-header-actions">
 				<label class="tutor-form-toggle">
 					<input type="hidden" value="<?php echo esc_attr( $enabled ); ?>" data-consent-enabled-hidden>
-					<input type="checkbox" class="tutor-form-toggle-input" <?php checked( $enabled, 'on' ); ?> data-consent-enabled>
+					<input type="checkbox" class="tutor-form-toggle-input" <?php checked( $enabled, 'on' ); ?> data-consent-enabled <?php disabled( 0 === (int) $consent_id ); ?>>
 					<span class="tutor-form-toggle-control"></span>
 				</label>
 
@@ -215,13 +215,24 @@ echo $this->view_template( 'common/reset-button-template.php', $section ); // ph
 ?>
 
 <div class="tutor-legal-consents" data-legal-consents>
+	<div data-consent-empty-state<?php echo ! empty( $consents ) ? ' hidden' : ''; ?>>
+		<?php tutor_utils()->render_list_empty_state( array( 'title' => __( 'No legal consent yet.', 'tutor' ) ) ); ?>
+
+		<div class="tutor-legal-consents-empty-state-action">
+			<button type="button" class="tutor-btn tutor-btn-outline-primary" data-add-consent>
+				<i class="tutor-icon-plus-light tutor-mr-8" aria-hidden="true"></i>
+				<?php esc_html_e( 'New Consent', 'tutor' ); ?>
+			</button>
+		</div>
+	</div>
+
 	<div class="tutor-legal-consents-list" data-consent-list>
 		<?php foreach ( $consents as $index => $consent ) : ?>
 			<?php $render_card( $consent, $index ); ?>
 		<?php endforeach; ?>
 	</div>
 
-	<div class="tutor-legal-consents-footer">
+	<div class="tutor-legal-consents-footer" data-consent-footer<?php echo empty( $consents ) ? ' hidden' : ''; ?>>
 		<button type="button" class="tutor-btn tutor-btn-outline-primary" data-add-consent>
 			<i class="tutor-icon-plus-light tutor-mr-8" aria-hidden="true"></i>
 			<?php esc_html_e( 'New Consent', 'tutor' ); ?>

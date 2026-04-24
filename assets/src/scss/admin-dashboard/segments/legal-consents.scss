@@ -46,6 +46,11 @@
     display: flex;
     align-items: center;
     gap: 18px;
+
+    .tutor-form-toggle-input:disabled + .tutor-form-toggle-control {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
   }
 
   .tutor-legal-consent-settings-toggle {
@@ -217,6 +222,11 @@
 
   .tutor-legal-consents-footer {
     margin-top: 16px;
+  }
+
+  .tutor-legal-consents-empty-state-action {
+    margin-top: 20px;
+    text-align: center;
   }
 
   @media (max-width: 1199px) {
