@@ -67,20 +67,42 @@ class UserConsent {
 	 * @return void
 	 */
 	public function store_login_consent( int $user_id ): void {
+		$this->create_user_consent( $user_id, LegalConsent::DISPLAY_ON_LOGIN );
+	}
+
+
+	/**
+	 * Check if the user has already given consent for a specific display key and version.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int    $user_id     ID of the user.
+	 * @param string $display_key Consent display key (e.g., registration, login).
+	 *
+	 * @return void
+	 */
+	private function create_user_consent( $user_id, $display_key ) {
 		$user_data = get_userdata( $user_id );
 		if ( $user_data ) {
-			$consents = LegalConsent::get_consent_by_display_key( LegalConsent::DISPLAY_ON_LOGIN );
+			$consents = LegalConsent::get_consent_by_display_key( $display_key );
 
 			if ( tutor_utils()->count( $consents ) ) {
 				foreach ( $consents as $consent ) {
-					$build_consent = LegalConsent::build_consent_snapshot( $consent );
-					if ( ! empty( $build_consent ) ) {
-						$build_consent['user_id']    = $user_data->ID;
-						$build_consent['user_email'] = $user_data->user_email;
-						$build_consent['source']     = LegalConsent::DISPLAY_ON_LOGIN;
+					$is_consent_given = self::is_given_by_user( $display_key, $consent->version, $user_data->ID );
 
-						// Store consent.
-						$this->create( $build_consent );
+					if ( ! $is_consent_given ) {
+						$build_consent = LegalConsent::build_consent_snapshot( $consent );
+						if ( ! empty( $build_consent ) ) {
+							$build_consent['user_id']    = $user_data->ID;
+							$build_consent['user_email'] = $user_data->user_email;
+							$build_consent['source']     = $display_key;
+
+							try {
+								$this->create( $build_consent );
+							} catch ( \Throwable $th ) {
+								tutor_log( $th );
+							}
+						}
 					}
 				}
 			}
@@ -108,14 +130,24 @@ class UserConsent {
 	}
 
 	/**
-	 * Get all consents
+	 * Check if a user already gave consent for a display key and version.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $request Request data.
+	 * @param string $display_key Consent display key.
+	 * @param string $version     Consent version.
+	 * @param int    $user_id     User ID. Defaults to current user.
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public static function get_all( array $request ) {
+	private function is_given_by_user( string $display_key, string $version, int $user_id ): bool {
+		$user_data = get_userdata( $user_id );
+		if ( ! $user_data ) {
+			return false;
+		}
+
+		$given_consent = $this->model->is_given_by_user( $user_id, $display_key, $version );
+
+		return $given_consent;
 	}
 }

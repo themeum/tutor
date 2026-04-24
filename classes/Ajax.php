@@ -455,7 +455,7 @@ class Ajax {
 				);
 			}
 
-			$has_consent = LegalConsent::has_consent( LegalConsent::DISPLAY_ON_SIGNIN, $_POST );
+			$has_consent = LegalConsent::has_consent( LegalConsent::DISPLAY_ON_LOGIN, $_POST );
 			if ( is_wp_error( $has_consent ) ) {
 				$validation_error->add(
 					$has_consent->get_error_code(),

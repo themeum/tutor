@@ -148,6 +148,7 @@ class LegalConsent {
 	public static function get_consent_places() {
 		$places = array(
 			self::DISPLAY_ON_STD_REG,
+			self::DISPLAY_ON_INS_REG,
 			self::DISPLAY_ON_LOGIN,
 			self::DISPLAY_ON_CHECKOUT,
 		);

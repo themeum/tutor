@@ -89,7 +89,7 @@ class Student {
 		}
 
 		// @since 4.0.0 legal consent added.
-		$has_consent = LegalConsent::has_consent( LegalConsent::DISPLAY_ON_SIGNUP, $_POST );
+		$has_consent = LegalConsent::has_consent( LegalConsent::DISPLAY_ON_STD_REG, $_POST );
 		if ( is_wp_error( $has_consent ) ) {
 			$validation_errors[ $has_consent->get_error_code() ] = $has_consent->get_error_message();
 		}
