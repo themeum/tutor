@@ -35,8 +35,9 @@ class LegalConsent {
 	 *
 	 * @var string
 	 */
-	const DISPLAY_ON_SIGNUP       = 'signup';
-	const DISPLAY_ON_SIGNIN       = 'signin';
+	const DISPLAY_ON_LOGIN        = 'login';
+	const DISPLAY_ON_STD_REG      = 'student_registration';
+	const DISPLAY_ON_INS_REG      = 'instructor_registration';
 	const DISPLAY_ON_CHECKOUT     = 'checkout';
 	const DISPLAY_ON_SUBSCRIPTION = 'subscription';
 	const DISPLAY_ON_ENROLLMENT   = 'enrollment';
@@ -127,7 +128,7 @@ class LegalConsent {
 	 * @since 4.0.0
 	 */
 	public function show_consent_field_on_login_form() {
-		$consents = self::get_consent_by_display_key( self::DISPLAY_ON_SIGNIN );
+		$consents = self::get_consent_by_display_key( self::DISPLAY_ON_LOGIN );
 		if ( tutor_utils()->count( $consents ) ) {
 			foreach ( $consents as $consent ) {
 				self::render_consent_field( $consent, 'tutor-mt-8' );
@@ -146,8 +147,8 @@ class LegalConsent {
 	 */
 	public static function get_consent_places() {
 		$places = array(
-			self::DISPLAY_ON_SIGNUP,
-			self::DISPLAY_ON_SIGNIN,
+			self::DISPLAY_ON_STD_REG,
+			self::DISPLAY_ON_LOGIN,
 			self::DISPLAY_ON_CHECKOUT,
 		);
 

@@ -69,7 +69,7 @@ class UserConsent {
 	public function store_login_consent( int $user_id ): void {
 		$user_data = get_userdata( $user_id );
 		if ( $user_data ) {
-			$consents = LegalConsent::get_consent_by_display_key( LegalConsent::DISPLAY_ON_SIGNIN );
+			$consents = LegalConsent::get_consent_by_display_key( LegalConsent::DISPLAY_ON_LOGIN );
 
 			if ( tutor_utils()->count( $consents ) ) {
 				foreach ( $consents as $consent ) {
@@ -77,7 +77,7 @@ class UserConsent {
 					if ( ! empty( $build_consent ) ) {
 						$build_consent['user_id']    = $user_data->ID;
 						$build_consent['user_email'] = $user_data->user_email;
-						$build_consent['source']     = LegalConsent::DISPLAY_ON_SIGNIN;
+						$build_consent['source']     = LegalConsent::DISPLAY_ON_LOGIN;
 
 						// Store consent.
 						$this->create( $build_consent );
