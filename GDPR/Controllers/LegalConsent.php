@@ -350,7 +350,7 @@ class LegalConsent extends BaseController {
 
 		$data = $this->prepare_legal_consent_data( $request, false );
 		if ( is_wp_error( $data ) ) {
-			$this->response_bad_request( __( 'Validation error', 'tutor' ) , $data->errors, 400 );
+			$this->response_bad_request( __( 'Validation error', 'tutor' ), $data->errors, 400 );
 		}
 
 		if ( isset( $data['consent_map'] ) && ! tutor_is_json( $data['consent_map'] ) ) {
@@ -363,6 +363,7 @@ class LegalConsent extends BaseController {
 
 		$wpdb->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
+		$data['version']        = (int) $existing->version + 1;
 		$data['updated_at_utc'] = current_time( 'mysql', true );
 		$updated                = $this->model->update( $id, $data );
 		if ( ! $updated ) {
