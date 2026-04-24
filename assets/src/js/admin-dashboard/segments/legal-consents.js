@@ -177,7 +177,7 @@ const getCardFormState = (card) => ({
 	consentMap: getSelectedPagesMap(card),
 });
 
-function getSelectedPagesMap(card) {
+const getSelectedPagesMap = (card) => {
 	const messageValue = card.querySelector(SELECTORS.consentMessageTextarea)?.value || '';
 	const usedPlaceholders = new Set(Array.from(messageValue.matchAll(PLACEHOLDER_PATTERN), (match) => match[1]));
 	const selectedPages = {};
@@ -190,7 +190,7 @@ function getSelectedPagesMap(card) {
 	});
 
 	return selectedPages;
-}
+};
 
 const captureCardState = (card) => getCardFormState(card);
 
@@ -417,7 +417,7 @@ const deleteConsent = ({ card, consentId, deleteButton, onSuccess = () => { } })
 	fetch(ajaxurl, { method: 'POST', body: formData })
 		.then((response) => response.json())
 		.then((data) => {
-			if (data.success) {
+			if (isSuccessfulResponse(data)) {
 				card.remove();
 				onSuccess();
 				showToast('Success', getResponseMessage(data, 'Legal consent deleted successfully.'), 'success');
