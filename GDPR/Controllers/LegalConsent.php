@@ -192,19 +192,47 @@ class LegalConsent {
 			return array();
 		}
 
+		$normalize_display_on = function ( $display_on ): array {
+			if ( is_array( $display_on ) ) {
+				return $display_on;
+			}
+
+			$display_on = array_filter( array_map( 'trim', explode( ',', (string) $display_on ) ) );
+			$normalized = array_combine( $display_on, $display_on );
+
+			if ( false === $normalized ) {
+				return array();
+			}
+
+			return $normalized;
+		};
+
+		$normalize_content_map = function ( $content_map ): array {
+			if ( is_array( $content_map ) ) {
+				return $content_map;
+			}
+
+			if ( ! is_string( $content_map ) || '' === $content_map ) {
+				return array();
+			}
+
+			$decoded = json_decode( $content_map, true );
+
+			return is_array( $decoded ) ? $decoded : array();
+		};
+
 		return array_map(
-			function ( $item ) {
+			function ( $item ) use ( $normalize_content_map, $normalize_display_on ) {
 				$item = (array) $item;
 
 				return array(
 					'id'          => isset( $item['id'] ) ? (int) $item['id'] : 0,
 					'enabled'     => ! empty( $item['is_active'] ) ? 'on' : 'off',
 					'title'       => $item['consent_title'] ?? '',
-					'display_on'  => $item['display_on'] ?? '',
+					'display_on'  => $normalize_display_on( $item['display_on'] ?? '' ),
 					'message'     => $item['consent_message'] ?? '',
-					'method'      => $item['consent_method'] ?? '',
-					'collapsed'   => 'off',
-					'content_map' => $item['consent_map'] ?? array(),
+					'method'      => $item['consent_method'] ?? self::METHOD_MANDATORY_CHECK,
+					'content_map' => $normalize_content_map( $item['consent_map'] ?? array() ),
 				);
 			},
 			$items

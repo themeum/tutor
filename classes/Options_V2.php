@@ -1901,14 +1901,13 @@ class Options_V2 {
 								'label'   => __( 'Legal Consents', 'tutor' ),
 								'default' => array(
 									array(
-										'enabled'    => 'on',
+										'enabled'    => 'off',
 										'title'      => __( 'Registration Consent', 'tutor' ),
 										'display_on' => array(
 											'signup' => 'signup',
 										),
 										'message'    => __( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ),
 										'method'     => 'mandatory_checkbox',
-										'collapsed'  => 'off',
 									),
 								),
 							),
