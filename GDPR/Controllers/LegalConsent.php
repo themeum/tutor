@@ -350,7 +350,7 @@ class LegalConsent extends BaseController {
 
 		$data = $this->prepare_legal_consent_data( $request, false );
 		if ( is_wp_error( $data ) ) {
-			$this->json_response( '', $data->errors, 400 );
+			$this->response_bad_request( __( 'Validation error', 'tutor' ) , $data->errors, 400 );
 		}
 
 		if ( isset( $data['consent_map'] ) && ! tutor_is_json( $data['consent_map'] ) ) {

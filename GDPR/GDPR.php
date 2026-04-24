@@ -79,7 +79,6 @@ final class GDPR extends Singleton {
 
 		$this->legal_consent = new LegalConsent();
 		$this->user_content  = new UserConsent();
-		$this->log           = new LegalConsentLogs();
 	}
 
 	/**
