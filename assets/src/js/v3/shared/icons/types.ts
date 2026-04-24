@@ -100,6 +100,7 @@ export const icons = [
   'confetti',
   'contentBank',
   'contentDrip',
+  'contractOutline',
   'contrast',
   'copy',
   'copy2',

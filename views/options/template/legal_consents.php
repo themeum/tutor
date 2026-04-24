@@ -9,25 +9,10 @@
  * @since 4.0.0
  */
 
+use TUTOR\Icon;
 use Tutor\GDPR\Controllers\LegalConsent;
 
-$consent_field = array();
-
-foreach ( $section['blocks'] as $block ) {
-	if ( empty( $block['fields'] ) || ! is_array( $block['fields'] ) ) {
-		continue;
-	}
-
-	foreach ( $block['fields'] as $field ) {
-		if ( 'legal_consents' === ( $field['key'] ?? '' ) ) {
-			$consent_field = $field;
-			break 2;
-		}
-	}
-}
-
-$default_consents = $consent_field['default'] ?? array();
-$consents         = LegalConsent::get_consents();
+$consents = LegalConsent::get_consents();
 
 if ( empty( $consents ) ) {
 	$consents = $this->get( 'legal_consents', array() );
@@ -53,8 +38,8 @@ $wp_pages        = get_pages(
 );
 $default_consent = array(
 	'id'          => 0,
-	'enabled'     => 'on',
-	'title'       => __( 'Registration Consent', 'tutor' ),
+	'enabled'     => 'off',
+	'title'       => __( 'Demo Consent', 'tutor' ),
 	'display_on'  => array(
 		LegalConsent::DISPLAY_ON_SIGNUP => LegalConsent::DISPLAY_ON_SIGNUP,
 	),
@@ -62,10 +47,6 @@ $default_consent = array(
 	'method'      => LegalConsent::METHOD_MANDATORY_CHECK,
 	'content_map' => array(),
 );
-
-if ( isset( $default_consents[0] ) && is_array( $default_consents[0] ) ) {
-	$default_consent = array_merge( $default_consent, $default_consents[0] );
-}
 
 $render_card = function ( array $consent, $index ) use ( $display_options, $method_options, $wp_pages ) {
 	$consent_id   = $consent['id'] ?? 0;
@@ -82,7 +63,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 
 		<div class="tutor-legal-consent-card-header">
 			<div class="tutor-legal-consent-card-title tutor-fs-6">
-				<span class="tutor-icon-legal-consent" aria-hidden="true"></span>
+				<?php tutor_utils()->render_svg_icon( Icon::CONTRACT_OUTLINE, 32, 32 ); ?>
 				<span data-consent-title><?php echo esc_html( $title ); ?></span>
 			</div>
 
@@ -110,7 +91,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 						<input
 							type="text"
 							class="tutor-form-control"
-							placeholder="<?php esc_attr_e( 'Registration Consent', 'tutor' ); ?>"
+							placeholder="<?php esc_attr_e( 'Demo Consent', 'tutor' ); ?>"
 							value="<?php echo esc_attr( $title ); ?>"
 							data-consent-title-input
 						/>
@@ -210,9 +191,11 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 	</div>
 	<?php
 };
-
-echo $this->view_template( 'common/reset-button-template.php', $section ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 ?>
+
+<div class="tutor-option-main-title">
+	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black" tutor-option-title><?php echo esc_html( $section['label'] ?? __( 'Legal Consents', 'tutor' ) ); ?></div>
+</div>
 
 <div class="tutor-legal-consents" data-legal-consents>
 	<div data-consent-empty-state<?php echo ! empty( $consents ) ? ' hidden' : ''; ?>>
