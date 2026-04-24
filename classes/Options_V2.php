@@ -1888,7 +1888,7 @@ class Options_V2 {
 				'slug'     => 'legal_consents',
 				'desc'     => __( 'Legal Consents', 'tutor' ),
 				'template' => 'legal_consents',
-				'icon'     => 'tutor-icon-legal-consent',
+				'icon'     => 'tutor-icon-lesson',
 				'blocks'   => array(
 					array(
 						'label'      => __( 'Legal Consents', 'tutor' ),
@@ -1899,17 +1899,7 @@ class Options_V2 {
 								'key'     => 'legal_consents',
 								'type'    => 'text',
 								'label'   => __( 'Legal Consents', 'tutor' ),
-								'default' => array(
-									array(
-										'enabled'    => 'off',
-										'title'      => __( 'Registration Consent', 'tutor' ),
-										'display_on' => array(
-											'signup' => 'signup',
-										),
-										'message'    => __( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ),
-										'method'     => 'mandatory_checkbox',
-									),
-								),
+								'default' => array(),
 							),
 						),
 					),

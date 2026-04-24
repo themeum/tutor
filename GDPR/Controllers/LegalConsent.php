@@ -140,7 +140,7 @@ class LegalConsent {
 	}
 
 	/**
-	 * Get admin display place options for the legal consent settings screen.
+	 * Get display place options for the legal consent settings screen.
 	 *
 	 * @since 4.0.0
 	 *
@@ -164,7 +164,7 @@ class LegalConsent {
 	}
 
 	/**
-	 * Get admin consent method options for the legal consent settings screen.
+	 * Get consent method options for the legal consent settings screen.
 	 *
 	 * @since 4.0.0
 	 *
@@ -179,7 +179,7 @@ class LegalConsent {
 	}
 
 	/**
-	 * Get normalized legal consent items for admin rendering.
+	 * Get legal consent items.
 	 *
 	 * @since 4.0.0
 	 *

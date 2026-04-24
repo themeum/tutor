@@ -1,3 +1,5 @@
+const { __ } = wp.i18n;
+
 const SELECTORS = {
 	legalConsentPage: 'legal_consents',
 	headerSaveButton: 'save_tutor_option',
@@ -66,7 +68,7 @@ const FORM_FIELDS = {
 	isActive: 'is_active',
 };
 
-const DEFAULT_CONSENT_TITLE = 'Registration Consent';
+const DEFAULT_CONSENT_TITLE = __('Demo Consent', 'tutor');
 const PLACEHOLDER_PATTERN = /\{([a-zA-Z0-9_-]+)\}/g;
 const TEMPLATE_INDEX_PLACEHOLDER = '__INDEX__';
 const TUTOR_OPTION_SAVED_EVENT = 'tutor_option_saved';
@@ -395,14 +397,14 @@ const buildSavePayload = ({ card, consentId, enabledInput, savedState }) => {
 		payload.append(FORM_FIELDS.consentMap, fields[FORM_FIELDS.consentMap]);
 	}
 
-	if (fields[FORM_FIELDS.isActive] !== ( savedState.enabled ? '1' : '0' )) {
+	if (fields[FORM_FIELDS.isActive] !== (savedState.enabled ? '1' : '0')) {
 		payload.append(FORM_FIELDS.isActive, fields[FORM_FIELDS.isActive]);
 	}
 
 	return payload;
 };
 
-const deleteConsent = ({ card, consentId, deleteButton, onSuccess = () => {} }) => {
+const deleteConsent = ({ card, consentId, deleteButton, onSuccess = () => { } }) => {
 	const formData = new FormData();
 	formData.append(FORM_FIELDS.action, AJAX_ACTIONS.legalConsents);
 	formData.append(FORM_FIELDS.crudAction, CRUD_ACTIONS.delete);
@@ -651,8 +653,8 @@ const initLegalConsents = () => {
 
 	container.querySelectorAll(SELECTORS.addConsent).forEach((button) => {
 		button.addEventListener('click', () => {
-		appendConsentCard(container);
-	});
+			appendConsentCard(container);
+		});
 	});
 
 	document.addEventListener('click', (event) => {
