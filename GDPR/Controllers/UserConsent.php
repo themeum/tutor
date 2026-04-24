@@ -88,7 +88,7 @@ class UserConsent {
 
 			if ( tutor_utils()->count( $consents ) ) {
 				foreach ( $consents as $consent ) {
-					$is_consent_given = self::is_given_by_user( $display_key, $consent->version, $user_data->ID );
+					$is_consent_given = self::is_consent_given_by_user( $display_key, $consent->version, $user_data->ID );
 
 					if ( ! $is_consent_given ) {
 						$build_consent = LegalConsent::build_consent_snapshot( $consent );
@@ -140,13 +140,13 @@ class UserConsent {
 	 *
 	 * @return bool
 	 */
-	private function is_given_by_user( string $display_key, string $version, int $user_id ): bool {
+	private function is_consent_given_by_user( string $display_key, string $version, int $user_id ): bool {
 		$user_data = get_userdata( $user_id );
 		if ( ! $user_data ) {
 			return false;
 		}
 
-		$given_consent = $this->model->is_given_by_user( $user_id, $display_key, $version );
+		$given_consent = $this->model->is_consent_given_by_user( $user_id, $display_key, $version );
 
 		return $given_consent;
 	}

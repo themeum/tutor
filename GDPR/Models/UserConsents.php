@@ -75,7 +75,7 @@ class UserConsents extends BaseModel {
 	 *
 	 * @return bool
 	 */
-	public function is_given_by_user( int $user_id, string $display_key, string $version ): bool {
+	public function is_consent_given_by_user( int $user_id, string $display_key, string $version ): bool {
 		if ( ! $user_id || ! $display_key || ! $version ) {
 			return false;
 		}
