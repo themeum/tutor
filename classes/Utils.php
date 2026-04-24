@@ -5315,7 +5315,7 @@ class Utils {
 				'is_pro' => true,
 			),
 			'coordinates'       => array(
-				'name'   => __( 'Coordinates', 'tutor' ),
+				'name'   => __( 'Graph', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-coordinates tutor-icon-grid"></i></span>',
 				'is_pro' => true,
 			),
