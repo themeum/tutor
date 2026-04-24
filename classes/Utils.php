@@ -5214,17 +5214,22 @@ class Utils {
 	 */
 	public function get_questions_by_quiz( $quiz_id = 0 ) {
 		$quiz_id = $this->get_post_id( $quiz_id );
-		global $wpdb;
 
-		$questions = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-			FROM	{$wpdb->prefix}tutor_quiz_questions
-			WHERE	quiz_id = %d
-			ORDER BY question_order ASC
-			",
-				$quiz_id
-			)
+		$where = array(
+			'quiz_id' => $quiz_id,
+		);
+
+		if ( $this->is_legacy_learning_mode() ) {
+			$types                  = array( 'scale', 'coordinates', 'draw_image', 'pin_image', 'puzzle' );
+			$where['question_type'] = array( 'NOT IN', $types );
+		}
+
+		$questions = QueryHelper::get_all(
+			'tutor_quiz_questions',
+			$where,
+			'question_order',
+			-1,
+			'ASC'
 		);
 
 		$questions = apply_filters( 'tutor_get_questions_by_quiz', $questions, $quiz_id );
@@ -5583,32 +5588,37 @@ class Utils {
 
 		$questions_order = $this->get_quiz_option( get_the_ID(), 'questions_order', 'rand' );
 
-		$order_by = '';
-		if ( 'rand' === $questions_order ) {
-			$order_by = 'ORDER BY RAND()';
-		} elseif ( 'asc' === $questions_order ) {
-			$order_by = 'ORDER BY question_id ASC';
+		$order_by = 'RAND()';
+		$order    = '';
+
+		if ( 'asc' === $questions_order ) {
+			$order_by = 'question_id';
+			$order    = 'ASC';
 		} elseif ( 'desc' === $questions_order ) {
-			$order_by = 'ORDER BY question_id DESC';
+			$order_by = 'question_id';
+			$order    = 'DESC';
 		} elseif ( 'sorting' === $questions_order ) {
-			$order_by = 'ORDER BY question_order ASC';
+			$order_by = 'question_order';
+			$order    = 'ASC';
 		}
 
-		$limit = '';
-		if ( $total_questions ) {
-			$limit = "LIMIT {$total_questions} ";
+		$where = array(
+			'quiz_id' => $quiz_id,
+		);
+
+		if ( $this->is_legacy_learning_mode() ) {
+			$types                  = array( 'scale', 'coordinates', 'draw_image', 'pin_image', 'puzzle' );
+			$where['question_type'] = array( 'NOT IN', $types );
 		}
 
-		$questions = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-			FROM 	{$wpdb->prefix}tutor_quiz_questions
-			WHERE 	quiz_id = %d
-			{$order_by}
-			{$limit}
-			",
-				$quiz_id
-			)
+		$limit = $total_questions ? $total_questions : -1;
+
+		$questions = QueryHelper::get_all(
+			'tutor_quiz_questions',
+			$where,
+			$order_by,
+			$limit,
+			$order
 		);
 
 		return $questions;
