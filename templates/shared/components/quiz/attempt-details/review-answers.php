@@ -95,7 +95,7 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 					)
 				);
 			}
-			do_action( 'tutor_review_answer_after_question_template', $question, $attempt_answer, $index );
+			do_action( 'tutor_review_answer_after_question_template', $question, $attempt_answer, $index, $is_instructor_review );
 			?>
 		</div>
 	<?php endforeach; ?>

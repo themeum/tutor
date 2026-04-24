@@ -1201,7 +1201,7 @@ class Quiz {
 	 *
 	 * @return object|null
 	 */
-	private function get_attempt_answer( int $attempt_answer_id ) {
+	public static function get_attempt_answer( int $attempt_answer_id ) {
 		global $wpdb;
 
 		return $wpdb->get_row(
@@ -1289,7 +1289,7 @@ class Quiz {
 			return null;
 		}
 
-		return $this->get_attempt_answer( $inserted_id );
+		return self::get_attempt_answer( $inserted_id );
 	}
 
 	/**
@@ -1304,7 +1304,7 @@ class Quiz {
 	 * @return object|null
 	 */
 	private function resolve_attempt_answer_for_review( int $attempt_id, int $attempt_answer_id = 0, int $question_id = 0 ) {
-		$attempt_answer = $attempt_answer_id ? $this->get_attempt_answer( $attempt_answer_id ) : null;
+		$attempt_answer = $attempt_answer_id ? self::get_attempt_answer( $attempt_answer_id ) : null;
 
 		if ( $attempt_answer ) {
 			return $attempt_answer;
@@ -1354,6 +1354,8 @@ class Quiz {
 		$previous_ans      = $attempt_answer->is_correct;
 
 		do_action( 'tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as );
+
+		$mark_as = apply_filters( 'tutor_quiz_review_mark_as', $mark_as, $attempt_answer_id, $attempt_id, $question );
 
 		if ( 'correct' === $mark_as ) {
 			$attempt_update_data = array();
