@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\GDPR\Controllers\LegalConsent;
+use Tutor\GDPR\Controllers\LegalConsentLogs;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\LessonModel;
 use Tutor\Traits\JsonResponse;
@@ -450,6 +452,14 @@ class Ajax {
 				$validation_error->add(
 					400,
 					__( 'Username is required.', 'tutor' )
+				);
+			}
+
+			$has_consent = LegalConsent::has_consent( LegalConsent::DISPLAY_ON_SIGNIN, $_POST );
+			if ( is_wp_error( $has_consent ) ) {
+				$validation_error->add(
+					$has_consent->get_error_code(),
+					$has_consent->get_error_message(),
 				);
 			}
 
