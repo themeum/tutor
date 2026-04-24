@@ -12,6 +12,9 @@ namespace Tutor\GDPR\Controllers;
 
 use Exception;
 use Tutor\GDPR\Models\UserConsents;
+use Tutor\Helpers\ValidationHelper;
+use TUTOR\Input;
+use Tutor\Traits\JsonResponse;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,7 +23,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 4.0.0
  */
-class UserConsent {
+class UserConsent extends BaseController {
+
+	use JsonResponse;
 
 	/**
 	 * User contents model.
@@ -55,6 +60,7 @@ class UserConsent {
 	 */
 	private function register_hooks() {
 		add_action( 'tutor_after_login_success', array( $this, 'store_login_consent' ) );
+		add_action( 'wp_ajax_tutor_user_consents', array( $this, 'handle_ajax_request' ) );
 	}
 
 	/**
@@ -68,6 +74,43 @@ class UserConsent {
 	 */
 	public function store_login_consent( int $user_id ): void {
 		$this->create_user_consent( $user_id, LegalConsent::DISPLAY_ON_LOGIN );
+	}
+
+	/**
+	 * Handle ajax request
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void Send json response
+	 */
+	public function handle_ajax_request(): void {
+		$this->validate_ajax_request();
+
+		$user_action = Input::post( 'user_action' );
+
+		switch ( $user_action ) {
+			case 'all_consents_given_by_user':
+				$user_id = Input::post( 'user_id', 0, Input::TYPE_INT );
+
+				$validate_user = ValidationHelper::validate(
+					array( 'user_id' => 'required|is_exists' ),
+					array( 'user_id' => $user_id )
+				);
+
+				if ( ! $validate_user->success ) {
+					$this->response_bad_request( __( 'Invalid user ID', 'tutor' ) );
+				}
+
+				$this->json_response(
+					__( 'Consent fetched successfully', 'tutor' ),
+					$this->get_all_consents_given_by_user( $user_id )
+				);
+
+				break;
+			default:
+				// code...
+				break;
+		}
 	}
 
 
@@ -107,6 +150,25 @@ class UserConsent {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Retrieve all consents given by a specific user.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $user_id ID of the user.
+	 *
+	 * @return array Array of user consent records.
+	 */
+	private function get_all_consents_given_by_user( int $user_id ): array {
+		$where = array(
+			'user_id' => $user_id,
+		);
+
+		$records = $this->model->get_all( $where );
+
+		return is_array( $records ) ? $records : array();
 	}
 
 	/**

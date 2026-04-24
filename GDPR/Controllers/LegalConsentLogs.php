@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 4.0.0
  */
-class LegalConsentLogs {
+class LegalConsentLogs extends BaseController {
 
 	/**
 	 * Logs model.
@@ -105,18 +105,6 @@ class LegalConsentLogs {
 				'created_at_utc' => current_time( 'mysql', true ),
 			)
 		);
-	}
-
-	/**
-	 * Validate nonce and user capability for AJAX requests.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return void
-	 */
-	private function validate_ajax_request() {
-		tutor_utils()->check_nonce();
-		tutor_utils()->check_current_user_capability();
 	}
 
 	/**

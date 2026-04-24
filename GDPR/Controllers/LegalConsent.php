@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 4.0.0
  */
-class LegalConsent {
+class LegalConsent extends BaseController {
 
 	use JsonResponse;
 
@@ -218,18 +218,6 @@ class LegalConsent {
 		$res = ( new self( false ) )->model->get_all( $where );
 
 		return $res ? $res : array();
-	}
-
-	/**
-	 * Validate nonce and user capability for AJAX requests.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return void
-	 */
-	private function validate_ajax_request() {
-		tutor_utils()->check_nonce();
-		tutor_utils()->check_current_user_capability();
 	}
 
 	/**
