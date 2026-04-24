@@ -60,12 +60,17 @@
     font-size: 20px;
     cursor: pointer;
     padding: 0;
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
   }
 
   .tutor-legal-consent-card-content {
     display: block;
     max-height: 800px;
-    transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
     opacity: 1;
   }
 
