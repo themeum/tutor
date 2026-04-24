@@ -702,4 +702,84 @@ class LegalConsent {
 
 		return true;
 	}
+
+	/**
+	 * Build a snapshot of the consent message and associated links.
+	 *
+	 * This method decodes the consent message, replaces any placeholders with finalized anchor tags,
+	 * and constructs a links snapshot containing details about the linked pages.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $consent Consent object containing message and map details.
+	 *
+	 * @return array Array containing the processed consent message and the links snapshot.
+	 */
+	public static function build_consent_snapshot( object $consent ): array {
+		if ( empty( $consent ) || empty( $consent->consent_message ) ) {
+			return array();
+		}
+
+		// Decode message.
+		$message = html_entity_decode( $consent->consent_message );
+
+		// Normalize map.
+		$map = is_array( $consent->consent_map )
+			? $consent->consent_map
+			: json_decode( $consent->consent_map, true );
+
+		$links_snapshot = array();
+
+		// Replace placeholders with final anchors.
+		preg_match_all( '/\{([a-zA-Z0-9_\-]+)\}/', $message, $matches );
+
+		if ( ! empty( $matches[1] ) && is_array( $map ) ) {
+
+			foreach ( $matches[1] as $key ) {
+
+				if ( empty( $map[ $key ] ) ) {
+					continue;
+				}
+
+				$page_id = (int) $map[ $key ];
+
+				if ( ! $page_id || 'publish' !== get_post_status( $page_id ) ) {
+					continue;
+				}
+
+				$url   = get_permalink( $page_id );
+				$title = get_the_title( $page_id );
+
+				// Build anchor (snapshot should NOT depend on future changes).
+				$anchor = sprintf(
+					'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+					esc_url( $url ),
+					esc_html( $title )
+				);
+
+				$message = str_replace( '{' . $key . '}', $anchor, $message );
+
+				// Store link snapshot separately (optional but powerful).
+				$links_snapshot[ $key ] = array(
+					'page_id' => $page_id,
+					'url'     => $url,
+					'title'   => $title,
+				);
+			}
+		}
+
+		$plain_text = wp_strip_all_tags( $message );
+
+		return array(
+			'consent_title'             => $consent->consent_title ?? '',
+			'version'                   => $consent->version ?? 1,
+			'label_snapshot'            => $message,      // PRIMARY legal proof.
+			'label_snapshot_plain_text' => $plain_text, // Fallback plain text.
+			'links_snapshot'            => wp_json_encode( $links_snapshot ),
+			'consent_method'            => $consent->consent_method ?? null,
+			'created_at_utc'            => gmdate( 'Y-m-d H:i:s' ),
+			'ip_address'                => isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '',
+			'user_agent'                => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
+		);
+	}
 }
