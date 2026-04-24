@@ -17,6 +17,7 @@
     border-radius: 6px;
     background: var(--tutor-color-white);
     overflow: visible;
+    border: 1px solid var(--tutor-border-color);
 
     &.is-collapsed {
       overflow: hidden;
@@ -75,7 +76,10 @@
   .tutor-legal-consent-card-content {
     display: block;
     max-height: 800px;
-    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    transition:
+      max-height 0.3s ease-out,
+      opacity 0.3s ease-out,
+      border-color 0.3s ease-out;
     opacity: 1;
   }
 
@@ -166,7 +170,9 @@
     cursor: pointer;
     padding: 10px 12px;
     text-align: left;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
 
     &:hover {
       background: var(--tutor-color-gray-10);
