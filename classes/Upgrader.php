@@ -282,15 +282,17 @@ class Upgrader {
 			$detail_column   = 'item_details';
 			$type_column     = 'item_type';
 
-			$is_detail_column_exists = QueryHelper::column_exist( $cart_item_table, $detail_column );
-			$is_type_column_exists   = QueryHelper::column_exist( $cart_item_table, $type_column );
+			if ( QueryHelper::table_exists( $cart_item_table ) ) {
+				$is_detail_column_exists = QueryHelper::column_exist( $cart_item_table, $detail_column );
+				$is_type_column_exists   = QueryHelper::column_exist( $cart_item_table, $type_column );
 
-			if ( QueryHelper::table_exists( $cart_item_table ) && ! $is_detail_column_exists ) {
-				$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$detail_column} JSON AFTER course_id" );
-			}
+				if ( ! $is_detail_column_exists ) {
+					$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$detail_column} JSON AFTER course_id" );
+				}
 
-			if ( QueryHelper::table_exists( $cart_item_table ) && ! $is_type_column_exists ) {
-				$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$type_column} VARCHAR(255) AFTER course_id" );
+				if ( ! $is_type_column_exists ) {
+					$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$type_column} VARCHAR(255) AFTER course_id" );
+				}
 			}
 		}
 	}
