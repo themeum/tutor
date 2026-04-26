@@ -263,9 +263,6 @@ function tutor_get_translate_text() {
 		'apr'      => array(
 			'text' => _x( 'April', 'Month name', 'tutor' ),
 		),
-		'may'        => array(
-			'text' => _x( 'May', 'Month name', 'tutor' ),
-		),
 		'jun'       => array(
 			'text' => _x( 'June', 'Month name', 'tutor' ),
 		),
