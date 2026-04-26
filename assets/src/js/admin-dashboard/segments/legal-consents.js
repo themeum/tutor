@@ -73,6 +73,8 @@ const PLACEHOLDER_PATTERN = /\{([a-zA-Z0-9_-]+)\}/g;
 const TEMPLATE_INDEX_PLACEHOLDER = '__INDEX__';
 const TUTOR_OPTION_SAVED_EVENT = 'tutor_option_saved';
 
+const getNonceValue = () => document.querySelector(SELECTORS.nonceInput)?.value || '';
+
 const getLegalConsentPage = () => document.getElementById(SELECTORS.legalConsentPage);
 
 const getHeaderSaveButton = () => document.getElementById(SELECTORS.headerSaveButton);
@@ -192,8 +194,6 @@ const getSelectedPagesMap = (card) => {
 	return selectedPages;
 };
 
-const captureCardState = (card) => getCardFormState(card);
-
 const isSameCardState = (left, right) => {
 	if (!left || !right) {
 		return false;
@@ -247,7 +247,7 @@ const syncCardSaveButton = (card, savedState) => {
 		return;
 	}
 
-	saveButton.disabled = isSameCardState(captureCardState(card), savedState);
+	saveButton.disabled = isSameCardState(getCardFormState(card), savedState);
 };
 
 const toggleConsentCard = (card, collapsed) => {
@@ -298,8 +298,7 @@ const bindPageLinkControl = (card, onCardChange) => {
 
 	const syncPageButtons = () => {
 		pageButtons.forEach((button) => {
-			const rawPageKey = button.dataset[DATA_ATTRIBUTES.pageKey];
-			const pageKey = rawPageKey || '';
+			const pageKey = button.dataset[DATA_ATTRIBUTES.pageKey] || '';
 			const placeholder = pageKey ? `{${pageKey}}` : '';
 			const isSelected = Boolean(placeholder && textarea.value.includes(placeholder));
 
@@ -319,13 +318,12 @@ const bindPageLinkControl = (card, onCardChange) => {
 
 	pageButtons.forEach((button) => {
 		button.addEventListener('click', () => {
-			const rawPageKey = button.dataset[DATA_ATTRIBUTES.pageKey];
+			const pageKey = button.dataset[DATA_ATTRIBUTES.pageKey];
 
-			if (!rawPageKey) {
+			if (!pageKey) {
 				return;
 			}
 
-			const pageKey = rawPageKey;
 			const placeholder = `{${pageKey}}`;
 			const currentValue = textarea.value.trim();
 
@@ -348,12 +346,12 @@ const bindPageLinkControl = (card, onCardChange) => {
 };
 
 const buildSavePayload = ({ card, consentId, enabledInput, savedState }) => {
-	const currentState = captureCardState(card);
+	const currentState = getCardFormState(card);
 	const payload = new FormData();
 
 	payload.append(FORM_FIELDS.action, AJAX_ACTIONS.legalConsents);
 	payload.append(FORM_FIELDS.crudAction, consentId ? CRUD_ACTIONS.update : CRUD_ACTIONS.create);
-	payload.append(FORM_FIELDS.nonce, document.querySelector(SELECTORS.nonceInput).value);
+	payload.append(FORM_FIELDS.nonce, getNonceValue());
 
 	if (consentId) {
 		payload.append(FORM_FIELDS.id, String(consentId));
@@ -365,7 +363,6 @@ const buildSavePayload = ({ card, consentId, enabledInput, savedState }) => {
 		[FORM_FIELDS.displayOn]: currentState.displayOn.join(','),
 		[FORM_FIELDS.method]: currentState.method,
 		[FORM_FIELDS.consentMap]: JSON.stringify(currentState.consentMap),
-		[FORM_FIELDS.method]: currentState.method,
 		[FORM_FIELDS.isActive]: enabledInput?.checked ? '1' : '0',
 	};
 
@@ -411,7 +408,7 @@ const deleteConsent = ({ card, consentId, deleteButton, onSuccess = () => { } })
 	const formData = new FormData();
 	formData.append(FORM_FIELDS.action, AJAX_ACTIONS.legalConsents);
 	formData.append(FORM_FIELDS.crudAction, CRUD_ACTIONS.delete);
-	formData.append(FORM_FIELDS.nonce, document.querySelector(SELECTORS.nonceInput).value);
+	formData.append(FORM_FIELDS.nonce, getNonceValue());
 	formData.append(FORM_FIELDS.id, String(consentId));
 
 	deleteButton.classList.add(CSS_CLASSES.loading);
@@ -423,14 +420,14 @@ const deleteConsent = ({ card, consentId, deleteButton, onSuccess = () => { } })
 			if (isSuccessfulResponse(data)) {
 				card.remove();
 				onSuccess();
-				showToast('Success', getResponseMessage(data, 'Legal consent deleted successfully.'), 'success');
+				showToast(__('Success', 'tutor'), getResponseMessage(data, __('Legal consent deleted successfully.', 'tutor')), 'success');
 				return;
 			}
 
-			showToast('Failed', getResponseMessage(data, 'Failed to delete legal consent.'), 'error');
+			showToast(__('Failed', 'tutor'), getResponseMessage(data, __('Failed to delete legal consent.', 'tutor')), 'error');
 		})
 		.catch(() => {
-			showToast('Failed', 'Failed to delete legal consent.', 'error');
+			showToast(__('Failed', 'tutor'), __('Failed to delete legal consent.', 'tutor'), 'error');
 		})
 		.finally(() => {
 			deleteButton.classList.remove(CSS_CLASSES.loading);
@@ -442,7 +439,7 @@ const updateConsentEnabledState = ({ consentId, enabledInput, enabledHiddenInput
 	const formData = new FormData();
 	formData.append(FORM_FIELDS.action, AJAX_ACTIONS.legalConsents);
 	formData.append(FORM_FIELDS.crudAction, CRUD_ACTIONS.update);
-	formData.append(FORM_FIELDS.nonce, document.querySelector(SELECTORS.nonceInput).value);
+	formData.append(FORM_FIELDS.nonce, getNonceValue());
 	formData.append(FORM_FIELDS.id, String(consentId));
 	formData.append(FORM_FIELDS.isActive, enabledInput.checked ? '1' : '0');
 
@@ -453,18 +450,18 @@ const updateConsentEnabledState = ({ consentId, enabledInput, enabledHiddenInput
 		.then((data) => {
 			if (isSuccessfulResponse(data)) {
 				onSuccess();
-				showToast('Success', getResponseMessage(data, 'Legal consent updated successfully.'), 'success');
+				showToast(__('Success', 'tutor'), getResponseMessage(data, __('Legal consent updated successfully.', 'tutor')), 'success');
 				return;
 			}
 
 			enabledInput.checked = !enabledInput.checked;
 			enabledHiddenInput.value = enabledInput.checked ? 'on' : 'off';
-			showToast('Failed', getResponseMessage(data, 'Failed to update legal consent.'), 'error');
+			showToast(__('Failed', 'tutor'), getResponseMessage(data, __('Failed to update legal consent.', 'tutor')), 'error');
 		})
 		.catch(() => {
 			enabledInput.checked = !enabledInput.checked;
 			enabledHiddenInput.value = enabledInput.checked ? 'on' : 'off';
-			showToast('Failed', 'Failed to update legal consent.', 'error');
+			showToast(__('Failed', 'tutor'), __('Failed to update legal consent.', 'tutor'), 'error');
 		})
 		.finally(() => {
 			enabledInput.disabled = false;
