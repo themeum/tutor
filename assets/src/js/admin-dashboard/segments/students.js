@@ -1,0 +1,230 @@
+/**
+ * Student actions consent logs modal.
+ *
+ * @since 4.0.0
+ */
+
+const AJAX_URL = window.ajaxurl || window._tutorobject?.ajaxurl || '';
+const AJAX_ACTION = 'tutor_gdpr_consent_ajax';
+const NONCE_KEY = window._tutorobject?.nonce_key || '_tutor_nonce';
+const NONCE_VALUE = window._tutorobject?.[NONCE_KEY] || '';
+
+
+const overlay = document.getElementById('tutor-consent-logs-modal');
+const modalBody = overlay?.querySelector('.tutor-consent-logs-modal-body');
+const downloadBtn = overlay?.querySelector('[data-consent-logs-download]');
+const userNameEl = overlay?.querySelector('.tutor-consent-user-card-name');
+const userJoinedEl = overlay?.querySelector('.tutor-consent-user-card-joined');
+const userAvatarEl = overlay?.querySelector('.tutor-consent-user-card img');
+
+// Current open state.
+let currentUserId = 0;
+let currentUserName = '';
+let currentUserJoined = '';
+let currentLogs = [];
+
+// ── Helpers ─────────────────────────────────────────────────────────────
+
+const { __ } = wp.i18n;
+
+
+
+/**
+ * Build a human-readable title from the consent_title or accepted flag.
+ *
+ * @param {Object} log
+ * @returns {string}
+ */
+const getLogTitle = (log) => {
+	if (log.consent_title) {
+		return `${log.accepted == 1 ? __('Accepted', 'tutor') : __('Declined', 'tutor')} ${log.consent_title}`;
+	}
+
+	return log.accepted == 1 ? __('Accepted Consent', 'tutor') : __('Declined Consent', 'tutor');
+};
+
+const renderTimeline = (logs) => {
+	const items = logs.map((log, index) => {
+		const title = getLogTitle(log);
+		const date = log.created_at_utc || '';
+		const ago = log.timeAgo || log.time_ago || '';
+		const ip = log.ip_address ? `IP: ${log.ip_address}` : '';
+		const source = log.source ? `Source: ${log.source}` : '';
+		const agent = log.user_agent ? `Agent: ${log.user_agent}` : '';
+		const metaLines = [ip, source, agent].filter(Boolean);
+
+		return `
+				<div class="tutor-consent-timeline-item">
+					<div class="tutor-consent-timeline-track">
+						<span class="tutor-consent-timeline-dot"></span>
+					</div>
+					<div class="tutor-consent-timeline-content">
+						<p class="tutor-consent-timeline-title">${title}</p>
+						<p class="tutor-consent-timeline-date">${date}</p>
+						${metaLines.length ? `<div class="tutor-consent-timeline-meta">${metaLines.join('<br>')}</div>` : ''}
+					</div>
+					<div class="tutor-consent-timeline-ago">${ago}</div>
+				</div>
+			`;
+	});
+
+	return items.join('');
+};
+
+const showLoading = () => {
+	if (!modalBody) return;
+	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('Loading…', 'tutor')}</div>`;
+};
+
+const showEmpty = () => {
+	if (!modalBody) return;
+	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('No consent logs found.', 'tutor')}</div>`;
+};
+
+const fetchAndRender = (userId, userName, userJoined, avatarSrc) => {
+	if (!overlay || !modalBody) return;
+
+	currentUserId = userId;
+	currentUserName = userName;
+	currentUserJoined = userJoined;
+
+	// Fill user card.
+	if (userNameEl) userNameEl.textContent = userName;
+	if (userJoinedEl) userJoinedEl.textContent = userJoined ? `${__('Joined', 'tutor')} ${userJoined}` : '';
+	if (userAvatarEl && avatarSrc) userAvatarEl.src = avatarSrc;
+
+	// showLoading();
+
+	const body = new FormData();
+	body.append('action', AJAX_ACTION);
+	body.append('crud_action', 'list');
+	body.append('user_id', userId);
+	body.append(NONCE_KEY, NONCE_VALUE);
+
+	fetch(AJAX_URL, { method: 'POST', body })
+		.then((r) => r.json())
+		.then((data) => {
+			// --- DUMMY DATA FOR TESTING TIMELINE HEIGHTS ---
+			const dummyLogs = [
+				{
+					consent_title: 'Terms of Service',
+					accepted: 1,
+					created_at_utc: '2023-10-15 14:30 UTC',
+					timeAgo: '2 hours ago',
+					ip_address: '192.168.1.1',
+					source: 'Registration Page',
+					user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36'
+				},
+				{
+					consent_title: 'Privacy Policy',
+					accepted: 1,
+					created_at_utc: '2023-10-15 14:35 UTC',
+					timeAgo: '2 hours ago',
+					ip_address: '192.168.1.1',
+					source: 'Checkout Page',
+					user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'
+				},
+				{
+					consent_title: 'Marketing Emails',
+					accepted: 0,
+					created_at_utc: '2023-11-01 09:15 UTC',
+					timeAgo: '5 months ago',
+					ip_address: '10.0.0.5',
+					source: 'Profile Settings',
+					user_agent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+				},
+				{
+					consent_title: 'Data Processing Agreement (Extremely long title to test wrapping behavior across multiple lines in the timeline view)',
+					accepted: 1,
+					created_at_utc: '2023-12-20 16:45 UTC',
+					timeAgo: '4 months ago',
+					ip_address: '172.16.254.1',
+					source: 'Course Enrollment (Advanced WordPress Development Bootcamp 2024)',
+					user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0'
+				},
+				{
+					consent_title: 'Cookie Policy',
+					accepted: 1,
+					created_at_utc: '2024-01-05 11:00 UTC',
+					timeAgo: '3 months ago',
+					ip_address: '192.168.1.100',
+					source: 'Footer Link',
+					user_agent: 'Mozilla/5.0'
+				}
+			];
+
+			const logs = dummyLogs; // Forcing dummy data for testing
+			currentLogs = logs;
+
+			if (!logs.length) {
+				showEmpty();
+				return;
+			}
+
+			const userCard = `
+					<div class="tutor-consent-user-card">
+						${avatarSrc ? `<img src="${avatarSrc}" alt="${userName}" />` : ''}
+						<div class="tutor-consent-user-card-info">
+							<span class="tutor-consent-user-card-name">${userName}</span>
+							<span class="tutor-consent-user-card-joined">${userJoined ? `${__('Joined', 'tutor')} ${userJoined}` : ''}</span>
+						</div>
+					</div>
+				`;
+
+			modalBody.innerHTML = `
+					<div class="tutor-consent-timeline">${renderTimeline(logs)}</div>
+					${userCard}
+				`;
+		})
+		.catch(() => showEmpty());
+};
+
+const downloadCSV = () => {
+	if (!currentLogs.length) return;
+
+	const headers = ['Title', 'Date (UTC)', 'IP Address', 'Source', 'User Agent', 'Accepted'];
+
+	const rows = currentLogs.map((log) => [
+		getLogTitle(log),
+		log.created_at_utc || '',
+		log.ip_address || '',
+		log.source || '',
+		log.user_agent || '',
+		log.accepted == 1 ? 'Yes' : 'No',
+	]);
+
+	const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
+
+	const csv = [headers, ...rows]
+		.map((row) => row.map(escape).join(','))
+		.join('\n');
+
+	const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement('a');
+	a.href = url;
+	a.download = `consent-logs-${currentUserId}.csv`;
+	a.click();
+	URL.revokeObjectURL(url);
+};
+
+
+const initConsentLogTriggers = () => {
+	document.querySelectorAll('[data-consent-logs-trigger]').forEach((btn) => {
+		btn.addEventListener('click', () => {
+			const userId = btn.dataset.userId || '';
+			const userName = btn.dataset.userName || '';
+			const userJoined = btn.dataset.userJoined || '';
+			const avatarSrc = btn.dataset.avatarSrc || '';
+
+			fetchAndRender(userId, userName, userJoined, avatarSrc);
+		});
+	});
+};
+
+
+if (downloadBtn) downloadBtn.addEventListener('click', downloadCSV);
+
+
+document.addEventListener('DOMContentLoaded', initConsentLogTriggers);
+

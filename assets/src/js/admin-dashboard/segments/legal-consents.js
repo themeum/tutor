@@ -298,7 +298,8 @@ const bindPageLinkControl = (card, onCardChange) => {
 
 	const syncPageButtons = () => {
 		pageButtons.forEach((button) => {
-			const pageKey = button.dataset[DATA_ATTRIBUTES.pageKey];
+			const rawPageKey = button.dataset[DATA_ATTRIBUTES.pageKey];
+			const pageKey = rawPageKey || '';
 			const placeholder = pageKey ? `{${pageKey}}` : '';
 			const isSelected = Boolean(placeholder && textarea.value.includes(placeholder));
 
@@ -318,12 +319,13 @@ const bindPageLinkControl = (card, onCardChange) => {
 
 	pageButtons.forEach((button) => {
 		button.addEventListener('click', () => {
-			const pageKey = button.dataset[DATA_ATTRIBUTES.pageKey];
+			const rawPageKey = button.dataset[DATA_ATTRIBUTES.pageKey];
 
-			if (!pageKey) {
+			if (!rawPageKey) {
 				return;
 			}
 
+			const pageKey = rawPageKey;
 			const placeholder = `{${pageKey}}`;
 			const currentValue = textarea.value.trim();
 
@@ -555,19 +557,53 @@ const bindCard = (card) => {
 	});
 
 	deleteButton?.addEventListener('click', () => {
-		if (!consentId) {
-			card.remove();
-			showToast(__('Success', 'tutor'), __('Legal consent removed.', 'tutor'), 'success');
-			syncEmptyState(container);
-			markSettingsAsChanged();
+		const modal = document.getElementById('tutor-legal-consent-delete-modal');
+		const confirmBtn = document.getElementById('tutor-legal-consent-confirm-delete');
+
+		if (!modal || !confirmBtn) {
+			if (!consentId) {
+				card.remove();
+				showToast(__('Success', 'tutor'), __('Legal consent removed.', 'tutor'), 'success');
+				syncEmptyState(container);
+				markSettingsAsChanged();
+				return;
+			}
+
+			deleteConsent({
+				card,
+				consentId,
+				deleteButton,
+				onSuccess: () => syncEmptyState(container),
+			});
 			return;
 		}
 
-		deleteConsent({
-			card,
-			consentId,
-			deleteButton,
-			onSuccess: () => syncEmptyState(container),
+		modal.classList.add('tutor-is-active');
+
+		const newConfirmBtn = confirmBtn.cloneNode(true);
+		confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+		newConfirmBtn.addEventListener('click', () => {
+			const closeBtn = modal.querySelector('[data-tutor-modal-close]');
+
+			if (!consentId) {
+				closeBtn?.click();
+				card.remove();
+				showToast(__('Success', 'tutor'), __('Legal consent removed.', 'tutor'), 'success');
+				syncEmptyState(container);
+				markSettingsAsChanged();
+				return;
+			}
+
+			deleteConsent({
+				card,
+				consentId,
+				deleteButton: newConfirmBtn,
+				onSuccess: () => {
+					closeBtn?.click();
+					syncEmptyState(container);
+				},
+			});
 		});
 	});
 

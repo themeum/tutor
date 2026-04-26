@@ -14,6 +14,7 @@ import './segments/navigation';
 import './segments/options';
 import './segments/reset';
 import './segments/withdraw';
+import './segments/students';
 import './wp-events-subscriber';
 import ajaxHandler from '../helper/ajax-handler';
 

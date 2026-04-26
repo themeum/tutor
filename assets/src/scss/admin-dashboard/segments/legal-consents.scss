@@ -183,6 +183,18 @@
       background: rgba(var(--tutor-color-primary-rgb), 0.1);
       color: var(--tutor-color-primary);
       cursor: not-allowed;
+
+      & + .is-selected,
+      & + :disabled {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+
+      &:has(+ .is-selected),
+      &:has(+ :disabled) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
     }
   }
 

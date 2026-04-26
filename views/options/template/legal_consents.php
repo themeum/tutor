@@ -145,8 +145,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 							<div class="tutor-option-dropdown tutor-legal-consent-page-dropdown" data-page-dropdown hidden>
 								<?php foreach ( $wp_pages as $page ) : ?>
 									<?php
-									$page_slug = strtolower( preg_replace( '/[^a-z0-9]+/', '_', sanitize_title( $page->post_title ) ) );
-									$page_key  = $page_slug . '_' . $page->ID;
+									$page_key = strtolower( preg_replace( '/[^a-z0-9]+/', '_', sanitize_title( $page->post_title ) ) );
 									?>
 									<button type="button" class="tutor-legal-consent-page-dropdown-item<?php echo isset( $content_map[ $page_key ] ) ? ' is-selected' : ''; ?>" data-page-btn value="<?php echo esc_attr( $page->ID ); ?>" data-page-key="<?php echo esc_attr( $page_key ); ?>" <?php echo isset( $content_map[ $page_key ] ) ? 'disabled' : ''; ?>>
 										<?php echo esc_html( $page->post_title ); ?>
@@ -225,4 +224,32 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 	<template data-consent-template>
 		<?php $render_card( $default_consent, '__INDEX__' ); ?>
 	</template>
+</div>
+
+<div id="tutor-legal-consent-delete-modal" class="tutor-modal" role="dialog" aria-modal="true" aria-hidden="true">
+	<div class="tutor-modal-overlay"></div>
+	<div class="tutor-modal-window">
+		<div class="tutor-modal-content tutor-modal-content-white">
+			<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+				<span class="tutor-icon-times" aria-hidden="true"></span>
+			</button>
+
+			<div class="tutor-modal-body tutor-text-center">
+				<div class="tutor-mt-48">
+					<img class="tutor-d-inline-block" src="<?php echo esc_url( tutor()->url ); ?>assets/images/icon-trash.svg" alt="" aria-hidden="true" />
+				</div>
+
+				<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Consent?', 'tutor' ); ?></div>
+				<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Are you sure you want to delete this consent permanently from the site? Please confirm your choice.', 'tutor' ); ?></div>
+				<div class="tutor-d-flex tutor-justify-center tutor-my-48">
+					<button type="button" class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+					</button>
+					<button type="button" class="tutor-btn tutor-btn-primary tutor-ml-20" id="tutor-legal-consent-confirm-delete">
+						<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

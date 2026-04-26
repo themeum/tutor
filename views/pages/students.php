@@ -166,6 +166,26 @@ $filters = array(
 											class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
 												<?php esc_html_e( 'Details', 'tutor' ); ?>
 											</a>
+											<div class="tutor-dropdown-parent">
+											<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+												<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
+											</button>
+											<div id="student-actions-<?php echo esc_attr( $list->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+												<button
+													type="button"
+													class="tutor-dropdown-item"
+													data-tutor-modal-target="tutor-consent-logs-modal"
+													data-consent-logs-trigger
+													data-user-id="<?php echo esc_attr( $list->ID ); ?>"
+													data-user-name="<?php echo esc_attr( $list->display_name ); ?>"
+													data-user-joined="<?php echo esc_attr( $list->user_registered ); ?>"
+													data-avatar-src="<?php echo esc_url( get_avatar_url( $list->ID, array( 'size' => 40 ) ) ); ?>"
+												>
+													<i class="tutor-icon-file-text tutor-mr-8" aria-hidden="true"></i>
+													<span><?php esc_html_e( 'Consent Logs', 'tutor' ); ?></span>
+												</button>
+											</div>
+										</div>
 										</div>
 									<?php endif; ?>
 								</td>
@@ -196,3 +216,34 @@ $filters = array(
 		</div>
 	</div>
 </div>
+
+<?php if ( tutor()->has_pro ) : ?>
+<div class="tutor-modal" id="tutor-consent-logs-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-consent-logs-title" aria-hidden="true">
+	<div class="tutor-modal-overlay" data-tutor-modal-close></div>
+	<div class="tutor-modal-window">
+		<div class="tutor-modal-content tutor-modal-content-white">
+			<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+				<span class="tutor-icon-times" aria-hidden="true"></span>
+			</button>
+
+			<div class="tutor-modal-header tutor-p-24 tutor-border-bottom">
+				<h3 id="tutor-consent-logs-title" class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-m-0"><?php esc_html_e( 'Consent logs', 'tutor' ); ?></h3>
+			</div>
+
+			<div class="tutor-modal-body tutor-p-24 tutor-consent-logs-modal-body" style="max-height: 60vh; overflow-y: auto;">
+				<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6"><?php esc_html_e( 'Loading&hellip;', 'tutor' ); ?></div>
+			</div>
+
+			<div class="tutor-modal-footer tutor-p-24 tutor-d-flex tutor-justify-end tutor-gap-1">
+				<button type="button" class="tutor-btn tutor-btn-ghost" data-tutor-modal-close>
+					<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+				</button>
+				<button type="button" class="tutor-btn tutor-btn-secondary" data-consent-logs-download>
+					<span class="tutor-icon-download tutor-mr-4" aria-hidden="true"></span>
+					<?php esc_html_e( 'Download CSV', 'tutor' ); ?>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<?php endif; ?>
