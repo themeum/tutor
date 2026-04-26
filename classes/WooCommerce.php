@@ -62,7 +62,7 @@ class WooCommerce extends Tutor_Base {
 		/**
 		 * After place new order
 		 */
-		add_action( 'woocommerce_new_order', array( $this, 'course_placing_order_from_admin' ), 10, 3 );
+		add_action( 'woocommerce_new_order', array( $this, 'course_placing_order_from_admin' ), 10, 1 );
 		add_action( 'woocommerce_new_order_item', array( $this, 'course_placing_order_from_customer' ), 10, 3 );
 
 		/**
