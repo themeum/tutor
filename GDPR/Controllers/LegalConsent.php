@@ -35,8 +35,6 @@ class LegalConsent extends BaseController {
 	 *
 	 * @var string
 	 */
-	const DISPLAY_ON_SIGNUP       = 'signup';
-	const DISPLAY_ON_SIGNIN       = 'signin';
 	const DISPLAY_ON_LOGIN        = 'login';
 	const DISPLAY_ON_STD_REG      = 'student_registration';
 	const DISPLAY_ON_INS_REG      = 'instructor_registration';
@@ -167,8 +165,6 @@ class LegalConsent extends BaseController {
 	 */
 	public static function get_display_place_options(): array {
 		$labels  = array(
-			self::DISPLAY_ON_SIGNUP       => __( 'Sign up page', 'tutor' ),
-			self::DISPLAY_ON_SIGNIN       => __( 'Login Page', 'tutor' ),
 			self::DISPLAY_ON_CHECKOUT     => __( 'Checkout', 'tutor' ),
 			self::DISPLAY_ON_SUBSCRIPTION => __( 'Subscription', 'tutor' ),
 			self::DISPLAY_ON_ENROLLMENT   => __( 'Enrollment', 'tutor' ),

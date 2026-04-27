@@ -41,7 +41,7 @@ $default_consent = array(
 	'enabled'     => 'off',
 	'title'       => __( 'Demo Consent', 'tutor' ),
 	'display_on'  => array(
-		LegalConsent::DISPLAY_ON_SIGNUP => LegalConsent::DISPLAY_ON_SIGNUP,
+		LegalConsent::DISPLAY_ON_STD_REG => LegalConsent::DISPLAY_ON_STD_REG,
 	),
 	'message'     => __( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ),
 	'method'      => LegalConsent::METHOD_MANDATORY_CHECK,
