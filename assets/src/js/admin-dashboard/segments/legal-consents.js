@@ -478,17 +478,18 @@ const saveConsent = ({ card, consentId, saveButton, enabledInput, savedState, on
 		.then((response) => response.json())
 		.then((data) => {
 			if (isSuccessfulResponse(data)) {
+				saveButton.classList.remove(CSS_CLASSES.loading);
 				onSuccess(Number(data?.data?.id || 0));
 				showToast(__('Success', 'tutor'), getResponseMessage(data, __('Legal consent saved successfully.', 'tutor')), 'success');
 				return;
 			}
 
 			showToast(__('Failed', 'tutor'), getResponseMessage(data, __('Failed to save legal consent.', 'tutor')), 'error');
+			saveButton.classList.remove(CSS_CLASSES.loading);
+			saveButton.disabled = false;
 		})
 		.catch(() => {
 			showToast(__('Failed', 'tutor'), __('Failed to save legal consent.', 'tutor'), 'error');
-		})
-		.finally(() => {
 			saveButton.classList.remove(CSS_CLASSES.loading);
 			saveButton.disabled = false;
 		});
