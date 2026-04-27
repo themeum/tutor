@@ -37,12 +37,16 @@
     "post-install-cmd": [
       "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal",
       "if [ ! -d \"includes/droip\" ]; then git clone https://github.com/themeum/tutor-droip.git includes/droip; else cd includes/droip && git pull origin master; fi",
-      "cd includes/droip && composer install && npm install"
+      "cd includes/droip && composer install && npm install",
+      "if [ ! -d \"includes/kirki\" ]; then git clone https://github.com/themeum/tutor-kirki.git includes/kirki; else cd includes/kirki && git pull origin master; fi",
+      "cd includes/kirki && composer install && npm install"
     ],
     "post-update-cmd": [
       "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal",
       "if [ ! -d \"includes/droip\" ]; then git clone https://github.com/themeum/tutor-droip.git includes/droip; else cd includes/droip && git pull origin master; fi",
-      "cd includes/droip && composer update && npm install"
+      "cd includes/droip && composer update && npm install",
+      "if [ ! -d \"includes/kirki\" ]; then git clone https://github.com/themeum/tutor-kirki.git includes/kirki; else cd includes/kirki && git pull origin master; fi",
+      "cd includes/kirki && composer update && npm install"
     ]
   }
 }
