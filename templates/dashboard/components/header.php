@@ -39,12 +39,12 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 <div x-data="tutorHeader()" class="tutor-dashboard-header">
 	<div class="tutor-dashboard-header-inner">
 		<div class="tutor-dashboard-header-left">
-			<h5 class="tutor-h5 tutor-text-primary tutor-text-medium tutor-my-none">
+			<div class="tutor-h5 tutor-text-primary tutor-text-medium">
 				<span class="tutor-text-subdued">
 					<?php echo esc_html_x( 'Hi,', 'greetings', 'tutor' ); ?>
 				</span>
 				<?php echo esc_html( $display_name . ' 👋' ); ?>
-			</h5>
+			</div>
 		</div>
 		<div class="tutor-dashboard-header-right">
 			<div>
