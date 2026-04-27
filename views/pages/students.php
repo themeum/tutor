@@ -178,6 +178,8 @@ $filters = array(
 													data-user-id="<?php echo esc_attr( $list->ID ); ?>"
 													data-user-name="<?php echo esc_attr( $list->display_name ); ?>"
 													data-user-joined="<?php echo esc_attr( $list->user_registered ); ?>"
+													data-user-email="<?php echo esc_attr( $list->user_email ); ?>"
+													data-user-login="<?php echo esc_attr( $list->user_login ); ?>"
 													data-avatar-src="<?php echo esc_url( get_avatar_url( $list->ID, array( 'size' => 40 ) ) ); ?>"
 												>
 													<i class="tutor-icon-file-text tutor-mr-8" aria-hidden="true"></i>
@@ -232,11 +234,11 @@ $filters = array(
 			</div>
 
 			<div class="tutor-modal-footer tutor-p-24 tutor-d-flex tutor-justify-end tutor-gap-1">
-				<button type="button" class="tutor-btn tutor-btn-ghost" data-tutor-modal-close>
+				<button type="button" class="tutor-btn tutor-btn-ghost tutor-mr-8" data-tutor-modal-close>
 					<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 				</button>
 				<button type="button" class="tutor-btn tutor-btn-secondary" data-consent-logs-download>
-					<span class="tutor-icon-download tutor-mr-4" aria-hidden="true"></span>
+					<span class="tutor-icon-download tutor-mr-8" aria-hidden="true"></span>
 					<?php esc_html_e( 'Download CSV', 'tutor' ); ?>
 				</button>
 			</div>

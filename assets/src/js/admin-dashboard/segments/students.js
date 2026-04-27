@@ -21,6 +21,8 @@ const userAvatarEl = overlay?.querySelector('.tutor-consent-user-card img');
 let currentUserId = 0;
 let currentUserName = '';
 let currentUserJoined = '';
+let currentUserEmail = '';
+let currentUserLogin = '';
 let currentLogs = [];
 
 // ── Helpers ─────────────────────────────────────────────────────────────
@@ -81,12 +83,14 @@ const showEmpty = () => {
 	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('No consent logs found.', 'tutor')}</div>`;
 };
 
-const fetchAndRender = (userId, userName, userJoined, avatarSrc) => {
+const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, userLogin) => {
 	if (!overlay || !modalBody) return;
 
 	currentUserId = userId;
 	currentUserName = userName;
 	currentUserJoined = userJoined;
+	currentUserEmail = userEmail;
+	currentUserLogin = userLogin;
 
 	// Fill user card.
 	if (userNameEl) userNameEl.textContent = userName;
@@ -182,6 +186,14 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc) => {
 const downloadCSV = () => {
 	if (!currentLogs.length) return;
 
+	const studentInfo = [
+		['Name:', currentUserName],
+		['User Name:', currentUserLogin],
+		['Email:', currentUserEmail],
+		['Joined At:', currentUserJoined],
+		[],
+	];
+
 	const headers = ['Title', 'Date (UTC)', 'IP Address', 'Source', 'User Agent', 'Accepted'];
 
 	const rows = currentLogs.map((log) => [
@@ -195,7 +207,7 @@ const downloadCSV = () => {
 
 	const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
 
-	const csv = [headers, ...rows]
+	const csv = [...studentInfo, headers, ...rows]
 		.map((row) => row.map(escape).join(','))
 		.join('\n');
 
@@ -216,8 +228,10 @@ const initConsentLogTriggers = () => {
 			const userName = btn.dataset.userName || '';
 			const userJoined = btn.dataset.userJoined || '';
 			const avatarSrc = btn.dataset.avatarSrc || '';
+			const userEmail = btn.dataset.userEmail || '';
+			const userLogin = btn.dataset.userLogin || '';
 
-			fetchAndRender(userId, userName, userJoined, avatarSrc);
+			fetchAndRender(userId, userName, userJoined, avatarSrc, userEmail, userLogin);
 		});
 	});
 };
