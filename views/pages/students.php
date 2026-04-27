@@ -159,14 +159,13 @@ $filters = array(
 									<span class="tutor-fs-7"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
 								</td>
 								<td>
-									<?php if ( tutor()->has_pro ) : ?>
-										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
-											<?php do_action( 'tutor_before_student_details_btn', $list->ID ); ?>
-											<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
-											class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
-												<?php esc_html_e( 'Details', 'tutor' ); ?>
-											</a>
-											<div class="tutor-dropdown-parent">
+									<div class="tutor-d-flex tutor-align-center tutor-gap-1 tutor-justify-end">
+										<?php do_action( 'tutor_before_student_details_btn', $list->ID ); ?>
+										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
+										class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
+											<?php esc_html_e( 'Details', 'tutor' ); ?>
+										</a>
+										<div class="tutor-dropdown-parent">
 											<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
 												<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 											</button>
@@ -186,8 +185,7 @@ $filters = array(
 												</button>
 											</div>
 										</div>
-										</div>
-									<?php endif; ?>
+									</div>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -217,7 +215,6 @@ $filters = array(
 	</div>
 </div>
 
-<?php if ( tutor()->has_pro ) : ?>
 <div class="tutor-modal" id="tutor-consent-logs-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-consent-logs-title" aria-hidden="true">
 	<div class="tutor-modal-overlay" data-tutor-modal-close></div>
 	<div class="tutor-modal-window">
@@ -246,4 +243,3 @@ $filters = array(
 		</div>
 	</div>
 </div>
-<?php endif; ?>
