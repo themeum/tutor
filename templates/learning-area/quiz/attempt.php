@@ -47,10 +47,6 @@ $hide_previous_button   = '1' === (string) ( $quiz_settings['hide_previous_butto
 $hide_quiz_time_display = '1' === (string) ( $quiz_settings['hide_quiz_time_display'] ?? '0' );
 $show_previous_button   = $show_previous_button && ! $hide_previous_button;
 
-echo '<pre>';
-print_r($quiz_settings);
-echo '</pre>';
-
 // Quiz layout.
 $question_layout_view = $quiz_settings['question_layout_view'] ?? 'single_question';
 $enable_pagination    = '1' === (string) ( $quiz_settings['enable_pagination'] ?? '0' );
