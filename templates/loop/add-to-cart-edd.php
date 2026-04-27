@@ -9,6 +9,8 @@
  * @since 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $product_id = tutor_utils()->get_course_product_id();
 $download   = new EDD_Download( $product_id );
 
