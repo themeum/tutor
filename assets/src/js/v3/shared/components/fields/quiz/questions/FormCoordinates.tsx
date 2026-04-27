@@ -6,7 +6,7 @@
  */
 
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -77,7 +77,7 @@ function sanitizePoint(p: CoordinatePoint, axisRange: number): CoordinatePoint {
   };
 }
 
-function parseStoredCoordinates(value: string, axisRange: number): CoordinatePoint[] {
+function parseStoredCoordinates(value: string, axisRange?: number): CoordinatePoint[] {
   if (!value || typeof value !== 'string') return [];
   try {
     const parsed = JSON.parse(value) as unknown;
@@ -87,7 +87,8 @@ function parseStoredCoordinates(value: string, axisRange: number): CoordinatePoi
           if (!p || typeof p !== 'object') return null;
           const maybe = p as { x?: unknown; y?: unknown };
           if (typeof maybe.x !== 'number' || typeof maybe.y !== 'number') return null;
-          return sanitizePoint({ x: maybe.x, y: maybe.y }, axisRange);
+          const point = { x: Math.round(maybe.x), y: Math.round(maybe.y) };
+          return typeof axisRange === 'number' ? sanitizePoint(point, axisRange) : point;
         })
         .filter(Boolean) as CoordinatePoint[];
       return pts.slice(0, MAX_COORDINATES);
@@ -95,7 +96,8 @@ function parseStoredCoordinates(value: string, axisRange: number): CoordinatePoi
     if (parsed && typeof parsed === 'object') {
       const o = parsed as { x?: unknown; y?: unknown };
       if (typeof o.x === 'number' && typeof o.y === 'number') {
-        return [sanitizePoint({ x: o.x, y: o.y }, axisRange)];
+        const point = { x: Math.round(o.x), y: Math.round(o.y) };
+        return [typeof axisRange === 'number' ? sanitizePoint(point, axisRange) : point];
       }
     }
   } catch {
@@ -123,6 +125,16 @@ function formatCoordinateText(pt: CoordinatePoint): string {
   return `${pt.x},${pt.y}`;
 }
 
+function getCoordinatesRangeErrorMessage(axisRange: number): string {
+  return sprintf(__('Range is from -%d to %d', __TUTOR_TEXT_DOMAIN__), axisRange, axisRange);
+}
+
+function isPointOutOfRange(point: CoordinatePoint, axisRange: number): boolean {
+  const min = -axisRange;
+  const max = axisRange;
+  return point.x < min || point.x > max || point.y < min || point.y > max;
+}
+
 const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerProps }: FormCoordinatesProps) => {
   const form = useFormContext();
   const option = field.value;
@@ -137,19 +149,19 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
   const maxCoord = axisRange;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [coordinates, setCoordinates] = useState<CoordinatePoint[]>(() => {
-    const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '', axisRange);
+    const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '');
     return parsed.length ? parsed : [{ x: 0, y: 0 }];
   });
   const [drafts, setDrafts] = useState<string[]>(() => coordinates.map(formatCoordinateText));
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '', axisRange);
+    const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '');
     const next = parsed.length ? parsed : [{ x: 0, y: 0 }];
     setCoordinates(next);
     setDrafts(next.map(formatCoordinateText));
     setActiveIndex((idx) => Math.max(0, Math.min(next.length - 1, idx)));
-  }, [axisRange, option?.answer_two_gap_match]);
+  }, [option?.answer_two_gap_match]);
 
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
@@ -178,16 +190,6 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     },
     [axisRange, option, updateOption],
   );
-
-  useEffect(() => {
-    const normalized = coordinates.map((point) => sanitizePoint(point, axisRange));
-    const hasChange = normalized.some(
-      (point, index) => point.x !== coordinates[index]?.x || point.y !== coordinates[index]?.y,
-    );
-    if (hasChange) {
-      commitCoordinates(normalized);
-    }
-  }, [axisRange, commitCoordinates, coordinates]);
 
   const drawGrid = useCallback(
     (ctx: CanvasRenderingContext2D, width: number, height: number) => {
@@ -360,6 +362,34 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     [activeIndex, commitCoordinates, coordinates, maxCoord, minCoord, option],
   );
 
+  const handleAxisRangeChange = useCallback(
+    (selectedOption: { value: number | string }) => {
+      const nextAxisRange = resolveAxisRange(Number(selectedOption.value));
+
+      // Keep the question "dirty" on range toggles (including 20 -> 10 -> 20),
+      // so the Save action remains available until the user saves explicitly.
+      if (form && axisRangeControllerProps?.field.name) {
+        form.setValue(axisRangeControllerProps.field.name as never, nextAxisRange as never, {
+          shouldDirty: true,
+        });
+      } else {
+        axisRangeControllerProps?.field.onChange(nextAxisRange);
+      }
+
+      if (!form) {
+        return;
+      }
+
+      const nextQuestionDataStatus = calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE);
+      if (nextQuestionDataStatus) {
+        form.setValue(resolvedQuestionDataStatusPath, nextQuestionDataStatus as QuizDataStatus, {
+          shouldDirty: true,
+        });
+      }
+    },
+    [activeQuestionDataStatus, axisRangeControllerProps, form, resolvedQuestionDataStatusPath],
+  );
+
   if (!option) {
     return null;
   }
@@ -376,18 +406,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
             label={__('Graph Range', __TUTOR_TEXT_DOMAIN__)}
             options={AXIS_RANGE_OPTIONS}
             helpText={__('Choose axis limits for both X and Y directions.', __TUTOR_TEXT_DOMAIN__)}
-            onChange={(selectedOption) => {
-              axisRangeControllerProps.field.onChange(resolveAxisRange(Number(selectedOption.value)));
-              if (!form) {
-                return;
-              }
-              if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
-                form.setValue(
-                  resolvedQuestionDataStatusPath,
-                  calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                );
-              }
-            }}
+            onChange={handleAxisRangeChange}
           />
         )}
         <div css={styles.list}>
@@ -395,6 +414,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
             const isActive = idx === activeIndex;
             const isAtLimit = coordinates.length >= MAX_COORDINATES;
             const isOnlyOne = coordinates.length <= 1;
+            const hasRangeError = isPointOutOfRange(pt, axisRange);
 
             return (
               <div
@@ -483,6 +503,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
                   }}
                   placeholder={__('x,y', __TUTOR_TEXT_DOMAIN__)}
                 />
+                {hasRangeError && <p css={styles.rowError}>{getCoordinatesRangeErrorMessage(axisRange)}</p>}
               </div>
             );
           })}
@@ -601,6 +622,11 @@ const styles = {
     align-items: center;
     flex-shrink: 0;
     gap: ${spacing[8]};
+  `,
+  rowError: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.error};
+    margin: 0;
   `,
   addButton: css`
     ${typography.small('medium')};
