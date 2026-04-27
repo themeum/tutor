@@ -310,7 +310,7 @@ class LegalConsent extends BaseController {
 		}
 
 		$where = array(
-			array( 'display_on', 'IN', $place_key ),
+			'display_on' => array( 'IN', array( $place_key ) ),
 		);
 
 		$res = ( new self( false ) )->model->get_all( $where );
