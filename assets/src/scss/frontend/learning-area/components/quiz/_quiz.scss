@@ -378,7 +378,7 @@ $tutor-quiz-content-bottom-offset: calc(
 
       &:hover {
         border-color: $tutor-border-hover;
-        background-color: $tutor-surface-l1-hover;
+        background-color: $tutor-quiz-hover;
       }
     }
 
@@ -660,7 +660,7 @@ $tutor-quiz-content-bottom-offset: calc(
           [data-option='incorrect']
         ):not([data-option='draggable']) {
         border-color: $tutor-border-hover;
-        background-color: $tutor-surface-l1-hover;
+        background-color: $tutor-quiz-hover;
       }
 
       &:has(:checked) {
@@ -687,7 +687,7 @@ $tutor-quiz-content-bottom-offset: calc(
 
         &:hover {
           border-color: $tutor-border-brand;
-          background-color: $tutor-surface-l1-hover;
+          background-color: $tutor-quiz-hover;
         }
       }
 
@@ -750,7 +750,7 @@ $tutor-quiz-content-bottom-offset: calc(
           @include tutor-typography('small', 'semibold');
           width: 40px;
           height: 100%;
-          border-inline-end: 1px solid $tutor-border-idle;
+          border-inline-end: 1px solid $tutor-border-idle2;
         }
 
         [data-title] {
@@ -1088,6 +1088,8 @@ $tutor-quiz-content-bottom-offset: calc(
   &-autostart-digit {
     @include tutor-flex(row, center, center);
     @include tutor-typography('d1', 'bold');
+    height: 100%;
+    width: 100%;
     position: absolute;
     inset: 0;
     color: $tutor-text-brand;
