@@ -14,7 +14,6 @@ use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Migrations\Migration;
-use Tutor\TemplateImport\TemplateImportInit;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
