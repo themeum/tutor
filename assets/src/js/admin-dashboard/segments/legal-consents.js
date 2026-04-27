@@ -5,6 +5,7 @@ const SELECTORS = {
 	headerSaveButton: 'save_tutor_option',
 	tutorOptionForm: 'tutor-option-form',
 	tabLinks: '[tutor-option-tabs] a',
+	tabPages: '.tutor-option-nav-page',
 	nonceInput: 'input[name="_tutor_nonce"]',
 	legalConsentsContainer: '[data-legal-consents]',
 	consentList: '[data-consent-list]',
@@ -732,6 +733,18 @@ const initLegalConsents = () => {
 	optionForm?.addEventListener('input', syncFooterSaveButtons);
 	optionForm?.addEventListener('change', syncFooterSaveButtons);
 	window.addEventListener(TUTOR_OPTION_SAVED_EVENT, syncFooterSaveButtons);
+
+	const tabPagesObserver = new MutationObserver(() => {
+		toggleHeaderSaveVisibility();
+		syncFooterSaveButtons();
+	});
+
+	document.querySelectorAll(SELECTORS.tabPages).forEach((tabPage) => {
+		tabPagesObserver.observe(tabPage, {
+			attributes: true,
+			attributeFilter: ['class'],
+		});
+	});
 };
 
 document.addEventListener('DOMContentLoaded', initLegalConsents);
