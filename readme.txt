@@ -321,7 +321,8 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.9.10 - Apr 27, 2026
 
-Coming soon ...
+Update: Improved user permission checks to enhance security.
+Fix: Resolved an issue where line breaks were not preserved in question–answer text created via the API. (Pro)
 
 = 3.9.9 - Apr 13, 2026
 
