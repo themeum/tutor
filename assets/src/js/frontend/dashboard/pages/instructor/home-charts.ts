@@ -156,7 +156,7 @@ const extractOverviewChartColors = (element: HTMLElement): OverviewChartColors =
       linearGradient: ['#8AF1B9', getCSSProperty(element, '--tutor-surface-l1')],
     },
     tooltip: {
-      background: getCSSProperty(element, '--tutor-surface-l1'),
+      background: getCSSProperty(element, '--tutor-surface-l1-hover'),
       title: getCSSProperty(element, '--tutor-text-subdued'),
       subtitle: getCSSProperty(element, '--tutor-text-primary'),
     },

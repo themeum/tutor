@@ -6,18 +6,25 @@
 .tutor-learning-header {
   background-color: $tutor-surface-base;
   padding: $tutor-spacing-4;
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: $tutor-z-header;
+  width: 100%;
 
-  @include tutor-breakpoint-up(sm) {
+  @include tutor-breakpoint-up(md) {
     .tutor-has-admin-bar & {
       top: 32px;
     }
   }
 
-  @include tutor-breakpoint-down(sm) {
-    padding: $tutor-spacing-2 $tutor-spacing-6;
+  @include tutor-breakpoint-between(md, sm) {
+    .tutor-has-admin-bar & {
+      top: 46px;
+    }
+  }
+
+  @include tutor-breakpoint-down(md) {
+    position: sticky;
   }
 
   &-inner {

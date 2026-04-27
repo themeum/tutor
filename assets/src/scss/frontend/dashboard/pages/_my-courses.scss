@@ -11,6 +11,7 @@
     @include tutor-card-radius();
     position: relative;
     @include tutor-transition(background-color);
+    border-color: $tutor-border-idle2;
 
     &-body {
       @include tutor-flex(column);
@@ -48,7 +49,7 @@
       @include tutor-typography(small, medium);
       @include tutor-flex(row, center, space-between);
       padding: $tutor-spacing-3 $tutor-spacing-5;
-      border-top: 1px solid $tutor-border-idle;
+      border-top: 1px solid $tutor-border-idle2;
       min-height: 44px;
 
       del {

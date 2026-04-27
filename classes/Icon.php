@@ -248,6 +248,7 @@ final class Icon {
 	const LIST_OPTION                = 'list-option';
 	const LOADING                    = 'loading';
 	const LOCK                       = 'lock';
+	const LOCK_CIRCLE                = 'lock-circle';
 	const LOCK_FILL                  = 'lock-fill';
 	const LOCK_STROKE                = 'lock-stroke';
 	const LOCK_STROKE_2              = 'lock-stroke-2';
