@@ -255,7 +255,25 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    drawGrid(ctx, canvas.width, canvas.height);
+    const rect = canvas.getBoundingClientRect();
+    const logicalSize = Math.max(1, rect.width || CANVAS_SIZE);
+    const dpr = window.devicePixelRatio || 1;
+    const nextWidth = Math.max(1, Math.round(logicalSize * dpr));
+    const nextHeight = Math.max(1, Math.round(logicalSize * dpr));
+
+    if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+      canvas.width = nextWidth;
+      canvas.height = nextHeight;
+    }
+
+    canvas.style.width = `${logicalSize}px`;
+    canvas.style.height = `${logicalSize}px`;
+
+    const scaleX = canvas.width / logicalSize;
+    const scaleY = canvas.height / logicalSize;
+    ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
+
+    drawGrid(ctx, logicalSize, logicalSize);
   }, [drawGrid]);
 
   const handleCanvasClick = useCallback(
@@ -264,15 +282,12 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       if (!canvas || !option) return;
 
       const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      const pixelX = (e.clientX - rect.left) * scaleX;
-      const pixelY = (e.clientY - rect.top) * scaleY;
+      const size = Math.max(1, rect.width || CANVAS_SIZE);
+      const pixelX = e.clientX - rect.left;
+      const pixelY = e.clientY - rect.top;
 
-      const width = canvas.width;
-      const height = canvas.height;
-      const drawableWidth = width - 2 * PADDING;
-      const drawableHeight = height - 2 * PADDING;
+      const drawableWidth = size - 2 * PADDING;
+      const drawableHeight = size - 2 * PADDING;
       const centerX = PADDING + drawableWidth / 2;
       const centerY = PADDING + drawableHeight / 2;
       const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (MAX_COORD - MIN_COORD);
