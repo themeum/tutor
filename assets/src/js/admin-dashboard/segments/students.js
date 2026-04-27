@@ -28,17 +28,17 @@ let currentLogs = [];
 const { __ } = wp.i18n;
 
 /**
- * Build a human-readable title from the consent_title or accepted flag.
+ * Build a human-readable title from the consent title.
  *
  * @param {Object} log
  * @returns {string}
  */
 const getLogTitle = (log) => {
 	if (log.consent_title) {
-		return `${log.accepted == 1 ? __('Accepted', 'tutor') : __('Declined', 'tutor')} ${log.consent_title}`;
+		return `${__('Accepted', 'tutor')} ${log.consent_title}`;
 	}
 
-	return log.accepted == 1 ? __('Accepted Consent', 'tutor') : __('Declined Consent', 'tutor');
+	return __('Accepted Consent', 'tutor');
 };
 
 const renderTimeline = (logs) => {
@@ -141,7 +141,7 @@ const downloadCSV = () => {
 		[],
 	];
 
-	const headers = ['Title', 'Date (UTC)', 'IP Address', 'Source', 'User Agent', 'Accepted'];
+	const headers = ['Title', 'Date (UTC)', 'IP Address', 'Source', 'User Agent'];
 
 	const rows = currentLogs.map((log) => [
 		getLogTitle(log),
@@ -149,7 +149,6 @@ const downloadCSV = () => {
 		log.ip_address || '',
 		log.source || '',
 		log.user_agent || '',
-		log.accepted == 1 ? 'Yes' : 'No',
 	]);
 
 	const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
@@ -188,4 +187,3 @@ if (downloadBtn) downloadBtn.addEventListener('click', downloadCSV);
 
 
 document.addEventListener('DOMContentLoaded', initConsentLogTriggers);
-
