@@ -189,7 +189,8 @@ $filters = array(
 
 									<td>
 										<?php
-										$coupon_status = $coupon->coupon_status;
+										$coupon_status   = CouponModel::is_scheduled( $coupon ) ? CouponModel::STATUS_SCHEDULED : $coupon->coupon_status;
+										$upcoming_coupon = time() < strtotime( $coupon->start_date_gmt );
 										if ( CouponModel::STATUS_ACTIVE === $coupon_status ) {
 											$coupon_status = $coupon_controller->model->has_coupon_validity( $coupon ) ? $coupon->coupon_status : 'expired';
 										}

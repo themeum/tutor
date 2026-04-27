@@ -287,6 +287,19 @@ class CouponController extends BaseController {
 			$data['expire_date_gmt'] = null;
 		}
 
+		/**
+		 * Validate that the expiration date is not earlier than the start date.
+		 *
+		 * @since 4.0.0
+		 */
+		if ( $data['expire_date_gmt'] && strtotime( $data['expire_date_gmt'] ) < strtotime( $data['start_date_gmt'] ) ) {
+			$this->json_response(
+				__( 'End date cannot be prior to the start date.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
+
 		// Set updated by.
 		$data['updated_by'] = get_current_user_id();
 
@@ -426,7 +439,8 @@ class CouponController extends BaseController {
 		$applies_to    = Input::get( 'applies_to', '' );
 		$search        = Input::get( 'search', '' );
 
-		$where = array();
+		$where         = array();
+		$status_filter = array();
 
 		if ( ! empty( $date ) ) {
 			$where['date(created_at_gmt)'] = tutor_get_formated_date( 'Y-m-d', $date );
@@ -458,42 +472,44 @@ class CouponController extends BaseController {
 		$gm_date = DateTimeHelper::now()->to_date_time_string();
 
 		foreach ( $coupon_status as $key => $value ) {
+			$status_filter = $where;
+
+			$status_filter['coupon_status'] = in_array(
+				$key,
+				array( CouponModel::STATUS_EXPIRED, CouponModel::STATUS_SCHEDULED ),
+				true
+			) ? CouponModel::STATUS_ACTIVE : $key;
+
 			if ( CouponModel::STATUS_EXPIRED === $key ) {
-				$where['coupon_status'] = CouponModel::STATUS_ACTIVE;
-				$raw_query              = '( start_date_gmt > %s OR expire_date_gmt < %s )';
-				$where[ $raw_query ]    = array(
+				$raw_query                   = '( start_date_gmt < %s AND expire_date_gmt < %s )';
+				$status_filter[ $raw_query ] = array(
 					'RAW',
 					array( $gm_date, $gm_date ),
 				);
+			} elseif ( CouponModel::STATUS_SCHEDULED === $key ) {
+				$status_filter['start_date_gmt'] = array(
+					'>',
+					$gm_date,
+				);
 			} else {
 
-				$where['coupon_status']  = $key;
-				$where['start_date_gmt'] = array(
+				$status_filter['start_date_gmt'] = array(
 					'<=',
 					$gm_date,
 				);
 
-				$where[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] = array(
+				$status_filter[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] = array(
 					'>=',
 					$gm_date,
 				);
-
 			}
 
 			$tabs[] = array(
 				'key'   => $key,
 				'title' => $value,
-				'value' => $this->model->get_coupon_count( $where, $search ),
+				'value' => $this->model->get_coupon_count( $status_filter, $search ),
 				'url'   => $url . '&data=' . $key,
 			);
-
-			if ( isset( $where['start_date_gmt'] ) ) {
-				unset( $where['start_date_gmt'] );
-			}
-
-			if ( isset( $where[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] ) ) {
-				unset( $where[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] );
-			}
 		}
 
 		return apply_filters( 'tutor_coupon_tabs', $tabs );
@@ -533,10 +549,16 @@ class CouponController extends BaseController {
 		if ( 'all' !== $active_tab && in_array( $active_tab, array_keys( $this->model->get_coupon_status() ), true ) ) {
 			if ( CouponModel::STATUS_EXPIRED === $active_tab ) {
 				$where_clause['coupon_status'] = CouponModel::STATUS_ACTIVE;
-				$raw_query                     = '( start_date_gmt > %s OR expire_date_gmt < %s )';
+				$raw_query                     = '( start_date_gmt < %s AND expire_date_gmt < %s )';
 				$where_clause[ $raw_query ]    = array(
 					'RAW',
 					array( $gm_date, $gm_date ),
+				);
+			} elseif ( CouponModel::STATUS_SCHEDULED === $active_tab ) {
+				$where_clause['coupon_status']  = CouponModel::STATUS_ACTIVE;
+				$where_clause['start_date_gmt'] = array(
+					'>',
+					$gm_date,
 				);
 			} else {
 				$where_clause['coupon_status']  = $active_tab;

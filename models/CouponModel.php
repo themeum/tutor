@@ -25,10 +25,11 @@ class CouponModel {
 	 *
 	 * @var string
 	 */
-	const STATUS_ACTIVE   = 'active';
-	const STATUS_INACTIVE = 'inactive';
-	const STATUS_TRASH    = 'trash';
-	const STATUS_EXPIRED  = 'expired';
+	const STATUS_ACTIVE    = 'active';
+	const STATUS_INACTIVE  = 'inactive';
+	const STATUS_TRASH     = 'trash';
+	const STATUS_EXPIRED   = 'expired';
+	const STATUS_SCHEDULED = 'scheduled';
 
 	/**
 	 * Coupon type
@@ -201,10 +202,11 @@ class CouponModel {
 	 */
 	public static function get_coupon_status() {
 		return array(
-			self::STATUS_ACTIVE   => __( 'Active', 'tutor' ),
-			self::STATUS_INACTIVE => __( 'Inactive', 'tutor' ),
-			self::STATUS_TRASH    => __( 'Trash', 'tutor' ),
-			self::STATUS_EXPIRED  => __( 'Expired', 'tutor' ),
+			self::STATUS_ACTIVE    => __( 'Active', 'tutor' ),
+			self::STATUS_INACTIVE  => __( 'Inactive', 'tutor' ),
+			self::STATUS_TRASH     => __( 'Trash', 'tutor' ),
+			self::STATUS_EXPIRED   => __( 'Expired', 'tutor' ),
+			self::STATUS_SCHEDULED => __( 'Scheduled', 'tutor' ),
 		);
 	}
 
@@ -1273,5 +1275,27 @@ class CouponModel {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Determine whether a coupon is scheduled (upcoming).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $coupon Coupon object.
+	 *
+	 * @return bool True if the coupon is scheduled, false otherwise.
+	 */
+	public static function is_scheduled( object $coupon ): bool {
+
+		if ( ! $coupon ) {
+			return false;
+		}
+
+		$now         = time();
+		$start_date  = strtotime( $coupon->start_date_gmt );
+		$expire_date = $coupon->expire_date_gmt ? strtotime( $coupon->expire_date_gmt ) : null;
+
+		return $start_date > $now && ( ! $expire_date || $expire_date > $now );
 	}
 }
