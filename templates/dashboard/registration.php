@@ -157,7 +157,7 @@ if ( ! get_option( 'users_can_register', false ) ) :
 
 				?>
 				<?php foreach ( $consents as $consent ) : ?>
-					<?php LegalConsent::render_consent_field( $consent ); ?>
+					<?php LegalConsent::render_consent_field( $consent, 'tutor-mb-8' ); ?>
 				<?php endforeach; ?>
 			
 			<?php else : ?>
