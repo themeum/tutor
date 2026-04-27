@@ -820,12 +820,14 @@ class LegalConsent extends BaseController {
 		} else {
 			$terms_conditions_link = tutor_utils()->get_toc_page_link();
 			if ( $terms_conditions_link ) {
-				$is_checked = $request['terms_conditions'] ?? 0;
+				$is_checked = self::DISPLAY_ON_CHECKOUT === $display_key
+					? ( $request['agree_to_terms'] ?? 0 )
+					: ( $request['terms_conditions'] ?? 0 );
 				if ( ! $is_checked ) {
 					$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
 				}
 
-				array_push( $res, 'terms_conditions' );
+				array_push( $res, self::DISPLAY_ON_CHECKOUT === $display_key ? 'agree_to_terms' : 'terms_conditions' );
 			}
 		}
 

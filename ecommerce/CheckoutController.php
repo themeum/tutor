@@ -11,6 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Input;
+use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use Tutor\Models\CouponModel;
@@ -620,6 +621,11 @@ class CheckoutController {
 					array_push( $errors, $error );
 				}
 			}
+		}
+
+		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $_POST );
+		if ( is_wp_error( $validate_consent ) ) {
+			array_push( $errors, $validate_consent->get_error_message() );
 		}
 
 		// Return if validation failed.
