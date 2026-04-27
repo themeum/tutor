@@ -25,11 +25,7 @@ let currentUserEmail = '';
 let currentUserLogin = '';
 let currentLogs = [];
 
-// ── Helpers ─────────────────────────────────────────────────────────────
-
 const { __ } = wp.i18n;
-
-
 
 /**
  * Build a human-readable title from the consent_title or accepted flag.
