@@ -1989,15 +1989,6 @@ class Quiz {
 					->cancel_button( $skip_modal_cancel_button )
 					->render();
 			}
-
-			if ( $show_continue ) {
-				Button::make()
-				->tag( 'a' )
-				->label( __( 'Continue Lesson', 'tutor' ) )
-				->variant( $can_start_quiz ? Variant::GHOST : Variant::PRIMARY )
-				->attr( 'href', esc_url( get_the_permalink( $next_id ) ) )
-				->render();
-			}
 			?>
 
 			<?php if ( $can_start_quiz ) : ?>
@@ -2005,8 +1996,8 @@ class Quiz {
 					<?php
 					Button::make()
 						->label( __( 'Retry Quiz', 'tutor' ) )
+						->variant( $show_continue ? Variant::GHOST : Variant::PRIMARY )
 						->attr( 'type', 'button' )
-						->icon( Icon::RELOAD_3, 'left', 20, 20 )
 						->attr(
 							'@click',
 							sprintf(
@@ -2042,6 +2033,16 @@ class Quiz {
 				</form>
 				<?php endif; ?>
 			<?php endif; ?>
+
+			<?php
+			if ( $show_continue ) {
+				Button::make()
+				->tag( 'a' )
+				->label( __( 'Continue Lesson', 'tutor' ) )
+				->attr( 'href', esc_url( get_the_permalink( $next_id ) ) )
+				->render();
+			}
+			?>
 		</div>
 
 		<?php if ( $show_retry_modal ) : ?>

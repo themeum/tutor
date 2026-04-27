@@ -433,6 +433,7 @@ class Input {
 				'stroke-dasharray'  => true,
 				'stroke-dashoffset' => true,
 				'opacity'           => true,
+				'rx'                => true,
 			),
 			'line'     => array(
 				'x1'                => true,
