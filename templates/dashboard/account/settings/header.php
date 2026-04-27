@@ -44,10 +44,10 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 				->attr( 'href', esc_url( $back_url ) )
 				->render();
 			?>
-			<div 
-				class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4"
+			<h4 
+				class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4 tutor-my-none"
 				x-text="windowWidth <= 768 ? (activeTab === 'none' ? '<?php esc_html_e( 'Settings', 'tutor' ); ?>' : tabs.find(tab => tab.id == activeTab).label) : '<?php esc_html_e( 'Settings', 'tutor' ); ?>'"
-			></div>
+			></h4>
 
 			<?php
 			Badge::make()

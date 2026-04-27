@@ -70,7 +70,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 		class="tutor-flex tutor-flex-column tutor-gap-6"
 	>
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
-			<div class="tutor-h5 tutor-md-hidden"><?php echo esc_html__( 'Account', 'tutor' ); ?></div>
+			<h5 class="tutor-h5 tutor-md-hidden tutor-my-none"><?php echo esc_html__( 'Account', 'tutor' ); ?></h5>
 			<div class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5">
 				<?php do_action( 'tutor_profile_edit_input_before' ); ?>
 

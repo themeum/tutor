@@ -27,7 +27,7 @@ foreach ( $social_fields as $key => $field ) {
 ?>
 
 <section class="tutor-social-accounts">
-	<div class="tutor-h5 tutor-md-hidden"><?php echo esc_html__( 'Social Profile Link', 'tutor' ); ?></div>
+	<h5 class="tutor-h5 tutor-md-hidden tutor-my-none"><?php echo esc_html__( 'Social Profile Link', 'tutor' ); ?></h5>
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data='tutorForm({ 

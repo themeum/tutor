@@ -54,11 +54,9 @@
   .plyr__controls__item.plyr__menu {
     .plyr__menu__container {
       [role=menu] button {
-        // color: $tutor-text-primary;
         color: var(--plyr-video-control-color, #fff);
         &:hover,
         &:focus {
-          // color: $tutor-text-primary-inverse;
           color: var(--plyr-video-control-color, #fff);
         }
       }
