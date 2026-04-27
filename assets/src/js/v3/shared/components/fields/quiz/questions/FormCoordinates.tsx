@@ -31,10 +31,15 @@ const PADDING = 12;
 const SNAP_THRESHOLD = 0.3;
 const CANVAS_SIZE = 420;
 const MAX_COORDINATES = 5;
+const AXIS_LABEL_STEP = 2;
 const AXIS_RANGE_OPTIONS = [10, 20].map((value) => ({
   label: `${value} ${__('points', __TUTOR_TEXT_DOMAIN__)}`,
   value,
 }));
+
+function shouldRenderAxisLabel(value: number): boolean {
+  return value === 0 || Math.abs(value % AXIS_LABEL_STEP) === 0;
+}
 
 interface FormCoordinatesProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
@@ -236,14 +241,14 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       for (let i = minCoord; i <= maxCoord; i++) {
-        if (i === 0) continue;
+        if (i === 0 || !shouldRenderAxisLabel(i)) continue;
         const p = graphToPixel(i, 0);
         ctx.fillText(String(i), p.x, centerY + 5);
       }
       ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
       for (let i = minCoord; i <= maxCoord; i++) {
-        if (i === 0) continue;
+        if (i === 0 || !shouldRenderAxisLabel(i)) continue;
         const p = graphToPixel(0, i);
         ctx.fillText(String(i), centerX - 5, p.y);
       }
