@@ -535,6 +535,10 @@ class LegalConsent extends BaseController {
 	 * @return void
 	 */
 	public static function render_consent_field( object $consent, string $wrapper_cs_class = '' ): void {
+		if ( ! $consent->is_active ) {
+			return;
+		}
+
 		$is_required  = self::is_required( $consent );
 		$is_text_only = self::METHOD_TEXT_ONLY === $consent->consent_method;
 		$field_name   = self::get_field_name( $consent );
@@ -654,7 +658,7 @@ class LegalConsent extends BaseController {
 	}
 
 	/**
-	 * Check if the display place has consent
+	 * Check if the display place has consent & validate it
 	 *
 	 * @since 4.0.0
 	 *
@@ -663,7 +667,7 @@ class LegalConsent extends BaseController {
 	 *
 	 * @return WP_Error|true WP_Error when the consent is required but not present in the req.
 	 */
-	public static function has_consent( string $display_key, array $request ) {
+	public static function validate_consent( string $display_key, array $request ) {
 		$consents = self::get_consent_by_display_key( $display_key );
 		if ( tutor_utils()->count( $consents ) ) {
 			foreach ( $consents as $consent ) {
