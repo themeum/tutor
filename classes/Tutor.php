@@ -14,7 +14,6 @@ use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Migrations\Migration;
-use Tutor\TemplateImport\TemplateImportInit;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -509,9 +508,6 @@ final class Tutor extends Singleton {
 		$this->private_course_access = new Private_Course_Access();
 		$this->course_filter         = new Course_Filter();
 		$this->permalink             = new Permalink();
-
-		// Template import.
-		new TemplateImportInit();
 
 		// Integrations.
 		$this->woocommerce = new WooCommerce();
