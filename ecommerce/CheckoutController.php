@@ -757,6 +757,8 @@ class CheckoutController {
 			}
 
 			if ( ! empty( $order_data ) ) {
+				do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
+
 				if ( 'automate' === $payment_type ) {
 					try {
 						$payment_data = self::prepare_payment_data( $order_data );
