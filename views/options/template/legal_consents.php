@@ -39,7 +39,7 @@ $wp_pages        = get_pages(
 $default_consent = array(
 	'id'          => 0,
 	'enabled'     => 'off',
-	'title'       => __( 'Demo Consent', 'tutor' ),
+	'title'       => __( 'Consent Title', 'tutor' ),
 	'display_on'  => array(
 		LegalConsent::DISPLAY_ON_STD_REG => LegalConsent::DISPLAY_ON_STD_REG,
 	),
@@ -91,7 +91,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 						<input
 							type="text"
 							class="tutor-form-control"
-							placeholder="<?php esc_attr_e( 'Demo Consent', 'tutor' ); ?>"
+							placeholder="<?php esc_attr_e( 'Consent Title', 'tutor' ); ?>"
 							value="<?php echo esc_attr( $title ); ?>"
 							data-consent-title-input
 						/>

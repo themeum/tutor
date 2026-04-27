@@ -69,7 +69,7 @@ const FORM_FIELDS = {
 	isActive: 'is_active',
 };
 
-const DEFAULT_CONSENT_TITLE = __('Demo Consent', 'tutor');
+const DEFAULT_CONSENT_TITLE = __('Consent Title', 'tutor');
 const PLACEHOLDER_PATTERN = /\{([a-zA-Z0-9_-]+)\}/g;
 const TEMPLATE_INDEX_PLACEHOLDER = '__INDEX__';
 const TUTOR_OPTION_SAVED_EVENT = 'tutor_option_saved';
