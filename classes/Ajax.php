@@ -481,7 +481,8 @@ class Ajax {
 					$validation_error->add( 400, $user->get_error_message() );
 				}
 			} else {
-				do_action( 'tutor_after_login_success', $user->ID );
+				// @since 4.0.0 $validate _consent param added.
+				do_action( 'tutor_after_login_success', $user->ID, $validate_consent );
 				// Since 1.9.8 do enroll if guest attempt to enroll.
 				$course_enroll_attempt = Input::post( 'tutor_course_enroll_attempt' );
 				if ( ! empty( $course_enroll_attempt ) && is_a( $user, 'WP_User' ) ) {

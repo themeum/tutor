@@ -89,9 +89,9 @@ class Student {
 		}
 
 		// @since 4.0.0 legal consent added.
-		$has_consent = LegalConsent::has_consent( LegalConsent::DISPLAY_ON_STD_REG, $_POST );
-		if ( is_wp_error( $has_consent ) ) {
-			$validation_errors[ $has_consent->get_error_code() ] = $has_consent->get_error_message();
+		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_STD_REG, $_POST );
+		if ( is_wp_error( $validate_consent ) ) {
+			$validation_errors[ $validate_consent->get_error_code() ] = $validate_consent->get_error_message();
 		}
 
 		if ( ! filter_var( tutor_utils()->input_old( 'email' ), FILTER_VALIDATE_EMAIL ) ) {
@@ -134,6 +134,10 @@ class Student {
 		}
 
 		$user = get_user_by( 'id', $user_id );
+
+		if ( $user ) {
+			do_action( 'tutor_new_user_registered', $user, $validate_consent );
+		}
 
 		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 		if ( $is_req_email_verification ) {

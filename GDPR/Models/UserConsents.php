@@ -63,29 +63,4 @@ class UserConsents extends BaseModel {
 		$this->table_name = Table::get_table_name();
 		parent::__construct();
 	}
-
-	/**
-	 * Check if a user has a stored consent for a display key and version.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int    $user_id     User ID.
-	 * @param string $display_key Consent display key (stored as source).
-	 * @param string $version     Consent version.
-	 *
-	 * @return bool
-	 */
-	public function is_consent_given_by_user( int $user_id, string $display_key, string $version ): bool {
-		if ( ! $user_id || ! $display_key || ! $version ) {
-			return false;
-		}
-
-		$where = array(
-			'user_id' => $user_id,
-			'source'  => Input::sanitize( $display_key ),
-			'version' => Input::sanitize( $version ),
-		);
-
-		return (bool) $this->get_row( $where );
-	}
 }

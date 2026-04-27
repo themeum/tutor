@@ -15,6 +15,7 @@ use Tutor\GDPR\Models\UserConsents;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
+use WP_User;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -59,8 +60,23 @@ class UserConsent extends BaseController {
 	 * @return void
 	 */
 	private function register_hooks() {
-		add_action( 'tutor_after_login_success', array( $this, 'store_login_consent' ) );
+		add_action( 'tutor_new_user_registered', array( $this, 'store_registration_consent' ), 10, 2 );
+		add_action( 'tutor_after_login_success', array( $this, 'store_login_consent' ), 10, 2 );
 		add_action( 'wp_ajax_tutor_user_consents', array( $this, 'handle_ajax_request' ) );
+	}
+
+	/**
+	 * Store registration consent
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_User $user User object.
+	 * @param array   $checked_consents The provided consent fields.
+	 *
+	 * @return void
+	 */
+	public function store_registration_consent( WP_User $user, array $checked_consents ): void {
+		$this->create_user_consent( $user->ID, LegalConsent::DISPLAY_ON_STD_REG, $checked_consents );
 	}
 
 	/**
@@ -68,12 +84,13 @@ class UserConsent extends BaseController {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param int $user_id User id.
+	 * @param int   $user_id User id.
+	 * @param array $checked_consents The provided consent fields.
 	 *
 	 * @return void
 	 */
-	public function store_login_consent( int $user_id ): void {
-		$this->create_user_consent( $user_id, LegalConsent::DISPLAY_ON_LOGIN );
+	public function store_login_consent( int $user_id, array $checked_consents ): void {
+		$this->create_user_consent( $user_id, LegalConsent::DISPLAY_ON_LOGIN, $checked_consents );
 	}
 
 	/**
@@ -121,31 +138,45 @@ class UserConsent extends BaseController {
 	 *
 	 * @param int    $user_id     ID of the user.
 	 * @param string $display_key Consent display key (e.g., registration, login).
+	 * @param array  $checked_consents Checked consent fields.
 	 *
 	 * @return void
 	 */
-	private function create_user_consent( $user_id, $display_key ) {
+	private function create_user_consent( int $user_id, string $display_key, array $checked_consents ) {
 		$user_data = get_userdata( $user_id );
 		if ( $user_data ) {
 			$consents = LegalConsent::get_consent_by_display_key( $display_key );
 
 			if ( tutor_utils()->count( $consents ) ) {
 				foreach ( $consents as $consent ) {
-					$is_consent_given = self::is_consent_given_by_user( $display_key, $consent->version, $user_data->ID );
+					$is_active = LegalConsent::is_active( $consent );
 
-					if ( ! $is_consent_given ) {
-						$build_consent = LegalConsent::build_consent_snapshot( $consent );
-						if ( ! empty( $build_consent ) ) {
-							$build_consent['user_id']    = $user_data->ID;
-							$build_consent['user_email'] = $user_data->user_email;
-							$build_consent['source']     = $display_key;
+					$args = array(
+						'source'        => $display_key,
+						'version'       => $consent->version,
+						'user_id'       => $user_data->ID,
+						'consent_title' => $consent->consent_title,
+					);
 
-							try {
-								$this->create( $build_consent );
-							} catch ( \Throwable $th ) {
-								tutor_log( $th );
-							}
+					$already_given = $this->model->get_row( $args );
+
+					if ( ! $is_active || $already_given ) {
+						continue;
+					}
+
+					$is_text_only = LegalConsent::is_text_only( $consent );
+					if ( $is_text_only ) {
+						// Store consent.
+						$this->build_and_store( $consent, $user_data, $display_key );
+					} else {
+						$consent_field      = LegalConsent::get_field_name( $consent );
+						$is_checked_consent = in_array( $consent_field, $checked_consents, true );
+
+						if ( ! $is_checked_consent ) {
+							continue;
 						}
+
+						$this->build_and_store( $consent, $user_data, $display_key );
 					}
 				}
 			}
@@ -169,6 +200,30 @@ class UserConsent extends BaseController {
 		$records = $this->model->get_all( $where );
 
 		return is_array( $records ) ? $records : array();
+	}
+
+	/**
+	 * Build and store give consent
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param Object  $consent Consent object.
+	 * @param WP_User $user_data User data object.
+	 * @param string  $display_key Display key.
+	 */
+	private function build_and_store( $consent, $user_data, $display_key ) {
+		$build_consent = LegalConsent::build_consent_snapshot( $consent );
+		if ( ! empty( $build_consent ) ) {
+			$build_consent['user_id']    = $user_data->ID;
+			$build_consent['user_email'] = $user_data->user_email;
+			$build_consent['source']     = $display_key;
+
+			try {
+				$this->create( $build_consent );
+			} catch ( \Throwable $th ) {
+				tutor_log( $th );
+			}
+		}
 	}
 
 	/**

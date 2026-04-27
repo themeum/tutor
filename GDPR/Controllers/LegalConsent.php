@@ -573,6 +573,33 @@ class LegalConsent extends BaseController {
 	}
 
 	/**
+	 * Check whether a consent is active.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $consent Consent settings object.
+	 *
+	 * @return bool
+	 */
+	public static function is_active( object $consent ): bool {
+		$is_active = (int) $consent->is_active;
+		return $is_active ? true : false;
+	}
+
+	/**
+	 * Check whether a consent is text only without checkbox.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $consent Consent settings object.
+	 *
+	 * @return bool
+	 */
+	public static function is_text_only( object $consent ): bool {
+		return self::METHOD_TEXT_ONLY === $consent->consent_method;
+	}
+
+	/**
 	 * Get the consent field name
 	 *
 	 * @since 4.0.0
@@ -665,10 +692,15 @@ class LegalConsent extends BaseController {
 	 * @param string $display_key Display key.
 	 * @param array  $request Input request.
 	 *
-	 * @return WP_Error|true WP_Error when the consent is required but not present in the req.
+	 * @return WP_Error|array WP_Error when the consent is required but not present in the req. Array
+	 * contain the given consent fields.
 	 */
 	public static function validate_consent( string $display_key, array $request ) {
 		$consents = self::get_consent_by_display_key( $display_key );
+
+		// Keep the fields where user has given consent.
+		$res = array();
+
 		if ( tutor_utils()->count( $consents ) ) {
 			foreach ( $consents as $consent ) {
 				$is_active = (int) $consent->is_active;
@@ -676,13 +708,16 @@ class LegalConsent extends BaseController {
 					continue;
 				}
 
-				$is_required = self::is_required( $consent );
 				$field_name  = self::get_field_name( $consent );
-				if ( $is_required ) {
-					$is_checked = $request[ $field_name ] ?? 0;
-					if ( ! $is_checked ) {
-						return new WP_Error( 'consent_error', __( 'Please accept the consent field', 'tutor' ) );
-					}
+				$is_required = self::is_required( $consent );
+				$is_checked  = $request[ $field_name ] ?? 0;
+
+				if ( $is_required && ! $is_checked ) {
+					return new WP_Error( 'consent_error', __( 'Please accept the consent field', 'tutor' ) );
+				}
+
+				if ( $is_checked ) {
+					array_push( $res, $field_name );
 				}
 			}
 		} else {
@@ -692,10 +727,12 @@ class LegalConsent extends BaseController {
 				if ( ! $is_checked ) {
 					$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
 				}
+
+				array_push( $res, 'terms_conditions' );
 			}
 		}
 
-		return true;
+		return $res;
 	}
 
 	/**
