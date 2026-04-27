@@ -198,8 +198,31 @@ class UserConsent extends BaseController {
 		);
 
 		$records = $this->model->get_all( $where );
+		if ( ! is_array( $records ) ) {
+			return array();
+		}
 
-		return is_array( $records ) ? $records : array();
+		return array_map(
+			function ( $record ) {
+				if ( ! isset( $record->created_at_utc ) ) {
+					return $record;
+				}
+
+				$created_at = strtotime( $record->created_at_utc . ' UTC' );
+				if ( false === $created_at ) {
+					return $record;
+				}
+
+				$record->time_ago = sprintf(
+					/* translators: %s: human-readable time difference. */
+					__( '%s ago', 'tutor' ),
+					human_time_diff( $created_at, time() )
+				);
+
+				return $record;
+			},
+			$records
+		);
 	}
 
 	/**

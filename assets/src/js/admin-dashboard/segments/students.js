@@ -108,56 +108,7 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
 	fetch(AJAX_URL, { method: 'POST', body })
 		.then((r) => r.json())
 		.then((data) => {
-			// // --- DUMMY DATA FOR TESTING TIMELINE HEIGHTS ---
-			// const dummyLogs = [
-			// 	{
-			// 		consent_title: 'Terms of Service',
-			// 		accepted: 1,
-			// 		created_at_utc: '2023-10-15 14:30 UTC',
-			// 		timeAgo: '2 hours ago',
-			// 		ip_address: '192.168.1.1',
-			// 		source: 'Registration Page',
-			// 		user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36'
-			// 	},
-			// 	{
-			// 		consent_title: 'Privacy Policy',
-			// 		accepted: 1,
-			// 		created_at_utc: '2023-10-15 14:35 UTC',
-			// 		timeAgo: '2 hours ago',
-			// 		ip_address: '192.168.1.1',
-			// 		source: 'Checkout Page',
-			// 		user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'
-			// 	},
-			// 	{
-			// 		consent_title: 'Marketing Emails',
-			// 		accepted: 0,
-			// 		created_at_utc: '2023-11-01 09:15 UTC',
-			// 		timeAgo: '5 months ago',
-			// 		ip_address: '10.0.0.5',
-			// 		source: 'Profile Settings',
-			// 		user_agent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
-			// 	},
-			// 	{
-			// 		consent_title: 'Data Processing Agreement (Extremely long title to test wrapping behavior across multiple lines in the timeline view)',
-			// 		accepted: 1,
-			// 		created_at_utc: '2023-12-20 16:45 UTC',
-			// 		timeAgo: '4 months ago',
-			// 		ip_address: '172.16.254.1',
-			// 		source: 'Course Enrollment (Advanced WordPress Development Bootcamp 2024)',
-			// 		user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0'
-			// 	},
-			// 	{
-			// 		consent_title: 'Cookie Policy',
-			// 		accepted: 1,
-			// 		created_at_utc: '2024-01-05 11:00 UTC',
-			// 		timeAgo: '3 months ago',
-			// 		ip_address: '192.168.1.100',
-			// 		source: 'Footer Link',
-			// 		user_agent: 'Mozilla/5.0'
-			// 	}
-			// ];
-
-			const logs = data;
+			const logs = data.data;
 			currentLogs = logs;
 
 			if (!logs.length) {
