@@ -48,9 +48,7 @@ cypress/fixtures/*
 # Ignore specific PNG files
 **/beforeEach*.png
 launch.json
-/tutor-droip
 /includes/droip
-/tutor-kirki
 /includes/kirki
 
 # Copilot Instructions
