@@ -510,9 +510,6 @@ final class Tutor extends Singleton {
 		$this->course_filter         = new Course_Filter();
 		$this->permalink             = new Permalink();
 
-		// Template import.
-		new TemplateImportInit();
-
 		// Integrations.
 		$this->woocommerce = new WooCommerce();
 		$this->edd         = new TutorEDD();
