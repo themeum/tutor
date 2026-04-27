@@ -152,12 +152,12 @@ if ( ! get_option( 'users_can_register', false ) ) :
 
 			<?php
 			$tutor_toc_page_link = tutor_utils()->get_toc_page_link();
-			$consents            = LegalConsent::get_consent_by_display_key( LegalConsent::DISPLAY_ON_SIGNUP );
+			$consents            = LegalConsent::get_consent_by_display_key( LegalConsent::DISPLAY_ON_STD_REG );
 			if ( tutor_utils()->count( $consents ) ) :
 
 				?>
 				<?php foreach ( $consents as $consent ) : ?>
-					<?php LegalConsent::render_consent_field( $consent ); ?>
+					<?php LegalConsent::render_consent_field( $consent, 'tutor-mb-8' ); ?>
 				<?php endforeach; ?>
 			
 			<?php else : ?>

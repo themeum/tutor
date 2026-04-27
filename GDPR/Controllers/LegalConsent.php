@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 4.0.0
  */
-class LegalConsent {
+class LegalConsent extends BaseController {
 
 	use JsonResponse;
 
@@ -35,8 +35,9 @@ class LegalConsent {
 	 *
 	 * @var string
 	 */
-	const DISPLAY_ON_SIGNUP       = 'signup';
-	const DISPLAY_ON_SIGNIN       = 'signin';
+	const DISPLAY_ON_LOGIN        = 'login';
+	const DISPLAY_ON_STD_REG      = 'student_registration';
+	const DISPLAY_ON_INS_REG      = 'instructor_registration';
 	const DISPLAY_ON_CHECKOUT     = 'checkout';
 	const DISPLAY_ON_SUBSCRIPTION = 'subscription';
 	const DISPLAY_ON_ENROLLMENT   = 'enrollment';
@@ -127,7 +128,7 @@ class LegalConsent {
 	 * @since 4.0.0
 	 */
 	public function show_consent_field_on_login_form() {
-		$consents = self::get_consent_by_display_key( self::DISPLAY_ON_SIGNIN );
+		$consents = self::get_consent_by_display_key( self::DISPLAY_ON_LOGIN );
 		if ( tutor_utils()->count( $consents ) ) {
 			foreach ( $consents as $consent ) {
 				self::render_consent_field( $consent, 'tutor-mt-8' );
@@ -146,8 +147,9 @@ class LegalConsent {
 	 */
 	public static function get_consent_places() {
 		$places = array(
-			self::DISPLAY_ON_SIGNUP,
-			self::DISPLAY_ON_SIGNIN,
+			self::DISPLAY_ON_STD_REG,
+			self::DISPLAY_ON_INS_REG,
+			self::DISPLAY_ON_LOGIN,
 			self::DISPLAY_ON_CHECKOUT,
 		);
 
@@ -319,18 +321,6 @@ class LegalConsent {
 	}
 
 	/**
-	 * Validate nonce and user capability for AJAX requests.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return void
-	 */
-	private function validate_ajax_request() {
-		tutor_utils()->check_nonce();
-		tutor_utils()->check_current_user_capability();
-	}
-
-	/**
 	 * Create legal consent entry.
 	 *
 	 * @since 4.0.0
@@ -460,7 +450,7 @@ class LegalConsent {
 
 		$data = $this->prepare_legal_consent_data( $request, false );
 		if ( is_wp_error( $data ) ) {
-			$this->json_response( '', $data->errors, 400 );
+			$this->response_bad_request( __( 'Validation error', 'tutor' ), $data->errors, 400 );
 		}
 
 		if ( isset( $data['consent_map'] ) && ! tutor_is_json( $data['consent_map'] ) ) {
@@ -473,6 +463,7 @@ class LegalConsent {
 
 		$wpdb->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
+		$data['version']        = (int) $existing->version + 1;
 		$data['updated_at_utc'] = current_time( 'mysql', true );
 		$updated                = $this->model->update( $id, $data );
 		if ( ! $updated ) {
@@ -643,6 +634,10 @@ class LegalConsent {
 	 * @return void
 	 */
 	public static function render_consent_field( object $consent, string $wrapper_cs_class = '' ): void {
+		if ( ! $consent->is_active ) {
+			return;
+		}
+
 		$is_required  = self::is_required( $consent );
 		$is_text_only = self::METHOD_TEXT_ONLY === $consent->consent_method;
 		$field_name   = self::get_field_name( $consent );
@@ -677,6 +672,33 @@ class LegalConsent {
 	}
 
 	/**
+	 * Check whether a consent is active.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $consent Consent settings object.
+	 *
+	 * @return bool
+	 */
+	public static function is_active( object $consent ): bool {
+		$is_active = (int) $consent->is_active;
+		return $is_active ? true : false;
+	}
+
+	/**
+	 * Check whether a consent is text only without checkbox.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $consent Consent settings object.
+	 *
+	 * @return bool
+	 */
+	public static function is_text_only( object $consent ): bool {
+		return self::METHOD_TEXT_ONLY === $consent->consent_method;
+	}
+
+	/**
 	 * Get the consent field name
 	 *
 	 * @since 4.0.0
@@ -699,7 +721,7 @@ class LegalConsent {
 	 *
 	 * @return void
 	 */
-	public static function render_constructed_label_text( object $consent ): void {
+	private static function render_constructed_label_text( object $consent ): void {
 		if ( empty( $consent ) || empty( $consent->consent_message ) ) {
 			return;
 		}
@@ -762,17 +784,22 @@ class LegalConsent {
 	}
 
 	/**
-	 * Check if the display place has consent
+	 * Check if the display place has consent & validate it
 	 *
 	 * @since 4.0.0
 	 *
 	 * @param string $display_key Display key.
 	 * @param array  $request Input request.
 	 *
-	 * @return WP_Error|true WP_Error when the consent is required but not present in the req.
+	 * @return WP_Error|array WP_Error when the consent is required but not present in the req. Array
+	 * contain the given consent fields.
 	 */
-	public static function has_consent( string $display_key, array $request ) {
+	public static function validate_consent( string $display_key, array $request ) {
 		$consents = self::get_consent_by_display_key( $display_key );
+
+		// Keep the fields where user has given consent.
+		$res = array();
+
 		if ( tutor_utils()->count( $consents ) ) {
 			foreach ( $consents as $consent ) {
 				$is_active = (int) $consent->is_active;
@@ -780,13 +807,16 @@ class LegalConsent {
 					continue;
 				}
 
-				$is_required = self::is_required( $consent );
 				$field_name  = self::get_field_name( $consent );
-				if ( $is_required ) {
-					$is_checked = $request[ $field_name ] ?? 0;
-					if ( ! $is_checked ) {
-						return new WP_Error( 'consent_error', __( 'Please accept the consent field', 'tutor' ) );
-					}
+				$is_required = self::is_required( $consent );
+				$is_checked  = $request[ $field_name ] ?? 0;
+
+				if ( $is_required && ! $is_checked ) {
+					return new WP_Error( 'consent_error', __( 'Please accept the consent field', 'tutor' ) );
+				}
+
+				if ( $is_checked ) {
+					array_push( $res, $field_name );
 				}
 			}
 		} else {
@@ -796,9 +826,91 @@ class LegalConsent {
 				if ( ! $is_checked ) {
 					$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
 				}
+
+				array_push( $res, 'terms_conditions' );
 			}
 		}
 
-		return true;
+		return $res;
+	}
+
+	/**
+	 * Build a snapshot of the consent message and associated links.
+	 *
+	 * This method decodes the consent message, replaces any placeholders with finalized anchor tags,
+	 * and constructs a links snapshot containing details about the linked pages.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $consent Consent object containing message and map details.
+	 *
+	 * @return array Array containing the processed consent message and the links snapshot.
+	 */
+	public static function build_consent_snapshot( object $consent ): array {
+		if ( empty( $consent ) || empty( $consent->consent_message ) ) {
+			return array();
+		}
+
+		// Decode message.
+		$message = html_entity_decode( $consent->consent_message );
+
+		// Normalize map.
+		$map = is_array( $consent->consent_map )
+			? $consent->consent_map
+			: json_decode( $consent->consent_map, true );
+
+		$links_snapshot = array();
+
+		// Replace placeholders with final anchors.
+		preg_match_all( '/\{([a-zA-Z0-9_\-]+)\}/', $message, $matches );
+
+		if ( ! empty( $matches[1] ) && is_array( $map ) ) {
+
+			foreach ( $matches[1] as $key ) {
+
+				if ( empty( $map[ $key ] ) ) {
+					continue;
+				}
+
+				$page_id = (int) $map[ $key ];
+
+				if ( ! $page_id || 'publish' !== get_post_status( $page_id ) ) {
+					continue;
+				}
+
+				$url   = get_permalink( $page_id );
+				$title = get_the_title( $page_id );
+
+				// Build anchor (snapshot should NOT depend on future changes).
+				$anchor = sprintf(
+					'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+					esc_url( $url ),
+					esc_html( $title )
+				);
+
+				$message = str_replace( '{' . $key . '}', $anchor, $message );
+
+				// Store link snapshot separately (optional but powerful).
+				$links_snapshot[ $key ] = array(
+					'page_id' => $page_id,
+					'url'     => $url,
+					'title'   => $title,
+				);
+			}
+		}
+
+		$plain_text = wp_strip_all_tags( $message );
+
+		return array(
+			'consent_title'             => $consent->consent_title ?? '',
+			'version'                   => $consent->version ?? 1,
+			'label_snapshot'            => $message,      // PRIMARY legal proof.
+			'label_snapshot_plain_text' => $plain_text, // Fallback plain text.
+			'links_snapshot'            => wp_json_encode( $links_snapshot ),
+			'consent_method'            => $consent->consent_method ?? null,
+			'created_at_utc'            => gmdate( 'Y-m-d H:i:s' ),
+			'ip_address'                => isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '',
+			'user_agent'                => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
+		);
 	}
 }

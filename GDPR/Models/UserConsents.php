@@ -11,6 +11,7 @@
 namespace Tutor\GDPR\Models;
 
 use Tutor\GDPR\DB\UserConsents as Table;
+use TUTOR\Input;
 use Tutor\Models\BaseModel;
 
 defined( 'ABSPATH' ) || exit;
@@ -43,9 +44,10 @@ class UserConsents extends BaseModel {
 		'user_email',
 		'consent_title',
 		'label_snapshot',
-		'consent_map',
+		'label_snapshot_plain_text',
+		'links_snapshot',
+		'consent_method',
 		'version',
-		'accepted',
 		'ip_address',
 		'user_agent',
 		'source',
