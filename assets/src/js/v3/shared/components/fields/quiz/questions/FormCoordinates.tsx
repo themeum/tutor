@@ -8,10 +8,12 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import TextInput from '@TutorShared/atoms/TextInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -26,14 +28,18 @@ import {
 } from '@TutorShared/utils/types';
 
 const PADDING = 12;
-const MIN_COORD = -10;
-const MAX_COORD = 10;
 const SNAP_THRESHOLD = 0.3;
 const CANVAS_SIZE = 420;
 const MAX_COORDINATES = 5;
+const AXIS_RANGE_OPTIONS = [10, 20].map((value) => ({
+  label: `${value} ${__('points', __TUTOR_TEXT_DOMAIN__)}`,
+  value,
+}));
 
 interface FormCoordinatesProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
+  activeQuestionIndex?: number;
+  axisRangeControllerProps?: FormControllerProps<number | null>;
   validationError?: {
     message: string;
     type: QuizValidationErrorType;
@@ -48,19 +54,25 @@ interface FormCoordinatesProps extends FormControllerProps<QuizQuestionOption> {
 
 type CoordinatePoint = { x: number; y: number };
 
-function clampIntToRange(n: number): number {
-  const rounded = Math.round(n);
-  return Math.max(MIN_COORD, Math.min(MAX_COORD, rounded));
+function resolveAxisRange(value?: number | null): 10 | 20 {
+  return Number(value) === 20 ? 20 : 10;
 }
 
-function sanitizePoint(p: CoordinatePoint): CoordinatePoint {
+function clampIntToRange(n: number, axisRange: number): number {
+  const min = -axisRange;
+  const max = axisRange;
+  const rounded = Math.round(n);
+  return Math.max(min, Math.min(max, rounded));
+}
+
+function sanitizePoint(p: CoordinatePoint, axisRange: number): CoordinatePoint {
   return {
-    x: clampIntToRange(p.x),
-    y: clampIntToRange(p.y),
+    x: clampIntToRange(p.x, axisRange),
+    y: clampIntToRange(p.y, axisRange),
   };
 }
 
-function parseStoredCoordinates(value: string): CoordinatePoint[] {
+function parseStoredCoordinates(value: string, axisRange: number): CoordinatePoint[] {
   if (!value || typeof value !== 'string') return [];
   try {
     const parsed = JSON.parse(value) as unknown;
@@ -70,7 +82,7 @@ function parseStoredCoordinates(value: string): CoordinatePoint[] {
           if (!p || typeof p !== 'object') return null;
           const maybe = p as { x?: unknown; y?: unknown };
           if (typeof maybe.x !== 'number' || typeof maybe.y !== 'number') return null;
-          return sanitizePoint({ x: maybe.x, y: maybe.y });
+          return sanitizePoint({ x: maybe.x, y: maybe.y }, axisRange);
         })
         .filter(Boolean) as CoordinatePoint[];
       return pts.slice(0, MAX_COORDINATES);
@@ -78,7 +90,7 @@ function parseStoredCoordinates(value: string): CoordinatePoint[] {
     if (parsed && typeof parsed === 'object') {
       const o = parsed as { x?: unknown; y?: unknown };
       if (typeof o.x === 'number' && typeof o.y === 'number') {
-        return [sanitizePoint({ x: o.x, y: o.y })];
+        return [sanitizePoint({ x: o.x, y: o.y }, axisRange)];
       }
     }
   } catch {
@@ -87,7 +99,9 @@ function parseStoredCoordinates(value: string): CoordinatePoint[] {
   return [];
 }
 
-function parseCoordinateText(value: string): CoordinatePoint | null {
+function parseCoordinateText(value: string, axisRange: number): CoordinatePoint | null {
+  const min = -axisRange;
+  const max = axisRange;
   const raw = (value ?? '').trim();
   if (!raw) return null;
   const parts = raw.split(',').map((p) => p.trim());
@@ -96,7 +110,7 @@ function parseCoordinateText(value: string): CoordinatePoint | null {
   const y = Number(parts[1]);
   if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
   if (!Number.isInteger(x) || !Number.isInteger(y)) return null;
-  if (x < MIN_COORD || x > MAX_COORD || y < MIN_COORD || y > MAX_COORD) return null;
+  if (x < min || x > max || y < min || y > max) return null;
   return { x, y };
 }
 
@@ -104,23 +118,33 @@ function formatCoordinateText(pt: CoordinatePoint): string {
   return `${pt.x},${pt.y}`;
 }
 
-const FormCoordinates = ({ field }: FormCoordinatesProps) => {
+const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerProps }: FormCoordinatesProps) => {
+  const form = useFormContext();
   const option = field.value;
+  const resolvedQuestionDataStatusPath = Array.isArray(form?.getValues?.('questions'))
+    ? (`questions.${activeQuestionIndex}._data_status` as const)
+    : ('_data_status' as const);
+  const activeQuestionDataStatus = form
+    ? ((form.watch(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
+    : QuizDataStatus.NO_CHANGE;
+  const axisRange = resolveAxisRange(axisRangeControllerProps?.field.value);
+  const minCoord = -axisRange;
+  const maxCoord = axisRange;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [coordinates, setCoordinates] = useState<CoordinatePoint[]>(() => {
-    const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '');
+    const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '', axisRange);
     return parsed.length ? parsed : [{ x: 0, y: 0 }];
   });
   const [drafts, setDrafts] = useState<string[]>(() => coordinates.map(formatCoordinateText));
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '');
+    const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '', axisRange);
     const next = parsed.length ? parsed : [{ x: 0, y: 0 }];
     setCoordinates(next);
     setDrafts(next.map(formatCoordinateText));
     setActiveIndex((idx) => Math.max(0, Math.min(next.length - 1, idx)));
-  }, [option?.answer_two_gap_match]);
+  }, [axisRange, option?.answer_two_gap_match]);
 
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
@@ -134,7 +158,7 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       if (!option) return;
       const normalized = (nextCoords.length ? nextCoords : [{ x: 0, y: 0 }])
         .slice(0, MAX_COORDINATES)
-        .map(sanitizePoint);
+        .map((point) => sanitizePoint(point, axisRange));
       setCoordinates(normalized);
       setDrafts(normalized.map(formatCoordinateText));
       setActiveIndex((idx) => Math.max(0, Math.min(normalized.length - 1, idx)));
@@ -147,8 +171,18 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
         is_saved: true,
       });
     },
-    [option, updateOption],
+    [axisRange, option, updateOption],
   );
+
+  useEffect(() => {
+    const normalized = coordinates.map((point) => sanitizePoint(point, axisRange));
+    const hasChange = normalized.some(
+      (point, index) => point.x !== coordinates[index]?.x || point.y !== coordinates[index]?.y,
+    );
+    if (hasChange) {
+      commitCoordinates(normalized);
+    }
+  }, [axisRange, commitCoordinates, coordinates]);
 
   const drawGrid = useCallback(
     (ctx: CanvasRenderingContext2D, width: number, height: number) => {
@@ -156,7 +190,7 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       const drawableHeight = height - 2 * PADDING;
       const centerX = PADDING + drawableWidth / 2;
       const centerY = PADDING + drawableHeight / 2;
-      const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (MAX_COORD - MIN_COORD);
+      const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (maxCoord - minCoord);
 
       const graphToPixel = (gx: number, gy: number) => ({
         x: centerX + gx * pixelsPerUnit,
@@ -165,14 +199,14 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
 
       ctx.clearRect(0, 0, width, height);
 
-      const leftEdge = graphToPixel(MIN_COORD, 0).x;
-      const rightEdge = graphToPixel(MAX_COORD, 0).x;
-      const topEdge = graphToPixel(0, MAX_COORD).y;
-      const bottomEdge = graphToPixel(0, MIN_COORD).y;
+      const leftEdge = graphToPixel(minCoord, 0).x;
+      const rightEdge = graphToPixel(maxCoord, 0).x;
+      const topEdge = graphToPixel(0, maxCoord).y;
+      const bottomEdge = graphToPixel(0, minCoord).y;
 
       ctx.strokeStyle = colorTokens.stroke.divider;
       ctx.lineWidth = 0.5;
-      for (let i = MIN_COORD; i <= MAX_COORD; i++) {
+      for (let i = minCoord; i <= maxCoord; i++) {
         if (i === 0) continue;
         const p = graphToPixel(i, 0);
         ctx.beginPath();
@@ -201,14 +235,14 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       ctx.font = '11px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
-      for (let i = MIN_COORD; i <= MAX_COORD; i++) {
+      for (let i = minCoord; i <= maxCoord; i++) {
         if (i === 0) continue;
         const p = graphToPixel(i, 0);
         ctx.fillText(String(i), p.x, centerY + 5);
       }
       ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
-      for (let i = MIN_COORD; i <= MAX_COORD; i++) {
+      for (let i = minCoord; i <= maxCoord; i++) {
         if (i === 0) continue;
         const p = graphToPixel(0, i);
         ctx.fillText(String(i), centerX - 5, p.y);
@@ -247,7 +281,7 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
         drawPointMarker(pt, isActive ? markerFillActive : markerFillIdle, isActive ? 1.05 : 1);
       });
     },
-    [activeIndex, coordinates],
+    [activeIndex, coordinates, maxCoord, minCoord],
   );
 
   useEffect(() => {
@@ -290,7 +324,7 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       const drawableHeight = size - 2 * PADDING;
       const centerX = PADDING + drawableWidth / 2;
       const centerY = PADDING + drawableHeight / 2;
-      const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (MAX_COORD - MIN_COORD);
+      const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (maxCoord - minCoord);
 
       const graphX = (pixelX - centerX) / pixelsPerUnit;
       const graphY = (centerY - pixelY) / pixelsPerUnit;
@@ -302,10 +336,10 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
       if (
         distX <= SNAP_THRESHOLD &&
         distY <= SNAP_THRESHOLD &&
-        snappedX >= MIN_COORD &&
-        snappedX <= MAX_COORD &&
-        snappedY >= MIN_COORD &&
-        snappedY <= MAX_COORD
+        snappedX >= minCoord &&
+        snappedX <= maxCoord &&
+        snappedY >= minCoord &&
+        snappedY <= maxCoord
       ) {
         const existingIdx = coordinates.findIndex((p) => p.x === snappedX && p.y === snappedY);
         if (existingIdx !== -1) {
@@ -318,7 +352,7 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
         commitCoordinates(next);
       }
     },
-    [activeIndex, commitCoordinates, coordinates, option],
+    [activeIndex, commitCoordinates, coordinates, maxCoord, minCoord, option],
   );
 
   if (!option) {
@@ -331,6 +365,26 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
         <div css={styles.answerHeader}>
           <span css={styles.answerHeaderTitle}>{__('Coordinations', __TUTOR_TEXT_DOMAIN__)}</span>
         </div>
+        {axisRangeControllerProps && (
+          <FormSelectInput
+            {...axisRangeControllerProps}
+            label={__('Graph Range', __TUTOR_TEXT_DOMAIN__)}
+            options={AXIS_RANGE_OPTIONS}
+            helpText={__('Choose axis limits for both X and Y directions.', __TUTOR_TEXT_DOMAIN__)}
+            onChange={(selectedOption) => {
+              axisRangeControllerProps.field.onChange(resolveAxisRange(Number(selectedOption.value)));
+              if (!form) {
+                return;
+              }
+              if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+                form.setValue(
+                  resolvedQuestionDataStatusPath,
+                  calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                );
+              }
+            }}
+          />
+        )}
         <div css={styles.list}>
           {coordinates.map((pt, idx) => {
             const isActive = idx === activeIndex;
@@ -405,7 +459,7 @@ const FormCoordinates = ({ field }: FormCoordinatesProps) => {
                     setDrafts(next);
                   }}
                   onBlur={(value) => {
-                    const parsed = parseCoordinateText(value ?? '');
+                    const parsed = parseCoordinateText(value ?? '', axisRange);
                     if (!parsed) {
                       setDrafts((prev) => {
                         const next = prev.slice();
