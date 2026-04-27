@@ -505,7 +505,7 @@ const bindCard = (card) => {
 	const container = card.closest(SELECTORS.legalConsentsContainer);
 
 	let consentId = Number(card.dataset[DATA_ATTRIBUTES.consentId] || 0);
-	let savedState = captureCardState(card);
+	let savedState = getCardFormState(card);
 	syncCardSaveButton(card, savedState);
 
 	const onCardChange = () => {
@@ -532,7 +532,7 @@ const bindCard = (card) => {
 				enabledInput,
 				enabledHiddenInput,
 				onSuccess: () => {
-					savedState = captureCardState(card);
+					savedState = getCardFormState(card);
 					syncCardSaveButton(card, savedState);
 				},
 			});
@@ -629,7 +629,7 @@ const bindCard = (card) => {
 				}
 
 				toggleConsentCard(card, true);
-				savedState = captureCardState(card);
+				savedState = getCardFormState(card);
 				syncCardSaveButton(card, savedState);
 			},
 		});

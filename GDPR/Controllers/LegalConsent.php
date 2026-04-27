@@ -35,6 +35,8 @@ class LegalConsent extends BaseController {
 	 *
 	 * @var string
 	 */
+	const DISPLAY_ON_SIGNUP       = 'signup';
+	const DISPLAY_ON_SIGNIN       = 'signin';
 	const DISPLAY_ON_LOGIN        = 'login';
 	const DISPLAY_ON_STD_REG      = 'student_registration';
 	const DISPLAY_ON_INS_REG      = 'instructor_registration';

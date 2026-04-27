@@ -1,3 +1,5 @@
+import ajaxHandler from '../helper/ajax-handler';
+
 import '../front/_select_dd_search';
 import './quiz-attempts';
 import './segments/color-preset';
@@ -13,10 +15,9 @@ import './segments/multiple_email_input';
 import './segments/navigation';
 import './segments/options';
 import './segments/reset';
-import './segments/withdraw';
 import './segments/students';
+import './segments/withdraw';
 import './wp-events-subscriber';
-import ajaxHandler from '../helper/ajax-handler';
 
 document.querySelectorAll('.tutor-control-button').forEach(function (button) {
 	button.addEventListener('click', function (event) {
