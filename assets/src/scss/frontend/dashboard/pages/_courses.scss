@@ -1,0 +1,34 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-dashboard-courses-card {
+	border: 1px solid $tutor-border-idle;
+	border-radius: $tutor-radius-2xl;
+
+	.tutor-dashboard-courses-tabs {
+		padding: $tutor-spacing-6;
+		border-bottom: 1px solid $tutor-border-idle;
+		border-radius: $tutor-radius-2xl $tutor-radius-2xl 0 0;
+		background-color: $tutor-surface-l1;
+	}
+
+	.tutor-dashboard-courses-list {
+		background-color: $tutor-surface-l1;
+	}
+
+	// omit bg on small screen
+	@include tutor-breakpoint-down(sm) {
+		background-color: transparent;
+		border: none;
+		.tutor-dashboard-courses-tabs {
+			padding: $tutor-spacing-2;
+			border: 1px solid $tutor-border-idle;
+			border-radius: $tutor-radius-2xl;
+		}
+		.tutor-dashboard-courses-list {
+			border: 1px solid $tutor-border-idle;
+			margin-top: $tutor-spacing-5;
+			border-radius: $tutor-radius-2xl;
+		}
+	}
+}
