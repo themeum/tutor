@@ -1088,6 +1088,8 @@ $tutor-quiz-content-bottom-offset: calc(
   &-autostart-digit {
     @include tutor-flex(row, center, center);
     @include tutor-typography('d1', 'bold');
+    height: 100%;
+    width: 100%;
     position: absolute;
     inset: 0;
     color: $tutor-text-brand;
