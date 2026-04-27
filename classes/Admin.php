@@ -37,8 +37,6 @@ class Admin {
 	public function __construct() {
 
 		add_action( 'admin_notices', array( $this, 'show_unstable_version_admin_notice' ) );
-		add_action( 'admin_notices', array( $this, 'show_v4_beta_notice' ) );
-		add_action( 'admin_init', array( $this, 'dismiss_v4_beta_notice' ) );
 
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
 		// Force activate menu for necessary.
@@ -85,90 +83,6 @@ class Admin {
 			</div>
 			<?php
 		}
-	}
-
-	/**
-	 * Show version 4 admin notice.
-	 *
-	 * @since 3.9.9
-	 *
-	 * @return void
-	 */
-	public function show_v4_beta_notice() {
-		if ( current_user_can( 'manage_options' ) && version_compare( TUTOR_VERSION, '4', '<' ) ) {
-			$user_id   = get_current_user_id();
-			$dismissed = get_user_meta( $user_id, 'tutor_v4_beta_notice_dismissed', true );
-			if ( $dismissed ) {
-				return;
-			}
-			?>
-			<div class="tutor-v4-beta-notice notice">
-				<div class="tutor-v4-beta-notice-left">
-					<img src="<?php echo esc_url( tutor()->url . 'assets/images/v4-notice-logo.svg' ); ?>" alt="Tutor LMS 4.0 Beta">
-				</div>
-			<div class="tutor-v4-beta-notice-right">
-				<div class="tutor-v4-beta-notice-right-content">
-					<h3><?php esc_html_e( 'Be the First to Try Tutor LMS 4.0 Beta!', 'tutor' ); ?></h3>
-					<p>
-						<?php
-						echo wp_kses(
-							sprintf(
-								/* translators: 1: opening anchor tag, 2: closing anchor tag */
-								__(
-									'Explore the upcoming features of Tutor LMS 4.0, test the experience, and help us improve with your valuable %1$sfeedback%2$s.',
-									'tutor'
-								),
-								'<a href="https://forms.gle/Dxc1CWT63UcEAJGR9" target="_blank" rel="noopener noreferrer">',
-								' <i class="tutor-icon-external-link" aria-hidden="true"></i></a>'
-							),
-							array(
-								'a' => array(
-									'href'   => true,
-									'target' => true,
-									'rel'    => true,
-								),
-								'i' => array(
-									'class'       => true,
-									'aria-hidden' => true,
-								),
-							)
-						);
-						?>
-					</p>
-				</div>
-				<div class="tutor-v4-beta-notice-right-buttons">
-					<a href="https://tutorlms.com/blog/first-look-into-tutor-lms-4-0/?nocache=1" target="_blank" rel="noopener noreferrer" class="tutor-btn tutor-btn-tertiary tutor-gap-4px tutor-text-nowrap">
-						<?php esc_html_e( 'Try now', 'tutor' ); ?>
-					</a>
-				</div>
-			</div>
-			<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'tutor_dismiss_v4_beta_notice', '1' ), 'tutor_dismiss_v4_beta_notice' ) ); ?>" class="notice-dismiss">
-				<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'tutor' ); ?></span>
-			</a>
-		</div>
-			<?php
-		}
-	}
-
-	/**
-	 * Persist the dismissal of the v4 beta notice for the current user.
-	 * Triggered via a query param on any admin page, then redirects to clean the URL.
-	 *
-	 * @since 3.9.9
-	 *
-	 * @return void
-	 */
-	public function dismiss_v4_beta_notice() {
-		if ( ! current_user_can( 'manage_options' ) || ! Input::has( 'tutor_dismiss_v4_beta_notice' ) ) {
-			return;
-		}
-
-		check_admin_referer( 'tutor_dismiss_v4_beta_notice' );
-		update_user_meta( get_current_user_id(), 'tutor_v4_beta_notice_dismissed', true );
-
-		$redirect = remove_query_arg( array( 'tutor_dismiss_v4_beta_notice', '_wpnonce' ) );
-		wp_safe_redirect( $redirect );
-		exit;
 	}
 
 	/**
