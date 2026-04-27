@@ -32,7 +32,7 @@ const App = () => {
   return (
     <RTLProvider>
       <QueryClientProvider client={queryClient}>
-        <ToastProvider position="bottom-center">
+        <ToastProvider position="bottom-right">
           <CourseBuilderSlotProvider>
             <ModalProvider>
               <Global styles={createGlobalCss()} />

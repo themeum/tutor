@@ -1,71 +1,41 @@
-import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { type AlpineToastData, type ToastConfig, type ToastItem, type ToastType } from '@Core/ts/types/toast';
-import { __ } from '@wordpress/i18n';
+import { type AlpineToastData, type ToastConfig } from '@Core/ts/types/toast';
+import { toastServiceMeta } from '@Core/ts/services/Toast';
 
 export function createToast(): AlpineToastData {
   return {
-    toasts: [] as ToastItem[],
-    $el: undefined as HTMLElement | undefined,
+    init(): void {},
 
-    init(): void {
-      document.addEventListener(TUTOR_CUSTOM_EVENTS.TOAST_SHOW, ((event: CustomEvent) => {
-        const { message, config } = event.detail;
-        this.show(message, config);
-      }) as EventListener);
-
-      document.addEventListener(TUTOR_CUSTOM_EVENTS.TOAST_CLEAR, () => {
-        this.clear();
-      });
+    show(message: string, config: ToastConfig = {}): string {
+      return toastServiceMeta.instance.show(message, config);
     },
 
-    show(message: string, config: ToastConfig = {}): void {
-      const type = config.type || 'info';
-      const defaultTitles: Record<ToastType, string> = {
-        success: __('Success', 'tutor'),
-        error: __('Error', 'tutor'),
-        warning: __('Warning', 'tutor'),
-        info: __('Info', 'tutor'),
-      };
-
-      const toast: ToastItem = {
-        id: Date.now() + Math.random(),
-        message,
-        type,
-        duration: config.duration || 5000,
-        title: config.title || defaultTitles[type],
-      };
-
-      this.toasts.push(toast);
-
-      if (toast.duration > 0) {
-        setTimeout(() => this.remove(toast.id), toast.duration);
-      }
-    },
-
-    remove(id: number): void {
-      this.toasts = this.toasts.filter((toast: ToastItem) => toast.id !== id);
+    remove(id: string): void {
+      toastServiceMeta.instance.dismiss(id);
     },
 
     clear(): void {
-      this.toasts = [];
+      toastServiceMeta.instance.clear();
     },
 
-    // Fallback methods for type compatibility if needed, but not used for global triggering anymore
-    success(message: string, duration?: number): void {
-      this.show(message, { type: 'success', ...(duration !== undefined && { duration }) });
+    dismiss(id?: string): void {
+      toastServiceMeta.instance.dismiss(id);
     },
 
-    error(message: string, duration?: number): void {
-      this.show(message, { type: 'error', ...(duration !== undefined && { duration }) });
+    success(message: string, duration?: number): string {
+      return toastServiceMeta.instance.success(message, duration);
     },
 
-    warning(message: string, duration?: number): void {
-      this.show(message, { type: 'warning', ...(duration !== undefined && { duration }) });
+    error(message: string, duration?: number): string {
+      return toastServiceMeta.instance.error(message, duration);
     },
 
-    info(message: string, duration?: number): void {
-      this.show(message, { type: 'info', ...(duration !== undefined && { duration }) });
+    warning(message: string, duration?: number): string {
+      return toastServiceMeta.instance.warning(message, duration);
+    },
+
+    info(message: string, duration?: number): string {
+      return toastServiceMeta.instance.info(message, duration);
     },
   };
 }
