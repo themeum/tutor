@@ -5,7 +5,7 @@
 	border: 1px solid $tutor-border-idle;
 	border-radius: $tutor-radius-2xl;
 
-	.tutor-dashboard-courses-tabs {
+	.tutor-dashboard-courses-tab {
 		padding: $tutor-spacing-6;
 		border-bottom: 1px solid $tutor-border-idle;
 		border-radius: $tutor-radius-2xl $tutor-radius-2xl 0 0;
@@ -19,7 +19,7 @@
 	@include tutor-breakpoint-down(sm) {
 		background-color: transparent;
 		border: none;
-		.tutor-dashboard-courses-tabs {
+		.tutor-dashboard-courses-tab {
 			padding: $tutor-spacing-2;
 			border: 1px solid $tutor-border-idle;
 			border-radius: $tutor-radius-2xl;
