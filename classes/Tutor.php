@@ -634,11 +634,22 @@ final class Tutor extends Singleton {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		$is_droip_active  = \is_plugin_active( 'droip/droip.php' );
-		$tutor_droip_path = $tutor_path . 'includes/droip/droip.php';
-		if ( $is_droip_active && file_exists( $tutor_droip_path ) ) {
-			include $tutor_droip_path;
+		// Only kirki latest has class KirkiMain.
+		$is_kirki_active = \is_plugin_active( 'kirki/kirki.php' ) && class_exists( 'KirkiMain' );
+
+		if ( $is_kirki_active ) {
+			$tutor_kirki_path = $tutor_path . 'includes/kirki/kirki.php';
+			if ( file_exists( $tutor_kirki_path ) ) {
+				include $tutor_kirki_path;
+			}
+		} else {
+			$is_droip_active  = \is_plugin_active( 'droip/droip.php' );
+			$tutor_droip_path = $tutor_path . 'includes/droip/droip.php';
+			if ( $is_droip_active && file_exists( $tutor_droip_path ) ) {
+				include $tutor_droip_path;
+			}
 		}
+
 	}
 
 	/**
