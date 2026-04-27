@@ -9,6 +9,8 @@
  * @since 1.4.3
  */
 
+use Tutor\Components\SvgIcon;
+
 defined( 'ABSPATH' ) || exit;
 
 $product_id = tutor_utils()->get_course_product_id();
@@ -52,4 +54,11 @@ if ( $download->ID ) {
 	);
 
 	echo edd_get_purchase_link( $args ); //phpcs:ignore
+} else {
+	?>
+	<div class="tutor-d-flex tutor-items-center tutor-gap-1 tutor-fs-7 tutor-color-muted">
+		<?php SvgIcon::make()->name( 'info' )->size( 20 )->render(); ?>
+		<p><?php esc_html_e( 'No EDD product for this course', 'tutor' ); ?></p>
+	</div>
+	<?php
 }
