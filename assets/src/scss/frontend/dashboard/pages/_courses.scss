@@ -16,7 +16,6 @@
 		background-color: $tutor-surface-l1;
 	}
 
-	// omit bg on small screen
 	@include tutor-breakpoint-down(sm) {
 		background-color: transparent;
 		border: none;
