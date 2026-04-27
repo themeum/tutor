@@ -42,6 +42,8 @@ interface QuizSettingsProps {
   contentDripType: ContentDripType;
 }
 
+const DEFAULT_MAX_QUESTIONS_FOR_ANSWER = 10;
+
 const getTimeInSeconds = (value: number, type: QuizForm['quiz_option']['time_limit']['time_type']) => {
   const timeUnitMap = {
     seconds: 1,
@@ -106,8 +108,9 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const hasQuestionLimit = form.watch('quiz_option.limit_questions_to_answer');
   const hasTimeLimit = form.watch('quiz_option.enable_time_limit');
   const questionsOrder = form.watch('quiz_option.questions_order');
-  const availableQuestionInPool =
-    Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount) || questionsCount;
+  const availableQuestionInPool = hasQuestionLimit
+    ? Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount) || questionsCount
+    : questionsCount;
   const usedQuestionCountPercentage = (availableQuestionInPool / questionsCount) * 100;
   const orderedQuestions = (() => {
     if (questionsOrder === 'rand') {
@@ -282,6 +285,18 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         'Set the number of quiz questions randomly from your question pool. If the set number exceeds available questions, all questions will be included',
                         'tutor',
                       )}
+                      onChange={(isChecked) => {
+                        if (!isChecked) {
+                          return;
+                        }
+
+                        const maxQuestionsForAnswer = Number(form.watch('quiz_option.max_questions_for_answer'));
+                        if (maxQuestionsForAnswer) {
+                          return;
+                        }
+
+                        form.setValue('quiz_option.max_questions_for_answer', DEFAULT_MAX_QUESTIONS_FOR_ANSWER);
+                      }}
                     />
                   )}
                 />
