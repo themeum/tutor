@@ -94,9 +94,30 @@ function parseStoredScaleData(value: string): ScaleData | null {
 }
 
 const scaleRangeErrorMessage = __('The maximum value must be greater than the minimum value.', __TUTOR_TEXT_DOMAIN__);
+const scaleCorrectValueRangeErrorMessage = __(
+  'The correct value must be between the minimum and maximum values.',
+  __TUTOR_TEXT_DOMAIN__,
+);
 
 function clearScaleRangeValidationError(setValidationError: FormScaleProps['setValidationError']) {
-  setValidationError?.((prev) => (prev?.type === 'question' && prev?.message === scaleRangeErrorMessage ? null : prev));
+  setValidationError?.((prev) => {
+    const isScaleRangeError =
+      prev?.type === 'question' && [scaleRangeErrorMessage, scaleCorrectValueRangeErrorMessage].includes(prev?.message);
+
+    return isScaleRangeError ? null : prev;
+  });
+}
+
+function getScaleValidationErrorMessage(config: ScaleConfig, value: number): string | null {
+  if (config.max <= config.min) {
+    return scaleRangeErrorMessage;
+  }
+
+  if (value < config.min || value > config.max) {
+    return scaleCorrectValueRangeErrorMessage;
+  }
+
+  return null;
 }
 
 const FormScale = ({ field, setValidationError }: FormScaleProps) => {
@@ -157,10 +178,10 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
   const handleConfigChange = useCallback(
     (fieldKey: keyof ScaleConfig, value: number) => {
       const newConfig = normalizeScaleConfig({ ...config, [fieldKey]: value });
-
-      if (newConfig.max <= newConfig.min) {
+      const validationMessage = getScaleValidationErrorMessage(newConfig, scaleData.value);
+      if (validationMessage) {
         setValidationError?.({
-          message: scaleRangeErrorMessage,
+          message: validationMessage,
           type: 'question',
         });
       } else {
@@ -187,11 +208,21 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
 
   const handleValueChange = useCallback(
     (value: number) => {
+      const validationMessage = getScaleValidationErrorMessage(config, value);
+      if (validationMessage) {
+        setValidationError?.({
+          message: validationMessage,
+          type: 'question',
+        });
+      } else {
+        clearScaleRangeValidationError(setValidationError);
+      }
+
       const newScaleData = { ...scaleData, value };
       setScaleData(newScaleData);
       saveScaleData(newScaleData);
     },
-    [scaleData, saveScaleData],
+    [config, scaleData, saveScaleData, setValidationError],
   );
 
   if (!option) {
