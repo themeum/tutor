@@ -200,7 +200,7 @@ class TutorEDD extends Tutor_Base {
 
 				if ( $is_enrolled ) {
 					// Update enrollment.
-					tutor_utils()->update_enrollments( $enrollment_status, array( $is_enrolled->ID ) );
+					EnrollmentModel::update_enrollments( $enrollment_status, array( $is_enrolled->ID ) );
 				} else {
 					// New enrollment.
 					add_filter( 'tutor_enroll_data', fn( $data ) => array_merge( $data, array( 'post_status' => $enrollment_status ) ) );

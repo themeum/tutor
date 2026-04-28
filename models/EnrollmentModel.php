@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
 use TUTOR\Course;
+use Tutor\Helpers\QueryHelper;
 use TUTOR\User;
 
 /**
@@ -213,5 +214,131 @@ class EnrollmentModel {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get enrollment by enrol_id
+	 *
+	 * @since 1.6.9
+	 *
+	 * @param int $enrol_id enrol id.
+	 *
+	 * @return array|object
+	 */
+	public static function get_enrolment_by_enrol_id( $enrol_id = 0 ) {
+		global $wpdb;
+
+		$enrolment = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT enrol.id      AS enrol_id,
+					enrol.post_author AS student_id,
+					enrol.post_date   AS enrol_date,
+					enrol.post_title  AS enrol_title,
+					enrol.post_status AS status,
+					enrol.post_parent AS course_id,
+					course.post_title AS course_title,
+					student.user_nicename,
+					student.user_email,
+					student.display_name,
+					student.ID
+			FROM   {$wpdb->posts} enrol
+					INNER JOIN {$wpdb->posts} course
+							ON enrol.post_parent = course.id
+					INNER JOIN {$wpdb->users} student
+							ON enrol.post_author = student.id
+			WHERE  enrol.id = %d;
+		",
+				$enrol_id
+			)
+		);
+
+		if ( $enrolment ) {
+			return $enrolment;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get single or list of enrolled course data by a user
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param integer $user_id user id.
+	 * @param integer $course_id cousrs id.
+	 *
+	 * @return object|mixed
+	 */
+	public static function get_enrolled_data( $user_id = 0, $course_id = 0 ) {
+		global $wpdb;
+		// If course ID provided, it will return single row data.
+		if ( $course_id > 0 ) {
+			return $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT * FROM 	{$wpdb->posts} 
+						WHERE post_type = %s
+						AND post_parent = %d
+						AND post_status = %s
+						AND post_author = %d;",
+					self::POST_TYPE,
+					$course_id,
+					self::STATUS_COMPLETED,
+					$user_id
+				)
+			);
+		} else {
+			// Return all enrolled data by user ID.
+			return $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM 	{$wpdb->posts} 
+						WHERE post_type = %s
+						AND post_status = %s
+						AND post_author = %d;",
+					self::POST_TYPE,
+					self::STATUS_COMPLETED,
+					$user_id
+				)
+			);
+		}
+	}
+
+	/**
+	 * Execute bulk action for enrollment list ex: complete | cancel
+	 *
+	 * @since 2.0.3
+	 * @since 3.2.0 $trigger_hook param added.
+	 *
+	 * @param string $status hold status for updating.
+	 * @param array  $enrollment_ids ids that need to update.
+	 * @param bool   $trigger_hook optional - trigger hook or not.
+	 *
+	 * @return bool
+	 */
+	public static function update_enrollments( string $status, array $enrollment_ids, bool $trigger_hook = true ): bool {
+		global $wpdb;
+		$enrollment_ids_in = QueryHelper::prepare_in_clause( $enrollment_ids );
+		$status            = 'complete' === $status ? 'completed' : $status;
+		$post_table        = $wpdb->posts;
+
+		//phpcs:disable
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$post_table}
+				SET post_status = %s
+				WHERE ID IN ($enrollment_ids_in)
+			",
+				$status
+			)
+		);
+		//phpcs:enable
+
+		if ( $trigger_hook ) {
+			// Run action hook.
+			foreach ( $enrollment_ids as $id ) {
+				do_action( 'tutor_enrollment/after/' . $status, $id );
+			}
+		}
+
+		return true;
 	}
 }
