@@ -8,6 +8,7 @@
   @include tutor-flex(column, flex-start, flex-start);
   height: 100%;
   @include tutor-transition(background-color);
+  position: relative;
 
   &:hover {
     background-color: $tutor-surface-l1-hover;
