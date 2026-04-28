@@ -25,24 +25,25 @@ const { __ } = wp.i18n;
  * Build a human-readable title from the consent title.
  *
  * @param {Object} log
+ * @param {boolean} includeAccepted Whether to prefix with "Accepted"
  * @returns {string}
  */
-const getLogTitle = (log) => {
-    if (log.consent_title) {
-        return `${__('Accepted', 'tutor')} ${log.consent_title}`;
-    }
-    return __('Accepted Consent', 'tutor');
+const getLogTitle = (log, includeAccepted = true) => {
+	if (log.consent_title) {
+		return includeAccepted ? `${__('Accepted', 'tutor')} ${log.consent_title}` : log.consent_title;
+	}
+	return includeAccepted ? __('Accepted Consent', 'tutor') : __('Consent', 'tutor');
 };
 const renderTimeline = (logs) => {
-    const items = logs.map((log, index) => {
-        const title = getLogTitle(log);
-        const date = log.created_at_utc || '';
-        const ago = log.timeAgo || log.time_ago || '';
-        const ip = log.ip_address ? `IP: ${log.ip_address}` : '';
-        const source = log.source ? `Source: ${log.source}` : '';
-        const agent = log.user_agent ? `Agent: ${log.user_agent}` : '';
-        const metaLines = [ip, source, agent].filter(Boolean);
-        return `
+	const items = logs.map((log, index) => {
+		const title = getLogTitle(log);
+		const date = log.created_at_utc || '';
+		const ago = log.timeAgo || log.time_ago || '';
+		const ip = log.ip_address ? `IP: ${log.ip_address}` : '';
+		const source = log.source ? `Source: ${log.source}` : '';
+		const agent = log.user_agent ? `Agent: ${log.user_agent}` : '';
+		const metaLines = [ip, source, agent].filter(Boolean);
+		return `
                 <div class="tutor-consent-timeline-item">
                     <div class="tutor-consent-timeline-track">
                         <span class="tutor-consent-timeline-dot"></span>
@@ -55,44 +56,44 @@ const renderTimeline = (logs) => {
                     <div class="tutor-consent-timeline-ago">${ago}</div>
                 </div>
             `;
-    });
-    return items.join('');
+	});
+	return items.join('');
 };
 const showLoading = () => {
-    if (!modalBody) return;
-    modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('Loading…', 'tutor')}</div>`;
+	if (!modalBody) return;
+	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('Loading…', 'tutor')}</div>`;
 };
 const showEmpty = () => {
-    if (!modalBody) return;
-    modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('No consent logs found.', 'tutor')}</div>`;
+	if (!modalBody) return;
+	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('No consent logs found.', 'tutor')}</div>`;
 };
 const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, userLogin) => {
-    if (!overlay || !modalBody) return;
-    currentUserId = userId;
-    currentUserName = userName;
-    currentUserJoined = userJoined;
-    currentUserEmail = userEmail;
-    currentUserLogin = userLogin;
-    // Fill user card.
-    if (userNameEl) userNameEl.textContent = userName;
-    if (userJoinedEl) userJoinedEl.textContent = userJoined ? `${__('Joined', 'tutor')} ${userJoined}` : '';
-    if (userAvatarEl && avatarSrc) userAvatarEl.src = avatarSrc;
-    // showLoading();
-    const body = new FormData();
-    body.append('action', AJAX_ACTION);
-    body.append('user_action', 'all_consents_given_by_user');
-    body.append('user_id', userId);
-    body.append(NONCE_KEY, NONCE_VALUE);
-    fetch(AJAX_URL, { method: 'POST', body })
-        .then((r) => r.json())
-        .then((data) => {
-            const logs = data.data;
-            currentLogs = logs;
-            if (!logs.length) {
-                showEmpty();
-                return;
-            }
-            const userCard = `
+	if (!overlay || !modalBody) return;
+	currentUserId = userId;
+	currentUserName = userName;
+	currentUserJoined = userJoined;
+	currentUserEmail = userEmail;
+	currentUserLogin = userLogin;
+	// Fill user card.
+	if (userNameEl) userNameEl.textContent = userName;
+	if (userJoinedEl) userJoinedEl.textContent = userJoined ? `${__('Joined', 'tutor')} ${userJoined}` : '';
+	if (userAvatarEl && avatarSrc) userAvatarEl.src = avatarSrc;
+	// showLoading();
+	const body = new FormData();
+	body.append('action', AJAX_ACTION);
+	body.append('user_action', 'all_consents_given_by_user');
+	body.append('user_id', userId);
+	body.append(NONCE_KEY, NONCE_VALUE);
+	fetch(AJAX_URL, { method: 'POST', body })
+		.then((r) => r.json())
+		.then((data) => {
+			const logs = data.data;
+			currentLogs = logs;
+			if (!logs.length) {
+				showEmpty();
+				return;
+			}
+			const userCard = `
                     <div class="tutor-consent-user-card">
                         ${avatarSrc ? `<img src="${avatarSrc}" alt="${userName}" />` : ''}
                         <div class="tutor-consent-user-card-info">
@@ -101,54 +102,60 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
                         </div>
                     </div>
                 `;
-            modalBody.innerHTML = `
+			modalBody.innerHTML = `
                     <div class="tutor-consent-timeline">${renderTimeline(logs)}</div>
                     ${userCard}
                 `;
-        })
-        .catch(() => showEmpty());
+		})
+		.catch(() => showEmpty());
 };
 const downloadCSV = () => {
-    if (!currentLogs.length) return;
-    const studentInfo = [
-        ['Name:', currentUserName],
-        ['User Name:', currentUserLogin],
-        ['Email:', currentUserEmail],
-        ['Joined At:', currentUserJoined],
-        [],
-    ];
-    const headers = ['Title', 'Date (UTC)', 'IP Address', 'Source', 'User Agent'];
-    const rows = currentLogs.map((log) => [
-        getLogTitle(log),
-        log.created_at_utc || '',
-        log.ip_address || '',
-        log.source || '',
-        log.user_agent || '',
-    ]);
-    const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
-    const csv = [...studentInfo, headers, ...rows]
-        .map((row) => row.map(escape).join(','))
-        .join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `consent-logs-${currentUserId}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+	if (!currentLogs.length) return;
+
+	const studentInfo = [
+		['Name:', currentUserName],
+		['User Name:', currentUserLogin],
+		['Email:', currentUserEmail],
+		['Joined At:', currentUserJoined],
+		[],
+	];
+
+	const headers = ['Title', 'Date (UTC)', 'IP Address', 'Source', 'User Agent'];
+
+	const rows = currentLogs.map((log) => [
+		getLogTitle(log, false),
+		log.created_at_utc || '',
+		log.ip_address || '',
+		log.source || '',
+		log.user_agent || '',
+	]);
+
+	const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
+
+	const csv = [...studentInfo, headers, ...rows]
+		.map((row) => row.map(escape).join(','))
+		.join('\n');
+
+	const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement('a');
+	a.href = url;
+	a.download = `consent-logs-${currentUserName}.csv`;
+	a.click();
+	URL.revokeObjectURL(url);
 };
 const initConsentLogTriggers = () => {
-    document.querySelectorAll('[data-consent-logs-trigger]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const userId = btn.dataset.userId || '';
-            const userName = btn.dataset.userName || '';
-            const userJoined = btn.dataset.userJoined || '';
-            const avatarSrc = btn.dataset.avatarSrc || '';
-            const userEmail = btn.dataset.userEmail || '';
-            const userLogin = btn.dataset.userLogin || '';
-            fetchAndRender(userId, userName, userJoined, avatarSrc, userEmail, userLogin);
-        });
-    });
+	document.querySelectorAll('[data-consent-logs-trigger]').forEach((btn) => {
+		btn.addEventListener('click', () => {
+			const userId = btn.dataset.userId || '';
+			const userName = btn.dataset.userName || '';
+			const userJoined = btn.dataset.userJoined || '';
+			const avatarSrc = btn.dataset.avatarSrc || '';
+			const userEmail = btn.dataset.userEmail || '';
+			const userLogin = btn.dataset.userLogin || '';
+			fetchAndRender(userId, userName, userJoined, avatarSrc, userEmail, userLogin);
+		});
+	});
 };
 if (downloadBtn) downloadBtn.addEventListener('click', downloadCSV);
 document.addEventListener('DOMContentLoaded', initConsentLogTriggers);
