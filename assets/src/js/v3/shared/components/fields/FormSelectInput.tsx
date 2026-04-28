@@ -19,8 +19,11 @@ import { noop } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
+type SpacingToken = keyof typeof spacing;
+
 type FormSelectInputProps<T> = {
   size?: 'small' | 'regular';
+  leftIconPadding?: SpacingToken;
   wrapperCss?: SerializedStyles;
   label?: React.ReactNode;
   options: Option<T>[];
@@ -51,6 +54,7 @@ type FormSelectInputProps<T> = {
 
 const FormSelectInput = <T,>({
   size = 'regular',
+  leftIconPadding = 48,
   wrapperCss,
   options,
   field,
@@ -202,6 +206,7 @@ const FormSelectInput = <T,>({
                     wrapperCss,
                     styles.input({
                       hasLeftIcon: !!leftIcon || !!selectedItem?.icon,
+                      leftIconPadding,
                       hasDescription,
                       hasError: !!fieldState.error,
                       isMagicAi,
@@ -250,7 +255,7 @@ const FormSelectInput = <T,>({
 
                 <Show when={hasDescription}>
                   <span
-                    css={styles.description({ hasLeftIcon: !!leftIcon, size })}
+                    css={styles.description({ hasLeftIcon: !!leftIcon, leftIconPadding, size })}
                     title={getInitialValue()?.description}
                   >
                     {getInitialValue()?.description}
@@ -399,6 +404,7 @@ const styles = {
   `,
   input: ({
     hasLeftIcon,
+    leftIconPadding,
     hasDescription,
     hasError = false,
     isMagicAi = false,
@@ -406,6 +412,7 @@ const styles = {
     size,
   }: {
     hasLeftIcon: boolean;
+    leftIconPadding: SpacingToken;
     hasDescription: boolean;
     hasError: boolean;
     isMagicAi: boolean;
@@ -430,7 +437,7 @@ const styles = {
 
       ${hasLeftIcon &&
       css`
-        padding-left: ${spacing[48]};
+        padding-left: ${spacing[leftIconPadding]};
       `}
 
       ${hasDescription &&
@@ -474,7 +481,15 @@ const styles = {
       }
     }
   `,
-  description: ({ hasLeftIcon, size }: { hasLeftIcon: boolean; size: 'small' | 'regular' }) => css`
+  description: ({
+    hasLeftIcon,
+    leftIconPadding,
+    size,
+  }: {
+    hasLeftIcon: boolean;
+    leftIconPadding: SpacingToken;
+    size: 'small' | 'regular';
+  }) => css`
     ${typography.small()};
     ${styleUtils.text.ellipsis(1)}
     color: ${colorTokens.text.hints};
@@ -489,7 +504,7 @@ const styles = {
 
     ${hasLeftIcon &&
     css`
-      padding-left: calc(${spacing[48]} + 1px);
+      padding-left: calc(${spacing[leftIconPadding]} + 1px);
     `}
   `,
   listLabel: css`

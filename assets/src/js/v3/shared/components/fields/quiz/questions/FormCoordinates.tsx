@@ -1,9 +1,4 @@
-/**
- * Form field for Coordinates quiz question type (instructor sets target point on grid).
- *
- * @package Tutor
- * @since 4.0.0
- */
+/** Coordinates question field: instructor places correct answer points on the graph grid. */
 
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
@@ -15,6 +10,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import TextInput from '@TutorShared/atoms/TextInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import Tooltip from '@TutorShared/atoms/Tooltip';
+import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
@@ -30,13 +26,20 @@ import {
 const PADDING = 12;
 const SNAP_THRESHOLD = 0.3;
 const CANVAS_SIZE = 420;
+const MARKER_DISPLAY_SIZE = 27;
+const HOVER_ALPHA_LERP = 0.28;
+const HOVER_SCALE_MIN = 0.85;
 const MAX_COORDINATES = 5;
 const AXIS_LABEL_STEP = 2;
 const AXIS_RANGE_OPTIONS = [10, 20].map((value) => ({
-  label: `${value} ${__('points', __TUTOR_TEXT_DOMAIN__)}`,
+  label: `${value} ${__('Unit', __TUTOR_TEXT_DOMAIN__)}`,
+  icon: value === 10 ? 'unit10' : 'unit20',
   value,
 }));
 
+/**
+ * Whether to draw a numeric label at this axis tick (every `AXIS_LABEL_STEP` units plus zero handling).
+ */
 function shouldRenderAxisLabel(value: number): boolean {
   return value === 0 || Math.abs(value % AXIS_LABEL_STEP) === 0;
 }
@@ -59,10 +62,16 @@ interface FormCoordinatesProps extends FormControllerProps<QuizQuestionOption> {
 
 type CoordinatePoint = { x: number; y: number };
 
+/**
+ * Normalizes stored or UI axis range to supported values (10 or 20 units).
+ */
 function resolveAxisRange(value?: number | null): 10 | 20 {
   return Number(value) === 20 ? 20 : 10;
 }
 
+/**
+ * Rounds to the nearest integer and clamps to `[-axisRange, axisRange]`.
+ */
 function clampIntToRange(n: number, axisRange: number): number {
   const min = -axisRange;
   const max = axisRange;
@@ -70,6 +79,9 @@ function clampIntToRange(n: number, axisRange: number): number {
   return Math.max(min, Math.min(max, rounded));
 }
 
+/**
+ * Clamps a point so both coordinates lie within the current axis range.
+ */
 function sanitizePoint(p: CoordinatePoint, axisRange: number): CoordinatePoint {
   return {
     x: clampIntToRange(p.x, axisRange),
@@ -77,6 +89,12 @@ function sanitizePoint(p: CoordinatePoint, axisRange: number): CoordinatePoint {
   };
 }
 
+/**
+ * Parses `answer_two_gap_match` JSON into up to five points (`MAX_COORDINATES`).
+ * Accepts either an array of `{x,y}` or a legacy single object; invalid input yields `[]`.
+ *
+ * @param axisRange - When set, clamps each parsed point to the grid extent.
+ */
 function parseStoredCoordinates(value: string, axisRange?: number): CoordinatePoint[] {
   if (!value || typeof value !== 'string') return [];
   try {
@@ -101,11 +119,14 @@ function parseStoredCoordinates(value: string, axisRange?: number): CoordinatePo
       }
     }
   } catch {
-    // ignore
+    return [];
   }
   return [];
 }
 
+/**
+ * Parses manual "x,y" text into a grid point; requires integers within `[-axisRange, axisRange]`.
+ */
 function parseCoordinateText(value: string, axisRange: number): CoordinatePoint | null {
   const min = -axisRange;
   const max = axisRange;
@@ -121,20 +142,87 @@ function parseCoordinateText(value: string, axisRange: number): CoordinatePoint 
   return { x, y };
 }
 
+/** Serializes a point for display and draft state (`"x,y"`). */
 function formatCoordinateText(pt: CoordinatePoint): string {
   return `${pt.x},${pt.y}`;
 }
 
+/** i18n message shown when a stored point lies outside the current axis range. */
 function getCoordinatesRangeErrorMessage(axisRange: number): string {
   return sprintf(__('Range is from -%d to %d', __TUTOR_TEXT_DOMAIN__), axisRange, axisRange);
 }
 
+/** Absolute URL for overlay marker SVGs shipped with Tutor assets. */
+function graphMarkerAssetUrl(filename: 'graph-marker-hover' | 'graph-marker-selected'): string {
+  return `${tutorConfig.tutor_url}assets/icons/${filename}.svg`;
+}
+
+/**
+ * Maps graph coordinates to CSS pixel position within a square logical canvas (padding inset, y-up).
+ */
+function graphToPixelLayout(
+  logicalSize: number,
+  minCoord: number,
+  maxCoord: number,
+  gx: number,
+  gy: number,
+): { x: number; y: number } {
+  const drawableWidth = logicalSize - 2 * PADDING;
+  const drawableHeight = logicalSize - 2 * PADDING;
+  const centerX = PADDING + drawableWidth / 2;
+  const centerY = PADDING + drawableHeight / 2;
+  const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (maxCoord - minCoord);
+  return {
+    x: centerX + gx * pixelsPerUnit,
+    y: centerY - gy * pixelsPerUnit,
+  };
+}
+
+/**
+ * Converts pointer position in CSS pixels to the nearest grid intersection if within snap distance.
+ * Returns `null` when not close enough to a lattice point or outside the axis bounds (student quiz parity).
+ */
+function pixelToSnappedGrid(
+  pixelX: number,
+  pixelY: number,
+  logicalSize: number,
+  minCoord: number,
+  maxCoord: number,
+): CoordinatePoint | null {
+  const drawableWidth = logicalSize - 2 * PADDING;
+  const drawableHeight = logicalSize - 2 * PADDING;
+  const centerX = PADDING + drawableWidth / 2;
+  const centerY = PADDING + drawableHeight / 2;
+  const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (maxCoord - minCoord);
+  const graphX = (pixelX - centerX) / pixelsPerUnit;
+  const graphY = (centerY - pixelY) / pixelsPerUnit;
+  const snappedX = Math.round(graphX);
+  const snappedY = Math.round(graphY);
+  const distX = Math.abs(graphX - snappedX);
+  const distY = Math.abs(graphY - snappedY);
+  if (
+    distX <= SNAP_THRESHOLD &&
+    distY <= SNAP_THRESHOLD &&
+    snappedX >= minCoord &&
+    snappedX <= maxCoord &&
+    snappedY >= minCoord &&
+    snappedY <= maxCoord
+  ) {
+    return { x: snappedX, y: snappedY };
+  }
+  return null;
+}
+
+/** True if either coordinate falls outside `[-axisRange, axisRange]`. */
 function isPointOutOfRange(point: CoordinatePoint, axisRange: number): boolean {
   const min = -axisRange;
   const max = axisRange;
   return point.x < min || point.x > max || point.y < min || point.y > max;
 }
 
+/**
+ * Renders the coordinates answer editor: list of points, canvas grid, axis range selector, and marker overlays.
+ */
 const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerProps }: FormCoordinatesProps) => {
   const form = useFormContext();
   const option = field.value;
@@ -148,6 +236,8 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
   const minCoord = -axisRange;
   const maxCoord = axisRange;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const gridWrapRef = useRef<HTMLDivElement | null>(null);
+  const [gridLogicalSize, setGridLogicalSize] = useState(CANVAS_SIZE);
   const [coordinates, setCoordinates] = useState<CoordinatePoint[]>(() => {
     const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '');
     return parsed.length ? parsed : [{ x: 0, y: 0 }];
@@ -170,6 +260,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     [field],
   );
 
+  /** Normalizes coordinates, syncs drafts/active index, and persists `answer_two_gap_match` on the option. */
   const commitCoordinates = useCallback(
     (nextCoords: CoordinatePoint[]) => {
       if (!option) return;
@@ -191,6 +282,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     [axisRange, option, updateOption],
   );
 
+  /** Draws axes, grid lines, and numeric tick labels on the backing canvas. */
   const drawGrid = useCallback(
     (ctx: CanvasRenderingContext2D, width: number, height: number) => {
       const drawableWidth = width - 2 * PADDING;
@@ -257,47 +349,34 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
       ctx.textAlign = 'right';
       ctx.textBaseline = 'top';
       ctx.fillText('0', centerX - 5, centerY + 5);
-
-      const markerOuterLayer = colorTokens.color.black[20];
-      const markerMiddleLayer = colorTokens.background.white;
-      const markerFillActive = colorTokens.stroke.brand;
-      const markerFillIdle = colorTokens.text.disable;
-
-      const drawPointMarker = (pt: { x: number; y: number }, fillColor: string, scale = 1) => {
-        const s = Number.isFinite(scale) ? scale : 1;
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 14 * s, 0, 2 * Math.PI);
-        ctx.fillStyle = markerOuterLayer;
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 10 * s, 0, 2 * Math.PI);
-        ctx.fillStyle = markerMiddleLayer;
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 6 * s, 0, 2 * Math.PI);
-        ctx.fillStyle = fillColor;
-        ctx.fill();
-      };
-
-      // Always show all set coordinates. Highlight the active one.
-      coordinates.forEach((coord, idx) => {
-        const isActive = idx === activeIndex;
-        const pt = graphToPixel(coord.x, coord.y);
-        drawPointMarker(pt, isActive ? markerFillActive : markerFillIdle, isActive ? 1.05 : 1);
-      });
     },
-    [activeIndex, coordinates, maxCoord, minCoord],
+    [maxCoord, minCoord],
   );
+
+  useEffect(() => {
+    const wrap = gridWrapRef.current;
+    if (!wrap) {
+      return;
+    }
+    const measure = () => {
+      setGridLogicalSize(Math.max(1, wrap.getBoundingClientRect().width || CANVAS_SIZE));
+    };
+    measure();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', measure);
+      return () => window.removeEventListener('resize', measure);
+    }
+    const ro = new ResizeObserver(measure);
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    const rect = canvas.getBoundingClientRect();
-    const logicalSize = Math.max(1, rect.width || CANVAS_SIZE);
+    const logicalSize = gridLogicalSize;
     const dpr = window.devicePixelRatio || 1;
     const nextWidth = Math.max(1, Math.round(logicalSize * dpr));
     const nextHeight = Math.max(1, Math.round(logicalSize * dpr));
@@ -315,8 +394,106 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
 
     drawGrid(ctx, logicalSize, logicalSize);
-  }, [drawGrid]);
+  }, [drawGrid, gridLogicalSize]);
 
+  const hoverTargetRef = useRef<CoordinatePoint | null>(null);
+  const hoverAlphaRef = useRef(0);
+  const hoverScaleRef = useRef(HOVER_SCALE_MIN);
+  const hoverRafRef = useRef<number | null>(null);
+  const [, setHoverRenderTick] = useState(0);
+
+  /**
+   * Eases hover marker opacity and scale toward the pointer target each frame (`HOVER_ALPHA_LERP`).
+   */
+  const runHoverFrame = useCallback(() => {
+    hoverRafRef.current = null;
+    const targetAlpha = hoverTargetRef.current ? 1 : 0;
+    const targetScale = hoverTargetRef.current ? 1 : HOVER_SCALE_MIN;
+    let a = hoverAlphaRef.current;
+    let s = hoverScaleRef.current;
+    a += (targetAlpha - a) * HOVER_ALPHA_LERP;
+    s += (targetScale - s) * HOVER_ALPHA_LERP;
+    if (Math.abs(targetAlpha - a) < 0.01) {
+      a = targetAlpha;
+    }
+    if (Math.abs(targetScale - s) < 0.01) {
+      s = targetScale;
+    }
+    hoverAlphaRef.current = a;
+    hoverScaleRef.current = s;
+    setHoverRenderTick((t) => t + 1);
+    if (a !== targetAlpha || s !== targetScale) {
+      hoverRafRef.current = requestAnimationFrame(runHoverFrame);
+    }
+  }, []);
+
+  /** Schedules one animation frame for hover easing if not already queued. */
+  const queueHoverFrame = useCallback(() => {
+    if (hoverRafRef.current === null) {
+      hoverRafRef.current = requestAnimationFrame(runHoverFrame);
+    }
+  }, [runHoverFrame]);
+
+  useEffect(() => {
+    return () => {
+      if (hoverRafRef.current !== null) {
+        cancelAnimationFrame(hoverRafRef.current);
+      }
+    };
+  }, []);
+
+  /** Clears eased hover preview state and cancels any pending hover animation frame. */
+  const clearHoverPreview = useCallback(() => {
+    hoverTargetRef.current = null;
+    hoverAlphaRef.current = 0;
+    hoverScaleRef.current = HOVER_SCALE_MIN;
+    if (hoverRafRef.current !== null) {
+      cancelAnimationFrame(hoverRafRef.current);
+      hoverRafRef.current = null;
+    }
+    setHoverRenderTick((t) => t + 1);
+  }, []);
+
+  /** Updates eased hover preview to the grid cell under the cursor, or clears it when not snapped. */
+  const handleCanvasMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement>) => {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        return;
+      }
+      const rect = canvas.getBoundingClientRect();
+      const logicalSize = Math.max(1, rect.width || CANVAS_SIZE);
+      const pixelX = e.clientX - rect.left;
+      const pixelY = e.clientY - rect.top;
+      const snapped = pixelToSnappedGrid(pixelX, pixelY, logicalSize, minCoord, maxCoord);
+      if (!snapped) {
+        if (hoverTargetRef.current !== null || hoverAlphaRef.current > 0.01) {
+          clearHoverPreview();
+        }
+        return;
+      }
+      const prev = hoverTargetRef.current;
+      if (prev?.x === snapped.x && prev?.y === snapped.y) {
+        return;
+      }
+      hoverTargetRef.current = snapped;
+      if (!prev) {
+        hoverAlphaRef.current = 0;
+        hoverScaleRef.current = HOVER_SCALE_MIN;
+      }
+      queueHoverFrame();
+    },
+    [clearHoverPreview, maxCoord, minCoord, queueHoverFrame],
+  );
+
+  /** Hides hover preview when the pointer exits the canvas. */
+  const handleCanvasMouseLeave = useCallback(() => {
+    if (hoverTargetRef.current !== null || hoverAlphaRef.current > 0.01) {
+      clearHoverPreview();
+    }
+  }, [clearHoverPreview]);
+
+  /** Sets the active coordinate slot to the clicked grid intersection (or focuses an existing match). */
   const handleCanvasClick = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current;
@@ -327,47 +504,32 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
       const pixelX = e.clientX - rect.left;
       const pixelY = e.clientY - rect.top;
 
-      const drawableWidth = size - 2 * PADDING;
-      const drawableHeight = size - 2 * PADDING;
-      const centerX = PADDING + drawableWidth / 2;
-      const centerY = PADDING + drawableHeight / 2;
-      const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (maxCoord - minCoord);
-
-      const graphX = (pixelX - centerX) / pixelsPerUnit;
-      const graphY = (centerY - pixelY) / pixelsPerUnit;
-      const snappedX = Math.round(graphX);
-      const snappedY = Math.round(graphY);
-      const distX = Math.abs(graphX - snappedX);
-      const distY = Math.abs(graphY - snappedY);
-
-      if (
-        distX <= SNAP_THRESHOLD &&
-        distY <= SNAP_THRESHOLD &&
-        snappedX >= minCoord &&
-        snappedX <= maxCoord &&
-        snappedY >= minCoord &&
-        snappedY <= maxCoord
-      ) {
-        const existingIdx = coordinates.findIndex((p) => p.x === snappedX && p.y === snappedY);
-        if (existingIdx !== -1) {
-          setActiveIndex(existingIdx);
-          return;
-        }
-
-        const next = coordinates.slice();
-        next[activeIndex] = { x: snappedX, y: snappedY };
-        commitCoordinates(next);
+      const snapped = pixelToSnappedGrid(pixelX, pixelY, size, minCoord, maxCoord);
+      if (!snapped) {
+        return;
       }
+
+      const existingIdx = coordinates.findIndex((p) => p.x === snapped.x && p.y === snapped.y);
+      if (existingIdx !== -1) {
+        setActiveIndex(existingIdx);
+        return;
+      }
+
+      const next = coordinates.slice();
+      next[activeIndex] = { x: snapped.x, y: snapped.y };
+      commitCoordinates(next);
     },
     [activeIndex, commitCoordinates, coordinates, maxCoord, minCoord, option],
   );
 
+  /**
+   * Applies a new axis range via react-hook-form so the question stays dirty until explicitly saved
+   * (including toggling 10 ↔ 20) and quiz data status reflects an update when a form context exists.
+   */
   const handleAxisRangeChange = useCallback(
     (selectedOption: { value: number | string }) => {
       const nextAxisRange = resolveAxisRange(Number(selectedOption.value));
 
-      // Keep the question "dirty" on range toggles (including 20 -> 10 -> 20),
-      // so the Save action remains available until the user saves explicitly.
       if (form && axisRangeControllerProps?.field.name) {
         form.setValue(axisRangeControllerProps.field.name as never, nextAxisRange as never, {
           shouldDirty: true,
@@ -400,15 +562,6 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
         <div css={styles.answerHeader}>
           <span css={styles.answerHeaderTitle}>{__('Coordinations', __TUTOR_TEXT_DOMAIN__)}</span>
         </div>
-        {axisRangeControllerProps && (
-          <FormSelectInput
-            {...axisRangeControllerProps}
-            label={__('Graph Range', __TUTOR_TEXT_DOMAIN__)}
-            options={AXIS_RANGE_OPTIONS}
-            helpText={__('Choose axis limits for both X and Y directions.', __TUTOR_TEXT_DOMAIN__)}
-            onChange={handleAxisRangeChange}
-          />
-        )}
         <div css={styles.list}>
           {coordinates.map((pt, idx) => {
             const isActive = idx === activeIndex;
@@ -523,16 +676,80 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
         >
           {__('Add Coordination', __TUTOR_TEXT_DOMAIN__)}
         </Button>
-        <div css={styles.canvasWrap}>
+        <div css={styles.canvasWrap} ref={gridWrapRef}>
           <canvas
             ref={canvasRef}
             width={CANVAS_SIZE}
             height={CANVAS_SIZE}
             css={styles.canvas}
             onClick={handleCanvasClick}
+            onMouseMove={handleCanvasMouseMove}
+            onMouseLeave={handleCanvasMouseLeave}
             aria-label={__('Coordinate grid: click to set the correct answer point.', __TUTOR_TEXT_DOMAIN__)}
           />
+          <div css={styles.markerLayer} aria-hidden>
+            {coordinates.map((coord, idx) => {
+              const pt = graphToPixelLayout(gridLogicalSize, minCoord, maxCoord, coord.x, coord.y);
+              const isActive = idx === activeIndex;
+              const markerPct = (MARKER_DISPLAY_SIZE / gridLogicalSize) * 100;
+              const markerSrc = isActive
+                ? graphMarkerAssetUrl('graph-marker-selected')
+                : graphMarkerAssetUrl('graph-marker-hover');
+              return (
+                <img
+                  key={`coord-marker-${idx}-${coord.x}-${coord.y}`}
+                  src={markerSrc}
+                  alt=""
+                  css={styles.markerImg}
+                  style={{
+                    left: `${(pt.x / gridLogicalSize) * 100}%`,
+                    top: `${(pt.y / gridLogicalSize) * 100}%`,
+                    width: `${markerPct}%`,
+                    height: `${markerPct}%`,
+                    objectFit: 'contain',
+                    transform: `translate(-50%, -50%) scale(${isActive ? 1.05 : 1})`,
+                  }}
+                />
+              );
+            })}
+            {hoverTargetRef.current !== null && hoverAlphaRef.current > 0.01
+              ? (() => {
+                  const hoverCell = hoverTargetRef.current;
+                  if (!hoverCell) {
+                    return null;
+                  }
+                  const hoverPt = graphToPixelLayout(gridLogicalSize, minCoord, maxCoord, hoverCell.x, hoverCell.y);
+                  const markerPct = (MARKER_DISPLAY_SIZE / gridLogicalSize) * 100;
+                  return (
+                    <img
+                      key="coord-grid-hover-preview"
+                      src={graphMarkerAssetUrl('graph-marker-hover')}
+                      alt=""
+                      css={styles.markerImg}
+                      style={{
+                        left: `${(hoverPt.x / gridLogicalSize) * 100}%`,
+                        top: `${(hoverPt.y / gridLogicalSize) * 100}%`,
+                        width: `${markerPct}%`,
+                        height: `${markerPct}%`,
+                        objectFit: 'contain',
+                        opacity: hoverAlphaRef.current,
+                        transform: `translate(-50%, -50%) scale(${Math.max(0.8, hoverScaleRef.current)})`,
+                      }}
+                    />
+                  );
+                })()
+              : null}
+          </div>
         </div>
+        {axisRangeControllerProps && (
+          <FormSelectInput
+            {...axisRangeControllerProps}
+            leftIconPadding={36}
+            size="small"
+            options={AXIS_RANGE_OPTIONS}
+            onChange={handleAxisRangeChange}
+          />
+        )}
       </div>
     </div>
   );
@@ -648,10 +865,23 @@ const styles = {
   `,
   canvasWrap: css`
     display: block;
+    position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
     overflow: hidden;
     background-color: ${colorTokens.background.white};
+  `,
+  markerLayer: css`
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  `,
+  markerImg: css`
+    position: absolute;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+    transform-origin: center center;
   `,
   canvas: css`
     display: block;
