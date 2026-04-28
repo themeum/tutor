@@ -431,11 +431,12 @@ class Ajax {
 		$remember    = isset( $_POST['rememberme'] );
 
 		try {
-			$creds            = array(
+			$creds = array(
 				'user_login'    => trim( $username ),
 				'user_password' => $password,
 				'remember'      => $remember,
 			);
+
 			$validation_error = apply_filters( 'tutor_process_login_errors', $validation_error, $creds['user_login'], $creds['user_password'] );
 			if ( $validation_error->get_error_code() ) {
 				$validation_error->add(
