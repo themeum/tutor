@@ -23,7 +23,7 @@ import {
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
 
-const PADDING = 12;
+const PADDING = 16;
 const SNAP_THRESHOLD = 0.3;
 const CANVAS_SIZE = 420;
 const MARKER_DISPLAY_SIZE = 27;
@@ -305,7 +305,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
       const topEdge = graphToPixel(0, maxCoord).y;
       const bottomEdge = graphToPixel(0, minCoord).y;
 
-      ctx.strokeStyle = colorTokens.stroke.divider;
+      ctx.strokeStyle = '#cecfd2';
       ctx.lineWidth = 0.5;
       for (let i = minCoord; i <= maxCoord; i++) {
         if (i === 0) continue;
@@ -321,7 +321,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
         ctx.stroke();
       }
 
-      ctx.strokeStyle = colorTokens.background.black;
+      ctx.strokeStyle = '#0c111d';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.moveTo(leftEdge, centerY);
@@ -878,6 +878,7 @@ const styles = {
     aspect-ratio: 1 / 1;
     overflow: hidden;
     background-color: ${colorTokens.background.white};
+    border-radius: ${borderRadius.card};
   `,
   markerLayer: css`
     position: absolute;
@@ -896,7 +897,7 @@ const styles = {
     width: 100%;
     height: 100%;
     cursor: crosshair;
-    border: 1px solid ${colorTokens.stroke.border};
+    border: 1px solid #ececed;
     border-radius: ${borderRadius.card};
   `,
 };
