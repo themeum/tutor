@@ -99,6 +99,23 @@
     }
   }
 
+  button[data-vc-arrow],
+  button[data-vc=month],
+  button[data-vc=year] {
+    background-color: transparent;
+    color: $tutor-text-primary;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      color: $tutor-text-primary;
+    }
+  }
+
+  button[data-vc-arrow] {
+    padding: $tutor-spacing-none;
+  }
+
   .vc-presets {
     grid-area: presets;
     @include tutor-flex(column);
