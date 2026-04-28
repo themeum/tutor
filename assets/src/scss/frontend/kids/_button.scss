@@ -37,9 +37,9 @@
 	--tutor-button-secondary-border-shadow-focused: none;
 	--tutor-button-secondary-border-shadow-disabled: none;
 
-	--tutor-button-outline-border-shadow: 0 0 0 1px #{$tutor-border-idle};
+	--tutor-button-outline-border-shadow: 0 0 0 1px #{$tutor-border-idle2};
 	--tutor-button-outline-border-shadow-hover: none;
-	--tutor-button-outline-border-shadow-focused: 0 0 0 1px #{$tutor-border-idle};
+	--tutor-button-outline-border-shadow-focused: 0 0 0 1px #{$tutor-border-idle2};
 	--tutor-button-outline-border-shadow-disabled: none;
 
 	--tutor-button-ghost-border-shadow: none;
@@ -103,14 +103,14 @@
 		--tutor-button-secondary-border-shadow-disabled: 0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
 		0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
 
-		--tutor-button-outline-border-shadow: 0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
-		0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
+		--tutor-button-outline-border-shadow: 0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle2},
+		0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle2};
 		--tutor-button-outline-border-shadow-hover: 0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-hover},
 		0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-hover};
-		--tutor-button-outline-border-shadow-focused: 0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
-		0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
-		--tutor-button-outline-border-shadow-disabled: 0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle},
-		0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle};
+		--tutor-button-outline-border-shadow-focused: 0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle2},
+		0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle2};
+		--tutor-button-outline-border-shadow-disabled: 0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-idle2},
+		0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-idle2};
 
 		--tutor-button-ghost-border-shadow-hover: 0 0 0 var(--tutor-button-border-shadow-base) #{$tutor-border-hover},
 		0 var(--tutor-button-border-shadow-bottom) 0 0 #{$tutor-border-hover};
