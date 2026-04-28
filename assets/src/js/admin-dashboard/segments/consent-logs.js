@@ -1,5 +1,5 @@
 /**
- * Student actions consent logs modal.
+ * Consent logs modal functionality for students and instructors.
  *
  * @since 4.0.0
  */
@@ -13,6 +13,7 @@ const downloadBtn = overlay?.querySelector('[data-consent-logs-download]');
 const userNameEl = overlay?.querySelector('.tutor-consent-user-card-name');
 const userJoinedEl = overlay?.querySelector('.tutor-consent-user-card-joined');
 const userAvatarEl = overlay?.querySelector('.tutor-consent-user-card img');
+
 // Current open state.
 let currentUserId = 0;
 let currentUserName = '';
@@ -20,7 +21,9 @@ let currentUserJoined = '';
 let currentUserEmail = '';
 let currentUserLogin = '';
 let currentLogs = [];
+
 const { __ } = wp.i18n;
+
 /**
  * Build a human-readable title from the consent title.
  *
@@ -34,6 +37,7 @@ const getLogTitle = (log, includeAccepted = true) => {
 	}
 	return includeAccepted ? __('Accepted Consent', 'tutor') : __('Consent', 'tutor');
 };
+
 const renderTimeline = (logs) => {
 	const items = logs.map((log, index) => {
 		const title = getLogTitle(log);
@@ -59,14 +63,17 @@ const renderTimeline = (logs) => {
 	});
 	return items.join('');
 };
+
 const showLoading = () => {
 	if (!modalBody) return;
 	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('Loading…', 'tutor')}</div>`;
 };
+
 const showEmpty = () => {
 	if (!modalBody) return;
 	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('No consent logs found.', 'tutor')}</div>`;
 };
+
 const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, userLogin) => {
 	if (!overlay || !modalBody) return;
 	currentUserId = userId;
@@ -74,16 +81,18 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
 	currentUserJoined = userJoined;
 	currentUserEmail = userEmail;
 	currentUserLogin = userLogin;
+
 	// Fill user card.
 	if (userNameEl) userNameEl.textContent = userName;
 	if (userJoinedEl) userJoinedEl.textContent = userJoined ? `${__('Joined', 'tutor')} ${userJoined}` : '';
 	if (userAvatarEl && avatarSrc) userAvatarEl.src = avatarSrc;
-	// showLoading();
+
 	const body = new FormData();
 	body.append('action', AJAX_ACTION);
 	body.append('user_action', 'all_consents_given_by_user');
 	body.append('user_id', userId);
 	body.append(NONCE_KEY, NONCE_VALUE);
+
 	fetch(AJAX_URL, { method: 'POST', body })
 		.then((r) => r.json())
 		.then((data) => {
@@ -109,6 +118,7 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
 		})
 		.catch(() => showEmpty());
 };
+
 const downloadCSV = () => {
 	if (!currentLogs.length) return;
 
@@ -144,6 +154,7 @@ const downloadCSV = () => {
 	a.click();
 	URL.revokeObjectURL(url);
 };
+
 const initConsentLogTriggers = () => {
 	document.querySelectorAll('[data-consent-logs-trigger]').forEach((btn) => {
 		btn.addEventListener('click', () => {
@@ -157,5 +168,6 @@ const initConsentLogTriggers = () => {
 		});
 	});
 };
+
 if (downloadBtn) downloadBtn.addEventListener('click', downloadCSV);
 document.addEventListener('DOMContentLoaded', initConsentLogTriggers);

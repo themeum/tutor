@@ -148,10 +148,15 @@ class LegalConsent extends BaseController {
 	public static function get_consent_places() {
 		$places = array(
 			self::DISPLAY_ON_STD_REG,
-			self::DISPLAY_ON_INS_REG,
 			self::DISPLAY_ON_LOGIN,
 			self::DISPLAY_ON_CHECKOUT,
 		);
+
+		$is_marketplace_enabled = tutor_utils()->get_option( 'enable_course_marketplace]', false );
+
+		if ( $is_marketplace_enabled ) {
+			$places[] = self::DISPLAY_ON_INS_REG;
+		}
 
 		return apply_filters( 'tutor_legal_consent_display_places', $places );
 	}
@@ -633,6 +638,19 @@ class LegalConsent extends BaseController {
 	 */
 	public static function render_consent_field( object $consent, string $wrapper_cs_class = '' ): void {
 		if ( ! $consent->is_active ) {
+			return;
+		}
+
+		$allowed_places = self::get_consent_places();
+
+		// Normalize display_on to array.
+		if ( is_array( $consent->display_on ) ) {
+			$display_on = array_map( 'strval', array_values( $consent->display_on ) );
+		} else {
+			$display_on = array_filter( array_map( 'trim', explode( ',', (string) ( $consent->display_on ?? '' ) ) ) );
+		}
+
+		if ( empty( array_intersect( $display_on, $allowed_places ) ) ) {
 			return;
 		}
 
