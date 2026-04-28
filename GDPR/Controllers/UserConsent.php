@@ -65,6 +65,8 @@ class UserConsent extends BaseController {
 		add_action( 'tutor_after_login_success', array( $this, 'store_login_consent' ), 10, 2 );
 		add_action( 'tutor_after_checkout_consent', array( $this, 'store_checkout_consent' ), 10, 2 );
 		add_action( 'wp_ajax_tutor_user_consents', array( $this, 'handle_ajax_request' ) );
+		add_action( 'tutor_render_consent_logs_button', array( $this, 'render_consent_logs_button' ) );
+		add_action( 'tutor_render_consent_logs_modal', array( $this, 'render_consent_logs_modal' ) );
 	}
 
 	/**
@@ -148,9 +150,11 @@ class UserConsent extends BaseController {
 					$this->response_bad_request( __( 'Invalid user ID', 'tutor' ) );
 				}
 
+				$consents = $this->get_all_consents_given_by_user( $user_id );
+
 				$this->json_response(
 					__( 'Consent fetched successfully', 'tutor' ),
-					$this->get_all_consents_given_by_user( $user_id )
+					$consents
 				);
 
 				break;
@@ -232,7 +236,7 @@ class UserConsent extends BaseController {
 			return array();
 		}
 
-		return array_map(
+		$records = array_map(
 			function ( $record ) {
 				if ( ! isset( $record->created_at_utc ) ) {
 					return $record;
@@ -253,6 +257,8 @@ class UserConsent extends BaseController {
 			},
 			$records
 		);
+
+		return $records;
 	}
 
 	/**
@@ -319,5 +325,60 @@ class UserConsent extends BaseController {
 		$given_consent = $this->model->is_consent_given_by_user( $user_id, $display_key, $version );
 
 		return $given_consent;
+	}
+
+	/**
+	 * Render consent logs button.
+	 * Called via action hook.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $user_data User list item object.
+	 */
+	public function render_consent_logs_button( $user_data ): void {
+		$user_id = $user_data->ID ?? 0;
+		if ( ! $user_id ) {
+			return;
+		}
+
+		$user_name   = $user_data->display_name ?? '';
+		$user_joined = $user_data->user_registered ?? '';
+		$user_email  = $user_data->user_email ?? '';
+		$user_login  = $user_data->user_login ?? '';
+		$avatar_src  = get_avatar_url( $user_id, array( 'size' => 40 ) );
+		?>
+		<div class="tutor-dropdown-parent">
+			<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+				<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
+			</button>
+			<div id="user-actions-<?php echo esc_attr( $user_id ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+				<button
+					type="button"
+					class="tutor-dropdown-item"
+					data-tutor-modal-target="tutor-consent-logs-modal"
+					data-consent-logs-trigger
+					data-user-id="<?php echo esc_attr( $user_id ); ?>"
+					data-user-name="<?php echo esc_attr( $user_name ); ?>"
+					data-user-joined="<?php echo esc_attr( $user_joined ); ?>"
+					data-user-email="<?php echo esc_attr( $user_email ); ?>"
+					data-user-login="<?php echo esc_attr( $user_login ); ?>"
+					data-avatar-src="<?php echo esc_url( $avatar_src ); ?>"
+				>
+					<i class="tutor-icon-file-text tutor-mr-8" aria-hidden="true"></i>
+					<span><?php esc_html_e( 'Consent Logs', 'tutor' ); ?></span>
+				</button>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render consent logs modal.
+	 * Called via action hook.
+	 *
+	 * @since 4.0.0
+	 */
+	public function render_consent_logs_modal(): void {
+		include tutor()->path . 'views/templates/consent-logs-modal.php';
 	}
 }
