@@ -9,19 +9,12 @@
  * @since 1.4.3
  */
 
-use Tutor\Components\SvgIcon;
-
-defined( 'ABSPATH' ) || exit;
-
 $product_id = tutor_utils()->get_course_product_id();
 $download   = new EDD_Download( $product_id );
 
 if ( $download->ID ) {
 
-	$args = array(
-		'download_id' => $download->ID,
-		'class'       => 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block',
-	);
+	$args = array( 'download_id' => $download->ID );
 
 	/**
 	 * Improved purchase link rendering using EDD native helper.
@@ -39,26 +32,5 @@ if ( $download->ID ) {
 		$args['class'] = 'tutor-open-login-modal';
 	}
 
-	/**
-	 * Added to align button styling with tutor-btn.
-	 *
-	 * @since 4.0.0
-	 */
-	add_filter(
-		'edd_purchase_link_args',
-		function( $args ) {
-			$args['class'] = str_replace( 'edd-submit', '', $args['class'] );
-			return $args;
-		},
-		PHP_INT_MAX
-	);
-
 	echo edd_get_purchase_link( $args ); //phpcs:ignore
-} else {
-	?>
-	<div class="tutor-d-flex tutor-items-center tutor-gap-1 tutor-fs-7 tutor-color-muted">
-		<?php SvgIcon::make()->name( 'info' )->size( 20 )->render(); ?>
-		<p><?php esc_html_e( 'No EDD product for this course', 'tutor' ); ?></p>
-	</div>
-	<?php
 }

@@ -5314,11 +5314,6 @@ class Utils {
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),
-			'coordinates'       => array(
-				'name'   => __( 'Graph', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-coordinates tutor-icon-grid"></i></span>',
-				'is_pro' => true,
-			),
 			'puzzle'            => array(
 				'name'   => __( 'Puzzle', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-puzzle tutor-icon-images"></i></span>',

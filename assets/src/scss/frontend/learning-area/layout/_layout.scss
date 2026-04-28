@@ -23,12 +23,6 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
     padding-inline-start: 0;
   }
 
-  @include tutor-breakpoint-up(md) {
-    .tutor-learning-area-content {
-      padding-top: 64px;
-    }
-  }
-
   .tutor-expand-btn {
     position: fixed;
     inset-inline-start: $tutor-spacing-6;

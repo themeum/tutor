@@ -113,17 +113,15 @@ const quizRadar = (config: QuizRadarConfig) => ({
     const innerRadius = radius * 0.3;
     const outerRadius = radius * 0.52;
 
-    const isDark = document.documentElement.getAttribute('data-tutor-theme') === 'dark';
-
     ctx.clearRect(0, 0, width, height);
     ctx.beginPath();
     ctx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2);
-    ctx.fillStyle = isDark ? '#2c3342' : '#E7EDFC';
+    ctx.fillStyle = '#E7EDFC';
     ctx.fill();
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, outerRadius, 0, Math.PI * 2);
-    ctx.strokeStyle = isDark ? '#3F63DF' : '#E7EDFC';
+    ctx.strokeStyle = '#E7EDFC';
     ctx.lineWidth = 1.5;
     ctx.stroke();
   },
@@ -153,9 +151,8 @@ const quizRadar = (config: QuizRadarConfig) => ({
     const sweepRad = startRad + progress * Math.PI * 2;
 
     const steps = 340;
-    const isDark = document.documentElement.getAttribute('data-tutor-theme') === 'dark';
-    const colorStart = isDark ? [112, 133, 222] : [197, 208, 245];
-    const colorEnd = isDark ? [44, 51, 66] : [241, 245, 254];
+    const colorStart = [197, 208, 245];
+    const colorEnd = [241, 245, 254];
 
     ctx.clearRect(0, 0, width, height);
 
@@ -183,7 +180,7 @@ const quizRadar = (config: QuizRadarConfig) => ({
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.lineTo(centerX + Math.cos(sweepRad) * radius, centerY + Math.sin(sweepRad) * radius);
-    ctx.strokeStyle = isDark ? 'rgba(63, 99, 223, 1)' : 'rgba(62,100,222,0.30)';
+    ctx.strokeStyle = 'rgba(62,100,222,0.30)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
   },

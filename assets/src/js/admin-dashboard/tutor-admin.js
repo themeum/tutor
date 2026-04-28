@@ -1,5 +1,3 @@
-import ajaxHandler from '../helper/ajax-handler';
-
 import '../front/_select_dd_search';
 import './quiz-attempts';
 import './segments/color-preset';
@@ -8,16 +6,15 @@ import './segments/editor_full';
 import './segments/filter';
 import './segments/image-preview';
 import './segments/import-export';
-import './segments/legal-consents';
 import './segments/lib';
 import './segments/manage-api-keys';
 import './segments/multiple_email_input';
 import './segments/navigation';
 import './segments/options';
 import './segments/reset';
-import './segments/students';
 import './segments/withdraw';
 import './wp-events-subscriber';
+import ajaxHandler from '../helper/ajax-handler';
 
 document.querySelectorAll('.tutor-control-button').forEach(function (button) {
 	button.addEventListener('click', function (event) {

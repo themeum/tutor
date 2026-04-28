@@ -326,53 +326,71 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
           },
           layouts: {
             multiple: `
-              <aside class="vc-presets">
-                ${(Object.entries(PRESET_LABELS) as [Preset, string][])
-                  .map(
-                    ([key, label]) => `
-                    <button type="button" ${TUTOR_CALENDAR_DATA_ATTRS.preset}="${key}">
-                      <span>${label}</span>
-                      <span class="vc-preset-icon" x-data="tutorIcon({ name: 'check-2' })"></span>
-                    </button>
-                  `,
-                  )
-                  .join('')}
-              </aside>
+              <div class="vc-layout">
+                <aside class="vc-presets">
+                  ${(Object.entries(PRESET_LABELS) as [Preset, string][])
+                    .map(
+                      ([key, label]) => `
+                      <button type="button" ${TUTOR_CALENDAR_DATA_ATTRS.preset}="${key}">
+                        <span>${label}</span>
+                        <span class="vc-preset-icon" x-data="tutorIcon({ name: 'check-2' })"></span>
+                      </button>
+                    `,
+                    )
+                    .join('')}
+                </aside>
 
-              <div class="vc-controls" data-vc="controls" role="toolbar" aria-label="Calendar Navigation">
-                <#ArrowPrev />
-                <#ArrowNext />
-              </div>
+                <div class="vc-main">
+                  <div class="vc-controls" data-vc="controls" role="toolbar" aria-label="Calendar Navigation">
+                    <#ArrowPrev />
+                    <#ArrowNext />
+                  </div>
 
-              <div class="vc-grid" data-vc="grid">
-                <#Multiple>
-                  <div class="vc-column" data-vc="column" role="region">
-                    <div class="vc-header" data-vc="header" role="toolbar">
-                      <div class="vc-header__content" data-vc-header="content">
-                        <#Month /> <#Year />
+                  <div class="vc-grid" data-vc="grid">
+                    <div class="vc-column" data-vc="column" role="region">
+                      <div class="vc-header" data-vc="header" role="toolbar">
+                        <div class="vc-header__content" data-vc-header="content">
+                          <#Month /> <#Year />
+                        </div>
+                      </div>
+                      <div class="vc-wrapper" data-vc="wrapper">
+                        <#WeekNumbers />
+                        <div class="vc-content" data-vc="content">
+                          <#Week />
+                          <#Dates />
+                          <#DateRangeTooltip />
+                        </div>
                       </div>
                     </div>
-                    <div class="vc-wrapper" data-vc="wrapper">
-                      <#WeekNumbers />
-                      <div class="vc-content" data-vc="content">
-                        <#Week />
-                        <#Dates />
+
+                    <div class="vc-column" data-vc="column" role="region">
+                      <div class="vc-header" data-vc="header" role="toolbar">
+                        <div class="vc-header__content" data-vc-header="content">
+                          <#Month /> <#Year />
+                        </div>
+                      </div>
+                      <div class="vc-wrapper" data-vc="wrapper">
+                        <#WeekNumbers />
+                        <div class="vc-content" data-vc="content">
+                          <#Week />
+                          <#Dates />
+                          <#DateRangeTooltip />
+                        </div>
                       </div>
                     </div>
                   </div>
-                <#/Multiple>
-                <#DateRangeTooltip />
-              </div>
 
-              <#ControlTime />
+                  <#ControlTime />
 
-              <div class="vc-footer tutor-flex tutor-justify-end tutor-gap-5 tutor-mt-6">
-                <button type="button" ${TUTOR_CALENDAR_DATA_ATTRS.action}="${TUTOR_CALENDAR_VALUES.clear}" class="tutor-btn tutor-btn-secondary tutor-btn-small">
-                ${__('Clear Selection', 'tutor')}
-                </button>
-                <button type="button" ${TUTOR_CALENDAR_DATA_ATTRS.action}="${TUTOR_CALENDAR_VALUES.apply}" class="tutor-btn tutor-btn-primary tutor-btn-small">
-                ${__('Apply', 'tutor')}
-                </button>
+                  <div class="vc-footer tutor-flex tutor-justify-end tutor-gap-5 tutor-mt-6">
+                    <button type="button" ${TUTOR_CALENDAR_DATA_ATTRS.action}="${TUTOR_CALENDAR_VALUES.clear}" class="tutor-btn tutor-btn-secondary tutor-btn-small">
+                    ${__('Clear Selection', 'tutor')}
+                    </button>
+                    <button type="button" ${TUTOR_CALENDAR_DATA_ATTRS.action}="${TUTOR_CALENDAR_VALUES.apply}" class="tutor-btn tutor-btn-primary tutor-btn-small">
+                    ${__('Apply', 'tutor')}
+                    </button>
+                  </div>
+                </div>
               </div>
             `,
           },

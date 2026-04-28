@@ -210,15 +210,6 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						onclick="<?php echo esc_attr( $item['onclick'] ); ?>"
 					<?php endif; ?>
 				>
-					<?php if ( isset( $item['locked'] ) ) : ?>
-						<?php
-							SvgIcon::make()
-							->name( Icon::LOCK_CIRCLE )
-							->size( 12 )
-							->attr( 'class', 'tutor-lock-icon' )
-							->render();
-						?>
-					<?php endif; ?>
 					<?php SvgIcon::make()->name( $item['icon'] )->size( 20 )->render(); ?>
 					<?php echo esc_html( $item['title'] ); ?>
 				</a>

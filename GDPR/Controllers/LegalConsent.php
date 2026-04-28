@@ -157,104 +157,6 @@ class LegalConsent extends BaseController {
 	}
 
 	/**
-	 * Get display place options for the legal consent settings screen.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return array<string, string>
-	 */
-	public static function get_display_place_options(): array {
-		$labels  = array(
-			self::DISPLAY_ON_CHECKOUT     => __( 'Checkout', 'tutor' ),
-			self::DISPLAY_ON_SUBSCRIPTION => __( 'Subscription', 'tutor' ),
-			self::DISPLAY_ON_ENROLLMENT   => __( 'Enrollment', 'tutor' ),
-		);
-		$options = array();
-
-		foreach ( self::get_consent_places() as $place ) {
-			$options[ $place ] = $labels[ $place ] ?? ucwords( str_replace( '_', ' ', $place ) );
-		}
-
-		return $options;
-	}
-
-	/**
-	 * Get consent method options for the legal consent settings screen.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return array<string, string>
-	 */
-	public static function get_consent_method_options(): array {
-		return array(
-			self::METHOD_MANDATORY_CHECK => __( 'Mandatory Checkbox', 'tutor' ),
-			self::METHOD_OPTIONAL_CHECK  => __( 'Optional Checkbox', 'tutor' ),
-			self::METHOD_TEXT_ONLY       => __( 'Display Text Only', 'tutor' ),
-		);
-	}
-
-	/**
-	 * Get legal consent items.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public static function get_consents(): array {
-		$items = ( new self( false ) )->model->get_all( array() );
-
-		if ( ! is_array( $items ) ) {
-			return array();
-		}
-
-		$normalize_display_on = function ( $display_on ): array {
-			if ( is_array( $display_on ) ) {
-				return $display_on;
-			}
-
-			$display_on = array_filter( array_map( 'trim', explode( ',', (string) $display_on ) ) );
-			$normalized = array_combine( $display_on, $display_on );
-
-			if ( false === $normalized ) {
-				return array();
-			}
-
-			return $normalized;
-		};
-
-		$normalize_content_map = function ( $content_map ): array {
-			if ( is_array( $content_map ) ) {
-				return $content_map;
-			}
-
-			if ( ! is_string( $content_map ) || '' === $content_map ) {
-				return array();
-			}
-
-			$decoded = json_decode( $content_map, true );
-
-			return is_array( $decoded ) ? $decoded : array();
-		};
-
-		return array_map(
-			function ( $item ) use ( $normalize_content_map, $normalize_display_on ) {
-				$item = (array) $item;
-
-				return array(
-					'id'          => isset( $item['id'] ) ? (int) $item['id'] : 0,
-					'enabled'     => ! empty( $item['is_active'] ) ? 'on' : 'off',
-					'title'       => $item['consent_title'] ?? '',
-					'display_on'  => $normalize_display_on( $item['display_on'] ?? '' ),
-					'message'     => $item['consent_message'] ?? '',
-					'method'      => $item['consent_method'] ?? self::METHOD_MANDATORY_CHECK,
-					'content_map' => $normalize_content_map( $item['consent_map'] ?? array() ),
-				);
-			},
-			$items
-		);
-	}
-
-	/**
 	 * Handle legal consent CRUD AJAX requests.
 	 *
 	 * @since 4.0.0
@@ -310,7 +212,7 @@ class LegalConsent extends BaseController {
 		}
 
 		$where = array(
-			'display_on' => array( 'IN', array( $place_key ) ),
+			array( 'display_on', 'IN', $place_key ),
 		);
 
 		$res = ( new self( false ) )->model->get_all( $where );
@@ -576,6 +478,7 @@ class LegalConsent extends BaseController {
 					return '' !== $value && null !== $value;
 				}
 			);
+			$data = array_map( 'sanitize_text_field', $data );
 		}
 
 		return $data;
@@ -820,14 +723,12 @@ class LegalConsent extends BaseController {
 		} else {
 			$terms_conditions_link = tutor_utils()->get_toc_page_link();
 			if ( $terms_conditions_link ) {
-				$is_checked = self::DISPLAY_ON_CHECKOUT === $display_key
-					? ( $request['agree_to_terms'] ?? 0 )
-					: ( $request['terms_conditions'] ?? 0 );
+				$is_checked = $request['terms_conditions'] ?? 0;
 				if ( ! $is_checked ) {
 					$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
 				}
 
-				array_push( $res, self::DISPLAY_ON_CHECKOUT === $display_key ? 'agree_to_terms' : 'terms_conditions' );
+				array_push( $res, 'terms_conditions' );
 			}
 		}
 

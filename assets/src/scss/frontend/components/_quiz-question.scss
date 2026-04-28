@@ -62,9 +62,9 @@
 
   &-option {
     @include tutor-typography('small');
-    border: 1px solid $tutor-border-idle2;
+    border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-md;
-    background-color: $tutor-quiz-idle;
+    background-color: $tutor-surface-l1;
     overflow: hidden;
     min-width: 0;
     @include tutor-transition((background-color, border-color, color));
@@ -72,7 +72,7 @@
     &[data-option='correct'] {
       font-weight: $tutor-font-weight-medium;
       border-color: $tutor-border-success;
-      background-color: $tutor-surface-success;
+      background-color: $tutor-actions-success-tertiary;
       color: $tutor-text-success;
       cursor: default;
 
@@ -116,7 +116,7 @@
     &[data-option='incorrect'] {
       font-weight: $tutor-font-weight-medium;
       border-color: $tutor-border-error;
-      background-color: $tutor-surface-critical;
+      background-color: $tutor-actions-critical-secondary;
       color: $tutor-text-critical;
       cursor: default;
 
@@ -253,7 +253,6 @@
 
     &-option {
       @include tutor-typography('small', 'regular');
-      background-color: transparent;
       border: none;
       line-height: 2.5;
 

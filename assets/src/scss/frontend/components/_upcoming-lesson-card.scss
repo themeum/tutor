@@ -8,6 +8,7 @@
   padding: $tutor-spacing-6;
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
+  cursor: pointer;
 
   &:hover {
     background-color: $tutor-surface-l1-hover;

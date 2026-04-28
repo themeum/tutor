@@ -60,7 +60,7 @@ interface PreferencesFormProps {
   auto_play_next: boolean;
   theme: string;
   font_scale: number;
-  learning_mood: 'modern' | 'kids';
+  learning_mood: boolean;
   formId?: string;
 }
 
@@ -191,7 +191,8 @@ const settings = () => {
 
       this.savePreferencesMutation = query.useMutation(this.updatePreferences, {
         onSuccess: (data: TutorMutationResponse<PreferencesFormProps>, payload: PreferencesFormProps) => {
-          const learningMoodChanged = Boolean(form.getFormState(payload?.formId || '').dirtyFields.learning_mood);
+          const previousLearningMood = form.getValue(payload?.formId || '', 'learning_mood');
+          const learningMoodChanged = previousLearningMood !== payload.learning_mood;
 
           form.reset(payload?.formId || '', payload as unknown as Record<string, unknown>);
           toast.success(data?.message ?? __('Preferences saved successfully', 'tutor'));

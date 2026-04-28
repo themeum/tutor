@@ -28,7 +28,7 @@
   }
 
   &:placeholder-shown:not(:focus):not(:disabled) {
-    background-color: $tutor-surface-l3;
+    background-color: $tutor-surface-base;
   }
 
   &::placeholder {
@@ -217,7 +217,7 @@
   align-items: center;
   width: $width;
   height: $height;
-  background-color: $tutor-button-secondary-hover;
+  background-color: $tutor-surface-l2;
   border: none;
   outline: none;
   border-radius: $height;
@@ -236,7 +236,7 @@
     width: $thumb;
     height: $thumb;
     border-radius: 50%;
-    background-color: $tutor-actions-inverse;
+    background-color: $tutor-surface-l1;
     box-shadow: $tutor-shadow-sm;
     @include tutor-transition((transform, background-color));
   }
@@ -255,10 +255,10 @@
   }
 
   &:disabled {
-    background-color: $tutor-button-disabled;
+    background-color: $tutor-surface-l1-hover;
 
     &::after {
-      background-color: $tutor-actions-gray-empty;
+      background-color: $tutor-surface-base;
     }
   }
 }
