@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\EnrollmentModel;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -104,16 +106,16 @@ class TutorEDD extends Tutor_Base {
 	 */
 	public function save_course_meta( $post_ID ) {
 
-		$product_id = Input::post( '_tutor_course_product_id', '' );
+		$product_id = Input::post( Course::COURSE_PRODUCT_ID_META, '' );
 
 		if ( '-1' !== $product_id ) {
 			$product_id = (int) $product_id;
 			if ( $product_id ) {
-				update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
+				update_post_meta( $post_ID, Course::COURSE_PRODUCT_ID_META, $product_id );
 				update_post_meta( $product_id, '_tutor_product', 'yes' );
 			}
 		} else {
-			delete_post_meta( $post_ID, '_tutor_course_product_id' );
+			delete_post_meta( $post_ID, Course::COURSE_PRODUCT_ID_META );
 		}
 
 		do_action( 'save_tutor_course', $post_ID, get_post( $post_ID ) );
@@ -146,6 +148,8 @@ class TutorEDD extends Tutor_Base {
 	/**
 	 * Get course price
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $price course price.
 	 * @param int    $course_id course id.
 	 *
@@ -160,6 +164,8 @@ class TutorEDD extends Tutor_Base {
 
 	/**
 	 * Update payment status
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param int    $payment_id payment id.
 	 * @param string $new_status payment's new status.
@@ -181,8 +187,8 @@ class TutorEDD extends Tutor_Base {
 		$user_id      = (int) $payment->user_info['id'];
 
 		$enrollment_status = 'complete' === $new_status
-								? 'completed'
-								: ( 'pending' === $new_status ? 'pending' : 'cancel' );
+								? EnrollmentModel::STATUS_COMPLETED
+								: ( 'pending' === $new_status ? EnrollmentModel::STATUS_PENDING : EnrollmentModel::STATUS_CANCEL );
 
 		foreach ( $cart_details as $cart_item ) {
 			$product_id    = (int) $cart_item['id'];
@@ -190,7 +196,7 @@ class TutorEDD extends Tutor_Base {
 
 			if ( $if_has_course ) {
 				$course_id   = (int) $if_has_course->post_id;
-				$is_enrolled = tutor_utils()->is_enrolled( $course_id, $user_id, false );
+				$is_enrolled = EnrollmentModel::is_enrolled( $course_id, $user_id, false );
 
 				if ( $is_enrolled ) {
 					// Update enrollment.
@@ -198,7 +204,7 @@ class TutorEDD extends Tutor_Base {
 				} else {
 					// New enrollment.
 					add_filter( 'tutor_enroll_data', fn( $data ) => array_merge( $data, array( 'post_status' => $enrollment_status ) ) );
-					tutor_utils()->do_enroll( $course_id, $payment_id, $user_id );
+					EnrollmentModel::do_enroll( $course_id, $payment_id, $user_id );
 				}
 			}
 		}
