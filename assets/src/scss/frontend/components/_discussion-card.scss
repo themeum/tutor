@@ -111,7 +111,7 @@
       color: $tutor-icon-secondary;
     }
 
-    &-reply-button {
+    .tutor-discussion-card-meta-reply-button {
       @include tutor-button-reset();
       @include tutor-typography(tiny, medium, subdued);
       margin-right: auto;

@@ -58,7 +58,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 	@click.outside="sidebarOpen = false"
 >
 	<div class="tutor-hidden tutor-lg-flex tutor-items-center tutor-px-4">
-		<h5 class="tutor-learning-header-title">
+		<h5 class="tutor-learning-header-title tutor-my-none">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
 		<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">

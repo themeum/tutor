@@ -10,7 +10,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-
 add_action( 'wp_enqueue_scripts', 'tutor_flatpro_scripts' );
 
 if ( ! function_exists( 'tutor_flatpro_scripts' ) ) {
@@ -24,6 +23,3 @@ if ( ! function_exists( 'tutor_flatpro_scripts' ) ) {
 		wp_enqueue_style( 'tutor_flatpro', $dir_url . 'assets/css/style.css', array(), tutor()->version );
 	}
 }
-
-
-

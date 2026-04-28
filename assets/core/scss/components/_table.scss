@@ -16,9 +16,14 @@
   table {
     min-width: 600px;
     width: 100%;
+    border: none;
+    td, th {
+      border: none;
+    }
   }
 }
 
+table.tutor-table,
 .tutor-table {
   @include tutor-typography('small', 'regular', 'secondary');
   width: 100%;
@@ -41,14 +46,24 @@
   tbody {
     tr {
       border-bottom: 1px solid $tutor-border-idle;
+
       &:last-child {
         border-bottom: none;
       }
+
       &:hover {
         background-color: $tutor-surface-l1-hover;
       }
+
+      &:nth-child(odd) {
+        >td {
+          background-color: transparent;
+        }
+      }
     }
+
     td {
+      background-color: transparent;
       padding: $tutor-spacing-5;
       vertical-align: middle;
     }
@@ -56,11 +71,14 @@
 }
 
 .tutor-table-column-borders {
+
   th,
   td {
-    border-right: 1px solid $tutor-border-idle;
+    border-width: 0px 1px 0px 0px;
+    border-color: $tutor-border-idle;
+
     &:last-of-type {
-      border-right: none;
+      border-width: 0px 0px 0px 0px;
     }
   }
 }

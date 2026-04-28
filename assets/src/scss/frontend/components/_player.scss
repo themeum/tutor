@@ -34,4 +34,44 @@
   .plyr--vimeo .plyr__captions {
     display: none !important;
   }
+
+  button.plyr__control,
+  .plyr__control {
+    color: var(--plyr-video-control-color, #fff);
+    border: none;
+  }
+
+  .plyr__control.plyr__tab-focus,
+  .plyr__control:hover,
+  .plyr__control:focus,
+  .plyr__control[aria-expanded=true] {
+    background: #00b3ff;
+    background: var(--plyr-video-control-background-hover, var(--plyr-color-main, var(--plyr-color-main, #00b3ff)));
+    color: var(--plyr-video-control-color, #fff);
+    color: var(--plyr-video-control-color-hover, #fff);
+  }
+
+  .plyr__controls__item.plyr__menu {
+    .plyr__menu__container {
+      [role=menu] button {
+        color: var(--plyr-video-control-color, #fff);
+        &:hover,
+        &:focus {
+          color: var(--plyr-video-control-color, #fff);
+        }
+      }
+    }
+  }
+
+  .plyr__control--overlaid {
+    background: #00b3ff;
+    background: var(--plyr-video-control-background-hover, var(--plyr-color-main, var(--plyr-color-main, #00b3ff)));
+    border: 0;
+    border-radius: 100%;
+    color: #fff;
+    color: var(--plyr-video-control-color, #fff);
+    padding: calc(var(--plyr-control-spacing, 10px) * 1.5);
+    margin: $tutor-spacing-none;
+    z-index: 9;
+  }
 }
