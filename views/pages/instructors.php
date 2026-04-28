@@ -231,33 +231,34 @@ $filters = array(
 									<i class="icon2 tutor-icon-angle-down" aria-hidden="true"></i>
 								</div>
 							</td>
-						<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-							<?php
-							ob_start();
-							$profile_url = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) );
-							?>
-							<div class="tutor-d-flex tutor-align-center tutor-gap-1 tutor-justify-end">
-								<a href="<?php echo esc_url( $profile_url ); ?>" 
-									class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-									<?php esc_html_e( 'Edit', 'tutor' ); ?>
-								</a>
+
+							<td data-th="<?php esc_html_e( 'Actions', 'tutor' ); ?>">
 								<?php
-								/**
-								 * Action to render consent logs button.
-								 *
-								 * @since 4.0.0
-								 *
-								 * @param object $list User list item.
-								 */
-								do_action( 'tutor_render_consent_logs_button', $list );
+								ob_start();
+								$profile_url = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) );
 								?>
-							</div>
-							<?php
-							$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
-							//phpcs:ignore -- already escaped.
-							echo $edit_button;
-							?>
-						</td>
+								<div class="tutor-d-flex tutor-align-center tutor-gap-1 tutor-justify-end">
+									<a href="<?php echo esc_url( $profile_url ); ?>" 
+										class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+										<?php esc_html_e( 'Edit', 'tutor' ); ?>
+									</a>
+									<?php
+									/**
+									 * Action to render consent logs button.
+									 *
+									 * @since 4.0.0
+									 *
+									 * @param object $list User list item.
+									 */
+									do_action( 'tutor_render_consent_logs_button', $list );
+									?>
+								</div>
+								<?php
+								$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
+								//phpcs:ignore -- already escaped.
+								echo $edit_button;
+								?>
+							</td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
