@@ -2275,7 +2275,11 @@ class Course extends Tutor_Base {
 		$course_id = get_the_ID();
 
 		if ( $is_learning_area && ! Input::has( 'subpage' ) ) {
-			$course_id = wp_get_post_parent_id( wp_get_post_parent_id( get_the_ID() ) );
+			$course_id = wp_get_post_parent_id( wp_get_post_parent_id( $course_id ) );
+		}
+
+		if ( empty( $course_id ) ) {
+			return;
 		}
 
 		$user_id          = get_current_user_id();
