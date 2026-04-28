@@ -29,6 +29,13 @@ class EnrollmentModel {
 	const STATUS_CANCEL    = 'cancel';
 
 	/**
+	 * Enrollment post type
+	 *
+	 * @var string
+	 */
+	const POST_TYPE = 'tutor_enrolled';
+
+	/**
 	 * Saving enroll information to posts table
 	 * post_author = enrolled_student_id (wp_users id)
 	 * post_parent = enrolled course id
@@ -61,16 +68,16 @@ class EnrollmentModel {
 			}
 		}
 
-		$enrolment_status = 'completed';
+		$enrolment_status = self::STATUS_COMPLETED;
 
 		if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
-			$enrolment_status = 'pending';
+			$enrolment_status = self::STATUS_PENDING;
 		}
 
 		$enroll_data = apply_filters(
 			'tutor_enroll_data',
 			array(
-				'post_type'     => 'tutor_enrolled',
+				'post_type'     => self::POST_TYPE,
 				'post_title'    => $title,
 				'post_status'   => $enrolment_status,
 				'post_author'   => $user_id,
@@ -115,7 +122,7 @@ class EnrollmentModel {
 			$enrolled_id = $is_enrolled;
 
 			// Run this hook for completed enrollment regardless of payment provider and free/paid mode.
-			if ( $fire_hook && 'completed' === $enroll_data['post_status'] ) {
+			if ( $fire_hook && self::STATUS_COMPLETED === $enroll_data['post_status'] ) {
 				do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
 			}
 		}
@@ -172,7 +179,7 @@ class EnrollmentModel {
 					AND post_author = %d
 					{$status_clause};
 				",
-					'tutor_enrolled',
+					self::POST_TYPE,
 					$course_id,
 					$user_id
 				)
