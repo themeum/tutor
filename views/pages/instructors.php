@@ -160,7 +160,6 @@ $filters = array(
 							<?php esc_html_e( 'Status', 'tutor' ); ?>
 							<span class="tutor-icon-order-down up-down-icon" aria-hidden="true"></span>
 						</th>
-						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -501,10 +500,11 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 	</div>
 <?php endif; ?>
 
+<?php do_action( 'tutor_render_consent_logs_modal' ); ?>
+
 <style>
 	.table-instructors .woocommerce-Price-amount{
 		font-size: 0.875rem;
 	}
 </style>
 
-<?php do_action( 'tutor_render_consent_logs_modal' ); ?>
