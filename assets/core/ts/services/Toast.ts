@@ -56,7 +56,7 @@ const DEFAULT_CONFIG: Required<TutorToastConfig> = {
   position: 'bottom-right',
   duration: 5000,
   closeButton: true,
-  progressBar: true,
+  progressBar: false,
   maxVisible: 5,
   dir: 'auto',
   offset: {
@@ -66,7 +66,7 @@ const DEFAULT_CONFIG: Required<TutorToastConfig> = {
     lg: {},
   },
   expandMode: 'hover',
-  richColors: true,
+  richColors: false,
 };
 
 const DEFAULT_LABELS: Record<ToastType, string> = {

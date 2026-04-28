@@ -3,6 +3,8 @@ import Button from '@TutorShared/atoms/Button';
 import ToastProvider, { useToast } from '@TutorShared/atoms/Toast';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
+import '../../assets/css/tutor-core.min.css';
+
 const meta = {
   title: 'Atoms/Toast',
   component: ToastProvider,

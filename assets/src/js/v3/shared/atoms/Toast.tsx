@@ -88,7 +88,6 @@ const ToastProvider = ({
 
         return toast(option.message, {
           type,
-          title: option.title ?? option.message,
           description: option.title ? option.message : undefined,
           ...(duration !== undefined ? { duration } : {}),
           ...(option.position ? { position: option.position } : {}),

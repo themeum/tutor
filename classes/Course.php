@@ -1455,6 +1455,9 @@ class Course extends Tutor_Base {
 		wp_enqueue_script( 'mce-view' );
 		wp_enqueue_editor();
 
+		$core_css_url = tutor()->assets_url . 'css/tutor-core.min.css';
+		wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );
+
 		wp_enqueue_media();
 		wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'wp-date', 'wp-i18n', 'wp-element', 'wp-api' ), TUTOR_VERSION, true );
 		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
@@ -1807,7 +1810,7 @@ class Course extends Tutor_Base {
 
 		$i = 0;
 		foreach ( $sort_order as $topic ) {
-			$i++;
+			++$i;
 			$wpdb->update(
 				$wpdb->posts,
 				array( 'menu_order' => $i ),
@@ -2910,10 +2913,10 @@ class Course extends Tutor_Base {
 					}
 				}
 				if ( ! $has_passed ) {
-					$required_assignment_pass++;
+					++$required_assignment_pass;
 				}
 			} else {
-				$required_assignment_pass++;
+				++$required_assignment_pass;
 			}
 		}
 
@@ -2929,11 +2932,11 @@ class Course extends Tutor_Base {
 					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
 
 					if ( $earned_percentage < $passing_grade ) {
-						$required_quiz_pass++;
+						++$required_quiz_pass;
 						$is_quiz_pass = false;
 					}
 				} else {
-					$required_quiz_pass++;
+					++$required_quiz_pass;
 					$is_quiz_pass = false;
 				}
 			}
