@@ -45,7 +45,7 @@ if ( Input::get( 'reset_key' ) && Input::get( 'user_id' ) ) {
 			<div class="tutor-form-row">
 				<div class="tutor-form-col-12">
 					<div class="tutor-form-group">
-						<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block" value="<?php esc_attr_e( 'Reset password', 'tutor' ); ?>">
+						<button type="submit" class="tutor-btn tutor-btn-primary tutor-w-full" value="<?php esc_attr_e( 'Reset password', 'tutor' ); ?>">
 							<?php esc_html_e( 'Reset password', 'tutor' ); ?>
 						</button>
 					</div>

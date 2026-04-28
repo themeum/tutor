@@ -13,24 +13,24 @@
     background-color: $tutor-surface-l1-hover;
   }
 
-  &-thumbnail {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    border-radius: $tutor-radius-sm;
-    margin-bottom: $tutor-spacing-4;
+	&-thumbnail {
+		position: relative;
+		width: 100%;
+		overflow: hidden;
+		border-radius: $tutor-radius-sm;
+		margin-bottom: $tutor-spacing-4;
 
-    .tutor-ratio {
-      width: 100%;
-    }
+		.tutor-ratio {
+			width: 100%;
+		}
 
-    img {
-      width: 100%;
+		img {
+			width: 100%;
       border-radius: $tutor-radius-sm;
-      object-fit: cover;
-      object-position: center;
-    }
-  }
+			object-fit: cover;
+			object-position: center;
+		}
+	}
 
   &-badge {
     position: absolute;
@@ -39,13 +39,13 @@
     z-index: $tutor-z-positive;
   }
 
-  &-separator {
-    display: inline-block;
-    width: 4px;
-    height: 4px;
-    background: $tutor-text-subdued;
-    border-radius: $tutor-radius-lg;
-  }
+	&-separator {
+		display: inline-block;
+		width: 4px;
+		height: 4px;
+		background: $tutor-text-subdued;
+		border-radius: $tutor-radius-lg;
+	}
 
   &-rating {
     margin-bottom: $tutor-spacing-2;
@@ -73,15 +73,6 @@
   &-title {
     @include tutor-typography('small', 'medium', 'primary');
     margin-bottom: $tutor-spacing-2;
-
-    a {
-      color: $tutor-text-primary;
-      @include tutor-transition(color);
-
-      &:hover {
-        color: $tutor-text-brand;
-      }
-    }
   }
 
   &-meta {
@@ -89,15 +80,6 @@
     gap: $tutor-spacing-1 $tutor-spacing-3;
     @include tutor-typography('tiny', 'regular', 'secondary', 'body');
     margin-top: auto;
-
-    a {
-      color: $tutor-text-secondary;
-      @include tutor-transition(color);
-
-      &:hover {
-        color: $tutor-text-brand;
-      }
-    }
   }
 
   &-footer {
@@ -106,7 +88,6 @@
     gap: $tutor-spacing-5;
     @include tutor-typography('small', 'medium', 'primary');
     margin-top: auto;
-
     del {
       @include tutor-typography('tiny', 'regular', 'subdued');
     }

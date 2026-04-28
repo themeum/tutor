@@ -48,23 +48,6 @@
     }
   }
 
-  button[data-vc-arrow],
-  button[data-vc=month],
-  button[data-vc=year] {
-    background-color: transparent;
-    color: $tutor-text-primary;
-
-    &:hover,
-    &:focus {
-      background-color: transparent;
-      color: $tutor-text-primary;
-    }
-  }
-
-  button[data-vc-arrow] {
-    padding: $tutor-spacing-none;
-  }
-
   .vc-presets {
     @include tutor-flex(column);
 
@@ -113,17 +96,5 @@
 
   .vc-controls {
     padding: $tutor-spacing-2 $tutor-spacing-none $tutor-spacing-none $tutor-spacing-none;
-  }
-
-  .vc-grid {
-    grid-area: grid;
-  }
-
-  [data-vc='time'] {
-    grid-area: time;
-  }
-
-  .vc-footer {
-    grid-area: footer;
   }
 }

@@ -19,10 +19,8 @@
   &[x-on\:click] {
     cursor: pointer;
 
-    &:focus,
     &:hover {
       background-color: $tutor-surface-l1-hover;
-      outline: none;
     }
   }
 

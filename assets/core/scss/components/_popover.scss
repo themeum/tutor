@@ -71,11 +71,11 @@
     }
   }
 
-  .tutor-popover-menu {
+  &-menu {
     min-width: 170px;
     padding: $tutor-spacing-3 0;
-  
-    .tutor-popover-menu-item {
+
+    &-item {
       width: 100%;
       @include tutor-button-reset();
       @include tutor-flex(row, center, flex-start);
@@ -83,17 +83,11 @@
       gap: $tutor-spacing-5;
       padding: $tutor-spacing-4 $tutor-spacing-5;
       @include tutor-transition((color, background-color));
-  
-      svg {
-        flex-shrink: 0;
-      }
-  
-      &:hover,
-      &:focus {
-        color: $tutor-text-primary;
+
+      &:hover {
         background-color: $tutor-tab-sidebar-l2-hover;
       }
-  
+
       &.tutor-active {
         background-color: $tutor-tab-sidebar-l2-active;
         color: $tutor-text-brand;

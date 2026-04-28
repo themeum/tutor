@@ -16,14 +16,9 @@
   table {
     min-width: 600px;
     width: 100%;
-    border: none;
-    td, th {
-      border: none;
-    }
   }
 }
 
-table.tutor-table,
 .tutor-table {
   @include tutor-typography('small', 'regular', 'secondary');
   width: 100%;
@@ -46,24 +41,14 @@ table.tutor-table,
   tbody {
     tr {
       border-bottom: 1px solid $tutor-border-idle;
-
       &:last-child {
         border-bottom: none;
       }
-
       &:hover {
         background-color: $tutor-surface-l1-hover;
       }
-
-      &:nth-child(odd) {
-        >td {
-          background-color: transparent;
-        }
-      }
     }
-
     td {
-      background-color: transparent;
       padding: $tutor-spacing-5;
       vertical-align: middle;
     }
@@ -71,14 +56,11 @@ table.tutor-table,
 }
 
 .tutor-table-column-borders {
-
   th,
   td {
-    border-width: 0px 1px 0px 0px;
-    border-color: $tutor-border-idle;
-
+    border-right: 1px solid $tutor-border-idle;
     &:last-of-type {
-      border-width: 0px 0px 0px 0px;
+      border-right: none;
     }
   }
 }

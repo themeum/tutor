@@ -95,7 +95,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 								->attr( '@click', 'hide()' )
 								->render();
 							?>
-							<h4 class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-my-none">
+							<h4 class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold">
 								<?php esc_html_e( 'Account', 'tutor' ); ?>
 							</h4>
 							<?php

@@ -31,7 +31,7 @@ use Tutor\Components\SvgIcon;
 		?>
 		</div>
 		<div class="tutor-statistic-card-content">
-			<h3 class="tutor-statistic-card-value tutor-my-none"><?php echo esc_html( $stat['value'] ); ?></h3>
+			<h3 class="tutor-statistic-card-value"><?php echo esc_html( $stat['value'] ); ?></h3>
 			<div class="tutor-statistic-card-label"><?php echo esc_html( $stat['label'] ); ?></div>
 		</div>
 	</div>

@@ -10,6 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+
 add_action( 'wp_enqueue_scripts', 'tutor_astra_scripts' );
 
 if ( ! function_exists( 'tutor_astra_scripts' ) ) {

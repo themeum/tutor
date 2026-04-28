@@ -32,7 +32,7 @@ $course_retake_modal_id;
 			<a class="tutor-learning-header-back" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ); ?>">
 				<?php SvgIcon::make()->name( Icon::LEFT )->size( 20 )->render(); ?>
 			</a>
-			<h5 class="tutor-learning-header-title tutor-my-none">
+			<h5 class="tutor-learning-header-title">
 				<?php echo esc_html( $tutor_course->post_title ); ?>
 			</h5>
 
