@@ -700,9 +700,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
               const pt = graphToPixelLayout(gridLogicalSize, minCoord, maxCoord, coord.x, coord.y);
               const isActive = idx === activeIndex;
               const markerPct = (MARKER_DISPLAY_SIZE / gridLogicalSize) * 100;
-              const markerSrc = isActive
-                ? graphMarkerAssetUrl('graph-marker-selected')
-                : graphMarkerAssetUrl('graph-marker-hover');
+              const markerSrc = graphMarkerAssetUrl('graph-marker-selected');
               return (
                 <img
                   key={`coord-marker-${idx}-${coord.x}-${coord.y}`}
