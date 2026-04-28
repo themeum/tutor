@@ -245,7 +245,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 						<div class="tutor-medium tutor-font-medium tutor-mb-4">
 							<?php echo esc_html( $announcement->post_title ); ?>
 						</div>
-						<div class="tutor-p2 tutor-mb-6">
+						<div class="tutor-p2 tutor-mb-6 tutor-whitespace-pre-line">
 							<?php echo wp_kses_post( $announcement->post_content ); ?>
 						</div>
 						<div class="tutor-tiny tutor-text-secondary">
@@ -281,7 +281,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 		?>
 	<?php endif; ?>
 
-	<div x-data="tutorModal({ id: '<?php echo esc_attr( $create_modal_id ); ?>' })" x-cloak>
+	<div x-data="tutorModal({ id: '<?php echo esc_attr( $create_modal_id ); ?>', isCloseable: false })" x-cloak>
 		<template x-teleport="body">
 			<div x-bind="getModalBindings()">
 				<div x-bind="getBackdropBindings()"></div>
