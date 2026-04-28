@@ -52,6 +52,7 @@
   }
 
   .tutor-wp-editor-container {
+
     .wp-editor-container,
     .mce-tinymce {
       border-radius: $tutor-input-radius;
@@ -73,11 +74,11 @@
         background-color: $tutor-surface-l2;
         color: $tutor-text-secondary;
         border-color: $tutor-border-idle;
-        
+
         &:hover {
           background-color: $tutor-surface-l1-hover;
         }
-        
+
         &.wp-switch-editor-active {
           background-color: $tutor-surface-l1;
           color: $tutor-text-primary;
@@ -104,10 +105,10 @@
 
     .mce-btn {
       background-color: transparent !important;
-      
+
       button {
         color: $tutor-icon-secondary;
-        
+
         .mce-ico {
           color: $tutor-icon-secondary;
         }
@@ -117,10 +118,10 @@
       &.mce-active {
         background-color: $tutor-surface-l1-hover !important;
         border-color: transparent !important;
-        
+
         button {
           color: $tutor-icon-hover;
-          
+
           .mce-ico {
             color: $tutor-icon-hover;
           }

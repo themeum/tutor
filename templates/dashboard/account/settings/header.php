@@ -45,7 +45,7 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 				->render();
 			?>
 			<h4 
-				class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4"
+				class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4 tutor-my-none"
 				x-text="windowWidth <= 768 ? (activeTab === 'none' ? '<?php esc_html_e( 'Settings', 'tutor' ); ?>' : tabs.find(tab => tab.id == activeTab).label) : '<?php esc_html_e( 'Settings', 'tutor' ); ?>'"
 			></h4>
 

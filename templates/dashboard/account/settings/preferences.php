@@ -50,7 +50,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 	>
 		<!-- Course Content Section -->
 		<div class="tutor-flex tutor-justify-between tutor-mb-4">
-			<h5 class="tutor-h5 tutor-font-semibold">
+			<h5 class="tutor-h5 tutor-font-semibold tutor-my-none">
 				<?php esc_html_e( 'Course Content', 'tutor' ); ?>
 			</h5>
 			<div class="tutor-preferences-reset-default" @click="TutorCore.modal.showModal('<?php echo esc_js( $reset_modal_id ); ?>')">
