@@ -2519,34 +2519,6 @@ class Utils {
 	}
 
 	/**
-	 * Complete course enrollment and do some task
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $order_id order id.
-	 *
-	 * @return mixed
-	 */
-	public function complete_course_enroll( $order_id ) {
-		if ( ! $this->is_tutor_order( $order_id ) ) {
-			return;
-		}
-
-		global $wpdb;
-
-		$enrolled_ids_with_course = $this->get_course_enrolled_ids_by_order_id( $order_id );
-		if ( $enrolled_ids_with_course ) {
-			$enrolled_ids = wp_list_pluck( $enrolled_ids_with_course, 'enrolled_id' );
-
-			if ( is_array( $enrolled_ids ) && count( $enrolled_ids ) ) {
-				foreach ( $enrolled_ids as $enrolled_id ) {
-					$wpdb->update( $wpdb->posts, array( 'post_status' => 'completed' ), array( 'ID' => $enrolled_id ) );
-				}
-			}
-		}
-	}
-
-	/**
 	 * Get enrol ids by order id.
 	 *
 	 * @since 1.0.0
