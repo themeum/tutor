@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
 use TUTOR\Course;
+use TUTOR\User;
 
 /**
  * Class EnrollmentModel
@@ -22,6 +23,8 @@ class EnrollmentModel {
 	/**
 	 * Enrollment status constants
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	const STATUS_COMPLETED = 'completed';
@@ -31,9 +34,20 @@ class EnrollmentModel {
 	/**
 	 * Enrollment post type
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	const POST_TYPE = 'tutor_enrolled';
+
+
+	/**
+	 * Enrollment meta
+	 *
+	 * @since 4.0.0
+	 */
+	const ENROLLMENT_ORDER_ID_META   = '_tutor_enrolled_by_order_id';
+	const ENROLLMENT_PRODUCT_ID_META = '_tutor_enrolled_by_product_id';
 
 	/**
 	 * Saving enroll information to posts table
@@ -94,28 +108,28 @@ class EnrollmentModel {
 			$fire_hook ? do_action( 'tutor_after_enroll', $course_id, $is_enrolled ) : null;
 
 			// Mark Current User as Students with user meta data.
-			update_user_meta( $user_id, '_is_tutor_student', tutor_time() );
+			update_user_meta( $user_id, User::TUTOR_STUDENT_META, tutor_time() );
 
 			if ( $order_id ) {
 				// Mark order for course and user.
 				$product_id = tutor_utils()->get_course_product_id( $course_id );
-				update_post_meta( $is_enrolled, '_tutor_enrolled_by_order_id', $order_id );
-				update_post_meta( $is_enrolled, '_tutor_enrolled_by_product_id', $product_id );
+				update_post_meta( $is_enrolled, self::ENROLLMENT_ORDER_ID_META, $order_id );
+				update_post_meta( $is_enrolled, self::ENROLLMENT_PRODUCT_ID_META, $product_id );
 
 				$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 				if ( 'wc' === $monetize_by ) {
 					$order = wc_get_order( $order_id );
-					$order->update_meta_data( '_is_tutor_order_for_course', tutor_time() );
-					$order->update_meta_data( '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
+					$order->update_meta_data( Course::IS_TUTOR_ORDER_FOR_COURSE_META, tutor_time() );
+					$order->update_meta_data( Course::TUTOR_ORDER_FOR_COURSE_ID_META . $course_id, $is_enrolled );
 					$order->save();
 				} elseif ( 'edd' === $monetize_by ) {
 					$payment = new \EDD_Payment( $order_id );
-					$payment->update_meta( '_is_tutor_order_for_course', tutor_time() );
-					$payment->update_meta( '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
+					$payment->update_meta( Course::IS_TUTOR_ORDER_FOR_COURSE_META, tutor_time() );
+					$payment->update_meta( Course::TUTOR_ORDER_FOR_COURSE_ID_META . $course_id, $is_enrolled );
 					$payment->save();
 				} else {
-					update_post_meta( $order_id, '_is_tutor_order_for_course', tutor_time() );
-					update_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
+					update_post_meta( $order_id, Course::IS_TUTOR_ORDER_FOR_COURSE_META, tutor_time() );
+					update_post_meta( $order_id, Course::TUTOR_ORDER_FOR_COURSE_ID_META . $course_id, $is_enrolled );
 				}
 			}
 
@@ -187,8 +201,8 @@ class EnrollmentModel {
 			//phpcs:enable
 
 			if ( $get_enrolled_info ) {
-				$get_enrolled_info->order_id   = (int) get_post_meta( $get_enrolled_info->ID, Course::ENROLLMENT_ORDER_ID_META, true );
-				$get_enrolled_info->product_id = (int) get_post_meta( $get_enrolled_info->ID, Course::ENROLLMENT_PRODUCT_ID_META, true );
+				$get_enrolled_info->order_id   = (int) get_post_meta( $get_enrolled_info->ID, self::ENROLLMENT_ORDER_ID_META, true );
+				$get_enrolled_info->product_id = (int) get_post_meta( $get_enrolled_info->ID, self::ENROLLMENT_PRODUCT_ID_META, true );
 			}
 
 			TutorCache::set( $cache_key, $get_enrolled_info );
