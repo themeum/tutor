@@ -77,10 +77,7 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
         this.hide();
         return;
       }
-      // Show after delay
-      this.hoverTimeout = window.setTimeout(() => {
-        this.showPreview();
-      }, this.hoverDelay);
+      this.showPreview();
     },
 
     handleMouseEnter() {
