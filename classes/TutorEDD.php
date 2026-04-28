@@ -10,9 +10,9 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Models\EnrollmentModel;
 
 /**
  * Manage EDD integration
@@ -28,7 +28,7 @@ class TutorEDD extends Tutor_Base {
 	 */
 	public function __construct() {
 		parent::__construct();
-		// Add Tutor Option.
+
 		add_filter( 'tutor_monetization_options', array( $this, 'tutor_monetization_options' ) );
 
 		$monetize_by = tutils()->get_option( 'monetize_by' );
@@ -36,6 +36,7 @@ class TutorEDD extends Tutor_Base {
 			return;
 		}
 
+		add_filter( 'tutor_course_sell_by', fn() => 'edd' );
 		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ) );
 
 		/**
@@ -43,7 +44,6 @@ class TutorEDD extends Tutor_Base {
 		 */
 		add_filter( 'is_course_purchasable', array( $this, 'is_course_purchasable' ), 10, 2 );
 		add_filter( 'get_tutor_course_price', array( $this, 'get_tutor_course_price' ), 10, 2 );
-		add_filter( 'tutor_course_sell_by', array( $this, 'tutor_course_sell_by' ) );
 
 		add_action( 'edd_update_payment_status', array( $this, 'edd_update_payment_status' ), 10, 3 );
 	}
@@ -106,16 +106,16 @@ class TutorEDD extends Tutor_Base {
 	 */
 	public function save_course_meta( $post_ID ) {
 
-		$product_id = Input::post( '_tutor_course_product_id', '' );
+		$product_id = Input::post( Course::COURSE_PRODUCT_ID_META, '' );
 
 		if ( '-1' !== $product_id ) {
 			$product_id = (int) $product_id;
 			if ( $product_id ) {
-				update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
+				update_post_meta( $post_ID, Course::COURSE_PRODUCT_ID_META, $product_id );
 				update_post_meta( $product_id, '_tutor_product', 'yes' );
 			}
 		} else {
-			delete_post_meta( $post_ID, '_tutor_course_product_id' );
+			delete_post_meta( $post_ID, Course::COURSE_PRODUCT_ID_META );
 		}
 
 		do_action( 'save_tutor_course', $post_ID, get_post( $post_ID ) );
@@ -148,6 +148,8 @@ class TutorEDD extends Tutor_Base {
 	/**
 	 * Get course price
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $price course price.
 	 * @param int    $course_id course id.
 	 *
@@ -161,18 +163,9 @@ class TutorEDD extends Tutor_Base {
 	}
 
 	/**
-	 * Course sell by
+	 * Update payment status
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function tutor_course_sell_by() {
-		return 'edd';
-	}
-
-	/**
-	 * Update payment status
 	 *
 	 * @param int    $payment_id payment id.
 	 * @param string $new_status payment's new status.
@@ -181,27 +174,39 @@ class TutorEDD extends Tutor_Base {
 	 * @return void
 	 */
 	public function edd_update_payment_status( $payment_id, $new_status, $old_status ) {
-		if ( 'complete' !== $new_status ) {
+		if ( empty( $new_status ) || ! $payment_id ) {
 			return;
 		}
 
-		$payment      = new \EDD_Payment( $payment_id );
+		$payment = new \EDD_Payment( $payment_id );
+		if ( ! is_object( $payment ) || ! is_array( $payment->cart_details ) ) {
+			return;
+		}
+
 		$cart_details = $payment->cart_details;
-		$user_id      = $payment->user_info['id'];
+		$user_id      = (int) $payment->user_info['id'];
 
-		if ( is_array( $cart_details ) ) {
-			foreach ( $cart_details as $cart_index => $download ) {
+		$enrollment_status = 'complete' === $new_status
+								? EnrollmentModel::STATUS_COMPLETED
+								: ( 'pending' === $new_status ? EnrollmentModel::STATUS_PENDING : EnrollmentModel::STATUS_CANCEL );
 
-				$if_has_course = tutor_utils()->product_belongs_with_course( $download['id'] );
-				if ( $if_has_course ) {
-					$course_id        = $if_has_course->post_id;
-					$has_any_enrolled = tutor_utils()->has_any_enrolled( $course_id, $user_id );
-					if ( ! $has_any_enrolled ) {
-						tutor_utils()->do_enroll( $course_id, $payment_id, $user_id );
-					}
+		foreach ( $cart_details as $cart_item ) {
+			$product_id    = (int) $cart_item['id'];
+			$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
+
+			if ( $if_has_course ) {
+				$course_id   = (int) $if_has_course->post_id;
+				$is_enrolled = EnrollmentModel::is_enrolled( $course_id, $user_id, false );
+
+				if ( $is_enrolled ) {
+					// Update enrollment.
+					EnrollmentModel::update_enrollments( $enrollment_status, array( $is_enrolled->ID ) );
+				} else {
+					// New enrollment.
+					add_filter( 'tutor_enroll_data', fn( $data ) => array_merge( $data, array( 'post_status' => $enrollment_status ) ) );
+					EnrollmentModel::do_enroll( $course_id, $payment_id, $user_id );
 				}
 			}
-			tutor_utils()->complete_course_enroll( $payment_id );
 		}
 	}
 }
