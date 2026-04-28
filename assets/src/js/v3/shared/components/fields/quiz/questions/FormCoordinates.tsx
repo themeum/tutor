@@ -245,6 +245,8 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
   const [drafts, setDrafts] = useState<string[]>(() => coordinates.map(formatCoordinateText));
   const [activeIndex, setActiveIndex] = useState(0);
 
+  // Keep local editable state in sync when the persisted answer payload changes externally
+  // (e.g. question switch/reset), while preserving a valid active index.
   useEffect(() => {
     const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '');
     const next = parsed.length ? parsed : [{ x: 0, y: 0 }];
@@ -353,6 +355,8 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     [maxCoord, minCoord],
   );
 
+  // Measure the responsive square canvas container and subscribe to size changes so marker/layout math
+  // always uses the current rendered width; cleanup detaches observers/listeners and pending RAF.
   useEffect(() => {
     const wrap = gridWrapRef.current;
     if (!wrap) {
@@ -364,13 +368,25 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     measure();
     if (typeof ResizeObserver === 'undefined') {
       window.addEventListener('resize', measure);
-      return () => window.removeEventListener('resize', measure);
+      return () => {
+        window.removeEventListener('resize', measure);
+        if (hoverRafRef.current !== null) {
+          cancelAnimationFrame(hoverRafRef.current);
+        }
+      };
     }
     const ro = new ResizeObserver(measure);
     ro.observe(wrap);
-    return () => ro.disconnect();
+    return () => {
+      ro.disconnect();
+      if (hoverRafRef.current !== null) {
+        cancelAnimationFrame(hoverRafRef.current);
+      }
+    };
   }, []);
 
+  // Redraw the canvas grid when either the logical canvas size or axis range math changes.
+  // Canvas pixels are imperative state, so this rendering side effect must run after React commits.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -433,14 +449,6 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
       hoverRafRef.current = requestAnimationFrame(runHoverFrame);
     }
   }, [runHoverFrame]);
-
-  useEffect(() => {
-    return () => {
-      if (hoverRafRef.current !== null) {
-        cancelAnimationFrame(hoverRafRef.current);
-      }
-    };
-  }, []);
 
   /** Clears eased hover preview state and cancels any pending hover animation frame. */
   const clearHoverPreview = useCallback(() => {
