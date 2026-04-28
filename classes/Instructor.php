@@ -91,9 +91,10 @@ class Instructor {
 		if ( 'tutor_register_instructor' !== Input::post( 'tutor_action' ) || ! get_option( 'users_can_register', false ) ) {
 			return;
 		}
+
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
-		$required_fields   = apply_filters(
+		$required_fields = apply_filters(
 			'tutor_instructor_registration_required_fields',
 			array(
 				'first_name'            => __( 'First name field is required', 'tutor' ),
@@ -104,7 +105,9 @@ class Instructor {
 				'password_confirmation' => __( 'Password Confirmation field is required', 'tutor' ),
 			)
 		);
+
 		$validation_errors = array();
+
 		/*
 		* Push into validation_errors
 		* Error registration_errors
@@ -113,38 +116,46 @@ class Instructor {
 		foreach ( $errors->errors as $key => $value ) {
 			$validation_errors[ $key ] = $value[0];
 		}
+
 		foreach ( $required_fields as $required_key => $required_value ) {
 			if ( empty( $_POST[ $required_key ] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
 				$validation_errors[ $required_key ] = $required_value;
 			}
 		}
+
 		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_INS_REG, $_POST );
 		if ( is_wp_error( $validate_consent ) ) {
 			$validation_errors[ $validate_consent->get_error_code() ] = $validate_consent->get_error_message();
 		}
+
 		if ( ! filter_var( tutor_utils()->input_old( 'email' ), FILTER_VALIDATE_EMAIL ) ) {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
 		}
+
 		if ( tutor_utils()->input_old( 'password' ) !== tutor_utils()->input_old( 'password_confirmation' ) ) {
 			$validation_errors['password_confirmation'] = __( 'Your passwords should match each other. Please recheck.', 'tutor' );
 		}
+
 		if ( count( $validation_errors ) ) {
 			$this->error_msgs = $validation_errors;
 			add_filter( 'tutor_instructor_register_validation_errors', array( $this, 'tutor_instructor_form_validation_errors' ) );
 			return;
 		}
+
 		$first_name = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
 		$last_name  = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
 		$email      = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$password   = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
-		$userdata   = array(
+
+		$userdata = array(
 			'user_login' => $user_login,
 			'user_email' => $email,
 			'first_name' => $first_name,
 			'last_name'  => $last_name,
 			'user_pass'  => $password,
 		);
+
 		global $wpdb;
 		$wpdb->query( 'START TRANSACTION' );
 		$user_id = wp_insert_user( $userdata );
@@ -153,10 +164,12 @@ class Instructor {
 			add_filter( 'tutor_instructor_register_validation_errors', array( $this, 'tutor_instructor_form_validation_errors' ) );
 			return;
 		}
+
 		$user = get_user_by( 'id', $user_id );
 		if ( $user ) {
 			do_action( 'tutor_after_instructor_signup', $user_id, $validate_consent );
 		}
+
 		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 		if ( $is_req_email_verification ) {
 			do_action( 'tutor_send_verification_mail', get_userdata( $user_id ), 'instructor-registration' );
@@ -173,12 +186,14 @@ class Instructor {
 			 */
 			$this->update_instructor_meta( $user_id );
 			$wpdb->query( 'COMMIT' );
+
 			if ( $user ) {
 				wp_set_current_user( $user_id, $user->user_login );
 				wp_set_auth_cookie( $user_id );
 			}
 		}
-		wp_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
+
+		wp_safe_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
 		die();
 	}
 
