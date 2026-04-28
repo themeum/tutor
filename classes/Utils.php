@@ -2477,12 +2477,12 @@ class Utils {
 					if ( 'wc' === $monetize_by ) {
 						// Delete WC order meta.
 						$order = wc_get_order( $order_id );
-						$order->delete_meta_data( '_is_tutor_order_for_course' );
-						$order->delete_meta_data( '_tutor_order_for_course_id_' . $course_id );
+						$order->delete_meta_data( Course::IS_TUTOR_ORDER_FOR_COURSE_META );
+						$order->delete_meta_data( Course::TUTOR_ORDER_FOR_COURSE_ID_META . $course_id );
 						$order->save();
 					} else {
-						delete_post_meta( $order_id, '_is_tutor_order_for_course' );
-						delete_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id );
+						delete_post_meta( $order_id, Course::IS_TUTOR_ORDER_FOR_COURSE_META );
+						delete_post_meta( $order_id, Course::TUTOR_ORDER_FOR_COURSE_ID_META . $course_id );
 					}
 				}
 
@@ -2736,12 +2736,12 @@ class Utils {
 		$monetize_by = $this->get_option( 'monetize_by' );
 		if ( 'wc' === $monetize_by ) {
 			$order = wc_get_order( $order_id );
-			return $order->get_meta( '_is_tutor_order_for_course', true );
+			return $order->get_meta( Course::IS_TUTOR_ORDER_FOR_COURSE_META, true );
 		} elseif ( 'edd' === $monetize_by ) {
 			$payment = new \EDD_Payment( $order_id );
-			return $payment->get_meta( '_is_tutor_order_for_course', true );
+			return $payment->get_meta( Course::IS_TUTOR_ORDER_FOR_COURSE_META, true );
 		} else {
-			return get_post_meta( $order_id, '_is_tutor_order_for_course', true );
+			return get_post_meta( $order_id, Course::IS_TUTOR_ORDER_FOR_COURSE_META, true );
 		}
 	}
 

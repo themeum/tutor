@@ -10,9 +10,9 @@
 
 namespace TUTOR;
 
-use Tutor\Models\EnrollmentModel;
-
 defined( 'ABSPATH' ) || exit;
+
+use Tutor\Models\EnrollmentModel;
 
 /**
  * Manage EDD integration
