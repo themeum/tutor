@@ -213,51 +213,40 @@ $filters = array(
 							<?php do_action( 'tutor_after_instructor_list_commission_column_data', $list->ID ); ?>
 
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<span style="display:block; width:0; height:0; overflow:hidden;">
-									<?php
-										// Render for frontend sorting.
-										echo esc_html( $available_status[ $list->status ][0] );
-									?>
-								</span>
-								<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
-									<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
-										<?php foreach ( $available_status as $key => $status_name ) : ?>
-											<option data-status_class="<?php echo esc_attr( $available_status[ $key ][1] ); ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
-												<?php echo esc_html( $available_status[ $key ][0] ); ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
-									<i class="icon1 tutor-icon-eye-bold" aria-hidden="true"></i>
-									<i class="icon2 tutor-icon-angle-down" aria-hidden="true"></i>
-								</div>
-							</td>
-
-							<td data-th="<?php esc_html_e( 'Actions', 'tutor' ); ?>">
-								<?php
-								ob_start();
-								$profile_url = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) );
-								?>
 								<div class="tutor-d-flex tutor-align-center tutor-gap-1 tutor-justify-end">
-									<a href="<?php echo esc_url( $profile_url ); ?>" 
-										class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-										<?php esc_html_e( 'Edit', 'tutor' ); ?>
-									</a>
+									<span style="display:block; width:0; height:0; overflow:hidden;">
+										<?php
+											// Render for frontend sorting.
+											echo esc_html( $available_status[ $list->status ][0] );
+										?>
+									</span>
+									<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
+										<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
+											<?php foreach ( $available_status as $key => $status_name ) : ?>
+												<option data-status_class="<?php echo esc_attr( $available_status[ $key ][1] ); ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
+													<?php echo esc_html( $available_status[ $key ][0] ); ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
+										<i class="icon1 tutor-icon-eye-bold" aria-hidden="true"></i>
+										<i class="icon2 tutor-icon-angle-down" aria-hidden="true"></i>
+									</div>
+
 									<?php
-									/**
-									 * Action to render consent logs button.
-									 *
-									 * @since 4.0.0
-									 *
-									 * @param object $list User list item.
-									 */
-									do_action( 'tutor_render_consent_logs_button', $list );
+									ob_start();
+									$profile_url = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) );
 									?>
+										<a href="<?php echo esc_url( $profile_url ); ?>" 
+											class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+											<?php esc_html_e( 'Edit', 'tutor' ); ?>
+										</a>
+									<?php
+									$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
+									//phpcs:ignore -- already escaped.
+									echo $edit_button;
+									?>
+									<?php do_action( 'tutor_render_consent_logs_button', $list ); ?>
 								</div>
-								<?php
-								$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
-								//phpcs:ignore -- already escaped.
-								echo $edit_button;
-								?>
 							</td>
 						</tr>
 					<?php endforeach; ?>
@@ -518,6 +507,4 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 	}
 </style>
 
-<?php
-do_action( 'tutor_render_consent_logs_modal' );
-?>
+<?php do_action( 'tutor_render_consent_logs_modal' ); ?>
