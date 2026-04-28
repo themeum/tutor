@@ -15,6 +15,8 @@ import './segments/reset';
 import './segments/withdraw';
 import './wp-events-subscriber';
 import ajaxHandler from '../helper/ajax-handler';
+import './segments/legal-consents';
+import './segments/students';
 
 document.querySelectorAll('.tutor-control-button').forEach(function (button) {
 	button.addEventListener('click', function (event) {

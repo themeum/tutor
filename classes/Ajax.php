@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\LessonModel;
 use Tutor\Traits\JsonResponse;
@@ -403,20 +404,18 @@ class Ajax {
 	 */
 	public function process_tutor_login() {
 		$validation_error = new \WP_Error();
-
 		/**
 		 * Separate nonce verification added to show nonce verification
 		 * failed message in a proper way.
 		 *
 		 * @since 2.1.4
 		 */
-		if ( ! wp_verify_nonce( $_POST[ tutor()->nonce ], tutor()->nonce_action ) ) { //phpcs:ignore
+        if ( ! wp_verify_nonce( $_POST[ tutor()->nonce ], tutor()->nonce_action ) ) { //phpcs:ignore
 			$validation_error->add( 401, __( 'Nonce verification failed', 'tutor' ) );
 			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
 			return;
 		}
-		//phpcs:disable WordPress.Security.NonceVerification.Missing
-
+        //phpcs:disable WordPress.Security.NonceVerification.Missing
 		/**
 		 * No sanitization/wp_unslash needed for log & pwd since WordPress
 		 * does itself
@@ -425,53 +424,53 @@ class Ajax {
 		 *
 		 * @see https://developer.wordpress.org/reference/functions/wp_signon/
 		 */
-		$username    = tutor_utils()->array_get( 'log', $_POST ); //phpcs:ignore
-		$password    = tutor_utils()->array_get( 'pwd', $_POST ); //phpcs:ignore
+        $username    = tutor_utils()->array_get( 'log', $_POST ); //phpcs:ignore
+        $password    = tutor_utils()->array_get( 'pwd', $_POST ); //phpcs:ignore
 		$redirect_to = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : '';
 		$remember    = isset( $_POST['rememberme'] );
-
 		try {
-			$creds = array(
+			$creds            = array(
 				'user_login'    => trim( $username ),
 				'user_password' => $password,
 				'remember'      => $remember,
 			);
-
 			$validation_error = apply_filters( 'tutor_process_login_errors', $validation_error, $creds['user_login'], $creds['user_password'] );
-
 			if ( $validation_error->get_error_code() ) {
 				$validation_error->add(
 					$validation_error->get_error_code(),
 					$validation_error->get_error_message()
 				);
 			}
-
 			if ( empty( $creds['user_login'] ) ) {
 				$validation_error->add(
 					400,
 					__( 'Username is required.', 'tutor' )
 				);
 			}
-
+			$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_LOGIN, $_POST );
+			if ( is_wp_error( $validate_consent ) ) {
+				$validation_error->add(
+					$validate_consent->get_error_code(),
+					$validate_consent->get_error_message(),
+				);
+			}
 			// On multi-site, ensure user exists on current site, if not add them before allowing login.
 			if ( is_multisite() ) {
 				$user_data = get_user_by( is_email( $creds['user_login'] ) ? 'email' : 'login', $creds['user_login'] );
-
 				if ( $user_data && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) {
 					add_user_to_blog( get_current_blog_id(), $user_data->ID, 'customer' );
 				}
 			}
-
 			// Perform the login.
 			$user = wp_signon( apply_filters( 'tutor_login_credentials', $creds ), is_ssl() );
-
 			if ( is_wp_error( $user ) ) {
 				// If no error exist then add WP login error, to prevent error duplication.
 				if ( ! $validation_error->has_errors() ) {
 					$validation_error->add( 400, $user->get_error_message() );
 				}
 			} else {
-				do_action( 'tutor_after_login_success', $user->ID );
+				// @since 4.0.0 $validate _consent param added.
+				do_action( 'tutor_after_login_success', $user->ID, $validate_consent );
 				// Since 1.9.8 do enroll if guest attempt to enroll.
 				$course_enroll_attempt = Input::post( 'tutor_course_enroll_attempt' );
 				if ( ! empty( $course_enroll_attempt ) && is_a( $user, 'WP_User' ) ) {

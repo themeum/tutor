@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\GDPR\Controllers\LegalConsent;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -55,11 +57,9 @@ class Student {
 			// Action must be register, and registration must be enabled in dashboard.
 			return;
 		}
-
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
-
-		$required_fields = apply_filters(
+		$required_fields   = apply_filters(
 			'tutor_student_registration_required_fields',
 			array(
 				'first_name'            => __( 'First name field is required', 'tutor' ),
@@ -70,69 +70,58 @@ class Student {
 				'password_confirmation' => __( 'Password Confirmation field is required', 'tutor' ),
 			)
 		);
-
-		$terms_conditions_link = tutor_utils()->get_toc_page_link();
-		if ( $terms_conditions_link ) {
-			$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
-		}
-
 		$validation_errors = array();
-
 		// Registration error push into validation_errors.
 		$errors = apply_filters( 'registration_errors', new \WP_Error(), '', '' );
 		foreach ( $errors->errors as $key => $value ) {
 			$validation_errors[ $key ] = $value[0];
-
 		}
-
 		foreach ( $required_fields as $required_key => $required_value ) {
 			if ( empty( Input::post( $required_key, '' ) ) ) {
 				$validation_errors[ $required_key ] = $required_value;
 			}
 		}
-
-
+		// @since 4.0.0 legal consent added.
+		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_STD_REG, $_POST );
+		if ( is_wp_error( $validate_consent ) ) {
+			$validation_errors[ $validate_consent->get_error_code() ] = $validate_consent->get_error_message();
+		}
 		if ( ! filter_var( tutor_utils()->input_old( 'email' ), FILTER_VALIDATE_EMAIL ) ) {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
 		}
 		if ( tutor_utils()->input_old( 'password' ) !== tutor_utils()->input_old( 'password_confirmation' ) ) {
 			$validation_errors['password_confirmation'] = __( 'Your passwords should match each other. Please recheck.', 'tutor' );
 		}
-
 		if ( count( $validation_errors ) ) {
 			$this->error_msgs = $validation_errors;
 			add_filter( 'tutor_student_register_validation_errors', array( $this, 'tutor_student_form_validation_errors' ) );
 			return;
 		}
-
 		$first_name = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
 		$last_name  = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
 		$email      = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$password   = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
-
-		$userdata = array(
+		$userdata   = array(
 			'user_login' => $user_login,
 			'user_email' => $email,
 			'first_name' => $first_name,
 			'last_name'  => $last_name,
 			'user_pass'  => $password,
 		);
-
 		global $wpdb;
 		$wpdb->query( 'START TRANSACTION' );
-
 		$user_id        = wp_insert_user( $userdata );
 		$enroll_attempt = Input::post( 'tutor_course_enroll_attempt', '' );
-
 		if ( is_wp_error( $user_id ) ) {
 			$this->error_msgs = $user_id->get_error_messages();
 			add_filter( 'tutor_student_register_validation_errors', array( $this, 'tutor_student_form_validation_errors' ) );
 			return;
 		}
-
 		$user = get_user_by( 'id', $user_id );
-
+		if ( $user ) {
+			do_action( 'tutor_new_user_registered', $user, $validate_consent );
+		}
 		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 		if ( $is_req_email_verification ) {
 			do_action( 'tutor_send_verification_mail', $user, $enroll_attempt );
@@ -148,25 +137,21 @@ class Student {
 			 * Tutor Free - reqular student reg process.
 			 */
 			$wpdb->query( 'COMMIT' );
-
 			wp_set_current_user( $user_id, $user->user_login );
 			wp_set_auth_cookie( $user_id );
-
 			do_action( 'tutor_after_student_signup', $user_id );
 			// since 1.9.8 do enroll if guest attempt to enroll.
 			if ( ! empty( $enroll_attempt ) ) {
 				do_action( 'tutor_do_enroll_after_login_if_attempt', $enroll_attempt, $user_id );
 			}
-
 			// Redirect page.
-			$redirect_page = tutor_utils()->array_get( 'redirect_to', $_REQUEST ); //phpcs:ignore
+            $redirect_page = tutor_utils()->array_get( 'redirect_to', $_REQUEST ); //phpcs:ignore
 			if ( ! $redirect_page ) {
 				$redirect_page = tutor_utils()->tutor_dashboard_url();
 			}
 			wp_safe_redirect( apply_filters( 'tutor_student_register_redirect_url', $redirect_page, $user ) );
 			die();
 		}
-
 		$registration_page = tutor_utils()->student_register_url();
 		wp_safe_redirect( $registration_page );
 		die();
