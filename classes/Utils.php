@@ -2558,6 +2558,11 @@ class Utils {
 					$order->update_meta_data( '_is_tutor_order_for_course', tutor_time() );
 					$order->update_meta_data( '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
 					$order->save();
+				} elseif ( 'edd' === $monetize_by ) {
+					$payment = new \EDD_Payment( $order_id );
+					$payment->update_meta( '_is_tutor_order_for_course', tutor_time() );
+					$payment->update_meta( '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
+					$payment->save();
 				} else {
 					update_post_meta( $order_id, '_is_tutor_order_for_course', tutor_time() );
 					update_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
@@ -2924,6 +2929,9 @@ class Utils {
 		if ( 'wc' === $monetize_by ) {
 			$order = wc_get_order( $order_id );
 			return $order->get_meta( '_is_tutor_order_for_course', true );
+		} elseif ( 'edd' === $monetize_by ) {
+			$payment = new \EDD_Payment( $order_id );
+			return $payment->get_meta( '_is_tutor_order_for_course', true );
 		} else {
 			return get_post_meta( $order_id, '_is_tutor_order_for_course', true );
 		}
