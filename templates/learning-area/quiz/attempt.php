@@ -316,7 +316,7 @@ $default_values = array(
 						->label( __( 'Next', 'tutor' ) )
 						->size( Size::LARGE )
 						->attr( 'type', 'button' )
-						->attr( ':class', "{ 'is-shaking': nextButtonShaking, 'disabled': isRevealSubmitting || shouldDisableNextButton() }" )
+						->attr( ':disabled', 'isRevealSubmitting || shouldDisableNextButton()' )
 						->attr( '@click', 'goNext()' )
 						->attr( 'x-show', 'currentIndex < totalQuestions' )
 						->attr( 'class', 'tutor-quiz-answer-next-btn' )

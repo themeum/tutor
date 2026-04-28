@@ -61,7 +61,9 @@ class UserConsent extends BaseController {
 	 */
 	private function register_hooks() {
 		add_action( 'tutor_new_user_registered', array( $this, 'store_registration_consent' ), 10, 2 );
+		add_action( 'tutor_after_instructor_signup', array( $this, 'store_instructor_registration_consent' ), 10, 2 );
 		add_action( 'tutor_after_login_success', array( $this, 'store_login_consent' ), 10, 2 );
+		add_action( 'tutor_after_checkout_consent', array( $this, 'store_checkout_consent' ), 10, 2 );
 		add_action( 'wp_ajax_tutor_user_consents', array( $this, 'handle_ajax_request' ) );
 	}
 
@@ -80,6 +82,20 @@ class UserConsent extends BaseController {
 	}
 
 	/**
+	 * Store instructor registration consent.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int   $user_id User id.
+	 * @param array $checked_consents The provided consent fields.
+	 *
+	 * @return void
+	 */
+	public function store_instructor_registration_consent( int $user_id, array $checked_consents ): void {
+		$this->create_user_consent( $user_id, LegalConsent::DISPLAY_ON_INS_REG, $checked_consents );
+	}
+
+	/**
 	 * Store login consent
 	 *
 	 * @since 4.0.0
@@ -91,6 +107,20 @@ class UserConsent extends BaseController {
 	 */
 	public function store_login_consent( int $user_id, array $checked_consents ): void {
 		$this->create_user_consent( $user_id, LegalConsent::DISPLAY_ON_LOGIN, $checked_consents );
+	}
+
+	/**
+	 * Store checkout consent.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int   $user_id User id.
+	 * @param array $checked_consents The provided consent fields.
+	 *
+	 * @return void
+	 */
+	public function store_checkout_consent( int $user_id, array $checked_consents ): void {
+		$this->create_user_consent( $user_id, LegalConsent::DISPLAY_ON_CHECKOUT, $checked_consents );
 	}
 
 	/**
@@ -198,8 +228,31 @@ class UserConsent extends BaseController {
 		);
 
 		$records = $this->model->get_all( $where );
+		if ( ! is_array( $records ) ) {
+			return array();
+		}
 
-		return is_array( $records ) ? $records : array();
+		return array_map(
+			function ( $record ) {
+				if ( ! isset( $record->created_at_utc ) ) {
+					return $record;
+				}
+
+				$created_at = strtotime( $record->created_at_utc . ' UTC' );
+				if ( false === $created_at ) {
+					return $record;
+				}
+
+				$record->time_ago = sprintf(
+					/* translators: %s: human-readable time difference. */
+					__( '%s ago', 'tutor' ),
+					human_time_diff( $created_at, time() )
+				);
+
+				return $record;
+			},
+			$records
+		);
 	}
 
 	/**

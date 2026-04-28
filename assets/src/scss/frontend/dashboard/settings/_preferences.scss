@@ -12,7 +12,7 @@
   &-setting-item {
     @include tutor-flex-between;
     gap: $tutor-spacing-10;
-    
+
     &:not(:last-child) {
       margin-bottom: $tutor-spacing-6;
     }
@@ -55,6 +55,19 @@
     .tutor-preferences-setting-action {
       @include tutor-flex(row, center, flex-end);
       flex-shrink: 0;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      &:has(.tutor-select):has(.tutor-preferences-setting-subtitle) {
+        flex-direction: column;
+        align-items: start;
+        gap: $tutor-spacing-5;
+
+        .tutor-preferences-setting-action {
+          width: 100%;
+          padding-left: 28px;
+        }
+      }
     }
   }
 
