@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Cache\TutorCache;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
@@ -20,12 +22,9 @@ use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Icon;
 use Tutor\Models\CourseModel;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Utility methods
@@ -51,6 +50,7 @@ class Utils {
 			'Tutor\Models\LessonModel',
 			'Tutor\Models\QuizModel',
 			'Tutor\Models\WithdrawModel',
+			'Tutor\Models\EnrollmentModel',
 		);
 
 		foreach ( $classes as $class ) {
@@ -1318,75 +1318,6 @@ class Utils {
 	}
 
 	/**
-	 * Check if current user has been enrolled or not
-	 *
-	 * @since 1.0.0
-	 *
-	 * @since 3.0.0  $is_complete parameter added to check with completed status
-	 *               Default value set true for backward compatibility. It set
-	 *               false then it will just check record.
-	 *
-	 * @since 3.3.0  param $is_complete added to cache key.
-	 * @since 4.0.0  enrollment order_id and product_id added to enrollment info.
-	 *
-	 * @param int  $course_id course id.
-	 * @param int  $user_id user id.
-	 * @param bool $is_complete Whether to enrollment completed or not.
-	 *
-	 * @return array|bool|null|object
-	 */
-	public function is_enrolled( $course_id = 0, $user_id = 0, bool $is_complete = true ) {
-		global $wpdb;
-		$course_id = $this->get_post_id( $course_id );
-		$user_id   = $this->get_user_id( $user_id );
-		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}_{$is_complete}";
-
-		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
-
-		$get_enrolled_info = TutorCache::get( $cache_key );
-		if ( ! $get_enrolled_info ) {
-			$status_clause = '';
-			if ( $is_complete ) {
-				$status_clause = "AND post_status = 'completed' ";
-			}
-
-			$get_enrolled_info = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT ID,
-					post_author,
-					post_date,
-					post_date_gmt,
-					post_title
-				FROM {$wpdb->posts}
-				WHERE post_author > 0 
-					AND post_parent > 0
-					AND post_type = %s
-					AND post_parent = %d
-					AND post_author = %d
-					{$status_clause};
-				",
-					'tutor_enrolled',
-					$course_id,
-					$user_id
-				)
-			);
-
-			if ( $get_enrolled_info ) {
-				$get_enrolled_info->order_id   = (int) get_post_meta( $get_enrolled_info->ID, Course::ENROLLMENT_ORDER_ID_META, true );
-				$get_enrolled_info->product_id = (int) get_post_meta( $get_enrolled_info->ID, Course::ENROLLMENT_PRODUCT_ID_META, true );
-			}
-
-			TutorCache::set( $cache_key, $get_enrolled_info );
-		}
-
-		if ( $get_enrolled_info ) {
-			return apply_filters( 'tutor_is_enrolled', $get_enrolled_info, $course_id, $user_id );
-		}
-
-		return false;
-	}
-
-	/**
 	 * Delete course progress
 	 *
 	 * @since 1.9.5
@@ -1529,7 +1460,7 @@ class Utils {
 		$user_id   = $this->get_user_id( $user_id );
 		$course_id = $this->get_course_id_by( 'lesson', $lesson_id );
 
-		return $this->is_enrolled( $course_id );
+		return EnrollmentModel::is_enrolled( $course_id );
 	}
 
 	/**
@@ -2486,101 +2417,6 @@ class Utils {
 	}
 
 	/**
-	 * Saving enroll information to posts table
-	 * post_author = enrolled_student_id (wp_users id)
-	 * post_parent = enrolled course id
-	 *
-	 * @since 1.0.0
-	 * @since 2.6.0 Return enrolled id
-	 * @since 3.3.0 Added $fire_hook parameter.
-	 *
-	 * @param int  $course_id course id.
-	 * @param int  $order_id order id.
-	 * @param int  $user_id user id.
-	 * @param bool $fire_hook fire hook.
-	 *
-	 * @return int enrolled id
-	 */
-	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0, $fire_hook = true ) {
-		$enrolled_id = 0;
-		if ( ! $course_id ) {
-			return $enrolled_id;
-		}
-
-		$fire_hook ? do_action( 'tutor_before_enroll', $course_id ) : null;
-		$user_id = $this->get_user_id( $user_id );
-		$title   = __( 'Course Enrolled', 'tutor' ) . ' &ndash; ' . gmdate( get_option( 'date_format' ) ) . ' @ ' . gmdate( get_option( 'time_format' ) );
-
-		if ( $course_id && $user_id ) {
-			$enrolled_info = $this->is_enrolled( $course_id, $user_id );
-			if ( $enrolled_info ) {
-				return $enrolled_info->ID;
-			}
-		}
-
-		$enrolment_status = 'completed';
-
-		if ( $this->is_course_purchasable( $course_id ) ) {
-			$enrolment_status = 'pending';
-		}
-
-		$enroll_data = apply_filters(
-			'tutor_enroll_data',
-			array(
-				'post_type'     => 'tutor_enrolled',
-				'post_title'    => $title,
-				'post_status'   => $enrolment_status,
-				'post_author'   => $user_id,
-				'post_parent'   => $course_id,
-				'post_date_gmt' => current_time( 'mysql', true ),
-			)
-		);
-
-		// Insert the post into the database.
-		$is_enrolled = wp_insert_post( $enroll_data );
-		if ( $is_enrolled ) {
-
-			// Run this hook for both of pending and completed enrollment.
-			$fire_hook ? do_action( 'tutor_after_enroll', $course_id, $is_enrolled ) : null;
-
-			// Mark Current User as Students with user meta data.
-			update_user_meta( $user_id, '_is_tutor_student', tutor_time() );
-
-			if ( $order_id ) {
-				// Mark order for course and user.
-				$product_id = $this->get_course_product_id( $course_id );
-				update_post_meta( $is_enrolled, '_tutor_enrolled_by_order_id', $order_id );
-				update_post_meta( $is_enrolled, '_tutor_enrolled_by_product_id', $product_id );
-
-				$monetize_by = $this->get_option( 'monetize_by' );
-				if ( 'wc' === $monetize_by ) {
-					$order = wc_get_order( $order_id );
-					$order->update_meta_data( '_is_tutor_order_for_course', tutor_time() );
-					$order->update_meta_data( '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
-					$order->save();
-				} elseif ( 'edd' === $monetize_by ) {
-					$payment = new \EDD_Payment( $order_id );
-					$payment->update_meta( '_is_tutor_order_for_course', tutor_time() );
-					$payment->update_meta( '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
-					$payment->save();
-				} else {
-					update_post_meta( $order_id, '_is_tutor_order_for_course', tutor_time() );
-					update_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
-				}
-			}
-
-			$enrolled_id = $is_enrolled;
-
-			// Run this hook for completed enrollment regardless of payment provider and free/paid mode.
-			if ( $fire_hook && 'completed' === $enroll_data['post_status'] ) {
-				do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
-			}
-		}
-
-		return $enrolled_id;
-	}
-
-	/**
 	 * Enrol Status change
 	 *
 	 * @since 1.6.1
@@ -2616,7 +2452,7 @@ class Utils {
 	public function cancel_course_enrol( $course_id = 0, $user_id = 0, $cancel_status = 'canceled' ) {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
-		$enrolled  = $this->is_enrolled( $course_id, $user_id );
+		$enrolled  = EnrollmentModel::is_enrolled( $course_id, $user_id );
 
 		if ( $enrolled ) {
 			global $wpdb;
@@ -8150,7 +7986,7 @@ class Utils {
 
 		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
 
-		if ( $this->is_enrolled( $course_id, $user_id ) || $this->has_user_course_content_access( $user_id, $course_id ) ) {
+		if ( EnrollmentModel::is_enrolled( $course_id, $user_id ) || $this->has_user_course_content_access( $user_id, $course_id ) ) {
 			return true;
 		}
 
@@ -8189,7 +8025,7 @@ class Utils {
 		$enrolled_date_gmt = '';
 
 		if ( $course_id && $student_id ) {
-			$enrolled_info = $this->is_enrolled( $course_id, $student_id );
+			$enrolled_info = EnrollmentModel::is_enrolled( $course_id, $student_id );
 
 			if ( $enrolled_info ) {
 				$enrolled_date_gmt = apply_filters( 'tutor_content_drip_assignment_deadline', strtotime( $enrolled_info->post_date_gmt ), $course_id, $assignment_id );
@@ -9655,7 +9491,7 @@ class Utils {
 	 * @return boolean
 	 */
 	public function can_user_retake_course() {
-		if ( ! $this->is_enrolled() ) {
+		if ( ! EnrollmentModel::is_enrolled() ) {
 			return false;
 		}
 
