@@ -341,4 +341,25 @@ class EnrollmentModel {
 
 		return true;
 	}
+
+	/**
+	 * Delete enrollment record by providing the student and course id
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param int $student_id Student id.
+	 * @param int $course_id Course id.
+	 *
+	 * @return bool
+	 */
+	public static function delete_enrollment_record( int $student_id, int $course_id ): bool {
+		return QueryHelper::delete(
+			'posts',
+			array(
+				'post_author' => $student_id,
+				'post_parent' => $course_id,
+				'post_type'   => self::POST_TYPE,
+			)
+		);
+	}
 }
