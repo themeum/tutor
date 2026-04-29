@@ -44,4 +44,3 @@ $show_course_ratings = apply_filters( 'tutor_show_course_ratings', true, get_the
 	endif;
 	?>
 </div>
-<?php do_action( 'tutor_after_course_loop_rating', get_the_ID() ); ?>

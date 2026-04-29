@@ -22,11 +22,6 @@ $offset            = ( $current_page - 1 ) * $wishlist_per_page;
 
 $wishlists             = tutor_utils()->get_wishlist( null, $offset, $wishlist_per_page );
 $total_wishlists_count = count( tutor_utils()->get_wishlist() );
-
-$course_id       = $post->ID;
-$profile_url     = tutor_utils()->profile_url( $post->post_author, true );
-$course_duration = get_tutor_course_duration_context( $course_id, true );
-$course_students = apply_filters( 'tutor_course_students', tutor_utils()->count_enrolled_users_by_course( $course_id ), $course_id );
 ?>
 
 <div class="tutor-dashboard-page-card-body tutor-dashboard-wishlist-wrapper">
@@ -36,11 +31,16 @@ $course_students = apply_filters( 'tutor_course_students', tutor_utils()->count_
 			<?php
 			foreach ( $wishlists as $post ) : //phpcs:ignore
 				setup_postdata( $post );
+				$course_id        = $post->ID;
+				$profile_url      = tutor_utils()->profile_url( $post->post_author, true );
+				$course_duration  = get_tutor_course_duration_context( $course_id, true );
+				$course_students  = apply_filters( 'tutor_course_students', tutor_utils()->count_enrolled_users_by_course( $course_id ), $course_id );
 				$tutor_course_img = get_tutor_course_thumbnail_src();
 				?>
 				<div>
 					<div class="tutor-card tutor-card--rounded-2xl tutor-card--padding-small tutor-course-card">
 						<a href="<?php the_permalink(); ?>" class="tutor-course-card-thumbnail">
+							<?php do_action( 'tutor_courses_card_before_thumbnail', $course_id ); ?>
 							<div class="tutor-ratio tutor-ratio-16x9">
 								<img style="max-width: 100%;" src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy" />
 							</div>
