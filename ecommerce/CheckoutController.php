@@ -19,6 +19,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
+use Tutor\Models\EnrollmentModel;
 use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -193,7 +194,7 @@ class CheckoutController {
 		 * Display a warning alert if the user attempts to purchase a course they are already enrolled in.
 		 */
 		$course_id = (int) Input::sanitize_request_data( 'course_id', 0 );
-		if ( Settings::is_buy_now_enabled() && $course_id && tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) ) {
+		if ( Settings::is_buy_now_enabled() && $course_id && EnrollmentModel::is_enrolled( $course_id, get_current_user_id() ) ) {
 			add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
 			?>
 			<div class="tutor-alert tutor-warning tutor-d-flex tutor-gap-1">
@@ -210,7 +211,7 @@ class CheckoutController {
 		if ( ! Settings::is_buy_now_enabled() && is_array( $course_list ) && count( $course_list ) ) {
 			$enrolled_courses = array();
 			foreach ( $course_list as $course ) {
-				if ( tutor_utils()->is_enrolled( $course->ID, get_current_user_id() ) ) {
+				if ( EnrollmentModel::is_enrolled( $course->ID, get_current_user_id() ) ) {
 					$enrolled_courses[] = $course;
 				}
 			}

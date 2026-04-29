@@ -370,7 +370,7 @@ class HooksHandler {
 				}
 			}
 
-			$has_enrollment = tutor_utils()->is_enrolled( $object_id, $student_id, false );
+			$has_enrollment = EnrollmentModel::is_enrolled( $object_id, $student_id, false );
 			if ( $has_enrollment ) {
 				// Update enrollment status based on order status.
 				$update = EnrollmentModel::update_enrollments( $enrollment_status, array( $has_enrollment->ID ) );

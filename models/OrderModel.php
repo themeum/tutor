@@ -1821,7 +1821,7 @@ class OrderModel {
 				foreach ( $order_items as $item ) {
 					$course_id = $item->id;
 					if ( $course_id ) {
-						$is_enrolled = tutor_utils()->is_enrolled( $course_id );
+						$is_enrolled = EnrollmentModel::is_enrolled( $course_id );
 						if ( $is_enrolled ) {
 							$is_enrolled_any_course = true;
 							break;
@@ -1830,7 +1830,7 @@ class OrderModel {
 				}
 			} elseif ( tutor_utils()->count( $order_items ) ) {
 					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
-				if ( tutor_utils()->is_enrolled( $course_id ) ) {
+				if ( EnrollmentModel::is_enrolled( $course_id ) ) {
 					$is_enrolled_any_course = true;
 				}
 			}

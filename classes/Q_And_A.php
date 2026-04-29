@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Traits\JsonResponse;
 /**
  * Question answer management
@@ -100,7 +101,7 @@ class Q_And_A {
 
 		$enable_q_and_a_on_course = (bool) get_tutor_option( 'enable_q_and_a_on_course' );
 		$is_enabled_course_wise   = (bool) get_post_meta( $tutor_course_id, '_tutor_enable_qa', true );
-		$can_access               = tutor_utils()->is_enrolled( $tutor_course_id ) || tutor_utils()->has_user_course_content_access( $user_id, $tutor_course_id );
+		$can_access               = EnrollmentModel::is_enrolled( $tutor_course_id ) || tutor_utils()->has_user_course_content_access( $user_id, $tutor_course_id );
 
 		if ( $is_enabled_course_wise && $enable_q_and_a_on_course && $can_access ) {
 			$qna_item = array(
@@ -137,7 +138,7 @@ class Q_And_A {
 		$has_access = $is_public_course
 						|| User::is_admin()
 						|| tutor_utils()->is_instructor_of_this_course( $user_id, $course_id )
-						|| tutor_utils()->is_enrolled( $course_id, $user_id );
+						|| EnrollmentModel::is_enrolled( $course_id, $user_id );
 		return $has_access;
 	}
 

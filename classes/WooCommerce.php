@@ -773,7 +773,7 @@ class WooCommerce extends Tutor_Base {
 				return;
 			}
 
-			$has_enrollment = tutor_utils()->is_enrolled( $course_id, $customer_id, false );
+			$has_enrollment = EnrollmentModel::is_enrolled( $course_id, $customer_id, false );
 			if ( ! $has_enrollment ) {
 				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
 			}

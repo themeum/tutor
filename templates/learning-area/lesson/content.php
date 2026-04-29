@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Input;
 use TUTOR\Lesson;
+use Tutor\Models\EnrollmentModel;
 
 $lesson = $lesson ?? null;
 if ( ! $lesson || ! is_a( $lesson, 'WP_Post' ) ) {
@@ -68,7 +69,7 @@ $feature_url   = $feature_image ? wp_get_attachment_url( $feature_image ) : null
 				$json_data['required_percentage']             = (int) tutor_utils()->get_option( 'required_percentage_to_complete_video_lesson', 80 );
 				$json_data['video_duration']                  = $video_info->duration_sec ?? 0;
 				$json_data['lesson_completed']                = tutor_utils()->is_completed_lesson( $lesson->ID, get_current_user_id() ) !== false;
-				$json_data['is_enrolled']                     = tutor_utils()->is_enrolled( $tutor_course_id, get_current_user_id() ) !== false;
+				$json_data['is_enrolled']                     = EnrollmentModel::is_enrolled( $tutor_course_id, get_current_user_id() ) !== false;
 			?>
 			<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $json_data ) ); ?>">
 			<?php echo apply_filters( 'tutor_single_lesson_video', tutor_lesson_video( false ), $video_info, $source_key ); //phpcs:ignore ?>

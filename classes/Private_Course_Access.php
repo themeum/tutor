@@ -12,6 +12,7 @@ namespace TUTOR;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Models\CourseModel;
+use Tutor\Models\EnrollmentModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -89,7 +90,7 @@ class Private_Course_Access extends Tutor_Base {
 
 			$private_course_id = ( is_array( $result ) && isset( $result[0] ) ) ? $result[0]->ID : 0;
 
-			if ( $private_course_id > 0 && tutor_utils()->is_enrolled( $private_course_id ) ) {
+			if ( $private_course_id > 0 && EnrollmentModel::is_enrolled( $private_course_id ) ) {
 				$this->allow_empty = true;
 				$query->set( 'post_status', array( 'private', 'publish' ) );
 			}
