@@ -635,7 +635,7 @@ final class Tutor extends Singleton {
 		}
 
 		// Only kirki latest has class KirkiMain.
-		$is_kirki_active = \is_plugin_active( 'kirki/kirki.php' ) && class_exists( 'KirkiMain' );
+		$is_kirki_active = \is_plugin_active( 'kirki-pro/kirki-pro.php' ) && class_exists( 'KirkiProMain' );
 
 		if ( $is_kirki_active ) {
 			$tutor_kirki_path = $tutor_path . 'includes/kirki/kirki.php';
