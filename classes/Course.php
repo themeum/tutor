@@ -2133,7 +2133,7 @@ class Course extends Tutor_Base {
 
 		} else {
 			// Free enroll.
-			tutor_utils()->do_enroll( $course_id );
+			EnrollmentModel::do_enroll( $course_id );
 		}
 
 		$referer_url = wp_get_referer();
@@ -3079,7 +3079,7 @@ class Course extends Tutor_Base {
 		if ( $course_id && $is_allowed ) {
 			$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
 			if ( ! $is_purchasable ) {
-				tutor_utils()->do_enroll( $course_id, $order_id = 0, $user_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id = 0, $user_id );
 				do_action( 'guest_attempt_after_enrollment', $course_id );
 			}
 		}
@@ -3127,7 +3127,7 @@ class Course extends Tutor_Base {
 				}
 			}
 
-			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
+			$enroll = EnrollmentModel::do_enroll( $course_id, 0, $user_id );
 			if ( $enroll ) {
 				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
 			} else {

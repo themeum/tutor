@@ -425,7 +425,7 @@ class HooksHandler {
 					// Insert enrollment.
 					add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
-					$enrollment_id = tutor_utils()->do_enroll( $object_id, $order_id, $student_id );
+					$enrollment_id = EnrollmentModel::do_enroll( $object_id, $order_id, $student_id );
 					if ( $enrollment_id ) {
 						if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
 							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
@@ -481,7 +481,7 @@ class HooksHandler {
 			foreach ( $items as $item ) {
 				add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
-				$enrolled_id = tutor_utils()->do_enroll( $item['item_id'], $order_data['id'], $user_id );
+				$enrolled_id = EnrollmentModel::do_enroll( $item['item_id'], $order_data['id'], $user_id );
 				if ( $enrolled_id && tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
 					BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
 				}
