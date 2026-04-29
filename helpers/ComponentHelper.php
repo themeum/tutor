@@ -43,8 +43,10 @@ class ComponentHelper {
 			case 'refunded':
 			case 'cancelled':
 			case 'rejected':
+			case 'failed':
 				$badge_class = 'error';
 				break;
+			case 'complete':
 			case 'completed':
 			case 'approved':
 			case 'success':
