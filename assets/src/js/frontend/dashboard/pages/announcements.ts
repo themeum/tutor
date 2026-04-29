@@ -158,7 +158,7 @@ const announcementsPage = ({ formId, deleteModalId, createModalId }: Announcemen
           tutor_push_notify_students: true,
         };
 
-        form.reset(formId, values);
+        form.setValues(formId, values);
       }
     },
 

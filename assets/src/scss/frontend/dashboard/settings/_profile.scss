@@ -130,6 +130,7 @@ body:has(#wpadminbar) {
     }
 
     svg {
+      color: $tutor-icon-secondary;
       @include tutor-transition(transform);
 
       path {
@@ -141,7 +142,6 @@ body:has(#wpadminbar) {
       visibility: visible;
 
       svg {
-        color: $tutor-text-primary;
         transform: rotate(-180deg);
       }
     }
@@ -149,5 +149,12 @@ body:has(#wpadminbar) {
 
   .tutor-input-field {
     margin-bottom: 0px;
+  }
+
+  .tutor-profile-notification-content {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-3;
+    padding: $tutor-spacing-6;
+    border-top: 1px solid $tutor-border-idle;
   }
 }
