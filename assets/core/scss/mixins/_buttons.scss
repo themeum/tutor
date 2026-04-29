@@ -18,6 +18,7 @@
   font-family: inherit;
   background-color: transparent;
   color: $tutor-text-primary;
+  padding: $tutor-spacing-none;
   border: none;
   // Inherited “kids mode” elevation + per-variant border shadow.
   --tutor-button-border-shadow: none;
@@ -342,37 +343,49 @@
   @if $size ==x-small {
     --tutor-button-border-shadow-base: 1px;
     --tutor-button-border-shadow-bottom: 2px;
-    padding: $tutor-spacing-3 $tutor-spacing-5;
     font-size: $tutor-font-size-tiny;
     line-height: $tutor-line-height-tiny;
-    min-height: 32px;
+
+    &:not([class*=' tutor-btn-link']) {
+      min-height: 32px;
+      padding: $tutor-spacing-3 $tutor-spacing-5;
+    }
   }
 
   @else if $size ==small {
     --tutor-button-border-shadow-base: 1px;
     --tutor-button-border-shadow-bottom: 2px;
-    padding: $tutor-spacing-3 $tutor-spacing-5;
     font-size: $tutor-font-size-small;
     line-height: $tutor-line-height-small;
-    min-height: 34px;
+
+    &:not([class*=' tutor-btn-link']) {
+      padding: $tutor-spacing-3 $tutor-spacing-5;
+      min-height: 34px;
+    }
   }
 
   @else if $size ==large {
     --tutor-button-border-shadow-base: 2px;
     --tutor-button-border-shadow-bottom: 5px;
-    padding: $tutor-spacing-5 $tutor-spacing-6;
     font-size: $tutor-font-size-small;
     line-height: $tutor-line-height-small;
-    min-height: 48px;
+
+    &:not([class*=' tutor-btn-link']) {
+      padding: $tutor-spacing-5 $tutor-spacing-6;
+      min-height: 48px;
+    }
   }
 
   @else {
     --tutor-button-border-shadow-base: 1px;
     --tutor-button-border-shadow-bottom: 3px;
-    padding: $tutor-spacing-4 $tutor-spacing-5;
     font-size: $tutor-font-size-small;
     line-height: $tutor-line-height-small;
-    min-height: 38px;
+
+    &:not([class*=' tutor-btn-link']) {
+      padding: $tutor-spacing-4 $tutor-spacing-5;
+      min-height: 38px;
+    }
   }
 }
 
