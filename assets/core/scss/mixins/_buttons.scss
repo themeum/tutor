@@ -346,7 +346,7 @@
     font-size: $tutor-font-size-tiny;
     line-height: $tutor-line-height-tiny;
 
-    &:not([class*=' tutor-btn-link']) {
+    &:not([class*='tutor-btn-link']) {
       min-height: 32px;
       padding: $tutor-spacing-3 $tutor-spacing-5;
     }
@@ -358,7 +358,7 @@
     font-size: $tutor-font-size-small;
     line-height: $tutor-line-height-small;
 
-    &:not([class*=' tutor-btn-link']) {
+    &:not([class*='tutor-btn-link']) {
       padding: $tutor-spacing-3 $tutor-spacing-5;
       min-height: 34px;
     }
@@ -370,7 +370,7 @@
     font-size: $tutor-font-size-small;
     line-height: $tutor-line-height-small;
 
-    &:not([class*=' tutor-btn-link']) {
+    &:not([class*='tutor-btn-link']) {
       padding: $tutor-spacing-5 $tutor-spacing-6;
       min-height: 48px;
     }
@@ -382,7 +382,7 @@
     font-size: $tutor-font-size-small;
     line-height: $tutor-line-height-small;
 
-    &:not([class*=' tutor-btn-link']) {
+    &:not([class*='tutor-btn-link']) {
       padding: $tutor-spacing-4 $tutor-spacing-5;
       min-height: 38px;
     }
