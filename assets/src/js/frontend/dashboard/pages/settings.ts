@@ -242,7 +242,14 @@ const settings = () => {
             return formattedPayload;
           }
 
-          const stringValue = typeof value === 'boolean' ? (value ? 'on' : 'off') : value;
+          let stringValue = '';
+
+          // disable_all=true means turning everything OFF
+          if (key === 'disable_all') {
+            stringValue = value ? 'off' : 'on';
+          } else {
+            stringValue = value ? 'on' : 'off';
+          }
 
           if (!key.includes('__')) {
             formattedPayload[`tutor_notification_preference[${key}]`] = stringValue;
