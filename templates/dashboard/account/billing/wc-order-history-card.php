@@ -31,7 +31,7 @@ $total_price    = (float) $wc_order->get_total();
 $order_status   = $wc_order->get_status();
 $payment_status = $wc_order->get_status();
 $payment_method = $wc_order->get_payment_method_title();
-$order_date     = $wc_order->get_date_created();
+$order_date     = $wc_order->get_date_created()->date( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 
 $titles  = array();
 $courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order_id );
@@ -85,11 +85,12 @@ if ( tutor_utils()->count( $courses ) ) {
 
 		<?php
 		if ( 'pending' === $order_status ) {
-			printf(
-				'<a href="%s" class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit">%s</a>',
-				esc_url( $wc_order->get_checkout_payment_url() ),
-				esc_html__( 'Pay', 'tutor' )
-			);
+			Button::make()
+				->variant( Variant::LINK )
+				->tag( 'a' )
+				->attr( 'href', $wc_order->get_checkout_payment_url() )
+				->label( __( 'Pay', 'tutor' ) )
+				->render();
 		}
 
 		if ( 'completed' === $order_status ) {
@@ -98,7 +99,7 @@ if ( tutor_utils()->count( $courses ) ) {
 				->label( __( 'Receipt', 'tutor' ) )
 				->variant( Variant::LINK )
 				->attr( 'type', 'button' )
-				->attr( 'class', 'tutor-export-purchase-history tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit' )
+				->attr( 'class', 'tutor-export-purchase-history' )
 				->attr( 'data-order', $order_id )
 				->attr( 'data-course-name', implode( ', ', $titles ) )
 				->attr( 'data-price', $total_price )
