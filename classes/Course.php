@@ -25,6 +25,7 @@ use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Options_V2;
 
 /**
@@ -3025,9 +3026,10 @@ class Course extends Tutor_Base {
 			FROM
 				{$wpdb->postmeta}
 			WHERE
-				meta_key='_tutor_enrolled_by_order_id'
+				meta_key=%s
 				AND meta_value = %d
 			",
+				EnrollmentModel::ENROLLMENT_ORDER_ID_META,
 				$post_id
 			)
 		);

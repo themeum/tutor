@@ -843,7 +843,7 @@ class OrderModel {
 				"SELECT * FROM {$wpdb->postmeta} 
 				WHERE meta_key=%s
 				AND meta_value LIKE %d",
-				'_tutor_enrolled_by_order_id',
+				EnrollmentModel::ENROLLMENT_ORDER_ID_META,
 				$order_id
 			)
 		);

@@ -387,7 +387,7 @@ class HooksHandler {
 					 * For subscription, renewal no need to update order id.
 					 */
 					if ( $this->order_model->is_single_order( $order ) ) {
-						update_post_meta( $has_enrollment->ID, '_tutor_enrolled_by_order_id', $order_id );
+						update_post_meta( $has_enrollment->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
 
 						/**
 						 * Update enrollment expiry date if it is set in a course.
@@ -430,7 +430,7 @@ class HooksHandler {
 						if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
 							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
 						}
-						update_post_meta( $enrollment_id, '_tutor_enrolled_by_order_id', $order_id );
+						update_post_meta( $enrollment_id, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
 
 						do_action( 'tutor_order_enrolled', $order, $enrollment_id );
 					} else {

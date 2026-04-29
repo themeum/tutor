@@ -2425,10 +2425,10 @@ class Utils {
 				);
 
 				// Delete Related Meta Data.
-				delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_product_id' );
-				$order_id = get_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id', true );
+				delete_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_PRODUCT_ID_META );
+				$order_id = get_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META, true );
 				if ( $order_id ) {
-					delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id' );
+					delete_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META );
 
 					$monetize_by = $this->get_option( 'monetize_by' );
 					if ( 'wc' === $monetize_by ) {
