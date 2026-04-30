@@ -60,7 +60,7 @@ class Student {
 
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
-		$required_fields   = apply_filters(
+		$required_fields = apply_filters(
 			'tutor_student_registration_required_fields',
 			array(
 				'first_name'            => __( 'First name field is required', 'tutor' ),
@@ -129,8 +129,14 @@ class Student {
 			return;
 		}
 
+		$user = get_user_by( 'id', $user_id );
+
+		$redirect_url = '';
+
 		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 		if ( $is_req_email_verification ) {
+			$redirect_url = tutor_utils()->student_register_url();
+
 			do_action( 'tutor_send_verification_mail', $user, $enroll_attempt );
 			$reg_done = apply_filters( 'tutor_registration_done', true );
 			if ( ! $reg_done ) {
@@ -138,12 +144,14 @@ class Student {
 				return;
 			} else {
 				$wpdb->query( 'COMMIT' );
+
 			}
 		} else {
 			/**
 			 * Tutor Free - reqular student reg process.
 			 */
 			$wpdb->query( 'COMMIT' );
+
 			wp_set_current_user( $user_id, $user->user_login );
 			wp_set_auth_cookie( $user_id );
 			do_action( 'tutor_after_student_signup', $user_id );
@@ -154,22 +162,14 @@ class Student {
 			}
 
 			// Redirect page.
-            $redirect_page = tutor_utils()->array_get( 'redirect_to', $_REQUEST ); //phpcs:ignore
-			if ( ! $redirect_page ) {
-				$redirect_page = tutor_utils()->tutor_dashboard_url();
+            $redirect_url = tutor_utils()->array_get( 'redirect_to', $_REQUEST ); //phpcs:ignore
+			if ( ! $redirect_url ) {
+				$redirect_url = tutor_utils()->tutor_dashboard_url();
 			}
-
-			wp_safe_redirect( apply_filters( 'tutor_student_register_redirect_url', $redirect_page, $user ) );
-			die();
 		}
 
-		$user = get_user_by( 'id', $user_id );
-		if ( $user ) {
-			do_action( 'tutor_new_user_registered', $user, $validate_consent );
-		}
-
-		$registration_page = tutor_utils()->student_register_url();
-		wp_safe_redirect( $registration_page );
+		do_action( 'tutor_new_user_registered', $user, $validate_consent );
+		wp_safe_redirect( apply_filters( 'tutor_student_register_redirect_url', $redirect_url, $user ) );
 		die();
 	}
 

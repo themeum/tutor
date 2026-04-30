@@ -192,7 +192,7 @@ class Instructor {
 		}
 
 		if ( $user ) {
-			do_action( 'tutor_after_instructor_signup', $user_id, $validate_consent );
+			do_action( 'tutor_new_instructor_registered', $user_id, $validate_consent );
 		}
 
 		wp_safe_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );

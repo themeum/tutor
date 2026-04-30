@@ -61,7 +61,7 @@ class UserConsent extends BaseController {
 	 */
 	private function register_hooks() {
 		add_action( 'tutor_new_user_registered', array( $this, 'store_registration_consent' ), 10, 2 );
-		add_action( 'tutor_after_instructor_signup', array( $this, 'store_instructor_registration_consent' ), 10, 2 );
+		add_action( 'tutor_new_instructor_registered', array( $this, 'store_instructor_registration_consent' ), 10, 2 );
 		add_action( 'tutor_after_login_success', array( $this, 'store_login_consent' ), 10, 2 );
 		add_action( 'tutor_after_checkout_consent', array( $this, 'store_checkout_consent' ), 10, 2 );
 		add_action( 'wp_ajax_tutor_user_consents', array( $this, 'handle_ajax_request' ) );

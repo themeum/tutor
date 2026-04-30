@@ -28,12 +28,11 @@ const { __ } = wp.i18n;
  * Build a human-readable title from the consent title.
  *
  * @param {Object} log
- * @param {boolean} includeAccepted Whether to prefix with "Accepted"
  * @returns {string}
  */
-const getLogTitle = (log, includeAccepted = true) => {
+const getLogTitle = (log) => {
 	if (log.consent_title) {
-		return includeAccepted ? `${__('Accepted', 'tutor')} ${log.consent_title}` : log.consent_title;
+		return log.consent_title;
 	}
 	return includeAccepted ? __('Accepted Consent', 'tutor') : __('Consent', 'tutor');
 };
