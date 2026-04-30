@@ -159,15 +159,23 @@ $filters = array(
 									<span class="tutor-fs-7"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
 								</td>
 								<td>
-									<?php if ( tutor()->has_pro ) : ?>
-										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
-											<?php do_action( 'tutor_before_student_details_btn', $list->ID ); ?>
-											<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
-											class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
-												<?php esc_html_e( 'Details', 'tutor' ); ?>
-											</a>
-										</div>
-									<?php endif; ?>
+									<div class="tutor-d-flex tutor-align-center tutor-gap-1 tutor-justify-end">
+										<?php do_action( 'tutor_before_student_details_btn', $list->ID ); ?>
+										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
+										class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
+											<?php esc_html_e( 'Details', 'tutor' ); ?>
+										</a>
+										<?php
+										/**
+										 * Action to render consent logs button.
+										 *
+										 * @since 4.0.0
+										 *
+										 * @param object $list User list item.
+										 */
+										do_action( 'tutor_render_consent_logs_button', $list );
+										?>
+									</div>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -196,3 +204,7 @@ $filters = array(
 		</div>
 	</div>
 </div>
+
+<?php
+do_action( 'tutor_render_consent_logs_modal' );
+?>

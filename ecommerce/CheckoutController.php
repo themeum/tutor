@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\GDPR\Controllers\LegalConsent;
 use TUTOR\Input;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
@@ -623,6 +624,11 @@ class CheckoutController {
 			}
 		}
 
+		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $_POST );
+		if ( is_wp_error( $validate_consent ) ) {
+			array_push( $errors, $validate_consent->get_error_message() );
+		}
+
 		// Return if validation failed.
 		if ( ! empty( $errors ) ) {
 			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
@@ -752,6 +758,7 @@ class CheckoutController {
 			}
 
 			if ( ! empty( $order_data ) ) {
+				do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
 				if ( 'automate' === $payment_type ) {
 					try {
 						$payment_data = self::prepare_payment_data( $order_data );
