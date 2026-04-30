@@ -81,7 +81,7 @@ class Q_And_A {
 	 * @return bool
 	 */
 	public static function is_enabled_for_course( $course_id ) {
-		return self::is_enabled() && (bool) get_post_meta( $course_id, '_tutor_enable_qa', true );
+		return self::is_enabled() && 'yes' === get_post_meta( $course_id, Course::COURSE_ENABLE_QA_META, true );
 	}
 
 	/**
@@ -97,13 +97,11 @@ class Q_And_A {
 	public function add_learning_area_menu( $menu_items, $base_url ) {
 		global $tutor_course_id;
 
-		$user_id = get_current_user_id();
+		$user_id               = get_current_user_id();
+		$is_enabled_for_course = self::is_enabled_for_course( $tutor_course_id );
+		$can_access            = EnrollmentModel::is_enrolled( $tutor_course_id ) || tutor_utils()->has_user_course_content_access( $user_id, $tutor_course_id );
 
-		$enable_q_and_a_on_course = (bool) get_tutor_option( 'enable_q_and_a_on_course' );
-		$is_enabled_course_wise   = (bool) get_post_meta( $tutor_course_id, '_tutor_enable_qa', true );
-		$can_access               = EnrollmentModel::is_enrolled( $tutor_course_id ) || tutor_utils()->has_user_course_content_access( $user_id, $tutor_course_id );
-
-		if ( $is_enabled_course_wise && $enable_q_and_a_on_course && $can_access ) {
+		if ( $is_enabled_for_course && $can_access ) {
 			$qna_item = array(
 				'qna' => array(
 					'title'    => __( 'Q&A', 'tutor' ),
