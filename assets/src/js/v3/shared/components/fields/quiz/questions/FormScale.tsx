@@ -99,16 +99,16 @@ const scaleCorrectValueRangeErrorMessage = __(
   __TUTOR_TEXT_DOMAIN__,
 );
 
-function clearScaleRangeValidationError(setValidationError: FormScaleProps['setValidationError']) {
+const clearScaleRangeValidationError = (setValidationError: FormScaleProps['setValidationError']) => {
   setValidationError?.((prev) => {
     const isScaleRangeError =
       prev?.type === 'question' && [scaleRangeErrorMessage, scaleCorrectValueRangeErrorMessage].includes(prev?.message);
 
     return isScaleRangeError ? null : prev;
   });
-}
+};
 
-function getScaleValidationErrorMessage(config: ScaleConfig, value: number): string | null {
+const getScaleValidationErrorMessage = (config: ScaleConfig, value: number): string | null => {
   if (config.max <= config.min) {
     return scaleRangeErrorMessage;
   }
@@ -118,7 +118,7 @@ function getScaleValidationErrorMessage(config: ScaleConfig, value: number): str
   }
 
   return null;
-}
+};
 
 const FormScale = ({ field, setValidationError }: FormScaleProps) => {
   const option = field.value;
