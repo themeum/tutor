@@ -317,6 +317,7 @@ class Q_And_A {
 			$question_ids = QueryHelper::prepare_in_clause( $question_ids );
 
 			// Deleting question (comment), child question and question meta (comment meta).
+			// phpcs:disable -- variable $question_ids is escaped.
 			$wpdb->query(
 				$wpdb->prepare(
 					"DELETE
@@ -349,6 +350,7 @@ class Q_And_A {
 					1
 				)
 			);
+			// phpcs:enable
 		}
 	}
 
