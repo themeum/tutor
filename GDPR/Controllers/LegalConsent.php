@@ -663,7 +663,7 @@ class LegalConsent extends BaseController {
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<?php if ( ! $is_text_only ) : ?>
-						<input type="checkbox" id="<?php echo esc_attr( $field_name ); ?>" name="<?php echo esc_attr( $field_name ); ?>" class="tutor-checkbox tutor-checkbox-md" <?php echo esc_attr( $is_required ? 'required' : '' ); ?>>
+						<input type="checkbox" id="<?php echo esc_attr( $field_name ); ?>" name="<?php echo esc_attr( $field_name ); ?>" class="tutor-checkbox tutor-checkbox-md tutor-form-check-input" <?php echo esc_attr( $is_required ? 'required' : '' ); ?>>
 					<?php endif; ?>
 					<label for="<?php echo esc_attr( $field_name ); ?>" class="tutor-label">
 						<?php self::render_constructed_label_text( $consent ); ?>
