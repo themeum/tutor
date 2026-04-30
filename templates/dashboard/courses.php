@@ -95,7 +95,7 @@ $courses_list = $courses_list_array[ $active_tab ];
 			// Prepare course list based on page tab.
 			$courses_list = $courses_list_array[ $active_tab ];
 			?>
-			<div class="tutor-dashboard-courses-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
+			<div class="tutor-dashboard-courses-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6 tutor-sm-p-none">
 				<?php
 				if ( $courses_list && $courses_list->have_posts() ) :
 					while ( $courses_list->have_posts() ) :
