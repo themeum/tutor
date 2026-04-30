@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Alert;
 use Tutor\Components\SvgIcon;
+use Tutor\GDPR\Controllers\LegalConsent;
 use TUTOR\Icon;
 
 ?>
@@ -149,22 +150,30 @@ if ( ! get_option( 'users_can_register', false ) ) :
 
 				<?php do_action( 'tutor_student_reg_form_end' ); ?>
 
-				<?php
-				$tutor_toc_page_link = tutor_utils()->get_toc_page_link();
-				?>
-			<?php if ( null !== $tutor_toc_page_link ) : ?>
-			<div class="tutor-form-row tutor-mb-8">
-				<div class="tutor-input-field">
-					<div class="tutor-input-wrapper">
-						<input type="checkbox" id="tutor-terms-conditions" name="terms_conditions" class="tutor-checkbox tutor-checkbox-md" required>
-						<label for="tutor-terms-conditions" class="tutor-label">
-							<?php esc_html_e( 'By signing up, you agree to the ', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
-						</label>
-					</div>
-				</div>
-			</div>
-			<?php endif; ?>
+			<?php
+			$tutor_toc_page_link = tutor_utils()->get_toc_page_link();
+			$consents            = LegalConsent::get_consent_by_display_key( LegalConsent::DISPLAY_ON_STD_REG );
+			if ( tutor_utils()->count( $consents ) ) :
 
+				?>
+				<?php foreach ( $consents as $consent ) : ?>
+					<?php LegalConsent::render_consent_field( $consent, 'tutor-mb-8' ); ?>
+				<?php endforeach; ?>
+			
+			<?php else : ?>
+				<?php if ( $tutor_toc_page_link ) : ?>	
+					<div class="tutor-form-row tutor-mb-8">
+						<div class="tutor-input-field">
+							<div class="tutor-input-wrapper">
+								<input type="checkbox" id="tutor-terms-conditions" name="terms_conditions" class="tutor-checkbox tutor-checkbox-md" required>
+								<label for="tutor-terms-conditions" class="tutor-label">
+									<?php esc_html_e( 'By signing up, you agree to the ', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
+								</label>
+							</div>
+						</div>
+					</div>
+				<?php endif; ?>
+			<?php endif; ?>
 			<div>
 				<button type="submit" name="tutor_register_student_btn" value="register" class="tutor-btn tutor-btn-primary tutor-btn-block"><?php esc_html_e( 'Register', 'tutor' ); ?></button>
 				<div class="tutor-flex tutor-items-center tutor-justify-center tutor-text-center tutor-fs-6 tutor-color-secondary tutor-mt-8">

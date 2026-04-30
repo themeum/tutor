@@ -712,7 +712,7 @@ class Options_V2 {
 		$course_archive_page_id = ( is_array( $page_posts ) && count( $page_posts ) ) ? $page_posts[0] : null;
 
 		$attr = array(
-			'general'      => array(
+			'general'        => array(
 				'label'    => __( 'General', 'tutor' ),
 				'slug'     => 'general',
 				'desc'     => __( 'General Settings', 'tutor' ),
@@ -816,7 +816,7 @@ class Options_V2 {
 					),
 				),
 			),
-			'course'       => array(
+			'course'         => array(
 				'label'    => __( 'Course', 'tutor' ),
 				'slug'     => 'course',
 				'desc'     => __( 'Course Settings', 'tutor' ),
@@ -1036,7 +1036,7 @@ class Options_V2 {
 					),
 				),
 			),
-			'monetization' => array(
+			'monetization'   => array(
 				'label'    => __( 'Monetization', 'tutor' ),
 				'slug'     => 'monetization',
 				'desc'     => __( 'Monetization Settings', 'tutor' ),
@@ -1221,7 +1221,7 @@ class Options_V2 {
 					),
 				),
 			),
-			'design'       => array(
+			'design'         => array(
 				'label'    => __( 'Design', 'tutor' ),
 				'slug'     => 'design',
 				'desc'     => __( 'Design Settings', 'tutor' ),
@@ -1748,7 +1748,7 @@ class Options_V2 {
 					),
 				),
 			),
-			'advanced'     => array(
+			'advanced'       => array(
 				'label'    => __( 'Advanced', 'tutor' ),
 				'slug'     => 'advanced',
 				'desc'     => __( 'Advanced Settings', 'tutor' ),
@@ -1878,6 +1878,28 @@ class Options_V2 {
 								'label_title' => '',
 								'default'     => 'off',
 								'desc'        => __( 'Enabling maintenance mode will display a custom message on the frontend. During maintenance mode, visitors cannot access site content, but the wp-admin dashboard remains accessible.', 'tutor' ),
+							),
+						),
+					),
+				),
+			),
+			'legal_consents' => array(
+				'label'    => __( 'Legal Consents', 'tutor' ),
+				'slug'     => 'legal_consents',
+				'desc'     => __( 'Legal Consents', 'tutor' ),
+				'template' => 'legal_consents',
+				'icon'     => 'tutor-icon-lesson',
+				'blocks'   => array(
+					array(
+						'label'      => __( 'Legal Consents', 'tutor' ),
+						'slug'       => 'legal_consents',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'legal_consents',
+								'type'    => 'text',
+								'label'   => __( 'Legal Consents', 'tutor' ),
+								'default' => array(),
 							),
 						),
 					),
