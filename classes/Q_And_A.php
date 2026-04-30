@@ -302,7 +302,9 @@ class Q_And_A {
 	}
 
 	/**
-	 * Undocumented function
+	 * Delete question permanently
+	 *
+	 * @since 1.6.4
 	 *
 	 * @param array $question_ids question ids.
 	 *
