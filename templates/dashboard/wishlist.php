@@ -56,7 +56,7 @@ $total_wishlists_count = count( tutor_utils()->get_wishlist() );
 									array(
 										'course_rating' => $course_rating,
 										'wrapper_class' => 'tutor-course-card-ratings-stars',
-										'icon_class' => '',
+										'icon_class'    => '',
 										'show_rating_average' => true,
 									)
 								);
