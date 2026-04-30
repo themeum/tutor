@@ -8,9 +8,8 @@
  * @since 4.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="tutor-modal" id="tutor-consent-logs-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-consent-logs-title" aria-hidden="true">
 	<div class="tutor-modal-overlay" data-tutor-modal-close></div>
@@ -25,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 
 			<div class="tutor-modal-body tutor-p-24 tutor-consent-logs-modal-body" style="max-height: 60vh; overflow-y: auto;">
-				<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6"><?php esc_html_e( 'Loading&hellip;', 'tutor' ); ?></div>
+				<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6"><?php esc_html_e( 'Loading...', 'tutor' ); ?></div>
 			</div>
 
 			<div class="tutor-modal-footer tutor-p-24 tutor-d-flex tutor-justify-end tutor-gap-1">

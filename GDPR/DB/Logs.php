@@ -48,7 +48,7 @@ class Logs extends DB {
 			action VARCHAR(50), -- created, updated, deleted
 			old_data JSON NULL,
 			new_data JSON NULL,
-			created_at_utc DATETIME NOT NULL
+			created_at_gmt DATETIME NOT NULL
 		) {$charset_collate};";
 	}
 }

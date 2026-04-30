@@ -44,7 +44,7 @@ class LegalConsentLogs extends BaseModel {
 		'action',
 		'old_data',
 		'new_data',
-		'created_at_utc',
+		'created_at_gmt',
 	);
 
 	/**

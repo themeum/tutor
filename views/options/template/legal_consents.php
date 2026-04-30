@@ -12,6 +12,8 @@
 use TUTOR\Icon;
 use Tutor\GDPR\Controllers\LegalConsent;
 
+defined( 'ABSPATH' ) || exit;
+
 $consents = LegalConsent::get_consents();
 
 if ( empty( $consents ) ) {

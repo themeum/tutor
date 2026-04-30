@@ -166,9 +166,6 @@ class Instructor {
 		}
 
 		$user = get_user_by( 'id', $user_id );
-		if ( $user ) {
-			do_action( 'tutor_after_instructor_signup', $user_id, $validate_consent );
-		}
 
 		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 		if ( $is_req_email_verification ) {
@@ -190,7 +187,12 @@ class Instructor {
 			if ( $user ) {
 				wp_set_current_user( $user_id, $user->user_login );
 				wp_set_auth_cookie( $user_id );
+				do_action( 'tutor_after_instructor_signup', $user_id );
 			}
+		}
+
+		if ( $user ) {
+			do_action( 'tutor_after_instructor_signup', $user_id, $validate_consent );
 		}
 
 		wp_safe_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );

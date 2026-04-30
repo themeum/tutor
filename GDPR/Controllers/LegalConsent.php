@@ -76,13 +76,13 @@ class LegalConsent extends BaseController {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param bool $trigger_hooks Trigger hooks or not.
+	 * @param bool $register_hooks Trigger hooks or not.
 	 */
-	public function __construct( $trigger_hooks = true ) {
+	public function __construct( $register_hooks = true ) {
 		$this->model     = new LegalConsents();
 		$this->log_model = new LegalConsentLogs();
 
-		if ( $trigger_hooks ) {
+		if ( $register_hooks ) {
 			$this->register_hooks();
 		}
 	}
@@ -152,7 +152,7 @@ class LegalConsent extends BaseController {
 			self::DISPLAY_ON_CHECKOUT,
 		);
 
-		$is_marketplace_enabled = tutor_utils()->get_option( 'enable_course_marketplace]', false );
+		$is_marketplace_enabled = tutor_utils()->get_option( 'enable_course_marketplace', false );
 
 		if ( $is_marketplace_enabled ) {
 			$places[] = self::DISPLAY_ON_INS_REG;
@@ -362,7 +362,7 @@ class LegalConsent extends BaseController {
 				'action'           => 'created',
 				'old_data'         => null,
 				'new_data'         => wp_json_encode( $data ),
-				'created_at_utc'   => current_time( 'mysql', true ),
+				'created_at_gmt'   => current_time( 'mysql', true ),
 			)
 		);
 
@@ -467,7 +467,7 @@ class LegalConsent extends BaseController {
 		$wpdb->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		$data['version']        = (int) $existing->version + 1;
-		$data['updated_at_utc'] = current_time( 'mysql', true );
+		$data['updated_at_gmt'] = current_time( 'mysql', true );
 		$updated                = $this->model->update( $id, $data );
 		if ( ! $updated ) {
 			$wpdb->query( 'ROLLBACK' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -482,7 +482,7 @@ class LegalConsent extends BaseController {
 				'action'           => 'updated',
 				'old_data'         => wp_json_encode( (array) $existing ),
 				'new_data'         => wp_json_encode( $new_data ),
-				'created_at_utc'   => current_time( 'mysql', true ),
+				'created_at_gmt'   => current_time( 'mysql', true ),
 			)
 		);
 		if ( ! $log_id ) {
@@ -530,7 +530,7 @@ class LegalConsent extends BaseController {
 				'action'           => 'deleted',
 				'old_data'         => wp_json_encode( (array) $existing ),
 				'new_data'         => null,
-				'created_at_utc'   => current_time( 'mysql', true ),
+				'created_at_gmt'   => current_time( 'mysql', true ),
 			)
 		);
 		if ( ! $log_id ) {
@@ -573,7 +573,7 @@ class LegalConsent extends BaseController {
 				return new WP_Error( 'validation_error', $validation->errors );
 			}
 
-			$data['created_at_utc'] = current_time( 'mysql', true );
+			$data['created_at_gmt'] = current_time( 'mysql', true );
 		} else {
 			$data = array_filter(
 				$request,
@@ -926,7 +926,7 @@ class LegalConsent extends BaseController {
 			'label_snapshot_plain_text' => $plain_text, // Fallback plain text.
 			'links_snapshot'            => wp_json_encode( $links_snapshot ),
 			'consent_method'            => $consent->consent_method ?? null,
-			'created_at_utc'            => gmdate( 'Y-m-d H:i:s' ),
+			'created_at_gmt'            => gmdate( 'Y-m-d H:i:s' ),
 			'ip_address'                => isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '',
 			'user_agent'                => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
 		);

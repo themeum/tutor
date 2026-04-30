@@ -129,11 +129,6 @@ class Student {
 			return;
 		}
 
-		$user = get_user_by( 'id', $user_id );
-		if ( $user ) {
-			do_action( 'tutor_new_user_registered', $user, $validate_consent );
-		}
-
 		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 		if ( $is_req_email_verification ) {
 			do_action( 'tutor_send_verification_mail', $user, $enroll_attempt );
@@ -166,6 +161,11 @@ class Student {
 
 			wp_safe_redirect( apply_filters( 'tutor_student_register_redirect_url', $redirect_page, $user ) );
 			die();
+		}
+
+		$user = get_user_by( 'id', $user_id );
+		if ( $user ) {
+			do_action( 'tutor_new_user_registered', $user, $validate_consent );
 		}
 
 		$registration_page = tutor_utils()->student_register_url();

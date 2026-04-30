@@ -54,10 +54,10 @@ class UserConsents extends DB {
 			ip_address VARCHAR(45),
 			user_agent TEXT,
 			source VARCHAR(50), -- consent page info
-			created_at_utc DATETIME NOT NULL,
+			created_at_gmt DATETIME NOT NULL,
 			INDEX (user_id),
 			INDEX (consent_title),
-			INDEX (created_at_utc)
+			INDEX (created_at_gmt)
 		) {$charset_collate};";
 	}
 }

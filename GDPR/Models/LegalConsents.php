@@ -47,8 +47,8 @@ class LegalConsents extends BaseModel {
 		'consent_method',
 		'is_active',
 		'settings',
-		'created_at_utc',
-		'updated_at_utc',
+		'created_at_gmt',
+		'updated_at_gmt',
 	);
 
 	/**

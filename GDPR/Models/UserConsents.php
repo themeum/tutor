@@ -51,7 +51,7 @@ class UserConsents extends BaseModel {
 		'ip_address',
 		'user_agent',
 		'source',
-		'created_at_utc',
+		'created_at_gmt',
 	);
 
 	/**

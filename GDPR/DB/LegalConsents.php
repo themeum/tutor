@@ -52,8 +52,8 @@ class LegalConsents extends DB {
 			consent_method VARCHAR(255) NOT NULL,
 			is_active TINYINT(1) DEFAULT 1,
 			settings JSON,
-			created_at_utc DATETIME NOT NULL,
-			updated_at_utc DATETIME,
+			created_at_gmt DATETIME NOT NULL,
+			updated_at_gmt DATETIME,
 			INDEX (consent_title),
 			INDEX (is_active)
 		) {$charset_collate};";

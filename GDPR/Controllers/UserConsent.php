@@ -42,12 +42,12 @@ class UserConsent extends BaseController {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param bool $trigger_hooks When to trigger hook or not.
+	 * @param bool $register_hooks When to trigger hook or not.
 	 */
-	public function __construct( bool $trigger_hooks = true ) {
+	public function __construct( bool $register_hooks = true ) {
 		$this->model = new UserConsents();
 
-		if ( $trigger_hooks ) {
+		if ( $register_hooks ) {
 			$this->register_hooks();
 		}
 	}
@@ -110,7 +110,7 @@ class UserConsent extends BaseController {
 			return $value;
 		}
 
-		$value = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" data-tutor-modal-target="tutor-consent-logs-modal" data-consent-logs-trigger data-user-id="' . esc_attr( $user_id ) . '" data-user-name="' . esc_attr( $user->display_name ) . '" data-user-joined="' . esc_attr( $user->user_registered ) . '" data-user-email="' . esc_attr( $user->user_email ) . '" data-user-login="' . esc_attr( $user->user_login ) . '" data-avatar-src="' . esc_url( get_avatar_url( $user_id, array( 'size' => 40 ) ) ) . '"><i class="tutor-icon-eye-line tutor-mr-8" aria-hidden="true"></i>' . esc_html__( 'View Logs', 'tutor' ) . '</button>';
+		$value = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" data-tutor-modal-target="tutor-consent-logs-modal" data-consent-logs-trigger data-user-id="' . esc_attr( $user_id ) . '" data-user-name="' . esc_attr( $user->display_name ) . '" data-user-joined="' . esc_attr( $user->user_registered ) . '" data-user-email="' . esc_attr( $user->user_email ) . '" data-user-login="' . esc_attr( $user->user_login ) . '" data-avatar-src="' . esc_url( tutor_utils()->get_user_avatar_url( $user_id ) ) . '"><i class="tutor-icon-eye-line tutor-mr-8" aria-hidden="true"></i>' . esc_html__( 'View Logs', 'tutor' ) . '</button>';
 
 		return $value;
 	}
@@ -205,7 +205,7 @@ class UserConsent extends BaseController {
 
 				break;
 			default:
-				// code...
+				$this->response_bad_request( __( 'Invalid action', 'tutor' ) );
 				break;
 		}
 	}
@@ -284,11 +284,11 @@ class UserConsent extends BaseController {
 
 		$records = array_map(
 			function ( $record ) {
-				if ( ! isset( $record->created_at_utc ) ) {
+				if ( ! isset( $record->created_at_gmt ) ) {
 					return $record;
 				}
 
-				$created_at = strtotime( $record->created_at_utc . ' UTC' );
+				$created_at = strtotime( $record->created_at_gmt . ' UTC' );
 				if ( false === $created_at ) {
 					return $record;
 				}
