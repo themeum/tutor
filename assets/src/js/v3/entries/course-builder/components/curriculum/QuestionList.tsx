@@ -22,6 +22,7 @@ import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Popover from '@TutorShared/molecules/Popover';
 
+import GenerateQuizWithAi from '@CourseBuilderComponents/curriculum/GenerateQuizWithAi';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
@@ -462,30 +463,37 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     <div>
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
-        <button
-          data-cy="add-question"
-          ref={addButtonRef}
-          type="button"
-          onClick={() => {
-            if (contentType === 'tutor_h5p_quiz') {
-              showModal({
-                component: H5PContentListModal,
-                props: {
-                  title: __('Select H5P Content', 'tutor'),
-                  onAddContent: (contents) => {
-                    handleH5PBulkQuestion(contents);
+        <div css={styles.questionActions}>
+          <Show when={contentType !== 'tutor_h5p_quiz'}>
+            <GenerateQuizWithAi />
+          </Show>
+          <button
+            data-cy="add-question"
+            data-add-question-button
+            ref={addButtonRef}
+            type="button"
+            aria-label={__('Add question', 'tutor')}
+            onClick={() => {
+              if (contentType === 'tutor_h5p_quiz') {
+                showModal({
+                  component: H5PContentListModal,
+                  props: {
+                    title: __('Select H5P Content', 'tutor'),
+                    onAddContent: (contents) => {
+                      handleH5PBulkQuestion(contents);
+                    },
+                    contentType: 'tutor_h5p_quiz',
+                    addedContentIds: questions.map((question) => question.question_description),
                   },
-                  contentType: 'tutor_h5p_quiz',
-                  addedContentIds: questions.map((question) => question.question_description),
-                },
-              });
-            } else {
-              setIsOpen(true);
-            }
-          }}
-        >
-          <SVGIcon name="plusSquareBrand" width={32} height={32} />
-        </button>
+                });
+              } else {
+                setIsOpen(true);
+              }
+            }}
+          >
+            <SVGIcon name="plusSquareBrand" width={32} height={32} />
+          </button>
+        </div>
       </div>
 
       <div ref={questionListRef} css={styles.questionList}>
@@ -657,11 +665,24 @@ const styles = {
     ${typography.caption('medium')};
     color: ${colorTokens.text.subdued};
 
-    button {
+    ${Breakpoint.smallMobile} {
+      padding: ${spacing[16]};
+    }
+  `,
+  questionActions: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+
+    [data-add-question-button],
+    [data-generate-quiz-button] {
       ${styleUtils.resetButton};
       width: 32px;
       height: 32px;
       border-radius: ${borderRadius[6]};
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
 
       &:focus,
       &:active,
@@ -680,8 +701,13 @@ const styles = {
       }
     }
 
-    ${Breakpoint.smallMobile} {
-      padding: ${spacing[16]};
+    [data-generate-quiz-button] {
+      border: 1px solid ${colorTokens.stroke.divider};
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
     }
   `,
   questionList: css`

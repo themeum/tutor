@@ -41,6 +41,7 @@ type FormSelectInputProps<T> = {
   helpText?: string;
   removeOptionsMinWidth?: boolean;
   leftIcon?: ReactNode;
+  iconSize?: number;
   dataAttribute?: string;
   isSecondary?: boolean;
   isMagicAi?: boolean;
@@ -69,6 +70,7 @@ const FormSelectInput = <T,>({
   helpText,
   removeOptionsMinWidth = false,
   leftIcon,
+  iconSize,
   removeBorder,
   dataAttribute,
   isSecondary = false,
@@ -77,7 +79,7 @@ const FormSelectInput = <T,>({
   selectOnFocus,
   optionItemCss,
 }: FormSelectInputProps<T>) => {
-  const iconSize = size === 'small' ? 20 : 32;
+  const resolvedIconSize = iconSize ?? (size === 'small' ? 20 : 32);
 
   const getInitialValue = useCallback(
     () =>
@@ -183,7 +185,9 @@ const FormSelectInput = <T,>({
               <div css={styles.leftIcon}>
                 <Show when={leftIcon}>{leftIcon}</Show>
                 <Show when={selectedItem?.icon}>
-                  {(iconName) => <SVGIcon name={iconName as IconCollection} width={iconSize} height={iconSize} />}
+                  {(iconName) => (
+                    <SVGIcon name={iconName as IconCollection} width={resolvedIconSize} height={resolvedIconSize} />
+                  )}
                 </Show>
               </div>
 
@@ -320,7 +324,11 @@ const FormSelectInput = <T,>({
                         aria-selected={activeIndex === index}
                       >
                         <Show when={option.icon}>
-                          <SVGIcon name={option.icon as IconCollection} width={iconSize} height={iconSize} />
+                          <SVGIcon
+                            name={option.icon as IconCollection}
+                            width={resolvedIconSize}
+                            height={resolvedIconSize}
+                          />
                         </Show>
                         <span>{option.label}</span>
                       </button>
@@ -613,6 +621,10 @@ const styles = {
       flex-shrink: 0;
       ${styleUtils.text.ellipsis(1)}
       width: 100%;
+    }
+
+    svg {
+      flex-shrink: 0;
     }
   `,
   arrowUpDown: css`
