@@ -11,7 +11,6 @@
 namespace Tutor\GDPR;
 
 use AllowDynamicProperties;
-use Tutor\GDPR\Controllers\LegalConsentLogs;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\GDPR\Controllers\UserConsent;
 use Tutor\GDPR\DB\DB;
@@ -100,6 +99,6 @@ final class GDPR extends Singleton {
 		}
 
 		DB::create_tables();
-		update_option( self::DB_SCHEMA_VERSION_OPTION, self::DB_SCHEMA_VERSION );
+		update_option( self::DB_SCHEMA_VERSION_OPTION, self::DB_SCHEMA_VERSION, false );
 	}
 }

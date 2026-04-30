@@ -72,7 +72,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 			<div class="tutor-legal-consent-header-actions">
 				<label class="tutor-form-toggle">
 					<input type="hidden" value="<?php echo esc_attr( $enabled ); ?>" data-consent-enabled-hidden>
-					<input type="checkbox" class="tutor-form-toggle-input" <?php checked( $enabled, 'on' ); ?> data-consent-enabled <?php disabled( 0 === (int) $consent_id ); ?>>
+					<input type="checkbox" class="tutor-form-toggle-input" <?php checked( $enabled, 'on' ); ?> data-consent-enabled>
 					<span class="tutor-form-toggle-control"></span>
 				</label>
 

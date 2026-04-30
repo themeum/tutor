@@ -752,6 +752,7 @@ class LegalConsent extends BaseController {
 
 		if ( empty( $map ) || ! is_array( $map ) ) {
 			echo esc_html( $message );
+			return;
 		}
 
 		// Find all {placeholders}.
@@ -759,6 +760,7 @@ class LegalConsent extends BaseController {
 
 		if ( empty( $matches[1] ) ) {
 			echo esc_html( $message );
+			return;
 		}
 
 		foreach ( $matches[1] as $key ) {
