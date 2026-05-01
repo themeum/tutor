@@ -24,8 +24,10 @@
     cursor: pointer;
     @include tutor-transition(background-color);
 
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: $tutor-surface-l2;
+      outline: none;
     }
   }
 

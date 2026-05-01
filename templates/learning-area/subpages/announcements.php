@@ -54,7 +54,7 @@ $total_announcements = $the_query->found_posts;
 						<div class="tutor-medium tutor-font-medium tutor-mb-4">
 							<?php echo esc_html( $announcement->post_title ); ?>
 						</div>
-						<div class="tutor-p2 tutor-mb-7">
+						<div class="tutor-p2 tutor-mb-7 tutor-whitespace-pre-line">
 							<?php echo wp_kses_post( $announcement->post_content ); ?>
 						</div>
 						<div class="tutor-flex tutor-items-center tutor-justify-between">

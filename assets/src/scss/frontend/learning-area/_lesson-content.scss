@@ -7,6 +7,8 @@
 }
 
 .tutor-lesson-content {
+  button.tutor-mark-as-complete-button,
+  a.tutor-mark-as-complete-button,
   .tutor-mark-as-complete-button {
     @include tutor-button-reset();
     @include tutor-typography(tiny, medium, secondary);
@@ -19,6 +21,7 @@
     height: 40px;
     justify-content: space-between;
     border-radius: $tutor-radius-full;
+    border: 0px solid $tutor-border-idle;
     position: relative;
     @include tutor-transition(background-color);
 

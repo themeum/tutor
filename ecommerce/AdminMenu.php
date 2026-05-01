@@ -43,6 +43,7 @@ class AdminMenu {
 				array(
 					'payment_status' => OrderModel::PAYMENT_UNPAID,
 					'order_type'     => OrderModel::TYPE_SINGLE_ORDER,
+					'order_status'   => OrderModel::ORDER_INCOMPLETE,
 				)
 			);
 			set_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT, $order_badge_count, HOUR_IN_SECONDS );
