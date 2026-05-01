@@ -2,19 +2,25 @@ import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useToast } from '@TutorShared/atoms/Toast';
 import Popover from '@TutorShared/molecules/Popover';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { CourseTopic } from '@CourseBuilderServices/curriculum';
+import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
+import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, fontSize, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -22,9 +28,14 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import type { IconCollection } from '@TutorShared/icons/types';
+import { useGenerateQuizQuestionMutation } from '@TutorShared/services/magic-ai';
+import { convertedQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { Option, QuizQuestionType } from '@TutorShared/utils/types';
-import { noop } from '@TutorShared/utils/util';
+import { QuizDataStatus, type Option, type QuizQuestionType } from '@TutorShared/utils/types';
+import { nanoid } from '@TutorShared/utils/util';
+
+import generateCourse2x from '@SharedImages/pro-placeholders/generate-course-2x.webp';
+import generateCourse from '@SharedImages/pro-placeholders/generate-course.webp';
 
 const courseId = getCourseId();
 const emptyTopicIds: string[] = [];
@@ -78,8 +89,20 @@ const difficultyOptions = [
 const GenerateQuizWithAi = () => {
   const queryClient = useQueryClient();
   const { topicId } = useQuizModalContext();
+  const { showModal } = useModal();
+  const { showToast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
+
+  const quizForm = useFormContext<QuizForm>();
+  const { append: appendQuestion } = useFieldArray({
+    control: quizForm.control,
+    name: 'questions',
+  });
+
+  const generateMutation = useGenerateQuizQuestionMutation();
 
   const form = useFormWithGlobalError<GenerateQuizWithAiForm>({
     defaultValues: {
@@ -150,7 +173,7 @@ const GenerateQuizWithAi = () => {
     );
   };
 
-  const handleGenerate = (data: GenerateQuizWithAiForm) => {
+  const handleGenerate = async (data: GenerateQuizWithAiForm) => {
     const payload = {
       topic_ids: data.topic_ids.join(','),
       question_types: questionTypeOptions
@@ -161,8 +184,71 @@ const GenerateQuizWithAi = () => {
       number_of_questions: Number(data.question_count),
     };
 
-    void payload;
-    noop();
+    const response = await generateMutation.mutateAsync(payload);
+    const generatedQuestions = response.data ?? [];
+
+    const existingCount = quizForm.getValues('questions')?.length ?? 0;
+
+    generatedQuestions.forEach((item, index) => {
+      const questionId = nanoid();
+      const question = convertedQuestion({
+        question_id: questionId,
+        question_title: item.title,
+        question_description: item.description ?? '',
+        question_type: item.type,
+        question_mark: 1,
+        answer_explanation: '',
+        question_order: existingCount + index,
+        question_settings: {
+          question_type: item.type,
+          answer_required: false,
+          randomize_question: false,
+          question_mark: 1,
+          show_question_mark: true,
+          has_multiple_correct_answer: false,
+          is_image_matching: false,
+        },
+        question_answers: (item.options ?? []).map((opt, i) => ({
+          _data_status: QuizDataStatus.NEW,
+          is_saved: true,
+          answer_id: nanoid(),
+          belongs_question_id: questionId,
+          belongs_question_type: item.type,
+          answer_title: opt.name,
+          is_correct: opt.is_correct ? '1' : '0',
+          answer_order: i,
+          answer_two_gap_match: '',
+          answer_view_format: 'text',
+        })),
+      });
+
+      appendQuestion(question);
+    });
+
+    showToast({ type: 'success', message: __('Questions generated successfully', 'tutor') });
+    setIsOpen(false);
+  };
+
+  const handleAiButtonClick = () => {
+    if (!isTutorPro) {
+      showModal({
+        component: ProIdentifierModal,
+        props: {
+          image: generateCourse,
+          image2x: generateCourse2x,
+        },
+      });
+    } else if (!hasOpenAiAPIKey) {
+      showModal({
+        component: SetupOpenAiModal,
+        props: {
+          image: generateCourse,
+          image2x: generateCourse2x,
+        },
+      });
+    } else {
+      setIsOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -176,12 +262,12 @@ const GenerateQuizWithAi = () => {
         isIconOnly
         variant="text"
         size="small"
-        icon={<SVGIcon name="magicAi" width={24} height={24} />}
+        icon={<SVGIcon name="magicAiColorize" width={24} height={24} />}
         data-generate-quiz-button
         ref={triggerRef}
         type="button"
         aria-label={__('Generate quiz using AI', 'tutor')}
-        onClick={() => setIsOpen(true)}
+        onClick={handleAiButtonClick}
       />
 
       <Popover
@@ -319,6 +405,7 @@ const GenerateQuizWithAi = () => {
                   size="default"
                   roundedFull={false}
                   disabled={
+                    generateMutation.isPending ||
                     !selectedTopicIds.length ||
                     !selectedQuestionTypes.length ||
                     questionCount < 1 ||
@@ -327,7 +414,7 @@ const GenerateQuizWithAi = () => {
                   }
                 >
                   <SVGIcon name="magicAi" width={24} height={24} />
-                  {__('Generate Now', 'tutor')}
+                  {generateMutation.isPending ? __('Generating...', 'tutor') : __('Generate Now', 'tutor')}
                 </MagicButton>
                 <div css={styles.generateQuizButtonHelperText}>
                   {__('AI will generate questions based on your selected topics and types.', 'tutor')}

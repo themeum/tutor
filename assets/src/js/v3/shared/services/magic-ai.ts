@@ -282,6 +282,33 @@ export const useGenerateQuizQuestionsMutation = () => {
   });
 };
 
+interface GenerateQuizQuestionPayload {
+  topic_ids: string;
+  question_types: string;
+  difficulty_level: string;
+  number_of_questions: number;
+}
+
+const generateQuizQuestion = (payload: GenerateQuizQuestionPayload & { signal?: AbortSignal }) => {
+  return wpAjaxInstance.post<GenerateQuizQuestionPayload, TutorMutationResponse<QuizContent[]>>(
+    endpoints.GENERATE_QUIZ_QUESTION,
+    payload,
+    {
+      signal: payload.signal,
+    },
+  );
+};
+
+export const useGenerateQuizQuestionMutation = () => {
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: generateQuizQuestion,
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
+    },
+  });
+};
+
 const saveOpenAiSettingsKey = (payload: { chatgpt_api_key: string; chatgpt_enable: 1 | 0 }) => {
   return wpAjaxInstance.post<
     {
