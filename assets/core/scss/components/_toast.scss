@@ -1,50 +1,6 @@
 @use '../tokens' as *;
 @use '../mixins' as *;
 
-:root {
-  --tutor-toast-font: #{$tutor-font-family-body};
-  --tutor-toast-z: #{$tutor-z-highest + 1};
-  --tutor-toast-gap: #{$tutor-spacing-4};
-  --tutor-toast-padding: #{$tutor-spacing-5} #{$tutor-spacing-6};
-  --tutor-toast-radius: #{$tutor-radius-full};
-  --tutor-toast-icon-size: 36px;
-  --tutor-toast-min-width: 300px;
-  --tutor-toast-max-width: 420px;
-  --tutor-toast-animation-enter: 400ms;
-  --tutor-toast-animation-exit: 300ms;
-  --tutor-toast-offset-x: #{$tutor-spacing-6};
-  --tutor-toast-offset-y: #{$tutor-spacing-6};
-  --tutor-toast-background: #{$tutor-surface-base};
-  --tutor-toast-border: #{$tutor-border-idle};
-  --tutor-toast-shadow: #{$tutor-shadow-xl};
-  --tutor-toast-text: #{$tutor-text-primary};
-  --tutor-toast-text-muted: #{$tutor-text-secondary};
-  --tutor-toast-success-background: #{$tutor-surface-success};
-  --tutor-toast-success-border: #{$tutor-border-success};
-  --tutor-toast-success-icon: #{$tutor-icon-success-primary};
-  --tutor-toast-success-text: #{$tutor-text-success};
-  --tutor-toast-error-background: #{$tutor-surface-critical};
-  --tutor-toast-error-border: #{$tutor-border-error};
-  --tutor-toast-error-icon: #{$tutor-icon-critical};
-  --tutor-toast-error-text: #{$tutor-text-critical};
-  --tutor-toast-warning-background: #{$tutor-surface-warning-hover};
-  --tutor-toast-warning-border: #{$tutor-border-warning-tertiary};
-  --tutor-toast-warning-icon: #{$tutor-icon-warning};
-  --tutor-toast-warning-text: #{$tutor-text-caution};
-  --tutor-toast-info-background: #{$tutor-surface-brand-secondary};
-  --tutor-toast-info-border: #{$tutor-border-brand-tertiary};
-  --tutor-toast-info-icon: #{$tutor-icon-brand};
-  --tutor-toast-info-text: #{$tutor-text-brand};
-  --tutor-toast-loading-background: #{$tutor-surface-l2};
-  --tutor-toast-loading-border: #{$tutor-border-hover};
-  --tutor-toast-loading-icon: #{$tutor-icon-idle};
-  --tutor-toast-loading-text: #{$tutor-text-primary};
-  --tutor-toast-default-background: #{$tutor-surface-base};
-  --tutor-toast-default-border: #{$tutor-border-idle};
-  --tutor-toast-default-icon: #{$tutor-icon-idle};
-  --tutor-toast-default-text: #{$tutor-text-primary};
-}
-
 .tutor-toast-sr-only {
   position: absolute;
   width: 1px;
@@ -59,9 +15,9 @@
 
 .tutor-toast-container {
   position: fixed !important;
-  z-index: var(--tutor-toast-z);
-  width: min(100vw - (var(--tutor-toast-offset-x) * 2), var(--tutor-toast-max-width));
-  min-width: min(var(--tutor-toast-min-width), calc(100vw - (var(--tutor-toast-offset-x) * 2)));
+  z-index: $tutor-toast-z;
+  width: min(100vw - ($tutor-toast-offset-x * 2), $tutor-toast-max-width);
+  min-width: min($tutor-toast-min-width, calc(100vw - ($tutor-toast-offset-x * 2)));
   pointer-events: none;
   list-style: none;
   margin: 0;
@@ -69,11 +25,11 @@
   outline: none;
 
   &[data-position-x='left'] {
-    left: var(--tutor-toast-offset-x);
+    left: $tutor-toast-offset-x;
   }
 
   &[data-position-x='right'] {
-    right: var(--tutor-toast-offset-x);
+    right: $tutor-toast-offset-x;
   }
 
   &[data-position-x='center'] {
@@ -82,23 +38,23 @@
   }
 
   &[data-position-y='top'] {
-    top: var(--tutor-toast-offset-y);
+    top: $tutor-toast-offset-y;
   }
 
   &[data-position-y='bottom'] {
-    bottom: var(--tutor-toast-offset-y);
+    bottom: $tutor-toast-offset-y;
   }
 }
 
 [dir='rtl'] {
   .tutor-toast-container[data-position-x='left'] {
     left: auto;
-    right: var(--tutor-toast-offset-x);
+    right: $tutor-toast-offset-x;
   }
 
   .tutor-toast-container[data-position-x='right'] {
     right: auto;
-    left: var(--tutor-toast-offset-x);
+    left: $tutor-toast-offset-x;
   }
 }
 
@@ -158,11 +114,11 @@
 }
 
 .tutor-toast-item[data-entering][data-position-y='bottom'] {
-  animation: tutor-toast-enter-from-bottom var(--tutor-toast-animation-enter) cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+  animation: tutor-toast-enter-from-bottom $tutor-toast-animation-enter cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
 }
 
 .tutor-toast-item[data-entering][data-position-y='top'] {
-  animation: tutor-toast-enter-from-top var(--tutor-toast-animation-enter) cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+  animation: tutor-toast-enter-from-top $tutor-toast-animation-enter cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
 }
 
 @keyframes tutor-toast-exit-to-bottom {
@@ -171,7 +127,7 @@
   }
 
   to {
-    transform: translateY(calc(100% + var(--tutor-toast-offset-y)));
+    transform: translateY(calc(100% + $tutor-toast-offset-y));
     opacity: 0;
   }
 }
@@ -182,18 +138,18 @@
   }
 
   to {
-    transform: translateY(calc(-100% - var(--tutor-toast-offset-y)));
+    transform: translateY(calc(-100% - $tutor-toast-offset-y));
     opacity: 0;
   }
 }
 
 .tutor-toast-item[data-exiting][data-position-y='bottom'] {
-  animation: tutor-toast-exit-to-bottom var(--tutor-toast-animation-exit) ease forwards;
+  animation: tutor-toast-exit-to-bottom $tutor-toast-animation-exit ease forwards;
   pointer-events: none;
 }
 
 .tutor-toast-item[data-exiting][data-position-y='top'] {
-  animation: tutor-toast-exit-to-top var(--tutor-toast-animation-exit) ease forwards;
+  animation: tutor-toast-exit-to-top $tutor-toast-animation-exit ease forwards;
   pointer-events: none;
 }
 
@@ -240,15 +196,15 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: var(--tutor-toast-gap);
+  gap: $tutor-toast-gap;
   width: 100%;
-  padding: var(--tutor-toast-padding);
-  border: 1px solid var(--tutor-toast-border);
-  border-radius: var(--tutor-toast-radius);
-  background: var(--tutor-toast-background);
-  box-shadow: var(--tutor-toast-shadow);
-  color: var(--tutor-toast-text);
-  font-family: var(--tutor-toast-font);
+  padding: $tutor-toast-padding;
+  border: 1px solid $tutor-toast-border;
+  border-radius: $tutor-toast-radius;
+  background: $tutor-toast-background;
+  box-shadow: $tutor-toast-shadow;
+  color: $tutor-toast-text;
+  font-family: $tutor-toast-font;
   overflow: hidden;
   cursor: grab;
 
@@ -257,54 +213,54 @@
   }
 
   &[data-type='default'] {
-    background: var(--tutor-toast-default-background);
-    border-color: var(--tutor-toast-default-border);
-    color: var(--tutor-toast-default-text);
+    background: $tutor-toast-default-background;
+    border-color: $tutor-toast-default-border;
+    color: $tutor-toast-default-text;
   }
 
   &[data-type='success'] {
-    color: var(--tutor-toast-success-text);
+    color: $tutor-toast-success-text;
   }
 
   &[data-type='error'] {
-    color: var(--tutor-toast-error-text);
+    color: $tutor-toast-error-text;
   }
 
   &[data-type='warning'] {
-    color: var(--tutor-toast-warning-text);
+    color: $tutor-toast-warning-text;
   }
 
   &[data-type='info'] {
-    color: var(--tutor-toast-info-text);
+    color: $tutor-toast-info-text;
   }
 
   &[data-type='loading'] {
-    color: var(--tutor-toast-loading-text);
+    color: $tutor-toast-loading-text;
   }
 
   &[data-rich-colors][data-type='success'] {
-    background: var(--tutor-toast-success-background);
-    border-color: var(--tutor-toast-success-border);
+    background: $tutor-toast-success-background;
+    border-color: $tutor-toast-success-border;
   }
 
   &[data-rich-colors][data-type='error'] {
-    background: var(--tutor-toast-error-background);
-    border-color: var(--tutor-toast-error-border);
+    background: $tutor-toast-error-background;
+    border-color: $tutor-toast-error-border;
   }
 
   &[data-rich-colors][data-type='warning'] {
-    background: var(--tutor-toast-warning-background);
-    border-color: var(--tutor-toast-warning-border);
+    background: $tutor-toast-warning-background;
+    border-color: $tutor-toast-warning-border;
   }
 
   &[data-rich-colors][data-type='info'] {
-    background: var(--tutor-toast-info-background);
-    border-color: var(--tutor-toast-info-border);
+    background: $tutor-toast-info-background;
+    border-color: $tutor-toast-info-border;
   }
 
   &[data-rich-colors][data-type='loading'] {
-    background: var(--tutor-toast-loading-background);
-    border-color: var(--tutor-toast-loading-border);
+    background: $tutor-toast-loading-background;
+    border-color: $tutor-toast-loading-border;
   }
 }
 
@@ -313,34 +269,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  inline-size: var(--tutor-toast-icon-size);
-  block-size: var(--tutor-toast-icon-size);
+  inline-size: $tutor-toast-icon-size;
+  block-size: $tutor-toast-icon-size;
   border-radius: $tutor-radius-full;
   background: color-mix(in srgb, currentColor 12%, transparent);
-  color: var(--tutor-toast-info-icon);
+  color: $tutor-toast-info-icon;
 
   .tutor-toast-card[data-type='success'] & {
-    color: var(--tutor-toast-success-icon);
+    color: $tutor-toast-success-icon;
   }
 
   .tutor-toast-card[data-type='error'] & {
-    color: var(--tutor-toast-error-icon);
+    color: $tutor-toast-error-icon;
   }
 
   .tutor-toast-card[data-type='warning'] & {
-    color: var(--tutor-toast-warning-icon);
+    color: $tutor-toast-warning-icon;
   }
 
   .tutor-toast-card[data-type='info'] & {
-    color: var(--tutor-toast-info-icon);
+    color: $tutor-toast-info-icon;
   }
 
   .tutor-toast-card[data-type='loading'] & {
-    color: var(--tutor-toast-loading-icon);
+    color: $tutor-toast-loading-icon;
   }
 
   .tutor-toast-card[data-type='default'] & {
-    color: var(--tutor-toast-default-icon);
+    color: $tutor-toast-default-icon;
   }
 }
 
@@ -362,10 +318,10 @@
 .tutor-toast-description {
   @include tutor-typography('tiny');
   margin-top: $tutor-spacing-2;
-  color: var(--tutor-toast-text-muted);
+  color: $tutor-toast-text-muted;
 
   .tutor-toast-card[data-type='default'] & {
-    color: color-mix(in srgb, var(--tutor-toast-default-text) 75%, transparent);
+    color: color-mix(in srgb, $tutor-toast-default-text 75%, transparent);
   }
 }
 
@@ -416,27 +372,27 @@
   transform-origin: left;
 
   .tutor-toast-card[data-type='success'] & {
-    background: var(--tutor-toast-success-icon);
+    background: $tutor-toast-success-icon;
   }
 
   .tutor-toast-card[data-type='error'] & {
-    background: var(--tutor-toast-error-icon);
+    background: $tutor-toast-error-icon;
   }
 
   .tutor-toast-card[data-type='warning'] & {
-    background: var(--tutor-toast-warning-icon);
+    background: $tutor-toast-warning-icon;
   }
 
   .tutor-toast-card[data-type='info'] & {
-    background: var(--tutor-toast-info-icon);
+    background: $tutor-toast-info-icon;
   }
 
   .tutor-toast-card[data-type='loading'] & {
-    background: var(--tutor-toast-loading-icon);
+    background: $tutor-toast-loading-icon;
   }
 
   .tutor-toast-card[data-type='default'] & {
-    background: color-mix(in srgb, var(--tutor-toast-default-text) 30%, transparent);
+    background: color-mix(in srgb, $tutor-toast-default-text 30%, transparent);
   }
 }
 
