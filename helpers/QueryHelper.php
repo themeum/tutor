@@ -829,13 +829,17 @@ class QueryHelper {
 
 		$table        = self::prepare_table_name( $table );
 		$where_clause = self::prepare_where_clause( $where );
+		if ( ! empty( $where_clause ) ) {
+			$where_clause = "WHERE {$where_clause}";
+		}
+
 		$limit        = (int) sanitize_text_field( $limit );
 		$limit_clause = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
 
 		//phpcs:disable
 		$query = "SELECT *
 				FROM {$table}
-				WHERE {$where_clause}
+				{$where_clause}
 				ORDER BY {$order_by} {$order}
 				{$limit_clause}";
 

@@ -31,7 +31,7 @@ use Tutor\Components\Constants\Variant;
 					->attr( 'href', esc_url( $back_url ) )
 					->render();
 			?>
-			<h4 class="tutor-account-header-title">
+			<h4 class="tutor-account-header-title tutor-my-none">
 				<?php echo esc_html( $page_data['title'] ?? '' ); ?>
 			</h4>
 			<?php
