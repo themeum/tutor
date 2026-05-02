@@ -10,6 +10,8 @@ export type TutorToastPosition =
 
 export type TutorToastExpandMode = 'hover' | 'always' | 'never';
 
+export type TutorToastTheme = 'light' | 'dark' | 'auto';
+
 export interface TutorToastOffset {
   x?: number;
   y?: number;
@@ -38,9 +40,10 @@ export interface TutorToastOptions {
   duration?: number;
   progressBar?: boolean;
   closeButton?: boolean;
-  dir?: 'ltr' | 'rtl';
+  dir?: 'ltr' | 'rtl' | 'auto';
   richColors?: boolean;
   position?: TutorToastPosition;
+  theme?: TutorToastTheme;
 }
 
 export interface TutorToastConfig {
@@ -53,6 +56,7 @@ export interface TutorToastConfig {
   offset?: TutorToastOffset;
   expandMode?: TutorToastExpandMode;
   richColors?: boolean;
+  theme?: TutorToastTheme;
 }
 
 export interface TutorToastUpdateOptions {
