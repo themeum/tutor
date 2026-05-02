@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { format, isBefore, isValid, parseISO } from 'date-fns';
 
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 

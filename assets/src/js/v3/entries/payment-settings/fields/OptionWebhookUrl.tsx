@@ -2,7 +2,7 @@ import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { copyToClipboard } from '@TutorShared/utils/util';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 import FormFieldWrapper from '@TutorShared/components/fields/FormFieldWrapper';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';

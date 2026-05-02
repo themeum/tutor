@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';

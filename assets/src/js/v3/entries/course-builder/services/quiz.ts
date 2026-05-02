@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import { tutorConfig } from '@TutorShared/config/config';

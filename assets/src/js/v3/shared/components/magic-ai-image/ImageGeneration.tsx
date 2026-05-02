@@ -21,7 +21,7 @@ import photo from '@SharedImages/ai-types/photo.png';
 import retro from '@SharedImages/ai-types/retro.png';
 import sketch from '@SharedImages/ai-types/sketch.png';
 
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type OptionWithImage, isDefined } from '@TutorShared/utils/types';

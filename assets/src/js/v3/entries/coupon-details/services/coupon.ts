@@ -1,4 +1,4 @@
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 import config from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';

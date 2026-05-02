@@ -6,7 +6,7 @@ import { Controller } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 import { UploadButton } from '@TutorShared/molecules/FileUploader';
 
 import { hasAnyCourseWithChildren } from '@ImportExport/utils/utils';

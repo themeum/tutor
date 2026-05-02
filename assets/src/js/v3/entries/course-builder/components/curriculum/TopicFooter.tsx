@@ -7,7 +7,7 @@ import { useFormContext } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import Show from '@TutorShared/controls/Show';
 

@@ -8,7 +8,7 @@ import Button from '@TutorShared/atoms/Button';
 import { GradientLoadingSpinner } from '@TutorShared/atoms/LoadingSpinner';
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';

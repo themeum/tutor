@@ -1,6 +1,6 @@
 import routes from '@CourseBuilderConfig/routes';
 import { CourseBuilderSlotProvider } from '@CourseBuilderContexts/CourseBuilderSlotContext';
-import ToastProvider from '@TutorShared/atoms/Toast';
+import ToastProvider from '@Core/ts/toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 import type { StyleType } from '@TutorShared/components/magic-ai-image/ImageContext';
 
 import type { TopicContent } from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';

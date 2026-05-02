@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Switch from '@TutorShared/atoms/Switch';
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
 import { tutorConfig } from '@TutorShared/config/config';

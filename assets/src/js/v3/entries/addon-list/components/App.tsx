@@ -1,6 +1,6 @@
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import ToastProvider from '@TutorShared/atoms/Toast';
+import ToastProvider from '@Core/ts/toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
 import { useState } from 'react';

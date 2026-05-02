@@ -3,7 +3,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { type ErrorResponse } from 'react-router-dom';
 
-import { useToast } from '@TutorShared/atoms/Toast';
+import { useToast } from '@Core/ts/toast';
 import { UploadButton } from '@TutorShared/molecules/FileUploader';
 
 import ImportModal from '@ImportExport/components/modals/ImportModal';
