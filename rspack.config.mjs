@@ -90,7 +90,34 @@ const createConfig = (env, options) => {
       rules: [
         {
           test: /\.s[ac]ss$/i,
+          resourceQuery: /inline/,
+          use: [
+            'style-loader',
+            cssLoaderConfig,
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: [
+                    !isDevelopment &&
+                      purgecss({
+                        content: purgecssContent,
+                        defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+                        safelist: purgecssSafelist,
+                      }),
+                  ].filter(Boolean),
+                },
+              },
+            },
+            sassLoaderConfig,
+          ],
+        },
+        {
+          test: /\.s[ac]ss$/i,
           include: [path.resolve(__dirname, 'assets/core/scss')],
+          resourceQuery: {
+            not: [/inline/],
+          },
           use: [
             rspack.CssExtractRspackPlugin.loader,
             cssLoaderConfig,
@@ -115,6 +142,9 @@ const createConfig = (env, options) => {
         {
           test: /\.s[ac]ss$/i,
           exclude: [path.resolve(__dirname, 'assets/core/scss')],
+          resourceQuery: {
+            not: [/inline/],
+          },
           use: [rspack.CssExtractRspackPlugin.loader, cssLoaderConfig, sassLoaderConfig],
         },
         {

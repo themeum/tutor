@@ -1454,9 +1454,6 @@ class Course extends Tutor_Base {
 		wp_enqueue_script( 'mce-view' );
 		wp_enqueue_editor();
 
-		$core_css_url = tutor()->assets_url . 'css/tutor-core.min.css';
-		wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );
-
 		wp_enqueue_media();
 		wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'wp-date', 'wp-i18n', 'wp-element', 'wp-api' ), TUTOR_VERSION, true );
 		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
