@@ -58,14 +58,6 @@ class Course extends Tutor_Base {
 	const COURSE_PRODUCT_ID_META     = '_tutor_course_product_id';
 
 	/**
-	 * Enrollment meta
-	 *
-	 * @since 4.0.0
-	 */
-	const ENROLLMENT_ORDER_ID_META   = '_tutor_enrolled_by_order_id';
-	const ENROLLMENT_PRODUCT_ID_META = '_tutor_enrolled_by_product_id';
-
-	/**
 	 * Selling option constants
 	 *
 	 * @since 3.0.0
@@ -105,6 +97,13 @@ class Course extends Tutor_Base {
 	const COURSE_SETTINGS_META  = '_tutor_course_settings';
 	const COURSE_LEVEL_META     = '_tutor_course_level';
 
+	/**
+	 * Meta keys used to identify and store Tutor course order data.
+	 *
+	 * @since 4.0.0
+	 */
+	const IS_TUTOR_ORDER_FOR_COURSE_META = '_is_tutor_order_for_course';
+	const TUTOR_ORDER_FOR_COURSE_ID_META = '_tutor_order_for_course_id_';
 
 	/**
 	 * Additional course meta info
@@ -2278,6 +2277,10 @@ class Course extends Tutor_Base {
 			$course_id = wp_get_post_parent_id( wp_get_post_parent_id( get_the_ID() ) );
 		}
 
+		if ( empty( $course_id ) ) {
+			return;
+		}
+
 		$user_id          = get_current_user_id();
 		$meta_key         = User::get_review_popup_meta( $course_id );
 		$review_course_id = (int) get_user_meta( $user_id, $meta_key, true );
@@ -3478,7 +3481,7 @@ class Course extends Tutor_Base {
 	 */
 	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0, string $size = Size::MEDIUM ): void {
 		$button = Button::make()
-		->variant( Variant::SECONDARY )
+		->variant( Variant::PRIMARY_SOFT )
 		->label( __( 'Complete the Course', 'tutor' ) )
 		->icon( Icon::TICK_MARK )
 		->size( $size )
@@ -3507,7 +3510,7 @@ class Course extends Tutor_Base {
 	 */
 	public static function render_course_retake_btn( string $modal_id, string $size = Size::MEDIUM ): void {
 		Button::make()
-		->variant( Variant::SECONDARY )
+		->variant( Variant::PRIMARY_SOFT )
 		->label( __( 'Retake this Course', 'tutor' ) )
 		->icon( Icon::RELOAD_4 )
 		->size( $size )

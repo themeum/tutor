@@ -2,6 +2,85 @@
 @use '../tokens' as *;
 @use '../mixins/rtl' as rtl;
 
+button.tutor-tabs-tab,
+.tutor-tabs-tab {
+  @include tutor-flex(row, center, flex-start);
+  @include tutor-typography('small');
+  border-radius: $tutor-tab-radius;
+  font-weight: $tutor-tab-font-weight;
+  background: transparent;
+  border: none;
+  padding: $tutor-spacing-4 $tutor-spacing-6;
+  gap: $tutor-spacing-4;
+  text-transform: lowercase;
+  white-space: nowrap;
+  cursor: pointer;
+  color: $tutor-text-primary;
+  height: $tutor-tab-height;
+  box-shadow: none;
+  @include tutor-transition((background-color, color, box-shadow));
+
+  margin: $tutor-spacing-none;
+
+  @include tutor-breakpoint-down(sm) {
+    @include tutor-text('tiny');
+  }
+
+  &-active {
+    color: $tutor-text-brand;
+    background-color: $tutor-tab-l3-active;
+    box-shadow: $tutor-tab-active-shadow;
+
+    svg {
+      color: $tutor-text-brand;
+    }
+
+    &:focus,
+    &:hover {
+      box-shadow: none;
+      color: $tutor-text-brand;
+      background-color: $tutor-tab-l3-active;
+      box-shadow: $tutor-tab-active-shadow;
+      outline: none;
+    }
+  }
+
+  &-md {
+    height: 34px;
+    @include tutor-text('tiny');
+    padding: 7px $tutor-spacing-5;
+    gap: $tutor-spacing-2;
+  }
+
+  &-sm {
+    @include tutor-text('tiny');
+    padding: 6px $tutor-spacing-5;
+    gap: $tutor-spacing-2;
+    height: $tutor-tab-height-sm;
+  }
+
+  &:hover:not(:disabled):not(.tutor-tabs-tab-active),
+  &:focus:not(:disabled):not(.tutor-tabs-tab-active) {
+    color: $tutor-text-primary;
+    background-color: $tutor-tab-l3-active-hover;
+    box-shadow: none;
+    outline: none;
+
+    svg {
+      color: $tutor-text-primary;
+    }
+  }
+
+  &:disabled {
+    color: $tutor-text-subdued;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}
+
 .tutor-tabs {
   &-nav {
     @include tutor-flex(row, center, flex-start);
@@ -18,74 +97,6 @@
 
     [dir='rtl'] & {
       flex-direction: row-reverse;
-    }
-  }
-
-  &-tab {
-    @include tutor-flex(row, center, flex-start);
-    @include tutor-typography('small');
-    border-radius: $tutor-tab-radius;
-    font-weight: $tutor-tab-font-weight;
-    background: transparent;
-    border: none;
-    padding: $tutor-spacing-4 $tutor-spacing-6;
-    gap: $tutor-spacing-4;
-    white-space: nowrap;
-    cursor: pointer;
-    color: $tutor-text-primary;
-    height: $tutor-tab-height;
-    @include tutor-transition((background-color, color, box-shadow));
-
-    @include tutor-breakpoint-down(sm) {
-      @include tutor-text('tiny');
-    }
-
-    &-active {
-      color: $tutor-text-brand;
-      background-color: $tutor-tab-l3-active;
-      box-shadow: $tutor-tab-active-shadow;
-
-      svg {
-        color: $tutor-text-brand;
-      }
-
-      &:hover {
-        box-shadow: none;
-      }
-    }
-
-    &-md {
-      height: 34px;
-      @include tutor-text('tiny');
-      padding: 7px $tutor-spacing-5;
-      gap: $tutor-spacing-2;
-    }
-
-    &-sm {
-      @include tutor-text('tiny');
-      padding: 6px $tutor-spacing-5;
-      gap: $tutor-spacing-2;
-      height: $tutor-tab-height-sm;
-    }
-
-    &:hover:not(:disabled):not(.tutor-tabs-tab-active),
-    &:focus:not(:disabled):not(.tutor-tabs-tab-active) {
-      color: $tutor-text-primary;
-      background-color: $tutor-tab-l3-active-hover;
-      box-shadow: none;
-
-      svg {
-        color: $tutor-text-primary;
-      }
-    }
-
-    &:disabled {
-      color: $tutor-text-subdued;
-      cursor: not-allowed;
-
-      &:hover {
-        background-color: transparent;
-      }
     }
   }
 

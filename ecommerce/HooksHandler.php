@@ -16,6 +16,7 @@ use TUTOR\Earnings;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Models\OrderMetaModel;
 use Tutor\Models\OrderActivitiesModel;
 use TutorPro\CourseBundle\Models\BundleModel;
@@ -372,7 +373,7 @@ class HooksHandler {
 			$has_enrollment = tutor_utils()->is_enrolled( $object_id, $student_id, false );
 			if ( $has_enrollment ) {
 				// Update enrollment status based on order status.
-				$update = tutor_utils()->update_enrollments( $enrollment_status, array( $has_enrollment->ID ) );
+				$update = EnrollmentModel::update_enrollments( $enrollment_status, array( $has_enrollment->ID ) );
 				if ( $update ) {
 					if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
 						if ( 'completed' === $enrollment_status ) {

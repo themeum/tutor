@@ -60,7 +60,7 @@ interface PreferencesFormProps {
   auto_play_next: boolean;
   theme: string;
   font_scale: number;
-  learning_mood: boolean;
+  learning_mood: 'modern' | 'kids';
   formId?: string;
 }
 
@@ -191,8 +191,7 @@ const settings = () => {
 
       this.savePreferencesMutation = query.useMutation(this.updatePreferences, {
         onSuccess: (data: TutorMutationResponse<PreferencesFormProps>, payload: PreferencesFormProps) => {
-          const previousLearningMood = form.getValue(payload?.formId || '', 'learning_mood');
-          const learningMoodChanged = previousLearningMood !== payload.learning_mood;
+          const learningMoodChanged = Boolean(form.getFormState(payload?.formId || '').dirtyFields.learning_mood);
 
           form.reset(payload?.formId || '', payload as unknown as Record<string, unknown>);
           toast.success(data?.message ?? __('Preferences saved successfully', 'tutor'));
@@ -243,7 +242,14 @@ const settings = () => {
             return formattedPayload;
           }
 
-          const stringValue = typeof value === 'boolean' ? (value ? 'on' : 'off') : value;
+          let stringValue = '';
+
+          // disable_all=true means turning everything OFF
+          if (key === 'disable_all') {
+            stringValue = value ? 'off' : 'on';
+          } else {
+            stringValue = value ? 'on' : 'off';
+          }
 
           if (!key.includes('__')) {
             formattedPayload[`tutor_notification_preference[${key}]`] = stringValue;

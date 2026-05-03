@@ -108,7 +108,7 @@ $tutor-button-secondary-border-shadow-disabled: var(
 $tutor-button-outline-inverse: var(--tutor-button-outline-inverse);
 $tutor-button-outline-hover: var(--tutor-button-outline-hover);
 $tutor-button-outline-focused-inverse: var(--tutor-button-outline-focused-inverse);
-$tutor-button-outline-border-shadow: var(--tutor-button-outline-border-shadow, 0 0 0 1px #{$tutor-border-idle});
+$tutor-button-outline-border-shadow: var(--tutor-button-outline-border-shadow, 0 0 0 1px #{$tutor-border-idle2});
 $tutor-button-outline-border-shadow-hover: var(
   --tutor-button-outline-border-shadow-hover,
   #{$tutor-button-outline-border-shadow}

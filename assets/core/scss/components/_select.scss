@@ -7,7 +7,7 @@
   @include tutor-typography(small);
 
   // Trigger button
-  &-trigger {
+  .tutor-select-trigger {
     @include tutor-flex(row, center, space-between);
     width: 100%;
     min-height: 40px;
@@ -23,6 +23,7 @@
     text-align: left;
     @include tutor-transition();
 
+    &:hover,
     &:focus {
       @include tutor-focus-ring();
       border-color: $tutor-border-brand-tertiary;
@@ -126,7 +127,7 @@
     flex-shrink: 0;
   }
 
-  &-clear {
+  .tutor-select-clear {
     @include tutor-button-base;
     @include tutor-button-variant('ghost');
     @include tutor-flex(row, center, center);
