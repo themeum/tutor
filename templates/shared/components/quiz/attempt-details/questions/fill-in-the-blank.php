@@ -15,13 +15,12 @@ if ( ! isset( $question ) || ! is_object( $question ) ) {
 	return;
 }
 
-$attempt_answer   = isset( $attempt_answer ) && is_object( $attempt_answer ) ? $attempt_answer : null;
 $question_answers = QuizModel::get_answers_by_quiz_question( (int) $question->question_id );
 $question_answers = is_array( $question_answers ) ? $question_answers : array();
 $given_values     = array();
 
-if ( $attempt_answer ) {
-	$given_raw = maybe_unserialize( $attempt_answer->given_answer );
+if ( isset( $question->given_answer ) ) {
+	$given_raw = maybe_unserialize( $question->given_answer );
 	if ( is_array( $given_raw ) ) {
 		$given_values = array_values( array_map( 'strval', $given_raw ) );
 	} elseif ( is_string( $given_raw ) && '' !== trim( $given_raw ) ) {
