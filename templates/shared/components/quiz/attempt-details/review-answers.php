@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Quiz;
 
-$attempt_answers = isset( $attempt_answers ) && is_array( $attempt_answers ) ? $attempt_answers : array();
-$attempt_data    = isset( $attempt_data ) && is_object( $attempt_data ) ? $attempt_data : null;
-$back_url        = isset( $back_url ) ? (string) $back_url : '';
-$context         = isset( $context ) ? (string) $context : '';
+$questions    = isset( $questions ) && is_array( $questions ) ? $questions : array();
+$attempt_data = isset( $attempt_data ) && is_object( $attempt_data ) ? $attempt_data : null;
+$back_url     = isset( $back_url ) ? (string) $back_url : '';
+$context      = isset( $context ) ? (string) $context : '';
 ?>
 
 <div class="tutor-quiz tutor-quiz-questions">
-	<?php foreach ( $attempt_answers as $index => $question ) : ?>
+	<?php foreach ( $questions as $index => $question ) : ?>
 		<?php
 		$question_type = $question->question_type ?? '';
 

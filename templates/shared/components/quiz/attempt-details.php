@@ -69,7 +69,7 @@ if ( ! $quiz_id ) {
 	$quiz_id = (int) ( $attempt_data->quiz_id ?? 0 );
 }
 
-$attempt_answers = QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
+$questions       = QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
 $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id );
 ?>
 <div class="tutor-quiz-summary-page">
@@ -133,7 +133,7 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 			tutor_load_template(
 				'shared.components.quiz.attempt-details.review-answers',
 				array(
-					'attempt_answers'      => is_array( $attempt_answers ) ? $attempt_answers : array(),
+					'questions'            => is_array( $questions ) ? $questions : array(),
 					'attempt_data'         => $attempt_data,
 					'back_url'             => $back_url,
 					'context'              => $context,
