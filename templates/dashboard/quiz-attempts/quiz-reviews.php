@@ -36,7 +36,6 @@ $form_default_values = array(
 );
 
 $attempt_answers_map = array();
-$questions           = tutor_utils()->get_questions_by_attempt( $attempt_id );
 $attempt_answers     = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 
 if ( is_array( $attempt_answers ) ) {
@@ -45,17 +44,7 @@ if ( is_array( $attempt_answers ) ) {
 
 		if ( $question_id > 0 ) {
 			$attempt_answers_map[ $question_id ] = $attempt_answer;
-		}
-	}
-}
-
-if ( is_array( $questions ) ) {
-	foreach ( $questions as $question ) {
-		$question_id    = (int) ( $question->question_id ?? 0 );
-		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
-		$answer_status  = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'skipped';
-
-		if ( $question_id > 0 ) {
+			$answer_status                       = QuizModel::get_attempt_answer_status( $attempt_answer );
 			$form_default_values[ "review_statuses[{$question_id}]" ] = $answer_status;
 		}
 	}
