@@ -5219,9 +5219,20 @@ class Utils {
 			'quiz_id' => $quiz_id,
 		);
 
-		if ( $this->is_legacy_learning_mode() ) {
-			$types                  = array( 'scale', 'coordinates', 'draw_image', 'pin_image', 'puzzle' );
-			$where['question_type'] = array( 'NOT IN', $types );
+		$exclude_types = apply_filters( 'tutor_filter_unsupported_quiz_question_types', array() );
+
+		/**
+		 * Safely append excluded question types to the database query conditions.
+		 * If a 'NOT IN' condition already exists for question types, it merges the new types
+		 * to prevent overwriting previous exclusions. Otherwise, it creates a new condition.
+		 */
+		if ( count( $exclude_types ) ) {
+			$exclude_types = array_unique( $exclude_types );
+			if ( isset( $where['question_type'] ) && is_array( $where['question_type'] ) && 'NOT IN' === $where['question_type'][0] ) {
+				$where['question_type'][1] = array_unique( array_merge( $where['question_type'][1], $exclude_types ) );
+			} else {
+				$where['question_type'] = array( 'NOT IN', $exclude_types );
+			}
 		}
 
 		$questions = QueryHelper::get_all(
@@ -5606,9 +5617,20 @@ class Utils {
 			'quiz_id' => $quiz_id,
 		);
 
-		if ( $this->is_legacy_learning_mode() ) {
-			$types                  = array( 'scale', 'coordinates', 'draw_image', 'pin_image', 'puzzle' );
-			$where['question_type'] = array( 'NOT IN', $types );
+		$exclude_types = apply_filters( 'tutor_filter_unsupported_quiz_question_types', array() );
+
+		/**
+		 * Safely append excluded question types to the database query conditions.
+		 * If a 'NOT IN' condition already exists for question types, it merges the new types
+		 * to prevent overwriting previous exclusions. Otherwise, it creates a new condition.
+		 */
+		if ( count( $exclude_types ) ) {
+			$exclude_types = array_unique( $exclude_types );
+			if ( isset( $where['question_type'] ) && is_array( $where['question_type'] ) && 'NOT IN' === $where['question_type'][0] ) {
+				$where['question_type'][1] = array_unique( array_merge( $where['question_type'][1], $exclude_types ) );
+			} else {
+				$where['question_type'] = array( 'NOT IN', $exclude_types );
+			}
 		}
 
 		$limit = $total_questions ? $total_questions : -1;
