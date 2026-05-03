@@ -67,7 +67,6 @@ $context         = isset( $context ) ? (string) $context : '';
 					'shared.components.quiz.attempt-details.question',
 					array(
 						'question'             => $question,
-						'attempt_answer'       => $question,
 						'index'                => (int) $index + 1,
 						'question_template'    => $question_template,
 						'attempt_id'           => (int) ( $attempt_data->attempt_id ?? 0 ),

@@ -16,8 +16,8 @@ if ( ! isset( $question ) || ! is_object( $question ) || empty( $question_templa
 	return;
 }
 
+$attempt_answer       = $question;
 $index                = (int) ( $index ?? 1 );
-$attempt_answer       = isset( $attempt_answer ) && is_object( $attempt_answer ) ? $attempt_answer : null;
 $attempt_id           = (int) ( $attempt_id ?? 0 );
 $back_url             = (string) ( $back_url ?? '' );
 $context              = (string) ( $context ?? '' );
