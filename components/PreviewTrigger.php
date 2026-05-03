@@ -36,6 +36,13 @@ class PreviewTrigger extends BaseComponent {
 	protected $id;
 
 	/**
+	 * Whether to include URL or a custom URL string.
+	 *
+	 * @var bool|string
+	 */
+	protected $url = true;
+
+	/**
 	 * Set content ID
 	 *
 	 * @param int $id Content ID.
@@ -44,6 +51,18 @@ class PreviewTrigger extends BaseComponent {
 	 */
 	public function id( int $id ): self {
 		$this->id = $id;
+		return $this;
+	}
+
+	/**
+	 * Set URL behavior
+	 *
+	 * @param bool|string $url True for default permalink, false to disable, or a custom URL string.
+	 *
+	 * @return self
+	 */
+	public function url( $url ): self {
+		$this->url = $url;
 		return $this;
 	}
 
@@ -91,9 +110,16 @@ class PreviewTrigger extends BaseComponent {
 			}
 		}
 
+		$url_value = '';
+		if ( true === $this->url ) {
+			$url_value = get_permalink( $id );
+		} elseif ( is_string( $this->url ) ) {
+			$url_value = $this->url;
+		}
+
 		$preview_data = array(
 			'title'          => $title,
-			'url'            => get_permalink( $id ),
+			'url'            => $url_value,
 			'thumbnail'      => $thumbnail,
 			'instructor'     => $instructor_name,
 			'instructor_url' => $instructor_url,

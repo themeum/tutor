@@ -103,7 +103,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 			<?php esc_html_e( 'Topic', 'tutor' ); ?>
 			<?php
 			if ( $topic_id ) {
-				PreviewTrigger::make()->id( $topic_id )->render();
+				PreviewTrigger::make()->id( $topic_id )->url( false )->render();
 			} else {
 				echo esc_html( get_the_title( $quiz_id ) );
 			}

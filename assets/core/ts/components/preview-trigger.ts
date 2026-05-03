@@ -137,7 +137,7 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
         <div class="tutor-preview-card-content">
           ${data.thumbnail ? `<img src="${data.thumbnail}" alt="${this.escapeHtml(data.title)}" class="tutor-preview-card-thumbnail" />` : ''}
           <div class="tutor-preview-card-body">
-            <h4 class="tutor-preview-card-title"><a href="${data.url}">${this.escapeHtml(data.title)}</a></h4>
+            <h4 class="tutor-preview-card-title">${data.url ? `<a href="${data.url}">${this.escapeHtml(data.title)}</a>` : this.escapeHtml(data.title)}</h4>
             ${data.instructor ? `<div class="tutor-preview-card-instructor">${sprintf(__(`by <a href="${data.instructor_url}">%s</a>`, 'tutor'), this.escapeHtml(data.instructor))}</div>` : ''}
           </div>
         </div>
