@@ -5247,7 +5247,6 @@ class Utils {
 		return $max_questions;
 	}
 
-
 	/**
 	 * Get single quiz attempt
 	 *
