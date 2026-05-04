@@ -42,6 +42,7 @@ final class Icon {
 	const ARROW_LEFT_ALT             = 'arrow-left-alt';
 	const ARROW_RIGHT_2              = 'arrow-right-2';
 	const ARROW_UP                   = 'arrow-up';
+	const ASCENDING                  = 'ascending';
 	const ASSIGNMENT                 = 'assignment';
 	const ATTACH                     = 'attach';
 	const ATTACHMENT_LINE            = 'attachment-line';
@@ -200,6 +201,10 @@ final class Icon {
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
 	const GRAB_HANDLE                = 'grab-handle';
 	const GRADEBOOK                  = 'gradebook';
+	const GRAPH_MARKER_CORRECT       = 'graph-marker-correct';
+	const GRAPH_MARKER_HOVER         = 'graph-marker-hover';
+	const GRAPH_MARKER_SELECTED      = 'graph-marker-selected';
+	const GRAPH_MARKER_WRONG         = 'graph-marker-wrong';
 	const GUTENBERG_COLORIZED        = 'gutenberg-colorized';
 	const HAND_COIN                  = 'hand-coin';
 	const HAND_SWIPE_RIGHT           = 'hand-swipe-right';
@@ -384,7 +389,6 @@ final class Icon {
 	const STAR_FILL                  = 'star-fill';
 	const STAR_HALF                  = 'star-half';
 	const STAR_LINE                  = 'star-line';
-	const STEPPER                    = 'stepper';
 	const STOPWATCH                  = 'stopwatch';
 	const STORE_EYE                  = 'store-eye';
 	const STORE_EYE_SLASH            = 'store-eye-slash';
@@ -412,6 +416,8 @@ final class Icon {
 	const TRY_AGAIN                  = 'try-again';
 	const TXT                        = 'txt';
 	const UNDO                       = 'undo';
+	const UNIT_10                    = 'unit-10';
+	const UNIT_20                    = 'unit-20';
 	const UNREAD                     = 'unread';
 	const UPDATE                     = 'update';
 	const UPLOAD                     = 'upload';

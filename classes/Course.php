@@ -3384,7 +3384,7 @@ class Course extends Tutor_Base {
 		Button::make()
 			->tag( 'a' )
 			->label( $button_text )
-			->icon( Icon::PLAY )
+			->icon( Icon::PLAY_2 )
 			->variant( Variant::PRIMARY )
 			->size( Size::X_SMALL )
 			->attr( 'href', esc_url( $button_url ) )
