@@ -1326,7 +1326,15 @@ class QuizModel {
 				$answer->image_url = wp_get_attachment_url( $answer->image_id );
 			}
 		}
-		return $answers;
+
+		/**
+		 * Filter question answers after loading (e.g. expand stored mask paths for REST/API).
+		 *
+		 * @param array       $answers        Answer rows.
+		 * @param int         $question_id    Question id.
+		 * @param string|null $question_type  Question type when known.
+		 */
+		return apply_filters( 'tutor_quiz_question_answers', $answers, $question_id, $question_type );
 	}
 
 	/**

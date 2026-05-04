@@ -19,6 +19,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
+use TUTOR_PRO\QuizImageStorage;
 
 /**
  * Class QuizBuilder
@@ -200,7 +201,7 @@ class QuizBuilder {
 			return;
 		}
 
-		if ( false === wp_http_validate_url( $old_mask ) ) {
+		if ( ! class_exists( '\TUTOR_PRO\QuizImageStorage' ) ) {
 			return;
 		}
 
@@ -209,18 +210,17 @@ class QuizBuilder {
 			return;
 		}
 
-		$uploads_base_url = trailingslashit( $upload_dir['baseurl'] );
-		$uploads_base_dir = trailingslashit( $upload_dir['basedir'] );
-		$quiz_image_url   = $uploads_base_url . 'tutor/quiz-images/';
-
-		if ( 0 !== strpos( $old_mask, $quiz_image_url ) ) {
+		$old_path = QuizImageStorage::quiz_image_stored_value_to_path( $old_mask );
+		if ( '' === $old_path || ! is_file( $old_path ) || ! is_readable( $old_path ) ) {
 			return;
 		}
 
-		$old_path = str_replace( $uploads_base_url, $uploads_base_dir, $old_mask );
-		if ( is_string( $old_path ) && '' !== $old_path && is_file( $old_path ) && is_readable( $old_path ) ) {
-			wp_delete_file( $old_path );
+		$quiz_dir = trailingslashit( $upload_dir['basedir'] ) . QuizImageStorage::QUIZ_IMAGES_SUBDIR . '/';
+		if ( 0 !== strpos( $old_path, $quiz_dir ) ) {
+			return;
 		}
+
+		wp_delete_file( $old_path );
 	}
 
 	/**
