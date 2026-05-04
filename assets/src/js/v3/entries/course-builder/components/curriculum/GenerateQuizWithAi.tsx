@@ -29,9 +29,8 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import type { IconCollection } from '@TutorShared/icons/types';
 import { useGenerateQuizQuestionMutation } from '@TutorShared/services/magic-ai';
-import { convertedQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { QuizDataStatus, type Option, type QuizQuestionType } from '@TutorShared/utils/types';
+import { QuizDataStatus, type Option, type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
 
 import generateCourse2x from '@SharedImages/pro-placeholders/generate-course-2x.webp';
@@ -174,59 +173,67 @@ const GenerateQuizWithAi = () => {
   };
 
   const handleGenerate = async (data: GenerateQuizWithAiForm) => {
-    const payload = {
-      topic_ids: data.topic_ids.join(','),
-      question_types: questionTypeOptions
-        .filter((option) => data.question_types[option.value])
-        .map((option) => option.value)
-        .join(','),
-      difficulty_level: data.difficulty_level,
-      number_of_questions: Number(data.question_count),
-    };
+    try {
+      const payload = {
+        topic_ids: data.topic_ids.join(','),
+        question_types: questionTypeOptions
+          .filter((option) => data.question_types[option.value])
+          .map((option) => option.value)
+          .join(','),
+        difficulty_level: data.difficulty_level,
+        number_of_questions: Number(data.question_count),
+      };
 
-    const response = await generateMutation.mutateAsync(payload);
-    const generatedQuestions = response.data ?? [];
+      const response = await generateMutation.mutateAsync(payload);
+      const generatedQuestions = response.data ?? [];
 
-    const existingCount = quizForm.getValues('questions')?.length ?? 0;
+      const existingCount = quizForm.getValues('questions')?.length ?? 0;
 
-    generatedQuestions.forEach((item, index) => {
-      const questionId = nanoid();
-      const question = convertedQuestion({
-        question_id: questionId,
-        question_title: item.title,
-        question_description: item.description ?? '',
-        question_type: item.type,
-        question_mark: 1,
-        answer_explanation: '',
-        question_order: existingCount + index,
-        question_settings: {
-          question_type: item.type,
-          answer_required: false,
-          randomize_question: false,
-          question_mark: 1,
-          show_question_mark: true,
-          has_multiple_correct_answer: false,
-          is_image_matching: false,
-        },
-        question_answers: (item.options ?? []).map((opt, i) => ({
+      generatedQuestions.forEach((item, index) => {
+        const questionId = nanoid();
+        const question = {
           _data_status: QuizDataStatus.NEW,
-          is_saved: true,
-          answer_id: nanoid(),
-          belongs_question_id: questionId,
-          belongs_question_type: item.type,
-          answer_title: opt.name,
-          is_correct: opt.is_correct ? '1' : '0',
-          answer_order: i,
-          answer_two_gap_match: '',
-          answer_view_format: 'text',
-        })),
+          question_id: questionId,
+          question_title: item.title,
+          question_description: item.description ?? '',
+          question_type: item.type,
+          question_mark: 1,
+          answer_explanation: '',
+          question_order: existingCount + index,
+          question_settings: {
+            question_type: item.type,
+            answer_required: false,
+            randomize_question: false,
+            question_mark: 1,
+            show_question_mark: true,
+            has_multiple_correct_answer: false,
+            is_image_matching: false,
+          },
+          question_answers: (item.options ?? []).map((opt, i) => ({
+            _data_status: QuizDataStatus.NEW,
+            is_saved: true,
+            answer_id: nanoid(),
+            belongs_question_id: questionId,
+            belongs_question_type: item.type,
+            answer_title: opt.name,
+            is_correct: opt.is_correct ? '1' : '0',
+            answer_order: i,
+            answer_two_gap_match: '',
+            answer_view_format: 'text',
+          })),
+        } satisfies QuizQuestion;
+
+        appendQuestion(question);
       });
 
-      appendQuestion(question);
-    });
-
-    showToast({ type: 'success', message: __('Questions generated successfully', 'tutor') });
-    setIsOpen(false);
+      showToast({ type: 'success', message: __('Questions generated successfully', 'tutor') });
+      setIsOpen(false);
+    } catch (error) {
+      showToast({
+        type: 'danger',
+        message: error instanceof Error ? error.message : __('Something went wrong!', 'tutor'),
+      });
+    }
   };
 
   const handleAiButtonClick = () => {

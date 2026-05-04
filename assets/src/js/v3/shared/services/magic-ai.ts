@@ -291,7 +291,7 @@ interface GenerateQuizQuestionPayload {
 
 const generateQuizQuestion = (payload: GenerateQuizQuestionPayload & { signal?: AbortSignal }) => {
   return wpAjaxInstance.post<GenerateQuizQuestionPayload, TutorMutationResponse<QuizContent[]>>(
-    endpoints.GENERATE_QUIZ_QUESTION,
+    endpoints.GENERATE_AI_QUIZ_QUESTIONS,
     payload,
     {
       signal: payload.signal,
