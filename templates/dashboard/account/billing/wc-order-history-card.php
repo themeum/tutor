@@ -31,7 +31,8 @@ $total_price    = (float) $wc_order->get_total();
 $order_status   = $wc_order->get_status();
 $payment_status = $wc_order->get_status();
 $payment_method = $wc_order->get_payment_method_title();
-$order_date     = $wc_order->get_date_created()->date( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
+$order_date_obj = $wc_order->get_date_created();
+$order_date     = $order_date_obj ? $order_date_obj->date( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) ) : '';
 
 $titles  = array();
 $courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order_id );
