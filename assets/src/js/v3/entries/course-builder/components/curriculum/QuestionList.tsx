@@ -110,7 +110,7 @@ const interactiveQuestionTypeOptions: QuestionTypeOption[] = [
     isPro: true,
   },
   {
-    label: __('Draw on Image', 'tutor'),
+    label: __('Mark in the Image', 'tutor'),
     value: 'draw_image',
     icon: 'quizMarkInTheImage',
     isPro: true,

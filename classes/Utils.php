@@ -5073,7 +5073,7 @@ class Utils {
 				'is_pro' => true,
 			),
 			'draw_image'        => array(
-				'name'   => __( 'Draw on Image', 'tutor' ),
+				'name'   => __( 'Mark in the Image', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),

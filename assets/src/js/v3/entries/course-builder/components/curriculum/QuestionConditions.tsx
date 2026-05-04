@@ -54,7 +54,7 @@ const questionTypes = {
     icon: 'quizOrdering',
   },
   draw_image: {
-    label: __('Draw on Image', 'tutor'),
+    label: __('Mark in the Image', 'tutor'),
     icon: 'quizMarkInTheImage',
   },
   scale: {
