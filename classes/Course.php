@@ -2278,6 +2278,10 @@ class Course extends Tutor_Base {
 			$course_id = wp_get_post_parent_id( wp_get_post_parent_id( get_the_ID() ) );
 		}
 
+		if ( empty( $course_id ) ) {
+			return;
+		}
+
 		$user_id          = get_current_user_id();
 		$meta_key         = User::get_review_popup_meta( $course_id );
 		$review_course_id = (int) get_user_meta( $user_id, $meta_key, true );
