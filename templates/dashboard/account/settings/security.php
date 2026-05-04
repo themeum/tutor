@@ -27,7 +27,7 @@ $form_id = 'tutor-reset-password-form';
 
 <section class="tutor-flex tutor-flex-column tutor-gap-8">
 	<div class="tutor-flex tutor-flex-column tutor-gap-4">
-		<h5 class="tutor-h5"><?php esc_html_e( 'Login Info', 'tutor' ); ?></h5>
+		<h5 class="tutor-h5 tutor-my-none"><?php esc_html_e( 'Login Info', 'tutor' ); ?></h5>
 
 		<div 
 			class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5"

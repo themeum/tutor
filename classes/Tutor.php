@@ -12,6 +12,7 @@ namespace TUTOR;
 
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\GDPR\GDPR;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Migrations\Migration;
 use Tutor\TemplateImport\TemplateImportInit;
@@ -484,6 +485,8 @@ final class Tutor extends Singleton {
 		$this->includes();
 
 		do_action( 'tutor_before_load' );
+
+		GDPR::get_instance();
 
 		$this->addons                = new Addons();
 		$this->post_types            = new Post_types();

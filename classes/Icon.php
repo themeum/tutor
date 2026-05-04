@@ -116,6 +116,7 @@ final class Icon {
 	const CONFETTI                   = 'confetti';
 	const CONTENT_BANK               = 'content-bank';
 	const CONTENT_DRIP               = 'content-drip';
+	const CONTRACT_OUTLINE           = 'contract-outline';
 	const CONTRAST                   = 'contrast';
 	const COPY                       = 'copy';
 	const COPY_2                     = 'copy-2';

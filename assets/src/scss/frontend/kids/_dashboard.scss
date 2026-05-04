@@ -54,7 +54,7 @@
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
     }
 
-    .tutor-dashboard-courses,
+    .tutor-dashboard-courses-list,
     .tutor-wishlist-grid {
       gap: $tutor-spacing-6 $tutor-spacing-5;
     }
@@ -75,6 +75,7 @@
         }
       }
     }
+
     .tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
       @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
     }
@@ -126,6 +127,7 @@
   .tutor-dashboard-page-card {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
   }
+
   .tutor-discussion-card-wrapper {
     gap: $tutor-spacing-6 $tutor-spacing-4;
 
@@ -184,6 +186,7 @@
   }
 
   @include tutor-breakpoint-down(sm) {
+
     .tutor-dashboard-header-user-popover,
     .tutor-profile-settings-tab.tutor-tabs-nav {
       border-radius: 0px !important;

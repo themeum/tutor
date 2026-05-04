@@ -156,7 +156,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		<?php if ( empty( $results ) ) : ?>
 			<?php EmptyState::make()->title( 'No Courses Found' )->render(); ?>
 		<?php else : ?>
-		<div class="tutor-my-courses-card-wrapper tutor-p-6 tutor-sm-p-5 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
+		<div class="tutor-my-courses-card-wrapper">
 			<?php
 			global $post;
 			$tutor_nonce_value = wp_create_nonce( tutor()->nonce_action );
@@ -297,14 +297,14 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 									<!-- # Cancel Submission -->
 
 									<!-- Edit Link -->
-									<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-popover-menu-item tutor-hidden tutor-sm-flex">
+									<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-popover-menu-item tutor-popover-menu-item-edit">
 										<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</a>
 									<!-- Edit Link -->
 
 									<!-- View Link -->
-									<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-popover-menu-item tutor-hidden tutor-sm-flex">
+									<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-popover-menu-item tutor-popover-menu-item-overview">
 										<?php SvgIcon::make()->name( Icon::EYE_LINE )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Overview', 'tutor' ); ?>
 									</a>
@@ -349,7 +349,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 									<!-- Delete Action -->
 									<?php if ( $show_course_delete && $is_main_instructor && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT, CourseModel::STATUS_FUTURE ), true ) ) : ?>
 										<button 
-											class="tutor-popover-menu-item tutor-border-t"
+											class="tutor-popover-menu-item tutor-popover-menu-item-delete"
 											@click="hide(); TutorCore.modal.showModal('tutor-course-delete-modal', { courseId: <?php echo esc_html( $post->ID ); ?> });"
 										>
 											<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
