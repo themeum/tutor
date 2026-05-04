@@ -103,7 +103,11 @@ function fetchIcon(name: string, cacheKey: string, width: number, height: number
     return iconCache[cacheKey]!.promise!;
   }
 
-  const fileName = name.trim().replace(/[A-Z0-9]/g, (m) => '-' + m.toLowerCase());
+  const fileName = name
+    .trim()
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([a-zA-Z])(\d+)/g, '$1-$2')
+    .toLowerCase();
   const hasKidsVariant = !ignoreKids && tutorConfig.is_kids_mode && tutorConfig.kids_icons_registry?.includes(fileName);
 
   const basePath = hasKidsVariant ? 'assets/icons/kids/' : 'assets/icons/';

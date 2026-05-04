@@ -22,8 +22,25 @@ const CoordinatesPreview = () => {
       return;
     }
 
-    const width = canvas.width;
-    const height = canvas.height;
+    const rect = canvas.getBoundingClientRect();
+    const logicalSize = Math.max(1, rect.width || CANVAS_SIZE);
+    const dpr = window.devicePixelRatio || 1;
+    const nextWidth = Math.max(1, Math.round(logicalSize * dpr));
+    const nextHeight = Math.max(1, Math.round(logicalSize * dpr));
+
+    if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+      canvas.width = nextWidth;
+      canvas.height = nextHeight;
+    }
+    canvas.style.width = `${logicalSize}px`;
+    canvas.style.height = `${logicalSize}px`;
+
+    const scaleX = canvas.width / logicalSize;
+    const scaleY = canvas.height / logicalSize;
+    context.setTransform(scaleX, 0, 0, scaleY, 0, 0);
+
+    const width = logicalSize;
+    const height = logicalSize;
     const drawableWidth = width - 2 * PADDING;
     const drawableHeight = height - 2 * PADDING;
     const centerX = PADDING + drawableWidth / 2;

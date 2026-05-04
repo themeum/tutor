@@ -355,6 +355,9 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         ...(questionType === 'puzzle' && {
           puzzle_grid_size: 4,
         }),
+        ...(questionType === 'coordinates' && {
+          coordinates_axis_range: 10,
+        }),
       },
     } as QuizQuestion);
     setValidationError(null);
