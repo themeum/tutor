@@ -1,6 +1,6 @@
 <?php
 /**
- * WooCommerce: Order card template for billing
+ * EDD: Order card template for billing
  *
  * @package Tutor\Templates
  * @subpackage Dashboard
@@ -14,38 +14,28 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Variant;
 use Tutor\Helpers\ComponentHelper;
+use Tutor\Helpers\DateTimeHelper;
 
+/**
+ * EDD_Payment object.
+ *
+ * @var \EDD_Payment|null $order_data
+ */
 $order_data = $data['order_data'] ?? null;
-if ( ! $order_data ) {
+if ( ! $order_data || ! is_object( $order_data ) ) {
 	return;
 }
 
-$wc_order = wc_get_order( $order_data->ID );
+$order_id       = $order_data->order->id;
+$order_date     = $order_data->order->date_created;
+$order_status   = $order_data->order->status;
+$payment_method = $order_data->order->gateway;
+$total_price    = $order_data->order->total;
 
-if ( ! $wc_order ) {
-	return;
+$titles = array();
+foreach ( $order_data->order->items as $item ) {
+	$titles[] = $item->product_name;
 }
-
-$order_id       = $wc_order->get_id();
-$total_price    = (float) $wc_order->get_total();
-$order_status   = $wc_order->get_status();
-$payment_status = $wc_order->get_status();
-$payment_method = $wc_order->get_payment_method_title();
-$order_date_obj = $wc_order->get_date_created();
-$order_date     = $order_date_obj ? $order_date_obj->date( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) ) : '';
-
-$titles  = array();
-$courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order_id );
-if ( tutor_utils()->count( $courses ) ) {
-	foreach ( $courses as $course ) {
-		if ( empty( $course['course_id'] ) ) {
-			continue;
-		}
-
-		$titles[] = get_the_title( $course['course_id'] );
-	}
-}
-
 ?>
 <div class="tutor-billing-card">
 	<div class="tutor-billing-card-left">
@@ -68,7 +58,7 @@ if ( tutor_utils()->count( $courses ) ) {
 			</div>
 
 			<span class="tutor-tiny">
-				<?php echo esc_html( $order_date ); ?>
+				<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $order_date ) ); ?>
 			</span>
 
 			<span class="tutor-section-separator-vertical tutor-sm-hidden"></span>
@@ -85,27 +75,27 @@ if ( tutor_utils()->count( $courses ) ) {
 		</div>
 
 		<?php
-		if ( 'pending' === $order_status ) {
+		if ( $order_data->is_recoverable() ) {
 			Button::make()
-				->variant( Variant::LINK )
 				->tag( 'a' )
-				->attr( 'href', $wc_order->get_checkout_payment_url() )
+				->variant( Variant::LINK )
+				->attr( 'href', $order_data->get_recovery_url() )
 				->label( __( 'Pay', 'tutor' ) )
 				->render();
 		}
 
-		if ( 'completed' === $order_status ) {
+		/**
+		 * EDD Pro has invoice functionality.
+		 */
+		$has_invoice = function_exists( 'edd_invoices_order_has_invoice' ) && edd_invoices_order_has_invoice( $order_id );
+		if ( $has_invoice ) {
+			$invoice_url = edd_invoices_get_invoice_url( $order_id );
 			Button::make()
-				->tag( 'button' )
-				->label( __( 'Receipt', 'tutor' ) )
+				->tag( 'a' )
 				->variant( Variant::LINK )
-				->attr( 'type', 'button' )
-				->attr( 'class', 'tutor-export-purchase-history' )
-				->attr( 'data-order', $order_id )
-				->attr( 'data-course-name', implode( ', ', $titles ) )
-				->attr( 'data-price', $total_price )
-				->attr( 'data-date', $order_date )
-				->attr( 'data-status', $order_status )
+				->attr( 'href', $invoice_url )
+				->attr( 'target', '_blank' )
+				->label( __( 'Invoice', 'tutor' ) )
 				->render();
 		}
 		?>

@@ -8,8 +8,12 @@
  * @since 3.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Models\EnrollmentModel;
+
 $course_id      = get_the_ID();
-$is_enrolled    = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
+$is_enrolled    = EnrollmentModel::is_enrolled( $course_id, get_current_user_id() );
 $password_error = get_transient( 'tutor_post_password_error' );
 ?>
 <?php tutor_utils()->tutor_custom_header(); ?>
