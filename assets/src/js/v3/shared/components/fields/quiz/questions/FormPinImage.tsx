@@ -522,18 +522,20 @@ const FormPinImage = ({ field }: FormPinImageProps) => {
               </div>
             </Show>
           </div>
-          <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
-            <img
-              ref={imageRef}
-              src={option?.image_url}
-              alt={__('Background image for pin area', __TUTOR_TEXT_DOMAIN__)}
-              css={[styles.image, styles.answerImage]}
-            />
-            <canvas
-              ref={canvasRef}
-              css={[styles.canvas, isDrawModeActive ? styles.canvasDrawMode : styles.canvasIdleMode]}
-              aria-label={__('Draw a lasso around the valid pin area', __TUTOR_TEXT_DOMAIN__)}
-            />
+          <div css={styles.canvasOuter}>
+            <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
+              <img
+                ref={imageRef}
+                src={option?.image_url}
+                alt={__('Background image for pin area', __TUTOR_TEXT_DOMAIN__)}
+                css={[styles.image, styles.answerImage]}
+              />
+              <canvas
+                ref={canvasRef}
+                css={[styles.canvas, isDrawModeActive ? styles.canvasDrawMode : styles.canvasIdleMode]}
+                aria-label={__('Draw a lasso around the valid pin area', __TUTOR_TEXT_DOMAIN__)}
+              />
+            </div>
           </div>
           <Show when={option?.answer_two_gap_match}>
             <p css={styles.savedHint}>
@@ -577,28 +579,12 @@ const styles = {
     max-width: 100%;
   `,
   imageInputEmpty: css`
+    background-color: ${colorTokens.background.default};
+    height: 210px;
     border-radius: ${borderRadius.card};
   `,
   imageInputPreview: css`
-    width: fit-content;
-    max-width: 100%;
-    height: auto;
-    border-radius: ${borderRadius.card};
-
-    ${Breakpoint.smallMobile} {
-      width: 100%;
-    }
-
-    img {
-      width: auto;
-      max-width: 100%;
-      height: auto;
-      object-fit: initial;
-
-      ${Breakpoint.smallMobile} {
-        width: 100%;
-      }
-    }
+    height: 210px;
   `,
   answerHeader: css`
     ${styleUtils.display.flex('row')};
@@ -617,6 +603,11 @@ const styles = {
   headerIcon: css`
     flex-shrink: 0;
     color: ${colorTokens.text.subdued};
+  `,
+  canvasOuter: css`
+    ${styleUtils.display.flex()};
+    justify-content: center;
+    width: 100%;
   `,
   canvasInner: css`
     position: relative;
