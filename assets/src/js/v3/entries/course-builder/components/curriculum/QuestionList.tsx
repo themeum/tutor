@@ -820,11 +820,13 @@ const styles = {
       flex-shrink: 0;
     }
 
-    &:focus:enabled,
-    &:active:enabled,
-    &:hover:enabled {
-      background-color: ${colorTokens.background.hover};
-      color: ${colorTokens.text.title};
+    &:enabled {
+      &:focus,
+      &:active,
+      &:hover {
+        background-color: ${colorTokens.background.hover};
+        color: ${colorTokens.text.title};
+      }
     }
 
     :disabled {

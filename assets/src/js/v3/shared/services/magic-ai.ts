@@ -282,15 +282,15 @@ export const useGenerateQuizQuestionsMutation = () => {
   });
 };
 
-interface GenerateQuizQuestionPayload {
+interface GenerateAiQuizQuestionsPayload {
   topic_ids: string;
   question_types: string;
   difficulty_level: string;
   number_of_questions: number;
 }
 
-const generateQuizQuestion = (payload: GenerateQuizQuestionPayload & { signal?: AbortSignal }) => {
-  return wpAjaxInstance.post<GenerateQuizQuestionPayload, TutorMutationResponse<QuizContent[]>>(
+const generateAiQuizQuestions = (payload: GenerateAiQuizQuestionsPayload & { signal?: AbortSignal }) => {
+  return wpAjaxInstance.post<GenerateAiQuizQuestionsPayload, TutorMutationResponse<QuizContent[]>>(
     endpoints.GENERATE_AI_QUIZ_QUESTIONS,
     payload,
     {
@@ -299,10 +299,10 @@ const generateQuizQuestion = (payload: GenerateQuizQuestionPayload & { signal?: 
   );
 };
 
-export const useGenerateQuizQuestionMutation = () => {
+export const useGenerateAiQuizQuestionsMutation = () => {
   const { showToast } = useToast();
   return useMutation({
-    mutationFn: generateQuizQuestion,
+    mutationFn: generateAiQuizQuestions,
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },

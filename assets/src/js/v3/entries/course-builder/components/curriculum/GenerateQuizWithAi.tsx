@@ -28,7 +28,7 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import type { IconCollection } from '@TutorShared/icons/types';
-import { useGenerateQuizQuestionMutation } from '@TutorShared/services/magic-ai';
+import { useGenerateAiQuizQuestionsMutation } from '@TutorShared/services/magic-ai';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { QuizDataStatus, type Option, type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
@@ -101,7 +101,7 @@ const GenerateQuizWithAi = () => {
     name: 'questions',
   });
 
-  const generateMutation = useGenerateQuizQuestionMutation();
+  const generateMutation = useGenerateAiQuizQuestionsMutation();
 
   const form = useFormWithGlobalError<GenerateQuizWithAiForm>({
     defaultValues: {
@@ -305,7 +305,7 @@ const GenerateQuizWithAi = () => {
           </div>
 
           <div css={styles.generateQuizBody}>
-            <div css={styles.generateQuizBodyLeft}>
+            <div>
               <div css={styles.generateQuizFieldGroup}>
                 <Controller
                   control={topicSelectForm.control}
@@ -466,7 +466,6 @@ const styles = {
       overflow: auto;
     }
   `,
-  generateQuizBodyLeft: css``,
   selectInputStyle: css`
     padding-left: ${spacing[32]}!important;
   `,
