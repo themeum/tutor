@@ -12,7 +12,7 @@ button.tutor-tabs-tab,
   border: none;
   padding: $tutor-spacing-4 $tutor-spacing-6;
   gap: $tutor-spacing-4;
-  text-transform: lowercase;
+  text-transform: capitalize;
   white-space: nowrap;
   cursor: pointer;
   color: $tutor-text-primary;

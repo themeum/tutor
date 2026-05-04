@@ -75,8 +75,8 @@ $courses_list = $courses_list_array[ $active_tab ];
 	</div>
 
 	<!-- Courses nav  -->
-	<div class="tutor-dashboard-courses-card tutor-surface-l1 tutor-border tutor-rounded-2xl">
-		<div class="tutor-p-6 tutor-border-b">
+	<div class="tutor-dashboard-courses-card tutor-rounded-2xl">
+		<div class="tutor-dashboard-courses-tab">
 			<?php Nav::make()->items( $courses_tab )->size( Size::SMALL )->render(); ?>
 		</div>
 
@@ -95,7 +95,7 @@ $courses_list = $courses_list_array[ $active_tab ];
 			// Prepare course list based on page tab.
 			$courses_list = $courses_list_array[ $active_tab ];
 			?>
-			<div class="tutor-dashboard-courses tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
+			<div class="tutor-dashboard-courses-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6 tutor-sm-p-none">
 				<?php
 				if ( $courses_list && $courses_list->have_posts() ) :
 					while ( $courses_list->have_posts() ) :
