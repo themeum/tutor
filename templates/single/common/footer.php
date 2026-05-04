@@ -9,6 +9,10 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Models\EnrollmentModel;
+
 $course_id         = isset( $course_id ) ? (int) $course_id : 0;
 $course_content_id = get_the_ID();
 $course_id         = tutor_utils()->get_course_id_by_subcontent( $course_content_id );
@@ -19,7 +23,7 @@ $next_id           = $contents->next_id;
 
 $prev_is_preview = get_post_meta( $previous_id, '_is_preview', true );
 $next_is_preview = get_post_meta( $next_id, '_is_preview', true );
-$is_enrolled     = tutor_utils()->is_enrolled( $course_id );
+$is_enrolled     = EnrollmentModel::is_enrolled( $course_id );
 $is_public       = get_post_meta( $course_id, '_tutor_is_public_course', true );
 $prev_is_locked  = ! ( $is_enrolled || $prev_is_preview || $is_public );
 $next_is_locked  = ! ( $is_enrolled || $next_is_preview || $is_public );

@@ -9,13 +9,12 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Lesson;
 use Tutor\Components\SvgIcon;
+use Tutor\Models\EnrollmentModel;
 use TUTOR\User;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 global $post;
 global $previous_id;
@@ -33,7 +32,7 @@ $next_id     = $contents->next_id;
 
 $prev_is_preview = get_post_meta( $previous_id, '_is_preview', true );
 $next_is_preview = get_post_meta( $next_id, '_is_preview', true );
-$is_enrolled     = tutor_utils()->is_enrolled( $course_id );
+$is_enrolled     = EnrollmentModel::is_enrolled( $course_id );
 $is_public       = get_post_meta( $course_id, '_tutor_is_public_course', true );
 
 $prev_is_locked = ! ( $is_enrolled || $prev_is_preview || $is_public );
@@ -77,7 +76,7 @@ tutor_load_template(
 		$json_data['required_percentage']             = (int) tutor_utils()->get_option( 'required_percentage_to_complete_video_lesson', 80 );
 		$json_data['video_duration']                  = $video_info->duration_sec ?? 0;
 		$json_data['lesson_completed']                = tutor_utils()->is_completed_lesson( $content_id, get_current_user_id() ) !== false;
-		$json_data['is_enrolled']                     = tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) !== false;
+		$json_data['is_enrolled']                     = EnrollmentModel::is_enrolled( $course_id, get_current_user_id() ) !== false;
 		?>
 		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $json_data ) ); ?>">
 	<?php endif; ?>

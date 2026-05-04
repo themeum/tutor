@@ -25,6 +25,7 @@ use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Options_V2;
 
 /**
@@ -2132,7 +2133,7 @@ class Course extends Tutor_Base {
 
 		} else {
 			// Free enroll.
-			tutor_utils()->do_enroll( $course_id );
+			EnrollmentModel::do_enroll( $course_id );
 		}
 
 		$referer_url = wp_get_referer();
@@ -2168,7 +2169,7 @@ class Course extends Tutor_Base {
 			die( esc_html__( 'Please Sign-In', 'tutor' ) );
 		}
 
-		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+		if ( ! EnrollmentModel::is_enrolled( $course_id, $user_id ) ) {
 			die( esc_html__( 'User is not enrolled in course', 'tutor' ) );
 		}
 
@@ -2211,7 +2212,7 @@ class Course extends Tutor_Base {
 		}
 
 		$user_id = get_current_user_id();
-		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+		if ( ! EnrollmentModel::is_enrolled( $course_id, $user_id ) ) {
 			$this->response_bad_request( __( 'You are not enrolled in this course', 'tutor' ) );
 		}
 
@@ -2275,6 +2276,10 @@ class Course extends Tutor_Base {
 
 		if ( $is_learning_area && ! Input::has( 'subpage' ) ) {
 			$course_id = wp_get_post_parent_id( wp_get_post_parent_id( get_the_ID() ) );
+		}
+
+		if ( empty( $course_id ) ) {
+			return;
 		}
 
 		$user_id          = get_current_user_id();
@@ -2711,7 +2716,7 @@ class Course extends Tutor_Base {
 		}
 
 		// Whether enrollment require.
-		$is_enrolled = tutor_utils()->is_enrolled();
+		$is_enrolled = EnrollmentModel::is_enrolled();
 
 		return array_filter(
 			$items,
@@ -2839,7 +2844,7 @@ class Course extends Tutor_Base {
 
 		if ( $should_removed ) {
 			$course_id = get_the_ID();
-			$enrolled  = tutor_utils()->is_enrolled( $course_id );
+			$enrolled  = EnrollmentModel::is_enrolled( $course_id );
 			if ( $enrolled ) {
 				$html = '';
 			}
@@ -3025,9 +3030,10 @@ class Course extends Tutor_Base {
 			FROM
 				{$wpdb->postmeta}
 			WHERE
-				meta_key='_tutor_enrolled_by_order_id'
+				meta_key=%s
 				AND meta_value = %d
 			",
+				EnrollmentModel::ENROLLMENT_ORDER_ID_META,
 				$post_id
 			)
 		);
@@ -3051,7 +3057,7 @@ class Course extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
-		if ( ! $course_id || ! is_numeric( $course_id ) || ! tutor_utils()->is_enrolled( $course_id ) ) {
+		if ( ! $course_id || ! is_numeric( $course_id ) || ! EnrollmentModel::is_enrolled( $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid Course ID or Access Denied.', 'tutor' ) ) );
 			return;
 		}
@@ -3077,7 +3083,7 @@ class Course extends Tutor_Base {
 		if ( $course_id && $is_allowed ) {
 			$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
 			if ( ! $is_purchasable ) {
-				tutor_utils()->do_enroll( $course_id, $order_id = 0, $user_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id = 0, $user_id );
 				do_action( 'guest_attempt_after_enrollment', $course_id );
 			}
 		}
@@ -3118,14 +3124,14 @@ class Course extends Tutor_Base {
 			 * @since 3.9.4
 			 */
 			if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
-				$is_enrolled = (bool) tutor_utils()->is_enrolled( $course_id, $user_id );
+				$is_enrolled = (bool) EnrollmentModel::is_enrolled( $course_id, $user_id );
 
 				if ( ! $is_enrolled ) {
 					wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
 				}
 			}
 
-			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
+			$enroll = EnrollmentModel::do_enroll( $course_id, 0, $user_id );
 			if ( $enroll ) {
 				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
 			} else {

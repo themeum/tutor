@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 use DateInterval;
 use DateTime;
+use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
@@ -93,7 +94,6 @@ class Instructor {
 
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
-
 		$required_fields = apply_filters(
 			'tutor_instructor_registration_required_fields',
 			array(
@@ -103,14 +103,8 @@ class Instructor {
 				'user_login'            => __( 'User Name field is required', 'tutor' ),
 				'password'              => __( 'Password field is required', 'tutor' ),
 				'password_confirmation' => __( 'Password Confirmation field is required', 'tutor' ),
-
 			)
 		);
-
-		$terms_conditions_link = tutor_utils()->get_toc_page_link();
-		if ( $terms_conditions_link ) {
-			$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
-		}
 
 		$validation_errors = array();
 
@@ -129,9 +123,15 @@ class Instructor {
 			}
 		}
 
+		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_INS_REG, $_POST );
+		if ( is_wp_error( $validate_consent ) ) {
+			$validation_errors[ $validate_consent->get_error_code() ] = $validate_consent->get_error_message();
+		}
+
 		if ( ! filter_var( tutor_utils()->input_old( 'email' ), FILTER_VALIDATE_EMAIL ) ) {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
 		}
+
 		if ( tutor_utils()->input_old( 'password' ) !== tutor_utils()->input_old( 'password_confirmation' ) ) {
 			$validation_errors['password_confirmation'] = __( 'Your passwords should match each other. Please recheck.', 'tutor' );
 		}
@@ -158,17 +158,16 @@ class Instructor {
 
 		global $wpdb;
 		$wpdb->query( 'START TRANSACTION' );
-
 		$user_id = wp_insert_user( $userdata );
-
 		if ( is_wp_error( $user_id ) ) {
 			$this->error_msgs = $user_id->get_error_messages();
 			add_filter( 'tutor_instructor_register_validation_errors', array( $this, 'tutor_instructor_form_validation_errors' ) );
 			return;
 		}
 
-		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
+		$user = get_user_by( 'id', $user_id );
 
+		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 		if ( $is_req_email_verification ) {
 			do_action( 'tutor_send_verification_mail', get_userdata( $user_id ), 'instructor-registration' );
 			$reg_done = apply_filters( 'tutor_registration_done', true );
@@ -184,7 +183,7 @@ class Instructor {
 			 */
 			$this->update_instructor_meta( $user_id );
 			$wpdb->query( 'COMMIT' );
-			$user = get_user_by( 'id', $user_id );
+
 			if ( $user ) {
 				wp_set_current_user( $user_id, $user->user_login );
 				wp_set_auth_cookie( $user_id );
@@ -192,7 +191,11 @@ class Instructor {
 			}
 		}
 
-		wp_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
+		if ( $user ) {
+			do_action( 'tutor_new_instructor_registered', $user_id, $validate_consent );
+		}
+
+		wp_safe_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
 		die();
 	}
 

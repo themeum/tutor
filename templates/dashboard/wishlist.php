@@ -22,11 +22,6 @@ $offset            = ( $current_page - 1 ) * $wishlist_per_page;
 
 $wishlists             = tutor_utils()->get_wishlist( null, $offset, $wishlist_per_page );
 $total_wishlists_count = count( tutor_utils()->get_wishlist() );
-
-$course_id       = $post->ID;
-$profile_url     = tutor_utils()->profile_url( $post->post_author, true );
-$course_duration = get_tutor_course_duration_context( $course_id, true );
-$course_students = apply_filters( 'tutor_course_students', tutor_utils()->count_enrolled_users_by_course( $course_id ), $course_id );
 ?>
 
 <div class="tutor-dashboard-page-card-body tutor-dashboard-wishlist-wrapper">
@@ -36,69 +31,72 @@ $course_students = apply_filters( 'tutor_course_students', tutor_utils()->count_
 			<?php
 			foreach ( $wishlists as $post ) : //phpcs:ignore
 				setup_postdata( $post );
+				$course_id        = $post->ID;
+				$profile_url      = tutor_utils()->profile_url( $post->post_author, true );
+				$course_duration  = get_tutor_course_duration_context( $course_id, true );
+				$course_students  = apply_filters( 'tutor_course_students', tutor_utils()->count_enrolled_users_by_course( $course_id ), $course_id );
 				$tutor_course_img = get_tutor_course_thumbnail_src();
 				?>
-				<div>
-					<div class="tutor-card tutor-card--rounded-2xl tutor-card--padding-small tutor-course-card">
-						<a href="<?php the_permalink(); ?>" class="tutor-course-card-thumbnail">
-							<div class="tutor-ratio tutor-ratio-16x9">
-								<img style="max-width: 100%;" src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy" />
+				<div class="tutor-course-card">
+					<a href="<?php the_permalink(); ?>" class="tutor-course-card-thumbnail">
+						<?php do_action( 'tutor_courses_card_before_thumbnail', $course_id ); ?>
+						<div class="tutor-ratio tutor-ratio-16x9">
+							<img style="max-width: 100%;" src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy" />
+						</div>
+					</a>
+
+					<div class="tutor-card-body">
+						<!-- star rating  -->
+						<div class="tutor-course-card-rating">
+							<div class="tutor-ratings">
+								<?php
+								$course_rating = tutor_utils()->get_course_rating();
+								tutor_load_template(
+									'dashboard.wishlist.star-rating',
+									array(
+										'course_rating' => $course_rating,
+										'wrapper_class' => 'tutor-course-card-ratings-stars',
+										'icon_class'    => '',
+										'show_rating_average' => true,
+									)
+								);
+								?>
 							</div>
-						</a>
+						</div>
 
-						<div class="tutor-card-body">
-							<!-- star rating  -->
-							<div class="tutor-course-card-rating">
-								<div class="tutor-ratings">
-									<?php
-									$course_rating = tutor_utils()->get_course_rating();
-									tutor_load_template(
-										'dashboard.wishlist.star-rating',
-										array(
-											'course_rating' => $course_rating,
-											'wrapper_class' => 'tutor-course-card-ratings-stars',
-											'icon_class' => '',
-											'show_rating_average' => true,
-										)
-									);
-									?>
-								</div>
-							</div>
+						<div class="tutor-course-card-title tutor-mt-2 tutor-line-clamp-3">
+							<a href="<?php the_permalink(); ?>">
+								<?php the_title(); ?>
+							</a>
+						</div>
 
-							<div class="tutor-course-card-title tutor-mt-2 tutor-line-clamp-3">
-								<a href="<?php the_permalink(); ?>">
-									<?php the_title(); ?>
-								</a>
-							</div>
-
-							<?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) || ! empty( $course_duration ) ) : ?>
-							<div class="tutor-meta tutor-course-card-meta tutor-mt-2 tutor-mb-2">
-								<?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
-									<span class="tutor-course-meta-value"><?php echo esc_html( $course_students ); ?></span>
-									<span><?php esc_html_e( 'Learners', 'tutor' ); ?></span>
-								<?php endif; ?>
-
-								<?php if ( ! empty( $course_duration ) ) : ?>
-									<span class="tutor-course-card-separator"></span>
-									<span> <?php echo tutor_utils()->clean_html_content( $course_duration ); //phpcs:ignore ?> </span>
-								<?php endif; ?>
-
-								<span class="tutor-course-card-separator"></span>
-								<?php esc_html_e( 'By', 'tutor' ); ?>
-								<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_html( get_the_author() ); ?></a>
-							</div>
+						<?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) || ! empty( $course_duration ) ) : ?>
+						<div class="tutor-meta tutor-course-card-meta tutor-mt-2 tutor-mb-2">
+							<?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
+								<span class="tutor-course-meta-value"><?php echo esc_html( $course_students ); ?></span>
+								<span><?php esc_html_e( 'Learners', 'tutor' ); ?></span>
 							<?php endif; ?>
-						</div>
 
-						<div class="tutor-course-card-footer">
-							<?php
-							if ( null === tutor_utils()->get_course_price() ) {
-								esc_html_e( 'Free', 'tutor' );
-							} else {
-								echo wp_kses_post( tutor_utils()->get_course_price() );
-							}
-							?>
+							<?php if ( ! empty( $course_duration ) ) : ?>
+								<span class="tutor-course-card-separator"></span>
+								<span> <?php echo tutor_utils()->clean_html_content( $course_duration ); //phpcs:ignore ?> </span>
+							<?php endif; ?>
+
+							<span class="tutor-course-card-separator"></span>
+							<?php esc_html_e( 'By', 'tutor' ); ?>
+							<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_html( get_the_author() ); ?></a>
 						</div>
+						<?php endif; ?>
+					</div>
+
+					<div class="tutor-course-card-footer">
+						<?php
+						if ( null === tutor_utils()->get_course_price() ) {
+							esc_html_e( 'Free', 'tutor' );
+						} else {
+							echo wp_kses_post( tutor_utils()->get_course_price() );
+						}
+						?>
 					</div>
 				</div>
 				<?php

@@ -2425,10 +2425,10 @@ class Utils {
 				);
 
 				// Delete Related Meta Data.
-				delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_product_id' );
-				$order_id = get_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id', true );
+				delete_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_PRODUCT_ID_META );
+				$order_id = get_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META, true );
 				if ( $order_id ) {
-					delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id' );
+					delete_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META );
 
 					$monetize_by = $this->get_option( 'monetize_by' );
 					if ( 'wc' === $monetize_by ) {
@@ -7903,10 +7903,11 @@ class Utils {
 	 *
 	 * @return string|false
 	 */
-	public function get_assignment_deadline_date_in_gmt( $assignment_id, $fallback = null, $student_id = 0, $course_id = 0 ) {
-		$value               = $this->get_assignment_option( $assignment_id, 'time_duration.value' );
-		$time                = $this->get_assignment_option( $assignment_id, 'time_duration.time' );
-		$deadline_from_start = (bool) $this->get_assignment_option( $assignment_id, 'deadline_from_start' );
+	public function get_assignment_deadline_date_in_gmt( $assignment_id, $fallback = null, $student_id = 0, $course_id = 0, $options = null ) {
+		$options             = $options ?? $this->get_assignment_option( $assignment_id );
+		$value               = $this->avalue_dot( 'time_duration.value', $options );
+		$time                = $this->avalue_dot( 'time_duration.time', $options );
+		$deadline_from_start = (bool) $this->avalue_dot( 'deadline_from_start', $options );
 
 		if ( ! $value ) {
 			return $fallback;

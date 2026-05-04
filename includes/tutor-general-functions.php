@@ -16,6 +16,7 @@ use Tutor\Ecommerce\Settings;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Models\EnrollmentModel;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -1391,7 +1392,7 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 
 		$is_enabled_retake = tutor_utils()->get_option( 'course_retake_feature' );
 
-		$is_enrolled = tutor_utils()->is_enrolled( $course_id, $user_id );
+		$is_enrolled = EnrollmentModel::is_enrolled( $course_id, $user_id );
 
 		if ( 'yes' === $is_public_course ) {
 			$conditional_buttons->show_start_learning_btn = true;
