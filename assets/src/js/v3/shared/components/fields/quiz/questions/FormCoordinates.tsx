@@ -40,9 +40,7 @@ const AXIS_RANGE_OPTIONS = [10, 20].map((value) => ({
 /**
  * Whether to draw a numeric label at this axis tick (every `AXIS_LABEL_STEP` units plus zero handling).
  */
-function shouldRenderAxisLabel(value: number): boolean {
-  return value === 0 || Math.abs(value % AXIS_LABEL_STEP) === 0;
-}
+const shouldRenderAxisLabel = (value: number): boolean => value === 0 || Math.abs(value % AXIS_LABEL_STEP) === 0;
 
 interface FormCoordinatesProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
@@ -65,29 +63,25 @@ type CoordinatePoint = { x: number; y: number };
 /**
  * Normalizes stored or UI axis range to supported values (10 or 20 units).
  */
-function resolveAxisRange(value?: number | null): 10 | 20 {
-  return Number(value) === 20 ? 20 : 10;
-}
+const resolveAxisRange = (value?: number | null): 10 | 20 => (Number(value) === 20 ? 20 : 10);
 
 /**
  * Rounds to the nearest integer and clamps to `[-axisRange, axisRange]`.
  */
-function clampIntToRange(n: number, axisRange: number): number {
+const clampIntToRange = (n: number, axisRange: number): number => {
   const min = -axisRange;
   const max = axisRange;
   const rounded = Math.round(n);
   return Math.max(min, Math.min(max, rounded));
-}
+};
 
 /**
  * Clamps a point so both coordinates lie within the current axis range.
  */
-function sanitizePoint(p: CoordinatePoint, axisRange: number): CoordinatePoint {
-  return {
-    x: clampIntToRange(p.x, axisRange),
-    y: clampIntToRange(p.y, axisRange),
-  };
-}
+const sanitizePoint = (p: CoordinatePoint, axisRange: number): CoordinatePoint => ({
+  x: clampIntToRange(p.x, axisRange),
+  y: clampIntToRange(p.y, axisRange),
+});
 
 /**
  * Parses `answer_two_gap_match` JSON into up to five points (`MAX_COORDINATES`).
@@ -95,7 +89,7 @@ function sanitizePoint(p: CoordinatePoint, axisRange: number): CoordinatePoint {
  *
  * @param axisRange - When set, clamps each parsed point to the grid extent.
  */
-function parseStoredCoordinates(value: string, axisRange?: number): CoordinatePoint[] {
+const parseStoredCoordinates = (value: string, axisRange?: number): CoordinatePoint[] => {
   if (!value || typeof value !== 'string') return [];
   try {
     const parsed = JSON.parse(value) as unknown;
@@ -122,12 +116,12 @@ function parseStoredCoordinates(value: string, axisRange?: number): CoordinatePo
     return [];
   }
   return [];
-}
+};
 
 /**
  * Parses manual "x,y" text into a grid point; requires integers within `[-axisRange, axisRange]`.
  */
-function parseCoordinateText(value: string, axisRange: number): CoordinatePoint | null {
+const parseCoordinateText = (value: string, axisRange: number): CoordinatePoint | null => {
   const min = -axisRange;
   const max = axisRange;
   const raw = (value ?? '').trim();
@@ -140,33 +134,29 @@ function parseCoordinateText(value: string, axisRange: number): CoordinatePoint 
   if (!Number.isInteger(x) || !Number.isInteger(y)) return null;
   if (x < min || x > max || y < min || y > max) return null;
   return { x, y };
-}
+};
 
 /** Serializes a point for display and draft state (`"x,y"`). */
-function formatCoordinateText(pt: CoordinatePoint): string {
-  return `${pt.x},${pt.y}`;
-}
+const formatCoordinateText = (pt: CoordinatePoint): string => `${pt.x},${pt.y}`;
 
 /** i18n message shown when a stored point lies outside the current axis range. */
-function getCoordinatesRangeErrorMessage(axisRange: number): string {
-  return sprintf(__('Range is from -%d to %d', __TUTOR_TEXT_DOMAIN__), axisRange, axisRange);
-}
+const getCoordinatesRangeErrorMessage = (axisRange: number): string =>
+  sprintf(__('Range is from -%d to %d', __TUTOR_TEXT_DOMAIN__), axisRange, axisRange);
 
 /** Absolute URL for overlay marker SVGs shipped with Tutor assets. */
-function graphMarkerAssetUrl(filename: 'graph-marker-hover' | 'graph-marker-selected'): string {
-  return `${tutorConfig.tutor_url}assets/icons/${filename}.svg`;
-}
+const graphMarkerAssetUrl = (filename: 'graph-marker-hover' | 'graph-marker-selected'): string =>
+  `${tutorConfig.tutor_url}assets/icons/${filename}.svg`;
 
 /**
  * Maps graph coordinates to CSS pixel position within a square logical canvas (padding inset, y-up).
  */
-function graphToPixelLayout(
+const graphToPixelLayout = (
   logicalSize: number,
   minCoord: number,
   maxCoord: number,
   gx: number,
   gy: number,
-): { x: number; y: number } {
+): { x: number; y: number } => {
   const drawableWidth = logicalSize - 2 * PADDING;
   const drawableHeight = logicalSize - 2 * PADDING;
   const centerX = PADDING + drawableWidth / 2;
@@ -176,19 +166,19 @@ function graphToPixelLayout(
     x: centerX + gx * pixelsPerUnit,
     y: centerY - gy * pixelsPerUnit,
   };
-}
+};
 
 /**
  * Converts pointer position in CSS pixels to the nearest grid intersection if within snap distance.
  * Returns `null` when not close enough to a lattice point or outside the axis bounds (student quiz parity).
  */
-function pixelToSnappedGrid(
+const pixelToSnappedGrid = (
   pixelX: number,
   pixelY: number,
   logicalSize: number,
   minCoord: number,
   maxCoord: number,
-): CoordinatePoint | null {
+): CoordinatePoint | null => {
   const drawableWidth = logicalSize - 2 * PADDING;
   const drawableHeight = logicalSize - 2 * PADDING;
   const centerX = PADDING + drawableWidth / 2;
@@ -211,14 +201,14 @@ function pixelToSnappedGrid(
     return { x: snappedX, y: snappedY };
   }
   return null;
-}
+};
 
 /** True if either coordinate falls outside `[-axisRange, axisRange]`. */
-function isPointOutOfRange(point: CoordinatePoint, axisRange: number): boolean {
+const isPointOutOfRange = (point: CoordinatePoint, axisRange: number): boolean => {
   const min = -axisRange;
   const max = axisRange;
   return point.x < min || point.x > max || point.y < min || point.y > max;
-}
+};
 
 /**
  * Renders the coordinates answer editor: list of points, canvas grid, axis range selector, and marker overlays.
