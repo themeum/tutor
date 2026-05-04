@@ -9,9 +9,9 @@
  * @since 1.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Models\EnrollmentModel;
 
 global $is_enrolled;
 
@@ -25,7 +25,7 @@ $index     = 0;
  * @since 2.1.8
  */
 if ( is_null( $is_enrolled ) ) {
-	$is_enrolled = tutor_utils()->is_enrolled( $course_id );
+	$is_enrolled = EnrollmentModel::is_enrolled( $course_id );
 }
 
 do_action( 'tutor_course/single/before/topics' );

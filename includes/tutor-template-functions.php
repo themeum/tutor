@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Models\CourseModel;
+use Tutor\Models\EnrollmentModel;
 
 if ( ! function_exists( 'tutor_get_template' ) ) {
 	/**
@@ -639,7 +640,7 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 		ob_start();
 
 		$course_id    = get_the_ID();
-		$can_continue = tutor_utils()->is_enrolled( $course_id ) || get_post_meta( $course_id, '_tutor_is_public_course', true ) == 'yes';
+		$can_continue = EnrollmentModel::is_enrolled( $course_id ) || get_post_meta( $course_id, '_tutor_is_public_course', true ) == 'yes';
 
 		// Check for further access type like course content access settings.
 		if ( ! $can_continue ) {

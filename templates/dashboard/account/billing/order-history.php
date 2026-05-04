@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\DateFilter;
 use Tutor\Components\DropdownFilter;
@@ -55,6 +56,7 @@ $status_options = apply_filters( 'tutor_order_history_status_options', array(), 
 		if ( Input::has_any( $query_params, Input::GET_REQUEST ) ) {
 			Button::make()
 				->tag( 'a' )
+				->size( Size::SMALL )
 				->attr( 'href', Dashboard::get_account_page_url( 'billing' ) )
 				->attr( 'class', 'tutor-text-brand' )
 				->label( __( 'Clear all', 'tutor' ) )
@@ -63,7 +65,7 @@ $status_options = apply_filters( 'tutor_order_history_status_options', array(), 
 		}
 
 		DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
-		Sorting::make()->order( $order_filter )->render();
+		Sorting::make()->size( Size::SMALL )->order( $order_filter )->render();
 		?>
 	</div>
 </div>
