@@ -304,14 +304,6 @@ class Admin {
 					'zoom'             => null,
 					'google_meet'      => null,
 					'h5p'              => null,
-					'themes'           => array(
-						'parent_slug' => 'tutor',
-						'page_title'  => __( 'Themes', 'tutor' ),
-						'menu_title'  => __( 'Themes', 'tutor' ),
-						'capability'  => 'manage_tutor',
-						'menu_slug'   => 'tutor-themes',
-						'callback'    => array( $this, 'tutor_themes' ),
-					),
 					'addons'           => array(
 						'parent_slug' => 'tutor',
 						'page_title'  => __( 'Addons', 'tutor' ),
@@ -381,15 +373,6 @@ class Admin {
 				add_submenu_page( 'tutor', '', '<span class="tutor-admin-menu-separator"></span>', 'manage_tutor_instructor', '#' );
 			}
 		}
-	}
-
-	/**
-	 * Tutor template view
-	 *
-	 * @since 3.6.0
-	 */
-	public function tutor_themes() {
-		include tutor()->path . 'views/template-import/templates.php';
 	}
 
 	/**
