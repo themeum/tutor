@@ -22,7 +22,8 @@
   -moz-appearance: textfield;
 
   &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
+  &::-webkit-inner-spin-button,
+  &::-webkit-search-cancel-button {
     -webkit-appearance: none;
     margin: 0;
   }
