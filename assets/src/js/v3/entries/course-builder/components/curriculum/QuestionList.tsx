@@ -20,6 +20,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 import Popover from '@TutorShared/molecules/Popover';
 
 import GenerateQuizWithAi from '@CourseBuilderComponents/curriculum/GenerateQuizWithAi';
@@ -55,6 +56,7 @@ interface QuestionTypeOption {
   value: QuizQuestionType;
   icon: IconCollection;
   isPro: boolean;
+  isLegacyDisabled?: boolean;
 }
 
 const basicQuestionTypeOptions: QuestionTypeOption[] = [
@@ -146,13 +148,14 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   const questionTypeOptionsForUi = useMemo(() => {
     const legacyExcluded: QuizQuestionType[] = ['draw_image', 'pin_image', 'scale', 'coordinates', 'puzzle'];
-    const basic = tutorConfig.is_legacy_learning_mode
-      ? basicQuestionTypeOptions.filter((o) => !legacyExcluded.includes(o.value))
-      : basicQuestionTypeOptions;
-    const interactive = tutorConfig.is_legacy_learning_mode
-      ? interactiveQuestionTypeOptions.filter((o) => !legacyExcluded.includes(o.value))
-      : interactiveQuestionTypeOptions;
-    return { basic, interactive };
+    const markLegacyDisabled = (options: QuestionTypeOption[]) =>
+      options.map((o) =>
+        tutorConfig.is_legacy_learning_mode && legacyExcluded.includes(o.value) ? { ...o, isLegacyDisabled: true } : o,
+      );
+    return {
+      basic: markLegacyDisabled(basicQuestionTypeOptions),
+      interactive: markLegacyDisabled(interactiveQuestionTypeOptions),
+    };
   }, []);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -582,19 +585,33 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                         type="button"
                         css={styles.questionTypeOption}
                         title={option.label}
+                        disabled={option.isLegacyDisabled}
                         onClick={() => {
                           handleAddQuestion(option.value as QuizQuestionType);
                         }}
                       >
-                        <SVGIcon name={option.icon as IconCollection} width={24} height={24} />
-                        <span>{option.label}</span>
+                        <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                        <div css={styles.questionTypeOptionLabelRow}>
+                          <span css={styles.questionTypeOptionLabel}>{option.label}</span>
+                          <Show when={option.isLegacyDisabled}>
+                            <Tooltip
+                              content={__('Not available in legacy learning mode', 'tutor')}
+                              placement="top"
+                              wrapperCss={styleUtils.flexCenter()}
+                            >
+                              <span css={styles.legacyInfoIcon}>
+                                <SVGIcon name="infoOctagon" width={12} height={12} />
+                              </span>
+                            </Tooltip>
+                          </Show>
+                        </div>
                       </button>
                     }
                   >
                     <button type="button" css={styles.questionTypeOption} title={option.label} disabled onClick={noop}>
                       <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
                       <div css={styles.questionTypeOptionLabelRow}>
-                        <span>{option.label}</span>
+                        <span css={styles.questionTypeOptionLabel}>{option.label}</span>
                         <ProBadge size="small" content={__('Pro', 'tutor')} />
                       </div>
                     </button>
@@ -613,19 +630,33 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                         type="button"
                         css={styles.questionTypeOption}
                         title={option.label}
+                        disabled={option.isLegacyDisabled}
                         onClick={() => {
                           handleAddQuestion(option.value as QuizQuestionType);
                         }}
                       >
-                        <SVGIcon name={option.icon as IconCollection} width={24} height={24} />
-                        <span>{option.label}</span>
+                        <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                        <div css={styles.questionTypeOptionLabelRow}>
+                          <span css={styles.questionTypeOptionLabel}>{option.label}</span>
+                          <Show when={option.isLegacyDisabled}>
+                            <Tooltip
+                              content={__('Not available in legacy learning mode', 'tutor')}
+                              placement="top"
+                              wrapperCss={styleUtils.flexCenter()}
+                            >
+                              <span css={styles.legacyInfoIcon}>
+                                <SVGIcon name="info" width={16} height={16} />
+                              </span>
+                            </Tooltip>
+                          </Show>
+                        </div>
                       </button>
                     }
                   >
                     <button type="button" css={styles.questionTypeOption} title={option.label} disabled onClick={noop}>
                       <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
                       <div css={styles.questionTypeOptionLabelRow}>
-                        <span>{option.label}</span>
+                        <span css={styles.questionTypeOptionLabel}>{option.label}</span>
                         <ProBadge size="small" content={__('Pro', 'tutor')} />
                       </div>
                     </button>
@@ -810,12 +841,6 @@ const styles = {
       margin-bottom: ${spacing[4]};
     }
 
-    span {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
     [data-question-icon] {
       flex-shrink: 0;
     }
@@ -842,10 +867,14 @@ const styles = {
       border-color: ${colorTokens.stroke.brand};
     }
   `,
+  questionTypeOptionLabel: css`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  `,
   questionTypeOptionLabelRow: css`
     ${styleUtils.display.flex()};
     align-items: center;
-    justify-content: space-between;
     gap: ${spacing[4]};
     width: 100%;
     min-width: 0;
@@ -858,5 +887,11 @@ const styles = {
     ${typography.small()};
     color: ${colorTokens.text.subdued};
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[28]};
+  `,
+  legacyInfoIcon: css`
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: ${colorTokens.icon.brand};
   `,
 };
