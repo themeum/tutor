@@ -580,7 +580,7 @@ class Quiz_Attempts_List {
 			->type( 'circle' )
 			->value( $earned_percentage )
 			->size( $size )
-			->stroke_color( 'var(--tutor-border-idle)' )
+			->stroke_color( 'var(--tutor-border-idle2)' )
 			->progress_stroke_color( $statics_stroke_color )
 			->animated()
 			->attr( 'class', $wrapper_class )
