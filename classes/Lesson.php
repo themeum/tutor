@@ -686,9 +686,9 @@ class Lesson extends Tutor_Base {
 		$content_id = tutor_utils()->get_post_id( $post_id );
 		$contents   = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
 
-		$autoload_course_content = (bool) get_tutor_option( 'autoload_next_course_content' );
+		$autoload_course_content = (bool) UserPreference::get( 'auto_play_next', false, get_current_user_id() );
 		$next_url                = false;
-		if ( $autoload_course_content ) {
+		if ( $autoload_course_content && $contents->next_id ) {
 			$next_url = get_the_permalink( $contents->next_id );
 		}
 
