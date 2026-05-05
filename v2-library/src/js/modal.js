@@ -135,7 +135,9 @@
 
 		if (e.key === 'Escape' || e.key === 'Esc') {
 			e.preventDefault();
-			closeModal(activeModal);
+			if (!activeModal.hasAttribute('data-tutor-modal-no-dismiss')) {
+				closeModal(activeModal);
+			}
 		} else if (e.key === 'Tab') {
 			trapFocus(e);
 		}
@@ -159,7 +161,14 @@
 		if (e.target.hasAttribute(closeAttr) || e.target.classList.contains(overlay) || e.target.closest(`[${closeAttr}]`)) {
 			e.preventDefault();
 			const modal = e.target.closest('.tutor-modal.tutor-is-active');
-			if (modal) closeModal(modal);
+			if (modal && !modal.hasAttribute('data-tutor-modal-no-dismiss')) {
+				closeModal(modal);
+			} else if (modal && !e.target.classList.contains(overlay) && !e.target.closest(`.${overlay}`)) {
+				// Allow explicit close buttons even on no-dismiss modals
+				if (e.target.hasAttribute(closeAttr) || e.target.closest(`[${closeAttr}]`)) {
+					closeModal(modal);
+				}
+			}
 		}
 	});
 
