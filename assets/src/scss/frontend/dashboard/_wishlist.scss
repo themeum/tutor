@@ -5,7 +5,7 @@
 @use '@Core/scss/mixins' as *;
 .tutor-dashboard-wishlist-wrapper {
   padding: $tutor-spacing-6;
-  background-color: var(--tutor-surface-l1);
+  background-color: $tutor-surface-l1;
 
   .tutor-wishlist-grid {
     @include tutor-grid(3, $tutor-spacing-4);
