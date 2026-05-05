@@ -1473,7 +1473,7 @@ class CourseModel {
 
 			if ( ! empty( $contents_query ) && $contents_query->have_posts() ) {
 				foreach ( $contents_query->posts as $content_post ) {
-					$items[] = ( new self() )->build_course_progress_item( $content_post, $student_id );
+					$items[] = ( new self() )->build_course_progress_item( $content_post, $student_id, $course_id );
 				}
 				$total_topic_items = count( $contents_query->posts );
 			}
@@ -1575,10 +1575,11 @@ class CourseModel {
 	 *
 	 * @param \WP_Post $post    The course content post object.
 	 * @param int      $user_id The user ID for whom progress is being calculated.
+	 * @param int      $course_id The course ID to which the content belongs.
 	 *
 	 * @return array Associative array of progress item data
 	 */
-	private function build_course_progress_item( \WP_Post $post, $user_id ) {
+	private function build_course_progress_item( \WP_Post $post, $user_id, $course_id ) {
 
 		$base_items = array(
 			'id'    => $post->ID,
@@ -1589,22 +1590,63 @@ class CourseModel {
 
 		switch ( $post->post_type ) {
 			case tutor()->quiz_post_type:
+				$quiz_status  = '';
+				$icon_name    = Icon::QUIZ_2;
+				$icon_class   = 'tutor-text-subdued';
+				$last_attempt = ( new QuizModel() )->get_first_or_last_attempt( $post->ID, $user_id );
+
+				if ( is_object( $last_attempt ) && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status ) {
+					$quiz_status = QuizModel::get_quiz_result( $post->ID, $user_id );
+
+					$quiz_icon_map = array(
+						QuizModel::RESULT_FAIL    => array( Icon::CROSS_CIRCLE_LINE, 'tutor-icon-critical' ),
+						QuizModel::RESULT_PENDING => array( Icon::INFO_2, 'tutor-icon-warning-secondary' ),
+					);
+
+					if ( isset( $quiz_icon_map[ $quiz_status ] ) ) {
+						list( $icon_name, $icon_class ) = $quiz_icon_map[ $quiz_status ];
+					}
+				}
+
 				return array_merge(
 					$base_items,
 					array(
-						'is_completed' => tutor_utils()->has_attempted_quiz( $user_id, $post->ID ),
+						'is_completed' => QuizModel::RESULT_PASS === $quiz_status,
 						'label'        => __( 'Quiz', 'tutor' ),
-						'icon'         => Icon::QUIZ_2,
+						'icon'         => $icon_name,
+						'icon_class'   => $icon_class,
 					)
 				);
 
 			case tutor()->assignment_post_type:
+				$status = '';
+
+				$is_submitted = tutor_utils()->is_assignment_submitted( $post->ID, $user_id );
+				$status       = $is_submitted ? Assignments::get_assignment_result( $post->ID, $user_id ) : $status;
+
+				if ( ! $is_submitted && Assignments::is_expired( $post->ID, $user_id, $course_id ) ) {
+					$status = 'fail';
+				}
+
+				$icon       = Icon::BOOK_2;
+				$icon_class = 'tutor-text-subdued';
+
+				$status_map = array(
+					'pending' => array( Icon::INFO_2, 'tutor-icon-warning-secondary' ),
+					'fail'    => array( Icon::CROSS_CIRCLE_LINE, 'tutor-icon-critical' ),
+				);
+
+				if ( isset( $status_map[ $status ] ) ) {
+					list( $icon, $icon_class ) = $status_map[ $status ];
+				}
+
 				return array_merge(
 					$base_items,
 					array(
-						'is_completed' => tutor_utils()->get_submitted_assignment_count( $post->ID, $user_id ) > 0,
+						'is_completed' => 'pass' === $status,
 						'label'        => __( 'Assignment', 'tutor' ),
-						'icon'         => Icon::BOOK_2,
+						'icon'         => $icon,
+						'icon_class'   => $icon_class,
 					)
 				);
 

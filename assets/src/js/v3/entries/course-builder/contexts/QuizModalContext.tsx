@@ -15,6 +15,7 @@ interface QuizModalContextProps {
   activeQuestionId: ID;
   setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
   quizId: ID;
+  topicId: ID;
   contentType: TopicContentType;
   validationError: {
     message: string;
@@ -41,6 +42,7 @@ export const useQuizModalContext = () => {
 export const QuizModalContextProvider = ({
   children,
   quizId,
+  topicId,
   contentType,
   validationError: propsValidationError,
 }: {
@@ -63,6 +65,7 @@ export const QuizModalContextProvider = ({
         >;
       }) => React.ReactNode);
   quizId: ID;
+  topicId: ID;
   contentType: TopicContentType;
   validationError?: {
     message: string;
@@ -115,6 +118,7 @@ export const QuizModalContextProvider = ({
         validationError,
         setValidationError,
         contentType,
+        topicId,
       }}
     >
       {typeof children === 'function'

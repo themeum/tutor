@@ -9,12 +9,15 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Course;
 use Tutor\Models\CourseModel;
+use Tutor\Models\EnrollmentModel;
 
 $user_id            = get_current_user_id();
 $course_id          = isset( $course_id ) ? (int) $course_id : 0;
-$is_enrolled        = tutor_utils()->is_enrolled( $course_id );
+$is_enrolled        = EnrollmentModel::is_enrolled( $course_id );
 $course_stats       = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 $show_mark_complete = isset( $mark_as_complete ) ? $mark_as_complete : false;
 

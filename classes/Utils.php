@@ -2425,10 +2425,10 @@ class Utils {
 				);
 
 				// Delete Related Meta Data.
-				delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_product_id' );
-				$order_id = get_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id', true );
+				delete_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_PRODUCT_ID_META );
+				$order_id = get_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META, true );
 				if ( $order_id ) {
-					delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id' );
+					delete_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META );
 
 					$monetize_by = $this->get_option( 'monetize_by' );
 					if ( 'wc' === $monetize_by ) {
@@ -5354,12 +5354,12 @@ class Utils {
 
 		$quiz_id         = $this->get_post_id( $quiz_id );
 		$attempt         = $this->is_started_quiz( $quiz_id );
-		$total_questions = (int) $attempt->total_questions;
 		if ( ! $attempt ) {
 			return false;
 		}
 
-		$questions_order = $this->get_quiz_option( get_the_ID(), 'questions_order', 'rand' );
+		$total_questions = (int) $attempt->total_questions;
+		$questions_order = $this->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
 
 		$order_by = '';
 		if ( 'rand' === $questions_order ) {

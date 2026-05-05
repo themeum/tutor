@@ -32,6 +32,7 @@ const endpoints = {
   GENERATE_COURSE_TOPIC_CONTENT: 'tutor_pro_generate_course_topic_content',
   SAVE_AI_GENERATED_COURSE_CONTENT: 'tutor_pro_ai_course_create',
   GENERATE_QUIZ_QUESTIONS: 'tutor_pro_generate_quiz_questions',
+  GENERATE_AI_QUIZ_QUESTIONS: 'tutor_pro_ai_generate_questions',
 
   // SUBSCRIPTION
   GET_SUBSCRIPTIONS_LIST: 'tutor_subscription_plans',
