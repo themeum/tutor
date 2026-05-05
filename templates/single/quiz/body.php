@@ -40,7 +40,7 @@ if ( 0 !== $attempted_count ) {
 		<?php // @todo: need to change the ID ?>
 		<div id="tutor-quiz-image-matching-choice" class="tutor-quiz-wrap tutor-quiz-wrap-<?php the_ID(); ?>">
 		<?php
-			do_action( 'tutor_quiz/body/before', $quiz_id );
+			do_action( 'tutor_quiz/body/before', $quiz_id, $quiz_details );
 
 		if ( $is_started_quiz ) {
 			$quiz_attempt_info                  = tutor_utils()->quiz_attempt_info( $is_started_quiz->attempt_info );

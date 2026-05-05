@@ -19,6 +19,7 @@ use TUTOR\Course;
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Models\EnrollmentModel;
 use TUTOR\Quiz;
 use TUTOR\Template;
 
@@ -45,7 +46,7 @@ $current_user_id            = get_current_user_id();
 $tutor_current_post         = get_post();
 $tutor_course               = get_post( $tutor_course_id );
 $tutor_course_list_url      = tutor_utils()->course_archive_page_url();
-$tutor_is_enrolled          = tutor_utils()->is_enrolled( $tutor_course_id );
+$tutor_is_enrolled          = EnrollmentModel::is_enrolled( $tutor_course_id );
 $tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
 $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $current_user_id, $tutor_course_id );
 $tutor_is_course_completed  = tutor_utils()->is_completed_course( $tutor_course_id, $current_user_id );

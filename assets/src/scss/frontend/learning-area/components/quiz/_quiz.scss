@@ -60,26 +60,6 @@ $tutor-quiz-content-bottom-offset: calc(
       }
     }
 
-    &[data-question-layout-view='single_question']
-      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='draw_image']),
-    &[data-question-layout-view='question_pagination']
-      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='draw_image']),
-    &[data-question-layout-view='single_question']
-      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='pin_image']),
-    &[data-question-layout-view='question_pagination']
-      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='pin_image']) {
-      max-height: none;
-      overflow: visible;
-    }
-
-    &[data-question-layout-view='single_question']
-      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='coordinates']),
-    &[data-question-layout-view='question_pagination']
-      .tutor-quiz-question-wrapper:has(.tutor-quiz-question[data-question='coordinates']) {
-      max-height: none;
-      overflow: visible;
-    }
-
     &[data-question-layout-view='single_question'] .tutor-quiz-question,
     &[data-question-layout-view='question_pagination'] .tutor-quiz-question {
       margin-block: auto;
@@ -515,6 +495,10 @@ $tutor-quiz-content-bottom-offset: calc(
           }
         }
 
+        &.answered {
+          background-color: $tutor-icon-brand;
+        }
+
         &.skipped {
           background-color: $tutor-icon-disabled;
           color: $tutor-text-subdued;
@@ -604,9 +588,16 @@ $tutor-quiz-content-bottom-offset: calc(
           color: $tutor-text-subdued;
         }
 
-        &.active {
+        &.answered {
           background-color: $tutor-icon-brand;
           color: $tutor-text-primary-inverse;
+        }
+
+        &.active {
+          background-color: $tutor-icon-brand-hover;
+          color: $tutor-text-primary-inverse;
+          outline: 1px solid $tutor-border-brand;
+          outline-offset: 2px;
 
           .tutor-quiz-question-paginate-label {
             font-weight: $tutor-font-weight-bold;
@@ -615,11 +606,13 @@ $tutor-quiz-content-bottom-offset: calc(
           &.correct {
             background-color: $tutor-icon-success-primary;
             color: $tutor-text-light;
+            outline-color: $tutor-border-success;
           }
 
           &.incorrect {
             background-color: $tutor-icon-critical;
             color: $tutor-text-light;
+            outline-color: $tutor-border-error;
           }
         }
       }

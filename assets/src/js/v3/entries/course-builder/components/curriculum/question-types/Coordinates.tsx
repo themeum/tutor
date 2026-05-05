@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useController, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
@@ -12,10 +12,17 @@ const Coordinates = () => {
   const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
 
   const answersPath = `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers';
+  const axisRangePath =
+    `questions.${activeQuestionIndex}.question_settings.coordinates_axis_range` as 'questions.0.question_settings.coordinates_axis_range';
 
   const { fields: optionsFields } = useFieldArray({
     control: form.control,
     name: answersPath,
+  });
+  const axisRangeControllerProps = useController({
+    control: form.control,
+    name: axisRangePath,
+    defaultValue: 10,
   });
 
   if (optionsFields.length === 0) {
@@ -32,6 +39,8 @@ const Coordinates = () => {
           <FormCoordinates
             {...controllerProps}
             questionId={activeQuestionId}
+            activeQuestionIndex={activeQuestionIndex}
+            axisRangeControllerProps={axisRangeControllerProps}
             validationError={validationError}
             setValidationError={setValidationError}
           />

@@ -270,7 +270,7 @@ const PreviewDocumentContent = ({
                 <Show when={question.question_settings.show_question_mark}>
                   <span className="tutor-badge tutor-badge-rounded tutor-text-secondary">
                     <span className="tutor-text-subdued">{__('Points: ', 'tutor')}</span>
-                    {question.question_mark}
+                    {question.question_settings.question_mark}
                   </span>
                 </Show>
               </div>

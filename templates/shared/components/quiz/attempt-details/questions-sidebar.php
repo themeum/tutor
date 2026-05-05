@@ -22,7 +22,6 @@ if ( ! $quiz_id ) {
 	return;
 }
 
-$questions           = tutor_utils()->get_questions_by_quiz( $quiz_id );
 $question_status_map = array();
 $default_item_status = ( isset( $attempt_data ) && is_object( $attempt_data ) ) ? 'incorrect' : '';
 $status_priority     = array(
@@ -30,29 +29,31 @@ $status_priority     = array(
 	'incorrect' => 2,
 	'pending'   => 3,
 );
-$first_question_id   = is_array( $questions ) && ! empty( $questions ) ? (int) ( $questions[0]->question_id ?? 0 ) : 0;
-$first_question_id   = $first_question_id > 0 ? $first_question_id : '';
 
 if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_data->attempt_id ) ) {
-	$attempt_answers = QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
+	$questions = QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
+	$questions = is_array( $questions ) ? $questions : array();
 
-	if ( is_array( $attempt_answers ) ) {
-		foreach ( $attempt_answers as $answer_row ) {
-			$question_id = (int) ( $answer_row->question_id ?? 0 );
-			if ( ! $question_id ) {
-				continue;
-			}
+	foreach ( $questions as $answer_row ) {
+		$question_id = (int) ( $answer_row->question_id ?? 0 );
+		if ( ! $question_id ) {
+			continue;
+		}
 
-			$answer_status = QuizModel::get_attempt_answer_status( $answer_row );
-			$item_status   = 'correct' === $answer_status ? 'correct' : ( 'pending' === $answer_status ? 'pending' : 'incorrect' );
-			$current       = $question_status_map[ $question_id ] ?? '';
+		$answer_status = QuizModel::get_attempt_answer_status( $answer_row );
+		$item_status   = 'correct' === $answer_status ? 'correct' : ( 'pending' === $answer_status ? 'pending' : 'incorrect' );
+		$current       = $question_status_map[ $question_id ] ?? '';
 
-			if ( ! $current || $status_priority[ $item_status ] > $status_priority[ $current ] ) {
-				$question_status_map[ $question_id ] = $item_status;
-			}
+		if ( ! $current || $status_priority[ $item_status ] > $status_priority[ $current ] ) {
+			$question_status_map[ $question_id ] = $item_status;
 		}
 	}
+} else {
+	$questions = tutor_utils()->get_questions_by_quiz( $quiz_id );
 }
+
+$first_question_id = is_array( $questions ) && ! empty( $questions ) ? (int) ( $questions[0]->question_id ?? 0 ) : 0;
+$first_question_id = $first_question_id > 0 ? $first_question_id : '';
 ?>
 
 <div

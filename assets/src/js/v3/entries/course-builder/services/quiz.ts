@@ -45,6 +45,7 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
     is_image_matching?: '0' | '1';
     draw_image_threshold_percent?: number;
     puzzle_grid_size?: number;
+    coordinates_axis_range?: number;
   };
 }
 
@@ -185,7 +186,8 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       pass_is_required: quiz.quiz_option.pass_is_required === '1',
       passing_grade: quiz.quiz_option.passing_grade ?? 80,
       limit_questions_to_answer: !!Number(quiz.quiz_option.max_questions_for_answer),
-      max_questions_for_answer: quiz.quiz_option.max_questions_for_answer ?? 10,
+      max_questions_for_answer:
+        Number(quiz.quiz_option.max_questions_for_answer) > 0 ? quiz.quiz_option.max_questions_for_answer : 10,
       quiz_auto_start: quiz.quiz_option.quiz_auto_start === '1',
       auto_start_delay: String(quiz.quiz_option.auto_start_delay ?? 5),
       question_layout_view: quiz.quiz_option.question_layout_view || 'single_question',
@@ -328,6 +330,9 @@ export const convertQuizFormDataToPayload = (
             }),
             ...(question.question_type === 'puzzle' && {
               puzzle_grid_size: Number(question.question_settings.puzzle_grid_size ?? 4),
+            }),
+            ...(question.question_type === 'coordinates' && {
+              coordinates_axis_range: Number(question.question_settings.coordinates_axis_range ?? 10),
             }),
           },
           question_answers: question.question_answers.map(

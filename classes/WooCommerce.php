@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
+use Tutor\Models\EnrollmentModel;
 
 /**
  * Handle woocommerce hooks
@@ -213,8 +214,13 @@ class WooCommerce extends Tutor_Base {
 		$order_id = WC()->session->get( self::WC_STORE_API_DRAFT_ORDER, 0 );
 
 		if ( $course_ids && $order_id ) {
+			$wc_order = wc_get_order( $order_id );
+			if ( ! $wc_order ) {
+				return;
+			}
+
 			foreach ( $course_ids as $course_id ) {
-				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
 			}
 		}
 	}
@@ -715,7 +721,7 @@ class WooCommerce extends Tutor_Base {
 			if ( $if_has_course ) {
 				$course_id   = $if_has_course->post_id;
 				$customer_id = $order->get_customer_id();
-				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
 			}
 		}
 	}
@@ -772,9 +778,9 @@ class WooCommerce extends Tutor_Base {
 				return;
 			}
 
-			$has_enrollment = tutor_utils()->is_enrolled( $course_id, $customer_id, false );
+			$has_enrollment = EnrollmentModel::is_enrolled( $course_id, $customer_id, false );
 			if ( ! $has_enrollment ) {
-				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
 			}
 		}
 	}

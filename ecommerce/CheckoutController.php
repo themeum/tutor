@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\GDPR\Controllers\LegalConsent;
 use TUTOR\Input;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
@@ -19,6 +20,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
+use Tutor\Models\EnrollmentModel;
 use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -193,7 +195,7 @@ class CheckoutController {
 		 * Display a warning alert if the user attempts to purchase a course they are already enrolled in.
 		 */
 		$course_id = (int) Input::sanitize_request_data( 'course_id', 0 );
-		if ( Settings::is_buy_now_enabled() && $course_id && tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) ) {
+		if ( Settings::is_buy_now_enabled() && $course_id && EnrollmentModel::is_enrolled( $course_id, get_current_user_id() ) ) {
 			add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
 			?>
 			<div class="tutor-alert tutor-warning tutor-d-flex tutor-gap-1">
@@ -210,7 +212,7 @@ class CheckoutController {
 		if ( ! Settings::is_buy_now_enabled() && is_array( $course_list ) && count( $course_list ) ) {
 			$enrolled_courses = array();
 			foreach ( $course_list as $course ) {
-				if ( tutor_utils()->is_enrolled( $course->ID, get_current_user_id() ) ) {
+				if ( EnrollmentModel::is_enrolled( $course->ID, get_current_user_id() ) ) {
 					$enrolled_courses[] = $course;
 				}
 			}
@@ -622,6 +624,11 @@ class CheckoutController {
 			}
 		}
 
+		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $_POST );
+		if ( is_wp_error( $validate_consent ) ) {
+			array_push( $errors, $validate_consent->get_error_message() );
+		}
+
 		// Return if validation failed.
 		if ( ! empty( $errors ) ) {
 			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
@@ -751,6 +758,7 @@ class CheckoutController {
 			}
 
 			if ( ! empty( $order_data ) ) {
+				do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
 				if ( 'automate' === $payment_type ) {
 					try {
 						$payment_data = self::prepare_payment_data( $order_data );

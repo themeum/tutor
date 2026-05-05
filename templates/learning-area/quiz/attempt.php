@@ -40,8 +40,8 @@ $remaining_time_context = tutor_utils()->seconds_to_time_context( $remaining_tim
 
 // Quiz settings.
 $quiz_when_time_expires = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
-$reveal_wait_ms         = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
 $quiz_settings          = tutor_utils()->get_quiz_option( (int) $tutor_is_started_quiz->quiz_id );
+$reveal_wait_ms         = 1000 * $quiz_settings['answers_reveal_duration'];
 $show_previous_button   = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
 $hide_previous_button   = '1' === (string) ( $quiz_settings['hide_previous_button'] ?? '0' );
 $hide_quiz_time_display = '1' === (string) ( $quiz_settings['hide_quiz_time_display'] ?? '0' );
@@ -78,7 +78,7 @@ foreach ( $questions as $question ) {
 	}
 }
 
-$form_id             = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
+$form_id             = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id . '-' . $tutor_is_started_quiz->quiz_id;
 $modal_id            = 'tutor-quiz-abandon-modal';
 $submitted_modal_id  = 'tutor-quiz-submitted-modal';
 $timeout_modal_id    = 'tutor-quiz-timeout-modal';
@@ -197,6 +197,7 @@ $default_values = array(
 		<?php endif; ?>
 
 		<?php
+		do_action( 'tutor_quiz/body/before', $tutor_is_started_quiz->quiz_id, $quiz_attempt_info );
 		foreach ( $questions as $index => $question ) {
 			$question_settings = maybe_unserialize( $question->question_settings );
 			$answer_required   = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
