@@ -19,8 +19,11 @@ import { noop } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
+type SpacingToken = keyof typeof spacing;
+
 type FormSelectInputProps<T> = {
   size?: 'small' | 'regular';
+  leftIconPadding?: SpacingToken;
   wrapperCss?: SerializedStyles;
   label?: React.ReactNode;
   options: Option<T>[];
@@ -41,6 +44,7 @@ type FormSelectInputProps<T> = {
   helpText?: string;
   removeOptionsMinWidth?: boolean;
   leftIcon?: ReactNode;
+  iconSize?: number;
   dataAttribute?: string;
   isSecondary?: boolean;
   isMagicAi?: boolean;
@@ -51,6 +55,7 @@ type FormSelectInputProps<T> = {
 
 const FormSelectInput = <T,>({
   size = 'regular',
+  leftIconPadding = 48,
   wrapperCss,
   options,
   field,
@@ -69,6 +74,7 @@ const FormSelectInput = <T,>({
   helpText,
   removeOptionsMinWidth = false,
   leftIcon,
+  iconSize,
   removeBorder,
   dataAttribute,
   isSecondary = false,
@@ -77,7 +83,7 @@ const FormSelectInput = <T,>({
   selectOnFocus,
   optionItemCss,
 }: FormSelectInputProps<T>) => {
-  const iconSize = size === 'small' ? 20 : 32;
+  const resolvedIconSize = iconSize ?? (size === 'small' ? 20 : 32);
 
   const getInitialValue = useCallback(
     () =>
@@ -183,7 +189,9 @@ const FormSelectInput = <T,>({
               <div css={styles.leftIcon}>
                 <Show when={leftIcon}>{leftIcon}</Show>
                 <Show when={selectedItem?.icon}>
-                  {(iconName) => <SVGIcon name={iconName as IconCollection} width={iconSize} height={iconSize} />}
+                  {(iconName) => (
+                    <SVGIcon name={iconName as IconCollection} width={resolvedIconSize} height={resolvedIconSize} />
+                  )}
                 </Show>
               </div>
 
@@ -202,6 +210,7 @@ const FormSelectInput = <T,>({
                     wrapperCss,
                     styles.input({
                       hasLeftIcon: !!leftIcon || !!selectedItem?.icon,
+                      leftIconPadding,
                       hasDescription,
                       hasError: !!fieldState.error,
                       isMagicAi,
@@ -250,7 +259,7 @@ const FormSelectInput = <T,>({
 
                 <Show when={hasDescription}>
                   <span
-                    css={styles.description({ hasLeftIcon: !!leftIcon, size })}
+                    css={styles.description({ hasLeftIcon: !!leftIcon, leftIconPadding, size })}
                     title={getInitialValue()?.description}
                   >
                     {getInitialValue()?.description}
@@ -320,7 +329,11 @@ const FormSelectInput = <T,>({
                         aria-selected={activeIndex === index}
                       >
                         <Show when={option.icon}>
-                          <SVGIcon name={option.icon as IconCollection} width={iconSize} height={iconSize} />
+                          <SVGIcon
+                            name={option.icon as IconCollection}
+                            width={resolvedIconSize}
+                            height={resolvedIconSize}
+                          />
                         </Show>
                         <span>{option.label}</span>
                       </button>
@@ -399,6 +412,7 @@ const styles = {
   `,
   input: ({
     hasLeftIcon,
+    leftIconPadding,
     hasDescription,
     hasError = false,
     isMagicAi = false,
@@ -406,6 +420,7 @@ const styles = {
     size,
   }: {
     hasLeftIcon: boolean;
+    leftIconPadding: SpacingToken;
     hasDescription: boolean;
     hasError: boolean;
     isMagicAi: boolean;
@@ -430,7 +445,7 @@ const styles = {
 
       ${hasLeftIcon &&
       css`
-        padding-left: ${spacing[48]};
+        padding-left: ${spacing[leftIconPadding]};
       `}
 
       ${hasDescription &&
@@ -474,7 +489,15 @@ const styles = {
       }
     }
   `,
-  description: ({ hasLeftIcon, size }: { hasLeftIcon: boolean; size: 'small' | 'regular' }) => css`
+  description: ({
+    hasLeftIcon,
+    leftIconPadding,
+    size,
+  }: {
+    hasLeftIcon: boolean;
+    leftIconPadding: SpacingToken;
+    size: 'small' | 'regular';
+  }) => css`
     ${typography.small()};
     ${styleUtils.text.ellipsis(1)}
     color: ${colorTokens.text.hints};
@@ -489,7 +512,7 @@ const styles = {
 
     ${hasLeftIcon &&
     css`
-      padding-left: calc(${spacing[48]} + 1px);
+      padding-left: calc(${spacing[leftIconPadding]} + 1px);
     `}
   `,
   listLabel: css`
@@ -613,6 +636,10 @@ const styles = {
       flex-shrink: 0;
       ${styleUtils.text.ellipsis(1)}
       width: 100%;
+    }
+
+    svg {
+      flex-shrink: 0;
     }
   `,
   arrowUpDown: css`

@@ -17,13 +17,12 @@ if ( ! isset( $question ) || ! is_object( $question ) ) {
 	return;
 }
 
-$attempt_answer   = isset( $attempt_answer ) && is_object( $attempt_answer ) ? $attempt_answer : null;
 $question_answers = QuizModel::get_answers_by_quiz_question( (int) $question->question_id );
 $question_answers = is_array( $question_answers ) ? $question_answers : array();
 
 $given_ids = array();
-if ( $attempt_answer ) {
-	$given_value = maybe_unserialize( $attempt_answer->given_answer );
+if ( isset( $question->given_answer ) ) {
+	$given_value = maybe_unserialize( $question->given_answer );
 	$given_ids   = is_array( $given_value ) ? array_values( $given_value ) : array( $given_value );
 }
 $given_ids = array_map( 'intval', array_filter( $given_ids ) );

@@ -73,7 +73,11 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
 
     handleTap(event: MouseEvent) {
       event.preventDefault();
-      this.toggle();
+      if (this.open) {
+        this.hide();
+        return;
+      }
+      this.showPreview();
     },
 
     handleMouseEnter() {

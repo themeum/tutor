@@ -1,6 +1,7 @@
 import { borderRadius, colorTokens, fontSize, lineHeight, spacing, zIndex } from '@TutorShared/config/styles';
 import { AnimatedDiv } from '@TutorShared/hooks/useAnimation';
 import type { AnyObject } from '@TutorShared/utils/form';
+import type { SerializedStyles } from '@emotion/react';
 import { css } from '@emotion/react';
 import { useSpring } from '@react-spring/web';
 import Tippy from '@tippyjs/react/headless';
@@ -17,6 +18,7 @@ interface TooltipProps {
   delay?: number;
   disabled?: boolean;
   visible?: boolean;
+  wrapperCss?: SerializedStyles;
 }
 
 const initialStyles = { opacity: 0, transform: 'scale(0.8)' };
@@ -31,6 +33,7 @@ const Tooltip = ({
   delay = 0,
   disabled = false,
   visible,
+  wrapperCss,
 }: TooltipProps) => {
   const [props, setSpring] = useSpring(() => initialStyles);
 
@@ -71,7 +74,7 @@ const Tooltip = ({
       visible={visible}
       zIndex={zIndex.highest}
     >
-      <div>{children}</div>
+      <div css={wrapperCss}>{children}</div>
     </Tippy>
   );
 };

@@ -33,6 +33,24 @@
     color: $tutor-text-primary-inverse !important;
   }
 
+  button {
+    box-shadow: none;
+  }
+
+  button[data-vc-arrow],
+  button[data-vc=month],
+  button[data-vc=year] {
+    background-color: transparent;
+    color: $tutor-text-primary;
+    padding: 0px;
+  
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      color: $tutor-text-primary;
+    }
+  }
+
   button.vc-date__btn {
     background-color: transparent;
     font-size: $tutor-font-size-small;
@@ -96,19 +114,6 @@
         'grid'
         'time'
         'footer';
-    }
-  }
-
-  button[data-vc-arrow],
-  button[data-vc=month],
-  button[data-vc=year] {
-    background-color: transparent;
-    color: $tutor-text-primary;
-
-    &:hover,
-    &:focus {
-      background-color: transparent;
-      color: $tutor-text-primary;
     }
   }
 

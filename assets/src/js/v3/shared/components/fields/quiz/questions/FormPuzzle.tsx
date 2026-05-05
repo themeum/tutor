@@ -223,20 +223,12 @@ const styles = {
     max-width: 100%;
   `,
   imageInputEmpty: css`
+    background-color: ${colorTokens.background.default};
+    height: 210px;
     border-radius: ${borderRadius.card};
   `,
   imageInputPreview: css`
-    width: fit-content;
-    max-width: 100%;
-    height: auto;
-    border-radius: ${borderRadius.card};
-
-    img {
-      width: auto;
-      max-width: 100%;
-      height: auto;
-      object-fit: initial;
-    }
+    height: 210px;
   `,
   previewLabel: css`
     ${typography.body('medium')};

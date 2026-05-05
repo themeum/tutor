@@ -140,6 +140,8 @@ a.tutor-btn-block,
 }
 
 // Icon-only button
+button.tutor-btn-icon,
+a.tutor-btn-icon,
 .tutor-btn-icon {
   flex-shrink: 0;
   @include tutor-button-icon-size(medium);
