@@ -45,7 +45,7 @@ const defaultTutorConfig = {
   is_kids_mode: false,
   user_preferences: {
     auto_play_next: false,
-    contrast: 'high',
+    contrast: '',
     font_scale: 1,
     learning_mood: 'modern',
     motion_effects: 'auto',

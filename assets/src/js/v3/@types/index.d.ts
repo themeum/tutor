@@ -136,10 +136,10 @@ declare global {
         auto_play_next: boolean;
         contrast: string;
         font_scale: number;
-        learning_mood: 'modern' | 'legacy' | 'kids' | '';
-        motion_effects: 'auto' | 'on' | 'off';
-        theme: 'light' | 'dark' | '';
-        vision: 'normal' | '';
+        learning_mood: 'modern' | 'legacy' | 'kids';
+        motion_effects: 'auto' | 'reduce' | 'standard';
+        theme: 'light' | 'dark' | 'system';
+        vision: 'normal' | 'protanopia' | 'deuteranopia' | 'deuteranomaly';
       };
       current_user: {
         data: {
