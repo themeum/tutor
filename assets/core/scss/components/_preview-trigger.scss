@@ -7,6 +7,8 @@
 .tutor-preview-trigger {
   display: inline;
   position: relative;
+  @include tutor-text-truncate;
+  @include tutor-text-clamp(1);
 
   &-text {
     font-style: italic;
