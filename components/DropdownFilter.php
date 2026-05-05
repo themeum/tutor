@@ -418,13 +418,13 @@ class DropdownFilter extends BaseComponent {
 			}
 
 			if ( Variant::PRIMARY === $this->variant ) {
-				$btn_class = 'tutor-btn tutor-btn-primary tutor-gap-2 ' . $size_class;
+				$btn_class = 'tutor-btn tutor-btn-primary ' . $size_class;
 			} elseif ( Variant::PRIMARY_SOFT === $this->variant ) {
-				$btn_class = 'tutor-btn tutor-btn-primary-soft tutor-gap-2 ' . $size_class;
+				$btn_class = 'tutor-btn tutor-btn-primary-soft ' . $size_class;
 			} elseif ( Variant::OUTLINE === $this->variant ) {
-				$btn_class = 'tutor-btn tutor-btn-outline tutor-gap-2 ' . $size_class;
+				$btn_class = 'tutor-btn tutor-btn-outline ' . $size_class;
 			} else {
-				$btn_class = 'tutor-btn tutor-text-secondary tutor-btn-small tutor-font-regular tutor-gap-2 tutor-bg-transparent tutor-p-none tutor-min-h-0';
+				$btn_class = 'tutor-btn tutor-btn-link';
 			}
 		}
 
@@ -451,7 +451,7 @@ class DropdownFilter extends BaseComponent {
 				@click="toggle()" 
 				class="<?php echo esc_attr( $btn_class ); ?>"
 			>
-				<span class="tutor-truncate" style="max-width: 150px;"
+				<span class="tutor-truncate <?php echo Variant::LINK === $this->variant ? esc_attr( 'tutor-text-secondary' ) : ''; ?>" style="max-width: 150px;"
 					<?php if ( $this->active_value ) : ?>
 						x-text="labels[<?php echo esc_attr( $this->active_value ); ?>] || '<?php echo esc_js( $label ); ?>'"
 					<?php endif; ?>
@@ -459,7 +459,7 @@ class DropdownFilter extends BaseComponent {
 					<?php echo esc_html( $label ); ?>
 				</span>
 				<?php if ( null !== $count || $this->active_value ) : ?>
-					<span class="tutor-font-medium"
+					<span class="tutor-font-medium <?php echo Variant::LINK === $this->variant ? esc_attr( 'tutor-text-primary' ) : ''; ?>"
 						<?php if ( $this->active_value ) : ?>
 							x-text="'(' + (counts[<?php echo esc_attr( $this->active_value ); ?>] ?? '0') + ')'"
 							x-show="counts[<?php echo esc_attr( $this->active_value ); ?>] !== null"
