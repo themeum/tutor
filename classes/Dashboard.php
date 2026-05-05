@@ -79,7 +79,13 @@ class Dashboard {
 				return;
 			}
 
-			wp_safe_redirect( $redirect_mappings[ $current_url ] );
+			$redirect_url = $redirect_mappings[ $current_url ];
+
+			if ( tutor_utils()->count( $_GET ) ) {
+				$redirect_url = UrlHelper::add_query_params( $redirect_url, $_GET );
+			}
+
+			wp_safe_redirect( $redirect_url );
 			exit;
 		}
 	}

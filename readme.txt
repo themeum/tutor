@@ -318,6 +318,21 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 4.0.0-beta.4 - 05 May, 2026
+
+New: Introduced comprehensive GDPR compliance support for better data handling.
+New: Added an option to generate quiz questions via AI Studio (Pro)
+New: Added support for order history in Paid Memberships Pro. (Pro)
+Update: Improved H5P support in the students' learning area. (Pro)
+Fix: Resolved Checkout page styling issues when using WooCommerce monetization.
+Fix: Enrollment status now updates correctly after order cancellation or refund.
+Fix: Resolved the revenue calculation error for manual enrollments.
+Fix: Order history now displays properly when using the Easy Digital Downloads monetization.
+Fix: Addressed “Add to Cart” button issue in Easy Digital Downloads monetization.
+Fix: Auto-play next lesson feature is now working as expected.
+Fix: Fixed WPML translation issue on the assignment page in legacy mode. (Pro)
+Fix: Prevented ratings and reviews from appearing before course completion.
+
 = 4.0.0-beta.3 - 23 April, 2026
 
 New: Introduced a new Puzzle quiz type. (Pro)

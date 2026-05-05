@@ -24,7 +24,7 @@ $wishlists             = tutor_utils()->get_wishlist( null, $offset, $wishlist_p
 $total_wishlists_count = count( tutor_utils()->get_wishlist() );
 ?>
 
-<div class="tutor-dashboard-page-card-body tutor-dashboard-wishlist-wrapper">
+<div class="tutor-dashboard-wishlist-wrapper">
 
 	<?php if ( is_array( $wishlists ) && count( $wishlists ) ) : ?>
 		<div class="tutor-wishlist-grid">
