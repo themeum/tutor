@@ -101,13 +101,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 
 		<div class="tutor-medium tutor-sm-text-tiny tutor-text-subdued tutor-text-center tutor-mb-6">
 			<?php esc_html_e( 'Topic', 'tutor' ); ?>
-			<?php
-			if ( $topic_id ) {
-				PreviewTrigger::make()->id( $topic_id )->url( false )->render();
-			} else {
-				echo esc_html( get_the_title( $quiz_id ) );
-			}
-			?>
+			<i><?php echo esc_html( get_the_title( $topic_id ? $topic_id : $quiz_id ) ); ?></i>
 			<?php esc_html_e( 'in', 'tutor' ); ?>
 			<?php
 			if ( $course_id ) {
