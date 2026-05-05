@@ -7,6 +7,11 @@
   --tutor-quiz-summary-sidebar-top: calc(
     var(--tutor-quiz-summary-header-top) + #{$tutor-spacing-13} + var(--tutor-quiz-summary-header-height)
   );
+  --tutor-quiz-summary-footer-height: 0px;
+
+  &:has(.tutor-quiz-summary-footer) {
+    --tutor-quiz-summary-footer-height: 90px;
+  }
 
   body:has(#wpadminbar) & {
     --tutor-quiz-summary-header-top: 0px;
@@ -39,7 +44,7 @@
 
   .tutor-quiz-summary-body {
     max-width: 1220px;
-    padding-block: $tutor-spacing-13;
+    padding-top: $tutor-spacing-13;
     padding-inline: $tutor-spacing-6;
     margin-inline: auto;
     display: grid;
@@ -48,7 +53,7 @@
 
     @include tutor-breakpoint-down(sm) {
       grid-template-columns: 1fr;
-      padding-block: $tutor-spacing-8;
+      padding-top: $tutor-spacing-8;
     }
 
     @include tutor-breakpoint-down(md) {
@@ -61,15 +66,21 @@
   }
 
   .tutor-quiz-summary-sidebar {
+    @include tutor-flex(column);
     position: sticky;
     top: var(--tutor-quiz-summary-sidebar-top);
     align-self: start;
+    max-height: calc(100vh - var(--tutor-quiz-summary-sidebar-top) - var(--tutor-quiz-summary-footer-height));
 
     @include tutor-breakpoint-down(sm) {
       display: none;
     }
 
     .tutor-quiz-sidebar-questions {
+      overflow-y: auto;
+      @include tutor-scrollbar;
+      padding: 1px 1px $tutor-spacing-6 1px;
+
       .tutor-quiz-sidebar-question-item {
         all: unset;
         @include tutor-flex(row);
@@ -160,6 +171,7 @@
   .tutor-quiz-summary-content {
     min-width: 0;
     max-width: 100%;
+    padding-bottom: $tutor-spacing-6;
   }
 
   .tutor-quiz-questions {
@@ -168,7 +180,11 @@
     padding-inline: 0;
     width: 100%;
     min-width: 0;
-    gap: $tutor-spacing-5;
+    gap: $tutor-spacing-10;
+
+    @include tutor-breakpoint-down(sm) {
+      gap: $tutor-spacing-5;
+    }
   }
 
   .tutor-quiz-review-dnd {
@@ -190,8 +206,10 @@
       display: flex;
       flex-direction: column;
       gap: $tutor-spacing-3;
-      
-      .tutor-quiz-review-dnd-head, .tutor-quiz-review-dnd-rows, .tutor-quiz-review-dnd-row {
+
+      .tutor-quiz-review-dnd-head,
+      .tutor-quiz-review-dnd-rows,
+      .tutor-quiz-review-dnd-row {
         display: contents;
       }
 

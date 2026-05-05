@@ -110,6 +110,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
     Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount) || questionsCount;
   const usedQuestionCountPercentage = (availableQuestionInPool / questionsCount) * 100;
   const orderedQuestions = (() => {
+    if (questionsOrder === 'rand') {
+      return questions;
+    }
+
     if (questionsOrder === 'sorting') {
       return questions;
     }
@@ -122,7 +126,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
       return [...questions].sort((a, b) => Number(b.question_id) - Number(a.question_id));
     }
 
-    return [];
+    return questions;
   })();
   const questionsForStats = hasQuestionLimit ? orderedQuestions.slice(0, availableQuestionInPool) : orderedQuestions;
   const questionCountForStats = questionsForStats.length;
