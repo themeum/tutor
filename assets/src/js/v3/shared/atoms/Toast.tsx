@@ -110,7 +110,7 @@ const styles = {
     gap: ${spacing[16]};
     max-width: 400px;
     position: fixed;
-    z-index: ${zIndex.highest};
+    z-index: ${zIndex.toast};
 
     ${position === 'top-left' &&
     css`

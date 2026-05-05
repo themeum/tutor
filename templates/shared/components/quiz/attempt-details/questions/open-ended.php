@@ -13,11 +13,10 @@ if ( ! isset( $question ) || ! is_object( $question ) ) {
 	return;
 }
 
-$attempt_answer = isset( $attempt_answer ) && is_object( $attempt_answer ) ? $attempt_answer : null;
-$given_answer   = '';
+$given_answer = '';
 
-if ( $attempt_answer ) {
-	$given_raw = maybe_unserialize( $attempt_answer->given_answer );
+if ( isset( $question->given_answer ) ) {
+	$given_raw = maybe_unserialize( $question->given_answer );
 	if ( is_array( $given_raw ) ) {
 		$given_answer = implode( ', ', array_map( 'strval', $given_raw ) );
 	} else {

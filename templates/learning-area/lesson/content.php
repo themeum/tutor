@@ -121,6 +121,7 @@ $feature_url   = $feature_image ? wp_get_attachment_url( $feature_image ) : null
 		<?php endif; ?>
 	</div>
 	<?php
+		do_action( 'tutor_lesson/single/before/content' );
 		echo apply_filters( 'tutor_learning_area_content', ob_get_clean() ); //phpcs:ignore --already escaped
 		tutor_load_template( 'learning-area.lesson.footer' );
 	?>
