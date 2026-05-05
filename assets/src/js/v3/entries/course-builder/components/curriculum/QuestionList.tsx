@@ -20,8 +20,10 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 import Popover from '@TutorShared/molecules/Popover';
 
+import GenerateQuizWithAi from '@CourseBuilderComponents/curriculum/GenerateQuizWithAi';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
@@ -31,7 +33,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
@@ -49,12 +51,15 @@ import {
 } from '@TutorShared/utils/types';
 import { isAddonEnabled, nanoid, noop } from '@TutorShared/utils/util';
 
-const questionTypeOptions: {
+interface QuestionTypeOption {
   label: string;
   value: QuizQuestionType;
   icon: IconCollection;
   isPro: boolean;
-}[] = [
+  isLegacyDisabled?: boolean;
+}
+
+const basicQuestionTypeOptions: QuestionTypeOption[] = [
   {
     label: __('True/False', 'tutor'),
     value: 'true_false',
@@ -85,6 +90,9 @@ const questionTypeOptions: {
     icon: 'quizShortAnswer',
     isPro: true,
   },
+];
+
+const interactiveQuestionTypeOptions: QuestionTypeOption[] = [
   {
     label: __('Matching', 'tutor'),
     value: 'matching',
@@ -139,17 +147,15 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   const questionTypeOptionsForUi = useMemo(() => {
-    if (tutorConfig.is_legacy_learning_mode) {
-      return questionTypeOptions.filter(
-        (option) =>
-          option.value !== 'draw_image' &&
-          option.value !== 'pin_image' &&
-          option.value !== 'scale' &&
-          option.value !== 'coordinates' &&
-          option.value !== 'puzzle',
+    const legacyExcluded: QuizQuestionType[] = ['draw_image', 'pin_image', 'scale', 'coordinates', 'puzzle'];
+    const markLegacyDisabled = (options: QuestionTypeOption[]) =>
+      options.map((o) =>
+        tutorConfig.is_legacy_learning_mode && legacyExcluded.includes(o.value) ? { ...o, isLegacyDisabled: true } : o,
       );
-    }
-    return questionTypeOptions;
+    return {
+      basic: markLegacyDisabled(basicQuestionTypeOptions),
+      interactive: markLegacyDisabled(interactiveQuestionTypeOptions),
+    };
   }, []);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -355,6 +361,9 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         ...(questionType === 'puzzle' && {
           puzzle_grid_size: 4,
         }),
+        ...(questionType === 'coordinates' && {
+          coordinates_axis_range: 10,
+        }),
       },
     } as QuizQuestion);
     setValidationError(null);
@@ -462,30 +471,37 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     <div>
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
-        <button
-          data-cy="add-question"
-          ref={addButtonRef}
-          type="button"
-          onClick={() => {
-            if (contentType === 'tutor_h5p_quiz') {
-              showModal({
-                component: H5PContentListModal,
-                props: {
-                  title: __('Select H5P Content', 'tutor'),
-                  onAddContent: (contents) => {
-                    handleH5PBulkQuestion(contents);
+        <div css={styles.questionActions}>
+          <Show when={contentType !== 'tutor_h5p_quiz'}>
+            <GenerateQuizWithAi />
+          </Show>
+          <button
+            data-cy="add-question"
+            data-add-question-button
+            ref={addButtonRef}
+            type="button"
+            aria-label={__('Add question', 'tutor')}
+            onClick={() => {
+              if (contentType === 'tutor_h5p_quiz') {
+                showModal({
+                  component: H5PContentListModal,
+                  props: {
+                    title: __('Select H5P Content', 'tutor'),
+                    onAddContent: (contents) => {
+                      handleH5PBulkQuestion(contents);
+                    },
+                    contentType: 'tutor_h5p_quiz',
+                    addedContentIds: questions.map((question) => question.question_description),
                   },
-                  contentType: 'tutor_h5p_quiz',
-                  addedContentIds: questions.map((question) => question.question_description),
-                },
-              });
-            } else {
-              setIsOpen(true);
-            }
-          }}
-        >
-          <SVGIcon name="plusSquareBrand" width={32} height={32} />
-        </button>
+                });
+              } else {
+                setIsOpen(true);
+              }
+            }}
+          >
+            <SVGIcon name="plusSquareBrand" width={32} height={32} />
+          </button>
+        </div>
       </div>
 
       <div ref={questionListRef} css={styles.questionList}>
@@ -545,7 +561,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         </Show>
         <Popover
           gap={4}
-          maxWidth={'240px'}
+          maxWidth={'340px'}
           placement={
             CURRENT_VIEWPORT.isAboveTablet
               ? POPOVER_PLACEMENTS.BOTTOM
@@ -557,37 +573,101 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
           isOpen={isOpen}
           closePopover={() => setIsOpen(false)}
           animationType={AnimationType.slideUp}
-          arrow={true}
+          border={true}
         >
           <div css={styles.questionOptionsWrapper}>
-            <span css={styles.questionTypeOptionsTitle}>{__('Select Question Type', 'tutor')}</span>
-            {questionTypeOptionsForUi.map((option) => (
-              <Show
-                key={option.value}
-                when={option.isPro && !isTutorPro}
-                fallback={
-                  <button
+            <div css={styles.questionTypeColumns}>
+              <div css={styles.questionTypeColumn}>
+                <span css={styles.questionTypeColumnTitle}>{__('Interactive', 'tutor')}</span>
+                {questionTypeOptionsForUi.interactive.map((option) => (
+                  <Show
                     key={option.value}
-                    type="button"
-                    css={styles.questionTypeOption}
-                    onClick={() => {
-                      handleAddQuestion(option.value as QuizQuestionType);
-                    }}
+                    when={option.isPro && !isTutorPro}
+                    fallback={
+                      <button
+                        type="button"
+                        css={styles.questionTypeOption}
+                        title={option.label}
+                        disabled={option.isLegacyDisabled}
+                        onClick={() => {
+                          handleAddQuestion(option.value as QuizQuestionType);
+                        }}
+                      >
+                        <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                        <div css={styles.questionTypeOptionLabelRow}>
+                          <span css={styles.questionTypeOptionLabel}>{option.label}</span>
+                          <Show when={option.isLegacyDisabled}>
+                            <Tooltip
+                              content={__('Not available in legacy learning mode', 'tutor')}
+                              placement="top"
+                              wrapperCss={styleUtils.flexCenter()}
+                            >
+                              <span css={styles.legacyInfoIcon}>
+                                <SVGIcon name="infoOctagon" width={12} height={12} />
+                              </span>
+                            </Tooltip>
+                          </Show>
+                        </div>
+                      </button>
+                    }
                   >
-                    <SVGIcon name={option.icon as IconCollection} width={24} height={24} />
-                    <span>{option.label}</span>
-                  </button>
-                }
-              >
-                <button key={option.value} type="button" css={styles.questionTypeOption} disabled onClick={noop}>
-                  <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
-                  <div>
-                    <span>{option.label}</span>
-                    <ProBadge size="small" content={__('Pro', 'tutor')} />
-                  </div>
-                </button>
-              </Show>
-            ))}
+                    <button type="button" css={styles.questionTypeOption} title={option.label} disabled onClick={noop}>
+                      <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                      <div css={styles.questionTypeOptionLabelRow}>
+                        <span css={styles.questionTypeOptionLabel}>{option.label}</span>
+                        <ProBadge size="small" content={__('Pro', 'tutor')} />
+                      </div>
+                    </button>
+                  </Show>
+                ))}
+              </div>
+
+              <div css={styles.questionTypeColumn}>
+                <span css={styles.questionTypeColumnTitle}>{__('Basic', 'tutor')}</span>
+                {questionTypeOptionsForUi.basic.map((option) => (
+                  <Show
+                    key={option.value}
+                    when={option.isPro && !isTutorPro}
+                    fallback={
+                      <button
+                        type="button"
+                        css={styles.questionTypeOption}
+                        title={option.label}
+                        disabled={option.isLegacyDisabled}
+                        onClick={() => {
+                          handleAddQuestion(option.value as QuizQuestionType);
+                        }}
+                      >
+                        <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                        <div css={styles.questionTypeOptionLabelRow}>
+                          <span css={styles.questionTypeOptionLabel}>{option.label}</span>
+                          <Show when={option.isLegacyDisabled}>
+                            <Tooltip
+                              content={__('Not available in legacy learning mode', 'tutor')}
+                              placement="top"
+                              wrapperCss={styleUtils.flexCenter()}
+                            >
+                              <span css={styles.legacyInfoIcon}>
+                                <SVGIcon name="info" width={16} height={16} />
+                              </span>
+                            </Tooltip>
+                          </Show>
+                        </div>
+                      </button>
+                    }
+                  >
+                    <button type="button" css={styles.questionTypeOption} title={option.label} disabled onClick={noop}>
+                      <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                      <div css={styles.questionTypeOptionLabelRow}>
+                        <span css={styles.questionTypeOptionLabel}>{option.label}</span>
+                        <ProBadge size="small" content={__('Pro', 'tutor')} />
+                      </div>
+                    </button>
+                  </Show>
+                ))}
+              </div>
+            </div>
+
             <Show
               when={!isTutorPro}
               fallback={
@@ -657,11 +737,24 @@ const styles = {
     ${typography.caption('medium')};
     color: ${colorTokens.text.subdued};
 
-    button {
+    ${Breakpoint.smallMobile} {
+      padding: ${spacing[16]};
+    }
+  `,
+  questionActions: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+
+    [data-add-question-button],
+    [data-generate-quiz-button] {
       ${styleUtils.resetButton};
       width: 32px;
       height: 32px;
       border-radius: ${borderRadius[6]};
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
 
       &:focus,
       &:active,
@@ -675,13 +768,24 @@ const styles = {
         height: 100%;
       }
 
+      &:focus {
+        box-shadow: ${shadow.focus};
+      }
+
       :focus-visible {
+        box-shadow: none;
         outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 1px;
       }
     }
 
-    ${Breakpoint.smallMobile} {
-      padding: ${spacing[16]};
+    [data-generate-quiz-button] {
+      border: 1px solid ${colorTokens.stroke.divider};
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
     }
   `,
   questionList: css`
@@ -696,8 +800,7 @@ const styles = {
     border-bottom: 1px solid ${colorTokens.stroke.divider};
   `,
   addFormContentBankButton: css`
-    padding: ${spacing[8]} ${spacing[16]};
-    border-top: 1px solid ${colorTokens.stroke.divider};
+    padding: ${spacing[6]} ${spacing[12]};
 
     button {
       width: 100%;
@@ -708,42 +811,58 @@ const styles = {
     flex-direction: column;
     padding-block: ${spacing[6]};
   `,
+  questionTypeColumns: css`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-block: ${spacing[6]};
+  `,
+  questionTypeColumn: css`
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding-inline: ${spacing[8]};
+  `,
+  questionTypeColumnTitle: css`
+    ${typography.small('regular')};
+    color: ${colorTokens.text.title};
+    padding-left: ${spacing[4]};
+    margin-bottom: ${spacing[12]};
+  `,
   questionTypeOption: css`
     ${styleUtils.resetButton};
-    color: ${colorTokens.text.title};
+    color: ${colorTokens.text.hints};
     width: 100%;
-    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
+    padding: ${spacing[2]};
     transition: background-color 0.3s ease-in-out;
     display: flex;
     align-items: center;
-    gap: ${spacing[10]};
+    gap: ${spacing[8]};
     border: 2px solid transparent;
+    border-radius: ${borderRadius[6]};
 
-    div {
-      ${styleUtils.display.flex()};
-      align-items: center;
-      gap: ${spacing[4]};
+    &:not(:last-of-type) {
+      margin-bottom: ${spacing[4]};
     }
 
-    &:focus,
-    &:active,
-    &:hover {
-      background: none;
-      color: ${colorTokens.text.title};
+    [data-question-icon] {
+      flex-shrink: 0;
+    }
+
+    &:enabled {
+      &:focus,
+      &:active,
+      &:hover {
+        background-color: ${colorTokens.background.hover};
+        color: ${colorTokens.text.title};
+      }
     }
 
     :disabled {
       cursor: not-allowed;
-      color: ${colorTokens.text.primary};
 
       [data-question-icon] {
         filter: grayscale(100%);
       }
-    }
-
-    :hover:enabled {
-      background-color: ${colorTokens.background.hover};
-      color: ${colorTokens.text.title};
     }
 
     :focus:enabled,
@@ -751,9 +870,31 @@ const styles = {
       border-color: ${colorTokens.stroke.brand};
     }
   `,
+  questionTypeOptionLabel: css`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  `,
+  questionTypeOptionLabelRow: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[4]};
+    width: 100%;
+    min-width: 0;
+
+    > div {
+      flex-shrink: 0;
+    }
+  `,
   emptyQuestionText: css`
     ${typography.small()};
     color: ${colorTokens.text.subdued};
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[28]};
+  `,
+  legacyInfoIcon: css`
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: ${colorTokens.icon.brand};
   `,
 };

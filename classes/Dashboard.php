@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\UrlHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -29,6 +31,15 @@ class Dashboard {
 	const COURSES_PAGE_SLUG             = 'courses';
 	const QUIZ_ATTEMPTS_PAGE_SLUG       = 'quiz-attempts';
 	const MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG = 'my-quiz-attempts';
+	const REVIEW_PAGE_SLUG              = 'reviews';
+	const PROFILE_PAGE_SLUG             = 'my-profile';
+	const SETTINGS_PAGE_SLUG            = 'settings';
+	const Q_AND_A_PAGE_SLUG             = 'question-answer';
+	const DISCUSSION_PAGE_SLUG          = 'discussions';
+	const PURCHASE_HISTORY_PAGE_SLUG    = 'purchase_history';
+	const BILLING_PAGE_SLUG             = 'billing';
+	const WISHILIST_PAGE_SLUG           = 'wishlist';
+	const ENROLLED_COURSES_PAGE_SLUG    = 'enrolled-courses';
 
 	/**
 	 * Constructor
@@ -39,6 +50,44 @@ class Dashboard {
 	public function __construct() {
 		add_action( 'tutor_load_template_after', array( $this, 'tutor_load_template_after' ), 10, 2 );
 		add_filter( 'should_tutor_load_template', array( $this, 'should_tutor_load_template' ), 10, 2 );
+		add_action( 'template_redirect', array( $this, 'redirect_old_dashboard_pages' ) );
+	}
+
+	/**
+	 * Redirect user old dashboard page slugs to new slugs.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function redirect_old_dashboard_pages() {
+		$current_url = rtrim( UrlHelper::current(), '/' );
+		if ( is_user_logged_in() && ! is_admin() ) {
+			// Redirect logic here.
+			$redirect_mappings = array(
+				tutor_utils()->tutor_dashboard_url( self::PROFILE_PAGE_SLUG ) => self::get_account_page_url( self::PROFILE_PAGE_SLUG ),
+				tutor_utils()->tutor_dashboard_url( self::REVIEW_PAGE_SLUG ) => self::get_account_page_url( self::REVIEW_PAGE_SLUG ),
+				tutor_utils()->tutor_dashboard_url( self::SETTINGS_PAGE_SLUG ) => self::get_account_page_url( self::SETTINGS_PAGE_SLUG ),
+				tutor_utils()->tutor_dashboard_url( self::Q_AND_A_PAGE_SLUG ) => tutor_utils()->tutor_dashboard_url( self::DISCUSSION_PAGE_SLUG ),
+				tutor_utils()->tutor_dashboard_url( self::PURCHASE_HISTORY_PAGE_SLUG ) => self::get_account_page_url( self::BILLING_PAGE_SLUG ),
+				tutor_utils()->tutor_dashboard_url( self::WISHILIST_PAGE_SLUG ) => tutor_utils()->tutor_dashboard_url( 'courses/wishlist' ),
+				tutor_utils()->tutor_dashboard_url( self::MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG ) => tutor_utils()->tutor_dashboard_url( 'courses/my-quiz-attempts' ),
+				tutor_utils()->tutor_dashboard_url( self::ENROLLED_COURSES_PAGE_SLUG ) => tutor_utils()->tutor_dashboard_url( self::COURSES_PAGE_SLUG ),
+			);
+
+			if ( ! isset( $redirect_mappings[ $current_url ] ) ) {
+				return;
+			}
+
+			$redirect_url = $redirect_mappings[ $current_url ];
+
+			if ( tutor_utils()->count( $_GET ) ) {
+				$redirect_url = UrlHelper::add_query_params( $redirect_url, $_GET );
+			}
+
+			wp_safe_redirect( $redirect_url );
+			exit;
+		}
 	}
 
 

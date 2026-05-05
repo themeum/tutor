@@ -114,7 +114,7 @@ body{direction:<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;padding: 0px;margin: 0px;
 .tutor-email-announcement .announcement-heading {background: #E9EDFB;padding:20px 30px;border-top-left-radius: 6px;border-top-right-radius: 6px;}
 .tutor-email-announcement .announcement-heading .announcement-title{margin-bottom: 10px;}
 .tutor-email-announcement .announcement-heading .announcement-meta > *{display: inline-block;vertical-align: middle; margin-right: 10px;font-size: 15px;}
-.tutor-email-announcement .announcement-content{padding:20px 30px;}
+.tutor-email-announcement .announcement-content{padding:20px 30px; white-space: pre-line;}
 .tutor-email-announcement .announcement-content p{margin-bottom: 30px;}
 .tutor-email-footer-content{background-color: #eff1f6;padding: 0 50px 50px;}
 .tutor-email-footer-content * {margin-top: 0;}

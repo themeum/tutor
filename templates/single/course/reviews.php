@@ -9,7 +9,10 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
+use Tutor\Models\EnrollmentModel;
 
 $disable = ! get_tutor_option( 'enable_course_review' );
 if ( $disable ) {
@@ -37,11 +40,11 @@ if ( Input::has( 'course_id' ) ) {
 /**
  * Global $is_enrolled, $course_rating get null for third party
  * who only include this file without single-course.php file.
- * 
+ *
  * @since 2.1.9
  */
 if ( is_null( $is_enrolled ) ) {
-	$is_enrolled = tutor_utils()->is_enrolled( $course_id, $current_user_id );
+	$is_enrolled = EnrollmentModel::is_enrolled( $course_id, $current_user_id );
 }
 
 if ( is_null( $course_rating ) ) {
@@ -109,7 +112,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 										<span class="tutor-fs-6 tutor-color-secondary tutor-individual-star-rating">
 											<?php
 												/* translators: %s: rating count */
-												printf( esc_html( _n( '%s Rating', '%s Ratings', 0 == $value ? 1 : $value, 'tutor' ) ), number_format_i18n( $value ) ); 
+												printf( esc_html( _n( '%s Rating', '%s Ratings', 0 == $value ? 1 : $value, 'tutor' ) ), number_format_i18n( $value ) );
 											?>
 										</span>
 									</div>

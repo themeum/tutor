@@ -16,6 +16,7 @@ use TUTOR\Earnings;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Models\OrderMetaModel;
 use Tutor\Models\OrderActivitiesModel;
 use TutorPro\CourseBundle\Models\BundleModel;
@@ -369,10 +370,10 @@ class HooksHandler {
 				}
 			}
 
-			$has_enrollment = tutor_utils()->is_enrolled( $object_id, $student_id, false );
+			$has_enrollment = EnrollmentModel::is_enrolled( $object_id, $student_id, false );
 			if ( $has_enrollment ) {
 				// Update enrollment status based on order status.
-				$update = tutor_utils()->update_enrollments( $enrollment_status, array( $has_enrollment->ID ) );
+				$update = EnrollmentModel::update_enrollments( $enrollment_status, array( $has_enrollment->ID ) );
 				if ( $update ) {
 					if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
 						if ( 'completed' === $enrollment_status ) {
@@ -386,7 +387,7 @@ class HooksHandler {
 					 * For subscription, renewal no need to update order id.
 					 */
 					if ( $this->order_model->is_single_order( $order ) ) {
-						update_post_meta( $has_enrollment->ID, '_tutor_enrolled_by_order_id', $order_id );
+						update_post_meta( $has_enrollment->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
 
 						/**
 						 * Update enrollment expiry date if it is set in a course.
@@ -424,12 +425,12 @@ class HooksHandler {
 					// Insert enrollment.
 					add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
-					$enrollment_id = tutor_utils()->do_enroll( $object_id, $order_id, $student_id );
+					$enrollment_id = EnrollmentModel::do_enroll( $object_id, $order_id, $student_id );
 					if ( $enrollment_id ) {
 						if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
 							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
 						}
-						update_post_meta( $enrollment_id, '_tutor_enrolled_by_order_id', $order_id );
+						update_post_meta( $enrollment_id, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
 
 						do_action( 'tutor_order_enrolled', $order, $enrollment_id );
 					} else {
@@ -480,7 +481,7 @@ class HooksHandler {
 			foreach ( $items as $item ) {
 				add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
-				$enrolled_id = tutor_utils()->do_enroll( $item['item_id'], $order_data['id'], $user_id );
+				$enrolled_id = EnrollmentModel::do_enroll( $item['item_id'], $order_data['id'], $user_id );
 				if ( $enrolled_id && tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
 					BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
 				}

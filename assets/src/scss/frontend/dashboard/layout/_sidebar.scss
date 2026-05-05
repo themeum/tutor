@@ -23,7 +23,7 @@
     }
   }
 
-  &-nav {
+  .tutor-dashboard-sidebar-nav {
     padding: $tutor-spacing-8 $tutor-spacing-6;
 
     ul {
@@ -57,7 +57,9 @@
           outline: none;
           box-shadow: none;
 
-          &:hover {
+          &:hover,
+          &:focus {
+            outline: none !important;
             background-color: $tutor-tab-sidebar-l2-hover;
           }
 

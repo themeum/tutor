@@ -8,7 +8,8 @@
   gap: $tutor-spacing-2;
   overflow-x: auto;
 
-  &-item {
+  button.tutor-nav-item,
+  .tutor-nav-item {
     @include tutor-button-reset();
     @include tutor-typography(tiny, medium, secondary);
     @include tutor-flex(row, center);
@@ -22,10 +23,14 @@
     @include tutor-transition((background-color, color, box-shadow));
 
     &:hover {
-      background-color: $tutor-tab-l3-active-hover;
+      color: $tutor-text-brand;
+      background-color: $tutor-tab-l3-active;
+      box-shadow: $tutor-tab-active-shadow;
     }
 
     &:focus {
+      color: $tutor-text-brand;
+      background-color: $tutor-tab-l3-active;
       box-shadow: none;
       outline: none;
     }
@@ -56,10 +61,12 @@
       @include tutor-transition((background-color, color));
 
       &:hover {
+        color: $tutor-text-primary;
         background-color: $tutor-tab-l3-active-hover;
       }
 
       &:focus {
+        color: $tutor-text-primary;
         box-shadow: none;
         outline: none;
       }
@@ -69,8 +76,8 @@
         color: $tutor-text-brand;
 
         &:hover {
-          background-color: $tutor-tab-l3-active-hover;
-          color: $tutor-text-primary;
+          background-color: $tutor-tab-l3-active;
+          color: $tutor-text-brand;
 
           svg {
             color: $tutor-icon-brand;

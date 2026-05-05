@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Cache\TutorCache;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
@@ -20,12 +22,9 @@ use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Icon;
 use Tutor\Models\CourseModel;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Utility methods
@@ -51,6 +50,7 @@ class Utils {
 			'Tutor\Models\LessonModel',
 			'Tutor\Models\QuizModel',
 			'Tutor\Models\WithdrawModel',
+			'Tutor\Models\EnrollmentModel',
 		);
 
 		foreach ( $classes as $class ) {
@@ -1318,75 +1318,6 @@ class Utils {
 	}
 
 	/**
-	 * Check if current user has been enrolled or not
-	 *
-	 * @since 1.0.0
-	 *
-	 * @since 3.0.0  $is_complete parameter added to check with completed status
-	 *               Default value set true for backward compatibility. It set
-	 *               false then it will just check record.
-	 *
-	 * @since 3.3.0  param $is_complete added to cache key.
-	 * @since 4.0.0  enrollment order_id and product_id added to enrollment info.
-	 *
-	 * @param int  $course_id course id.
-	 * @param int  $user_id user id.
-	 * @param bool $is_complete Whether to enrollment completed or not.
-	 *
-	 * @return array|bool|null|object
-	 */
-	public function is_enrolled( $course_id = 0, $user_id = 0, bool $is_complete = true ) {
-		global $wpdb;
-		$course_id = $this->get_post_id( $course_id );
-		$user_id   = $this->get_user_id( $user_id );
-		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}_{$is_complete}";
-
-		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
-
-		$get_enrolled_info = TutorCache::get( $cache_key );
-		if ( ! $get_enrolled_info ) {
-			$status_clause = '';
-			if ( $is_complete ) {
-				$status_clause = "AND post_status = 'completed' ";
-			}
-
-			$get_enrolled_info = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT ID,
-					post_author,
-					post_date,
-					post_date_gmt,
-					post_title
-				FROM {$wpdb->posts}
-				WHERE post_author > 0 
-					AND post_parent > 0
-					AND post_type = %s
-					AND post_parent = %d
-					AND post_author = %d
-					{$status_clause};
-				",
-					'tutor_enrolled',
-					$course_id,
-					$user_id
-				)
-			);
-
-			if ( $get_enrolled_info ) {
-				$get_enrolled_info->order_id   = (int) get_post_meta( $get_enrolled_info->ID, Course::ENROLLMENT_ORDER_ID_META, true );
-				$get_enrolled_info->product_id = (int) get_post_meta( $get_enrolled_info->ID, Course::ENROLLMENT_PRODUCT_ID_META, true );
-			}
-
-			TutorCache::set( $cache_key, $get_enrolled_info );
-		}
-
-		if ( $get_enrolled_info ) {
-			return apply_filters( 'tutor_is_enrolled', $get_enrolled_info, $course_id, $user_id );
-		}
-
-		return false;
-	}
-
-	/**
 	 * Delete course progress
 	 *
 	 * @since 1.9.5
@@ -1529,7 +1460,7 @@ class Utils {
 		$user_id   = $this->get_user_id( $user_id );
 		$course_id = $this->get_course_id_by( 'lesson', $lesson_id );
 
-		return $this->is_enrolled( $course_id );
+		return EnrollmentModel::is_enrolled( $course_id );
 	}
 
 	/**
@@ -2279,49 +2210,6 @@ class Utils {
 	}
 
 	/**
-	 * Get single or list of enrolled course data by a user
-	 *
-	 * @since 2.0.5
-	 *
-	 * @param integer $user_id user id.
-	 * @param integer $course_id cousrs id.
-	 *
-	 * @return object|mixed
-	 */
-	public function get_enrolled_data( $user_id = 0, $course_id = 0 ) {
-		global $wpdb;
-		// If course ID provided, it will return single row data.
-		if ( 0 != $course_id ) {
-			return $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT * FROM 	{$wpdb->posts} 
-						WHERE post_type = %s
-						AND post_parent = %d
-						AND post_status = %s
-						AND post_author = %d;",
-					'tutor_enrolled',
-					$course_id,
-					'completed',
-					$user_id
-				)
-			);
-		} else {
-			// Return all enrolled data by user ID.
-			return $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT * FROM 	{$wpdb->posts} 
-						WHERE post_type = %s
-						AND post_status = %s
-						AND post_author = %d;",
-					'tutor_enrolled',
-					'completed',
-					$user_id
-				)
-			);
-		}
-	}
-
-	/**
 	 * Get total enrolled students by course id.
 	 *
 	 * @since 1.0.0
@@ -2486,96 +2374,6 @@ class Utils {
 	}
 
 	/**
-	 * Saving enroll information to posts table
-	 * post_author = enrolled_student_id (wp_users id)
-	 * post_parent = enrolled course id
-	 *
-	 * @since 1.0.0
-	 * @since 2.6.0 Return enrolled id
-	 * @since 3.3.0 Added $fire_hook parameter.
-	 *
-	 * @param int  $course_id course id.
-	 * @param int  $order_id order id.
-	 * @param int  $user_id user id.
-	 * @param bool $fire_hook fire hook.
-	 *
-	 * @return int enrolled id
-	 */
-	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0, $fire_hook = true ) {
-		$enrolled_id = 0;
-		if ( ! $course_id ) {
-			return $enrolled_id;
-		}
-
-		$fire_hook ? do_action( 'tutor_before_enroll', $course_id ) : null;
-		$user_id = $this->get_user_id( $user_id );
-		$title   = __( 'Course Enrolled', 'tutor' ) . ' &ndash; ' . gmdate( get_option( 'date_format' ) ) . ' @ ' . gmdate( get_option( 'time_format' ) );
-
-		if ( $course_id && $user_id ) {
-			$enrolled_info = $this->is_enrolled( $course_id, $user_id );
-			if ( $enrolled_info ) {
-				return $enrolled_info->ID;
-			}
-		}
-
-		$enrolment_status = 'completed';
-
-		if ( $this->is_course_purchasable( $course_id ) ) {
-			$enrolment_status = 'pending';
-		}
-
-		$enroll_data = apply_filters(
-			'tutor_enroll_data',
-			array(
-				'post_type'     => 'tutor_enrolled',
-				'post_title'    => $title,
-				'post_status'   => $enrolment_status,
-				'post_author'   => $user_id,
-				'post_parent'   => $course_id,
-				'post_date_gmt' => current_time( 'mysql', true ),
-			)
-		);
-
-		// Insert the post into the database.
-		$is_enrolled = wp_insert_post( $enroll_data );
-		if ( $is_enrolled ) {
-
-			// Run this hook for both of pending and completed enrollment.
-			$fire_hook ? do_action( 'tutor_after_enroll', $course_id, $is_enrolled ) : null;
-
-			// Mark Current User as Students with user meta data.
-			update_user_meta( $user_id, '_is_tutor_student', tutor_time() );
-
-			if ( $order_id ) {
-				// Mark order for course and user.
-				$product_id = $this->get_course_product_id( $course_id );
-				update_post_meta( $is_enrolled, '_tutor_enrolled_by_order_id', $order_id );
-				update_post_meta( $is_enrolled, '_tutor_enrolled_by_product_id', $product_id );
-
-				$monetize_by = $this->get_option( 'monetize_by' );
-				if ( 'wc' === $monetize_by ) {
-					$order = wc_get_order( $order_id );
-					$order->update_meta_data( '_is_tutor_order_for_course', tutor_time() );
-					$order->update_meta_data( '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
-					$order->save();
-				} else {
-					update_post_meta( $order_id, '_is_tutor_order_for_course', tutor_time() );
-					update_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
-				}
-			}
-
-			$enrolled_id = $is_enrolled;
-
-			// Run this hook for completed enrollment regardless of payment provider and free/paid mode.
-			if ( $fire_hook && 'completed' === $enroll_data['post_status'] ) {
-				do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
-			}
-		}
-
-		return $enrolled_id;
-	}
-
-	/**
 	 * Enrol Status change
 	 *
 	 * @since 1.6.1
@@ -2611,7 +2409,7 @@ class Utils {
 	public function cancel_course_enrol( $course_id = 0, $user_id = 0, $cancel_status = 'canceled' ) {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
-		$enrolled  = $this->is_enrolled( $course_id, $user_id );
+		$enrolled  = EnrollmentModel::is_enrolled( $course_id, $user_id );
 
 		if ( $enrolled ) {
 			global $wpdb;
@@ -2627,21 +2425,21 @@ class Utils {
 				);
 
 				// Delete Related Meta Data.
-				delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_product_id' );
-				$order_id = get_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id', true );
+				delete_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_PRODUCT_ID_META );
+				$order_id = get_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META, true );
 				if ( $order_id ) {
-					delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id' );
+					delete_post_meta( $enrolled->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META );
 
 					$monetize_by = $this->get_option( 'monetize_by' );
 					if ( 'wc' === $monetize_by ) {
 						// Delete WC order meta.
 						$order = wc_get_order( $order_id );
-						$order->delete_meta_data( '_is_tutor_order_for_course' );
-						$order->delete_meta_data( '_tutor_order_for_course_id_' . $course_id );
+						$order->delete_meta_data( Course::IS_TUTOR_ORDER_FOR_COURSE_META );
+						$order->delete_meta_data( Course::TUTOR_ORDER_FOR_COURSE_ID_META . $course_id );
 						$order->save();
 					} else {
-						delete_post_meta( $order_id, '_is_tutor_order_for_course' );
-						delete_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id );
+						delete_post_meta( $order_id, Course::IS_TUTOR_ORDER_FOR_COURSE_META );
+						delete_post_meta( $order_id, Course::TUTOR_ORDER_FOR_COURSE_ID_META . $course_id );
 					}
 				}
 
@@ -2672,34 +2470,6 @@ class Utils {
 
 				if ( 'cancel' === $cancel_status ) {
 					die( esc_html( $cancel_status ) );
-				}
-			}
-		}
-	}
-
-	/**
-	 * Complete course enrollment and do some task
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $order_id order id.
-	 *
-	 * @return mixed
-	 */
-	public function complete_course_enroll( $order_id ) {
-		if ( ! $this->is_tutor_order( $order_id ) ) {
-			return;
-		}
-
-		global $wpdb;
-
-		$enrolled_ids_with_course = $this->get_course_enrolled_ids_by_order_id( $order_id );
-		if ( $enrolled_ids_with_course ) {
-			$enrolled_ids = wp_list_pluck( $enrolled_ids_with_course, 'enrolled_id' );
-
-			if ( is_array( $enrolled_ids ) && count( $enrolled_ids ) ) {
-				foreach ( $enrolled_ids as $enrolled_id ) {
-					$wpdb->update( $wpdb->posts, array( 'post_status' => 'completed' ), array( 'ID' => $enrolled_id ) );
 				}
 			}
 		}
@@ -2923,9 +2693,12 @@ class Utils {
 		$monetize_by = $this->get_option( 'monetize_by' );
 		if ( 'wc' === $monetize_by ) {
 			$order = wc_get_order( $order_id );
-			return $order->get_meta( '_is_tutor_order_for_course', true );
+			return $order->get_meta( Course::IS_TUTOR_ORDER_FOR_COURSE_META, true );
+		} elseif ( 'edd' === $monetize_by ) {
+			$payment = new \EDD_Payment( $order_id );
+			return $payment->get_meta( Course::IS_TUTOR_ORDER_FOR_COURSE_META, true );
 		} else {
-			return get_post_meta( $order_id, '_is_tutor_order_for_course', true );
+			return get_post_meta( $order_id, Course::IS_TUTOR_ORDER_FOR_COURSE_META, true );
 		}
 	}
 
@@ -5314,6 +5087,11 @@ class Utils {
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),
+			'coordinates'       => array(
+				'name'   => __( 'Graph', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-coordinates tutor-icon-grid"></i></span>',
+				'is_pro' => true,
+			),
 			'puzzle'            => array(
 				'name'   => __( 'Puzzle', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-puzzle tutor-icon-images"></i></span>',
@@ -7674,49 +7452,6 @@ class Utils {
 	}
 
 	/**
-	 * Get enrollment by enrol_id
-	 *
-	 * @since 1.6.9
-	 *
-	 * @param int $enrol_id enrol id.
-	 *
-	 * @return array|object
-	 */
-	public function get_enrolment_by_enrol_id( $enrol_id = 0 ) {
-		global $wpdb;
-
-		$enrolment = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT enrol.id          AS enrol_id,
-					enrol.post_author AS student_id,
-					enrol.post_date   AS enrol_date,
-					enrol.post_title  AS enrol_title,
-					enrol.post_status AS status,
-					enrol.post_parent AS course_id,
-					course.post_title AS course_title,
-					student.user_nicename,
-					student.user_email,
-					student.display_name,
-					student.ID
-			FROM   {$wpdb->posts} enrol
-					INNER JOIN {$wpdb->posts} course
-							ON enrol.post_parent = course.id
-					INNER JOIN {$wpdb->users} student
-							ON enrol.post_author = student.id
-			WHERE  enrol.id = %d;
-		",
-				$enrol_id
-			)
-		);
-
-		if ( $enrolment ) {
-			return $enrolment;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Get students list based on course id
 	 *
 	 * @since 1.6.6
@@ -8142,7 +7877,7 @@ class Utils {
 
 		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
 
-		if ( $this->is_enrolled( $course_id, $user_id ) || $this->has_user_course_content_access( $user_id, $course_id ) ) {
+		if ( EnrollmentModel::is_enrolled( $course_id, $user_id ) || $this->has_user_course_content_access( $user_id, $course_id ) ) {
 			return true;
 		}
 
@@ -8168,10 +7903,11 @@ class Utils {
 	 *
 	 * @return string|false
 	 */
-	public function get_assignment_deadline_date_in_gmt( $assignment_id, $fallback = null, $student_id = 0, $course_id = 0 ) {
-		$value               = $this->get_assignment_option( $assignment_id, 'time_duration.value' );
-		$time                = $this->get_assignment_option( $assignment_id, 'time_duration.time' );
-		$deadline_from_start = (bool) $this->get_assignment_option( $assignment_id, 'deadline_from_start' );
+	public function get_assignment_deadline_date_in_gmt( $assignment_id, $fallback = null, $student_id = 0, $course_id = 0, $options = null ) {
+		$options             = $options ?? $this->get_assignment_option( $assignment_id );
+		$value               = $this->avalue_dot( 'time_duration.value', $options );
+		$time                = $this->avalue_dot( 'time_duration.time', $options );
+		$deadline_from_start = (bool) $this->avalue_dot( 'deadline_from_start', $options );
 
 		if ( ! $value ) {
 			return $fallback;
@@ -8181,7 +7917,7 @@ class Utils {
 		$enrolled_date_gmt = '';
 
 		if ( $course_id && $student_id ) {
-			$enrolled_info = $this->is_enrolled( $course_id, $student_id );
+			$enrolled_info = EnrollmentModel::is_enrolled( $course_id, $student_id );
 
 			if ( $enrolled_info ) {
 				$enrolled_date_gmt = apply_filters( 'tutor_content_drip_assignment_deadline', strtotime( $enrolled_info->post_date_gmt ), $course_id, $assignment_id );
@@ -9647,7 +9383,7 @@ class Utils {
 	 * @return boolean
 	 */
 	public function can_user_retake_course() {
-		if ( ! $this->is_enrolled() ) {
+		if ( ! EnrollmentModel::is_enrolled() ) {
 			return false;
 		}
 
@@ -10028,44 +9764,6 @@ class Utils {
 	public function get_local_time_from_unix( $time, $date_format = null ) {
 		$output_format = $date_format ? $date_format : get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
 		return get_date_from_gmt( $time, $output_format );
-	}
-
-	/**
-	 * Execute bulk action for enrollment list ex: complete | cancel
-	 *
-	 * @since 2.0.3
-	 * @since 3.2.0 $trigger_hook param added.
-	 *
-	 * @param string $status hold status for updating.
-	 * @param array  $enrollment_ids ids that need to update.
-	 * @param bool   $trigger_hook optional - trigger hook or not.
-	 *
-	 * @return bool
-	 */
-	public function update_enrollments( string $status, array $enrollment_ids, bool $trigger_hook = true ): bool {
-		global $wpdb;
-		$enrollment_ids_in = QueryHelper::prepare_in_clause( $enrollment_ids );
-		$status            = 'complete' === $status ? 'completed' : $status;
-		$post_table        = $wpdb->posts;
-
-		$wpdb->query(
-			$wpdb->prepare(
-				" UPDATE {$post_table}
-				SET post_status = %s
-				WHERE ID IN ($enrollment_ids_in)
-			",
-				$status
-			)
-		);
-
-		if ( $trigger_hook ) {
-			// Run action hook.
-			foreach ( $enrollment_ids as $id ) {
-				do_action( 'tutor_enrollment/after/' . $status, $id );
-			}
-		}
-
-		return true;
 	}
 
 	/**
@@ -10566,28 +10264,6 @@ class Utils {
 		}
 
 		return (object) $info;
-	}
-
-	/**
-	 * Delete enrollment record by providing the student and course id
-	 *
-	 * @since 3.4.0
-	 *
-	 * @param int $student_id Student id.
-	 * @param int $course_id Course id
-	 *
-	 * @return bool
-	 */
-	public function delete_enrollment_record( int $student_id, int $course_id ): bool {
-		global $wpdb;
-		return QueryHelper::delete(
-			$wpdb->posts,
-			array(
-				'post_author' => $student_id,
-				'post_parent' => $course_id,
-				'post_type'   => tutor()->enrollment_post_type,
-			)
-		);
 	}
 
 	/**

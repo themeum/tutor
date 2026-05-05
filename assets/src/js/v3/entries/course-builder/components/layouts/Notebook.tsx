@@ -7,7 +7,7 @@ import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import { CURRENT_VIEWPORT, LocalStorageKeys, notebook } from '@TutorShared/config/constants';
-import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { getFromLocalStorage, setToLocalStorage } from '@TutorShared/utils/localStorage';
@@ -43,12 +43,8 @@ const Notebook = () => {
   const notebookRef = useRef<HTMLDivElement>(null);
 
   const expandAnimation = useSpring({
-    width: !isCollapsed ? notebook.MIN_NOTEBOOK_WIDTH : notebook.NOTEBOOK_HEADER,
-    height: CURRENT_VIEWPORT.isAboveDesktop
-      ? notebook.MIN_NOTEBOOK_HEIGHT
-      : !isCollapsed
-        ? notebook.MIN_NOTEBOOK_HEIGHT
-        : notebook.NOTEBOOK_HEADER,
+    width: !isCollapsed ? notebook.MIN_NOTEBOOK_WIDTH : 0,
+    height: !isCollapsed ? notebook.MIN_NOTEBOOK_HEIGHT : 0,
     config: {
       duration: 300,
       easing: (t) => t * (2 - t),
@@ -264,19 +260,14 @@ const Notebook = () => {
       <Show
         when={!isCollapsed}
         fallback={
-          <div css={styles.verticalTitleWrapper}>
-            <button
-              type="button"
-              css={[styleUtils.resetButton, styles.verticalButton]}
-              onClick={() => setIsCollapsed(false)}
-            >
-              {CURRENT_VIEWPORT.isAboveDesktop ? (
-                __('Notebook', 'tutor')
-              ) : (
-                <SVGIcon name="note" height={24} width={24} />
-              )}
-            </button>
-          </div>
+          <button
+            type="button"
+            css={styles.collapsedTrigger}
+            onClick={() => setIsCollapsed(false)}
+            aria-label={__('Open Notebook', 'tutor')}
+          >
+            <SVGIcon name="notes" height={20} width={20} />
+          </button>
         }
       >
         <div css={styles.header({ isCollapsed, isFloating })} onMouseDown={handleMouseDown}>
@@ -385,29 +376,30 @@ const styles = {
       border-radius: ${borderRadius.card};
     `}
   `,
-  verticalTitleWrapper: css`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-90deg);
+  collapsedTrigger: css`
+    ${styleUtils.resetButton};
+    position: fixed;
+    bottom: ${spacing[16]};
+    right: ${spacing[16]};
+    width: 32px;
+    height: 32px;
+    border-radius: ${borderRadius[6]};
     background-color: ${colorTokens.background.active};
-    color: ${colorTokens.text.title};
+    box-shadow: ${shadow.notebook};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: ${colorTokens.icon.default};
+    z-index: ${zIndex.notebook};
+    transition: background-color 0.2s ease-in-out;
 
-    ${Breakpoint.smallTablet} {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-  `,
-  verticalButton: css`
-    text-align: center;
-    width: ${notebook.MIN_NOTEBOOK_HEIGHT}px;
-    height: ${notebook.NOTEBOOK_HEADER}px;
-    ${typography.body('bold')};
-
-    &:focus,
-    &:active,
     &:hover {
-      background: none;
-      color: ${colorTokens.text.primary};
+      background-color: ${colorTokens.background.hover};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 2px;
     }
   `,
   header: ({ isCollapsed, isFloating }: { isCollapsed: boolean; isFloating: boolean }) => css`

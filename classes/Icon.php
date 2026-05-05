@@ -116,6 +116,7 @@ final class Icon {
 	const CONFETTI                   = 'confetti';
 	const CONTENT_BANK               = 'content-bank';
 	const CONTENT_DRIP               = 'content-drip';
+	const CONTRACT_OUTLINE           = 'contract-outline';
 	const CONTRAST                   = 'contrast';
 	const COPY                       = 'copy';
 	const COPY_2                     = 'copy-2';
@@ -140,6 +141,9 @@ final class Icon {
 	const DELETE_2                   = 'delete-2';
 	const DESCENDING                 = 'descending';
 	const DEVICES                    = 'devices';
+	const DIFFICULTY_EASY            = 'difficulty-easy';
+	const DIFFICULTY_HARD            = 'difficulty-hard';
+	const DIFFICULTY_NORMAL          = 'difficulty-normal';
 	const DISCOUNT_TYPE              = 'discount-type';
 	const DIVI_COLORIZED             = 'divi-colorized';
 	const DOC                        = 'doc';

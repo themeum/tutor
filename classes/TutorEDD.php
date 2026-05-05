@@ -10,9 +10,11 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
+use Tutor\Models\EnrollmentModel;
 
 /**
  * Manage EDD integration
@@ -28,7 +30,7 @@ class TutorEDD extends Tutor_Base {
 	 */
 	public function __construct() {
 		parent::__construct();
-		// Add Tutor Option.
+
 		add_filter( 'tutor_monetization_options', array( $this, 'tutor_monetization_options' ) );
 
 		$monetize_by = tutils()->get_option( 'monetize_by' );
@@ -36,6 +38,7 @@ class TutorEDD extends Tutor_Base {
 			return;
 		}
 
+		add_filter( 'tutor_course_sell_by', fn() => 'edd' );
 		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ) );
 
 		/**
@@ -43,9 +46,12 @@ class TutorEDD extends Tutor_Base {
 		 */
 		add_filter( 'is_course_purchasable', array( $this, 'is_course_purchasable' ), 10, 2 );
 		add_filter( 'get_tutor_course_price', array( $this, 'get_tutor_course_price' ), 10, 2 );
-		add_filter( 'tutor_course_sell_by', array( $this, 'tutor_course_sell_by' ) );
-
 		add_action( 'edd_update_payment_status', array( $this, 'edd_update_payment_status' ), 10, 3 );
+
+		// @since 4.0.0
+		add_filter( 'tutor_order_history_card_template', fn( $template ) => tutor_get_template( 'dashboard.account.billing.edd-order-history-card' ) );
+		add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ), 10, 2 );
+		add_filter( 'tutor_get_orders_by_user_id', array( $this, 'filter_tutor_get_orders_by_user_id' ), 10, 3 );
 	}
 
 	/**
@@ -106,16 +112,16 @@ class TutorEDD extends Tutor_Base {
 	 */
 	public function save_course_meta( $post_ID ) {
 
-		$product_id = Input::post( '_tutor_course_product_id', '' );
+		$product_id = Input::post( Course::COURSE_PRODUCT_ID_META, '' );
 
 		if ( '-1' !== $product_id ) {
 			$product_id = (int) $product_id;
 			if ( $product_id ) {
-				update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
+				update_post_meta( $post_ID, Course::COURSE_PRODUCT_ID_META, $product_id );
 				update_post_meta( $product_id, '_tutor_product', 'yes' );
 			}
 		} else {
-			delete_post_meta( $post_ID, '_tutor_course_product_id' );
+			delete_post_meta( $post_ID, Course::COURSE_PRODUCT_ID_META );
 		}
 
 		do_action( 'save_tutor_course', $post_ID, get_post( $post_ID ) );
@@ -148,6 +154,8 @@ class TutorEDD extends Tutor_Base {
 	/**
 	 * Get course price
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $price course price.
 	 * @param int    $course_id course id.
 	 *
@@ -161,18 +169,9 @@ class TutorEDD extends Tutor_Base {
 	}
 
 	/**
-	 * Course sell by
+	 * Update payment status
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function tutor_course_sell_by() {
-		return 'edd';
-	}
-
-	/**
-	 * Update payment status
 	 *
 	 * @param int    $payment_id payment id.
 	 * @param string $new_status payment's new status.
@@ -181,27 +180,130 @@ class TutorEDD extends Tutor_Base {
 	 * @return void
 	 */
 	public function edd_update_payment_status( $payment_id, $new_status, $old_status ) {
-		if ( 'complete' !== $new_status ) {
+		if ( empty( $new_status ) || ! $payment_id ) {
 			return;
 		}
 
-		$payment      = new \EDD_Payment( $payment_id );
+		$payment = new \EDD_Payment( $payment_id );
+		if ( ! is_object( $payment ) || ! is_array( $payment->cart_details ) ) {
+			return;
+		}
+
 		$cart_details = $payment->cart_details;
-		$user_id      = $payment->user_info['id'];
+		$user_id      = (int) $payment->user_info['id'];
 
-		if ( is_array( $cart_details ) ) {
-			foreach ( $cart_details as $cart_index => $download ) {
+		$enrollment_status = 'complete' === $new_status
+								? EnrollmentModel::STATUS_COMPLETED
+								: ( 'pending' === $new_status ? EnrollmentModel::STATUS_PENDING : EnrollmentModel::STATUS_CANCEL );
 
-				$if_has_course = tutor_utils()->product_belongs_with_course( $download['id'] );
-				if ( $if_has_course ) {
-					$course_id        = $if_has_course->post_id;
-					$has_any_enrolled = tutor_utils()->has_any_enrolled( $course_id, $user_id );
-					if ( ! $has_any_enrolled ) {
-						tutor_utils()->do_enroll( $course_id, $payment_id, $user_id );
-					}
+		foreach ( $cart_details as $cart_item ) {
+			$product_id    = (int) $cart_item['id'];
+			$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
+
+			if ( $if_has_course ) {
+				$course_id   = (int) $if_has_course->post_id;
+				$is_enrolled = EnrollmentModel::is_enrolled( $course_id, $user_id, false );
+
+				if ( $is_enrolled ) {
+					// Update enrollment.
+					EnrollmentModel::update_enrollments( $enrollment_status, array( $is_enrolled->ID ) );
+				} else {
+					// New enrollment.
+					add_filter( 'tutor_enroll_data', fn( $data ) => array_merge( $data, array( 'post_status' => $enrollment_status ) ) );
+					EnrollmentModel::do_enroll( $course_id, $payment_id, $user_id );
 				}
 			}
-			tutor_utils()->complete_course_enroll( $payment_id );
 		}
+	}
+
+	/**
+	 * Filter order history status options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $options the status options.
+	 * @param string $seleted the selected status.
+	 *
+	 * @return array<array{label: string, value: string, count: int, url: string, active: bool}>
+	 */
+	public function filter_order_history_status_options( $options, $seleted ) {
+		$url     = get_pagenum_link();
+		$user_id = get_current_user_id();
+
+		$statuses = array_merge( array( 'all' => 'All' ), edd_get_payment_statuses() );
+		$options  = array();
+
+		foreach ( $statuses as $key => $status ) {
+			$params = array(
+				'meta_key' => Course::IS_TUTOR_ORDER_FOR_COURSE_META,
+				'user_id'  => $user_id,
+				'status'   => $key,
+				'count'    => true,
+			);
+
+			$count_query = new \EDD_Payments_Query( $params );
+			$count       = $count_query->get_payments();
+
+			$options[] = array(
+				'label'  => $status,
+				'value'  => $key,
+				'count'  => $count,
+				'url'    => UrlHelper::add_query_params( $url, array( 'data' => $key ) ),
+				'active' => $key === $seleted || ( empty( $key ) && 'all' === $seleted ),
+			);
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Filter tutor get orders by user id.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $data data.
+	 * @param int    $user_id the user id.
+	 * @param array  $args the query args.
+	 *
+	 * @return object
+	 */
+	public function filter_tutor_get_orders_by_user_id( $data, $user_id, $args ) {
+		if ( ! $user_id ) {
+			return $data;
+		}
+
+		$status     = Input::sanitize( $args['status'] ?? '' );
+		$start_date = Input::sanitize( $args['start_date'] ?? '' );
+		$end_date   = Input::sanitize( $args['end_date'] ?? '' );
+		$order      = QueryHelper::get_valid_sort_order( $args['order'] ?? 'DESC' );
+		$limit      = intval( $args['limit'] ?? 0 );
+		$offset     = intval( $args['offset'] ?? 0 );
+
+		$params = array(
+			'meta_key'   => Course::IS_TUTOR_ORDER_FOR_COURSE_META,
+			'user'       => $user_id,
+			'status'     => $status,
+			'start_date' => $start_date,
+			'end_date'   => $end_date,
+			'limit'      => $limit,
+			'offset'     => $offset,
+			'order'      => $order,
+		);
+
+		if ( empty( $status ) || 'all' === $status ) {
+			unset( $params['status'] );
+		}
+
+		$edd_query = new \EDD_Payments_Query( $params );
+		$results   = $edd_query->get_payments();
+
+		$params['count']   = true;
+		$total_count_query = new \EDD_Payments_Query( $params );
+		$total_count       = $total_count_query->get_payments();
+
+		$data->results     = $results;
+		$data->total_count = $total_count;
+
+		return $data;
 	}
 }

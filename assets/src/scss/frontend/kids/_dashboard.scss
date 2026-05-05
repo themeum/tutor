@@ -54,7 +54,7 @@
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
     }
 
-    .tutor-dashboard-courses,
+    .tutor-dashboard-courses-list,
     .tutor-wishlist-grid {
       gap: $tutor-spacing-6 $tutor-spacing-5;
     }
@@ -75,6 +75,7 @@
         }
       }
     }
+
     .tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
       @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
     }
@@ -126,6 +127,7 @@
   .tutor-dashboard-page-card {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
   }
+
   .tutor-discussion-card-wrapper {
     gap: $tutor-spacing-6 $tutor-spacing-4;
 
@@ -183,6 +185,21 @@
     }
   }
 
+  @include tutor-breakpoint-down(md) {
+    .tutor-calendar {
+      border-radius: 0px;
+      box-shadow: none;
+    }
+
+    .tutor-calendar-tabs {
+      @include tutor-kids-shadow(false);
+    }
+
+    .tutor-calendar-content {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
+    }
+  }
+
   @include tutor-breakpoint-down(sm) {
     .tutor-dashboard-header-user-popover,
     .tutor-profile-settings-tab.tutor-tabs-nav {
@@ -195,8 +212,7 @@
       gap: $tutor-spacing-5;
     }
 
-    .tutor-dashboard-page-card,
-    .tutor-calendar {
+    .tutor-dashboard-page-card {
       border-radius: 0px;
       box-shadow: none;
     }
@@ -206,13 +222,11 @@
     }
 
     .tutor-profile-settings-tab button .tutor-icon,
-    .tutor-dashboard-page-card-header,
-    .tutor-calendar-tabs {
+    .tutor-dashboard-page-card-header {
       @include tutor-kids-shadow(false);
     }
 
-    .tutor-dashboard-page-card-body,
-    .tutor-calendar-content {
+    .tutor-dashboard-page-card-body {
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
     }
 

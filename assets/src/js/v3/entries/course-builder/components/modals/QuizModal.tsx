@@ -214,7 +214,7 @@ const QuizModal = ({
 
   return (
     <FormProvider {...form}>
-      <QuizModalContextProvider quizId={quizId || ''} contentType={contentType || 'tutor_quiz'}>
+      <QuizModalContextProvider quizId={quizId || ''} topicId={topicId} contentType={contentType || 'tutor_quiz'}>
         {({ activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError }) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
@@ -324,8 +324,7 @@ const QuizModal = ({
                                 <FormTextareaInput
                                   {...controllerProps}
                                   placeholder={__('Add a summary', 'tutor')}
-                                  enableResize={false}
-                                  rows={2}
+                                  rows={3}
                                 />
                               )}
                             />
@@ -490,7 +489,7 @@ const styles = {
   quizTitleWrapper: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
-    padding: ${spacing[16]} ${spacing[32]} ${spacing[16]} ${spacing[28]};
+    padding: ${spacing[16]} ${spacing[16]} ${spacing[16]} ${spacing[28]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
 
     ${Breakpoint.smallTablet} {

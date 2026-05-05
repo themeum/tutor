@@ -9,17 +9,30 @@
   align-items: center;
   justify-content: center;
   gap: $tutor-spacing-2;
-  border: none;
   border-radius: $tutor-button-radius;
   font-weight: $tutor-button-font-weight;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
+  text-transform: capitalize;
   font-family: inherit;
+  background-color: transparent;
+  color: $tutor-text-primary;
+  padding: $tutor-spacing-none;
+  border: none;
   // Inherited “kids mode” elevation + per-variant border shadow.
   --tutor-button-border-shadow: none;
   box-shadow: $tutor-button-border-shadow;
   @include tutor-transition();
+
+  &:hover:not(:disabled):not(.disabled),
+  &:focus:not(:disabled):not(.disabled) {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: $tutor-text-primary;
+    --tutor-button-border-shadow: #{$tutor-button-primary-border-shadow};
+  }
 
   svg:not([class]) {
     color: currentColor;
@@ -50,11 +63,13 @@
 
     &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-primary-hover;
+      color: $tutor-text-primary-inverse;
       --tutor-button-border-shadow: #{$tutor-button-primary-border-shadow-hover};
     }
 
     &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-primary-focused;
+      color: $tutor-text-primary-inverse;
       --tutor-button-border-shadow: #{$tutor-button-primary-border-shadow-focused};
     }
 
@@ -75,17 +90,20 @@
 
     &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-primary-soft-hover;
+      color: $tutor-text-brand;
       --tutor-button-border-shadow: #{$tutor-button-primary-soft-border-shadow-hover};
     }
 
     &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-primary-soft-focused;
+      color: $tutor-text-brand;
       --tutor-button-border-shadow: #{$tutor-button-primary-soft-border-shadow-focused};
     }
 
     &:disabled,
     &.disabled {
       background-color: $tutor-button-disabled;
+      color: $tutor-text-brand;
       --tutor-button-border-shadow: #{$tutor-button-primary-soft-border-shadow-disabled};
     }
   } @else if $variant == destructive {
@@ -99,17 +117,20 @@
 
     &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-destructive-hover;
+      color: $tutor-text-primary-inverse;
       --tutor-button-border-shadow: #{$tutor-button-destructive-border-shadow-hover};
     }
 
     &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-destructive-focused;
+      color: $tutor-text-primary-inverse;
       --tutor-button-border-shadow: #{$tutor-button-destructive-border-shadow-focused};
     }
 
     &:disabled,
     &.disabled {
       background-color: $tutor-button-disabled;
+      color: $tutor-text-primary-inverse;
       --tutor-button-border-shadow: #{$tutor-button-destructive-border-shadow-disabled};
     }
   } @else if $variant == destructive-soft {
@@ -123,11 +144,13 @@
 
     &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-destructive-soft-hover;
+      color: $tutor-text-critical;
       --tutor-button-border-shadow: #{$tutor-button-destructive-soft-border-shadow-hover};
     }
 
     &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-destructive-soft-focused;
+      color: $tutor-text-critical;
       --tutor-button-border-shadow: #{$tutor-button-destructive-soft-border-shadow-focused};
     }
 
@@ -164,11 +187,13 @@
 
     &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-secondary-hover;
+      color: $tutor-text-primary;
       --tutor-button-border-shadow: #{$tutor-button-secondary-border-shadow-hover};
     }
 
     &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-secondary-focused;
+      color: $tutor-text-primary;
       --tutor-button-border-shadow: #{$tutor-button-secondary-border-shadow-focused};
     }
 
@@ -188,11 +213,13 @@
 
     &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-outline-hover;
+      color: $tutor-text-primary;
       --tutor-button-border-shadow: #{$tutor-button-outline-border-shadow-hover};
     }
 
     &:focus:not(:disabled):not(.disabled) {
       background-color: $tutor-button-outline-focused-inverse;
+      color: $tutor-text-primary;
       --tutor-button-border-shadow: #{$tutor-button-outline-border-shadow-focused};
     }
 
@@ -212,6 +239,7 @@
 
     &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-ghost-hover;
+      color: $tutor-text-primary;
       --tutor-button-border-shadow: #{$tutor-button-ghost-border-shadow-hover};
     }
 
@@ -231,6 +259,7 @@
 
     &:hover:not(:disabled):not(.disabled) {
       background-color: $tutor-button-primary-soft;
+      color: $tutor-text-brand;
       --tutor-button-border-shadow: #{$tutor-button-ghost-brand-border-shadow-hover};
     }
 
@@ -249,6 +278,7 @@
 
     &:hover:not(:disabled):not(.disabled) {
       color: $tutor-text-brand-hover;
+      box-shadow: none !important;
 
       svg:not([class]) {
         color: $tutor-icon-brand-hover;
@@ -291,31 +321,43 @@
   @if $size == x-small {
     --tutor-button-border-shadow-base: 1px;
     --tutor-button-border-shadow-bottom: 2px;
-    padding: $tutor-spacing-3 $tutor-spacing-5;
     font-size: $tutor-font-size-tiny;
     line-height: $tutor-line-height-tiny;
-    min-height: 32px;
+
+    &:not([class*='tutor-btn-link']) {
+      min-height: 32px;
+      padding: $tutor-spacing-3 $tutor-spacing-5;
+    }
   } @else if $size == small {
     --tutor-button-border-shadow-base: 1px;
     --tutor-button-border-shadow-bottom: 2px;
-    padding: $tutor-spacing-3 $tutor-spacing-5;
     font-size: $tutor-font-size-small;
     line-height: $tutor-line-height-small;
-    min-height: 34px;
+
+    &:not([class*='tutor-btn-link']) {
+      padding: $tutor-spacing-3 $tutor-spacing-5;
+      min-height: 34px;
+    }
   } @else if $size == large {
     --tutor-button-border-shadow-base: 2px;
     --tutor-button-border-shadow-bottom: 5px;
-    padding: $tutor-spacing-5 $tutor-spacing-6;
     font-size: $tutor-font-size-small;
     line-height: $tutor-line-height-small;
-    min-height: 48px;
+
+    &:not([class*='tutor-btn-link']) {
+      padding: $tutor-spacing-5 $tutor-spacing-6;
+      min-height: 48px;
+    }
   } @else {
     --tutor-button-border-shadow-base: 1px;
     --tutor-button-border-shadow-bottom: 3px;
-    padding: $tutor-spacing-4 $tutor-spacing-5;
     font-size: $tutor-font-size-small;
     line-height: $tutor-line-height-small;
-    min-height: 38px;
+
+    &:not([class*='tutor-btn-link']) {
+      padding: $tutor-spacing-4 $tutor-spacing-5;
+      min-height: 38px;
+    }
   }
 }
 
@@ -419,6 +461,7 @@
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
   }
+
   100% {
     transform: translate(-50%, -50%) rotate(360deg);
   }
@@ -431,6 +474,7 @@
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
   }
+
   50% {
     opacity: 0.4;
     transform: translate(-50%, -50%) scale(0.9);

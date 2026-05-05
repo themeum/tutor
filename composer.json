@@ -13,7 +13,8 @@
       "Tutor\\Traits\\": "traits/",
       "Tutor\\Ecommerce\\": "ecommerce/",
       "Tutor\\PaymentGateways\\": "ecommerce/PaymentGateways",
-      "Tutor\\TemplateImport\\": "template-import/"
+      "Tutor\\TemplateImport\\": "template-import/",
+      "Tutor\\GDPR\\": "GDPR/"
     }
   },
   "autoload-dev": {
@@ -35,15 +36,5 @@
     }
   },
   "scripts": {
-    "post-install-cmd": [
-      "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal",
-      "if [ ! -d \"includes/droip\" ]; then git clone https://github.com/themeum/tutor-droip.git includes/droip; else cd includes/droip && git pull origin master; fi",
-      "cd includes/droip && composer install && npm install"
-    ],
-    "post-update-cmd": [
-      "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal",
-      "if [ ! -d \"includes/droip\" ]; then git clone https://github.com/themeum/tutor-droip.git includes/droip; else cd includes/droip && git pull origin master; fi",
-      "cd includes/droip && composer update && npm install"
-    ]
   }
 }
