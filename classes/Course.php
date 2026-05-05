@@ -309,6 +309,7 @@ class Course extends Tutor_Base {
 
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
+		add_filter( 'post_password_required', array( $this, 'bypass_password_for_enrolled' ), 10, 2 );
 		add_filter( 'the_preview', array( $this, 'handle_schedule_courses' ) );
 
 		add_action( 'tutor_course_action_btn', array( $this, 'render_course_action_btn' ) );
@@ -353,6 +354,29 @@ class Course extends Tutor_Base {
 				set_transient( 'tutor_post_password_error', __( 'Invalid password', 'tutor' ) );
 			}
 		}
+	}
+
+	/**
+	 * Bypass password protection for enrolled users.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param bool    $required Whether the password is required.
+	 * @param WP_Post $post     The post object.
+	 *
+	 * @return bool false if the current user is enrolled, original value otherwise.
+	 */
+	public function bypass_password_for_enrolled( $required, $post ) {
+		if ( ! $required ) {
+			return $required;
+		}
+
+		$post_types = array( tutor()->course_post_type, tutor()->bundle_post_type );
+		if ( in_array( $post->post_type, $post_types, true ) && tutor_utils()->is_enrolled( $post->ID ) ) {
+			return false;
+		}
+
+		return $required;
 	}
 
 	/**
