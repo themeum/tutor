@@ -64,7 +64,7 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 ?>
 <div class="tutor-my-quiz-attempts-wrapper" x-data="tutorQuizAttempts()">
 	<div class="tutor-quiz-attempts">
-		<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-items-center tutor-border-b">
+		<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-surface-l1 tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-items-center tutor-border-b">
 			<div class="tutor-quiz-students-attempts-filter-item">
 			<?php
 			if ( isset( $nav_links['options'] ) ) {
