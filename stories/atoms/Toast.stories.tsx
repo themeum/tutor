@@ -44,7 +44,7 @@ type Story = StoryObj<typeof meta>;
 const ToastDemo = () => {
   const { showToast } = useToast();
 
-  const handleShowToast = (type: 'success' | 'danger' | 'warning' | 'dark') => () => {
+  const handleShowToast = (type: 'success' | 'danger' | 'warning' | 'dark' | 'info') => () => {
     showToast({
       type,
       message: `This is a ${type} toast!`,
@@ -90,6 +90,10 @@ const ToastDemo = () => {
 
       <Button variant="secondary" onClick={handleShowToast('warning')} aria-label="Show Warning Toast" tabIndex={0}>
         Show Warning Toast
+      </Button>
+
+      <Button variant="tertiary" onClick={handleShowToast('info')} aria-label="Show Info Toast" tabIndex={0}>
+        Show Info Toast
       </Button>
 
       <Button variant="text" onClick={handleShowToast('dark')} aria-label="Show Dark Toast" tabIndex={0}>

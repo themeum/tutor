@@ -68,6 +68,104 @@ const DEFAULT_CONFIG: Required<TutorToastConfig> = {
   theme: 'auto',
 };
 
+const DEFAULT_STACK_DEPTH = {
+  gap: 10,
+  peek: 10,
+  scaleStep: 0.034,
+  scaleFloor: 0.883,
+  opacity1: 0.78,
+  opacity2: 0.52,
+  opacity3: 0,
+} as const;
+
+const TOAST_DOM_ID = {
+  liveRegion: 'tutor-toast-aria-live',
+} as const;
+
+const TOAST_CLASS = {
+  srOnly: 'tutor-toast-sr-only',
+  container: 'tutor-toast-container',
+  stack: 'tutor-toast-stack',
+  spinner: 'tutor-toast-spinner',
+  card: 'tutor-toast-card',
+  icon: 'tutor-toast-icon',
+  content: 'tutor-toast-content',
+  title: 'tutor-toast-title',
+  description: 'tutor-toast-description',
+  actions: 'tutor-toast-actions',
+  actionButton: 'tutor-toast-action-button',
+  closeButton: 'tutor-toast-close',
+  progress: 'tutor-toast-progress',
+  progressBar: 'tutor-toast-progress-bar',
+  item: 'tutor-toast-item',
+} as const;
+
+const TOAST_SELECTOR = {
+  card: `.${TOAST_CLASS.card}`,
+  icon: `.${TOAST_CLASS.icon}`,
+  content: `.${TOAST_CLASS.content}`,
+  title: `.${TOAST_CLASS.title}`,
+  description: `.${TOAST_CLASS.description}`,
+  progressBar: `.${TOAST_CLASS.progressBar}`,
+} as const;
+
+const TOAST_ATTR = {
+  ariaLive: 'aria-live',
+  ariaAtomic: 'aria-atomic',
+  ariaLabel: 'aria-label',
+  ariaLabelledBy: 'aria-labelledby',
+  dataPositionX: 'data-position-x',
+  dataPositionY: 'data-position-y',
+  dataTutorTheme: 'data-tutor-theme',
+  dataRichColors: 'data-rich-colors',
+  dataType: 'data-type',
+  dataFront: 'data-front',
+  dataExpanded: 'data-expanded',
+  dataEntering: 'data-entering',
+  dataExiting: 'data-exiting',
+  dataSwiping: 'data-swiping',
+  dataSwipeOut: 'data-swipe-out',
+  dataUpdating: 'data-updating',
+  dir: 'dir',
+  role: 'role',
+  tabIndex: 'tabindex',
+} as const;
+
+const TOAST_ATTR_VALUE = {
+  polite: 'polite',
+  assertive: 'assertive',
+  region: 'region',
+  list: 'list',
+  listItem: 'listitem',
+  alert: 'alert',
+  status: 'status',
+  true: 'true',
+  frontZIndex: '10',
+} as const;
+
+const TOAST_POSITION = {
+  left: 'left',
+  right: 'right',
+  center: 'center',
+  top: 'top',
+  bottom: 'bottom',
+} as const;
+
+const TOAST_CSS_VAR = {
+  offsetX: '--tutor-toast-offset-x',
+  offsetY: '--tutor-toast-offset-y',
+  y: '--tutor-toast-y',
+  scale: '--tutor-toast-scale',
+  opacity: '--tutor-toast-opacity',
+  frontHeight: '--tutor-toast-front-height',
+} as const;
+
+const TOAST_ANIMATION = {
+  progressShrink: 'tutor-toast-progress-shrink',
+} as const;
+
+const TOAST_TITLE_ID_PREFIX = 'tutor-toast-title-';
+
 const DEFAULT_LABELS: Record<ToastType, string> = {
   success: __('Success', 'tutor'),
   error: __('Error', 'tutor'),
@@ -139,42 +237,45 @@ export class TutorToastManager {
 
   private xPosition(position = this.config.position): 'left' | 'right' | 'center' {
     if (position.endsWith('left')) {
-      return 'left';
+      return TOAST_POSITION.left;
     }
 
     if (position.endsWith('right')) {
-      return 'right';
+      return TOAST_POSITION.right;
     }
 
-    return 'center';
+    return TOAST_POSITION.center;
   }
 
   private yPosition(position = this.config.position): 'top' | 'bottom' {
-    return this.isBottom(position) ? 'bottom' : 'top';
+    return this.isBottom(position) ? TOAST_POSITION.bottom : TOAST_POSITION.top;
   }
 
   private ensureLiveRegion(): void {
-    if (document.getElementById('tutor-toast-aria-live')) {
+    if (document.getElementById(TOAST_DOM_ID.liveRegion)) {
       return;
     }
 
     const liveRegion = document.createElement('div');
-    liveRegion.id = 'tutor-toast-aria-live';
-    liveRegion.className = 'tutor-toast-sr-only';
-    liveRegion.setAttribute('aria-live', 'polite');
-    liveRegion.setAttribute('aria-atomic', 'false');
+    liveRegion.id = TOAST_DOM_ID.liveRegion;
+    liveRegion.className = TOAST_CLASS.srOnly;
+    liveRegion.setAttribute(TOAST_ATTR.ariaLive, TOAST_ATTR_VALUE.polite);
+    liveRegion.setAttribute(TOAST_ATTR.ariaAtomic, 'false');
     document.body.appendChild(liveRegion);
   }
 
   private announce(title: string, description: string | undefined, type: TutorToastType): void {
     this.ensureLiveRegion();
-    const liveRegion = document.getElementById('tutor-toast-aria-live');
+    const liveRegion = document.getElementById(TOAST_DOM_ID.liveRegion);
 
     if (!liveRegion) {
       return;
     }
 
-    liveRegion.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
+    liveRegion.setAttribute(
+      TOAST_ATTR.ariaLive,
+      type === 'error' ? TOAST_ATTR_VALUE.assertive : TOAST_ATTR_VALUE.polite,
+    );
     liveRegion.textContent = '';
     requestAnimationFrame(() => {
       liveRegion.textContent = description ? `${title}. ${description}` : title;
@@ -213,8 +314,8 @@ export class TutorToastManager {
       }
     }
 
-    this.container.style.setProperty('--tutor-toast-offset-x', `${offsetX}px`);
-    this.container.style.setProperty('--tutor-toast-offset-y', `${offsetY}px`);
+    this.container.style.setProperty(TOAST_CSS_VAR.offsetX, `${offsetX}px`);
+    this.container.style.setProperty(TOAST_CSS_VAR.offsetY, `${offsetY}px`);
   }
 
   private syncContainerAttributes(position = this.config.position): void {
@@ -222,22 +323,22 @@ export class TutorToastManager {
       return;
     }
 
-    this.container.setAttribute('data-position-x', this.xPosition(position));
-    this.container.setAttribute('data-position-y', this.yPosition(position));
+    this.container.setAttribute(TOAST_ATTR.dataPositionX, this.xPosition(position));
+    this.container.setAttribute(TOAST_ATTR.dataPositionY, this.yPosition(position));
 
     const theme = this.config.theme;
     if (theme === 'auto') {
-      this.container.removeAttribute('data-tutor-theme');
+      this.container.removeAttribute(TOAST_ATTR.dataTutorTheme);
     } else {
-      this.container.setAttribute('data-tutor-theme', theme);
+      this.container.setAttribute(TOAST_ATTR.dataTutorTheme, theme);
     }
 
     if (this.config.dir === 'auto') {
-      this.container.removeAttribute('dir');
+      this.container.removeAttribute(TOAST_ATTR.dir);
       return;
     }
 
-    this.container.setAttribute('dir', this.config.dir);
+    this.container.setAttribute(TOAST_ATTR.dir, this.config.dir);
   }
 
   private boot(position = this.config.position): void {
@@ -248,17 +349,17 @@ export class TutorToastManager {
     }
 
     this.container = document.createElement('ol');
-    this.container.className = 'tutor-toast-container';
+    this.container.className = TOAST_CLASS.container;
     if (this.config.theme !== 'auto') {
-      this.container.setAttribute('data-tutor-theme', this.config.theme);
+      this.container.setAttribute(TOAST_ATTR.dataTutorTheme, this.config.theme);
     }
-    this.container.setAttribute('role', 'region');
-    this.container.setAttribute('aria-label', __('Notifications', 'tutor'));
-    this.container.setAttribute('tabindex', '-1');
+    this.container.setAttribute(TOAST_ATTR.role, TOAST_ATTR_VALUE.region);
+    this.container.setAttribute(TOAST_ATTR.ariaLabel, __('Notifications', 'tutor'));
+    this.container.setAttribute(TOAST_ATTR.tabIndex, '-1');
 
     this.stack = document.createElement('li');
-    this.stack.className = 'tutor-toast-stack';
-    this.stack.setAttribute('role', 'list');
+    this.stack.className = TOAST_CLASS.stack;
+    this.stack.setAttribute(TOAST_ATTR.role, TOAST_ATTR_VALUE.list);
 
     this.stack.addEventListener('mouseenter', () => {
       this.hovered = true;
@@ -338,8 +439,8 @@ export class TutorToastManager {
 
     if (type === 'loading') {
       const spinner = document.createElement('div');
-      spinner.className = 'tutor-toast-spinner';
-      spinner.setAttribute('aria-label', __('Loading', 'tutor'));
+      spinner.className = TOAST_CLASS.spinner;
+      spinner.setAttribute(TOAST_ATTR.ariaLabel, __('Loading', 'tutor'));
       wrapper.appendChild(spinner);
       return;
     }
@@ -356,36 +457,36 @@ export class TutorToastManager {
 
   private buildCard(id: string, title: string, options: NormalizedTutorToastOptions): HTMLElement {
     const card = document.createElement('div');
-    card.className = 'tutor-toast-card';
-    card.setAttribute('data-type', options.type);
-    card.setAttribute('role', options.type === 'error' ? 'alert' : 'status');
-    card.setAttribute('aria-atomic', 'false');
+    card.className = TOAST_CLASS.card;
+    card.setAttribute(TOAST_ATTR.dataType, options.type);
+    card.setAttribute(TOAST_ATTR.role, options.type === 'error' ? TOAST_ATTR_VALUE.alert : TOAST_ATTR_VALUE.status);
+    card.setAttribute(TOAST_ATTR.ariaAtomic, 'false');
 
     if (options.dir) {
-      card.setAttribute('dir', options.dir);
+      card.setAttribute(TOAST_ATTR.dir, options.dir);
     }
 
     if (options.richColors) {
-      card.setAttribute('data-rich-colors', 'true');
+      card.setAttribute(TOAST_ATTR.dataRichColors, TOAST_ATTR_VALUE.true);
     }
 
     const icon = document.createElement('div');
-    icon.className = 'tutor-toast-icon';
+    icon.className = TOAST_CLASS.icon;
     this.renderIcon(icon, options.type, options.icon);
     card.appendChild(icon);
 
     const content = document.createElement('div');
-    content.className = 'tutor-toast-content';
+    content.className = TOAST_CLASS.content;
 
     const titleElement = document.createElement('p');
-    titleElement.className = 'tutor-toast-title';
-    titleElement.id = `tutor-toast-title-${id}`;
+    titleElement.className = TOAST_CLASS.title;
+    titleElement.id = `${TOAST_TITLE_ID_PREFIX}${id}`;
     titleElement.textContent = title;
     content.appendChild(titleElement);
 
     if (options.description) {
       const description = document.createElement('p');
-      description.className = 'tutor-toast-description';
+      description.className = TOAST_CLASS.description;
       description.textContent = options.description;
       content.appendChild(description);
     }
@@ -394,10 +495,10 @@ export class TutorToastManager {
 
     if (options.action) {
       const actions = document.createElement('div');
-      actions.className = 'tutor-toast-actions';
+      actions.className = TOAST_CLASS.actions;
 
       const actionButton = document.createElement('button');
-      actionButton.className = 'tutor-toast-action-button';
+      actionButton.className = TOAST_CLASS.actionButton;
       actionButton.type = 'button';
       actionButton.textContent = options.action.label;
       actionButton.addEventListener('click', (event) => {
@@ -414,9 +515,9 @@ export class TutorToastManager {
 
     if (options.closeButton) {
       const closeButton = document.createElement('button');
-      closeButton.className = 'tutor-toast-close';
+      closeButton.className = TOAST_CLASS.closeButton;
       closeButton.type = 'button';
-      closeButton.setAttribute('aria-label', __('Close notification', 'tutor'));
+      closeButton.setAttribute(TOAST_ATTR.ariaLabel, __('Close notification', 'tutor'));
       closeButton.innerHTML =
         '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 1l10 10M11 1L1 11"/></svg>';
       closeButton.addEventListener('click', (event) => {
@@ -428,11 +529,11 @@ export class TutorToastManager {
 
     if (options.progressBar && options.type !== 'loading' && options.duration > 0) {
       const progress = document.createElement('div');
-      progress.className = 'tutor-toast-progress';
+      progress.className = TOAST_CLASS.progress;
 
       const progressBar = document.createElement('div');
-      progressBar.className = 'tutor-toast-progress-bar';
-      progressBar.style.animation = `tutor-toast-progress-shrink ${options.duration}ms linear forwards`;
+      progressBar.className = TOAST_CLASS.progressBar;
+      progressBar.style.animation = `${TOAST_ANIMATION.progressShrink} ${options.duration}ms linear forwards`;
 
       progress.appendChild(progressBar);
       card.appendChild(progress);
@@ -450,9 +551,9 @@ export class TutorToastManager {
       .filter((entry) => !entry.exiting && !entry.swiping)
       .reverse();
 
-    const gap = 10;
-    const peek = 7;
-    const scaleStep = 0.034;
+    const gap = DEFAULT_STACK_DEPTH.gap;
+    const peek = DEFAULT_STACK_DEPTH.peek;
+    const scaleStep = DEFAULT_STACK_DEPTH.scaleStep;
     const direction = this.isBottom() ? -1 : 1;
 
     visibleEntries.forEach((entry) => {
@@ -465,28 +566,33 @@ export class TutorToastManager {
     visibleEntries.forEach((entry, index) => {
       const isFront = index === 0;
 
-      entry.element.setAttribute('data-front', String(isFront));
+      entry.element.setAttribute(TOAST_ATTR.dataFront, String(isFront));
       if (this.expanded) {
-        entry.element.setAttribute('data-expanded', 'true');
+        entry.element.setAttribute(TOAST_ATTR.dataExpanded, TOAST_ATTR_VALUE.true);
       } else {
-        entry.element.removeAttribute('data-expanded');
+        entry.element.removeAttribute(TOAST_ATTR.dataExpanded);
       }
 
       entry.element.style.pointerEvents = isFront || this.expanded ? 'all' : 'none';
 
       if (!this.expanded) {
         if (isFront) {
-          entry.element.style.setProperty('--tutor-toast-y', '0px');
-          entry.element.style.setProperty('--tutor-toast-scale', '1');
-          entry.element.style.setProperty('--tutor-toast-opacity', '1');
+          entry.element.style.setProperty(TOAST_CSS_VAR.y, '0px');
+          entry.element.style.setProperty(TOAST_CSS_VAR.scale, '1');
+          entry.element.style.setProperty(TOAST_CSS_VAR.opacity, '1');
         } else {
           const offset = index * peek;
-          const scale = Math.max(0.9, 1 - index * scaleStep);
-          const opacity = index === 1 ? 0.78 : index === 2 ? 0.52 : 0;
+          const scale = Math.max(DEFAULT_STACK_DEPTH.scaleFloor, 1 - index * scaleStep);
+          const opacity =
+            index === 1
+              ? DEFAULT_STACK_DEPTH.opacity1
+              : index === 2
+                ? DEFAULT_STACK_DEPTH.opacity2
+                : DEFAULT_STACK_DEPTH.opacity3;
 
-          entry.element.style.setProperty('--tutor-toast-y', `${direction * offset}px`);
-          entry.element.style.setProperty('--tutor-toast-scale', String(scale));
-          entry.element.style.setProperty('--tutor-toast-opacity', String(opacity));
+          entry.element.style.setProperty(TOAST_CSS_VAR.y, `${direction * offset}px`);
+          entry.element.style.setProperty(TOAST_CSS_VAR.scale, String(scale));
+          entry.element.style.setProperty(TOAST_CSS_VAR.opacity, String(opacity));
         }
       } else {
         let offset = 0;
@@ -494,20 +600,20 @@ export class TutorToastManager {
           offset += (visibleEntries[cursor].height || 72) + gap;
         }
 
-        entry.element.style.setProperty('--tutor-toast-y', `${direction * offset}px`);
-        entry.element.style.setProperty('--tutor-toast-scale', '1');
-        entry.element.style.setProperty('--tutor-toast-opacity', '1');
+        entry.element.style.setProperty(TOAST_CSS_VAR.y, `${direction * offset}px`);
+        entry.element.style.setProperty(TOAST_CSS_VAR.scale, '1');
+        entry.element.style.setProperty(TOAST_CSS_VAR.opacity, '1');
       }
 
-      entry.element.style.zIndex = String(10 - index);
-      if (!entry.element.hasAttribute('data-entering')) {
-        entry.element.style.transform = 'translateY(var(--tutor-toast-y, 0px)) scale(var(--tutor-toast-scale, 1))';
-        entry.element.style.opacity = 'var(--tutor-toast-opacity, 1)';
+      entry.element.style.zIndex = String(Number(TOAST_ATTR_VALUE.frontZIndex) - index);
+      if (!entry.element.hasAttribute(TOAST_ATTR.dataEntering)) {
+        entry.element.style.transform = `translateY(var(${TOAST_CSS_VAR.y}, 0px)) scale(var(${TOAST_CSS_VAR.scale}, 1))`;
+        entry.element.style.opacity = `var(${TOAST_CSS_VAR.opacity}, 1)`;
       }
     });
 
     const frontHeight = visibleEntries[0]?.height || 0;
-    this.stack.style.setProperty('--tutor-toast-front-height', `${frontHeight}px`);
+    this.stack.style.setProperty(TOAST_CSS_VAR.frontHeight, `${frontHeight}px`);
 
     if (this.expanded && visibleEntries.length > 0) {
       const totalHeight =
@@ -536,7 +642,7 @@ export class TutorToastManager {
     entry.remainingMs = Math.max(0, entry.endsAt - Date.now());
     entry.paused = true;
 
-    const progressBar = entry.card.querySelector<HTMLElement>('.tutor-toast-progress-bar');
+    const progressBar = entry.card.querySelector<HTMLElement>(TOAST_SELECTOR.progressBar);
     if (progressBar) {
       progressBar.style.animationPlayState = 'paused';
     }
@@ -553,7 +659,7 @@ export class TutorToastManager {
       entry.endsAt = Date.now() + entry.remainingMs;
       entry.timerId = setTimeout(() => this.dismiss(entry.id), entry.remainingMs);
 
-      const progressBar = entry.card.querySelector<HTMLElement>('.tutor-toast-progress-bar');
+      const progressBar = entry.card.querySelector<HTMLElement>(TOAST_SELECTOR.progressBar);
       if (progressBar) {
         progressBar.style.animationPlayState = 'running';
       }
@@ -613,7 +719,7 @@ export class TutorToastManager {
   }
 
   private attachSwipe(element: HTMLElement, id: string): void {
-    const card = element.querySelector<HTMLElement>('.tutor-toast-card');
+    const card = element.querySelector<HTMLElement>(TOAST_SELECTOR.card);
     if (!card) {
       return;
     }
@@ -648,7 +754,7 @@ export class TutorToastManager {
       const entry = this.entries.get(id);
       if (entry) {
         entry.swiping = true;
-        element.setAttribute('data-swiping', 'true');
+        element.setAttribute(TOAST_ATTR.dataSwiping, TOAST_ATTR_VALUE.true);
       }
     };
 
@@ -675,7 +781,7 @@ export class TutorToastManager {
       const entry = this.entries.get(id);
       if (entry) {
         entry.swiping = false;
-        element.removeAttribute('data-swiping');
+        element.removeAttribute(TOAST_ATTR.dataSwiping);
       }
 
       if (Math.abs(distanceX) >= 60) {
@@ -686,7 +792,7 @@ export class TutorToastManager {
           entry.exiting = true;
         }
 
-        element.setAttribute('data-swipe-out', direction);
+        element.setAttribute(TOAST_ATTR.dataSwipeOut, direction);
         setTimeout(() => this.collapseAndRemove(element, id), 230);
       }
 
@@ -709,9 +815,9 @@ export class TutorToastManager {
 
     entry.exiting = true;
     this.clearTimer(id);
-    entry.element.removeAttribute('data-entering');
-    entry.element.setAttribute('data-exiting', 'true');
-    entry.element.setAttribute('data-position-y', this.yPosition());
+    entry.element.removeAttribute(TOAST_ATTR.dataEntering);
+    entry.element.setAttribute(TOAST_ATTR.dataExiting, TOAST_ATTR_VALUE.true);
+    entry.element.setAttribute(TOAST_ATTR.dataPositionY, this.yPosition());
 
     setTimeout(() => this.collapseAndRemove(entry.element, id), 280);
   }
@@ -735,34 +841,34 @@ export class TutorToastManager {
     const nextType = options.type ?? entry.type;
 
     if (options.type) {
-      card.setAttribute('data-type', options.type);
-      card.setAttribute('role', options.type === 'error' ? 'alert' : 'status');
+      card.setAttribute(TOAST_ATTR.dataType, options.type);
+      card.setAttribute(TOAST_ATTR.role, options.type === 'error' ? TOAST_ATTR_VALUE.alert : TOAST_ATTR_VALUE.status);
       entry.type = options.type;
-      const icon = card.querySelector<HTMLElement>('.tutor-toast-icon');
+      const icon = card.querySelector<HTMLElement>(TOAST_SELECTOR.icon);
       if (icon) {
         this.renderIcon(icon, options.type, options.icon ?? null);
       }
     }
 
     if (options.title != null) {
-      const titleElement = card.querySelector<HTMLElement>('.tutor-toast-title');
+      const titleElement = card.querySelector<HTMLElement>(TOAST_SELECTOR.title);
       if (titleElement) {
         titleElement.textContent = options.title;
       }
     }
 
     if (options.description != null) {
-      let descriptionElement = card.querySelector<HTMLElement>('.tutor-toast-description');
+      let descriptionElement = card.querySelector<HTMLElement>(TOAST_SELECTOR.description);
       if (!descriptionElement) {
         descriptionElement = document.createElement('p');
-        descriptionElement.className = 'tutor-toast-description';
-        card.querySelector('.tutor-toast-content')?.appendChild(descriptionElement);
+        descriptionElement.className = TOAST_CLASS.description;
+        card.querySelector(TOAST_SELECTOR.content)?.appendChild(descriptionElement);
       }
       descriptionElement.textContent = options.description;
     }
 
-    card.setAttribute('data-updating', 'true');
-    setTimeout(() => card.removeAttribute('data-updating'), 250);
+    card.setAttribute(TOAST_ATTR.dataUpdating, TOAST_ATTR_VALUE.true);
+    setTimeout(() => card.removeAttribute(TOAST_ATTR.dataUpdating), 250);
 
     this.clearTimer(id);
     const nextDuration = options.duration ?? this.config.duration;
@@ -773,27 +879,27 @@ export class TutorToastManager {
       entry.remainingMs = nextDuration;
       entry.timerId = setTimeout(() => this.dismiss(id), nextDuration);
 
-      const progressBar = card.querySelector<HTMLElement>('.tutor-toast-progress-bar');
+      const progressBar = card.querySelector<HTMLElement>(TOAST_SELECTOR.progressBar);
       if (progressBar) {
         progressBar.style.animation = 'none';
         requestAnimationFrame(() => {
-          progressBar.style.animation = `tutor-toast-progress-shrink ${nextDuration}ms linear forwards`;
+          progressBar.style.animation = `${TOAST_ANIMATION.progressShrink} ${nextDuration}ms linear forwards`;
         });
       } else if (options.progressBar ?? this.config.progressBar) {
         const progress = document.createElement('div');
-        progress.className = 'tutor-toast-progress';
+        progress.className = TOAST_CLASS.progress;
 
         const bar = document.createElement('div');
-        bar.className = 'tutor-toast-progress-bar';
-        bar.style.animation = `tutor-toast-progress-shrink ${nextDuration}ms linear forwards`;
+        bar.className = TOAST_CLASS.progressBar;
+        bar.style.animation = `${TOAST_ANIMATION.progressShrink} ${nextDuration}ms linear forwards`;
 
         progress.appendChild(bar);
         card.appendChild(progress);
       }
     }
 
-    const titleElement = card.querySelector<HTMLElement>('.tutor-toast-title');
-    const descriptionElement = card.querySelector<HTMLElement>('.tutor-toast-description');
+    const titleElement = card.querySelector<HTMLElement>(TOAST_SELECTOR.title);
+    const descriptionElement = card.querySelector<HTMLElement>(TOAST_SELECTOR.description);
     this.announce(titleElement?.textContent || '', descriptionElement?.textContent, nextType);
   }
 
@@ -829,12 +935,12 @@ export class TutorToastManager {
     };
 
     const item = document.createElement('li');
-    item.className = 'tutor-toast-item';
-    item.setAttribute('role', 'listitem');
-    item.setAttribute('aria-labelledby', `tutor-toast-title-${id}`);
-    item.setAttribute('tabindex', '0');
-    item.setAttribute('data-entering', 'true');
-    item.setAttribute('data-position-y', this.yPosition(position));
+    item.className = TOAST_CLASS.item;
+    item.setAttribute(TOAST_ATTR.role, TOAST_ATTR_VALUE.listItem);
+    item.setAttribute(TOAST_ATTR.ariaLabelledBy, `${TOAST_TITLE_ID_PREFIX}${id}`);
+    item.setAttribute(TOAST_ATTR.tabIndex, '0');
+    item.setAttribute(TOAST_ATTR.dataEntering, TOAST_ATTR_VALUE.true);
+    item.setAttribute(TOAST_ATTR.dataPositionY, this.yPosition(position));
 
     const card = this.buildCard(id, title, normalizedOptions);
     item.appendChild(card);
@@ -853,7 +959,7 @@ export class TutorToastManager {
     }
 
     setTimeout(() => {
-      item.removeAttribute('data-entering');
+      item.removeAttribute(TOAST_ATTR.dataEntering);
       this.restack();
     }, 420);
 

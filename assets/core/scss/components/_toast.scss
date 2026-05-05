@@ -271,32 +271,45 @@
   justify-content: center;
   inline-size: $tutor-toast-icon-size;
   block-size: $tutor-toast-icon-size;
+  border: 1px solid transparent;
   border-radius: $tutor-radius-full;
-  background: color-mix(in srgb, currentColor 12%, transparent);
+  background: $tutor-toast-default-background;
   color: $tutor-toast-info-icon;
 
   .tutor-toast-card[data-type='success'] & {
     color: $tutor-toast-success-icon;
+    border-color: $tutor-toast-success-border;
+    background: $tutor-toast-success-background;
   }
 
   .tutor-toast-card[data-type='error'] & {
     color: $tutor-toast-error-icon;
+    border-color: $tutor-toast-error-border;
+    background: $tutor-toast-error-background;
   }
 
   .tutor-toast-card[data-type='warning'] & {
     color: $tutor-toast-warning-icon;
+    border-color: $tutor-toast-warning-border;
+    background: $tutor-toast-warning-background;
   }
 
   .tutor-toast-card[data-type='info'] & {
     color: $tutor-toast-info-icon;
+    border-color: $tutor-toast-info-border;
+    background: $tutor-toast-info-background;
   }
 
   .tutor-toast-card[data-type='loading'] & {
     color: $tutor-toast-loading-icon;
+    border-color: $tutor-toast-loading-border;
+    background: $tutor-toast-loading-background;
   }
 
   .tutor-toast-card[data-type='default'] & {
     color: $tutor-toast-default-icon;
+    border-color: $tutor-toast-default-border;
+    background: $tutor-toast-default-background;
   }
 }
 
@@ -321,7 +334,7 @@
   color: $tutor-toast-text-muted;
 
   .tutor-toast-card[data-type='default'] & {
-    color: color-mix(in srgb, $tutor-toast-default-text 75%, transparent);
+    color: $tutor-toast-default-text;
   }
 }
 
@@ -335,7 +348,7 @@
 .tutor-toast-close {
   border: 0;
   background: transparent;
-  color: inherit;
+  color: $tutor-icon-idle;
   cursor: pointer;
 }
 
