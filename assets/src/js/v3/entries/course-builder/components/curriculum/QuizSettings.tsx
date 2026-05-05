@@ -446,162 +446,163 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             </div>
           </div>
         </div>
+        <Show when={contentType !== 'tutor_h5p_quiz'}>
+          <div css={styles.card}>
+            <h5>{__('Navigation & Display', 'tutor')}</h5>
 
-        <div css={styles.card}>
-          <h5>{__('Navigation & Display', 'tutor')}</h5>
+            <div css={styles.innerCard}>
+              <Controller
+                control={form.control}
+                name="quiz_option.question_layout_view"
+                render={(controllerProps) => (
+                  <FormQuizLayoutSelect
+                    {...controllerProps}
+                    label={__('Layout', 'tutor')}
+                    description={__('Choose how students will answer the questions.', 'tutor')}
+                    options={[
+                      {
+                        label: __('Single Question', 'tutor'),
+                        value: 'single_question',
+                        image: <QuizSingleLayoutSvg width={72} height={92} />,
+                      },
+                      {
+                        label: __('Full Page', 'tutor'),
+                        value: 'question_below_each_other',
+                        image: <QuizFullPageSvg width={72} height={92} />,
+                      },
+                    ]}
+                  />
+                )}
+              />
 
-          <div css={styles.innerCard}>
-            <Controller
-              control={form.control}
-              name="quiz_option.question_layout_view"
-              render={(controllerProps) => (
-                <FormQuizLayoutSelect
-                  {...controllerProps}
-                  label={__('Layout', 'tutor')}
-                  description={__('Choose how students will answer the questions.', 'tutor')}
-                  options={[
-                    {
-                      label: __('Single Question', 'tutor'),
-                      value: 'single_question',
-                      image: <QuizSingleLayoutSvg width={72} height={92} />,
-                    },
-                    {
-                      label: __('Full Page', 'tutor'),
-                      value: 'question_below_each_other',
-                      image: <QuizFullPageSvg width={72} height={92} />,
-                    },
-                  ]}
-                />
-              )}
-            />
+              <Show when={form.watch('quiz_option.question_layout_view') === 'single_question'}>
+                <hr />
 
-            <Show when={form.watch('quiz_option.question_layout_view') === 'single_question'}>
-              <hr />
-
-              <div css={styles.inlineForm}>
-                <Controller
-                  control={form.control}
-                  name="quiz_option.enable_pagination"
-                  render={(controllerProps) => (
-                    <FormCheckbox
-                      {...controllerProps}
-                      label={__('Show pagination', 'tutor')}
-                      helpText={
-                        isLegacyLearningMode
-                          ? __('Pagination style is unavailable while learning mode is set to Legacy.', 'tutor')
-                          : undefined
-                      }
-                    />
-                  )}
-                />
-
-                <Show when={form.watch('quiz_option.enable_pagination')}>
-                  <div css={styles.paginationIcons}>
-                    <SVGIcon
-                      name={getPaginationTypeIcon(form.watch('quiz_option.pagination_type'))}
-                      width={40}
-                      height={32}
-                    />
-                  </div>
+                <div css={styles.inlineForm}>
                   <Controller
                     control={form.control}
-                    name="quiz_option.pagination_type"
+                    name="quiz_option.enable_pagination"
                     render={(controllerProps) => (
-                      <FormSelectInput
+                      <FormCheckbox
                         {...controllerProps}
-                        size="small"
-                        isInlineLabel
-                        disabled={isLegacyLearningMode}
-                        options={[
-                          {
-                            label: __('Shapes', 'tutor'),
-                            value: 'shape',
-                          },
-                          {
-                            label: __('Numbers', 'tutor'),
-                            value: 'number',
-                          },
-                          {
-                            label: __('Radio', 'tutor'),
-                            value: 'radio',
-                          },
-                        ]}
+                        label={__('Show pagination', 'tutor')}
+                        helpText={
+                          isLegacyLearningMode
+                            ? __('Pagination style is unavailable while learning mode is set to Legacy.', 'tutor')
+                            : undefined
+                        }
                       />
                     )}
                   />
-                </Show>
-              </div>
 
-              <div css={styles.inlineForm}>
-                <Controller
-                  control={form.control}
-                  name="quiz_option.enable_answer_reveal"
-                  render={(controllerProps) => (
-                    <FormCheckbox {...controllerProps} label={__('Reveal answers after submission', 'tutor')} />
-                  )}
-                />
-
-                <Show when={form.watch('quiz_option.enable_answer_reveal')}>
-                  <div css={styles.inlineForm({ withPrefix: true })}>
-                    <div data-prefix>{__('For', 'tutor')}</div>
+                  <Show when={form.watch('quiz_option.enable_pagination')}>
+                    <div css={styles.paginationIcons}>
+                      <SVGIcon
+                        name={getPaginationTypeIcon(form.watch('quiz_option.pagination_type'))}
+                        width={40}
+                        height={32}
+                      />
+                    </div>
                     <Controller
-                      name="quiz_option.answers_reveal_duration"
                       control={form.control}
+                      name="quiz_option.pagination_type"
                       render={(controllerProps) => (
-                        <FormInputWithPresets
+                        <FormSelectInput
                           {...controllerProps}
                           size="small"
-                          content={__('secs', 'tutor')}
-                          contentPosition="right"
-                          wrapperCss={styles.maxWidth('80px')}
-                          contentCss={styles.minWidth('fit-content')}
-                          formFieldWrapperCss={styles.width('auto')}
-                          showVerticalBar={false}
-                          presetOptions={[
+                          isInlineLabel
+                          disabled={isLegacyLearningMode}
+                          options={[
                             {
-                              label: __('2', 'tutor'),
-                              value: '2',
+                              label: __('Shapes', 'tutor'),
+                              value: 'shape',
                             },
                             {
-                              label: __('5', 'tutor'),
-                              value: '5',
+                              label: __('Numbers', 'tutor'),
+                              value: 'number',
                             },
                             {
-                              label: __('7', 'tutor'),
-                              value: '7',
-                            },
-                            {
-                              label: __('10', 'tutor'),
-                              value: '10',
+                              label: __('Radio', 'tutor'),
+                              value: 'radio',
                             },
                           ]}
                         />
                       )}
                     />
-                  </div>
-                </Show>
-              </div>
+                  </Show>
+                </div>
 
-              <hr />
+                <div css={styles.inlineForm}>
+                  <Controller
+                    control={form.control}
+                    name="quiz_option.enable_answer_reveal"
+                    render={(controllerProps) => (
+                      <FormCheckbox {...controllerProps} label={__('Reveal answers after submission', 'tutor')} />
+                    )}
+                  />
 
-              <Controller
-                control={form.control}
-                name="quiz_option.hide_previous_button"
-                render={(controllerProps) => (
-                  <FormSwitch {...controllerProps} label={__('Hide previous button from students', 'tutor')} />
-                )}
-              />
+                  <Show when={form.watch('quiz_option.enable_answer_reveal')}>
+                    <div css={styles.inlineForm({ withPrefix: true })}>
+                      <div data-prefix>{__('For', 'tutor')}</div>
+                      <Controller
+                        name="quiz_option.answers_reveal_duration"
+                        control={form.control}
+                        render={(controllerProps) => (
+                          <FormInputWithPresets
+                            {...controllerProps}
+                            size="small"
+                            content={__('secs', 'tutor')}
+                            contentPosition="right"
+                            wrapperCss={styles.maxWidth('80px')}
+                            contentCss={styles.minWidth('fit-content')}
+                            formFieldWrapperCss={styles.width('auto')}
+                            showVerticalBar={false}
+                            presetOptions={[
+                              {
+                                label: __('2', 'tutor'),
+                                value: '2',
+                              },
+                              {
+                                label: __('5', 'tutor'),
+                                value: '5',
+                              },
+                              {
+                                label: __('7', 'tutor'),
+                                value: '7',
+                              },
+                              {
+                                label: __('10', 'tutor'),
+                                value: '10',
+                              },
+                            ]}
+                          />
+                        )}
+                      />
+                    </div>
+                  </Show>
+                </div>
 
-              <Controller
-                control={form.control}
-                name="quiz_option.hide_question_number_overview"
-                render={(controllerProps) => (
-                  <FormSwitch {...controllerProps} label={__('Hide question number', 'tutor')} />
-                )}
-              />
-            </Show>
+                <hr />
+
+                <Controller
+                  control={form.control}
+                  name="quiz_option.hide_previous_button"
+                  render={(controllerProps) => (
+                    <FormSwitch {...controllerProps} label={__('Hide previous button from students', 'tutor')} />
+                  )}
+                />
+
+                <Controller
+                  control={form.control}
+                  name="quiz_option.hide_question_number_overview"
+                  render={(controllerProps) => (
+                    <FormSwitch {...controllerProps} label={__('Hide question number', 'tutor')} />
+                  )}
+                />
+              </Show>
+            </div>
           </div>
-        </div>
+        </Show>
 
         <Show
           when={
