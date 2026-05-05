@@ -359,7 +359,7 @@ class Course extends Tutor_Base {
 	/**
 	 * Bypass password protection for enrolled users.
 	 *
-	 * @since 3.0.0
+	 * @since 4.0.0
 	 *
 	 * @param bool    $required Whether the password is required.
 	 * @param WP_Post $post     The post object.
@@ -372,7 +372,7 @@ class Course extends Tutor_Base {
 		}
 
 		$post_types = array( tutor()->course_post_type, tutor()->bundle_post_type );
-		if ( in_array( $post->post_type, $post_types, true ) && tutor_utils()->is_enrolled( $post->ID ) ) {
+		if ( in_array( $post->post_type, $post_types, true ) && EnrollmentModel::is_enrolled( $post->ID ) ) {
 			return false;
 		}
 
