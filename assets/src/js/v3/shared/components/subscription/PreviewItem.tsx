@@ -258,7 +258,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
               {subscription.plan_name}
             </span>
             <Show when={subscription.is_featured}>
-              <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
+              <SVGIcon style={styles.featuredIcon} name="starFill" height={16} width={16} />
             </Show>
             <Show when={!subscription.is_enabled}>
               <TutorBadge css={styles.badge} variant="secondary" title={__('Inactive', __TUTOR_TEXT_DOMAIN__)}>
