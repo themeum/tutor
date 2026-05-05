@@ -67,6 +67,7 @@ interface QuizPayload {
   payload: QuizResponseWithStatus;
   deleted_question_ids?: ID[];
   deleted_answer_ids?: ID[];
+  deleted_temp_mask_values?: string[];
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: number;
   'content_drip_settings[prerequisites]'?: ID[] | string;
@@ -148,6 +149,7 @@ export interface QuizForm {
   questions: QuizQuestion[];
   deleted_question_ids: ID[];
   deleted_answer_ids: ID[];
+  deleted_temp_mask_values: string[];
 }
 
 interface QuizUpdateQuestionPayload {
@@ -213,6 +215,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
     questions: (quiz.questions || []).map((question) => convertedQuestion(question)),
     deleted_question_ids: [],
     deleted_answer_ids: [],
+    deleted_temp_mask_values: [],
     ...Object.fromEntries(slotFields.map((key) => [key, quiz[key as keyof QuizDetailsResponse]])),
   };
 };
@@ -362,6 +365,7 @@ export const convertQuizFormDataToPayload = (
     },
     deleted_question_ids: formData.deleted_question_ids,
     deleted_answer_ids: deletedAnswerIds,
+    deleted_temp_mask_values: formData.deleted_temp_mask_values,
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'unlock_by_date' && {
         'content_drip_settings[unlock_date]': formData.quiz_option.content_drip_settings.unlock_date,
