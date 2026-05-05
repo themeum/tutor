@@ -5354,12 +5354,12 @@ class Utils {
 
 		$quiz_id         = $this->get_post_id( $quiz_id );
 		$attempt         = $this->is_started_quiz( $quiz_id );
-		$total_questions = (int) $attempt->total_questions;
 		if ( ! $attempt ) {
 			return false;
 		}
 
-		$questions_order = $this->get_quiz_option( get_the_ID(), 'questions_order', 'rand' );
+		$total_questions = (int) $attempt->total_questions;
+		$questions_order = $this->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
 
 		$order_by = '';
 		if ( 'rand' === $questions_order ) {
