@@ -208,6 +208,13 @@ const isSameCardState = (left, right) => {
 		&& JSON.stringify(left.consentMap) === JSON.stringify(right.consentMap);
 };
 
+const isValidConsentState = (state) => Boolean(
+	state.title.trim()
+	&& state.message.trim()
+	&& state.method
+	&& state.displayOn.length > 0
+);
+
 const applyCardState = (card, state) => {
 	const titleInput = card.querySelector(SELECTORS.consentTitleInput);
 	const enabledInput = card.querySelector(SELECTORS.consentEnabled);
@@ -470,6 +477,13 @@ const updateConsentEnabledState = ({ consentId, enabledInput, enabledHiddenInput
 };
 
 const saveConsent = ({ card, consentId, saveButton, enabledInput, savedState, onSuccess }) => {
+	const currentState = getCardFormState(card);
+
+	if (!isValidConsentState(currentState)) {
+		showToast(__('Error', 'tutor'), __('Please fill all the required fields.', 'tutor'), 'error');
+		return;
+	}
+
 	const formData = buildSavePayload({ card, consentId, enabledInput, savedState });
 
 	saveButton.classList.add(CSS_CLASSES.loading);
