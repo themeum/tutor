@@ -132,6 +132,15 @@ declare global {
       kids_icons_registry: string[];
       is_kids_mode: boolean;
       is_legacy_learning_mode: boolean;
+      user_preferences: {
+        auto_play_next: boolean;
+        contrast: string;
+        font_scale: number;
+        learning_mood: 'modern' | 'legacy' | 'kids' | '';
+        motion_effects: 'auto' | 'on' | 'off';
+        theme: 'light' | 'dark' | '';
+        vision: 'normal' | '';
+      };
       current_user: {
         data: {
           id: string;

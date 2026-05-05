@@ -43,6 +43,15 @@ const defaultTutorConfig = {
   addons_data: [],
   kids_icons_registry: [],
   is_kids_mode: false,
+  user_preferences: {
+    auto_play_next: false,
+    contrast: 'high',
+    font_scale: 1,
+    learning_mood: 'modern',
+    motion_effects: 'auto',
+    theme: 'light',
+    vision: 'normal',
+  },
   is_legacy_learning_mode: false,
   current_user: {
     data: {
