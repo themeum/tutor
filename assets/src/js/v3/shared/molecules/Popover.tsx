@@ -24,6 +24,7 @@ interface PopoverProps<T> {
   closeOnEscape?: boolean;
   animationType?: AnimationType;
   arrow?: boolean;
+  border?: boolean;
   autoAdjustOverflow?: boolean;
   positionModifier?: {
     top: number;
@@ -44,6 +45,7 @@ const Popover = <T extends HTMLElement>({
   closeOnEscape = true,
   animationType = AnimationType.slideLeft,
   arrow = false,
+  border = false,
   autoAdjustOverflow = true,
   positionModifier = {
     top: 0,
@@ -83,7 +85,7 @@ const Popover = <T extends HTMLElement>({
         }}
         ref={popoverRef}
       >
-        <div css={styles.content}>{children}</div>
+        <div css={styles.content({ border })}>{children}</div>
       </div>
     </Portal>
   );
@@ -158,10 +160,12 @@ const styles = {
         : ''}
     }
   `,
-  content: css`
+  content: ({ border = false }: { border: boolean }) => css`
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     border-radius: ${borderRadius[6]};
+    border: ${border ? `1px solid ${colorTokens.stroke.divider}` : 'none'};
+
     ::-webkit-scrollbar {
       background-color: ${colorTokens.background.white};
       width: 10px;
