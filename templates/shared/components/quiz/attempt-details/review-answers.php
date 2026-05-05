@@ -78,7 +78,7 @@ $context      = isset( $context ) ? (string) $context : '';
 					)
 				);
 			}
-			do_action( 'tutor_review_answer_after_question_template', $question, $attempt_answer, $index, $is_instructor_review );
+			do_action( 'tutor_review_answer_after_question_template', $question, $index, $is_instructor_review );
 			?>
 		</div>
 	<?php endforeach; ?>

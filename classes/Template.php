@@ -553,4 +553,17 @@ class Template extends Tutor_Base {
 
 		return $menu_items;
 	}
+
+	/**
+	 * Get learning area active subpage
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	public static function learning_area_active_subpage(): string {
+		$active_menu = Input::get( 'subpage', '' );
+
+		return apply_filters( 'tutor_learning_area_active_subpage', $active_menu );
+	}
 }
