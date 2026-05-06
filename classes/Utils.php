@@ -8825,7 +8825,7 @@ class Utils {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param $args array  array of arguments.
+	 * @param array $args array of arguments.
 	 *
 	 * @return array default config.
 	 */
@@ -9123,7 +9123,7 @@ class Utils {
 
 		$default = '0, 0, 0';
 
-		if ( $color === '' ) {
+		if ( '' === $color ) {
 			return '';
 		}
 
@@ -9132,7 +9132,7 @@ class Utils {
 		}
 
 		// Convert hex to rgb.
-		if ( $color[0] == '#' ) {
+		if ( '#' === $color[0] ) {
 			$color = substr( $color, 1 );
 		} else {
 			return $default;
@@ -9157,13 +9157,13 @@ class Utils {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return void
+	 * @return string|null
 	 */
 	public function get_course_builder_screen() {
 		$builder_screen = null;
 		if ( is_admin() ) {
 			$screen = get_current_screen();
-			if ( is_object( $screen ) && $screen->base == 'post' && $screen->id == tutor()->course_post_type ) {
+			if ( is_object( $screen ) && 'post' === $screen->base && tutor()->course_post_type === $screen->id ) {
 				$builder_screen = $screen->is_block_editor ? 'gutenberg' : 'classic';
 			}
 		} elseif ( $this->is_tutor_frontend_dashboard( 'create-course' ) ) {
@@ -9888,7 +9888,7 @@ class Utils {
 	 * @since 3.4.0
 	 *
 	 * @param int $student_id Student id.
-	 * @param int $course_id Course id
+	 * @param int $course_id Course id.
 	 *
 	 * @return bool
 	 */
@@ -10001,6 +10001,7 @@ class Utils {
 			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 
+		//phpcs:ignore --all variables are sanitized.
 		printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}
 
@@ -10022,8 +10023,8 @@ class Utils {
 	 *
 	 * @since 3.7.0
 	 *
-	 * @param string $filename Filename
-	 * @param string $locale Locale
+	 * @param string $filename Filename.
+	 * @param string $locale Locale.
 	 *
 	 * @return array|null
 	 */
@@ -10045,8 +10046,8 @@ class Utils {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $monitize_by Optional. Monetization provider key
-	 *                                 (e.g., 'wc', 'edd', 'pmpro').
+	 * @param string $monetize_by Optional. Monetization provider key.
+	 *                            (e.g., 'wc', 'edd', 'pmpro').
 	 *
 	 * @return array{
 	 *     currency: string,
