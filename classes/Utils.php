@@ -7537,7 +7537,7 @@ class Utils {
 			)
 		);
 
-		return array_column( $student_data, $field_name );
+		return $student_data;
 	}
 
 	/**
