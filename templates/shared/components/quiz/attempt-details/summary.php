@@ -148,7 +148,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 					<span class="tutor-font-semibold tutor-text-primary">
 						<?php echo esc_html( $attempt_duration_taken ); ?>
 					</span>
-					<?php if ( $attempt_duration ) : ?>
+					<?php if ( (int) $attempt_duration ) : ?>
 						<span>
 							<?php
 								echo esc_html(

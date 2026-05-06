@@ -185,7 +185,7 @@ const GenerateQuizWithAi = () => {
       };
 
       const response = await generateMutation.mutateAsync(payload);
-      const generatedQuestions = response.data ?? [];
+      const generatedQuestions = Array.isArray(response.data) ? response.data : [];
 
       const existingCount = quizForm.getValues('questions')?.length ?? 0;
 
@@ -229,10 +229,8 @@ const GenerateQuizWithAi = () => {
       showToast({ type: 'success', message: __('Questions generated successfully', 'tutor') });
       setIsOpen(false);
     } catch (error) {
-      showToast({
-        type: 'danger',
-        message: error instanceof Error ? error.message : __('Something went wrong!', 'tutor'),
-      });
+      // eslint-disable-next-line no-console
+      console.error(error);
     }
   };
 

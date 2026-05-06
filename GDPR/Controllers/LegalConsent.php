@@ -314,11 +314,7 @@ class LegalConsent extends BaseController {
 			throw new Exception( esc_html__( 'Invalid place key', 'tutor' ) );
 		}
 
-		$where = array(
-			'display_on' => array( 'IN', array( $place_key ) ),
-		);
-
-		$res = ( new self( false ) )->model->get_all( $where );
+		$res = ( new self( false ) )->model->get_consents_by_display_key( $place_key );
 
 		return $res ? $res : array();
 	}
