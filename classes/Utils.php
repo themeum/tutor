@@ -8158,16 +8158,16 @@ class Utils {
 				$addons_path = trailingslashit( tutor()->path . "assets/images/addons/{$base_name}" );
 				$addons_url  = trailingslashit( tutor()->url . "assets/images/addons/{$base_name}" );
 
-				$thumbnailURL = tutor()->url . 'assets/images/tutor-plugin.png';
+				$thumbnail_URL = tutor()->url . 'assets/images/tutor-plugin.png';
 				if ( file_exists( $addons_path . 'thumbnail.png' ) ) {
-					$thumbnailURL = $addons_url . 'thumbnail.png';
+					$thumbnail_URL = $addons_url . 'thumbnail.png';
 				} elseif ( file_exists( $addons_path . 'thumbnail.jpg' ) ) {
-					$thumbnailURL = $addons_url . 'thumbnail.jpg';
+					$thumbnail_URL = $addons_url . 'thumbnail.jpg';
 				} elseif ( file_exists( $addons_path . 'thumbnail.svg' ) ) {
-					$thumbnailURL = $addons_url . 'thumbnail.svg';
+					$thumbnail_URL = $addons_url . 'thumbnail.svg';
 				}
 
-				$plugins_data[ $base_name ]['url'] = $thumbnailURL;
+				$plugins_data[ $base_name ]['url'] = $thumbnail_URL;
 
 				// Add add-on enable status.
 				$addon_url = "tutor-pro/addons/{$base_name}/{$base_name}.php";
