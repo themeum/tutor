@@ -456,10 +456,6 @@ class LegalConsent extends BaseController {
 			$this->response_fail( __( 'Invalid consent map.', 'tutor' ), 400 );
 		}
 
-		if ( empty( $data['display_on'] ) ) {
-			$this->response_fail( __( 'Please select at least one display place.', 'tutor' ), 400 );
-		}
-
 		if ( empty( $data ) ) {
 			$this->response_fail( __( 'No update data found.', 'tutor' ), 400 );
 		}
