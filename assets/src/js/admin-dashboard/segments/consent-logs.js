@@ -66,11 +66,13 @@ const renderTimeline = (logs) => {
 const showLoading = () => {
 	if (!modalBody) return;
 	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('Loading…', 'tutor')}</div>`;
+	if (downloadBtn) downloadBtn.style.display = 'none';
 };
 
 const showEmpty = () => {
 	if (!modalBody) return;
 	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('No consent logs found.', 'tutor')}</div>`;
+	if (downloadBtn) downloadBtn.style.display = 'none';
 };
 
 const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, userLogin) => {
@@ -80,6 +82,9 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
 	currentUserJoined = userJoined;
 	currentUserEmail = userEmail;
 	currentUserLogin = userLogin;
+
+	// Show loading state and hide download button.
+	showLoading();
 
 	// Fill user card.
 	if (userNameEl) userNameEl.textContent = userName;
@@ -114,6 +119,7 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
                     <div class="tutor-consent-timeline">${renderTimeline(logs)}</div>
                     ${userCard}
                 `;
+			if (downloadBtn) downloadBtn.style.display = '';
 		})
 		.catch(() => showEmpty());
 };
