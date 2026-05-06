@@ -45,7 +45,7 @@ const getLogTitle = (log, includeAccepted = true) => {
 
 const renderTimeline = (logs) => {
 	const items = logs.map((log, index) => {
-		const title = getLogTitle(log, true);
+		const title = getLogTitle(log);
 		const date = log.created_at_gmt || '';
 		const ago = log.timeAgo || log.time_ago || '';
 		const ip = log.ip_address ? `IP: ${log.ip_address}` : '';
