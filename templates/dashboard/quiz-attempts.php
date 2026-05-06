@@ -126,8 +126,6 @@ $hidden_inputs = array(
 					DateFilter::make()
 						->type( DateFilter::TYPE_SINGLE )
 						->placement( Positions::BOTTOM_END )
-						->trigger_size( Size::SMALL )
-						->icon_size( Size::SIZE_16 )
 						->render();
 
 					Sorting::make()->size( Size::SMALL )->order( $order_filter )->render();
