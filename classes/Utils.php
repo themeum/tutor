@@ -1747,30 +1747,30 @@ class Utils {
 	 *
 	 * @since 2.0.7
 	 *
-	 * @param string $from                  date time string value. Example: 2022-06-24 22:00:00
+	 * @param string $from                  date time string value. Example: 2022-06-24 22:00:00.
 	 * @param string $to                    (optional) date time string value. Default value is current.
-	 * @param string $format                format you want to print. Default: '%ad %hh %im %ss' Help: https://www.php.net/manual/en/dateinterval.format.php
-	 * @param bool   $show_postfix_text     show postfix text like 'ago', 'left'
+	 * @param string $format                format you want to print. Default: '%ad %hh %im %ss' Help: https://www.php.net/manual/en/dateinterval.format.php.
+	 * @param bool   $show_postfix_text     show postfix text like 'ago', 'left'.
 	 *
 	 * @return string
 	 */
 	public function get_human_readable_time( $from, $to = null, $format = null, $show_postfix_text = true ) {
-		$postfix_text = '';
-		$wp_tz        = new \DateTimeZone( wp_timezone_string() );
-		$fromDateTime = new \DateTime( $from, $wp_tz );
-		$toDateTime   = $to === null ? new \DateTime( 'now', $wp_tz ) : new \DateTime( $to, $wp_tz );
-		$format       = $format === null ? '%ad %hh %im %ss' : $format;
+		$postfix_text   = '';
+		$wp_tz          = new \DateTimeZone( wp_timezone_string() );
+		$from_date_time = new \DateTime( $from, $wp_tz );
+		$to_date_time   = null === $to ? new \DateTime( 'now', $wp_tz ) : new \DateTime( $to, $wp_tz );
+		$format         = null === $format ? '%ad %hh %im %ss' : $format;
 
-		if ( $toDateTime > $fromDateTime ) {
+		if ( $to_date_time > $from_date_time ) {
 			$postfix_text = __( ' ago', 'tutor' );
 		} else {
 			$postfix_text = __( ' left', 'tutor' );
 		}
 
-		$timeSpan     = $toDateTime->diff( $fromDateTime );
-		$postfix_text = $show_postfix_text === true ? $postfix_text : '';
+		$time_span    = $to_date_time->diff( $from_date_time );
+		$postfix_text = true === $show_postfix_text ? $postfix_text : '';
 
-		return $timeSpan->format( $format ) . $postfix_text;
+		return $time_span->format( $format ) . $postfix_text;
 	}
 
 	/**
