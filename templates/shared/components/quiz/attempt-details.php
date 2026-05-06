@@ -145,15 +145,17 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 	</div>
 	<?php if ( ! empty( $is_learning_area ) && $course_contents->next_id ) : ?>
 	<div class="tutor-quiz-summary-footer">
-		<?php
-			Button::make()
-			->tag( 'a' )
-			->label( __( 'Continue Lesson', 'tutor' ) )
-			->variant( Variant::PRIMARY )
-			->size( Size::LARGE )
-			->attr( 'href', esc_url( get_the_permalink( $course_contents->next_id ) ) )
-			->render();
-		?>
+		<div class="tutor-quiz-summary-footer-inner">
+			<?php
+				Button::make()
+				->tag( 'a' )
+				->label( __( 'Continue Lesson', 'tutor' ) )
+				->variant( Variant::PRIMARY )
+				->size( Size::LARGE )
+				->attr( 'href', esc_url( get_the_permalink( $course_contents->next_id ) ) )
+				->render();
+			?>
+		</div>
 	</div>
 	<?php endif; ?>
 </div>
