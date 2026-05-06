@@ -51,7 +51,7 @@ const handleClick = () => {
   alert('Chip clicked!');
 };
 
-const customIcon = <SVGIcon name="star" width={20} height={20} />;
+const customIcon = <SVGIcon name="starFill" width={20} height={20} />;
 
 export const Default = {
   args: {
