@@ -791,37 +791,37 @@ class Utils {
 	 * @return int
 	 */
 	public function get_completed_lesson_count_by_course( $course_id = 0, $user_id = 0 ) {
-		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
 		$lesson_ids = $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id );
-		$count      = 0;
-		if ( count( $lesson_ids ) ) {
-			$completed_lesson_meta_ids = array();
-			foreach ( $lesson_ids as $lesson_id ) {
-				$completed_lesson_meta_ids[] = '_tutor_completed_lesson_id_' . $lesson_id;
-			}
-			$in_ids = implode( "','", $completed_lesson_meta_ids );
-
-			$prepare_ids = str_replace( "','", '', $in_ids );
-			$cache_key   = "tutor_get_completed_lesson_count_by{$user_id}_{$prepare_ids}";
-			$count       = TutorCache::get( $cache_key );
-
-			if ( false === $count ) {
-				$count = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT count(umeta_id)
-					FROM	{$wpdb->usermeta}
-					WHERE	user_id = %d
-							AND meta_key IN ('{$in_ids}')
-					",
-						$user_id
-					)
-				);
-				TutorCache::set( $cache_key, $count );
-			}
+		if ( empty( $lesson_ids ) ) {
+			return 0;
 		}
+
+		$cache_key = 'tutor_get_completed_lesson_count_by_' . $user_id . '_' . implode( '_', $lesson_ids );
+		$cached    = TutorCache::get( $cache_key );
+
+		if ( false !== $cached ) {
+			return (int) $cached;
+		}
+
+		$meta_keys = array_map(
+			fn( $id ) => '_tutor_completed_lesson_id_' . $id,
+			$lesson_ids
+		);
+
+		$count = QueryHelper::get_count(
+			'usermeta',
+			array(
+				'user_id'  => $user_id,
+				'meta_key' => array( 'IN', $meta_keys ),
+			),
+			array(),
+			'umeta_id'
+		);
+
+		TutorCache::set( $cache_key, $count );
 
 		return $count;
 	}
