@@ -8115,27 +8115,27 @@ class Utils {
 		'm' => 'min',
 		's' => 'sec',
 	) ) {
-		$duration        = maybe_unserialize( get_post_meta( $course_id, '_course_duration', true ) );
-		$durationHours   = (int) $this->avalue_dot( 'hours', $duration, 0 );
-		$durationMinutes = (int) $this->avalue_dot( 'minutes', $duration, 0 );
-		$durationSeconds = (int) $this->avalue_dot( 'seconds', $duration, 0 );
+		$duration         = maybe_unserialize( get_post_meta( $course_id, '_course_duration', true ) );
+		$duration_hours   = (int) $this->avalue_dot( 'hours', $duration, 0 );
+		$duration_minutes = (int) $this->avalue_dot( 'minutes', $duration, 0 );
+		$duration_seconds = (int) $this->avalue_dot( 'seconds', $duration, 0 );
 
 		if ( $return_array ) {
 			return array(
 				'duration'        => $duration,
-				'durationHours'   => $durationHours,
-				'durationMinutes' => $durationMinutes,
-				'durationSeconds' => $durationSeconds,
+				'durationHours'   => $duration_hours,
+				'durationMinutes' => $duration_minutes,
+				'durationSeconds' => $duration_seconds,
 			);
 		}
 
-		if ( ! $durationHours && ! $durationMinutes && ! $durationSeconds ) {
+		if ( ! $duration_hours && ! $duration_minutes && ! $duration_seconds ) {
 			return '';
 		}
 
-		return $durationHours . $texts['h'] . ' ' .
-		$durationMinutes . $texts['m'] . ' ' .
-		$durationSeconds . $texts['s'];
+		return $duration_hours . $texts['h'] . ' ' .
+		$duration_minutes . $texts['m'] . ' ' .
+		$duration_seconds . $texts['s'];
 	}
 
 	/**
