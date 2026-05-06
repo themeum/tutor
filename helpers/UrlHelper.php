@@ -55,11 +55,17 @@ class UrlHelper {
 		}
 
 		$sources = array(
-			array( 'path' => tutor()->path . 'assets/', 'url' => tutor()->assets_url ),
+			array(
+				'path' => tutor()->path . 'assets/',
+				'url'  => tutor()->assets_url,
+			),
 		);
 
 		if ( function_exists( 'tutor_pro' ) ) {
-			$sources[] = array( 'path' => tutor_pro()->path . 'assets/', 'url' => tutor_pro()->assets );
+			$sources[] = array(
+				'path' => tutor_pro()->path . 'assets/',
+				'url'  => tutor_pro()->assets,
+			);
 		}
 
 		$candidates = array( $path );
@@ -131,14 +137,14 @@ class UrlHelper {
 		return array(
 			'--tutor-visual-gray-1'      => '#fff',
 			'--tutor-visual-gray-2'      => '#ececed',
-			'--tutor-visual-gray-3'      => '#CECFD2',
+			'--tutor-visual-gray-3'      => '#cecfd2',
 			'--tutor-visual-gray-4'      => '#2d3039',
 			'--tutor-visual-brand-1'     => '#4979e8',
 			'--tutor-visual-brand-2'     => '#a4bcf4',
 			'--tutor-visual-brand-3'     => '#dbe4fa',
 			'--tutor-visual-success-1'   => '#28a745',
-			'--tutor-visual-success-2'   => '#52c41a',
-			'--tutor-visual-critical-1'  => '#f04438',
+			'--tutor-visual-success-2'   => '#28a745',
+			'--tutor-visual-critical-1'  => '#1d0d0c',
 			'--tutor-visual-critical-2'  => '#fee4e2',
 			'--tutor-visual-caution-1'   => '#fde272',
 			'--tutor-visual-caution-2'   => '#a15c07',
@@ -210,7 +216,7 @@ class UrlHelper {
 			return '';
 		}
 
-		$svg_content = file_get_contents( $resolved['path'] );
+		$svg_content = file_get_contents( $resolved['path'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		if ( false === $svg_content ) {
 			return '';
 		}
