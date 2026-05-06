@@ -15,7 +15,6 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\GDPR\GDPR;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Migrations\Migration;
-use Tutor\TemplateImport\TemplateImportInit;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -523,9 +522,6 @@ final class Tutor extends Singleton {
 		$this->course_filter         = new Course_Filter();
 		$this->permalink             = new Permalink();
 
-		// Template import.
-		new TemplateImportInit();
-
 		// Integrations.
 		$this->woocommerce = new WooCommerce();
 		$this->edd         = new TutorEDD();
@@ -647,11 +643,22 @@ final class Tutor extends Singleton {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		$is_droip_active  = \is_plugin_active( 'droip/droip.php' );
-		$tutor_droip_path = $tutor_path . 'includes/droip/droip.php';
-		if ( $is_droip_active && file_exists( $tutor_droip_path ) ) {
-			include $tutor_droip_path;
+		// Only kirki latest has class KirkiMain.
+		$is_kirki_active = \is_plugin_active( 'kirki-pro/kirki-pro.php' ) && class_exists( 'KirkiProMain' );
+
+		if ( $is_kirki_active ) {
+			$tutor_kirki_path = $tutor_path . 'includes/kirki/kirki.php';
+			if ( file_exists( $tutor_kirki_path ) ) {
+				include $tutor_kirki_path;
+			}
+		} else {
+			$is_droip_active  = \is_plugin_active( 'droip/droip.php' );
+			$tutor_droip_path = $tutor_path . 'includes/droip/droip.php';
+			if ( $is_droip_active && file_exists( $tutor_droip_path ) ) {
+				include $tutor_droip_path;
+			}
 		}
+
 	}
 
 	/**

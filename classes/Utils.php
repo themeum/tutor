@@ -7640,11 +7640,6 @@ class Utils {
 	 * @return int|int[]
 	 */
 	public function get_course_id_by( $content, $object_id ) {
-		$course_id = Input::get( 'course', 0, Input::TYPE_INT );
-		if ( $course_id ) {
-			return $course_id;
-		}
-
 		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
 		$course_id = TutorCache::get( $cache_key );
 
