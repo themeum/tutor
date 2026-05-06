@@ -1707,17 +1707,17 @@ class Utils {
 			return $run_time_format;
 		}
 
-		$playTimeString = $this->playtime_string( $seconds );
-		$timeInArray    = explode( ':', $playTimeString );
+		$play_time_string = $this->playtime_string( $seconds );
+		$time_in_array    = explode( ':', $play_time_string );
 
-		$run_time_size = count( $timeInArray );
-		if ( $run_time_size === 3 ) {
-			$run_time_format['hours']   = $timeInArray[0];
-			$run_time_format['minutes'] = $timeInArray[1];
-			$run_time_format['seconds'] = $timeInArray[2];
-		} elseif ( $run_time_size === 2 ) {
-			$run_time_format['minutes'] = $timeInArray[0];
-			$run_time_format['seconds'] = $timeInArray[1];
+		$run_time_size = count( $time_in_array );
+		if ( 3 === $run_time_size ) {
+			$run_time_format['hours']   = $time_in_array[0];
+			$run_time_format['minutes'] = $time_in_array[1];
+			$run_time_format['seconds'] = $time_in_array[2];
+		} elseif ( 2 === $run_time_size ) {
+			$run_time_format['minutes'] = $time_in_array[0];
+			$run_time_format['seconds'] = $time_in_array[1];
 		}
 
 		return $run_time_format;
