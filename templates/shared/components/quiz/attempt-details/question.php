@@ -17,7 +17,6 @@ if ( ! isset( $question ) || ! is_object( $question ) || empty( $question_templa
 }
 
 $index                = (int) ( $index ?? 1 );
-$attempt_answer       = isset( $attempt_answer ) && is_object( $attempt_answer ) ? $attempt_answer : null;
 $attempt_id           = (int) ( $attempt_id ?? 0 );
 $back_url             = (string) ( $back_url ?? '' );
 $context              = (string) ( $context ?? '' );
@@ -35,8 +34,8 @@ if ( 'single_choice' === $question_type ) {
 	$question_type = 'multiple_choice';
 }
 
-$is_skipped    = QuizModel::is_attempt_answer_skipped( $attempt_answer );
-$review_status = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'skipped';
+$is_skipped    = QuizModel::is_attempt_answer_skipped( $question );
+$review_status = $question ? QuizModel::get_attempt_answer_status( $question ) : 'skipped';
 $answer_status = $review_status;
 $status_badges = array();
 
@@ -86,7 +85,7 @@ if ( 'review-answer-dnd' === $question_template ) {
 			'status_badges'        => $status_badges,
 			'answer_status'        => $answer_status,
 			'attempt_id'           => $attempt_id,
-			'attempt_answer_id'    => (int) ( $attempt_answer->attempt_answer_id ?? 0 ),
+			'attempt_answer_id'    => (int) ( $question->attempt_answer_id ?? 0 ),
 			'back_url'             => $back_url,
 			'context'              => $context,
 			'is_instructor_review' => $is_instructor_review,
@@ -97,16 +96,15 @@ if ( 'review-answer-dnd' === $question_template ) {
 	tutor_load_template(
 		'shared.components.quiz.attempt-details.questions.' . $question_template,
 		array(
-			'question'       => $question,
-			'attempt_answer' => $attempt_answer,
-			'index'          => $index,
+			'question' => $question,
+			'index'    => $index,
 		)
 	);
 
-	do_action( 'tutor_quiz_attempt_details_after_question_template', $question, $question_template, $attempt_answer, $index );
+	do_action( 'tutor_quiz_attempt_details_after_question_template', $question, $question_template, $index );
 
-	if ( is_object( $attempt_answer ) ) {
-		do_action( 'tutor_quiz_attempt_details_loop_after_row', $attempt_answer, $answer_status, array() );
+	if ( is_object( $question ) ) {
+		do_action( 'tutor_quiz_attempt_details_loop_after_row', $question, $answer_status, array() );
 	}
 	?>
 </div>

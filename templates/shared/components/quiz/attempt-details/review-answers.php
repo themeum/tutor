@@ -10,25 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Quiz;
-use Tutor\Models\QuizModel;
 
 $questions    = isset( $questions ) && is_array( $questions ) ? $questions : array();
 $attempt_data = isset( $attempt_data ) && is_object( $attempt_data ) ? $attempt_data : null;
 $back_url     = isset( $back_url ) ? (string) $back_url : '';
 $context      = isset( $context ) ? (string) $context : '';
-
-$attempt_answers_map = array();
-if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
-	$attempt_answers = QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
-	if ( is_array( $attempt_answers ) ) {
-		foreach ( $attempt_answers as $attempt_answer ) {
-			$qid = (int) ( $attempt_answer->question_id ?? 0 );
-			if ( $qid > 0 ) {
-				$attempt_answers_map[ $qid ] = $attempt_answer;
-			}
-		}
-	}
-}
 ?>
 
 <div class="tutor-quiz tutor-quiz-questions">
@@ -48,8 +34,6 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 		$is_scale              = 'scale' === $question_type;
 		$is_coordinates        = 'coordinates' === $question_type;
 		$is_puzzle             = 'puzzle' === $question_type;
-
-		$attempt_answer = $attempt_answers_map[ $question_id ] ?? null;
 
 		$question_template = '';
 
@@ -83,7 +67,6 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 					'shared.components.quiz.attempt-details.question',
 					array(
 						'question'             => $question,
-						'attempt_answer'       => $attempt_answer,
 						'index'                => (int) $index + 1,
 						'question_template'    => $question_template,
 						'attempt_id'           => (int) ( $attempt_data->attempt_id ?? 0 ),
@@ -95,7 +78,7 @@ if ( $attempt_data && ! empty( $attempt_data->attempt_id ) ) {
 					)
 				);
 			}
-			do_action( 'tutor_review_answer_after_question_template', $question, $attempt_answer, $index, $is_instructor_review );
+			do_action( 'tutor_review_answer_after_question_template', $question, $index, $is_instructor_review );
 			?>
 		</div>
 	<?php endforeach; ?>

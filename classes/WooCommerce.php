@@ -214,6 +214,11 @@ class WooCommerce extends Tutor_Base {
 		$order_id = WC()->session->get( self::WC_STORE_API_DRAFT_ORDER, 0 );
 
 		if ( $course_ids && $order_id ) {
+			$wc_order = wc_get_order( $order_id );
+			if ( ! $wc_order ) {
+				return;
+			}
+
 			foreach ( $course_ids as $course_id ) {
 				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
 			}

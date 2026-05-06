@@ -4987,17 +4987,29 @@ class Utils {
 	 */
 	public function get_questions_by_quiz( $quiz_id = 0 ) {
 		$quiz_id = $this->get_post_id( $quiz_id );
-		global $wpdb;
 
-		$questions = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-			FROM	{$wpdb->prefix}tutor_quiz_questions
-			WHERE	quiz_id = %d
-			ORDER BY question_order ASC
-			",
-				$quiz_id
-			)
+		$where = array(
+			'quiz_id' => $quiz_id,
+		);
+
+		/**
+		 * Filter to exclude quiz question types
+		 *
+		 * @since 4.0.0
+		 */
+		$exclude_types = apply_filters( 'tutor_filter_unsupported_quiz_question_types', array() );
+
+		if ( tutor_utils()->count( $exclude_types ) ) {
+			$exclude_types          = array_unique( $exclude_types );
+			$where['question_type'] = array( 'NOT IN', $exclude_types );
+		}
+
+		$questions = QueryHelper::get_all(
+			'tutor_quiz_questions',
+			$where,
+			'question_order',
+			-1,
+			'ASC'
 		);
 
 		$questions = apply_filters( 'tutor_get_questions_by_quiz', $questions, $quiz_id );
@@ -5354,39 +5366,46 @@ class Utils {
 
 		$quiz_id         = $this->get_post_id( $quiz_id );
 		$attempt         = $this->is_started_quiz( $quiz_id );
-		$total_questions = (int) $attempt->total_questions;
 		if ( ! $attempt ) {
 			return false;
 		}
 
-		$questions_order = $this->get_quiz_option( get_the_ID(), 'questions_order', 'rand' );
+		$total_questions = (int) $attempt->total_questions;
+		$questions_order = $this->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
 
-		$order_by = '';
-		if ( 'rand' === $questions_order ) {
-			$order_by = 'ORDER BY RAND()';
-		} elseif ( 'asc' === $questions_order ) {
-			$order_by = 'ORDER BY question_id ASC';
+		$order_by = 'RAND()';
+		$order    = '';
+
+		if ( 'asc' === $questions_order ) {
+			$order_by = 'question_id';
+			$order    = 'ASC';
 		} elseif ( 'desc' === $questions_order ) {
-			$order_by = 'ORDER BY question_id DESC';
+			$order_by = 'question_id';
+			$order    = 'DESC';
 		} elseif ( 'sorting' === $questions_order ) {
-			$order_by = 'ORDER BY question_order ASC';
+			$order_by = 'question_order';
+			$order    = 'ASC';
 		}
 
-		$limit = '';
-		if ( $total_questions ) {
-			$limit = "LIMIT {$total_questions} ";
+		$where = array(
+			'quiz_id' => $quiz_id,
+		);
+
+		$exclude_types = apply_filters( 'tutor_filter_unsupported_quiz_question_types', array() );
+
+		if ( tutor_utils()->count( $exclude_types ) ) {
+			$exclude_types          = array_unique( $exclude_types );
+			$where['question_type'] = array( 'NOT IN', $exclude_types );
 		}
 
-		$questions = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-			FROM 	{$wpdb->prefix}tutor_quiz_questions
-			WHERE 	quiz_id = %d
-			{$order_by}
-			{$limit}
-			",
-				$quiz_id
-			)
+		$limit = $total_questions ? $total_questions : -1;
+
+		$questions = QueryHelper::get_all(
+			'tutor_quiz_questions',
+			$where,
+			$order_by,
+			$limit,
+			$order
 		);
 
 		return $questions;
@@ -6242,7 +6261,7 @@ class Utils {
 	 * @since 1.1.2
 	 * @since 4.0.0 Condition added for different monetizations.
 	 *
-	 * @param int  $price price.
+	 * @param int $price price.
 	 *
 	 * @return int|string
 	 */

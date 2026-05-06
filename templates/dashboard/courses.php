@@ -75,7 +75,7 @@ $courses_list = $courses_list_array[ $active_tab ];
 	</div>
 
 	<!-- Courses nav  -->
-	<div class="tutor-dashboard-courses-card tutor-rounded-2xl">
+	<div class="tutor-dashboard-courses-card">
 		<div class="tutor-dashboard-courses-tab">
 			<?php Nav::make()->items( $courses_tab )->size( Size::SMALL )->render(); ?>
 		</div>

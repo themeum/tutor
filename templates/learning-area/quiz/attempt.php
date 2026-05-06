@@ -40,8 +40,8 @@ $remaining_time_context = tutor_utils()->seconds_to_time_context( $remaining_tim
 
 // Quiz settings.
 $quiz_when_time_expires = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
-$reveal_wait_ms         = 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' );
 $quiz_settings          = tutor_utils()->get_quiz_option( (int) $tutor_is_started_quiz->quiz_id );
+$reveal_wait_ms         = 1000 * $quiz_settings['answers_reveal_duration'];
 $show_previous_button   = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
 $hide_previous_button   = '1' === (string) ( $quiz_settings['hide_previous_button'] ?? '0' );
 $hide_quiz_time_display = '1' === (string) ( $quiz_settings['hide_quiz_time_display'] ?? '0' );

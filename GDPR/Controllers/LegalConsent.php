@@ -314,11 +314,7 @@ class LegalConsent extends BaseController {
 			throw new Exception( esc_html__( 'Invalid place key', 'tutor' ) );
 		}
 
-		$where = array(
-			'display_on' => array( 'IN', array( $place_key ) ),
-		);
-
-		$res = ( new self( false ) )->model->get_all( $where );
+		$res = ( new self( false ) )->model->get_consents_by_display_key( $place_key );
 
 		return $res ? $res : array();
 	}
@@ -458,6 +454,10 @@ class LegalConsent extends BaseController {
 
 		if ( isset( $data['consent_map'] ) && ! tutor_is_json( $data['consent_map'] ) ) {
 			$this->response_fail( __( 'Invalid consent map.', 'tutor' ), 400 );
+		}
+
+		if ( empty( $data['display_on'] ) ) {
+			$this->response_fail( __( 'Please select at least one display place.', 'tutor' ), 400 );
 		}
 
 		if ( empty( $data ) ) {
