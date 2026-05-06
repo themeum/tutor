@@ -5,12 +5,20 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-dashboard-header {
+  position: sticky;
+  top: 0;
   height: 80px;
+  z-index: $tutor-z-header;
   background-color: $tutor-surface-sidebar-l1;
   border-bottom: 1px solid $tutor-border-idle;
   padding: $tutor-spacing-6 $tutor-spacing-8;
 
+  body:has(#wpadminbar) & {
+    top: 32px;
+  }
+
   @include tutor-breakpoint-down(sm) {
+    position: static;
     height: fit-content;
     border-bottom: none;
     padding: $tutor-spacing-6 $tutor-spacing-6 0 $tutor-spacing-6;
