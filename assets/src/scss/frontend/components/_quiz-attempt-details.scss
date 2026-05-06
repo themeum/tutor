@@ -442,7 +442,7 @@
 
 .tutor-quiz-review-feedback-wrapper {
   max-width: 1220px;
-  padding: $tutor-spacing-13 $tutor-spacing-6;
+  padding: $tutor-spacing-10 $tutor-spacing-6;
   margin-inline: auto;
   display: grid;
   grid-template-columns: 300px 1fr;
@@ -456,6 +456,10 @@
 .tutor-quiz-review-feedback {
   @include tutor-flex(column);
   gap: $tutor-spacing-7;
+
+  .tutor-quiz-review-feedback-button {
+    padding-inline: $tutor-spacing-7 !important;
+  }
 }
 
 .tutor-quiz-attempt-feedback {

@@ -27,7 +27,7 @@ $content      = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor
 		<div> </div> <!-- This is placeholder for quiz summary sidebar -->
 		<div class="tutor-quiz-review-feedback">
 			<div class="tutor-flex tutor-flex-column tutor-gap-5">
-				<h5 class="tutor-h5 tutor-font-semibold">
+				<h5 class="tutor-h5 tutor-font-semibold tutor-m-none">
 					<?php esc_html_e( 'Instructor Feedback', 'tutor' ); ?>
 				</h5>
 
@@ -56,6 +56,7 @@ $content      = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor
 						->variant( Variant::PRIMARY )
 						->attr( 'type', 'submit' )
 						->attr( ':disabled', 'feedbackMutation?.isPending' )
+						->attr( 'class', 'tutor-quiz-review-feedback-button' )
 						->attr( ':class', "{ 'tutor-btn-loading': feedbackMutation?.isPending }" )
 						->render();
 				?>
