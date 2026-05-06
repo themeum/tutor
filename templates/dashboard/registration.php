@@ -18,25 +18,21 @@ use TUTOR\Icon;
 
 ?>
 
-<?php
-if ( ! get_option( 'users_can_register', false ) ) :
-	?>
-
+<?php if ( ! get_option( 'users_can_register', false ) ) : ?>
 	<?php
-		$args = array(
-			'image_path'  => tutor()->url . 'assets/images/construction.png',
-			'title'       => __( 'Oooh! Access Denied', 'tutor' ),
-			'description' => __( 'You do not have access to this area of the application. Please refer to your system  administrator.', 'tutor' ),
-			'button'      => array(
-				'text'  => __( 'Go to Home', 'tutor' ),
-				'url'   => get_home_url(),
-				'class' => 'tutor-btn',
-			),
-		);
-		tutor_load_template( 'feature_disabled', $args );
-		?>
+	$args = array(
+		'image_path'  => tutor()->url . 'assets/images/construction.png',
+		'title'       => __( 'Oooh! Access Denied', 'tutor' ),
+		'description' => __( 'You do not have access to this area of the application. Please refer to your system  administrator.', 'tutor' ),
+		'button'      => array(
+			'text'  => __( 'Go to Home', 'tutor' ),
+			'url'   => get_home_url(),
+			'class' => 'tutor-btn',
+		),
+	);
+	tutor_load_template( 'feature_disabled', $args );
+	?>
 <?php else : ?>
-
 	<div id="tutor-registration-wrap" class="tutor-card" style="max-width: 520px; margin: 10px auto;">
 
 		<?php do_action( 'tutor_before_student_reg_form' ); ?>
@@ -178,7 +174,7 @@ if ( ! get_option( 'users_can_register', false ) ) :
 				<button type="submit" name="tutor_register_student_btn" value="register" class="tutor-btn tutor-btn-primary tutor-btn-block"><?php esc_html_e( 'Register', 'tutor' ); ?></button>
 				<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-2 tutor-mt-8">
 					<div class="tutor-small">
-						<?php esc_html_e( 'Don\'t have an account?', 'tutor' ); ?>
+						<?php esc_html_e( 'Already have an account?', 'tutor' ); ?>
 					</div>
 					<a href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ); ?>" class="tutor-btn tutor-btn-link">
 						<?php esc_html_e( 'Login', 'tutor' ); ?>
