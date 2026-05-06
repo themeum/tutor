@@ -44,7 +44,19 @@ $content      = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor
 							'editor_height' => 180,
 						)
 					)
-					->attr( 'x-bind', "register('feedback')" )
+					->attr(
+						'x-bind',
+						"register('feedback', {
+							validate: (value) => {
+								const text = String(value || '')
+									.replace(/<[^>]*>/g, '')
+									.replace(/&nbsp;/g, ' ')
+									.trim();
+
+								return text.length > 0 || '" . esc_js( __( 'Feedback is required', 'tutor' ) ) . "';
+							}
+						})"
+					)
 					->render();
 				?>
 			</div>
