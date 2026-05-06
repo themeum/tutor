@@ -347,7 +347,7 @@ class LessonPlayer {
       const instance = event.detail.plyr;
       this.syncTime({ is_ended: true });
 
-      if (this.playerData.autoload_next_course_content && this.playedOnce) {
+      if (tutorConfig.user_preferences.auto_play_next && this.playedOnce) {
         this.autoloadContent();
       }
 
