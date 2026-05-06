@@ -109,7 +109,7 @@ $hidden_inputs = array(
 					->render();
 				?>
 
-				<div class="tutor-flex tutor-gap-4">
+				<div class="tutor-flex tutor-gap-3">
 					<?php
 					$query_items = array( 'course-id', 'search', 'date', 'result', 'order' );
 					if ( Input::has_any( $query_items, Input::GET_REQUEST ) ) {
