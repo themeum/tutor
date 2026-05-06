@@ -3468,13 +3468,11 @@ class Utils {
 	 * Get all course for a give student & instructor id
 	 *
 	 * @since 1.9.9
+	 * @since 3.4.0 param $post_status added.
 	 *
 	 * @param int   $student_id student id.
 	 * @param int   $instructor_id instructor id.
-	 *
-	 * @since 3.4.0
-	 *
-	 * @param array $post the post status.
+	 * @param array $post_status the post status.
 	 *
 	 * @return array
 	 */
@@ -4778,8 +4776,11 @@ class Utils {
 	/**
 	 * Funcion to check if a user can delete qa by id
 	 *
-	 * @param int $user_id
-	 * @param int $question_id
+	 * @since 1.6.9
+	 *
+	 * @param int $user_id user id.
+	 * @param int $question_id question id.
+	 *
 	 * @return boolean
 	 */
 	public function can_delete_qa( $user_id, $question_id ) {
@@ -5770,46 +5771,6 @@ class Utils {
 	}
 
 	/**
-	 * Get most rated courses lists
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $limit limit.
-	 *
-	 * @return array|bool|null|object
-	 */
-	public function most_rated_courses( $limit = 10 ) {
-		global $wpdb;
-
-		$result = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 	COUNT(comment_ID) AS total_rating,
-						comment_ID,
-						comment_post_ID,
-						course.*
-			FROM 		{$wpdb->comments}
-						INNER JOIN {$wpdb->posts} course
-								ON comment_post_ID = course.ID
-			WHERE 		{$wpdb->comments}.comment_type = %s
-						AND {$wpdb->comments}.comment_approved = %s
-			GROUP BY 	comment_post_ID
-			ORDER BY 	total_rating DESC
-			LIMIT 		0, %d
-			;",
-				'tutor_course_rating',
-				'approved',
-				$limit
-			)
-		);
-
-		if ( is_array( $result ) && count( $result ) ) {
-			return $result;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Get Addon config
 	 *
 	 * @since 1.0.0
@@ -6118,144 +6079,6 @@ class Utils {
 	}
 
 	/**
-	 * Get earning statements
-	 *
-	 * @since 1.1.2
-	 *
-	 * @param int   $user_id user id.
-	 * @param array $filter_data  filter data.
-	 *
-	 * @return array|null|object
-	 */
-	public function get_earning_statements( $user_id = 0, $filter_data = array() ) {
-		global $wpdb;
-
-		$user_sql = '';
-		if ( $user_id ) {
-			$user_sql = " AND user_id='{$user_id}' ";
-		}
-
-		$date_query       = '';
-		$query_by_status  = '';
-		$pagination_query = '';
-
-		/**
-		 * Query by Date Filter
-		 */
-		if ( $this->count( $filter_data ) ) {
-			extract( $filter_data );
-
-			if ( ! empty( $dataFor ) ) {
-				if ( $dataFor === 'yearly' ) {
-					if ( empty( $year ) ) {
-						$year = date( 'Y' );
-					}
-					$date_query = "AND YEAR(created_at) = {$year} ";
-				}
-			} else {
-				$date_query = " AND (created_at BETWEEN '{$start_date}' AND '{$end_date}') ";
-			}
-
-			/**
-			 * Query by order status related to this earning transaction
-			 */
-			if ( ! empty( $statuses ) ) {
-				if ( $this->count( $statuses ) ) {
-					$status          = "'" . implode( "','", $statuses ) . "'";
-					$query_by_status = "AND order_status IN({$status})";
-				} elseif ( $statuses === 'completed' ) {
-					$get_earnings_completed_statuses = $this->get_earnings_completed_statuses();
-					if ( $this->count( $get_earnings_completed_statuses ) ) {
-						$status          = "'" . implode( "','", $get_earnings_completed_statuses ) . "'";
-						$query_by_status = "AND order_status IN({$status})";
-					}
-				}
-			}
-
-			if ( ! empty( $per_page ) ) {
-				$offset           = (int) ! empty( $offset ) ? $offset : 0;
-				$pagination_query = " LIMIT {$offset}, {$per_page}  ";
-			}
-		}
-
-		/**
-		 * Delete duplicated earning rows that were created due to not checking if already added while creating new.
-		 * New entries will check before insert.
-		 *
-		 * @since 1.9.7
-		 */
-		if ( ! get_option( 'tutor_duplicated_earning_deleted', false ) ) {
-
-			// Get the duplicated order IDs.
-			$del_rows  = array();
-			$order_ids = $wpdb->get_col(
-				"SELECT order_id
-				FROM (SELECT order_id, COUNT(order_id) AS cnt
-						FROM {$wpdb->prefix}tutor_earnings
-						GROUP BY order_id) t
-				WHERE cnt>1"
-			);
-
-			if ( is_array( $order_ids ) && count( $order_ids ) ) {
-				$order_ids_string = implode( ',', $order_ids );
-				$earnings         = $wpdb->get_results(
-					"SELECT earning_id, course_id FROM {$wpdb->prefix}tutor_earnings
-					WHERE order_id IN ({$order_ids_string})
-					ORDER BY earning_id ASC"
-				);
-
-				$excluded_first = array();
-				foreach ( $earnings as $earning ) {
-					if ( ! in_array( $earning->course_id, $excluded_first ) ) {
-						// Exclude first course ID from deletion.
-						$excluded_first[] = $earning->course_id;
-						continue;
-					}
-
-						$del_rows[] = $earning->earning_id;
-				}
-			}
-
-			if ( count( $del_rows ) ) {
-				$ids = implode( ',', $del_rows );
-				$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_earnings WHERE earning_id IN ({$ids})" );
-			}
-
-			update_option( 'tutor_duplicated_earning_deleted', true );
-		}
-
-		$query = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 	earning_tbl.*,
-						course.post_title AS course_title
-			FROM 		{$wpdb->prefix}tutor_earnings earning_tbl
-						LEFT JOIN {$wpdb->posts} course
-						   	   ON earning_tbl.course_id = course.ID
-			WHERE 		1 = %d {$user_sql} {$date_query} {$query_by_status}
-			ORDER BY 	created_at DESC {$pagination_query}
-			",
-				1
-			)
-		);
-
-		$query_count = (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT 	COUNT(earning_tbl.earning_id)
-			FROM 		{$wpdb->prefix}tutor_earnings earning_tbl
-            WHERE 		1 = %d {$user_sql} {$date_query} {$query_by_status}
-			ORDER BY 	created_at DESC
-			",
-				1
-			)
-		);
-
-		return (object) array(
-			'count'   => $query_count,
-			'results' => $query,
-		);
-	}
-
-	/**
 	 * Get the price format
 	 *
 	 * @since 1.1.2
@@ -6371,33 +6194,6 @@ class Utils {
 		);
 
 		return apply_filters( 'tutor_get_orders_by_user_id', $data, $user_id, $args );
-	}
-
-	/**
-	 * Export purchased course data
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $order_id order id.
-	 * @param string $purchase_date purchase date.
-	 *
-	 * @return mixed
-	 */
-	public function export_purchased_course_data( $order_id = '', $purchase_date = '' ) {
-		global $wpdb;
-
-		$purchased_data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT tutor_order.*, course.post_title
-   			FROM {$wpdb->prefix}tutor_earnings AS tutor_order
-   			INNER JOIN {$wpdb->posts} AS course
-     			ON course.ID = tutor_order.course_id
-  			WHERE tutor_order.order_id = %d",
-				$order_id
-			)
-		);
-
-		return $purchased_data;
 	}
 
 	/**
@@ -7277,7 +7073,7 @@ class Utils {
 
 			if ( $wp_page ) {
 				$wp_page_name = $wp_page->post_title;
-				$page_visible = $wp_page->post_status === 'publish';
+				$page_visible = 'publish' === $wp_page->post_status;
 			} else {
 				$page_id = 0;
 			}
@@ -7448,7 +7244,7 @@ class Utils {
 		);
 
 		// Add payment method as a required on if current user is an approved instructor.
-		if ( 'approved' == $instructor_status ) {
+		if ( 'approved' === $instructor_status ) {
 			$required_fields['_tutor_withdraw_method_data'] = __( 'Set Withdraw Method', 'tutor' );
 		}
 
