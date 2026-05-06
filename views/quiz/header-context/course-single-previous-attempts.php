@@ -43,7 +43,7 @@ $passing_grade = tutor_utils()->get_quiz_option( get_the_ID(), 'passing_grade', 
 	<div class="tutor-d-flex tutor-gap-1">
 		<?php esc_html_e( 'Total Marks', 'tutor' ); ?>: 
 		<span class="tutor-color-black">
-			<?php echo esc_html( number_format( $earned_marks, 2 ) . '/' . number_format( $total_marks, 2 ) ); ?>
+			<?php echo esc_html( number_format( $earned_marks ?? 0, 2 ) . '/' . number_format( $total_marks ?? 0, 2 ) ); ?>
 		</span>
 	</div>
 	<div class="tutor-d-flex tutor-gap-1">
@@ -51,7 +51,7 @@ $passing_grade = tutor_utils()->get_quiz_option( get_the_ID(), 'passing_grade', 
 		<span class="tutor-color-black">
 			<?php
 				$pass_marks = ( $total_marks * $passing_grade ) / 100;
-				echo esc_html( number_format_i18n( $pass_marks, 2 ) );
+				echo esc_html( number_format_i18n( $pass_marks ?? 0, 2 ) );
 			?>
 		</span>
 	</div>
