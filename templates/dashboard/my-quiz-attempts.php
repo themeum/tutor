@@ -87,7 +87,7 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 						->variant( Variant::LINK )
 						->render();
 				}
-				Sorting::make()->order( $order_filter )->icon_size( 20 )->render();
+				Sorting::make()->order( $order_filter )->render();
 
 				?>
 			</div>

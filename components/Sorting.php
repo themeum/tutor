@@ -40,12 +40,6 @@ defined( 'ABSPATH' ) || exit;
  */
 class Sorting extends BaseComponent {
 
-	/**
-	 * Icon size
-	 *
-	 * @var int
-	 */
-	protected $icon_size = 16;
 
 	/**
 	 * Order param
@@ -102,18 +96,6 @@ class Sorting extends BaseComponent {
 	public function __construct() {
 		$this->label_asc  = __( 'Oldest First', 'tutor' );
 		$this->label_desc = __( 'Newest First', 'tutor' );
-	}
-
-	/**
-	 * Set icon size
-	 *
-	 * @param integer $icon_size the icon size.
-	 *
-	 * @return self
-	 */
-	public function icon_size( int $icon_size ):self {
-		$this->icon_size = $icon_size;
-		return $this;
 	}
 
 	/**
@@ -228,7 +210,7 @@ class Sorting extends BaseComponent {
 			>
 				<?php
 					$sorting_icon = 'DESC' === $this->order ? Icon::ASCENDING : Icon::DESCENDING;
-					SvgIcon::make()->name( $sorting_icon )->size( $this->icon_size )->color( Color::SECONDARY )->render();
+					SvgIcon::make()->name( $sorting_icon )->size( 16 )->color( Color::SECONDARY )->render();
 				?>
 			</button>
 

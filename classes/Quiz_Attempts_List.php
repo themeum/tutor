@@ -468,7 +468,7 @@ class Quiz_Attempts_List {
 	 */
 	private function get_kebab_button() {
 		$kebab_button = Button::make()
-				->icon( SvgIcon::make()->name( Icon::ELLIPSES )->size( 20 )->get() )
+				->icon( Icon::ELLIPSES )
 				->attr( 'x-ref', 'trigger' )
 				->attr( '@click', 'toggle()' )
 				->attr( 'class', 'tutor-quiz-item-result-more' )
