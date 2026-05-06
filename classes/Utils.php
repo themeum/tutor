@@ -7796,17 +7796,17 @@ class Utils {
 		$content_type = get_post_field( 'post_type', $content_id );
 
 		// Differentiate standalone zoom meeting and zoom lesson.
-		if ( $content_type == 'tutor_zoom_meeting' ) {
+		if ( 'tutor_zoom_meeting' === $content_type ) {
 			$parent_id   = wp_get_post_parent_id( $content_id );
 			$parent_type = get_post_field( 'post_type', $parent_id );
 
-			$content_type = $parent_type == tutor()->course_post_type ? 'tutor_zoom_meeting' : 'tutor_zoom_lesson';
+			$content_type = $parent_type === tutor()->course_post_type ? 'tutor_zoom_meeting' : 'tutor_zoom_lesson';
 		}
-		if ( $content_type == 'tutor-google-meet' ) {
+		if ( 'tutor-google-meet' === $content_type ) {
 			$parent_id   = wp_get_post_parent_id( $content_id );
 			$parent_type = get_post_field( 'post_type', $parent_id );
 
-			$content_type = $parent_type == tutor()->course_post_type ? 'tutor_gm_course' : 'tutor_gm_topic';
+			$content_type = $parent_type === tutor()->course_post_type ? 'tutor_gm_course' : 'tutor_gm_topic';
 		}
 
 		return $this->get_course_id_by( $mapping[ $content_type ], $content_id );
@@ -7914,6 +7914,7 @@ class Utils {
 	 * @param mixed $fallback fallback.
 	 * @param int   $student_id the student id.
 	 * @param int   $course_id  the course id.
+	 * @param mixed $options options.
 	 *
 	 * @return string|false
 	 */
@@ -7957,143 +7958,13 @@ class Utils {
 	}
 
 	/**
-	 * Get earning chart data
-	 *
-	 * @since 1.8.2
-	 *
-	 * @param int    $user_id user id.
-	 * @param string $start_date start date.
-	 * @param string $end_date end date.
-	 *
-	 * @return array
-	 */
-	public function get_earning_chart( $user_id, $start_date, $end_date ) {
-		global $wpdb;
-
-		// Format Date Name.
-		$begin    = new \DateTime( $start_date );
-		$end      = new \DateTime( $end_date );
-		$interval = \DateInterval::createFromDateString( '1 day' );
-		$period   = new \DatePeriod( $begin, $interval, $end );
-
-		$datesPeriod = array();
-		foreach ( $period as $dt ) {
-			$datesPeriod[ $dt->format( 'Y-m-d' ) ] = 0;
-		}
-
-		// Get statuses.
-		$complete_status = $this->get_earnings_completed_statuses();
-		$statuses        = $complete_status;
-		$complete_status = "'" . implode( "','", $complete_status ) . "'";
-
-		$salesQuery = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT  SUM(instructor_amount) AS total_earning,
-					DATE(created_at) AS date_format
-			FROM	{$wpdb->prefix}tutor_earnings
-			WHERE 	user_id = %d
-					AND order_status IN({$complete_status})
-					AND (created_at BETWEEN %s AND %s)
-			GROUP BY date_format
-			ORDER BY created_at ASC;
-			",
-				$user_id,
-				$start_date,
-				$end_date
-			)
-		);
-
-		$total_earning = wp_list_pluck( $salesQuery, 'total_earning' );
-		$queried_date  = wp_list_pluck( $salesQuery, 'date_format' );
-		$dateWiseSales = array_combine( $queried_date, $total_earning );
-		$chartData     = array_merge( $datesPeriod, $dateWiseSales );
-
-		foreach ( $chartData as $key => $salesCount ) {
-			unset( $chartData[ $key ] );
-			$formatDate               = date( 'd M', strtotime( $key ) );
-			$chartData[ $formatDate ] = $salesCount;
-		}
-
-		$statements  = $this->get_earning_statements( $user_id, compact( 'start_date', 'end_date', 'statuses' ) );
-		$earning_sum = $this->get_earning_sum( $user_id, compact( 'start_date', 'end_date' ) );
-
-		return array(
-			'chartData'   => $chartData,
-			'statements'  => $statements,
-			'statuses'    => $statuses,
-			'begin'       => $begin,
-			'end'         => $end,
-			'earning_sum' => $earning_sum,
-			'datesPeriod' => $datesPeriod,
-		);
-	}
-
-	/**
-	 * Get earning chart data yearly
-	 *
-	 * @since 1.8.2
-	 *
-	 * @param int $user_id user id.
-	 * @param int $year year.
-	 *
-	 * @return array
-	 */
-	public function get_earning_chart_yearly( $user_id, $year ) {
-		global $wpdb;
-
-		$complete_status = $this->get_earnings_completed_statuses();
-		$statuses        = $complete_status;
-		$complete_status = "'" . implode( "','", $complete_status ) . "'";
-
-		$salesQuery = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT SUM(instructor_amount) AS total_earning,
-					MONTHNAME(created_at)  AS month_name
-			FROM  	{$wpdb->prefix}tutor_earnings
-			WHERE	user_id = %d
-					AND order_status IN({$complete_status})
-					AND YEAR(created_at) = %s
-			GROUP BY MONTH (created_at)
-			ORDER BY MONTH(created_at) ASC;
-			",
-				$user_id,
-				$year
-			)
-		);
-
-		$total_earning  = wp_list_pluck( $salesQuery, 'total_earning' );
-		$months         = wp_list_pluck( $salesQuery, 'month_name' );
-		$monthWiseSales = array_combine( $months, $total_earning );
-
-		$dataFor = 'yearly';
-
-		/**
-		 * Format yearly
-		 */
-		$emptyMonths = array();
-		for ( $m = 1; $m <= 12; $m++ ) {
-			$emptyMonths[ date( 'F', mktime( 0, 0, 0, $m, 1, date( 'Y' ) ) ) ] = 0;
-		}
-
-		$chartData   = array_merge( $emptyMonths, $monthWiseSales );
-		$statements  = $this->get_earning_statements( $user_id, compact( 'year', 'dataFor', 'statuses' ) );
-		$earning_sum = $this->get_earning_sum( $user_id, compact( 'year', 'dataFor' ) );
-
-		return array(
-			'chartData'   => $chartData,
-			'statements'  => $statements,
-			'earning_sum' => $earning_sum,
-		);
-	}
-
-	/**
 	 * Return object from vendor package
 	 *
 	 * @since 1.8.4
 	 *
 	 * @return object
 	 */
-	function get_package_object() {
+	public function get_package_object() {
 		$params = func_get_args();
 
 		$is_pro     = $params[0];
