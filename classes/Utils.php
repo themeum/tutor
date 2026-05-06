@@ -400,41 +400,6 @@ class Utils {
 	}
 
 	/**
-	 * Get all pages which are not translated.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	public function get_not_translated_pages() {
-		do_action( 'tutor_utils/get_pages/before' );
-
-		$pages = array();
-
-		$wp_pages = get_posts(
-			array(
-				'post_type'        => 'page',
-				'suppress_filters' => true,
-				'post_status'      => 'publish',
-				'numberposts'      => -1,
-			)
-		);
-
-		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
-			foreach ( $wp_pages as $page ) {
-				$translate_id = icl_object_id( $page->ID, 'page', true, ICL_LANGUAGE_CODE );
-				if ( $page->ID === $translate_id ) {
-					$pages[ $page->ID ] = $page->post_title;
-				}
-			}
-		}
-
-		do_action( 'tutor_utils/get_pages/after' );
-
-		return $pages;
-	}
-
-	/**
 	 * Get course archive URL
 	 *
 	 * @since 1.0.0
@@ -3889,7 +3854,7 @@ class Utils {
 	 *
 	 * Fetching data by context, either course or comment
 	 *
-	 * @param int   $object id Course/Comment id.
+	 * @param int   $object_id Course/Comment id.
 	 * @param int   $start offset.
 	 * @param int   $limit limit.
 	 * @param bool  $count_only count only.
@@ -6445,6 +6410,7 @@ class Utils {
 	 *
 	 * @param int   $parent parent.
 	 * @param array $custom_args Custom args.
+	 * @param bool  $top_level_children top level children.
 	 *
 	 * @return array
 	 */
@@ -7842,7 +7808,7 @@ class Utils {
 	 *
 	 * @return boolean
 	 */
-	function is_course_booked( $course_id = 0 ) {
+	public function is_course_booked( $course_id = 0 ) {
 
 		$total_enrolled   = $this->count_enrolled_users_by_course( $course_id );
 		$maximum_students = (int) $this->get_course_settings( $course_id, 'maximum_students' );
@@ -7958,8 +7924,8 @@ class Utils {
 	 * @since 1.9.4
 	 *
 	 * @param string $content_type like: lesson, quiz.
-	 * @param string $ancestor_type like: course, topics
-	 * @param string $ancestor_ids ancestor like course or topic
+	 * @param string $ancestor_type like: course, topics.
+	 * @param string $ancestor_ids ancestor like course or topic.
 	 *
 	 * @return array of ID cols
 	 */
@@ -8027,9 +7993,9 @@ class Utils {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $content_type, content type like: lesson, assignment, quiz
-	 * @param string $ancestor_type, content type like: lesson, assignment, quiz
-	 * @param int    $ancestor_ids, post_parent id
+	 * @param string $content_type, content type like: lesson, assignment, quiz.
+	 * @param string $ancestor_type, content type like: lesson, assignment, quiz.
+	 * @param string    $ancestor_ids, post_parent id.
 	 *
 	 * @return array
 	 */
