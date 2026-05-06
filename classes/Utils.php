@@ -8587,12 +8587,12 @@ class Utils {
 	 * @param string $seconds seconds.
 	 * @param string $type type.
 	 *
-	 * @return DateInterval|false
+	 * @return \DateInterval|false
 	 */
 	public function second_to_formated_time( $seconds, $type = null ) {
 
-		$dtF = new \DateTime( '@0' );
-		$dtT = new \DateTime( "@$seconds" );
+		$dt_f = new \DateTime( '@0' );
+		$dt_t = new \DateTime( "@$seconds" );
 
 		switch ( $type ) {
 
@@ -8614,7 +8614,7 @@ class Utils {
 				break;
 		}
 
-		return $dtF->diff( $dtT )->format( $format );
+		return $dt_f->diff( $dt_t )->format( $format );
 	}
 
 	/**
