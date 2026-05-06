@@ -41,140 +41,81 @@ class UrlHelper {
 	}
 
 	/**
-	 * Get a theme-aware plugin asset URL.
+	 * Find the first existing file across asset sources for a given path,
+	 * respecting kids-mode variant resolution.
 	 *
-	 * In kids mode, this looks for a matching kids variant before falling back
-	 * to the default asset path.
+	 * @since 4.0.0
+	 *
+	 * @param string $path Relative asset path (no leading slash).
+	 * @return array{path: string, url: string}|null
+	 */
+	private static function resolve_asset( string $path ): ?array {
+		if ( '' === $path ) {
+			return null;
+		}
+
+		$sources = array(
+			array( 'path' => tutor()->path . 'assets/', 'url' => tutor()->assets_url ),
+		);
+
+		if ( function_exists( 'tutor_pro' ) ) {
+			$sources[] = array( 'path' => tutor_pro()->path . 'assets/', 'url' => tutor_pro()->assets );
+		}
+
+		$candidates = array( $path );
+
+		if ( tutor_utils()->is_kids_mode() && ! str_contains( $path, '/kids/' ) ) {
+			$directory = pathinfo( $path, PATHINFO_DIRNAME );
+			$basename  = pathinfo( $path, PATHINFO_BASENAME );
+
+			if ( '' !== $basename ) {
+				$kids_path = ( '.' === $directory || '' === $directory )
+					? 'kids/' . $basename
+					: trailingslashit( $directory ) . 'kids/' . $basename;
+
+				array_unshift( $candidates, $kids_path );
+			}
+		}
+
+		foreach ( $candidates as $candidate ) {
+			foreach ( $sources as $source ) {
+				if ( file_exists( $source['path'] . $candidate ) ) {
+					return array(
+						'path' => $source['path'] . $candidate,
+						'url'  => $source['url'] . $candidate,
+					);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get a theme-aware plugin asset URL.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @param string $path Relative asset path.
-	 *
 	 * @return string
 	 */
-	public static function themed_asset( $path = '' ): string {
-		static $resolved_paths = array();
+	public static function themed_asset( string $path = '' ): string {
+		static $cache = array();
 
-		$path = ltrim( (string) $path, '/' );
+		$path = ltrim( $path, '/' );
 
 		if ( '' === $path ) {
 			return self::asset( $path );
 		}
 
-		if ( isset( $resolved_paths[ $path ] ) ) {
-			return $resolved_paths[ $path ];
+		if ( isset( $cache[ $path ] ) ) {
+			return $cache[ $path ];
 		}
 
-		$asset_sources = array(
-			array(
-				'path' => tutor()->path . 'assets/',
-				'url'  => tutor()->assets_url,
-			),
-		);
+		$resolved       = self::resolve_asset( $path );
+		$cache[ $path ] = $resolved ? $resolved['url'] : self::asset( $path );
 
-		if ( function_exists( 'tutor_pro' ) ) {
-			$asset_sources[] = array(
-				'path' => tutor_pro()->path . 'assets/',
-				'url'  => tutor_pro()->assets,
-			);
-		}
-
-		if ( ! tutor_utils()->is_kids_mode() || false !== strpos( $path, '/kids/' ) ) {
-			foreach ( $asset_sources as $asset_source ) {
-				if ( file_exists( $asset_source['path'] . $path ) ) {
-					$resolved_paths[ $path ] = $asset_source['url'] . $path;
-					return $resolved_paths[ $path ];
-				}
-			}
-
-			$resolved_paths[ $path ] = self::asset( $path );
-			return $resolved_paths[ $path ];
-		}
-
-		$directory = pathinfo( $path, PATHINFO_DIRNAME );
-		$basename  = pathinfo( $path, PATHINFO_BASENAME );
-		if ( '' !== $basename ) {
-			$candidate_path = '.' === $directory || '' === $directory
-				? 'kids/' . $basename
-				: trailingslashit( $directory ) . 'kids/' . $basename;
-
-			foreach ( $asset_sources as $asset_source ) {
-				if ( file_exists( $asset_source['path'] . $candidate_path ) ) {
-					$resolved_paths[ $path ] = $asset_source['url'] . $candidate_path;
-					return $resolved_paths[ $path ];
-				}
-			}
-		}
-
-		foreach ( $asset_sources as $asset_source ) {
-			if ( file_exists( $asset_source['path'] . $path ) ) {
-				$resolved_paths[ $path ] = $asset_source['url'] . $path;
-				return $resolved_paths[ $path ];
-			}
-		}
-
-		$resolved_paths[ $path ] = self::asset( $path );
-		return $resolved_paths[ $path ];
-	}
-
-	/**
-	 * Resolve the file path for a themed asset.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $path Relative asset path.
-	 *
-	 * @return string|false Resolved file path or false if not found.
-	 */
-	private static function resolve_themed_path( string $path ) {
-		$path = ltrim( (string) $path, '/' );
-
-		if ( '' === $path ) {
-			return false;
-		}
-
-		$asset_sources = array(
-			array(
-				'path' => tutor()->path . 'assets/',
-			),
-		);
-
-		if ( function_exists( 'tutor_pro' ) ) {
-			$asset_sources[] = array(
-				'path' => tutor_pro()->path . 'assets/',
-			);
-		}
-
-		if ( ! tutor_utils()->is_kids_mode() || false !== strpos( $path, '/kids/' ) ) {
-			foreach ( $asset_sources as $asset_source ) {
-				if ( file_exists( $asset_source['path'] . $path ) ) {
-					return $asset_source['path'] . $path;
-				}
-			}
-			return false;
-		}
-
-		$directory = pathinfo( $path, PATHINFO_DIRNAME );
-		$basename  = pathinfo( $path, PATHINFO_BASENAME );
-		if ( '' !== $basename ) {
-			$candidate_path = '.' === $directory || '' === $directory
-				? 'kids/' . $basename
-				: trailingslashit( $directory ) . 'kids/' . $basename;
-
-			foreach ( $asset_sources as $asset_source ) {
-				if ( file_exists( $asset_source['path'] . $candidate_path ) ) {
-					return $asset_source['path'] . $candidate_path;
-				}
-			}
-		}
-
-		foreach ( $asset_sources as $asset_source ) {
-			if ( file_exists( $asset_source['path'] . $path ) ) {
-				return $asset_source['path'] . $path;
-			}
-		}
-
-		return false;
+		return $cache[ $path ];
 	}
 
 	/**
@@ -184,7 +125,7 @@ class UrlHelper {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private static function get_default_color_map(): array {
 		return array(
@@ -214,7 +155,7 @@ class UrlHelper {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @return array
+	 * @return array<string, array<string, bool>>
 	 */
 	private static function get_svg_allowed_html(): array {
 		return array(
@@ -250,7 +191,6 @@ class UrlHelper {
 				'fill'      => true,
 				'maskunits' => true,
 			),
-
 		);
 	}
 
@@ -259,38 +199,35 @@ class UrlHelper {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string     $path      Relative asset path to the SVG file.
-	 * @param array|null $color_map Array mapping CSS variable names to hex colors.
-	 *                              Pass null to use the default map, empty array to skip replacement.
-	 * @param bool       $output    Whether to echo the output.
-	 *
+	 * @param string                    $path      Relative asset path to the SVG file.
+	 * @param array<string,string>|null $color_map CSS variable → hex color map. Null = default, [] = skip.
+	 * @param bool                      $output    Whether to echo the output.
 	 * @return string Processed SVG markup.
 	 */
 	public static function themed_svg( string $path, ?array $color_map = null, bool $output = false ): string {
-		$color_map ??= self::get_default_color_map();
-
-		$svg_path = self::resolve_themed_path( $path );
-
-		if ( ! $svg_path ) {
+		$resolved = self::resolve_asset( ltrim( $path, '/' ) );
+		if ( ! $resolved ) {
 			return '';
 		}
 
-		$svg_content = file_get_contents( $svg_path );
+		$svg_content = file_get_contents( $resolved['path'] );
 		if ( false === $svg_content ) {
 			return '';
 		}
 
+		$color_map ??= self::get_default_color_map();
 		foreach ( $color_map as $css_var => $hex_color ) {
-			$pattern     = '/' . preg_quote( $hex_color, '/' ) . '/i';
-			$replacement = "var({$css_var}, {$hex_color})";
-			$svg_content = preg_replace( $pattern, $replacement, $svg_content );
+			$svg_content = preg_replace(
+				'/' . preg_quote( $hex_color, '/' ) . '/i',
+				"var({$css_var}, {$hex_color})",
+				$svg_content
+			);
 		}
 
 		$escaped = wp_kses( $svg_content, self::get_svg_allowed_html() );
-		// $escaped = $svg_content;
 
 		if ( $output ) {
-			echo $escaped; // phpcs:ignore
+			echo $escaped; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		return $escaped;
