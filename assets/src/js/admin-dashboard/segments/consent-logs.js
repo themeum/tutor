@@ -163,6 +163,9 @@ const downloadCSV = () => {
 const initConsentLogTriggers = () => {
 	document.querySelectorAll('[data-consent-logs-trigger]').forEach((btn) => {
 		btn.addEventListener('click', () => {
+			// Hide download button immediately before modal opens.
+			if (downloadBtn) downloadBtn.style.display = 'none';
+
 			const userId = btn.dataset.userId || '';
 			const userName = btn.dataset.userName || '';
 			const userJoined = btn.dataset.userJoined || '';
