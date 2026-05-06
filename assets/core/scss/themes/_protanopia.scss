@@ -55,6 +55,11 @@
   --tutor-text-critical-hover: #{$tutor-orange-700};
   --tutor-text-warning: #{$tutor-orange-700};
   --tutor-text-caution: #{$tutor-yellow-700};
+
+  // VISUAL COLORS
+  --tutor-visual-success-1: #{$tutor-cyan-500};
+  --tutor-visual-success-2: #{$tutor-cyan-500};
+  --tutor-visual-exception-1: #{$tutor-cyan-200};
 }
 
 // =============================================================================
@@ -74,6 +79,10 @@
   --tutor-actions-warning-secondary: #{$tutor-orange-100};
   --tutor-actions-warning-exception: #{$tutor-orange-600};
   --tutor-actions-critical-secondary: #{$tutor-orange-100};
+
+  // VISUAL COLORS
+  --tutor-visual-critical-1: #{$tutor-orange-500};
+  --tutor-visual-critical-2: #{$tutor-orange-100};
 }
 
 // =============================================================================
@@ -91,4 +100,8 @@
   // ACTION COLORS
   --tutor-actions-success-exception: #{$tutor-cyan-950};
   --tutor-actions-warning-exception: #{$tutor-orange-50};
+
+  // VISUAL COLORS
+  --tutor-visual-critical-1: #{$tutor-orange-600};
+  --tutor-visual-critical-2: #{$tutor-orange-900};
 }
