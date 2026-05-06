@@ -1803,33 +1803,33 @@ class Utils {
 			)
 		);
 
-		$videoSource = $this->avalue_dot( 'source', $video );
+		$video_source = $this->avalue_dot( 'source', $video );
 
-		if ( $videoSource === 'html5' ) {
-			$sourceVideoID = $this->avalue_dot( 'source_video_id', $video );
-			$video_info    = get_post_meta( $sourceVideoID, '_wp_attachment_metadata', true );
+		if ( 'html5' === $video_source ) {
+			$source_video_id = $this->avalue_dot( 'source_video_id', $video );
+			$video_info      = get_post_meta( $source_video_id, '_wp_attachment_metadata', true );
 
 			if ( $video_info && in_array( $this->array_get( 'mime_type', $video_info ), $types ) ) {
-				$path             = get_attached_file( $sourceVideoID );
+				$path             = get_attached_file( $source_video_id );
 				$info['playtime'] = $video_info['length_formatted'];
 				$info['path']     = $path;
-				$info['url']      = wp_get_attachment_url( $sourceVideoID );
+				$info['url']      = wp_get_attachment_url( $source_video_id );
 				$info['ext']      = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
 				$info['type']     = $types[ $info['ext'] ];
 			}
 		}
 
-		if ( $videoSource !== 'html5' ) {
-			$video          = maybe_unserialize( get_post_meta( $lesson_id, '_video', true ) );
-			$runtimeHours   = $this->avalue_dot( 'runtime.hours', $video );
-			$runtimeMinutes = $this->avalue_dot( 'runtime.minutes', $video );
-			$runtimeSeconds = $this->avalue_dot( 'runtime.seconds', $video );
+		if ( 'html5' !== $video_source ) {
+			$video           = maybe_unserialize( get_post_meta( $lesson_id, '_video', true ) );
+			$runtime_hours   = $this->avalue_dot( 'runtime.hours', $video );
+			$runtime_minutes = $this->avalue_dot( 'runtime.minutes', $video );
+			$runtime_seconds = $this->avalue_dot( 'runtime.seconds', $video );
 
-			$runtimeHours   = $runtimeHours ? $runtimeHours : '00';
-			$runtimeMinutes = $runtimeMinutes ? $runtimeMinutes : '00';
-			$runtimeSeconds = $runtimeSeconds ? $runtimeSeconds : '00';
+			$runtime_hours   = $runtime_hours ? $runtime_hours : '00';
+			$runtime_minutes = $runtime_minutes ? $runtime_minutes : '00';
+			$runtime_seconds = $runtime_seconds ? $runtime_seconds : '00';
 
-			$info['playtime'] = "$runtimeHours:$runtimeMinutes:$runtimeSeconds";
+			$info['playtime'] = "$runtime_hours:$runtime_minutes:$runtime_seconds";
 		}
 
 		$info = array_merge( $info, $video );
