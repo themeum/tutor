@@ -64,7 +64,7 @@ if ( 1 === $number_of_tabs ) {
 }
 ?>
 <div class="tutor-dashboard-discussions" x-data="tutorDiscussions()">
-	<h4 class="tutor-h4 tutor-mb-5 tutor-hidden tutor-sm-block">
+	<h4 class="tutor-h4 tutor-mb-5 tutor-mt-none tutor-hidden tutor-sm-block">
 		<?php esc_html_e( 'Discussions', 'tutor' ); ?>
 	</h4>
 

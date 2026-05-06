@@ -62,7 +62,7 @@ $first_question_id = $first_question_id > 0 ? $first_question_id : '';
 		firstQuestionId: '<?php echo esc_js( (string) $first_question_id ); ?>'
 	})"
 >
-	<h3 class="tutor-h3 tutor-mb-10">
+	<h3 class="tutor-h3 tutor-mb-10 tutor-mt-none">
 		<?php esc_html_e( 'Quiz questions', 'tutor' ); ?>
 	</h3>
 

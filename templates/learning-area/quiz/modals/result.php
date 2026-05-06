@@ -32,9 +32,9 @@ $action_label  = $data['action_label'] ?? __( 'View Results', 'tutor' );
 	</div>
 
 	<div class="tutor-flex tutor-flex-column tutor-gap-2 tutor-py-7">
-		<div class="tutor-h5 tutor-font-semibold">
+		<h5 class="tutor-h5 tutor-my-none tutor-font-semibold">
 			<?php echo esc_html( $modal_title ); ?>
-		</div>
+		</h5>
 
 		<div class="tutor-p3 tutor-text-secondary">
 			<?php if ( $show_attempts ) : ?>

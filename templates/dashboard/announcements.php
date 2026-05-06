@@ -87,7 +87,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 	})"
 >
 	<div class="tutor-hidden tutor-sm-flex tutor-items-center tutor-justify-between tutor-mb-5">
-		<h4 class="tutor-h4"><?php esc_html_e( 'Announcements', 'tutor' ); ?></h4>
+		<h4 class="tutor-h4 tutor-my-none"><?php esc_html_e( 'Announcements', 'tutor' ); ?></h4>
 		<?php
 		Button::make()
 			->label( __( 'New Announcement', 'tutor' ) )

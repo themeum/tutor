@@ -83,7 +83,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 		<div class="tutor-card tutor-card-rounded-2xl">
 			<div class="tutor-withdrawal-available-header tutor-flex tutor-items-center tutor-justify-between">
 				<div class="tutor-flex tutor-flex-column tutor-gap-2">
-					<h3 class="tutor-h3"><?php echo wp_kses( $available_for_withdraw_formatted, tutor_price_allowed_html() ); ?></h3>
+					<h3 class="tutor-h3 tutor-my-none"><?php echo wp_kses( $available_for_withdraw_formatted, tutor_price_allowed_html() ); ?></h3>
 					<div class="tutor-small tutor-text-secondary"><?php esc_html_e( 'Available for Withdrawal', 'tutor' ); ?></div>
 				</div>
 				<div>
