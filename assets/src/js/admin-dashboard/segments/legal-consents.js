@@ -98,6 +98,17 @@ const getResponseMessage = (data, fallbackMessage) => {
 	return fallbackMessage;
 };
 
+const getValidationErrors = (data) => {
+	const validationError = data?.data?.validation_error;
+	if (!validationError || typeof validationError !== 'object') {
+		return null;
+	}
+
+	return Object.entries(validationError)
+		.map(([field, message]) => `${field}: ${message}`)
+		.join('\n');
+};
+
 const isSuccessfulResponse = (data) => Boolean(
 	data?.success === true
 	|| (typeof data?.status_code === 'number' && data.status_code >= 200 && data.status_code < 300)
@@ -256,6 +267,15 @@ const syncCardSaveButton = (card, savedState) => {
 	}
 
 	saveButton.disabled = isSameCardState(getCardFormState(card), savedState);
+};
+
+const syncCardDiscardButton = (card, savedState) => {
+	const discardButton = card.querySelector(SELECTORS.consentCancelButton);
+	if (!discardButton || discardButton.classList.contains(CSS_CLASSES.loading)) {
+		return;
+	}
+
+	discardButton.disabled = isSameCardState(getCardFormState(card), savedState);
 };
 
 const toggleConsentCard = (card, collapsed) => {
@@ -499,7 +519,9 @@ const saveConsent = ({ card, consentId, saveButton, enabledInput, savedState, on
 				return;
 			}
 
-			showToast(__('Failed', 'tutor'), getResponseMessage(data, __('Failed to save legal consent.', 'tutor')), 'error');
+			const validationErrors = getValidationErrors(data);
+			const errorMessage = validationErrors || getResponseMessage(data, __('Failed to save legal consent.', 'tutor'));
+			showToast(__('Failed', 'tutor'), errorMessage, 'error');
 			saveButton.classList.remove(CSS_CLASSES.loading);
 			saveButton.disabled = false;
 		})
@@ -523,10 +545,12 @@ const bindCard = (card) => {
 	let consentId = Number(card.dataset[DATA_ATTRIBUTES.consentId] || 0);
 	let savedState = getCardFormState(card);
 	syncCardSaveButton(card, savedState);
+	syncCardDiscardButton(card, savedState);
 
 	const onCardChange = () => {
 		markSettingsAsChanged();
 		syncCardSaveButton(card, savedState);
+		syncCardDiscardButton(card, savedState);
 	};
 
 	titleInput?.addEventListener('input', (event) => {
@@ -623,6 +647,7 @@ const bindCard = (card) => {
 	cancelButton?.addEventListener('click', () => {
 		applyCardState(card, savedState);
 		syncCardSaveButton(card, savedState);
+		syncCardDiscardButton(card, savedState);
 	});
 
 	saveButton?.addEventListener('click', () => {
@@ -647,6 +672,7 @@ const bindCard = (card) => {
 				toggleConsentCard(card, true);
 				savedState = getCardFormState(card);
 				syncCardSaveButton(card, savedState);
+				syncCardDiscardButton(card, savedState);
 			},
 		});
 	});

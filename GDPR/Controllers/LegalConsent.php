@@ -335,13 +335,13 @@ class LegalConsent extends BaseController {
 
 		$data = $this->prepare_legal_consent_data( $request, true );
 
+		if ( is_wp_error( $data ) ) {
+			$this->json_response( '', $data->errors, 400 );
+		}
+
 		$consent_map = tutor_is_json( $data['consent_map'] ) ? $data['consent_map'] : null;
 		if ( is_null( $consent_map ) ) {
 			$this->json_response( __( 'Invalid consent map', 'tutor' ), '', 400 );
-		}
-
-		if ( is_wp_error( $data ) ) {
-			$this->json_response( '', $data->errors, 400 );
 		}
 
 		$wpdb->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
