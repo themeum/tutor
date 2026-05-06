@@ -37,7 +37,7 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 		<div class="tutor-quiz-intro-overview">
 			<!-- Quiz Icon -->
 			<div class="tutor-quiz-intro-icon">
-				<img src="<?php echo esc_url( UrlHelper::themed_asset( 'images/illustrations/quiz-intro.webp' ) ); ?>" alt="<?php esc_attr_e( 'Quiz', 'tutor' ); ?>">
+				<?php UrlHelper::themed_svg( 'images/illustrations/quiz-intro.svg', null, true ); ?>
 			</div>
 
 			<!-- Quiz Title -->
