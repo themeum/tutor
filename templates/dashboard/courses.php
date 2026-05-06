@@ -46,8 +46,8 @@ if ( ! isset( $active_tab, $page_tabs[ $active_tab ] ) ) {
 }
 
 $enrolled_courses  = CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ), $offset, $courses_per_page );
-$active_courses    = CourseModel::get_active_courses_by_user( null, $offset, $courses_per_page );
-$completed_courses = CourseModel::get_completed_courses_by_user( null, $offset, $courses_per_page );
+$active_courses    = CourseModel::get_active_courses_by_user( null, $offset, $courses_per_page, array( 'post_status' => array( 'private', 'publish' ) ) );
+$completed_courses = CourseModel::get_completed_courses_by_user( null, $offset, $courses_per_page, array( 'post_status' => array( 'private', 'publish' ) ) );
 
 $enrolled_course_count  = is_a( $enrolled_courses, 'WP_Query' ) ? $enrolled_courses->found_posts : 0;
 $active_course_count    = is_a( $active_courses, 'WP_Query' ) ? $active_courses->found_posts : 0;
