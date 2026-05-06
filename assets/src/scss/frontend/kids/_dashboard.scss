@@ -48,6 +48,14 @@
     }
   }
 
+  .tutor-upcoming-lessons {
+    row-gap: $tutor-spacing-5;
+  }
+
+  .tutor-calendar-content .tutor-upcoming-lesson-card + .tutor-upcoming-lesson-card {
+    margin-top: $tutor-spacing-4;
+  }
+
   // wishList
   .tutor-dashboard-courses-wrapper {
     .tutor-dashboard-courses-card {
