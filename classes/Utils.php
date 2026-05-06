@@ -1681,10 +1681,10 @@ class Utils {
 	public function playtime_string( $seconds ) {
 		$sign    = ( ( $seconds < 0 ) ? '-' : '' );
 		$seconds = round( abs( $seconds ) );
-		$H       = (int) floor( $seconds / 3600 );
-		$M       = (int) floor( ( $seconds - ( 3600 * $H ) ) / 60 );
-		$S       = (int) round( $seconds - ( 3600 * $H ) - ( 60 * $M ) );
-		return $sign . ( $H ? $H . ':' : '' ) . ( $H ? str_pad( $M, 2, '0', STR_PAD_LEFT ) : intval( $M ) ) . ':' . str_pad( $S, 2, 0, STR_PAD_LEFT );
+		$h       = (int) floor( $seconds / 3600 );
+		$m       = (int) floor( ( $seconds - ( 3600 * $h ) ) / 60 );
+		$s       = (int) round( $seconds - ( 3600 * $h ) - ( 60 * $m ) );
+		return $sign . ( $h ? $h . ':' : '' ) . ( $h ? str_pad( $m, 2, '0', STR_PAD_LEFT ) : intval( $m ) ) . ':' . str_pad( $s, 2, 0, STR_PAD_LEFT );
 	}
 
 	/**
