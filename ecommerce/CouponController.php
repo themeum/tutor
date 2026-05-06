@@ -115,6 +115,7 @@ class CouponController extends BaseController {
 			add_action( 'wp_ajax_tutor_coupon_update', array( $this, 'ajax_update_coupon' ) );
 			add_action( 'wp_ajax_tutor_coupon_applies_to_list', array( $this, 'ajax_coupon_applies_to_list' ) );
 			add_action( 'wp_ajax_tutor_apply_coupon', array( $this, 'ajax_apply_coupon' ) );
+			add_action( 'tutor_set_coupon_as_expired', array( $this, 'set_coupon_as_expired' ) );
 		}
 	}
 
@@ -474,19 +475,10 @@ class CouponController extends BaseController {
 		foreach ( $coupon_status as $key => $value ) {
 			$status_filter = $where;
 
-			$status_filter['coupon_status'] = in_array(
-				$key,
-				array( CouponModel::STATUS_EXPIRED, CouponModel::STATUS_SCHEDULED ),
-				true
-			) ? CouponModel::STATUS_ACTIVE : $key;
-
 			if ( CouponModel::STATUS_EXPIRED === $key ) {
-				$raw_query                   = '( start_date_gmt < %s AND expire_date_gmt < %s )';
-				$status_filter[ $raw_query ] = array(
-					'RAW',
-					array( $gm_date, $gm_date ),
-				);
+				$status_filter['coupon_status'] = CouponModel::STATUS_EXPIRED;
 			} elseif ( CouponModel::STATUS_SCHEDULED === $key ) {
+				$status_filter['coupon_status']  = CouponModel::STATUS_ACTIVE;
 				$status_filter['start_date_gmt'] = array(
 					'>',
 					$gm_date,
@@ -953,5 +945,45 @@ class CouponController extends BaseController {
 		}
 
 		return ValidationHelper::validate( $validation_rules, $data );
+	}
+
+	/**
+	 * Update coupon status to expired for the given coupon IDs.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $coupon_ids List of coupon IDs.
+	 *
+	 * @return void
+	 */
+	public function set_coupon_as_expired( array $coupon_ids ) {
+
+		if ( empty( $coupon_ids ) ) {
+			return;
+		}
+
+		$this->model->update_coupon( $coupon_ids, array( 'coupon_status' => CouponModel::STATUS_EXPIRED ) );
+	}
+
+	/**
+	 * Get the display status for a coupon.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $coupon Coupon object.
+	 *
+	 * @return string Coupon display status.
+	 */
+	public function get_coupon_display_status( $coupon ) {
+
+		if ( $this->model->is_scheduled( $coupon ) ) {
+			return CouponModel::STATUS_SCHEDULED;
+		}
+
+		if ( CouponModel::STATUS_ACTIVE === $coupon->coupon_status && ! $this->model->has_coupon_validity( $coupon ) ) {
+			return CouponModel::STATUS_EXPIRED;
+		}
+
+		return $coupon->coupon_status;
 	}
 }
