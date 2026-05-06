@@ -145,7 +145,7 @@ export const Default = {} satisfies Story;
 
 export const WithIcon = {
   args: {
-    icon: <SVGIcon name="star" width={18} height={18} />,
+    icon: <SVGIcon name="starFill" width={18} height={18} />,
     text: 'Starred',
   },
 } satisfies Story;
