@@ -95,7 +95,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 ?>
 <div class="tutor-quiz-summary" x-data="tutorQuizRetryAttempt()" x-init="init()">
 	<div class="tutor-quiz-summary-overview">
-		<h2 class="tutor-h2 tutor-sm-text-h3 tutor-mb-3 tutor-mt-none tutor-sm-mb-2 tutor-text-center">
+		<h2 class="tutor-h2 tutor-sm-text-h3 tutor-mb-3 tutor-sm-mb-2 tutor-text-center">
 			<?php echo esc_html( get_the_title( $quiz_id ) ); ?>
 		</h2>
 

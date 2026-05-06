@@ -86,7 +86,7 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 						->icon_only()
 						->render();
 				?>
-				<h5 class="tutor-h5 tutor-font-semibold tutor-my-none"><?php esc_html_e( 'Quiz Summary', 'tutor' ); ?></h5>
+				<h5 class="tutor-h5 tutor-font-semibold"><?php esc_html_e( 'Quiz Summary', 'tutor' ); ?></h5>
 			</div>
 
 			<?php
@@ -126,7 +126,7 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 		);
 		?>
 		<div class="tutor-quiz-summary-content">
-			<h3 class="tutor-h3 tutor-sm-text-h5 tutor-text-subdued tutor-mb-10 tutor-sm-mb-5 tutor-mt-none">
+			<h3 class="tutor-h3 tutor-sm-text-h5 tutor-text-subdued tutor-mb-10 tutor-sm-mb-5">
 				<?php esc_html_e( 'Review your answers', 'tutor' ); ?>
 			</h3>
 			<?php

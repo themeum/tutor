@@ -27,7 +27,7 @@ $content      = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor
 		<div> </div> <!-- This is placeholder for quiz summary sidebar -->
 		<div class="tutor-quiz-review-feedback">
 			<div class="tutor-flex tutor-flex-column tutor-gap-5">
-				<h5 class="tutor-h5 tutor-font-semibold tutor-my-none">
+				<h5 class="tutor-h5 tutor-font-semibold tutor-m-none">
 					<?php esc_html_e( 'Instructor Feedback', 'tutor' ); ?>
 				</h5>
 

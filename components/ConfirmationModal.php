@@ -433,7 +433,7 @@ class ConfirmationModal extends BaseComponent {
 
 							<div class="tutor-p-7 tutor-pt-10 tutor-flex tutor-flex-column tutor-items-center">
 								%s
-								<h5 class="tutor-h5 tutor-font-medium tutor-mt-7 tutor-mb-none">
+								<h5 class="tutor-h5 tutor-font-medium tutor-mt-7">
 									%s
 								</h5>
 								<p class="tutor-p3 tutor-text-secondary tutor-mt-2 tutor-text-center">

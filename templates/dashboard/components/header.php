@@ -84,7 +84,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 				>
 					<div class="tutor-dashboard-header-user-popover-profile">
 
-						<div class="tutor-profile-header-top tutor-flex tutor-hidden tutor-sm-flex tutor-items-center tutor-px-7 tutor-py-5">
+						<div class="tutor-profile-header-top tutor-flex tutor-hidden tutor-sm-block tutor-items-center tutor-px-7 tutor-py-5">
 							<?php
 							Button::make()
 								->label( __( 'Back', 'tutor' ) )

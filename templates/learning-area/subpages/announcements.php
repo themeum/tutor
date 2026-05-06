@@ -40,7 +40,7 @@ $total_announcements = $the_query->found_posts;
 
 ?>
 <div class="tutor-py-8">
-	<h4 class="tutor-h4 tutor-mb-5 tutor-mt-none tutor-flex tutor-items-center tutor-gap-4">
+	<h4 class="tutor-h4 tutor-mb-5 tutor-flex tutor-items-center tutor-gap-4">
 		<?php SvgIcon::make()->name( Icon::ANNOUNCEMENT )->size( 24 )->render(); ?>
 		<?php esc_html_e( 'Announcements', 'tutor' ); ?>
 	</h4>

@@ -23,7 +23,7 @@ $initial_states  = $state_mapping[ $billing_country ] ?? array();
 ?>
 
 <section class="tutor-flex tutor-flex-column tutor-gap-4">
-	<h5 class="tutor-h5 tutor-md-hidden tutor-my-none"><?php echo esc_html__( 'Billing Address', 'tutor' ); ?></h5>
+	<h5 class="tutor-h5 tutor-md-hidden"><?php echo esc_html__( 'Billing Address', 'tutor' ); ?></h5>
 
 	<div class="tutor-card tutor-flex tutor-flex-column tutor-gap-5 tutor-border">
 		<form

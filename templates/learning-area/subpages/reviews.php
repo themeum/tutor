@@ -43,7 +43,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 
 <div class="tutor-py-8 tutor-learning-area-reviews">
 	<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-5">
-		<h4 class="tutor-h4 tutor-my-none tutor-flex tutor-items-center tutor-gap-4">
+		<h4 class="tutor-h4 tutor-flex tutor-items-center tutor-gap-4">
 			<?php SvgIcon::make()->name( Icon::RATINGS )->size( 24 )->render(); ?>
 			<?php esc_html_e( 'Reviews', 'tutor' ); ?>
 		</h4>

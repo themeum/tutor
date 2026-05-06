@@ -21,7 +21,7 @@ $attachments = tutor_utils()->get_attachments( $tutor_current_content_id );
 
 <div x-show="activeTab === 'exercise_files'" x-cloak class="tutor-tab-panel" role="tabpanel">
 	<div class="tutor-lesson-exercise-files tutor-p-6">
-		<h5 class="tutor-h5 tutor-mb-4 tutor-mt-none"><?php esc_html_e( 'Exercise Files', 'tutor' ); ?></h5>
+		<h5 class="tutor-h5 tutor-mb-4"><?php esc_html_e( 'Exercise Files', 'tutor' ); ?></h5>
 		<div class="tutor-grid tutor-grid-cols-2 tutor-sm-grid-cols-1 tutor-gap-5">
 			<?php foreach ( $attachments as $attachment ) : ?>
 				<div class="tutor-rounded-md tutor-flex tutor-flex-col tutor-gap-2">
