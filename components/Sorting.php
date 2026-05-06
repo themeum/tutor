@@ -40,7 +40,6 @@ defined( 'ABSPATH' ) || exit;
  */
 class Sorting extends BaseComponent {
 
-
 	/**
 	 * Order param
 	 *
