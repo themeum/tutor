@@ -25,21 +25,27 @@ let currentLogs = [];
 const { __ } = wp.i18n;
 
 /**
- * Build a human-readable title from the consent title.
+ * Build a human-readable title from the consent log.
  *
- * @param {Object} log
- * @returns {string}
+ * @param log - The consent log object
+ * @param includeAccepted - Whether to prefix the title with "Accepted"
+ * @returns A human-readable title string
  */
-const getLogTitle = (log) => {
+const getLogTitle = (log, includeAccepted = true) => {
 	if (log.consent_title) {
-		return log.consent_title;
+		return includeAccepted
+			? `${__('Accepted', 'tutor')} ${log.consent_title}`
+			: log.consent_title;
 	}
-	return includeAccepted ? __('Accepted Consent', 'tutor') : __('Consent', 'tutor');
+
+	return includeAccepted
+		? __('Accepted Consent', 'tutor')
+		: __('Consent', 'tutor');
 };
 
 const renderTimeline = (logs) => {
 	const items = logs.map((log, index) => {
-		const title = getLogTitle(log);
+		const title = getLogTitle(log, true);
 		const date = log.created_at_gmt || '';
 		const ago = log.timeAgo || log.time_ago || '';
 		const ip = log.ip_address ? `IP: ${log.ip_address}` : '';
