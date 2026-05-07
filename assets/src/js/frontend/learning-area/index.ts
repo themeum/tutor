@@ -2,15 +2,14 @@
 // Initializes learning area functionality based on current page
 
 import { initializeReviews } from '@FrontendComponents/reviews';
+import { initializeCommon } from '@FrontendServices/common';
+import { tutorConfig } from '@TutorShared/config/config';
 import { initializeCommon as initializeLearningAreaCommon } from './common';
 import { initializeLesson } from './lesson';
-import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeCourseCourseInfo } from './pages/course-info';
 import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './quiz';
 import { initializeSidebar } from './sidebar';
-import { initializeCommon } from '@FrontendServices/common';
-import { tutorConfig } from '@TutorShared/config/config';
 
 const initializeLearningArea = () => {
   initializeLearningAreaCommon();
@@ -21,13 +20,11 @@ const initializeLearningArea = () => {
 
   // Normalize path segments
   const pathSegments = pathname.split('/').filter(Boolean);
-  const { lesson_slug = 'lessons', quiz_slug = 'quizzes', assignment_slug = 'assignments' } = tutorConfig || {};
+  const { lesson_slug = 'lessons', quiz_slug = 'quizzes' } = tutorConfig || {};
 
   let currentPage = null;
 
-  if (pathSegments.includes(assignment_slug)) {
-    currentPage = 'assignment-view';
-  } else if (pathSegments.includes(lesson_slug)) {
+  if (pathSegments.includes(lesson_slug)) {
     currentPage = 'lesson';
   } else if (pathSegments.includes(quiz_slug)) {
     currentPage = 'quiz';
@@ -41,15 +38,9 @@ const initializeLearningArea = () => {
     case 'quiz':
       initializeQuizInterface();
       break;
-
-    case 'assignment-view':
-      initializeAssignmentView();
-      break;
-
     case 'lesson':
       initializeLesson();
       break;
-
     case 'qna':
       initializeQna();
       break;

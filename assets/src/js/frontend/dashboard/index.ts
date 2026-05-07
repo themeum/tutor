@@ -2,26 +2,21 @@
 // Initializes dashboard functionality based on current page
 
 import { initializeReviews } from '@FrontendComponents/reviews';
+import { initializeCommon } from '@FrontendServices/common';
 import { initializeHeader } from './header';
 import { initializeAnnouncements } from './pages/announcements';
-import { initializeAssignments } from './pages/assignments';
-import { initializeCertificates } from './pages/certificates';
+import { initBillingCsvExport } from './pages/billing';
 import { initializeDiscussions } from './pages/discussions';
 import { initializeHome } from './pages/instructor/home';
 import { initializeMyCourses } from './pages/my-courses';
-import { initializeOverview } from './pages/overview';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
 import { initializeSettings } from './pages/settings';
 import { initializeWithdrawals } from './pages/withdrawals';
-import { initBillingCsvExport } from './pages/billing';
-import { initializeCommon } from '@FrontendServices/common';
 
 /**
  * Get current dashboard page from URL
  *
- * Currently, we are supporting both the playground and the dashboard
- *
- * @TODO: Remove playground support
+ * @since 4.0.0
  */
 const getCurrentPage = (): string => {
   const path = window.location.pathname;
@@ -50,19 +45,10 @@ const getCurrentPage = (): string => {
     return 'my-courses';
   }
   if (path.includes('/announcements')) {
-    return 'dashboard-announcements';
-  }
-  if (path.includes('/assignments')) {
-    return 'assignments';
+    return 'announcements';
   }
   if (path.includes('/quiz-attempts') || path.includes('/my-quiz-attempts')) {
     return 'quiz-attempts';
-  }
-  if (path.includes('/settings')) {
-    return 'settings';
-  }
-  if (path.includes('/certificates')) {
-    return 'certificates';
   }
   if (path.includes('/discussions')) {
     return 'discussions';
@@ -75,6 +61,9 @@ const getCurrentPage = (): string => {
   }
   if (path.includes('/account/billing')) {
     return 'billing';
+  }
+  if (path.includes('/settings')) {
+    return 'settings';
   }
 
   // Default to home when subpage=dashboard
@@ -91,28 +80,16 @@ const initializeDashboard = () => {
   switch (currentPage) {
     case 'home':
     case 'dashboard':
-      initializeOverview();
       initializeHome();
       break;
-    case 'courses':
     case 'my-courses':
       initializeMyCourses();
       break;
-    case 'dashboard-announcements':
+    case 'announcements':
       initializeAnnouncements();
-      break;
-    case 'dashboard-assignments':
-    case 'assignments':
-      initializeAssignments();
       break;
     case 'quiz-attempts':
       initializeQuizAttempts();
-      break;
-    case 'settings':
-      initializeSettings();
-      break;
-    case 'certificates':
-      initializeCertificates();
       break;
     case 'discussions':
       initializeDiscussions();
@@ -126,10 +103,12 @@ const initializeDashboard = () => {
     case 'billing':
       initBillingCsvExport();
       break;
+    case 'settings':
+      initializeSettings();
+      break;
     default:
       // eslint-disable-next-line no-console
       console.warn('Unknown dashboard page:', currentPage);
-      initializeOverview(); // Fallback
   }
 };
 
