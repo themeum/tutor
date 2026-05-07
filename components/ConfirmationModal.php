@@ -244,6 +244,21 @@ class ConfirmationModal extends BaseComponent {
 	}
 
 	/**
+	 * Set icon html.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $html Icon HTML.
+	 *
+	 * @return $this
+	 */
+	public function icon_html( string $html ) {
+		$this->icon      = '';   // skip the built-in icon logic.
+		$this->icon_html = $html;
+		return $this;
+	}
+
+	/**
 	 * Set confirm handler function name.
 	 *
 	 * @since 4.0.0
@@ -375,8 +390,8 @@ class ConfirmationModal extends BaseComponent {
 			: '';
 
 		// Build icon HTML.
-		$icon_html = '';
-		if ( ! empty( $this->icon ) ) {
+		$icon_html = $this->icon_html ?? '';
+		if ( empty( $this->icon_html ) && ! empty( $this->icon ) ) {
 			if ( filter_var( $this->icon, FILTER_VALIDATE_URL ) !== false ) {
 				$icon_html = sprintf( '<img src="%s" style="width:%spx;height:%spx;"/>', $this->icon, $this->icon_width, $this->icon_height );
 			} else {

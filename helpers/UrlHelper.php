@@ -197,6 +197,7 @@ class UrlHelper {
 					'stroke'         => true,
 					'stroke-width'   => true,
 					'stroke-linecap' => true,
+					'clip-path'      => true,
 				)
 			),
 			'mask'     => array_merge(

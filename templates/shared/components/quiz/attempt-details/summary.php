@@ -292,7 +292,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 		ConfirmationModal::make()
 			->id( $retry_modal_id )
 			->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
-			->icon( UrlHelper::themed_asset( 'images/illustrations/quiz-retry.webp' ) )
+			->icon_html( UrlHelper::themed_svg( 'images/illustrations/quiz-retry.svg', array( 'output' => false ) ) )
 			->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
 			->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
 			->confirm_text( __( 'Retry Quiz', 'tutor' ) )
