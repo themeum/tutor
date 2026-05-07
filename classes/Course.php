@@ -23,6 +23,7 @@ use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\EnrollmentModel;
@@ -2132,7 +2133,13 @@ class Course extends Tutor_Base {
 			exit( esc_html__( 'Please Sign In first', 'tutor' ) );
 		}
 
-		$course_id = Input::post( 'tutor_course_id', 0, Input::TYPE_INT );
+		$course_id  = Input::post( 'tutor_course_id', 0, Input::TYPE_INT );
+		$can_enroll = $this->validate_course_enrollment_period( $course_id );
+		if ( ! $can_enroll ) {
+			$referer_url = wp_get_referer();
+			wp_safe_redirect( tutor_utils()->get_nocache_url( $referer_url ) );
+			exit;
+		}
 
 		/**
 		 * TODO: need to check purchase information
@@ -2214,6 +2221,51 @@ class Course extends Tutor_Base {
 			wp_safe_redirect( $permalink );
 			exit;
 		}
+	}
+
+	/**
+	 * Validate course enrollment period before enrollment.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id the course id.
+	 *
+	 * @return bool
+	 */
+	public function validate_course_enrollment_period( $course_id ) {
+		$course_settings = get_post_meta( $course_id, self::COURSE_SETTINGS_META, true );
+
+		if ( ! tutor_utils()->count( $course_settings ) ) {
+			return true;
+		}
+
+		if ( ! isset( $course_settings['course_enrollment_period'] ) || ! isset( $course_settings['pause_enrollment'] ) ) {
+			return true;
+		}
+
+		$enrollment_period = $course_settings['course_enrollment_period'];
+		$pause_enrollment  = $course_settings['pause_enrollment'];
+
+		if ( 'yes' === $pause_enrollment ) {
+			return false;
+		}
+
+		if ( 'yes' === $enrollment_period ) {
+			$enrollment_start  = strtotime( $course_settings['enrollment_starts_at'] );
+			$enrollment_end    = strtotime( $course_settings['enrollment_ends_at'] );
+			$current_date_time = DateTimeHelper::get_gmt_to_user_timezone_date( DateTimeHelper::now()->to_date_time_string() );
+			$current_date_time = strtotime( $current_date_time );
+
+			if ( $enrollment_start && $enrollment_start > $current_date_time ) {
+				return false;
+			}
+
+			if ( $enrollment_end && $enrollment_end < $current_date_time ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -3079,15 +3131,22 @@ class Course extends Tutor_Base {
 	 */
 	public function tutor_reset_course_progress() {
 		tutor_utils()->checking_nonce();
-		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$course_id             = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$course_reset_progress = tutor_utils()->get_option( 'course_reset_progress', false );
+		$course_retake_feature = tutor_utils()->get_option( 'course_retake_feature', false );
+
+		if ( ! $course_reset_progress || ! $course_retake_feature ) {
+			$this->response_bad_request( __( 'You are not allowed to reset course progress.', 'tutor' ) );
+			return;
+		}
 
 		if ( ! $course_id || ! is_numeric( $course_id ) || ! EnrollmentModel::is_enrolled( $course_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid Course ID or Access Denied.', 'tutor' ) ) );
+			$this->response_bad_request( __( 'Invalid Course ID or Access Denied.', 'tutor' ) );
 			return;
 		}
 
 		tutor_utils()->delete_course_progress( $course_id );
-		wp_send_json_success( array( 'redirect_to' => tutor_utils()->get_course_first_lesson( $course_id ) ) );
+		$this->json_response( '', array( 'redirect_to' => tutor_utils()->get_course_first_lesson( $course_id ) ) );
 	}
 
 	/**
