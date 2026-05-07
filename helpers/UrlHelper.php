@@ -163,83 +163,88 @@ class UrlHelper {
 	 * @return array<string, array<string, bool>>
 	 */
 	private static function get_svg_allowed_html(): array {
-		$with_fill = array( 'fill' => true );
-		$with_id   = array( 'id' => true );
-		$with_dims = array(
+		$attr_fill      = array( 'fill' => true );
+		$attr_id        = array( 'id' => true );
+		$attr_dims      = array(
 			'width'  => true,
 			'height' => true,
 			'x'      => true,
 			'y'      => true,
 		);
+		$attr_transform = array( 'transform' => true );
+		$attr_clip      = array(
+			'clip-path' => true,
+			'clip-rule' => true,
+		);
+		$attr_center    = array(
+			'cx' => true,
+			'cy' => true,
+		);
+
+		$attr_stroke = array(
+			'stroke'           => true,
+			'stroke-width'     => true,
+			'stroke-linecap'   => true,
+			'stroke-linejoin'  => true,
+			'stroke-dasharray' => true,
+		);
 
 		return array(
 			'svg'      => array_merge(
-				$with_fill,
-				$with_dims,
+				$attr_fill,
+				$attr_dims,
 				array(
 					'xmlns'   => true,
 					'viewBox' => true,
 				)
 			),
-			'g'        => array(
-				'clip-path' => true,
-			),
-			'defs'     => $with_id,
-			'clipPath' => $with_id,
+			'g'        => $attr_clip,
+			'defs'     => $attr_id,
+			'clipPath' => $attr_id,
 			'path'     => array_merge(
-				$with_fill,
+				$attr_fill,
+				$attr_stroke,
+				$attr_clip,
 				array(
-					'd'                => true,
-					'mask'             => true,
-					'fill-rule'        => true,
-					'clip-rule'        => true,
-					'stroke'           => true,
-					'stroke-width'     => true,
-					'stroke-linecap'   => true,
-					'clip-path'        => true,
-					'stroke-dasharray' => true,
+					'd'         => true,
+					'mask'      => true,
+					'fill-rule' => true,
 				)
 			),
 			'mask'     => array_merge(
-				$with_fill,
-				$with_dims,
-				$with_id,
+				$attr_fill,
+				$attr_dims,
+				$attr_id,
 				array(
 					'maskunits' => true,
 					'mask-type' => true,
 				)
 			),
 			'rect'     => array_merge(
-				$with_fill,
-				$with_dims,
+				$attr_fill,
+				$attr_dims,
+				$attr_stroke,
+				$attr_transform,
 				array(
-					'maskunits'        => true,
-					'transform'        => true,
-					'stroke'           => true,
-					'stroke-width'     => true,
-					'stroke-dasharray' => true,
-					'rx'               => true,
-					'stroke-linecap'   => true,
-					'stroke-linejoin'  => true,
-
+					'maskunits' => true,
+					'rx'        => true,
 				)
 			),
 			'circle'   => array_merge(
-				$with_fill,
+				$attr_fill,
+				$attr_center,
+				$attr_transform,
 				array(
-					'cx' => true,
-					'cy' => true,
-					'r'  => true,
+					'r' => true,
 				)
 			),
 			'ellipse'  => array_merge(
-				$with_fill,
+				$attr_fill,
+				$attr_center,
+				$attr_transform,
 				array(
-					'cx'        => true,
-					'cy'        => true,
-					'rx'        => true,
-					'ry'        => true,
-					'transform' => true,
+					'rx' => true,
+					'ry' => true,
 				)
 			),
 		);
