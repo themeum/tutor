@@ -8,6 +8,8 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Cache\FlashMessage;
 use Tutor\Components\Alert;
 use Tutor\Ecommerce\Ecommerce;
@@ -18,8 +20,6 @@ use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 
-defined( 'ABSPATH' ) || exit;
-
 
 if ( ! function_exists( 'tutor' ) ) {
 	/**
@@ -28,9 +28,9 @@ if ( ! function_exists( 'tutor' ) ) {
 	 * @since 1.0.0
 	 * @since 3.7.0 updated with config class.
 	 *
-	 * @return object
+	 * @return \TUTOR\Config
 	 */
-	function tutor() {
+	function tutor(): \TUTOR\Config {
 		return \TUTOR\Config::get_instance();
 	}
 }
