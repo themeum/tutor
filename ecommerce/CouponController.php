@@ -473,6 +473,9 @@ class CouponController extends BaseController {
 		foreach ( $coupon_status as $key => $value ) {
 			$status_filter = $where;
 
+			/**
+			 * Map expired and scheduled filters to active coupon status for querying.
+			 */
 			$status_filter['coupon_status'] = in_array(
 				$key,
 				array( CouponModel::STATUS_EXPIRED, CouponModel::STATUS_SCHEDULED ),
@@ -554,6 +557,9 @@ class CouponController extends BaseController {
 
 		if ( 'all' !== $active_tab && in_array( $active_tab, $available_statuses, true ) ) {
 
+			/**
+			 * Map expired and scheduled filters to active coupon status for querying.
+			 */
 			$where_clause['coupon_status'] = in_array(
 				$active_tab,
 				array( CouponModel::STATUS_EXPIRED, CouponModel::STATUS_SCHEDULED ),
