@@ -246,7 +246,7 @@ class UrlHelper {
 		$options = array_merge(
 			array(
 				'color_map'        => self::get_default_color_map(),
-				'output'           => true,
+				'output'           => false,
 				'strip_dimensions' => false,
 			),
 			$options
