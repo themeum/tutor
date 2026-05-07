@@ -5,37 +5,38 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-upcoming-lesson-card {
+  background-color: $tutor-surface-l1;
   padding: $tutor-spacing-6;
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
 
   &:hover {
     background-color: $tutor-surface-l1-hover;
-		@include tutor-breakpoint-up(sm) {
-			.tutor-upcoming-lesson-card-live-tag-badge {
-				opacity: 0;
-				visibility: hidden;
-			}
-			.tutor-upcoming-lesson-card-action {
-				opacity: 1;
-				visibility: visible;
-				pointer-events: auto;
-			}
-		}
+    @include tutor-breakpoint-up(sm) {
+      .tutor-upcoming-lesson-card-live-tag-badge {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .tutor-upcoming-lesson-card-action {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+    }
   }
 
   &:focus-within {
-		@include tutor-breakpoint-up(sm) {
-			.tutor-upcoming-lesson-card-live-tag-badge {
-				opacity: 0;
-				visibility: hidden;
-			}
-			.tutor-upcoming-lesson-card-action {
-				opacity: 1;
-				visibility: visible;
-				pointer-events: auto;
-			}
-		}
+    @include tutor-breakpoint-up(sm) {
+      .tutor-upcoming-lesson-card-live-tag-badge {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .tutor-upcoming-lesson-card-action {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+    }
   }
 
   &-header {
@@ -54,42 +55,41 @@
     @include tutor-flex-center;
   }
 
-	&-live-tag {
-		position: relative;
-		
+  &-live-tag {
+    position: relative;
 
-		&-badge {
-			@include tutor-flex(row, center, center);
-			opacity: 1;
-			visibility: visible;
-			z-index: $tutor-z-positive;
-			@include tutor-transition((opacity, visibility));
-		}
-	}
+    &-badge {
+      @include tutor-flex(row, center, center);
+      opacity: 1;
+      visibility: visible;
+      z-index: $tutor-z-positive;
+      @include tutor-transition((opacity, visibility));
+    }
+  }
 
-	&-action {
-		@include tutor-flex(row, center, center);
-		position: absolute;
-		top: 0;
-		right: 0;
-		opacity: 0;
-		visibility: hidden;
-		pointer-events: none;
-		z-index: $tutor-z-dropdown;
-		@include tutor-transition((opacity, visibility));
+  &-action {
+    @include tutor-flex(row, center, center);
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: $tutor-z-dropdown;
+    @include tutor-transition((opacity, visibility));
 
-		&:hover {
-			color: $tutor-text-primary-inverse;
-		}
-	}
+    &:hover {
+      color: $tutor-text-primary-inverse;
+    }
+  }
 
   &-title {
     @include tutor-typography('small', 'medium', 'primary', 'body');
     margin: 0 0 $tutor-spacing-5 0;
 
     @include tutor-breakpoint-down(sm) {
-			color: $tutor-text-brand;
-		}
+      color: $tutor-text-brand;
+    }
   }
 
   &-course {

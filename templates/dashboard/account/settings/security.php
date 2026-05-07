@@ -48,8 +48,6 @@ $form_id = 'tutor-reset-password-form';
 				->placeholder( __( 'Enter Your Email', 'tutor' ) )
 				->disabled()
 				->attr( 'x-bind', "register('account_email', { required: true })" )
-				// ->attr( 'style', 'padding: 7px 12px;' )
-				->size( Size::SM )
 				->render();
 
 			echo '</div>';
