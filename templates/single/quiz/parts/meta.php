@@ -74,8 +74,7 @@
 				<span id="tutor-quiz-time-update" 
 					class="tutor-fs-6 tutor-fw-medium tutor-text-nowrap <?php $remaining_time_secs < 0 ? 'color-text-error' : ''; ?>" 
 					data-attempt-settings="<?php echo esc_attr( wp_json_encode( $is_started_quiz ) ); ?>" 
-					data-attempt-meta="<?php echo esc_attr( wp_json_encode( $quiz_attempt_info ) ); ?>" 
-					data-quiz-duration="<?php echo esc_attr( tutor_utils()->quiz_time_duration_in_seconds( $quiz_time_type, $quiz_time_value ) ); ?>">
+					data-attempt-meta="<?php echo esc_attr( wp_json_encode( $quiz_attempt_info ) ); ?>">
 				
 				</span>
 			</div>
