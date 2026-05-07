@@ -189,14 +189,15 @@ class UrlHelper {
 			'path'     => array_merge(
 				$with_fill,
 				array(
-					'd'              => true,
-					'mask'           => true,
-					'fill-rule'      => true,
-					'clip-rule'      => true,
-					'stroke'         => true,
-					'stroke-width'   => true,
-					'stroke-linecap' => true,
-					'clip-path'      => true,
+					'd'                => true,
+					'mask'             => true,
+					'fill-rule'        => true,
+					'clip-rule'        => true,
+					'stroke'           => true,
+					'stroke-width'     => true,
+					'stroke-linecap'   => true,
+					'clip-path'        => true,
+					'stroke-dasharray' => true,
 				)
 			),
 			'mask'     => array_merge(
@@ -212,8 +213,23 @@ class UrlHelper {
 				$with_fill,
 				$with_dims,
 				array(
-					'maskunits' => true,
-					'transform' => true,
+					'maskunits'        => true,
+					'transform'        => true,
+					'stroke'           => true,
+					'stroke-width'     => true,
+					'stroke-dasharray' => true,
+					'rx'               => true,
+					'stroke-linecap'   => true,
+					'stroke-linejoin'  => true,
+
+				)
+			),
+			'circle'   => array_merge(
+				$with_fill,
+				array(
+					'cx' => true,
+					'cy' => true,
+					'r'  => true,
 				)
 			),
 			'ellipse'  => array_merge(
