@@ -18,6 +18,7 @@ use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Input;
 use TUTOR\User;
+use Tutor\Helpers\UrlHelper;
 
 $user_id       = get_current_user_id();
 $is_instructor = tutor_utils()->is_instructor( $user_id, true );
@@ -66,7 +67,12 @@ $nav_items = array(
 </div>
 
 <?php if ( empty( $questions ) ) : ?>
-	<?php EmptyState::make()->title( 'No Questions Found!' )->render(); ?>
+	<?php
+		EmptyState::make()
+			->title( 'No Questions Found!' )
+			->icon( UrlHelper::themed_svg( 'images/illustrations/qna-empty.svg' ) )
+			->render();
+	?>
 <?php else : ?>
 <div class="tutor-discussion-card-wrapper tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
 	<?php

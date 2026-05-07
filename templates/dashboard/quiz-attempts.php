@@ -27,6 +27,7 @@ use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
 use TUTOR\User;
+use Tutor\Helpers\UrlHelper;
 
 if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 	// Load single attempt details if ID provided.
@@ -168,7 +169,12 @@ $hidden_inputs = array(
 				?>
 			</div>
 			<?php else : ?>
-				<?php EmptyState::make()->title( __( 'No Quiz Attempts Found', 'tutor' ) )->render(); ?>
+				<?php
+					EmptyState::make()
+						->title( __( 'No Quiz Attempts Found', 'tutor' ) )
+						->icon( UrlHelper::themed_svg( 'images/illustrations/quiz-empty.svg' ) )
+						->render();
+				?>
 			<?php endif; ?>
 		</div>
 	</div>

@@ -154,7 +154,12 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		</div>
 
 		<?php if ( empty( $results ) ) : ?>
-			<?php EmptyState::make()->title( 'No Courses Found' )->render(); ?>
+			<?php
+				EmptyState::make()
+					->title( 'No Courses Found' )
+					->icon( UrlHelper::themed_svg( 'images/illustrations/learning-empty.svg' ) )
+					->render();
+			?>
 		<?php else : ?>
 		<div class="tutor-my-courses-card-wrapper">
 			<?php

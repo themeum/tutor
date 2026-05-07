@@ -75,7 +75,12 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 
 	<div class="tutor-card tutor-card-rounded-2xl tutor-p-none">
 	<?php if ( empty( $reviews ) ) : ?>
-		<?php EmptyState::make()->title( __( 'No Reviews Found', 'tutor' ) )->render(); ?>
+		<?php
+			EmptyState::make()
+				->title( __( 'No Reviews Found!', 'tutor' ) )
+				->icon( UrlHelper::themed_svg( 'images/illustrations/reviews-empty.svg' ) )
+				->render();
+		?>
 	<?php else : ?>
 		<div class="tutor-grid tutor-grid-cols-2 tutor-sm-grid-cols-1 tutor-gap-4 tutor-sm-gap-6 tutor-p-6">
 			<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-justify-between">

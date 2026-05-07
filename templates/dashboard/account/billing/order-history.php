@@ -22,6 +22,7 @@ use Tutor\Components\Sorting;
 use TUTOR\Dashboard;
 use Tutor\Ecommerce\Ecommerce;
 use TUTOR\Input;
+use Tutor\Helpers\UrlHelper;
 
 $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 if ( 'free' === $monetize_by ) {
@@ -72,7 +73,10 @@ $status_options = apply_filters( 'tutor_order_history_status_options', array(), 
 
 <?php
 if ( empty( $orders ) ) :
-	EmptyState::make()->title( 'No Orders Found!' )->render();
+	EmptyState::make()
+		->title( 'No Orders Found!' )
+		->icon( UrlHelper::themed_svg( 'images/illustrations/order-empty.svg' ) )
+		->render();
 else :
 	?>
 <div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-order-history">

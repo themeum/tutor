@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Input;
 use Tutor\Components\Pagination;
 use Tutor\Components\EmptyState;
+use Tutor\Helpers\UrlHelper;
 
 global $post;
 $wishlist_per_page = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
@@ -105,7 +106,12 @@ $total_wishlists_count = count( tutor_utils()->get_wishlist() );
 			?>
 		</div>
 	<?php else : ?>
-		<?php EmptyState::make()->title( __( 'No Courses Found', 'tutor' ) )->render(); ?>
+		<?php
+			EmptyState::make()
+				->title( __( 'No Courses Found', 'tutor' ) )
+				->icon( UrlHelper::themed_svg( 'images/illustrations/wishlist-empty.svg' ) )
+				->render();
+		?>
 	<?php endif; ?>
 
 	<!-- Wishlist pagination  -->

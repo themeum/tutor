@@ -30,6 +30,7 @@ use Tutor\Components\Sorting;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\Color;
 use Tutor\Components\SvgIcon;
+use Tutor\Helpers\UrlHelper;
 
 $limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
@@ -149,7 +150,12 @@ $create_modal_id = 'tutor-announcement-form-modal';
 		</div>
 
 		<?php if ( empty( $announcements ) ) : ?>
-			<?php EmptyState::make()->render(); ?>
+			<?php
+				EmptyState::make()
+					->title( __( 'No Announcements Found', 'tutor' ) )
+					->icon( UrlHelper::themed_svg( 'images/illustrations/no-announcements.svg' ) )
+					->render();
+			?>
 		<?php else : ?>
 			<div class="tutor-announcement-list">
 				<?php

@@ -173,6 +173,7 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 			<?php
 			EmptyState::make()
 				->title( __( 'No Quiz Attempts Found', 'tutor' ) )
+				->icon( UrlHelper::themed_svg( 'images/illustrations/quiz-empty.svg' ) )
 				->render();
 			?>
 		<?php endif; ?>

@@ -18,6 +18,7 @@ use Tutor\Models\CourseModel;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Nav;
 use TUTOR\Student;
+use Tutor\Helpers\UrlHelper;
 
 // Pagination.
 $courses_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
@@ -103,7 +104,10 @@ $courses_list = $courses_list_array[ $active_tab ];
 						tutor_load_template( 'dashboard.courses.course-card' );
 					endwhile;
 				else :
-					EmptyState::make()->title( __( 'No Courses Found', 'tutor' ) )->render();
+					EmptyState::make()
+						->title( __( 'No Courses Found', 'tutor' ) )
+						->icon( UrlHelper::themed_svg( 'images/illustrations/learning-empty.svg' ) )
+						->render();
 				endif;
 				?>
 			</div>

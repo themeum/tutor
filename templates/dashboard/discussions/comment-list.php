@@ -17,6 +17,7 @@ use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Lesson;
 use TUTOR\User;
+use Tutor\Helpers\UrlHelper;
 
 $is_instructor = tutor_utils()->is_instructor( null, true );
 
@@ -68,7 +69,12 @@ $total_items     = Lesson::get_comments( $count_args );
 </div>
 
 <?php if ( empty( $lesson_comments ) ) : ?>
-	<?php EmptyState::make()->title( 'No Comments Found!' )->render(); ?>
+	<?php
+		EmptyState::make()
+			->title( 'No Comments Found!' )
+			->icon( UrlHelper::themed_svg( 'images/illustrations/comments-empty.svg' ) )
+			->render();
+	?>
 <?php else : ?>
 <div class="tutor-discussion-card-wrapper tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
 	<?php

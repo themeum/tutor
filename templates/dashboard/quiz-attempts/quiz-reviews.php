@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Input;
 use Tutor\Components\EmptyState;
 use Tutor\Models\QuizModel;
+use Tutor\Helpers\UrlHelper;
 
 $attempt_id   = Input::get( 'attempt_id', 0, Input::TYPE_INT );
 $attempt_data = tutor_utils()->get_attempt( $attempt_id );
@@ -26,6 +27,7 @@ $can_review   = $attempt_id > 0 && tutor_utils()->can_user_manage( 'attempt', $a
 if ( ! $attempt_data || ! $can_review ) {
 	EmptyState::make()
 		->title( __( 'Attempt not found or access permission denied', 'tutor' ) )
+		->icon( UrlHelper::themed_svg( 'images/illustrations/quiz-empty.svg' ) )
 		->render();
 	return;
 }

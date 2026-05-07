@@ -18,6 +18,7 @@ use Tutor\Components\SvgIcon;
 use TUTOR\Input;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
+use Tutor\Helpers\UrlHelper;
 
 // Get course ID from global variable set in learning-area/index.php .
 global $tutor_course_id;
@@ -46,7 +47,12 @@ $total_announcements = $the_query->found_posts;
 	</h4>
 	<div class="tutor-course-announcements">
 		<?php if ( empty( $announcements ) ) : ?>
-			<?php EmptyState::make()->title( __( 'No Announcements Found!', 'tutor' ) )->render(); ?>
+			<?php
+				EmptyState::make()
+					->title( __( 'No Announcements Found!', 'tutor' ) )
+					->icon( UrlHelper::themed_svg( 'images/illustrations/no-announcements.svg' ) )
+					->render();
+			?>
 		<?php else : ?>
 			<div class="tutor-announcement-list">
 				<?php foreach ( $announcements as $announcement ) : ?>

@@ -19,6 +19,7 @@ use Tutor\Models\QuizModel;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Helpers\UrlHelper;
 
 global $tutor_current_post;
 
@@ -47,6 +48,7 @@ if ( ! $attempt_data && $quiz_id > 0 ) {
 $render_attempt_not_found = static function ( string $title ) {
 	EmptyState::make()
 		->title( $title )
+		->icon( UrlHelper::themed_svg( 'images/illustrations/quiz-empty.svg' ) )
 		->render();
 };
 

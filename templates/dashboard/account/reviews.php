@@ -75,7 +75,12 @@ foreach ( $reviews as $review ) {
 
 		<?php else : ?>
 			<div class="tutor-card">
-				<?php EmptyState::make()->title( 'No Reviews Found' )->render(); ?>
+				<?php
+					EmptyState::make()
+						->title( 'No Reviews Found' )
+						->icon( UrlHelper::themed_svg( 'images/illustrations/reviews-empty.svg' ) )
+						->render();
+				?>
 			</div>
 		<?php endif; ?>
 	</div>
