@@ -65,7 +65,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 			->message( __( 'This will reset your learning preferences to the default settings. Your progress and account data won’t be affected.', 'tutor' ) )
 			->cancel_text( __( 'Cancel', 'tutor' ) )
 			->confirm_text( __( 'Reset Preferences', 'tutor' ) )
-			->icon( UrlHelper::themed_asset( 'images/illustrations/reset-preference.webp' ) )
+			->icon_html( UrlHelper::themed_svg( 'images/illustrations/reset-preference.svg' ) )
 			->confirm_handler( "handleResetPreferences('" . esc_js( $form_id ) . "','" . esc_js( $reset_modal_id ) . "')" )
 			->mutation_state( 'resetPreferencesMutation' )
 			->render();

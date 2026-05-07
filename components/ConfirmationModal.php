@@ -101,6 +101,15 @@ class ConfirmationModal extends BaseComponent {
 	protected $icon = '';
 
 	/**
+	 * Icon HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $icon_html = '';
+
+	/**
 	 * Icon width.
 	 *
 	 * @since 4.0.0
@@ -368,8 +377,9 @@ class ConfirmationModal extends BaseComponent {
 			return '';
 		}
 
-		if ( empty( $this->icon ) ) {
-			$this->icon = UrlHelper::themed_asset( 'images/illustrations/delete.webp' );
+		if ( empty( $this->icon ) && empty( $this->icon_html ) ) {
+			$this->icon      = '';
+			$this->icon_html = UrlHelper::themed_svg( 'images/illustrations/delete.svg' );
 		}
 
 		// Set default button texts if not provided.

@@ -17,7 +17,7 @@ use Tutor\Components\Constants\Variant;
 
 $modal_title   = $data['title'] ?? '';
 $message       = $data['message'] ?? '';
-$icon_url      = $data['icon_url'] ?? '';
+$icon_html     = $data['icon_html'] ?? '';
 $modal_id      = $data['modal_id'] ?? '';
 $show_attempts = isset( $data['show_attempts'] ) ? (bool) $data['show_attempts'] : false;
 $action_url    = $data['action_url'] ?? '';
@@ -26,8 +26,8 @@ $action_label  = $data['action_label'] ?? __( 'View Results', 'tutor' );
 
 <div class="tutor-modal-body tutor-quiz-result-modal">
 	<div class="tutor-quiz-result-modal-icon">
-		<?php if ( $icon_url ) : ?>
-			<img src="<?php echo esc_url( $icon_url ); ?>" alt="" />
+		<?php if ( $icon_html ) : ?>
+			<?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped by UrlHelper::themed_svg() ?>
 		<?php endif; ?>
 	</div>
 
