@@ -1832,7 +1832,7 @@ class Course extends Tutor_Base {
 
 		$i = 0;
 		foreach ( $sort_order as $topic ) {
-			$i++;
+			++$i;
 			$wpdb->update(
 				$wpdb->posts,
 				array( 'menu_order' => $i ),
@@ -2990,10 +2990,10 @@ class Course extends Tutor_Base {
 					}
 				}
 				if ( ! $has_passed ) {
-					$required_assignment_pass++;
+					++$required_assignment_pass;
 				}
 			} else {
-				$required_assignment_pass++;
+				++$required_assignment_pass;
 			}
 		}
 
@@ -3009,11 +3009,11 @@ class Course extends Tutor_Base {
 					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
 
 					if ( $earned_percentage < $passing_grade ) {
-						$required_quiz_pass++;
+						++$required_quiz_pass;
 						$is_quiz_pass = false;
 					}
 				} else {
-					$required_quiz_pass++;
+					++$required_quiz_pass;
 					$is_quiz_pass = false;
 				}
 			}
@@ -3190,7 +3190,12 @@ class Course extends Tutor_Base {
 				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
 			}
 
-			$course = get_post( $course_id );
+			$course     = get_post( $course_id );
+			$can_enroll = $this->validate_course_enrollment_period( $course_id );
+
+			if ( ! $can_enroll ) {
+				wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
+			}
 
 			if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
 				wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
