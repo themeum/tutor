@@ -143,7 +143,6 @@ class UrlHelper {
 			'--tutor-visual-brand-2'     => '#a4bcf4',
 			'--tutor-visual-brand-3'     => '#dbe4fa',
 			'--tutor-visual-success-1'   => '#28a745',
-			'--tutor-visual-success-2'   => '#28a745',
 			'--tutor-visual-critical-1'  => '#1d0d0c',
 			'--tutor-visual-critical-2'  => '#fee4e2',
 			'--tutor-visual-caution-1'   => '#fde272',
@@ -214,6 +213,7 @@ class UrlHelper {
 				$with_dims,
 				array(
 					'maskunits' => true,
+					'transform' => true,
 				)
 			),
 			'ellipse'  => array_merge(
