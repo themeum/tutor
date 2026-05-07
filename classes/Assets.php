@@ -212,6 +212,7 @@ class Assets {
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
 			'kids_icons_registry'          => $kids_icons,
 			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
+			'user_preferences'             => UserPreference::get_preferences( get_current_user_id() ),
 			'is_legacy_learning_mode'      => tutor_utils()->is_legacy_learning_mode(),
 			'course_slug'                  => tutor_utils()->get_option( 'course_permalink_base', 'courses' ),
 			'lesson_slug'                  => tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ),
@@ -277,11 +278,6 @@ class Assets {
 
 		if ( 'tutor-addons' === $page ) {
 			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-addon-list.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
-		}
-
-		if ( 'tutor-themes' === $page ) {
-			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
-			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 		}
 	}
 

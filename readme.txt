@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.9.9
+Stable tag: 3.9.10
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,7 +318,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.0-beta.4 - 05 May, 2026
+= 4.0.0-beta.4 - 06 May, 2026
 
 New: Introduced comprehensive GDPR compliance support for better data handling.
 New: Added an option to generate quiz questions via AI Studio (Pro)
@@ -431,6 +431,11 @@ New: Lots of Micro-interactions with animations and sound effects to make lesson
 New: A new button “view as student” has been added to allow admin & instructor to change the dashboard view.
 New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
 New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
+
+= 3.9.10 - Apr 29, 2026
+
+Update: Improved user permission checks to enhance security.
+Fix: Resolved an issue where line breaks were not preserved in question–answer text created via the API. (Pro)
 
 = 3.9.9 - Apr 13, 2026
 

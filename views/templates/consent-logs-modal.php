@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 				<button type="button" class="tutor-btn tutor-btn-ghost tutor-mr-8" data-tutor-modal-close>
 					<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 				</button>
-				<button type="button" class="tutor-btn tutor-btn-secondary" data-consent-logs-download>
+				<button type="button" class="tutor-btn tutor-btn-secondary" data-consent-logs-download style="display: none;">
 					<span class="tutor-icon-download tutor-mr-8" aria-hidden="true"></span>
 					<?php esc_html_e( 'Download CSV', 'tutor' ); ?>
 				</button>
