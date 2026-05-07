@@ -72,56 +72,51 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
 			<h5 class="tutor-h5 tutor-md-hidden tutor-my-none"><?php echo esc_html__( 'Account', 'tutor' ); ?></h5>
 			<div class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5">
-				<?php do_action( 'tutor_profile_edit_input_before' ); ?>
+				<div>
+					<div
+						x-data="tutorFileUploader({
+							value: [getValue('cover_photo')],
+							variant: 'image-uploader',
+							accept: '.png,.jpg,.jpeg',
+							onFileSelect: handleUploadCoverPhoto,
+							imagePreviewPlaceholder: '<?php echo esc_attr( $settings_data['cover_placeholder'] ); ?>',
+						})"
+						class="tutor-account-cover-photo"
+						:class="{
+							'is-loading': uploadCoverPhotoMutation?.isPending || removeCoverPhotoMutation?.isPending,
+						}"
+						:style="`background-image: url(${imagePreview ? imagePreview : '<?php echo esc_url( $settings_data['cover_placeholder'] ); ?>'})`"
+					>
+						<input
+							class="tutor-hidden"
+							type="file"
+							name="cover_photo"
+							x-ref="fileInput"
+							:multiple="multiple"
+							:accept="accept"
+							@change="handleFileSelect($event)"
+						/>
 
-				<div class="tutor-account-avatar-wrapper">
-					<div x-data="tutorPopover({
-						placement: 'bottom',
-						offset: 8,
-					})">
 						<div
-							x-data="tutorFileUploader({
-								value: [getValue('profile_photo')],
-								variant: 'image-uploader',
-								accept: '.png,.jpg,.jpeg',
-								onFileSelect: handleUploadProfilePhoto,
-								imagePreviewPlaceholder: '<?php echo esc_attr( $settings_data['profile_placeholder'] ); ?>',
+							x-data="tutorPopover({
+								placement: 'bottom-end',
+								offset: 4,
 							})"
-							class="tutor-account-avatar" 
-							:class="{
-								'active': open,
-								'is-loading': uploadProfilePhotoMutation?.isPending || removeProfilePhotoMutation?.isPending,
-							}"
+							class="tutor-account-cover-photo-action"
 						>
-							<input
-								class="tutor-hidden"
-								type="file"
-								name="profile_photo"
-								x-ref="fileInput"
-								:multiple="multiple"
-								:accept="accept"
-								@change="handleFileSelect($event)"
-							/>
-							<img 
-								:src="imagePreview ? imagePreview : '<?php echo esc_url( $settings_data['profile_placeholder'] ); ?>'"
-								class="tutor-avatar-image"
-								alt="<?php esc_attr_e( 'User Avatar', 'tutor' ); ?>"
-							>
-
 							<?php
 								Button::make()
-									->label( __( 'Upload Photo', 'tutor' ) )
+									->variant( Variant::OUTLINE )
+									->label( __( 'Edit Cover Photo', 'tutor' ) )
 									->size( Size::X_SMALL )
-									->icon( Icon::EDIT_2, 'left', 24, 24 )
-									->icon_only()
+									->icon( Icon::CAMERA )
 									->attr( 'type', 'button' )
-									->attr( 'class', 'tutor-account-avatar-edit' )
 									->attr( 'x-ref', 'trigger' )
 									->attr( '@click', 'toggle()' )
 									->render();
 							?>
 
-							<div 
+							<div
 								x-ref="content"
 								x-show="open"
 								x-cloak
@@ -134,8 +129,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 											->label( __( 'Upload Photo', 'tutor' ) )
 											->size( Size::X_SMALL )
 											->attr( 'type', 'button' )
-											->attr( 'x-ref', 'upload' )
-											->attr( '@click', 'openFileDialog()' )
+											->attr( '@click', 'openFileDialog(), hide()' )
 											->render();
 
 										Button::make()
@@ -143,14 +137,95 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 											->variant( Variant::SECONDARY )
 											->size( Size::X_SMALL )
 											->attr( 'type', 'button' )
-											->attr( '@click', 'removeFile(), hide(), handleRemoveProfilePhoto()' )
+											->attr( '@click', 'removeFile(), hide(), handleRemoveCoverPhoto()' )
 											->render();
 									?>
 								</div>
 							</div>
 						</div>
 					</div>
+
+					<div class="tutor-account-avatar-wrapper">
+						<div x-data="tutorPopover({
+							placement: 'right-top',
+							offset: 4,
+						})">
+							<div
+								x-data="tutorFileUploader({
+									value: [getValue('profile_photo')],
+									variant: 'image-uploader',
+									accept: '.png,.jpg,.jpeg',
+									onFileSelect: handleUploadProfilePhoto,
+									imagePreviewPlaceholder: '<?php echo esc_attr( $settings_data['profile_placeholder'] ); ?>',
+								})"
+								class="tutor-account-avatar"
+								:class="{
+									'active': open,
+									'is-loading': uploadProfilePhotoMutation?.isPending || removeProfilePhotoMutation?.isPending,
+								}"
+							>
+								<input
+									class="tutor-hidden"
+									type="file"
+									name="profile_photo"
+									x-ref="fileInput"
+									:multiple="multiple"
+									:accept="accept"
+									@change="handleFileSelect($event)"
+								/>
+								<img
+									:src="imagePreview ? imagePreview : '<?php echo esc_url( $settings_data['profile_placeholder'] ); ?>'"
+									class="tutor-avatar-image"
+									alt="<?php esc_attr_e( 'User Avatar', 'tutor' ); ?>"
+								>
+
+								<?php
+									Button::make()
+										->variant( Variant::SECONDARY )
+										->label( __( 'Upload Photo', 'tutor' ) )
+										->size( Size::X_SMALL )
+										->icon( Icon::CAMERA )
+										->icon_only()
+										->attr( 'type', 'button' )
+										->attr( 'class', 'tutor-account-avatar-edit' )
+										->attr( 'x-ref', 'trigger' )
+										->attr( '@click', 'toggle()' )
+										->render();
+								?>
+
+								<div
+									x-ref="content"
+									x-show="open"
+									x-cloak
+									@click.outside="handleClickOutside()"
+									class="tutor-popover"
+								>
+									<div class="tutor-flex tutor-flex-column tutor-gap-3 tutor-p-5">
+										<?php
+											Button::make()
+												->label( __( 'Upload Photo', 'tutor' ) )
+												->size( Size::X_SMALL )
+												->attr( 'type', 'button' )
+												->attr( 'x-ref', 'upload' )
+												->attr( '@click', 'openFileDialog()' )
+												->render();
+
+											Button::make()
+												->label( __( 'Remove Photo', 'tutor' ) )
+												->variant( Variant::SECONDARY )
+												->size( Size::X_SMALL )
+												->attr( 'type', 'button' )
+												->attr( '@click', 'removeFile(), hide(), handleRemoveProfilePhoto()' )
+												->render();
+										?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
+
+				<?php do_action( 'tutor_profile_edit_input_before' ); ?>
 
 				<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
 					<?php
