@@ -327,9 +327,9 @@ $sortable_sections_ids = array_reduce(
 	<!-- Filters -->
 	<div class="tutor-flex tutor-justify-between tutor-align-center">
 		<?php if ( $tutor_pro_enabled ) : ?>
-			<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-start' )->render(); ?>
+			<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->render(); ?>
 		<?php endif; ?>
-		
+
 		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: 'bottom-end' })">
 			<button
 				x-ref="trigger"

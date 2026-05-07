@@ -28,7 +28,6 @@ use Tutor\Components\PreviewTrigger;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
 use Tutor\Components\Constants\Variant;
-use Tutor\Components\Constants\Positions;
 use Tutor\Components\Constants\Color;
 use Tutor\Components\SvgIcon;
 
@@ -109,9 +108,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 
 				DateFilter::make()
 						->type( DateFilter::TYPE_SINGLE )
-						->placement( Positions::BOTTOM_END )
-						->trigger_size( Size::SMALL )
-						->icon_size( 16 )
+						->placement( DateFilter::PLACEMENT_BOTTOM_END )
 						->attr( 'class', 'tutor-hidden tutor-sm-flex' )
 						->render();
 
@@ -139,9 +136,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 				<?php
 					DateFilter::make()
 						->type( DateFilter::TYPE_SINGLE )
-						->placement( Positions::BOTTOM_END )
-						->trigger_size( Size::SMALL )
-						->icon_size( 16 )
+						->placement( DateFilter::PLACEMENT_BOTTOM_END )
 						->attr( 'class', 'tutor-sm-hidden' )
 						->render();
 

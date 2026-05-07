@@ -73,8 +73,8 @@ function copy() {
         '!phpunit.xml',
         '!phpcs.xml',
         '!phpcs.xml.dist',
-        '!./tutor-droip/**',
         '!./includes/droip/**',
+        '!./includes/kirki/**',
         '!./cypress/**',
         '!./cypress.config.ts',
         '!.husky',
@@ -111,6 +111,23 @@ function copyTutorDroip() {
     .pipe(gulp.dest('build/tutor/includes/droip'));
 }
 
+function copyTutorKirki() {
+  const kirkiDistPath = 'includes/kirki/dist';
+
+  if (!existsSync(kirkiDistPath)) {
+    console.log('⚠️ Kirki files not found, skipping...');
+    return Promise.resolve();
+  }
+
+  return gulp
+    .src(`${kirkiDistPath}/**`, {
+      allowEmpty: true,
+      buffer: true,
+      encoding: false,
+    })
+    .pipe(gulp.dest('build/tutor/includes/kirki'));
+}
+
 function makeZip() {
   return gulp
     .src('./build/**/*.*', {
@@ -122,4 +139,4 @@ function makeZip() {
     .pipe(gulp.dest('./'));
 }
 
-export const build = gulp.series(cleanZip, cleanBuild, copy, copyTutorDroip, makeZip, cleanBuild);
+export const build = gulp.series(cleanZip, cleanBuild, copy, copyTutorDroip, copyTutorKirki, makeZip, cleanBuild);
