@@ -67,7 +67,7 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 										'tutor'
 									)
 								),
-								esc_html( $course_progress['completed_percent'] ),
+								esc_html( $course_progress['completed_count'] ),
 								esc_html( $course_progress['total_count'] )
 							);
 

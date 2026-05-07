@@ -55,9 +55,7 @@ $withdrawals_base_url = remove_query_arg( 'current_page', $withdrawals_base_url 
 		</div>
 		<div class="tutor-withdrawal-history-filters-mobile-right tutor-flex tutor-items-center tutor-gap-3">
 			<div class="tutor-withdrawal-history-filters-calendar-mobile">
-				<?php
-				DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
-				?>
+				<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( DateFilter::PLACEMENT_BOTTOM_END )->render(); ?>
 			</div>
 			<div class="tutor-withdrawal-history-filters-sort-mobile tutor-flex tutor-items-center">
 				<?php
@@ -69,9 +67,7 @@ $withdrawals_base_url = remove_query_arg( 'current_page', $withdrawals_base_url 
 	<div class="tutor-withdrawal-history-filters-row tutor-withdrawal-history-filters-row--bottom tutor-flex tutor-items-center tutor-justify-between">
 		<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-justify-between tutor-withdrawal-history-filters-right-group">
 			<div class="tutor-withdrawal-history-filters-calendar-desktop">
-			<?php
-			DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
-			?>
+			<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( DateFilter::PLACEMENT_BOTTOM_END )->render(); ?>
 			</div>
 			<?php
 			$query_params = array( 'data', 'order', 'start_date', 'end_date' );

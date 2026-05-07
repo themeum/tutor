@@ -157,7 +157,7 @@ export const CustomContent = {
         `}
       >
         <span>
-          <SVGIcon name="star" width={20} height={20} /> Custom content with icon.
+          <SVGIcon name="starFill" width={20} height={20} /> Custom content with icon.
         </span>
         <span>
           <strong>More content:</strong> You can put any ReactNode here, including lists, images, or forms.
