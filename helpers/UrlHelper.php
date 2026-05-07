@@ -76,8 +76,8 @@ class UrlHelper {
 
 			if ( '' !== $basename ) {
 				$kids_path = ( '.' === $directory || '' === $directory )
-					? 'kids/' . $basename
-					: trailingslashit( $directory ) . 'kids/' . $basename;
+				? 'kids/' . $basename
+				: trailingslashit( $directory ) . 'kids/' . $basename;
 
 				array_unshift( $candidates, $kids_path );
 			}
@@ -164,38 +164,66 @@ class UrlHelper {
 	 * @return array<string, array<string, bool>>
 	 */
 	private static function get_svg_allowed_html(): array {
+		$with_fill = array( 'fill' => true );
+		$with_id   = array( 'id' => true );
+		$with_dims = array(
+			'width'  => true,
+			'height' => true,
+			'x'      => true,
+			'y'      => true,
+		);
+
 		return array(
-			'svg'  => array(
-				'xmlns'   => true,
-				'width'   => true,
-				'height'  => true,
-				'fill'    => true,
-				'viewBox' => true,
+			'svg'      => array_merge(
+				$with_fill,
+				$with_dims,
+				array(
+					'xmlns'   => true,
+					'viewBox' => true,
+				)
 			),
-			'path' => array(
-				'd'         => true,
-				'fill'      => true,
-				'mask'      => true,
-				'fill-rule' => true,
-				'clip-rule' => true,
+			'g'        => array(
+				'clip-path' => true,
 			),
-			'mask' => array(
-				'id'        => true,
-				'width'     => true,
-				'height'    => true,
-				'x'         => true,
-				'y'         => true,
-				'fill'      => true,
-				'maskunits' => true,
-				'mask-type' => true,
+			'defs'     => $with_id,
+			'clipPath' => $with_id,
+			'path'     => array_merge(
+				$with_fill,
+				array(
+					'd'              => true,
+					'mask'           => true,
+					'fill-rule'      => true,
+					'clip-rule'      => true,
+					'stroke'         => true,
+					'stroke-width'   => true,
+					'stroke-linecap' => true,
+				)
 			),
-			'rect' => array(
-				'x'         => true,
-				'y'         => true,
-				'width'     => true,
-				'height'    => true,
-				'fill'      => true,
-				'maskunits' => true,
+			'mask'     => array_merge(
+				$with_fill,
+				$with_dims,
+				$with_id,
+				array(
+					'maskunits' => true,
+					'mask-type' => true,
+				)
+			),
+			'rect'     => array_merge(
+				$with_fill,
+				$with_dims,
+				array(
+					'maskunits' => true,
+				)
+			),
+			'ellipse'  => array_merge(
+				$with_fill,
+				array(
+					'cx'        => true,
+					'cy'        => true,
+					'rx'        => true,
+					'ry'        => true,
+					'transform' => true,
+				)
 			),
 		);
 	}
@@ -205,12 +233,24 @@ class UrlHelper {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string                    $path      Relative asset path to the SVG file.
-	 * @param array<string,string>|null $color_map CSS variable → hex color map. Null = default, [] = skip.
-	 * @param bool                      $output    Whether to echo the output.
+	 * @param string $path    Relative asset path to the SVG file.
+	 * @param array  $options {
+	 *   color_map?: array<string,string>|null,
+	 *   output?: bool,
+	 *   strip_dimensions?: bool
+	 * }                                $options Optional settings.
 	 * @return string Processed SVG markup.
 	 */
-	public static function themed_svg( string $path, ?array $color_map = null, bool $output = false ): string {
+	public static function themed_svg( string $path, array $options = array() ): string {
+		$options = array_merge(
+			array(
+				'color_map'        => self::get_default_color_map(),
+				'output'           => true,
+				'strip_dimensions' => false,
+			),
+			$options
+		);
+
 		$resolved = self::resolve_asset( ltrim( $path, '/' ) );
 		if ( ! $resolved ) {
 			return '';
@@ -221,18 +261,23 @@ class UrlHelper {
 			return '';
 		}
 
-		$color_map ??= self::get_default_color_map();
-		foreach ( $color_map as $css_var => $hex_color ) {
-			$svg_content = preg_replace(
-				'/' . preg_quote( $hex_color, '/' ) . '/i',
-				"var({$css_var}, {$hex_color})",
-				$svg_content
-			);
+		if ( $options['strip_dimensions'] ) {
+			$svg_content = preg_replace( '/(<svg[^>]*)\s(?:width|height)="[^"]*"/i', '$1', $svg_content );
+		}
+
+		if ( ! empty( $options['color_map'] ) ) {
+			foreach ( $options['color_map'] as $css_var => $hex_color ) {
+				$svg_content = preg_replace(
+					'/' . preg_quote( $hex_color, '/' ) . '/i',
+					"var({$css_var}, {$hex_color})",
+					$svg_content
+				);
+			}
 		}
 
 		$escaped = wp_kses( $svg_content, self::get_svg_allowed_html() );
 
-		if ( $output ) {
+		if ( $options['output'] ) {
 			echo $escaped; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
