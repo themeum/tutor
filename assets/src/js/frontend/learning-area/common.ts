@@ -3,6 +3,7 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
+import { type AxiosError } from 'axios';
 
 interface CourseCompletePayload {
   course_id: number;
@@ -34,6 +35,10 @@ export const courseCompleteHandler = () => {
         },
         onError: (error: Error) => {
           toast.error(convertToErrorMessage(error));
+          const axiosError = error as AxiosError;
+          if (!axiosError || !axiosError.response || !axiosError.response.data) {
+            window.location.reload();
+          }
         },
       });
 
