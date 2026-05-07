@@ -178,7 +178,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 
 				<div class="tutor-legal-consent-card-footer-actions">
 					<button type="button" class="tutor-btn tutor-btn-sm tutor-btn-ghost" data-consent-cancel>
-						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+						<?php esc_html_e( 'Discard', 'tutor' ); ?>
 					</button>
 
 					<button type="button" class="tutor-btn tutor-btn-sm tutor-btn-primary" data-consent-save>

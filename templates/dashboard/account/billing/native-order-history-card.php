@@ -29,7 +29,7 @@ $titles = OrderModel::get_order_history_titles( $order_data );
 			<div class="tutor-hidden tutor-sm-block">
 				<?php ComponentHelper::render_status_badge( $order_data->order_status ); ?>
 			</div>
-			<ul class="tutor-pl-1">
+			<ul class="tutor-pl-1 tutor-m-none">
 				<?php foreach ( $titles as $item_title ) : ?>
 					<li><span><?php echo esc_html( $item_title ); ?></span></li>
 				<?php endforeach; ?>

@@ -176,7 +176,15 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 	<div class="tutor-course-intro">
 		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-3 tutor-tiny tutor-text-secondary">
 			<?php SvgIcon::make()->name( Icon::RELOAD_2 )->render(); ?>
-			<?php echo esc_html( $tutor_course->post_modified ); ?> Last Updated
+			<?php
+			echo esc_html(
+				sprintf(
+					// translators: %s is the course last modified date.
+					__( '%s Last Updated', 'tutor' ),
+					tutor_i18n_get_formated_date( $tutor_course->post_modified )
+				)
+			);
+			?>
 		</div>
 		<h3 class="tutor-h3 tutor-sm-text-h5 tutor-mt-3"><?php echo esc_html( $tutor_course->post_title ); ?></h3>
 		<div class="tutor-medium tutor-sm-text-small tutor-text-secondary tutor-mt-4 tutor-mb-6">

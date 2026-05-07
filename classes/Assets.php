@@ -212,6 +212,7 @@ class Assets {
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
 			'kids_icons_registry'          => $kids_icons,
 			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
+			'user_preferences'             => UserPreference::get_preferences( get_current_user_id() ),
 			'is_legacy_learning_mode'      => tutor_utils()->is_legacy_learning_mode(),
 			'course_slug'                  => tutor_utils()->get_option( 'course_permalink_base', 'courses' ),
 			'lesson_slug'                  => tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ),
@@ -290,8 +291,8 @@ class Assets {
 	 * @return void
 	 */
 	public function frontend_scripts() {
-		$load_legacy_srcipts = $this->should_load_legacy_scripts();
-		if ( ! $load_legacy_srcipts ) {
+		$load_legacy_scripts = $this->should_load_legacy_scripts();
+		if ( ! $load_legacy_scripts ) {
 			return;
 		}
 

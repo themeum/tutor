@@ -93,7 +93,7 @@ class DateFilter extends BaseComponent {
 	 *
 	 * @var integer
 	 */
-	protected $icon_size = 20;
+	protected $icon_size = Size::SIZE_16;
 
 	/**
 	 * Whether to display the label text.

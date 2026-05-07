@@ -109,7 +109,7 @@ $hidden_inputs = array(
 					->render();
 				?>
 
-				<div class="tutor-flex tutor-gap-4">
+				<div class="tutor-flex tutor-gap-3">
 					<?php
 					$query_items = array( 'course-id', 'search', 'date', 'result', 'order' );
 					if ( Input::has_any( $query_items, Input::GET_REQUEST ) ) {
@@ -126,8 +126,6 @@ $hidden_inputs = array(
 					DateFilter::make()
 						->type( DateFilter::TYPE_SINGLE )
 						->placement( Positions::BOTTOM_END )
-						->trigger_size( Size::SMALL )
-						->icon_size( Size::SIZE_16 )
 						->render();
 
 					Sorting::make()->size( Size::SMALL )->order( $order_filter )->render();

@@ -318,7 +318,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.0-beta.4 - 05 May, 2026
+= 4.0.0-beta.4 - 06 May, 2026
 
 New: Introduced comprehensive GDPR compliance support for better data handling.
 New: Added an option to generate quiz questions via AI Studio (Pro)

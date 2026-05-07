@@ -479,6 +479,11 @@ class HooksHandler {
 			$user_id  = $order_data['user_id'];
 			$items    = $order_data['items'];
 			foreach ( $items as $item ) {
+				$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item );
+				if ( $is_gift_item ) {
+					continue;
+				}
+
 				add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
 				$enrolled_id = EnrollmentModel::do_enroll( $item['item_id'], $order_data['id'], $user_id );
