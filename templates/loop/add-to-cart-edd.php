@@ -9,9 +9,9 @@
  * @since 1.4.3
  */
 
-use Tutor\Components\SvgIcon;
-
 defined( 'ABSPATH' ) || exit;
+
+use Tutor\Components\SvgIcon;
 
 $product_id = tutor_utils()->get_course_product_id();
 $download   = new EDD_Download( $product_id );
@@ -28,15 +28,10 @@ if ( $download->ID ) {
 	 *
 	 * @since 4.0.0
 	 */
-	add_filter(
-		'edd_download_redirect_to_checkout',
-		function ( $redirect ) {
-			return is_user_logged_in() ? $redirect : false;
-		}
-	);
+	add_filter( 'edd_download_redirect_to_checkout', fn( $redirect ) => is_user_logged_in() ? $redirect : false );
 
 	if ( ! is_user_logged_in() ) {
-		$args['class'] = 'tutor-open-login-modal';
+		$args['class'] = $args['class'] . ' tutor-open-login-modal';
 	}
 
 	/**
@@ -58,7 +53,7 @@ if ( $download->ID ) {
 	?>
 	<div class="tutor-d-flex tutor-items-center tutor-gap-1 tutor-fs-7 tutor-color-muted">
 		<?php SvgIcon::make()->name( 'info' )->size( 20 )->render(); ?>
-		<p><?php esc_html_e( 'No EDD product for this course', 'tutor' ); ?></p>
+		<p class="tutor-m-0"><?php esc_html_e( 'No EDD product for this course', 'tutor' ); ?></p>
 	</div>
 	<?php
 }

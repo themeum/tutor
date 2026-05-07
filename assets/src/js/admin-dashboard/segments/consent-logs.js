@@ -25,16 +25,22 @@ let currentLogs = [];
 const { __ } = wp.i18n;
 
 /**
- * Build a human-readable title from the consent title.
+ * Build a human-readable title from the consent log.
  *
- * @param {Object} log
- * @returns {string}
+ * @param log - The consent log object
+ * @param includeAccepted - Whether to prefix the title with "Accepted"
+ * @returns A human-readable title string
  */
-const getLogTitle = (log) => {
+const getLogTitle = (log, includeAccepted = true) => {
 	if (log.consent_title) {
-		return log.consent_title;
+		return includeAccepted
+			? `${__('Accepted', 'tutor')} ${log.consent_title}`
+			: log.consent_title;
 	}
-	return includeAccepted ? __('Accepted Consent', 'tutor') : __('Consent', 'tutor');
+
+	return includeAccepted
+		? __('Accepted Consent', 'tutor')
+		: __('Consent', 'tutor');
 };
 
 const renderTimeline = (logs) => {
@@ -66,11 +72,13 @@ const renderTimeline = (logs) => {
 const showLoading = () => {
 	if (!modalBody) return;
 	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('Loading…', 'tutor')}</div>`;
+	if (downloadBtn) downloadBtn.style.display = 'none';
 };
 
 const showEmpty = () => {
 	if (!modalBody) return;
 	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('No consent logs found.', 'tutor')}</div>`;
+	if (downloadBtn) downloadBtn.style.display = 'none';
 };
 
 const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, userLogin) => {
@@ -80,6 +88,9 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
 	currentUserJoined = userJoined;
 	currentUserEmail = userEmail;
 	currentUserLogin = userLogin;
+
+	// Show loading state and hide download button.
+	showLoading();
 
 	// Fill user card.
 	if (userNameEl) userNameEl.textContent = userName;
@@ -114,6 +125,7 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
                     <div class="tutor-consent-timeline">${renderTimeline(logs)}</div>
                     ${userCard}
                 `;
+			if (downloadBtn) downloadBtn.style.display = '';
 		})
 		.catch(() => showEmpty());
 };
@@ -157,6 +169,9 @@ const downloadCSV = () => {
 const initConsentLogTriggers = () => {
 	document.querySelectorAll('[data-consent-logs-trigger]').forEach((btn) => {
 		btn.addEventListener('click', () => {
+			// Hide download button immediately before modal opens.
+			if (downloadBtn) downloadBtn.style.display = 'none';
+
 			const userId = btn.dataset.userId || '';
 			const userName = btn.dataset.userName || '';
 			const userJoined = btn.dataset.userJoined || '';

@@ -112,7 +112,7 @@ export const WithIcon = {
     label: 'Radio with Icon',
     icon: (
       <SVGIcon
-        name="star"
+        name="starFill"
         width={16}
         height={16}
         style={css`

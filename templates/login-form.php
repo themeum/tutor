@@ -93,7 +93,7 @@ do_action( 'tutor_before_login_form' );
 				$url_arg['enrol_course_id'] = get_the_ID();
 			}
 			?>
-		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-text-center tutor-fs-6 tutor-color-secondary tutor-mt-8">
+		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-2 tutor-mt-8">
 			<div class="tutor-small">
 				<?php esc_html_e( 'Don\'t have an account?', 'tutor' ); ?>
 			</div>
