@@ -291,8 +291,8 @@ class Assets {
 	 * @return void
 	 */
 	public function frontend_scripts() {
-		$load_legacy_srcipts = $this->should_load_legacy_scripts();
-		if ( ! $load_legacy_srcipts ) {
+		$load_legacy_scripts = $this->should_load_legacy_scripts();
+		if ( ! $load_legacy_scripts ) {
 			return;
 		}
 

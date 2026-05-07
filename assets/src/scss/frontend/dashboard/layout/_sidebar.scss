@@ -5,8 +5,17 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-dashboard-sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  min-height: 100dvh;
   background-color: $tutor-surface-sidebar-l1;
   border-inline-end: 1px solid $tutor-border-idle;
+
+  body:has(#wpadminbar) & {
+    top: 32px;
+    min-height: calc(100dvh - 32px);
+  }
 
   @include tutor-breakpoint-down(md) {
     display: none;

@@ -64,7 +64,7 @@ $status_options = apply_filters( 'tutor_order_history_status_options', array(), 
 				->render();
 		}
 
-		DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render();
+		DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( DateFilter::PLACEMENT_BOTTOM_END )->render();
 		Sorting::make()->size( Size::SMALL )->order( $order_filter )->render();
 		?>
 	</div>
