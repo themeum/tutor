@@ -129,7 +129,7 @@ class UrlHelper {
 	 *
 	 * Maps CSS variable names to their hex color equivalents.
 	 *
-	 * @since 3.0.0
+	 * @since 4.0.0
 	 *
 	 * @return array<string, string>
 	 */
