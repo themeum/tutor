@@ -56,7 +56,11 @@ class Popover extends BaseComponent {
 		Positions::BOTTOM_START => 'left.top',
 		Positions::BOTTOM_END   => 'right.top',
 		Positions::LEFT         => 'right.center',
+		Positions::LEFT_TOP     => 'right.top',
+		Positions::LEFT_BOTTOM  => 'right.bottom',
 		Positions::RIGHT        => 'left.center',
+		Positions::RIGHT_TOP    => 'left.top',
+		Positions::RIGHT_BOTTOM => 'left.bottom',
 	);
 
 	/**
@@ -219,9 +223,23 @@ class Popover extends BaseComponent {
 	 * @return self
 	 */
 	public function placement( string $popover_placement = 'bottom-start' ): self {
-		$placement_positions = array( Positions::TOP, Positions::LEFT, Positions::RIGHT, Positions::BOTTOM, Positions::BOTTOM_START, Positions::BOTTOM_END );
+		$placement_positions = array(
+			Positions::TOP,
+			Positions::TOP_START,
+			Positions::TOP_END,
+			Positions::LEFT,
+			Positions::LEFT_TOP,
+			Positions::LEFT_BOTTOM,
+			Positions::RIGHT,
+			Positions::RIGHT_TOP,
+			Positions::RIGHT_BOTTOM,
+			Positions::BOTTOM,
+			Positions::BOTTOM_START,
+			Positions::BOTTOM_END,
+		);
 		if ( ! in_array( $popover_placement, $placement_positions, true ) ) {
 			$this->popover_placement = Positions::BOTTOM_START;
+			return $this;
 		}
 
 		$this->popover_placement = $popover_placement;
@@ -524,10 +542,10 @@ class Popover extends BaseComponent {
 		$footer             = $this->render_footer();
 		$menu               = $this->render_menu();
 
-		$placement_class = Positions::BOTTOM_START !== $placement_position ? "tutor-popover-$placement_position" : 'tutor-popover-top';
+		$placement_class = 'tutor-popover-' . explode( '-', $placement_position )[0];
 		$class           = 'tutor-popover ' . $placement_class;
 
-		$closeable_attr = $this->popover_close_outside ? '@click.outside="handleClickOutside()' : '';
+		$closeable_attr = $this->popover_close_outside ? '@click.outside="handleClickOutside()"' : '';
 
 		$origin = self::TRANSFORM_ORIGIN_MAP[ $placement_position ] ?? 'center.top';
 
@@ -539,8 +557,8 @@ class Popover extends BaseComponent {
 					x-show="open"
 					x-cloak
 					x-transition.%s
-					class=%s
-					%s"
+					class="%s"
+					%s
 				>	
 				%s
 				%s
