@@ -115,7 +115,6 @@ class CouponController extends BaseController {
 			add_action( 'wp_ajax_tutor_coupon_update', array( $this, 'ajax_update_coupon' ) );
 			add_action( 'wp_ajax_tutor_coupon_applies_to_list', array( $this, 'ajax_coupon_applies_to_list' ) );
 			add_action( 'wp_ajax_tutor_apply_coupon', array( $this, 'ajax_apply_coupon' ) );
-			add_action( 'tutor_set_coupon_as_expired', array( $this, 'set_coupon_as_expired' ) );
 		}
 	}
 
@@ -440,6 +439,7 @@ class CouponController extends BaseController {
 		$applies_to    = Input::get( 'applies_to', '' );
 		$search        = Input::get( 'search', '' );
 		$where         = array();
+		$status_filter = array();
 
 		if ( ! empty( $date ) ) {
 			$where['date(created_at_gmt)'] = tutor_get_formated_date( 'Y-m-d', $date );
@@ -471,21 +471,47 @@ class CouponController extends BaseController {
 		$gm_date = DateTimeHelper::now()->to_date_time_string();
 
 		foreach ( $coupon_status as $key => $value ) {
+			$status_filter = $where;
 
-			if ( CouponModel::STATUS_SCHEDULED === $key ) {
-				$where['coupon_status']  = CouponModel::STATUS_ACTIVE;
-				$where['start_date_gmt'] = array(
-					'>',
-					$gm_date,
-				);
-			} else {
-				$where['coupon_status'] = $key;
+			$status_filter['coupon_status'] = in_array(
+				$key,
+				array( CouponModel::STATUS_EXPIRED, CouponModel::STATUS_SCHEDULED ),
+				true
+			) ? CouponModel::STATUS_ACTIVE : $key;
+
+			switch ( $key ) {
+				case CouponModel::STATUS_EXPIRED:
+					$raw_query                   = '( start_date_gmt < %s AND expire_date_gmt < %s )';
+					$status_filter[ $raw_query ] = array(
+						'RAW',
+						array( $gm_date, $gm_date ),
+					);
+					break;
+
+				case CouponModel::STATUS_SCHEDULED:
+					$status_filter['start_date_gmt'] = array(
+						'>',
+						$gm_date,
+					);
+					break;
+
+				case CouponModel::STATUS_ACTIVE:
+					$status_filter['start_date_gmt'] = array(
+						'<=',
+						$gm_date,
+					);
+
+					$status_filter[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] = array(
+						'>=',
+						$gm_date,
+					);
+					break;
 			}
 
 			$tabs[] = array(
 				'key'   => $key,
 				'title' => $value,
-				'value' => $this->model->get_coupon_count( $where, $search ),
+				'value' => $this->model->get_coupon_count( $status_filter, $search ),
 				'url'   => $url . '&data=' . $key,
 			);
 		}
@@ -527,14 +553,40 @@ class CouponController extends BaseController {
 		$available_statuses = array_keys( $this->model->get_coupon_status() );
 
 		if ( 'all' !== $active_tab && in_array( $active_tab, $available_statuses, true ) ) {
-			if ( CouponModel::STATUS_SCHEDULED === $active_tab ) {
-				$where_clause['coupon_status']  = CouponModel::STATUS_ACTIVE;
-				$where_clause['start_date_gmt'] = array(
-					'>',
-					$gm_date,
-				);
-			} else {
-				$where_clause['coupon_status'] = $active_tab;
+
+			$where_clause['coupon_status'] = in_array(
+				$active_tab,
+				array( CouponModel::STATUS_EXPIRED, CouponModel::STATUS_SCHEDULED ),
+				true
+			) ? CouponModel::STATUS_ACTIVE : $active_tab;
+
+			switch ( $active_tab ) {
+				case CouponModel::STATUS_EXPIRED:
+					$raw_query                  = '( start_date_gmt < %s AND expire_date_gmt < %s )';
+					$where_clause[ $raw_query ] = array(
+						'RAW',
+						array( $gm_date, $gm_date ),
+					);
+					break;
+
+				case CouponModel::STATUS_SCHEDULED:
+					$where_clause['start_date_gmt'] = array(
+						'>',
+						$gm_date,
+					);
+					break;
+
+				case CouponModel::STATUS_ACTIVE:
+					$where_clause['start_date_gmt'] = array(
+						'<=',
+						$gm_date,
+					);
+
+					$where_clause[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] = array(
+						'>=',
+						$gm_date,
+					);
+					break;
 			}
 		}
 
@@ -917,24 +969,6 @@ class CouponController extends BaseController {
 		}
 
 		return ValidationHelper::validate( $validation_rules, $data );
-	}
-
-	/**
-	 * Update coupon status to expired for the given coupon IDs.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array $coupon_ids List of coupon IDs.
-	 *
-	 * @return void
-	 */
-	public function set_coupon_as_expired( array $coupon_ids ) {
-
-		if ( empty( $coupon_ids ) ) {
-			return;
-		}
-
-		$this->model->update_coupon( $coupon_ids, array( 'coupon_status' => CouponModel::STATUS_EXPIRED ) );
 	}
 
 	/**

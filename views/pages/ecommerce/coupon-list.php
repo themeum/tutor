@@ -32,10 +32,9 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 
 $coupon_controller = new CouponController( false );
 
-$get_coupons        = $coupon_controller->get_coupons( $limit, $offset );
-$coupons            = $get_coupons['results'];
-$total_items        = $get_coupons['total_count'];
-$expired_coupon_ids = array();
+$get_coupons = $coupon_controller->get_coupons( $limit, $offset );
+$coupons     = $get_coupons['results'];
+$total_items = $get_coupons['total_count'];
 /**
  * Navbar data to make nav menu
  */
@@ -191,10 +190,6 @@ $filters = array(
 									<td>
 										<?php
 										$coupon_status = $coupon_controller->get_coupon_display_status( $coupon );
-
-										if ( CouponModel::STATUS_EXPIRED === $coupon_status ) {
-											$expired_coupon_ids[] = $coupon->id;
-										}
 										echo wp_kses_post( tutor_utils()->translate_dynamic_text( $coupon_status, true ) );
 										?>
 									</td>
@@ -232,19 +227,6 @@ $filters = array(
 				<?php else : ?>
 					<?php tutils()->render_list_empty_state(); ?>
 				<?php endif; ?>
-
-				<?php
-				/**
-				 * Fires after identifying expired coupons to update their status.
-				 *
-				 * @since 4.0.0
-				 *
-				 * @param array $expired_coupon_ids[] List of expired coupon IDs.
-				 */
-				if ( ! empty( $expired_coupon_ids ) ) {
-					do_action( 'tutor_set_coupon_as_expired', $expired_coupon_ids );
-				}
-				?>
 
 				<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
 					<?php
