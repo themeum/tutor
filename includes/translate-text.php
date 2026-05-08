@@ -82,6 +82,10 @@ function tutor_get_translate_text() {
 			'badge' => 'warning',
 			'text'  => __( 'Processing', 'tutor' ),
 		),
+		'scheduled'          => array(
+			'badge' => 'warning',
+			'text'  => __( 'Scheduled', 'tutor' ),
+		),
 		'cancelled'          => array(
 			'badge' => 'danger',
 			'text'  => __( 'Cancelled', 'tutor' ),
