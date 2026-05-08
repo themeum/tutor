@@ -17,6 +17,7 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
+use Tutor\Components\Tooltip;
 use Tutor\Components\WPEditor;
 
 $user          = wp_get_current_user();
@@ -97,51 +98,70 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 							@change="handleFileSelect($event)"
 						/>
 
-						<div
-							x-data="tutorPopover({
-								placement: 'bottom-end',
-								offset: 4,
-							})"
-							class="tutor-account-cover-photo-action"
-						>
-							<?php
-								Button::make()
-									->variant( Variant::OUTLINE )
-									->label( __( 'Edit Cover Photo', 'tutor' ) )
-									->size( Size::X_SMALL )
-									->icon( Icon::CAMERA )
-									->attr( 'type', 'button' )
-									->attr( 'x-ref', 'trigger' )
-									->attr( '@click', 'toggle()' )
-									->render();
-							?>
-
+						<div class="tutor-account-cover-photo-action">
 							<div
-								x-ref="content"
-								x-show="open"
-								x-cloak
-								@click.outside="handleClickOutside()"
-								class="tutor-popover"
+								x-data="tutorPopover({
+									placement: 'bottom-end',
+									offset: 4,
+								})"
 							>
-								<div class="tutor-flex tutor-flex-column tutor-gap-3 tutor-p-5">
-									<?php
-										Button::make()
-											->label( __( 'Upload Photo', 'tutor' ) )
-											->size( Size::X_SMALL )
-											->attr( 'type', 'button' )
-											->attr( '@click', 'openFileDialog(), hide()' )
-											->render();
+								<?php
+									Button::make()
+										->variant( Variant::OUTLINE )
+										->label( __( 'Edit Cover Photo', 'tutor' ) )
+										->size( Size::X_SMALL )
+										->icon( Icon::CAMERA )
+										->attr( 'type', 'button' )
+										->attr( 'x-ref', 'trigger' )
+										->attr( '@click', 'toggle()' )
+										->render();
+								?>
 
-										Button::make()
-											->label( __( 'Remove Photo', 'tutor' ) )
-											->variant( Variant::SECONDARY )
-											->size( Size::X_SMALL )
-											->attr( 'type', 'button' )
-											->attr( '@click', 'removeFile(), hide(), handleRemoveCoverPhoto()' )
-											->render();
-									?>
+								<div
+									x-ref="content"
+									x-show="open"
+									x-cloak
+									@click.outside="handleClickOutside()"
+									class="tutor-popover"
+								>
+									<div class="tutor-flex tutor-flex-column tutor-gap-3 tutor-p-5">
+										<?php
+											Button::make()
+												->label( __( 'Upload Photo', 'tutor' ) )
+												->size( Size::X_SMALL )
+												->attr( 'type', 'button' )
+												->attr( '@click', 'openFileDialog(), hide()' )
+												->render();
+
+											Button::make()
+												->label( __( 'Remove Photo', 'tutor' ) )
+												->variant( Variant::SECONDARY )
+												->size( Size::X_SMALL )
+												->attr( 'type', 'button' )
+												->attr( '@click', 'removeFile(), hide(), handleRemoveCoverPhoto()' )
+												->render();
+										?>
+									</div>
 								</div>
 							</div>
+							<?php
+							Tooltip::make()
+								->content( __( 'Profile Photo Size: 200x200 pixels Cover Photo Size: 700x430 pixels', 'tutor' ) )
+								->trigger_element(
+									Button::make()
+										->variant( Variant::OUTLINE )
+										->label( __( 'Cover Photo Info', 'tutor' ) )
+										->size( Size::X_SMALL )
+										->icon( Icon::INFO_OCTAGON )
+										->icon_only()
+										->attr( 'type', 'button' )
+										->get()
+								)
+								->placement( Tooltip::PLACEMENT_BOTTOM )
+								->arrow( Tooltip::ARROW_CENTER )
+								->size( Size::MEDIUM )
+								->render();
+							?>
 						</div>
 					</div>
 
