@@ -41,6 +41,23 @@
 
     &:hover {
       background-color: $tutor-surface-l1-hover;
+      .tutor-quiz-attempts-item {
+        .tutor-quiz-item-info {
+          .tutor-quiz-attempts-expand-btn {
+            @include tutor-flex(row, center);
+          }
+        }
+      }
+    }
+
+    &.tutor-quiz-previous-attempts {
+      .tutor-quiz-attempts-item {
+        .tutor-quiz-item-info {
+          .tutor-quiz-attempts-expand-btn {
+            @include tutor-flex(row, center);
+          }
+        }
+      }
     }
 
     &.tutor-quiz-previous-attempts {
@@ -87,9 +104,14 @@
       .tutor-quiz-item-info {
         grid-area: info;
 
+        &-expanded {
+          @include tutor-flex(row, center);
+          gap: $tutor-spacing-4;
+          text-align: center;
+        }
+
         &-title {
           @include tutor-typography(medium, semibold);
-          margin-bottom: $tutor-spacing-2;
 
           @include tutor-breakpoint-down(sm) {
             font-size: $tutor-font-size-small;
@@ -117,8 +139,8 @@
         }
 
         .tutor-quiz-attempts-expand-btn {
+          display: none;
           @include tutor-button-reset();
-          @include tutor-flex(row, center);
           gap: $tutor-spacing-2;
           @include tutor-typography(small, medium, brand);
           cursor: pointer;
@@ -209,7 +231,7 @@
 
       .tutor-quiz-item-result {
         grid-area: result;
-        @include tutor-flex(column, center, center);
+        @include tutor-flex(column, left, center);
 
         @include tutor-breakpoint-down(sm) {
           height: 100%;
@@ -251,6 +273,12 @@
 
           .tutor-quiz-item-result-more {
             display: flex;
+          }
+        }
+
+        &:hover {
+          .tutor-quiz-item-info-title{
+            color: $tutor-brand-700;
           }
         }
 
@@ -298,7 +326,7 @@
         }
 
         &:hover {
-          background-color: $tutor-surface-base;
+          background-color: $tutor-surface-l1-hover;
         }
 
         &:not(:last-child) {
@@ -337,6 +365,16 @@
       background-color: $tutor-surface-l1;
       border: 1px solid $tutor-border-idle;
       border-radius: $tutor-radius-2xl;
+    }
+  }
+
+  .tutor-quiz-students-attempts {
+    &-filter-item {
+      &:first-child {
+        button {
+          padding: 0;
+        }
+      }
     }
   }
 }

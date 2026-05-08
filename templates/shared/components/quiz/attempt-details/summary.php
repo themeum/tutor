@@ -14,6 +14,7 @@ use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Progress;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\PreviewTrigger;
@@ -299,5 +300,12 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 			->mutation_state( 'retryMutation' )
 			->render();
 		?>
+	<?php endif; ?>
+
+	<?php if ( ! $incorrect ) : ?>
+	<div class="tutor-empty-quiz-details">
+		<?php SvgIcon::make()->name( Icon::WARNING )->color( Color::CRITICAL )->size( 20 )->render(); ?>
+		<p class="error-message"><?php echo esc_html__( 'No Questions Answered.', 'tutor' ); ?></p>
+	</div>
 	<?php endif; ?>
 </div>
