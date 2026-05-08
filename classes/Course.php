@@ -2133,13 +2133,7 @@ class Course extends Tutor_Base {
 			exit( esc_html__( 'Please Sign In first', 'tutor' ) );
 		}
 
-		$course_id  = Input::post( 'tutor_course_id', 0, Input::TYPE_INT );
-		$can_enroll = $this->validate_course_enrollment_period( $course_id );
-		if ( ! $can_enroll ) {
-			$referer_url = wp_get_referer();
-			wp_safe_redirect( tutor_utils()->get_nocache_url( $referer_url ) );
-			exit;
-		}
+		$course_id = Input::post( 'tutor_course_id', 0, Input::TYPE_INT );
 
 		/**
 		 * TODO: need to check purchase information
@@ -2221,51 +2215,6 @@ class Course extends Tutor_Base {
 			wp_safe_redirect( $permalink );
 			exit;
 		}
-	}
-
-	/**
-	 * Validate course enrollment period before enrollment.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int $course_id the course id.
-	 *
-	 * @return bool
-	 */
-	public function validate_course_enrollment_period( $course_id ) {
-		$course_settings = get_post_meta( $course_id, self::COURSE_SETTINGS_META, true );
-
-		if ( ! tutor_utils()->count( $course_settings ) ) {
-			return true;
-		}
-
-		if ( ! isset( $course_settings['course_enrollment_period'] ) || ! isset( $course_settings['pause_enrollment'] ) ) {
-			return true;
-		}
-
-		$enrollment_period = $course_settings['course_enrollment_period'];
-		$pause_enrollment  = $course_settings['pause_enrollment'];
-
-		if ( 'yes' === $pause_enrollment ) {
-			return false;
-		}
-
-		if ( 'yes' === $enrollment_period ) {
-			$enrollment_start  = strtotime( $course_settings['enrollment_starts_at'] );
-			$enrollment_end    = strtotime( $course_settings['enrollment_ends_at'] );
-			$current_date_time = DateTimeHelper::get_gmt_to_user_timezone_date( DateTimeHelper::now()->to_date_time_string() );
-			$current_date_time = strtotime( $current_date_time );
-
-			if ( $enrollment_start && $enrollment_start > $current_date_time ) {
-				return false;
-			}
-
-			if ( $enrollment_end && $enrollment_end < $current_date_time ) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	/**
@@ -3190,12 +3139,7 @@ class Course extends Tutor_Base {
 				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
 			}
 
-			$course     = get_post( $course_id );
-			$can_enroll = $this->validate_course_enrollment_period( $course_id );
-
-			if ( ! $can_enroll ) {
-				wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
-			}
+			$course = get_post( $course_id );
 
 			if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
 				wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );

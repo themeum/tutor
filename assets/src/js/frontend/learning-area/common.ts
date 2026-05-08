@@ -33,10 +33,9 @@ export const courseCompleteHandler = () => {
           modal.closeModal('tutor-course-complete-modal');
           window.location.reload();
         },
-        onError: (error: Error) => {
+        onError: (error: AxiosError) => {
           toast.error(convertToErrorMessage(error));
-          const axiosError = error as AxiosError;
-          if (!axiosError || !axiosError.response || !axiosError.response.data) {
+          if (!error || !error.response || !error.response.data) {
             window.location.reload();
           }
         },
