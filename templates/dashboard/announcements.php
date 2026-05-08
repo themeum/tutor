@@ -93,6 +93,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 			->label( __( 'New Announcement', 'tutor' ) )
 			->size( Size::SMALL )
 			->icon( Icon::ADD )
+			->icon_only()
 			->attr( '@click', 'openCreateModal()' )
 			->render();
 		?>
@@ -117,7 +118,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 					->size( Size::SMALL )
 					->icon( Icon::ADD )
 					->attr( '@click', 'openCreateModal()' )
-					->attr( 'class', 'tutor-sm-hidden' )
+					->attr( 'class', 'tutor-force-sm-hidden' )
 					->render();
 			?>
 		</div>

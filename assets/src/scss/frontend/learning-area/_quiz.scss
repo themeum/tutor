@@ -825,7 +825,7 @@ $tutor-quiz-content-bottom-offset: calc(
             box-shadow: none;
 
             button {
-              display: flex;
+              display: flex !important;
             }
 
             &:hover {

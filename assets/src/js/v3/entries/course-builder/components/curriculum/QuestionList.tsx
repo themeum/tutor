@@ -33,7 +33,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
-import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
@@ -475,12 +475,14 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
           <Show when={contentType !== 'tutor_h5p_quiz'}>
             <GenerateQuizWithAi />
           </Show>
-          <button
-            data-cy="add-question"
-            data-add-question-button
-            ref={addButtonRef}
+          <Button
             type="button"
+            size="small"
+            data-cy="add-question"
+            ref={addButtonRef}
             aria-label={__('Add question', 'tutor')}
+            isIconOnly
+            icon={<SVGIcon name="plus" width={20} height={20} />}
             onClick={() => {
               if (contentType === 'tutor_h5p_quiz') {
                 showModal({
@@ -498,9 +500,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                 setIsOpen(true);
               }
             }}
-          >
-            <SVGIcon name="plusSquareBrand" width={32} height={32} />
-          </button>
+          />
         </div>
       </div>
 
@@ -746,46 +746,8 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
 
-    [data-add-question-button],
-    [data-generate-quiz-button] {
-      ${styleUtils.resetButton};
-      width: 32px;
-      height: 32px;
-      border-radius: ${borderRadius[6]};
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      &:focus,
-      &:active,
-      &:hover {
-        background: none;
-      }
-
-      svg {
-        color: ${colorTokens.action.primary.default};
-        width: 100%;
-        height: 100%;
-      }
-
-      &:focus {
-        box-shadow: ${shadow.focus};
-      }
-
-      :focus-visible {
-        box-shadow: none;
-        outline: 2px solid ${colorTokens.stroke.brand};
-        outline-offset: 1px;
-      }
-    }
-
     [data-generate-quiz-button] {
       border: 1px solid ${colorTokens.stroke.divider};
-
-      svg {
-        width: 24px;
-        height: 24px;
-      }
     }
   `,
   questionList: css`
