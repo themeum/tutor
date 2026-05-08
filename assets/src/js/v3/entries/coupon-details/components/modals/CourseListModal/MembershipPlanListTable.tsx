@@ -103,7 +103,7 @@ const MembershipPlanListTable = ({ form }: MembershipPlanListTableProps) => {
             <div>
               {item.plan_name}
               <Show when={item.is_featured === '1'}>
-                <SVGIcon name="star" width={20} height={20} />
+                <SVGIcon name="starFill" width={16} height={16} />
               </Show>
             </div>
           </div>

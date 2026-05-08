@@ -192,7 +192,9 @@
   }
 
   .tutor-average-rating,
-  .tutor-certificate-icon {
+  .tutor-certificate-icon,
+  .tutor-learning-sidebar .tutor-learning-sidebar-curriculum .tutor-learning-nav-topic .tutor-learning-nav-header,
+  .tutor-learning-sidebar .tutor-learning-sidebar-pages .tutor-learning-pages-item {
     border-radius: $tutor-radius-2xl;
   }
 
@@ -212,8 +214,8 @@
     margin-top: $tutor-spacing-2;
   }
 
-  .tutor-upcoming-lesson-card:not(:last-of-type) {
-    margin-bottom: $tutor-spacing-4;
+  .tutor-webinar .tutor-upcoming-lesson-card + .tutor-upcoming-lesson-card {
+    margin-top: $tutor-spacing-5;
   }
 
   .tutor-quiz-submission[data-question-layout-view='single_question'] .tutor-quiz-question-wrapper {

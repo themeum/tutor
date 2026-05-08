@@ -95,6 +95,7 @@ export const purgecssContent = [
   // Tutor LMS paths
   path.resolve(__dirname, './components/**/*.php'),
   path.resolve(__dirname, './templates/**/*.php'),
+  path.resolve(__dirname, './models/**/*.php'),
   path.resolve(__dirname, './views/**/*.php'),
   path.resolve(__dirname, './classes/**/*.php'),
   path.resolve(__dirname, './assets/src/js/**/*.{js,ts,jsx,tsx}'),

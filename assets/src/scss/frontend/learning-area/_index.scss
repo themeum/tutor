@@ -8,17 +8,9 @@
 @forward 'layout/footer';
 
 // Content components
-@forward 'course-player';
 @forward 'lesson-content';
-@forward 'quiz-interface';
-@forward 'assignment-view';
-@forward 'course-navigation';
-@forward 'progress-tracking';
 @forward 'lesson-comments';
-@forward 'announcements';
-
-// Components
-@forward './components';
+@forward 'quiz';
 
 // Pages
 @forward './pages/';
