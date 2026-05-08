@@ -208,12 +208,10 @@ class DateFilter extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param bool $hide_initial_label True to hide the initial label, false to show it.
-	 *
 	 * @return self
 	 */
-	public function hide_initial_label( bool $hide_initial_label = true ): self {
-		$this->hide_initial_label = $hide_initial_label;
+	public function hide_initial_label(): self {
+		$this->hide_initial_label = true;
 		return $this;
 	}
 
