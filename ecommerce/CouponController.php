@@ -841,7 +841,7 @@ class CouponController extends BaseController {
 
 					$response['results'][] = array(
 						'id'            => $term->term_id,
-						'title'         => $term->name,
+						'title'         => tutor_decode_unicode_sequences( $term->name ),
 						'image'         => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : tutor()->url . 'assets/images/placeholder.svg',
 						'total_courses' => (int) $term->count,
 					);
