@@ -23,6 +23,7 @@ use Tutor\Helpers\UrlHelper;
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class( '' ); ?>>
+	<?php wp_body_open(); ?>
 <?php
 
 $dashboard_page    = get_query_var( 'tutor_dashboard_page' );

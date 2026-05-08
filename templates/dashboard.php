@@ -27,6 +27,7 @@ if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 		<?php wp_head(); ?>
 	</head>
 	<body <?php body_class( '' ); ?>>
+		<?php wp_body_open(); ?>
 	<?php
 endif;
 global $wp_query;
