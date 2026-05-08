@@ -124,5 +124,9 @@ $footer_links = array(
 </div>
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 </body>
-<?php wp_footer(); ?>
+<?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
+	</body>
+	<?php wp_footer(); ?>
+	</html>
+<?php endif; ?>
 </html>
