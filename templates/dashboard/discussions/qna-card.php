@@ -192,10 +192,12 @@ $single_url = UrlHelper::add_query_params(
 		<div class="tutor-discussion-card-actions" x-show="replyingId !== <?php echo (int) $question_id; ?>" x-cloak>
 			<?php
 			Button::make()
+				->variant( Variant::PRIMARY )
+				->size( Size::X_SMALL )
 				->label( __( 'Reply', 'tutor' ) )
 				->size( Size::X_SMALL )
 				->attr( '@click', 'toggleReply(' . (int) $question_id . ')' )
-				->attr( 'class', 'tutor-btn tutor-btn-primary tutor-btn-x-small tutor-force-sm-hidden' )
+				->attr( 'class', 'tutor-force-sm-hidden' )
 				->attr( 'type', 'button' )
 				->render();
 			?>
