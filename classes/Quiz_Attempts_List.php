@@ -533,14 +533,16 @@ class Quiz_Attempts_List {
 
 			$url = $this->get_review_url( $attempt, $query_param );
 
-			Button::make()
+			$button_html = Button::make()
 				->tag( 'a' )
 				->label( __( 'Details', 'tutor' ) )
 				->size( Size::X_SMALL )
-				->variant( Variant::OUTLINE )
+				->variant( Variant::PRIMARY )
 				->attr( 'href', $url )
-				->attr( 'class', 'tutor-quiz-item-result-more' )
-				->render();
+				->attr( 'class', 'tutor-quiz-item-result-more tutor-quiz-details-btn' )
+				->get();
+
+			echo '<div class="tutor-flex">' . wp_kses_post( $button_html ) . '</div>';
 			return;
 		}
 
