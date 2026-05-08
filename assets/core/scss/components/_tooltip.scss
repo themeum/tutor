@@ -24,6 +24,11 @@
   text-align: center;
   pointer-events: none;
 
+  &-medium {
+    max-width: 226px;
+    padding: $tutor-spacing-5;
+  }
+
   &-large {
     max-width: 320px;
     padding: $tutor-spacing-5;
