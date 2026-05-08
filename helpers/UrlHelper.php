@@ -125,37 +125,6 @@ class UrlHelper {
 	}
 
 	/**
-	 * Default visual token color map.
-	 *
-	 * Maps CSS variable names to their hex color equivalents.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return array<string, string>
-	 */
-	private static function get_default_color_map(): array {
-		return array(
-			'--tutor-visual-gray-1'      => '#fff',
-			'--tutor-visual-gray-2'      => '#ececed',
-			'--tutor-visual-gray-3'      => '#cecfd2',
-			'--tutor-visual-gray-4'      => '#2d3039',
-			'--tutor-visual-brand-1'     => '#4979e8',
-			'--tutor-visual-brand-2'     => '#a4bcf4',
-			'--tutor-visual-brand-3'     => '#dbe4fa',
-			'--tutor-visual-success-1'   => '#28a745',
-			'--tutor-visual-critical-1'  => '#1d0d0c',
-			'--tutor-visual-critical-2'  => '#fee4e2',
-			'--tutor-visual-caution-1'   => '#fde272',
-			'--tutor-visual-caution-2'   => '#a15c07',
-			'--tutor-visual-caution-3'   => '#542c0d',
-			'--tutor-visual-orange-1'    => '#ff8904',
-			'--tutor-visual-exception-1' => '#cbfd78',
-			'--tutor-visual-exception-2' => '#f4f433',
-			'--tutor-visual-exception-3' => '#ede9fe',
-		);
-	}
-
-	/**
 	 * Allowed HTML tags and attributes for SVG output.
 	 *
 	 * @since 4.0.0
@@ -251,22 +220,23 @@ class UrlHelper {
 	}
 
 	/**
-	 * Get SVG content with colors replaced by CSS variables for dynamic theming.
+	 * Get SVG content for inline rendering.
+	 *
+	 * Colors are pre-tokenised at build time by replace-hex-colors.ts,
+	 * so no runtime color-map substitution is needed here.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @param string $path    Relative asset path to the SVG file.
 	 * @param array  $options {
-	 *   color_map?: array<string,string>|null,
 	 *   output?: bool,
 	 *   strip_dimensions?: bool
-	 * }                                $options Optional settings.
+	 * } $options Optional settings.
 	 * @return string Processed SVG markup.
 	 */
 	public static function themed_svg( string $path, array $options = array() ): string {
 		$options = array_merge(
 			array(
-				'color_map'        => self::get_default_color_map(),
 				'output'           => false,
 				'strip_dimensions' => false,
 			),
@@ -285,16 +255,6 @@ class UrlHelper {
 
 		if ( $options['strip_dimensions'] ) {
 			$svg_content = preg_replace( '/(<svg[^>]*)\s(?:width|height)="[^"]*"/i', '$1', $svg_content );
-		}
-
-		if ( ! empty( $options['color_map'] ) ) {
-			foreach ( $options['color_map'] as $css_var => $hex_color ) {
-				$svg_content = preg_replace(
-					'/' . preg_quote( $hex_color, '/' ) . '/i',
-					"var({$css_var}, {$hex_color})",
-					$svg_content
-				);
-			}
 		}
 
 		$escaped = wp_kses( $svg_content, self::get_svg_allowed_html() );
