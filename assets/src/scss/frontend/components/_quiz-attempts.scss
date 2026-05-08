@@ -120,9 +120,6 @@
         }
 
         &-course {
-          display: inline-flex;
-          align-items: center;
-          max-width: 100%;
           @include tutor-typography(small, regular, secondary);
 
           @include tutor-breakpoint-down(sm) {
@@ -276,6 +273,12 @@
 
           .tutor-quiz-item-result-more {
             display: flex;
+          }
+        }
+
+        &:hover {
+          .tutor-quiz-item-info-title{
+            color: $tutor-brand-700;
           }
         }
 
