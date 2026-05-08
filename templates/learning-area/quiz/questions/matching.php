@@ -72,7 +72,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 							->icon_only()
 							->attrs(
 								array(
-									'class'          => 'tutor-hidden',
+									'class'          => 'tutor-force-hidden',
 									'@click.prevent' => 'clearDropZone',
 								)
 							)

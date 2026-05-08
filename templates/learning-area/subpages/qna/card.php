@@ -96,7 +96,7 @@ $single_url = UrlHelper::add_query_params(
 			Button::make()
 				->label( __( 'Reply', 'tutor' ) )
 				->attr( '@click', 'toggleReply(' . (int) $question_id . ')' )
-				->attr( 'class', 'tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden' )
+				->attr( 'class', 'tutor-btn tutor-btn-primary tutor-btn-x-small tutor-force-sm-hidden' )
 				->attr( 'type', 'button' )
 				->size( Size::X_SMALL )
 				->render();

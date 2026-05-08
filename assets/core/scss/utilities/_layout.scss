@@ -85,6 +85,9 @@ $grid-split-utils: (
 // Display
 @each $name, $value in $display-utils {
   .tutor-#{$name} {
+    display: $value;
+  }
+  .tutor-force-#{$name} {
     display: $value !important;
   }
 }
@@ -366,6 +369,9 @@ $overflow-types: auto, hidden, visible, scroll;
     // Display utilities
     @each $name, $value in $display-utils {
       .tutor-#{$breakpoint}-#{$name} {
+        display: $value;
+      }
+      .tutor-force-#{$breakpoint}-#{$name} {
         display: $value !important;
       }
     }

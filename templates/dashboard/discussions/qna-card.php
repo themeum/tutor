@@ -192,10 +192,12 @@ $single_url = UrlHelper::add_query_params(
 		<div class="tutor-discussion-card-actions" x-show="replyingId !== <?php echo (int) $question_id; ?>" x-cloak>
 			<?php
 			Button::make()
+				->variant( Variant::PRIMARY )
+				->size( Size::X_SMALL )
 				->label( __( 'Reply', 'tutor' ) )
 				->size( Size::X_SMALL )
 				->attr( '@click', 'toggleReply(' . (int) $question_id . ')' )
-				->attr( 'class', 'tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden' )
+				->attr( 'class', 'tutor-force-sm-hidden' )
 				->attr( 'type', 'button' )
 				->render();
 			?>
@@ -213,7 +215,7 @@ $single_url = UrlHelper::add_query_params(
 					<div class="tutor-popover-menu">
 						<?php if ( User::is_instructor_view() ) : ?>
 						<button 
-							class="tutor-popover-menu-item tutor-gap-5 tutor-hidden tutor-sm-flex"
+							class="tutor-popover-menu-item tutor-gap-5 tutor-force-hidden tutor-force-sm-flex"
 							@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'solved')"
 							:disabled="qnaSingleActionMutation?.isPending"
 						>
@@ -234,7 +236,7 @@ $single_url = UrlHelper::add_query_params(
 						</button>
 
 						<button 
-							class="tutor-popover-menu-item tutor-gap-5 tutor-hidden tutor-sm-flex"
+							class="tutor-popover-menu-item tutor-gap-5 tutor-force-hidden tutor-force-sm-flex"
 							@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'important')"
 							:disabled="qnaSingleActionMutation?.isPending"
 						>
