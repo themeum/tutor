@@ -631,7 +631,14 @@ class CheckoutController {
 				foreach ( $course_ids as $course_id ) {
 					$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
 					if ( ! $can_buy ) {
-						array_push( $errors, __( 'Some of the course cannot be enrolled right now.', 'tutor' ) );
+						array_push(
+							$errors,
+							sprintf(
+							// Translators: %s course name.
+								__( ' Course %s cannot be enrolled right now.', 'tutor' )
+							),
+							get_the_title( $course_id ) ?? ''
+						);
 					}
 				}
 			}
