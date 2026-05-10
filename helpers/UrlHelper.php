@@ -230,15 +230,17 @@ class UrlHelper {
 	 * @param string $path    Relative asset path to the SVG file.
 	 * @param array  $options {
 	 *   output?: bool,
-	 *   strip_dimensions?: bool
+	 *   width?: string|int|null,
+	 *   height?: string|int|null
 	 * } $options Optional settings.
 	 * @return string Processed SVG markup.
 	 */
 	public static function themed_svg( string $path, array $options = array() ): string {
 		$options = array_merge(
 			array(
-				'output'           => false,
-				'strip_dimensions' => false,
+				'output' => false,
+				'width'  => null,
+				'height' => null,
 			),
 			$options
 		);
@@ -253,8 +255,21 @@ class UrlHelper {
 			return '';
 		}
 
-		if ( $options['strip_dimensions'] ) {
-			$svg_content = preg_replace( '/(<svg[^>]*)\s(?:width|height)="[^"]*"/i', '$1', $svg_content );
+		if ( ! empty( $options['width'] ) || ! empty( $options['height'] ) ) {
+			$svg_content = preg_replace_callback(
+				'/(<svg[^>]*)\s(?:width|height)="[^"]*"/i',
+				static function ( $matches ) use ( $options ) {
+					$tag = $matches[1];
+					if ( ! empty( $options['width'] ) ) {
+						$tag .= ' width="' . esc_attr( (string) $options['width'] ) . '"';
+					}
+					if ( ! empty( $options['height'] ) ) {
+						$tag .= ' height="' . esc_attr( (string) $options['height'] ) . '"';
+					}
+					return $tag;
+				},
+				$svg_content
+			);
 		}
 
 		$escaped = wp_kses( $svg_content, self::get_svg_allowed_html() );
