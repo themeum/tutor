@@ -16,10 +16,6 @@
   table {
     min-width: 600px;
     width: 100%;
-    border: none;
-    td, th {
-      border: none;
-    }
   }
 }
 
@@ -28,6 +24,7 @@ table.tutor-table,
   @include tutor-typography('small', 'regular', 'secondary');
   width: 100%;
   margin: 0px;
+  border: none;
   border-collapse: collapse;
   border-spacing: 0;
   background-color: $tutor-surface-l1;
@@ -39,6 +36,8 @@ table.tutor-table,
       @include tutor-typography(tiny, regular, secondary);
       text-align: left;
       padding: $tutor-spacing-5;
+      border: none;
+      white-space: nowrap;
       border-bottom: 1px solid $tutor-border-idle;
     }
   }
@@ -56,7 +55,7 @@ table.tutor-table,
       }
 
       &:nth-child(odd) {
-        >td {
+        > td {
           background-color: transparent;
         }
       }
@@ -66,12 +65,12 @@ table.tutor-table,
       background-color: transparent;
       padding: $tutor-spacing-5;
       vertical-align: middle;
+      border: none;
     }
   }
 }
 
 .tutor-table-column-borders {
-
   th,
   td {
     border-width: 0px 1px 0px 0px;

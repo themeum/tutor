@@ -60,12 +60,14 @@ window.jQuery(document).ready($ => {
         utcDateTimes.forEach((utcDateTime) => {
           try {
             const textContent = utcDateTime.textContent.trim();
-            const localDateTime = new Date(`${textContent} UTC`);
+            // Safari does not support format 0000-00-00, instead it needs 0000/00/00
+            const dateString = textContent.replace(/-/g,'/'); 
+            const localDateTime = new Date(`${dateString} UTC`);
 
             if (!isNaN(localDateTime)) {
               utcDateTime.textContent = wp.date.dateI18n(format, localDateTime, Intl.DateTimeFormat().resolvedOptions().timeZone);
             } else {
-              console.warn(`Invalid UTC date: "${textContent}"`);
+              console.warn(`Invalid UTC date: "${dateString}"`);
             }
           } catch (error) {
             console.log(error);

@@ -38,6 +38,9 @@ class TutorEDD extends Tutor_Base {
 			return;
 		}
 
+		$edd_path = WP_PLUGIN_DIR . '/easy-digital-downloads/easy-digital-downloads.php';
+		register_deactivation_hook( $edd_path, array( $this, 'edd_deactivation_handler' ) );
+
 		add_filter( 'tutor_course_sell_by', fn() => 'edd' );
 		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ) );
 
@@ -53,6 +56,19 @@ class TutorEDD extends Tutor_Base {
 		add_filter( 'tutor_order_history_card_template', fn( $template ) => tutor_get_template( 'dashboard.account.billing.edd-order-history-card' ) );
 		add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ), 10, 2 );
 		add_filter( 'tutor_get_orders_by_user_id', array( $this, 'filter_tutor_get_orders_by_user_id' ), 10, 3 );
+	}
+
+	/**
+	 * Handle EDD deactivation.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function edd_deactivation_handler() {
+		if ( 'edd' === tutor_utils()->get_option( 'monetize_by' ) ) {
+			tutor_utils()->update_option( 'monetize_by', 'free' );
+		}
 	}
 
 	/**

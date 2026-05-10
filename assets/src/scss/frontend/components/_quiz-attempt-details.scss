@@ -50,6 +50,7 @@
     display: grid;
     grid-template-columns: 300px 1fr;
     gap: 128px;
+    padding-bottom: calc( var(--tutor-quiz-summary-footer-height) + #{$tutor-spacing-4} );
 
     @include tutor-breakpoint-down(sm) {
       grid-template-columns: 1fr;
@@ -149,8 +150,10 @@
     background-color: $tutor-surface-base;
     border-top: 1px solid $tutor-border-idle;
     box-shadow: 0px -4px 13px -2px #1018280f;
-    position: sticky;
+    position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
 
     .tutor-quiz-summary-footer-inner {
       max-width: 1220px;

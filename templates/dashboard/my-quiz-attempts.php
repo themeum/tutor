@@ -63,140 +63,140 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 
 ?>
 <div class="tutor-my-quiz-attempts-wrapper" x-data="tutorQuizAttempts()">
-		<div class="tutor-quiz-attempts">
-			<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-surface-l1 tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-items-center tutor-border-b">
-				<div class="tutor-quiz-students-attempts-filter-item">
+	<div class="tutor-quiz-attempts">
+		<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-surface-l1 tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-items-center tutor-border-b">
+			<div class="tutor-quiz-students-attempts-filter-item">
+			<?php
+			if ( isset( $nav_links['options'] ) ) {
+				DropdownFilter::make()
+					->options( $nav_links['options'] )
+					->query_param( 'result' )
+					->render();
+			}
+			?>
+			</div>
+			<div class="tutor-quiz-students-attempts-filter-item tutor-flex tutor-items-center tutor-gap-4">
 				<?php
-				if ( isset( $nav_links['options'] ) ) {
-					DropdownFilter::make()
-						->options( $nav_links['options'] )
-						->query_param( 'result' )
+
+				if ( Input::has_any( array( 'result', 'order' ), Input::GET_REQUEST ) ) {
+					Button::make()
+						->tag( 'a' )
+						->attr( 'href', tutor_utils()->tutor_dashboard_url( 'courses/my-quiz-attempts' ) )
+						->attr( 'class', 'tutor-text-brand' )
+						->label( __( 'Clear all', 'tutor' ) )
+						->variant( Variant::LINK )
 						->render();
 				}
+				Sorting::make()->order( $order_filter )->render();
+
 				?>
-				</div>
-				<div class="tutor-quiz-students-attempts-filter-item tutor-flex tutor-items-center tutor-gap-4">
-					<?php
-
-					if ( Input::has_any( array( 'result', 'order' ), Input::GET_REQUEST ) ) {
-						Button::make()
-							->tag( 'a' )
-							->attr( 'href', tutor_utils()->tutor_dashboard_url( 'courses/my-quiz-attempts' ) )
-							->attr( 'class', 'tutor-text-brand' )
-							->label( __( 'Clear all', 'tutor' ) )
-							->variant( Variant::LINK )
-							->render();
-					}
-					Sorting::make()->order( $order_filter )->render();
-
-					?>
-				</div>
 			</div>
-			<?php if ( $quiz_attempts_count ) : ?>
-			<div class="tutor-quiz-attempts-header">
-				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
-				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
-				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
-				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
-			</div>
-			<div class="tutor-quiz-attempts-list">
-				<?php
-				foreach ( $quiz_attempts_list as $quiz_index => $quiz_attempt ) :
-					$attempts           = $quiz_attempt['attempts'];
-					$attempts_count     = count( $attempts );
-					$quiz_id            = $quiz_attempt['quiz_id'] ?? 0;
-					$course_id          = $quiz_attempt['course_id'] ?? 0;
-					$first_attempt      = $attempts[0];
-					$remaining_attempts = array_slice( $attempts, 1 );
-					?>
-				<div x-data="{ expanded: false }" class="tutor-quiz-attempts-item-wrapper" :class="{ 'tutor-quiz-previous-attempts': expanded }">
-					<!-- First Attempt (Always Visible with Quiz Title & Expand Button) -->
-					<?php
-					tutor_load_template(
-						'shared.components.student-quiz-attempt-row',
-						array(
-							'attempt'          => $first_attempt,
-							'quiz_title'       => $quiz_attempt['quiz_title'] ?? '',
-							'course_title'     => $quiz_attempt['course_title'] ?? '',
-							'course_id'        => $course_id,
-							'show_quiz_title'  => true,
-							'show_course'      => true,
-							'quiz_id'          => $quiz_id,
-							'attempts_count'   => $attempts_count,
-							'attempt_id'       => $first_attempt['attempt_id'] ?? 0,
-							'quiz_attempt_obj' => $quiz_attempt_obj,
-						)
-					);
-					?>
+		</div>
+	<?php if ( $quiz_attempts_count ) : ?>
+	<div class="tutor-quiz-attempts-header">
+		<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
+		<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
+		<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
+		<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
+	</div>
+	<div class="tutor-quiz-attempts-list">
+		<?php
+		foreach ( $quiz_attempts_list as $quiz_index => $quiz_attempt ) :
+			$attempts           = $quiz_attempt['attempts'];
+			$attempts_count     = count( $attempts );
+			$quiz_id            = $quiz_attempt['quiz_id'] ?? 0;
+			$course_id          = $quiz_attempt['course_id'] ?? 0;
+			$first_attempt      = $attempts[0];
+			$remaining_attempts = array_slice( $attempts, 1 );
+			?>
+		<div x-data="{ expanded: false }" class="tutor-quiz-attempts-item-wrapper" :class="{ 'tutor-quiz-previous-attempts': expanded }">
+			<!-- First Attempt (Always Visible with Quiz Title & Expand Button) -->
+			<?php
+			tutor_load_template(
+				'shared.components.student-quiz-attempt-row',
+				array(
+					'attempt'          => $first_attempt,
+					'quiz_title'       => $quiz_attempt['quiz_title'] ?? '',
+					'course_title'     => $quiz_attempt['course_title'] ?? '',
+					'course_id'        => $course_id,
+					'show_quiz_title'  => true,
+					'show_course'      => true,
+					'quiz_id'          => $quiz_id,
+					'attempts_count'   => $attempts_count,
+					'attempt_id'       => $first_attempt['attempt_id'] ?? 0,
+					'quiz_attempt_obj' => $quiz_attempt_obj,
+				)
+			);
+			?>
 
-					<!-- Additional Attempts (Collapsible) -->
-					<?php if ( ! empty( $remaining_attempts ) ) : ?>
-						<div x-show="expanded" x-collapse x-cloak class="tutor-quiz-previous-attempts">
-							<div class="tutor-text-tiny tutor-text-subdued tutor-py-4 tutor-px-6 tutor-quiz-previous-attempts-title">
-								<?php esc_html_e( 'Previous Attempts', 'tutor' ); ?>
-							</div>
-							<?php foreach ( $remaining_attempts as $key => $attempt ) : ?>
-								<?php
-								tutor_load_template(
-									'shared.components.student-quiz-attempt-row',
-									array(
-										'attempt'          => $attempt,
-										'attempt_number'   => count( $remaining_attempts ) - $key,
-										'quiz_id'          => $quiz_id,
-										'attempt_id'       => $attempt['attempt_id'] ?? 0,
-										'course_id'        => $course_id,
-										'quiz_attempt_obj' => $quiz_attempt_obj,
-										'is_previous'      => true,
-									)
-								);
-								?>
-							<?php endforeach; ?>
-						</div>
-					<?php endif; ?>
-
-					<div class="tutor-quiz-item-actions">
+			<!-- Additional Attempts (Collapsible) -->
+			<?php if ( ! empty( $remaining_attempts ) ) : ?>
+				<div x-show="expanded" x-collapse x-cloak class="tutor-quiz-previous-attempts">
+					<div class="tutor-text-tiny tutor-text-subdued tutor-py-4 tutor-px-6 tutor-quiz-previous-attempts-title">
+						<?php esc_html_e( 'Previous Attempts', 'tutor' ); ?>
+					</div>
+					<?php foreach ( $remaining_attempts as $key => $attempt ) : ?>
 						<?php
-						$quiz_attempt_obj->render_retry_button(
-							$course_id,
-							$quiz_id,
-							$first_attempt,
-							$attempts_count
+						tutor_load_template(
+							'shared.components.student-quiz-attempt-row',
+							array(
+								'attempt'          => $attempt,
+								'attempt_number'   => count( $remaining_attempts ) - $key,
+								'quiz_id'          => $quiz_id,
+								'attempt_id'       => $attempt['attempt_id'] ?? 0,
+								'course_id'        => $course_id,
+								'quiz_attempt_obj' => $quiz_attempt_obj,
+								'is_previous'      => true,
+							)
 						);
 						?>
-					</div>
+					<?php endforeach; ?>
 				</div>
-					<?php
-					endforeach;
-				?>
-			</div>
-		<?php else : ?>
-			<?php
-			EmptyState::make()
-				->title( __( 'No Quiz Attempts Found', 'tutor' ) )
-				->icon( UrlHelper::themed_svg( 'images/illustrations/quiz-empty.svg' ) )
-				->render();
-			?>
-		<?php endif; ?>
-			<?php
-			Pagination::make()
-				->current( $current_page )
-				->total( $quiz_attempts_count )
-				->limit( $item_per_page )
-				->attr( 'class', 'tutor-p-6' )
-				->render();
-			?>
+			<?php endif; ?>
 
-			<div x-data="tutorQuizRetryAttempt()">
+			<div class="tutor-quiz-item-actions">
 				<?php
-				ConfirmationModal::make()
-					->id( 'tutor-retry-modal' )
-					->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
-					->icon_html( UrlHelper::themed_svg( 'images/illustrations/quiz-retry.svg' ) )
-					->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
-					->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
-					->confirm_text( __( 'Retry Quiz', 'tutor' ) )
-					->mutation_state( 'retryMutation' )
-					->render();
+				$quiz_attempt_obj->render_retry_button(
+					$course_id,
+					$quiz_id,
+					$first_attempt,
+					$attempts_count
+				);
 				?>
 			</div>
+		</div>
+			<?php
+			endforeach;
+		?>
+	</div>
+	<?php else : ?>
+		<?php
+		EmptyState::make()
+			->title( __( 'No Quiz Attempts Found', 'tutor' ) )
+				->icon( UrlHelper::themed_svg( 'images/illustrations/quiz-empty.svg' ) )
+			->render();
+		?>
+	<?php endif; ?>
+	<?php
+	Pagination::make()
+		->current( $current_page )
+		->total( $quiz_attempts_count )
+		->limit( $item_per_page )
+		->attr( 'class', 'tutor-p-6' )
+		->render();
+	?>
+
+	<div x-data="tutorQuizRetryAttempt()">
+		<?php
+		ConfirmationModal::make()
+			->id( 'tutor-retry-modal' )
+			->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+			->icon_html( UrlHelper::themed_svg( 'images/illustrations/quiz-retry.svg' ) )
+			->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
+			->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
+			->confirm_text( __( 'Retry Quiz', 'tutor' ) )
+			->mutation_state( 'retryMutation' )
+			->render();
+		?>
+	</div>
 </div>

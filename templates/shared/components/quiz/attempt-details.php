@@ -116,7 +116,7 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 		);
 		?>
 	</div>
-
+	<?php if ( tutor_utils()->count( $questions ) ) : ?>
 	<div class="tutor-quiz-summary-body">
 		<?php
 		tutor_load_template(
@@ -145,6 +145,7 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 			?>
 		</div>
 	</div>
+	<?php endif; ?>
 	<?php if ( ! empty( $is_learning_area ) && $course_contents->next_id ) : ?>
 	<div class="tutor-quiz-summary-footer">
 		<div class="tutor-quiz-summary-footer-inner">

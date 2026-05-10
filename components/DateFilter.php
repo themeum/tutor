@@ -105,6 +105,15 @@ class DateFilter extends BaseComponent {
 	protected $show_label = true;
 
 	/**
+	 * Whether to hide the initial label when no date range is selected.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $hide_initial_label = false;
+
+	/**
 	 * Query params to clear when a date filter is applied or cleared (e.g. 'current_page').
 	 *
 	 * @since 4.0.0
@@ -191,6 +200,18 @@ class DateFilter extends BaseComponent {
 	 */
 	public function show_label( bool $show_label ) {
 		$this->show_label = $show_label;
+		return $this;
+	}
+
+	/**
+	 * Hide or show the initial label text before a date range is selected.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return self
+	 */
+	public function hide_initial_label(): self {
+		$this->hide_initial_label = true;
 		return $this;
 	}
 
@@ -324,7 +345,7 @@ class DateFilter extends BaseComponent {
 		$end_date   = Input::get( ( 'end_date' ) );
 
 		if ( ! $start_date || ! $end_date ) {
-			return __( 'All Time', 'tutor' );
+			return $this->hide_initial_label ? '' : __( 'All Time', 'tutor' );
 		}
 
 		$presets = array(

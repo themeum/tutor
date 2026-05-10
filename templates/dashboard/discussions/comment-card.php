@@ -83,9 +83,11 @@ $single_url = UrlHelper::add_query_params(
 		<div class="tutor-discussion-card-actions" x-show="replyingCommentId !== <?php echo (int) $lesson_comment->comment_ID; ?>">
 			<?php
 			Button::make()
+				->variant( Variant::PRIMARY )
+				->size( Size::X_SMALL )
 				->label( __( 'Reply', 'tutor' ) )
 				->attr( '@click', 'toggleCommentReply(' . (int) $lesson_comment->comment_ID . ')' )
-				->attr( 'class', 'tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden' )
+				->attr( 'class', 'tutor-force-sm-hidden' )
 				->attr( 'type', 'button' )
 				->size( Size::X_SMALL )
 				->render();

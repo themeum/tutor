@@ -20,6 +20,7 @@ use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Positions;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\Popover;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Models\QuizModel;
@@ -468,7 +469,7 @@ class Quiz_Attempts_List {
 	 */
 	private function get_kebab_button() {
 		$kebab_button = Button::make()
-				->icon( Icon::THREE_DOTS_VERTICAL )
+				->icon( Icon::ELLIPSES )
 				->attr( 'x-ref', 'trigger' )
 				->attr( '@click', 'toggle()' )
 				->attr( 'class', 'tutor-quiz-item-result-more' )
@@ -523,6 +524,25 @@ class Quiz_Attempts_List {
 		$show_retry = $can_retry && $attempts_count > 0;
 
 		if ( ! $show_retry && $is_quiz_details_hidden ) {
+			return;
+		}
+
+		if ( $is_learning_area && ! $is_quiz_details_hidden ) {
+
+			$query_param = array( 'action' => 'view_details' );
+
+			$url = $this->get_review_url( $attempt, $query_param );
+
+			$button_html = Button::make()
+				->tag( 'a' )
+				->label( __( 'Details', 'tutor' ) )
+				->size( Size::X_SMALL )
+				->variant( Variant::PRIMARY )
+				->attr( 'href', $url )
+				->attr( 'class', 'tutor-quiz-item-result-more tutor-quiz-details-btn' )
+				->get();
+
+			echo '<div class="tutor-flex">' . wp_kses_post( $button_html ) . '</div>';
 			return;
 		}
 
