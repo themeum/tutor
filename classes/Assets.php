@@ -830,11 +830,6 @@ class Assets {
 			wp_enqueue_style( 'tutor-kids', $kids_css_url, array( 'tutor-core' ), $version );
 		}
 
-		if ( $is_dashboard ) {
-			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
-			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
-		}
-
 		// Core.
 		wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );
 		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), TUTOR_VERSION, true );

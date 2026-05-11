@@ -33,6 +33,7 @@ use TUTOR\Template;
 		<?php wp_head(); ?>
 	</head>
 	<body <?php body_class( '' ); ?> x-data="tutorCourseCompleteHandler()">
+		<?php wp_body_open(); ?>
 <?php
 
 // Tutor global variable for using inside learning area.

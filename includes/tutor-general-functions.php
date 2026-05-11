@@ -511,6 +511,7 @@ if ( ! function_exists( 'get_tutor_header' ) ) {
 			</head>
 
 			<body <?php body_class(); ?>>
+				<?php wp_body_open(); ?>
 				<div id="tutor-page-wrap" class="tutor-site-wrap site">
 				<?php
 		} else {
