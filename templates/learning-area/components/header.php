@@ -20,18 +20,11 @@ use TUTOR\Course;
 global $tutor_course_id,
 $tutor_course,
 $current_user_id,
-$tutor_current_post,
 $tutor_course_progress,
 $tutor_can_complete_course,
 $tutor_can_retake_course,
 $course_complete_modal_id,
 $course_retake_modal_id;
-
-$mobile_header_title = $tutor_course->post_title;
-
-if ( ! empty( $tutor_current_post->ID ) ) {
-	$mobile_header_title = $tutor_current_post->post_title;
-}
 ?>
 <div class="tutor-learning-header">
 	<div class="tutor-learning-header-inner">
@@ -40,12 +33,7 @@ if ( ! empty( $tutor_current_post->ID ) ) {
 				<?php SvgIcon::make()->name( Icon::LEFT )->size( 20 )->render(); ?>
 			</a>
 			<h5 class="tutor-learning-header-title tutor-my-none">
-				<span class="tutor-md-hidden">
-					<?php echo esc_html( $tutor_course->post_title ); ?>
-				</span>
-				<span class="tutor-hidden tutor-md-inline">
-					<?php echo esc_html( $mobile_header_title ); ?>
-				</span>
+				<?php echo esc_html( $tutor_course->post_title ); ?>
 			</h5>
 
 			<div class="tutor-flex tutor-gap-2 tutor-items-center tutor-ml-auto tutor-pr-4 tutor-whitespace-nowrap tutor-md-hidden">
