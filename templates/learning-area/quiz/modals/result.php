@@ -27,7 +27,7 @@ $action_label  = $data['action_label'] ?? __( 'View Results', 'tutor' );
 <div class="tutor-modal-body tutor-quiz-result-modal">
 	<div class="tutor-quiz-result-modal-icon">
 		<?php if ( $icon_html ) : ?>
-			<?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped by UrlHelper::themed_svg() ?>
+			<?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped by tutor_utils()->get_themed_svg() ?>
 		<?php endif; ?>
 	</div>
 

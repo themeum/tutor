@@ -26,7 +26,7 @@ use TUTOR\Lesson;
 $lesson_comment = get_comment( $discussion_id );
 if ( ! $lesson_comment ) {
 	EmptyState::make()
-		->icon( UrlHelper::themed_svg( 'images/illustrations/comments-empty.svg' ) )
+		->icon( tutor_utils()->get_themed_svg( 'images/illustrations/comments-empty.svg' ) )
 		->title( __( 'No Comments Found', 'tutor' ) )
 		->render();
 	return;

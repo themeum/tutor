@@ -48,7 +48,7 @@ if ( ! $attempt_data && $quiz_id > 0 ) {
 $render_attempt_not_found = static function ( string $title ) {
 	EmptyState::make()
 		->title( $title )
-		->icon( UrlHelper::themed_svg( 'images/illustrations/quiz-empty.svg' ) )
+		->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-empty.svg' ) )
 		->render();
 };
 

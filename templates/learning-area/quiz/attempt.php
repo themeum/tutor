@@ -354,7 +354,7 @@ $default_values = array(
 	<?php
 		ConfirmationModal::make()
 			->id( $modal_id )
-			->icon_html( UrlHelper::themed_svg( 'images/illustrations/warning.svg' ) )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/warning.svg' ), 100, 100, ConfirmationModal::TYPE_HTML )
 			->title( __( 'Leave this Quiz?', 'tutor' ) )
 			->message( __( 'If you leave now, your quiz will be submitted with the answers completed so far.', 'tutor' ) )
 			->confirm_text( __( 'Yes, Leave Quiz', 'tutor' ) )
@@ -374,7 +374,7 @@ $default_values = array(
 					'modal_id'      => $submitted_modal_id,
 					'title'         => __( 'Quiz Submitted', 'tutor' ),
 					'message'       => __( 'Your responses have been successfully recorded.', 'tutor' ),
-					'icon_html'     => UrlHelper::themed_svg( 'images/illustrations/quiz-submitted.svg' ),
+					'icon_html'     => tutor_utils()->get_themed_svg( 'images/illustrations/quiz-submitted.svg' ),
 					'show_attempts' => false,
 					'action_url'    => $attempt_details_url,
 					'action_label'  => __( 'View Results', 'tutor' ),
@@ -391,7 +391,7 @@ $default_values = array(
 					'modal_id'      => $timeout_modal_id,
 					'title'         => __( 'Times up!', 'tutor' ),
 					'message'       => __( 'Your quiz has been submitted automatically.', 'tutor' ),
-					'icon_html'     => UrlHelper::themed_svg( 'images/illustrations/quiz-timeout.svg' ),
+					'icon_html'     => tutor_utils()->get_themed_svg( 'images/illustrations/quiz-timeout.svg' ),
 					'show_attempts' => true,
 					'action_url'    => $attempt_details_url,
 					'action_label'  => __( 'View Results', 'tutor' ),

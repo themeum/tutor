@@ -50,7 +50,7 @@ $total_announcements = $the_query->found_posts;
 			<?php
 				EmptyState::make()
 					->title( __( 'No Announcements Found!', 'tutor' ) )
-					->icon( UrlHelper::themed_svg( 'images/illustrations/no-announcements.svg' ) )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/no-announcements.svg' ) )
 					->render();
 			?>
 		<?php else : ?>
@@ -95,4 +95,3 @@ $total_announcements = $the_query->found_posts;
 		?>
 	</div>
 </div>
-

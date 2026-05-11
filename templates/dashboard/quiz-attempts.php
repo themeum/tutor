@@ -172,7 +172,7 @@ $hidden_inputs = array(
 				<?php
 					EmptyState::make()
 						->title( __( 'No Quiz Attempts Found', 'tutor' ) )
-						->icon( UrlHelper::themed_svg( 'images/illustrations/quiz-empty.svg' ) )
+						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-empty.svg' ) )
 						->render();
 				?>
 			<?php endif; ?>

@@ -118,7 +118,7 @@ $questions   = tutor_utils()->get_qa_questions(
 			<?php
 				EmptyState::make()
 					->title( 'No Questions Found!' )
-					->icon( UrlHelper::themed_svg( 'images/illustrations/qna-empty.svg' ) )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/qna-empty.svg' ) )
 					->render();
 			?>
 		<?php else : ?>

@@ -173,7 +173,7 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 		<?php
 		EmptyState::make()
 			->title( __( 'No Quiz Attempts Found', 'tutor' ) )
-				->icon( UrlHelper::themed_svg( 'images/illustrations/quiz-empty.svg' ) )
+				->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-empty.svg' ) )
 			->render();
 		?>
 	<?php endif; ?>
@@ -191,7 +191,7 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 		ConfirmationModal::make()
 			->id( 'tutor-retry-modal' )
 			->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
-			->icon_html( UrlHelper::themed_svg( 'images/illustrations/quiz-retry.svg' ) )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-retry.svg' ), 100, 100, ConfirmationModal::TYPE_HTML )
 			->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
 			->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
 			->confirm_text( __( 'Retry Quiz', 'tutor' ) )

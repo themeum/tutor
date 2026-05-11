@@ -109,7 +109,7 @@ $total_wishlists_count = count( tutor_utils()->get_wishlist() );
 		<?php
 			EmptyState::make()
 				->title( __( 'No Courses Found', 'tutor' ) )
-				->icon( UrlHelper::themed_svg( 'images/illustrations/wishlist-empty.svg' ) )
+				->icon( tutor_utils()->get_themed_svg( 'images/illustrations/wishlist-empty.svg' ) )
 				->render();
 		?>
 	<?php endif; ?>

@@ -72,7 +72,7 @@ $total_items     = Lesson::get_comments( $count_args );
 	<?php
 		EmptyState::make()
 			->title( 'No Comments Found!' )
-			->icon( UrlHelper::themed_svg( 'images/illustrations/comments-empty.svg' ) )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/comments-empty.svg' ) )
 			->render();
 	?>
 <?php else : ?>
@@ -111,4 +111,3 @@ if ( ! empty( $lesson_comments ) ) {
 		->mutation_state( 'deleteCommentMutation' )
 		->render();
 }
-

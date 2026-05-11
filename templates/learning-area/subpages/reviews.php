@@ -78,7 +78,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 		<?php
 			EmptyState::make()
 				->title( __( 'No Reviews Found!', 'tutor' ) )
-				->icon( UrlHelper::themed_svg( 'images/illustrations/reviews-empty.svg' ) )
+				->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reviews-empty.svg' ) )
 				->render();
 		?>
 	<?php else : ?>
@@ -148,7 +148,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 					->id( 'review-delete-modal' )
 					->title( __( 'Delete your Review?', 'tutor' ) )
 					->message( __( 'Are you sure you want to delete this review? This action cannot be undone.', 'tutor' ) )
-					->icon_html( UrlHelper::themed_svg( 'images/illustrations/delete-reviews.svg' ) )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/delete-reviews.svg' ), 100, 100, ConfirmationModal::TYPE_HTML )
 					->confirm_handler( 'handleDeleteReview(payload?.id)' )
 					->mutation_state( 'deleteReviewMutation' )
 					->confirm_text( __( 'Yes, Delete This', 'tutor' ) )

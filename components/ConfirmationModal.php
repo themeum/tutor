@@ -12,7 +12,6 @@
 
 namespace Tutor\Components;
 
-use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
@@ -44,6 +43,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 4.0.0
  */
 class ConfirmationModal extends BaseComponent {
+	const TYPE_HTML = 'html';
 
 	/**
 	 * Modal unique ID.
@@ -101,15 +101,6 @@ class ConfirmationModal extends BaseComponent {
 	protected $icon = '';
 
 	/**
-	 * Icon HTML.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var string
-	 */
-	protected $icon_html = '';
-
-	/**
 	 * Icon width.
 	 *
 	 * @since 4.0.0
@@ -126,6 +117,15 @@ class ConfirmationModal extends BaseComponent {
 	 * @var int
 	 */
 	protected $icon_height = 100;
+
+	/**
+	 * Icon type.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string|null
+	 */
+	protected $icon_type = null;
 
 	/**
 	 * Confirm handler function name (Alpine.js method).
@@ -242,28 +242,15 @@ class ConfirmationModal extends BaseComponent {
 	 * @param string $icon Icon name from Icon class.
 	 * @param int    $width Icon width.
 	 * @param int    $height Icon height.
+	 * @param string $type Icon type.
 	 *
 	 * @return $this
 	 */
-	public function icon( string $icon, int $width = 100, int $height = 100 ) {
+	public function icon( string $icon, int $width = 100, int $height = 100, $type = null ) {
 		$this->icon        = $icon;
 		$this->icon_width  = $width;
 		$this->icon_height = $height;
-		return $this;
-	}
-
-	/**
-	 * Set icon html.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $html Icon HTML.
-	 *
-	 * @return $this
-	 */
-	public function icon_html( string $html ) {
-		$this->icon      = '';   // skip the built-in icon logic.
-		$this->icon_html = $html;
+		$this->icon_type  = $type;
 		return $this;
 	}
 
@@ -377,9 +364,9 @@ class ConfirmationModal extends BaseComponent {
 			return '';
 		}
 
-		if ( empty( $this->icon ) && empty( $this->icon_html ) ) {
-			$this->icon      = '';
-			$this->icon_html = UrlHelper::themed_svg( 'images/illustrations/delete.svg' );
+		if ( empty( $this->icon ) ) {
+			$this->icon      = tutor_utils()->get_themed_svg( 'images/illustrations/delete.svg' );
+			$this->icon_type = self::TYPE_HTML;
 		}
 
 		// Set default button texts if not provided.
@@ -400,9 +387,11 @@ class ConfirmationModal extends BaseComponent {
 			: '';
 
 		// Build icon HTML.
-		$icon_html = $this->icon_html ?? '';
-		if ( empty( $this->icon_html ) && ! empty( $this->icon ) ) {
-			if ( filter_var( $this->icon, FILTER_VALIDATE_URL ) !== false ) {
+		$icon_html = '';
+		if ( ! empty( $this->icon ) ) {
+			if ( self::TYPE_HTML === $this->icon_type ) {
+				$icon_html = $this->icon;
+			} elseif ( filter_var( $this->icon, FILTER_VALIDATE_URL ) !== false ) {
 				$icon_html = sprintf( '<img src="%s" style="width:%spx;height:%spx;"/>', $this->icon, $this->icon_width, $this->icon_height );
 			} else {
 				ob_start();

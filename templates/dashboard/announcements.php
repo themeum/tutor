@@ -154,7 +154,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 			<?php
 				EmptyState::make()
 					->title( __( 'No Announcements Found', 'tutor' ) )
-					->icon( UrlHelper::themed_svg( 'images/illustrations/no-announcements.svg' ) )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/no-announcements.svg' ) )
 					->render();
 			?>
 		<?php else : ?>

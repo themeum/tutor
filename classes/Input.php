@@ -147,7 +147,6 @@ class Input {
 		}
 
 		return $sanitized_value;
-
 	}
 
 	/**
@@ -314,7 +313,7 @@ class Input {
 	 *
 	 * @return array
 	 */
-	public static function sanitize_array( array $input, array $sanitize_mapping = array(), $allow_iframe = false ):array {
+	public static function sanitize_array( array $input, array $sanitize_mapping = array(), $allow_iframe = false ): array {
 		$array = array();
 
 		if ( $allow_iframe ) {
@@ -378,97 +377,133 @@ class Input {
 	 * @return array
 	 */
 	public static function allow_svg( $allowed_tags ) {
+		$attr_fill      = array( 'fill' => true );
+		$attr_id        = array( 'id' => true );
+		$attr_dims      = array(
+			'width'  => true,
+			'height' => true,
+			'x'      => true,
+			'y'      => true,
+		);
+		$attr_transform = array( 'transform' => true );
+		$attr_clip      = array(
+			'clip-path' => true,
+			'clip-rule' => true,
+		);
+		$attr_center    = array(
+			'cx' => true,
+			'cy' => true,
+		);
+		$attr_stroke    = array(
+			'stroke'            => true,
+			'stroke-width'      => true,
+			'stroke-linecap'    => true,
+			'stroke-linejoin'   => true,
+			'stroke-dasharray'  => true,
+			'stroke-dashoffset' => true,
+		);
+
 		$svg_tags = array(
-			'svg'      => array(
-				'class'       => true,
-				'aria-hidden' => true,
-				'aria-label'  => true,
-				'role'        => true,
-				'xmlns'       => true,
-				'width'       => true,
-				'height'      => true,
-				'viewbox'     => true,
-				'fill'        => true,
+			'svg'      => array_merge(
+				$attr_fill,
+				$attr_dims,
+				array(
+					'class'       => true,
+					'aria-hidden' => true,
+					'aria-label'  => true,
+					'role'        => true,
+					'xmlns'       => true,
+					'viewbox'     => true,
+					'viewBox'     => true,
+					'opacity'     => true,
+				)
 			),
-			'g'        => array(
-				'fill'    => true,
-				'opacity' => true,
+			'g'        => array_merge(
+				$attr_fill,
+				$attr_clip,
+				array(
+					'opacity' => true,
+				)
 			),
-			'path'     => array(
-				'd'                 => true,
-				'fill'              => true,
-				'stroke'            => true,
-				'stroke-width'      => true,
-				'stroke-linecap'    => true,
-				'stroke-linejoin'   => true,
-				'stroke-dasharray'  => true,
-				'stroke-dashoffset' => true,
-				'fill-rule'         => true,
-				'clip-rule'         => true,
-				'opacity'           => true,
+			'defs'     => $attr_id,
+			'clipPath' => $attr_id,
+			'path'     => array_merge(
+				$attr_fill,
+				$attr_stroke,
+				$attr_clip,
+				array(
+					'd'         => true,
+					'fill-rule' => true,
+					'mask'      => true,
+					'opacity'   => true,
+				)
 			),
-			'circle'   => array(
-				'cx'                => true,
-				'cy'                => true,
-				'r'                 => true,
-				'fill'              => true,
-				'stroke'            => true,
-				'stroke-width'      => true,
-				'stroke-linecap'    => true,
-				'stroke-linejoin'   => true,
-				'stroke-dasharray'  => true,
-				'stroke-dashoffset' => true,
-				'opacity'           => true,
+			'mask'     => array_merge(
+				$attr_fill,
+				$attr_dims,
+				$attr_id,
+				array(
+					'maskunits' => true,
+					'mask-type' => true,
+					'opacity'   => true,
+				)
 			),
-			'rect'     => array(
-				'x'                 => true,
-				'y'                 => true,
-				'width'             => true,
-				'height'            => true,
-				'fill'              => true,
-				'stroke'            => true,
-				'stroke-width'      => true,
-				'stroke-linecap'    => true,
-				'stroke-linejoin'   => true,
-				'stroke-dasharray'  => true,
-				'stroke-dashoffset' => true,
-				'opacity'           => true,
-				'rx'                => true,
+			'circle'   => array_merge(
+				$attr_fill,
+				$attr_center,
+				$attr_transform,
+				$attr_stroke,
+				array(
+					'r'       => true,
+					'opacity' => true,
+				)
 			),
-			'line'     => array(
-				'x1'                => true,
-				'x2'                => true,
-				'y1'                => true,
-				'y2'                => true,
-				'stroke'            => true,
-				'stroke-width'      => true,
-				'stroke-linecap'    => true,
-				'stroke-linejoin'   => true,
-				'stroke-dasharray'  => true,
-				'stroke-dashoffset' => true,
-				'opacity'           => true,
+			'ellipse'  => array_merge(
+				$attr_fill,
+				$attr_center,
+				$attr_transform,
+				array(
+					'rx'      => true,
+					'ry'      => true,
+					'opacity' => true,
+				)
 			),
-			'polyline' => array(
-				'points'            => true,
-				'fill'              => true,
-				'stroke'            => true,
-				'stroke-width'      => true,
-				'stroke-linecap'    => true,
-				'stroke-linejoin'   => true,
-				'stroke-dasharray'  => true,
-				'stroke-dashoffset' => true,
-				'opacity'           => true,
+			'rect'     => array_merge(
+				$attr_fill,
+				$attr_dims,
+				$attr_stroke,
+				$attr_transform,
+				array(
+					'maskunits' => true,
+					'rx'        => true,
+					'opacity'   => true,
+				)
 			),
-			'polygon'  => array(
-				'points'            => true,
-				'fill'              => true,
-				'stroke'            => true,
-				'stroke-width'      => true,
-				'stroke-linecap'    => true,
-				'stroke-linejoin'   => true,
-				'stroke-dasharray'  => true,
-				'stroke-dashoffset' => true,
-				'opacity'           => true,
+			'line'     => array_merge(
+				$attr_stroke,
+				array(
+					'x1'      => true,
+					'x2'      => true,
+					'y1'      => true,
+					'y2'      => true,
+					'opacity' => true,
+				)
+			),
+			'polyline' => array_merge(
+				$attr_fill,
+				$attr_stroke,
+				array(
+					'points'  => true,
+					'opacity' => true,
+				)
+			),
+			'polygon'  => array_merge(
+				$attr_fill,
+				$attr_stroke,
+				array(
+					'points'  => true,
+					'opacity' => true,
+				)
 			),
 		);
 

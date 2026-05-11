@@ -75,7 +75,7 @@ $status_options = apply_filters( 'tutor_order_history_status_options', array(), 
 if ( empty( $orders ) ) :
 	EmptyState::make()
 		->title( 'No Orders Found!' )
-		->icon( UrlHelper::themed_svg( 'images/illustrations/order-empty.svg' ) )
+		->icon( tutor_utils()->get_themed_svg( 'images/illustrations/order-empty.svg' ) )
 		->render();
 else :
 	?>
