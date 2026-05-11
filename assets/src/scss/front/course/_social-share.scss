@@ -9,10 +9,6 @@
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    @include breakpoint-max(mobile) {
-      width: 150px;
-      justify-content: center;
-    }
     span {
       font-style: normal;
       font-weight: 500;

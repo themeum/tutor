@@ -5,7 +5,7 @@
   @include tutor-flex(row, center, space-between);
   button.tutor-star-rating-icon-btn {
     @include tutor-button-reset();
-    height: unset;
+    min-height: unset;
   }
   &.is-emoji-view {
     @include tutor-flex-column;
