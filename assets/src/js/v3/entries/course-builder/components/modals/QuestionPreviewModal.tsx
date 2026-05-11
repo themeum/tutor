@@ -143,12 +143,35 @@ const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) 
 
     iframeDocument.body.setAttribute('data-preview-device', activeTab);
 
+    const iframeWin = iframeDocument.defaultView;
+    const tutorPreviewWin = iframeWin as (Window & { _tutorCoordinatesRedrawAll?: () => void }) | null;
+    let coordinatesRedrawTimeout: number | undefined;
+    if (tutorPreviewWin && typeof tutorPreviewWin._tutorCoordinatesRedrawAll === 'function') {
+      const redrawAll = tutorPreviewWin._tutorCoordinatesRedrawAll;
+      requestAnimationFrame(() => {
+        redrawAll();
+      });
+      coordinatesRedrawTimeout = tutorPreviewWin.setTimeout(() => {
+        redrawAll();
+      }, 280);
+    }
+
     if (tutorConfig.settings?.learning_mode === 'kids') {
       iframeDocument.body.setAttribute('data-tutor-ui', 'kids');
-      return;
+      return () => {
+        if (coordinatesRedrawTimeout !== undefined && tutorPreviewWin) {
+          tutorPreviewWin.clearTimeout(coordinatesRedrawTimeout);
+        }
+      };
     }
 
     iframeDocument.body.removeAttribute('data-tutor-ui');
+
+    return () => {
+      if (coordinatesRedrawTimeout !== undefined && tutorPreviewWin) {
+        tutorPreviewWin.clearTimeout(coordinatesRedrawTimeout);
+      }
+    };
   }, [activeTab, iframeDocument]);
 
   useLayoutEffect(() => {
@@ -335,17 +358,40 @@ const renderQuestionPreview = (question: QuizQuestion) => {
     case 'ordering':
       return <OrderingPreview answers={question.question_answers} />;
     case 'pin_image':
-      return <PinImagePreview answers={question.question_answers} />;
+      return (
+        <PinImagePreview
+          key={`pin-${String(question.question_id)}-${question.question_answers?.[0]?.image_url ?? ''}`}
+          answers={question.question_answers}
+        />
+      );
     case 'draw_image':
-      return <DrawImagePreview answers={question.question_answers} />;
+      return (
+        <DrawImagePreview
+          key={`draw-${String(question.question_id)}-${question.question_answers?.[0]?.image_url ?? ''}`}
+          answers={question.question_answers}
+        />
+      );
     case 'scale':
       return <ScalePreview answers={question.question_answers} />;
     case 'coordinates':
-      return <CoordinatesPreview />;
-    case 'puzzle':
       return (
-        <PuzzlePreview answers={question.question_answers} gridSize={question.question_settings.puzzle_grid_size} />
+        <CoordinatesPreview
+          key={`coordinates-${String(question.question_id)}-${question.question_settings?.coordinates_axis_range ?? ''}`}
+          axisRange={question.question_settings?.coordinates_axis_range}
+        />
       );
+    case 'puzzle': {
+      const puzzleAnswer = question.question_answers?.[0];
+      const puzzleImageKey = puzzleAnswer?.image_url || puzzleAnswer?.answer_two_gap_match || '';
+      return (
+        <PuzzlePreview
+          key={`puzzle-${question.question_id}-${question.question_settings?.puzzle_grid_size ?? ''}-${encodeURIComponent(puzzleImageKey)}`}
+          answers={question.question_answers}
+          gridSize={question.question_settings.puzzle_grid_size}
+          questionId={question.question_id}
+        />
+      );
+    }
     default:
       return <UnsupportedPreview />;
   }
@@ -406,6 +452,19 @@ const getPreviewFrameStyles = () => `
 
   .tutor-quiz-question-option {
     cursor: default;
+  }
+
+  /*
+   * Clear buttons: DrawImagePreview uses SVGIcon; CoordinatesPreview uses inline eraser SVG (coordinates script clones the button on re-init).
+   */
+  .tutor-coordinates-clear-button > svg,
+  .tutor-draw-image-clear-button > svg {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    flex-shrink: 0;
+    color: inherit;
   }
 
   body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-wrapper,
