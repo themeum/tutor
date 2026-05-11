@@ -100,9 +100,6 @@ const PuzzlePreview = ({ answers, gridSize: gridSizeProp, questionId }: PuzzlePr
       data-image-url={imageUrl}
       data-puzzle-token=""
     >
-      <p className="tutor-puzzle-help-text">
-        {__('Preview only — drag pieces like a student; nothing is saved or submitted.', 'tutor')}
-      </p>
       <div className="tutor-puzzle-playground">
         <img
           className="tutor-puzzle-reference-image"
