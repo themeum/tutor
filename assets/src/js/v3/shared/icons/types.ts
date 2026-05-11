@@ -59,6 +59,7 @@ export const icons = [
   'calendarLine',
   'calendarLines',
   'callEnd',
+  'camera',
   'cart',
   'categories',
   'certificate',

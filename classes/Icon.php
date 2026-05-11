@@ -75,6 +75,7 @@ final class Icon {
 	const CALENDAR_LINE              = 'calendar-line';
 	const CALENDAR_LINES             = 'calendar-lines';
 	const CALL_END                   = 'call-end';
+	const CAMERA                     = 'camera';
 	const CART                       = 'cart';
 	const CATEGORIES                 = 'categories';
 	const CERTIFICATE                = 'certificate';
