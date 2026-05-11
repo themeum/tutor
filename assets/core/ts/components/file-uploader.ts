@@ -234,6 +234,12 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
 
       if (this.multiple) {
         const mergedFiles = this.mergeFileLists(this.selectedFiles, validFiles);
+        const totalFileSize = mergedFiles.reduce((total, current) => {
+          if (typeof current === 'string') {
+            return 0;
+          }
+          return total + Math.round(Number(current?.size) || 0);
+        }, 0);
 
         if (this.maxFiles && mergedFiles.length > this.maxFiles) {
           this.showError(
@@ -241,6 +247,17 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
               // translators: %d is the maximum number of files allowed
               __('Cannot select more than %d files', 'tutor'),
               this.maxFiles,
+            ),
+          );
+          return;
+        }
+
+        if (totalFileSize > this.maxSize) {
+          this.showError(
+            sprintf(
+              // translators: %1$s is the maximum allowed size
+              __('Maximum allowed size is %1$s.', 'tutor'),
+              formatBytes(this.maxSize),
             ),
           );
           return;
