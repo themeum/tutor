@@ -25,6 +25,11 @@
       &:only-child {
         width: 100%;
       }
+
+      .tutor-mark-as-complete-button {
+        @include tutor-button-size(large);
+        width: 100%;
+      }
     }
 
     button:not(.tutor-mark-as-complete-button),
