@@ -56,7 +56,7 @@ $content_title = $tutor_current_post->post_title ?? '';
 				<?php endif; ?>
 			</div>
 		</div>
-		<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">
+		<button class="tutor-learning-header-toggle-mobile" @click.stop="$dispatch('toggle-sidebar')">
 			<?php SvgIcon::make()->name( Icon::MENU )->size( 20 )->render(); ?>
 		</button>
 	</div>

@@ -35,7 +35,7 @@
     height: 100dvh;
     overflow-y: auto;
     background-color: $tutor-surface-base;
-    z-index: $tutor-z-highest;
+    z-index: calc(#{$tutor-z-highest} + 1);
     transform: translateX(100%);
     @include tutor-transition(transform, 0.3s);
 

@@ -54,14 +54,16 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 <div 
 	class="tutor-learning-sidebar" 
 	x-data="tutorLearningSidebar({ isCollapsed: <?php echo empty( $active_menu ) ? 'true' : 'false'; ?>, courseId: <?php echo (int) $tutor_course->ID; ?>, resetModalId: '<?php echo esc_attr( $reset_modal_id ); ?>' })"
+	x-trap.noscroll="sidebarOpen"
 	:class="{ 'is-open': sidebarOpen }" 
-	@click.outside="sidebarOpen = false"
+	@click.outside="closeSidebar()"
+	@toggle-sidebar.window="toggleSidebar()"
 >
 	<div class="tutor-hidden tutor-lg-flex tutor-items-center tutor-px-4">
 		<h5 class="tutor-learning-header-title tutor-my-none">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
-		<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">
+		<button class="tutor-learning-header-toggle-mobile" @click.stop="toggleSidebar()">
 			<?php SvgIcon::make()->name( Icon::CROSS_2 )->size( 20 )->render(); ?>
 		</button>
 	</div>
