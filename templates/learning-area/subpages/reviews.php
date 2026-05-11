@@ -118,7 +118,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 					?>
 					<div class="tutor-flex tutor-items-center tutor-gap-5">
 						<div class="tutor-flex tutor-items-center tutor-gap-3">
-							<?php tutor_utils()->render_svg_icon( Icon::STAR_FILL, 12, 12, array( 'class' => 'tutor-icon-exception4' ) ); ?>
+							<?php SvgIcon::make()->name( Icon::STAR_FILL )->size( 12 )->attr( 'class', 'tutor-icon-exception4' )->render(); ?>
 							<span class="tutor-small" style="font-variant-numeric: tabular-nums;"><?php echo esc_html( $i ); ?></span>
 						</div>
 						<?php Progress::make()->variant( Variant::WARNING )->value( $percent )->animated()->render(); ?>
@@ -148,7 +148,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 					->id( 'review-delete-modal' )
 					->title( __( 'Delete your Review?', 'tutor' ) )
 					->message( __( 'Are you sure you want to delete this review? This action cannot be undone.', 'tutor' ) )
-					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/delete-reviews.svg' ), 100, 100, ConfirmationModal::TYPE_HTML )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/delete-reviews.svg' ), 100, 100, ConfirmationModal::ICON_TYPE_HTML )
 					->confirm_handler( 'handleDeleteReview(payload?.id)' )
 					->mutation_state( 'deleteReviewMutation' )
 					->confirm_text( __( 'Yes, Delete This', 'tutor' ) )

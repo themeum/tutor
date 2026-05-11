@@ -354,7 +354,7 @@ $default_values = array(
 	<?php
 		ConfirmationModal::make()
 			->id( $modal_id )
-			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/warning.svg' ), 100, 100, ConfirmationModal::TYPE_HTML )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/warning.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 			->title( __( 'Leave this Quiz?', 'tutor' ) )
 			->message( __( 'If you leave now, your quiz will be submitted with the answers completed so far.', 'tutor' ) )
 			->confirm_text( __( 'Yes, Leave Quiz', 'tutor' ) )

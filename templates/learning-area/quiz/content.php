@@ -37,7 +37,7 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 		<div class="tutor-quiz-intro-overview">
 			<!-- Quiz Icon -->
 			<div class="tutor-quiz-intro-icon">
-				<?php tutor_utils()->get_themed_svg( 'images/illustrations/quiz-intro.svg', array( 'output' => true ) ); ?>
+				<?php tutor_utils()->render_themed_svg( 'images/illustrations/quiz-intro.svg' ); ?>
 			</div>
 
 			<!-- Quiz Title -->

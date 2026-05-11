@@ -64,7 +64,7 @@ foreach ( $reviews as $review ) {
 					->id( 'review-delete-modal' )
 					->title( __( 'Delete your Review?', 'tutor' ) )
 					->message( __( 'Are you sure you want to delete this review? This action cannot be undone.', 'tutor' ) )
-					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/delete-reviews.svg' ), 100, 100, ConfirmationModal::TYPE_HTML )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/delete-reviews.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 					->confirm_handler( 'handleDeleteReview(payload?.id)' )
 					->mutation_state( 'deleteReviewMutation' )
 					->confirm_text( __( 'Yes, Delete This', 'tutor' ) )

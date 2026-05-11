@@ -19,6 +19,7 @@ use Tutor\Components\Constants\Variant;
 use Tutor\Components\InputField;
 use Tutor\Components\StarRating;
 use Tutor\Components\StarRatingInput;
+use Tutor\Components\SvgIcon;
 
 // Get global variables.
 global $current_user_id;
@@ -127,11 +128,11 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 		<div class="tutor-flex tutor-justify-between tutor-gap-3">
 			<div class="tutor-flex tutor-gap-3 tutor-tiny tutor-text-subdued tutor-items-center tutor-flex-wrap">
 				<span>
-					<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?>
+					<?php SvgIcon::make()->name( Icon::COMMAND )->size( 12 )->render(); ?>
 				</span>
 				<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
 				<span>
-					<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?>
+					<?php SvgIcon::make()->name( Icon::ENTER )->size( 12 )->render(); ?>
 				</span>
 				<?php esc_html_e( 'Enter to Save', 'tutor' ); ?>
 			</div>

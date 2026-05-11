@@ -366,7 +366,7 @@ class ConfirmationModal extends BaseComponent {
 
 		if ( empty( $this->icon ) ) {
 			$this->icon      = tutor_utils()->get_themed_svg( 'images/illustrations/delete.svg' );
-			$this->icon_type = self::TYPE_HTML;
+			$this->icon_type = self::ICON_TYPE_HTML;
 		}
 
 		// Set default button texts if not provided.
@@ -389,7 +389,7 @@ class ConfirmationModal extends BaseComponent {
 		// Build icon HTML.
 		$icon_html = '';
 		if ( ! empty( $this->icon ) ) {
-			if ( self::TYPE_HTML === $this->icon_type ) {
+			if ( self::ICON_TYPE_HTML === $this->icon_type ) {
 				$icon_html = $this->icon;
 			} elseif ( filter_var( $this->icon, FILTER_VALIDATE_URL ) !== false ) {
 				$icon_html = sprintf( '<img src="%s" style="width:%spx;height:%spx;"/>', $this->icon, $this->icon_width, $this->icon_height );
