@@ -170,7 +170,7 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 		->id( $course_retake_modal_id )
 		->title( __( 'Start the Course Again?', 'tutor' ) )
 		->message( __( 'Retaking the course will reset your progress and start everything from the beginning.', 'tutor' ) )
-		->icon( tutor_utils()->get_themed_svg( 'images/illustrations/retake-course.svg' ), 100, 100, ConfirmationModal::ICON_TYPE_HTML )
+		->icon( tutor_utils()->get_themed_svg( 'images/illustrations/retake-course.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 		->cancel_text( __( 'Cancel', 'tutor' ) )
 		->confirm_text( __( 'Start Retake', 'tutor' ) )
 		->confirm_handler( "handleCourseRetake($tutor_course_id)" )
