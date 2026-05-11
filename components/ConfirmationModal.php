@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 4.0.0
  */
 class ConfirmationModal extends BaseComponent {
-	const TYPE_HTML = 'html';
+	const ICON_TYPE_HTML = 'html';
 
 	/**
 	 * Modal unique ID.
@@ -250,7 +250,7 @@ class ConfirmationModal extends BaseComponent {
 		$this->icon        = $icon;
 		$this->icon_width  = $width;
 		$this->icon_height = $height;
-		$this->icon_type  = $type;
+		$this->icon_type   = $type;
 		return $this;
 	}
 
