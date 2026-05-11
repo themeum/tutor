@@ -241,8 +241,8 @@ $delete_modal_id = 'review-delete-modal';
 						->render();
 				?>
 			</form>
-			<div class="tutor-flex tutor-justify-between tutor-gap-3">
-				<div class="tutor-flex tutor-gap-3 tutor-tiny tutor-text-subdued tutor-items-center">
+			<div class="tutor-flex tutor-justify-between tutor-sm-justify-end tutor-gap-3">
+				<div class="tutor-flex tutor-gap-3 tutor-tiny tutor-text-subdued tutor-items-center tutor-sm-hidden">
 					<span>
 						<?php SvgIcon::make()->name( Icon::COMMAND )->size( 12 )->render(); ?>
 					</span>
