@@ -3,7 +3,7 @@
 
 .tutor-star-rating-container {
   @include tutor-flex(row, center, space-between);
-  button.tutor-star-rating-btn {
+  button.tutor-star-rating-icon-btn {
     @include tutor-button-reset();
     height: unset;
   }
