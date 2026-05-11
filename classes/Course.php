@@ -22,6 +22,7 @@ use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
+use Tutor\Components\Tooltip;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
@@ -2877,36 +2878,35 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Check if all lessons and quizzes done before mark course complete.
+	 * Get course completion missing requirements message.
 	 *
-	 * @since 1.5.8
+	 * @since 4.0.0
 	 *
-	 * @param string $html HTML string.
-	 * @return string
+	 * @param int $course_id Course ID.
+	 * @param int $user_id   User ID.
+	 *
+	 * @return string|null
 	 */
-	public function tutor_lms_hide_course_complete_btn( $html ) {
+	public static function get_course_completion_missing_requirements_msg( $course_id = 0, $user_id = 0 ) {
+		$course_id = tutor_utils()->get_post_id( $course_id );
+		$user_id   = tutor_utils()->get_user_id( $user_id );
 
 		$completion_mode = tutor_utils()->get_option( 'course_completion_process' );
 		if ( 'strict' !== $completion_mode ) {
-			return $html;
+			return null;
 		}
 
-		$completed_lesson = tutor_utils()->get_completed_lesson_count_by_course();
-		$lesson_count     = tutor_utils()->get_lesson_count_by_course();
+		$completed_lesson = tutor_utils()->get_completed_lesson_count_by_course( $course_id, $user_id );
+		$lesson_count     = tutor_utils()->get_lesson_count_by_course( $course_id );
 
 		if ( $completed_lesson < $lesson_count ) {
-			return '<div class="tutor-alert tutor-warning tutor-mt-28">
-						<div class="tutor-alert-text">
-							<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
-							<span>' . __( 'Complete all lessons to mark this course as complete', 'tutor' ) . '</span>
-						</div>
-					</div>';
+			return __( 'Complete all lessons to mark this course as complete', 'tutor' );
 		}
 
 		$quizzes     = array();
 		$assignments = array();
 
-		$course_contents = tutor_utils()->get_course_contents_by_id();
+		$course_contents = tutor_utils()->get_course_contents_by_id( $course_id );
 		if ( tutor_utils()->count( $course_contents ) ) {
 			foreach ( $course_contents as $content ) {
 				if ( 'tutor_quiz' === $content->post_type ) {
@@ -2919,10 +2919,8 @@ class Course extends Tutor_Base {
 		}
 
 		$required_assignment_pass = 0;
-
 		foreach ( $assignments as $row ) {
-
-			$assignment_submission     = tutor_utils()->is_assignment_submitted( $row->ID );
+			$assignment_submission     = tutor_utils()->is_assignment_submitted( $row->ID, $user_id );
 			$is_reviewed_by_instructor = ! count( $assignment_submission )
 											? false
 											: get_comment_meta( $assignment_submission[0]->comment_ID, 'evaluate_time', true );
@@ -2950,8 +2948,7 @@ class Course extends Tutor_Base {
 
 		if ( tutor_utils()->count( $quizzes ) ) {
 			foreach ( $quizzes as $quiz ) {
-
-				$attempt = tutor_utils()->get_quiz_attempt( $quiz->ID );
+				$attempt = tutor_utils()->get_quiz_attempt( $quiz->ID, $user_id );
 				if ( $attempt ) {
 					$passing_grade     = tutor_utils()->get_quiz_option( $quiz->ID, 'passing_grade', 0 );
 					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
@@ -2973,20 +2970,33 @@ class Course extends Tutor_Base {
 			$assignment_str = _n( 'assignment', 'assignments', $required_assignment_pass, 'tutor' );
 
 			if ( ! $is_quiz_pass && 0 == $required_assignment_pass ) {
-				/* translators: %1$s: number of quiz/assignment pass required; %2$s: quiz/assignment string */
+				/* translators: %1$s: number of quiz pass required; %2$s: quiz string */
 				$_msg = sprintf( __( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ), $required_quiz_pass, $quiz_str );
-			}
-
-			if ( $is_quiz_pass && $required_assignment_pass > 0 ) {
-				//phpcs:ignore
+			} elseif ( $is_quiz_pass && $required_assignment_pass > 0 ) {
+				/* translators: %1$s: number of assignment pass required; %2$s: assignment string */
 				$_msg = sprintf( __( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ), $required_assignment_pass, $assignment_str );
-			}
-
-			if ( ! $is_quiz_pass && $required_assignment_pass > 0 ) {
+			} else {
 				/* translators: %1$s: number of quiz pass required; %2$s: quiz string; %3$s: number of assignment pass required; %4$s: assignment string */
 				$_msg = sprintf( __( 'You have to pass %1$s %2$s and %3$s %4$s to complete this course.', 'tutor' ), $required_quiz_pass, $quiz_str, $required_assignment_pass, $assignment_str );
 			}
+			return $_msg;
+		}
 
+		return null;
+	}
+
+	/**
+	 * Check if all lessons and quizzes done before mark course complete.
+	 *
+	 * @since 1.5.8
+	 *
+	 * @param string $html HTML string.
+	 * @return string
+	 */
+	public function tutor_lms_hide_course_complete_btn( $html ) {
+		$_msg = self::get_course_completion_missing_requirements_msg();
+
+		if ( $_msg ) {
 			return '<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
 							<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
@@ -3502,16 +3512,23 @@ class Course extends Tutor_Base {
 	 * @param int    $course_id       The ID of the course.
 	 * @param float  $course_progress The current completion percentage of the course.
 	 * @param string $size            The button size.
+	 * @param string $tooltip         Optional. Tooltip message.
+	 * @param bool   $block           Optional. Whether the button is full-width.
 	 *
 	 * @return void
 	 */
-	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0, string $size = Size::MEDIUM ): void {
+	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0, string $size = Size::MEDIUM, string $tooltip = '', bool $block = false ): void {
 		$button = Button::make()
 		->variant( Variant::PRIMARY_SOFT )
 		->label( __( 'Complete the Course', 'tutor' ) )
 		->icon( Icon::TICK_MARK )
 		->size( $size )
+		->block( $block )
 		->attr( 'type', 'button' );
+
+		if ( ! empty( $tooltip ) ) {
+			$button->disabled();
+		}
 
 		if ( $course_progress < 100 ) {
 			$button->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" );
@@ -3521,7 +3538,16 @@ class Course extends Tutor_Base {
 			$button->attr( ':disabled', 'courseCompleteMutation?.isPending' );
 		}
 
-		$button->render();
+		if ( ! empty( $tooltip ) ) {
+			Tooltip::make()
+				->content( $tooltip )
+				->placement( Tooltip::PLACEMENT_BOTTOM )
+				->arrow( Tooltip::ARROW_CENTER )
+				->trigger_element( $button->get() )
+				->render();
+		} else {
+			$button->render();
+		}
 	}
 
 	/**
@@ -3531,15 +3557,17 @@ class Course extends Tutor_Base {
 	 *
 	 * @param string $modal_id Modal id.
 	 * @param string $size     The button size.
+	 * @param bool   $block    Optional. Whether the button is full-width.
 	 *
 	 * @return void
 	 */
-	public static function render_course_retake_btn( string $modal_id, string $size = Size::MEDIUM ): void {
+	public static function render_course_retake_btn( string $modal_id, string $size = Size::MEDIUM, bool $block = false ): void {
 		Button::make()
 		->variant( Variant::PRIMARY_SOFT )
 		->label( __( 'Retake this Course', 'tutor' ) )
 		->icon( Icon::RELOAD_4 )
 		->size( $size )
+		->block( $block )
 		->attr( 'type', 'button' )
 		->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" )
 		->render();
