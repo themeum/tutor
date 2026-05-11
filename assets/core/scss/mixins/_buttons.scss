@@ -103,7 +103,7 @@
     &:disabled,
     &.disabled {
       background-color: $tutor-button-disabled;
-      color: $tutor-text-brand;
+      color: $tutor-text-disabled;
       --tutor-button-border-shadow: #{$tutor-button-primary-soft-border-shadow-disabled};
     }
   } @else if $variant == destructive {
