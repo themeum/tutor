@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 
 interface SVGIconConfigContextValue {
-  disableKidsIcons: boolean;
+  showKidsIcons: boolean;
 }
 
 const defaultValue: SVGIconConfigContextValue = {
-  disableKidsIcons: true,
+  showKidsIcons: false,
 };
 
 const SVGIconConfigContext = React.createContext<SVGIconConfigContextValue>(defaultValue);
@@ -14,15 +14,15 @@ export const useSVGIconConfig = () => useContext(SVGIconConfigContext);
 
 export const SVGIconConfigProvider = ({
   children,
-  disableKidsIcons = true,
+  showKidsIcons = false,
 }: {
   children: React.ReactNode;
-  disableKidsIcons?: boolean;
+  showKidsIcons?: boolean;
 }) => {
   return (
     <SVGIconConfigContext.Provider
       value={{
-        disableKidsIcons,
+        showKidsIcons,
       }}
     >
       {children}
