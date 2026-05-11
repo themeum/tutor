@@ -21,11 +21,26 @@
   .tutor-review-card,
   .tutor-dashboard-home-chart,
   .tutor-dashboard-home-card,
-  .tutor-dashboard-home-sort .tutor-popover-bottom {
+  .tutor-dashboard-home-sort .tutor-popover-bottom,
+  .tutor-subscription-payments-item:hover {
     @include tutor-kids-shadow;
   }
 
-  .tutor-progress-card .tutor-progress-card-thumbnail {
+  .tutor-billing-card:hover {
+    @include tutor-kids-shadow;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid transparent;
+    }
+  }
+
+  .tutor-billing-body {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+  }
+
+  .tutor-progress-card .tutor-progress-card-thumbnail,
+  .tutor-subscription-overview-card,
+  .tutor-subscription-payments-list,
+  .tutor-subscription-details-alert {
     border-radius: $tutor-radius-3xl;
   }
 
@@ -220,12 +235,14 @@
       gap: $tutor-spacing-5;
     }
 
-    .tutor-dashboard-page-card {
+    .tutor-dashboard-page-card,
+    .tutor-billing-body {
       border-radius: 0px;
       box-shadow: none;
     }
 
-    .tutor-dashboard-page-card-header {
+    .tutor-dashboard-page-card-header,
+    .tutor-billing-tabs {
       margin-bottom: $tutor-spacing-5;
     }
 
@@ -234,7 +251,9 @@
       @include tutor-kids-shadow(false);
     }
 
-    .tutor-dashboard-page-card-body {
+    .tutor-dashboard-page-card-body,
+    .tutor-billing-tabs,
+    .tutor-billing-tabs-content {
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
     }
 
