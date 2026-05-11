@@ -244,7 +244,7 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
         if (this.maxFiles && mergedFiles.length > this.maxFiles) {
           this.showError(
             sprintf(
-              // translators: %d is the maximum number of files allowed
+              // translators: %d is the maximum number of files allowed.
               __('Cannot select more than %d files', 'tutor'),
               this.maxFiles,
             ),
