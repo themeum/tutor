@@ -30,11 +30,12 @@ window.jQuery(document).ready(($) => {
                                 button.prop('disabled', true).addClass('is-loading');
                             },
                             success: function (response) {
-                                if (response.success) {
+                                if (response.status_code === 200 ) {
                                     window.location.assign(response.data.redirect_to);
-                                } else {
-                                    alert((response.data || {}).message || __('Something went wrong', 'tutor'));
                                 }
+                            },
+                            error: function(response) {
+                                tutor_toast(__( 'Error', 'tutor' ),(response.responseJSON || {}).message ||__('Something went wrong', 'tutor'));
                             },
                             complete: function () {
                                 button.prop('disabled', false).removeClass('is-loading');

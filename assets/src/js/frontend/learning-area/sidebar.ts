@@ -8,6 +8,7 @@ import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { type AxiosError } from 'axios';
 
 interface ResetProgressPayload {
   course_id: number;
@@ -57,8 +58,11 @@ export const sidebarComponent = ({
               window.location.href = response.data.redirect_to;
             }
           },
-          onError: (error) => {
+          onError: (error: AxiosError) => {
             toast.error(convertToErrorMessage(error));
+            if (!error || !error.response || !error.response.data) {
+              window.location.reload();
+            }
           },
         },
       );
