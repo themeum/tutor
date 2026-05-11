@@ -22,7 +22,7 @@
       @include tutor-loading-spinner($tutor-surface-l1, $tutor-surface-l1-hover, 44px);
 
       &::before {
-        z-index: 1;
+        z-index: $tutor-z-positive;
       }
     }
 
