@@ -63,7 +63,7 @@ final class GDPR extends Singleton {
 	 * @return void
 	 */
 	private function register_hooks() {
-		add_action( 'init', array( $this, 'init' ), 5 );
+		add_action( 'admin_init', array( $this, 'admin_init' ), 5 );
 	}
 
 	/**
@@ -73,7 +73,7 @@ final class GDPR extends Singleton {
 	 *
 	 * @return void
 	 */
-	public function init() {
+	public function admin_init() {
 		$this->maybe_install_db();
 
 		$this->legal_consent = new LegalConsent();
