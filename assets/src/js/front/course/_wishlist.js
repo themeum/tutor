@@ -30,7 +30,9 @@ window.jQuery(document).ready(($) => {
 						$that.blur();
 					}
 				} else {
-					tutor_toast(__('Error', 'tutor-pro'), data?.data?.message ?? 'Something went wrong!!', 'error');
+					if ( data?.data?.message ) {
+						tutor_toast(__('Error', 'tutor-pro'), data?.data?.message, 'error');
+					}
 					$('.tutor-login-modal').addClass('tutor-is-active');
 					$that.blur();
 				}
