@@ -261,17 +261,10 @@ class Tooltip extends BaseComponent {
 		// Prepare x-data dynamic config.
 		$x_data = sprintf( 'tutorTooltip(%s)', wp_json_encode( $config ) );
 
-		// Wrap the trigger element.
-		// We use str_replace to inject x-ref="trigger" into the trigger element if possible,
-		// or we can expect the user to provide it. But to be helpful, let's inject it.
 		$trigger_html = $this->trigger_element;
-		if ( ! empty( $trigger_html ) && false === strpos( $trigger_html, 'x-ref="trigger"' ) ) {
-			// Find the first tag and add x-ref="trigger".
-			$trigger_html = preg_replace( '/<([a-z0-9]+)/i', '<$1 x-ref="trigger"', $trigger_html, 1 );
-		}
 
 		$this->component_string = sprintf(
-			'<div x-data="%1$s" class="tutor-tooltip-wrap %2$s" %3$s>
+			'<div x-data="%1$s" x-ref="trigger" class="tutor-tooltip-wrap %2$s" %3$s>
 				%4$s
 				<template x-teleport="body">
 					<div x-ref="content" x-show="open" x-cloak x-transition class="tutor-tooltip">
