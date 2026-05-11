@@ -1543,6 +1543,7 @@ class Course extends Tutor_Base {
 			'instructor_can_publish_course',
 			'instructor_can_change_course_author',
 			'instructor_can_manage_co_instructors',
+			'quiz_attempts_allowed',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
