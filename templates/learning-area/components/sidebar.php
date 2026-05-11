@@ -73,7 +73,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 				<div class="tutor-learning-progress-text tutor-py-2">
 					<?php
 					// translators: %s: course completed percentage.
-					echo sprintf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $tutor_course_progress ) . '%</span>' );
+					printf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $tutor_course_progress ) . '%</span>' );
 					?>
 				</div>
 				<div class="tutor-flex">
