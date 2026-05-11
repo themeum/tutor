@@ -22,7 +22,6 @@ use Tutor\Components\Pagination;
 use Tutor\Components\Progress;
 use Tutor\Components\StarRating;
 use Tutor\Components\SvgIcon;
-use Tutor\Helpers\UrlHelper;
 
 // Get course ID from global variable set in learning-area/index.php .
 global $tutor_course_id,

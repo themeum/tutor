@@ -17,7 +17,6 @@ use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Lesson;
 use TUTOR\User;
-use Tutor\Helpers\UrlHelper;
 
 $is_instructor = tutor_utils()->is_instructor( null, true );
 

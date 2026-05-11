@@ -19,7 +19,6 @@ use Tutor\Models\QuizModel;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
-use Tutor\Helpers\UrlHelper;
 
 global $tutor_current_post;
 

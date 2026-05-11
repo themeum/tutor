@@ -18,7 +18,6 @@ use Tutor\Models\CourseModel;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Nav;
 use TUTOR\Student;
-use Tutor\Helpers\UrlHelper;
 
 // Pagination.
 $courses_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );

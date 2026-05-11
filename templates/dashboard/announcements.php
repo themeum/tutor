@@ -30,7 +30,6 @@ use Tutor\Components\Sorting;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\Color;
 use Tutor\Components\SvgIcon;
-use Tutor\Helpers\UrlHelper;
 
 $limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );

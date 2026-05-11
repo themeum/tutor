@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Input;
 use Tutor\Components\Pagination;
 use Tutor\Components\EmptyState;
-use Tutor\Helpers\UrlHelper;
 
 global $post;
 $wishlist_per_page = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );

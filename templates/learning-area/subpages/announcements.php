@@ -18,7 +18,6 @@ use Tutor\Components\SvgIcon;
 use TUTOR\Input;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
-use Tutor\Helpers\UrlHelper;
 
 // Get course ID from global variable set in learning-area/index.php .
 global $tutor_course_id;

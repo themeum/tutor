@@ -18,7 +18,6 @@ use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Input;
 use TUTOR\User;
-use Tutor\Helpers\UrlHelper;
 
 $user_id       = get_current_user_id();
 $is_instructor = tutor_utils()->is_instructor( $user_id, true );

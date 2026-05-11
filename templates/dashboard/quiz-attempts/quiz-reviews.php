@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Input;
 use Tutor\Components\EmptyState;
 use Tutor\Models\QuizModel;
-use Tutor\Helpers\UrlHelper;
 
 $attempt_id   = Input::get( 'attempt_id', 0, Input::TYPE_INT );
 $attempt_data = tutor_utils()->get_attempt( $attempt_id );

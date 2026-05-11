@@ -18,7 +18,6 @@ use Tutor\Components\SvgIcon;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
-use Tutor\Helpers\UrlHelper;
 
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
 $current_page  = max( 1, Input::get( 'current_page', 0, Input::TYPE_INT ) );

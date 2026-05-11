@@ -27,7 +27,6 @@ use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
 use TUTOR\User;
-use Tutor\Helpers\UrlHelper;
 
 if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 	// Load single attempt details if ID provided.

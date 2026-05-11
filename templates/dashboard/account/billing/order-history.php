@@ -22,7 +22,6 @@ use Tutor\Components\Sorting;
 use TUTOR\Dashboard;
 use Tutor\Ecommerce\Ecommerce;
 use TUTOR\Input;
-use Tutor\Helpers\UrlHelper;
 
 $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 if ( 'free' === $monetize_by ) {
