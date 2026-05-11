@@ -255,7 +255,7 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
         if (totalFileSize > this.maxSize) {
           this.showError(
             sprintf(
-              // translators: %1$s is the maximum allowed size
+              // translators: %1$s is the maximum allowed size.
               __('Maximum allowed size is %1$s.', 'tutor'),
               formatBytes(this.maxSize),
             ),
