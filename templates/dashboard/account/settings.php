@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 use TUTOR\User;
+use Tutor\Helpers\UrlHelper;
 
 $settings_tab_data = array(
 	'account'         => array(
@@ -68,19 +69,59 @@ $settings_tab_data = array_values(
 		}
 	)
 );
+
+$back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_utils()->tutor_dashboard_url() ) );
 ?>
 
 <section x-data="tutorSettings()">
 	<div 
-		x-data='tutorTabs({
-			tabs: <?php echo wp_json_encode( $settings_tab_data ); ?>,
-			orientation: "vertical",
-			defaultTab: window.innerWidth >= 768 ? "account" : "none",
-			urlParams: {
-				enabled: true,
-				paramName: "tab",
-			}
-		})'
+		x-data='(() => {
+			const tabs = tutorTabs({
+				tabs: <?php echo wp_json_encode( $settings_tab_data ); ?>,
+				orientation: "vertical",
+				defaultTab: window.innerWidth >= 768 ? "account" : "none",
+				urlParams: {
+					enabled: true,
+					paramName: "tab",
+				}
+			});
+
+			return {
+				...tabs,
+				backUrl: <?php echo wp_json_encode( $back_url ); ?>,
+				selectTab(tabId) {
+					if (tabId === "none") {
+						this.activeTab = "none";
+
+						if (this.urlParamsConfig.enabled) {
+							const url = new URL(window.location.href);
+							url.searchParams.delete(this.urlParamsConfig.paramName);
+							window.history.replaceState({}, "", url.toString());
+						}
+
+						return;
+					}
+
+					return tabs.selectTab.call(this, tabId);
+				},
+				handleMobileClose() {
+					if (this.activeTab !== "none") {
+						this.selectTab("none");
+						return;
+					}
+
+					window.location.href = this.backUrl;
+				},
+				handleClose() {
+					if (window.innerWidth < 768) {
+						this.handleMobileClose();
+						return;
+					}
+
+					this.activeTab = "none";
+				}
+			};
+		})()'
 		class="tutor-profile-settings-section"
 	>
 		<?php tutor_load_template( 'dashboard.account.settings.header' ); ?>
