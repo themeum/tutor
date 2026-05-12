@@ -1464,34 +1464,23 @@ class CourseModel {
 		}
 
 		foreach ( $topics_query->posts as $topic_post ) {
-			$topic_id                    = (int) $topic_post->ID;
-			$total_topic_items           = 0;
-			$total_topic_items_completed = 0;
-			$items                       = array();
-
-			$contents_query = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
+			$topic_id              = (int) $topic_post->ID;
+			$items                 = array();
+			$completion_percentage = tutor_utils()->count_completed_contents_by_topic( $topic_id, $student_id );
+			$contents_query        = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
 
 			if ( ! empty( $contents_query ) && $contents_query->have_posts() ) {
 				foreach ( $contents_query->posts as $content_post ) {
 					$items[] = ( new self() )->build_course_progress_item( $content_post, $student_id, $course_id );
 				}
-				$total_topic_items = count( $contents_query->posts );
 			}
-
-			$total_topic_items_completed = count(
-				array_filter( $items, fn( $item ) => $item['is_completed'] )
-			);
-
-			$percentage = $total_topic_items > 0 && $total_topic_items_completed > 0
-							? round( ( $total_topic_items_completed / $total_topic_items ) * 100, 2 )
-							: 0;
 
 			$topic_list[] = array(
 				'id'                    => $topic_id,
 				'summary'               => $topic_post->post_content,
 				'title'                 => get_the_title( $topic_id ),
 				'items'                 => $items,
-				'completion_percentage' => $percentage,
+				'completion_percentage' => $completion_percentage['percentage'] ?? 0,
 			);
 		}
 
