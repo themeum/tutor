@@ -154,7 +154,7 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 				</div>
 			<?php endif; ?>
 
-			<div class="tutor-quiz-item-actions" x-show="!expanded">
+			<div class="tutor-quiz-item-actions" x-show="!expanded" x-cloak>
 				<?php
 				$quiz_attempt_obj->render_details_button( $first_attempt );
 				$quiz_attempt_obj->render_student_attempt_popover( $first_attempt, $attempts_count, $quiz_id, false, false );
