@@ -7,6 +7,15 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * These variables are inherited from parent template.
+ * template: tutor/templates/dashboard/account/billing.php
+ *
+ * @var int    $user_id       The user ID.
+ * @var int    $offset        The offset for pagination.
+ * @var int    $item_per_page The number of items per page.
+ * @var string $order_filter  The order filter.
+ * @var int    $current_page  The current page.
  */
 
 defined( 'ABSPATH' ) || exit;
