@@ -3084,10 +3084,16 @@ class Course extends Tutor_Base {
 	public function tutor_reset_course_progress() {
 		tutor_utils()->checking_nonce();
 		$course_id             = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$context               = Input::post( 'context', '' );
 		$course_reset_progress = tutor_utils()->get_option( 'course_reset_progress', false );
 		$course_retake_feature = tutor_utils()->get_option( 'course_retake_feature', false );
 
-		if ( ! $course_reset_progress || ! $course_retake_feature ) {
+		if ( ! $course_reset_progress && 'learning-area-sidebar' === $context ) {
+			$this->response_bad_request( __( 'You are not allowed to reset course progress.', 'tutor' ) );
+			return;
+		}
+
+		if ( ! $course_retake_feature && ( 'course-landing' === $context || 'learning-area' === $context ) ) {
 			$this->response_bad_request( __( 'You are not allowed to reset course progress.', 'tutor' ) );
 			return;
 		}

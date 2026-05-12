@@ -47,7 +47,7 @@ $allowed_attempts = $limit_attempts ? $quiz_options['attempts_allowed'] ?? '' : 
 		<div class="tutor-quiz-intro-overview">
 			<!-- Quiz Icon -->
 			<div class="tutor-quiz-intro-icon">
-				<img src="<?php echo esc_url( UrlHelper::themed_asset( 'images/illustrations/quiz-intro.webp' ) ); ?>" alt="<?php esc_attr_e( 'Quiz', 'tutor' ); ?>">
+				<?php tutor_utils()->render_themed_svg( 'images/illustrations/quiz-intro.svg' ); ?>
 			</div>
 
 			<!-- Quiz Title -->

@@ -103,7 +103,10 @@ $courses_list = $courses_list_array[ $active_tab ];
 						tutor_load_template( 'dashboard.courses.course-card' );
 					endwhile;
 				else :
-					EmptyState::make()->title( __( 'No Courses Found', 'tutor' ) )->render();
+					EmptyState::make()
+						->title( __( 'No Courses Found', 'tutor' ) )
+						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/learning-empty.svg' ) )
+						->render();
 				endif;
 				?>
 			</div>

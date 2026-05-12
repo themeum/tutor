@@ -3,6 +3,12 @@
 
 .tutor-star-rating-container {
   @include tutor-flex(row, center, space-between);
+
+  button.tutor-star-rating-icon-btn {
+    @include tutor-button-reset();
+    min-height: unset;
+  }
+
   &.is-emoji-view {
     @include tutor-flex-column;
     gap: $tutor-spacing-7;

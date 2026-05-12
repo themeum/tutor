@@ -150,7 +150,12 @@ $create_modal_id = 'tutor-announcement-form-modal';
 		</div>
 
 		<?php if ( empty( $announcements ) ) : ?>
-			<?php EmptyState::make()->render(); ?>
+			<?php
+				EmptyState::make()
+					->title( __( 'No Announcements Found', 'tutor' ) )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/no-announcements.svg' ) )
+					->render();
+			?>
 		<?php else : ?>
 			<div class="tutor-announcement-list">
 				<?php

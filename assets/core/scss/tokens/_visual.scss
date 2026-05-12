@@ -8,11 +8,21 @@
 $tutor-visual-gray-1: var(--tutor-visual-gray-1);
 $tutor-visual-gray-2: var(--tutor-visual-gray-2);
 $tutor-visual-gray-3: var(--tutor-visual-gray-3);
+$tutor-visual-gray-4: var(--tutor-visual-gray-4);
 $tutor-visual-brand-1: var(--tutor-visual-brand-1);
 $tutor-visual-brand-2: var(--tutor-visual-brand-2);
+$tutor-visual-brand-3: var(--tutor-visual-brand-3);
 $tutor-visual-success-1: var(--tutor-visual-success-1);
+$tutor-visual-success-2: var(--tutor-visual-success-2);
 $tutor-visual-critical-1: var(--tutor-visual-critical-1);
+$tutor-visual-critical-2: var(--tutor-visual-critical-2);
 $tutor-visual-caution-1: var(--tutor-visual-caution-1);
+$tutor-visual-caution-2: var(--tutor-visual-caution-2);
+$tutor-visual-caution-3: var(--tutor-visual-caution-3);
+$tutor-visual-orange-1: var(--tutor-visual-orange-1);
+$tutor-visual-exception-1: var(--tutor-visual-exception-1);
+$tutor-visual-exception-2: var(--tutor-visual-exception-2);
+$tutor-visual-exception-3: var(--tutor-visual-exception-3);
 
 // =============================================================================
 // VISUAL COLOR MAP (for utility generation)
@@ -22,9 +32,19 @@ $tutor-visual-colors: (
   gray-1: $tutor-visual-gray-1,
   gray-2: $tutor-visual-gray-2,
   gray-3: $tutor-visual-gray-3,
+  gray-4: $tutor-visual-gray-4,
   brand-1: $tutor-visual-brand-1,
   brand-2: $tutor-visual-brand-2,
+  brand-3: $tutor-visual-brand-3,
   success-1: $tutor-visual-success-1,
+  success-2: $tutor-visual-success-2,
   critical-1: $tutor-visual-critical-1,
+  critical-2: $tutor-visual-critical-2,
   caution-1: $tutor-visual-caution-1,
+  caution-2: $tutor-visual-caution-2,
+  caution-3: $tutor-visual-caution-3,
+  orange-1: $tutor-visual-orange-1,
+  exception-1: $tutor-visual-exception-1,
+  exception-2: $tutor-visual-exception-2,
+  exception-3: $tutor-visual-exception-3,
 );
