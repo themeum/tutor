@@ -390,6 +390,7 @@ final class Icon {
 	const SORT_MINOR                 = 'sort-minor';
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
+	const STAR                       = 'star';
 	const STAR_FILL                  = 'star-fill';
 	const STAR_HALF                  = 'star-half';
 	const STAR_LINE                  = 'star-line';
@@ -404,6 +405,7 @@ final class Icon {
 	const SVG                        = 'svg';
 	const TAG                        = 'tag';
 	const TAG_OUTLINE                = 'tag-outline';
+	const TARGET                     = 'target';
 	const TEXT                       = 'text';
 	const TEXT_FIELD_EXPAND          = 'text-field-expand';
 	const THREE_DOTS                 = 'three-dots';

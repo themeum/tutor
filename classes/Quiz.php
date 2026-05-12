@@ -1780,10 +1780,12 @@ class Quiz {
 	 * @param string $quiz_item_readable Readable time.
 	 * @param int    $total_marks Total Marks.
 	 * @param string $passing_grade Passing grade.
+	 * @param string $earned_marks Earned marks.
+	 * @param string $attempts_allowed Total Attempts allowed.
 	 *
 	 * @return void
 	 */
-	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade ) {
+	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, $attempts_allowed ) {
 		$quiz_summary = array(
 			array(
 				'columns' => array(
@@ -1825,10 +1827,32 @@ class Quiz {
 			'columns' => array(
 				array(
 					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . SvgIcon::make()->name( Icon::PASSED )->size( 20 )->get() . __( 'Passing Marks', 'tutor' ) . '
+						' . SvgIcon::make()->name( Icon::PASSED )->size( 20 )->get() . __( 'Passing Grade', 'tutor' ) . '
 					</div>',
 				),
 				array( 'content' => $passing_grade . '%' ),
+			),
+		);
+
+		$quiz_summary[] = array(
+			'columns' => array(
+				array(
+					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+						' . SvgIcon::make()->name( Icon::STAR )->size( 20 )->get() . __( 'Earned Grade', 'tutor' ) . '
+					</div>',
+				),
+				array( 'content' => $earned_marks . '%' ),
+			),
+		);
+
+		$quiz_summary[] = array(
+			'columns' => array(
+				array(
+					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+						' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
+					</div>',
+				),
+				array( 'content' => $attempts_allowed ),
 			),
 		);
 

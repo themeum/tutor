@@ -302,7 +302,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 		?>
 	<?php endif; ?>
 
-	<?php if ( ! $incorrect ) : ?>
+	<?php if ( ! $answers ) : ?>
 	<div class="tutor-empty-quiz-details">
 		<?php SvgIcon::make()->name( Icon::WARNING )->color( Color::CRITICAL )->size( 20 )->render(); ?>
 		<p class="error-message"><?php echo esc_html__( 'No Questions Answered.', 'tutor' ); ?></p>
