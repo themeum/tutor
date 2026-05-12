@@ -3,12 +3,14 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
+import { type AxiosError } from 'axios';
 
 interface CourseCompletePayload {
   course_id: number;
 }
 interface CourseRetakePayload {
   course_id: number;
+  context: string;
 }
 
 /**
@@ -32,8 +34,11 @@ export const courseCompleteHandler = () => {
           modal.closeModal('tutor-course-complete-modal');
           window.location.reload();
         },
-        onError: (error: Error) => {
+        onError: (error: AxiosError) => {
           toast.error(convertToErrorMessage(error));
+          if (!error || !error.response || !error.response.data) {
+            window.location.reload();
+          }
         },
       });
 
@@ -66,7 +71,7 @@ export const courseCompleteHandler = () => {
     },
 
     async handleCourseRetake(courseId: number) {
-      await this.courseRetakeMutation?.mutate({ course_id: courseId });
+      await this.courseRetakeMutation?.mutate({ course_id: courseId, context: 'learning-area' });
     },
   };
 };

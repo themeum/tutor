@@ -18,7 +18,6 @@ use Tutor\Components\SvgIcon;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
-use Tutor\Helpers\UrlHelper;
 
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
 $current_page  = max( 1, Input::get( 'current_page', 0, Input::TYPE_INT ) );
@@ -64,7 +63,7 @@ foreach ( $reviews as $review ) {
 					->id( 'review-delete-modal' )
 					->title( __( 'Delete your Review?', 'tutor' ) )
 					->message( __( 'Are you sure you want to delete this review? This action cannot be undone.', 'tutor' ) )
-					->icon( UrlHelper::themed_asset( 'images/illustrations/delete-reviews.webp' ) )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/delete-reviews.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 					->confirm_handler( 'handleDeleteReview(payload?.id)' )
 					->mutation_state( 'deleteReviewMutation' )
 					->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
@@ -75,7 +74,12 @@ foreach ( $reviews as $review ) {
 
 		<?php else : ?>
 			<div class="tutor-card">
-				<?php EmptyState::make()->title( 'No Reviews Found' )->render(); ?>
+				<?php
+					EmptyState::make()
+						->title( 'No Reviews Found' )
+						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reviews-empty.svg' ) )
+						->render();
+				?>
 			</div>
 		<?php endif; ?>
 	</div>

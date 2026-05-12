@@ -160,7 +160,7 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 			->message( Course::get_complete_modal_content( $tutor_course_progress ), wp_kses_allowed_html( 'post' ) )
 			->cancel_text( __( 'Go Back to Course', 'tutor' ) )
 			->confirm_text( __( 'Complete Anyway', 'tutor' ) )
-			->icon( UrlHelper::themed_asset( 'images/illustrations/warning.webp' ) )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/warning.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 			->confirm_handler( "handleCourseComplete($tutor_course_id)" )
 			->mutation_state( 'courseCompleteMutation' )
 			->render();
@@ -171,7 +171,7 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 		->id( $course_retake_modal_id )
 		->title( __( 'Start the Course Again?', 'tutor' ) )
 		->message( __( 'Retaking the course will reset your progress and start everything from the beginning.', 'tutor' ) )
-		->icon( UrlHelper::themed_asset( 'images/illustrations/retake-course.webp' ) )
+		->icon( tutor_utils()->get_themed_svg( 'images/illustrations/retake-course.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 		->cancel_text( __( 'Cancel', 'tutor' ) )
 		->confirm_text( __( 'Start Retake', 'tutor' ) )
 		->confirm_handler( "handleCourseRetake($tutor_course_id)" )

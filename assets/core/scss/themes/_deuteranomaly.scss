@@ -47,13 +47,18 @@
   --tutor-text-critical-hover: #{$tutor-orange-700};
   --tutor-text-warning: #{$tutor-orange-700};
   --tutor-text-caution: #{$tutor-yellow-700};
+
+  // VISUAL COLORS
+  --tutor-visual-success-1: #{$tutor-cyan-500};
+  --tutor-visual-success-2: #{$tutor-cyan-500};
+  --tutor-visual-exception-1: #{$tutor-cyan-200};
 }
 
 // =============================================================================
 // LIGHT — overrides specific to the light base theme
 // =============================================================================
 
-[data-tutor-theme='light'][data-tutor-vision='deuteranomaly'] {
+@mixin deuteranomaly-light-tokens {
   // SURFACE COLORS
   --tutor-surface-warning: #{$tutor-warning-50};
   --tutor-surface-warning-hover: #{$tutor-warning-100};
@@ -82,13 +87,17 @@
   --tutor-actions-warning-secondary: #{$tutor-orange-100};
   --tutor-actions-warning-exception: #{$tutor-orange-600};
   --tutor-actions-critical-secondary: #{$tutor-orange-100};
+
+  // VISUAL COLORS
+  --tutor-visual-critical-1: #{$tutor-error-500};
+  --tutor-visual-critical-2: #{$tutor-orange-100};
 }
 
 // =============================================================================
 // DARK — overrides specific to the dark base theme
 // =============================================================================
 
-[data-tutor-theme='dark'][data-tutor-vision='deuteranomaly'] {
+@mixin deuteranomaly-dark-tokens {
   // SURFACE COLORS
   --tutor-surface-warning: #{$tutor-gray-750};
   --tutor-surface-warning-hover: #{$tutor-warning-900};
@@ -119,4 +128,23 @@
   --tutor-actions-warning-secondary: #{$tutor-gray-700};
   --tutor-actions-warning-exception: #{$tutor-orange-50};
   --tutor-actions-critical-secondary: #{$tutor-gray-700};
+
+  // VISUAL COLORS
+  --tutor-visual-critical-1: #{$tutor-error-600};
+  --tutor-visual-critical-2: #{$tutor-orange-900};
+}
+
+[data-tutor-theme='light'][data-tutor-vision='deuteranomaly'],
+[data-tutor-theme='system'][data-tutor-vision='deuteranomaly'] {
+  @include deuteranomaly-light-tokens;
+}
+
+[data-tutor-theme='dark'][data-tutor-vision='deuteranomaly'] {
+  @include deuteranomaly-dark-tokens;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-tutor-theme='system'][data-tutor-vision='deuteranomaly'] {
+    @include deuteranomaly-dark-tokens;
+  }
 }

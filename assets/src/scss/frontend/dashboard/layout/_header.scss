@@ -217,7 +217,7 @@
       &-menu-wrapper {
         @include tutor-flex(column, stretch, space-between);
         background: $tutor-surface-base;
-        height: 100vh;
+        height: 100%;
       }
 
       &-menu {

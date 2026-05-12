@@ -20,6 +20,7 @@ use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
@@ -5330,8 +5331,8 @@ class Utils {
 	public function get_random_questions_by_quiz( $quiz_id = 0 ) {
 		global $wpdb;
 
-		$quiz_id         = $this->get_post_id( $quiz_id );
-		$attempt         = $this->is_started_quiz( $quiz_id );
+		$quiz_id = $this->get_post_id( $quiz_id );
+		$attempt = $this->is_started_quiz( $quiz_id );
 		if ( ! $attempt ) {
 			return false;
 		}
@@ -7069,9 +7070,26 @@ class Utils {
 	public function get_course_prev_next_contents_by_id( $content_id = 0 ) {
 
 		$course_id       = $this->get_course_id_by_content( $content_id );
-		$course_contents = $this->get_course_contents_by_id( $course_id );
-		$previous_id     = 0;
-		$next_id         = 0;
+		$course_contents = array();
+		$topics          = $this->get_topics( $course_id, array( 'fields' => 'ids' ) );
+		$topic_ids       = $topics->posts ?? array();
+
+		/*
+		 * Get course content based on topic ordering
+		 * instead of ordering all the content through query.
+		 */
+		if ( $this->count( $topic_ids ) ) {
+			foreach ( $topic_ids as $topic_id ) {
+				$course_content = $this->get_course_contents_by_topic( $topic_id, -1 );
+				if ( ! $this->count( $course_content->posts ) ) {
+					continue;
+				}
+				array_push( $course_contents, ...$course_content->posts );
+			}
+		}
+
+		$previous_id = 0;
+		$next_id     = 0;
 
 		if ( $this->count( $course_contents ) ) {
 			$ids = wp_list_pluck( $course_contents, 'ID' );
@@ -7989,7 +8007,7 @@ class Utils {
 	 *
 	 * @param string $content_type, content type like: lesson, assignment, quiz.
 	 * @param string $ancestor_type, content type like: lesson, assignment, quiz.
-	 * @param string    $ancestor_ids, post_parent id.
+	 * @param string $ancestor_ids, post_parent id.
 	 *
 	 * @return array
 	 */
@@ -9072,36 +9090,138 @@ class Utils {
 	 * @return string
 	 */
 	public function get_svg_icon( $name = '', $width = 16, $height = 16, $attributes = array() ) {
-
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
-		if ( ! file_exists( $icon_path ) ) {
-			return;
-		}
+		return $this->get_svg(
+			$icon_path,
+			array(
+				'width'      => $width,
+				'height'     => $height,
+				'attributes' => array_merge(
+					array(
+						'fill'        => 'none',
+						'role'        => 'presentation',
+						'aria-hidden' => 'true',
+					),
+					$attributes
+				),
+			)
+		);
+	}
 
-		$svg = file_get_contents( $icon_path );
-		if ( ! $svg ) {
-			return;
-		}
-
-		preg_match( '/<svg[^>]*viewBox="([^"]+)"[^>]*>(.*?)<\/svg>/is', $svg, $matches );
-		if ( ! $matches ) {
-			return;
-		}
-
-		list( $svg_tag, $view_box, $inner_svg ) = $matches;
-
-		$attr_string = sprintf(
-			'width="%d" height="%d" viewBox="%s" fill="none" role="presentation" aria-hidden="true"',
-			esc_attr( $width ),
-			esc_attr( $height ),
-			esc_attr( $view_box ),
+	/**
+	 * Get SVG content for inline rendering.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $path Absolute path to the SVG file.
+	 * @param array  $options {
+	 *   output?: bool,
+	 *   width?: string|int|null,
+	 *   height?: string|int|null,
+	 *   attributes?: array<string, string>
+	 * } $options Optional settings.
+	 * @return string
+	 */
+	public function get_svg( string $path, array $options = array() ): string {
+		$options = array_merge(
+			array(
+				'width'      => null,
+				'height'     => null,
+				'attributes' => array(),
+			),
+			$options
 		);
 
-		foreach ( $attributes as $key => $value ) {
-			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
+		if ( ! file_exists( $path ) ) {
+			return '';
 		}
 
-		return sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+		$svg_content = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		if ( false === $svg_content ) {
+			return '';
+		}
+
+		if ( ! empty( $options['width'] ) || ! empty( $options['height'] ) || ! empty( $options['attributes'] ) ) {
+			$svg_content = preg_replace_callback(
+				'/<svg\b[^>]*>/i',
+				static function ( $matches ) use ( $options ) {
+					$svg_tag = preg_replace( '/\s(?:width|height)="[^"]*"/i', '', $matches[0] );
+
+					foreach ( $options['attributes'] as $key => $value ) {
+						$svg_tag = preg_replace( '/\s' . preg_quote( $key, '/' ) . '="[^"]*"/i', '', $svg_tag );
+					}
+
+					$svg_tag = rtrim( substr( $svg_tag, 0, -1 ) );
+
+					if ( ! empty( $options['width'] ) ) {
+						$svg_tag .= ' width="' . esc_attr( (string) $options['width'] ) . '"';
+					}
+
+					if ( ! empty( $options['height'] ) ) {
+						$svg_tag .= ' height="' . esc_attr( (string) $options['height'] ) . '"';
+					}
+
+					foreach ( $options['attributes'] as $key => $value ) {
+						$svg_tag .= ' ' . esc_attr( $key ) . '="' . esc_attr( (string) $value ) . '"';
+					}
+
+					return $svg_tag . '>';
+				},
+				$svg_content,
+				1
+			);
+		}
+
+		$escaped = wp_kses( $svg_content, Input::allow_svg( array() ) );
+
+		return $escaped;
+	}
+
+	/**
+	 * Render SVG content.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $path Absolute path to the SVG file.
+	 * @param array  $options Optional settings passed to get_svg().
+	 *
+	 * @return void
+	 */
+	public function render_svg( string $path, array $options = array() ): void {
+		echo $this->get_svg( $path, $options ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+
+	/**
+	 * Get theme-aware SVG content for inline rendering.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $path Relative asset path to the SVG file.
+	 * @param array  $options Optional settings passed to get_svg().
+	 * @return string
+	 */
+	public function get_themed_svg( string $path, array $options = array() ): string {
+		$resolved = UrlHelper::resolve_asset( ltrim( $path, '/' ) );
+
+		if ( ! $resolved ) {
+			return '';
+		}
+
+		return $this->get_svg( $resolved['path'], $options );
+	}
+
+	/**
+	 * Render theme-aware SVG content.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $path Relative asset path to the SVG file.
+	 * @param array  $options Optional settings passed to get_themed_svg().
+	 *
+	 * @return void
+	 */
+	public function render_themed_svg( string $path, array $options = array() ): void {
+		echo $this->get_themed_svg( $path, $options ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -9967,36 +10087,7 @@ class Utils {
 	 * @return void
 	 */
 	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ) {
-		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
-		if ( ! file_exists( $icon_path ) ) {
-			return;
-		}
-
-		$svg = file_get_contents( $icon_path );
-		if ( ! $svg ) {
-			return;
-		}
-
-		preg_match( '/<svg[^>]*viewBox="([^"]+)"[^>]*>(.*?)<\/svg>/is', $svg, $matches );
-		if ( ! $matches ) {
-			return;
-		}
-
-		list( $svg_tag, $view_box, $inner_svg ) = $matches;
-
-		$attr_string = sprintf(
-			'width="%d" height="%d" viewBox="%s" fill="none" role="presentation" aria-hidden="true"',
-			esc_attr( $width ),
-			esc_attr( $height ),
-			esc_attr( $view_box ),
-		);
-
-		foreach ( $attributes as $key => $value ) {
-			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
-		}
-
-		//phpcs:ignore --all variables are sanitized.
-		printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+		echo $this->get_svg_icon( $name, $width, $height, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**

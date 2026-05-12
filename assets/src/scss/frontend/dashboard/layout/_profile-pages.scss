@@ -19,7 +19,7 @@ body:has(#wpadminbar) {
   padding-block: $tutor-spacing-5;
   position: sticky;
   top: 0;
-  z-index: $tutor-z-positive;
+  z-index: $tutor-z-header;
   width: 100%;
 
   &-title {

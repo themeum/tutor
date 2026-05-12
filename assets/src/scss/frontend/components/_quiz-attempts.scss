@@ -4,6 +4,16 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
+.tutor-my-quiz-attempts-wrapper .tutor-quiz-attempts {
+  border-radius: $tutor-radius-2xl;
+
+  @include tutor-breakpoint-down(sm) {
+    border: 1px solid $tutor-border-idle;
+    overflow: hidden;
+    margin-top: $tutor-spacing-4;
+  }
+}
+
 .tutor-quiz-attempts-mobile-heading {
   @include tutor-breakpoint-up(sm) {
     display: none;
@@ -277,7 +287,7 @@
         }
 
         &:hover {
-          .tutor-quiz-item-info-title{
+          .tutor-quiz-item-info-title {
             color: $tutor-brand-700;
           }
         }

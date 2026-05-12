@@ -20,7 +20,9 @@
     "generate:icon-types": "tsx ./assets/src/js/v3/shared/icons/generate-icon-types.ts",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006 --no-open",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "replace-svg-colors": "tsx ./assets/core/ts/utils/replace-svg-colors.ts ./assets/images/illustrations ../tutor-pro/assets/images/illustrations",
+    "replace-svg-colors:dry": "tsx ./assets/core/ts/utils/replace-svg-colors.ts --dry-run ./assets/images/illustrations ../tutor-pro/assets/images/illustrations"
   },
   "keywords": [
     "lms",

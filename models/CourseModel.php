@@ -1464,34 +1464,23 @@ class CourseModel {
 		}
 
 		foreach ( $topics_query->posts as $topic_post ) {
-			$topic_id                    = (int) $topic_post->ID;
-			$total_topic_items           = 0;
-			$total_topic_items_completed = 0;
-			$items                       = array();
-
-			$contents_query = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
+			$topic_id              = (int) $topic_post->ID;
+			$items                 = array();
+			$completion_percentage = tutor_utils()->count_completed_contents_by_topic( $topic_id, $student_id );
+			$contents_query        = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
 
 			if ( ! empty( $contents_query ) && $contents_query->have_posts() ) {
 				foreach ( $contents_query->posts as $content_post ) {
 					$items[] = ( new self() )->build_course_progress_item( $content_post, $student_id, $course_id );
 				}
-				$total_topic_items = count( $contents_query->posts );
 			}
-
-			$total_topic_items_completed = count(
-				array_filter( $items, fn( $item ) => $item['is_completed'] )
-			);
-
-			$percentage = $total_topic_items > 0 && $total_topic_items_completed > 0
-							? round( ( $total_topic_items_completed / $total_topic_items ) * 100, 2 )
-							: 0;
 
 			$topic_list[] = array(
 				'id'                    => $topic_id,
 				'summary'               => $topic_post->post_content,
 				'title'                 => get_the_title( $topic_id ),
 				'items'                 => $items,
-				'completion_percentage' => $percentage,
+				'completion_percentage' => $completion_percentage['percentage'] ?? 0,
 			);
 		}
 
@@ -1599,8 +1588,8 @@ class CourseModel {
 					$quiz_status = QuizModel::get_quiz_result( $post->ID, $user_id );
 
 					$quiz_icon_map = array(
-						QuizModel::RESULT_FAIL    => array( Icon::CROSS_CIRCLE_LINE, 'tutor-icon-critical' ),
-						QuizModel::RESULT_PENDING => array( Icon::INFO_2, 'tutor-icon-warning-secondary' ),
+						QuizModel::RESULT_FAIL    => array( Icon::CROSS_COLORIZE, 'tutor-icon-critical' ),
+						QuizModel::RESULT_PENDING => array( Icon::INFO_COLORIZE, 'tutor-icon-warning-secondary' ),
 					);
 
 					if ( isset( $quiz_icon_map[ $quiz_status ] ) ) {
@@ -1632,8 +1621,8 @@ class CourseModel {
 				$icon_class = 'tutor-text-subdued';
 
 				$status_map = array(
-					'pending' => array( Icon::INFO_2, 'tutor-icon-warning-secondary' ),
-					'fail'    => array( Icon::CROSS_CIRCLE_LINE, 'tutor-icon-critical' ),
+					'pending' => array( Icon::INFO_COLORIZE, 'tutor-icon-warning-secondary' ),
+					'fail'    => array( Icon::CROSS_COLORIZE, 'tutor-icon-critical' ),
 				);
 
 				if ( isset( $status_map[ $status ] ) ) {

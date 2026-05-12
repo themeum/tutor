@@ -41,31 +41,20 @@ class UrlHelper {
 	}
 
 	/**
-	 * Get a theme-aware plugin asset URL.
-	 *
-	 * In kids mode, this looks for a matching kids variant before falling back
-	 * to the default asset path.
+	 * Find the first existing file across asset sources for a given path,
+	 * respecting kids-mode variant resolution.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $path Relative asset path.
-	 *
-	 * @return string
+	 * @param string $path Relative asset path (no leading slash).
+	 * @return array{path: string, url: string}|null
 	 */
-	public static function themed_asset( $path = '' ): string {
-		static $resolved_paths = array();
-
-		$path = ltrim( (string) $path, '/' );
-
+	public static function resolve_asset( string $path ): ?array {
 		if ( '' === $path ) {
-			return self::asset( $path );
+			return null;
 		}
 
-		if ( isset( $resolved_paths[ $path ] ) ) {
-			return $resolved_paths[ $path ];
-		}
-
-		$asset_sources = array(
+		$sources = array(
 			array(
 				'path' => tutor()->path . 'assets/',
 				'url'  => tutor()->assets_url,
@@ -73,48 +62,66 @@ class UrlHelper {
 		);
 
 		if ( function_exists( 'tutor_pro' ) ) {
-			$asset_sources[] = array(
+			$sources[] = array(
 				'path' => tutor_pro()->path . 'assets/',
 				'url'  => tutor_pro()->assets,
 			);
 		}
 
-		if ( ! tutor_utils()->is_kids_mode() || false !== strpos( $path, '/kids/' ) ) {
-			foreach ( $asset_sources as $asset_source ) {
-				if ( file_exists( $asset_source['path'] . $path ) ) {
-					$resolved_paths[ $path ] = $asset_source['url'] . $path;
-					return $resolved_paths[ $path ];
+		$candidates = array( $path );
+
+		if ( tutor_utils()->is_kids_mode() && false === strpos( $path, '/kids/' ) ) {
+			$directory = pathinfo( $path, PATHINFO_DIRNAME );
+			$basename  = pathinfo( $path, PATHINFO_BASENAME );
+
+			if ( '' !== $basename ) {
+				$kids_path = ( '.' === $directory || '' === $directory )
+					? 'kids/' . $basename
+					: trailingslashit( $directory ) . 'kids/' . $basename;
+
+				array_unshift( $candidates, $kids_path );
+			}
+		}
+
+		foreach ( $candidates as $candidate ) {
+			foreach ( $sources as $source ) {
+				if ( file_exists( $source['path'] . $candidate ) ) {
+					return array(
+						'path' => $source['path'] . $candidate,
+						'url'  => $source['url'] . $candidate,
+					);
 				}
 			}
-
-			$resolved_paths[ $path ] = self::asset( $path );
-			return $resolved_paths[ $path ];
 		}
 
-		$directory = pathinfo( $path, PATHINFO_DIRNAME );
-		$basename  = pathinfo( $path, PATHINFO_BASENAME );
-		if ( '' !== $basename ) {
-			$candidate_path = '.' === $directory || '' === $directory
-				? 'kids/' . $basename
-				: trailingslashit( $directory ) . 'kids/' . $basename;
+		return null;
+	}
 
-			foreach ( $asset_sources as $asset_source ) {
-				if ( file_exists( $asset_source['path'] . $candidate_path ) ) {
-					$resolved_paths[ $path ] = $asset_source['url'] . $candidate_path;
-					return $resolved_paths[ $path ];
-				}
-			}
+	/**
+	 * Get a theme-aware plugin asset URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $path Relative asset path.
+	 * @return string
+	 */
+	public static function themed_asset( string $path = '' ): string {
+		static $cache = array();
+
+		$path = ltrim( $path, '/' );
+
+		if ( '' === $path ) {
+			return self::asset( $path );
 		}
 
-		foreach ( $asset_sources as $asset_source ) {
-			if ( file_exists( $asset_source['path'] . $path ) ) {
-				$resolved_paths[ $path ] = $asset_source['url'] . $path;
-				return $resolved_paths[ $path ];
-			}
+		if ( isset( $cache[ $path ] ) ) {
+			return $cache[ $path ];
 		}
 
-		$resolved_paths[ $path ] = self::asset( $path );
-		return $resolved_paths[ $path ];
+		$resolved       = self::resolve_asset( $path );
+		$cache[ $path ] = $resolved ? $resolved['url'] : self::asset( $path );
+
+		return $cache[ $path ];
 	}
 
 	/**

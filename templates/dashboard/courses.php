@@ -46,8 +46,8 @@ if ( ! isset( $active_tab, $page_tabs[ $active_tab ] ) ) {
 }
 
 $enrolled_courses  = CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ), $offset, $courses_per_page );
-$active_courses    = CourseModel::get_active_courses_by_user( null, $offset, $courses_per_page );
-$completed_courses = CourseModel::get_completed_courses_by_user( null, $offset, $courses_per_page );
+$active_courses    = CourseModel::get_active_courses_by_user( null, $offset, $courses_per_page, array( 'post_status' => array( 'private', 'publish' ) ) );
+$completed_courses = CourseModel::get_completed_courses_by_user( null, $offset, $courses_per_page, array( 'post_status' => array( 'private', 'publish' ) ) );
 
 $enrolled_course_count  = is_a( $enrolled_courses, 'WP_Query' ) ? $enrolled_courses->found_posts : 0;
 $active_course_count    = is_a( $active_courses, 'WP_Query' ) ? $active_courses->found_posts : 0;
@@ -103,7 +103,10 @@ $courses_list = $courses_list_array[ $active_tab ];
 						tutor_load_template( 'dashboard.courses.course-card' );
 					endwhile;
 				else :
-					EmptyState::make()->title( __( 'No Courses Found', 'tutor' ) )->render();
+					EmptyState::make()
+						->title( __( 'No Courses Found', 'tutor' ) )
+						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/learning-empty.svg' ) )
+						->render();
 				endif;
 				?>
 			</div>
