@@ -236,7 +236,9 @@
     }
 
     .tutor-dashboard-page-card,
-    .tutor-billing-body {
+    .tutor-billing-body,
+    .tutor-dashboard-courses-wrapper .tutor-dashboard-courses-card,
+    .tutor-dashboard-lesson-notes .tutor-dashboard-page-card {
       border-radius: 0px;
       box-shadow: none;
     }
@@ -253,12 +255,19 @@
 
     .tutor-dashboard-page-card-body,
     .tutor-billing-tabs,
-    .tutor-billing-tabs-content {
+    .tutor-billing-tabs-content,
+    .tutor-dashboard-courses-card .tutor-dashboard-courses-tab,
+    .tutor-my-quiz-attempts-wrapper .tutor-quiz-attempts {
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
     }
 
     .tutor-dashboard-page-card-header {
       border-radius: $tutor-radius-6xl;
+    }
+
+    .tutor-dashboard-courses-card {
+      padding: 2px 2px 5px 2px;
+      margin: -2px -2px -5px -2px;
     }
   }
 }

@@ -4,6 +4,13 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
+.tutor-my-quiz-attempts-wrapper .tutor-quiz-attempts {
+  @include tutor-breakpoint-down(sm) {
+    overflow: hidden;
+    margin-top: $tutor-spacing-5;
+  }
+}
+
 .tutor-quiz-attempts-mobile-heading {
   @include tutor-breakpoint-up(sm) {
     display: none;
@@ -277,7 +284,7 @@
         }
 
         &:hover {
-          .tutor-quiz-item-info-title{
+          .tutor-quiz-item-info-title {
             color: $tutor-brand-700;
           }
         }
