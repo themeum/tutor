@@ -35,7 +35,7 @@ window.jQuery(document).ready(($) => {
                                 }
                             },
                             error: function(response) {
-                                tutor_toast(__( 'Error', 'tutor' ),(response.responseJSON || {}).message ||__('Something went wrong', 'tutor'));
+                                tutor_toast(__( 'Error', 'tutor' ),(response.responseJSON || {}).message ||__('Something went wrong', 'tutor'), 'error' );
                             },
                             complete: function () {
                                 button.prop('disabled', false).removeClass('is-loading');
