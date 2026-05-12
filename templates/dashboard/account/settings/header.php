@@ -93,7 +93,7 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 					->icon_only()
 					->size( Size::X_SMALL )
 					->attr( 'type', 'button' )
-					->attr( '@click', 'handleMobileClose()' )
+					->attr( '@click', 'handleClose()' )
 					->render();
 				?>
 			</div>

@@ -104,22 +104,14 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 
 					return tabs.selectTab.call(this, tabId);
 				},
-				handleMobileClose() {
-					if (this.activeTab !== "none") {
+				handleClose() {
+					if (window.innerWidth < 768 && this.activeTab !== "none") {
 						this.selectTab("none");
 						return;
 					}
 
 					window.location.href = this.backUrl;
 				},
-				handleClose() {
-					if (window.innerWidth < 768) {
-						this.handleMobileClose();
-						return;
-					}
-
-					this.activeTab = "none";
-				}
 			};
 		})()'
 		class="tutor-profile-settings-section"
