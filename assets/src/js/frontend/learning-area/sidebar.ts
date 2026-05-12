@@ -39,6 +39,7 @@ export const sidebarComponent = ({
     pagesHeight: 0,
     resizing: false,
     collapsed: isCollapsed,
+    sidebarOpen: false,
     courseId: courseId,
     resetModalId: resetModalId,
     resetProgressMutation: null as MutationState<ResetProgressResponse, ResetProgressPayload> | null,
@@ -69,6 +70,14 @@ export const sidebarComponent = ({
           },
         },
       );
+    },
+
+    toggleSidebar() {
+      this.sidebarOpen = !this.sidebarOpen;
+    },
+
+    closeSidebar() {
+      this.sidebarOpen = false;
     },
 
     startResizing(e: MouseEvent) {

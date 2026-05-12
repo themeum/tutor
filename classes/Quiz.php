@@ -2200,10 +2200,10 @@ class Quiz {
 			$quiz_result = QuizModel::get_quiz_result( $quiz->ID );
 			if ( $attempt_ended && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status ) {
 				if ( QuizModel::RESULT_FAIL === $quiz_result ) {
-					$icon_name   = Icon::CROSS_CIRCLE_LINE;
+					$icon_name   = Icon::CROSS_COLORIZE;
 					$quiz_status = QuizModel::RESULT_FAIL;
 				} elseif ( QuizModel::RESULT_PENDING === $quiz_result ) {
-					$icon_name   = Icon::INFO_2;
+					$icon_name   = Icon::INFO_COLORIZE;
 					$quiz_status = QuizModel::RESULT_PENDING;
 				} elseif ( QuizModel::RESULT_PASS === $quiz_result ) {
 					$icon_name = Icon::COMPLETED_COLORIZE;

@@ -231,10 +231,15 @@
       padding: 0;
     }
 
+    .tutor-webinar-card {
+      overflow: hidden;
+    }
+
     .tutor-meeting,
     .tutor-quiz-intro,
     .tutor-lesson-content .tutor-lesson-content-tab,
-    .tutor-quiz-summary .tutor-quiz-result {
+    .tutor-quiz-summary .tutor-quiz-result,
+    .tutor-learning-area-resources .tutor-resources-wrapper {
       box-shadow: none;
     }
 
@@ -249,7 +254,9 @@
     .tutor-quiz-summary .tutor-quiz-summary-overview,
     .tutor-quiz-intro-params,
     .tutor-lesson-content .tutor-lesson-content-tab .tutor-tabs-nav,
-    .tutor-lesson-content .tutor-lesson-content-tab .tutor-tabs-content {
+    .tutor-lesson-content .tutor-lesson-content-tab .tutor-tabs-content,
+    .tutor-learning-area-resources .tutor-tabs-nav,
+    .tutor-learning-area-resources .tutor-tabs-content {
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
     }
 

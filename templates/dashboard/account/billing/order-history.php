@@ -78,7 +78,7 @@ if ( empty( $orders ) ) :
 		->render();
 else :
 	?>
-<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-order-history">
+<div class="tutor-flex tutor-flex-column tutor-order-history">
 	<?php
 	$default_card_template       = Ecommerce::MONETIZE_BY === $monetize_by ? tutor_get_template( 'dashboard.account.billing.native-order-history-card' ) : '';
 	$order_history_card_template = apply_filters( 'tutor_order_history_card_template', $default_card_template );
