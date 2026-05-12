@@ -247,10 +247,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   rules={{
                     ...requiredRule(),
                     validate: (value) => {
-                      if (value >= 0 && value <= 20) {
+                      if (value >= 0) {
                         return true;
                       }
-                      return __('Allowed attempts must be between 0 and 20', 'tutor');
+                      return __('Allowed attempts must be greater than or equal to 0', 'tutor');
                     },
                   }}
                   render={(controllerProps) => (
