@@ -36,7 +36,7 @@ $earned_marks       = 0;
 if ( $quiz_attempt ) {
 	$earned_marks = (float) $quiz_attempt->earned_marks;
 	$total        = (float) $total_marks;
-	$earned_marks = round( ( $earned_marks / $total_marks ) * 100 );
+	$earned_marks = number_format( ( $earned_marks / $total_marks ) * 100, 2 );
 }
 $limit_attempts   = (int) $quiz_options['limit_attempts_allowed'] ?? 0;
 $allowed_attempts = $limit_attempts ? $quiz_options['attempts_allowed'] ?? '' : '1';
