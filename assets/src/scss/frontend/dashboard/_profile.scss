@@ -88,6 +88,51 @@
       }
     }
 
+    .tutor-bio-wrapper {
+      position: relative;
+      margin-bottom: $tutor-spacing-9;
+
+      .tutor-bio-collapsed {
+        max-height: calc(4 * 1.125rem);
+        overflow: hidden;
+      }
+
+      .tutor-user-profile-bio {
+        margin-bottom: 0;
+      }
+
+      // Shared base for both toggle buttons
+      %bio-toggle-base {
+        @include tutor-typography(small);
+        background: none;
+        border: none;
+        padding: 0;
+        color: $tutor-text-brand;
+        cursor: pointer;
+        text-box-trim: trim-both;
+      }
+
+      .tutor-bio-toggle {
+        @extend %bio-toggle-base;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        z-index: calc($tutor-z-highest + 1);
+        background: $tutor-surface-l1; // Overrides the transparent base — needed for text overlap
+        padding: 0 0 0 4px;
+      }
+
+      .tutor-bio-toggle-less {
+        @extend %bio-toggle-base;
+        display: inline;
+        margin-top: 4px;
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        margin-bottom: $tutor-spacing-6;
+      }
+    }
+
     .tutor-user-profile-details {
       @include tutor-flex(column, flex-start);
       gap: $tutor-spacing-2;

@@ -58,9 +58,40 @@ $phone_number     = $student_meta['phone_number'][0] ?? '';
 			</div>
 		</div>
 		<div class="tutor-profile-card-body-right">
-			<div class="tutor-user-profile-bio">
-				<?php echo wp_kses_post( $student_meta['_tutor_profile_bio'][0] ?? '' ); ?>
+			<?php
+			$bio_text = $student_meta['_tutor_profile_bio'][0] ?? '';
+			if ( ! empty( $bio_text ) ) :
+				?>
+			<div
+				class="tutor-bio-wrapper"
+				x-data="{ expanded: false, hasOverflow: false }"
+				x-init="hasOverflow = $refs.bio.scrollHeight > ( parseFloat( getComputedStyle( $refs.bio ).lineHeight ) * 4 )"
+			>
+				<div
+					class="tutor-user-profile-bio"
+					x-ref="bio"
+					:class="{ 'tutor-bio-collapsed': !expanded && hasOverflow }"
+				>
+					<?php echo wp_kses_post( $bio_text ); ?>
+				</div>
+				<span
+					class="tutor-bio-toggle"
+					x-cloak
+					x-show="hasOverflow && !expanded"
+					x-on:click.prevent="expanded = true"
+				>
+					<?php esc_html_e( 'Read more', 'tutor' ); ?>
+				</span>
+				<span 
+					class="tutor-bio-toggle-less"
+					x-cloak
+					x-show="expanded"
+					x-on:click.prevent="expanded = false"
+				>
+					<?php esc_html_e( 'Read less', 'tutor' ); ?>
+				</span>
 			</div>
+			<?php endif; ?>
 			<ul class="tutor-user-profile-details">
 				<li class="tutor-badge tutor-badge-disabled">
 					<?php echo esc_html__( 'Username', 'tutor' ); ?> : 
