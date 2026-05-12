@@ -3089,12 +3089,12 @@ class Course extends Tutor_Base {
 		$course_retake_feature = tutor_utils()->get_option( 'course_retake_feature', false );
 
 		if ( ! $course_reset_progress && 'learning-area-sidebar' === $context ) {
-			$this->response_bad_request( __( 'You are not allowed to reset course progress.', 'tutor' ) );
+			$this->response_bad_request( __( 'You do not have permission to reset this course.', 'tutor' ) );
 			return;
 		}
 
 		if ( ! $course_retake_feature && ( 'course-landing' === $context || 'learning-area' === $context ) ) {
-			$this->response_bad_request( __( 'You are not allowed to reset course progress.', 'tutor' ) );
+			$this->response_bad_request( __( 'You do not have permission to retake this course.', 'tutor' ) );
 			return;
 		}
 
