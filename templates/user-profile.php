@@ -20,6 +20,7 @@ use TUTOR\Input;
 $user_id          = Input::get( 'student_id', get_current_user_id(), Input::TYPE_INT );
 $student_details  = get_userdata( $user_id );
 $student_meta     = get_user_meta( $user_id );
+$cover_photo_url  = tutor_utils()->get_cover_photo_url( $user_id );
 $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
 $website_url      = $student_meta['_tutor_profile_website'][0] ?? '#';
 $github_url       = $student_meta['_tutor_profile_github'][0] ?? '#';
@@ -30,7 +31,7 @@ $phone_number     = $student_meta['phone_number'][0] ?? '';
 ?>
 
 <div class="tutor-profile-card">
-	<div class="tutor-profile-card-header">
+	<div class="tutor-profile-card-header" style="background-image: url(<?php echo esc_attr( $cover_photo_url ); ?>);">
 		<?php Avatar::make()->user( $user_id )->size( Size::SIZE_104 )->render(); ?>
 		<?php if ( tutor_utils()->is_dashboard_page( 'account/profile' ) ) : ?>
 		<a href="<?php echo esc_url( $edit_profile_url ); ?>" class="tutor-edit-profile-btn">

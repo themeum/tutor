@@ -11,10 +11,18 @@
   .tutor-profile-card-header {
     @include tutor-flex(row, center, center);
     background-color: $tutor-surface-brand-tertiary;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
     border-radius: $tutor-radius-lg;
-    margin-bottom: $tutor-spacing-7;
+    margin-bottom: $tutor-spacing-14;
     position: relative;
     height: 184px;
+
+    .tutor-avatar {
+      border: 4px solid $tutor-border-inverse;
+      transform: translateY(92px);
+    }
 
     .tutor-edit-profile-btn {
       @include tutor-button-base();
@@ -44,8 +52,7 @@
   }
 
   .tutor-profile-card-body {
-    @include tutor-grid(2);
-    gap: $tutor-spacing-6;
+    @include tutor-grid(2, $tutor-spacing-21);
     position: relative;
 
     @include tutor-breakpoint-down(sm) {
@@ -117,11 +124,6 @@
 
     &-right {
       @include tutor-flex(column, flex-start, space-between);
-
-      @include tutor-breakpoint-up(sm) {
-        max-width: 240px;
-        margin-left: auto;
-      }
     }
 
     .tutor-profile-member-since {
