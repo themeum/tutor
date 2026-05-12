@@ -8,6 +8,8 @@
  * @since 1.0.0
  */
 
+use TUTOR\Assets;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -20,6 +22,8 @@ if ( ! tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true 
 
 tutor_utils()->tutor_custom_header();
 $login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
+
+$should_load_legacy_scripts = Assets::should_load_legacy_scripts();
 ?>
 
 <?php
@@ -34,9 +38,10 @@ do_action( 'tutor/template/login/before/wrap' );
 			</div>
 			<?php
 				// load form template.
-				$login_form = trailingslashit( tutor()->path ) . 'templates/login-form.php';
+				$login_form        = trailingslashit( tutor()->path ) . 'templates/login-form.php';
+				$login_form_legacy = trailingslashit( tutor()->path ) . 'templates/login-form-legacy.php';
 				tutor_load_template_from_custom_path(
-					$login_form,
+					$should_load_legacy_scripts ? $login_form_legacy : $login_form,
 					false
 				);
 				?>
