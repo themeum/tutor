@@ -25,6 +25,7 @@ use TUTOR\Input;
 
 $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 if ( 'free' === $monetize_by ) {
+	EmptyState::make()->title( __( 'No Orders Found!', 'tutor' ) )->render();
 	return;
 }
 
