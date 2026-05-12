@@ -21,35 +21,20 @@ $user_id          = Input::get( 'student_id', get_current_user_id(), Input::TYPE
 $student_details  = get_userdata( $user_id );
 $student_meta     = get_user_meta( $user_id );
 $edit_profile_url = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
-$website_url      = $student_meta['_tutor_profile_website'][0] ?? '';
-$github_url       = $student_meta['_tutor_profile_github'][0] ?? '';
-$x_url            = $student_meta['_tutor_profile_twitter'][0] ?? '';
-$facebook_url     = $student_meta['_tutor_profile_facebook'][0] ?? '';
-$linked_in_url    = $student_meta['_tutor_profile_linkedin'][0] ?? '';
 $phone_number     = $student_meta['phone_number'][0] ?? '';
 
-$social_links = array(
-	'facebook' => array(
-		'url'  => $facebook_url,
-		'icon' => Icon::FACEBOOK,
-	),
-	'x'        => array(
-		'url'  => $x_url,
-		'icon' => Icon::X,
-	),
-	'linkedin' => array(
-		'url'  => $linked_in_url,
-		'icon' => Icon::LINKEDIN,
-	),
-	'github'   => array(
-		'url'  => $github_url,
-		'icon' => Icon::GITHUB,
-	),
-	'website'  => array(
-		'url'  => $website_url,
-		'icon' => Icon::GLOBE,
-	),
-);
+$social_fields = tutor_utils()->tutor_user_social_icons();
+$social_links  = array();
+
+foreach ( $social_fields as $meta_key => $field ) {
+	$short_key                  = str_replace( '_tutor_profile_', '', $meta_key );
+	$url                        = get_user_meta( $user_id, $meta_key, true );
+	$social_links[ $short_key ] = array(
+		'url'   => $url,
+		'icon'  => $field['svg_icon'],
+		'label' => $field['label'],
+	);
+}
 ?>
 
 <div class="tutor-profile-card">
@@ -73,7 +58,6 @@ $social_links = array(
 				</div>
 
 				<?php
-				// Only render the social row if at least one URL is provided.
 				$has_social = array_filter( array_column( $social_links, 'url' ) );
 				if ( $has_social ) :
 					?>
@@ -81,11 +65,11 @@ $social_links = array(
 					<?php foreach ( $social_links as $network => $social_link ) : ?>
 						<?php if ( ! empty( $social_link['url'] ) ) : ?>
 						<a
-							href="<?php echo esc_url( $link['url'] ); ?>"
+							href="<?php echo esc_url( $social_link['url'] ); ?>"
 							class="tutor-social-link tutor-social-link--<?php echo esc_attr( $network ); ?>"
 							target="_blank"
 							rel="noopener noreferrer"
-							aria-label="<?php echo esc_attr( ucfirst( $network ) ); ?>"
+							aria-label="<?php echo esc_attr( $social_link['label'] ); ?>"
 						>
 							<?php SvgIcon::make()->name( $social_link['icon'] )->render(); ?>
 						</a>
@@ -102,22 +86,16 @@ $social_links = array(
 				?>
 			<div
 				class="tutor-bio-wrapper"
-				x-data="{ expanded: false, hasOverflow: false }"
-				x-init="
-					const checkOverflow = () => {
-						const lh = parseFloat( getComputedStyle( $refs.bio ).lineHeight );
-						hasOverflow = ! isNaN( lh ) && $refs.bio.scrollHeight > ( lh * 4 );
-					};
-					checkOverflow();
-					const ro = new ResizeObserver( checkOverflow );
-					ro.observe( $refs.bio );
-					$cleanup( () => ro.disconnect() );
-				"
+				x-data="{ expanded: false, hasOverflow: true }"
+				x-init="$nextTick(() => hasOverflow = $refs.bio.scrollHeight > $refs.bio.offsetHeight)"
 			>
 				<div
-					class="tutor-user-profile-bio"
+					class="tutor-user-profile-bio tutor-bio-collapsed"
 					x-ref="bio"
 					:class="{ 'tutor-bio-collapsed': ! expanded && hasOverflow }"
+					x-show="expanded || ! hasOverflow"
+					x-collapse.min.76px
+					:style="! expanded && hasOverflow && { minHeight: 'var(--tutor-bio-collapsed-height)' }"
 				>
 					<?php echo wp_kses_post( $bio_text ); ?>
 				</div>

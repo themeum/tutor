@@ -91,13 +91,14 @@
     .tutor-bio-wrapper {
       position: relative;
       margin-bottom: $tutor-spacing-9;
+      --tutor-bio-collapsed-height: calc(4 * #{if(variable-exists(tutor-line-height-p2), $tutor-line-height-p2, 1.5rem)});
 
       .tutor-user-profile-bio {
         margin-bottom: 0;
       }
 
       .tutor-bio-collapsed {
-        max-height: calc(4 * #{if(variable-exists(tutor-line-height-p2), $tutor-line-height-p2, 1.5rem)});
+        max-height: var(--tutor-bio-collapsed-height);
         overflow: hidden;
       }
 
