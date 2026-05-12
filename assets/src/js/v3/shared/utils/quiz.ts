@@ -183,18 +183,23 @@ export const validateQuizQuestion = (
       }
     }
 
-    if (
-      currentQuestionType === 'draw_image' ||
-      currentQuestionType === 'pin_image' ||
-      currentQuestionType === 'puzzle'
-    ) {
+    if (currentQuestionType === 'draw_image' || currentQuestionType === 'pin_image') {
       const hasMarkedArea = answers.some((answer) => Boolean(answer.answer_two_gap_match));
       if (!hasMarkedArea) {
         return {
-          message:
-            currentQuestionType === 'puzzle'
-              ? __('Please upload a valid puzzle image.', __TUTOR_TEXT_DOMAIN__)
-              : __('Please mark a valid area on the image.', __TUTOR_TEXT_DOMAIN__),
+          message: __('Please mark a valid area on the image.', __TUTOR_TEXT_DOMAIN__),
+          type: 'question',
+        };
+      }
+    }
+
+    if (currentQuestionType === 'puzzle') {
+      const hasPuzzleImage = answers.some(
+        (answer) => Boolean(answer.answer_two_gap_match) || Boolean(answer.image_url),
+      );
+      if (!hasPuzzleImage) {
+        return {
+          message: __('Please upload a valid puzzle image.', __TUTOR_TEXT_DOMAIN__),
           type: 'question',
         };
       }
