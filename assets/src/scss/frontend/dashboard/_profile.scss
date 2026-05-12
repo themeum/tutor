@@ -71,11 +71,17 @@
       gap: $tutor-spacing-6;
       margin-top: $tutor-spacing-6;
 
-      a {
+      .tutor-social-link {
         height: 16px;
         width: 16px;
         outline: none;
         box-shadow: none;
+        color: $tutor-text-primary;
+        @include tutor-transition(color);
+
+        &:hover {
+          color: $tutor-text-brand;
+        }
       }
     }
 
@@ -91,7 +97,9 @@
     .tutor-bio-wrapper {
       position: relative;
       margin-bottom: $tutor-spacing-9;
-      --tutor-bio-collapsed-height: calc(4 * #{if(variable-exists(tutor-line-height-p2), $tutor-line-height-p2, 1.5rem)});
+      --tutor-bio-collapsed-height: calc(
+        4 * #{if(variable-exists(tutor-line-height-p2), $tutor-line-height-p2, 1.5rem)}
+      );
 
       .tutor-user-profile-bio {
         margin-bottom: 0;
@@ -155,7 +163,7 @@
       }
     }
   }
-  
+
   %bio-toggle-base {
     @include tutor-typography(small);
     appearance: none;

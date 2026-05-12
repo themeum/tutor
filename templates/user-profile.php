@@ -66,7 +66,7 @@ foreach ( $social_fields as $meta_key => $field ) {
 						<?php if ( ! empty( $social_link['url'] ) ) : ?>
 						<a
 							href="<?php echo esc_url( $social_link['url'] ); ?>"
-							class="tutor-social-link tutor-social-link--<?php echo esc_attr( $network ); ?>"
+							class="tutor-social-link tutor-social-link-<?php echo esc_attr( $network ); ?>"
 							target="_blank"
 							rel="noopener noreferrer"
 							aria-label="<?php echo esc_attr( $social_link['label'] ); ?>"
