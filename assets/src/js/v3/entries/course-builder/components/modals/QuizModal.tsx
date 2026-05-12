@@ -44,6 +44,7 @@ import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { type ID, isDefined, type TopicContentType } from '@TutorShared/utils/types';
 import { findSlotFields } from '@TutorShared/utils/util';
+import { tutorConfig } from '@TutorShared/config/config';
 
 interface QuizModalProps extends ModalProps {
   quizId?: ID;
@@ -56,6 +57,7 @@ interface QuizModalProps extends ModalProps {
 type QuizTabs = 'details' | 'settings';
 
 const courseId = getCourseId();
+const defaultQuizAttemptsAllowed = tutorConfig.settings?.quiz_attempts_allowed ?? 10;
 
 const QuizModal = ({
   closeModal,
@@ -89,7 +91,7 @@ const QuizModal = ({
         hide_quiz_time_display: false,
         limit_attempts_allowed: false,
         limit_questions_to_answer: false,
-        attempts_allowed: 10,
+        attempts_allowed: defaultQuizAttemptsAllowed,
         passing_grade: 80,
         max_questions_for_answer: contentType === 'tutor_h5p_quiz' ? 0 : 10,
         quiz_auto_start: false,

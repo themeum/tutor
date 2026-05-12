@@ -6,6 +6,7 @@ import ToastProvider from '@TutorShared/atoms/Toast';
 
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
+import { SVGIconConfigProvider } from '@TutorShared/contexts/SVGIconConfigContext';
 
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
 import Main from './layout/Main';
@@ -30,12 +31,14 @@ function App() {
   return (
     <RTLProvider>
       <QueryClientProvider client={queryClient}>
-        <ToastProvider position="bottom-right">
-          <ModalProvider>
-            <Global styles={createGlobalCss()} />
-            <Main />
-          </ModalProvider>
-        </ToastProvider>
+        <SVGIconConfigProvider>
+          <ToastProvider position="bottom-right">
+            <ModalProvider>
+              <Global styles={createGlobalCss()} />
+              <Main />
+            </ModalProvider>
+          </ToastProvider>
+        </SVGIconConfigProvider>
       </QueryClientProvider>
     </RTLProvider>
   );

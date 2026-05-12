@@ -7070,9 +7070,26 @@ class Utils {
 	public function get_course_prev_next_contents_by_id( $content_id = 0 ) {
 
 		$course_id       = $this->get_course_id_by_content( $content_id );
-		$course_contents = $this->get_course_contents_by_id( $course_id );
-		$previous_id     = 0;
-		$next_id         = 0;
+		$course_contents = array();
+		$topics          = $this->get_topics( $course_id, array( 'fields' => 'ids' ) );
+		$topic_ids       = $topics->posts ?? array();
+
+		/*
+		 * Get course content based on topic ordering
+		 * instead of ordering all the content through query.
+		 */
+		if ( $this->count( $topic_ids ) ) {
+			foreach ( $topic_ids as $topic_id ) {
+				$course_content = $this->get_course_contents_by_topic( $topic_id, -1 );
+				if ( ! $this->count( $course_content->posts ) ) {
+					continue;
+				}
+				array_push( $course_contents, ...$course_content->posts );
+			}
+		}
+
+		$previous_id = 0;
+		$next_id     = 0;
 
 		if ( $this->count( $course_contents ) ) {
 			$ids = wp_list_pluck( $course_contents, 'ID' );

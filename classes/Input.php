@@ -377,8 +377,8 @@ class Input {
 	 * @return array
 	 */
 	public static function allow_svg( $allowed_tags ) {
-		$attr_fill      = array( 'fill' => true );
 		$attr_id        = array( 'id' => true );
+		$attr_fill      = array( 'fill' => true );
 		$attr_dims      = array(
 			'width'  => true,
 			'height' => true,
@@ -402,11 +402,16 @@ class Input {
 			'stroke-dasharray'  => true,
 			'stroke-dashoffset' => true,
 		);
+		$attr_style     = array( 'style' => true );
+		$attr_opacity   = array( 'opacity' => true );
+		$attr_xlink     = array( 'xlink:href' => true );
 
 		$svg_tags = array(
-			'svg'      => array_merge(
+			'svg'            => array_merge(
+				$attr_id,
 				$attr_fill,
 				$attr_dims,
+				$attr_style,
 				array(
 					'class'       => true,
 					'aria-hidden' => true,
@@ -418,19 +423,24 @@ class Input {
 					'opacity'     => true,
 				)
 			),
-			'g'        => array_merge(
+			'g'              => array_merge(
+				$attr_id,
 				$attr_fill,
 				$attr_clip,
-				array(
-					'opacity' => true,
-				)
+				$attr_transform,
+				$attr_style,
+				$attr_opacity
 			),
-			'defs'     => $attr_id,
-			'clipPath' => $attr_id,
-			'path'     => array_merge(
+			'defs'           => array(),
+			'clipPath'       => $attr_id,
+			'clippath'       => $attr_id,
+			'path'           => array_merge(
+				$attr_id,
 				$attr_fill,
 				$attr_stroke,
 				$attr_clip,
+				$attr_transform,
+				$attr_style,
 				array(
 					'd'         => true,
 					'fill-rule' => true,
@@ -438,49 +448,59 @@ class Input {
 					'opacity'   => true,
 				)
 			),
-			'mask'     => array_merge(
+			'mask'           => array_merge(
+				$attr_id,
 				$attr_fill,
 				$attr_dims,
-				$attr_id,
+				$attr_style,
 				array(
 					'maskunits' => true,
 					'mask-type' => true,
 					'opacity'   => true,
 				)
 			),
-			'circle'   => array_merge(
+			'circle'         => array_merge(
+				$attr_id,
 				$attr_fill,
 				$attr_center,
 				$attr_transform,
 				$attr_stroke,
+				$attr_style,
 				array(
 					'r'       => true,
 					'opacity' => true,
 				)
 			),
-			'ellipse'  => array_merge(
+			'ellipse'        => array_merge(
+				$attr_id,
 				$attr_fill,
 				$attr_center,
 				$attr_transform,
+				$attr_style,
 				array(
 					'rx'      => true,
 					'ry'      => true,
 					'opacity' => true,
 				)
 			),
-			'rect'     => array_merge(
+			'rect'           => array_merge(
+				$attr_id,
 				$attr_fill,
 				$attr_dims,
 				$attr_stroke,
 				$attr_transform,
+				$attr_style,
 				array(
 					'maskunits' => true,
 					'rx'        => true,
 					'opacity'   => true,
 				)
 			),
-			'line'     => array_merge(
+			'line'           => array_merge(
+				$attr_id,
 				$attr_stroke,
+				$attr_transform,
+				$attr_style,
 				array(
 					'x1'      => true,
 					'x2'      => true,
@@ -489,21 +509,63 @@ class Input {
 					'opacity' => true,
 				)
 			),
-			'polyline' => array_merge(
+			'polyline'       => array_merge(
+				$attr_id,
 				$attr_fill,
 				$attr_stroke,
+				$attr_transform,
+				$attr_style,
 				array(
 					'points'  => true,
 					'opacity' => true,
 				)
 			),
-			'polygon'  => array_merge(
+			'polygon'        => array_merge(
+				$attr_id,
 				$attr_fill,
 				$attr_stroke,
+				$attr_transform,
+				$attr_style,
 				array(
 					'points'  => true,
 					'opacity' => true,
 				)
+			),
+			'lineargradient' => array_merge(
+				$attr_id,
+				$attr_xlink,
+				array(
+					'x1'                => true,
+					'y1'                => true,
+					'x2'                => true,
+					'y2'                => true,
+					'gradientunits'     => true,
+					'gradienttransform' => true,
+					'spreadmethod'      => true,
+				)
+			),
+			'radialgradient' => array_merge(
+				$attr_id,
+				$attr_center,
+				$attr_xlink,
+				array(
+					'r'                 => true,
+					'fx'                => true,
+					'fy'                => true,
+					'gradientunits'     => true,
+					'gradienttransform' => true,
+					'spreadmethod'      => true,
+				)
+			),
+			'stop'           => array(
+				'offset'       => true,
+				'stop-color'   => true,
+				'stop-opacity' => true,
+			),
+			'use'            => array_merge(
+				$attr_id,
+				$attr_dims,
+				$attr_xlink
 			),
 		);
 

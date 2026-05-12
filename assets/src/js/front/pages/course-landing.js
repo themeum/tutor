@@ -25,16 +25,18 @@ window.jQuery(document).ready(($) => {
                             data: {
                                 action: 'tutor_reset_course_progress',
                                 course_id: course_id,
+                                context: 'course-landing',
                             },
                             beforeSend: () => {
                                 button.prop('disabled', true).addClass('is-loading');
                             },
                             success: function (response) {
-                                if (response.success) {
+                                if (response.status_code === 200 ) {
                                     window.location.assign(response.data.redirect_to);
-                                } else {
-                                    alert((response.data || {}).message || __('Something went wrong', 'tutor'));
                                 }
+                            },
+                            error: function(response) {
+                                tutor_toast(__( 'Error', 'tutor' ),(response.responseJSON || {}).message ||__('Something went wrong', 'tutor'), 'error' );
                             },
                             complete: function () {
                                 button.prop('disabled', false).removeClass('is-loading');

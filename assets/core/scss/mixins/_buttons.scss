@@ -41,12 +41,12 @@
 
   &:disabled,
   &.disabled {
-    color: $tutor-text-disabled;
+    color: $tutor-text-subdued;
     cursor: not-allowed;
     pointer-events: none;
 
     svg:not([class]) {
-      color: $tutor-icon-disabled;
+      color: $tutor-icon-subdued;
     }
   }
 }
@@ -103,7 +103,6 @@
     &:disabled,
     &.disabled {
       background-color: $tutor-button-disabled;
-      color: $tutor-text-brand;
       --tutor-button-border-shadow: #{$tutor-button-primary-soft-border-shadow-disabled};
     }
   } @else if $variant == destructive {
@@ -130,7 +129,6 @@
     &:disabled,
     &.disabled {
       background-color: $tutor-button-disabled;
-      color: $tutor-text-primary-inverse;
       --tutor-button-border-shadow: #{$tutor-button-destructive-border-shadow-disabled};
     }
   } @else if $variant == destructive-soft {

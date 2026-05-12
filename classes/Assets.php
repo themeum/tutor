@@ -291,7 +291,7 @@ class Assets {
 	 * @return void
 	 */
 	public function frontend_scripts() {
-		$load_legacy_scripts = $this->should_load_legacy_scripts();
+		$load_legacy_scripts = self::should_load_legacy_scripts();
 		if ( ! $load_legacy_scripts ) {
 			return;
 		}
@@ -450,7 +450,7 @@ class Assets {
 	 * @return void
 	 */
 	public function common_scripts( $slug ) {
-		if ( ! $this->should_load_legacy_scripts() ) {
+		if ( ! self::should_load_legacy_scripts() ) {
 			return;
 		}
 
@@ -802,7 +802,7 @@ class Assets {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		if ( $this->should_load_legacy_scripts() ) {
+		if ( self::should_load_legacy_scripts() ) {
 			return;
 		}
 
@@ -828,11 +828,6 @@ class Assets {
 		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 		if ( $is_kids_mode ) {
 			wp_enqueue_style( 'tutor-kids', $kids_css_url, array( 'tutor-core' ), $version );
-		}
-
-		if ( $is_dashboard ) {
-			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
-			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
 		}
 
 		// Core.
@@ -867,7 +862,7 @@ class Assets {
 	 *
 	 * @return boolean
 	 */
-	public function should_load_legacy_scripts(): bool {
+	public static function should_load_legacy_scripts(): bool {
 		$load = true;
 
 		$post_id = get_the_ID();

@@ -2,18 +2,56 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-account-section {
+  .tutor-account-cover-photo {
+    min-height: 184px;
+    border-radius: $tutor-radius-lg;
+    background-color: $tutor-surface-brand-quaternary;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+
+    &.is-loading {
+      pointer-events: none;
+      background-image: none !important;
+
+      & > * {
+        visibility: hidden;
+      }
+
+      @include tutor-loading-spinner($tutor-surface-l1, $tutor-surface-l1-hover, 44px);
+
+      &::before {
+        z-index: $tutor-z-positive;
+      }
+    }
+
+    .tutor-account-cover-photo-action {
+      @include tutor-flex();
+      gap: $tutor-spacing-3;
+      position: absolute;
+      top: $tutor-spacing-4;
+      right: $tutor-spacing-4;
+    }
+  }
+
   .tutor-account-avatar-wrapper {
     @include tutor-flex(row, center, center);
-    background-color: $tutor-surface-brand-tertiary;
-    border-radius: $tutor-radius-lg;
-    padding: $tutor-spacing-10;
+    transform: translateY(-52px);
+    margin-bottom: -52px;
+    position: relative;
+    z-index: $tutor-z-positive;
 
     .tutor-account-avatar {
       @include tutor-avatar-base();
       width: 104px;
       height: 104px;
-      border: 2px solid $tutor-border-brand-secondary;
-      position: relative;
+      border: 4px solid $tutor-border-inverse;
+      overflow: visible;
+
+      img {
+        border-radius: $tutor-radius-full;
+      }
 
       &.is-loading {
         position: relative;
@@ -28,18 +66,17 @@
       }
 
       .tutor-account-avatar-edit {
-        @include tutor-button-reset();
         position: absolute;
-        inset: 0;
-        background-color: rgba($color: #000000, $alpha: 0.5);
-        color: $tutor-icon-idle-inverse;
-        display: none;
-      }
+        right: 0;
+        bottom: 0;
+        border: 3px solid $tutor-border-inverse;
+        border-radius: $tutor-radius-full;
+        @include tutor-transition((background-color, color));
 
-      &.active,
-      &:hover {
-        .tutor-account-avatar-edit {
-          display: block;
+        &:hover,
+        &:focus,
+        &:active {
+          border: 3px solid $tutor-border-inverse;
         }
       }
     }

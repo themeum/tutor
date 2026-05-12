@@ -624,6 +624,26 @@ class CheckoutController {
 			}
 		}
 
+		if ( isset( $request['object_ids'] ) ) {
+			$course_ids = explode( ',', $request['object_ids'] );
+
+			if ( tutor_utils()->count( $course_ids ) ) {
+				foreach ( $course_ids as $course_id ) {
+					$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
+					if ( ! $can_buy ) {
+						array_push(
+							$errors,
+							sprintf(
+							// Translators: %s course name.
+								__( 'Course %s cannot be enrolled right now.', 'tutor' ),
+								get_the_title( $course_id ) ?? ''
+							),
+						);
+					}
+				}
+			}
+		}
+
 		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $_POST );
 		if ( is_wp_error( $validate_consent ) ) {
 			array_push( $errors, $validate_consent->get_error_message() );
@@ -1038,6 +1058,17 @@ class CheckoutController {
 		$page_id = self::get_page_id();
 		if ( ! $page_id || ! is_page( $page_id ) ) {
 			return;
+		}
+
+		$course_id = Input::get( 'course_id', 0, Input::TYPE_INT );
+
+		if ( $course_id ) {
+			$can_buy    = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
+			$course_url = get_post_permalink( $course_id );
+			if ( ! $can_buy ) {
+				wp_safe_redirect( tutor_utils()->get_nocache_url( $course_url ) );
+				exit;
+			}
 		}
 
 		$cart_page_url = CartController::get_page_url();

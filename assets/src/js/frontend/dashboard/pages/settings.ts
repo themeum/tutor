@@ -7,9 +7,13 @@ import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
-interface ProfilePhotoFormProps {
+interface UserPhotoFormProps {
   photo_file: File;
-  photo_type: 'profile_photo';
+  photo_type: 'profile_photo' | 'cover_photo';
+}
+
+interface RemoveUserPhotoProps {
+  photo_type: UserPhotoFormProps['photo_type'];
 }
 
 interface AccountFormProps {
@@ -21,6 +25,8 @@ interface AccountFormProps {
   occupation: string;
   bio: string;
   display_name: string;
+  profile_photo: string;
+  cover_photo: string;
   tutor_pro_custom_signature_id: WPMedia | null;
 }
 
@@ -89,6 +95,8 @@ const settings = () => {
     $el: null as HTMLElement | null,
     uploadProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     removeProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    uploadCoverPhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    removeCoverPhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     updateProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
     saveSocialProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
     saveBillingInfoMutation: null as MutationState<TutorMutationResponse<string>> | null,
@@ -106,6 +114,8 @@ const settings = () => {
       this.handleUpdateProfile = this.handleUpdateProfile.bind(this);
       this.handleUploadProfilePhoto = this.handleUploadProfilePhoto.bind(this);
       this.handleRemoveProfilePhoto = this.handleRemoveProfilePhoto.bind(this);
+      this.handleUploadCoverPhoto = this.handleUploadCoverPhoto.bind(this);
+      this.handleRemoveCoverPhoto = this.handleRemoveCoverPhoto.bind(this);
       this.handleSaveSocialProfile = this.handleSaveSocialProfile.bind(this);
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
       this.handleSaveWithdrawMethod = this.handleSaveWithdrawMethod.bind(this);
@@ -122,7 +132,7 @@ const settings = () => {
         },
       });
 
-      this.uploadProfilePhotoMutation = query.useMutation(this.uploadProfilePhoto, {
+      this.uploadProfilePhotoMutation = query.useMutation(this.uploadUserPhoto, {
         onSuccess: () => {
           toast.success(__('Successfully updated profile photo.', 'tutor'));
         },
@@ -131,9 +141,27 @@ const settings = () => {
         },
       });
 
-      this.removeProfilePhotoMutation = query.useMutation(this.removeProfilePhoto, {
+      this.removeProfilePhotoMutation = query.useMutation(this.removeUserPhoto, {
         onSuccess: () => {
           toast.success(__('Successfully removed profile photo.', 'tutor'));
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
+        },
+      });
+
+      this.uploadCoverPhotoMutation = query.useMutation(this.uploadUserPhoto, {
+        onSuccess: () => {
+          toast.success(__('Successfully updated cover photo.', 'tutor'));
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
+        },
+      });
+
+      this.removeCoverPhotoMutation = query.useMutation(this.removeUserPhoto, {
+        onSuccess: () => {
+          toast.success(__('Successfully removed cover photo.', 'tutor'));
         },
         onError: (error: Error) => {
           toast.error(convertToErrorMessage(error));
@@ -271,7 +299,7 @@ const settings = () => {
       return wpAjaxInstance.post(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload).then((res) => res.data);
     },
 
-    async uploadProfilePhoto(payload: ProfilePhotoFormProps) {
+    async uploadUserPhoto(payload: UserPhotoFormProps) {
       return wpAjaxInstance.post(endpoints.UPLOAD_PROFILE_PHOTO, payload).then((res) => res.data);
     },
 
@@ -282,16 +310,31 @@ const settings = () => {
       const data = {
         photo_file: files[0],
         photo_type: 'profile_photo',
-      } satisfies ProfilePhotoFormProps;
+      } satisfies UserPhotoFormProps;
       await this.uploadProfilePhotoMutation?.mutate(data);
     },
 
-    async removeProfilePhoto() {
-      return wpAjaxInstance.post(endpoints.REMOVE_PROFILE_PHOTO).then((res) => res.data);
+    async handleUploadCoverPhoto(files: File[]) {
+      if (files.length === 0) {
+        return;
+      }
+      const data = {
+        photo_file: files[0],
+        photo_type: 'cover_photo',
+      } satisfies UserPhotoFormProps;
+      await this.uploadCoverPhotoMutation?.mutate(data);
+    },
+
+    async removeUserPhoto(payload: RemoveUserPhotoProps) {
+      return wpAjaxInstance.post(endpoints.REMOVE_PROFILE_PHOTO, payload).then((res) => res.data);
     },
 
     async handleRemoveProfilePhoto() {
-      await this.removeProfilePhotoMutation?.mutate({});
+      await this.removeProfilePhotoMutation?.mutate({ photo_type: 'profile_photo' });
+    },
+
+    async handleRemoveCoverPhoto() {
+      await this.removeCoverPhotoMutation?.mutate({ photo_type: 'cover_photo' });
     },
 
     async updateProfile(payload: AccountFormProps) {
