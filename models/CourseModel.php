@@ -1588,8 +1588,8 @@ class CourseModel {
 					$quiz_status = QuizModel::get_quiz_result( $post->ID, $user_id );
 
 					$quiz_icon_map = array(
-						QuizModel::RESULT_FAIL    => array( Icon::CROSS_CIRCLE_LINE, 'tutor-icon-critical' ),
-						QuizModel::RESULT_PENDING => array( Icon::INFO_2, 'tutor-icon-warning-secondary' ),
+						QuizModel::RESULT_FAIL    => array( Icon::CROSS_COLORIZE, 'tutor-icon-critical' ),
+						QuizModel::RESULT_PENDING => array( Icon::INFO_COLORIZE, 'tutor-icon-warning-secondary' ),
 					);
 
 					if ( isset( $quiz_icon_map[ $quiz_status ] ) ) {
@@ -1621,8 +1621,8 @@ class CourseModel {
 				$icon_class = 'tutor-text-subdued';
 
 				$status_map = array(
-					'pending' => array( Icon::INFO_2, 'tutor-icon-warning-secondary' ),
-					'fail'    => array( Icon::CROSS_CIRCLE_LINE, 'tutor-icon-critical' ),
+					'pending' => array( Icon::INFO_COLORIZE, 'tutor-icon-warning-secondary' ),
+					'fail'    => array( Icon::CROSS_COLORIZE, 'tutor-icon-critical' ),
 				);
 
 				if ( isset( $status_map[ $status ] ) ) {
