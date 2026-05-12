@@ -12,6 +12,7 @@ import { type AxiosError } from 'axios';
 
 interface ResetProgressPayload {
   course_id: number;
+  context: string;
 }
 
 interface ResetProgressResponse {
@@ -104,7 +105,7 @@ export const sidebarComponent = ({
     },
 
     resetProgress() {
-      this.resetProgressMutation?.mutate({ course_id: this.courseId });
+      this.resetProgressMutation?.mutate({ course_id: this.courseId, context: 'learning-area-sidebar' });
     },
   };
 };

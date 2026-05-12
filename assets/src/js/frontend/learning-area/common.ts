@@ -10,6 +10,7 @@ interface CourseCompletePayload {
 }
 interface CourseRetakePayload {
   course_id: number;
+  context: string;
 }
 
 /**
@@ -70,7 +71,7 @@ export const courseCompleteHandler = () => {
     },
 
     async handleCourseRetake(courseId: number) {
-      await this.courseRetakeMutation?.mutate({ course_id: courseId });
+      await this.courseRetakeMutation?.mutate({ course_id: courseId, context: 'learning-area' });
     },
   };
 };
