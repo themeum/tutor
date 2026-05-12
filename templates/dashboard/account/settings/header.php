@@ -89,18 +89,16 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 				Button::make()
 					->label( __( 'Close', 'tutor' ) )
 					->variant( Variant::GHOST )
-					->tag( 'a' )
 					->icon( Icon::CROSS, 'left', 20, 20 )
 					->icon_only()
 					->size( Size::X_SMALL )
 					->attr( 'type', 'button' )
-					->attr( 'href', esc_url( $back_url ) )
+					->attr( '@click', 'handleClose()' )
 					->render();
 				?>
 			</div>
 			<div 
 				class="tutor-profile-header-close tutor-hidden tutor-md-flex"
-				@click="activeTab = 'none'"
 				x-show="activeTab === 'none' || !isDirty[`tutor-${activeTab}-form`]"
 			>
 				<?php
@@ -111,7 +109,7 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 					->icon_only()
 					->size( Size::X_SMALL )
 					->attr( 'type', 'button' )
-					->attr( '@click', 'activeTab = "none"' )
+					->attr( '@click', 'handleClose()' )
 					->render();
 				?>
 			</div>

@@ -54,14 +54,16 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 <div 
 	class="tutor-learning-sidebar" 
 	x-data="tutorLearningSidebar({ isCollapsed: <?php echo empty( $active_menu ) ? 'true' : 'false'; ?>, courseId: <?php echo (int) $tutor_course->ID; ?>, resetModalId: '<?php echo esc_attr( $reset_modal_id ); ?>' })"
+	x-trap.noscroll="sidebarOpen"
 	:class="{ 'is-open': sidebarOpen }" 
-	@click.outside="sidebarOpen = false"
+	@click.outside="closeSidebar()"
+	@toggle-sidebar.window="toggleSidebar()"
 >
 	<div class="tutor-hidden tutor-lg-flex tutor-items-center tutor-px-4">
 		<h5 class="tutor-learning-header-title tutor-my-none">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
-		<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">
+		<button class="tutor-learning-header-toggle-mobile" @click.stop="toggleSidebar()">
 			<?php SvgIcon::make()->name( Icon::CROSS_2 )->size( 20 )->render(); ?>
 		</button>
 	</div>
@@ -71,7 +73,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 				<div class="tutor-learning-progress-text tutor-py-2">
 					<?php
 					// translators: %s: course completed percentage.
-					echo sprintf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $tutor_course_progress ) . '%</span>' );
+					printf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $tutor_course_progress ) . '%</span>' );
 					?>
 				</div>
 				<div class="tutor-flex">
@@ -91,7 +93,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
 						->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
 						->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
-						->icon( UrlHelper::themed_asset( 'images/illustrations/reset-course.webp' ) )
+						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reset-course.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 						->confirm_handler( 'resetProgress()' )
 						->mutation_state( 'resetProgressMutation' )
 						->render();
@@ -257,11 +259,12 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 	</div>
 	<div class="tutor-hidden tutor-md-flex tutor-flex-column tutor-gap-2">
 	<?php
-	if ( $tutor_can_complete_course ) {
-		Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $tutor_course_progress );
+	$incomplete_msg = Course::get_course_completion_restrict_msg( $tutor_course_id, $current_user_id );
+	if ( $tutor_can_complete_course || $incomplete_msg ) {
+		Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $tutor_course_progress, Size::MEDIUM, $incomplete_msg ?? '', true );
 	}
 	if ( $tutor_can_retake_course ) {
-		Course::render_course_retake_btn( $course_retake_modal_id );
+		Course::render_course_retake_btn( $course_retake_modal_id, Size::MEDIUM, true );
 	}
 	?>
 	</div>

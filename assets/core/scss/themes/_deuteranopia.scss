@@ -48,6 +48,10 @@
   --tutor-text-critical: #{$tutor-orange-500};
   --tutor-text-warning: #{$tutor-orange-600};
   --tutor-text-caution: #{$tutor-yellow-600};
+
+  // VISUAL COLORS
+  --tutor-visual-success-1: #{$tutor-cyan-500};
+  --tutor-visual-exception-1: #{$tutor-cyan-400};
 }
 
 // =============================================================================
@@ -78,6 +82,11 @@
   --tutor-actions-warning-exception: #{$tutor-orange-500};
   --tutor-actions-critical-primary: #{$tutor-orange-500};
   --tutor-actions-critical-secondary: #{$tutor-orange-100};
+
+  // VISUAL COLORS
+  --tutor-visual-success-2: #{$tutor-cyan-500};
+  --tutor-visual-critical-1: #{$tutor-orange-500};
+  --tutor-visual-critical-2: #{$tutor-orange-300};
 }
 
 // =============================================================================
@@ -112,6 +121,11 @@
   --tutor-actions-critical-primary: #{$tutor-orange-600};
   --tutor-actions-critical-secondary: #{$tutor-gray-700};
   --tutor-actions-caution: #{$tutor-yellow-500};
+
+  // VISUAL COLORS
+  --tutor-visual-success-2: #{$tutor-cyan-600};
+  --tutor-visual-critical-1: #{$tutor-orange-600};
+  --tutor-visual-critical-2: #{$tutor-orange-900};
 }
 
 [data-tutor-theme='light'][data-tutor-vision='deuteranopia'],

@@ -12,10 +12,12 @@ import { type AxiosError } from 'axios';
 
 interface ResetProgressPayload {
   course_id: number;
+  context: string;
 }
 
 interface ResetProgressResponse {
   success: boolean;
+  status_code?: number;
   message?: string;
   data?: {
     redirect_to: string;
@@ -37,6 +39,7 @@ export const sidebarComponent = ({
     pagesHeight: 0,
     resizing: false,
     collapsed: isCollapsed,
+    sidebarOpen: false,
     courseId: courseId,
     resetModalId: resetModalId,
     resetProgressMutation: null as MutationState<ResetProgressResponse, ResetProgressPayload> | null,
@@ -54,8 +57,9 @@ export const sidebarComponent = ({
         (payload) => wpAjaxInstance.post(endpoints.RESET_COURSE_PROGRESS, payload),
         {
           onSuccess: (response) => {
-            if (response.success && response.data?.redirect_to) {
+            if (response.status_code === 200 && response.data?.redirect_to) {
               window.location.href = response.data.redirect_to;
+              modal.closeModal(this.resetModalId);
             }
           },
           onError: (error: AxiosError) => {
@@ -66,6 +70,14 @@ export const sidebarComponent = ({
           },
         },
       );
+    },
+
+    toggleSidebar() {
+      this.sidebarOpen = !this.sidebarOpen;
+    },
+
+    closeSidebar() {
+      this.sidebarOpen = false;
     },
 
     startResizing(e: MouseEvent) {
@@ -102,7 +114,7 @@ export const sidebarComponent = ({
     },
 
     resetProgress() {
-      this.resetProgressMutation?.mutate({ course_id: this.courseId });
+      this.resetProgressMutation?.mutate({ course_id: this.courseId, context: 'learning-area-sidebar' });
     },
   };
 };

@@ -49,13 +49,13 @@ $page_nav_items = apply_filters( 'tutor_dashboard_account_billing_page_nav_items
 
 	<div class="tutor-account-container">
 		<div class="tutor-account-billing-wrapper tutor-flex tutor-flex-column tutor-gap-5 tutor-my-9 tutor-sm-my-6">
-			<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
+			<div class="tutor-billing-body">
 				<?php if ( $show_tab_nav ) { ?>
-				<div class="tutor-px-6 tutor-py-5 tutor-border-b">
+				<div class="tutor-billing-tabs">
 					<?php Nav::make()->items( $page_nav_items )->size( Size::SMALL )->render(); ?>
 				</div>
 				<?php } ?>
-				<div class="tutor-sm-rounded-2xl tutor-sm-mt-4">
+				<div class="tutor-billing-tabs-content">
 					<?php
 					if ( file_exists( $tab_template ) ) {
 						require_once $tab_template;

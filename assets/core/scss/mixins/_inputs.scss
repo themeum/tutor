@@ -55,6 +55,13 @@
   @if $size == lg {
     padding: $tutor-spacing-5;
   }
+
+  // Prevent iOS Safari from auto-zooming focused fields and exposing
+  // horizontal overflow on mobile layouts.
+  @media (hover: none) and (pointer: coarse) {
+    font-size: $tutor-font-size-medium;
+    line-height: $tutor-line-height-medium;
+  }
 }
 
 @mixin tutor-textarea($min-height: 92px) {

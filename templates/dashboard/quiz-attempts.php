@@ -168,7 +168,12 @@ $hidden_inputs = array(
 				?>
 			</div>
 			<?php else : ?>
-				<?php EmptyState::make()->title( __( 'No Quiz Attempts Found', 'tutor' ) )->render(); ?>
+				<?php
+					EmptyState::make()
+						->title( __( 'No Quiz Attempts Found', 'tutor' ) )
+						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-empty.svg' ) )
+						->render();
+				?>
 			<?php endif; ?>
 		</div>
 	</div>

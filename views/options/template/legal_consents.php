@@ -10,6 +10,7 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\GDPR\Controllers\LegalConsent;
 
 defined( 'ABSPATH' ) || exit;
@@ -63,7 +64,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 
 		<div class="tutor-legal-consent-card-header">
 			<div class="tutor-legal-consent-card-title tutor-fs-6">
-				<?php tutor_utils()->render_svg_icon( Icon::CONTRACT_OUTLINE, 32, 32 ); ?>
+				<?php SvgIcon::make()->name( Icon::CONTRACT_OUTLINE )->size( 32 )->render(); ?>
 				<span data-consent-title><?php echo esc_html( $title ); ?></span>
 			</div>
 
