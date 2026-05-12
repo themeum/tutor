@@ -67,7 +67,7 @@ export class ToastService {
             <!-- Content -->
             <div class="tutor-toast-content">
               <div class="tutor-toast-title" x-text="toast.title"></div>
-              <div class="tutor-toast-message" x-text="toast.message"></div>
+              <div class="tutor-toast-message" x-html="toast.message"></div>
             </div>
 
             <!-- Close Button -->
