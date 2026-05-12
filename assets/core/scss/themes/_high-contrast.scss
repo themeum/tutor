@@ -9,7 +9,7 @@
 // LIGHT — overrides specific to the light base theme
 // =============================================================================
 
-[data-tutor-theme='light'][data-tutor-contrast='high'] {
+@mixin high-contrast-light-tokens {
   // TEXT COLORS
   --tutor-text-primary: #{$tutor-gray-950};
   --tutor-text-secondary: #{$tutor-gray-950};
@@ -36,7 +36,7 @@
 // DARK — overrides specific to the dark base theme
 // =============================================================================
 
-[data-tutor-theme='dark'][data-tutor-contrast='high'] {
+@mixin high-contrast-dark-tokens {
   // TEXT COLORS
   --tutor-text-primary: #{$tutor-gray-100};
   --tutor-text-secondary: #{$tutor-gray-50};
@@ -57,4 +57,19 @@
   --tutor-border-brand: #{$tutor-brand-200};
   --tutor-border-brand-secondary: #{$tutor-brand-800};
   --tutor-border-brand-tertiary: #{$tutor-brand-700};
+}
+
+[data-tutor-theme='light'][data-tutor-contrast='high'],
+[data-tutor-theme='system'][data-tutor-contrast='high'] {
+  @include high-contrast-light-tokens;
+}
+
+[data-tutor-theme='dark'][data-tutor-contrast='high'] {
+  @include high-contrast-dark-tokens;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-tutor-theme='system'][data-tutor-contrast='high'] {
+    @include high-contrast-dark-tokens;
+  }
 }

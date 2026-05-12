@@ -51,7 +51,7 @@ window.jQuery(document).ready(function($) {
 						.addClass('is-loading');
 				},
 				success: function(data) {
-					if (data.success) {
+					if (data.success || data.status_code === 200) {
 						if (del) {
 							$('#' + del).fadeOut(function() {
 								$(this).remove();

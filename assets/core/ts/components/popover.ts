@@ -23,6 +23,11 @@ export interface PopoverProps {
   onHide?: () => void;
 }
 
+interface PopoverDimensions {
+  width: number;
+  height: number;
+}
+
 export const popover = (props: PopoverProps = {}) => ({
   open: false,
   placement: props.placement || PLACEMENTS.BOTTOM_START,
@@ -165,14 +170,14 @@ export const popover = (props: PopoverProps = {}) => ({
     if (!trigger || !content) return;
 
     const triggerRect = trigger.getBoundingClientRect();
-    const contentRect = content.getBoundingClientRect();
+    const contentDimensions = this.getContentDimensions(content);
     const viewport = {
       width: window.innerWidth,
       height: window.innerHeight,
     };
 
-    const placement = this.resolvePlacement(this.actualPlacement, triggerRect, contentRect, viewport);
-    const viewportPosition = this.calculatePosition(triggerRect, contentRect, placement);
+    const placement = this.resolvePlacement(this.actualPlacement, triggerRect, contentDimensions, viewport);
+    const viewportPosition = this.calculatePosition(triggerRect, contentDimensions, placement);
     const { top, left } = this.convertViewportPositionToContentPosition(content, viewportPosition);
 
     // Apply positioning
@@ -188,7 +193,7 @@ export const popover = (props: PopoverProps = {}) => ({
   resolvePlacement(
     placement: string,
     triggerRect: DOMRect,
-    contentRect: DOMRect,
+    contentDimensions: PopoverDimensions,
     viewport: { width: number; height: number },
   ): string {
     const space = {
@@ -199,13 +204,13 @@ export const popover = (props: PopoverProps = {}) => ({
     };
 
     const needsVerticalFlip = {
-      top: space.top < contentRect.height + this.offset && space.bottom > space.top,
-      bottom: space.bottom < contentRect.height + this.offset && space.top > space.bottom,
+      top: space.top < contentDimensions.height + this.offset && space.bottom > space.top,
+      bottom: space.bottom < contentDimensions.height + this.offset && space.top > space.bottom,
     };
 
     const needsHorizontalFlip = {
-      left: space.left < contentRect.width + this.offset && space.right > space.left,
-      right: space.right < contentRect.width + this.offset && space.left > space.right,
+      left: space.left < contentDimensions.width + this.offset && space.right > space.left,
+      right: space.right < contentDimensions.width + this.offset && space.left > space.right,
     };
 
     if (placement.startsWith('top') && needsVerticalFlip.top) {
@@ -227,26 +232,26 @@ export const popover = (props: PopoverProps = {}) => ({
     return placement;
   },
 
-  calculatePosition(triggerRect: DOMRect, contentRect: DOMRect, placement: string) {
+  calculatePosition(triggerRect: DOMRect, contentDimensions: PopoverDimensions, placement: string) {
     let top = 0;
     let left = 0;
 
     switch (placement) {
       case PLACEMENTS.TOP:
-        top = triggerRect.top - contentRect.height - this.offset;
-        left = triggerRect.left + (triggerRect.width - contentRect.width) / 2;
+        top = triggerRect.top - contentDimensions.height - this.offset;
+        left = triggerRect.left + (triggerRect.width - contentDimensions.width) / 2;
         break;
       case PLACEMENTS.TOP_START:
-        top = triggerRect.top - contentRect.height - this.offset;
+        top = triggerRect.top - contentDimensions.height - this.offset;
         left = triggerRect.left;
         break;
       case PLACEMENTS.TOP_END:
-        top = triggerRect.top - contentRect.height - this.offset;
-        left = triggerRect.right - contentRect.width;
+        top = triggerRect.top - contentDimensions.height - this.offset;
+        left = triggerRect.right - contentDimensions.width;
         break;
       case PLACEMENTS.BOTTOM:
         top = triggerRect.bottom + this.offset;
-        left = triggerRect.left + (triggerRect.width - contentRect.width) / 2;
+        left = triggerRect.left + (triggerRect.width - contentDimensions.width) / 2;
         break;
       case PLACEMENTS.BOTTOM_START:
         top = triggerRect.bottom + this.offset;
@@ -254,22 +259,22 @@ export const popover = (props: PopoverProps = {}) => ({
         break;
       case PLACEMENTS.BOTTOM_END:
         top = triggerRect.bottom + this.offset;
-        left = triggerRect.right - contentRect.width;
+        left = triggerRect.right - contentDimensions.width;
         break;
       case PLACEMENTS.LEFT:
-        top = triggerRect.top + (triggerRect.height - contentRect.height) / 2;
-        left = triggerRect.left - contentRect.width - this.offset;
+        top = triggerRect.top + (triggerRect.height - contentDimensions.height) / 2;
+        left = triggerRect.left - contentDimensions.width - this.offset;
         break;
       case PLACEMENTS.LEFT_TOP:
         top = triggerRect.top;
-        left = triggerRect.left - contentRect.width - this.offset;
+        left = triggerRect.left - contentDimensions.width - this.offset;
         break;
       case PLACEMENTS.LEFT_BOTTOM:
-        top = triggerRect.bottom - contentRect.height;
-        left = triggerRect.left - contentRect.width - this.offset;
+        top = triggerRect.bottom - contentDimensions.height;
+        left = triggerRect.left - contentDimensions.width - this.offset;
         break;
       case PLACEMENTS.RIGHT:
-        top = triggerRect.top + (triggerRect.height - contentRect.height) / 2;
+        top = triggerRect.top + (triggerRect.height - contentDimensions.height) / 2;
         left = triggerRect.right + this.offset;
         break;
       case PLACEMENTS.RIGHT_TOP:
@@ -277,12 +282,21 @@ export const popover = (props: PopoverProps = {}) => ({
         left = triggerRect.right + this.offset;
         break;
       case PLACEMENTS.RIGHT_BOTTOM:
-        top = triggerRect.bottom - contentRect.height;
+        top = triggerRect.bottom - contentDimensions.height;
         left = triggerRect.right + this.offset;
         break;
     }
 
     return { top, left };
+  },
+
+  getContentDimensions(content: HTMLElement): PopoverDimensions {
+    const rect = content.getBoundingClientRect();
+
+    return {
+      width: content.offsetWidth || rect.width,
+      height: content.offsetHeight || rect.height,
+    };
   },
 
   convertViewportPositionToContentPosition(content: HTMLElement, position: { top: number; left: number }) {

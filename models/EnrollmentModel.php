@@ -72,6 +72,11 @@ class EnrollmentModel {
 			return $enrolled_id;
 		}
 
+		$can_enroll = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
+		if ( ! $can_enroll ) {
+			return $enrolled_id;
+		}
+
 		$fire_hook ? do_action( 'tutor_before_enroll', $course_id ) : null;
 		$user_id = tutor_utils()->get_user_id( $user_id );
 		$title   = __( 'Course Enrolled', 'tutor' ) . ' &ndash; ' . gmdate( get_option( 'date_format' ) ) . ' @ ' . gmdate( get_option( 'time_format' ) );

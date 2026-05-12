@@ -3,7 +3,8 @@
 
 @use '../tokens' as *;
 
-[data-tutor-theme='dark'] {
+// Mixin containing all dark theme tokens
+@mixin dark-theme-tokens {
   // =============================================================================
   // SURFACE COLORS
   // =============================================================================
@@ -213,4 +214,17 @@
   --tutor-shadow-xl: #{$tutor-shadow-xl};
   --tutor-shadow-2xl: #{$tutor-shadow-2xl};
   --tutor-shadow-3xl: #{$tutor-shadow-3xl};
+}
+
+// Apply dark theme when explicitly set
+[data-tutor-theme='dark'] {
+  @include dark-theme-tokens;
+}
+
+// Apply dark theme when system preference is dark
+// This prevents flash of light theme before JS loads
+@media (prefers-color-scheme: dark) {
+  [data-tutor-theme='system'] {
+    @include dark-theme-tokens;
+  }
 }
