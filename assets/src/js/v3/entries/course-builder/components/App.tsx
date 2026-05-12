@@ -3,6 +3,7 @@ import { CourseBuilderSlotProvider } from '@CourseBuilderContexts/CourseBuilderS
 import ToastProvider from '@TutorShared/atoms/Toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
+import { SVGIconConfigProvider } from '@TutorShared/contexts/SVGIconConfigContext';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -32,14 +33,16 @@ const App = () => {
   return (
     <RTLProvider>
       <QueryClientProvider client={queryClient}>
-        <ToastProvider position="bottom-center">
-          <CourseBuilderSlotProvider>
-            <ModalProvider>
-              <Global styles={createGlobalCss()} />
-              {routers}
-            </ModalProvider>
-          </CourseBuilderSlotProvider>
-        </ToastProvider>
+        <SVGIconConfigProvider>
+          <ToastProvider position="bottom-center">
+            <CourseBuilderSlotProvider>
+              <ModalProvider>
+                <Global styles={createGlobalCss()} />
+                {routers}
+              </ModalProvider>
+            </CourseBuilderSlotProvider>
+          </ToastProvider>
+        </SVGIconConfigProvider>
       </QueryClientProvider>
     </RTLProvider>
   );

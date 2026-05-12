@@ -257,11 +257,12 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 	</div>
 	<div class="tutor-hidden tutor-md-flex tutor-flex-column tutor-gap-2">
 	<?php
-	if ( $tutor_can_complete_course ) {
-		Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $tutor_course_progress );
+	$incomplete_msg = Course::get_course_completion_restrict_msg( $tutor_course_id, $current_user_id );
+	if ( $tutor_can_complete_course || $incomplete_msg ) {
+		Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $tutor_course_progress, Size::MEDIUM, $incomplete_msg ?? '', true );
 	}
 	if ( $tutor_can_retake_course ) {
-		Course::render_course_retake_btn( $course_retake_modal_id );
+		Course::render_course_retake_btn( $course_retake_modal_id, Size::MEDIUM, true );
 	}
 	?>
 	</div>
