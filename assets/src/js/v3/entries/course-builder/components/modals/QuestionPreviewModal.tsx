@@ -510,6 +510,14 @@ const getPreviewFrameStyles = () => `
     object-fit: contain;
   }
 
+  /* Coordinates graph is a square (canvas width 100% + aspect-ratio); cap like draw/pin so the modal does not scroll. */
+  .tutor-quiz-question[data-question='coordinates'] .tutor-coordinates-grid-container {
+    box-sizing: border-box;
+    width: min(100%, min(52vh, 460px));
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
   /*
    * Puzzle preview: same viewport idea as draw/pin above — board capped at min(52vh, 460px),
    * scatter scroll area capped so header + board + pieces fit the modal column.
