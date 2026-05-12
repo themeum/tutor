@@ -25,6 +25,7 @@ window.jQuery(document).ready(($) => {
                             data: {
                                 action: 'tutor_reset_course_progress',
                                 course_id: course_id,
+                                context: 'course-landing',
                             },
                             beforeSend: () => {
                                 button.prop('disabled', true).addClass('is-loading');
