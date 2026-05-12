@@ -9,7 +9,11 @@ const PLACEMENTS = {
   BOTTOM_START: 'bottom-start',
   BOTTOM_END: 'bottom-end',
   LEFT: 'left',
+  LEFT_TOP: 'left-top',
+  LEFT_BOTTOM: 'left-bottom',
   RIGHT: 'right',
+  RIGHT_TOP: 'right-top',
+  RIGHT_BOTTOM: 'right-bottom',
 } as const;
 
 export interface PopoverProps {
@@ -17,6 +21,11 @@ export interface PopoverProps {
   offset?: number;
   onShow?: () => void;
   onHide?: () => void;
+}
+
+interface PopoverDimensions {
+  width: number;
+  height: number;
 }
 
 export const popover = (props: PopoverProps = {}) => ({
@@ -82,7 +91,11 @@ export const popover = (props: PopoverProps = {}) => ({
 
     const rtlAdaptations: Record<string, string> = {
       [PLACEMENTS.LEFT]: PLACEMENTS.RIGHT,
+      [PLACEMENTS.LEFT_TOP]: PLACEMENTS.RIGHT_TOP,
+      [PLACEMENTS.LEFT_BOTTOM]: PLACEMENTS.RIGHT_BOTTOM,
       [PLACEMENTS.RIGHT]: PLACEMENTS.LEFT,
+      [PLACEMENTS.RIGHT_TOP]: PLACEMENTS.LEFT_TOP,
+      [PLACEMENTS.RIGHT_BOTTOM]: PLACEMENTS.LEFT_BOTTOM,
       [PLACEMENTS.TOP_START]: PLACEMENTS.TOP_END,
       [PLACEMENTS.TOP_END]: PLACEMENTS.TOP_START,
       [PLACEMENTS.BOTTOM_START]: PLACEMENTS.BOTTOM_END,
@@ -157,14 +170,15 @@ export const popover = (props: PopoverProps = {}) => ({
     if (!trigger || !content) return;
 
     const triggerRect = trigger.getBoundingClientRect();
-    const contentRect = content.getBoundingClientRect();
+    const contentDimensions = this.getContentDimensions(content);
     const viewport = {
       width: window.innerWidth,
       height: window.innerHeight,
     };
 
-    const placement = this.resolvePlacement(this.actualPlacement, triggerRect, contentRect, viewport);
-    const { top, left } = this.calculatePosition(triggerRect, contentRect, placement);
+    const placement = this.resolvePlacement(this.actualPlacement, triggerRect, contentDimensions, viewport);
+    const viewportPosition = this.calculatePosition(triggerRect, contentDimensions, placement);
+    const { top, left } = this.convertViewportPositionToContentPosition(content, viewportPosition);
 
     // Apply positioning
     content.style.position = 'fixed';
@@ -179,7 +193,7 @@ export const popover = (props: PopoverProps = {}) => ({
   resolvePlacement(
     placement: string,
     triggerRect: DOMRect,
-    contentRect: DOMRect,
+    contentDimensions: PopoverDimensions,
     viewport: { width: number; height: number },
   ): string {
     const space = {
@@ -190,13 +204,13 @@ export const popover = (props: PopoverProps = {}) => ({
     };
 
     const needsVerticalFlip = {
-      top: space.top < contentRect.height + this.offset && space.bottom > space.top,
-      bottom: space.bottom < contentRect.height + this.offset && space.top > space.bottom,
+      top: space.top < contentDimensions.height + this.offset && space.bottom > space.top,
+      bottom: space.bottom < contentDimensions.height + this.offset && space.top > space.bottom,
     };
 
     const needsHorizontalFlip = {
-      left: space.left < contentRect.width + this.offset && space.right > space.left,
-      right: space.right < contentRect.width + this.offset && space.left > space.right,
+      left: space.left < contentDimensions.width + this.offset && space.right > space.left,
+      right: space.right < contentDimensions.width + this.offset && space.left > space.right,
     };
 
     if (placement.startsWith('top') && needsVerticalFlip.top) {
@@ -207,37 +221,37 @@ export const popover = (props: PopoverProps = {}) => ({
       return placement.replace('bottom', 'top');
     }
 
-    if (placement === PLACEMENTS.LEFT && needsHorizontalFlip.left) {
-      return PLACEMENTS.RIGHT;
+    if (placement.startsWith('left') && needsHorizontalFlip.left) {
+      return placement.replace('left', 'right');
     }
 
-    if (placement === PLACEMENTS.RIGHT && needsHorizontalFlip.right) {
-      return PLACEMENTS.LEFT;
+    if (placement.startsWith('right') && needsHorizontalFlip.right) {
+      return placement.replace('right', 'left');
     }
 
     return placement;
   },
 
-  calculatePosition(triggerRect: DOMRect, contentRect: DOMRect, placement: string) {
+  calculatePosition(triggerRect: DOMRect, contentDimensions: PopoverDimensions, placement: string) {
     let top = 0;
     let left = 0;
 
     switch (placement) {
       case PLACEMENTS.TOP:
-        top = triggerRect.top - contentRect.height - this.offset;
-        left = triggerRect.left + (triggerRect.width - contentRect.width) / 2;
+        top = triggerRect.top - contentDimensions.height - this.offset;
+        left = triggerRect.left + (triggerRect.width - contentDimensions.width) / 2;
         break;
       case PLACEMENTS.TOP_START:
-        top = triggerRect.top - contentRect.height - this.offset;
+        top = triggerRect.top - contentDimensions.height - this.offset;
         left = triggerRect.left;
         break;
       case PLACEMENTS.TOP_END:
-        top = triggerRect.top - contentRect.height - this.offset;
-        left = triggerRect.right - contentRect.width;
+        top = triggerRect.top - contentDimensions.height - this.offset;
+        left = triggerRect.right - contentDimensions.width;
         break;
       case PLACEMENTS.BOTTOM:
         top = triggerRect.bottom + this.offset;
-        left = triggerRect.left + (triggerRect.width - contentRect.width) / 2;
+        left = triggerRect.left + (triggerRect.width - contentDimensions.width) / 2;
         break;
       case PLACEMENTS.BOTTOM_START:
         top = triggerRect.bottom + this.offset;
@@ -245,19 +259,96 @@ export const popover = (props: PopoverProps = {}) => ({
         break;
       case PLACEMENTS.BOTTOM_END:
         top = triggerRect.bottom + this.offset;
-        left = triggerRect.right - contentRect.width;
+        left = triggerRect.right - contentDimensions.width;
         break;
       case PLACEMENTS.LEFT:
-        top = triggerRect.top + (triggerRect.height - contentRect.height) / 2;
-        left = triggerRect.left - contentRect.width - this.offset;
+        top = triggerRect.top + (triggerRect.height - contentDimensions.height) / 2;
+        left = triggerRect.left - contentDimensions.width - this.offset;
+        break;
+      case PLACEMENTS.LEFT_TOP:
+        top = triggerRect.top;
+        left = triggerRect.left - contentDimensions.width - this.offset;
+        break;
+      case PLACEMENTS.LEFT_BOTTOM:
+        top = triggerRect.bottom - contentDimensions.height;
+        left = triggerRect.left - contentDimensions.width - this.offset;
         break;
       case PLACEMENTS.RIGHT:
-        top = triggerRect.top + (triggerRect.height - contentRect.height) / 2;
+        top = triggerRect.top + (triggerRect.height - contentDimensions.height) / 2;
+        left = triggerRect.right + this.offset;
+        break;
+      case PLACEMENTS.RIGHT_TOP:
+        top = triggerRect.top;
+        left = triggerRect.right + this.offset;
+        break;
+      case PLACEMENTS.RIGHT_BOTTOM:
+        top = triggerRect.bottom - contentDimensions.height;
         left = triggerRect.right + this.offset;
         break;
     }
 
     return { top, left };
+  },
+
+  getContentDimensions(content: HTMLElement): PopoverDimensions {
+    const rect = content.getBoundingClientRect();
+
+    return {
+      width: content.offsetWidth || rect.width,
+      height: content.offsetHeight || rect.height,
+    };
+  },
+
+  convertViewportPositionToContentPosition(content: HTMLElement, position: { top: number; left: number }) {
+    const containingBlock = this.getFixedContainingBlock(content);
+
+    if (!containingBlock) {
+      return position;
+    }
+
+    const containingBlockRect = containingBlock.getBoundingClientRect();
+    const scaleX = containingBlock.offsetWidth ? containingBlockRect.width / containingBlock.offsetWidth || 1 : 1;
+    const scaleY = containingBlock.offsetHeight ? containingBlockRect.height / containingBlock.offsetHeight || 1 : 1;
+
+    return {
+      top: (position.top - containingBlockRect.top) / scaleY - containingBlock.clientTop,
+      left: (position.left - containingBlockRect.left) / scaleX - containingBlock.clientLeft,
+    };
+  },
+
+  getFixedContainingBlock(element: HTMLElement) {
+    let parent = element.parentElement;
+
+    while (parent && parent !== document.documentElement) {
+      if (this.createsFixedContainingBlock(parent)) {
+        return parent;
+      }
+
+      parent = parent.parentElement;
+    }
+
+    return null;
+  },
+
+  createsFixedContainingBlock(element: HTMLElement) {
+    const style = window.getComputedStyle(element);
+    const willChangeProperties = style.willChange.split(',').map((property) => property.trim());
+    const containProperties = style.contain.split(' ');
+    const backdropFilter =
+      style.getPropertyValue('backdrop-filter') || style.getPropertyValue('-webkit-backdrop-filter');
+    const contentVisibility = style.getPropertyValue('content-visibility');
+    const containerType = style.getPropertyValue('container-type');
+
+    return (
+      style.transform !== 'none' ||
+      style.perspective !== 'none' ||
+      style.filter !== 'none' ||
+      (backdropFilter !== '' && backdropFilter !== 'none') ||
+      contentVisibility === 'auto' ||
+      (containerType !== '' && containerType !== 'normal') ||
+      willChangeProperties.some((property) => ['transform', 'perspective', 'filter'].includes(property)) ||
+      containProperties.some((property) => ['layout', 'paint', 'strict', 'content'].includes(property))
+    );
   },
 
   updatePlacementClasses(content: HTMLElement, placement: string) {

@@ -23,6 +23,7 @@ use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\EnrollmentModel;
@@ -1543,6 +1544,7 @@ class Course extends Tutor_Base {
 			'instructor_can_publish_course',
 			'instructor_can_change_course_author',
 			'instructor_can_manage_co_instructors',
+			'quiz_attempts_allowed',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
@@ -3079,15 +3081,22 @@ class Course extends Tutor_Base {
 	 */
 	public function tutor_reset_course_progress() {
 		tutor_utils()->checking_nonce();
-		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$course_id             = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$course_reset_progress = tutor_utils()->get_option( 'course_reset_progress', false );
+		$course_retake_feature = tutor_utils()->get_option( 'course_retake_feature', false );
+
+		if ( ! $course_reset_progress || ! $course_retake_feature ) {
+			$this->response_bad_request( __( 'You are not allowed to reset course progress.', 'tutor' ) );
+			return;
+		}
 
 		if ( ! $course_id || ! is_numeric( $course_id ) || ! EnrollmentModel::is_enrolled( $course_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid Course ID or Access Denied.', 'tutor' ) ) );
+			$this->response_bad_request( __( 'Invalid Course ID or Access Denied.', 'tutor' ) );
 			return;
 		}
 
 		tutor_utils()->delete_course_progress( $course_id );
-		wp_send_json_success( array( 'redirect_to' => tutor_utils()->get_course_first_lesson( $course_id ) ) );
+		$this->json_response( '', array( 'redirect_to' => tutor_utils()->get_course_first_lesson( $course_id ) ) );
 	}
 
 	/**

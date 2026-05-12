@@ -257,9 +257,6 @@ class UserPreference {
 			$vision = self::VISION_NORMAL;
 		}
 
-		// Resolve actual theme for 'system' (PHP fallback is light; JS applies real system preference).
-		$resolved_theme = self::THEME_SYSTEM === $theme ? self::THEME_LIGHT : $theme;
-
 		$contrast      = isset( $prefs['contrast'] ) ? (string) $prefs['contrast'] : '';
 		$contrast_attr = '';
 		if ( self::CONTRAST_HIGH === $contrast ) {
@@ -282,7 +279,7 @@ class UserPreference {
 			? ' data-tutor-vision="' . esc_attr( $vision ) . '"'
 			: '';
 
-		return $output . ' data-tutor-theme="' . esc_attr( $resolved_theme ) . '"' . $vision_attr . $contrast_attr . $motion_effects_attr;
+		return $output . ' data-tutor-theme="' . esc_attr( $theme ) . '"' . $vision_attr . $contrast_attr . $motion_effects_attr;
 	}
 
 	/**
@@ -587,7 +584,7 @@ class UserPreference {
 				'value' => self::THEME_DARK,
 			),
 			array(
-				'label' => __( 'System Default', 'tutor' ),
+				'label' => __( 'Auto (System Default)', 'tutor' ),
 				'value' => self::THEME_SYSTEM,
 			),
 		);
@@ -651,16 +648,16 @@ class UserPreference {
 	public static function get_motion_effects_options() {
 		return array(
 			array(
-				'label' => __( 'Auto (System Default)', 'tutor' ),
-				'value' => self::MOTION_EFFECTS_AUTO,
-			),
-			array(
 				'label' => __( 'Reduced Motion', 'tutor' ),
 				'value' => self::MOTION_EFFECTS_REDUCE,
 			),
 			array(
 				'label' => __( 'Standard Motion', 'tutor' ),
 				'value' => self::MOTION_EFFECTS_STANDARD,
+			),
+			array(
+				'label' => __( 'Auto (System Default)', 'tutor' ),
+				'value' => self::MOTION_EFFECTS_AUTO,
 			),
 		);
 	}

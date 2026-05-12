@@ -33,11 +33,11 @@ use TUTOR\Icon;
 	tutor_load_template( 'feature_disabled', $args );
 	?>
 <?php else : ?>
-	<div id="tutor-registration-wrap" class="tutor-card" style="max-width: 520px; margin: 10px auto;">
+	<div id="tutor-registration-wrap" class="tutor-card tutor-p-none tutor-py-9" style="max-width: 520px; margin: 0px auto;">
 
 		<?php do_action( 'tutor_before_student_reg_form' ); ?>
 
-		<form method="post" enctype="multipart/form-data" id="tutor-registration-form">
+		<form method="post" enctype="multipart/form-data" id="tutor-registration-form" class="tutor-p-8">
 			<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo isset( $_GET['enrol_course_id'] ) ? (int) $_GET['enrol_course_id'] : ''; ?>">
 			<?php do_action( 'tutor_student_reg_form_start' ); ?>
 

@@ -527,10 +527,20 @@ class Options_V2 {
 
 		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
 
-		$data_before = get_option( 'tutor_option' );
+		$data_before   = get_option( 'tutor_option' );
+		$login_page_id = 0;
+
+		if ( isset( $data_before['tutor_login_page'] ) ) {
+			$login_page_id = $data_before['tutor_login_page'];
+		}
+
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
 
 		do_action( 'tutor_option_save_before', $option );
+
+		if ( ! isset( $option['tutor_login_page'] ) ) {
+			$option['tutor_login_page'] = $login_page_id ?? 0;
+		}
 
 		$option = Input::sanitize_array(
 			$option,

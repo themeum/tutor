@@ -71,7 +71,7 @@ class Tooltip extends BaseComponent {
 	protected $placement = self::PLACEMENT_TOP;
 
 	/**
-	 * Tooltip size (small|large).
+	 * Tooltip size (small|medium|large).
 	 *
 	 * @var string
 	 */
@@ -158,7 +158,7 @@ class Tooltip extends BaseComponent {
 	 * @return $this
 	 */
 	public function size( string $size ): self {
-		$allowed = array( Size::SMALL, Size::LARGE );
+		$allowed = array( Size::SMALL, Size::MEDIUM, Size::LARGE );
 		if ( in_array( $size, $allowed, true ) ) {
 			$this->size = $size;
 		}
