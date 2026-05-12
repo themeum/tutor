@@ -38,7 +38,8 @@ if ( $quiz_attempt ) {
 	$total        = (float) $total_marks;
 	$earned_marks = ( $earned_marks / $total_marks ) * 100;
 }
-$allowed_attempts = $quiz_options['attempts_allowed'] ?? '';
+$limit_attempts   = (int) $quiz_options['limit_attempts_allowed'] ?? 0;
+$allowed_attempts = $limit_attempts ? $quiz_options['attempts_allowed'] ?? '' : '1';
 ?>
 <div class="tutor-quiz">
 	<?php ob_start(); ?>
