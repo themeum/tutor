@@ -28,6 +28,7 @@ use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\EnrollmentModel;
 use Tutor\Options_V2;
+use TUTOR_ASSIGNMENTS\Assignments;
 
 /**
  * Course Class
@@ -1832,7 +1833,7 @@ class Course extends Tutor_Base {
 
 		$i = 0;
 		foreach ( $sort_order as $topic ) {
-			$i++;
+			++$i;
 			$wpdb->update(
 				$wpdb->posts,
 				array( 'menu_order' => $i ),
@@ -2887,102 +2888,93 @@ class Course extends Tutor_Base {
 	 *
 	 * @return string|null
 	 */
-	public static function get_course_completion_missing_requirements_msg( $course_id = 0, $user_id = 0 ) {
+	public static function get_course_completion_restrict_msg( $course_id = 0, $user_id = 0 ) {
 		$course_id = tutor_utils()->get_post_id( $course_id );
 		$user_id   = tutor_utils()->get_user_id( $user_id );
 
-		$completion_mode = tutor_utils()->get_option( 'course_completion_process' );
-		if ( 'strict' !== $completion_mode ) {
+		if ( 'strict' !== tutor_utils()->get_option( 'course_completion_process' ) ) {
 			return null;
 		}
 
-		$completed_lesson = tutor_utils()->get_completed_lesson_count_by_course( $course_id, $user_id );
-		$lesson_count     = tutor_utils()->get_lesson_count_by_course( $course_id );
+		$completed_lessons = tutor_utils()->get_completed_lesson_count_by_course( $course_id, $user_id );
+		$total_lessons     = tutor_utils()->get_lesson_count_by_course( $course_id );
 
-		if ( $completed_lesson < $lesson_count ) {
+		if ( $completed_lessons < $total_lessons ) {
 			return __( 'Complete all lessons to mark this course as complete', 'tutor' );
 		}
 
-		$quizzes     = array();
-		$assignments = array();
-
 		$course_contents = tutor_utils()->get_course_contents_by_id( $course_id );
-		if ( tutor_utils()->count( $course_contents ) ) {
-			foreach ( $course_contents as $content ) {
-				if ( 'tutor_quiz' === $content->post_type ) {
-					$quizzes[] = $content;
+
+		$required_quiz_pass_count       = 0;
+		$required_assignment_pass_count = 0;
+
+		$is_assignment_addon_enabled = tutor_utils()->is_addon_enabled( 'tutor-assignments' );
+
+		foreach ( $course_contents as $content ) {
+
+			if ( tutor()->quiz_post_type === $content->post_type ) {
+				if ( ! QuizModel::is_quiz_passed( $content->ID, $user_id ) ) {
+					++$required_quiz_pass_count;
 				}
-				if ( 'tutor_assignments' === $content->post_type ) {
-					$assignments[] = $content;
+			}
+
+			if ( $is_assignment_addon_enabled && tutor()->assignment_post_type === $content->post_type ) {
+				if ( ! Assignments::is_assignment_passed( $content->ID, $user_id ) ) {
+					++$required_assignment_pass_count;
 				}
 			}
 		}
 
-		$required_assignment_pass = 0;
-		foreach ( $assignments as $row ) {
-			$assignment_submission     = tutor_utils()->is_assignment_submitted( $row->ID, $user_id );
-			$is_reviewed_by_instructor = ! count( $assignment_submission )
-											? false
-											: get_comment_meta( $assignment_submission[0]->comment_ID, 'evaluate_time', true );
-
-			if ( $assignment_submission && $is_reviewed_by_instructor ) {
-				$pass_mark  = tutor_utils()->get_assignment_option( $row->ID, 'pass_mark' );
-				$has_passed = false;
-				foreach ( $assignment_submission as $submission ) {
-					$given_mark = (int) get_comment_meta( $submission->comment_ID, 'assignment_mark', true );
-					if ( $given_mark >= $pass_mark ) {
-						$has_passed = true;
-						break;
-					}
-				}
-				if ( ! $has_passed ) {
-					$required_assignment_pass++;
-				}
-			} else {
-				$required_assignment_pass++;
-			}
+		if ( ! $required_quiz_pass_count && ! $required_assignment_pass_count ) {
+			return null;
 		}
 
-		$is_quiz_pass       = true;
-		$required_quiz_pass = 0;
+		return self::get_course_completion_requirement_message(
+			$required_quiz_pass_count,
+			$required_assignment_pass_count
+		);
+	}
 
-		if ( tutor_utils()->count( $quizzes ) ) {
-			foreach ( $quizzes as $quiz ) {
-				$attempt = tutor_utils()->get_quiz_attempt( $quiz->ID, $user_id );
-				if ( $attempt ) {
-					$passing_grade     = tutor_utils()->get_quiz_option( $quiz->ID, 'passing_grade', 0 );
-					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
+	/**
+	 * Build missing course completion requirements message.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $quiz_count Total quiz count.
+	 * @param int $assignment_count Total assignment count.
+	 *
+	 * @return string
+	 */
+	private static function get_course_completion_requirement_message( $quiz_count, $assignment_count ) {
+		$quiz_label       = _n( 'quiz', 'quizzes', $quiz_count, 'tutor' );
+		$assignment_label = _n( 'assignment', 'assignments', $assignment_count, 'tutor' );
 
-					if ( $earned_percentage < $passing_grade ) {
-						$required_quiz_pass++;
-						$is_quiz_pass = false;
-					}
-				} else {
-					$required_quiz_pass++;
-					$is_quiz_pass = false;
-				}
-			}
+		if ( $quiz_count && ! $assignment_count ) {
+			return sprintf(
+				/* translators: %1$s: quiz count; %2$s: quiz label */
+				__( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ),
+				$quiz_count,
+				$quiz_label
+			);
 		}
 
-		if ( ! $is_quiz_pass || $required_assignment_pass > 0 ) {
-			$_msg           = '';
-			$quiz_str       = _n( 'quiz', 'quizzes', $required_quiz_pass, 'tutor' );
-			$assignment_str = _n( 'assignment', 'assignments', $required_assignment_pass, 'tutor' );
-
-			if ( ! $is_quiz_pass && 0 == $required_assignment_pass ) {
-				/* translators: %1$s: number of quiz pass required; %2$s: quiz string */
-				$_msg = sprintf( __( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ), $required_quiz_pass, $quiz_str );
-			} elseif ( $is_quiz_pass && $required_assignment_pass > 0 ) {
-				/* translators: %1$s: number of assignment pass required; %2$s: assignment string */
-				$_msg = sprintf( __( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ), $required_assignment_pass, $assignment_str );
-			} else {
-				/* translators: %1$s: number of quiz pass required; %2$s: quiz string; %3$s: number of assignment pass required; %4$s: assignment string */
-				$_msg = sprintf( __( 'You have to pass %1$s %2$s and %3$s %4$s to complete this course.', 'tutor' ), $required_quiz_pass, $quiz_str, $required_assignment_pass, $assignment_str );
-			}
-			return $_msg;
+		if ( ! $quiz_count && $assignment_count ) {
+			return sprintf(
+				/* translators: %1$s: assignment count; %2$s: assignment label */
+				__( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ),
+				$assignment_count,
+				$assignment_label
+			);
 		}
 
-		return null;
+		return sprintf(
+			/* translators: %1$s: quiz count; %2$s: quiz label; %3$s: assignment count; %4$s: assignment label */
+			__( 'You have to pass %1$s %2$s and %3$s %4$s to complete this course.', 'tutor' ),
+			$quiz_count,
+			$quiz_label,
+			$assignment_count,
+			$assignment_label
+		);
 	}
 
 	/**
@@ -2994,7 +2986,7 @@ class Course extends Tutor_Base {
 	 * @return string
 	 */
 	public function tutor_lms_hide_course_complete_btn( $html ) {
-		$_msg = self::get_course_completion_missing_requirements_msg();
+		$_msg = self::get_course_completion_restrict_msg();
 
 		if ( $_msg ) {
 			return '<div class="tutor-alert tutor-warning tutor-mt-28">

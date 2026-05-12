@@ -257,7 +257,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 	</div>
 	<div class="tutor-hidden tutor-md-flex tutor-flex-column tutor-gap-2">
 	<?php
-	$incomplete_msg = Course::get_course_completion_missing_requirements_msg( $tutor_course_id, $current_user_id );
+	$incomplete_msg = Course::get_course_completion_restrict_msg( $tutor_course_id, $current_user_id );
 	if ( $tutor_can_complete_course || $incomplete_msg ) {
 		Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $tutor_course_progress, Size::MEDIUM, $incomplete_msg ?? '', true );
 	}
