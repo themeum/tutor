@@ -131,6 +131,13 @@
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
 
+  // user account/device management
+  .tutor-devices-signout-all {
+    button {
+      margin-inline-end: $tutor-spacing-5;
+    }
+  }
+
   // discussions
   .tutor-dashboard-page-card {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);

@@ -29,9 +29,16 @@
     height: 200px;
     background-color: $tutor-surface-l3;
     border-radius: $tutor-radius-lg;
+    overflow: hidden;
+    position: relative;
 
-    img {
-      max-height: 200px;
+    @include tutor-breakpoint-down(sm) {
+      svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
   }
 

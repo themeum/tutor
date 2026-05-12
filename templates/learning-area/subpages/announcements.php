@@ -46,7 +46,12 @@ $total_announcements = $the_query->found_posts;
 	</h4>
 	<div class="tutor-course-announcements">
 		<?php if ( empty( $announcements ) ) : ?>
-			<?php EmptyState::make()->title( __( 'No Announcements Found!', 'tutor' ) )->render(); ?>
+			<?php
+				EmptyState::make()
+					->title( __( 'No Announcements Found!', 'tutor' ) )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/no-announcements.svg' ) )
+					->render();
+			?>
 		<?php else : ?>
 			<div class="tutor-announcement-list">
 				<?php foreach ( $announcements as $announcement ) : ?>
@@ -89,4 +94,3 @@ $total_announcements = $the_query->found_posts;
 		?>
 	</div>
 </div>
-

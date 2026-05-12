@@ -246,8 +246,8 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 				<?php else : ?>
 					<?php
 					EmptyState::make()
-					->title( __( 'No withdrawal records found', 'tutor' ) )
-					->render();
+						->title( __( 'No withdrawal records found', 'tutor' ) )
+						->render();
 					?>
 				<?php endif; ?>
 			</div>

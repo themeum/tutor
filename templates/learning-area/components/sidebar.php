@@ -71,7 +71,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 				<div class="tutor-learning-progress-text tutor-py-2">
 					<?php
 					// translators: %s: course completed percentage.
-					echo sprintf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $tutor_course_progress ) . '%</span>' );
+					printf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $tutor_course_progress ) . '%</span>' );
 					?>
 				</div>
 				<div class="tutor-flex">
@@ -91,7 +91,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
 						->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
 						->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
-						->icon( UrlHelper::themed_asset( 'images/illustrations/reset-course.webp' ) )
+						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reset-course.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 						->confirm_handler( 'resetProgress()' )
 						->mutation_state( 'resetProgressMutation' )
 						->render();
