@@ -16,6 +16,7 @@ interface ResetProgressPayload {
 
 interface ResetProgressResponse {
   success: boolean;
+  status_code?: number;
   message?: string;
   data?: {
     redirect_to: string;
@@ -55,8 +56,9 @@ export const sidebarComponent = ({
         (payload) => wpAjaxInstance.post(endpoints.RESET_COURSE_PROGRESS, payload),
         {
           onSuccess: (response) => {
-            if (response.success && response.data?.redirect_to) {
+            if (response.status_code === 200 && response.data?.redirect_to) {
               window.location.href = response.data.redirect_to;
+              modal.closeModal(this.resetModalId);
             }
           },
           onError: (error: AxiosError) => {

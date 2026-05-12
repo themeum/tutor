@@ -431,6 +431,27 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   };
 
   const handleDeleteQuestion = (index: number, question: QuizQuestion) => {
+    if (question._data_status === QuizDataStatus.NEW) {
+      const isMaskQuestionType =
+        question.question_type === 'draw_image' ||
+        question.question_type === 'pin_image' ||
+        question.question_type === 'puzzle';
+
+      if (isMaskQuestionType) {
+        const tempMaskValues = (question.question_answers || [])
+          .flatMap((answer) => [answer.answer_two_gap_match, answer.image_url])
+          .map((value) => (typeof value === 'string' ? value.trim() : ''))
+          .filter(Boolean);
+
+        if (tempMaskValues.length > 0) {
+          form.setValue('deleted_temp_mask_values', [
+            ...(form.getValues('deleted_temp_mask_values') || []),
+            ...tempMaskValues,
+          ]);
+        }
+      }
+    }
+
     removeQuestion(index);
 
     if (activeQuestionIndex === index) {
