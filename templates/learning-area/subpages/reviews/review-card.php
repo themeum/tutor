@@ -124,8 +124,8 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 					->render();
 			?>
 		</form>
-		<div class="tutor-flex tutor-justify-between tutor-gap-3">
-			<div class="tutor-flex tutor-gap-3 tutor-tiny tutor-text-subdued tutor-items-center tutor-flex-wrap">
+		<div class="tutor-flex tutor-justify-between tutor-gap-3 tutor-sm-justify-end">
+			<div class="tutor-flex tutor-gap-3 tutor-tiny tutor-text-subdued tutor-items-center tutor-flex-wrap tutor-sm-hidden">
 				<span>
 					<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?>
 				</span>
