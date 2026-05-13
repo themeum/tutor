@@ -27,6 +27,7 @@
   &::-webkit-autofill-button,
   &::-webkit-contacts-auto-fill-button,
   &::-webkit-credentials-auto-fill-button {
+    -webkit-appearance: none;
     display: none;
     visibility: hidden;
     opacity: 0;
