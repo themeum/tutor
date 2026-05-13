@@ -79,6 +79,7 @@
 
   &-title {
     @include tutor-typography('h5', 'semibold', 'secondary', 'heading');
+    margin: 0;
   }
 
   &-subtitle {
