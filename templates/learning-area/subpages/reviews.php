@@ -22,7 +22,6 @@ use Tutor\Components\Pagination;
 use Tutor\Components\Progress;
 use Tutor\Components\StarRating;
 use Tutor\Components\SvgIcon;
-use Tutor\Helpers\UrlHelper;
 
 // Get course ID from global variable set in learning-area/index.php .
 global $tutor_course_id,
@@ -75,7 +74,12 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 
 	<div class="tutor-card tutor-card-rounded-2xl tutor-p-none">
 	<?php if ( empty( $reviews ) ) : ?>
-		<?php EmptyState::make()->title( __( 'No Reviews Found', 'tutor' ) )->render(); ?>
+		<?php
+			EmptyState::make()
+				->title( __( 'No Reviews Found!', 'tutor' ) )
+				->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reviews-empty.svg' ) )
+				->render();
+		?>
 	<?php else : ?>
 		<div class="tutor-grid tutor-grid-cols-2 tutor-sm-grid-cols-1 tutor-gap-4 tutor-sm-gap-6 tutor-p-6">
 			<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-justify-between">
@@ -113,7 +117,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 					?>
 					<div class="tutor-flex tutor-items-center tutor-gap-5">
 						<div class="tutor-flex tutor-items-center tutor-gap-3">
-							<?php tutor_utils()->render_svg_icon( Icon::STAR_FILL, 12, 12, array( 'class' => 'tutor-icon-exception4' ) ); ?>
+							<?php SvgIcon::make()->name( Icon::STAR_FILL )->size( 12 )->attr( 'class', 'tutor-icon-exception4' )->render(); ?>
 							<span class="tutor-small" style="font-variant-numeric: tabular-nums;"><?php echo esc_html( $i ); ?></span>
 						</div>
 						<?php Progress::make()->variant( Variant::WARNING )->value( $percent )->animated()->render(); ?>
@@ -143,7 +147,7 @@ $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_c
 					->id( 'review-delete-modal' )
 					->title( __( 'Delete your Review?', 'tutor' ) )
 					->message( __( 'Are you sure you want to delete this review? This action cannot be undone.', 'tutor' ) )
-					->icon( UrlHelper::themed_asset( 'images/illustrations/delete-reviews.webp' ) )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/delete-reviews.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 					->confirm_handler( 'handleDeleteReview(payload?.id)' )
 					->mutation_state( 'deleteReviewMutation' )
 					->confirm_text( __( 'Yes, Delete This', 'tutor' ) )

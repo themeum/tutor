@@ -68,7 +68,12 @@ $total_items     = Lesson::get_comments( $count_args );
 </div>
 
 <?php if ( empty( $lesson_comments ) ) : ?>
-	<?php EmptyState::make()->title( 'No Comments Found!' )->render(); ?>
+	<?php
+		EmptyState::make()
+			->title( 'No Comments Found!' )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/comments-empty.svg' ) )
+			->render();
+	?>
 <?php else : ?>
 <div class="tutor-discussion-card-wrapper tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
 	<?php
@@ -105,4 +110,3 @@ if ( ! empty( $lesson_comments ) ) {
 		->mutation_state( 'deleteCommentMutation' )
 		->render();
 }
-
