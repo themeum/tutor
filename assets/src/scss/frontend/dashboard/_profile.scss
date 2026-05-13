@@ -71,17 +71,44 @@
       gap: $tutor-spacing-6;
       margin-top: $tutor-spacing-6;
 
-      a {
+      .tutor-social-link {
         height: 16px;
         width: 16px;
         outline: none;
         box-shadow: none;
+        color: $tutor-text-primary;
+        @include tutor-transition(color);
+
+        &:hover {
+          color: $tutor-text-brand;
+        }
       }
     }
 
     .tutor-user-profile-bio {
       @include tutor-typography(p2, regular, secondary);
       margin-bottom: $tutor-spacing-9;
+
+      @include tutor-breakpoint-down(sm) {
+        margin-bottom: $tutor-spacing-6;
+      }
+    }
+
+    .tutor-bio-wrapper {
+      position: relative;
+      margin-bottom: $tutor-spacing-9;
+      --tutor-bio-collapsed-height: calc(
+        4 * #{if(variable-exists(tutor-line-height-p2), $tutor-line-height-p2, 1.5rem)}
+      );
+
+      .tutor-user-profile-bio {
+        margin-bottom: 0;
+      }
+
+      .tutor-bio-collapsed {
+        max-height: var(--tutor-bio-collapsed-height);
+        overflow: hidden;
+      }
 
       @include tutor-breakpoint-down(sm) {
         margin-bottom: $tutor-spacing-6;
@@ -135,6 +162,40 @@
         bottom: 0;
       }
     }
+  }
+
+  %bio-toggle-base {
+    @include tutor-typography(small);
+    appearance: none;
+    background: none;
+    border: none;
+    padding: 0;
+    color: $tutor-text-brand;
+    cursor: pointer;
+    text-box-trim: trim-both;
+    text-edge: cap alphabetic;
+
+    &:focus-visible {
+      outline: 2px solid $tutor-text-brand;
+      outline-offset: 2px;
+      border-radius: $tutor-radius-xs;
+    }
+  }
+
+  .tutor-bio-toggle {
+    @extend %bio-toggle-base;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: calc($tutor-z-highest + 1);
+    background: $tutor-surface-l1;
+    padding-left: 4px;
+  }
+
+  .tutor-bio-toggle-less {
+    @extend %bio-toggle-base;
+    display: inline;
+    margin-top: $tutor-spacing-2;
   }
 
   .tutor-user-profile-statistics {
