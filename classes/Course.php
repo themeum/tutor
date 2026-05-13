@@ -2209,7 +2209,7 @@ class Course extends Tutor_Base {
 		$can_complete = apply_filters( 'tutor_user_can_complete_course', CourseModel::can_complete_course( $course_id, $user_id ), $user_id, $course_id );
 
 		if ( is_wp_error( $can_complete ) ) {
-			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message() ?? __( 'You do not have permission to complete this course.', 'tutor' ), 'error' );
+			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
 		} elseif ( ! $can_complete ) {
 			tutor_utils()->redirect_to( $permalink, __( 'You do not have permission to complete this course.', 'tutor' ), 'error' );
 		} else {
