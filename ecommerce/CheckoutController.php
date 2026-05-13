@@ -635,7 +635,7 @@ class CheckoutController {
 							$errors,
 							sprintf(
 							// Translators: %s course name.
-								__( 'Course %s cannot be enrolled right now.', 'tutor' ),
+								__( 'Enrollment for %s is currently paused. Please remove it from your cart to proceed.', 'tutor' ),
 								get_the_title( $course_id ) ?? ''
 							),
 						);
