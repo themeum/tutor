@@ -163,11 +163,51 @@ export const popover = (props: PopoverProps = {}) => ({
     }
   },
 
+  isTriggerVisible(): boolean {
+    const trigger = this.$refs.trigger;
+    if (!trigger) return false;
+
+    const rect = trigger.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+
+    // Check if trigger is within viewport bounds
+    const isWithinViewport =
+      rect.bottom > 0 && rect.top < viewportHeight && rect.right > 0 && rect.left < viewportWidth;
+
+    if (!isWithinViewport || rect.width === 0 || rect.height === 0) {
+      return false;
+    }
+
+    // Check if trigger is obscured by elements like sticky headers
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const elementAtPoint = document.elementFromPoint(centerX, centerY);
+
+    if (elementAtPoint) {
+      const content = this.$refs.content;
+      const isTriggerOrChild = trigger === elementAtPoint || trigger.contains(elementAtPoint);
+      const isContentOrChild = content && (content === elementAtPoint || content.contains(elementAtPoint));
+
+      if (!isTriggerOrChild && !isContentOrChild) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+
   updatePosition(): void {
     const trigger = this.$refs.trigger;
     const content = this.$refs.content;
 
     if (!trigger || !content) return;
+
+    if (this.open && !this.isTriggerVisible()) {
+      this.hide();
+      return;
+    }
 
     const triggerRect = trigger.getBoundingClientRect();
     const contentDimensions = this.getContentDimensions(content);

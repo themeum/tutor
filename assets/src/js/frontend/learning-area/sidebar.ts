@@ -24,21 +24,12 @@ interface ResetProgressResponse {
   };
 }
 
-export const sidebarComponent = ({
-  isCollapsed,
-  courseId,
-  resetModalId,
-}: {
-  isCollapsed: boolean;
-  courseId: number;
-  resetModalId: string;
-}) => {
+export const sidebarComponent = ({ courseId, resetModalId }: { courseId: number; resetModalId: string }) => {
   const { query, modal, toast } = window.TutorCore;
 
   return {
     pagesHeight: 0,
     resizing: false,
-    collapsed: isCollapsed,
     sidebarOpen: false,
     courseId: courseId,
     resetModalId: resetModalId,
