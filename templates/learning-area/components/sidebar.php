@@ -53,7 +53,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 ?>
 <div 
 	class="tutor-learning-sidebar" 
-	x-data="tutorLearningSidebar({ isCollapsed: <?php echo empty( $active_menu ) ? 'true' : 'false'; ?>, courseId: <?php echo (int) $tutor_course->ID; ?>, resetModalId: '<?php echo esc_attr( $reset_modal_id ); ?>' })"
+	x-data="tutorLearningSidebar({ courseId: <?php echo (int) $tutor_course->ID; ?>, resetModalId: '<?php echo esc_attr( $reset_modal_id ); ?>' })"
 	x-trap.noscroll="sidebarOpen"
 	:class="{ 'is-open': sidebarOpen }" 
 	@click.outside="closeSidebar()"
@@ -193,14 +193,16 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 			?>
 		</div>
 	</div>
-	<div class="tutor-learning-sidebar-pages" :class="{ 'expanded': !collapsed }">
-		<div class="tutor-sidebar-resizer" x-show="!collapsed" @mousedown="startResizing($event)" x-cloak></div>
-		<div class="tutor-sidebar-restore-dropdown" x-show="!collapsed" x-cloak>
-			<button :class="{ 'is-minimized': pagesHeight <= 40 }" @click="togglePagesHeight()">
-				<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->render(); ?>
-			</button>
-		</div>
-		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" :style="!collapsed && { height: pagesHeight + 'px' }">
+	<div class="tutor-learning-sidebar-pages <?php echo ! empty( $active_menu ) ? 'expanded' : ''; ?>">
+		<?php if ( ! empty( $active_menu ) ) : ?>
+			<div class="tutor-sidebar-resizer" @mousedown="startResizing($event)"></div>
+			<div class="tutor-sidebar-restore-dropdown">
+				<button :class="{ 'is-minimized': pagesHeight <= 40 }" @click="togglePagesHeight()">
+					<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->render(); ?>
+				</button>
+			</div>
+		<?php endif; ?>
+		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" <?php echo ! empty( $active_menu ) ? ':style="{ height: pagesHeight + \'px\' }"' : ''; ?>>
 			<?php
 			ob_start();
 			foreach ( $menu_items as $key => $item ) {
@@ -229,7 +231,8 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 			$menu_html = ob_get_clean();
 			?>
 
-			<div x-show="collapsed" x-cloak>
+			<?php if ( empty( $active_menu ) ) : ?>
+			<div>
 				<?php
 				$allowed_html = wp_kses_allowed_html( 'post' );
 				if ( isset( $allowed_html['a'] ) ) {
@@ -251,10 +254,11 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 					->render();
 				?>
 			</div>
-
-			<div x-show="!collapsed" x-cloak>
+			<?php else : ?>
+			<div>
 				<?php echo $menu_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
+			<?php endif; ?>
 		</div>
 	</div>
 	<div class="tutor-hidden tutor-md-flex tutor-flex-column tutor-gap-2">
