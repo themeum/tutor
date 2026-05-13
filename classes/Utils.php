@@ -7193,7 +7193,7 @@ class Utils {
 			TutorCache::set( $cache_key, $instructor );
 		}
 
-		if ( is_array( $instructor ) && count( $instructor ) ) {
+		if ( $this->count( $instructor ) ) {
 			return true;
 		}
 
