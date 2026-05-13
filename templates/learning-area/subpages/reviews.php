@@ -39,18 +39,18 @@ $reviews       = tutor_utils()->get_course_reviews( $tutor_course_id, $offset, $
 $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_course_id, array( 'approved', 'hold' ) );
 
 if ( ! empty( $my_rating ) ) {
-	$my_review    = is_array( $my_rating ) ? $my_rating[0] : $my_rating;
-	$my_review_id = $my_review->comment_ID;
+	$my_rating    = is_array( $my_rating ) ? $my_rating[0] : $my_rating;
+	$my_rating_id = $my_rating->comment_ID;
 
 	$reviews = array_filter(
 		$reviews,
-		function ( $review ) use ( $my_review_id ) {
-			return $review->comment_ID !== $my_review_id;
+		function ( $review ) use ( $my_rating_id ) {
+			return $review->comment_ID !== $my_rating_id;
 		}
 	);
 
 	$reviews = array_values( $reviews );
-	array_unshift( $reviews, $my_review );
+	array_unshift( $reviews, $my_rating );
 }
 
 ?>
