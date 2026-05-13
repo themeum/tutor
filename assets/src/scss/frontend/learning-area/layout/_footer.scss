@@ -33,7 +33,7 @@
       width: 50%;
 
       &:is(:only-child),
-      &:is(.tutor-meeting-mark-as-complete-button) {
+      &:is(.tutor-meeting-complete-button) {
         width: 100%;
       }
     }
