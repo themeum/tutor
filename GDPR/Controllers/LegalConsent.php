@@ -97,13 +97,6 @@ class LegalConsent extends BaseController {
 	private function register_hooks() {
 		add_action( 'wp_ajax_tutor_gdpr_legal_consents', array( $this, 'handle_legal_consent_ajax' ) );
 		add_filter( 'tutor_localize_data', array( $this, 'extend_localize_data' ) );
-		add_filter(
-			'safe_style_css',
-			function ( $styles ) {
-				$styles[] = 'display';
-				return $styles;
-			}
-		);
 		add_action( 'tutor_login_form_end', array( $this, 'show_consent_field_on_login_form' ) );
 	}
 
@@ -782,6 +775,14 @@ class LegalConsent extends BaseController {
 
 			$message = str_replace( '{' . $key . '}', $anchor, $message );
 		}
+
+		add_filter(
+			'safe_style_css',
+			function ( $styles ) {
+				$styles[] = 'display';
+				return $styles;
+			}
+		);
 
 		echo wp_kses(
 			$message,
