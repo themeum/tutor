@@ -109,11 +109,23 @@ export const popover = (props: PopoverProps = {}) => ({
     const content = this.$refs.content;
     if (content) {
       content.style.visibility = 'hidden';
+      // Initialize with off-screen position to avoid flashes if visibility fails
+      content.style.left = '-9999px';
+      content.style.top = '-9999px';
     }
 
     this.open = true;
 
     const afterShow = () => {
+      if (!this.open) return;
+
+      const dimensions = this.getContentDimensions(content);
+      // If measurement failed (0 size), Safari might not have rendered it yet. Retry.
+      if (dimensions.width === 0 && dimensions.height === 0) {
+        requestAnimationFrame(afterShow);
+        return;
+      }
+
       this.updatePosition();
       if (content) {
         content.style.visibility = 'visible';
@@ -171,6 +183,13 @@ export const popover = (props: PopoverProps = {}) => ({
 
     const triggerRect = trigger.getBoundingClientRect();
     const contentDimensions = this.getContentDimensions(content);
+
+    // If measurement failed (0 size), retry on next frame
+    if (this.open && contentDimensions.width === 0 && contentDimensions.height === 0) {
+      requestAnimationFrame(() => this.updatePosition());
+      return;
+    }
+
     const viewport = {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -291,12 +310,22 @@ export const popover = (props: PopoverProps = {}) => ({
   },
 
   getContentDimensions(content: HTMLElement): PopoverDimensions {
-    const rect = content.getBoundingClientRect();
+    // Temporarily reset transforms/transitions for accurate measurement
+    const originalTransform = content.style.transform;
+    const originalTransition = content.style.transition;
+    content.style.transform = 'none';
+    content.style.transition = 'none';
 
-    return {
+    const rect = content.getBoundingClientRect();
+    const dimensions = {
       width: content.offsetWidth || rect.width,
       height: content.offsetHeight || rect.height,
     };
+
+    content.style.transform = originalTransform;
+    content.style.transition = originalTransition;
+
+    return dimensions;
   },
 
   convertViewportPositionToContentPosition(content: HTMLElement, position: { top: number; left: number }) {
