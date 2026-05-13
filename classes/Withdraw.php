@@ -248,8 +248,8 @@ class Withdraw {
 				wp_sprintf(
 					/* translators: 1: total pending withdraw request 2: available for withdraw */
 					__( "You have total %1\$s pending withdraw request. You can't make more than %2\$s withdraw request at a time", 'tutor' ),
-					$earning_summary->total_pending,
-					$earning_summary->available_for_withdraw
+					tutor_utils()->tutor_price( $earning_summary->total_pending ),
+					tutor_utils()->tutor_price( $earning_summary->available_for_withdraw )
 				),
 			);
 		}
