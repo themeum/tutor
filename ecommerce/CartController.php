@@ -234,7 +234,7 @@ class CartController {
 		$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
 		if ( ! $can_buy ) {
 			$this->json_response(
-				__( 'Failed to add to cart.', 'tutor' ),
+				__( 'Cannot add to cart, enrollment is currently paused.', 'tutor' ),
 				null,
 				HttpHelper::STATUS_BAD_REQUEST
 			);

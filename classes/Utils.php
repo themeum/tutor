@@ -7145,11 +7145,9 @@ class Utils {
 	 * @param int  $course_id course id.
 	 * @param bool $is_approved is approved.
 	 *
-	 * @return bool|int
+	 * @return bool
 	 */
 	public function is_instructor_of_this_course( $instructor_id = 0, $course_id = 0, $is_approved = true ) {
-		global $wpdb;
-
 		$instructor_id = $this->get_user_id( $instructor_id );
 		$course_id     = $this->get_post_id( $course_id );
 
@@ -7161,46 +7159,42 @@ class Utils {
 		$instructor = TutorCache::get( $cache_key );
 
 		if ( false === $instructor ) {
+			$meta_query_args = array(
+				array(
+					'key'     => '_tutor_instructor_course_id',
+					'value'   => $course_id,
+					'compare' => '=',
+					'type'    => 'NUMERIC',
+				),
+			);
 
 			if ( $is_approved ) {
-				$is_approved_instructor = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT COUNT(umeta_id)
-						FROM   {$wpdb->usermeta}
-						WHERE  user_id = %d 
-							AND meta_key = %s 
-							AND meta_value = %s",
-						$instructor_id,
-						'_tutor_instructor_status',
-						'approved',
-					)
+				$meta_query_args[] = array(
+					'key'     => '_tutor_instructor_status',
+					'value'   => 'approved',
+					'compare' => '=',
 				);
-
-				if ( ! $is_approved_instructor ) {
-					return false;
-				}
 			}
 
-			//phpcs:disable
-			$instructor = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT umeta_id
-				FROM   {$wpdb->usermeta}
-				WHERE  user_id = %d
-					AND meta_key = '_tutor_instructor_course_id'
-					AND meta_value = %d
-				",
-				$instructor_id,
-				$course_id
-			)
+			$meta_query_args['relation'] = 'AND';
+			$meta_query                  = new \WP_Meta_Query( $meta_query_args );
+			$instructor_query            = new \WP_User_Query(
+				array(
+					'include'     => array( $instructor_id ),
+					'number'      => 1,
+					'fields'      => 'ID',
+					'count_total' => false,
+					'meta_query'  => $meta_query->queries,
+				)
 			);
-			//phpcs:enable
+
+			$instructor = $instructor_query->get_results();
 
 			TutorCache::set( $cache_key, $instructor );
 		}
 
-		if ( is_array( $instructor ) && count( $instructor ) ) {
-			return $instructor;
+		if ( $this->count( $instructor ) ) {
+			return true;
 		}
 
 		return false;
