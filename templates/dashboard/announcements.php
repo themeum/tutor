@@ -108,8 +108,9 @@ $create_modal_id = 'tutor-announcement-form-modal';
 					->render();
 
 				DateFilter::make()
-						->type( DateFilter::TYPE_SINGLE )
+						->type( DateFilter::TYPE_RANGE )
 						->placement( DateFilter::PLACEMENT_BOTTOM_END )
+						->hide_initial_label()
 						->attr( 'class', 'tutor-hidden tutor-sm-flex' )
 						->render();
 
@@ -136,8 +137,9 @@ $create_modal_id = 'tutor-announcement-form-modal';
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
 				<?php
 					DateFilter::make()
-						->type( DateFilter::TYPE_SINGLE )
+						->type( DateFilter::TYPE_RANGE )
 						->placement( DateFilter::PLACEMENT_BOTTOM_END )
+						->hide_initial_label()
 						->attr( 'class', 'tutor-sm-hidden' )
 						->render();
 
@@ -164,7 +166,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 					<div class="tutor-announcement-item">
 						<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-5">
 							<div class="tutor-flex tutor-items-center tutor-gap-3">
-								<?php SvgIcon::make()->name( Icon::ANNOUNCEMENT )->render(); ?>
+								<?php SvgIcon::make()->name( Icon::ANNOUNCEMENT )->color( Color::IDLE )->render(); ?>
 								<div class="tutor-tiny tutor-text-secondary">
 									<?php echo esc_html( tutor_i18n_get_formated_date( $announcement->post_date ) ); ?>
 								</div>
