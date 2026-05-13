@@ -27,11 +27,10 @@ $social_fields = tutor_utils()->tutor_user_social_icons();
 $social_links  = array();
 
 foreach ( $social_fields as $meta_key => $field ) {
-	$short_key                  = str_replace( '_tutor_profile_', '', $meta_key );
-	$url                        = get_user_meta( $user_id, $meta_key, true );
-	$social_links[ $short_key ] = array(
+	$url                       = $student_meta[ $meta_key ][0] ?? '';
+	$social_links[ $meta_key ] = array(
 		'url'   => $url,
-		'icon'  => $field['svg_icon'],
+		'icon'  => $field['svg_icon'] ?? Icon::GLOBE,
 		'label' => $field['label'],
 	);
 }
@@ -62,11 +61,11 @@ foreach ( $social_fields as $meta_key => $field ) {
 				if ( $has_social ) :
 					?>
 				<div class="tutor-user-profile-social">
-					<?php foreach ( $social_links as $network => $social_link ) : ?>
+					<?php foreach ( $social_links as $social_link ) : ?>
 						<?php if ( ! empty( $social_link['url'] ) ) : ?>
 						<a
 							href="<?php echo esc_url( $social_link['url'] ); ?>"
-							class="tutor-social-link tutor-social-link-<?php echo esc_attr( $network ); ?>"
+							class="tutor-social-link"
 							target="_blank"
 							rel="noopener noreferrer"
 							aria-label="<?php echo esc_attr( $social_link['label'] ); ?>"
