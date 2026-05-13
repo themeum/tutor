@@ -23,7 +23,8 @@
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button,
-  &::-webkit-search-cancel-button {
+  &::-webkit-search-cancel-button,
+  &::-webkit-autofill-button {
     -webkit-appearance: none;
     margin: 0;
   }
@@ -83,12 +84,7 @@
   cursor: pointer;
   position: relative;
   flex-shrink: 0;
-  @include tutor-transition((
-    background-color,
-    border-color,
-    box-shadow,
-    color
-  ));
+  @include tutor-transition((background-color, border-color, box-shadow, color));
 
   color: $tutor-icon-idle;
 
@@ -171,11 +167,7 @@
   cursor: pointer;
   position: relative;
   flex-shrink: 0;
-  @include tutor-transition((
-    background-color,
-    border-color,
-    box-shadow
-  ));
+  @include tutor-transition((background-color, border-color, box-shadow));
 
   &:checked {
     background-color: $tutor-surface-brand-primary;
