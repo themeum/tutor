@@ -21,7 +21,10 @@
 
     .tutor-avatar {
       border: 4px solid $tutor-border-inverse;
-      transform: translateY(92px);
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateY(50%) translateX(-50%);
     }
 
     .tutor-edit-profile-btn {
