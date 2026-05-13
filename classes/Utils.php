@@ -7145,7 +7145,7 @@ class Utils {
 	 * @param int  $course_id course id.
 	 * @param bool $is_approved is approved.
 	 *
-	 * @return bool|int
+	 * @return bool
 	 */
 	public function is_instructor_of_this_course( $instructor_id = 0, $course_id = 0, $is_approved = true ) {
 		$instructor_id = $this->get_user_id( $instructor_id );
@@ -7194,7 +7194,7 @@ class Utils {
 		}
 
 		if ( is_array( $instructor ) && count( $instructor ) ) {
-			return $instructor;
+			return true;
 		}
 
 		return false;
