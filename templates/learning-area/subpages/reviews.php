@@ -38,6 +38,21 @@ $total_items   = (int) tutor_utils()->get_course_reviews( $tutor_course_id, null
 $reviews       = tutor_utils()->get_course_reviews( $tutor_course_id, $offset, $review_per_page, false, array( 'approved' ), $current_user_id );
 $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, null, false, $tutor_course_id, array( 'approved', 'hold' ) );
 
+if ( ! empty( $my_rating ) ) {
+	$my_rating    = is_array( $my_rating ) ? $my_rating[0] : $my_rating;
+	$my_rating_id = $my_rating->comment_ID;
+
+	$reviews = array_filter(
+		$reviews,
+		function ( $review ) use ( $my_rating_id ) {
+			return $review->comment_ID !== $my_rating_id;
+		}
+	);
+
+	$reviews = array_values( $reviews );
+	array_unshift( $reviews, $my_rating );
+}
+
 ?>
 
 <div class="tutor-py-8 tutor-learning-area-reviews">
