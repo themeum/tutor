@@ -25,11 +25,6 @@
       &:only-child {
         width: 100%;
       }
-
-      .tutor-mark-as-complete-button {
-        @include tutor-button-size(large);
-        width: 100%;
-      }
     }
 
     button:not(.tutor-mark-as-complete-button),
@@ -37,7 +32,8 @@
       @include tutor-button-size(large);
       width: 50%;
 
-      &:is(:only-child) {
+      &:is(:only-child),
+      &:is(.tutor-meeting-mark-as-complete-button) {
         width: 100%;
       }
     }
