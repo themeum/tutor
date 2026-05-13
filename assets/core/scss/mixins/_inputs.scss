@@ -24,9 +24,15 @@
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button,
   &::-webkit-search-cancel-button,
-  &::-webkit-autofill-button {
-    -webkit-appearance: none;
-    margin: 0;
+  &::-webkit-autofill-button,
+  &::-webkit-contacts-auto-fill-button,
+  &::-webkit-credentials-auto-fill-button {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
   }
 
   &:placeholder-shown:not(:focus):not(:disabled) {
