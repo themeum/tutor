@@ -126,6 +126,41 @@ const getCSSProperty = (element: HTMLElement, propertyName: string): string => {
   return getComputedStyle(element).getPropertyValue(propertyName).trim();
 };
 
+const getAnimationConfig = (): { duration: 0 } | undefined => {
+  const wrapper = document.querySelector('[data-tutor-theme]') || document.documentElement;
+  const motion = wrapper.getAttribute('data-tutor-motion');
+
+  if (motion === 'reduce') {
+    return { duration: 0 };
+  }
+  if ((!motion || motion === 'auto') && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return { duration: 0 };
+  }
+  return undefined;
+};
+
+const createChart = (canvas: HTMLCanvasElement, config: ChartConfiguration): void => {
+  requestAnimationFrame(() => {
+    new Chart(canvas, config);
+  });
+};
+
+const initWhenVisible = (canvas: HTMLCanvasElement, callback: () => void): void => {
+  if (canvas.clientWidth > 0) {
+    callback();
+    return;
+  }
+
+  const observer = new ResizeObserver(() => {
+    if (canvas.clientWidth > 0) {
+      observer.disconnect();
+      callback();
+    }
+  });
+
+  observer.observe(canvas);
+};
+
 const extractStatCardColors = (element: HTMLElement, data: number[]): StatCardColors => {
   const isPositiveTrend = data[data.length - 1] > data[0];
 
@@ -400,15 +435,12 @@ export const statCard = (data: number[]) => ({
   $refs: {} as { canvas: HTMLCanvasElement },
 
   init() {
-    if (!this.$refs.canvas) {
-      return;
-    }
-
+    if (!this.$refs?.canvas) return;
     this.setupCanvas();
-    const colors = extractStatCardColors(this.$refs.canvas, data);
-    const chartConfig = this.createChartConfig(data, colors);
-
-    new Chart(this.$refs.canvas, chartConfig);
+    initWhenVisible(this.$refs.canvas, () => {
+      const colors = extractStatCardColors(this.$refs.canvas, data);
+      createChart(this.$refs.canvas, this.createChartConfig(data, colors));
+    });
   },
 
   setupCanvas() {
@@ -446,6 +478,7 @@ export const statCard = (data: number[]) => ({
         ],
       },
       options: {
+        animation: getAnimationConfig(),
         devicePixelRatio: CHART_CONFIG.common.devicePixelRatio(),
         responsive: CHART_CONFIG.common.responsive,
         maintainAspectRatio: false,
@@ -487,15 +520,12 @@ export const overviewChart = (data: OverviewChartProps) => ({
   colors: null as OverviewChartColors | null,
 
   init() {
-    if (!this.$refs.canvas) {
-      return;
-    }
-
+    if (!this.$refs?.canvas) return;
     this.setupCanvas();
-    this.colors = extractOverviewChartColors(this.$refs.canvas);
-    const chartConfig = this.createChartConfig(data, this.colors);
-
-    new Chart(this.$refs.canvas, chartConfig);
+    initWhenVisible(this.$refs.canvas, () => {
+      this.colors = extractOverviewChartColors(this.$refs.canvas);
+      createChart(this.$refs.canvas, this.createChartConfig(data, this.colors));
+    });
   },
 
   setupCanvas() {
@@ -569,6 +599,7 @@ export const overviewChart = (data: OverviewChartProps) => ({
         ],
       },
       options: {
+        animation: getAnimationConfig(),
         devicePixelRatio: CHART_CONFIG.common.devicePixelRatio(),
         aspectRatio: CHART_CONFIG.aspectRatio.overview,
         interaction: {
@@ -631,13 +662,11 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
   $refs: {} as { canvas: HTMLCanvasElement },
 
   init() {
-    if (!this.$refs.canvas) {
-      return;
-    }
-
+    if (!this.$refs?.canvas) return;
     this.setupCanvas();
-    const chartConfig = this.createChartConfig(data);
-    new Chart(this.$refs.canvas, chartConfig);
+    initWhenVisible(this.$refs.canvas, () => {
+      createChart(this.$refs.canvas, this.createChartConfig(data));
+    });
   },
 
   setupCanvas() {
@@ -681,6 +710,7 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
         })),
       },
       options: {
+        animation: getAnimationConfig(),
         indexAxis: 'y',
         responsive: CHART_CONFIG.common.responsive,
         maintainAspectRatio: false,
