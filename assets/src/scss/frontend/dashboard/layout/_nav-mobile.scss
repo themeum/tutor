@@ -39,12 +39,17 @@
         &.active,
         &.active span {
           color: $tutor-text-brand;
+          font-weight: $tutor-font-weight-medium;
         }
 
         &:hover,
         &:focus {
           background-color: transparent;
           color: $tutor-text-brand;
+        }
+
+        .tutor-dashboard-nav-mobile-icon {
+          @include tutor-flex-center;
         }
       }
     }
