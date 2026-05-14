@@ -341,7 +341,7 @@ const renderQuestionPreview = (question: QuizQuestion) => {
     case 'scale':
       return <ScalePreview answers={question.question_answers} />;
     case 'coordinates':
-      return <CoordinatesPreview />;
+      return <CoordinatesPreview axisRange={question.question_settings?.coordinates_axis_range} />;
     case 'puzzle':
       return (
         <PuzzlePreview answers={question.question_answers} gridSize={question.question_settings.puzzle_grid_size} />
@@ -493,6 +493,27 @@ const getPreviewFrameStyles = () => `
     margin-top: 12px;
     overflow-x: hidden;
     overflow-y: auto;
+  }
+
+  /*
+   * Coordinates preview: default quiz styles use a row flex with justify-content flex-start on
+   * .tutor-quiz-question-options, which leaves the graph hugging the left. Match draw/pin layout
+   * and cap width so the grid sits centered in the preview column.
+   */
+  .tutor-quiz-question[data-question='coordinates'] .tutor-quiz-question-options.tutor-coordinates-question {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .tutor-quiz-question[data-question='coordinates'] .tutor-coordinates-grid-container {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 420px;
+    margin-inline: auto;
+    align-items: stretch;
   }
 `;
 
