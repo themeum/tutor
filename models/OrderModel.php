@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Exception;
+use Tutor\Cache\TutorCache;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Variant;
@@ -639,6 +640,13 @@ class OrderModel {
 	 * @return array The order items, each containing details and course titles, or an empty array if no items are found.
 	 */
 	public function get_order_items_by_id( $order_id ) {
+		$cache_key = 'tutor_get_order_items_by_id_' . $order_id;
+		$cached    = TutorCache::get( $cache_key );
+
+		if ( $cached ) {
+			return $cached;
+		}
+
 		global $wpdb;
 
 		$primary_table  = "{$wpdb->prefix}tutor_order_items AS oi";
@@ -679,7 +687,10 @@ class OrderModel {
 
 		unset( $course );
 
-		return ! empty( $courses ) ? $courses : array();
+		$result = ! empty( $courses ) ? $courses : array();
+		TutorCache::set( $cache_key, $result );
+
+		return $result;
 	}
 
 	/**
