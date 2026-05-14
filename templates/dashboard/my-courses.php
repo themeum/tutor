@@ -390,7 +390,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			->id( 'tutor-course-delete-modal' )
 			->title( __( 'Delete This Course?', 'tutor' ) )
 			->message( __( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ) )
-			->icon( UrlHelper::asset( 'images/illustrations/delete.svg' ) )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/delete.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 			->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
 			->confirm_handler( 'handleDeleteCourse(payload?.courseId)' )
 			->mutation_state( 'deleteMutation' )
