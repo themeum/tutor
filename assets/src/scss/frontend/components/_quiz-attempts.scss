@@ -42,6 +42,10 @@
     }
   }
 
+  &-list {
+    background-color: $tutor-surface-l1;
+  }
+
   .tutor-quiz-attempts-header-item:last-of-type {
     text-align: center;
   }

@@ -69,7 +69,7 @@ $courses_list = $courses_list_array[ $active_tab ];
 
 ?>
 
-<div class="tutor-dashboard-courses-wrapper tutor-surface-l1">
+<div class="tutor-dashboard-courses-wrapper">
 	<div class="tutor-hidden tutor-sm-flex tutor-items-center tutor-justify-between tutor-mb-5">
 		<h4 class="tutor-h4 tutor-my-none"><?php esc_html_e( 'Courses', 'tutor' ); ?></h4>
 	</div>
