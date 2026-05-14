@@ -46,6 +46,10 @@
           background-color: transparent;
           color: $tutor-text-brand;
         }
+
+        .tutor-dashboard-nav-mobile-icon {
+          @include tutor-flex-center;
+        }
       }
     }
   }

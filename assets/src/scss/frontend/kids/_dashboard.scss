@@ -5,6 +5,10 @@
 [data-tutor-ui='kids'] {
   .tutor-dashboard-nav-mobile-list > li > a,
   .tutor-dashboard-nav-mobile-list > li > button {
+    .tutor-dashboard-nav-mobile-icon {
+      padding: $tutor-spacing-2;
+    }
+
     span {
       &:last-of-type {
         color: $tutor-text-primary;
