@@ -56,7 +56,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 					<?php
 					SvgIcon::make()
 						->name( ( $is_active_menu && ! tutor_utils()->is_kids_mode() ) ? $active_icon_name : $menu_icon_name )
-						->size( tutor_utils()->is_kids_mode() ? Size::SIZE_20 : Size::SIZE_16 )
+						->size( Size::SIZE_20 )
 						->render();
 					?>
 					<span class="tutor-tiny"><?php echo esc_html( $menu_title ); ?></span>
