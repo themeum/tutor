@@ -496,7 +496,7 @@ class Quiz_Attempts_List {
 				->attr( '@click', 'toggle()' )
 				->attr( 'class', 'tutor-quiz-item-result-more' )
 				->variant( 'secondary' )
-				->size( Size::MEDIUM )
+				->size( Size::X_SMALL )
 				->get();
 		return $kebab_button;
 	}
@@ -689,7 +689,7 @@ class Quiz_Attempts_List {
 	public function render_quiz_attempt_popover( $attempt = array() ) {
 		Popover::make()
 			->trigger( $this->get_kebab_button() )
-			->placement( Positions::BOTTOM_END )
+			->placement( Positions::BOTTOM )
 			->menu_min_width( '110px' )
 			->menu_item( $this->get_details_item( $attempt ) )
 			->menu_item(
