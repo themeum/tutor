@@ -227,6 +227,11 @@ const quizLayout = (config: QuizLayoutConfig) => {
           return;
         }
 
+        if (!this.isQuestionAttempted(this.currentIndex)) {
+          this.moveToNextQuestion();
+          return;
+        }
+
         this.isRevealing = true;
         this.revealQuestion(wrapper);
         this.syncRevealFooterState(wrapper);
