@@ -53,12 +53,14 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 			?>
 			<li>
 				<a class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $menu_link ?? '#' ); ?>">
-					<?php
-					SvgIcon::make()
-						->name( ( $is_active_menu && ! tutor_utils()->is_kids_mode() ) ? $active_icon_name : $menu_icon_name )
-						->size( Size::SIZE_20 )
-						->render();
-					?>
+					<span class="tutor-flex-center tutor-p-2">
+						<?php
+						SvgIcon::make()
+							->name( ( $is_active_menu && ! tutor_utils()->is_kids_mode() ) ? $active_icon_name : $menu_icon_name )
+							->size( Size::SIZE_20 )
+							->render();
+						?>
+					</span>
 					<span class="tutor-tiny"><?php echo esc_html( $menu_title ); ?></span>
 				</a>
 			</li>
@@ -70,7 +72,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 				<?php
 				Avatar::make()
 					->user( get_current_user_id() )
-					->size( Size::SIZE_20 )
+					->size( Size::SIZE_28 )
 					->render();
 				?>
 				<span class="tutor-tiny"><?php esc_html_e( 'Profile', 'tutor' ); ?></span>
@@ -87,7 +89,9 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 					:aria-expanded="open ? 'true' : 'false'"
 					aria-haspopup="true"
 				>
-					<?php SvgIcon::make()->name( Icon::THREE_DOTS_VERTICAL )->size( 16 )->render(); ?>
+					<span class="tutor-flex-center tutor-p-2">
+						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 20 )->render(); ?>
+					</span>
 					<span class="tutor-tiny"><?php esc_html_e( 'More', 'tutor' ); ?></span>
 				</button>
 				<!-- Popover panel -->

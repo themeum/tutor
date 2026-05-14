@@ -30,6 +30,7 @@ abstract class Size {
 	public const SIZE_16  = 16;
 	public const SIZE_20  = 20;
 	public const SIZE_24  = 24;
+	public const SIZE_28  = 28;
 	public const SIZE_32  = 32;
 	public const SIZE_40  = 40;
 	public const SIZE_48  = 48;

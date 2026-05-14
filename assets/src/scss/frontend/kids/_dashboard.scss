@@ -3,6 +3,26 @@
 @use './mixins' as *;
 
 [data-tutor-ui='kids'] {
+  .tutor-dashboard-nav-mobile-list > li > a,
+  .tutor-dashboard-nav-mobile-list > li > button {
+    span {
+      &:last-of-type {
+        color: $tutor-text-primary;
+        font-weight: $tutor-font-weight-medium;
+      }
+    }
+    &.active span {
+      &:first-of-type {
+        @include tutor-kids-shadow(false, $tutor-border-brand, $tutor-radius-full, sm);
+        background-color: $tutor-surface-brand-tertiary;
+      }
+
+      &:last-of-type {
+        font-weight: $tutor-font-weight-semibold;
+      }
+    }
+  }
+
   .tutor-card {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
