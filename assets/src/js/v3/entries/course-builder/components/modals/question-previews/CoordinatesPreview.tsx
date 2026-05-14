@@ -3,13 +3,26 @@ import { useEffect, useRef } from 'react';
 
 import { colorTokens } from '@TutorShared/config/styles';
 
-const MIN_COORD = -10;
-const MAX_COORD = 10;
 const CANVAS_SIZE = 420;
 const PADDING = 12;
+const AXIS_LABEL_STEP = 2;
 
-const CoordinatesPreview = () => {
+const shouldRenderAxisLabel = (value: number): boolean => value === 0 || Math.abs(value % AXIS_LABEL_STEP) === 0;
+
+/**
+ * Normalizes stored axis range to supported values (10 or 20 units), matching FormCoordinates.
+ */
+const resolveAxisRange = (value?: number | null): 10 | 20 => (Number(value) === 20 ? 20 : 10);
+
+interface CoordinatesPreviewProps {
+  axisRange?: number | null;
+}
+
+const CoordinatesPreview = ({ axisRange: axisRangeProp }: CoordinatesPreviewProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const axisRange = resolveAxisRange(axisRangeProp);
+  const minCoord = -axisRange;
+  const maxCoord = axisRange;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -45,7 +58,7 @@ const CoordinatesPreview = () => {
     const drawableHeight = height - 2 * PADDING;
     const centerX = PADDING + drawableWidth / 2;
     const centerY = PADDING + drawableHeight / 2;
-    const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (MAX_COORD - MIN_COORD);
+    const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (maxCoord - minCoord);
 
     const graphToPixel = (x: number, y: number) => ({
       x: centerX + x * pixelsPerUnit,
@@ -54,14 +67,14 @@ const CoordinatesPreview = () => {
 
     context.clearRect(0, 0, width, height);
 
-    const leftEdge = graphToPixel(MIN_COORD, 0).x;
-    const rightEdge = graphToPixel(MAX_COORD, 0).x;
-    const topEdge = graphToPixel(0, MAX_COORD).y;
-    const bottomEdge = graphToPixel(0, MIN_COORD).y;
+    const leftEdge = graphToPixel(minCoord, 0).x;
+    const rightEdge = graphToPixel(maxCoord, 0).x;
+    const topEdge = graphToPixel(0, maxCoord).y;
+    const bottomEdge = graphToPixel(0, minCoord).y;
 
     context.strokeStyle = colorTokens.stroke.divider;
     context.lineWidth = 0.5;
-    for (let i = MIN_COORD; i <= MAX_COORD; i++) {
+    for (let i = minCoord; i <= maxCoord; i++) {
       if (i === 0) {
         continue;
       }
@@ -89,7 +102,31 @@ const CoordinatesPreview = () => {
     context.moveTo(centerX, topEdge);
     context.lineTo(centerX, bottomEdge);
     context.stroke();
-  }, []);
+
+    context.fillStyle = colorTokens.text.subdued;
+    context.font = '11px Arial';
+    context.textAlign = 'center';
+    context.textBaseline = 'top';
+    for (let i = minCoord; i <= maxCoord; i++) {
+      if (i === 0 || !shouldRenderAxisLabel(i)) {
+        continue;
+      }
+      const p = graphToPixel(i, 0);
+      context.fillText(String(i), p.x, centerY + 5);
+    }
+    context.textAlign = 'right';
+    context.textBaseline = 'middle';
+    for (let i = minCoord; i <= maxCoord; i++) {
+      if (i === 0 || !shouldRenderAxisLabel(i)) {
+        continue;
+      }
+      const p = graphToPixel(0, i);
+      context.fillText(String(i), centerX - 5, p.y);
+    }
+    context.textAlign = 'right';
+    context.textBaseline = 'top';
+    context.fillText('0', centerX - 5, centerY + 5);
+  }, [minCoord, maxCoord]);
 
   return (
     <div className="tutor-quiz-question-options tutor-coordinates-question" data-question-type="coordinates">
