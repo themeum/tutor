@@ -633,8 +633,6 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 *
 	 * @param int $order_id The ID of the order to retrieve items for.
 	 *
 	 * @return array The order items, each containing details and course titles, or an empty array if no items are found.
@@ -647,13 +645,11 @@ class OrderModel {
 			return $cached;
 		}
 
-		global $wpdb;
-
-		$primary_table  = "{$wpdb->prefix}tutor_order_items AS oi";
+		$primary_table  = 'tutor_order_items AS oi';
 		$joining_tables = array(
 			array(
 				'type'  => 'LEFT',
-				'table' => "{$wpdb->prefix}posts AS p",
+				'table' => 'posts AS p',
 				'on'    => 'p.ID = oi.item_id',
 			),
 		);
@@ -665,13 +661,11 @@ class OrderModel {
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
 
-		if ( tutor()->has_pro ) {
-			$bundle_model = new \TutorPro\CourseBundle\Models\BundleModel();
-		}
+		$bundle_model = tutor()->has_pro ? new \TutorPro\CourseBundle\Models\BundleModel() : null;
 
 		if ( ! empty( $courses_data['total_count'] ) ) {
 			foreach ( $courses as &$course ) {
-				if ( tutor()->has_pro && 'course-bundle' === $course->type ) {
+				if ( is_object( $bundle_model ) && tutor()->bundle_post_type === $course->type ) {
 					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
 				}
 
