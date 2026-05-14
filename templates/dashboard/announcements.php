@@ -251,11 +251,9 @@ $create_modal_id = 'tutor-announcement-form-modal';
 						<div class="tutor-p2 tutor-mb-6 tutor-whitespace-pre-line">
 							<?php echo wp_kses_post( $announcement->post_content ); ?>
 						</div>
-						<div class="tutor-tiny tutor-text-secondary">
-							<span class="tutor-mr-4">
-								<span class="tutor-mr-1"><?php esc_html_e( 'Course', 'tutor' ); ?></span>
-								<?php PreviewTrigger::make()->id( $announcement->post_parent )->render(); ?>
-							</span>
+						<div class="tutor-tiny tutor-text-secondary tutor-flex tutor-items-center tutor-gap-2">
+							<span class="tutor-flex-shrink-0"><?php esc_html_e( 'Course', 'tutor' ); ?></span>
+							<?php PreviewTrigger::make()->id( $announcement->post_parent )->render(); ?>
 						</div>
 					</div>
 					<?php
