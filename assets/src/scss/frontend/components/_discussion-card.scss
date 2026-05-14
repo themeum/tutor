@@ -63,6 +63,8 @@
 
   &-content {
     width: 100%;
+    min-width: 0;
+    flex: 1;
   }
 
   &-top {
@@ -70,12 +72,24 @@
     @include tutor-flex(row, center);
     gap: $tutor-spacing-5;
     margin-block: $tutor-spacing-3;
+    min-width: 0;
+    overflow: hidden;
+    padding-inline-end: $tutor-spacing-17;
+
+    > div {
+      min-width: 0;
+    }
 
     @include tutor-breakpoint-down(sm) {
       flex-direction: column;
       align-items: flex-start;
       gap: $tutor-spacing-none;
       margin-bottom: $tutor-spacing-4;
+      padding-inline-end: $tutor-spacing-9;
+
+      > div {
+        width: 100%;
+      }
     }
   }
 

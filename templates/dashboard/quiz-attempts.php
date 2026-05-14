@@ -99,7 +99,7 @@ $hidden_inputs = array(
 					->render();
 				?>
 			</div>
-			<div class="tutor-px-6 tutor-py-5 tutor-flex tutor-justify-between tutor-border-b">
+			<div class="tutor-px-6 tutor-py-5 tutor-flex tutor-gap-3 tutor-justify-between tutor-border-b">
 				<?php
 				SearchFilter::make()
 					->form_id( 'tutor-quiz-attempt-search-form' )

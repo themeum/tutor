@@ -114,6 +114,10 @@
       grid-template-columns: 324px 190px 1.5fr 1fr;
     }
 
+    .tutor-quiz-attempts-header-item:last-of-type {
+      text-align: center;
+    }
+
     .tutor-quiz-attempts-item {
       grid-template-columns: 324px 190px 1.5fr 1fr !important;
 
