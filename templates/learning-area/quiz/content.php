@@ -33,7 +33,7 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 $quiz_attempt       = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id ?? get_current_user_id() );
 $earned_marks       = 0;
 
-if ( $quiz_attempt ) {
+if ( $quiz_attempt && $total_marks > 0 ) {
 	$earned_marks = (float) $quiz_attempt->earned_marks;
 	$total        = (float) $total_marks;
 	$earned_marks = number_format( ( $earned_marks / $total_marks ) * 100, 2 );
