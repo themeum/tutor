@@ -2206,10 +2206,12 @@ class Course extends Tutor_Base {
 		 * for specific cases like prerequisites. WP_Error should be returned
 		 * from the filter value to prevent the completion.
 		 */
-		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', CourseModel::can_complete_course( $course_id, $user_id ), $user_id, $course_id );
 
 		if ( is_wp_error( $can_complete ) ) {
 			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
+		} elseif ( ! $can_complete ) {
+			tutor_utils()->redirect_to( $permalink, __( 'You do not have permission to complete this course.', 'tutor' ), 'error' );
 		} else {
 			CourseModel::mark_course_as_completed( $course_id, $user_id );
 			// Set temporary identifier to show review pop up.
@@ -2249,10 +2251,12 @@ class Course extends Tutor_Base {
 		 * for specific cases like prerequisites. WP_Error should be returned
 		 * from the filter value to prevent the completion.
 		 */
-		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', CourseModel::can_complete_course( $course_id, $user_id ), $user_id, $course_id );
 
 		if ( is_wp_error( $can_complete ) ) {
 			$this->response_bad_request( $can_complete->get_error_message() );
+		} elseif ( ! $can_complete ) {
+			$this->response_bad_request( __( 'You do not have permission to complete this course.', 'tutor' ) );
 		} else {
 			CourseModel::mark_course_as_completed( $course_id, $user_id );
 			// Set temporary identifier to show review pop up.
