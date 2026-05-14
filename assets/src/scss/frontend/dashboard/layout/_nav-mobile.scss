@@ -39,6 +39,7 @@
         &.active,
         &.active span {
           color: $tutor-text-brand;
+          font-weight: $tutor-font-weight-medium;
         }
 
         &:hover,

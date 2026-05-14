@@ -61,7 +61,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 							->render();
 						?>
 					</span>
-					<span class="tutor-tiny"><?php echo esc_html( $menu_title ); ?></span>
+					<span class="tutor-tiny tutor-dashboard-nav-mobile-text"><?php echo esc_html( $menu_title ); ?></span>
 				</a>
 			</li>
 			<?php
@@ -77,7 +77,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 						->render();
 					?>
 				</div>
-				<span class="tutor-tiny"><?php esc_html_e( 'Profile', 'tutor' ); ?></span>
+				<span class="tutor-tiny tutor-dashboard-nav-mobile-text"><?php esc_html_e( 'Profile', 'tutor' ); ?></span>
 			</a>
 		</li>
 		<?php
@@ -94,7 +94,7 @@ $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 					<span class="tutor-dashboard-nav-mobile-icon">
 						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 20 )->render(); ?>
 					</span>
-					<span class="tutor-tiny"><?php esc_html_e( 'More', 'tutor' ); ?></span>
+					<span class="tutor-tiny tutor-dashboard-nav-mobile-text"><?php esc_html_e( 'More', 'tutor' ); ?></span>
 				</button>
 				<!-- Popover panel -->
 				<div
