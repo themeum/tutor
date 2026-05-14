@@ -40,17 +40,11 @@ foreach ( $order_data->order->items as $item ) {
 <div class="tutor-billing-card">
 	<div class="tutor-billing-card-left">
 		<div class="tutor-billing-card-title">
-			<div class="tutor-hidden tutor-sm-block">
-				<?php ComponentHelper::render_status_badge( $order_status ); ?>
-			</div>
 			<ul class="tutor-pl-1">
 				<?php foreach ( $titles as $item_title ) : ?>
 					<li><span><?php echo esc_html( $item_title ); ?></span></li>
 				<?php endforeach; ?>
 			</ul>
-			<div class="tutor-sm-hidden">
-				<div class="tutor-ml-6"><?php ComponentHelper::render_status_badge( $order_status ); ?></div>
-			</div>
 		</div>
 		<div class="tutor-billing-card-details">
 			<div class="tutor-billing-card-id">
@@ -70,6 +64,8 @@ foreach ( $order_data->order->items as $item ) {
 	</div>
 
 	<div class="tutor-billing-card-right">
+		<?php ComponentHelper::render_status_badge( $order_status ); ?>
+
 		<div class="tutor-billing-card-amount">
 			<?php echo wp_kses( tutor_get_formatted_price( $total_price ), tutor_price_allowed_html() ); ?>
 		</div>
