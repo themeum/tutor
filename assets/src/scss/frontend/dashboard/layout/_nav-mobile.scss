@@ -40,18 +40,12 @@
         &.active span {
           color: $tutor-text-brand;
         }
+
         &:hover,
         &:focus {
           background-color: transparent;
           color: $tutor-text-brand;
         }
-      }
-
-      img {
-        width: 16px;
-        height: 16px;
-        object-fit: cover;
-        border-radius: $tutor-radius-full;
       }
     }
   }

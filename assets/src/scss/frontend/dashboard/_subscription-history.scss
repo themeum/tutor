@@ -1,6 +1,7 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
+// @TODO:: Move this to pro plugin
 [data-subscription-details="1"] {
   @include tutor-breakpoint-down(sm) {
     .tutor-billing-header {
@@ -41,30 +42,6 @@
       &-amount {
         span:nth-child(2) {
           color: $tutor-text-subdued;
-        }
-      }
-
-      &-action-btn {
-        @include tutor-button-base;
-        @include tutor-button-variant('link');
-        @include tutor-button-size('small');
-        padding: 0;
-        min-height: unset;
-        gap: $tutor-spacing-2;
-        color: $tutor-text-brand;
-        position: relative;
-        margin-right: -$tutor-spacing-7;
-
-        svg {
-          opacity: 0;
-        }
-
-        &:hover {
-          margin-right: 0;
-
-          svg {
-            opacity: 1;
-          }
         }
       }
     }

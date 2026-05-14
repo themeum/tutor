@@ -94,19 +94,21 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-gap-5 tutor-mb-5">
 			<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_40 )->render(); ?>
-			<div>
+			<div class="tutor-min-w-0 tutor-flex-1">
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-					<span class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></span> 
-					<span class="tutor-text-secondary">
+					<span class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $question->comment_author ); ?></span> 
+					<span class="tutor-text-secondary tutor-flex-shrink-0">
 						<?php
 							// Translators: %s is the time of comment.
 							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 						?>
 					</span>
 				</div>
-				<div class="tutor-tiny">
-					<span class="tutor-text-subdued">asked in</span> 
-					<?php PreviewTrigger::make()->id( $question->course_id )->render(); ?>
+				<div class="tutor-tiny tutor-flex tutor-items-center tutor-gap-1 tutor-overflow-hidden">
+					<span class="tutor-text-subdued tutor-flex-shrink-0">asked in</span> 
+					<div class="tutor-min-w-0 tutor-flex-1">
+						<?php PreviewTrigger::make()->id( $question->course_id )->render(); ?>
+					</div>
 				</div>
 			</div>
 			<div class="tutor-ml-auto">

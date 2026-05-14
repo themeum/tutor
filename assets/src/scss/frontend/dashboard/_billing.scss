@@ -72,7 +72,7 @@
   }
 
   &-card {
-    @include tutor-flex(row, center, space-between);
+    @include tutor-flex(row, start, space-between);
     border-bottom: 1px solid $tutor-border-idle;
     padding: $tutor-spacing-6;
     gap: $tutor-spacing-4;
