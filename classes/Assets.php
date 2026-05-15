@@ -109,6 +109,13 @@ class Assets {
 
 		// Add custom meta.
 		add_action( 'wp_head', array( $this, 'add_custom_data' ) );
+
+		/**
+		 * Add preload to CSS
+		 *
+		 * @since 4.0.0
+		 */
+		add_filter( 'style_loader_tag', array( $this, 'add_preload_to_css' ), 10, 2 );
 	}
 
 	/**
@@ -924,5 +931,26 @@ class Assets {
 		if ( tutor_utils()->is_dashboard_page() || tutor_utils()->is_learning_area() ) {
 			echo '<meta name="viewport" content="width=device-width, initial-scale=1" />' . "\n";
 		}
+	}
+
+	/**
+	 * Add preload to CSS
+	 *
+	 * @param string $html HTML.
+	 * @param string $handle Handle.
+	 * 
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	private function add_preload_to_css( $html, $handle ) {
+		if ( 'tutor-google-fonts' === $handle ) {
+			$html = str_replace(
+				"rel='stylesheet'",
+				"rel='preload' as='style' onload=\"this.onload=null;this.rel='stylesheet'\"",
+				$html
+			);
+		}
+		return $html;
 	}
 }
