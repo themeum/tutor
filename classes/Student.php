@@ -169,7 +169,7 @@ class Student {
 		}
 
 		do_action( 'tutor_new_user_registered', $user, $validate_consent );
-		wp_safe_redirect( apply_filters( 'tutor_student_register_redirect_url', $redirect_url, $user ) );
+		wp_safe_redirect( apply_filters( 'tutor_student_register_redirect_url', tutor_utils()->get_nocache_url( $redirect_url ), $user ) );
 		die();
 	}
 
