@@ -154,7 +154,7 @@ class Nav extends BaseComponent {
 	 */
 	protected function get_icon_size( $size ): int {
 		$icon_sizes = array(
-			Size::SMALL  => 16,
+			Size::SMALL  => 20,
 			Size::MEDIUM => 20,
 			Size::LARGE  => 24,
 		);
