@@ -938,12 +938,12 @@ class Assets {
 	 *
 	 * @param string $html HTML.
 	 * @param string $handle Handle.
-	 * 
+	 *
 	 * @since 4.0.0
 	 *
 	 * @return string
 	 */
-	private function add_preload_to_css( $html, $handle ) {
+	public function add_preload_to_css( $html, $handle ) {
 		if ( 'tutor-google-fonts' === $handle ) {
 			$html = str_replace(
 				"rel='stylesheet'",
