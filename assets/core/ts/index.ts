@@ -3,38 +3,8 @@ import focus from '@alpinejs/focus';
 import Alpine from 'alpinejs';
 
 import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
-
-import { accordionMeta } from '@Core/ts/components/accordion';
-import { buttonMeta } from '@Core/ts/components/button';
-import { calendarMeta } from '@Core/ts/components/calendar';
-import { copyToClipboardMeta } from '@Core/ts/components/copy-to-clipboard';
-import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
-import { formMeta } from '@Core/ts/components/form';
-import { iconMeta } from '@Core/ts/components/icon';
-import { modalMeta } from '@Core/ts/components/modal';
-import { passwordInputMeta } from '@Core/ts/components/password-input';
-import { playerMeta } from '@Core/ts/components/player';
-import { popoverMeta } from '@Core/ts/components/popover';
-import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
-import { selectMeta } from '@Core/ts/components/select';
-import { selectDropdownMeta } from '@Core/ts/components/select-dropdown';
-import { starRatingMeta } from '@Core/ts/components/star-rating';
-import { staticsMeta } from '@Core/ts/components/statics';
-import { statusSelectMeta } from '@Core/ts/components/status-select';
-import { stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
-import { tabsMeta } from '@Core/ts/components/tabs';
-import { timeInputMeta } from '@Core/ts/components/time-input';
-import { toastMeta } from '@Core/ts/components/toast';
-import { tooltipMeta } from '@Core/ts/components/tooltip';
-import { wpEditorMeta } from '@Core/ts/components/wp-editor';
-
-import { formServiceMeta } from '@Core/ts/services/Form';
-import { locationServiceMeta } from '@Core/ts/services/Location';
-import { modalServiceMeta } from '@Core/ts/services/Modal';
-import { preferenceServiceMeta } from '@Core/ts/services/Preference';
-import { queryServiceMeta } from '@Core/ts/services/Query';
-import { toastServiceMeta } from '@Core/ts/services/Toast';
-import { wpMediaServiceMeta } from '@Core/ts/services/WPMedia';
+import { registerCoreBasePack } from '@Core/ts/packs/base';
+import { type OptionalTutorCorePackName, type TutorCorePackName } from '@Core/ts/packs/types';
 
 import { registerLegacyFunctions } from '@Core/ts/legacy';
 import { getNonceData } from '@Core/ts/utils/nonce';
@@ -43,53 +13,89 @@ import { escapeAttr, escapeHtml } from '@Core/ts/utils/security';
 Alpine.plugin(focus);
 Alpine.plugin(collapse);
 
-const initializePlugin = () => {
-  TutorComponentRegistry.registerAll({
-    components: [
-      buttonMeta,
-      calendarMeta,
-      fileUploaderMeta,
-      tabsMeta,
-      iconMeta,
-      modalMeta,
-      popoverMeta,
-      staticsMeta,
-      accordionMeta,
-      formMeta,
-      tooltipMeta,
-      timeInputMeta,
-      selectDropdownMeta,
-      stepperDropdownMeta,
-      selectMeta,
-      previewTriggerMeta,
-      starRatingMeta,
-      toastMeta,
-      playerMeta,
-      passwordInputMeta,
-      copyToClipboardMeta,
-      wpEditorMeta,
-      statusSelectMeta,
-    ],
-    services: [
-      formServiceMeta,
-      locationServiceMeta,
-      modalServiceMeta,
-      queryServiceMeta,
-      toastServiceMeta,
-      wpMediaServiceMeta,
-      preferenceServiceMeta,
-    ],
-  });
+window.TutorComponentRegistry = TutorComponentRegistry;
+window.Alpine = Alpine;
+
+type CorePackModule = {
+  register: (registry: typeof TutorComponentRegistry) => void;
+};
+
+const optionalCorePackLoaders: Record<OptionalTutorCorePackName, () => Promise<CorePackModule>> = {
+  'core-form-controls': async () => {
+    const module = await import(/* webpackChunkName: "core-form-controls" */ '@Core/ts/packs/form-controls');
+    return {
+      register: module.registerCoreFormControlsPack,
+    };
+  },
+  'core-media-editor': async () => {
+    const module = await import(/* webpackChunkName: "core-media-editor" */ '@Core/ts/packs/media-editor');
+    return {
+      register: module.registerCoreMediaEditorPack,
+    };
+  },
+  'core-learning': async () => {
+    const module = await import(/* webpackChunkName: "core-learning" */ '@Core/ts/packs/learning');
+    return {
+      register: module.registerCoreLearningPack,
+    };
+  },
+};
+
+const corePackModulePromises = new Map<OptionalTutorCorePackName, Promise<CorePackModule>>();
+
+const normalizeOptionalCorePacks = (packs: TutorCorePackName[]): OptionalTutorCorePackName[] => {
+  const normalizedPacks = new Set<OptionalTutorCorePackName>();
+  for (const pack of packs) {
+    if (pack !== 'core-base') {
+      normalizedPacks.add(pack);
+    }
+  }
+
+  return Array.from(normalizedPacks);
+};
+
+const preloadOptionalCorePacks = (packs: TutorCorePackName[]): Promise<void> => {
+  const normalizedPacks = normalizeOptionalCorePacks(packs);
+  for (const pack of normalizedPacks) {
+    if (!corePackModulePromises.has(pack)) {
+      corePackModulePromises.set(pack, optionalCorePackLoaders[pack]());
+    }
+  }
+
+  return Promise.all(normalizedPacks.map((pack) => corePackModulePromises.get(pack)!)).then(() => undefined);
+};
+
+const getRequestedCorePacks = (): OptionalTutorCorePackName[] => {
+  return normalizeOptionalCorePacks(window.TutorRequestedCorePacks || []);
+};
+
+const registerOptionalCorePacks = async (): Promise<void> => {
+  const requestedPacks = getRequestedCorePacks();
+  const modules = await Promise.all(
+    requestedPacks.map((pack) => corePackModulePromises.get(pack) || optionalCorePackLoaders[pack]()),
+  );
+
+  for (const module of modules) {
+    module.register(TutorComponentRegistry);
+  }
+};
+
+window.TutorPreloadCorePacks = preloadOptionalCorePacks;
+
+const initializePlugin = async () => {
+  const preloadPromise = window.TutorRoutePreload;
+  if (preloadPromise) {
+    await preloadPromise;
+  }
+
+  registerCoreBasePack(TutorComponentRegistry);
+  await registerOptionalCorePacks();
 
   TutorComponentRegistry.initWithAlpine(Alpine);
-
-  window.TutorComponentRegistry = TutorComponentRegistry;
-  window.Alpine = Alpine;
 
   // Expose TutorCore with services and utilities
   // Use Object.assign to extend existing TutorCore instead of overwriting
   window.TutorCore = Object.assign(window.TutorCore || {}, {
-    toast: toastServiceMeta.instance,
     security: {
       escapeHtml,
       escapeAttr,
@@ -108,10 +114,10 @@ const initializePlugin = () => {
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    initializePlugin();
+    void initializePlugin();
   });
 } else {
-  initializePlugin();
+  void initializePlugin();
 }
 
 export { Alpine, TutorComponentRegistry };

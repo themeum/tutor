@@ -156,6 +156,9 @@ importers:
       '@types/cypress':
         specifier: ^1.1.6
         version: 1.1.6
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.1
       '@types/react':
         specifier: ^18.2.48
         version: 18.3.27

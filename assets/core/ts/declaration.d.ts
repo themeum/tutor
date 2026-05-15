@@ -1,6 +1,7 @@
 import { type Alpine as AlpineType } from 'alpinejs';
 
 import { type TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
+import { type TutorCorePackName } from '@Core/ts/packs/types';
 import { type ToastService } from '@Core/ts/services/Toast';
 import { type TutorCore } from '@Core/ts/types';
 import { type ToastType } from '@Core/ts/types/toast';
@@ -54,6 +55,9 @@ declare global {
   interface Window {
     Alpine: AlpineType;
     TutorComponentRegistry: typeof TutorComponentRegistry;
+    TutorRoutePreload?: Promise<void>;
+    TutorRequestedCorePacks?: TutorCorePackName[];
+    TutorPreloadCorePacks?: (packs: TutorCorePackName[]) => Promise<void>;
     TutorLessonPlayer?: Plyr;
     TutorCore: TutorCore & {
       toast?: ToastService;

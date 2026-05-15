@@ -1,17 +1,19 @@
 // Dashboard Entry Point
 // Initializes dashboard functionality based on current page
 
-import { initializeReviews } from '@FrontendComponents/reviews';
+import { type TutorCorePackName } from '@Core/ts/packs/types';
 import { initializeCommon } from '@FrontendServices/common';
+import { chainRoutePreload, requestCorePacks } from '../core-packs';
 import { initializeHeader } from './header';
-import { initializeAnnouncements } from './pages/announcements';
-import { initBillingCsvExport } from './pages/billing';
-import { initializeDiscussions } from './pages/discussions';
-import { initializeHome } from './pages/instructor/home';
-import { initializeMyCourses } from './pages/my-courses';
-import { initializeQuizAttempts } from './pages/quiz-attempts';
-import { initializeSettings } from './pages/settings';
-import { initializeWithdrawals } from './pages/withdrawals';
+
+type DashboardRouteModule = {
+  initializeDashboardRoute?: () => void;
+};
+
+type DashboardRouteConfig = {
+  packs: TutorCorePackName[];
+  load: () => Promise<DashboardRouteModule>;
+};
 
 /**
  * Get current dashboard page from URL
@@ -70,53 +72,160 @@ const getCurrentPage = (): string => {
   return 'home';
 };
 
-const initializeDashboard = () => {
+const dashboardRoutes: Record<string, DashboardRouteConfig> = {
+  home: {
+    packs: ['core-base', 'core-form-controls'],
+    load: async () => {
+      const { initializeHome } = await import(/* webpackChunkName: "tutor-dashboard-home" */ './pages/instructor/home');
+      return {
+        initializeDashboardRoute: initializeHome,
+      };
+    },
+  },
+  dashboard: {
+    packs: ['core-base', 'core-form-controls'],
+    load: async () => {
+      const { initializeHome } = await import(/* webpackChunkName: "tutor-dashboard-home" */ './pages/instructor/home');
+      return {
+        initializeDashboardRoute: initializeHome,
+      };
+    },
+  },
+  'my-courses': {
+    packs: ['core-base'],
+    load: async () => {
+      const { initializeMyCourses } = await import(
+        /* webpackChunkName: "tutor-dashboard-my-courses" */ './pages/my-courses'
+      );
+      return {
+        initializeDashboardRoute: initializeMyCourses,
+      };
+    },
+  },
+  announcements: {
+    packs: ['core-base', 'core-form-controls'],
+    load: async () => {
+      const { initializeAnnouncements } = await import(
+        /* webpackChunkName: "tutor-dashboard-announcements" */ './pages/announcements'
+      );
+      return {
+        initializeDashboardRoute: initializeAnnouncements,
+      };
+    },
+  },
+  'quiz-attempts': {
+    packs: ['core-base', 'core-form-controls'],
+    load: async () => {
+      const { initializeQuizAttempts } = await import(
+        /* webpackChunkName: "tutor-dashboard-quiz-attempts" */ './pages/quiz-attempts'
+      );
+      return {
+        initializeDashboardRoute: initializeQuizAttempts,
+      };
+    },
+  },
+  discussions: {
+    packs: ['core-base'],
+    load: async () => {
+      const { initializeDiscussions } = await import(
+        /* webpackChunkName: "tutor-dashboard-discussions" */ './pages/discussions'
+      );
+      return {
+        initializeDashboardRoute: initializeDiscussions,
+      };
+    },
+  },
+  reviews: {
+    packs: ['core-base'],
+    load: async () => {
+      const { initializeReviews } = await import(
+        /* webpackChunkName: "tutor-dashboard-reviews" */ '@FrontendComponents/reviews'
+      );
+      return {
+        initializeDashboardRoute: initializeReviews,
+      };
+    },
+  },
+  withdrawals: {
+    packs: ['core-base', 'core-form-controls'],
+    load: async () => {
+      const { initializeWithdrawals } = await import(
+        /* webpackChunkName: "tutor-dashboard-withdrawals" */ './pages/withdrawals'
+      );
+      return {
+        initializeDashboardRoute: initializeWithdrawals,
+      };
+    },
+  },
+  billing: {
+    packs: ['core-base', 'core-form-controls'],
+    load: async () => {
+      const { initBillingCsvExport } = await import(
+        /* webpackChunkName: "tutor-dashboard-billing" */ './pages/billing'
+      );
+      return {
+        initializeDashboardRoute: initBillingCsvExport,
+      };
+    },
+  },
+  settings: {
+    packs: ['core-base', 'core-form-controls', 'core-media-editor'],
+    load: async () => {
+      const { initializeSettings } = await import(
+        /* webpackChunkName: "tutor-dashboard-settings" */ './pages/settings'
+      );
+      return {
+        initializeDashboardRoute: initializeSettings,
+      };
+    },
+  },
+};
+
+const getDashboardRouteConfig = (route: string): DashboardRouteConfig | undefined => {
+  return dashboardRoutes[route];
+};
+
+const preloadedDashboardRoute = getCurrentPage();
+const preloadedDashboardRouteConfig = getDashboardRouteConfig(preloadedDashboardRoute);
+const preloadedDashboardRouteModule = preloadedDashboardRouteConfig ? preloadedDashboardRouteConfig.load() : null;
+const preloadDashboardRoute = async () => {
   initializeHeader();
+
+  if (!preloadedDashboardRouteModule) {
+    return;
+  }
+
+  const routeModule = await preloadedDashboardRouteModule;
+  routeModule.initializeDashboardRoute?.();
+};
+
+const dashboardCorePackPreload = requestCorePacks(preloadedDashboardRouteConfig?.packs || ['core-base']);
+
+chainRoutePreload(dashboardCorePackPreload, preloadDashboardRoute());
+
+const initializeDashboard = async () => {
   initializeCommon();
 
   const currentPage = getCurrentPage();
-
-  // Initialize page-specific functionality
-  switch (currentPage) {
-    case 'home':
-    case 'dashboard':
-      initializeHome();
-      break;
-    case 'my-courses':
-      initializeMyCourses();
-      break;
-    case 'announcements':
-      initializeAnnouncements();
-      break;
-    case 'quiz-attempts':
-      initializeQuizAttempts();
-      break;
-    case 'discussions':
-      initializeDiscussions();
-      break;
-    case 'reviews':
-      initializeReviews();
-      break;
-    case 'withdrawals':
-      initializeWithdrawals();
-      break;
-    case 'billing':
-      initBillingCsvExport();
-      break;
-    case 'settings':
-      initializeSettings();
-      break;
-    default:
-      // eslint-disable-next-line no-console
-      console.warn('Unknown dashboard page:', currentPage);
+  const routeConfig = getDashboardRouteConfig(currentPage);
+  if (!routeConfig && currentPage) {
+    // eslint-disable-next-line no-console
+    console.warn('Unknown dashboard page:', currentPage);
   }
+};
+
+const bootstrapDashboard = () => {
+  void initializeDashboard().catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error('Failed to initialize dashboard', error);
+  });
 };
 
 // Initialize when Alpine is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('alpine:init', initializeDashboard);
+  document.addEventListener('alpine:init', bootstrapDashboard);
 } else {
-  initializeDashboard();
+  bootstrapDashboard();
 }
 
 export { initializeDashboard };

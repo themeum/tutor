@@ -1,68 +1,131 @@
 // Learning Area Entry Point
 // Initializes learning area functionality based on current page
 
-import { initializeReviews } from '@FrontendComponents/reviews';
+import { type TutorCorePackName } from '@Core/ts/packs/types';
 import { initializeCommon } from '@FrontendServices/common';
 import { tutorConfig } from '@TutorShared/config/config';
+import { chainRoutePreload, requestCorePacks } from '../core-packs';
 import { initializeCommon as initializeLearningAreaCommon } from './common';
-import { initializeLesson } from './lesson';
-import { initializeCourseCourseInfo } from './pages/course-info';
-import { initializeQna } from './pages/qna';
-import { initializeQuizInterface } from './quiz';
 import { initializeSidebar } from './sidebar';
 
-const initializeLearningArea = () => {
-  initializeLearningAreaCommon();
-  initializeCommon();
-  initializeSidebar();
-  initializeReviews();
+type LearningAreaRouteModule = {
+  initializeLearningAreaRoute?: () => void;
+};
+
+type LearningAreaRouteConfig = {
+  packs: TutorCorePackName[];
+  load: () => Promise<LearningAreaRouteModule>;
+};
+
+const learningAreaRoutes: Record<string, LearningAreaRouteConfig> = {
+  quiz: {
+    packs: ['core-base', 'core-learning'],
+    load: async () => {
+      const { initializeQuizInterface } = await import(/* webpackChunkName: "tutor-learning-quiz" */ './quiz');
+      return {
+        initializeLearningAreaRoute: initializeQuizInterface,
+      };
+    },
+  },
+  lesson: {
+    packs: ['core-base', 'core-learning'],
+    load: async () => {
+      const { initializeLesson } = await import(/* webpackChunkName: "tutor-learning-lesson" */ './lesson');
+      return {
+        initializeLearningAreaRoute: initializeLesson,
+      };
+    },
+  },
+  qna: {
+    packs: ['core-base'],
+    load: async () => {
+      const { initializeQnA } = await import(/* webpackChunkName: "tutor-learning-qna" */ './pages/qna');
+      return {
+        initializeLearningAreaRoute: initializeQnA,
+      };
+    },
+  },
+  'course-info': {
+    packs: ['core-base'],
+    load: async () => {
+      const [{ initializeCourseCourseInfo }, { initializeReviews }] = await Promise.all([
+        import(/* webpackChunkName: "tutor-learning-course-info" */ './pages/course-info'),
+        import(/* webpackChunkName: "tutor-learning-reviews" */ '@FrontendComponents/reviews'),
+      ]);
+
+      return {
+        initializeLearningAreaRoute: () => {
+          initializeCourseCourseInfo();
+          initializeReviews();
+        },
+      };
+    },
+  },
+};
+
+const getCurrentLearningAreaPage = (): string | null => {
   const { pathname, search } = window.location;
 
-  // Normalize path segments
   const pathSegments = pathname.split('/').filter(Boolean);
   const { lesson_slug = 'lessons', quiz_slug = 'quizzes' } = tutorConfig || {};
 
-  let currentPage = null;
-
   if (pathSegments.includes(lesson_slug)) {
-    currentPage = 'lesson';
-  } else if (pathSegments.includes(quiz_slug)) {
-    currentPage = 'quiz';
-  } else {
-    // fallback to query param (older behavior)
-    const params = new URLSearchParams(search);
-    currentPage = params.get('subpage');
+    return 'lesson';
   }
 
-  switch (currentPage) {
-    case 'quiz':
-      initializeQuizInterface();
-      break;
-    case 'lesson':
-      initializeLesson();
-      break;
-    case 'qna':
-      initializeQna();
-      break;
-    case 'course-info':
-      initializeCourseCourseInfo();
-      break;
+  if (pathSegments.includes(quiz_slug)) {
+    return 'quiz';
+  }
 
-    default:
+  const params = new URLSearchParams(search);
+  return params.get('subpage');
+};
+
+const preloadedLearningAreaPage = getCurrentLearningAreaPage();
+const preloadedLearningAreaRoute = preloadedLearningAreaPage
+  ? learningAreaRoutes[preloadedLearningAreaPage]
+  : undefined;
+const preloadedLearningAreaModule = preloadedLearningAreaRoute ? preloadedLearningAreaRoute.load() : null;
+const preloadLearningAreaRoute = async () => {
+  initializeLearningAreaCommon();
+  initializeSidebar();
+
+  if (!preloadedLearningAreaModule) {
+    return;
+  }
+
+  const routeModule = await preloadedLearningAreaModule;
+  routeModule.initializeLearningAreaRoute?.();
+};
+
+const learningAreaCorePackPreload = requestCorePacks(preloadedLearningAreaRoute?.packs || ['core-base']);
+
+chainRoutePreload(learningAreaCorePackPreload, preloadLearningAreaRoute());
+
+const initializeLearningArea = async () => {
+  initializeCommon();
+  const currentPage = getCurrentLearningAreaPage();
+
+  const routeConfig = currentPage ? learningAreaRoutes[currentPage] : undefined;
+  if (!routeConfig) {
+    if (currentPage) {
       // eslint-disable-next-line no-console
       console.warn('Unknown learning area page:', currentPage);
-  }
-
-  // Ensure all registered components are initialized with Alpine.
-  if (window.TutorComponentRegistry) {
-    window.TutorComponentRegistry.initWithAlpine(window.Alpine);
+    }
   }
 };
 
+const bootstrapLearningArea = () => {
+  void initializeLearningArea().catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error('Failed to initialize learning area', error);
+  });
+};
+
 if (document.readyState === 'loading') {
-  document.addEventListener('alpine:init', initializeLearningArea);
+  document.addEventListener('alpine:init', bootstrapLearningArea);
 } else {
-  initializeLearningArea();
+  bootstrapLearningArea();
 }
 
 export { initializeLearningArea };
