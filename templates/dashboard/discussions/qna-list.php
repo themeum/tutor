@@ -7,6 +7,15 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * These variables are inherited from the parent template file.
+ * template: /tutor/templates/dashboard/discussions.php
+ *
+ * @var string $discussion_url
+ * @var int    $item_per_page
+ * @var int    $offset
+ * @var string $order_filter
+ * @var int    $current_page
  */
 
 defined( 'ABSPATH' ) || exit;
