@@ -53,19 +53,19 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$enrolled_course       = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
 	$completed_courses     = CourseModel::get_completed_courses_by_user( $user_id, 0, -1, array( 'post_status' => array( 'private', 'publish' ) ) );
 	$has_completed_courses = is_object( $completed_courses ) && $completed_courses->have_posts();
-	$completed_courses_ids = $has_completed_courses ? wp_list_pluck( $completed_courses->posts, 'ID' ) : array();
 	$active_courses        = CourseModel::get_active_courses_by_user( $user_id, 0, -1, array( 'post_status' => array( 'private', 'publish' ) ) );
 
 	$enrolled_course_count  = $enrolled_course ? $enrolled_course->post_count : 0;
 	$completed_course_count = $has_completed_courses ? $completed_courses->post_count : 0;
 	$active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
+	$enrolled_courses_ids   = $enrolled_course_count ? wp_list_pluck( $enrolled_course->posts, 'ID' ) : array();
 
 	$enrolled_course_link  = tutor_utils()->tutor_dashboard_url( 'courses' );
 	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'courses/completed-courses' );
 	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'courses/active-courses' );
 
-	$time_spent = Course::get_total_course_duration( $completed_courses_ids );
-	$grid_col   = $time_spent['hours'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
+	$time_spent = Course::get_total_course_duration( $enrolled_courses_ids );
+	$grid_col   = $time_spent['minutes'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
 	?>
 	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 <?php echo esc_attr( $grid_col ); ?>">
 		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-stat-card tutor-stat-card-enrolled">
@@ -115,7 +115,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				</div>
 			</div>
 		</a>
-		<?php if ( $time_spent['hours'] > 0 ) : ?>
+		<?php if ( $time_spent['minutes'] > 0 ) : ?>
 		<div 
 			class="tutor-stat-card tutor-stat-card-time-spent"
 			@click="TutorCore.modal.showModal('tutor-time-spent-modal')"

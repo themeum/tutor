@@ -3437,7 +3437,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Calculate the total course duration for a set of courses.
+	 * Calculate the total course duration for a set of courses and returns the total time in hours, minutes, and seconds.
 	 *
 	 * @since 4.0.0
 	 *
@@ -3455,19 +3455,29 @@ class Course extends Tutor_Base {
 		foreach ( $course_ids as $id ) {
 			$duration = tutor_utils()->get_course_duration( (int) $id, true );
 
-			$total_seconds += ( (int) $duration['durationHours'] * 3600 )
-				+ ( (int) $duration['durationMinutes'] * 60 )
+			$completion_percentage = tutor_utils()->is_completed_course( $id )
+										? 100
+										: (int) tutor_utils()->get_course_completed_percent( (int) $id );
+
+			if ( 0 === $completion_percentage ) {
+				continue;
+			}
+
+			$course_duration_in_seconds = ( (int) $duration['durationHours'] * HOUR_IN_SECONDS )
+				+ ( (int) $duration['durationMinutes'] * MINUTE_IN_SECONDS )
 				+ ( (int) $duration['durationSeconds'] );
+
+			// Calculate the time spent by a user based on the course completion percentage.
+			$total_seconds += $course_duration_in_seconds * ( $completion_percentage / 100 );
 		}
 
-		$hours   = floor( $total_seconds / 3600 );
-		$minutes = floor( $total_seconds / 60 );
-		$seconds = $total_seconds;
+		$hours   = floor( $total_seconds / HOUR_IN_SECONDS );
+		$minutes = floor( $total_seconds / MINUTE_IN_SECONDS );
 
 		return array(
 			'hours'   => (int) $hours,
 			'minutes' => (int) $minutes,
-			'seconds' => (int) $seconds,
+			'seconds' => (int) $total_seconds,
 		);
 	}
 
