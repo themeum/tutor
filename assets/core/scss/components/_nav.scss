@@ -11,12 +11,12 @@
   button.tutor-nav-item,
   .tutor-nav-item {
     @include tutor-button-reset();
-    @include tutor-typography(tiny, medium, secondary);
+    @include tutor-typography(small, medium, secondary);
     @include tutor-flex(row, center);
     border-radius: $tutor-tab-radius;
     font-weight: $tutor-tab-font-weight;
     box-shadow: none;
-    gap: $tutor-spacing-2;
+    gap: $tutor-spacing-3;
     padding: 10px $tutor-spacing-6;
     height: $tutor-tab-height;
     white-space: nowrap;
@@ -104,7 +104,6 @@
   // Size variants
   &.tutor-nav-small {
     .tutor-nav-item {
-      @include tutor-text(tiny);
       padding: 7px $tutor-spacing-5;
       border-radius: $tutor-tab-radius-sm;
       height: $tutor-tab-height-sm;
@@ -117,7 +116,6 @@
 
   &.tutor-nav-large {
     .tutor-nav-item {
-      @include tutor-text(small);
       gap: $tutor-spacing-4;
       padding: 11px $tutor-spacing-6;
       height: $tutor-tab-height-lg;
