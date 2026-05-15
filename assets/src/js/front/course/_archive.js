@@ -119,8 +119,14 @@ window.jQuery(document).ready($ => {
         filter_criteria.current_page = (use_page_num && params.current_page) ? params.current_page : 1;
         filter_criteria.action = 'tutor_course_filter_ajax';
 
+        const courseCategoryIds = document.getElementById('course_filter_categories');
+        const categoryIds = courseCategoryIds ? JSON.parse($(courseCategoryIds)?.val()) : [];
         if (push_state) {
             pushFilterToState(filter_criteria);
+        }
+
+        if ( categoryIds.length > 0 ) {
+            filter_criteria['tutor-course-filter-category'] = categoryIds;
         }
 
         content_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" aria-hidden="true"></span></div>');
