@@ -42,6 +42,7 @@
   &-header {
     @include tutor-flex(row, center, space-between);
     margin-bottom: $tutor-spacing-1;
+    min-height: 32px;
   }
 
   &-meta {
@@ -84,7 +85,9 @@
   }
 
   &-title {
+    display: block;
     @include tutor-typography('small', 'medium', 'primary', 'body');
+    @include tutor-text-truncate();
     margin: 0 0 $tutor-spacing-5 0;
 
     @include tutor-breakpoint-down(sm) {
