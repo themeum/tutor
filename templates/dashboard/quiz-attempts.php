@@ -81,101 +81,99 @@ $hidden_inputs = array(
 	<h4 class="tutor-quiz-attempts-mobile-heading tutor-h4 tutor-mb-5">
 		<?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?>
 	</h4>
-	<div class="tutor-dashboard-page-card">
-		<div class="tutor-quiz-attempts tutor-instructor-quiz-attempts">
-			<div class="tutor-quiz-attempts-filter">
-				<?php
-				CourseFilter::make()
-					->size( Size::SMALL )
-					->variant( Variant::PRIMARY_SOFT )
-					->render();
+	<div class="tutor-quiz-attempts tutor-instructor-quiz-attempts tutor-surface-l1 tutor-border tutor-rounded-2xl tutor-overflow-hidden">
+		<div class="tutor-quiz-attempts-filter">
+			<?php
+			CourseFilter::make()
+				->size( Size::SMALL )
+				->variant( Variant::PRIMARY_SOFT )
+				->render();
 
-				DropdownFilter::make()
-					->size( Size::SMALL )
-					->options( $nav_links['options'] )
-					->query_param( 'result' )
-					->variant( Variant::OUTLINE )
-					->position( Positions::BOTTOM_END )
-					->render();
-				?>
-			</div>
-			<div class="tutor-px-6 tutor-py-5 tutor-flex tutor-gap-3 tutor-justify-between tutor-border-b">
-				<?php
-				SearchFilter::make()
-					->form_id( 'tutor-quiz-attempt-search-form' )
-					->hidden_inputs( $hidden_inputs )
-					->placeholder( __( 'Search quizzes...', 'tutor' ) )
-					->size( Size::SMALL )
-					->render();
-				?>
-
-				<div class="tutor-flex tutor-gap-3">
-					<?php
-					$query_items = array( 'course-id', 'search', 'date', 'result', 'order' );
-					if ( Input::has_any( $query_items, Input::GET_REQUEST ) ) {
-						Button::make()
-							->tag( 'a' )
-							->size( Size::SMALL )
-							->attr( 'href', tutor_utils()->tutor_dashboard_url( 'quiz-attempts' ) )
-							->attr( 'class', 'tutor-text-brand' )
-							->label( __( 'Clear all', 'tutor' ) )
-							->variant( Variant::LINK )
-							->render();
-					}
-
-					DateFilter::make()
-						->type( DateFilter::TYPE_SINGLE )
-						->placement( Positions::BOTTOM_END )
-						->render();
-
-					Sorting::make()->size( Size::SMALL )->order( $order_filter )->render();
-					?>
-				</div>
-			</div>
-			<?php if ( $quiz_attempts_count ) : ?>
-			<div class="tutor-quiz-attempts-header">
-				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
-				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
-				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
-				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
-			</div>
-			<div class="tutor-quiz-attempts-list">
-				<?php
-				foreach ( $quiz_attempts_list as $quiz_attempt ) :
-					?>
-				<div class="tutor-quiz-attempts-item-wrapper">
-					<?php
-						tutor_load_template(
-							'dashboard.components.quiz-attempt-row',
-							array(
-								'attempt'          => $quiz_attempt,
-								'quiz_title'       => $quiz_attempt['quiz_title'],
-								'course_title'     => $quiz_attempt['course_title'],
-								'course_id'        => $quiz_attempt['course_id'],
-								'show_quiz_title'  => true,
-								'show_course'      => true,
-								'quiz_id'          => $quiz_attempt['quiz_id'],
-								'attempts_count'   => 1,
-								'attempt_id'       => $quiz_attempt['attempt_id'] ?? 0,
-								'quiz_attempt_obj' => $quiz_attempt_obj,
-							)
-						);
-
-					?>
-				</div>
-					<?php
-				endforeach;
-				?>
-			</div>
-			<?php else : ?>
-				<?php
-					EmptyState::make()
-						->title( __( 'No Quiz Attempts Found', 'tutor' ) )
-						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-empty.svg' ) )
-						->render();
-				?>
-			<?php endif; ?>
+			DropdownFilter::make()
+				->size( Size::SMALL )
+				->options( $nav_links['options'] )
+				->query_param( 'result' )
+				->variant( Variant::OUTLINE )
+				->position( Positions::BOTTOM_END )
+				->render();
+			?>
 		</div>
+		<div class="tutor-px-6 tutor-py-5 tutor-flex tutor-gap-3 tutor-justify-between tutor-border-b">
+			<?php
+			SearchFilter::make()
+				->form_id( 'tutor-quiz-attempt-search-form' )
+				->hidden_inputs( $hidden_inputs )
+				->placeholder( __( 'Search quizzes...', 'tutor' ) )
+				->size( Size::SMALL )
+				->render();
+			?>
+
+			<div class="tutor-flex tutor-gap-3">
+				<?php
+				$query_items = array( 'course-id', 'search', 'date', 'result', 'order' );
+				if ( Input::has_any( $query_items, Input::GET_REQUEST ) ) {
+					Button::make()
+						->tag( 'a' )
+						->size( Size::SMALL )
+						->attr( 'href', tutor_utils()->tutor_dashboard_url( 'quiz-attempts' ) )
+						->attr( 'class', 'tutor-text-brand' )
+						->label( __( 'Clear all', 'tutor' ) )
+						->variant( Variant::LINK )
+						->render();
+				}
+
+				DateFilter::make()
+					->type( DateFilter::TYPE_SINGLE )
+					->placement( Positions::BOTTOM_END )
+					->render();
+
+				Sorting::make()->size( Size::SMALL )->order( $order_filter )->render();
+				?>
+			</div>
+		</div>
+		<?php if ( $quiz_attempts_count ) : ?>
+		<div class="tutor-quiz-attempts-header">
+			<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
+			<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
+			<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
+			<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
+		</div>
+		<div class="tutor-quiz-attempts-list">
+			<?php
+			foreach ( $quiz_attempts_list as $quiz_attempt ) :
+				?>
+			<div class="tutor-quiz-attempts-item-wrapper">
+				<?php
+					tutor_load_template(
+						'dashboard.components.quiz-attempt-row',
+						array(
+							'attempt'          => $quiz_attempt,
+							'quiz_title'       => $quiz_attempt['quiz_title'],
+							'course_title'     => $quiz_attempt['course_title'],
+							'course_id'        => $quiz_attempt['course_id'],
+							'show_quiz_title'  => true,
+							'show_course'      => true,
+							'quiz_id'          => $quiz_attempt['quiz_id'],
+							'attempts_count'   => 1,
+							'attempt_id'       => $quiz_attempt['attempt_id'] ?? 0,
+							'quiz_attempt_obj' => $quiz_attempt_obj,
+						)
+					);
+
+				?>
+			</div>
+				<?php
+			endforeach;
+			?>
+		</div>
+		<?php else : ?>
+			<?php
+				EmptyState::make()
+					->title( __( 'No Quiz Attempts Found', 'tutor' ) )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-empty.svg' ) )
+					->render();
+			?>
+		<?php endif; ?>
 	</div>
 	<?php
 		Pagination::make()

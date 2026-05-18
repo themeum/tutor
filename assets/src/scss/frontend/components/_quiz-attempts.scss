@@ -123,6 +123,8 @@
         }
 
         &-course {
+          @include tutor-flex(row, center);
+          gap: $tutor-spacing-2;
           @include tutor-typography(small, regular, secondary);
 
           @include tutor-breakpoint-down(sm) {
