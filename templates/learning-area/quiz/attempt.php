@@ -332,7 +332,7 @@ $default_values = array(
 						->size( Size::LARGE )
 						->attr( 'type', 'submit' )
 						->attr( 'x-show', 'currentIndex === totalQuestions' )
-						->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+						->attr( ':disabled', 'isRevealSubmitting' )
 						->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
 						->attr( 'class', 'tutor-quiz-submit-btn' )
 						->render();
@@ -348,7 +348,7 @@ $default_values = array(
 					->size( Size::LARGE )
 					->attr( 'form', $form_id )
 					->attr( 'type', 'submit' )
-					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+					->attr( ':disabled', 'isRevealSubmitting' )
 					->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
 					->attr( 'style', 'display: block; margin: 0 auto; min-width: 290px;' )
 					->render();

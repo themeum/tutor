@@ -321,6 +321,7 @@ class Quiz {
 
 		if ( 'question_below_each_other' === $question_layout_view ) {
 			$settings['hide_question_number_overview'] = '0';
+			$enable_answer_reveal                      = false;
 		}
 
 		if ( $enable_pagination ) {
