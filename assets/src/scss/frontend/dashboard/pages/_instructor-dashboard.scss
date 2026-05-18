@@ -254,13 +254,8 @@
     }
 
     &-link {
-      @include tutor-button-base;
-      @include tutor-button-size(x-small);
-      @include tutor-button-variant(link);
-      min-height: unset;
-      padding: 0;
+      align-self: start;
       margin-top: $tutor-spacing-5;
-      color: $tutor-text-brand;
       width: fit-content;
     }
 
