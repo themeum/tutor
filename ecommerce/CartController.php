@@ -240,6 +240,14 @@ class CartController {
 			);
 		}
 
+		if ( 'publish' !== get_post_status( $course_id ) ) {
+			$this->json_response(
+				__( 'Cannot add to cart, course is not published.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
 		// Check if the course already exists in the cart or not.
 		$is_course_in_user_cart = $this->model->is_course_in_user_cart( $user_id, $course_id );
 		if ( $is_course_in_user_cart ) {

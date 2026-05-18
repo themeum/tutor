@@ -629,6 +629,18 @@ class CheckoutController {
 
 			if ( tutor_utils()->count( $course_ids ) ) {
 				foreach ( $course_ids as $course_id ) {
+					$status = get_post_status( $course_id );
+					if ( 'publish' !== $status ) {
+						array_push(
+							$errors,
+							sprintf(
+								// Translators: %s course name.
+								__( 'Course %s is currently not published', 'tutor' ),
+								get_the_title( $course_id ) ?? ''
+							)
+						);
+					}
+
 					$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
 					if ( ! $can_buy ) {
 						array_push(
