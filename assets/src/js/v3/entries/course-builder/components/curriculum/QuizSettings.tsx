@@ -588,13 +588,15 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
                 <hr />
 
-                <Controller
-                  control={form.control}
-                  name="quiz_option.hide_previous_button"
-                  render={(controllerProps) => (
-                    <FormSwitch {...controllerProps} label={__('Hide previous button from students', 'tutor')} />
-                  )}
-                />
+                <Show when={!form.watch('quiz_option.enable_pagination')}>
+                  <Controller
+                    control={form.control}
+                    name="quiz_option.hide_previous_button"
+                    render={(controllerProps) => (
+                      <FormSwitch {...controllerProps} label={__('Hide previous button from students', 'tutor')} />
+                    )}
+                  />
+                </Show>
 
                 <Controller
                   control={form.control}

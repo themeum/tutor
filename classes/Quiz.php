@@ -319,6 +319,14 @@ class Quiz {
 			$enable_pagination    = true;
 		}
 
+		if ( 'question_below_each_other' === $question_layout_view ) {
+			$settings['hide_question_number_overview'] = '0';
+		}
+
+		if ( $enable_pagination ) {
+			$settings['hide_previous_button'] = '0';
+		}
+
 		$settings['question_layout_view']   = $question_layout_view;
 		$settings['enable_pagination']      = $enable_pagination ? '1' : '0';
 		$settings['pagination_type']        = $pagination_type;
