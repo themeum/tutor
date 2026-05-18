@@ -227,7 +227,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
             <hr />
 
-            <div css={styles.inlineForm}>
+            <div css={styles.inlineForm({ minHeight: '32px' })}>
               <Controller
                 name="quiz_option.limit_attempts_allowed"
                 control={form.control}
@@ -270,7 +270,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             </div>
 
             <Show when={contentType !== 'tutor_h5p_quiz'}>
-              <div css={styles.inlineForm}>
+              <div css={styles.inlineForm({ minHeight: '32px' })}>
                 <Controller
                   name="quiz_option.limit_questions_to_answer"
                   control={form.control}
@@ -331,7 +331,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
           <div css={styles.innerCard}>
             <Show when={contentType !== 'tutor_h5p_quiz'}>
-              <div css={styles.inlineForm}>
+              <div css={styles.inlineForm({ minHeight: '32px' })}>
                 <Controller
                   name="quiz_option.enable_time_limit"
                   control={form.control}
@@ -399,7 +399,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               <hr />
             </Show>
 
-            <div css={styles.inlineForm}>
+            <div css={styles.inlineForm({ minHeight: '34px' })}>
               <Controller
                 name="quiz_option.quiz_auto_start"
                 control={form.control}
@@ -482,7 +482,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               <Show when={form.watch('quiz_option.question_layout_view') === 'single_question'}>
                 <hr />
 
-                <div css={styles.inlineForm}>
+                <div css={styles.inlineForm({ minHeight: '34px' })}>
                   <Controller
                     control={form.control}
                     name="quiz_option.enable_pagination"
@@ -990,12 +990,16 @@ const styles = {
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.surface.courseBuilder};
   `,
-  inlineForm: ({ withPrefix }: { withPrefix?: boolean } = {}) => css`
+  inlineForm: ({ withPrefix, minHeight }: { withPrefix?: boolean; minHeight?: string } = {}) => css`
     ${styleUtils.display.flex('row')};
     width: 100%;
     align-items: center;
     justify-content: space-between;
     gap: ${spacing[8]};
+    ${minHeight &&
+    css`
+      min-height: ${minHeight};
+    `}
 
     ${withPrefix &&
     css`
