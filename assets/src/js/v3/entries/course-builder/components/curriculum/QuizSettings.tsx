@@ -806,7 +806,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               <div data-subtitle>{__('Passing grade', 'tutor')}</div>
 
               <div data-footer>
-                <SVGIcon name="stopwatch" width={12} height={12} />
+                <SVGIcon name="starLine" width={12} height={12} />
                 {questionsOrder === 'rand'
                   ? '-'
                   : sprintf(
