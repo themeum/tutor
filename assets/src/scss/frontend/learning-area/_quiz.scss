@@ -717,14 +717,15 @@ $tutor-quiz-content-bottom-offset: calc(
     margin-inline-start: auto;
   }
 
-  &-answer-next-btn,
-  &-previous-btn,
-  &-submit-btn {
+  &-answer-next-btn.tutor-btn,
+  &-previous-btn.tutor-btn,
+  &-submit-btn.tutor-btn {
     padding-inline: $tutor-spacing-9;
 
-    &:disabled {
+    &:disabled,
+    &.disabled {
       background-color: $tutor-button-disabled;
-      border-color: $tutor-button-disabled;
+      --tutor-button-border-shadow: #{$tutor-button-outline-border-shadow-disabled};
       color: $tutor-text-subdued;
       opacity: 1;
       cursor: default;
