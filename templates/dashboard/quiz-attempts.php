@@ -139,9 +139,7 @@ $hidden_inputs = array(
 			<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
 		</div>
 		<div class="tutor-quiz-attempts-list">
-			<?php
-			foreach ( $quiz_attempts_list as $quiz_attempt ) :
-				?>
+			<?php foreach ( $quiz_attempts_list as $quiz_attempt ) : ?>
 			<div class="tutor-quiz-attempts-item-wrapper">
 				<?php
 					tutor_load_template(
@@ -162,8 +160,14 @@ $hidden_inputs = array(
 
 				?>
 			</div>
-				<?php
-			endforeach;
+			<?php endforeach; ?>
+			<?php
+			Pagination::make()
+				->current( $current_page )
+				->total( $quiz_attempts_count )
+				->limit( $item_per_page )
+				->attr( 'class', 'tutor-p-6' )
+				->render();
 			?>
 		</div>
 		<?php else : ?>
@@ -176,13 +180,6 @@ $hidden_inputs = array(
 		<?php endif; ?>
 	</div>
 	<?php
-		Pagination::make()
-		->current( $current_page )
-		->total( $quiz_attempts_count )
-		->limit( $item_per_page )
-		->attr( 'class', 'tutor-pt-6' )
-		->render();
-
 	ConfirmationModal::make()
 		->id( 'tutor-quiz-attempt-delete-modal' )
 		->title( __( 'Do You Want to Delete This?', 'tutor' ) )

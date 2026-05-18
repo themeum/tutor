@@ -51,7 +51,7 @@
   }
 
   .tutor-quiz-attempts-item-wrapper {
-    padding: $tutor-spacing-6;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
 
     &:not(:last-child) {
       border-bottom: 1px solid $tutor-border-idle;
@@ -115,6 +115,7 @@
         &-title {
           @include tutor-typography(medium, semibold);
           text-align: start;
+          margin-bottom: $tutor-spacing-2;
 
           @include tutor-breakpoint-down(sm) {
             font-size: $tutor-font-size-small;
