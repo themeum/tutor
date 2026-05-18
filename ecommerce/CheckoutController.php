@@ -635,7 +635,7 @@ class CheckoutController {
 							$errors,
 							sprintf(
 								// Translators: %s course name.
-								__( 'Course %s is currently not published', 'tutor' ),
+								__( '“%s” is no longer available for purchase.', 'tutor' ),
 								get_the_title( $course_id ) ?? ''
 							)
 						);
