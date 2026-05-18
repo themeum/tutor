@@ -110,6 +110,10 @@
         gap: $tutor-spacing-2;
         min-width: 99px;
 
+        @include tutor-breakpoint-down(sm) {
+          min-width: 80px;
+        }
+
         &::before {
           content: '';
           height: 12px;
