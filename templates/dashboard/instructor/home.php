@@ -330,7 +330,7 @@ $sortable_sections_ids = array_reduce(
 			<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->render(); ?>
 		<?php endif; ?>
 
-		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: 'bottom-end' })">
+		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: '<?php echo esc_js( $tutor_pro_enabled ? 'bottom-end' : 'bottom-start' ); ?>' })">
 			<button
 				x-ref="trigger"
 				@click="toggle()"
