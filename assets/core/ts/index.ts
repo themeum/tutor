@@ -22,19 +22,19 @@ type CorePackModule = {
 
 const optionalCorePackLoaders: Record<OptionalTutorCorePackName, () => Promise<CorePackModule>> = {
   'core-form-controls': async () => {
-    const module = await import(/* webpackChunkName: "core-form-controls" */ '@Core/ts/packs/form-controls');
+    const module = await import(/* webpackChunkName: "tutor-core-form-controls" */ '@Core/ts/packs/form-controls');
     return {
       register: module.registerCoreFormControlsPack,
     };
   },
   'core-media-editor': async () => {
-    const module = await import(/* webpackChunkName: "core-media-editor" */ '@Core/ts/packs/media-editor');
+    const module = await import(/* webpackChunkName: "tutor-core-media-editor" */ '@Core/ts/packs/media-editor');
     return {
       register: module.registerCoreMediaEditorPack,
     };
   },
   'core-learning': async () => {
-    const module = await import(/* webpackChunkName: "core-learning" */ '@Core/ts/packs/learning');
+    const module = await import(/* webpackChunkName: "tutor-core-learning" */ '@Core/ts/packs/learning');
     return {
       register: module.registerCoreLearningPack,
     };

@@ -100,11 +100,11 @@ const createConfig = (env, options) => {
                 postcssOptions: {
                   plugins: [
                     !isDevelopment &&
-                    purgecss({
-                      content: purgecssContent,
-                      defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
-                      safelist: purgecssSafelist,
-                    }),
+                      purgecss({
+                        content: purgecssContent,
+                        defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+                        safelist: purgecssSafelist,
+                      }),
                   ].filter(Boolean),
                 },
               },
@@ -215,24 +215,12 @@ const createConfig = (env, options) => {
 
   if ('production' === mode) {
     baseConfig.optimization = {
+      chunkIds: 'named',
       splitChunks: {
         chunks: 'async',
-        minSize: 20000,
         cacheGroups: {
-          tutorAsyncVendors: {
-            test: /[\\/]node_modules[\\/]/,
-            chunks: 'async',
-            priority: 20,
-            reuseExistingChunk: true,
-            name(module) {
-              const path = module.context || '';
-              // Match the *last* node_modules segment to handle pnpm symlinks, and handle @scoped packages
-              const match = path.match(/[\\/]node_modules[\\/](?!.*?node_modules)(@[^\\/]+[\\/][^\\/]+|[^\\/]+)/);
-              if (!match) return 'tutor-async-vendors';
-              const packageName = match[1].replace('@', '').replace(/[\\/]/g, '-');
-              return `tutor-vendor-${packageName}`;
-            },
-          },
+          default: false,
+          defaultVendors: false,
           tutorAsyncCommon: {
             minChunks: 2,
             chunks: 'async',
