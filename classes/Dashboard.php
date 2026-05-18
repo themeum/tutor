@@ -132,14 +132,17 @@ class Dashboard {
 				'url'         => self::get_account_page_url( 'reviews' ),
 				'template'    => tutor_get_template( 'dashboard.account.reviews' ),
 			),
-			'billing' => array(
+		);
+
+		if ( User::is_student_view() ) {
+			$pages['billing'] = array(
 				'title'       => esc_html__( 'Billing', 'tutor' ),
 				'icon'        => Icon::BILLING,
 				'icon_active' => Icon::BILLING,
 				'url'         => self::get_account_page_url( 'billing' ),
 				'template'    => tutor_get_template( 'dashboard.account.billing' ),
-			),
-		);
+			);
+		}
 
 		if ( User::is_instructor_view() ) {
 			$pages['withdrawals'] = array(
