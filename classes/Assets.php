@@ -109,6 +109,13 @@ class Assets {
 
 		// Add custom meta.
 		add_action( 'wp_head', array( $this, 'add_custom_data' ) );
+
+		/**
+		 * Add preload to CSS
+		 *
+		 * @since 4.0.0
+		 */
+		add_filter( 'style_loader_tag', array( $this, 'add_preload_to_css' ), 10, 2 );
 	}
 
 	/**
@@ -831,8 +838,11 @@ class Assets {
 		}
 
 		// Core.
-		wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );
-		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), TUTOR_VERSION, true );
+		$google_font_url = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+		wp_enqueue_style( 'tutor-google-fonts', $google_font_url, array(), $version );
+
+		wp_enqueue_style( 'tutor-core', $core_css_url, array( 'tutor-google-fonts' ), $version );
+		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), $version, true );
 
 		wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
 
@@ -846,8 +856,8 @@ class Assets {
 			wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
 
 			if ( is_single_course( true ) ) {
-				wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
-				wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+				wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), $version );
+				wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), $version, true );
 			}
 		}
 	}
@@ -921,5 +931,26 @@ class Assets {
 		if ( tutor_utils()->is_dashboard_page() || tutor_utils()->is_learning_area() ) {
 			echo '<meta name="viewport" content="width=device-width, initial-scale=1" />' . "\n";
 		}
+	}
+
+	/**
+	 * Add preload to CSS
+	 *
+	 * @param string $html HTML.
+	 * @param string $handle Handle.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	public function add_preload_to_css( $html, $handle ) {
+		if ( 'tutor-google-fonts' === $handle ) {
+			$html = str_replace(
+				"rel='stylesheet'",
+				"rel='preload' as='style' onload=\"this.onload=null;this.rel='stylesheet'\"",
+				$html
+			);
+		}
+		return $html;
 	}
 }

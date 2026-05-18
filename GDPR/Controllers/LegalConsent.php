@@ -296,15 +296,13 @@ class LegalConsent extends BaseController {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @throws Exception If place_key is invalid.
-	 *
 	 * @param string $place_key Place key like signup, signin, etc.
 	 *
 	 * @return array Consent places.
 	 */
 	public static function get_consent_by_display_key( string $place_key ): array {
 		if ( ! in_array( $place_key, self::get_consent_places(), true ) ) {
-			throw new Exception( esc_html__( 'Invalid place key', 'tutor' ) );
+			return array();
 		}
 
 		$res = ( new self( false ) )->model->get_consents_by_display_key( $place_key );
