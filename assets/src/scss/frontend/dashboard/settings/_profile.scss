@@ -2,12 +2,6 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
-body:has(#wpadminbar) {
-  .tutor-profile-settings-tab {
-    top: calc(57px + 32px + 32px);
-  }
-}
-
 .tutor-profile-settings-section {
   background: $tutor-surface-base;
   display: flex;
@@ -64,10 +58,14 @@ body:has(#wpadminbar) {
       background: $tutor-surface-base;
       position: absolute;
       top: 60px;
-      height: 100dvh;
+      height: calc(100dvh - 60px);
       display: none;
       overflow-y: scroll;
       padding: $tutor-spacing-6;
+
+      body:has(#wpadminbar) & {
+        height: calc(100dvh - 106px);
+      }
 
       &.tutor-profile-tab-activated {
         left: 0px;
