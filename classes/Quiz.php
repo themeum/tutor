@@ -1834,16 +1834,18 @@ class Quiz {
 			),
 		);
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+		if ( $earned_marks ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
 						' . SvgIcon::make()->name( Icon::STAR )->size( 20 )->get() . __( 'Earned Grade', 'tutor' ) . '
 					</div>',
+					),
+					array( 'content' => $earned_marks . '%' ),
 				),
-				array( 'content' => $earned_marks . '%' ),
-			),
-		);
+			);
+		}
 
 		$quiz_summary[] = array(
 			'columns' => array(
