@@ -1,18 +1,12 @@
 // Dashboard Entry Point
 // Initializes dashboard functionality based on current page
 
-import { type TutorCorePackName } from '@Core/ts/packs/types';
 import { initializeCommon } from '@FrontendServices/common';
-import { chainRoutePreload, requestCorePacks } from '../core-packs';
+import { createRouteConfig, registerRoutePreload, type TutorRouteConfig, withBasePack } from '../route-preload';
 import { initializeHeader } from './header';
 
 type DashboardRouteModule = {
   initializeDashboardRoute?: () => void;
-};
-
-type DashboardRouteConfig = {
-  packs: TutorCorePackName[];
-  load: () => Promise<DashboardRouteModule>;
 };
 
 /**
@@ -72,136 +66,94 @@ const getCurrentPage = (): string => {
   return 'home';
 };
 
-const dashboardRoutes: Record<string, DashboardRouteConfig> = {
-  home: {
-    packs: ['core-base', 'core-form-controls'],
-    load: async () => {
-      const { initializeHome } = await import(/* webpackChunkName: "tutor-dashboard-home" */ './pages/instructor/home');
-      return {
-        initializeDashboardRoute: initializeHome,
-      };
-    },
-  },
-  dashboard: {
-    packs: ['core-base', 'core-form-controls'],
-    load: async () => {
-      const { initializeHome } = await import(/* webpackChunkName: "tutor-dashboard-home" */ './pages/instructor/home');
-      return {
-        initializeDashboardRoute: initializeHome,
-      };
-    },
-  },
-  'my-courses': {
-    packs: ['core-base'],
-    load: async () => {
-      const { initializeMyCourses } = await import(
-        /* webpackChunkName: "tutor-dashboard-my-courses" */ './pages/my-courses'
-      );
-      return {
-        initializeDashboardRoute: initializeMyCourses,
-      };
-    },
-  },
-  announcements: {
-    packs: ['core-base', 'core-form-controls'],
-    load: async () => {
-      const { initializeAnnouncements } = await import(
-        /* webpackChunkName: "tutor-dashboard-announcements" */ './pages/announcements'
-      );
-      return {
-        initializeDashboardRoute: initializeAnnouncements,
-      };
-    },
-  },
-  'quiz-attempts': {
-    packs: ['core-base', 'core-form-controls'],
-    load: async () => {
-      const { initializeQuizAttempts } = await import(
-        /* webpackChunkName: "tutor-dashboard-quiz-attempts" */ './pages/quiz-attempts'
-      );
-      return {
-        initializeDashboardRoute: initializeQuizAttempts,
-      };
-    },
-  },
-  discussions: {
-    packs: ['core-base'],
-    load: async () => {
-      const { initializeDiscussions } = await import(
-        /* webpackChunkName: "tutor-dashboard-discussions" */ './pages/discussions'
-      );
-      return {
-        initializeDashboardRoute: initializeDiscussions,
-      };
-    },
-  },
-  reviews: {
-    packs: ['core-base'],
-    load: async () => {
-      const { initializeReviews } = await import(
-        /* webpackChunkName: "tutor-dashboard-reviews" */ '@FrontendComponents/reviews'
-      );
-      return {
-        initializeDashboardRoute: initializeReviews,
-      };
-    },
-  },
-  withdrawals: {
-    packs: ['core-base', 'core-form-controls'],
-    load: async () => {
-      const { initializeWithdrawals } = await import(
-        /* webpackChunkName: "tutor-dashboard-withdrawals" */ './pages/withdrawals'
-      );
-      return {
-        initializeDashboardRoute: initializeWithdrawals,
-      };
-    },
-  },
-  billing: {
-    packs: ['core-base', 'core-form-controls'],
-    load: async () => {
-      const { initBillingCsvExport } = await import(
-        /* webpackChunkName: "tutor-dashboard-billing" */ './pages/billing'
-      );
-      return {
-        initializeDashboardRoute: initBillingCsvExport,
-      };
-    },
-  },
-  settings: {
-    packs: ['core-base', 'core-form-controls', 'core-media-editor'],
-    load: async () => {
-      const { initializeSettings } = await import(
-        /* webpackChunkName: "tutor-dashboard-settings" */ './pages/settings'
-      );
-      return {
-        initializeDashboardRoute: initializeSettings,
-      };
-    },
-  },
+const dashboardRoutes: Record<string, TutorRouteConfig<DashboardRouteModule>> = {
+  home: createRouteConfig(withBasePack('core-form-controls'), async () => {
+    const { initializeHome } = await import(/* webpackChunkName: "tutor-dashboard-home" */ './pages/instructor/home');
+    return {
+      initializeDashboardRoute: initializeHome,
+    };
+  }),
+  dashboard: createRouteConfig(withBasePack('core-form-controls'), async () => {
+    const { initializeHome } = await import(/* webpackChunkName: "tutor-dashboard-home" */ './pages/instructor/home');
+    return {
+      initializeDashboardRoute: initializeHome,
+    };
+  }),
+  'my-courses': createRouteConfig(withBasePack(), async () => {
+    const { initializeMyCourses } = await import(
+      /* webpackChunkName: "tutor-dashboard-my-courses" */ './pages/my-courses'
+    );
+    return {
+      initializeDashboardRoute: initializeMyCourses,
+    };
+  }),
+  announcements: createRouteConfig(withBasePack('core-form-controls'), async () => {
+    const { initializeAnnouncements } = await import(
+      /* webpackChunkName: "tutor-dashboard-announcements" */ './pages/announcements'
+    );
+    return {
+      initializeDashboardRoute: initializeAnnouncements,
+    };
+  }),
+  'quiz-attempts': createRouteConfig(withBasePack('core-form-controls'), async () => {
+    const { initializeQuizAttempts } = await import(
+      /* webpackChunkName: "tutor-dashboard-quiz-attempts" */ './pages/quiz-attempts'
+    );
+    return {
+      initializeDashboardRoute: initializeQuizAttempts,
+    };
+  }),
+  discussions: createRouteConfig(withBasePack(), async () => {
+    const { initializeDiscussions } = await import(
+      /* webpackChunkName: "tutor-dashboard-discussions" */ './pages/discussions'
+    );
+    return {
+      initializeDashboardRoute: initializeDiscussions,
+    };
+  }),
+  reviews: createRouteConfig(withBasePack(), async () => {
+    const { initializeReviews } = await import(
+      /* webpackChunkName: "tutor-dashboard-reviews" */ '@FrontendComponents/reviews'
+    );
+    return {
+      initializeDashboardRoute: initializeReviews,
+    };
+  }),
+  withdrawals: createRouteConfig(withBasePack('core-form-controls'), async () => {
+    const { initializeWithdrawals } = await import(
+      /* webpackChunkName: "tutor-dashboard-withdrawals" */ './pages/withdrawals'
+    );
+    return {
+      initializeDashboardRoute: initializeWithdrawals,
+    };
+  }),
+  billing: createRouteConfig(withBasePack('core-form-controls'), async () => {
+    const { initBillingCsvExport } = await import(/* webpackChunkName: "tutor-dashboard-billing" */ './pages/billing');
+    return {
+      initializeDashboardRoute: initBillingCsvExport,
+    };
+  }),
+  settings: createRouteConfig(withBasePack('core-form-controls', 'core-media-editor'), async () => {
+    const { initializeSettings } = await import(/* webpackChunkName: "tutor-dashboard-settings" */ './pages/settings');
+    return {
+      initializeDashboardRoute: initializeSettings,
+    };
+  }),
 };
 
-const getDashboardRouteConfig = (route: string): DashboardRouteConfig | undefined => {
+const getDashboardRouteConfig = (route: string): TutorRouteConfig<DashboardRouteModule> | undefined => {
   return dashboardRoutes[route];
 };
 
 const preloadedDashboardRoute = getCurrentPage();
 const preloadedDashboardRouteConfig = getDashboardRouteConfig(preloadedDashboardRoute);
-const preloadedDashboardRouteModule = preloadedDashboardRouteConfig ? preloadedDashboardRouteConfig.load() : null;
-const preloadDashboardRoute = async () => {
-  initializeHeader();
-
-  if (!preloadedDashboardRouteModule) {
-    return;
-  }
-
-  const routeModule = await preloadedDashboardRouteModule;
-  routeModule.initializeDashboardRoute?.();
-};
-
-const dashboardCorePackPreload = requestCorePacks(preloadedDashboardRouteConfig?.packs || ['core-base']);
-
-chainRoutePreload(dashboardCorePackPreload, preloadDashboardRoute());
+registerRoutePreload({
+  routeConfig: preloadedDashboardRouteConfig,
+  beforeLoad: initializeHeader,
+  initializeRoute: (routeModule) => {
+    routeModule.initializeDashboardRoute?.();
+  },
+});
 
 const initializeDashboard = async () => {
   initializeCommon();
