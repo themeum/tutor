@@ -100,21 +100,27 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 			<?php echo esc_html( get_the_title( $quiz_id ) ); ?>
 		</h2>
 
-		<div class="tutor-medium tutor-sm-text-tiny tutor-text-subdued tutor-text-center tutor-mb-6">
-			<?php esc_html_e( 'Topic', 'tutor' ); ?>
-			<i><?php echo esc_html( get_the_title( $topic_id ? $topic_id : $quiz_id ) ); ?></i>
-			<?php esc_html_e( 'in', 'tutor' ); ?>
-			<?php
-			if ( $course_id ) {
-				PreviewTrigger::make()->id( $course_id )->render();
-			} else {
-				echo esc_html__( 'Course', 'tutor' );
-			}
-			?>
+		<div class="tutor-flex tutor-gap-2 tutor-items-center tutor-justify-center tutor-medium tutor-sm-text-tiny tutor-text-subdued tutor-mb-6">
+			<div class="tutor-flex tutor-gap-2 tutor-items-center tutor-overflow-hidden">
+				<?php esc_html_e( 'Topic', 'tutor' ); ?>
+				<i class="tutor-text-secondary tutor-truncate">
+					<?php echo esc_html( get_the_title( $topic_id ? $topic_id : $quiz_id ) ); ?>
+				</i>
+			</div>
+			<div class="tutor-flex tutor-gap-2 tutor-items-center tutor-overflow-hidden">
+				<?php esc_html_e( 'in', 'tutor' ); ?>
+				<?php
+				if ( $course_id ) {
+					PreviewTrigger::make()->id( $course_id )->render();
+				} else {
+					echo esc_html__( 'Course', 'tutor' );
+				}
+				?>
+			</div>
 		</div>
 
-	<div class="tutor-quiz-result">
-		<?php Quiz_Attempts_List::render_quiz_attempt_marks_percentage( $attempt_result, $earned_percentage, 'large', 'tutor-quiz-result-progress' ); ?>
+		<div class="tutor-quiz-result">
+			<?php Quiz_Attempts_List::render_quiz_attempt_marks_percentage( $attempt_result, $earned_percentage, 'large', 'tutor-quiz-result-progress' ); ?>
 
 			<div class="tutor-quiz-result-marks">
 				<div class="tutor-result-badge <?php echo esc_attr( $result_badge_class ); ?>">
