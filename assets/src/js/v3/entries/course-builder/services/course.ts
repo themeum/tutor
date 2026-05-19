@@ -724,14 +724,6 @@ const createCourse = (payload: CoursePayload) => {
   return wpAjaxInstance.post<CoursePayload, CourseResponse>(endpoints.CREATED_COURSE, payload);
 };
 
-interface TutorDeleteResponse {
-  data: {
-    message: string;
-    post_id: number;
-  };
-  success: boolean;
-}
-
 export const useCreateCourseMutation = () => {
   const { showToast } = useToast();
 
@@ -868,7 +860,7 @@ export const useSaveZoomMeetingMutation = () => {
 };
 
 const deleteZoomMeeting = (meetingId: string) => {
-  return wpAjaxInstance.post<number, TutorDeleteResponse>(endpoints.DELETE_ZOOM_MEETING, {
+  return wpAjaxInstance.post<number, TutorMutationResponse<number>>(endpoints.DELETE_ZOOM_MEETING, {
     meeting_id: meetingId,
   });
 };
@@ -880,8 +872,8 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
   return useMutation({
     mutationFn: deleteZoomMeeting,
     onSuccess: (response) => {
-      if (response.data) {
-        showToast({ type: 'success', message: __(response.data.message, 'tutor') });
+      if (response.status_code === 200) {
+        showToast({ type: 'success', message: response.message });
 
         queryClient.invalidateQueries({
           queryKey: ['CourseDetails', Number(courseId)],
