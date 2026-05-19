@@ -571,11 +571,11 @@ class CheckoutController {
 
 		$is_guest_checkout_endabled = class_exists( 'TutorPro\Ecommerce\GuestCheckout\GuestCheckout' ) && GuestCheckout::is_enable();
 
-		// Pevent invalid request.
+		// Prevent invalid request.
 		if ( ! $current_user_id ) {
 			if ( $is_guest_checkout_endabled ) {
 				// Guest user.
-				$current_user_id = wp_rand(); // A random id to iniquely indentify.
+				$current_user_id = wp_rand(); // A random id to uniquely identify.
 			} else {
 				wp_die( esc_html( tutor_utils()->error_message( 'invalid_req' ) ) );
 			}
