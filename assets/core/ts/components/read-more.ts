@@ -6,14 +6,13 @@ interface ReadMoreProps {
 }
 
 const DEFAULT_LINES = 4;
+
 const readMore = (props: ReadMoreProps = {}) => {
   return {
     expanded: props.expanded ?? false,
     hasOverflow: false,
     lines: props.lines ?? DEFAULT_LINES,
     collapsedHeightPx: 0,
-    resizeObserver: null as ResizeObserver | null,
-    mutationObserver: null as MutationObserver | null,
     $el: null as HTMLElement | null,
     $refs: {} as { content?: HTMLElement; readMore?: HTMLElement; readLess?: HTMLElement },
     $watch: null as ((key: string, callback: () => void) => void) | null,
@@ -41,13 +40,9 @@ const readMore = (props: ReadMoreProps = {}) => {
 
       this.$nextTick?.(() => {
         this.sync();
-        this.setupObservers();
       });
     },
 
-    /**
-     * Calculate the collapsed height in px from lines × lineHeight.
-     */
     computeCollapsedHeight(content: HTMLElement) {
       const computedStyle = getComputedStyle(content);
       let lineHeight = parseFloat(computedStyle.lineHeight);
@@ -60,27 +55,6 @@ const readMore = (props: ReadMoreProps = {}) => {
       this.collapsedHeightPx = Math.ceil(this.lines * lineHeight);
     },
 
-    setupObservers() {
-      const content = this.$refs.content;
-      if (!content) {
-        return;
-      }
-
-      if (window.ResizeObserver) {
-        this.resizeObserver = new ResizeObserver(() => this.sync());
-        this.resizeObserver.observe(content);
-      }
-
-      if (window.MutationObserver) {
-        this.mutationObserver = new MutationObserver(() => this.sync());
-        this.mutationObserver.observe(content, {
-          childList: true,
-          subtree: true,
-          characterData: true,
-        });
-      }
-    },
-
     sync() {
       const content = this.$refs.content;
       if (!content) {
@@ -89,7 +63,6 @@ const readMore = (props: ReadMoreProps = {}) => {
 
       this.computeCollapsedHeight(content);
 
-      // Temporarily clamp to measure overflow.
       const previousMaxHeight = content.style.maxHeight;
       const previousOverflow = content.style.overflow;
 
@@ -104,10 +77,6 @@ const readMore = (props: ReadMoreProps = {}) => {
       this.applyState();
     },
 
-    /**
-     * Apply collapsed inline styles so content is hidden before Alpine
-     * fully processes the component (prevents flash).
-     */
     applyCollapsedStyles(content: HTMLElement) {
       content.style.maxHeight = `${this.collapsedHeightPx}px`;
       content.style.overflow = 'hidden';
@@ -137,11 +106,6 @@ const readMore = (props: ReadMoreProps = {}) => {
       this.styleReadMoreButton(readMoreBtn, true);
     },
 
-    /**
-     * Position the "read more" button at the bottom-right of the last
-     * visible line, with a matching background so it overlaps text
-     * seamlessly — exactly like the user-profile bio toggle.
-     */
     styleReadMoreButton(btn: HTMLElement | undefined, collapsed: boolean) {
       if (!btn) {
         return;
@@ -167,11 +131,6 @@ const readMore = (props: ReadMoreProps = {}) => {
       }
 
       this.expanded = !this.expanded;
-    },
-
-    destroy() {
-      this.resizeObserver?.disconnect();
-      this.mutationObserver?.disconnect();
     },
   };
 };
