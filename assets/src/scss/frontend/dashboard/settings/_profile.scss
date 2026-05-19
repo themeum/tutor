@@ -13,7 +13,7 @@
   }
 
   @include tutor-breakpoint-down(md) {
-    .tutor-dashboard-container {
+    .tutor-account-container {
       .tutor-tabs-tab {
         gap: $tutor-spacing-6;
 
@@ -23,15 +23,14 @@
       }
 
       .tutor-profile-settings-tab {
-        background: $tutor-surface-base;
+        background: transparent;
         height: 100dvh;
         overflow-y: visible;
-        flex-direction: column;
         width: 100%;
         flex-direction: column;
         gap: $tutor-spacing-6;
-        background: transparent;
-        border: 0px;
+        border: none;
+        padding: $tutor-spacing-none;
         overflow: unset;
       }
 

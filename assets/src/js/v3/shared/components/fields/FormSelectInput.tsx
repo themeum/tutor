@@ -409,6 +409,7 @@ const styles = {
     align-items: center;
     height: 100%;
     color: ${colorTokens.icon.default};
+    z-index: ${zIndex.positive};
   `,
   input: ({
     hasLeftIcon,
