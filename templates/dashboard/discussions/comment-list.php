@@ -7,6 +7,15 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * These variables are inherited from the parent template file.
+ * template: /tutor/templates/dashboard/discussions.php
+ *
+ * @var string $discussion_url
+ * @var int    $item_per_page
+ * @var int    $offset
+ * @var string $order_filter
+ * @var int    $current_page
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,45 +25,71 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Lesson;
+use Tutor\Models\CourseModel;
 use TUTOR\User;
 
-$is_instructor = tutor_utils()->is_instructor( null, true );
-
-$lesson_ids = get_posts(
-	array(
-		'post_type'      => tutor()->lesson_post_type,
-		'posts_per_page' => -1,
-		'fields'         => 'ids',
-	)
-);
+$current_user_id    = get_current_user_id();
+$is_only_instructor = User::is_only_instructor( $current_user_id );
 
 $list_args = array(
-	'post__in' => $lesson_ids,
-	'status'   => 'approve',
-	'parent'   => 0,
-	'number'   => $item_per_page,
-	'offset'   => $offset,
-	'orderby'  => 'comment_date',
-	'order'    => $order_filter,
+	'post_type' => tutor()->lesson_post_type,
+	'status'    => 'approve',
+	'parent'    => 0,
+	'number'    => $item_per_page,
+	'offset'    => $offset,
+	'orderby'   => 'comment_date',
+	'order'     => $order_filter,
 );
-
-if ( User::is_student_view() ) {
-	$list_args['user_id'] = get_current_user_id();
-}
 
 $count_args = array(
-	'post__in' => $lesson_ids,
-	'status'   => 'approve',
-	'parent'   => 0,
-	'count'    => true,
+	'post_type' => tutor()->lesson_post_type,
+	'status'    => 'approve',
+	'parent'    => 0,
+	'count'     => true,
 );
 
 if ( User::is_student_view() ) {
-	$count_args['user_id'] = get_current_user_id();
+	$list_args['user_id']  = $current_user_id;
+	$count_args['user_id'] = $current_user_id;
+} elseif ( $is_only_instructor ) {
+	$courses    = CourseModel::get_courses_by_instructor( $current_user_id );
+	$course_ids = array_column( $courses, 'ID' );
+	$lesson_ids = array();
+	if ( count( $course_ids ) ) {
+		$lesson_ids = tutor_utils()->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_ids );
+	}
+
+	$list_args['tutor_instructor_comments']  = true;
+	$count_args['tutor_instructor_comments'] = true;
+
+	$list_args['tutor_instructor_lesson_ids']  = $lesson_ids;
+	$count_args['tutor_instructor_lesson_ids'] = $lesson_ids;
+
+	$list_args['tutor_instructor_user_id']  = $current_user_id;
+	$count_args['tutor_instructor_user_id'] = $current_user_id;
 }
 
+$tutor_comments_filter = function ( $pieces, $query ) {
+	global $wpdb;
+	if ( isset( $query->query_vars['tutor_instructor_comments'] ) && $query->query_vars['tutor_instructor_comments'] ) {
+		$lesson_ids = $query->query_vars['tutor_instructor_lesson_ids'];
+		$user_id    = $query->query_vars['tutor_instructor_user_id'];
+
+		$in_lessons = '1=0';
+		if ( is_array( $lesson_ids ) && count( $lesson_ids ) ) {
+			$in_lessons = "{$wpdb->comments}.comment_post_ID IN (" . implode( ',', array_map( 'intval', $lesson_ids ) ) . ')';
+		}
+
+		//phpcs:ignore -- $in_lessons is safely constructed.
+		$pieces['where'] .= $wpdb->prepare( " AND ( ($in_lessons) OR {$wpdb->comments}.user_id = %d )", $user_id );
+	}
+	return $pieces;
+};
+
+add_filter( 'comments_clauses', $tutor_comments_filter, 10, 2 );
 $lesson_comments = Lesson::get_comments( $list_args );
 $total_items     = Lesson::get_comments( $count_args );
+remove_filter( 'comments_clauses', $tutor_comments_filter, 10 );
 ?>
 
 <div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">

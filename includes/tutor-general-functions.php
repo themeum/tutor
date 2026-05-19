@@ -10,6 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Assets;
 use Tutor\Cache\FlashMessage;
 use Tutor\Components\Alert;
 use Tutor\Ecommerce\Ecommerce;
@@ -1223,14 +1224,25 @@ if ( ! function_exists( 'tutor_closeable_alert_msg' ) ) {
 	 * @return void
 	 */
 	function tutor_closeable_alert_msg( string $message, string $alert = 'success', $allowed_tags = array(), $css_class = '' ) {
-		?>
-		<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?> <?php echo esc_attr( $css_class ); ?> tutor-mb-12 tutor-alert tutor-success tutor-mb-12 tutor-d-flex tutor-align-center tutor-justify-between">
-			<span>
-				<?php echo is_array( $allowed_tags ) && count( $allowed_tags ) ? wp_kses( $message, $allowed_tags ) : esc_html( $message ); ?>
-			</span>
-			<span class="tutor-icon-times" aria-hidden="true" onclick="this.closest('div').remove()" style="cursor: pointer;"></span>
-		</div>
-		<?php
+		if ( Assets::should_load_legacy_scripts() ) {
+			?>
+			<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?> <?php echo esc_attr( $css_class ); ?> tutor-mb-12 tutor-alert tutor-success tutor-mb-12 tutor-d-flex tutor-align-center tutor-justify-between">
+				<span>
+					<?php echo is_array( $allowed_tags ) && count( $allowed_tags ) ? wp_kses( $message, $allowed_tags ) : esc_html( $message ); ?>
+				</span>
+				<span class="tutor-icon-times" aria-hidden="true" onclick="this.closest('div').remove()" style="cursor: pointer;"></span>
+			</div>
+			<?php
+		} else {
+			$message = is_array( $allowed_tags ) && count( $allowed_tags ) ? wp_kses( $message, $allowed_tags ) : esc_html( $message );
+			$alert   = 'danger' === $alert ? Alert::ERROR : $alert;
+
+			Alert::make()
+				->text( $message )
+				->variant( $alert )
+				->attr( 'class', $css_class . ' tutor-mb-5' )
+				->render();
+		}
 	}
 }
 
