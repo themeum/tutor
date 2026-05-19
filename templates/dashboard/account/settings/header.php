@@ -26,7 +26,7 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 			windowWidth: window.innerWidth,
 			isDirty: {}
 		}"
-		class="tutor-dashboard-container tutor-flex tutor-items-center tutor-justify-between">
+		class="tutor-account-container tutor-flex tutor-items-center tutor-justify-between">
 		<div 
 			class="tutor-profile-header-left tutor-flex tutor-items-center"
 			@resize.window="windowWidth = window.innerWidth"
