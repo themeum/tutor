@@ -239,8 +239,8 @@ class CartController {
 			);
 		}
 
-		$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
-		if ( ! $can_buy ) {
+		$can_buy = apply_filters( 'tutor_can_purchase_course', true, $course_id );
+		if ( is_wp_error( $can_buy ) ) {
 			$this->json_response(
 				__( 'Cannot add to cart, enrollment is currently paused.', 'tutor' ),
 				null,

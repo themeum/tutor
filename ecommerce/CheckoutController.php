@@ -656,10 +656,9 @@ class CheckoutController {
 					array_push( $errors, sprintf( __( '“%s” is no longer available for purchase.', 'tutor' ), get_the_title( $object_id ) ?? '' ) );
 				}
 
-				$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $object_id );
-				if ( ! $can_buy ) {
-					// translators: %s is the course title.
-					array_push( $errors, sprintf( __( 'Enrollment for %s is currently paused. Please remove it from your cart to proceed.', 'tutor' ), get_the_title( $object_id ) ?? '' ) );
+				$can_buy = apply_filters( 'tutor_can_purchase_course', true, $object_id );
+				if ( is_wp_error( $can_buy ) ) {
+					array_push( $errors, $can_buy->get_error_message() );
 				}
 			}
 		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
@@ -1055,9 +1054,9 @@ class CheckoutController {
 		$course_id = Input::get( 'course_id', 0, Input::TYPE_INT );
 
 		if ( $course_id ) {
-			$can_buy    = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
+			$can_buy    = apply_filters( 'tutor_can_purchase_course', true, $course_id );
 			$course_url = get_post_permalink( $course_id );
-			if ( ! $can_buy ) {
+			if ( is_wp_error( $can_buy ) ) {
 				wp_safe_redirect( tutor_utils()->get_nocache_url( $course_url ) );
 				exit;
 			}
