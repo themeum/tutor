@@ -64,10 +64,15 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'courses/completed-courses' );
 	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'courses/active-courses' );
 
-	$time_spent = Course::get_total_course_duration( $enrolled_courses_ids );
-	$grid_col   = $time_spent['minutes'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
+	// Time spent calculation.
+	$time_spent            = Course::get_total_course_duration( $enrolled_courses_ids );
+	$is_hour_format        = $time_spent['hours'] > 0;
+	$has_time_spent        = $is_hour_format || $time_spent['minutes'] > 0;
+	$time_spent_value      = $is_hour_format ? $time_spent['hours'] : $time_spent['minutes'];
+	$time_spent_unit       = $is_hour_format ? 'h+' : 'm+';
+	$time_spent_unit_modal = $is_hour_format ? 'hours' : 'minutes';
 	?>
-	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 <?php echo esc_attr( $grid_col ); ?>">
+	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 tutor-grid-cols-4">
 		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-stat-card tutor-stat-card-enrolled">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
@@ -115,7 +120,6 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				</div>
 			</div>
 		</a>
-		<?php if ( $time_spent['minutes'] > 0 ) : ?>
 		<div 
 			class="tutor-stat-card tutor-stat-card-time-spent"
 			@click="TutorCore.modal.showModal('tutor-time-spent-modal')"
@@ -132,19 +136,22 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<div class="tutor-stat-card-value">
 					<?php
 					echo esc_html(
-						sprintf(
-						/* translators: 1: total hour spent */
-							__( '%1$d h+', 'tutor' ),
-							$time_spent['hours']
+						$has_time_spent
+						? sprintf(
+							/* translators: 1: total time spent 2: Unit. */
+							__( '%1$d %2$s', 'tutor' ),
+							$time_spent_value,
+							$time_spent_unit
 						)
+						: '0'
 					);
 					?>
 				</div>
 			</div>
 		</div>
-		<?php endif; ?>
 	</div>
 
+	<?php if ( $time_spent['minutes'] > 0 ) : ?>
 	<div x-data="tutorModal({ id: 'tutor-time-spent-modal' })" x-cloak>
 		<template x-teleport="body">
 			<div x-bind="getModalBindings()">
@@ -168,22 +175,23 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							<?php
 							echo esc_html(
 								sprintf(
-								/* translators: 1: total hour spent */
-									__( '%1$d+ hours', 'tutor' ),
-									$time_spent['hours']
+									/* translators: 1: total time spent 2: Unit. */
+									__( '%1$d+ %2$s', 'tutor' ),
+									$time_spent_value,
+									$time_spent_unit_modal
 								)
 							);
 							?>
 						</h2>
 						<p class="tutor-p2 tutor-mb-7">
-							<?php if ( $time_spent['minutes'] > 0 ) : ?>
-								<?php echo esc_html__( "That's", 'tutor' ); ?> 
+							<?php echo esc_html__( "That's", 'tutor' ); ?> 
+							<?php if ( $is_hour_format && $time_spent['minutes'] > 0 ) : ?>
 							<span class="tutor-font-medium">
 								<?php
 								echo esc_html(
 									sprintf(
 									/* translators: 1: total minutes spent */
-										__( '%1$d+ minutes', 'tutor' ),
+										__( '%1$d+ minutes, and ', 'tutor' ),
 										$time_spent['minutes']
 									)
 								);
@@ -197,7 +205,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 								echo esc_html(
 									sprintf(
 									/* translators: 1: total seconds spent */
-										__( ', and %1$d+ seconds!', 'tutor' ),
+										__( '%1$d+ seconds!', 'tutor' ),
 										$time_spent['seconds']
 									)
 								);
@@ -220,6 +228,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			</div>
 		</template>
 	</div>
+	<?php endif; ?>
 </div>
 
 <?php
@@ -307,6 +316,6 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2, 
 		</div>
 	</div>
 	<?php
-endif;
+	endif;
 	do_action( 'tutor_after_continue_learning_section' );
 ?>
