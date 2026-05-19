@@ -231,18 +231,18 @@ class CartController {
 			);
 		}
 
-		$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
-		if ( ! $can_buy ) {
+		if ( 'publish' !== get_post_status( $course_id ) ) {
 			$this->json_response(
-				__( 'Cannot add to cart, enrollment is currently paused.', 'tutor' ),
+				__( 'Cannot add to cart, course is not published.', 'tutor' ),
 				null,
 				HttpHelper::STATUS_BAD_REQUEST
 			);
 		}
 
-		if ( 'publish' !== get_post_status( $course_id ) ) {
+		$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
+		if ( ! $can_buy ) {
 			$this->json_response(
-				__( 'Cannot add to cart, course is not published.', 'tutor' ),
+				__( 'Cannot add to cart, enrollment is currently paused.', 'tutor' ),
 				null,
 				HttpHelper::STATUS_BAD_REQUEST
 			);

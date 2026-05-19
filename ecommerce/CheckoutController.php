@@ -624,38 +624,6 @@ class CheckoutController {
 			}
 		}
 
-		if ( isset( $request['object_ids'] ) ) {
-			$course_ids = explode( ',', $request['object_ids'] );
-
-			if ( tutor_utils()->count( $course_ids ) ) {
-				foreach ( $course_ids as $course_id ) {
-					$status = get_post_status( $course_id );
-					if ( 'publish' !== $status ) {
-						array_push(
-							$errors,
-							sprintf(
-								// Translators: %s course name.
-								__( '“%s” is no longer available for purchase.', 'tutor' ),
-								get_the_title( $course_id ) ?? ''
-							)
-						);
-					}
-
-					$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
-					if ( ! $can_buy ) {
-						array_push(
-							$errors,
-							sprintf(
-							// Translators: %s course name.
-								__( 'Enrollment for %s is currently paused. Please remove it from your cart to proceed.', 'tutor' ),
-								get_the_title( $course_id ) ?? ''
-							),
-						);
-					}
-				}
-			}
-		}
-
 		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $_POST );
 		if ( is_wp_error( $validate_consent ) ) {
 			array_push( $errors, $validate_consent->get_error_message() );
@@ -680,6 +648,30 @@ class CheckoutController {
 				if ( ! in_array( get_post_type( $object_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
 					// translators: %s is the course title.
 					array_push( $errors, sprintf( __( 'Invalid item: %s', 'tutor' ), get_the_title( $object_id ) ) );
+				}
+
+				$status = get_post_status( $object_id );
+				if ( 'publish' !== $status ) {
+					array_push(
+						$errors,
+						sprintf(
+							// Translators: %s course name.
+							__( '“%s” is no longer available for purchase.', 'tutor' ),
+							get_the_title( $object_id ) ?? ''
+						)
+					);
+				}
+
+				$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $object_id );
+				if ( ! $can_buy ) {
+					array_push(
+						$errors,
+						sprintf(
+						// Translators: %s course name.
+							__( 'Enrollment for %s is currently paused. Please remove it from your cart to proceed.', 'tutor' ),
+							get_the_title( $object_id ) ?? ''
+						),
+					);
 				}
 			}
 		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
