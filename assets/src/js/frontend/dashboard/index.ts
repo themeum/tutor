@@ -95,7 +95,7 @@ const dashboardRoutes: Record<string, TutorRouteConfig<DashboardRouteModule>> = 
       initializeDashboardRoute: initializeAnnouncements,
     };
   }),
-  'quiz-attempts': createRouteConfig(withBasePack('core-form-controls'), async () => {
+  'quiz-attempts': createRouteConfig(withBasePack('core-form-controls', 'core-media-editor'), async () => {
     const { initializeQuizAttempts } = await import(
       /* webpackChunkName: "tutor-dashboard-quiz-attempts" */ './pages/quiz-attempts'
     );
@@ -103,7 +103,7 @@ const dashboardRoutes: Record<string, TutorRouteConfig<DashboardRouteModule>> = 
       initializeDashboardRoute: initializeQuizAttempts,
     };
   }),
-  discussions: createRouteConfig(withBasePack(), async () => {
+  discussions: createRouteConfig(withBasePack('core-media-editor'), async () => {
     const { initializeDiscussions } = await import(
       /* webpackChunkName: "tutor-dashboard-discussions" */ './pages/discussions'
     );
