@@ -1,6 +1,7 @@
 import { type TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 import { accordionMeta } from '@Core/ts/components/accordion';
 import { buttonMeta } from '@Core/ts/components/button';
+import { copyToClipboardMeta } from '@Core/ts/components/copy-to-clipboard';
 import { formMeta } from '@Core/ts/components/form';
 import { iconMeta } from '@Core/ts/components/icon';
 import { modalMeta } from '@Core/ts/components/modal';
@@ -32,6 +33,7 @@ export const registerCoreBasePack = (registry: typeof TutorComponentRegistry): v
       toastMeta,
       passwordInputMeta,
       previewTriggerMeta,
+      copyToClipboardMeta,
     ],
     services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta, preferenceServiceMeta],
   });

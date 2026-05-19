@@ -236,7 +236,6 @@ const createConfig = (env, options) => {
           extractComments: false,
           minimizerOptions: {
             compress: {
-              drop_console: true,
               drop_debugger: true,
               passes: 2,
               pure_funcs: ['console.log', 'console.info'],

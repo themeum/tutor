@@ -48,5 +48,5 @@ export const registerRoutePreload = <TModule>({
 
   const corePackPreload = requestCorePacks(routeConfig?.packs || defaultPacks);
 
-  return chainRoutePreload(corePackPreload, preloadRoute());
+  return chainRoutePreload(corePackPreload, preloadRoute()).catch(() => undefined);
 };
