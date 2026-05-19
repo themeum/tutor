@@ -13,6 +13,10 @@
   background-color: $tutor-surface-l1;
   @include tutor-transition(background-color);
 
+  @include tutor-breakpoint-down(sm) {
+    padding: $tutor-spacing-5;
+  }
+
   &[href],
   &[onclick],
   &[\@click],

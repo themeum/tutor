@@ -37,6 +37,10 @@
   }
 }
 
+.tutor-stat-card-value {
+  @include tutor-text(h3);
+}
+
 .tutor-dashboard-home {
   &-sort {
     .tutor-input-field .tutor-label {
