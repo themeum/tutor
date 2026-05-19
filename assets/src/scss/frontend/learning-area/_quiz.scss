@@ -1088,6 +1088,7 @@ $tutor-quiz-content-bottom-offset: calc(
     color: $tutor-text-brand;
     z-index: $tutor-z-positive;
     font-variant-numeric: tabular-nums;
+    text-box-trim: trim-both;
   }
 
   &-result-modal {

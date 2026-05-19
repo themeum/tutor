@@ -1912,7 +1912,7 @@ class Quiz {
 					foreach ( $attempts_list as $index => $attempt ) {
 						$attempt_number = $attempts_count - $index;
 						?>
-						<div class="tutor-quiz-attempts-item-wrapper">
+						<div x-data="{ expanded: false }" class="tutor-quiz-attempts-item-wrapper">
 							<?php
 							tutor_load_template(
 								'shared.components.student-quiz-attempt-row',
