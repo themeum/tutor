@@ -652,26 +652,14 @@ class CheckoutController {
 
 				$status = get_post_status( $object_id );
 				if ( 'publish' !== $status ) {
-					array_push(
-						$errors,
-						sprintf(
-							// Translators: %s course name.
-							__( '“%s” is no longer available for purchase.', 'tutor' ),
-							get_the_title( $object_id ) ?? ''
-						)
-					);
+					// translators: %s is the course title.
+					array_push( $errors, sprintf( __( '“%s” is no longer available for purchase.', 'tutor' ), get_the_title( $object_id ) ?? '' ) );
 				}
 
 				$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $object_id );
 				if ( ! $can_buy ) {
-					array_push(
-						$errors,
-						sprintf(
-						// Translators: %s course name.
-							__( 'Enrollment for %s is currently paused. Please remove it from your cart to proceed.', 'tutor' ),
-							get_the_title( $object_id ) ?? ''
-						),
-					);
+					// translators: %s is the course title.
+					array_push( $errors, sprintf( __( 'Enrollment for %s is currently paused. Please remove it from your cart to proceed.', 'tutor' ), get_the_title( $object_id ) ?? '' ) );
 				}
 			}
 		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
