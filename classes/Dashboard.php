@@ -10,11 +10,10 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\UrlHelper;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 /**
  * Dashboard Class
  *
@@ -45,12 +44,14 @@ class Dashboard {
 	 * Constructor
 	 *
 	 * @since 1.3.4
+	 *
 	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'tutor_load_template_after', array( $this, 'tutor_load_template_after' ), 10, 2 );
 		add_filter( 'should_tutor_load_template', array( $this, 'should_tutor_load_template' ), 10, 2 );
 		add_action( 'template_redirect', array( $this, 'redirect_old_dashboard_pages' ) );
+		add_filter( 'tutor_dashboard_back_url', array( $this, 'filter_dashboard_back_url' ) );
 	}
 
 	/**
@@ -263,5 +264,28 @@ class Dashboard {
 			return false;
 		}
 		return $bool;
+	}
+
+	/**
+	 * Filter dashboard back URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $url URL.
+	 *
+	 * @return string
+	 */
+	public function filter_dashboard_back_url( string $url ): string {
+		if ( ! Input::has( 'back_url', Input::GET_REQUEST ) ) {
+			return $url;
+		}
+
+		$back_url = Input::get( 'back_url', '' );
+		$decoded  = urldecode( $back_url );
+		if ( ! str_starts_with( $decoded, home_url() ) ) {
+			return $url;
+		}
+
+		return esc_url_raw( $decoded );
 	}
 }

@@ -15,6 +15,7 @@ use Tutor\Components\Constants\Size;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Input;
 
 $user_id          = Input::get( 'student_id', get_current_user_id(), Input::TYPE_INT );
@@ -41,7 +42,7 @@ foreach ( $social_fields as $meta_key => $field ) {
 	<div class="tutor-profile-card-header" style="background-image: url(<?php echo esc_attr( $cover_photo_url ); ?>);">
 		<?php Avatar::make()->user( $user_id )->size( Size::SIZE_104 )->render(); ?>
 		<?php if ( tutor_utils()->is_dashboard_page( 'account/profile' ) ) : ?>
-		<a href="<?php echo esc_url( $edit_profile_url ); ?>" class="tutor-edit-profile-btn">
+		<a href="<?php echo esc_url( UrlHelper::add_query_params( $edit_profile_url, array( 'back_url' => UrlHelper::current() ) ) ); ?>" class="tutor-edit-profile-btn">
 			<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
 			<span><?php esc_html_e( 'Edit Profile', 'tutor' ); ?></span>
 		</a>
