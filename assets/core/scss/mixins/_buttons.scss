@@ -23,7 +23,7 @@
   // Inherited “kids mode” elevation + per-variant border shadow.
   --tutor-button-border-shadow: none;
   box-shadow: $tutor-button-border-shadow;
-  @include tutor-transition();
+  @include tutor-transition((color, background-color));
 
   &:hover:not(:disabled):not(.disabled),
   &:focus:not(:disabled):not(.disabled) {
