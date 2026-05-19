@@ -8,8 +8,8 @@ import { useFormContext } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import TextInput from '@TutorShared/atoms/TextInput';
-import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import Tooltip from '@TutorShared/atoms/Tooltip';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -141,7 +141,12 @@ const formatCoordinateText = (pt: CoordinatePoint): string => `${pt.x},${pt.y}`;
 
 /** i18n message shown when a stored point lies outside the current axis range. */
 const getCoordinatesRangeErrorMessage = (axisRange: number): string =>
-  sprintf(__('Range is from -%d to %d', __TUTOR_TEXT_DOMAIN__), axisRange, axisRange);
+  sprintf(
+    // translators: %1$d is the minimum axis range, %2$d is the maximum axis range
+    __('Range is from -%1$d to %2$d', __TUTOR_TEXT_DOMAIN__),
+    axisRange,
+    axisRange,
+  );
 
 /** Absolute URL for overlay marker SVGs shipped with Tutor assets. */
 const graphMarkerAssetUrl = (filename: 'graph-marker-hover' | 'graph-marker-selected'): string =>
