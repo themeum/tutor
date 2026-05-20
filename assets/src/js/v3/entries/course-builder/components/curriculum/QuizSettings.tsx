@@ -106,8 +106,9 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const hasQuestionLimit = form.watch('quiz_option.limit_questions_to_answer');
   const hasTimeLimit = form.watch('quiz_option.enable_time_limit');
   const questionsOrder = form.watch('quiz_option.questions_order');
-  const availableQuestionInPool =
-    Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount) || questionsCount;
+  const availableQuestionInPool = hasQuestionLimit
+    ? Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount) || questionsCount
+    : questionsCount;
   const usedQuestionCountPercentage = (availableQuestionInPool / questionsCount) * 100;
   const orderedQuestions = (() => {
     if (questionsOrder === 'rand') {
