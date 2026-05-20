@@ -13,11 +13,12 @@
   &-fill {
     --tutor-progress-width: 0%;
     height: 100%;
-    width: var(--tutor-progress-width);
+    width: 100%;
+    transform: translateX(calc(var(--tutor-progress-width) - 100%));
     background-color: $tutor-actions-success-primary;
     border-radius: inherit;
     position: relative;
-    @include tutor-transition(width, 0.3s);
+    @include tutor-transition(transform, 0.3s);
 
     &::before {
       content: '';
@@ -84,9 +85,9 @@
 
 @keyframes tutor-progress-fill-animate {
   from {
-    width: 0;
+    transform: translateX(-100%);
   }
   to {
-    width: var(--tutor-progress-width);
+    transform: translateX(calc(var(--tutor-progress-width) - 100%));
   }
 }
