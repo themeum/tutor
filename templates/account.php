@@ -11,7 +11,6 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Dashboard;
-use Tutor\Helpers\UrlHelper;
 
 ?>
 <!DOCTYPE html>
@@ -32,8 +31,9 @@ $account_pages = Dashboard::get_account_pages();
 $page_data     = $account_pages[ $subpage ] ?? array();
 $page_template = $page_data['template'] ?? '';
 
-$back_url  = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_utils()->tutor_dashboard_url() ) );
-$close_url = tutor_utils()->tutor_dashboard_url();
+$dashboard_url = tutor_utils()->tutor_dashboard_url();
+$back_url      = apply_filters( 'tutor_dashboard_back_url', $dashboard_url );
+$close_url     = $dashboard_url;
 ?>
 <div class="tutor-account-page-wrapper">
 	<?php require_once $page_template; ?>
