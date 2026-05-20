@@ -160,20 +160,18 @@ $tutor-quiz-content-bottom-offset: calc(
       width: 100%;
     }
 
-    &-animate {
-      svg path:nth-child(2) {
-        @include tutor-spin;
-        transform-origin: center;
-      }
-    }
   }
 
   &-timer-frame {
-    @include tutor-flex(row, center, center);
+    @include tutor-flex(row, center, flex-start);
     position: relative;
-    display: inline-flex;
+    display: inline-grid;
     flex-shrink: 0;
-    @include tutor-transition(color);
+    transition:
+      color 0.2s ease,
+      width 0.25s ease,
+      min-width 0.25s ease;
+    min-height: 33px;
 
     &.is-initial {
       color: $tutor-text-brand;
@@ -191,21 +189,93 @@ $tutor-quiz-content-bottom-offset: calc(
       animation: tutor-quiz-timer-shake 0.5s ease-in-out;
     }
 
-    svg {
-      display: block;
+    &[data-format='compact'] {
+      --tutor-quiz-timer-padding-inline-start: #{$tutor-spacing-4};
+      --tutor-quiz-timer-padding-inline-end: #{$tutor-spacing-4};
     }
+
+    &[data-format='hours'] {
+      --tutor-quiz-timer-padding-inline-start: #{$tutor-spacing-4};
+      --tutor-quiz-timer-padding-inline-end: #{$tutor-spacing-5};
+    }
+
+    &[data-format='days'] {
+      --tutor-quiz-timer-padding-inline-start: #{$tutor-spacing-4};
+      --tutor-quiz-timer-padding-inline-end: #{$tutor-spacing-5};
+    }
+  }
+
+  &-timer-frame-shape {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  &-timer-frame-tabs {
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
+    height: 4px;
+    pointer-events: none;
+  }
+
+  &-timer-frame-tab {
+    position: absolute;
+    top: 0;
+    width: 10px;
+    height: 4px;
+    border-radius: 2px 2px 0 0;
+    background: currentColor;
+    opacity: 0.2;
+  }
+
+  &-timer-frame-tab-start {
+    left: 13px;
+  }
+
+  &-timer-frame-tab-end {
+    right: 13px;
+  }
+
+  &-timer-frame-body {
+    position: absolute;
+    inset-inline: 0;
+    top: 5px;
+    bottom: 0;
+  }
+
+  &-timer-frame-body-fill,
+  &-timer-frame-body-stroke {
+    position: absolute;
+    inset: 0;
+    @include tutor-card-radius(md);
+  }
+
+  &-timer-frame-body-fill {
+    background: currentColor;
+    opacity: 0.06;
+  }
+
+  &-timer-frame-body-stroke {
+    border: 1px solid currentColor;
+    opacity: 0.4;
   }
 
   &-timer-text {
     @include tutor-typography('h5', 'semibold');
     @include tutor-flex-center;
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: 27px;
+    grid-area: 1 / 1;
+    position: relative;
+    min-height: 33px;
+    margin-top: 4px;
+    padding-inline-start: var(--tutor-quiz-timer-padding-inline-start, #{$tutor-spacing-4});
+    padding-inline-end: var(--tutor-quiz-timer-padding-inline-end, #{$tutor-spacing-4});
     line-height: 1;
     font-variant-numeric: tabular-nums;
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
     @include tutor-transition(color);
+    z-index: $tutor-z-positive;
 
     &.is-initial {
       color: $tutor-text-brand;
@@ -220,9 +290,25 @@ $tutor-quiz-content-bottom-offset: calc(
     }
   }
 
+  &-timer-text-sizer {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   &-timer-separator {
     line-height: 1;
     margin-bottom: $tutor-spacing-1;
+  }
+
+  &-timer-suffix {
+    line-height: 1;
+    margin-inline-start: 1px;
+    margin-bottom: $tutor-spacing-1;
+  }
+
+  &-timer-spacer {
+    width: $tutor-spacing-2;
+    flex: 0 0 $tutor-spacing-2;
   }
 
   &-timer-digit-wrapper {
@@ -631,14 +717,15 @@ $tutor-quiz-content-bottom-offset: calc(
     margin-inline-start: auto;
   }
 
-  &-answer-next-btn,
-  &-previous-btn,
-  &-submit-btn {
+  &-answer-next-btn.tutor-btn,
+  &-previous-btn.tutor-btn,
+  &-submit-btn.tutor-btn {
     padding-inline: $tutor-spacing-9;
 
-    &:disabled {
+    &:disabled,
+    &.disabled {
       background-color: $tutor-button-disabled;
-      border-color: $tutor-button-disabled;
+      --tutor-button-border-shadow: #{$tutor-button-outline-border-shadow-disabled};
       color: $tutor-text-subdued;
       opacity: 1;
       cursor: default;

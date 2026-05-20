@@ -8,6 +8,7 @@ import { modalMeta } from '@Core/ts/components/modal';
 import { passwordInputMeta } from '@Core/ts/components/password-input';
 import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
+import { readMoreMeta } from '@Core/ts/components/read-more';
 import { staticsMeta } from '@Core/ts/components/statics';
 import { tabsMeta } from '@Core/ts/components/tabs';
 import { toastMeta } from '@Core/ts/components/toast';
@@ -31,6 +32,7 @@ export const registerCoreBasePack = (registry: typeof TutorComponentRegistry): v
       formMeta,
       tooltipMeta,
       toastMeta,
+      readMoreMeta,
       passwordInputMeta,
       previewTriggerMeta,
       copyToClipboardMeta,

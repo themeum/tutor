@@ -8,6 +8,12 @@ const QUIZ_TIMER_CLASSES = {
 
 type QuizExpireAction = 'auto_submit' | 'auto_abandon' | 'autosubmit';
 type TimerState = 'initial' | 'warning' | 'critical';
+type TimerFormat = 'compact' | 'hours' | 'days';
+type TimerDisplayToken = {
+  key: string;
+  type: 'digit' | 'separator' | 'suffix' | 'spacer';
+  value: string;
+};
 
 interface QuizTimerConfig {
   duration: number;
@@ -31,6 +37,7 @@ const quizTimer = (config: QuizTimerConfig) => {
     remaining: total,
     hasLimit,
     expired: false,
+    isReady: false,
     expiresAction,
     formId: config.formId ?? '',
     timer: null as number | null,
@@ -41,6 +48,7 @@ const quizTimer = (config: QuizTimerConfig) => {
 
     init() {
       if (!this.hasLimit) {
+        this.isReady = true;
         return;
       }
 
@@ -54,10 +62,12 @@ const quizTimer = (config: QuizTimerConfig) => {
       }) as EventListener);
 
       if (this.remaining <= 0) {
+        this.isReady = true;
         this.handleExpire();
         return;
       }
 
+      this.isReady = true;
       this.start();
     },
 
@@ -146,11 +156,69 @@ const quizTimer = (config: QuizTimerConfig) => {
     },
 
     get minutes() {
-      return String(Math.floor(this.remaining / 60)).padStart(2, '0');
+      if (this.days > 0 || this.hours > 0) {
+        return Math.floor((this.remaining % 3600) / 60);
+      }
+
+      return Math.floor(this.remaining / 60);
+    },
+
+    get hours() {
+      if (this.days > 0) {
+        return Math.floor((this.remaining % 86400) / 3600);
+      }
+
+      return Math.floor(this.remaining / 3600);
+    },
+
+    get days() {
+      return Math.floor(this.remaining / 86400);
     },
 
     get seconds() {
-      return String(this.remaining % 60).padStart(2, '0');
+      return this.remaining % 60;
+    },
+
+    get timerFormat(): TimerFormat {
+      if (this.days > 0) {
+        return 'days';
+      }
+
+      if (this.hours > 0) {
+        return 'hours';
+      }
+
+      return 'compact';
+    },
+
+    get displayTokens(): TimerDisplayToken[] {
+      const tokens: TimerDisplayToken[] = [];
+      const pushDigits = (prefix: string, value: string) => {
+        value.split('').forEach((char, index) => {
+          tokens.push({
+            key: `${prefix}-${index}`,
+            type: 'digit',
+            value: char,
+          });
+        });
+      };
+
+      if (this.timerFormat === 'days') {
+        pushDigits('days', String(this.days));
+        tokens.push({ key: 'days-suffix', type: 'suffix', value: 'd' });
+        tokens.push({ key: 'days-spacer', type: 'spacer', value: ' ' });
+      }
+
+      if (this.timerFormat === 'days' || this.timerFormat === 'hours') {
+        pushDigits('hours', String(this.hours).padStart(2, '0'));
+        tokens.push({ key: 'hours-separator', type: 'separator', value: ':' });
+      }
+
+      pushDigits('minutes', String(this.minutes).padStart(2, '0'));
+      tokens.push({ key: 'minutes-separator', type: 'separator', value: ':' });
+      pushDigits('seconds', String(this.seconds).padStart(2, '0'));
+
+      return tokens;
     },
 
     get progress() {
