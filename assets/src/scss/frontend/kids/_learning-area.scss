@@ -161,28 +161,23 @@
 
   .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-attempt-image-wrap {
     .tutor-puzzle-attempt-image {
-      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-md, sm, false);
-      border: 1px solid $tutor-border-idle;
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-md, sm);
     }
 
-    .tutor-quiz-review-item[data-option] {
-      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-md, sm, false);
-      border: 1px solid $tutor-border-idle;
+    .tutor-quiz-review-item[data-option='neutral'] {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-md, sm);
+    }
 
-      &[data-option='correct'] {
-        border-color: $tutor-border-success;
-        box-shadow: 0 3px 0 0 $tutor-border-success;
-      }
+    .tutor-quiz-review-item[data-option='correct'] {
+      @include tutor-kids-shadow(false, $tutor-border-success, $tutor-radius-md, sm);
+    }
 
-      &[data-option='incorrect'] {
-        border-color: $tutor-border-error;
-        box-shadow: 0 3px 0 0 $tutor-border-error;
-      }
+    .tutor-quiz-review-item[data-option='incorrect'] {
+      @include tutor-kids-shadow(false, $tutor-border-error, $tutor-radius-md, sm);
+    }
 
-      &[data-option='pending'] {
-        border-color: $tutor-border-warning-tertiary;
-        box-shadow: 0 3px 0 0 $tutor-border-warning-tertiary;
-      }
+    .tutor-quiz-review-item[data-option='pending'] {
+      @include tutor-kids-shadow(false, $tutor-border-warning-tertiary, $tutor-radius-md, sm);
     }
   }
 
