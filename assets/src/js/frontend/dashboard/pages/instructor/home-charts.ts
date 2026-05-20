@@ -614,6 +614,9 @@ export const overviewChart = (data: OverviewChartProps) => ({
             filter: (tooltipItem) => !isEndPoint(tooltipItem.dataIndex, tooltipItem.dataset.data.length),
             external: (context) => handleTooltip(context, colors),
             callbacks: {
+              title: (items) => {
+                return data.labels[items[0].dataIndex] || '';
+              },
               label: (context) => {
                 const value = context.parsed.y;
                 if (value === null) {

@@ -1277,9 +1277,7 @@ class OrderModel {
 		$user_clause       = '';
 		$date_range_clause = '';
 		$period_clause     = '';
-		$course_clause     = '';
-		$commission_clause = '';
-		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+		$group_clause      = ' GROUP BY DATE(order_meta.created_at_gmt) ';
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
@@ -1287,14 +1285,14 @@ class OrderModel {
 				$start_date,
 				$end_date
 			);
-			$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+			$group_clause      = ' GROUP BY DATE(order_meta.created_at_gmt) ';
 
 		} else {
-			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+			$period_clause = QueryHelper::get_period_clause( 'order_meta.created_at_gmt', $period );
 		}
 
 		if ( 'today' !== $period ) {
-			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+			$group_clause = ' GROUP BY MONTH(order_meta.created_at_gmt) ';
 		}
 
 		if ( $course_id ) {
@@ -1302,11 +1300,18 @@ class OrderModel {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 			}
 		} elseif ( $user_id ) {
-				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 		}
 
 		// Refund query logic remains the same.
-		$item_table = $wpdb->prefix . 'tutor_order_items';
+		$item_table           = $wpdb->prefix . 'tutor_order_items';
+		$order_meta_table     = $wpdb->prefix . 'tutor_ordermeta';
+		$order_meta_in_clause = QueryHelper::prepare_in_clause(
+			array(
+				OrderActivitiesModel::META_KEY_REFUND,
+				OrderActivitiesModel::META_KEY_PARTIALLY_REFUND,
+			)
+		);
 
 		if ( $course_id ) {
 			//phpcs:disable
@@ -1325,7 +1330,8 @@ class OrderModel {
 									END / o.total_price
 								)
 							), 2
-						) AS total
+						) AS total,
+						DATE_FORMAT(order_meta.created_at_gmt, '%b') AS label_name
 					FROM 
 						{$this->table_name} o
 					JOIN 
@@ -1334,15 +1340,17 @@ class OrderModel {
 						{$wpdb->posts} c
 						ON c.ID = i.item_id
 						AND c.post_type = %s
+					JOIN {$order_meta_table} AS order_meta
+						ON order_meta.order_id = o.id
+						AND order_meta.meta_key IN ({$order_meta_in_clause})
 					WHERE 
 						o.refund_amount > 0
 						AND i.item_id = %d
 						{$user_clause}
 						{$period_clause}
 						{$date_range_clause}
-					{$group_clause},
-					i.item_id
-					",
+					{$group_clause}
+					ORDER BY order_meta.created_at_gmt ASC",
 					tutor()->course_post_type,
 					$course_id
 				)
@@ -1351,7 +1359,7 @@ class OrderModel {
 		} else {
 			$earning_table = $wpdb->tutor_earnings;
 			if ( $user_id ) {
-				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} LIMIT 1)";
+				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} WHERE user_id = {$user_id} LIMIT 1)";
 			}
 
 			//phpcs:disable
@@ -1359,18 +1367,19 @@ class OrderModel {
 				$wpdb->prepare(
 					"SELECT 
 					COALESCE(SUM(o.refund_amount), 0) AS total,
-					created_at_gmt AS date_format,
-					DATE_FORMAT(o.created_at_gmt, '%b') AS label_name
+					order_meta.created_at_gmt AS date_format,
+					DATE_FORMAT(order_meta.created_at_gmt, '%b') AS label_name
 					FROM {$this->table_name} AS o
-					-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-					-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+					LEFT JOIN {$order_meta_table} AS order_meta
+						ON order_meta.order_id = o.id
+						AND order_meta.meta_key IN ({$order_meta_in_clause})
 					WHERE 1 = %d
 					AND o.refund_amount > %d
 					{$user_clause}
 					{$period_clause}
 					{$date_range_clause}
-					{$group_clause},
-					o.id",
+					{$group_clause}
+					ORDER BY order_meta.created_at_gmt ASC",
 					1,
 					0
 				)
@@ -1385,14 +1394,14 @@ class OrderModel {
 
 			// Update total amount from list.
 			$split_refund  = (object) tutor_split_amounts( $refund->total );
-			$refund->total = User::is_admin() ? $split_refund->admin : $split_refund->instructor;
+			$refund->total = User::is_admin() && is_admin() ? $split_refund->admin : $split_refund->instructor;
 		}
 
 		$split_total_refund = (object) tutor_split_amounts( $total_refund );
 
 		$response = array(
 			'refunds'       => $refunds,
-			'total_refunds' => User::is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
+			'total_refunds' => User::is_admin() && is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
 		);
 
 		return $response;
