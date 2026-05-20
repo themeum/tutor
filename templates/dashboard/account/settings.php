@@ -121,7 +121,7 @@ $settings_tab_data = array_values(
 	>
 		<?php tutor_load_template( 'dashboard.account.settings.header', array( 'back_url' => $back_url ) ); ?>
 
-		<div class="tutor-dashboard-container">
+		<div class="tutor-account-container">
 			<div 
 				x-init="$watch('$store.windowWidth', () => {
 					if (window.innerWidth >= 768 && activeTab === 'none') {
@@ -140,7 +140,7 @@ $settings_tab_data = array_values(
 				x-cloak
 				class="tutor-gap-8"
 			>
-				<div class="tutor-flex tutor-gap-8 tutor-mb-9">
+				<div class="tutor-flex tutor-gap-8 tutor-my-9 tutor-sm-my-6">
 					<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab tutor-p-5">
 						<template x-for="tab in tabs" :key="tab.id">
 							<button

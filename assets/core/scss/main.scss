@@ -100,11 +100,8 @@ body {
 [data-tutor-motion='reduce'] *::before,
 [data-tutor-motion='reduce'] *::after {
   animation: none !important;
+  transition: none !important;
   scroll-behavior: auto !important;
-}
-
-[data-tutor-motion='reduce'] * {
-  transition-duration: 0.1s !important;
 }
 
 [data-tutor-motion='reduce']::view-transition-new(root),
@@ -117,11 +114,8 @@ body {
   [data-tutor-motion='auto'] *::before,
   [data-tutor-motion='auto'] *::after {
     animation: none !important;
+    transition: none !important;
     scroll-behavior: auto !important;
-  }
-
-  [data-tutor-motion='auto'] * {
-    transition-duration: 0.1s !important;
   }
 
   [data-tutor-motion='auto']::view-transition-new(root),

@@ -113,17 +113,13 @@ $total_wishlists_count = count( tutor_utils()->get_wishlist() );
 		?>
 	<?php endif; ?>
 
-	<!-- Wishlist pagination  -->
-	<?php if ( $total_wishlists_count > $wishlist_per_page ) : ?>
-	<div class="tutor-p-6 tutor-border-t">
-		<?php
-			Pagination::make()
-			->current( $current_page )
-			->total( $total_wishlists_count )
-			->limit( $wishlist_per_page )
-			->render();
-		?>
-	</div>
-	<?php endif; ?>
+	<?php
+		Pagination::make()
+		->current( $current_page )
+		->total( $total_wishlists_count )
+		->limit( $wishlist_per_page )
+		->attr( 'class', 'tutor-mt-6 tutor-sm-mt-5' )
+		->render();
+	?>
 
 </div>

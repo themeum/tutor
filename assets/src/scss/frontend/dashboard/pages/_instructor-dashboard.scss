@@ -37,6 +37,10 @@
   }
 }
 
+.tutor-stat-card-value {
+  @include tutor-text(h3);
+}
+
 .tutor-dashboard-home {
   &-sort {
     .tutor-input-field .tutor-label {
@@ -109,6 +113,10 @@
         @include tutor-typography('tiny', 'regular', 'subdued');
         gap: $tutor-spacing-2;
         min-width: 99px;
+
+        @include tutor-breakpoint-down(sm) {
+          min-width: 80px;
+        }
 
         &::before {
           content: '';
@@ -254,13 +262,8 @@
     }
 
     &-link {
-      @include tutor-button-base;
-      @include tutor-button-size(x-small);
-      @include tutor-button-variant(link);
-      min-height: unset;
-      padding: 0;
+      align-self: start;
       margin-top: $tutor-spacing-5;
-      color: $tutor-text-brand;
       width: fit-content;
     }
 

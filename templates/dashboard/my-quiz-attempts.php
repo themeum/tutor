@@ -160,8 +160,14 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 				?>
 			</div>
 		</div>
-			<?php
-			endforeach;
+		<?php endforeach; ?>
+		<?php
+		Pagination::make()
+			->current( $current_page )
+			->total( $quiz_attempts_count )
+			->limit( $item_per_page )
+			->attr( 'class', 'tutor-p-6' )
+			->render();
 		?>
 	</div>
 	<?php else : ?>
@@ -172,14 +178,6 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 			->render();
 		?>
 	<?php endif; ?>
-	<?php
-	Pagination::make()
-		->current( $current_page )
-		->total( $quiz_attempts_count )
-		->limit( $item_per_page )
-		->attr( 'class', 'tutor-p-6' )
-		->render();
-	?>
 
 	<div x-data="tutorQuizRetryAttempt()">
 		<?php

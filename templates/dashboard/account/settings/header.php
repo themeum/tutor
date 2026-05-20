@@ -28,7 +28,7 @@ use Tutor\Components\Constants\Variant;
 			windowWidth: window.innerWidth,
 			isDirty: {}
 		}"
-		class="tutor-dashboard-container tutor-flex tutor-items-center tutor-justify-between">
+		class="tutor-account-container tutor-flex tutor-items-center tutor-justify-between">
 		<div 
 			class="tutor-profile-header-left tutor-flex tutor-items-center"
 			@resize.window="windowWidth = window.innerWidth"
