@@ -1,3 +1,11 @@
+/**
+ * Route Preloading & Code Splitting Infrastructure
+ *
+ * For architectural details, API documentation, and a step-by-step guide
+ * on adding new split routes, please see:
+ * @see assets/core/docs/code-splitting-guide.md
+ */
+
 import { type OptionalTutorCorePackName, type TutorCorePackName } from '@Core/ts/packs/types';
 import { chainRoutePreload, requestCorePacks } from './core-packs';
 
