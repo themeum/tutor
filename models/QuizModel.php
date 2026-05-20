@@ -887,6 +887,39 @@ class QuizModel {
 	}
 
 	/**
+	 * Filter attempt answers for attempt-details views.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attempt_answers Attempt answer rows.
+	 * @param bool  $is_instructor_review Whether the current view is instructor review.
+	 *
+	 * @return array
+	 */
+	public static function filter_attempt_answers_for_details( $attempt_answers, bool $is_instructor_review = false ): array {
+		if ( ! is_array( $attempt_answers ) ) {
+			return array();
+		}
+
+		return array_values(
+			array_filter(
+				$attempt_answers,
+				static function ( $attempt_answer ) use ( $is_instructor_review ) {
+					if ( ! is_object( $attempt_answer ) ) {
+						return false;
+					}
+
+					if ( $is_instructor_review ) {
+						return true;
+					}
+
+					return ! self::is_attempt_answer_skipped( $attempt_answer );
+				}
+			)
+		);
+	}
+
+	/**
 	 * Get normalized attempt-answer status.
 	 *
 	 * Status rules follow legacy attempt-details logic:
