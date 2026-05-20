@@ -16,6 +16,7 @@ import { passwordInputMeta } from '@Core/ts/components/password-input';
 import { playerMeta } from '@Core/ts/components/player';
 import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
+import { readMoreMeta } from '@Core/ts/components/read-more';
 import { selectMeta } from '@Core/ts/components/select';
 import { selectDropdownMeta } from '@Core/ts/components/select-dropdown';
 import { starRatingMeta } from '@Core/ts/components/star-rating';
@@ -62,6 +63,7 @@ const initializePlugin = () => {
       stepperDropdownMeta,
       selectMeta,
       previewTriggerMeta,
+      readMoreMeta,
       starRatingMeta,
       toastMeta,
       playerMeta,

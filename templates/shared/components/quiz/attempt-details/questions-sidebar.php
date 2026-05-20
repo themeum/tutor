@@ -31,8 +31,8 @@ $status_priority     = array(
 );
 
 if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_data->attempt_id ) ) {
-	$questions = QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
-	$questions = is_array( $questions ) ? $questions : array();
+	$questions = isset( $questions ) ? $questions : QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
+	$questions = QuizModel::filter_attempt_answers_for_details( $questions, ! empty( $is_instructor_review ) );
 
 	foreach ( $questions as $answer_row ) {
 		$question_id = (int) ( $answer_row->question_id ?? 0 );

@@ -70,7 +70,9 @@ if ( ! $quiz_id ) {
 	$quiz_id = (int) ( $attempt_data->quiz_id ?? 0 );
 }
 
-$questions       = QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
+$questions = QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
+$questions = QuizModel::filter_attempt_answers_for_details( $questions, $is_instructor_review );
+
 $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id );
 ?>
 <div class="tutor-quiz-summary-page">
@@ -110,6 +112,7 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 			'shared.components.quiz.attempt-details.summary',
 			array(
 				'attempt_data'         => $attempt_data,
+				'answers'              => $questions, // $questions holds quiz answers data, mapped to 'answers' key for summary template
 				'is_instructor_review' => $is_instructor_review,
 			)
 		);
@@ -121,8 +124,10 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 		tutor_load_template(
 			'shared.components.quiz.attempt-details.questions-sidebar',
 			array(
-				'quiz_id'      => $quiz_id,
-				'attempt_data' => $attempt_data,
+				'quiz_id'              => $quiz_id,
+				'attempt_data'         => $attempt_data,
+				'questions'            => $questions,
+				'is_instructor_review' => $is_instructor_review,
 			)
 		);
 		?>
