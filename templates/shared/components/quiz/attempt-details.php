@@ -112,6 +112,7 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 			'shared.components.quiz.attempt-details.summary',
 			array(
 				'attempt_data'         => $attempt_data,
+				'answers'              => $questions, // $questions holds quiz answers data, mapped to 'answers' key for summary template
 				'is_instructor_review' => $is_instructor_review,
 			)
 		);

@@ -913,11 +913,7 @@ class QuizModel {
 						return true;
 					}
 
-					if ( ! self::is_attempt_answer_skipped( $attempt_answer ) ) {
-						return true;
-					}
-
-					return null !== ( $attempt_answer->is_correct ?? null );
+					return ! self::is_attempt_answer_skipped( $attempt_answer );
 				}
 			)
 		);

@@ -52,7 +52,7 @@ $timing                 = QuizModel::get_quiz_attempt_timing( $attempt_data );
 $attempt_duration       = $timing['attempt_duration'] ?? '';
 $attempt_duration_taken = $timing['attempt_duration_taken'] ?? '';
 
-$answers   = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+$answers   = isset( $answers ) ? $answers : QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 $correct   = 0;
 $incorrect = 0;
 
