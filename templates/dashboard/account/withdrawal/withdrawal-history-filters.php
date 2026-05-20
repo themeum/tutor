@@ -67,6 +67,7 @@ $withdrawals_base_url = remove_query_arg( 'current_page', $withdrawals_base_url 
 			->type( DateFilter::TYPE_RANGE )
 			->placement( DateFilter::PLACEMENT_BOTTOM_END )
 			->trigger_size( Size::X_SMALL )
+			->hide_initial_label()
 			->render();
 
 		Sorting::make()
