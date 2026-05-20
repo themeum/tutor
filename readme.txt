@@ -319,7 +319,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.9.11 - May 19, 2026
+= 3.9.11 - May 20, 2026
 
 Update: Improved compatibility with Tutor LMS themes.
 
