@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Variant;
+use Tutor\Helpers\TimerHelper;
 
 global $tutor_is_started_quiz;
 
@@ -24,58 +25,8 @@ $hide_quiz_time_display = isset( $hide_quiz_time_display ) ? (bool) $hide_quiz_t
 $total_questions        = isset( $total_questions ) ? (int) $total_questions : 0;
 $quiz_title             = get_the_title( $tutor_is_started_quiz->quiz_id );
 
-$build_timer_tokens = static function ( int $seconds, int $reserved_day_digits = 0 ): array {
-	$seconds = max( 0, $seconds );
-	$days    = (int) floor( $seconds / DAY_IN_SECONDS );
-	$hours   = $days > 0 ? (int) floor( ( $seconds % DAY_IN_SECONDS ) / HOUR_IN_SECONDS ) : (int) floor( $seconds / HOUR_IN_SECONDS );
-	$minutes = ( $days > 0 || $hours > 0 ) ? (int) floor( ( $seconds % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS ) : (int) floor( $seconds / MINUTE_IN_SECONDS );
-	$secs    = (int) ( $seconds % MINUTE_IN_SECONDS );
-	$tokens  = array();
-
-	$push_digits = static function ( array &$token_list, string $value ) {
-		foreach ( str_split( $value ) as $char ) {
-			$token_list[] = array(
-				'type'  => 'digit',
-				'value' => $char,
-			);
-		}
-	};
-
-	if ( $days > 0 || $reserved_day_digits > 0 ) {
-		$day_value = $days > 0 ? str_pad( (string) $days, $reserved_day_digits, '0', STR_PAD_LEFT ) : str_repeat( '0', max( 1, $reserved_day_digits ) );
-		$push_digits( $tokens, $day_value );
-		$tokens[] = array(
-			'type'  => 'suffix',
-			'value' => 'd',
-		);
-		$tokens[] = array(
-			'type'  => 'spacer',
-			'value' => ' ',
-		);
-	}
-
-	if ( $days > 0 || $hours > 0 || $reserved_day_digits > 0 || $seconds >= HOUR_IN_SECONDS ) {
-		$push_digits( $tokens, str_pad( (string) $hours, 2, '0', STR_PAD_LEFT ) );
-		$tokens[] = array(
-			'type'  => 'separator',
-			'value' => ':',
-		);
-	}
-
-	$push_digits( $tokens, str_pad( (string) $minutes, 2, '0', STR_PAD_LEFT ) );
-	$tokens[] = array(
-		'type'  => 'separator',
-		'value' => ':',
-	);
-	$push_digits( $tokens, str_pad( (string) $secs, 2, '0', STR_PAD_LEFT ) );
-
-	return $tokens;
-};
-
-$reserved_day_digits = max( 0, strlen( (string) floor( max( 0, $remaining_time_secs ) / DAY_IN_SECONDS ) ) );
-$reserved_day_digits = $remaining_time_secs >= DAY_IN_SECONDS ? $reserved_day_digits : 0;
-$initial_tokens      = $build_timer_tokens( $remaining_time_secs, 0 );
-$sizer_tokens        = $build_timer_tokens( $remaining_time_secs, $reserved_day_digits );
+$initial_tokens = TimerHelper::build_tokens( $remaining_time_secs );
+$sizer_tokens   = TimerHelper::build_tokens( $remaining_time_secs );
 
 $render_timer_tokens = static function ( array $tokens ) {
 	foreach ( $tokens as $token ) {
