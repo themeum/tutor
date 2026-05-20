@@ -41,7 +41,7 @@ $withdrawals_base_url = remove_query_arg( 'current_page', $withdrawals_base_url 
 ?>
 <div class="tutor-flex tutor-items-center tutor-justify-between tutor-gap-4 tutor-flex-wrap tutor-px-6 tutor-py-5 tutor-border-b">
 	<?php
-		DropdownFilter::make()
+	DropdownFilter::make()
 		->options( $dropdown_options )
 		->query_param( 'data' )
 		->variant( Variant::LINK )
