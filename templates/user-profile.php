@@ -86,16 +86,12 @@ foreach ( $social_fields as $meta_key => $field ) {
 				?>
 			<div
 				class="tutor-bio-wrapper"
-				x-data="{ expanded: false, hasOverflow: true }"
-				x-init="$nextTick(() => hasOverflow = $refs.bio.scrollHeight > $refs.bio.offsetHeight)"
+				x-data="tutorReadMore({ lines: 4 })"
 			>
 				<div
-					class="tutor-user-profile-bio tutor-bio-collapsed"
-					x-ref="bio"
-					:class="{ 'tutor-bio-collapsed': ! expanded && hasOverflow }"
-					x-show="expanded || ! hasOverflow"
-					x-collapse.min.76px
-					:style="! expanded && hasOverflow && { minHeight: 'var(--tutor-bio-collapsed-height)' }"
+					class="tutor-user-profile-bio"
+					x-ref="content"
+					style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden;"
 				>
 					<?php echo wp_kses_post( $bio_text ); ?>
 				</div>
@@ -103,10 +99,10 @@ foreach ( $social_fields as $meta_key => $field ) {
 				<button
 					type="button"
 					class="tutor-bio-toggle"
+					x-ref="readMore"
 					x-cloak
 					x-show="hasOverflow && ! expanded"
-					x-on:click="expanded = true"
-					aria-expanded="false"
+					@click="toggle()"
 					:aria-expanded="expanded.toString()"
 				>
 					<?php esc_html_e( '… Read more', 'tutor' ); ?>
@@ -117,8 +113,7 @@ foreach ( $social_fields as $meta_key => $field ) {
 					class="tutor-bio-toggle-less"
 					x-cloak
 					x-show="expanded"
-					x-on:click="expanded = false"
-					aria-expanded="true"
+					@click="toggle()"
 					:aria-expanded="expanded.toString()"
 				>
 					<?php esc_html_e( 'Read less', 'tutor' ); ?>
