@@ -15,39 +15,14 @@ use TUTOR\Course;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
-use Tutor\Components\Constants\Color;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 
 $user_id   = get_current_user_id();
 $user_data = get_userdata( $user_id );
-
-if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
-	$profile_completion = tutor_utils()->user_profile_completion( $user_id );
-
-	$photo_data = $profile_completion['_tutor_profile_photo'] ?? array();
-	$is_set     = $photo_data['is_set'] ?? null;
-	$text       = $photo_data['text'] ?? '';
-	if ( empty( $is_set ) ) {
-		?>
-		<div class="tutor-border tutor-mb-7 tutor-rounded-2xl tutor-surface-l1 tutor-p-5">
-			<div class="tutor-flex tutor-items-center tutor-justify-between">
-				<div class="tutor-flex tutor-items-center tutor-gap-2">
-					<?php SvgIcon::make()->name( Icon::INFO )->size( 24 )->color( Color::BRAND )->render(); ?>
-					<span class="tutor-small">
-						<?php echo esc_html( $text ); ?>
-					</span>
-				</div>
-				<a href="<?php echo esc_attr( Dashboard::get_account_page_url( 'settings' ) ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small">
-					<?php esc_html_e( 'Click Here', 'tutor' ); ?>
-				</a>
-			</div>
-		</div>
-		<?php
-	}
-}
 ?>
 <?php do_action( 'tutor_before_dashboard_content' ); ?>
+<?php tutor_load_template( 'dashboard.components.profile-completion' ); ?>
 <div class="tutor-student-dashboard" x-data>
 	<?php
 	$enrolled_course       = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
@@ -190,7 +165,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 								?>
 							</span> 
 							<?php endif; ?>
-							
+
 							<?php if ( $time_spent['seconds'] > 0 ) : ?>
 							<span class="tutor-font-medium">
 								<?php
