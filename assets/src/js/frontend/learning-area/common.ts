@@ -1,4 +1,5 @@
 import { type MutationState } from '@Core/ts/services/Query';
+import { reviewModalMeta } from '@FrontendComponents/reviews';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
@@ -84,6 +85,9 @@ export const initializeCommon = () => {
         name: 'courseCompleteHandler',
         component: courseCompleteHandler,
       },
+    });
+    window.TutorComponentRegistry.registerAll({
+      components: [reviewModalMeta],
     });
   }
 };

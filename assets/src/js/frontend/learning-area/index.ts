@@ -31,14 +31,23 @@ const learningAreaRoutes: Record<string, TutorRouteConfig<LearningAreaRouteModul
     };
   }),
   'course-info': createRouteConfig(withBasePack(), async () => {
-    const [{ initializeCourseCourseInfo }, { initializeReviews }] = await Promise.all([
-      import(/* webpackChunkName: "tutor-learning-course-info" */ './pages/course-info'),
-      import(/* webpackChunkName: "tutor-learning-reviews" */ '@FrontendComponents/reviews'),
-    ]);
+    const { initializeCourseCourseInfo } = await import(
+      /* webpackChunkName: "tutor-learning-course-info" */ './pages/course-info'
+    );
 
     return {
       initializeLearningAreaRoute: () => {
         initializeCourseCourseInfo();
+      },
+    };
+  }),
+  reviews: createRouteConfig(withBasePack('core-form-controls'), async () => {
+    const { initializeReviews } = await import(
+      /* webpackChunkName: "tutor-learning-reviews" */ '@FrontendComponents/reviews'
+    );
+
+    return {
+      initializeLearningAreaRoute: () => {
         initializeReviews();
       },
     };

@@ -189,7 +189,7 @@ const reviewServicesMeta = {
   component: reviewDeleteModal,
 };
 
-const reviewModalMeta = {
+export const reviewModalMeta = {
   name: 'reviewModal',
   component: reviewModal,
 };
