@@ -1281,7 +1281,7 @@ class OrderModel {
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
-				'AND o.created_at_gmt BETWEEN %s AND %s',
+				'AND DATE(order_meta.created_at_gmt) BETWEEN %s AND %s',
 				$start_date,
 				$end_date
 			);
@@ -1291,7 +1291,7 @@ class OrderModel {
 			$period_clause = QueryHelper::get_period_clause( 'order_meta.created_at_gmt', $period );
 		}
 
-		if ( 'today' !== $period ) {
+		if ( 'yearly' === $period ) {
 			$group_clause = ' GROUP BY MONTH(order_meta.created_at_gmt) ';
 		}
 

@@ -159,15 +159,21 @@ $stat_cards = array(
  * -------------------------
  */
 if ( $is_pro_reports ) {
-	$labels              = wp_list_pluck( $earnings['earnings'], 'label_name' );
-	$graph_earnings      = array_map( 'intval', wp_list_pluck( $earnings['earnings'], 'total' ) );
-	$enrollments         = Analytics::get_total_students_by_user( $user->ID, '', $start_date, $end_date );
-	$graph_enrollments   = array_map( 'intval', wp_list_pluck( $enrollments['enrollments'], 'total' ) );
+	$labels            = wp_list_pluck( $earnings['earnings'], 'label_name' );
+	$graph_earnings    = array_map( 'intval', wp_list_pluck( $earnings['earnings'], 'total' ) );
+	$enrollments       = Analytics::get_total_students_by_user( $user->ID, '', $start_date, $end_date );
+	$graph_enrollments = array_map( 'intval', wp_list_pluck( $enrollments['enrollments'], 'total' ) );
+	$enrolled_dates    = array_map( fn( $item ) => wp_date( 'M d', strtotime( $item->date_format ) ), $enrollments['enrollments'] );
+	$earnings_dates    = array_map( fn( $item ) => wp_date( 'M d', strtotime( $item->date_format ) ), $earnings['earnings'] );
+
+
 	$overview_chart_data = array(
-		'earnings' => array_merge( array( 0 ), $graph_earnings, array( 0 ) ),
-		'enrolled' => array_merge( array( 0 ), $graph_enrollments, array( 0 ) ),
-		'labels'   => array_merge( array( '' ), $labels, array( '' ) ),
-		'currency' => tutor_utils()->get_monetization_currency_config(),
+		'earnings'      => array_merge( array( 0 ), $graph_earnings, array( 0 ) ),
+		'enrolled'      => array_merge( array( 0 ), $graph_enrollments, array( 0 ) ),
+		'labels'        => array_merge( array( '' ), $labels, array( '' ) ),
+		'currency'      => tutor_utils()->get_monetization_currency_config(),
+		'enrolled_date' => $enrolled_dates,
+		'earning_date'  => $earnings_dates,
 	);
 }
 

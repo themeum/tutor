@@ -6,6 +6,8 @@ export interface OverviewChartProps {
   earnings: number[];
   enrolled: number[];
   labels: string[];
+  enrolled_date: string[];
+  earning_date: string[];
   currency: MonetizationData;
 }
 
@@ -697,7 +699,11 @@ export const overviewChart = (data: OverviewChartProps) => ({
             external: (context) => handleTooltip(context, colors, 'line'),
             callbacks: {
               title: (items) => {
-                return data.labels[items[0].dataIndex] || '';
+                return (
+                  data?.earning_date?.[items[0]?.dataIndex] ||
+                  data?.enrolled_date?.[items[0]?.dataIndex] ||
+                  data.labels?.[items[0]?.dataIndex]
+                );
               },
               label: (context) => {
                 const value = context.parsed.y;
