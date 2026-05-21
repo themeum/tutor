@@ -1,285 +1,187 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
-.tutor-withdrawal-history-filters {
-	display: flex;
-	flex-direction: column;
-	gap: $tutor-spacing-4;
-	width: 100%;
-
-	.tutor-withdrawal-history-filters-row {
-		min-width: 0;
-	}
-
-	.tutor-withdrawal-history-filters-mobile-right {
-		@include tutor-breakpoint-up(md) {
-			display: none !important;
-		}
-	}
-
-	.tutor-withdrawal-history-filters-calendar-mobile {
-		@include tutor-breakpoint-up(md) {
-			display: none !important;
-		}
-	}
-
-	.tutor-withdrawal-history-filters-calendar-desktop {
-		@include tutor-breakpoint-down(md) {
-			display: none !important;
-		}
-	}
-
-	.tutor-withdrawal-history-filters-sort-mobile {
-		@include tutor-breakpoint-up(md) {
-			display: none !important;
-		}
-	}
-
-	.tutor-withdrawal-history-filters-sort-desktop {
-		display: none;
-
-		@include tutor-breakpoint-up(md) {
-			display: block;
-		}
-	}
-
-	.tutor-withdrawal-history-filters-right-group {
-		@include tutor-breakpoint-down(md) {
-			width: 100%;
-			justify-content: flex-end;
-		}
-	}
-
-	@include tutor-breakpoint-up(md) {
-		flex-direction: row;
-		flex-wrap: nowrap;
-		align-items: center;
-		justify-content: space-between;
-		gap: $tutor-spacing-3;
-
-		.tutor-withdrawal-history-filters-row--top {
-			flex: 0 0 auto;
-			justify-content: flex-start;
-		}
-
-		.tutor-withdrawal-history-filters-row--bottom {
-			flex: 0 0 auto;
-			justify-content: flex-end;
-
-			.tutor-withdrawal-history-filters-right-group {
-				display: flex;
-				align-items: center;
-				justify-content: flex-end;
-				gap: $tutor-spacing-3;
-
-				&:has(> *:nth-child(3)) > *:first-child {
-					order: 2;
-				}
-				&:has(> *:nth-child(3)) > *:nth-child(2) {
-					order: 1;
-				}
-				&:has(> *:nth-child(3)) > *:nth-child(3) {
-					order: 3;
-				}
-			}
-		}
-	}
-}
-
 .tutor-user-withdrawals {
-	.tutor-withdrawal-history-heading {
-		@include tutor-breakpoint-down(md) {
-			margin-top: 20px;
-		}
-	}
+  .tutor-withdrawal-history-heading {
+    @include tutor-typography(medium, medium);
+    margin-top: $tutor-spacing-10;
+    margin-bottom: $tutor-spacing-5;
 
-	.tutor-tooltip-wrap {
-		@include tutor-breakpoint-down(md) {
-			margin-top: $tutor-spacing-1;
-		}
-	}
+    @include tutor-breakpoint-down(md) {
+      margin-top: 20px;
+    }
+  }
 
-	.tutor-withdrawal-preference-msg-wrap {
-		@include tutor-breakpoint-down(sm) {
-			flex-wrap: nowrap;
-			align-items: flex-start;
-		}
-	}
+  .tutor-tooltip-wrap {
+    @include tutor-breakpoint-down(md) {
+      margin-top: $tutor-spacing-1;
+    }
+  }
 
-	.tutor-withdrawal-preference-msg {
-		flex: 1;
-		min-width: 0;
-		word-break: break-word;
+  .tutor-withdrawal-available-header {
+    @include tutor-breakpoint-down(sm) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: $tutor-spacing-7;
+    }
+  }
 
-		.tutor-withdrawal-preference-link-inline {
-			white-space: nowrap;
-		}
-	}
+  .tutor-withdrawal-status {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin-top: $tutor-spacing-6;
+    padding: $tutor-spacing-6;
+    background-color: $tutor-surface-base;
+    border: 1px solid $tutor-border-idle2;
+    border-radius: $tutor-radius-lg;
 
-	.tutor-withdrawal-available-header {
-		@include tutor-breakpoint-down(sm) {
-			flex-direction: column;
-			align-items: stretch;
-			gap: $tutor-spacing-7;
-		}
-	}
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: $tutor-spacing-6;
+      bottom: $tutor-spacing-6;
+      width: 1px;
+      background-color: $tutor-border-idle;
+    }
 
-	.tutor-withdrawal-status {
-		position: relative;
-		display: flex;
-		justify-content: space-between;
-		margin-top: $tutor-spacing-6;
-		padding: $tutor-spacing-6;
-		background-color: $tutor-surface-base;
-		border: 1px solid $tutor-border-idle2;
-		border-radius: $tutor-radius-lg;
+    &::before {
+      left: 33.3333%;
+    }
 
-		&::before,
-		&::after {
-			content: '';
-			position: absolute;
-			top: $tutor-spacing-6;
-			bottom: $tutor-spacing-6;
-			width: 1px;
-			background-color: $tutor-border-idle;
-		}
+    &::after {
+      left: 66.6667%;
+    }
 
-		&::before {
-			left: 33.3333%;
-		}
+    &-item {
+      position: relative;
+      flex: 1;
 
-		&::after {
-			left: 66.6667%;
-		}
+      &-label {
+        @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+      }
 
-		&-item {
-			position: relative;
-			flex: 1;
+      &-value {
+        @include tutor-typography('small', 'medium', 'primary', 'body');
+      }
 
-			&-label {
-				@include tutor-typography('tiny', 'regular', 'secondary', 'body');
-			}
+      &-value--pending {
+        @include tutor-typography('small', 'medium', 'warning', 'body');
+      }
 
-			&-value {
-				@include tutor-typography('small', 'medium', 'primary', 'body');
-			}
+      &-info {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: $tutor-spacing-1;
+        color: $tutor-text-secondary;
+      }
 
-			&-value--pending {
-				@include tutor-typography('small', 'medium', 'warning', 'body');
-			}
+      &:nth-child(2) {
+        padding-left: 10%;
+      }
 
-			&-info {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				margin-left: $tutor-spacing-1;
-				color: $tutor-text-secondary;
-			}
+      &:nth-child(3) {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+      }
+    }
 
-			&:nth-child(2) {
-				padding-left: 10%;
-			}
+    @include tutor-breakpoint-down(sm) {
+      flex-direction: column;
+      gap: 0;
 
-			&:nth-child(3) {
-				display: flex;
-				flex-direction: column;
-				align-items: end;
-			}
-		}
+      &::before,
+      &::after {
+        display: none;
+      }
 
-		@include tutor-breakpoint-down(sm) {
-			flex-direction: column;
-			gap: 0;
+      &-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        flex: none;
+        width: 100%;
+        padding: $tutor-spacing-4 0;
+        border-bottom: 1px solid $tutor-border-idle;
 
-			&::before,
-			&::after {
-				display: none;
-			}
+        &:first-child {
+          padding-top: 0;
+        }
 
-			&-item {
-				display: flex;
-				flex-direction: row;
-				align-items: center;
-				justify-content: space-between;
-				flex: none;
-				width: 100%;
-				padding: $tutor-spacing-4 0;
-				border-bottom: 1px solid $tutor-border-idle;
+        &:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
 
-				&:first-child {
-					padding-top: 0;
-				}
+        &:nth-child(2) {
+          padding-left: 0;
+        }
 
-				&:last-child {
-					border-bottom: none;
-					padding-bottom: 0;
-				}
+        &:nth-child(3) {
+          flex-direction: row;
+          align-items: center;
+        }
+      }
+    }
+  }
 
-				&:nth-child(2) {
-					padding-left: 0;
-				}
+  .tutor-billing-card {
+    min-width: 0;
+    align-items: flex-start;
+  }
 
-				&:nth-child(3) {
-					flex-direction: row;
-					align-items: center;
-				}
-			}
-		}
-	}
+  .tutor-billing-card-left {
+    gap: $tutor-spacing-4;
+    min-width: 0;
 
-	.tutor-billing-card {
-		min-width: 0;
-		align-items: flex-start;
-	}
+    // Keep badge text in a single line; let adjacent text wrap instead.
+    .tutor-badge {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
 
-	.tutor-billing-card-left {
-		gap: $tutor-spacing-4;
-		min-width: 0;
+    // Allow long text (e.g. masked PayPal email) to wrap instead of overflowing.
+    .tutor-flex:first-child {
+      min-width: 0;
 
-		// Keep badge text in a single line; let adjacent text wrap instead.
-		.tutor-badge {
-			flex-shrink: 0;
-			white-space: nowrap;
-		}
+      // Make the badge wrapper a flex item so shrink / nowrap behave correctly.
+      > div:first-child {
+        display: flex;
+        align-items: baseline;
+        flex-shrink: 0;
+      }
 
-		// Allow long text (e.g. masked PayPal email) to wrap instead of overflowing.
-		.tutor-flex:first-child {
-			min-width: 0;
+      > div:last-child {
+        min-width: 0;
+        word-break: break-word;
+        overflow-wrap: break-word;
+      }
+    }
+  }
 
-			// Make the badge wrapper a flex item so shrink / nowrap behave correctly.
-			> div:first-child {
-				display: flex;
-				align-items: baseline;
-				flex-shrink: 0;
-			}
-
-			> div:last-child {
-				min-width: 0;
-				word-break: break-word;
-				overflow-wrap: break-word;
-			}
-		}
-	}
-
-	.tutor-billing-card-right {
-		flex-shrink: 0;
-	}
+  .tutor-billing-card-right {
+    flex-shrink: 0;
+  }
 }
 
 .tutor-withdrawal-available-balance {
-	padding: $tutor-spacing-5 $tutor-spacing-6;
-	background: $tutor-surface-l1-hover;
-	border: 1px solid $tutor-border-idle;
-	border-radius: $tutor-radius-lg;
+  @include tutor-flex();
+  gap: $tutor-spacing-5;
+  padding: $tutor-spacing-5 $tutor-spacing-6;
+  background: $tutor-surface-l1-hover;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-lg;
 
-	&-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 44px;
-		height: 44px;
-		gap: $tutor-spacing-4;
-		background: $tutor-surface-l1;
-		border-radius: $tutor-radius-full;
-	}
+  &-icon {
+    @include tutor-flex-center();
+    width: 44px;
+    height: 44px;
+    gap: $tutor-spacing-4;
+    background: $tutor-surface-l1;
+    border-radius: $tutor-radius-full;
+  }
 }
