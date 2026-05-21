@@ -38,13 +38,13 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { type ContentDripType } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { type ID, isDefined, type TopicContentType } from '@TutorShared/utils/types';
 import { findSlotFields } from '@TutorShared/utils/util';
-import { tutorConfig } from '@TutorShared/config/config';
 
 interface QuizModalProps extends ModalProps {
   quizId?: ID;
@@ -97,6 +97,11 @@ const QuizModal = ({
         quiz_auto_start: false,
         question_layout_view: contentType === 'tutor_h5p_quiz' ? 'question_below_each_other' : 'single_question',
         questions_order: 'rand',
+        enable_pagination: false,
+        pagination_type: 'shape',
+        enable_answer_reveal: false,
+        answers_reveal_duration: 5,
+        hide_previous_button: false,
         hide_question_number_overview: false,
         short_answer_characters_limit: 200,
         open_ended_answer_characters_limit: 500,
