@@ -210,7 +210,7 @@ const questionMatching = (
       }
 
       if (targetDropZone) {
-        const dropZoneEl = targetDropZone.element;
+        const dropZoneEl = targetDropZone.element as HTMLElement;
         const sourceId = operation.source.id;
 
         if (!dropZoneEl) {

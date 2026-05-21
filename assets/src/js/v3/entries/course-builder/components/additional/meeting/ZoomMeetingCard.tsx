@@ -42,7 +42,7 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
 
   const handleZoomMeetingDelete = async () => {
     const response = await deleteZoomMeetingMutation.mutateAsync(ID);
-    if (response.success) {
+    if (response.status_code === 200) {
       setIsDeletePopoverOpen(false);
     }
   };

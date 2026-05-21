@@ -1,6 +1,6 @@
 import { Global, css } from '@emotion/react';
 import { withThemeFromJSXProvider } from '@storybook/addon-themes';
-import type { Preview } from '@storybook/react';
+import { type Preview } from 'storybook-react-rsbuild';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { typography } from '@TutorShared/config/typography';

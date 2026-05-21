@@ -131,7 +131,7 @@ const FormImageInput = ({
           <div>
             <ImageInput
               size={size}
-              value={fieldValue}
+              value={fieldValue ?? null}
               uploadHandler={handleMediaButtonClick}
               clearHandler={clearHandler}
               buttonText={buttonText}

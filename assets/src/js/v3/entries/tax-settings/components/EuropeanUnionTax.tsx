@@ -78,7 +78,8 @@ function EuropeanUnionTax() {
                   }}
                 />
                 <Button
-                  variant="text"
+                  isIconOnly
+                  aria-label={__('Delete', 'tutor')}
                   icon={<SVGIcon name="delete" style={styles.deleteIcon} />}
                   onClick={() => {
                     const updatedRates = rates.map((rate) => {
@@ -95,7 +96,7 @@ function EuropeanUnionTax() {
           </>
         );
       },
-      width: 120,
+      width: '120px',
     },
   ];
 

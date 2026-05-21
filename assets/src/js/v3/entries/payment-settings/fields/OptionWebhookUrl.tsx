@@ -32,7 +32,7 @@ const OptionWebhookUrl = ({
 
   const handleCopyClick = async () => {
     try {
-      await copyToClipboard(field.value);
+      await copyToClipboard(field?.value || '');
       showToast({
         type: 'success',
         message: __('Copied to clipboard', 'tutor'),
