@@ -41,8 +41,8 @@ use Tutor\Components\Constants\Size;
 								<?php
 								echo esc_html(
 									sprintf(
-										/* translators: %s human-readable time difference. */
-										_x( '%s ago', 'human-readable time difference', 'tutor' ),
+										/* translators: %s: Human-readable time difference. */
+										__( '%s ago', 'tutor' ),
 										human_time_diff( strtotime( $review['date'] ) )
 									)
 								);

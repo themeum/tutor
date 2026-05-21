@@ -39,7 +39,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 						<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_attr( $question->display_name ); ?></a>
 						<span class="tutor-text-mute">
 						<?php
-							/* translators: %s human-readable time difference. */
+							/* translators: %s: time difference */
 							echo esc_html( wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 						?>
 					</span>
@@ -76,7 +76,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 										<a href="<?php echo esc_url( $answer_profile ); ?>"><?php echo esc_attr( $answer->display_name ); ?></a>
 										<span class="tutor-text-mute">
 										<?php
-										/* translators: %s human-readable time difference. */
+										/* translators: %s: time difference */
 										echo esc_html( wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date_gmt ) ) ) );
 										?>
 										</span>

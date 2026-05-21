@@ -57,7 +57,7 @@ $single_url = UrlHelper::add_query_params(
 				<div class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></div>
 				<div class="tutor-text-tiny tutor-text-subdued">
 					<?php
-						/* translators: %s human-readable time difference. */
+						/* translators: %s: time difference */
 						echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 					?>
 				</div>
@@ -82,7 +82,7 @@ $single_url = UrlHelper::add_query_params(
 						<?php Avatar::make()->user( $last_reply->user_id )->size( Size::SIZE_20 )->render(); ?>
 						<div class="tutor-text-small">
 							<?php
-								/* translators: %s human-readable time difference. */
+								/* translators: %s: time difference */
 								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $last_reply->comment_date_gmt ) ) ) );
 							?>
 						</div>

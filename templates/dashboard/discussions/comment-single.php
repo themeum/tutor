@@ -59,7 +59,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 					<span class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $lesson_comment->comment_author ); ?></span> 
 					<span class="tutor-text-secondary tutor-flex-shrink-0">
 						<?php
-							/* translators: %s human-readable time difference. */
+							// translators: %s is the time of comment.
 							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $lesson_comment->comment_date_gmt ) ) ) );
 						?>
 					</span>

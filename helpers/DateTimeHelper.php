@@ -206,7 +206,7 @@ final class DateTimeHelper {
 
 		// Handle past or future tense.
 		return ( $interval > 0 )
-				/* translators: %s human-readable time difference. */
+				/* translators: %s: time difference */
 				? sprintf( __( '%s ago', 'tutor' ), $time_diff )
 				/* translators: %s: time difference */
 				: sprintf( __( '%s from now', 'tutor' ), $time_diff );

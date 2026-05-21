@@ -47,7 +47,7 @@ use TUTOR\User;
 						</span>
 						<span class="tutor-text-secondary">
 							<?php
-							/* translators: %s human-readable time difference. */
+							// translators: %s is the time of comment.
 							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $reply->comment_date_gmt ) ) ) );
 							?>
 						</span>

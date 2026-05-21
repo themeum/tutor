@@ -99,7 +99,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 					<span class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $question->comment_author ); ?></span> 
 					<span class="tutor-text-secondary tutor-flex-shrink-0">
 						<?php
-							/* translators: %s human-readable time difference. */
+							// Translators: %s is the time of comment.
 							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 						?>
 					</span>
