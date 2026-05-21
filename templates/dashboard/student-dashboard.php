@@ -20,18 +20,25 @@ use Tutor\Models\CourseModel;
 
 $user_id   = get_current_user_id();
 $user_data = get_userdata( $user_id );
+
+$enrolled_course       = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
+$enrolled_course_count = $enrolled_course ? $enrolled_course->post_count : 0;
+
+do_action( 'tutor_before_dashboard_content' );
+tutor_load_template( 'dashboard.components.profile-completion' );
+
+if ( 0 === $enrolled_course_count ) {
+	tutor_load_template( 'dashboard.student.dashboard-empty' );
+	return;
+}
 ?>
-<?php do_action( 'tutor_before_dashboard_content' ); ?>
-<?php tutor_load_template( 'dashboard.components.profile-completion' ); ?>
 <div class="tutor-student-dashboard" x-data>
 	<?php
-	$enrolled_course       = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
 	$completed_courses     = CourseModel::get_completed_courses_by_user( $user_id, 0, -1, array( 'post_status' => array( 'private', 'publish' ) ) );
 	$has_completed_courses = is_object( $completed_courses ) && $completed_courses->have_posts();
 	$completed_courses_ids = $has_completed_courses ? wp_list_pluck( $completed_courses->posts, 'ID' ) : array();
 	$active_courses        = CourseModel::get_active_courses_by_user( $user_id, 0, -1, array( 'post_status' => array( 'private', 'publish' ) ) );
 
-	$enrolled_course_count  = $enrolled_course ? $enrolled_course->post_count : 0;
 	$completed_course_count = $has_completed_courses ? $completed_courses->post_count : 0;
 	$active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
 
