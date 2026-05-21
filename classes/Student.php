@@ -71,6 +71,11 @@ class Student {
 			)
 		);
 
+		$terms_conditions_link = tutor_utils()->get_toc_page_link();
+		if ( $terms_conditions_link ) {
+			$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
+		}
+
 		$validation_errors = array();
 
 		// Registration error push into validation_errors.
@@ -85,6 +90,7 @@ class Student {
 				$validation_errors[ $required_key ] = $required_value;
 			}
 		}
+
 
 		if ( ! filter_var( tutor_utils()->input_old( 'email' ), FILTER_VALIDATE_EMAIL ) ) {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );

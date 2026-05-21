@@ -506,9 +506,9 @@ class CourseModel {
 
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
-							$in_question_ids = "'" . implode( "','", $questions_ids ) . "'";
+							$in_clause = QueryHelper::prepare_in_clause( $questions_ids );
 							//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-							$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) " );
+							$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_clause}) " ) );
 						}
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $content_id ) );
 					}

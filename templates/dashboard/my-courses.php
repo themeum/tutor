@@ -141,7 +141,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							<div class="tutor-meta tutor-mt-16">
 								<?php if ( ! empty( $course_duration ) ) : ?>
 									<div>
-										<span class="tutor-icon-clock-line tutor-meta-icon" area-hidden="true"></span>
+										<span class="tutor-icon-clock-line tutor-meta-icon" aria-hidden="true"></span>
 										<span class="tutor-meta-value">
 										<?php
 										echo wp_kses(
@@ -157,7 +157,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 	
 								<?php if ( ! empty( $course_students ) ) : ?>
 									<div>
-										<span class="tutor-icon-user-line tutor-meta-icon" area-hidden="true"></span>
+										<span class="tutor-icon-user-line tutor-meta-icon" aria-hidden="true"></span>
 										<span class="tutor-meta-value">
 										<?php
 										echo wp_kses(
@@ -196,11 +196,11 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 								</div>
 								<div class="tutor-iconic-btn-group tutor-mr-n8">
 									<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-iconic-btn tutor-my-course-edit">
-										<i class="tutor-icon-edit" area-hidden="true"></i>
+										<i class="tutor-icon-edit" aria-hidden="true"></i>
 									</a>
 									<div class="tutor-dropdown-parent">
 										<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-											<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+											<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 										</button>
 										<div id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 
@@ -217,7 +217,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 												);
 												?>
 											<a class="tutor-dropdown-item" href="?<?php echo esc_attr( $params ); ?>">
-												<i class="tutor-icon-share tutor-mr-8" area-hidden="true"></i>
+												<i class="tutor-icon-share tutor-mr-8" aria-hidden="true"></i>
 												<span>
 													<?php
 													$can_publish_course = current_user_can( 'administrator' ) || (bool) tutor_utils()->get_option( 'instructor_can_publish_course' );
@@ -243,7 +243,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 												);
 												?>
 											<a class="tutor-dropdown-item" href="?<?php echo esc_attr( $params ); ?>">
-												<i class="tutor-icon-copy-text tutor-mr-8" area-hidden="true"></i>
+												<i class="tutor-icon-copy-text tutor-mr-8" aria-hidden="true"></i>
 												<span><?php esc_html_e( 'Duplicate', 'tutor' ); ?></span>
 											</a>
 											<?php endif; ?>
@@ -262,7 +262,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 												);
 												?>
 											<a class="tutor-dropdown-item" href="?<?php echo esc_attr( $params ); ?>">
-												<i class="tutor-icon-archive tutor-mr-8" area-hidden="true"></i>
+												<i class="tutor-icon-archive tutor-mr-8" aria-hidden="true"></i>
 												<span><?php esc_html_e( 'Move to Draft', 'tutor' ); ?></span>
 											</a>
 											<?php endif; ?>
@@ -281,7 +281,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 												);
 												?>
 											<a href="?<?php echo esc_attr( $params ); ?>" class="tutor-dropdown-item">
-												<i class="tutor-icon-times tutor-mr-8" area-hidden="true"></i>
+												<i class="tutor-icon-times tutor-mr-8" aria-hidden="true"></i>
 												<span><?php esc_html_e( 'Cancel Submission', 'tutor' ); ?></span>
 											</a>
 											<?php endif; ?>
@@ -291,7 +291,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 											<?php if ( $is_main_instructor && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT, CourseModel::STATUS_FUTURE ) ) ) : ?>
 												<?php if ( $show_course_delete ) : ?>
 												<a href="#" data-tutor-modal-target="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-dropdown-item tutor-admin-course-delete">
-													<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+													<i class="tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true"></i>
 													<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 												</a>
 												<?php endif; ?>
@@ -305,20 +305,20 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						</div>
 
 						<!-- Delete prompt modal -->
-						<div id="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-modal">
+						<div id="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-modal" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $id_string_delete ); ?>-title" aria-hidden="true">
 							<div class="tutor-modal-overlay"></div>
 							<div class="tutor-modal-window">
 								<div class="tutor-modal-content tutor-modal-content-white">
-									<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-										<span class="tutor-icon-times" area-hidden="true"></span>
+									<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+										<span class="tutor-icon-times" aria-hidden="true"></span>
 									</button>
 
 									<div class="tutor-modal-body tutor-text-center">
 										<div class="tutor-mt-48">
-											<img class="tutor-d-inline-block" src="<?php echo esc_attr( tutor()->url ); ?>assets/images/icon-trash.svg" />
+											<img class="tutor-d-inline-block" src="<?php echo esc_attr( tutor()->url ); ?>assets/images/icon-trash.svg" alt="<?php esc_attr_e( 'Delete This Course?', 'tutor' ); ?>" aria-hidden="true" />
 										</div>
 
-										<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Course?', 'tutor' ); ?></div>
+										<div id="<?php echo esc_attr( $id_string_delete ); ?>-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Course?', 'tutor' ); ?></div>
 										<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ); ?></div>
 
 										<div class="tutor-d-flex tutor-justify-center tutor-my-48">

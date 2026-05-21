@@ -38,6 +38,7 @@ class OrderModel {
 	const ORDER_COMPLETED  = 'completed';
 	const ORDER_CANCELLED  = 'cancelled';
 	const ORDER_TRASH      = 'trash';
+	const ORDER_PENDING    = 'pending';
 
 	/**
 	 * Payment status
@@ -51,6 +52,7 @@ class OrderModel {
 	const PAYMENT_UNPAID             = 'unpaid';
 	const PAYMENT_REFUNDED           = 'refunded';
 	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
+	const PAYMENT_PENDING            = 'pending';
 
 	/**
 	 * Payment methods
@@ -291,6 +293,7 @@ class OrderModel {
 			self::ORDER_COMPLETED  => __( 'Completed', 'tutor' ),
 			self::ORDER_CANCELLED  => __( 'Cancelled', 'tutor' ),
 			self::ORDER_TRASH      => __( 'Trash', 'tutor' ),
+			self::ORDER_PENDING    => __( 'Pending', 'tutor' ),
 		);
 	}
 
@@ -323,6 +326,7 @@ class OrderModel {
 			self::PAYMENT_FAILED             => __( 'Failed', 'tutor' ),
 			self::PAYMENT_REFUNDED           => __( 'Refunded', 'tutor' ),
 			self::PAYMENT_PARTIALLY_REFUNDED => __( 'Partially Refunded', 'tutor' ),
+			self::PAYMENT_PENDING            => __( 'Pending', 'tutor' ),
 		);
 	}
 

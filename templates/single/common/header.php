@@ -48,11 +48,11 @@ if ( CourseModel::can_autocomplete_course( $course_id, $user_id ) ) {
 ?>
 <div class="tutor-course-topic-single-header tutor-single-page-top-bar">
 	<a href="#" class="tutor-course-topics-sidebar-toggler tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex tutor-flex-shrink-0" tutor-course-topics-sidebar-toggler>
-		<span class="tutor-icon-left" area-hidden="true"></span>
+		<span class="tutor-icon-left" aria-hidden="true"></span>
 	</a>
 
 	<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>" class="tutor-iconic-btn tutor-d-flex tutor-d-xl-none">
-		<span class="tutor-icon-previous" area-hidden="true"></span>
+		<span class="tutor-icon-previous" aria-hidden="true"></span>
 	</a>
 
 	<div class="tutor-course-topic-single-header-title tutor-fs-6 tutor-ml-12 tutor-ml-xl-24">
@@ -92,13 +92,13 @@ if ( CourseModel::can_autocomplete_course( $course_id, $user_id ) ) {
 		}
 		?>
 		<a class="tutor-iconic-btn tutor-flex-shrink-0" href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>">
-			<span class="tutor-icon-times" area-hidden="true"></span>
+			<span class="tutor-icon-times" aria-hidden="true"></span>
 		</a>
 	</div>
 
 	<div class="tutor-ml-auto tutor-align-center tutor-d-block tutor-d-xl-none">
 		<a class="tutor-iconic-btn" href="#" tutor-course-topics-sidebar-offcanvas-toggler>
-			<span class="tutor-icon-hamburger-menu" area-hidden="true"></span>
+			<span class="tutor-icon-hamburger-menu" aria-hidden="true"></span>
 		</a>
 	</div>
 </div>

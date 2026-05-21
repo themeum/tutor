@@ -60,7 +60,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 		<div class="tutor-row tutor-align-lg-center">
 			<div class="tutor-col-lg-auto tutor-mb-16 tutor-mb-lg-0">
 				<div class="tutor-round-box tutor-p-8">
-					<i class="tutor-icon-wallet" area-hidden="true"></i>
+					<i class="tutor-icon-wallet" aria-hidden="true"></i>
 				</div>
 			</div>
 
@@ -130,21 +130,21 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 	<?php
 	if ( $is_balance_sufficient && $withdraw_method_name ) {
 		?>
-		<div id="tutor-earning-withdraw-modal" class="tutor-modal">
+		<div id="tutor-earning-withdraw-modal" class="tutor-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-withdraw-modal-title" aria-hidden="true">
 			<div class="tutor-modal-overlay"></div>
 			<div class="tutor-modal-window">
 				<div class="tutor-modal-content tutor-modal-content-white">
-					<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-						<span class="tutor-icon-times" area-hidden="true"></span>
+					<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+						<span class="tutor-icon-times" aria-hidden="true"></span>
 					</button>
 
 					<div class="tutor-modal-body">
 						<div class="tutor-py-20 tutor-px-24">
 							<div class="tutor-round-box tutor-round-box-lg tutor-mb-16">
-								<span class="tutor-icon-wallet" area-hidden="true"></span>
+								<span class="tutor-icon-wallet" aria-hidden="true"></span>
 							</div>
 
-							<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'Withdrawal Request', 'tutor' ); ?></div>
+							<div id="tutor-withdraw-modal-title" class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'Withdrawal Request', 'tutor' ); ?></div>
 							<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Please check your transaction notification on your connected withdrawal method', 'tutor' ); ?></div>
 
 							<div class="tutor-row tutor-mt-32">
@@ -160,7 +160,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 							</div>
 						</div>
 
-						<div class="tutor-mx-n32 tutor-my-32"><div class="tutor-hr" area-hidden="true"></div></div>
+						<div class="tutor-mx-n32 tutor-my-32"><div class="tutor-hr" aria-hidden="true"></div></div>
 
 						<form id="tutor-earning-withdraw-form" method="post">
 							<div class="tutor-py-20 tutor-px-24">
@@ -176,7 +176,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 									</div>
 
 									<div class="tutor-form-help tutor-d-flex tutor-align-center">
-										<span class="tutor-icon-circle-question-mark tutor-mr-8" area-hidden="true"></span>
+										<span class="tutor-icon-circle-question-mark tutor-mr-8" aria-hidden="true"></span>
 										<span><?php echo wp_kses( __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . $formatted_min_withdraw_amount, array() ); ?></span>
 									</div>
 

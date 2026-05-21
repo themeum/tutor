@@ -246,7 +246,6 @@ const jsEntries = {
   'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
   'tutor-setup': './assets/react/admin-dashboard/tutor-setup.js',
   'tutor-gutenberg': './assets/react/gutenberg/index.js',
-  'tutor-template-import-script': './assets/react/admin-dashboard/template-import-script.js',
   'tutor-course-builder': './assets/react/v3/entries/course-builder/index.tsx',
   'tutor-order-details': './assets/react/v3/entries/order-details/index.tsx',
   'tutor-coupon': './assets/react/v3/entries/coupon-details/index.tsx',
@@ -264,7 +263,6 @@ const scssEntries = {
   'tutor-rtl-scss': './v2-library/src/scss/main.rtl.scss',
   'tutor-icon-scss': './v2-library/tutor-icon/tutor-icon.scss',
   'tutor-frontend-dashboard-scss': './assets/scss/frontend-dashboard/index.scss',
-  'tutor-template-import-scss': './assets/scss/admin-dashboard/template-import.scss',
 };
 
 const resolveAliases = {

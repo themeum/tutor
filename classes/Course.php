@@ -1695,6 +1695,8 @@ class Course extends Tutor_Base {
 	 * Update course content order
 	 *
 	 * @since 1.0.0
+	 * @since 3.9.9 Check if user can manage course before updating order.
+	 *
 	 * @return void
 	 */
 	public function ajax_update_course_content_order() {
@@ -1707,22 +1709,21 @@ class Course extends Tutor_Base {
 			wp_send_json_error( __( 'Sorting order is required', 'tutor' ) );
 		}
 
-		foreach ( $sorting_order as $topic ) {
-			if ( isset( $topic['topic_id'] ) && ! tutor_utils()->can_user_manage( 'topic', $topic['topic_id'] ) ) {
-				wp_send_json_error( __( 'Access Denied!', 'tutor' ) );
-				return;
-			}
+		$topic_id  = (int) isset( $sorting_order[0], $sorting_order[0]['topic_id'] ) ? $sorting_order[0]['topic_id'] : 0;
+		$course_id = wp_get_post_parent_id( $topic_id );
+
+		if ( ! $topic_id || ! $course_id ) {
+			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
+		}
+
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) || ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
 		if ( Input::has( 'content_parent' ) ) {
 			$content_parent = Input::post( 'content_parent', array(), Input::TYPE_ARRAY );
 			$topic_id       = tutor_utils()->array_get( 'parent_topic_id', $content_parent );
 			$content_id     = tutor_utils()->array_get( 'content_id', $content_parent );
-
-			if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
-				wp_send_json_success( array( 'message' => __( 'Access Denied!', 'tutor' ) ) );
-				exit;
-			}
 
 			// Update the parent topic id of the content.
 			global $wpdb;

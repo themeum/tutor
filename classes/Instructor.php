@@ -95,8 +95,14 @@ class Instructor {
 				'user_login'            => __( 'User Name field is required', 'tutor' ),
 				'password'              => __( 'Password field is required', 'tutor' ),
 				'password_confirmation' => __( 'Password Confirmation field is required', 'tutor' ),
+
 			)
 		);
+
+		$terms_conditions_link = tutor_utils()->get_toc_page_link();
+		if ( $terms_conditions_link ) {
+			$required_fields['terms_conditions'] = __( 'Please accept the Terms and Conditions to continue', 'tutor' );
+		}
 
 		$validation_errors = array();
 
