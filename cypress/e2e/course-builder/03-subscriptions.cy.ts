@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import endpoints from '@TutorShared/utils/endpoints';
-import { loginAsAdmin } from 'cypress/support/auth';
-import { backendUrls } from '../../config/page-urls';
+import { loginAsAdmin } from '@Cypress/support/auth';
+import { backendUrls } from '@Cypress/config/page-urls';
 
 describe('Tutor Admin Subscriptions', () => {
   let courseId: string;

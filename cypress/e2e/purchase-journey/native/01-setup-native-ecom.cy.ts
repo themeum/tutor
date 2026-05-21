@@ -1,6 +1,6 @@
 import endpoints from '@TutorShared/utils/endpoints';
-import { backendUrls } from 'cypress/config/page-urls';
-import { loginAsAdmin } from 'cypress/support/auth';
+import { backendUrls } from '@Cypress/config/page-urls';
+import { loginAsAdmin } from '@Cypress/support/auth';
 
 describe('Native E-Commerce', () => {
   beforeEach(() => {

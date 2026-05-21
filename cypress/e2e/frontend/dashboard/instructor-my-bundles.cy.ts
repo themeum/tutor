@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import endpoints from '@TutorShared/utils/endpoints';
-import { backendUrls, frontendUrls } from '../../../config/page-urls';
+import { backendUrls, frontendUrls } from '@Cypress/config/page-urls';
 
 describe('Tutor Dashboard My Bundles', () => {
   let bundleData: { post_title: string; post_content: string; course_benefits: string };

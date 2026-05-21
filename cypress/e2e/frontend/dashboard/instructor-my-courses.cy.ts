@@ -1,5 +1,5 @@
 import endpoints from '@TutorShared/utils/endpoints';
-import { backendUrls, frontendUrls } from '../../../config/page-urls';
+import { backendUrls, frontendUrls } from '@Cypress/config/page-urls';
 
 describe('Tutor Dashboard Instructor Settings', () => {
   it('should give instructor access to publish courses', () => {

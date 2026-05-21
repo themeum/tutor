@@ -1,4 +1,4 @@
-import { backendUrls } from '../../config/page-urls';
+import { backendUrls } from '@Cypress/config/page-urls';
 
 describe('Tutor Admin Question and Answers', () => {
   beforeEach(() => {

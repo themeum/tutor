@@ -2,8 +2,8 @@ import { type AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentM
 import { type LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import { faker } from '@faker-js/faker';
 import endpoints from '@TutorShared/utils/endpoints';
-import { backendUrls } from 'cypress/config/page-urls';
-import { loginAsAdmin } from '../../support/auth';
+import { backendUrls } from '@Cypress/config/page-urls';
+import { loginAsAdmin } from '@Cypress/support/auth';
 
 describe('Course Builder - Curriculum', () => {
   let courseId: string;

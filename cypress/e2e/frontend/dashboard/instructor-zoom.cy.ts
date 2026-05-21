@@ -2,7 +2,7 @@ import { type ZoomMeetingFormData } from '@CourseBuilderServices/course';
 import { faker } from '@faker-js/faker';
 import { Addons } from '@TutorShared/config/constants';
 import endpoints from '@TutorShared/utils/endpoints';
-import { frontendUrls } from '../../../config/page-urls';
+import { frontendUrls } from '@Cypress/config/page-urls';
 
 let courseId: string = '';
 describe('Tutor Dashboard Zoom', () => {

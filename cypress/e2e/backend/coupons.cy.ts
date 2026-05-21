@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { backendUrls } from 'cypress/config/page-urls';
+import { backendUrls } from '@Cypress/config/page-urls';
 
 const couponData = {
   title: faker.lorem.words(2),

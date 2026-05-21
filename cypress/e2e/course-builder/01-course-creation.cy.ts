@@ -1,8 +1,8 @@
 import { type CourseFormData } from '@CourseBuilderServices/course';
 import { faker } from '@faker-js/faker';
 import endpoints from '@TutorShared/utils/endpoints';
-import { backendUrls } from 'cypress/config/page-urls';
-import { loginAsAdmin } from '../../support/auth';
+import { backendUrls } from '@Cypress/config/page-urls';
+import { loginAsAdmin } from '@Cypress/support/auth';
 
 describe('Course Builder - Creation', () => {
   let courseId: string;

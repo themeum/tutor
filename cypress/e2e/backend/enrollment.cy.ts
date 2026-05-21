@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import endpoints from '@TutorShared/utils/endpoints';
-import { backendUrls } from '../../config/page-urls';
+import { backendUrls } from '@Cypress/config/page-urls';
 
 describe('Tutor Admin ENROLLMENTS', () => {
   const studentCSVPath = 'cypress/fixtures/assets/tutor_bulk_enrollment_sample.csv';
