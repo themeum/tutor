@@ -1268,6 +1268,22 @@ class QueryHelper {
 	 * @return string
 	 */
 	public static function prepare_table_name( string $table_name ) {
+		global $wpdb;
+
+		$table_name = trim( $table_name );
+
+		if ( $table_name === 'users' ) {
+			return $wpdb->users;
+		} elseif ( $table_name === 'usermeta' ) {
+			return $wpdb->usermeta;
+		} 
+
+		if ( strpos( $table_name, 'wp_users' ) !== false ) {
+			return str_replace( 'wp_users', $wpdb->users, $table_name );
+		} elseif ( strpos( $table_name, 'wp_usermeta' ) !== false ) {
+			return str_replace( 'wp_usermeta', $wpdb->usermeta, $table_name );
+		}
+
 		$table_prefix = self::get_table_prefix();
 		if ( strpos( $table_name,$table_prefix ) !== 0 ) {
 			$table_name = $table_prefix . $table_name;
