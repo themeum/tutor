@@ -295,7 +295,7 @@ class UserConsent extends BaseController {
 
 				$record->time_ago = sprintf(
 					/* translators: %s human-readable time difference. */
-					_x( '%s ago', 'human-readable time difference', 'tutor' ),
+					__( '%s ago', 'tutor' ),
 					human_time_diff( $created_at, time() )
 				);
 
