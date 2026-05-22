@@ -235,7 +235,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 render={(controllerProps) => (
                   <FormCheckbox
                     {...controllerProps}
-                    label={__('Limit attempts allowed', 'tutor')}
+                    label={__('Limit allowed attempts', 'tutor')}
                     helpText={__('Set the number of attempts allowed for this quiz. 0 means unlimited.', 'tutor')}
                   />
                 )}
@@ -337,7 +337,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   name="quiz_option.enable_time_limit"
                   control={form.control}
                   render={(controllerProps) => (
-                    <FormCheckbox {...controllerProps} label={__('Set Time Limit', 'tutor')} />
+                    <FormCheckbox {...controllerProps} label={__('Set time limit', 'tutor')} />
                   )}
                 />
                 <Show when={form.watch('quiz_option.enable_time_limit')}>

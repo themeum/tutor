@@ -27,8 +27,8 @@ const displayBundle = isTutorProActive && isAddonEnabled(Addons.COURSE_BUNDLE);
 const isSubscriptionActive = isTutorProActive && isAddonEnabled(Addons.SUBSCRIPTION);
 
 const discountTypeOptions = [
-  { label: __('Percent', 'tutor'), value: 'percentage' },
-  { label: __('Amount', 'tutor'), value: 'flat' },
+  { label: __('Percentage', 'tutor'), value: 'percentage' },
+  { label: __('Fixed Amount', 'tutor'), value: 'flat' },
 ];
 
 const appliesToOptions = [
