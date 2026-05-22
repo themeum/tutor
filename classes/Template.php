@@ -519,11 +519,13 @@ class Template extends Tutor_Base {
 		if ( tutor_utils()->is_learning_area() ) {
 			$post_type = get_post_type();
 			$post_id   = get_the_ID();
-			$course_id = tutor_utils()->get_course_id_by_content( $post_id );
-
+			$course_id = tutor()->course_post_type === $post_type ? $post_id : tutor_utils()->get_course_id_by_subcontent( $post_id );
 			if ( ! in_array( get_post_status( $course_id ), array( 'publish', 'private' ), true ) ) {
-				tutor_utils()->redirect_to( tutor_utils()->course_archive_page_url() );
-				exit;
+				global $wp_query;
+				$wp_query->set_404();
+				status_header( 404 );
+				$template = get_query_template( '404' );
+				return $template;
 			}
 
 			$legacy_mode = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
