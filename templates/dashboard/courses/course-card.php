@@ -30,11 +30,11 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 ?>
 
 <div class="tutor-progress-card">
-	<div class="tutor-progress-card-inner" onclick="window.location.href = '<?php echo esc_url( $course_learning_url ); ?>';">
+	<div class="tutor-progress-card-inner" onclick="window.location.href = '<?php echo esc_js( esc_url( $course_learning_url ) ); ?>';">
 		<div class="tutor-progress-card-thumbnail">
 			<?php do_action( 'tutor_courses_card_before_thumbnail', $course_id ); ?>
 			<?php if ( ! empty( $tutor_course_img ) ) : ?>
-				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" />
+				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title_attribute(); ?>" />
 			<?php endif; ?>
 		</div>
 
@@ -47,7 +47,7 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 					</div>
 				<?php endif; ?>
 				<h3 class="tutor-progress-card-title tutor-line-clamp-2">
-					<?php the_title(); ?>
+					<?php echo esc_html( $course_title ); ?>
 				</h3>
 			</div>
 

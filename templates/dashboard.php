@@ -115,7 +115,7 @@ $footer_links = array(
 				} elseif ( User::is_instructor_view() ) {
 						tutor_load_template( 'dashboard.dashboard' );
 				} else {
-					tutor_load_template( 'dashboard.student-dashboard' );
+					tutor_load_template( 'dashboard.student.dashboard' );
 				}
 				?>
 			</div>
@@ -123,7 +123,6 @@ $footer_links = array(
 	</div>
 </div>
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
-</body>
 <?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
 	</body>
 	<?php wp_footer(); ?>
