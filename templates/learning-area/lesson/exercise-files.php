@@ -39,15 +39,9 @@ $open_mode_view = apply_filters( 'tutor_pro_attachment_open_mode', null ) == 'vi
 							</span>
 						</div>
 						<div class="tutor-attachment-card-actions">
-							<?php if ( $open_mode_view ) : ?>
-							<a href="<?php echo esc_url( $attachment->url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" <?php echo esc_attr( $open_mode_view ); ?>>
-								<?php SvgIcon::make()->name( Icon::LINK_EXTERNAL )->size( 20 )->render(); ?>
+							<a href="<?php echo esc_url( $attachment->url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" rel="noopener" <?php echo $open_mode_view ? esc_attr( $open_mode_view ) : esc_attr( 'download' ); ?>>
+								<?php SvgIcon::make()->name( $open_mode_view ? Icon::LINK_EXTERNAL : Icon::DOWNLOAD_2 )->size( 20 )->render(); ?>
 							</a>
-							<?php else : ?>
-							<a href="<?php echo esc_url( $attachment->url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" download>
-								<?php SvgIcon::make()->name( Icon::DOWNLOAD_2 )->render(); ?>
-							</a>
-							<?php endif; ?>
 						</div>
 					</div>
 				</div>
