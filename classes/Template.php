@@ -524,8 +524,7 @@ class Template extends Tutor_Base {
 				global $wp_query;
 				$wp_query->set_404();
 				status_header( 404 );
-				$template = get_query_template( '404' );
-				return $template;
+				return get_404_template();
 			}
 
 			$legacy_mode = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
