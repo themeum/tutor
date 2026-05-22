@@ -41,13 +41,6 @@ $tutor_current_post_type  = get_post_type();
 $tutor_current_content_id = get_the_ID();
 $tutor_course_id          = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
 
-if ( ! in_array( get_post_status( $tutor_course_id ), array( 'publish', 'private' ) ) ) {
-	global $wp_query;
-	$course_url = site_url() . '/' . tutor_utils()->get_option( 'course_permalink_base' ) . '/' . get_the_title( $tutor_course_id );
-	tutor_utils()->redirect_to( $course_url );
-	exit;
-}
-
 do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
 
 $current_user_id            = get_current_user_id();

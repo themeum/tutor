@@ -517,7 +517,15 @@ class Template extends Tutor_Base {
 	 */
 	public function load_learning_template( string $template ): string {
 		if ( tutor_utils()->is_learning_area() ) {
-			$post_type   = get_post_type();
+			$post_type = get_post_type();
+			$post_id   = get_the_ID();
+			$course_id = tutor_utils()->get_course_id_by_content( $post_id );
+
+			if ( ! in_array( get_post_status( $course_id ), array( 'publish', 'private' ), true ) ) {
+				tutor_utils()->redirect_to( tutor_utils()->course_archive_page_url() );
+				exit;
+			}
+
 			$legacy_mode = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
 
 			$template_path = apply_filters( 'tutor_single_content_template', $template, $post_type );
