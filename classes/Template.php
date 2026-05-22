@@ -320,7 +320,7 @@ class Template extends Tutor_Base {
 			$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
 			if ( $page_id === $tutor_checkout_page_id ) {
 				if ( ! apply_filters( 'tutor_should_load_checkout_page', true ) ) {
-					return;
+					return '';
 				}
 
 				$shortcode = new Shortcode( false );
@@ -517,7 +517,16 @@ class Template extends Tutor_Base {
 	 */
 	public function load_learning_template( string $template ): string {
 		if ( tutor_utils()->is_learning_area() ) {
-			$post_type   = get_post_type();
+			$post_type = get_post_type();
+			$post_id   = get_the_ID();
+			$course_id = tutor()->course_post_type === $post_type ? $post_id : tutor_utils()->get_course_id_by_subcontent( $post_id );
+			if ( ! in_array( get_post_status( $course_id ), array( 'publish', 'private' ), true ) ) {
+				global $wp_query;
+				$wp_query->set_404();
+				status_header( 404 );
+				return get_404_template();
+			}
+
 			$legacy_mode = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
 
 			$template_path = apply_filters( 'tutor_single_content_template', $template, $post_type );

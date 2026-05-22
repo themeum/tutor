@@ -2147,15 +2147,16 @@ class Utils {
 		$with_bundle_enrolled_courses_clause = '';
 		if ( ! $with_bundle_enrolled_courses ) {
 			$with_bundle_enrolled_courses_clause = $wpdb->prepare(
-				'AND NOT EXISTS (
+				"AND NOT EXISTS (
 					SELECT 1
-					FROM wp_postmeta pm
+					FROM {$wpdb->postmeta} pm
 					WHERE pm.post_id = e.ID
 						AND pm.meta_key = %s
-				)',
+				)",
 				'_tutor_bundle_id'
 			);
 		}
+
 		$course_ids = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT DISTINCT e.post_parent, e.post_date

@@ -25,10 +25,8 @@
 @forward 'pages/instructor-dashboard';
 
 // Account Pages
-@forward 'certificates';
 @forward 'reviews';
 @forward 'profile';
 @forward 'billing';
 @forward 'withdrawals';
-// @forward 'subscription-history';
 @forward 'settings';
