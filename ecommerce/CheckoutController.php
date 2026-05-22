@@ -21,7 +21,6 @@ use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\EnrollmentModel;
-use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -569,11 +568,11 @@ class CheckoutController {
 		$billing_model   = new BillingModel();
 		$current_user_id = get_current_user_id();
 
-		$is_guest_checkout_endabled = class_exists( 'TutorPro\Ecommerce\GuestCheckout\GuestCheckout' ) && GuestCheckout::is_enable();
+		$is_guest_checkout_enabled = apply_filters( 'tutor_is_guest_checkout_enabled', false );
 
 		// Prevent invalid request.
 		if ( ! $current_user_id ) {
-			if ( $is_guest_checkout_endabled ) {
+			if ( $is_guest_checkout_enabled ) {
 				// Guest user.
 				$current_user_id = wp_rand(); // A random id to uniquely identify.
 			} else {
