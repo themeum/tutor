@@ -66,7 +66,7 @@ $status_options = apply_filters( 'tutor_order_history_status_options', array(), 
 		if ( Input::has_any( $query_params, Input::GET_REQUEST ) ) {
 			Button::make()
 				->tag( 'a' )
-				->size( Size::SMALL )
+				->size( Size::X_SMALL )
 				->attr( 'href', Dashboard::get_account_page_url( 'billing' ) )
 				->attr( 'class', 'tutor-text-brand' )
 				->label( __( 'Clear all', 'tutor' ) )
@@ -74,8 +74,14 @@ $status_options = apply_filters( 'tutor_order_history_status_options', array(), 
 				->render();
 		}
 
-		DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( DateFilter::PLACEMENT_BOTTOM_END )->render();
-		Sorting::make()->size( Size::SMALL )->order( $order_filter )->render();
+		DateFilter::make()
+			->type( DateFilter::TYPE_RANGE )
+			->placement( DateFilter::PLACEMENT_BOTTOM_END )
+			->trigger_size( Size::X_SMALL )
+			->hide_initial_label()
+			->render();
+
+		Sorting::make()->size( Size::X_SMALL )->order( $order_filter )->render();
 		?>
 	</div>
 </div>

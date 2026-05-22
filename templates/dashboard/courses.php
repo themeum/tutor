@@ -111,9 +111,10 @@ $courses_list = $courses_list_array[ $active_tab ];
 				?>
 			</div>
 			<?php
+			$found_posts = $courses_list ? $courses_list->found_posts : 0;
 			Pagination::make()
 				->current( $current_page )
-				->total( $courses_list->found_posts )
+				->total( $found_posts )
 				->limit( $courses_per_page )
 				->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-none tutor-sm-mt-5' )
 				->render();
