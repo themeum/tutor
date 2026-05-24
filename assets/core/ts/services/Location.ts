@@ -1,7 +1,8 @@
-import Alpine from 'alpinejs';
-import axios from 'axios';
 import { type QueryService, type QueryState, queryServiceMeta } from '@Core/ts/services/Query';
+import Alpine from 'alpinejs';
+
 import { type ServiceMeta } from '@Core/ts/types';
+import { wpGet } from '@Core/ts/utils/api';
 import { tutorConfig } from '@TutorShared/config/config';
 import endpoints from '@TutorShared/utils/endpoints';
 
@@ -14,7 +15,7 @@ class LocationService {
   /**
    * 24 hours in milliseconds
    */
-  private readonly STEAL_TIME = 1000 * 60 * 60 * 24;
+  private readonly STALE_TIME = 1000 * 60 * 60 * 24;
 
   constructor() {
     this.initStore();
@@ -26,12 +27,10 @@ class LocationService {
     Alpine.store('tutorLocation', {
       fetchCountriesQuery: query.useQuery(
         'fetch-countries',
-        async () => {
-          return await axios.get(`${tutorConfig.tutor_url}${endpoints.FETCH_COUNTRIES}`).then((res) => res.data);
-        },
+        async () => wpGet<Country[]>(`${tutorConfig.tutor_url}${endpoints.FETCH_COUNTRIES}`),
         {
-          staleTime: this.STEAL_TIME,
-          cacheTime: this.STEAL_TIME,
+          staleTime: this.STALE_TIME,
+          cacheTime: this.STALE_TIME,
         },
       ) as QueryState<Country[]>,
     });

@@ -1,12 +1,10 @@
-import axios from 'axios';
-
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 
+import { wpPost, wpPostForm } from '@Core/ts/utils/api';
 import { tutorConfig } from '@TutorShared/config/config';
 import {
   ERROR_MESSAGES,
@@ -46,7 +44,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     submittedModalId: config.submittedModalId ?? '',
     timeoutModalId: config.timeoutModalId ?? '',
 
-    submitQuizMutation: null as MutationState<{ success?: boolean; data?: unknown }, Record<string, unknown>> | null,
+    submitQuizMutation: null as MutationState<unknown, Record<string, unknown>> | null,
     abandonQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
     timeoutQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
 
@@ -508,31 +506,24 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       }, {});
     },
 
-    submitQuizAttempt(payload: Record<string, unknown>) {
-      return axios
-        .postForm(window.location.href, {
-          tutor_action: endpoints.QUIZ_ATTEMPT_SUBMIT,
-          _tutor_nonce: tutorConfig._tutor_nonce,
-          ...payload,
-        })
-        .then((res) => res.data);
+    submitQuizAttempt(payload: object) {
+      return wpPostForm(window.location.href, {
+        tutor_action: endpoints.QUIZ_ATTEMPT_SUBMIT,
+        ...payload,
+      });
     },
 
     abandonQuizAttempt(payload: Record<string, unknown>) {
-      return wpAjaxInstance
-        .post(endpoints.QUIZ_ABANDON, {
-          tutor_action: endpoints.QUIZ_ATTEMPT_SUBMIT,
-          ...payload,
-        })
-        .then((data) => data as { success?: boolean; data?: unknown });
+      return wpPost(endpoints.QUIZ_ABANDON, {
+        tutor_action: endpoints.QUIZ_ATTEMPT_SUBMIT,
+        ...payload,
+      }).then((data) => data as { success?: boolean; data?: unknown });
     },
 
     timeoutQuizAttempt(payload: Record<string, unknown>) {
-      return wpAjaxInstance
-        .post(endpoints.QUIZ_TIMEOUT, {
-          ...payload,
-        })
-        .then((data) => data as { success?: boolean; data?: unknown });
+      return wpPost(endpoints.QUIZ_TIMEOUT, {
+        ...payload,
+      }).then((data) => data as { success?: boolean; data?: unknown });
     },
 
     destroy() {

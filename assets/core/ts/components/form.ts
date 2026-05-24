@@ -3,7 +3,7 @@ import { isValid as isValidDate, parse } from 'date-fns';
 
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { parseNumberOnly } from '@TutorShared/utils/util';
+import { parseNumberOnly } from '@Core/ts/utils/number';
 
 interface FormControlConfig {
   mode?: 'onChange' | 'onBlur' | 'onSubmit';

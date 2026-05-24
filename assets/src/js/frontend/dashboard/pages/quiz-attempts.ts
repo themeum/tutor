@@ -1,10 +1,10 @@
 // Quiz Attempts Page
 import { type MutationState } from '@Core/ts/services/Query';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import { quizRetryAttemptMeta } from '@FrontendComponents/quiz/retry-attempt';
 import { quizSummarySidebarMeta } from '@FrontendComponents/quiz/summary-sidebar';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 
+import { wpPost } from '@Core/ts/utils/api';
 import { quizAttemptFeedbackMeta } from './quiz-attempt-feedback';
 
 const quizAttemptsPage = () => {
@@ -27,7 +27,7 @@ const quizAttemptsPage = () => {
     },
 
     deleteAttempt(attemptID: number) {
-      return wpAjaxInstance.post('tutor_attempt_delete', {
+      return wpPost('tutor_attempt_delete', {
         id: attemptID,
       });
     },

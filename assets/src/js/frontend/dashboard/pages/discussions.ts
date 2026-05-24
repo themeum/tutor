@@ -1,7 +1,9 @@
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { decodeHtmlEntities } from '@Core/ts/utils/decode-html-entities';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage, decodeHtmlEntities } from '@TutorShared/utils/util';
+import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
 
 interface ReplyCommentPayload {
@@ -282,7 +284,7 @@ const discussionsPage = () => {
       this.loadingReplies = true;
       try {
         const endpoint = tab === 'qna' ? endpoints.LOAD_QNA_REPLIES : endpoints.LOAD_COMMENT_REPLIES;
-        const response = await wpAjaxInstance.post(endpoint, {
+        const response = await wpPost<TutorMutationResponse<{ html: string }>>(endpoint, {
           comment_id: commentId,
           order: this.repliesOrder,
         });
@@ -311,31 +313,31 @@ const discussionsPage = () => {
     },
 
     deleteComment(payload: DeleteCommentPayload) {
-      return wpAjaxInstance.post(endpoints.DELETE_LESSON_COMMENT, payload);
+      return wpPost(endpoints.DELETE_LESSON_COMMENT, payload);
     },
 
     replyComment(payload: ReplyCommentPayload) {
-      return wpAjaxInstance.post(endpoints.REPLY_LESSON_COMMENT, payload);
+      return wpPost(endpoints.REPLY_LESSON_COMMENT, payload);
     },
 
     updateComment(payload: { comment_id: number; comment: string }) {
-      return wpAjaxInstance.post(endpoints.UPDATE_LESSON_COMMENT, payload);
+      return wpPost(endpoints.UPDATE_LESSON_COMMENT, payload);
     },
 
     qnaSingleAction(payload: QnASingleActionPayload) {
-      return wpAjaxInstance.post(endpoints.QNA_SINGLE_ACTION, payload);
+      return wpPost(endpoints.QNA_SINGLE_ACTION, payload);
     },
 
     deleteQnA(payload: DeleteQnAPayload) {
-      return wpAjaxInstance.post(endpoints.DELETE_DASHBOARD_QNA, payload);
+      return wpPost(endpoints.DELETE_DASHBOARD_QNA, payload);
     },
 
     replyQnA(payload: ReplyQnAPayload) {
-      return wpAjaxInstance.post(endpoints.CREATE_UPDATE_QNA, payload);
+      return wpPost(endpoints.CREATE_UPDATE_QNA, payload);
     },
 
     updateQnA(payload: UpdateQnAPayload) {
-      return wpAjaxInstance.post(endpoints.UPDATE_QNA, payload);
+      return wpPost(endpoints.UPDATE_QNA, payload);
     },
 
     async handleQnASingleAction(questionId: number, action: string, extras: Record<string, string> = {}) {

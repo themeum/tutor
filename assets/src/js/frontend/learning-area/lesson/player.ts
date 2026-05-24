@@ -1,19 +1,13 @@
+import { wpPost } from '@Core/ts/utils/api';
 import { isMobileDevice } from '@Core/ts/utils/util';
 import { isVimeoPlyr, isYouTubePlyr } from '@FrontendTypes/index';
 import { tutorConfig } from '@TutorShared/config/config';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { __, sprintf } from '@wordpress/i18n';
 
-interface AutoLoadPayload {
-  post_id: number;
-}
-
-interface AutoLoadResponse {
-  success: boolean;
-  data?: {
-    next_url: string;
-  };
-}
+type AutoLoadResponse = TutorMutationResponse<{
+  next_url: string;
+}>;
 
 interface PlayerData {
   strict_mode?: boolean;
@@ -155,7 +149,7 @@ class LessonPlayer {
       ...options,
     };
 
-    wpAjaxInstance.post('sync_video_playback', data);
+    wpPost('sync_video_playback', data);
 
     const currentTime = this.player.currentTime;
     const bestWatchTime = this.playerData.best_watch_time || 0;
@@ -172,15 +166,13 @@ class LessonPlayer {
   private autoloadContent() {
     if (!this.playerData.post_id) return;
 
-    wpAjaxInstance
-      .post<AutoLoadPayload, AutoLoadResponse>('autoload_next_course_content', {
-        post_id: this.playerData.post_id,
-      })
-      .then((response) => {
-        if (response.success && response.data?.next_url) {
-          window.location.href = response.data.next_url;
-        }
-      });
+    wpPost<AutoLoadResponse>('autoload_next_course_content', {
+      post_id: this.playerData.post_id,
+    }).then((response) => {
+      if (response.status_code === 200 && response.data?.next_url) {
+        window.location.href = response.data.next_url;
+      }
+    });
   }
 
   /**
