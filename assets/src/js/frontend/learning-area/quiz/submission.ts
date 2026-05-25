@@ -45,8 +45,8 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     timeoutModalId: config.timeoutModalId ?? '',
 
     submitQuizMutation: null as MutationState<unknown, Record<string, unknown>> | null,
-    abandonQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
-    timeoutQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
+    abandonQuizMutation: null as MutationState<unknown, Record<string, unknown>> | null,
+    timeoutQuizMutation: null as MutationState<unknown, Record<string, unknown>> | null,
 
     hasTimedOut: false,
     isRevealSubmitting: false,
@@ -517,13 +517,13 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       return wpPost(endpoints.QUIZ_ABANDON, {
         tutor_action: endpoints.QUIZ_ATTEMPT_SUBMIT,
         ...payload,
-      }).then((data) => data as { success?: boolean; data?: unknown });
+      });
     },
 
     timeoutQuizAttempt(payload: Record<string, unknown>) {
       return wpPost(endpoints.QUIZ_TIMEOUT, {
         ...payload,
-      }).then((data) => data as { success?: boolean; data?: unknown });
+      });
     },
 
     destroy() {

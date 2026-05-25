@@ -2,13 +2,20 @@ import config, { tutorConfig } from '@TutorShared/config/config';
 
 type HttpMethod = 'GET' | 'POST';
 
-function toFormData(data: object): FormData {
+function toFormData(data: Record<string, unknown>): FormData {
   const formData = new FormData();
 
   for (const [key, value] of Object.entries(data)) {
-    if (value !== undefined && value !== null) {
-      formData.append(key, String(value));
+    if (value === undefined || value === null) continue;
+
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        formData.append(`${key}[]`, String(item));
+      }
+      continue;
     }
+
+    formData.append(key, String(value));
   }
 
   return formData;
