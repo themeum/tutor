@@ -160,27 +160,27 @@ class WithdrawModel {
 		//phpcs:disable
 		$data = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT ID, display_name, 
+				"SELECT ID, display_name,
                     total_income,
-					total_withdraw, 
-                    (total_income-total_withdraw) current_balance, 
+					total_withdraw,
+                    (total_income-total_withdraw) current_balance,
                     total_matured,
 					total_pending,
-                    greatest(0, total_matured - total_withdraw) available_for_withdraw 
-                
+                    greatest(0, total_matured - total_withdraw) available_for_withdraw
+
                 FROM (
-                        SELECT ID,display_name, 
+                        SELECT ID,display_name,
                     COALESCE((SELECT SUM(instructor_amount) FROM {$wpdb->prefix}tutor_earnings WHERE order_status='%s' {$date_clause} GROUP BY user_id HAVING user_id=u.ID),0) total_income,
-                    
+
                         COALESCE((
-                        SELECT sum(amount) total_withdraw FROM {$wpdb->prefix}tutor_withdraws 
+                        SELECT sum(amount) total_withdraw FROM {$wpdb->prefix}tutor_withdraws
                         WHERE status='%s' {$date_clause}
                         GROUP BY user_id
                         HAVING user_id=u.ID
                     ),0) total_withdraw,
-					
+
 					COALESCE((
-                        SELECT sum(amount) total_pending FROM {$wpdb->prefix}tutor_withdraws 
+                        SELECT sum(amount) total_pending FROM {$wpdb->prefix}tutor_withdraws
                         WHERE status='pending' {$date_clause}
                         GROUP BY user_id
                         HAVING user_id=u.ID
@@ -194,9 +194,9 @@ class WithdrawModel {
                         GROUP BY user_id
                         HAVING user_id = u.ID
                     ),0) total_matured
-                    
-                FROM {$wpdb->prefix}users u WHERE u.ID=%d
-                
+
+                FROM {$wpdb->users} u WHERE u.ID=%d
+
                 ) a",
 				'completed',
 				self::STATUS_APPROVED,
