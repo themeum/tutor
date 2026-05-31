@@ -72,10 +72,8 @@ const getCurrentLearningAreaPage = (): string | null => {
   return params.get('subpage');
 };
 
-const preloadedLearningAreaPage = getCurrentLearningAreaPage();
-const preloadedLearningAreaRoute = preloadedLearningAreaPage
-  ? learningAreaRoutes[preloadedLearningAreaPage]
-  : undefined;
+const currentLearningAreaPage = getCurrentLearningAreaPage();
+const preloadedLearningAreaRoute = currentLearningAreaPage ? learningAreaRoutes[currentLearningAreaPage] : undefined;
 registerRoutePreload({
   routeConfig: preloadedLearningAreaRoute,
   beforeLoad: () => {

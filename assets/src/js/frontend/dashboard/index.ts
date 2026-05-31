@@ -32,7 +32,7 @@ const getCurrentPage = (): string => {
 
   // Check for legacy query parameters
   const pageParam = params.get('subpage');
-  if (pageParam) {
+  if (pageParam && pageParam !== 'dashboard') {
     return pageParam;
   }
 
@@ -68,12 +68,6 @@ const getCurrentPage = (): string => {
 
 const dashboardRoutes: Record<string, TutorRouteConfig<DashboardRouteModule>> = {
   home: createRouteConfig(withBasePack('core-form-controls'), async () => {
-    const { initializeHome } = await import(/* webpackChunkName: "tutor-dashboard-home" */ './pages/instructor/home');
-    return {
-      initializeDashboardRoute: initializeHome,
-    };
-  }),
-  dashboard: createRouteConfig(withBasePack('core-form-controls'), async () => {
     const { initializeHome } = await import(/* webpackChunkName: "tutor-dashboard-home" */ './pages/instructor/home');
     return {
       initializeDashboardRoute: initializeHome,
@@ -145,8 +139,8 @@ const getDashboardRouteConfig = (route: string): TutorRouteConfig<DashboardRoute
   return dashboardRoutes[route];
 };
 
-const preloadedDashboardRoute = getCurrentPage();
-const preloadedDashboardRouteConfig = getDashboardRouteConfig(preloadedDashboardRoute);
+const currentPage = getCurrentPage();
+const preloadedDashboardRouteConfig = getDashboardRouteConfig(currentPage);
 registerRoutePreload({
   routeConfig: preloadedDashboardRouteConfig,
   beforeLoad: initializeHeader,
