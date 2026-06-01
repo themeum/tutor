@@ -143,35 +143,12 @@ const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) 
 
     iframeDocument.body.setAttribute('data-preview-device', activeTab);
 
-    const iframeWin = iframeDocument.defaultView;
-    const tutorPreviewWin = iframeWin as (Window & { _tutorCoordinatesRedrawAll?: () => void }) | null;
-    let coordinatesRedrawTimeout: number | undefined;
-    if (tutorPreviewWin && typeof tutorPreviewWin._tutorCoordinatesRedrawAll === 'function') {
-      const redrawAll = tutorPreviewWin._tutorCoordinatesRedrawAll;
-      requestAnimationFrame(() => {
-        redrawAll();
-      });
-      coordinatesRedrawTimeout = tutorPreviewWin.setTimeout(() => {
-        redrawAll();
-      }, 280);
-    }
-
     if (tutorConfig.settings?.learning_mode === 'kids') {
       iframeDocument.body.setAttribute('data-tutor-ui', 'kids');
-      return () => {
-        if (coordinatesRedrawTimeout !== undefined && tutorPreviewWin) {
-          tutorPreviewWin.clearTimeout(coordinatesRedrawTimeout);
-        }
-      };
+      return;
     }
 
     iframeDocument.body.removeAttribute('data-tutor-ui');
-
-    return () => {
-      if (coordinatesRedrawTimeout !== undefined && tutorPreviewWin) {
-        tutorPreviewWin.clearTimeout(coordinatesRedrawTimeout);
-      }
-    };
   }, [activeTab, iframeDocument]);
 
   useLayoutEffect(() => {
@@ -229,11 +206,7 @@ const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) 
               />
               {iframeDocument?.getElementById('preview-root')
                 ? createPortal(
-                    <PreviewDocumentContent
-                      activeTab={activeTab}
-                      question={question}
-                      previewQuestionStyleType={previewQuestionStyleType}
-                    />,
+                    <PreviewDocumentContent question={question} previewQuestionStyleType={previewQuestionStyleType} />,
                     iframeDocument.getElementById('preview-root') as HTMLElement,
                   )
                 : null}
@@ -269,7 +242,6 @@ const PreviewDocumentContent = ({
   question,
   previewQuestionStyleType,
 }: {
-  activeTab: 'desktop' | 'mobile';
   question: QuizQuestion;
   previewQuestionStyleType: string;
 }) => {
