@@ -14,11 +14,9 @@ import { playerMeta } from '@Core/ts/components/player';
 import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
 import { readMoreMeta } from '@Core/ts/components/read-more';
-import { selectDropdownMeta } from '@Core/ts/components/select-dropdown';
 import { starRatingMeta } from '@Core/ts/components/star-rating';
 import { staticsMeta } from '@Core/ts/components/statics';
 import { statusSelectMeta } from '@Core/ts/components/status-select';
-import { stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 import { tabsMeta } from '@Core/ts/components/tabs';
 import { toastMeta } from '@Core/ts/components/toast';
 import { tooltipMeta } from '@Core/ts/components/tooltip';
@@ -51,8 +49,6 @@ const initializePlugin = async () => {
       staticsMeta,
       accordionMeta,
       tooltipMeta,
-      selectDropdownMeta,
-      stepperDropdownMeta,
       previewTriggerMeta,
       readMoreMeta,
       starRatingMeta,
