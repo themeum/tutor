@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Tutor LMS
  * Plugin URI: https://tutorlms.com
- * Description: Tutor LMS (Free) build and manage professional online courses with unlimited lessons, a flexible quiz engine, and a complete student learning experience. No coding needed.
+ * Description: Build and manage professional online courses with unlimited lessons, a flexible quiz engine, and a complete student learning experience. No coding needed.
  * Author: Themeum
  * Version: 4.0.0-rc.1
  * Author URI: https://themeum.com
