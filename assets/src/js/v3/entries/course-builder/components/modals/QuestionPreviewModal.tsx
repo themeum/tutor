@@ -430,23 +430,6 @@ const getPreviewFrameStyles = () => `
     display: none !important;
   }
 
-  .tutor-quiz-question-option[data-preview-selected='true'] {
-    border-color: var(--tutor-color-primary);
-    background: color-mix(in srgb, var(--tutor-color-primary) 8%, transparent);
-  }
-
-  .tutor-quiz-question-option[data-option='dragging'],
-  .tutor-quiz-question-option[data-dnd-dragging='true'] {
-    background: var(--tutor-surface-l1);
-    border-color: var(--tutor-color-primary);
-    box-shadow: 0 12px 30px rgba(16, 24, 40, 0.16);
-    opacity: 0.6;
-  }
-
-  .tutor-quiz-question-option[data-dnd-dragging='true'] {
-    opacity: 1;
-  }
-
   [data-grab-handle] {
     border: 0;
     background: transparent;

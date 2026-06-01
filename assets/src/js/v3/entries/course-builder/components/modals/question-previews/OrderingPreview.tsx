@@ -3,6 +3,7 @@ import { Sortable } from '@dnd-kit/dom/sortable';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import For from '@TutorShared/controls/For';
 import { type QuizQuestionOption } from '@TutorShared/utils/types';
 
 const getAnswerId = (answer: QuizQuestionOption, index: number) => String(answer.answer_id || index);
@@ -73,27 +74,27 @@ const OrderingPreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
 
   return (
     <div ref={containerRef} className="tutor-quiz-question-options">
-      {orderedAnswerIds.map((answerId, index) => {
-        const answer = answersById[answerId];
+      <For each={orderedAnswerIds}>
+        {(answerId, index) => {
+          const answer = answersById[answerId];
+          if (!answer) {
+            return null;
+          }
 
-        if (!answer) {
-          return null;
-        }
-
-        return (
-          <div key={answerId} className="tutor-quiz-question-option" data-option="draggable" data-id={answerId}>
-            <div data-option-order>{index + 1}</div>
-            <div data-title>
-              {answer.image_url ? <img src={answer.image_url} alt={answer.answer_title} /> : null}
-              {answer.answer_title}
+          return (
+            <div key={answerId} className="tutor-quiz-question-option" data-option="draggable" data-id={answerId}>
+              <div data-option-order>{index + 1}</div>
+              <div data-title>
+                {answer.image_url ? <img src={answer.image_url} alt={answer.answer_title} /> : null}
+                <div data-question-title>{answer.answer_title}</div>
+              </div>
+              <button type="button" data-grab-handle aria-label={answer.answer_title}>
+                <SVGIcon name="grabHandle" width={24} height={24} />
+              </button>
             </div>
-
-            <button type="button" data-grab-handle aria-label={answer.answer_title}>
-              <SVGIcon name="grabHandle" width={24} height={24} />
-            </button>
-          </div>
-        );
-      })}
+          );
+        }}
+      </For>
     </div>
   );
 };

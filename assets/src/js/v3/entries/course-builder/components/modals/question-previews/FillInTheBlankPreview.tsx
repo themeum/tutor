@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
+import For from '@TutorShared/controls/For';
 import { type QuizQuestionOption } from '@TutorShared/utils/types';
 
 const renderFillInBlankText = (
@@ -47,11 +48,13 @@ const FillInTheBlankPreview = ({ answers }: { answers: QuizQuestionOption[] }) =
 
   return (
     <div className="tutor-quiz-question-options">
-      {answers.map((answer, index) => (
-        <div key={answer.answer_id || index} className="tutor-quiz-question-option">
-          {renderFillInBlankText(answer, index, values, setValue)}
-        </div>
-      ))}
+      <For each={answers}>
+        {(answer, index) => (
+          <div key={answer.answer_id || index} className="tutor-quiz-question-option">
+            {renderFillInBlankText(answer, index, values, setValue)}
+          </div>
+        )}
+      </For>
     </div>
   );
 };
