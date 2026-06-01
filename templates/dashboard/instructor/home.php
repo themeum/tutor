@@ -162,12 +162,12 @@ if ( $is_pro_reports ) {
 	$enrollments = Analytics::get_total_students_by_user( $user->ID, '', $start_date, $end_date );
 
 	$overview_chart_data = array(
-		'earnings'      => array( 0 ),
-		'enrolled'      => array( 0 ),
-		'labels'        => array( '' ),
-		'currency'      => tutor_utils()->get_monetization_currency_config(),
-		'enrolled_date' => array(),
-		'earning_date'  => array(),
+		'earnings'        => array( 0 ),
+		'enrolled'        => array( 0 ),
+		'labels'          => array( '' ),
+		'currency'        => tutor_utils()->get_monetization_currency_config(),
+		'enrollment_date' => array( '' ),
+		'earning_date'    => array( '' ),
 	);
 
 	foreach ( $earnings['earnings'] as $item ) {
@@ -178,14 +178,16 @@ if ( $is_pro_reports ) {
 	}
 
 	foreach ( $enrollments['enrollments'] as $item ) {
-		$overview_chart_data['enrolled'][]      = (float) ( $item->total ?? 0 );
-		$overview_chart_data['enrolled_date'][] = ! empty( $item->date_format )
+		$overview_chart_data['enrolled'][]        = (float) ( $item->total ?? 0 );
+		$overview_chart_data['enrollment_date'][] = ! empty( $item->date_format )
 													? wp_date( 'M d', strtotime( $item->date_format ) ) : '';
 	}
 
-	$overview_chart_data['earnings'][] = 0;
-	$overview_chart_data['enrolled'][] = 0;
-	$overview_chart_data['labels'][]   = '';
+	$overview_chart_data['earnings'][]        = 0;
+	$overview_chart_data['enrolled'][]        = 0;
+	$overview_chart_data['labels'][]          = '';
+	$overview_chart_data['earning_date'][]    = '';
+	$overview_chart_data['enrollment_date'][] = '';
 }
 
 /**
