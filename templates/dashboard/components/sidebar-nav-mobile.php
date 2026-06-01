@@ -25,7 +25,7 @@ $visible_nav_items = array_slice( $dashboard_pages, 0, 3, true );
 $more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
 
 ?>
-<div class="tutor-dashboard-nav-mobile">
+<div class="tutor-dashboard-nav-mobile" role="navigation">
 	<ul class="tutor-dashboard-nav-mobile-list">
 		<?php
 		foreach ( $visible_nav_items as $key => $item ) {
