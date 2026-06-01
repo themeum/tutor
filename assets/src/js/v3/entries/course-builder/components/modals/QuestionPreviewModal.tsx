@@ -206,7 +206,11 @@ const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) 
               />
               {iframeDocument?.getElementById('preview-root')
                 ? createPortal(
-                    <PreviewDocumentContent question={question} previewQuestionStyleType={previewQuestionStyleType} />,
+                    <PreviewDocumentContent
+                      key={`${question.question_id}-${question.question_type}`}
+                      question={question}
+                      previewQuestionStyleType={previewQuestionStyleType}
+                    />,
                     iframeDocument.getElementById('preview-root') as HTMLElement,
                   )
                 : null}
@@ -422,8 +426,56 @@ const getPreviewFrameStyles = () => `
     box-shadow: none;
   }
 
-  .tutor-quiz-question-option {
-    cursor: default;
+  .tutor-quiz-question-option > input.tutor-hidden {
+    display: none !important;
+  }
+
+  .tutor-quiz-question-option[data-preview-selected='true'] {
+    border-color: var(--tutor-color-primary);
+    background: color-mix(in srgb, var(--tutor-color-primary) 8%, transparent);
+  }
+
+  .tutor-quiz-question-option[data-option='dragging'],
+  .tutor-quiz-question-option[data-dnd-dragging='true'] {
+    background: var(--tutor-surface-l1);
+    border-color: var(--tutor-color-primary);
+    box-shadow: 0 12px 30px rgba(16, 24, 40, 0.16);
+    opacity: 0.6;
+  }
+
+  .tutor-quiz-question-option[data-dnd-dragging='true'] {
+    opacity: 1;
+  }
+
+  [data-grab-handle] {
+    border: 0;
+    background: transparent;
+    color: inherit;
+  }
+
+  .tutor-quiz-question-option-drop-zone {
+    position: relative;
+  }
+
+  .tutor-quiz-question-option-drop-zone [data-option='dropped'] {
+    width: 100%;
+  }
+
+  .tutor-preview-drop-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    padding: 2px;
+    margin-left: 8px;
+    background: transparent;
+    color: var(--tutor-icon-idle);
+    cursor: pointer;
+  }
+
+  .tutor-preview-drop-clear > svg {
+    width: 16px;
+    height: 16px;
   }
 
   /*
