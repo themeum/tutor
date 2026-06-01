@@ -169,7 +169,7 @@ class QuizBuilder {
 			}
 
 			// Save sort order.
-			++$answer_order;
+			$answer_order++;
 			$wpdb->update(
 				$answers_table,
 				array( 'answer_order' => $answer_order ),
@@ -250,7 +250,7 @@ class QuizBuilder {
 		$question_order = 0;
 		foreach ( $questions as $question ) {
 			$data_status = isset( $question[ self::TRACKING_KEY ] ) ? $question[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
-			++$question_order;
+			$question_order++;
 			if ( isset( $question['is_cb_question'], $question['cb_action'] ) && 'link' === $question['cb_action'] ) {
 				$question['question_order'] = $question_order;
 				do_action( 'tutor_content_bank_question_linked_to_quiz', $quiz_id, (object) $question );
