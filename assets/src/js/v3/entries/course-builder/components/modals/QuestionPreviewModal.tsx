@@ -374,7 +374,6 @@ const renderQuestionPreview = (question: QuizQuestion) => {
     case 'scale':
       return <ScalePreview answers={question.question_answers} />;
     case 'coordinates':
-      return <CoordinatesPreview axisRange={question.question_settings?.coordinates_axis_range} />;
       return (
         <CoordinatesPreview
           key={`coordinates-${String(question.question_id)}-${question.question_settings?.coordinates_axis_range ?? ''}`}
