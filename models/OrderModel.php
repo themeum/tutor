@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use DateTime;
 use Exception;
 use Tutor\Cache\TutorCache;
 use Tutor\Components\Badge;
@@ -1092,6 +1093,7 @@ class OrderModel {
 	 * If period or date range not pass then it will return all time enrollment list
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 Minor query updates for the new graph.
 	 *
 	 * @param int    $user_id User id, if user not have admin access
 	 * then only this user's refund amount will fetched.
@@ -1114,8 +1116,8 @@ class OrderModel {
 		$date_range_clause = '';
 		$period_clause     = '';
 		$course_clause     = '';
-		$group_clause      = ' GROUP BY DATE(date_format) ';
-		$discount_clause   = 'o.coupon_amount as total';
+		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+		$select_query      = " DATE_FORMAT(o.created_at_gmt, '%b') AS label_name, DATE(o.created_at_gmt) AS date_format ";
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
@@ -1123,12 +1125,21 @@ class OrderModel {
 				$start_date,
 				$end_date
 			);
+
+			$diff_days = ( new DateTime( $start_date ) )->diff( new DateTime( $end_date ) )->days;
+
+			if ( $diff_days > 31 ) {
+				$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+				$select_query = " DATE_FORMAT(o.created_at_gmt, '%b') AS label_name ";
+
+			}
 		} else {
 			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
 		}
 
-		if ( 'today' !== $period ) {
-			$group_clause = ' GROUP BY MONTH(date_format) ';
+		if ( in_array( $period, array( 'last90days', 'last365days', 'yearly' ), true ) ) {
+			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+			$select_query = " DATE_FORMAT(o.created_at_gmt, '%b') AS label_name ";
 		}
 
 		if ( $course_id ) {
@@ -1159,8 +1170,7 @@ class OrderModel {
 								0
 							)
 						) AS total,
-						o.created_at_gmt AS date_format,
-						DATE_FORMAT( o.created_at_gmt, '%b' ) AS label_name
+						{$select_query}
 					FROM 
 						{$this->table_name} o
 					JOIN 
@@ -1202,8 +1212,7 @@ class OrderModel {
 							0
 						)
 					) AS total,
-					o.created_at_gmt AS date_format,
-					DATE_FORMAT( o.created_at_gmt, '%b' ) AS label_name
+					{$select_query}
 					FROM {$this->table_name} AS o
 					WHERE 1 = %d
 					AND o.order_status = 'completed'
@@ -1236,13 +1245,13 @@ class OrderModel {
 				// Split each discount.
 				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
 
-				$discount->total = User::is_admin() ? $admin_discount : $instructor_discount;
+				$discount->total = User::is_admin() && is_admin() ? $admin_discount : $instructor_discount;
 			}
 
 			list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
 
 			$response['discounts']       = $discount_items;
-			$response['total_discounts'] = User::is_admin() ? $admin_total : $instructor_total;
+			$response['total_discounts'] = User::is_admin() && is_admin() ? $admin_total : $instructor_total;
 		}
 
 		return $response;
@@ -1256,6 +1265,7 @@ class OrderModel {
 	 * If period or date range not pass then it will return all time enrollment list
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 Minor query updates for the new graph.
 	 *
 	 * @param int    $user_id User id, if user not have admin access
 	 * then only this user's refund amount will fetched.
@@ -1278,6 +1288,7 @@ class OrderModel {
 		$date_range_clause = '';
 		$period_clause     = '';
 		$group_clause      = ' GROUP BY DATE(order_meta.created_at_gmt) ';
+		$select_query      = " DATE_FORMAT(order_meta.created_at_gmt, '%b') AS label_name, order_meta.created_at_gmt AS date_format ";
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
@@ -1285,14 +1296,20 @@ class OrderModel {
 				$start_date,
 				$end_date
 			);
-			$group_clause      = ' GROUP BY DATE(order_meta.created_at_gmt) ';
 
+			$diff_days = ( new DateTime( $start_date ) )->diff( new DateTime( $end_date ) )->days;
+
+			if ( $diff_days > 31 ) {
+				$group_clause = ' GROUP BY MONTH(order_meta.created_at_gmt) ';
+				$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%b') AS label_name ";
+			}
 		} else {
 			$period_clause = QueryHelper::get_period_clause( 'order_meta.created_at_gmt', $period );
 		}
 
-		if ( 'yearly' === $period ) {
+		if ( in_array( $period, array( 'last90days', 'last365days', 'yearly' ), true ) ) {
 			$group_clause = ' GROUP BY MONTH(order_meta.created_at_gmt) ';
+			$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%b') AS label_name ";
 		}
 
 		if ( $course_id ) {
@@ -1331,7 +1348,7 @@ class OrderModel {
 								)
 							), 2
 						) AS total,
-						DATE_FORMAT(order_meta.created_at_gmt, '%b') AS label_name
+						{$select_query}
 					FROM 
 						{$this->table_name} o
 					JOIN 
@@ -1367,8 +1384,7 @@ class OrderModel {
 				$wpdb->prepare(
 					"SELECT 
 					COALESCE(SUM(o.refund_amount), 0) AS total,
-					order_meta.created_at_gmt AS date_format,
-					DATE_FORMAT(order_meta.created_at_gmt, '%b') AS label_name
+					{$select_query}
 					FROM {$this->table_name} AS o
 					LEFT JOIN {$order_meta_table} AS order_meta
 						ON order_meta.order_id = o.id

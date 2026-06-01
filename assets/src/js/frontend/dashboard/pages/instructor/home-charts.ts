@@ -6,7 +6,7 @@ export interface OverviewChartProps {
   earnings: number[];
   enrolled: number[];
   labels: string[];
-  enrolled_date: string[];
+  enrollment_date: string[];
   earning_date: string[];
   currency: MonetizationData;
 }
@@ -701,7 +701,7 @@ export const overviewChart = (data: OverviewChartProps) => ({
               title: (items) => {
                 return (
                   data?.earning_date?.[items[0]?.dataIndex] ||
-                  data?.enrolled_date?.[items[0]?.dataIndex] ||
+                  data?.enrollment_date?.[items[0]?.dataIndex] ||
                   data.labels?.[items[0]?.dataIndex]
                 );
               },
