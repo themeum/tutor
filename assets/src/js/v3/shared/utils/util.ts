@@ -496,17 +496,17 @@ export const formatSubscriptionRepeatUnit = ({
 
   const unitFormats = {
     hour: {
-      // translators: %d is the number of hours
+      // translators: %d: number of hours
       plural: __('%d hours', __TUTOR_TEXT_DOMAIN__),
-      // translators: %d is the number of hours
+      // translators: %d: number of hours
       singular: __('%d hour', __TUTOR_TEXT_DOMAIN__),
       suffix: __('hourly', __TUTOR_TEXT_DOMAIN__),
       base: __('hour', __TUTOR_TEXT_DOMAIN__),
     },
     day: {
-      // translators: %d is the number of days
+      // translators: %d: number of days
       plural: __('%d days', __TUTOR_TEXT_DOMAIN__),
-      // translators: %d is the number of days
+      // translators: %d: number of days
       singular: __('%d day', __TUTOR_TEXT_DOMAIN__),
       suffix: __('daily', __TUTOR_TEXT_DOMAIN__),
       base: __('day', __TUTOR_TEXT_DOMAIN__),

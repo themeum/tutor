@@ -45,7 +45,7 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 					</div>
 					<div class="tutor-small tutor-text-subdued">
 					<?php
-					/* translators: %s: time difference */
+					/* translators: %s human-readable time difference. */
 					echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date_gmt ) ) ) );
 					?>
 					</div>

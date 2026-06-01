@@ -2957,7 +2957,7 @@ class Course extends Tutor_Base {
 
 		if ( $quiz_count && ! $assignment_count ) {
 			return sprintf(
-				/* translators: %1$s: quiz count; %2$s: quiz label */
+				/* translators: %1$s: item count; %2$s: item label */
 				__( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ),
 				$quiz_count,
 				$quiz_label
@@ -2966,7 +2966,7 @@ class Course extends Tutor_Base {
 
 		if ( ! $quiz_count && $assignment_count ) {
 			return sprintf(
-				/* translators: %1$s: assignment count; %2$s: assignment label */
+				/* translators: %1$s: item count; %2$s: item label */
 				__( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ),
 				$assignment_count,
 				$assignment_label
