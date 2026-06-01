@@ -77,13 +77,15 @@ $single_url = UrlHelper::add_query_params(
 		<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
 			<div class="tutor-discussion-card-top">
-				<div class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></div>
-				<div class="tutor-flex tutor-gap-2">
+				<div class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $question->comment_author ); ?></div>
+				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-overflow-hidden">
 					<span class="tutor-text-subdued tutor-text-subdued tutor-flex-shrink-0"><?php echo esc_html__( 'asked in', 'tutor' ); ?></span>
-					<?php PreviewTrigger::make()->id( $question->course_id )->render(); ?>
+					<div class="tutor-min-w-0 tutor-flex-1">
+						<?php PreviewTrigger::make()->id( $question->course_id )->render(); ?>
+					</div>
 				</div>
 			</div>
-			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="<?php echo esc_attr( 'tutor-qna-text-' . (int) $question_id ); ?>"><?php echo wp_kses_post( $content ); ?></a>
+			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title tutor-break-words" id="<?php echo esc_attr( 'tutor-qna-text-' . (int) $question_id ); ?>"><?php echo wp_kses_post( $content ); ?></a>
 			<div class="tutor-flex tutor-items-center tutor-justify-between tutor-sm-mt-4">
 				<div class="tutor-discussion-card-meta">
 					<button 
@@ -103,15 +105,15 @@ $single_url = UrlHelper::add_query_params(
 						<?php Avatar::make()->user( $last_reply->user_id )->size( Size::SIZE_20 )->render(); ?>
 						<div class="tutor-text-small">
 							<?php
-								/* translators: %s: time difference */
-								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $last_reply->comment_date_gmt ) ) ) );
+								// translators: %s human-readable time difference.
+								echo esc_html( sprintf( _x( '%s ago', 'human-readable time difference', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 							?>
 						</div>
 					</div>
 					<?php } else { ?>
 						<div class="tutor-text-small">
 							<?php
-								/* translators: %s: time difference */
+								/* translators: %s human-readable time difference. */
 								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 							?>
 						</div>

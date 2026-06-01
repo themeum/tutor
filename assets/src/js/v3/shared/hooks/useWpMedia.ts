@@ -183,7 +183,7 @@ const useWPMedia = ({ options = {}, onChange, initialFiles }: UseWPMediaParams):
 
       if (mediaOptions.maxFiles && updatedFiles.length > mediaOptions.maxFiles) {
         showToast({
-          // translators: %d is the maximum number of files allowed
+          // translators: %d is the maximum number of files allowed.
           message: sprintf(__('Cannot select more than %d files', __TUTOR_TEXT_DOMAIN__), mediaOptions.maxFiles),
           type: 'warning',
         });

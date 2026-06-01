@@ -131,7 +131,7 @@ $add_meta( Icon::RESOURCES, __( 'Resources', 'tutor' ), $resource_content );
 ob_start();
 if ( ! empty( $course_tags ) && is_array( $course_tags ) ) {
 	?>
-	<div class="tutor-flex tutor-items-start tutor-gap-3">
+	<div class="tutor-flex tutor-items-start tutor-flex-wrap tutor-gap-3">
 		<?php
 		foreach ( $course_tags as $key => $tags ) {
 			Badge::make()

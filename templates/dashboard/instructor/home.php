@@ -123,7 +123,7 @@ if ( $tutor_pro_enabled && ! $is_all_time ) {
  */
 $stat_cards = array(
 	array(
-		'variation'     => 'success',
+		'variation'     => 'brand',
 		'title'         => esc_html__( 'Total Earnings', 'tutor' ),
 		'icon'          => Icon::EARNING,
 		'value'         => tutor_utils()->tutor_price( $total_earnings ?? 0 ),
@@ -325,12 +325,12 @@ $sortable_sections_ids = array_reduce(
 	class="tutor-flex tutor-flex-column tutor-gap-6"
 >
 	<!-- Filters -->
-	<div class="tutor-flex tutor-justify-between tutor-align-center">
+	<div class="tutor-flex tutor-justify-between tutor-items-center">
 		<?php if ( $tutor_pro_enabled ) : ?>
 			<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->render(); ?>
 		<?php endif; ?>
 
-		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: 'bottom-end' })">
+		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: '<?php echo esc_js( $tutor_pro_enabled ? 'bottom-end' : 'bottom-start' ); ?>' })">
 			<button
 				x-ref="trigger"
 				@click="toggle()"
@@ -395,6 +395,7 @@ $sortable_sections_ids = array_reduce(
 							'variation'     => $card['variation'] ?? 'enrolled',
 							'card_title'    => $card['title'] ?? '',
 							'icon'          => $card['icon'] ?? '',
+							'icon_size'     => $card['icon_size'] ?? 20,
 							'value'         => $card['value'] ?? '',
 							'content'       => $card['content'] ?? '',
 							'hover_content' => $card['hover_content'] ?? array(),
@@ -445,7 +446,7 @@ $sortable_sections_ids = array_reduce(
 				x-show="watch('top_performing_courses')"
 				x-cloak
 			> 
-				<div class="tutor-flex tutor-row tutor-justify-between tutor-align-center tutor-gap-9">
+				<div class="tutor-flex tutor-row tutor-justify-between tutor-items-center tutor-gap-9">
 					<div class="tutor-small">
 						<?php esc_html_e( 'Top Performing Courses', 'tutor' ); ?>
 					</div>

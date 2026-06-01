@@ -41,6 +41,10 @@ $remaining_time_context = tutor_utils()->seconds_to_time_context( $remaining_tim
 // Quiz settings.
 $quiz_when_time_expires = tutor_utils()->get_option( 'quiz_when_time_expires', 'auto_abandon' );
 $quiz_settings          = tutor_utils()->get_quiz_option( (int) $tutor_is_started_quiz->quiz_id );
+$show_timeout_attempts  = 'auto_abandon' !== $quiz_when_time_expires;
+$timeout_modal_message  = 'auto_abandon' === $quiz_when_time_expires
+	? __( 'Your quiz was abandoned automatically because time expired before you submitted it.', 'tutor' )
+	: __( 'Your quiz has been submitted automatically.', 'tutor' );
 $reveal_wait_ms         = 1000 * $quiz_settings['answers_reveal_duration'];
 $show_previous_button   = (bool) tutor_utils()->get_option( 'quiz_previous_button_enabled', true );
 $hide_previous_button   = '1' === (string) ( $quiz_settings['hide_previous_button'] ?? '0' );
@@ -328,7 +332,7 @@ $default_values = array(
 						->size( Size::LARGE )
 						->attr( 'type', 'submit' )
 						->attr( 'x-show', 'currentIndex === totalQuestions' )
-						->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+						->attr( ':disabled', 'isRevealSubmitting' )
 						->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
 						->attr( 'class', 'tutor-quiz-submit-btn' )
 						->render();
@@ -344,7 +348,7 @@ $default_values = array(
 					->size( Size::LARGE )
 					->attr( 'form', $form_id )
 					->attr( 'type', 'submit' )
-					->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+					->attr( ':disabled', 'isRevealSubmitting' )
 					->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
 					->attr( 'style', 'display: block; margin: 0 auto; min-width: 290px;' )
 					->render();
@@ -354,7 +358,7 @@ $default_values = array(
 	<?php
 		ConfirmationModal::make()
 			->id( $modal_id )
-			->icon( UrlHelper::themed_asset( 'images/illustrations/warning.webp' ) )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/warning.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 			->title( __( 'Leave this Quiz?', 'tutor' ) )
 			->message( __( 'If you leave now, your quiz will be submitted with the answers completed so far.', 'tutor' ) )
 			->confirm_text( __( 'Yes, Leave Quiz', 'tutor' ) )
@@ -374,7 +378,7 @@ $default_values = array(
 					'modal_id'      => $submitted_modal_id,
 					'title'         => __( 'Quiz Submitted', 'tutor' ),
 					'message'       => __( 'Your responses have been successfully recorded.', 'tutor' ),
-					'icon_url'      => UrlHelper::themed_asset( 'images/illustrations/quiz-submitted.webp' ),
+					'icon_html'     => tutor_utils()->get_themed_svg( 'images/illustrations/quiz-submitted.svg' ),
 					'show_attempts' => false,
 					'action_url'    => $attempt_details_url,
 					'action_label'  => __( 'View Results', 'tutor' ),
@@ -390,9 +394,9 @@ $default_values = array(
 				array(
 					'modal_id'      => $timeout_modal_id,
 					'title'         => __( 'Times up!', 'tutor' ),
-					'message'       => __( 'Your quiz has been submitted automatically.', 'tutor' ),
-					'icon_url'      => UrlHelper::themed_asset( 'images/illustrations/quiz-timeout.webp' ),
-					'show_attempts' => true,
+					'message'       => $timeout_modal_message,
+					'icon_html'     => tutor_utils()->get_themed_svg( 'images/illustrations/quiz-timeout.svg' ),
+					'show_attempts' => $show_timeout_attempts,
 					'action_url'    => $attempt_details_url,
 					'action_label'  => __( 'View Results', 'tutor' ),
 				)

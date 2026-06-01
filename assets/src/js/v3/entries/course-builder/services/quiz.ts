@@ -137,7 +137,6 @@ export interface QuizForm {
     hide_question_number_overview: boolean;
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
-    show_pagination: boolean;
     pagination_type: QuizPaginationType;
     content_drip_settings: {
       unlock_date: string;
@@ -203,7 +202,6 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       answers_reveal_duration: String(quiz.quiz_option.answers_reveal_duration ?? 5),
       hide_previous_button: quiz.quiz_option.hide_previous_button === '1',
       questions_order: quiz.quiz_option.questions_order ?? 'rand',
-      show_pagination: quiz.quiz_option.question_layout_view === 'question_pagination',
       pagination_type: quiz.quiz_option.pagination_type ?? 'shape',
       hide_question_number_overview: quiz.quiz_option.hide_question_number_overview === '1',
       short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit ?? 200,

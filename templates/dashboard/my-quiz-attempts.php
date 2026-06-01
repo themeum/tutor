@@ -22,7 +22,6 @@ use Tutor\Helpers\QueryHelper;
 use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
-use Tutor\Helpers\UrlHelper;
 
 if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 	// Load single attempt details if ID provided.
@@ -154,43 +153,38 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 				</div>
 			<?php endif; ?>
 
-			<div class="tutor-quiz-item-actions">
+			<div class="tutor-quiz-item-actions" x-show="!expanded" x-cloak>
 				<?php
-				$quiz_attempt_obj->render_retry_button(
-					$course_id,
-					$quiz_id,
-					$first_attempt,
-					$attempts_count
-				);
+				$quiz_attempt_obj->render_details_button( $first_attempt );
+				$quiz_attempt_obj->render_student_attempt_popover( $first_attempt, $attempts_count, $quiz_id, false, false );
 				?>
 			</div>
 		</div>
-			<?php
-			endforeach;
+		<?php endforeach; ?>
+		<?php
+		Pagination::make()
+			->current( $current_page )
+			->total( $quiz_attempts_count )
+			->limit( $item_per_page )
+			->attr( 'class', 'tutor-p-6' )
+			->render();
 		?>
 	</div>
 	<?php else : ?>
 		<?php
 		EmptyState::make()
 			->title( __( 'No Quiz Attempts Found', 'tutor' ) )
+				->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-empty.svg' ) )
 			->render();
 		?>
 	<?php endif; ?>
-	<?php
-	Pagination::make()
-		->current( $current_page )
-		->total( $quiz_attempts_count )
-		->limit( $item_per_page )
-		->attr( 'class', 'tutor-p-6' )
-		->render();
-	?>
 
 	<div x-data="tutorQuizRetryAttempt()">
 		<?php
 		ConfirmationModal::make()
 			->id( 'tutor-retry-modal' )
 			->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
-			->icon( UrlHelper::themed_asset( 'images/illustrations/quiz-retry.webp' ) )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-retry.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 			->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
 			->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
 			->confirm_text( __( 'Retry Quiz', 'tutor' ) )

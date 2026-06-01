@@ -2206,10 +2206,12 @@ class Course extends Tutor_Base {
 		 * for specific cases like prerequisites. WP_Error should be returned
 		 * from the filter value to prevent the completion.
 		 */
-		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', CourseModel::can_complete_course( $course_id, $user_id ), $user_id, $course_id );
 
 		if ( is_wp_error( $can_complete ) ) {
 			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
+		} elseif ( ! $can_complete ) {
+			tutor_utils()->redirect_to( $permalink, __( 'You do not have permission to complete this course.', 'tutor' ), 'error' );
 		} else {
 			CourseModel::mark_course_as_completed( $course_id, $user_id );
 			// Set temporary identifier to show review pop up.
@@ -2249,10 +2251,12 @@ class Course extends Tutor_Base {
 		 * for specific cases like prerequisites. WP_Error should be returned
 		 * from the filter value to prevent the completion.
 		 */
-		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', CourseModel::can_complete_course( $course_id, $user_id ), $user_id, $course_id );
 
 		if ( is_wp_error( $can_complete ) ) {
 			$this->response_bad_request( $can_complete->get_error_message() );
+		} elseif ( ! $can_complete ) {
+			$this->response_bad_request( __( 'You do not have permission to complete this course.', 'tutor' ) );
 		} else {
 			CourseModel::mark_course_as_completed( $course_id, $user_id );
 			// Set temporary identifier to show review pop up.
@@ -2953,7 +2957,7 @@ class Course extends Tutor_Base {
 
 		if ( $quiz_count && ! $assignment_count ) {
 			return sprintf(
-				/* translators: %1$s: quiz count; %2$s: quiz label */
+				/* translators: %1$s: item count; %2$s: item label */
 				__( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ),
 				$quiz_count,
 				$quiz_label
@@ -2962,7 +2966,7 @@ class Course extends Tutor_Base {
 
 		if ( ! $quiz_count && $assignment_count ) {
 			return sprintf(
-				/* translators: %1$s: assignment count; %2$s: assignment label */
+				/* translators: %1$s: item count; %2$s: item label */
 				__( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ),
 				$assignment_count,
 				$assignment_label
@@ -3084,11 +3088,17 @@ class Course extends Tutor_Base {
 	public function tutor_reset_course_progress() {
 		tutor_utils()->checking_nonce();
 		$course_id             = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$context               = Input::post( 'context', '' );
 		$course_reset_progress = tutor_utils()->get_option( 'course_reset_progress', false );
 		$course_retake_feature = tutor_utils()->get_option( 'course_retake_feature', false );
 
-		if ( ! $course_reset_progress || ! $course_retake_feature ) {
-			$this->response_bad_request( __( 'You are not allowed to reset course progress.', 'tutor' ) );
+		if ( ! $course_reset_progress && 'learning-area-sidebar' === $context ) {
+			$this->response_bad_request( __( 'You do not have permission to reset this course.', 'tutor' ) );
+			return;
+		}
+
+		if ( ! $course_retake_feature && ( 'course-landing' === $context || 'learning-area' === $context ) ) {
+			$this->response_bad_request( __( 'You do not have permission to retake this course.', 'tutor' ) );
 			return;
 		}
 

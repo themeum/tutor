@@ -53,15 +53,17 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 ?>
 <div 
 	class="tutor-learning-sidebar" 
-	x-data="tutorLearningSidebar({ isCollapsed: <?php echo empty( $active_menu ) ? 'true' : 'false'; ?>, courseId: <?php echo (int) $tutor_course->ID; ?>, resetModalId: '<?php echo esc_attr( $reset_modal_id ); ?>' })"
+	x-data="tutorLearningSidebar({ courseId: <?php echo (int) $tutor_course->ID; ?>, resetModalId: '<?php echo esc_attr( $reset_modal_id ); ?>' })"
+	x-trap.noscroll="sidebarOpen"
 	:class="{ 'is-open': sidebarOpen }" 
-	@click.outside="sidebarOpen = false"
+	@click.outside="closeSidebar()"
+	@toggle-sidebar.window="toggleSidebar()"
 >
 	<div class="tutor-hidden tutor-lg-flex tutor-items-center tutor-px-4">
 		<h5 class="tutor-learning-header-title tutor-my-none">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
-		<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">
+		<button class="tutor-learning-header-toggle-mobile" @click.stop="toggleSidebar()">
 			<?php SvgIcon::make()->name( Icon::CROSS_2 )->size( 20 )->render(); ?>
 		</button>
 	</div>
@@ -71,7 +73,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 				<div class="tutor-learning-progress-text tutor-py-2">
 					<?php
 					// translators: %s: course completed percentage.
-					echo sprintf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $tutor_course_progress ) . '%</span>' );
+					printf( esc_html__( '%s Completed', 'tutor' ), '<span>' . esc_html( $tutor_course_progress ) . '%</span>' );
 					?>
 				</div>
 				<div class="tutor-flex">
@@ -91,7 +93,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
 						->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
 						->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
-						->icon( UrlHelper::themed_asset( 'images/illustrations/reset-course.webp' ) )
+						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reset-course.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 						->confirm_handler( 'resetProgress()' )
 						->mutation_state( 'resetProgressMutation' )
 						->render();
@@ -191,14 +193,16 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 			?>
 		</div>
 	</div>
-	<div class="tutor-learning-sidebar-pages" :class="{ 'expanded': !collapsed }">
-		<div class="tutor-sidebar-resizer" x-show="!collapsed" @mousedown="startResizing($event)" x-cloak></div>
-		<div class="tutor-sidebar-restore-dropdown" x-show="!collapsed" x-cloak>
-			<button :class="{ 'is-minimized': pagesHeight <= 40 }" @click="togglePagesHeight()">
-				<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->render(); ?>
-			</button>
-		</div>
-		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" :style="!collapsed && { height: pagesHeight + 'px' }">
+	<div class="tutor-learning-sidebar-pages <?php echo ! empty( $active_menu ) ? 'expanded' : ''; ?>">
+		<?php if ( ! empty( $active_menu ) ) : ?>
+			<div class="tutor-sidebar-resizer" @mousedown="startResizing($event)"></div>
+			<div class="tutor-sidebar-restore-dropdown">
+				<button :class="{ 'is-minimized': pagesHeight <= 40 }" @click="togglePagesHeight()">
+					<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->render(); ?>
+				</button>
+			</div>
+		<?php endif; ?>
+		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" <?php echo ! empty( $active_menu ) ? ':style="{ height: pagesHeight + \'px\' }"' : ''; ?>>
 			<?php
 			ob_start();
 			foreach ( $menu_items as $key => $item ) {
@@ -227,7 +231,8 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 			$menu_html = ob_get_clean();
 			?>
 
-			<div x-show="collapsed" x-cloak>
+			<?php if ( empty( $active_menu ) ) : ?>
+			<div>
 				<?php
 				$allowed_html = wp_kses_allowed_html( 'post' );
 				if ( isset( $allowed_html['a'] ) ) {
@@ -249,10 +254,11 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 					->render();
 				?>
 			</div>
-
-			<div x-show="!collapsed" x-cloak>
+			<?php else : ?>
+			<div>
 				<?php echo $menu_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
+			<?php endif; ?>
 		</div>
 	</div>
 	<div class="tutor-hidden tutor-md-flex tutor-flex-column tutor-gap-2">

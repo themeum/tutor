@@ -2,25 +2,9 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-billing {
-  &-header {
-    background-color: $tutor-surface-base;
-    border-bottom: 1px solid $tutor-border-idle;
-    padding-block: $tutor-spacing-5;
-
-    @include tutor-breakpoint-down(sm) {
-      border-bottom: none;
-    }
-  }
-
   &-body {
     @include tutor-card-base;
     @include tutor-card-radius(lg);
-    @include tutor-flex(column, flex-start, center);
-    margin-top: $tutor-spacing-9;
-
-    .tutor-tabs-horizontal {
-      width: 100%;
-    }
 
     @include tutor-breakpoint-down(sm) {
       background-color: transparent;
@@ -31,10 +15,23 @@
   }
 
   &-tabs {
-    padding: $tutor-spacing-6;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
+    border-bottom: 1px solid $tutor-border-idle;
+    width: 100%;
+
+    @include tutor-breakpoint-down(sm) {
+      margin-bottom: $tutor-spacing-4;
+    }
 
     &-content {
       width: 100%;
+
+      @include tutor-breakpoint-down(sm) {
+        border: 1px solid $tutor-border-idle;
+        background-color: $tutor-surface-l1;
+        border-radius: $tutor-radius-2xl;
+        margin-top: $tutor-spacing-4;
+      }
     }
 
     @include tutor-breakpoint-down(sm) {
@@ -56,7 +53,6 @@
     width: 100%;
 
     @include tutor-breakpoint-down(sm) {
-      margin-top: $tutor-spacing-4;
       border: 1px solid $tutor-border-idle;
       background-color: $tutor-surface-l1;
       border-radius: $tutor-radius-2xl;
@@ -76,7 +72,7 @@
   }
 
   &-card {
-    @include tutor-flex(row, center, space-between);
+    @include tutor-flex(row, start, space-between);
     border-bottom: 1px solid $tutor-border-idle;
     padding: $tutor-spacing-6;
     gap: $tutor-spacing-4;
@@ -98,7 +94,9 @@
 
     &-left {
       @include tutor-flex(column, flex-start, center);
+      flex: 1 1 0;
       gap: $tutor-spacing-3;
+      min-width: 0;
 
       .tutor-section-separator-vertical {
         background-color: $tutor-surface-l2-hover;
@@ -108,13 +106,17 @@
 
     &-right {
       @include tutor-flex(column, flex-end, center);
+      flex-shrink: 0;
       gap: $tutor-spacing-2;
-      text-align: right
+      text-align: right;
     }
 
     &-title {
+      @include tutor-flex(row, start, flex-start);
       @include tutor-typography('small', 'medium');
-      @include tutor-flex(row, start, center);
+      @include tutor-text-truncate();
+      min-width: 0;
+      width: 100%;
       gap: $tutor-spacing-2;
 
       ul {
@@ -133,6 +135,11 @@
 
       @include tutor-breakpoint-down(sm) {
         @include tutor-flex(column, flex-start, center);
+        overflow: visible;
+        text-overflow: unset;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
     }
 
@@ -152,15 +159,17 @@
     }
 
     &-payment-method {
-      @extend .tutor-billing-card-id;
-      @include tutor-typography('tiny-2');
-      gap: $tutor-spacing-2;
-      border-radius: $tutor-radius-sm;
-      color: $tutor-text-secondary;
-
       @include tutor-breakpoint-down(sm) {
-        @include tutor-typography('tiny');
-        padding: $tutor-spacing-2;
+        .tutor-badge {
+          font-size: 0;
+          line-height: 0;
+          gap: 0;
+          padding: $tutor-spacing-2;
+
+          img {
+            display: block;
+          }
+        }
       }
     }
 
@@ -198,6 +207,38 @@
         object-position: center;
         object-fit: contain;
       }
+    }
+  }
+}
+
+.tutor-payment-modal-contents {
+  padding: $tutor-spacing-2 $tutor-spacing-6 $tutor-spacing-6;
+  max-height: calc(100dvh - 173px);
+  overflow-y: auto;
+
+  .tutor-payment-modal-payments {
+    @include tutor-flex(column);
+    background-color: $tutor-surface-base;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-lg;
+
+    .tutor-input-field {
+      padding: $tutor-spacing-6;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid $tutor-border-idle;
+      }
+    }
+  }
+
+  .tutor-payment-terms-checkbox {
+    .tutor-input-wrapper {
+      align-items: start;
+    }
+
+    .tutor-label {
+      flex-wrap: wrap;
+      row-gap: $tutor-spacing-none;
     }
   }
 }

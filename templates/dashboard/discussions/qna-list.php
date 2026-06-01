@@ -7,6 +7,15 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * These variables are inherited from the parent template file.
+ * template: /tutor/templates/dashboard/discussions.php
+ *
+ * @var string $discussion_url
+ * @var int    $item_per_page
+ * @var int    $offset
+ * @var string $order_filter
+ * @var int    $current_page
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -66,7 +75,12 @@ $nav_items = array(
 </div>
 
 <?php if ( empty( $questions ) ) : ?>
-	<?php EmptyState::make()->title( 'No Questions Found!' )->render(); ?>
+	<?php
+		EmptyState::make()
+			->title( 'No Questions Found!' )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/qna-empty.svg' ) )
+			->render();
+	?>
 <?php else : ?>
 <div class="tutor-discussion-card-wrapper tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
 	<?php

@@ -6,18 +6,20 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * These variables are inherited from parent templates:
+ * template: templates/dashboard/account/settings.php
+ *
+ * @var string $back_url
  */
 
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
-use Tutor\Helpers\UrlHelper;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
-
-$back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_utils()->tutor_dashboard_url() ) );
 
 ?>
 <div class="tutor-profile-header">
@@ -26,7 +28,7 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 			windowWidth: window.innerWidth,
 			isDirty: {}
 		}"
-		class="tutor-dashboard-container tutor-flex tutor-items-center tutor-justify-between">
+		class="tutor-account-container tutor-flex tutor-items-center tutor-justify-between">
 		<div 
 			class="tutor-profile-header-left tutor-flex tutor-items-center"
 			@resize.window="windowWidth = window.innerWidth"
@@ -89,18 +91,16 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 				Button::make()
 					->label( __( 'Close', 'tutor' ) )
 					->variant( Variant::GHOST )
-					->tag( 'a' )
 					->icon( Icon::CROSS, 'left', 20, 20 )
 					->icon_only()
 					->size( Size::X_SMALL )
 					->attr( 'type', 'button' )
-					->attr( 'href', esc_url( $back_url ) )
+					->attr( '@click', 'handleClose()' )
 					->render();
 				?>
 			</div>
 			<div 
 				class="tutor-profile-header-close tutor-hidden tutor-md-flex"
-				@click="activeTab = 'none'"
 				x-show="activeTab === 'none' || !isDirty[`tutor-${activeTab}-form`]"
 			>
 				<?php
@@ -111,7 +111,7 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 					->icon_only()
 					->size( Size::X_SMALL )
 					->attr( 'type', 'button' )
-					->attr( '@click', 'activeTab = "none"' )
+					->attr( '@click', 'handleClose()' )
 					->render();
 				?>
 			</div>

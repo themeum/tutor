@@ -964,17 +964,18 @@ class WooCommerce extends Tutor_Base {
 	public static function get_count( $args = array() ): int {
 		$query = wc_get_orders(
 			array(
-				'customer'   => $args['user_id'] ?? 0,
-				'status'     => $args['status'] ?? 'all',
-				'meta_query' => array(
+				'customer'     => $args['user_id'] ?? 0,
+				'status'       => $args['status'] ?? 'all',
+				'date_created' => $args['date_created'] ?? null,
+				'meta_query'   => array(
 					array(
 						'key'     => '_is_tutor_order_for_course',
 						'compare' => 'EXISTS',
 					),
 				),
 				// Limit 1 for query performance.
-				'limit'      => 1,
-				'paginate'   => true,
+				'limit'        => 1,
+				'paginate'     => true,
 			)
 		);
 
@@ -1000,6 +1001,9 @@ class WooCommerce extends Tutor_Base {
 			unset( $statuses['wc-checkout-draft'] );
 		}
 
+		$start_date = Input::get( 'start_date' );
+		$end_date   = Input::get( 'end_date' );
+
 		$options = array();
 
 		foreach ( $statuses as $key => $status ) {
@@ -1007,6 +1011,10 @@ class WooCommerce extends Tutor_Base {
 				'user_id' => $user_id,
 				'status'  => $key,
 			);
+
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$params['date_created'] = $start_date . '...' . $end_date;
+			}
 
 			$options[] = array(
 				'label'  => $status,

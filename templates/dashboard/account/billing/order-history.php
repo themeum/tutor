@@ -7,6 +7,15 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * These variables are inherited from parent template.
+ * template: tutor/templates/dashboard/account/billing.php
+ *
+ * @var int    $user_id       The user ID.
+ * @var int    $offset        The offset for pagination.
+ * @var int    $item_per_page The number of items per page.
+ * @var string $order_filter  The order filter.
+ * @var int    $current_page  The current page.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -25,6 +34,7 @@ use TUTOR\Input;
 
 $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 if ( 'free' === $monetize_by ) {
+	EmptyState::make()->title( __( 'No Orders Found!', 'tutor' ) )->render();
 	return;
 }
 
@@ -56,7 +66,7 @@ $status_options = apply_filters( 'tutor_order_history_status_options', array(), 
 		if ( Input::has_any( $query_params, Input::GET_REQUEST ) ) {
 			Button::make()
 				->tag( 'a' )
-				->size( Size::SMALL )
+				->size( Size::X_SMALL )
 				->attr( 'href', Dashboard::get_account_page_url( 'billing' ) )
 				->attr( 'class', 'tutor-text-brand' )
 				->label( __( 'Clear all', 'tutor' ) )
@@ -64,18 +74,27 @@ $status_options = apply_filters( 'tutor_order_history_status_options', array(), 
 				->render();
 		}
 
-		DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( DateFilter::PLACEMENT_BOTTOM_END )->render();
-		Sorting::make()->size( Size::SMALL )->order( $order_filter )->render();
+		DateFilter::make()
+			->type( DateFilter::TYPE_RANGE )
+			->placement( DateFilter::PLACEMENT_BOTTOM_END )
+			->trigger_size( Size::X_SMALL )
+			->hide_initial_label()
+			->render();
+
+		Sorting::make()->size( Size::X_SMALL )->order( $order_filter )->render();
 		?>
 	</div>
 </div>
 
 <?php
 if ( empty( $orders ) ) :
-	EmptyState::make()->title( 'No Orders Found!' )->render();
+	EmptyState::make()
+		->title( 'No Orders Found!' )
+		->icon( tutor_utils()->get_themed_svg( 'images/illustrations/order-empty.svg' ) )
+		->render();
 else :
 	?>
-<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-order-history">
+<div class="tutor-flex tutor-flex-column tutor-order-history">
 	<?php
 	$default_card_template       = Ecommerce::MONETIZE_BY === $monetize_by ? tutor_get_template( 'dashboard.account.billing.native-order-history-card' ) : '';
 	$order_history_card_template = apply_filters( 'tutor_order_history_card_template', $default_card_template );

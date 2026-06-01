@@ -105,20 +105,21 @@ $total_wishlists_count = count( tutor_utils()->get_wishlist() );
 			?>
 		</div>
 	<?php else : ?>
-		<?php EmptyState::make()->title( __( 'No Courses Found', 'tutor' ) )->render(); ?>
+		<?php
+			EmptyState::make()
+				->title( __( 'No Courses Found', 'tutor' ) )
+				->icon( tutor_utils()->get_themed_svg( 'images/illustrations/wishlist-empty.svg' ) )
+				->render();
+		?>
 	<?php endif; ?>
 
-	<!-- Wishlist pagination  -->
-	<?php if ( $total_wishlists_count > $wishlist_per_page ) : ?>
-	<div class="tutor-p-6 tutor-border-t">
-		<?php
-			Pagination::make()
-			->current( $current_page )
-			->total( $total_wishlists_count )
-			->limit( $wishlist_per_page )
-			->render();
-		?>
-	</div>
-	<?php endif; ?>
+	<?php
+		Pagination::make()
+		->current( $current_page )
+		->total( $total_wishlists_count )
+		->limit( $wishlist_per_page )
+		->attr( 'class', 'tutor-mt-6 tutor-sm-mt-5' )
+		->render();
+	?>
 
 </div>

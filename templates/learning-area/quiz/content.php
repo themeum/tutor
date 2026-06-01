@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Quiz;
+use TUTOR\Models\QuizModel;
 
 global $tutor_current_post, $tutor_course_id;
 
@@ -29,7 +30,16 @@ $passing_grade      = (int) ( $quiz_options['passing_grade'] ?? 0 );
 $quiz_time          = $quiz_options['time_limit'] ?? null;
 $has_time_limit     = is_array( $quiz_time ) && ! empty( $quiz_time['time_value'] ) && (int) $quiz_time['time_value'] > 0;
 $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_time['time_type'] : null;
+$quiz_attempt       = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id ?? get_current_user_id() );
+$earned_marks       = 0;
 
+if ( $quiz_attempt && $total_marks > 0 ) {
+	$earned_marks = (float) $quiz_attempt->earned_marks;
+	$total        = (float) $total_marks;
+	$earned_marks = number_format( ( $earned_marks / $total_marks ) * 100, 2 );
+}
+$limit_attempts   = (int) $quiz_options['limit_attempts_allowed'] ?? 0;
+$allowed_attempts = $limit_attempts ? $quiz_options['attempts_allowed'] ?? '' : '1';
 ?>
 <div class="tutor-quiz">
 	<?php ob_start(); ?>
@@ -37,7 +47,7 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 		<div class="tutor-quiz-intro-overview">
 			<!-- Quiz Icon -->
 			<div class="tutor-quiz-intro-icon">
-				<img src="<?php echo esc_url( UrlHelper::themed_asset( 'images/illustrations/quiz-intro.webp' ) ); ?>" alt="<?php esc_attr_e( 'Quiz', 'tutor' ); ?>">
+				<?php tutor_utils()->render_themed_svg( 'images/illustrations/quiz-intro.svg' ); ?>
 			</div>
 
 			<!-- Quiz Title -->
@@ -56,7 +66,7 @@ $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_t
 		<!-- Quiz Parameters Table -->
 		<div class="tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-quiz-intro-params tutor-mb-8 tutor-sm-mb-5">
 			<?php
-				Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade );
+				Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, $allowed_attempts );
 			?>
 		</div>
 

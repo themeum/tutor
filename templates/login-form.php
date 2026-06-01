@@ -10,6 +10,9 @@
 
 use TUTOR\Ajax;
 use Tutor\Components\Alert;
+use Tutor\Components\Constants\InputType;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\InputField;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
 
@@ -40,7 +43,7 @@ do_action( 'tutor_before_login_form' );
 	<input type="hidden" name="tutor_action" value="tutor_user_login" />
 	<input type="hidden" name="redirect_to" value="<?php echo esc_url( apply_filters( 'tutor_after_login_redirect_url', tutor()->current_url ) ); ?>" />
 
-	<div class="tutor-input-field tutor-mb-8">
+	<div class="tutor-input-field tutor-mb-7">
 		<input type="text" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" required/>
 	</div>
 
@@ -67,20 +70,22 @@ do_action( 'tutor_before_login_form' );
 		do_action( 'login_form' );
 		apply_filters( 'login_form_middle', '', '' );
 	?>
-	<div class="tutor-flex tutor-justify-between tutor-align-center tutor-mt-10">
-		<div class="tutor-input-field tutor-flex tutor-flex-wrap tutor-justify-between tutor-items-center tutor-gap-3" style="width: auto;">
-			<input id="tutor-login-agmnt-1" type="checkbox" class="tutor-form-check-input tutor-switch tutor-bg-black-40" name="rememberme" value="forever" />
-			<label for="tutor-login-agmnt-1" class="tutor-medium tutor-color-muted">
-				<?php esc_html_e( 'Keep me signed in', 'tutor' ); ?>
-			</label>
+	<div class="tutor-flex tutor-justify-between tutor-items-center tutor-mt-9">
+		<div class="tutor-input-field tutor-w-auto">
+			<div class="tutor-input-wrapper">
+				<input id="tutor-login-agmnt-1" type="checkbox" class="tutor-checkbox tutor-checkbox-md" name="rememberme" value="forever" />
+				<label for="tutor-login-agmnt-1" class="tutor-label">
+					<?php esc_html_e( 'Keep me signed in', 'tutor' ); ?>
+				</label>
+			</div>
 		</div>
-		<a href="<?php echo esc_url( $lost_pass ); ?>" class="tutor-btn tutor-small">
+		<a href="<?php echo esc_url( $lost_pass ); ?>" class="tutor-btn tutor-btn-link-gray tutor-btn-small">
 			<?php esc_html_e( 'Forgot Password?', 'tutor' ); ?>
 		</a>
 	</div>
 
 	<?php do_action( 'tutor_login_form_end' ); ?>
-	<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block tutor-mt-8">
+	<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block tutor-mt-10">
 		<?php esc_html_e( 'Sign In', 'tutor' ); ?>
 	</button>
 
@@ -93,7 +98,7 @@ do_action( 'tutor_before_login_form' );
 				$url_arg['enrol_course_id'] = get_the_ID();
 			}
 			?>
-		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-2 tutor-mt-8">
+		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-2 tutor-mt-7">
 			<div class="tutor-small">
 				<?php esc_html_e( 'Don\'t have an account?', 'tutor' ); ?>
 			</div>

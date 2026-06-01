@@ -3,6 +3,27 @@
 @use './mixins' as *;
 
 [data-tutor-ui='kids'] {
+  .tutor-dashboard-nav-mobile-list {
+    .tutor-dashboard-nav-mobile-icon {
+      padding: $tutor-spacing-2;
+    }
+
+    .tutor-dashboard-nav-mobile-text {
+      color: $tutor-text-primary;
+      font-weight: $tutor-font-weight-medium;
+    }
+
+    .active {
+      .tutor-dashboard-nav-mobile-icon {
+        @include tutor-kids-shadow(false, $tutor-border-brand, $tutor-radius-full, sm);
+        background-color: $tutor-surface-brand-tertiary;
+      }
+      .tutor-dashboard-nav-mobile-text {
+        font-weight: $tutor-font-weight-semibold;
+      }
+    }
+  }
+
   .tutor-card {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
@@ -21,11 +42,26 @@
   .tutor-review-card,
   .tutor-dashboard-home-chart,
   .tutor-dashboard-home-card,
-  .tutor-dashboard-home-sort .tutor-popover-bottom {
+  .tutor-dashboard-home-sort .tutor-popover-bottom,
+  .tutor-subscription-payments-item:hover {
     @include tutor-kids-shadow;
   }
 
-  .tutor-progress-card .tutor-progress-card-thumbnail {
+  .tutor-billing-card:hover {
+    @include tutor-kids-shadow;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid transparent;
+    }
+  }
+
+  .tutor-billing-body {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+  }
+
+  .tutor-progress-card .tutor-progress-card-thumbnail,
+  .tutor-subscription-overview-card,
+  .tutor-subscription-payments-list,
+  .tutor-subscription-details-alert {
     border-radius: $tutor-radius-3xl;
   }
 
@@ -131,6 +167,13 @@
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
 
+  // user account/device management
+  .tutor-devices-signout-all {
+    button {
+      margin-inline-end: $tutor-spacing-5;
+    }
+  }
+
   // discussions
   .tutor-dashboard-page-card {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
@@ -220,12 +263,17 @@
       gap: $tutor-spacing-5;
     }
 
-    .tutor-dashboard-page-card {
+    .tutor-dashboard-page-card,
+    .tutor-billing-body,
+    .tutor-dashboard-courses-wrapper .tutor-dashboard-courses-card,
+    .tutor-dashboard-lesson-notes .tutor-dashboard-page-card {
       border-radius: 0px;
       box-shadow: none;
     }
 
-    .tutor-dashboard-page-card-header {
+    .tutor-dashboard-page-card-header,
+    .tutor-billing-tabs,
+    .tutor-dashboard-courses-tab {
       margin-bottom: $tutor-spacing-5;
     }
 
@@ -234,12 +282,21 @@
       @include tutor-kids-shadow(false);
     }
 
-    .tutor-dashboard-page-card-body {
+    .tutor-dashboard-page-card-body,
+    .tutor-billing-tabs,
+    .tutor-billing-tabs-content,
+    .tutor-dashboard-courses-card .tutor-dashboard-courses-tab,
+    .tutor-my-quiz-attempts-wrapper .tutor-quiz-attempts {
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
     }
 
     .tutor-dashboard-page-card-header {
       border-radius: $tutor-radius-6xl;
+    }
+
+    .tutor-dashboard-courses-card {
+      padding: 2px 2px 5px 2px;
+      margin: -2px -2px -5px -2px;
     }
   }
 }

@@ -14,8 +14,15 @@
       top: 32px;
     }
 
+    @include tutor-breakpoint-down(sm) {
+      body:has(#wpadminbar) & {
+        top: 0;
+      }
+    }
+
     &-title {
       @include tutor-typography(h4, semibold, primary, heading);
+      margin: $tutor-spacing-none;
 
       @include tutor-breakpoint-up(sm) {
         margin-inline-end: auto;

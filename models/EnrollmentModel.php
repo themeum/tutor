@@ -73,7 +73,7 @@ class EnrollmentModel {
 		}
 
 		$can_enroll = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
-		if ( ! $can_enroll ) {
+		if ( is_wp_error( $can_enroll ) ) {
 			return $enrolled_id;
 		}
 
@@ -172,47 +172,50 @@ class EnrollmentModel {
 		global $wpdb;
 		$course_id = tutor_utils()->get_post_id( $course_id );
 		$user_id   = tutor_utils()->get_user_id( $user_id );
+
 		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}_{$is_complete}";
+		$cached    = TutorCache::get( $cache_key );
+
+		if ( false !== $cached ) {
+			return $cached;
+		}
 
 		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
-		$get_enrolled_info = TutorCache::get( $cache_key );
-		if ( ! $get_enrolled_info ) {
-			$status_clause = '';
-			if ( $is_complete ) {
-				$status_clause = $wpdb->prepare( 'AND post_status = %s ', self::STATUS_COMPLETED );
-			}
-
-			//phpcs:disable
-			$get_enrolled_info = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT ID,
-					post_author,
-					post_date,
-					post_date_gmt,
-					post_title
-				FROM {$wpdb->posts}
-				WHERE post_author > 0 
-					AND post_parent > 0
-					AND post_type = %s
-					AND post_parent = %d
-					AND post_author = %d
-					{$status_clause};
-				",
-					self::POST_TYPE,
-					$course_id,
-					$user_id
-				)
-			);
-			//phpcs:enable
-
-			if ( $get_enrolled_info ) {
-				$get_enrolled_info->order_id   = (int) get_post_meta( $get_enrolled_info->ID, self::ENROLLMENT_ORDER_ID_META, true );
-				$get_enrolled_info->product_id = (int) get_post_meta( $get_enrolled_info->ID, self::ENROLLMENT_PRODUCT_ID_META, true );
-			}
-
-			TutorCache::set( $cache_key, $get_enrolled_info );
+		$status_clause = '';
+		if ( $is_complete ) {
+			$status_clause = $wpdb->prepare( 'AND post_status = %s ', self::STATUS_COMPLETED );
 		}
+
+		//phpcs:disable
+		$get_enrolled_info = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT ID,
+				post_author,
+				post_date,
+				post_date_gmt,
+				post_title
+			FROM {$wpdb->posts}
+			WHERE post_author > 0 
+				AND post_parent > 0
+				AND post_type = %s
+				AND post_parent = %d
+				AND post_author = %d
+				{$status_clause};
+			",
+				self::POST_TYPE,
+				$course_id,
+				$user_id
+			)
+		);
+		//phpcs:enable
+
+		if ( $get_enrolled_info ) {
+			$get_enrolled_info->order_id   = (int) get_post_meta( $get_enrolled_info->ID, self::ENROLLMENT_ORDER_ID_META, true );
+			$get_enrolled_info->product_id = (int) get_post_meta( $get_enrolled_info->ID, self::ENROLLMENT_PRODUCT_ID_META, true );
+		}
+
+		TutorCache::set( $cache_key, $get_enrolled_info );
 
 		if ( $get_enrolled_info ) {
 			return apply_filters( 'tutor_is_enrolled', $get_enrolled_info, $course_id, $user_id );

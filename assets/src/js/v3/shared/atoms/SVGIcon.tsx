@@ -30,8 +30,8 @@ interface IconCacheEntry {
 const iconCache: Record<string, IconCacheEntry> = {};
 
 const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ignoreKids, ...rest }: SVGIconProps) => {
-  const { showKidsIcons } = useSVGIconConfig();
-  const shouldIgnoreKids = ignoreKids ?? !showKidsIcons;
+  const { supportKidsIcon } = useSVGIconConfig();
+  const shouldIgnoreKids = ignoreKids ?? !supportKidsIcon;
   const cacheKey = shouldIgnoreKids ? `${name}-ignoreKids` : name;
   const [icon, setIcon] = useState<Icon | null>(iconCache[cacheKey]?.icon || null);
   const [isLoading, setIsLoading] = useState(!iconCache[cacheKey]?.icon);

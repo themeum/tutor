@@ -26,6 +26,7 @@ $can_review   = $attempt_id > 0 && tutor_utils()->can_user_manage( 'attempt', $a
 if ( ! $attempt_data || ! $can_review ) {
 	EmptyState::make()
 		->title( __( 'Attempt not found or access permission denied', 'tutor' ) )
+		->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-empty.svg' ) )
 		->render();
 	return;
 }

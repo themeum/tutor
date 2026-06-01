@@ -12,6 +12,7 @@ import { type AxiosError } from 'axios';
 
 interface ResetProgressPayload {
   course_id: number;
+  context: string;
 }
 
 interface ResetProgressResponse {
@@ -23,21 +24,13 @@ interface ResetProgressResponse {
   };
 }
 
-export const sidebarComponent = ({
-  isCollapsed,
-  courseId,
-  resetModalId,
-}: {
-  isCollapsed: boolean;
-  courseId: number;
-  resetModalId: string;
-}) => {
+export const sidebarComponent = ({ courseId, resetModalId }: { courseId: number; resetModalId: string }) => {
   const { query, modal, toast } = window.TutorCore;
 
   return {
     pagesHeight: 0,
     resizing: false,
-    collapsed: isCollapsed,
+    sidebarOpen: false,
     courseId: courseId,
     resetModalId: resetModalId,
     resetProgressMutation: null as MutationState<ResetProgressResponse, ResetProgressPayload> | null,
@@ -68,6 +61,14 @@ export const sidebarComponent = ({
           },
         },
       );
+    },
+
+    toggleSidebar() {
+      this.sidebarOpen = !this.sidebarOpen;
+    },
+
+    closeSidebar() {
+      this.sidebarOpen = false;
     },
 
     startResizing(e: MouseEvent) {
@@ -104,7 +105,7 @@ export const sidebarComponent = ({
     },
 
     resetProgress() {
-      this.resetProgressMutation?.mutate({ course_id: this.courseId });
+      this.resetProgressMutation?.mutate({ course_id: this.courseId, context: 'learning-area-sidebar' });
     },
   };
 };

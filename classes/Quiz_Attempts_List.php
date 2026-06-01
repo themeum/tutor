@@ -461,6 +461,28 @@ class Quiz_Attempts_List {
 	}
 
 	/**
+	 * Render quiz attempt details button.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attempt the quiz attempt.
+	 *
+	 * @return void
+	 */
+	public function render_details_button( $attempt ) {
+		if ( User::is_student_view() ) {
+			Button::make()
+				->label( __( 'Details', 'tutor' ) )
+				->icon( Icon::RESOURCES, 'left', 20, 20 )
+				->size( Size::MEDIUM )
+				->tag( 'a' )
+				->attr( 'href', $this->get_review_url( $attempt ) )
+				->variant( 'primary' )
+				->render();
+		}
+	}
+
+	/**
 	 * Get kebab button for quiz attempt popover.
 	 *
 	 * @since 4.0.0
@@ -511,10 +533,11 @@ class Quiz_Attempts_List {
 	 * @param integer $attempts_count the quiz attempt count.
 	 * @param integer $quiz_id the quiz id.
 	 * @param bool    $is_learning_area is learning area list item.
+	 * @param bool    $show_details whether to show details.
 	 *
 	 * @return void
 	 */
-	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0, $is_learning_area = false ) {
+	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0, $is_learning_area = false, $show_details = true ) {
 		$is_quiz_details_hidden = $this->is_attempt_details_hidden();
 		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
 		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
@@ -564,7 +587,7 @@ class Quiz_Attempts_List {
 			);
 		}
 
-		if ( ! $is_quiz_details_hidden ) {
+		if ( ! $is_quiz_details_hidden && $show_details ) {
 			$popover->menu_item( $this->get_details_item( $attempt ) );
 		}
 
@@ -666,7 +689,7 @@ class Quiz_Attempts_List {
 	public function render_quiz_attempt_popover( $attempt = array() ) {
 		Popover::make()
 			->trigger( $this->get_kebab_button() )
-			->placement( Positions::BOTTOM_END )
+			->placement( Positions::BOTTOM )
 			->menu_min_width( '110px' )
 			->menu_item( $this->get_details_item( $attempt ) )
 			->menu_item(

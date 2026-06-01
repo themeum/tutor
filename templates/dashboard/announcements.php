@@ -108,8 +108,9 @@ $create_modal_id = 'tutor-announcement-form-modal';
 					->render();
 
 				DateFilter::make()
-						->type( DateFilter::TYPE_SINGLE )
+						->type( DateFilter::TYPE_RANGE )
 						->placement( DateFilter::PLACEMENT_BOTTOM_END )
+						->hide_initial_label()
 						->attr( 'class', 'tutor-hidden tutor-sm-flex' )
 						->render();
 
@@ -136,8 +137,9 @@ $create_modal_id = 'tutor-announcement-form-modal';
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
 				<?php
 					DateFilter::make()
-						->type( DateFilter::TYPE_SINGLE )
+						->type( DateFilter::TYPE_RANGE )
 						->placement( DateFilter::PLACEMENT_BOTTOM_END )
+						->hide_initial_label()
 						->attr( 'class', 'tutor-sm-hidden' )
 						->render();
 
@@ -150,7 +152,12 @@ $create_modal_id = 'tutor-announcement-form-modal';
 		</div>
 
 		<?php if ( empty( $announcements ) ) : ?>
-			<?php EmptyState::make()->render(); ?>
+			<?php
+				EmptyState::make()
+					->title( __( 'No Announcements Found', 'tutor' ) )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/no-announcements.svg' ) )
+					->render();
+			?>
 		<?php else : ?>
 			<div class="tutor-announcement-list">
 				<?php
@@ -159,7 +166,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 					<div class="tutor-announcement-item">
 						<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-5">
 							<div class="tutor-flex tutor-items-center tutor-gap-3">
-								<?php SvgIcon::make()->name( Icon::ANNOUNCEMENT )->render(); ?>
+								<?php SvgIcon::make()->name( Icon::ANNOUNCEMENT )->color( Color::IDLE )->render(); ?>
 								<div class="tutor-tiny tutor-text-secondary">
 									<?php echo esc_html( tutor_i18n_get_formated_date( $announcement->post_date ) ); ?>
 								</div>
@@ -244,11 +251,9 @@ $create_modal_id = 'tutor-announcement-form-modal';
 						<div class="tutor-p2 tutor-mb-6 tutor-whitespace-pre-line">
 							<?php echo wp_kses_post( $announcement->post_content ); ?>
 						</div>
-						<div class="tutor-tiny tutor-text-secondary">
-							<span class="tutor-mr-4">
-								<span class="tutor-mr-1"><?php esc_html_e( 'Course', 'tutor' ); ?></span>
-								<?php PreviewTrigger::make()->id( $announcement->post_parent )->render(); ?>
-							</span>
+						<div class="tutor-tiny tutor-text-secondary tutor-flex tutor-items-center tutor-gap-2">
+							<span class="tutor-flex-shrink-0"><?php esc_html_e( 'Course', 'tutor' ); ?></span>
+							<?php PreviewTrigger::make()->id( $announcement->post_parent )->render(); ?>
 						</div>
 					</div>
 					<?php

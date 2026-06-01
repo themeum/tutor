@@ -131,6 +131,7 @@ final class Icon {
 	const CROSS_2                    = 'cross-2';
 	const CROSS_CIRCLE               = 'cross-circle';
 	const CROSS_CIRCLE_LINE          = 'cross-circle-line';
+	const CROSS_COLORIZE             = 'cross-colorize';
 	const CROWN                      = 'crown';
 	const CROWN_OUTLINED             = 'crown-outlined';
 	const CROWN_ROUNDED              = 'crown-rounded';
@@ -228,6 +229,7 @@ final class Icon {
 	const INACTIVE                   = 'inactive';
 	const INFO                       = 'info';
 	const INFO_2                     = 'info-2';
+	const INFO_COLORIZE              = 'info-colorize';
 	const INFO_FILL                  = 'info-fill';
 	const INFO_OCTAGON               = 'info-octagon';
 	const INSTRUCTOR                 = 'instructor';
@@ -390,6 +392,7 @@ final class Icon {
 	const SORT_MINOR                 = 'sort-minor';
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
+	const STAR                       = 'star';
 	const STAR_FILL                  = 'star-fill';
 	const STAR_HALF                  = 'star-half';
 	const STAR_LINE                  = 'star-line';
@@ -404,6 +407,7 @@ final class Icon {
 	const SVG                        = 'svg';
 	const TAG                        = 'tag';
 	const TAG_OUTLINE                = 'tag-outline';
+	const TARGET                     = 'target';
 	const TEXT                       = 'text';
 	const TEXT_FIELD_EXPAND          = 'text-field-expand';
 	const THREE_DOTS                 = 'three-dots';
