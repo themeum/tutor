@@ -10,6 +10,8 @@
 
 namespace Tutor\Ecommerce;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\GDPR\Controllers\LegalConsent;
 use TUTOR\Input;
 use Tutor\Models\CartModel;
@@ -21,10 +23,6 @@ use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\EnrollmentModel;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Checkout Controller class
