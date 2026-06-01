@@ -1,7 +1,8 @@
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
 import { type AxiosError } from 'axios';
 
@@ -58,7 +59,7 @@ export const courseCompleteHandler = () => {
 
     // Complete
     async completeCourseRequest(payload: CourseCompletePayload) {
-      return wpAjaxInstance.post(endpoints.TUTOR_COMPLETE_COURSE, payload);
+      return wpPost(endpoints.TUTOR_COMPLETE_COURSE, payload);
     },
 
     async handleCourseComplete(courseId: number) {
@@ -67,7 +68,7 @@ export const courseCompleteHandler = () => {
 
     // Retake
     async retakeCourseRequest(payload: CourseRetakePayload) {
-      return wpAjaxInstance.post(endpoints.RESET_COURSE_PROGRESS, payload);
+      return wpPost<TutorMutationResponse<{ redirect_to: string }>>(endpoints.RESET_COURSE_PROGRESS, payload);
     },
 
     async handleCourseRetake(courseId: number) {

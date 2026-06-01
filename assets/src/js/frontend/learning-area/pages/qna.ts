@@ -1,7 +1,8 @@
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
 
 interface CreateQnaPayload {
@@ -158,19 +159,19 @@ const qnaPage = () => {
     },
 
     createQnA(payload: CreateQnaPayload) {
-      return wpAjaxInstance.post(endpoints.CREATE_UPDATE_QNA, payload);
+      return wpPost(endpoints.CREATE_UPDATE_QNA, payload);
     },
 
     updateQnA(payload: UpdateQnAPayload) {
-      return wpAjaxInstance.post(endpoints.UPDATE_QNA, payload);
+      return wpPost(endpoints.UPDATE_QNA, payload);
     },
 
     replyQnA(payload: ReplyQnaPayload) {
-      return wpAjaxInstance.post(endpoints.CREATE_UPDATE_QNA, payload);
+      return wpPost(endpoints.CREATE_UPDATE_QNA, payload);
     },
 
     deleteQnA(payload: DeleteQnaPayload) {
-      return wpAjaxInstance.post(endpoints.DELETE_DASHBOARD_QNA, payload);
+      return wpPost(endpoints.DELETE_DASHBOARD_QNA, payload);
     },
 
     async reloadReplies(order?: string) {
@@ -185,7 +186,7 @@ const qnaPage = () => {
 
       this.loadingReplies = true;
       try {
-        const response = await wpAjaxInstance.post(endpoints.LOAD_QNA_REPLIES, {
+        const response = await wpPost<TutorMutationResponse<{ html: string }>>(endpoints.LOAD_QNA_REPLIES, {
           comment_id: commentId,
           order: this.repliesOrder,
           context: 'learning-area',

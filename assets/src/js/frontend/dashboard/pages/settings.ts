@@ -2,10 +2,10 @@ import { __ } from '@wordpress/i18n';
 
 import { type MutationState } from '@Core/ts/services/Query';
 import { type WPMedia } from '@Core/ts/services/WPMedia';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface UserPhotoFormProps {
   photo_file: File;
@@ -123,7 +123,7 @@ const settings = () => {
       this.handleResetPreferences = this.handleResetPreferences.bind(this);
 
       this.handleUpdateNotification = query.useMutation(this.updateNotification, {
-        onSuccess: (data: TutorMutationResponse<string>, payload: UpdateNotificationProps) => {
+        onSuccess: (data, payload) => {
           form.reset(payload?.formId as string, payload as unknown as Record<string, unknown>);
           toast.success(data?.message ?? __('Notification settings updated', 'tutor'));
         },
@@ -169,7 +169,7 @@ const settings = () => {
       });
 
       this.updateProfileMutation = query.useMutation(this.updateProfile, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data) => {
           toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
         },
         onError: (error: Error) => {
@@ -178,7 +178,7 @@ const settings = () => {
       });
 
       this.saveSocialProfileMutation = query.useMutation(this.saveSocialProfile, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data) => {
           toast.success(data?.message ?? __('Success successfully saved social profile', 'tutor'));
         },
         onError: (error: Error) => {
@@ -187,7 +187,7 @@ const settings = () => {
       });
 
       this.saveBillingInfoMutation = query.useMutation(this.saveBillingInfo, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data) => {
           toast.success(data?.message ?? __('Success successfully saved billing info', 'tutor'));
         },
         onError: (error: Error) => {
@@ -196,7 +196,7 @@ const settings = () => {
       });
 
       this.saveWithdrawMethodMutation = query.useMutation(this.saveWithdrawMethod, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data) => {
           toast.success(data?.message ?? __('Withdrawal method saved successfully', 'tutor'));
         },
         onError: (error: Error) => {
@@ -245,13 +245,13 @@ const settings = () => {
     },
 
     async updatePreferences(payload: PreferencesFormProps) {
-      return wpAjaxInstance.post(endpoints.UPDATE_USER_PREFERENCES, payload) as unknown as Promise<
+      return wpPost(endpoints.UPDATE_USER_PREFERENCES, payload) as unknown as Promise<
         TutorMutationResponse<PreferencesFormProps>
       >;
     },
 
     async resetPreferences(payload: ResetPreferencesPayload) {
-      return wpAjaxInstance.post(endpoints.RESET_USER_PREFERENCES, payload) as unknown as Promise<
+      return wpPost(endpoints.RESET_USER_PREFERENCES, payload) as unknown as Promise<
         TutorMutationResponse<PreferencesFormProps>
       >;
     },
@@ -296,11 +296,11 @@ const settings = () => {
         {} as Record<string, string>,
       );
 
-      return wpAjaxInstance.post(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload);
     },
 
     async uploadUserPhoto(payload: UserPhotoFormProps) {
-      return wpAjaxInstance.post(endpoints.UPLOAD_PROFILE_PHOTO, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.UPLOAD_PROFILE_PHOTO, payload);
     },
 
     async handleUploadProfilePhoto(files: File[]) {
@@ -326,7 +326,7 @@ const settings = () => {
     },
 
     async removeUserPhoto(payload: RemoveUserPhotoProps) {
-      return wpAjaxInstance.post(endpoints.REMOVE_PROFILE_PHOTO, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.REMOVE_PROFILE_PHOTO, payload);
     },
 
     async handleRemoveProfilePhoto() {
@@ -338,7 +338,7 @@ const settings = () => {
     },
 
     async updateProfile(payload: AccountFormProps) {
-      return wpAjaxInstance.post(endpoints.UPDATE_PROFILE, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.UPDATE_PROFILE, payload);
     },
 
     async handleUpdateProfile(data: AccountFormProps, formId: string) {
@@ -351,7 +351,7 @@ const settings = () => {
     },
 
     async saveSocialProfile(payload: SocialFormProps) {
-      return wpAjaxInstance.post(endpoints.SAVE_SOCIAL_PROFILE, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.SAVE_SOCIAL_PROFILE, payload);
     },
 
     async handleSaveSocialProfile(data: SocialFormProps, formId: string) {
@@ -360,7 +360,7 @@ const settings = () => {
     },
 
     async saveBillingInfo(payload: SettingsFormProps) {
-      return wpAjaxInstance.post(endpoints.SAVE_BILLING_INFO, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.SAVE_BILLING_INFO, payload);
     },
 
     async handleSaveBillingInfo(data: SettingsFormProps, formId: string) {
@@ -371,7 +371,7 @@ const settings = () => {
     },
 
     async saveWithdrawMethod(payload: Record<string, unknown>) {
-      return wpAjaxInstance.post(endpoints.SAVE_WITHDRAW_METHOD, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.SAVE_WITHDRAW_METHOD, payload);
     },
 
     async handleSaveWithdrawMethod(data: WithdrawMethodFormProps, formId: string) {
@@ -393,7 +393,7 @@ const settings = () => {
     },
 
     async resetPassword(payload: ResetPasswordFormProps) {
-      return wpAjaxInstance.post(endpoints.RESET_PASSWORD, payload) as unknown as Promise<ResetPasswordResponse>;
+      return wpPost(endpoints.RESET_PASSWORD, payload) as unknown as Promise<ResetPasswordResponse>;
     },
 
     async handleResetPassword(data: ResetPasswordFormProps, formId: string) {

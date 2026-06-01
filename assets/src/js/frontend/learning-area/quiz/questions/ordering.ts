@@ -1,6 +1,19 @@
 import type { AlpineComponentMeta } from '@Core/ts/types';
-import { DragDropManager, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
-import { Sortable } from '@dnd-kit/dom/sortable';
+import type { Sortable } from '@dnd-kit/dom/sortable';
+
+const loadDndKit = async () => {
+  const [dom, sortable] = await Promise.all([
+    import(/* webpackChunkName: "tutor-dnd-kit" */ '@dnd-kit/dom'),
+    import(/* webpackChunkName: "tutor-dnd-kit" */ '@dnd-kit/dom/sortable'),
+  ]);
+
+  return {
+    DragDropManager: dom.DragDropManager,
+    KeyboardSensor: dom.KeyboardSensor,
+    PointerSensor: dom.PointerSensor,
+    Sortable: sortable.Sortable,
+  };
+};
 
 const QUESTION_ORDERING_CONSTANTS = {
   CLASSES: {
@@ -45,9 +58,14 @@ const questionOrdering = (
     }
   },
 
-  setupDrag() {
+  async setupDrag() {
     const container = this.$el;
     if (!container) {
+      return;
+    }
+
+    const { DragDropManager, KeyboardSensor, PointerSensor, Sortable } = await loadDndKit();
+    if (!this.initialized) {
       return;
     }
 

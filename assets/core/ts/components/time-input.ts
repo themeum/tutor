@@ -1,10 +1,10 @@
 import { __ } from '@wordpress/i18n';
-import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { type FormControlMethods, type ValidationRules } from '@Core/ts/components/form';
 import { popover, type PopoverProps } from '@Core/ts/components/popover';
+import { DateFormats } from '@Core/ts/date-formats';
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { DateFormats } from '@TutorShared/config/constants';
 
 export interface TimeInputProps extends PopoverProps {
   value?: string;
@@ -37,12 +37,16 @@ const defaultProps: Required<
 
 const buildTimeOptions = (interval: number): string[] => {
   const safeInterval = Number.isFinite(interval) && interval > 0 ? interval : defaultProps.interval;
-  const start = setMinutes(setHours(new Date(), 0), 0);
-  const end = setMinutes(setHours(new Date(), 23), 59);
+  const start = dayjs().hour(0).minute(0);
+  const end = dayjs().hour(23).minute(59);
 
-  return eachMinuteOfInterval({ start, end }, { step: safeInterval }).map((date) =>
-    format(date, DateFormats.hoursMinutes),
-  );
+  const options: string[] = [];
+  let current = start;
+  while (current.isBefore(end) || current.isSame(end, 'minute')) {
+    options.push(current.format(DateFormats.hoursMinutes));
+    current = current.add(safeInterval, 'minute');
+  }
+  return options;
 };
 
 const normalizeTimeValue = (value: string): string => {

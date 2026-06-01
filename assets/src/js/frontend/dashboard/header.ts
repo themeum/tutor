@@ -1,8 +1,8 @@
 import { type MutationState } from '@Core/ts/services/Query';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import { type AjaxResponse } from '@FrontendTypes/index';
 import { tutorConfig } from '@TutorShared/config/config';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 const header = () => {
   const query = window.TutorCore.query;
@@ -12,7 +12,7 @@ const header = () => {
     profileSwitchMutation: null as MutationState<AjaxResponse> | null,
     init() {
       this.profileSwitchMutation = this.query.useMutation(
-        (currentMode: string) => wpAjaxInstance.post('tutor_switch_profile', { current_mode: currentMode }),
+        (currentMode: string) => wpPost('tutor_switch_profile', { current_mode: currentMode }),
         {
           onSuccess: (res: AjaxResponse) => {
             window.TutorCore.toast.success(res?.message);

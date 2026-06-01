@@ -1,13 +1,14 @@
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
+import type { TutorMutationResponse } from '@TutorShared/utils/types';
 
 const createCourseHandler = () => {
   const { query, toast } = window.TutorCore;
 
   return {
-    createCourseMutation: null as MutationState<unknown, unknown> | null,
+    createCourseMutation: null as MutationState<TutorMutationResponse<string>, unknown> | null,
 
     init() {
       if (this.createCourseMutation) {
@@ -25,7 +26,7 @@ const createCourseHandler = () => {
     },
 
     async createCourseRequest() {
-      return wpAjaxInstance.post(endpoints.CREATE_DRAFT_COURSE, {
+      return wpPost<TutorMutationResponse<string>>(endpoints.CREATE_DRAFT_COURSE, {
         from_dashboard: true,
       });
     },
