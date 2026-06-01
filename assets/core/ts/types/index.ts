@@ -34,6 +34,8 @@ export interface AjaxResponse<T = unknown> {
   data?: T;
 }
 
+export type LazyComponentLoader = () => Promise<AlpineComponentMeta>;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ExtractComponent<T extends AlpineComponentMeta<any>> = T['component'];
 

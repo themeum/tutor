@@ -1,4 +1,4 @@
-import { type AlpineComponentMeta, type ServiceMeta, type TutorCore } from '@Core/ts/types';
+import { type AlpineComponentMeta, type LazyComponentLoader, type ServiceMeta, type TutorCore } from '@Core/ts/types';
 import { makeFirstCharacterUpperCase } from '@Core/ts/utils/string';
 import { type Alpine } from 'alpinejs';
 
@@ -21,6 +21,8 @@ interface RegisterOptions {
 
 class Registry {
   private components = new Map<string, AlpineComponentMeta>();
+  private lazyComponents = new Map<string, LazyComponentLoader>();
+  private loadingComponents = new Map<string, Promise<void>>();
   private services = new Map<string, ServiceMeta>();
 
   register({ type, meta }: RegisterOptions): void {
@@ -36,6 +38,12 @@ class Registry {
         this.exposeToWindow({ type: 'service', items: [serviceMeta] });
       }
     }
+  }
+
+  registerLazy(loaders: Record<string, LazyComponentLoader>): void {
+    Object.entries(loaders).forEach(([name, loader]) => {
+      this.lazyComponents.set(name, loader);
+    });
   }
 
   registerAll({ components = [], services = [] }: RegisterAllOptions): void {
@@ -55,6 +63,46 @@ class Registry {
 
   has({ name, type }: GetOptions): boolean {
     return type === 'component' ? this.components.has(name) : this.services.has(name);
+  }
+
+  async loadComponent(name: string): Promise<void> {
+    // Already registered.
+    if (this.components.has(name)) {
+      return;
+    }
+
+    // Already being loaded.
+    const existingPromise = this.loadingComponents.get(name);
+    if (existingPromise) {
+      return existingPromise;
+    }
+
+    const loader = this.lazyComponents.get(name);
+
+    if (!loader) {
+      return;
+    }
+
+    const loadingPromise = (async () => {
+      try {
+        const meta = await loader();
+
+        this.register({
+          type: 'component',
+          meta,
+        });
+      } finally {
+        this.loadingComponents.delete(name);
+      }
+    })();
+
+    this.loadingComponents.set(name, loadingPromise);
+
+    return loadingPromise;
+  }
+
+  async loadComponents(names: string[]): Promise<void> {
+    await Promise.all(names.map((name) => this.loadComponent(name)));
   }
 
   private exposeToWindow({ type, items }: { type: RegistryType; items: (AlpineComponentMeta | ServiceMeta)[] }): void {

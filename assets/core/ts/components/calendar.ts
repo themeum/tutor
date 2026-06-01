@@ -4,7 +4,10 @@ import dayjs from 'dayjs';
 import { DateFormats } from '@Core/ts/date-formats';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
-import type { Calendar, Options } from 'vanilla-calendar-pro';
+import { type Calendar, type Options, Calendar as VanillaCalendar } from 'vanilla-calendar-pro';
+
+// @ts-ignore
+import 'vanilla-calendar-pro/styles/index.css';
 
 const PRESETS = {
   ALL_TIME: 'all-time',
@@ -260,14 +263,9 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
     init(): void {
       if (!this.$el) return;
 
-      this.$nextTick(async () => {
+      this.$nextTick(() => {
         const el = this.$el!;
         const url = new URL(window.location.href);
-        const [{ Calendar: VanillaCalendar }] = await Promise.all([
-          import(/* webpackChunkName: "tutor-vanilla-calendar" */ 'vanilla-calendar-pro'),
-          // @ts-ignore
-          import(/* webpackChunkName: "tutor-vanilla-calendar" */ 'vanilla-calendar-pro/styles/index.css'),
-        ]);
 
         const selectedDates: string[] = [];
         let selectedTime = '';
