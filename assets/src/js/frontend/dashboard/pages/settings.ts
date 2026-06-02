@@ -141,7 +141,7 @@ const settings = () => {
           toast.success(__('Successfully updated profile photo.', 'tutor'));
         },
         onError: (error: Error) => {
-          toast.error(error.message || convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -159,7 +159,7 @@ const settings = () => {
           toast.success(__('Successfully updated cover photo.', 'tutor'));
         },
         onError: (error: Error) => {
-          toast.error(error.message || convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
