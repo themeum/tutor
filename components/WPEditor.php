@@ -389,7 +389,6 @@ class WPEditor extends BaseComponent {
 				editorId: '<?php echo esc_js( $editor_id ); ?>',
 				placeholder: '<?php echo esc_js( $this->placeholder ); ?>'
 			})"
-			x-init="init()"
 		>
 			<?php if ( ! empty( $this->label ) ) : ?>
 				<label 
