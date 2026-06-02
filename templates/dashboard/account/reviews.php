@@ -11,10 +11,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\User;
-use Tutor\Components\SvgIcon;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
@@ -29,22 +27,20 @@ $all_reviews  = User::is_student_view() ?
 $review_count = $all_reviews->count;
 $reviews      = $all_reviews->results;
 $is_editable  = User::is_student_view();
-
-foreach ( $reviews as $review ) {
-	$review->is_editable = $is_editable;
-	$review->user_avatar = tutor_utils()->get_user_avatar_url( $review->user_id );
-}
-
 ?>
 
 <?php require_once tutor_get_template( 'account-header' ); ?>
 
 <div class="tutor-user-reviews">
 	<div class="tutor-account-container">
-	<?php if ( $review_count > 0 ) : ?>
+	<?php if ( is_array( $reviews ) && count( $reviews ) ) : ?>
 		<div class="tutor-flex tutor-flex-column tutor-gap-5">
 			<?php foreach ( $reviews as $review ) : ?>
-				<?php tutor_load_template( 'dashboard.account.reviews.review-card', array( 'review' => $review ) ); ?>
+				<?php
+					$review->is_editable = $is_editable;
+					$review->user_avatar = tutor_utils()->get_user_avatar_url( $review->user_id );
+					tutor_load_template( 'dashboard.account.reviews.review-card', array( 'review' => $review ) );
+				?>
 			<?php endforeach; ?>
 		</div>
 
@@ -76,7 +72,7 @@ foreach ( $reviews as $review ) {
 			<div class="tutor-card">
 				<?php
 					EmptyState::make()
-						->title( 'No Reviews Found' )
+						->title( __( 'No Reviews Found', 'tutor' ) )
 						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reviews-empty.svg' ) )
 						->render();
 				?>

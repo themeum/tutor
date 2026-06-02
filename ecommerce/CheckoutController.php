@@ -10,6 +10,8 @@
 
 namespace Tutor\Ecommerce;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\GDPR\Controllers\LegalConsent;
 use TUTOR\Input;
 use Tutor\Models\CartModel;
@@ -21,11 +23,6 @@ use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\EnrollmentModel;
-use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Checkout Controller class
@@ -569,13 +566,13 @@ class CheckoutController {
 		$billing_model   = new BillingModel();
 		$current_user_id = get_current_user_id();
 
-		$is_guest_checkout_endabled = class_exists( 'TutorPro\Ecommerce\GuestCheckout\GuestCheckout' ) && GuestCheckout::is_enable();
+		$is_guest_checkout_enabled = apply_filters( 'tutor_is_guest_checkout_enabled', false );
 
-		// Pevent invalid request.
+		// Prevent invalid request.
 		if ( ! $current_user_id ) {
-			if ( $is_guest_checkout_endabled ) {
+			if ( $is_guest_checkout_enabled ) {
 				// Guest user.
-				$current_user_id = wp_rand(); // A random id to iniquely indentify.
+				$current_user_id = wp_rand(); // A random id to uniquely identify.
 			} else {
 				wp_die( esc_html( tutor_utils()->error_message( 'invalid_req' ) ) );
 			}
@@ -624,26 +621,6 @@ class CheckoutController {
 			}
 		}
 
-		if ( isset( $request['object_ids'] ) ) {
-			$course_ids = explode( ',', $request['object_ids'] );
-
-			if ( tutor_utils()->count( $course_ids ) ) {
-				foreach ( $course_ids as $course_id ) {
-					$can_buy = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
-					if ( ! $can_buy ) {
-						array_push(
-							$errors,
-							sprintf(
-							// Translators: %s course name.
-								__( 'Enrollment for %s is currently paused. Please remove it from your cart to proceed.', 'tutor' ),
-								get_the_title( $course_id ) ?? ''
-							),
-						);
-					}
-				}
-			}
-		}
-
 		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $_POST );
 		if ( is_wp_error( $validate_consent ) ) {
 			array_push( $errors, $validate_consent->get_error_message() );
@@ -668,6 +645,17 @@ class CheckoutController {
 				if ( ! in_array( get_post_type( $object_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
 					// translators: %s is the course title.
 					array_push( $errors, sprintf( __( 'Invalid item: %s', 'tutor' ), get_the_title( $object_id ) ) );
+				}
+
+				$status = get_post_status( $object_id );
+				if ( 'publish' !== $status ) {
+					// translators: %s is the course title.
+					array_push( $errors, sprintf( __( '“%s” is no longer available for purchase.', 'tutor' ), get_the_title( $object_id ) ?? '' ) );
+				}
+
+				$can_buy = apply_filters( 'tutor_can_purchase_course', true, $object_id );
+				if ( is_wp_error( $can_buy ) ) {
+					array_push( $errors, $can_buy->get_error_message() );
 				}
 			}
 		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
@@ -1063,9 +1051,9 @@ class CheckoutController {
 		$course_id = Input::get( 'course_id', 0, Input::TYPE_INT );
 
 		if ( $course_id ) {
-			$can_buy    = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
+			$can_buy    = apply_filters( 'tutor_can_purchase_course', true, $course_id );
 			$course_url = get_post_permalink( $course_id );
-			if ( ! $can_buy ) {
+			if ( is_wp_error( $can_buy ) ) {
 				wp_safe_redirect( tutor_utils()->get_nocache_url( $course_url ) );
 				exit;
 			}

@@ -51,9 +51,9 @@ defined( 'ABSPATH' ) || exit;
 				</div>
 				<div class="tutor-form-group">
 					<label for="tutor_announcement_course">
-						<?php esc_html_e( 'Summary', 'tutor' ); ?>
+						<?php esc_html_e( 'Description', 'tutor' ); ?>
 					</label>
-					<textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php esc_html_e( 'Summary...', 'tutor' ); ?>" required></textarea>
+					<textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php esc_html_e( 'Write a short announcement description.', 'tutor' ); ?>" required></textarea>
 				</div>
 				
 				<?php do_action( 'tutor_announcement_editor/after' ); ?>

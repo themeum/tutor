@@ -282,9 +282,14 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2, 
 							<div class="tutor-progress-card-details">
 								<?php
 									echo esc_html(
-										sprintf(
-										/* translators: 1: completed lesson count, 2: total lesson count */
-											__( '%1$s of %2$s lessons', 'tutor' ),
+										apply_filters(
+											'tutor_course_progress_message',
+											sprintf(
+											/* translators: 1: completed lesson count, 2: total lesson count */
+												__( '%1$s of %2$s lessons', 'tutor' ),
+												$course_progress['completed_count'],
+												$course_progress['total_count']
+											),
 											$course_progress['completed_count'],
 											$course_progress['total_count']
 										)

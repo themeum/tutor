@@ -31,7 +31,13 @@ const copyToClipboard = () => {
         try {
           document.execCommand('copy');
         } catch (error) {
-          this.toast.error(sprintf(__('Failed to copy to clipboard: %s', 'tutor'), error));
+          this.toast.error(
+            sprintf(
+              // translators: %s: error message.
+              __('Failed to copy to clipboard: %s', 'tutor'),
+              error,
+            ),
+          );
           return;
         }
         document.body.removeChild(textArea);

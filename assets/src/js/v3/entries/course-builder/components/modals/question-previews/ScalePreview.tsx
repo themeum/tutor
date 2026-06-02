@@ -104,7 +104,7 @@ const ScalePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
             <SVGIcon name="handSwipeRight" width={20} height={20} />
           </div>
           <span className="tutor-scale-instruction-text">
-            {__('Move the scale left or right to set value', 'tutor')}
+            {__('Move the scale left or right to set the correct value', 'tutor')}
           </span>
         </div>
       </div>

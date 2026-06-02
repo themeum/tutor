@@ -12,6 +12,9 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 use Tutor\Components\Badge;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\SvgIcon;
 use TUTOR\Utils;
 
@@ -50,9 +53,17 @@ $label = __( 'Live Session', 'tutor' );
 				?>
 			</div>
 		</div>
-		<a href="<?php echo esc_url( $item['url'] ); ?>" class="tutor-dashboard-home-task-link" data-link>
-			<?php esc_html_e( 'Open', 'tutor' ); ?>
-			<?php SvgIcon::make()->name( Icon::CHEVRON_RIGHT_2 )->render(); ?>
-		</a>
+		<?php
+		Button::make()
+			->tag( 'a' )
+			->label( __( 'Open', 'tutor' ) )
+			->variant( Variant::LINK )
+			->size( Size::X_SMALL )
+			->icon( Icon::CHEVRON_RIGHT_2, 'right' )
+			->attr( 'href', $item['url'] )
+			->attr( 'class', 'tutor-dashboard-home-task-link' )
+			->attr( 'data-link', '' )
+			->render();
+		?>
 	</div>
 </div>

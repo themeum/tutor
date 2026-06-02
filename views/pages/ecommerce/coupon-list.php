@@ -177,7 +177,7 @@ $filters = array(
 									</td>
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( 'flat' === $coupon->discount_type ? __( 'Amount', 'tutor' ) : __( 'Percent', 'tutor' ) ); ?>
+											<?php echo esc_html( 'flat' === $coupon->discount_type ? __( 'Fixed Amount', 'tutor' ) : __( 'Percentage', 'tutor' ) ); ?>
 										</div>
 									</td>
 

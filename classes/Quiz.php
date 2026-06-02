@@ -319,6 +319,15 @@ class Quiz {
 			$enable_pagination    = true;
 		}
 
+		if ( 'question_below_each_other' === $question_layout_view ) {
+			$settings['hide_question_number_overview'] = '0';
+			$enable_answer_reveal                      = false;
+		}
+
+		if ( $enable_pagination ) {
+			$settings['hide_previous_button'] = '0';
+		}
+
 		$settings['question_layout_view']   = $question_layout_view;
 		$settings['enable_pagination']      = $enable_pagination ? '1' : '0';
 		$settings['pagination_type']        = $pagination_type;
@@ -1834,16 +1843,18 @@ class Quiz {
 			),
 		);
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+		if ( $earned_marks ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
 						' . SvgIcon::make()->name( Icon::STAR )->size( 20 )->get() . __( 'Earned Grade', 'tutor' ) . '
 					</div>',
+					),
+					array( 'content' => $earned_marks . '%' ),
 				),
-				array( 'content' => $earned_marks . '%' ),
-			),
-		);
+			);
+		}
 
 		$quiz_summary[] = array(
 			'columns' => array(
@@ -2076,7 +2087,7 @@ class Quiz {
 			<?php
 			ConfirmationModal::make()
 				->id( $retry_modal_id )
-				->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+				->title( __( 'Retake Quiz?', 'tutor' ) )
 				->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-retry.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 				->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
 				->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )

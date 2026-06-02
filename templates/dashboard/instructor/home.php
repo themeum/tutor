@@ -123,7 +123,7 @@ if ( $tutor_pro_enabled && ! $is_all_time ) {
  */
 $stat_cards = array(
 	array(
-		'variation'     => 'success',
+		'variation'     => 'brand',
 		'title'         => esc_html__( 'Total Earnings', 'tutor' ),
 		'icon'          => Icon::EARNING,
 		'value'         => tutor_utils()->tutor_price( $total_earnings ?? 0 ),
@@ -249,14 +249,14 @@ $sortable_sections = array(
 	),
 	array(
 		'id'        => 'overview_chart',
-		'label'     => esc_html__( 'Earning Over Time', 'tutor' ),
+		'label'     => esc_html__( 'Earnings Over Time', 'tutor' ),
 		'is_active' => $saved_visibility['overview_chart'] ?? true,
 		'order'     => $saved_order['overview_chart'] ?? 1,
 		'data'      => ! empty( $overview_chart_data ),
 	),
 	array(
 		'id'        => 'course_completion_and_leader',
-		'label'     => esc_html__( 'Course Completion and Leader', 'tutor' ),
+		'label'     => esc_html__( 'Course Completion Rate', 'tutor' ),
 		'is_active' => $saved_visibility['course_completion_and_leader'] ?? true,
 		'order'     => $saved_order['course_completion_and_leader'] ?? 2,
 		'data'      => ! empty( $course_completion_data ),
@@ -330,7 +330,7 @@ $sortable_sections_ids = array_reduce(
 			<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->render(); ?>
 		<?php endif; ?>
 
-		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: 'bottom-end' })">
+		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: '<?php echo esc_js( $tutor_pro_enabled ? 'bottom-end' : 'bottom-start' ); ?>' })">
 			<button
 				x-ref="trigger"
 				@click="toggle()"
@@ -395,6 +395,7 @@ $sortable_sections_ids = array_reduce(
 							'variation'     => $card['variation'] ?? 'enrolled',
 							'card_title'    => $card['title'] ?? '',
 							'icon'          => $card['icon'] ?? '',
+							'icon_size'     => $card['icon_size'] ?? 20,
 							'value'         => $card['value'] ?? '',
 							'content'       => $card['content'] ?? '',
 							'hover_content' => $card['hover_content'] ?? array(),

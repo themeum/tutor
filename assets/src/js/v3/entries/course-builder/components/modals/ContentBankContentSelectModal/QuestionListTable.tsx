@@ -82,7 +82,7 @@ const ALL_QUESTION_TYPE_OPTIONS: QuestionTypeOption[] = [
     isPro: true,
   },
   {
-    label: __('Mark in the Image', 'tutor'),
+    label: __('Mark in the image', 'tutor'),
     value: 'draw_image',
     icon: 'quizMarkInTheImage',
     isPro: true,

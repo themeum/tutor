@@ -10,10 +10,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Icon;
-use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Variant;
+use Tutor\Helpers\TimerHelper;
 
 global $tutor_is_started_quiz;
 
@@ -25,6 +24,40 @@ $has_time_limit         = isset( $has_time_limit ) ? (bool) $has_time_limit : $r
 $hide_quiz_time_display = isset( $hide_quiz_time_display ) ? (bool) $hide_quiz_time_display : false;
 $total_questions        = isset( $total_questions ) ? (int) $total_questions : 0;
 $quiz_title             = get_the_title( $tutor_is_started_quiz->quiz_id );
+
+$initial_tokens = TimerHelper::build_tokens( $remaining_time_secs );
+$sizer_tokens   = TimerHelper::build_tokens( $remaining_time_secs );
+
+$render_timer_tokens = static function ( array $tokens ) {
+	foreach ( $tokens as $token ) {
+		$type  = (string) ( $token['type'] ?? '' );
+		$value = (string) ( $token['value'] ?? '' );
+		$cls   = '';
+
+		if ( 'digit' === $type ) {
+			$cls = 'tutor-quiz-timer-digit-wrapper';
+		} elseif ( 'separator' === $type ) {
+			$cls = 'tutor-quiz-timer-separator';
+		} elseif ( 'suffix' === $type ) {
+			$cls = 'tutor-quiz-timer-suffix';
+		} elseif ( 'spacer' === $type ) {
+			$cls = 'tutor-quiz-timer-spacer';
+		}
+
+		if ( ! $cls ) {
+			continue;
+		}
+		?>
+		<span class="<?php echo esc_attr( $cls ); ?>">
+			<?php if ( 'digit' === $type ) : ?>
+				<?php echo esc_html( $value ); ?>
+			<?php elseif ( 'spacer' !== $type ) : ?>
+				<?php echo esc_html( $value ); ?>
+			<?php endif; ?>
+		</span>
+		<?php
+	}
+};
 
 ?>
 
@@ -43,58 +76,57 @@ $quiz_title             = get_the_title( $tutor_is_started_quiz->quiz_id );
 		<div class="tutor-quiz-progress-header">
 			<div class="tutor-quiz-progress-meta">
 				<?php if ( $has_time_limit && ! $hide_quiz_time_display ) : ?>
-					<div class="tutor-quiz-timer-frame" :class="'is-' + timerState" :data-shaking="shaking ? '1' : '0'">
-						<?php
-							SvgIcon::make()
-								->name( Icon::CLOCK_FRAME )
-								->width( 66 )
-								->height( 33 )
-								->render();
-						?>
+					<div
+						class="tutor-quiz-timer-frame"
+						:class="['is-' + timerState, 'is-' + timerFormat]"
+						:data-shaking="shaking ? '1' : '0'"
+						:data-format="timerFormat"
+					>
+						<div class="tutor-quiz-timer-frame-shape" aria-hidden="true">
+							<div class="tutor-quiz-timer-frame-tabs">
+								<span class="tutor-quiz-timer-frame-tab tutor-quiz-timer-frame-tab-start"></span>
+								<span class="tutor-quiz-timer-frame-tab tutor-quiz-timer-frame-tab-end"></span>
+							</div>
+							<div class="tutor-quiz-timer-frame-body">
+								<div class="tutor-quiz-timer-frame-body-fill"></div>
+								<div class="tutor-quiz-timer-frame-body-stroke"></div>
+							</div>
+						</div>
 
-						<div class="tutor-quiz-timer-text" :class="'is-' + timerState">
-							<?php
-							$digit_positions = array(
-								array(
-									'field' => 'minutes',
-									'index' => 0,
-								),
-								array(
-									'field' => 'minutes',
-									'index' => 1,
-								),
-								'separator',
-								array(
-									'field' => 'seconds',
-									'index' => 0,
-								),
-								array(
-									'field' => 'seconds',
-									'index' => 1,
-								),
-							);
+						<div class="tutor-quiz-timer-text tutor-quiz-timer-text-sizer" aria-hidden="true">
+							<?php $render_timer_tokens( $sizer_tokens ); ?>
+						</div>
 
-							foreach ( $digit_positions as $pos ) :
-								if ( 'separator' === $pos ) :
-									?>
-									<span class="tutor-quiz-timer-separator">:</span>
-									<?php
-								else :
-									?>
-									<span class="tutor-quiz-timer-digit-wrapper">
+						<div class="tutor-quiz-timer-text tutor-quiz-timer-text-fallback" :class="'is-' + timerState" x-show="!isReady">
+							<?php $render_timer_tokens( $initial_tokens ); ?>
+						</div>
+
+						<div class="tutor-quiz-timer-text tutor-quiz-timer-text-live" :class="'is-' + timerState" x-show="isReady">
+							<template x-for="token in displayTokens" :key="token.key">
+								<span
+									:class="{
+										'tutor-quiz-timer-digit-wrapper': token.type === 'digit',
+										'tutor-quiz-timer-separator': token.type === 'separator',
+										'tutor-quiz-timer-suffix': token.type === 'suffix',
+										'tutor-quiz-timer-spacer': token.type === 'spacer'
+									}"
+								>
+									<template x-if="token.type === 'digit'">
 										<span
 											class="tutor-quiz-timer-reel"
-											:style="'transform: translateY(-' + (<?php echo esc_attr( $pos['field'] ); ?>.charAt(<?php echo esc_attr( $pos['index'] ); ?>) * 1.25) + 'em)'"
+											:style="'transform: translateY(-' + (Number(token.value) * 1.25) + 'em)'"
 										>
 											<?php for ( $i = 0; $i < 10; $i++ ) : ?>
 												<span><?php echo esc_html( $i ); ?></span>
 											<?php endfor; ?>
 										</span>
-									</span>
-									<?php
-								endif;
-							endforeach;
-							?>
+									</template>
+
+									<template x-if="token.type !== 'digit'">
+										<span x-text="token.type === 'spacer' ? '' : token.value"></span>
+									</template>
+								</span>
+							</template>
 						</div>
 					</div>
 				<?php endif; ?>

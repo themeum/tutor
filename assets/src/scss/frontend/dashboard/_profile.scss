@@ -107,17 +107,9 @@
     .tutor-bio-wrapper {
       position: relative;
       margin-bottom: $tutor-spacing-9;
-      --tutor-bio-collapsed-height: calc(
-        4 * #{if(variable-exists(tutor-line-height-p2), $tutor-line-height-p2, 1.5rem)}
-      );
 
       .tutor-user-profile-bio {
         margin-bottom: 0;
-      }
-
-      .tutor-bio-collapsed {
-        max-height: var(--tutor-bio-collapsed-height);
-        overflow: hidden;
       }
 
       @include tutor-breakpoint-down(sm) {
@@ -172,7 +164,7 @@
   %bio-toggle-base {
     @include tutor-typography(small);
     appearance: none;
-    background: none;
+    background: $tutor-surface-l1;
     border: none;
     padding: 0;
     color: $tutor-text-brand;
@@ -189,12 +181,6 @@
 
   .tutor-bio-toggle {
     @extend %bio-toggle-base;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    z-index: calc($tutor-z-highest + 1);
-    background: $tutor-surface-l1;
-    padding-left: 4px;
   }
 
   .tutor-bio-toggle-less {

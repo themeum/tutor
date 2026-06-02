@@ -2,35 +2,26 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-dashboard-courses-card {
-	border: 1px solid $tutor-border-idle;
-	border-radius: $tutor-radius-2xl;
-	overflow: hidden;
+  background-color: $tutor-surface-l1;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+  overflow: hidden;
 
-	.tutor-dashboard-courses-tab {
-		padding: $tutor-spacing-6;
-		border-bottom: 1px solid $tutor-border-idle;
-		border-radius: $tutor-radius-2xl $tutor-radius-2xl 0 0;
-		background-color: $tutor-surface-l1;
-	}
+  .tutor-dashboard-courses-tab {
+    padding: $tutor-spacing-6;
+    border-bottom: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl $tutor-radius-2xl 0 0;
+  }
 
-	.tutor-dashboard-courses-list {
-		background-color: $tutor-surface-l1;
-	}
+  @include tutor-breakpoint-down(sm) {
+    background-color: transparent;
+    border: none;
+    border-radius: $tutor-radius-none;
 
-	@include tutor-breakpoint-down(sm) {
-		background-color: transparent;
-		border: none;
-		border-radius: unset;
-		.tutor-dashboard-courses-tab {
-			padding: $tutor-spacing-2;
-			border: 1px solid $tutor-border-idle;
-			border-radius: $tutor-radius-2xl;
-		}
-		.tutor-dashboard-courses-list {
-			border: none;
-			background: none;
-			margin-top: $tutor-spacing-4;
-			border-radius: $tutor-radius-2xl;
-		}
-	}
+    .tutor-dashboard-courses-tab {
+      padding: $tutor-spacing-2;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+    }
+  }
 }

@@ -114,6 +114,7 @@
 
   &-title {
     @include tutor-typography(medium, semibold);
+    @include tutor-text-clamp(2);
     margin-bottom: $tutor-spacing-3;
     margin-top: 0px;
     @include tutor-transition(color);

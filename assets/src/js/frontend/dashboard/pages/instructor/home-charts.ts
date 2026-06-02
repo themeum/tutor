@@ -95,7 +95,9 @@ const CHART_CONFIG = {
     boxShadow: '0px 2px 4px -2px #1018280F, 0px 4px 8px -2px #1018281A',
     caretSize: 6,
     caretInnerSize: 5,
-    offsetX: 12,
+    caretInnerOffset: 4,
+    barOffsetX: 6,
+    lineOffsetX: 12,
   },
 
   common: {
@@ -251,11 +253,21 @@ const createTooltipElement = (): HTMLDivElement => {
 };
 
 const getOrCreateTooltip = (chart: Chart): HTMLDivElement => {
-  let tooltipEl = chart.canvas.parentNode?.querySelector('div[data-chart-tooltip]') as HTMLDivElement;
+  const container = chart.canvas.parentElement;
+
+  if (!container) {
+    return createTooltipElement();
+  }
+
+  if (getComputedStyle(container).position === 'static') {
+    container.style.position = 'relative';
+  }
+
+  let tooltipEl = container.querySelector('div[data-chart-tooltip]') as HTMLDivElement;
 
   if (!tooltipEl) {
     tooltipEl = createTooltipElement();
-    chart.canvas.parentNode?.appendChild(tooltipEl);
+    container.appendChild(tooltipEl);
   }
 
   return tooltipEl;
@@ -346,26 +358,31 @@ const styleTooltipTable = (table: HTMLTableElement, colors: { tooltip: TooltipCo
   });
 };
 
-const addCaretToTable = (table: HTMLTableElement, colors: { tooltip: TooltipColors }): void => {
+type TooltipPlacement = 'left' | 'right';
+
+const addCaretToTable = (
+  table: HTMLTableElement,
+  colors: { tooltip: TooltipColors },
+  placement: TooltipPlacement,
+): void => {
   const carets = table.querySelectorAll('[data-caret]');
   for (const el of carets) {
     el.remove();
   }
 
   const { caretSize, caretInnerSize } = CHART_CONFIG.tooltip;
+  const caretInnerOffset = CHART_CONFIG.tooltip.caretInnerOffset;
 
   const caret = document.createElement('div');
   caret.setAttribute('data-caret', 'outer');
   Object.assign(caret.style, {
     position: 'absolute',
-    left: `-${caretSize}px`,
     top: '50%',
     transform: 'translateY(-50%)',
     width: '0',
     height: '0',
     borderTop: `${caretSize}px solid transparent`,
     borderBottom: `${caretSize}px solid transparent`,
-    borderRight: `${caretSize}px solid transparent`,
     zIndex: '1',
   });
 
@@ -373,30 +390,62 @@ const addCaretToTable = (table: HTMLTableElement, colors: { tooltip: TooltipColo
   caretInner.setAttribute('data-caret', 'inner');
   Object.assign(caretInner.style, {
     position: 'absolute',
-    left: '-4px',
     top: '50%',
     transform: 'translateY(-50%)',
     width: '0',
     height: '0',
     borderTop: `${caretInnerSize}px solid transparent`,
     borderBottom: `${caretInnerSize}px solid transparent`,
-    borderRight: `${caretInnerSize}px solid ${colors.tooltip.background}`,
     zIndex: '2',
   });
+
+  if (placement === 'right') {
+    Object.assign(caret.style, {
+      left: `-${caretSize}px`,
+      borderRight: `${caretSize}px solid transparent`,
+    });
+
+    Object.assign(caretInner.style, {
+      left: `-${caretInnerOffset}px`,
+      borderRight: `${caretInnerSize}px solid ${colors.tooltip.background}`,
+    });
+  } else {
+    Object.assign(caret.style, {
+      right: `-${caretSize}px`,
+      borderLeft: `${caretSize}px solid transparent`,
+    });
+
+    Object.assign(caretInner.style, {
+      right: `-${caretInnerOffset}px`,
+      borderLeft: `${caretInnerSize}px solid ${colors.tooltip.background}`,
+    });
+  }
 
   table.appendChild(caret);
   table.appendChild(caretInner);
 };
 
+const clampValue = (value: number, min: number, max: number): number => {
+  if (min > max) {
+    return min;
+  }
+
+  return Math.min(Math.max(value, min), max);
+};
+
+const getTooltipOffsetX = (chartType: 'line' | 'bar'): number => {
+  return chartType === 'bar' ? CHART_CONFIG.tooltip.barOffsetX : CHART_CONFIG.tooltip.lineOffsetX;
+};
+
 const handleTooltip = (
   context: { chart: Chart; tooltip: TooltipModel<'line'> | TooltipModel<'bar'> },
   colors: { tooltip: TooltipColors },
+  chartType: 'line' | 'bar',
 ): void => {
   const { chart, tooltip } = context;
   const tooltipEl = getOrCreateTooltip(chart);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (!shouldShowTooltip(tooltip, (chart.config as any).type)) {
+  if (!shouldShowTooltip(tooltip, chartType)) {
     tooltipEl.style.opacity = '0';
     return;
   }
@@ -420,14 +469,47 @@ const handleTooltip = (
   tableRoot.appendChild(body);
 
   styleTooltipTable(tableRoot, colors);
-  addCaretToTable(tableRoot, colors);
+  const container = chart.canvas.parentElement;
 
+  if (!container) {
+    return;
+  }
+
+  const tooltipOffsetX = getTooltipOffsetX(chartType);
   const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+  const anchorX = positionX + tooltip.caretX;
+  const anchorY = positionY + tooltip.caretY;
+  const tooltipPadding = 8;
+
+  let placement: TooltipPlacement = 'right';
+  addCaretToTable(tableRoot, colors, placement);
+
+  const tooltipWidth = tooltipEl.offsetWidth;
+  const containerWidth = container.clientWidth;
+  const containerHeight = container.clientHeight;
+  const defaultRight = anchorX + tooltipOffsetX;
+
+  if (defaultRight + tooltipWidth > containerWidth - tooltipPadding) {
+    placement = 'left';
+    addCaretToTable(tableRoot, colors, placement);
+  }
+
+  const measuredTooltipWidth = tooltipEl.offsetWidth;
+  const measuredTooltipHeight = tooltipEl.offsetHeight;
+  const horizontalPosition =
+    placement === 'right' ? anchorX + tooltipOffsetX : anchorX - measuredTooltipWidth - tooltipOffsetX;
+  const left = clampValue(horizontalPosition, tooltipPadding, containerWidth - measuredTooltipWidth - tooltipPadding);
+  const top = clampValue(
+    anchorY - measuredTooltipHeight / 2,
+    tooltipPadding,
+    containerHeight - measuredTooltipHeight - tooltipPadding,
+  );
+
   Object.assign(tooltipEl.style, {
     opacity: '1',
-    left: `${positionX + tooltip.caretX + CHART_CONFIG.tooltip.offsetX}px`,
-    top: `${positionY + tooltip.caretY}px`,
-    transform: 'translate(0, -50%)',
+    left: `${left}px`,
+    top: `${top}px`,
+    transform: 'translate(0, 0)',
   });
 };
 
@@ -492,7 +574,7 @@ export const statCard = (data: number[]) => ({
             enabled: false,
             position: 'nearest',
             filter: (tooltipItem) => !isEndPoint(tooltipItem.dataIndex, tooltipItem.dataset.data.length),
-            external: (context) => handleTooltip(context, colors),
+            external: (context) => handleTooltip(context, colors, 'line'),
             callbacks: {
               label: (context) => {
                 const value = context.parsed.y;
@@ -612,7 +694,7 @@ export const overviewChart = (data: OverviewChartProps) => ({
             enabled: false,
             position: 'nearest',
             filter: (tooltipItem) => !isEndPoint(tooltipItem.dataIndex, tooltipItem.dataset.data.length),
-            external: (context) => handleTooltip(context, colors),
+            external: (context) => handleTooltip(context, colors, 'line'),
             callbacks: {
               label: (context) => {
                 const value = context.parsed.y;
@@ -720,7 +802,7 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
           tooltip: {
             enabled: false,
             position: 'nearest',
-            external: (context) => handleTooltip(context, colors),
+            external: (context) => handleTooltip(context, colors, 'bar'),
             callbacks: {
               title: (items) => {
                 const item = items[0];
