@@ -150,7 +150,7 @@ $single_url = UrlHelper::add_query_params(
 							class="tutor-tooltip"
 							x-text="isSolved
 								? '<?php esc_html_e( 'Solved', 'tutor' ); ?>'
-								: '<?php esc_html_e( 'Unresolved Yet', 'tutor' ); ?>'"
+								: '<?php esc_html_e( 'Unresolved', 'tutor' ); ?>'"
 							>
 						</div>
 					</div>

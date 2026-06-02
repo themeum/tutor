@@ -2085,7 +2085,7 @@ class Quiz {
 			<?php
 			ConfirmationModal::make()
 				->id( $retry_modal_id )
-				->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+				->title( __( 'Retake Quiz?', 'tutor' ) )
 				->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-retry.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 				->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
 				->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
