@@ -8,7 +8,6 @@ import { type MutationState } from '@Core/ts/services/Query';
 import { wpPost } from '@Core/ts/utils/api';
 import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { type AxiosError } from 'axios';
 
 interface ResetProgressPayload {
   course_id: number;
@@ -47,13 +46,13 @@ export const sidebarComponent = ({ courseId, resetModalId }: { courseId: number;
       this.resetProgressMutation = query.useMutation((payload) => wpPost(endpoints.RESET_COURSE_PROGRESS, payload), {
         onSuccess: (response) => {
           if (response.status_code === 200 && response.data?.redirect_to) {
-            window.location.href = response.data.redirect_to;
             modal.closeModal(this.resetModalId);
+            window.location.href = response.data.redirect_to;
           }
         },
-        onError: (error: AxiosError) => {
+        onError: (error) => {
           toast.error(convertToErrorMessage(error));
-          if (!error || !error.response || !error.response.data) {
+          if (error.message?.includes('HTTP')) {
             window.location.reload();
           }
         },

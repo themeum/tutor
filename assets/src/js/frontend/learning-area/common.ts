@@ -4,7 +4,6 @@ import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
-import { type AxiosError } from 'axios';
 
 interface CourseCompletePayload {
   course_id: number;
@@ -35,9 +34,9 @@ export const courseCompleteHandler = () => {
           modal.closeModal('tutor-course-complete-modal');
           window.location.reload();
         },
-        onError: (error: AxiosError) => {
+        onError: (error) => {
           toast.error(convertToErrorMessage(error));
-          if (!error || !error.response || !error.response.data) {
+          if (error.message?.includes('HTTP')) {
             window.location.reload();
           }
         },
