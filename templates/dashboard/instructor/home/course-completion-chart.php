@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 <!-- Course Completion Chart -->
 <div class="tutor-dashboard-home-chart tutor-flex-1" data-stacked="true">
 	<div class="tutor-small">
-		<?php esc_html_e( 'Course Completion Distribution', 'tutor' ); ?>
+		<?php esc_html_e( 'Course Completion Rate', 'tutor' ); ?>
 	</div>
 
 	<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorCourseCompletionChart(<?php echo esc_attr( wp_json_encode( $course_completion_data ) ); ?>)' x-ref="canvas"></canvas>

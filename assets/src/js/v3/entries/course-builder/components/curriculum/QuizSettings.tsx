@@ -235,7 +235,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 render={(controllerProps) => (
                   <FormCheckbox
                     {...controllerProps}
-                    label={__('Limit attempts allowed', 'tutor')}
+                    label={__('Limit allowed attempts', 'tutor')}
                     helpText={__('Set the number of attempts allowed for this quiz. 0 means unlimited.', 'tutor')}
                   />
                 )}
@@ -278,7 +278,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   render={(controllerProps) => (
                     <FormCheckbox
                       {...controllerProps}
-                      label={__('Limit questions to answer', 'tutor')}
+                      label={__('Set maximum questions per quiz', 'tutor')}
                       helpText={__(
                         'Set the number of quiz questions randomly from your question pool. If the set number exceeds available questions, all questions will be included',
                         'tutor',
@@ -337,7 +337,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   name="quiz_option.enable_time_limit"
                   control={form.control}
                   render={(controllerProps) => (
-                    <FormCheckbox {...controllerProps} label={__('Set Time Limit', 'tutor')} />
+                    <FormCheckbox {...controllerProps} label={__('Set time limit', 'tutor')} />
                   )}
                 />
                 <Show when={form.watch('quiz_option.enable_time_limit')}>
@@ -392,7 +392,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   name="quiz_option.hide_quiz_time_display"
                   control={form.control}
                   render={(controllerProps) => (
-                    <FormSwitch {...controllerProps} label={__('Hide quiz timer from students', 'tutor')} />
+                    <FormSwitch {...controllerProps} label={__('Hide countdown timer', 'tutor')} />
                   )}
                 />
               </Show>
@@ -594,7 +594,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     control={form.control}
                     name="quiz_option.hide_previous_button"
                     render={(controllerProps) => (
-                      <FormSwitch {...controllerProps} label={__('Hide previous button from students', 'tutor')} />
+                      <FormSwitch {...controllerProps} label={__('Hide "Previous" button', 'tutor')} />
                     )}
                   />
                 </Show>

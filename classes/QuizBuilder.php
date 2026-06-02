@@ -257,9 +257,9 @@ class QuizBuilder {
 				continue;
 			}
 
-			$question_type    = Input::sanitize( $question['question_type'] );
+			$question_type = Input::sanitize( $question['question_type'] );
 			if ( 'draw_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
-				throw new \Exception( esc_html__( 'Mark in the Image questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
+				throw new \Exception( esc_html__( 'Mark in the image questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
 			}
 			if ( 'pin_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
 				throw new \Exception( esc_html__( 'Pin questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
@@ -386,11 +386,11 @@ class QuizBuilder {
 	 */
 	public function handle_delete( $deleted_question_ids = array(), $deleted_answer_ids = array(), $deleted_temp_mask_values = array() ) {
 		global $wpdb;
-		$deleted_question_ids    = array_filter( $deleted_question_ids, 'is_numeric' );
-		$deleted_answer_ids      = array_filter( $deleted_answer_ids, 'is_numeric' );
+		$deleted_question_ids     = array_filter( $deleted_question_ids, 'is_numeric' );
+		$deleted_answer_ids       = array_filter( $deleted_answer_ids, 'is_numeric' );
 		$deleted_temp_mask_values = is_array( $deleted_temp_mask_values ) ? array_values( array_filter( array_map( 'strval', $deleted_temp_mask_values ) ) ) : array();
-		$question_file_paths     = array();
-		$mask_question_ids       = array();
+		$question_file_paths      = array();
+		$mask_question_ids        = array();
 
 		if ( count( $deleted_question_ids ) ) {
 			$mask_question_ids = $this->get_deletable_mask_question_ids( $deleted_question_ids );
@@ -731,8 +731,8 @@ class QuizBuilder {
 			}
 
 			// Delete questions and answers.
-			$deleted_question_ids    = Input::post( 'deleted_question_ids', array(), Input::TYPE_ARRAY );
-			$deleted_answer_ids      = Input::post( 'deleted_answer_ids', array(), Input::TYPE_ARRAY );
+			$deleted_question_ids     = Input::post( 'deleted_question_ids', array(), Input::TYPE_ARRAY );
+			$deleted_answer_ids       = Input::post( 'deleted_answer_ids', array(), Input::TYPE_ARRAY );
 			$deleted_temp_mask_values = Input::post( 'deleted_temp_mask_values', array(), Input::TYPE_ARRAY );
 			$this->handle_delete( $deleted_question_ids, $deleted_answer_ids, $deleted_temp_mask_values );
 
