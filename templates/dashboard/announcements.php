@@ -335,8 +335,8 @@ $create_modal_id = 'tutor-announcement-form-modal';
 							InputField::make()
 								->type( InputType::TEXTAREA )
 								->name( 'tutor_announcement_summary' )
-								->label( __( 'Summary', 'tutor' ) )
-								->placeholder( __( 'Summary...', 'tutor' ) )
+								->label( __( 'Description', 'tutor' ) )
+								->placeholder( __( 'Write a short announcement description.', 'tutor' ) )
 								->attr( 'rows', '5' )
 								->attr( 'x-bind', "register('tutor_announcement_summary', { required: 'Summary is required' })" )
 								->render();

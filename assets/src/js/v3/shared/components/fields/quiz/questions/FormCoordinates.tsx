@@ -563,7 +563,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     <div css={styles.wrapper}>
       <div css={styles.card}>
         <div css={styles.answerHeader}>
-          <span css={styles.answerHeaderTitle}>{__('Coordinations', __TUTOR_TEXT_DOMAIN__)}</span>
+          <span css={styles.answerHeaderTitle}>{__('Coordinates', __TUTOR_TEXT_DOMAIN__)}</span>
         </div>
         <div css={styles.list}>
           {coordinates.map((pt, idx) => {
@@ -677,7 +677,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
           }}
           disabled={coordinates.length >= MAX_COORDINATES}
         >
-          {__('Add Coordination', __TUTOR_TEXT_DOMAIN__)}
+          {__('Add Coordinates', __TUTOR_TEXT_DOMAIN__)}
         </Button>
         <div css={styles.canvasWrap} ref={gridWrapRef}>
           <canvas

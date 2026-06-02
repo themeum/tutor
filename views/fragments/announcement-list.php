@@ -75,9 +75,9 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 
 					<div class="tutor-mb-32">
 						<label class="tutor-form-label" for="tutor_announcement_course">
-							<?php esc_html_e( 'Summary', 'tutor' ); ?>
+							<?php esc_html_e( 'Description', 'tutor' ); ?>
 						</label>
-						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php esc_html_e( 'Summary...', 'tutor' ); ?>" required><?php echo esc_textarea( $summary ); ?></textarea>
+						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php esc_html_e( 'Write a short announcement description.', 'tutor' ); ?>" required><?php echo esc_textarea( $summary ); ?></textarea>
 					</div>
 
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
