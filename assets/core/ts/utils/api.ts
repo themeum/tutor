@@ -2,6 +2,15 @@ import config, { tutorConfig } from '@TutorShared/config/config';
 
 type HttpMethod = 'GET' | 'POST';
 
+function toFormDataValue(value: unknown): string | Blob {
+  if (value instanceof File || value instanceof Blob) return value;
+  if (typeof value === 'string') return value;
+  if (typeof value === 'boolean' || typeof value === 'number') return String(value);
+  if (typeof value === 'object') return JSON.stringify(value);
+
+  return String(value);
+}
+
 function toFormData(data: Record<string, unknown>): FormData {
   const formData = new FormData();
 
@@ -10,12 +19,14 @@ function toFormData(data: Record<string, unknown>): FormData {
 
     if (Array.isArray(value)) {
       for (const item of value) {
-        formData.append(`${key}[]`, String(item));
+        if (item === undefined || item === null) continue;
+
+        formData.append(`${key}[]`, toFormDataValue(item));
       }
       continue;
     }
 
-    formData.append(key, String(value));
+    formData.append(key, toFormDataValue(value));
   }
 
   return formData;
