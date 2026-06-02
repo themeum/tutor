@@ -377,7 +377,7 @@ $default_values = array(
 				array(
 					'modal_id'      => $submitted_modal_id,
 					'title'         => __( 'Quiz Submitted', 'tutor' ),
-					'message'       => __( 'Your responses have been successfully recorded.', 'tutor' ),
+					'message'       => __( 'Your answers are locked in. Ready to check your score?', 'tutor' ),
 					'icon_html'     => tutor_utils()->get_themed_svg( 'images/illustrations/quiz-submitted.svg' ),
 					'show_attempts' => false,
 					'action_url'    => $attempt_details_url,

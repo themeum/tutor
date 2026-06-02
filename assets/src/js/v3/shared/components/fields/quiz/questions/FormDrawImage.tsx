@@ -581,7 +581,7 @@ const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 
       <Show when={!option?.image_url}>
         <p css={styles.placeholder}>
           {__(
-            'Upload an image to define the area students must draw on. Then mark the correct zone in the next section.',
+            'First, upload your base image above. Then, proceed to the next step to draw the correct target zone.',
             __TUTOR_TEXT_DOMAIN__,
           )}
         </p>
