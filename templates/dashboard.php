@@ -10,30 +10,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Dashboard;
 use TUTOR\User;
 
-?>
-
-<?php
 $is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
-if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
-	?>
-	<!DOCTYPE html>
-	<html <?php language_attributes(); ?>>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title><?php bloginfo( 'name' ); ?></title>
-		<?php wp_head(); ?>
-	</head>
-	<body <?php body_class( '' ); ?>>
-		<?php wp_body_open(); ?>
-	<?php
-endif;
 global $wp_query;
 
-$dashboard_page_slug = '';
-$dashboard_page_name = '';
+$dashboard_page_slug     = '';
+$dashboard_page_sub_slug = '';
+$dashboard_page_name     = '';
+
 if ( isset( $wp_query->query_vars['tutor_dashboard_page'] ) && $wp_query->query_vars['tutor_dashboard_page'] ) {
 	$dashboard_page_slug = $wp_query->query_vars['tutor_dashboard_page'];
 	$dashboard_page_name = $wp_query->query_vars['tutor_dashboard_page'];
@@ -42,12 +28,63 @@ if ( isset( $wp_query->query_vars['tutor_dashboard_page'] ) && $wp_query->query_
  * Getting dashboard sub pages
  */
 if ( isset( $wp_query->query_vars['tutor_dashboard_sub_page'] ) && $wp_query->query_vars['tutor_dashboard_sub_page'] ) {
-	$dashboard_page_name = $wp_query->query_vars['tutor_dashboard_sub_page'];
+	$dashboard_page_sub_slug = $wp_query->query_vars['tutor_dashboard_sub_page'];
+	$dashboard_page_name     = $dashboard_page_sub_slug;
 	if ( $dashboard_page_slug ) {
 		$dashboard_page_name = $dashboard_page_slug . '/' . $dashboard_page_name;
 	}
 }
 $dashboard_page_name = apply_filters( 'tutor_dashboard_sub_page_template', $dashboard_page_name );
+
+$dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
+$page_title      = __( 'Dashboard', 'tutor' );
+
+$format_slug_title = static function ( $slug ) {
+	$slug = str_replace( array( '-', '_', '/' ), ' ', (string) $slug );
+	return wp_strip_all_tags( ucwords( $slug ) );
+};
+
+if ( $dashboard_page_slug && isset( $dashboard_pages[ $dashboard_page_slug ] ) ) {
+	$page_data  = $dashboard_pages[ $dashboard_page_slug ];
+	$page_title = is_array( $page_data ) ? ( $page_data['title'] ?? $page_title ) : $page_data;
+}
+
+if ( $dashboard_page_sub_slug ) {
+	if ( Dashboard::ACCOUNT_PAGE_SLUG === $dashboard_page_slug ) {
+		$account_pages = Dashboard::get_account_pages();
+		if ( isset( $account_pages[ $dashboard_page_sub_slug ]['title'] ) ) {
+			$page_title = $account_pages[ $dashboard_page_sub_slug ]['title'];
+		}
+	} else {
+		$page_title = $format_slug_title( $dashboard_page_sub_slug );
+	}
+}
+
+$page_meta = Dashboard::get_page_meta_data(
+	$page_title,
+	Dashboard::META_CONTEXT_DASHBOARD
+);
+
+$page_title       = $page_meta['page_title'];
+$meta_title       = $page_meta['meta_title'];
+$meta_description = $page_meta['meta_description'];
+
+if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
+	?>
+	<!DOCTYPE html>
+	<html <?php language_attributes(); ?>>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title><?php echo esc_html( $page_title ); ?></title>
+		<meta name="title" content="<?php echo esc_attr( $meta_title ); ?>" />
+		<meta name="description" content="<?php echo esc_attr( $meta_description ); ?>" />
+		<?php wp_head(); ?>
+	</head>
+	<body <?php body_class( '' ); ?>>
+		<?php wp_body_open(); ?>
+	<?php
+endif;
 
 $user_id                   = get_current_user_id();
 $user                      = get_user_by( 'ID', $user_id );

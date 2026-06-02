@@ -39,6 +39,9 @@ class Dashboard {
 	const BILLING_PAGE_SLUG             = 'billing';
 	const WISHILIST_PAGE_SLUG           = 'wishlist';
 	const ENROLLED_COURSES_PAGE_SLUG    = 'enrolled-courses';
+	const META_CONTEXT_DASHBOARD        = 'dashboard';
+	const META_CONTEXT_ACCOUNT          = 'account';
+	const META_CONTEXT_LEARNING         = 'learning';
 
 	/**
 	 * Constructor
@@ -287,5 +290,45 @@ class Dashboard {
 		}
 
 		return esc_url_raw( $decoded );
+	}
+
+	/**
+	 * Build page metadata.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $page_title   Page title.
+	 * @param string $page_context Page context.
+	 *
+	 * @return array
+	 */
+	public static function get_page_meta_data( string $page_title, string $page_context ): array {
+		$site_name = get_bloginfo( 'name' );
+
+		/* translators: 1: current page title, 2: site name. */
+		$meta_title = sprintf( __( '%1$s | %2$s', 'tutor' ), $page_title, $site_name );
+
+		switch ( $page_context ) {
+			case self::META_CONTEXT_DASHBOARD:
+				/* translators: 1: current dashboard page title, 2: site name. */
+				$meta_description = sprintf( __( 'Access the %1$s section of your Tutor dashboard on %2$s.', 'tutor' ), wp_strip_all_tags( $page_title ), $site_name );
+				break;
+			case self::META_CONTEXT_ACCOUNT:
+				/* translators: 1: current account page title, 2: site name. */
+				$meta_description = sprintf( __( 'Manage your %1$s settings from your Tutor account on %2$s.', 'tutor' ), wp_strip_all_tags( $page_title ), $site_name );
+				break;
+			case self::META_CONTEXT_LEARNING:
+				/* translators: 1: current learning page title, 2: site name. */
+				$meta_description = sprintf( __( 'Continue with %1$s on %2$s.', 'tutor' ), wp_strip_all_tags( $page_title ), $site_name );
+				break;
+			default:
+				$meta_description = '';
+		}
+
+		return array(
+			'page_title'       => $page_title,
+			'meta_title'       => $meta_title,
+			'meta_description' => $meta_description,
+		);
 	}
 }
