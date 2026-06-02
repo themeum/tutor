@@ -195,7 +195,7 @@ class Instructor {
 			do_action( 'tutor_new_instructor_registered', $user_id, $validate_consent );
 		}
 
-		wp_safe_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
+		wp_safe_redirect( tutor_utils()->get_nocache_url( tutor_utils()->input_old( '_wp_http_referer' ) ) );
 		die();
 	}
 

@@ -54,21 +54,29 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-gap-5 tutor-mb-5">
 			<?php Avatar::make()->user( $lesson_comment->user_id )->size( Size::SIZE_40 )->render(); ?>
-			<div>
+			<div class="tutor-min-w-0 tutor-flex-1">
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-					<span class="tutor-discussion-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></span> 
-					<span class="tutor-text-secondary">
+					<span class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $lesson_comment->comment_author ); ?></span> 
+					<span class="tutor-text-secondary tutor-flex-shrink-0">
 						<?php
-							// translators: %s is the time of comment.
+							/* translators: %s human-readable time difference. */
 							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $lesson_comment->comment_date_gmt ) ) ) );
 						?>
 					</span>
 				</div>
-				<div class="tutor-tiny">
-					<span class="tutor-text-subdued"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
-					<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
-					<span class="tutor-text-subdued"><?php esc_html_e( 'in', 'tutor' ); ?></span> 
-					<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
+				<div class="tutor-tiny tutor-flex tutor-items-center tutor-gap-4 tutor-overflow-hidden">
+					<div class="tutor-flex tutor-items-center tutor-gap-1 tutor-min-w-0">
+						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
+						<div class="tutor-min-w-0 tutor-flex-1">
+							<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
+						</div>
+					</div>
+					<div class="tutor-flex tutor-items-center tutor-gap-1 tutor-min-w-0">
+						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'in', 'tutor' ); ?></span> 
+						<div class="tutor-min-w-0 tutor-flex-1">
+							<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="tutor-ml-auto">

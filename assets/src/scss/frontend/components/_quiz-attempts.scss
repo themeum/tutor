@@ -42,8 +42,16 @@
     }
   }
 
+  &-list {
+    background-color: $tutor-surface-l1;
+  }
+
+  .tutor-quiz-attempts-header-item:last-of-type {
+    text-align: center;
+  }
+
   .tutor-quiz-attempts-item-wrapper {
-    padding: $tutor-spacing-6;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
 
     &:not(:last-child) {
       border-bottom: 1px solid $tutor-border-idle;
@@ -51,23 +59,6 @@
 
     &:hover {
       background-color: $tutor-surface-l1-hover;
-      .tutor-quiz-attempts-item {
-        .tutor-quiz-item-info {
-          .tutor-quiz-attempts-expand-btn {
-            @include tutor-flex(row, center);
-          }
-        }
-      }
-    }
-
-    &.tutor-quiz-previous-attempts {
-      .tutor-quiz-attempts-item {
-        .tutor-quiz-item-info {
-          .tutor-quiz-attempts-expand-btn {
-            @include tutor-flex(row, center);
-          }
-        }
-      }
     }
 
     &.tutor-quiz-previous-attempts {
@@ -115,13 +106,16 @@
         grid-area: info;
 
         &-expanded {
-          @include tutor-flex(row, center);
+          @include tutor-flex(row, start);
           gap: $tutor-spacing-4;
           text-align: center;
+          min-height: 24px;
         }
 
         &-title {
           @include tutor-typography(medium, semibold);
+          text-align: start;
+          margin-bottom: $tutor-spacing-2;
 
           @include tutor-breakpoint-down(sm) {
             font-size: $tutor-font-size-small;
@@ -130,6 +124,8 @@
         }
 
         &-course {
+          @include tutor-flex(row, center);
+          gap: $tutor-spacing-2;
           @include tutor-typography(small, regular, secondary);
 
           @include tutor-breakpoint-down(sm) {
@@ -149,15 +145,15 @@
         }
 
         .tutor-quiz-attempts-expand-btn {
-          display: none;
           @include tutor-button-reset();
+          @include tutor-flex(row, center);
           gap: $tutor-spacing-2;
           @include tutor-typography(small, medium, brand);
           cursor: pointer;
           white-space: nowrap;
 
           @include tutor-breakpoint-down(sm) {
-            @include tutor-flex(row,center);
+            @include tutor-flex(row, center);
             font-size: $tutor-font-size-tiny;
             line-height: $tutor-line-height-tiny;
           }
@@ -242,7 +238,7 @@
 
       .tutor-quiz-item-result {
         grid-area: result;
-        @include tutor-flex(column, left, center);
+        @include tutor-flex(column, center, center);
 
         @include tutor-breakpoint-down(sm) {
           height: 100%;
@@ -374,16 +370,6 @@
       background-color: $tutor-surface-l1;
       border: 1px solid $tutor-border-idle;
       border-radius: $tutor-radius-2xl;
-    }
-  }
-
-  .tutor-quiz-students-attempts {
-    &-filter-item {
-      &:first-child {
-        button {
-          padding: 0;
-        }
-      }
     }
   }
 }

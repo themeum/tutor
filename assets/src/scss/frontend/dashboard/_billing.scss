@@ -72,7 +72,7 @@
   }
 
   &-card {
-    @include tutor-flex(row, center, space-between);
+    @include tutor-flex(row, start, space-between);
     border-bottom: 1px solid $tutor-border-idle;
     padding: $tutor-spacing-6;
     gap: $tutor-spacing-4;
@@ -207,6 +207,38 @@
         object-position: center;
         object-fit: contain;
       }
+    }
+  }
+}
+
+.tutor-payment-modal-contents {
+  padding: $tutor-spacing-2 $tutor-spacing-6 $tutor-spacing-6;
+  max-height: calc(100dvh - 173px);
+  overflow-y: auto;
+
+  .tutor-payment-modal-payments {
+    @include tutor-flex(column);
+    background-color: $tutor-surface-base;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-lg;
+
+    .tutor-input-field {
+      padding: $tutor-spacing-6;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid $tutor-border-idle;
+      }
+    }
+  }
+
+  .tutor-payment-terms-checkbox {
+    .tutor-input-wrapper {
+      align-items: start;
+    }
+
+    .tutor-label {
+      flex-wrap: wrap;
+      row-gap: $tutor-spacing-none;
     }
   }
 }

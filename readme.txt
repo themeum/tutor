@@ -318,7 +318,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.0-rc.1 - 14 May, 2026
+= 4.0.0-rc.1 - 15 May, 2026
 
 Update: Improved the Live Class section on the Homepage. (Pro)
 Update: Added WordPress wp_body_open hook support to custom templates.

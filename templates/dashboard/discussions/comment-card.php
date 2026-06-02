@@ -47,15 +47,23 @@ $single_url = UrlHelper::add_query_params(
 		<?php Avatar::make()->user( $lesson_comment->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
 			<div class="tutor-discussion-card-top">
-				<div class="tutor-discussion-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></div>
-				<div>
-					<span class="tutor-text-subdued"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
-					<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
-					<span class="tutor-text-subdued"><?php esc_html_e( 'in', 'tutor' ); ?></span> 
-					<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
+				<div class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $lesson_comment->comment_author ); ?></div>
+				<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-overflow-hidden">
+					<div class="tutor-flex tutor-items-center tutor-gap-1 tutor-min-w-0">
+						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
+						<div class="tutor-min-w-0 tutor-flex-1">
+							<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
+						</div>
+					</div>
+					<div class="tutor-flex tutor-items-center tutor-gap-1 tutor-min-w-0">
+						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'in', 'tutor' ); ?></span> 
+						<div class="tutor-min-w-0 tutor-flex-1">
+							<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
+						</div>
+					</div>
 				</div>
 			</div>
-			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="<?php echo esc_attr( 'tutor-lesson-comment-text-' . (int) $lesson_comment->comment_ID ); ?>"><?php echo wp_kses_post( $lesson_comment->comment_content ); ?></a>
+			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title tutor-break-words" id="<?php echo esc_attr( 'tutor-lesson-comment-text-' . (int) $lesson_comment->comment_ID ); ?>"><?php echo wp_kses_post( $lesson_comment->comment_content ); ?></a>
 			<div class="tutor-discussion-card-meta tutor-sm-mt-4">
 				<button 
 					@click="toggleCommentReply(<?php echo (int) $lesson_comment->comment_ID; ?>)"

@@ -63,7 +63,7 @@ $history_count  = $withdral_history->count;
 $method_icons   = WithdrawModel::get_method_icons();
 $status_message = array(
 	WithdrawModel::STATUS_REJECTED => __( 'Please contact the site administrator for more information.', 'tutor' ),
-	WithdrawModel::STATUS_PENDING  => __( 'Withdrawal request is pending for approval, please hold tight.', 'tutor' ),
+	WithdrawModel::STATUS_PENDING  => __( 'Withdrawal request is pending approval, please hold tight.', 'tutor' ),
 );
 
 $currency_config = tutor_utils()->get_monetization_currency_config();
@@ -149,35 +149,44 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 			</div>
 		</div>
 
-		<div class="tutor-withdrawal-preference-msg-wrap tutor-mt-4 tutor-text-tiny tutor-flex tutor-items-center tutor-gap-3">
-			<?php
-			SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 16 )->color( Color::SECONDARY )->render();
-			?>
-			<span class="tutor-withdrawal-preference-msg">
+		<div class="tutor-mt-4 tutor-flex tutor-items-start tutor-gap-3">
+			<div class="tutor-flex tutor-flex-shrink-0 tutor-mt-1">
+				<?php
+					SvgIcon::make()
+					->name( Icon::INFO_OCTAGON )
+					->size( 16 )
+					->color( Color::SECONDARY )
+					->render();
+				?>
+			</div>
+			<div class="tutor-tiny">
 				<?php
 				$withdrawal_pref_link = Dashboard::get_account_page_url( 'settings?tab=withdraw' );
-				$change_pref_text     = __( 'You can change your', 'tutor' );
-				$pref_link_anchor     = '<a href="' . esc_url( $withdrawal_pref_link ) . '">' . __( 'Withdraw Preference', 'tutor' ) . '</a>';
+
+				$pref_link_text = sprintf(
+					/* translators: %s: Withdraw preference settings link. */
+					__( 'You can update your %s.', 'tutor' ),
+					'<a href="' . esc_url( $withdrawal_pref_link ) . '" class="tutor-text-brand">' . esc_html__( 'Withdraw Preference', 'tutor' ) . '</a>'
+				);
+
 				echo wp_kses_post(
 					sprintf(
-						/* translators: 1: Preferred withdraw method, 2: "You can change your" + Withdraw Preference link. */
+						/* translators: 1: Preferred withdraw method, 2: Withdraw preference settings sentence with link. */
 						__( 'The preferred payment method is selected as %1$s. %2$s', 'tutor' ),
 						esc_html( $withdraw_method_name ),
-						'<span class="tutor-withdrawal-preference-link-inline">' . esc_html( $change_pref_text ) . ' ' . $pref_link_anchor . '</span>'
+						$pref_link_text
 					)
 				);
 				?>
-			</span>
+			</div>
 		</div>
 
-		<div class="tutor-withdrawal-history-heading tutor-mt-10 tutor-mb-5 tutor-medium tutor-font-medium">
+		<div class="tutor-withdrawal-history-heading">
 			<?php esc_html_e( 'Withdrawal History', 'tutor' ); ?>
 		</div>
 
 		<div class="tutor-card tutor-p-none">
-			<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
-				<?php require_once tutor_get_template( 'dashboard.account.withdrawal.withdrawal-history-filters' ); ?>  
-			</div>
+			<?php require_once tutor_get_template( 'dashboard.account.withdrawal.withdrawal-history-filters' ); ?>  
 			<div class="tutor-flex tutor-flex-column">
 				<?php if ( tutor_utils()->count( $withdral_history->results ) > 0 ) : ?>
 					<?php

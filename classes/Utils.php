@@ -2147,15 +2147,16 @@ class Utils {
 		$with_bundle_enrolled_courses_clause = '';
 		if ( ! $with_bundle_enrolled_courses ) {
 			$with_bundle_enrolled_courses_clause = $wpdb->prepare(
-				'AND NOT EXISTS (
+				"AND NOT EXISTS (
 					SELECT 1
-					FROM wp_postmeta pm
+					FROM {$wpdb->postmeta} pm
 					WHERE pm.post_id = e.ID
 						AND pm.meta_key = %s
-				)',
+				)",
 				'_tutor_bundle_id'
 			);
 		}
+
 		$course_ids = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT DISTINCT e.post_parent, e.post_date
@@ -3888,6 +3889,7 @@ class Utils {
 			_reviews.comment_author,
 			_reviews.comment_author_email,
 			_reviews.comment_date,
+			_reviews.comment_date_gmt,
 			_reviews.comment_content,
 			_reviews.comment_approved AS comment_status,
 			_reviews.user_id,
@@ -4047,6 +4049,7 @@ class Utils {
 					_comment.comment_author,
 					_comment.comment_author_email,
 					_comment.comment_date,
+					_comment.comment_date_gmt,
 					_comment.comment_content,
 					_comment.comment_approved AS comment_status,
 					_comment.user_id,
@@ -5052,7 +5055,7 @@ class Utils {
 				'is_pro' => true,
 			),
 			'draw_image'        => array(
-				'name'   => __( 'Mark in the Image', 'tutor' ),
+				'name'   => __( 'Mark in the image', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),

@@ -7,13 +7,17 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * These variables are inherited from parent templates:
+ * template: templates/account.php
+ *
+ * @var string $back_url
  */
 
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 use TUTOR\User;
-use Tutor\Helpers\UrlHelper;
 
 $settings_tab_data = array(
 	'account'         => array(
@@ -70,7 +74,6 @@ $settings_tab_data = array_values(
 	)
 );
 
-$back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_utils()->tutor_dashboard_url() ) );
 ?>
 
 <section x-data="tutorSettings()">
@@ -116,9 +119,9 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 		})()'
 		class="tutor-profile-settings-section"
 	>
-		<?php tutor_load_template( 'dashboard.account.settings.header' ); ?>
-		
-		<div class="tutor-dashboard-container">
+		<?php tutor_load_template( 'dashboard.account.settings.header', array( 'back_url' => $back_url ) ); ?>
+
+		<div class="tutor-account-container">
 			<div 
 				x-init="$watch('$store.windowWidth', () => {
 					if (window.innerWidth >= 768 && activeTab === 'none') {
@@ -137,7 +140,7 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 				x-cloak
 				class="tutor-gap-8"
 			>
-				<div class="tutor-flex tutor-gap-8 tutor-mb-9">
+				<div class="tutor-flex tutor-gap-8 tutor-my-9 tutor-sm-my-6">
 					<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab tutor-p-5">
 						<template x-for="tab in tabs" :key="tab.id">
 							<button

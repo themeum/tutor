@@ -113,7 +113,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 									<div class="tooltip-wrap tooltip-icon-custom" >
 										<i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success' : 'tutor-icon-circle-mark-line tutor-color-muted'; ?>"></i>
 										<span class="tooltip-txt tooltip-top">
-											<?php $is_solved ? esc_html_e( 'Solved', 'tutor' ) : esc_html_e( 'Unresolved Yet', 'tutor' ); ?>
+											<?php $is_solved ? esc_html_e( 'Solved', 'tutor' ) : esc_html_e( 'Unresolved', 'tutor' ); ?>
 										</span>
 									</div>
 								<?php elseif ( 'action' == $key ) : ?>

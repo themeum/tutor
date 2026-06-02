@@ -23,12 +23,24 @@
 
   &-logo {
     height: 80px;
-    @include tutor-flex(row, center);
-    padding: $tutor-spacing-8 $tutor-spacing-10;
+    display: flex;
+    align-items: center;
+    padding: $tutor-spacing-6 $tutor-spacing-10;
     border-bottom: 1px solid $tutor-border-idle;
+    overflow: hidden;
 
     img {
-      max-width: 110px;
+      display: block;
+      max-width: 120px;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      object-position: left center;
+
+      [dir='rtl'] & {
+        object-position: right center;
+      }
     }
   }
 

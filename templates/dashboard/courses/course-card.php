@@ -57,7 +57,7 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 					<?php if ( $course_progress['total_count'] > 0 ) : ?>
 						<div class="tutor-progress-card-details">
 							<?php
-							printf(
+							$progress_msg = sprintf(
 								esc_html(
 									// translators: %1$s is the completed count, %2$s is the total count.
 									_n(
@@ -70,7 +70,8 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 								esc_html( $course_progress['completed_count'] ),
 								esc_html( $course_progress['total_count'] )
 							);
-
+							// phpcs:ignore -- already sanitized
+							echo apply_filters( 'tutor_course_progress_message', esc_html( $progress_msg ), $course_progress['completed_count'], $course_progress['total_count'] );
 							?>
 							<span class="tutor-progress-card-separator">•</span>
 							<?php

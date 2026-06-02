@@ -95,7 +95,7 @@ $courses_list = $courses_list_array[ $active_tab ];
 			// Prepare course list based on page tab.
 			$courses_list = $courses_list_array[ $active_tab ];
 			?>
-			<div class="tutor-dashboard-courses-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6 tutor-sm-p-none">
+			<div class="tutor-dashboard-courses-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6 tutor-sm-p-none tutor-sm-mt-4">
 				<?php
 				if ( $courses_list && $courses_list->have_posts() ) :
 					while ( $courses_list->have_posts() ) :
@@ -110,17 +110,15 @@ $courses_list = $courses_list_array[ $active_tab ];
 				endif;
 				?>
 			</div>
-			<?php if ( ! empty( $courses_list->found_posts ) && $courses_list->found_posts > $courses_per_page ) : ?>
-			<div class="tutor-p-6 tutor-border-t">
-				<?php
-					Pagination::make()
-					->current( $current_page )
-					->total( $courses_list->found_posts )
-					->limit( $courses_per_page )
-					->render();
-				?>
-			</div>
-			<?php endif; ?>
+			<?php
+			$found_posts = $courses_list ? $courses_list->found_posts : 0;
+			Pagination::make()
+				->current( $current_page )
+				->total( $found_posts )
+				->limit( $courses_per_page )
+				->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-none tutor-sm-mt-5' )
+				->render();
+			?>
 		<?php endif; ?>
 	</div>
 </div>

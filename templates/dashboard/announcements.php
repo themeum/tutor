@@ -251,11 +251,9 @@ $create_modal_id = 'tutor-announcement-form-modal';
 						<div class="tutor-p2 tutor-mb-6 tutor-whitespace-pre-line">
 							<?php echo wp_kses_post( $announcement->post_content ); ?>
 						</div>
-						<div class="tutor-tiny tutor-text-secondary">
-							<span class="tutor-mr-4">
-								<span class="tutor-mr-1"><?php esc_html_e( 'Course', 'tutor' ); ?></span>
-								<?php PreviewTrigger::make()->id( $announcement->post_parent )->render(); ?>
-							</span>
+						<div class="tutor-tiny tutor-text-secondary tutor-flex tutor-items-center tutor-gap-2">
+							<span class="tutor-flex-shrink-0"><?php esc_html_e( 'Course', 'tutor' ); ?></span>
+							<?php PreviewTrigger::make()->id( $announcement->post_parent )->render(); ?>
 						</div>
 					</div>
 					<?php
@@ -337,8 +335,8 @@ $create_modal_id = 'tutor-announcement-form-modal';
 							InputField::make()
 								->type( InputType::TEXTAREA )
 								->name( 'tutor_announcement_summary' )
-								->label( __( 'Summary', 'tutor' ) )
-								->placeholder( __( 'Summary...', 'tutor' ) )
+								->label( __( 'Description', 'tutor' ) )
+								->placeholder( __( 'Write a short announcement description.', 'tutor' ) )
 								->attr( 'rows', '5' )
 								->attr( 'x-bind', "register('tutor_announcement_summary', { required: 'Summary is required' })" )
 								->render();

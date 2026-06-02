@@ -72,6 +72,13 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 					"
 				>
 					<?php Avatar::make()->user( $user_id )->size( Size::SIZE_32 )->render(); ?>
+					<?php
+						SvgIcon::make()
+						->name( Icon::USER_CIRCLE )
+						->size( Size::SIZE_20 )
+						->attr( 'class', 'tutor-hidden tutor-sm-inline-block' )
+						->render();
+					?>
 				</button>
 
 				<div 
@@ -84,7 +91,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 				>
 					<div class="tutor-dashboard-header-user-popover-profile">
 
-						<div class="tutor-profile-header-top tutor-hidden tutor-sm-flex tutor-items-center tutor-px-7 tutor-py-5">
+						<div class="tutor-profile-header-top tutor-hidden tutor-sm-flex tutor-items-center tutor-px-6 tutor-py-5">
 							<?php
 							Button::make()
 								->label( __( 'Back', 'tutor' ) )
@@ -110,7 +117,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 							?>
 						</div>
 
-						<div class="tutor-user-profile-info tutor-flex tutor-flex-column tutor-sm-px-7 tutor-sm-py-5">
+						<div class="tutor-user-profile-info">
 							<?php Avatar::make()->user( $user_id )->size( Size::SIZE_48 )->bordered()->render(); ?>
 							<div class="tutor-user-profile-meta tutor-flex tutor-flex-column tutor-items-center tutor-gap-1">
 								<div class="tutor-text-medium tutor-text-primary tutor-font-semibold">
@@ -120,11 +127,9 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 									<?php echo esc_html( wp_get_current_user()->user_email ); ?>
 								</div>
 							</div>
-							<?php if ( User::is_student() && User::is_student_view() ) : ?>
-							<a href="<?php echo esc_url( $edit_profile_url ); ?>" class="tutor-edit-profile-link tutor-hidden tutor-sm-block tutor-">
-								<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
+							<a href="<?php echo esc_url( $edit_profile_url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon tutor-ml-auto tutor-force-hidden tutor-force-sm-flex">
+								<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( Size::SIZE_20 )->render(); ?>
 							</a>
-							<?php endif; ?>
 						</div>
 
 						<?php
@@ -136,7 +141,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 								$applied_on = get_user_meta( $user_id, '_is_tutor_instructor', true );
 								$applied_on = tutor_i18n_get_formated_date( $applied_on, get_option( 'date_format' ) );
 								?>
-								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
+								<div class="tutor-w-full tutor-sm-px-6">
 									<div class="tutor-flex tutor-sm-items-center tutor-gap-3 tutor-py-4 tutor-px-4 tutor-surface-warning-hover tutor-rounded-sm">
 										<span class="tutor-pt-1">
 											<?php SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 16 )->color( Color::WARNING )->render(); ?>
@@ -146,7 +151,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 											echo wp_kses_post(
 												sprintf(
 												/* translators: %s: application date */
-													__( 'Your Application is pending as of <span class="tutor-font-medium">%s</span>', 'tutor' ),
+													__( 'Your application is pending as of <span class="tutor-font-medium">%s</span>', 'tutor' ),
 													esc_html( $applied_on ),
 												)
 											);
@@ -157,8 +162,8 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 								<?php
 							} elseif ( Instructors_List::STATUS_BLOCKED !== $instructor_status && $is_become_instructor_enabled ) {
 								?>
-								<div class="tutor-w-full tutor-sm-px-7 tutor-surface-l1">
-									<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-x-small tutor-btn-block">
+								<div class="tutor-w-full tutor-sm-px-6">
+									<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-x-small tutor-btn-block tutor-profile-switch-button">
 										<?php SvgIcon::make()->name( Icon::INSTRUCTOR )->render(); ?>
 										<?php esc_html_e( 'Become an Instructor', 'tutor' ); ?>
 									</a>
@@ -170,16 +175,17 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 								$current_mode = User::get_current_view_mode();
 								$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'Switch to Learner', 'tutor' ) : esc_html__( 'Switch to Instructor', 'tutor' );
 							?>
-							<div class="tutor-w-full tutor-sm-px-7">
+							<div class="tutor-w-full tutor-sm-px-6">
 								<?php
 								Button::make()
 								->label( $button_label )
 								->size( Size::X_SMALL )
 								->variant( Variant::PRIMARY_SOFT )
 								->icon( Icon::RELOAD_2 )
+								->block()
 								->attr( ':disabled', 'profileSwitchMutation?.isPending' )
 								->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
-								->attr( 'class', 'tutor-w-full' )
+								->attr( 'class', 'tutor-profile-switch-button' )
 								->attr( '@click', "profileSwitchMutation.mutate('{$current_mode}')" )
 								->render();
 								?>
@@ -202,7 +208,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 							}
 							?>
 						</ul>
-						<div class="tutor-mobile-logout-wrapper tutor-text-center tutor-px-7 tutor-hidden tutor-sm-block">
+						<div class="tutor-mobile-logout-wrapper tutor-text-center tutor-px-6 tutor-pb-7 tutor-hidden tutor-sm-block">
 							<?php
 							$logout_btn = $menu_items['logout'] ?? '';
 							if ( ! empty( $logout_btn ) ) :
@@ -212,12 +218,6 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 								<span><?php echo esc_html( $logout_btn['title'] ); ?></span>
 							</a>
 							<?php endif; ?>
-							<div class="tutor-tiny tutor-text-secondary tutor-py-5">
-								<?php
-									/* translators: %s: Tutor LMS version number */
-									echo esc_html( sprintf( __( 'Version %s', 'tutor' ), TUTOR_VERSION ) );
-								?>
-							</div>
 						</div>
 					</div>
 				</div>

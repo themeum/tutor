@@ -6,18 +6,20 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * These variables are inherited from parent templates:
+ * template: templates/dashboard/account/settings.php
+ *
+ * @var string $back_url
  */
 
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
-use Tutor\Helpers\UrlHelper;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
-
-$back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_utils()->tutor_dashboard_url() ) );
 
 ?>
 <div class="tutor-profile-header">
@@ -26,7 +28,7 @@ $back_url = apply_filters( 'tutor_dashboard_back_url', UrlHelper::back( tutor_ut
 			windowWidth: window.innerWidth,
 			isDirty: {}
 		}"
-		class="tutor-dashboard-container tutor-flex tutor-items-center tutor-justify-between">
+		class="tutor-account-container tutor-flex tutor-items-center tutor-justify-between">
 		<div 
 			class="tutor-profile-header-left tutor-flex tutor-items-center"
 			@resize.window="windowWidth = window.innerWidth"
