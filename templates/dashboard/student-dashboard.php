@@ -11,7 +11,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Course;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
@@ -65,7 +64,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'courses/active-courses' );
 
 	// Time spent calculation.
-	$time_spent            = Course::get_total_course_duration( $enrolled_courses_ids );
+	$time_spent            = CourseModel::get_total_estimated_time_spent( $enrolled_courses_ids );
 	$is_hour_format        = $time_spent['hours'] > 0;
 	$has_time_spent        = $is_hour_format || $time_spent['minutes'] > 0;
 	$time_spent_value      = $is_hour_format ? $time_spent['hours'] : $time_spent['minutes'];
@@ -188,25 +187,27 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							<?php if ( $is_hour_format && $time_spent['minutes'] > 0 ) : ?>
 							<span class="tutor-font-medium">
 								<?php
+								$total_minutes = ( $time_spent['hours'] * MINUTE_IN_SECONDS ) + $time_spent['minutes'];
 								echo esc_html(
 									sprintf(
 									/* translators: 1: total minutes spent */
 										__( '%1$d+ minutes, and ', 'tutor' ),
-										$time_spent['minutes']
+										$total_minutes
 									)
 								);
 								?>
 							</span> 
 							<?php endif; ?>
 							
-							<?php if ( $time_spent['seconds'] > 0 ) : ?>
+							<?php if ( $time_spent['minutes'] > 0 ) : ?>
 							<span class="tutor-font-medium">
 								<?php
+								$total_seconds = ( $time_spent['hours'] * HOUR_IN_SECONDS ) + ( $time_spent['minutes'] * MINUTE_IN_SECONDS ) + $time_spent['seconds'];
 								echo esc_html(
 									sprintf(
 									/* translators: 1: total seconds spent */
 										__( '%1$d+ seconds!', 'tutor' ),
-										$time_spent['seconds']
+										$total_seconds
 									)
 								);
 								?>

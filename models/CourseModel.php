@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Icon;
 use TUTOR\Course;
 use TUTOR\Lesson;
@@ -1681,5 +1682,82 @@ class CourseModel {
 					)
 				);
 		}
+	}
+
+	/**
+	 * Calculate the total course duration for a set of courses and returns the total time in hours, minutes, and
+	 * seconds.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<int> $course_ids List of course IDs.
+	 *
+	 * @return array{
+	 *     hours: int,
+	 *     minutes: int,
+	 *     seconds: int
+	 * } Total accumulated duration from all given courses.
+	 */
+	public static function get_total_course_duration( $course_ids ): array {
+		$total_seconds = 0;
+
+		foreach ( $course_ids as $id ) {
+			$total_seconds += self::get_course_duration_in_seconds( $id );
+		}
+
+		return DateTimeHelper::split_seconds_into_time_units( $total_seconds );
+	}
+
+	/**
+	 * Calculate the estimated time spent on courses based on completion progress.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<int> $course_ids List of course IDs.
+	 *
+	 * @return array{
+	 *     hours: int,
+	 *     minutes: int,
+	 *     seconds: int
+	 * } Total accumulated duration from all given courses.
+	 */
+	public static function get_total_estimated_time_spent( $course_ids ): array {
+		$total_seconds = 0;
+
+		foreach ( $course_ids as $id ) {
+
+			$completion_percentage = tutor_utils()->is_completed_course( $id )
+										? 100
+										: (int) tutor_utils()->get_course_completed_percent( (int) $id );
+
+			if ( 0 === $completion_percentage ) {
+				continue;
+			}
+
+			$course_duration_in_seconds = self::get_course_duration_in_seconds( $id );
+
+			// Calculate the time spent by a user based on the course completion percentage.
+			$total_seconds += $course_duration_in_seconds * ( $completion_percentage / 100 );
+		}
+
+		return DateTimeHelper::split_seconds_into_time_units( $total_seconds );
+	}
+
+	/**
+	 * Get the total duration of a course in seconds.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id Course ID.
+	 *
+	 * @return int Course duration in seconds.
+	 */
+	public static function get_course_duration_in_seconds( int $course_id ): int {
+
+		$duration = tutor_utils()->get_course_duration( $course_id, true );
+
+		return ( (int) $duration['durationHours'] * HOUR_IN_SECONDS )
+				+ ( (int) $duration['durationMinutes'] * MINUTE_IN_SECONDS )
+				+ ( (int) $duration['durationSeconds'] );
 	}
 }
