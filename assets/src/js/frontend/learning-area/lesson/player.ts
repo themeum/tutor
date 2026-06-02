@@ -2,12 +2,14 @@ import { wpPost } from '@Core/ts/utils/api';
 import { isMobileDevice } from '@Core/ts/utils/util';
 import { isVimeoPlyr, isYouTubePlyr } from '@FrontendTypes/index';
 import { tutorConfig } from '@TutorShared/config/config';
-import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { __, sprintf } from '@wordpress/i18n';
 
-type AutoLoadResponse = TutorMutationResponse<{
-  next_url: string;
-}>;
+interface AutoLoadResponse {
+  success: boolean;
+  data?: {
+    next_url: string;
+  };
+}
 
 interface PlayerData {
   strict_mode?: boolean;
@@ -169,7 +171,7 @@ class LessonPlayer {
     wpPost<AutoLoadResponse>('autoload_next_course_content', {
       post_id: this.playerData.post_id,
     }).then((response) => {
-      if (response.status_code === 200 && response.data?.next_url) {
+      if (response.success && response.data?.next_url) {
         window.location.href = response.data.next_url;
       }
     });
