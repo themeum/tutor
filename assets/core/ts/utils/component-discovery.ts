@@ -4,7 +4,7 @@ export function getRequiredComponents(): string[] {
   const collectComponentName = (el: Element) => {
     const expression = el.getAttribute('x-data') ?? '';
 
-    const componentExpression = /(?:^\s*|\.{3}\s*)tutor([A-Z][a-zA-Z0-9]*)\s*\(/g;
+    const componentExpression = /\btutor([A-Z][A-Za-z0-9]*)\b/g;
     let match: RegExpExecArray | null;
 
     while ((match = componentExpression.exec(expression)) !== null) {
