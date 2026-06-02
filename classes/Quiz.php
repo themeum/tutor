@@ -21,7 +21,6 @@ use Tutor\Components\SvgIcon;
 use Tutor\Components\Table;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
