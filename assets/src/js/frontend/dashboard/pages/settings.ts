@@ -12,6 +12,10 @@ interface UserPhotoFormProps {
   photo_type: 'profile_photo' | 'cover_photo';
 }
 
+interface UserPhotoUploadResponse {
+  status?: string;
+}
+
 interface RemoveUserPhotoProps {
   photo_type: UserPhotoFormProps['photo_type'];
 }
@@ -93,9 +97,9 @@ const settings = () => {
 
   return {
     $el: null as HTMLElement | null,
-    uploadProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    uploadProfilePhotoMutation: null as MutationState<UserPhotoUploadResponse> | null,
     removeProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
-    uploadCoverPhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    uploadCoverPhotoMutation: null as MutationState<UserPhotoUploadResponse> | null,
     removeCoverPhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     updateProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
     saveSocialProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
@@ -137,7 +141,7 @@ const settings = () => {
           toast.success(__('Successfully updated profile photo.', 'tutor'));
         },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error));
+          toast.error(error.message || convertToErrorMessage(error));
         },
       });
 
@@ -155,7 +159,7 @@ const settings = () => {
           toast.success(__('Successfully updated cover photo.', 'tutor'));
         },
         onError: (error: Error) => {
-          toast.error(convertToErrorMessage(error));
+          toast.error(error.message || convertToErrorMessage(error));
         },
       });
 
@@ -300,7 +304,13 @@ const settings = () => {
     },
 
     async uploadUserPhoto(payload: UserPhotoFormProps) {
-      return wpPost<TutorMutationResponse<string>>(endpoints.UPLOAD_PROFILE_PHOTO, payload);
+      const response = await wpPost<UserPhotoUploadResponse>(endpoints.UPLOAD_PROFILE_PHOTO, payload);
+
+      if (response?.status !== 'success') {
+        throw new Error(__('Image upload failed. Please try again.', 'tutor'));
+      }
+
+      return response;
     },
 
     async handleUploadProfilePhoto(files: File[]) {
