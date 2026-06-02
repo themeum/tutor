@@ -4,15 +4,14 @@ export function getRequiredComponents(): string[] {
   const collectComponentName = (el: Element) => {
     const expression = el.getAttribute('x-data') ?? '';
 
-    const match = expression.match(/^tutor([A-Z][a-zA-Z0-9]*)\s*\(/);
+    const componentExpression = /(?:^\s*|\.{3}\s*)tutor([A-Z][a-zA-Z0-9]*)\s*\(/g;
+    let match: RegExpExecArray | null;
 
-    if (!match) {
-      return;
+    while ((match = componentExpression.exec(expression)) !== null) {
+      const componentName = match[1].charAt(0).toLowerCase() + match[1].slice(1);
+
+      names.add(componentName);
     }
-
-    const componentName = match[1].charAt(0).toLowerCase() + match[1].slice(1);
-
-    names.add(componentName);
   };
 
   document.querySelectorAll('[x-data]').forEach(collectComponentName);
