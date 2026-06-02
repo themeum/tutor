@@ -175,10 +175,11 @@ class Announcements {
 	public function add_subpage_nav_item( $nav_items, $base_url ): array {
 
 		$nav_items['announcements'] = array(
-			'title'    => __( 'Announcements', 'tutor' ),
-			'icon'     => Icon::ANNOUNCEMENT,
-			'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'announcements' ) ),
-			'template' => tutor()->path . 'templates/learning-area/subpages/announcements.php',
+			'title'            => __( 'Announcements', 'tutor' ),
+			'meta_description' => esc_html__( 'View and manage your announcements', 'tutor' ),
+			'icon'             => Icon::ANNOUNCEMENT,
+			'url'              => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'announcements' ) ),
+			'template'         => tutor()->path . 'templates/learning-area/subpages/announcements.php',
 		);
 
 		return $nav_items;

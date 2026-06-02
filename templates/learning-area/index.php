@@ -13,27 +13,52 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\ConfirmationModal;
 use TUTOR\Course_List;
-use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use TUTOR\Course;
+use TUTOR\Dashboard;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 use TUTOR\Quiz;
 use TUTOR\Template;
 
-// Tutor global variable for using inside learning area.
-$tutor_current_post_type    = get_post_type();
-$tutor_current_content_id   = get_the_ID();
-$tutor_course_id            = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
+$tutor_current_post       = get_post();
+$tutor_current_post_type  = get_post_type();
+$tutor_current_content_id = get_the_ID();
+$tutor_course_id          = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
+
+$subpages            = Template::make_learning_area_sub_page_nav_items();
+$subpage             = Input::get( 'subpage' );
+$tutor_course        = get_post( $tutor_course_id );
+$course_title        = $tutor_course ? get_the_title( $tutor_course ) : '';
+$content_title       = $tutor_current_post ? get_the_title( $tutor_current_post ) : $course_title;
+$learning_meta_title = $content_title ? $content_title : __( 'Learning', 'tutor' );
+
+if ( $subpage && ! empty( $subpages[ $subpage ]['title'] ) ) {
+	$learning_meta_title       = $subpages[ $subpage ]['title'];
+	$learning_meta_description = $subpages[ $subpage ]['meta_description'];
+}
+
+$page_meta = Dashboard::get_page_meta_data( $learning_meta_title, $learning_meta_description ?? $content_title );
+Dashboard::set_document_title( $page_meta['meta_title'] );
+
+?>
+<!DOCTYPE html>
+	<html <?php language_attributes(); ?>>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="<?php echo esc_attr( $page_meta['meta_description'] ); ?>" />
+		<?php wp_head(); ?>
+	</head>
+	<body <?php body_class( '' ); ?> x-data="tutorCourseCompleteHandler()">
+	<?php wp_body_open(); ?>
+<?php
+
+do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
+
 $current_user_id            = get_current_user_id();
-$tutor_current_post         = get_post();
-$tutor_course               = get_post( $tutor_course_id );
-$attempt_id                 = Input::get( 'attempt_id', 0, Input::TYPE_INT );
-$user_action                = Input::get( 'action' );
-$subpages                   = Template::make_learning_area_sub_page_nav_items();
-$subpage                    = Input::get( 'subpage' );
 $tutor_course_list_url      = tutor_utils()->course_archive_page_url();
 $tutor_is_enrolled          = EnrollmentModel::is_enrolled( $tutor_course_id );
 $tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
@@ -44,71 +69,6 @@ $tutor_course_progress      = tutor_utils()->get_course_completed_percent( $tuto
 $tutor_completion_mode      = tutor_utils()->get_option( 'course_completion_process' );
 $tutor_retake_course        = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $tutor_is_course_completed || $tutor_course_progress >= 100 );
 $tutor_can_retake_course    = $tutor_retake_course && ( CourseModel::MODE_FLEXIBLE === $tutor_completion_mode || $tutor_is_course_completed );
-
-$site_name = get_bloginfo( 'name' );
-
-$get_learning_excerpt = static function ( $post ) {
-	if ( ! $post instanceof WP_Post ) {
-		return '';
-	}
-
-	$content = has_excerpt( $post ) ? $post->post_excerpt : $post->post_content;
-	$content = wp_strip_all_tags( strip_shortcodes( (string) $content ) );
-
-	return wp_trim_words( $content, 30, '...' );
-};
-
-$course_title     = $tutor_course ? get_the_title( $tutor_course ) : '';
-$content_title    = $tutor_current_post ? get_the_title( $tutor_current_post ) : $course_title;
-$learning_title   = $content_title ? $content_title : __( 'Learning', 'tutor' );
-$learning_excerpt = $get_learning_excerpt( $tutor_current_post );
-
-if ( $subpage && ! empty( $subpages[ $subpage ]['title'] ) ) {
-	$learning_title = $subpages[ $subpage ]['title'];
-	if ( $course_title ) {
-		$learning_title = sprintf( '%1$s - %2$s', $learning_title, $course_title );
-	}
-	$learning_excerpt = $get_learning_excerpt( $tutor_course );
-} elseif ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
-	$learning_title = __( 'Quiz Attempt Details', 'tutor' );
-	if ( $content_title ) {
-		$learning_title = sprintf( '%1$s - %2$s', $learning_title, $content_title );
-	}
-} elseif ( tutor()->quiz_post_type === $tutor_current_post_type && $content_title ) {
-	/* translators: %s: quiz title. */
-	$learning_title = sprintf( __( 'Quiz: %s', 'tutor' ), $content_title );
-}
-
-if ( '' === $learning_excerpt ) {
-	/* translators: 1: current learning page title, 2: site name. */
-	$learning_excerpt = sprintf( __( 'Continue with %1$s on %2$s.', 'tutor' ), wp_strip_all_tags( $learning_title ), $site_name );
-}
-
-$page_meta = Dashboard::get_page_meta_data(
-	$learning_title,
-	Dashboard::META_CONTEXT_LEARNING
-);
-
-$learning_title            = $page_meta['page_title'];
-$learning_meta_title       = $page_meta['meta_title'];
-$learning_meta_description = '' !== $learning_excerpt ? $learning_excerpt : $page_meta['meta_description'];
-
-?>
-<!DOCTYPE html>
-	<html <?php language_attributes(); ?>>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title><?php echo esc_html( $learning_title ); ?></title>
-		<meta name="title" content="<?php echo esc_attr( $learning_meta_title ); ?>" />
-		<meta name="description" content="<?php echo esc_attr( $learning_meta_description ); ?>" />
-		<?php wp_head(); ?>
-	</head>
-	<body <?php body_class( '' ); ?> x-data="tutorCourseCompleteHandler()">
-	<?php wp_body_open(); ?>
-<?php
-
-do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
 
 // Auto complete course.
 if ( CourseModel::can_autocomplete_course( $tutor_course_id, $current_user_id ) ) {
@@ -149,6 +109,9 @@ if ( tutor()->quiz_post_type === $tutor_current_post_type ) {
 		exit;
 	}
 }
+
+$attempt_id  = Input::get( 'attempt_id', 0, Input::TYPE_INT );
+$user_action = Input::get( 'action' );
 
 if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 	tutor_load_template( 'learning-area.quiz.attempt-details' );

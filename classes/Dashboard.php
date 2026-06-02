@@ -123,47 +123,52 @@ class Dashboard {
 	public static function get_account_pages() {
 		$pages = array(
 			'profile' => array(
-				'title'       => esc_html__( 'Profile', 'tutor' ),
-				'icon'        => Icon::USER_CIRCLE,
-				'icon_active' => Icon::USER_CIRCLE_FILL,
-				'url'         => self::get_account_page_url( 'profile' ),
-				'template'    => tutor_get_template( 'dashboard.account.profile' ),
+				'title'            => esc_html__( 'Profile', 'tutor' ),
+				'meta_description' => esc_html__( 'Manage your profile and settings', 'tutor' ),
+				'icon'             => Icon::USER_CIRCLE,
+				'icon_active'      => Icon::USER_CIRCLE_FILL,
+				'url'              => self::get_account_page_url( 'profile' ),
+				'template'         => tutor_get_template( 'dashboard.account.profile' ),
 			),
 			'reviews' => array(
-				'title'       => esc_html__( 'Reviews', 'tutor' ),
-				'icon'        => Icon::RATINGS,
-				'icon_active' => Icon::RATINGS,
-				'url'         => self::get_account_page_url( 'reviews' ),
-				'template'    => tutor_get_template( 'dashboard.account.reviews' ),
+				'title'            => esc_html__( 'Reviews', 'tutor' ),
+				'meta_description' => esc_html__( 'Manage your reviews and ratings', 'tutor' ),
+				'icon'             => Icon::RATINGS,
+				'icon_active'      => Icon::RATINGS,
+				'url'              => self::get_account_page_url( 'reviews' ),
+				'template'         => tutor_get_template( 'dashboard.account.reviews' ),
 			),
 		);
 
 		if ( User::is_student_view() ) {
 			$pages['billing'] = array(
-				'title'       => esc_html__( 'Billing', 'tutor' ),
-				'icon'        => Icon::BILLING,
-				'icon_active' => Icon::BILLING,
-				'url'         => self::get_account_page_url( 'billing' ),
-				'template'    => tutor_get_template( 'dashboard.account.billing' ),
+				'title'            => esc_html__( 'Billing', 'tutor' ),
+				'meta_description' => esc_html__( 'Manage your billing and payment methods', 'tutor' ),
+				'icon'             => Icon::BILLING,
+				'icon_active'      => Icon::BILLING,
+				'url'              => self::get_account_page_url( 'billing' ),
+				'template'         => tutor_get_template( 'dashboard.account.billing' ),
 			);
 		}
 
 		if ( User::is_instructor_view() ) {
 			$pages['withdrawals'] = array(
-				'title'       => esc_html__( 'Withdrawals', 'tutor' ),
-				'icon'        => Icon::WALLET,
-				'icon_active' => Icon::WALLET,
-				'url'         => self::get_account_page_url( 'withdrawals' ),
-				'template'    => tutor_get_template( 'dashboard.account.withdrawals' ),
+				'title'            => esc_html__( 'Withdrawals', 'tutor' ),
+				'meta_description' => esc_html__( 'Manage your withdrawals and payments', 'tutor' ),
+				'icon'             => Icon::WALLET,
+				'icon_active'      => Icon::WALLET,
+				'url'              => self::get_account_page_url( 'withdrawals' ),
+				'template'         => tutor_get_template( 'dashboard.account.withdrawals' ),
 			);
 		}
 
 		$pages['settings'] = array(
-			'title'       => esc_html__( 'Settings', 'tutor' ),
-			'icon'        => Icon::SETTING,
-			'icon_active' => Icon::SETTING,
-			'url'         => self::get_account_page_url( 'settings' ),
-			'template'    => tutor_get_template( 'dashboard.account.settings' ),
+			'title'            => esc_html__( 'Settings', 'tutor' ),
+			'meta_description' => esc_html__( 'Manage your account settings', 'tutor' ),
+			'icon'             => Icon::SETTING,
+			'icon_active'      => Icon::SETTING,
+			'url'              => self::get_account_page_url( 'settings' ),
+			'template'         => tutor_get_template( 'dashboard.account.settings' ),
 		);
 
 		return apply_filters( 'tutor_dashboard_account_pages', $pages );
@@ -297,38 +302,41 @@ class Dashboard {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $page_title   Page title.
-	 * @param string $page_context Page context.
+	 * @param string $page_title       Page title.
+	 * @param string $page_description Page description.
 	 *
 	 * @return array
 	 */
-	public static function get_page_meta_data( string $page_title, string $page_context ): array {
+	public static function get_page_meta_data( string $page_title, string $page_description ): array {
 		$site_name = get_bloginfo( 'name' );
 
 		/* translators: 1: current page title, 2: site name. */
 		$meta_title = sprintf( __( '%1$s | %2$s', 'tutor' ), $page_title, $site_name );
-
-		switch ( $page_context ) {
-			case self::META_CONTEXT_DASHBOARD:
-				/* translators: 1: current dashboard page title, 2: site name. */
-				$meta_description = sprintf( __( 'Access the %1$s section of your Tutor dashboard on %2$s.', 'tutor' ), wp_strip_all_tags( $page_title ), $site_name );
-				break;
-			case self::META_CONTEXT_ACCOUNT:
-				/* translators: 1: current account page title, 2: site name. */
-				$meta_description = sprintf( __( 'Manage your %1$s settings from your Tutor account on %2$s.', 'tutor' ), wp_strip_all_tags( $page_title ), $site_name );
-				break;
-			case self::META_CONTEXT_LEARNING:
-				/* translators: 1: current learning page title, 2: site name. */
-				$meta_description = sprintf( __( 'Continue with %1$s on %2$s.', 'tutor' ), wp_strip_all_tags( $page_title ), $site_name );
-				break;
-			default:
-				$meta_description = '';
-		}
+		/* translators: 1: current page description, 2: site name. */
+		$meta_description = sprintf( __( '%1$s | %2$s.', 'tutor' ), $page_description, $site_name );
 
 		return array(
-			'page_title'       => $page_title,
 			'meta_title'       => $meta_title,
 			'meta_description' => $meta_description,
+		);
+	}
+
+	/**
+	 * Set the document title for custom frontend templates.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $title Document title.
+	 *
+	 * @return void
+	 */
+	public static function set_document_title( string $title ): void {
+		add_filter(
+			'pre_get_document_title',
+			static function () use ( $title ) {
+				return $title;
+			},
+			999
 		);
 	}
 }

@@ -22,23 +22,23 @@ $page_title    = $page_data['title'] ?? __( 'Account', 'tutor' );
 
 $page_meta = Dashboard::get_page_meta_data(
 	$page_title,
-	Dashboard::META_CONTEXT_ACCOUNT
+	$page_data['meta_description'] ?? __( 'Account', 'tutor' )
 );
 
-$page_title       = $page_meta['page_title'];
 $meta_title       = $page_meta['meta_title'];
 $meta_description = $page_meta['meta_description'];
 
 $dashboard_url = tutor_utils()->tutor_dashboard_url();
 $back_url      = apply_filters( 'tutor_dashboard_back_url', $dashboard_url );
 $close_url     = $dashboard_url;
+
+Dashboard::set_document_title( $meta_title );
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><?php echo esc_html( $page_title ); ?></title>
 	<meta name="title" content="<?php echo esc_attr( $meta_title ); ?>" />
 	<meta name="description" content="<?php echo esc_attr( $meta_description ); ?>" />
 	<?php wp_head(); ?>

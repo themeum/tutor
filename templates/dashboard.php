@@ -49,25 +49,14 @@ if ( $dashboard_page_slug && isset( $dashboard_pages[ $dashboard_page_slug ] ) )
 	$page_title = is_array( $page_data ) ? ( $page_data['title'] ?? $page_title ) : $page_data;
 }
 
-if ( $dashboard_page_sub_slug ) {
-	if ( Dashboard::ACCOUNT_PAGE_SLUG === $dashboard_page_slug ) {
-		$account_pages = Dashboard::get_account_pages();
-		if ( isset( $account_pages[ $dashboard_page_sub_slug ]['title'] ) ) {
-			$page_title = $account_pages[ $dashboard_page_sub_slug ]['title'];
-		}
-	} else {
-		$page_title = $format_slug_title( $dashboard_page_sub_slug );
-	}
-}
-
 $page_meta = Dashboard::get_page_meta_data(
 	$page_title,
-	Dashboard::META_CONTEXT_DASHBOARD
+	$page_data['meta_description'] ?? __( 'Tutor dashboard', 'tutor' )
 );
 
-$page_title       = $page_meta['page_title'];
 $meta_title       = $page_meta['meta_title'];
 $meta_description = $page_meta['meta_description'];
+Dashboard::set_document_title( $meta_title );
 
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 	?>
@@ -76,7 +65,6 @@ if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title><?php echo esc_html( $page_title ); ?></title>
 		<meta name="title" content="<?php echo esc_attr( $meta_title ); ?>" />
 		<meta name="description" content="<?php echo esc_attr( $meta_description ); ?>" />
 		<?php wp_head(); ?>
