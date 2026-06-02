@@ -20,10 +20,7 @@ $page_data     = $account_pages[ $subpage ] ?? array();
 $page_template = $page_data['template'] ?? '';
 $page_title    = $page_data['title'] ?? __( 'Account', 'tutor' );
 
-$page_meta = Dashboard::get_page_meta_data(
-	$page_title,
-	$page_data['meta_description'] ?? __( 'Account', 'tutor' )
-);
+$page_meta = Dashboard::get_page_meta_data( $page_title, $page_data['meta_description'] ?? __( 'Account', 'tutor' ) );
 
 $meta_title       = $page_meta['meta_title'];
 $meta_description = $page_meta['meta_description'];

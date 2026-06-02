@@ -39,9 +39,6 @@ class Dashboard {
 	const BILLING_PAGE_SLUG             = 'billing';
 	const WISHILIST_PAGE_SLUG           = 'wishlist';
 	const ENROLLED_COURSES_PAGE_SLUG    = 'enrolled-courses';
-	const META_CONTEXT_DASHBOARD        = 'dashboard';
-	const META_CONTEXT_ACCOUNT          = 'account';
-	const META_CONTEXT_LEARNING         = 'learning';
 
 	/**
 	 * Constructor

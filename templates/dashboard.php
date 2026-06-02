@@ -39,20 +39,12 @@ $dashboard_page_name = apply_filters( 'tutor_dashboard_sub_page_template', $dash
 $dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
 $page_title      = __( 'Dashboard', 'tutor' );
 
-$format_slug_title = static function ( $slug ) {
-	$slug = str_replace( array( '-', '_', '/' ), ' ', (string) $slug );
-	return wp_strip_all_tags( ucwords( $slug ) );
-};
-
 if ( $dashboard_page_slug && isset( $dashboard_pages[ $dashboard_page_slug ] ) ) {
 	$page_data  = $dashboard_pages[ $dashboard_page_slug ];
 	$page_title = is_array( $page_data ) ? ( $page_data['title'] ?? $page_title ) : $page_data;
 }
 
-$page_meta = Dashboard::get_page_meta_data(
-	$page_title,
-	$page_data['meta_description'] ?? __( 'Tutor dashboard', 'tutor' )
-);
+$page_meta = Dashboard::get_page_meta_data( $page_title, $page_data['meta_description'] ?? __( 'Tutor dashboard', 'tutor' ) );
 
 $meta_title       = $page_meta['meta_title'];
 $meta_description = $page_meta['meta_description'];
@@ -105,7 +97,6 @@ $footer_links = array(
 		'icon_class' => 'ttr tutor-icon-hamburger-o tutor-dashboard-menu-toggler',
 	),
 );
-
 ?>
 
 <?php do_action( 'tutor_dashboard/before/wrap' ); ?>
@@ -148,10 +139,8 @@ $footer_links = array(
 	</div>
 </div>
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
-</body>
 <?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
-	</body>
 	<?php wp_footer(); ?>
-	</html>
 <?php endif; ?>
+	</body>
 </html>

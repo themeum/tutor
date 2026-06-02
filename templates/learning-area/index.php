@@ -28,16 +28,28 @@ $tutor_current_post_type  = get_post_type();
 $tutor_current_content_id = get_the_ID();
 $tutor_course_id          = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
 
-$subpages            = Template::make_learning_area_sub_page_nav_items();
-$subpage             = Input::get( 'subpage' );
-$tutor_course        = get_post( $tutor_course_id );
-$course_title        = $tutor_course ? get_the_title( $tutor_course ) : '';
-$content_title       = $tutor_current_post ? get_the_title( $tutor_current_post ) : $course_title;
-$learning_meta_title = $content_title ? $content_title : __( 'Learning', 'tutor' );
+$subpages                  = Template::make_learning_area_sub_page_nav_items();
+$subpage                   = Input::get( 'subpage' );
+$attempt_id                = Input::get( 'attempt_id', 0, Input::TYPE_INT );
+$user_action               = Input::get( 'action' );
+$tutor_course              = get_post( $tutor_course_id );
+$course_title              = $tutor_course ? get_the_title( $tutor_course ) : '';
+$content_title             = $tutor_current_post ? get_the_title( $tutor_current_post ) : $course_title;
+$learning_meta_title       = $content_title ? $content_title : __( 'Learning', 'tutor' );
+$learning_meta_description = $content_title;
+
 
 if ( $subpage && ! empty( $subpages[ $subpage ]['title'] ) ) {
 	$learning_meta_title       = $subpages[ $subpage ]['title'];
 	$learning_meta_description = $subpages[ $subpage ]['meta_description'];
+} elseif ( Quiz::ACTION_VIEW_DETAILS === $user_action ) {
+	if ( $content_title ) {
+		/* translators: %s: quiz title. */
+		$learning_meta_description = sprintf( '%1$s - %2$s', __( 'Quiz Attempt Details', 'tutor' ), $content_title );
+	}
+} elseif ( tutor()->quiz_post_type === $tutor_current_post_type && $content_title ) {
+	/* translators: %s: quiz title. */
+	$learning_meta_title = sprintf( __( 'Quiz: %s', 'tutor' ), $content_title );
 }
 
 $page_meta = Dashboard::get_page_meta_data( $learning_meta_title, $learning_meta_description ?? $content_title );
@@ -49,6 +61,7 @@ Dashboard::set_document_title( $page_meta['meta_title'] );
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="title" content="<?php echo esc_attr( $page_meta['meta_title'] ); ?>" />
 		<meta name="description" content="<?php echo esc_attr( $page_meta['meta_description'] ); ?>" />
 		<?php wp_head(); ?>
 	</head>
