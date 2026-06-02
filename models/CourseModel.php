@@ -1756,8 +1756,8 @@ class CourseModel {
 
 		$duration = tutor_utils()->get_course_duration( $course_id, true );
 
-		return ( (int) $duration['durationHours'] * HOUR_IN_SECONDS )
-				+ ( (int) $duration['durationMinutes'] * MINUTE_IN_SECONDS )
-				+ ( (int) $duration['durationSeconds'] );
+		return ( $duration['durationHours'] * HOUR_IN_SECONDS )
+				+ ( $duration['durationMinutes'] * MINUTE_IN_SECONDS )
+				+ ( $duration['durationSeconds'] );
 	}
 }
