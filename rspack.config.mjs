@@ -5,7 +5,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
-// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import nodeExternals from 'webpack-node-externals';
 import { purgecssContent, purgecssSafelist } from './purgecss.config.mjs';
 
@@ -174,7 +173,6 @@ const createConfig = (env, options) => {
         __TUTOR_TEXT_DOMAIN__: JSON.stringify(process.env.TEXT_DOMAIN || 'tutor'),
       }),
       process.env.RSDOCTOR && new RsdoctorRspackPlugin({}),
-      // new BundleAnalyzerPlugin(),
     ].filter(Boolean),
     externals: {
       react: 'React',
