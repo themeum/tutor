@@ -311,6 +311,7 @@ const resolveAliases = {
   '@FrontendServices': path.resolve(__dirname, './assets/src/js/frontend/services'),
   '@FrontendDashboard': path.resolve(__dirname, './assets/src/js/frontend/dashboard'),
   '@LearningArea': path.resolve(__dirname, './assets/src/js/frontend/learning-area'),
+  '@TutorProQuiz': path.resolve(__dirname, '../tutor-pro/assets/src/js/quiz-type'),
 };
 
 const isScssEntry = (entry) => {
