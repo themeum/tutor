@@ -151,6 +151,51 @@ const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) 
     iframeDocument.body.removeAttribute('data-tutor-ui');
   }, [activeTab, iframeDocument]);
 
+  useEffect(() => {
+    if (!iframeDocument) {
+      return;
+    }
+
+    const iframeWindow = iframeDocument.defaultView;
+    if (!iframeWindow) {
+      return;
+    }
+
+    const addKeyboardNav = () => {
+      iframeDocument.body?.classList.add('tutor-keyboard-nav');
+    };
+
+    const removeKeyboardNav = () => {
+      iframeDocument.body?.classList.remove('tutor-keyboard-nav');
+    };
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        addKeyboardNav();
+      }
+    };
+
+    // Listen on BOTH outer window and iframe window.
+    // When Tab moves focus from outside the page into the iframe the keydown
+    // fires on the outer window, not iframeWindow — so we need both to catch
+    // the very first Tab that lands on the first input inside the iframe.
+    window.addEventListener('keydown', handleTab);
+    iframeWindow.addEventListener('keydown', handleTab);
+    window.addEventListener('mousedown', removeKeyboardNav);
+    iframeWindow.addEventListener('mousedown', removeKeyboardNav);
+    window.addEventListener('touchstart', removeKeyboardNav);
+    iframeWindow.addEventListener('touchstart', removeKeyboardNav);
+
+    return () => {
+      window.removeEventListener('keydown', handleTab);
+      iframeWindow.removeEventListener('keydown', handleTab);
+      window.removeEventListener('mousedown', removeKeyboardNav);
+      iframeWindow.removeEventListener('mousedown', removeKeyboardNav);
+      window.removeEventListener('touchstart', removeKeyboardNav);
+      iframeWindow.removeEventListener('touchstart', removeKeyboardNav);
+    };
+  }, [iframeDocument]);
+
   useLayoutEffect(() => {
     if (!iframeDocument || !iframeRef.current) {
       return;
@@ -383,6 +428,7 @@ const getPreviewFrameStyles = () => `
     margin: 0;
     padding: 0;
     background: transparent;
+    box-sizing: border-box;
   }
 
   body {
@@ -390,6 +436,7 @@ const getPreviewFrameStyles = () => `
     align-items: center;
     justify-content: center;
     min-height: 100%;
+    padding: 4px;
   }
 
   #preview-root {
@@ -588,6 +635,10 @@ const getPreviewFrameStyles = () => `
     max-width: 420px;
     margin-inline: auto;
     align-items: stretch;
+  }
+
+  .tutor-keyboard-nav .tutor-quiz-question:has(:focus-visible) {
+    outline: 1px solid var(--tutor-color-brand, #3e64de);
   }
 `;
 
