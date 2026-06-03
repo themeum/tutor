@@ -52,10 +52,19 @@ if ( $subpage && ! empty( $subpages[ $subpage ]['title'] ) ) {
 	$learning_meta_title = sprintf( __( 'Quiz: %s', 'tutor' ), $content_title );
 }
 
+// override meta description if has post excerpt.
+if ( has_excerpt( $tutor_current_post ) && ! empty( $tutor_current_post->post_excerpt ) ) {
+	$learning_meta_description = $tutor_current_post->post_excerpt;
+}
+
 /* translators: %s: learning area meta title. */
 $page_meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $learning_meta_title, $site_name );
 /* translators: %s: learning area meta description. */
 $page_meta_description = sprintf( __( '%1$s - %2$s', 'tutor' ), $learning_meta_description, $site_name );
+
+// filter hook for changing meta_title & description.
+$page_meta_title       = apply_filters( 'tutor_learning_area_meta_title', $page_meta_title );
+$page_meta_description = apply_filters( 'tutor_learning_area_meta_description', $page_meta_description );
 
 Dashboard::set_document_title( $page_meta_title );
 

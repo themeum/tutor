@@ -332,15 +332,15 @@ class Dashboard {
 			$page_title = wp_strip_all_tags( ucfirst( $slug ) );
 		}
 
-		$site_name = get_bloginfo( 'name' );
-
-		$meta_title       = '';
-		$meta_description = '';
+		$site_name  = get_bloginfo( 'name' );
+		$meta_title = '';
 
 		if ( '' !== $page_title ) {
 			/* translators: 1: current page title, 2: site name. */
 			$meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $page_title, $site_name );
 		}
+
+		$meta_title = apply_filters( 'tutor_dashboard_meta_title', $meta_title );
 
 		return array(
 			'page_data'  => $page_data,
