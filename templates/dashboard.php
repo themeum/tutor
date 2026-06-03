@@ -13,12 +13,12 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Dashboard;
 use TUTOR\User;
 
-$is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
 global $wp_query;
 
-$dashboard_page_slug     = '';
-$dashboard_page_sub_slug = '';
-$dashboard_page_name     = '';
+$dashboard_page_slug    = '';
+$dashboard_page_subslug = '';
+$dashboard_page_name    = '';
+$page_data              = array();
 
 if ( isset( $wp_query->query_vars['tutor_dashboard_page'] ) && $wp_query->query_vars['tutor_dashboard_page'] ) {
 	$dashboard_page_slug = $wp_query->query_vars['tutor_dashboard_page'];
@@ -28,8 +28,8 @@ if ( isset( $wp_query->query_vars['tutor_dashboard_page'] ) && $wp_query->query_
  * Getting dashboard sub pages
  */
 if ( isset( $wp_query->query_vars['tutor_dashboard_sub_page'] ) && $wp_query->query_vars['tutor_dashboard_sub_page'] ) {
-	$dashboard_page_sub_slug = $wp_query->query_vars['tutor_dashboard_sub_page'];
-	$dashboard_page_name     = $dashboard_page_sub_slug;
+	$dashboard_page_subslug = $wp_query->query_vars['tutor_dashboard_sub_page'];
+	$dashboard_page_name    = $dashboard_page_subslug;
 	if ( $dashboard_page_slug ) {
 		$dashboard_page_name = $dashboard_page_slug . '/' . $dashboard_page_name;
 	}
@@ -37,19 +37,23 @@ if ( isset( $wp_query->query_vars['tutor_dashboard_sub_page'] ) && $wp_query->qu
 $dashboard_page_name = apply_filters( 'tutor_dashboard_sub_page_template', $dashboard_page_name );
 
 $dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
-$page_title      = __( 'Dashboard', 'tutor' );
+$dashboard_pages = array_merge(
+	array(
+		'index' => array(
+			'title'            => __( 'Dashboard', 'tutor' ),
+			'meta_description' => __( 'Tutor Dashboard' ),
+		),
+	),
+	$dashboard_pages
+);
 
-if ( $dashboard_page_slug && isset( $dashboard_pages[ $dashboard_page_slug ] ) ) {
-	$page_data  = $dashboard_pages[ $dashboard_page_slug ];
-	$page_title = is_array( $page_data ) ? ( $page_data['title'] ?? $page_title ) : $page_data;
-}
-
-$page_meta = Dashboard::get_page_meta_data( $page_title, $page_data['meta_description'] ?? __( 'Tutor dashboard', 'tutor' ) );
+$page_meta = Dashboard::get_page_meta_data( $dashboard_page_slug ? $dashboard_page_slug : 'index', $dashboard_page_subslug, $dashboard_pages );
 
 $meta_title       = $page_meta['meta_title'];
 $meta_description = $page_meta['meta_description'];
 Dashboard::set_document_title( $meta_title );
 
+$is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 	?>
 	<!DOCTYPE html>

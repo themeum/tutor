@@ -16,11 +16,9 @@ global $wp_query;
 
 $subpage       = tutor_utils()->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars, 'profile' );
 $account_pages = Dashboard::get_account_pages();
-$page_data     = $account_pages[ $subpage ] ?? array();
+$page_meta     = Dashboard::get_page_meta_data( Dashboard::ACCOUNT_PAGE_SLUG, $subpage, $account_pages );
+$page_data     = $page_meta['page_data'];
 $page_template = $page_data['template'] ?? '';
-$page_title    = $page_data['title'] ?? __( 'Account', 'tutor' );
-
-$page_meta = Dashboard::get_page_meta_data( $page_title, $page_data['meta_description'] ?? __( 'Account', 'tutor' ) );
 
 $meta_title       = $page_meta['meta_title'];
 $meta_description = $page_meta['meta_description'];
