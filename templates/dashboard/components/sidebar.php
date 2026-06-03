@@ -47,7 +47,7 @@ $dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
 			<span class="site-title"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
 		<?php endif; ?>
 	</a>
-	<div class="tutor-dashboard-sidebar-nav">
+	<div class="tutor-dashboard-sidebar-nav" role="navigation">
 		<ul>
 			<?php
 			foreach ( $dashboard_pages as $dashboard_key => $dashboard_page ) {
