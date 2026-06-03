@@ -11,6 +11,14 @@
   width: 100%;
   min-width: 0;
 
+  &:has(:focus-visible:not(input):not(textarea):not(select)) {
+    @include tutor-focus-ring;
+  }
+
+  .tutor-keyboard-nav &:has(:focus-visible) {
+    @include tutor-focus-ring;
+  }
+
   @include tutor-breakpoint-down(sm) {
     padding: $tutor-spacing-5;
     gap: $tutor-spacing-5;
@@ -167,9 +175,6 @@
       }
     }
   }
-
-
-
 
   img,
   video,
