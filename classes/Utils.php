@@ -2682,19 +2682,16 @@ class Utils {
 		$items = array(
 			'index'             => array(
 				'title'            => __( 'Home', 'tutor' ),
-				'meta_description' => esc_html__( 'Access your dashboard', 'tutor' ),
 				'icon'             => Icon::HOME,
 				'active_icon'      => Icon::HOME_FILL,
 			),
 			'courses'           => array(
 				'title'            => __( 'Courses', 'tutor' ),
-				'meta_description' => esc_html__( 'View your enrolled courses and manage your learning', 'tutor' ),
 				'icon'             => Icon::COURSES,
 				'active_icon'      => Icon::COURSES_FILL,
 			),
 			'retrieve-password' => array(
 				'title'            => __( 'Retrieve Password', 'tutor' ),
-				'meta_description' => esc_html__( 'Retrieve your password if you forget it', 'tutor' ),
 				'show_ui'          => false,
 				'login_require'    => false,
 			),
@@ -2707,7 +2704,6 @@ class Utils {
 		if ( $this->should_show_dicussion_menu() ) {
 			$items['discussions'] = array(
 				'title'            => __( 'Discussions', 'tutor' ),
-				'meta_description' => esc_html__( 'View and manage your discussions', 'tutor' ),
 				'icon'             => Icon::QA,
 				'active_icon'      => Icon::QA_FILL,
 			);
@@ -2727,13 +2723,11 @@ class Utils {
 		$menus = array(
 			'index'         => array(
 				'title'            => __( 'Home', 'tutor' ),
-				'meta_description' => esc_html__( 'Access your dashboard', 'tutor' ),
 				'icon'             => Icon::HOME,
 				'active_icon'      => Icon::HOME_FILL,
 			),
 			'my-courses'    => array(
 				'title'            => __( 'Courses', 'tutor' ),
-				'meta_description' => esc_html__( 'View your enrolled courses and manage your learning', 'tutor' ),
 				'auth_cap'         => tutor()->instructor_role,
 				'icon'             => Icon::COURSES,
 				'active_icon'      => Icon::COURSES_FILL,
@@ -2741,13 +2735,11 @@ class Utils {
 			// Hidden menu.
 			'create-course' => array(
 				'title'            => __( 'Create Course', 'tutor' ),
-				'meta_description' => esc_html__( 'Create a new course', 'tutor' ),
 				'show_ui'          => false,
 				'auth_cap'         => tutor()->instructor_role,
 			),
 			'create-bundle' => array(
 				'title'            => __( 'Create Bundle', 'tutor' ),
-				'meta_description' => esc_html__( 'Create a new bundle', 'tutor' ),
 				'show_ui'          => false,
 				'auth_cap'         => tutor()->instructor_role,
 			),
@@ -2758,14 +2750,12 @@ class Utils {
 		$other_menus = array(
 			'announcements' => array(
 				'title'            => __( 'Announcements', 'tutor' ),
-				'meta_description' => esc_html__( 'Share course updates with your students', 'tutor' ),
 				'auth_cap'         => tutor()->instructor_role,
 				'icon'             => Icon::ANNOUNCEMENT,
 				'active_icon'      => Icon::ANNOUNCEMENT_FILL,
 			),
 			'quiz-attempts' => array(
 				'title'            => __( 'Quiz Attempts', 'tutor' ),
-				'meta_description' => esc_html__( 'Review and evaluate quiz submissions', 'tutor' ),
 				'auth_cap'         => tutor()->instructor_role,
 				'icon'             => Icon::QUIZ_2,
 				'active_icon'      => Icon::QUIZ_2_FILL,
@@ -2775,7 +2765,6 @@ class Utils {
 		if ( $this->should_show_dicussion_menu() ) {
 			$other_menus['discussions'] = array(
 				'title'            => __( 'Discussions', 'tutor' ),
-				'meta_description' => esc_html__( 'Engage with students through discussions', 'tutor' ),
 				'auth_cap'         => tutor()->instructor_role,
 				'icon'             => Icon::QA,
 				'active_icon'      => Icon::QA_FILL,

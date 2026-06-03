@@ -36,9 +36,7 @@ $display_name                 = tutor_utils()->display_name( $user_id );
 $edit_profile_url             = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
 $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instructor_btn' );
 
-$is_instructor          = User::is_instructor( $user_id );
-$active_course_count    = $is_instructor ? (int) CourseModel::get_course_count_by_instructor( $user_id ) : 0;
-$enrolled_student_count = $is_instructor ? (int) tutor_utils()->get_total_students_by_instructor( $user_id ) : 0;
+$is_instructor_view = User::is_instructor_view();
 ?>
 
 <div x-data="tutorHeader()" class="tutor-dashboard-header">
@@ -50,12 +48,16 @@ $enrolled_student_count = $is_instructor ? (int) tutor_utils()->get_total_studen
 				</span>
 				<?php echo esc_html( $display_name . ' 👋' ); ?>
 			</div>
-			<?php if ( $is_instructor ) : ?>
-				<div class="tutor-text-xl tutor-text-primary tutor-mt-2">
-					<span class="tutor-text-medium"><?php echo esc_html( number_format_i18n( $active_course_count ) ); ?></span>
+			<?php
+			if ( $is_instructor_view ) :
+				$active_course_count    = (int) CourseModel::get_course_count_by_instructor( $user_id );
+				$enrolled_student_count = (int) tutor_utils()->get_total_students_by_instructor( $user_id );
+				?>
+				<div class="tutor-tiny tutor-mt-2">
+					<span class="tutor-medium"><?php echo esc_html( number_format_i18n( $active_course_count ) ); ?></span>
 					<?php echo esc_html( _n( 'active course', 'active courses', $active_course_count, 'tutor' ) ); ?>
 					<span class="tutor-text-subdued">&bull;</span>
-					<span class="tutor-text-medium"><?php echo esc_html( number_format_i18n( $enrolled_student_count ) ); ?></span>
+					<span class="tutor-medium"><?php echo esc_html( number_format_i18n( $enrolled_student_count ) ); ?></span>
 					<?php echo esc_html( _n( 'student enrolled', 'students enrolled', $enrolled_student_count, 'tutor' ) ); ?>
 				</div>
 			<?php endif; ?>

@@ -40,8 +40,7 @@ $dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
 $dashboard_pages = array_merge(
 	array(
 		'index' => array(
-			'title'            => __( 'Dashboard', 'tutor' ),
-			'meta_description' => __( 'Tutor Dashboard' ),
+			'title' => __( 'Dashboard', 'tutor' ),
 		),
 	),
 	$dashboard_pages
@@ -49,8 +48,7 @@ $dashboard_pages = array_merge(
 
 $page_meta = Dashboard::get_page_meta_data( $dashboard_page_slug ? $dashboard_page_slug : 'index', $dashboard_page_subslug, $dashboard_pages );
 
-$meta_title       = $page_meta['meta_title'];
-$meta_description = $page_meta['meta_description'];
+$meta_title = $page_meta['meta_title'];
 Dashboard::set_document_title( $meta_title );
 
 $is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
@@ -62,7 +60,6 @@ if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="title" content="<?php echo esc_attr( $meta_title ); ?>" />
-		<meta name="description" content="<?php echo esc_attr( $meta_description ); ?>" />
 		<?php wp_head(); ?>
 	</head>
 	<body <?php body_class( '' ); ?>>

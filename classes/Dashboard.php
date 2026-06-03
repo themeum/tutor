@@ -120,52 +120,47 @@ class Dashboard {
 	public static function get_account_pages() {
 		$pages = array(
 			'profile' => array(
-				'title'            => esc_html__( 'Profile', 'tutor' ),
-				'meta_description' => esc_html__( 'Manage your profile', 'tutor' ),
-				'icon'             => Icon::USER_CIRCLE,
-				'icon_active'      => Icon::USER_CIRCLE_FILL,
-				'url'              => self::get_account_page_url( 'profile' ),
-				'template'         => tutor_get_template( 'dashboard.account.profile' ),
+				'title'       => esc_html__( 'Profile', 'tutor' ),
+				'icon'        => Icon::USER_CIRCLE,
+				'icon_active' => Icon::USER_CIRCLE_FILL,
+				'url'         => self::get_account_page_url( 'profile' ),
+				'template'    => tutor_get_template( 'dashboard.account.profile' ),
 			),
 			'reviews' => array(
-				'title'            => esc_html__( 'Reviews', 'tutor' ),
-				'meta_description' => esc_html__( 'View learner feedback and ratings', 'tutor' ),
-				'icon'             => Icon::RATINGS,
-				'icon_active'      => Icon::RATINGS,
-				'url'              => self::get_account_page_url( 'reviews' ),
-				'template'         => tutor_get_template( 'dashboard.account.reviews' ),
+				'title'       => esc_html__( 'Reviews', 'tutor' ),
+				'icon'        => Icon::RATINGS,
+				'icon_active' => Icon::RATINGS,
+				'url'         => self::get_account_page_url( 'reviews' ),
+				'template'    => tutor_get_template( 'dashboard.account.reviews' ),
 			),
 		);
 
 		if ( User::is_student_view() ) {
 			$pages['billing'] = array(
-				'title'            => esc_html__( 'Billing', 'tutor' ),
-				'meta_description' => esc_html__( 'View and manage your billing and payment methods', 'tutor' ),
-				'icon'             => Icon::BILLING,
-				'icon_active'      => Icon::BILLING,
-				'url'              => self::get_account_page_url( 'billing' ),
-				'template'         => tutor_get_template( 'dashboard.account.billing' ),
+				'title'       => esc_html__( 'Billing', 'tutor' ),
+				'icon'        => Icon::BILLING,
+				'icon_active' => Icon::BILLING,
+				'url'         => self::get_account_page_url( 'billing' ),
+				'template'    => tutor_get_template( 'dashboard.account.billing' ),
 			);
 		}
 
 		if ( User::is_instructor_view() ) {
 			$pages['withdrawals'] = array(
-				'title'            => esc_html__( 'Withdrawals', 'tutor' ),
-				'meta_description' => esc_html__( 'Track earnings and withdrawal requests', 'tutor' ),
-				'icon'             => Icon::WALLET,
-				'icon_active'      => Icon::WALLET,
-				'url'              => self::get_account_page_url( 'withdrawals' ),
-				'template'         => tutor_get_template( 'dashboard.account.withdrawals' ),
+				'title'       => esc_html__( 'Withdrawals', 'tutor' ),
+				'icon'        => Icon::WALLET,
+				'icon_active' => Icon::WALLET,
+				'url'         => self::get_account_page_url( 'withdrawals' ),
+				'template'    => tutor_get_template( 'dashboard.account.withdrawals' ),
 			);
 		}
 
 		$pages['settings'] = array(
-			'title'            => esc_html__( 'Settings', 'tutor' ),
-			'meta_description' => esc_html__( 'Manage your account settings', 'tutor' ),
-			'icon'             => Icon::SETTING,
-			'icon_active'      => Icon::SETTING,
-			'url'              => self::get_account_page_url( 'settings' ),
-			'template'         => tutor_get_template( 'dashboard.account.settings' ),
+			'title'       => esc_html__( 'Settings', 'tutor' ),
+			'icon'        => Icon::SETTING,
+			'icon_active' => Icon::SETTING,
+			'url'         => self::get_account_page_url( 'settings' ),
+			'template'    => tutor_get_template( 'dashboard.account.settings' ),
 		);
 
 		return apply_filters( 'tutor_dashboard_account_pages', $pages );
@@ -181,16 +176,14 @@ class Dashboard {
 	public static function get_isolated_pages() {
 		$pages = array(
 			self::QUIZ_ATTEMPTS_PAGE_SLUG => array(
-				'title'            => esc_html__( 'Quiz attempts', 'tutor' ),
-				'meta_description' => esc_html__( 'Quiz attempts reviews', 'tutor' ),
-				'template'         => tutor_get_template( 'dashboard.quiz-attempts.quiz-reviews' ),
-				'requires_param'   => 'attempt_id',
+				'title'          => esc_html__( 'Quiz attempts', 'tutor' ),
+				'template'       => tutor_get_template( 'dashboard.quiz-attempts.quiz-reviews' ),
+				'requires_param' => 'attempt_id',
 			),
 			self::COURSES_PAGE_SLUG . '/' . self::MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG => array(
-				'title'            => esc_html__( 'Quiz details', 'tutor' ),
-				'meta_description' => esc_html__( 'Quiz attempts details', 'tutor' ),
-				'template'         => tutor_get_template( 'dashboard.my-quiz-attempts.attempts-details' ),
-				'requires_param'   => 'attempt_id',
+				'title'          => esc_html__( 'Quiz details', 'tutor' ),
+				'template'       => tutor_get_template( 'dashboard.my-quiz-attempts.attempts-details' ),
+				'requires_param' => 'attempt_id',
 			),
 		);
 
@@ -327,14 +320,12 @@ class Dashboard {
 
 		if ( empty( $page_data ) ) {
 			return array(
-				'page_data'        => $page_data,
-				'meta_title'       => '',
-				'meta_description' => '',
+				'page_data'  => $page_data,
+				'meta_title' => '',
 			);
 		}
 
-		$page_title       = isset( $page_data['title'] ) ? $page_data['title'] : '';
-		$page_description = isset( $page_data['meta_description'] ) ? $page_data['meta_description'] : '';
+		$page_title = isset( $page_data['title'] ) ? $page_data['title'] : '';
 
 		if ( $page_subslug ) {
 			$slug       = str_replace( array( '-', '_', '/' ), ' ', (string) $page_subslug );
@@ -351,15 +342,9 @@ class Dashboard {
 			$meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $page_title, $site_name );
 		}
 
-		if ( '' !== $page_description ) {
-			/* translators: 1: current page description, 2: site name. */
-			$meta_description = sprintf( __( '%1$s - %2$s.', 'tutor' ), $page_description, $site_name );
-		}
-
 		return array(
-			'page_data'        => $page_data,
-			'meta_title'       => $meta_title,
-			'meta_description' => $meta_description,
+			'page_data'  => $page_data,
+			'meta_title' => $meta_title,
 		);
 	}
 

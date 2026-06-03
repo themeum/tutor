@@ -21,7 +21,6 @@ $page_data     = $page_meta['page_data'];
 $page_template = $page_data['template'] ?? '';
 
 $meta_title       = $page_meta['meta_title'];
-$meta_description = $page_meta['meta_description'];
 
 $dashboard_url = tutor_utils()->tutor_dashboard_url();
 $back_url      = apply_filters( 'tutor_dashboard_back_url', $dashboard_url );
@@ -35,7 +34,6 @@ Dashboard::set_document_title( $meta_title );
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="title" content="<?php echo esc_attr( $meta_title ); ?>" />
-	<meta name="description" content="<?php echo esc_attr( $meta_description ); ?>" />
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class( '' ); ?>>

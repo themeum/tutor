@@ -104,11 +104,10 @@ class Q_And_A {
 		if ( $is_enabled_for_course && $can_access ) {
 			$qna_item = array(
 				'qna' => array(
-					'title'            => __( 'Q&A', 'tutor' ),
-					'meta_description' => esc_html__( 'View and manage your Q&A questions', 'tutor' ),
-					'icon'             => Icon::QA,
-					'url'              => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'qna' ) ),
-					'template'         => tutor_get_template( 'learning-area.subpages.qna' ),
+					'title'    => __( 'Q&A', 'tutor' ),
+					'icon'     => Icon::QA,
+					'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'qna' ) ),
+					'template' => tutor_get_template( 'learning-area.subpages.qna' ),
 				),
 			);
 
