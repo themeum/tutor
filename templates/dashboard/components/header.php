@@ -152,7 +152,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 											echo wp_kses_post(
 												sprintf(
 												/* translators: %s: application date */
-													__( 'Your Application is pending as of <span class="tutor-font-medium">%s</span>', 'tutor' ),
+													__( 'Your application is pending as of <span class="tutor-font-medium">%s</span>', 'tutor' ),
 													esc_html( $applied_on ),
 												)
 											);

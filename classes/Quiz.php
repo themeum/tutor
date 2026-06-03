@@ -1843,27 +1843,31 @@ class Quiz {
 			),
 		);
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+		if ( $earned_marks ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
 						' . SvgIcon::make()->name( Icon::STAR )->size( 20 )->get() . __( 'Earned Grade', 'tutor' ) . '
 					</div>',
+					),
+					array( 'content' => $earned_marks . '%' ),
 				),
-				array( 'content' => $earned_marks . '%' ),
-			),
-		);
+			);
+		}
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
-					</div>',
+		if ( 1 !== $attempts_allowed ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' =>  0 === $attempts_allowed ? __( 'No Limit', 'tutor' ) : $attempts_allowed ),
 				),
-				array( 'content' => $attempts_allowed ),
-			),
-		);
+			);
+		}
 
 		Table::make()->contents( $quiz_summary )->render();
 	}
@@ -2085,7 +2089,7 @@ class Quiz {
 			<?php
 			ConfirmationModal::make()
 				->id( $retry_modal_id )
-				->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+				->title( __( 'Retake Quiz?', 'tutor' ) )
 				->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-retry.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 				->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
 				->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )

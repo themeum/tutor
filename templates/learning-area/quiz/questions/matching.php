@@ -54,6 +54,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 				<?php endif; ?>
 				<div
 					class="tutor-quiz-question-option-drop-zone"
+					tabindex="0"
 					data-drop-placeholder-text="<?php echo esc_attr__( 'Drop here', 'tutor' ); ?>"
 				>
 					<input
@@ -74,6 +75,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 								array(
 									'class'          => 'tutor-force-hidden',
 									'@click.prevent' => 'clearDropZone',
+									'aria-label'     => __( 'Clear matched option', 'tutor' ),
 								)
 							)
 							->render();
@@ -108,7 +110,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 					<div data-title>
 						<?php echo esc_html( $draggable_title ); ?>
 					</div>
-					<button type="button" data-grab-handle>
+					<button type="button" data-grab-handle aria-label="<?php esc_attr_e( 'Drag matching option', 'tutor' ); ?>">
 						<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 24 )->render(); ?>
 					</button>
 				</div>
@@ -116,3 +118,4 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 		</div>
 	</div>
 </div>
+

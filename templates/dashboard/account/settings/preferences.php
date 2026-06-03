@@ -78,7 +78,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 						<?php SvgIcon::make()->name( Icon::PLAY_LINE )->size( 20 )->render(); ?>
 					</div>
 					<div class="tutor-preferences-setting-title">
-						<?php esc_html_e( 'Auto-play next lecture', 'tutor' ); ?>
+						<?php esc_html_e( 'Auto-play next lesson', 'tutor' ); ?>
 					</div>
 				</div>
 				<div class="tutor-preferences-setting-action">
