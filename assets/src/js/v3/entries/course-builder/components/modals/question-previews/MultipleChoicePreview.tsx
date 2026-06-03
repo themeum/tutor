@@ -25,6 +25,13 @@ const MultipleChoicePreview = ({
     });
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent, answerId: string) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      toggleAnswer(answerId);
+    }
+  };
+
   return (
     <div className="tutor-quiz-question-options">
       <For each={answers}>
@@ -38,6 +45,8 @@ const MultipleChoicePreview = ({
               key={answer.answer_id || index}
               className="tutor-quiz-question-option"
               data-preview-selected={isChecked ? 'true' : undefined}
+              tabIndex={0}
+              onKeyDown={(e) => handleKeyDown(e, answerId)}
             >
               <Show
                 when={!hasImage}
@@ -50,6 +59,7 @@ const MultipleChoicePreview = ({
                       value={answerId}
                       checked={isChecked}
                       onChange={() => toggleAnswer(answerId)}
+                      tabIndex={-1}
                     />
                     <img src={answer.image_url} alt={answer.answer_title} />
                     <div data-title>{answer.answer_title}</div>
@@ -66,6 +76,7 @@ const MultipleChoicePreview = ({
                       value={answerId}
                       checked={isChecked}
                       onChange={() => toggleAnswer(answerId)}
+                      tabIndex={-1}
                     />
                     <label htmlFor={inputId}>{answer.answer_title}</label>
                   </div>

@@ -119,6 +119,7 @@ const MatchingPreview = ({ answers, isImageMatching }: { answers: QuizQuestionOp
                   className="tutor-quiz-question-option-drop-zone"
                   data-drop-placeholder-text={__('Drop here', 'tutor')}
                   data-drop-zone-id={dropZoneId}
+                  tabIndex={0}
                 >
                   <Show
                     when={matchedAnswer}
