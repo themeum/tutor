@@ -2682,7 +2682,7 @@ class Utils {
 		$items = array(
 			'index'             => array(
 				'title'            => __( 'Home', 'tutor' ),
-				'meta_description' => esc_html__( 'View your dashboard and manage your account', 'tutor' ),
+				'meta_description' => esc_html__( 'Access your dashboard', 'tutor' ),
 				'icon'             => Icon::HOME,
 				'active_icon'      => Icon::HOME_FILL,
 			),
@@ -2727,7 +2727,7 @@ class Utils {
 		$menus = array(
 			'index'         => array(
 				'title'            => __( 'Home', 'tutor' ),
-				'meta_description' => esc_html__( 'View your dashboard and manage your account', 'tutor' ),
+				'meta_description' => esc_html__( 'Access your dashboard', 'tutor' ),
 				'icon'             => Icon::HOME,
 				'active_icon'      => Icon::HOME_FILL,
 			),
@@ -2758,14 +2758,14 @@ class Utils {
 		$other_menus = array(
 			'announcements' => array(
 				'title'            => __( 'Announcements', 'tutor' ),
-				'meta_description' => esc_html__( 'View and manage your announcements', 'tutor' ),
+				'meta_description' => esc_html__( 'Share course updates with your students', 'tutor' ),
 				'auth_cap'         => tutor()->instructor_role,
 				'icon'             => Icon::ANNOUNCEMENT,
 				'active_icon'      => Icon::ANNOUNCEMENT_FILL,
 			),
 			'quiz-attempts' => array(
 				'title'            => __( 'Quiz Attempts', 'tutor' ),
-				'meta_description' => esc_html__( 'View and manage your quiz attempts', 'tutor' ),
+				'meta_description' => esc_html__( 'Review and evaluate quiz submissions', 'tutor' ),
 				'auth_cap'         => tutor()->instructor_role,
 				'icon'             => Icon::QUIZ_2,
 				'active_icon'      => Icon::QUIZ_2_FILL,
@@ -2775,7 +2775,7 @@ class Utils {
 		if ( $this->should_show_dicussion_menu() ) {
 			$other_menus['discussions'] = array(
 				'title'            => __( 'Discussions', 'tutor' ),
-				'meta_description' => esc_html__( 'View and manage your discussions', 'tutor' ),
+				'meta_description' => esc_html__( 'Engage with students through discussions', 'tutor' ),
 				'auth_cap'         => tutor()->instructor_role,
 				'icon'             => Icon::QA,
 				'active_icon'      => Icon::QA_FILL,

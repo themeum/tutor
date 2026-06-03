@@ -35,7 +35,7 @@ $user_action               = Input::get( 'action' );
 $tutor_course              = get_post( $tutor_course_id );
 $course_title              = $tutor_course ? get_the_title( $tutor_course ) : '';
 $content_title             = $tutor_current_post ? get_the_title( $tutor_current_post ) : $course_title;
-$learning_meta_title       = $content_title ? $content_title : __( 'Learning', 'tutor' );
+$learning_meta_title       = $content_title ? $content_title : __( 'Learning area', 'tutor' );
 $learning_meta_description = $content_title;
 $site_name                 = get_bloginfo( 'name' );
 

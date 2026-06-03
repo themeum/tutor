@@ -121,7 +121,7 @@ class Dashboard {
 		$pages = array(
 			'profile' => array(
 				'title'            => esc_html__( 'Profile', 'tutor' ),
-				'meta_description' => esc_html__( 'Manage your profile and settings', 'tutor' ),
+				'meta_description' => esc_html__( 'Manage your profile', 'tutor' ),
 				'icon'             => Icon::USER_CIRCLE,
 				'icon_active'      => Icon::USER_CIRCLE_FILL,
 				'url'              => self::get_account_page_url( 'profile' ),
@@ -129,7 +129,7 @@ class Dashboard {
 			),
 			'reviews' => array(
 				'title'            => esc_html__( 'Reviews', 'tutor' ),
-				'meta_description' => esc_html__( 'Manage your reviews and ratings', 'tutor' ),
+				'meta_description' => esc_html__( 'View learner feedback and ratings', 'tutor' ),
 				'icon'             => Icon::RATINGS,
 				'icon_active'      => Icon::RATINGS,
 				'url'              => self::get_account_page_url( 'reviews' ),
@@ -140,7 +140,7 @@ class Dashboard {
 		if ( User::is_student_view() ) {
 			$pages['billing'] = array(
 				'title'            => esc_html__( 'Billing', 'tutor' ),
-				'meta_description' => esc_html__( 'Manage your billing and payment methods', 'tutor' ),
+				'meta_description' => esc_html__( 'View and manage your billing and payment methods', 'tutor' ),
 				'icon'             => Icon::BILLING,
 				'icon_active'      => Icon::BILLING,
 				'url'              => self::get_account_page_url( 'billing' ),
@@ -151,7 +151,7 @@ class Dashboard {
 		if ( User::is_instructor_view() ) {
 			$pages['withdrawals'] = array(
 				'title'            => esc_html__( 'Withdrawals', 'tutor' ),
-				'meta_description' => esc_html__( 'Manage your withdrawals and payments', 'tutor' ),
+				'meta_description' => esc_html__( 'Track earnings and withdrawal requests', 'tutor' ),
 				'icon'             => Icon::WALLET,
 				'icon_active'      => Icon::WALLET,
 				'url'              => self::get_account_page_url( 'withdrawals' ),

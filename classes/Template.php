@@ -556,7 +556,7 @@ class Template extends Tutor_Base {
 
 		$menu_items['course-info'] = array(
 			'title'            => __( 'Course Info', 'tutor' ),
-			'meta_description' => esc_html__( 'View and manage your course information', 'tutor' ),
+			'meta_description' => esc_html__( 'View course details', 'tutor' ),
 			'icon'             => Icon::INFO_OCTAGON,
 			'url'              => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
 			'template'         => tutor_get_template( 'learning-area.subpages.course-info' ),
