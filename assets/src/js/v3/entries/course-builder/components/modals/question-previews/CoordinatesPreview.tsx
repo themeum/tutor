@@ -1,144 +1,103 @@
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from 'react';
 
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { tutorConfig } from '@TutorShared/config/config';
 import { colorTokens } from '@TutorShared/config/styles';
 
-const CANVAS_SIZE = 420;
-const PADDING = 12;
-const AXIS_LABEL_STEP = 2;
+const COORDINATES_SCRIPT_ATTR = 'data-tutor-coordinates-preview-script';
 
-const shouldRenderAxisLabel = (value: number): boolean => value === 0 || Math.abs(value % AXIS_LABEL_STEP) === 0;
+const resolveAxisRange = (raw?: number) => (raw === 20 ? 20 : 10);
 
-/**
- * Normalizes stored axis range to supported values (10 or 20 units), matching FormCoordinates.
- */
-const resolveAxisRange = (value?: number | null): 10 | 20 => (Number(value) === 20 ? 20 : 10);
+const tutorIconsBase = `${String(tutorConfig.tutor_url || '').replace(/\/$/, '')}/assets/icons`;
+
+const markerUrl = (name: 'graph-marker-hover' | 'graph-marker-selected' | 'graph-marker-wrong'): string =>
+  `${tutorIconsBase}/${name}.svg`;
+
+/** Matches Pro `coordinates.php` eraser + {@link DrawImagePreview} Clear (SVGIcon + brand). */
+const clearButtonIcon = css`
+  color: ${colorTokens.text.brand};
+`;
 
 interface CoordinatesPreviewProps {
-  axisRange?: number | null;
+  axisRange?: number;
 }
 
+/**
+ * Learning-area parity: loads `tutor-pro/assets/js/coordinates-question.js` in the preview iframe
+ * (same pattern as {@link ScalePreview} + Pro template `learning-area/quiz/questions/coordinates.php`).
+ */
 const CoordinatesPreview = ({ axisRange: axisRangeProp }: CoordinatesPreviewProps) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const axisRange = resolveAxisRange(axisRangeProp);
-  const minCoord = -axisRange;
-  const maxCoord = axisRange;
+  const qId = 'preview';
+  const inputId = `tutor-coordinates-points-${qId}`;
+  const canvasId = `tutor-coordinates-canvas-${qId}`;
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) {
       return;
     }
 
-    const context = canvas.getContext('2d');
-    if (!context) {
+    const doc = wrapper.ownerDocument;
+    if (!doc || doc === document) {
       return;
     }
 
-    const rect = canvas.getBoundingClientRect();
-    const logicalSize = Math.max(1, rect.width || CANVAS_SIZE);
-    const dpr = window.devicePixelRatio || 1;
-    const nextWidth = Math.max(1, Math.round(logicalSize * dpr));
-    const nextHeight = Math.max(1, Math.round(logicalSize * dpr));
-
-    if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
-      canvas.width = nextWidth;
-      canvas.height = nextHeight;
-    }
-    canvas.style.width = `${logicalSize}px`;
-    canvas.style.height = `${logicalSize}px`;
-
-    const scaleX = canvas.width / logicalSize;
-    const scaleY = canvas.height / logicalSize;
-    context.setTransform(scaleX, 0, 0, scaleY, 0, 0);
-
-    const width = logicalSize;
-    const height = logicalSize;
-    const drawableWidth = width - 2 * PADDING;
-    const drawableHeight = height - 2 * PADDING;
-    const centerX = PADDING + drawableWidth / 2;
-    const centerY = PADDING + drawableHeight / 2;
-    const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (maxCoord - minCoord);
-
-    const graphToPixel = (x: number, y: number) => ({
-      x: centerX + x * pixelsPerUnit,
-      y: centerY - y * pixelsPerUnit,
-    });
-
-    context.clearRect(0, 0, width, height);
-
-    const leftEdge = graphToPixel(minCoord, 0).x;
-    const rightEdge = graphToPixel(maxCoord, 0).x;
-    const topEdge = graphToPixel(0, maxCoord).y;
-    const bottomEdge = graphToPixel(0, minCoord).y;
-
-    context.strokeStyle = colorTokens.stroke.divider;
-    context.lineWidth = 0.5;
-    for (let i = minCoord; i <= maxCoord; i++) {
-      if (i === 0) {
-        continue;
-      }
-      const xPoint = graphToPixel(i, 0);
-      context.beginPath();
-      context.moveTo(xPoint.x, topEdge);
-      context.lineTo(xPoint.x, bottomEdge);
-      context.stroke();
-
-      const yPoint = graphToPixel(0, i);
-      context.beginPath();
-      context.moveTo(leftEdge, yPoint.y);
-      context.lineTo(rightEdge, yPoint.y);
-      context.stroke();
+    if (doc.head.querySelector(`[${COORDINATES_SCRIPT_ATTR}]`)) {
+      wrapper.removeAttribute('data-tutor-coordinates-init');
+      const reinit = doc.createElement('script');
+      reinit.textContent = 'if(window._tutorCoordinatesInitAll){window._tutorCoordinatesInitAll();}';
+      doc.head.appendChild(reinit);
+      return;
     }
 
-    context.strokeStyle = colorTokens.color.black[80];
-    context.lineWidth = 1.5;
-    context.beginPath();
-    context.moveTo(leftEdge, centerY);
-    context.lineTo(rightEdge, centerY);
-    context.stroke();
-
-    context.beginPath();
-    context.moveTo(centerX, topEdge);
-    context.lineTo(centerX, bottomEdge);
-    context.stroke();
-
-    context.fillStyle = colorTokens.text.subdued;
-    context.font = '11px Arial';
-    context.textAlign = 'center';
-    context.textBaseline = 'top';
-    for (let i = minCoord; i <= maxCoord; i++) {
-      if (i === 0 || !shouldRenderAxisLabel(i)) {
-        continue;
-      }
-      const p = graphToPixel(i, 0);
-      context.fillText(String(i), p.x, centerY + 5);
-    }
-    context.textAlign = 'right';
-    context.textBaseline = 'middle';
-    for (let i = minCoord; i <= maxCoord; i++) {
-      if (i === 0 || !shouldRenderAxisLabel(i)) {
-        continue;
-      }
-      const p = graphToPixel(0, i);
-      context.fillText(String(i), centerX - 5, p.y);
-    }
-    context.textAlign = 'right';
-    context.textBaseline = 'top';
-    context.fillText('0', centerX - 5, centerY + 5);
-  }, [minCoord, maxCoord]);
+    const siteUrl = tutorConfig.site_url.replace(/\/$/, '');
+    const script = doc.createElement('script');
+    script.setAttribute(COORDINATES_SCRIPT_ATTR, '1');
+    script.textContent = `
+      (function(){
+        var scriptEl = document.createElement('script');
+        scriptEl.src = '${siteUrl}/wp-content/plugins/tutor-pro/assets/js/coordinates-question.js';
+        scriptEl.onload = function(){
+          if(typeof window._tutorCoordinatesInitAll === 'function'){
+            window._tutorCoordinatesInitAll();
+          }
+        };
+        document.head.appendChild(scriptEl);
+      })();
+    `;
+    doc.head.appendChild(script);
+  }, []);
 
   return (
-    <div className="tutor-quiz-question-options tutor-coordinates-question" data-question-type="coordinates">
-      <div className="tutor-coordinates-grid-container">
-        <canvas
-          ref={canvasRef}
-          className="tutor-coordinates-canvas"
-          width={CANVAS_SIZE}
-          height={CANVAS_SIZE}
-          aria-label={__('Coordinate grid preview.', 'tutor')}
-        />
+    <div
+      ref={wrapperRef}
+      id={`tutor-coordinates-question-${qId}`}
+      className="tutor-quiz-question-options tutor-coordinates-question question-type-coordinates"
+      data-question-type="coordinates"
+      data-question-id={qId}
+      data-axis-range={String(axisRange)}
+      data-marker-hover={markerUrl('graph-marker-hover')}
+      data-marker-selected={markerUrl('graph-marker-selected')}
+      data-marker-wrong={markerUrl('graph-marker-wrong')}
+    >
+      <div className="tutor-coordinates-actions">
+        <button
+          type="button"
+          className="tutor-coordinates-clear-prev tutor-coordinates-clear-button tutor-hidden"
+          aria-label={__('Clear last point', 'tutor')}
+        >
+          <SVGIcon name="eraser" style={clearButtonIcon} width={18} height={18} />
+          {__('Clear', 'tutor')}
+        </button>
       </div>
+      <div className="tutor-coordinates-grid-container">
+        <canvas id={canvasId} className="tutor-coordinates-canvas" width={420} height={420} />
+      </div>
+      <input type="hidden" id={inputId} name="preview[answers][coordinates][points]" defaultValue="" />
     </div>
   );
 };
