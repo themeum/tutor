@@ -20,8 +20,7 @@ $page_meta     = Dashboard::get_page_meta_data( Dashboard::ACCOUNT_PAGE_SLUG, $s
 $page_data     = $page_meta['page_data'];
 $page_template = $page_data['template'] ?? '';
 
-$meta_title       = $page_meta['meta_title'];
-
+$meta_title    = $page_meta['meta_title'];
 $dashboard_url = tutor_utils()->tutor_dashboard_url();
 $back_url      = apply_filters( 'tutor_dashboard_back_url', $dashboard_url );
 $close_url     = $dashboard_url;
