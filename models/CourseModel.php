@@ -1397,10 +1397,10 @@ class CourseModel {
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
 		if ( empty( $start_date ) && empty( $end_date ) ) {
-			return (int) self::get_courses_by_instructor( $user_id, array(), 0, PHP_INT_MAX, true );
+			return (int) self::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX, true );
 		}
 
-		$courses = self::get_courses_by_instructor( $user_id, array(), 0, PHP_INT_MAX );
+		$courses = self::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX );
 
 		if ( empty( $courses ) ) {
 			return 0;
