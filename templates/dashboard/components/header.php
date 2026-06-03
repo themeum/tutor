@@ -53,11 +53,11 @@ $is_instructor_view = User::is_instructor_view();
 				$active_course_count    = (int) CourseModel::get_course_count_by_instructor( $user_id );
 				$enrolled_student_count = (int) tutor_utils()->get_total_students_by_instructor( $user_id );
 				?>
-				<div class="tutor-tiny tutor-mt-2">
-					<span class="tutor-medium"><?php echo esc_html( number_format_i18n( $active_course_count ) ); ?></span>
+				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny tutor-mt-2">
+					<span class="tutor-font-medium"><?php echo esc_html( number_format_i18n( $active_course_count ) ); ?></span>
 					<?php echo esc_html( _n( 'active course', 'active courses', $active_course_count, 'tutor' ) ); ?>
 					<span class="tutor-text-subdued">&bull;</span>
-					<span class="tutor-medium"><?php echo esc_html( number_format_i18n( $enrolled_student_count ) ); ?></span>
+					<span class="tutor-font-medium"><?php echo esc_html( number_format_i18n( $enrolled_student_count ) ); ?></span>
 					<?php echo esc_html( _n( 'student enrolled', 'students enrolled', $enrolled_student_count, 'tutor' ) ); ?>
 				</div>
 			<?php endif; ?>
