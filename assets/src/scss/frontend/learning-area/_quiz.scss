@@ -736,11 +736,14 @@ $tutor-quiz-content-bottom-offset: calc(
     &-option {
       cursor: pointer;
 
-      &:hover:not(:has(:checked)):not(:has(:disabled)):not([data-readonly='true']):not([data-option='correct']):not(
-          [data-option='incorrect']
-        ):not([data-option='draggable']) {
-        border-color: $tutor-border-hover;
-        background-color: $tutor-quiz-hover;
+      &:hover,
+      &:focus {
+        &:not(:has(:checked)):not(:has(:disabled)):not([data-readonly='true']):not([data-option='correct']):not(
+            [data-option='incorrect']
+          ):not([data-option='draggable']) {
+          border-color: $tutor-border-hover;
+          background-color: $tutor-quiz-hover;
+        }
       }
 
       &:has(:checked) {
@@ -765,7 +768,9 @@ $tutor-quiz-content-bottom-offset: calc(
       &[data-option='draggable'] {
         box-shadow: 2px 2px 0px 0px #00000014;
 
-        &:hover {
+        &:hover,
+        &:focus,
+        &:focus-within {
           border-color: $tutor-border-brand;
           background-color: $tutor-quiz-hover;
         }
@@ -824,6 +829,13 @@ $tutor-quiz-content-bottom-offset: calc(
         @include tutor-flex(row, center, flex-start);
         padding: 0;
         gap: $tutor-spacing-3;
+
+        &:hover,
+        &:focus,
+        &:focus-within {
+          border-color: $tutor-border-brand !important;
+          background-color: $tutor-quiz-hover !important;
+        }
 
         [data-option-order] {
           @include tutor-flex-center;
@@ -906,6 +918,12 @@ $tutor-quiz-content-bottom-offset: calc(
           min-height: 46px;
           width: 100%;
 
+          &:focus,
+          &:focus-within {
+            border-color: $tutor-border-brand;
+            outline: none;
+          }
+
           &:has([data-option='dropped']) {
             border-color: $tutor-border-idle;
             border-style: solid;
@@ -915,7 +933,9 @@ $tutor-quiz-content-bottom-offset: calc(
               display: flex !important;
             }
 
-            &:hover {
+            &:hover,
+            &:focus,
+            &:focus-within {
               border-color: $tutor-border-brand;
             }
           }
@@ -954,6 +974,13 @@ $tutor-quiz-content-bottom-offset: calc(
             @include tutor-flex(row, center, flex-start);
             background-color: $tutor-surface-l1;
             padding: 0 $tutor-spacing-4;
+
+            &:hover,
+            &:focus,
+            &:focus-within {
+              border-color: $tutor-border-brand !important;
+              background-color: $tutor-quiz-hover !important;
+            }
 
             // Hide dnd-kit's default drop-back animation frame for matching draggables.
             &[data-dnd-dragging][data-dnd-dropping] {
