@@ -287,6 +287,9 @@ class DateFilter extends BaseComponent {
 				x-ref="trigger"
 				@click="toggle()"
 				class="<?php echo esc_attr( $button_classes ); ?>"
+				<?php if ( empty( $this->label ) ) : ?>
+					aria-label="<?php echo $is_range ? esc_attr__( 'Filter by date range', 'tutor' ) : esc_attr__( 'Filter by date', 'tutor' ); ?>"
+				<?php endif; ?>
 			>
 				<?php SvgIcon::make()->name( $icon )->size( $this->icon_size )->render(); ?>
 				<?php if ( ! empty( $this->label ) ) : ?>
