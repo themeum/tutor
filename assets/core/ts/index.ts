@@ -23,7 +23,6 @@ import { tooltipMeta } from '@Core/ts/components/tooltip';
 import { wpEditorMeta } from '@Core/ts/components/wp-editor';
 
 import { formServiceMeta } from '@Core/ts/services/Form';
-import { locationServiceMeta } from '@Core/ts/services/Location';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { preferenceServiceMeta } from '@Core/ts/services/Preference';
 import { queryServiceMeta } from '@Core/ts/services/Query';
@@ -61,7 +60,6 @@ const initializePlugin = async () => {
     ],
     services: [
       formServiceMeta,
-      locationServiceMeta,
       modalServiceMeta,
       queryServiceMeta,
       toastServiceMeta,

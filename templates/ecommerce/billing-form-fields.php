@@ -78,7 +78,7 @@ use Tutor\Components\InputField;
 		->required()
 		->placeholder( __( 'Enter your state', 'tutor' ) )
 		->attr( 'x-bind', "register('billing_state', { required: true })" )
-		->attr( 'x-effect', 'options = ($store.tutorLocation.fetchCountriesQuery.data || []).find(country => country.name === values.billing_country)?.states.map(state => ({ label: state.name, value: state.name })) || []' )
+		->attr( 'x-effect', 'options = (config.stateOptions || {})[values.billing_country] || []' )
 		->render();
 ?>
 
