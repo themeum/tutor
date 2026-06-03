@@ -63,7 +63,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 		<h5 class="tutor-learning-header-title tutor-my-none">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
-		<button class="tutor-learning-header-toggle-mobile" @click.stop="toggleSidebar()">
+		<button class="tutor-learning-header-toggle-mobile" @click.stop="toggleSidebar()" aria-label="<?php esc_attr_e( 'Close course sidebar', 'tutor' ); ?>">
 			<?php SvgIcon::make()->name( Icon::CROSS_2 )->size( 20 )->render(); ?>
 		</button>
 	</div>
@@ -80,6 +80,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 					<?php
 					if ( $course_reset_progress && ! $tutor_is_course_completed ) {
 						Button::make()
+						->label( __( 'Reset Progress', 'tutor' ) )
 						->variant( Variant::GHOST )
 						->size( Size::X_SMALL )
 						->icon( Icon::RELOAD_2, 'left', 16, 16, array( 'class' => 'tutor-icon-secondary' ) )
@@ -105,7 +106,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 				<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $tutor_course_progress ); ?>%;"></div>
 			</div>
 		</div>
-		<div class="tutor-learning-nav">
+		<div class="tutor-learning-nav" role="navigation">
 			<?php
 			$topics = tutor_utils()->get_topics( $tutor_course->ID );
 			if ( $topics->have_posts() ) {

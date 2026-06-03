@@ -116,7 +116,7 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 		<?php tutor_load_template( 'learning-area.components.header' ); ?>
 		<div class="tutor-learning-area-body">
 			<?php tutor_load_template( 'learning-area.components.sidebar' ); ?>
-			<div class="tutor-learning-area-content">
+			<div class="tutor-learning-area-content" role="main">
 				<div class="tutor-learning-area-container">
 					<?php
 					// Get requested page from query string and sanitize.
@@ -137,6 +137,7 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 			<button 
 				class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon tutor-expand-btn"
 				@click="isFullScreen = !isFullScreen"
+				:aria-label="isFullScreen ? '<?php echo esc_attr__( 'Exit fullscreen', 'tutor' ); ?>' : '<?php echo esc_attr__( 'Enter fullscreen', 'tutor' ); ?>'"
 			>
 				<template x-if="!isFullScreen">
 					<?php SvgIcon::make()->name( Icon::EXPAND )->render(); ?>
