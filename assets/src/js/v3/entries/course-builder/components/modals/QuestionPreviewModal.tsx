@@ -206,7 +206,11 @@ const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) 
               />
               {iframeDocument?.getElementById('preview-root')
                 ? createPortal(
-                    <PreviewDocumentContent question={question} previewQuestionStyleType={previewQuestionStyleType} />,
+                    <PreviewDocumentContent
+                      key={`${question.question_id}-${question.question_type}`}
+                      question={question}
+                      previewQuestionStyleType={previewQuestionStyleType}
+                    />,
                     iframeDocument.getElementById('preview-root') as HTMLElement,
                   )
                 : null}
@@ -422,8 +426,39 @@ const getPreviewFrameStyles = () => `
     box-shadow: none;
   }
 
-  .tutor-quiz-question-option {
-    cursor: default;
+  .tutor-quiz-question-option > input.tutor-hidden {
+    display: none !important;
+  }
+
+  [data-grab-handle] {
+    border: 0;
+    background: transparent;
+    color: inherit;
+  }
+
+  .tutor-quiz-question-option-drop-zone {
+    position: relative;
+  }
+
+  .tutor-quiz-question-option-drop-zone [data-option='dropped'] {
+    width: 100%;
+  }
+
+  .tutor-preview-drop-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    padding: 2px;
+    margin-left: 8px;
+    background: transparent;
+    color: var(--tutor-icon-idle);
+    cursor: pointer;
+  }
+
+  .tutor-preview-drop-clear > svg {
+    width: 16px;
+    height: 16px;
   }
 
   /*

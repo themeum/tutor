@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from 'react';
 
 import { tutorConfig } from '@TutorShared/config/config';
-import { type QuizQuestionOption } from '@TutorShared/utils/types';
+import { type ID, type QuizQuestionOption } from '@TutorShared/utils/types';
 
 const PUZZLE_SCRIPT_ATTR = 'data-tutor-puzzle-preview-script';
 
@@ -16,7 +16,7 @@ interface PuzzlePreviewProps {
   answers: QuizQuestionOption[];
   gridSize?: number | string;
   /** Used for hidden input id parity with `puzzle.php` (`tutor-puzzle-state-{id}`). */
-  questionId: number;
+  questionId: ID;
 }
 
 /**
