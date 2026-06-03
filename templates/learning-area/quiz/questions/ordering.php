@@ -51,12 +51,13 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 					<?php echo esc_html( $answer['answer_title'] ); ?>
 				</div>
 
-				<button type="button" data-grab-handle>
+				<button type="button" data-grab-handle aria-label="<?php esc_attr_e( 'Reorder item', 'tutor' ); ?>">
 					<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 40 )->render(); ?>
 				</button>
 			</div>
 		<?php endforeach; ?>
 	</div>
+
 	
 	<div
 		class="tutor-quiz-questions-error"

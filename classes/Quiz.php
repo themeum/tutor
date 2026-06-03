@@ -1855,16 +1855,18 @@ class Quiz {
 			);
 		}
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
-					</div>',
+		if ( 1 !== $attempts_allowed ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' =>  0 === $attempts_allowed ? __( 'No Limit', 'tutor' ) : $attempts_allowed ),
 				),
-				array( 'content' => $attempts_allowed ),
-			),
-		);
+			);
+		}
 
 		Table::make()->contents( $quiz_summary )->render();
 	}
