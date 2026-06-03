@@ -8,6 +8,13 @@ import { type QuizQuestionOption } from '@TutorShared/utils/types';
 const TrueFalsePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
   const [selectedAnswer, setSelectedAnswer] = useState('');
 
+  const handleKeyDown = (e: React.KeyboardEvent, value: string) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      setSelectedAnswer(value);
+    }
+  };
+
   return (
     <div className="tutor-quiz-question-options">
       <For each={answers}>
@@ -18,6 +25,8 @@ const TrueFalsePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
               key={answer.answer_id || index}
               className="tutor-quiz-question-option"
               data-preview-selected={selectedAnswer === answerId ? 'true' : undefined}
+              tabIndex={0}
+              onKeyDown={(e) => handleKeyDown(e, answerId)}
             >
               <input
                 className="tutor-hidden"
