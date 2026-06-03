@@ -73,7 +73,8 @@ class QueryHelper {
 		$wpdb->query( $query );
 
 		if ( $wpdb->last_error ) {
-			error_log( $wpdb->last_error );
+			$error_msg = (string) $wpdb->last_error;
+			error_log( $error_msg );
 			return false;
 		}
 
@@ -1253,9 +1254,39 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	public static function get_table_prefix() {
+	public static function get_table_prefix( $table_name ) {
 		global $wpdb;
+
+		if ( is_multisite() ) {
+			if ( self::is_base_table( $table_name ) ) {
+				return $wpdb->base_prefix;
+			}
+		}
+
 		return $wpdb->prefix;
+	}
+
+	/**
+	 * Check if accessing the base tables
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $table_name Table name.
+	 *
+	 * @return bool
+	 */
+	private static function is_base_table( $table_name ): bool {
+		$base_tables = array(
+			'users',
+			'usermeta',
+		);
+
+		if ( in_array( $table_name, $base_tables, true ) ) {
+			return true;
+		}
+
+		$is_base_table = strpos( $table_name, 'wp_users' ) !== false || strpos( $table_name, 'wp_usermeta' ) !== false;
+		return $is_base_table;
 	}
 
 	/**
@@ -1271,20 +1302,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table_name = trim( $table_name );
-
-		if ( $table_name === 'users' ) {
-			return $wpdb->users;
-		} elseif ( $table_name === 'usermeta' ) {
-			return $wpdb->usermeta;
-		} 
-
-		if ( strpos( $table_name, 'wp_users' ) !== false ) {
-			return str_replace( 'wp_users', $wpdb->users, $table_name );
-		} elseif ( strpos( $table_name, 'wp_usermeta' ) !== false ) {
-			return str_replace( 'wp_usermeta', $wpdb->usermeta, $table_name );
-		}
-
-		$table_prefix = self::get_table_prefix();
+		$table_prefix = self::get_table_prefix( $table_name );
 		if ( strpos( $table_name,$table_prefix ) !== 0 ) {
 			$table_name = $table_prefix . $table_name;
 		}
