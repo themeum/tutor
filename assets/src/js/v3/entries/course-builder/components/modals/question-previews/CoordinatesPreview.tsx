@@ -34,6 +34,8 @@ const CoordinatesPreview = ({ axisRange: axisRangeProp }: CoordinatesPreviewProp
   const qId = 'preview';
   const inputId = `tutor-coordinates-points-${qId}`;
   const canvasId = `tutor-coordinates-canvas-${qId}`;
+  const instructionId = `tutor-coordinates-instruction-${qId}`;
+  const hoverDisplayId = `tutor-coordinates-hover-${qId}`;
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -95,8 +97,28 @@ const CoordinatesPreview = ({ axisRange: axisRangeProp }: CoordinatesPreviewProp
         </button>
       </div>
       <div className="tutor-coordinates-grid-container">
-        <canvas id={canvasId} className="tutor-coordinates-canvas" width={420} height={420} />
+        <canvas
+          id={canvasId}
+          className="tutor-coordinates-canvas tutor-quiz-interaction-focus-target"
+          width={420}
+          height={420}
+          tabIndex={0}
+          role="application"
+          aria-describedby={`${instructionId} ${hoverDisplayId}`}
+          aria-label={__('Coordinate grid: click or use arrow keys and Enter to select grid points.', 'tutor')}
+        />
       </div>
+      <p id={instructionId} className="tutor-quiz-a11y-sr-only">
+        {__(
+          'Use arrow keys to move the active grid point, Enter to add it, and Backspace or Delete to remove the last point.',
+          'tutor',
+        )}
+      </p>
+      <p
+        id={hoverDisplayId}
+        className="tutor-coordinates-hover-display tutor-fs-7 tutor-color-secondary tutor-mb-12"
+        aria-live="polite"
+      />
       <input type="hidden" id={inputId} name="preview[answers][coordinates][points]" defaultValue="" />
     </div>
   );
