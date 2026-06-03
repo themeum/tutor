@@ -594,8 +594,8 @@ class Instructor {
 
 		$complete_status = tutor_utils()->get_earnings_completed_statuses();
 
-		$amount_type = User::is_admin() ? 'earnings.admin_amount' : 'earnings.instructor_amount';
-		$amount_rate = User::is_admin() ? 'earnings.admin_rate' : 'earnings.instructor_rate';
+		$amount_type = User::is_admin() && is_admin() ? 'earnings.admin_amount' : 'earnings.instructor_amount';
+		$amount_rate = User::is_admin() && is_admin() ? 'earnings.admin_rate' : 'earnings.instructor_rate';
 
 		$amount_condition = "CASE
 			WHEN orders.tax_type = 'inclusive' AND earnings.course_price_grand_total > 0
@@ -608,7 +608,10 @@ class Instructor {
 			'earnings.order_status' => array( 'IN', $complete_status ),
 		);
 
-		$enrollment_where_clause = array( 'post_type' => 'tutor_enrolled' );
+		$enrollment_where_clause = array(
+			'post_type'   => 'tutor_enrolled',
+			'post_status' => 'completed',
+		);
 
 		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$earning_where_clause['earnings.created_at'] = array( 'BETWEEN', array( $start_date, $end_date ) );
@@ -629,7 +632,7 @@ class Instructor {
 		$enrollment_sql = QueryHelper::prepare_raw_query(
 			"SELECT 
 				post_parent AS course_id, 
-				COUNT(ID) AS total_student
+				COUNT(DISTINCT post_author) AS total_student
 			FROM {$wpdb->posts}
 			WHERE {$enrollment_where_clause}
 			GROUP BY post_parent",
