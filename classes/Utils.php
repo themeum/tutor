@@ -530,9 +530,15 @@ class Utils {
 	 * @return boolean
 	 */
 	public function is_plugin_active( $plugin_path ) {
-		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
-		$depends           = is_array( $plugin_path ) ? $plugin_path : array( $plugin_path );
-		$has_plugin        = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
+		$depends    = is_array( $plugin_path ) ? $plugin_path : array( $plugin_path );
+		$has_plugin = true;
+
+		foreach ( $depends as $plugin ) {
+			if ( ! is_plugin_active( $plugin ) ) {
+				$has_plugin = false;
+				break;
+			}
+		}
 
 		return $has_plugin;
 	}
