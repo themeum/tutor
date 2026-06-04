@@ -27,10 +27,26 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 	$course_learning_url = get_permalink();
 }
 
+if ( ! $course_learning_url ) {
+	$course_learning_url = $course_permalink;
+}
+
 ?>
 
-<div class="tutor-progress-card">
-	<div class="tutor-progress-card-inner" onclick="window.location.href = '<?php echo esc_js( esc_url( $course_learning_url ) ); ?>';">
+<div
+	class="tutor-progress-card"
+	role="link"
+	tabindex="0"
+	x-data="{
+		navigate() {
+			window.location.href = '<?php echo esc_js( esc_url( $course_learning_url ) ); ?>';
+		}
+	}"
+	@click="navigate()"
+	@keydown.enter.prevent="navigate()"
+	@keydown.space.prevent="navigate()"
+>
+	<div class="tutor-progress-card-inner">
 		<div class="tutor-progress-card-thumbnail">
 			<?php do_action( 'tutor_courses_card_before_thumbnail', $course_id ); ?>
 			<?php if ( ! empty( $tutor_course_img ) ) : ?>
@@ -47,7 +63,7 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 					</div>
 				<?php endif; ?>
 				<h3 class="tutor-progress-card-title tutor-line-clamp-2">
-					<?php echo esc_html( $course_title ); ?>
+					<?php the_title(); ?>
 				</h3>
 			</div>
 
