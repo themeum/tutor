@@ -776,7 +776,7 @@ $tutor-quiz-content-bottom-offset: calc(
 
         &:focus-visible {
           @include tutor-focus-ring(brand, true);
-          outline-offset: 4px;
+          outline-offset: $tutor-spacing-2;
         }
       }
 
@@ -844,7 +844,7 @@ $tutor-quiz-content-bottom-offset: calc(
         &:focus-visible,
         &:has([data-grab-handle]:focus-visible) {
           @include tutor-focus-ring(brand, true);
-          outline-offset: 4px;
+          outline-offset: $tutor-spacing-2;
         }
 
         [data-option-order] {
@@ -995,7 +995,7 @@ $tutor-quiz-content-bottom-offset: calc(
             &:focus-visible,
             &:has([data-grab-handle]:focus-visible) {
               @include tutor-focus-ring(brand, true);
-              outline-offset: 4px;
+              outline-offset: $tutor-spacing-2;
             }
 
             // Hide dnd-kit's default drop-back animation frame for matching draggables.
