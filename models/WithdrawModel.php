@@ -10,8 +10,6 @@
 
 namespace Tutor\Models;
 
-use Tutor\Helpers\QueryHelper;
-
 /**
  * WithdrawModel Class
  *
@@ -113,7 +111,7 @@ class WithdrawModel {
 		$query_by_status_sql = '';
 		$query_by_user_sql   = '';
 
-		if ( ! empty( $status ) && in_array( $status, array( 'pending', 'approved', 'rejected' ), true ) ) {
+		if ( ! empty( $status ) && in_array( $status, array( self::STATUS_PENDING, self::STATUS_APPROVED, self::STATUS_REJECTED ), true ) ) {
 			$status      = (array) $status;
 			$placeholder = implode( ',', array_fill( 0, count( $status ), '%s' ) );
 
