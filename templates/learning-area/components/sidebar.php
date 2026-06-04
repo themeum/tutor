@@ -83,7 +83,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						->label( __( 'Reset Progress', 'tutor' ) )
 						->variant( Variant::GHOST )
 						->size( Size::X_SMALL )
-						->icon( Icon::RELOAD_2, 'left', 16, 16, array( 'class' => 'tutor-icon-secondary' ) )
+						->icon( Icon::RELOAD_2, 'left', 16, Color::SECONDARY )
 						->icon_only()
 						->attr( '@click', 'confirmReset()' )
 						->render();
@@ -246,7 +246,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						Button::make()
 							->variant( Variant::GHOST )
 							->label( __( 'More', 'tutor' ) )
-							->icon( Icon::THREE_DOTS, 'left', 20, 20 )
+							->icon( Icon::THREE_DOTS, 'left', 20 )
 							->attr( 'class', 'tutor-learning-pages-item' )
 							->attr( 'x-ref', 'trigger' )
 							->attr( '@click', 'toggle()' )

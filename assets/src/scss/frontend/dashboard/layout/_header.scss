@@ -94,6 +94,7 @@
     @include tutor-transition(border-color);
 
     &:hover,
+    &:focus,
     &.active {
       border-color: $tutor-border-brand;
     }

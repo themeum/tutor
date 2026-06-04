@@ -98,7 +98,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 								->label( __( 'Back', 'tutor' ) )
 								->variant( Variant::GHOST )
 								->size( Size::X_SMALL )
-								->icon( Icon::LEFT, 'left', 20, 20 )
+								->icon( Icon::LEFT, 'left', 20 )
 								->icon_only()
 								->attr( '@click', 'hide()' )
 								->render();
@@ -110,7 +110,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 							Button::make()
 								->variant( Variant::GHOST )
 								->size( Size::X_SMALL )
-								->icon( Icon::SETTING, 'left', 20, 20 )
+								->icon( Icon::SETTING, 'left', 20 )
 								->tag( 'a' )
 								->icon_only()
 								->attr( 'href', esc_url( Dashboard::get_account_page_url( 'settings' ) ) )

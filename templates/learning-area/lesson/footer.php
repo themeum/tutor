@@ -45,7 +45,7 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 	->variant( Variant::GHOST )
 	->size( Size::SMALL )
 	->label( __( 'Previous', 'tutor' ) )
-	->icon( Icon::CHEVRON_LEFT_2, 'left' )
+	->icon( Icon::CHEVRON_LEFT_2 )
 	->attr( 'href', esc_url( $prev_link ) )
 	->attr( 'style', 'visibility:' . ( $previous_id ? 'visible' : 'hidden' ) )
 	->disabled( $prev_is_locked )

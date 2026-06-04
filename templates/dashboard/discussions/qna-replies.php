@@ -12,11 +12,13 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
+use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use Tutor\Components\Constants\Variant;
 use TUTOR\User;
 
 ?>
@@ -63,9 +65,17 @@ use TUTOR\User;
 				?>
 				<?php if ( $has_menu ) : ?>
 					<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-ml-auto">
-						<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-							<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
-						</button>
+						<?php
+						Button::make()
+							->label( __( 'More options', 'tutor' ) )
+							->variant( Variant::GHOST )
+							->size( Size::X_SMALL )
+							->icon( Icon::ELLIPSES, 'left', Size::SIZE_16, Color::SECONDARY )
+							->icon_only()
+							->attr( 'x-ref', 'trigger' )
+							->attr( '@click', 'toggle()' )
+							->render();
+						?>
 						<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 							<div class="tutor-popover-menu" style="min-width: 110px;">
 								<?php if ( $can_edit ) : ?>
