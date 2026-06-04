@@ -1275,16 +1275,18 @@ class QueryHelper {
 	 *
 	 * @return bool
 	 */
-	public static function is_base_table( string $table_name ): bool {
+	private static function is_base_table( string $table_name ): bool {
 		$base_tables = array(
 			'users',
 			'usermeta',
 		);
+		
+		// Table name examples: wp_users, wp_3_users, td_12_usermeta, users, usermeta, wp_users u, wp_users AS u.
+		$pattern = '/(?:^|_)(?:' .
+			implode( '|', array_map( 'preg_quote', $base_tables ) ) .
+			')(?:\s+(?:AS\s+)?[a-zA-Z_][a-zA-Z0-9_]*)?$/i';
 	
-		// Examples: wp_users, wp_3_users, td_12_usermeta, users, usermeta.
-		$pattern = '/(?:^|_)(?:' . implode( '|', array_map( 'preg_quote', $base_tables ) ) . ')$/i';
-	
-		return (bool) preg_match( $pattern, $table_name );
+		return (bool) preg_match( $pattern, trim( $table_name ) );
 	}
 
 	/**
