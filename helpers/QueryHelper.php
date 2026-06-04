@@ -1299,8 +1299,6 @@ class QueryHelper {
 	 * @return string
 	 */
 	public static function prepare_table_name( string $table_name ) {
-		global $wpdb;
-
 		$table_name = trim( $table_name );
 		$table_prefix = self::get_table_prefix( $table_name );
 		if ( strpos( $table_name,$table_prefix ) !== 0 ) {
