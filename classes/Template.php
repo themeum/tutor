@@ -517,10 +517,11 @@ class Template extends Tutor_Base {
 	 */
 	public function load_learning_template( string $template ): string {
 		if ( tutor_utils()->is_learning_area() ) {
+			$user_id   = get_current_user_id();
 			$post_type = get_post_type();
 			$post_id   = get_the_ID();
 			$course_id = tutor()->course_post_type === $post_type ? $post_id : tutor_utils()->get_course_id_by_subcontent( $post_id );
-			if ( ! in_array( get_post_status( $course_id ), array( 'publish', 'private' ), true ) ) {
+			if ( ! in_array( get_post_status( $course_id ), array( 'publish', 'private' ), true ) && ! tutor_utils()->has_user_course_content_access( $user_id, $course_id ) ) {
 				global $wp_query;
 				$wp_query->set_404();
 				status_header( 404 );

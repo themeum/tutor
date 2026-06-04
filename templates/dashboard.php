@@ -88,7 +88,7 @@ $footer_links = array(
 	<?php tutor_load_template( 'dashboard.components.sidebar' ); ?>
 	<div class="tutor-dashboard-main">
 		<?php tutor_load_template( 'dashboard.components.header' ); ?>
-		<div class="tutor-dashboard-body">
+		<div class="tutor-dashboard-body" role="main">
 			<div class="tutor-dashboard-page">
 				<?php
 				if ( $dashboard_page_name ) {

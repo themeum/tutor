@@ -249,14 +249,14 @@ $sortable_sections = array(
 	),
 	array(
 		'id'        => 'overview_chart',
-		'label'     => esc_html__( 'Earning Over Time', 'tutor' ),
+		'label'     => esc_html__( 'Earnings Over Time', 'tutor' ),
 		'is_active' => $saved_visibility['overview_chart'] ?? true,
 		'order'     => $saved_order['overview_chart'] ?? 1,
 		'data'      => ! empty( $overview_chart_data ),
 	),
 	array(
 		'id'        => 'course_completion_and_leader',
-		'label'     => esc_html__( 'Course Completion and Leader', 'tutor' ),
+		'label'     => esc_html__( 'Course Completion Rate', 'tutor' ),
 		'is_active' => $saved_visibility['course_completion_and_leader'] ?? true,
 		'order'     => $saved_order['course_completion_and_leader'] ?? 2,
 		'data'      => ! empty( $course_completion_data ),
@@ -335,6 +335,7 @@ $sortable_sections_ids = array_reduce(
 				x-ref="trigger"
 				@click="toggle()"
 				class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon"
+				aria-label="<?php esc_attr_e( 'Filter dashboard sections', 'tutor' ); ?>"
 			>
 				<?php SvgIcon::make()->name( Icon::FILTER_2 )->render(); ?>
 			</button>

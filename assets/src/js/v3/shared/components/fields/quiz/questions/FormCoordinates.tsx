@@ -2,7 +2,7 @@
 
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -16,6 +16,15 @@ import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import {
+  announceQuizBuilderPolite,
+  bindQuizBuilderDescribedBy,
+  isQuizBuilderGridMoveKey,
+  moveQuizBuilderGridCursor,
+  normalizeQuizBuilderKey,
+  quizBuilderInteractionFocusCss,
+  quizBuilderSrOnlyCss,
+} from '@TutorShared/utils/quizBuilderA11y';
 import {
   type ID,
   QuizDataStatus,
@@ -230,9 +239,16 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
   const axisRange = resolveAxisRange(axisRangeControllerProps?.field.value);
   const minCoord = -axisRange;
   const maxCoord = axisRange;
+  const a11yBaseId = useId();
+  const instructionId = `${a11yBaseId}-instruction`;
+  const liveRegionId = `${a11yBaseId}-live-region`;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const liveRegionRef = useRef<HTMLDivElement | null>(null);
   const gridWrapRef = useRef<HTMLDivElement | null>(null);
+  const focusFromPointerRef = useRef(false);
   const [gridLogicalSize, setGridLogicalSize] = useState(CANVAS_SIZE);
+  const [keyboardActive, setKeyboardActive] = useState(false);
+  const [keyboardCursor, setKeyboardCursor] = useState<CoordinatePoint | null>(null);
   const [coordinates, setCoordinates] = useState<CoordinatePoint[]>(() => {
     const parsed = parseStoredCoordinates(option?.answer_two_gap_match ?? '');
     return parsed.length ? parsed : [{ x: 0, y: 0 }];
@@ -496,6 +512,46 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     }
   }, [clearHoverPreview]);
 
+  const announceStatus = useCallback((message: string) => {
+    announceQuizBuilderPolite(liveRegionRef.current, message);
+  }, []);
+
+  /** Apply a grid point to the active coordinate (click or keyboard Enter). */
+  const applyGridPoint = useCallback(
+    (snapped: CoordinatePoint) => {
+      if (!option) {
+        return;
+      }
+
+      const existingIdx = coordinates.findIndex((p) => p.x === snapped.x && p.y === snapped.y);
+      if (existingIdx !== -1) {
+        setActiveIndex(existingIdx);
+        announceStatus(
+          sprintf(
+            // translators: %1$d is the x coordinate, %2$d is the y coordinate
+            __('Coordinate (%1$d, %2$d) selected.', __TUTOR_TEXT_DOMAIN__),
+            snapped.x,
+            snapped.y,
+          ),
+        );
+        return;
+      }
+
+      const next = coordinates.slice();
+      next[activeIndex] = { x: snapped.x, y: snapped.y };
+      commitCoordinates(next);
+      announceStatus(
+        sprintf(
+          // translators: %1$d is the x coordinate, %2$d is the y coordinate
+          __('Coordinate set to (%1$d, %2$d).', __TUTOR_TEXT_DOMAIN__),
+          snapped.x,
+          snapped.y,
+        ),
+      );
+    },
+    [activeIndex, announceStatus, commitCoordinates, coordinates, option],
+  );
+
   /** Sets the active coordinate slot to the clicked grid intersection (or focuses an existing match). */
   const handleCanvasClick = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -512,17 +568,93 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
         return;
       }
 
-      const existingIdx = coordinates.findIndex((p) => p.x === snapped.x && p.y === snapped.y);
-      if (existingIdx !== -1) {
-        setActiveIndex(existingIdx);
+      applyGridPoint(snapped);
+    },
+    [applyGridPoint, maxCoord, minCoord, option],
+  );
+
+  const handleCanvasPointerDown = useCallback(() => {
+    focusFromPointerRef.current = true;
+  }, []);
+
+  const handleCanvasFocus = useCallback(() => {
+    bindQuizBuilderDescribedBy(canvasRef.current, [instructionId]);
+    if (focusFromPointerRef.current) {
+      focusFromPointerRef.current = false;
+      return;
+    }
+    clearHoverPreview();
+    setKeyboardActive(true);
+    setKeyboardCursor((prev) => prev ?? coordinates[activeIndex] ?? { x: 0, y: 0 });
+  }, [activeIndex, clearHoverPreview, coordinates, instructionId]);
+
+  const handleCanvasBlur = useCallback(() => {
+    setKeyboardActive(false);
+    setKeyboardCursor(null);
+  }, []);
+
+  const handleCanvasKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLCanvasElement>) => {
+      const key = normalizeQuizBuilderKey(event);
+
+      if (key === 'Enter') {
+        event.preventDefault();
+        const cursor = keyboardCursor ?? coordinates[activeIndex] ?? { x: 0, y: 0 };
+        if (!keyboardActive) {
+          setKeyboardActive(true);
+          setKeyboardCursor(cursor);
+        }
+        applyGridPoint(cursor);
         return;
       }
 
-      const next = coordinates.slice();
-      next[activeIndex] = { x: snapped.x, y: snapped.y };
-      commitCoordinates(next);
+      if (key === 'Backspace' || key === 'Delete') {
+        event.preventDefault();
+        if (coordinates.length <= 1) {
+          announceStatus(__('At least one coordinate is required.', __TUTOR_TEXT_DOMAIN__));
+          return;
+        }
+        const next = coordinates.slice();
+        next.splice(activeIndex, 1);
+        commitCoordinates(next);
+        announceStatus(__('Coordinate removed.', __TUTOR_TEXT_DOMAIN__));
+        return;
+      }
+
+      if (!isQuizBuilderGridMoveKey(key)) {
+        return;
+      }
+
+      event.preventDefault();
+      const current = keyboardCursor ?? coordinates[activeIndex] ?? { x: 0, y: 0 };
+      if (!keyboardActive) {
+        setKeyboardActive(true);
+      }
+      const nextCursor = moveQuizBuilderGridCursor(current, key, { min: minCoord, max: maxCoord });
+      if (!nextCursor) {
+        return;
+      }
+      setKeyboardCursor(nextCursor);
+      announceStatus(
+        sprintf(
+          // translators: %1$d is the x coordinate, %2$d is the y coordinate
+          __('Grid position (%1$d, %2$d). Press Enter to set the active coordinate.', __TUTOR_TEXT_DOMAIN__),
+          nextCursor.x,
+          nextCursor.y,
+        ),
+      );
     },
-    [activeIndex, commitCoordinates, coordinates, maxCoord, minCoord, option],
+    [
+      activeIndex,
+      announceStatus,
+      applyGridPoint,
+      commitCoordinates,
+      coordinates,
+      keyboardActive,
+      keyboardCursor,
+      maxCoord,
+      minCoord,
+    ],
   );
 
   /**
@@ -563,7 +695,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     <div css={styles.wrapper}>
       <div css={styles.card}>
         <div css={styles.answerHeader}>
-          <span css={styles.answerHeaderTitle}>{__('Coordinations', __TUTOR_TEXT_DOMAIN__)}</span>
+          <span css={styles.answerHeaderTitle}>{__('Coordinates', __TUTOR_TEXT_DOMAIN__)}</span>
         </div>
         <div css={styles.list}>
           {coordinates.map((pt, idx) => {
@@ -579,7 +711,9 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
                 onClick={() => setActiveIndex(idx)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
                     setActiveIndex(idx);
+                    setKeyboardCursor(coordinates[idx] ?? { x: 0, y: 0 });
                   }
                 }}
                 role="button"
@@ -677,18 +811,42 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
           }}
           disabled={coordinates.length >= MAX_COORDINATES}
         >
-          {__('Add Coordination', __TUTOR_TEXT_DOMAIN__)}
+          {__('Add Coordinates', __TUTOR_TEXT_DOMAIN__)}
         </Button>
+        <p id={instructionId} css={quizBuilderSrOnlyCss}>
+          {__(
+            'Use arrow keys to move the active grid point, Enter to set it, and Backspace or Delete to remove the active coordinate.',
+            __TUTOR_TEXT_DOMAIN__,
+          )}
+        </p>
+        <div
+          id={liveRegionId}
+          ref={liveRegionRef}
+          css={quizBuilderSrOnlyCss}
+          aria-live="polite"
+          aria-atomic="true"
+          role="status"
+        />
         <div css={styles.canvasWrap} ref={gridWrapRef}>
           <canvas
             ref={canvasRef}
             width={CANVAS_SIZE}
             height={CANVAS_SIZE}
-            css={styles.canvas}
+            css={[styles.canvas, quizBuilderInteractionFocusCss]}
+            tabIndex={0}
+            role="application"
+            aria-describedby={instructionId}
+            onPointerDown={handleCanvasPointerDown}
             onClick={handleCanvasClick}
+            onFocus={handleCanvasFocus}
+            onBlur={handleCanvasBlur}
+            onKeyDown={handleCanvasKeyDown}
             onMouseMove={handleCanvasMouseMove}
             onMouseLeave={handleCanvasMouseLeave}
-            aria-label={__('Coordinate grid: click to set the correct answer point.', __TUTOR_TEXT_DOMAIN__)}
+            aria-label={__(
+              'Coordinate grid: click or use arrow keys and Enter to set the correct answer point.',
+              __TUTOR_TEXT_DOMAIN__,
+            )}
           />
           <div css={styles.markerLayer} aria-hidden>
             {coordinates.map((coord, idx) => {
@@ -713,7 +871,35 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
                 />
               );
             })}
-            {hoverTargetRef.current !== null && hoverAlphaRef.current > 0.01
+            {keyboardActive && keyboardCursor
+              ? (() => {
+                  const keyboardPt = graphToPixelLayout(
+                    gridLogicalSize,
+                    minCoord,
+                    maxCoord,
+                    keyboardCursor.x,
+                    keyboardCursor.y,
+                  );
+                  const markerPct = (MARKER_DISPLAY_SIZE / gridLogicalSize) * 100;
+                  return (
+                    <img
+                      key="coord-grid-keyboard-preview"
+                      src={graphMarkerAssetUrl('graph-marker-hover')}
+                      alt=""
+                      css={styles.markerImg}
+                      style={{
+                        left: `${(keyboardPt.x / gridLogicalSize) * 100}%`,
+                        top: `${(keyboardPt.y / gridLogicalSize) * 100}%`,
+                        width: `${markerPct}%`,
+                        height: `${markerPct}%`,
+                        objectFit: 'contain',
+                        transform: 'translate(-50%, -50%)',
+                      }}
+                    />
+                  );
+                })()
+              : null}
+            {!keyboardActive && hoverTargetRef.current !== null && hoverAlphaRef.current > 0.01
               ? (() => {
                   const hoverCell = hoverTargetRef.current;
                   if (!hoverCell) {
@@ -852,10 +1038,15 @@ const styles = {
     border: none;
     color: ${colorTokens.text.brand};
 
-    &:focus,
+    &:focus {
+      border: none;
+      box-shadow: none;
+    }
+
     &:focus-visible {
       border: none;
-      outline: none;
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 2px;
       box-shadow: none;
     }
 

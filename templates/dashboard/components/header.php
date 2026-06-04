@@ -70,6 +70,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 						if (window.innerWidth <= 768 && open) { document.body.style.overflow = open ? 'hidden' : ''; }
 						else if (window.innerWidth >= 768 && open) { document.body.style.overflow = '' }
 					"
+					aria-label="<?php esc_attr_e( 'Open user menu', 'tutor' ); ?>"
 				>
 					<?php Avatar::make()->user( $user_id )->size( Size::SIZE_32 )->render(); ?>
 					<?php
@@ -151,7 +152,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 											echo wp_kses_post(
 												sprintf(
 												/* translators: %s: application date */
-													__( 'Your Application is pending as of <span class="tutor-font-medium">%s</span>', 'tutor' ),
+													__( 'Your application is pending as of <span class="tutor-font-medium">%s</span>', 'tutor' ),
 													esc_html( $applied_on ),
 												)
 											);

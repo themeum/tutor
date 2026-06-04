@@ -34,7 +34,7 @@ $content_title = $tutor_current_post->post_title ?? '';
 <div class="tutor-learning-header">
 	<div class="tutor-learning-header-inner">
 		<div class="tutor-learning-header-content">
-			<a class="tutor-learning-header-back" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ); ?>">
+			<a class="tutor-learning-header-back" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ); ?>" aria-label="<?php esc_attr_e( 'Back to dashboard', 'tutor' ); ?>">
 				<?php SvgIcon::make()->name( Icon::LEFT )->size( 20 )->render(); ?>
 			</a>
 			<h5 class="tutor-learning-header-title tutor-my-none">
@@ -58,7 +58,7 @@ $content_title = $tutor_current_post->post_title ?? '';
 				?>
 			</div>
 		</div>
-		<button class="tutor-learning-header-toggle-mobile" @click.stop="$dispatch('toggle-sidebar')">
+		<button class="tutor-learning-header-toggle-mobile" @click.stop="$dispatch('toggle-sidebar')" aria-label="<?php esc_attr_e( 'Toggle course sidebar', 'tutor' ); ?>">
 			<?php SvgIcon::make()->name( Icon::MENU )->size( 20 )->render(); ?>
 		</button>
 	</div>

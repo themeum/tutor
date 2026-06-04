@@ -14,6 +14,10 @@ export interface QuizLayoutConfig {
 
 const quizLayout = (config: QuizLayoutConfig) => {
   const form = window.TutorCore?.form;
+  let container: Element | null | undefined = null;
+
+  let handleFirstTab: ((e: KeyboardEvent) => void) | null = null;
+  let handleMouseDown: (() => void) | null = null;
 
   return {
     layout: config.layout ?? QuizLayoutType.QUESTION_BELOW_EACH_OTHER,
@@ -34,6 +38,31 @@ const quizLayout = (config: QuizLayoutConfig) => {
     $root: null as HTMLElement | null,
 
     init() {
+      container = (this.$root ?? this.$el)?.querySelector('.tutor-quiz-questions');
+
+      // Keyboard vs Mouse Navigation helper for focus styles
+      handleFirstTab = (e: KeyboardEvent) => {
+        if (e.key === 'Tab') {
+          container?.classList.add('tutor-keyboard-nav');
+          if (handleFirstTab) window.removeEventListener('keydown', handleFirstTab);
+          if (handleMouseDown) {
+            window.addEventListener('mousedown', handleMouseDown);
+            window.addEventListener('touchstart', handleMouseDown);
+          }
+        }
+      };
+
+      handleMouseDown = () => {
+        container?.classList.remove('tutor-keyboard-nav');
+        if (handleMouseDown) {
+          window.removeEventListener('mousedown', handleMouseDown);
+          window.removeEventListener('touchstart', handleMouseDown);
+        }
+        if (handleFirstTab) window.addEventListener('keydown', handleFirstTab);
+      };
+
+      if (handleFirstTab) window.addEventListener('keydown', handleFirstTab);
+
       this.revealAnswerIds = this.getRevealAnswerIds();
       this.answerRequiredByIndex = this.getAnswerRequiredMap();
       this.revealStateByIndex = this.getRevealStateMap();
@@ -43,6 +72,16 @@ const quizLayout = (config: QuizLayoutConfig) => {
       }
       this.currentIndex = 1;
       this.syncCurrentRevealFooterState();
+    },
+
+    destroy() {
+      if (handleFirstTab) {
+        window.removeEventListener('keydown', handleFirstTab);
+      }
+      if (handleMouseDown) {
+        window.removeEventListener('mousedown', handleMouseDown);
+        window.removeEventListener('touchstart', handleMouseDown);
+      }
     },
 
     isQuestionActive(index: number) {

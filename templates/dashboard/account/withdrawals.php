@@ -63,7 +63,7 @@ $history_count  = $withdral_history->count;
 $method_icons   = WithdrawModel::get_method_icons();
 $status_message = array(
 	WithdrawModel::STATUS_REJECTED => __( 'Please contact the site administrator for more information.', 'tutor' ),
-	WithdrawModel::STATUS_PENDING  => __( 'Withdrawal request is pending for approval, please hold tight.', 'tutor' ),
+	WithdrawModel::STATUS_PENDING  => __( 'Withdrawal request is pending approval, please hold tight.', 'tutor' ),
 );
 
 $currency_config = tutor_utils()->get_monetization_currency_config();
@@ -165,7 +165,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 
 				$pref_link_text = sprintf(
 					/* translators: %s: Withdraw preference settings link. */
-					__( 'You can change your %s.', 'tutor' ),
+					__( 'You can update your %s.', 'tutor' ),
 					'<a href="' . esc_url( $withdrawal_pref_link ) . '" class="tutor-text-brand">' . esc_html__( 'Withdraw Preference', 'tutor' ) . '</a>'
 				);
 

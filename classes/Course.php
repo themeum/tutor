@@ -3437,51 +3437,6 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Calculate the total course duration for a set of courses and returns the total time in hours, minutes, and seconds.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array<int> $course_ids List of course IDs.
-	 *
-	 * @return array{
-	 *     hours: int,
-	 *     minutes: int,
-	 *     seconds: int
-	 * } Total accumulated duration from all given courses.
-	 */
-	public static function get_total_course_duration( $course_ids ): array {
-		$total_seconds = 0;
-
-		foreach ( $course_ids as $id ) {
-			$duration = tutor_utils()->get_course_duration( (int) $id, true );
-
-			$completion_percentage = tutor_utils()->is_completed_course( $id )
-										? 100
-										: (int) tutor_utils()->get_course_completed_percent( (int) $id );
-
-			if ( 0 === $completion_percentage ) {
-				continue;
-			}
-
-			$course_duration_in_seconds = ( (int) $duration['durationHours'] * HOUR_IN_SECONDS )
-				+ ( (int) $duration['durationMinutes'] * MINUTE_IN_SECONDS )
-				+ ( (int) $duration['durationSeconds'] );
-
-			// Calculate the time spent by a user based on the course completion percentage.
-			$total_seconds += $course_duration_in_seconds * ( $completion_percentage / 100 );
-		}
-
-		$hours   = floor( $total_seconds / HOUR_IN_SECONDS );
-		$minutes = floor( $total_seconds / MINUTE_IN_SECONDS );
-
-		return array(
-			'hours'   => (int) $hours,
-			'minutes' => (int) $minutes,
-			'seconds' => (int) $total_seconds,
-		);
-	}
-
-	/**
 	 * Get the content for the course completion modal.
 	 *
 	 * This method returns HTML for displaying a modal that informs the user

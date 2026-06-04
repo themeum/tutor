@@ -24,10 +24,16 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 
 <div class="tutor-quiz-question-options">
 	<?php foreach ( $question['question_answers'] as $answer ) : ?>
-		<label class="tutor-quiz-question-option">
+		<label 
+			class="tutor-quiz-question-option"
+			tabindex="0"
+			@keydown.space.prevent="$el.querySelector('input').click()"
+			@keydown.enter.prevent="$el.querySelector('input').click()"
+		>
 			<input
 				class="tutor-hidden"
 				type="radio"
+				tabindex="-1"
 				name="<?php echo esc_attr( $field_name ); ?>"
 				value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 				x-bind="<?php echo esc_attr( $register_attr ); ?>"
@@ -37,6 +43,7 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 		</label>
 	<?php endforeach; ?>
 </div>
+
 
 <div
 	class="tutor-quiz-questions-error"

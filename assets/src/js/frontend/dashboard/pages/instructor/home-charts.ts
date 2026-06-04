@@ -1,4 +1,4 @@
-import { Chart, type ChartConfiguration, type ScriptableContext, type TooltipModel } from 'chart.js/auto';
+import type { Chart, ChartConfiguration, ChartItem, ScriptableContext, TooltipModel } from 'chart.js/auto';
 
 import { createPriceFormatter, formatPrice } from '@TutorShared/utils/currency';
 
@@ -49,6 +49,18 @@ type MonetizationData = {
   thousand_separator: string;
   decimal_separator: string;
   no_of_decimal: number | string;
+};
+
+type ChartConstructor = new (item: ChartItem, config: ChartConfiguration) => Chart;
+
+let chartConstructorPromise: Promise<ChartConstructor> | null = null;
+
+const loadChartConstructor = async (): Promise<ChartConstructor> => {
+  chartConstructorPromise ??= import(/* webpackChunkName: "tutor-chart-js" */ 'chart.js/auto').then(
+    ({ Chart }) => Chart,
+  );
+
+  return chartConstructorPromise;
 };
 
 const CHART_CONFIG = {
@@ -142,7 +154,8 @@ const getAnimationConfig = (): { duration: 0 } | undefined => {
 };
 
 const createChart = (canvas: HTMLCanvasElement, config: ChartConfiguration): void => {
-  requestAnimationFrame(() => {
+  requestAnimationFrame(async () => {
+    const Chart = await loadChartConstructor();
     new Chart(canvas, config);
   });
 };

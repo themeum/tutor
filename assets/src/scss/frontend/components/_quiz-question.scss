@@ -11,6 +11,16 @@
   width: 100%;
   min-width: 0;
 
+  &:has(:focus-visible:not(input):not(textarea):not(select)) {
+    @include tutor-focus-ring(#{$tutor-border-idle2}, true);
+    outline-offset: $tutor-spacing-2;
+  }
+
+  .tutor-keyboard-nav &:has(:focus-visible) {
+    @include tutor-focus-ring(#{$tutor-border-idle2}, true);
+    outline-offset: $tutor-spacing-2;
+  }
+
   @include tutor-breakpoint-down(sm) {
     padding: $tutor-spacing-5;
     gap: $tutor-spacing-5;
@@ -69,6 +79,21 @@
     overflow: hidden;
     min-width: 0;
     @include tutor-transition((background-color, border-color, color));
+
+    &:focus,
+    &:focus-within {
+      outline: none;
+    }
+
+    &:focus-visible,
+    &:has(.tutor-input:focus-visible) {
+      @include tutor-focus-ring(brand, true);
+      outline-offset: $tutor-spacing-2;
+    }
+
+    [data-grab-handle]:focus {
+      outline: none;
+    }
 
     &[data-option='correct'] {
       font-weight: $tutor-font-weight-medium;
@@ -190,7 +215,15 @@
     &-option {
       @include tutor-flex-center;
       gap: $tutor-spacing-3;
-      padding: $tutor-spacing-3;
+      padding: $tutor-spacing-3 $tutor-spacing-4;
+
+      &:focus,
+      &:focus-within {
+        &:not(:has(:checked)) {
+          border-color: $tutor-border-hover;
+          background-color: $tutor-quiz-hover;
+        }
+      }
     }
   }
 }
@@ -220,7 +253,7 @@
     &-option {
       @include tutor-flex(row, center, flex-start);
       gap: $tutor-spacing-3;
-      padding: $tutor-spacing-3;
+      padding: $tutor-spacing-3 $tutor-spacing-4;
 
       &:has(img) {
         @include tutor-flex(column, flex-start, center);
@@ -240,6 +273,13 @@
           padding: $tutor-spacing-3 $tutor-spacing-4;
           text-align: left;
         }
+      }
+
+      &:focus-within:has(:checked) {
+        font-weight: $tutor-font-weight-medium;
+        border-color: $tutor-border-brand;
+        background-color: $tutor-surface-brand-secondary;
+        color: $tutor-text-brand;
       }
     }
   }

@@ -153,6 +153,7 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
               options={gridSizeOptions}
               wrapperCss={styles.dropdownText}
               optionItemCss={styles.dropdownOptionText}
+              helpText={__('Larger grids create more pieces and a harder puzzle for learners.', __TUTOR_TEXT_DOMAIN__)}
               onChange={(selectedOption) => {
                 gridSizeControllerProps.field.onChange(selectedOption.value);
                 if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
@@ -175,6 +176,10 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
                   options={gridSizeOptions}
                   wrapperCss={styles.dropdownText}
                   optionItemCss={styles.dropdownOptionText}
+                  helpText={__(
+                    'Larger grids create more pieces and a harder puzzle for learners.',
+                    __TUTOR_TEXT_DOMAIN__,
+                  )}
                   onChange={(selectedOption) => {
                     gridSizeControllerProps.field.onChange(selectedOption.value);
                     if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
