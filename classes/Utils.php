@@ -2681,19 +2681,19 @@ class Utils {
 	public function default_menus(): array {
 		$items = array(
 			'index'             => array(
-				'title'            => __( 'Home', 'tutor' ),
-				'icon'             => Icon::HOME,
-				'active_icon'      => Icon::HOME_FILL,
+				'title'       => __( 'Home', 'tutor' ),
+				'icon'        => Icon::HOME,
+				'active_icon' => Icon::HOME_FILL,
 			),
 			'courses'           => array(
-				'title'            => __( 'Courses', 'tutor' ),
-				'icon'             => Icon::COURSES,
-				'active_icon'      => Icon::COURSES_FILL,
+				'title'       => __( 'Courses', 'tutor' ),
+				'icon'        => Icon::COURSES,
+				'active_icon' => Icon::COURSES_FILL,
 			),
 			'retrieve-password' => array(
-				'title'            => __( 'Retrieve Password', 'tutor' ),
-				'show_ui'          => false,
-				'login_require'    => false,
+				'title'         => __( 'Retrieve Password', 'tutor' ),
+				'show_ui'       => false,
+				'login_require' => false,
 			),
 			'account'           => array(
 				'label'   => __( 'Account', 'tutor' ),
@@ -2703,9 +2703,9 @@ class Utils {
 
 		if ( $this->should_show_dicussion_menu() ) {
 			$items['discussions'] = array(
-				'title'            => __( 'Discussions', 'tutor' ),
-				'icon'             => Icon::QA,
-				'active_icon'      => Icon::QA_FILL,
+				'title'       => __( 'Discussions', 'tutor' ),
+				'icon'        => Icon::QA,
+				'active_icon' => Icon::QA_FILL,
 			);
 		}
 
@@ -2722,26 +2722,26 @@ class Utils {
 	public function instructor_menus(): array {
 		$menus = array(
 			'index'         => array(
-				'title'            => __( 'Home', 'tutor' ),
-				'icon'             => Icon::HOME,
-				'active_icon'      => Icon::HOME_FILL,
+				'title'       => __( 'Home', 'tutor' ),
+				'icon'        => Icon::HOME,
+				'active_icon' => Icon::HOME_FILL,
 			),
 			'my-courses'    => array(
-				'title'            => __( 'Courses', 'tutor' ),
-				'auth_cap'         => tutor()->instructor_role,
-				'icon'             => Icon::COURSES,
-				'active_icon'      => Icon::COURSES_FILL,
+				'title'       => __( 'Courses', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::COURSES,
+				'active_icon' => Icon::COURSES_FILL,
 			),
 			// Hidden menu.
 			'create-course' => array(
-				'title'            => __( 'Create Course', 'tutor' ),
-				'show_ui'          => false,
-				'auth_cap'         => tutor()->instructor_role,
+				'title'    => __( 'Create Course', 'tutor' ),
+				'show_ui'  => false,
+				'auth_cap' => tutor()->instructor_role,
 			),
 			'create-bundle' => array(
-				'title'            => __( 'Create Bundle', 'tutor' ),
-				'show_ui'          => false,
-				'auth_cap'         => tutor()->instructor_role,
+				'title'    => __( 'Create Bundle', 'tutor' ),
+				'show_ui'  => false,
+				'auth_cap' => tutor()->instructor_role,
 			),
 		);
 
@@ -2749,25 +2749,25 @@ class Utils {
 
 		$other_menus = array(
 			'announcements' => array(
-				'title'            => __( 'Announcements', 'tutor' ),
-				'auth_cap'         => tutor()->instructor_role,
-				'icon'             => Icon::ANNOUNCEMENT,
-				'active_icon'      => Icon::ANNOUNCEMENT_FILL,
+				'title'       => __( 'Announcements', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::ANNOUNCEMENT,
+				'active_icon' => Icon::ANNOUNCEMENT_FILL,
 			),
 			'quiz-attempts' => array(
-				'title'            => __( 'Quiz Attempts', 'tutor' ),
-				'auth_cap'         => tutor()->instructor_role,
-				'icon'             => Icon::QUIZ_2,
-				'active_icon'      => Icon::QUIZ_2_FILL,
+				'title'       => __( 'Quiz Attempts', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::QUIZ_2,
+				'active_icon' => Icon::QUIZ_2_FILL,
 			),
 		);
 
 		if ( $this->should_show_dicussion_menu() ) {
 			$other_menus['discussions'] = array(
-				'title'            => __( 'Discussions', 'tutor' ),
-				'auth_cap'         => tutor()->instructor_role,
-				'icon'             => Icon::QA,
-				'active_icon'      => Icon::QA_FILL,
+				'title'       => __( 'Discussions', 'tutor' ),
+				'auth_cap'    => tutor()->instructor_role,
+				'icon'        => Icon::QA,
+				'active_icon' => Icon::QA_FILL,
 			);
 		}
 
