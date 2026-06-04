@@ -22,7 +22,6 @@ use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
-use Tutor\Helpers\UrlHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
@@ -179,10 +178,10 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							<?php do_action( 'tutor_my_courses_before_thumbnail', $post->ID ); ?>
 							<img src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 							<div class="tutor-my-courses-card-actions">
-								<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
+								<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon" aria-label="<?php esc_attr_e( 'Edit Course', 'tutor' ); ?>">
 									<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
 								</a>
-								<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
+								<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon" aria-label="<?php esc_attr_e( 'View Course', 'tutor' ); ?>">
 									<?php SvgIcon::make()->name( Icon::EYE_LINE )->render(); ?>
 								</a>
 							</div>
@@ -242,7 +241,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 								onHide: () => { $el.classList.remove('tutor-popover-open') }
 							})"
 						>
-							<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
+							<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" aria-label="<?php esc_attr_e( 'Course Actions', 'tutor' ); ?>">
 								<?php SvgIcon::make()->name( Icon::THREE_DOTS_VERTICAL )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 							</button>
 

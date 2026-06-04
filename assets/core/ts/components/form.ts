@@ -1,9 +1,9 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { isValid as isValidDate, parse } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { parseNumberOnly } from '@TutorShared/utils/util';
+import { parseNumberOnly } from '@Core/ts/utils/number';
 
 interface FormControlConfig {
   mode?: 'onChange' | 'onBlur' | 'onSubmit';
@@ -169,8 +169,8 @@ const ValidationHelpers = {
       return false;
     }
 
-    const parsed12Hour = parse(trimmed, 'hh:mm a', new Date());
-    return isValidDate(parsed12Hour);
+    const parsed12Hour = dayjs(trimmed, 'hh:mm A', true);
+    return parsed12Hour.isValid();
   },
 
   validateValidTime(value: unknown, rule?: boolean | string | { message: string }): FieldError | null {

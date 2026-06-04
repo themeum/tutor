@@ -1,6 +1,18 @@
 import type { AlpineComponentMeta } from '@Core/ts/types';
-import { DragDropManager, Draggable, Droppable, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
+import type { Draggable, Droppable } from '@dnd-kit/dom';
 import { __ } from '@wordpress/i18n';
+
+const loadDndKit = async () => {
+  const dom = await import(/* webpackChunkName: "tutor-dnd-kit" */ '@dnd-kit/dom');
+
+  return {
+    DragDropManager: dom.DragDropManager,
+    Draggable: dom.Draggable,
+    Droppable: dom.Droppable,
+    KeyboardSensor: dom.KeyboardSensor,
+    PointerSensor: dom.PointerSensor,
+  };
+};
 
 const QUESTION_MATCHING_CONSTANTS = {
   CLASSES: {
@@ -125,9 +137,14 @@ const questionMatching = (
     }
   },
 
-  setupDrag() {
+  async setupDrag() {
     const container = this.$el;
     if (!container) {
+      return;
+    }
+
+    const { DragDropManager, Draggable, Droppable, KeyboardSensor, PointerSensor } = await loadDndKit();
+    if (!this.initialized) {
       return;
     }
 

@@ -486,7 +486,7 @@ class Modal extends BaseComponent {
 
 		// Build close button.
 		$close_button = $this->closeable
-			? '<button x-data="tutorIcon({ name: \'cross\', width: 16, height: 16})" x-bind="getCloseButtonBindings()"></button>'
+			? '<button x-data="tutorIcon({ name: \'cross\', width: 16, height: 16})" x-bind="getCloseButtonBindings()" aria-label="' . esc_attr__( 'Close', 'tutor' ) . '"></button>'
 			: '';
 
 		// Build style attribute for custom width.

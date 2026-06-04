@@ -1,11 +1,9 @@
-import axios from 'axios';
-
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
+import { wpPostForm } from '@Core/ts/utils/api';
 
-import { tutorConfig } from '@TutorShared/config/config';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface RetryAttemptPayload {
   quizID: string;
@@ -31,10 +29,9 @@ const quizRetryAttempt = () => {
     },
 
     retryAttempt(payload: RetryAttemptPayload) {
-      return axios.postForm(payload.redirectURL, {
-        quiz_id: payload.quizID,
+      return wpPostForm(payload.redirectURL, {
         tutor_action: endpoints.START_QUIZ,
-        _tutor_nonce: tutorConfig._tutor_nonce,
+        quiz_id: payload.quizID,
       });
     },
   };

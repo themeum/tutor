@@ -443,7 +443,7 @@ class ConfirmationModal extends BaseComponent {
 					<div x-bind="getModalBindings()">
 						<div x-bind="getBackdropBindings()"></div>
 						<div x-bind="getModalContentBindings()"%s>
-							<button x-data="tutorIcon({ name: \'cross\', width: 16, height: 16})" x-bind="getCloseButtonBindings()"></button>
+							<button x-data="tutorIcon({ name: \'cross\', width: 16, height: 16})" x-bind="getCloseButtonBindings()" aria-label="%s"></button>
 
 							<div class="tutor-p-7 tutor-pt-10 tutor-flex tutor-flex-column tutor-items-center">
 								%s
@@ -465,6 +465,7 @@ class ConfirmationModal extends BaseComponent {
 			</div>',
 			esc_attr( $alpine_json ),
 			$style_attr,
+			esc_attr__( 'Close', 'tutor' ),
 			$icon_html,
 			esc_html( $this->title ?? __( 'Are you sure?', 'tutor' ) ),
 			$message_html,

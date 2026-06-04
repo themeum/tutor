@@ -53,6 +53,10 @@ export const wpEditor = (config: WPEditorConfig): WPEditorComponent => {
     initialized: false,
 
     init(this) {
+      if (this.initialized) {
+        return;
+      }
+
       // Wait for TinyMCE to be ready
       if (typeof window.tinymce !== 'undefined') {
         this.setupTinyMCE();

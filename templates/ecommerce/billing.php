@@ -32,7 +32,8 @@ $initial_states  = $state_mapping[ $billing_country ] ?? array();
 				id: '<?php echo esc_attr( $form_id ); ?>',
 				mode: 'onChange', 
 				shouldFocusError: true,
-				defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>
+				defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>,
+				stateOptions: <?php echo esc_attr( wp_json_encode( $state_mapping ) ); ?>
 			})"
 			x-bind="getFormBindings()"
 			x-init="$watch('values.billing_country', () => !isResetting && setValue('billing_state', '', { shouldDirty: true }))"

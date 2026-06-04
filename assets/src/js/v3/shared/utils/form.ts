@@ -1,11 +1,19 @@
 import type { FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
-import { isFileOrBlob } from '@TutorShared/utils/util';
 import type { AxiosResponse, Method } from 'axios';
 import type { FocusEvent } from 'react';
 import type { ControllerFieldState, Path } from 'react-hook-form';
 
 import { translateBeErrorMessage } from './errors';
-import { isAxiosError, isBoolean, isDefined, isNumber, isPrimitivesArray, isString, isStringArray } from './types';
+import {
+  isAxiosError,
+  isBoolean,
+  isDefined,
+  isFileOrBlob,
+  isNumber,
+  isPrimitivesArray,
+  isString,
+  isStringArray,
+} from './types';
 
 export interface FormControllerProps<ValueType> {
   field: {
