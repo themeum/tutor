@@ -1251,6 +1251,8 @@ class QueryHelper {
 	 *
 	 * @since 3.7.0
 	 *
+	 * @since 4.0.0 $table_name param added
+	 *
 	 * @param string $table_name Table name.
 	 *
 	 * @return string
