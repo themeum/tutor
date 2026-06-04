@@ -30,6 +30,10 @@
     }
   }
 
+  &:focus-visible {
+    @include tutor-focus-ring();
+  }
+
   &-header {
     @include tutor-flex(row, center, space-between);
   }
