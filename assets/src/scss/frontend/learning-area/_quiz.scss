@@ -159,7 +159,6 @@ $tutor-quiz-content-bottom-offset: calc(
     &-bar-wrapper {
       width: 100%;
     }
-
   }
 
   &-timer-frame {
@@ -774,6 +773,11 @@ $tutor-quiz-content-bottom-offset: calc(
           border-color: $tutor-border-brand;
           background-color: $tutor-quiz-hover;
         }
+
+        &:focus-visible {
+          @include tutor-focus-ring(brand, true);
+          outline-offset: 4px;
+        }
       }
 
       &[data-option='dragging'] {
@@ -835,6 +839,12 @@ $tutor-quiz-content-bottom-offset: calc(
         &:focus-within {
           border-color: $tutor-border-brand !important;
           background-color: $tutor-quiz-hover !important;
+        }
+
+        &:focus-visible,
+        &:has([data-grab-handle]:focus-visible) {
+          @include tutor-focus-ring(brand, true);
+          outline-offset: 4px;
         }
 
         [data-option-order] {
@@ -980,6 +990,12 @@ $tutor-quiz-content-bottom-offset: calc(
             &:focus-within {
               border-color: $tutor-border-brand !important;
               background-color: $tutor-quiz-hover !important;
+            }
+
+            &:focus-visible,
+            &:has([data-grab-handle]:focus-visible) {
+              @include tutor-focus-ring(brand, true);
+              outline-offset: 4px;
             }
 
             // Hide dnd-kit's default drop-back animation frame for matching draggables.
