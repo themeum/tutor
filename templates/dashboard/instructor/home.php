@@ -335,6 +335,7 @@ $sortable_sections_ids = array_reduce(
 				x-ref="trigger"
 				@click="toggle()"
 				class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon"
+				aria-label="<?php esc_attr_e( 'Filter dashboard sections', 'tutor' ); ?>"
 			>
 				<?php SvgIcon::make()->name( Icon::FILTER_2 )->render(); ?>
 			</button>

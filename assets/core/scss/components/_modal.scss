@@ -91,7 +91,7 @@
   }
 
   &-close {
-    @extend .tutor-btn;
+    @include tutor-button-base;
     @include tutor-button-icon-size(x-small);
     @include tutor-button-variant(ghost);
     position: absolute;

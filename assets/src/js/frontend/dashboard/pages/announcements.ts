@@ -2,9 +2,9 @@ import { __ } from '@wordpress/i18n';
 
 import { type FormControlMethods } from '@Core/ts/components/form';
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 interface AnnouncementFormData {
   id: number;
   course_id: string;
@@ -87,7 +87,7 @@ const announcementsPage = ({ formId, deleteModalId, createModalId }: Announcemen
 
       // Setup create/update mutation
       this.createUpdateMutation = this.query.useMutation(this.createUpdateAnnouncement, {
-        onSuccess: (response: AnnouncementResponse) => {
+        onSuccess: (response) => {
           modal.closeModal(ANNOUNCEMENTS_IDS.CREATE);
           toast.success(response.message || __('Operation successful', 'tutor'));
           window.location.reload();
@@ -99,15 +99,13 @@ const announcementsPage = ({ formId, deleteModalId, createModalId }: Announcemen
     },
 
     async deleteAnnouncement(announcementId: number) {
-      const response = await wpAjaxInstance.post<AnnouncementResponse>(endpoints.DELETE_ANNOUNCEMENT, {
+      return wpPost<AnnouncementResponse>(endpoints.DELETE_ANNOUNCEMENT, {
         announcement_id: announcementId,
       });
-      return response.data;
     },
 
     async createUpdateAnnouncement(payload: AnnouncementPayload) {
-      const response = await wpAjaxInstance.post<AnnouncementResponse>(endpoints.CREATE_ANNOUNCEMENT, payload);
-      return response.data;
+      return wpPost<AnnouncementResponse>(endpoints.CREATE_ANNOUNCEMENT, payload);
     },
 
     async handleDeleteAnnouncement(announcementId: number) {

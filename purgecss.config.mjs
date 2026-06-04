@@ -7,6 +7,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // assets/core/scss/tokens/_utility-config.scss ($tutor-responsive-breakpoints).
 const tutorUtilityBreakpoints = ['xl', 'lg', 'md', 'sm'];
 const tutorResponsiveUtilityPrefix = `(?:${tutorUtilityBreakpoints.join('|')})-`;
+const tutorIconColorUtilitiesRegex =
+  /^tutor-icon-(idle|idle-inverse|hover|secondary|subdued|brand|brand-hover|brand-secondary|success-primary|success-secondary|critical|critical-hover|warning|warning-secondary|caution|exception1|exception2|exception4|exception5|disabled)$/;
 
 // Prefixes after `tutor-` (or after `tutor-{bp}-`) from assets/core/scss/utilities.
 // Used by PurgeCSS so real utilities are not treated as component safelist entries.
@@ -129,6 +131,7 @@ export const purgecssSafelist = {
     /^mce-/,
     /^quicktags-/,
     /^arrow-/,
+    tutorIconColorUtilitiesRegex,
     tutorComponentsRegex,
     'active',
     'disabled',

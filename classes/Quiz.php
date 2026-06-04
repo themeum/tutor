@@ -21,7 +21,6 @@ use Tutor\Components\SvgIcon;
 use Tutor\Components\Table;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
@@ -1843,27 +1842,31 @@ class Quiz {
 			),
 		);
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+		if ( $earned_marks ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
 						' . SvgIcon::make()->name( Icon::STAR )->size( 20 )->get() . __( 'Earned Grade', 'tutor' ) . '
 					</div>',
+					),
+					array( 'content' => $earned_marks . '%' ),
 				),
-				array( 'content' => $earned_marks . '%' ),
-			),
-		);
+			);
+		}
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
-					</div>',
+		if ( 1 !== $attempts_allowed ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' =>  0 === $attempts_allowed ? __( 'No Limit', 'tutor' ) : $attempts_allowed ),
 				),
-				array( 'content' => $attempts_allowed ),
-			),
-		);
+			);
+		}
 
 		Table::make()->contents( $quiz_summary )->render();
 	}
@@ -1931,8 +1934,7 @@ class Quiz {
 									'quiz_id'          => $attempt['quiz_id'] ?? 0,
 									'course_id'        => $attempt['course_id'] ?? 0,
 									'quiz_attempt_obj' => $quiz_attempt_obj,
-									'attempts_count'   => $attempts_count,
-									'is_previous'      => true,
+									'is_previous'      => false,
 									'is_learning_area' => true,
 								)
 							);
