@@ -11,7 +11,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Course;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
@@ -53,21 +52,26 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$enrolled_course       = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
 	$completed_courses     = CourseModel::get_completed_courses_by_user( $user_id, 0, -1, array( 'post_status' => array( 'private', 'publish' ) ) );
 	$has_completed_courses = is_object( $completed_courses ) && $completed_courses->have_posts();
-	$completed_courses_ids = $has_completed_courses ? wp_list_pluck( $completed_courses->posts, 'ID' ) : array();
 	$active_courses        = CourseModel::get_active_courses_by_user( $user_id, 0, -1, array( 'post_status' => array( 'private', 'publish' ) ) );
 
 	$enrolled_course_count  = $enrolled_course ? $enrolled_course->post_count : 0;
 	$completed_course_count = $has_completed_courses ? $completed_courses->post_count : 0;
 	$active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
+	$enrolled_courses_ids   = $enrolled_course_count ? wp_list_pluck( $enrolled_course->posts, 'ID' ) : array();
 
 	$enrolled_course_link  = tutor_utils()->tutor_dashboard_url( 'courses' );
 	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'courses/completed-courses' );
 	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'courses/active-courses' );
 
-	$time_spent = Course::get_total_course_duration( $completed_courses_ids );
-	$grid_col   = $time_spent['hours'] > 0 ? 'tutor-grid-cols-4' : 'tutor-grid-cols-3';
+	// Time spent calculation.
+	$time_spent            = CourseModel::get_total_estimated_time_spent( $enrolled_courses_ids );
+	$is_hour_format        = $time_spent['hours'] > 0;
+	$has_time_spent        = $is_hour_format || $time_spent['minutes'] > 0;
+	$time_spent_value      = $is_hour_format ? $time_spent['hours'] : $time_spent['minutes'];
+	$time_spent_unit       = $is_hour_format ? 'h+' : 'm+';
+	$time_spent_unit_modal = $is_hour_format ? 'hours' : 'minutes';
 	?>
-	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 <?php echo esc_attr( $grid_col ); ?>">
+	<div class="tutor-grid tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7 tutor-grid-cols-4">
 		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-stat-card tutor-stat-card-enrolled">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
@@ -115,7 +119,6 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				</div>
 			</div>
 		</a>
-		<?php if ( $time_spent['hours'] > 0 ) : ?>
 		<div 
 			class="tutor-stat-card tutor-stat-card-time-spent"
 			@click="TutorCore.modal.showModal('tutor-time-spent-modal')"
@@ -132,19 +135,22 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 				<div class="tutor-stat-card-value">
 					<?php
 					echo esc_html(
-						sprintf(
-						/* translators: 1: total hour spent */
-							__( '%1$d h+', 'tutor' ),
-							$time_spent['hours']
+						$has_time_spent
+						? sprintf(
+							/* translators: 1: total time spent 2: Unit. */
+							__( '%1$d %2$s', 'tutor' ),
+							$time_spent_value,
+							$time_spent_unit
 						)
+						: '0'
 					);
 					?>
 				</div>
 			</div>
 		</div>
-		<?php endif; ?>
 	</div>
 
+	<?php if ( $time_spent['minutes'] > 0 ) : ?>
 	<div x-data="tutorModal({ id: 'tutor-time-spent-modal' })" x-cloak>
 		<template x-teleport="body">
 			<div x-bind="getModalBindings()">
@@ -168,37 +174,40 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							<?php
 							echo esc_html(
 								sprintf(
-								/* translators: 1: total hour spent */
-									__( '%1$d+ hours', 'tutor' ),
-									$time_spent['hours']
+									/* translators: 1: total time spent 2: Unit. */
+									__( '%1$d+ %2$s', 'tutor' ),
+									$time_spent_value,
+									$time_spent_unit_modal
 								)
 							);
 							?>
 						</h2>
 						<p class="tutor-p2 tutor-mb-7">
-							<?php if ( $time_spent['minutes'] > 0 ) : ?>
-								<?php echo esc_html__( "That's", 'tutor' ); ?> 
+							<?php echo esc_html__( "That's", 'tutor' ); ?> 
+							<?php if ( $is_hour_format && $time_spent['minutes'] > 0 ) : ?>
 							<span class="tutor-font-medium">
 								<?php
+								$total_minutes = ( $time_spent['hours'] * MINUTE_IN_SECONDS ) + $time_spent['minutes'];
 								echo esc_html(
 									sprintf(
 									/* translators: 1: total minutes spent */
-										__( '%1$d+ minutes', 'tutor' ),
-										$time_spent['minutes']
+										__( '%1$d+ minutes, and ', 'tutor' ),
+										$total_minutes
 									)
 								);
 								?>
 							</span> 
 							<?php endif; ?>
 							
-							<?php if ( $time_spent['seconds'] > 0 ) : ?>
+							<?php if ( $time_spent['minutes'] > 0 ) : ?>
 							<span class="tutor-font-medium">
 								<?php
+								$total_seconds = ( $time_spent['hours'] * HOUR_IN_SECONDS ) + ( $time_spent['minutes'] * MINUTE_IN_SECONDS ) + $time_spent['seconds'];
 								echo esc_html(
 									sprintf(
 									/* translators: 1: total seconds spent */
-										__( ', and %1$d+ seconds!', 'tutor' ),
-										$time_spent['seconds']
+										__( '%1$d+ seconds!', 'tutor' ),
+										$total_seconds
 									)
 								);
 								?>
@@ -220,6 +229,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			</div>
 		</template>
 	</div>
+	<?php endif; ?>
 </div>
 
 <?php
@@ -312,6 +322,6 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2, 
 		</div>
 	</div>
 	<?php
-endif;
+	endif;
 	do_action( 'tutor_after_continue_learning_section' );
 ?>

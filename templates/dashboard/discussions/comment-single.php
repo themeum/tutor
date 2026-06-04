@@ -66,14 +66,14 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 						?>
 					</span>
 				</div>
-				<div class="tutor-tiny tutor-flex tutor-items-center tutor-gap-4 tutor-overflow-hidden">
-					<div class="tutor-flex tutor-items-center tutor-gap-1 tutor-min-w-0">
+				<div class="tutor-tiny tutor-flex tutor-items-center tutor-gap-2 tutor-overflow-hidden">
+					<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-min-w-0">
 						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
 						<div class="tutor-min-w-0 tutor-flex-1">
 							<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
 						</div>
 					</div>
-					<div class="tutor-flex tutor-items-center tutor-gap-1 tutor-min-w-0">
+					<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-min-w-0">
 						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'in', 'tutor' ); ?></span> 
 						<div class="tutor-min-w-0 tutor-flex-1">
 							<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
