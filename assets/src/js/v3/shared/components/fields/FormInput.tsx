@@ -247,6 +247,7 @@ export default withVisibilityControl(FormInput);
 const styles = {
   input: (size: 'small' | 'regular') => css`
     &.tutor-input-field:not(textarea) {
+      min-height: auto;
       ${size === 'small' &&
       css`
         height: 32px;
