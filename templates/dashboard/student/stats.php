@@ -11,7 +11,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Course;
 use Tutor\Models\CourseModel;
 use TUTOR\Icon;
 
@@ -30,7 +29,7 @@ $active_course_count    = is_object( $active_courses ) && $active_courses->have_
 $enrolled_courses_ids   = $enrolled_course_count ? wp_list_pluck( $enrolled_course->posts, 'ID' ) : array();
 
 // Time spent calculation.
-$time_spent       = Course::get_total_course_duration( $enrolled_courses_ids );
+$time_spent       = CourseModel::get_total_estimated_time_spent( $enrolled_courses_ids );
 $is_hour_format   = $time_spent['hours'] > 0;
 $has_time_spent   = $is_hour_format || $time_spent['minutes'] > 0;
 $time_spent_value = $is_hour_format ? $time_spent['hours'] : $time_spent['minutes'];
