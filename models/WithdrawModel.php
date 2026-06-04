@@ -117,7 +117,7 @@ class WithdrawModel {
 			$status      = (array) $status;
 			$placeholder = implode( ',', array_fill( 0, count( $status ), '%s' ) );
 
-			$query_by_status_sql = $wpdb->prepare( "AND status IN($placeholder)", ...$status );
+			$query_by_status_sql = $wpdb->prepare( "AND status IN($placeholder)", ...$status ); //phpcs:ignore
 		}
 
 		if ( $user_id ) {
