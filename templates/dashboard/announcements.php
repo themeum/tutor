@@ -208,7 +208,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 								</div>
 								<!-- Mobile Popover -->
 								<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-hidden tutor-sm-block">
-									<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
+									<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" aria-label="<?php esc_attr_e( 'Announcement actions', 'tutor' ); ?>">
 										<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 									</button>
 									<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
@@ -335,8 +335,8 @@ $create_modal_id = 'tutor-announcement-form-modal';
 							InputField::make()
 								->type( InputType::TEXTAREA )
 								->name( 'tutor_announcement_summary' )
-								->label( __( 'Summary', 'tutor' ) )
-								->placeholder( __( 'Summary...', 'tutor' ) )
+								->label( __( 'Description', 'tutor' ) )
+								->placeholder( __( 'Write a short announcement description.', 'tutor' ) )
 								->attr( 'rows', '5' )
 								->attr( 'x-bind', "register('tutor_announcement_summary', { required: 'Summary is required' })" )
 								->render();

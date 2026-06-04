@@ -1,10 +1,6 @@
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
-
-interface CourseCreateResponse {
-  status_code?: number;
-  data?: string;
-}
+import { wpPost } from '@Core/ts/utils/api';
+import { type TutorMutationResponse } from '@TutorShared/utils/types';
 
 /**
  * My Courses Page Component
@@ -15,13 +11,13 @@ const myCoursesPage = () => {
 
   return {
     query,
-    createMutation: null as MutationState<CourseCreateResponse> | null,
+    createMutation: null as MutationState<unknown> | null,
     deleteMutation: null as MutationState<unknown, number> | null,
 
     init() {
       // Setup create mutation
       this.createMutation = this.query.useMutation(this.createCourse, {
-        onSuccess: (response: CourseCreateResponse) => {
+        onSuccess: (response) => {
           if (response.status_code === 201 && response.data) {
             window.location.href = response.data;
           }
@@ -44,11 +40,11 @@ const myCoursesPage = () => {
     },
 
     createCourse(payload: { from_dashboard: boolean }) {
-      return wpAjaxInstance.post('tutor_create_new_draft_course', payload);
+      return wpPost<TutorMutationResponse<string>>('tutor_create_new_draft_course', payload);
     },
 
     deleteCourse(courseId: number) {
-      return wpAjaxInstance.post('tutor_delete_dashboard_course', {
+      return wpPost('tutor_delete_dashboard_course', {
         course_id: courseId,
       });
     },

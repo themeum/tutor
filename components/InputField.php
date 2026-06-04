@@ -152,6 +152,16 @@ class InputField extends BaseComponent {
 	protected $label = '';
 
 	/**
+	 * InputField label HTML (for checkbox/radio labels that contain HTML markup).
+	 * When set, this takes precedence over $label for checkbox/radio/switch types.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $label_html = '';
+
+	/**
 	 * InputField placeholder text.
 	 *
 	 * @since 4.0.0
@@ -534,6 +544,35 @@ class InputField extends BaseComponent {
 	 */
 	public function label( $label ) {
 		$this->label = $label;
+		return $this;
+	}
+
+	/**
+	 * Set input label as HTML markup (for checkbox/radio/switch labels containing links or other HTML).
+	 * Content is sanitized via wp_kses with a safe set of allowed tags.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $html        Raw HTML label content.
+	 * @param array  $allowed_tags Optional. Allowed HTML tags. Defaults to a, span, strong, em.
+	 *
+	 * @return $this
+	 */
+	public function label_html( $html, $allowed_tags = array() ) {
+		if ( empty( $allowed_tags ) ) {
+			$allowed_tags = array(
+				'a'      => array(
+					'href'   => true,
+					'target' => true,
+					'class'  => true,
+					'rel'    => true,
+				),
+				'span'   => array( 'class' => true ),
+				'strong' => array(),
+				'em'     => array(),
+			);
+		}
+		$this->label_html = wp_kses( $html, $allowed_tags );
 		return $this;
 	}
 
@@ -1662,7 +1701,7 @@ class InputField extends BaseComponent {
 			$input_attrs,
 			esc_attr( $input_id ),
 			$this->required ? ' tutor-label-required' : '',
-			$this->esc( $this->label )
+			! empty( $this->label_html ) ? $this->label_html : $this->esc( $this->label )
 		);
 	}
 
@@ -1709,7 +1748,7 @@ class InputField extends BaseComponent {
 			$input_attrs,
 			esc_attr( $input_id ),
 			$this->required ? ' tutor-label-required' : '',
-			$this->esc( $this->label )
+			! empty( $this->label_html ) ? $this->label_html : $this->esc( $this->label )
 		);
 	}
 

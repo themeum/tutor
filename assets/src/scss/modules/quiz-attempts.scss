@@ -46,7 +46,7 @@
 }
 
 .tutor-quiz-attempt-details {
-	img {
+	img:not(.tutor-puzzle-attempt-image) {
 		width: 100%;
 	}
 

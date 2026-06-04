@@ -1,9 +1,9 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { isValid as isValidDate, parse } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { parseNumberOnly } from '@TutorShared/utils/util';
+import { parseNumberOnly } from '@Core/ts/utils/number';
 
 interface FormControlConfig {
   mode?: 'onChange' | 'onBlur' | 'onSubmit';
@@ -91,7 +91,14 @@ const ValidationHelpers = {
     if (!value) return null;
 
     const minLength = typeof rule === 'number' ? rule : rule.value;
-    const message = typeof rule === 'object' ? rule.message : sprintf(__('Minimum length is %s', 'tutor'), minLength);
+    const message =
+      typeof rule === 'object'
+        ? rule.message
+        : sprintf(
+            // translators: %s is the minimum length
+            __('Minimum length is %s', 'tutor'),
+            minLength,
+          );
 
     return value.length < minLength ? { type: 'minLength', message } : null;
   },
@@ -100,21 +107,42 @@ const ValidationHelpers = {
     if (!value) return null;
 
     const maxLength = typeof rule === 'number' ? rule : rule.value;
-    const message = typeof rule === 'object' ? rule.message : sprintf(__('Maximum length is %s', 'tutor'), maxLength);
+    const message =
+      typeof rule === 'object'
+        ? rule.message
+        : sprintf(
+            // translators: %s is the maximum length
+            __('Maximum length is %s', 'tutor'),
+            maxLength,
+          );
 
     return value.length > maxLength ? { type: 'maxLength', message } : null;
   },
 
   validateMin(value: number, rule: number | { value: number; message: string }): FieldError | null {
     const min = typeof rule === 'number' ? rule : rule.value;
-    const message = typeof rule === 'object' ? rule.message : sprintf(__('Minimum value is %s', 'tutor'), min);
+    const message =
+      typeof rule === 'object'
+        ? rule.message
+        : sprintf(
+            // translators: %s is the minimum value
+            __('Minimum value is %s', 'tutor'),
+            min,
+          );
 
     return value < min ? { type: 'min', message } : null;
   },
 
   validateMax(value: number, rule: number | { value: number; message: string }): FieldError | null {
     const max = typeof rule === 'number' ? rule : rule.value;
-    const message = typeof rule === 'object' ? rule.message : sprintf(__('Maximum value is %s', 'tutor'), max);
+    const message =
+      typeof rule === 'object'
+        ? rule.message
+        : sprintf(
+            // translators: %s is the maximum value
+            __('Maximum value is %s', 'tutor'),
+            max,
+          );
 
     return value > max ? { type: 'max', message } : null;
   },
@@ -141,8 +169,8 @@ const ValidationHelpers = {
       return false;
     }
 
-    const parsed12Hour = parse(trimmed, 'hh:mm a', new Date());
-    return isValidDate(parsed12Hour);
+    const parsed12Hour = dayjs(trimmed, 'hh:mm A', true);
+    return parsed12Hour.isValid();
   },
 
   validateValidTime(value: unknown, rule?: boolean | string | { message: string }): FieldError | null {

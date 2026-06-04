@@ -2957,7 +2957,7 @@ class Course extends Tutor_Base {
 
 		if ( $quiz_count && ! $assignment_count ) {
 			return sprintf(
-				/* translators: %1$s: quiz count; %2$s: quiz label */
+				/* translators: %1$s: item count; %2$s: item label */
 				__( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ),
 				$quiz_count,
 				$quiz_label
@@ -2966,7 +2966,7 @@ class Course extends Tutor_Base {
 
 		if ( ! $quiz_count && $assignment_count ) {
 			return sprintf(
-				/* translators: %1$s: assignment count; %2$s: assignment label */
+				/* translators: %1$s: item count; %2$s: item label */
 				__( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ),
 				$assignment_count,
 				$assignment_label
@@ -3434,41 +3434,6 @@ class Course extends Tutor_Base {
 			->size( Size::X_SMALL )
 			->attr( 'href', esc_url( $button_url ) )
 			->render();
-	}
-
-	/**
-	 * Calculate the total course duration for a set of courses.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array<int> $course_ids List of course IDs.
-	 *
-	 * @return array{
-	 *     hours: int,
-	 *     minutes: int,
-	 *     seconds: int
-	 * } Total accumulated duration from all given courses.
-	 */
-	public static function get_total_course_duration( $course_ids ): array {
-		$total_seconds = 0;
-
-		foreach ( $course_ids as $id ) {
-			$duration = tutor_utils()->get_course_duration( (int) $id, true );
-
-			$total_seconds += ( (int) $duration['durationHours'] * 3600 )
-				+ ( (int) $duration['durationMinutes'] * 60 )
-				+ ( (int) $duration['durationSeconds'] );
-		}
-
-		$hours   = floor( $total_seconds / 3600 );
-		$minutes = floor( $total_seconds / 60 );
-		$seconds = $total_seconds;
-
-		return array(
-			'hours'   => (int) $hours,
-			'minutes' => (int) $minutes,
-			'seconds' => (int) $seconds,
-		);
 	}
 
 	/**

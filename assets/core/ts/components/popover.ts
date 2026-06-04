@@ -1,5 +1,5 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { isRTL } from '@TutorShared/config/constants';
+import { isRTL } from '@Core/ts/utils/util';
 
 const PLACEMENTS = {
   TOP: 'top',

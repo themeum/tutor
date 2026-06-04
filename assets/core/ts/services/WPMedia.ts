@@ -140,7 +140,7 @@ export class WPMediaService {
       if (options.maxFiles && files.length > options.maxFiles) {
         this.toastService?.warning(
           sprintf(
-            // translators: %d is the maximum number of files allowed
+            // translators: %d is the maximum number of files allowed.
             __('Cannot select more than %d files', 'tutor'),
             options.maxFiles,
           ),

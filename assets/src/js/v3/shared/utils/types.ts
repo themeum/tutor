@@ -40,6 +40,10 @@ export function isObject<T>(value: T): value is T {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+export const isFileOrBlob = (value: unknown): value is Blob | File => {
+  return value instanceof Blob || value instanceof File;
+};
+
 export interface Option<T> {
   label: string;
   labelContent?: ReactNode | string;

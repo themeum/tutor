@@ -105,15 +105,15 @@ $single_url = UrlHelper::add_query_params(
 						<?php Avatar::make()->user( $last_reply->user_id )->size( Size::SIZE_20 )->render(); ?>
 						<div class="tutor-text-small">
 							<?php
-								/* translators: %s: time difference */
-								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $last_reply->comment_date_gmt ) ) ) );
+								// translators: %s human-readable time difference.
+								echo esc_html( sprintf( _x( '%s ago', 'human-readable time difference', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 							?>
 						</div>
 					</div>
 					<?php } else { ?>
 						<div class="tutor-text-small">
 							<?php
-								/* translators: %s: time difference */
+								/* translators: %s human-readable time difference. */
 								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 							?>
 						</div>
@@ -150,7 +150,7 @@ $single_url = UrlHelper::add_query_params(
 							class="tutor-tooltip"
 							x-text="isSolved
 								? '<?php esc_html_e( 'Solved', 'tutor' ); ?>'
-								: '<?php esc_html_e( 'Unresolved Yet', 'tutor' ); ?>'"
+								: '<?php esc_html_e( 'Unresolved', 'tutor' ); ?>'"
 							>
 						</div>
 					</div>

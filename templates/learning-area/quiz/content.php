@@ -67,7 +67,7 @@ $allowed_attempts = $limit_attempts ? $quiz_options['attempts_allowed'] ?? '' : 
 		<!-- Quiz Parameters Table -->
 		<div class="tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-quiz-intro-params tutor-mb-8 tutor-sm-mb-5">
 			<?php
-				Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, $allowed_attempts );
+				Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, (int) $allowed_attempts );
 			?>
 		</div>
 

@@ -8,3 +8,5 @@
 export function isMobileDevice() {
   return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
+
+export const isRTL = document.dir === 'rtl';

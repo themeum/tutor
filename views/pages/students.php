@@ -29,7 +29,7 @@ $search    = Input::get( 'search', '' );
  * Pagination data
  */
 $paged    = Input::get( 'paged', 1, Input::TYPE_INT );
-$per_page = tutor_utils()->get_option( 'pagination_per_page' );
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset   = ( $per_page * $paged ) - $per_page;
 
 $students_list = tutor_utils()->get_students( $offset, $per_page, $search, $course_id, $date, $order );
