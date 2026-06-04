@@ -99,7 +99,7 @@ const CoordinatesPreview = ({ axisRange: axisRangeProp }: CoordinatesPreviewProp
       <div className="tutor-coordinates-grid-container">
         <canvas
           id={canvasId}
-          className="tutor-coordinates-canvas tutor-quiz-interaction-focus-target"
+          className="tutor-coordinates-canvas"
           width={420}
           height={420}
           tabIndex={0}

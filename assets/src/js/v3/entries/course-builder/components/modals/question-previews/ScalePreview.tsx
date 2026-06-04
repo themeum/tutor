@@ -89,7 +89,7 @@ const ScalePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
     >
       <div className="tutor-scale-slider-wrapper">
         <div
-          className="tutor-scale-container tutor-quiz-interaction-focus-target"
+          className="tutor-scale-container"
           id={`tutor-scale-container-${qId}`}
           role="slider"
           tabIndex={0}

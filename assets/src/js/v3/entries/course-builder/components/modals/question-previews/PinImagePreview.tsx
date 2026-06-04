@@ -72,7 +72,7 @@ const PinImagePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
       data-question-id={qId}
     >
       <div
-        className="tutor-pin-image-wrapper tutor-quiz-interaction-focus-target"
+        className="tutor-pin-image-wrapper"
         tabIndex={0}
         role="application"
         aria-describedby={`${instructionId} ${statusId}`}
