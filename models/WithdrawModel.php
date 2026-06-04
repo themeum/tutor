@@ -10,6 +10,8 @@
 
 namespace Tutor\Models;
 
+use Tutor\Helpers\QueryHelper;
+
 /**
  * WithdrawModel Class
  *
@@ -111,11 +113,11 @@ class WithdrawModel {
 		$query_by_status_sql = '';
 		$query_by_user_sql   = '';
 
-		if ( ! empty( $status ) ) {
-			$status = (array) $status;
-			$status = "'" . implode( "','", $status ) . "'";
+		if ( ! empty( $status ) && in_array( $status, array( 'pending', 'approved', 'rejected' ), true ) ) {
+			$status      = (array) $status;
+			$placeholder = implode( ',', array_fill( 0, count( $status ), '%s' ) );
 
-			$query_by_status_sql = " AND status IN({$status}) ";
+			$query_by_status_sql = $wpdb->prepare( "AND status IN($placeholder)", ...$status );
 		}
 
 		if ( $user_id ) {
