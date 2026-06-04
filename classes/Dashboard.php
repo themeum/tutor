@@ -303,8 +303,12 @@ class Dashboard {
 	 * @return array
 	 */
 	public static function get_page_meta_data( string $page_slug = '', string $page_subslug = '', array $pages = array() ): array {
-		$page_data = array();
-		$page_key  = trim( $page_slug . '/' . $page_subslug, '/' );
+		$page_data      = array();
+		$page_meta_data = array(
+			'page_data'  => array(),
+			'meta_title' => '',
+		);
+		$page_key       = trim( $page_slug . '/' . $page_subslug, '/' );
 
 		if ( $page_subslug && isset( $pages[ $page_subslug ] ) ) {
 			$page_data = $pages[ $page_subslug ];
@@ -319,10 +323,7 @@ class Dashboard {
 		}
 
 		if ( empty( $page_data ) ) {
-			return array(
-				'page_data'  => $page_data,
-				'meta_title' => '',
-			);
+			return $page_meta_data;
 		}
 
 		$page_title = isset( $page_data['title'] ) ? $page_data['title'] : '';
@@ -342,10 +343,10 @@ class Dashboard {
 
 		$meta_title = apply_filters( 'tutor_dashboard_meta_title', $meta_title );
 
-		return array(
-			'page_data'  => $page_data,
-			'meta_title' => $meta_title,
-		);
+		$page_meta_data['page_data']  = $page_data;
+		$page_meta_data['meta_title'] = $meta_title;
+
+		return $page_meta_data;
 	}
 
 	/**
