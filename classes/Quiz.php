@@ -21,7 +21,6 @@ use Tutor\Components\SvgIcon;
 use Tutor\Components\Table;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
@@ -1935,8 +1934,7 @@ class Quiz {
 									'quiz_id'          => $attempt['quiz_id'] ?? 0,
 									'course_id'        => $attempt['course_id'] ?? 0,
 									'quiz_attempt_obj' => $quiz_attempt_obj,
-									'attempts_count'   => $attempts_count,
-									'is_previous'      => true,
+									'is_previous'      => false,
 									'is_learning_area' => true,
 								)
 							);

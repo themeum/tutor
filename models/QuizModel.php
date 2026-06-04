@@ -88,7 +88,7 @@ class QuizModel {
 			$start_time = DateTimeHelper::create( $quiz_attempt->attempt_started_at ?? '' )
 				->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 
-			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ) - strtotime( $quiz_attempt->attempt_started_at );
+			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ?? '' ) - strtotime( $quiz_attempt->attempt_started_at ?? '' );
 			$attempt_time = tutor_utils()->playtime_string( $attempt_time );
 
 			$earned_percent = self::calculate_attempt_earned_percentage( $quiz_attempt );
