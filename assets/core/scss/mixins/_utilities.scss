@@ -67,7 +67,7 @@
 
   @if $color == 'error' {
     $shadow: $tutor-error-shadow-xs;
-    $outline-color: $tutor-error-color;
+    $outline-color: $tutor-error-shadow-xs;
   }
 
   @if $use-outline {
