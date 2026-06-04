@@ -1252,15 +1252,15 @@ class QueryHelper {
 	 *
 	 * @since 3.7.0
 	 *
+	 * @param string $table_name Table name.
+	 *
 	 * @return string
 	 */
 	public static function get_table_prefix( $table_name ) {
 		global $wpdb;
 
-		if ( is_multisite() ) {
-			if ( self::is_base_table( $table_name ) ) {
-				return $wpdb->base_prefix;
-			}
+		if ( is_multisite() && self::is_base_table( $table_name ) ) {
+			return $wpdb->base_prefix;
 		}
 
 		return $wpdb->prefix;
@@ -1281,12 +1281,22 @@ class QueryHelper {
 			'usermeta',
 		);
 
+		$base_tables_with_prefix = array(
+			'wp_users',
+			'wp_usermeta',
+		);
+
 		if ( in_array( $table_name, $base_tables, true ) ) {
 			return true;
 		}
 
-		$is_base_table = strpos( $table_name, 'wp_users' ) !== false || strpos( $table_name, 'wp_usermeta' ) !== false;
-		return $is_base_table;
+		foreach ( $base_tables_with_prefix as $table ) {
+			if ( strpos( $table_name, $table ) !== false ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
