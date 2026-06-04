@@ -119,6 +119,10 @@
 		}
 	}
 
+	&:focus-visible {
+		@include tutor-focus-ring();
+	}
+
 	@include tutor-breakpoint-down(lg) {
 		&-content {
 			flex: 0 0 calc(100% - 250px);
