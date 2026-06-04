@@ -73,8 +73,7 @@ class QueryHelper {
 		$wpdb->query( $query );
 
 		if ( $wpdb->last_error ) {
-			$error_msg = (string) $wpdb->last_error;
-			error_log( $error_msg );
+			error_log( $wpdb->last_error );
 			return false;
 		}
 
