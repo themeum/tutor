@@ -70,10 +70,10 @@ $currency_config = tutor_utils()->get_monetization_currency_config();
 $currency_symbol = $currency_config['symbol'] ?? '';
 
 $summary_data                     = WithdrawModel::get_withdraw_summary( $user_id );
-$available_for_withdraw           = $summary_data->available_for_withdraw - $summary_data->total_pending;
+$available_for_withdraw           = $summary_data ? $summary_data->available_for_withdraw - $summary_data->total_pending : 0;
 $is_balance_sufficient            = $available_for_withdraw >= $min_withdraw;
 $available_for_withdraw_formatted = tutor_utils()->tutor_price( $available_for_withdraw );
-$current_balance_formated         = tutor_utils()->tutor_price( $summary_data->current_balance );
+$current_balance_formated         = tutor_utils()->tutor_price( $summary_data->current_balance ?? 0 );
 ?>
 
 <?php require_once tutor_get_template( 'account-header' ); ?>
@@ -123,7 +123,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 			<div class="tutor-withdrawal-status">
 				<div class="tutor-withdrawal-status-item">
 					<div class="tutor-withdrawal-status-item-label"><?php esc_html_e( 'Net Income', 'tutor' ); ?></div>
-					<div class="tutor-withdrawal-status-item-value"><?php echo wp_kses( tutor_utils()->tutor_price( $summary_data->total_income ), tutor_price_allowed_html() ); ?></div>
+					<div class="tutor-withdrawal-status-item-value"><?php echo wp_kses( tutor_utils()->tutor_price( $summary_data->total_income ?? 0 ), tutor_price_allowed_html() ); ?></div>
 				</div>
 				<div class="tutor-withdrawal-status-item">
 					<div class="tutor-withdrawal-status-item-label tutor-flex tutor-items-center tutor-gap-1">
@@ -131,7 +131,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 						
 					</div>
 					<div class="tutor-withdrawal-status-item-value tutor-withdrawal-status-item-value--pending tutor-flex tutor-items-center tutor-gap-3">
-						<?php echo wp_kses( tutor_utils()->tutor_price( $summary_data->total_pending ), tutor_price_allowed_html() ); ?>
+						<?php echo wp_kses( tutor_utils()->tutor_price( $summary_data->total_pending ?? 0 ), tutor_price_allowed_html() ); ?>
 						<?php
 						Tooltip::make()
 							->content( __( 'Total amount requested but not yet processed.', 'tutor' ) )
@@ -144,7 +144,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 				</div>
 				<div class="tutor-withdrawal-status-item">
 					<div class="tutor-withdrawal-status-item-label"><?php esc_html_e( 'Withdrawal Total', 'tutor' ); ?></div>
-					<div class="tutor-withdrawal-status-item-value"><?php echo wp_kses( tutor_utils()->tutor_price( $summary_data->total_withdraw ), tutor_price_allowed_html() ); ?></div>
+					<div class="tutor-withdrawal-status-item-value"><?php echo wp_kses( tutor_utils()->tutor_price( $summary_data->total_withdraw ?? 0 ), tutor_price_allowed_html() ); ?></div>
 				</div>
 			</div>
 		</div>

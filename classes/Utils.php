@@ -525,7 +525,7 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $plugin_path plugin path.
+	 * @param string|array $plugin_path plugin path.
 	 *
 	 * @return boolean
 	 */
@@ -582,10 +582,7 @@ class Utils {
 	 * @return bool
 	 */
 	public function has_bp() {
-		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
-		$depends           = array( 'buddypress/bp-loader.php' );
-		$has_bp            = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
-		return $has_bp;
+		return $this->is_plugin_active( 'buddypress/bp-loader.php' );
 	}
 
 	/**
