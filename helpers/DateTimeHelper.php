@@ -285,4 +285,21 @@ final class DateTimeHelper {
 				->set_timezone( 'UTC' )
 				->format( self::FORMAT_MYSQL );
 	}
+
+	/**
+	 * Format seconds into an associative array of hours, minutes, and seconds.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $seconds Total seconds.
+	 *
+	 * @return array{hours: int, minutes: int, seconds: int}
+	 */
+	public static function split_seconds_into_time_units( int $seconds ): array {
+		return array(
+			'hours'   => intdiv( $seconds, HOUR_IN_SECONDS ),
+			'minutes' => intdiv( $seconds % HOUR_IN_SECONDS, MINUTE_IN_SECONDS ),
+			'seconds' => $seconds % MINUTE_IN_SECONDS,
+		);
+	}
 }

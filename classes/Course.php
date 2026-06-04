@@ -3437,41 +3437,6 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Calculate the total course duration for a set of courses.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array<int> $course_ids List of course IDs.
-	 *
-	 * @return array{
-	 *     hours: int,
-	 *     minutes: int,
-	 *     seconds: int
-	 * } Total accumulated duration from all given courses.
-	 */
-	public static function get_total_course_duration( $course_ids ): array {
-		$total_seconds = 0;
-
-		foreach ( $course_ids as $id ) {
-			$duration = tutor_utils()->get_course_duration( (int) $id, true );
-
-			$total_seconds += ( (int) $duration['durationHours'] * 3600 )
-				+ ( (int) $duration['durationMinutes'] * 60 )
-				+ ( (int) $duration['durationSeconds'] );
-		}
-
-		$hours   = floor( $total_seconds / 3600 );
-		$minutes = floor( $total_seconds / 60 );
-		$seconds = $total_seconds;
-
-		return array(
-			'hours'   => (int) $hours,
-			'minutes' => (int) $minutes,
-			'seconds' => (int) $seconds,
-		);
-	}
-
-	/**
 	 * Get the content for the course completion modal.
 	 *
 	 * This method returns HTML for displaying a modal that informs the user

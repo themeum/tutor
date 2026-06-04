@@ -8120,10 +8120,10 @@ class Utils {
 	 * @since 2.0.0
 	 *
 	 * @param int   $course_id course id.
-	 * @param array $return_array return array.
+	 * @param bool  $return_array return array.
 	 * @param array $texts texts.
 	 *
-	 * @return string
+	 * @return string | array
 	 */
 	public function get_course_duration( $course_id, $return_array, $texts = array(
 		'h' => 'hr',
