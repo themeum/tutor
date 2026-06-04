@@ -1275,28 +1275,16 @@ class QueryHelper {
 	 *
 	 * @return bool
 	 */
-	private static function is_base_table( $table_name ): bool {
+	public static function is_base_table( string $table_name ): bool {
 		$base_tables = array(
 			'users',
 			'usermeta',
 		);
-
-		$base_tables_with_prefix = array(
-			'wp_users',
-			'wp_usermeta',
-		);
-
-		if ( in_array( $table_name, $base_tables, true ) ) {
-			return true;
-		}
-
-		foreach ( $base_tables_with_prefix as $table ) {
-			if ( strpos( $table_name, $table ) !== false ) {
-				return true;
-			}
-		}
-
-		return false;
+	
+		// Examples: wp_users, wp_3_users, td_12_usermeta, users, usermeta.
+		$pattern = '/(?:^|_)(?:' . implode( '|', array_map( 'preg_quote', $base_tables ) ) . ')$/i';
+	
+		return (bool) preg_match( $pattern, $table_name );
 	}
 
 	/**
