@@ -1690,7 +1690,7 @@ class CourseModel {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array<int> | int $course_ids List of course IDs.
+	 * @param array<int> | int $course_ids List of course IDs or a single course ID.
 	 *
 	 * @return array{
 	 *     hours: int,
@@ -1701,7 +1701,6 @@ class CourseModel {
 	public static function get_total_course_duration( $course_ids ): array {
 		$total_seconds = 0;
 		$course_ids    = is_array( $course_ids ) ? $course_ids : array( $course_ids );
-
 		foreach ( $course_ids as $id ) {
 			$total_seconds += self::get_course_duration_in_seconds( $id );
 		}
@@ -1724,7 +1723,6 @@ class CourseModel {
 	 */
 	public static function get_total_estimated_time_spent( $course_ids ): array {
 		$total_seconds = 0;
-
 		foreach ( $course_ids as $id ) {
 			$completion_percentage = tutor_utils()->is_completed_course( $id )
 										? 100
@@ -1733,7 +1731,6 @@ class CourseModel {
 			if ( 0 === $completion_percentage ) {
 				continue;
 			}
-
 			$course_duration_in_seconds = self::get_course_duration_in_seconds( $id );
 			// Calculate the time spent by a user based on the course completion percentage.
 			$total_seconds += $course_duration_in_seconds * ( $completion_percentage / 100 );
@@ -1752,11 +1749,10 @@ class CourseModel {
 	 * @return int Course duration in seconds.
 	 */
 	public static function get_course_duration_in_seconds( int $course_id ): int {
-
 		$duration = tutor_utils()->get_course_duration( $course_id, true );
 
 		return ( $duration['durationHours'] * HOUR_IN_SECONDS )
-				+ ( $duration['durationMinutes'] * MINUTE_IN_SECONDS )
-				+ ( $duration['durationSeconds'] );
+			+ ( $duration['durationMinutes'] * MINUTE_IN_SECONDS )
+			+ ( $duration['durationSeconds'] );
 	}
 }
