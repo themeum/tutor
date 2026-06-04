@@ -525,7 +525,7 @@ class DropdownFilter extends BaseComponent {
 										x-show="search === '' || '<?php echo esc_js( $opt_label ); ?>'.toLowerCase().includes(search.toLowerCase())"
 									<?php endif; ?>
 								>
-									<span class="tutor-flex tutor-gap-2 tutor-items-center">
+									<span class="tutor-flex tutor-gap-2 tutor-items-center tutor-w-full">
 										<span class="tutor-truncate">
 											<?php echo esc_html( $opt_label ); ?>
 										</span>
@@ -544,7 +544,7 @@ class DropdownFilter extends BaseComponent {
 										x-show="search === '' || '<?php echo esc_js( $opt_label ); ?>'.toLowerCase().includes(search.toLowerCase())"
 									<?php endif; ?>
 								>
-									<span class="tutor-flex tutor-gap-2 tutor-items-center">
+									<span class="tutor-flex tutor-gap-2 tutor-items-center tutor-w-full">
 										<span class="tutor-truncate">
 											<?php echo esc_html( $opt_label ); ?>
 										</span>

@@ -39,7 +39,8 @@
       "@FrontendTypes/*": ["assets/src/js/frontend/types/*"],
       "@FrontendServices/*": ["assets/src/js/frontend/services/*"],
       "@FrontendDashboard/*": ["assets/src/js/frontend/dashboard/*"],
-      "@LearningArea/*": ["assets/src/js/frontend/learning-area/*"]
+      "@LearningArea/*": ["assets/src/js/frontend/learning-area/*"],
+      "@TutorProQuiz/*": ["../tutor-pro/assets/src/js/quiz-type/*"]
     }
   },
   "include": [

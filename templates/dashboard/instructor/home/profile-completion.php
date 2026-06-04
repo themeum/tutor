@@ -76,7 +76,7 @@ unset( $rest_of_the_items[ $first_incomplete_key ] );
 			</div>
 		</div>
 
-		<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-small tutor-btn-icon" @click="expanded = !expanded">
+		<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-small tutor-btn-icon" @click="expanded = !expanded" aria-label="<?php esc_attr_e( 'Toggle profile completion', 'tutor' ); ?>">
 			<span :class="expanded && 'tutor-rotate-180'" class="tutor-flex tutor-transition-all">
 				<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 20 )->color( Color::SECONDARY )->render(); ?>
 			</span>

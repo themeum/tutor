@@ -6,7 +6,7 @@
  */
 
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useState } from 'react';
 
 import TextInput from '@TutorShared/atoms/TextInput';
@@ -241,8 +241,8 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
         <div css={styles.configSection}>
           <div css={styles.configGrid}>
             <div css={styles.configField}>
-              <label css={styles.configLabel}>{__('Min value', __TUTOR_TEXT_DOMAIN__)}</label>
               <TextInput
+                label={__('Min value', __TUTOR_TEXT_DOMAIN__)}
                 type="number"
                 size="small"
                 value={String(config.min)}
@@ -250,8 +250,8 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
               />
             </div>
             <div css={styles.configField}>
-              <label css={styles.configLabel}>{__('Max value', __TUTOR_TEXT_DOMAIN__)}</label>
               <TextInput
+                label={__('Max value', __TUTOR_TEXT_DOMAIN__)}
                 type="number"
                 size="small"
                 value={String(config.max)}
@@ -259,8 +259,8 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
               />
             </div>
             <div css={styles.configField}>
-              <label css={styles.configLabel}>{__('Label entry', __TUTOR_TEXT_DOMAIN__)}</label>
               <TextInput
+                label={__('Label entry', __TUTOR_TEXT_DOMAIN__)}
                 type="number"
                 size="small"
                 value={String(config.labelEvery)}
@@ -275,13 +275,22 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
         <div css={styles.answerSection}>
           {/* Answer Configuration */}
           <div css={styles.configField}>
-            <label css={styles.configLabel}>{__('Correct Value', __TUTOR_TEXT_DOMAIN__)}</label>
             <TextInput
+              label={__('Correct Value', __TUTOR_TEXT_DOMAIN__)}
               type="number"
               size="small"
               value={String(scaleData.value)}
               onChange={(v) => handleValueChange(parseConfigNumber(v, config.min))}
-              {...(!isRangeInvalid && { min: config.min, max: config.max })}
+              placeholder={
+                isRangeInvalid
+                  ? undefined
+                  : sprintf(
+                      // translators: %1$s is the minimum scale value, %2$s is the maximum scale value
+                      __('Between %1$s and %2$s', __TUTOR_TEXT_DOMAIN__),
+                      String(config.min),
+                      String(config.max),
+                    )
+              }
             />
           </div>
         </div>
@@ -341,13 +350,5 @@ const styles = {
   configField: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[4]};
-  `,
-  configLabel: css`
-    font-family: ${fontFamily.sfProDisplay};
-    font-weight: ${fontWeight.regular};
-    font-size: ${fontSize[15]};
-    line-height: ${lineHeight[24]};
-    letter-spacing: ${letterSpacing.normal};
-    color: ${colorTokens.text.title};
   `,
 };

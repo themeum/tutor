@@ -1,10 +1,24 @@
-import { DragDropManager, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
-import { RestrictToElement } from '@dnd-kit/dom/modifiers';
-import { Sortable } from '@dnd-kit/dom/sortable';
+import { wpPost } from '@Core/ts/utils/api';
+import type { Sortable } from '@dnd-kit/dom/sortable';
 import type { AjaxResponse } from '@FrontendTypes/index';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { __ } from '@wordpress/i18n';
+
+const loadDndKit = async () => {
+  const [dom, modifiers, sortable] = await Promise.all([
+    import(/* webpackChunkName: "tutor-dnd-kit" */ '@dnd-kit/dom'),
+    import(/* webpackChunkName: "tutor-dnd-kit" */ '@dnd-kit/dom/modifiers'),
+    import(/* webpackChunkName: "tutor-dnd-kit" */ '@dnd-kit/dom/sortable'),
+  ]);
+
+  return {
+    DragDropManager: dom.DragDropManager,
+    KeyboardSensor: dom.KeyboardSensor,
+    PointerSensor: dom.PointerSensor,
+    RestrictToElement: modifiers.RestrictToElement,
+    Sortable: sortable.Sortable,
+  };
+};
 
 export const sortSections = (sectionsIds: string[]) => {
   const toast = window.TutorCore.toast;
@@ -23,9 +37,14 @@ export const sortSections = (sectionsIds: string[]) => {
       }
     },
 
-    setupDrag() {
+    async setupDrag() {
       const container = this.$el;
       if (!container) {
+        return;
+      }
+
+      const { DragDropManager, KeyboardSensor, PointerSensor, RestrictToElement, Sortable } = await loadDndKit();
+      if (!this.initialized) {
         return;
       }
 
@@ -85,14 +104,12 @@ export const sortSections = (sectionsIds: string[]) => {
 
         const order = this.getOrder();
         try {
-          wpAjaxInstance
-            .post<undefined, AjaxResponse>(endpoints.SAVE_INSTRUCTOR_HOME_SECTIONS_ORDER, { order })
-            .then((response) => {
-              if (!response.success) {
-                toast.error((response?.data as string) || __('Failed to save instructor home section order.', 'tutor'));
-                return;
-              }
-            });
+          wpPost<AjaxResponse>(endpoints.SAVE_INSTRUCTOR_HOME_SECTIONS_ORDER, { order }).then((response) => {
+            if (!response.success) {
+              toast.error((response?.data as string) || __('Failed to save instructor home section order.', 'tutor'));
+              return;
+            }
+          });
         } catch (error) {
           const message = error instanceof Error ? error.message : __('Unknown error occurred.', 'tutor');
           toast.error(message);
@@ -119,16 +136,14 @@ export const sortSections = (sectionsIds: string[]) => {
       );
 
       try {
-        wpAjaxInstance
-          .post<undefined, AjaxResponse>(endpoints.SAVE_INSTRUCTOR_HOME_SECTIONS_VISIBILITY, { items })
-          .then((response) => {
-            if (!response.success) {
-              toast.error(
-                (response?.data as string) || __('Failed to save instructor home section visibility.', 'tutor'),
-              );
-              return;
-            }
-          });
+        wpPost<AjaxResponse>(endpoints.SAVE_INSTRUCTOR_HOME_SECTIONS_VISIBILITY, { items }).then((response) => {
+          if (!response.success) {
+            toast.error(
+              (response?.data as string) || __('Failed to save instructor home section visibility.', 'tutor'),
+            );
+            return;
+          }
+        });
       } catch (error) {
         const message = error instanceof Error ? error.message : __('Unknown error occurred.', 'tutor');
         toast.error(message);

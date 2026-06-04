@@ -271,6 +271,8 @@ class Nav extends BaseComponent {
 		$dropdown = sprintf(
 			'<div x-data="tutorPopover({ placement: \'bottom-start\', offset: 4 })">
 				<button x-ref="trigger" @click="toggle()"
+					:aria-expanded="open.toString()"
+					aria-haspopup="true"
 					class="tutor-nav-item %s">
 				%s
 				%s

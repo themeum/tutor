@@ -1,9 +1,9 @@
-import { __ } from '@wordpress/i18n';
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { __ } from '@wordpress/i18n';
 
 interface WithdrawalsFormProps {
   amount: string;
@@ -35,9 +35,9 @@ const withdrawals = () => {
       this.handleWithdrawalFormSubmit = this.handleWithdrawalFormSubmit.bind(this);
 
       this.withdrawalRequestMutation = this.query.useMutation(
-        (payload) => wpAjaxInstance.post(endpoints.MAKE_AN_WITHDRAW, payload),
+        (payload: Record<string, string>) => wpPost(endpoints.MAKE_AN_WITHDRAW, payload),
         {
-          onSuccess: (data: TutorMutationResponse<string>) => {
+          onSuccess: (data) => {
             this.toast.success(data?.message ?? __('Withdrawal request submitted successfully', 'tutor'));
             window.location.reload();
           },

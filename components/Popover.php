@@ -367,9 +367,10 @@ class Popover extends BaseComponent {
 		$title = sprintf( '<h3 class="tutor-popover-title">%s</h3>', esc_attr( $this->popover_title ) );
 
 		$close_button = sprintf(
-			'<button @click="hide()" class="tutor-popover-close">
+			'<button @click="hide()" class="tutor-popover-close" aria-label="%s">
 				%s
 			</button>',
+			esc_attr__( 'Close', 'tutor' ),
 			SvgIcon::make()->name( Icon::CROSS )->size( 14 )->get()
 		);
 

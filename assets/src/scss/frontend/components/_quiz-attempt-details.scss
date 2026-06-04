@@ -50,7 +50,7 @@
     display: grid;
     grid-template-columns: 300px 1fr;
     gap: 128px;
-    padding-bottom: calc( var(--tutor-quiz-summary-footer-height) + #{$tutor-spacing-4} );
+    padding-bottom: calc(var(--tutor-quiz-summary-footer-height) + #{$tutor-spacing-4});
 
     @include tutor-breakpoint-down(sm) {
       grid-template-columns: 1fr;
@@ -129,6 +129,11 @@
         &.active {
           background-color: $tutor-surface-l1;
           outline: 1px solid $tutor-border-idle;
+        }
+
+        &:focus-visible {
+          @include tutor-focus-ring;
+          background-color: $tutor-surface-l2;
         }
 
         &.correct .tutor-question-number::before {

@@ -1,19 +1,9 @@
 import { __ } from '@wordpress/i18n';
-import {
-  endOfMonth,
-  endOfYear,
-  format,
-  startOfMonth,
-  startOfToday,
-  startOfYear,
-  subDays,
-  subMonths,
-  subYears,
-} from 'date-fns';
+import dayjs from 'dayjs';
 
+import { DateFormats } from '@Core/ts/date-formats';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
-import { DateFormats } from '@TutorShared/config/constants';
 import { type Calendar, type Options, Calendar as VanillaCalendar } from 'vanilla-calendar-pro';
 
 // @ts-ignore
@@ -523,36 +513,36 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
     },
 
     getPresetDates(preset: Preset): string[] {
-      const today = startOfToday();
+      const today = dayjs().startOf('day');
 
       switch (preset) {
         case PRESETS.ALL_TIME:
           return [];
         case PRESETS.YESTERDAY:
           return [
-            format(subDays(today, 1), DateFormats.yearMonthDay),
-            format(subDays(today, 1), DateFormats.yearMonthDay),
+            today.subtract(1, 'day').format(DateFormats.yearMonthDay),
+            today.subtract(1, 'day').format(DateFormats.yearMonthDay),
           ];
         case PRESETS.LAST_7:
-          return [format(subDays(today, 6), DateFormats.yearMonthDay), format(today, DateFormats.yearMonthDay)];
+          return [today.subtract(6, 'day').format(DateFormats.yearMonthDay), today.format(DateFormats.yearMonthDay)];
         case PRESETS.LAST_14:
-          return [format(subDays(today, 13), DateFormats.yearMonthDay), format(today, DateFormats.yearMonthDay)];
+          return [today.subtract(13, 'day').format(DateFormats.yearMonthDay), today.format(DateFormats.yearMonthDay)];
         case PRESETS.LAST_30:
-          return [format(subDays(today, 29), DateFormats.yearMonthDay), format(today, DateFormats.yearMonthDay)];
+          return [today.subtract(29, 'day').format(DateFormats.yearMonthDay), today.format(DateFormats.yearMonthDay)];
         case PRESETS.THIS_MONTH:
           return [
-            format(startOfMonth(today), DateFormats.yearMonthDay),
-            format(endOfMonth(today), DateFormats.yearMonthDay),
+            today.startOf('month').format(DateFormats.yearMonthDay),
+            today.endOf('month').format(DateFormats.yearMonthDay),
           ];
         case PRESETS.LAST_MONTH:
           return [
-            format(startOfMonth(subMonths(today, 1)), DateFormats.yearMonthDay),
-            format(endOfMonth(subMonths(today, 1)), DateFormats.yearMonthDay),
+            today.subtract(1, 'month').startOf('month').format(DateFormats.yearMonthDay),
+            today.subtract(1, 'month').endOf('month').format(DateFormats.yearMonthDay),
           ];
         case PRESETS.LAST_YEAR:
           return [
-            format(startOfYear(subYears(today, 1)), DateFormats.yearMonthDay),
-            format(endOfYear(subYears(today, 1)), DateFormats.yearMonthDay),
+            today.subtract(1, 'year').startOf('year').format(DateFormats.yearMonthDay),
+            today.subtract(1, 'year').endOf('year').format(DateFormats.yearMonthDay),
           ];
         default:
           return [];
