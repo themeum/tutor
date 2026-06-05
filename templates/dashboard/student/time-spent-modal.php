@@ -15,8 +15,8 @@ use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Helpers\UrlHelper;
 
-$minutes_value = (int) $time_spent['minutes'];
-$seconds_value = (int) $time_spent['seconds'];
+$minutes_value = ( $time_spent['hours'] * MINUTE_IN_SECONDS ) + $time_spent['minutes'];
+$seconds_value = ( $time_spent['hours'] * HOUR_IN_SECONDS ) + ( $time_spent['minutes'] * MINUTE_IN_SECONDS ) + $time_spent['seconds'];
 
 $has_minutes = $minutes_value > 0;
 $has_seconds = $seconds_value > 0;
