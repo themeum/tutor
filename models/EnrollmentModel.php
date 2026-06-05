@@ -68,7 +68,7 @@ class EnrollmentModel {
 	 */
 	public static function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0, $fire_hook = true ) {
 		$enrolled_id = 0;
-		if ( ! $course_id || ! in_array( get_post_type( $course_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
+		if ( ! CourseModel::is_course_accessible( $course_id ) ) {
 			return $enrolled_id;
 		}
 

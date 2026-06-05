@@ -270,6 +270,9 @@ class CheckoutController {
 		foreach ( $item_ids as $item_id ) {
 
 			if ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
+				if ( ! CourseModel::is_course_accessible( $item_id ) ) {
+					continue;
+				}
 				$item_name    = get_the_title( $item_id );
 				$course_price = tutor_utils()->get_raw_course_price( $item_id );
 
@@ -642,21 +645,13 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
 			foreach ( $object_ids as $object_id ) {
-				if ( ! get_post( $object_id ) ) {
-					array_push( $errors, __( 'A course is not available for purchase', 'tutor' ) );
-					continue;
-				}
-				if ( ! in_array( get_post_type( $object_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
+				if ( ! CourseModel::is_course_accessible( $object_id ) ) {
+					if ( ! get_the_title( $object_id ) ) {
+						continue;
+					}
 					// translators: %s is the course title.
-					array_push( $errors, sprintf( __( 'Invalid item: %s', 'tutor' ), get_the_title( $object_id ) ) );
+					array_push( $errors, sprintf( __( '“%s” is no longer available for purchase.', 'tutor' ), get_the_title( $object_id ) ) );
 				}
-
-				$status = get_post_status( $object_id );
-				if ( 'publish' !== $status ) {
-					// translators: %s is the course title.
-					array_push( $errors, sprintf( __( '“%s” is no longer available for purchase.', 'tutor' ), get_the_title( $object_id ) ?? '' ) );
-				}
-
 				$can_buy = apply_filters( 'tutor_can_purchase_course', true, $object_id );
 				if ( is_wp_error( $can_buy ) ) {
 					array_push( $errors, $can_buy->get_error_message() );

@@ -92,6 +92,31 @@ class CourseModel {
 	}
 
 	/**
+	 * Check if a course is available for enrollment or purchase.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $course_id the course id.
+	 *
+	 * @return bool
+	 */
+	public static function is_course_accessible( int $course_id = 0 ) {
+		if ( ! $course_id || ! get_post( $course_id ) ) {
+			return false;
+		}
+
+		if ( ! in_array( get_post_type( $course_id ), array( tutor()->course_post_type, tutor()->free_course_post_type ), true ) ) {
+			return false;
+		}
+
+		if ( ! in_array( get_post_status( $course_id ), array( self::STATUS_PUBLISH, self::STATUS_PRIVATE ), true ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Course record count
 	 *
 	 * @since 2.0.7
