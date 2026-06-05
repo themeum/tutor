@@ -642,6 +642,10 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
 			foreach ( $object_ids as $object_id ) {
+				if ( ! get_post( $object_id ) ) {
+					array_push( $errors, __( 'A course is not available for purchase', 'tutor' ) );
+					continue;
+				}
 				if ( ! in_array( get_post_type( $object_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
 					// translators: %s is the course title.
 					array_push( $errors, sprintf( __( 'Invalid item: %s', 'tutor' ), get_the_title( $object_id ) ) );
