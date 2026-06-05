@@ -128,7 +128,7 @@ $details_url      = $quiz_attempt_obj->get_review_url(
 	</div>
 	<?php endif; ?>
 
-	<?php if ( $attempt_number ) : ?>
+	<?php if ( $attempt_number && $is_previous ) : ?>
 	<div class="tutor-quiz-item-actions" x-show="expanded" x-cloak>
 		<?php
 		$quiz_attempt_obj->render_details_button( $attempt );

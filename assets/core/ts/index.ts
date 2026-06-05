@@ -6,10 +6,7 @@ import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 
 import { accordionMeta } from '@Core/ts/components/accordion';
 import { buttonMeta } from '@Core/ts/components/button';
-import { calendarMeta } from '@Core/ts/components/calendar';
 import { copyToClipboardMeta } from '@Core/ts/components/copy-to-clipboard';
-import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
-import { formMeta } from '@Core/ts/components/form';
 import { iconMeta } from '@Core/ts/components/icon';
 import { modalMeta } from '@Core/ts/components/modal';
 import { passwordInputMeta } from '@Core/ts/components/password-input';
@@ -17,20 +14,15 @@ import { playerMeta } from '@Core/ts/components/player';
 import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
 import { readMoreMeta } from '@Core/ts/components/read-more';
-import { selectMeta } from '@Core/ts/components/select';
-import { selectDropdownMeta } from '@Core/ts/components/select-dropdown';
 import { starRatingMeta } from '@Core/ts/components/star-rating';
 import { staticsMeta } from '@Core/ts/components/statics';
 import { statusSelectMeta } from '@Core/ts/components/status-select';
-import { stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 import { tabsMeta } from '@Core/ts/components/tabs';
-import { timeInputMeta } from '@Core/ts/components/time-input';
 import { toastMeta } from '@Core/ts/components/toast';
 import { tooltipMeta } from '@Core/ts/components/tooltip';
 import { wpEditorMeta } from '@Core/ts/components/wp-editor';
 
 import { formServiceMeta } from '@Core/ts/services/Form';
-import { locationServiceMeta } from '@Core/ts/services/Location';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { preferenceServiceMeta } from '@Core/ts/services/Preference';
 import { queryServiceMeta } from '@Core/ts/services/Query';
@@ -38,30 +30,24 @@ import { toastServiceMeta } from '@Core/ts/services/Toast';
 import { wpMediaServiceMeta } from '@Core/ts/services/WPMedia';
 
 import { registerLegacyFunctions } from '@Core/ts/legacy';
+import { getRequiredComponents } from '@Core/ts/utils/component-discovery';
 import { getNonceData } from '@Core/ts/utils/nonce';
 import { escapeAttr, escapeHtml } from '@Core/ts/utils/security';
 
 Alpine.plugin(focus);
 Alpine.plugin(collapse);
 
-const initializePlugin = () => {
+const initializePlugin = async () => {
   TutorComponentRegistry.registerAll({
     components: [
       buttonMeta,
-      calendarMeta,
-      fileUploaderMeta,
       tabsMeta,
       iconMeta,
       modalMeta,
       popoverMeta,
       staticsMeta,
       accordionMeta,
-      formMeta,
       tooltipMeta,
-      timeInputMeta,
-      selectDropdownMeta,
-      stepperDropdownMeta,
-      selectMeta,
       previewTriggerMeta,
       readMoreMeta,
       starRatingMeta,
@@ -74,7 +60,6 @@ const initializePlugin = () => {
     ],
     services: [
       formServiceMeta,
-      locationServiceMeta,
       modalServiceMeta,
       queryServiceMeta,
       toastServiceMeta,
@@ -82,6 +67,40 @@ const initializePlugin = () => {
       preferenceServiceMeta,
     ],
   });
+
+  TutorComponentRegistry.registerLazy({
+    calendar: () =>
+      import(
+        /* webpackChunkName: "tutor-calendar" */
+        '@Core/ts/components/calendar'
+      ).then(({ calendarMeta }) => calendarMeta),
+
+    form: () =>
+      import(
+        /* webpackChunkName: "tutor-form" */
+        '@Core/ts/components/form'
+      ).then(({ formMeta }) => formMeta),
+
+    fileUploader: () =>
+      import(
+        /* webpackChunkName: "tutor-file-uploader" */
+        '@Core/ts/components/file-uploader'
+      ).then(({ fileUploaderMeta }) => fileUploaderMeta),
+
+    select: () =>
+      import(
+        /* webpackChunkName: "tutor-select" */
+        '@Core/ts/components/select'
+      ).then(({ selectMeta }) => selectMeta),
+
+    timeInput: () =>
+      import(
+        /* webpackChunkName: "tutor-time-input" */
+        '@Core/ts/components/time-input'
+      ).then(({ timeInputMeta }) => timeInputMeta),
+  });
+
+  await TutorComponentRegistry.loadComponents(getRequiredComponents());
 
   TutorComponentRegistry.initWithAlpine(Alpine);
 

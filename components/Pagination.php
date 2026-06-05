@@ -262,18 +262,37 @@ class Pagination extends BaseComponent {
 				$link = str_replace( 'next', 'tutor-pagination-item-next', $link );
 				$link = str_replace( 'tutor-pagination-item-activeColor', 'currentColor', $link );
 
+				if ( str_contains( $link, 'tutor-pagination-item-prev' ) ) {
+					$link = preg_replace(
+						'/<a\b/',
+						'<a aria-label="' . esc_attr__( 'Previous page', 'tutor' ) . '"',
+						$link,
+						1
+					);
+				}
+
+				if ( str_contains( $link, 'tutor-pagination-item-next' ) ) {
+					$link = preg_replace(
+						'/<a\b/',
+						'<a aria-label="' . esc_attr__( 'Next page', 'tutor' ) . '"',
+						$link,
+						1
+					);
+				}
+
 				$links .= sprintf( '<li>%s</li>', $link );
 			}
 		}
 
 		return sprintf(
-			'<nav class="%s" role="navigation" aria-label="Pagination Navigation">
+			'<nav class="%s" role="navigation" aria-label="%s">
 				%s
 				<ul class="tutor-pagination-list">
 				%s
 				</ul>
 			</nav>',
 			esc_attr( implode( ' ', $classes ) ),
+			esc_attr__( 'Pagination', 'tutor' ),
 			$pagination_info,
 			$links
 		);

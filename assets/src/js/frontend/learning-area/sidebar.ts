@@ -5,10 +5,9 @@
  */
 
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
-import { type AxiosError } from 'axios';
 
 interface ResetProgressPayload {
   course_id: number;
@@ -44,23 +43,20 @@ export const sidebarComponent = ({ courseId, resetModalId }: { courseId: number;
         }
       });
 
-      this.resetProgressMutation = query.useMutation(
-        (payload) => wpAjaxInstance.post(endpoints.RESET_COURSE_PROGRESS, payload),
-        {
-          onSuccess: (response) => {
-            if (response.status_code === 200 && response.data?.redirect_to) {
-              window.location.href = response.data.redirect_to;
-              modal.closeModal(this.resetModalId);
-            }
-          },
-          onError: (error: AxiosError) => {
-            toast.error(convertToErrorMessage(error));
-            if (!error || !error.response || !error.response.data) {
-              window.location.reload();
-            }
-          },
+      this.resetProgressMutation = query.useMutation((payload) => wpPost(endpoints.RESET_COURSE_PROGRESS, payload), {
+        onSuccess: (response) => {
+          if (response.status_code === 200 && response.data?.redirect_to) {
+            modal.closeModal(this.resetModalId);
+            window.location.href = response.data.redirect_to;
+          }
         },
-      );
+        onError: (error) => {
+          toast.error(convertToErrorMessage(error));
+          if (error.message?.includes('HTTP')) {
+            window.location.reload();
+          }
+        },
+      });
     },
 
     toggleSidebar() {

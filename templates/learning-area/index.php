@@ -141,7 +141,7 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 		<?php tutor_load_template( 'learning-area.components.header' ); ?>
 		<div class="tutor-learning-area-body">
 			<?php tutor_load_template( 'learning-area.components.sidebar' ); ?>
-			<div class="tutor-learning-area-content">
+			<div class="tutor-learning-area-content" role="main">
 				<div class="tutor-learning-area-container">
 					<?php
 					if ( $subpage ) {
@@ -160,6 +160,7 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 			<button 
 				class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon tutor-expand-btn"
 				@click="isFullScreen = !isFullScreen"
+				:aria-label="isFullScreen ? '<?php echo esc_attr__( 'Exit fullscreen', 'tutor' ); ?>' : '<?php echo esc_attr__( 'Enter fullscreen', 'tutor' ); ?>'"
 			>
 				<template x-if="!isFullScreen">
 					<?php SvgIcon::make()->name( Icon::EXPAND )->render(); ?>

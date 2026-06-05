@@ -88,6 +88,9 @@ const PuzzlePreview = ({ answers, gridSize: gridSizeProp, questionId }: PuzzlePr
   }
 
   const hiddenInputId = `tutor-puzzle-state-preview-${questionId}`;
+  const instructionId = `tutor-puzzle-instruction-${questionId}`;
+  const statusId = `tutor-puzzle-status-${questionId}`;
+  const describedByIds = `${instructionId} ${statusId}`;
 
   return (
     <div
@@ -100,16 +103,47 @@ const PuzzlePreview = ({ answers, gridSize: gridSizeProp, questionId }: PuzzlePr
       data-image-url={imageUrl}
       data-puzzle-token=""
     >
-      <div className="tutor-puzzle-playground">
+      <div
+        className="tutor-puzzle-playground tutor-quiz-interaction-focus-target"
+        tabIndex={0}
+        role="application"
+        aria-describedby={describedByIds}
+        aria-label={__(
+          'Puzzle board: use arrow keys to choose a slot, then press Enter to place the selected piece.',
+          'tutor',
+        )}
+      >
         <img
           className="tutor-puzzle-reference-image"
           src={imageUrl}
           alt={__('Puzzle reference image', 'tutor')}
           style={{ opacity: 0.3 }}
         />
-        <div className="tutor-puzzle-slots" />
+        <div className="tutor-puzzle-slots" aria-hidden="true" />
       </div>
-      <div className="tutor-puzzle-scatter" />
+      <div
+        className="tutor-puzzle-scatter tutor-quiz-interaction-focus-target"
+        tabIndex={0}
+        role="listbox"
+        aria-describedby={describedByIds}
+        aria-label={__(
+          'Puzzle pieces: use arrow keys to choose a piece, then Tab to the board and press Enter to place it.',
+          'tutor',
+        )}
+      />
+      <p id={instructionId} className="tutor-quiz-a11y-sr-only">
+        {__(
+          'In the piece pool, use arrow keys to select a piece. Tab to the puzzle board, use arrow keys to select a slot, and press Enter to place the piece at that slot. Pieces snap only when correct; wrong placements stay on the board like drag-and-drop. Press Backspace or Delete on the board to return a piece to the pool. Progress counts locked pieces only.',
+          'tutor',
+        )}
+      </p>
+      <div
+        id={statusId}
+        className="tutor-quiz-a11y-live-region tutor-quiz-a11y-sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+        role="status"
+      />
       <input type="hidden" id={hiddenInputId} name="" value="" />
     </div>
   );

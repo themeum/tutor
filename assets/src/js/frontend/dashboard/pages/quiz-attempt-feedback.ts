@@ -1,9 +1,9 @@
 import { __ } from '@wordpress/i18n';
 
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 const REVIEW_STATUSES = ['correct', 'incorrect'] as const;
 const REVIEW_STATUS_FIELD = 'review_statuses' as const;
@@ -88,20 +88,16 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
       const reviewStatusesPayload = getReviewStatusesPayload(payload.review_statuses);
       const reviewRequest =
         Object.keys(reviewStatusesPayload).length > 0
-          ? wpAjaxInstance
-              .post<QuizAttemptFeedbackResponse>(endpoints.REVIEW_QUIZ_ANSWERS, {
-                attempt_id: payload.attempt_id,
-                ...reviewStatusesPayload,
-              })
-              .then((res) => res.data)
+          ? wpPost<QuizAttemptFeedbackResponse>(endpoints.REVIEW_QUIZ_ANSWERS, {
+              attempt_id: payload.attempt_id,
+              ...reviewStatusesPayload,
+            })
           : Promise.resolve(null);
 
-      const feedbackRequest = wpAjaxInstance
-        .post<QuizAttemptFeedbackResponse>(endpoints.INSTRUCTOR_FEEDBACK, {
-          attempt_id: payload.attempt_id,
-          feedback: payload.feedback,
-        })
-        .then((res) => res.data);
+      const feedbackRequest = wpPost<QuizAttemptFeedbackResponse>(endpoints.INSTRUCTOR_FEEDBACK, {
+        attempt_id: payload.attempt_id,
+        feedback: payload.feedback,
+      });
 
       const [reviewResponse, feedbackResponse] = await Promise.all([reviewRequest, feedbackRequest]);
 

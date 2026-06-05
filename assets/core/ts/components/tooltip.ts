@@ -1,7 +1,5 @@
-// Tooltip Component
-
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { isRTL } from '@TutorShared/config/constants';
+import { isRTL } from '@Core/ts/utils/util';
 
 const TOOLTIP_PLACEMENTS = {
   TOP: 'top',

@@ -13,7 +13,9 @@ const PIN_IMAGE_SCRIPT_ATTR = 'data-tutor-pin-image-preview-script';
 const PinImagePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const imageUrl = answers[0]?.image_url;
-  const qId = answers[0]?.answer_id ?? 'preview';
+  const qId = String(answers[0]?.answer_id ?? 'preview');
+  const instructionId = `tutor-pin-image-instruction-${qId}`;
+  const statusId = `tutor-pin-image-status-${qId}`;
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -67,11 +69,31 @@ const PinImagePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
       id={`tutor-pin-image-question-${qId}`}
       className="tutor-quiz-question-options tutor-pin-image-question"
       data-question-type="pin_image"
+      data-question-id={qId}
     >
-      <div className="tutor-pin-image-wrapper">
+      <div
+        className="tutor-pin-image-wrapper"
+        tabIndex={0}
+        role="application"
+        aria-describedby={`${instructionId} ${statusId}`}
+        aria-label={__('Pin on image: click or use keyboard to place and move your pin.', 'tutor')}
+      >
         <img id={`tutor-pin-image-bg-${qId}`} src={imageUrl} alt={__('Pin on image question', 'tutor')} />
         <span className="tutor-pin-image-marker" aria-hidden="true" />
       </div>
+      <p id={instructionId} className="tutor-quiz-a11y-sr-only">
+        {__(
+          'Press Enter to place the pin. Use arrow keys to nudge the position, Shift with arrow keys for larger steps, and C to clear the pin.',
+          'tutor',
+        )}
+      </p>
+      <div
+        id={statusId}
+        className="tutor-quiz-a11y-live-region tutor-quiz-a11y-sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+        role="status"
+      />
       <input type="hidden" id={`tutor-pin-image-x-${qId}`} name="preview[answers][pin][x]" defaultValue="" readOnly />
       <input type="hidden" id={`tutor-pin-image-y-${qId}`} name="preview[answers][pin][y]" defaultValue="" readOnly />
     </div>

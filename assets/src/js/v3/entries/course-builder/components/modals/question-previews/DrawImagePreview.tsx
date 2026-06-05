@@ -21,7 +21,9 @@ const clearButtonIcon = css`
 const DrawImagePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const imageUrl = answers[0]?.image_url;
-  const qId = answers[0]?.answer_id ?? 'preview';
+  const qId = String(answers[0]?.answer_id ?? 'preview');
+  const instructionId = `tutor-draw-image-instruction-${qId}`;
+  const statusId = `tutor-draw-image-status-${qId}`;
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -75,6 +77,7 @@ const DrawImagePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
       id={`tutor-draw-image-question-${qId}`}
       className="tutor-quiz-question-options tutor-draw-image-question"
       data-question-type="draw_image"
+      data-question-id={qId}
     >
       <div className="tutor-draw-image-actions tutor-mb-12">
         <button
@@ -88,8 +91,28 @@ const DrawImagePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
       </div>
       <div className="tutor-draw-image-wrapper">
         <img id={`tutor-draw-image-bg-${qId}`} src={imageUrl} alt={__('Draw on image question', 'tutor')} />
-        <canvas id={`tutor-draw-image-canvas-${qId}`} className="tutor-draw-image-canvas" />
+        <canvas
+          id={`tutor-draw-image-canvas-${qId}`}
+          className="tutor-draw-image-canvas tutor-quiz-interaction-focus-target"
+          tabIndex={0}
+          role="application"
+          aria-describedby={`${instructionId} ${statusId}`}
+          aria-label={__('Draw on image: use pointer or keyboard to mark your selection area.', 'tutor')}
+        />
       </div>
+      <p id={instructionId} className="tutor-quiz-a11y-sr-only">
+        {__(
+          'Use arrow keys to move the drawing pointer. Press Space or Enter to start a freehand stroke, trace with arrow keys, then press Space or Enter again to finish and fill the selection. Escape cancels an in-progress stroke. C clears the saved selection.',
+          'tutor',
+        )}
+      </p>
+      <div
+        id={statusId}
+        className="tutor-quiz-a11y-live-region tutor-quiz-a11y-sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+        role="status"
+      />
       <input type="hidden" id={`tutor-draw-image-mask-${qId}`} name="preview[answers][mask]" defaultValue="" readOnly />
     </div>
   );

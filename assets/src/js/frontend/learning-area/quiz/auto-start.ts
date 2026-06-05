@@ -1,11 +1,10 @@
-import axios from 'axios';
-
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import { tutorConfig } from '@TutorShared/config/config';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 
+import { wpPostForm } from '@Core/ts/utils/api';
 import { QUIZ_EVENTS } from './constants';
 
 export interface QuizAutoStartConfig {
@@ -87,10 +86,9 @@ const quizAutoStart = (config: QuizAutoStartConfig) => {
     },
 
     startQuiz(payload: StartQuizPayload) {
-      return axios.postForm(window.location.href, {
-        quiz_id: payload.quizID,
+      return wpPostForm(window.location.href, {
         tutor_action: endpoints.START_QUIZ,
-        _tutor_nonce: tutorConfig._tutor_nonce,
+        quiz_id: payload.quizID,
       });
     },
 

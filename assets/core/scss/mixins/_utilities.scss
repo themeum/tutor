@@ -56,45 +56,42 @@
   }
 }
 
-@mixin tutor-focus-ring($color: 'brand') {
+@mixin tutor-focus-ring($color: 'brand', $use-outline: false) {
   $shadow: none;
+  $outline-color: $color;
 
-  @if $color =='brand' {
+  @if $color == 'brand' {
     $shadow: $tutor-ring-brand-shadow-xs;
+    $outline-color: #90a0f7;
   }
 
-  @if $color =='error' {
+  @if $color == 'error' {
     $shadow: $tutor-error-shadow-xs;
+    $outline-color: $tutor-error-shadow-xs;
   }
 
-  outline: none;
-  box-shadow: $shadow;
-
+  @if $use-outline {
+    outline: 2px solid $outline-color;
+    outline-offset: 2px;
+  } @else {
+    outline: none;
+    box-shadow: $shadow;
+  }
 }
 
-@mixin tutor-transition(
-  $properties: all,
-  $duration: 0.25s,
-  $timing: ease-in-out,
-  $delay: 0s
-) {
+@mixin tutor-transition($properties: all, $duration: 0.25s, $timing: ease-in-out, $delay: 0s) {
   @if $properties == all {
     transition: all $duration $timing $delay;
   } @else {
     $transitions: ();
 
     @each $property in $properties {
-      $transitions: append(
-        $transitions,
-        $property $duration $timing $delay,
-        comma
-      );
+      $transitions: append($transitions, $property $duration $timing $delay, comma);
     }
 
     transition: $transitions;
   }
 }
-
 
 @mixin tutor-hover-lift {
   @include tutor-transition(transform);
@@ -128,12 +125,12 @@
     position: relative;
 
     &::before {
-      content: "";
+      content: '';
       display: block;
       padding-top: percentage(1 / $ratio);
     }
 
-    >* {
+    > * {
       position: absolute;
       top: 0;
       left: 0;
@@ -145,23 +142,22 @@
 
 // Loading Spinner
 @mixin tutor-loading-spinner($lineColor: #ababab, $lineBgColor: #f1f1f1, $size: 20px) {
-	&::before {
-		content: '';
-		box-sizing: border-box;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		width: #{$size};
-		height: #{$size};
-		margin-top: calc(-1 * #{$size} / 2);
-		margin-left: calc(-1 * #{$size} / 2);
-		border-radius: 50%;
-		border: 2px solid $lineBgColor;
-		border-top-color: $lineColor;
-		animation: tutor-spin 0.8s linear infinite;
-	}
+  &::before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: #{$size};
+    height: #{$size};
+    margin-top: calc(-1 * #{$size} / 2);
+    margin-left: calc(-1 * #{$size} / 2);
+    border-radius: 50%;
+    border: 2px solid $lineBgColor;
+    border-top-color: $lineColor;
+    animation: tutor-spin 0.8s linear infinite;
+  }
 }
-
 
 // Animation and Transition Mixins for consistent motion design
 @mixin tutor-fade-in($duration: 0.3s, $timing: ease-out) {
@@ -290,7 +286,6 @@
 }
 
 @keyframes tutor-pulse {
-
   0%,
   100% {
     opacity: 1;
@@ -312,7 +307,6 @@
 }
 
 @keyframes tutor-shake {
-
   0%,
   100% {
     transform: translateX(0);
