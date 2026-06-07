@@ -26,7 +26,6 @@ use Tutor\Components\Sorting;
 use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
-use TUTOR\User;
 
 if ( Input::has( 'attempt_id', Input::GET_REQUEST ) ) {
 	// Load single attempt details if ID provided.
@@ -44,15 +43,21 @@ $quiz_attempt_obj = new Quiz_Attempts_List( false );
 $course_id     = Input::get( 'course-id', 0, Input::TYPE_INT );
 $order_filter  = Input::get( 'order', 'DESC' );
 $date_filter   = Input::get( 'date', '' );
+$start_date    = Input::get( 'start_date', '' );
+$end_date      = Input::get( 'end_date', '' );
 $result_filter = Input::get( 'result', '' );
 $search_filter = Input::get( 'search', '' );
 
-$quiz_attempts       = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, false, true );
+$quiz_attempts       = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, false, true, $start_date, $end_date );
 $quiz_attempts_list  = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter );
-$quiz_attempts_count = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, true, true );
+$quiz_attempts_count = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, true, true, $start_date, $end_date );
 
 
-if ( Input::has( 'date', Input::GET_REQUEST ) && $quiz_attempts_count <= $offset ) {
+$date_params_present = Input::has( 'date', Input::GET_REQUEST )
+	|| Input::has( 'start_date', Input::GET_REQUEST )
+	|| Input::has( 'end_date', Input::GET_REQUEST );
+
+if ( $date_params_present && $quiz_attempts_count <= $offset ) {
 	$offset = 0;
 }
 
@@ -64,15 +69,19 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data(
 	$search_filter,
 	$course_id,
 	$date_filter,
-	$order_filter
+	$order_filter,
+	array(),
+	$start_date,
+	$end_date
 );
 
 $hidden_inputs = array(
-	'order'     => $order_filter,
-	'search'    => $search_filter,
-	'date'      => $date_filter,
-	'result'    => $result_filter,
-	'course-id' => $course_id,
+	'order'      => $order_filter,
+	'date'       => $date_filter,
+	'start_date' => $start_date,
+	'end_date'   => $end_date,
+	'result'     => $result_filter,
+	'course-id'  => $course_id,
 )
 
 ?>
@@ -110,7 +119,7 @@ $hidden_inputs = array(
 
 			<div class="tutor-flex tutor-gap-3">
 				<?php
-				$query_items = array( 'course-id', 'search', 'date', 'result', 'order' );
+				$query_items = array( 'course-id', 'search', 'date', 'start_date', 'end_date', 'result', 'order' );
 				if ( Input::has_any( $query_items, Input::GET_REQUEST ) ) {
 					Button::make()
 						->tag( 'a' )
@@ -123,8 +132,9 @@ $hidden_inputs = array(
 				}
 
 				DateFilter::make()
-					->type( DateFilter::TYPE_SINGLE )
+					->type( DateFilter::TYPE_RANGE )
 					->placement( Positions::BOTTOM_END )
+					->hide_initial_label()
 					->render();
 
 				Sorting::make()->size( Size::SMALL )->order( $order_filter )->render();
