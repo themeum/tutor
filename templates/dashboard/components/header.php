@@ -54,11 +54,45 @@ $is_instructor_view = User::is_instructor_view();
 				$enrolled_student_count = (int) tutor_utils()->get_total_students_by_instructor( $user_id );
 				?>
 				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny tutor-mt-2">
-					<span class="tutor-font-medium"><?php echo esc_html( number_format_i18n( $active_course_count ) ); ?></span>
-					<?php echo esc_html( _n( 'active course', 'active courses', $active_course_count, 'tutor' ) ); ?>
+					<?php
+						echo wp_kses(
+							sprintf(
+								/* translators: %s is the formatted active course count wrapped in a span element. */
+								_n(
+									'<span class="tutor-font-medium">%s</span> active course',
+									'<span class="tutor-font-medium">%s</span> active courses',
+									$active_course_count,
+									'tutor'
+								),
+								esc_html( number_format_i18n( $active_course_count ) )
+							),
+							array(
+								'span' => array(
+									'class' => true,
+								),
+							)
+						);
+					?>
 					<span class="tutor-text-subdued">&bull;</span>
-					<span class="tutor-font-medium"><?php echo esc_html( number_format_i18n( $enrolled_student_count ) ); ?></span>
-					<?php echo esc_html( _n( 'student enrolled', 'students enrolled', $enrolled_student_count, 'tutor' ) ); ?>
+					<?php
+						echo wp_kses(
+							sprintf(
+								/* translators: %s is the formatted enrolled student count wrapped in a span element. */
+								_n(
+									'<span class="tutor-font-medium">%s</span> student enrolled',
+									'<span class="tutor-font-medium">%s</span> students enrolled',
+									$enrolled_student_count,
+									'tutor'
+								),
+								esc_html( number_format_i18n( $enrolled_student_count ) )
+							),
+							array(
+								'span' => array(
+									'class' => true,
+								),
+							)
+						);
+					?>
 				</div>
 			<?php endif; ?>
 		</div>
