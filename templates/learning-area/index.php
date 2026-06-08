@@ -143,7 +143,6 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 			<div class="tutor-learning-area-content" role="main">
 				<div class="tutor-learning-area-container">
 					<?php
-					// it was here before
 					if ( $subpage ) {
 						$template = $subpages[ $subpage ]['template'] ?? '';
 						if ( file_exists( $template ) ) {
