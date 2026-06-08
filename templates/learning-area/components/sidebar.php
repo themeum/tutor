@@ -266,7 +266,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						Button::make()
 							->variant( Variant::GHOST )
 							->label( __( 'More', 'tutor' ) )
-							->icon( Icon::THREE_DOTS, 'left', 20 )
+							->icon( Icon::MORE, 'left', 20 )
 							->attr( 'class', 'tutor-learning-pages-item' )
 							->attr( 'x-ref', 'trigger' )
 							->attr( '@click', 'toggle()' )
