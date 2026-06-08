@@ -12,11 +12,13 @@
   min-width: 0;
 
   &:has(:focus-visible:not(input):not(textarea):not(select)) {
-    @include tutor-focus-ring;
+    @include tutor-focus-ring(#{$tutor-border-idle2}, true);
+    outline-offset: $tutor-spacing-2;
   }
 
   .tutor-keyboard-nav &:has(:focus-visible) {
-    @include tutor-focus-ring;
+    @include tutor-focus-ring(#{$tutor-border-idle2}, true);
+    outline-offset: $tutor-spacing-2;
   }
 
   @include tutor-breakpoint-down(sm) {
@@ -81,6 +83,12 @@
     &:focus,
     &:focus-within {
       outline: none;
+    }
+
+    &:focus-visible,
+    &:has(.tutor-input:focus-visible) {
+      @include tutor-focus-ring(brand, true);
+      outline-offset: $tutor-spacing-2;
     }
 
     [data-grab-handle]:focus {

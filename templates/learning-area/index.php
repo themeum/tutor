@@ -16,36 +16,59 @@ use TUTOR\Course_List;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use TUTOR\Course;
-use Tutor\Helpers\UrlHelper;
+use TUTOR\Dashboard;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 use TUTOR\Quiz;
 use TUTOR\Template;
 
+$tutor_current_post       = get_post();
+$tutor_current_post_type  = get_post_type();
+$tutor_current_content_id = get_the_ID();
+$tutor_course_id          = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
+
+$subpages            = Template::make_learning_area_sub_page_nav_items();
+$subpage             = Input::get( 'subpage' );
+$attempt_id          = Input::get( 'attempt_id', 0, Input::TYPE_INT );
+$user_action         = Input::get( 'action' );
+$tutor_course        = get_post( $tutor_course_id );
+$course_title        = $tutor_course ? get_the_title( $tutor_course ) : '';
+$content_title       = $tutor_current_post ? get_the_title( $tutor_current_post ) : $course_title;
+$learning_meta_title = $content_title ? $content_title : __( 'Learning area', 'tutor' );
+$site_name           = get_bloginfo( 'name' );
+
+if ( $subpage && ! empty( $subpages[ $subpage ]['title'] ) ) {
+	$learning_meta_title = $subpages[ $subpage ]['title'];
+} elseif ( Quiz::ACTION_VIEW_DETAILS === $user_action ) {
+	if ( $content_title ) {
+		/* translators: %s: quiz attempt details. */
+		$learning_meta_title = sprintf( __( 'Quiz Attempt Details: %s', 'tutor' ), $content_title );
+	}
+} elseif ( tutor()->quiz_post_type === $tutor_current_post_type && $content_title ) {
+	/* translators: %s: quiz attempt title. */
+	$learning_meta_title = sprintf( __( 'Quiz: %s', 'tutor' ), $content_title );
+}
+
+/* translators: %s: learning area meta title. */
+$page_meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $learning_meta_title, $site_name );
+
+Dashboard::set_document_title( $page_meta_title );
+
+do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
 ?>
 <!DOCTYPE html>
 	<html <?php language_attributes(); ?>>
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title><?php bloginfo( 'name' ); ?></title>
 		<?php wp_head(); ?>
 	</head>
 	<body <?php body_class( '' ); ?> x-data="tutorCourseCompleteHandler()">
-		<?php wp_body_open(); ?>
+	<?php wp_body_open(); ?>
 <?php
 
-// Tutor global variable for using inside learning area.
-$tutor_current_post_type  = get_post_type();
-$tutor_current_content_id = get_the_ID();
-$tutor_course_id          = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
-
-do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
-
 $current_user_id            = get_current_user_id();
-$tutor_current_post         = get_post();
-$tutor_course               = get_post( $tutor_course_id );
 $tutor_course_list_url      = tutor_utils()->course_archive_page_url();
 $tutor_is_enrolled          = EnrollmentModel::is_enrolled( $tutor_course_id );
 $tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
@@ -106,7 +129,6 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 	exit;
 }
 
-$subpages = Template::make_learning_area_sub_page_nav_items();
 ?>
 	<div
 		class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>"
@@ -119,8 +141,6 @@ $subpages = Template::make_learning_area_sub_page_nav_items();
 			<div class="tutor-learning-area-content" role="main">
 				<div class="tutor-learning-area-container">
 					<?php
-					// Get requested page from query string and sanitize.
-					$subpage = Input::get( 'subpage' );
 					if ( $subpage ) {
 						$template = $subpages[ $subpage ]['template'] ?? '';
 						if ( file_exists( $template ) ) {
