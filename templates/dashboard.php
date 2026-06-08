@@ -131,7 +131,7 @@ $footer_links = array(
 				} elseif ( User::is_instructor_view() ) {
 						tutor_load_template( 'dashboard.dashboard' );
 				} else {
-					tutor_load_template( 'dashboard.student-dashboard' );
+					tutor_load_template( 'dashboard.student.dashboard' );
 				}
 				?>
 			</div>
