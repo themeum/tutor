@@ -54,6 +54,7 @@
     "@types/alpinejs__collapse": "^3.13.4",
     "@types/alpinejs__focus": "^3.13.4",
     "@types/cypress": "^1.1.6",
+    "@types/node": "^25.9.2",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@types/react-router-dom": "^5.3.3",
