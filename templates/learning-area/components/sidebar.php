@@ -17,12 +17,10 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Popover;
 use Tutor\Components\Progress;
 use Tutor\Components\Tooltip;
-use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
 use TUTOR\Course;
-use TUTOR\Input;
 use TUTOR\Template;
 
 global $tutor_course,
@@ -63,9 +61,18 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 		<h5 class="tutor-learning-header-title tutor-my-none">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
-		<button class="tutor-learning-header-toggle-mobile" @click.stop="toggleSidebar()" aria-label="<?php esc_attr_e( 'Close course sidebar', 'tutor' ); ?>">
-			<?php SvgIcon::make()->name( Icon::CROSS_2 )->size( 20 )->render(); ?>
-		</button>
+		<div class="tutor-learning-header-toggle-mobile">
+			<?php
+			Button::make()
+				->label( __( 'Close course sidebar', 'tutor' ) )
+				->variant( Variant::GHOST )
+				->size( Size::SMALL )
+				->icon( Icon::CROSS_2, 'left', 20 )
+				->icon_only()
+				->attr( '@click.stop', '$dispatch(\'toggle-sidebar\')' )
+				->render();
+			?>
+		</div>
 	</div>
 	<div class="tutor-learning-sidebar-curriculum">
 		<div class="tutor-learning-progress">
