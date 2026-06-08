@@ -14,6 +14,7 @@ use TUTOR\Course;
 use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
 use Tutor\Models\CartModel;
+use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -219,12 +220,8 @@ class CartController {
 		$user_id   = tutils()->get_user_id();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
-		if ( ! $course_id ) {
-			$this->response_bad_request( __( 'Invalid course id.', 'tutor' ) );
-		}
-
-		if ( 'publish' !== get_post_status( $course_id ) ) {
-			$this->response_bad_request( __( 'Cannot add to cart, course is not published.', 'tutor' ) );
+		if ( ! CourseModel::is_course_accessible( $course_id ) ) {
+			$this->response_bad_request( __( 'Cannot add to cart, course is not available for purchase.', 'tutor' ) );
 		}
 
 		$can_buy = apply_filters( 'tutor_can_purchase_course', true, $course_id );
