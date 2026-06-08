@@ -172,6 +172,8 @@ export default function TaxRates() {
                       }}
                     />
                     <Button
+                      isIconOnly
+                      aria-label={__('Delete', 'tutor')}
                       variant="text"
                       buttonCss={styles.deleteIcon}
                       icon={<SVGIcon height={24} width={24} name="delete" />}
@@ -233,6 +235,8 @@ export default function TaxRates() {
                     />
 
                     <Button
+                      isIconOnly
+                      aria-label={__('Delete', 'tutor')}
                       variant="text"
                       buttonCss={styles.deleteIcon}
                       icon={<SVGIcon height={24} width={24} name="delete" />}
@@ -262,7 +266,7 @@ export default function TaxRates() {
           </div>
         );
       },
-      width: activeCountry ? 180 : 100,
+      width: activeCountry ? '180px' : '100px',
     },
   ];
 
@@ -272,7 +276,7 @@ export default function TaxRates() {
       Cell: (item) => {
         return <MoreOptions data={item} />;
       },
-      width: 32,
+      width: '32px',
     });
   }
 

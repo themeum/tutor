@@ -156,7 +156,7 @@ export default function SubscriptionItem() {
                   label={__('Billing Cycles', __TUTOR_TEXT_DOMAIN__)}
                   placeholder={__('Select or type times to renewing the plan', __TUTOR_TEXT_DOMAIN__)}
                   content={
-                    !billingCyclesCustomPresets.includes(controllerProps.field.value) &&
+                    !billingCyclesCustomPresets.includes(controllerProps.field.value ?? '') &&
                     __('Times', __TUTOR_TEXT_DOMAIN__)
                   }
                   contentPosition="right"

@@ -14,7 +14,7 @@ import MembershipPlanListTable from './MembershipPlanListTable';
 interface CouponSelectItemModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<Coupon, any, undefined>;
+  form: UseFormReturn<Coupon, any, any>;
   type: 'bundles' | 'courses' | 'categories' | 'membershipPlans';
 }
 

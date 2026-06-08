@@ -86,7 +86,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
           </div>
         );
       },
-      width: 720,
+      width: '720px',
     },
   ];
 

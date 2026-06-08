@@ -1,7 +1,7 @@
 import { type QuizForm } from '@CourseBuilderServices/quiz';
+import { backendUrls } from '@Cypress/config/page-urls';
 import { faker } from '@faker-js/faker';
 import endpoints from '@TutorShared/utils/endpoints';
-import { backendUrls } from 'cypress/config/page-urls';
 import { loginAsAdmin } from '../../support/auth';
 
 describe('Course Builder - Quiz', () => {

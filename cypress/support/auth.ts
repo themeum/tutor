@@ -1,4 +1,4 @@
-import { backendUrls } from 'cypress/config/page-urls';
+import { backendUrls } from '@Cypress/config/page-urls';
 
 export const loginAsAdmin = () => {
   return cy.session(
