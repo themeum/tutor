@@ -53,23 +53,20 @@ if ( $subpage && ! empty( $subpages[ $subpage ]['title'] ) ) {
 /* translators: %s: learning area meta title. */
 $page_meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $learning_meta_title, $site_name );
 
-$page_meta_title = apply_filters( 'tutor_learning_area_meta_title', $page_meta_title );
-
 Dashboard::set_document_title( $page_meta_title );
+
+do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
 ?>
 <!DOCTYPE html>
 	<html <?php language_attributes(); ?>>
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="title" content="<?php echo esc_attr( $page_meta_title ); ?>" />
 		<?php wp_head(); ?>
 	</head>
 	<body <?php body_class( '' ); ?> x-data="tutorCourseCompleteHandler()">
 	<?php wp_body_open(); ?>
 <?php
-
-do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
 
 $current_user_id            = get_current_user_id();
 $tutor_course_list_url      = tutor_utils()->course_archive_page_url();

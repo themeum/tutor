@@ -59,7 +59,6 @@ if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="title" content="<?php echo esc_attr( $meta_title ); ?>" />
 		<?php wp_head(); ?>
 	</head>
 	<body <?php body_class( '' ); ?>>

@@ -341,8 +341,6 @@ class Dashboard {
 			$meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $page_title, $site_name );
 		}
 
-		$meta_title = apply_filters( 'tutor_dashboard_meta_title', $meta_title );
-
 		$page_meta_data['page_data']  = $page_data;
 		$page_meta_data['meta_title'] = $meta_title;
 
