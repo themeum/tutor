@@ -1733,7 +1733,7 @@ class CourseModel {
 			}
 			$course_duration_in_seconds = self::get_course_duration_in_seconds( $id );
 			// Calculate the time spent by a user based on the course completion percentage.
-			$total_seconds += $course_duration_in_seconds * ( $completion_percentage / 100 );
+			$total_seconds += (int) round( $course_duration_in_seconds * ( $completion_percentage / 100 ) );
 		}
 
 		return DateTimeHelper::split_seconds_into_time_units( $total_seconds );
