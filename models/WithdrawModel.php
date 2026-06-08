@@ -111,11 +111,11 @@ class WithdrawModel {
 		$query_by_status_sql = '';
 		$query_by_user_sql   = '';
 
-		if ( ! empty( $status ) ) {
-			$status = (array) $status;
-			$status = "'" . implode( "','", $status ) . "'";
+		if ( ! empty( $status ) && in_array( $status, array( self::STATUS_PENDING, self::STATUS_APPROVED, self::STATUS_REJECTED ), true ) ) {
+			$status      = (array) $status;
+			$placeholder = implode( ',', array_fill( 0, count( $status ), '%s' ) );
 
-			$query_by_status_sql = " AND status IN({$status}) ";
+			$query_by_status_sql = $wpdb->prepare( "AND status IN($placeholder)", ...$status ); //phpcs:ignore
 		}
 
 		if ( $user_id ) {
