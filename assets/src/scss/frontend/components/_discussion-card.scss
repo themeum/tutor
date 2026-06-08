@@ -136,6 +136,7 @@
       margin-right: auto;
       min-height: unset;
       background: unset !important;
+
       &:hover,
       &:focus {
         color: $tutor-text-brand !important;
@@ -187,7 +188,8 @@
   }
 
   &.active,
-  &:hover {
+  &:hover,
+  &:focus-within {
     background-color: $tutor-surface-l1-hover;
     border-color: $tutor-border-idle;
 

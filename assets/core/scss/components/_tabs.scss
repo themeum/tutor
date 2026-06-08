@@ -19,7 +19,6 @@ button.tutor-tabs-tab,
   height: $tutor-tab-height;
   box-shadow: none;
   @include tutor-transition((background-color, color, box-shadow));
-
   margin: $tutor-spacing-none;
 
   @include tutor-breakpoint-down(sm) {
@@ -63,7 +62,6 @@ button.tutor-tabs-tab,
   &:focus:not(:disabled):not(.tutor-tabs-tab-active) {
     color: $tutor-text-primary;
     background-color: $tutor-tab-l3-active-hover;
-    box-shadow: none;
     outline: none;
 
     svg {
@@ -78,6 +76,10 @@ button.tutor-tabs-tab,
     &:hover {
       background-color: transparent;
     }
+  }
+
+  &:focus-visible {
+    @include tutor-focus-ring();
   }
 }
 

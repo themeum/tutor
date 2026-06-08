@@ -131,7 +131,15 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						class="tutor-learning-nav-topic <?php echo esc_attr( $is_topic_active ? 'active' : '' ); ?>"
 						:class="{ 'expanded': expanded }"
 					>
-						<div role="button" @click="expanded = !expanded" class="tutor-learning-nav-header">
+						<div 
+							role="button" 
+							tabindex="0" 
+							@click="expanded = !expanded" 
+							@keydown.enter.prevent="expanded = !expanded" 
+							@keydown.space.prevent="expanded = !expanded" 
+							:aria-expanded="expanded ? 'true' : 'false'"
+							class="tutor-learning-nav-header"
+						>
 							<div class="tutor-learning-nav-header-progress">
 								<?php
 								Progress::make()
@@ -198,7 +206,12 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 		<?php if ( ! empty( $active_menu ) ) : ?>
 			<div class="tutor-sidebar-resizer" @mousedown="startResizing($event)"></div>
 			<div class="tutor-sidebar-restore-dropdown">
-				<button :class="{ 'is-minimized': pagesHeight <= 40 }" @click="togglePagesHeight()">
+				<button 
+					:class="{ 'is-minimized': pagesHeight <= 40 }" 
+					@click="togglePagesHeight()"
+					:aria-expanded="pagesHeight > 40 ? 'true' : 'false'"
+					:aria-label="pagesHeight <= 40 ? '<?php echo esc_js( __( 'Expand panel', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Collapse panel', 'tutor' ) ); ?>'"
+				>
 					<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->render(); ?>
 				</button>
 			</div>

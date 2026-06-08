@@ -188,7 +188,8 @@
     @include tutor-flex(row, center, center);
     @include tutor-button-base;
     @include tutor-button-variant('ghost');
-    padding: 0;
+    padding: $tutor-spacing-1;
+    border-radius: $tutor-radius-sm;
     flex-shrink: 0;
     position: absolute;
     @include right($tutor-spacing-5);

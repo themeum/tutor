@@ -36,6 +36,7 @@ use Tutor\Components\Constants\Variant;
 			</h4>
 			<?php
 				Button::make()
+					->label( __( 'Close', 'tutor' ) )
 					->variant( Variant::GHOST )
 					->size( Size::X_SMALL )
 					->tag( 'a' )
