@@ -73,16 +73,18 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 				<?php
 				Button::make()
 					->variant( Variant::OUTLINE )
-					->size( Size::SMALL, 16, 16 )
+					->size( Size::SMALL )
 					->label( __( 'Edit Review', 'tutor' ) )
 					->icon( Icon::EDIT_2 )
 					->attr( 'x-ref', 'edit' )
 					->render();
 
 				Button::make()
+					->label( __( 'Delete Review', 'tutor' ) )
 					->variant( Variant::OUTLINE )
 					->size( Size::SMALL )
 					->icon( Icon::DELETE_2 )
+					->icon_only()
 					->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review->comment_ID ) . ' })' )
 					->icon_only()
 					->render();

@@ -266,6 +266,7 @@ export const icons = [
   'minus',
   'minusSquare',
   'monitorPlay',
+  'more',
   'move',
   'mp3',
   'mp4',

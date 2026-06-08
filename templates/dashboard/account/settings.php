@@ -161,6 +161,7 @@ $settings_tab_data = array_values(
 					</div>
 
 					<div 
+						role="main"
 						:class="activeTab !== null && activeTab !== 'none' ? 'tutor-profile-tab-activated' : ''" 
 						class="tutor-profile-settings-tab-content tutor-w-full"
 					>

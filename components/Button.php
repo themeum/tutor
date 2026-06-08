@@ -100,14 +100,14 @@ class Button extends BaseComponent {
 	 *
 	 * @var int
 	 */
-	protected $icon_width = 16;
+	protected $icon_size = 16;
 
 	/**
-	 * Icon height.
+	 * Icon color.
 	 *
-	 * @var int
+	 * @var string
 	 */
-	protected $icon_height = 16;
+	protected $icon_color = '';
 
 	/**
 	 * Button icon position
@@ -228,17 +228,17 @@ class Button extends BaseComponent {
 	 *
 	 * @param string $icon       SVG icon name or markup.
 	 * @param string $position   Optional. Icon position: 'left' or 'right'.
-	 * @param int    $width      Optional. Icon width.
-	 * @param int    $height     Optional. Icon height.
+	 * @param int    $size       Optional. Icon size (width and height).
+	 * @param string $color      Optional. Icon color (use \Tutor\Components\Constants\Color).
 	 * @param array  $attributes Optional. Icon attributes.
 	 *
 	 * @return $this
 	 */
-	public function icon( string $icon, string $position = 'left', int $width = 16, int $height = 16, array $attributes = array() ): self {
+	public function icon( string $icon, string $position = 'left', int $size = 16, string $color = '', array $attributes = array() ): self {
 		$this->icon            = $icon;
 		$this->icon_position   = in_array( $position, array( self::POSITION_LEFT, self::POSITION_RIGHT ), true ) ? $position : 'left';
-		$this->icon_width      = $width;
-		$this->icon_height     = $height;
+		$this->icon_size       = $size;
+		$this->icon_color      = $color;
 		$this->icon_attributes = $attributes;
 		return $this;
 	}
@@ -346,8 +346,8 @@ class Button extends BaseComponent {
 				ob_start();
 				SvgIcon::make()
 					->name( $this->icon )
-					->width( $this->icon_width )
-					->height( $this->icon_height )
+					->size( $this->icon_size )
+					->color( $this->icon_color )
 					->attrs( $this->icon_attributes )
 					->render();
 				$icon_html = ob_get_clean();

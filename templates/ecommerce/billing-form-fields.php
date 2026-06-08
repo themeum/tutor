@@ -75,9 +75,7 @@ use Tutor\Components\InputField;
 		->options( $initial_states )
 		->searchable()
 		->id( 'billing_state' )
-		->required()
 		->placeholder( __( 'Enter your state', 'tutor' ) )
-		->attr( 'x-bind', "register('billing_state', { required: true })" )
 		->attr( 'x-effect', 'options = (config.stateOptions || {})[values.billing_country] || []' )
 		->render();
 ?>

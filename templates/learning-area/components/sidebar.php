@@ -17,12 +17,10 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Popover;
 use Tutor\Components\Progress;
 use Tutor\Components\Tooltip;
-use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
 use TUTOR\Course;
-use TUTOR\Input;
 use TUTOR\Template;
 
 global $tutor_course,
@@ -63,9 +61,18 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 		<h5 class="tutor-learning-header-title tutor-my-none">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
-		<button class="tutor-learning-header-toggle-mobile" @click.stop="toggleSidebar()" aria-label="<?php esc_attr_e( 'Close course sidebar', 'tutor' ); ?>">
-			<?php SvgIcon::make()->name( Icon::CROSS_2 )->size( 20 )->render(); ?>
-		</button>
+		<div class="tutor-learning-header-toggle-mobile">
+			<?php
+			Button::make()
+				->label( __( 'Close course sidebar', 'tutor' ) )
+				->variant( Variant::GHOST )
+				->size( Size::SMALL )
+				->icon( Icon::CROSS_2, 'left', 20 )
+				->icon_only()
+				->attr( '@click.stop', '$dispatch(\'toggle-sidebar\')' )
+				->render();
+			?>
+		</div>
 	</div>
 	<div class="tutor-learning-sidebar-curriculum">
 		<div class="tutor-learning-progress">
@@ -83,7 +90,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						->label( __( 'Reset Progress', 'tutor' ) )
 						->variant( Variant::GHOST )
 						->size( Size::X_SMALL )
-						->icon( Icon::RELOAD_2, 'left', 16, 16, array( 'class' => 'tutor-icon-secondary' ) )
+						->icon( Icon::RELOAD_2, 'left', 16, Color::SECONDARY )
 						->icon_only()
 						->attr( '@click', 'confirmReset()' )
 						->render();
@@ -131,7 +138,15 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						class="tutor-learning-nav-topic <?php echo esc_attr( $is_topic_active ? 'active' : '' ); ?>"
 						:class="{ 'expanded': expanded }"
 					>
-						<div role="button" @click="expanded = !expanded" class="tutor-learning-nav-header">
+						<div 
+							role="button" 
+							tabindex="0" 
+							@click="expanded = !expanded" 
+							@keydown.enter.prevent="expanded = !expanded" 
+							@keydown.space.prevent="expanded = !expanded" 
+							:aria-expanded="expanded ? 'true' : 'false'"
+							class="tutor-learning-nav-header"
+						>
 							<div class="tutor-learning-nav-header-progress">
 								<?php
 								Progress::make()
@@ -198,7 +213,12 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 		<?php if ( ! empty( $active_menu ) ) : ?>
 			<div class="tutor-sidebar-resizer" @mousedown="startResizing($event)"></div>
 			<div class="tutor-sidebar-restore-dropdown">
-				<button :class="{ 'is-minimized': pagesHeight <= 40 }" @click="togglePagesHeight()">
+				<button 
+					:class="{ 'is-minimized': pagesHeight <= 40 }" 
+					@click="togglePagesHeight()"
+					:aria-expanded="pagesHeight > 40 ? 'true' : 'false'"
+					:aria-label="pagesHeight <= 40 ? '<?php echo esc_js( __( 'Expand panel', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Collapse panel', 'tutor' ) ); ?>'"
+				>
 					<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->render(); ?>
 				</button>
 			</div>
@@ -246,7 +266,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 						Button::make()
 							->variant( Variant::GHOST )
 							->label( __( 'More', 'tutor' ) )
-							->icon( Icon::THREE_DOTS, 'left', 20, 20 )
+							->icon( Icon::MORE, 'left', 20 )
 							->attr( 'class', 'tutor-learning-pages-item' )
 							->attr( 'x-ref', 'trigger' )
 							->attr( '@click', 'toggle()' )
