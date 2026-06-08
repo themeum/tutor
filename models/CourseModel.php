@@ -92,6 +92,32 @@ class CourseModel {
 	}
 
 	/**
+	 * Check if a course is available for enrollment or purchase.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $course_id the course id.
+	 *
+	 * @return bool
+	 */
+	public static function is_course_accessible( $course_id = 0 ) {
+		$course = get_post( $course_id );
+		if ( ! $course || ! is_object( $course ) ) {
+			return false;
+		}
+
+		if ( ! in_array( $course->post_type, array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
+			return false;
+		}
+
+		if ( ! in_array( $course->post_status, array( self::STATUS_PUBLISH, self::STATUS_PRIVATE ), true ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Course record count
 	 *
 	 * @since 2.0.7
@@ -1733,7 +1759,7 @@ class CourseModel {
 			}
 			$course_duration_in_seconds = self::get_course_duration_in_seconds( $id );
 			// Calculate the time spent by a user based on the course completion percentage.
-			$total_seconds += $course_duration_in_seconds * ( $completion_percentage / 100 );
+			$total_seconds += (int) round( $course_duration_in_seconds * ( $completion_percentage / 100 ) );
 		}
 
 		return DateTimeHelper::split_seconds_into_time_units( $total_seconds );

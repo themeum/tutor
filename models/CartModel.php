@@ -136,7 +136,10 @@ class CartModel {
 					'on'    => 'item.course_id = post.ID',
 				),
 			);
-			$where                = array( 'item.cart_id' => $user_cart->id );
+			$where                = array(
+				'item.cart_id'     => $user_cart->id,
+				'post.post_status' => 'publish',
+			);
 			$select_columns       = array( 'post.*' );
 			$cart_data['courses'] = QueryHelper::get_joined_data(
 				$primary_table,

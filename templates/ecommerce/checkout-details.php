@@ -77,7 +77,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 					/**
 					 * Course and bundle checkout items.
 					 */
-					if ( is_array( $course_list ) && count( $course_list ) ) :
+					if ( is_array( $course_list ) && count( $course_list ) && isset( $checkout_data->items ) ) :
 						?>
 						<?php
 						foreach ( $checkout_data->items as $item ) :
