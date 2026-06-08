@@ -105,11 +105,14 @@ $single_url = UrlHelper::add_query_params(
 			<div class="tutor-flex">
 				<?php
 				Button::make()
+					->label( __( 'More options', 'tutor' ) )
+					->variant( Variant::SECONDARY )
 					->size( Size::X_SMALL )
 					->attr( 'x-ref', 'trigger' )
 					->attr( '@click', 'toggle()' )
-					->attr( 'class', 'tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon tutor-discussion-card-actions-trigger' )
+					->attr( 'class', 'tutor-discussion-card-actions-trigger' )
 					->icon( Icon::ELLIPSES )
+					->icon_only()
 					->render()
 				?>
 				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">

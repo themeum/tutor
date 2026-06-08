@@ -10,22 +10,10 @@
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
 
-  &:hover {
-    background-color: $tutor-surface-l1-hover;
-    @include tutor-breakpoint-up(sm) {
-      .tutor-upcoming-lesson-card-live-tag-badge {
-        opacity: 0;
-        visibility: hidden;
-      }
-      .tutor-upcoming-lesson-card-action {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-      }
-    }
-  }
-
+  &:hover,
   &:focus-within {
+    background-color: $tutor-surface-l1-hover;
+
     @include tutor-breakpoint-up(sm) {
       .tutor-upcoming-lesson-card-live-tag-badge {
         opacity: 0;

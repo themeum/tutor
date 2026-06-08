@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->id( 'delete-announcement-modal' )
  *     ->title( 'Delete This Announcement?' )
  *     ->message( 'This action cannot be undone.' )
- *     ->icon( Icon::DELETE_2, 80, 80 )
+ *     ->icon( Icon::DELETE_2, 80 )
  *     ->confirm_handler( 'handleDeleteAnnouncement(payload?.announcementId)' )
  *     ->render();
  * ```

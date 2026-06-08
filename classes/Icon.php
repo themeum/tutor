@@ -282,6 +282,7 @@ final class Icon {
 	const MINUS                      = 'minus';
 	const MINUS_SQUARE               = 'minus-square';
 	const MONITOR_PLAY               = 'monitor-play';
+	const MORE                       = 'more';
 	const MOVE                       = 'move';
 	const MP3                        = 'mp3';
 	const MP4                        = 'mp4';

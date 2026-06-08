@@ -230,7 +230,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 					Button::make()
 						->label( __( 'Retry Quiz', 'tutor' ) )
 						->variant( Variant::PRIMARY_SOFT )
-						->icon( Icon::RELOAD_3, 'left', 20, 20 )
+						->icon( Icon::RELOAD_3, 'left', 20 )
 						->attr( 'type', 'button' )
 						->attr( 'class', 'tutor-gap-2 tutor-btn-block' )
 						->attr(
