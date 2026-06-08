@@ -23,6 +23,7 @@ use Tutor\Models\EnrollmentModel;
 use TUTOR\Quiz;
 use TUTOR\Template;
 
+$current_user_id          = get_current_user_id();
 $tutor_current_post       = get_post();
 $tutor_current_post_type  = get_post_type();
 $tutor_current_content_id = get_the_ID();
@@ -30,7 +31,6 @@ $tutor_course_id          = tutor()->course_post_type === $tutor_current_post_ty
 
 do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
 
-$current_user_id            = get_current_user_id();
 $tutor_course_list_url      = tutor_utils()->course_archive_page_url();
 $tutor_is_enrolled          = EnrollmentModel::is_enrolled( $tutor_course_id );
 $tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
