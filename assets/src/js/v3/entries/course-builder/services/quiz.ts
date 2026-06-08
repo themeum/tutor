@@ -192,7 +192,10 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
         Number(quiz.quiz_option.max_questions_for_answer) > 0 ? quiz.quiz_option.max_questions_for_answer : 10,
       quiz_auto_start: quiz.quiz_option.quiz_auto_start === '1',
       auto_start_delay: String(quiz.quiz_option.auto_start_delay ?? 5),
-      question_layout_view: quiz.quiz_option.question_layout_view || 'single_question',
+      question_layout_view:
+        quiz.quiz_option.question_layout_view === 'question_pagination'
+          ? 'single_question'
+          : quiz.quiz_option.question_layout_view || 'single_question',
       enable_pagination: isDefined(quiz.quiz_option.enable_pagination)
         ? quiz.quiz_option.enable_pagination === '1'
         : quiz.quiz_option.question_layout_view === 'question_pagination' || false,
