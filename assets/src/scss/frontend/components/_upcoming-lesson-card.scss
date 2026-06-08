@@ -17,11 +17,9 @@
     @include tutor-breakpoint-up(sm) {
       .tutor-upcoming-lesson-card-live-tag-badge {
         opacity: 0;
-        visibility: hidden;
       }
       .tutor-upcoming-lesson-card-action {
         opacity: 1;
-        visibility: visible;
         pointer-events: auto;
       }
     }
@@ -50,9 +48,8 @@
     &-badge {
       @include tutor-flex(row, center, center);
       opacity: 1;
-      visibility: visible;
       z-index: $tutor-z-positive;
-      @include tutor-transition((opacity, visibility));
+      @include tutor-transition(opacity);
     }
   }
 
@@ -62,10 +59,9 @@
     top: 0;
     right: 0;
     opacity: 0;
-    visibility: hidden;
     pointer-events: none;
     z-index: $tutor-z-dropdown;
-    @include tutor-transition((opacity, visibility));
+    @include tutor-transition(opacity);
 
     &:hover {
       color: $tutor-text-primary-inverse;
