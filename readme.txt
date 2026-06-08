@@ -319,7 +319,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.9.12 - Jun 08, 2026
+= 3.9.12 - Jun 09, 2026
 
 Update: Added compatibility support for PHP 8.5
 Update: Added compatibility support for WordPress 7.0
