@@ -210,8 +210,8 @@ const FormVideoInput = ({
       source_video_id: file.id.toString(),
       source_html5: file.url,
     };
-    field.onChange(updateFieldValue(field.value, updateData));
-    onChange?.(updateFieldValue(field.value, updateData));
+    field.onChange(updateFieldValue(field.value ?? null, updateData));
+    onChange?.(updateFieldValue(field.value ?? null, updateData));
 
     try {
       setIsThumbnailLoading(true);
@@ -256,8 +256,8 @@ const FormVideoInput = ({
         poster: file.id.toString(),
         poster_url: file.url,
       };
-      field.onChange(updateFieldValue(field.value, updateData));
-      onChange?.(updateFieldValue(field.value, updateData));
+      field.onChange(updateFieldValue(field.value ?? null, updateData));
+      onChange?.(updateFieldValue(field.value ?? null, updateData));
     },
     initialFiles: field.value?.poster
       ? { id: Number(field.value.poster), url: field.value.poster_url, title: '' }
@@ -401,7 +401,7 @@ const FormVideoInput = ({
       type === 'video'
         ? { source: '', source_video_id: '', poster: '', poster_url: '' }
         : { poster: '', poster_url: '' };
-    const updatedValue = updateFieldValue(fieldValue, updateData);
+    const updatedValue = updateFieldValue(fieldValue ?? null, updateData);
     if (type === 'video') {
       resetVideoSelection();
     } else {
@@ -438,8 +438,8 @@ const FormVideoInput = ({
         [`source_${source}`]: url,
       };
 
-      field.onChange(updateFieldValue(fieldValue, updatedValue));
-      onChange?.(updateFieldValue(fieldValue, updatedValue));
+      field.onChange(updateFieldValue(fieldValue ?? null, updatedValue));
+      onChange?.(updateFieldValue(fieldValue ?? null, updatedValue));
       setIsOpen(false);
 
       const [duration, thumbnail] = await Promise.all([

@@ -65,13 +65,15 @@ const FormMultipleChoiceAndOrdering = ({
   validationError,
   setValidationError,
 }: FormMultipleChoiceAndOrderingProps) => {
-  const inputValue = field.value ?? {
-    answer_id: nanoid(),
-    answer_title: '',
-    is_correct: '0',
-    belongs_question_id: questionId,
-    belongs_question_type: 'multiple_choice',
-  };
+  const inputValue =
+    field.value ??
+    ({
+      answer_id: nanoid(),
+      answer_title: '',
+      is_correct: '0',
+      belongs_question_id: questionId,
+      belongs_question_type: 'multiple_choice',
+    } as QuizQuestionOption);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const [isEditing, setIsEditing] = useState(

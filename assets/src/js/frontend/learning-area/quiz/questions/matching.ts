@@ -249,7 +249,7 @@ const questionMatching = (
           droppedOption.replaceWith(clone);
         }
 
-        this._animateDropSnap(dropZoneEl, clone);
+        this._animateDropSnap(dropZoneEl as HTMLElement, clone);
 
         this._matches[targetDropZone.id] = String(sourceId);
         const values = this._getValuesFromMatches();
