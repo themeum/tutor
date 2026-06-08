@@ -647,10 +647,11 @@ class CheckoutController {
 			foreach ( $object_ids as $object_id ) {
 				if ( ! CourseModel::is_course_accessible( $object_id ) ) {
 					if ( ! get_the_title( $object_id ) ) {
-						continue;
+						array_push( $errors, __( 'Invalid order items', 'tutor' ) );
+					} else {
+						// translators: %s is the course title.
+						array_push( $errors, sprintf( __( '“%s” is no longer available for purchase.', 'tutor' ), get_the_title( $object_id ) ) );
 					}
-					// translators: %s is the course title.
-					array_push( $errors, sprintf( __( '“%s” is no longer available for purchase.', 'tutor' ), get_the_title( $object_id ) ) );
 				}
 				$can_buy = apply_filters( 'tutor_can_purchase_course', true, $object_id );
 				if ( is_wp_error( $can_buy ) ) {

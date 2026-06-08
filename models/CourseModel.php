@@ -100,16 +100,17 @@ class CourseModel {
 	 *
 	 * @return bool
 	 */
-	public static function is_course_accessible( int $course_id = 0 ) {
-		if ( ! $course_id || ! get_post( $course_id ) ) {
+	public static function is_course_accessible( $course_id = 0 ) {
+		$course = get_post( $course_id );
+		if ( ! $course || ! is_object( $course ) ) {
 			return false;
 		}
 
-		if ( ! in_array( get_post_type( $course_id ), array( tutor()->course_post_type, tutor()->free_course_post_type ), true ) ) {
+		if ( ! in_array( $course->post_type, array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
 			return false;
 		}
 
-		if ( ! in_array( get_post_status( $course_id ), array( self::STATUS_PUBLISH, self::STATUS_PRIVATE ), true ) ) {
+		if ( ! in_array( $course->post_status, array( self::STATUS_PUBLISH, self::STATUS_PRIVATE ), true ) ) {
 			return false;
 		}
 
