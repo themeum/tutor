@@ -38,6 +38,7 @@
       "@FrontendServices/*": ["./assets/src/js/frontend/services/*"],
       "@FrontendDashboard/*": ["./assets/src/js/frontend/dashboard/*"],
       "@LearningArea/*": ["./assets/src/js/frontend/learning-area/*"],
+      "@Cypress/*": ["./cypress/*"],
       "@TutorProQuiz/*": ["../tutor-pro/assets/src/js/quiz-type/*"]
     }
   },

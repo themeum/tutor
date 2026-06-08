@@ -1,7 +1,7 @@
 import endpoints from '@TutorShared/utils/endpoints';
 import { type Addon } from '@TutorShared/utils/util';
-import { backendUrls } from 'cypress/config/page-urls';
-import { type Interception } from 'node_modules/cypress/types/net-stubbing';
+import { backendUrls } from '@Cypress/config/page-urls';
+import { type Interception } from '../../node_modules/cypress/types/net-stubbing';
 
 /* eslint-disable @typescript-eslint/no-namespace */
 export {};
