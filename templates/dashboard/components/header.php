@@ -57,7 +57,7 @@ $is_instructor_view = User::is_instructor_view();
 					<?php
 						echo wp_kses(
 							sprintf(
-								/* translators: %s is the formatted active course count wrapped in a span element. */
+								/* translators: %s is the formatted active course count. */
 								_n(
 									'<span class="tutor-font-medium">%s</span> active course',
 									'<span class="tutor-font-medium">%s</span> active courses',
@@ -77,7 +77,7 @@ $is_instructor_view = User::is_instructor_view();
 					<?php
 						echo wp_kses(
 							sprintf(
-								/* translators: %s is the formatted enrolled student count wrapped in a span element. */
+								/* translators: %s is the formatted enrolled student count. */
 								_n(
 									'<span class="tutor-font-medium">%s</span> student enrolled',
 									'<span class="tutor-font-medium">%s</span> students enrolled',
