@@ -28,6 +28,22 @@ $tutor_current_post_type  = get_post_type();
 $tutor_current_content_id = get_the_ID();
 $tutor_course_id          = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
 
+do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
+
+$current_user_id            = get_current_user_id();
+$tutor_course_list_url      = tutor_utils()->course_archive_page_url();
+$tutor_is_enrolled          = EnrollmentModel::is_enrolled( $tutor_course_id );
+$tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
+$tutor_is_course_instructor = tutor_utils()->is_instructor_of_this_course( $current_user_id, $tutor_course_id, true );
+$tutor_is_course_completed  = tutor_utils()->is_completed_course( $tutor_course_id, $current_user_id );
+$tutor_can_complete_course  = CourseModel::can_complete_course( $tutor_course_id, $current_user_id ) && ! $tutor_is_course_completed;
+
+$tutor_course_progress   = tutor_utils()->get_course_completed_percent( $tutor_course_id, $current_user_id );
+$tutor_completion_mode   = tutor_utils()->get_option( 'course_completion_process' );
+$tutor_retake_course     = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $tutor_is_course_completed || $tutor_course_progress >= 100 );
+$tutor_can_retake_course = $tutor_retake_course && ( CourseModel::MODE_FLEXIBLE === $tutor_completion_mode || $tutor_is_course_completed );
+
+// Global variables defined above are used by the 'make_learning_area_sub_page_nav_items' function.
 $subpages            = Template::make_learning_area_sub_page_nav_items();
 $subpage             = Input::get( 'subpage' );
 $attempt_id          = Input::get( 'attempt_id', 0, Input::TYPE_INT );
@@ -54,8 +70,6 @@ if ( $subpage && ! empty( $subpages[ $subpage ]['title'] ) ) {
 $page_meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $learning_meta_title, $site_name );
 
 Dashboard::set_document_title( $page_meta_title );
-
-do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_current_content_id );
 ?>
 <!DOCTYPE html>
 	<html <?php language_attributes(); ?>>
@@ -67,18 +81,6 @@ do_action( 'tutor/course/single/content/before/all', $tutor_course_id, $tutor_cu
 	<body <?php body_class( '' ); ?> x-data="tutorCourseCompleteHandler()">
 	<?php wp_body_open(); ?>
 <?php
-
-$current_user_id            = get_current_user_id();
-$tutor_course_list_url      = tutor_utils()->course_archive_page_url();
-$tutor_is_enrolled          = EnrollmentModel::is_enrolled( $tutor_course_id );
-$tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
-$tutor_is_course_instructor = tutor_utils()->is_instructor_of_this_course( $current_user_id, $tutor_course_id, true );
-$tutor_is_course_completed  = tutor_utils()->is_completed_course( $tutor_course_id, $current_user_id );
-$tutor_can_complete_course  = CourseModel::can_complete_course( $tutor_course_id, $current_user_id ) && ! $tutor_is_course_completed;
-$tutor_course_progress      = tutor_utils()->get_course_completed_percent( $tutor_course_id, $current_user_id );
-$tutor_completion_mode      = tutor_utils()->get_option( 'course_completion_process' );
-$tutor_retake_course        = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $tutor_is_course_completed || $tutor_course_progress >= 100 );
-$tutor_can_retake_course    = $tutor_retake_course && ( CourseModel::MODE_FLEXIBLE === $tutor_completion_mode || $tutor_is_course_completed );
 
 // Auto complete course.
 if ( CourseModel::can_autocomplete_course( $tutor_course_id, $current_user_id ) ) {
@@ -141,6 +143,7 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 			<div class="tutor-learning-area-content" role="main">
 				<div class="tutor-learning-area-container">
 					<?php
+					// it was here before
 					if ( $subpage ) {
 						$template = $subpages[ $subpage ]['template'] ?? '';
 						if ( file_exists( $template ) ) {
