@@ -531,6 +531,11 @@ class OrderModel {
 		$order_data->activities = $order_activities_model->get_order_activities( $order_id );
 		$order_data->refunds    = $this->get_order_refunds( $order_id );
 
+		$enrollment_ids = $this->get_enrollment_ids( $order_id );
+		if ( tutor_utils()->count( $enrollment_ids ) ) {
+			$order_data->enrollment = EnrollmentModel::get_enrolment_by_enrol_id( $enrollment_ids[0] );
+		}
+
 		unset( $student->billing_address->id );
 		unset( $student->billing_address->user_id );
 
