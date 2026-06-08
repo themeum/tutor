@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 use Tutor\Components\Button;
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\SvgIcon;
@@ -58,14 +59,14 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 		<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="lesson_id" />
 		<input type="hidden" value="tutor_complete_lesson" name="tutor_action" />
 		<button type="submit" name="complete_lesson_btn" class="tutor-mark-as-complete-button <?php echo esc_attr( $is_completed_lesson ? 'completed' : '' ); ?>" <?php echo esc_attr( $is_completed_lesson ? 'disabled' : '' ); ?>>
-			<div class="tutor-text-center tutor-w-full">
+			<span class="tutor-text-center tutor-w-full">
 				<?php echo esc_html( $is_completed_lesson ? __( 'Completed', 'tutor' ) : __( 'Mark as complete', 'tutor' ) ); ?>
-			</div>
+			</span>
 			<?php
 			if ( $is_completed_lesson ) {
 				SvgIcon::make()->name( Icon::LESSON_COMPLETED )->size( 40 )->render();
 			} else {
-				SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->attr( 'class', 'tutor-icon-secondary' )->render();
+				SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->color( Color::BRAND )->render();
 			}
 			?>
 		</button>

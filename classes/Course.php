@@ -3495,7 +3495,7 @@ class Course extends Tutor_Base {
 	 */
 	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0, string $size = Size::MEDIUM, string $tooltip = '', bool $block = false ): void {
 		$button = Button::make()
-		->variant( Variant::PRIMARY_SOFT )
+		->variant( Variant::SECONDARY )
 		->label( __( 'Complete the Course', 'tutor' ) )
 		->icon( Icon::TICK_MARK )
 		->size( $size )
@@ -3539,7 +3539,7 @@ class Course extends Tutor_Base {
 	 */
 	public static function render_course_retake_btn( string $modal_id, string $size = Size::MEDIUM, bool $block = false ): void {
 		Button::make()
-		->variant( Variant::PRIMARY_SOFT )
+		->variant( Variant::SECONDARY )
 		->label( __( 'Retake this Course', 'tutor' ) )
 		->icon( Icon::RELOAD_4 )
 		->size( $size )
