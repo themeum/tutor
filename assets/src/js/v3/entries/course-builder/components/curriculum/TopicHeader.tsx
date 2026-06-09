@@ -128,6 +128,9 @@ const TopicHeader = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
+  const summaryValue = form.watch('summary') ?? '';
+  const hasSummary = summaryValue.trim().length > 0;
+
   return (
     <>
       <div css={styles.header({ isCollapsed: topic.isCollapsed, isEdit, isDeletePopoverOpen, isDragging })}>
@@ -135,7 +138,7 @@ const TopicHeader = ({
           css={styles.headerContent({
             isSaved: topic.isSaved,
             isCollapsed: topic.isCollapsed,
-            hasSummary: topic.summary.length > 0,
+            hasSummary,
           })}
         >
           <div
@@ -259,10 +262,10 @@ const TopicHeader = ({
         <Show
           when={isEdit}
           fallback={
-            <Show when={topic.summary.length > 0}>
+            <Show when={hasSummary}>
               <animated.div style={{ ...collapseAnimationDescription }}>
                 <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
-                  {form.watch('summary')}
+                  {summaryValue}
                 </div>
               </animated.div>
             </Show>
