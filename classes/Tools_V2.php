@@ -429,8 +429,8 @@ class Tools_V2 {
 	 */
 	public function status( $type = '' ) {
 
-		$data         = array();
-		$data[ null ] = 'null';
+		$data     = array();
+		$data[''] = 'null';
 
 		$environment = $this->get_environment_info();
 
@@ -518,7 +518,7 @@ class Tools_V2 {
 			return $data[ $type ];
 		}
 
-		return $data[ null ];
+		return $data[''];
 	}
 
 	/**
