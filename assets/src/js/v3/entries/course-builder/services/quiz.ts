@@ -45,6 +45,7 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
     is_image_matching?: '0' | '1';
     draw_image_threshold_percent?: number;
     puzzle_grid_size?: number;
+    coordinates_axis_range?: number;
   };
 }
 
@@ -66,6 +67,7 @@ interface QuizPayload {
   payload: QuizResponseWithStatus;
   deleted_question_ids?: ID[];
   deleted_answer_ids?: ID[];
+  deleted_temp_mask_values?: string[];
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: number;
   'content_drip_settings[prerequisites]'?: ID[] | string;
@@ -135,7 +137,6 @@ export interface QuizForm {
     hide_question_number_overview: boolean;
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
-    show_pagination: boolean;
     pagination_type: QuizPaginationType;
     content_drip_settings: {
       unlock_date: string;
@@ -147,6 +148,7 @@ export interface QuizForm {
   questions: QuizQuestion[];
   deleted_question_ids: ID[];
   deleted_answer_ids: ID[];
+  deleted_temp_mask_values: string[];
 }
 
 interface QuizUpdateQuestionPayload {
@@ -162,6 +164,7 @@ interface QuizUpdateQuestionPayload {
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFields: string[]): QuizForm => {
+  const defaultQuizAttemptsAllowed = tutorConfig.settings?.quiz_attempts_allowed ?? 10;
   const legacyQuizOption = quiz.quiz_option as QuizDetailsResponse['quiz_option'] & {
     feedback_mode?: 'default' | 'reveal' | 'retry';
   };
@@ -181,14 +184,18 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       limit_attempts_allowed: isDefined(quiz.quiz_option.limit_attempts_allowed)
         ? quiz.quiz_option.limit_attempts_allowed === '1'
         : legacyQuizOption.feedback_mode === 'retry',
-      attempts_allowed: quiz.quiz_option.attempts_allowed ?? 10,
+      attempts_allowed: quiz.quiz_option.attempts_allowed ?? defaultQuizAttemptsAllowed,
       pass_is_required: quiz.quiz_option.pass_is_required === '1',
       passing_grade: quiz.quiz_option.passing_grade ?? 80,
       limit_questions_to_answer: !!Number(quiz.quiz_option.max_questions_for_answer),
-      max_questions_for_answer: quiz.quiz_option.max_questions_for_answer ?? 10,
+      max_questions_for_answer:
+        Number(quiz.quiz_option.max_questions_for_answer) > 0 ? quiz.quiz_option.max_questions_for_answer : 10,
       quiz_auto_start: quiz.quiz_option.quiz_auto_start === '1',
       auto_start_delay: String(quiz.quiz_option.auto_start_delay ?? 5),
-      question_layout_view: quiz.quiz_option.question_layout_view || 'single_question',
+      question_layout_view:
+        quiz.quiz_option.question_layout_view === 'question_pagination'
+          ? 'single_question'
+          : quiz.quiz_option.question_layout_view || 'single_question',
       enable_pagination: isDefined(quiz.quiz_option.enable_pagination)
         ? quiz.quiz_option.enable_pagination === '1'
         : quiz.quiz_option.question_layout_view === 'question_pagination' || false,
@@ -198,7 +205,6 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       answers_reveal_duration: String(quiz.quiz_option.answers_reveal_duration ?? 5),
       hide_previous_button: quiz.quiz_option.hide_previous_button === '1',
       questions_order: quiz.quiz_option.questions_order ?? 'rand',
-      show_pagination: quiz.quiz_option.question_layout_view === 'question_pagination',
       pagination_type: quiz.quiz_option.pagination_type ?? 'shape',
       hide_question_number_overview: quiz.quiz_option.hide_question_number_overview === '1',
       short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit ?? 200,
@@ -212,6 +218,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
     questions: (quiz.questions || []).map((question) => convertedQuestion(question)),
     deleted_question_ids: [],
     deleted_answer_ids: [],
+    deleted_temp_mask_values: [],
     ...Object.fromEntries(slotFields.map((key) => [key, quiz[key as keyof QuizDetailsResponse]])),
   };
 };
@@ -329,6 +336,9 @@ export const convertQuizFormDataToPayload = (
             ...(question.question_type === 'puzzle' && {
               puzzle_grid_size: Number(question.question_settings.puzzle_grid_size ?? 4),
             }),
+            ...(question.question_type === 'coordinates' && {
+              coordinates_axis_range: Number(question.question_settings.coordinates_axis_range ?? 10),
+            }),
           },
           question_answers: question.question_answers.map(
             (answer) =>
@@ -358,6 +368,7 @@ export const convertQuizFormDataToPayload = (
     },
     deleted_question_ids: formData.deleted_question_ids,
     deleted_answer_ids: deletedAnswerIds,
+    deleted_temp_mask_values: formData.deleted_temp_mask_values,
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'unlock_by_date' && {
         'content_drip_settings[unlock_date]': formData.quiz_option.content_drip_settings.unlock_date,

@@ -31,7 +31,8 @@ $total_price    = (float) $wc_order->get_total();
 $order_status   = $wc_order->get_status();
 $payment_status = $wc_order->get_status();
 $payment_method = $wc_order->get_payment_method_title();
-$order_date     = $wc_order->get_date_created();
+$order_date_obj = $wc_order->get_date_created();
+$order_date     = $order_date_obj ? $order_date_obj->date( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) ) : '';
 
 $titles  = array();
 $courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order_id );
@@ -49,17 +50,11 @@ if ( tutor_utils()->count( $courses ) ) {
 <div class="tutor-billing-card">
 	<div class="tutor-billing-card-left">
 		<div class="tutor-billing-card-title">
-			<div class="tutor-hidden tutor-sm-block">
-				<?php ComponentHelper::render_status_badge( $order_status ); ?>
-			</div>
 			<ul class="tutor-pl-1">
 				<?php foreach ( $titles as $item_title ) : ?>
 					<li><span><?php echo esc_html( $item_title ); ?></span></li>
 				<?php endforeach; ?>
 			</ul>
-			<div class="tutor-sm-hidden">
-				<div class="tutor-ml-6"><?php ComponentHelper::render_status_badge( $order_status ); ?></div>
-			</div>
 		</div>
 		<div class="tutor-billing-card-details">
 			<div class="tutor-billing-card-id">
@@ -79,17 +74,20 @@ if ( tutor_utils()->count( $courses ) ) {
 	</div>
 
 	<div class="tutor-billing-card-right">
+		<?php ComponentHelper::render_status_badge( $order_status ); ?>
+
 		<div class="tutor-billing-card-amount">
 			<?php echo wp_kses( tutor_get_formatted_price( $total_price ), tutor_price_allowed_html() ); ?>
 		</div>
 
 		<?php
 		if ( 'pending' === $order_status ) {
-			printf(
-				'<a href="%s" class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit">%s</a>',
-				esc_url( $wc_order->get_checkout_payment_url() ),
-				esc_html__( 'Pay', 'tutor' )
-			);
+			Button::make()
+				->variant( Variant::LINK )
+				->tag( 'a' )
+				->attr( 'href', $wc_order->get_checkout_payment_url() )
+				->label( __( 'Pay', 'tutor' ) )
+				->render();
 		}
 
 		if ( 'completed' === $order_status ) {
@@ -98,7 +96,7 @@ if ( tutor_utils()->count( $courses ) ) {
 				->label( __( 'Receipt', 'tutor' ) )
 				->variant( Variant::LINK )
 				->attr( 'type', 'button' )
-				->attr( 'class', 'tutor-export-purchase-history tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit' )
+				->attr( 'class', 'tutor-export-purchase-history' )
 				->attr( 'data-order', $order_id )
 				->attr( 'data-course-name', implode( ', ', $titles ) )
 				->attr( 'data-price', $total_price )

@@ -5,37 +5,31 @@
  */
 
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface ResetProgressPayload {
   course_id: number;
+  context: string;
 }
 
 interface ResetProgressResponse {
   success: boolean;
+  status_code?: number;
   message?: string;
   data?: {
     redirect_to: string;
   };
 }
 
-export const sidebarComponent = ({
-  isCollapsed,
-  courseId,
-  resetModalId,
-}: {
-  isCollapsed: boolean;
-  courseId: number;
-  resetModalId: string;
-}) => {
+export const sidebarComponent = ({ courseId, resetModalId }: { courseId: number; resetModalId: string }) => {
   const { query, modal, toast } = window.TutorCore;
 
   return {
     pagesHeight: 0,
     resizing: false,
-    collapsed: isCollapsed,
+    sidebarOpen: false,
     courseId: courseId,
     resetModalId: resetModalId,
     resetProgressMutation: null as MutationState<ResetProgressResponse, ResetProgressPayload> | null,
@@ -49,19 +43,28 @@ export const sidebarComponent = ({
         }
       });
 
-      this.resetProgressMutation = query.useMutation(
-        (payload) => wpAjaxInstance.post(endpoints.RESET_COURSE_PROGRESS, payload),
-        {
-          onSuccess: (response) => {
-            if (response.success && response.data?.redirect_to) {
-              window.location.href = response.data.redirect_to;
-            }
-          },
-          onError: (error) => {
-            toast.error(convertToErrorMessage(error));
-          },
+      this.resetProgressMutation = query.useMutation((payload) => wpPost(endpoints.RESET_COURSE_PROGRESS, payload), {
+        onSuccess: (response) => {
+          if (response.status_code === 200 && response.data?.redirect_to) {
+            modal.closeModal(this.resetModalId);
+            window.location.href = response.data.redirect_to;
+          }
         },
-      );
+        onError: (error) => {
+          toast.error(convertToErrorMessage(error));
+          if (error.message?.includes('HTTP')) {
+            window.location.reload();
+          }
+        },
+      });
+    },
+
+    toggleSidebar() {
+      this.sidebarOpen = !this.sidebarOpen;
+    },
+
+    closeSidebar() {
+      this.sidebarOpen = false;
     },
 
     startResizing(e: MouseEvent) {
@@ -98,7 +101,7 @@ export const sidebarComponent = ({
     },
 
     resetProgress() {
-      this.resetProgressMutation?.mutate({ course_id: this.courseId });
+      this.resetProgressMutation?.mutate({ course_id: this.courseId, context: 'learning-area-sidebar' });
     },
   };
 };

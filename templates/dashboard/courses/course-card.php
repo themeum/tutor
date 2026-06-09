@@ -27,14 +27,30 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 	$course_learning_url = get_permalink();
 }
 
+if ( ! $course_learning_url ) {
+	$course_learning_url = $course_permalink;
+}
+
 ?>
 
-<div class="tutor-progress-card">
-	<div class="tutor-progress-card-inner" onclick="window.location.href = '<?php echo esc_url( $course_learning_url ); ?>';">
+<div
+	class="tutor-progress-card"
+	role="link"
+	tabindex="0"
+	x-data="{
+		navigate() {
+			window.location.href = '<?php echo esc_js( esc_url( $course_learning_url ) ); ?>';
+		}
+	}"
+	@click="navigate()"
+	@keydown.enter.prevent="navigate()"
+	@keydown.space.prevent="navigate()"
+>
+	<div class="tutor-progress-card-inner">
 		<div class="tutor-progress-card-thumbnail">
 			<?php do_action( 'tutor_courses_card_before_thumbnail', $course_id ); ?>
 			<?php if ( ! empty( $tutor_course_img ) ) : ?>
-				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" />
+				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title_attribute(); ?>" />
 			<?php endif; ?>
 		</div>
 
@@ -57,7 +73,7 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 					<?php if ( $course_progress['total_count'] > 0 ) : ?>
 						<div class="tutor-progress-card-details">
 							<?php
-							printf(
+							$progress_msg = sprintf(
 								esc_html(
 									// translators: %1$s is the completed count, %2$s is the total count.
 									_n(
@@ -67,10 +83,11 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 										'tutor'
 									)
 								),
-								esc_html( $course_progress['completed_percent'] ),
+								esc_html( $course_progress['completed_count'] ),
 								esc_html( $course_progress['total_count'] )
 							);
-
+							// phpcs:ignore -- already sanitized
+							echo apply_filters( 'tutor_course_progress_message', esc_html( $progress_msg ), $course_progress['completed_count'], $course_progress['total_count'] );
 							?>
 							<span class="tutor-progress-card-separator">•</span>
 							<?php

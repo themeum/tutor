@@ -47,15 +47,23 @@ $single_url = UrlHelper::add_query_params(
 		<?php Avatar::make()->user( $lesson_comment->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
 			<div class="tutor-discussion-card-top">
-				<div class="tutor-discussion-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></div>
-				<div>
-					<span class="tutor-text-subdued"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
-					<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
-					<span class="tutor-text-subdued"><?php esc_html_e( 'in', 'tutor' ); ?></span> 
-					<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
+				<div class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $lesson_comment->comment_author ); ?></div>
+				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-overflow-hidden">
+					<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-min-w-0">
+						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
+						<div class="tutor-min-w-0 tutor-flex-1">
+							<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
+						</div>
+					</div>
+					<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-min-w-0">
+						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'in', 'tutor' ); ?></span> 
+						<div class="tutor-min-w-0 tutor-flex-1">
+							<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
+						</div>
+					</div>
 				</div>
 			</div>
-			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="<?php echo esc_attr( 'tutor-lesson-comment-text-' . (int) $lesson_comment->comment_ID ); ?>"><?php echo wp_kses_post( $lesson_comment->comment_content ); ?></a>
+			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title tutor-break-words" id="<?php echo esc_attr( 'tutor-lesson-comment-text-' . (int) $lesson_comment->comment_ID ); ?>"><?php echo wp_kses_post( $lesson_comment->comment_content ); ?></a>
 			<div class="tutor-discussion-card-meta tutor-sm-mt-4">
 				<button 
 					@click="toggleCommentReply(<?php echo (int) $lesson_comment->comment_ID; ?>)"
@@ -83,18 +91,28 @@ $single_url = UrlHelper::add_query_params(
 		<div class="tutor-discussion-card-actions" x-show="replyingCommentId !== <?php echo (int) $lesson_comment->comment_ID; ?>">
 			<?php
 			Button::make()
+				->variant( Variant::PRIMARY )
+				->size( Size::X_SMALL )
 				->label( __( 'Reply', 'tutor' ) )
 				->attr( '@click', 'toggleCommentReply(' . (int) $lesson_comment->comment_ID . ')' )
-				->attr( 'class', 'tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden' )
+				->attr( 'class', 'tutor-force-sm-hidden' )
 				->attr( 'type', 'button' )
 				->size( Size::X_SMALL )
 				->render();
 			?>
 			<?php if ( get_current_user_id() === (int) $lesson_comment->user_id ) : ?>
 				<div class="tutor-flex">
-					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
-						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
-					</button>
+					<?php
+					Button::make()
+						->label( __( 'More options', 'tutor' ) )
+						->variant( Variant::SECONDARY )
+						->size( Size::X_SMALL )
+						->icon( Icon::ELLIPSES, 'left', Size::SIZE_16, Color::SECONDARY )
+						->icon_only()
+						->attr( 'x-ref', 'trigger' )
+						->attr( '@click', 'toggle()' )
+						->render();
+					?>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 						<div class="tutor-popover-menu" style="min-width: 104px;">
 							<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $lesson_comment->comment_ID; ?>); hide()">

@@ -57,7 +57,7 @@ $single_url = UrlHelper::add_query_params(
 				<div class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></div>
 				<div class="tutor-text-tiny tutor-text-subdued">
 					<?php
-						/* translators: %s: time difference */
+						/* translators: %s human-readable time difference. */
 						echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 					?>
 				</div>
@@ -82,7 +82,7 @@ $single_url = UrlHelper::add_query_params(
 						<?php Avatar::make()->user( $last_reply->user_id )->size( Size::SIZE_20 )->render(); ?>
 						<div class="tutor-text-small">
 							<?php
-								/* translators: %s: time difference */
+								/* translators: %s human-readable time difference. */
 								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $last_reply->comment_date_gmt ) ) ) );
 							?>
 						</div>
@@ -96,7 +96,7 @@ $single_url = UrlHelper::add_query_params(
 			Button::make()
 				->label( __( 'Reply', 'tutor' ) )
 				->attr( '@click', 'toggleReply(' . (int) $question_id . ')' )
-				->attr( 'class', 'tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden' )
+				->attr( 'class', 'tutor-btn tutor-btn-primary tutor-btn-x-small tutor-force-sm-hidden' )
 				->attr( 'type', 'button' )
 				->size( Size::X_SMALL )
 				->render();
@@ -105,11 +105,14 @@ $single_url = UrlHelper::add_query_params(
 			<div class="tutor-flex">
 				<?php
 				Button::make()
+					->label( __( 'More options', 'tutor' ) )
+					->variant( Variant::SECONDARY )
 					->size( Size::X_SMALL )
 					->attr( 'x-ref', 'trigger' )
 					->attr( '@click', 'toggle()' )
-					->attr( 'class', 'tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon tutor-discussion-card-actions-trigger' )
+					->attr( 'class', 'tutor-discussion-card-actions-trigger' )
 					->icon( Icon::ELLIPSES )
+					->icon_only()
 					->render()
 				?>
 				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">

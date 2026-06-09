@@ -131,7 +131,7 @@ $add_meta( Icon::RESOURCES, __( 'Resources', 'tutor' ), $resource_content );
 ob_start();
 if ( ! empty( $course_tags ) && is_array( $course_tags ) ) {
 	?>
-	<div class="tutor-flex tutor-items-start tutor-gap-3">
+	<div class="tutor-flex tutor-items-start tutor-flex-wrap tutor-gap-3">
 		<?php
 		foreach ( $course_tags as $key => $tags ) {
 			Badge::make()
@@ -176,7 +176,15 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 	<div class="tutor-course-intro">
 		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-3 tutor-tiny tutor-text-secondary">
 			<?php SvgIcon::make()->name( Icon::RELOAD_2 )->render(); ?>
-			<?php echo esc_html( $tutor_course->post_modified ); ?> Last Updated
+			<?php
+			echo esc_html(
+				sprintf(
+					// translators: %s is the course last modified date.
+					__( '%s Last Updated', 'tutor' ),
+					tutor_i18n_get_formated_date( $tutor_course->post_modified )
+				)
+			);
+			?>
 		</div>
 		<h3 class="tutor-h3 tutor-sm-text-h5 tutor-mt-3"><?php echo esc_html( $tutor_course->post_title ); ?></h3>
 		<div class="tutor-medium tutor-sm-text-small tutor-text-secondary tutor-mt-4 tutor-mb-6">
@@ -217,7 +225,15 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		<div class="tutor-course-accordion">
 			<?php if ( ! empty( get_the_content() ) ) : ?>
 				<div x-data="{ expanded: false }" class="tutor-course-accordion-item">
-					<div role="button" @click="expanded = !expanded" class="tutor-course-accordion-header">
+					<div 
+						role="button" 
+						tabindex="0" 
+						@click="expanded = !expanded" 
+						@keydown.enter.prevent="expanded = !expanded" 
+						@keydown.space.prevent="expanded = !expanded" 
+						:aria-expanded="expanded ? 'true' : 'false'"
+						class="tutor-course-accordion-header"
+					>
 						<div class="tutor-course-accordion-header-title">
 							<?php esc_html_e( 'About this Course', 'tutor' ); ?>
 						</div>
@@ -233,7 +249,15 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 
 			<?php if ( ! empty( $course_benefits ) && is_array( $course_benefits ) ) : ?>
 				<div x-data="{ expanded: false }" class="tutor-course-accordion-item">
-					<div role="button" @click="expanded = !expanded" class="tutor-course-accordion-header">
+					<div 
+						role="button" 
+						tabindex="0" 
+						@click="expanded = !expanded" 
+						@keydown.enter.prevent="expanded = !expanded" 
+						@keydown.space.prevent="expanded = !expanded" 
+						:aria-expanded="expanded ? 'true' : 'false'"
+						class="tutor-course-accordion-header"
+					>
 						<div class="tutor-course-accordion-header-title">
 							<?php esc_html_e( "What you'll learn", 'tutor' ); ?>
 						</div>

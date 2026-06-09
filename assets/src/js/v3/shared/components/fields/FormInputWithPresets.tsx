@@ -143,33 +143,31 @@ const FormInputWithPresets = ({
                 closePopover={() => setIsOpen(false)}
                 animationType={AnimationType.slideDown}
               >
-                <div css={[styles.optionsWrapper]}>
-                  <ul css={[styles.options(removeOptionsMinWidth)]}>
-                    {presetOptions.map((option) => (
-                      <li
-                        key={String(option.value)}
-                        css={styles.optionItem({
-                          isSelected: option.value === field.value,
-                        })}
+                <ul css={[styles.options(removeOptionsMinWidth)]}>
+                  {presetOptions.map((option) => (
+                    <li
+                      key={String(option.value)}
+                      css={styles.optionItem({
+                        isSelected: option.value === field.value,
+                      })}
+                    >
+                      <button
+                        type="button"
+                        css={styles.label}
+                        onClick={() => {
+                          field.onChange(option.value);
+                          onChange?.(option.value);
+                          setIsOpen(false);
+                        }}
                       >
-                        <button
-                          type="button"
-                          css={styles.label}
-                          onClick={() => {
-                            field.onChange(option.value);
-                            onChange?.(option.value);
-                            setIsOpen(false);
-                          }}
-                        >
-                          <Show when={option.icon}>
-                            <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
-                          </Show>
-                          <span>{option.label}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                        <Show when={option.icon}>
+                          <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
+                        </Show>
+                        <span>{option.label}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </Popover>
             </Show>
           </>
@@ -270,10 +268,6 @@ const styles = {
       flex-shrink: 0;
     }
   `,
-  optionsWrapper: css`
-    position: absolute;
-    width: 100%;
-  `,
   options: (removeOptionsMinWidth: boolean) => css`
     z-index: ${zIndex.dropdown};
     background-color: ${colorTokens.background.white};
@@ -336,7 +330,7 @@ const styles = {
 
     ${size === 'small' &&
     css`
-      min-width: 32px;
+      min-width: 40px;
       height: 32px;
       padding-inline: ${spacing[6]};
     `}
@@ -361,7 +355,7 @@ const styles = {
 
     ${size === 'small' &&
     css`
-      min-width: 32px;
+      min-width: 40px;
       height: 32px;
       padding-inline: ${spacing[6]};
     `}

@@ -3,8 +3,8 @@ import { __, sprintf } from '@wordpress/i18n';
 import { type FormControlMethods, type SetValueOptions, type ValidationRules } from '@Core/ts/components/form';
 import { type WPMedia, type WPMediaType } from '@Core/ts/services/WPMedia';
 import { type AlpineComponentMeta } from '@Core/ts/types';
+import { formatBytes } from '@Core/ts/utils/format';
 import { tutorConfig } from '@TutorShared/config/config';
-import { formatBytes } from '@TutorShared/utils/util';
 
 type FileUploaderVariant = 'file-uploader' | 'image-uploader';
 
@@ -234,13 +234,30 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
 
       if (this.multiple) {
         const mergedFiles = this.mergeFileLists(this.selectedFiles, validFiles);
+        const totalFileSize = mergedFiles.reduce((total, current) => {
+          if (typeof current === 'string') {
+            return 0;
+          }
+          return total + Math.round(Number(current?.size) || 0);
+        }, 0);
 
         if (this.maxFiles && mergedFiles.length > this.maxFiles) {
           this.showError(
             sprintf(
-              // translators: %d is the maximum number of files allowed
+              // translators: %d is the maximum number of files allowed.
               __('Cannot select more than %d files', 'tutor'),
               this.maxFiles,
+            ),
+          );
+          return;
+        }
+
+        if (totalFileSize > this.maxSize) {
+          this.showError(
+            sprintf(
+              // translators: %1$s is the maximum allowed size.
+              __('Maximum allowed size is %1$s.', 'tutor'),
+              formatBytes(this.maxSize),
             ),
           );
           return;

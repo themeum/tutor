@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useCallback, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -11,6 +12,7 @@ import QuestionPreviewModal from '@CourseBuilderComponents/modals/QuestionPrevie
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
 import Button from '@TutorShared/atoms/Button';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -54,7 +56,7 @@ const questionTypes = {
     icon: 'quizOrdering',
   },
   draw_image: {
-    label: __('Mark in the Image', 'tutor'),
+    label: __('Mark in the image', 'tutor'),
     icon: 'quizMarkInTheImage',
   },
   scale: {
@@ -92,6 +94,28 @@ const QuestionConditions = () => {
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as QuestionTypes;
   const activeDataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
 
+  const handlePreview = useCallback(() => {
+    showModal({
+      component: QuestionPreviewModal,
+      props: {
+        question: activeQuestion,
+        onClose: () => closeModal(),
+      },
+    });
+  }, [activeQuestion, showModal, closeModal]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.altKey && event.code === 'KeyP') {
+        event.preventDefault();
+        handlePreview();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handlePreview]);
+
   if (!activeQuestionId) {
     return <p css={styles.emptyQuestions}>{__('Create/Select a question to view details', 'tutor')}</p>;
   }
@@ -116,23 +140,17 @@ const QuestionConditions = () => {
             </span>
           </div>
 
-          <Button
-            isOutlined
-            variant="primary"
-            size="small"
-            icon={<SVGIcon name="preview2" width={24} height={24} />}
-            onClick={() => {
-              showModal({
-                component: QuestionPreviewModal,
-                props: {
-                  question: activeQuestion,
-                  onClose: () => closeModal(),
-                },
-              });
-            }}
-          >
-            {__('Preview', 'tutor')}
-          </Button>
+          <Tooltip content={__('Preview (Option/Alt + P)', 'tutor')}>
+            <Button
+              isOutlined
+              variant="primary"
+              size="small"
+              icon={<SVGIcon name="preview2" width={24} height={24} />}
+              onClick={handlePreview}
+            >
+              {__('Preview', 'tutor')}
+            </Button>
+          </Tooltip>
         </div>
       </div>
 

@@ -26,20 +26,21 @@ use Tutor\Components\Constants\Variant;
 					->variant( Variant::GHOST )
 					->size( Size::X_SMALL )
 					->tag( 'a' )
-					->icon( Icon::LEFT, 'left', 20, 20 )
+					->icon( Icon::LEFT, 'left', 20 )
 					->icon_only()
 					->attr( 'href', esc_url( $back_url ) )
 					->render();
 			?>
-			<h4 class="tutor-account-header-title tutor-my-none">
+			<h4 class="tutor-account-header-title">
 				<?php echo esc_html( $page_data['title'] ?? '' ); ?>
 			</h4>
 			<?php
 				Button::make()
+					->label( __( 'Close', 'tutor' ) )
 					->variant( Variant::GHOST )
 					->size( Size::X_SMALL )
 					->tag( 'a' )
-					->icon( Icon::CROSS, 'left', 20, 20 )
+					->icon( Icon::CROSS, 'left', 20 )
 					->icon_only()
 					->attr( 'href', esc_url( $close_url ) )
 					->render();

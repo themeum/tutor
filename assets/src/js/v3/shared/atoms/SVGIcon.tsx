@@ -1,4 +1,5 @@
 import { tutorConfig } from '@TutorShared/config/config';
+import { useSVGIconConfig } from '@TutorShared/contexts/SVGIconConfigContext';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { type SerializedStyles, css } from '@emotion/react';
 import { memo, useEffect, useState } from 'react';
@@ -28,16 +29,10 @@ interface IconCacheEntry {
 
 const iconCache: Record<string, IconCacheEntry> = {};
 
-const SVGIcon = ({
-  name,
-  width = 16,
-  height = 16,
-  style,
-  isColorIcon = false,
-  ignoreKids = false,
-  ...rest
-}: SVGIconProps) => {
-  const cacheKey = ignoreKids ? `${name}-ignoreKids` : name;
+const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ignoreKids, ...rest }: SVGIconProps) => {
+  const { supportKidsIcon } = useSVGIconConfig();
+  const shouldIgnoreKids = ignoreKids ?? !supportKidsIcon;
+  const cacheKey = shouldIgnoreKids ? `${name}-ignoreKids` : name;
   const [icon, setIcon] = useState<Icon | null>(iconCache[cacheKey]?.icon || null);
   const [isLoading, setIsLoading] = useState(!iconCache[cacheKey]?.icon);
 
@@ -50,7 +45,7 @@ const SVGIcon = ({
 
     setIsLoading(true);
 
-    fetchIcon(name, cacheKey, width, height, ignoreKids)
+    fetchIcon(name, cacheKey, width, height, shouldIgnoreKids)
       .then((loadedIcon) => {
         setIcon(loadedIcon);
       })
@@ -60,7 +55,7 @@ const SVGIcon = ({
       .finally(() => {
         setIsLoading(false);
       });
-  }, [name, width, height, ignoreKids, cacheKey]);
+  }, [name, width, height, shouldIgnoreKids, cacheKey]);
 
   const additionalAttributes = {
     ...(isColorIcon && { 'data-colorize': true }),
@@ -103,7 +98,11 @@ function fetchIcon(name: string, cacheKey: string, width: number, height: number
     return iconCache[cacheKey]!.promise!;
   }
 
-  const fileName = name.trim().replace(/[A-Z0-9]/g, (m) => '-' + m.toLowerCase());
+  const fileName = name
+    .trim()
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([a-zA-Z])(\d+)/g, '$1-$2')
+    .toLowerCase();
   const hasKidsVariant = !ignoreKids && tutorConfig.is_kids_mode && tutorConfig.kids_icons_registry?.includes(fileName);
 
   const basePath = hasKidsVariant ? 'assets/icons/kids/' : 'assets/icons/';

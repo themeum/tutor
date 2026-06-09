@@ -4,6 +4,16 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
+.tutor-my-quiz-attempts-wrapper .tutor-quiz-attempts {
+  border-radius: $tutor-radius-2xl;
+
+  @include tutor-breakpoint-down(sm) {
+    border: 1px solid $tutor-border-idle;
+    overflow: hidden;
+    margin-top: $tutor-spacing-4;
+  }
+}
+
 .tutor-quiz-attempts-mobile-heading {
   @include tutor-breakpoint-up(sm) {
     display: none;
@@ -32,8 +42,16 @@
     }
   }
 
+  &-list {
+    background-color: $tutor-surface-l1;
+  }
+
+  .tutor-quiz-attempts-header-item:last-of-type {
+    text-align: center;
+  }
+
   .tutor-quiz-attempts-item-wrapper {
-    padding: $tutor-spacing-6;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
 
     &:not(:last-child) {
       border-bottom: 1px solid $tutor-border-idle;
@@ -87,8 +105,16 @@
       .tutor-quiz-item-info {
         grid-area: info;
 
+        &-expanded {
+          @include tutor-flex(row, start);
+          gap: $tutor-spacing-4;
+          text-align: center;
+          min-height: 24px;
+        }
+
         &-title {
           @include tutor-typography(medium, semibold);
+          text-align: start;
           margin-bottom: $tutor-spacing-2;
 
           @include tutor-breakpoint-down(sm) {
@@ -98,6 +124,8 @@
         }
 
         &-course {
+          @include tutor-flex(row, center);
+          gap: $tutor-spacing-2;
           @include tutor-typography(small, regular, secondary);
 
           @include tutor-breakpoint-down(sm) {
@@ -125,6 +153,7 @@
           white-space: nowrap;
 
           @include tutor-breakpoint-down(sm) {
+            @include tutor-flex(row, center);
             font-size: $tutor-font-size-tiny;
             line-height: $tutor-line-height-tiny;
           }
@@ -254,6 +283,12 @@
           }
         }
 
+        &:hover {
+          .tutor-quiz-item-info-title {
+            color: $tutor-brand-700;
+          }
+        }
+
         &:hover:has(.tutor-quiz-item-result-more) {
           .tutor-quiz-item-result {
             .tutor-badge {
@@ -298,7 +333,7 @@
         }
 
         &:hover {
-          background-color: $tutor-surface-base;
+          background-color: $tutor-surface-l1-hover;
         }
 
         &:not(:last-child) {
@@ -317,8 +352,6 @@
 
       @include tutor-breakpoint-down(sm) {
         .tutor-quiz-item-actions {
-          padding-left: $tutor-spacing-5;
-          padding-right: $tutor-spacing-5;
           padding-bottom: $tutor-spacing-5;
           &:not(:last-child) {
             border-bottom: 1px solid $tutor-border-idle;
@@ -345,6 +378,7 @@
   @include tutor-flex(row, center, space-between);
   gap: $tutor-spacing-5;
   padding-top: $tutor-spacing-2;
+  grid-column: 1/-1;
 
   button,
   a {

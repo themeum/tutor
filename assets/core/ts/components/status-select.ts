@@ -1,6 +1,6 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import { tutorConfig } from '@TutorShared/config/config';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
 
 export interface StatusSelectProps {

@@ -109,6 +109,13 @@ class Assets {
 
 		// Add custom meta.
 		add_action( 'wp_head', array( $this, 'add_custom_data' ) );
+
+		/**
+		 * Add preload to CSS
+		 *
+		 * @since 4.0.0
+		 */
+		add_filter( 'style_loader_tag', array( $this, 'add_preload_to_css' ), 10, 2 );
 	}
 
 	/**
@@ -212,6 +219,7 @@ class Assets {
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
 			'kids_icons_registry'          => $kids_icons,
 			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
+			'user_preferences'             => UserPreference::get_preferences( get_current_user_id() ),
 			'is_legacy_learning_mode'      => tutor_utils()->is_legacy_learning_mode(),
 			'course_slug'                  => tutor_utils()->get_option( 'course_permalink_base', 'courses' ),
 			'lesson_slug'                  => tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ),
@@ -278,11 +286,6 @@ class Assets {
 		if ( 'tutor-addons' === $page ) {
 			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-addon-list.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 		}
-
-		if ( 'tutor-themes' === $page ) {
-			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
-			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
-		}
 	}
 
 	/**
@@ -295,8 +298,8 @@ class Assets {
 	 * @return void
 	 */
 	public function frontend_scripts() {
-		$load_legacy_srcipts = $this->should_load_legacy_scripts();
-		if ( ! $load_legacy_srcipts ) {
+		$load_legacy_scripts = self::should_load_legacy_scripts();
+		if ( ! $load_legacy_scripts ) {
 			return;
 		}
 
@@ -454,7 +457,7 @@ class Assets {
 	 * @return void
 	 */
 	public function common_scripts( $slug ) {
-		if ( ! $this->should_load_legacy_scripts() ) {
+		if ( ! self::should_load_legacy_scripts() ) {
 			return;
 		}
 
@@ -806,7 +809,7 @@ class Assets {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		if ( $this->should_load_legacy_scripts() ) {
+		if ( self::should_load_legacy_scripts() ) {
 			return;
 		}
 
@@ -834,14 +837,12 @@ class Assets {
 			wp_enqueue_style( 'tutor-kids', $kids_css_url, array( 'tutor-core' ), $version );
 		}
 
-		if ( $is_dashboard ) {
-			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
-			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
-		}
-
 		// Core.
-		wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );
-		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), TUTOR_VERSION, true );
+		$google_font_url = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+		wp_enqueue_style( 'tutor-google-fonts', $google_font_url, array(), $version );
+
+		wp_enqueue_style( 'tutor-core', $core_css_url, array( 'tutor-google-fonts' ), $version );
+		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), $version, true );
 
 		wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
 
@@ -855,8 +856,8 @@ class Assets {
 			wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
 
 			if ( is_single_course( true ) ) {
-				wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
-				wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+				wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), $version );
+				wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), $version, true );
 			}
 		}
 	}
@@ -871,7 +872,7 @@ class Assets {
 	 *
 	 * @return boolean
 	 */
-	public function should_load_legacy_scripts(): bool {
+	public static function should_load_legacy_scripts(): bool {
 		$load = true;
 
 		$post_id = get_the_ID();
@@ -930,5 +931,26 @@ class Assets {
 		if ( tutor_utils()->is_dashboard_page() || tutor_utils()->is_learning_area() ) {
 			echo '<meta name="viewport" content="width=device-width, initial-scale=1" />' . "\n";
 		}
+	}
+
+	/**
+	 * Add preload to CSS
+	 *
+	 * @param string $html HTML.
+	 * @param string $handle Handle.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	public function add_preload_to_css( $html, $handle ) {
+		if ( 'tutor-google-fonts' === $handle ) {
+			$html = str_replace(
+				"rel='stylesheet'",
+				"rel='preload' as='style' onload=\"this.onload=null;this.rel='stylesheet'\"",
+				$html
+			);
+		}
+		return $html;
 	}
 }

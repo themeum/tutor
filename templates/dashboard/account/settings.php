@@ -7,6 +7,11 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * These variables are inherited from parent templates:
+ * template: templates/account.php
+ *
+ * @var string $back_url
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -68,24 +73,55 @@ $settings_tab_data = array_values(
 		}
 	)
 );
+
 ?>
 
 <section x-data="tutorSettings()">
 	<div 
-		x-data='tutorTabs({
-			tabs: <?php echo wp_json_encode( $settings_tab_data ); ?>,
-			orientation: "vertical",
-			defaultTab: window.innerWidth >= 768 ? "account" : "none",
-			urlParams: {
-				enabled: true,
-				paramName: "tab",
-			}
-		})'
+		x-data='(() => {
+			const tabs = tutorTabs({
+				tabs: <?php echo wp_json_encode( $settings_tab_data ); ?>,
+				orientation: "vertical",
+				defaultTab: window.innerWidth >= 768 ? "account" : "none",
+				urlParams: {
+					enabled: true,
+					paramName: "tab",
+				}
+			});
+
+			return {
+				...tabs,
+				backUrl: <?php echo wp_json_encode( $back_url ); ?>,
+				selectTab(tabId) {
+					if (tabId === "none") {
+						this.activeTab = "none";
+
+						if (this.urlParamsConfig.enabled) {
+							const url = new URL(window.location.href);
+							url.searchParams.delete(this.urlParamsConfig.paramName);
+							window.history.replaceState({}, "", url.toString());
+						}
+
+						return;
+					}
+
+					return tabs.selectTab.call(this, tabId);
+				},
+				handleClose() {
+					if (window.innerWidth < 768 && this.activeTab !== "none") {
+						this.selectTab("none");
+						return;
+					}
+
+					window.location.href = this.backUrl;
+				},
+			};
+		})()'
 		class="tutor-profile-settings-section"
 	>
-		<?php tutor_load_template( 'dashboard.account.settings.header' ); ?>
-		
-		<div class="tutor-dashboard-container">
+		<?php tutor_load_template( 'dashboard.account.settings.header', array( 'back_url' => $back_url ) ); ?>
+
+		<div class="tutor-account-container">
 			<div 
 				x-init="$watch('$store.windowWidth', () => {
 					if (window.innerWidth >= 768 && activeTab === 'none') {
@@ -104,7 +140,7 @@ $settings_tab_data = array_values(
 				x-cloak
 				class="tutor-gap-8"
 			>
-				<div class="tutor-flex tutor-gap-8 tutor-mb-9">
+				<div class="tutor-flex tutor-gap-8 tutor-my-9 tutor-sm-my-6">
 					<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab tutor-p-5">
 						<template x-for="tab in tabs" :key="tab.id">
 							<button
@@ -125,6 +161,7 @@ $settings_tab_data = array_values(
 					</div>
 
 					<div 
+						role="main"
 						:class="activeTab !== null && activeTab !== 'none' ? 'tutor-profile-tab-activated' : ''" 
 						class="tutor-profile-settings-tab-content tutor-w-full"
 					>

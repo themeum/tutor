@@ -40,6 +40,10 @@ export function isObject<T>(value: T): value is T {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+export const isFileOrBlob = (value: unknown): value is Blob | File => {
+  return value instanceof Blob || value instanceof File;
+};
+
 export interface Option<T> {
   label: string;
   labelContent?: ReactNode | string;
@@ -337,6 +341,7 @@ export interface QuizQuestion {
     is_image_matching: boolean;
     draw_image_threshold_percent?: number;
     puzzle_grid_size?: number;
+    coordinates_axis_range?: number;
   };
   question_answers: QuizQuestionOption[];
 }
@@ -353,6 +358,7 @@ export interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_se
     is_image_matching?: '0' | '1';
     draw_image_threshold_percent?: number;
     puzzle_grid_size?: number;
+    coordinates_axis_range?: number;
   };
 }
 

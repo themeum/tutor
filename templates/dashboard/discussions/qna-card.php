@@ -77,13 +77,15 @@ $single_url = UrlHelper::add_query_params(
 		<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
 			<div class="tutor-discussion-card-top">
-				<div class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></div>
-				<div class="tutor-flex tutor-gap-2">
+				<div class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $question->comment_author ); ?></div>
+				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-overflow-hidden">
 					<span class="tutor-text-subdued tutor-text-subdued tutor-flex-shrink-0"><?php echo esc_html__( 'asked in', 'tutor' ); ?></span>
-					<?php PreviewTrigger::make()->id( $question->course_id )->render(); ?>
+					<div class="tutor-min-w-0 tutor-flex-1">
+						<?php PreviewTrigger::make()->id( $question->course_id )->render(); ?>
+					</div>
 				</div>
 			</div>
-			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title" id="<?php echo esc_attr( 'tutor-qna-text-' . (int) $question_id ); ?>"><?php echo wp_kses_post( $content ); ?></a>
+			<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-title tutor-break-words" id="<?php echo esc_attr( 'tutor-qna-text-' . (int) $question_id ); ?>"><?php echo wp_kses_post( $content ); ?></a>
 			<div class="tutor-flex tutor-items-center tutor-justify-between tutor-sm-mt-4">
 				<div class="tutor-discussion-card-meta">
 					<button 
@@ -103,15 +105,15 @@ $single_url = UrlHelper::add_query_params(
 						<?php Avatar::make()->user( $last_reply->user_id )->size( Size::SIZE_20 )->render(); ?>
 						<div class="tutor-text-small">
 							<?php
-								/* translators: %s: time difference */
-								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $last_reply->comment_date_gmt ) ) ) );
+								// translators: %s human-readable time difference.
+								echo esc_html( sprintf( _x( '%s ago', 'human-readable time difference', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 							?>
 						</div>
 					</div>
 					<?php } else { ?>
 						<div class="tutor-text-small">
 							<?php
-								/* translators: %s: time difference */
+								/* translators: %s human-readable time difference. */
 								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 							?>
 						</div>
@@ -125,6 +127,7 @@ $single_url = UrlHelper::add_query_params(
 							class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon tutor-text-subdued"
 							@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'solved')"
 							:disabled="qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo esc_html( $question_id ); ?>"
+							:aria-label="isSolved ? '<?php echo esc_js( __( 'Mark as Unresolved', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Mark as Solved', 'tutor' ) ); ?>'"
 						>
 							<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo esc_html( $question_id ); ?>">
 								<?php SvgIcon::make()->name( Icon::SPINNER )->size( 14 )->attr( 'class', 'tutor-animate-spin' )->render(); ?>
@@ -148,7 +151,7 @@ $single_url = UrlHelper::add_query_params(
 							class="tutor-tooltip"
 							x-text="isSolved
 								? '<?php esc_html_e( 'Solved', 'tutor' ); ?>'
-								: '<?php esc_html_e( 'Unresolved Yet', 'tutor' ); ?>'"
+								: '<?php esc_html_e( 'Unresolved', 'tutor' ); ?>'"
 							>
 						</div>
 					</div>
@@ -158,6 +161,7 @@ $single_url = UrlHelper::add_query_params(
 							class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon tutor-text-subdued"
 							@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'important')"
 							:disabled="qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo esc_html( $question_id ); ?>"
+							:aria-label="isImportant ? '<?php echo esc_js( __( 'Mark as Not Important', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Mark as Important', 'tutor' ) ); ?>'"
 						>
 							<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo esc_html( $question_id ); ?>">
 								<?php SvgIcon::make()->name( Icon::SPINNER )->size( 14 )->attr( 'class', 'tutor-animate-spin' )->render(); ?>
@@ -192,20 +196,26 @@ $single_url = UrlHelper::add_query_params(
 		<div class="tutor-discussion-card-actions" x-show="replyingId !== <?php echo (int) $question_id; ?>" x-cloak>
 			<?php
 			Button::make()
+				->variant( Variant::PRIMARY )
+				->size( Size::X_SMALL )
 				->label( __( 'Reply', 'tutor' ) )
 				->size( Size::X_SMALL )
 				->attr( '@click', 'toggleReply(' . (int) $question_id . ')' )
-				->attr( 'class', 'tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden' )
+				->attr( 'class', 'tutor-force-sm-hidden' )
 				->attr( 'type', 'button' )
 				->render();
 			?>
 			<div class="tutor-flex">
 				<?php
 				Button::make()
+					->label( __( 'More options', 'tutor' ) )
+					->variant( Variant::SECONDARY )
+					->size( Size::X_SMALL )
+					->icon( Icon::ELLIPSES, 'left', Size::SIZE_16, Color::SECONDARY )
+					->icon_only()
 					->attr( 'x-ref', 'trigger' )
 					->attr( '@click', 'toggle()' )
-					->attr( 'class', 'tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon tutor-discussion-card-actions-trigger' )
-					->icon( Icon::ELLIPSES )
+					->attr( 'class', 'tutor-discussion-card-actions-trigger' )
 					->render();
 				?>
 
@@ -213,7 +223,7 @@ $single_url = UrlHelper::add_query_params(
 					<div class="tutor-popover-menu">
 						<?php if ( User::is_instructor_view() ) : ?>
 						<button 
-							class="tutor-popover-menu-item tutor-gap-5 tutor-hidden tutor-sm-flex"
+							class="tutor-popover-menu-item tutor-gap-5 tutor-force-hidden tutor-force-sm-flex"
 							@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'solved')"
 							:disabled="qnaSingleActionMutation?.isPending"
 						>
@@ -234,7 +244,7 @@ $single_url = UrlHelper::add_query_params(
 						</button>
 
 						<button 
-							class="tutor-popover-menu-item tutor-gap-5 tutor-hidden tutor-sm-flex"
+							class="tutor-popover-menu-item tutor-gap-5 tutor-force-hidden tutor-force-sm-flex"
 							@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'important')"
 							:disabled="qnaSingleActionMutation?.isPending"
 						>

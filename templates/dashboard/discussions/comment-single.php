@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
+use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\EmptyState;
@@ -20,12 +21,16 @@ use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use Tutor\Components\Constants\Variant;
 use TUTOR\Input;
 use TUTOR\Lesson;
 
 $lesson_comment = get_comment( $discussion_id );
 if ( ! $lesson_comment ) {
-	EmptyState::make()->render();
+	EmptyState::make()
+		->icon( tutor_utils()->get_themed_svg( 'images/illustrations/comments-empty.svg' ) )
+		->title( __( 'No Comments Found', 'tutor' ) )
+		->render();
 	return;
 }
 
@@ -51,29 +56,45 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-gap-5 tutor-mb-5">
 			<?php Avatar::make()->user( $lesson_comment->user_id )->size( Size::SIZE_40 )->render(); ?>
-			<div>
+			<div class="tutor-min-w-0 tutor-flex-1">
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-					<span class="tutor-discussion-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></span> 
-					<span class="tutor-text-secondary">
+					<span class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $lesson_comment->comment_author ); ?></span> 
+					<span class="tutor-text-secondary tutor-flex-shrink-0">
 						<?php
-							// translators: %s is the time of comment.
+							/* translators: %s human-readable time difference. */
 							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $lesson_comment->comment_date_gmt ) ) ) );
 						?>
 					</span>
 				</div>
-				<div class="tutor-tiny">
-					<span class="tutor-text-subdued"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
-					<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
-					<span class="tutor-text-subdued"><?php esc_html_e( 'in', 'tutor' ); ?></span> 
-					<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
+				<div class="tutor-tiny tutor-flex tutor-items-center tutor-gap-2 tutor-overflow-hidden">
+					<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-min-w-0">
+						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
+						<div class="tutor-min-w-0 tutor-flex-1">
+							<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
+						</div>
+					</div>
+					<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-min-w-0">
+						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'in', 'tutor' ); ?></span> 
+						<div class="tutor-min-w-0 tutor-flex-1">
+							<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="tutor-ml-auto">
 				<?php if ( $user_id === (int) $lesson_comment->user_id ) : ?>
 				<div x-data="tutorPopover({ placement: 'bottom-end' })">
-					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
-					</button>
+					<?php
+					Button::make()
+						->label( __( 'More options', 'tutor' ) )
+						->variant( Variant::GHOST )
+						->size( Size::X_SMALL )
+						->icon( Icon::ELLIPSES, 'left', Size::SIZE_16, Color::SECONDARY )
+						->icon_only()
+						->attr( 'x-ref', 'trigger' )
+						->attr( '@click', 'toggle()' )
+						->render();
+					?>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 						<div class="tutor-popover-menu" style="min-width: 104px;">
 							<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $lesson_comment->comment_ID; ?>); hide()">

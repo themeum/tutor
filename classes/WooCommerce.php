@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
+use Tutor\Models\EnrollmentModel;
 
 /**
  * Handle woocommerce hooks
@@ -94,8 +95,9 @@ class WooCommerce extends Tutor_Base {
 		 *
 		 * @since 1.7.8
 		 */
-		$woocommerce_path = dirname( dirname( __DIR__ ) ) . DIRECTORY_SEPARATOR . 'woocommerce' . DIRECTORY_SEPARATOR . 'woocommerce.php';
+		$woocommerce_path = WP_PLUGIN_DIR . '/woocommerce/woocommerce.php';
 		register_deactivation_hook( $woocommerce_path, array( $this, 'woocommerce_deactivation_handler' ) );
+
 		/**
 		 * Redirect student on enrolled courses after course
 		 * Enrollment complete
@@ -213,8 +215,13 @@ class WooCommerce extends Tutor_Base {
 		$order_id = WC()->session->get( self::WC_STORE_API_DRAFT_ORDER, 0 );
 
 		if ( $course_ids && $order_id ) {
+			$wc_order = wc_get_order( $order_id );
+			if ( ! $wc_order ) {
+				return;
+			}
+
 			foreach ( $course_ids as $course_id ) {
-				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
 			}
 		}
 	}
@@ -715,7 +722,7 @@ class WooCommerce extends Tutor_Base {
 			if ( $if_has_course ) {
 				$course_id   = $if_has_course->post_id;
 				$customer_id = $order->get_customer_id();
-				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
 			}
 		}
 	}
@@ -772,9 +779,9 @@ class WooCommerce extends Tutor_Base {
 				return;
 			}
 
-			$has_enrollment = tutor_utils()->is_enrolled( $course_id, $customer_id, false );
+			$has_enrollment = EnrollmentModel::is_enrolled( $course_id, $customer_id, false );
 			if ( ! $has_enrollment ) {
-				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
 			}
 		}
 	}
@@ -957,17 +964,18 @@ class WooCommerce extends Tutor_Base {
 	public static function get_count( $args = array() ): int {
 		$query = wc_get_orders(
 			array(
-				'customer'   => $args['user_id'] ?? 0,
-				'status'     => $args['status'] ?? 'all',
-				'meta_query' => array(
+				'customer'     => $args['user_id'] ?? 0,
+				'status'       => $args['status'] ?? 'all',
+				'date_created' => $args['date_created'] ?? null,
+				'meta_query'   => array(
 					array(
 						'key'     => '_is_tutor_order_for_course',
 						'compare' => 'EXISTS',
 					),
 				),
 				// Limit 1 for query performance.
-				'limit'      => 1,
-				'paginate'   => true,
+				'limit'        => 1,
+				'paginate'     => true,
 			)
 		);
 
@@ -993,6 +1001,9 @@ class WooCommerce extends Tutor_Base {
 			unset( $statuses['wc-checkout-draft'] );
 		}
 
+		$start_date = Input::get( 'start_date' );
+		$end_date   = Input::get( 'end_date' );
+
 		$options = array();
 
 		foreach ( $statuses as $key => $status ) {
@@ -1000,6 +1011,10 @@ class WooCommerce extends Tutor_Base {
 				'user_id' => $user_id,
 				'status'  => $key,
 			);
+
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$params['date_created'] = $start_date . '...' . $end_date;
+			}
 
 			$options[] = array(
 				'label'  => $status,

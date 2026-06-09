@@ -4,11 +4,6 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
-.tutor-dashboard-container {
-  @include tutor-frontend-layout();
-  width: 100%;
-}
-
 .tutor-dashboard-layout {
   display: grid;
   grid-template-columns: 274px 1fr;

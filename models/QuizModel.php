@@ -88,7 +88,7 @@ class QuizModel {
 			$start_time = DateTimeHelper::create( $quiz_attempt->attempt_started_at ?? '' )
 				->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 
-			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ) - strtotime( $quiz_attempt->attempt_started_at );
+			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ?? '' ) - strtotime( $quiz_attempt->attempt_started_at ?? '' );
 			$attempt_time = tutor_utils()->playtime_string( $attempt_time );
 
 			$earned_percent = self::calculate_attempt_earned_percentage( $quiz_attempt );
@@ -887,6 +887,39 @@ class QuizModel {
 	}
 
 	/**
+	 * Filter attempt answers for attempt-details views.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attempt_answers Attempt answer rows.
+	 * @param bool  $is_instructor_review Whether the current view is instructor review.
+	 *
+	 * @return array
+	 */
+	public static function filter_attempt_answers_for_details( $attempt_answers, bool $is_instructor_review = false ): array {
+		if ( ! is_array( $attempt_answers ) ) {
+			return array();
+		}
+
+		return array_values(
+			array_filter(
+				$attempt_answers,
+				static function ( $attempt_answer ) use ( $is_instructor_review ) {
+					if ( ! is_object( $attempt_answer ) ) {
+						return false;
+					}
+
+					if ( $is_instructor_review ) {
+						return true;
+					}
+
+					return ! self::is_attempt_answer_skipped( $attempt_answer );
+				}
+			)
+		);
+	}
+
+	/**
 	 * Get normalized attempt-answer status.
 	 *
 	 * Status rules follow legacy attempt-details logic:
@@ -1326,7 +1359,15 @@ class QuizModel {
 				$answer->image_url = wp_get_attachment_url( $answer->image_id );
 			}
 		}
-		return $answers;
+
+		/**
+		 * Filter question answers after loading (e.g. expand stored mask paths for REST/API).
+		 *
+		 * @param array       $answers        Answer rows.
+		 * @param int         $question_id    Question id.
+		 * @param string|null $question_type  Question type when known.
+		 */
+		return apply_filters( 'tutor_quiz_question_answers', $answers, $question_id, $question_type );
 	}
 
 	/**

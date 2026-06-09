@@ -21,7 +21,6 @@ use Tutor\Components\SvgIcon;
 use Tutor\Components\Table;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\UrlHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
@@ -317,6 +316,15 @@ class Quiz {
 		if ( 'question_pagination' === $question_layout_view ) {
 			$question_layout_view = 'single_question';
 			$enable_pagination    = true;
+		}
+
+		if ( 'question_below_each_other' === $question_layout_view ) {
+			$settings['hide_question_number_overview'] = '0';
+			$enable_answer_reveal                      = false;
+		}
+
+		if ( $enable_pagination ) {
+			$settings['hide_previous_button'] = '0';
 		}
 
 		$settings['question_layout_view']   = $question_layout_view;
@@ -1201,7 +1209,7 @@ class Quiz {
 	 *
 	 * @return object|null
 	 */
-	private function get_attempt_answer( int $attempt_answer_id ) {
+	public static function get_attempt_answer( int $attempt_answer_id ) {
 		global $wpdb;
 
 		return $wpdb->get_row(
@@ -1289,7 +1297,7 @@ class Quiz {
 			return null;
 		}
 
-		return $this->get_attempt_answer( $inserted_id );
+		return self::get_attempt_answer( $inserted_id );
 	}
 
 	/**
@@ -1304,7 +1312,7 @@ class Quiz {
 	 * @return object|null
 	 */
 	private function resolve_attempt_answer_for_review( int $attempt_id, int $attempt_answer_id = 0, int $question_id = 0 ) {
-		$attempt_answer = $attempt_answer_id ? $this->get_attempt_answer( $attempt_answer_id ) : null;
+		$attempt_answer = $attempt_answer_id ? self::get_attempt_answer( $attempt_answer_id ) : null;
 
 		if ( $attempt_answer ) {
 			return $attempt_answer;
@@ -1354,6 +1362,8 @@ class Quiz {
 		$previous_ans      = $attempt_answer->is_correct;
 
 		do_action( 'tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as );
+
+		$mark_as = apply_filters( 'tutor_quiz_review_mark_as', $mark_as, $attempt_answer_id, $attempt_id, $question );
 
 		if ( 'correct' === $mark_as ) {
 			$attempt_update_data = array();
@@ -1778,10 +1788,12 @@ class Quiz {
 	 * @param string $quiz_item_readable Readable time.
 	 * @param int    $total_marks Total Marks.
 	 * @param string $passing_grade Passing grade.
+	 * @param string $earned_marks Earned marks.
+	 * @param string $attempts_allowed Total Attempts allowed.
 	 *
 	 * @return void
 	 */
-	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade ) {
+	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, $attempts_allowed ) {
 		$quiz_summary = array(
 			array(
 				'columns' => array(
@@ -1823,12 +1835,38 @@ class Quiz {
 			'columns' => array(
 				array(
 					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . SvgIcon::make()->name( Icon::PASSED )->size( 20 )->get() . __( 'Passing Marks', 'tutor' ) . '
+						' . SvgIcon::make()->name( Icon::PASSED )->size( 20 )->get() . __( 'Passing Grade', 'tutor' ) . '
 					</div>',
 				),
 				array( 'content' => $passing_grade . '%' ),
 			),
 		);
+
+		if ( $earned_marks ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+						' . SvgIcon::make()->name( Icon::STAR )->size( 20 )->get() . __( 'Earned Grade', 'tutor' ) . '
+					</div>',
+					),
+					array( 'content' => $earned_marks . '%' ),
+				),
+			);
+		}
+
+		if ( 1 !== $attempts_allowed ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' =>  0 === $attempts_allowed ? __( 'No Limit', 'tutor' ) : $attempts_allowed ),
+				),
+			);
+		}
 
 		Table::make()->contents( $quiz_summary )->render();
 	}
@@ -1896,8 +1934,7 @@ class Quiz {
 									'quiz_id'          => $attempt['quiz_id'] ?? 0,
 									'course_id'        => $attempt['course_id'] ?? 0,
 									'quiz_attempt_obj' => $quiz_attempt_obj,
-									'attempts_count'   => $attempts_count,
-									'is_previous'      => true,
+									'is_previous'      => false,
 									'is_learning_area' => true,
 								)
 							);
@@ -2050,8 +2087,8 @@ class Quiz {
 			<?php
 			ConfirmationModal::make()
 				->id( $retry_modal_id )
-				->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
-				->icon( UrlHelper::themed_asset( 'images/illustrations/quiz-retry.webp' ) )
+				->title( __( 'Retake Quiz?', 'tutor' ) )
+				->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-retry.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 				->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
 				->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
 				->confirm_text( __( 'Retry Quiz', 'tutor' ) )
@@ -2198,10 +2235,10 @@ class Quiz {
 			$quiz_result = QuizModel::get_quiz_result( $quiz->ID );
 			if ( $attempt_ended && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status ) {
 				if ( QuizModel::RESULT_FAIL === $quiz_result ) {
-					$icon_name   = Icon::CROSS_CIRCLE_LINE;
+					$icon_name   = Icon::CROSS_COLORIZE;
 					$quiz_status = QuizModel::RESULT_FAIL;
 				} elseif ( QuizModel::RESULT_PENDING === $quiz_result ) {
-					$icon_name   = Icon::INFO_2;
+					$icon_name   = Icon::INFO_COLORIZE;
 					$quiz_status = QuizModel::RESULT_PENDING;
 				} elseif ( QuizModel::RESULT_PASS === $quiz_result ) {
 					$icon_name = Icon::COMPLETED_COLORIZE;

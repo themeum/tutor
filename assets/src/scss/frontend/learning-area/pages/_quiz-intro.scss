@@ -29,9 +29,16 @@
     height: 200px;
     background-color: $tutor-surface-l3;
     border-radius: $tutor-radius-lg;
+    overflow: hidden;
+    position: relative;
 
-    img {
-      max-height: 200px;
+    @include tutor-breakpoint-down(sm) {
+      svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
   }
 
@@ -105,6 +112,10 @@
     overflow: hidden;
     .tutor-quiz-attempts-header {
       grid-template-columns: 324px 190px 1.5fr 1fr;
+    }
+
+    .tutor-quiz-attempts-header-item:last-of-type {
+      text-align: center;
     }
 
     .tutor-quiz-attempts-item {

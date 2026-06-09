@@ -51,15 +51,15 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 					<span class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></span> 
 					<span class="tutor-text-secondary">
 						<?php
-							// Translators: %s is the time of comment.
+							/* translators: %s human-readable time difference. */
 							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 						?>
 					</span>
 				</div>
 				<?php if ( $is_user_asker ) : ?>
 				<div class="tutor-ml-auto">
-					<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-quiz-item-result-more">
-						<button class="tutor-btn tutor-btn-ghost tutor-btn-icon tutor-btn-x-small" x-ref="trigger" @click="toggle()">
+					<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })">
+						<button class="tutor-btn tutor-btn-ghost tutor-btn-icon tutor-btn-x-small" x-ref="trigger" @click="toggle()" aria-label="<?php esc_attr_e( 'More options', 'tutor' ); ?>">
 							<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
 						</button>
 						<div 

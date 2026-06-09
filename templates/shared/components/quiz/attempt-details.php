@@ -47,6 +47,7 @@ if ( ! $attempt_data && $quiz_id > 0 ) {
 $render_attempt_not_found = static function ( string $title ) {
 	EmptyState::make()
 		->title( $title )
+		->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-empty.svg' ) )
 		->render();
 };
 
@@ -69,7 +70,9 @@ if ( ! $quiz_id ) {
 	$quiz_id = (int) ( $attempt_data->quiz_id ?? 0 );
 }
 
-$questions       = tutor_utils()->get_questions_by_quiz( $quiz_id );
+$questions = QuizModel::get_quiz_answers_by_attempt_id( (int) $attempt_data->attempt_id );
+$questions = QuizModel::filter_attempt_answers_for_details( $questions, $is_instructor_review );
+
 $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id );
 ?>
 <div class="tutor-quiz-summary-page">
@@ -109,19 +112,22 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 			'shared.components.quiz.attempt-details.summary',
 			array(
 				'attempt_data'         => $attempt_data,
+				'answers'              => $questions, // $questions holds quiz answers data, mapped to 'answers' key for summary template
 				'is_instructor_review' => $is_instructor_review,
 			)
 		);
 		?>
 	</div>
-
+	<?php if ( tutor_utils()->count( $questions ) ) : ?>
 	<div class="tutor-quiz-summary-body">
 		<?php
 		tutor_load_template(
 			'shared.components.quiz.attempt-details.questions-sidebar',
 			array(
-				'quiz_id'      => $quiz_id,
-				'attempt_data' => $attempt_data,
+				'quiz_id'              => $quiz_id,
+				'attempt_data'         => $attempt_data,
+				'questions'            => $questions,
+				'is_instructor_review' => $is_instructor_review,
 			)
 		);
 		?>
@@ -143,17 +149,20 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 			?>
 		</div>
 	</div>
+	<?php endif; ?>
 	<?php if ( ! empty( $is_learning_area ) && $course_contents->next_id ) : ?>
 	<div class="tutor-quiz-summary-footer">
-		<?php
-			Button::make()
-			->tag( 'a' )
-			->label( __( 'Continue Lesson', 'tutor' ) )
-			->variant( Variant::PRIMARY )
-			->size( Size::LARGE )
-			->attr( 'href', esc_url( get_the_permalink( $course_contents->next_id ) ) )
-			->render();
-		?>
+		<div class="tutor-quiz-summary-footer-inner">
+			<?php
+				Button::make()
+				->tag( 'a' )
+				->label( __( 'Continue Lesson', 'tutor' ) )
+				->variant( Variant::PRIMARY )
+				->size( Size::LARGE )
+				->attr( 'href', esc_url( get_the_permalink( $course_contents->next_id ) ) )
+				->render();
+			?>
+		</div>
 	</div>
 	<?php endif; ?>
 </div>

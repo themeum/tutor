@@ -14,6 +14,7 @@ use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Progress;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\PreviewTrigger;
@@ -51,7 +52,7 @@ $timing                 = QuizModel::get_quiz_attempt_timing( $attempt_data );
 $attempt_duration       = $timing['attempt_duration'] ?? '';
 $attempt_duration_taken = $timing['attempt_duration_taken'] ?? '';
 
-$answers   = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+$answers   = isset( $answers ) ? $answers : QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 $correct   = 0;
 $incorrect = 0;
 
@@ -99,27 +100,27 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 			<?php echo esc_html( get_the_title( $quiz_id ) ); ?>
 		</h2>
 
-		<div class="tutor-medium tutor-sm-text-tiny tutor-text-subdued tutor-text-center tutor-mb-6">
-			<?php esc_html_e( 'Topic', 'tutor' ); ?>
-			<?php
-			if ( $topic_id ) {
-				PreviewTrigger::make()->id( $topic_id )->render();
-			} else {
-				echo esc_html( get_the_title( $quiz_id ) );
-			}
-			?>
-			<?php esc_html_e( 'in', 'tutor' ); ?>
-			<?php
-			if ( $course_id ) {
-				PreviewTrigger::make()->id( $course_id )->render();
-			} else {
-				echo esc_html__( 'Course', 'tutor' );
-			}
-			?>
+		<div class="tutor-flex tutor-gap-2 tutor-items-center tutor-justify-center tutor-medium tutor-sm-text-tiny tutor-text-subdued tutor-mb-6">
+			<div class="tutor-flex tutor-gap-2 tutor-items-center tutor-overflow-hidden">
+				<?php esc_html_e( 'Topic', 'tutor' ); ?>
+				<i class="tutor-text-secondary tutor-truncate">
+					<?php echo esc_html( get_the_title( $topic_id ? $topic_id : $quiz_id ) ); ?>
+				</i>
+			</div>
+			<div class="tutor-flex tutor-gap-2 tutor-items-center tutor-overflow-hidden">
+				<?php esc_html_e( 'in', 'tutor' ); ?>
+				<?php
+				if ( $course_id ) {
+					PreviewTrigger::make()->id( $course_id )->render();
+				} else {
+					echo esc_html__( 'Course', 'tutor' );
+				}
+				?>
+			</div>
 		</div>
 
-	<div class="tutor-quiz-result">
-		<?php Quiz_Attempts_List::render_quiz_attempt_marks_percentage( $attempt_result, $earned_percentage, 'large', 'tutor-quiz-result-progress' ); ?>
+		<div class="tutor-quiz-result">
+			<?php Quiz_Attempts_List::render_quiz_attempt_marks_percentage( $attempt_result, $earned_percentage, 'large', 'tutor-quiz-result-progress' ); ?>
 
 			<div class="tutor-quiz-result-marks">
 				<div class="tutor-result-badge <?php echo esc_attr( $result_badge_class ); ?>">
@@ -154,7 +155,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 					<span class="tutor-font-semibold tutor-text-primary">
 						<?php echo esc_html( $attempt_duration_taken ); ?>
 					</span>
-					<?php if ( $attempt_duration ) : ?>
+					<?php if ( (int) $attempt_duration ) : ?>
 						<span>
 							<?php
 								echo esc_html(
@@ -229,7 +230,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 					Button::make()
 						->label( __( 'Retry Quiz', 'tutor' ) )
 						->variant( Variant::PRIMARY_SOFT )
-						->icon( Icon::RELOAD_3, 'left', 20, 20 )
+						->icon( Icon::RELOAD_3, 'left', 20 )
 						->attr( 'type', 'button' )
 						->attr( 'class', 'tutor-gap-2 tutor-btn-block' )
 						->attr(
@@ -297,13 +298,20 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 		<?php
 		ConfirmationModal::make()
 			->id( $retry_modal_id )
-			->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
-			->icon( UrlHelper::themed_asset( 'images/illustrations/quiz-retry.webp' ) )
+			->title( __( 'Retake Quiz?', 'tutor' ) )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/quiz-retry.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 			->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
 			->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
 			->confirm_text( __( 'Retry Quiz', 'tutor' ) )
 			->mutation_state( 'retryMutation' )
 			->render();
 		?>
+	<?php endif; ?>
+
+	<?php if ( ! $answers ) : ?>
+	<div class="tutor-empty-quiz-details">
+		<?php SvgIcon::make()->name( Icon::WARNING )->color( Color::CRITICAL )->size( 20 )->render(); ?>
+		<p class="error-message"><?php echo esc_html__( 'No Questions Answered.', 'tutor' ); ?></p>
+	</div>
 	<?php endif; ?>
 </div>

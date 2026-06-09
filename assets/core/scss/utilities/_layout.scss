@@ -45,6 +45,7 @@ $justify-utils: (
 );
 
 $align-items-utils: (
+  items-normal: normal,
   items-start: flex-start,
   items-end: flex-end,
   items-center: center,
@@ -86,6 +87,9 @@ $grid-split-utils: (
 @each $name, $value in $display-utils {
   .tutor-#{$name} {
     display: $value;
+  }
+  .tutor-force-#{$name} {
+    display: $value !important;
   }
 }
 
@@ -318,43 +322,43 @@ $overflow-types: auto, hidden, visible, scroll;
 // Aspect ratio utility
 // ------------------------
 .tutor-ratio {
-	content: ' ';
-	position: relative;
-	width: 100%;
-	display: block;
+  content: ' ';
+  position: relative;
+  width: 100%;
+  display: block;
 
-	&-16x9 {
-		padding-top: 56.25%;
-	}
+  &-16x9 {
+    padding-top: 56.25%;
+  }
 
-	&-4x3 {
-		padding-top: 75%;
-	}
+  &-4x3 {
+    padding-top: 75%;
+  }
 
-	&-3x2 {
-		padding-top: 66.66%;
-	}
+  &-3x2 {
+    padding-top: 66.66%;
+  }
 
-	&-3x1 {
-		padding-top: 33.33%;
-	}
+  &-3x1 {
+    padding-top: 33.33%;
+  }
 
-	&-1x1 {
-		padding-top: 100%;
-	}
+  &-1x1 {
+    padding-top: 100%;
+  }
 
-	> * {
-		position: absolute !important;
-		top: 0 !important;
-		left: 0 !important;
-		width: 100% !important;
-		height: 100% !important;
-	}
+  > * {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
 
-	> img {
-		object-fit: cover;
-		object-position: center;
-	}
+  > img {
+    object-fit: cover;
+    object-position: center;
+  }
 }
 
 // ------------------------
@@ -367,6 +371,9 @@ $overflow-types: auto, hidden, visible, scroll;
     @each $name, $value in $display-utils {
       .tutor-#{$breakpoint}-#{$name} {
         display: $value;
+      }
+      .tutor-force-#{$breakpoint}-#{$name} {
+        display: $value !important;
       }
     }
 
@@ -420,4 +427,3 @@ $overflow-types: auto, hidden, visible, scroll;
     }
   }
 }
-

@@ -297,7 +297,6 @@ const jsEntries = {
   'tutor-admin': './assets/src/js/admin-dashboard/tutor-admin.js',
   'tutor-setup': './assets/src/js/admin-dashboard/tutor-setup.js',
   'tutor-gutenberg': './assets/src/js/gutenberg/index.js',
-  'tutor-template-import-script': './assets/src/js/admin-dashboard/template-import-script.js',
   'tutor-course-builder': './assets/src/js/v3/entries/course-builder/index.tsx',
   'tutor-order-details': './assets/src/js/v3/entries/order-details/index.tsx',
   'tutor-coupon': './assets/src/js/v3/entries/coupon-details/index.tsx',
@@ -317,7 +316,6 @@ const scssEntries = {
   'tutor-rtl-scss': './v2-library/src/scss/main.rtl.scss',
   'tutor-icon-scss': './v2-library/tutor-icon/tutor-icon.scss',
   'tutor-frontend-dashboard-scss': './assets/src/scss/frontend-dashboard/index.scss',
-  'tutor-template-import-scss': './assets/src/scss/admin-dashboard/template-import.scss',
   'tutor-core-scss': './assets/core/scss/main.scss',
   'tutor-kids-scss': './assets/src/scss/frontend/kids/index.scss',
   'tutor-dashboard-scss': './assets/src/scss/frontend/main/dashboard.scss',
@@ -343,6 +341,7 @@ const resolveAliases = {
   '@FrontendServices': path.resolve(__dirname, './assets/src/js/frontend/services'),
   '@FrontendDashboard': path.resolve(__dirname, './assets/src/js/frontend/dashboard'),
   '@LearningArea': path.resolve(__dirname, './assets/src/js/frontend/learning-area'),
+  '@TutorProQuiz': path.resolve(__dirname, '../tutor-pro/assets/src/js/quiz-type'),
 };
 
 const isScssEntry = (entry) => {

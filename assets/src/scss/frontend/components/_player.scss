@@ -35,31 +35,25 @@
     display: none !important;
   }
 
-  button.plyr__control,
+  /* Plyr buttons specificity increase */
   .plyr__control {
-    color: var(--plyr-video-control-color, #fff);
-    border: none;
-  }
+    background: transparent;
+    border: 0;
+    border-radius: 3px;
+    border-radius: var(--plyr-control-radius, 3px);
+    color: inherit;
+    cursor: pointer;
+    flex-shrink: 0;
+    overflow: visible;
+    padding: 7px;
+    padding: calc(var(--plyr-control-spacing, 10px) * 0.7);
+    position: relative;
+    transition: all 0.3s ease;
 
-  .plyr__control.plyr__tab-focus,
-  .plyr__control:hover,
-  .plyr__control:focus,
-  .plyr__control[aria-expanded=true] {
-    background: #00b3ff;
-    background: var(--plyr-video-control-background-hover, var(--plyr-color-main, var(--plyr-color-main, #00b3ff)));
-    color: var(--plyr-video-control-color, #fff);
-    color: var(--plyr-video-control-color-hover, #fff);
-  }
-
-  .plyr__controls__item.plyr__menu {
-    .plyr__menu__container {
-      [role=menu] button {
-        color: var(--plyr-video-control-color, #fff);
-        &:hover,
-        &:focus {
-          color: var(--plyr-video-control-color, #fff);
-        }
-      }
+    &:focus {
+      background: unset;
+      color: unset;
+      outline: 0;
     }
   }
 
@@ -70,8 +64,15 @@
     border-radius: 100%;
     color: #fff;
     color: var(--plyr-video-control-color, #fff);
+    display: block;
+    left: 50%;
+    opacity: 0.9;
+    padding: 15px;
     padding: calc(var(--plyr-control-spacing, 10px) * 1.5);
-    margin: $tutor-spacing-none;
-    z-index: 9;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: 0.3s;
+    z-index: 2;
   }
 }

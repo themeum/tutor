@@ -2,14 +2,22 @@ import { __ } from '@wordpress/i18n';
 
 import { type MutationState } from '@Core/ts/services/Query';
 import { type WPMedia } from '@Core/ts/services/WPMedia';
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 
-interface ProfilePhotoFormProps {
+interface UserPhotoFormProps {
   photo_file: File;
-  photo_type: 'profile_photo';
+  photo_type: 'profile_photo' | 'cover_photo';
+}
+
+interface UserPhotoUploadResponse {
+  status?: string;
+}
+
+interface RemoveUserPhotoProps {
+  photo_type: UserPhotoFormProps['photo_type'];
 }
 
 interface AccountFormProps {
@@ -21,6 +29,8 @@ interface AccountFormProps {
   occupation: string;
   bio: string;
   display_name: string;
+  profile_photo: string;
+  cover_photo: string;
   tutor_pro_custom_signature_id: WPMedia | null;
 }
 
@@ -87,8 +97,10 @@ const settings = () => {
 
   return {
     $el: null as HTMLElement | null,
-    uploadProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    uploadProfilePhotoMutation: null as MutationState<UserPhotoUploadResponse> | null,
     removeProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    uploadCoverPhotoMutation: null as MutationState<UserPhotoUploadResponse> | null,
+    removeCoverPhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     updateProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
     saveSocialProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
     saveBillingInfoMutation: null as MutationState<TutorMutationResponse<string>> | null,
@@ -106,6 +118,8 @@ const settings = () => {
       this.handleUpdateProfile = this.handleUpdateProfile.bind(this);
       this.handleUploadProfilePhoto = this.handleUploadProfilePhoto.bind(this);
       this.handleRemoveProfilePhoto = this.handleRemoveProfilePhoto.bind(this);
+      this.handleUploadCoverPhoto = this.handleUploadCoverPhoto.bind(this);
+      this.handleRemoveCoverPhoto = this.handleRemoveCoverPhoto.bind(this);
       this.handleSaveSocialProfile = this.handleSaveSocialProfile.bind(this);
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
       this.handleSaveWithdrawMethod = this.handleSaveWithdrawMethod.bind(this);
@@ -113,7 +127,7 @@ const settings = () => {
       this.handleResetPreferences = this.handleResetPreferences.bind(this);
 
       this.handleUpdateNotification = query.useMutation(this.updateNotification, {
-        onSuccess: (data: TutorMutationResponse<string>, payload: UpdateNotificationProps) => {
+        onSuccess: (data, payload) => {
           form.reset(payload?.formId as string, payload as unknown as Record<string, unknown>);
           toast.success(data?.message ?? __('Notification settings updated', 'tutor'));
         },
@@ -122,7 +136,7 @@ const settings = () => {
         },
       });
 
-      this.uploadProfilePhotoMutation = query.useMutation(this.uploadProfilePhoto, {
+      this.uploadProfilePhotoMutation = query.useMutation(this.uploadUserPhoto, {
         onSuccess: () => {
           toast.success(__('Successfully updated profile photo.', 'tutor'));
         },
@@ -131,7 +145,7 @@ const settings = () => {
         },
       });
 
-      this.removeProfilePhotoMutation = query.useMutation(this.removeProfilePhoto, {
+      this.removeProfilePhotoMutation = query.useMutation(this.removeUserPhoto, {
         onSuccess: () => {
           toast.success(__('Successfully removed profile photo.', 'tutor'));
         },
@@ -140,8 +154,26 @@ const settings = () => {
         },
       });
 
+      this.uploadCoverPhotoMutation = query.useMutation(this.uploadUserPhoto, {
+        onSuccess: () => {
+          toast.success(__('Successfully updated cover photo.', 'tutor'));
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
+        },
+      });
+
+      this.removeCoverPhotoMutation = query.useMutation(this.removeUserPhoto, {
+        onSuccess: () => {
+          toast.success(__('Successfully removed cover photo.', 'tutor'));
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error));
+        },
+      });
+
       this.updateProfileMutation = query.useMutation(this.updateProfile, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data) => {
           toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
         },
         onError: (error: Error) => {
@@ -150,7 +182,7 @@ const settings = () => {
       });
 
       this.saveSocialProfileMutation = query.useMutation(this.saveSocialProfile, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data) => {
           toast.success(data?.message ?? __('Success successfully saved social profile', 'tutor'));
         },
         onError: (error: Error) => {
@@ -159,7 +191,7 @@ const settings = () => {
       });
 
       this.saveBillingInfoMutation = query.useMutation(this.saveBillingInfo, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data) => {
           toast.success(data?.message ?? __('Success successfully saved billing info', 'tutor'));
         },
         onError: (error: Error) => {
@@ -168,7 +200,7 @@ const settings = () => {
       });
 
       this.saveWithdrawMethodMutation = query.useMutation(this.saveWithdrawMethod, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data) => {
           toast.success(data?.message ?? __('Withdrawal method saved successfully', 'tutor'));
         },
         onError: (error: Error) => {
@@ -217,13 +249,13 @@ const settings = () => {
     },
 
     async updatePreferences(payload: PreferencesFormProps) {
-      return wpAjaxInstance.post(endpoints.UPDATE_USER_PREFERENCES, payload) as unknown as Promise<
+      return wpPost(endpoints.UPDATE_USER_PREFERENCES, payload) as unknown as Promise<
         TutorMutationResponse<PreferencesFormProps>
       >;
     },
 
     async resetPreferences(payload: ResetPreferencesPayload) {
-      return wpAjaxInstance.post(endpoints.RESET_USER_PREFERENCES, payload) as unknown as Promise<
+      return wpPost(endpoints.RESET_USER_PREFERENCES, payload) as unknown as Promise<
         TutorMutationResponse<PreferencesFormProps>
       >;
     },
@@ -268,11 +300,17 @@ const settings = () => {
         {} as Record<string, string>,
       );
 
-      return wpAjaxInstance.post(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload);
     },
 
-    async uploadProfilePhoto(payload: ProfilePhotoFormProps) {
-      return wpAjaxInstance.post(endpoints.UPLOAD_PROFILE_PHOTO, payload).then((res) => res.data);
+    async uploadUserPhoto(payload: UserPhotoFormProps) {
+      const response = await wpPost<UserPhotoUploadResponse>(endpoints.UPLOAD_PROFILE_PHOTO, payload);
+
+      if (response?.status !== 'success') {
+        throw new Error(__('Image upload failed. Please try again.', 'tutor'));
+      }
+
+      return response;
     },
 
     async handleUploadProfilePhoto(files: File[]) {
@@ -282,20 +320,35 @@ const settings = () => {
       const data = {
         photo_file: files[0],
         photo_type: 'profile_photo',
-      } satisfies ProfilePhotoFormProps;
+      } satisfies UserPhotoFormProps;
       await this.uploadProfilePhotoMutation?.mutate(data);
     },
 
-    async removeProfilePhoto() {
-      return wpAjaxInstance.post(endpoints.REMOVE_PROFILE_PHOTO).then((res) => res.data);
+    async handleUploadCoverPhoto(files: File[]) {
+      if (files.length === 0) {
+        return;
+      }
+      const data = {
+        photo_file: files[0],
+        photo_type: 'cover_photo',
+      } satisfies UserPhotoFormProps;
+      await this.uploadCoverPhotoMutation?.mutate(data);
+    },
+
+    async removeUserPhoto(payload: RemoveUserPhotoProps) {
+      return wpPost<TutorMutationResponse<string>>(endpoints.REMOVE_PROFILE_PHOTO, payload);
     },
 
     async handleRemoveProfilePhoto() {
-      await this.removeProfilePhotoMutation?.mutate({});
+      await this.removeProfilePhotoMutation?.mutate({ photo_type: 'profile_photo' });
+    },
+
+    async handleRemoveCoverPhoto() {
+      await this.removeCoverPhotoMutation?.mutate({ photo_type: 'cover_photo' });
     },
 
     async updateProfile(payload: AccountFormProps) {
-      return wpAjaxInstance.post(endpoints.UPDATE_PROFILE, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.UPDATE_PROFILE, payload);
     },
 
     async handleUpdateProfile(data: AccountFormProps, formId: string) {
@@ -308,7 +361,7 @@ const settings = () => {
     },
 
     async saveSocialProfile(payload: SocialFormProps) {
-      return wpAjaxInstance.post(endpoints.SAVE_SOCIAL_PROFILE, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.SAVE_SOCIAL_PROFILE, payload);
     },
 
     async handleSaveSocialProfile(data: SocialFormProps, formId: string) {
@@ -317,7 +370,7 @@ const settings = () => {
     },
 
     async saveBillingInfo(payload: SettingsFormProps) {
-      return wpAjaxInstance.post(endpoints.SAVE_BILLING_INFO, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.SAVE_BILLING_INFO, payload);
     },
 
     async handleSaveBillingInfo(data: SettingsFormProps, formId: string) {
@@ -328,7 +381,7 @@ const settings = () => {
     },
 
     async saveWithdrawMethod(payload: Record<string, unknown>) {
-      return wpAjaxInstance.post(endpoints.SAVE_WITHDRAW_METHOD, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.SAVE_WITHDRAW_METHOD, payload);
     },
 
     async handleSaveWithdrawMethod(data: WithdrawMethodFormProps, formId: string) {
@@ -350,7 +403,7 @@ const settings = () => {
     },
 
     async resetPassword(payload: ResetPasswordFormProps) {
-      return wpAjaxInstance.post(endpoints.RESET_PASSWORD, payload) as unknown as Promise<ResetPasswordResponse>;
+      return wpPost(endpoints.RESET_PASSWORD, payload) as unknown as Promise<ResetPasswordResponse>;
     },
 
     async handleResetPassword(data: ResetPasswordFormProps, formId: string) {

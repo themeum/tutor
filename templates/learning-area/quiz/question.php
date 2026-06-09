@@ -55,6 +55,7 @@ $required_message   = __( 'The answer for this question is required', 'tutor' );
 
 <div
 	class="tutor-quiz-question"
+	id="<?php echo esc_attr( $question_id ); ?>"
 	data-question="<?php echo esc_attr( $question->question_type ); ?>"
 	data-answer-required="<?php echo esc_attr( $answer_is_required ); ?>"
 >
@@ -70,7 +71,7 @@ $required_message   = __( 'The answer for this question is required', 'tutor' );
 
 	// Render the question type specific answers template.
 	tutor_load_template(
-		'learning-area.quiz.questions.' . $question_type,
+		apply_filters( 'tutor_filter_quiz_question_template', 'learning-area.quiz.questions.' . $question_type, $question_type ),
 		array(
 			'question'                 => wp_parse_args( (array) $question, $default_question ),
 			'quiz_settings'            => $quiz_settings,

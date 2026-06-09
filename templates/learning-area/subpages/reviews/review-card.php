@@ -19,6 +19,7 @@ use Tutor\Components\Constants\Variant;
 use Tutor\Components\InputField;
 use Tutor\Components\StarRating;
 use Tutor\Components\StarRatingInput;
+use Tutor\Components\SvgIcon;
 
 // Get global variables.
 global $current_user_id;
@@ -44,8 +45,8 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 					</div>
 					<div class="tutor-small tutor-text-subdued">
 					<?php
-					/* translators: %s: time difference */
-					echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ) );
+					/* translators: %s human-readable time difference. */
+					echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date_gmt ) ) ) );
 					?>
 					</div>
 				</div>
@@ -72,16 +73,18 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 				<?php
 				Button::make()
 					->variant( Variant::OUTLINE )
-					->size( Size::SMALL, 16, 16 )
+					->size( Size::SMALL )
 					->label( __( 'Edit Review', 'tutor' ) )
 					->icon( Icon::EDIT_2 )
 					->attr( 'x-ref', 'edit' )
 					->render();
 
 				Button::make()
+					->label( __( 'Delete Review', 'tutor' ) )
 					->variant( Variant::OUTLINE )
 					->size( Size::SMALL )
 					->icon( Icon::DELETE_2 )
+					->icon_only()
 					->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review->comment_ID ) . ' })' )
 					->icon_only()
 					->render();
@@ -124,14 +127,14 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 					->render();
 			?>
 		</form>
-		<div class="tutor-flex tutor-justify-between tutor-gap-3">
-			<div class="tutor-flex tutor-gap-3 tutor-tiny tutor-text-subdued tutor-items-center tutor-flex-wrap">
+		<div class="tutor-flex tutor-justify-between tutor-gap-3 tutor-sm-justify-end">
+			<div class="tutor-flex tutor-gap-3 tutor-tiny tutor-text-subdued tutor-items-center tutor-flex-wrap tutor-sm-hidden">
 				<span>
-					<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?>
+					<?php SvgIcon::make()->name( Icon::COMMAND )->size( 12 )->render(); ?>
 				</span>
 				<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
 				<span>
-					<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?>
+					<?php SvgIcon::make()->name( Icon::ENTER )->size( 12 )->render(); ?>
 				</span>
 				<?php esc_html_e( 'Enter to Save', 'tutor' ); ?>
 			</div>

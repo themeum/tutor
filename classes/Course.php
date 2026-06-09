@@ -22,10 +22,14 @@ use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
+use Tutor\Components\Tooltip;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Options_V2;
+use TUTOR_ASSIGNMENTS\Assignments;
 
 /**
  * Course Class
@@ -308,6 +312,7 @@ class Course extends Tutor_Base {
 
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
+		add_filter( 'post_password_required', array( $this, 'bypass_password_for_enrolled' ), 10, 2 );
 		add_filter( 'the_preview', array( $this, 'handle_schedule_courses' ) );
 
 		add_action( 'tutor_course_action_btn', array( $this, 'render_course_action_btn' ) );
@@ -352,6 +357,29 @@ class Course extends Tutor_Base {
 				set_transient( 'tutor_post_password_error', __( 'Invalid password', 'tutor' ) );
 			}
 		}
+	}
+
+	/**
+	 * Bypass password protection for enrolled users.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool    $required Whether the password is required.
+	 * @param WP_Post $post     The post object.
+	 *
+	 * @return bool false if the current user is enrolled, original value otherwise.
+	 */
+	public function bypass_password_for_enrolled( $required, $post ) {
+		if ( ! $required ) {
+			return $required;
+		}
+
+		$post_types = array( tutor()->course_post_type, tutor()->bundle_post_type );
+		if ( in_array( $post->post_type, $post_types, true ) && EnrollmentModel::is_enrolled( $post->ID ) ) {
+			return false;
+		}
+
+		return $required;
 	}
 
 	/**
@@ -1518,6 +1546,7 @@ class Course extends Tutor_Base {
 			'instructor_can_publish_course',
 			'instructor_can_change_course_author',
 			'instructor_can_manage_co_instructors',
+			'quiz_attempts_allowed',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
@@ -2132,7 +2161,7 @@ class Course extends Tutor_Base {
 
 		} else {
 			// Free enroll.
-			tutor_utils()->do_enroll( $course_id );
+			EnrollmentModel::do_enroll( $course_id );
 		}
 
 		$referer_url = wp_get_referer();
@@ -2168,7 +2197,7 @@ class Course extends Tutor_Base {
 			die( esc_html__( 'Please Sign-In', 'tutor' ) );
 		}
 
-		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+		if ( ! EnrollmentModel::is_enrolled( $course_id, $user_id ) ) {
 			die( esc_html__( 'User is not enrolled in course', 'tutor' ) );
 		}
 
@@ -2177,10 +2206,12 @@ class Course extends Tutor_Base {
 		 * for specific cases like prerequisites. WP_Error should be returned
 		 * from the filter value to prevent the completion.
 		 */
-		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', CourseModel::can_complete_course( $course_id, $user_id ), $user_id, $course_id );
 
 		if ( is_wp_error( $can_complete ) ) {
 			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
+		} elseif ( ! $can_complete ) {
+			tutor_utils()->redirect_to( $permalink, __( 'You do not have permission to complete this course.', 'tutor' ), 'error' );
 		} else {
 			CourseModel::mark_course_as_completed( $course_id, $user_id );
 			// Set temporary identifier to show review pop up.
@@ -2211,7 +2242,7 @@ class Course extends Tutor_Base {
 		}
 
 		$user_id = get_current_user_id();
-		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+		if ( ! EnrollmentModel::is_enrolled( $course_id, $user_id ) ) {
 			$this->response_bad_request( __( 'You are not enrolled in this course', 'tutor' ) );
 		}
 
@@ -2220,10 +2251,12 @@ class Course extends Tutor_Base {
 		 * for specific cases like prerequisites. WP_Error should be returned
 		 * from the filter value to prevent the completion.
 		 */
-		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', CourseModel::can_complete_course( $course_id, $user_id ), $user_id, $course_id );
 
 		if ( is_wp_error( $can_complete ) ) {
 			$this->response_bad_request( $can_complete->get_error_message() );
+		} elseif ( ! $can_complete ) {
+			$this->response_bad_request( __( 'You do not have permission to complete this course.', 'tutor' ) );
 		} else {
 			CourseModel::mark_course_as_completed( $course_id, $user_id );
 			// Set temporary identifier to show review pop up.
@@ -2715,7 +2748,7 @@ class Course extends Tutor_Base {
 		}
 
 		// Whether enrollment require.
-		$is_enrolled = tutor_utils()->is_enrolled();
+		$is_enrolled = EnrollmentModel::is_enrolled();
 
 		return array_filter(
 			$items,
@@ -2843,12 +2876,111 @@ class Course extends Tutor_Base {
 
 		if ( $should_removed ) {
 			$course_id = get_the_ID();
-			$enrolled  = tutor_utils()->is_enrolled( $course_id );
+			$enrolled  = EnrollmentModel::is_enrolled( $course_id );
 			if ( $enrolled ) {
 				$html = '';
 			}
 		}
 		return $html;
+	}
+
+	/**
+	 * Get course completion missing requirements message.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id Course ID.
+	 * @param int $user_id   User ID.
+	 *
+	 * @return string|null
+	 */
+	public static function get_course_completion_restrict_msg( $course_id = 0, $user_id = 0 ) {
+		$course_id = tutor_utils()->get_post_id( $course_id );
+		$user_id   = tutor_utils()->get_user_id( $user_id );
+
+		if ( 'strict' !== tutor_utils()->get_option( 'course_completion_process' ) ) {
+			return null;
+		}
+
+		$completed_lessons = tutor_utils()->get_completed_lesson_count_by_course( $course_id, $user_id );
+		$total_lessons     = tutor_utils()->get_lesson_count_by_course( $course_id );
+
+		if ( $completed_lessons < $total_lessons ) {
+			return __( 'Complete all lessons to mark this course as complete', 'tutor' );
+		}
+
+		$course_contents = tutor_utils()->get_course_contents_by_id( $course_id );
+
+		$required_quiz_pass_count       = 0;
+		$required_assignment_pass_count = 0;
+
+		$is_assignment_addon_enabled = tutor_utils()->is_addon_enabled( 'tutor-assignments' );
+
+		foreach ( $course_contents as $content ) {
+
+			if ( tutor()->quiz_post_type === $content->post_type ) {
+				if ( ! QuizModel::is_quiz_passed( $content->ID, $user_id ) ) {
+					++$required_quiz_pass_count;
+				}
+			}
+
+			if ( $is_assignment_addon_enabled && tutor()->assignment_post_type === $content->post_type ) {
+				if ( ! Assignments::is_assignment_passed( $content->ID, $user_id ) ) {
+					++$required_assignment_pass_count;
+				}
+			}
+		}
+
+		if ( ! $required_quiz_pass_count && ! $required_assignment_pass_count ) {
+			return null;
+		}
+
+		return self::get_course_completion_requirement_message(
+			$required_quiz_pass_count,
+			$required_assignment_pass_count
+		);
+	}
+
+	/**
+	 * Build missing course completion requirements message.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $quiz_count Total quiz count.
+	 * @param int $assignment_count Total assignment count.
+	 *
+	 * @return string
+	 */
+	private static function get_course_completion_requirement_message( $quiz_count, $assignment_count ) {
+		$quiz_label       = _n( 'quiz', 'quizzes', $quiz_count, 'tutor' );
+		$assignment_label = _n( 'assignment', 'assignments', $assignment_count, 'tutor' );
+
+		if ( $quiz_count && ! $assignment_count ) {
+			return sprintf(
+				/* translators: %1$s: item count; %2$s: item label */
+				__( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ),
+				$quiz_count,
+				$quiz_label
+			);
+		}
+
+		if ( ! $quiz_count && $assignment_count ) {
+			return sprintf(
+				/* translators: %1$s: item count; %2$s: item label */
+				__( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ),
+				$assignment_count,
+				$assignment_label
+			);
+		}
+
+		return sprintf(
+			/* translators: %1$s: quiz count; %2$s: quiz label; %3$s: assignment count; %4$s: assignment label */
+			__( 'You have to pass %1$s %2$s and %3$s %4$s to complete this course.', 'tutor' ),
+			$quiz_count,
+			$quiz_label,
+			$assignment_count,
+			$assignment_label
+		);
 	}
 
 	/**
@@ -2860,108 +2992,9 @@ class Course extends Tutor_Base {
 	 * @return string
 	 */
 	public function tutor_lms_hide_course_complete_btn( $html ) {
+		$_msg = self::get_course_completion_restrict_msg();
 
-		$completion_mode = tutor_utils()->get_option( 'course_completion_process' );
-		if ( 'strict' !== $completion_mode ) {
-			return $html;
-		}
-
-		$completed_lesson = tutor_utils()->get_completed_lesson_count_by_course();
-		$lesson_count     = tutor_utils()->get_lesson_count_by_course();
-
-		if ( $completed_lesson < $lesson_count ) {
-			return '<div class="tutor-alert tutor-warning tutor-mt-28">
-						<div class="tutor-alert-text">
-							<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
-							<span>' . __( 'Complete all lessons to mark this course as complete', 'tutor' ) . '</span>
-						</div>
-					</div>';
-		}
-
-		$quizzes     = array();
-		$assignments = array();
-
-		$course_contents = tutor_utils()->get_course_contents_by_id();
-		if ( tutor_utils()->count( $course_contents ) ) {
-			foreach ( $course_contents as $content ) {
-				if ( 'tutor_quiz' === $content->post_type ) {
-					$quizzes[] = $content;
-				}
-				if ( 'tutor_assignments' === $content->post_type ) {
-					$assignments[] = $content;
-				}
-			}
-		}
-
-		$required_assignment_pass = 0;
-
-		foreach ( $assignments as $row ) {
-
-			$assignment_submission     = tutor_utils()->is_assignment_submitted( $row->ID );
-			$is_reviewed_by_instructor = ! count( $assignment_submission )
-											? false
-											: get_comment_meta( $assignment_submission[0]->comment_ID, 'evaluate_time', true );
-
-			if ( $assignment_submission && $is_reviewed_by_instructor ) {
-				$pass_mark  = tutor_utils()->get_assignment_option( $row->ID, 'pass_mark' );
-				$has_passed = false;
-				foreach ( $assignment_submission as $submission ) {
-					$given_mark = (int) get_comment_meta( $submission->comment_ID, 'assignment_mark', true );
-					if ( $given_mark >= $pass_mark ) {
-						$has_passed = true;
-						break;
-					}
-				}
-				if ( ! $has_passed ) {
-					++$required_assignment_pass;
-				}
-			} else {
-				++$required_assignment_pass;
-			}
-		}
-
-		$is_quiz_pass       = true;
-		$required_quiz_pass = 0;
-
-		if ( tutor_utils()->count( $quizzes ) ) {
-			foreach ( $quizzes as $quiz ) {
-
-				$attempt = tutor_utils()->get_quiz_attempt( $quiz->ID );
-				if ( $attempt ) {
-					$passing_grade     = tutor_utils()->get_quiz_option( $quiz->ID, 'passing_grade', 0 );
-					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
-
-					if ( $earned_percentage < $passing_grade ) {
-						++$required_quiz_pass;
-						$is_quiz_pass = false;
-					}
-				} else {
-					++$required_quiz_pass;
-					$is_quiz_pass = false;
-				}
-			}
-		}
-
-		if ( ! $is_quiz_pass || $required_assignment_pass > 0 ) {
-			$_msg           = '';
-			$quiz_str       = _n( 'quiz', 'quizzes', $required_quiz_pass, 'tutor' );
-			$assignment_str = _n( 'assignment', 'assignments', $required_assignment_pass, 'tutor' );
-
-			if ( ! $is_quiz_pass && 0 == $required_assignment_pass ) {
-				/* translators: %1$s: number of quiz/assignment pass required; %2$s: quiz/assignment string */
-				$_msg = sprintf( __( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ), $required_quiz_pass, $quiz_str );
-			}
-
-			if ( $is_quiz_pass && $required_assignment_pass > 0 ) {
-				//phpcs:ignore
-				$_msg = sprintf( __( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ), $required_assignment_pass, $assignment_str );
-			}
-
-			if ( ! $is_quiz_pass && $required_assignment_pass > 0 ) {
-				/* translators: %1$s: number of quiz pass required; %2$s: quiz string; %3$s: number of assignment pass required; %4$s: assignment string */
-				$_msg = sprintf( __( 'You have to pass %1$s %2$s and %3$s %4$s to complete this course.', 'tutor' ), $required_quiz_pass, $quiz_str, $required_assignment_pass, $assignment_str );
-			}
-
+		if ( $_msg ) {
 			return '<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
 							<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
@@ -3029,9 +3062,10 @@ class Course extends Tutor_Base {
 			FROM
 				{$wpdb->postmeta}
 			WHERE
-				meta_key='_tutor_enrolled_by_order_id'
+				meta_key=%s
 				AND meta_value = %d
 			",
+				EnrollmentModel::ENROLLMENT_ORDER_ID_META,
 				$post_id
 			)
 		);
@@ -3053,15 +3087,28 @@ class Course extends Tutor_Base {
 	 */
 	public function tutor_reset_course_progress() {
 		tutor_utils()->checking_nonce();
-		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$course_id             = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$context               = Input::post( 'context', '' );
+		$course_reset_progress = tutor_utils()->get_option( 'course_reset_progress', false );
+		$course_retake_feature = tutor_utils()->get_option( 'course_retake_feature', false );
 
-		if ( ! $course_id || ! is_numeric( $course_id ) || ! tutor_utils()->is_enrolled( $course_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid Course ID or Access Denied.', 'tutor' ) ) );
+		if ( ! $course_reset_progress && 'learning-area-sidebar' === $context ) {
+			$this->response_bad_request( __( 'You do not have permission to reset this course.', 'tutor' ) );
+			return;
+		}
+
+		if ( ! $course_retake_feature && ( 'course-landing' === $context || 'learning-area' === $context ) ) {
+			$this->response_bad_request( __( 'You do not have permission to retake this course.', 'tutor' ) );
+			return;
+		}
+
+		if ( ! $course_id || ! is_numeric( $course_id ) || ! EnrollmentModel::is_enrolled( $course_id ) ) {
+			$this->response_bad_request( __( 'Invalid Course ID or Access Denied.', 'tutor' ) );
 			return;
 		}
 
 		tutor_utils()->delete_course_progress( $course_id );
-		wp_send_json_success( array( 'redirect_to' => tutor_utils()->get_course_first_lesson( $course_id ) ) );
+		$this->json_response( '', array( 'redirect_to' => tutor_utils()->get_course_first_lesson( $course_id ) ) );
 	}
 
 	/**
@@ -3081,7 +3128,7 @@ class Course extends Tutor_Base {
 		if ( $course_id && $is_allowed ) {
 			$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
 			if ( ! $is_purchasable ) {
-				tutor_utils()->do_enroll( $course_id, $order_id = 0, $user_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id = 0, $user_id );
 				do_action( 'guest_attempt_after_enrollment', $course_id );
 			}
 		}
@@ -3122,14 +3169,14 @@ class Course extends Tutor_Base {
 			 * @since 3.9.4
 			 */
 			if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
-				$is_enrolled = (bool) tutor_utils()->is_enrolled( $course_id, $user_id );
+				$is_enrolled = (bool) EnrollmentModel::is_enrolled( $course_id, $user_id );
 
 				if ( ! $is_enrolled ) {
 					wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
 				}
 			}
 
-			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
+			$enroll = EnrollmentModel::do_enroll( $course_id, 0, $user_id );
 			if ( $enroll ) {
 				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
 			} else {
@@ -3382,46 +3429,11 @@ class Course extends Tutor_Base {
 		Button::make()
 			->tag( 'a' )
 			->label( $button_text )
-			->icon( Icon::PLAY )
+			->icon( Icon::PLAY_2 )
 			->variant( Variant::PRIMARY )
 			->size( Size::X_SMALL )
 			->attr( 'href', esc_url( $button_url ) )
 			->render();
-	}
-
-	/**
-	 * Calculate the total course duration for a set of courses.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array<int> $course_ids List of course IDs.
-	 *
-	 * @return array{
-	 *     hours: int,
-	 *     minutes: int,
-	 *     seconds: int
-	 * } Total accumulated duration from all given courses.
-	 */
-	public static function get_total_course_duration( $course_ids ): array {
-		$total_seconds = 0;
-
-		foreach ( $course_ids as $id ) {
-			$duration = tutor_utils()->get_course_duration( (int) $id, true );
-
-			$total_seconds += ( (int) $duration['durationHours'] * 3600 )
-				+ ( (int) $duration['durationMinutes'] * 60 )
-				+ ( (int) $duration['durationSeconds'] );
-		}
-
-		$hours   = floor( $total_seconds / 3600 );
-		$minutes = floor( $total_seconds / 60 );
-		$seconds = $total_seconds;
-
-		return array(
-			'hours'   => (int) $hours,
-			'minutes' => (int) $minutes,
-			'seconds' => (int) $seconds,
-		);
 	}
 
 	/**
@@ -3476,16 +3488,23 @@ class Course extends Tutor_Base {
 	 * @param int    $course_id       The ID of the course.
 	 * @param float  $course_progress The current completion percentage of the course.
 	 * @param string $size            The button size.
+	 * @param string $tooltip         Optional. Tooltip message.
+	 * @param bool   $block           Optional. Whether the button is full-width.
 	 *
 	 * @return void
 	 */
-	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0, string $size = Size::MEDIUM ): void {
+	public static function render_course_complete_btn( string $modal_id, int $course_id, float $course_progress = 0, string $size = Size::MEDIUM, string $tooltip = '', bool $block = false ): void {
 		$button = Button::make()
-		->variant( Variant::PRIMARY_SOFT )
+		->variant( Variant::SECONDARY )
 		->label( __( 'Complete the Course', 'tutor' ) )
 		->icon( Icon::TICK_MARK )
 		->size( $size )
+		->block( $block )
 		->attr( 'type', 'button' );
+
+		if ( ! empty( $tooltip ) ) {
+			$button->disabled();
+		}
 
 		if ( $course_progress < 100 ) {
 			$button->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" );
@@ -3495,7 +3514,16 @@ class Course extends Tutor_Base {
 			$button->attr( ':disabled', 'courseCompleteMutation?.isPending' );
 		}
 
-		$button->render();
+		if ( ! empty( $tooltip ) ) {
+			Tooltip::make()
+				->content( $tooltip )
+				->placement( Tooltip::PLACEMENT_BOTTOM )
+				->arrow( Tooltip::ARROW_CENTER )
+				->trigger_element( $button->get() )
+				->render();
+		} else {
+			$button->render();
+		}
 	}
 
 	/**
@@ -3505,15 +3533,17 @@ class Course extends Tutor_Base {
 	 *
 	 * @param string $modal_id Modal id.
 	 * @param string $size     The button size.
+	 * @param bool   $block    Optional. Whether the button is full-width.
 	 *
 	 * @return void
 	 */
-	public static function render_course_retake_btn( string $modal_id, string $size = Size::MEDIUM ): void {
+	public static function render_course_retake_btn( string $modal_id, string $size = Size::MEDIUM, bool $block = false ): void {
 		Button::make()
-		->variant( Variant::PRIMARY_SOFT )
+		->variant( Variant::SECONDARY )
 		->label( __( 'Retake this Course', 'tutor' ) )
 		->icon( Icon::RELOAD_4 )
 		->size( $size )
+		->block( $block )
 		->attr( 'type', 'button' )
 		->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" )
 		->render();

@@ -42,6 +42,7 @@ final class Icon {
 	const ARROW_LEFT_ALT             = 'arrow-left-alt';
 	const ARROW_RIGHT_2              = 'arrow-right-2';
 	const ARROW_UP                   = 'arrow-up';
+	const ASCENDING                  = 'ascending';
 	const ASSIGNMENT                 = 'assignment';
 	const ATTACH                     = 'attach';
 	const ATTACHMENT_LINE            = 'attachment-line';
@@ -74,6 +75,7 @@ final class Icon {
 	const CALENDAR_LINE              = 'calendar-line';
 	const CALENDAR_LINES             = 'calendar-lines';
 	const CALL_END                   = 'call-end';
+	const CAMERA                     = 'camera';
 	const CART                       = 'cart';
 	const CATEGORIES                 = 'categories';
 	const CERTIFICATE                = 'certificate';
@@ -129,6 +131,7 @@ final class Icon {
 	const CROSS_2                    = 'cross-2';
 	const CROSS_CIRCLE               = 'cross-circle';
 	const CROSS_CIRCLE_LINE          = 'cross-circle-line';
+	const CROSS_COLORIZE             = 'cross-colorize';
 	const CROWN                      = 'crown';
 	const CROWN_OUTLINED             = 'crown-outlined';
 	const CROWN_ROUNDED              = 'crown-rounded';
@@ -141,6 +144,9 @@ final class Icon {
 	const DELETE_2                   = 'delete-2';
 	const DESCENDING                 = 'descending';
 	const DEVICES                    = 'devices';
+	const DIFFICULTY_EASY            = 'difficulty-easy';
+	const DIFFICULTY_HARD            = 'difficulty-hard';
+	const DIFFICULTY_NORMAL          = 'difficulty-normal';
 	const DISCOUNT_TYPE              = 'discount-type';
 	const DIVI_COLORIZED             = 'divi-colorized';
 	const DOC                        = 'doc';
@@ -200,6 +206,10 @@ final class Icon {
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
 	const GRAB_HANDLE                = 'grab-handle';
 	const GRADEBOOK                  = 'gradebook';
+	const GRAPH_MARKER_CORRECT       = 'graph-marker-correct';
+	const GRAPH_MARKER_HOVER         = 'graph-marker-hover';
+	const GRAPH_MARKER_SELECTED      = 'graph-marker-selected';
+	const GRAPH_MARKER_WRONG         = 'graph-marker-wrong';
 	const GUTENBERG_COLORIZED        = 'gutenberg-colorized';
 	const HAND_COIN                  = 'hand-coin';
 	const HAND_SWIPE_RIGHT           = 'hand-swipe-right';
@@ -219,6 +229,7 @@ final class Icon {
 	const INACTIVE                   = 'inactive';
 	const INFO                       = 'info';
 	const INFO_2                     = 'info-2';
+	const INFO_COLORIZE              = 'info-colorize';
 	const INFO_FILL                  = 'info-fill';
 	const INFO_OCTAGON               = 'info-octagon';
 	const INSTRUCTOR                 = 'instructor';
@@ -271,6 +282,7 @@ final class Icon {
 	const MINUS                      = 'minus';
 	const MINUS_SQUARE               = 'minus-square';
 	const MONITOR_PLAY               = 'monitor-play';
+	const MORE                       = 'more';
 	const MOVE                       = 'move';
 	const MP3                        = 'mp3';
 	const MP4                        = 'mp4';
@@ -381,10 +393,10 @@ final class Icon {
 	const SORT_MINOR                 = 'sort-minor';
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
+	const STAR                       = 'star';
 	const STAR_FILL                  = 'star-fill';
 	const STAR_HALF                  = 'star-half';
 	const STAR_LINE                  = 'star-line';
-	const STEPPER                    = 'stepper';
 	const STOPWATCH                  = 'stopwatch';
 	const STORE_EYE                  = 'store-eye';
 	const STORE_EYE_SLASH            = 'store-eye-slash';
@@ -396,6 +408,7 @@ final class Icon {
 	const SVG                        = 'svg';
 	const TAG                        = 'tag';
 	const TAG_OUTLINE                = 'tag-outline';
+	const TARGET                     = 'target';
 	const TEXT                       = 'text';
 	const TEXT_FIELD_EXPAND          = 'text-field-expand';
 	const THREE_DOTS                 = 'three-dots';
@@ -412,6 +425,8 @@ final class Icon {
 	const TRY_AGAIN                  = 'try-again';
 	const TXT                        = 'txt';
 	const UNDO                       = 'undo';
+	const UNIT_10                    = 'unit-10';
+	const UNIT_20                    = 'unit-20';
 	const UNREAD                     = 'unread';
 	const UPDATE                     = 'update';
 	const UPLOAD                     = 'upload';

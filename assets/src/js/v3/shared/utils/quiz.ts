@@ -5,7 +5,7 @@ import {
   type QuizQuestionOption,
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { normalizeLineEndings } from './util';
 
 export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatus: QuizDataStatus) => {
@@ -135,6 +135,9 @@ export const validateQuizQuestion = (
 
     if (currentQuestionType === 'coordinates') {
       const firstAnswer = answers[0];
+      const axisRange = question.question_settings.coordinates_axis_range === 20 ? 20 : 10;
+      const min = -axisRange;
+      const max = axisRange;
       const raw = firstAnswer?.answer_two_gap_match || '';
       try {
         const parsed = JSON.parse(raw) as unknown;
@@ -150,38 +153,53 @@ export const validateQuizQuestion = (
               typeof o.y === 'number' &&
               Number.isInteger(o.x) &&
               Number.isInteger(o.y) &&
-              o.x >= -10 &&
-              o.x <= 10 &&
-              o.y >= -10 &&
-              o.y <= 10
+              o.x >= min &&
+              o.x <= max &&
+              o.y >= min &&
+              o.y <= max
             );
           });
         if (!valid) {
           return {
-            message: __('Please add valid coordinates in the range -10 to 10.', __TUTOR_TEXT_DOMAIN__),
+            message: sprintf(
+              /* translators: 1: minimum coordinate value, 2: maximum coordinate value. */
+              __('Please add valid coordinates in the range %1$d to %2$d.', __TUTOR_TEXT_DOMAIN__),
+              min,
+              max,
+            ),
             type: 'question',
           };
         }
       } catch {
         return {
-          message: __('Please add valid coordinates in the range -10 to 10.', __TUTOR_TEXT_DOMAIN__),
+          message: sprintf(
+            /* translators: 1: minimum coordinate value, 2: maximum coordinate value. */
+            __('Please add valid coordinates in the range %1$d to %2$d.', __TUTOR_TEXT_DOMAIN__),
+            min,
+            max,
+          ),
           type: 'question',
         };
       }
     }
 
-    if (
-      currentQuestionType === 'draw_image' ||
-      currentQuestionType === 'pin_image' ||
-      currentQuestionType === 'puzzle'
-    ) {
+    if (currentQuestionType === 'draw_image' || currentQuestionType === 'pin_image') {
       const hasMarkedArea = answers.some((answer) => Boolean(answer.answer_two_gap_match));
       if (!hasMarkedArea) {
         return {
-          message:
-            currentQuestionType === 'puzzle'
-              ? __('Please upload a valid puzzle image.', __TUTOR_TEXT_DOMAIN__)
-              : __('Please mark a valid area on the image.', __TUTOR_TEXT_DOMAIN__),
+          message: __('Please mark a valid area on the image.', __TUTOR_TEXT_DOMAIN__),
+          type: 'question',
+        };
+      }
+    }
+
+    if (currentQuestionType === 'puzzle') {
+      const hasPuzzleImage = answers.some(
+        (answer) => Boolean(answer.answer_two_gap_match) || Boolean(answer.image_url),
+      );
+      if (!hasPuzzleImage) {
+        return {
+          message: __('Please upload a valid puzzle image.', __TUTOR_TEXT_DOMAIN__),
           type: 'question',
         };
       }
@@ -214,6 +232,16 @@ export const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>):
       const rawGridSize = question.question_settings.puzzle_grid_size;
       if (rawGridSize !== undefined && rawGridSize !== null && !Number.isNaN(Number(rawGridSize))) {
         question.question_settings.puzzle_grid_size = Number(rawGridSize);
+      }
+    }
+    if (question.question_type === 'coordinates') {
+      const rawCoordinatesAxisRange = question.question_settings.coordinates_axis_range;
+      if (
+        rawCoordinatesAxisRange !== undefined &&
+        rawCoordinatesAxisRange !== null &&
+        !Number.isNaN(Number(rawCoordinatesAxisRange))
+      ) {
+        question.question_settings.coordinates_axis_range = Number(rawCoordinatesAxisRange);
       }
     }
   }

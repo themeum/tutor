@@ -14,6 +14,7 @@ use TUTOR\Course;
 use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
 use Tutor\Models\CartModel;
+use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -213,32 +214,25 @@ class CartController {
 	 */
 	public function add_course_to_cart() {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response(
-				tutor_utils()->error_message( 'nonce' ),
-				null,
-				HttpHelper::STATUS_BAD_REQUEST
-			);
+			$this->response_bad_request( tutor_utils()->error_message( 'nonce' ) );
 		}
 
 		$user_id   = tutils()->get_user_id();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
-		if ( ! $course_id ) {
-			$this->json_response(
-				__( 'Invalid course id.', 'tutor' ),
-				null,
-				HttpHelper::STATUS_BAD_REQUEST
-			);
+		if ( ! CourseModel::is_course_accessible( $course_id ) ) {
+			$this->response_bad_request( __( 'Cannot add to cart, course is not available for purchase.', 'tutor' ) );
+		}
+
+		$can_buy = apply_filters( 'tutor_can_purchase_course', true, $course_id );
+		if ( is_wp_error( $can_buy ) ) {
+			$this->response_bad_request( __( 'Cannot add to cart, enrollment is currently paused.', 'tutor' ) );
 		}
 
 		// Check if the course already exists in the cart or not.
 		$is_course_in_user_cart = $this->model->is_course_in_user_cart( $user_id, $course_id );
 		if ( $is_course_in_user_cart ) {
-			$this->json_response(
-				__( 'The course is already in the cart.', 'tutor' ),
-				null,
-				HttpHelper::STATUS_BAD_REQUEST
-			);
+			$this->response_bad_request( __( 'The course is already in the cart.', 'tutor' ) );
 		}
 
 		$response = $this->model->add_course_to_cart( $user_id, $course_id );
@@ -253,11 +247,7 @@ class CartController {
 				HttpHelper::STATUS_CREATED
 			);
 		} else {
-			$this->json_response(
-				__( 'Failed to add to cart.', 'tutor' ),
-				null,
-				HttpHelper::STATUS_BAD_REQUEST
-			);
+			$this->response_bad_request( __( 'Failed to add to cart.', 'tutor' ) );
 		}
 	}
 

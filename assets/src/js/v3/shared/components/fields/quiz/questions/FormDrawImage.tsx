@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useId, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -15,6 +15,8 @@ import useWPMedia from '@TutorShared/hooks/useWpMedia';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { useDrawOnImageField } from '@TutorShared/hooks/useDrawOnImageField';
+import { quizBuilderInteractionFocusCss, quizBuilderSrOnlyCss } from '@TutorShared/utils/quizBuilderA11y';
 import {
   type ID,
   QuizDataStatus,
@@ -22,10 +24,8 @@ import {
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
 
-const LASSO_FILL_STYLE = 'rgba(220, 53, 69, 0.45)';
-const LASSO_STROKE_STYLE = 'rgba(220, 53, 69, 0.95)';
-const LASSO_DASH_PATTERN = [8, 6];
-const LASSO_MIN_POINT_DISTANCE = 4;
+/** Instructor mask stroke/fill — same red as legacy builder lasso. */
+const INSTRUCTOR_MASK_STYLE = 'rgba(220, 53, 69, 0.95)';
 
 interface FormDrawImageProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;
@@ -58,15 +58,15 @@ const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 
     ? ((form.watch(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
     : QuizDataStatus.NO_CHANGE;
 
-  const [isDrawModeActive, setIsDrawModeActive] = useState(false);
-  const [hasStartedLassoDraw, setHasStartedLassoDraw] = useState(false);
+  const a11yBaseId = useId();
+  const instructionId = `${a11yBaseId}-instruction`;
+  const liveRegionId = `${a11yBaseId}-live-region`;
+  const [hasStartedDraw, setHasStartedDraw] = useState(false);
 
   const imageRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const drawInstanceRef = useRef<{ destroy: () => void } | null>(null);
-  const isLassoDrawingRef = useRef(false);
-  const lassoPointsRef = useRef<Array<{ x: number; y: number }>>([]);
-  const baseImageDataRef = useRef<ImageData | null>(null);
+  const canvasInnerRef = useRef<HTMLDivElement | null>(null);
+  const liveRegionRef = useRef<HTMLDivElement | null>(null);
 
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
@@ -75,55 +75,38 @@ const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 
     [field],
   );
 
-  /** Display-only: sync canvas size and draw saved mask when not in draw mode. */
-  const syncCanvasDisplay = useCallback((maskUrl?: string) => {
-    const img = imageRef.current;
-    const canvas = canvasRef.current;
+  const persistMaskToOption = useCallback(
+    (maskDataUrl: string) => {
+      if (!option) {
+        return;
+      }
 
-    if (!img || !canvas) {
-      return;
-    }
+      updateOption({
+        ...option,
+        ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
+          _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
+        }),
+        answer_two_gap_match: maskDataUrl,
+        is_saved: true,
+      });
+      setHasStartedDraw(Boolean(maskDataUrl));
+    },
+    [option, updateOption],
+  );
 
-    if (!img.complete) {
-      return;
-    }
-
-    const container = img.parentElement;
-    if (!container) {
-      return;
-    }
-
-    const rect = container.getBoundingClientRect();
-    const width = Math.round(rect.width);
-    const height = Math.round(rect.height);
-
-    if (!width || !height) {
-      return;
-    }
-
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.position = 'absolute';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      return;
-    }
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    if (maskUrl) {
-      const maskImg = new Image();
-      maskImg.onload = () => {
-        ctx.drawImage(maskImg, 0, 0, canvas.width, canvas.height);
-      };
-      maskImg.src = maskUrl;
-    }
-  }, []);
+  const { clearMask, announceStatus } = useDrawOnImageField({
+    imageRef,
+    canvasRef,
+    interactionRootRef: canvasInnerRef,
+    liveRegionRef,
+    instructionId,
+    liveRegionId,
+    imageUrl: option?.image_url,
+    initialMaskUrl: option?.answer_two_gap_match || undefined,
+    strokeStyle: INSTRUCTOR_MASK_STYLE,
+    onMaskChange: persistMaskToOption,
+    onDrawStart: () => setHasStartedDraw(true),
+  });
 
   const { openMediaLibrary, resetFiles } = useWPMedia({
     options: {
@@ -142,12 +125,7 @@ const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 
           answer_two_gap_match: '',
         };
         updateOption(updated);
-        if (drawInstanceRef.current) {
-          drawInstanceRef.current.destroy();
-          drawInstanceRef.current = null;
-        }
-        setIsDrawModeActive(false);
-        setHasStartedLassoDraw(false);
+        setHasStartedDraw(false);
       }
     },
     initialFiles: option?.image_id
@@ -159,283 +137,19 @@ const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 
       : null,
   });
 
-  useEffect(() => {
-    if (isDrawModeActive) {
-      return;
-    }
-    syncCanvasDisplay(option?.answer_two_gap_match || undefined);
-  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match, syncCanvasDisplay]);
-
-  useEffect(() => {
-    if (isDrawModeActive) {
-      return;
-    }
-    const img = imageRef.current;
-    if (!img) {
-      return;
-    }
-    const handleLoad = () => {
-      syncCanvasDisplay(option?.answer_two_gap_match || undefined);
-    };
-    img.addEventListener('load', handleLoad);
-    return () => {
-      img.removeEventListener('load', handleLoad);
-    };
-  }, [isDrawModeActive, option?.answer_two_gap_match, syncCanvasDisplay]);
-
-  useEffect(() => {
-    if (isDrawModeActive) {
-      return;
-    }
-    const img = imageRef.current;
-    const canvas = canvasRef.current;
-    if (!img || !canvas) {
-      return;
-    }
-    const container = img.parentElement;
-    if (!container) {
-      return;
-    }
-    const resizeObserver = new ResizeObserver(() => {
-      syncCanvasDisplay(option?.answer_two_gap_match || undefined);
-    });
-    resizeObserver.observe(container);
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match, syncCanvasDisplay]);
-
-  // Draw-image instructor UI: same lasso polygon flow as FormPinImage (feat/quiz-type-pin-image).
-  useEffect(() => {
-    if (!isDrawModeActive || !option?.image_url) {
-      return;
-    }
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      return;
-    }
-
-    if (drawInstanceRef.current) {
-      drawInstanceRef.current.destroy();
-      drawInstanceRef.current = null;
-    }
-
-    const getPointFromEvent = (event: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      const x = (event.clientX - rect.left) * scaleX;
-      const y = (event.clientY - rect.top) * scaleY;
-      return {
-        x: Math.max(0, Math.min(canvas.width, x)),
-        y: Math.max(0, Math.min(canvas.height, y)),
-      };
-    };
-
-    const renderPathPreview = () => {
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        return;
-      }
-
-      const points = lassoPointsRef.current;
-      if (!baseImageDataRef.current || points.length < 2) {
-        return;
-      }
-
-      ctx.putImageData(baseImageDataRef.current, 0, 0);
-      ctx.beginPath();
-      ctx.moveTo(points[0]?.x || 0, points[0]?.y || 0);
-      points.forEach((point, index) => {
-        if (index > 0) {
-          ctx.lineTo(point.x, point.y);
-        }
-      });
-      ctx.lineTo(points[0]?.x || 0, points[0]?.y || 0);
-      ctx.closePath();
-
-      ctx.fillStyle = LASSO_FILL_STYLE;
-      ctx.fill();
-
-      ctx.setLineDash(LASSO_DASH_PATTERN);
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = LASSO_STROKE_STYLE;
-      ctx.stroke();
-      ctx.setLineDash([]);
-    };
-
-    const onPointerDown = (event: PointerEvent) => {
-      if (event.button !== 0) {
-        return;
-      }
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        return;
-      }
-      // Only one lasso at a time: starting a new stroke clears any previous polygon.
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.setPointerCapture(event.pointerId);
-      isLassoDrawingRef.current = true;
-      lassoPointsRef.current = [getPointFromEvent(event)];
-      baseImageDataRef.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      setHasStartedLassoDraw(true);
-    };
-
-    const onPointerMove = (event: PointerEvent) => {
-      if (!isLassoDrawingRef.current) {
-        return;
-      }
-      const nextPoint = getPointFromEvent(event);
-      const points = lassoPointsRef.current;
-      const lastPoint = points[points.length - 1];
-      if (!lastPoint) {
-        points.push(nextPoint);
-        renderPathPreview();
-        return;
-      }
-      const dx = nextPoint.x - lastPoint.x;
-      const dy = nextPoint.y - lastPoint.y;
-      if (Math.hypot(dx, dy) < LASSO_MIN_POINT_DISTANCE) {
-        return;
-      }
-      points.push(nextPoint);
-      renderPathPreview();
-    };
-
-    const finishLasso = () => {
-      if (!isLassoDrawingRef.current) {
-        return;
-      }
-      isLassoDrawingRef.current = false;
-      const points = lassoPointsRef.current;
-      if (points.length >= 3) {
-        renderPathPreview();
-      } else if (baseImageDataRef.current) {
-        const ctx = canvas.getContext('2d');
-        ctx?.putImageData(baseImageDataRef.current, 0, 0);
-      }
-      lassoPointsRef.current = [];
-      baseImageDataRef.current = null;
-    };
-
-    const onPointerUp = (event: PointerEvent) => {
-      if (canvas.hasPointerCapture(event.pointerId)) {
-        canvas.releasePointerCapture(event.pointerId);
-      }
-      finishLasso();
-    };
-
-    const onPointerCancel = (event: PointerEvent) => {
-      if (canvas.hasPointerCapture(event.pointerId)) {
-        canvas.releasePointerCapture(event.pointerId);
-      }
-      finishLasso();
-    };
-
-    canvas.addEventListener('pointerdown', onPointerDown);
-    canvas.addEventListener('pointermove', onPointerMove);
-    canvas.addEventListener('pointerup', onPointerUp);
-    canvas.addEventListener('pointercancel', onPointerCancel);
-
-    const instance = {
-      destroy: () => {
-        canvas.removeEventListener('pointerdown', onPointerDown);
-        canvas.removeEventListener('pointermove', onPointerMove);
-        canvas.removeEventListener('pointerup', onPointerUp);
-        canvas.removeEventListener('pointercancel', onPointerCancel);
-        isLassoDrawingRef.current = false;
-        lassoPointsRef.current = [];
-        baseImageDataRef.current = null;
-      },
-    };
-    drawInstanceRef.current = instance;
-
-    return () => {
-      instance.destroy();
-      drawInstanceRef.current = null;
-    };
-  }, [isDrawModeActive, option?.image_url, option?.answer_two_gap_match]);
-
-  useEffect(() => {
-    return () => {
-      if (drawInstanceRef.current) {
-        drawInstanceRef.current.destroy();
-        drawInstanceRef.current = null;
-      }
-    };
-  }, []);
-
-  const persistCanvasMask = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !option) {
-      return;
-    }
-
-    const dataUrl = canvas.toDataURL('image/png');
-    const blank = document.createElement('canvas');
-    blank.width = canvas.width;
-    blank.height = canvas.height;
-    const isEmpty = dataUrl === blank.toDataURL();
-
-    const updated: QuizQuestionOption = {
-      ...option,
-      ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
-        _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
-      }),
-      answer_two_gap_match: isEmpty ? '' : dataUrl,
-      is_saved: true,
-    };
-    updateOption(updated);
-  }, [option, updateOption]);
-
   const handleClear = () => {
     if (!option) {
       return;
     }
 
-    if (drawInstanceRef.current) {
-      drawInstanceRef.current.destroy();
-      drawInstanceRef.current = null;
-    }
-
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    const updated: QuizQuestionOption = {
-      ...option,
-      ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
-        _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
-      }),
-      answer_two_gap_match: '',
-      is_saved: true,
-    };
-    updateOption(updated);
-    setHasStartedLassoDraw(false);
-  };
-
-  const handleCanvasMouseEnter = () => {
-    setIsDrawModeActive(true);
-  };
-
-  const handleCanvasMouseLeave = () => {
-    if (!isLassoDrawingRef.current) {
-      setIsDrawModeActive(false);
-    }
+    clearMask();
+    announceStatus(__('Correct area cleared.', __TUTOR_TEXT_DOMAIN__));
   };
 
   const clearImage = () => {
     if (!option) {
       return;
     }
-
-    if (drawInstanceRef.current) {
-      drawInstanceRef.current.destroy();
-      drawInstanceRef.current = null;
-    }
-    setIsDrawModeActive(false);
 
     const updated: QuizQuestionOption = {
       ...option,
@@ -448,42 +162,15 @@ const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 
 
     updateOption(updated);
     resetFiles();
-    setHasStartedLassoDraw(false);
-
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    setHasStartedDraw(false);
+    clearMask();
   };
-
-  useEffect(() => {
-    if (!isDrawModeActive || !option?.image_url) {
-      return;
-    }
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      return;
-    }
-
-    const onPointerUp = () => {
-      persistCanvasMask();
-    };
-
-    canvas.addEventListener('pointerup', onPointerUp);
-    canvas.addEventListener('pointercancel', onPointerUp);
-
-    return () => {
-      canvas.removeEventListener('pointerup', onPointerUp);
-      canvas.removeEventListener('pointercancel', onPointerUp);
-    };
-  }, [isDrawModeActive, option?.image_url, persistCanvasMask]);
 
   if (!option) {
     return null;
   }
 
-  const canClearSelection = hasStartedLassoDraw || Boolean(option?.answer_two_gap_match);
+  const canClearSelection = hasStartedDraw || Boolean(option?.answer_two_gap_match);
 
   return (
     <div css={styles.wrapper}>
@@ -532,18 +219,40 @@ const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 
               </div>
             </Show>
           </div>
-          <div css={styles.canvasInner} onMouseEnter={handleCanvasMouseEnter} onMouseLeave={handleCanvasMouseLeave}>
-            <img
-              ref={imageRef}
-              src={option?.image_url}
-              alt={__('Background image for marking correct area', __TUTOR_TEXT_DOMAIN__)}
-              css={[styles.image, styles.answerImage]}
-            />
-            <canvas
-              ref={canvasRef}
-              css={[styles.canvas, isDrawModeActive ? styles.canvasDrawMode : styles.canvasIdleMode]}
-              aria-label={__('Draw a lasso around the correct answer area', __TUTOR_TEXT_DOMAIN__)}
-            />
+          <p id={instructionId} css={quizBuilderSrOnlyCss}>
+            {__(
+              'Use arrow keys to move the drawing pointer. Press Space or Enter to start a freehand stroke, trace with arrow keys, then press Space or Enter again to finish and fill the selection. Escape cancels an in-progress stroke. C clears the saved selection.',
+              __TUTOR_TEXT_DOMAIN__,
+            )}
+          </p>
+          <div
+            id={liveRegionId}
+            ref={liveRegionRef}
+            css={quizBuilderSrOnlyCss}
+            aria-live="polite"
+            aria-atomic="true"
+            role="status"
+          />
+          <div css={styles.canvasOuter}>
+            <div css={styles.canvasInner} ref={canvasInnerRef} className="tutor-draw-image-wrapper">
+              <img
+                ref={imageRef}
+                src={option?.image_url}
+                alt={__('Background image for marking correct area', __TUTOR_TEXT_DOMAIN__)}
+                css={[styles.image, styles.answerImage]}
+              />
+              <canvas
+                ref={canvasRef}
+                tabIndex={0}
+                role="application"
+                aria-describedby={`${instructionId} ${liveRegionId}`}
+                css={[styles.canvas, quizBuilderInteractionFocusCss]}
+                aria-label={__(
+                  'Draw on image: use pointer or keyboard to mark the correct answer area.',
+                  __TUTOR_TEXT_DOMAIN__,
+                )}
+              />
+            </div>
           </div>
           {precisionControllerProps && (
             <FormSelectInput
@@ -579,7 +288,7 @@ const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 
       <Show when={!option?.image_url}>
         <p css={styles.placeholder}>
           {__(
-            'Upload an image to define the area students must draw on. Then mark the correct zone in the next section.',
+            'First, upload your base image above. Then, proceed to the next step to draw the correct target zone.',
             __TUTOR_TEXT_DOMAIN__,
           )}
         </p>
@@ -611,28 +320,12 @@ const styles = {
     max-width: 100%;
   `,
   imageInputEmpty: css`
+    background-color: ${colorTokens.background.default};
+    height: 210px;
     border-radius: ${borderRadius.card};
   `,
   imageInputPreview: css`
-    width: fit-content;
-    max-width: 100%;
-    height: auto;
-    border-radius: ${borderRadius.card};
-
-    ${Breakpoint.smallMobile} {
-      width: 100%;
-    }
-
-    img {
-      width: auto;
-      max-width: 100%;
-      height: auto;
-      object-fit: initial;
-
-      ${Breakpoint.smallMobile} {
-        width: 100%;
-      }
-    }
+    height: 210px;
   `,
   answerHeader: css`
     ${styleUtils.display.flex('row')};
@@ -658,6 +351,11 @@ const styles = {
     justify-content: flex-end;
     min-width: 94px;
     min-height: 32px;
+  `,
+  canvasOuter: css`
+    ${styleUtils.display.flex()};
+    justify-content: center;
+    width: 100%;
   `,
   canvasInner: css`
     position: relative;
@@ -695,14 +393,6 @@ const styles = {
     top: 0;
     left: 0;
     z-index: 1;
-  `,
-  canvasIdleMode: css`
-    pointer-events: none;
-    cursor: default;
-  `,
-  canvasDrawMode: css`
-    pointer-events: auto;
-    cursor: crosshair;
   `,
   clearButtonIcon: css`
     color: ${colorTokens.text.brand};

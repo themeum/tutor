@@ -36,7 +36,6 @@ class Admin {
 	 */
 	public function __construct() {
 		add_action( 'admin_notices', array( $this, 'show_unstable_version_admin_notice' ) );
-		add_action( 'admin_notices', array( $this, 'show_v4_beta_notice' ) );
 
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
 		// Force activate menu for necessary.
@@ -97,61 +96,6 @@ class Admin {
 				<p><strong><?php esc_html_e( 'Warning!', 'tutor' ); ?></strong></p>
 				<p><?php echo wp_kses_post( $message ); ?></p>
 			</div>
-			<?php
-		}
-	}
-
-	/**
-	 * Show version 4 admin notice.
-	 *
-	 * @since 3.9.9
-	 *
-	 * @return void
-	 */
-	public function show_v4_beta_notice() {
-		if ( version_compare( TUTOR_VERSION, '4', '<' ) ) {
-			?>
-			<div class="tutor-v4-beta-notice notice is-dismissible">
-				<div class="tutor-v4-beta-notice-left">
-					<img src="<?php echo esc_url( tutor()->url . 'assets/images/v4-notice-logo.svg' ); ?>" alt="Tutor LMS 4.0 Beta">
-				</div>
-			<div class="tutor-v4-beta-notice-right">
-				<div class="tutor-v4-beta-notice-right-content">
-					<h3><?php esc_html_e( 'Be the First to Try Tutor LMS 4.0 Beta!', 'tutor' ); ?></h3>
-					<p>
-						<?php
-						echo wp_kses(
-							sprintf(
-								/* translators: 1: opening anchor tag, 2: closing anchor tag */
-								__(
-									'Explore the upcoming features of Tutor LMS 4.0, test the experience, and help us improve with your valuable %1$sfeedback%2$s.',
-									'tutor'
-								),
-								'<a href="https://forms.gle/Dxc1CWT63UcEAJGR9" target="_blank" rel="noopener noreferrer">',
-								' <i class="tutor-icon-external-link" aria-hidden="true"></i></a>'
-							),
-							array(
-								'a' => array(
-									'href'   => true,
-									'target' => true,
-									'rel'    => true,
-								),
-								'i' => array(
-									'class'       => true,
-									'aria-hidden' => true,
-								),
-							)
-						);
-						?>
-					</p>
-				</div>
-				<div class="tutor-v4-beta-notice-right-buttons">
-					<a href="https://tutorlms.com/blog/first-look-into-tutor-lms-4-0/?nocache=1" target="_blank" rel="noopener noreferrer" class="tutor-btn tutor-btn-tertiary tutor-gap-4px tutor-text-nowrap">
-						<?php esc_html_e( 'Try now', 'tutor' ); ?>
-					</a>
-				</div>
-			</div>
-		</div>
 			<?php
 		}
 	}
@@ -304,14 +248,6 @@ class Admin {
 					'zoom'             => null,
 					'google_meet'      => null,
 					'h5p'              => null,
-					'themes'           => array(
-						'parent_slug' => 'tutor',
-						'page_title'  => __( 'Themes', 'tutor' ),
-						'menu_title'  => __( 'Themes', 'tutor' ),
-						'capability'  => 'manage_tutor',
-						'menu_slug'   => 'tutor-themes',
-						'callback'    => array( $this, 'tutor_themes' ),
-					),
 					'addons'           => array(
 						'parent_slug' => 'tutor',
 						'page_title'  => __( 'Addons', 'tutor' ),
@@ -381,15 +317,6 @@ class Admin {
 				add_submenu_page( 'tutor', '', '<span class="tutor-admin-menu-separator"></span>', 'manage_tutor_instructor', '#' );
 			}
 		}
-	}
-
-	/**
-	 * Tutor template view
-	 *
-	 * @since 3.6.0
-	 */
-	public function tutor_themes() {
-		include tutor()->path . 'views/template-import/templates.php';
 	}
 
 	/**

@@ -2,38 +2,30 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-user-profile {
-  .tutor-profile-header {
-    @include tutor-breakpoint-down(sm) {
-      display: none;
-    }
-  }
-
-  .tutor-profile-page-title {
-    @include tutor-typography(h4, semibold, primary, heading);
-
-    @include tutor-breakpoint-up(sm) {
-      display: none;
-    }
-  }
-
   .tutor-profile-card {
     @include tutor-card-base;
     border-radius: $tutor-radius-2xl;
     padding: $tutor-spacing-6;
-    margin-top: $tutor-spacing-9;
-
-    @include tutor-breakpoint-down(sm) {
-      margin-top: $tutor-spacing-6;
-    }
   }
 
   .tutor-profile-card-header {
     @include tutor-flex(row, center, center);
     background-color: $tutor-surface-brand-tertiary;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
     border-radius: $tutor-radius-lg;
-    margin-bottom: $tutor-spacing-7;
+    margin-bottom: $tutor-spacing-14;
     position: relative;
     height: 184px;
+
+    .tutor-avatar {
+      border: 4px solid $tutor-border-inverse;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateY(50%) translateX(-50%);
+    }
 
     .tutor-edit-profile-btn {
       @include tutor-button-base();
@@ -63,8 +55,7 @@
   }
 
   .tutor-profile-card-body {
-    @include tutor-grid(2);
-    gap: $tutor-spacing-6;
+    @include tutor-grid(2, $tutor-spacing-21);
     position: relative;
 
     @include tutor-breakpoint-down(sm) {
@@ -73,6 +64,7 @@
 
     .tutor-user-profile-title {
       @include tutor-typography(h3, semibold, primary, heading);
+      margin-top: $tutor-spacing-none;
       margin-bottom: $tutor-spacing-2;
 
       @include tutor-breakpoint-down(sm) {
@@ -89,17 +81,36 @@
       gap: $tutor-spacing-6;
       margin-top: $tutor-spacing-6;
 
-      a {
+      .tutor-social-link {
         height: 16px;
         width: 16px;
         outline: none;
         box-shadow: none;
+        color: $tutor-text-primary;
+        @include tutor-transition(color);
+
+        &:hover {
+          color: $tutor-text-brand;
+        }
       }
     }
 
     .tutor-user-profile-bio {
       @include tutor-typography(p2, regular, secondary);
       margin-bottom: $tutor-spacing-9;
+
+      @include tutor-breakpoint-down(sm) {
+        margin-bottom: $tutor-spacing-6;
+      }
+    }
+
+    .tutor-bio-wrapper {
+      position: relative;
+      margin-bottom: $tutor-spacing-9;
+
+      .tutor-user-profile-bio {
+        margin-bottom: 0;
+      }
 
       @include tutor-breakpoint-down(sm) {
         margin-bottom: $tutor-spacing-6;
@@ -135,11 +146,6 @@
 
     &-right {
       @include tutor-flex(column, flex-start, space-between);
-
-      @include tutor-breakpoint-up(sm) {
-        max-width: 240px;
-        margin-left: auto;
-      }
     }
 
     .tutor-profile-member-since {
@@ -155,11 +161,40 @@
     }
   }
 
+  %bio-toggle-base {
+    @include tutor-typography(small);
+    appearance: none;
+    background: $tutor-surface-l1;
+    border: none;
+    padding: 0;
+    color: $tutor-text-brand;
+    cursor: pointer;
+    text-box-trim: trim-both;
+    text-edge: cap alphabetic;
+
+    &:focus-visible {
+      outline: 2px solid $tutor-text-brand;
+      outline-offset: 2px;
+      border-radius: $tutor-radius-xs;
+    }
+  }
+
+  .tutor-bio-toggle {
+    @extend %bio-toggle-base;
+  }
+
+  .tutor-bio-toggle-less {
+    @extend %bio-toggle-base;
+    display: inline;
+    margin-top: $tutor-spacing-2;
+  }
+
   .tutor-user-profile-statistics {
     margin-top: $tutor-spacing-8;
 
     .tutor-statistic-title {
       @include tutor-typography(h5, semibold, primary, heading);
+      margin-top: $tutor-spacing-none;
       margin-bottom: $tutor-spacing-4;
     }
 

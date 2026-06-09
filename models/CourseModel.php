@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Icon;
 use TUTOR\Course;
 use TUTOR\Lesson;
@@ -88,6 +89,32 @@ class CourseModel {
 			self::STATUS_PENDING,
 			self::STATUS_TRASH,
 		);
+	}
+
+	/**
+	 * Check if a course is available for enrollment or purchase.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $course_id the course id.
+	 *
+	 * @return bool
+	 */
+	public static function is_course_accessible( $course_id = 0 ) {
+		$course = get_post( $course_id );
+		if ( ! $course || ! is_object( $course ) ) {
+			return false;
+		}
+
+		if ( ! in_array( $course->post_type, array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
+			return false;
+		}
+
+		if ( ! in_array( $course->post_status, array( self::STATUS_PUBLISH, self::STATUS_PRIVATE ), true ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -1464,34 +1491,23 @@ class CourseModel {
 		}
 
 		foreach ( $topics_query->posts as $topic_post ) {
-			$topic_id                    = (int) $topic_post->ID;
-			$total_topic_items           = 0;
-			$total_topic_items_completed = 0;
-			$items                       = array();
-
-			$contents_query = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
+			$topic_id              = (int) $topic_post->ID;
+			$items                 = array();
+			$completion_percentage = tutor_utils()->count_completed_contents_by_topic( $topic_id, $student_id );
+			$contents_query        = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
 
 			if ( ! empty( $contents_query ) && $contents_query->have_posts() ) {
 				foreach ( $contents_query->posts as $content_post ) {
-					$items[] = ( new self() )->build_course_progress_item( $content_post, $student_id );
+					$items[] = ( new self() )->build_course_progress_item( $content_post, $student_id, $course_id );
 				}
-				$total_topic_items = count( $contents_query->posts );
 			}
-
-			$total_topic_items_completed = count(
-				array_filter( $items, fn( $item ) => $item['is_completed'] )
-			);
-
-			$percentage = $total_topic_items > 0 && $total_topic_items_completed > 0
-							? round( ( $total_topic_items_completed / $total_topic_items ) * 100, 2 )
-							: 0;
 
 			$topic_list[] = array(
 				'id'                    => $topic_id,
 				'summary'               => $topic_post->post_content,
 				'title'                 => get_the_title( $topic_id ),
 				'items'                 => $items,
-				'completion_percentage' => $percentage,
+				'completion_percentage' => $completion_percentage['percentage'] ?? 0,
 			);
 		}
 
@@ -1575,10 +1591,11 @@ class CourseModel {
 	 *
 	 * @param \WP_Post $post    The course content post object.
 	 * @param int      $user_id The user ID for whom progress is being calculated.
+	 * @param int      $course_id The course ID to which the content belongs.
 	 *
 	 * @return array Associative array of progress item data
 	 */
-	private function build_course_progress_item( \WP_Post $post, $user_id ) {
+	private function build_course_progress_item( \WP_Post $post, $user_id, $course_id ) {
 
 		$base_items = array(
 			'id'    => $post->ID,
@@ -1589,22 +1606,63 @@ class CourseModel {
 
 		switch ( $post->post_type ) {
 			case tutor()->quiz_post_type:
+				$quiz_status  = '';
+				$icon_name    = Icon::QUIZ_2;
+				$icon_class   = 'tutor-text-subdued';
+				$last_attempt = ( new QuizModel() )->get_first_or_last_attempt( $post->ID, $user_id );
+
+				if ( is_object( $last_attempt ) && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status ) {
+					$quiz_status = QuizModel::get_quiz_result( $post->ID, $user_id );
+
+					$quiz_icon_map = array(
+						QuizModel::RESULT_FAIL    => array( Icon::CROSS_COLORIZE, 'tutor-icon-critical' ),
+						QuizModel::RESULT_PENDING => array( Icon::INFO_COLORIZE, 'tutor-icon-warning-secondary' ),
+					);
+
+					if ( isset( $quiz_icon_map[ $quiz_status ] ) ) {
+						list( $icon_name, $icon_class ) = $quiz_icon_map[ $quiz_status ];
+					}
+				}
+
 				return array_merge(
 					$base_items,
 					array(
-						'is_completed' => tutor_utils()->has_attempted_quiz( $user_id, $post->ID ),
+						'is_completed' => QuizModel::RESULT_PASS === $quiz_status,
 						'label'        => __( 'Quiz', 'tutor' ),
-						'icon'         => Icon::QUIZ_2,
+						'icon'         => $icon_name,
+						'icon_class'   => $icon_class,
 					)
 				);
 
 			case tutor()->assignment_post_type:
+				$status = '';
+
+				$is_submitted = tutor_utils()->is_assignment_submitted( $post->ID, $user_id );
+				$status       = $is_submitted ? Assignments::get_assignment_result( $post->ID, $user_id ) : $status;
+
+				if ( ! $is_submitted && Assignments::is_expired( $post->ID, $user_id, $course_id ) ) {
+					$status = 'fail';
+				}
+
+				$icon       = Icon::BOOK_2;
+				$icon_class = 'tutor-text-subdued';
+
+				$status_map = array(
+					'pending' => array( Icon::INFO_COLORIZE, 'tutor-icon-warning-secondary' ),
+					'fail'    => array( Icon::CROSS_COLORIZE, 'tutor-icon-critical' ),
+				);
+
+				if ( isset( $status_map[ $status ] ) ) {
+					list( $icon, $icon_class ) = $status_map[ $status ];
+				}
+
 				return array_merge(
 					$base_items,
 					array(
-						'is_completed' => tutor_utils()->get_submitted_assignment_count( $post->ID, $user_id ) > 0,
+						'is_completed' => 'pass' === $status,
 						'label'        => __( 'Assignment', 'tutor' ),
-						'icon'         => Icon::BOOK_2,
+						'icon'         => $icon,
+						'icon_class'   => $icon_class,
 					)
 				);
 
@@ -1650,5 +1708,77 @@ class CourseModel {
 					)
 				);
 		}
+	}
+
+	/**
+	 * Calculate the total course duration for a set of courses and returns the total time in hours, minutes, and
+	 * seconds.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<int> | int $course_ids List of course IDs or a single course ID.
+	 *
+	 * @return array{
+	 *     hours: int,
+	 *     minutes: int,
+	 *     seconds: int
+	 * } Total accumulated duration from all given courses.
+	 */
+	public static function get_total_course_duration( $course_ids ): array {
+		$total_seconds = 0;
+		$course_ids    = is_array( $course_ids ) ? $course_ids : array( $course_ids );
+		foreach ( $course_ids as $id ) {
+			$total_seconds += self::get_course_duration_in_seconds( $id );
+		}
+
+		return DateTimeHelper::split_seconds_into_time_units( $total_seconds );
+	}
+
+	/**
+	 * Calculate the estimated time spent on courses based on completion progress.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<int> $course_ids List of course IDs.
+	 *
+	 * @return array{
+	 *     hours: int,
+	 *     minutes: int,
+	 *     seconds: int
+	 * } Total accumulated duration from all given courses.
+	 */
+	public static function get_total_estimated_time_spent( $course_ids ): array {
+		$total_seconds = 0;
+		foreach ( $course_ids as $id ) {
+			$completion_percentage = tutor_utils()->is_completed_course( $id )
+										? 100
+										: (int) tutor_utils()->get_course_completed_percent( (int) $id );
+
+			if ( 0 === $completion_percentage ) {
+				continue;
+			}
+			$course_duration_in_seconds = self::get_course_duration_in_seconds( $id );
+			// Calculate the time spent by a user based on the course completion percentage.
+			$total_seconds += (int) round( $course_duration_in_seconds * ( $completion_percentage / 100 ) );
+		}
+
+		return DateTimeHelper::split_seconds_into_time_units( $total_seconds );
+	}
+
+	/**
+	 * Get the total duration of a course in seconds.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id Course ID.
+	 *
+	 * @return int Course duration in seconds.
+	 */
+	public static function get_course_duration_in_seconds( int $course_id ): int {
+		$duration = tutor_utils()->get_course_duration( $course_id, true );
+
+		return ( $duration['durationHours'] * HOUR_IN_SECONDS )
+			+ ( $duration['durationMinutes'] * MINUTE_IN_SECONDS )
+			+ ( $duration['durationSeconds'] );
 	}
 }

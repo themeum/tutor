@@ -153,6 +153,7 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
               options={gridSizeOptions}
               wrapperCss={styles.dropdownText}
               optionItemCss={styles.dropdownOptionText}
+              helpText={__('Larger grids create more pieces and a harder puzzle for learners.', __TUTOR_TEXT_DOMAIN__)}
               onChange={(selectedOption) => {
                 gridSizeControllerProps.field.onChange(selectedOption.value);
                 if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
@@ -175,6 +176,10 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
                   options={gridSizeOptions}
                   wrapperCss={styles.dropdownText}
                   optionItemCss={styles.dropdownOptionText}
+                  helpText={__(
+                    'Larger grids create more pieces and a harder puzzle for learners.',
+                    __TUTOR_TEXT_DOMAIN__,
+                  )}
                   onChange={(selectedOption) => {
                     gridSizeControllerProps.field.onChange(selectedOption.value);
                     if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
@@ -223,20 +228,12 @@ const styles = {
     max-width: 100%;
   `,
   imageInputEmpty: css`
+    background-color: ${colorTokens.background.default};
+    height: 210px;
     border-radius: ${borderRadius.card};
   `,
   imageInputPreview: css`
-    width: fit-content;
-    max-width: 100%;
-    height: auto;
-    border-radius: ${borderRadius.card};
-
-    img {
-      width: auto;
-      max-width: 100%;
-      height: auto;
-      object-fit: initial;
-    }
+    height: 210px;
   `,
   previewLabel: css`
     ${typography.body('medium')};

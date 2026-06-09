@@ -3,6 +3,27 @@
 @use './mixins' as *;
 
 [data-tutor-ui='kids'] {
+  .tutor-dashboard-nav-mobile-list {
+    .tutor-dashboard-nav-mobile-icon {
+      padding: $tutor-spacing-2;
+    }
+
+    .tutor-dashboard-nav-mobile-text {
+      color: $tutor-text-primary;
+      font-weight: $tutor-font-weight-medium;
+    }
+
+    .active {
+      .tutor-dashboard-nav-mobile-icon {
+        @include tutor-kids-shadow(false, $tutor-border-brand, $tutor-radius-full, sm);
+        background-color: $tutor-surface-brand-tertiary;
+      }
+      .tutor-dashboard-nav-mobile-text {
+        font-weight: $tutor-font-weight-semibold;
+      }
+    }
+  }
+
   .tutor-card {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
@@ -21,11 +42,32 @@
   .tutor-review-card,
   .tutor-dashboard-home-chart,
   .tutor-dashboard-home-card,
-  .tutor-dashboard-home-sort .tutor-popover-bottom {
+  .tutor-dashboard-home-sort .tutor-popover-bottom,
+  .tutor-subscription-payments-item:hover {
     @include tutor-kids-shadow;
   }
 
-  .tutor-progress-card .tutor-progress-card-thumbnail {
+  .tutor-dashboard-welcome-card,
+  .tutor-dashboard-quick-tips-card,
+  .tutor-profile-completion-header {
+    @include tutor-kids-shadow(false);
+  }
+
+  .tutor-billing-card:hover {
+    @include tutor-kids-shadow;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid transparent;
+    }
+  }
+
+  .tutor-billing-body {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+  }
+
+  .tutor-progress-card .tutor-progress-card-thumbnail,
+  .tutor-subscription-overview-card,
+  .tutor-subscription-payments-list,
+  .tutor-subscription-details-alert {
     border-radius: $tutor-radius-3xl;
   }
 
@@ -34,6 +76,15 @@
   }
 
   // home
+  .tutor-profile-completion-body {
+    border: none;
+    box-shadow:
+      0 2px 0 2px $tutor-border-idle,
+      0 5px 0 0 $tutor-border-idle;
+    border-bottom-left-radius: $tutor-radius-5xl;
+    border-bottom-right-radius: $tutor-radius-5xl;
+  }
+
   .tutor-student-dashboard-courses {
     .tutor-progress-card:not(:first-child) {
       margin-top: $tutor-spacing-4;
@@ -48,13 +99,21 @@
     }
   }
 
+  .tutor-upcoming-lessons {
+    row-gap: $tutor-spacing-5;
+  }
+
+  .tutor-calendar-content .tutor-upcoming-lesson-card + .tutor-upcoming-lesson-card {
+    margin-top: $tutor-spacing-4;
+  }
+
   // wishList
   .tutor-dashboard-courses-wrapper {
     .tutor-dashboard-courses-card {
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
     }
 
-    .tutor-dashboard-courses,
+    .tutor-dashboard-courses-list,
     .tutor-wishlist-grid {
       gap: $tutor-spacing-6 $tutor-spacing-5;
     }
@@ -75,6 +134,7 @@
         }
       }
     }
+
     .tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
       @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
     }
@@ -122,10 +182,18 @@
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
 
+  // user account/device management
+  .tutor-devices-signout-all {
+    button {
+      margin-inline-end: $tutor-spacing-5;
+    }
+  }
+
   // discussions
   .tutor-dashboard-page-card {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
   }
+
   .tutor-discussion-card-wrapper {
     gap: $tutor-spacing-6 $tutor-spacing-4;
 
@@ -183,6 +251,21 @@
     }
   }
 
+  @include tutor-breakpoint-down(md) {
+    .tutor-calendar {
+      border-radius: 0px;
+      box-shadow: none;
+    }
+
+    .tutor-calendar-tabs {
+      @include tutor-kids-shadow(false);
+    }
+
+    .tutor-calendar-content {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
+    }
+  }
+
   @include tutor-breakpoint-down(sm) {
     .tutor-dashboard-header-user-popover,
     .tutor-profile-settings-tab.tutor-tabs-nav {
@@ -196,28 +279,39 @@
     }
 
     .tutor-dashboard-page-card,
-    .tutor-calendar {
+    .tutor-billing-body,
+    .tutor-dashboard-courses-wrapper .tutor-dashboard-courses-card,
+    .tutor-dashboard-lesson-notes .tutor-dashboard-page-card {
       border-radius: 0px;
       box-shadow: none;
     }
 
-    .tutor-dashboard-page-card-header {
+    .tutor-dashboard-page-card-header,
+    .tutor-billing-tabs,
+    .tutor-dashboard-courses-tab {
       margin-bottom: $tutor-spacing-5;
     }
 
     .tutor-profile-settings-tab button .tutor-icon,
-    .tutor-dashboard-page-card-header,
-    .tutor-calendar-tabs {
+    .tutor-dashboard-page-card-header {
       @include tutor-kids-shadow(false);
     }
 
     .tutor-dashboard-page-card-body,
-    .tutor-calendar-content {
+    .tutor-billing-tabs,
+    .tutor-billing-tabs-content,
+    .tutor-dashboard-courses-card .tutor-dashboard-courses-tab,
+    .tutor-my-quiz-attempts-wrapper .tutor-quiz-attempts {
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
     }
 
     .tutor-dashboard-page-card-header {
       border-radius: $tutor-radius-6xl;
+    }
+
+    .tutor-dashboard-courses-card {
+      padding: 2px 2px 5px 2px;
+      margin: -2px -2px -5px -2px;
     }
   }
 }

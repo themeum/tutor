@@ -22,7 +22,7 @@ import SearchField from './SearchField';
 
 interface MembershipPlanListTableProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<Coupon, any, undefined>;
+  form: UseFormReturn<Coupon, any, any>;
 }
 
 const MembershipPlanListTable = ({ form }: MembershipPlanListTableProps) => {
@@ -103,7 +103,7 @@ const MembershipPlanListTable = ({ form }: MembershipPlanListTableProps) => {
             <div>
               {item.plan_name}
               <Show when={item.is_featured === '1'}>
-                <SVGIcon name="star" width={20} height={20} />
+                <SVGIcon name="starFill" width={16} height={16} />
               </Show>
             </div>
           </div>

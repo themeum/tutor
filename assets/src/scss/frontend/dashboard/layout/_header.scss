@@ -5,12 +5,20 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-dashboard-header {
+  position: sticky;
+  top: 0;
   height: 80px;
-  background-color: $tutor-surface-sidebar-l1;
+  z-index: $tutor-z-header;
+  background-color: $tutor-surface-base;
   border-bottom: 1px solid $tutor-border-idle;
   padding: $tutor-spacing-6 $tutor-spacing-8;
 
+  body:has(#wpadminbar) & {
+    top: 32px;
+  }
+
   @include tutor-breakpoint-down(sm) {
+    position: static;
     height: fit-content;
     border-bottom: none;
     padding: $tutor-spacing-6 $tutor-spacing-6 0 $tutor-spacing-6;
@@ -63,7 +71,10 @@
 
   &-right {
     @include tutor-flex(row, center);
-    gap: $tutor-spacing-4;
+
+    @include tutor-breakpoint-up(sm) {
+      gap: $tutor-spacing-4;
+    }
   }
 
   &-user {
@@ -86,6 +97,10 @@
     &.active {
       border-color: $tutor-border-brand;
     }
+
+    &:focus-visible {
+      @include tutor-focus-ring();
+    }
   }
 
   &-user-popover {
@@ -100,10 +115,10 @@
       padding: $tutor-spacing-6 $tutor-spacing-5;
       border-radius: $tutor-radius-md;
       margin-bottom: $tutor-spacing-5;
+    }
 
-      .tutor-edit-profile-link {
-        color: $tutor-icon-idle;
-      }
+    .tutor-user-profile-info {
+      @include tutor-flex(column);
     }
 
     &-menu {
@@ -154,13 +169,13 @@
   @include tutor-breakpoint-down(sm) {
     height: 60px;
 
-    &-user-avatar {
-      width: 22px;
-      height: 22px;
+    .tutor-dashboard-header-user-avatar {
+      @include tutor-button-base();
+      @include tutor-button-variant(ghost);
+      padding: 9px;
 
       .tutor-avatar {
-        width: 22px;
-        height: 22px;
+        display: none;
       }
     }
 
@@ -171,50 +186,55 @@
       max-width: 100% !important;
       height: 100% !important;
       max-height: 100% !important;
+      border-radius: $tutor-radius-none;
       overflow-y: auto;
+      background: $tutor-surface-base;
       padding: $tutor-spacing-none;
       @include tutor-flex(column);
 
       &-profile {
         padding: $tutor-spacing-none;
         gap: $tutor-spacing-none;
-        margin-bottom: $tutor-spacing-6;
+        margin-bottom: $tutor-spacing-none;
+        padding-bottom: $tutor-spacing-6;
+        background: $tutor-surface-l1;
 
         .tutor-profile-header-top {
           width: 100%;
           @include tutor-flex(row, center, space-between);
+          background: $tutor-surface-base;
         }
 
         .tutor-user-profile-info {
           width: 100%;
           flex-direction: row;
-          gap: 10px;
-          background: $tutor-surface-l1;
+          align-items: center;
+          gap: $tutor-spacing-5;
+          padding-block: $tutor-spacing-5;
+          padding-inline: $tutor-spacing-6;
         }
 
         .tutor-user-profile-meta {
           align-items: flex-start;
         }
 
-        .tutor-edit-profile-link {
-          align-self: center;
-          margin-inline-start: auto;
-        }
-
         .tutor-avatar {
           margin: unset;
+        }
+
+        .tutor-profile-switch-button {
+          @include tutor-button-size(regular);
         }
       }
 
       &-menu-wrapper {
         @include tutor-flex(column, stretch, space-between);
-        background: $tutor-surface-base;
-        height: 100vh;
+        height: 100%;
       }
 
       &-menu {
-        gap: 10px;
-        padding: $tutor-spacing-6 $tutor-spacing-7;
+        gap: $tutor-spacing-4;
+        padding: $tutor-spacing-6;
 
         li {
           &:last-of-type {
@@ -224,7 +244,7 @@
           }
 
           a {
-            padding: $tutor-spacing-6 $tutor-spacing-5;
+            padding: $tutor-spacing-7 $tutor-spacing-8;
             border: 1px solid $tutor-border-idle;
 
             &.active {
@@ -245,7 +265,7 @@
 
         a {
           width: 100%;
-          padding: $tutor-spacing-6 $tutor-spacing-5;
+          padding: $tutor-spacing-5 $tutor-spacing-6;
           border: 1px solid $tutor-border-idle;
         }
       }

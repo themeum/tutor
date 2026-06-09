@@ -206,9 +206,10 @@ class Sorting extends BaseComponent {
 				x-ref="trigger"
 				@click="toggle()"
 				class="tutor-btn tutor-btn-outline tutor-btn-<?php echo esc_attr( $this->size ); ?> tutor-btn-icon"
+				aria-label="<?php esc_attr_e( 'Open sorting options', 'tutor' ); ?>"
 			>
 				<?php
-					$sorting_icon = 'DESC' === $this->order ? Icon::STEPPER : Icon::DESCENDING;
+					$sorting_icon = 'DESC' === $this->order ? Icon::ASCENDING : Icon::DESCENDING;
 					SvgIcon::make()->name( $sorting_icon )->size( 16 )->color( Color::SECONDARY )->render();
 				?>
 			</button>

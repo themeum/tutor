@@ -177,7 +177,7 @@ $filters = array(
 									</td>
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( 'flat' === $coupon->discount_type ? __( 'Amount', 'tutor' ) : __( 'Percent', 'tutor' ) ); ?>
+											<?php echo esc_html( 'flat' === $coupon->discount_type ? __( 'Fixed Amount', 'tutor' ) : __( 'Percentage', 'tutor' ) ); ?>
 										</div>
 									</td>
 
@@ -189,10 +189,7 @@ $filters = array(
 
 									<td>
 										<?php
-										$coupon_status = $coupon->coupon_status;
-										if ( CouponModel::STATUS_ACTIVE === $coupon_status ) {
-											$coupon_status = $coupon_controller->model->has_coupon_validity( $coupon ) ? $coupon->coupon_status : 'expired';
-										}
+										$coupon_status = $coupon_controller->get_coupon_display_status( $coupon );
 										echo wp_kses_post( tutor_utils()->translate_dynamic_text( $coupon_status, true ) );
 										?>
 									</td>

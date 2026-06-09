@@ -1,11 +1,10 @@
 import { __ } from '@wordpress/i18n';
 
 import { type MutationState } from '@Core/ts/services/Query';
-
-import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { wpPost } from '@Core/ts/utils/api';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface ReviewFormProps {
   comment_ID?: string;
@@ -36,7 +35,7 @@ const reviewDeleteModal = () => {
       }
 
       this.deleteReviewMutation = this.query.useMutation(this.deleteReview, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data) => {
           window.location.reload();
           window.TutorCore.toast.success(data?.message ?? __('Review deleted successfully', 'tutor'));
         },
@@ -51,11 +50,9 @@ const reviewDeleteModal = () => {
     },
 
     async deleteReview(reviewId: string) {
-      return wpAjaxInstance
-        .post(endpoints.DELETE_REVIEW, {
-          review_id: reviewId,
-        })
-        .then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.DELETE_REVIEW, {
+        review_id: reviewId,
+      });
     },
   };
 };
@@ -70,7 +67,7 @@ const reviewModal = () => {
 
     init() {
       this.saveRatingMutation = this.query.useMutation(this.saveRating, {
-        onSuccess: async (data: TutorMutationResponse<string>, variables: ReviewPayload) => {
+        onSuccess: async (data, variables) => {
           if (this.clear_review_popup_data) {
             await this.clearReviewPopupData(variables.course_id);
           }
@@ -91,15 +88,13 @@ const reviewModal = () => {
     },
 
     async saveRating(payload: ReviewPayload) {
-      return wpAjaxInstance.post(endpoints.PLACE_RATING, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.PLACE_RATING, payload);
     },
 
     async clearReviewPopupData(courseId: string | number) {
-      return wpAjaxInstance
-        .post(endpoints.CLEAR_REVIEW_POPUP_DATA, {
-          course_id: courseId,
-        })
-        .then((res) => res.data);
+      return wpPost(endpoints.CLEAR_REVIEW_POPUP_DATA, {
+        course_id: courseId,
+      });
     },
 
     convertFormDataToPayload(data: ReviewFormProps): ReviewPayload {
@@ -143,7 +138,7 @@ const reviewCard = (id: string) => {
       this.$refs.delete?.addEventListener('click', this.handlers.onDeleteButtonClick);
 
       this.saveRatingMutation = this.query.useMutation(this.saveRating, {
-        onSuccess: (data: TutorMutationResponse<string>) => {
+        onSuccess: (data) => {
           this.isEditMode = false;
           window.TutorCore.toast.success(data.message);
           window.location.reload();
@@ -166,7 +161,7 @@ const reviewCard = (id: string) => {
     },
 
     async saveRating(payload: ReviewPayload) {
-      return wpAjaxInstance.post(endpoints.PLACE_RATING, payload).then((res) => res.data);
+      return wpPost<TutorMutationResponse<string>>(endpoints.PLACE_RATING, payload);
     },
 
     convertFormDataToPayload(data: ReviewFormProps): ReviewPayload {

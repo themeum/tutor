@@ -422,6 +422,7 @@ export const zIndex = {
   modal: 25,
   notebook: 100000,
   highest: 99999,
+  toast: 100001,
 } as const;
 
 export const SmallMobileBreakpoint = 480;

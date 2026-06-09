@@ -48,13 +48,17 @@
   --tutor-text-critical: #{$tutor-orange-500};
   --tutor-text-warning: #{$tutor-orange-600};
   --tutor-text-caution: #{$tutor-yellow-600};
+
+  // VISUAL COLORS
+  --tutor-visual-success-1: #{$tutor-cyan-500};
+  --tutor-visual-exception-1: #{$tutor-cyan-400};
 }
 
 // =============================================================================
 // LIGHT — overrides specific to the light base theme
 // =============================================================================
 
-[data-tutor-theme='light'][data-tutor-vision='deuteranopia'] {
+@mixin deuteranopia-light-tokens {
   // SURFACE COLORS
   --tutor-surface-warning: #{$tutor-warning-50};
   --tutor-surface-warning-hover: #{$tutor-warning-100};
@@ -78,13 +82,18 @@
   --tutor-actions-warning-exception: #{$tutor-orange-500};
   --tutor-actions-critical-primary: #{$tutor-orange-500};
   --tutor-actions-critical-secondary: #{$tutor-orange-100};
+
+  // VISUAL COLORS
+  --tutor-visual-success-2: #{$tutor-cyan-500};
+  --tutor-visual-critical-1: #{$tutor-orange-500};
+  --tutor-visual-critical-2: #{$tutor-orange-300};
 }
 
 // =============================================================================
 // DARK — overrides specific to the dark base theme
 // =============================================================================
 
-[data-tutor-theme='dark'][data-tutor-vision='deuteranopia'] {
+@mixin deuteranopia-dark-tokens {
   // SURFACE COLORS
   --tutor-surface-warning: #{$tutor-gray-750};
   --tutor-surface-warning-hover: #{$tutor-warning-900};
@@ -112,4 +121,24 @@
   --tutor-actions-critical-primary: #{$tutor-orange-600};
   --tutor-actions-critical-secondary: #{$tutor-gray-700};
   --tutor-actions-caution: #{$tutor-yellow-500};
+
+  // VISUAL COLORS
+  --tutor-visual-success-2: #{$tutor-cyan-600};
+  --tutor-visual-critical-1: #{$tutor-orange-600};
+  --tutor-visual-critical-2: #{$tutor-orange-900};
+}
+
+[data-tutor-theme='light'][data-tutor-vision='deuteranopia'],
+[data-tutor-theme='system'][data-tutor-vision='deuteranopia'] {
+  @include deuteranopia-light-tokens;
+}
+
+[data-tutor-theme='dark'][data-tutor-vision='deuteranopia'] {
+  @include deuteranopia-dark-tokens;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-tutor-theme='system'][data-tutor-vision='deuteranopia'] {
+    @include deuteranopia-dark-tokens;
+  }
 }

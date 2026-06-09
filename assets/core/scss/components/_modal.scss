@@ -45,7 +45,7 @@
     position: relative;
     width: 100%;
     max-width: 500px;
-    max-height: 90vh;
+    max-height: calc(100dvh - 40px);
     background-color: $tutor-surface-l1;
     border-radius: $tutor-modal-radius;
     box-shadow: $tutor-modal-shadow;
@@ -79,6 +79,7 @@
 
   &-title {
     @include tutor-typography('h5', 'semibold', 'secondary', 'heading');
+    margin: 0;
   }
 
   &-subtitle {
@@ -90,7 +91,7 @@
   }
 
   &-close {
-    @extend .tutor-btn;
+    @include tutor-button-base;
     @include tutor-button-icon-size(x-small);
     @include tutor-button-variant(ghost);
     position: absolute;

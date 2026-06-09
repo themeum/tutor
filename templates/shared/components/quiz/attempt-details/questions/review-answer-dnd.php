@@ -30,8 +30,7 @@ $question_settings['show_question_mark'] = $question_settings['show_question_mar
 $question_settings['is_image_matching']  = $is_image_matching ? '1' : ( $question_settings['is_image_matching'] ?? '0' );
 $question_answers                        = QuizModel::get_answers_by_quiz_question( (int) $question->question_id );
 $question_answers                        = is_array( $question_answers ) ? array_values( $question_answers ) : array();
-$attempt_answer                          = isset( $attempt_answer ) && is_object( $attempt_answer ) ? $attempt_answer : null;
-$given_raw                               = $attempt_answer->given_answer ?? null;
+$given_raw                               = $question->given_answer ?? null;
 $given_answer                            = maybe_unserialize( $given_raw );
 
 $normalize = static function ( $value ) {
@@ -84,7 +83,7 @@ if ( 'ordering' === $question_type ) {
 	}
 } elseif ( 'image_answering' === $question_type ) {
 	$given_map      = is_array( $given_answer ) ? $given_answer : array();
-	$answer_status  = $attempt_answer ? QuizModel::get_attempt_answer_status( $attempt_answer ) : 'incorrect';
+	$answer_status  = QuizModel::get_attempt_answer_status( $question );
 	$row_item_state = 'correct' === $answer_status ? 'correct' : ( 'pending' === $answer_status ? 'pending' : 'incorrect' );
 
 	foreach ( $question_answers as $correct_item ) {

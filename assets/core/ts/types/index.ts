@@ -3,8 +3,6 @@ import { type buttonMeta } from '@Core/ts/components/button';
 import { type fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { type iconMeta } from '@Core/ts/components/icon';
 import { type popoverMeta } from '@Core/ts/components/popover';
-import { type selectDropdownMeta } from '@Core/ts/components/select-dropdown';
-import { type stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 import { type tabsMeta } from '@Core/ts/components/tabs';
 import { type timeInputMeta } from '@Core/ts/components/time-input';
 
@@ -34,6 +32,8 @@ export interface AjaxResponse<T = unknown> {
   data?: T;
 }
 
+export type LazyComponentLoader = () => Promise<AlpineComponentMeta>;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ExtractComponent<T extends AlpineComponentMeta<any>> = T['component'];
 
@@ -42,11 +42,9 @@ export interface TutorCore {
   fileUploader: ExtractComponent<typeof fileUploaderMeta>;
   tabs: ExtractComponent<typeof tabsMeta>;
   icon: ExtractComponent<typeof iconMeta>;
-  selectDropdown: ExtractComponent<typeof selectDropdownMeta>;
   popover: ExtractComponent<typeof popoverMeta>;
   accordion: ExtractComponent<typeof accordionMeta>;
   form: FormService;
-  stepperDropdown: ExtractComponent<typeof stepperDropdownMeta>;
   timeInput: ExtractComponent<typeof timeInputMeta>;
   toast: ToastService;
   query: QueryService;

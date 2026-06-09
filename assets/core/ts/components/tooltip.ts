@@ -1,7 +1,5 @@
-// Tooltip Component
-
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { isRTL } from '@TutorShared/config/constants';
+import { isRTL } from '@Core/ts/utils/util';
 
 const TOOLTIP_PLACEMENTS = {
   TOP: 'top',
@@ -18,6 +16,7 @@ const TOOLTIP_TRIGGERS = {
 
 const TOOLTIP_SIZES = {
   SMALL: 'small',
+  MEDIUM: 'medium',
   LARGE: 'large',
 } as const;
 
@@ -328,14 +327,16 @@ export const tooltip = (props: TooltipProps = {}) => {
         'tutor-tooltip-start',
         'tutor-tooltip-end',
       ];
-      const sizeClasses = ['tutor-tooltip-large'];
+      const sizeClasses = ['tutor-tooltip-medium', 'tutor-tooltip-large'];
       const arrowClasses = ['tutor-tooltip-arrow-start', 'tutor-tooltip-arrow-center', 'tutor-tooltip-arrow-end'];
 
       content.classList.remove(...placementClasses, ...sizeClasses, ...arrowClasses);
 
       content.classList.add(`tutor-tooltip-${placement}`);
 
-      if (this.size === TOOLTIP_SIZES.LARGE) {
+      if (this.size === TOOLTIP_SIZES.MEDIUM) {
+        content.classList.add('tutor-tooltip-medium');
+      } else if (this.size === TOOLTIP_SIZES.LARGE) {
         content.classList.add('tutor-tooltip-large');
       }
 

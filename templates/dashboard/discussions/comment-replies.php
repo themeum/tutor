@@ -12,11 +12,13 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
+use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use Tutor\Components\Constants\Variant;
 
 ?>
 <?php if ( ! empty( $replies ) ) : ?>
@@ -46,7 +48,7 @@ use Tutor\Components\Constants\Color;
 						</span>
 						<span class="tutor-text-secondary">
 							<?php
-								// translators: %s is the time of comment.
+								/* translators: %s human-readable time difference. */
 								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $reply->comment_date_gmt ) ) ) );
 							?>
 						</span>
@@ -57,9 +59,17 @@ use Tutor\Components\Constants\Color;
 				</div>
 				<?php if ( $user_id === (int) $reply->user_id ) : ?>
 				<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-ml-auto">
-					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
-					</button>
+					<?php
+					Button::make()
+						->label( __( 'More options', 'tutor' ) )
+						->variant( Variant::GHOST )
+						->size( Size::X_SMALL )
+						->icon( Icon::ELLIPSES, 'left', Size::SIZE_16, Color::SECONDARY )
+						->icon_only()
+						->attr( 'x-ref', 'trigger' )
+						->attr( '@click', 'toggle()' )
+						->render();
+					?>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 						<div class="tutor-popover-menu" style="min-width: 104px;">
 							<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $reply->comment_ID; ?>); hide()">

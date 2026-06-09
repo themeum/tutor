@@ -46,8 +46,8 @@ if ( ! isset( $active_tab, $page_tabs[ $active_tab ] ) ) {
 }
 
 $enrolled_courses  = CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ), $offset, $courses_per_page );
-$active_courses    = CourseModel::get_active_courses_by_user( null, $offset, $courses_per_page );
-$completed_courses = CourseModel::get_completed_courses_by_user( null, $offset, $courses_per_page );
+$active_courses    = CourseModel::get_active_courses_by_user( null, $offset, $courses_per_page, array( 'post_status' => array( 'private', 'publish' ) ) );
+$completed_courses = CourseModel::get_completed_courses_by_user( null, $offset, $courses_per_page, array( 'post_status' => array( 'private', 'publish' ) ) );
 
 $enrolled_course_count  = is_a( $enrolled_courses, 'WP_Query' ) ? $enrolled_courses->found_posts : 0;
 $active_course_count    = is_a( $active_courses, 'WP_Query' ) ? $active_courses->found_posts : 0;
@@ -75,8 +75,8 @@ $courses_list = $courses_list_array[ $active_tab ];
 	</div>
 
 	<!-- Courses nav  -->
-	<div class="tutor-dashboard-courses-card tutor-surface-l1 tutor-border tutor-rounded-2xl">
-		<div class="tutor-p-6 tutor-border-b">
+	<div class="tutor-dashboard-courses-card">
+		<div class="tutor-dashboard-courses-tab">
 			<?php Nav::make()->items( $courses_tab )->size( Size::SMALL )->render(); ?>
 		</div>
 
@@ -95,7 +95,7 @@ $courses_list = $courses_list_array[ $active_tab ];
 			// Prepare course list based on page tab.
 			$courses_list = $courses_list_array[ $active_tab ];
 			?>
-			<div class="tutor-dashboard-courses tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
+			<div class="tutor-dashboard-courses-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6 tutor-sm-p-none tutor-sm-mt-4">
 				<?php
 				if ( $courses_list && $courses_list->have_posts() ) :
 					while ( $courses_list->have_posts() ) :
@@ -103,21 +103,22 @@ $courses_list = $courses_list_array[ $active_tab ];
 						tutor_load_template( 'dashboard.courses.course-card' );
 					endwhile;
 				else :
-					EmptyState::make()->title( __( 'No Courses Found', 'tutor' ) )->render();
+					EmptyState::make()
+						->title( __( 'No Courses Found', 'tutor' ) )
+						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/learning-empty.svg' ) )
+						->render();
 				endif;
 				?>
 			</div>
-			<?php if ( ! empty( $courses_list->found_posts ) && $courses_list->found_posts > $courses_per_page ) : ?>
-			<div class="tutor-p-6 tutor-border-t">
-				<?php
-					Pagination::make()
-					->current( $current_page )
-					->total( $courses_list->found_posts )
-					->limit( $courses_per_page )
-					->render();
-				?>
-			</div>
-			<?php endif; ?>
+			<?php
+			$found_posts = $courses_list ? $courses_list->found_posts : 0;
+			Pagination::make()
+				->current( $current_page )
+				->total( $found_posts )
+				->limit( $courses_per_page )
+				->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-none tutor-sm-mt-5' )
+				->render();
+			?>
 		<?php endif; ?>
 	</div>
 </div>

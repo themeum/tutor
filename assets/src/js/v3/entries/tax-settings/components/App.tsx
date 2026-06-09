@@ -5,6 +5,7 @@ import { useState } from 'react';
 import ToastProvider from '@Core/ts/toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
+import { SVGIconConfigProvider } from '@TutorShared/contexts/SVGIconConfigContext';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
 
 import TaxSettingsPage from './TaxSettings';
@@ -30,12 +31,14 @@ function App() {
   return (
     <RTLProvider>
       <QueryClientProvider client={queryClient}>
-        <ToastProvider position="bottom-right">
-          <ModalProvider>
-            <Global styles={createGlobalCss()} />
-            <TaxSettingsPage />
-          </ModalProvider>
-        </ToastProvider>
+        <SVGIconConfigProvider>
+          <ToastProvider position="bottom-right">
+            <ModalProvider>
+              <Global styles={createGlobalCss()} />
+              <TaxSettingsPage />
+            </ModalProvider>
+          </ToastProvider>
+        </SVGIconConfigProvider>
       </QueryClientProvider>
     </RTLProvider>
   );

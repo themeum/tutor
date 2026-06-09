@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { type UseFormReturn, useForm } from 'react-hook-form';
-import type { FieldValues, UseFormProps } from 'react-hook-form/dist/types';
+import { type FieldValues, type UseFormProps, type UseFormReturn, useForm } from 'react-hook-form';
 
 export type FormWithGlobalErrorType<T extends FieldValues> = UseFormReturn<T> & {
   setSubmitError: (error: string | undefined) => void;

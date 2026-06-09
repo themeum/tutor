@@ -12,12 +12,14 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
+use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use Tutor\Components\Constants\Variant;
 use TUTOR\Input;
 use TUTOR\User;
 
@@ -94,26 +96,36 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-gap-5 tutor-mb-5">
 			<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_40 )->render(); ?>
-			<div>
+			<div class="tutor-min-w-0 tutor-flex-1">
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-					<span class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></span> 
-					<span class="tutor-text-secondary">
+					<span class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $question->comment_author ); ?></span> 
+					<span class="tutor-text-secondary tutor-flex-shrink-0">
 						<?php
-							// Translators: %s is the time of comment.
+							/* translators: %s human-readable time difference. */
 							echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) );
 						?>
 					</span>
 				</div>
-				<div class="tutor-tiny">
-					<span class="tutor-text-subdued">asked in</span> 
-					<?php PreviewTrigger::make()->id( $question->course_id )->render(); ?>
+				<div class="tutor-tiny tutor-flex tutor-items-center tutor-gap-1 tutor-overflow-hidden">
+					<span class="tutor-text-subdued tutor-flex-shrink-0">asked in</span> 
+					<div class="tutor-min-w-0 tutor-flex-1">
+						<?php PreviewTrigger::make()->id( $question->course_id )->render(); ?>
+					</div>
 				</div>
 			</div>
 			<div class="tutor-ml-auto">
 				<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-quiz-item-result-more">
-					<button class="tutor-btn tutor-btn-ghost tutor-btn-icon tutor-btn-x-small" x-ref="trigger" @click="toggle()">
-						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
-					</button>
+					<?php
+					Button::make()
+						->label( __( 'More options', 'tutor' ) )
+						->variant( Variant::GHOST )
+						->size( Size::X_SMALL )
+						->icon( Icon::ELLIPSES, 'left', Size::SIZE_16, Color::SECONDARY )
+						->icon_only()
+						->attr( 'x-ref', 'trigger' )
+						->attr( '@click', 'toggle()' )
+						->render();
+					?>
 
 					<div 
 						x-ref="content"

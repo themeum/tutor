@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.9.9
+Stable tag: 3.9.10
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,6 +318,51 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 4.0.0-rc.1 - 15 May, 2026
+
+Update: Improved the Live Class section on the Homepage. (Pro)
+Update: Added WordPress wp_body_open hook support to custom templates.
+Update: Improved course completion warning behavior in strict mode. (Pro)
+Update: Added email notification preference grouping for students. (Pro)
+Update: Improved compatibility with Rank Math SEO and Yoast SEO in Tutor LMS 4.x dashboards.
+Update: Enhanced the Tutor LMS login experience and social login modal UI. (Pro)
+Update: Improved dashboard and learning area theme consistency with system default themes.
+Update: Improved responsive behavior across different themes and devices.
+Update: Enhanced theme compatibility across Tutor LMS pages and layouts.
+Update: Updated compatibility with the Twenty Twenty-Five theme.
+Fix: Fixed the issue where existing Google Meet lessons could not be updated. (Pro)
+Fix: Future scheduled coupons no longer appear as expired.
+Fix: Fixed UI inconsistencies in the Order History page.
+Fix: Resolved the "Continue Lesson" button issue in the students' learning area.
+Fix: Prevented fatal errors when deactivating the Easy Digital Downloads plugin.
+Fix: Corrected completed lesson counts on the student enrolled page.
+Fix: Resolved the "Skip Assignment" button issue. (Pro)
+Fix: Fixed the wishlist button issue for unauthenticated users.
+Fix: Saving Tutor LMS settings no longer causes the login page to disappear and regenerate.
+Fix: Fixed UI issues in the Manage Devices section.
+Fix: Corrected scheduled course time mismatches in the Safari browser.
+Fix: Private courses now appear properly under the active filter in the student dashboard.
+Fix: Gifted courses no longer incorrectly apply a 100% discount. (Pro)
+Fix: Fixed the sitewide enrollment pause issue.
+Fix: Fixed backend verification issues for "Retake Course" and "Reset Progress" actions. (Pro)
+Fix: "Mark as Complete", "Complete Course", and "Reset Progress" actions no longer appear for logged-out users.
+Fix: Subscription plan names now appear correctly during auto-renew and early renewal processes. (Pro)
+
+= 4.0.0-beta.4 - 06 May, 2026
+
+New: Introduced comprehensive GDPR compliance support for better data handling.
+New: Added an option to generate quiz questions via AI Studio (Pro)
+New: Added support for order history in Paid Memberships Pro. (Pro)
+Update: Improved H5P support in the students' learning area. (Pro)
+Fix: Resolved Checkout page styling issues when using WooCommerce monetization.
+Fix: Enrollment status now updates correctly after order cancellation or refund.
+Fix: Resolved the revenue calculation error for manual enrollments.
+Fix: Order history now displays properly when using the Easy Digital Downloads monetization.
+Fix: Addressed “Add to Cart” button issue in Easy Digital Downloads monetization.
+Fix: Auto-play next lesson feature is now working as expected.
+Fix: Fixed WPML translation issue on the assignment page in legacy mode. (Pro)
+Fix: Prevented ratings and reviews from appearing before course completion.
+
 = 4.0.0-beta.3 - 23 April, 2026
 
 New: Introduced a new Puzzle quiz type. (Pro)
@@ -416,6 +461,11 @@ New: Lots of Micro-interactions with animations and sound effects to make lesson
 New: A new button “view as student” has been added to allow admin & instructor to change the dashboard view.
 New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
 New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
+
+= 3.9.10 - Apr 29, 2026
+
+Update: Improved user permission checks to enhance security.
+Fix: Resolved an issue where line breaks were not preserved in question–answer text created via the API. (Pro)
 
 = 3.9.9 - Apr 13, 2026
 

@@ -52,8 +52,8 @@ if ( $show_statistics ) {
 
 <div class="tutor-profile-wrapper">
 	<?php require_once tutor_get_template( 'account-header' ); ?>
-	
-	<div class="tutor-user-profile">
+
+	<div class="tutor-user-profile tutor-my-9 tutor-sm-my-6" role="main">
 		<div class="tutor-account-container">
 			<?php tutor_load_template( 'user-profile' ); ?>
 

@@ -18,30 +18,26 @@ use TUTOR\Icon;
 
 ?>
 
-<?php
-if ( ! get_option( 'users_can_register', false ) ) :
-	?>
-
+<?php if ( ! get_option( 'users_can_register', false ) ) : ?>
 	<?php
-		$args = array(
-			'image_path'  => tutor()->url . 'assets/images/construction.png',
-			'title'       => __( 'Oooh! Access Denied', 'tutor' ),
-			'description' => __( 'You do not have access to this area of the application. Please refer to your system  administrator.', 'tutor' ),
-			'button'      => array(
-				'text'  => __( 'Go to Home', 'tutor' ),
-				'url'   => get_home_url(),
-				'class' => 'tutor-btn',
-			),
-		);
-		tutor_load_template( 'feature_disabled', $args );
-		?>
+	$args = array(
+		'image_path'  => tutor()->url . 'assets/images/construction.png',
+		'title'       => __( 'Oooh! Access Denied', 'tutor' ),
+		'description' => __( 'You do not have access to this area of the application. Please refer to your system  administrator.', 'tutor' ),
+		'button'      => array(
+			'text'  => __( 'Go to Home', 'tutor' ),
+			'url'   => get_home_url(),
+			'class' => 'tutor-btn',
+		),
+	);
+	tutor_load_template( 'feature_disabled', $args );
+	?>
 <?php else : ?>
-
-	<div id="tutor-registration-wrap" class="tutor-card" style="max-width: 520px; margin: 10px auto;">
+	<div id="tutor-registration-wrap" class="tutor-card tutor-p-none tutor-py-9" style="max-width: 520px; margin: 0px auto;">
 
 		<?php do_action( 'tutor_before_student_reg_form' ); ?>
 
-		<form method="post" enctype="multipart/form-data" id="tutor-registration-form">
+		<form method="post" enctype="multipart/form-data" id="tutor-registration-form" class="tutor-p-8">
 			<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo isset( $_GET['enrol_course_id'] ) ? (int) $_GET['enrol_course_id'] : ''; ?>">
 			<?php do_action( 'tutor_student_reg_form_start' ); ?>
 
@@ -159,7 +155,7 @@ if ( ! get_option( 'users_can_register', false ) ) :
 				<?php foreach ( $consents as $consent ) : ?>
 					<?php LegalConsent::render_consent_field( $consent, 'tutor-mb-8' ); ?>
 				<?php endforeach; ?>
-			
+
 			<?php else : ?>
 				<?php if ( $tutor_toc_page_link ) : ?>	
 					<div class="tutor-form-row tutor-mb-8">
@@ -176,20 +172,18 @@ if ( ! get_option( 'users_can_register', false ) ) :
 			<?php endif; ?>
 			<div>
 				<button type="submit" name="tutor_register_student_btn" value="register" class="tutor-btn tutor-btn-primary tutor-btn-block"><?php esc_html_e( 'Register', 'tutor' ); ?></button>
-				<div class="tutor-flex tutor-items-center tutor-justify-center tutor-text-center tutor-fs-6 tutor-color-secondary tutor-mt-8">
+				<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-2 tutor-mt-8">
 					<div class="tutor-small">
-						<?php esc_html_e( 'Don\'t have an account?', 'tutor' ); ?>
+						<?php esc_html_e( 'Already have an account?', 'tutor' ); ?>
 					</div>
 					<a href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ); ?>" class="tutor-btn tutor-btn-link">
 						<?php esc_html_e( 'Login', 'tutor' ); ?>
 					</a>
 				</div>
 			</div>
-				<?php do_action( 'tutor_after_register_button' ); ?>
-			
+			<?php do_action( 'tutor_after_register_button' ); ?>
 		</form>
-				<?php do_action( 'tutor_after_registration_form_wrap' ); ?>
-		
+		<?php do_action( 'tutor_after_registration_form_wrap' ); ?>
 	</div>
-				<?php do_action( 'tutor_after_student_reg_form' ); ?>
+	<?php do_action( 'tutor_after_student_reg_form' ); ?>
 <?php endif; ?>

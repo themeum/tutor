@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { FieldValues } from 'react-hook-form/dist/types';
+import { type FieldValues } from 'react-hook-form';
 
 import type { FormWithGlobalErrorType } from './useFormWithGlobalError';
 

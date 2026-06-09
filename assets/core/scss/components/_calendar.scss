@@ -33,6 +33,25 @@
     color: $tutor-text-primary-inverse !important;
   }
 
+  button {
+    box-shadow: none;
+    transition: none;
+    @include tutor-transition((background-color, color));
+  }
+
+  button[data-vc-arrow],
+  button[data-vc='month'],
+  button[data-vc='year'] {
+    background-color: transparent;
+    color: $tutor-text-primary;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      color: $tutor-text-primary;
+    }
+  }
+
   button.vc-date__btn {
     background-color: transparent;
     font-size: $tutor-font-size-small;
@@ -99,19 +118,6 @@
     }
   }
 
-  button[data-vc-arrow],
-  button[data-vc=month],
-  button[data-vc=year] {
-    background-color: transparent;
-    color: $tutor-text-primary;
-
-    &:hover,
-    &:focus {
-      background-color: transparent;
-      color: $tutor-text-primary;
-    }
-  }
-
   button[data-vc-arrow] {
     padding: $tutor-spacing-none;
   }
@@ -152,6 +158,7 @@
       flex-wrap: wrap;
       border-bottom: 1px solid $tutor-border-idle;
       padding-bottom: $tutor-spacing-4;
+      margin-bottom: $tutor-spacing-4;
 
       button {
         width: 50%;
@@ -166,6 +173,14 @@
 
   .vc-grid {
     grid-area: grid;
+    display: flex;
+    gap: $tutor-spacing-6;
+
+    @include tutor-breakpoint-down(md) {
+      .vc-column:nth-child(n+2) {
+        display: none;
+      }
+    }
   }
 
   [data-vc='time'] {

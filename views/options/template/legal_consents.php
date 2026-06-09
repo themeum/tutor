@@ -10,6 +10,7 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
 use Tutor\GDPR\Controllers\LegalConsent;
 
 defined( 'ABSPATH' ) || exit;
@@ -42,9 +43,7 @@ $default_consent = array(
 	'id'          => 0,
 	'enabled'     => 'off',
 	'title'       => __( 'Consent Title', 'tutor' ),
-	'display_on'  => array(
-		LegalConsent::DISPLAY_ON_STD_REG => LegalConsent::DISPLAY_ON_STD_REG,
-	),
+	'display_on'  => array(),
 	'message'     => __( 'By continuing, you agree to our Terms of Service and Privacy Policy.', 'tutor' ),
 	'method'      => LegalConsent::METHOD_MANDATORY_CHECK,
 	'content_map' => array(),
@@ -65,7 +64,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 
 		<div class="tutor-legal-consent-card-header">
 			<div class="tutor-legal-consent-card-title tutor-fs-6">
-				<?php tutor_utils()->render_svg_icon( Icon::CONTRACT_OUTLINE, 32, 32 ); ?>
+				<?php SvgIcon::make()->name( Icon::CONTRACT_OUTLINE )->size( 32 )->render(); ?>
 				<span data-consent-title><?php echo esc_html( $title ); ?></span>
 			</div>
 
@@ -87,7 +86,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 				<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
 						<div class="tutor-fs-6 tutor-fw-medium" tutor-option-name><?php esc_html_e( 'Consent Title', 'tutor' ); ?></div>
-						<div class="tutor-fs-7 tutor-color-muted tutor-mt-8"><?php esc_html_e( 'Internal title (visible to admin only)', 'tutor' ); ?></div>
+						<div class="tutor-fs-7 tutor-color-muted tutor-mt-8"><?php esc_html_e( 'Enter title (visible to admin only)', 'tutor' ); ?></div>
 					</div>
 					<div class="tutor-option-field-input">
 						<input
@@ -180,7 +179,7 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 
 				<div class="tutor-legal-consent-card-footer-actions">
 					<button type="button" class="tutor-btn tutor-btn-sm tutor-btn-ghost" data-consent-cancel>
-						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+						<?php esc_html_e( 'Discard', 'tutor' ); ?>
 					</button>
 
 					<button type="button" class="tutor-btn tutor-btn-sm tutor-btn-primary" data-consent-save>
@@ -241,14 +240,14 @@ $render_card = function ( array $consent, $index ) use ( $display_options, $meth
 					<img class="tutor-d-inline-block" src="<?php echo esc_url( tutor()->url ); ?>assets/images/icon-trash.svg" alt="" aria-hidden="true" />
 				</div>
 
-				<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Consent?', 'tutor' ); ?></div>
-				<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Are you sure you want to delete this consent permanently from the site? Please confirm your choice.', 'tutor' ); ?></div>
+				<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete Consent?', 'tutor' ); ?></div>
+				<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Are you sure you want to permanently delete this consent?', 'tutor' ); ?></div>
 				<div class="tutor-d-flex tutor-justify-center tutor-my-48">
 					<button type="button" class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
 						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 					</button>
 					<button type="button" class="tutor-btn tutor-btn-primary tutor-ml-20" id="tutor-legal-consent-confirm-delete">
-						<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
+						<?php esc_html_e( 'Delete Consent', 'tutor' ); ?>
 					</button>
 				</div>
 			</div>

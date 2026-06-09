@@ -8,6 +8,9 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Assets;
 use Tutor\Cache\FlashMessage;
 use Tutor\Components\Alert;
 use Tutor\Ecommerce\Ecommerce;
@@ -16,8 +19,7 @@ use Tutor\Ecommerce\Settings;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
-
-defined( 'ABSPATH' ) || exit;
+use Tutor\Models\EnrollmentModel;
 
 
 if ( ! function_exists( 'tutor' ) ) {
@@ -27,9 +29,9 @@ if ( ! function_exists( 'tutor' ) ) {
 	 * @since 1.0.0
 	 * @since 3.7.0 updated with config class.
 	 *
-	 * @return object
+	 * @return \TUTOR\Config
 	 */
-	function tutor() {
+	function tutor(): \TUTOR\Config {
 		return \TUTOR\Config::get_instance();
 	}
 }
@@ -510,6 +512,7 @@ if ( ! function_exists( 'get_tutor_header' ) ) {
 			</head>
 
 			<body <?php body_class(); ?>>
+				<?php wp_body_open(); ?>
 				<div id="tutor-page-wrap" class="tutor-site-wrap site">
 				<?php
 		} else {
@@ -1221,14 +1224,25 @@ if ( ! function_exists( 'tutor_closeable_alert_msg' ) ) {
 	 * @return void
 	 */
 	function tutor_closeable_alert_msg( string $message, string $alert = 'success', $allowed_tags = array(), $css_class = '' ) {
-		?>
-		<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?> <?php echo esc_attr( $css_class ); ?> tutor-mb-12 tutor-alert tutor-success tutor-mb-12 tutor-d-flex tutor-align-center tutor-justify-between">
-			<span>
-				<?php echo is_array( $allowed_tags ) && count( $allowed_tags ) ? wp_kses( $message, $allowed_tags ) : esc_html( $message ); ?>
-			</span>
-			<span class="tutor-icon-times" aria-hidden="true" onclick="this.closest('div').remove()" style="cursor: pointer;"></span>
-		</div>
-		<?php
+		if ( Assets::should_load_legacy_scripts() ) {
+			?>
+			<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?> <?php echo esc_attr( $css_class ); ?> tutor-mb-12 tutor-alert tutor-success tutor-mb-12 tutor-d-flex tutor-align-center tutor-justify-between">
+				<span>
+					<?php echo is_array( $allowed_tags ) && count( $allowed_tags ) ? wp_kses( $message, $allowed_tags ) : esc_html( $message ); ?>
+				</span>
+				<span class="tutor-icon-times" aria-hidden="true" onclick="this.closest('div').remove()" style="cursor: pointer;"></span>
+			</div>
+			<?php
+		} else {
+			$message = is_array( $allowed_tags ) && count( $allowed_tags ) ? wp_kses( $message, $allowed_tags ) : esc_html( $message );
+			$alert   = 'danger' === $alert ? Alert::ERROR : $alert;
+
+			Alert::make()
+				->text( $message )
+				->variant( $alert )
+				->attr( 'class', $css_class . ' tutor-mb-5' )
+				->render();
+		}
 	}
 }
 
@@ -1391,7 +1405,7 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 
 		$is_enabled_retake = tutor_utils()->get_option( 'course_retake_feature' );
 
-		$is_enrolled = tutor_utils()->is_enrolled( $course_id, $user_id );
+		$is_enrolled = EnrollmentModel::is_enrolled( $course_id, $user_id );
 
 		if ( 'yes' === $is_public_course ) {
 			$conditional_buttons->show_start_learning_btn = true;

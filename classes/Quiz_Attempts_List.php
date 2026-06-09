@@ -20,6 +20,7 @@ use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Positions;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\Popover;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Models\QuizModel;
@@ -460,20 +461,46 @@ class Quiz_Attempts_List {
 	}
 
 	/**
-	 * Get kebab button for quiz attempt popover.
+	 * Render quiz attempt details button.
 	 *
 	 * @since 4.0.0
 	 *
+	 * @param array $attempt the quiz attempt.
+	 *
+	 * @return void
+	 */
+	public function render_details_button( $attempt ) {
+		if ( User::is_student_view() ) {
+			Button::make()
+				->label( __( 'Details', 'tutor' ) )
+				->icon( Icon::RESOURCES, 'left', 20 )
+				->size( Size::MEDIUM )
+				->tag( 'a' )
+				->attr( 'href', $this->get_review_url( $attempt ) )
+				->variant( 'primary' )
+				->render();
+		}
+	}
+
+	/**
+	 * Get kebab button for quiz attempt popover.
+	 *
+	 * @since 4.0.0
+	 * 
+	 * @param string $size the size of the button.
+	 *
 	 * @return string
 	 */
-	private function get_kebab_button() {
+	private function get_kebab_button( $size = Size::X_SMALL ) {
 		$kebab_button = Button::make()
-				->icon( Icon::THREE_DOTS_VERTICAL )
+				->label(__( 'More options', 'tutor' ) )
+				->icon( Icon::ELLIPSES )
+				->icon_only()
 				->attr( 'x-ref', 'trigger' )
 				->attr( '@click', 'toggle()' )
 				->attr( 'class', 'tutor-quiz-item-result-more' )
-				->variant( 'secondary' )
-				->size( Size::X_SMALL )
+				->variant( Variant::SECONDARY )
+				->size( $size )
 				->get();
 		return $kebab_button;
 	}
@@ -510,10 +537,11 @@ class Quiz_Attempts_List {
 	 * @param integer $attempts_count the quiz attempt count.
 	 * @param integer $quiz_id the quiz id.
 	 * @param bool    $is_learning_area is learning area list item.
+	 * @param bool    $show_details whether to show details.
 	 *
 	 * @return void
 	 */
-	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0, $is_learning_area = false ) {
+	public function render_student_attempt_popover( $attempt = array(), $attempts_count = 0, $quiz_id = 0, $is_learning_area = false, $show_details = true ) {
 		$is_quiz_details_hidden = $this->is_attempt_details_hidden();
 		$quiz_settings          = tutor_utils()->get_quiz_option( $quiz_id, '', array() );
 		$limit_attempts_allowed = '1' === (string) ( $quiz_settings['limit_attempts_allowed'] ?? '0' );
@@ -526,8 +554,27 @@ class Quiz_Attempts_List {
 			return;
 		}
 
+		if ( $is_learning_area && ! $is_quiz_details_hidden ) {
+
+			$query_param = array( 'action' => 'view_details' );
+
+			$url = $this->get_review_url( $attempt, $query_param );
+
+			$button_html = Button::make()
+				->tag( 'a' )
+				->label( __( 'Details', 'tutor' ) )
+				->size( Size::X_SMALL )
+				->variant( Variant::PRIMARY )
+				->attr( 'href', $url )
+				->attr( 'class', 'tutor-quiz-item-result-more tutor-quiz-details-btn' )
+				->get();
+
+			echo '<div class="tutor-flex">' . wp_kses_post( $button_html ) . '</div>';
+			return;
+		}
+
 		$popover = Popover::make()
-			->trigger( $this->get_kebab_button() )
+			->trigger( $this->get_kebab_button( $show_details ? Size::X_SMALL : Size::MEDIUM ) )
 			->placement( 'bottom' )
 			->menu_min_width( '110px' );
 
@@ -544,7 +591,7 @@ class Quiz_Attempts_List {
 			);
 		}
 
-		if ( ! $is_quiz_details_hidden ) {
+		if ( ! $is_quiz_details_hidden && $show_details ) {
 			$popover->menu_item( $this->get_details_item( $attempt ) );
 		}
 
@@ -580,7 +627,7 @@ class Quiz_Attempts_List {
 			->type( 'circle' )
 			->value( $earned_percentage )
 			->size( $size )
-			->stroke_color( 'var(--tutor-border-idle)' )
+			->stroke_color( 'var(--tutor-border-idle2)' )
 			->progress_stroke_color( $statics_stroke_color )
 			->animated()
 			->attr( 'class', $wrapper_class )
@@ -618,7 +665,7 @@ class Quiz_Attempts_List {
 	public function render_quiz_attempt_buttons( $attempt = array() ) {
 		Button::make()
 			->label( __( 'Details', 'tutor' ) )
-			->icon( Icon::RESOURCES, 'left', 20, 20 )
+			->icon( Icon::RESOURCES, 'left', 20 )
 			->size( Size::MEDIUM )
 			->tag( 'a' )
 			->attr( 'href', $this->get_review_url( $attempt ) )
@@ -627,7 +674,7 @@ class Quiz_Attempts_List {
 
 		Button::make()
 			->label( __( 'Delete', 'tutor' ) )
-			->icon( Icon::DELETE_2, 'left', 20, 20 )
+			->icon( Icon::DELETE_2, 'left', 20 )
 			->size( Size::MEDIUM )
 			->attr( '@click', sprintf( 'TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });', $attempt['attempt_id'] ?? 0 ) )
 			->variant( 'secondary' )
@@ -646,7 +693,7 @@ class Quiz_Attempts_List {
 	public function render_quiz_attempt_popover( $attempt = array() ) {
 		Popover::make()
 			->trigger( $this->get_kebab_button() )
-			->placement( Positions::BOTTOM_END )
+			->placement( Positions::BOTTOM )
 			->menu_min_width( '110px' )
 			->menu_item( $this->get_details_item( $attempt ) )
 			->menu_item(

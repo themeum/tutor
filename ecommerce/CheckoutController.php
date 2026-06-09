@@ -10,6 +10,8 @@
 
 namespace Tutor\Ecommerce;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\GDPR\Controllers\LegalConsent;
 use TUTOR\Input;
 use Tutor\Models\CartModel;
@@ -20,11 +22,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
-use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Models\EnrollmentModel;
 
 /**
  * Checkout Controller class
@@ -194,7 +192,7 @@ class CheckoutController {
 		 * Display a warning alert if the user attempts to purchase a course they are already enrolled in.
 		 */
 		$course_id = (int) Input::sanitize_request_data( 'course_id', 0 );
-		if ( Settings::is_buy_now_enabled() && $course_id && tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) ) {
+		if ( Settings::is_buy_now_enabled() && $course_id && EnrollmentModel::is_enrolled( $course_id, get_current_user_id() ) ) {
 			add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
 			?>
 			<div class="tutor-alert tutor-warning tutor-d-flex tutor-gap-1">
@@ -211,7 +209,7 @@ class CheckoutController {
 		if ( ! Settings::is_buy_now_enabled() && is_array( $course_list ) && count( $course_list ) ) {
 			$enrolled_courses = array();
 			foreach ( $course_list as $course ) {
-				if ( tutor_utils()->is_enrolled( $course->ID, get_current_user_id() ) ) {
+				if ( EnrollmentModel::is_enrolled( $course->ID, get_current_user_id() ) ) {
 					$enrolled_courses[] = $course;
 				}
 			}
@@ -272,6 +270,9 @@ class CheckoutController {
 		foreach ( $item_ids as $item_id ) {
 
 			if ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
+				if ( ! CourseModel::is_course_accessible( $item_id ) ) {
+					continue;
+				}
 				$item_name    = get_the_title( $item_id );
 				$course_price = tutor_utils()->get_raw_course_price( $item_id );
 
@@ -568,13 +569,13 @@ class CheckoutController {
 		$billing_model   = new BillingModel();
 		$current_user_id = get_current_user_id();
 
-		$is_guest_checkout_endabled = class_exists( 'TutorPro\Ecommerce\GuestCheckout\GuestCheckout' ) && GuestCheckout::is_enable();
+		$is_guest_checkout_enabled = apply_filters( 'tutor_is_guest_checkout_enabled', false );
 
-		// Pevent invalid request.
+		// Prevent invalid request.
 		if ( ! $current_user_id ) {
-			if ( $is_guest_checkout_endabled ) {
+			if ( $is_guest_checkout_enabled ) {
 				// Guest user.
-				$current_user_id = wp_rand(); // A random id to iniquely indentify.
+				$current_user_id = wp_rand(); // A random id to uniquely identify.
 			} else {
 				wp_die( esc_html( tutor_utils()->error_message( 'invalid_req' ) ) );
 			}
@@ -644,9 +645,9 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
 			foreach ( $object_ids as $object_id ) {
-				if ( ! in_array( get_post_type( $object_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
-					// translators: %s is the course title.
-					array_push( $errors, sprintf( __( 'Invalid item: %s', 'tutor' ), get_the_title( $object_id ) ) );
+				$can_buy = apply_filters( 'tutor_can_purchase_course', true, $object_id );
+				if ( is_wp_error( $can_buy ) ) {
+					array_push( $errors, $can_buy->get_error_message() );
 				}
 			}
 		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
@@ -685,6 +686,10 @@ class CheckoutController {
 		}
 
 		$checkout_data = $this->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
+
+		if ( ! tutor_utils()->count( $checkout_data->items ) ) {
+			array_push( $errors, __( 'No items found for purchase', 'tutor' ) );
+		}
 
 		if ( $checkout_data->total_price > 0 && 'free' === $payment_method ) {
 			array_push( $errors, __( 'Select a payment method', 'tutor' ) );
@@ -1037,6 +1042,17 @@ class CheckoutController {
 		$page_id = self::get_page_id();
 		if ( ! $page_id || ! is_page( $page_id ) ) {
 			return;
+		}
+
+		$course_id = Input::get( 'course_id', 0, Input::TYPE_INT );
+
+		if ( $course_id ) {
+			$can_buy    = apply_filters( 'tutor_can_purchase_course', true, $course_id );
+			$course_url = get_post_permalink( $course_id );
+			if ( is_wp_error( $can_buy ) ) {
+				wp_safe_redirect( tutor_utils()->get_nocache_url( $course_url ) );
+				exit;
+			}
 		}
 
 		$cart_page_url = CartController::get_page_url();

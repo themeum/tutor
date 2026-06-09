@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			const post = await ajaxHandler(formData);
 			if (post.ok) {
 				const response = await post.json();
-				if (!response) {
+				if (response.status_code !== 200 ) {
 					tutor_toast(__('Warning', 'tutor'), __(`Attachment remove failed`, 'tutor'), 'error');
 				} else {
 					currentTarget.closest('.tutor-instructor-card').remove();

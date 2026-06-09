@@ -215,8 +215,9 @@ Instructor
 	max-width: 520px;
 	margin: 0 auto;
 	padding: 40px 0 32px 0;
-	box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-	border-radius: 5px;
+	border: 1px solid #ececed;
+	box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.0588235294), 0px 4px 8px -2px rgba(16, 24, 40, 0.1019607843);
+	border-radius: 8px;
 }
 
 .tutor-login-form-wrapper, #tutor-registration-form {
@@ -233,6 +234,25 @@ Instructor
 
 .tutor-login-wrap form {
 	margin: 0;
+}
+
+.tutor-login-wrap,
+#tutor-login-form {
+	input.tutor-form-control {
+		background-color: #ffffff;
+		border-color: #ececed !important;
+		font-size: 14px;
+		line-height: 22px;
+
+		&:placeholder-shown:not(:focus) {
+			background-color: #f5f5f6;
+		}
+
+		&:focus {
+			box-shadow: 0px 0px 0px 2px #90A0F7;
+    		border-color: #a4bcf4 !important;
+		}
+	}
 }
 
 .tutor-login-wrap .tutor-login-title {

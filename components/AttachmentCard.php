@@ -204,7 +204,7 @@ class AttachmentCard extends BaseComponent {
 				<?php endif; ?>
 			</div>
 
-			<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" <?php echo $action_attr; // phpcs:ignore --already-escaped WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+			<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" aria-label="<?php echo $is_downloadable ? esc_attr__( 'Download file', 'tutor' ) : esc_attr__( 'Remove file', 'tutor' ); ?>" <?php echo $action_attr; // phpcs:ignore --already-escaped WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 				<?php SvgIcon::make()->name( $action_icon )->size( 16 )->render(); ?>
 			</button>
 		</div>

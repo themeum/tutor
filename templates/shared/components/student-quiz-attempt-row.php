@@ -38,10 +38,10 @@ $details_url      = $quiz_attempt_obj->get_review_url(
 		<?php
 		if ( $show_quiz_title && ! empty( $quiz_title ) ) :
 			?>
-			<div class="tutor-flex tutor-sm-justify-between tutor-gap-4">
-				<div class="tutor-quiz-item-info-title">
+			<div class="tutor-quiz-item-info-expanded">
+				<a href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>" class="tutor-quiz-item-info-title">
 					<?php echo esc_html( $quiz_title ); ?>
-				</div>
+				</a>
 				<?php if ( $attempts_count > 1 ) : ?>
 					<button @click="expanded = !expanded" class="tutor-quiz-attempts-expand-btn">
 						<?php
@@ -55,30 +55,17 @@ $details_url      = $quiz_attempt_obj->get_review_url(
 							<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN )->size( 18 )->render(); ?>
 						</span>
 					</button>
-				<?php else : ?>
-				<a
-					href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>"
-					class="tutor-tiny tutor-font-medium tutor-student-attempt-detail tutor-text-brand"
-				>
-					<?php esc_html_e( 'See Details', 'tutor' ); ?>
-				</a>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
 		<?php if ( $attempt_number ) : ?>
 			<div class="tutor-flex tutor-items-start tutor-justify-start tutor-gap-4">
-				<div class="tutor-quiz-item-info-title">
+				<a href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>" class="tutor-quiz-item-info-title">
 					<?php
 					/* translators: %d: attempt number */
 					echo esc_html( sprintf( __( 'Attempt %d', 'tutor' ), $attempt_number ) );
 					?>
-				</div>
-				<a 
-					href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>"
-					class="tutor-tiny tutor-font-medium tutor-student-attempt-detail tutor-text-brand"
-				>
-						<?php esc_html_e( 'See Details', 'tutor' ); ?>
 				</a>
 			</div>
 		<?php endif; ?>
@@ -132,4 +119,20 @@ $details_url      = $quiz_attempt_obj->get_review_url(
 		$quiz_attempt_obj->render_student_attempt_popover( $attempt, $attempts_count, $quiz_id, $is_learning_area );
 		?>
 	</div>
+	<?php if ( $attempts_count > 1 ) : ?>
+	<div class="tutor-quiz-item-actions" x-show="expanded" x-cloak>
+		<?php
+			$quiz_attempt_obj->render_details_button( $attempt );
+			$quiz_attempt_obj->render_student_attempt_popover( $attempt, $attempts_count, $quiz_id, false, false );
+		?>
+	</div>
+	<?php endif; ?>
+
+	<?php if ( $attempt_number && $is_previous ) : ?>
+	<div class="tutor-quiz-item-actions" x-show="expanded" x-cloak>
+		<?php
+		$quiz_attempt_obj->render_details_button( $attempt );
+		?>
+	</div>
+	<?php endif; ?>
 </div>

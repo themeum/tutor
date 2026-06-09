@@ -23,14 +23,14 @@
     margin: 0;
     padding: 0;
 
-    >li {
+    > li {
       @include tutor-flex(column, center);
       min-width: 44px;
       margin: 0;
       padding: 0;
 
-      >a,
-      >button {
+      > a,
+      > button {
         @include tutor-button-reset();
         @include tutor-typography(tiny, medium);
         @include tutor-flex(column, center);
@@ -39,14 +39,18 @@
         &.active,
         &.active span {
           color: $tutor-text-brand;
+          font-weight: $tutor-font-weight-medium;
         }
-      }
 
-      img {
-        width: 16px;
-        height: 16px;
-        object-fit: cover;
-        border-radius: $tutor-radius-full;
+        &:hover,
+        &:focus {
+          background-color: transparent;
+          color: $tutor-text-brand;
+        }
+
+        .tutor-dashboard-nav-mobile-icon {
+          @include tutor-flex-center;
+        }
       }
     }
   }

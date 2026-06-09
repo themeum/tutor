@@ -52,6 +52,15 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
       if (this.isTouchDevice) {
         // Mobile: tap to toggle
         trigger.addEventListener('click', (e: Event) => this.handleTap(e as MouseEvent));
+
+        // Prevent clicks inside content from bubbling to trigger on mobile
+        // This ensures links inside content work and tapping content doesn't toggle the popover
+        const content = this.$refs.content;
+        if (content) {
+          content.addEventListener('click', (e: Event) => {
+            e.stopPropagation();
+          });
+        }
       } else {
         // Desktop: hover to show
         trigger.addEventListener('mouseenter', () => this.handleMouseEnter());
@@ -72,8 +81,21 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
     },
 
     handleTap(event: MouseEvent) {
+      const target = event.target as HTMLElement;
+      const content = this.$refs.content;
+
+      // If the tap is inside the preview content, let it be handled there
+      // This is a fallback in case propagation wasn't stopped
+      if (content && content.contains(target)) {
+        return;
+      }
+
       event.preventDefault();
-      this.toggle();
+      if (this.open) {
+        this.hide();
+        return;
+      }
+      this.showPreview();
     },
 
     handleMouseEnter() {
@@ -132,12 +154,15 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
       if (!this.previewData) return;
 
       const data = this.previewData;
+      const thumbnailHtml = data.thumbnail
+        ? `<img src="${data.thumbnail}" alt="${this.escapeHtml(data.title)}" class="tutor-preview-card-thumbnail" />`
+        : '';
 
       content.innerHTML = `
         <div class="tutor-preview-card-content">
-          ${data.thumbnail ? `<img src="${data.thumbnail}" alt="${this.escapeHtml(data.title)}" class="tutor-preview-card-thumbnail" />` : ''}
+          ${data.thumbnail ? (data.url ? `<a href="${data.url}">${thumbnailHtml}</a>` : thumbnailHtml) : ''}
           <div class="tutor-preview-card-body">
-            <h4 class="tutor-preview-card-title"><a href="${data.url}">${this.escapeHtml(data.title)}</a></h4>
+            <h4 class="tutor-preview-card-title">${data.url ? `<a href="${data.url}">${this.escapeHtml(data.title)}</a>` : this.escapeHtml(data.title)}</h4>
             ${data.instructor ? `<div class="tutor-preview-card-instructor">${sprintf(__(`by <a href="${data.instructor_url}">%s</a>`, 'tutor'), this.escapeHtml(data.instructor))}</div>` : ''}
           </div>
         </div>

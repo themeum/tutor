@@ -45,9 +45,14 @@
       border-radius: $tutor-radius-lg;
       padding: $tutor-spacing-5 $tutor-spacing-6;
 
+      &:focus-within {
+        @include tutor-focus-ring();
+      }
+
       .tutor-course-accordion-header {
         @include tutor-flex(row, center, space-between);
         cursor: pointer;
+        outline: none;
 
         &-title {
           @include tutor-typography(medium, medium);
@@ -147,6 +152,10 @@
             margin: 0;
             padding: 0;
           }
+        }
+
+        .tutor-meta-value {
+          color: $tutor-text-secondary;
         }
       }
     }

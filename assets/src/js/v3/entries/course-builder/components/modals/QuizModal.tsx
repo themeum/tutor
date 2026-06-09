@@ -38,6 +38,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { type ContentDripType } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
@@ -56,6 +57,7 @@ interface QuizModalProps extends ModalProps {
 type QuizTabs = 'details' | 'settings';
 
 const courseId = getCourseId();
+const defaultQuizAttemptsAllowed = tutorConfig.settings?.quiz_attempts_allowed ?? 10;
 
 const QuizModal = ({
   closeModal,
@@ -89,12 +91,17 @@ const QuizModal = ({
         hide_quiz_time_display: false,
         limit_attempts_allowed: false,
         limit_questions_to_answer: false,
-        attempts_allowed: 10,
+        attempts_allowed: Number(defaultQuizAttemptsAllowed),
         passing_grade: 80,
         max_questions_for_answer: contentType === 'tutor_h5p_quiz' ? 0 : 10,
         quiz_auto_start: false,
         question_layout_view: contentType === 'tutor_h5p_quiz' ? 'question_below_each_other' : 'single_question',
         questions_order: 'rand',
+        enable_pagination: false,
+        pagination_type: 'shape',
+        enable_answer_reveal: false,
+        answers_reveal_duration: '5',
+        hide_previous_button: false,
         hide_question_number_overview: false,
         short_answer_characters_limit: 200,
         open_ended_answer_characters_limit: 500,
@@ -214,7 +221,7 @@ const QuizModal = ({
 
   return (
     <FormProvider {...form}>
-      <QuizModalContextProvider quizId={quizId || ''} contentType={contentType || 'tutor_quiz'}>
+      <QuizModalContextProvider quizId={quizId || ''} topicId={topicId} contentType={contentType || 'tutor_quiz'}>
         {({ activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError }) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
@@ -324,8 +331,7 @@ const QuizModal = ({
                                 <FormTextareaInput
                                   {...controllerProps}
                                   placeholder={__('Add a summary', 'tutor')}
-                                  enableResize={false}
-                                  rows={2}
+                                  rows={3}
                                 />
                               )}
                             />
@@ -490,7 +496,7 @@ const styles = {
   quizTitleWrapper: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
-    padding: ${spacing[16]} ${spacing[32]} ${spacing[16]} ${spacing[28]};
+    padding: ${spacing[16]} ${spacing[16]} ${spacing[16]} ${spacing[28]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
 
     ${Breakpoint.smallTablet} {

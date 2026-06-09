@@ -22,8 +22,18 @@
   -moz-appearance: textfield;
 
   &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
+  &::-webkit-inner-spin-button,
+  &::-webkit-search-cancel-button,
+  &::-webkit-autofill-button,
+  &::-webkit-contacts-auto-fill-button,
+  &::-webkit-credentials-auto-fill-button {
     -webkit-appearance: none;
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
     margin: 0;
   }
 
@@ -54,6 +64,13 @@
   @if $size == lg {
     padding: $tutor-spacing-5;
   }
+
+  // Prevent iOS Safari from auto-zooming focused fields and exposing
+  // horizontal overflow on mobile layouts.
+  @media (hover: none) and (pointer: coarse) {
+    font-size: $tutor-font-size-medium;
+    line-height: $tutor-line-height-medium;
+  }
 }
 
 @mixin tutor-textarea($min-height: 92px) {
@@ -75,12 +92,7 @@
   cursor: pointer;
   position: relative;
   flex-shrink: 0;
-  @include tutor-transition((
-    background-color,
-    border-color,
-    box-shadow,
-    color
-  ));
+  @include tutor-transition((background-color, border-color, box-shadow, color));
 
   color: $tutor-icon-idle;
 
@@ -163,11 +175,7 @@
   cursor: pointer;
   position: relative;
   flex-shrink: 0;
-  @include tutor-transition((
-    background-color,
-    border-color,
-    box-shadow
-  ));
+  @include tutor-transition((background-color, border-color, box-shadow));
 
   &:checked {
     background-color: $tutor-surface-brand-primary;

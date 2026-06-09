@@ -11,7 +11,15 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Dashboard;
-use Tutor\Helpers\UrlHelper;
+
+$dashboard_page    = get_query_var( 'tutor_dashboard_page' );
+$dashboard_subpage = get_query_var( 'tutor_dashboard_sub_page' );
+$isolated_pages    = Dashboard::get_isolated_pages();
+$page_meta         = Dashboard::get_page_meta_data( $dashboard_page, $dashboard_subpage, $isolated_pages );
+$page_data         = $page_meta['page_data'];
+
+$meta_title = $page_meta['meta_title'];
+Dashboard::set_document_title( $meta_title );
 
 ?>
 <!DOCTYPE html>
@@ -19,20 +27,15 @@ use Tutor\Helpers\UrlHelper;
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><?php bloginfo( 'name' ); ?></title>
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class( '' ); ?>>
+	<?php wp_body_open(); ?>
 <?php
 
-$dashboard_page    = get_query_var( 'tutor_dashboard_page' );
-$dashboard_subpage = get_query_var( 'tutor_dashboard_sub_page' );
-$page_key          = Dashboard::get_isolated_page_key( $dashboard_page, $dashboard_subpage );
-$isolated_pages    = Dashboard::get_isolated_pages();
-$page_data         = $isolated_pages[ $page_key ] ?? array();
-$page_template     = $page_data['template'] ?? '';
-$back_url          = tutor_utils()->tutor_dashboard_url();
-$close_url         = $back_url;
+$page_template = $page_data['template'] ?? '';
+$back_url      = tutor_utils()->tutor_dashboard_url();
+$close_url     = $back_url;
 ?>
 <div class="tutor-dashboard-isolated-page-wrapper">
 	<?php

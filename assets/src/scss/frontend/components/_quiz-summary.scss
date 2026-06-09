@@ -129,4 +129,18 @@
       }
     }
   }
+
+  .tutor-empty-quiz-details{
+    @include tutor-flex(row,center,center);
+    padding: $tutor-spacing-6;
+    background-color: $tutor-surface-critical;
+    border: 1px solid $tutor-border-error-tertiary;
+    border-radius: $tutor-radius-lg;
+    gap: $tutor-spacing-4;
+    margin-top: $tutor-spacing-6;
+    .error-message{
+      @include tutor-typography(small,regular);
+      color: $tutor-text-critical;
+    }
+  }
 }

@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Exception;
+use Tutor\Cache\TutorCache;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Variant;
@@ -632,20 +633,23 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 *
 	 * @param int $order_id The ID of the order to retrieve items for.
 	 *
 	 * @return array The order items, each containing details and course titles, or an empty array if no items are found.
 	 */
 	public function get_order_items_by_id( $order_id ) {
-		global $wpdb;
+		$cache_key = 'tutor_get_order_items_by_id_' . $order_id;
+		$cached    = TutorCache::get( $cache_key );
 
-		$primary_table  = "{$wpdb->prefix}tutor_order_items AS oi";
+		if ( $cached ) {
+			return $cached;
+		}
+
+		$primary_table  = 'tutor_order_items AS oi';
 		$joining_tables = array(
 			array(
 				'type'  => 'LEFT',
-				'table' => "{$wpdb->prefix}posts AS p",
+				'table' => 'posts AS p',
 				'on'    => 'p.ID = oi.item_id',
 			),
 		);
@@ -657,13 +661,11 @@ class OrderModel {
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
 
-		if ( tutor()->has_pro ) {
-			$bundle_model = new \TutorPro\CourseBundle\Models\BundleModel();
-		}
+		$bundle_model = tutor()->has_pro ? new \TutorPro\CourseBundle\Models\BundleModel() : null;
 
 		if ( ! empty( $courses_data['total_count'] ) ) {
 			foreach ( $courses as &$course ) {
-				if ( tutor()->has_pro && 'course-bundle' === $course->type ) {
+				if ( is_object( $bundle_model ) && tutor()->bundle_post_type === $course->type ) {
 					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
 				}
 
@@ -679,7 +681,10 @@ class OrderModel {
 
 		unset( $course );
 
-		return ! empty( $courses ) ? $courses : array();
+		$result = ! empty( $courses ) ? $courses : array();
+		TutorCache::set( $cache_key, $result );
+
+		return $result;
 	}
 
 	/**
@@ -843,7 +848,7 @@ class OrderModel {
 				"SELECT * FROM {$wpdb->postmeta} 
 				WHERE meta_key=%s
 				AND meta_value LIKE %d",
-				'_tutor_enrolled_by_order_id',
+				EnrollmentModel::ENROLLMENT_ORDER_ID_META,
 				$order_id
 			)
 		);
@@ -1821,7 +1826,7 @@ class OrderModel {
 				foreach ( $order_items as $item ) {
 					$course_id = $item->id;
 					if ( $course_id ) {
-						$is_enrolled = tutor_utils()->is_enrolled( $course_id );
+						$is_enrolled = EnrollmentModel::is_enrolled( $course_id );
 						if ( $is_enrolled ) {
 							$is_enrolled_any_course = true;
 							break;
@@ -1830,7 +1835,7 @@ class OrderModel {
 				}
 			} elseif ( tutor_utils()->count( $order_items ) ) {
 					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
-				if ( tutor_utils()->is_enrolled( $course_id ) ) {
+				if ( EnrollmentModel::is_enrolled( $course_id ) ) {
 					$is_enrolled_any_course = true;
 				}
 			}

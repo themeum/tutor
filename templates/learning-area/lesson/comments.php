@@ -97,7 +97,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 		->id( 'delete-comment-modal' )
 		->title( 'Delete This Item?' )
 		->message( 'This action cannot be undone.' )
-		->icon( Icon::DELETE_2, 80, 80 )
+		->icon( Icon::DELETE_2, 80 )
 		->mutation_state( 'deleteCommentMutation' )
 		->confirm_handler( 'deleteCommentMutation?.mutate({ comment_id: payload?.commentId })' )
 		->render();

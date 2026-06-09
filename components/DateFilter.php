@@ -93,7 +93,7 @@ class DateFilter extends BaseComponent {
 	 *
 	 * @var integer
 	 */
-	protected $icon_size = 20;
+	protected $icon_size = Size::SIZE_16;
 
 	/**
 	 * Whether to display the label text.
@@ -103,6 +103,15 @@ class DateFilter extends BaseComponent {
 	 * @var bool
 	 */
 	protected $show_label = true;
+
+	/**
+	 * Whether to hide the initial label when no date range is selected.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $hide_initial_label = false;
 
 	/**
 	 * Query params to clear when a date filter is applied or cleared (e.g. 'current_page').
@@ -195,6 +204,18 @@ class DateFilter extends BaseComponent {
 	}
 
 	/**
+	 * Hide or show the initial label text before a date range is selected.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return self
+	 */
+	public function hide_initial_label(): self {
+		$this->hide_initial_label = true;
+		return $this;
+	}
+
+	/**
 	 * Set query params to clear when a date filter is applied or cleared.
 	 *
 	 * Useful for resetting pagination (e.g. 'current_page') or other
@@ -266,6 +287,9 @@ class DateFilter extends BaseComponent {
 				x-ref="trigger"
 				@click="toggle()"
 				class="<?php echo esc_attr( $button_classes ); ?>"
+				<?php if ( empty( $this->label ) ) : ?>
+					aria-label="<?php echo $is_range ? esc_attr__( 'Filter by date range', 'tutor' ) : esc_attr__( 'Filter by date', 'tutor' ); ?>"
+				<?php endif; ?>
 			>
 				<?php SvgIcon::make()->name( $icon )->size( $this->icon_size )->render(); ?>
 				<?php if ( ! empty( $this->label ) ) : ?>
@@ -324,7 +348,7 @@ class DateFilter extends BaseComponent {
 		$end_date   = Input::get( ( 'end_date' ) );
 
 		if ( ! $start_date || ! $end_date ) {
-			return __( 'All Time', 'tutor' );
+			return $this->hide_initial_label ? '' : __( 'All Time', 'tutor' );
 		}
 
 		$presets = array(

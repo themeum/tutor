@@ -13,6 +13,10 @@
   background-color: $tutor-surface-l1;
   @include tutor-transition(background-color);
 
+  @include tutor-breakpoint-down(sm) {
+    padding: $tutor-spacing-5;
+  }
+
   &[href],
   &[onclick],
   &[\@click],
@@ -24,6 +28,10 @@
       background-color: $tutor-surface-l1-hover;
       outline: none;
     }
+  }
+
+  &:focus-visible {
+    @include tutor-focus-ring();
   }
 
   &-header {
@@ -107,8 +115,6 @@
   }
 
   &-time-spent {
-    cursor: pointer;
-
     .tutor-stat-card-icon {
       color: $tutor-text-exception4;
     }

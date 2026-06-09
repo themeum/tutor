@@ -1,90 +1,125 @@
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from 'react';
 
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { tutorConfig } from '@TutorShared/config/config';
 import { colorTokens } from '@TutorShared/config/styles';
 
-const MIN_COORD = -10;
-const MAX_COORD = 10;
-const CANVAS_SIZE = 420;
-const PADDING = 12;
+const COORDINATES_SCRIPT_ATTR = 'data-tutor-coordinates-preview-script';
 
-const CoordinatesPreview = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+const resolveAxisRange = (raw?: number) => (raw === 20 ? 20 : 10);
+
+const tutorIconsBase = `${String(tutorConfig.tutor_url || '').replace(/\/$/, '')}/assets/icons`;
+
+const markerUrl = (name: 'graph-marker-hover' | 'graph-marker-selected' | 'graph-marker-wrong'): string =>
+  `${tutorIconsBase}/${name}.svg`;
+
+/** Matches Pro `coordinates.php` eraser + {@link DrawImagePreview} Clear (SVGIcon + brand). */
+const clearButtonIcon = css`
+  color: ${colorTokens.text.brand};
+`;
+
+interface CoordinatesPreviewProps {
+  axisRange?: number;
+}
+
+/**
+ * Learning-area parity: loads `tutor-pro/assets/js/coordinates-question.js` in the preview iframe
+ * (same pattern as {@link ScalePreview} + Pro template `learning-area/quiz/questions/coordinates.php`).
+ */
+const CoordinatesPreview = ({ axisRange: axisRangeProp }: CoordinatesPreviewProps) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const axisRange = resolveAxisRange(axisRangeProp);
+  const qId = 'preview';
+  const inputId = `tutor-coordinates-points-${qId}`;
+  const canvasId = `tutor-coordinates-canvas-${qId}`;
+  const instructionId = `tutor-coordinates-instruction-${qId}`;
+  const hoverDisplayId = `tutor-coordinates-hover-${qId}`;
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) {
       return;
     }
 
-    const context = canvas.getContext('2d');
-    if (!context) {
+    const doc = wrapper.ownerDocument;
+    if (!doc || doc === document) {
       return;
     }
 
-    const width = canvas.width;
-    const height = canvas.height;
-    const drawableWidth = width - 2 * PADDING;
-    const drawableHeight = height - 2 * PADDING;
-    const centerX = PADDING + drawableWidth / 2;
-    const centerY = PADDING + drawableHeight / 2;
-    const pixelsPerUnit = Math.min(drawableWidth, drawableHeight) / (MAX_COORD - MIN_COORD);
-
-    const graphToPixel = (x: number, y: number) => ({
-      x: centerX + x * pixelsPerUnit,
-      y: centerY - y * pixelsPerUnit,
-    });
-
-    context.clearRect(0, 0, width, height);
-
-    const leftEdge = graphToPixel(MIN_COORD, 0).x;
-    const rightEdge = graphToPixel(MAX_COORD, 0).x;
-    const topEdge = graphToPixel(0, MAX_COORD).y;
-    const bottomEdge = graphToPixel(0, MIN_COORD).y;
-
-    context.strokeStyle = colorTokens.stroke.divider;
-    context.lineWidth = 0.5;
-    for (let i = MIN_COORD; i <= MAX_COORD; i++) {
-      if (i === 0) {
-        continue;
-      }
-      const xPoint = graphToPixel(i, 0);
-      context.beginPath();
-      context.moveTo(xPoint.x, topEdge);
-      context.lineTo(xPoint.x, bottomEdge);
-      context.stroke();
-
-      const yPoint = graphToPixel(0, i);
-      context.beginPath();
-      context.moveTo(leftEdge, yPoint.y);
-      context.lineTo(rightEdge, yPoint.y);
-      context.stroke();
+    if (doc.head.querySelector(`[${COORDINATES_SCRIPT_ATTR}]`)) {
+      wrapper.removeAttribute('data-tutor-coordinates-init');
+      const reinit = doc.createElement('script');
+      reinit.textContent = 'if(window._tutorCoordinatesInitAll){window._tutorCoordinatesInitAll();}';
+      doc.head.appendChild(reinit);
+      return;
     }
 
-    context.strokeStyle = colorTokens.color.black[80];
-    context.lineWidth = 1.5;
-    context.beginPath();
-    context.moveTo(leftEdge, centerY);
-    context.lineTo(rightEdge, centerY);
-    context.stroke();
-
-    context.beginPath();
-    context.moveTo(centerX, topEdge);
-    context.lineTo(centerX, bottomEdge);
-    context.stroke();
+    const siteUrl = tutorConfig.site_url.replace(/\/$/, '');
+    const script = doc.createElement('script');
+    script.setAttribute(COORDINATES_SCRIPT_ATTR, '1');
+    script.textContent = `
+      (function(){
+        var scriptEl = document.createElement('script');
+        scriptEl.src = '${siteUrl}/wp-content/plugins/tutor-pro/assets/js/coordinates-question.js';
+        scriptEl.onload = function(){
+          if(typeof window._tutorCoordinatesInitAll === 'function'){
+            window._tutorCoordinatesInitAll();
+          }
+        };
+        document.head.appendChild(scriptEl);
+      })();
+    `;
+    doc.head.appendChild(script);
   }, []);
 
   return (
-    <div className="tutor-quiz-question-options tutor-coordinates-question" data-question-type="coordinates">
+    <div
+      ref={wrapperRef}
+      id={`tutor-coordinates-question-${qId}`}
+      className="tutor-quiz-question-options tutor-coordinates-question question-type-coordinates"
+      data-question-type="coordinates"
+      data-question-id={qId}
+      data-axis-range={String(axisRange)}
+      data-marker-hover={markerUrl('graph-marker-hover')}
+      data-marker-selected={markerUrl('graph-marker-selected')}
+      data-marker-wrong={markerUrl('graph-marker-wrong')}
+    >
+      <div className="tutor-coordinates-actions">
+        <button
+          type="button"
+          className="tutor-coordinates-clear-prev tutor-coordinates-clear-button tutor-hidden"
+          aria-label={__('Clear last point', 'tutor')}
+        >
+          <SVGIcon name="eraser" style={clearButtonIcon} width={18} height={18} />
+          {__('Clear', 'tutor')}
+        </button>
+      </div>
       <div className="tutor-coordinates-grid-container">
         <canvas
-          ref={canvasRef}
+          id={canvasId}
           className="tutor-coordinates-canvas"
-          width={CANVAS_SIZE}
-          height={CANVAS_SIZE}
-          aria-label={__('Coordinate grid preview.', 'tutor')}
+          width={420}
+          height={420}
+          tabIndex={0}
+          role="application"
+          aria-describedby={`${instructionId} ${hoverDisplayId}`}
+          aria-label={__('Coordinate grid: click or use arrow keys and Enter to select grid points.', 'tutor')}
         />
       </div>
+      <p id={instructionId} className="tutor-quiz-a11y-sr-only">
+        {__(
+          'Use arrow keys to move the active grid point, Enter to add it, and Backspace or Delete to remove the last point.',
+          'tutor',
+        )}
+      </p>
+      <p
+        id={hoverDisplayId}
+        className="tutor-coordinates-hover-display tutor-fs-7 tutor-color-secondary tutor-mb-12"
+        aria-live="polite"
+      />
+      <input type="hidden" id={inputId} name="preview[answers][coordinates][points]" defaultValue="" />
     </div>
   );
 };

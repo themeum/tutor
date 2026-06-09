@@ -77,7 +77,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 					/**
 					 * Course and bundle checkout items.
 					 */
-					if ( is_array( $course_list ) && count( $course_list ) ) :
+					if ( is_array( $course_list ) && count( $course_list ) && isset( $checkout_data->items ) ) :
 						?>
 						<?php
 						foreach ( $checkout_data->items as $item ) :
@@ -216,7 +216,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 
 		<?php
 		$is_zero_price        = empty( $checkout_data->total_price ) && OrderModel::TYPE_SINGLE_ORDER === $checkout_data->order_type;
-		$pay_now_btn_text     = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
+		$pay_now_btn_text     = $is_zero_price ? __( 'Place Order', 'tutor' ) : __( 'Pay Now', 'tutor' );
 		$pay_now_btn_text     = apply_filters( 'tutor_checkout_pay_now_btn_text', $pay_now_btn_text, $checkout_data );
 		$show_payment_methods = apply_filters( 'tutor_checkout_show_payment_methods', ! $is_zero_price, $checkout_data );
 

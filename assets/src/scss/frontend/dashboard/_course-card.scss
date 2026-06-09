@@ -7,6 +7,10 @@
 .tutor-course-card {
   @include tutor-flex(column, flex-start, flex-start);
   height: 100%;
+  background-color: $tutor-surface-l1;
+  padding: $tutor-spacing-4;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-lg;
   @include tutor-transition(background-color);
 
   &:hover {
@@ -124,7 +128,8 @@
 @media (max-width: $tutor-breakpoint-sm) {
   .tutor-dashboard-page-card-body {
     &.tutor-dashboard-wishlist-wrapper {
-      margin: 10px;
+      margin-top: 10px;
+      background-color: unset;
       border: unset;
     }
   }
