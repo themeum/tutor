@@ -486,14 +486,14 @@ class Quiz_Attempts_List {
 	 * Get kebab button for quiz attempt popover.
 	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @param string $size the size of the button.
 	 *
 	 * @return string
 	 */
 	private function get_kebab_button( $size = Size::X_SMALL ) {
 		$kebab_button = Button::make()
-				->label(__( 'More options', 'tutor' ) )
+				->label( __( 'More options', 'tutor' ) )
 				->icon( Icon::ELLIPSES )
 				->icon_only()
 				->attr( 'x-ref', 'trigger' )

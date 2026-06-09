@@ -116,6 +116,11 @@
           @include tutor-typography(medium, semibold);
           text-align: start;
           margin-bottom: $tutor-spacing-2;
+          @include tutor-transition(color);
+
+          &:hover {
+            color: $tutor-text-brand;
+          }
 
           @include tutor-breakpoint-down(sm) {
             font-size: $tutor-font-size-small;
@@ -283,13 +288,8 @@
           }
         }
 
-        &:hover {
-          .tutor-quiz-item-info-title {
-            color: $tutor-brand-700;
-          }
-        }
-
-        &:hover:has(.tutor-quiz-item-result-more) {
+        &:hover:has(.tutor-quiz-item-result-more),
+        &:focus-within:has(.tutor-quiz-item-result-more) {
           .tutor-quiz-item-result {
             .tutor-badge {
               display: none;

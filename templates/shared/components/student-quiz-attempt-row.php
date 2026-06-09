@@ -39,7 +39,7 @@ $details_url      = $quiz_attempt_obj->get_review_url(
 		if ( $show_quiz_title && ! empty( $quiz_title ) ) :
 			?>
 			<div class="tutor-quiz-item-info-expanded">
-				<a href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>" class="tutor-quiz-item-info-title">
+				<a href="<?php echo esc_url( $details_url ); ?>" class="tutor-quiz-item-info-title">
 					<?php echo esc_html( $quiz_title ); ?>
 				</a>
 				<?php if ( $attempts_count > 1 ) : ?>
