@@ -131,7 +131,13 @@ const TopicHeader = ({
   return (
     <>
       <div css={styles.header({ isCollapsed: topic.isCollapsed, isEdit, isDeletePopoverOpen, isDragging })}>
-        <div css={styles.headerContent({ isSaved: topic.isSaved, isCollapsed: topic.isCollapsed })}>
+        <div
+          css={styles.headerContent({
+            isSaved: topic.isSaved,
+            isCollapsed: topic.isCollapsed,
+            hasSummary: topic.summary.length > 0,
+          })}
+        >
           <div
             css={styles.grabberInput}
             onClick={() => onCollapse(topic.id)}
@@ -398,12 +404,20 @@ const styles = {
       }
     }
   `,
-  headerContent: ({ isSaved = true, isCollapsed = false }: { isSaved: boolean; isCollapsed: boolean }) => css`
+  headerContent: ({
+    isSaved = true,
+    isCollapsed = false,
+    hasSummary = false,
+  }: {
+    isSaved: boolean;
+    isCollapsed: boolean;
+    hasSummary: boolean;
+  }) => css`
     display: grid;
     grid-template-columns: ${isSaved ? '1fr auto' : '1fr'};
     gap: ${spacing[12]};
     width: 100%;
-    padding-bottom: ${!isCollapsed ? spacing[12] : '0px'};
+    padding-bottom: ${!isCollapsed && hasSummary ? spacing[12] : '0px'};
   `,
   grabberInput: css`
     ${styleUtils.display.flex()};
@@ -458,6 +472,7 @@ const styles = {
 
     ${isEdit &&
     css`
+      padding-top: ${spacing[12]};
       padding-right: 0;
     `}
   `,
