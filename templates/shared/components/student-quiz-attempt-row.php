@@ -42,9 +42,15 @@ $quiz_details_url  = $hide_quiz_details ? '#' : $details_url;
 		if ( $show_quiz_title && ! empty( $quiz_title ) ) :
 			?>
 			<div class="tutor-quiz-item-info-expanded">
-				<a href="<?php echo esc_url( $quiz_details_url ); ?>" class="tutor-quiz-item-info-title">
-					<?php echo esc_html( $quiz_title ); ?>
-				</a>
+				<?php if ( $hide_quiz_details ) : ?>
+					<div class="tutor-medium tutor-font-semibold">
+						<?php echo esc_html( $quiz_title ); ?>
+					</div>
+				<?php else : ?>
+					<a href="<?php echo esc_url( $quiz_details_url ); ?>" class="tutor-quiz-item-info-title">
+						<?php echo esc_html( $quiz_title ); ?>
+					</a>
+				<?php endif; ?>
 				<?php if ( $attempts_count > 1 ) : ?>
 					<button @click="expanded = !expanded" class="tutor-quiz-attempts-expand-btn">
 						<?php
@@ -64,12 +70,21 @@ $quiz_details_url  = $hide_quiz_details ? '#' : $details_url;
 
 		<?php if ( $attempt_number ) : ?>
 			<div class="tutor-flex tutor-items-start tutor-justify-start tutor-gap-4">
-				<a href="<?php echo esc_url( $quiz_details_url ); ?>" class="tutor-quiz-item-info-title">
+				<?php if ( $hide_quiz_details ) : ?>
+					<div class="tutor-medium tutor-font-semibold">
 					<?php
 					/* translators: %d: attempt number */
 					echo esc_html( sprintf( __( 'Attempt %d', 'tutor' ), $attempt_number ) );
 					?>
-				</a>
+					</div>
+				<?php else : ?>
+					<a href="<?php echo esc_url( $quiz_details_url ); ?>" class="tutor-quiz-item-info-title">
+						<?php
+						/* translators: %d: attempt number */
+						echo esc_html( sprintf( __( 'Attempt %d', 'tutor' ), $attempt_number ) );
+						?>
+					</a>
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
