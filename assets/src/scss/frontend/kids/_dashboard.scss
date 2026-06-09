@@ -47,6 +47,12 @@
     @include tutor-kids-shadow;
   }
 
+  .tutor-dashboard-welcome-card,
+  .tutor-dashboard-quick-tips-card,
+  .tutor-profile-completion-header {
+    @include tutor-kids-shadow(false);
+  }
+
   .tutor-billing-card:hover {
     @include tutor-kids-shadow;
     &:not(:last-of-type) {
@@ -70,6 +76,15 @@
   }
 
   // home
+  .tutor-profile-completion-body {
+    border: none;
+    box-shadow:
+      0 2px 0 2px $tutor-border-idle,
+      0 5px 0 0 $tutor-border-idle;
+    border-bottom-left-radius: $tutor-radius-5xl;
+    border-bottom-right-radius: $tutor-radius-5xl;
+  }
+
   .tutor-student-dashboard-courses {
     .tutor-progress-card:not(:first-child) {
       margin-top: $tutor-spacing-4;

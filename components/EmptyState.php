@@ -159,8 +159,16 @@ class EmptyState extends BaseComponent {
 			);
 		}
 
+		// Merge custom classes.
+		$wrapper_classes = 'tutor-px-9 tutor-py-10 tutor-flex-center-col';
+		if ( ! empty( $this->attributes['class'] ) ) {
+			$wrapper_classes .= ' ' . $this->attributes['class'];
+			unset( $this->attributes['class'] );
+		}
+		$this->attributes['class'] = $wrapper_classes;
+
 		$this->component_string = sprintf(
-			'<div class="tutor-px-9 tutor-py-10 tutor-flex-center-col" %s>
+			'<div %s>
 				%s
 				<div class="tutor-small tutor-text-subdued tutor-mt-4">%s</div>
 				%s

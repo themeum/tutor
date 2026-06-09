@@ -78,6 +78,8 @@ function EuropeanUnionTax() {
                   }}
                 />
                 <Button
+                  isIconOnly
+                  aria-label={__('Delete', 'tutor')}
                   variant="text"
                   icon={<SVGIcon name="delete" style={styles.deleteIcon} />}
                   onClick={() => {
@@ -95,7 +97,7 @@ function EuropeanUnionTax() {
           </>
         );
       },
-      width: 120,
+      width: '120px',
     },
   ];
 

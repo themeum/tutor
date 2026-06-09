@@ -1,6 +1,6 @@
+import { backendUrls } from '@Cypress/config/page-urls';
+import { loginAsAdmin } from '@Cypress/support/auth';
 import endpoints from '@TutorShared/utils/endpoints';
-import { backendUrls } from 'cypress/config/page-urls';
-import { loginAsAdmin } from 'cypress/support/auth';
 
 describe('Content Bank - Actions', () => {
   let collectionId: string;

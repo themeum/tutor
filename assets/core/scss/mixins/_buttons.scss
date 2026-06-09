@@ -25,7 +25,8 @@
   box-shadow: $tutor-button-border-shadow;
   @include tutor-transition((color, background-color));
 
-  &:hover:not(:disabled):not(.disabled) {
+  &:hover:not(:disabled):not(.disabled),
+  &:focus:not(:disabled):not(.disabled) {
     background-color: transparent;
     border: none;
     outline: none;
@@ -33,11 +34,7 @@
     --tutor-button-border-shadow: #{$tutor-button-primary-border-shadow};
   }
 
-  &:focus:not(:disabled):not(.disabled) {
-    background-color: transparent;
-    border: none;
-    color: $tutor-text-primary;
-    --tutor-button-border-shadow: #{$tutor-button-primary-border-shadow};
+  &:focus-visible:not(:disabled):not(.disabled) {
     @include tutor-focus-ring;
   }
 

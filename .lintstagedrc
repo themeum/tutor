@@ -1,4 +1,4 @@
 {
-  "*.{ts,tsx}": ["pnpm exec eslint --fix"],
+  "*.{ts,tsx}": ["pnpm exec eslint --fix", "bash -c 'pnpm exec tsc --noEmit'"],
   "*.{ts,tsx,jsonc,md}": ["pnpm exec prettier --write"]
 }

@@ -473,7 +473,7 @@ class Quiz_Attempts_List {
 		if ( User::is_student_view() ) {
 			Button::make()
 				->label( __( 'Details', 'tutor' ) )
-				->icon( Icon::RESOURCES, 'left', 20, 20 )
+				->icon( Icon::RESOURCES, 'left', 20 )
 				->size( Size::MEDIUM )
 				->tag( 'a' )
 				->attr( 'href', $this->get_review_url( $attempt ) )
@@ -486,17 +486,21 @@ class Quiz_Attempts_List {
 	 * Get kebab button for quiz attempt popover.
 	 *
 	 * @since 4.0.0
+	 * 
+	 * @param string $size the size of the button.
 	 *
 	 * @return string
 	 */
-	private function get_kebab_button() {
+	private function get_kebab_button( $size = Size::X_SMALL ) {
 		$kebab_button = Button::make()
+				->label(__( 'More options', 'tutor' ) )
 				->icon( Icon::ELLIPSES )
+				->icon_only()
 				->attr( 'x-ref', 'trigger' )
 				->attr( '@click', 'toggle()' )
 				->attr( 'class', 'tutor-quiz-item-result-more' )
-				->variant( 'secondary' )
-				->size( Size::X_SMALL )
+				->variant( Variant::SECONDARY )
+				->size( $size )
 				->get();
 		return $kebab_button;
 	}
@@ -570,7 +574,7 @@ class Quiz_Attempts_List {
 		}
 
 		$popover = Popover::make()
-			->trigger( $this->get_kebab_button() )
+			->trigger( $this->get_kebab_button( $show_details ? Size::X_SMALL : Size::MEDIUM ) )
 			->placement( 'bottom' )
 			->menu_min_width( '110px' );
 
@@ -661,7 +665,7 @@ class Quiz_Attempts_List {
 	public function render_quiz_attempt_buttons( $attempt = array() ) {
 		Button::make()
 			->label( __( 'Details', 'tutor' ) )
-			->icon( Icon::RESOURCES, 'left', 20, 20 )
+			->icon( Icon::RESOURCES, 'left', 20 )
 			->size( Size::MEDIUM )
 			->tag( 'a' )
 			->attr( 'href', $this->get_review_url( $attempt ) )
@@ -670,7 +674,7 @@ class Quiz_Attempts_List {
 
 		Button::make()
 			->label( __( 'Delete', 'tutor' ) )
-			->icon( Icon::DELETE_2, 'left', 20, 20 )
+			->icon( Icon::DELETE_2, 'left', 20 )
 			->size( Size::MEDIUM )
 			->attr( '@click', sprintf( 'TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });', $attempt['attempt_id'] ?? 0 ) )
 			->variant( 'secondary' )

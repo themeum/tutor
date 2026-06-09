@@ -30,6 +30,10 @@
     }
   }
 
+  &:focus-visible {
+    @include tutor-focus-ring();
+  }
+
   &-header {
     @include tutor-flex(row, center, space-between);
   }
@@ -111,8 +115,6 @@
   }
 
   &-time-spent {
-    cursor: pointer;
-
     .tutor-stat-card-icon {
       color: $tutor-text-exception4;
     }

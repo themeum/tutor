@@ -12,12 +12,14 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
+use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use Tutor\Components\Constants\Variant;
 use TUTOR\Input;
 use TUTOR\User;
 
@@ -113,9 +115,17 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 			</div>
 			<div class="tutor-ml-auto">
 				<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-quiz-item-result-more">
-					<button class="tutor-btn tutor-btn-ghost tutor-btn-icon tutor-btn-x-small" x-ref="trigger" @click="toggle()">
-						<?php SvgIcon::make()->name( Icon::ELLIPSES )->size( 16 )->color( Color::SECONDARY )->render(); ?>
-					</button>
+					<?php
+					Button::make()
+						->label( __( 'More options', 'tutor' ) )
+						->variant( Variant::GHOST )
+						->size( Size::X_SMALL )
+						->icon( Icon::ELLIPSES, 'left', Size::SIZE_16, Color::SECONDARY )
+						->icon_only()
+						->attr( 'x-ref', 'trigger' )
+						->attr( '@click', 'toggle()' )
+						->render();
+					?>
 
 					<div 
 						x-ref="content"

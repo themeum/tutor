@@ -60,14 +60,16 @@ const FormMatching = ({
   validationError,
   setValidationError,
 }: FormMatchingProps) => {
-  const inputValue = field.value ?? {
-    answer_id: '',
-    answer_title: '',
-    answer_two_gap_match: '',
-    is_correct: '0',
-    belongs_question_id: questionId,
-    belongs_question_type: 'matching',
-  };
+  const inputValue =
+    field.value ??
+    ({
+      answer_id: '',
+      answer_title: '',
+      answer_two_gap_match: '',
+      is_correct: '0',
+      belongs_question_id: questionId,
+      belongs_question_type: 'matching',
+    } as QuizQuestionOption);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isEditing, setIsEditing] = useState(
@@ -77,7 +79,7 @@ const FormMatching = ({
   const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: field.value.answer_id || 0,
+    id: field.value?.answer_id || 0,
     animateLayoutChanges,
   });
   const { openMediaLibrary, resetFiles } = useWPMedia({
