@@ -58,8 +58,8 @@ const DEFAULT_CONFIG: Required<TutorToastConfig> = {
   maxVisible: 5,
   dir: 'auto',
   offset: {
-    x: 16,
-    y: 16,
+    x: 20,
+    y: 20,
     mobile: { y: 12 },
     lg: {},
   },
