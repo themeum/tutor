@@ -72,12 +72,12 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 							<div class="tutor-col-auto">
 								<div class="tutor-given-review-actions tutor-d-flex">
 									<span class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" role="button">
-										<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+										<i class="tutor-icon-edit tutor-mr-8" aria-hidden="true"></i>
 										<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 									</span>
 
 									<span class="tutor-btn tutor-btn-ghost tutor-ml-16" data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" role="button">
-										<i class="tutor-icon-trash-can-line tutor-mr-8"  area-hidden="true"></i>
+										<i class="tutor-icon-trash-can-line tutor-mr-8"  aria-hidden="true"></i>
 										<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 									</span>
 								</div>
@@ -95,7 +95,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 						<div class="tutor-modal-window">
 							<div class="tutor-modal-content tutor-modal-content-white">
 								<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-									<span class="tutor-icon-times" area-hidden="true"></span>
+									<span class="tutor-icon-times" aria-hidden="true"></span>
 								</button>
 
 								<div class="tutor-modal-body tutor-text-center">

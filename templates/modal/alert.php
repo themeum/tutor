@@ -22,7 +22,7 @@ $close   = isset( $close ) ? (bool) $close : true;
 		<div class="tutor-modal-content tutor-modal-content-white">
 			<?php if ( $close ) : ?>
 			<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-				<span class="tutor-icon-times" area-hidden="true"></span>
+				<span class="tutor-icon-times" aria-hidden="true"></span>
 			</button>
 			<?php endif; ?>
 			<div class="tutor-modal-body tutor-text-center">

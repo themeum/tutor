@@ -15,7 +15,7 @@
 	<div class="tutor-modal-window">
 		<div class="tutor-modal-content tutor-modal-content-white">
 			<button type="button" class="tutor-iconic-btn tutor-modal-close-o">
-				<span class="tutor-icon-times" area-hidden="true"></span>
+				<span class="tutor-icon-times" aria-hidden="true"></span>
 			</button>
 
 			<div class="tutor-modal-body tutor-text-center">

@@ -137,7 +137,7 @@ $filters = array(
 											<?php echo esc_html( $list->display_name ); ?>
 										</span>
 										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, false ) ); ?>" class="tutor-iconic-btn" target="_blank">
-											<span class="tutor-icon-external-link" area-hidden="True"></span>
+											<span class="tutor-icon-external-link" aria-hidden="True"></span>
 										</a>
 									</div>
 								</td>

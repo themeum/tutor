@@ -375,15 +375,15 @@ class RestAuth {
 			<td>
 				<div class="tutor-dropdown-parent">
 					<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-						<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+						<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 					</button>
 					<div class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 						<a href="javascript:void(0)" class="tutor-dropdown-item" data-tutor-modal-target="tutor-update-permission-modal" data-update-id="<?php echo esc_attr( $meta_id ); ?>" data-permission="<?php echo esc_attr( $permission ); ?>" data-description="<?php echo esc_attr( $description ); ?>">
-							<i class="tutor-icon-edit tutor-mr-8" area-hidden="true" data-update-id="<?php echo esc_attr( $meta_id ); ?>" data-permission="<?php echo esc_attr( $permission ); ?>" data-description="<?php echo esc_attr( $description ); ?>"></i>
+							<i class="tutor-icon-edit tutor-mr-8" aria-hidden="true" data-update-id="<?php echo esc_attr( $meta_id ); ?>" data-permission="<?php echo esc_attr( $permission ); ?>" data-description="<?php echo esc_attr( $description ); ?>"></i>
 							<span data-update-id="<?php echo esc_attr( $meta_id ); ?>" data-permission="<?php echo esc_attr( $permission ); ?>" data-description="<?php echo esc_attr( $description ); ?>"><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 						</a>
 						<a href="javascript:void(0)" class="tutor-dropdown-item" data-meta-id="<?php echo esc_attr( $meta_id ); ?>">
-							<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true" data-meta-id="<?php echo esc_attr( $meta_id ); ?>"></i>
+							<i class="tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true" data-meta-id="<?php echo esc_attr( $meta_id ); ?>"></i>
 							<span data-meta-id="<?php echo esc_attr( $meta_id ); ?>"><?php esc_html_e( 'Revoke', 'tutor' ); ?></span>
 						</a>
 					</div>

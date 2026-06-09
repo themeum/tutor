@@ -15,7 +15,7 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
 	<div class="tutor-modal-window tutor-modal-window-sm">
 		<div class="tutor-modal-content tutor-modal-content-white">
 			<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-				<span class="tutor-icon-times" area-hidden="true"></span>
+				<span class="tutor-icon-times" aria-hidden="true"></span>
 			</button>
 
 			<div class="tutor-modal-body">

@@ -13,7 +13,7 @@ $passing_grade = tutor_utils()->get_quiz_option( get_the_ID(), 'passing_grade', 
 <?php if ( ! empty( $back_url ) ) : ?>
 	<div class="tutor-mb-24">
 		<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $back_url ); ?>">
-			<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
+			<span class="tutor-icon-previous tutor-mr-8" aria-hidden="true"></span>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>

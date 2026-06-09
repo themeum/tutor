@@ -23,7 +23,7 @@ $password_error = get_transient( 'tutor_post_password_error' );
 		<div class="tutor-modal-window" style="max-width: 834px;">
 			<div class="tutor-modal-content tutor-bg-white tutor-p-40">
 				<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" class="tutor-iconic-btn tutor-modal-close-o">
-					<span class="tutor-icon-times" area-hidden="true"></span>
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</a>
 				<div class="tutor-row">
 					<div class="tutor-col-md-7">

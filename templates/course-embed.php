@@ -60,14 +60,14 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 			<div class="tutor-meta tutor-mt-12 tutor-mb-20">
 				<?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
 					<div>
-						<span class="tutor-meta-icon tutor-icon-user-line" area-hidden="true"></span>
+						<span class="tutor-meta-icon tutor-icon-user-line" aria-hidden="true"></span>
 						<span class="tutor-meta-value"><?php echo esc_html( $course_students ); ?></span>
 					</div>
 				<?php endif; ?>
 
 				<?php if ( ! empty( $course_duration ) ) : ?>
 					<div>
-						<span class="tutor-icon-clock-line tutor-meta-icon" area-hidden="true"></span>
+						<span class="tutor-icon-clock-line tutor-meta-icon" aria-hidden="true"></span>
 						<span class="tutor-meta-value">
 							<?php
 								//phpcs:ignore --data sanitize through helper method

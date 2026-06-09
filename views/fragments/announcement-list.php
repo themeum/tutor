@@ -40,7 +40,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<?php echo esc_html( $title ); ?>
 					</div>
 					<button class="tutor-modal-close tutor-iconic-btn" data-tutor-modal-close role="button">
-						<span class="tutor-icon-times" area-hidden="true"></span>
+						<span class="tutor-icon-times" aria-hidden="true"></span>
 					</button>
 				</div>
 
@@ -119,13 +119,13 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 		<div class="tutor-modal-window">
 			<div class="tutor-modal-content tutor-modal-content-white">
 				<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 
 				<div class="tutor-modal-body">
 					<div class="tutor-py-20 tutor-px-24">
 						<span class="tutor-round-box tutor-round-box-lg tutor-mb-32">
-							<i class="tutor-icon-bullhorn" area-hidden="true"></i>
+							<i class="tutor-icon-bullhorn" aria-hidden="true"></i>
 						</span>
 						<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-24">
 							<?php echo esc_html( $announcement->post_title ); ?>
@@ -135,7 +135,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 						</div>
 					</div>
 
-					<div class="tutor-mx-n32 tutor-my-32"><div class="tutor-hr" area-hidden="true"></div></div>
+					<div class="tutor-mx-n32 tutor-my-32"><div class="tutor-hr" aria-hidden="true"></div></div>
 
 					<div class="tutor-py-20 tutor-px-24">
 						<div class="tutor-row tutor-mb-60">
@@ -202,7 +202,7 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 		<div class="tutor-modal-window">
 			<div class="tutor-modal-content tutor-modal-content-white">
 				<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 
 				<div class="tutor-modal-body tutor-text-center">
@@ -312,18 +312,18 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 
 							<div class="tutor-dropdown-parent">
 								<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-									<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+									<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 								</button>
 								<ul class="tutor-dropdown tutor-dropdown-dark">
 									<li>
 										<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo esc_attr( $update_modal_id ); ?>">
-											<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+											<i class="tutor-icon-edit tutor-mr-8" aria-hidden="true"></i>
 											<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 										</a>
 									</li>
 									<li>
 										<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo esc_attr( $delete_modal_id ); ?>">
-											<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+											<i class="tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true"></i>
 											<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 										</a>
 									</li>

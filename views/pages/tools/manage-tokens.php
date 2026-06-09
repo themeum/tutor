@@ -83,7 +83,7 @@ $user        = get_userdata( get_current_user_id() );
 					<?php esc_html_e( 'Generate API Key, Secret', 'tutor' ); ?>
 				</div>
 				<button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 			</div>
 
@@ -148,7 +148,7 @@ $user        = get_userdata( get_current_user_id() );
 					<?php esc_html_e( 'Update API', 'tutor' ); ?>
 				</div>
 				<button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 			</div>
 

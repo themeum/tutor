@@ -344,7 +344,7 @@ $filters = array(
 				<div class="tutor-modal-window">
 					<form id="tutor-admin-withdraw-approve-form" class="tutor-modal-content tutor-modal-content-white">
 						<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-							<span class="tutor-icon-times" area-hidden="true"></span>
+							<span class="tutor-icon-times" aria-hidden="true"></span>
 						</button>
 
 						<div class="tutor-modal-body tutor-text-center">
@@ -395,7 +395,7 @@ $filters = array(
 				<div class="tutor-modal-window">
 					<form id="tutor-admin-withdraw-reject-form" class="tutor-modal-content tutor-modal-content-white">
 						<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-							<span class="tutor-icon-times" area-hidden="true"></span>
+							<span class="tutor-icon-times" aria-hidden="true"></span>
 						</button>
 
 						<div class="tutor-modal-body tutor-text-center">

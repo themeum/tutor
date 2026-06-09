@@ -28,7 +28,7 @@ $share_config = array(
 	<div class="tutor-modal-window">
 		<div class="tutor-modal-content tutor-modal-content-white">
 			<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-				<span class="tutor-icon-times" area-hidden="true"></span>
+				<span class="tutor-icon-times" aria-hidden="true"></span>
 			</button>
 			<div class="tutor-modal-body">
 				<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16">

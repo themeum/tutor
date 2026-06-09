@@ -283,7 +283,7 @@ $filters = array(
 						<?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
 					</div>
 					<button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
-						<span class="tutor-icon-times" area-hidden="true"></span>
+						<span class="tutor-icon-times" aria-hidden="true"></span>
 					</button>
 				</div>
 
@@ -411,7 +411,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 		<div class="tutor-modal-window tutor-modal-window-sm">
 			<div class="tutor-modal-content tutor-modal-content-white">
 				<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-py-lg-64">
