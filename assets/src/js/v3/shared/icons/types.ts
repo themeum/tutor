@@ -346,6 +346,7 @@ export const icons = [
   'report',
   'requirements',
   'resources',
+  'rightArrowUp',
   'rotate',
   'rtf',
   'sale',

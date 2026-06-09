@@ -10,8 +10,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\SvgIcon;
+use TUTOR\Dashboard;
+use TUTOR\Icon;
+use TUTOR\User;
 
 global $wp_query;
 
@@ -92,6 +97,17 @@ $dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
 			?>
 		</ul>
 	</div>
+	<?php if ( User::is_student_view() ) : ?>
+	<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" target="_blank" class="tutor-see-all-courses">
+		<?php esc_html_e( 'Explore Courses', 'tutor' ); ?>
+		<?php
+		SvgIcon::make()
+			->name( Icon::RIGHT_ARROW_UP )
+			->size( tutor_utils()->is_kids_mode() ? Size::SIZE_24 : Size::SIZE_20 )
+			->render();
+		?>
+	</a>
+	<?php endif; ?>
 </div>
 <?php
 	tutor_load_template(

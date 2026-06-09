@@ -92,4 +92,24 @@
       }
     }
   }
+
+  .tutor-see-all-courses {
+    width: calc(100% - 32px);
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-3;
+    @include tutor-typography(small);
+    padding: $tutor-spacing-4 $tutor-spacing-8;
+    border-radius: $tutor-radius-md;
+    @include tutor-transition(background-color);
+    outline: none;
+
+    position: absolute;
+    left: $tutor-spacing-6;
+    bottom: $tutor-spacing-8;
+
+    &:hover,
+    &:focus {
+      background-color: $tutor-tab-sidebar-l2-hover;
+    }
+  }
 }
