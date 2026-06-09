@@ -1436,8 +1436,9 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 					$conditional_buttons->show_retake_course_btn = true;
 				}
 			} else {
+				$monetize_by    = tutor_utils()->get_option( 'monetize_by' );
 				$is_paid_course = tutor_utils()->is_course_purchasable( $course_id );
-				if ( $is_paid_course ) {
+				if ( 'free' !== $monetize_by && $is_paid_course ) {
 					if ( tutor_is_item_in_cart( $course_id ) ) {
 						$conditional_buttons->show_view_cart_btn = true;
 					} else {

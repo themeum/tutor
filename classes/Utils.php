@@ -5002,7 +5002,7 @@ class Utils {
 	 *
 	 * @return array|mixed
 	 */
-	public function get_question_types( $type = null ) {
+	public function get_question_types( $type = '' ) {
 		$types = array(
 			'true_false'        => array(
 				'name'   => __( 'True/False', 'tutor' ),
@@ -9469,14 +9469,16 @@ class Utils {
 				);
 			}
 
+			$content_type = $result->content_type ?? '';
+
 			// Create content key.
-			if ( ! array_key_exists( $result->content_type, $course_meta[ $result->course_id ] ) ) {
-				$course_meta[ $result->course_id ][ $result->content_type ] = array();
+			if ( ! array_key_exists( $content_type, $course_meta[ $result->course_id ] ) ) {
+				$course_meta[ $result->course_id ][ $content_type ] = array();
 			}
 
 			try {
 				if ( $result->content_id ) {
-					$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
+					$course_meta[ $result->course_id ][ $content_type ][] = $result->content_id;
 				}
 			} catch ( \Throwable $th ) {
 				tutor_log( 'Affected course ID : ' . $result->course_id . ' Error : ' . $th->getMessage() );
