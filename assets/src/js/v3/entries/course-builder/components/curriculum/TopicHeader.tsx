@@ -128,10 +128,19 @@ const TopicHeader = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
+  const summaryValue = form.watch('summary') ?? '';
+  const hasSummary = summaryValue.trim().length > 0;
+
   return (
     <>
       <div css={styles.header({ isCollapsed: topic.isCollapsed, isEdit, isDeletePopoverOpen, isDragging })}>
-        <div css={styles.headerContent({ isSaved: topic.isSaved })}>
+        <div
+          css={styles.headerContent({
+            isSaved: topic.isSaved,
+            isCollapsed: topic.isCollapsed,
+            hasSummary,
+          })}
+        >
           <div
             css={styles.grabberInput}
             onClick={() => onCollapse(topic.id)}
@@ -253,10 +262,10 @@ const TopicHeader = ({
         <Show
           when={isEdit}
           fallback={
-            <Show when={topic.summary.length > 0}>
+            <Show when={hasSummary}>
               <animated.div style={{ ...collapseAnimationDescription }}>
                 <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
-                  {form.watch('summary')}
+                  {summaryValue}
                 </div>
               </animated.div>
             </Show>
@@ -271,7 +280,7 @@ const TopicHeader = ({
                   {...controllerProps}
                   placeholder={__('Add a summary', 'tutor')}
                   isSecondary
-                  rows={2}
+                  rows={5}
                   enableResize
                 />
               )}
@@ -377,11 +386,6 @@ const styles = {
     `}
 
     ${!isEdit &&
-    css`
-      padding-bottom: 0;
-    `}
-
-    ${!isEdit &&
     !isDeletePopoverOpen &&
     css`
       [data-visually-hidden] {
@@ -403,12 +407,20 @@ const styles = {
       }
     }
   `,
-  headerContent: ({ isSaved = true }: { isSaved: boolean }) => css`
+  headerContent: ({
+    isSaved = true,
+    isCollapsed = false,
+    hasSummary = false,
+  }: {
+    isSaved: boolean;
+    isCollapsed: boolean;
+    hasSummary: boolean;
+  }) => css`
     display: grid;
     grid-template-columns: ${isSaved ? '1fr auto' : '1fr'};
     gap: ${spacing[12]};
     width: 100%;
-    padding-bottom: ${spacing[12]};
+    padding-bottom: ${!isCollapsed && hasSummary ? spacing[12] : '0px'};
   `,
   grabberInput: css`
     ${styleUtils.display.flex()};
@@ -455,7 +467,6 @@ const styles = {
     color: ${colorTokens.text.hints};
     padding-inline: ${spacing[8]};
     margin-left: ${spacing[24]};
-    padding-bottom: ${spacing[12]};
 
     ${!isEdit &&
     css`
@@ -464,6 +475,7 @@ const styles = {
 
     ${isEdit &&
     css`
+      padding-top: ${spacing[12]};
       padding-right: 0;
     `}
   `,
@@ -473,6 +485,7 @@ const styles = {
     ${styleUtils.display.flex()};
     gap: ${spacing[8]};
     justify-content: end;
+    margin-top: ${spacing[12]};
   `,
   actions: css`
     ${styleUtils.display.flex()};
