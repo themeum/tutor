@@ -362,6 +362,7 @@ final class Icon {
 	const REPORT                     = 'report';
 	const REQUIREMENTS               = 'requirements';
 	const RESOURCES                  = 'resources';
+	const RIGHT_ARROW_UP             = 'right-arrow-up';
 	const ROTATE                     = 'rotate';
 	const RTF                        = 'rtf';
 	const SALE                       = 'sale';
