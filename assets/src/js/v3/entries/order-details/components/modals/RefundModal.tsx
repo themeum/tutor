@@ -25,11 +25,12 @@ interface RefundModalProps extends ModalProps {
   order_id: number;
   order_type: string;
   payment_method: string;
+  enrollment_status?: string;
 }
 
 interface FormField {
   amount: number;
-  is_remove_enrolment: boolean;
+  is_remove_enrolment?: boolean;
   is_cancel_subscription: boolean;
   reason: string;
 }
@@ -42,14 +43,17 @@ function RefundModal({
   order_id,
   order_type,
   payment_method,
+  enrollment_status,
 }: RefundModalProps) {
   const refundOrderMutation = useRefundOrderMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
       amount: 0,
-      is_remove_enrolment: false,
       is_cancel_subscription: false,
       reason: '',
+      ...(enrollment_status === 'completed' && {
+        is_remove_enrolment: false,
+      }),
     },
   });
   const amount = form.watch('amount', 0);
@@ -116,7 +120,7 @@ function RefundModal({
             )}
           />
 
-          {order_type === 'single_order' && (
+          {order_type === 'single_order' && enrollment_status === 'completed' && (
             <Controller
               control={form.control}
               name="is_remove_enrolment"
@@ -136,7 +140,7 @@ function RefundModal({
             <Alert type="warning" icon="bulb">
               {
                 // prettier-ignore
-                __( "Note: Refund won't be processed automatically. You are required to process the refund manually via the payment gateway.", 'tutor')
+                __("Note: Refund won't be processed automatically. You are required to process the refund manually via the payment gateway.", 'tutor')
               }
             </Alert>
           </Show>

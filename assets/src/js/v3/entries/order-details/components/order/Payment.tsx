@@ -253,6 +253,7 @@ function Payment() {
                     order_id: order.id,
                     order_type: order.order_type,
                     payment_method: order.payment_method,
+                    enrollment_status: order.enrollment?.status,
                   },
                 });
               }
