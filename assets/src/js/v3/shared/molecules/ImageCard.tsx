@@ -1,6 +1,8 @@
-import { borderRadius, colorTokens } from '@TutorShared/config/styles';
-import productPlaceholder from '@SharedImages/course-placeholder.png';
 import { css } from '@emotion/react';
+
+import { borderRadius, colorTokens } from '@TutorShared/config/styles';
+
+import productPlaceholder from '@SharedImages/course-placeholder.png';
 
 interface ImageProps {
   name: string;

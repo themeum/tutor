@@ -1,17 +1,18 @@
+import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
 
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
+
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 
 import {
   type ImportContentResponse,
   type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
-import { colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
 
 import ImportExportCompletedState from './import-export-states/ImportExportCompletedState';
 import ImportExportProgressState from './import-export-states/ImportExportProgressState';

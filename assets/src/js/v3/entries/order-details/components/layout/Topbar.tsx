@@ -1,17 +1,21 @@
-import CancelOrderModal from '@OrderDetails/components/modals/CancelOrderModal';
-import { OrderBadge } from '@OrderDetails/components/order/OrderBadge';
-import { PaymentBadge } from '@OrderDetails/components/order/PaymentBadge';
-import { useOrderContext } from '@OrderDetails/contexts/order-context';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import Container from '@TutorShared/components/Container';
 import { useModal } from '@TutorShared/components/modals/Modal';
+
 import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+
+import CancelOrderModal from '@OrderDetails/components/modals/CancelOrderModal';
+import { OrderBadge } from '@OrderDetails/components/order/OrderBadge';
+import { PaymentBadge } from '@OrderDetails/components/order/PaymentBadge';
+import { useOrderContext } from '@OrderDetails/contexts/order-context';
 
 export const TOPBAR_HEIGHT = 96;
 

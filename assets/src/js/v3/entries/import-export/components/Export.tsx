@@ -1,17 +1,12 @@
+import { useEffect } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { useModal } from '@TutorShared/components/modals/Modal';
 
-import ExportModal from '@ImportExport/components/modals/ExportModal';
-import {
-  convertExportFormDataToPayload,
-  useExportContentsMutation,
-  type ExportFormData,
-} from '@ImportExport/services/import-export';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -19,6 +14,13 @@ import { type ExportableContent } from '@TutorShared/services/import-export';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeParams } from '@TutorShared/utils/url';
 import { convertToErrorMessage, formatBytes } from '@TutorShared/utils/util';
+
+import ExportModal from '@ImportExport/components/modals/ExportModal';
+import {
+  convertExportFormDataToPayload,
+  type ExportFormData,
+  useExportContentsMutation,
+} from '@ImportExport/services/import-export';
 
 const CONTENT_BANK_PAGE = 'tutor-content-bank';
 const isTutorPro = !!tutorConfig.tutor_pro_url;

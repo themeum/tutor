@@ -1,5 +1,6 @@
+import { type DependencyList, useEffect, useRef, useState } from 'react';
+
 import { isDefined } from '@TutorShared/utils/types';
-import { useEffect, useRef, useState, type DependencyList } from 'react';
 
 type Args = IntersectionObserverInit & {
   freezeOnceVisible?: boolean;

@@ -1,8 +1,9 @@
+import React, { type ChangeEvent, type FocusEventHandler, type ReactNode } from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { nanoid } from '@TutorShared/utils/util';
-import { css, type SerializedStyles } from '@emotion/react';
-import React, { type ChangeEvent, type FocusEventHandler, type ReactNode } from 'react';
 
 interface CheckboxProps {
   id?: string;

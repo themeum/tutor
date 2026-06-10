@@ -1,10 +1,13 @@
+import { useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import {
+  closestCenter,
   DndContext,
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
   type UniqueIdentifier,
-  closestCenter,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -12,17 +15,12 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useMemo, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import FormMultipleChoiceAndOrdering from '@TutorShared/components/fields/quiz/questions/FormMultipleChoiceAndOrdering';
 
-import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
@@ -30,6 +28,9 @@ import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { QuizDataStatus, type QuizQuestionOption } from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';
+
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { type QuizForm } from '@CourseBuilderServices/quiz';
 
 const MultipleChoiceAndOrdering = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);

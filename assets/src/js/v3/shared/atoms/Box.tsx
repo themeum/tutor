@@ -1,8 +1,10 @@
+import React from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { css, type SerializedStyles } from '@emotion/react';
-import React from 'react';
+
 import SVGIcon from './SVGIcon';
 import Tooltip from './Tooltip';
 

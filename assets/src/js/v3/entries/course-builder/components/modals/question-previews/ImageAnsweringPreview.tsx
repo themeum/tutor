@@ -1,5 +1,5 @@
-import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
+import { __ } from '@wordpress/i18n';
 
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';

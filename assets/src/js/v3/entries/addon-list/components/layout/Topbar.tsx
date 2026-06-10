@@ -1,8 +1,11 @@
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import TextInput from '@TutorShared/atoms/TextInput';
+
 import { Breakpoint, colorTokens, fontSize, fontWeight, lineHeight, spacing } from '@TutorShared/config/styles';
-import { __ } from '@wordpress/i18n';
+
 import { useAddonContext } from '../../contexts/addon-context';
 import Container from './Container';
 

@@ -1,8 +1,10 @@
 // Preview Trigger Component
 // Shows course/lesson preview card on hover
 
-import { type AlpineComponentMeta } from '@Core/ts/types';
 import { __, sprintf } from '@wordpress/i18n';
+
+import { type AlpineComponentMeta } from '@Core/ts/types';
+
 import { popover, type PopoverProps } from './popover';
 
 export interface PreviewData {

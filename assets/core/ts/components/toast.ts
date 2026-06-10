@@ -1,7 +1,8 @@
+import { __ } from '@wordpress/i18n';
+
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { type AlpineToastData, type ToastConfig, type ToastItem, type ToastType } from '@Core/ts/types/toast';
-import { __ } from '@wordpress/i18n';
 
 export function createToast(): AlpineToastData {
   return {

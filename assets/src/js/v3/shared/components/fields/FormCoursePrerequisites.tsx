@@ -1,11 +1,9 @@
+import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from 'react';
 
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EmptyState from '@TutorShared/molecules/EmptyState';
-import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -14,13 +12,15 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+import EmptyState from '@TutorShared/molecules/EmptyState';
+import Popover from '@TutorShared/molecules/Popover';
 import { type Course } from '@TutorShared/services/course';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
-import notFound2x from '@SharedImages/not-found-2x.webp';
 import notFound from '@SharedImages/not-found.webp';
+import notFound2x from '@SharedImages/not-found-2x.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

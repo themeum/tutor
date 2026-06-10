@@ -1,6 +1,7 @@
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
-import { css, keyframes } from '@emotion/react';
 import React from 'react';
+import { css, keyframes } from '@emotion/react';
+
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 
 const GenerativeLoading = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className }, ref) => {

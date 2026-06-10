@@ -1,9 +1,12 @@
-import { type CourseFormData } from '@CourseBuilderServices/course';
-import { backendUrls } from '@Cypress/config/page-urls';
-import { loginAsAdmin } from '@Cypress/support/auth';
 import { faker } from '@faker-js/faker';
+
 import { Addons } from '@TutorShared/config/constants';
 import endpoints from '@TutorShared/utils/endpoints';
+
+import { type CourseFormData } from '@CourseBuilderServices/course';
+
+import { backendUrls } from '@Cypress/config/page-urls';
+import { loginAsAdmin } from '@Cypress/support/auth';
 
 describe('Paid Course Creation for WooCommerce', () => {
   let courseId: string;

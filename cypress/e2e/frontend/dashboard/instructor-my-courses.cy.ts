@@ -1,4 +1,5 @@
 import endpoints from '@TutorShared/utils/endpoints';
+
 import { backendUrls, frontendUrls } from '../../../config/page-urls';
 
 describe('Tutor Dashboard Instructor Settings', () => {

@@ -7,8 +7,8 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 
-import emptyStateImage2x from '@SharedImages/subscriptions-empty-state-2x.webp';
 import emptyStateImage from '@SharedImages/subscriptions-empty-state.webp';
+import emptyStateImage2x from '@SharedImages/subscriptions-empty-state-2x.webp';
 
 export const SubscriptionEmptyState = ({ onCreateSubscription }: { onCreateSubscription: () => void }) => {
   return (

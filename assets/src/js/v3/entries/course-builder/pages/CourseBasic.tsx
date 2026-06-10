@@ -1,25 +1,13 @@
+import { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
 
-import CourseBasicSidebar from '@CourseBuilderComponents/course-basic/CourseBasicSidebar';
-import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
-import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import FormEditableAlias from '@TutorShared/components/fields/FormEditableAlias';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
-import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
-import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
-import {
-  type CourseDetailsResponse,
-  type CourseFormData,
-  convertCourseDataToPayload,
-  useUpdateCourseMutation,
-} from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorShared/config/styles';
@@ -29,6 +17,19 @@ import { useUnlinkPageBuilderMutation } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { convertToSlug, determinePostStatus, findSlotFields } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
+
+import CourseBasicSidebar from '@CourseBuilderComponents/course-basic/CourseBasicSidebar';
+import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import {
+  convertCourseDataToPayload,
+  type CourseDetailsResponse,
+  type CourseFormData,
+  useUpdateCourseMutation,
+} from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 const courseId = getCourseId();
 let hasAliasChanged = false;

@@ -1,8 +1,15 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Controller } from 'react-hook-form';
+import { css, keyframes } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import MagicButton from '@TutorShared/atoms/MagicButton';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { Separator } from '@TutorShared/atoms/Separator';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import FormRangeSliderField from '@TutorShared/components/fields/FormRangeSliderField';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -12,10 +19,7 @@ import { useMagicFillImageMutation, useStoreAIGeneratedImageMutation } from '@Tu
 import { downloadBase64Image, getCanvas, getImageData } from '@TutorShared/utils/magic-ai';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { nanoid } from '@TutorShared/utils/util';
-import { css, keyframes } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
+
 import { DrawingCanvas } from './DrawingCanvas';
 import { useMagicImageGeneration } from './ImageContext';
 import { magicAIStyles } from './styles';

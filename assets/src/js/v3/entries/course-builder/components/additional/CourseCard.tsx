@@ -4,7 +4,6 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import { borderRadius, Breakpoint, colorTokens, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface CourseCardProps {

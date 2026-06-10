@@ -1,7 +1,8 @@
+import { createRef, type ReactNode, useEffect, useRef, useState } from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
+
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing } from '@TutorShared/config/styles';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type SerializedStyles, css } from '@emotion/react';
-import { type ReactNode, createRef, useEffect, useRef, useState } from 'react';
 
 type OrientationType = 'horizontal' | 'vertical';
 

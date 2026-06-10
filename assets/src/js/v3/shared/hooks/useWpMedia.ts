@@ -1,5 +1,5 @@
-import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 
 import { useToast } from '@TutorShared/atoms/Toast';
 

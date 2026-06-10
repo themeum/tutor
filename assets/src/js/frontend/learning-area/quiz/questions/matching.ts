@@ -1,6 +1,7 @@
-import type { AlpineComponentMeta } from '@Core/ts/types';
 import type { Draggable, Droppable } from '@dnd-kit/dom';
 import { __ } from '@wordpress/i18n';
+
+import type { AlpineComponentMeta } from '@Core/ts/types';
 
 const loadDndKit = async () => {
   const dom = await import(/* webpackChunkName: "tutor-dnd-kit" */ '@dnd-kit/dom');
