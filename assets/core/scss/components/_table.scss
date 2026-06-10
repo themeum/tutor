@@ -13,6 +13,20 @@
     border-radius: $tutor-radius-lg;
   }
 
+  &.tutor-table-column-borders {
+    table,
+    .tutor-table {
+      thead th,
+      tbody td {
+        @include border-end(1px solid $tutor-border-idle);
+        &:last-of-type,
+        &:last-child {
+          @include border-end(none);
+        }
+      }
+    }
+  }
+
   table {
     min-width: 600px;
     width: 100%;
@@ -66,18 +80,6 @@ table.tutor-table,
       padding: $tutor-spacing-5;
       vertical-align: middle;
       border: none;
-    }
-  }
-}
-
-.tutor-table-column-borders {
-  th,
-  td {
-    border-width: 0px 1px 0px 0px;
-    border-color: $tutor-border-idle;
-
-    &:last-of-type {
-      border-width: 0px 0px 0px 0px;
     }
   }
 }
