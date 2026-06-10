@@ -74,6 +74,44 @@ class QuizModel {
 		return QueryHelper::prepare_table_name( self::ATTEMPTS_TABLE );
 	}
 
+
+	/**
+	 * Get all quiz types which are only available in modern learning mode.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_modern_mode_quiz_types() {
+		return array(
+			self::QUESTION_TYPE_DRAW_IMAGE  => array(
+				'name'   => __( 'Mark in the image', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_SCALE       => array(
+				'name'   => __( 'Range', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-scale tutor-icon-slider-horizontal"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_PIN_IMAGE   => array(
+				'name'   => __( 'Pin', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_COORDINATES => array(
+				'name'   => __( 'Graph', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-coordinates tutor-icon-grid"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_PUZZLE      => array(
+				'name'   => __( 'Puzzle', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-puzzle tutor-icon-images"></i></span>',
+				'is_pro' => true,
+			),
+		);
+	}
+
 	/**
 	 * Get all question types
 	 *
@@ -135,33 +173,9 @@ class QuizModel {
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-ordering tutor-icon-ordering-z-a"></i></span>',
 				'is_pro' => true,
 			),
-			self::QUESTION_TYPE_DRAW_IMAGE        => array(
-				'name'   => __( 'Mark in the image', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
-				'is_pro' => true,
-			),
-			self::QUESTION_TYPE_SCALE             => array(
-				'name'   => __( 'Range', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-scale tutor-icon-slider-horizontal"></i></span>',
-				'is_pro' => true,
-			),
-			self::QUESTION_TYPE_PIN_IMAGE         => array(
-				'name'   => __( 'Pin', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
-				'is_pro' => true,
-			),
-			self::QUESTION_TYPE_COORDINATES       => array(
-				'name'   => __( 'Graph', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-coordinates tutor-icon-grid"></i></span>',
-				'is_pro' => true,
-			),
-			self::QUESTION_TYPE_PUZZLE            => array(
-				'name'   => __( 'Puzzle', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-puzzle tutor-icon-images"></i></span>',
-				'is_pro' => true,
-			),
 		);
 
+		$types = $types + self::get_modern_mode_quiz_types();
 		$types = apply_filters( 'tutor_get_question_types', $types );
 
 		if ( isset( $types[ $type ] ) ) {
