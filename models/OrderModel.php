@@ -1117,7 +1117,7 @@ class OrderModel {
 		$period_clause     = '';
 		$course_clause     = '';
 		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
-		$select_query      = " DATE_FORMAT(o.created_at_gmt, '%b') AS label_name, DATE(o.created_at_gmt) AS date_format ";
+		$select_query      = " DATE_FORMAT(o.created_at_gmt, '%%b') AS label_name, DATE(o.created_at_gmt) AS date_format ";
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
@@ -1130,7 +1130,7 @@ class OrderModel {
 
 			if ( $diff_days > 31 ) {
 				$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
-				$select_query = " DATE_FORMAT(o.created_at_gmt, '%b') AS label_name ";
+				$select_query = " DATE_FORMAT(o.created_at_gmt, '%%b') AS label_name ";
 
 			}
 		} else {
@@ -1139,7 +1139,7 @@ class OrderModel {
 
 		if ( in_array( $period, array( 'last90days', 'last365days', 'yearly' ), true ) ) {
 			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
-			$select_query = " DATE_FORMAT(o.created_at_gmt, '%b') AS label_name ";
+			$select_query = " DATE_FORMAT(o.created_at_gmt, '%%b') AS label_name ";
 		}
 
 		if ( $course_id ) {
@@ -1288,7 +1288,7 @@ class OrderModel {
 		$date_range_clause = '';
 		$period_clause     = '';
 		$group_clause      = ' GROUP BY DATE(order_meta.created_at_gmt) ';
-		$select_query      = " DATE_FORMAT(order_meta.created_at_gmt, '%b') AS label_name, order_meta.created_at_gmt AS date_format ";
+		$select_query      = " DATE_FORMAT(order_meta.created_at_gmt, '%%b') AS label_name, order_meta.created_at_gmt AS date_format ";
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
@@ -1301,7 +1301,7 @@ class OrderModel {
 
 			if ( $diff_days > 31 ) {
 				$group_clause = ' GROUP BY MONTH(order_meta.created_at_gmt) ';
-				$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%b') AS label_name ";
+				$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%%b') AS label_name ";
 			}
 		} else {
 			$period_clause = QueryHelper::get_period_clause( 'order_meta.created_at_gmt', $period );
@@ -1309,7 +1309,7 @@ class OrderModel {
 
 		if ( in_array( $period, array( 'last90days', 'last365days', 'yearly' ), true ) ) {
 			$group_clause = ' GROUP BY MONTH(order_meta.created_at_gmt) ';
-			$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%b') AS label_name ";
+			$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%%b') AS label_name ";
 		}
 
 		if ( $course_id ) {
