@@ -1409,9 +1409,9 @@ class CourseModel {
 	 *
 	 * @since 4.0.0
 	 *
-	 * If no date range is provided, all courses authored by the user are counted.
-	 * Courses without a `_wp_old_date` meta value are considered valid based on
-	 * their publish date.
+	 * If no date range is provided, returns the total course count for the instructor.
+	 * Course creation date is determined using the `_wp_old_date` meta value when available; otherwise, the course
+	 * post date is used.
 	 *
 	 * @param string|null $start_date Start date in Y-m-d format.
 	 * @param string|null $end_date   End date in Y-m-d format.
@@ -1421,50 +1421,29 @@ class CourseModel {
 	 */
 	public static function get_course_count_by_date( $start_date, $end_date, $user_id ) {
 
-		$common_args = array(
-			'post_author'    => $user_id,
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-		);
+		$user_id = tutor_utils()->get_user_id( $user_id );
 
 		if ( empty( $start_date ) && empty( $end_date ) ) {
-			return self::get_courses_by_args( $common_args )->post_count;
+			return (int) self::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX, true );
 		}
 
-		$by_date = self::get_courses_by_args(
-			$common_args +
-			array(
-				'date_query' => array(
-					'column'    => 'post_date_gmt',
-					'before'    => $end_date,
-					'after'     => $start_date,
-					'inclusive' => true,
-				),
-			)
-		);
+		$courses = self::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX );
 
-		$by_meta = self::get_courses_by_args(
-			$common_args +
-			array(
-				'meta_key'     => '_wp_old_date',
-				'meta_value'   => array( $start_date, $end_date ),
-				'meta_compare' => 'BETWEEN',
-				'meta_type'    => 'DATE',
-			)
-		);
+		if ( empty( $courses ) ) {
+			return 0;
+		}
 
-		$post_ids = array_unique( array_merge( (array) $by_date->posts, (array) $by_meta->posts ) );
+		$start_date_timestamp = strtotime( $start_date . ' 00:00:00' );
+		$end_date_timestamp   = strtotime( $end_date . ' 23:59:59' );
 
 		$filtered = array_filter(
-			$post_ids,
-			function ( int $post_id ) use ( $start_date, $end_date ): bool {
-				$old_date = get_post_meta( $post_id, '_wp_old_date', true ); // first value.
+			$courses,
+			function ( $course ) use ( $start_date_timestamp, $end_date_timestamp ) {
+				$creation_date = get_post_meta( $course->ID, '_wp_old_date', true );
 
-				if ( empty( $old_date ) ) {
-					return true;
-				}
+				$course_creation_date = empty( $creation_date ) ? strtotime( $course->post_date_gmt ) : strtotime( $creation_date );
 
-				return strtotime( $start_date ) <= $old_date && strtotime( $end_date ) >= $old_date;
+				return $start_date_timestamp <= $course_creation_date && $end_date_timestamp >= $course_creation_date;
 			}
 		);
 
