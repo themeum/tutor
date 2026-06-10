@@ -70,7 +70,7 @@ const FormImageInput = ({
     initialFiles: field.value,
   });
 
-  const fieldValue = field.value;
+  const fieldValue = field.value ?? null;
 
   const handleMediaButtonClick = () => {
     openMediaLibrary();

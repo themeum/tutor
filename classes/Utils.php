@@ -5005,7 +5005,7 @@ class Utils {
 	 *
 	 * @return array|mixed
 	 */
-	public function get_question_types( $type = null ) {
+	public function get_question_types( $type = '' ) {
 		$types = array(
 			'true_false'        => array(
 				'name'   => __( 'True/False', 'tutor' ),
@@ -7220,10 +7220,12 @@ class Utils {
 		$instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 
 		$settings_url          = Dashboard::get_account_page_url( 'settings' );
+		$social_settings_url   = Dashboard::get_account_page_url( 'settings?tab=social-accounts' );
 		$withdraw_settings_url = Dashboard::get_account_page_url( 'settings?tab=withdraw' );
 
 		$required_fields = array(
 			'_tutor_profile_photo' => __( 'Set Your Profile Photo', 'tutor' ),
+			'_tutor_social_links'  => __( 'Add Your Social Links', 'tutor' ),
 			'_tutor_profile_bio'   => __( 'Set Your Bio', 'tutor' ),
 		);
 
@@ -7232,16 +7234,31 @@ class Utils {
 			$required_fields['_tutor_withdraw_method_data'] = __( 'Set Withdraw Method', 'tutor' );
 		}
 
+		// Check if any individual social link meta is set.
+		$social_meta_keys = array_keys( $this->tutor_user_social_icons() );
+		$has_social_link  = false;
+		foreach ( $social_meta_keys as $social_key ) {
+			if ( get_user_meta( $user_id, $social_key, true ) ) {
+				$has_social_link = true;
+				break;
+			}
+		}
+
 		// url where user should redirect for profile completion.
 		$profile_completion_urls = array(
 			'_tutor_profile_photo'        => $settings_url,
 			'_tutor_profile_bio'          => $settings_url,
+			'_tutor_social_links'         => $social_settings_url,
 			'_tutor_withdraw_method_data' => $withdraw_settings_url,
 		);
 		foreach ( $required_fields as $key => $field ) {
+			$is_set = '_tutor_social_links' === $key
+				? $has_social_link
+				: (bool) get_user_meta( $user_id, $key, true );
+
 			$required_fields[ $key ] = array(
 				'text'   => $field,
-				'is_set' => get_user_meta( $user_id, $key, true ) ? true : false,
+				'is_set' => $is_set,
 				'url'    => $profile_completion_urls[ $key ],
 			);
 		}
@@ -9455,14 +9472,16 @@ class Utils {
 				);
 			}
 
+			$content_type = $result->content_type ?? '';
+
 			// Create content key.
-			if ( ! array_key_exists( $result->content_type, $course_meta[ $result->course_id ] ) ) {
-				$course_meta[ $result->course_id ][ $result->content_type ] = array();
+			if ( ! array_key_exists( $content_type, $course_meta[ $result->course_id ] ) ) {
+				$course_meta[ $result->course_id ][ $content_type ] = array();
 			}
 
 			try {
 				if ( $result->content_id ) {
-					$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
+					$course_meta[ $result->course_id ][ $content_type ][] = $result->content_id;
 				}
 			} catch ( \Throwable $th ) {
 				tutor_log( 'Affected course ID : ' . $result->course_id . ' Error : ' . $th->getMessage() );

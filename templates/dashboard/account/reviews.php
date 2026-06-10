@@ -31,7 +31,7 @@ $is_editable  = User::is_student_view();
 
 <?php require_once tutor_get_template( 'account-header' ); ?>
 
-<div class="tutor-user-reviews">
+<div class="tutor-user-reviews" role="main">
 	<div class="tutor-account-container">
 	<?php if ( is_array( $reviews ) && count( $reviews ) ) : ?>
 		<div class="tutor-flex tutor-flex-column tutor-gap-5">

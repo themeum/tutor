@@ -1213,7 +1213,7 @@ class QueryHelper {
 				$period_clause = "AND DATE($column) = CURDATE()";
 				break;
 			case 'monthly':
-				$period_clause = "AND MONTH($column) = MONTH(CURDATE())";
+				$period_clause = "AND MONTH($column) = MONTH(CURDATE()) AND YEAR($column)  = YEAR(CURDATE())";
 				break;
 			case 'yearly':
 				$period_clause = "AND YEAR($column) = YEAR(CURDATE())";

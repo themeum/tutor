@@ -130,6 +130,7 @@ export interface Order {
   updated_at_gmt?: string;
   updated_at_readable?: string;
   subscription_fees?: SubscriptionFees[];
+  enrollment?: { status: string };
 }
 
 interface Response {
@@ -190,7 +191,7 @@ export const useMarkAsPaidMutation = () => {
   });
 };
 
-const refundOrder = (params: { order_id: number; reason: string; is_remove_enrolment: boolean }) => {
+const refundOrder = (params: { order_id: number; reason: string; is_remove_enrolment?: boolean }) => {
   return wpAjaxInstance.post<unknown, Response>(endpoints.ORDER_REFUND, params);
 };
 

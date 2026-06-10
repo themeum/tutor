@@ -21,8 +21,19 @@ if ( ! tutor_utils()->count( $dashboard_pages ) ) {
 }
 
 $active_nav        = '';
-$visible_nav_items = array_slice( $dashboard_pages, 0, 3, true );
-$more_nav_items    = array_slice( $dashboard_pages, 3, null, true );
+$visible_nav_items = array_slice( $dashboard_pages, 0, 2, true );
+$more_nav_items    = array_slice( $dashboard_pages, 2, null, true );
+
+// Insert the Explore link after the first visible navigation item.
+$explore_nav_item = array(
+	'title' => __( 'Explore', 'tutor' ),
+	'icon'  => Icon::EXPLORE,
+	'url'   => tutor_utils()->course_archive_page_url(),
+);
+
+$visible_nav_items = array_slice( $visible_nav_items, 0, 1, true ) +
+		array( 'explore' => $explore_nav_item ) +
+		array_slice( $visible_nav_items, 1, null, true );
 
 ?>
 <div class="tutor-dashboard-nav-mobile" role="navigation">

@@ -15,7 +15,7 @@ import SearchField from './SearchField';
 
 interface CategoryListTableProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<Coupon, any, undefined>;
+  form: UseFormReturn<Coupon, any, any>;
 }
 
 const CategoryListTable = ({ form }: CategoryListTableProps) => {
@@ -83,7 +83,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
           </div>
         );
       },
-      width: 720,
+      width: '720px',
     },
   ];
 

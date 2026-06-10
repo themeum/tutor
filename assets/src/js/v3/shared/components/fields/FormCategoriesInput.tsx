@@ -156,11 +156,11 @@ const FormMultiLevelInput = ({
                         key={option.id}
                         disabled={disabled}
                         option={option}
-                        value={field.value}
+                        value={field.value || []}
                         isLastChild={index === treeOptions.length - 1}
                         onChange={(id) => {
                           field.onChange(
-                            produce(field.value, (draft) => {
+                            produce(field.value || [], (draft) => {
                               if (Array.isArray(draft)) {
                                 return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
                               }

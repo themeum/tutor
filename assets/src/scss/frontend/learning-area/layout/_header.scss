@@ -43,6 +43,7 @@
     width: 100%;
 
     @include tutor-breakpoint-down(sm) {
+      gap: $tutor-spacing-none;
       width: calc(100dvw - 44px - #{$tutor-spacing-6}); // 100dvw + toggle button width + padding
     }
   }
@@ -74,20 +75,13 @@
   }
 
   &-toggle-mobile {
-    @include tutor-button-reset();
-    @include tutor-flex-center();
     flex-shrink: 0;
     margin-inline-start: auto;
-    height: 44px;
-    width: 44px;
+    height: 40px;
+    width: 40px;
 
     @include tutor-breakpoint-up(lg) {
       display: none;
-    }
-
-    @include tutor-breakpoint-down(sm) {
-      height: 40px;
-      width: 40px;
     }
   }
 }

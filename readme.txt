@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://tutorlms.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.9.10
+Stable tag: 3.9.12
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -461,6 +461,16 @@ New: Lots of Micro-interactions with animations and sound effects to make lesson
 New: A new button “view as student” has been added to allow admin & instructor to change the dashboard view.
 New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
 New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
+
+= 3.9.12 - Jun 09, 2026
+
+Update: Added compatibility support for PHP 8.5
+Update: Added compatibility support for WordPress 7.0
+Update: Patched multiple security vulnerabilities.
+
+= 3.9.11 - May 20, 2026
+
+Update: Improved compatibility with Tutor LMS themes.
 
 = 3.9.10 - Apr 29, 2026
 

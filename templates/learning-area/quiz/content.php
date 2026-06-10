@@ -29,7 +29,8 @@ $total_marks        = Quiz::get_quiz_total_marks( $quiz_id );
 $passing_grade      = (int) ( $quiz_options['passing_grade'] ?? 0 );
 $quiz_time          = $quiz_options['time_limit'] ?? null;
 $has_time_limit     = is_array( $quiz_time ) && ! empty( $quiz_time['time_value'] ) && (int) $quiz_time['time_value'] > 0;
-$quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $quiz_time['time_type'] : null;
+$time_units         = Quiz::quiz_time_units();
+$quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $time_units[ $quiz_time['time_type'] ] : null;
 $quiz_attempt       = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id ?? get_current_user_id() );
 $earned_marks       = 0;
 

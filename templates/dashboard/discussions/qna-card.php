@@ -127,6 +127,7 @@ $single_url = UrlHelper::add_query_params(
 							class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon tutor-text-subdued"
 							@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'solved')"
 							:disabled="qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo esc_html( $question_id ); ?>"
+							:aria-label="isSolved ? '<?php echo esc_js( __( 'Mark as Unresolved', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Mark as Solved', 'tutor' ) ); ?>'"
 						>
 							<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo esc_html( $question_id ); ?>">
 								<?php SvgIcon::make()->name( Icon::SPINNER )->size( 14 )->attr( 'class', 'tutor-animate-spin' )->render(); ?>
@@ -160,6 +161,7 @@ $single_url = UrlHelper::add_query_params(
 							class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon tutor-text-subdued"
 							@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'important')"
 							:disabled="qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo esc_html( $question_id ); ?>"
+							:aria-label="isImportant ? '<?php echo esc_js( __( 'Mark as Not Important', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Mark as Important', 'tutor' ) ); ?>'"
 						>
 							<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo esc_html( $question_id ); ?>">
 								<?php SvgIcon::make()->name( Icon::SPINNER )->size( 14 )->attr( 'class', 'tutor-animate-spin' )->render(); ?>
@@ -206,10 +208,14 @@ $single_url = UrlHelper::add_query_params(
 			<div class="tutor-flex">
 				<?php
 				Button::make()
+					->label( __( 'More options', 'tutor' ) )
+					->variant( Variant::SECONDARY )
+					->size( Size::X_SMALL )
+					->icon( Icon::ELLIPSES, 'left', Size::SIZE_16, Color::SECONDARY )
+					->icon_only()
 					->attr( 'x-ref', 'trigger' )
 					->attr( '@click', 'toggle()' )
-					->attr( 'class', 'tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon tutor-discussion-card-actions-trigger' )
-					->icon( Icon::ELLIPSES )
+					->attr( 'class', 'tutor-discussion-card-actions-trigger' )
 					->render();
 				?>
 

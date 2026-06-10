@@ -282,6 +282,7 @@ final class Icon {
 	const MINUS                      = 'minus';
 	const MINUS_SQUARE               = 'minus-square';
 	const MONITOR_PLAY               = 'monitor-play';
+	const MORE                       = 'more';
 	const MOVE                       = 'move';
 	const MP3                        = 'mp3';
 	const MP4                        = 'mp4';
@@ -361,6 +362,7 @@ final class Icon {
 	const REPORT                     = 'report';
 	const REQUIREMENTS               = 'requirements';
 	const RESOURCES                  = 'resources';
+	const RIGHT_ARROW_UP             = 'right-arrow-up';
 	const ROTATE                     = 'rotate';
 	const RTF                        = 'rtf';
 	const SALE                       = 'sale';

@@ -15,7 +15,7 @@ import SearchField from './SearchField';
 
 interface CourseListTableProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<Coupon, any, undefined>;
+  form: UseFormReturn<Coupon, any, any>;
   type: 'bundles' | 'courses';
 }
 

@@ -78,7 +78,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 
 <?php require_once tutor_get_template( 'account-header' ); ?>
 
-<div class="tutor-user-withdrawals tutor-py-9 tutor-sm-py-6" x-data="tutorWithdrawals()">
+<div role="main" class="tutor-user-withdrawals tutor-py-9 tutor-sm-py-6" x-data="tutorWithdrawals()">
 	<div class="tutor-account-container">
 		<div class="tutor-card tutor-card-rounded-2xl">
 			<div class="tutor-withdrawal-available-header tutor-flex tutor-items-center tutor-justify-between">

@@ -10,6 +10,7 @@
 @forward 'layout/account';
 
 // Dashboard components
+@forward 'profile-completion';
 @forward 'stat-card';
 @forward 'progress-card';
 @forward 'course-card';
@@ -20,6 +21,7 @@
 @forward 'pages/courses';
 @forward 'pages/announcements';
 @forward 'pages/wishlist';
+@forward 'pages/student-dashboard';
 @forward 'pages/instructor-dashboard';
 
 // Account Pages

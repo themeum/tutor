@@ -97,6 +97,10 @@
     &.active {
       border-color: $tutor-border-brand;
     }
+
+    &:focus-visible {
+      @include tutor-focus-ring();
+    }
   }
 
   &-user-popover {

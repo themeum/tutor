@@ -64,11 +64,24 @@ const meta = {
       description: 'Disable the dropdown trigger.',
       defaultValue: false,
     },
-    arrowPosition: {
+    placement: {
       control: 'select',
-      options: ['top', 'bottom', 'left', 'right'],
-      description: 'Arrow position for dropdown.',
-      defaultValue: 'top',
+      options: [
+        'top',
+        'topLeft',
+        'topRight',
+        'bottom',
+        'bottomLeft',
+        'bottomRight',
+        'left',
+        'leftTop',
+        'leftBottom',
+        'right',
+        'rightTop',
+        'rightBottom',
+      ],
+      description: 'Placement of the dropdown popover.',
+      defaultValue: 'bottomRight',
     },
     animationType: {
       control: 'select',
@@ -100,7 +113,7 @@ const meta = {
     loading: false,
     dropdownMaxWidth: '140px',
     disabledDropdown: false,
-    arrowPosition: 'top',
+    placement: 'bottomRight',
     animationType: AnimationType.slideUp,
     tabIndex: 0,
     children: (

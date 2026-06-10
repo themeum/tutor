@@ -58,20 +58,22 @@ const FormImageAnswering = ({
   validationError,
   setValidationError,
 }: FormImageAnsweringProps) => {
-  const inputValue = field.value ?? {
-    answer_id: nanoid(),
-    answer_title: '',
-    is_correct: '0',
-    belongs_question_id: questionId,
-    belongs_question_type: 'image_answering',
-  };
+  const inputValue =
+    field.value ??
+    ({
+      answer_id: nanoid(),
+      answer_title: '',
+      is_correct: '0',
+      belongs_question_id: questionId,
+      belongs_question_type: 'image_answering',
+    } as QuizQuestionOption);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_id && !inputValue.image_url);
   const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: field.value.answer_id || 0,
+    id: field.value?.answer_id || 0,
     animateLayoutChanges,
   });
   const { openMediaLibrary, resetFiles } = useWPMedia({
@@ -91,7 +93,7 @@ const FormImageAnswering = ({
         });
       }
     },
-    initialFiles: field.value.image_id
+    initialFiles: field.value?.image_id
       ? {
           id: Number(inputValue.image_id),
           url: inputValue.image_url || '',
