@@ -19,25 +19,6 @@ const config: StorybookConfig = {
 
     rsbuildConfig.tools = rsbuildConfig.tools || {};
     rsbuildConfig.tools.bundlerChain = (chain, { rspack }) => {
-      chain.module
-        .rule('sass-inline')
-        .test(/\.s[ac]ss$/i)
-        .resourceQuery(/inline/)
-        .use('style-loader')
-        .loader('style-loader')
-        .end()
-        .use('css-loader')
-        .loader('css-loader')
-        .end()
-        .use('sass-loader')
-        .loader('sass-loader')
-        .options({
-          implementation: 'sass',
-          sassOptions: {
-            silenceDeprecations: ['abs-percent', 'color-functions', 'global-builtin', 'import', 'legacy-js-api'],
-          },
-        });
-
       chain.plugin('extra-define').use(rspack.DefinePlugin, [
         {
           __TUTOR_TEXT_DOMAIN__: {

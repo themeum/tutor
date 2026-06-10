@@ -1,6 +1,6 @@
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import ToastProvider from '@Core/ts/toast';
+import ToastProvider from '@TutorShared/atoms/Toast';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { SVGIconConfigProvider } from '@TutorShared/contexts/SVGIconConfigContext';
@@ -29,7 +29,7 @@ function App() {
     <RTLProvider>
       <QueryClientProvider client={queryClient}>
         <SVGIconConfigProvider>
-          <ToastProvider position="bottom-right">
+          <ToastProvider position="bottom-center">
             <ModalProvider>
               <Global styles={createGlobalCss()} />
               <Main />

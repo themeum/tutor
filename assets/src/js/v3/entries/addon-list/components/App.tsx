@@ -1,4 +1,4 @@
-import ToastProvider from '@Core/ts/toast';
+import ToastProvider from '@TutorShared/atoms/Toast';
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import RTLProvider from '@TutorShared/components/RTLProvider';
@@ -29,7 +29,7 @@ function App() {
     <RTLProvider>
       <QueryClientProvider client={queryClient}>
         <SVGIconConfigProvider>
-          <ToastProvider position="bottom-right">
+          <ToastProvider position="bottom-center">
             <Global styles={createGlobalCss()} />
             <Main />
           </ToastProvider>

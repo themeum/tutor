@@ -82,18 +82,6 @@ export interface TutorToastItem {
   duration: number;
 }
 
-export interface AlpineToastData {
-  init(): void;
-  show(message: string, config?: ToastConfig): string;
-  remove(id: string): void;
-  clear(): void;
-  dismiss(id?: string): void;
-  success(message: string, duration?: number): string;
-  error(message: string, duration?: number): string;
-  warning(message: string, duration?: number): string;
-  info(message: string, duration?: number): string;
-}
-
 export type ToastType = Extract<TutorToastType, 'info' | 'success' | 'warning' | 'error'>;
 export type ToastConfig = Pick<TutorToastOptions, 'type' | 'duration' | 'title' | 'description'> &
   Pick<TutorToastConfig, 'position'>;

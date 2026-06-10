@@ -1,6 +1,6 @@
 import routes from '@CourseBuilderConfig/routes';
 import { CourseBuilderSlotProvider } from '@CourseBuilderContexts/CourseBuilderSlotContext';
-import ToastProvider from '@Core/ts/toast';
+import ToastProvider from '@TutorShared/atoms/Toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
 import { SVGIconConfigProvider } from '@TutorShared/contexts/SVGIconConfigContext';
@@ -34,7 +34,7 @@ const App = () => {
     <RTLProvider>
       <QueryClientProvider client={queryClient}>
         <SVGIconConfigProvider>
-          <ToastProvider position="bottom-right">
+          <ToastProvider position="bottom-center">
             <CourseBuilderSlotProvider>
               <ModalProvider>
                 <Global styles={createGlobalCss()} />

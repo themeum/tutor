@@ -1,11 +1,9 @@
+import { toastServiceMeta } from '@Core/ts/services/toast/Toast';
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { type AlpineToastData, type ToastConfig } from '@Core/ts/types/toast';
-import { toastServiceMeta } from '@Core/ts/services/Toast';
+import { type ToastConfig } from '@Core/ts/types/toast';
 
-export function createToast(): AlpineToastData {
+const toast = () => {
   return {
-    init(): void {},
-
     show(message: string, config: ToastConfig = {}): string {
       return toastServiceMeta.instance.show(message, config);
     },
@@ -38,9 +36,9 @@ export function createToast(): AlpineToastData {
       return toastServiceMeta.instance.info(message, duration);
     },
   };
-}
+};
 
 export const toastMeta: AlpineComponentMeta = {
   name: 'toast',
-  component: createToast,
+  component: toast,
 };

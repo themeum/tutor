@@ -1,9 +1,9 @@
 import { type Alpine as AlpineType } from 'alpinejs';
 
 import { type TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
-import { type ToastService } from '@Core/ts/services/Toast';
+import { type ToastService } from '@Core/ts/services/toast/Toast';
+import { type ToastType } from '@Core/ts/services/ToastTypes';
 import { type TutorCore } from '@Core/ts/types';
-import { type ToastType } from '@Core/ts/types/toast';
 
 interface WPMediaFrameOptions {
   title?: string;

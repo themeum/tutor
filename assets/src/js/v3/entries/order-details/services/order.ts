@@ -1,4 +1,4 @@
-import { useToast } from '@Core/ts/toast';
+import { useToast } from '@TutorShared/atoms/Toast';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';

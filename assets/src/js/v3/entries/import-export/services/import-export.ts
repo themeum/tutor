@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type ErrorResponse } from 'react-router-dom';
 
-import { useToast } from '@Core/ts/toast';
+import { useToast } from '@TutorShared/atoms/Toast';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { type Course } from '@TutorShared/services/course';

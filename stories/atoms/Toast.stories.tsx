@@ -3,8 +3,6 @@ import Button from '@TutorShared/atoms/Button';
 import ToastProvider, { useToast } from '@TutorShared/atoms/Toast';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-import '../../assets/css/tutor-core.min.css';
-
 const meta = {
   title: 'Atoms/Toast',
   component: ToastProvider,
@@ -44,7 +42,7 @@ type Story = StoryObj<typeof meta>;
 const ToastDemo = () => {
   const { showToast } = useToast();
 
-  const handleShowToast = (type: 'success' | 'danger' | 'warning' | 'dark' | 'info') => () => {
+  const handleShowToast = (type: 'success' | 'danger' | 'warning' | 'dark') => () => {
     showToast({
       type,
       message: `This is a ${type} toast!`,
@@ -90,10 +88,6 @@ const ToastDemo = () => {
 
       <Button variant="secondary" onClick={handleShowToast('warning')} aria-label="Show Warning Toast" tabIndex={0}>
         Show Warning Toast
-      </Button>
-
-      <Button variant="tertiary" onClick={handleShowToast('info')} aria-label="Show Info Toast" tabIndex={0}>
-        Show Info Toast
       </Button>
 
       <Button variant="text" onClick={handleShowToast('dark')} aria-label="Show Dark Toast" tabIndex={0}>

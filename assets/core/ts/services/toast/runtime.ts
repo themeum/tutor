@@ -36,6 +36,12 @@ export interface TutorToastApi {
   configure: (options: TutorToastConfig) => void;
 }
 
+export interface TutorToastGlobal {
+  toast: TutorToastApi;
+  defaults: TutorToastConfig;
+  manager: TutorToastManager;
+}
+
 interface NormalizedTutorToastOptions {
   type: TutorToastType;
   title: string;
@@ -1127,11 +1133,7 @@ export function createTutorToastApi(
 }
 
 const sharedTarget = globalThis as typeof globalThis & {
-  __TUTOR_TOAST_SHARED__?: {
-    manager: TutorToastManager;
-    defaults: TutorToastConfig;
-    toast: TutorToastApi;
-  };
+  __TUTOR_TOAST_SHARED__?: TutorToastGlobal;
 };
 
 const sharedRuntime =

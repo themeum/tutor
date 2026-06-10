@@ -1,3 +1,4 @@
+import { tutorToastManager } from '@Core/ts/services/toast/runtime';
 import { type ServiceMeta } from '@Core/ts/types';
 import {
   type ToastConfig,
@@ -6,7 +7,6 @@ import {
   type TutorToastPromiseMessages,
   type TutorToastUpdateOptions,
 } from '@Core/ts/types/toast';
-import { tutorToastManager } from '@Core/ts/toast/runtime';
 
 export class ToastService {
   show(message: string, config: ToastConfig = {}): string {

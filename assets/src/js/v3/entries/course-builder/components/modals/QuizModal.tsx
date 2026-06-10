@@ -6,7 +6,7 @@ import { Controller, FormProvider } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { useToast } from '@Core/ts/toast';
+import { useToast } from '@TutorShared/atoms/Toast';
 
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';

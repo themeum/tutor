@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import Main from '@ImportExport/components/Main';
-import ToastProvider from '@Core/ts/toast';
+import ToastProvider from '@TutorShared/atoms/Toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
 import { SVGIconConfigProvider } from '@TutorShared/contexts/SVGIconConfigContext';

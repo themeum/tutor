@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
-import { useToast } from '@Core/ts/toast';
+import { useToast } from '@TutorShared/atoms/Toast';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
 import type { ContentDripType, GoogleMeet, ZoomMeeting } from '@CourseBuilderServices/course';
