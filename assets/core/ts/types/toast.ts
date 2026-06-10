@@ -1,4 +1,4 @@
-export type TutorToastType = 'success' | 'error' | 'warning' | 'info' | 'loading' | 'default';
+export type TutorToastType = 'success' | 'error' | 'warning' | 'info' | 'default';
 
 export type TutorToastPosition =
   | 'top-left'
@@ -38,7 +38,6 @@ export interface TutorToastOptions {
   icon?: string | null;
   action?: TutorToastAction;
   duration?: number;
-  progressBar?: boolean;
   closeButton?: boolean;
   dir?: 'ltr' | 'rtl' | 'auto';
   richColors?: boolean;
@@ -50,28 +49,12 @@ export interface TutorToastConfig {
   position?: TutorToastPosition;
   duration?: number;
   closeButton?: boolean;
-  progressBar?: boolean;
   maxVisible?: number;
   dir?: 'ltr' | 'rtl' | 'auto';
   offset?: TutorToastOffset;
   expandMode?: TutorToastExpandMode;
   richColors?: boolean;
   theme?: TutorToastTheme;
-}
-
-export interface TutorToastUpdateOptions {
-  type?: TutorToastType;
-  title?: string;
-  description?: string;
-  icon?: string | null;
-  duration?: number;
-  progressBar?: boolean;
-}
-
-export interface TutorToastPromiseMessages<T = unknown> {
-  loading: string | (() => string);
-  success: string | ((result: T) => string);
-  error: string | ((error: unknown) => string);
 }
 
 export interface TutorToastItem {

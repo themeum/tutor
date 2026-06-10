@@ -4,9 +4,7 @@ import {
   type ToastType,
   type TutorToastConfig,
   type TutorToastOptions,
-  type TutorToastPromiseMessages,
   type TutorToastType,
-  type TutorToastUpdateOptions,
 } from '@Core/ts/types/toast';
 
 interface TutorToastEntry {
@@ -29,17 +27,9 @@ export interface TutorToastApi {
   error: (message: string, options?: TutorToastOptions) => string;
   warning: (message: string, options?: TutorToastOptions) => string;
   info: (message: string, options?: TutorToastOptions) => string;
-  loading: (message: string, options?: TutorToastOptions) => string;
-  promise: <T>(promise: Promise<T>, messages: TutorToastPromiseMessages<T>, options?: TutorToastOptions) => string;
-  update: (id: string, options: TutorToastUpdateOptions) => void;
+
   dismiss: (id?: string) => void;
   configure: (options: TutorToastConfig) => void;
-}
-
-export interface TutorToastGlobal {
-  toast: TutorToastApi;
-  defaults: TutorToastConfig;
-  manager: TutorToastManager;
 }
 
 interface NormalizedTutorToastOptions {
@@ -49,7 +39,6 @@ interface NormalizedTutorToastOptions {
   icon: string | null;
   action: TutorToastOptions['action'] | null;
   duration: number;
-  progressBar: boolean;
   closeButton: boolean;
   dir: 'ltr' | 'rtl' | 'auto';
   richColors: boolean;
@@ -60,7 +49,6 @@ const DEFAULT_CONFIG: Required<TutorToastConfig> = {
   position: 'bottom-right',
   duration: 5000,
   closeButton: true,
-  progressBar: false,
   maxVisible: 5,
   dir: 'auto',
   offset: {
@@ -92,7 +80,6 @@ const TOAST_CLASS = {
   srOnly: 'tutor-toast-sr-only',
   container: 'tutor-toast-container',
   stack: 'tutor-toast-stack',
-  spinner: 'tutor-toast-spinner',
   card: 'tutor-toast-card',
   icon: 'tutor-toast-icon',
   content: 'tutor-toast-content',
@@ -101,8 +88,6 @@ const TOAST_CLASS = {
   actions: 'tutor-toast-actions',
   actionButton: 'tutor-toast-action-button',
   closeButton: 'tutor-toast-close',
-  progress: 'tutor-toast-progress',
-  progressBar: 'tutor-toast-progress-bar',
   item: 'tutor-toast-item',
 } as const;
 
@@ -112,7 +97,6 @@ const TOAST_SELECTOR = {
   content: `.${TOAST_CLASS.content}`,
   title: `.${TOAST_CLASS.title}`,
   description: `.${TOAST_CLASS.description}`,
-  progressBar: `.${TOAST_CLASS.progressBar}`,
 } as const;
 
 const TOAST_ATTR = {
@@ -131,7 +115,7 @@ const TOAST_ATTR = {
   dataExiting: 'data-exiting',
   dataSwiping: 'data-swiping',
   dataSwipeOut: 'data-swipe-out',
-  dataUpdating: 'data-updating',
+
   dir: 'dir',
   role: 'role',
   tabIndex: 'tabindex',
@@ -166,10 +150,6 @@ const TOAST_CSS_VAR = {
   frontHeight: '--tutor-toast-front-height',
 } as const;
 
-const TOAST_ANIMATION = {
-  progressShrink: 'tutor-toast-progress-shrink',
-} as const;
-
 const TOAST_TITLE_ID_PREFIX = 'tutor-toast-title-';
 
 const DEFAULT_LABELS: Record<ToastType, string> = {
@@ -187,7 +167,6 @@ const TOAST_ICON_MARKUP: Record<TutorToastType | 'default', string> = {
   warning:
     '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
   info: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><path d="M12 11v6"/></svg>',
-  loading: '',
   default:
     '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><path d="M12 11v6"/></svg>',
 };
@@ -443,14 +422,6 @@ export class TutorToastManager {
   private renderIcon(wrapper: HTMLElement, type: TutorToastType, override?: string | null): void {
     wrapper.innerHTML = '';
 
-    if (type === 'loading') {
-      const spinner = document.createElement('div');
-      spinner.className = TOAST_CLASS.spinner;
-      spinner.setAttribute(TOAST_ATTR.ariaLabel, __('Loading', 'tutor'));
-      wrapper.appendChild(spinner);
-      return;
-    }
-
     const iconMarkup = override ?? TOAST_ICON_MARKUP[type] ?? TOAST_ICON_MARKUP.default;
 
     if (iconMarkup?.trimStart().startsWith('<')) {
@@ -531,18 +502,6 @@ export class TutorToastManager {
         this.dismiss(id);
       });
       card.appendChild(closeButton);
-    }
-
-    if (options.progressBar && options.type !== 'loading' && options.duration > 0) {
-      const progress = document.createElement('div');
-      progress.className = TOAST_CLASS.progress;
-
-      const progressBar = document.createElement('div');
-      progressBar.className = TOAST_CLASS.progressBar;
-      progressBar.style.animation = `${TOAST_ANIMATION.progressShrink} ${options.duration}ms linear forwards`;
-
-      progress.appendChild(progressBar);
-      card.appendChild(progress);
     }
 
     return card;
@@ -640,18 +599,13 @@ export class TutorToastManager {
   }
 
   private pauseEntry(entry: TutorToastEntry): void {
-    if (entry.paused || entry.exiting || entry.type === 'loading') {
+    if (entry.paused || entry.exiting) {
       return;
     }
 
     this.clearTimer(entry.id);
     entry.remainingMs = Math.max(0, entry.endsAt - Date.now());
     entry.paused = true;
-
-    const progressBar = entry.card.querySelector<HTMLElement>(TOAST_SELECTOR.progressBar);
-    if (progressBar) {
-      progressBar.style.animationPlayState = 'paused';
-    }
   }
 
   private resumeEntry(entry: TutorToastEntry): void {
@@ -664,12 +618,7 @@ export class TutorToastManager {
     if (entry.remainingMs > 0) {
       entry.endsAt = Date.now() + entry.remainingMs;
       entry.timerId = setTimeout(() => this.dismiss(entry.id), entry.remainingMs);
-
-      const progressBar = entry.card.querySelector<HTMLElement>(TOAST_SELECTOR.progressBar);
-      if (progressBar) {
-        progressBar.style.animationPlayState = 'running';
-      }
-    } else if (entry.type !== 'loading') {
+    } else {
       this.dismiss(entry.id);
     }
   }
@@ -837,78 +786,6 @@ export class TutorToastManager {
     Array.from(this.entries.keys()).forEach((entryId) => this.dismissOne(entryId));
   }
 
-  public update(id: string, options: TutorToastUpdateOptions): void {
-    const entry = this.entries.get(id);
-    if (!entry) {
-      return;
-    }
-
-    const { card } = entry;
-    const nextType = options.type ?? entry.type;
-
-    if (options.type) {
-      card.setAttribute(TOAST_ATTR.dataType, options.type);
-      card.setAttribute(TOAST_ATTR.role, options.type === 'error' ? TOAST_ATTR_VALUE.alert : TOAST_ATTR_VALUE.status);
-      entry.type = options.type;
-      const icon = card.querySelector<HTMLElement>(TOAST_SELECTOR.icon);
-      if (icon) {
-        this.renderIcon(icon, options.type, options.icon ?? null);
-      }
-    }
-
-    if (options.title != null) {
-      const titleElement = card.querySelector<HTMLElement>(TOAST_SELECTOR.title);
-      if (titleElement) {
-        titleElement.textContent = options.title;
-      }
-    }
-
-    if (options.description != null) {
-      let descriptionElement = card.querySelector<HTMLElement>(TOAST_SELECTOR.description);
-      if (!descriptionElement) {
-        descriptionElement = document.createElement('p');
-        descriptionElement.className = TOAST_CLASS.description;
-        card.querySelector(TOAST_SELECTOR.content)?.appendChild(descriptionElement);
-      }
-      descriptionElement.textContent = options.description;
-    }
-
-    card.setAttribute(TOAST_ATTR.dataUpdating, TOAST_ATTR_VALUE.true);
-    setTimeout(() => card.removeAttribute(TOAST_ATTR.dataUpdating), 250);
-
-    this.clearTimer(id);
-    const nextDuration = options.duration ?? this.config.duration;
-
-    if (nextType !== 'loading' && nextDuration > 0) {
-      entry.paused = false;
-      entry.endsAt = Date.now() + nextDuration;
-      entry.remainingMs = nextDuration;
-      entry.timerId = setTimeout(() => this.dismiss(id), nextDuration);
-
-      const progressBar = card.querySelector<HTMLElement>(TOAST_SELECTOR.progressBar);
-      if (progressBar) {
-        progressBar.style.animation = 'none';
-        requestAnimationFrame(() => {
-          progressBar.style.animation = `${TOAST_ANIMATION.progressShrink} ${nextDuration}ms linear forwards`;
-        });
-      } else if (options.progressBar ?? this.config.progressBar) {
-        const progress = document.createElement('div');
-        progress.className = TOAST_CLASS.progress;
-
-        const bar = document.createElement('div');
-        bar.className = TOAST_CLASS.progressBar;
-        bar.style.animation = `${TOAST_ANIMATION.progressShrink} ${nextDuration}ms linear forwards`;
-
-        progress.appendChild(bar);
-        card.appendChild(progress);
-      }
-    }
-
-    const titleElement = card.querySelector<HTMLElement>(TOAST_SELECTOR.title);
-    const descriptionElement = card.querySelector<HTMLElement>(TOAST_SELECTOR.description);
-    this.announce(titleElement?.textContent || '', descriptionElement?.textContent, nextType);
-  }
-
   public show(message: string, options: TutorToastOptions = {}): string {
     const position = options.position ?? this.config.position;
     const theme = options.theme ?? this.config.theme;
@@ -922,8 +799,7 @@ export class TutorToastManager {
     const id = String(++this.idCounter);
     const type = options.type ?? 'info';
     const duration = options.duration ?? this.config.duration;
-    const title =
-      options.title ?? (type === 'default' || type === 'loading' ? message : DEFAULT_LABELS[type as ToastType]);
+    const title = options.title ?? (type === 'default' ? message : DEFAULT_LABELS[type as ToastType]);
     const description = options.description ?? (options.title ? message : type === 'default' ? undefined : message);
 
     const normalizedOptions: NormalizedTutorToastOptions = {
@@ -933,7 +809,6 @@ export class TutorToastManager {
       icon: options.icon ?? null,
       action: options.action ?? null,
       duration,
-      progressBar: options.progressBar ?? this.config.progressBar,
       closeButton: options.closeButton ?? this.config.closeButton,
       dir: options.dir ?? (this.config.dir !== 'auto' ? this.config.dir : 'ltr'),
       richColors: options.richColors ?? this.config.richColors,
@@ -973,7 +848,7 @@ export class TutorToastManager {
 
     let timerId: ReturnType<typeof setTimeout> | null = null;
     let endsAt = 0;
-    if (type !== 'loading' && duration > 0 && !this.hovered) {
+    if (duration > 0 && !this.hovered) {
       endsAt = Date.now() + duration;
       timerId = setTimeout(() => this.dismiss(id), duration);
     } else if (duration > 0) {
@@ -996,37 +871,6 @@ export class TutorToastManager {
 
     this.restack();
     this.enforceLimits();
-
-    return id;
-  }
-
-  public promise<T>(promise: Promise<T>, messages: TutorToastPromiseMessages<T>, options?: TutorToastOptions): string {
-    const id = this.show(
-      typeof messages.loading === 'function' ? messages.loading() : messages.loading || __('Loading', 'tutor'),
-      {
-        ...options,
-        type: 'loading',
-        duration: 0,
-      },
-    );
-
-    Promise.resolve(promise)
-      .then((result) => {
-        const title = typeof messages.success === 'function' ? messages.success(result) : messages.success;
-        this.update(id, {
-          type: 'success',
-          title,
-          duration: options?.duration ?? this.config.duration,
-        });
-      })
-      .catch((error: unknown) => {
-        const title = typeof messages.error === 'function' ? messages.error(error) : messages.error;
-        this.update(id, {
-          type: 'error',
-          title,
-          duration: options?.duration ?? this.config.duration,
-        });
-      });
 
     return id;
   }
@@ -1088,10 +932,6 @@ export class TutorToastManager {
     return this.show(message, { type: 'info', ...(duration !== undefined ? { duration } : {}) });
   }
 
-  public loading(message: string, options?: TutorToastOptions): string {
-    return this.show(message, { ...options, type: 'loading', duration: 0 });
-  }
-
   public createContextBound(contextConfig: TutorToastConfig): TutorToastApi {
     const contextOverrides: Pick<TutorToastOptions, 'dir' | 'theme'> = {
       ...(contextConfig.dir != null && { dir: contextConfig.dir }),
@@ -1123,38 +963,17 @@ export function createTutorToastApi(
   api.error = (message, options) => showHandler(message, merge({ ...options, type: 'error' }));
   api.warning = (message, options) => showHandler(message, merge({ ...options, type: 'warning' }));
   api.info = (message, options) => showHandler(message, merge({ ...options, type: 'info' }));
-  api.loading = (message, options) => showHandler(message, merge({ ...options, type: 'loading', duration: 0 }));
-  api.promise = (promise, messages, options) => manager.promise(promise, messages, options);
-  api.update = (id, options) => manager.update(id, options);
+
   api.dismiss = (id) => manager.dismiss(id);
   api.configure = (options) => manager.configure(options);
 
   return api;
 }
 
-const sharedTarget = globalThis as typeof globalThis & {
-  __TUTOR_TOAST_SHARED__?: TutorToastGlobal;
-};
+const manager = new TutorToastManager();
 
-const sharedRuntime =
-  sharedTarget.__TUTOR_TOAST_SHARED__ ??
-  (() => {
-    const manager = new TutorToastManager();
-    const defaults: TutorToastConfig = DEFAULT_CONFIG;
-    const toast = createTutorToastApi((message, options) => manager.show(message, options), manager);
+export const tutorToastManager = manager;
 
-    const runtime = {
-      manager,
-      defaults,
-      toast,
-    };
+export const tutorToastDefaults: TutorToastConfig = DEFAULT_CONFIG;
 
-    sharedTarget.__TUTOR_TOAST_SHARED__ = runtime;
-    return runtime;
-  })();
-
-export const tutorToastManager = sharedRuntime.manager;
-
-export const tutorToastDefaults = sharedRuntime.defaults;
-
-export const toast = sharedRuntime.toast;
+export const toast = createTutorToastApi((message, options) => manager.show(message, options), manager);
