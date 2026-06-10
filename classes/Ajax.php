@@ -460,6 +460,10 @@ class Ajax {
 				);
 			}
 
+			if ( $validation_error->has_errors() ) {
+				return;
+			}
+
 			// On multi-site, ensure user exists on current site, if not add them before allowing login.
 			if ( is_multisite() ) {
 				$user_data = get_user_by( is_email( $creds['user_login'] ) ? 'email' : 'login', $creds['user_login'] );
