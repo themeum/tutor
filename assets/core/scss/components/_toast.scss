@@ -330,7 +330,6 @@
 
 .tutor-toast-description {
   @include tutor-typography('tiny');
-  margin-top: $tutor-spacing-2;
   color: $tutor-toast-text-muted;
 
   .tutor-toast-card[data-type='default'] & {
@@ -338,36 +337,21 @@
   }
 }
 
-.tutor-toast-actions {
-  display: flex;
-  align-items: center;
-  gap: $tutor-spacing-3;
-}
-
-.tutor-toast-action-button,
-.tutor-toast-close {
+button.tutor-toast-close {
+  @include tutor-button-base();
   border: 0;
   background: transparent;
   color: $tutor-icon-idle;
   cursor: pointer;
 }
 
-.tutor-toast-action-button {
-  padding: $tutor-spacing-2 $tutor-spacing-4;
-  border-radius: $tutor-radius-md;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-  font-size: $tutor-font-size-tiny;
-  font-weight: $tutor-font-weight-medium;
-  line-height: $tutor-line-height-tiny;
-}
-
-.tutor-toast-close {
+button.tutor-toast-close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   inline-size: 28px;
   block-size: 28px;
-  border-radius: 999px;
+  border-radius: $tutor-radius-full;
   flex-shrink: 0;
 }
 
