@@ -461,6 +461,7 @@ class Ajax {
 			}
 
 			if ( $validation_error->has_errors() ) {
+				\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
 				return;
 			}
 
