@@ -132,6 +132,8 @@ class QuizModel {
 			),
 		);
 
+		$types = apply_filters( 'tutor_get_question_types', $types );
+
 		if ( isset( $types[ $type ] ) ) {
 			return $types[ $type ];
 		}
