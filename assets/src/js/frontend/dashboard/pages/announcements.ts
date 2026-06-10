@@ -27,8 +27,9 @@ interface AnnouncementPayload extends Record<string, unknown> {
 
 interface AnnouncementResponse {
   success: boolean;
-  message?: string;
-  data?: unknown;
+  data?: {
+    message?: string;
+  };
 }
 
 interface AnnouncementProps {
@@ -89,7 +90,7 @@ const announcementsPage = ({ formId, deleteModalId, createModalId }: Announcemen
       this.createUpdateMutation = this.query.useMutation(this.createUpdateAnnouncement, {
         onSuccess: (response) => {
           modal.closeModal(ANNOUNCEMENTS_IDS.CREATE);
-          toast.success(response.message || __('Operation successful', 'tutor'));
+          toast.success(response.data?.message || __('Operation successful', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
