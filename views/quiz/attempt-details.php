@@ -393,7 +393,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					$answer_i = 0;
 				foreach ( $answers as $answer ) {
 					$answer_i++;
-					$question_type     = tutor_utils()->get_question_types( $answer->question_type );
+					$question_type     = QuizModel::get_question_types( $answer->question_type );
 					$question_settings = maybe_unserialize( $answer->question_settings );
 					$is_image_matching = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];
 					$answer_status     = 'wrong';
@@ -452,7 +452,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														}
 														?>
 														<span class="tooltip-txt tooltip-top">
-															<?php echo esc_html( tutor_utils()->get_question_types( $answer->question_type )['name'] ?? '' ); ?>
+															<?php echo esc_html( QuizModel::get_question_types( $answer->question_type )['name'] ?? '' ); ?>
 														</span>
 													</div>
 												</td>
@@ -768,9 +768,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																<?php
 														}
 														echo '</div>';
-													}
-
-													else {
+													} else {
 														/**
 														 * Allow Pro and add-ons to render correct answer for custom question types.
 														 * Pro handles draw_image and pin_image via this action.
