@@ -473,7 +473,7 @@ export class TutorToastManager {
       closeButton.type = 'button';
       closeButton.setAttribute(TOAST_ATTR.ariaLabel, __('Close notification', 'tutor'));
       closeButton.innerHTML =
-        '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 1l10 10M11 1L1 11"/></svg>';
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m12.402 3.6-8.8 8.8m0-8.8 8.8 8.8"/></svg>';
       closeButton.addEventListener('click', (event) => {
         event.stopPropagation();
         this.dismiss(id);
