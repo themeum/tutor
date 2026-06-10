@@ -43,8 +43,8 @@ $paged    = Input::get( 'paged', 1, Input::TYPE_INT );
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$quiz_attempts_list = QuizModel::get_quiz_attempts( $offset, $per_page, $search, $course_id, $date, $order, $active_tab, false, true );
-$total              = QuizModel::get_quiz_attempts( $offset, $per_page, $search, $course_id, $date, $order, $active_tab, true, true );
+$quiz_attempts_list = QuizModel::get_quiz_attempts( $offset, $per_page, $search, $course_id, $date, $date, $order, $active_tab, false, true );
+$total              = QuizModel::get_quiz_attempts( $offset, $per_page, $search, $course_id, $date, $date, $order, $active_tab, true, true );
 //phpcs:enable
 
 

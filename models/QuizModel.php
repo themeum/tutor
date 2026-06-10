@@ -482,26 +482,22 @@ class QuizModel {
 	 * @param integer $limit              Number of rows to return (0 = no limit).
 	 * @param string  $search_filter      Search keyword matched against user email, display name, quiz title, and course title.
 	 * @param string  $course_filter      Course ID (or array of IDs) to restrict results to.
-	 * @param string  $date_filter        Single date filter (Y-m-d). Ignored when both $start_date and $end_date are provided.
+	 * @param string  $start_date         Range start date (Y-m-d).
+	 * @param string  $end_date           Range end date (Y-m-d).
 	 * @param string  $order_filter       SQL ORDER BY direction – 'ASC' or 'DESC'.
 	 * @param mixed   $result_state       Attempt result to filter by (pass|fail|pending). Null returns all results.
 	 * @param boolean $count_only         When true, returns an integer count instead of rows.
 	 * @param boolean $instructor_id_check When true, restricts results to courses the current user instructs.
-	 * @param string  $start_date         Range start date (Y-m-d). When provided together with $end_date, a BETWEEN
-	 *                                    clause is used and $date_filter is ignored.
-	 * @param string  $end_date           Range end date (Y-m-d). When provided together with $start_date, a BETWEEN
-	 *                                    clause is used and $date_filter is ignored.
 	 *
 	 * @return mixed Integer count when $count_only is true, array of row objects otherwise.
 	 */
-	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false, $start_date = '', $end_date = '' ) {
+	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $start_date = '', $end_date = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
 		global $wpdb;
 
 		$start         = (int) $start;
 		$limit         = (int) $limit;
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
-		$date_filter   = sanitize_text_field( $date_filter );
 		$order_filter  = sanitize_sql_orderby( $order_filter );
 
 		$search_term_raw = $search_filter;
@@ -518,13 +514,11 @@ class QuizModel {
 		}
 
 		// Filter by date (single) or date range.
+		$date_filter = '';
 		if ( '' !== $start_date && '' !== $end_date ) {
-			$start_date  = sanitize_text_field( $start_date );
-			$end_date    = sanitize_text_field( $end_date );
+			$start_date  = tutor_get_formated_date( 'Y-m-d', $start_date );
+			$end_date    = tutor_get_formated_date( 'Y-m-d', $end_date );
 			$date_filter = $wpdb->prepare( ' AND DATE(quiz_attempts.attempt_started_at) BETWEEN %s AND %s ', $start_date, $end_date );
-		} else {
-			$date_filter = '' !== $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-			$date_filter = '' !== $date_filter ? $wpdb->prepare( ' AND  DATE(quiz_attempts.attempt_started_at) = %s ', $date_filter ) : '';
 		}
 
 		$result_clause  = '';

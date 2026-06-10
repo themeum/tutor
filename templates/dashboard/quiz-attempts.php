@@ -42,15 +42,14 @@ $quiz_attempt_obj = new Quiz_Attempts_List( false );
 // Filter params.
 $course_id     = Input::get( 'course-id', 0, Input::TYPE_INT );
 $order_filter  = Input::get( 'order', 'DESC' );
-$date_filter   = Input::get( 'date', '' );
 $start_date    = Input::get( 'start_date', '' );
 $end_date      = Input::get( 'end_date', '' );
 $result_filter = Input::get( 'result', '' );
 $search_filter = Input::get( 'search', '' );
 
-$quiz_attempts       = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, false, true, $start_date, $end_date );
+$quiz_attempts       = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $start_date, $end_date, $order_filter, $result_filter, false, true );
 $quiz_attempts_list  = QuizModel::format_quiz_attempts( $quiz_attempts, $result_filter );
-$quiz_attempts_count = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $date_filter, $order_filter, $result_filter, true, true, $start_date, $end_date );
+$quiz_attempts_count = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $start_date, $end_date, $order_filter, $result_filter, true, true );
 
 
 $date_params_present = Input::has( 'date', Input::GET_REQUEST )
@@ -68,16 +67,14 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data(
 	$result_filter,
 	$search_filter,
 	$course_id,
-	$date_filter,
-	$order_filter,
-	array(),
 	$start_date,
-	$end_date
+	$end_date,
+	$order_filter,
+	array()
 );
 
 $hidden_inputs = array(
 	'order'      => $order_filter,
-	'date'       => $date_filter,
 	'start_date' => $start_date,
 	'end_date'   => $end_date,
 	'result'     => $result_filter,

@@ -242,15 +242,14 @@ class Quiz_Attempts_List {
 	 * @param string $result_filter the current result state.
 	 * @param string $search_filter the search filter.
 	 * @param string $course_filter the course id filter.
-	 * @param string $date_filter single date filter (Y-m-d). Ignored when $start_date and $end_date are provided.
+	 * @param string $start_date range start date (Y-m-d).
+	 * @param string $end_date   range end date (Y-m-d).
 	 * @param string $order_filter the order filter.
 	 * @param array  $all_quizzes all quiz data for student.
-	 * @param string $start_date range start date (Y-m-d). Used together with $end_date for date-range filtering.
-	 * @param string $end_date   range end date (Y-m-d). Used together with $start_date for date-range filtering.
 	 *
 	 * @return array
 	 */
-	public function get_quiz_attempts_nav_data( $quiz_attempts_count = 0, $url = '', $result_filter = '', $search_filter = '', $course_filter = 0, $date_filter = '', $order_filter = 'DESC', $all_quizzes = array(), $start_date = '', $end_date = '' ): array {
+	public function get_quiz_attempts_nav_data( $quiz_attempts_count = 0, $url = '', $result_filter = '', $search_filter = '', $course_filter = 0, $start_date = '', $end_date = '', $order_filter = 'DESC', $all_quizzes = array() ): array {
 		$quiz_model = new QuizModel();
 
 		if ( tutor_utils()->count( $all_quizzes ) ) {
@@ -261,10 +260,10 @@ class Quiz_Attempts_List {
 			$failed_attempts     = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_FAIL ) );
 			$pending_attempts    = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_PENDING ) );
 		} else {
-			$all_attempts     = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $date_filter, $order_filter, '', true, true, $start_date, $end_date );
-			$pending_attempts = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $date_filter, $order_filter, QuizModel::RESULT_PENDING, true, true, $start_date, $end_date );
-			$passed_attempts  = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $date_filter, $order_filter, QuizModel::RESULT_PASS, true, true, $start_date, $end_date );
-			$failed_attempts  = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $date_filter, $order_filter, QuizModel::RESULT_FAIL, true, true, $start_date, $end_date );
+			$all_attempts     = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, '', true, true );
+			$pending_attempts = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_PENDING, true, true );
+			$passed_attempts  = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_PASS, true, true );
+			$failed_attempts  = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_FAIL, true, true );
 		}
 
 		$filter_url = remove_query_arg( 'current_page', $url );
