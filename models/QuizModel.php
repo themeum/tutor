@@ -34,6 +34,36 @@ class QuizModel {
 	const ATTEMPTS_TABLE = 'tutor_quiz_attempts';
 
 	/**
+	 * Question type constants
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const QUESTION_TYPE_TRUE_FALSE        = 'true_false';
+	const QUESTION_TYPE_SINGLE_CHOICE     = 'single_choice';
+	const QUESTION_TYPE_MULTIPLE_CHOICE   = 'multiple_choice';
+	const QUESTION_TYPE_OPEN_ENDED        = 'open_ended';
+	const QUESTION_TYPE_FILL_IN_THE_BLANK = 'fill_in_the_blank';
+	const QUESTION_TYPE_SHORT_ANSWER      = 'short_answer';
+	const QUESTION_TYPE_MATCHING          = 'matching';
+	const QUESTION_TYPE_IMAGE_MATCHING    = 'image_matching';
+	const QUESTION_TYPE_IMAGE_ANSWERING   = 'image_answering';
+	const QUESTION_TYPE_ORDERING          = 'ordering';
+
+	/**
+	 * Newly added question types.
+	 * These questions types are not supported in legacy learning mode.
+	 *
+	 * @since 4.0.0
+	 */
+	const QUESTION_TYPE_DRAW_IMAGE  = 'draw_image';
+	const QUESTION_TYPE_SCALE       = 'scale';
+	const QUESTION_TYPE_PIN_IMAGE   = 'pin_image';
+	const QUESTION_TYPE_COORDINATES = 'coordinates';
+	const QUESTION_TYPE_PUZZLE      = 'puzzle';
+
+	/**
 	 * Get quiz table name
 	 *
 	 * @since 2.1.0
@@ -55,77 +85,77 @@ class QuizModel {
 	 */
 	public static function get_question_types( $type = null ) {
 		$types = array(
-			'true_false'        => array(
+			self::QUESTION_TYPE_TRUE_FALSE        => array(
 				'name'   => __( 'True/False', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-quiz-type-boolean tutor-icon-circle-half"></i></span>',
 				'is_pro' => false,
 			),
-			'single_choice'     => array(
+			self::QUESTION_TYPE_SINGLE_CHOICE     => array(
 				'name'   => __( 'Single Choice', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-single-choice tutor-icon-mark"></i></span>',
 				'is_pro' => false,
 			),
-			'multiple_choice'   => array(
+			self::QUESTION_TYPE_MULTIPLE_CHOICE   => array(
 				'name'   => __( 'Multiple Choice', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-multiple-choices tutor-icon-double-mark"></i></span>',
 				'is_pro' => false,
 			),
-			'open_ended'        => array(
+			self::QUESTION_TYPE_OPEN_ENDED        => array(
 				'name'   => __( 'Open Ended', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-open-ended tutor-icon-text-width"></i></span>',
 				'is_pro' => false,
 			),
-			'fill_in_the_blank' => array(
+			self::QUESTION_TYPE_FILL_IN_THE_BLANK => array(
 				'name'   => __( 'Fill In The Blanks', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-quiz-type-fill-blanks tutor-icon-hourglass"></i></span>',
 				'is_pro' => false,
 			),
-			'short_answer'      => array(
+			self::QUESTION_TYPE_SHORT_ANSWER      => array(
 				'name'   => __( 'Short Answer', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-short-answer tutor-icon-minimize"></i></span>',
 				'is_pro' => true,
 			),
-			'matching'          => array(
+			self::QUESTION_TYPE_MATCHING          => array(
 				'name'   => __( 'Matching', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-matching tutor-icon-arrow-right-left"></i></span>',
 				'is_pro' => true,
 			),
-			'image_matching'    => array(
+			self::QUESTION_TYPE_IMAGE_MATCHING    => array(
 				'name'   => __( 'Image Matching', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-image-matching tutor-icon-images"></i></span>',
 				'is_pro' => true,
 			),
-			'image_answering'   => array(
+			self::QUESTION_TYPE_IMAGE_ANSWERING   => array(
 				'name'   => __( 'Image Answering', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-image-answering tutor-icon-camera"></i></span>',
 				'is_pro' => true,
 			),
-			'ordering'          => array(
+			self::QUESTION_TYPE_ORDERING          => array(
 				'name'   => __( 'Ordering', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-ordering tutor-icon-ordering-z-a"></i></span>',
 				'is_pro' => true,
 			),
-			'draw_image'        => array(
+			self::QUESTION_TYPE_DRAW_IMAGE        => array(
 				'name'   => __( 'Mark in the image', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),
-			'scale'             => array(
+			self::QUESTION_TYPE_SCALE             => array(
 				'name'   => __( 'Range', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-scale tutor-icon-slider-horizontal"></i></span>',
 				'is_pro' => true,
 			),
-			'pin_image'         => array(
+			self::QUESTION_TYPE_PIN_IMAGE         => array(
 				'name'   => __( 'Pin', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),
-			'coordinates'       => array(
+			self::QUESTION_TYPE_COORDINATES       => array(
 				'name'   => __( 'Graph', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-coordinates tutor-icon-grid"></i></span>',
 				'is_pro' => true,
 			),
-			'puzzle'            => array(
+			self::QUESTION_TYPE_PUZZLE            => array(
 				'name'   => __( 'Puzzle', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-puzzle tutor-icon-images"></i></span>',
 				'is_pro' => true,
