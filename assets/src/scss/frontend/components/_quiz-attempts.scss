@@ -91,7 +91,7 @@
 
         &[data-learning-area='true'] {
           .tutor-quiz-item-info {
-            div:first-of-type {
+            > div:first-of-type {
               @include tutor-visually-hidden;
             }
 
