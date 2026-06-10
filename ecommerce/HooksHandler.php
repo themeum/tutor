@@ -245,11 +245,14 @@ class HooksHandler {
 	 * @return void
 	 */
 	public function handle_payment_status_changed( $order_id, $prev_payment_status, $new_payment_status ) {
+		$cancel_reason = Input::post( 'cancel_reason' );
 
-		$order_status = $this->order_model->get_order_status_by_payment_status( $new_payment_status );
-
-		$cancel_reason     = Input::post( 'cancel_reason' );
-		$remove_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
+		if ( Input::has( 'is_remove_enrolment', Input::POST_REQUEST ) ) {
+			$remove_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
+			$order_status      = $remove_enrollment ? OrderModel::ORDER_CANCELLED : OrderModel::ORDER_COMPLETED;
+		} else {
+			$order_status = $this->order_model->get_order_status_by_payment_status( $new_payment_status );
+		}
 
 		// Store activity.
 		$data = (object) array(
@@ -267,10 +270,6 @@ class HooksHandler {
 		}
 
 		$this->order_activities_model->add_order_meta( $data );
-
-		if ( $remove_enrollment ) {
-			$order_status = OrderModel::ORDER_CANCELLED;
-		}
 
 		$this->manage_earnings_and_enrollments( $order_status, $order_id );
 
