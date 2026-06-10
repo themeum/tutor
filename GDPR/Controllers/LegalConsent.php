@@ -644,16 +644,14 @@ class LegalConsent extends BaseController {
 		$is_text_only = self::METHOD_TEXT_ONLY === $consent->consent_method;
 		$field_name   = self::get_field_name( $consent );
 
-		$field_unique_name = $field_name . '_' . $consent->id;
-
 		?>
 		<div class="tutor-form-row <?php echo esc_attr( $wrapper_cs_class ); ?>">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper tutor-form-check tutor-d-flex" style="align-items: start;">
 					<?php if ( ! $is_text_only ) : ?>
-						<input type="checkbox" id="<?php echo esc_attr( $field_unique_name ); ?>" name="<?php echo esc_attr( $field_unique_name ); ?>" class="tutor-checkbox tutor-checkbox-md tutor-form-check-input" style="margin-top: 2px!important;" <?php echo esc_attr( $is_required ? 'required' : '' ); ?>>
+						<input type="checkbox" id="<?php echo esc_attr( $field_name ); ?>" name="<?php echo esc_attr( $field_name ); ?>" class="tutor-checkbox tutor-checkbox-md tutor-form-check-input" style="margin-top: 2px!important;" <?php echo esc_attr( $is_required ? 'required' : '' ); ?>>
 					<?php endif; ?>
-					<label for="<?php echo esc_attr( $field_unique_name ); ?>" class="tutor-label">
+					<label for="<?php echo esc_attr( $field_name ); ?>" class="tutor-label">
 						<?php self::render_constructed_label_text( $consent ); ?>
 					</label>
 				</div>
@@ -712,7 +710,7 @@ class LegalConsent extends BaseController {
 	 * @return string
 	 */
 	public static function get_field_name( object $consent ): string {
-		return strtolower( str_replace( ' ', '_', $consent->consent_title ) );
+		return strtolower( str_replace( ' ', '_', $consent->consent_title . '_' . $consent->id ) );
 	}
 
 
