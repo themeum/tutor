@@ -613,7 +613,7 @@ class FileUploader extends BaseComponent {
 							</div>
 						</template>
 					</div>
-					<div class="tutor-mt-1">
+					<div x-show="maxFiles > selectedFiles.length" class="tutor-mt-1">
 						<button type="button" class="tutor-btn tutor-btn-primary-soft tutor-sm-w-full" @click="openFileDialog()">
 							<?php $this->multiple ? esc_html_e( 'Upload More Files', 'tutor' ) : esc_html_e( 'Upload Again', 'tutor' ); ?>
 						</button>
