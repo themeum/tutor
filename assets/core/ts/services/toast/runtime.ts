@@ -37,7 +37,6 @@ interface NormalizedTutorToastOptions {
   title: string;
   description?: string;
   icon: string | null;
-  action: TutorToastOptions['action'] | null;
   duration: number;
   closeButton: boolean;
   dir: 'ltr' | 'rtl' | 'auto';
@@ -85,8 +84,6 @@ const TOAST_CLASS = {
   content: 'tutor-toast-content',
   title: 'tutor-toast-title',
   description: 'tutor-toast-description',
-  actions: 'tutor-toast-actions',
-  actionButton: 'tutor-toast-action-button',
   closeButton: 'tutor-toast-close',
   item: 'tutor-toast-item',
 } as const;
@@ -470,26 +467,6 @@ export class TutorToastManager {
 
     card.appendChild(content);
 
-    if (options.action) {
-      const actions = document.createElement('div');
-      actions.className = TOAST_CLASS.actions;
-
-      const actionButton = document.createElement('button');
-      actionButton.className = TOAST_CLASS.actionButton;
-      actionButton.type = 'button';
-      actionButton.textContent = options.action.label;
-      actionButton.addEventListener('click', (event) => {
-        event.stopPropagation();
-        options.action?.onClick();
-        if (options.action?.dismissOnClick !== false) {
-          this.dismiss(id);
-        }
-      });
-
-      actions.appendChild(actionButton);
-      card.appendChild(actions);
-    }
-
     if (options.closeButton) {
       const closeButton = document.createElement('button');
       closeButton.className = TOAST_CLASS.closeButton;
@@ -807,7 +784,6 @@ export class TutorToastManager {
       title,
       description,
       icon: options.icon ?? null,
-      action: options.action ?? null,
       duration,
       closeButton: options.closeButton ?? this.config.closeButton,
       dir: options.dir ?? (this.config.dir !== 'auto' ? this.config.dir : 'ltr'),

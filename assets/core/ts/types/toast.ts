@@ -25,18 +25,11 @@ export interface TutorToastOffset {
   };
 }
 
-export interface TutorToastAction {
-  label: string;
-  onClick: () => void;
-  dismissOnClick?: boolean;
-}
-
 export interface TutorToastOptions {
   type?: TutorToastType;
   title?: string;
   description?: string;
   icon?: string | null;
-  action?: TutorToastAction;
   duration?: number;
   closeButton?: boolean;
   dir?: 'ltr' | 'rtl' | 'auto';
