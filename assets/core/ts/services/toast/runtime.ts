@@ -260,7 +260,10 @@ export class TutorToastManager {
     );
     liveRegion.textContent = '';
     requestAnimationFrame(() => {
-      liveRegion.textContent = description ? `${title}. ${description}` : title;
+      const text = description ? `${title}. ${description}` : title;
+      const tmp = document.createElement('div');
+      tmp.innerHTML = text;
+      liveRegion.textContent = tmp.textContent || '';
     });
   }
 
@@ -463,7 +466,7 @@ export class TutorToastManager {
     if (options.description) {
       const description = document.createElement('p');
       description.className = TOAST_CLASS.description;
-      description.textContent = options.description;
+      description.innerHTML = options.description;
       content.appendChild(description);
     }
 
