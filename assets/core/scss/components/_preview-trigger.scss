@@ -27,6 +27,24 @@
     text-overflow: ellipsis;
     max-width: 100%;
     vertical-align: bottom;
+    padding-inline-end: $tutor-spacing-1;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      @include tutor-focus-ring('brand', true);
+      outline-offset: 2px;
+      border-radius: $tutor-radius-sm;
+    }
+
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    vertical-align: bottom;
   }
 }
 
@@ -79,6 +97,12 @@
     &:hover {
       color: $tutor-text-brand;
     }
+
+    &:focus-visible {
+      @include tutor-focus-ring('brand', true);
+      outline-offset: 2px;
+      border-radius: $tutor-radius-sm;
+    }
   }
 }
 
@@ -92,6 +116,12 @@
 
     &:hover {
       color: $tutor-text-brand;
+    }
+
+    &:focus-visible {
+      @include tutor-focus-ring('brand', true);
+      outline-offset: 2px;
+      border-radius: $tutor-radius-sm;
     }
   }
 }
