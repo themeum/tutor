@@ -20,7 +20,7 @@
   @include tutor-breakpoint-down(sm) {
     height: fit-content;
     border-bottom: none;
-    padding: $tutor-spacing-6 $tutor-spacing-6 0 $tutor-spacing-6;
+    padding: $tutor-spacing-6;
 
     body:has(#wpadminbar) & {
       top: 0;
