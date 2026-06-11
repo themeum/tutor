@@ -121,7 +121,7 @@ class QuizModel {
 	 *
 	 * @return array|mixed
 	 */
-	public static function get_question_types( $type = null ) {
+	public static function get_question_types( $type = '' ) {
 		$types = array(
 			self::QUESTION_TYPE_TRUE_FALSE        => array(
 				'name'   => __( 'True/False', 'tutor' ),
