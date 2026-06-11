@@ -75,6 +75,10 @@
     border-radius: $tutor-radius-3xl;
   }
 
+  .tutor-dashboard-sidebar .tutor-see-all-courses {
+    @include tutor-typography(medium, medium);
+  }
+
   // home
   .tutor-profile-completion-body {
     border: none;
