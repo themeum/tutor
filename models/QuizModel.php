@@ -34,6 +34,36 @@ class QuizModel {
 	const ATTEMPTS_TABLE = 'tutor_quiz_attempts';
 
 	/**
+	 * Question type constants
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const QUESTION_TYPE_TRUE_FALSE        = 'true_false';
+	const QUESTION_TYPE_SINGLE_CHOICE     = 'single_choice';
+	const QUESTION_TYPE_MULTIPLE_CHOICE   = 'multiple_choice';
+	const QUESTION_TYPE_OPEN_ENDED        = 'open_ended';
+	const QUESTION_TYPE_FILL_IN_THE_BLANK = 'fill_in_the_blank';
+	const QUESTION_TYPE_SHORT_ANSWER      = 'short_answer';
+	const QUESTION_TYPE_MATCHING          = 'matching';
+	const QUESTION_TYPE_IMAGE_MATCHING    = 'image_matching';
+	const QUESTION_TYPE_IMAGE_ANSWERING   = 'image_answering';
+	const QUESTION_TYPE_ORDERING          = 'ordering';
+
+	/**
+	 * Newly added question types.
+	 * These questions types are not supported in legacy learning mode.
+	 *
+	 * @since 4.0.0
+	 */
+	const QUESTION_TYPE_DRAW_IMAGE  = 'draw_image';
+	const QUESTION_TYPE_SCALE       = 'scale';
+	const QUESTION_TYPE_PIN_IMAGE   = 'pin_image';
+	const QUESTION_TYPE_COORDINATES = 'coordinates';
+	const QUESTION_TYPE_PUZZLE      = 'puzzle';
+
+	/**
 	 * Get quiz table name
 	 *
 	 * @since 2.1.0
@@ -42,6 +72,117 @@ class QuizModel {
 	 */
 	public function get_table(): string {
 		return QueryHelper::prepare_table_name( self::ATTEMPTS_TABLE );
+	}
+
+
+	/**
+	 * Get all quiz types which are only available in modern learning mode.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_modern_mode_quiz_types() {
+		return array(
+			self::QUESTION_TYPE_DRAW_IMAGE  => array(
+				'name'   => __( 'Mark in the image', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_SCALE       => array(
+				'name'   => __( 'Range', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-scale tutor-icon-slider-horizontal"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_PIN_IMAGE   => array(
+				'name'   => __( 'Pin', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_COORDINATES => array(
+				'name'   => __( 'Graph', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-coordinates tutor-icon-grid"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_PUZZLE      => array(
+				'name'   => __( 'Puzzle', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-puzzle tutor-icon-images"></i></span>',
+				'is_pro' => true,
+			),
+		);
+	}
+
+	/**
+	 * Get all question types
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed $type type.
+	 *
+	 * @return array|mixed
+	 */
+	public static function get_question_types( $type = null ) {
+		$types = array(
+			self::QUESTION_TYPE_TRUE_FALSE        => array(
+				'name'   => __( 'True/False', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-quiz-type-boolean tutor-icon-circle-half"></i></span>',
+				'is_pro' => false,
+			),
+			self::QUESTION_TYPE_SINGLE_CHOICE     => array(
+				'name'   => __( 'Single Choice', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-single-choice tutor-icon-mark"></i></span>',
+				'is_pro' => false,
+			),
+			self::QUESTION_TYPE_MULTIPLE_CHOICE   => array(
+				'name'   => __( 'Multiple Choice', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-multiple-choices tutor-icon-double-mark"></i></span>',
+				'is_pro' => false,
+			),
+			self::QUESTION_TYPE_OPEN_ENDED        => array(
+				'name'   => __( 'Open Ended', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-open-ended tutor-icon-text-width"></i></span>',
+				'is_pro' => false,
+			),
+			self::QUESTION_TYPE_FILL_IN_THE_BLANK => array(
+				'name'   => __( 'Fill In The Blanks', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-quiz-type-fill-blanks tutor-icon-hourglass"></i></span>',
+				'is_pro' => false,
+			),
+			self::QUESTION_TYPE_SHORT_ANSWER      => array(
+				'name'   => __( 'Short Answer', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-short-answer tutor-icon-minimize"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_MATCHING          => array(
+				'name'   => __( 'Matching', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-matching tutor-icon-arrow-right-left"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_IMAGE_MATCHING    => array(
+				'name'   => __( 'Image Matching', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-image-matching tutor-icon-images"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_IMAGE_ANSWERING   => array(
+				'name'   => __( 'Image Answering', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-image-answering tutor-icon-camera"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_ORDERING          => array(
+				'name'   => __( 'Ordering', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-ordering tutor-icon-ordering-z-a"></i></span>',
+				'is_pro' => true,
+			),
+		);
+
+		$types = $types + self::get_modern_mode_quiz_types();
+		$types = apply_filters( 'tutor_get_question_types', $types );
+
+		if ( isset( $types[ $type ] ) ) {
+			return $types[ $type ];
+		}
+
+		return $types;
 	}
 
 	/**
@@ -476,27 +617,28 @@ class QuizModel {
 	 * @since 1.0.0
 	 * @since 1.9.5 sorting params added.
 	 * @since 3.8.0 refactor and query optimize.
+	 * @since 4.0.0 date-range filtering added via $start_date / $end_date.
 	 *
-	 * @param integer $start start.
-	 * @param integer $limit limit.
-	 * @param string  $search_filter search filter.
-	 * @param string  $course_filter course filter.
-	 * @param string  $date_filter date filter.
-	 * @param string  $order_filter order filter.
-	 * @param mixed   $result_state result state.
-	 * @param boolean $count_only count only or not.
-	 * @param boolean $instructor_id_check need instructor id check or not.
+	 * @param integer $start              Query offset.
+	 * @param integer $limit              Number of rows to return (0 = no limit).
+	 * @param string  $search_filter      Search keyword matched against user email, display name, quiz title, and course title.
+	 * @param string  $course_filter      Course ID (or array of IDs) to restrict results to.
+	 * @param string  $start_date         Range start date (Y-m-d).
+	 * @param string  $end_date           Range end date (Y-m-d).
+	 * @param string  $order_filter       SQL ORDER BY direction – 'ASC' or 'DESC'.
+	 * @param mixed   $result_state       Attempt result to filter by (pass|fail|pending). Null returns all results.
+	 * @param boolean $count_only         When true, returns an integer count instead of rows.
+	 * @param boolean $instructor_id_check When true, restricts results to courses the current user instructs.
 	 *
-	 * @return mixed
+	 * @return mixed Integer count when $count_only is true, array of row objects otherwise.
 	 */
-	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
+	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $start_date = '', $end_date = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
 		global $wpdb;
 
 		$start         = (int) $start;
 		$limit         = (int) $limit;
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
-		$date_filter   = sanitize_text_field( $date_filter );
 		$order_filter  = sanitize_sql_orderby( $order_filter );
 
 		$search_term_raw = $search_filter;
@@ -512,9 +654,13 @@ class QuizModel {
 			$course_filter = " AND quiz_attempts.course_id IN ($course_ids) ";
 		}
 
-		// Filter by date.
-		$date_filter = '' !== $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-		$date_filter = '' !== $date_filter ? $wpdb->prepare( ' AND  DATE(quiz_attempts.attempt_started_at) = %s ', $date_filter ) : '';
+		// Filter by date (single) or date range.
+		$date_filter = '';
+		if ( '' !== $start_date && '' !== $end_date ) {
+			$start_date  = tutor_get_formated_date( 'Y-m-d', $start_date );
+			$end_date    = tutor_get_formated_date( 'Y-m-d', $end_date );
+			$date_filter = $wpdb->prepare( ' AND DATE(quiz_attempts.attempt_started_at) BETWEEN %s AND %s ', $start_date, $end_date );
+		}
 
 		$result_clause  = '';
 		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name, course.post_title as course_title';

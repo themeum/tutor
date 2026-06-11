@@ -687,12 +687,17 @@ class CheckoutController {
 
 		$checkout_data = $this->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
 
-		if ( ! tutor_utils()->count( $checkout_data->items ) ) {
+		if ( ! isset( $checkout_data->items ) || ! tutor_utils()->count( $checkout_data->items ) ) {
 			array_push( $errors, __( 'No items found for purchase', 'tutor' ) );
 		}
 
 		if ( $checkout_data->total_price > 0 && 'free' === $payment_method ) {
 			array_push( $errors, __( 'Select a payment method', 'tutor' ) );
+		}
+
+		if ( ! empty( $errors ) ) {
+			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
+			return;
 		}
 
 		$items = array();
@@ -1062,14 +1067,15 @@ class CheckoutController {
 			exit;
 		}
 
-		$user_id       = tutils()->get_user_id();
-		$cart_model    = new CartModel();
-		$has_cart_item = $cart_model->has_item_in_cart( $user_id );
-		$buy_now       = Settings::is_buy_now_enabled();
-		$plan_id       = Input::get( 'plan', 0, Input::TYPE_INT );
-		$order_id      = Input::get( 'order_id', 0, Input::TYPE_INT );
+		$user_id        = tutils()->get_user_id();
+		$cart_model     = new CartModel();
+		$has_cart_item  = $cart_model->has_item_in_cart( $user_id );
+		$buy_now        = Settings::is_buy_now_enabled();
+		$plan_id        = Input::get( 'plan', 0, Input::TYPE_INT );
+		$order_id       = Input::get( 'order_id', 0, Input::TYPE_INT );
+		$checkout_error = get_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
 
-		if ( ! $has_cart_item && ! $buy_now && ! $plan_id && ! $order_id ) {
+		if ( ! $has_cart_item && ! $buy_now && ! $plan_id && ! $order_id && ! tutor_utils()->count( $checkout_error ) ) {
 			wp_safe_redirect( $cart_page_url );
 			exit;
 		}

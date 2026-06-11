@@ -1,5 +1,3 @@
-import rgba from 'polished/lib/color/rgba';
-
 export const headerHeight = 64;
 export const sidebarWidth = 355;
 export const footerHeight = 56;
@@ -93,7 +91,7 @@ export const colorTokens = {
     magicAi: {
       default: '#FBF6FF',
       skeleton: '#FEF4FF',
-      8: rgba('#C984FE', 0.08),
+      8: 'rgba(201, 132, 254, 0.08)',
     },
   },
   icon: {

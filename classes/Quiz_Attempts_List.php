@@ -242,13 +242,14 @@ class Quiz_Attempts_List {
 	 * @param string $result_filter the current result state.
 	 * @param string $search_filter the search filter.
 	 * @param string $course_filter the course id filter.
-	 * @param string $date_filter the date filter.
+	 * @param string $start_date range start date (Y-m-d).
+	 * @param string $end_date   range end date (Y-m-d).
 	 * @param string $order_filter the order filter.
 	 * @param array  $all_quizzes all quiz data for student.
 	 *
 	 * @return array
 	 */
-	public function get_quiz_attempts_nav_data( $quiz_attempts_count = 0, $url = '', $result_filter = '', $search_filter = '', $course_filter = 0, $date_filter = '', $order_filter = 'DESC', $all_quizzes = array() ): array {
+	public function get_quiz_attempts_nav_data( $quiz_attempts_count = 0, $url = '', $result_filter = '', $search_filter = '', $course_filter = 0, $start_date = '', $end_date = '', $order_filter = 'DESC', $all_quizzes = array() ): array {
 		$quiz_model = new QuizModel();
 
 		if ( tutor_utils()->count( $all_quizzes ) ) {
@@ -259,10 +260,10 @@ class Quiz_Attempts_List {
 			$failed_attempts     = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_FAIL ) );
 			$pending_attempts    = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_PENDING ) );
 		} else {
-			$all_attempts     = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $date_filter, $order_filter, '', true, true );
-			$pending_attempts = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $date_filter, $order_filter, QuizModel::RESULT_PENDING, true, true );
-			$passed_attempts  = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $date_filter, $order_filter, QuizModel::RESULT_PASS, true, true );
-			$failed_attempts  = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $date_filter, $order_filter, QuizModel::RESULT_FAIL, true, true );
+			$all_attempts     = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, '', true, true );
+			$pending_attempts = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_PENDING, true, true );
+			$passed_attempts  = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_PASS, true, true );
+			$failed_attempts  = QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_FAIL, true, true );
 		}
 
 		$filter_url = remove_query_arg( 'current_page', $url );
@@ -486,14 +487,14 @@ class Quiz_Attempts_List {
 	 * Get kebab button for quiz attempt popover.
 	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @param string $size the size of the button.
 	 *
 	 * @return string
 	 */
 	private function get_kebab_button( $size = Size::X_SMALL ) {
 		$kebab_button = Button::make()
-				->label(__( 'More options', 'tutor' ) )
+				->label( __( 'More options', 'tutor' ) )
 				->icon( Icon::ELLIPSES )
 				->icon_only()
 				->attr( 'x-ref', 'trigger' )
