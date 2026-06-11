@@ -617,27 +617,28 @@ class QuizModel {
 	 * @since 1.0.0
 	 * @since 1.9.5 sorting params added.
 	 * @since 3.8.0 refactor and query optimize.
+	 * @since 4.0.0 date-range filtering added via $start_date / $end_date.
 	 *
-	 * @param integer $start start.
-	 * @param integer $limit limit.
-	 * @param string  $search_filter search filter.
-	 * @param string  $course_filter course filter.
-	 * @param string  $date_filter date filter.
-	 * @param string  $order_filter order filter.
-	 * @param mixed   $result_state result state.
-	 * @param boolean $count_only count only or not.
-	 * @param boolean $instructor_id_check need instructor id check or not.
+	 * @param integer $start              Query offset.
+	 * @param integer $limit              Number of rows to return (0 = no limit).
+	 * @param string  $search_filter      Search keyword matched against user email, display name, quiz title, and course title.
+	 * @param string  $course_filter      Course ID (or array of IDs) to restrict results to.
+	 * @param string  $start_date         Range start date (Y-m-d).
+	 * @param string  $end_date           Range end date (Y-m-d).
+	 * @param string  $order_filter       SQL ORDER BY direction – 'ASC' or 'DESC'.
+	 * @param mixed   $result_state       Attempt result to filter by (pass|fail|pending). Null returns all results.
+	 * @param boolean $count_only         When true, returns an integer count instead of rows.
+	 * @param boolean $instructor_id_check When true, restricts results to courses the current user instructs.
 	 *
-	 * @return mixed
+	 * @return mixed Integer count when $count_only is true, array of row objects otherwise.
 	 */
-	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
+	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $start_date = '', $end_date = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
 		global $wpdb;
 
 		$start         = (int) $start;
 		$limit         = (int) $limit;
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
-		$date_filter   = sanitize_text_field( $date_filter );
 		$order_filter  = sanitize_sql_orderby( $order_filter );
 
 		$search_term_raw = $search_filter;
@@ -653,9 +654,13 @@ class QuizModel {
 			$course_filter = " AND quiz_attempts.course_id IN ($course_ids) ";
 		}
 
-		// Filter by date.
-		$date_filter = '' !== $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-		$date_filter = '' !== $date_filter ? $wpdb->prepare( ' AND  DATE(quiz_attempts.attempt_started_at) = %s ', $date_filter ) : '';
+		// Filter by date (single) or date range.
+		$date_filter = '';
+		if ( '' !== $start_date && '' !== $end_date ) {
+			$start_date  = tutor_get_formated_date( 'Y-m-d', $start_date );
+			$end_date    = tutor_get_formated_date( 'Y-m-d', $end_date );
+			$date_filter = $wpdb->prepare( ' AND DATE(quiz_attempts.attempt_started_at) BETWEEN %s AND %s ', $start_date, $end_date );
+		}
 
 		$result_clause  = '';
 		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name, course.post_title as course_title';
