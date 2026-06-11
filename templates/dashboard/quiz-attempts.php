@@ -52,10 +52,7 @@ $quiz_attempts_list  = QuizModel::format_quiz_attempts( $quiz_attempts, $result_
 $quiz_attempts_count = QuizModel::get_quiz_attempts( $offset, $item_per_page, $search_filter, $course_id > 0 ? $course_id : '', $start_date, $end_date, $order_filter, $result_filter, true, true );
 
 
-$date_params_present = Input::has( 'date', Input::GET_REQUEST )
-	|| Input::has( 'start_date', Input::GET_REQUEST )
-	|| Input::has( 'end_date', Input::GET_REQUEST );
-
+$date_params_present = Input::has( 'start_date', Input::GET_REQUEST ) || Input::has( 'end_date', Input::GET_REQUEST );
 if ( $date_params_present && $quiz_attempts_count <= $offset ) {
 	$offset = 0;
 }
@@ -116,7 +113,7 @@ $hidden_inputs = array(
 
 			<div class="tutor-flex tutor-gap-3">
 				<?php
-				$query_items = array( 'course-id', 'search', 'date', 'start_date', 'end_date', 'result', 'order' );
+				$query_items = array( 'course-id', 'search', 'start_date', 'end_date', 'result', 'order' );
 				if ( Input::has_any( $query_items, Input::GET_REQUEST ) ) {
 					Button::make()
 						->tag( 'a' )
