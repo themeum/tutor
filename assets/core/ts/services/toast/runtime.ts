@@ -296,6 +296,8 @@ export class TutorToastManager {
       }
     }
 
+    this.container.setAttribute(TOAST_ATTR.dataPositionX, isMobile ? TOAST_POSITION.center : this.xPosition());
+
     this.container.style.setProperty(TOAST_CSS_VAR.offsetX, `${offsetX}px`);
     this.container.style.setProperty(TOAST_CSS_VAR.offsetY, `${offsetY}px`);
   }
