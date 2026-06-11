@@ -1,0 +1,57 @@
+@use './typography' as *;
+@use './borders' as *;
+@use './shadows' as *;
+@use './spacing' as *;
+@use './surfaces' as *;
+@use './text-colors' as *;
+@use './icons' as *;
+@use './zIndex' as *;
+
+$tutor-toast-font: var(--tutor-toast-font, #{$tutor-font-family-body});
+$tutor-toast-z: var(--tutor-toast-z, #{$tutor-z-highest + 1});
+$tutor-toast-gap: var(--tutor-toast-gap, #{$tutor-spacing-4});
+$tutor-toast-padding: var(--tutor-toast-padding, #{$tutor-spacing-5} #{$tutor-spacing-6});
+$tutor-toast-radius: var(--tutor-toast-radius, #{$tutor-radius-full});
+$tutor-toast-icon-size: var(--tutor-toast-icon-size, 36px);
+$tutor-toast-min-width: var(--tutor-toast-min-width, 300px);
+$tutor-toast-max-width: var(--tutor-toast-max-width, 340px);
+$tutor-toast-animation-enter: var(--tutor-toast-animation-enter, 400ms);
+$tutor-toast-animation-exit: var(--tutor-toast-animation-exit, 300ms);
+$tutor-toast-offset-x: var(--tutor-toast-offset-x, #{$tutor-spacing-6});
+$tutor-toast-offset-y: var(--tutor-toast-offset-y, #{$tutor-spacing-6});
+
+$tutor-toast-background: var(--tutor-toast-background, #{$tutor-surface-base});
+$tutor-toast-border: var(--tutor-toast-border, #{$tutor-border-idle});
+$tutor-toast-shadow: var(--tutor-toast-shadow, #{$tutor-shadow-xl});
+$tutor-toast-text: var(--tutor-toast-text, #{$tutor-text-primary});
+$tutor-toast-text-muted: var(--tutor-toast-text-muted, #{$tutor-text-secondary});
+
+$tutor-toast-success-background: var(--tutor-toast-success-background, #{$tutor-surface-success});
+$tutor-toast-success-border: var(--tutor-toast-success-border, #{$tutor-border-success});
+$tutor-toast-success-icon: var(--tutor-toast-success-icon, #{$tutor-icon-success-primary});
+$tutor-toast-success-text: var(--tutor-toast-success-text, #{$tutor-text-success});
+
+$tutor-toast-error-background: var(--tutor-toast-error-background, #{$tutor-surface-critical});
+$tutor-toast-error-border: var(--tutor-toast-error-border, #{$tutor-border-error});
+$tutor-toast-error-icon: var(--tutor-toast-error-icon, #{$tutor-icon-critical});
+$tutor-toast-error-text: var(--tutor-toast-error-text, #{$tutor-text-critical});
+
+$tutor-toast-warning-background: var(--tutor-toast-warning-background, #{$tutor-surface-warning-hover});
+$tutor-toast-warning-border: var(--tutor-toast-warning-border, #{$tutor-border-warning-tertiary});
+$tutor-toast-warning-icon: var(--tutor-toast-warning-icon, #{$tutor-icon-warning});
+$tutor-toast-warning-text: var(--tutor-toast-warning-text, #{$tutor-text-caution});
+
+$tutor-toast-info-background: var(--tutor-toast-info-background, #{$tutor-surface-brand-secondary});
+$tutor-toast-info-border: var(--tutor-toast-info-border, #{$tutor-border-brand-tertiary});
+$tutor-toast-info-icon: var(--tutor-toast-info-icon, #{$tutor-icon-brand});
+$tutor-toast-info-text: var(--tutor-toast-info-text, #{$tutor-text-brand});
+
+$tutor-toast-loading-background: var(--tutor-toast-loading-background, #{$tutor-surface-l2});
+$tutor-toast-loading-border: var(--tutor-toast-loading-border, #{$tutor-border-hover});
+$tutor-toast-loading-icon: var(--tutor-toast-loading-icon, #{$tutor-icon-idle});
+$tutor-toast-loading-text: var(--tutor-toast-loading-text, #{$tutor-text-primary});
+
+$tutor-toast-default-background: var(--tutor-toast-default-background, #{$tutor-surface-base});
+$tutor-toast-default-border: var(--tutor-toast-default-border, #{$tutor-border-idle});
+$tutor-toast-default-icon: var(--tutor-toast-default-icon, #{$tutor-icon-idle});
+$tutor-toast-default-text: var(--tutor-toast-default-text, #{$tutor-text-primary});

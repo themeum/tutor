@@ -21,6 +21,7 @@ use Tutor\Components\Constants\Color;
 use TUTOR\Icon;
 use TUTOR\Instructors_List;
 use TUTOR\User;
+use Tutor\Models\CourseModel;
 
 $menu_items           = Dashboard::get_account_pages();
 $menu_items['logout'] = array(
@@ -34,6 +35,8 @@ $user_id                      = get_current_user_id();
 $display_name                 = tutor_utils()->display_name( $user_id );
 $edit_profile_url             = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
 $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instructor_btn' );
+
+$is_instructor_view = User::is_instructor_view();
 ?>
 
 <div x-data="tutorHeader()" class="tutor-dashboard-header">
@@ -45,6 +48,53 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 				</span>
 				<?php echo esc_html( $display_name . ' 👋' ); ?>
 			</div>
+			<?php
+			if ( $is_instructor_view ) :
+				$active_course_count    = (int) CourseModel::get_course_count_by_instructor( $user_id );
+				$enrolled_student_count = (int) tutor_utils()->get_total_students_by_instructor( $user_id );
+				?>
+				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny tutor-mt-2">
+					<?php
+						echo wp_kses(
+							sprintf(
+								/* translators: %s is the formatted active course count. */
+								_n(
+									'<span class="tutor-font-medium">%s</span> active course',
+									'<span class="tutor-font-medium">%s</span> active courses',
+									$active_course_count,
+									'tutor'
+								),
+								esc_html( number_format_i18n( $active_course_count ) )
+							),
+							array(
+								'span' => array(
+									'class' => true,
+								),
+							)
+						);
+					?>
+					<span class="tutor-text-subdued">&bull;</span>
+					<?php
+						echo wp_kses(
+							sprintf(
+								/* translators: %s is the formatted enrolled student count. */
+								_n(
+									'<span class="tutor-font-medium">%s</span> student enrolled',
+									'<span class="tutor-font-medium">%s</span> students enrolled',
+									$enrolled_student_count,
+									'tutor'
+								),
+								esc_html( number_format_i18n( $enrolled_student_count ) )
+							),
+							array(
+								'span' => array(
+									'class' => true,
+								),
+							)
+						);
+					?>
+				</div>
+			<?php endif; ?>
 		</div>
 		<div class="tutor-dashboard-header-right">
 			<div>
@@ -98,7 +148,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 								->label( __( 'Back', 'tutor' ) )
 								->variant( Variant::GHOST )
 								->size( Size::X_SMALL )
-								->icon( Icon::LEFT, 'left', 20, 20 )
+								->icon( Icon::LEFT, 'left', 20 )
 								->icon_only()
 								->attr( '@click', 'hide()' )
 								->render();
@@ -110,7 +160,7 @@ $is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instru
 							Button::make()
 								->variant( Variant::GHOST )
 								->size( Size::X_SMALL )
-								->icon( Icon::SETTING, 'left', 20, 20 )
+								->icon( Icon::SETTING, 'left', 20 )
 								->tag( 'a' )
 								->icon_only()
 								->attr( 'href', esc_url( Dashboard::get_account_page_url( 'settings' ) ) )

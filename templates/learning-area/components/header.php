@@ -12,8 +12,9 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use TUTOR\Icon;
-use Tutor\Components\SvgIcon;
+use Tutor\Components\Button;
 use TUTOR\Course;
 
 // Globals inherited from learning-area/index.php template.
@@ -34,9 +35,19 @@ $content_title = $tutor_current_post->post_title ?? '';
 <div class="tutor-learning-header">
 	<div class="tutor-learning-header-inner">
 		<div class="tutor-learning-header-content">
-			<a class="tutor-learning-header-back" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ); ?>" aria-label="<?php esc_attr_e( 'Back to dashboard', 'tutor' ); ?>">
-				<?php SvgIcon::make()->name( Icon::LEFT )->size( 20 )->render(); ?>
-			</a>
+			<div class="tutor-learning-header-back">
+				<?php
+				Button::make()
+					->tag( 'a' )
+					->label( __( 'Back to dashboard', 'tutor' ) )
+					->variant( Variant::GHOST )
+					->size( Size::SMALL )
+					->icon( Icon::LEFT, 'left', 20 )
+					->icon_only()
+					->attr( 'href', esc_url( tutor_utils()->tutor_dashboard_url() ) )
+					->render();
+				?>
+			</div>
 			<h5 class="tutor-learning-header-title tutor-my-none">
 				<span class="tutor-md-hidden">
 					<?php echo esc_html( $course_title ); ?>
@@ -58,8 +69,17 @@ $content_title = $tutor_current_post->post_title ?? '';
 				?>
 			</div>
 		</div>
-		<button class="tutor-learning-header-toggle-mobile" @click.stop="$dispatch('toggle-sidebar')" aria-label="<?php esc_attr_e( 'Toggle course sidebar', 'tutor' ); ?>">
-			<?php SvgIcon::make()->name( Icon::MENU )->size( 20 )->render(); ?>
-		</button>
+		<div class="tutor-learning-header-toggle-mobile">
+			<?php
+			Button::make()
+				->label( __( 'Toggle course sidebar', 'tutor' ) )
+				->variant( Variant::GHOST )
+				->size( Size::SMALL )
+				->icon( Icon::MENU, 'left', 20 )
+				->icon_only()
+				->attr( '@click.stop', '$dispatch(\'toggle-sidebar\')' )
+				->render();
+			?>
+		</div>
 	</div>
 </div>

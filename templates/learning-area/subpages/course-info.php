@@ -225,7 +225,15 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		<div class="tutor-course-accordion">
 			<?php if ( ! empty( get_the_content() ) ) : ?>
 				<div x-data="{ expanded: false }" class="tutor-course-accordion-item">
-					<div role="button" @click="expanded = !expanded" class="tutor-course-accordion-header">
+					<div 
+						role="button" 
+						tabindex="0" 
+						@click="expanded = !expanded" 
+						@keydown.enter.prevent="expanded = !expanded" 
+						@keydown.space.prevent="expanded = !expanded" 
+						:aria-expanded="expanded ? 'true' : 'false'"
+						class="tutor-course-accordion-header"
+					>
 						<div class="tutor-course-accordion-header-title">
 							<?php esc_html_e( 'About this Course', 'tutor' ); ?>
 						</div>
@@ -241,7 +249,15 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 
 			<?php if ( ! empty( $course_benefits ) && is_array( $course_benefits ) ) : ?>
 				<div x-data="{ expanded: false }" class="tutor-course-accordion-item">
-					<div role="button" @click="expanded = !expanded" class="tutor-course-accordion-header">
+					<div 
+						role="button" 
+						tabindex="0" 
+						@click="expanded = !expanded" 
+						@keydown.enter.prevent="expanded = !expanded" 
+						@keydown.space.prevent="expanded = !expanded" 
+						:aria-expanded="expanded ? 'true' : 'false'"
+						class="tutor-course-accordion-header"
+					>
 						<div class="tutor-course-accordion-header-title">
 							<?php esc_html_e( "What you'll learn", 'tutor' ); ?>
 						</div>

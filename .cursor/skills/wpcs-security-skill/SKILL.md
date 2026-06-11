@@ -5,6 +5,7 @@
 This skill enforces strict WordPress coding standards (WPCS) and security best practices for all WordPress PHP, JavaScript, CSS, and HTML code. Apply these rules automatically whenever writing or reviewing WordPress plugin, theme, or core-adjacent code.
 
 **Official References:**
+
 - WPCS: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/
 - PHP Standards: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/
 - JS Standards: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/javascript/
@@ -21,6 +22,7 @@ This skill enforces strict WordPress coding standards (WPCS) and security best p
 ## PART 1 — PHP CODING STANDARDS
 
 ### 1.1 PHP Tags
+
 - Always use full `<?php ?>` tags. Never use shorthand `<?` or `<?=`.
 - In multi-line PHP-within-HTML blocks, opening and closing tags must be on their own lines.
 
@@ -35,13 +37,13 @@ This skill enforces strict WordPress coding standards (WPCS) and security best p
 
 ### 1.2 Naming Conventions
 
-| Construct | Convention | Example |
-|---|---|---|
-| Functions / variables / hooks | `lowercase_with_underscores` | `my_plugin_get_data()` |
-| Classes / Interfaces / Traits / Enums | `Capitalized_Words` | `My_Plugin_Handler` |
-| Constants | `ALL_CAPS_WITH_UNDERSCORES` | `MY_PLUGIN_VERSION` |
-| Files (general) | `lowercase-hyphenated.php` | `my-plugin-name.php` |
-| Class files | `class-{classname}.php` | `class-my-plugin-handler.php` |
+| Construct                             | Convention                   | Example                       |
+| ------------------------------------- | ---------------------------- | ----------------------------- |
+| Functions / variables / hooks         | `lowercase_with_underscores` | `my_plugin_get_data()`        |
+| Classes / Interfaces / Traits / Enums | `Capitalized_Words`          | `My_Plugin_Handler`           |
+| Constants                             | `ALL_CAPS_WITH_UNDERSCORES`  | `MY_PLUGIN_VERSION`           |
+| Files (general)                       | `lowercase-hyphenated.php`   | `my-plugin-name.php`          |
+| Class files                           | `class-{classname}.php`      | `class-my-plugin-handler.php` |
 
 - Never use `camelCase` for functions or variables.
 - Never abbreviate variable names unnecessarily — code must be self-documenting.
@@ -58,6 +60,7 @@ define( 'VERSION', '1.0.0' );
 ```
 
 ### 1.3 Spacing & Indentation
+
 - Use **real tabs** (not spaces) for indentation.
 - Spaces may be used mid-line for alignment only.
 - Put spaces after commas, and on both sides of logical, arithmetic, comparison, and assignment operators.
@@ -81,6 +84,7 @@ foreach($items as $key=>$value){
 ```
 
 ### 1.4 Brace Style
+
 - Always use braces for all control structure blocks — even single-line bodies.
 - Use `elseif` (not `else if`).
 - Opening brace on the same line as the statement.
@@ -102,6 +106,7 @@ else if ( $other ) { other_action(); }
 ```
 
 ### 1.5 Yoda Conditions
+
 Always place the constant/literal on the **left** side of comparisons to prevent accidental assignment.
 
 ```php
@@ -118,6 +123,7 @@ if ( $post->post_status === 'publish' ) {}
 Applies to `==`, `!=`, `===`, `!==`. Not required for `<`, `>`, `<=`, `>=`.
 
 ### 1.6 Arrays
+
 - Always use long array syntax: `array()` — not `[]`.
 - Multi-item arrays must be written with one item per line, trailing comma included.
 
@@ -134,6 +140,7 @@ $args = ['post_type' => 'post', 'post_status' => 'publish'];
 ```
 
 ### 1.7 Object-Oriented PHP
+
 - Declare **visibility** (`public`, `protected`, `private`) on all properties and methods — never use `var`.
 - Only **one class/interface/trait/enum per file**.
 - Follow modifier order: `abstract|final` → `readonly` → visibility → `static` → type.
@@ -157,6 +164,7 @@ class My_Plugin_Handler {
 ```
 
 ### 1.8 Database Queries
+
 - **Never** write raw SQL when a WordPress API function exists.
 - Always use `$wpdb->prepare()` for any query with user-supplied data.
 - Use `%d`, `%s`, `%f`, `%i` placeholders — never quote them inside `prepare()`.
@@ -178,19 +186,21 @@ $result = $wpdb->get_var( "SELECT post_title FROM wp_posts WHERE ID = $post_id" 
 ```
 
 ### 1.9 Forbidden Constructs
+
 Never use these — they are security risks or bad practice:
 
-| Forbidden | Reason |
-|---|---|
-| `eval()` | Arbitrary code execution |
-| `create_function()` | Deprecated, wraps `eval()` |
-| `extract()` | Creates unpredictable variable scope |
-| Backtick operator `` ` `` | Identical to `shell_exec()` |
-| `@` error suppression | Hides real errors, dangerous pre-PHP 8 |
-| `goto` | Unreadable, unmaintainable |
-| Short ternary `?:` | Confusing behavior |
+| Forbidden                 | Reason                                 |
+| ------------------------- | -------------------------------------- |
+| `eval()`                  | Arbitrary code execution               |
+| `create_function()`       | Deprecated, wraps `eval()`             |
+| `extract()`               | Creates unpredictable variable scope   |
+| Backtick operator `` ` `` | Identical to `shell_exec()`            |
+| `@` error suppression     | Hides real errors, dangerous pre-PHP 8 |
+| `goto`                    | Unreadable, unmaintainable             |
+| Short ternary `?:`        | Confusing behavior                     |
 
 ### 1.10 Dynamic Hook Names
+
 Use interpolation with curly braces, not concatenation:
 
 ```php
@@ -202,6 +212,7 @@ do_action( $post->post_type . '_saved', $post->ID );
 ```
 
 ### 1.11 Includes & Requires
+
 - Prefer `require_once` over `include_once` for critical files.
 - No parentheses around the path.
 
@@ -221,6 +232,7 @@ include_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 Security principle: **Never trust any data.** Validate on input. Sanitize before saving. Escape on output.
 
 ### 2.1 Nonces (CSRF Protection)
+
 Every form submission, AJAX request, or state-changing URL must be protected with a nonce.
 
 ```php
@@ -240,6 +252,7 @@ check_ajax_referer( 'myplugin_ajax_action', 'nonce' );
 ```
 
 ### 2.2 Capability Checks (Authorization)
+
 Always verify the current user has permission before performing privileged actions.
 
 ```php
@@ -261,21 +274,22 @@ function myplugin_ajax_save() {
 ```
 
 ### 2.3 Sanitizing Input
+
 Sanitize all incoming data before saving to database or using in logic. Choose the most specific sanitizer available.
 
-| Data Type | Sanitizer |
-|---|---|
-| Plain text (single line) | `sanitize_text_field()` |
-| Multi-line text | `sanitize_textarea_field()` |
-| Email address | `sanitize_email()` |
-| URL | `esc_url_raw()` |
-| Integer | `absint()` or `intval()` |
-| Float | `floatval()` |
-| HTML content | `wp_kses_post()` or `wp_kses()` |
-| File name | `sanitize_file_name()` |
-| CSS class/ID | `sanitize_html_class()` |
-| Slug/key | `sanitize_key()` or `sanitize_title()` |
-| SQL values | Use `$wpdb->prepare()` |
+| Data Type                | Sanitizer                              |
+| ------------------------ | -------------------------------------- |
+| Plain text (single line) | `sanitize_text_field()`                |
+| Multi-line text          | `sanitize_textarea_field()`            |
+| Email address            | `sanitize_email()`                     |
+| URL                      | `esc_url_raw()`                        |
+| Integer                  | `absint()` or `intval()`               |
+| Float                    | `floatval()`                           |
+| HTML content             | `wp_kses_post()` or `wp_kses()`        |
+| File name                | `sanitize_file_name()`                 |
+| CSS class/ID             | `sanitize_html_class()`                |
+| Slug/key                 | `sanitize_key()` or `sanitize_title()` |
+| SQL values               | Use `$wpdb->prepare()`                 |
 
 ```php
 // ✅ Correct
@@ -293,19 +307,20 @@ update_option( 'my_option', $_POST['value'] );
 Always call `wp_unslash()` before sanitizing `$_POST`, `$_GET`, `$_REQUEST`, `$_COOKIE` data.
 
 ### 2.4 Escaping Output
+
 Escape data as **late as possible** — immediately before rendering. Use the most context-specific escaping function.
 
-| Context | Escaping Function |
-|---|---|
-| HTML text nodes | `esc_html()` |
-| HTML attributes | `esc_attr()` |
-| URLs in `href`, `src`, `action` | `esc_url()` |
-| JavaScript values | `esc_js()` |
-| CSS values | `esc_attr()` |
-| Translated strings (HTML) | `esc_html__()`, `esc_html_e()` |
-| Translated strings (attr) | `esc_attr__()`, `esc_attr_e()` |
-| Inline JSON for JS | `wp_json_encode()` |
-| Rich HTML content | `wp_kses_post()` |
+| Context                         | Escaping Function              |
+| ------------------------------- | ------------------------------ |
+| HTML text nodes                 | `esc_html()`                   |
+| HTML attributes                 | `esc_attr()`                   |
+| URLs in `href`, `src`, `action` | `esc_url()`                    |
+| JavaScript values               | `esc_js()`                     |
+| CSS values                      | `esc_attr()`                   |
+| Translated strings (HTML)       | `esc_html__()`, `esc_html_e()` |
+| Translated strings (attr)       | `esc_attr__()`, `esc_attr_e()` |
+| Inline JSON for JS              | `wp_json_encode()`             |
+| Rich HTML content               | `wp_kses_post()`               |
 
 ```php
 // ✅ Correct
@@ -328,6 +343,7 @@ echo '<a href="' . $link . '">';
 ```
 
 ### 2.5 Data Validation (Rejection vs Sanitization)
+
 Validation is stricter than sanitization — **reject** invalid data rather than silently correcting it.
 
 ```php
@@ -354,6 +370,7 @@ if ( $quantity < 1 || $quantity > 100 ) {
 ```
 
 ### 2.6 Direct File Access Prevention
+
 Every plugin file must include a check to prevent direct access:
 
 ```php
@@ -364,6 +381,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ```
 
 ### 2.7 Options & Transients Security
+
 - Use `sanitize_*` functions before saving to options.
 - Use `esc_*` functions when reading from options for output.
 - Always prefix option names with plugin slug.
@@ -376,7 +394,8 @@ update_option( 'myplugin_api_key', sanitize_text_field( $api_key ) );
 echo esc_html( get_option( 'myplugin_api_key', '' ) );
 ```
 
-### 2.8 HTTP Requests (wp_remote_*)
+### 2.8 HTTP Requests (wp*remote*\*)
+
 Always use WordPress HTTP API — never raw `curl` or `file_get_contents`.
 
 ```php
@@ -406,6 +425,7 @@ $data = json_decode( $body, true );
 **CSRF (Cross-Site Request Forgery)** — always use nonces (covered in 2.1).
 
 **Path Traversal** — validate and sanitize file paths:
+
 ```php
 // ✅ Correct
 $file = sanitize_file_name( wp_unslash( $_GET['file'] ?? '' ) );
@@ -416,6 +436,7 @@ if ( false === $full_path || 0 !== strpos( $full_path, realpath( WP_CONTENT_DIR 
 ```
 
 **Object Injection / Unsafe Unserialize** — never unserialize user data:
+
 ```php
 // ❌ NEVER do this
 $data = unserialize( $_POST['data'] );
@@ -425,6 +446,7 @@ $data = json_decode( wp_unslash( $_POST['data'] ), true );
 ```
 
 **Open Redirects** — always validate redirect URLs:
+
 ```php
 // ✅ Correct
 $redirect = wp_validate_redirect( wp_unslash( $_GET['redirect_to'] ?? '' ), admin_url() );
@@ -449,17 +471,17 @@ wp_redirect( $_GET['redirect_to'] );
 ```javascript
 // ✅ Correct AJAX with nonce
 jQuery.post(
-    myPlugin.ajaxUrl,
-    {
-        action: 'myplugin_save',
-        nonce:  myPlugin.nonce,
-        data:   inputValue,
-    },
-    function( response ) {
-        if ( response.success ) {
-            // handle success
-        }
+  myPlugin.ajaxUrl,
+  {
+    action: 'myplugin_save',
+    nonce: myPlugin.nonce,
+    data: inputValue,
+  },
+  function (response) {
+    if (response.success) {
+      // handle success
     }
+  },
 );
 ```
 
@@ -487,12 +509,16 @@ wp_localize_script( 'myplugin-script', 'myPlugin', array(
 /* ✅ Correct */
 .myplugin-container,
 .myplugin-wrapper {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 /* ❌ Incorrect */
-.container, .wrapper { display:flex; align-items:center }
+.container,
+.wrapper {
+  display: flex;
+  align-items: center;
+}
 ```
 
 ---

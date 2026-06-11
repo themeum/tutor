@@ -132,7 +132,8 @@
     @include tutor-button-variant('ghost');
     @include tutor-flex(row, center, center);
     @include margin-end($tutor-spacing-2);
-    padding: 0;
+    padding: $tutor-spacing-1;
+    border-radius: $tutor-radius-sm;
     color: $tutor-icon-secondary;
     cursor: pointer;
     @include tutor-transition(color);

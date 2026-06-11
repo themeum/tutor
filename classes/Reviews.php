@@ -191,5 +191,4 @@ class Reviews {
 
 		return $nav_items;
 	}
-
 }

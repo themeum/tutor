@@ -12,5 +12,5 @@
 defined( 'ABSPATH' ) || exit;
 
 do_action( 'tutor_before_dashboard_content' );
-tutor_load_template( 'dashboard.instructor.home.profile-completion' );
+tutor_load_template( 'dashboard.components.profile-completion' );
 tutor_load_template( 'dashboard.instructor.home' );

@@ -4987,105 +4987,10 @@ class Utils {
 		foreach ( $questions as $question ) {
 			$question->question_title       = stripslashes( $question->question_title );
 			$question->question_description = stripslashes( $question->question_description );
-			$question->answer_explanation   = stripslashes( $question->answer_explanation );
+			$question->answer_explanation   = stripslashes( $question->answer_explanation ?? '' );
 		}
 
 		return ( is_array( $questions ) && count( $questions ) ) ? $questions : false;
-	}
-
-	/**
-	 * Get all question types
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param mixed $type type.
-	 *
-	 * @return array|mixed
-	 */
-	public function get_question_types( $type = null ) {
-		$types = array(
-			'true_false'        => array(
-				'name'   => __( 'True/False', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-quiz-type-boolean tutor-icon-circle-half"></i></span>',
-				'is_pro' => false,
-			),
-			'single_choice'     => array(
-				'name'   => __( 'Single Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-single-choice tutor-icon-mark"></i></span>',
-				'is_pro' => false,
-			),
-			'multiple_choice'   => array(
-				'name'   => __( 'Multiple Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-multiple-choices tutor-icon-double-mark"></i></span>',
-				'is_pro' => false,
-			),
-			'open_ended'        => array(
-				'name'   => __( 'Open Ended', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-open-ended tutor-icon-text-width"></i></span>',
-				'is_pro' => false,
-			),
-			'fill_in_the_blank' => array(
-				'name'   => __( 'Fill In The Blanks', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-quiz-type-fill-blanks tutor-icon-hourglass"></i></span>',
-				'is_pro' => false,
-			),
-			'short_answer'      => array(
-				'name'   => __( 'Short Answer', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-short-answer tutor-icon-minimize"></i></span>',
-				'is_pro' => true,
-			),
-			'matching'          => array(
-				'name'   => __( 'Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-matching tutor-icon-arrow-right-left"></i></span>',
-				'is_pro' => true,
-			),
-			'image_matching'    => array(
-				'name'   => __( 'Image Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-image-matching tutor-icon-images"></i></span>',
-				'is_pro' => true,
-			),
-			'image_answering'   => array(
-				'name'   => __( 'Image Answering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-image-answering tutor-icon-camera"></i></span>',
-				'is_pro' => true,
-			),
-			'ordering'          => array(
-				'name'   => __( 'Ordering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-ordering tutor-icon-ordering-z-a"></i></span>',
-				'is_pro' => true,
-			),
-			'draw_image'        => array(
-				'name'   => __( 'Mark in the image', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
-				'is_pro' => true,
-			),
-			'scale'             => array(
-				'name'   => __( 'Range', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-scale tutor-icon-slider-horizontal"></i></span>',
-				'is_pro' => true,
-			),
-			'pin_image'         => array(
-				'name'   => __( 'Pin', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
-				'is_pro' => true,
-			),
-			'coordinates'       => array(
-				'name'   => __( 'Graph', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-coordinates tutor-icon-grid"></i></span>',
-				'is_pro' => true,
-			),
-			'puzzle'            => array(
-				'name'   => __( 'Puzzle', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-puzzle tutor-icon-images"></i></span>',
-				'is_pro' => true,
-			),
-		);
-
-		if ( isset( $types[ $type ] ) ) {
-			return $types[ $type ];
-		}
-
-		return $types;
 	}
 
 	/**
@@ -7217,10 +7122,12 @@ class Utils {
 		$instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 
 		$settings_url          = Dashboard::get_account_page_url( 'settings' );
+		$social_settings_url   = Dashboard::get_account_page_url( 'settings?tab=social-accounts' );
 		$withdraw_settings_url = Dashboard::get_account_page_url( 'settings?tab=withdraw' );
 
 		$required_fields = array(
 			'_tutor_profile_photo' => __( 'Set Your Profile Photo', 'tutor' ),
+			'_tutor_social_links'  => __( 'Add Your Social Links', 'tutor' ),
 			'_tutor_profile_bio'   => __( 'Set Your Bio', 'tutor' ),
 		);
 
@@ -7229,16 +7136,31 @@ class Utils {
 			$required_fields['_tutor_withdraw_method_data'] = __( 'Set Withdraw Method', 'tutor' );
 		}
 
+		// Check if any individual social link meta is set.
+		$social_meta_keys = array_keys( $this->tutor_user_social_icons() );
+		$has_social_link  = false;
+		foreach ( $social_meta_keys as $social_key ) {
+			if ( get_user_meta( $user_id, $social_key, true ) ) {
+				$has_social_link = true;
+				break;
+			}
+		}
+
 		// url where user should redirect for profile completion.
 		$profile_completion_urls = array(
 			'_tutor_profile_photo'        => $settings_url,
 			'_tutor_profile_bio'          => $settings_url,
+			'_tutor_social_links'         => $social_settings_url,
 			'_tutor_withdraw_method_data' => $withdraw_settings_url,
 		);
 		foreach ( $required_fields as $key => $field ) {
+			$is_set = '_tutor_social_links' === $key
+				? $has_social_link
+				: (bool) get_user_meta( $user_id, $key, true );
+
 			$required_fields[ $key ] = array(
 				'text'   => $field,
-				'is_set' => get_user_meta( $user_id, $key, true ) ? true : false,
+				'is_set' => $is_set,
 				'url'    => $profile_completion_urls[ $key ],
 			);
 		}
@@ -9452,14 +9374,16 @@ class Utils {
 				);
 			}
 
+			$content_type = $result->content_type ?? '';
+
 			// Create content key.
-			if ( ! array_key_exists( $result->content_type, $course_meta[ $result->course_id ] ) ) {
-				$course_meta[ $result->course_id ][ $result->content_type ] = array();
+			if ( ! array_key_exists( $content_type, $course_meta[ $result->course_id ] ) ) {
+				$course_meta[ $result->course_id ][ $content_type ] = array();
 			}
 
 			try {
 				if ( $result->content_id ) {
-					$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
+					$course_meta[ $result->course_id ][ $content_type ][] = $result->content_id;
 				}
 			} catch ( \Throwable $th ) {
 				tutor_log( 'Affected course ID : ' . $result->course_id . ' Error : ' . $th->getMessage() );
