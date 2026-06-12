@@ -46,10 +46,10 @@ $search_term  = Input::get( 'search', '' );
 
 // Get counts for course tabs.
 $count_map = array(
-	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true, $course_post_type, $search_term ),
-	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true, $course_post_type, $search_term ),
-	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true, $course_post_type, $search_term ),
-	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true, $course_post_type, $search_term ),
+	'publish' => CourseModel::get_course_count_by_instructor( $current_user_id, $course_post_type, array( CourseModel::STATUS_PUBLISH ), $search_term ),
+	'pending' => CourseModel::get_course_count_by_instructor( $current_user_id, $course_post_type, array( CourseModel::STATUS_PENDING ), $search_term ),
+	'draft'   => CourseModel::get_course_count_by_instructor( $current_user_id, $course_post_type, array( CourseModel::STATUS_DRAFT ), $search_term ),
+	'future'  => CourseModel::get_course_count_by_instructor( $current_user_id, $course_post_type, array( CourseModel::STATUS_FUTURE ), $search_term ),
 );
 
 $item_per_page      = tutor_utils()->get_option( 'pagination_per_page', 10 );
