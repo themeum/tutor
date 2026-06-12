@@ -29,6 +29,7 @@ interface RefundModalProps extends ModalProps {
 }
 
 interface FormField {
+  context?: string;
   amount: number;
   is_remove_enrolment?: boolean;
   is_cancel_subscription: boolean;
@@ -48,6 +49,7 @@ function RefundModal({
   const refundOrderMutation = useRefundOrderMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
+      context: 'backend_refund',
       amount: 0,
       is_cancel_subscription: false,
       reason: '',

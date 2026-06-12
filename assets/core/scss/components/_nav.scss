@@ -35,6 +35,11 @@
       outline: none;
     }
 
+    &:focus-visible {
+      @include tutor-focus-ring('brand', true);
+      outline-offset: -2px;
+    }
+
     &.active {
       background-color: $tutor-tab-l3-active;
       color: $tutor-text-brand;

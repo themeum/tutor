@@ -5,7 +5,6 @@ import Alpine from 'alpinejs';
 import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 
 import { accordionMeta } from '@Core/ts/components/accordion';
-import { buttonMeta } from '@Core/ts/components/button';
 import { copyToClipboardMeta } from '@Core/ts/components/copy-to-clipboard';
 import { iconMeta } from '@Core/ts/components/icon';
 import { modalMeta } from '@Core/ts/components/modal';
@@ -26,7 +25,7 @@ import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { preferenceServiceMeta } from '@Core/ts/services/Preference';
 import { queryServiceMeta } from '@Core/ts/services/Query';
-import { toastServiceMeta } from '@Core/ts/services/Toast';
+import { toastServiceMeta } from '@Core/ts/services/toast/Toast';
 import { wpMediaServiceMeta } from '@Core/ts/services/WPMedia';
 
 import { registerLegacyFunctions } from '@Core/ts/legacy';
@@ -40,7 +39,6 @@ Alpine.plugin(collapse);
 const initializePlugin = async () => {
   TutorComponentRegistry.registerAll({
     components: [
-      buttonMeta,
       tabsMeta,
       iconMeta,
       modalMeta,

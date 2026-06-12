@@ -318,6 +318,33 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 4.0.0-rc.2 - 12 jun, 2026
+
+Update: Added more details to the Instructor Dashboard header
+Update: Added page title and meta title support for learning pages
+Update: Introduced a new empty dashboard design for students
+Update: Refined the pending payment modal for subscriptions
+Update: Improved Google Classroom compatibility
+Update: Improved accessibility across the plugin
+Update: Improved consistency in course analytics details
+Update: Added “Explore Course” button in the student dashboard
+Fix: Resolved the checkbox issue on the login page
+Fix: Corrected certificate visibility in bundle courses
+Fix: Addressed incorrect email notifications during partial refunds
+Fix: Fixed a fatal error in Learning Area live classes when translations are enabled
+Fix: Corrected "Cancel Enrollment" checkbox behavior for partial and full refunds
+Fix: Fixed order history filtering issues with WooCommerce monetization
+Fix: Resolved a homepage layout issue where content appeared outside the header
+Fix: Fixed attachment not opening in a new tab
+Fix: Removed infinite loop issue triggered by the back button
+Fix: Fixed email verification notice issue when Jetpack is active
+Fix: Restored visibility of enrolled courses in the student dashboard
+Fix: Corrected Learning Area URL access after a course is trashed
+Fix: Fixed incorrect countdown timing for Google Meet live classes
+Fix: Addressed multiple assignment-related issues
+Fix: Corrected quiz export and import functionality
+Fix: Resolved blank page issue when "Hide Quiz Details From Students" is enabled
+
 = 4.0.0-rc.1 - 15 May, 2026
 
 Update: Improved the Live Class section on the Homepage. (Pro)

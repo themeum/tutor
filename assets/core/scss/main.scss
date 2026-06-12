@@ -45,6 +45,10 @@ body {
   @include tutor-transition((background-color, color));
 }
 
+form {
+  margin: $tutor-spacing-none;
+}
+
 .tutor-dashboard-layout,
 .tutor-learning-area,
 .tutor-account-page-wrapper {

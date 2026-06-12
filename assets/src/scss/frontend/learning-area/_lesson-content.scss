@@ -108,7 +108,6 @@
   .tutor-lesson-image-wrapper {
     @include tutor-flex-center();
     aspect-ratio: 16 / 9;
-    height: 100%;
 
     .tutor-lesson-feature-image {
       display: block;
