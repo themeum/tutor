@@ -24,6 +24,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Template extends Tutor_Base {
 
 	/**
+	 * Store Shortcode Object
+	 *
+	 * @var Shortcode
+	 */
+	public $shortcode_obj;
+
+	/**
 	 * Register Hooks
 	 *
 	 * @since 1.0.0
@@ -55,6 +62,8 @@ class Template extends Tutor_Base {
 		add_filter( 'the_content', array( $this, 'convert_static_page_to_template' ) );
 		add_action( 'pre_get_posts', array( $this, 'limit_course_query_archive' ), 99 );
 		add_filter( 'template_include', array( $this, 'load_learning_template' ) );
+
+		$this->shortcode_obj = new Shortcode( false );
 	}
 
 	/**
@@ -293,28 +302,24 @@ class Template extends Tutor_Base {
 		// Dashboard Page.
 		$student_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
 		if ( $page_id === $student_dashboard_page_id ) {
-			$shortcode = new Shortcode( false );
-			return $shortcode->tutor_dashboard();
+			return $this->shortcode_obj->tutor_dashboard();
 		}
 
 		// Instructor Registration Page.
 		$instructor_register_page_page_id = (int) tutor_utils()->get_option( 'instructor_register_page' );
 		if ( $page_id === $instructor_register_page_page_id ) {
-			$shortcode = new Shortcode( false );
-			return $shortcode->instructor_registration_form();
+			return $this->shortcode_obj->instructor_registration_form();
 		}
 
 		$student_register_page_id = (int) tutor_utils()->get_option( 'student_register_page' );
 		if ( $page_id === $student_register_page_id ) {
-			$shortcode = new Shortcode( false );
-			return $shortcode->student_registration_form();
+			return $this->shortcode_obj->student_registration_form();
 		}
 
 		if ( tutor_utils()->is_monetize_by_tutor() ) {
 			$tutor_cart_page_id = (int) tutor_utils()->get_option( 'tutor_cart_page_id' );
 			if ( $page_id === $tutor_cart_page_id ) {
-				$shortcode = new Shortcode( false );
-				return $shortcode->tutor_cart_page();
+				return $this->shortcode_obj->tutor_cart_page();
 			}
 
 			$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
@@ -323,8 +328,7 @@ class Template extends Tutor_Base {
 					return '';
 				}
 
-				$shortcode = new Shortcode( false );
-				return $shortcode->tutor_checkout_page();
+				return $this->shortcode_obj->tutor_checkout_page();
 			}
 		}
 
