@@ -313,7 +313,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
           css={styles.information}
           ref={marqueeContainerRef}
           aria-label={__('Subscription plan details', __TUTOR_TEXT_DOMAIN__)}
-          title={marqueeContainerRef.current?.textContent}
+          title={marqueeContainerRef.current?.textContent ?? ''}
         >
           <span css={styles.marqueeSlide} ref={marqueeContentRef} data-marquee-content>
             <span>{marqueeText}</span>
