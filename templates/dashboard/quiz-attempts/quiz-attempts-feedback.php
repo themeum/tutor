@@ -52,7 +52,7 @@ $content      = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor
 				?>
 			</div>
 
-			<div class="tutor-flex tutor-justify-`sta`rt">
+			<div class="tutor-flex tutor-justify-start">
 				<?php
 					Button::make()
 						->label( __( 'Submit', 'tutor' ) )
