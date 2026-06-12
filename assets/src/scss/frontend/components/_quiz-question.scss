@@ -80,6 +80,10 @@
     min-width: 0;
     @include tutor-transition((background-color, border-color, color));
 
+    label {
+      color: inherit;
+    }
+
     &:focus,
     &:focus-within {
       outline: none;
@@ -102,7 +106,8 @@
       color: $tutor-text-success;
       cursor: default;
 
-      .tutor-label {
+      .tutor-label,
+      label {
         color: $tutor-text-success;
       }
 
@@ -146,7 +151,8 @@
       color: $tutor-text-critical;
       cursor: default;
 
-      .tutor-label {
+      .tutor-label,
+      label {
         color: $tutor-text-critical;
       }
 

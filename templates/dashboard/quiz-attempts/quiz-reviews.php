@@ -61,7 +61,7 @@ if ( is_array( $questions ) ) {
 			...tutorForm({
 				id: "<?php echo esc_attr( $form_id ); ?>",
 				mode: "onSubmit",
-				defaultValues: <?php echo wp_json_encode( $form_default_values ); ?>
+				defaultValues: <?php echo wp_json_encode( $form_default_values, JSON_HEX_APOS ); ?>
 			}),
 			...tutorQuizAttemptFeedback({
 				attemptId: <?php echo esc_attr( $attempt_id ); ?>,

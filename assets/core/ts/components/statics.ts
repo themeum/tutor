@@ -44,6 +44,7 @@ export const statics = (config: StaticsProps) => ({
   value: 0,
   targetValue: config.value ?? DEFAULT_CONFIG.value,
   type: config.type ?? DEFAULT_CONFIG.type,
+  size: config.size ?? DEFAULT_CONFIG.size,
   background: config.background ?? DEFAULT_CONFIG.background,
   strokeColor: config.strokeColor ?? DEFAULT_CONFIG.strokeColor,
   progressStrokeColor: config.progressStrokeColor ?? DEFAULT_CONFIG.progressStrokeColor,
@@ -90,62 +91,62 @@ export const statics = (config: StaticsProps) => ({
     return 1 - Math.pow(1 - progress, ANIMATION_EASING_POWER);
   },
 
-  get sizeConfig() {
-    const size = config.size ?? DEFAULT_CONFIG.size;
-    return SIZE_CONFIG[size];
+  sizeConfig() {
+    const size = this.size ?? DEFAULT_CONFIG.size;
+    return SIZE_CONFIG[size as StaticsSize] ?? SIZE_CONFIG[DEFAULT_CONFIG.size];
   },
 
-  get sizeValue(): number {
-    return this.sizeConfig.dimension;
+  sizeValue(): number {
+    return this.sizeConfig().dimension;
   },
 
-  get strokeWidth(): number {
-    return this.sizeConfig.strokeWidth;
+  strokeWidth(): number {
+    return this.sizeConfig().strokeWidth;
   },
 
-  get radius(): number {
-    return (this.sizeValue - this.strokeWidth) / 2;
+  radius(): number {
+    return (this.sizeValue() - this.strokeWidth()) / 2;
   },
 
-  get center(): number {
-    return this.sizeValue / 2;
+  center(): number {
+    return this.sizeValue() / 2;
   },
 
-  get viewBox(): string {
-    return `0 0 ${this.sizeValue} ${this.sizeValue}`;
+  viewBox(): string {
+    return `0 0 ${this.sizeValue()} ${this.sizeValue()}`;
   },
 
-  get circumference(): number {
-    return 2 * Math.PI * this.radius;
+  circumference(): number {
+    return 2 * Math.PI * this.radius();
   },
 
-  get strokeDashoffset(): number {
+  strokeDashoffset(): number {
     const clampedProgress = Math.min(Math.max(this.value, MIN_PROGRESS), MAX_PROGRESS);
-    return this.circumference - (clampedProgress / MAX_PROGRESS) * this.circumference;
+    return this.circumference() - (clampedProgress / MAX_PROGRESS) * this.circumference();
   },
 
-  get displayValue(): number {
+  displayValue(): number {
     return Math.round(this.value);
   },
 
-  get displayLabel(): string {
-    return this.label || `${this.displayValue}%`;
+  displayLabel(): string {
+    return this.label || `${this.displayValue()}%`;
   },
 
   get labelText(): string {
     if (!this.showLabel) return '';
-    return this.displayValue === 0 ? '0' : `${this.displayValue}%`;
+    return this.displayValue() === 0 ? '0' : `${this.displayValue()}%`;
   },
 
   get labelClass(): string {
     const baseClass = 'tutor-statics-progress-label';
-    const sizeClass = config.size === 'large' ? 'tutor-statics-progress-label-large' : '';
+    const sizeClass = this.size === 'large' ? 'tutor-statics-progress-label-large' : '';
     return `${baseClass} ${sizeClass}`.trim();
   },
 
   renderProgressCircle(): string {
     return `
-      <svg class="tutor-statics-progress" viewBox="${this.viewBox}" width="${this.sizeValue}" height="${this.sizeValue}">
+      <svg class="tutor-statics-progress" viewBox="${this.viewBox()}" width="${this.sizeValue()}" height="${this.sizeValue()}">
         ${this.renderBackgroundCircle()}
         ${this.renderProgressArc()}
       </svg>
@@ -156,12 +157,12 @@ export const statics = (config: StaticsProps) => ({
   renderBackgroundCircle(): string {
     return `
       <circle 
-        cx="${this.center}" 
-        cy="${this.center}" 
-        r="${this.radius}"
+        cx="${this.center()}" 
+        cy="${this.center()}" 
+        r="${this.radius()}"
         fill="${this.background}"
         stroke="${this.strokeColor}"
-        stroke-width="${this.strokeWidth}"
+        stroke-width="${this.strokeWidth()}"
       ></circle>
     `;
   },
@@ -169,15 +170,15 @@ export const statics = (config: StaticsProps) => ({
   renderProgressArc(): string {
     return `
       <circle 
-        cx="${this.center}" 
-        cy="${this.center}" 
-        r="${this.radius}"
+        cx="${this.center()}" 
+        cy="${this.center()}" 
+        r="${this.radius()}"
         fill="none"
         stroke="${this.progressStrokeColor}"
-        stroke-width="${this.strokeWidth}"
+        stroke-width="${this.strokeWidth()}"
         stroke-linecap="round"
-        stroke-dasharray="${this.circumference}"
-        stroke-dashoffset="${this.strokeDashoffset}"
+        stroke-dasharray="${this.circumference()}"
+        stroke-dashoffset="${this.strokeDashoffset()}"
         style="transition: stroke-dashoffset 0.6s ease;"
       ></circle>
     `;
@@ -189,18 +190,18 @@ export const statics = (config: StaticsProps) => ({
   },
 
   renderCompleteCircle(): string {
-    const iconSize = this.sizeConfig.iconSizes.check;
+    const iconSize = this.sizeConfig().iconSizes.check;
     return this.renderIconContainer('tutor-statics-complete', 'checkStroke', iconSize);
   },
 
   renderLockIcon(): string {
-    const iconSize = this.sizeConfig.iconSizes.lock;
+    const iconSize = this.sizeConfig().iconSizes.lock;
     return this.renderIconContainer('tutor-statics-locked', 'circumLock', iconSize);
   },
 
   renderIconContainer(className: string, iconName: string, iconSize: number): string {
     return `
-      <div class="${className}" style="width: ${this.sizeValue}px; height: ${this.sizeValue}px;">
+      <div class="${className}" style="width: ${this.sizeValue()}px; height: ${this.sizeValue()}px;">
         <div x-data="tutorIcon({ name: '${iconName}', width: ${iconSize}, height: ${iconSize} })"></div>
       </div>
     `;
