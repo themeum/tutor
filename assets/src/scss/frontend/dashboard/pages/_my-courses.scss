@@ -64,9 +64,8 @@
       inset: 0;
       background: #00000066;
       box-shadow: 0px 4px 4px 0px #00000040;
-      visibility: hidden;
       opacity: 0;
-      @include tutor-transition((opacity, visibility));
+      @include tutor-transition((opacity));
     }
 
     &-footer {
@@ -82,9 +81,8 @@
       }
 
       &-actions {
-        visibility: hidden;
         opacity: 0;
-        @include tutor-transition((opacity, visibility));
+        @include tutor-transition((opacity));
       }
     }
 
@@ -94,12 +92,12 @@
     }
 
     &:hover,
+    &:focus-within,
     &:has(.tutor-popover-open) {
       background-color: $tutor-surface-l1-hover;
 
       .tutor-my-courses-card-actions,
       .tutor-my-courses-card-footer-actions {
-        visibility: visible;
         opacity: 1;
       }
     }
@@ -121,7 +119,6 @@
       }
 
       .tutor-my-courses-card-footer-actions {
-        visibility: visible;
         opacity: 1;
       }
     }
