@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\EmptyState;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use TUTOR\Input;
@@ -61,7 +62,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 		?>
 	</div>
 
-	<div x-show="totalComments > 0">
+	<div>
 		<div 
 			class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-t"
 			:class="{ 'tutor-loading-spinner': isReloading }"
@@ -87,7 +88,16 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 			?>
 		</div>
 
-		<div x-ref="loadMoreTrigger" x-show="hasMore" aria-hidden="true">
+		<?php
+		EmptyState::make()
+			->title( __( 'Be the first to ask a question about this lesson!', 'tutor' ) )
+			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/comments-empty.svg' ) )
+			->attr( 'x-show', 'isEmpty' )
+			->attr( 'x-cloak', '' )
+			->render();
+		?>
+
+		<div x-ref="loadMoreTrigger" x-show="hasMore && !isReloading" aria-hidden="true">
 			<span x-show="loading" class="tutor-loading-spinner tutor-border-t"></span>
 		</div>
 	</div>
