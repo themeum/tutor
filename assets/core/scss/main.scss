@@ -62,6 +62,10 @@ body {
       opacity: 1;
     }
   }
+
+  form {
+    margin: $tutor-spacing-none;
+  }
 }
 
 // Alpine.js cloak utility
