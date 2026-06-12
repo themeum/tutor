@@ -19,6 +19,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Models\EnrollmentModel;
 use Tutor\Models\OrderMetaModel;
 use Tutor\Models\OrderActivitiesModel;
+use TUTOR\User;
 use TutorPro\CourseBundle\Models\BundleModel;
 use TutorPro\CourseBundle\CustomPosts\CourseBundle;
 
@@ -246,13 +247,7 @@ class HooksHandler {
 	 */
 	public function handle_payment_status_changed( $order_id, $prev_payment_status, $new_payment_status ) {
 		$cancel_reason = Input::post( 'cancel_reason' );
-
-		if ( Input::has( 'is_remove_enrolment', Input::POST_REQUEST ) ) {
-			$remove_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
-			$order_status      = $remove_enrollment ? OrderModel::ORDER_CANCELLED : OrderModel::ORDER_COMPLETED;
-		} else {
-			$order_status = $this->order_model->get_order_status_by_payment_status( $new_payment_status );
-		}
+		$order_status  = $this->order_model->get_order_status_by_payment_status( $new_payment_status );
 
 		// Store activity.
 		$data = (object) array(
@@ -337,6 +332,29 @@ class HooksHandler {
 		$student_id = $order->student->id;
 
 		$enrollment_status = ( OrderModel::ORDER_COMPLETED === $order_status ? 'completed' : ( OrderModel::ORDER_INCOMPLETE === $order->order_status ? 'pending' : 'cancel' ) );
+
+		/**
+		 * Handles enrollment updates from the admin refund modal.
+		 *
+		 * - No action is taken if the enrollment is already in the canceled state.
+		 * - If the administrator explicitly chooses to remove the enrollment,
+		 *   the enrollment status is updated to canceled.
+		 *
+		 * @since 4.0.0
+		 */
+		if ( 'backend_refund' === Input::post( 'context' ) && User::is_admin() ) {
+			$has_enrollment = isset( $order->enrollment ) && is_object( $order->enrollment );
+			if ( $has_enrollment ) {
+				if ( EnrollmentModel::STATUS_CANCEL === $order->enrollment->status ) {
+					$enrollment_status = EnrollmentModel::STATUS_CANCEL;
+				}
+
+				if ( EnrollmentModel::STATUS_COMPLETED === $order->enrollment->status && Input::has( 'is_remove_enrolment', Input::POST_REQUEST ) ) {
+					$remove_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
+					$enrollment_status = $remove_enrollment ? EnrollmentModel::STATUS_CANCEL : EnrollmentModel::STATUS_COMPLETED;
+				}
+			}
+		}
 
 		foreach ( $order->items as $item ) {
 			$object_id    = $item->id; // It could be course/bundle/plan id.
