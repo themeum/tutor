@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type Alpine as AlpineType } from 'alpinejs';
 
 import { type TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 import { type ToastService } from '@Core/ts/services/toast/Toast';
-import { type ToastType } from '@Core/ts/types/toast';
 import { type TutorCore } from '@Core/ts/types';
+import { type ToastType } from '@Core/ts/types/toast';
 
 interface WPMediaFrameOptions {
   title?: string;
@@ -89,20 +90,10 @@ declare global {
     defaultErrorMessage: string;
 
     // WordPress i18n and media
-    wp?: {
-      i18n?: {
-        __?: (text: string, domain: string) => string;
-      };
-
-      media?: ((options: WPMediaFrameOptions) => WPMediaFrame) & {
-        attachment: (id: number) => WPMediaAttachmentModel;
-      };
-    };
+    wp?: any;
 
     // WordPress editor (TinyMCE and QuickTags)
-    tinymce?: {
-      get(id: string): () => unknown;
-    };
+    tinymce?: any;
     quicktags?: unknown;
 
     // Tutor object from PHP (extend existing type, don't redeclare)

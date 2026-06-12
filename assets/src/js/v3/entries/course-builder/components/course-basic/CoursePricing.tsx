@@ -66,7 +66,7 @@ const CoursePricing = () => {
   const isTaxEnabled = !!tutorConfig.settings?.enable_tax;
   const enableIndividualTaxControl = !!tutorConfig.settings?.enable_individual_tax_control;
   const isTaxIncludedInPrice = !!tutorConfig.settings?.is_tax_included_in_price;
-  const monetizeBy = tutorConfig.settings?.monetize_by;
+  const monetizeBy = tutorConfig.settings?.monetize_by as 'tutor' | 'wc' | 'edd' | undefined;
 
   // prettier-ignore
   const taxAlertMessage = __('You have unchecked the Tax Collection option. Please review your pricing, as your tax settings currently indicate that prices are inclusive of tax.', 'tutor');

@@ -74,7 +74,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
 
   const saveGoogleMeetMeeting = useSaveGoogleMeetMutation();
 
-  const timezones = tutorConfig.timezones;
+  const timezones = tutorConfig.timezones as Record<string, string>;
 
   const timeZonesOptions = Object.keys(timezones).map((key) => ({
     label: timezones[key],
