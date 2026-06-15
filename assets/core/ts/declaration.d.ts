@@ -20,7 +20,7 @@ interface WPMediaState {
 interface WPMediaSelection {
   reset: () => void;
   add: (attachment: WPMediaAttachmentModel) => void;
-  toJSON: () => WPMediaAttachmentJSON[];
+  toJSON: () => any[];
 }
 
 interface WPMediaAttachmentJSON {
@@ -45,7 +45,7 @@ interface WPMediaFrame {
   open: () => void;
   close: () => void;
   state: () => WPMediaState;
-  $el?: {
+  $el: {
     attr: (key: string, value: string) => void;
     parent: () => { parent: () => { remove: () => void } };
   };
@@ -90,10 +90,23 @@ declare global {
     defaultErrorMessage: string;
 
     // WordPress i18n and media
-    wp?: any;
+    wp: {
+      i18n: {
+        __(text: string, domain?: string): string;
+        [key: string]: any;
+      };
+      media: ((options: any) => WPMediaFrame) & {
+        attachment: (id: number) => WPMediaAttachmentModel;
+        [key: string]: any;
+      };
+      [key: string]: any;
+    };
 
     // WordPress editor (TinyMCE and QuickTags)
-    tinymce?: any;
+    tinymce: {
+      get(id: string): any;
+      [key: string]: any;
+    };
     quicktags?: unknown;
 
     // Tutor object from PHP (extend existing type, don't redeclare)
