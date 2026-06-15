@@ -66,7 +66,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
 
   const saveZoomMeeting = useSaveZoomMeetingMutation();
 
-  const timezones = tutorConfig.timezones;
+  const timezones = tutorConfig.timezones as Record<string, string>;
   const timeZonesOptions = Object.keys(timezones).map((key) => ({
     label: timezones[key],
     value: key,
