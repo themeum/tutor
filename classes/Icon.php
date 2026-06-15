@@ -284,8 +284,8 @@ final class Icon {
 	const MONITOR_PLAY               = 'monitor-play';
 	const MORE                       = 'more';
 	const MOVE                       = 'move';
-	const MP3                        = 'mp3';
-	const MP4                        = 'mp4';
+	const MP_3                       = 'mp-3';
+	const MP_4                       = 'mp-4';
 	const MULTIPLE_INSTRUCTORS       = 'multiple-instructors';
 	const MUSIC                      = 'music';
 	const NOTE                       = 'note';

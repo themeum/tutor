@@ -822,6 +822,7 @@ class Assets {
 		$kids_css_url          = tutor()->assets_url . 'css/tutor-kids.min.css';
 		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
 		$learning_area_css_url = tutor()->assets_url . 'css/tutor-learning-area.min.css';
+		$google_font_url       = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
 
 		$core_js_url          = tutor()->assets_url . 'js/tutor-core.js';
 		$dashboard_js_url     = tutor()->assets_url . 'js/tutor-dashboard.js';
@@ -834,11 +835,11 @@ class Assets {
 
 		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 		if ( $is_kids_mode ) {
+			$google_font_url = 'https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap';
 			wp_enqueue_style( 'tutor-kids', $kids_css_url, array( 'tutor-core' ), $version );
 		}
 
 		// Core.
-		$google_font_url = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
 		wp_enqueue_style( 'tutor-google-fonts', $google_font_url, array(), $version );
 
 		wp_enqueue_style( 'tutor-core', $core_css_url, array( 'tutor-google-fonts' ), $version );

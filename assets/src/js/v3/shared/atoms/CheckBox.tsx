@@ -127,6 +127,7 @@ const styles = {
     disabled: boolean;
   }) => css`
     position: absolute;
+    display: none !important;
     opacity: 0 !important;
     height: 0;
     width: 0;

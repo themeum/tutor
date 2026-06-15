@@ -83,15 +83,15 @@ tutor/
 
 Tutor LMS uses **PSR-4 autoloading** via Composer. Always declare the correct namespace at the top of every file.
 
-| Location | Namespace |
-|---|---|
-| `classes/` | `TUTOR` |
-| `models/` | `Tutor\Models` |
-| `helpers/` | `Tutor\Helpers` |
-| `traits/` | `Tutor\Traits` |
-| `cache/` | `Tutor\Cache` |
-| `ecommerce/` | `Tutor\Ecommerce` |
-| `restapi/` | `Tutor\RestAPI` |
+| Location      | Namespace          |
+| ------------- | ------------------ |
+| `classes/`    | `TUTOR`            |
+| `models/`     | `Tutor\Models`     |
+| `helpers/`    | `Tutor\Helpers`    |
+| `traits/`     | `Tutor\Traits`     |
+| `cache/`      | `Tutor\Cache`      |
+| `ecommerce/`  | `Tutor\Ecommerce`  |
+| `restapi/`    | `Tutor\RestAPI`    |
 | `migrations/` | `Tutor\Migrations` |
 
 ### Standard file header (all PHP files)
@@ -987,14 +987,14 @@ add_action( 'wp_ajax_nopriv_tutor_save_lesson_progress', array( $this, 'ajax_sav
 
 All Tutor hooks are prefixed with `tutor_`. Follow this naming structure:
 
-| Type | Pattern | Example |
-|---|---|---|
-| Action (before) | `tutor_before_{event}` | `tutor_before_enroll` |
-| Action (after) | `tutor_after_{event}` | `tutor_after_enroll` |
-| Action (AJAX) | `tutor_action_{name}` | `tutor_action_regenerate_tutor_pages` |
-| Filter (data) | `tutor_{object}_{property}` | `tutor_course_archive_args` |
-| Filter (template) | `tutor_get_template_path` | — |
-| Filter (localize) | `tutor_localize_data` | — |
+| Type              | Pattern                     | Example                               |
+| ----------------- | --------------------------- | ------------------------------------- |
+| Action (before)   | `tutor_before_{event}`      | `tutor_before_enroll`                 |
+| Action (after)    | `tutor_after_{event}`       | `tutor_after_enroll`                  |
+| Action (AJAX)     | `tutor_action_{name}`       | `tutor_action_regenerate_tutor_pages` |
+| Filter (data)     | `tutor_{object}_{property}` | `tutor_course_archive_args`           |
+| Filter (template) | `tutor_get_template_path`   | —                                     |
+| Filter (localize) | `tutor_localize_data`       | —                                     |
 
 Dynamic hooks use **interpolation**, not concatenation:
 
@@ -1051,6 +1051,7 @@ $results         = CourseModel::get_courses_by_instructor( $current_user_id, 'pu
 ```
 
 **Templates must NOT contain:**
+
 - Database queries (use Models)
 - Hook registration
 - Business logic / calculations
@@ -1190,22 +1191,22 @@ Input::post( 'field', '', Input::TYPE_INT );
 
 ## PART 14 — WHAT NOT TO DO IN TUTOR LMS
 
-| ❌ Never Do | ✅ Do Instead |
-|---|---|
-| `$_POST['field']` directly | `Input::post( 'field', '', Input::TYPE_* )` |
-| `$_GET['param']` directly | `Input::get( 'param', '', Input::TYPE_* )` |
-| Raw SQL in controllers/classes | `QueryHelper::*` or `$wpdb->prepare()` |
-| `wp_send_json_success/error` in classes with `JsonResponse` | `$this->json_response(...)` |
-| Hardcode HTTP status numbers (`400`, `403`) | `HttpHelper::STATUS_BAD_REQUEST`, etc. |
-| `new Tutor()` or `new Singleton_Class()` | `Tutor::get_instance()` or `tutor()` |
-| `echo $var` without escaping | `echo esc_html( $var )` |
-| Business logic in `templates/` | Move to Model or class method |
-| `global $wpdb` in templates | Use Models or pass data from controller |
-| `wp_verify_nonce()` without `wp_unslash()` | `tutor_utils()->checking_nonce()` or `wp_verify_nonce( sanitize_text_field( wp_unslash( ... ) ), ... )` |
-| Hook registration in Models | Only in class constructors (`classes/`) |
-| `eval()`, `extract()`, backtick operator | Never — forbidden |
-| Omit `@since` in PHPDoc | Always include `@since x.x.x` |
-| Skip `@param`/`@return` docs | Always document all params and return values |
+| ❌ Never Do                                                 | ✅ Do Instead                                                                                           |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `$_POST['field']` directly                                  | `Input::post( 'field', '', Input::TYPE_* )`                                                             |
+| `$_GET['param']` directly                                   | `Input::get( 'param', '', Input::TYPE_* )`                                                              |
+| Raw SQL in controllers/classes                              | `QueryHelper::*` or `$wpdb->prepare()`                                                                  |
+| `wp_send_json_success/error` in classes with `JsonResponse` | `$this->json_response(...)`                                                                             |
+| Hardcode HTTP status numbers (`400`, `403`)                 | `HttpHelper::STATUS_BAD_REQUEST`, etc.                                                                  |
+| `new Tutor()` or `new Singleton_Class()`                    | `Tutor::get_instance()` or `tutor()`                                                                    |
+| `echo $var` without escaping                                | `echo esc_html( $var )`                                                                                 |
+| Business logic in `templates/`                              | Move to Model or class method                                                                           |
+| `global $wpdb` in templates                                 | Use Models or pass data from controller                                                                 |
+| `wp_verify_nonce()` without `wp_unslash()`                  | `tutor_utils()->checking_nonce()` or `wp_verify_nonce( sanitize_text_field( wp_unslash( ... ) ), ... )` |
+| Hook registration in Models                                 | Only in class constructors (`classes/`)                                                                 |
+| `eval()`, `extract()`, backtick operator                    | Never — forbidden                                                                                       |
+| Omit `@since` in PHPDoc                                     | Always include `@since x.x.x`                                                                           |
+| Skip `@param`/`@return` docs                                | Always document all params and return values                                                            |
 
 ---
 

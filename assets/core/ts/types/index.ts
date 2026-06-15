@@ -1,5 +1,4 @@
 import { type accordionMeta } from '@Core/ts/components/accordion';
-import { type buttonMeta } from '@Core/ts/components/button';
 import { type fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { type iconMeta } from '@Core/ts/components/icon';
 import { type popoverMeta } from '@Core/ts/components/popover';
@@ -8,9 +7,8 @@ import { type timeInputMeta } from '@Core/ts/components/time-input';
 import { type FormService } from '@Core/ts/services/Form';
 import { type ModalService } from '@Core/ts/services/Modal';
 import { type QueryService } from '@Core/ts/services/Query';
-import { type ToastService } from '@Core/ts/services/Toast';
-
-import { type WPMediaService } from '../services/WPMedia';
+import { type ToastService } from '@Core/ts/services/toast/Toast';
+import { type WPMediaService } from '@Core/ts/services/WPMedia';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface AlpineComponentMeta<TProps = any> {
@@ -38,7 +36,6 @@ export type LazyComponentLoader = () => Promise<AlpineComponentMeta>;
 type ExtractComponent<T extends AlpineComponentMeta<any>> = T['component'];
 
 export interface TutorCore {
-  button: ExtractComponent<typeof buttonMeta>;
   fileUploader: ExtractComponent<typeof fileUploaderMeta>;
   tabs: ExtractComponent<typeof tabsMeta>;
   icon: ExtractComponent<typeof iconMeta>;

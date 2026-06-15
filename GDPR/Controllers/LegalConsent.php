@@ -10,7 +10,6 @@
 
 namespace Tutor\GDPR\Controllers;
 
-use Exception;
 use Tutor\GDPR\Models\{LegalConsents, LegalConsentLogs};
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
@@ -124,7 +123,7 @@ class LegalConsent extends BaseController {
 		$consents = self::get_consent_by_display_key( self::DISPLAY_ON_LOGIN );
 		if ( tutor_utils()->count( $consents ) ) {
 			foreach ( $consents as $consent ) {
-				self::render_consent_field( $consent, 'tutor-mt-8' );
+				self::render_consent_field( $consent, 'tutor-mt-8 tutor-mb-24' );
 			}
 		}
 	}
@@ -619,7 +618,7 @@ class LegalConsent extends BaseController {
 	 * @since 4.0.0
 	 *
 	 * @param object $consent Consent settings object.
-	 * @param string $wrapper_cs_class Wrapper css class for styleing.
+	 * @param string $wrapper_cs_class Wrapper css class for styling.
 	 *
 	 * @return void
 	 */
@@ -648,9 +647,9 @@ class LegalConsent extends BaseController {
 		?>
 		<div class="tutor-form-row <?php echo esc_attr( $wrapper_cs_class ); ?>">
 			<div class="tutor-input-field">
-				<div class="tutor-input-wrapper">
+				<div class="tutor-input-wrapper tutor-form-check tutor-d-flex" style="align-items: start;">
 					<?php if ( ! $is_text_only ) : ?>
-						<input type="checkbox" id="<?php echo esc_attr( $field_name ); ?>" name="<?php echo esc_attr( $field_name ); ?>" class="tutor-checkbox tutor-checkbox-md tutor-form-check-input" <?php echo esc_attr( $is_required ? 'required' : '' ); ?>>
+						<input type="checkbox" id="<?php echo esc_attr( $field_name ); ?>" name="<?php echo esc_attr( $field_name ); ?>" class="tutor-checkbox tutor-checkbox-md tutor-form-check-input" style="margin-top: 2px!important;" <?php echo esc_attr( $is_required ? 'required' : '' ); ?>>
 					<?php endif; ?>
 					<label for="<?php echo esc_attr( $field_name ); ?>" class="tutor-label">
 						<?php self::render_constructed_label_text( $consent ); ?>
@@ -711,7 +710,7 @@ class LegalConsent extends BaseController {
 	 * @return string
 	 */
 	public static function get_field_name( object $consent ): string {
-		return strtolower( str_replace( ' ', '_', $consent->consent_title ) );
+		return strtolower( str_replace( ' ', '_', $consent->consent_title . '_' . $consent->id ) );
 	}
 
 

@@ -20,13 +20,18 @@ if ( empty( $attempt ) ) {
 	return;
 }
 
+$details_url = $quiz_attempt_obj->get_review_url(
+	$attempt,
+	array( 'action' => 'view_details' )
+) ?? '#';
+
 ?>
 <div class="tutor-quiz-attempts-item">
 	<div class="tutor-quiz-item-info">
 		<?php if ( ! empty( $quiz_title ) ) : ?>
-		<div class="tutor-quiz-item-info-title">
+		<a href="<?php echo esc_url( $details_url ); ?>" class="tutor-quiz-item-info-title">
 			<?php echo esc_html( $quiz_title ); ?>
-		</div>
+		</a>
 		<?php endif; ?>
 
 		<div class="tutor-quiz-item-info-course">

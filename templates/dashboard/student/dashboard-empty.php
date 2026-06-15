@@ -35,7 +35,7 @@ $quick_tips = array(
 				echo esc_html( sprintf( __( 'Welcome to %s', 'tutor' ), get_bloginfo( 'name' ) ) );
 				?>
 			</span>
-			<img src="<?php echo esc_attr( UrlHelper::asset( 'images/illustrations/confetti.svg' ) ); ?>" alt="<?php esc_html_e( 'Confetti', 'tutor' ); ?>" height="16" width="16" />
+			<img src="<?php echo esc_attr( UrlHelper::asset( 'images/illustrations/confetti.svg' ) ); ?>" alt="<?php esc_html_e( 'Confetti', 'tutor' ); ?>" style="width: 16px; height: 16px;" />
 		</div>
 		<h3 class="tutor-h3 tutor-my-4">
 			<?php esc_html_e( 'You haven’t enrolled in a course yet', 'tutor' ); ?>

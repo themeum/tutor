@@ -50,10 +50,11 @@ $is_instructor_view = User::is_instructor_view();
 			</div>
 			<?php
 			if ( $is_instructor_view ) :
-				$active_course_count    = (int) CourseModel::get_course_count_by_instructor( $user_id );
+				$course_post_type       = apply_filters( 'tutor_dashboard_course_list_post_type', array( tutor()->course_post_type ) );
+				$active_course_count    = CourseModel::get_courses_by_instructor( $user_id, CourseModel::STATUS_PUBLISH, 0, 0, true, $course_post_type, '' );
 				$enrolled_student_count = (int) tutor_utils()->get_total_students_by_instructor( $user_id );
 				?>
-				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny tutor-mt-2">
+				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny">
 					<?php
 						echo wp_kses(
 							sprintf(

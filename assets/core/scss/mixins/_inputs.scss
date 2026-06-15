@@ -47,7 +47,9 @@
 
   &:focus {
     @include tutor-focus-ring();
+    background-color: $tutor-surface-l1;
     border-color: $tutor-border-brand-tertiary;
+    color: $tutor-text-primary;
     --tutor-input-border-shadow-current: none;
   }
 

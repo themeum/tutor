@@ -33,7 +33,6 @@ $details_url      = $quiz_attempt_obj->get_review_url(
 ) ?? '#';
 
 $hide_quiz_details = Quiz_Attempts_List::is_attempt_details_hidden();
-$quiz_details_url  = $hide_quiz_details ? '#' : $details_url;
 
 ?>
 <div class="tutor-quiz-attempts-item" data-learning-area="<?php echo esc_attr( $is_learning_area ? 'true' : 'false' ); ?>">
@@ -43,11 +42,11 @@ $quiz_details_url  = $hide_quiz_details ? '#' : $details_url;
 			?>
 			<div class="tutor-quiz-item-info-expanded">
 				<?php if ( $hide_quiz_details ) : ?>
-					<div class="tutor-medium tutor-font-semibold">
+					<div class="tutor-medium tutor-font-semibold tutor-text-start">
 						<?php echo esc_html( $quiz_title ); ?>
 					</div>
 				<?php else : ?>
-					<a href="<?php echo esc_url( $quiz_details_url ); ?>" class="tutor-quiz-item-info-title">
+					<a href="<?php echo esc_url( $details_url ); ?>" class="tutor-quiz-item-info-title">
 						<?php echo esc_html( $quiz_title ); ?>
 					</a>
 				<?php endif; ?>
@@ -78,7 +77,7 @@ $quiz_details_url  = $hide_quiz_details ? '#' : $details_url;
 					?>
 					</div>
 				<?php else : ?>
-					<a href="<?php echo esc_url( $quiz_details_url ); ?>" class="tutor-quiz-item-info-title">
+					<a href="<?php echo esc_url( $details_url ); ?>" class="tutor-quiz-item-info-title">
 						<?php
 						/* translators: %d: attempt number */
 						echo esc_html( sprintf( __( 'Attempt %d', 'tutor' ), $attempt_number ) );
@@ -101,7 +100,7 @@ $quiz_details_url  = $hide_quiz_details ? '#' : $details_url;
 
 		<div class="tutor-quiz-item-info-date">
 			<?php
-			echo $is_learning_area
+			echo $is_learning_area && ! $hide_quiz_details
 				? '<a href="' . esc_url( $details_url ) . '">' . esc_html( $attempt['date'] ?? '' ) . '</a>'
 				: esc_html( $attempt['date'] ?? '' );
 			?>
