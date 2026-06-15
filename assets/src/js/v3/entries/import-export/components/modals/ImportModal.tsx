@@ -7,12 +7,9 @@ import { type ModalProps } from '@TutorShared/components/modals/Modal';
 
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import { type ImportContentResponse, type ImportExportContentResponseBase } from '@TutorShared/utils/types';
 
-import {
-  type ImportContentResponse,
-  type ImportExportContentResponseBase,
-  type ImportExportModalState,
-} from '@ImportExport/services/import-export';
+import { type ImportExportModalState } from '@ImportExport/services/import-export';
 
 import ImportExportCompletedState from './import-export-states/ImportExportCompletedState';
 import ImportExportProgressState from './import-export-states/ImportExportProgressState';
