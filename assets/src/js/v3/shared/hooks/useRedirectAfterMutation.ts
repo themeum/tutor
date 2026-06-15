@@ -1,6 +1,6 @@
-import type { UseMutationResult } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { type To, useNavigate } from 'react-router-dom';
+import type { UseMutationResult } from '@tanstack/react-query';
 
 export const useRedirectAfterMutation = <T, U>({
   mutation,

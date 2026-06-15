@@ -1,19 +1,16 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
+import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
-
-import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
-import QuestionPreviewModal from '@CourseBuilderComponents/modals/QuestionPreviewModal';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizForm } from '@CourseBuilderServices/quiz';
-import Button from '@TutorShared/atoms/Button';
-import Tooltip from '@TutorShared/atoms/Tooltip';
 import { useModal } from '@TutorShared/components/modals/Modal';
+
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -21,6 +18,11 @@ import { type IconCollection } from '@TutorShared/icons/types';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { QuizDataStatus, type QuizQuestionType } from '@TutorShared/utils/types';
+
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import QuestionPreviewModal from '@CourseBuilderComponents/modals/QuestionPreviewModal';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { type QuizForm } from '@CourseBuilderServices/quiz';
 
 const questionTypes = {
   true_false: {

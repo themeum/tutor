@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
+
 import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';

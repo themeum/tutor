@@ -1,9 +1,10 @@
-import { css } from '@emotion/react';
 import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { css } from '@emotion/react';
 
 import FocusTrap from '@TutorShared/components/FocusTrap';
 import { useModal } from '@TutorShared/components/modals/Modal';
+
 import { isRTL } from '@TutorShared/config/constants';
 import { zIndex } from '@TutorShared/config/styles';
 import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/useAnimation';

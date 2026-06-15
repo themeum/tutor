@@ -1,10 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import dayjs from 'dayjs';
+import { type Calendar, Calendar as VanillaCalendar, type Options } from 'vanilla-calendar-pro';
 
 import { DateFormats } from '@Core/ts/date-formats';
 import { type AlpineComponentMeta } from '@Core/ts/types';
+
 import { tutorConfig } from '@TutorShared/config/config';
-import { type Calendar, type Options, Calendar as VanillaCalendar } from 'vanilla-calendar-pro';
 
 // @ts-ignore
 import 'vanilla-calendar-pro/styles/index.css';

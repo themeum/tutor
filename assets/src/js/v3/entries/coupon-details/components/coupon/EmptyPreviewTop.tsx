@@ -1,8 +1,10 @@
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 
 const EmptyPreviewTop = () => {
   return (

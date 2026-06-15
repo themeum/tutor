@@ -1,9 +1,13 @@
-import Layout from '@CourseBuilderComponents/layouts/Layout';
-import RouteSuspense from '@TutorShared/components/RouteSuspense';
-import { tutorConfig } from '@TutorShared/config/config';
-import { setLocaleData } from '@wordpress/i18n';
 import React from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { setLocaleData } from '@wordpress/i18n';
+
+import RouteSuspense from '@TutorShared/components/RouteSuspense';
+
+import { tutorConfig } from '@TutorShared/config/config';
+
+import Layout from '@CourseBuilderComponents/layouts/Layout';
+
 import { CourseBuilderRouteConfigs } from './route-configs';
 
 let CourseBasicPage, CourseCurriculumPage, CourseAdditionalPage, IconListPage;

@@ -1,11 +1,14 @@
+import { useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useFormContext } from 'react-hook-form';
 import {
+  closestCenter,
   DndContext,
   type DragEndEvent,
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
   type UniqueIdentifier,
-  closestCenter,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -13,9 +16,6 @@ import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifi
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useMemo, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useFormContext } from 'react-hook-form';
 
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';

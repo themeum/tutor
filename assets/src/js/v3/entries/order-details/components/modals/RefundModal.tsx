@@ -1,11 +1,17 @@
-import { useRefundOrderMutation } from '@OrderDetails/services/order';
+import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Alert from '@TutorShared/atoms/Alert';
 import Button from '@TutorShared/atoms/Button';
+
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -14,10 +20,8 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+
+import { useRefundOrderMutation } from '@OrderDetails/services/order';
 
 interface RefundModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -29,6 +33,7 @@ interface RefundModalProps extends ModalProps {
 }
 
 interface FormField {
+  context?: string;
   amount: number;
   is_remove_enrolment?: boolean;
   is_cancel_subscription: boolean;
@@ -48,6 +53,7 @@ function RefundModal({
   const refundOrderMutation = useRefundOrderMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
+      context: 'backend_refund',
       amount: 0,
       is_cancel_subscription: false,
       reason: '',

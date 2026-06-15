@@ -1,4 +1,5 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
+
 import { TUTOR_CUSTOM_EVENTS } from '../constant';
 
 interface TinyMCEEditor {

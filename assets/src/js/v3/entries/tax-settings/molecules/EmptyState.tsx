@@ -1,9 +1,11 @@
+import type { ReactNode } from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
+
 import Button from '@TutorShared/atoms/Button';
+
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { type SerializedStyles, css } from '@emotion/react';
-import type { ReactNode } from 'react';
 
 interface EmptyStateProps {
   emptyStateImage: string;

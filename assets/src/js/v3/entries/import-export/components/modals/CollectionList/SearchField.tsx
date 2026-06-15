@@ -1,8 +1,9 @@
-import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
+import { __ } from '@wordpress/i18n';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 
 import { useDebounce } from '@TutorShared/hooks/useDebounce';

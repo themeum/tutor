@@ -1,6 +1,6 @@
+import { FormProvider } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { FormProvider } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -13,9 +13,9 @@ import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import {
-  type SubscriptionFormData,
   convertFormDataToSubscription,
   defaultSubscriptionFormData,
+  type SubscriptionFormData,
   useSaveCourseSubscriptionMutation,
 } from '@TutorShared/services/subscription';
 

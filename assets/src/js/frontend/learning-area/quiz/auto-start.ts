@@ -1,10 +1,11 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
+import { wpPostForm } from '@Core/ts/utils/api';
 import { convertToErrorMessage } from '@Core/ts/utils/error';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import endpoints from '@TutorShared/utils/endpoints';
 
-import { wpPostForm } from '@Core/ts/utils/api';
 import { QUIZ_EVENTS } from './constants';
 
 export interface QuizAutoStartConfig {

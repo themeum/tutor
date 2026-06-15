@@ -1,15 +1,19 @@
+import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+
 import { modal } from '@TutorShared/config/constants';
-import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+
 import { useGenerateCourseContent } from '../../hooks/useGenerateCourseContent';
 import { useContentGenerationContext } from './ContentGenerationContext';
 

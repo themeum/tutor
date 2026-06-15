@@ -1,5 +1,7 @@
-import { tutorConfig } from '@TutorShared/config/config';
 import React, { useState } from 'react';
+
+import { tutorConfig } from '@TutorShared/config/config';
+
 import { type Addon, useAddonListQuery } from '../services/addons';
 
 interface AddonContextType {

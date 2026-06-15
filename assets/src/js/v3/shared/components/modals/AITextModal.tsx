@@ -1,5 +1,3 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Controller,
@@ -8,11 +6,12 @@ import {
   type FieldValues,
   type Path,
 } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import { OptionList } from '@TutorShared/components/magic-ai-content/OptionList';
@@ -32,6 +31,7 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import Popover from '@TutorShared/molecules/Popover';
 import {
   type ModificationType,
   useMagicTextGenerationMutation,

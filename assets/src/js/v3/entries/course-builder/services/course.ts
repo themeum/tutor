@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { format, isBefore, isValid, parseISO } from 'date-fns';
 
 import { useToast } from '@TutorShared/atoms/Toast';
+
 import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
@@ -16,10 +17,10 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
-  isDefined,
   type Certificate,
   type Editor,
   type ID,
+  isDefined,
   type Prettify,
   type TutorCategory,
   type TutorMutationResponse,

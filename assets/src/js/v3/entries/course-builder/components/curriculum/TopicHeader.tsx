@@ -1,18 +1,30 @@
+import { memo, useEffect, useRef, useState } from 'react';
+import { Controller } from 'react-hook-form';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { css } from '@emotion/react';
 import { animated } from '@react-spring/web';
 import { __, sprintf } from '@wordpress/i18n';
-import { memo, useEffect, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
-import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 
 import FormInput from '@TutorShared/components/fields/FormInput';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useCollapseExpandAnimation } from '@TutorShared/hooks/useCollapseExpandAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
 
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import {
@@ -20,20 +32,7 @@ import {
   useDuplicateContentMutation,
   useSaveTopicMutation,
 } from '@CourseBuilderServices/curriculum';
-import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
-import { tutorConfig } from '@TutorShared/config/config';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
-
-import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { useCollapseExpandAnimation } from '@TutorShared/hooks/useCollapseExpandAnimation';
-import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type ID } from '@TutorShared/utils/types';
-import { noop } from '@TutorShared/utils/util';
 
 interface TopicHeaderProps {
   topic: CourseTopicWithCollapse;

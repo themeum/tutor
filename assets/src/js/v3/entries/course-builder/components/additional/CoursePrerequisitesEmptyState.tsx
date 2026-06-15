@@ -9,8 +9,8 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import prerequisites2x from '@SharedImages/pro-placeholders/prerequisites-2x.webp';
 import prerequisites from '@SharedImages/pro-placeholders/prerequisites.webp';
+import prerequisites2x from '@SharedImages/pro-placeholders/prerequisites-2x.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 

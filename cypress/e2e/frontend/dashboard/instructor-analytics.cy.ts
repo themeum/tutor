@@ -17,7 +17,6 @@ describe('Tutor Admin Dashboard Journey', () => {
               if (link) {
                 cy.visit(link);
                 cy.url().should('eq', `${link}${link.endsWith('/') ? '' : '/'}`);
-                console.log(link);
                 cy.get(`a[href="${link}"]`).should('have.class', 'is-active');
               } else {
                 cy.log('Link not found');

@@ -1,16 +1,20 @@
-import type { Coupon } from '@CouponDetails/services/coupon';
+import { Controller, useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
+
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import { Controller, useFormContext } from 'react-hook-form';
+
+import type { Coupon } from '@CouponDetails/services/coupon';
 
 function PurchaseRequirements() {
   const form = useFormContext<Coupon>();

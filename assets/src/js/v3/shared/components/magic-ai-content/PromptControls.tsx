@@ -1,11 +1,13 @@
+import { Controller, type UseFormReturn } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import type { GenerateTextFieldProps } from '@TutorShared/components/modals/AITextModal';
+
 import { formatOptions, languageOptions, toneOptions } from '@TutorShared/config/magic-ai';
 import { spacing } from '@TutorShared/config/styles';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller, type UseFormReturn } from 'react-hook-form';
 
 export const PromptControls = ({ form }: { form: UseFormReturn<GenerateTextFieldProps> }) => {
   return (

@@ -14,8 +14,8 @@ import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 
-import generateImage2x from '@SharedImages/pro-placeholders/generate-image-2x.webp';
 import generateImage from '@SharedImages/pro-placeholders/generate-image.webp';
+import generateImage2x from '@SharedImages/pro-placeholders/generate-image-2x.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

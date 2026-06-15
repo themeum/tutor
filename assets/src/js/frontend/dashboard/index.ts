@@ -3,6 +3,7 @@
 
 import { initializeReviews } from '@FrontendComponents/reviews';
 import { initializeCommon } from '@FrontendServices/common';
+
 import { initializeHeader } from './header';
 import { initializeAnnouncements } from './pages/announcements';
 import { initBillingCsvExport } from './pages/billing';
