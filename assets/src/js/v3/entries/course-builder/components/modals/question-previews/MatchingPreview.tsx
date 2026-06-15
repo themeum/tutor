@@ -1,8 +1,9 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { DragDropManager, Draggable, Droppable, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { type QuizQuestionOption } from '@TutorShared/utils/types';

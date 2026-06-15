@@ -1,5 +1,5 @@
-import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
+import { css } from '@emotion/react';
 
 const CONTAINER_WIDTH = 1116;
 

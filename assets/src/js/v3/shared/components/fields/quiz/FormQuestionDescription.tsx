@@ -1,16 +1,17 @@
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
+
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import type { FormControllerProps } from '@TutorShared/utils/form';
-
-import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
-import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
 interface FormQuestionDescriptionProps extends FormControllerProps<string | null> {
   label?: string;

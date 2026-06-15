@@ -1,6 +1,6 @@
+import type { ReactNode, RefObject } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import type { ReactNode, RefObject } from 'react';
 
 import Button, { type ButtonVariant } from '@TutorShared/atoms/Button';
 

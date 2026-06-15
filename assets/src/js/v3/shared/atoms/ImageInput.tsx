@@ -1,4 +1,4 @@
-import { type SerializedStyles, css } from '@emotion/react';
+import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import rgba from 'polished/lib/color/rgba';
 

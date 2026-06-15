@@ -1,5 +1,5 @@
-import { type SerializedStyles, css } from '@emotion/react';
 import { useLayoutEffect, useRef } from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
 
 import { spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';

@@ -1,7 +1,8 @@
+import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
 import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const meta = {
   title: 'Atoms/ProBadge',

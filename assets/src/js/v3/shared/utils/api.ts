@@ -1,8 +1,7 @@
 import axios, { type AxiosRequestHeaders, type Method } from 'axios';
+import * as querystring from 'querystring';
 
 import config, { tutorConfig } from '@TutorShared/config/config';
-
-import * as querystring from 'querystring';
 
 import { convertToFormData, serializeParams } from './form';
 

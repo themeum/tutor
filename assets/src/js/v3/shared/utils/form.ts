@@ -1,7 +1,8 @@
-import type { FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
-import type { AxiosResponse, Method } from 'axios';
 import type { FocusEvent } from 'react';
 import type { ControllerFieldState, Path } from 'react-hook-form';
+import type { AxiosResponse, Method } from 'axios';
+
+import type { FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
 
 import { translateBeErrorMessage } from './errors';
 import {

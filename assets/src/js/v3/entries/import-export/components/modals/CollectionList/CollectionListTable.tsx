@@ -1,21 +1,23 @@
+import React, { useCallback, useMemo } from 'react';
 import { css } from '@emotion/react';
 import { __, _n, sprintf } from '@wordpress/i18n';
-import React, { useCallback, useMemo } from 'react';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import Table, { type Column } from '@TutorShared/molecules/Table';
 
-import { type BulkSelectionFormData } from '@ImportExport/services/import-export';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { type FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
 import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
 import { useGetCollectionsPaginatedQuery } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection, type CollectionContentType } from '@TutorShared/utils/types';
+
+import { type BulkSelectionFormData } from '@ImportExport/services/import-export';
+
 import SearchField from './SearchField';
 
 interface CourseListTableProps {

@@ -1,14 +1,18 @@
-import routes from '@CourseBuilderConfig/routes';
-import { CourseBuilderSlotProvider } from '@CourseBuilderContexts/CourseBuilderSlotContext';
-import ToastProvider from '@TutorShared/atoms/Toast';
-import RTLProvider from '@TutorShared/components/RTLProvider';
-import { ModalProvider } from '@TutorShared/components/modals/Modal';
-import { SVGIconConfigProvider } from '@TutorShared/contexts/SVGIconConfigContext';
-import { createGlobalCss } from '@TutorShared/utils/style-utils';
-import { Global } from '@emotion/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useRoutes } from 'react-router-dom';
+import { Global } from '@emotion/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import ToastProvider from '@TutorShared/atoms/Toast';
+
+import { ModalProvider } from '@TutorShared/components/modals/Modal';
+import RTLProvider from '@TutorShared/components/RTLProvider';
+
+import { SVGIconConfigProvider } from '@TutorShared/contexts/SVGIconConfigContext';
+import { createGlobalCss } from '@TutorShared/utils/style-utils';
+
+import routes from '@CourseBuilderConfig/routes';
+import { CourseBuilderSlotProvider } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 
 const App = () => {
   const [queryClient] = useState(

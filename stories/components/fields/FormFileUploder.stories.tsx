@@ -1,7 +1,9 @@
-import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
-import { DEFAULT_FORM_FIELD_PROPS, DEFAULT_FORM_FILED_STATE_PROPS } from '@TutorShared/config/constants';
 import { Controller, useForm } from 'react-hook-form';
 import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
+
+import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
+
+import { DEFAULT_FORM_FIELD_PROPS, DEFAULT_FORM_FILED_STATE_PROPS } from '@TutorShared/config/constants';
 
 const meta = {
   title: 'Components/Fields/FormFileUploader',

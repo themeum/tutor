@@ -1,38 +1,39 @@
+import { useEffect, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { format, isBefore } from 'date-fns';
-import { useEffect, useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import DropdownButton from '@TutorShared/molecules/DropdownButton';
 
 import { useModal } from '@TutorShared/components/modals/Modal';
 import SuccessModal from '@TutorShared/components/modals/SuccessModal';
 
-import {
-  convertCourseDataToPayload,
-  useCreateCourseMutation,
-  useUpdateCourseMutation,
-  type CourseDetailsResponse,
-  type CourseFormData,
-} from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import config, { tutorConfig } from '@TutorShared/config/config';
 import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@TutorShared/config/constants';
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
+import DropdownButton from '@TutorShared/molecules/DropdownButton';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined, type WPPostStatus } from '@TutorShared/utils/types';
 import { convertToGMT, determinePostStatus, findSlotFields, noop } from '@TutorShared/utils/util';
 
 import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
-import reviewSubmitted2x from '@SharedImages/review-submitted-2x.webp';
+import {
+  convertCourseDataToPayload,
+  type CourseDetailsResponse,
+  type CourseFormData,
+  useCreateCourseMutation,
+  useUpdateCourseMutation,
+} from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+
 import reviewSubmitted from '@SharedImages/review-submitted.webp';
+import reviewSubmitted2x from '@SharedImages/review-submitted-2x.webp';
 
 const courseId = getCourseId();
 

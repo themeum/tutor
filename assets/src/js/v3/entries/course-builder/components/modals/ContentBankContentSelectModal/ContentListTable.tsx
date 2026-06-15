@@ -1,28 +1,29 @@
-import { css } from '@emotion/react';
-import { __, _n, sprintf } from '@wordpress/i18n';
 import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __, _n, sprintf } from '@wordpress/i18n';
 
-import { type ContentSelectionForm } from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Paginator from '@TutorShared/molecules/Paginator';
-import Table, { type Column } from '@TutorShared/molecules/Table';
-
-import FilterFields from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/FilterFields';
-import SearchField from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/SearchField';
-import { getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import Select from '@TutorShared/atoms/Select';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { Addons } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
+import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
 import { CONTENT_BANK_POST_TYPE_MAP, useGetContentBankContents } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type CollectionContentType, type ContentBankContent, type Option } from '@TutorShared/utils/types';
 import { isAddonEnabled } from '@TutorShared/utils/util';
+
+import { type ContentSelectionForm } from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
+import FilterFields from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/FilterFields';
+import SearchField from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/SearchField';
+import { getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 
 type SortDirection = 'asc' | 'desc';
 

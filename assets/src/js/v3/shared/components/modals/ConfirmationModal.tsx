@@ -2,8 +2,10 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
 import Button, { type ButtonVariant } from '@TutorShared/atoms/Button';
+
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
+
 import { colorTokens, fontSize, lineHeight, shadow, spacing } from '@TutorShared/config/styles';
 
 interface ConfirmationModalProps extends Omit<ModalProps, 'actions'> {

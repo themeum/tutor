@@ -1,7 +1,7 @@
+import { type ReactNode, useEffect, useRef } from 'react';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
-import { type ReactNode, useEffect, useRef } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
@@ -9,8 +9,8 @@ import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@TutorSh
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-
 import { isDefined } from '@TutorShared/utils/types';
+
 import Badge from '../atoms/Badge';
 
 interface CardProps {

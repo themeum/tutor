@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useFieldArray } from 'react-hook-form';
 import {
   closestCenter,
   DndContext,
@@ -12,13 +15,11 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useFieldArray } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { useModal } from '@TutorShared/components/modals/Modal';
 import SubscriptionModal, {
   type SubscriptionFormDataWithSaved,

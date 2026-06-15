@@ -1,11 +1,12 @@
+import { useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
-import { useState } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import FormCategoriesInput from '@TutorShared/components/fields/FormCategoriesInput';
 import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormInput from '@TutorShared/components/fields/FormInput';
@@ -14,10 +15,6 @@ import FormSelectUser, { type UserOption } from '@TutorShared/components/fields/
 import FormTagsInput from '@TutorShared/components/fields/FormTagsInput';
 import FormVideoInput from '@TutorShared/components/fields/FormVideoInput';
 
-import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
-
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats, TutorRoles, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, headerHeight, spacing } from '@TutorShared/config/styles';
@@ -26,6 +23,10 @@ import Show from '@TutorShared/controls/Show';
 import { useInstructorListQuery, useUserListQuery } from '@TutorShared/services/users';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { formatBytes, isAddonEnabled } from '@TutorShared/utils/util';
+
+import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 import CoursePricing from './CoursePricing';
 

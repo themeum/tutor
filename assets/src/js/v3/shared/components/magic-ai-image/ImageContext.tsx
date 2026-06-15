@@ -1,6 +1,3 @@
-import type { PromiseResolvePayload } from '@TutorShared/components/modals/Modal';
-import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { __ } from '@wordpress/i18n';
 import React, { useCallback, useContext, useState } from 'react';
 import {
   type ControllerFieldState,
@@ -9,6 +6,11 @@ import {
   FormProvider,
   type Path,
 } from 'react-hook-form';
+import { __ } from '@wordpress/i18n';
+
+import type { PromiseResolvePayload } from '@TutorShared/components/modals/Modal';
+
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
 export type StyleType =
   | 'none'

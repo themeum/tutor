@@ -1,12 +1,13 @@
-import { type SerializedStyles, css } from '@emotion/react';
 import type React from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
 import FocusTrap from '@TutorShared/components/FocusTrap';
 
 import { modal } from '@TutorShared/config/constants';
-import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useScrollLock } from '@TutorShared/hooks/useScrollLock';

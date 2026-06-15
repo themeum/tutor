@@ -1,3 +1,5 @@
+import { css } from '@emotion/react';
+
 import {
   borderRadius,
   colorTokens,
@@ -7,7 +9,7 @@ import {
   shadow,
   spacing,
 } from '@TutorShared/config/styles';
-import { css } from '@emotion/react';
+
 import { typography } from '../config/typography';
 
 export const createGlobalCss = () => css`

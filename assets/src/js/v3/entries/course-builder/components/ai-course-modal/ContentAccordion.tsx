@@ -1,8 +1,8 @@
+import { type ReactNode, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { useSpring } from '@react-spring/web';
 import { animated } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
-import { type ReactNode, useEffect, useState } from 'react';
 
 import { GradientLoadingSpinner } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';

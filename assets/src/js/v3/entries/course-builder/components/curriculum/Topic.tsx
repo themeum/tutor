@@ -1,19 +1,14 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   type AnimateLayoutChanges,
-  SortableContext,
   defaultAnimateLayoutChanges,
+  SortableContext,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
-import { useCallback, useEffect, useRef, useState } from 'react';
-
-import TopicContentWrapper from '@CourseBuilderComponents/curriculum/TopicContentWrapper';
-import TopicFooter from '@CourseBuilderComponents/curriculum/TopicFooter';
-import TopicHeader from '@CourseBuilderComponents/curriculum/TopicHeader';
-import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import For from '@TutorShared/controls/For';
@@ -21,6 +16,11 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ID, isDefined } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
+
+import TopicContentWrapper from '@CourseBuilderComponents/curriculum/TopicContentWrapper';
+import TopicFooter from '@CourseBuilderComponents/curriculum/TopicFooter';
+import TopicHeader from '@CourseBuilderComponents/curriculum/TopicHeader';
+import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;

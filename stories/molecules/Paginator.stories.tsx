@@ -1,6 +1,7 @@
-import Paginator from '@TutorShared/molecules/Paginator';
 import { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import Paginator from '@TutorShared/molecules/Paginator';
 
 const meta = {
   title: 'Molecules/Paginator',

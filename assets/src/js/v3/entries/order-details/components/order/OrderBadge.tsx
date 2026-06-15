@@ -1,6 +1,8 @@
-import type { OrderStatus } from '@OrderDetails/services/order';
-import { TutorBadge, type Variant } from '@TutorShared/atoms/TutorBadge';
 import { __ } from '@wordpress/i18n';
+
+import { TutorBadge, type Variant } from '@TutorShared/atoms/TutorBadge';
+
+import type { OrderStatus } from '@OrderDetails/services/order';
 
 const badgeMap: Record<OrderStatus, { label: string; type: Variant }> = {
   incomplete: { label: __('Incomplete', 'tutor'), type: 'critical' },

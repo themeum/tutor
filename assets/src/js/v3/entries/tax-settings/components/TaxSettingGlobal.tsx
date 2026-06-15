@@ -1,6 +1,6 @@
+import { Controller, useFormContext } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { Controller, useFormContext } from 'react-hook-form';
 
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';

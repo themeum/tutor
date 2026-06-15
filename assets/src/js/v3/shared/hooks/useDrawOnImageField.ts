@@ -5,8 +5,8 @@
  * @since 4.0.0
  */
 
-import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef } from 'react';
+import { __ } from '@wordpress/i18n';
 
 import {
   announceQuizBuilderPolite,
@@ -16,7 +16,7 @@ import {
   normalizeQuizBuilderKey,
 } from '@TutorShared/utils/quizBuilderA11y';
 
-import { initDrawOnImage, DEFAULT_BRUSH_SIZE } from '@TutorProQuiz/shared/draw-on-image.js';
+import { DEFAULT_BRUSH_SIZE, initDrawOnImage } from '@TutorProQuiz/shared/draw-on-image.js';
 
 const PREVIEW_CURSOR = 'rgba(0, 0, 255, 0.65)';
 

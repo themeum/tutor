@@ -1,5 +1,6 @@
-import type { Option } from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
+
+import type { Option } from '@TutorShared/utils/types';
 
 export type ChatTone = 'formal' | 'casual' | 'professional' | 'enthusiastic' | 'informational' | 'funny';
 export type ChatFormat = 'title' | 'essay' | 'paragraph' | 'outline';

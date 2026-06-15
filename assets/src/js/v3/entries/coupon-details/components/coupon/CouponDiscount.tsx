@@ -1,26 +1,30 @@
-import CouponSelectItemModal from '@CouponDetails/components/modals/CourseListModal';
+import type { ReactNode } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import { useModal } from '@TutorShared/components/modals/Modal';
-import { tutorConfig } from '@TutorShared/config/config';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
-import Show from '@TutorShared/controls/Show';
 
-import type { Coupon } from '@CouponDetails/services/coupon';
-import coursePlaceholder from '@SharedImages/course-placeholder.png';
+import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { formatSubscriptionRepeatUnit, isAddonEnabled } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import type { ReactNode } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+
+import CouponSelectItemModal from '@CouponDetails/components/modals/CourseListModal';
+import type { Coupon } from '@CouponDetails/services/coupon';
+
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
 
 const isTutorProActive = !!tutorConfig.tutor_pro_url;
 const displayBundle = isTutorProActive && isAddonEnabled(Addons.COURSE_BUNDLE);

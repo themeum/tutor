@@ -1,7 +1,8 @@
-import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from 'react';
+import { __ } from '@wordpress/i18n';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { type QuizQuestionOption } from '@TutorShared/utils/types';
 

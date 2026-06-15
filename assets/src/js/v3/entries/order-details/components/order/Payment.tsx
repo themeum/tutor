@@ -4,13 +4,8 @@ import { __, sprintf } from '@wordpress/i18n';
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { useModal } from '@TutorShared/components/modals/Modal';
 
-import DiscountModal from '@OrderDetails/components/modals/DiscountModal';
-import MarkAsPaidModal from '@OrderDetails/components/modals/MarkAsPaidModal';
-import RefundModal from '@OrderDetails/components/modals/RefundModal';
-import { useOrderContext } from '@OrderDetails/contexts/order-context';
-import type { Order } from '@OrderDetails/services/order';
+import { useModal } from '@TutorShared/components/modals/Modal';
 
 import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -18,6 +13,12 @@ import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { calculateDiscountValue, formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+
+import DiscountModal from '@OrderDetails/components/modals/DiscountModal';
+import MarkAsPaidModal from '@OrderDetails/components/modals/MarkAsPaidModal';
+import RefundModal from '@OrderDetails/components/modals/RefundModal';
+import { useOrderContext } from '@OrderDetails/contexts/order-context';
+import type { Order } from '@OrderDetails/services/order';
 
 import { PaymentBadge } from './PaymentBadge';
 

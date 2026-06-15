@@ -1,6 +1,6 @@
-import { css } from '@emotion/react';
 import type React from 'react';
 import type { RefObject } from 'react';
+import { css } from '@emotion/react';
 
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, zIndex } from '@TutorShared/config/styles';
@@ -8,9 +8,9 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import {
   getMirroredPlacement,
   POPOVER_PLACEMENTS,
+  type PopoverPlacement,
   Portal,
   usePortalPopover,
-  type PopoverPlacement,
 } from '@TutorShared/hooks/usePortalPopover';
 
 interface PopoverProps<T> {

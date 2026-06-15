@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
