@@ -85,7 +85,9 @@ $previous_period_courses = ! $is_all_time
 							: 0;
 
 // Total Students.
-$total_students           = tutor_utils()->get_total_students_by_instructor( $user->ID, $date_range( $start_date, $end_date ) );
+if ( $start_date && $end_date ) {
+	$total_students = tutor_utils()->get_total_students_by_instructor( $user->ID, $date_range( $start_date, $end_date ) );
+}
 $previous_period_students = ! $is_all_time
 							? tutor_utils()->get_total_students_by_instructor( $user->ID, $date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) )
 							: 0;
@@ -112,7 +114,7 @@ $total_ratings_state_card_details  = array();
 if ( $tutor_pro_enabled && ! $is_all_time ) {
 	$total_earnings_state_card_details = $stat( $total_earnings, $previous_period_earnings, $previous_dates );
 	$total_courses_state_card_details  = $stat( $total_courses, $previous_period_courses, $previous_dates );
-	$total_students_state_card_details = $stat( $total_students, $previous_period_students, $previous_dates );
+	$total_students_state_card_details = $stat( $total_students ?? 0, $previous_period_students, $previous_dates );
 	$total_ratings_state_card_details  = $stat( $total_ratings->rating_avg, $previous_period_ratings->rating_avg, $previous_dates );
 }
 
@@ -140,7 +142,7 @@ $stat_cards = array(
 		'variation'     => 'exception5',
 		'title'         => esc_html__( 'Total Students', 'tutor' ),
 		'icon'          => Icon::PASSED,
-		'value'         => $total_students,
+		'value'         => $total_students ?? 0,
 		'hover_content' => $total_students_state_card_details,
 	),
 	array(
