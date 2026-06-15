@@ -82,8 +82,6 @@ export default [
         },
       ],
       '@typescript-eslint/ban-ts-comment': 'off',
-
-      // 'sort-imports': 'off',
     },
     settings: {
       react: {
