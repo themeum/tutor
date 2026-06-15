@@ -297,6 +297,19 @@ class Template extends Tutor_Base {
 	 * @return mixed
 	 */
 	public function convert_static_page_to_template( $content ) {
+		/**
+		 * Avoid rendering dynamic templates or shortcodes during head generation.
+		 *
+		 * Some plugins (e.g., Yoast SEO) may process `the_content` while generating
+		 * frontend metadata in `wp_head`, which can cause templates or shortcodes
+		 * to be rendered multiple times within the same request.
+		 *
+		 * @since 4.0.0
+		 */
+		if ( ! is_admin() && doing_action( 'wp_head' ) ) {
+			return $content;
+		}
+
 		$page_id = get_the_ID();
 
 		// Dashboard Page.
