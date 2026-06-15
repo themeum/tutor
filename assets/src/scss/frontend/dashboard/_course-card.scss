@@ -55,6 +55,7 @@
     margin-bottom: $tutor-spacing-2;
 
     .tutor-ratings {
+      @include tutor-typography('tiny', 'regular', 'exception4');
       @include tutor-flex(row, center, flex-start, wrap);
       gap: $tutor-spacing-2;
     }

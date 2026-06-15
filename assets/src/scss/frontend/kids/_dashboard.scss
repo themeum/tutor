@@ -73,6 +73,10 @@
 
   .tutor-dashboard-header-user-popover-profile {
     border-radius: $tutor-radius-3xl;
+
+    .tutor-surface-warning-hover.tutor-rounded-sm {
+      border-radius: $tutor-radius-3xl;
+    }
   }
 
   .tutor-dashboard-sidebar .tutor-see-all-courses {

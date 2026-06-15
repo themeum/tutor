@@ -318,7 +318,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.0-rc.2 - 11 jun, 2026
+= 4.0.0-rc.2 - 12 jun, 2026
 
 Update: Added more details to the Instructor Dashboard header
 Update: Added page title and meta title support for learning pages
