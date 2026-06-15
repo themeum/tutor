@@ -1,6 +1,6 @@
-import type { AxiosError, AxiosResponse } from 'axios';
 import type { ReactNode } from 'react';
 import type { RegisterOptions } from 'react-hook-form';
+import type { AxiosError, AxiosResponse } from 'axios';
 
 export type CourseProgressSteps = 'basic' | 'curriculum' | 'additional' | 'certificate';
 

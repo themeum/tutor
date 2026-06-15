@@ -1,7 +1,16 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
+
 import { tutorConfig } from '@TutorShared/config/config';
 
-const iconCache = new Map<string, string>();
+interface IconCacheEntry {
+  svg?: string;
+  loading?: boolean;
+  promise?: Promise<string>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error?: any;
+}
+
+const iconCache: Record<string, IconCacheEntry> = {};
 
 export interface IconProps {
   name: string; // Use PHP Icon::<name> to get the name.
@@ -26,7 +35,13 @@ const createSvg = ({
 }) =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox || '0 0 ' + width + ' ' + height}" fill="${fill}">${content}</svg>`;
 
-async function fetchSVG(name: string, width: number, height: number, from: 'php' | 'ts' = 'ts', ignoreKids = false) {
+function fetchSVG(
+  name: string,
+  width: number,
+  height: number,
+  from: 'php' | 'ts' = 'ts',
+  ignoreKids = false,
+): Promise<string> {
   const fileName = from === 'php' ? name : name.trim().replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
   const hasKidsVariant = !ignoreKids && tutorConfig.is_kids_mode && tutorConfig.kids_icons_registry?.includes(fileName);
 
@@ -34,33 +49,42 @@ async function fetchSVG(name: string, width: number, height: number, from: 'php'
   const url = `${tutorConfig.tutor_url}${basePath}${fileName}.svg`;
   const defaultViewBox = `0 0 ${width} ${height}`;
 
-  if (iconCache.has(url)) {
-    return iconCache.get(url)!;
+  if (iconCache[url]?.svg) {
+    return Promise.resolve(iconCache[url].svg!);
   }
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const svgText = await response.text();
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(svgText, 'image/svg+xml');
-    const svgEl = doc.querySelector('svg');
-    const viewBox = svgEl?.getAttribute('viewBox') || defaultViewBox;
-    const fill = svgEl?.getAttribute('fill') || 'none';
-    const content = svgEl?.innerHTML || '';
-
-    const svgMarkup = createSvg({ width, height, viewBox, fill, content });
-
-    iconCache.set(url, svgMarkup);
-    return svgMarkup;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`Failed to load icon: ${fileName}`, error);
-    return createSvg({ width, height });
+  if (iconCache[url]?.promise) {
+    return iconCache[url].promise!;
   }
+
+  const promise = fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.text();
+    })
+    .then((svgText) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(svgText, 'image/svg+xml');
+      const svgEl = doc.querySelector('svg');
+      const viewBox = svgEl?.getAttribute('viewBox') || defaultViewBox;
+      const fill = svgEl?.getAttribute('fill') || 'none';
+      const content = svgEl?.innerHTML || '';
+
+      const svgMarkup = createSvg({ width, height, viewBox, fill, content });
+      iconCache[url] = { svg: svgMarkup };
+      return svgMarkup;
+    })
+    .catch((error) => {
+      iconCache[url] = { error };
+      // eslint-disable-next-line no-console
+      console.error(`Failed to load icon: ${fileName}`, error);
+      return createSvg({ width, height });
+    });
+
+  iconCache[url] = { loading: true, promise };
+  return promise;
 }
 
 export const icon = (props: IconProps) => ({

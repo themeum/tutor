@@ -106,11 +106,19 @@ class PreviewTrigger extends BaseComponent {
 			x-ref="trigger"
 			class="tutor-preview-trigger"
 		>
-			<span class="tutor-preview-trigger-text"><?php echo esc_html( $title ); ?></span>
+			<span 
+				tabindex="0" 
+				role="button"
+				aria-haspopup="true"
+				:aria-expanded="open ? 'true' : 'false'"
+				class="tutor-preview-trigger-text"
+			><?php echo esc_html( $title ); ?></span>
 			<div 
 				x-ref="content"
 				x-show="open"
 				x-cloak
+				x-trap="open"
+				@keydown.escape="hide()"
 				@click.outside="handleClickOutside()"
 				class="tutor-popover tutor-preview-card"
 			></div>

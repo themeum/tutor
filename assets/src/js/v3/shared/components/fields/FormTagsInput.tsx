@@ -1,11 +1,10 @@
+import { useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import Chip from '@TutorShared/atoms/Chip';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -13,6 +12,7 @@ import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import Popover from '@TutorShared/molecules/Popover';
 import { type Tag, useCreateTagMutation, useTagListQuery } from '@TutorShared/services/tags';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';

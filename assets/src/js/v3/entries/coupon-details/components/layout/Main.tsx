@@ -1,20 +1,24 @@
-import {
-  type Coupon,
-  type Course,
-  type CourseCategory,
-  couponInitialValue,
-  useCouponDetailsQuery,
-} from '@CouponDetails/services/coupon';
+import { lazy, Suspense, useEffect } from 'react';
+import { FormProvider } from 'react-hook-form';
+import { setLocaleData } from '@wordpress/i18n';
+import { format } from 'date-fns';
+
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type MembershipPlan } from '@TutorShared/utils/types';
 import { convertGMTtoLocalDate } from '@TutorShared/utils/util';
-import { setLocaleData } from '@wordpress/i18n';
-import { format } from 'date-fns';
-import { lazy, Suspense, useEffect } from 'react';
-import { FormProvider } from 'react-hook-form';
+
+import {
+  type Coupon,
+  couponInitialValue,
+  type Course,
+  type CourseCategory,
+  useCouponDetailsQuery,
+} from '@CouponDetails/services/coupon';
+
 import Topbar from './Topbar';
 
 let MainContent: React.FC;

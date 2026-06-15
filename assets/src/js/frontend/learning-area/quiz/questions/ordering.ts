@@ -1,5 +1,6 @@
-import type { AlpineComponentMeta } from '@Core/ts/types';
 import type { Sortable } from '@dnd-kit/dom/sortable';
+
+import type { AlpineComponentMeta } from '@Core/ts/types';
 
 const loadDndKit = async () => {
   const [dom, sortable] = await Promise.all([

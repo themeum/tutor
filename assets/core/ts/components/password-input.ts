@@ -1,5 +1,6 @@
-import { type AlpineComponentMeta } from '@Core/ts/types';
 import { __ } from '@wordpress/i18n';
+
+import { type AlpineComponentMeta } from '@Core/ts/types';
 
 export interface PasswordInputProps {
   showStrength?: boolean;

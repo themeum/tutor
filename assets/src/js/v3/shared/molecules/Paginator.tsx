@@ -1,11 +1,13 @@
+import { useEffect, useState } from 'react';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
 
 interface PaginatorProps {
   currentPage: number;

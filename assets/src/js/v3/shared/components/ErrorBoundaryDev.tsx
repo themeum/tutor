@@ -1,7 +1,7 @@
-import { css } from '@emotion/react';
-import ErrorStackParser from 'error-stack-parser';
 import type React from 'react';
 import { Component, type ErrorInfo } from 'react';
+import { css } from '@emotion/react';
+import ErrorStackParser from 'error-stack-parser';
 import { SourceMapConsumer } from 'source-map';
 
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';

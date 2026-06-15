@@ -1,8 +1,10 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import { spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { css } from '@emotion/react';
+
 import emptyStateBanner from '@SharedImages/addons-empty-state.webp';
-import { __ } from '@wordpress/i18n';
 
 function EmptyState() {
   return (

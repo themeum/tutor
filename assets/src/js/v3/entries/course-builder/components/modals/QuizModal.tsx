@@ -1,7 +1,7 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
@@ -9,17 +9,32 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormQuestionTitle from '@TutorShared/components/fields/quiz/FormQuestionTitle';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
+import { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT, modal } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 import Tabs from '@TutorShared/molecules/Tabs';
+import { validateQuizQuestion } from '@TutorShared/utils/quiz';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID, isDefined, type TopicContentType } from '@TutorShared/utils/types';
+import { findSlotFields } from '@TutorShared/utils/util';
 
 import QuestionConditions from '@CourseBuilderComponents/curriculum/QuestionConditions';
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
 import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
   convertQuizFormDataToPayload,
   convertQuizResponseToFormData,
@@ -27,24 +42,7 @@ import {
   useGetQuizDetailsQuery,
   useSaveQuizMutation,
 } from '@CourseBuilderServices/quiz';
-import FormQuestionTitle from '@TutorShared/components/fields/quiz/FormQuestionTitle';
-
-import { CURRENT_VIEWPORT, modal } from '@TutorShared/config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
-import { styleUtils } from '@TutorShared/utils/style-utils';
-
-import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
-import { type ContentDripType } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { tutorConfig } from '@TutorShared/config/config';
-import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
-import { validateQuizQuestion } from '@TutorShared/utils/quiz';
-import { type ID, isDefined, type TopicContentType } from '@TutorShared/utils/types';
-import { findSlotFields } from '@TutorShared/utils/util';
 
 interface QuizModalProps extends ModalProps {
   quizId?: ID;

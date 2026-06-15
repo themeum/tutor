@@ -1,10 +1,9 @@
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -12,6 +11,7 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 import { type IconCollection } from '@TutorShared/icons/types';
+import Popover from '@TutorShared/molecules/Popover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined, type Option } from '@TutorShared/utils/types';

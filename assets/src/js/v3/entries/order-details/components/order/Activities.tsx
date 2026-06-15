@@ -1,9 +1,13 @@
-import { useOrderContext } from '@OrderDetails/contexts/order-context';
-import { useAdminCommentMutation } from '@OrderDetails/services/order';
+import { Controller } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Alert from '@TutorShared/atoms/Alert';
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
+
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
@@ -11,9 +15,9 @@ import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller } from 'react-hook-form';
+
+import { useOrderContext } from '@OrderDetails/contexts/order-context';
+import { useAdminCommentMutation } from '@OrderDetails/services/order';
 
 function Activities() {
   const { order } = useOrderContext();

@@ -1,5 +1,6 @@
-import { ITEMS_PER_PAGE } from '@TutorShared/config/constants';
 import { useCallback, useState } from 'react';
+
+import { ITEMS_PER_PAGE } from '@TutorShared/config/constants';
 
 type FilterKey =
   | 'search'

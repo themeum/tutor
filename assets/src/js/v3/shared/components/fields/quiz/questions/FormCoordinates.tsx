@@ -1,21 +1,22 @@
 /** Coordinates question field: instructor places correct answer points on the graph grid. */
 
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import TextInput from '@TutorShared/atoms/TextInput';
 import Tooltip from '@TutorShared/atoms/Tooltip';
+
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
-import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
   announceQuizBuilderPolite,
   bindQuizBuilderDescribedBy,
@@ -25,6 +26,7 @@ import {
   quizBuilderInteractionFocusCss,
   quizBuilderSrOnlyCss,
 } from '@TutorShared/utils/quizBuilderA11y';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
   type ID,
   QuizDataStatus,

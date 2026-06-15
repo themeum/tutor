@@ -9,8 +9,8 @@ import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import certificate2x from '@SharedImages/pro-placeholders/certificates-2x.webp';
 import certificate from '@SharedImages/pro-placeholders/certificates.webp';
+import certificate2x from '@SharedImages/pro-placeholders/certificates-2x.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 

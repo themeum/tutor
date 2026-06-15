@@ -1,7 +1,8 @@
+import type { ReactNode } from 'react';
+import { css } from '@emotion/react';
+
 import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
-import { css } from '@emotion/react';
-import type { ReactNode } from 'react';
 
 export type BadgeVariant = 'neutral' | 'success' | 'warning';
 

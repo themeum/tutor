@@ -1,12 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 
-import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
-import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import { useToast } from '@TutorShared/atoms/Toast';
+
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
-import type { ContentDripType, GoogleMeet, ZoomMeeting } from '@CourseBuilderServices/course';
 import { Addons } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
@@ -14,6 +12,10 @@ import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { type ID, type TopicContentType, type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
+
+import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
+import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
+import type { ContentDripType, GoogleMeet, ZoomMeeting } from '@CourseBuilderServices/course';
 
 export interface Content {
   ID: ID;

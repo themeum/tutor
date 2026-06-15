@@ -1,5 +1,6 @@
-import { colorTokens, fontFamily, fontSize, fontWeight, lineHeight } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
+
+import { colorTokens, fontFamily, fontSize, fontWeight, lineHeight } from '@TutorShared/config/styles';
 
 type TypefaceKeys = 'regular' | 'medium' | 'semiBold' | 'bold';
 

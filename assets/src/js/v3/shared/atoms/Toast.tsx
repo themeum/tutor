@@ -1,6 +1,6 @@
+import React, { type ReactNode, useCallback, useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { useTransition } from '@react-spring/web';
-import React, { type ReactNode, useCallback, useContext, useState } from 'react';
 
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';

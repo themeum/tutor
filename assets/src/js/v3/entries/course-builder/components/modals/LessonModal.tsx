@@ -1,8 +1,8 @@
+import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
@@ -19,21 +19,10 @@ import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
 import FormVideoInput, { type CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
+import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
 import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
-import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
-import { type ContentDripType } from '@CourseBuilderServices/course';
-import {
-  convertLessonDataToPayload,
-  type CourseTopic,
-  type Lesson,
-  useLessonDetailsQuery,
-  useSaveLessonMutation,
-} from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT, TutorRoles, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
@@ -46,6 +35,18 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type H5PContent, type ID } from '@TutorShared/utils/types';
 import { findSlotFields, formatBytes, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
+
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
+import {
+  convertLessonDataToPayload,
+  type CourseTopic,
+  type Lesson,
+  useLessonDetailsQuery,
+  useSaveLessonMutation,
+} from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;

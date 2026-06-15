@@ -1,12 +1,13 @@
+import { type UseFormReturn } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { type UseFormReturn } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
+
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import CourseListTable from '@TutorShared/components/modals/CourseListModal/CourseListTable';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
-import CourseListTable from '@TutorShared/components/modals/CourseListModal/CourseListTable';
 import { spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type Bundle, type Course } from '@TutorShared/services/course';

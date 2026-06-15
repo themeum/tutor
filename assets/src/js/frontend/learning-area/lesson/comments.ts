@@ -1,10 +1,12 @@
+import { __ } from '@wordpress/i18n';
+
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpPost } from '@Core/ts/utils/api';
 import { convertToErrorMessage } from '@Core/ts/utils/error';
+
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
-import { __ } from '@wordpress/i18n';
 
 const COMMENT_ID_PREFIX = 'tutor-comment-';
 const COMMENT_REPLY_ID_PREFIX = 'tutor-comment-reply-';
@@ -58,6 +60,7 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
     hasMore: true,
     currentOrder: 'DESC' as OrderTypes,
     isReloading: false,
+    isEmpty: false,
     $el: null as unknown as HTMLElement,
     $refs: {} as {
       commentList: HTMLElement;
@@ -75,6 +78,10 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
       const url = new URL(window.location.href);
       const orderParam = url.searchParams.get('order');
       this.currentOrder = orderParam === 'ASC' ? 'ASC' : 'DESC';
+
+      const childCount = this.$refs.commentList.querySelectorAll(`:scope > .${CLASSES.COMMENT_ITEM}`).length;
+      this.hasMore = this.totalComments > childCount;
+      this.isEmpty = childCount === 0;
 
       this.initInfiniteScroll();
 
@@ -94,6 +101,7 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
 
           if (data.count !== undefined) {
             this.totalComments = data.count;
+            this.isEmpty = false;
           }
 
           if (form.hasForm(COMMENT_FORM_ID)) {
@@ -160,6 +168,8 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
             if (!data.is_reply && this.hasMore) {
               this.loadNextPage();
             }
+
+            this.isEmpty = this.$refs.commentList.querySelectorAll(`:scope > .${CLASSES.COMMENT_ITEM}`).length === 0;
           }
         },
         onError: (error) => {
@@ -291,6 +301,8 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
           if (response.data.count !== undefined) {
             this.totalComments = response.data.count;
           }
+
+          this.isEmpty = !response.data.html?.trim();
         })
         .catch((error) => {
           toast.error(convertToErrorMessage(error));
@@ -324,6 +336,8 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
             this.currentPage++;
             this.$refs.commentList.insertAdjacentHTML('beforeend', response.data.html);
           }
+
+          this.isEmpty = this.$refs.commentList.querySelectorAll(`:scope > .${CLASSES.COMMENT_ITEM}`).length === 0;
         })
         .catch((error) => {
           toast.error(convertToErrorMessage(error));

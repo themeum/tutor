@@ -1,5 +1,7 @@
+import { createContext, type ReactNode, useContext } from 'react';
+
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import { type ReactNode, createContext, useContext } from 'react';
+
 import {
   type PaymentGateway,
   type PaymentSettings,

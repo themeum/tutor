@@ -1,7 +1,6 @@
-import { styleUtils } from '@TutorShared/utils/style-utils';
+import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -9,6 +8,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, Breakpoint, colorTokens, fontSize, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { convertToSlug } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';

@@ -1,11 +1,12 @@
-import { css } from '@emotion/react';
 import React from 'react';
+import { css } from '@emotion/react';
 
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { type VariantProps, createVariation } from '@TutorShared/utils/create-variation';
+import { createVariation, type VariantProps } from '@TutorShared/utils/create-variation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+
 import LoadingSpinner from './LoadingSpinner';
 
 interface MagicButtonProps extends React.HTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {

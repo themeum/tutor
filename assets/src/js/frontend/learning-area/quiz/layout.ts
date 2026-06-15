@@ -1,4 +1,5 @@
 import type { AlpineComponentMeta } from '@Core/ts/types';
+
 import { tutorConfig } from '@TutorShared/config/config';
 
 import { QUIZ_LAYOUT_KEYS, QUIZ_LAYOUT_SELECTORS, QUIZ_REVEAL_CONFIG, QuizLayoutType } from './constants';

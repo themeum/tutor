@@ -1,21 +1,22 @@
-import { css } from '@emotion/react';
-import { __, _n, sprintf } from '@wordpress/i18n';
 import React, { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __, _n, sprintf } from '@wordpress/i18n';
 
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import Paginator from '@TutorShared/molecules/Paginator';
-import Table, { type Column } from '@TutorShared/molecules/Table';
 
-import { type ContentSelectionForm } from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
-import SearchField from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/SearchField';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
+import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
 import { useGetCollectionsPaginatedQuery } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection, type CollectionContentType } from '@TutorShared/utils/types';
+
+import { type ContentSelectionForm } from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
+import SearchField from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/SearchField';
 
 interface CollectionListTableProps {
   type: 'lesson_assignment' | 'question';

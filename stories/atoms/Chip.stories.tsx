@@ -1,6 +1,7 @@
+import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
 import Chip from '@TutorShared/atoms/Chip';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const meta = {
   title: 'Atoms/Chip',

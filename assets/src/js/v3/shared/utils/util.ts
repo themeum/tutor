@@ -1,18 +1,18 @@
-import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
 import { __, sprintf } from '@wordpress/i18n';
 import { addMinutes, format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { type Addons, DateFormats } from '@TutorShared/config/constants';
+import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
   type DurationUnit,
   type InjectedField,
-  type PaginatedParams,
-  type WPPostStatus,
   isDefined,
   isObject,
+  type PaginatedParams,
+  type WPPostStatus,
 } from '@TutorShared/utils/types';
 
 export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {

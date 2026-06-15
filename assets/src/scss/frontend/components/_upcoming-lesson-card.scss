@@ -74,6 +74,10 @@
     @include tutor-text-truncate();
     margin: 0 0 $tutor-spacing-5 0;
 
+    &:hover {
+      color: $tutor-text-brand;
+    }
+
     @include tutor-breakpoint-down(sm) {
       color: $tutor-text-brand;
     }

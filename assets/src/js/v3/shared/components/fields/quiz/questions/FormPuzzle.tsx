@@ -1,10 +1,14 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useCallback, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import ImageInput from '@TutorShared/atoms/ImageInput';
+
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import useWPMedia from '@TutorShared/hooks/useWpMedia';
 import type { FormControllerProps } from '@TutorShared/utils/form';
@@ -16,8 +20,6 @@ import {
   type QuizQuestionOption,
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
 
 interface FormPuzzleProps extends FormControllerProps<QuizQuestionOption> {
   questionId: ID;

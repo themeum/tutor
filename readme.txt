@@ -318,31 +318,32 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.0-rc.2 - 11 jun, 2026
+= 4.0.0-rc.2 - 12 jun, 2026
 
-Update: Added a new empty dashboard design for students
-Update: Improved Instructor dashboard header by adding missing information
-Update: Added page title and meta title support for dashboard and learning pages
-Update: Improved subscription pending payment modal
-Fix: Fixed inconsistency in analytics course page details
-Fix: Fixed fatal error in Learning Area → Webinar when using translations
-Fix: Fixed Google Classroom issues
-Fix: Fixed individual course certificate visibility issue in bundle courses
-Fix: Fixed email trigger issue for enrolled courses during partial refunds
-Fix: Fixed "Cancel Enrollment" checkbox issue for partial and full refunds
-Fix: Fixed order history filter issue when monetization is set to WooCommerce
-Fix: Fixed homepage layout issue where content appeared outside the header
-Fix: Fixed expired assignment notice issue
+Update: Added more details to the Instructor Dashboard header
+Update: Added page title and meta title support for learning pages
+Update: Introduced a new empty dashboard design for students
+Update: Refined the pending payment modal for subscriptions
+Update: Improved Google Classroom compatibility
+Update: Improved accessibility across the plugin
+Update: Improved consistency in course analytics details
+Update: Added “Explore Course” button in the student dashboard
+Fix: Resolved the checkbox issue on the login page
+Fix: Corrected certificate visibility in bundle courses
+Fix: Addressed incorrect email notifications during partial refunds
+Fix: Fixed a fatal error in Learning Area live classes when translations are enabled
+Fix: Corrected "Cancel Enrollment" checkbox behavior for partial and full refunds
+Fix: Fixed order history filtering issues with WooCommerce monetization
+Fix: Resolved a homepage layout issue where content appeared outside the header
 Fix: Fixed attachment not opening in a new tab
-Fix: Fixed back button infinite loop issue
-Fix: Fixed email verification notice not appearing when Jetpack is active
-Fix: Fixed issue where students could not see enrolled courses on dashboard
-Fix: Fixed Learning Area URL accessibility after course is trashed
-Fix: Fixed incorrect countdown timing for Google Meet sessions
-Fix: Fixed blank page issue when "Hide Quiz Details From Students" is enabled
-Fix: Fixed assignment-related issues
-Fix: Fixed quiz export/import issue
-Fix: Improved accessibility across the site
+Fix: Removed infinite loop issue triggered by the back button
+Fix: Fixed email verification notice issue when Jetpack is active
+Fix: Restored visibility of enrolled courses in the student dashboard
+Fix: Corrected Learning Area URL access after a course is trashed
+Fix: Fixed incorrect countdown timing for Google Meet live classes
+Fix: Addressed multiple assignment-related issues
+Fix: Corrected quiz export and import functionality
+Fix: Resolved blank page issue when "Hide Quiz Details From Students" is enabled
 
 = 4.0.0-rc.1 - 15 May, 2026
 

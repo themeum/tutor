@@ -43,6 +43,7 @@
     @include tutor-flex(row, center, space-between);
     background-color: $tutor-surface-base;
     padding: $tutor-spacing-6 0;
+    margin-top: $tutor-spacing-none;
     position: sticky;
     bottom: 0;
     gap: 0;

@@ -1,8 +1,12 @@
+import { faker } from '@faker-js/faker';
+
+import endpoints from '@TutorShared/utils/endpoints';
+
 import { type AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import { type LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
+
 import { backendUrls } from '@Cypress/config/page-urls';
-import { faker } from '@faker-js/faker';
-import endpoints from '@TutorShared/utils/endpoints';
+
 import { loginAsAdmin } from '../../support/auth';
 
 describe('Course Builder - Curriculum', () => {
