@@ -1,12 +1,16 @@
+import { css } from '@emotion/react';
+
 import Alert from '@TutorShared/atoms/Alert';
+
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
+
 import { colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import { css } from '@emotion/react';
 import { type FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
+
 import { usePaymentContext } from '../../contexts/payment-context';
 import { type PaymentSettings } from '../../services/payment';
 import PaymentGatewayItem from '../PaymentGatewayItem';

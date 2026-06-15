@@ -1,13 +1,16 @@
-import type { Coupon, CouponAppliesTo } from '@CouponDetails/services/coupon';
+import { useFormContext } from 'react-hook-form';
 import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+import { format, isToday, isTomorrow, isValid } from 'date-fns';
+
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { formatPrice } from '@TutorShared/utils/currency';
-import { __, sprintf } from '@wordpress/i18n';
-import { format, isToday, isTomorrow, isValid } from 'date-fns';
-import { useFormContext } from 'react-hook-form';
+
+import type { Coupon, CouponAppliesTo } from '@CouponDetails/services/coupon';
+
 import EmptyPreviewDetail from './EmptyPreviewDetail';
 import EmptyPreviewTop from './EmptyPreviewTop';
 

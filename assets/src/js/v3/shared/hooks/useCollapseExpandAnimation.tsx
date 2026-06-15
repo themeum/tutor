@@ -1,5 +1,5 @@
-import { useSpring } from '@react-spring/web';
 import { type RefObject, useEffect, useState } from 'react';
+import { useSpring } from '@react-spring/web';
 
 export const useCollapseExpandAnimation = <T extends HTMLElement>({
   ref,

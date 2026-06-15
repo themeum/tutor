@@ -1,10 +1,11 @@
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
-import type { FormControllerProps } from '@TutorShared/utils/form';
 import { css } from '@emotion/react';
 
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { OptionWithImage } from '@TutorShared/utils/types';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormImageRadioGroupProps<T> extends FormControllerProps<T> {

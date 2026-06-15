@@ -1,19 +1,18 @@
+import { useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useIsFetching } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { isBefore, startOfDay } from 'date-fns';
-import { useState } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
+
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
-import { type CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -22,6 +21,9 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule, requiredRule } from '@TutorShared/utils/validation';
+
+import { type CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 const courseId = getCourseId();
 

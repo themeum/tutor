@@ -1,11 +1,15 @@
-import { useOrderContext } from '@OrderDetails/contexts/order-context';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
+
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+
+import { useOrderContext } from '@OrderDetails/contexts/order-context';
+
 import { OrderItem } from './OrderItem';
 
 function Summary() {

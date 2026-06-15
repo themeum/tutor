@@ -1,9 +1,10 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
+
 import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
@@ -15,7 +16,7 @@ import { typography } from '@TutorShared/config/typography';
 import { type FormWithGlobalErrorType, useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { requiredRule } from '@TutorShared/utils/validation';
 
-import { type PaymentMethod, type PaymentSettings, manualMethodFields } from '../../services/payment';
+import { manualMethodFields, type PaymentMethod, type PaymentSettings } from '../../services/payment';
 
 interface ManualPaymentModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

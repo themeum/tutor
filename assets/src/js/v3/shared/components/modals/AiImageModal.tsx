@@ -1,3 +1,5 @@
+import type { ControllerFieldState, ControllerRenderProps, FieldValues, Path } from 'react-hook-form';
+
 import {
   MagicImageGenerationProvider,
   type StyleType,
@@ -5,7 +7,7 @@ import {
 } from '@TutorShared/components/magic-ai-image/ImageContext';
 import { ImageGeneration } from '@TutorShared/components/magic-ai-image/ImageGeneration';
 import MagicFill from '@TutorShared/components/magic-ai-image/MagicFill';
-import type { ControllerFieldState, ControllerRenderProps, FieldValues, Path } from 'react-hook-form';
+
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
 

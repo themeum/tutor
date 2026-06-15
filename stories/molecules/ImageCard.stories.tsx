@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
-import productPlaceholder from '@SharedImages/course-placeholder.png';
-import ImageCard from '@TutorShared/molecules/ImageCard';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import ImageCard from '@TutorShared/molecules/ImageCard';
+
+import productPlaceholder from '@SharedImages/course-placeholder.png';
 
 const meta = {
   title: 'Molecules/ImageCard',

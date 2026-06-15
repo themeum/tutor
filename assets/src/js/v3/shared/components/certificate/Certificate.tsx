@@ -1,25 +1,26 @@
+import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
-import Tabs from '@TutorShared/molecules/Tabs';
 
 import CertificatePreviewModal from '@TutorShared/components/modals/CertificatePreviewModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import Tabs from '@TutorShared/molecules/Tabs';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Certificate as CertificateType } from '@TutorShared/utils/types';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 
-import notFound2x from '@SharedImages/not-found-2x.webp';
 import notFound from '@SharedImages/not-found.webp';
+import notFound2x from '@SharedImages/not-found-2x.webp';
 
 import CertificateCard from './CertificateCard';
 import CertificateEmptyState from './CertificateEmptyState';

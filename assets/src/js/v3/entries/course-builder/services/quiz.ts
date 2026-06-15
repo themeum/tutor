@@ -4,7 +4,6 @@ import type { AxiosResponse } from 'axios';
 
 import { useToast } from '@TutorShared/atoms/Toast';
 
-import type { ContentDripType } from '@CourseBuilderServices/course';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
@@ -12,9 +11,9 @@ import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { convertedQuestion, normalizeSingleMaskQuestionAnswers } from '@TutorShared/utils/quiz';
 import {
+  type ID,
   isDefined,
   QuizDataStatus,
-  type ID,
   type QuizQuestion,
   type QuizQuestionOption,
   type QuizQuestionType,
@@ -22,6 +21,8 @@ import {
   type TutorMutationResponse,
 } from '@TutorShared/utils/types';
 import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
+
+import type { ContentDripType } from '@CourseBuilderServices/course';
 
 type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
 type QuizLayoutView = '' | 'single_question' | 'question_pagination' | 'question_below_each_other'; // question_pagination will be deprecated

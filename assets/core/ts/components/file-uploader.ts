@@ -4,6 +4,7 @@ import { type FormControlMethods, type SetValueOptions, type ValidationRules } f
 import { type WPMedia, type WPMediaType } from '@Core/ts/services/WPMedia';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { formatBytes } from '@Core/ts/utils/format';
+
 import { tutorConfig } from '@TutorShared/config/config';
 
 type FileUploaderVariant = 'file-uploader' | 'image-uploader';

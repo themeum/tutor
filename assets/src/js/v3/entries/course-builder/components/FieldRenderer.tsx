@@ -1,4 +1,7 @@
+import { Controller, type RegisterOptions, type UseFormReturn } from 'react-hook-form';
+
 import Alert from '@TutorShared/atoms/Alert';
+
 import ComponentErrorBoundary from '@TutorShared/components/ComponentErrorBoundary';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
@@ -12,9 +15,9 @@ import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput'
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 import FormVideoInput from '@TutorShared/components/fields/FormVideoInput';
 import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
+
 import { type FormControllerProps } from '@TutorShared/utils/form';
 import { type FieldType, type Option } from '@TutorShared/utils/types';
-import { Controller, type RegisterOptions, type UseFormReturn } from 'react-hook-form';
 
 interface FieldRendererProps {
   name: string;

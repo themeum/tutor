@@ -1,7 +1,9 @@
-import { type CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import { type Content } from '@CourseBuilderServices/curriculum';
 import { type AnimateLayoutChanges, defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+
+import { type CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
+import { type Content } from '@CourseBuilderServices/curriculum';
+
 import TopicContent from './TopicContent';
 
 interface TopicContentWrapperProps {

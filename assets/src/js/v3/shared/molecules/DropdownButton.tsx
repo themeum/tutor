@@ -1,15 +1,15 @@
+import React, { type MouseEvent, type ReactNode, useRef, useState } from 'react';
 import { css, keyframes, type SerializedStyles } from '@emotion/react';
-import React, { useRef, useState, type MouseEvent, type ReactNode } from 'react';
 
 import type { ButtonIconPosition, ButtonSize, ButtonVariant } from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { POPOVER_PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/usePortalPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import { typography } from '@TutorShared/config/typography';
-import { POPOVER_PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/usePortalPopover';
 import Popover from './Popover';
 
 interface DropdownOptionProps {

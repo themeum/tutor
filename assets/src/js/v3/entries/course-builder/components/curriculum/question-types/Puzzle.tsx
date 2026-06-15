@@ -1,11 +1,13 @@
-import { css } from '@emotion/react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+
+import FormPuzzle from '@TutorShared/components/fields/quiz/questions/FormPuzzle';
+
+import { spacing } from '@TutorShared/config/styles';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import FormPuzzle from '@TutorShared/components/fields/quiz/questions/FormPuzzle';
-import { spacing } from '@TutorShared/config/styles';
-import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const Puzzle = () => {
   const form = useFormContext<QuizForm>();

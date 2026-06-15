@@ -1,16 +1,20 @@
-import { useMarkAsPaidMutation } from '@OrderDetails/services/order';
+import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Button from '@TutorShared/atoms/Button';
+
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
+
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { formatPrice } from '@TutorShared/utils/currency';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+
+import { useMarkAsPaidMutation } from '@OrderDetails/services/order';
 
 interface MarkAsPaidModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

@@ -6,7 +6,6 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Certificate } from '@TutorShared/utils/types';

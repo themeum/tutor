@@ -1,7 +1,8 @@
+import { forwardRef } from 'react';
+import { css, keyframes } from '@emotion/react';
+
 import { borderRadius, colorTokens } from '@TutorShared/config/styles';
 import { isNumber } from '@TutorShared/utils/types';
-import { css, keyframes } from '@emotion/react';
-import { forwardRef } from 'react';
 
 interface SkeletonProps extends React.HTMLAttributes<HTMLSpanElement> {
   width?: number | string;

@@ -1,10 +1,16 @@
-import { type Discount, useOrderDiscountMutation } from '@OrderDetails/services/order';
+import { useEffect, useMemo } from 'react';
+import { Controller } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Button from '@TutorShared/atoms/Button';
+
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -12,10 +18,8 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo } from 'react';
-import { Controller } from 'react-hook-form';
+
+import { type Discount, useOrderDiscountMutation } from '@OrderDetails/services/order';
 
 interface DiscountModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

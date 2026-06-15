@@ -1,7 +1,8 @@
-import { colorTokens } from '@TutorShared/config/styles';
-import { type VariantProps, createVariation } from '@TutorShared/utils/create-variation';
-import { css } from '@emotion/react';
 import React from 'react';
+import { css } from '@emotion/react';
+
+import { colorTokens } from '@TutorShared/config/styles';
+import { createVariation, type VariantProps } from '@TutorShared/utils/create-variation';
 
 interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof separatorVariant> {}
 
