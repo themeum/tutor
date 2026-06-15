@@ -8,10 +8,8 @@ import type { ChatFormat, ChatLanguage, ChatTone } from '@TutorShared/config/mag
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import type { Prettify, TutorMutationResponse } from '@TutorShared/utils/types';
+import type { Prettify, TopicContent, TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
-
-import type { TopicContent } from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
 
 interface ImagePayload {
   prompt: string;
