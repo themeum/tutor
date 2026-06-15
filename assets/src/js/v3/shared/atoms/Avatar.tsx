@@ -1,6 +1,7 @@
+import { css } from '@emotion/react';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { css } from '@emotion/react';
 
 interface AvatarProps {
   image?: string;

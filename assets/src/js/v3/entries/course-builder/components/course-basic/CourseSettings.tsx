@@ -1,29 +1,30 @@
+import { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useIsFetching } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Tabs, { type TabItem } from '@TutorShared/molecules/Tabs';
 
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormMultiSelectInput from '@TutorShared/components/fields/FormMultiSelectInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
-import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
-import EnrollmentSettings from '@CourseBuilderComponents/course-basic/EnrollmentSettings';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import useVisibilityControl from '@TutorShared/hooks/useVisibilityControl';
+import Tabs, { type TabItem } from '@TutorShared/molecules/Tabs';
 import type { Option } from '@TutorShared/utils/types';
 import { isAddonEnabled } from '@TutorShared/utils/util';
+
+import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
+import EnrollmentSettings from '@CourseBuilderComponents/course-basic/EnrollmentSettings';
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 const courseId = getCourseId();
 

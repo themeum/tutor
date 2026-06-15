@@ -1,6 +1,6 @@
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
@@ -8,7 +8,6 @@ import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-
 import { isDefined } from '@TutorShared/utils/types';
 
 interface CardProps {

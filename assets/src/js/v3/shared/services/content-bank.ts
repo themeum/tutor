@@ -1,9 +1,9 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
 
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type CollectionResponse, type ContentBankContents, type ID } from '@TutorShared/utils/types';
-import { __ } from '@wordpress/i18n';
 
 interface CollectionParams {
   search?: string;

@@ -1,6 +1,8 @@
-import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotContext';
-import { type InjectionSlots } from '@TutorShared/utils/types';
 import { type LocaleData } from '@wordpress/i18n';
+
+import { type InjectionSlots } from '@TutorShared/utils/types';
+
+import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 
 export type {};
 

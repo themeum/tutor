@@ -1,23 +1,26 @@
+import { useEffect } from 'react';
+import { Controller, type UseFormReturn } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import FormInput from '@TutorShared/components/fields/FormInput';
-import { colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
-import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { css } from '@emotion/react';
-import { Controller, type UseFormReturn } from 'react-hook-form';
 
+import FormInput from '@TutorShared/components/fields/FormInput';
 import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
+
+import { colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import {
   euCountryCode,
   getCountryByCode,
   getCountryListAsOptions,
   getStatesByCountryAsOptions,
 } from '@TutorShared/utils/countries';
-import { __, sprintf } from '@wordpress/i18n';
-import { useEffect } from 'react';
+
 import TaxCheckbox from '../../atoms/TaxCheckbox';
 import type { TaxSettings } from '../../services/tax';
 import TaxModalWrapper from './TaxModalWrapper';

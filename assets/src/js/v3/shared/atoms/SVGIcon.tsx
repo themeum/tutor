@@ -1,8 +1,9 @@
+import { memo, useEffect, useState } from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { useSVGIconConfig } from '@TutorShared/contexts/SVGIconConfigContext';
 import { type IconCollection } from '@TutorShared/icons/types';
-import { type SerializedStyles, css } from '@emotion/react';
-import { memo, useEffect, useState } from 'react';
 
 interface SVGIconProps {
   name: IconCollection;

@@ -1,11 +1,13 @@
+import { css, type SerializedStyles } from '@emotion/react';
+
 import AtomCheckbox from '@TutorShared/atoms/CheckBox';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
-import { type SerializedStyles, css } from '@emotion/react';
 
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Tooltip from '@TutorShared/atoms/Tooltip';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface CheckboxProps extends FormControllerProps<boolean> {

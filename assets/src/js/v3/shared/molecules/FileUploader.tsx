@@ -1,15 +1,17 @@
+import type React from 'react';
+import { useRef } from 'react';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Button, { type ButtonIconPosition, type ButtonSize, type ButtonVariant } from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { MAX_FILE_SIZE } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { formatReadAbleBytesToBytes, getFileExtensionFromName } from '@TutorShared/utils/util';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import type React from 'react';
-import { useRef } from 'react';
 
 interface UploaderProps {
   onUpload: (files: File[]) => void;

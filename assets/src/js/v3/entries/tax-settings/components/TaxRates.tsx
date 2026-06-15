@@ -1,28 +1,29 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 
 import { colorTokens, fontSize, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 import { getCountryByCode, getStateByCode, isEuropeanUnion } from '@TutorShared/utils/countries';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
-import { typography } from '@TutorShared/config/typography';
 import Card from '../molecules/Card';
 import type { TaxSettings } from '../services/tax';
 import EuropeanUnionTax from './EuropeanUnionTax';
-import { MoreOptions } from './MoreOptions';
-import TaxSettingGlobal from './TaxSettingGlobal';
 import { useCountrySelectModal } from './modals/CountrySelectModal';
 import { useCountryTaxRateModal } from './modals/CountryTaxRateModal';
+import { MoreOptions } from './MoreOptions';
+import TaxSettingGlobal from './TaxSettingGlobal';
 
 export interface ColumnDataType {
   locationId: string | number;

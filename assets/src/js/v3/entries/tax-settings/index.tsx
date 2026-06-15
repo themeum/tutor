@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
+
 import App from './components/App';
 
 const root = createRoot(document.getElementById('ecommerce_tax') as HTMLElement);

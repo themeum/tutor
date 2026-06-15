@@ -1,7 +1,7 @@
+import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -10,12 +10,11 @@ import { CURRENT_VIEWPORT, LocalStorageKeys, notebook } from '@TutorShared/confi
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { useResize } from '@TutorShared/hooks/useResize';
 import { getFromLocalStorage, setToLocalStorage } from '@TutorShared/utils/localStorage';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
 import { jsonParse, throttle } from '@TutorShared/utils/util';
-
-import { useResize } from '@TutorShared/hooks/useResize';
 
 interface Position {
   x: number;

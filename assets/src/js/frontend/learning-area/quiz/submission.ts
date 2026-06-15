@@ -1,17 +1,18 @@
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
+import { wpPost, wpPostForm } from '@Core/ts/utils/api';
 import { convertToErrorMessage } from '@Core/ts/utils/error';
+
+import { tutorConfig } from '@TutorShared/config/config';
 import endpoints from '@TutorShared/utils/endpoints';
 
-import { wpPost, wpPostForm } from '@Core/ts/utils/api';
-import { tutorConfig } from '@TutorShared/config/config';
 import {
   ERROR_MESSAGES,
+  QuestionTimeoutAction,
   QUIZ_ABANDON_CONFIG,
   QUIZ_LAYOUT_SELECTORS,
   QUIZ_REVEAL_CONFIG,
-  QuestionTimeoutAction,
 } from './constants';
 import { getAttemptedQuestionCountFromForm, revealQuestionWithAnswers } from './helpers';
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import App from '@CouponDetails/components/App';
 import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
+
+import App from '@CouponDetails/components/App';
 
 const root = ReactDOM.createRoot(document.getElementById('tutor-coupon-root') as HTMLElement);
 

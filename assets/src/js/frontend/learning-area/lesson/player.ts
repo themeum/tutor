@@ -1,8 +1,11 @@
+import { __, sprintf } from '@wordpress/i18n';
+
 import { wpPost } from '@Core/ts/utils/api';
 import { isMobileDevice } from '@Core/ts/utils/util';
-import { isVimeoPlyr, isYouTubePlyr } from '@FrontendTypes/index';
+
 import { tutorConfig } from '@TutorShared/config/config';
-import { __, sprintf } from '@wordpress/i18n';
+
+import { isVimeoPlyr, isYouTubePlyr } from '@FrontendTypes/index';
 
 interface AutoLoadResponse {
   success: boolean;

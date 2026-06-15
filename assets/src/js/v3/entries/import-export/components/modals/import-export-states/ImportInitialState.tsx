@@ -1,18 +1,17 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
-import { UploadButton } from '@TutorShared/molecules/FileUploader';
 
-import { hasAnyCourseWithChildren } from '@ImportExport/utils/utils';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -21,10 +20,13 @@ import Show from '@TutorShared/controls/Show';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import useIntersectionObserver from '@TutorShared/hooks/useIntersectionObserver';
+import { UploadButton } from '@TutorShared/molecules/FileUploader';
 import { useGetCollectionsInfinityQuery } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection } from '@TutorShared/utils/types';
 import { formatBytes, isAddonEnabled } from '@TutorShared/utils/util';
+
+import { hasAnyCourseWithChildren } from '@ImportExport/utils/utils';
 
 interface ImportInitialStateProps {
   files: File[];

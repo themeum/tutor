@@ -1,10 +1,12 @@
+import { __ } from '@wordpress/i18n';
+
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpPost } from '@Core/ts/utils/api';
 import { decodeHtmlEntities } from '@Core/ts/utils/decode-html-entities';
 import { convertToErrorMessage } from '@Core/ts/utils/error';
+
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
-import { __ } from '@wordpress/i18n';
 
 interface ReplyCommentPayload {
   comment_post_ID: number;

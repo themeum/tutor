@@ -1,7 +1,7 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
@@ -20,8 +20,8 @@ import taxBanner from '@SharedImages/tax-banner.png';
 import Card from '../molecules/Card';
 import EmptyState from '../molecules/EmptyState';
 import { type TaxSettings, useTaxSettingsQuery } from '../services/tax';
-import TaxRates from './TaxRates';
 import { useCountrySelectModal } from './modals/CountrySelectModal';
+import TaxRates from './TaxRates';
 
 const TaxSettingsPage = () => {
   const form = useFormWithGlobalError<TaxSettings>({

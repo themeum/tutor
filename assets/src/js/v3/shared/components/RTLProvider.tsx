@@ -1,8 +1,9 @@
-import { isRTL } from '@TutorShared/config/constants';
+import type { ReactNode } from 'react';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
-import type { ReactNode } from 'react';
 import rtlPlugin from 'stylis-plugin-rtl';
+
+import { isRTL } from '@TutorShared/config/constants';
 
 const cache = createCache({
   stylisPlugins: [rtlPlugin],

@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Card from '@TutorShared/molecules/Card';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import Card from '@TutorShared/molecules/Card';
 
 const meta = {
   title: 'Molecules/Card',

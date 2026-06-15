@@ -1,7 +1,8 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+
 import { wpAjaxInstance } from '../utils/api';
-import { type PaginatedParams, type PaginatedResult } from '../utils/types';
 import endpoints from '../utils/endpoints';
+import { type PaginatedParams, type PaginatedResult } from '../utils/types';
 
 export interface Category {
   id: number;

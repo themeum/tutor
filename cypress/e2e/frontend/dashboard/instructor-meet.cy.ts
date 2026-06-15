@@ -1,7 +1,10 @@
-import { type GoogleMeetMeetingFormData } from '@CourseBuilderServices/course';
 import { faker } from '@faker-js/faker';
+
 import { Addons } from '@TutorShared/config/constants';
 import endpoints from '@TutorShared/utils/endpoints';
+
+import { type GoogleMeetMeetingFormData } from '@CourseBuilderServices/course';
+
 import { frontendUrls } from '../../../config/page-urls';
 
 let courseId: string = '';

@@ -1,16 +1,20 @@
-import type { Coupon } from '@CouponDetails/services/coupon';
+import { Controller, useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
+
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
+
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller, useFormContext } from 'react-hook-form';
+
+import type { Coupon } from '@CouponDetails/services/coupon';
 
 function CouponValidity() {
   const form = useFormContext<Coupon>();

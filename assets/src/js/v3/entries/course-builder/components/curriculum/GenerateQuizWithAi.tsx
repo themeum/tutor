@@ -1,25 +1,21 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
+import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
-import Popover from '@TutorShared/molecules/Popover';
 
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { CourseTopic } from '@CourseBuilderServices/curriculum';
-import type { QuizForm } from '@CourseBuilderServices/quiz';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import MagicButton from '@TutorShared/atoms/MagicButton';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, fontSize, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -28,13 +24,19 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import type { IconCollection } from '@TutorShared/icons/types';
+import Popover from '@TutorShared/molecules/Popover';
 import { useGenerateAiQuizQuestionsMutation } from '@TutorShared/services/magic-ai';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { QuizDataStatus, type Option, type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
+import { type Option, QuizDataStatus, type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
 
-import generateCourse2x from '@SharedImages/pro-placeholders/generate-course-2x.webp';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import type { CourseTopic } from '@CourseBuilderServices/curriculum';
+import type { QuizForm } from '@CourseBuilderServices/quiz';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+
 import generateCourse from '@SharedImages/pro-placeholders/generate-course.webp';
+import generateCourse2x from '@SharedImages/pro-placeholders/generate-course-2x.webp';
 
 const courseId = getCourseId();
 const emptyTopicIds: string[] = [];

@@ -1,11 +1,13 @@
+import { __, sprintf } from '@wordpress/i18n';
+
 import {
-  QuizDataStatus,
   type ID,
+  QuizDataStatus,
   type QuizQuestion,
   type QuizQuestionOption,
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
-import { __, sprintf } from '@wordpress/i18n';
+
 import { normalizeLineEndings } from './util';
 
 export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatus: QuizDataStatus) => {

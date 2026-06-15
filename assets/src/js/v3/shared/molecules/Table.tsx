@@ -1,11 +1,13 @@
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import type { ReactNode } from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
+
 import Skeleton from '@TutorShared/atoms/Skeleton';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { getRandom, range } from '@TutorShared/utils/util';
-import { type SerializedStyles, css } from '@emotion/react';
-import type { ReactNode } from 'react';
 
 interface BaseColumn {
   name?: string;

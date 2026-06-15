@@ -1,6 +1,7 @@
-import { css } from '@emotion/react';
-import { styleUtils } from '@TutorShared/utils/style-utils';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { css } from '@emotion/react';
+
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface VirtualListProps<T> {
   items: T[];

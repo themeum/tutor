@@ -1,7 +1,8 @@
-import { css } from '@emotion/react';
 import type React from 'react';
+import { css } from '@emotion/react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
 import FocusTrap from '@TutorShared/components/FocusTrap';
 

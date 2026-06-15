@@ -1,15 +1,19 @@
+import { Controller, useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+
 import { colorTokens, fontSize, fontWeight, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 import { euCountryCode, europeanUnionData } from '@TutorShared/utils/countries';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller, useFormContext } from 'react-hook-form';
+
 import Card, { CardHeader } from '../molecules/Card';
 import { EUTaxRegistrationTypes, type TaxSettings } from '../services/tax';
 import { useCountryTaxRateModal } from './modals/CountryTaxRateModal';

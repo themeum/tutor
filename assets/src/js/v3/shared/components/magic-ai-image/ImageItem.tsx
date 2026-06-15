@@ -1,15 +1,15 @@
+import { useRef, useState } from 'react';
 import { css, keyframes } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
 
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import Popover from '@TutorShared/molecules/Popover';
 import { useStoreAIGeneratedImageMutation } from '@TutorShared/services/magic-ai';
 import { downloadBase64Image } from '@TutorShared/utils/magic-ai';
 import { styleUtils } from '@TutorShared/utils/style-utils';

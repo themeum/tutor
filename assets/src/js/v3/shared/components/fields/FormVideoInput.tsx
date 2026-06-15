@@ -1,14 +1,13 @@
+import { useEffect, useRef, useState } from 'react';
+import { Controller } from 'react-hook-form';
 import { css } from '@emotion/react';
 import type { UseMutationResult } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import config, { tutorConfig } from '@TutorShared/config/config';
 import { VideoRegex } from '@TutorShared/config/constants';
@@ -21,6 +20,7 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { type IconCollection } from '@TutorShared/icons/types';
+import Popover from '@TutorShared/molecules/Popover';
 import { useGetYouTubeVideoDuration } from '@TutorShared/services/video';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';

@@ -1,18 +1,19 @@
+import React, { useCallback, useMemo } from 'react';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import React, { useCallback, useMemo } from 'react';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import Paginator from '@TutorShared/molecules/Paginator';
-import Table, { type Column } from '@TutorShared/molecules/Table';
 
 import SearchField from '@TutorShared/components/modals/CourseListModal/SearchField';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { type FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
+import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
 import { type Bundle, type Course, useBundleListQuery, useCourseListQuery } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 

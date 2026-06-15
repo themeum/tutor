@@ -1,26 +1,25 @@
+import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { TutorRoles } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-
+import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
-
-import { type CourseDetailsResponse } from '@CourseBuilderServices/course';
-import Show from '@TutorShared/controls/Show';
-import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import Popover from '@TutorShared/molecules/Popover';
 import type { User } from '@TutorShared/services/users';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
+
+import { type CourseDetailsResponse } from '@CourseBuilderServices/course';
 
 import profileImage from '@SharedImages/profile-photo.png';
 

@@ -1,7 +1,7 @@
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
 
 import Alert from '@TutorShared/atoms/Alert';
 import Button from '@TutorShared/atoms/Button';
@@ -10,10 +10,10 @@ import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+
 import { Addons, isRTL } from '@TutorShared/config/constants';
-import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
@@ -22,17 +22,18 @@ import { useSaveAIGeneratedCourseContentMutation } from '@TutorShared/services/m
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { getObjectKeys, getObjectValues, isAddonEnabled } from '@TutorShared/utils/util';
 
+import { getCourseId } from '@CourseBuilderUtils/utils';
+
+import aiStudioError from '@SharedImages/ai-studio-error.webp';
+import aiStudioError2x from '@SharedImages/ai-studio-error-2x.webp';
+
 import { useGenerateCourseContent } from '../../hooks/useGenerateCourseContent';
 import ContentAccordion from './ContentAccordion';
 import { type Loading, useContentGenerationContext } from './ContentGenerationContext';
 import ContentSkeleton from './loaders/ContentSkeleton';
 import DescriptionSkeleton from './loaders/DescriptionSkeleton';
-import TitleSkeleton from './loaders/TitleSkeleton';
-
-import aiStudioError2x from '@SharedImages/ai-studio-error-2x.webp';
-import aiStudioError from '@SharedImages/ai-studio-error.webp';
-
 import ImageSkeleton from './loaders/ImageSkeleton';
+import TitleSkeleton from './loaders/TitleSkeleton';
 
 interface LoadingStep {
   loading_label: string;

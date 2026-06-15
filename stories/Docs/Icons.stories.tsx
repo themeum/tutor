@@ -1,14 +1,16 @@
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import { IconGallery, IconItem, Meta } from '@storybook/addon-docs/blocks';
+import { type Meta as StorybookMeta, type StoryObj } from 'storybook-react-rsbuild';
+
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import TextInput from '@TutorShared/atoms/TextInput';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { icons, type IconCollection } from '@TutorShared/icons/types';
+import { type IconCollection, icons } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { copyToClipboard } from '@TutorShared/utils/util';
-import { useState } from 'react';
-import { type Meta as StorybookMeta, type StoryObj } from 'storybook-react-rsbuild';
 
 const styles = {
   container: css`

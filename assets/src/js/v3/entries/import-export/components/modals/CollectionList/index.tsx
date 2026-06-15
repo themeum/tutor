@@ -1,18 +1,20 @@
+import { type UseFormReturn } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { type UseFormReturn } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
-import CollectionListTable from '@ImportExport/components/modals/CollectionList/CollectionListTable';
-import { type BulkSelectionFormData } from '@ImportExport/services/import-export';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection } from '@TutorShared/utils/types';
+
+import CollectionListTable from '@ImportExport/components/modals/CollectionList/CollectionListTable';
+import { type BulkSelectionFormData } from '@ImportExport/services/import-export';
 
 interface CollectionListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

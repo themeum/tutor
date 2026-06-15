@@ -1,7 +1,7 @@
-import type { SerializedStyles } from '@emotion/react';
-import { type EasingFunction, animated, easings, useSpring, useTransition } from '@react-spring/web';
 import type { ReactNode } from 'react';
 import useMeasure from 'react-use-measure';
+import type { SerializedStyles } from '@emotion/react';
+import { animated, type EasingFunction, easings, useSpring, useTransition } from '@react-spring/web';
 
 export enum AnimationType {
   slideDown = 0,

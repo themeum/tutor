@@ -1,7 +1,8 @@
+import React, { type MouseEvent, useEffect, useRef, useState } from 'react';
+import { css } from '@emotion/react';
+
 import { borderRadius, colorTokens, zIndex } from '@TutorShared/config/styles';
 import { calculateCartesianDistance, drawPath, getCanvas } from '@TutorShared/utils/magic-ai';
-import { css } from '@emotion/react';
-import React, { type MouseEvent, useEffect, useRef, useState } from 'react';
 
 interface CanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
   src: string;

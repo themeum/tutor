@@ -1,7 +1,8 @@
-import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
+import { __ } from '@wordpress/i18n';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import For from '@TutorShared/controls/For';
 import { type QuizQuestionOption } from '@TutorShared/utils/types';
 

@@ -1,25 +1,19 @@
+import { useFormContext } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import HeaderActions from '@CourseBuilderComponents/layouts/header/HeaderActions';
-import Tracker from '@CourseBuilderComponents/layouts/Tracker';
-import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
 import Logo from '@TutorShared/components/Logo';
 import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 
-import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { CURRENT_VIEWPORT, TutorRoles, WP_ADMIN_BAR_HEIGHT } from '@TutorShared/config/constants';
 import {
@@ -35,8 +29,15 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import generateCourse2x from '@SharedImages/pro-placeholders/generate-course-2x.webp';
+import HeaderActions from '@CourseBuilderComponents/layouts/header/HeaderActions';
+import Tracker from '@CourseBuilderComponents/layouts/Tracker';
+import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
+import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+
 import generateCourse from '@SharedImages/pro-placeholders/generate-course.webp';
+import generateCourse2x from '@SharedImages/pro-placeholders/generate-course-2x.webp';
 
 const courseId = getCourseId();
 
