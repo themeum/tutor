@@ -1,10 +1,12 @@
+import { Controller, useForm } from 'react-hook-form';
 import { css } from '@emotion/react';
+import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
+
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+
 import { DEFAULT_FORM_FIELD_PROPS, DEFAULT_FORM_FILED_STATE_PROPS } from '@TutorShared/config/constants';
 import { colorTokens } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { Controller, useForm } from 'react-hook-form';
-import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 
 const meta = {
   title: 'Components/Fields/FormSwitch',

@@ -1,6 +1,8 @@
-import Skeleton from '@TutorShared/atoms/Skeleton';
-import { spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
+
+import Skeleton from '@TutorShared/atoms/Skeleton';
+
+import { spacing } from '@TutorShared/config/styles';
 
 const ImageSkeleton = () => {
   return (

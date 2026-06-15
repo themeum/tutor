@@ -1,13 +1,15 @@
-import { type Step, useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
-import type { CourseFormData } from '@CourseBuilderServices/course';
+import { useFormContext } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { css } from '@emotion/react';
+
 import { borderRadius, Breakpoint, colorTokens, lineHeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import { useFormContext } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+
+import { type Step, useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 
 const Tracker = () => {
   const { steps } = useCourseNavigator();

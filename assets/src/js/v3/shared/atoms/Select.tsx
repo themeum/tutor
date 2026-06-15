@@ -1,14 +1,13 @@
-import { type SerializedStyles, css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
-
-import Popover from '@TutorShared/molecules/Popover';
+import { css, type SerializedStyles } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import useIntersectionObserver from '@TutorShared/hooks/useIntersectionObserver';
+import Popover from '@TutorShared/molecules/Popover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { Option } from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';

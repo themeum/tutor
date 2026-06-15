@@ -1,7 +1,8 @@
-import { css } from '@emotion/react';
-import CheckBox from '@TutorShared/atoms/CheckBox';
 import { useState } from 'react';
+import { css } from '@emotion/react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import CheckBox from '@TutorShared/atoms/CheckBox';
 
 const meta = {
   title: 'Atoms/CheckBox',

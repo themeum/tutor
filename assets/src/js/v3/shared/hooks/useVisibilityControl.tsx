@@ -37,7 +37,7 @@ const useVisibilityControl = (visibilityKey: string = ''): boolean => {
       return true;
     }
 
-    return visibilitySettings[keyWithRole] === 'on';
+    return (visibilitySettings as Record<string, string>)[keyWithRole] === 'on';
   }, [visibilityKey]);
 };
 

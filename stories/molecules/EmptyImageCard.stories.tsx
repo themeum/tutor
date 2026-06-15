@@ -1,5 +1,6 @@
-import EmptyImageCard from '@TutorShared/molecules/EmptyImageCard';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import EmptyImageCard from '@TutorShared/molecules/EmptyImageCard';
 
 const meta = {
   title: 'Molecules/EmptyImageCard',

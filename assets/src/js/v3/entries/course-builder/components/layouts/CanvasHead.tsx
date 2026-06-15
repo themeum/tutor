@@ -1,7 +1,7 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import type { ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';

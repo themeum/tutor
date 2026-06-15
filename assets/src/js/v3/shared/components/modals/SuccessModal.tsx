@@ -1,7 +1,8 @@
-import { type SerializedStyles, css } from '@emotion/react';
+import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
+
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 
 import { colorTokens, spacing } from '@TutorShared/config/styles';

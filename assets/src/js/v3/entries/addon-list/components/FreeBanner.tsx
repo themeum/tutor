@@ -1,11 +1,14 @@
-import bannerImage from '@SharedImages/free-addons-banner.png';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import config from '@TutorShared/config/config';
 import { colorTokens, lineHeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+
+import bannerImage from '@SharedImages/free-addons-banner.png';
 
 function FreeBanner() {
   return (

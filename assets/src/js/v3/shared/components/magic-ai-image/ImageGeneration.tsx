@@ -1,12 +1,23 @@
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useToast } from '@TutorShared/atoms/Toast';
+
 import FormImageRadioGroup from '@TutorShared/components/fields/FormImageRadioGroup';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { useMagicImageGenerationMutation } from '@TutorShared/services/magic-ai';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined, type OptionWithImage } from '@TutorShared/utils/types';
 
 import threeD from '@SharedImages/ai-types/3d.png';
 import blackAndWhite from '@SharedImages/ai-types/black-and-white.png';
@@ -21,18 +32,10 @@ import photo from '@SharedImages/ai-types/photo.png';
 import retro from '@SharedImages/ai-types/retro.png';
 import sketch from '@SharedImages/ai-types/sketch.png';
 
-import { useToast } from '@TutorShared/atoms/Toast';
-import type { ErrorResponse } from '@TutorShared/utils/form';
-import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type OptionWithImage, isDefined } from '@TutorShared/utils/types';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import {
+  inspirationPrompts,
   type MagicImageGenerationFormFields,
   type StyleType,
-  inspirationPrompts,
   useMagicImageGeneration,
 } from './ImageContext';
 import { AiImageItem } from './ImageItem';

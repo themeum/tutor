@@ -1,16 +1,19 @@
-import routes from '@CourseBuilderConfig/routes';
-import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
-import type { CourseFormData } from '@CourseBuilderServices/course';
+import { useFormContext } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { css, type SerializedStyles } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { isRTL } from '@TutorShared/config/constants';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { useCurrentPath } from '@TutorShared/hooks/useCurrentPath';
-import { type SerializedStyles, css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useFormContext } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+
+import routes from '@CourseBuilderConfig/routes';
+import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 
 interface NavigatorProps {
   styleModifier?: SerializedStyles;

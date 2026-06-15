@@ -1,14 +1,13 @@
-import { css } from '@emotion/react';
-import { useIsFetching, useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { css } from '@emotion/react';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
 
 import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import ProBadge from '@TutorShared/atoms/ProBadge';
-import EmptyState from '@TutorShared/molecules/EmptyState';
 
 import Certificate from '@TutorShared/components/certificate/Certificate';
 import FormCoursePrerequisites from '@TutorShared/components/fields/FormCoursePrerequisites';
@@ -16,27 +15,28 @@ import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 
-import CoursePrerequisitesEmptyState from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
-import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
-import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import { type CourseDetailsResponse, type CourseFormData } from '@CourseBuilderServices/course';
-
-import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, footerHeight, headerHeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import useVisibilityControl from '@TutorShared/hooks/useVisibilityControl';
+import EmptyState from '@TutorShared/molecules/EmptyState';
 import { useCourseListQuery } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 
-import attachmentsPro2x from '@SharedImages/pro-placeholders/attachments-2x.webp';
+import CoursePrerequisitesEmptyState from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
+import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
+import { type CourseDetailsResponse, type CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+
 import attachmentsPro from '@SharedImages/pro-placeholders/attachments.webp';
+import attachmentsPro2x from '@SharedImages/pro-placeholders/attachments-2x.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();

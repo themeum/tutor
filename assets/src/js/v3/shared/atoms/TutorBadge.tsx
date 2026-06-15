@@ -1,8 +1,9 @@
+import React from 'react';
+import { css } from '@emotion/react';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import React from 'react';
 
 const badgeVariants = {
   default: {

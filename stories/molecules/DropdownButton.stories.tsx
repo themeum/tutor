@@ -1,7 +1,9 @@
+import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import DropdownButton from '@TutorShared/molecules/DropdownButton';
-import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const meta = {
   title: 'Molecules/DropdownButton',

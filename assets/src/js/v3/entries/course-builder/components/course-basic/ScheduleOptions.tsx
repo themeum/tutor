@@ -1,23 +1,21 @@
+import { useEffect, useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useIsFetching } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 import { addHours, format, isBefore, isSameMinute, isValid, parseISO, startOfDay } from 'date-fns';
-import { useEffect, useState } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
+import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import ProBadge from '@TutorShared/atoms/ProBadge';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
 import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -27,6 +25,9 @@ import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { formatBytes, noop } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
+
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();

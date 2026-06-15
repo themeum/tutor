@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { HashRouter } from 'react-router-dom';
 
 import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
+
 import App from '@CourseBuilderComponents/App';
-import { HashRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('tutor-course-builder') as HTMLElement);
 

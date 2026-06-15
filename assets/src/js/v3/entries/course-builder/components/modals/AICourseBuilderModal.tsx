@@ -1,11 +1,13 @@
+import { css } from '@emotion/react';
+
+import FocusTrap from '@TutorShared/components/FocusTrap';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+
 import BasicPrompt from '@CourseBuilderComponents/ai-course-modal/BasicPrompt';
 import ContentGeneration from '@CourseBuilderComponents/ai-course-modal/ContentGeneration';
 import ContentGenerationContextProvider, {
   useContentGenerationContext,
 } from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
-import { css } from '@emotion/react';
-import FocusTrap from '@TutorShared/components/FocusTrap';
-import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
 type AICourseBuilderModalProps = ModalProps;
 

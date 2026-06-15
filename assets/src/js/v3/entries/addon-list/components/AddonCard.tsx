@@ -1,6 +1,6 @@
+import { useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Switch from '@TutorShared/atoms/Switch';
@@ -15,7 +15,7 @@ import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import Popover from '@TutorShared/molecules/Popover';
 
 import { useAddonContext } from '../contexts/addon-context';
-import { useEnableDisableAddon, type Addon } from '../services/addons';
+import { type Addon, useEnableDisableAddon } from '../services/addons';
 import InstallationPopover from './InstallationPopover';
 import SettingsPopover from './SettingsPopover';
 
