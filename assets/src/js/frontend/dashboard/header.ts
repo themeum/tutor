@@ -1,11 +1,11 @@
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-import { type AjaxResponse } from '@FrontendTypes/index';
-import { tutorConfig } from '@TutorShared/config/config';
+import { type AjaxResponse } from '@Core/ts/types';
 
 const header = () => {
-  const query = window.TutorCore.query;
+  const { query, toast } = window.TutorCore;
+  const { tutorConfig } = window.TutorCore.config;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
 
   return {
     query,
@@ -15,13 +15,13 @@ const header = () => {
         (currentMode: string) => wpPost('tutor_switch_profile', { current_mode: currentMode }),
         {
           onSuccess: (res: AjaxResponse) => {
-            window.TutorCore.toast.success(res?.message);
+            toast.success(res?.message);
             setTimeout(() => {
               window.location.href = tutorConfig.tutor_frontend_dashboard_url;
             }, 1000);
           },
           onError: (error: Error) => {
-            window.TutorCore.toast.error(convertToErrorMessage(error));
+            toast.error(convertToErrorMessage(error));
           },
         },
       );

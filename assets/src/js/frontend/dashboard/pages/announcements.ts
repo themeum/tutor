@@ -2,9 +2,6 @@ import { __ } from '@wordpress/i18n';
 
 import { type FormControlMethods } from '@Core/ts/components/form';
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-import endpoints from '@TutorShared/utils/endpoints';
 interface AnnouncementFormData {
   id: number;
   course_id: string;
@@ -39,10 +36,9 @@ interface AnnouncementProps {
 }
 
 const announcementsPage = ({ formId, deleteModalId, createModalId }: AnnouncementProps) => {
-  const query = window.TutorCore.query;
-  const modal = window.TutorCore.modal;
-  const toast = window.TutorCore.toast;
-  const form = window.TutorCore.form;
+  const { query, modal, toast, form, endpoints } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
 
   const ANNOUNCEMENTS_IDS = {
     FORM: formId,

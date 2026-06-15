@@ -1,8 +1,5 @@
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-import endpoints from '@TutorShared/utils/endpoints';
-import { type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type AjaxResponse } from '@Core/ts/types';
 import { __ } from '@wordpress/i18n';
 
 interface CourseCompletePayload {
@@ -18,7 +15,9 @@ interface CourseRetakePayload {
  * These are globally registered in the learning area.
  */
 export const courseCompleteHandler = () => {
-  const { query, toast, modal } = window.TutorCore;
+  const { query, toast, modal, endpoints } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
 
   return {
     courseCompleteMutation: null as MutationState<unknown, CourseCompletePayload> | null,
@@ -67,7 +66,7 @@ export const courseCompleteHandler = () => {
 
     // Retake
     async retakeCourseRequest(payload: CourseRetakePayload) {
-      return wpPost<TutorMutationResponse<{ redirect_to: string }>>(endpoints.RESET_COURSE_PROGRESS, payload);
+      return wpPost<AjaxResponse<{ redirect_to: string }>>(endpoints.RESET_COURSE_PROGRESS, payload);
     },
 
     async handleCourseRetake(courseId: number) {

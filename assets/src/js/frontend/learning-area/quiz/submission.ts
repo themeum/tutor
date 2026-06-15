@@ -1,11 +1,5 @@
-import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-import endpoints from '@TutorShared/utils/endpoints';
-
-import { wpPost, wpPostForm } from '@Core/ts/utils/api';
-import { tutorConfig } from '@TutorShared/config/config';
 import {
   ERROR_MESSAGES,
   QUIZ_ABANDON_CONFIG,
@@ -28,10 +22,11 @@ export interface QuizSubmissionConfig {
 }
 
 const quizSubmission = (config: QuizSubmissionConfig) => {
-  const query = window.TutorCore.query;
-  const toast = window.TutorCore.toast;
-  const form = window.TutorCore.form;
-  const modal = window.TutorCore.modal;
+  const { query, toast, form, modal, constants, endpoints } = window.TutorCore;
+  const { convertToErrorMessage } = window.TutorCore.error;
+  const { wpPostForm, wpPost } = window.TutorCore.api;
+  const { tutorConfig } = window.TutorCore.config;
+  const { TUTOR_CUSTOM_EVENTS } = constants;
 
   return {
     formId: config.formId,

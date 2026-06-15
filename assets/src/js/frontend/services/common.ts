@@ -1,14 +1,13 @@
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-import endpoints from '@TutorShared/utils/endpoints';
-import type { TutorMutationResponse } from '@TutorShared/utils/types';
+import { type AjaxResponse } from '@Core/ts/types';
 
 const createCourseHandler = () => {
-  const { query, toast } = window.TutorCore;
+  const { query, toast, endpoints } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
 
   return {
-    createCourseMutation: null as MutationState<TutorMutationResponse<string>, unknown> | null,
+    createCourseMutation: null as MutationState<AjaxResponse<string>, unknown> | null,
 
     init() {
       if (this.createCourseMutation) {
@@ -17,7 +16,7 @@ const createCourseHandler = () => {
 
       this.createCourseMutation = query.useMutation(this.createCourseRequest, {
         onSuccess: (res) => {
-          window.location.href = res.data;
+          window.location.href = res.data ?? '';
         },
         onError: (error: Error) => {
           toast.error(convertToErrorMessage(error));
@@ -26,7 +25,7 @@ const createCourseHandler = () => {
     },
 
     async createCourseRequest() {
-      return wpPost<TutorMutationResponse<string>>(endpoints.CREATE_DRAFT_COURSE, {
+      return wpPost<AjaxResponse<string>>(endpoints.CREATE_DRAFT_COURSE, {
         from_dashboard: true,
       });
     },

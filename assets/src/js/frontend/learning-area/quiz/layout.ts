@@ -1,5 +1,4 @@
 import type { AlpineComponentMeta } from '@Core/ts/types';
-import { tutorConfig } from '@TutorShared/config/config';
 
 import { QUIZ_LAYOUT_KEYS, QUIZ_LAYOUT_SELECTORS, QUIZ_REVEAL_CONFIG, QuizLayoutType } from './constants';
 import { revealQuestionWithAnswers } from './helpers';
@@ -13,7 +12,7 @@ export interface QuizLayoutConfig {
 }
 
 const quizLayout = (config: QuizLayoutConfig) => {
-  const form = window.TutorCore?.form;
+  const { form, tutorConfig } = window.TutorCore;
   let container: Element | null | undefined = null;
 
   let handleFirstTab: ((e: KeyboardEvent) => void) | null = null;
