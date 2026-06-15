@@ -41,6 +41,7 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
   const toast = window.TutorCore.toast;
   const form = window.TutorCore.form;
   const reviewStatusFieldPattern = new RegExp(`^${REVIEW_STATUS_FIELD}\\[[^\\]]+\\]$`);
+  let isProgrammaticReload = false;
 
   const getReviewStatuses = (data: Record<string, unknown>) => {
     return Object.entries(data).reduce<ReviewStatusMap>((acc, [key, value]) => {
@@ -73,11 +74,13 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
     formId,
     attemptId,
     feedbackMutation: null as MutationState<QuizAttemptSubmitResponse, QuizAttemptFeedbackPayload> | null,
+    _destroy: () => {},
 
     init() {
       this.feedbackMutation = query.useMutation(this.saveFeedback, {
         onSuccess: () => {
           toast.success(__('Quiz feedback updated successfully.', 'tutor'));
+          isProgrammaticReload = true;
           window.location.reload();
         },
         onError: (error: Error) => {
@@ -93,22 +96,25 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
         );
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this as any).setupFormListeners?.();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this as any).dispatchStateChange?.();
+      const handler = (event: Event) => {
+        if (isProgrammaticReload) {
+          return false;
+        }
+        if (form.hasForm(formId) && form.getFormState(formId).isDirty) {
+          event.preventDefault();
+        }
+      };
 
-      window.addEventListener('beforeunload', this.beforeUnloadHandler);
-    },
+      window.addEventListener('beforeunload', handler);
 
-    beforeUnloadHandler(event: Event) {
-      if (form.hasForm(formId) && form.getFormState(formId).isDirty) {
-        event.preventDefault();
-      }
+      this._destroy = () => {
+        isProgrammaticReload = true;
+        window.removeEventListener('beforeunload', handler);
+      };
     },
 
     destroy() {
-      window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+      this._destroy?.();
     },
 
     async saveFeedback(payload: QuizAttemptFeedbackPayload) {
