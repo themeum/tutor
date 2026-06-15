@@ -46,7 +46,11 @@ if ( $is_skipped ) {
 	);
 }
 
-if ( 'correct' === $review_status ) {
+if ( $is_instructor_review ) {
+	$status_badges[] = array(
+		'status' => $review_status,
+	);
+} elseif ( 'correct' === $review_status ) {
 	$status_badges[] = array(
 		'label'   => __( 'Correct', 'tutor' ),
 		'variant' => Badge::SUCCESS,

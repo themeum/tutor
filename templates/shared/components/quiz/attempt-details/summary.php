@@ -288,9 +288,9 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 			<div data-title>
 				<?php esc_html_e( 'Instructor Feedback', 'tutor' ); ?>
 			</div>
-			<p data-body>
+			<div data-body>
 				<?php echo wp_kses_post( $instructor_feedback ); ?>
-			</p>
+			</div>
 		</div>
 	<?php endif; ?>
 

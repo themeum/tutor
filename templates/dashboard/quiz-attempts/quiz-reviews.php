@@ -33,7 +33,7 @@ if ( ! $attempt_data || ! $can_review ) {
 
 $form_id             = 'quiz-attempt-review-form';
 $form_default_values = array(
-	'feedback' => is_array( $attempt_info ) ? (string) ( wp_json_encode( $attempt_info['instructor_feedback'] ?? '', JSON_HEX_APOS ) ) : '',
+	'feedback' => is_array( $attempt_info ) ? $attempt_info['instructor_feedback'] : '',
 );
 
 $attempt_answers_map = array();
@@ -57,17 +57,26 @@ if ( is_array( $questions ) ) {
 	<?php if ( ! is_admin() ) : ?>
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
-		x-data='{ 
-			...tutorForm({
+		x-data='(() => {
+			const form = tutorForm({
 				id: "<?php echo esc_attr( $form_id ); ?>",
 				mode: "onSubmit",
-				defaultValues: <?php echo wp_json_encode( $form_default_values ); ?>
-			}),
-			...tutorQuizAttemptFeedback({
+				defaultValues: <?php echo wp_json_encode( $form_default_values, JSON_HEX_APOS ); ?>
+			});
+			const feedback =  tutorQuizAttemptFeedback({
 				attemptId: <?php echo esc_attr( $attempt_id ); ?>,
 				formId: "<?php echo esc_attr( $form_id ); ?>"
-			})
-		}'
+			});
+
+			return {
+				...form,
+				...feedback,
+				init() {
+					form.init?.call(this);
+					feedback.init?.call(this);
+				},
+			};
+		})()'
 		x-bind="getFormBindings()"
 		@submit.prevent="handleSubmit((data) => handleSaveFeedback(data))($event)"
 	>
