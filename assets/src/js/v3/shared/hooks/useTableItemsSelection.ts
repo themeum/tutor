@@ -1,6 +1,7 @@
-import { type TableSelectedItems, isDefined } from '@TutorShared/utils/types';
-import { range } from '@TutorShared/utils/util';
 import { useState } from 'react';
+
+import { isDefined, type TableSelectedItems } from '@TutorShared/utils/types';
+import { range } from '@TutorShared/utils/util';
 
 import { useIsShiftHolding } from './useIsShiftHolding';
 

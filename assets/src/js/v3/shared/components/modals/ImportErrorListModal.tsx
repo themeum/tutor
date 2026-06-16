@@ -2,15 +2,15 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Table, { type Column } from '@TutorShared/molecules/Table';
 
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
 
-import { type ImportContentResponse } from '@ImportExport/services/import-export';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import Table, { type Column } from '@TutorShared/molecules/Table';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ImportContentResponse } from '@TutorShared/utils/types';
 import { getObjectEntries } from '@TutorShared/utils/util';
 
 interface ImportErrorListModalProps extends ModalProps {

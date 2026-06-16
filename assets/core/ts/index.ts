@@ -3,7 +3,6 @@ import focus from '@alpinejs/focus';
 import Alpine from 'alpinejs';
 
 import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
-
 import { accordionMeta } from '@Core/ts/components/accordion';
 import { copyToClipboardMeta } from '@Core/ts/components/copy-to-clipboard';
 import { iconMeta } from '@Core/ts/components/icon';
@@ -20,17 +19,15 @@ import { tabsMeta } from '@Core/ts/components/tabs';
 import { toastMeta } from '@Core/ts/components/toast';
 import { tooltipMeta } from '@Core/ts/components/tooltip';
 import { wpEditorMeta } from '@Core/ts/components/wp-editor';
-
+import { tutorConfig } from '@Core/ts/config/config';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
+import { registerLegacyFunctions } from '@Core/ts/legacy';
 import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { preferenceServiceMeta } from '@Core/ts/services/Preference';
 import { queryServiceMeta } from '@Core/ts/services/Query';
 import { toastServiceMeta } from '@Core/ts/services/toast/Toast';
 import { wpMediaServiceMeta } from '@Core/ts/services/WPMedia';
-
-import { tutorConfig } from '@Core/ts/config/config';
-import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
-import { registerLegacyFunctions } from '@Core/ts/legacy';
 import { wpGet, wpPost, wpPostForm } from '@Core/ts/utils/api';
 import { getRequiredComponents } from '@Core/ts/utils/component-discovery';
 import { createPriceFormatter, formatPrice } from '@Core/ts/utils/currency';

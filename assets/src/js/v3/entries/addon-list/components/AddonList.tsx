@@ -1,11 +1,15 @@
-import { type Addon } from '@AddonList/services/addons';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { __ } from '@wordpress/i18n';
+
+import { type Addon } from '@AddonList/services/addons';
+
 import { useAddonContext } from '../contexts/addon-context';
 import AddonCard from './AddonCard';
 import EmptyState from './EmptyState';

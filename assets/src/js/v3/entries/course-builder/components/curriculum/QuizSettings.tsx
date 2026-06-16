@@ -1,16 +1,29 @@
-import FormInput from '@TutorShared/components/fields/FormInput';
+import { Controller, useFormContext } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
-import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormInputWithPresets from '@TutorShared/components/fields/FormInputWithPresets';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
+
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { type IconCollection } from '@TutorShared/icons/types';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
+import { requiredRule } from '@TutorShared/utils/validation';
 
 import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
@@ -18,23 +31,11 @@ import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { CourseTopic } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
-import FormInputWithPresets from '@TutorShared/components/fields/FormInputWithPresets';
-import { tutorConfig } from '@TutorShared/config/config';
-import { Addons } from '@TutorShared/config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
-import { styleUtils } from '@TutorShared/utils/style-utils';
-import { isAddonEnabled } from '@TutorShared/utils/util';
-import { requiredRule } from '@TutorShared/utils/validation';
-
-import FormQuizLayoutSelect from './FormQuizLayoutSelect';
 
 import QuizFullPageSvg from '@SharedImages/quiz-fullpage.svg';
 import QuizSingleLayoutSvg from '@SharedImages/quiz-single-question.svg';
-import Tooltip from '@TutorShared/atoms/Tooltip';
-import { type IconCollection } from '@TutorShared/icons/types';
+
+import FormQuizLayoutSelect from './FormQuizLayoutSelect';
 
 const courseId = getCourseId();
 

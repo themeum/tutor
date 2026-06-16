@@ -5,11 +5,12 @@
  * @since 4.0.0
  */
 
+import { useCallback, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useCallback, useEffect, useState } from 'react';
 
 import TextInput from '@TutorShared/atoms/TextInput';
+
 import {
   borderRadius,
   Breakpoint,

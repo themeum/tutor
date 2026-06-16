@@ -1,4 +1,8 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import {
+  closestCorners,
   DndContext,
   type DragEndEvent,
   type DragOverEvent,
@@ -6,7 +10,6 @@ import {
   KeyboardSensor,
   PointerSensor,
   type UniqueIdentifier,
-  closestCorners,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -14,20 +17,24 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
 
 import Button from '@TutorShared/atoms/Button';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import EmptyState from '@TutorShared/molecules/EmptyState';
+import { droppableMeasuringStrategy } from '@TutorShared/utils/dndkit';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID } from '@TutorShared/utils/types';
+import { moveTo, nanoid } from '@TutorShared/utils/util';
 
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import TopicDragOverlay from '@CourseBuilderComponents/curriculum/TopicDragOverlay';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-
 import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import {
   type Content,
@@ -37,16 +44,9 @@ import {
   useUpdateCourseContentOrderMutation,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
-import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import For from '@TutorShared/controls/For';
-import Show from '@TutorShared/controls/Show';
-import { droppableMeasuringStrategy } from '@TutorShared/utils/dndkit';
-import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type ID } from '@TutorShared/utils/types';
-import { moveTo, nanoid } from '@TutorShared/utils/util';
 
-import curriculumEmptyState2x from '@SharedImages/curriculum-empty-state-2x.webp';
 import curriculumEmptyState from '@SharedImages/curriculum-empty-state.webp';
+import curriculumEmptyState2x from '@SharedImages/curriculum-empty-state-2x.webp';
 
 const courseId = getCourseId();
 

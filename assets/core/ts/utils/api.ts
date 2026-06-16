@@ -1,6 +1,7 @@
+import { __ } from '@wordpress/i18n';
+
 import config, { tutorConfig } from '@TutorShared/config/config';
 import { convertToFormData } from '@TutorShared/utils/form';
-import { __ } from '@wordpress/i18n';
 
 type HttpMethod = 'GET' | 'POST';
 

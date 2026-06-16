@@ -1,6 +1,7 @@
-import { type AjaxResponse } from '@Core/ts/types';
 import type { Sortable } from '@dnd-kit/dom/sortable';
 import { __ } from '@wordpress/i18n';
+
+import { type AjaxResponse } from '@Core/ts/types';
 
 const loadDndKit = async () => {
   const [dom, modifiers, sortable] = await Promise.all([

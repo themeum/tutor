@@ -1,6 +1,8 @@
-import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import { type ReactNode, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
+
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+
 import ErrorBoundary from './ErrorBoundary';
 
 type RouteSuspenseProps = {

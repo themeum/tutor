@@ -1,9 +1,9 @@
+import { useEffect, useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
 
 import Alert from '@TutorShared/atoms/Alert';
 import Button from '@TutorShared/atoms/Button';
@@ -17,6 +17,7 @@ import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import {
   borderRadius,
   Breakpoint,
@@ -34,16 +35,15 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isObject } from '@TutorShared/utils/types';
 import { requiredRule } from '@TutorShared/utils/validation';
 
-import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import Badge from '../atoms/Badge';
 import { usePaymentContext } from '../contexts/payment-context';
 import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
 import {
-  type PaymentMethod,
-  type PaymentSettings,
   getWebhookUrl,
   manualMethodFields,
+  type PaymentMethod,
+  type PaymentSettings,
   useInstallPaymentMutation,
   useRemovePaymentMutation,
 } from '../services/payment';

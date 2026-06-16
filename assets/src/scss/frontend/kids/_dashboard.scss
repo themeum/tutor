@@ -83,6 +83,10 @@
     @include tutor-typography(medium, medium);
   }
 
+  .tutor-attachment-card-icon {
+    border-radius: $tutor-radius-2xl;
+  }
+
   // home
   .tutor-profile-completion-body {
     border: none;

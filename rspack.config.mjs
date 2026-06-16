@@ -1,11 +1,13 @@
-import purgecss from '@fullhuman/postcss-purgecss';
-import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
-import { rspack } from '@rspack/core';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+
+import purgecss from '@fullhuman/postcss-purgecss';
+import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
+import { rspack } from '@rspack/core';
 import nodeExternals from 'webpack-node-externals';
+
 import { purgecssContent, purgecssSafelist } from './purgecss.config.mjs';
 
 const __filename = fileURLToPath(import.meta.url);

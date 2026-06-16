@@ -1,5 +1,6 @@
-import { backendUrls, frontendUrls } from '@Cypress/config/page-urls';
 import { faker } from '@faker-js/faker';
+
+import { backendUrls, frontendUrls } from '@Cypress/config/page-urls';
 
 interface BillingData {
   first_name: string;

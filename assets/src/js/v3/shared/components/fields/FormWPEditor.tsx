@@ -1,8 +1,8 @@
+import type React from 'react';
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import rgba from 'polished/lib/color/rgba';
-import type React from 'react';
-import { useState } from 'react';
 
 import Alert from '@TutorShared/atoms/Alert';
 import Button from '@TutorShared/atoms/Button';
@@ -27,8 +27,8 @@ import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { Editor, TutorMutationResponse } from '@TutorShared/utils/types';
 
-import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
+import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

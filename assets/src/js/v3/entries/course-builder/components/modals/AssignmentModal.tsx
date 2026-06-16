@@ -1,8 +1,8 @@
+import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
@@ -13,23 +13,12 @@ import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
 import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
-import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
-import { type ContentDripType } from '@CourseBuilderServices/course';
-import {
-  convertAssignmentDataToPayload,
-  useAssignmentDetailsQuery,
-  useSaveAssignmentMutation,
-  type Assignment,
-  type CourseTopic,
-} from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
@@ -40,6 +29,18 @@ import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { type ID } from '@TutorShared/utils/types';
 import { findSlotFields, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
+
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
+import {
+  type Assignment,
+  convertAssignmentDataToPayload,
+  type CourseTopic,
+  useAssignmentDetailsQuery,
+  useSaveAssignmentMutation,
+} from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;

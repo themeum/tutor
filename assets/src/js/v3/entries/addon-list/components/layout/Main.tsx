@@ -1,7 +1,8 @@
-import Topbar from './Topbar';
-import { AddonProvider } from '@AddonList/contexts/addon-context';
 import AddonList from '@AddonList/components/AddonList';
+import { AddonProvider } from '@AddonList/contexts/addon-context';
+
 import Container from './Container';
+import Topbar from './Topbar';
 
 function Main() {
   return (

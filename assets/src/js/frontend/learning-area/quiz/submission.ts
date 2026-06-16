@@ -1,11 +1,12 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
+
 import {
   ERROR_MESSAGES,
+  QuestionTimeoutAction,
   QUIZ_ABANDON_CONFIG,
   QUIZ_LAYOUT_SELECTORS,
   QUIZ_REVEAL_CONFIG,
-  QuestionTimeoutAction,
 } from './constants';
 import { getAttemptedQuestionCountFromForm, revealQuestionWithAnswers } from './helpers';
 

@@ -1,5 +1,6 @@
-import { type ServiceMeta } from '@Core/ts/types';
 import Alpine from 'alpinejs';
+
+import { type ServiceMeta } from '@Core/ts/types';
 
 type QueryKey = string | readonly unknown[];
 

@@ -1,13 +1,16 @@
-import { useOrderContext } from '@OrderDetails/contexts/order-context';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import { Avatar } from '@TutorShared/atoms/Avatar';
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
+
 import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+
+import { useOrderContext } from '@OrderDetails/contexts/order-context';
 
 function Student() {
   const { order } = useOrderContext();

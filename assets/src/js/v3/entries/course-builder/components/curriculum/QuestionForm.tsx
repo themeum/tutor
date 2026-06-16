@@ -1,7 +1,7 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Alert from '@TutorShared/atoms/Alert';
 
@@ -9,33 +9,32 @@ import FormAnswerExplanation from '@TutorShared/components/fields/quiz/FormAnswe
 import FormQuestionDescription from '@TutorShared/components/fields/quiz/FormQuestionDescription';
 import FormQuestionTitle from '@TutorShared/components/fields/quiz/FormQuestionTitle';
 
-import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
-import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
-import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
-import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/question-types/MultipleChoiceAndOrdering';
-import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/question-types/OpenEndedAndShortAnswer';
-import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
-import DrawImage from '@CourseBuilderComponents/curriculum/question-types/DrawImage';
-import Scale from '@CourseBuilderComponents/curriculum/question-types/Scale';
-import PinImage from '@CourseBuilderComponents/curriculum/question-types/PinImage';
-import Coordinates from '@CourseBuilderComponents/curriculum/question-types/Coordinates';
-import Puzzle from '@CourseBuilderComponents/curriculum/question-types/Puzzle';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { usePrevious } from '@TutorShared/hooks/usePrevious';
-import { styleUtils } from '@TutorShared/utils/style-utils';
-
-import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
-import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { QuizDataStatus, type QuizQuestionType } from '@TutorShared/utils/types';
 
-import emptyStateImage2x from '@SharedImages/quiz-empty-state-2x.webp';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import Coordinates from '@CourseBuilderComponents/curriculum/question-types/Coordinates';
+import DrawImage from '@CourseBuilderComponents/curriculum/question-types/DrawImage';
+import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
+import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
+import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
+import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/question-types/MultipleChoiceAndOrdering';
+import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/question-types/OpenEndedAndShortAnswer';
+import PinImage from '@CourseBuilderComponents/curriculum/question-types/PinImage';
+import Puzzle from '@CourseBuilderComponents/curriculum/question-types/Puzzle';
+import Scale from '@CourseBuilderComponents/curriculum/question-types/Scale';
+import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { type QuizForm } from '@CourseBuilderServices/quiz';
+
 import emptyStateImage from '@SharedImages/quiz-empty-state.webp';
+import emptyStateImage2x from '@SharedImages/quiz-empty-state-2x.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 

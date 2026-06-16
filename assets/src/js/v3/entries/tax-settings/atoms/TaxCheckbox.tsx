@@ -1,6 +1,7 @@
-import { colorTokens, shadow, spacing } from '@TutorShared/config/styles';
-import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEvent, type FocusEventHandler, type ReactNode } from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
+
+import { colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 
 interface CheckboxProps {
   id?: string;

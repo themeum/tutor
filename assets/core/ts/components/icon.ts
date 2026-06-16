@@ -1,4 +1,5 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
+
 import { tutorConfig } from '@TutorShared/config/config';
 
 interface IconCacheEntry {

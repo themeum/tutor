@@ -1,17 +1,17 @@
+import { useEffect, useRef, useState } from 'react';
 import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
-import { useCategoryListQuery, type CategoryWithChildren } from '@TutorShared/services/category';
+import Popover from '@TutorShared/molecules/Popover';
+import { type CategoryWithChildren, useCategoryListQuery } from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities, generateTree } from '@TutorShared/utils/util';

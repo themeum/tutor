@@ -1,13 +1,17 @@
-import woocommerceFavicon from '@SharedImages/woocommerce-favicon.webp';
+import { useEffect, useState } from 'react';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+
 import Button from '@TutorShared/atoms/Button';
+
 import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
-import { useInstallPlugin, type Addon } from '../services/addons';
+
+import woocommerceFavicon from '@SharedImages/woocommerce-favicon.webp';
+
+import { type Addon, useInstallPlugin } from '../services/addons';
 
 interface Plugin {
   name: string;

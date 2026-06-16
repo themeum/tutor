@@ -2,13 +2,14 @@ import type React from 'react';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import type { QuizForm } from '@CourseBuilderServices/quiz';
 import {
   type ID,
   type QuizQuestion,
   type QuizValidationErrorType,
   type TopicContentType,
 } from '@TutorShared/utils/types';
+
+import type { QuizForm } from '@CourseBuilderServices/quiz';
 
 interface QuizModalContextProps {
   activeQuestionIndex: number;

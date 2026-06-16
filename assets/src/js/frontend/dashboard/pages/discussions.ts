@@ -1,6 +1,7 @@
+import { __ } from '@wordpress/i18n';
+
 import { type MutationState } from '@Core/ts/services/Query';
 import { type AjaxResponse } from '@Core/ts/types';
-import { __ } from '@wordpress/i18n';
 
 interface ReplyCommentPayload {
   comment_post_ID: number;

@@ -1,6 +1,6 @@
+import { useCallback, useId, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useCallback, useId, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
@@ -13,8 +13,8 @@ import { useDrawOnImageField } from '@TutorShared/hooks/useDrawOnImageField';
 import useWPMedia from '@TutorShared/hooks/useWpMedia';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
-import { styleUtils } from '@TutorShared/utils/style-utils';
 import { quizBuilderInteractionFocusCss, quizBuilderSrOnlyCss } from '@TutorShared/utils/quizBuilderA11y';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
   type ID,
   QuizDataStatus,

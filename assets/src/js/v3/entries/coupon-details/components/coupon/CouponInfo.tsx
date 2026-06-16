@@ -1,18 +1,22 @@
-import type { Coupon } from '@CouponDetails/services/coupon';
+import { Controller, useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+import { format } from 'date-fns';
+
 import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
+
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+
 import { DateFormats } from '@TutorShared/config/constants';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { generateCouponCode } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import { format } from 'date-fns';
-import { Controller, useFormContext } from 'react-hook-form';
+
+import type { Coupon } from '@CouponDetails/services/coupon';
 
 const couponTypeOptions = [
   { label: __('Code', 'tutor'), value: 'code' },

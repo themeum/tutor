@@ -3,11 +3,12 @@ import { __, sprintf } from '@wordpress/i18n';
 
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 
-import { useOrderContext } from '@OrderDetails/contexts/order-context';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+
+import { useOrderContext } from '@OrderDetails/contexts/order-context';
 
 const PaymentInfo = () => {
   const {

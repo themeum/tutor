@@ -1,15 +1,18 @@
+import React from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import React from 'react';
 
-import type { OrderSummaryItem } from '@OrderDetails/services/order';
-import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { formatPrice } from '@TutorShared/utils/currency';
 import { isString } from '@TutorShared/utils/types';
+
+import type { OrderSummaryItem } from '@OrderDetails/services/order';
+
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
 
 interface OrderItemProps extends React.HTMLAttributes<HTMLDivElement> {
   item: OrderSummaryItem;

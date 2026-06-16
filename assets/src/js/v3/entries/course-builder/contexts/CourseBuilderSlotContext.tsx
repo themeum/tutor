@@ -1,11 +1,12 @@
+import React, { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { produce } from 'immer';
+
 import {
   type InjectedContent,
   type InjectedField,
   type InjectionSlots,
   type SectionPath,
 } from '@TutorShared/utils/types';
-import { produce } from 'immer';
-import React, { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 type CurriculumType = 'Lesson' | 'Quiz' | 'Assignment';
 

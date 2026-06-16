@@ -1,19 +1,24 @@
+import { useEffect } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import Logo from '@TutorShared/components/Logo';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import CourseListModal from '@TutorShared/components/modals/CourseListModal';
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
 
+import { tutorConfig } from '@TutorShared/config/config';
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type Course } from '@TutorShared/services/course';
+import { type ExportableContent, useExportableContentQuery } from '@TutorShared/services/import-export';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type Collection, type ImportExportContentResponseBase } from '@TutorShared/utils/types';
 
 import ExportInitialState from '@ImportExport/components/modals/import-export-states/ExportInitialState';
 import ImportExportCompletedState from '@ImportExport/components/modals/import-export-states/ImportExportCompletedState';
@@ -21,14 +26,9 @@ import ImportExportProgressState from '@ImportExport/components/modals/import-ex
 import {
   defaultExportFormData,
   type ExportFormData,
-  type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
 
-import CourseListModal from '@TutorShared/components/modals/CourseListModal';
-import { tutorConfig } from '@TutorShared/config/config';
-import { type ExportableContent, useExportableContentQuery } from '@TutorShared/services/import-export';
-import { type Collection } from '@TutorShared/utils/types';
 import CollectionListModal from './CollectionList';
 
 interface ExportModalProps extends ModalProps {
