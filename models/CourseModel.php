@@ -1452,7 +1452,15 @@ class CourseModel {
 			return (int) self::get_course_count_by_instructor( $user_id, array( tutor()->course_post_type ), array( 'publish', 'private' ) );
 		}
 
-		$courses = self::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX );
+		$cache_key = 'tutor_course_count_by_date_' . $user_id;
+
+		$courses = TutorCache::get( $cache_key );
+
+		if ( ! $courses ) {
+			// Don't need to call this twice.
+			$courses = self::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX );
+			TutorCache::set( $cache_key, $courses );
+		}
 
 		if ( empty( $courses ) ) {
 			return 0;
