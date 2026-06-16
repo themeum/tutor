@@ -257,6 +257,19 @@ class QuizBuilder {
 			$errors  = array_merge( $errors, $validation->errors );
 		}
 
+		if ( isset( $payload['ID'] ) && is_numeric( $payload['ID'] ) ) {
+			if ( ! current_user_can( 'edit_post', $payload['ID'] ) ) {
+				$success                = false;
+				$errors['permission'][] = __( 'You do not have permission to edit this quiz', 'tutor' );
+			} else {
+				$quiz = get_post( $payload['ID'] );
+				if ( ! $quiz || tutor()->quiz_post_type !== $quiz->post_type ) {
+					$success        = false;
+					$errors['ID'][] = __( 'Invalid quiz id provided', 'tutor' );
+				}
+			}
+		}
+
 		foreach ( $payload['questions'] as $question ) {
 			if ( ! isset( $question[ self::TRACKING_KEY ] ) ) {
 				$success = false;
