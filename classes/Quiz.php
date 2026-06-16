@@ -422,11 +422,10 @@ class Quiz {
 	 * @return void
 	 */
 	public function answering_quiz() {
-
-		if ( Input::post( 'tutor_action' ) !== 'tutor_answering_quiz_question' ) {
+		if ( 'tutor_answering_quiz_question' !== Input::post( 'tutor_action' ) ) {
 			return;
 		}
-		// submit quiz attempts.
+
 		self::tutor_quiz_attempt_submit();
 
 		wp_safe_redirect( get_the_permalink() );
@@ -438,12 +437,13 @@ class Quiz {
 	 *
 	 * @since 1.9.6
 	 *
-	 * @return JSON response
+	 * @return void JSON response
 	 */
 	public function tutor_quiz_abandon() {
-		if ( Input::post( 'tutor_action' ) !== 'tutor_answering_quiz_question' ) {
+		if ( 'tutor_answering_quiz_question' !== Input::post( 'tutor_action' ) ) {
 			return;
 		}
+
 		tutor_utils()->checking_nonce();
 		// submit quiz attempts.
 		if ( self::tutor_quiz_attempt_submit() ) {
@@ -454,27 +454,47 @@ class Quiz {
 	}
 
 	/**
+	 * Validate quiz attempt
+	 *
+	 * @since 3.9.13
+	 *
+	 * @param int $attempt_id attempt id.
+	 * @param int $user_id user id.
+	 *
+	 * @return object|false attempt object if valid otherwise false
+	 */
+	private static function validate_attempt( $attempt_id, $user_id ) {
+		$attempt = tutor_utils()->get_attempt( $attempt_id );
+
+		if ( ! $attempt || ! is_object( $attempt ) || (int) $attempt->user_id !== (int) $user_id ) {
+			return false;
+		}
+
+		return $attempt;
+	}
+
+	/**
 	 * This is  a unified method for handling normal quiz submit or abandon submit
 	 * It will handle ajax or normal form submit and can be used with different hooks
 	 *
 	 * @since 1.9.6
 	 *
-	 * @return true | false
+	 * @return bool true if quiz attempt submit successfully otherwise false
 	 */
 	public static function tutor_quiz_attempt_submit() {
-		// Check logged in.
 		if ( ! is_user_logged_in() ) {
 			die( 'Please sign in to do this operation' );
 		}
 
-		// Check nonce.
 		tutor_utils()->checking_nonce();
 
-		// Prepare attempt info.
 		$user_id    = get_current_user_id();
 		$attempt_id = Input::post( 'attempt_id', 0, Input::TYPE_INT );
-		$attempt    = tutor_utils()->get_attempt( $attempt_id );
-		$course_id  = CourseModel::get_course_by_quiz( $attempt->quiz_id )->ID;
+		$attempt    = self::validate_attempt( $attempt_id, $user_id );
+
+		if ( ! $attempt ) {
+			die( 'Operation not allowed, attempt not found or permission denied' );
+		}
 
 		if ( QuizModel::ATTEMPT_TIMEOUT === $attempt->attempt_status ) {
 			return false;
@@ -484,11 +504,7 @@ class Quiz {
 		$attempt_answers = isset( $_POST['attempt'] ) ? tutor_sanitize_data( $_POST['attempt'] ) : false; //phpcs:ignore
 		$attempt_answers = is_array( $attempt_answers ) ? $attempt_answers : array();
 
-		// Check if has access to the attempt.
-		if ( ! $attempt || $user_id != $attempt->user_id ) {
-			die( 'Operation not allowed, attempt not found or permission denied' );
-		}
-		self::manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $course_id, $user_id );
+		self::manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $attempt->course_id, $user_id );
 		return true;
 	}
 
@@ -508,23 +524,26 @@ class Quiz {
 	 * @return void
 	 */
 	public static function manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $course_id, $user_id ) {
+		if ( ! is_array( $attempt_answers ) || ! self::validate_attempt( $attempt_id, $user_id ) ) {
+			return;
+		}
+
 		global $wpdb;
 		// Before hook.
 		do_action( 'tutor_quiz/attempt_analysing/before', $attempt_id );
 
 		// Single quiz can have multiple question. So multiple answer should be saved.
-		foreach ( $attempt_answers as $attempt_id => $attempt_answer ) {
+		foreach ( $attempt_answers as $posted_attempt_id => $attempt_answer ) {
+			if ( ! self::validate_attempt( $posted_attempt_id, $user_id ) ) {
+				continue;
+			}
+
 			// Get total marks of all question comes.
 			$question_ids = tutor_utils()->avalue_dot( 'quiz_question_ids', $attempt_answer );
-			$question_ids = array_filter(
-				$question_ids,
-				function ( $id ) {
-					return (int) $id;
-				}
-			);
+			$question_ids = array_filter( $question_ids, fn ( $id ) => is_numeric( $id ) && intval( $id ) > 0 );
 
 			// Calculate and set the total marks in attempt table for this question.
-			if ( is_array( $question_ids ) && count( $question_ids ) ) {
+			if ( tutor_utils()->count( $question_ids ) ) {
 				$question_ids_string = QueryHelper::prepare_in_clause( $question_ids );
 
 				// Get total marks of the questions from question table.
@@ -584,13 +603,8 @@ class Quiz {
 					} elseif ( 'multiple_choice' === $question_type ) {
 
 						$given_answer = (array) ( $answers );
+						$given_answer = array_filter( $given_answer, fn ( $id ) => is_numeric( $id ) && intval( $id ) > 0 );
 
-						$given_answer         = array_filter(
-							$given_answer,
-							function ( $id ) {
-								return is_numeric( $id ) && $id > 0;
-							}
-						);
 						$get_original_answers = (array) $wpdb->get_col(
 							$wpdb->prepare(
 								"SELECT
@@ -647,7 +661,7 @@ class Quiz {
 						/**
 						 * Compare answer's by making both case-insensitive.
 						 */
-						if ( strtolower( $given_answer ) == strtolower( $gap_answer ) ) {
+						if ( strtolower( $given_answer ) === strtolower( $gap_answer ) ) {
 							$is_answer_was_correct = true;
 						}
 					} elseif ( 'open_ended' === $question_type || 'short_answer' === $question_type ) {
