@@ -388,7 +388,7 @@ $sortable_sections_ids = array_reduce(
 									->type( InputType::CHECKBOX )
 									->name( "$section[id]" )
 									->label( $section['label'] )
-									->attr( 'x-bind', "register('$section[id]')" )
+									->attr( 'x-bind', "\$el.closest('[data-dnd-placeholder]') ? {} : register('{$section['id']}')" )
 									->attr( '@click.stop', 'handleCheckboxClick(event)' )
 									->render();
 							?>

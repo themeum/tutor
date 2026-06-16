@@ -15,13 +15,10 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ImportContentResponse, type ImportExportContentResponseBase } from '@TutorShared/utils/types';
 import { formatBytes, getObjectEntries, getObjectKeys, getObjectValues } from '@TutorShared/utils/util';
 
-import {
-  type ImportContentResponse,
-  type ImportExportContentResponseBase,
-  type ImportExportModalState,
-} from '@ImportExport/services/import-export';
+import { type ImportExportModalState } from '@ImportExport/services/import-export';
 
 import exportErrorImage from '@SharedImages/import-export/export-error.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
