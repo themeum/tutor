@@ -1238,7 +1238,6 @@ class Quiz {
 	 * @since 3.8.1
 	 *
 	 * @param int $course_id The ID of the course.
-	 * @param int $user_id The ID of the user.
 	 *
 	 * @return array Returns an array of quiz attempt objects with their answers, or an empty array on error.
 	 */
