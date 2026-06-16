@@ -37,6 +37,15 @@ class Options_V2 {
 	const LEARNING_MODE_LEGACY = 'legacy';
 
 	/**
+	 * Default theme.
+	 *
+	 * @since 4.0.0
+	 */
+	const DEFAULT_THEME_LIGHT = 'light';
+	const DEFAULT_THEME_DARK  = 'dark';
+	const DEFAULT_THEME_AUTO  = 'auto';
+
+	/**
 	 * Undocumented variable
 	 *
 	 * @since 2.0.0
@@ -1246,15 +1255,50 @@ class Options_V2 {
 						'fields'     => array(
 							array(
 								'key'     => 'learning_mode',
-								'type'    => 'radio_horizontal_full',
+								'type'    => 'radio_horizontal_image',
 								'label'   => __( 'Learning Mode', 'tutor' ),
+								'desc'    => __( 'Decide how students will experience the courses you create.', 'tutor' ),
 								'default' => self::LEARNING_MODE_MODERN,
 								'options' => array(
-									self::LEARNING_MODE_MODERN => __( 'Modern', 'tutor' ),
-									self::LEARNING_MODE_KIDS   => __( 'Kids', 'tutor' ),
-									self::LEARNING_MODE_LEGACY => __( 'Legacy', 'tutor' ),
+									self::LEARNING_MODE_MODERN      => array(
+										'title' => __( 'Modern', 'tutor' ),
+										'image' => 'learning-mode/modern.svg',
+									),
+									self::LEARNING_MODE_KIDS    => array(
+										'title' => __( 'Kids', 'tutor' ),
+										'image' => 'learning-mode/kids.svg',
+									),
+									self::LEARNING_MODE_LEGACY        => array(
+										'title' => __( 'Legacy', 'tutor' ),
+										'image' => 'learning-mode/legacy.svg',
+									),
 								),
-								'desc'    => __( 'Decide how students will experience the courses you create.', 'tutor' ),
+							),
+							array(
+								'key'     => 'default_theme',
+								'type'    => 'radio_horizontal_image',
+								'label'   => __( 'Default Theme', 'tutor' ),
+								'desc'    => __( 'Set the default appearance for learners across your platform. Learners can switch between dark and light mode if enabled.', 'tutor' ),
+								'default' => self::DEFAULT_THEME_AUTO,
+								'options' => array(
+									self::DEFAULT_THEME_LIGHT      => array(
+										'title' => __( 'Light', 'tutor' ),
+										'image' => 'default-theme/light.svg',
+									),
+									self::DEFAULT_THEME_DARK    => array(
+										'title' => __( 'dark', 'tutor' ),
+										'image' => 'default-theme/dark.svg',
+									),
+								),
+							),
+							array(
+								'key'         => 'brand_color',
+								'preset_name' => 'brand_color',
+								'type'        => 'color_field',
+								'label'       => __( 'Brand Color', 'tutor' ),
+								'desc'        => __( 'Customize the primary accent color used across your learning platform to match your brand identity.', 'tutor' ),
+								'class'       => 'col-1x1 color-picker-wrapper',
+								'default'     => '#00ddff',
 							),
 						),
 					),
