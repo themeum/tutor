@@ -248,7 +248,7 @@ class CourseModel {
 	public static function get_course_count_by_instructor( $instructor_id, $post_type = array( self::POST_TYPE ), $post_status = array( self::STATUS_PUBLISH ), $search = '' ) {
 		global $wpdb;
 
-		$cache_key = 'tutor_course_count_by_instructor_' . $instructor_id . implode( '_', $post_status ) . $search;
+		$cache_key = 'tutor_course_count_by_instructor_' . $instructor_id . '_' . implode( '_', $post_type ) . '_' . implode( '_', $post_status ) . '_' . $search;
 
 		$cache = TutorCache::get( $cache_key );
 		if ( false !== $cache ) {

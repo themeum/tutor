@@ -225,10 +225,11 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							</span>
 							<?php endif ?>
 							<?php
-							if ( null === tutor_utils()->get_course_price() ) {
+							$course_price = tutor_utils()->get_course_price();
+							if ( null === $course_price ) {
 								esc_html_e( 'Free', 'tutor' );
 							} else {
-								echo wp_kses_post( tutor_utils()->get_course_price() );
+								echo wp_kses_post( $course_price );
 							}
 							?>
 						</div>

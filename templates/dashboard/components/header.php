@@ -50,8 +50,7 @@ $is_instructor_view = User::is_instructor_view();
 			</div>
 			<?php
 			if ( $is_instructor_view ) :
-				$course_post_type    = apply_filters( 'tutor_dashboard_course_list_post_type', array( tutor()->course_post_type ) );
-				$active_course_count = (int) CourseModel::get_course_count_by_instructor( $user_id, $course_post_type );
+				$active_course_count = (int) CourseModel::get_course_count_by_instructor( $user_id, array( tutor()->course_post_type, tutor()->bundle_post_type ) );
 				?>
 				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny">
 					<?php
