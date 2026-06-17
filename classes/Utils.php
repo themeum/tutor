@@ -2285,10 +2285,6 @@ class Utils {
 	 *              otherwise return given ID
 	 */
 	public function get_user_id( $user_id = 0 ) {
-		if ( ! defined( 'LOGGED_IN_COOKIE' ) ) {
-			return 0;
-		}
-
 		if ( ! $user_id ) {
 			return get_current_user_id();
 		}
