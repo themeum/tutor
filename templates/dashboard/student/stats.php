@@ -18,15 +18,14 @@ $user_id   = $user_id ?? get_current_user_id();
 $user_data = $user_data ?? get_userdata( $user_id );
 
 // Query metrics and stats data.
-$enrolled_course       = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
 $completed_courses     = CourseModel::get_completed_courses_by_user( $user_id, 0, -1, array( 'post_status' => array( 'private', 'publish' ) ) );
 $has_completed_courses = is_object( $completed_courses ) && $completed_courses->have_posts();
 $active_courses        = CourseModel::get_active_courses_by_user( $user_id, 0, -1, array( 'post_status' => array( 'private', 'publish' ) ) );
 
-$enrolled_course_count  = $enrolled_course ? $enrolled_course->post_count : 0;
+$enrolled_course_count  = isset( $enrolled_course ) && $enrolled_course ? $enrolled_course->post_count : 0;
 $completed_course_count = $has_completed_courses ? $completed_courses->post_count : 0;
 $active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
-$enrolled_courses_ids   = $enrolled_course_count ? wp_list_pluck( $enrolled_course->posts, 'ID' ) : array();
+$enrolled_courses_ids   = $enrolled_course_count ? wp_list_pluck( isset( $enrolled_course ) ? $enrolled_course->posts : array(), 'ID' ) : array();
 
 // Time spent calculation.
 $time_spent       = CourseModel::get_total_estimated_time_spent( $enrolled_courses_ids );

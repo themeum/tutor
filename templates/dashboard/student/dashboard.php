@@ -11,7 +11,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Course;
 use Tutor\Models\CourseModel;
 
 $user_id   = get_current_user_id();
@@ -31,8 +30,9 @@ if ( 0 === $enrolled_course_count ) {
 tutor_load_template(
 	'dashboard.student.stats',
 	array(
-		'user_id'   => $user_id,
-		'user_data' => $user_data,
+		'user_id'         => $user_id,
+		'user_data'       => $user_data,
+		'enrolled_course' => $enrolled_course,
 	)
 );
 

@@ -1469,9 +1469,13 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = get_current_user_id();
 
-		$lessons = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT items.ID
+		$course_first_lesson_cache_key = 'tutor_course_first_lesson_' . $course_id;
+		$cache                         = TutorCache::get( $course_first_lesson_cache_key );
+
+		if ( false === $cache ) {
+			$lessons = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT items.ID
 			FROM 	{$wpdb->posts} topic
 					INNER JOIN {$wpdb->posts} items
 							ON topic.ID = items.post_parent
@@ -1481,10 +1485,15 @@ class Utils {
 			ORDER BY topic.menu_order ASC,
 					items.menu_order ASC;
 			',
-				$course_id,
-				'publish'
-			)
-		);
+					$course_id,
+					'publish'
+				)
+			);
+
+			TutorCache::set( $course_first_lesson_cache_key, $lessons );
+		} else {
+			$lessons = $cache;
+		}
 
 		$first_lesson = false;
 
@@ -2107,6 +2116,12 @@ class Utils {
 
 		$user_id = $this->get_user_id( $user_id );
 
+		$completed_courses_cache_key = 'tutor_completed_courses_ids_by_user_' . $user_id;
+		$cache                       = TutorCache::get( $completed_courses_cache_key );
+		if ( false !== $cache ) {
+			return $cache;
+		}
+
 		$course_ids = (array) $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT comment_post_ID AS course_id
@@ -2125,6 +2140,8 @@ class Utils {
 				$user_id
 			)
 		);
+
+		TutorCache::set( $completed_courses_cache_key, $course_ids );
 
 		return $course_ids;
 	}
@@ -2157,6 +2174,12 @@ class Utils {
 			);
 		}
 
+		$enrolled_courses_cache_key = 'tutor_enrolled_courses_ids_by_user_' . $user_id . '_bundle_' . $with_bundle_enrolled_courses;
+		$cache                      = TutorCache::get( $enrolled_courses_cache_key );
+		if ( false !== $cache ) {
+			return $cache;
+		}
+
 		$course_ids = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT DISTINCT e.post_parent, e.post_date
@@ -2172,6 +2195,8 @@ class Utils {
 				$user_id
 			)
 		);
+
+		TutorCache::set( $enrolled_courses_cache_key, (array) $course_ids );
 
 		return $course_ids;
 	}
@@ -8464,17 +8489,26 @@ class Utils {
 		// Sanitize data.
 		$user_id   = sanitize_text_field( $user_id );
 		$quiz_id   = sanitize_text_field( $quiz_id );
+		$cache_key = 'tutor_has_attempted_quiz_' . $user_id . '_' . $quiz_id;
+		$cache     = TutorCache::get( $cache_key );
+
+		if ( false !== $cache ) {
+			return $cache ? true : false;
+		}
+
 		$attempted = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT quiz_id
 				FROM {$wpdb->tutor_quiz_attempts}
 				WHERE user_id = %d
-					AND quiz_id = %d
-			",
+				AND quiz_id = %d",
 				$user_id,
 				$quiz_id
 			)
 		);
+
+		TutorCache::set( $cache_key, $attempted );
+
 		return $attempted ? true : false;
 	}
 
