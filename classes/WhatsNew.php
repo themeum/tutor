@@ -52,6 +52,15 @@ class WhatsNew {
 			'callback'    => array( $this, 'whats_new_page' ),
 		);
 
+		$menu['group_three']['whats_new_in_v4'] = array(
+			'parent_slug' => 'tutor',
+			'page_title'  => __( "What's New in v4", 'tutor' ),
+			'menu_title'  => __( "What's New in v4", 'tutor' ),
+			'capability'  => 'manage_options',
+			'menu_slug'   => 'tutor-whats-new-in-v4',
+			'callback'    => array( $this, 'whats_new_in_v4_page' ),
+		);
+
 		return $menu;
 	}
 
@@ -67,6 +76,18 @@ class WhatsNew {
 		$changelogs = self::build_changelog_array();
 
 		include tutor()->path . 'views/pages/whats-new.php';
+	}
+
+	/**
+	 * What's new in v4 page.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function whats_new_in_v4_page() {
+		wp_enqueue_style( 'tutor-core-styles', tutor()->url . 'assets/css/tutor-core.min.css', array(), TUTOR_VERSION );
+		include tutor()->path . 'views/pages/whats-new-in-v4.php';
 	}
 
 	/**
