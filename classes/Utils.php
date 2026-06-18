@@ -3277,15 +3277,23 @@ class Utils {
 	public function get_total_students_by_instructor( $instructor_id, $args = array() ) {
 		global $wpdb;
 
-		$course_post_type       = tutor()->course_post_type;
-		$enrollment_date_clause = '';
+		$course_post_type         = tutor()->course_post_type;
+		$enrollment_date_clause   = '';
+		$total_students_cache_key = __FUNCTION__ . "_{$instructor_id}";
 
 		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
 			$from = Input::sanitize( $args['from'] );
 			$to   = Input::sanitize( $args['to'] );
 
+			$total_students_cache_key .= "_{$from}_{$to}";
+
 			$where['enrollment.post_date'] = array( 'BETWEEN', array( $from, $to ) );
 			$enrollment_date_clause        = ' AND ' . QueryHelper::prepare_where_clause( $where );
+		}
+
+		$cached = TutorCache::get( $total_students_cache_key );
+		if ( false !== $cached ) {
+			return $cached;
 		}
 
 		$count = $wpdb->get_var(
@@ -3307,6 +3315,8 @@ class Utils {
 				'completed'
 			)
 		);
+
+		TutorCache::set( $total_students_cache_key, $count );
 
 		return (int) $count;
 	}
@@ -3508,9 +3518,17 @@ class Utils {
 	 */
 	public function get_completed_assignment( int $course_id, int $student_id ): int {
 		global $wpdb;
-		$course_id  = sanitize_text_field( $course_id );
-		$student_id = sanitize_text_field( $student_id );
-		$count      = $wpdb->get_var(
+
+		$course_id                     = sanitize_text_field( $course_id );
+		$student_id                    = sanitize_text_field( $student_id );
+		$complete_assignment_cache_key = __FUNCTION__ . "_{$course_id}_{$student_id}";
+
+		$cached = TutorCache::get( $complete_assignment_cache_key );
+		if ( false !== $cached ) {
+			return $cached;
+		}
+
+		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT( DISTINCT ID ) FROM {$wpdb->posts}
 				INNER JOIN {$wpdb->comments} c ON c.comment_post_ID = ID  AND c.user_id = %d AND c.comment_approved = %s
@@ -3527,6 +3545,8 @@ class Utils {
 				'publish'
 			)
 		);
+
+		TutorCache::set( $complete_assignment_cache_key, (int) $count );
 		return (int) $count;
 	}
 
@@ -3542,9 +3562,16 @@ class Utils {
 	 */
 	public function get_completed_quiz( int $course_id, int $student_id ): int {
 		global $wpdb;
-		$course_id  = sanitize_text_field( $course_id );
-		$student_id = sanitize_text_field( $student_id );
-		$count      = $wpdb->get_var(
+		$course_id               = sanitize_text_field( $course_id );
+		$student_id              = sanitize_text_field( $student_id );
+		$complete_quiz_cache_key = __FUNCTION__ . "_{$course_id}_{$student_id}";
+
+		$cached = TutorCache::get( $complete_quiz_cache_key );
+		if ( false !== $cached ) {
+			return $cached;
+		}
+
+		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(DISTINCT quiz_id) AS total
 				FROM {$wpdb->prefix}tutor_quiz_attempts
@@ -3557,6 +3584,8 @@ class Utils {
 				'attempt_ended'
 			)
 		);
+
+		TutorCache::set( $complete_quiz_cache_key, (int) $count );
 		return (int) $count;
 	}
 
@@ -7289,6 +7318,12 @@ class Utils {
 	 */
 	public function get_single_comment_user_post_id( $post_id, $user_id ) {
 		global $wpdb;
+		$single_user_comment_cache_key = __FUNCTION__ . "_{$post_id}_{$user_id}";
+
+		$cached = TutorCache::get( $single_user_comment_cache_key );
+		if ( false !== $cached ) {
+			return $cached;
+		}
 		$table = $wpdb->prefix . 'comments';
 		$query = $wpdb->get_row(
 			$wpdb->prepare(
@@ -7302,6 +7337,7 @@ class Utils {
 				$user_id
 			)
 		);
+		TutorCache::set( $single_user_comment_cache_key, $query );
 		return $query ? $query : false;
 	}
 

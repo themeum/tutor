@@ -971,17 +971,24 @@ class QuizModel {
 			return array();
 		}
 
-		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$results = $wpdb->get_results(
-			"SELECT answers.*,
+		$quiz_answers_cache_key = __FUNCTION__ . implode( '_', $ids );
+		$results                = TutorCache::get( $quiz_answers_cache_key );
+
+		if ( false === $results ) {
+			//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$results = $wpdb->get_results(
+				"SELECT answers.*,
 					question.*
 			FROM 	{$wpdb->prefix}tutor_quiz_attempt_answers answers
 					LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question
 						   ON answers.question_id = question.question_id
 			WHERE 	answers.quiz_attempt_id IN ({$ids_in})
 			ORDER BY attempt_answer_id ASC;"
-		);
-		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			);
+			//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+			TutorCache::set( $quiz_answers_cache_key, $results );
+		}
 
 		if ( $add_index ) {
 			$new_array = array();

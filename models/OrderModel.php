@@ -482,19 +482,26 @@ class OrderModel {
 	 * the user ID from the order data, and returns the modified order data.
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 param $order added.
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
-	 * @param int $order_id The ID of the order to retrieve.
+	 * @param int       $order_id The ID of the order to retrieve.
+	 * @param \stdClass $order    Optional. The order data if already fetched.
 	 *
 	 * @return object|false The order data with the student's information included, or false if no order is found.
 	 */
-	public function get_order_by_id( $order_id ) {
-		$order_data = QueryHelper::get_row(
-			$this->table_name,
-			array( 'id' => $order_id ),
-			'id'
-		);
+	public function get_order_by_id( $order_id, $order = null ) {
+		$order_data = null;
+		if ( ! $order ) {
+			$order_data = QueryHelper::get_row(
+				$this->table_name,
+				array( 'id' => $order_id ),
+				'id'
+			);
+		} else {
+			$order_data = $order;
+		}
 
 		if ( ! $order_data ) {
 			return false;
@@ -677,7 +684,6 @@ class OrderModel {
 
 				$course->id            = (int) $course->id;
 				$course->regular_price = (float) $course->regular_price;
-				$course->image         = get_the_post_thumbnail_url( $course->id );
 
 				// Add meta items.
 				$order_item_meta        = new OrderItemMetaModel();
@@ -2229,9 +2235,12 @@ class OrderModel {
 		$titles = array();
 		$items  = ( new OrderModel() )->get_order_items_by_id( $order->id );
 		foreach ( $items as $item ) {
-
 			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
-				$titles[] = get_the_title( $item->id );
+				if ( empty( $item->title ) ) {
+					continue;
+				}
+
+				$titles[] = $item->title;
 				continue;
 			}
 
