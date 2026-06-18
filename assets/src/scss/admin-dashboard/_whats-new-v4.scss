@@ -15,7 +15,7 @@
     max-width: 1280px;
     width: 100%;
     margin: 0 auto;
-    padding: 20px 64px;
+    padding: 64px 20px;
   }
 
   .tutor-section-title {
@@ -427,7 +427,7 @@
   }
 }
 
-@media (max-width: 834px) {
+@media (max-width: 1024px) {
   #wpbody-content {
     padding-bottom: 0;
   }
@@ -465,8 +465,12 @@
       }
     }
 
+    .tutor-section-action {
+      max-width: fit-content;
+    }
+
     .tutor-section-cards {
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 10px;
     }
 
@@ -535,6 +539,10 @@
       &-right {
         flex-basis: 100%;
       }
+    }
+
+    .tutor-section-action {
+      max-width: 196px;
     }
 
     .tutor-section-interactive .tutor-section-cards {
