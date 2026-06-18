@@ -902,13 +902,12 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @since 3.2.0
-	 *
-	 * Refactor the arguments & response as per new design
+	 * @since 3.2.0 Refactor the arguments & response as per new design.
 	 *
 	 * @return void
 	 */
 	public function ajax_course_list() {
+		tutor_utils()->check_nonce();
 		$this->check_access();
 
 		$limit       = Input::post( 'limit', 10, Input::TYPE_INT );
@@ -930,12 +929,7 @@ class Course extends Tutor_Base {
 
 		$exclude = Input::post( 'exclude', array(), Input::TYPE_ARRAY );
 		if ( count( $exclude ) ) {
-			$exclude              = array_filter(
-				$exclude,
-				function ( $id ) {
-					return is_numeric( $id );
-				}
-			);
+			$exclude              = array_filter( $exclude, fn( $id ) => is_numeric( $id ) && $id > 0 );
 			$args['post__not_in'] = $exclude;
 		}
 
@@ -1077,6 +1071,10 @@ class Course extends Tutor_Base {
 		);
 
 		$course_id = (int) $params['course_id'];
+		if ( ! $course_id ) {
+			$this->response_bad_request( __( 'Invalid course id', 'tutor' ) );
+		}
+
 		$this->check_access( $course_id );
 
 		$errors     = array();
@@ -1167,9 +1165,13 @@ class Course extends Tutor_Base {
 		tutor_utils()->check_nonce();
 
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
-		$builder   = Input::post( 'builder' );
+		if ( ! $course_id ) {
+			$this->response_bad_request( __( 'Invalid course id', 'tutor' ) );
+		}
+
 		$this->check_access( $course_id );
 
+		$builder = Input::post( 'builder' );
 		if ( 'elementor' === $builder ) {
 			delete_post_meta( $course_id, '_elementor_edit_mode' );
 		} elseif ( 'droip' === $builder ) {
@@ -1248,13 +1250,14 @@ class Course extends Tutor_Base {
 	public function ajax_course_contents() {
 		tutor_utils()->check_nonce();
 
+		$errors    = array();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
-		$this->check_access( $course_id );
-
-		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
+		if ( ! $course_id || tutor()->course_post_type !== get_post_type( $course_id ) ) {
 			$errors['course_id'] = __( 'Invalid course id', 'tutor' );
 		}
+
+		$this->check_access( $course_id );
 
 		if ( ! empty( $errors ) ) {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
@@ -1281,11 +1284,11 @@ class Course extends Tutor_Base {
 		$errors    = array();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
-		$this->check_access( $course_id );
-
-		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
+		if ( ! $course_id || tutor()->course_post_type !== get_post_type( $course_id ) ) {
 			$errors['course_id'] = __( 'Invalid course id', 'tutor' );
 		}
+
+		$this->check_access( $course_id );
 
 		if ( ! empty( $errors ) ) {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
@@ -1299,7 +1302,7 @@ class Course extends Tutor_Base {
 		$sale_price   = 0;
 		$product_id   = tutor_utils()->get_course_product_id( $course_id );
 
-		if ( 'wc' === $monetize_by ) {
+		if ( WooCommerce::MONETIZE_BY === $monetize_by ) {
 			$product = wc_get_product( $product_id );
 			if ( $product ) {
 				$product_name = $product->get_name();
@@ -1308,7 +1311,7 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		if ( 'tutor' === $monetize_by ) {
+		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			$price      = get_post_meta( $course_id, self::COURSE_PRICE_META, true );
 			$sale_price = get_post_meta( $course_id, self::COURSE_SALE_PRICE_META, true );
 		}
@@ -2265,7 +2268,7 @@ class Course extends Tutor_Base {
 		}
 
 		// Check if user is only an instructor.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			// Check if instructor can trash course.
 			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
 
@@ -2277,7 +2280,7 @@ class Course extends Tutor_Base {
 		$trash_course = wp_update_post(
 			array(
 				'ID'          => $course_id,
-				'post_status' => 'trash',
+				'post_status' => CourseModel::STATUS_TRASH,
 			)
 		);
 
@@ -2982,9 +2985,9 @@ class Course extends Tutor_Base {
 	 */
 	public function tutor_reset_course_progress() {
 		tutor_utils()->checking_nonce();
-		$course_id = Input::post( 'course_id' );
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
-		if ( ! $course_id || ! is_numeric( $course_id ) || ! tutor_utils()->is_enrolled( $course_id ) ) {
+		if ( ! $course_id || ! tutor_utils()->is_enrolled( $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid Course ID or Access Denied.', 'tutor' ) ) );
 			return;
 		}
@@ -3028,44 +3031,44 @@ class Course extends Tutor_Base {
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$user_id   = get_current_user_id();
 
-		if ( $course_id ) {
-			$password_protected = post_password_required( $course_id );
-			if ( $password_protected ) {
-				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
+		if ( ! $course_id || ! $user_id ) {
+			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
+		}
+
+		$password_protected = post_password_required( $course_id );
+		if ( $password_protected ) {
+			wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
+		}
+
+		$course = get_post( $course_id );
+
+		if ( CourseModel::STATUS_PRIVATE === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
+			wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
+		}
+
+		/**
+		 * This check was added to address a security issue where users could
+		 * enroll in a course via an AJAX call without purchasing it.
+		 *
+		 * To prevent this, we now verify whether the course is paid.
+		 * Additionally, we check if the user is already enrolled, since
+		 * Tutor's default behavior enrolls users automatically upon purchase.
+		 *
+		 * @since 3.9.4
+		 */
+		if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
+			$is_enrolled = (bool) tutor_utils()->is_enrolled( $course_id, $user_id );
+
+			if ( ! $is_enrolled ) {
+				wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
 			}
+		}
 
-			$course = get_post( $course_id );
-
-			if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
-				wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
-			}
-
-			/**
-			 * This check was added to address a security issue where users could
-			 * enroll in a course via an AJAX call without purchasing it.
-			 *
-			 * To prevent this, we now verify whether the course is paid.
-			 * Additionally, we check if the user is already enrolled, since
-			 * Tutor's default behavior enrolls users automatically upon purchase.
-			 *
-			 * @since 3.9.4
-			 */
-			if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
-				$is_enrolled = (bool) tutor_utils()->is_enrolled( $course_id, $user_id );
-
-				if ( ! $is_enrolled ) {
-					wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
-				}
-			}
-
-			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
-			if ( $enroll ) {
-				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
-			} else {
-				wp_send_json_error( __( 'Enrollment failed, please try again!', 'tutor' ) );
-			}
+		$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
+		if ( $enroll ) {
+			wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
 		} else {
-			wp_send_json_error( __( 'Invalid course ID', 'tutor' ) );
+			wp_send_json_error( __( 'Enrollment failed, please try again!', 'tutor' ) );
 		}
 	}
 
