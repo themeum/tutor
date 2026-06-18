@@ -157,10 +157,6 @@ const initializePlugin = async () => {
       tutorConfig: tutorConfig,
     },
     endpoints: endpoints,
-    query: queryServiceMeta.instance,
-    modal: modalServiceMeta.instance,
-    form: formServiceMeta.instance,
-    wpMedia: wpMediaServiceMeta.instance,
   });
 
   // Register legacy functions for backward compatibility
