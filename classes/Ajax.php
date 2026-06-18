@@ -39,7 +39,6 @@ class Ajax {
 	public function __construct( $allow_hooks = true ) {
 		if ( $allow_hooks ) {
 			add_action( 'wp_ajax_sync_video_playback', array( $this, 'sync_video_playback' ) );
-			add_action( 'wp_ajax_nopriv_sync_video_playback', array( $this, 'sync_video_playback_noprev' ) );
 			add_action( 'wp_ajax_tutor_place_rating', array( $this, 'tutor_place_rating' ) );
 			add_action( 'wp_ajax_delete_tutor_review', array( $this, 'delete_tutor_review' ) );
 
@@ -71,6 +70,7 @@ class Ajax {
 	 * Update video information and data when necessary
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function sync_video_playback() {
@@ -112,15 +112,6 @@ class Ajax {
 			LessonModel::update_lesson_reading_info( $post_id, $user_id, 'video_best_watched_time', 0 );
 		}
 		exit();
-	}
-
-	/**
-	 * Video playback callback for noprev
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function sync_video_playback_noprev() {
 	}
 
 	/**
