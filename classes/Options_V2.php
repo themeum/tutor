@@ -46,6 +46,13 @@ class Options_V2 {
 	const DEFAULT_THEME_AUTO  = 'auto';
 
 	/**
+	 * Brand color.
+	 * 
+	 * @since 4.0.0
+	 */
+	const DEFAULT_BRAND_COLOR = '#3e64de';
+
+	/**
 	 * Undocumented variable
 	 *
 	 * @since 2.0.0
@@ -1297,8 +1304,8 @@ class Options_V2 {
 								'type'        => 'color_field',
 								'label'       => __( 'Brand Color', 'tutor' ),
 								'desc'        => __( 'Customize the primary accent color used across your learning platform to match your brand identity.', 'tutor' ),
-								'class'       => 'col-1x1 color-picker-wrapper',
-								'default'     => '#00ddff',
+								'class'       => 'color-picker-wrapper',
+								'default'     => self::DEFAULT_BRAND_COLOR,
 							),
 						),
 					),

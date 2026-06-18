@@ -595,6 +595,191 @@ class Assets {
 	}
 
 	/**
+	 * Convert HEX to HSL
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $hex HEX color code.
+	 *
+	 * @return array
+	 */
+	private function hex_to_hsl( $hex ) {
+		$hex = ltrim( $hex, '#' );
+		if ( strlen( $hex ) == 3 ) {
+			$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+		}
+		$r = hexdec( substr( $hex, 0, 2 ) ) / 255;
+		$g = hexdec( substr( $hex, 2, 2 ) ) / 255;
+		$b = hexdec( substr( $hex, 4, 2 ) ) / 255;
+
+		$max = max( $r, $g, $b );
+		$min = min( $r, $g, $b );
+		$l   = ( $max + $min ) / 2;
+
+		if ( $min === $max ) {
+			$h = $s = 0; //phpcs:ignore
+		} else {
+			$d = $max - $min;
+			$s = $l > 0.5 ? $d / ( 2 - $max - $min ) : $d / ( $max + $min );
+			switch ( $max ) {
+				case $r:
+					$h = ( $g - $b ) / $d + ( $g < $b ? 6 : 0 );
+					break;
+				case $g:
+					$h = ( $b - $r ) / $d + 2;
+					break;
+				case $b:
+					$h = ( $r - $g ) / $d + 4;
+					break;
+			}
+			$h /= 6;
+		}
+		return array(
+			'h' => $h * 360,
+			's' => $s * 100,
+			'l' => $l * 100,
+		);
+	}
+
+	/**
+	 * Convert HSL to HEX
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $h H color value.
+	 * @param string $s S color value.
+	 * @param string $l L color value.
+	 *
+	 * @return array
+	 */
+	private function hsl_to_hex( $h, $s, $l ) {
+		$h /= 360;
+		$s /= 100;
+		$l /= 100;
+		if ( 0 === $s ) {
+			$r = $g = $b = $l; //phpcs:ignore
+		} else {
+			$hue2rgb = function( $p, $q, $t ) {
+				if ( $t < 0 ) {
+					++$t;
+				}
+				if ( $t > 1 ) {
+					--$t;
+				}
+				if ( $t < 1 / 6 ) {
+					return $p + ( $q - $p ) * 6 * $t;
+				}
+				if ( $t < 1 / 2 ) {
+					return $q;
+				}
+				if ( $t < 2 / 3 ) {
+					return $p + ( $q - $p ) * ( 2 / 3 - $t ) * 6;
+				}
+				return $p;
+			};
+			$q       = $l < 0.5 ? $l * ( 1 + $s ) : $l + $s - $l * $s;
+			$p       = 2 * $l - $q;
+			$r       = $hue2rgb( $p, $q, $h + 1 / 3 );
+			$g       = $hue2rgb( $p, $q, $h );
+			$b       = $hue2rgb( $p, $q, $h - 1 / 3 );
+		}
+		return sprintf( '#%02x%02x%02x', round( $r * 255 ), round( $g * 255 ), round( $b * 255 ) );
+	}
+
+	/**
+	 * Generate color palette
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $base_hex HEX color code.
+	 *
+	 * @return array
+	 */
+	private function generate_color_palette( $base_hex ) {
+		$base = $this->hex_to_hsl( $base_hex );
+
+		// Mapping of [Hue-Shift, Saturation-Shift, Target-Lightness].
+		$rules = array(
+			100 => array( -1, 3, 97.5 ),
+			200 => array( -3, 1, 94.1 ),
+			300 => array( -3, -2, 92.2 ),
+			400 => array( -4, 0, 79.6 ),
+			500 => array( -4, 5, 59.8 ),
+			600 => array( 0, 0, $base['l'] ),
+			700 => array( 3, -7, 48.0 ),
+			800 => array( 4, -12, 40.2 ),
+			900 => array( 5, -17, 33.1 ),
+			950 => array( 6, -24, 20.8 ),
+		);
+
+		$palette = array();
+		foreach ( $rules as $weight => $modifier ) {
+			if ( 600 === $weight ) {
+				$palette[ $weight ] = strtolower( $base_hex );
+				continue;
+			}
+
+			$new_h = fmod( ( $base['h'] + $modifier[0] + 360 ), 360 );
+			$new_s = max( 0, min( 100, $base['s'] + $modifier[1] ) );
+			$new_l = max( 0, min( 100, $modifier[2] ) );
+
+			$palette[ $weight ] = $this->hsl_to_hex( $new_h, $new_s, $new_l );
+		}
+
+		return $palette;
+	}
+
+	/**
+	 * Load core color palette
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	private function load_core_color_palette() {
+		$base_color = tutor_utils()->get_option( 'brand_color', Options_V2::DEFAULT_BRAND_COLOR );
+		$palette    = $this->generate_color_palette( $base_color );
+
+		return "
+			:root {
+			--tutor-surface-brand-dark: {$palette[950]};
+			--tutor-surface-brand-primary: {$palette[600]};
+			--tutor-surface-brand-primary-2: {$palette[800]};
+			--tutor-surface-brand-secondary: {$palette[300]};
+			--tutor-surface-brand-tertiary: {$palette[100]};
+			--tutor-surface-brand-quaternary: {$palette[200]};
+			--tutor-text-brand: {$palette[600]};
+			--tutor-text-brand-hover: {$palette[700]};
+			--tutor-text-brand-secondary: {$palette[400]};
+			--tutor-icon-brand: {$palette[600]};
+			--tutor-icon-brand-hover: {$palette[700]};
+			--tutor-icon-brand-secondary: {$palette[300]};
+			--tutor-button-primary: {$palette[600]};
+			--tutor-button-primary-hover: {$palette[700]};
+			--tutor-button-primary-focused: {$palette[600]};
+			--tutor-button-primary-disabled: {$palette[400]};
+			--tutor-button-primary-soft: {$palette[200]};
+			--tutor-button-primary-soft-hover: {$palette[300]};
+			--tutor-button-primary-soft-focused: {$palette[200]};
+			--tutor-border-brand: {$palette[600]};
+			--tutor-border-brand-secondary: {$palette[300]};
+			--tutor-border-brand-tertiary: {$palette[400]};
+			--tutor-tab-sidebar-l2-active: {$palette[200]};
+			--tutor-tab-sidebar-l4-active: {$palette[200]};
+			--tutor-tab-l3: {$palette[200]};
+			--tutor-tab-l3-hover: {$palette[300]};
+			--tutor-tab-l3-active: {$palette[200]};
+			--tutor-actions-brand-primary: {$palette[600]};
+			--tutor-actions-brand-secondary: {$palette[300]};
+			--tutor-actions-brand-tertiary: {$palette[200]};
+			--tutor-visual-brand-1: {$palette[500]};
+			--tutor-visual-brand-2: {$palette[400]};
+			--tutor-visual-brand-3: {$palette[300]};
+			}
+		";
+	}
+
+	/**
 	 * Add Tinymce button for placing shortcode
 	 *
 	 * @since 1.0.0
@@ -846,6 +1031,7 @@ class Assets {
 		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), $version, true );
 
 		wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
+		wp_add_inline_style( 'tutor-core', $this->load_core_color_palette() );
 
 		if ( $is_dashboard ) {
 			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
