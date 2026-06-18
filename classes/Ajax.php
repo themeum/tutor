@@ -10,9 +10,7 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\LessonModel;
@@ -27,6 +25,7 @@ class Ajax {
 	use JsonResponse;
 
 	const LOGIN_ERRORS_TRANSIENT_KEY = 'tutor_login_errors';
+
 	/**
 	 * Constructor
 	 *
