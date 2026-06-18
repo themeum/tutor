@@ -87,6 +87,12 @@
 			position: relative;
 			border: 1px solid #c0c3cb;
 			border-radius: 6px;
+			height: 90px;
+			width: 88px;
+
+			img {
+				max-width: 100%;
+			}
 
 			&:before {
 				content: "";
