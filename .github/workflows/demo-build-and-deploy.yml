@@ -1,0 +1,60 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - multisite
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version number
+        id: get_version
+        run: |
+          version=$(grep -Po 'Version:\s*\K[\d.]+' tutor.php)
+          echo "VERSION_NUMBER=$version" >> $GITHUB_ENV
+          echo "ZIP_PATH=tutor-${version}.zip" >> $GITHUB_ENV
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: pnpm run build
+        run: composer install --no-dev --no-scripts && rspack --mode=production && gulp build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: ${{ env.ZIP_PATH }}
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEMO_SSH_PRIVATE_KEY }}
+
+      - name: Add remote server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H 172.105.64.114 >> ~/.ssh/known_hosts
+
+      - name: Transfer file to remote
+        run: scp ${{ env.ZIP_PATH }} root@172.105.64.114:/var/www/tutor-demo/wp-content/plugins
+
+      - name: UNZIP file
+        run: |
+          ssh root@172.105.64.114 << 'EOF'
+            rm -rf /var/www/tutor-demo/wp-content/plugins/tutor
+            unzip -o /var/www/tutor-demo/wp-content/plugins/${{ env.ZIP_PATH }} -d /var/www/tutor-demo/wp-content/plugins
+          EOF
