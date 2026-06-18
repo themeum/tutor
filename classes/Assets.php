@@ -761,39 +761,16 @@ class Assets {
 
 		return "
 			:root {
-			--tutor-surface-brand-dark: {$palette[950]};
-			--tutor-surface-brand-primary: {$palette[600]};
-			--tutor-surface-brand-primary-2: {$palette[800]};
-			--tutor-surface-brand-secondary: {$palette[300]};
-			--tutor-surface-brand-tertiary: {$palette[100]};
-			--tutor-surface-brand-quaternary: {$palette[200]};
-			--tutor-text-brand: {$palette[600]};
-			--tutor-text-brand-hover: {$palette[700]};
-			--tutor-text-brand-secondary: {$palette[400]};
-			--tutor-icon-brand: {$palette[600]};
-			--tutor-icon-brand-hover: {$palette[700]};
-			--tutor-icon-brand-secondary: {$palette[300]};
-			--tutor-button-primary: {$palette[600]};
-			--tutor-button-primary-hover: {$palette[700]};
-			--tutor-button-primary-focused: {$palette[600]};
-			--tutor-button-primary-disabled: {$palette[400]};
-			--tutor-button-primary-soft: {$palette[200]};
-			--tutor-button-primary-soft-hover: {$palette[300]};
-			--tutor-button-primary-soft-focused: {$palette[200]};
-			--tutor-border-brand: {$palette[600]};
-			--tutor-border-brand-secondary: {$palette[300]};
-			--tutor-border-brand-tertiary: {$palette[400]};
-			--tutor-tab-sidebar-l2-active: {$palette[200]};
-			--tutor-tab-sidebar-l4-active: {$palette[200]};
-			--tutor-tab-l3: {$palette[200]};
-			--tutor-tab-l3-hover: {$palette[300]};
-			--tutor-tab-l3-active: {$palette[200]};
-			--tutor-actions-brand-primary: {$palette[600]};
-			--tutor-actions-brand-secondary: {$palette[300]};
-			--tutor-actions-brand-tertiary: {$palette[200]};
-			--tutor-visual-brand-1: {$palette[500]};
-			--tutor-visual-brand-2: {$palette[400]};
-			--tutor-visual-brand-3: {$palette[300]};
+			--tutor-brand-100: {$palette[100]};
+			--tutor-brand-200: {$palette[200]};
+			--tutor-brand-300: {$palette[300]};
+			--tutor-brand-400: {$palette[400]};
+			--tutor-brand-500: {$palette[500]};
+			--tutor-brand-600: {$palette[600]};
+			--tutor-brand-700: {$palette[700]};
+			--tutor-brand-800: {$palette[800]};
+			--tutor-brand-900: {$palette[900]};
+			--tutor-brand-950: {$palette[950]};
 			}
 		";
 	}
