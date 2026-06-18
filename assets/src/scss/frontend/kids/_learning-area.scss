@@ -81,6 +81,10 @@
     }
   }
 
+  .tutor-learning-area-resources .tutor-resources-wrapper {
+    gap: $tutor-spacing-5;
+  }
+
   .tutor-quiz-summary-page .tutor-quiz-review-dnd-rows {
     gap: $tutor-spacing-4;
   }
@@ -238,8 +242,7 @@
     .tutor-meeting,
     .tutor-quiz-intro,
     .tutor-lesson-content .tutor-lesson-content-tab,
-    .tutor-quiz-summary .tutor-quiz-result,
-    .tutor-learning-area-resources .tutor-resources-wrapper {
+    .tutor-quiz-summary .tutor-quiz-result {
       box-shadow: none;
     }
 
