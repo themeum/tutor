@@ -394,9 +394,7 @@ class Ajax {
 	 * Process tutor login
 	 *
 	 * @since 1.6.3
-	 *
-	 * @since 2.1.3 Ajax removed, validation errors
-	 * stores in session.
+	 * @since 2.1.3 Ajax removed, validation errors stores in session.
 	 *
 	 * @return void
 	 */
@@ -409,12 +407,11 @@ class Ajax {
 		 *
 		 * @since 2.1.4
 		 */
-		if ( ! wp_verify_nonce( $_POST[ tutor()->nonce ], tutor()->nonce_action ) ) { //phpcs:ignore
+		if ( ! tutor_utils()->is_nonce_verified( 'post' ) ) {
 			$validation_error->add( 401, __( 'Nonce verification failed', 'tutor' ) );
-			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
+			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages(), MINUTE_IN_SECONDS );
 			return;
 		}
-		//phpcs:disable WordPress.Security.NonceVerification.Missing
 
 		/**
 		 * No sanitization/wp_unslash needed for log & pwd since WordPress
@@ -424,10 +421,12 @@ class Ajax {
 		 *
 		 * @see https://developer.wordpress.org/reference/functions/wp_signon/
 		 */
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		$username    = tutor_utils()->array_get( 'log', $_POST ); //phpcs:ignore
 		$password    = tutor_utils()->array_get( 'pwd', $_POST ); //phpcs:ignore
 		$redirect_to = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : '';
 		$remember    = isset( $_POST['rememberme'] );
+		//phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		try {
 			$creds = array(
@@ -484,7 +483,7 @@ class Ajax {
 			$validation_error->add( 400, $e->getMessage() );
 		} finally {
 			// Store errors in transient data.
-			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
+			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages(), MINUTE_IN_SECONDS );
 		}
 	}
 
