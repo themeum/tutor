@@ -15,7 +15,7 @@
     max-width: 1280px;
     width: 100%;
     margin: 0 auto;
-    padding-block: 64px;
+    padding: 20px 64px;
   }
 
   .tutor-section-title {
@@ -69,6 +69,7 @@
       gap: 20px;
       max-width: 400px;
       width: 100%;
+      flex-basis: 50%;
 
       p {
         font-size: 1rem;
@@ -103,6 +104,7 @@
       display: flex;
       flex-direction: column;
       padding: 32px;
+      gap: 10px;
 
       h6 {
         font-size: 1.25rem;
@@ -114,6 +116,7 @@
       }
 
       p {
+        margin: 0px;
         font-size: 1rem;
         line-height: 1.375rem;
         letter-spacing: 0em;
@@ -125,6 +128,7 @@
     &-image {
       display: flex;
       position: relative;
+      overflow: hidden;
 
       img {
         width: 100%;
@@ -418,6 +422,89 @@
   .tutor-section-instructor-dashboard {
     .tutor-section-cards {
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-areas: 'learners assignments announcements';
+    }
+  }
+}
+
+@media (max-width: 834px) {
+  .tutor-whats-new {
+    .tutor-section-layout {
+      padding: 48px 20px;
+      gap: 96px;
+    }
+
+    .tutor-section-wrapper {
+      gap: 40px;
+    }
+
+    .tutor-section-title {
+      gap: 10px;
+      align-items: flex-start;
+
+      &-left {
+        gap: 4px;
+
+        h2 {
+          font-size: 2rem;
+          line-height: 2.5rem;
+          margin-inline-end: 10px;
+        }
+        p {
+          font-size: 0.75rem;
+          line-height: 1.125rem;
+        }
+      }
+    }
+
+    .tutor-section-cards {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+    }
+
+    .tutor-section-card {
+      &-title {
+        gap: 10px;
+        padding: 20px;
+      }
+    }
+
+    .tutor-section-interactive .tutor-section-cards {
+      grid-template-areas:
+        'ordering image-marking'
+        'graph puzzle'
+        'range pin';
+    }
+
+    .tutor-section-a11y .tutor-section-cards {
+      grid-template-areas:
+        'mode-preference mode-preference'
+        'font contrast'
+        'vision motion';
+
+      .tutor-section-card-comparison {
+        margin: 0 40px 0 40px;
+      }
+    }
+
+    .tutor-section-instructor-dashboard .tutor-section-cards {
+      grid-template-areas:
+        'learners assignments'
+        'announcements announcements';
+
+      [style*='grid-area: announcements'] {
+        height: 400px;
+        img {
+          width: min-content;
+          margin-inline: auto;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .tutor-whats-new {
+      margin-left: -10px;
     }
   }
 }

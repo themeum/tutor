@@ -102,11 +102,15 @@ $render_action_button = function () use ( $action_button_text, $action_button_ur
 					<p>
 						<?php esc_html_e( 'Notes, discussions, resources, lesson comments – all accessible without leaving the lesson. No more tab-switching. No more hunting.', 'tutor' ); ?>
 					</p>
+
+					<div>
+						<?php $render_action_button(); ?>
+					</div>
 				</div>
 			</div>
 
 			<div class="tutor-section-cards">
-				<!-- Course -->
+				<!-- Courses -->
 				<div class="tutor-section-card">
 					<div class="tutor-section-card-title">
 						<h6>
@@ -520,7 +524,7 @@ $render_action_button = function () use ( $action_button_text, $action_button_ur
 
 			<div class="tutor-section-cards">
 				<!-- Learners -->
-				<div class="tutor-section-card">
+				<div class="tutor-section-card" style="grid-area: learners;">
 					<div class="tutor-section-card-title">
 						<h6>
 							<?php esc_html_e( 'Learners', 'tutor' ); ?>
@@ -536,7 +540,7 @@ $render_action_button = function () use ( $action_button_text, $action_button_ur
 				</div>
 
 				<!-- Assignments -->
-				<div class="tutor-section-card">
+				<div class="tutor-section-card" style="grid-area: assignments;">
 					<div class="tutor-section-card-title">
 						<h6>
 							<?php esc_html_e( 'Assignments', 'tutor' ); ?>
@@ -552,7 +556,7 @@ $render_action_button = function () use ( $action_button_text, $action_button_ur
 				</div>
 
 				<!-- Announcements -->
-				<div class="tutor-section-card">
+				<div class="tutor-section-card" style="grid-area: announcements;">
 					<div class="tutor-section-card-title">
 						<h6>
 							<?php esc_html_e( 'Announcements', 'tutor' ); ?>
