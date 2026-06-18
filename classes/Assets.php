@@ -578,13 +578,15 @@ class Assets {
 			$fallback_color = isset( $fallback_colors[ $key ] ) ? $fallback_colors[ $key ] : '#212327';
 			$color          = $fallback_color;
 
-			if ( 'tutor_primary_color' === $key ) {
-				$color = $brand_color;
-			}
+			if ( Options_V2::DEFAULT_BRAND_COLOR !== $brand_color ) {
+				if ( 'tutor_primary_color' === $key ) {
+					$color = $brand_color;
+				}
 
-			if ( 'tutor_primary_hover_color' === $key ) {
-				$palette = $this->generate_color_palette( $brand_color );
-				$color   = $palette[700];
+				if ( 'tutor_primary_hover_color' === $key ) {
+					$palette = $this->generate_color_palette( $brand_color );
+					$color   = $palette[700];
+				}
 			}
 
 			$color_rgb = tutor_utils()->hex2rgb( $color );
