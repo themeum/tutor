@@ -571,11 +571,23 @@ class Assets {
 			'tutor_gray_color'          => '#CDCFD5',
 		);
 
+		$brand_color = tutor_utils()->get_option( 'brand_color', Options_V2::DEFAULT_BRAND_COLOR );
+
 		$color_string = '';
 		foreach ( $colors as $key => $property ) {
 			$fallback_color = isset( $fallback_colors[ $key ] ) ? $fallback_colors[ $key ] : '#212327';
-			$color          = tutor_utils()->get_option( $key, $fallback_color );
-			$color_rgb      = tutor_utils()->hex2rgb( $color );
+			$color          = $fallback_color;
+
+			if ( 'tutor_primary_color' === $key ) {
+				$color = $brand_color;
+			}
+
+			if ( 'tutor_primary_hover_color' === $key ) {
+				$palette = $this->generate_color_palette( $brand_color );
+				$color   = $palette[700];
+			}
+
+			$color_rgb = tutor_utils()->hex2rgb( $color );
 
 			if ( is_admin() && isset( $admin_colors[ $property ] ) ) {
 				$color     = $admin_colors[ $property ];
