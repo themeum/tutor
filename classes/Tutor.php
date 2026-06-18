@@ -1235,7 +1235,6 @@ final class Tutor extends Singleton {
 			'email_footer_text'                 => '',
 			'earning_admin_commission'          => '20',
 			'earning_instructor_commission'     => '80',
-			'color_preset_type'                 => 'default',
 
 			// Default options for tutor ecommerce.
 			'monetize_by'                       => Ecommerce::MONETIZE_BY,
