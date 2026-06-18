@@ -57,8 +57,8 @@ class Ajax {
 			 *
 			 * @since  v.1.7.9
 			 */
-			add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_annoucement' ) );
-			add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_annoucement' ) );
+			add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_announcement' ) );
+			add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_announcement' ) );
 
 			add_action( 'wp_ajax_tutor_youtube_video_duration', array( $this, 'ajax_youtube_video_duration' ) );
 		}
@@ -482,9 +482,10 @@ class Ajax {
 	 * Create/Update announcement
 	 *
 	 * @since  1.7.9
+	 *
 	 * @return void
 	 */
-	public function create_or_update_annoucement() {
+	public function create_or_update_announcement() {
 		tutor_utils()->checking_nonce();
 
 		$error                = array();
@@ -492,7 +493,7 @@ class Ajax {
 		$announcement_title   = Input::post( 'tutor_announcement_title' );
 		$announcement_summary = Input::post( 'tutor_announcement_summary', '', Input::TYPE_TEXTAREA );
 
-		// Check if user can manage this announcment.
+		// Check if user can manage this announcement.
 		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
@@ -565,9 +566,10 @@ class Ajax {
 	 * Delete announcement
 	 *
 	 * @since  1.7.9
+	 *
 	 * @return void
 	 */
-	public function delete_annoucement() {
+	public function delete_announcement() {
 		tutor_utils()->checking_nonce();
 
 		$announcement_id = Input::post( 'announcement_id' );
