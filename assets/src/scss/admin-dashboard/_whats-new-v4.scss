@@ -324,16 +324,16 @@
       &::before {
         content: '';
         position: absolute;
+        z-index: -1;
+        pointer-events: none;
         width: 241px;
         height: 544px;
-        left: -240px;
-        top: 0px;
+        left: -236.5px;
+        top: 0.9px;
         background: linear-gradient(347.31deg, rgba(245, 243, 241, 0.2) 37.95%, rgba(170, 170, 175, 0.12) 81.38%);
-        filter: blur(1.95595px);
-        /* transform: matrix(1, 0, 0, 1, 0, 0); */
-        pointer-events: none;
-        z-index: -1;
-        rotate: 180deg;
+        filter: blur(1.96px);
+        transform: matrix(-1, 0, 0, 1, 0, 0) translateZ(-1px);
+        clip-path: polygon(0 0, 100% 100%, 0 100%);
       }
 
       .tutor-comparison-inner {
