@@ -24,6 +24,8 @@ class WhatsNew {
 	 */
 	public function __construct() {
 		add_filter( 'tutor_admin_menu', array( $this, 'add_whats_new_menu_item' ) );
+		add_action( 'upgrader_process_complete', array( $this, 'set_whats_new_v4_redirect' ), 10, 2 );
+		add_action( 'admin_init', array( $this, 'maybe_redirect_to_whats_new_v4' ) );
 	}
 
 	/**
@@ -88,6 +90,56 @@ class WhatsNew {
 	public function whats_new_in_v4_page() {
 		wp_enqueue_style( 'tutor-core-styles', tutor()->url . 'assets/css/tutor-core.min.css', array(), TUTOR_VERSION );
 		include tutor()->path . 'views/pages/whats-new-in-v4.php';
+	}
+
+	/**
+	 * Set a transient flag after plugin upgrade to trigger a one-time redirect.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param mixed $upgrader_object Upgrader instance.
+	 * @param array $options         Hook arguments.
+	 *
+	 * @return void
+	 */
+	public function set_whats_new_v4_redirect( $upgrader_object, $options ) {
+		if (
+			'update' === $options['action'] &&
+			'plugin' === $options['type'] &&
+			isset( $options['plugins'] ) &&
+			is_array( $options['plugins'] )
+		) {
+			foreach ( $options['plugins'] as $plugin ) {
+				if ( plugin_basename( TUTOR_FILE ) === $plugin ) {
+					set_transient( 'tutor_whats_new_v4_redirect', TUTOR_VERSION, 60 );
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Redirect to the What's New v4 page once after a plugin update.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function maybe_redirect_to_whats_new_v4() {
+		// Only redirect for admins, not during AJAX, not during activation bulk actions.
+		if (
+			! is_admin() ||
+			wp_doing_ajax() ||
+			! current_user_can( 'manage_options' ) ||
+			! get_transient( 'tutor_whats_new_v4_redirect' )
+		) {
+			return;
+		}
+
+		delete_transient( 'tutor_whats_new_v4_redirect' );
+
+		wp_safe_redirect( admin_url( 'admin.php?page=tutor-whats-new-in-v4' ) );
+		exit;
 	}
 
 	/**
