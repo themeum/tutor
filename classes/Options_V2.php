@@ -41,13 +41,13 @@ class Options_V2 {
 	 *
 	 * @since 4.0.0
 	 */
-	const DEFAULT_THEME_LIGHT = 'light';
-	const DEFAULT_THEME_DARK  = 'dark';
-	const DEFAULT_THEME_AUTO  = 'auto';
+	const DEFAULT_THEME_LIGHT  = 'light';
+	const DEFAULT_THEME_DARK   = 'dark';
+	const DEFAULT_THEME_SYSTEM = 'system';
 
 	/**
 	 * Brand color.
-	 * 
+	 *
 	 * @since 4.0.0
 	 */
 	const DEFAULT_BRAND_COLOR = '#3e64de';
@@ -1286,17 +1286,17 @@ class Options_V2 {
 								'type'    => 'radio_horizontal_image',
 								'label'   => __( 'Default Theme', 'tutor' ),
 								'desc'    => __( 'Set the default appearance for learners across your platform. Learners can switch between dark and light mode if enabled.', 'tutor' ),
-								'default' => self::DEFAULT_THEME_AUTO,
+								'default' => self::DEFAULT_THEME_SYSTEM,
 								'options' => array(
 									self::DEFAULT_THEME_LIGHT      => array(
 										'title' => __( 'Light', 'tutor' ),
 										'image' => 'default-theme/light.png',
 									),
-									self::DEFAULT_THEME_DARK    => array(
+									self::DEFAULT_THEME_DARK       => array(
 										'title' => __( 'Dark', 'tutor' ),
 										'image' => 'default-theme/dark.png',
 									),
-									self::DEFAULT_THEME_AUTO    => array(
+									self::DEFAULT_THEME_SYSTEM     => array(
 										'title' => __( 'Auto', 'tutor' ),
 										'image' => 'default-theme/auto.png',
 									),
