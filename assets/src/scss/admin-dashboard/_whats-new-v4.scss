@@ -428,7 +428,15 @@
 }
 
 @media (max-width: 834px) {
+  #wpbody-content {
+    padding-bottom: 0;
+  }
+
   .tutor-whats-new {
+    br {
+      display: none;
+    }
+
     .tutor-section-layout {
       padding: 48px 20px;
       gap: 96px;
@@ -501,10 +509,69 @@
       }
     }
   }
+}
 
-  @media (max-width: 768px) {
-    .tutor-whats-new {
-      margin-left: -10px;
+@media (max-width: 768px) {
+  .tutor-whats-new {
+    margin-left: -10px;
+  }
+}
+
+@media (max-width: 425px) {
+  .tutor-whats-new {
+    .tutor-section-layout {
+      padding-inline: 16px;
+    }
+
+    .tutor-section-cards {
+      gap: 16px;
+    }
+
+    .tutor-section-title {
+      gap: 10px;
+      flex-wrap: wrap;
+
+      &-left,
+      &-right {
+        flex-basis: 100%;
+      }
+    }
+
+    .tutor-section-interactive .tutor-section-cards {
+      grid-template-areas:
+        'ordering'
+        'image-marking'
+        'graph'
+        'puzzle'
+        'range'
+        'pin';
+    }
+
+    .tutor-section-native .tutor-section-cards {
+      grid-template-areas:
+        'native-app'
+        'navigation'
+        'mode';
+    }
+
+    .tutor-section-a11y .tutor-section-cards {
+      grid-template-areas:
+        'mode-preference'
+        'font'
+        'contrast'
+        'vision'
+        'motion';
+
+      .tutor-section-card-comparison {
+        margin: 0 20px 0 20px;
+      }
+    }
+
+    .tutor-section-instructor-dashboard .tutor-section-cards {
+      grid-template-areas:
+        'learners'
+        'assignments'
+        'announcements';
     }
   }
 }
