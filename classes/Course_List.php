@@ -483,54 +483,6 @@ class Course_List {
 	}
 
 	/**
-	 * Get course enrollment list with student info
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param  int $course_id int | required.
-	 *
-	 * @return array
-	 */
-	public static function course_enrollments_with_student_details( int $course_id ) {
-		global $wpdb;
-		$course_id         = sanitize_text_field( $course_id );
-		$course_completed  = 0;
-		$course_inprogress = 0;
-
-		$enrollments = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT enroll.ID AS enroll_id, enroll.post_author AS enroll_author, user.*, course.ID AS course_id
-                FROM {$wpdb->posts} AS enroll
-                LEFT JOIN {$wpdb->users} AS user ON user.ID = enroll.post_author
-                LEFT JOIN {$wpdb->posts} AS course ON course.ID = enroll.post_parent
-                WHERE enroll.post_type = %s
-                    AND enroll.post_status = %s
-                    AND enroll.post_parent = %d
-			",
-				'tutor_enrolled',
-				'completed',
-				$course_id
-			)
-		);
-
-		foreach ( $enrollments as $enrollment ) {
-			$course_progress = tutor_utils()->get_course_completed_percent( $course_id, $enrollment->enroll_author );
-			if ( 100 == $course_progress ) {
-				$course_completed++;
-			} else {
-				$course_inprogress++;
-			}
-		}
-
-		return array(
-			'enrollments'       => $enrollments,
-			'total_completed'   => $course_completed,
-			'total_inprogress'  => $course_inprogress,
-			'total_enrollments' => count( $enrollments ),
-		);
-	}
-
-	/**
 	 * Check course is public or not
 	 *
 	 * @since 1.0.0
