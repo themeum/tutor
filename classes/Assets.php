@@ -734,11 +734,16 @@ class Assets {
 	 *
 	 * @since 4.0.0
 	 *
+	 * @param string $brand_color Base color code.
+	 *
 	 * @return string
 	 */
-	private function load_core_color_palette() {
-		$base_color = tutor_utils()->get_option( 'brand_color', Options_V2::DEFAULT_BRAND_COLOR );
-		$palette    = $this->generate_color_palette( $base_color );
+	private function load_core_color_palette( $brand_color ) {
+		if ( empty( $brand_color ) ) {
+			return '';
+		}
+
+		$palette = $this->generate_color_palette( $brand_color );
 
 		return "
 			:root {
@@ -1031,7 +1036,12 @@ class Assets {
 		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), $version, true );
 
 		wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
-		wp_add_inline_style( 'tutor-core', $this->load_core_color_palette() );
+
+		// Generate color palette from user selected brand color and add to the root.
+		$brand_color = tutor_utils()->get_option( 'brand_color' );
+		if ( Options_V2::DEFAULT_BRAND_COLOR !== $brand_color ) {
+			wp_add_inline_style( 'tutor-core', $this->load_core_color_palette( $brand_color ) );
+		}
 
 		if ( $is_dashboard ) {
 			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
