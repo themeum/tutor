@@ -26,7 +26,7 @@ $render_action_button = function () use ( $action_button_text, $action_button_ur
 };
 
 ?>
-<div class="tutor-whats-new" data-tutor-theme="light">
+<div class="tutor-whats-new">
 	<img class="tutor-hero-image" src="<?php echo esc_url( UrlHelper::asset( 'images/whats-new/whats-new-hero.webp' ) ); ?>" alt="What's new in v4" class="tutor-whats-new-in-v4-image">
 	<div class="tutor-section-layout">
 		<!-- Dashboard and Navigation -->
