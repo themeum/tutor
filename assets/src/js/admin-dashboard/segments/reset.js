@@ -47,7 +47,7 @@ const resetConfirmation = () => {
 					if (xhttp.readyState === 4) {
 						let pageData = JSON.parse(xhttp.response).data;
 						pageData.forEach((item) => {
-							const field_types_associate = ['color_preset', 'upload_full', 'checkbox_notification', 'checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'toggle_switch_button', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+							const field_types_associate = ['color_preset', 'color_field', 'upload_full', 'checkbox_notification', 'checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'radio_horizontal_image', 'checkbox_vertical', 'toggle_switch', 'toggle_switch_button', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
 							if (field_types_associate.includes(item.type)) {
 								let itemName = 'tutor_option[' + item.key + ']';
@@ -60,6 +60,13 @@ const resetConfirmation = () => {
 										elementOption.selected = typeof item.default === 'number' ? elementOption.value === item.default : item.default.includes(elementOption.value);
 									});
 
+								} else if (item.type == 'color_field') {
+									let pickerName = 'tutor_option[' + item.key + ']';
+									let pickerItem = elementByName(pickerName)[0];
+									if (pickerItem) {
+										pickerItem.value = item.default;
+										pickerItem.nextElementSibling.innerText = item.default;
+									}
 								} else if (item.type == 'color_preset') {
 
 									let presetItems = elementByName(itemName);
@@ -89,7 +96,7 @@ const resetConfirmation = () => {
 										}
 									})
 
-								} else if (item.type == 'checkbox_horizontal' || item.type == 'checkbox_vertical' || item.type == 'radio_horizontal' || item.type == 'radio_horizontal_full' || item.type == 'radio_vertical' || item.type == 'group_radio' || item.type == 'group_radio_full_3') {
+								} else if (item.type == 'checkbox_horizontal' || item.type == 'checkbox_vertical' || item.type == 'radio_horizontal' || item.type == 'radio_horizontal_full' || item.type == 'radio_horizontal_image' || item.type == 'radio_vertical' || item.type == 'group_radio' || item.type == 'group_radio_full_3') {
 
 									if (item.type == 'checkbox_horizontal') {
 										Object.keys(item.options).forEach((optionKeys) => {
