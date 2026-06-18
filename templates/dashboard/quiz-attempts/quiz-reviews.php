@@ -33,7 +33,7 @@ if ( ! $attempt_data || ! $can_review ) {
 
 $form_id             = 'quiz-attempt-review-form';
 $form_default_values = array(
-	'feedback' => is_array( $attempt_info ) ? $attempt_info['instructor_feedback'] : '',
+	'feedback' => tutor_utils()->count( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '',
 );
 
 $attempt_answers_map = array();
