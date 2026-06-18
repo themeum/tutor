@@ -10,12 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 /**
  * Course List class
  *
@@ -41,25 +40,26 @@ class Course_List {
 	 * Constructor
 	 *
 	 * @return void
+	 *
 	 * @since 2.0.0
 	 */
 	public function __construct() {
 		/**
 		 * Handle bulk action
 		 *
-		 * @since v2.0.0
+		 * @since 2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_course_list_bulk_action', array( $this, 'course_list_bulk_action' ) );
 		/**
 		 * Handle ajax request for updating course status
 		 *
-		 * @since v2.0.0
+		 * @since 2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_change_course_status', array( $this, 'tutor_change_course_status' ) );
 		/**
 		 * Handle ajax request for delete course
 		 *
-		 * @since v2.0.0
+		 * @since 2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_course_delete', array( $this, 'tutor_course_delete' ) );
 	}
@@ -82,8 +82,9 @@ class Course_List {
 	/**
 	 * Prepare bulk actions that will show on dropdown options
 	 *
-	 * @return array
 	 * @since 2.0.0
+	 *
+	 * @return array
 	 */
 	public function prepare_bulk_actions(): array {
 		$actions = array(
@@ -95,22 +96,17 @@ class Course_List {
 
 		$active_tab = Input::get( 'data', '' );
 
-		if ( 'trash' === $active_tab ) {
+		if ( CourseModel::STATUS_TRASH === $active_tab ) {
 			array_push( $actions, $this->bulk_action_delete() );
 		}
-		if ( 'trash' !== $active_tab ) {
+		if ( CourseModel::STATUS_TRASH !== $active_tab ) {
 			array_push( $actions, $this->bulk_action_trash() );
 		}
 
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_course' );
 			if ( ! $can_trash_post ) {
-				$actions = array_filter(
-					$actions,
-					function ( $val ) {
-						return 'trash' !== $val['value'];
-					}
-				);
+				$actions = array_filter( $actions, fn ( $val ) => CourseModel::STATUS_TRASH !== $val['value'] );
 			}
 		}
 		return apply_filters( 'tutor_course_bulk_actions', $actions );
@@ -119,14 +115,14 @@ class Course_List {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param string  $category_slug category slug.
 	 * @param integer $course_id course ID.
 	 * @param string  $date selected date | optional.
 	 * @param string  $search search by user name or email | optional.
 	 *
 	 * @return array
-	 *
-	 * @since v2.0.0
 	 */
 	public function tabs_key_value( $category_slug, $course_id, $date, $search ): array {
 		$url = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
@@ -200,6 +196,8 @@ class Course_List {
 	 * Count courses by status & filters
 	 * Count all | min | published | pending | draft
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param string $status | required.
 	 * @param string $category_slug course category | optional.
 	 * @param string $course_id selected course id | optional.
@@ -207,8 +205,6 @@ class Course_List {
 	 * @param string $search_term search by user name or email | optional.
 	 *
 	 * @return int
-	 *
-	 * @since 2.0.0
 	 */
 	protected static function count_course( string $status, $category_slug = '', $course_id = '', $date = '', $search_term = '' ): int {
 		$user_id       = get_current_user_id();
@@ -235,9 +231,9 @@ class Course_List {
 
 		$date_filter = sanitize_text_field( $date );
 
-		$year  = date( 'Y', strtotime( $date_filter ) );
-		$month = date( 'm', strtotime( $date_filter ) );
-		$day   = date( 'd', strtotime( $date_filter ) );
+		$year  = gmdate( 'Y', strtotime( $date_filter ) );
+		$month = gmdate( 'm', strtotime( $date_filter ) );
+		$day   = gmdate( 'd', strtotime( $date_filter ) );
 
 		// Add date query.
 		if ( '' !== $date_filter ) {
@@ -278,8 +274,9 @@ class Course_List {
 	/**
 	 * Handle bulk action for enrollment cancel | delete
 	 *
-	 * @return void
 	 * @since 2.0.0
+	 *
+	 * @return void
 	 */
 	public function course_list_bulk_action() {
 
@@ -289,13 +286,13 @@ class Course_List {
 		$bulk_ids = Input::post( 'bulk-ids', '' );
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			$course_ids = explode( ',', $bulk_ids );
 
 			if ( current_user_can( 'edit_tutor_course' ) ) {
 				$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
 
-				if ( 'publish' === $action && ! $can_publish_course ) {
+				if ( CourseModel::STATUS_PUBLISH === $action && ! $can_publish_course ) {
 					wp_send_json_error( tutor_utils()->error_message() );
 				}
 			} else {
@@ -350,18 +347,19 @@ class Course_List {
 	/**
 	 * Handle ajax request for updating course status
 	 *
-	 * @return void
 	 * @since 2.0.0
+	 *
+	 * @return void
 	 */
 	public static function tutor_change_course_status() {
 		tutor_utils()->checking_nonce();
 
 		$status = Input::post( 'status' );
-		$id     = Input::post( 'id' );
+		$id     = Input::post( 'id', 0, Input::TYPE_INT );
 		$course = get_post( $id );
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 
 			if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course->ID ) ) {
 				wp_send_json_error( tutor_utils()->error_message() );
@@ -370,11 +368,11 @@ class Course_List {
 			$can_delete_course  = tutor_utils()->get_option( 'instructor_can_delete_course' );
 			$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
 
-			if ( 'publish' === $status && ! $can_publish_course ) {
+			if ( CourseModel::STATUS_PUBLISH === $status && ! $can_publish_course ) {
 				wp_send_json_error( tutor_utils()->error_message() );
 			}
 
-			if ( 'trash' === $status && $can_delete_course ) {
+			if ( CourseModel::STATUS_TRASH === $status && $can_delete_course ) {
 				$args       = array(
 					'ID'          => $id,
 					'post_status' => $status,
@@ -439,9 +437,11 @@ class Course_List {
 	/**
 	 * Execute bulk delete action
 	 *
-	 * @param string $bulk_ids ids that need to update.
-	 * @return bool
 	 * @since 2.0.0
+	 *
+	 * @param string $bulk_ids ids that need to update.
+	 *
+	 * @return bool
 	 */
 	public static function bulk_delete_course( $bulk_ids ): bool {
 		$bulk_ids = explode( ',', sanitize_text_field( $bulk_ids ) );
@@ -456,12 +456,12 @@ class Course_List {
 	/**
 	 * Update course status
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param string $status for updating course status.
 	 * @param string $bulk_ids comma separated ids.
 	 *
 	 * @return bool
-	 *
-	 * @since 2.0.0
 	 */
 	public static function update_course_status( string $status, $bulk_ids ): bool {
 		global $wpdb;
@@ -472,7 +472,7 @@ class Course_List {
 		$ids       = array_map( 'intval', explode( ',', $bulk_ids ) );
 		$in_clause = QueryHelper::prepare_in_clause( $ids );
 
-		$update = $wpdb->query(
+		$wpdb->query(
 			$wpdb->prepare(
 				"UPDATE {$post_table} SET post_status = %s WHERE ID IN ($in_clause)", //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$status
@@ -485,9 +485,11 @@ class Course_List {
 	/**
 	 * Get course enrollment list with student info
 	 *
-	 * @param  int $course_id int | required.
-	 * @return array
 	 * @since 2.0.0
+	 *
+	 * @param  int $course_id int | required.
+	 *
+	 * @return array
 	 */
 	public static function course_enrollments_with_student_details( int $course_id ) {
 		global $wpdb;
@@ -529,11 +531,13 @@ class Course_List {
 	}
 
 	/**
-	 * Check wheather course is public or not
+	 * Check course is public or not
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param integer $course_id  course id to check with.
+	 *
 	 * @return boolean  true if public otherwise false.
-	 * @since 1.0.0
 	 */
 	public static function is_public( int $course_id ): bool {
 		$is_public = get_post_meta( $course_id, '_tutor_is_public_course', true );
