@@ -185,28 +185,18 @@ class Lesson extends Tutor_Base {
 	 */
 	public function ajax_lesson_details() {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+			$this->response_bad_request( tutor_utils()->error_message( 'nonce' ) );
 		}
 
 		$topic_id  = Input::post( 'topic_id', 0, Input::TYPE_INT );
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 
-		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
-			$this->json_response(
-				tutor_utils()->error_message(),
-				null,
-				HttpHelper::STATUS_FORBIDDEN
-			);
+		if ( ! $topic_id || ! $lesson_id ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
 		}
 
-		if ( 0 !== $lesson_id ) {
-			if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-				$this->json_response(
-					tutor_utils()->error_message(),
-					null,
-					HttpHelper::STATUS_FORBIDDEN
-				);
-			}
+		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) || ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 
 		$data = LessonModel::get_lesson_details( $lesson_id );
@@ -228,7 +218,7 @@ class Lesson extends Tutor_Base {
 	 */
 	public function ajax_save_lesson() {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+			$this->response_bad_request( tutor_utils()->error_message( 'nonce' ) );
 		}
 
 		/**
@@ -239,22 +229,14 @@ class Lesson extends Tutor_Base {
 		 */
 		add_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
 
-		$is_update = false;
-
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 		$topic_id  = Input::post( 'topic_id', 0, Input::TYPE_INT );
 
-		if ( $lesson_id ) {
-			$is_update = true;
+		if ( ! $topic_id || ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 
-		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
-			$this->json_response(
-				tutor_utils()->error_message(),
-				null,
-				HttpHelper::STATUS_FORBIDDEN
-			);
-		}
+		$is_update = $lesson_id > 0;
 
 		$title            = Input::post( 'title' );
 		$description      = Input::post( 'description', '', Input::TYPE_KSES_POST );
