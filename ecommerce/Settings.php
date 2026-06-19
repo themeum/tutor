@@ -241,6 +241,21 @@ class Settings {
 						),
 					),
 				),
+				array(
+					'label'      => __( 'PayPal Settings', 'tutor' ),
+					'desc'       => __( 'Advanced configuration options for PayPal.', 'tutor' ),
+					'slug'       => 'paypal_settings',
+					'block_type' => 'uniform',
+					'fields'     => array(
+						array(
+							'key'     => OptionKeys::PAYPAL_ENABLE_VAULTING,
+							'type'    => 'toggle_switch',
+							'label'   => __( 'Enable PayPal Vaulting (Save Payment Methods)', 'tutor' ),
+							'default' => 'on',
+							'desc'    => __( 'Allow PayPal to save customer payment methods for future purchases.', 'tutor' ),
+						),
+					),
+				),
 			),
 		);
 
