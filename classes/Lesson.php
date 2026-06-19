@@ -328,12 +328,8 @@ class Lesson extends Tutor_Base {
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 
-		if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-			$this->json_response(
-				tutor_utils()->error_message(),
-				null,
-				HttpHelper::STATUS_FORBIDDEN
-			);
+		if ( ! $lesson_id || ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 
 		$content   = __( 'Lesson', 'tutor' );
