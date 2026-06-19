@@ -2,6 +2,7 @@
 
 namespace Tutor\PaymentGateways\Configs;
 
+use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
 use Ollyo\PaymentHub\Core\Payment\BaseConfig;
 use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
@@ -129,7 +130,7 @@ class PaypalConfig extends BaseConfig implements ConfigContract {
 	public function createConfig(): void {
 		parent::createConfig();
 
-		$enable_vaulting = (bool) tutor_utils()->get_option( 'tutor_paypal_enable_vaulting', true );
+		$enable_vaulting = (bool) tutor_utils()->get_option( OptionKeys::PAYPAL_ENABLE_VAULTING, true );
 
 		$config = array(
 			'client_id'           => $this->getClientID(),
