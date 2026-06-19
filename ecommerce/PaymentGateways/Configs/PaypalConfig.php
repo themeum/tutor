@@ -129,12 +129,14 @@ class PaypalConfig extends BaseConfig implements ConfigContract {
 	public function createConfig(): void {
 		parent::createConfig();
 
+		$enable_vaulting = apply_filters( 'tutor_paypal_enable_vaulting', true );
+
 		$config = array(
 			'client_id'           => $this->getClientID(),
 			'merchant_email'      => $this->getMerchantEmail(),
 			'api_url'             => $this->getApiURL(),
 			'client_secret'       => $this->getClientSecret(),
-			'save_payment_method' => true,
+			'save_payment_method' => $enable_vaulting,
 			'webhook_id'          => $this->webhook_id
 		);
 
