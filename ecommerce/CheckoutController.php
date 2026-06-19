@@ -463,7 +463,7 @@ class CheckoutController {
 
 		$should_calculate_tax = Tax::should_calculate_tax();
 		$tax_included         = Tax::is_tax_included_in_price();
-		$tax_rate             = Tax::get_user_tax_rate();
+		$tax_rate             = $should_calculate_tax ? Tax::get_user_tax_rate() : '';
 
 		// Keep calculated price for each item.
 		foreach ( $items as $item ) {
