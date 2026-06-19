@@ -20,14 +20,25 @@ jobs:
           echo "VERSION_NUMBER=$version" >> $GITHUB_ENV
           echo "ZIP_PATH=tutor-${version}.zip" >> $GITHUB_ENV
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install Composer
+        run: sudo apt-get update && sudo apt-get install -y composer
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build project
-        run: composer install --no-dev --no-scripts && rspack --mode=production && gulp build
+        run: pnpm run build-dev
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
