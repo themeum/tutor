@@ -274,6 +274,11 @@ jQuery(document).ready(function($) {
 				return;
 			}
 
+			// If user is not enrolled like lesson preview.
+			if (!video_data.is_enrolled) {
+				return;
+			}
+
 			if (this.isRequiredPercentage()) {
 				this.enable_complete_lesson_btn(instance);
 			}
