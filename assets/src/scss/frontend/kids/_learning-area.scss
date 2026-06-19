@@ -73,6 +73,10 @@
     border-bottom-right-radius: $tutor-radius-md;
   }
 
+  .tutor-lesson-content .tutor-lesson-content-tab {
+    margin-bottom: $tutor-spacing-2;
+  }
+
   .tutor-quiz-submission[data-question-layout-view='single_question'],
   .tutor-quiz-submission[data-question-layout-view='question_pagination'] {
     .tutor-quiz-question {
