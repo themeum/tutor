@@ -18,7 +18,7 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { type Course } from '@TutorShared/services/course';
 import { type ExportableContent, useExportableContentQuery } from '@TutorShared/services/import-export';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type Collection } from '@TutorShared/utils/types';
+import { type Collection, type ImportExportContentResponseBase } from '@TutorShared/utils/types';
 
 import ExportInitialState from '@ImportExport/components/modals/import-export-states/ExportInitialState';
 import ImportExportCompletedState from '@ImportExport/components/modals/import-export-states/ImportExportCompletedState';
@@ -26,7 +26,6 @@ import ImportExportProgressState from '@ImportExport/components/modals/import-ex
 import {
   defaultExportFormData,
   type ExportFormData,
-  type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
 

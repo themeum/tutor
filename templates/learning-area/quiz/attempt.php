@@ -3,7 +3,7 @@
  * Tutor learning area quiz active template
  *
  * This template get loaded once user submit the quiz or
- * if there any active quiz
+ * if there is any active quiz
  *
  * @package Tutor\Templates
  * @subpackage LearningArea
@@ -11,6 +11,8 @@
  * @link https://themeum.com
  * @since 4.0.0
  */
+
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Quiz;
 use Tutor\Models\QuizModel;

@@ -12,7 +12,12 @@ import {
 } from '@TutorShared/services/import-export';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { type Collection, type TutorMutationResponse } from '@TutorShared/utils/types';
+import {
+  type Collection,
+  type ImportContentResponse,
+  type ImportExportContentResponseBase,
+  type TutorMutationResponse,
+} from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -165,31 +170,6 @@ export interface ExportContentPayload {
   job_id?: string | number; // need to send back the job id to get the status
 }
 
-interface ImportExportCompletedContentsItem {
-  label?: string; // Failed Label; will only be sent when progress is 100% and has failed item
-  success: string[];
-  failed: string[];
-}
-
-export interface ImportExportContentResponseBase {
-  message: string;
-  failed_message?: string; // Failed Message; will only be sent when progress is 100% and has failed item
-  job_id: string;
-  job_progress: number;
-  job_status: string;
-  job_requirements: {
-    type: string;
-    ids: string[];
-    sub_contents: string[];
-  }[];
-  completed_contents: {
-    courses: ImportExportCompletedContentsItem;
-    'course-bundle': ImportExportCompletedContentsItem;
-    content_bank: ImportExportCompletedContentsItem;
-    settings: boolean;
-  };
-}
-
 export interface ExportContentResponse extends ImportExportContentResponseBase {
   export_file: {
     url: string;
@@ -232,19 +212,6 @@ interface ImportContentPayload {
   data?: File;
   collection_id?: number; // for content bank import
   job_id?: string | number; // need to send back the job id to get the status
-}
-
-export interface ImportContentResponse extends ImportExportContentResponseBase {
-  imported_data: [];
-  errors?: {
-    topics?: string[];
-    lesson?: string[];
-    tutor_quiz?: string[];
-    tutor_assignments?: string[];
-    'cb-question'?: string[];
-    'cb-lesson'?: string[];
-    'cb-assignment'?: string[];
-  };
 }
 
 const importContents = async (payload: ImportContentPayload) => {

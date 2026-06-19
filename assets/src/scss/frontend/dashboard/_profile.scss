@@ -99,6 +99,10 @@
       @include tutor-typography(p2, regular, secondary);
       margin-bottom: $tutor-spacing-9;
 
+      p {
+        margin: 0;
+      }
+
       @include tutor-breakpoint-down(sm) {
         margin-bottom: $tutor-spacing-6;
       }

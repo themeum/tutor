@@ -455,7 +455,7 @@ class ConfirmationModal extends BaseComponent {
 								</p>
 							</div>
 
-							<div class="tutor-grid tutor-grid-cols-2 tutor-gap-6 tutor-px-7 tutor-pb-6">
+							<div class="tutor-grid tutor-grid-cols-2 tutor-gap-4 tutor-px-7 tutor-pb-6">
 								%s
 								%s
 							</div>

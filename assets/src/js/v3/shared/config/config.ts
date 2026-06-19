@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const defaultTutorConfig = {
   ID: 0,
   ajaxurl: '',
@@ -35,13 +36,13 @@ const defaultTutorConfig = {
   tutor_pn_vapid_key: '',
   tutor_pn_client_id: '',
   tutor_pn_subscription_saved: '',
-  difficulty_levels: [],
-  supported_video_sources: [],
-  edd_products: [],
-  bp_groups: [],
+  difficulty_levels: [] as any[],
+  supported_video_sources: [] as any[],
+  edd_products: [] as any[],
+  bp_groups: [] as any[],
   timezones: {},
-  addons_data: [],
-  kids_icons_registry: [],
+  addons_data: [] as any[],
+  kids_icons_registry: [] as string[],
   is_kids_mode: false,
   user_preferences: {
     auto_play_next: false,
@@ -68,7 +69,7 @@ const defaultTutorConfig = {
     },
     caps: {},
     cap_key: '',
-    roles: [],
+    roles: [] as string[],
     allcaps: {},
     filter: null,
   },
@@ -91,9 +92,12 @@ const defaultTutorConfig = {
     instructor_can_publish_course: 'off',
     youtube_api_key_exist: false,
     membership_only_mode: false,
-    enable_tax: false,
-    enable_individual_tax_control: false,
+    enable_tax: false as boolean | string,
+    enable_individual_tax_control: false as boolean | string,
     is_tax_included_in_price: false,
+    quiz_attempts_allowed: 10,
+    pagination_per_page: 10,
+    has_active_membership_plans: false,
   },
   tutor_currency: {
     symbol: '',
@@ -104,11 +108,12 @@ const defaultTutorConfig = {
     no_of_decimal: '',
   },
   visibility_control: {
-    course_builder: {},
+    course_builder: {} as Record<string, unknown>,
   },
 };
 
-export const tutorConfig = window._tutorobject || defaultTutorConfig;
+export const tutorConfig = (window._tutorobject ||
+  defaultTutorConfig) as unknown as typeof defaultTutorConfig as typeof defaultTutorConfig & Record<string, any>;
 window.ajaxurl = tutorConfig.ajaxurl;
 
 const config = {
