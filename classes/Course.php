@@ -10,9 +10,7 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
@@ -1286,6 +1284,8 @@ class Course extends Tutor_Base {
 	 * Get course contents
 	 *
 	 * @since 3.0.0
+	 *
+	 * @return void
 	 */
 	public function ajax_course_contents() {
 		tutor_utils()->check_nonce();
@@ -1805,7 +1805,9 @@ class Course extends Tutor_Base {
 	 * Restrict media
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $where where clause.
+	 *
 	 * @return string
 	 */
 	public function restrict_media( $where ) {
@@ -2352,6 +2354,7 @@ class Course extends Tutor_Base {
 	 * Delete course delete from frontend dashboard
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_delete_dashboard_course() {
@@ -2566,6 +2569,7 @@ class Course extends Tutor_Base {
 	 * @since 1.4.1
 	 *
 	 * @param array $args arguments.
+	 *
 	 * @return array
 	 */
 	public function add_course_level_to_settings( $args ) {
@@ -2607,6 +2611,7 @@ class Course extends Tutor_Base {
 	 * Add Course level to course settings
 	 *
 	 * @since 1.4.8
+	 *
 	 * @return void
 	 */
 	public function course_elements_enable_disable() {
@@ -2641,6 +2646,7 @@ class Course extends Tutor_Base {
 	 * @since 1.4.8
 	 *
 	 * @param string $html HTML string.
+	 *
 	 * @return string
 	 */
 	public function enable_disable_material_includes( $html ) {
@@ -2657,6 +2663,7 @@ class Course extends Tutor_Base {
 	 * @since 1.4.8
 	 *
 	 * @param string $html HTML string.
+	 *
 	 * @return string
 	 */
 	public function enable_disable_course_content( $html ) {
@@ -2673,6 +2680,7 @@ class Course extends Tutor_Base {
 	 * @since 1.4.8
 	 *
 	 * @param string $html HTML string.
+	 *
 	 * @return string
 	 */
 	public function enable_disable_course_benefits( $html ) {
@@ -2689,6 +2697,7 @@ class Course extends Tutor_Base {
 	 * @since 1.4.8
 	 *
 	 * @param string $html HTML string.
+	 *
 	 * @return string
 	 */
 	public function enable_disable_course_requirements( $html ) {
@@ -2705,6 +2714,7 @@ class Course extends Tutor_Base {
 	 * @since 1.4.8
 	 *
 	 * @param string $html HTML string.
+	 *
 	 * @return string
 	 */
 	public function enable_disable_course_target_audience( $html ) {
@@ -2768,6 +2778,7 @@ class Course extends Tutor_Base {
 	 * Filter product in shop page
 	 *
 	 * @since 1.4.9
+	 *
 	 * @return void|null
 	 */
 	public function filter_product_in_shop_page() {
@@ -2785,6 +2796,7 @@ class Course extends Tutor_Base {
 	 * Tutor product meta query
 	 *
 	 * @since 1.4.9
+	 *
 	 * @return array
 	 */
 	public function tutor_product_meta_query() {
@@ -2801,6 +2813,7 @@ class Course extends Tutor_Base {
 	 * @since 1.4.9
 	 *
 	 * @param \WP_Query $wp_query WP Query instance.
+	 *
 	 * @return \WP_Query
 	 */
 	public function filter_woocommerce_product_query( $wp_query ) {
@@ -2844,6 +2857,7 @@ class Course extends Tutor_Base {
 	 * @since 1.4.9
 	 *
 	 * @param \WP_Query $query WP Query instance.
+	 *
 	 * @return \WP_Query
 	 */
 	public function filter_edd_downloads_query( $query ) {
@@ -2857,6 +2871,7 @@ class Course extends Tutor_Base {
 	 * @since 1.4.9
 	 *
 	 * @param \WP_Query $wp_query WP Query instance.
+	 *
 	 * @return \WP_Query
 	 */
 	public function filter_archive_meta_query( $wp_query ) {
@@ -2872,6 +2887,7 @@ class Course extends Tutor_Base {
 	 * @since 1.5.8
 	 *
 	 * @param string $html HTML string.
+	 *
 	 * @return string
 	 */
 	public function remove_price_if_enrolled( $html ) {
@@ -2992,6 +3008,7 @@ class Course extends Tutor_Base {
 	 * @since 1.5.8
 	 *
 	 * @param string $html HTML string.
+	 *
 	 * @return string
 	 */
 	public function tutor_lms_hide_course_complete_btn( $html ) {
@@ -3015,6 +3032,7 @@ class Course extends Tutor_Base {
 	 * @since 1.5.8
 	 *
 	 * @param string $html HTML string.
+	 *
 	 * @return string
 	 */
 	public function get_generate_greadbook( $html ) {
@@ -3028,6 +3046,7 @@ class Course extends Tutor_Base {
 	 * Add social share content in header
 	 *
 	 * @since 1.6.3
+	 *
 	 * @return void
 	 */
 	public function social_share_content() {
@@ -3053,6 +3072,7 @@ class Course extends Tutor_Base {
 	 * @since 1.8.2
 	 *
 	 * @param integer $post_id post ID.
+	 *
 	 * @return void
 	 */
 	public function delete_associated_enrollment( $post_id ) {
@@ -3086,6 +3106,7 @@ class Course extends Tutor_Base {
 	 * Reset course progress.
 	 *
 	 * @since 1.5.8
+	 *
 	 * @return void
 	 */
 	public function tutor_reset_course_progress() {
@@ -3121,7 +3142,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @param integer $course_id course ID.
 	 * @param integer $user_id user ID.
-
+     *
 	 * @return void
 	 */
 	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
@@ -3368,6 +3389,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @param int $post_ID    The WordPress post ID of the course.
 	 * @param int $product_id The WooCommerce product ID to associate with the course.
+	 *
 	 * @return void
 	 */
 	public static function sync_course_with_wc_product( $post_ID, $product_id ) {
