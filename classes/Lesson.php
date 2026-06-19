@@ -584,12 +584,11 @@ class Lesson extends Tutor_Base {
 		if ( 'tutor_complete_lesson' !== Input::post( 'tutor_action' ) ) {
 			return;
 		}
-		// Checking nonce.
+
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
 
-		// TODO: need to show view if not signed_in.
 		if ( ! $user_id ) {
 			die( esc_html__( 'Please Sign-In', 'tutor' ) );
 		}
@@ -598,6 +597,12 @@ class Lesson extends Tutor_Base {
 
 		if ( ! $lesson_id ) {
 			return;
+		}
+
+		$course_id = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
+
+		if ( ! $course_id || ! tutor_utils()->is_enrolled( $course_id ) ) {
+			die( esc_html( tutor_utils()->error_message() ) );
 		}
 
 		$validated = apply_filters( 'tutor_validate_lesson_complete', true, $user_id, $lesson_id );
