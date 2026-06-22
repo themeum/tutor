@@ -12,6 +12,7 @@
 
   &-fill {
     --tutor-progress-width: 0%;
+    --tutor-progress-start: 0%;
     height: 100%;
     width: 100%;
     transform: translateX(calc(var(--tutor-progress-width) - 100%));
@@ -85,7 +86,7 @@
 
 @keyframes tutor-progress-fill-animate {
   from {
-    transform: translateX(-100%);
+    transform: translateX(calc(var(--tutor-progress-start, 0%) - 100%));
   }
   to {
     transform: translateX(calc(var(--tutor-progress-width) - 100%));
