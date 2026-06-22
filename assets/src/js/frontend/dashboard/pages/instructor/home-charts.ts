@@ -70,7 +70,7 @@ const CHART_CONFIG = {
     statCardHeight: '33px',
     width: '100%',
     overviewMaxHeight: 179,
-    completionMaxHeight: 60,
+    completionMaxHeight: 118,
   },
 
   aspectRatio: {
@@ -90,7 +90,7 @@ const CHART_CONFIG = {
   },
 
   bar: {
-    thickness: 54,
+    thickness: 118,
     borderRadius: 5,
     borderWidth: 3,
   },
