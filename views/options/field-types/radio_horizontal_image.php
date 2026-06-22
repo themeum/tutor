@@ -6,8 +6,10 @@
  * @subpackage Tutor\Settings
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.0.0
+ * @since 4.0.0
  */
+
+defined( 'ABSPATH' ) || exit;
 
 $field_key = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
 
