@@ -560,16 +560,17 @@ class Template extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $base_url Nav items base url.
+	 * @param string    $base_url            Nav items base url.
+	 * @param \stdClass $is_completed_course Whether course is completed.
 	 *
 	 * @return array
 	 */
-	public static function make_learning_area_sub_page_nav_items( $base_url = '' ): array {
+	public static function make_learning_area_sub_page_nav_items( $base_url = '', $is_completed_course = null ): array {
 		if ( empty( $base_url ) ) {
 			$base_url = get_permalink();
 		}
 
-		$menu_items = apply_filters( 'tutor_learning_area_sub_page_nav_item', array(), $base_url );
+		$menu_items = apply_filters( 'tutor_learning_area_sub_page_nav_item', array(), $base_url, $is_completed_course );
 
 		$menu_items['course-info'] = array(
 			'title'    => __( 'Course Info', 'tutor' ),
