@@ -631,18 +631,19 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
+		if ( ! $lesson_id ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
 
-		$ancestors = get_post_ancestors( $lesson_id );
-		$course_id = ! empty( $ancestors ) ? array_pop( $ancestors ) : $lesson_id;
+		$course_id = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
 
 		// Course must be public or current user must be enrolled to access this lesson.
-		if ( get_post_meta( $course_id, '_tutor_is_public_course', true ) !== 'yes' && ! EnrollmentModel::is_enrolled( $course_id ) ) {
+		if ( ! Course_List::is_public( $course_id ) && ! EnrollmentModel::is_enrolled( $course_id ) ) {
 
-			$is_admin = tutor_utils()->has_user_role( 'administrator' );
-			$allowed  = $is_admin ? true : tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
+			$allowed = User::is_admin() ? true : tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
 
 			if ( ! $allowed ) {
-				http_response_code( 400 );
+				$this->response_bad_request( tutor_utils()->error_message() );
 				exit;
 			}
 		}
