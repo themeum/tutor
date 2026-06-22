@@ -5,6 +5,8 @@
  * @package Tutor\Templates
  * @subpackage Dashboard\Enrolled_Courses
  * @author Themeum
+ *
+ * @since 4.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -50,7 +52,7 @@ if ( ! $course_learning_url ) {
 		<div class="tutor-progress-card-thumbnail">
 			<?php do_action( 'tutor_courses_card_before_thumbnail', $course_id ); ?>
 			<?php if ( ! empty( $tutor_course_img ) ) : ?>
-				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title_attribute(); ?>" />
+				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" />
 			<?php endif; ?>
 		</div>
 
