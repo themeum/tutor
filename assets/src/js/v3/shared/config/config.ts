@@ -112,8 +112,8 @@ const defaultTutorConfig = {
   },
 };
 
-export const tutorConfig = (window._tutorobject ||
-  defaultTutorConfig) as unknown as typeof defaultTutorConfig as typeof defaultTutorConfig & Record<string, any>;
+export const tutorConfig = (window._tutorobject || defaultTutorConfig) as typeof defaultTutorConfig &
+  Record<string, any>;
 window.ajaxurl = tutorConfig.ajaxurl;
 
 const config = {
