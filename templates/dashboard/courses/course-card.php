@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Models\CourseModel;
+use Tutor\Components\Progress;
 
 $course_permalink = get_the_permalink();
 $course_title     = get_the_title();
@@ -103,11 +104,12 @@ if ( ! $course_learning_url ) {
 					<?php endif; ?>
 					<?php if ( $course_progress['completed_percent'] >= 0 ) : ?>
 						<div class="tutor-progress-card-bar">
-							<div class="tutor-progress-bar" data-tutor-animated>
-								<div class="tutor-progress-bar-fill"
-									style="--tutor-progress-width: <?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;">
-								</div>
-							</div>
+							<?php
+								Progress::make()
+									->value( $course_progress['completed_percent'] )
+									->type( 'bar' )
+									->render();
+							?>
 						</div>
 					<?php endif; ?>
 				</div>
