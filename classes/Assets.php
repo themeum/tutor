@@ -571,7 +571,7 @@ class Assets {
 			'tutor_gray_color'          => '#CDCFD5',
 		);
 
-		$brand_color = tutor_utils()->get_option( 'brand_color', Options_V2::DEFAULT_BRAND_COLOR );
+		$brand_color = tutor_utils()->get_brand_color();
 
 		$color_string = '';
 		foreach ( $colors as $key => $property ) {
@@ -937,7 +937,7 @@ class Assets {
 		wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
 
 		// Generate color palette from user selected brand color and add to the root.
-		$brand_color = tutor_utils()->get_option( 'brand_color' );
+		$brand_color = tutor_utils()->get_brand_color();
 		if ( Options_V2::DEFAULT_BRAND_COLOR !== $brand_color ) {
 			wp_add_inline_style( 'tutor-core', $this->load_core_color_palette( $brand_color ) );
 		}
