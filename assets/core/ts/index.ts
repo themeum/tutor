@@ -19,6 +19,8 @@ import { tabsMeta } from '@Core/ts/components/tabs';
 import { toastMeta } from '@Core/ts/components/toast';
 import { tooltipMeta } from '@Core/ts/components/tooltip';
 import { wpEditorMeta } from '@Core/ts/components/wp-editor';
+import { tutorConfig } from '@Core/ts/config/config';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { registerLegacyFunctions } from '@Core/ts/legacy';
 import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
@@ -26,9 +28,18 @@ import { preferenceServiceMeta } from '@Core/ts/services/Preference';
 import { queryServiceMeta } from '@Core/ts/services/Query';
 import { toastServiceMeta } from '@Core/ts/services/toast/Toast';
 import { wpMediaServiceMeta } from '@Core/ts/services/WPMedia';
+import { wpGet, wpPost, wpPostForm } from '@Core/ts/utils/api';
 import { getRequiredComponents } from '@Core/ts/utils/component-discovery';
+import { createPriceFormatter, formatPrice } from '@Core/ts/utils/currency';
+import { decodeHtmlEntities } from '@Core/ts/utils/decode-html-entities';
+import endpoints from '@Core/ts/utils/endpoints';
+import { convertToErrorMessage } from '@Core/ts/utils/error';
+import { formatBytes } from '@Core/ts/utils/format';
 import { getNonceData } from '@Core/ts/utils/nonce';
+import { parseNumberOnly } from '@Core/ts/utils/number';
 import { escapeAttr, escapeHtml } from '@Core/ts/utils/security';
+import { makeFirstCharacterUpperCase } from '@Core/ts/utils/string';
+import { isMobileDevice, isRTL } from '@Core/ts/utils/util';
 
 Alpine.plugin(focus);
 Alpine.plugin(collapse);
@@ -113,6 +124,39 @@ const initializePlugin = async () => {
     nonce: {
       getNonceData,
     },
+    api: {
+      wpPost,
+      wpPostForm,
+      wpGet,
+    },
+    error: {
+      convertToErrorMessage,
+    },
+    string: {
+      decodeHtmlEntities,
+      makeFirstCharacterUpperCase,
+    },
+    device: {
+      isMobileDevice,
+      isRTL,
+    },
+    number: {
+      parseNumberOnly,
+    },
+    format: {
+      formatBytes,
+    },
+    currency: {
+      createPriceFormatter,
+      formatPrice,
+    },
+    constants: {
+      TUTOR_CUSTOM_EVENTS,
+    },
+    config: {
+      tutorConfig: tutorConfig,
+    },
+    endpoints: endpoints,
   });
 
   // Register legacy functions for backward compatibility

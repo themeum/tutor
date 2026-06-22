@@ -1,11 +1,7 @@
 import type { Sortable } from '@dnd-kit/dom/sortable';
 import { __ } from '@wordpress/i18n';
 
-import { wpPost } from '@Core/ts/utils/api';
-
-import endpoints from '@TutorShared/utils/endpoints';
-
-import type { AjaxResponse } from '@FrontendTypes/index';
+import { type AjaxResponse } from '@Core/ts/types';
 
 const loadDndKit = async () => {
   const [dom, modifiers, sortable] = await Promise.all([
@@ -24,7 +20,8 @@ const loadDndKit = async () => {
 };
 
 export const sortSections = (sectionsIds: string[]) => {
-  const toast = window.TutorCore.toast;
+  const { toast, endpoints } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
 
   return {
     _sortables: [] as Sortable[],
