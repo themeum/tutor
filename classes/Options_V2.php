@@ -1290,15 +1290,15 @@ class Options_V2 {
 								'options' => array(
 									self::DEFAULT_THEME_LIGHT      => array(
 										'title' => __( 'Light', 'tutor' ),
-										'image' => 'default-theme/light.png',
+										'image' => 'default-theme/light.webp',
 									),
 									self::DEFAULT_THEME_DARK       => array(
 										'title' => __( 'Dark', 'tutor' ),
-										'image' => 'default-theme/dark.png',
+										'image' => 'default-theme/dark.webp',
 									),
 									self::DEFAULT_THEME_SYSTEM     => array(
 										'title' => __( 'Auto', 'tutor' ),
-										'image' => 'default-theme/auto.png',
+										'image' => 'default-theme/auto.webp',
 									),
 								),
 							),
