@@ -1,11 +1,8 @@
 // Learning Area Entry Point
 // Initializes learning area functionality based on current page
 
-import { tutorConfig } from '@TutorShared/config/config';
-
 import { initializeReviews } from '@FrontendComponents/reviews';
 import { initializeCommon } from '@FrontendServices/common';
-
 import { initializeCommon as initializeLearningAreaCommon } from './common';
 import { initializeLesson } from './lesson';
 import { initializeCourseCourseInfo } from './pages/course-info';
@@ -22,6 +19,7 @@ const initializeLearningArea = () => {
 
   // Normalize path segments
   const pathSegments = pathname.split('/').filter(Boolean);
+  const { tutorConfig } = window.TutorCore.config;
   const { lesson_slug = 'lessons', quiz_slug = 'quizzes' } = tutorConfig || {};
 
   let currentPage = null;

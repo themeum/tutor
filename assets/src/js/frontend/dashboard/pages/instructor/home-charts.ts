@@ -1,7 +1,5 @@
 import type { Chart, ChartConfiguration, ChartItem, ScriptableContext, TooltipModel } from 'chart.js/auto';
 
-import { createPriceFormatter, formatPrice } from '@TutorShared/utils/currency';
-
 export interface OverviewChartProps {
   earnings: number[];
   enrolled: number[];
@@ -547,6 +545,7 @@ export const statCard = (data: number[]) => ({
 
   createChartConfig(data: number[], colors: StatCardColors): ChartConfiguration<'line'> {
     const dataLength = data.length;
+    const { formatPrice } = window.TutorCore.currency;
 
     return {
       type: 'line',
@@ -854,7 +853,7 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
 });
 
 const formatPriceByMonetization = (data: MonetizationData, value: number): string =>
-  createPriceFormatter({
+  window.TutorCore.currency.createPriceFormatter({
     symbol: data?.symbol ?? '$',
     position: data?.position ?? 'left',
     thousandSeparator: data?.thousand_separator ?? ',',

@@ -1,11 +1,7 @@
 import { __ } from '@wordpress/i18n';
 
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-
-import endpoints from '@TutorShared/utils/endpoints';
-import { type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type AjaxResponse } from '@Core/ts/types';
 
 interface CreateQnaPayload {
   course_id: number;
@@ -54,10 +50,9 @@ const URL_PARAMS = {
  * Handles Q&A related action in learning area
  */
 const qnaPage = () => {
-  const query = window.TutorCore.query;
-  const form = window.TutorCore.form;
-  const modal = window.TutorCore.modal;
-  const toast = window.TutorCore.toast;
+  const { query, form, modal, toast, endpoints } = window.TutorCore;
+  const { convertToErrorMessage } = window.TutorCore.error;
+  const { wpPost } = window.TutorCore.api;
 
   return {
     query,
@@ -188,7 +183,7 @@ const qnaPage = () => {
 
       this.loadingReplies = true;
       try {
-        const response = await wpPost<TutorMutationResponse<{ html: string }>>(endpoints.LOAD_QNA_REPLIES, {
+        const response = await wpPost<AjaxResponse<{ html: string }>>(endpoints.LOAD_QNA_REPLIES, {
           comment_id: commentId,
           order: this.repliesOrder,
           context: 'learning-area',

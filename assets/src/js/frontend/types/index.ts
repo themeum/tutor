@@ -16,10 +16,3 @@ export function isYouTubePlyr(instance: Plyr): instance is PlyrYouTubeInstance {
 export function isVimeoPlyr(instance: Plyr): instance is PlyrVimeoInstance {
   return instance.provider === 'vimeo';
 }
-
-export interface AjaxResponse<T = unknown> {
-  status_code: number;
-  success: boolean;
-  message: string;
-  data?: T;
-}
