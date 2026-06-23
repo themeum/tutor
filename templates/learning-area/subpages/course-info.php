@@ -228,7 +228,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 					<div class="tutor-medium tutor-font-medium">
 						<?php esc_html_e( 'About this Course', 'tutor' ); ?>
 					</div>
-					<div class="tutor-p3 tutor">
+					<div class="tutor-p3">
 						<?php the_content(); ?>
 					</div>
 				</div>
