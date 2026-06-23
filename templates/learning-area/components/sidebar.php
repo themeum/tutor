@@ -86,31 +86,34 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 					<?php
 					if ( $course_reset_progress && ! $tutor_is_course_completed ) {
 						Button::make()
-						->label( __( 'Reset Progress', 'tutor' ) )
-						->variant( Variant::GHOST )
-						->size( Size::X_SMALL )
-						->icon( Icon::RELOAD_2, 'left', 16, Color::SECONDARY )
-						->icon_only()
-						->attr( '@click', 'confirmReset()' )
-						->render();
+							->label( __( 'Reset Progress', 'tutor' ) )
+							->variant( Variant::GHOST )
+							->size( Size::X_SMALL )
+							->icon( Icon::RELOAD_2, 'left', 16, Color::SECONDARY )
+							->icon_only()
+							->attr( '@click', 'confirmReset()' )
+							->render();
 
 						ConfirmationModal::make()
-						->id( $reset_modal_id )
-						->title( __( 'Reset Course Progress?', 'tutor' ) )
-						->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
-						->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
-						->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
-						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reset-course.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
-						->confirm_handler( 'resetProgress()' )
-						->mutation_state( 'resetProgressMutation' )
-						->render();
+							->id( $reset_modal_id )
+							->title( __( 'Reset Course Progress?', 'tutor' ) )
+							->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
+							->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
+							->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
+							->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reset-course.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
+							->confirm_handler( 'resetProgress()' )
+							->mutation_state( 'resetProgressMutation' )
+							->render();
 					}
 					?>
 				</div>
 			</div>
-			<div class="tutor-progress-bar" data-tutor-animated="">
-				<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $tutor_course_progress ); ?>%;"></div>
-			</div>
+			<?php
+				Progress::make()
+					->value( $tutor_course_progress )
+					->type( 'bar' )
+					->render();
+			?>
 		</div>
 		<div class="tutor-learning-nav" role="navigation">
 			<?php
