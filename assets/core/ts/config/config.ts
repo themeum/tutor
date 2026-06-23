@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const defaultTutorConfig = {
   ID: 0,
   ajaxurl: '',
@@ -35,13 +36,13 @@ const defaultTutorConfig = {
   tutor_pn_vapid_key: '',
   tutor_pn_client_id: '',
   tutor_pn_subscription_saved: '',
-  difficulty_levels: [],
-  supported_video_sources: [],
-  edd_products: [],
-  bp_groups: [],
-  timezones: {},
-  addons_data: [],
-  kids_icons_registry: [],
+  difficulty_levels: [] as any[],
+  supported_video_sources: [] as any[],
+  edd_products: [] as any[],
+  bp_groups: [] as any[],
+  timezones: {} as Record<string, any>,
+  addons_data: [] as any[],
+  kids_icons_registry: [] as any[],
   is_kids_mode: false,
   user_preferences: {
     auto_play_next: false,
@@ -66,10 +67,10 @@ const defaultTutorConfig = {
       user_status: '',
       display_name: '',
     },
-    caps: {},
+    caps: {} as Record<string, any>,
     cap_key: '',
-    roles: [],
-    allcaps: {},
+    roles: [] as any[],
+    allcaps: {} as Record<string, any>,
     filter: null,
   },
   settings: {
@@ -108,7 +109,8 @@ const defaultTutorConfig = {
   },
 };
 
-export const tutorConfig = window._tutorobject || defaultTutorConfig;
+export const tutorConfig = (window._tutorobject || defaultTutorConfig) as typeof defaultTutorConfig &
+  Record<string, any>;
 window.ajaxurl = tutorConfig.ajaxurl;
 
 const config = {
