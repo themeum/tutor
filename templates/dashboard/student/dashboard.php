@@ -11,11 +11,18 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Icon;
 use TUTOR\Course;
+use TUTOR\User;
 use Tutor\Models\CourseModel;
+use TUTOR\Instructors_List;
+use Tutor\Components\Alert;
 
-$user_id   = get_current_user_id();
-$user_data = get_userdata( $user_id );
+$user_id               = get_current_user_id();
+$user_data             = get_userdata( $user_id );
+$instructor_status     = tutor_utils()->instructor_status( 0, false );
+$instructor_status     = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
+$is_instructor_pending = Instructors_List::STATUS_PENDING === $instructor_status;
 
 $enrolled_course       = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
 $enrolled_course_count = $enrolled_course ? $enrolled_course->post_count : 0;
@@ -23,8 +30,20 @@ $enrolled_course_count = $enrolled_course ? $enrolled_course->post_count : 0;
 do_action( 'tutor_before_dashboard_content' );
 tutor_load_template( 'dashboard.components.profile-completion' );
 
+
+Alert::make()
+	->variant( Alert::WARNING )
+	->icon( Icon::WARNING_LINE )
+	->text( __( 'Thank you for applying to become an instructor. Our team is reviewing your application.', 'tutor' ) )
+	->attr( 'class', 'tutor-mb-8' )
+	->render();
+
 if ( 0 === $enrolled_course_count ) {
-	tutor_load_template( 'dashboard.student.dashboard-empty' );
+	if ( $is_instructor_pending ) {
+		tutor_load_template( 'dashboard.instructor.dashboard-empty' );
+	} else {
+		tutor_load_template( 'dashboard.student.dashboard-empty' );
+	}
 	return;
 }
 
