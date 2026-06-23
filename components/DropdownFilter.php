@@ -473,7 +473,7 @@ class DropdownFilter extends BaseComponent {
 				if ( null === $icon_size ) {
 					$icon_size = in_array( $this->variant, array( Variant::PRIMARY, Variant::PRIMARY_SOFT ), true ) ? 16 : 20;
 				}
-				SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( $icon_size )->color( Color::BRAND )->render();
+				SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( $icon_size )->color( Variant::PRIMARY_SOFT === $this->variant ? Color::BRAND : Color::SECONDARY )->render();
 				?>
 			</button>
 
