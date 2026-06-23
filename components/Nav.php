@@ -218,6 +218,25 @@ class Nav extends BaseComponent {
 	}
 
 	/**
+	 * Check if any dropdown option is active.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $options Array of dropdown options.
+	 *
+	 * @return bool True when any option is active.
+	 */
+	protected function has_active_dropdown_option( array $options ): bool {
+		foreach ( $options as $option ) {
+			if ( ! empty( $option['active'] ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Render dropdown nav if it is selected.
 	 *
 	 * @since 4.0.0
@@ -233,16 +252,17 @@ class Nav extends BaseComponent {
 			return '';
 		}
 
-		$options       = $item['options'] ?? array();
-		$active_label  = $this->get_active_dropdown_label( $options );
-		$icon_size     = $this->get_icon_size( $this->nav_size );
-		$active_item   = isset( $item['active'] ) && $item['active'] ? 'active' : '';
-		$active_icon   = $this->get_active_dropdown_icon( $options );
-		$icon          = $active_icon ? SvgIcon::make()->name( $active_icon )->size( $icon_size )->get() : '';
-		$dropdown_icon = SvgIcon::make()
+		$options            = $item['options'] ?? array();
+		$active_label       = $this->get_active_dropdown_label( $options );
+		$icon_size          = $this->get_icon_size( $this->nav_size );
+		$active_item        = isset( $item['active'] ) && $item['active'] ? 'active' : '';
+		$is_dropdown_active = ! empty( $item['active'] ) || $this->has_active_dropdown_option( $options );
+		$active_icon        = $this->get_active_dropdown_icon( $options );
+		$icon               = $active_icon ? SvgIcon::make()->name( $active_icon )->size( $icon_size )->get() : '';
+		$dropdown_icon      = SvgIcon::make()
 			->name( Icon::CHEVRON_DOWN_2 )
 			->size( $icon_size )
-			->color( Color::SUBDUED )
+			->color( $is_dropdown_active ? Color::BRAND : Color::SUBDUED )
 			->get();
 
 		$dropdown_options = '';

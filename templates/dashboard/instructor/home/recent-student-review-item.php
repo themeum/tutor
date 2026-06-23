@@ -20,7 +20,7 @@ use Tutor\Components\Constants\Size;
 	<div class="tutor-flex tutor-gap-4 tutor-items-start">
 		<!-- Avatar -->
 		<div class="tutor-dashboard-home-review-avatar">
-			<?php Avatar::make()->src( $review['user']['avatar'] )->initials( $review['user']['name'] )->size( Size::SIZE_48 )->render(); ?>
+			<?php Avatar::make()->src( $review['user']['avatar'] )->size( Size::SIZE_48 )->render(); ?>
 		</div>
 
 		<!-- Review Content -->
