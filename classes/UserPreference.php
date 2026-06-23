@@ -171,7 +171,7 @@ class UserPreference {
 	 *
 	 * @var string
 	 */
-	const DEFAULT_THEME = self::THEME_LIGHT;
+	const DEFAULT_THEME = self::THEME_SYSTEM;
 
 	/**
 	 * Available theme options.
@@ -554,7 +554,7 @@ class UserPreference {
 			'tutor_user_preference_defaults',
 			array(
 				'auto_play_next' => (bool) tutor_utils()->get_option( 'autoload_next_course_content' ),
-				'theme'          => self::DEFAULT_THEME,
+				'theme'          => tutor_utils()->get_option( 'default_theme', Options_V2::DEFAULT_THEME_SYSTEM ),
 				'vision'         => self::VISION_NORMAL,
 				'contrast'       => '',
 				'motion_effects' => self::MOTION_EFFECTS_AUTO,
