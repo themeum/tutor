@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -393,22 +393,30 @@ const QuizModal = ({
               triggerRef={cancelRef}
               closePopover={() => setIsConfirmationOpen(false)}
               maxWidth="258px"
-              title={__('Your quiz has unsaved changes. If you cancel, you will lose your progress.', 'tutor')}
-              message={__('Are you sure you want to continue?', 'tutor')}
+              title={
+                <div css={styles.confirmationPopoverTitle}>
+                  <SVGIcon name="warning" width={20} height={20} />
+                  <span>{__('Discard changes?', 'tutor')}</span>
+                </div>
+              }
+              message={''}
               animationType={AnimationType.slideUp}
               placement={
                 CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER
               }
               positionModifier={{ top: -55, left: quizId ? 34 : 2 }}
               confirmButton={{
-                text: __('Yes', 'tutor'),
+                text: __('Keep Editing', 'tutor'),
                 variant: 'primary',
               }}
               cancelButton={{
-                text: __('No', 'tutor'),
+                text: __('Discard', 'tutor'),
                 variant: 'text',
               }}
               onConfirmation={() => {
+                setIsConfirmationOpen(false);
+              }}
+              onCancel={() => {
                 form.reset();
                 setValidationError(null);
 
@@ -420,6 +428,7 @@ const QuizModal = ({
                 if (!quizId) {
                   closeModal();
                 }
+                setIsConfirmationOpen(false);
               }}
             />
           </ModalWrapper>
@@ -452,6 +461,16 @@ const styles = {
       button {
         min-width: auto;
       }
+    }
+  `,
+  confirmationPopoverTitle: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[8]};
+    margin-bottom: ${spacing[8]};
+
+    svg {
+      color: ${colorTokens.icon.default};
     }
   `,
   left: css`

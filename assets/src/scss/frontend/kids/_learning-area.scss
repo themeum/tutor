@@ -73,12 +73,20 @@
     border-bottom-right-radius: $tutor-radius-md;
   }
 
+  .tutor-lesson-content .tutor-lesson-content-tab {
+    margin-bottom: $tutor-spacing-2;
+  }
+
   .tutor-quiz-submission[data-question-layout-view='single_question'],
   .tutor-quiz-submission[data-question-layout-view='question_pagination'] {
     .tutor-quiz-question {
       width: calc(100% - 2px);
       margin: 1px 1px 0 1px;
     }
+  }
+
+  .tutor-learning-area-resources .tutor-resources-wrapper {
+    gap: $tutor-spacing-5;
   }
 
   .tutor-quiz-summary-page .tutor-quiz-review-dnd-rows {
@@ -238,8 +246,7 @@
     .tutor-meeting,
     .tutor-quiz-intro,
     .tutor-lesson-content .tutor-lesson-content-tab,
-    .tutor-quiz-summary .tutor-quiz-result,
-    .tutor-learning-area-resources .tutor-resources-wrapper {
+    .tutor-quiz-summary .tutor-quiz-result {
       box-shadow: none;
     }
 

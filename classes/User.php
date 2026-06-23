@@ -767,7 +767,7 @@ class User {
 	 *
 	 * @return boolean
 	 */
-	public static function can_switch_mode( int $user_id = 0 ) : bool {
+	public static function can_switch_mode( int $user_id = 0 ): bool {
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
 		return self::is_instructor( $user_id ) || self::is_admin( $user_id );
