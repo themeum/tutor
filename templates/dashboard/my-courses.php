@@ -22,8 +22,14 @@ use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use TUTOR\Dashboard;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use TUTOR\User;
+
+if ( ! User::is_instructor_view() ) {
+	tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( Dashboard::COURSES_PAGE_SLUG ) );
+}
 
 // Get the user ID and active tab.
 $current_user_id                     = get_current_user_id();
