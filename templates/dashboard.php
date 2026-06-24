@@ -110,7 +110,7 @@ $footer_links = array(
 		<div class="tutor-dashboard-body" role="main">
 			<div class="tutor-dashboard-page">
 				<?php
-				if ( User::registered_as_instructor() && User::has_pending_instructor_application() && $dashboard_page_slug ) {
+				if ( User::used_instructor_registration() && User::has_pending_instructor_application() && $dashboard_page_slug ) {
 					tutor_load_template( 'dashboard.instructor.instructor-request-alert' );
 
 					EmptyState::make()

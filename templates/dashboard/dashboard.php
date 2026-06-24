@@ -25,7 +25,7 @@ $instructor_status               = tutor_utils()->instructor_status( 0, false );
 $instructor_status               = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
 $is_instructor_pending           = Instructors_List::STATUS_PENDING === $instructor_status;
 $is_instructor_approved          = Instructors_List::STATUS_APPROVED === $instructor_status;
-$registered_as_instructor = User::registered_as_instructor( $user_id );
+$used_instructor_registration = User::used_instructor_registration( $user_id );
 
 do_action( 'tutor_before_dashboard_content' );
 tutor_load_template( 'dashboard.components.profile-completion' );
@@ -37,7 +37,7 @@ if ( $is_instructor_pending ) {
 	return;
 }
 
-if ( $is_instructor_approved && $registered_as_instructor ) {
+if ( $is_instructor_approved && $used_instructor_registration ) {
 	$hide_notice_url = add_query_arg( 'tutor_action', 'hide_instructor_approval_notice' );
 
 	if ( get_user_meta( $user_id, User::INSTRUCTOR_APPROVAL_NOTICE_META, true ) ) {

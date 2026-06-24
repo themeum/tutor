@@ -240,7 +240,7 @@ class User {
 	 *
 	 * @return boolean
 	 */
-	public static function registered_as_instructor( $user_id = 0 ): bool {
+	public static function used_instructor_registration( $user_id = 0 ): bool {
 		return self::SOURCE_INSTRUCTOR_REGISTRATION === self::get_application_source( $user_id );
 	}
 
@@ -260,7 +260,7 @@ class User {
 			return true;
 		}
 
-		if ( ! self::registered_as_instructor( $user_id ) ) {
+		if ( ! self::used_instructor_registration( $user_id ) ) {
 			return false;
 		}
 
@@ -810,7 +810,7 @@ class User {
 			return $current_mode;
 		}
 
-		if ( self::registered_as_instructor( $user_id ) ) {
+		if ( self::used_instructor_registration( $user_id ) ) {
 			$instructor_status = tutor_utils()->instructor_status( $user_id, false );
 			if ( in_array( $instructor_status, array( 'pending', 'approved' ), true ) ) {
 				return self::VIEW_AS_INSTRUCTOR;
