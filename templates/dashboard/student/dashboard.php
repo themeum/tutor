@@ -31,12 +31,9 @@ do_action( 'tutor_before_dashboard_content' );
 tutor_load_template( 'dashboard.components.profile-completion' );
 
 
-Alert::make()
-	->variant( Alert::WARNING )
-	->icon( Icon::WARNING_LINE )
-	->text( __( 'Thank you for applying to become an instructor. Our team is reviewing your application.', 'tutor' ) )
-	->attr( 'class', 'tutor-mb-8' )
-	->render();
+if ( $is_instructor_pending ) {
+	tutor_load_template( 'dashboard.instructor.instructor-request-alert' );
+}
 
 if ( 0 === $enrolled_course_count ) {
 	if ( $is_instructor_pending ) {
