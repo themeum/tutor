@@ -45,14 +45,14 @@ export const initializeCommon = () => {
   const createCourseButton = document.querySelector('.tutor-create-new-course');
   createCourseButton?.addEventListener('click', async (e) => {
     e.preventDefault();
-    createCourseButton.classList.add('tutor-loading');
+    createCourseButton.classList.add(...['tutor-loading', 'tutor-btn-loading']);
     createCourseButton.setAttribute('disabled', 'true');
     const target = e.target as HTMLElement;
     target.innerHTML = 'Creating...';
     try {
       await handler.handleCreateCourse();
     } finally {
-      createCourseButton.classList.remove('tutor-loading');
+      createCourseButton.classList.remove(...['tutor-loading', 'tutor-btn-loading']);
       createCourseButton.removeAttribute('disabled');
     }
   });
