@@ -10,7 +10,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Alert;
+use Tutor\Components\EmptyState;
 use TUTOR\Dashboard;
+use TUTOR\Icon;
 use TUTOR\User;
 
 global $wp_query;
@@ -107,7 +110,14 @@ $footer_links = array(
 		<div class="tutor-dashboard-body" role="main">
 			<div class="tutor-dashboard-page">
 				<?php
-				if ( $dashboard_page_name ) {
+				if ( User::is_instructor_registration_user() && User::has_pending_instructor_application() && $dashboard_page_slug ) {
+					tutor_load_template( 'dashboard.instructor.instructor-request-alert' );
+
+					EmptyState::make()
+						->title( __( 'Your application is under review', 'tutor' ) )
+						->subtitle( __( 'Only your dashboard home is available while your instructor application is pending.', 'tutor' ) )
+						->render();
+				} elseif ( $dashboard_page_name ) {
 					do_action( 'tutor_load_dashboard_template_before', $dashboard_page_name );
 
 					/**
