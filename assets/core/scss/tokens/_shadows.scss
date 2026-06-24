@@ -15,7 +15,7 @@ $tutor-shadow-3xl: 0px 32px 64px -12px #10182824;
 // Ring Shadows
 // ==========================================================================
 
-$tutor-ring-brand-shadow-xs: 0px 0px 0px 2px #90A0F7;
+$tutor-ring-brand-shadow-xs: 0px 0px 0px 2px var(--tutor-text-brand);
 $tutor-ring-brand-shadow-sm: 0px 0px 0px 4px #3E64DE3D, 0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A;
 $tutor-ring-gray-shadow-md: 0px 0px 0px 4px #98A2B324, 0px 1px 2px 0px #1018280D;
 $tutor-ring-gray-shadow-sm: 0px 0px 0px 2px #98A2B324, 0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A;

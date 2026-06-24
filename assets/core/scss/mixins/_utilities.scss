@@ -62,7 +62,7 @@
 
   @if $color == 'brand' {
     $shadow: $tutor-ring-brand-shadow-xs;
-    $outline-color: #90a0f7;
+    $outline-color: $tutor-text-brand;
   }
 
   @if $color == 'error' {
@@ -80,7 +80,7 @@
 }
 
 @mixin tutor-transition($properties: all, $duration: 0.25s, $timing: ease-in-out, $delay: 0s) {
-  @if $properties == all {
+  @if $properties ==all {
     transition: all $duration $timing $delay;
   } @else {
     $transitions: ();
