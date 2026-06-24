@@ -2826,6 +2826,10 @@ class Utils {
 	public function tutor_dashboard_nav_ui_items() {
 		$nav_items = $this->tutor_dashboard_pages();
 
+		if ( ! tutor_utils()->count( $nav_items ) ) {
+			return $nav_items;
+		}
+
 		foreach ( $nav_items as $key => $nav_item ) {
 			if ( is_array( $nav_item ) ) {
 
@@ -2833,12 +2837,13 @@ class Utils {
 					unset( $nav_items[ $key ] );
 				}
 
-				if (
-					isset( $nav_item['auth_cap'] )
-					&& ! User::is_admin()
-					&& ! current_user_can( $nav_item['auth_cap'] )
-					&& ! ( tutor()->instructor_role === $nav_item['auth_cap'] && User::can_view_instructor_dashboard() )
-				) {
+				if ( ! isset( $nav_item['auth_cap'] ) ) {
+					continue;
+				}
+
+				$can_access_instructor_item = tutor()->instructor_role === $nav_item['auth_cap'] && User::can_view_instructor_dashboard();
+
+				if ( ! User::is_admin() && ! current_user_can( $nav_item['auth_cap'] ) && ! $can_access_instructor_item ) {
 					unset( $nav_items[ $key ] );
 				}
 			}

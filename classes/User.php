@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\UserModel;
 use Tutor\Traits\JsonResponse;
-use TUTOR\Instructors_List;
+use TUTOR\InstructorList;
 
 /**
  * User class
@@ -46,8 +46,6 @@ class User {
 
 	const SOURCE_INSTRUCTOR_REGISTRATION = 'instructor_registration';
 	const SOURCE_STUDENT_DASHBOARD       = 'student_dashboard';
-	const SOURCE_REST_APPLY              = 'rest_apply';
-	const SOURCE_ADMIN_ADD               = 'admin_add';
 
 	/**
 	 * View as constants
@@ -247,36 +245,6 @@ class User {
 	}
 
 	/**
-	 * Check if user should have both learner and instructor dashboard modes.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int $user_id user id.
-	 *
-	 * @return boolean
-	 */
-	public static function has_dual_dashboard_roles( $user_id = 0 ): bool {
-		$user_id = tutor_utils()->get_user_id( $user_id );
-
-		if ( ! self::is_instructor( $user_id ) ) {
-			return false;
-		}
-
-		if ( self::is_student( $user_id ) ) {
-			return true;
-		}
-
-		return in_array(
-			self::get_application_source( $user_id ),
-			array(
-				self::SOURCE_STUDENT_DASHBOARD,
-				self::SOURCE_REST_APPLY,
-			),
-			true
-		);
-	}
-
-	/**
 	 * Check if a user can view instructor dashboard screens.
 	 *
 	 * @since 4.0.0
@@ -298,7 +266,7 @@ class User {
 
 		return in_array(
 			tutor_utils()->instructor_status( $user_id, false ),
-			array( InstructorList::STATUS_PENDING, InstructorList::STATUS_APPROVED ),
+			array( Instructors_List::STATUS_PENDING, Instructors_List::STATUS_APPROVED ),
 			true
 		);
 	}
@@ -884,8 +852,26 @@ class User {
 	 * @return boolean
 	 */
 	public static function can_switch_mode( int $user_id = 0 ): bool {
-		$user_id = tutor_utils()->get_user_id( $user_id );
+		if ( self::is_admin( $user_id ) ) {
+			return true;
+		}
 
-		return self::is_admin( $user_id ) || self::has_dual_dashboard_roles( $user_id );
+		$can_access_both_dashboards = false;
+
+		if ( ! self::is_instructor( $user_id ) ) {
+			$can_access_both_dashboards = false;
+		}
+
+		if ( self::is_student( $user_id ) || self::is_instructor( $user_id ) ) {
+			$can_access_both_dashboards = true;
+		}
+
+		$can_access_both_dashboards = in_array(
+			self::get_application_source( $user_id ),
+			array( self::SOURCE_STUDENT_DASHBOARD ),
+			true
+		);
+
+		return $can_access_both_dashboards;
 	}
 }

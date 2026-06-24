@@ -320,7 +320,6 @@ class Instructor {
 			update_user_meta( $user_id, '_tutor_profile_job_title', $tutor_profile_job_title );
 			update_user_meta( $user_id, '_is_tutor_instructor', tutor_time() );
 			update_user_meta( $user_id, '_tutor_instructor_status', apply_filters( 'tutor_initial_instructor_status', 'approved' ) );
-			update_user_meta( $user_id, User::APPLICATION_SOURCE_META, User::SOURCE_ADMIN_ADD );
 
 			do_action( 'tutor_add_new_instructor_after', $user_id );
 
