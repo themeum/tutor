@@ -843,35 +843,31 @@ class User {
 	}
 
 	/**
-	 * Check if the user can switch mode
+	 * Check if the user can switch between learner and instructor dashboard modes.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param integer $user_id User id.
+	 * @param int $user_id User ID.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function can_switch_mode( int $user_id = 0 ): bool {
-		if ( self::is_admin( $user_id ) ) {
+		if ( self::is_admin( $user_id ) || self::is_instructor( $user_id ) ) {
 			return true;
 		}
 
-		$can_access_both_dashboards = false;
-
 		if ( ! self::is_instructor( $user_id ) ) {
-			$can_access_both_dashboards = false;
+			return false;
 		}
 
-		if ( self::is_student( $user_id ) || self::is_instructor( $user_id ) ) {
-			$can_access_both_dashboards = true;
+		if ( self::is_student( $user_id ) ) {
+			return true;
 		}
 
-		$can_access_both_dashboards = in_array(
+		return in_array(
 			self::get_application_source( $user_id ),
 			array( self::SOURCE_STUDENT_DASHBOARD ),
 			true
 		);
-
-		return $can_access_both_dashboards;
 	}
 }

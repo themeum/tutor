@@ -405,11 +405,11 @@ class Template extends Tutor_Base {
 						$query_var           = tutor_utils()->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
 						$dashboard_pages     = tutor_utils()->tutor_dashboard_pages();
 						$dashboard_page_item = tutor_utils()->array_get( $query_var, $dashboard_pages );
-						$auth_cap            = tutor_utils()->array_get( 'auth_cap', $dashboard_page_item ) ?? '';
+						$auth_cap            = tutor_utils()->array_get( 'auth_cap', $dashboard_page_item );
 
 						$can_access_instructor_item = tutor()->instructor_role === $auth_cap && User::can_view_instructor_dashboard();
 
-						if ( ! User::is_admin() && ! current_user_can( $auth_cap ) && ! $can_access_instructor_item
+						if ( $auth_cap && ! User::is_admin() && ! current_user_can( $auth_cap ) && ! $can_access_instructor_item
 						) {
 							$template = tutor_get_template( 'permission-denied' );
 						}
