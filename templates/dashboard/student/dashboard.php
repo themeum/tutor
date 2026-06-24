@@ -15,14 +15,11 @@ use TUTOR\Icon;
 use TUTOR\Course;
 use TUTOR\User;
 use Tutor\Models\CourseModel;
-use TUTOR\Instructors_List;
 use Tutor\Components\Alert;
 
 $user_id               = get_current_user_id();
 $user_data             = get_userdata( $user_id );
-$instructor_status     = tutor_utils()->instructor_status( 0, false );
-$instructor_status     = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
-$is_instructor_pending = Instructors_List::STATUS_PENDING === $instructor_status;
+$is_instructor_pending = User::has_pending_instructor_application( $user_id );
 
 $enrolled_course       = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
 $enrolled_course_count = $enrolled_course ? $enrolled_course->post_count : 0;
