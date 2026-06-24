@@ -856,14 +856,6 @@ class User {
 			return true;
 		}
 
-		if ( ! self::is_instructor( $user_id ) ) {
-			return false;
-		}
-
-		if ( self::is_student( $user_id ) ) {
-			return true;
-		}
-
 		return in_array(
 			self::get_application_source( $user_id ),
 			array( self::SOURCE_STUDENT_DASHBOARD ),

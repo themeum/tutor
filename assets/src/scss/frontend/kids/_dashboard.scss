@@ -28,7 +28,6 @@
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
 
-  .tutor-alert,
   .tutor-badge,
   .tutor-file-preview,
   .tutor-dashboard-lesson-notes .tutor-lesson-note-thumb img {
@@ -67,6 +66,10 @@
 
   .tutor-account-section #tutor-account-form .tutor-card {
     border-radius: $tutor-radius-6xl;
+  }
+
+  .tutor-instructor-request-alert {
+    border-radius: $tutor-radius-5xl;
   }
 
   .tutor-account-section .tutor-account-cover-photo {

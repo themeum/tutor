@@ -35,7 +35,7 @@ if ( 'success' === $variant ) {
 }
 
 ?>
-<div class="<?php echo esc_attr( $bg_class ); ?> tutor-flex tutor-rounded-2xl tutor-gap-5 tutor-mb-7 tutor-py-5 tutor-px-4">
+<div class="<?php echo esc_attr( $bg_class ); ?> tutor-instructor-request-alert tutor-flex tutor-rounded-2xl tutor-gap-5 tutor-mb-7 tutor-py-5 tutor-px-4">
 	<div class="tutor-flex-center">
 		<?php
 			SvgIcon::make()
