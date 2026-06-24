@@ -1,6 +1,7 @@
-import { spacing } from '@TutorShared/config/styles';
-import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
+import { css } from '@emotion/react';
+
+import { spacing } from '@TutorShared/config/styles';
 
 const CONTAINER_WIDTH = 1196;
 

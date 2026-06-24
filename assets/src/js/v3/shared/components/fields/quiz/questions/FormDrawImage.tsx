@@ -1,22 +1,23 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useCallback, useId, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { useDrawOnImageField } from '@TutorShared/hooks/useDrawOnImageField';
 import useWPMedia from '@TutorShared/hooks/useWpMedia';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
-import { styleUtils } from '@TutorShared/utils/style-utils';
-import { useDrawOnImageField } from '@TutorShared/hooks/useDrawOnImageField';
 import { quizBuilderInteractionFocusCss, quizBuilderSrOnlyCss } from '@TutorShared/utils/quizBuilderA11y';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
   type ID,
   QuizDataStatus,

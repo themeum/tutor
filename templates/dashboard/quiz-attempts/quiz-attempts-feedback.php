@@ -46,16 +46,7 @@ $content      = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor
 					)
 					->attr(
 						'x-bind',
-						"register('feedback', {
-							validate: (value) => {
-								const text = String(value || '')
-									.replace(/<[^>]*>/g, '')
-									.replace(/&nbsp;/g, ' ')
-									.trim();
-
-								return text.length > 0 || '" . esc_js( __( 'Feedback is required', 'tutor' ) ) . "';
-							}
-						})"
+						"register('feedback')"
 					)
 					->render();
 				?>
@@ -67,7 +58,7 @@ $content      = is_array( $attempt_info ) ? (string) ( $attempt_info['instructor
 						->label( __( 'Submit', 'tutor' ) )
 						->variant( Variant::PRIMARY )
 						->attr( 'type', 'submit' )
-						->attr( ':disabled', 'feedbackMutation?.isPending' )
+						->attr( ':disabled', 'feedbackMutation?.isPending || !Object.values(dirtyFields).some(Boolean)' )
 						->attr( 'class', 'tutor-quiz-review-feedback-button' )
 						->attr( ':class', "{ 'tutor-btn-loading': feedbackMutation?.isPending }" )
 						->render();

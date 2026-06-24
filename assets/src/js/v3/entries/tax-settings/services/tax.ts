@@ -1,6 +1,7 @@
+import { useQuery } from '@tanstack/react-query';
+
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { useQuery } from '@tanstack/react-query';
 
 export enum EUTaxRegistrationTypes {
   oneStop = 'one-stop',

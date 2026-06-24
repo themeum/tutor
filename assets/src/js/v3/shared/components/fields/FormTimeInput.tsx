@@ -1,21 +1,20 @@
-import { css } from '@emotion/react';
-import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import { DateFormats } from '@TutorShared/config/constants';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+import Popover from '@TutorShared/molecules/Popover';
 import { type FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
-
-import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTimeInputProps extends FormControllerProps<string> {

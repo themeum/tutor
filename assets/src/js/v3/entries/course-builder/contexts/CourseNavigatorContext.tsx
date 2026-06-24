@@ -1,3 +1,10 @@
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { __ } from '@wordpress/i18n';
+
+import { useCurrentPath } from '@TutorShared/hooks/useCurrentPath';
+import { isDefined } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
+
 import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import routes from '@CourseBuilderConfig/routes';
 import {
@@ -6,11 +13,6 @@ import {
   useCourseDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useCurrentPath } from '@TutorShared/hooks/useCurrentPath';
-import { isDefined } from '@TutorShared/utils/types';
-import { noop } from '@TutorShared/utils/util';
-import { __ } from '@wordpress/i18n';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 export type StepStatus = 'active' | 'completed' | 'inactive' | 'visited';
 export type CompletionStatus = 'incomplete' | 'complete';

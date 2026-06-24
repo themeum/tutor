@@ -1,6 +1,7 @@
+import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const meta = {
   title: 'Atoms/MagicButton',

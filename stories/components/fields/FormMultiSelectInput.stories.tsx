@@ -1,7 +1,9 @@
-import FormMultiSelectInput from '@TutorShared/components/fields/FormMultiSelectInput';
-import { DEFAULT_FORM_FIELD_PROPS, DEFAULT_FORM_FILED_STATE_PROPS } from '@TutorShared/config/constants';
 import { Controller, useForm } from 'react-hook-form';
 import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
+
+import FormMultiSelectInput from '@TutorShared/components/fields/FormMultiSelectInput';
+
+import { DEFAULT_FORM_FIELD_PROPS, DEFAULT_FORM_FILED_STATE_PROPS } from '@TutorShared/config/constants';
 
 const options = [
   { value: 'react', label: 'ReactJS' },

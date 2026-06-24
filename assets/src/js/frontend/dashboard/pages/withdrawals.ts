@@ -1,25 +1,23 @@
-import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-import endpoints from '@TutorShared/utils/endpoints';
-import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
+
+import { type MutationState } from '@Core/ts/services/Query';
+import { type AjaxResponse } from '@Core/ts/types';
 
 interface WithdrawalsFormProps {
   amount: string;
 }
 
 const withdrawals = () => {
-  const query = window.TutorCore.query;
-  const form = window.TutorCore.form;
-  const toast = window.TutorCore.toast;
+  const { query, form, toast, endpoints } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
 
   return {
     query,
     form,
     toast,
     $el: null as HTMLElement | null,
-    withdrawalRequestMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    withdrawalRequestMutation: null as MutationState<AjaxResponse<string>> | null,
 
     async handleWithdrawalFormSubmit(data: WithdrawalsFormProps, formId: string) {
       const payload: Record<string, string> = { amount: data.amount };

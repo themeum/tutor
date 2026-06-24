@@ -1,9 +1,5 @@
-import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-import endpoints from '@TutorShared/utils/endpoints';
-import { type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type AjaxResponse } from '@Core/ts/types';
 import { __ } from '@wordpress/i18n';
 
 const COMMENT_ID_PREFIX = 'tutor-comment-';
@@ -44,10 +40,10 @@ type OrderTypes = 'ASC' | 'DESC';
  * Lesson Comments Component
  */
 const lessonComments = (lessonId: number, initialCount: number = 0) => {
-  const query = window.TutorCore.query;
-  const toast = window.TutorCore.toast;
-  const form = window.TutorCore.form;
-  const modal = window.TutorCore.modal;
+  const { query, toast, form, modal, endpoints } = window.TutorCore;
+  const { convertToErrorMessage } = window.TutorCore.error;
+  const { wpPost } = window.TutorCore.api;
+  const { TUTOR_CUSTOM_EVENTS } = window.TutorCore.constants;
 
   return {
     query,
@@ -221,11 +217,11 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
     },
 
     createComment(payload: { comment_post_ID: number; comment_parent: number }) {
-      return wpPost<TutorMutationResponse<{ html: string; count: number }>>(endpoints.CREATE_LESSON_COMMENT, payload);
+      return wpPost<AjaxResponse<{ html: string; count: number }>>(endpoints.CREATE_LESSON_COMMENT, payload);
     },
 
     updateComment(payload: { comment_id: number; comment: string }) {
-      return wpPost<TutorMutationResponse<{ html: string; comment_id: number; is_reply: boolean }>>(
+      return wpPost<AjaxResponse<{ html: string; comment_id: number; is_reply: boolean }>>(
         endpoints.UPDATE_LESSON_COMMENT,
         payload,
       );
@@ -233,12 +229,12 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
 
     deleteComment(payload: { comment_id: number }) {
       return wpPost<
-        TutorMutationResponse<{ html: string; comment_id: number; parent_id: number; count: number; is_reply: boolean }>
+        AjaxResponse<{ html: string; comment_id: number; parent_id: number; count: number; is_reply: boolean }>
       >(endpoints.DELETE_LESSON_COMMENT, payload);
     },
 
     replyComment(payload: ReplyCommentPayload) {
-      return wpPost<TutorMutationResponse<{ html: string; is_first_reply: boolean; count: number }>>(
+      return wpPost<AjaxResponse<{ html: string; is_first_reply: boolean; count: number }>>(
         endpoints.REPLY_LESSON_COMMENT,
         payload,
       );
@@ -283,14 +279,11 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
       this.currentPage = 1;
       this.hasMore = true;
 
-      wpPost<TutorMutationResponse<{ html: string; has_more: boolean; count: number }>>(
-        endpoints.LOAD_LESSON_COMMENTS,
-        {
-          lesson_id: this.lessonId,
-          current_page: 1,
-          order: this.currentOrder,
-        },
-      )
+      wpPost<AjaxResponse<{ html: string; has_more: boolean; count: number }>>(endpoints.LOAD_LESSON_COMMENTS, {
+        lesson_id: this.lessonId,
+        current_page: 1,
+        order: this.currentOrder,
+      })
         .then((response) => {
           // Replace entire comment list.
           this.$refs.commentList.innerHTML = response.data.html;
@@ -320,7 +313,7 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
       // Calculate offset based on main comments in DOM.
       const offset = this.$refs.commentList.querySelectorAll(`:scope > .${CLASSES.COMMENT_ITEM}`).length;
 
-      wpPost<TutorMutationResponse<{ html: string; has_more: boolean }>>(endpoints.LOAD_LESSON_COMMENTS, {
+      wpPost<AjaxResponse<{ html: string; has_more: boolean }>>(endpoints.LOAD_LESSON_COMMENTS, {
         lesson_id: this.lessonId,
         offset,
         order: this.currentOrder,

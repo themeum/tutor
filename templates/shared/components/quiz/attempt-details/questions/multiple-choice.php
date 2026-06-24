@@ -57,7 +57,7 @@ $given_ids = array_map( 'intval', array_filter( $given_ids ) );
 							<?php checked( $is_selected ); ?>
 							disabled
 						>
-						<label for="<?php echo esc_attr( 'attempt-review-' . $question->question_id . '-' . $index ); ?>">
+						<label class="tutor-label" for="<?php echo esc_attr( 'attempt-review-' . $question->question_id . '-' . $index ); ?>">
 							<?php echo esc_html( $answer->answer_title ?? '' ); ?>
 						</label>
 					</div>

@@ -1,14 +1,15 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { useModal } from '@TutorShared/components/modals/Modal';
 
 import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { Breakpoint, colorTokens, fontSize, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -16,10 +17,10 @@ import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
 import { usePaymentContext } from '../contexts/payment-context';
-import { type PaymentSettings, convertPaymentMethods, initialPaymentSettings } from '../services/payment';
-import PaymentMethods from './PaymentMethods';
+import { convertPaymentMethods, initialPaymentSettings, type PaymentSettings } from '../services/payment';
 import ManualPaymentModal from './modals/ManualPaymentModal';
 import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
+import PaymentMethods from './PaymentMethods';
 
 const TaxSettingsPage = () => {
   const { payment_gateways, payment_settings } = usePaymentContext();

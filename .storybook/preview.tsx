@@ -1,4 +1,4 @@
-import { Global, css } from '@emotion/react';
+import { css, Global } from '@emotion/react';
 import { withThemeFromJSXProvider } from '@storybook/addon-themes';
 import { type Preview } from 'storybook-react-rsbuild';
 

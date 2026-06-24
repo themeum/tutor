@@ -1,10 +1,5 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-import { tutorConfig } from '@TutorShared/config/config';
-import endpoints from '@TutorShared/utils/endpoints';
-
-import { wpPostForm } from '@Core/ts/utils/api';
 import { QUIZ_EVENTS } from './constants';
 
 export interface QuizAutoStartConfig {
@@ -19,9 +14,10 @@ export interface StartQuizPayload {
 }
 
 const quizAutoStart = (config: QuizAutoStartConfig) => {
-  const query = window.TutorCore.query;
-  const toast = window.TutorCore.toast;
-  const modal = window.TutorCore.modal;
+  const { query, toast, modal, endpoints } = window.TutorCore;
+  const { convertToErrorMessage } = window.TutorCore.error;
+  const { wpPostForm } = window.TutorCore.api;
+  const { tutorConfig } = window.TutorCore.config;
   const autoStartEvent = QUIZ_EVENTS.AUTO_START_COMPLETE;
 
   return {

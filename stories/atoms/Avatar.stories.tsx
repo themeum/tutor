@@ -1,5 +1,6 @@
-import { Avatar, AvatarFallback } from '@TutorShared/atoms/Avatar';
 import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
+
+import { Avatar, AvatarFallback } from '@TutorShared/atoms/Avatar';
 
 const meta = {
   title: 'Atoms/Avatar',

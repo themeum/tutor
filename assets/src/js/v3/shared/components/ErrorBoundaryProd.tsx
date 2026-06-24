@@ -1,18 +1,19 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import type React from 'react';
 import { Component, type ErrorInfo } from 'react';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import config, { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import productionError2x from '@SharedImages/production-error-2x.webp';
 import productionError from '@SharedImages/production-error.webp';
+import productionError2x from '@SharedImages/production-error-2x.webp';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;

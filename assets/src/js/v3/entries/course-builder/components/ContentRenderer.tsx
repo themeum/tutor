@@ -1,5 +1,6 @@
-import ComponentErrorBoundary from '@TutorShared/components/ComponentErrorBoundary';
 import React from 'react';
+
+import ComponentErrorBoundary from '@TutorShared/components/ComponentErrorBoundary';
 
 interface ContentRendererProps {
   component: React.ReactNode;

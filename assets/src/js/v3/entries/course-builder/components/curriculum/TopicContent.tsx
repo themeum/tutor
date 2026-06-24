@@ -1,34 +1,17 @@
+import { memo, useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { type SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
-import { memo, useRef, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 
 import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
-import Popover from '@TutorShared/molecules/Popover';
-
-import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
-import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
-import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
-import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
-import {
-  useDeleteContentBankContentMutation,
-  useDeleteContentMutation,
-  useDuplicateContentMutation,
-} from '@CourseBuilderServices/curriculum';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
-import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
-import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
-import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -37,9 +20,26 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
+import Popover from '@TutorShared/molecules/Popover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { ID, TopicContentType } from '@TutorShared/utils/types';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
+
+import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
+import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
+import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
+import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
+import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
+import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import {
+  useDeleteContentBankContentMutation,
+  useDeleteContentMutation,
+  useDuplicateContentMutation,
+} from '@CourseBuilderServices/curriculum';
+import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
+import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 
 interface TopicContentProps {
   type: TopicContentType;

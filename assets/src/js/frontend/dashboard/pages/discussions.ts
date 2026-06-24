@@ -1,10 +1,7 @@
-import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { decodeHtmlEntities } from '@Core/ts/utils/decode-html-entities';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-import endpoints from '@TutorShared/utils/endpoints';
-import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
+
+import { type MutationState } from '@Core/ts/services/Query';
+import { type AjaxResponse } from '@Core/ts/types';
 
 interface ReplyCommentPayload {
   comment_post_ID: number;
@@ -73,10 +70,10 @@ const CARD_TITLE_WORD_LIMIT = 60;
  * Handles Q&A, Lesson comments related actions
  */
 const discussionsPage = () => {
-  const query = window.TutorCore.query;
-  const form = window.TutorCore.form;
-  const toast = window.TutorCore.toast;
-  const modal = window.TutorCore.modal;
+  const { query, form, toast, modal, endpoints } = window.TutorCore;
+  const { decodeHtmlEntities } = window.TutorCore.string;
+  const { convertToErrorMessage } = window.TutorCore.error;
+  const { wpPost } = window.TutorCore.api;
 
   return {
     query,
@@ -284,7 +281,7 @@ const discussionsPage = () => {
       this.loadingReplies = true;
       try {
         const endpoint = tab === 'qna' ? endpoints.LOAD_QNA_REPLIES : endpoints.LOAD_COMMENT_REPLIES;
-        const response = await wpPost<TutorMutationResponse<{ html: string }>>(endpoint, {
+        const response = await wpPost<AjaxResponse<{ html: string }>>(endpoint, {
           comment_id: commentId,
           order: this.repliesOrder,
         });

@@ -1,11 +1,12 @@
-import { borderRadius, colorTokens, fontSize, lineHeight, spacing, zIndex } from '@TutorShared/config/styles';
-import { AnimatedDiv } from '@TutorShared/hooks/useAnimation';
-import type { AnyObject } from '@TutorShared/utils/form';
+import type { ReactNode } from 'react';
 import type { SerializedStyles } from '@emotion/react';
 import { css } from '@emotion/react';
 import { useSpring } from '@react-spring/web';
 import Tippy from '@tippyjs/react/headless';
-import type { ReactNode } from 'react';
+
+import { borderRadius, colorTokens, fontSize, lineHeight, spacing, zIndex } from '@TutorShared/config/styles';
+import { AnimatedDiv } from '@TutorShared/hooks/useAnimation';
+import type { AnyObject } from '@TutorShared/utils/form';
 
 type Placement = 'top' | 'right' | 'bottom' | 'left';
 

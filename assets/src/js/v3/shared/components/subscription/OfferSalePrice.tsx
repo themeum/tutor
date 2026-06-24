@@ -1,14 +1,14 @@
+import { Controller, useFormContext } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { Controller, useFormContext } from 'react-hook-form';
 
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
-
 import type { SubscriptionFormDataWithSaved } from '@TutorShared/components/modals/SubscriptionModal';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';

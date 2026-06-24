@@ -1,6 +1,6 @@
+import type { ReactNode, RefObject } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import type { ReactNode, RefObject } from 'react';
 
 import Button, { type ButtonVariant } from '@TutorShared/atoms/Button';
 
@@ -15,7 +15,7 @@ import Popover from './Popover';
 interface ConfirmationPopoverProps<TRef> {
   triggerRef: RefObject<TRef>;
   isOpen: boolean;
-  title: string;
+  title: string | ReactNode;
   message: string | ReactNode;
   onConfirmation: () => void;
   onCancel?: () => void;

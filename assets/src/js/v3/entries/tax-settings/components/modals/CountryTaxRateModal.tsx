@@ -1,15 +1,19 @@
+import { Controller, type UseFormReturn } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Button from '@TutorShared/atoms/Button';
+
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
+
 import { colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { europeanUnionData, getStatesByCountryAsOptions, isEuropeanUnion } from '@TutorShared/utils/countries';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller, type UseFormReturn } from 'react-hook-form';
+
 import type { TaxSettings } from '../../services/tax';
 import TaxModalWrapper from './TaxModalWrapper';
 

@@ -1,5 +1,6 @@
-import Alert from '@TutorShared/atoms/Alert';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+
+import Alert from '@TutorShared/atoms/Alert';
 
 interface ComponentErrorBoundaryProps {
   children: ReactNode;

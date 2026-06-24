@@ -1,28 +1,29 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Switch from '@TutorShared/atoms/Switch';
 import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
-import ThreeDots from '@TutorShared/molecules/ThreeDots';
 
 import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
+
 import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import {
   BILLING_CYCLE_CUSTOM_PRESETS,
   convertFormDataToSubscription,
+  type SubscriptionFormData,
   useDeleteCourseSubscriptionMutation,
   useDuplicateCourseSubscriptionMutation,
   useSaveCourseSubscriptionMutation,
-  type SubscriptionFormData,
 } from '@TutorShared/services/subscription';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -313,7 +314,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
           css={styles.information}
           ref={marqueeContainerRef}
           aria-label={__('Subscription plan details', __TUTOR_TEXT_DOMAIN__)}
-          title={marqueeContainerRef.current?.textContent}
+          title={marqueeContainerRef.current?.textContent ?? undefined}
         >
           <span css={styles.marqueeSlide} ref={marqueeContentRef} data-marquee-content>
             <span>{marqueeText}</span>

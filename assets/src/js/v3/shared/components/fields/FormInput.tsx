@@ -1,6 +1,6 @@
-import { type SerializedStyles, css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -16,12 +16,12 @@ import { colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
 import { parseNumberOnly } from '@TutorShared/utils/util';
 
-import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
-import { styleUtils } from '@TutorShared/utils/style-utils';
+import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   size?: 'small' | 'regular';

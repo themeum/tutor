@@ -1,9 +1,9 @@
-import { css } from '@emotion/react';
-import { useIsFetching, useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { css } from '@emotion/react';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
 
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
@@ -11,15 +11,6 @@ import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import SubscriptionPreview from '@TutorShared/components/subscription/SubscriptionPreview';
 
-import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
-import {
-  type CourseDetailsResponse,
-  type CourseFormData,
-  type WcProduct,
-  useGetWcProductsQuery,
-  useWcProductDetailsQuery,
-} from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -30,6 +21,16 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
+
+import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
+import {
+  type CourseDetailsResponse,
+  type CourseFormData,
+  useGetWcProductsQuery,
+  useWcProductDetailsQuery,
+  type WcProduct,
+} from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 const courseId = getCourseId();
 
@@ -66,7 +67,7 @@ const CoursePricing = () => {
   const isTaxEnabled = !!tutorConfig.settings?.enable_tax;
   const enableIndividualTaxControl = !!tutorConfig.settings?.enable_individual_tax_control;
   const isTaxIncludedInPrice = !!tutorConfig.settings?.is_tax_included_in_price;
-  const monetizeBy = tutorConfig.settings?.monetize_by;
+  const monetizeBy = tutorConfig.settings?.monetize_by as 'tutor' | 'wc' | 'edd' | undefined;
 
   // prettier-ignore
   const taxAlertMessage = __('You have unchecked the Tax Collection option. Please review your pricing, as your tax settings currently indicate that prices are inclusive of tax.', 'tutor');

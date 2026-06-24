@@ -1,3 +1,6 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 import {
   closestCenter,
   DndContext,
@@ -13,24 +16,15 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
-import Popover from '@TutorShared/molecules/Popover';
 
-import GenerateQuizWithAi from '@CourseBuilderComponents/curriculum/GenerateQuizWithAi';
-import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
-import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -40,6 +34,7 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
+import Popover from '@TutorShared/molecules/Popover';
 import { convertedQuestion, validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
@@ -50,6 +45,12 @@ import {
   type QuizQuestionType,
 } from '@TutorShared/utils/types';
 import { isAddonEnabled, nanoid, noop } from '@TutorShared/utils/util';
+
+import GenerateQuizWithAi from '@CourseBuilderComponents/curriculum/GenerateQuizWithAi';
+import Question from '@CourseBuilderComponents/curriculum/Question';
+import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { type QuizForm } from '@CourseBuilderServices/quiz';
 
 interface QuestionTypeOption {
   label: string;

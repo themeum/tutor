@@ -1,7 +1,7 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { type FunctionComponent } from 'react';
 import { Controller } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
@@ -11,7 +11,6 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
-import { type BulkSelectionFormData, type ExportFormData } from '@ImportExport/services/import-export';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -20,6 +19,8 @@ import Show from '@TutorShared/controls/Show';
 import { type useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type ExportableContent, type ExportableCourseContentType } from '@TutorShared/services/import-export';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+
+import { type BulkSelectionFormData, type ExportFormData } from '@ImportExport/services/import-export';
 
 interface ExportInitialStateProps {
   form: ReturnType<typeof useFormWithGlobalError<ExportFormData>>;

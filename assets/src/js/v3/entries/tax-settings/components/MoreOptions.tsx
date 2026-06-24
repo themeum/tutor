@@ -1,15 +1,15 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-
-import ThreeDots from '@TutorShared/molecules/ThreeDots';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
+
 import { spacing, zIndex } from '@TutorShared/config/styles';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
+import ThreeDots from '@TutorShared/molecules/ThreeDots';
 
 import type { TaxSettings } from '../services/tax';
 import type { ColumnDataType } from './TaxRates';

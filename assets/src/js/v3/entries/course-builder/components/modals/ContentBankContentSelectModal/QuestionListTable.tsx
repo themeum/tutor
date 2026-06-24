@@ -1,25 +1,26 @@
-import { css } from '@emotion/react';
-import { __, _n, sprintf } from '@wordpress/i18n';
 import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { __, _n, sprintf } from '@wordpress/i18n';
 
-import { tutorConfig } from '@TutorShared/config/config';
-
-import { type ContentSelectionForm } from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Paginator from '@TutorShared/molecules/Paginator';
-import Table, { type Column } from '@TutorShared/molecules/Table';
 
+import { tutorConfig } from '@TutorShared/config/config';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
 import { type IconCollection } from '@TutorShared/icons/types';
+import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
 import { useGetContentBankContents } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ContentBankContent, type QuizQuestionType } from '@TutorShared/utils/types';
+
+import { type ContentSelectionForm } from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
+
 import FilterFields from './FilterFields';
 import SearchField from './SearchField';
 

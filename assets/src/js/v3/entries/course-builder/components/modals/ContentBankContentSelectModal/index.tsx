@@ -1,19 +1,22 @@
+import { FormProvider } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { FormProvider } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
-import CollectionListTable from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/CollectionListTable';
-import { type Content, useAddContentBankContentToCourseMutation } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type Collection, type ContentBankContent, type ID, type QuizQuestion } from '@TutorShared/utils/types';
+
+import CollectionListTable from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/CollectionListTable';
+import { type Content, useAddContentBankContentToCourseMutation } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+
 import ContentListTable from './ContentListTable';
 import QuestionListTable from './QuestionListTable';
 

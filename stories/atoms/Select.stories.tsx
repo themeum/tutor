@@ -1,6 +1,7 @@
-import Select from '@TutorShared/atoms/Select';
 import { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import Select from '@TutorShared/atoms/Select';
 
 const options = [
   { label: 'Option One', value: 'one' },

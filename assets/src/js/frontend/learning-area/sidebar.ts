@@ -5,9 +5,6 @@
  */
 
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-import endpoints from '@TutorShared/utils/endpoints';
 
 interface ResetProgressPayload {
   course_id: number;
@@ -25,6 +22,9 @@ interface ResetProgressResponse {
 
 export const sidebarComponent = ({ courseId, resetModalId }: { courseId: number; resetModalId: string }) => {
   const { query, modal, toast } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
+  const { endpoints } = window.TutorCore;
 
   return {
     pagesHeight: 0,

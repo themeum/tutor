@@ -1,17 +1,9 @@
-import React, { useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react';
+import React, { type ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react';
 
-import type { QuizContent } from '@TutorShared/services/magic-ai';
-import { isDefined } from '@TutorShared/utils/types';
+import { isDefined, type TopicContent } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
 export type CourseContentStep = 'prompt' | 'generation';
-
-export interface TopicContent {
-  type: 'lesson' | 'quiz' | 'assignment';
-  title: string;
-  description: string;
-  questions?: QuizContent[];
-}
 
 export interface Topic {
   title: string;

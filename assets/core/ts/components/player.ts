@@ -1,6 +1,7 @@
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { isMobileDevice } from '@Core/ts/utils/util';
+
 import { isVimeoPlyr } from '@FrontendTypes/index';
 
 export interface PlayerProps {

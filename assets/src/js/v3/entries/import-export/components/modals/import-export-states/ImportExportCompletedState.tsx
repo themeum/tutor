@@ -1,30 +1,29 @@
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
-import { useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import {
-  type ImportContentResponse,
-  type ImportExportContentResponseBase,
-  type ImportExportModalState,
-} from '@ImportExport/services/import-export';
 import ImportErrorListModal from '@TutorShared/components/modals/ImportErrorListModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
+
+import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ImportContentResponse, type ImportExportContentResponseBase } from '@TutorShared/utils/types';
 import { formatBytes, getObjectEntries, getObjectKeys, getObjectValues } from '@TutorShared/utils/util';
+
+import { type ImportExportModalState } from '@ImportExport/services/import-export';
 
 import exportErrorImage from '@SharedImages/import-export/export-error.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
 import importErrorImage from '@SharedImages/import-export/import-error.webp';
 import importSuccessImage from '@SharedImages/import-export/import-success.webp';
-import { tutorConfig } from '@TutorShared/config/config';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const fileName = `tutor-lms-data-${format(new Date(), 'yyyy-MM-dd-HH-mm-ss')}.json`;
