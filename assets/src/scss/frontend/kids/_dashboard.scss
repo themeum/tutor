@@ -28,6 +28,7 @@
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
   }
 
+  .tutor-alert,
   .tutor-badge,
   .tutor-file-preview,
   .tutor-dashboard-lesson-notes .tutor-lesson-note-thumb img {
