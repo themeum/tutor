@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\UserModel;
 use Tutor\Traits\JsonResponse;
+use TUTOR\Instructors_List;
 
 /**
  * User class
@@ -297,7 +298,7 @@ class User {
 
 		return in_array(
 			tutor_utils()->instructor_status( $user_id, false ),
-			array( 'pending', 'approved' ),
+			array( InstructorList::STATUS_PENDING, InstructorList::STATUS_APPROVED ),
 			true
 		);
 	}
