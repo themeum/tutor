@@ -2833,7 +2833,12 @@ class Utils {
 					unset( $nav_items[ $key ] );
 				}
 
-				if ( isset( $nav_item['auth_cap'] ) && ! User::is_admin() && ! current_user_can( $nav_item['auth_cap'] ) ) {
+				if (
+					isset( $nav_item['auth_cap'] )
+					&& ! User::is_admin()
+					&& ! current_user_can( $nav_item['auth_cap'] )
+					&& ! ( tutor()->instructor_role === $nav_item['auth_cap'] && User::can_view_instructor_dashboard() )
+				) {
 					unset( $nav_items[ $key ] );
 				}
 			}
