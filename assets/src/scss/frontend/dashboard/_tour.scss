@@ -1,0 +1,121 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-tour-modal {
+  &.tutor-modal-content {
+    max-width: 100%;
+  }
+
+  .tutor-tour-images {
+    position: relative;
+    overflow: hidden;
+    min-height: 366px;
+    width: 100%;
+    border-radius: $tutor-radius-2xl;
+    background: $tutor-surface-l1-hover;
+
+    .tutor-tour-slide-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      picture,
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: $tutor-radius-2xl;
+      }
+    }
+  }
+
+  .tutor-tour-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: $tutor-radius-full;
+    background: $tutor-icon-disabled;
+    display: inline-block;
+    @include tutor-transition(background);
+
+    &.is-active {
+      background: $tutor-icon-brand;
+    }
+  }
+
+  .tutor-tour-skip-wrapper {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .tutor-transition-slide-enter {
+    @include tutor-transition((transform, opacity));
+  }
+
+  .tutor-transition-slide-enter-start {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  .tutor-transition-slide-enter-end {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .tutor-transition-slide-leave {
+    transition:
+      transform 0.3s ease-in,
+      opacity 0.3s ease-in;
+  }
+
+  .tutor-transition-slide-leave-start {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .tutor-transition-slide-leave-end {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  .tutor-tour-images[data-direction='back'] {
+    .tutor-transition-slide-enter-start {
+      transform: translateX(-100%);
+    }
+
+    .tutor-transition-slide-leave-end {
+      transform: translateX(100%);
+    }
+  }
+
+  [dir='rtl'] & {
+    .tutor-transition-slide-enter-start {
+      transform: translateX(-100%);
+    }
+
+    .tutor-transition-slide-leave-end {
+      transform: translateX(100%);
+    }
+
+    .tutor-tour-images[data-direction='back'] {
+      .tutor-transition-slide-enter-start {
+        transform: translateX(100%);
+      }
+
+      .tutor-transition-slide-leave-end {
+        transform: translateX(-100%);
+      }
+    }
+  }
+}
+
+.tutor-modal-content:has(.tutor-tour-modal) {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
