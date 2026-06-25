@@ -24,9 +24,15 @@ $render_action_button = function () use ( $action_button_text, $action_button_ur
 	</a>
 	<?php
 };
-
 ?>
+
 <div class="tutor-whats-new">
+	<div class="tutor-whats-new-dismiss-bar">
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor' ) ); ?>" class="tutor-section-action tutor-section-action-outline tutor-whats-new-dismiss-btn">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m12.4 3.6-8.8 8.8m0-8.8 8.8 8.8"/></svg>
+			<span><?php esc_html_e( 'Close', 'tutor' ); ?></span>
+		</a>
+	</div>
 	<img class="tutor-hero-image" src="<?php echo esc_url( UrlHelper::asset( 'images/whats-new/whats-new-hero.webp' ) ); ?>" alt="What's new in v4" class="tutor-whats-new-in-v4-image">
 	<div class="tutor-section-layout">
 		<!-- Dashboard and Navigation -->

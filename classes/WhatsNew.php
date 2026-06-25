@@ -26,6 +26,7 @@ class WhatsNew {
 		add_filter( 'tutor_admin_menu', array( $this, 'add_whats_new_menu_item' ) );
 		add_action( 'upgrader_process_complete', array( $this, 'set_whats_new_v4_redirect' ), 10, 2 );
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_whats_new_v4' ) );
+		add_action( 'admin_menu', array( $this, 'register_whats_new_in_v4_hidden_page' ), 99 );
 	}
 
 	/**
@@ -52,15 +53,6 @@ class WhatsNew {
 			'capability'  => 'manage_options',
 			'menu_slug'   => 'tutor-whats-new',
 			'callback'    => array( $this, 'whats_new_page' ),
-		);
-
-		$menu['group_three']['whats_new_in_v4'] = array(
-			'parent_slug' => 'tutor',
-			'page_title'  => __( "What's New in v4", 'tutor' ),
-			'menu_title'  => __( "What's New in v4", 'tutor' ),
-			'capability'  => 'manage_options',
-			'menu_slug'   => 'tutor-whats-new-in-v4',
-			'callback'    => array( $this, 'whats_new_in_v4_page' ),
 		);
 
 		return $menu;
@@ -93,6 +85,25 @@ class WhatsNew {
 	}
 
 	/**
+	 * Register the What's New in v4 page as a hidden submenu (no sidebar link).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function register_whats_new_in_v4_hidden_page() {
+		add_submenu_page(
+			'tutor',                              // parent slug.
+			__( "What's New in v4", 'tutor' ),    // page title.
+			'',                                   // empty menu title = hidden from sidebar.
+			'manage_options',
+			'tutor-whats-new-in-v4',
+			array( $this, 'whats_new_in_v4_page' )
+		);
+	}
+
+	/**
+
 	 * Set a transient flag after plugin upgrade to trigger a one-time redirect.
 	 *
 	 * @since 4.0.0
@@ -136,6 +147,7 @@ class WhatsNew {
 			return;
 		}
 
+		// Delete the transient immediately so only the first admin gets redirected once.
 		delete_transient( 'tutor_whats_new_v4_redirect' );
 
 		wp_safe_redirect( admin_url( 'admin.php?page=tutor-whats-new-in-v4' ) );

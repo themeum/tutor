@@ -1,6 +1,14 @@
 .tutor-whats-new {
   margin-left: -20px;
   background-color: rgba(255, 255, 255, 1);
+  position: relative;
+
+  .tutor-whats-new-dismiss-bar {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 10;
+  }
 
   .tutor-hero-image {
     width: 100%;
@@ -175,10 +183,28 @@
     text-decoration: none;
     background-color: rgba(15, 15, 15, 1);
     transition: all 0.2s ease;
+    gap: 6px;
+    cursor: pointer;
+
+    svg {
+      flex-shrink: 0;
+    }
 
     &:hover,
     &:focus {
       background-color: rgba(15, 15, 15, 0.8);
+    }
+
+    &-outline {
+      background-color: transparent;
+      border: 1px solid rgba(217, 217, 217, 1);
+      color: rgba(255, 255, 255, 1);
+
+      &:hover,
+      &:focus {
+        background-color: rgba(217, 217, 217, 1);
+        color: rgba(15, 15, 15, 1);
+      }
     }
   }
 
@@ -518,11 +544,41 @@
 @media (max-width: 768px) {
   .tutor-whats-new {
     margin-left: -10px;
+
+    .tutor-hero-image {
+      height: 404px;
+      object-fit: cover;
+    }
   }
 }
 
-@media (max-width: 425px) {
+@media (max-width: 430px) {
   .tutor-whats-new {
+    .tutor-hero-image {
+      height: 263px;
+      object-fit: cover;
+    }
+
+    .tutor-whats-new-dismiss-bar {
+      top: 8px;
+      right: 8px;
+    }
+
+    .tutor-whats-new-dismiss-btn {
+      border-radius: 999px;
+      padding: 12px;
+      gap: 0;
+
+      span {
+        display: none;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
     .tutor-section-layout {
       padding-inline: 16px;
     }
