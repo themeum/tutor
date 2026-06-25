@@ -20,11 +20,11 @@ use TUTOR\Icon;
 use TUTOR\Instructors_List;
 use TUTOR\User;
 
-$user_id                         = get_current_user_id();
-$instructor_status               = tutor_utils()->instructor_status( 0, false );
-$instructor_status               = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
-$is_instructor_pending           = Instructors_List::STATUS_PENDING === $instructor_status;
-$is_instructor_approved          = Instructors_List::STATUS_APPROVED === $instructor_status;
+$user_id                      = get_current_user_id();
+$instructor_status            = tutor_utils()->instructor_status( 0, false );
+$instructor_status            = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
+$is_instructor_pending        = Instructors_List::STATUS_PENDING === $instructor_status;
+$is_instructor_approved       = Instructors_List::STATUS_APPROVED === $instructor_status;
 $used_instructor_registration = User::used_instructor_registration( $user_id );
 
 do_action( 'tutor_before_dashboard_content' );
