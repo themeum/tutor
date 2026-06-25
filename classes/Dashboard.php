@@ -63,7 +63,8 @@ class Dashboard {
 	 */
 	public function redirect_old_dashboard_pages() {
 		$current_url = rtrim( UrlHelper::current(), '/' );
-		if ( is_user_logged_in() && ! is_admin() ) {
+
+		if ( ! is_admin() ) {
 			// Redirect logic here.
 			$redirect_mappings = array(
 				tutor_utils()->tutor_dashboard_url( self::PROFILE_PAGE_SLUG ) => self::get_account_page_url( 'profile' ),
