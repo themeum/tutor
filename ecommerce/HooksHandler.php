@@ -405,7 +405,10 @@ class HooksHandler {
 					 */
 					if ( $this->order_model->is_single_order( $order ) ) {
 						update_post_meta( $has_enrollment->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
-
+						$has_bundle_enrollment_meta = get_post_meta( $has_enrollment->ID, CourseBundle::BUNDLE_ENROLLMENT_META, true );
+						if ( $has_bundle_enrollment_meta ) {
+							delete_post_meta( $has_enrollment->ID, CourseBundle::BUNDLE_ENROLLMENT_META );
+						}
 						/**
 						 * Update enrollment expiry date if it is set in a course.
 						 */
