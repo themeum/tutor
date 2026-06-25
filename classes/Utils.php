@@ -9297,6 +9297,18 @@ class Utils {
 	}
 
 	/**
+	 * Get default brand color
+	 * 
+	 * @since 4.0.0
+	 * 
+	 * @return string
+	 */
+	public function get_default_brand_color() {
+		$legacy_brand_color = tutor_utils()->get_option( 'tutor_primary_color' );
+		return $legacy_brand_color ? $legacy_brand_color : Options_V2::DEFAULT_BRAND_COLOR;
+	}
+
+	/**
 	 * Get course builder screen.
 	 *
 	 * @since 2.0.0
