@@ -343,6 +343,10 @@ class QuizBuilder {
 		$errors  = array();
 
 		$validation = $this->validate_payload( $payload );
+		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
+			$validation->success              = false;
+			$validation->errors['topic_id'][] = tutor_utils()->error_message();
+		}
 
 		if ( ! $validation->success ) {
 			return (object) array(
