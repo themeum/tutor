@@ -116,6 +116,7 @@ $footer_links = array(
 					EmptyState::make()
 						->title( __( 'Your application is under review', 'tutor' ) )
 						->subtitle( __( 'Only your dashboard home is available while your instructor application is pending.', 'tutor' ) )
+						->attr( 'class', 'tutor-surface-l1 tutor-border tutor-rounded-2xl' )
 						->render();
 				} elseif ( $dashboard_page_name ) {
 					do_action( 'tutor_load_dashboard_template_before', $dashboard_page_name );
