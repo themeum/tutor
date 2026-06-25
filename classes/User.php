@@ -256,7 +256,7 @@ class User {
 	public static function can_view_instructor_dashboard( $user_id = 0 ): bool {
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
-		if ( self::is_admin( $user_id ) || user_can( $user_id, self::INSTRUCTOR ) ) {
+		if ( self::is_admin( $user_id ) || self::is_instructor( $user_id ) ) {
 			return true;
 		}
 
@@ -812,7 +812,7 @@ class User {
 
 		if ( self::used_instructor_registration( $user_id ) ) {
 			$instructor_status = tutor_utils()->instructor_status( $user_id, false );
-			if ( in_array( $instructor_status, array( 'pending', 'approved' ), true ) ) {
+			if ( in_array( $instructor_status, array( Instructors_List::STATUS_PENDING, Instructors_List::STATUS_APPROVED ), true ) ) {
 				return self::VIEW_AS_INSTRUCTOR;
 			}
 		}
