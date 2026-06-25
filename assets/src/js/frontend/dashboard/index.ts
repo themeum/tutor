@@ -13,6 +13,7 @@ import { initializeMyCourses } from './pages/my-courses';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
 import { initializeSettings } from './pages/settings';
 import { initializeWithdrawals } from './pages/withdrawals';
+import { initializeTour } from './tour';
 
 /**
  * Get current dashboard page from URL
@@ -74,6 +75,7 @@ const getCurrentPage = (): string => {
 const initializeDashboard = () => {
   initializeHeader();
   initializeCommon();
+  initializeTour();
 
   const currentPage = getCurrentPage();
 
