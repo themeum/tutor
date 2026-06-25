@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Exception;
 use Tutor\Models\WithdrawModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -221,103 +222,132 @@ class Withdraw {
 	}
 
 	/**
-	 * Handle withdraw request form submit
+	 * Handle withdraw request form submit.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
+	 *
+	 * @throws Exception If any validation fails.
 	 */
 	public function tutor_make_an_withdraw() {
 		global $wpdb;
 
 		tutor_utils()->checking_nonce();
 
-		$user_id         = get_current_user_id();
-		$withdraw_amount = Input::post( 'tutor_withdraw_amount' );
+		$user_id = get_current_user_id();
+		if ( ! tutor_utils()->is_instructor( $user_id ) ) {
+			wp_send_json_error( array( 'msg' => tutor_utils()->error_message() ) );
+		}
 
-		$earning_summary = WithdrawModel::get_withdraw_summary( $user_id );
-		$min_withdraw    = tutor_utils()->get_option( 'min_withdraw_amount' );
+		$lock_name = 'tutor_withdraw_lock_' . $user_id;
+		$locked    = $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 10)', $lock_name ) );
 
-		if ( ( $earning_summary->total_pending + $withdraw_amount ) > $earning_summary->available_for_withdraw ) {
+		if ( 1 !== (int) $locked ) {
 			wp_send_json_error(
 				array(
-					'msg' => wp_sprintf(
-						/* translators: 1: total pending withdraw request 2: available for withdraw */
-						__( "You have total %1\$s pending withdraw request. You can't make more than %2\$s withdraw request at a time", 'tutor' ),
-						$earning_summary->total_pending,
-						$earning_summary->available_for_withdraw
-					),
+					'msg' => __( 'Another withdrawal request is in progress. Please try again.', 'tutor' ),
 				)
 			);
 		}
 
-		$saved_withdraw_account        = WithdrawModel::get_user_withdraw_method();
-		$formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
+		try {
+			$withdraw_amount = (float) Input::post( 'tutor_withdraw_amount' );
+			$earning_summary = WithdrawModel::get_withdraw_summary( $user_id );
+			$min_withdraw    = (float) tutor_utils()->get_option( 'min_withdraw_amount' );
 
-		if ( ! tutor_utils()->count( $saved_withdraw_account ) ) {
-			$no_withdraw_method = apply_filters( 'tutor_no_withdraw_method_msg', __( 'Please save withdraw method ', 'tutor' ) );
-			wp_send_json_error( array( 'msg' => $no_withdraw_method ) );
-		}
+			if ( ( $earning_summary->total_pending + $withdraw_amount ) > $earning_summary->available_for_withdraw ) {
+				throw new Exception(
+					wp_sprintf(
+					/* translators: 1: total pending withdraw request 2: available for withdraw */
+						__( "You have total %1\$s pending withdraw request. You can't make more than %2\$s withdraw request at a time", 'tutor' ),
+						$earning_summary->total_pending,
+						$earning_summary->available_for_withdraw
+					)
+				);
+			}
 
-		if ( ( ! is_numeric( $withdraw_amount ) && ! is_float( $withdraw_amount ) ) || $withdraw_amount < $min_withdraw ) {
-			/* translators: 1: strong tag start 2: min withdrawal amount 3: strong tag end */
-			$required_min_withdraw = apply_filters( 'tutor_required_min_amount_msg', sprintf( __( 'Minimum withdrawal amount is %1$s %2$s %3$s ', 'tutor' ), '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
-			wp_send_json_error( array( 'msg' => $required_min_withdraw ) );
-		}
+			$saved_withdraw_account        = WithdrawModel::get_user_withdraw_method();
+			$formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 
-		if ( $earning_summary->available_for_withdraw < $withdraw_amount ) {
-			$insufficient_balence = apply_filters( 'tutor_withdraw_insufficient_balance_msg', __( 'Insufficient balance.', 'tutor' ) );
+			if ( ! tutor_utils()->count( $saved_withdraw_account ) ) {
+				$no_withdraw_method = apply_filters( 'tutor_no_withdraw_method_msg', __( 'Please save withdraw method ', 'tutor' ) );
+				throw new Exception( $no_withdraw_method );
+			}
 
-			wp_send_json_error( array( 'msg' => $insufficient_balence ) );
-		}
+			if ( ( ! is_numeric( $withdraw_amount ) && ! is_float( $withdraw_amount ) ) || $withdraw_amount < $min_withdraw ) {
+				/* translators: 1: strong tag start 2: min withdrawal amount 3: strong tag end */
+				$required_min_withdraw = apply_filters( 'tutor_required_min_amount_msg', sprintf( __( 'Minimum withdrawal amount is %1$s %2$s %3$s ', 'tutor' ), '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
+				throw new Exception( $required_min_withdraw );
+			}
 
-		$date = gmdate( 'Y-m-d H:i:s', tutor_time() );
+			if ( $earning_summary->available_for_withdraw < $withdraw_amount ) {
+				$insufficient_balence = apply_filters( 'tutor_withdraw_insufficient_balance_msg', __( 'Insufficient balance.', 'tutor' ) );
+				throw new Exception( $insufficient_balence );
+			}
 
-		$withdraw_data = apply_filters(
-			'tutor_pre_withdraw_data',
-			array(
-				'user_id'     => $user_id,
-				'amount'      => $withdraw_amount,
-				'method_data' => maybe_serialize( $saved_withdraw_account ),
-				'status'      => 'pending',
-				'created_at'  => $date,
-			)
-		);
+			$date = gmdate( 'Y-m-d H:i:s', tutor_time() );
 
-		$date = gmdate( 'Y-m-d H:i:s', tutor_time() );
+			$withdraw_data = apply_filters(
+				'tutor_pre_withdraw_data',
+				array(
+					'user_id'     => $user_id,
+					'amount'      => $withdraw_amount,
+					'method_data' => maybe_serialize( $saved_withdraw_account ),
+					'status'      => 'pending',
+					'created_at'  => $date,
+				)
+			);
 
-		$withdraw_data = apply_filters(
-			'tutor_pre_withdraw_data',
-			array(
-				'user_id'     => $user_id,
-				'amount'      => $withdraw_amount,
-				'method_data' => maybe_serialize( $saved_withdraw_account ),
-				'status'      => 'pending',
-				'created_at'  => $date,
-			)
-		);
+			do_action( 'tutor_insert_withdraw_before', $withdraw_data );
 
-		do_action( 'tutor_insert_withdraw_before', $withdraw_data );
+			$inserted = $wpdb->insert( $wpdb->prefix . 'tutor_withdraws', $withdraw_data );
+			if ( false === $inserted ) {
+				throw new Exception( __( 'Unable to process withdrawal request. Please try again.', 'tutor' ) );
+			}
 
-		$wpdb->insert( $wpdb->prefix . 'tutor_withdraws', $withdraw_data );
-		$withdraw_id = $wpdb->insert_id;
+			$withdraw_id = $wpdb->insert_id;
 
-		do_action( 'tutor_insert_withdraw_after', $withdraw_id, $withdraw_data );
+			do_action( 'tutor_insert_withdraw_after', $withdraw_id, $withdraw_data );
 
-		/**
-		 * Getting earning and balance data again
-		 */
-		$earning               = WithdrawModel::get_withdraw_summary( $user_id );
-		$new_available_balance = tutor_utils()->tutor_price( $earning->available_for_withdraw );
+			/**
+			* Getting earning and balance data again
+			*/
+			$earning               = WithdrawModel::get_withdraw_summary( $user_id );
+			$new_available_balance = tutor_utils()->tutor_price( $earning->available_for_withdraw );
 
-		do_action( 'tutor_withdraw_after' );
+			do_action( 'tutor_withdraw_after' );
 
-		$withdraw_successfull_msg = apply_filters( 'tutor_withdraw_successful_msg', __( 'Withdrawal Request Sent!', 'tutor' ) );
-		wp_send_json_success(
-			array(
-				'msg'               => $withdraw_successfull_msg,
+			$response = array(
+				'msg'               => apply_filters( 'tutor_withdraw_successful_msg', __( 'Withdrawal Request Sent!', 'tutor' ) ),
 				'available_balance' => $new_available_balance,
-			)
-		);
+			);
+
+		} catch ( Exception $e ) {
+
+			$response = array(
+				'error' => true,
+				'msg'   => $e->getMessage(),
+			);
+
+		} finally {
+
+			$wpdb->query(
+				$wpdb->prepare(
+					'SELECT RELEASE_LOCK(%s)',
+					$lock_name
+				)
+			);
+		}
+
+		if ( ! empty( $response['error'] ) ) {
+			wp_send_json_error(
+				array(
+					'msg' => $response['msg'],
+				)
+			);
+		}
+
+		wp_send_json_success( $response );
 	}
 }
