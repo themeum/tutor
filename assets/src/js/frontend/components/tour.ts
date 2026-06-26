@@ -6,14 +6,16 @@ interface SlideData {
   imageSmall: string;
 }
 
-const TOUR_LOCAL_STORAGE_KEY = 'tutor_tour_seen';
 const SLIDE_DIRECTION = {
   NEXT: 'next',
   BACK: 'back',
 };
 
-const tour = ({ slidesData, modalId }: { slidesData: SlideData[]; modalId: string }) => {
+const getStorageKey = (userId: number) => `tutor_tour_seen_${userId}`;
+
+const tour = ({ slidesData, modalId, userId }: { slidesData: SlideData[]; modalId: string; userId: number }) => {
   const modal = window.TutorCore.modal;
+  const storageKey = getStorageKey(userId);
   return {
     currentSlide: 0,
     slides: slidesData || [],
@@ -31,7 +33,7 @@ const tour = ({ slidesData, modalId }: { slidesData: SlideData[]; modalId: strin
 
       document.addEventListener(TUTOR_CUSTOM_EVENTS.MODAL_CLOSE, this._onModalClose);
 
-      if (localStorage.getItem(TOUR_LOCAL_STORAGE_KEY) !== 'true') {
+      if (localStorage.getItem(storageKey) !== 'true') {
         this.isOpen = true;
         this.$nextTick?.(() => {
           modal.showModal(modalId);
@@ -60,7 +62,7 @@ const tour = ({ slidesData, modalId }: { slidesData: SlideData[]; modalId: strin
     },
 
     skip() {
-      localStorage.setItem(TOUR_LOCAL_STORAGE_KEY, 'true');
+      localStorage.setItem(storageKey, 'true');
       this.isOpen = false;
       modal.closeModal(modalId);
     },
