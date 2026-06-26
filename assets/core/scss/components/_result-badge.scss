@@ -19,7 +19,7 @@
 
   svg {
     position: absolute;
-    left: -$tutor-spacing-4;
+    inset-inline-start: -$tutor-spacing-4;
     top: 50%;
     transform: translateY(-50%);
   }

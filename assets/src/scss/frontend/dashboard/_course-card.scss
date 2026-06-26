@@ -39,7 +39,7 @@
   &-badge {
     position: absolute;
     top: $tutor-spacing-2;
-    right: $tutor-spacing-2;
+    inset-inline-end: $tutor-spacing-2;
     z-index: $tutor-z-positive;
   }
 

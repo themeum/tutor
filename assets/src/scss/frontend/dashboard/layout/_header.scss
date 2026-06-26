@@ -62,7 +62,7 @@
         content: '';
         position: absolute;
         top: 50%;
-        right: -$tutor-spacing-4;
+        inset-inline-end: -$tutor-spacing-4;
         transform: translateY(-50%);
         width: 3.5px;
         height: 3.5px;

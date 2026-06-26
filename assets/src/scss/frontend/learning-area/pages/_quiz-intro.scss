@@ -280,7 +280,7 @@
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-flex();
-      margin-left: $tutor-spacing-4;
+      margin-inline-start: $tutor-spacing-4;
     }
   }
 
@@ -289,7 +289,7 @@
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-flex(row, center);
-      margin-left: auto;
+      margin-inline-start: auto;
       gap: $tutor-spacing-2;
       @include tutor-typography('tiny', 'medium', 'secondary');
     }
