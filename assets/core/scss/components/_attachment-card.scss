@@ -1,5 +1,6 @@
 @use '../tokens' as *;
 @use '../mixins' as *;
+@use '../utilities' as *;
 
 .tutor-attachment-card {
   @include tutor-flex(row, center, flex-start);
@@ -42,7 +43,7 @@
 
   &-title {
     @include tutor-typography('small', 'medium', 'primary');
-    @include tutor-text-truncate;
+    @include tutor-text-clamp(1);
   }
 
   &-meta {
