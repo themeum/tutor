@@ -171,6 +171,7 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 			</button>
 		</div>
 	</div>
+	<?php tutor_load_template( 'dashboard.components.tour' ); ?>
 	<?php wp_footer(); ?>
 
 	<?php

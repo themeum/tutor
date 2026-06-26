@@ -2,6 +2,7 @@
 // Initializes dashboard functionality based on current page
 
 import { initializeReviews } from '@FrontendComponents/reviews';
+import { initializeTour } from '@FrontendComponents/tour';
 import { initializeCommon } from '@FrontendServices/common';
 
 import { initializeHeader } from './header';
@@ -13,7 +14,6 @@ import { initializeMyCourses } from './pages/my-courses';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
 import { initializeSettings } from './pages/settings';
 import { initializeWithdrawals } from './pages/withdrawals';
-import { initializeTour } from './tour';
 
 /**
  * Get current dashboard page from URL
