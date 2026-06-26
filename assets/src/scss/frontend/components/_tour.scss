@@ -56,7 +56,7 @@
         }
 
         &:nth-child(2)::after {
-          box-shadow: inset 6px -6px 20px 0px $tutor-surface-l1-hover;
+          box-shadow: inset -6px 6px 20px 0px $tutor-surface-l1-hover;
         }
       }
     }
