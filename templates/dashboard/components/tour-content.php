@@ -25,6 +25,7 @@ use Tutor\Components\Constants\Variant;
 		<template x-for="(slide, index) in slides" :key="index">
 			<div
 				class="tutor-tour-slide-image"
+				:class="'tutor-slide-' + index"
 				x-show="currentSlide === index"
 				x-transition:enter="tutor-transition-slide-enter"
 				x-transition:enter-start="tutor-transition-slide-enter-start"

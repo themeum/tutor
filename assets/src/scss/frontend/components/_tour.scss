@@ -38,24 +38,27 @@
         pointer-events: none;
       }
 
-      &:nth-child(5)::after {
-        box-shadow: inset 0 -6px 20px 0px $tutor-surface-l1-hover;
+      &[class*='tutor-slide-4']::after {
+        box-shadow: inset 0 6px 20px 0px $tutor-surface-l1-hover;
       }
 
       @include tutor-breakpoint-up(sm) {
-        &:nth-child(-n + 4)::after {
+        &[class*='tutor-slide-0']::after,
+        &[class*='tutor-slide-1']::after,
+        &[class*='tutor-slide-2']::after,
+        &[class*='tutor-slide-3']::after {
           box-shadow: inset -6px -6px 20px 0px $tutor-surface-l1-hover;
         }
       }
 
       @include tutor-breakpoint-down(sm) {
-        &:nth-child(1)::after,
-        &:nth-child(3)::after,
-        &:nth-child(4)::after {
+        &[class*='tutor-slide-0']::after,
+        &[class*='tutor-slide-2']::after,
+        &[class*='tutor-slide-3']::after {
           box-shadow: inset -6px -6px 20px 0px $tutor-surface-l1-hover;
         }
 
-        &:nth-child(2)::after {
+        &[class*='tutor-slide-1']::after {
           box-shadow: inset -6px 6px 20px 0px $tutor-surface-l1-hover;
         }
       }
