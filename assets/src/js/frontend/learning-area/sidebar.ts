@@ -27,7 +27,7 @@ export const sidebarComponent = ({ courseId, resetModalId }: { courseId: number;
   const { endpoints } = window.TutorCore;
 
   return {
-    pagesHeight: 0,
+    pagesHeight: null as number | null,
     resizing: false,
     sidebarOpen: false,
     courseId: courseId,
@@ -89,7 +89,7 @@ export const sidebarComponent = ({ courseId, resetModalId }: { courseId: number;
     },
 
     togglePagesHeight() {
-      if (this.pagesHeight > 36) {
+      if ((this.pagesHeight || 0) > 36) {
         this.pagesHeight = 36;
       } else if (this.$refs.pagesList) {
         this.pagesHeight = this.$refs.pagesList.scrollHeight;

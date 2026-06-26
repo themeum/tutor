@@ -216,7 +216,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 			<div class="tutor-sidebar-resizer" @mousedown="startResizing($event)"></div>
 			<div class="tutor-sidebar-restore-dropdown">
 				<button 
-					:class="{ 'is-minimized': pagesHeight <= 40 }" 
+					:class="{ 'is-minimized': pagesHeight && pagesHeight <= 40 }" 
 					@click="togglePagesHeight()"
 					:aria-expanded="pagesHeight > 40 ? 'true' : 'false'"
 					:aria-label="pagesHeight <= 40 ? '<?php echo esc_js( __( 'Expand panel', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Collapse panel', 'tutor' ) ); ?>'"
@@ -225,7 +225,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 				</button>
 			</div>
 		<?php endif; ?>
-		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" <?php echo ! empty( $active_menu ) ? ':style="{ height: pagesHeight + \'px\' }"' : ''; ?>>
+		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" <?php echo ! empty( $active_menu ) ? ':style="pagesHeight !== null ? { height: pagesHeight + \'px\' } : {}"' : ''; ?>>
 			<?php
 			ob_start();
 			foreach ( $menu_items as $key => $item ) {
@@ -278,7 +278,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 				?>
 			</div>
 			<?php else : ?>
-			<div>
+			<div class="tutor-learning-pages-nav">
 				<?php echo $menu_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 			<?php endif; ?>

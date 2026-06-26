@@ -626,6 +626,7 @@ class Assets {
 			200 => array( -3, 1, 94.1 ),
 			300 => array( -3, -2, 92.2 ),
 			400 => array( -4, 0, 79.6 ),
+			450 => array( -2, -3, 76.7 ),
 			500 => array( -4, 5, 59.8 ),
 			600 => array( 0, 0, $base['l'] ),
 			700 => array( 3, -7, 48.0 ),
@@ -673,6 +674,7 @@ class Assets {
 			--tutor-brand-200: {$palette[200]};
 			--tutor-brand-300: {$palette[300]};
 			--tutor-brand-400: {$palette[400]};
+			--tutor-brand-450: {$palette[450]};
 			--tutor-brand-500: {$palette[500]};
 			--tutor-brand-600: {$palette[600]};
 			--tutor-brand-700: {$palette[700]};

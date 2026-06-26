@@ -365,6 +365,12 @@
         width: 288px;
       }
 
+      &-nav,
+      .tutor-popover-body {
+        @include tutor-flex(column);
+        gap: $tutor-spacing-1;
+      }
+
       &-item {
         @include tutor-button-reset();
         @include tutor-typography(small);
