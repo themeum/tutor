@@ -39,12 +39,12 @@
       }
 
       &:nth-child(5)::after {
-        box-shadow: inset 0 -6px 20px 6px $tutor-surface-l1-hover;
+        box-shadow: inset 0 -6px 20px 0px $tutor-surface-l1-hover;
       }
 
       @include tutor-breakpoint-up(sm) {
         &:nth-child(-n + 4)::after {
-          box-shadow: inset -6px -6px 20px 6px $tutor-surface-l1-hover;
+          box-shadow: inset -6px -6px 20px 0px $tutor-surface-l1-hover;
         }
       }
 
@@ -52,11 +52,11 @@
         &:nth-child(1)::after,
         &:nth-child(3)::after,
         &:nth-child(4)::after {
-          box-shadow: inset -6px -6px 20px 6px $tutor-surface-l1-hover;
+          box-shadow: inset -6px -6px 20px 0px $tutor-surface-l1-hover;
         }
 
         &:nth-child(2)::after {
-          box-shadow: inset 6px -6px 20px 6px $tutor-surface-l1-hover;
+          box-shadow: inset 6px -6px 20px 0px $tutor-surface-l1-hover;
         }
       }
     }
