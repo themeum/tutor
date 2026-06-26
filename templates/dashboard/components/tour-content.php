@@ -20,7 +20,7 @@ use Tutor\Components\Constants\Variant;
 
 ?>
 
-<div class="tutor-modal-body tutor-tour-modal tutor-modal-content">
+<div class="tutor-tour-modal tutor-modal-content">
 	<div class="tutor-tour-images tutor-mb-6" :data-direction="slideDirection">
 		<template x-for="(slide, index) in slides" :key="index">
 			<div
