@@ -138,7 +138,10 @@ $footer_links = array(
 		</div>
 	</div>
 </div>
-<?php tutor_load_template( 'dashboard.components.tour' ); ?>
+<?php if ( User::is_student_view() ) : ?>
+	<?php tutor_load_template( 'dashboard.components.tour' ); ?>
+<?php endif; ?>
+	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 <?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
 	<?php wp_footer(); ?>
