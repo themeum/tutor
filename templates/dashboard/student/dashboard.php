@@ -43,5 +43,4 @@ tutor_load_template(
 	)
 );
 
-tutor_load_template( 'dashboard.components.tour' );
 do_action( 'tutor_after_continue_learning_section' );
