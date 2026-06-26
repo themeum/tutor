@@ -12,32 +12,33 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Modal;
+use Tutor\Helpers\UrlHelper;
 
 $slides_data = array(
 	array(
 		'title'      => __( 'Your learning experience just got a whole lot better', 'tutor' ),
-		'imageLarge' => 'https://placehold.co/568x366/E2E8F0/A0AEC0?text=Large',
-		'imageSmall' => 'https://placehold.co/324x366/E2E8F0/A0AEC0?text=Small',
+		'imageLarge' => UrlHelper::asset( 'images/tour/tour-1.webp' ),
+		'imageSmall' => UrlHelper::asset( 'images/tour/tour-1-sm.webp' ),
 	),
 	array(
 		'title'      => __( 'Find quiz attempts inside your courses', 'tutor' ),
-		'imageLarge' => 'https://placehold.co/568x366/E2E8F0/A0AEC0?text=Large',
-		'imageSmall' => 'https://placehold.co/324x366/E2E8F0/A0AEC0?text=Small',
+		'imageLarge' => UrlHelper::asset( 'images/tour/tour-2.webp' ),
+		'imageSmall' => UrlHelper::asset( 'images/tour/tour-2-sm.webp' ),
 	),
 	array(
 		'title'      => __( 'Access all your lesson & video notes in one place', 'tutor' ),
-		'imageLarge' => 'https://placehold.co/568x366/E2E8F0/A0AEC0?text=Large',
-		'imageSmall' => 'https://placehold.co/324x366/E2E8F0/A0AEC0?text=Small',
+		'imageLarge' => UrlHelper::asset( 'images/tour/tour-3.webp' ),
+		'imageSmall' => UrlHelper::asset( 'images/tour/tour-3-sm.webp' ),
 	),
 	array(
 		'title'      => __( 'Everything about your account now lives in one place', 'tutor' ),
-		'imageLarge' => 'https://placehold.co/568x366/E2E8F0/A0AEC0?text=Large',
-		'imageSmall' => 'https://placehold.co/324x366/E2E8F0/A0AEC0?text=Small',
+		'imageLarge' => UrlHelper::asset( 'images/tour/tour-4.webp' ),
+		'imageSmall' => UrlHelper::asset( 'images/tour/tour-4-sm.webp' ),
 	),
 	array(
 		'title'      => __( 'Switch between dark and light mode whenever you like', 'tutor' ),
-		'imageLarge' => 'https://placehold.co/568x366/E2E8F0/A0AEC0?text=Large',
-		'imageSmall' => 'https://placehold.co/324x366/E2E8F0/A0AEC0?text=Small',
+		'imageLarge' => UrlHelper::asset( 'images/tour/tour-5.webp' ),
+		'imageSmall' => UrlHelper::asset( 'images/tour/tour-5-sm.webp' ),
 	),
 );
 
