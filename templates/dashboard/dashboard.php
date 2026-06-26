@@ -44,16 +44,9 @@ if ( $is_instructor_approved && $used_instructor_registration ) {
 		tutor_load_template( 'dashboard.instructor.instructor-request-alert', array( 'variant' => 'success' ) );
 	}
 
-	$course_query = CourseModel::get_courses_by_args(
-		array(
-			'author'         => $user_id,
-			'fields'         => 'ids',
-			'posts_per_page' => 1,
-			'post_status'    => array( 'publish', 'private', 'draft', 'pending', 'future' ),
-		)
-	);
+	$course_count = (int) CourseModel::get_courses_by_instructor( $user_id, CourseModel::get_status_list(), 0, PHP_INT_MAX, true );
 
-	if ( ! $course_query->found_posts ) {
+	if ( ! $course_count ) {
 		tutor_load_template( 'dashboard.instructor.dashboard-empty' );
 		return;
 	}
