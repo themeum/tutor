@@ -132,12 +132,156 @@ class Tutor_Setup {
 		$setup_page = Input::get( 'page', '' );
 		if ( 'tutor-setup' === $setup_page ) {
 			$this->tutor_setup_wizard_header();
-			$this->tutor_setup_wizard_boarding();
-			$this->tutor_setup_wizard_type();
-			$this->tutor_setup_wizard_settings();
+			$this->tutor_setup_page();
+			// $this->tutor_setup_wizard_boarding();
+			// $this->tutor_setup_wizard_type();
+			// $this->tutor_setup_wizard_settings();
 			$this->tutor_setup_wizard_footer();
 			exit;
 		}
+	}
+
+	/**
+	 * Tutor setup page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function tutor_setup_page() {
+		$current_user            = wp_get_current_user();
+		$display_name            = $current_user instanceof \WP_User && $current_user->exists() ? tutor_utils()->display_name( $current_user->ID ) : __( 'there', 'tutor' );
+		$logo_url                = tutor()->url . 'assets/images/tutor-logo.png';
+		$welcome_placeholder_url = 'https://placehold.co/356x176/png?text=Placeholder+Image';
+		$card_placeholder_url    = 'https://placehold.co/72x48/png?text=Image';
+		?>
+		<div id="tutor-setup-wrapper" class="tutor-d-flex tutor-flex-column tutor-align-center tutor-justify-center">
+			<section class="tutor-setup-screen tutor-setup-screen-welcome is-active" data-screen="welcome">
+				<div class="tutor-setup-screen-logo tutor-d-flex tutor-justify-center">
+					<img src="<?php echo esc_url( $logo_url ); ?>" alt="<?php esc_attr_e( 'Tutor LMS', 'tutor' ); ?>">
+				</div>
+
+				<div class="tutor-setup-card">
+					<div class="tutor-setup-card-body">
+						<div class="tutor-setup-welcome-text">
+							<div class="tutor-setup-welcome-greeting">
+								Hello <span> <?php echo esc_html( $display_name ); ?></span>
+							</div>
+							<h2 class="tutor-setup-welcome-title">
+								<?php esc_html_e( 'Welcome to', 'tutor' ); ?>
+								<span><?php esc_html_e( 'Tutor LMS', 'tutor' ); ?></span>
+							</h2>
+						</div>
+
+						<div class="tutor-setup-welcome-media">
+							<img src="<?php echo esc_url( tutor()->url . 'assets/images/tutor-onboard-hero-img.png' ); ?>" alt="<?php esc_attr_e( 'Setup welcome preview', 'tutor' ); ?>">
+						</div>
+
+						<div class="tutor-setup-welcome-description">
+							<?php
+								echo wp_kses(
+									sprintf(
+										/* translators: %s: Number of trusted websites */
+										__( 'Get started with an all-in-one platform to create, manage, and sell your courses effortlessly, trusted by over %s eLearning websites worldwide.', 'tutor' ),
+										'<span>100k+</span>'
+									),
+									array(
+										'span' => array(),
+									)
+								);
+							?>
+						</div>
+					</div>
+
+					<div class="tutor-setup-card-footer">
+						<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-block tutor-setup-next-screen" data-target="preferences">
+							<span><?php esc_html_e( 'Next', 'tutor' ); ?></span>
+							<span aria-hidden="true">&#8594;</span>
+						</button>
+					</div>
+				</div>
+			</section>
+
+			<section class="tutor-setup-screen tutor-setup-screen-preferences" data-screen="preferences">
+				<div class="tutor-setup-screen-logo tutor-d-flex tutor-justify-center">
+					<img src="<?php echo esc_url( $logo_url ); ?>" alt="<?php esc_attr_e( 'Tutor LMS', 'tutor' ); ?>">
+				</div>
+
+				<div class="tutor-setup-card">
+					<div class="tutor-setup-card-body">
+						<h2 class="tutor-setup-preferences-title"><?php esc_html_e( 'Choose a look for your learners', 'tutor' ); ?></h2>
+
+						<div class="tutor-setup-preferences-group">
+							<h3 class="tutor-setup-preferences-label"><?php esc_html_e( 'Default Learning Mode', 'tutor' ); ?></h3>
+
+							<div class="tutor-setup-choice-wrapper tutor-setup-choice-learning">
+								<label class="tutor-setup-choice-card is-selected">
+									<input type="radio" class="tutor-setup-choice-input" name="tutor_setup_learning_mode" value="modern" checked>
+									<span class="tutor-setup-choice-media">
+										<img src="<?php echo esc_url( tutor()->assets_url . 'images/images-v2/learning-mode/modern.svg' ); ?>" alt="<?php esc_attr_e( 'Modern mode preview', 'tutor' ); ?>">
+									</span>
+									<span class="tutor-setup-choice-text"><?php esc_html_e( 'Modern', 'tutor' ); ?></span>
+								</label>
+
+								<label class="tutor-setup-choice-card">
+									<input type="radio" class="tutor-setup-choice-input" name="tutor_setup_learning_mode" value="kids">
+									<span class="tutor-setup-choice-media">
+										<img src="<?php echo esc_url( tutor()->assets_url . 'images/images-v2/learning-mode/kids.svg' ); ?>" alt="<?php esc_attr_e( 'Kids mode preview', 'tutor' ); ?>">
+									</span>
+									<span class="tutor-setup-choice-text"><?php esc_html_e( 'Kids', 'tutor' ); ?></span>
+								</label>
+							</div>
+						</div>
+
+						<div class="tutor-setup-preferences-group">
+							<h3 class="tutor-setup-preferences-label"><?php esc_html_e( 'Default Theme', 'tutor' ); ?></h3>
+
+							<div class="tutor-setup-choice-wrapper tutor-setup-choice-theme">
+								<label class="tutor-setup-choice-card is-selected">
+									<input type="radio" class="tutor-setup-choice-input" name="tutor_setup_theme" value="light" checked>
+									<span class="tutor-setup-choice-media">
+										<img src="<?php echo esc_url( tutor()->assets_url . 'images/images-v2/default-theme/light.webp' ); ?>" alt="<?php esc_attr_e( 'Light theme preview', 'tutor' ); ?>">
+									</span>
+									<span class="tutor-setup-choice-text"><?php esc_html_e( 'Light', 'tutor' ); ?></span>
+								</label>
+
+								<label class="tutor-setup-choice-card">
+									<input type="radio" class="tutor-setup-choice-input" name="tutor_setup_theme" value="dark">
+									<span class="tutor-setup-choice-media">
+										<img src="<?php echo esc_url( tutor()->assets_url . 'images/images-v2/default-theme/dark.webp' ); ?>" alt="<?php esc_attr_e( 'Dark theme preview', 'tutor' ); ?>">
+									</span>
+									<span class="tutor-setup-choice-text"><?php esc_html_e( 'Dark', 'tutor' ); ?></span>
+								</label>
+
+								<label class="tutor-setup-choice-card">
+									<input type="radio" class="tutor-setup-choice-input" name="tutor_setup_theme" value="auto">
+									<span class="tutor-setup-choice-media">
+										<img src="<?php echo esc_url( tutor()->assets_url . 'images/images-v2/default-theme/auto.webp' ); ?>" alt="<?php esc_attr_e( 'Auto theme preview', 'tutor' ); ?>">
+									</span>
+									<span class="tutor-setup-choice-text"><?php esc_html_e( 'Auto', 'tutor' ); ?></span>
+								</label>
+							</div>
+						</div>
+
+						<div class="tutor-setup-load-sample tutor-form-check tutor-d-flex tutor-align-center tutor-gap-1 tutor-setup-checkbox">
+							<input id="tutor-setup-load-sample-course" type="checkbox" class="tutor-form-check-input" checked>
+							<label for="tutor-setup-load-sample-course" class="tutor-setup-checkbox-label">
+								<?php esc_html_e( 'Load sample courses to help you get started.', 'tutor' ); ?>
+							</label>
+						</div>
+					</div>
+
+					<div class="tutor-setup-card-footer tutor-setup-card-footer-stack">
+						<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-block">
+							<span><?php esc_html_e( 'Let\'s go', 'tutor' ); ?></span>
+							<span aria-hidden="true">&#8594;</span>
+						</button>
+						<p class="tutor-setup-help-text"><?php esc_html_e( 'Don\'t worry, you can always change these settings later! 😊', 'tutor' ); ?></p>
+					</div>
+				</div>
+			</section>
+		</div>
+		<?php
 	}
 
 	/**
@@ -414,7 +558,7 @@ class Tutor_Setup {
 				$html .= $this->tutor_setup_wizard_action_final();
 			}
 				$html .= '</li>';
-				$i++;
+				++$i;
 		}
 
 		echo tutor_kses_html( $html );//phpcs:ignore
@@ -838,7 +982,7 @@ class Tutor_Setup {
 		$page = Input::get( 'page', '' );
 		if ( 'tutor-setup' === $page ) {
 			wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
-			wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+			wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 			wp_localize_script( 'tutor-setup', '_tutorobject', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 			wp_set_script_translations( 'tutor-setup', 'tutor', tutor()->path . 'languages/' );
 		}
@@ -867,4 +1011,3 @@ class Tutor_Setup {
 		update_option( 'tutor_welcome_page_visited', true );
 	}
 }
-
