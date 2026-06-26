@@ -15,7 +15,7 @@ import Popover from './Popover';
 interface ConfirmationPopoverProps<TRef> {
   triggerRef: RefObject<TRef>;
   isOpen: boolean;
-  title: string;
+  title: string | ReactNode;
   message: string | ReactNode;
   onConfirmation: () => void;
   onCancel?: () => void;

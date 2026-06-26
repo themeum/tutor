@@ -40,9 +40,9 @@ const defaultTutorConfig = {
   supported_video_sources: [] as any[],
   edd_products: [] as any[],
   bp_groups: [] as any[],
-  timezones: {},
+  timezones: {} as Record<string, any>,
   addons_data: [] as any[],
-  kids_icons_registry: [] as string[],
+  kids_icons_registry: [] as any[],
   is_kids_mode: false,
   user_preferences: {
     auto_play_next: false,
@@ -67,10 +67,10 @@ const defaultTutorConfig = {
       user_status: '',
       display_name: '',
     },
-    caps: {},
+    caps: {} as Record<string, any>,
     cap_key: '',
-    roles: [] as string[],
-    allcaps: {},
+    roles: [] as any[],
+    allcaps: {} as Record<string, any>,
     filter: null,
   },
   settings: {
@@ -92,12 +92,9 @@ const defaultTutorConfig = {
     instructor_can_publish_course: 'off',
     youtube_api_key_exist: false,
     membership_only_mode: false,
-    enable_tax: false as boolean | string,
-    enable_individual_tax_control: false as boolean | string,
+    enable_tax: false,
+    enable_individual_tax_control: false,
     is_tax_included_in_price: false,
-    quiz_attempts_allowed: 10,
-    pagination_per_page: 10,
-    has_active_membership_plans: false,
   },
   tutor_currency: {
     symbol: '',
@@ -108,7 +105,7 @@ const defaultTutorConfig = {
     no_of_decimal: '',
   },
   visibility_control: {
-    course_builder: {} as Record<string, unknown>,
+    course_builder: {},
   },
 };
 

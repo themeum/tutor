@@ -62,7 +62,7 @@
 
   @if $color == 'brand' {
     $shadow: $tutor-ring-brand-shadow-xs;
-    $outline-color: #90a0f7;
+    $outline-color: $tutor-brand-450;
   }
 
   @if $color == 'error' {

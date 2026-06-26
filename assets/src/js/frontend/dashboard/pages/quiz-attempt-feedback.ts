@@ -2,10 +2,6 @@ import { __ } from '@wordpress/i18n';
 
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-
-import endpoints from '@TutorShared/utils/endpoints';
 
 const REVIEW_STATUSES = ['correct', 'incorrect'] as const;
 const REVIEW_STATUS_FIELD = 'review_statuses' as const;
@@ -38,9 +34,10 @@ interface QuizAttemptSubmitResponse {
 }
 
 const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) => {
-  const query = window.TutorCore.query;
-  const toast = window.TutorCore.toast;
-  const form = window.TutorCore.form;
+  const { query, toast, endpoints, form } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
+
   const reviewStatusFieldPattern = new RegExp(`^${REVIEW_STATUS_FIELD}\\[[^\\]]+\\]$`);
   let isProgrammaticReload = false;
 

@@ -1,7 +1,5 @@
 import type { Chart, ChartConfiguration, ChartItem, ScriptableContext, TooltipModel } from 'chart.js/auto';
 
-import { createPriceFormatter, formatPrice } from '@TutorShared/utils/currency';
-
 export interface OverviewChartProps {
   earnings: number[];
   enrolled: number[];
@@ -70,7 +68,7 @@ const CHART_CONFIG = {
     statCardHeight: '33px',
     width: '100%',
     overviewMaxHeight: 179,
-    completionMaxHeight: 60,
+    completionMaxHeight: 118,
   },
 
   aspectRatio: {
@@ -90,7 +88,7 @@ const CHART_CONFIG = {
   },
 
   bar: {
-    thickness: 54,
+    thickness: 118,
     borderRadius: 5,
     borderWidth: 3,
   },
@@ -142,17 +140,45 @@ const getCSSProperty = (element: HTMLElement, propertyName: string): string => {
   return getComputedStyle(element).getPropertyValue(propertyName).trim();
 };
 
-const getAnimationConfig = (): { duration: 0 } | undefined => {
+const shouldReduceMotion = (): boolean => {
   const wrapper = document.querySelector('[data-tutor-theme]') || document.documentElement;
   const motion = wrapper.getAttribute('data-tutor-motion');
+  return (
+    motion === 'reduce' ||
+    ((!motion || motion === 'auto') && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  );
+};
 
-  if (motion === 'reduce') {
-    return { duration: 0 };
-  }
-  if ((!motion || motion === 'auto') && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+const getAnimationConfig = (): { duration: 0 } | undefined => {
+  if (shouldReduceMotion()) {
     return { duration: 0 };
   }
   return undefined;
+};
+
+const getCompletionChartAnimation = (): { duration: 0 } | Record<string, unknown> => {
+  if (shouldReduceMotion()) {
+    return { duration: 0 };
+  }
+
+  return {
+    base: { duration: 0 },
+    x: {
+      from: (ctx: Record<string, unknown>) => {
+        const chart = ctx.chart as {
+          scales: { x: { getPixelForValue: (v: number) => number } };
+          data: { datasets: Array<{ data: Array<number> }> };
+        };
+        const dataIndex = ctx.dataIndex as number;
+        const datasetIndex = ctx.datasetIndex as number;
+        let cumulative = 0;
+        for (let i = 0; i < datasetIndex; i++) {
+          cumulative += chart.data.datasets[i].data[dataIndex] || 0;
+        }
+        return chart.scales.x.getPixelForValue(cumulative);
+      },
+    },
+  };
 };
 
 const createChart = (canvas: HTMLCanvasElement, config: ChartConfiguration): void => {
@@ -547,6 +573,7 @@ export const statCard = (data: number[]) => ({
 
   createChartConfig(data: number[], colors: StatCardColors): ChartConfiguration<'line'> {
     const dataLength = data.length;
+    const { formatPrice } = window.TutorCore.currency;
 
     return {
       type: 'line',
@@ -792,6 +819,9 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
     const chartColors = [colors.enrolled, colors.completed, colors.in_progress, colors.inactive, colors.cancelled];
     const dataKeys: CourseCompletionChartDataKey[] = ['enrolled', 'completed', 'in_progress', 'inactive', 'cancelled'];
 
+    const lastNonZeroIndex = chartData.reduce((last, value, i) => (value > 0 ? i : last), -1);
+    const firstNonZeroIndex = chartData.findIndex((value) => value > 0);
+
     return {
       type: 'bar',
       data: {
@@ -801,20 +831,29 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
           backgroundColor: chartColors[index],
           barThickness: CHART_CONFIG.bar.thickness,
           borderRadius: {
-            bottomLeft: index === 0 ? CHART_CONFIG.bar.borderRadius : 0,
-            topLeft: index === 0 ? CHART_CONFIG.bar.borderRadius : 0,
-            bottomRight: index === chartData.length - 1 ? CHART_CONFIG.bar.borderRadius : 0,
-            topRight: index === chartData.length - 1 ? CHART_CONFIG.bar.borderRadius : 0,
+            bottomLeft: index === (firstNonZeroIndex > -1 ? firstNonZeroIndex : 0) ? CHART_CONFIG.bar.borderRadius : 0,
+            topLeft: index === (firstNonZeroIndex > -1 ? firstNonZeroIndex : 0) ? CHART_CONFIG.bar.borderRadius : 0,
+            bottomRight:
+              index === (lastNonZeroIndex > -1 ? lastNonZeroIndex : chartData.length - 1)
+                ? CHART_CONFIG.bar.borderRadius
+                : 0,
+            topRight:
+              index === (lastNonZeroIndex > -1 ? lastNonZeroIndex : chartData.length - 1)
+                ? CHART_CONFIG.bar.borderRadius
+                : 0,
           },
           borderSkipped: false,
           borderWidth: {
-            right: index === chartData.length - 1 ? 0 : CHART_CONFIG.bar.borderWidth,
+            right:
+              index === (lastNonZeroIndex > -1 ? lastNonZeroIndex : chartData.length - 1)
+                ? 0
+                : CHART_CONFIG.bar.borderWidth,
           },
           borderColor: getCSSProperty(this.$refs.canvas, '--tutor-surface-l1'),
         })),
       },
       options: {
-        animation: getAnimationConfig(),
+        animation: getCompletionChartAnimation(),
         indexAxis: 'y',
         responsive: CHART_CONFIG.common.responsive,
         maintainAspectRatio: false,
@@ -854,7 +893,7 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
 });
 
 const formatPriceByMonetization = (data: MonetizationData, value: number): string =>
-  createPriceFormatter({
+  window.TutorCore.currency.createPriceFormatter({
     symbol: data?.symbol ?? '$',
     position: data?.position ?? 'left',
     thousandSeparator: data?.thousand_separator ?? ',',

@@ -5,10 +5,6 @@
  */
 
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-
-import endpoints from '@TutorShared/utils/endpoints';
 
 interface ResetProgressPayload {
   course_id: number;
@@ -26,9 +22,12 @@ interface ResetProgressResponse {
 
 export const sidebarComponent = ({ courseId, resetModalId }: { courseId: number; resetModalId: string }) => {
   const { query, modal, toast } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
+  const { endpoints } = window.TutorCore;
 
   return {
-    pagesHeight: 0,
+    pagesHeight: null as number | null,
     resizing: false,
     sidebarOpen: false,
     courseId: courseId,
@@ -90,7 +89,7 @@ export const sidebarComponent = ({ courseId, resetModalId }: { courseId: number;
     },
 
     togglePagesHeight() {
-      if (this.pagesHeight > 36) {
+      if ((this.pagesHeight || 0) > 36) {
         this.pagesHeight = 36;
       } else if (this.$refs.pagesList) {
         this.pagesHeight = this.$refs.pagesList.scrollHeight;
