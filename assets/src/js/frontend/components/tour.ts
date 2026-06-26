@@ -6,12 +6,13 @@ interface SlideData {
   imageSmall: string;
 }
 
+const LOCAL_STORAGE_KEY = 'tutor_tour_seen_';
 const SLIDE_DIRECTION = {
   NEXT: 'next',
   BACK: 'back',
 };
 
-const getStorageKey = (userId: number) => `tutor_tour_seen_${userId}`;
+const getStorageKey = (userId: number) => `${LOCAL_STORAGE_KEY}${userId}`;
 
 const tour = ({ slidesData, modalId, userId }: { slidesData: SlideData[]; modalId: string; userId: number }) => {
   const modal = window.TutorCore.modal;
