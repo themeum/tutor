@@ -20,13 +20,16 @@ const tour = ({ slidesData, modalId }: { slidesData: SlideData[]; modalId: strin
     isOpen: false,
     slideDirection: SLIDE_DIRECTION.NEXT,
     $nextTick: undefined as ((callback: () => void) => void) | undefined,
+    _onModalClose: undefined as EventListener | undefined,
 
     init() {
-      window.addEventListener(TUTOR_CUSTOM_EVENTS.MODAL_CLOSE, ((e: CustomEvent) => {
-        if (e.detail === modalId) {
+      this._onModalClose = ((e: CustomEvent) => {
+        if (e.detail?.id === modalId) {
           this.isOpen = false;
         }
-      }) as EventListener);
+      }) as EventListener;
+
+      document.addEventListener(TUTOR_CUSTOM_EVENTS.MODAL_CLOSE, this._onModalClose);
 
       if (localStorage.getItem(TOUR_LOCAL_STORAGE_KEY) !== 'true') {
         this.isOpen = true;
@@ -34,6 +37,10 @@ const tour = ({ slidesData, modalId }: { slidesData: SlideData[]; modalId: strin
           modal.showModal(modalId);
         });
       }
+    },
+
+    destroy() {
+      document.removeEventListener(TUTOR_CUSTOM_EVENTS.MODAL_CLOSE, this._onModalClose!);
     },
 
     next() {
