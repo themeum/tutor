@@ -195,6 +195,11 @@
       padding: $tutor-spacing-none;
       @include tutor-flex(column);
 
+      body:has(#wpadminbar) & {
+        top: 46px !important;
+        height: calc(100% - 46px) !important;
+      }
+
       &-profile {
         padding: $tutor-spacing-none;
         gap: $tutor-spacing-none;
