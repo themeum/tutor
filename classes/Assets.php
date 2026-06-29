@@ -224,6 +224,7 @@ class Assets {
 			'course_slug'                  => tutor_utils()->get_option( 'course_permalink_base', 'courses' ),
 			'lesson_slug'                  => tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ),
 			'quiz_slug'                    => tutor_utils()->get_option( 'quiz_permalink_base', 'quizzes' ),
+			'is_tour_completed'            => (bool) get_user_meta( get_current_user_id(), User::TOUR_COMPLETED_META, true ),
 		);
 	}
 

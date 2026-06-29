@@ -84,6 +84,7 @@ declare global {
       wp_rest_nonce: string;
       is_admin: string;
       is_admin_bar_showing: string;
+      is_tour_completed: string;
       max_upload_size: string; // in bytes
       content_change_event: string;
       is_tutor_course_edit: string;
