@@ -12,8 +12,6 @@
 
 namespace Tutor\Components;
 
-use TUTOR\User;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
