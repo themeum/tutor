@@ -1,3 +1,4 @@
+import { tutorConfig } from '@Core/ts/config/config';
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 
 interface SlideData {
@@ -6,17 +7,15 @@ interface SlideData {
   imageSmall: string;
 }
 
-const LOCAL_STORAGE_KEY = 'tutor_tour_seen_';
 const SLIDE_DIRECTION = {
   NEXT: 'next',
   BACK: 'back',
 };
 
-const getStorageKey = (userId: number) => `${LOCAL_STORAGE_KEY}${userId}`;
+const tour = ({ slidesData, modalId }: { slidesData: SlideData[]; modalId: string }) => {
+  const { modal, api, endpoints } = window.TutorCore;
+  const isTourComplete = Number(tutorConfig.is_tour_completed);
 
-const tour = ({ slidesData, modalId, userId }: { slidesData: SlideData[]; modalId: string; userId: number }) => {
-  const modal = window.TutorCore.modal;
-  const storageKey = getStorageKey(userId);
   return {
     currentSlide: 0,
     slides: slidesData || [],
@@ -34,7 +33,7 @@ const tour = ({ slidesData, modalId, userId }: { slidesData: SlideData[]; modalI
 
       document.addEventListener(TUTOR_CUSTOM_EVENTS.MODAL_CLOSE, this._onModalClose);
 
-      if (localStorage.getItem(storageKey) !== 'true') {
+      if (!isTourComplete) {
         this.isOpen = true;
         this.$nextTick?.(() => {
           modal.showModal(modalId);
@@ -63,7 +62,9 @@ const tour = ({ slidesData, modalId, userId }: { slidesData: SlideData[]; modalI
     },
 
     skip() {
-      localStorage.setItem(storageKey, 'true');
+      // Fire-and-forget AJAX call to save user meta
+      api.wpPost(endpoints.COMPLETE_TOUR);
+
       this.isOpen = false;
       modal.closeModal(modalId);
     },
