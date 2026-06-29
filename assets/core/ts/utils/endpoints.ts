@@ -228,6 +228,9 @@ const endpoints = {
   // Instructor Dashboard
   SAVE_INSTRUCTOR_HOME_SECTIONS_ORDER: 'tutor_save_instructor_home_sections_order',
   SAVE_INSTRUCTOR_HOME_SECTIONS_VISIBILITY: 'tutor_save_instructor_home_sections_visibility',
+
+  // Tour
+  COMPLETE_TOUR: 'tutor_complete_tour',
 } as const;
 
 export default endpoints;
