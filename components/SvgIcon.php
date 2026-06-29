@@ -12,8 +12,6 @@
 
 namespace Tutor\Components;
 
-use TUTOR\User;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -90,6 +88,15 @@ class SvgIcon extends BaseComponent {
 	 * @var bool
 	 */
 	protected $ignore_kids = false;
+
+	/**
+	 * Flip the icon in RTL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $flip_rtl = false;
 
 	/**
 	 * Set icon name.
@@ -179,6 +186,23 @@ class SvgIcon extends BaseComponent {
 	}
 
 	/**
+	 * Flip the icon in RTL.
+	 *
+	 * Use this only for directional icons such as arrows,
+	 * chevrons and pagination controls.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $flip Whether to flip in RTL.
+	 *
+	 * @return $this
+	 */
+	public function flip_rtl( bool $flip = true ): self {
+		$this->flip_rtl = $flip;
+		return $this;
+	}
+
+	/**
 	 * Set custom HTML attribute.
 	 *
 	 * @since 4.0.0
@@ -241,6 +265,12 @@ class SvgIcon extends BaseComponent {
 		if ( ! empty( $this->color ) ) {
 			$color_class               = "tutor-icon-{$this->color}";
 			$this->attributes['class'] = trim( ( $this->attributes['class'] ?? '' ) . " {$color_class}" );
+		}
+
+		if ( $this->flip_rtl ) {
+			$this->attributes['class'] = trim(
+				( $this->attributes['class'] ?? '' ) . ' tutor-icon-flip-rtl'
+			);
 		}
 
 		$attributes = $this->get_attributes_string();

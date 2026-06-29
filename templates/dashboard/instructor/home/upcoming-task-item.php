@@ -60,6 +60,7 @@ $label = __( 'Live Session', 'tutor' );
 			->variant( Variant::LINK )
 			->size( Size::X_SMALL )
 			->icon( Icon::CHEVRON_RIGHT_2, 'right' )
+			->flip_icon_rtl()
 			->attr( 'href', $item['url'] )
 			->attr( 'class', 'tutor-dashboard-home-task-link' )
 			->attr( 'data-link', '' )

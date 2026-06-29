@@ -136,6 +136,15 @@ class Button extends BaseComponent {
 	protected $icon_attributes = array();
 
 	/**
+	 * Whether to flip the button icon in RTL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $icon_flip_rtl = false;
+
+	/**
 	 * Whether button is disabled.
 	 *
 	 * @since 4.0.0
@@ -258,6 +267,23 @@ class Button extends BaseComponent {
 	}
 
 	/**
+	 * Flip the button icon in RTL.
+	 *
+	 * Use this only for directional icons such as arrows,
+	 * chevrons and pagination controls.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $flip Whether to flip the icon in RTL.
+	 *
+	 * @return $this
+	 */
+	public function flip_icon_rtl( bool $flip = true ): self {
+		$this->icon_flip_rtl = $flip;
+		return $this;
+	}
+
+	/**
 	 * Set the HTML tag for rendering.
 	 *
 	 * @since 4.0.0
@@ -348,6 +374,7 @@ class Button extends BaseComponent {
 					->name( $this->icon )
 					->size( $this->icon_size )
 					->color( $this->icon_color )
+					->flip_rtl( $this->icon_flip_rtl )
 					->attrs( $this->icon_attributes )
 					->render();
 				$icon_html = ob_get_clean();

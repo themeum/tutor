@@ -151,6 +151,7 @@ $is_instructor_view = User::is_instructor_view();
 								->size( Size::X_SMALL )
 								->icon( Icon::LEFT, 'left', 20 )
 								->icon_only()
+								->flip_icon_rtl()
 								->attr( '@click', 'hide()' )
 								->render();
 							?>
@@ -252,7 +253,7 @@ $is_instructor_view = User::is_instructor_view();
 								?>
 								<li>
 									<a href="<?php echo esc_url( $item['url'] ?? '#' ); ?>" class="<?php echo ( $key === $active_nav ) ? 'active' : ''; ?> tutor-small">
-										<?php SvgIcon::make()->name( $icon )->size( 20 )->render(); ?>
+										<?php SvgIcon::make()->name( $icon )->size( 20 )->flip_rtl( 'logout' === $key ? true : false )->render(); ?>
 										<span><?php echo esc_html( $item['title'] ); ?></span>
 									</a>
 								</li>

@@ -312,6 +312,7 @@ $default_values = array(
 						->size( Size::LARGE )
 						->variant( Variant::OUTLINE )
 						->icon( Icon::ARROW_LEFT_2, 'left', 20 )
+						->flip_icon_rtl()
 						->attr( 'type', 'button' )
 						->attr( ':disabled', 'isRevealSubmitting' )
 						->attr( '@click', 'goPrev()' )
