@@ -482,11 +482,10 @@ class OrderModel {
 	 * the user ID from the order data, and returns the modified order data.
 	 *
 	 * @since 3.0.0
-	 * @since 4.0.0 param $order added.
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
-	 * @param int       $order_id The ID of the order to retrieve.
+	 * @param int $order_id The ID of the order to retrieve.
 	 *
 	 * @return object|false The order data with the student's information included, or false if no order is found.
 	 */

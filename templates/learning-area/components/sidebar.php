@@ -6,6 +6,8 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * @var array $menu_items passed from tutor\templates\learning-area\index.php
  */
 
 defined( 'ABSPATH' ) || exit;

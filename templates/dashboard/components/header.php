@@ -7,6 +7,8 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * @var int $enrolled_student_count passed from tutor\templates\dashboard.php
  */
 
 defined( 'ABSPATH' ) || exit;

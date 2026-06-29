@@ -7,6 +7,8 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * @var \stdClass $enrolled_course passed from tutor\templates\dashboard\student\dashboard.php
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -3562,11 +3562,10 @@ class Utils {
 	 */
 	public function get_completed_quiz( int $course_id, int $student_id ): int {
 		global $wpdb;
-		$course_id               = sanitize_text_field( $course_id );
-		$student_id              = sanitize_text_field( $student_id );
-		$complete_quiz_cache_key = __FUNCTION__ . "_{$course_id}_{$student_id}";
-
-		$cached = TutorCache::get( $complete_quiz_cache_key );
+		$course_id  = sanitize_text_field( $course_id );
+		$student_id = sanitize_text_field( $student_id );
+		$cache_key  = __FUNCTION__ . "_{$course_id}_{$student_id}";
+		$cached     = TutorCache::get( $cache_key );
 		if ( false !== $cached ) {
 			return $cached;
 		}
@@ -3585,7 +3584,7 @@ class Utils {
 			)
 		);
 
-		TutorCache::set( $complete_quiz_cache_key, (int) $count );
+		TutorCache::set( $cache_key, (int) $count );
 		return (int) $count;
 	}
 
