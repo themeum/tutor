@@ -13,6 +13,38 @@ use Tutor\Components\Badge;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 
+/**
+ * Build Alpine.js attribute expressions for a reactive review-status badge.
+ *
+ * @param string $review_field_name The form field name, e.g. "review_statuses[42]".
+ *
+ * @return array{ x_text: string, class_expr: string }
+ */
+$build_badge_attrs = function ( string $review_field_name ): array {
+	$label_map = wp_json_encode(
+		array(
+			'pending'   => __( 'Pending', 'tutor' ),
+			'correct'   => __( 'Correct', 'tutor' ),
+			'incorrect' => __( 'Incorrect', 'tutor' ),
+		)
+	);
+
+	$variant_map = wp_json_encode(
+		array(
+			'pending'   => Badge::WARNING,
+			'correct'   => Badge::SUCCESS,
+			'incorrect' => Badge::ERROR,
+		)
+	);
+
+	$field = esc_attr( $review_field_name );
+
+	return array(
+		'x_text'     => "({$label_map})[watch('{$field}')] ?? ''",
+		'class_expr' => "'tutor-badge tutor-badge-rounded tutor-badge-' + (({$variant_map})[watch('{$field}')] ?? 'info')",
+	);
+};
+
 $index                = (int) ( $index ?? 1 );
 $question_title       = (string) ( $question_title ?? '' );
 $question_description = (string) ( $question_description ?? '' );
@@ -54,18 +86,30 @@ $review_field_name    = (string) ( $review_field_name ?? '' );
 				<div class="tutor-quiz-question-header-status">
 					<?php foreach ( $status_badges as $badge ) : ?>
 						<?php
-						$badge_label   = (string) ( $badge['label'] ?? '' );
-						$badge_variant = (string) ( $badge['variant'] ?? '' );
+						$badge_status = (string) ( $badge['status'] ?? '' );
 
-						if ( '' === $badge_label || '' === $badge_variant ) {
-							continue;
-						}
+						if ( $badge_status && $is_instructor_review ) :
+							$badge_attrs = $build_badge_attrs( $review_field_name );
 
-						Badge::make()
-							->label( $badge_label )
-							->variant( $badge_variant )
-							->rounded()
-							->render();
+							Badge::make()
+								->rounded()
+								->attr( 'x-text', $badge_attrs['x_text'] )
+								->attr( ':class', $badge_attrs['class_expr'] )
+								->render();
+						else :
+							$badge_label   = (string) ( $badge['label'] ?? '' );
+							$badge_variant = (string) ( $badge['variant'] ?? '' );
+
+							if ( '' === $badge_label || '' === $badge_variant ) {
+								continue;
+							}
+
+							Badge::make()
+								->label( $badge_label )
+								->variant( $badge_variant )
+								->rounded()
+								->render();
+						endif;
 						?>
 					<?php endforeach; ?>
 				</div>

@@ -26,6 +26,9 @@
       color: $tutor-text-brand;
       background-color: $tutor-tab-l3-active;
       box-shadow: $tutor-tab-active-shadow;
+      svg {
+        color: $tutor-icon-brand;
+      }
     }
 
     &:focus {
@@ -33,6 +36,9 @@
       background-color: $tutor-tab-l3-active;
       box-shadow: none;
       outline: none;
+      svg {
+        color: $tutor-icon-brand;
+      }
     }
 
     &:focus-visible {
@@ -44,6 +50,9 @@
       background-color: $tutor-tab-l3-active;
       color: $tutor-text-brand;
       box-shadow: $tutor-tab-active-shadow;
+      svg {
+        color: $tutor-icon-brand;
+      }
     }
 
     svg {

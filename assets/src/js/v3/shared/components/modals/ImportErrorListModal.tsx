@@ -10,9 +10,8 @@ import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ImportContentResponse } from '@TutorShared/utils/types';
 import { getObjectEntries } from '@TutorShared/utils/util';
-
-import { type ImportContentResponse } from '@ImportExport/services/import-export';
 
 interface ImportErrorListModalProps extends ModalProps {
   errors: ImportContentResponse['errors'];

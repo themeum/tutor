@@ -188,8 +188,9 @@ declare global {
         enable_tax: boolean;
         enable_individual_tax_control: boolean;
         is_tax_included_in_price: boolean;
-        pagination_per_page: string;
-        quiz_attempts_allowed: string;
+        pagination_per_page: string | number;
+        quiz_attempts_allowed: string | number;
+        has_active_membership_plans: boolean;
       };
       tutor_currency: {
         symbol: string;

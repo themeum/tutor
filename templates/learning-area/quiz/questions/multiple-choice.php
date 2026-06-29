@@ -58,6 +58,7 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 						x-bind="<?php echo esc_attr( $register_attr ); ?>"
 					>
 					<label 
+						class="tutor-label"
 						for="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
 					>
 						<?php echo esc_html( $answer['answer_title'] ); ?>

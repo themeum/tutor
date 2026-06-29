@@ -9,6 +9,9 @@ import { type ModalService } from '@Core/ts/services/Modal';
 import { type QueryService } from '@Core/ts/services/Query';
 import { type ToastService } from '@Core/ts/services/toast/Toast';
 import { type WPMediaService } from '@Core/ts/services/WPMedia';
+import { type wpGet, type wpPost, type wpPostForm } from '@Core/ts/utils/api';
+import { type createPriceFormatter, type formatPrice } from '@Core/ts/utils/currency';
+import type endpoints from '@Core/ts/utils/endpoints';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface AlpineComponentMeta<TProps = any> {
@@ -27,7 +30,7 @@ export interface AjaxResponse<T = unknown> {
   status_code: number;
   success: boolean;
   message: string;
-  data?: T;
+  data: T;
 }
 
 export type LazyComponentLoader = () => Promise<AlpineComponentMeta>;
@@ -47,6 +50,16 @@ export interface TutorCore {
   query: QueryService;
   modal: ModalService;
   wpMedia: WPMediaService;
+  api: {
+    wpPost: typeof wpPost;
+    wpPostForm: typeof wpPostForm;
+    wpGet: typeof wpGet;
+  };
+  endpoints: typeof endpoints;
+  currency: {
+    createPriceFormatter: typeof createPriceFormatter;
+    formatPrice: typeof formatPrice;
+  };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
