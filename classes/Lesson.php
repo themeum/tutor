@@ -671,7 +671,12 @@ class Lesson extends Tutor_Base {
 	public function autoload_next_course_content() {
 		tutor_utils()->checking_nonce();
 
-		$post_id    = Input::post( 'post_id', 0, Input::TYPE_INT );
+		$post_id   = Input::post( 'post_id', 0, Input::TYPE_INT );
+		$course_id = tutor_utils()->get_course_id_by_content( $post_id );
+		if ( ! $course_id || ! EnrollmentModel::is_enrolled( $course_id ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$content_id = tutor_utils()->get_post_id( $post_id );
 		$contents   = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
 
