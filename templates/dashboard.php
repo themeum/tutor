@@ -139,7 +139,7 @@ $footer_links = array(
 	</div>
 </div>
 <?php if ( User::is_student_view() ) : ?>
-	<?php tutor_load_template( 'dashboard.components.tour' ); ?>
+	<?php tutor_load_template( 'shared.tour' ); ?>
 <?php endif; ?>
 	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>

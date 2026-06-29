@@ -78,13 +78,6 @@
     }
   }
 
-  .tutor-tour-skip-wrapper {
-    position: absolute;
-    bottom: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
   .tutor-transition-slide-enter {
     @include tutor-transition((transform, opacity));
   }
@@ -142,6 +135,16 @@
       .tutor-transition-slide-leave-end {
         transform: translateX(-100%);
       }
+    }
+  }
+}
+
+.tutor-tour-skip-wrapper {
+  .tutor-tour-skip-btn {
+    color: $tutor-text-primary-inverse;
+
+    &:hover {
+      color: $tutor-text-primary;
     }
   }
 }

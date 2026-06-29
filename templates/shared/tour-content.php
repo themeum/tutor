@@ -103,6 +103,7 @@ use Tutor\Components\Constants\Variant;
 	Button::make()
 		->label( __( 'Skip', 'tutor' ) )
 		->variant( Variant::GHOST )
+		->attr( 'class', 'tutor-tour-skip-btn' )
 		->attr( '@click', 'skip' )
 		->render();
 	?>
