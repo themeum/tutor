@@ -788,7 +788,7 @@ class User {
 		$user_id = get_current_user_id();
 		if ( ! $user_id ) {
 			$this->json_response(
-				__( 'User not logged in', 'tutor' ),
+				tutor_utils()->error_message(),
 				null,
 				HttpHelper::STATUS_UNAUTHORIZED
 			);
