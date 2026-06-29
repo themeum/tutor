@@ -971,10 +971,11 @@ class QuizModel {
 			return array();
 		}
 
-		$quiz_answers_cache_key = __FUNCTION__ . implode( '_', $ids );
-		$results                = TutorCache::get( $quiz_answers_cache_key );
+		$cache_key = __FUNCTION__ . implode( '_', $ids );
+		$cached    = TutorCache::get( $cache_key );
+		$results   = array();
 
-		if ( false === $results ) {
+		if ( false === $cached ) {
 			//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$results = $wpdb->get_results(
 				"SELECT answers.*,
@@ -987,7 +988,9 @@ class QuizModel {
 			);
 			//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-			TutorCache::set( $quiz_answers_cache_key, $results );
+			TutorCache::set( $cache_key, $results );
+		} else {
+			$results = $cached;
 		}
 
 		if ( $add_index ) {

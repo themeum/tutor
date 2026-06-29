@@ -50,7 +50,7 @@ $has_manual_coupon_code = ! empty( $coupon_code );
 
 $should_calculate_tax     = Tax::should_calculate_tax();
 $is_tax_included_in_price = Tax::is_tax_included_in_price();
-$tax_rate                 = $should_calculate_tax ? Tax::get_user_tax_rate( $user_id ) : '';
+$tax_rate                 = $should_calculate_tax ? Tax::get_user_tax_rate( $user_id ) : 0;
 
 $checkout_data   = $checkout_controller->prepare_checkout_items( $item_ids, $order_type, $coupon_code );
 $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_coupon_applied;

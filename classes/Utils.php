@@ -1470,7 +1470,7 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = get_current_user_id();
 
-		$course_first_lesson_cache_key = 'tutor_course_first_lesson_' . $course_id;
+		$course_first_lesson_cache_key = 'tutor_course_first_lesson_' . $course_id . '_' . $post_type;
 		$cache                         = TutorCache::get( $course_first_lesson_cache_key );
 
 		if ( false === $cache ) {
@@ -2117,8 +2117,8 @@ class Utils {
 
 		$user_id = $this->get_user_id( $user_id );
 
-		$completed_courses_cache_key = 'tutor_completed_courses_ids_by_user_' . $user_id;
-		$cache                       = TutorCache::get( $completed_courses_cache_key );
+		$cache_key = 'tutor_completed_courses_ids_by_user_' . $user_id;
+		$cache     = TutorCache::get( $cache_key );
 		if ( false !== $cache ) {
 			return $cache;
 		}
@@ -2142,7 +2142,7 @@ class Utils {
 			)
 		);
 
-		TutorCache::set( $completed_courses_cache_key, $course_ids );
+		TutorCache::set( $cache_key, $course_ids );
 
 		return $course_ids;
 	}
@@ -2175,10 +2175,10 @@ class Utils {
 			);
 		}
 
-		$enrolled_courses_cache_key = 'tutor_enrolled_courses_ids_by_user_' . $user_id . '_bundle_' . $with_bundle_enrolled_courses;
-		$cache                      = TutorCache::get( $enrolled_courses_cache_key );
-		if ( false !== $cache ) {
-			return $cache;
+		$cache_key = 'tutor_enrolled_courses_ids_by_user_' . $user_id . '_bundle_' . $with_bundle_enrolled_courses;
+		$cached    = TutorCache::get( $cache_key );
+		if ( false !== $cached ) {
+			return $cached;
 		}
 
 		$course_ids = $wpdb->get_col(
@@ -2197,7 +2197,7 @@ class Utils {
 			)
 		);
 
-		TutorCache::set( $enrolled_courses_cache_key, (array) $course_ids );
+		TutorCache::set( $cache_key, (array) $course_ids );
 
 		return $course_ids;
 	}
@@ -3278,21 +3278,21 @@ class Utils {
 	public function get_total_students_by_instructor( $instructor_id, $args = array() ) {
 		global $wpdb;
 
-		$course_post_type         = tutor()->course_post_type;
-		$enrollment_date_clause   = '';
-		$total_students_cache_key = __FUNCTION__ . "_{$instructor_id}";
+		$course_post_type       = tutor()->course_post_type;
+		$enrollment_date_clause = '';
+		$cache_key              = __FUNCTION__ . "_{$instructor_id}";
 
 		if ( ! empty( $args['from'] ) && ! empty( $args['to'] ) ) {
 			$from = Input::sanitize( $args['from'] );
 			$to   = Input::sanitize( $args['to'] );
 
-			$total_students_cache_key .= "_{$from}_{$to}";
+			$cache_key .= "_{$from}_{$to}";
 
 			$where['enrollment.post_date'] = array( 'BETWEEN', array( $from, $to ) );
 			$enrollment_date_clause        = ' AND ' . QueryHelper::prepare_where_clause( $where );
 		}
 
-		$cached = TutorCache::get( $total_students_cache_key );
+		$cached = TutorCache::get( $cache_key );
 		if ( false !== $cached ) {
 			return $cached;
 		}
@@ -3317,7 +3317,7 @@ class Utils {
 			)
 		);
 
-		TutorCache::set( $total_students_cache_key, $count );
+		TutorCache::set( $cache_key, $count );
 
 		return (int) $count;
 	}
@@ -3520,11 +3520,10 @@ class Utils {
 	public function get_completed_assignment( int $course_id, int $student_id ): int {
 		global $wpdb;
 
-		$course_id                     = sanitize_text_field( $course_id );
-		$student_id                    = sanitize_text_field( $student_id );
-		$complete_assignment_cache_key = __FUNCTION__ . "_{$course_id}_{$student_id}";
-
-		$cached = TutorCache::get( $complete_assignment_cache_key );
+		$course_id  = sanitize_text_field( $course_id );
+		$student_id = sanitize_text_field( $student_id );
+		$cache_key  = __FUNCTION__ . "_{$course_id}_{$student_id}";
+		$cached     = TutorCache::get( $cache_key );
 		if ( false !== $cached ) {
 			return $cached;
 		}
@@ -3547,7 +3546,7 @@ class Utils {
 			)
 		);
 
-		TutorCache::set( $complete_assignment_cache_key, (int) $count );
+		TutorCache::set( $cache_key, (int) $count );
 		return (int) $count;
 	}
 
@@ -7319,9 +7318,8 @@ class Utils {
 	 */
 	public function get_single_comment_user_post_id( $post_id, $user_id ) {
 		global $wpdb;
-		$single_user_comment_cache_key = __FUNCTION__ . "_{$post_id}_{$user_id}";
-
-		$cached = TutorCache::get( $single_user_comment_cache_key );
+		$cache_key = __FUNCTION__ . "_{$post_id}_{$user_id}";
+		$cached    = TutorCache::get( $cache_key );
 		if ( false !== $cached ) {
 			return $cached;
 		}
@@ -7338,7 +7336,8 @@ class Utils {
 				$user_id
 			)
 		);
-		TutorCache::set( $single_user_comment_cache_key, $query );
+
+		TutorCache::set( $cache_key, $query );
 		return $query ? $query : false;
 	}
 
@@ -9327,7 +9326,7 @@ class Utils {
 		if ( 0 === $s ) {
 			$r = $g = $b = $l; //phpcs:ignore
 		} else {
-			$hue2rgb = function( $p, $q, $t ) {
+			$hue2rgb = function ( $p, $q, $t ) {
 				if ( $t < 0 ) {
 					++$t;
 				}
@@ -9356,9 +9355,9 @@ class Utils {
 
 	/**
 	 * Get brand color
-	 * 
+	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_brand_color() {
@@ -9368,9 +9367,9 @@ class Utils {
 
 	/**
 	 * Get default brand color
-	 * 
+	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_default_brand_color() {

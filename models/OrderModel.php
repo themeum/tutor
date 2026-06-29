@@ -487,21 +487,15 @@ class OrderModel {
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param int       $order_id The ID of the order to retrieve.
-	 * @param \stdClass $order    Optional. The order data if already fetched.
 	 *
 	 * @return object|false The order data with the student's information included, or false if no order is found.
 	 */
-	public function get_order_by_id( $order_id, $order = null ) {
-		$order_data = null;
-		if ( ! $order ) {
-			$order_data = QueryHelper::get_row(
-				$this->table_name,
-				array( 'id' => $order_id ),
-				'id'
-			);
-		} else {
-			$order_data = $order;
-		}
+	public function get_order_by_id( $order_id ) {
+		$order_data = QueryHelper::get_row(
+			$this->table_name,
+			array( 'id' => $order_id ),
+			'id'
+		);
 
 		if ( ! $order_data ) {
 			return false;
@@ -684,6 +678,7 @@ class OrderModel {
 
 				$course->id            = (int) $course->id;
 				$course->regular_price = (float) $course->regular_price;
+				$course->image         = get_the_post_thumbnail_url( $course->id );
 
 				// Add meta items.
 				$order_item_meta        = new OrderItemMetaModel();

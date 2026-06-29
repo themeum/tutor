@@ -237,7 +237,6 @@ class Quiz_Attempts_List {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param int    $quiz_attempts_count the quiz attempt count.
 	 * @param string $url the url.
 	 * @param string $result_filter the current result state.
 	 * @param string $search_filter the search filter.
@@ -249,24 +248,24 @@ class Quiz_Attempts_List {
 	 *
 	 * @return array
 	 */
-	public function get_quiz_attempts_nav_data( $quiz_attempts_count = 0, $url = '', $result_filter = '', $search_filter = '', $course_filter = 0, $start_date = '', $end_date = '', $order_filter = 'DESC', $all_quizzes = array() ): array {
+	public function get_quiz_attempts_nav_data( $url = '', $result_filter = '', $search_filter = '', $course_filter = 0, $start_date = '', $end_date = '', $order_filter = 'DESC', $all_quizzes = array() ): array {
 		$quiz_model = new QuizModel();
 
 		if ( tutor_utils()->count( $all_quizzes ) ) {
-			$results             = isset( $all_quizzes['results'] ) ? $all_quizzes['results'] : array();
-			$all_attempts        = isset( $all_quizzes['total_count'] ) ? $all_quizzes['total_count'] : 0;
-			$quiz_attempts_count = $all_attempts;
-			$passed_attempts     = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_PASS ) );
-			$failed_attempts     = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_FAIL ) );
-			$pending_attempts    = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_PENDING ) );
+			$results          = isset( $all_quizzes['results'] ) ? $all_quizzes['results'] : array();
+			$all_attempts     = isset( $all_quizzes['total_count'] ) ? $all_quizzes['total_count'] : 0;
+			$passed_attempts  = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_PASS ) );
+			$failed_attempts  = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_FAIL ) );
+			$pending_attempts = count( $quiz_model->get_formatted_quiz_attempt_list_by_quiz_id( $results, QuizModel::RESULT_PENDING ) );
 		} else {
-			$all_attempts     = ( '' === $result_filter ) ? (int) $quiz_attempts_count : (int) QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, '', true, true );
-			$pending_attempts = ( QuizModel::RESULT_PENDING === $result_filter ) ? (int) $quiz_attempts_count : (int) QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_PENDING, true, true );
-			$passed_attempts  = ( QuizModel::RESULT_PASS === $result_filter ) ? (int) $quiz_attempts_count : (int) QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_PASS, true, true );
-			$failed_attempts  = ( QuizModel::RESULT_FAIL === $result_filter ) ? (int) $quiz_attempts_count : (int) QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_FAIL, true, true );
+			$all_attempts     = (int) QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, '', true, true );
+			$pending_attempts = (int) QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_PENDING, true, true );
+			$passed_attempts  = (int) QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_PASS, true, true );
+			$failed_attempts  = (int) QuizModel::get_quiz_attempts( 0, 0, $search_filter, $course_filter > 0 ? $course_filter : '', $start_date, $end_date, $order_filter, QuizModel::RESULT_FAIL, true, true );
 		}
 
-		$filter_url = remove_query_arg( 'current_page', $url );
+		$quiz_attempts_count = array_sum( array( $passed_attempts, $failed_attempts, $pending_attempts ) );
+		$filter_url          = remove_query_arg( 'current_page', $url );
 
 		$nav_links = array(
 			'type'    => 'dropdown',

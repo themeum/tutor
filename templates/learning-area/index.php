@@ -44,7 +44,7 @@ $tutor_retake_course     = tutor_utils()->get_option( 'course_retake_feature', f
 $tutor_can_retake_course = $tutor_retake_course && ( CourseModel::MODE_FLEXIBLE === $tutor_completion_mode || $tutor_is_course_completed );
 
 // Global variables defined above are used by the 'make_learning_area_sub_page_nav_items' function.
-$subpages            = Template::make_learning_area_sub_page_nav_items( '', $tutor_is_course_completed );
+$subpages            = Template::make_learning_area_sub_page_nav_items();
 $subpage             = Input::get( 'subpage' );
 $attempt_id          = Input::get( 'attempt_id', 0, Input::TYPE_INT );
 $user_action         = Input::get( 'action' );
