@@ -75,7 +75,7 @@ class Addons {
 		// Check and verify the request.
 		tutor_utils()->checking_nonce();
 
-		if ( ! User::is_admin() ) {
+		if ( ! User::can() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
