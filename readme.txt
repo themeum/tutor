@@ -321,8 +321,8 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.9.14 - Jun 29, 2026
 
-Update: WooCommerce block checkout page compatibility updated.
-Fix: Prevented withdrawal requests from exceeding the available payout balance. (Pro)
+Update: Improved compatibility with the block-based WooCommerce checkout page.
+Fix: Added validation to ensure withdrawal amounts do not exceed the available payout balance. (Pro)
 
 = 3.9.13 - Jun 17, 2026
 
