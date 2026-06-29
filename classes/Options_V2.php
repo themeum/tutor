@@ -1309,7 +1309,7 @@ class Options_V2 {
 								'label'       => __( 'Brand Color', 'tutor' ),
 								'desc'        => __( 'Customize the primary accent color used across your learning platform to match your brand identity.', 'tutor' ),
 								'class'       => 'color-picker-wrapper',
-								'default'     => tutor_utils()->get_brand_color(),
+								'default'     => tutor_utils()->get_default_brand_color(),
 							),
 						),
 					),

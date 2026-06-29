@@ -806,6 +806,7 @@ class Instructor {
 			function ( $review ) {
 				return array(
 					'user'        => array(
+						'id'     => $review->user_id,
 						'name'   => $review->display_name,
 						'avatar' => tutor_utils()->get_user_avatar_url( $review->user_id ),
 					),
