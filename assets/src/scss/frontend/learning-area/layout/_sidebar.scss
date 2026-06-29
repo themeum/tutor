@@ -24,6 +24,10 @@
     opacity: 0;
     pointer-events: none;
     transform: translateX(-100%);
+
+    [dir='rtl'] & {
+      transform: translateX(100%);
+    }
   }
 
   @include tutor-breakpoint-down(lg) {
