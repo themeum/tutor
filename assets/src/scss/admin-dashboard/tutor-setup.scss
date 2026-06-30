@@ -1,12 +1,12 @@
 // Tutor setup page
-#tutor-setup-wrapper {
+#tutor-onboard-wrapper {
   min-height: 100vh;
   padding: 32px 16px;
   background: #f5f5f5;
   gap: 32px;
 }
 
-.tutor-setup-screen {
+.tutor-onboard-screen {
   display: none;
   width: 100%;
   max-width: 444px;
@@ -16,7 +16,7 @@
   }
 }
 
-.tutor-setup-screen-logo {
+.tutor-onboard-screen-logo {
   margin-bottom: 32px;
 
   img {
@@ -25,7 +25,7 @@
   }
 }
 
-.tutor-setup-card {
+.tutor-onboard-card {
   background: #fafafa;
   box-shadow: none;
   overflow: hidden;
@@ -34,12 +34,12 @@
   padding: 24px;
 }
 
-.tutor-setup-card-body {
+.tutor-onboard-card-body {
   padding-bottom: 12px;
 }
 
-.tutor-setup-welcome-greeting,
-.tutor-setup-help-text {
+.tutor-onboard-welcome-greeting,
+.tutor-onboard-help-text {
   margin: 0;
   color: #6b7280;
   font-size: 16px;
@@ -47,11 +47,11 @@
   font-weight: 400;
 }
 
-.tutor-setup-welcome-greeting span {
+.tutor-onboard-welcome-greeting span {
   font-weight: 600;
 }
 
-.tutor-setup-welcome-title {
+.tutor-onboard-welcome-title {
   margin: 4px 0 0;
   color: #2f3137;
   font-size: 24px;
@@ -59,11 +59,11 @@
   font-weight: 400;
 }
 
-.tutor-setup-welcome-title span {
+.tutor-onboard-welcome-title span {
   font-weight: 600;
 }
 
-.tutor-setup-preferences-title {
+.tutor-onboard-preferences-title {
   font-size: 24px;
   line-height: 32px;
   font-weight: 600;
@@ -72,7 +72,7 @@
   color: #2f3137;
 }
 
-.tutor-setup-preferences-label {
+.tutor-onboard-preferences-label {
   font-size: 14px;
   font-weight: 400;
   line-height: 18px;
@@ -81,7 +81,7 @@
   color: #333741;
 }
 
-.tutor-setup-welcome-media {
+.tutor-onboard-welcome-media {
   margin: 18px 0 12px;
   overflow: hidden;
   border-radius: 10px;
@@ -93,7 +93,7 @@
   }
 }
 
-.tutor-setup-welcome-description {
+.tutor-onboard-welcome-description {
   margin: 0;
   color: #5f6470;
   font-size: 14px;
@@ -103,39 +103,39 @@
   }
 }
 
-.tutor-setup-card-footer-stack {
+.tutor-onboard-card-footer-stack {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.tutor-setup-next-screen,
-.tutor-setup-card-footer .tutor-btn {
+.tutor-onboard-next-screen,
+.tutor-onboard-card-footer .tutor-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
 }
 
-.tutor-setup-preferences-group {
+.tutor-onboard-preferences-group {
   & + & {
     margin-top: 20px;
   }
 }
 
-.tutor-setup-load-sample {
-  input#tutor-setup-load-sample-course {
+.tutor-onboard-load-sample {
+  input#tutor-onboard-load-sample-course {
     margin-right: 0px;
   }
 }
 
-.tutor-setup-choice-wrapper {
+.tutor-onboard-choice-wrapper {
   display: flex;
   gap: 12px;
   margin-top: 8px;
 }
 
-.tutor-setup-choice-card {
+.tutor-onboard-choice-card {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -149,7 +149,7 @@
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
-  .tutor-setup-choice-text {
+  .tutor-onboard-choice-text {
     color: #73767d;
     font-size: 12px;
     line-height: 1.4;
@@ -157,21 +157,22 @@
     text-align: center;
   }
   &.is-selected {
+    background-color: #f5f5f6;
     border-color: #0049f8;
     box-shadow: 0 0 0 1px #0049f8;
-    .tutor-setup-choice-text {
+    .tutor-onboard-choice-text {
       color: #0c111d;
     }
   }
 }
 
-.tutor-setup-choice-input {
+.tutor-onboard-choice-input {
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
 
-.tutor-setup-choice-media {
+.tutor-onboard-choice-media {
   display: block;
   overflow: hidden;
 
@@ -182,16 +183,16 @@
   }
 }
 
-.tutor-setup-checkbox {
+.tutor-onboard-checkbox {
   margin: 44px 0px 12px 0px;
-  .tutor-setup-checkbox-label {
+  .tutor-onboard-checkbox-label {
     color: #5d5f66;
     font-size: 14px;
     line-height: 18px;
   }
 }
 
-.tutor-setup-help-text {
+.tutor-onboard-help-text {
   color: #5b616f;
   font-size: 13px;
   font-weight: 400;
@@ -199,4 +200,15 @@
   letter-spacing: 0px;
   text-align: center;
   margin: 8px 0px 0px 0px;
+}
+
+.tutor-onboard-card-loading {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 400;
+}
+
+.tutor-onboard-loading-text {
+  display: block;
+  min-height: 80px;
 }
