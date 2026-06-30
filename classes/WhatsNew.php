@@ -15,6 +15,10 @@ namespace TUTOR;
  */
 class WhatsNew {
 
+	const WHATS_NEW_REDIRECT_TRANSIENT = 'tutor_whats_new_redirect';
+	const WHATS_NEW_V4_SHOWN_OPTION    = 'tutor_whats_new_v4_shown';
+	const LAST_SEEN_VERSION_OPTION     = 'tutor_last_seen_version';
+
 	/**
 	 * Constructor
 	 *
@@ -24,7 +28,7 @@ class WhatsNew {
 	 */
 	public function __construct() {
 		add_filter( 'tutor_admin_menu', array( $this, 'add_whats_new_menu_item' ) );
-		add_action( 'upgrader_process_complete', array( $this, 'set_whats_new_v4_redirect' ), 10, 2 );
+		add_action( 'admin_init', array( $this, 'maybe_flag_version_bump_redirect' ), 5 );
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_whats_new_v4' ) );
 		add_action( 'admin_menu', array( $this, 'register_whats_new_in_v4_hidden_page' ), 99 );
 	}
@@ -103,30 +107,90 @@ class WhatsNew {
 	}
 
 	/**
-
-	 * Set a transient flag after plugin upgrade to trigger a one-time redirect.
+	 * Strips any pre-release suffix (e.g. "-rc.2", "-beta.1") from a version
+	 * string so RC/beta builds compare correctly against numeric core
+	 * versions like "4.0.0".
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param mixed $upgrader_object Upgrader instance.
-	 * @param array $options         Hook arguments.
+	 * @param string $version Version string.
+	 *
+	 * @return string
+	 */
+	private function normalize_version( $version ) {
+		return preg_replace( '/-.*$/', '', (string) $version );
+	}
+
+	/**
+	 * Detects whether this site has crossed into 4.x since we last checked,
+	 * and flags a one-time redirect to the "What's New in v4" page if so.
+	 *
+	 * Works regardless of upgrade mechanism (admin UI, WP-CLI, manual upload,
+	 * etc.) since it just compares the last recorded version against the
+	 * live TUTOR_VERSION on a normal admin page load.
+	 *
+	 * @since 4.0.0
 	 *
 	 * @return void
 	 */
-	public function set_whats_new_v4_redirect( $upgrader_object, $options ) {
-		if (
-			'update' === $options['action'] &&
-			'plugin' === $options['type'] &&
-			isset( $options['plugins'] ) &&
-			is_array( $options['plugins'] )
-		) {
-			foreach ( $options['plugins'] as $plugin ) {
-				if ( plugin_basename( TUTOR_FILE ) === $plugin ) {
-					set_transient( 'tutor_whats_new_v4_redirect', TUTOR_VERSION, 60 );
-					break;
-				}
-			}
+	public function maybe_flag_version_bump_redirect() {
+		if ( ! is_admin() || wp_doing_ajax() || ! current_user_can( 'manage_options' ) ) {
+			return;
 		}
+
+		$current_version   = $this->normalize_version( TUTOR_VERSION );
+		$last_seen_version = get_option( self::LAST_SEEN_VERSION_OPTION );
+		$last_seen_version = false === $last_seen_version ? false : $this->normalize_version( $last_seen_version );
+
+		if ( false === $last_seen_version ) {
+			update_option( self::LAST_SEEN_VERSION_OPTION, TUTOR_VERSION );
+
+			if ( get_option( self::WHATS_NEW_V4_SHOWN_OPTION ) ) {
+				return;
+			}
+
+			if ( $this->is_fresh_install() ) {
+				// Brand-new site, nothing to compare against — skip the redirect.
+				update_option( self::WHATS_NEW_V4_SHOWN_OPTION, true );
+				return;
+			}
+
+			// Existing site, first time we've recorded a version since this code shipped.
+			if ( version_compare( $current_version, '4.0.0', '>=' ) ) {
+				set_transient( self::WHATS_NEW_REDIRECT_TRANSIENT, TUTOR_VERSION, 60 );
+				update_option( self::WHATS_NEW_V4_SHOWN_OPTION, true );
+			}
+
+			return;
+		}
+
+		if ( version_compare( $last_seen_version, $current_version, '>=' ) ) {
+			return;
+		}
+
+		update_option( self::LAST_SEEN_VERSION_OPTION, TUTOR_VERSION );
+
+		$crossed_into_v4 = version_compare( $last_seen_version, '4.0.0', '<' )
+			&& version_compare( $current_version, '4.0.0', '>=' );
+
+		if ( $crossed_into_v4 && ! get_option( self::WHATS_NEW_V4_SHOWN_OPTION ) ) {
+			set_transient( self::WHATS_NEW_REDIRECT_TRANSIENT, TUTOR_VERSION, 60 );
+			update_option( self::WHATS_NEW_V4_SHOWN_OPTION, true );
+		}
+	}
+
+	/**
+	 * Best-effort check for whether this is a brand-new install rather than
+	 * an upgrade. Used only to avoid redirecting first-time users who land
+	 * directly on 4.x with no prior version history.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	private function is_fresh_install() {
+		// Adjust to whatever signal reliably indicates a new site for Tutor.
+		return false === get_option( 'tutor_option' );
 	}
 
 	/**
@@ -137,18 +201,16 @@ class WhatsNew {
 	 * @return void
 	 */
 	public function maybe_redirect_to_whats_new_v4() {
-		// Only redirect for admins, not during AJAX, not during activation bulk actions.
 		if (
 			! is_admin() ||
 			wp_doing_ajax() ||
 			! current_user_can( 'manage_options' ) ||
-			! get_transient( 'tutor_whats_new_v4_redirect' )
+			! get_transient( self::WHATS_NEW_REDIRECT_TRANSIENT )
 		) {
 			return;
 		}
 
-		// Delete the transient immediately so only the first admin gets redirected once.
-		delete_transient( 'tutor_whats_new_v4_redirect' );
+		delete_transient( self::WHATS_NEW_REDIRECT_TRANSIENT );
 
 		wp_safe_redirect( admin_url( 'admin.php?page=tutor-whats-new-in-v4' ) );
 		exit;
