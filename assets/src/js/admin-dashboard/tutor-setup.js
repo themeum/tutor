@@ -1,7 +1,6 @@
 // Tutor setup page
 document.addEventListener('DOMContentLoaded', () => {
 	const { __ } = wp.i18n;
-
 	const onboardWrapper = document.querySelector('#tutor-onboard-wrapper');
 
 	if (!onboardWrapper) {
@@ -155,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 
 			if (!response.ok) {
-				throw new Error('Onboarding setup request failed.');
+				throw new Error(__('Onboarding setup request failed.', 'tutor'));
 			}
 
 			const result = await response.json();
@@ -166,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		} catch (error) {
 			activateScreen('preferences');
-			tutor_toast('Something went wrong. Please try again.', null, 'error');
 		} finally {
 			stopLoadingTextAnimation();
 			if (submitButton) {
