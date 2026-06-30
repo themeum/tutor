@@ -51,26 +51,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	const startLoadingTextAnimation = () => {
 		if (!loadingTextElement || !loadingText) {
-			return;
+			return Promise.resolve();
 		}
 
 		stopLoadingTextAnimation();
 		let visibleLength = 0;
 		loadingTextElement.textContent = '';
 
-		const animate = () => {
-			if (!loadingTextElement) {
-				return;
-			}
+		return new Promise((resolve) => {
+			const animate = () => {
+				if (!loadingTextElement) {
+					resolve();
+					return;
+				}
 
-			if (visibleLength < loadingText.length) {
-				visibleLength += 1;
-				loadingTextElement.textContent = loadingText.slice(0, visibleLength);
-				loadingTextTimer = window.setTimeout(animate, 35);
-			}
-		};
+				if (visibleLength < loadingText.length) {
+					visibleLength += 1;
+					loadingTextElement.textContent = loadingText.slice(0, visibleLength);
+					loadingTextTimer = window.setTimeout(animate, 35);
+					return;
+				}
 
-		animate();
+				loadingTextTimer = null;
+				resolve();
+			};
+
+			animate();
+		});
 	};
 
 	onboardWrapper.addEventListener('click', (event) => {
@@ -115,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		activateScreen(loadingScreen);
-		startLoadingTextAnimation();
+		await startLoadingTextAnimation();
 
 		try {
 			if (formData.get('tutor_onboard_load_sample_course')) {
@@ -139,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				window.location.href = _tutorobject.tutor_dashboard;
 			}
 		} catch (error) {
-			console.log('Tutor on setup request failed:', error);
 			activateScreen('preferences');
 		} finally {
 			stopLoadingTextAnimation();
@@ -159,11 +165,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		if (!jobId) {
 			const data = await fetch(courseDataUrl);
-			const json = await data.json();
-			const limitedJson = {
-				...json,
-				data: Array.isArray(json.data)
-					? json.data.map((section) => {
+			const courseJson = await data.json();
+			const limitedCourseJson = {
+				...courseJson,
+				data: Array.isArray(courseJson.data)
+					? courseJson.data.map((section) => {
 						if (section?.content_type === 'courses' && Array.isArray(section.data)) {
 							return {
 								...section,
@@ -175,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					})
 					: [],
 			};
-			const blob = new Blob([JSON.stringify(limitedJson)], {
+			const blob = new Blob([JSON.stringify(limitedCourseJson)], {
 				type: 'application/json',
 			});
 			formData.append('data', blob, 'importer.json');
@@ -193,13 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
 				const jobId = response.data.job_id;
 				const jobProgress = response.data.job_progress;
 				if (jobProgress != 100) {
-					// showConsentProgress(Math.min(80 + jobProgress * 0.2, 99), __('Importing demo courses...', 'tutor-pro'));
-					console.log('Job Progress', jobProgress);
 					return await importSampleCourses(jobId);
 				}
 				if (jobProgress == 100) {
-					// showConsentProgress(100, __('Demo courses imported.', 'tutor-pro'));
-					console.log('100 Job Progress', jobProgress);
 					return true;
 				}
 			}

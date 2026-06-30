@@ -14,6 +14,9 @@
   &.is-active {
     display: block;
   }
+  &.tutor-onboard-screen-loading {
+    max-width: 520px;
+  }
 }
 
 .tutor-onboard-screen-logo {
@@ -97,7 +100,7 @@
   margin: 0;
   color: #5f6470;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 20px;
   span {
     font-weight: 600;
   }
@@ -138,6 +141,7 @@
 .tutor-onboard-choice-card {
   position: relative;
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 8px;
   width: 90px;
@@ -173,6 +177,7 @@
 }
 
 .tutor-onboard-choice-media {
+  width: 88px;
   display: block;
   overflow: hidden;
 

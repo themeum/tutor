@@ -37,31 +37,7 @@ class Tutor_Setup {
 		add_action( 'admin_init', array( $this, 'initialize_tutor_onboarding' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_setup_action', array( $this, 'tutor_setup_action' ) );
-		add_filter( 'tutor_wizard_attributes', array( $this, 'tutor_setup_attributes_callback' ) );
 		add_action( 'wp_ajax_tutor_onboard_setup', array( $this, 'tutor_onboard_setup' ) );
-	}
-
-	/**
-	 * Tutor setup attr callback
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param mixed $attr attr.
-	 *
-	 * @return array
-	 */
-	public function tutor_setup_attributes_callback( $attr ) {
-		$options   = (array) maybe_unserialize( get_option( 'tutor_option' ) );
-		$final_arr = array();
-		$data_arr  = $this->tutor_setup_attributes();
-
-		foreach ( $data_arr as $key => $section ) {
-			foreach ( $section['attr'] as $k => $val ) {
-				$final_arr[ $k ] = isset( $options[ $k ] ) ? $options[ $k ] : '';
-			}
-		}
-
-		return $final_arr;
 	}
 
 	/**
@@ -166,8 +142,6 @@ class Tutor_Setup {
 			$options['learning_mode'] = Input::post( 'learning_mode', '', Input::TYPE_STRING );
 
 			update_option( 'tutor_option', $options );
-
-			sleep( 5 );
 
 			$this->json_response(
 				__( 'Onboarding Success', 'tutor' ),
