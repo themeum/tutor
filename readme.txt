@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.9.13
+Stable tag: 3.9.14
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -488,6 +488,12 @@ New: Lots of Micro-interactions with animations and sound effects to make lesson
 New: A new button “view as student” has been added to allow admin & instructor to change the dashboard view.
 New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
 New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
+
+= 3.9.14 - Jun 29, 2026
+
+Update: WooCommerce block checkout page compatibility updated.
+Fix: Prevented withdrawal requests from exceeding the available payout balance. (Pro)
+
 = 3.9.13 - Jun 17, 2026
 
 Update: Patched multiple security vulnerabilities.

@@ -979,14 +979,6 @@ class Options_V2 {
 								'desc'    => __( 'Put the answer display time in seconds', 'tutor' ),
 							),
 							array(
-								'key'         => 'quiz_attempts_allowed',
-								'type'        => 'number',
-								'number_type' => 'integer',
-								'label'       => __( 'Default Quiz Attempt limit (When Retry Mode is enabled)', 'tutor' ),
-								'default'     => '10',
-								'desc'        => __( 'The highest number of attempts allowed for students to participate a quiz. 0 means unlimited. This will work as the default Quiz Attempt limit in case of Quiz Retry Mode.', 'tutor' ),
-							),
-							array(
 								'key'     => 'quiz_previous_button_enabled',
 								'type'    => 'toggle_switch',
 								'label'   => __( 'Show Quiz Previous Button', 'tutor' ),

@@ -13,8 +13,7 @@ import FormQuestionTitle from '@TutorShared/components/fields/quiz/FormQuestionT
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import { tutorConfig } from '@TutorShared/config/config';
-import { CURRENT_VIEWPORT, modal } from '@TutorShared/config/constants';
+import { CURRENT_VIEWPORT, DEFAULT_QUIZ_ATTEMPTS_ALLOWED, modal } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -55,7 +54,6 @@ interface QuizModalProps extends ModalProps {
 type QuizTabs = 'details' | 'settings';
 
 const courseId = getCourseId();
-const defaultQuizAttemptsAllowed = tutorConfig.settings?.quiz_attempts_allowed ?? 10;
 
 const QuizModal = ({
   closeModal,
@@ -89,7 +87,7 @@ const QuizModal = ({
         hide_quiz_time_display: false,
         limit_attempts_allowed: false,
         limit_questions_to_answer: false,
-        attempts_allowed: Number(defaultQuizAttemptsAllowed),
+        attempts_allowed: DEFAULT_QUIZ_ATTEMPTS_ALLOWED,
         passing_grade: 80,
         max_questions_for_answer: contentType === 'tutor_h5p_quiz' ? 0 : 10,
         quiz_auto_start: false,
