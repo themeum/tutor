@@ -373,7 +373,7 @@ class Tutor_Setup {
 				'_tutorobject',
 				array(
 					'ajaxurl'            => admin_url( 'admin-ajax.php' ),
-					'tutor_welcome_page' => admin_url( 'admin.php?page=tutor-welcome' ),
+					'tutor_welcome_page' => admin_url( 'admin.php?page=tutor&welcome=1' ),
 					'course_data_url'    => 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/workademy/data.json',
 					'nonce_key'          => tutor()->nonce,
 					tutor()->nonce       => wp_create_nonce( tutor()->nonce_action ),
