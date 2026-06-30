@@ -107,21 +107,6 @@ class WhatsNew {
 	}
 
 	/**
-	 * Strips any pre-release suffix (e.g. "-rc.2", "-beta.1") from a version
-	 * string so RC/beta builds compare correctly against numeric core
-	 * versions like "4.0.0".
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $version Version string.
-	 *
-	 * @return string
-	 */
-	private function normalize_version( $version ) {
-		return preg_replace( '/-.*$/', '', (string) $version );
-	}
-
-	/**
 	 * Detects whether this site has crossed into 4.x since we last checked,
 	 * and flags a one-time redirect to the "What's New in v4" page if so.
 	 *
@@ -138,9 +123,9 @@ class WhatsNew {
 			return;
 		}
 
-		$current_version   = $this->normalize_version( TUTOR_VERSION );
+		$current_version   = TUTOR_VERSION;
 		$last_seen_version = get_option( self::LAST_SEEN_VERSION_OPTION );
-		$last_seen_version = false === $last_seen_version ? false : $this->normalize_version( $last_seen_version );
+		$last_seen_version = false === $last_seen_version ? false : TUTOR_VERSION;
 
 		if ( false === $last_seen_version ) {
 			update_option( self::LAST_SEEN_VERSION_OPTION, TUTOR_VERSION );
