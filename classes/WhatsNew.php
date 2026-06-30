@@ -149,7 +149,7 @@ class WhatsNew {
 				return;
 			}
 
-			if ( $this->is_fresh_install() ) {
+			if ( false === get_option( 'tutor_option' ) ) {
 				// Brand-new site, nothing to compare against — skip the redirect.
 				update_option( self::WHATS_NEW_V4_SHOWN_OPTION, true );
 				return;
@@ -177,20 +177,6 @@ class WhatsNew {
 			set_transient( self::WHATS_NEW_REDIRECT_TRANSIENT, TUTOR_VERSION, 60 );
 			update_option( self::WHATS_NEW_V4_SHOWN_OPTION, true );
 		}
-	}
-
-	/**
-	 * Best-effort check for whether this is a brand-new install rather than
-	 * an upgrade. Used only to avoid redirecting first-time users who land
-	 * directly on 4.x with no prior version history.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return bool
-	 */
-	private function is_fresh_install() {
-		// Adjust to whatever signal reliably indicates a new site for Tutor.
-		return false === get_option( 'tutor_option' );
 	}
 
 	/**
