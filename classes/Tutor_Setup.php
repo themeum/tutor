@@ -187,7 +187,7 @@ class Tutor_Setup {
 						</div>
 
 						<div class="tutor-onboard-welcome-media">
-							<img src="<?php echo esc_url( tutor()->url . 'assets/images/tutor-onboard-hero-img.png' ); ?>" alt="<?php esc_attr_e( 'Setup welcome preview', 'tutor' ); ?>">
+							<img src="<?php echo esc_url( tutor()->url . 'assets/images/tutor-onboard-hero-img.webp' ); ?>" alt="<?php esc_attr_e( 'Setup welcome preview', 'tutor' ); ?>">
 						</div>
 
 						<div class="tutor-onboard-welcome-description">
