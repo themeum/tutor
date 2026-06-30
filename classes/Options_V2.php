@@ -10,13 +10,12 @@
 
 namespace Tutor;
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
 use Tutor\Ecommerce\OptionKeys;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use TUTOR\User;
 
 /**
  * Contains all the settings options
@@ -191,6 +190,10 @@ class Options_V2 {
 	public function tutor_option_search() {
 		tutor_utils()->checking_nonce();
 
+		if ( ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
 			if ( is_array( $sections ) && ! empty( $sections ) ) {
@@ -278,7 +281,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -308,7 +311,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -332,7 +335,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -397,7 +400,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -415,7 +418,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -452,7 +455,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
