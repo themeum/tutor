@@ -5,7 +5,7 @@ import type { AxiosResponse } from 'axios';
 import { useToast } from '@TutorShared/atoms/Toast';
 
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons } from '@TutorShared/config/constants';
+import { Addons, DEFAULT_QUIZ_ATTEMPTS_ALLOWED } from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
@@ -165,7 +165,6 @@ interface QuizUpdateQuestionPayload {
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFields: string[]): QuizForm => {
-  const defaultQuizAttemptsAllowed = tutorConfig.settings?.quiz_attempts_allowed ?? 10;
   const legacyQuizOption = quiz.quiz_option as QuizDetailsResponse['quiz_option'] & {
     feedback_mode?: 'default' | 'reveal' | 'retry';
   };
@@ -185,7 +184,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       limit_attempts_allowed: isDefined(quiz.quiz_option.limit_attempts_allowed)
         ? quiz.quiz_option.limit_attempts_allowed === '1'
         : legacyQuizOption.feedback_mode === 'retry',
-      attempts_allowed: quiz.quiz_option.attempts_allowed ?? defaultQuizAttemptsAllowed,
+      attempts_allowed: quiz.quiz_option.attempts_allowed ?? DEFAULT_QUIZ_ATTEMPTS_ALLOWED,
       pass_is_required: quiz.quiz_option.pass_is_required === '1',
       passing_grade: quiz.quiz_option.passing_grade ?? 80,
       limit_questions_to_answer: !!Number(quiz.quiz_option.max_questions_for_answer),

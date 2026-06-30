@@ -66,6 +66,7 @@ class WooCommerce extends Tutor_Base {
 		 */
 		add_action( 'woocommerce_new_order', array( $this, 'course_placing_order_from_admin' ), 10, 3 );
 		add_action( 'woocommerce_new_order_item', array( $this, 'course_placing_order_from_customer' ), 10, 3 );
+		add_action( 'woocommerce_order_status_changed', array( $this, 'handle_customer_order_by_block_checkout' ), 9, 3 );
 
 		/**
 		 * Order Status Hook
@@ -620,6 +621,15 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 
+		/**
+		 * Prevent adding earning data when order is created with WC block checkout page.
+		 *
+		 * @since 3.9.14
+		 */
+		if ( $order->has_status( 'checkout-draft' ) ) {
+			return;
+		}
+
 		$order_type = $order->get_type();
 
 		if ( 'shop_subscription' === $order_type ) {
@@ -728,6 +738,58 @@ class WooCommerce extends Tutor_Base {
 	}
 
 	/**
+	 * Handle checkout order item.
+	 *
+	 * @since 3.9.14
+	 *
+	 * @param object $order the order object.
+	 * @param object $item the order item object.
+	 * @param string $context the context of checkout page.
+	 *
+	 * @return void
+	 */
+	private function handle_checkout_order_item( $order, $item, $context = 'classic_checkout' ) {
+		if ( ! $order instanceof \WC_Order || ! $item instanceof \WC_Order_Item_Product ) {
+			return;
+		}
+
+		$order_id     = $order->get_id();
+		$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item );
+		if ( $is_gift_item ) {
+			return;
+		}
+
+		$product_id    = $item->get_product_id();
+		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
+
+		if ( $if_has_course ) {
+			$should_process = apply_filters( 'tutor_wc_should_process_checkout_order_item', true, $item, $order );
+			if ( ! $should_process ) {
+				return;
+			}
+
+			$course_id   = $if_has_course->post_id;
+			$customer_id = $order->get_customer_id();
+
+			// Handle course enrollment.
+			if ( ! $customer_id && WC()->session && WC()->session->has_session() ) {
+				$guest_customer_id = WC()->session->get_customer_unique_id();
+				update_post_meta( $course_id, self::TUTOR_WC_GUEST_CUSTOMER_ID, $guest_customer_id );
+			} else {
+				$has_enrollment = tutor_utils()->is_enrolled( $course_id, $customer_id, true );
+				if ( ! $has_enrollment ) {
+					tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+				}
+			}
+
+			if ( 'block_checkout' === $context ) {
+				$this->add_earning_data( $item->get_id(), $item, $order_id );
+			}
+		}
+	}
+
+
+	/**
 	 * Course placing order from customer
 	 *
 	 * @since 1.6.7
@@ -746,43 +808,51 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 
-		$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item );
-		if ( $is_gift_item ) {
+		$order = wc_get_order( $order_id );
+		if ( ! $order ) {
 			return;
 		}
 
-		$item          = new \WC_Order_Item_Product( $item );
-		$product_id    = $item->get_product_id();
-		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
+		/**
+		 * Prevent when order is created with WC block checkout page.
+		 *
+		 * @since 3.9.14
+		 */
+		if ( $order->has_status( 'checkout-draft' ) ) {
+			return;
+		}
 
-		if ( $if_has_course ) {
-			$order = wc_get_order( $order_id );
-			if ( ! is_object( $order ) ) {
-				return;
-			}
+		$this->handle_checkout_order_item( $order, $item, 'classic_checkout' );
+	}
 
-			$should_process = apply_filters( 'tutor_wc_should_process_checkout_order_item', true, $item, $order );
-			if ( ! $should_process ) {
-				return;
-			}
+	/**
+	 * Handle order status change by block checkout page.
+	 *
+	 * @since 3.9.14
+	 *
+	 * @param int    $order_id    WooCommerce order ID.
+	 * @param string $status_from Previous order status.
+	 * @param string $status_to   New order status.
+	 *
+	 * @return void
+	 */
+	public function handle_customer_order_by_block_checkout( $order_id, $status_from, $status_to ) {
+		if ( 'checkout-draft' !== $status_from ) {
+			return;
+		}
 
-			/**
-			 * Get customer ID from from order
-			 *
-			 * @since 2.1.7
-			 */
-			$customer_id = $order->get_customer_id();
-			$course_id   = $if_has_course->post_id;
-			if ( ! $customer_id && WC()->session->has_session() ) {
-				$guest_customer_id = WC()->session->get_customer_unique_id();
-				update_post_meta( $course_id, self::TUTOR_WC_GUEST_CUSTOMER_ID, $guest_customer_id );
-				return;
-			}
+		// If transitioning to another draft or invalid status, do nothing.
+		if ( in_array( $status_to, array( 'checkout-draft', 'draft' ), true ) ) {
+			return;
+		}
 
-			$has_enrollment = EnrollmentModel::is_enrolled( $course_id, $customer_id, false );
-			if ( ! $has_enrollment ) {
-				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
-			}
+		$order = wc_get_order( $order_id );
+		if ( ! $order ) {
+			return;
+		}
+
+		foreach ( $order->get_items() as $item ) {
+			$this->handle_checkout_order_item( $order, $item, 'block_checkout' );
 		}
 	}
 
