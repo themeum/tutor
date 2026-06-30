@@ -57,8 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	const loadingTextElement = onboardWrapper.querySelector('.tutor-onboard-loading-text');
 	const loadingText = loadingTextElement?.dataset.text || loadingTextElement?.textContent?.trim() || '';
 	let loadingTextTimer = null;
+	let isLoadingTextLooping = false;
 
 	const stopLoadingTextAnimation = () => {
+		isLoadingTextLooping = false;
+
 		if (loadingTextTimer) {
 			clearTimeout(loadingTextTimer);
 			loadingTextTimer = null;
@@ -67,6 +70,27 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (loadingTextElement) {
 			loadingTextElement.textContent = loadingText;
 		}
+	};
+
+	const startLoadingTextDotsAnimation = () => {
+		if (!loadingTextElement || !loadingText) {
+			return;
+		}
+
+		let dotsCount = 0;
+		isLoadingTextLooping = true;
+
+		const animateDots = () => {
+			if (!loadingTextElement || !isLoadingTextLooping) {
+				return;
+			}
+
+			loadingTextElement.textContent = `${loadingText}${'.'.repeat(dotsCount)}`;
+			dotsCount = (dotsCount + 1) % 4;
+			loadingTextTimer = setTimeout(animateDots, 350);
+		};
+
+		animateDots();
 	};
 
 	const startLoadingTextAnimation = () => {
@@ -93,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 
 				loadingTextTimer = null;
+				startLoadingTextDotsAnimation();
 				resolve();
 			};
 
