@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		activateScreen(loadingScreen);
-		await startLoadingTextAnimation();
+		const loadingTextAnimation = startLoadingTextAnimation();
 
 		try {
 			if (formData.get('tutor_onboard_load_sample_course')) {
@@ -159,14 +159,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			const result = await response.json();
 			if (result.status_code == 200) {
-				stopLoadingTextAnimation();
+				await loadingTextAnimation;
 				await fadeOutLoadingScreen();
 				location.href = _tutorobject.tutor_welcome_page;
 			}
 		} catch (error) {
+			await loadingTextAnimation;
 			activateScreen('preferences');
 		} finally {
-			stopLoadingTextAnimation();
 			if (submitButton) {
 				submitButton.disabled = false;
 			}
