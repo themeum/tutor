@@ -35,6 +35,9 @@ $render_card = function ( $card ) use ( $asset_base ) {
 	$classes = array_filter( array( 'tutor-section-card', $card['class'] ?? '' ) );
 	?>
 	<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>"<?php echo isset( $card['grid_area'] ) ? ' style="grid-area: ' . esc_attr( $card['grid_area'] ) . ';"' : ''; ?>>
+		<?php if ( ! empty( $card['icon'] ) ) : ?>
+			<div class="tutor-section-card-icon"><?php echo $card['icon']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted inline SVG. ?></div>
+		<?php endif; ?>
 		<?php if ( ! empty( $card['title'] ) || ! empty( $card['desc'] ) ) : ?>
 			<div class="tutor-section-card-title">
 				<?php if ( ! empty( $card['title'] ) ) : ?>
@@ -44,10 +47,6 @@ $render_card = function ( $card ) use ( $asset_base ) {
 					<p><?php echo esc_html( $card['desc'] ); ?></p>
 				<?php endif; ?>
 			</div>
-		<?php endif; ?>
-
-		<?php if ( ! empty( $card['icon'] ) ) : ?>
-			<div class="tutor-section-card-icon"><?php echo $card['icon']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted inline SVG. ?></div>
 		<?php endif; ?>
 
 		<?php if ( ! empty( $card['image'] ) ) : ?>
