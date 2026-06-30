@@ -361,35 +361,6 @@ class Options_V2 {
 	}
 
 	/**
-	 * Tutor default settings update options
-	 * and send json response
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return void send wp_json response
-	 */
-	public function tutor_default_settings() {
-		$attr = $this->get_setting_fields();
-
-		foreach ( $attr as $sections ) {
-
-			foreach ( $sections as $section ) {
-				foreach ( $section['blocks'] as $blocks ) {
-					foreach ( $blocks['fields'] as $field ) {
-						if ( isset( $field['default'] ) ) {
-							$attr_default[ $field['key'] ] = $field['default'];
-						}
-					}
-				}
-			}
-		}
-
-		update_option( 'tutor_option', $attr_default );
-
-		wp_send_json_success( $attr_default );
-	}
-
-	/**
 	 * Tutor settings log
 	 *
 	 * @since 2.0.0
@@ -459,6 +430,7 @@ class Options_V2 {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
+		//phpcs:ignore
 		$data = $_FILES['data'];
 
 		if ( ! isset( $data['tmp_name'] ) ) {
