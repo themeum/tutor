@@ -148,6 +148,11 @@ class Lesson extends Tutor_Base {
 		}
 
 		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
+			$course_id = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
+			if ( ! tutor_utils()->is_enrolled( $course_id ) ) {
+				wp_send_json_error( __( 'You must be enrolled to comment', 'tutor' ) );
+			}
+
 			$comment_data = array(
 				'comment_content' => $comment,
 				'comment_post_ID' => $lesson_id,
@@ -723,15 +728,22 @@ class Lesson extends Tutor_Base {
 	 */
 	public function ajax_reply_lesson_comment() {
 		tutor_utils()->checking_nonce();
-		$comment = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		$comment = Input::post( 'comment', '', Input::TYPE_TEXTAREA );
 		if ( 0 === strlen( $comment ) ) {
 			wp_send_json_error();
 			return;
 		}
 
+		$lesson_id = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
+		$course_id = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
+		if ( ! tutor_utils()->is_enrolled( $course_id ) ) {
+			wp_send_json_error( __( 'You must be enrolled to comment', 'tutor' ) );
+			return;
+		}
+
 		$comment_data = array(
 			'comment_content' => $comment,
-			'comment_post_ID' => Input::post( 'comment_post_ID', 0, Input::TYPE_INT ),
+			'comment_post_ID' => $lesson_id,
 			'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 		);
 
