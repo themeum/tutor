@@ -82,7 +82,7 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 				<?php
 					Button::make()
 						->icon( Icon::ARROW_LEFT_2 )
-						->flip_icon_rtl()
+						->flip_rtl()
 						->tag( 'a' )
 						->attr( 'href', $back_url )
 						->variant( Variant::GHOST )

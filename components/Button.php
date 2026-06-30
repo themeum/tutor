@@ -142,7 +142,7 @@ class Button extends BaseComponent {
 	 *
 	 * @var bool
 	 */
-	protected $icon_flip_rtl = false;
+	protected $flip_rtl = false;
 
 	/**
 	 * Whether button is disabled.
@@ -274,12 +274,10 @@ class Button extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param bool $flip Whether to flip the icon in RTL.
-	 *
 	 * @return $this
 	 */
-	public function flip_icon_rtl( bool $flip = true ): self {
-		$this->icon_flip_rtl = $flip;
+	public function flip_rtl(): self {
+		$this->flip_rtl = true;
 		return $this;
 	}
 
@@ -374,7 +372,7 @@ class Button extends BaseComponent {
 					->name( $this->icon )
 					->size( $this->icon_size )
 					->color( $this->icon_color )
-					->flip_rtl( $this->icon_flip_rtl )
+					->flip_rtl( $this->flip_rtl )
 					->attrs( $this->icon_attributes )
 					->render();
 				$icon_html = ob_get_clean();

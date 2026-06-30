@@ -193,12 +193,10 @@ class SvgIcon extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param bool $flip Whether to flip in RTL.
-	 *
 	 * @return $this
 	 */
-	public function flip_rtl( bool $flip = true ): self {
-		$this->flip_rtl = $flip;
+	public function flip_rtl(): self {
+		$this->flip_rtl = true;
 		return $this;
 	}
 

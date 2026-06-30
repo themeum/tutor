@@ -151,7 +151,7 @@ $is_instructor_view = User::is_instructor_view();
 								->size( Size::X_SMALL )
 								->icon( Icon::LEFT, 'left', 20 )
 								->icon_only()
-								->flip_icon_rtl()
+								->flip_rtl()
 								->attr( '@click', 'hide()' )
 								->render();
 							?>

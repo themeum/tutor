@@ -43,7 +43,7 @@ use Tutor\Components\Constants\Variant;
 				->icon( Icon::LEFT, 'left', 20 )
 				->tag( 'a' )
 				->icon_only()
-				->flip_icon_rtl()
+				->flip_rtl()
 				->attr( 'href', esc_url( $back_url ) )
 				->render();
 			?>

@@ -28,7 +28,7 @@ use Tutor\Components\Constants\Variant;
 					->tag( 'a' )
 					->icon( Icon::LEFT, 'left', 20 )
 					->icon_only()
-					->flip_icon_rtl()
+					->flip_rtl()
 					->attr( 'href', esc_url( $back_url ) )
 					->render();
 			?>

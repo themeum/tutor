@@ -44,7 +44,7 @@ $content_title = $tutor_current_post->post_title ?? '';
 					->size( Size::SMALL )
 					->icon( Icon::LEFT, 'left', 20 )
 					->icon_only()
-					->flip_icon_rtl()
+					->flip_rtl()
 					->attr( 'href', esc_url( tutor_utils()->tutor_dashboard_url() ) )
 					->render();
 				?>
