@@ -238,8 +238,8 @@ class Options_V2 {
 	 */
 	public function tutor_export_settings() {
 		tutor_utils()->checking_nonce();
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -544,7 +544,9 @@ class Options_V2 {
 	public function tutor_option_save() {
 		tutor_utils()->checking_nonce();
 
-		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+		if ( ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
 
 		$data_before   = get_option( 'tutor_option' );
 		$login_page_id = 0;
@@ -652,7 +654,10 @@ class Options_V2 {
 	public function tutor_option_default_save() {
 		tutor_utils()->checking_nonce();
 
-		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+		if ( ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$attr                 = $this->get_setting_fields();
 		$tutor_default_option = get_option( 'tutor_default_option' );
 		$tutor_saved_option   = get_option( 'tutor_option' );
