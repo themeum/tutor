@@ -372,10 +372,11 @@ class Tutor_Setup {
 				'tutor-setup',
 				'_tutorobject',
 				array(
-					'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-					'tutor_dashboard' => admin_url( 'admin.php?page=tutor' ),
-					'nonce_key'       => tutor()->nonce,
-					tutor()->nonce    => wp_create_nonce( tutor()->nonce_action ),
+					'ajaxurl'            => admin_url( 'admin-ajax.php' ),
+					'tutor_welcome_page' => admin_url( 'admin.php?page=tutor-welcome' ),
+					'course_data_url'    => 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/workademy/data.json',
+					'nonce_key'          => tutor()->nonce,
+					tutor()->nonce       => wp_create_nonce( tutor()->nonce_action ),
 				)
 			);
 			wp_set_script_translations( 'tutor-setup', 'tutor', tutor()->path . 'languages/' );

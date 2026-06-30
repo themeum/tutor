@@ -1,5 +1,7 @@
 // Tutor setup page
 document.addEventListener('DOMContentLoaded', () => {
+	const { __ } = wp.i18n;
+
 	const onboardWrapper = document.querySelector('#tutor-onboard-wrapper');
 
 	if (!onboardWrapper) {
@@ -9,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const activateScreen = (screenName) => {
 		onboardWrapper.querySelectorAll('.tutor-onboard-screen').forEach((screen) => {
 			screen.classList.remove('is-active');
+			screen.classList.remove('is-fading-out');
 		});
 
 		const targetScreen = onboardWrapper.querySelector(`.tutor-onboard-screen[data-screen="${screenName}"]`);
@@ -16,6 +19,20 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (targetScreen) {
 			targetScreen.classList.add('is-active');
 		}
+	};
+
+	const fadeOutLoadingScreen = () => {
+		const loadingSection = onboardWrapper.querySelector('.tutor-onboard-screen-loading');
+
+		if (!loadingSection?.classList.contains('is-active')) {
+			return Promise.resolve();
+		}
+
+		loadingSection.classList.add('is-fading-out');
+
+		return new Promise((resolve) => {
+			setTimeout(resolve, 300);
+		});
 	};
 
 	const syncSelectedCards = () => {
@@ -40,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	const stopLoadingTextAnimation = () => {
 		if (loadingTextTimer) {
-			window.clearTimeout(loadingTextTimer);
+			clearTimeout(loadingTextTimer);
 			loadingTextTimer = null;
 		}
 
@@ -68,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (visibleLength < loadingText.length) {
 					visibleLength += 1;
 					loadingTextElement.textContent = loadingText.slice(0, visibleLength);
-					loadingTextTimer = window.setTimeout(animate, 35);
+					loadingTextTimer = setTimeout(animate, 35);
 					return;
 				}
 
@@ -143,10 +160,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			const result = await response.json();
 			if (result.status_code == 200) {
-				window.location.href = _tutorobject.tutor_dashboard;
+				stopLoadingTextAnimation();
+				await fadeOutLoadingScreen();
+				location.href = _tutorobject.tutor_welcome_page;
 			}
 		} catch (error) {
 			activateScreen('preferences');
+			tutor_toast('Something went wrong. Please try again.', null, 'error');
 		} finally {
 			stopLoadingTextAnimation();
 			if (submitButton) {
@@ -161,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		formData.append('job_id', jobId);
 		formData.append('action', 'tutor_pro_import');
 		formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-		const courseDataUrl = 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/workademy/data.json';
+		const courseDataUrl = _tutorobject.course_data_url;
 
 		if (!jobId) {
 			const data = await fetch(courseDataUrl);

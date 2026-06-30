@@ -211,6 +211,16 @@
   font-size: 32px;
   line-height: 40px;
   font-weight: 400;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.tutor-onboard-screen-loading.is-fading-out .tutor-onboard-card-loading {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 .tutor-onboard-loading-text {
