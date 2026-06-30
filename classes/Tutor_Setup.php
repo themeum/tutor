@@ -108,15 +108,21 @@ class Tutor_Setup {
 		if ( 'tutor-setup' === $page ) {
 			wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
 			wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
+
+			if ( is_rtl() ) {
+				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
+			} else {
+				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
+			}
+
+			wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
+
 			wp_localize_script(
 				'tutor-setup',
-				'_tutorobject',
+				'_tutorOnboardObject',
 				array(
-					'ajaxurl'            => admin_url( 'admin-ajax.php' ),
 					'tutor_welcome_page' => admin_url( 'admin.php?page=tutor&welcome=1' ),
 					'course_data_url'    => 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/workademy/data.json',
-					'nonce_key'          => tutor()->nonce,
-					tutor()->nonce       => wp_create_nonce( tutor()->nonce_action ),
 				)
 			);
 			wp_set_script_translations( 'tutor-setup', 'tutor', tutor()->path . 'languages/' );

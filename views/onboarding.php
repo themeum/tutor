@@ -190,5 +190,6 @@ set_current_screen();
 				</div>
 			</section>
 		</div>
+		<?php wp_print_scripts( 'tutor-script' ); ?>
 	</body>
 </html>

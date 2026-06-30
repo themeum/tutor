@@ -1,4 +1,4 @@
-// Tutor setup page
+// Tutor onboarding
 document.addEventListener('DOMContentLoaded', () => {
 	const { __ } = wp.i18n;
 	const onboardWrapper = document.querySelector('#tutor-onboard-wrapper');
@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			setTimeout(resolve, 300);
 		});
 	};
+
+	const wait = (time) => new Promise((resolve) => {
+		setTimeout(resolve, time);
+	});
 
 	const syncSelectedCards = () => {
 		onboardWrapper.querySelectorAll('.tutor-onboard-choice-wrapper').forEach((choiceWrapper) => {
@@ -161,15 +165,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (result.status_code == 200) {
 				await loadingTextAnimation;
 				await fadeOutLoadingScreen();
-				location.href = _tutorobject.tutor_welcome_page;
 			}
 		} catch (error) {
 			await loadingTextAnimation;
-			activateScreen('preferences');
+			tutor_toast(error?.message || __('Some setup may failed.', 'tutor'), '', 'error');
+			await wait(1000);
 		} finally {
 			if (submitButton) {
 				submitButton.disabled = false;
 			}
+			location.href = _tutorOnboardObject.tutor_welcome_page;
 		}
 	});
 
@@ -179,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		formData.append('job_id', jobId);
 		formData.append('action', 'tutor_pro_import');
 		formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-		const courseDataUrl = _tutorobject.course_data_url;
+		const courseDataUrl = _tutorOnboardObject.course_data_url;
 
 		if (!jobId) {
 			const data = await fetch(courseDataUrl);
