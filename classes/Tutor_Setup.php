@@ -144,13 +144,13 @@ class Tutor_Setup {
 			update_option( 'tutor_option', $options );
 
 			$this->json_response(
-				__( 'Onboarding Success', 'tutor' ),
+				__( 'Onboard Successfully', 'tutor' ),
 				null,
 				HttpHelper::STATUS_OK
 			);
 		} catch ( \Exception $e ) {
 			$this->json_response(
-				__( 'Onboarding Failed, Try again!', 'tutor' ),
+				__( 'Onboard Failed, Try again!', 'tutor' ),
 				null,
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
@@ -164,11 +164,9 @@ class Tutor_Setup {
 	 * @return void
 	 */
 	public function tutor_onboard_page() {
-		$current_user            = wp_get_current_user();
-		$display_name            = $current_user instanceof \WP_User && $current_user->exists() ? tutor_utils()->display_name( $current_user->ID ) : __( 'there', 'tutor' );
-		$logo_url                = tutor()->url . 'assets/images/tutor-logo.png';
-		$welcome_placeholder_url = 'https://placehold.co/356x176/png?text=Placeholder+Image';
-		$card_placeholder_url    = 'https://placehold.co/72x48/png?text=Image';
+		$current_user = wp_get_current_user();
+		$display_name = $current_user instanceof \WP_User && $current_user->exists() ? tutor_utils()->display_name( $current_user->ID ) : __( 'there', 'tutor' );
+		$logo_url     = tutor()->url . 'assets/images/tutor-logo.png';
 		?>
 		<div id="tutor-onboard-wrapper" class="tutor-d-flex tutor-flex-column tutor-align-center tutor-justify-center">
 			<section class="tutor-onboard-screen tutor-onboard-screen-welcome is-active" data-screen="welcome">
