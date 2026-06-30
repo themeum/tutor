@@ -578,7 +578,7 @@ class Template extends Tutor_Base {
 			'template' => tutor_get_template( 'learning-area.subpages.course-info' ),
 		);
 
-		return $menu_items;
+		return apply_filters( 'tutor_learning_area_sub_page_menu_items', $menu_items, $base_url );
 	}
 
 	/**
