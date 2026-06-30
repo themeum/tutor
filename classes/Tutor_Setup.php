@@ -10,7 +10,6 @@
 
 namespace TUTOR;
 
-use Tutor\Ecommerce\Settings;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Traits\JsonResponse;
 
@@ -35,60 +34,8 @@ class Tutor_Setup {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menus' ) );
 		add_action( 'admin_init', array( $this, 'initialize_tutor_onboarding' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'wp_ajax_setup_action', array( $this, 'tutor_setup_action' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'tutor_onboard_enqueue_scripts' ) );
 		add_action( 'wp_ajax_tutor_onboard_setup', array( $this, 'tutor_onboard_setup' ) );
-	}
-
-	/**
-	 * Setup action
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void send wp_json response
-	 */
-	public function tutor_setup_action() {
-		tutor_utils()->checking_nonce();
-		if ( 'setup_action' !== Input::post( 'action', '' ) || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-			return;
-		}
-
-		// General Settings.
-		$options     = (array) maybe_unserialize( get_option( 'tutor_option' ) );
-		$change_data = apply_filters( 'tutor_wizard_attributes', array() );
-		foreach ( $change_data as $key => $value ) {
-			$post_key = Input::post( $key, '' );
-			if ( Input::has( $key ) ) {
-				if ( $post_key != $change_data[ $key ] ) {
-					if ( '' === $post_key ) {
-						unset( $options[ $key ] );
-					} else {
-						$options[ $key ] = $post_key;
-					}
-				}
-				$options_preset[ $key ] = $post_key;
-			} else {
-				unset( $options[ $key ] );
-			}
-		}
-
-		// Payment Settings.
-		$withdrawal_payments_methods         = array( 'bank_transfer_withdraw', 'echeck_withdraw', 'paypal_withdraw' );
-		$options['tutor_withdrawal_methods'] = array();
-
-		foreach ( $withdrawal_payments_methods as $key ) {
-			if ( 'on' === Input::post( $key ) ) {
-				$options['tutor_withdrawal_methods'][ $key ] = $key;
-			}
-		}
-
-		update_option( 'tutor_default_option', $options_preset );
-		update_option( 'tutor_option', $options );
-
-		do_action( 'tutor_setup_finished' );
-
-		wp_send_json_success( __( 'Success', 'tutor' ) );
 	}
 
 	/**
@@ -112,9 +59,9 @@ class Tutor_Setup {
 	public function initialize_tutor_onboarding() {
 		$setup_page = Input::get( 'page', '' );
 		if ( 'tutor-setup' === $setup_page ) {
-			$this->tutor_setup_wizard_header();
+			$this->tutor_onboard_header();
 			$this->tutor_onboard_page();
-			$this->initialize_tutor_onboarding_footer();
+			$this->tutor_onboard_footer();
 			exit;
 		}
 	}
@@ -317,7 +264,7 @@ class Tutor_Setup {
 	 *
 	 * @return void
 	 */
-	public function tutor_setup_wizard_header() {
+	public function tutor_onboard_header() {
 		set_current_screen();
 		?>
 			<!DOCTYPE html>
@@ -347,7 +294,7 @@ class Tutor_Setup {
 	 *
 	 * @return void
 	 */
-	public function initialize_tutor_onboarding_footer() {
+	public function tutor_onboard_footer() {
 		?>
 				</body>
 			</html>
@@ -355,13 +302,13 @@ class Tutor_Setup {
 	}
 
 	/**
-	 * Enqueue scripts
+	 *  Tutor onboarding enqueue scripts
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
-	public function enqueue_scripts() {
+	public function tutor_onboard_enqueue_scripts() {
 		$page = Input::get( 'page', '' );
 		if ( 'tutor-setup' === $page ) {
 			wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );

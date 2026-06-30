@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		const formData = new FormData(onboardForm);
 		formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
 		const submitButton = onboardForm.querySelector('.tutor-onboard-submit-btn');
-		const loadingScreen = submitButton?.dataset.screen || 'loading';
+		const loadingScreen = submitButton?.dataset.screen || __('Loading...', 'tutor');
 
 		if (submitButton) {
 			submitButton.disabled = true;
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (formData.get('tutor_onboard_load_sample_course')) {
 				const importSuccess = await importSampleCourses();
 				if (!importSuccess) {
-					throw new Error('Sample course import failed.');
+					throw new Error(__('Sample course import failed.', 'tutor'));
 				}
 			}
 
