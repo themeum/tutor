@@ -41,6 +41,7 @@ class User {
 	const PROFILE_BIO_META                = '_tutor_profile_bio';
 	const PROFILE_JOB_TITLE_META          = '_tutor_profile_job_title';
 	const TUTOR_STUDENT_META              = '_is_tutor_student';
+	const TOUR_COMPLETED_META             = '_tutor_tour_completed';
 	const APPLICATION_SOURCE_META         = '_tutor_application_source';
 	const INSTRUCTOR_APPROVAL_NOTICE_META = 'tutor_instructor_show_approval_message';
 
@@ -115,6 +116,7 @@ class User {
 
 		add_action( 'wp_ajax_tutor_user_list', array( $this, 'ajax_user_list' ) );
 		add_action( 'wp_ajax_tutor_switch_profile', array( $this, 'ajax_switch_profile' ) );
+		add_action( 'wp_ajax_tutor_complete_tour', array( $this, 'ajax_complete_tour' ) );
 	}
 
 	/**
@@ -853,5 +855,20 @@ class User {
 	 */
 	public static function can_switch_mode( int $user_id = 0 ): bool {
 		return self::is_admin( $user_id ) || self::is_instructor( $user_id );
+	}
+
+	/**
+	 * Mark dashboard tour as completed for the current user.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void JSON response.
+	 */
+	public function ajax_complete_tour() {
+		tutor_utils()->check_nonce();
+
+		update_user_meta( $user_id, self::TOUR_COMPLETED_META, true );
+
+		$this->json_response( __( 'Tour completed', 'tutor' ) );
 	}
 }

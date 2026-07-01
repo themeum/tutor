@@ -73,6 +73,7 @@ $user_id                   = get_current_user_id();
 $user                      = get_user_by( 'ID', $user_id );
 $enable_profile_completion = tutor_utils()->get_option( 'enable_profile_completion' );
 $is_instructor             = tutor_utils()->is_instructor();
+$is_tour_completed         = get_user_meta( $user_id, User::TOUR_COMPLETED_META, true );
 
 // URLS.
 $current_url  = tutor()->current_url;
@@ -149,6 +150,10 @@ $footer_links = array(
 		</div>
 	</div>
 </div>
+<?php if ( User::is_student_view() && ! $is_tour_completed ) : ?>
+	<?php tutor_load_template( 'shared.tour' ); ?>
+<?php endif; ?>
+	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 <?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
 	<?php wp_footer(); ?>

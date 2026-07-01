@@ -23,6 +23,7 @@ const defaultTutorConfig = {
   wp_rest_nonce: '',
   is_admin: '',
   is_admin_bar_showing: '',
+  is_tour_completed: '',
   max_upload_size: '',
   content_change_event: '',
   is_tutor_course_edit: '',
