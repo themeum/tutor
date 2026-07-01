@@ -1,380 +1,257 @@
-import '../front/_select_dd_search';
-import { tutor_esc_attr, tutor_esc_html } from '../lib/tutor';
+// Tutor onboarding
+document.addEventListener('DOMContentLoaded', () => {
+	const { __ } = wp.i18n;
+	const onboardWrapper = document.querySelector('#tutor-onboard-wrapper');
 
-jQuery.fn.serializeObject = function () {
-	var $ = jQuery;
-	var values = {};
-	var array = this.serializeArray();
-
-	jQuery.each(array, function () {
-		if (values[this.name]) {
-			if (!values[this.name].push) {
-				values[this.name] = [values[this.name]];
-			}
-			values[this.name].push(this.value || '');
-		} else {
-			values[this.name] = this.value || '';
-		}
-	});
-
-	// Map array value
-	$(this).find("input:checkbox").each(function () {
-		values[$(this).attr('name')] = $(this).prop('checked') ?
-			($(this).attr('data-on') !== undefined ? $(this).attr('data-on') : 'on') :
-			($(this).attr('data-off') !== undefined ? $(this).attr('data-off') : 'off');
-	});
-
-	return values;
-};
-
-jQuery(document).ready(function ($) {
-	"use strict";
-
-	selectSearchField('.tutor-form-select');
-
-	const url = window.location.href;
-	const params = new URLSearchParams(window.location.search);
-	const enable_marketplace = params.get('marketplace');
-	if (url.indexOf('#') > 0) {
-		$(".tutor-wizard-container > div").removeClass("active");
-		$(".tutor-wizard-container > div.tutor-setup-wizard-settings").addClass("active");
-		const split_data = url.split("#");
-		if (split_data[1]) {
-			const _length = $(".tutor-setup-title li." + split_data[1]).index();
-			$(".tutor-setup-title li").removeClass("current");
-			$(".tutor-setup-content li").removeClass("active");
-			for (let index = 0; index <= _length; index++) {
-				$(".tutor-setup-title li").eq(index).addClass('active');
-				if (_length == index) {
-					$(".tutor-setup-title li").eq(index).addClass("current");
-					$(".tutor-setup-content li").eq(index).addClass("active");
-				}
-			}
-		}
-		showHide(enable_marketplace);
+	if (!onboardWrapper) {
+		return;
 	}
 
-	if (enable_marketplace === 'off') {
-		$("#enable_course_marketplace-0").prop('checked', true);
-	}
-
-	$(".tutor-setup-title li").on("click", function (e) {
-		e.preventDefault();
-		const _length = $(this).closest("li").index();
-		$(".tutor-setup-title li").removeClass("active current");
-		$(".tutor-setup-title li").eq(_length).addClass("active current");
-		$(".tutor-setup-content li").removeClass("active");
-		$(".tutor-setup-content li").eq(_length).addClass("active");
-		window.location.hash = $("ul.tutor-setup-title li").eq(_length).data("url");
-		for (let index = 0; index <= _length; index++) {
-			$(".tutor-setup-title li").eq(index).addClass('active');
-		}
-	});
-
-	/* ---------------------
-	* Navigate Wizard Screens
-	* ---------------------- */
-	$(".tutor-type-next").on("click", function (e) {
-		e.preventDefault();
-		$(".tutor-setup-wizard-type").removeClass("active");
-		$(".tutor-setup-wizard-settings").addClass("active");
-		$('.tutor-setup-title li').eq(0).addClass('active');
-		const enable_marketplace = $("input[name='enable_course_marketplace']:checked").val();
-		const url = new URL(window.location.href);
-		url.searchParams.set('marketplace', enable_marketplace);
-		url.hash = 'course';
-		window.history.pushState(null, '', url);
-		showHide(enable_marketplace);
-	});
-
-	$(".tutor-type-previous").on("click", function (e) {
-		e.preventDefault();
-		$(".tutor-setup-wizard-type").removeClass("active");
-		$(".tutor-setup-wizard-boarding").addClass("active");
-	});
-
-	/* ---------------------
-	* Wizard Action
-	* ---------------------- */
-	$(".tutor-setup-previous").on("click", function (e) {
-		e.preventDefault();
-		let _index = $(this).closest("li").index();
-
-		$("ul.tutor-setup-title li").eq(_index).removeClass("active");
-		if (_index > 0 && _index == ($('.tutor-setup-title li.instructor').index() + 1) && $('.tutor-setup-title li.instructor').hasClass('hide-this')) {
-			_index = _index - 1
-		}
-
-		if (_index > 0) {
-			$("ul.tutor-setup-title li").eq(_index - 1).addClass("active");
-			$("ul.tutor-setup-content li").removeClass("active").eq(_index - 1).addClass("active");
-			$("ul.tutor-setup-title li").removeClass("current").eq(_index - 1).addClass("current");
-			window.location.hash = $("ul.tutor-setup-title li").eq(_index - 1).data('url');
-		} else {
-			$('.tutor-setup-wizard-settings').removeClass('active');
-			$('.tutor-setup-wizard-type').addClass('active');
-			window.location.hash = '';
-		}
-		setpSet()
-	});
-	$('.tutor-setup-type-previous').on("click", function (e) {
-		$('.tutor-setup-wizard-type').removeClass('active');
-		$('.tutor-setup-wizard-boarding').addClass('active');
-	});
-	$(".tutor-setup-skip, .tutor-setup-next").on("click", function (e) {
-		e.preventDefault();
-		let _index = $(this).closest("li").index() + 1;
-
-		if (_index == $('.tutor-setup-title li.instructor').index() && $('.tutor-setup-title li.instructor').hasClass('hide-this')) {
-			_index = _index + 1
-		}
-
-		$("ul.tutor-setup-title li").eq(_index).addClass("active");
-		$("ul.tutor-setup-content li").removeClass("active").eq(_index).addClass("active");
-		$("ul.tutor-setup-title li").removeClass("current").eq(_index).addClass("current");
-		window.location.hash = $("ul.tutor-setup-title li").eq(_index).data("url");
-
-		setpSet();
-	});
-
-	/* ---------------------
-	* Wizard Skip
-	* ---------------------- */
-	$(".tutor-boarding-next, .tutor-boarding-skip").on("click", function (e) {
-		e.preventDefault();
-		$(".tutor-setup-wizard-boarding").removeClass("active");
-		$(".tutor-setup-wizard-type").addClass("active");
-	});
-
-	/* ---------------------
-	* Form Submit and Redirect after Finished
-	* ---------------------- */
-	$(".tutor-finish-setup").on("click", function (e) {
-		e.preventDefault();
-
-		const btnSubmit = $(this);
-		const formData = $("#tutor-setup-form").serializeObject();
-		const redirectUrl = btnSubmit.data("redirect-url");
-		const url = _tutorobject.ajaxurl;
-
-		$.ajax({
-			url: url,
-			type: 'POST',
-			data: formData,
-			beforeSend: function () {
-				btnSubmit.attr('disabled', 'disabled').addClass('is-loading');
-			},
-			success: function (data) {
-				if (data.success) {
-					window.location = redirectUrl
-				}
-			},
-			complete: function () {
-				btnSubmit.removeAttr('disabled').removeClass('is-loading');
-			}
+	const activateScreen = (screenName) => {
+		onboardWrapper.querySelectorAll('.tutor-onboard-screen').forEach((screen) => {
+			screen.classList.remove('is-active');
+			screen.classList.remove('is-fading-out');
 		});
-	});
 
-	/* ---------------------
-	* Reset Section
-	* ---------------------- */
-	$(".tutor-reset-section").on("click", function (e) {
-		$(this).closest("li").find("input").val(function () {
-			switch (this.type) {
-				case "text":
-					return this.defaultValue;
-					break;
+		const targetScreen = onboardWrapper.querySelector(`.tutor-onboard-screen[data-screen="${screenName}"]`);
 
-				case "checkbox":
-				case "radio":
-					this.checked = this.defaultChecked;
-					break;
+		if (targetScreen) {
+			targetScreen.classList.add('is-active');
+		}
+	};
 
-				case "range":
-					const rangeval = $(this).closest(".limit-slider");
-					if (rangeval.find(".range-input").hasClass("double-range-slider")) {
-						rangeval.find(".range-value-1").html(this.defaultValue + "%");
-						$(".range-value-data-1").val(this.defaultValue);
-						rangeval.find(".range-value-2").html(100 - this.defaultValue + "%");
-						$(".range-value-data-2").val(100 - this.defaultValue);
-					} else {
-						rangeval.find(".range-value").html(this.defaultValue);
-						return this.defaultValue;
-					}
-					break;
+	const fadeOutLoadingScreen = () => {
+		const loadingSection = onboardWrapper.querySelector('.tutor-onboard-screen-loading');
 
-				case "hidden":
-					return this.value;
-					break;
-			}
+		if (!loadingSection?.classList.contains('is-active')) {
+			return Promise.resolve();
+		}
+
+		loadingSection.classList.add('is-fading-out');
+
+		return new Promise((resolve) => {
+			setTimeout(resolve, 300);
 		});
+	};
+
+	const wait = (time) => new Promise((resolve) => {
+		setTimeout(resolve, time);
 	});
 
-
-	/* ---------------------
-	* Wizard Tooltip
-	* ---------------------- */
-	$(".tooltip-btn").on("click", function (e) {
-		e.preventDefault();
-		$(this).toggleClass("active");
-	});
-
-
-	/* ---------------------
-	* on/of emphasizing after input check click
-	* ---------------------- */
-	$(".input-switchbox").each(function () {
-		inputCheckEmphasizing($(this));
-	});
-	function inputCheckEmphasizing(th) {
-		var checkboxRoot = th.parent().parent();
-		if (th.prop("checked")) {
-			checkboxRoot.find(".label-on").addClass("active");
-			checkboxRoot.find(".label-off").removeClass("active");
-		} else {
-			checkboxRoot.find(".label-on").removeClass("active");
-			checkboxRoot.find(".label-off").addClass("active");
-		}
-	}
-	$(".input-switchbox").click(function () {
-		inputCheckEmphasizing($(this));
-	});
-
-
-	/* ---------------------
-	* Select Option
-	* ---------------------- */
-	$('.select-box').click(function (e) {
-		e.preventDefault()
-		console.log('ddd')
-		$(this).parent().find('.options-container').toggleClass('active');
-	})
-
-	$('.select-box .options-container .option').click(function (e) {
-		e.stopPropagation();
-		$(this).parent().parent().find(".selected").html($(this).find("label").html());
-		$(this).parent().removeClass("active");
-	});
-
-
-	/* ---------------------
-	* Time Limit sliders
-	* ---------------------- */
-	$(".range-input").on("change mousemove", function (e) {
-		let rangeInput = $(this).val();
-		let rangeValue = $(this).parent().parent().find(".range-value");
-		rangeValue.text(rangeInput);
-	});
-
-	$(".double-range-slider").on("change mousemove", function () {
-		const selector = $(this).closest(".settings");
-		selector.find(".range-value-1").text($(this).val() + "%");
-		selector.find('input[name="earning_instructor_commission"]').val($(this).val());
-		selector.find(".range-value-2").text(100 - $(this).val() + "%");
-		selector.find('input[name="earning_admin_commission"]').val(100 - $(this).val());
-	});
-
-	$("#attempts-allowed-1").on("click", function (e) {
-		if ($("#attempts-allowed-numer").prop("disabled", true)) {
-			$(this).parent().parent().parent().addClass("active");
-			$("#attempts-allowed-numer").prop("disabled", false);
-		}
-	});
-	$("#attempts-allowed-2").on("click", function (e) {
-		if ($("#attempts-allowed-2").is(":checked")) {
-			$(this).parent().parent().parent().removeClass("active");
-			$("#attempts-allowed-numer").prop("disabled", true);
-		}
-	});
-
-	$('.wizard-type-item').on('click', function (e) {
-		showHide($(this).find('input').val())
-	});
-
-	function showHide(val) {
-		if (val == 'on') {
-			$('.tutor-show-hide').addClass('active')
-			$('.tutor-setup-title li.instructor').removeClass('hide-this')
-			$('.tutor-setup-content li').eq($('.tutor-setup-title li.instructor')).removeClass('hide-this')
-		} else {
-			$('.tutor-show-hide').removeClass('active')
-			$('.tutor-setup-title li.instructor').addClass('hide-this')
-			$('.tutor-setup-content li').eq($('.tutor-setup-title li.instructor')).addClass('hide-this')
-		}
-	}
-
-	setpSet();
-	function setpSet() {
-		if ($('.tutor-setup-title li.instructor').hasClass('hide-this')) {
-			$('.tutor-steps').html(5)
-			let _index = $('.tutor-setup-title li.current').index()
-			if (_index > 2) {
-				$('.tutor-setup-content li.active .tutor-steps-current').html(_index)
-			}
-		} else {
-			$('.tutor-steps').html(6)
-			$(".tutor-setup-content li").each(function () {
-				$(this).find('.tutor-steps-current').html($(this).index() + 1)
+	const syncSelectedCards = () => {
+		onboardWrapper.querySelectorAll('.tutor-onboard-choice-wrapper').forEach((choiceWrapper) => {
+			choiceWrapper.querySelectorAll('.tutor-onboard-choice-card').forEach((card) => {
+				card.classList.remove('is-selected');
 			});
+
+			choiceWrapper.querySelectorAll('.tutor-onboard-choice-input:checked').forEach((input) => {
+				const card = input.closest('.tutor-onboard-choice-card');
+
+				if (card) {
+					card.classList.add('is-selected');
+				}
+			});
+		});
+	};
+
+	const loadingTextElement = onboardWrapper.querySelector('.tutor-onboard-loading-text');
+	const loadingText = loadingTextElement?.dataset.text || loadingTextElement?.textContent?.trim() || '';
+	let loadingTextTimer = null;
+	let isLoadingTextLooping = false;
+
+	const stopLoadingTextAnimation = () => {
+		isLoadingTextLooping = false;
+
+		if (loadingTextTimer) {
+			clearTimeout(loadingTextTimer);
+			loadingTextTimer = null;
 		}
-	}
 
-	/* ---------------------
-	* Attempt Allowed
-	* ---------------------- */
-	$("input[name='attempts-allowed']").on('change', function (e) {
-		const _val = $(this).filter(':checked').val();
-
-		if (_val == 'unlimited') {
-			$("input[name='quiz_attempts_allowed']").val(0)
-		} else {
-			$("input[name='quiz_attempts_allowed']").val($("input[name='attempts-allowed-number").val())
+		if (loadingTextElement) {
+			loadingTextElement.textContent = loadingText;
 		}
-	});
+	};
 
-
-	// Prevent number input out of range
-	$(document).on('input', 'input.tutor-form-number-verify[type="number"]', function () {
-		if ($(this).val() == '') {
-			$(this).val('');
+	const startLoadingTextDotsAnimation = () => {
+		if (!loadingTextElement || !loadingText) {
 			return;
 		}
 
-		let min = $(this).attr('min');
-		let max = $(this).attr('max');
+		let dotsCount = 0;
+		isLoadingTextLooping = true;
 
-		let val = $(this).val().toString();
-		/\D/.test(val) ? val = '' : 0;
-		val = parseInt(val || 0);
+		const animateDots = () => {
+			if (!loadingTextElement || !isLoadingTextLooping) {
+				return;
+			}
 
-		$(this).val(Math.abs($(this).val()));
+			loadingTextElement.textContent = `${loadingText}${'.'.repeat(dotsCount)}`;
+			dotsCount = (dotsCount + 1) % 4;
+			loadingTextTimer = setTimeout(animateDots, 350);
+		};
 
-		// Prevent number smaller than min
-		if (!(min === undefined)) {
-			val < (parseInt(min)) ? $(this).val(min) : 0;
+		animateDots();
+	};
+
+	const startLoadingTextAnimation = () => {
+		if (!loadingTextElement || !loadingText) {
+			return Promise.resolve();
 		}
 
-		// Prevent numbers greater than max
-		if (!(max === undefined)) {
-			val > max ? $(this).val(max) : 0;
+		stopLoadingTextAnimation();
+		let visibleLength = 0;
+		loadingTextElement.textContent = '';
+
+		return new Promise((resolve) => {
+			const animate = () => {
+				if (!loadingTextElement) {
+					resolve();
+					return;
+				}
+
+				if (visibleLength < loadingText.length) {
+					visibleLength += 1;
+					loadingTextElement.textContent = loadingText.slice(0, visibleLength);
+					loadingTextTimer = setTimeout(animate, 35);
+					return;
+				}
+
+				loadingTextTimer = null;
+				startLoadingTextDotsAnimation();
+				resolve();
+			};
+
+			animate();
+		});
+	};
+
+	onboardWrapper.addEventListener('click', (event) => {
+		const nextButton = event.target.closest('.tutor-onboard-next-screen');
+
+		if (!nextButton) {
+			return;
+		}
+
+		const { target } = nextButton.dataset;
+
+		if (target) {
+			activateScreen(target);
 		}
 	});
 
+	onboardWrapper.addEventListener('change', (event) => {
+		if (event.target.matches('.tutor-onboard-choice-input')) {
+			syncSelectedCards();
+		}
+	});
 
-	/* $(document).on('focus', 'input.tutor-form-number-verify[type="number"]', function () {
-		$("input[name='attempts-allowed'][value='single']").attr('checked', true);
-	}) */
+	syncSelectedCards();
 
+	// Onboarding setup form submit
+	const onboardForm = onboardWrapper.querySelector('.tutor-onboard-setup-form');
 
-	/* $("input[name='attempts-allowed-number']").on('change', function (e) {
-		$("input[name='quiz_attempts_allowed']").val($(this).val())
-	})
-	$("input[name='attempts-allowed-number']").on('focus', function (e) {
-		$("input[name='attempts-allowed'][value='single']").attr('checked', true);
-	}) */
+	if (!onboardForm) {
+		return;
+	}
 
+	onboardForm.addEventListener('submit', async (event) => {
+		event.preventDefault();
+
+		const formData = new FormData(onboardForm);
+		formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+		const submitButton = onboardForm.querySelector('.tutor-onboard-submit-btn');
+		const loadingScreen = submitButton?.dataset.screen || __('Loading...', 'tutor');
+
+		if (submitButton) {
+			submitButton.disabled = true;
+		}
+
+		activateScreen(loadingScreen);
+		const loadingTextAnimation = startLoadingTextAnimation();
+
+		try {
+			if (formData.get('tutor_onboard_load_sample_course')) {
+				const importSuccess = await importSampleCourses();
+				if (!importSuccess) {
+					throw new Error(__('Sample course import failed.', 'tutor'));
+				}
+			}
+
+			const response = await fetch(_tutorobject.ajaxurl, {
+				method: 'POST',
+				body: formData,
+			});
+
+			if (!response.ok) {
+				throw new Error(__('Onboarding setup request failed.', 'tutor'));
+			}
+		} catch (error) {
+			await loadingTextAnimation;
+			tutor_toast(error?.message || __('Something went wrong!', 'tutor'), '', 'error');
+			await wait(1000);
+		} finally {
+			if (submitButton) {
+				submitButton.disabled = false;
+			}
+			await loadingTextAnimation;
+			await fadeOutLoadingScreen();
+			location.href = _tutorOnboardObject.tutor_welcome_page;
+		}
+	});
+
+	const importSampleCourses = async (jobId = 0) => {
+		// import sample courses
+		const formData = new FormData();
+		formData.append('job_id', jobId);
+		formData.append('action', 'tutor_pro_import');
+		formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+		const courseDataUrl = _tutorOnboardObject.course_data_url;
+
+		if (!jobId) {
+			const data = await fetch(courseDataUrl);
+			const courseJson = await data.json();
+			const limitedCourseJson = {
+				...courseJson,
+				data: Array.isArray(courseJson.data)
+					? courseJson.data.map((section) => {
+						if (section?.content_type === 'courses' && Array.isArray(section.data)) {
+							return {
+								...section,
+								data: section.data.slice(0, 4),
+							};
+						}
+
+						return section;
+					})
+					: [],
+			};
+			const blob = new Blob([JSON.stringify(limitedCourseJson)], {
+				type: 'application/json',
+			});
+			formData.append('data', blob, 'importer.json');
+		}
+
+		const post = await fetch(_tutorobject.ajaxurl, {
+			method: 'POST',
+			body: formData,
+			credentials: 'same-origin',
+		});
+
+		if (post.ok) {
+			const response = await post.json();
+			if (response.status_code == 200) {
+				const jobId = response.data.job_id;
+				const jobProgress = response.data.job_progress;
+				if (jobProgress != 100) {
+					return await importSampleCourses(jobId);
+				}
+				if (jobProgress == 100) {
+					return true;
+				}
+			}
+		} else {
+			return false;
+		}
+	};
 
 });
-
-window.tutor_esc_attr = tutor_esc_attr;
-window.tutor_esc_html = tutor_esc_html;

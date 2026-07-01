@@ -886,7 +886,7 @@ class User {
 	public function ajax_complete_tour() {
 		tutor_utils()->check_nonce();
 
-		update_user_meta( $user_id, self::TOUR_COMPLETED_META, true );
+		update_user_meta( get_current_user_id(), self::TOUR_COMPLETED_META, true );
 
 		$this->json_response( __( 'Tour completed', 'tutor' ) );
 	}
