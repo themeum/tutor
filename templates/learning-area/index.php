@@ -174,7 +174,7 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 		</div>
 	</div>
 	<?php
-	if ( ! $is_tour_completed ) {
+	if ( is_user_logged_in() && ! $is_tour_completed ) {
 		tutor_load_template( 'shared.tour' );
 	}
 	?>
