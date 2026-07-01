@@ -133,7 +133,7 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 				'is_pending'     => 'editCommentMutation?.isPending',
 				'class'          => 'tutor-comment-edit-form',
 				'x_show'         => 'editingId === ' . (int) $comment_item->comment_ID,
-				'default_values' => array( 'comment' => $comment_item->comment_content ),
+				'default_value'  => $comment_item->comment_content,
 			)
 		);
 		?>

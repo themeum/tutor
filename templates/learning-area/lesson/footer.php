@@ -56,11 +56,11 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 	if ( $tutor_is_enrolled ) {
 		ob_start();
 		?>
-		<form method="post" class="tutor-mb-none">
+		<form method="post" class="tutor-mb-none" x-data="{ isLoading: false }">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 			<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="lesson_id" />
 			<input type="hidden" value="tutor_complete_lesson" name="tutor_action" />
-			<button type="submit" name="complete_lesson_btn" class="tutor-mark-as-complete-button <?php echo esc_attr( $is_completed_lesson ? 'completed' : '' ); ?>" <?php echo esc_attr( $is_completed_lesson ? 'disabled' : '' ); ?>>
+			<button type="submit" name="complete_lesson_btn" @click="isLoading = true" :class="{ 'tutor-btn-loading': isLoading }" class="tutor-mark-as-complete-button <?php echo esc_attr( $is_completed_lesson ? 'completed' : '' ); ?>" <?php echo esc_attr( $is_completed_lesson ? 'disabled' : '' ); ?>>
 				<span class="tutor-text-center tutor-w-full">
 					<?php echo esc_html( $is_completed_lesson ? __( 'Completed', 'tutor' ) : __( 'Mark as Complete', 'tutor' ) ); ?>
 				</span>

@@ -18,7 +18,7 @@ use Tutor\Models\WithdrawModel;
 
 $statistics      = array();
 $user            = wp_get_current_user();
-$show_statistics = User::is_instructor() ? true : false;
+$show_statistics = User::is_instructor_view();
 
 if ( $show_statistics ) {
 	$statistics = array(
