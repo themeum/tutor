@@ -23,9 +23,6 @@ class WhatsNew {
 	 */
 	public function __construct() {
 		add_filter( 'tutor_admin_menu', array( $this, 'add_whats_new_menu_item' ) );
-		add_action( 'admin_init', array( $this, 'set_upgrade_redirect_flag' ), 5 );
-		add_action( 'admin_init', array( $this, 'redirect_after_upgrade' ) );
-		add_action( 'admin_menu', array( $this, 'register_hidden_whats_new_page' ), 99 );
 	}
 
 	/**
