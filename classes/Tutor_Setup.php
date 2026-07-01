@@ -13,9 +13,7 @@ namespace TUTOR;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Traits\JsonResponse;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Manage setup functionalities
@@ -79,8 +77,8 @@ class Tutor_Setup {
 			}
 
 			$options                  = get_option( 'tutor_option' );
-			$options['default_theme'] = Input::post( 'default_theme', '' );
-			$options['learning_mode'] = Input::post( 'learning_mode', '' );
+			$options['default_theme'] = Input::post( 'default_theme' );
+			$options['learning_mode'] = Input::post( 'learning_mode' );
 
 			update_option( 'tutor_option', $options );
 

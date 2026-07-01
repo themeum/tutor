@@ -183,7 +183,7 @@ set_current_screen();
 
 			<section class="tutor-onboard-screen tutor-onboard-screen-loading" data-screen="loading">
 				<div class="tutor-onboard-card-loading">
-					<?php $loading_text = __( 'The world is changing with AI, but the need for great teachers never will.', 'tutor' ); ?>
+					<?php $loading_text = __( 'The world is changing with AI, but the need for great teachers never will', 'tutor' ); ?>
 					<span class="tutor-onboard-loading-text" data-text="<?php echo esc_attr( $loading_text ); ?>">
 						<?php echo esc_html( $loading_text ); ?>
 					</span>
