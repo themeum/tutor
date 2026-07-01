@@ -522,8 +522,11 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->check_nonce();
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
+		if ( ! $lesson_id ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
 
-		if ( ! $lesson_id || ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+		if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
 			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 
@@ -594,14 +597,16 @@ class Lesson extends Tutor_Base {
 		}
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
-
 		if ( ! $lesson_id ) {
 			return;
 		}
 
 		$course_id = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
+		if ( ! $course_id ) {
+			return;
+		}
 
-		if ( ! $course_id || ! tutor_utils()->is_enrolled( $course_id ) ) {
+		if ( ! tutor_utils()->is_enrolled( $course_id ) ) {
 			die( esc_html( tutor_utils()->error_message() ) );
 		}
 
