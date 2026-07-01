@@ -861,8 +861,8 @@ class Admin {
 	 * @return void
 	 */
 	public function redirect_to_welcome_page() {
-		// Skip redirect for fresh installs; let redirect_to_setup_page() handle the flow.
-		if ( ! get_option( 'tutor_wizard' ) ) {
+		// Skip for fresh installs, during the setup wizard, or during AJAX.
+		if ( ! get_option( 'tutor_wizard' ) || 'tutor-setup' === Input::get( 'page' ) || wp_doing_ajax() ) {
 			return;
 		}
 
