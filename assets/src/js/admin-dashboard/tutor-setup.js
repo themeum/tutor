@@ -185,20 +185,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (!response.ok) {
 				throw new Error(__('Onboarding setup request failed.', 'tutor'));
 			}
-
-			const result = await response.json();
-			if (result.status_code == 200) {
-				await loadingTextAnimation;
-				await fadeOutLoadingScreen();
-			}
 		} catch (error) {
 			await loadingTextAnimation;
-			tutor_toast(error?.message || __('Some setup may failed.', 'tutor'), '', 'error');
+			tutor_toast(error?.message || __('Something went wrong!', 'tutor'), '', 'error');
 			await wait(1000);
 		} finally {
 			if (submitButton) {
 				submitButton.disabled = false;
 			}
+			await loadingTextAnimation;
+			await fadeOutLoadingScreen();
 			location.href = _tutorOnboardObject.tutor_welcome_page;
 		}
 	});
