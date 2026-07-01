@@ -6,7 +6,7 @@
  * @subpackage Tutor\Welcome
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 4.0.0
+ * @since 1.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
