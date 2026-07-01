@@ -14,11 +14,6 @@ namespace TUTOR;
  * Class WhatsNew
  */
 class WhatsNew {
-
-	const WHATS_NEW_REDIRECT_TRANSIENT = 'tutor_whats_new_redirect';
-	const WHATS_NEW_V4_SHOWN_OPTION    = 'tutor_whats_new_v4_shown';
-	const LAST_SEEN_VERSION_OPTION     = 'tutor_last_seen_version';
-
 	/**
 	 * Constructor
 	 *
@@ -74,117 +69,6 @@ class WhatsNew {
 		$changelogs = self::build_changelog_array();
 
 		include tutor()->path . 'views/pages/whats-new.php';
-	}
-
-	/**
-	 * What's new in v4 page.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return void
-	 */
-	public function whats_new_in_v4_page() {
-		wp_enqueue_style( 'tutor-core-styles', tutor()->url . 'assets/css/tutor-core.min.css', array(), TUTOR_VERSION );
-		include tutor()->path . 'views/pages/whats-new-in-v4.php';
-	}
-
-	/**
-	 * Register the What's New in v4 page as a hidden submenu (no sidebar link).
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return void
-	 */
-	public function register_hidden_whats_new_page() {
-		add_submenu_page(
-			'tutor',                              // parent slug.
-			__( "What's New in v4", 'tutor' ),    // page title.
-			'',                                   // empty menu title = hidden from sidebar.
-			'manage_options',
-			'tutor-whats-new-in-v4',
-			array( $this, 'whats_new_in_v4_page' )
-		);
-	}
-
-	/**
-	 * Detects whether this site has crossed into 4.x since we last checked,
-	 * and flags a one-time redirect to the "What's New in v4" page if so.
-	 *
-	 * Works regardless of upgrade mechanism (admin UI, WP-CLI, manual upload,
-	 * etc.) since it just compares the last recorded version against the
-	 * live TUTOR_VERSION on a normal admin page load.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return void
-	 */
-	public function set_upgrade_redirect_flag() {
-		if ( ! is_admin() || wp_doing_ajax() || ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		$current_version   = TUTOR_VERSION;
-		$last_seen_version = get_option( self::LAST_SEEN_VERSION_OPTION );
-		$last_seen_version = false === $last_seen_version ? false : TUTOR_VERSION;
-
-		if ( false === $last_seen_version ) {
-			update_option( self::LAST_SEEN_VERSION_OPTION, TUTOR_VERSION );
-
-			if ( get_option( self::WHATS_NEW_V4_SHOWN_OPTION ) ) {
-				return;
-			}
-
-			if ( false === get_option( 'tutor_option' ) ) {
-				// Brand-new site, nothing to compare against — skip the redirect.
-				update_option( self::WHATS_NEW_V4_SHOWN_OPTION, true );
-				return;
-			}
-
-			// Existing site, first time we've recorded a version since this code shipped.
-			if ( version_compare( $current_version, '4.0.0', '>=' ) ) {
-				set_transient( self::WHATS_NEW_REDIRECT_TRANSIENT, TUTOR_VERSION, 60 );
-				update_option( self::WHATS_NEW_V4_SHOWN_OPTION, true );
-			}
-
-			return;
-		}
-
-		if ( version_compare( $last_seen_version, $current_version, '>=' ) ) {
-			return;
-		}
-
-		update_option( self::LAST_SEEN_VERSION_OPTION, TUTOR_VERSION );
-
-		$crossed_into_v4 = version_compare( $last_seen_version, '4.0.0', '<' )
-			&& version_compare( $current_version, '4.0.0', '>=' );
-
-		if ( $crossed_into_v4 && ! get_option( self::WHATS_NEW_V4_SHOWN_OPTION ) ) {
-			set_transient( self::WHATS_NEW_REDIRECT_TRANSIENT, TUTOR_VERSION, 60 );
-			update_option( self::WHATS_NEW_V4_SHOWN_OPTION, true );
-		}
-	}
-
-	/**
-	 * Redirect to the What's New v4 page once after a plugin update.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return void
-	 */
-	public function redirect_after_upgrade() {
-		if (
-			! is_admin() ||
-			wp_doing_ajax() ||
-			! current_user_can( 'manage_options' ) ||
-			! get_transient( self::WHATS_NEW_REDIRECT_TRANSIENT )
-		) {
-			return;
-		}
-
-		delete_transient( self::WHATS_NEW_REDIRECT_TRANSIENT );
-
-		wp_safe_redirect( admin_url( 'admin.php?page=tutor-whats-new-in-v4' ) );
-		exit;
 	}
 
 	/**
