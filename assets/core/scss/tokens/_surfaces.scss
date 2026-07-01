@@ -25,6 +25,7 @@ $tutor-surface-exception6: var(--tutor-surface-exception6);
 $tutor-surface-exception7: var(--tutor-surface-exception7);
 $tutor-surface-warning: var(--tutor-surface-warning);
 $tutor-surface-warning-hover: var(--tutor-surface-warning-hover);
+$tutor-surface-warning-hover-2: var(--tutor-surface-warning-hover-2);
 $tutor-surface-success: var(--tutor-surface-success);
 $tutor-surface-critical: var(--tutor-surface-critical);
 
@@ -53,6 +54,7 @@ $tutor-surfaces: (
   exception7: $tutor-surface-exception7,
   warning: $tutor-surface-warning,
   warning-hover: $tutor-surface-warning-hover,
+  warning-hover-2: $tutor-surface-warning-hover-2,
   success: $tutor-surface-success,
   critical: $tutor-surface-critical,
 );
