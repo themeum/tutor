@@ -55,7 +55,7 @@ $quick_tips = array(
 		?>
 	</div>
 	<div class="tutor-dashboard-welcome-banner">
-		<img src="<?php echo esc_attr( UrlHelper::asset( 'images/illustrations/dashboard-empty.svg' ) ); ?>" alt="<?php esc_html_e( 'Confetti', 'tutor' ); ?>" />
+		<?php tutor_utils()->render_themed_svg( 'images/illustrations/dashboard-empty.svg' ); ?>
 	</div>
 </div>
 
