@@ -31,7 +31,7 @@
       gap: $tutor-spacing-3;
       position: absolute;
       top: $tutor-spacing-4;
-      right: $tutor-spacing-4;
+      inset-inline-end: $tutor-spacing-4;
     }
   }
 
@@ -67,7 +67,7 @@
 
       .tutor-account-avatar-edit {
         position: absolute;
-        right: 0;
+        inset-inline-end: 0;
         bottom: 0;
         border: 3px solid $tutor-border-inverse;
         border-radius: $tutor-radius-full;

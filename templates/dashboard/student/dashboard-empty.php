@@ -49,6 +49,7 @@ $quick_tips = array(
 			->variant( Variant::PRIMARY )
 			->size( Size::X_SMALL )
 			->icon( Icon::ARROW_RIGHT_2, 'right' )
+			->flip_rtl()
 			->tag( 'a' )
 			->attr( 'href', tutor_utils()->course_archive_page_url() )
 			->render();

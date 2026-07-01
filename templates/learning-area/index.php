@@ -164,11 +164,11 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 				:aria-label="isFullScreen ? '<?php echo esc_attr__( 'Exit fullscreen', 'tutor' ); ?>' : '<?php echo esc_attr__( 'Enter fullscreen', 'tutor' ); ?>'"
 			>
 				<template x-if="!isFullScreen">
-					<?php SvgIcon::make()->name( Icon::EXPAND )->render(); ?>
+					<?php SvgIcon::make()->name( Icon::EXPAND )->flip_rtl()->render(); ?>
 				</template>
 
 				<template x-if="isFullScreen">
-					<?php SvgIcon::make()->name( Icon::COLLAPSED )->render(); ?>
+					<?php SvgIcon::make()->name( Icon::COLLAPSED )->flip_rtl()->render(); ?>
 				</template>
 			</button>
 		</div>

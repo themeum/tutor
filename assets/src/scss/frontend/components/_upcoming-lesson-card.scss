@@ -57,7 +57,7 @@
     @include tutor-flex(row, center, center);
     position: absolute;
     top: 0;
-    right: 0;
+    inset-inline-end: 0;
     opacity: 0;
     pointer-events: none;
     z-index: $tutor-z-dropdown;
