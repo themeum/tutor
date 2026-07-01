@@ -28,9 +28,9 @@ class WhatsNew {
 	 */
 	public function __construct() {
 		add_filter( 'tutor_admin_menu', array( $this, 'add_whats_new_menu_item' ) );
-		add_action( 'admin_init', array( $this, 'maybe_flag_version_bump_redirect' ), 5 );
-		add_action( 'admin_init', array( $this, 'maybe_redirect_to_whats_new_v4' ) );
-		add_action( 'admin_menu', array( $this, 'register_whats_new_in_v4_hidden_page' ), 99 );
+		add_action( 'admin_init', array( $this, 'set_upgrade_redirect_flag' ), 5 );
+		add_action( 'admin_init', array( $this, 'redirect_after_upgrade' ) );
+		add_action( 'admin_menu', array( $this, 'register_hidden_whats_new_page' ), 99 );
 	}
 
 	/**
@@ -95,7 +95,7 @@ class WhatsNew {
 	 *
 	 * @return void
 	 */
-	public function register_whats_new_in_v4_hidden_page() {
+	public function register_hidden_whats_new_page() {
 		add_submenu_page(
 			'tutor',                              // parent slug.
 			__( "What's New in v4", 'tutor' ),    // page title.
@@ -118,7 +118,7 @@ class WhatsNew {
 	 *
 	 * @return void
 	 */
-	public function maybe_flag_version_bump_redirect() {
+	public function set_upgrade_redirect_flag() {
 		if ( ! is_admin() || wp_doing_ajax() || ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
@@ -171,7 +171,7 @@ class WhatsNew {
 	 *
 	 * @return void
 	 */
-	public function maybe_redirect_to_whats_new_v4() {
+	public function redirect_after_upgrade() {
 		if (
 			! is_admin() ||
 			wp_doing_ajax() ||
