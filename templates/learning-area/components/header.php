@@ -21,6 +21,7 @@ use TUTOR\Course;
 global $tutor_course_id,
 $tutor_course,
 $current_user_id,
+$tutor_is_enrolled,
 $tutor_current_post,
 $tutor_course_progress,
 $tutor_can_complete_course,
@@ -57,6 +58,7 @@ $content_title = $tutor_current_post->post_title ?? '';
 				</span>
 			</h5>
 
+			<?php if ( $tutor_is_enrolled ) : ?>
 			<div class="tutor-flex tutor-gap-2 tutor-items-center tutor-ml-auto tutor-pr-4 tutor-whitespace-nowrap tutor-md-hidden">
 				<?php
 				$incomplete_msg = Course::get_course_completion_restrict_msg( $tutor_course_id, $current_user_id );
@@ -68,6 +70,7 @@ $content_title = $tutor_current_post->post_title ?? '';
 				}
 				?>
 			</div>
+			<?php endif; ?>
 		</div>
 		<div class="tutor-learning-header-toggle-mobile">
 			<?php
