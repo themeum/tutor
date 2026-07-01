@@ -4,7 +4,7 @@
 .tutor-progress-bar {
   width: 100%;
   height: $tutor-progress-height;
-  background-color: $tutor-actions-gray-secondary;
+  background-color: $tutor-actions-gray-quaternary;
   box-shadow: inset 0 0 1.75px rgba(0, 0, 0, 0.16);
   border-radius: $tutor-radius-full;
   overflow: hidden;
@@ -52,7 +52,7 @@
   }
 
   &.tutor-progress-bar-brand {
-    background-color: $tutor-actions-gray-secondary;
+    background-color: $tutor-actions-gray-quaternary;
 
     .tutor-progress-bar-fill {
       background-color: $tutor-actions-brand-primary;

@@ -195,20 +195,12 @@ $is_instructor_view = User::is_instructor_view();
 								$applied_on = tutor_i18n_get_formated_date( $applied_on, get_option( 'date_format' ) );
 								?>
 								<div class="tutor-w-full tutor-sm-px-6">
-									<div class="tutor-flex tutor-sm-items-center tutor-gap-3 tutor-py-4 tutor-px-4 tutor-surface-warning-hover tutor-rounded-sm">
-										<span class="tutor-pt-1">
-											<?php SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 16 )->color( Color::WARNING )->render(); ?>
+									<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-py-2 tutor-px-4 tutor-surface-warning-hover-2 tutor-rounded-sm">
+										<span class="tutor-flex-center">
+											<?php SvgIcon::make()->name( Icon::INFO_OCTAGON )->size( 12 )->color( Color::WARNING )->render(); ?>
 										</span>
-										<span class="tutor-p3 tutor-text-warning">
-										<?php
-											echo wp_kses_post(
-												sprintf(
-												/* translators: %s: application date */
-													__( 'Your application is pending as of <span class="tutor-font-medium">%s</span>', 'tutor' ),
-													esc_html( $applied_on ),
-												)
-											);
-										?>
+										<span class="tutor-p3 tutor-text-warning ">
+										<?php esc_html_e( 'Application Under Review', 'tutor' ); ?>
 										</span>
 									</div>
 								</div>

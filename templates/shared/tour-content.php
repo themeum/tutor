@@ -58,7 +58,7 @@ use Tutor\Components\Constants\Variant;
 			<template x-if="currentSlide === 0 && slides.length > 1">
 				<?php
 				Button::make()
-					->label( __( 'Take the tour', 'tutor' ) )
+					->label( __( 'Take the Tour', 'tutor' ) )
 					->block()
 					->attr( '@click', 'next' )
 					->render();

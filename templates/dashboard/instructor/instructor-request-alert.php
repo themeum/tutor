@@ -20,7 +20,7 @@ use Tutor\Components\SvgIcon;
 $variant         = isset( $variant ) ? $variant : 'warning';
 $alert_title     = __( 'Application Under Review', 'tutor' );
 $alert_text      = __( 'Thank you for applying to become an instructor. Our team is reviewing your application.', 'tutor' );
-$bg_class        = 'tutor-surface-warning-hover';
+$bg_class        = 'tutor-surface-warning-hover-2';
 $icon_class      = 'tutor-icon-warning-secondary';
 $icon            = Icon::INFO_OCTAGON_FILL;
 $hide_notice_url = '';
