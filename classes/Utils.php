@@ -7583,11 +7583,7 @@ class Utils {
 	public function has_enrolled_content_access( $content, $object_id = 0, $user_id = 0 ) {
 		$user_id   = $this->get_user_id( $user_id );
 		$object_id = $this->get_post_id( $object_id );
-
-		$course_id = Input::get( 'course', 0, Input::TYPE_INT );
-		if ( ! $course_id ) {
-			$course_id = $this->get_course_id_by( $content, $object_id );
-		}
+		$course_id = $this->get_course_id_by( $content, $object_id );
 
 		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
 
@@ -9294,6 +9290,18 @@ class Utils {
 	public function get_brand_color() {
 		$legacy_brand_color = tutor_utils()->get_option( 'tutor_primary_color' );
 		return $legacy_brand_color ? $legacy_brand_color : tutor_utils()->get_option( 'brand_color', Options_V2::DEFAULT_BRAND_COLOR );
+	}
+
+	/**
+	 * Get default brand color
+	 * 
+	 * @since 4.0.0
+	 * 
+	 * @return string
+	 */
+	public function get_default_brand_color() {
+		$legacy_brand_color = tutor_utils()->get_option( 'tutor_primary_color' );
+		return $legacy_brand_color ? $legacy_brand_color : Options_V2::DEFAULT_BRAND_COLOR;
 	}
 
 	/**

@@ -232,6 +232,7 @@ class Instructor {
 			} else {
 				update_user_meta( $user_id, '_is_tutor_instructor', tutor_time() );
 				update_user_meta( $user_id, '_tutor_instructor_status', apply_filters( 'tutor_initial_instructor_status', 'pending' ) );
+				update_user_meta( $user_id, User::APPLICATION_SOURCE_META, User::SOURCE_STUDENT_DASHBOARD );
 
 				do_action( 'tutor_new_instructor_after', $user_id );
 			}
@@ -350,6 +351,7 @@ class Instructor {
 
 			update_user_meta( $instructor_id, '_tutor_instructor_status', 'approved' );
 			update_user_meta( $instructor_id, '_tutor_instructor_approved', tutor_time() );
+			update_user_meta( $instructor_id, User::INSTRUCTOR_APPROVAL_NOTICE_META, true );
 
 			$instructor = new \WP_User( $instructor_id );
 			$instructor->add_role( tutor()->instructor_role );
@@ -395,6 +397,8 @@ class Instructor {
 	public function hide_instructor_notice() {
 		if ( 'hide_instructor_notice' === Input::get( 'tutor_action' ) ) {
 			delete_user_meta( get_current_user_id(), 'tutor_instructor_show_rejection_message' );
+		} elseif ( 'hide_instructor_approval_notice' === Input::get( 'tutor_action' ) ) {
+			delete_user_meta( get_current_user_id(), User::INSTRUCTOR_APPROVAL_NOTICE_META );
 		}
 	}
 
@@ -430,6 +434,7 @@ class Instructor {
 	public function update_instructor_meta( int $user_id ) {
 		update_user_meta( $user_id, '_is_tutor_instructor', tutor_time() );
 		update_user_meta( $user_id, '_tutor_instructor_status', apply_filters( 'tutor_initial_instructor_status', 'pending' ) );
+		update_user_meta( $user_id, User::APPLICATION_SOURCE_META, User::SOURCE_INSTRUCTOR_REGISTRATION );
 
 		do_action( 'tutor_new_instructor_after', $user_id );
 	}
@@ -806,6 +811,7 @@ class Instructor {
 			function ( $review ) {
 				return array(
 					'user'        => array(
+						'id'     => $review->user_id,
 						'name'   => $review->display_name,
 						'avatar' => tutor_utils()->get_user_avatar_url( $review->user_id ),
 					),

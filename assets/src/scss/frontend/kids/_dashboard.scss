@@ -68,6 +68,10 @@
     border-radius: $tutor-radius-6xl;
   }
 
+  .tutor-instructor-request-alert {
+    border-radius: $tutor-radius-5xl;
+  }
+
   .tutor-account-section .tutor-account-cover-photo {
     border-radius: $tutor-radius-4xl;
   }
@@ -201,6 +205,11 @@
     border-radius: $tutor-radius-2xl;
   }
 
+  // notification drawer
+  .tutor-pn-drawer-content {
+    border-width: 0px 2px 5px 2px;
+  }
+
   // user account/notification
   .tutor-profile-notification-card {
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
@@ -308,6 +317,10 @@
     .tutor-dashboard-lesson-notes .tutor-dashboard-page-card {
       border-radius: 0px;
       box-shadow: none;
+    }
+
+    .tutor-dashboard-courses-tab {
+      overflow: hidden;
     }
 
     .tutor-dashboard-page-card-header,

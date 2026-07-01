@@ -23,6 +23,7 @@ button.tutor-tabs-tab,
 
   @include tutor-breakpoint-down(sm) {
     @include tutor-text('tiny');
+    justify-content: center;
   }
 
   &-active {

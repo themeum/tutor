@@ -232,6 +232,7 @@ final class Icon {
 	const INFO_COLORIZE              = 'info-colorize';
 	const INFO_FILL                  = 'info-fill';
 	const INFO_OCTAGON               = 'info-octagon';
+	const INFO_OCTAGON_FILL          = 'info-octagon-fill';
 	const INSTRUCTOR                 = 'instructor';
 	const INTERACTIVE_QUIZ           = 'interactive-quiz';
 	const INTERFACE                  = 'interface';
