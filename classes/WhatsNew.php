@@ -14,6 +14,7 @@ namespace TUTOR;
  * Class WhatsNew
  */
 class WhatsNew {
+
 	/**
 	 * Constructor
 	 *
