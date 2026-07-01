@@ -76,7 +76,8 @@ class Tutor_Setup {
 				$this->response_bad_request( tutor_utils()->error_message() );
 			}
 
-			$options                  = get_option( 'tutor_option' );
+			$options = get_option( 'tutor_option', array() );
+
 			$options['default_theme'] = Input::post( 'default_theme' );
 			$options['learning_mode'] = Input::post( 'learning_mode' );
 

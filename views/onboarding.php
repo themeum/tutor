@@ -3,8 +3,10 @@
  * Onboarding page
  *
  * @package Tutor
- * @since 1.0.0
+ * @since 4.0.0 onboarding
  */
+
+defined( 'ABSPATH' ) || exit;
 
 set_current_screen();
 ?>
