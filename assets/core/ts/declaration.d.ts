@@ -110,7 +110,7 @@ declare global {
     quicktags?: unknown;
 
     // Tutor object from PHP (extend existing type, don't redeclare)
-    _tutorobject?: Record<string, unknown> & {
+    _tutorobject?: Record<string, any> & {
       nonce_key?: string;
       ajaxurl?: string;
       tutor_url?: string;

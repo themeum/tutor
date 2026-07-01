@@ -236,7 +236,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 render={(controllerProps) => (
                   <FormCheckbox
                     {...controllerProps}
-                    label={__('Limit allowed attempts', 'tutor')}
+                    label={__('Allow multiple attempts', 'tutor')}
                     helpText={__('Set the number of attempts allowed for this quiz. 0 means unlimited.', 'tutor')}
                   />
                 )}

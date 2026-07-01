@@ -64,6 +64,18 @@
     @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
   }
 
+  .tutor-account-section #tutor-account-form .tutor-card {
+    border-radius: $tutor-radius-6xl;
+  }
+
+  .tutor-instructor-request-alert {
+    border-radius: $tutor-radius-5xl;
+  }
+
+  .tutor-account-section .tutor-account-cover-photo {
+    border-radius: $tutor-radius-4xl;
+  }
+
   .tutor-progress-card .tutor-progress-card-thumbnail,
   .tutor-subscription-overview-card,
   .tutor-subscription-payments-list,
@@ -179,6 +191,10 @@
     border-radius: $tutor-radius-5xl;
   }
 
+  .tutor-account-section .tutor-account-cover-photo {
+    border-radius: $tutor-radius-4xl;
+  }
+
   .tutor-review-card {
     .tutor-review-form {
       border-radius: $tutor-radius-6xl;
@@ -187,6 +203,11 @@
 
   .tutor-dashboard-header-user-popover-menu li a {
     border-radius: $tutor-radius-2xl;
+  }
+
+  // notification drawer
+  .tutor-pn-drawer-content {
+    border-width: 0px 2px 5px 2px;
   }
 
   // user account/notification
@@ -296,6 +317,10 @@
     .tutor-dashboard-lesson-notes .tutor-dashboard-page-card {
       border-radius: 0px;
       box-shadow: none;
+    }
+
+    .tutor-dashboard-courses-tab {
+      overflow: hidden;
     }
 
     .tutor-dashboard-page-card-header,

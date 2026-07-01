@@ -24,6 +24,10 @@
     opacity: 0;
     pointer-events: none;
     transform: translateX(-100%);
+
+    [dir='rtl'] & {
+      transform: translateX(100%);
+    }
   }
 
   @include tutor-breakpoint-down(lg) {
@@ -169,7 +173,7 @@
           width: 1.5px;
           position: absolute;
           top: 0;
-          left: 21px;
+          inset-inline-start: 21px;
           background-color: $tutor-surface-l1-hover;
         }
       }
@@ -207,7 +211,7 @@
             background-color: $tutor-actions-brand-primary;
             position: absolute;
             top: 8px;
-            left: -9px;
+            inset-inline-start: -9px;
           }
         }
 
@@ -291,7 +295,7 @@
       @include tutor-flex(row, center, center);
       position: absolute;
       width: 100%;
-      left: 0;
+      inset-inline-start: 0;
       bottom: 100%;
 
       button {
@@ -311,7 +315,7 @@
           height: 8px;
           position: absolute;
           bottom: 0;
-          left: -8px;
+          inset-inline-start: -8px;
           background: $tutor-surface-l1;
 
           mask: radial-gradient(circle 8px at top left, transparent 8px, $tutor-surface-l1 8px);
@@ -365,6 +369,12 @@
         width: 288px;
       }
 
+      &-nav,
+      .tutor-popover-body {
+        @include tutor-flex(column);
+        gap: $tutor-spacing-1;
+      }
+
       &-item {
         @include tutor-button-reset();
         @include tutor-typography(small);
@@ -398,7 +408,7 @@
         .tutor-lock-icon {
           color: $tutor-actions-success-primary;
           position: absolute;
-          left: 7px;
+          inset-inline-start: 7px;
           top: 7px;
         }
       }

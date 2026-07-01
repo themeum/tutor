@@ -87,31 +87,34 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 					<?php
 					if ( $course_reset_progress && ! $tutor_is_course_completed ) {
 						Button::make()
-						->label( __( 'Reset Progress', 'tutor' ) )
-						->variant( Variant::GHOST )
-						->size( Size::X_SMALL )
-						->icon( Icon::RELOAD_2, 'left', 16, Color::SECONDARY )
-						->icon_only()
-						->attr( '@click', 'confirmReset()' )
-						->render();
+							->label( __( 'Reset Progress', 'tutor' ) )
+							->variant( Variant::GHOST )
+							->size( Size::X_SMALL )
+							->icon( Icon::RELOAD_2, 'left', 16, Color::SECONDARY )
+							->icon_only()
+							->attr( '@click', 'confirmReset()' )
+							->render();
 
 						ConfirmationModal::make()
-						->id( $reset_modal_id )
-						->title( __( 'Reset Course Progress?', 'tutor' ) )
-						->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
-						->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
-						->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
-						->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reset-course.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
-						->confirm_handler( 'resetProgress()' )
-						->mutation_state( 'resetProgressMutation' )
-						->render();
+							->id( $reset_modal_id )
+							->title( __( 'Reset Course Progress?', 'tutor' ) )
+							->message( __( 'This will remove your completed lessons, quizzes, and assignments. You will start the course from the beginning.', 'tutor' ) )
+							->cancel_text( __( 'No, Keep My Progress', 'tutor' ) )
+							->confirm_text( __( 'Yes, Reset Everything', 'tutor' ) )
+							->icon( tutor_utils()->get_themed_svg( 'images/illustrations/reset-course.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
+							->confirm_handler( 'resetProgress()' )
+							->mutation_state( 'resetProgressMutation' )
+							->render();
 					}
 					?>
 				</div>
 			</div>
-			<div class="tutor-progress-bar" data-tutor-animated="">
-				<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $tutor_course_progress ); ?>%;"></div>
-			</div>
+			<?php
+				Progress::make()
+					->value( $tutor_course_progress )
+					->type( 'bar' )
+					->render();
+			?>
 		</div>
 		<div class="tutor-learning-nav" role="navigation">
 			<?php
@@ -214,7 +217,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 			<div class="tutor-sidebar-resizer" @mousedown="startResizing($event)"></div>
 			<div class="tutor-sidebar-restore-dropdown">
 				<button 
-					:class="{ 'is-minimized': pagesHeight <= 40 }" 
+					:class="{ 'is-minimized': pagesHeight && pagesHeight <= 40 }" 
 					@click="togglePagesHeight()"
 					:aria-expanded="pagesHeight > 40 ? 'true' : 'false'"
 					:aria-label="pagesHeight <= 40 ? '<?php echo esc_js( __( 'Expand panel', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Collapse panel', 'tutor' ) ); ?>'"
@@ -223,7 +226,7 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 				</button>
 			</div>
 		<?php endif; ?>
-		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" <?php echo ! empty( $active_menu ) ? ':style="{ height: pagesHeight + \'px\' }"' : ''; ?>>
+		<div class="tutor-learning-pages" x-ref="pagesList" :class="{ 'is-resizing': resizing }" <?php echo ! empty( $active_menu ) ? ':style="pagesHeight !== null ? { height: pagesHeight + \'px\' } : {}"' : ''; ?>>
 			<?php
 			ob_start();
 			foreach ( $menu_items as $key => $item ) {
@@ -276,21 +279,23 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 				?>
 			</div>
 			<?php else : ?>
-			<div>
+			<div class="tutor-learning-pages-nav">
 				<?php echo $menu_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 			<?php endif; ?>
 		</div>
 	</div>
+	<?php if ( $tutor_is_enrolled ) : ?>
 	<div class="tutor-hidden tutor-md-flex tutor-flex-column tutor-gap-2">
-	<?php
-	$incomplete_msg = Course::get_course_completion_restrict_msg( $tutor_course_id, $current_user_id );
-	if ( $tutor_can_complete_course || $incomplete_msg ) {
-		Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $tutor_course_progress, Size::MEDIUM, $incomplete_msg ?? '', true );
-	}
-	if ( $tutor_can_retake_course ) {
-		Course::render_course_retake_btn( $course_retake_modal_id, Size::MEDIUM, true );
-	}
-	?>
+		<?php
+		$incomplete_msg = Course::get_course_completion_restrict_msg( $tutor_course_id, $current_user_id );
+		if ( $tutor_can_complete_course || $incomplete_msg ) {
+			Course::render_course_complete_btn( $course_complete_modal_id, $tutor_course_id, $tutor_course_progress, Size::MEDIUM, $incomplete_msg ?? '', true );
+		}
+		if ( $tutor_can_retake_course ) {
+			Course::render_course_retake_btn( $course_retake_modal_id, Size::MEDIUM, true );
+		}
+		?>
 	</div>
+	<?php endif; ?>
 </div>

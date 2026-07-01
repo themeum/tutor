@@ -2,6 +2,7 @@
 // Initializes dashboard functionality based on current page
 
 import { initializeReviews } from '@FrontendComponents/reviews';
+import { initializeTour } from '@FrontendComponents/tour';
 import { initializeCommon } from '@FrontendServices/common';
 
 import { initializeHeader } from './header';
@@ -74,6 +75,7 @@ const getCurrentPage = (): string => {
 const initializeDashboard = () => {
   initializeHeader();
   initializeCommon();
+  initializeTour();
 
   const currentPage = getCurrentPage();
 

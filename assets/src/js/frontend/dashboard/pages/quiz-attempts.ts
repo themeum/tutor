@@ -1,7 +1,5 @@
 // Quiz Attempts Page
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
 
 import { quizRetryAttemptMeta } from '@FrontendComponents/quiz/retry-attempt';
 import { quizSummarySidebarMeta } from '@FrontendComponents/quiz/summary-sidebar';
@@ -9,7 +7,9 @@ import { quizSummarySidebarMeta } from '@FrontendComponents/quiz/summary-sidebar
 import { quizAttemptFeedbackMeta } from './quiz-attempt-feedback';
 
 const quizAttemptsPage = () => {
-  const query = window.TutorCore.query;
+  const { query, modal, toast } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
 
   return {
     query,
@@ -18,11 +18,11 @@ const quizAttemptsPage = () => {
     init() {
       this.deleteMutation = this.query.useMutation(this.deleteAttempt, {
         onSuccess: () => {
-          window.TutorCore.modal.closeModal('tutor-quiz-attempt-delete-modal');
+          modal.closeModal('tutor-quiz-attempt-delete-modal');
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
     },

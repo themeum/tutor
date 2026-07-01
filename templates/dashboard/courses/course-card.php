@@ -5,11 +5,14 @@
  * @package Tutor\Templates
  * @subpackage Dashboard\Enrolled_Courses
  * @author Themeum
+ *
+ * @since 4.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Models\CourseModel;
+use Tutor\Components\Progress;
 
 $course_permalink = get_the_permalink();
 $course_title     = get_the_title();
@@ -50,7 +53,7 @@ if ( ! $course_learning_url ) {
 		<div class="tutor-progress-card-thumbnail">
 			<?php do_action( 'tutor_courses_card_before_thumbnail', $course_id ); ?>
 			<?php if ( ! empty( $tutor_course_img ) ) : ?>
-				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title_attribute(); ?>" />
+				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" />
 			<?php endif; ?>
 		</div>
 
@@ -101,11 +104,12 @@ if ( ! $course_learning_url ) {
 					<?php endif; ?>
 					<?php if ( $course_progress['completed_percent'] >= 0 ) : ?>
 						<div class="tutor-progress-card-bar">
-							<div class="tutor-progress-bar" data-tutor-animated>
-								<div class="tutor-progress-bar-fill"
-									style="--tutor-progress-width: <?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;">
-								</div>
-							</div>
+							<?php
+								Progress::make()
+									->value( $course_progress['completed_percent'] )
+									->type( 'bar' )
+									->render();
+							?>
 						</div>
 					<?php endif; ?>
 				</div>

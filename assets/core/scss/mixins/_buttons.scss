@@ -82,6 +82,9 @@
       background-color: $tutor-button-primary-disabled;
       color: $tutor-text-primary-inverse;
       --tutor-button-border-shadow: #{$tutor-button-primary-border-shadow-disabled};
+      svg:not([class]) {
+        color: $tutor-text-primary-inverse;
+      }
     }
   } @else if $variant == primary-soft {
     background-color: $tutor-button-primary-soft;

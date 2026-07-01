@@ -1215,7 +1215,6 @@ final class Tutor extends Singleton {
 			'course_permalink_base'             => 'courses',
 			'lesson_permalink_base'             => 'lessons',
 			'quiz_when_time_expires'            => 'autosubmit',
-			'quiz_attempts_allowed'             => '10',
 			'quiz_grade_method'                 => 'highest_grade',
 			'enable_public_profile'             => '1',
 			'email_to_students'                 =>
@@ -1235,7 +1234,6 @@ final class Tutor extends Singleton {
 			'email_footer_text'                 => '',
 			'earning_admin_commission'          => '20',
 			'earning_instructor_commission'     => '80',
-			'color_preset_type'                 => 'default',
 
 			// Default options for tutor ecommerce.
 			'monetize_by'                       => Ecommerce::MONETIZE_BY,

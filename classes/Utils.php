@@ -25,6 +25,7 @@ use TUTOR\Icon;
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 use Tutor\Models\QuizModel;
+use Tutor\Options_V2;
 use Tutor\Traits\JsonResponse;
 
 /**
@@ -7582,11 +7583,7 @@ class Utils {
 	public function has_enrolled_content_access( $content, $object_id = 0, $user_id = 0 ) {
 		$user_id   = $this->get_user_id( $user_id );
 		$object_id = $this->get_post_id( $object_id );
-
-		$course_id = Input::get( 'course', 0, Input::TYPE_INT );
-		if ( ! $course_id ) {
-			$course_id = $this->get_course_id_by( $content, $object_id );
-		}
+		$course_id = $this->get_course_id_by( $content, $object_id );
 
 		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
 
@@ -9189,6 +9186,122 @@ class Utils {
 		$rgb = array_map( 'hexdec', $hex );
 
 		return implode( ', ', $rgb );
+	}
+
+	/**
+	 * Convert HEX to HSL
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $hex HEX color code.
+	 *
+	 * @return array
+	 */
+	public function hex_to_hsl( $hex ) {
+		$hex = ltrim( $hex, '#' );
+		if ( strlen( $hex ) == 3 ) {
+			$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+		}
+		$r = hexdec( substr( $hex, 0, 2 ) ) / 255;
+		$g = hexdec( substr( $hex, 2, 2 ) ) / 255;
+		$b = hexdec( substr( $hex, 4, 2 ) ) / 255;
+
+		$max = max( $r, $g, $b );
+		$min = min( $r, $g, $b );
+		$l   = ( $max + $min ) / 2;
+
+		if ( $min === $max ) {
+			$h = $s = 0; //phpcs:ignore
+		} else {
+			$d = $max - $min;
+			$s = $l > 0.5 ? $d / ( 2 - $max - $min ) : $d / ( $max + $min );
+			switch ( $max ) {
+				case $r:
+					$h = ( $g - $b ) / $d + ( $g < $b ? 6 : 0 );
+					break;
+				case $g:
+					$h = ( $b - $r ) / $d + 2;
+					break;
+				case $b:
+					$h = ( $r - $g ) / $d + 4;
+					break;
+			}
+			$h /= 6;
+		}
+		return array(
+			'h' => $h * 360,
+			's' => $s * 100,
+			'l' => $l * 100,
+		);
+	}
+
+	/**
+	 * Convert HSL to HEX
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $h H color value.
+	 * @param string $s S color value.
+	 * @param string $l L color value.
+	 *
+	 * @return array
+	 */
+	public function hsl_to_hex( $h, $s, $l ) {
+		$h /= 360;
+		$s /= 100;
+		$l /= 100;
+		if ( 0 === $s ) {
+			$r = $g = $b = $l; //phpcs:ignore
+		} else {
+			$hue2rgb = function( $p, $q, $t ) {
+				if ( $t < 0 ) {
+					++$t;
+				}
+				if ( $t > 1 ) {
+					--$t;
+				}
+				if ( $t < 1 / 6 ) {
+					return $p + ( $q - $p ) * 6 * $t;
+				}
+				if ( $t < 1 / 2 ) {
+					return $q;
+				}
+				if ( $t < 2 / 3 ) {
+					return $p + ( $q - $p ) * ( 2 / 3 - $t ) * 6;
+				}
+				return $p;
+			};
+			$q       = $l < 0.5 ? $l * ( 1 + $s ) : $l + $s - $l * $s;
+			$p       = 2 * $l - $q;
+			$r       = $hue2rgb( $p, $q, $h + 1 / 3 );
+			$g       = $hue2rgb( $p, $q, $h );
+			$b       = $hue2rgb( $p, $q, $h - 1 / 3 );
+		}
+		return sprintf( '#%02x%02x%02x', round( $r * 255 ), round( $g * 255 ), round( $b * 255 ) );
+	}
+
+	/**
+	 * Get brand color
+	 * 
+	 * @since 4.0.0
+	 * 
+	 * @return string
+	 */
+	public function get_brand_color() {
+		$legacy_brand_color = tutor_utils()->get_option( 'tutor_primary_color' );
+		return $legacy_brand_color ? $legacy_brand_color : tutor_utils()->get_option( 'brand_color', Options_V2::DEFAULT_BRAND_COLOR );
+	}
+
+	/**
+	 * Get default brand color
+	 * 
+	 * @since 4.0.0
+	 * 
+	 * @return string
+	 */
+	public function get_default_brand_color() {
+		$legacy_brand_color = tutor_utils()->get_option( 'tutor_primary_color' );
+		return $legacy_brand_color ? $legacy_brand_color : Options_V2::DEFAULT_BRAND_COLOR;
 	}
 
 	/**

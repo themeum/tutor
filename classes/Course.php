@@ -163,13 +163,6 @@ class Course extends Tutor_Base {
 		add_action( 'save_tutor_course', array( $this, 'attach_product_with_course' ), 10, 2 );
 
 		/**
-		 * Add course level to course settings
-		 *
-		 * @since v.1.4.1
-		 */
-		add_filter( 'tutor_course_settings_tabs', array( $this, 'add_course_level_to_settings' ) );
-
-		/**
 		 * Enable Disable Course Details Page Feature
 		 *
 		 * @since v.1.4.8
@@ -1546,7 +1539,6 @@ class Course extends Tutor_Base {
 			'instructor_can_publish_course',
 			'instructor_can_change_course_author',
 			'instructor_can_manage_co_instructors',
-			'quiz_attempts_allowed',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
@@ -2555,31 +2547,6 @@ class Course extends Tutor_Base {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Add Course level to course settings
-	 *
-	 * @since 1.4.1
-	 *
-	 * @param array $args arguments.
-	 * @return array
-	 */
-	public function add_course_level_to_settings( $args ) {
-		$course_id    = get_the_ID();
-		$levels       = tutor_utils()->course_levels();
-		$course_level = get_post_meta( $course_id, '_tutor_course_level', true );
-
-		$args['general']['fields']['_tutor_course_level'] = array(
-			'type'        => 'select',
-			'label'       => __( 'Difficulty Level', 'tutor' ),
-			'label_title' => __( 'Enable', 'tutor' ),
-			'options'     => $levels,
-			'value'       => $course_level ? $course_level : 'intermediate',
-			'desc'        => __( 'Course difficulty level', 'tutor' ),
-		);
-
-		return $args;
 	}
 
 	/**
