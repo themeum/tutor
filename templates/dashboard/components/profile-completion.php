@@ -70,7 +70,7 @@ unset( $rest_of_the_items[ $first_incomplete_key ] );
 					<a href="<?php echo esc_url( $first_incomplete_item['url'] ); ?>"
 						class="tutor-tiny tutor-font-medium tutor-text-brand tutor-flex tutor-items-center tutor-gap-3">
 						<?php echo esc_html( $first_incomplete_item['text'] ); ?>
-						<?php SvgIcon::make()->name( Icon::ARROW_RIGHT_2 )->render(); ?>
+						<?php SvgIcon::make()->name( Icon::ARROW_RIGHT_2 )->flip_rtl()->render(); ?>
 					</a>
 				<?php } ?>
 			</div>
@@ -99,7 +99,7 @@ unset( $rest_of_the_items[ $first_incomplete_key ] );
 					</div>
 					<a href="<?php echo esc_url( $data['url'] ); ?>" class="tutor-tiny tutor-font-medium tutor-text-brand tutor-flex tutor-items-center tutor-gap-3">
 						<?php echo esc_html( $data['text'] ); ?>
-						<?php SvgIcon::make()->name( Icon::ARROW_RIGHT_2 )->render(); ?>
+						<?php SvgIcon::make()->name( Icon::ARROW_RIGHT_2 )->flip_rtl()->render(); ?>
 					</a>
 				<?php endif; ?>
 			</div>

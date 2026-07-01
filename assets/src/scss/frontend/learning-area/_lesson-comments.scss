@@ -23,10 +23,10 @@
       content: '';
       position: absolute;
       top: 60px;
-      left: 36px;
+      inset-inline-start: 36px;
       width: 28px;
       height: calc(100% - 86px);
-      border-left: 1px solid $tutor-border-idle;
+      border-inline-start: 1px solid $tutor-border-idle;
       border-bottom: 1px solid $tutor-border-idle;
       border-end-start-radius: $tutor-radius-sm;
     }

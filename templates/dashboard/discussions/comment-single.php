@@ -49,7 +49,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 			href="<?php echo esc_url( UrlHelper::add_query_params( $discussion_url, array( 'tab' => 'lesson-comments' ) ) ); ?>" 
 			class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2"
 		>
-			<?php SvgIcon::make()->name( Icon::ARROW_LEFT_2 )->render(); ?>
+			<?php SvgIcon::make()->name( Icon::ARROW_LEFT_2 )->flip_rtl()->render(); ?>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
