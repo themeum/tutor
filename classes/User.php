@@ -785,21 +785,8 @@ class User {
 	public function ajax_complete_tour() {
 		tutor_utils()->check_nonce();
 
-		$user_id = get_current_user_id();
-		if ( ! $user_id ) {
-			$this->json_response(
-				tutor_utils()->error_message(),
-				null,
-				HttpHelper::STATUS_UNAUTHORIZED
-			);
-		}
-
 		update_user_meta( $user_id, self::TOUR_COMPLETED_META, true );
 
-		$this->json_response(
-			__( 'Tour completed', 'tutor' ),
-			null,
-			HttpHelper::STATUS_OK
-		);
+		$this->json_response( __( 'Tour completed', 'tutor' ) );
 	}
 }

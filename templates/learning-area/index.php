@@ -22,6 +22,7 @@ use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 use TUTOR\Quiz;
 use TUTOR\Template;
+use TUTOR\User;
 
 $current_user_id          = get_current_user_id();
 $tutor_current_post       = get_post();
@@ -37,6 +38,7 @@ $tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
 $tutor_is_course_instructor = tutor_utils()->is_instructor_of_this_course( $current_user_id, $tutor_course_id, true );
 $tutor_is_course_completed  = tutor_utils()->is_completed_course( $tutor_course_id, $current_user_id );
 $tutor_can_complete_course  = CourseModel::can_complete_course( $tutor_course_id, $current_user_id ) && ! $tutor_is_course_completed;
+$is_tour_completed          = get_user_meta( $current_user_id, User::TOUR_COMPLETED_META, true );
 
 $tutor_course_progress   = tutor_utils()->get_course_completed_percent( $tutor_course_id, $current_user_id );
 $tutor_completion_mode   = tutor_utils()->get_option( 'course_completion_process' );
@@ -171,7 +173,11 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 			</button>
 		</div>
 	</div>
-	<?php tutor_load_template( 'shared.tour' ); ?>
+	<?php
+	if ( ! $is_tour_completed ) {
+		tutor_load_template( 'shared.tour' );
+	}
+	?>
 	<?php wp_footer(); ?>
 
 	<?php
