@@ -43,6 +43,7 @@ class Admin {
 		add_filter( 'submenu_file', array( $this, 'submenu_file_active' ), 10, 2 );
 
 		add_action( 'admin_init', array( $this, 'filter_posts_for_instructors' ) );
+		add_action( 'admin_init', array( $this, 'redirect_to_welcome_page' ) );
 		add_action( 'load-post.php', array( $this, 'check_if_current_users_post' ) );
 
 		add_filter( 'plugin_action_links_' . plugin_basename( TUTOR_FILE ), array( $this, 'plugin_action_links' ) );
@@ -850,5 +851,27 @@ class Admin {
 		}
 
 		return $admin_bar;
+	}
+
+	/**
+	 * Redirect to welcome page if user is not logged in.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function redirect_to_welcome_page() {
+		// Skip for fresh installs, during the setup wizard, or during AJAX.
+		if ( ! get_option( 'tutor_wizard' ) || 'tutor-setup' === Input::get( 'page' ) || wp_doing_ajax() ) {
+			return;
+		}
+
+		$tutor_new_feature = get_option( 'tutor-new-feature' );
+		if ( version_compare( $tutor_new_feature, '4.0.0-rc.2', '>=' ) ) {
+			return;
+		}
+
+		wp_safe_redirect( admin_url( 'admin.php?page=tutor&welcome=1' ) );
+		update_option( 'tutor-new-feature', TUTOR_VERSION );
 	}
 }

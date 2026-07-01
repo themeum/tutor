@@ -1,5 +1,6 @@
-import { isVimeoPlyr, isYouTubePlyr } from '@FrontendTypes/index';
 import { __, sprintf } from '@wordpress/i18n';
+
+import { isVimeoPlyr, isYouTubePlyr } from '@FrontendTypes/index';
 
 interface AutoLoadResponse {
   success: boolean;
