@@ -41,6 +41,7 @@ class User {
 	const PROFILE_BIO_META                = '_tutor_profile_bio';
 	const PROFILE_JOB_TITLE_META          = '_tutor_profile_job_title';
 	const TUTOR_STUDENT_META              = '_is_tutor_student';
+	const TOUR_COMPLETED_META             = '_tutor_tour_completed';
 	const APPLICATION_SOURCE_META         = '_tutor_application_source';
 	const INSTRUCTOR_APPROVAL_NOTICE_META = 'tutor_instructor_show_approval_message';
 
