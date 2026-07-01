@@ -47,11 +47,11 @@
     }
 
     &::before {
-      left: 33.3333%;
+      inset-inline-start: 33.3333%;
     }
 
     &::after {
-      left: 66.6667%;
+      inset-inline-start: 66.6667%;
     }
 
     &-item {
@@ -74,12 +74,12 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin-left: $tutor-spacing-1;
+        margin-inline-start: $tutor-spacing-1;
         color: $tutor-text-secondary;
       }
 
       &:nth-child(2) {
-        padding-left: 10%;
+        padding-inline-start: 10%;
       }
 
       &:nth-child(3) {
@@ -118,7 +118,7 @@
         }
 
         &:nth-child(2) {
-          padding-left: 0;
+          padding-inline-start: 0;
         }
 
         &:nth-child(3) {

@@ -323,6 +323,12 @@ class Assets {
 			}
 		}
 
+		/**
+		 * Enabling Sorting, draggable, droppable...
+		 */
+		wp_enqueue_script( 'jquery-ui-sortable' );
+        wp_enqueue_script('jquery-touch-punch', ['jquery-ui-sortable']); //phpcs:ignore
+
 		// Plyr.
 		if ( is_single_course( true ) ) {
 			wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );

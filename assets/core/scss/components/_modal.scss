@@ -5,10 +5,7 @@
 
 .tutor-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: $tutor-z-highest;
   display: flex;
   align-items: center;
@@ -16,10 +13,7 @@
 
   &-backdrop {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background-color: #00000099;
     backdrop-filter: blur(20px);
 
@@ -96,7 +90,7 @@
     @include tutor-button-variant(ghost);
     position: absolute;
     top: $tutor-spacing-4;
-    right: $tutor-spacing-4;
+    inset-inline-end: $tutor-spacing-4;
 
     svg {
       color: $tutor-icon-idle !important;

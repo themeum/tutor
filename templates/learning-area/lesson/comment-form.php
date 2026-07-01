@@ -24,7 +24,7 @@ $placeholder      = $placeholder ?? '';
 $submit_handler   = $submit_handler ?? '';
 $cancel_handler   = $cancel_handler ?? '';
 $is_pending       = $is_pending ?? 'false';
-$default_values   = $default_values ?? array();
+$default_value    = $default_value ?? '';
 $class            = $class ?? '';
 $x_show           = $x_show ?? '';
 $hide_footer_init = $hide_footer_init ?? false;
@@ -37,7 +37,7 @@ $hide_footer_init = $hide_footer_init ?? false;
 		x-collapse
 		x-init="$watch('<?php echo esc_js( $x_show ); ?>', value => value && $nextTick(() => $refs.commentInput.focus()))"
 	<?php endif; ?>
-	x-data="tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>', mode: 'onSubmit', defaultValues: <?php echo esc_js( wp_json_encode( $default_values ) ); ?> })"
+	x-data="tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>', mode: 'onSubmit', defaultValues: { comment: '<?php echo esc_js( $default_value ); ?>' } })"
 	x-bind="getFormBindings()"
 	@submit.prevent="handleSubmit((data) => <?php echo esc_js( $submit_handler ); ?>)($event)"
 >

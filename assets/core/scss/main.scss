@@ -68,6 +68,15 @@ form {
   }
 }
 
+/**
+ * Flips directional icons in RTL layouts.
+ * Use only for icons whose meaning depends on reading direction,
+ * such as arrows, chevrons, previous/next pagination controls, etc.
+ */
+[dir='rtl'] .tutor-icon-flip-rtl {
+  transform: scaleX(-1);
+}
+
 // Alpine.js cloak utility
 [x-cloak] {
   display: none !important;

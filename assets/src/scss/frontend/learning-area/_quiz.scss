@@ -229,11 +229,11 @@ $tutor-quiz-content-bottom-offset: calc(
   }
 
   &-timer-frame-tab-start {
-    left: 13px;
+    inset-inline-start: 13px;
   }
 
   &-timer-frame-tab-end {
-    right: 13px;
+    inset-inline-end: 13px;
   }
 
   &-timer-frame-body {
