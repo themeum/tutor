@@ -37,13 +37,13 @@
       height: 4px;
       width: 4px;
       position: absolute;
-      left: 6px;
+      inset-inline-start: 6px;
       top: 30px;
       background-color: $tutor-icon-critical;
       border-radius: $tutor-radius-lg;
 
       @include tutor-breakpoint-down(sm) {
-        left: 4px;
+        inset-inline-start: 4px;
         top: 26px;
       }
     }
@@ -103,7 +103,7 @@
         width: 4px;
         height: 4px;
         position: absolute;
-        right: -8px;
+        inset-inline-end: -8px;
         top: 50%;
         transform: translateY(-50%);
         background-color: $tutor-text-subdued;
@@ -133,7 +133,7 @@
     .tutor-discussion-card-meta-reply-button {
       @include tutor-button-reset();
       @include tutor-typography(tiny, medium, subdued);
-      margin-right: auto;
+      margin-inline-end: auto;
       min-height: unset;
       background: unset !important;
 
@@ -169,7 +169,7 @@
     gap: $tutor-spacing-3;
     position: absolute;
     top: $tutor-spacing-6;
-    right: $tutor-spacing-6;
+    inset-inline-end: $tutor-spacing-6;
 
     @include tutor-breakpoint-up(sm) {
       opacity: 0;
@@ -178,7 +178,7 @@
 
     @include tutor-breakpoint-down(sm) {
       top: $tutor-spacing-5;
-      right: $tutor-spacing-5;
+      inset-inline-end: $tutor-spacing-5;
 
       &-trigger {
         @include tutor-button-variant(ghost);

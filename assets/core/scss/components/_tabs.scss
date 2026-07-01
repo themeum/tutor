@@ -1,6 +1,5 @@
 @use '../mixins' as *;
 @use '../tokens' as *;
-@use '../mixins/rtl' as rtl;
 
 button.tutor-tabs-tab,
 .tutor-tabs-tab {
@@ -23,6 +22,7 @@ button.tutor-tabs-tab,
 
   @include tutor-breakpoint-down(sm) {
     @include tutor-text('tiny');
+    justify-content: center;
   }
 
   &-active {
@@ -96,10 +96,6 @@ button.tutor-tabs-tab,
     &::-webkit-scrollbar {
       display: none;
     }
-
-    [dir='rtl'] & {
-      flex-direction: row-reverse;
-    }
   }
 
   &-content {
@@ -109,10 +105,6 @@ button.tutor-tabs-tab,
   // Vertical variant
   &-vertical {
     @include tutor-flex(row, flex-start, flex-start);
-
-    [dir='rtl'] & {
-      flex-direction: row-reverse;
-    }
 
     .tutor-tabs-nav {
       @include tutor-flex-column;

@@ -68,6 +68,10 @@
     border-radius: $tutor-radius-6xl;
   }
 
+  .tutor-instructor-request-alert {
+    border-radius: $tutor-radius-5xl;
+  }
+
   .tutor-account-section .tutor-account-cover-photo {
     border-radius: $tutor-radius-4xl;
   }
@@ -313,6 +317,10 @@
     .tutor-dashboard-lesson-notes .tutor-dashboard-page-card {
       border-radius: 0px;
       box-shadow: none;
+    }
+
+    .tutor-dashboard-courses-tab {
+      overflow: hidden;
     }
 
     .tutor-dashboard-page-card-header,

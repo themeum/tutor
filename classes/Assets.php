@@ -224,6 +224,7 @@ class Assets {
 			'course_slug'                  => tutor_utils()->get_option( 'course_permalink_base', 'courses' ),
 			'lesson_slug'                  => tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ),
 			'quiz_slug'                    => tutor_utils()->get_option( 'quiz_permalink_base', 'quizzes' ),
+			'is_tour_completed'            => (bool) get_user_meta( get_current_user_id(), User::TOUR_COMPLETED_META, true ),
 		);
 	}
 
@@ -303,8 +304,6 @@ class Assets {
 			return;
 		}
 
-		global $post, $wp_query;
-
 		/**
 		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
 		 * condition updated @since v.1.7.4
@@ -316,27 +315,13 @@ class Assets {
 				$is_page_builder_used = et_pb_is_pagebuilder_used( get_the_ID() );
 				if ( ! $is_page_builder_used ) {
 					wp_enqueue_editor();
+					wp_enqueue_script( 'quicktags' );
 				}
 			} else {
 				wp_enqueue_editor();
+				wp_enqueue_script( 'quicktags' );
 			}
 		}
-
-		/**
-		 * Initializing quicktags script to use in wp_editor();
-		 */
-		wp_enqueue_script( 'quicktags' );
-
-		$tutor_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
-		if ( get_the_ID() === $tutor_dashboard_page_id ) {
-			wp_enqueue_media();
-		}
-
-		/**
-		 * Enabling Sorting, draggable, droppable...
-		 */
-		wp_enqueue_script( 'jquery-ui-sortable' );
-        wp_enqueue_script('jquery-touch-punch', ['jquery-ui-sortable']); //phpcs:ignore
 
 		// Plyr.
 		if ( is_single_course( true ) ) {
@@ -348,41 +333,12 @@ class Assets {
 		wp_enqueue_script( 'tutor-social-share', tutor()->url . 'assets/lib/SocialShare/SocialShare.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
 		/**
-		 * Chart Data
-		 */
-		if ( ! empty( $wp_query->query_vars['tutor_dashboard_page'] ) ) {
-			wp_enqueue_script( 'jquery-ui-slider' );
-
-			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
-			wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-
-			if ( 'earning' === $wp_query->query_vars['tutor_dashboard_page'] ) {
-				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/lib/Chart.bundle.min.js', array(), TUTOR_VERSION );
-				wp_enqueue_script( 'jquery-ui-datepicker' );
-			}
-		}
-		/**
 		 * Dependency wp-i18n added for translate js file
 		 *
 		 * @since 1.9.0
 		 */
 		wp_enqueue_style( 'tutor-frontend', tutor()->url . 'assets/css/tutor-front.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
-
-		/**
-		 * Load frontend dashboard style
-		 *
-		 * @since v1.9.8
-		 */
-		$should_load_dashboard_styles = apply_filters( 'tutor_should_load_dashboard_styles', tutor_utils()->is_tutor_frontend_dashboard() );
-		if ( $should_load_dashboard_styles ) {
-			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', array(), TUTOR_VERSION );
-		}
-
-		// Load date picker for announcement at frontend.
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		$css = '.mce-notification.mce-notification-error{display: none !important;}';
-		wp_add_inline_style( 'tutor-frontend', $css );
 	}
 
 	/**

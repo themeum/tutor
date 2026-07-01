@@ -35,12 +35,12 @@
     &.completed {
       background-color: $tutor-actions-success-primary;
       color: $tutor-text-primary-inverse;
-      padding-right: 40px;
+      padding-inline-end: 40px;
       cursor: default;
 
       svg {
         position: absolute;
-        right: 0;
+        inset-inline-end: 0;
         top: 0;
         color: $tutor-icon-idle-inverse;
       }

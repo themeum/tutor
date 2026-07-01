@@ -280,6 +280,7 @@ class Instructors_List {
 
 		update_user_meta( $instructor_id, '_tutor_instructor_status', $status );
 		update_user_meta( $instructor_id, '_tutor_instructor_approved', tutor_time() );
+		update_user_meta( $instructor_id, User::INSTRUCTOR_APPROVAL_NOTICE_META, true );
 
 		$instructor = new \WP_User( $instructor_id );
 		$instructor->add_role( tutor()->instructor_role );

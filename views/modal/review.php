@@ -13,6 +13,8 @@ use Tutor\Components\Modal;
 use Tutor\Options_V2;
 
 $is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
+
+$modal_id = 'tutor-review-modal-' . $course_id;
 ?>
 <?php if ( $is_legacy_learning ) : ?> 
 <form class="tutor-modal tutor-is-active tutor-course-review-popup-form">

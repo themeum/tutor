@@ -452,40 +452,6 @@ if ( ! function_exists( 'tutor_generate_tags_checkbox' ) ) {
 	}
 }
 
-if ( ! function_exists( 'course_builder_section_wrap' ) ) {
-	/**
-	 * Wrap course builder sections within div for frontend.
-	 *
-	 * @since 1.3.4
-	 *
-	 * @param string $content content to wrap.
-	 * @param string $title title.
-	 * @param bool   $echo whether to echo.
-	 *
-	 * @return string
-	 */
-	function course_builder_section_wrap( $content = '', $title = '', $echo = true ) {
-		$template = trailingslashit( tutor()->path . 'templates' ) . 'metabox-wrapper.php';
-		if ( $echo ) {
-			if ( file_exists( $template ) ) {
-				include $template;
-			} else {
-				echo esc_html( $template ) . esc_html__( 'file not exists', 'tutor' );
-			}
-		} else {
-			ob_start();
-			if ( file_exists( $template ) ) {
-				include $template;
-			} else {
-				echo esc_html( $template ) . esc_html__( 'file not exists', 'tutor' );
-			}
-			$html = ob_get_clean();
-			return $html;
-		}
-	}
-}
-
-
 if ( ! function_exists( 'get_tutor_header' ) ) {
 	/**
 	 * Get Tutor Header.
