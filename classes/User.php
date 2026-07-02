@@ -825,9 +825,11 @@ class User {
 	 */
 	public static function get_current_view_mode(): string {
 		$user_id      = get_current_user_id();
+		$can_switch   = self::can_switch_mode( $user_id );
+		$default_mode = $can_switch ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT;
 		$current_mode = get_user_meta( $user_id, self::VIEW_MODE_USER_META, true );
 
-		if ( self::can_switch_mode( $user_id ) && in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true ) ) {
+		if ( $can_switch && in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true ) ) {
 			return $current_mode;
 		}
 
@@ -838,7 +840,7 @@ class User {
 			}
 		}
 
-		return self::VIEW_AS_STUDENT;
+		return $default_mode;
 	}
 
 	/**

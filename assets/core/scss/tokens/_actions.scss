@@ -19,6 +19,7 @@ $tutor-actions-brand-tertiary: var(--tutor-actions-brand-tertiary);
 $tutor-actions-gray-empty: var(--tutor-actions-gray-empty);
 $tutor-actions-gray-secondary: var(--tutor-actions-gray-secondary);
 $tutor-actions-gray-tertiary: var(--tutor-actions-gray-tertiary);
+$tutor-actions-gray-quaternary: var(--tutor-actions-gray-quaternary);
 $tutor-actions-critical-primary: var(--tutor-actions-critical-primary);
 $tutor-actions-critical-secondary: var(--tutor-actions-critical-secondary);
 $tutor-actions-caution: var(--tutor-actions-caution);
@@ -47,6 +48,7 @@ $tutor-actions: (
   gray-empty: $tutor-actions-gray-empty,
   gray-secondary: $tutor-actions-gray-secondary,
   gray-tertiary: $tutor-actions-gray-tertiary,
+  gray-quaternary: $tutor-actions-gray-quaternary,
   critical-primary: $tutor-actions-critical-primary,
   critical-secondary: $tutor-actions-critical-secondary,
   caution: $tutor-actions-caution,
