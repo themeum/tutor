@@ -34,6 +34,7 @@ class Tutor_Setup {
 		add_action( 'admin_init', array( $this, 'init_onboarding' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'tutor_onboard_enqueue_scripts' ) );
 		add_action( 'wp_ajax_tutor_onboard_setup', array( $this, 'tutor_onboard_setup' ) );
+		add_action( 'wp_ajax_tutor_import_sample_courses', array( $this, 'ajax_import_sample_courses' ) );
 	}
 
 	/**
@@ -93,6 +94,27 @@ class Tutor_Setup {
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
+	}
+
+	/**
+	 * Handle sample courses import.
+	 *
+	 * @since 4.0.0
+	 */
+	public function ajax_import_sample_courses() {
+		tutor_utils()->check_nonce();
+		if ( ! User::can( 'manage_options' ) ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
+		try {
+			$file_url = 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/workademy/data.json';
+			( new SampleCourse() )->import( $file_url );
+			$this->json_response( __( 'Sample courses imported successfully', 'tutor' ) );
+		} catch ( \Throwable $th ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
 	}
 
 	/**

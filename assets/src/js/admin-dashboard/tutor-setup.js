@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		// import sample courses
 		const formData = new FormData();
 		formData.append('job_id', jobId);
-		formData.append('action', 'tutor_pro_import');
+		formData.append('action', 'tutor_import_sample_courses');
 		formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
 		const courseDataUrl = _tutorOnboardObject.course_data_url;
 
