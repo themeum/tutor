@@ -52,28 +52,28 @@ $single_url = UrlHelper::add_query_params(
 	)
 );
 ?>
-<div class="tutor-discussion-card tutor-flex-column">
-	<div
-		class="tutor-flex tutor-gap-4 tutor-w-full"
-		data-question-id="<?php echo esc_attr( (int) $question_id ); ?>"
-		x-show="editingId !== <?php echo (int) $question_id; ?>"
-		x-data="{ 
-			...tutorPopover({ placement: 'bottom-end' }),
-			isUnread: <?php echo $is_unread ? 'true' : 'false'; ?>, 
-			isArchived: <?php echo tutor_utils()->array_get( 'tutor_qna_archived', $meta, 0 ) ? 'true' : 'false'; ?>,
-			isSolved: <?php echo $is_solved ? 'true' : 'false'; ?>,
-			isImportant: <?php echo $is_important ? 'true' : 'false'; ?>
-		}"
-		:class="{ 'unread': isUnread, 'active': open }"
-		@tutor-qna-action-success.window="
-			if ($event.detail.questionId === <?php echo esc_html( $question_id ); ?>) {
-				if ($event.detail.action === 'read') isUnread = !isUnread;
-				if ($event.detail.action === 'archived') isArchived = !isArchived;
-				if ($event.detail.action === 'solved') isSolved = !isSolved;
-				if ($event.detail.action === 'important') isImportant = !isImportant;
-			}
-		"
-	>
+<div
+	class="tutor-discussion-card tutor-flex-column"
+	data-question-id="<?php echo esc_attr( (int) $question_id ); ?>"
+	x-show="editingId !== <?php echo (int) $question_id; ?>"
+	x-data="{ 
+		...tutorPopover({ placement: 'bottom-end' }),
+		isUnread: <?php echo $is_unread ? 'true' : 'false'; ?>, 
+		isArchived: <?php echo tutor_utils()->array_get( 'tutor_qna_archived', $meta, 0 ) ? 'true' : 'false'; ?>,
+		isSolved: <?php echo $is_solved ? 'true' : 'false'; ?>,
+		isImportant: <?php echo $is_important ? 'true' : 'false'; ?>
+	}"
+	:class="{ 'unread': isUnread, 'active': open }"
+	@tutor-qna-action-success.window="
+		if ($event.detail.questionId === <?php echo esc_html( $question_id ); ?>) {
+			if ($event.detail.action === 'read') isUnread = !isUnread;
+			if ($event.detail.action === 'archived') isArchived = !isArchived;
+			if ($event.detail.action === 'solved') isSolved = !isSolved;
+			if ($event.detail.action === 'important') isImportant = !isImportant;
+		}
+	"
+>
+	<div class="tutor-flex tutor-gap-4 tutor-w-full">
 		<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
 			<div class="tutor-discussion-card-top">
