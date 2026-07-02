@@ -32,8 +32,9 @@ class Tutor_Setup {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menus' ) );
 		add_action( 'admin_init', array( $this, 'init_onboarding' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'tutor_onboard_enqueue_scripts' ) );
-		add_action( 'wp_ajax_tutor_onboard_setup', array( $this, 'tutor_onboard_setup' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_onboard_scripts' ) );
+
+		add_action( 'wp_ajax_tutor_onboard_setup', array( $this, 'ajax_onboard_setup' ) );
 		add_action( 'wp_ajax_tutor_import_sample_courses', array( $this, 'ajax_import_sample_courses' ) );
 	}
 
@@ -70,7 +71,7 @@ class Tutor_Setup {
 	 *
 	 * @since 4.0.0 onboarding
 	 */
-	public function tutor_onboard_setup() {
+	public function ajax_onboard_setup() {
 		try {
 			tutor_utils()->check_nonce();
 			if ( 'tutor_onboard_setup' !== Input::post( 'action', '' ) || ! current_user_can( 'manage_options' ) ) {
@@ -124,7 +125,7 @@ class Tutor_Setup {
 	 *
 	 * @return void
 	 */
-	public function tutor_onboard_enqueue_scripts() {
+	public function enqueue_onboard_scripts() {
 		$page = Input::get( 'page', '' );
 		if ( 'tutor-setup' === $page ) {
 			wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
