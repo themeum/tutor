@@ -41,6 +41,11 @@
     border-radius: $tutor-radius-5xl;
   }
 
+  .tutor-alert,
+  .tutor-quiz-summary .tutor-empty-quiz-details {
+    border-radius: $tutor-radius-4xl;
+  }
+
   .tutor-quiz-summary .tutor-quiz-result,
   .tutor-quiz-question,
   .tutor-quiz-summary-page .tutor-quiz-review-dnd,
