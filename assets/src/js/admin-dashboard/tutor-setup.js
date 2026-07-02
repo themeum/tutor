@@ -199,37 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	});
 
-	const importSampleCourses = async (jobId = 0) => {
+	const importSampleCourses = async () => {
 		// import sample courses
 		const formData = new FormData();
-		formData.append('job_id', jobId);
 		formData.append('action', 'tutor_import_sample_courses');
 		formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-		const courseDataUrl = _tutorOnboardObject.course_data_url;
-
-		if (!jobId) {
-			const data = await fetch(courseDataUrl);
-			const courseJson = await data.json();
-			const limitedCourseJson = {
-				...courseJson,
-				data: Array.isArray(courseJson.data)
-					? courseJson.data.map((section) => {
-						if (section?.content_type === 'courses' && Array.isArray(section.data)) {
-							return {
-								...section,
-								data: section.data.slice(0, 4),
-							};
-						}
-
-						return section;
-					})
-					: [],
-			};
-			const blob = new Blob([JSON.stringify(limitedCourseJson)], {
-				type: 'application/json',
-			});
-			formData.append('data', blob, 'importer.json');
-		}
 
 		const post = await fetch(_tutorobject.ajaxurl, {
 			method: 'POST',
@@ -238,20 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 
 		if (post.ok) {
-			const response = await post.json();
-			if (response.status_code == 200) {
-				const jobId = response.data.job_id;
-				const jobProgress = response.data.job_progress;
-				if (jobProgress != 100) {
-					return await importSampleCourses(jobId);
-				}
-				if (jobProgress == 100) {
-					return true;
-				}
-			}
+			return true;
 		} else {
 			return false;
 		}
 	};
-
 });
