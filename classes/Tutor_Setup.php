@@ -32,8 +32,10 @@ class Tutor_Setup {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menus' ) );
 		add_action( 'admin_init', array( $this, 'init_onboarding' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'tutor_onboard_enqueue_scripts' ) );
-		add_action( 'wp_ajax_tutor_onboard_setup', array( $this, 'tutor_onboard_setup' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_onboard_scripts' ) );
+
+		add_action( 'wp_ajax_tutor_onboard_setup', array( $this, 'ajax_onboard_setup' ) );
+		add_action( 'wp_ajax_tutor_import_sample_courses', array( $this, 'ajax_import_sample_courses' ) );
 	}
 
 	/**
@@ -69,7 +71,7 @@ class Tutor_Setup {
 	 *
 	 * @since 4.0.0 onboarding
 	 */
-	public function tutor_onboard_setup() {
+	public function ajax_onboard_setup() {
 		try {
 			tutor_utils()->check_nonce();
 			if ( 'tutor_onboard_setup' !== Input::post( 'action', '' ) || ! current_user_can( 'manage_options' ) ) {
@@ -83,9 +85,7 @@ class Tutor_Setup {
 
 			update_option( 'tutor_option', $options );
 
-			$this->json_response(
-				__( 'Onboard Successfully', 'tutor' )
-			);
+			$this->json_response( __( 'Onboard Successfully', 'tutor' ) );
 		} catch ( \Exception $e ) {
 			$this->json_response(
 				__( 'Onboard Failed, Try again!', 'tutor' ),
@@ -96,13 +96,34 @@ class Tutor_Setup {
 	}
 
 	/**
+	 * Handle sample courses import.
+	 *
+	 * @since 4.0.0
+	 */
+	public function ajax_import_sample_courses() {
+		tutor_utils()->check_nonce();
+		if ( ! User::can( 'manage_options' ) ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
+		try {
+			$file_url = 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/workademy/data.json';
+			( new SampleCourse() )->import( $file_url );
+			$this->json_response( __( 'Sample courses imported successfully', 'tutor' ) );
+		} catch ( \Throwable $th ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
+	}
+
+	/**
 	 *  Tutor onboarding enqueue scripts
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
-	public function tutor_onboard_enqueue_scripts() {
+	public function enqueue_onboard_scripts() {
 		$page = Input::get( 'page', '' );
 		if ( 'tutor-setup' === $page ) {
 			wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
