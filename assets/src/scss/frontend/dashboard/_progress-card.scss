@@ -113,10 +113,14 @@
 	&:focus-within {
 		background-color: $tutor-surface-l1-hover;
 		
-		.tutor-progress-card-actions {
+		> .tutor-progress-card-actions {
 			opacity: 1;
 			visibility: visible;
 		}
+	}
+
+	&.tutor-active {
+		background-color: $tutor-surface-l1-hover;
 	}
 
 	&:focus-visible {
@@ -134,10 +138,10 @@
 		@include tutor-flex(column, stretch, flex-start);
 		height: auto;
 		gap: $tutor-spacing-none;
-		padding: $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-5;
 
 		.tutor-progress-card-inner {
 			flex-direction: column;
+			gap: $tutor-spacing-none;
 		}
 
 		.tutor-progress-card-thumbnail {
@@ -155,7 +159,7 @@
 		}
 
 		&-header {
-			margin-bottom: $tutor-spacing-4;
+			margin-bottom: $tutor-spacing-6;
 		}
 
 		&-details {
@@ -168,7 +172,7 @@
 
 		&-actions {
 			position: static;
-			display: block;
+			display: flex;
 			visibility: visible;
 			opacity: 1;
 			padding: $tutor-spacing-6 0 0;
