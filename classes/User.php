@@ -146,6 +146,26 @@ class User {
 	}
 
 	/**
+	 * Check current user has capability.
+	 *
+	 * Example usage:
+	 *
+	 * User::can( 'edit_posts' );
+	 * User::can( 'edit_post', $post->ID );
+	 * User::can( 'edit_post_meta', $post->ID, $meta_key );
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $capability capability.
+	 * @param mixed  ...$args     args.
+	 *
+	 * @return boolean
+	 */
+	public static function can( string $capability = 'manage_options', ...$args ) {
+		return current_user_can( $capability, ...$args );
+	}
+
+	/**
 	 * Check user has any role.
 	 *
 	 * @since 2.2.0
@@ -165,7 +185,6 @@ class User {
 		foreach ( $roles as $role ) {
 			if ( in_array( $role, $user->roles, true ) ) {
 				return true;
-				break;
 			}
 		}
 

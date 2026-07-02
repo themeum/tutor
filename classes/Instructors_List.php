@@ -10,9 +10,7 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Students_List;
 use TUTOR\Backend_Page_Trait;
@@ -129,9 +127,10 @@ class Instructors_List {
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return array
 	 */
-	public function prpare_bulk_actions(): array {
+	public function prepare_bulk_actions(): array {
 		$actions = array(
 			$this->bulk_action_default(),
 			$this->bulk_action_approved(),

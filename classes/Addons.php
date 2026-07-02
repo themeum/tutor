@@ -10,9 +10,8 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Addons Class
  *
@@ -25,6 +24,7 @@ class Addons {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -52,6 +52,7 @@ class Addons {
 	 *
 	 * @param string $basename basename of addon.
 	 * @param bool   $status status 0,1.
+	 *
 	 * @return void
 	 */
 	public static function update_addon_status( $basename, $status ) {
@@ -66,6 +67,7 @@ class Addons {
 	 * Get all addons data.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function get_all_addons() {
@@ -73,7 +75,7 @@ class Addons {
 		// Check and verify the request.
 		tutor_utils()->checking_nonce();
 
-		if ( ! User::is_admin() ) {
+		if ( ! User::can() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -179,8 +181,8 @@ class Addons {
 
 		tutor_utils()->checking_nonce();
 
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		if ( ! User::can() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
 		$form_data     = json_decode( Input::post( 'addonFieldNames' ) );
@@ -227,6 +229,7 @@ class Addons {
 	 * Get tutor addons list
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return array
 	 */
 	public function addons_lists_to_show() {

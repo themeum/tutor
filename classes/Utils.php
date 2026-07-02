@@ -7330,14 +7330,14 @@ class Utils {
 	}
 
 	/**
-	 * Return the course ID(s) by lession, quiz, answer etc.
+	 * Return the course ID by lesson, quiz, answer etc.
 	 *
 	 * @since 1.7.9
 	 *
-	 * @param string $content content like lession, quiz, answer etc.
+	 * @param string $content content like lesson, quiz, answer etc.
 	 * @param int    $object_id object id.
 	 *
-	 * @return int|int[]
+	 * @return int
 	 */
 	public function get_course_id_by( $content, $object_id ) {
 		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
