@@ -1301,6 +1301,7 @@ class CourseModel {
 				'post__in'       => $course_ids,
 				'posts_per_page' => $posts_per_page,
 				'offset'         => $offset,
+				'orderby'        => 'post__in',
 			);
 
 			$args        = apply_filters( 'tutor_get_completed_courses_by_user', $args, $user_id, $course_post_type );
@@ -1338,6 +1339,7 @@ class CourseModel {
 				'post__in'       => $active_courses,
 				'posts_per_page' => $posts_per_page,
 				'offset'         => $offset,
+				'orderby'        => 'post__in',
 			);
 
 			$args        = apply_filters( 'tutor_get_active_courses_by_user', $args, $user_id, $course_post_type );
@@ -1377,6 +1379,7 @@ class CourseModel {
 				'post__in'       => $course_ids,
 				'offset'         => $offset,
 				'posts_per_page' => $posts_per_page,
+				'orderby'        => 'post__in',
 			);
 
 			$args        = apply_filters( 'tutor_get_enrolled_courses_by_user', $args, $user_id, $course_post_type );
