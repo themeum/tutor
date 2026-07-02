@@ -141,19 +141,25 @@ class Q_And_A {
 	}
 
 	/**
-	 * Undocumented function
+	 * Handle QnA create/update via AJAX.
 	 *
-	 * @since v1.0.0
+	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
 	public function tutor_qna_create_update() {
 		tutor_utils()->checking_nonce();
 
-		$user_id   = get_current_user_id();
-		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$user_id     = get_current_user_id();
+		$course_id   = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
+		$context     = Input::post( 'context' );
 
-		if ( ! $this->has_qna_access( $user_id, $course_id ) ) {
+		if ( $question_id ) {
+			$course_id = tutor_utils()->get_course_id_by( 'question', $question_id );
+		}
+
+		if ( ! $course_id || ! $this->has_qna_access( $user_id, $course_id ) ) {
 			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 
@@ -162,11 +168,6 @@ class Q_And_A {
 		if ( ! $qna_text ) {
 			$this->response_bad_request( __( 'Empty Content Not Allowed!', 'tutor' ) );
 		}
-
-		// Prepare course, question info.
-		$course_id   = Input::post( 'course_id', 0, Input::TYPE_INT );
-		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
-		$context     = Input::post( 'context' );
 
 		// Prepare user info.
 		$user = get_userdata( $user_id );
