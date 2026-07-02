@@ -321,8 +321,8 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.9.15 - Jul 02, 2026
 
-Update: Improved security for REST API usage.
-Update: Improve Q&A access privilege.
+Update: Enhanced security for REST API requests.
+Update: Improved user access privileges for Q&A.
 
 = 3.9.14 - Jun 29, 2026
 
