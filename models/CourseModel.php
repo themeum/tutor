@@ -1291,7 +1291,7 @@ class CourseModel {
 	 */
 	public static function get_completed_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1, $args = array() ) {
 		$user_id    = tutor_utils()->get_user_id( $user_id );
-		$course_ids = tutor_utils()->get_completed_courses_ids_by_user( $user_id );
+		$course_ids = tutor_utils()->get_completed_courses_ids_by_user( $user_id, false );
 
 		if ( count( $course_ids ) ) {
 			$course_post_type = tutor()->course_post_type;
@@ -1327,7 +1327,7 @@ class CourseModel {
 	 */
 	public static function get_active_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1, $args = array() ) {
 		$user_id             = tutor_utils()->get_user_id( $user_id );
-		$course_ids          = tutor_utils()->get_completed_courses_ids_by_user( $user_id );
+		$course_ids          = tutor_utils()->get_completed_courses_ids_by_user( $user_id, false );
 		$enrolled_course_ids = tutor_utils()->get_enrolled_courses_ids_by_user( $user_id, false );
 		$active_courses      = array_diff( $enrolled_course_ids, $course_ids );
 
