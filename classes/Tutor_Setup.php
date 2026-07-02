@@ -85,9 +85,7 @@ class Tutor_Setup {
 
 			update_option( 'tutor_option', $options );
 
-			$this->json_response(
-				__( 'Onboard Successfully', 'tutor' )
-			);
+			$this->json_response( __( 'Onboard Successfully', 'tutor' ) );
 		} catch ( \Exception $e ) {
 			$this->json_response(
 				__( 'Onboard Failed, Try again!', 'tutor' ),
