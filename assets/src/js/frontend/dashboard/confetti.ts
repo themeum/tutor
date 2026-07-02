@@ -8,8 +8,8 @@ const MODAL_CLASS = {
 };
 const TIME_SPENT_MODAL = 'tutor-time-spent-modal';
 const CONFETTI_FRAME_RATE_FPS = 60;
-const CONFETTI_FIRE_DURATION_MS = 850; // matches `end = Date.now() + 850` in fire()
-const CONFETTI_PARTICLE_TICKS = 850; // matches `ticks: 850` passed to fireConfetti
+const CONFETTI_FIRE_DURATION_MS = 850;
+const CONFETTI_PARTICLE_TICKS = 850;
 const CLEANUP_BUFFER_MS = 500; // safety margin for slower frame rates
 
 const PARTICLE_LIFETIME_MS = (CONFETTI_PARTICLE_TICKS / CONFETTI_FRAME_RATE_FPS) * 1000;
