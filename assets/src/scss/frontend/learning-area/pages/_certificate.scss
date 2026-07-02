@@ -38,7 +38,7 @@
     .tutor-certificate-preview-effect {
       position: absolute;
       bottom: 24px;
-      left: 50%;
+      inset-inline-start: 50%;
       transform: translateX(-50%);
       width: 310px;
       height: 142px;
@@ -61,7 +61,7 @@
 
       position: absolute;
       top: 0;
-      left: 50%;
+      inset-inline-start: 50%;
       transform: translateX(-50%) translateY(-50%);
     }
   }

@@ -49,13 +49,14 @@ $quick_tips = array(
 			->variant( Variant::PRIMARY )
 			->size( Size::X_SMALL )
 			->icon( Icon::ARROW_RIGHT_2, 'right' )
+			->flip_rtl()
 			->tag( 'a' )
 			->attr( 'href', tutor_utils()->course_archive_page_url() )
 			->render();
 		?>
 	</div>
 	<div class="tutor-dashboard-welcome-banner">
-		<img src="<?php echo esc_attr( UrlHelper::asset( 'images/illustrations/dashboard-empty.svg' ) ); ?>" alt="<?php esc_html_e( 'Confetti', 'tutor' ); ?>" />
+		<?php tutor_utils()->render_themed_svg( 'images/illustrations/dashboard-empty.svg' ); ?>
 	</div>
 </div>
 

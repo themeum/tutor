@@ -246,6 +246,13 @@ class UserPreference {
 	 * @return string
 	 */
 	public function add_theme_attribute( $output ) {
+		$is_logged_in  = is_user_logged_in();
+		$is_tutor_page = tutor_utils()->is_dashboard_page() || tutor_utils()->is_learning_area();
+
+		if ( ! $is_logged_in || ! $is_tutor_page ) {
+			return $output;
+		}
+
 		$prefs = $this->get_preferences();
 		$theme = isset( $prefs['theme'] ) ? (string) $prefs['theme'] : self::DEFAULT_THEME;
 		if ( ! in_array( $theme, self::THEMES, true ) ) {

@@ -35,7 +35,7 @@
       gap: $tutor-spacing-2;
       position: absolute;
       top: $tutor-spacing-5;
-      right: $tutor-spacing-5;
+      inset-inline-end: $tutor-spacing-5;
 
       @include tutor-breakpoint-down(sm) {
         padding: 0;
@@ -159,7 +159,7 @@
 
       @include tutor-breakpoint-up(sm) {
         position: absolute;
-        left: 0;
+        inset-inline-start: 0;
         bottom: 0;
       }
     }

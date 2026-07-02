@@ -1,7 +1,9 @@
 // Quiz Attempts Page
 import { type MutationState } from '@Core/ts/services/Query';
+
 import { quizRetryAttemptMeta } from '@FrontendComponents/quiz/retry-attempt';
 import { quizSummarySidebarMeta } from '@FrontendComponents/quiz/summary-sidebar';
+
 import { quizAttemptFeedbackMeta } from './quiz-attempt-feedback';
 
 const quizAttemptsPage = () => {

@@ -40,18 +40,20 @@ export const initializeCommon = () => {
   const handler = createCourseHandler();
   handler.init();
 
-  const createCourseButton = document.querySelector('.tutor-create-new-course');
-  createCourseButton?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    createCourseButton.classList.add('tutor-loading');
-    createCourseButton.setAttribute('disabled', 'true');
-    const target = e.target as HTMLElement;
-    target.innerHTML = 'Creating...';
-    try {
-      await handler.handleCreateCourse();
-    } finally {
-      createCourseButton.classList.remove('tutor-loading');
-      createCourseButton.removeAttribute('disabled');
-    }
+  const createCourseButtons = document.querySelectorAll('.tutor-create-new-course');
+  createCourseButtons.forEach((button) => {
+    button.addEventListener('click', async (e) => {
+      e.preventDefault();
+      button.classList.add(...['tutor-loading', 'tutor-btn-loading']);
+      button.setAttribute('disabled', 'true');
+      const target = e.target as HTMLElement;
+      target.innerHTML = 'Creating...';
+      try {
+        await handler.handleCreateCourse();
+      } finally {
+        button.classList.remove(...['tutor-loading', 'tutor-btn-loading']);
+        button.removeAttribute('disabled');
+      }
+    });
   });
 };

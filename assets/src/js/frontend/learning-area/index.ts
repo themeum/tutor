@@ -2,7 +2,9 @@
 // Initializes learning area functionality based on current page
 
 import { initializeReviews } from '@FrontendComponents/reviews';
+import { initializeTour } from '@FrontendComponents/tour';
 import { initializeCommon } from '@FrontendServices/common';
+
 import { initializeCommon as initializeLearningAreaCommon } from './common';
 import { initializeLesson } from './lesson';
 import { initializeCourseCourseInfo } from './pages/course-info';
@@ -14,6 +16,7 @@ const initializeLearningArea = () => {
   initializeLearningAreaCommon();
   initializeCommon();
   initializeSidebar();
+  initializeTour();
   initializeReviews();
   const { pathname, search } = window.location;
 

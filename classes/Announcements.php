@@ -10,12 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 /**
  * Announcements class
  *
@@ -41,6 +40,7 @@ class Announcements {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -74,6 +74,7 @@ class Announcements {
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return array
 	 */
 	public function prepare_bulk_actions(): array {
@@ -88,6 +89,7 @@ class Announcements {
 	 * Handle bulk action for enrollment cancel | delete
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return string JSON response.
 	 */
 	public function announcement_bulk_action() {
@@ -118,7 +120,7 @@ class Announcements {
 	 * @since 2.0.0
 	 *
 	 * @param string $action hold action.
-	 * @param string $bulk_ids comma seperated ids.
+	 * @param string $bulk_ids comma separated ids.
 	 *
 	 * @return bool
 	 */
