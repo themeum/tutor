@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (formData.get('tutor_onboard_load_sample_course')) {
 				const importSuccess = await importSampleCourses();
 				if (!importSuccess) {
-					throw new Error(__('Sample course import failed.', 'tutor'));
+					tutor_toast(__('Sample course import failed.', 'tutor'), '', 'error');
 				}
 			}
 
