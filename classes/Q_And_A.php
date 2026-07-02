@@ -156,7 +156,7 @@ class Q_And_A {
 		$context     = Input::post( 'context' );
 
 		if ( $question_id ) {
-			$course_id = tutor_utils()->get_course_id_by( 'question', $question_id );
+			$course_id = tutor_utils()->get_course_id_by( 'qa_question', $question_id );
 		}
 
 		if ( ! $course_id || ! $this->has_qna_access( $user_id, $course_id ) ) {
