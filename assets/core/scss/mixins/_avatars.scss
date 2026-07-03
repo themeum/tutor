@@ -113,7 +113,7 @@ $tutor-avatar-sizes: (
       color: $tutor-actions-brand-primary;
     }
   } @else if $variant == border {
-    border: 2px solid $tutor-border-brand-secondary;
+    border: 1px solid $tutor-border-brand-secondary;
     svg,
     .tutor-avatar-image {
       border-radius: 0px;

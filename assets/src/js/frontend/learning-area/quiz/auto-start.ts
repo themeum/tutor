@@ -1,5 +1,6 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
+
 import { QUIZ_EVENTS } from './constants';
 
 export interface QuizAutoStartConfig {

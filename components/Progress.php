@@ -108,7 +108,7 @@ class Progress extends BaseComponent {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	protected $stroke_color = 'var(--tutor-actions-brand-secondary)';
+	protected $stroke_color = 'var(--tutor-actions-gray-secondary)';
 
 	/**
 	 * Progress stroke color (progress arc).

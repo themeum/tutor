@@ -218,8 +218,8 @@ class Pagination extends BaseComponent {
 		$per_page  = max( ceil( $this->pagination_total / $this->pagination_limit ), 1 );
 		$current   = max( intval( $this->pagination_current ), 1 );
 		$format    = ! empty( $this->format ) ? $this->format : '?current_page=%#%';
-		$prev_text = ! empty( $this->prev ) ? $this->prev : SvgIcon::make()->name( Icon::CHEVRON_LEFT_2 )->get();
-		$next_text = ! empty( $this->next ) ? $this->next : SvgIcon::make()->name( Icon::CHEVRON_RIGHT_2 )->get();
+		$prev_text = ! empty( $this->prev ) ? $this->prev : SvgIcon::make()->name( Icon::CHEVRON_LEFT_2 )->flip_rtl()->get();
+		$next_text = ! empty( $this->next ) ? $this->next : SvgIcon::make()->name( Icon::CHEVRON_RIGHT_2 )->flip_rtl()->get();
 		return paginate_links(
 			array(
 				'format'    => $format,

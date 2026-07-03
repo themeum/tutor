@@ -9,6 +9,7 @@ import {
 
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const VALID_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+export const DEFAULT_QUIZ_ATTEMPTS_ALLOWED = 10;
 export const ITEMS_PER_PAGE = 10;
 export const TAG_ITEMS_PER_PAGE = 48;
 export const MAX_MULTISELECT_CHIPS = 7;

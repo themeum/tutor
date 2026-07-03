@@ -95,7 +95,6 @@ const defaultTutorConfig = {
     enable_tax: false as boolean | string,
     enable_individual_tax_control: false as boolean | string,
     is_tax_included_in_price: false,
-    quiz_attempts_allowed: 10,
     pagination_per_page: 10,
     has_active_membership_plans: false,
   },

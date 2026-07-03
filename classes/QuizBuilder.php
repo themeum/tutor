@@ -259,7 +259,7 @@ class QuizBuilder {
 
 			$question_type = Input::sanitize( $question['question_type'] );
 			if ( 'draw_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
-				throw new \Exception( esc_html__( 'Mark in the image questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
+				throw new \Exception( esc_html__( 'Image Marking questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
 			}
 			if ( 'pin_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
 				throw new \Exception( esc_html__( 'Pin questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
@@ -343,6 +343,19 @@ class QuizBuilder {
 		if ( ! $validation->success ) {
 			$success = false;
 			$errors  = array_merge( $errors, $validation->errors );
+		}
+
+		if ( isset( $payload['ID'] ) && is_numeric( $payload['ID'] ) ) {
+			if ( ! current_user_can( 'edit_post', $payload['ID'] ) ) {
+				$success                = false;
+				$errors['permission'][] = __( 'You do not have permission to edit this quiz', 'tutor' );
+			} else {
+				$quiz = get_post( $payload['ID'] );
+				if ( ! $quiz || tutor()->quiz_post_type !== $quiz->post_type ) {
+					$success        = false;
+					$errors['ID'][] = __( 'Invalid quiz id provided', 'tutor' );
+				}
+			}
 		}
 
 		foreach ( $payload['questions'] as $question ) {
@@ -682,6 +695,10 @@ class QuizBuilder {
 		$errors  = array();
 
 		$validation = $this->validate_payload( $payload );
+		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
+			$validation->success              = false;
+			$validation->errors['topic_id'][] = tutor_utils()->error_message();
+		}
 
 		if ( ! $validation->success ) {
 			return (object) array(
