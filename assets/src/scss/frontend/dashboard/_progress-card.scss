@@ -125,6 +125,8 @@
 
 	&:focus-visible {
 		@include tutor-focus-ring();
+		border-radius: $tutor-radius-2xl !important;
+		z-index: $tutor-z-positive;
 	}
 
 	@include tutor-breakpoint-down(lg) {
