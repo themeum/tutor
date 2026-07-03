@@ -259,7 +259,7 @@ class QuizBuilder {
 
 			$question_type = Input::sanitize( $question['question_type'] );
 			if ( 'draw_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
-				throw new \Exception( esc_html__( 'Mark in the image questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
+				throw new \Exception( esc_html__( 'Image Marking questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
 			}
 			if ( 'pin_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
 				throw new \Exception( esc_html__( 'Pin questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
