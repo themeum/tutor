@@ -218,7 +218,6 @@ $a11y_feature_cards = array(
 	flex-direction: column;
 	gap: 128px;
 	max-width: 1280px;
-	/* width: 100%; */
 	margin: 0 auto;
 	padding: 64px 20px;
 }
@@ -434,10 +433,10 @@ $a11y_feature_cards = array(
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	grid-template-areas: "ordering ordering image-marking image-marking" "graph puzzle range pin";
 }
-.tutor-whats-new .tutor-section-interactive .tutor-section-cards .tutor-section-card-ordering {
+/* .tutor-whats-new .tutor-section-interactive .tutor-section-cards .tutor-section-card-ordering {
 	background-image: url("https://tutor-lms.s3.us-east-1.amazonaws.com/whats-new/ordering-bg.webp");
 	background-size: cover;
-}
+} */
 .tutor-whats-new .tutor-section-native .tutor-section-cards {
 	grid-template-areas: "native-app navigation" "mode mode";
 }
@@ -698,6 +697,91 @@ $a11y_feature_cards = array(
 	}
 }
 
+/* Full-width background sections */
+.tutor-whats-new .tutor-section-bg {
+	width: 100%;
+}
+.tutor-whats-new .tutor-section-learner {
+	padding-bottom: 64px;
+}
+.tutor-whats-new .tutor-section-bg-interactive {
+	background-color: #000;
+	padding-top: 64px;
+}
+.tutor-whats-new .tutor-section-bg-native {
+	background:
+		linear-gradient(180deg, #000000 4.74%, #091DF6 47.11%, rgba(255, 255, 255, 0) 79.7%),
+		linear-gradient(0deg, #FFFFFF, #FFFFFF);
+}
+
+/* Light text on dark backgrounds */
+.tutor-whats-new .tutor-section-bg-interactive .tutor-section-title p,
+.tutor-whats-new .tutor-section-bg-interactive .tutor-section-title h2,
+.tutor-whats-new .tutor-section-bg-interactive .tutor-section-title-right p,
+.tutor-whats-new .tutor-section-bg-native .tutor-section-title p,
+.tutor-whats-new .tutor-section-bg-native .tutor-section-title h2,
+.tutor-whats-new .tutor-section-bg-native .tutor-section-title-center p,
+.tutor-whats-new .tutor-section-bg-native .tutor-section-title-center h2 {
+	color: #fff;
+}
+
+/* Interactive Assessments Card background */
+.tutor-whats-new .tutor-section-bg-interactive .tutor-section-cards .tutor-section-card {
+	background-color: rgba(255, 255, 255, 0.06);
+	border: 1px solid rgba(26, 26, 26, 1)
+}
+.tutor-whats-new .tutor-section-bg-interactive .tutor-section-cards .tutor-section-card .tutor-section-card-title h6 {
+	color: #fff;
+}
+
+/* Left gradient border + dot on "Native App Like Experience" subtitle */
+.tutor-whats-new .tutor-section-native .tutor-section-title-center p:first-of-type {
+	display: flex;
+	align-items: flex-start;
+	gap: 6px;
+	padding: 8px;
+	position: relative;
+	color: #fff;
+	margin-bottom: 16px;
+	width: fit-content;
+}
+.tutor-whats-new .tutor-section-native .tutor-section-title-center p:first-of-type::before {
+	content: '';
+	width: 8px;
+	height: 8px;
+	flex-shrink: 0;
+	margin-top: 5px;
+	border-radius: 50%;
+	background: #fff;
+}
+.tutor-whats-new .tutor-section-native .tutor-section-title-center p:first-of-type::after {
+	content: '';
+	position: absolute;
+	left: -4px;
+	top: 0;
+	bottom: 0;
+	width: 20px;
+	border-radius: 50%;
+	background: linear-gradient(111.79deg, #DAC64B -8.96%, #CC616E 25.97%, #517ECF 59.39%, #EAEEF4 81.17%, #86C672 96.36%);
+}
+
+/* Action button on dark backgrounds */
+.tutor-whats-new .tutor-section-bg-interactive .tutor-section-action {
+	background-color: #fff;
+	color: #000;
+}
+.tutor-whats-new .tutor-section-bg-interactive .tutor-section-action:hover,
+.tutor-whats-new .tutor-section-bg-interactive .tutor-section-action:focus {
+	background-color: rgba(255, 255, 255, 0.8);
+}
+.tutor-whats-new .tutor-section-bg-native .tutor-section-action {
+	background-color: #fff;
+	color: #000;
+}
+.tutor-whats-new .tutor-section-bg-native .tutor-section-action:hover,
+.tutor-whats-new .tutor-section-bg-native .tutor-section-action:focus {
+	background-color: rgba(255, 255, 255, 0.8);
+}
 </style>
 
 <div class="tutor-whats-new">
@@ -751,9 +835,12 @@ $a11y_feature_cards = array(
 				<?php endforeach; ?>
 			</div>
 		</section>
+	</div>
 
-		<!-- Interactive Assessments -->
-		<section class="tutor-section-wrapper tutor-section-interactive">
+	<div class="tutor-section-bg tutor-section-bg-interactive">
+		<div class="tutor-section-layout">
+			<!-- Interactive Assessments -->
+			<section class="tutor-section-wrapper tutor-section-interactive">
 			<div class="tutor-section-title">
 				<div class="tutor-section-title-left">
 					<p><?php esc_html_e( 'Interactive Assessments', 'tutor' ); ?></p>
@@ -773,9 +860,13 @@ $a11y_feature_cards = array(
 				<?php endforeach; ?>
 			</div>
 		</section>
+		</div>
+	</div>
 
-		<!-- Native App -->
-		<section class="tutor-section-wrapper tutor-section-native">
+	<div class="tutor-section-bg tutor-section-bg-native">
+		<div class="tutor-section-layout">
+			<!-- Native App -->
+			<section class="tutor-section-wrapper tutor-section-native">
 			<div class="tutor-section-title">
 				<div class="tutor-section-title-center">
 					<p><?php esc_html_e( 'Native App Like Experience', 'tutor' ); ?></p>
@@ -844,7 +935,10 @@ $a11y_feature_cards = array(
 				</div>
 			</div>
 		</section>
+		</div>
+	</div>
 
+	<div class="tutor-section-layout">
 		<!-- Accessibility -->
 		<section class="tutor-section-wrapper tutor-section-a11y">
 			<div class="tutor-section-title">
