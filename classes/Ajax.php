@@ -10,9 +10,7 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\HttpHelper;
@@ -28,6 +26,7 @@ class Ajax {
 	use JsonResponse;
 
 	const LOGIN_ERRORS_TRANSIENT_KEY = 'tutor_login_errors';
+
 	/**
 	 * Constructor
 	 *
@@ -41,7 +40,6 @@ class Ajax {
 	public function __construct( $allow_hooks = true ) {
 		if ( $allow_hooks ) {
 			add_action( 'wp_ajax_sync_video_playback', array( $this, 'sync_video_playback' ) );
-			add_action( 'wp_ajax_nopriv_sync_video_playback', array( $this, 'sync_video_playback_noprev' ) );
 			add_action( 'wp_ajax_tutor_place_rating', array( $this, 'tutor_place_rating' ) );
 			add_action( 'wp_ajax_delete_tutor_review', array( $this, 'delete_tutor_review' ) );
 
@@ -60,8 +58,8 @@ class Ajax {
 			 *
 			 * @since  v.1.7.9
 			 */
-			add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_annoucement' ) );
-			add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_annoucement' ) );
+			add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_announcement' ) );
+			add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_announcement' ) );
 
 			add_action( 'wp_ajax_tutor_youtube_video_duration', array( $this, 'ajax_youtube_video_duration' ) );
 		}
@@ -73,6 +71,7 @@ class Ajax {
 	 * Update video information and data when necessary
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function sync_video_playback() {
@@ -114,15 +113,6 @@ class Ajax {
 			LessonModel::update_lesson_reading_info( $post_id, $user_id, 'video_best_watched_time', 0 );
 		}
 		exit();
-	}
-
-	/**
-	 * Video playback callback for noprev
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function sync_video_playback_noprev() {
 	}
 
 	/**
@@ -396,9 +386,7 @@ class Ajax {
 	 * Process tutor login
 	 *
 	 * @since 1.6.3
-	 *
-	 * @since 2.1.3 Ajax removed, validation errors
-	 * stores in session.
+	 * @since 2.1.3 Ajax removed, validation errors stores in session.
 	 *
 	 * @return void
 	 */
@@ -411,9 +399,9 @@ class Ajax {
 		 *
 		 * @since 2.1.4
 		 */
-        if ( ! wp_verify_nonce( $_POST[ tutor()->nonce ], tutor()->nonce_action ) ) { //phpcs:ignore
+		if ( ! tutor_utils()->is_nonce_verified( 'post' ) ) {
 			$validation_error->add( 401, __( 'Nonce verification failed', 'tutor' ) );
-			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
+			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages(), MINUTE_IN_SECONDS );
 			return;
 		}
 
@@ -425,10 +413,12 @@ class Ajax {
 		 *
 		 * @see https://developer.wordpress.org/reference/functions/wp_signon/
 		 */
-        $username    = tutor_utils()->array_get( 'log', $_POST ); //phpcs:ignore
-        $password    = tutor_utils()->array_get( 'pwd', $_POST ); //phpcs:ignore
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
+		$username    = tutor_utils()->array_get( 'log', $_POST ); //phpcs:ignore
+		$password    = tutor_utils()->array_get( 'pwd', $_POST ); //phpcs:ignore
 		$redirect_to = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : '';
 		$remember    = isset( $_POST['rememberme'] );
+		//phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		try {
 			$creds = array(
@@ -497,7 +487,7 @@ class Ajax {
 			$validation_error->add( 400, $e->getMessage() );
 		} finally {
 			// Store errors in transient data.
-			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
+			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages(), MINUTE_IN_SECONDS );
 		}
 	}
 
@@ -505,9 +495,10 @@ class Ajax {
 	 * Create/Update announcement
 	 *
 	 * @since  1.7.9
+	 *
 	 * @return void
 	 */
-	public function create_or_update_annoucement() {
+	public function create_or_update_announcement() {
 		tutor_utils()->checking_nonce();
 
 		$error                = array();
@@ -515,7 +506,7 @@ class Ajax {
 		$announcement_title   = Input::post( 'tutor_announcement_title' );
 		$announcement_summary = Input::post( 'tutor_announcement_summary', '', Input::TYPE_TEXTAREA );
 
-		// Check if user can manage this announcment.
+		// Check if user can manage this announcement.
 		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
@@ -588,9 +579,10 @@ class Ajax {
 	 * Delete announcement
 	 *
 	 * @since  1.7.9
+	 *
 	 * @return void
 	 */
-	public function delete_annoucement() {
+	public function delete_announcement() {
 		tutor_utils()->checking_nonce();
 
 		$announcement_id = Input::post( 'announcement_id' );

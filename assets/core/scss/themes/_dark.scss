@@ -29,6 +29,7 @@
   --tutor-surface-dark: #{$tutor-gray-600};
   --tutor-surface-warning: #{$tutor-gray-750};
   --tutor-surface-warning-hover: #{$tutor-warning-900};
+  --tutor-surface-warning-hover-2: #{$tutor-exception-10};
   --tutor-surface-success: #{$tutor-success-950};
   --tutor-surface-critical: #{$tutor-error-950};
 
@@ -165,6 +166,7 @@
   --tutor-actions-gray-empty: #{$tutor-gray-800};
   --tutor-actions-gray-secondary: #{$tutor-gray-750};
   --tutor-actions-gray-tertiary: #{$tutor-gray-800};
+  --tutor-actions-gray-quaternary: #{$tutor-gray-900};
   --tutor-actions-critical-primary: #{$tutor-error-500};
   --tutor-actions-critical-secondary: #{$tutor-gray-700};
   --tutor-actions-exception3-highlight: #{$tutor-exception-3};

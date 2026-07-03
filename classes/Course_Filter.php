@@ -47,6 +47,7 @@ class Course_Filter {
 	 * @since 1.0.0
 	 *
 	 * @param boolean $register_hook register hook or not.
+	 *
 	 * @return void|null
 	 */
 	public function __construct( $register_hook = true ) {
@@ -55,7 +56,7 @@ class Course_Filter {
 		}
 		add_action( 'wp_ajax_tutor_course_filter_ajax', array( $this, 'load_listing' ), 10, 0 );
 		add_action( 'wp_ajax_nopriv_tutor_course_filter_ajax', array( $this, 'load_listing' ), 10, 0 );
-		add_filter( 'term_link', __CLASS__ . '::filter_course_category_term_link', 10, 3 );
+		add_filter( 'term_link', array( $this, 'filter_course_category_term_link' ), 10, 3 );
 	}
 
 	/**
@@ -64,7 +65,7 @@ class Course_Filter {
 	 * @since 1.0.0
 	 *
 	 * @param mixed   $filters filters.
-	 * @param boolean $return_filter return filterd data or not.
+	 * @param boolean $return_filter return filtered data or not.
 	 * @return mixed
 	 */
 	public function load_listing( $filters = null, $return_filter = false ) {
@@ -122,26 +123,14 @@ class Course_Filter {
 		);
 
 		$post_ids_array = tutils()->array_get( 'tutor-course-filter-post-ids', $sanitized_post, array() );
-
-		$post_ids_array = array_map(
-			function ( $post_id ) {
-				return (int) $post_id;
-			},
-			$post_ids_array
-		);
+		$post_ids_array = array_map( 'intval', $post_ids_array );
 
 		if ( count( $post_ids_array ) ) {
 			$args['post__in'] = $post_ids_array;
 		}
 
 		$exclude_ids_array = tutils()->array_get( 'tutor-course-filter-exclude-ids', $sanitized_post, array() );
-
-		$exclude_ids_array = array_map(
-			function ( $exclude_id ) {
-				return (int) $exclude_id;
-			},
-			$exclude_ids_array
-		);
+		$exclude_ids_array = array_map( 'intval', $exclude_ids_array );
 
 		if ( count( $exclude_ids_array ) ) {
 			$args['post__not_in'] = $exclude_ids_array;
@@ -152,12 +141,7 @@ class Course_Filter {
 			$term_array                             = tutils()->array_get( 'tutor-course-filter-' . $taxonomy, $sanitized_post, array() );
 			! is_array( $term_array ) ? $term_array = array( $term_array ) : 0;
 
-			$term_array = array_filter(
-				$term_array,
-				function( $term_id ) {
-					return is_numeric( $term_id );
-				}
-			);
+			$term_array = array_filter( $term_array, fn ( $term_id ) => is_numeric( $term_id ) );
 
 			if ( count( $term_array ) > 0 ) {
 				$tax_query = array(
@@ -288,6 +272,7 @@ class Course_Filter {
 	 *
 	 * @param array  $terms term list.
 	 * @param string $taxonomy taxonomy name.
+	 *
 	 * @return void
 	 */
 	private function render_terms_hierarchically( $terms, $taxonomy ) {
@@ -312,6 +297,7 @@ class Course_Filter {
 	 * @since 1.0.0
 	 *
 	 * @param string $taxonomy taxonomy name.
+	 *
 	 * @return void
 	 */
 	public function render_terms( $taxonomy ) {

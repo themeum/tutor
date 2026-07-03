@@ -146,6 +146,26 @@ class User {
 	}
 
 	/**
+	 * Check current user has capability.
+	 *
+	 * Example usage:
+	 *
+	 * User::can( 'edit_posts' );
+	 * User::can( 'edit_post', $post->ID );
+	 * User::can( 'edit_post_meta', $post->ID, $meta_key );
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $capability capability.
+	 * @param mixed  ...$args     args.
+	 *
+	 * @return boolean
+	 */
+	public static function can( string $capability = 'manage_options', ...$args ) {
+		return current_user_can( $capability, ...$args );
+	}
+
+	/**
 	 * Check user has any role.
 	 *
 	 * @since 2.2.0
@@ -165,7 +185,6 @@ class User {
 		foreach ( $roles as $role ) {
 			if ( in_array( $role, $user->roles, true ) ) {
 				return true;
-				break;
 			}
 		}
 
@@ -806,9 +825,11 @@ class User {
 	 */
 	public static function get_current_view_mode(): string {
 		$user_id      = get_current_user_id();
+		$can_switch   = self::can_switch_mode( $user_id );
+		$default_mode = $can_switch ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT;
 		$current_mode = get_user_meta( $user_id, self::VIEW_MODE_USER_META, true );
 
-		if ( self::can_switch_mode( $user_id ) && in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true ) ) {
+		if ( $can_switch && in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true ) ) {
 			return $current_mode;
 		}
 
@@ -819,7 +840,7 @@ class User {
 			}
 		}
 
-		return self::VIEW_AS_STUDENT;
+		return $default_mode;
 	}
 
 	/**

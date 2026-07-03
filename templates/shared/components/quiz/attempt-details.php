@@ -40,10 +40,6 @@ if ( $attempt_id > 0 && ! $attempt_data ) {
 	$attempt_data = tutor_utils()->get_attempt( $attempt_id );
 }
 
-if ( ! $attempt_data && $quiz_id > 0 ) {
-	$attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
-}
-
 $render_attempt_not_found = static function ( string $title ) {
 	EmptyState::make()
 		->title( $title )

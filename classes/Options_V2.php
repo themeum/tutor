@@ -10,13 +10,12 @@
 
 namespace Tutor;
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
 use Tutor\Ecommerce\OptionKeys;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use TUTOR\User;
 
 /**
  * Contains all the settings options
@@ -191,6 +190,10 @@ class Options_V2 {
 	public function tutor_option_search() {
 		tutor_utils()->checking_nonce();
 
+		if ( ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
 			if ( is_array( $sections ) && ! empty( $sections ) ) {
@@ -235,8 +238,8 @@ class Options_V2 {
 	 */
 	public function tutor_export_settings() {
 		tutor_utils()->checking_nonce();
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -278,7 +281,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -308,7 +311,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -332,7 +335,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -358,35 +361,6 @@ class Options_V2 {
 	}
 
 	/**
-	 * Tutor default settings update options
-	 * and send json response
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return void send wp_json response
-	 */
-	public function tutor_default_settings() {
-		$attr = $this->get_setting_fields();
-
-		foreach ( $attr as $sections ) {
-
-			foreach ( $sections as $section ) {
-				foreach ( $section['blocks'] as $blocks ) {
-					foreach ( $blocks['fields'] as $field ) {
-						if ( isset( $field['default'] ) ) {
-							$attr_default[ $field['key'] ] = $field['default'];
-						}
-					}
-				}
-			}
-		}
-
-		update_option( 'tutor_option', $attr_default );
-
-		wp_send_json_success( $attr_default );
-	}
-
-	/**
 	 * Tutor settings log
 	 *
 	 * @since 2.0.0
@@ -397,7 +371,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -415,7 +389,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -452,10 +426,11 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
+		//phpcs:ignore
 		$data = $_FILES['data'];
 
 		if ( ! isset( $data['tmp_name'] ) ) {
@@ -541,7 +516,9 @@ class Options_V2 {
 	public function tutor_option_save() {
 		tutor_utils()->checking_nonce();
 
-		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+		if ( ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
 
 		$data_before   = get_option( 'tutor_option' );
 		$login_page_id = 0;
@@ -649,7 +626,10 @@ class Options_V2 {
 	public function tutor_option_default_save() {
 		tutor_utils()->checking_nonce();
 
-		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+		if ( ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$attr                 = $this->get_setting_fields();
 		$tutor_default_option = get_option( 'tutor_default_option' );
 		$tutor_saved_option   = get_option( 'tutor_option' );

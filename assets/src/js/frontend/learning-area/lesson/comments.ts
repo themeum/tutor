@@ -1,6 +1,7 @@
+import { __ } from '@wordpress/i18n';
+
 import { type MutationState } from '@Core/ts/services/Query';
 import { type AjaxResponse } from '@Core/ts/types';
-import { __ } from '@wordpress/i18n';
 
 const COMMENT_ID_PREFIX = 'tutor-comment-';
 const COMMENT_REPLY_ID_PREFIX = 'tutor-comment-reply-';

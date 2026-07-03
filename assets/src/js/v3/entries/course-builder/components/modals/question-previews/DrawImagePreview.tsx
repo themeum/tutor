@@ -66,7 +66,7 @@ const DrawImagePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
     return (
       <div className="tutor-quiz-question-options">
         <p className="tutor-fs-7 tutor-color-secondary">
-          {__('No background image configured for this Mark in the image question.', 'tutor')}
+          {__('No background image configured for this Image Marking question.', 'tutor')}
         </p>
       </div>
     );
