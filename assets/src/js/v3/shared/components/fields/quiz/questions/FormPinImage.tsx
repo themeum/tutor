@@ -302,6 +302,8 @@ const styles = {
     gap: ${spacing[8]};
   `,
   headerIcon: css`
+    display: flex;
+    margin-top: -2px;
     flex-shrink: 0;
     color: ${colorTokens.text.subdued};
   `,
