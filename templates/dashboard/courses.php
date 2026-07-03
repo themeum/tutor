@@ -100,7 +100,14 @@ $courses_list = $courses_list_array[ $active_tab ];
 				if ( $courses_list && $courses_list->have_posts() ) :
 					while ( $courses_list->have_posts() ) :
 						$courses_list->the_post();
-						tutor_load_template( 'dashboard.courses.course-card' );
+						$course_id = get_the_ID();
+
+						$default_template     = tutor_get_template( 'dashboard.courses.course-card' );
+						$course_card_template = apply_filters( 'tutor_dashboard_course_card_template', $default_template, $course_id );
+
+						if ( file_exists( $course_card_template ) ) {
+							require $course_card_template;
+						}
 					endwhile;
 				else :
 					EmptyState::make()

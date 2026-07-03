@@ -13,12 +13,6 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Models\CourseModel;
 
-// Allow overriding the default course card rendering.
-// Return early when rendering is handled by a filter callback.
-if ( apply_filters( 'tutor_dashboard_course_card_before_render', false, get_the_ID() ) ) {
-	return;
-}
-
 $course_permalink = get_the_permalink();
 $course_title     = get_the_title();
 $tutor_course_img = get_tutor_course_thumbnail_src();
@@ -50,7 +44,7 @@ if ( ! $course_learning_url ) {
 			window.location.href = '<?php echo esc_js( esc_url( $course_learning_url ) ); ?>';
 		}
 	}"
-	@click="navigate()"
+	@click.stop="navigate()"
 	@keydown.enter.prevent="navigate()"
 	@keydown.space.prevent="navigate()"
 >

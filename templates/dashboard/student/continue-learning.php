@@ -36,7 +36,14 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2, 
 		if ( $courses_in_progress && $courses_in_progress->have_posts() ) :
 			while ( $courses_in_progress->have_posts() ) :
 				$courses_in_progress->the_post();
-				tutor_load_template( 'dashboard.courses.course-card' );
+				$course_id = get_the_ID();
+
+				$default_template     = tutor_get_template( 'dashboard.courses.course-card' );
+				$course_card_template = apply_filters( 'tutor_dashboard_course_card_template', $default_template, $course_id );
+
+				if ( file_exists( $course_card_template ) ) {
+					require $course_card_template;
+				}
 			endwhile;
 			wp_reset_postdata();
 		else :
