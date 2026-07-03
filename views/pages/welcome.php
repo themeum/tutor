@@ -93,6 +93,7 @@ $learner_cards = array(
 		'title' => __( 'Notes', 'tutor' ),
 		'desc'  => __( 'Highlight key moments from lessons and videos, jot down thoughts, and build a personal study guide without ever leaving the course.', 'tutor' ),
 		'image' => 'notes.webp',
+		'class' => 'tutor-section-card-notes',
 	),
 	array(
 		'title' => __( 'Discussions', 'tutor' ),
@@ -190,12 +191,12 @@ $a11y_feature_cards = array(
 ?>
 
 <style type="text/css">
-.tutor-whats-new {
+.tutor-welcome {
 	margin-left: -20px;
 	background-color: rgb(255, 255, 255);
 	position: relative;
 }
-.tutor-whats-new .tutor-whats-new-dismiss-bar {
+.tutor-welcome .tutor-welcome-dismiss-bar {
 	position: absolute;
 	top: 24px;
 	width: 100%;
@@ -208,34 +209,33 @@ $a11y_feature_cards = array(
 		max-width: fit-content;
 	}
 }
-.tutor-whats-new .tutor-hero-image {
+.tutor-welcome .tutor-hero-image {
 	width: 100%;
 	height: auto;
 	max-width: 100%;
 }
-.tutor-whats-new .tutor-section-layout {
+.tutor-welcome .tutor-section-layout {
 	display: flex;
 	flex-direction: column;
 	gap: 128px;
 	max-width: 1280px;
-	/* width: 100%; */
 	margin: 0 auto;
 	padding: 64px 20px;
 }
-.tutor-whats-new .tutor-section-title {
+.tutor-welcome .tutor-section-title {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-end;
 	justify-content: space-between;
 	gap: 24px;
 }
-.tutor-whats-new .tutor-section-title-left, .tutor-whats-new .tutor-section-title-center {
+.tutor-welcome .tutor-section-title-left, .tutor-welcome .tutor-section-title-center {
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
 	flex-basis: 50%;
 }
-.tutor-whats-new .tutor-section-title-left p, .tutor-whats-new .tutor-section-title-center p {
+.tutor-welcome .tutor-section-title-left p, .tutor-welcome .tutor-section-title-center p {
 	font-size: 0.875rem;
 	line-height: 1.125rem;
 	letter-spacing: 0.125em;
@@ -244,7 +244,7 @@ $a11y_feature_cards = array(
 	color: rgba(0, 0, 0, 0.68);
 	margin: 0;
 }
-.tutor-whats-new .tutor-section-title-left h2, .tutor-whats-new .tutor-section-title-center h2 {
+.tutor-welcome .tutor-section-title-left h2, .tutor-welcome .tutor-section-title-center h2 {
 	font-size: 3rem;
 	line-height: 3.5rem;
 	letter-spacing: -0.02em;
@@ -252,16 +252,16 @@ $a11y_feature_cards = array(
 	color: rgb(15, 15, 15);
 	margin: 0;
 }
-.tutor-whats-new .tutor-section-title-center {
+.tutor-welcome .tutor-section-title-center {
 	flex-basis: 100%;
 	text-align: center;
 	align-items: center;
 }
-.tutor-whats-new .tutor-section-title-center p:last-of-type {
+.tutor-welcome .tutor-section-title-center p:last-of-type {
 	text-transform: none;
 	letter-spacing: 0em;
 }
-.tutor-whats-new .tutor-section-title-right {
+.tutor-welcome .tutor-section-title-right {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
@@ -269,7 +269,7 @@ $a11y_feature_cards = array(
 	width: 100%;
 	flex-basis: 50%;
 }
-.tutor-whats-new .tutor-section-title-right p {
+.tutor-welcome .tutor-section-title-right p {
 	font-size: 1rem;
 	line-height: 1.375rem;
 	letter-spacing: 0em;
@@ -277,29 +277,29 @@ $a11y_feature_cards = array(
 	color: rgba(0, 0, 0, 0.68);
 	margin: 0;
 }
-.tutor-whats-new .tutor-section-wrapper {
+.tutor-welcome .tutor-section-wrapper {
 	display: flex;
 	flex-direction: column;
 	gap: 56px;
 }
-.tutor-whats-new .tutor-section-card {
+.tutor-welcome .tutor-section-card {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	border-radius: 20px;
-	background-color: rgb(245, 243, 241);
+	background-color: rgba(242, 242, 242, 1);
 	overflow: hidden;
 }
-.tutor-whats-new .tutor-section-card-icon {
+.tutor-welcome .tutor-section-card-icon {
 	padding: 32px 32px 16px 32px;
 }
-.tutor-whats-new .tutor-section-card-title {
+.tutor-welcome .tutor-section-card-title {
 	display: flex;
 	flex-direction: column;
 	padding: 32px;
 	gap: 10px;
 }
-.tutor-whats-new .tutor-section-card-title h6 {
+.tutor-welcome .tutor-section-card-title h6 {
 	font-size: 1.25rem;
 	line-height: 1.75rem;
 	letter-spacing: -0.005em;
@@ -307,7 +307,7 @@ $a11y_feature_cards = array(
 	color: rgb(15, 15, 15);
 	margin: 0;
 }
-.tutor-whats-new .tutor-section-card-title p {
+.tutor-welcome .tutor-section-card-title p {
 	margin: 0px;
 	font-size: 1rem;
 	line-height: 1.375rem;
@@ -315,34 +315,34 @@ $a11y_feature_cards = array(
 	font-weight: 400;
 	color: rgba(0, 0, 0, 0.68);
 }
-.tutor-whats-new .tutor-section-card-image {
+.tutor-welcome .tutor-section-card-image {
 	display: flex;
 	position: relative;
 	overflow: hidden;
 }
-.tutor-whats-new .tutor-section-card-image img {
+.tutor-welcome .tutor-section-card-image img {
 	width: 100%;
 	height: auto;
 	transition: opacity 0.5s ease-in-out;
 }
-.tutor-whats-new .tutor-section-card-image .tutor-img-kids {
+.tutor-welcome .tutor-section-card-image .tutor-img-kids {
 	position: absolute;
 	top: 0;
 	left: 0;
 	opacity: 0;
 }
-.tutor-whats-new .tutor-section-card-image.show-kids .tutor-img-default {
+.tutor-welcome .tutor-section-card-image.show-kids .tutor-img-default {
 	opacity: 0;
 }
-.tutor-whats-new .tutor-section-card-image.show-kids .tutor-img-kids {
+.tutor-welcome .tutor-section-card-image.show-kids .tutor-img-kids {
 	opacity: 1;
 }
-.tutor-whats-new .tutor-section-cards {
+.tutor-welcome .tutor-section-cards {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
 	gap: 16px;
 }
-.tutor-whats-new .tutor-section-action {
+.tutor-welcome .tutor-section-action {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -360,22 +360,22 @@ $a11y_feature_cards = array(
 	gap: 6px;
 	cursor: pointer;
 }
-.tutor-whats-new .tutor-section-action svg {
+.tutor-welcome .tutor-section-action svg {
 	flex-shrink: 0;
 }
-.tutor-whats-new .tutor-section-action:hover, .tutor-whats-new .tutor-section-action:focus {
+.tutor-welcome .tutor-section-action:hover, .tutor-welcome .tutor-section-action:focus {
 	background-color: rgba(15, 15, 15, 0.8);
 }
-.tutor-whats-new .tutor-section-action-outline {
+.tutor-welcome .tutor-section-action-outline {
 	background-color: transparent;
 	border: 1px solid rgb(217, 217, 217);
 	color: rgb(255, 255, 255);
 }
-.tutor-whats-new .tutor-section-action-outline:hover, .tutor-whats-new .tutor-section-action-outline:focus {
+.tutor-welcome .tutor-section-action-outline:hover, .tutor-welcome .tutor-section-action-outline:focus {
 	background-color: rgb(217, 217, 217);
 	color: rgb(15, 15, 15);
 }
-.tutor-whats-new .tutor-learning-mode-button {
+.tutor-welcome .tutor-learning-mode-button {
 	display: block;
 	position: relative;
 	border: none;
@@ -390,7 +390,7 @@ $a11y_feature_cards = array(
 	border-radius: 8px;
 	transition: filter 0.3s ease, opacity 0.3s ease;
 }
-.tutor-whats-new .tutor-learning-mode-button .progress-border {
+.tutor-welcome .tutor-learning-mode-button .progress-border {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -398,18 +398,18 @@ $a11y_feature_cards = array(
 	height: 100%;
 	pointer-events: none;
 }
-.tutor-whats-new .tutor-learning-mode-button .progress-border rect {
+.tutor-welcome .tutor-learning-mode-button .progress-border rect {
 	fill: none;
 	stroke: rgb(2, 101, 225);
 	stroke-width: 2px;
 	stroke-dasharray: 184;
 	stroke-dashoffset: 184;
 }
-.tutor-whats-new .tutor-learning-mode-button.active {
+.tutor-welcome .tutor-learning-mode-button.active {
 	filter: grayscale(0);
 	opacity: 1;
 }
-.tutor-whats-new .tutor-learning-mode-button.active .progress-border rect {
+.tutor-welcome .tutor-learning-mode-button.active .progress-border rect {
 	animation: buttonBorderProgress 3s linear forwards;
 }
 @keyframes buttonBorderProgress {
@@ -420,46 +420,53 @@ $a11y_feature_cards = array(
 	stroke-dashoffset: 0;
 	}
 }
-.tutor-whats-new .tutor-lm-text-transition {
+.tutor-welcome .tutor-lm-text-transition {
 	transition: opacity 0.3s ease;
 }
-.tutor-whats-new .tutor-lm-text-transition.fading {
+.tutor-welcome .tutor-lm-text-transition.fading {
 	opacity: 0;
 }
-.tutor-whats-new .tutor-section-dashboard .tutor-section-cards .tutor-section-card-navigation {
+.tutor-welcome .tutor-section-dashboard .tutor-section-cards .tutor-section-card-navigation {
 	background-image: url("https://tutor-lms.s3.us-east-1.amazonaws.com/whats-new/navigation-bg.webp");
 	background-size: cover;
+	h6, p {
+		color: #fff;
+	}
 }
-.tutor-whats-new .tutor-section-interactive .tutor-section-cards {
+.tutor-welcome .tutor-section-interactive .tutor-section-cards {
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	grid-template-areas: "ordering ordering image-marking image-marking" "graph puzzle range pin";
 }
-.tutor-whats-new .tutor-section-interactive .tutor-section-cards .tutor-section-card-ordering {
-	background-image: url("https://tutor-lms.s3.us-east-1.amazonaws.com/whats-new/ordering-bg.webp");
+.tutor-welcome .tutor-section-learner .tutor-section-cards .tutor-section-card-notes {
+	background-image: url("https://tutor-lms.s3.us-east-1.amazonaws.com/whats-new/notes-bg.webp");
 	background-size: cover;
+	h6, p {
+		color: #fff;
+	}
+
 }
-.tutor-whats-new .tutor-section-native .tutor-section-cards {
+.tutor-welcome .tutor-section-native .tutor-section-cards {
 	grid-template-areas: "native-app navigation" "mode mode";
 }
-.tutor-whats-new .tutor-section-native .tutor-section-cards .tutor-section-card-learning-mode {
+.tutor-welcome .tutor-section-native .tutor-section-cards .tutor-section-card-learning-mode {
 	border: 8px solid rgb(247, 247, 247);
 	padding: 8px;
 	flex-direction: row;
 	gap: 8px;
 	justify-content: flex-start;
 }
-.tutor-whats-new .tutor-section-native .tutor-section-cards .tutor-section-card-learning-mode .tutor-section-card-title {
+.tutor-welcome .tutor-section-native .tutor-section-cards .tutor-section-card-learning-mode .tutor-section-card-title {
 	justify-content: center;
 	padding: 0;
 }
-.tutor-whats-new .tutor-section-native .tutor-section-cards .tutor-section-card-learning-mode .tutor-section-card-title h6 {
+.tutor-welcome .tutor-section-native .tutor-section-cards .tutor-section-card-learning-mode .tutor-section-card-title h6 {
 	font-size: 1rem;
 	line-height: 1.375rem;
 	letter-spacing: 0em;
 	font-weight: 600;
 	color: rgb(15, 15, 15);
 }
-.tutor-whats-new .tutor-section-native .tutor-section-cards .tutor-section-card-learning-mode .tutor-section-card-title p {
+.tutor-welcome .tutor-section-native .tutor-section-cards .tutor-section-card-learning-mode .tutor-section-card-title p {
 	margin: 0;
 	font-size: 0.875rem;
 	line-height: 1.125rem;
@@ -467,14 +474,14 @@ $a11y_feature_cards = array(
 	font-weight: 400;
 	color: rgba(0, 0, 0, 0.68);
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-cards {
+.tutor-welcome .tutor-section-a11y .tutor-section-cards {
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	grid-template-areas: "mode-preference mode-preference mode-preference mode-preference" "font contrast vision motion";
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-cards .tutor-section-feature-card {
+.tutor-welcome .tutor-section-a11y .tutor-section-cards .tutor-section-feature-card {
 	justify-content: flex-start;
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-card-comparison {
+.tutor-welcome .tutor-section-a11y .tutor-section-card-comparison {
 	display: flex;
 	margin: 23px 82px 0 82px;
 	border-radius: 12px 12px 0 0;
@@ -484,7 +491,7 @@ $a11y_feature_cards = array(
 	line-height: 0;
 	z-index: 1;
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-card-comparison::before {
+.tutor-welcome .tutor-section-a11y .tutor-section-card-comparison::before {
 	content: "";
 	position: absolute;
 	z-index: -1;
@@ -498,14 +505,14 @@ $a11y_feature_cards = array(
 	transform: matrix(-1, 0, 0, 1, 0, 0) translateZ(-1px);
 	clip-path: polygon(0 0, 100% 100%, 0 100%);
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-inner {
+.tutor-welcome .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-inner {
 	position: relative;
 	width: 100%;
 	overflow: hidden;
 	border-radius: 8px 8px 0 0;
 	line-height: 0;
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-inner img {
+.tutor-welcome .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-inner img {
 	width: 100%;
 	height: auto;
 	object-fit: cover;
@@ -513,7 +520,7 @@ $a11y_feature_cards = array(
 	user-select: none;
 	pointer-events: none;
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-inner .tutor-comparison-img-light-wrapper {
+.tutor-welcome .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-inner .tutor-comparison-img-light-wrapper {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -521,7 +528,7 @@ $a11y_feature_cards = array(
 	height: 100%;
 	clip-path: polygon(0 0, var(--pos) 0, var(--pos) 100%, 0 100%);
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-inner .tutor-comparison-handle-line {
+.tutor-welcome .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-inner .tutor-comparison-handle-line {
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -532,7 +539,7 @@ $a11y_feature_cards = array(
 	pointer-events: none;
 	z-index: 5;
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-slider {
+.tutor-welcome .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-slider {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -545,7 +552,7 @@ $a11y_feature_cards = array(
 	-webkit-appearance: none;
 	appearance: none;
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-handle-icon {
+.tutor-welcome .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-handle-icon {
 	position: absolute;
 	top: 50%;
 	left: var(--pos);
@@ -562,147 +569,269 @@ $a11y_feature_cards = array(
 	background: white;
 	box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3), 0 4px 16px rgba(0, 0, 0, 0.15);
 }
-.tutor-whats-new .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-handle-icon svg {
+.tutor-welcome .tutor-section-a11y .tutor-section-card-comparison .tutor-comparison-handle-icon svg {
 	position: relative;
 	z-index: 1;
 }
-.tutor-whats-new .tutor-section-instructor-dashboard .tutor-section-cards {
+.tutor-welcome .tutor-section-instructor-dashboard .tutor-section-cards {
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	grid-template-areas: "learners assignments announcements";
+}
+/* Full-width background sections */
+.tutor-welcome .tutor-section-bg {
+	width: 100%;
+}
+.tutor-welcome .tutor-section-learner {
+	padding-bottom: 64px;
+}
+.tutor-welcome .tutor-section-bg-interactive {
+	background-color: #000;
+	padding-top: 64px;
+}
+.tutor-welcome .tutor-section-bg-native {
+	background:
+		linear-gradient(180deg, #000000 4.74%, #091DF6 47.11%, rgba(255, 255, 255, 0) 79.7%),
+		linear-gradient(0deg, #FFFFFF, #FFFFFF);
+}
+
+/* Light text on dark backgrounds */
+.tutor-welcome .tutor-section-bg-interactive .tutor-section-title p,
+.tutor-welcome .tutor-section-bg-interactive .tutor-section-title h2,
+.tutor-welcome .tutor-section-bg-interactive .tutor-section-title-right p,
+.tutor-welcome .tutor-section-bg-native .tutor-section-title p,
+.tutor-welcome .tutor-section-bg-native .tutor-section-title h2,
+.tutor-welcome .tutor-section-bg-native .tutor-section-title-center p,
+.tutor-welcome .tutor-section-bg-native .tutor-section-title-center h2 {
+	color: #fff;
+}
+
+/* Interactive Assessments Card background */
+.tutor-welcome .tutor-section-bg-interactive .tutor-section-cards .tutor-section-card {
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(26, 26, 26, 1)
+}
+.tutor-welcome .tutor-section-bg-interactive .tutor-section-cards .tutor-section-card .tutor-section-card-title h6 {
+	color: #fff;
+}
+
+/* Rotating gradient border on "Native App Like Experience" subtitle */
+.tutor-welcome .tutor-section-native .gradient-btn-wrapper {
+	position: relative;
+	padding: 1.5px;
+	border-radius: 9999px;
+	display: inline-block;
+	overflow: hidden;
+	margin-bottom: 16px;
+}
+.tutor-welcome .tutor-section-native .gradient-spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 220%;
+	aspect-ratio: 1 / 1;
+	transform-origin: center;
+	background: conic-gradient(
+		from 0deg,
+		transparent 0deg,
+		transparent 120deg,
+		#DAC64B 150deg,
+		#CC616E 180deg,
+		#517ECF 210deg,
+		#86C672 240deg,
+		transparent 270deg,
+		transparent 360deg
+	);
+	animation: tutor-gradient-spin 4s linear infinite;
+	z-index: 1;
+}
+.tutor-welcome .tutor-section-native .gradient-btn-content {
+	position: relative;
+	z-index: 2;
+	background: #000;
+	color: #fff;
+	border: none;
+	border-radius: 9999px;
+	padding: 8px 12px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: inherit;
+	font-weight: 500;
+	white-space: nowrap;
+	user-select: none;
+	cursor: default;
+}
+.tutor-welcome .tutor-section-native .gradient-btn-dot {
+	width: 8px;
+	height: 8px;
+	background-color: #fff;
+	border-radius: 50%;
+	display: inline-block;
+	flex-shrink: 0;
+}
+@keyframes tutor-gradient-spin {
+	0%   { transform: translate(-50%, -50%) rotate(60deg); }
+	25%  { transform: translate(-50%, -50%) rotate(150deg); }
+	50%  { transform: translate(-50%, -50%) rotate(240deg); }
+	75%  { transform: translate(-50%, -50%) rotate(330deg); }
+	100% { transform: translate(-50%, -50%) rotate(420deg); }
+}
+
+/* Action button on dark backgrounds */
+.tutor-welcome .tutor-section-bg-interactive .tutor-section-action {
+	background-color: #fff;
+	color: #000;
+}
+.tutor-welcome .tutor-section-bg-interactive .tutor-section-action:hover,
+.tutor-welcome .tutor-section-bg-interactive .tutor-section-action:focus {
+	background-color: rgba(255, 255, 255, 0.8);
+}
+.tutor-welcome .tutor-section-bg-native .tutor-section-action {
+	background-color: #fff;
+	color: #000;
+}
+.tutor-welcome .tutor-section-bg-native .tutor-section-action:hover,
+.tutor-welcome .tutor-section-bg-native .tutor-section-action:focus {
+	background-color: rgba(255, 255, 255, 0.8);
 }
 
 @media (max-width: 1024px) {
 	#wpbody-content {
 	padding-bottom: 0;
 	}
-	.tutor-whats-new br {
+	.tutor-welcome br {
 	display: none;
 	}
-	.tutor-whats-new .tutor-section-layout {
+	.tutor-welcome .tutor-section-layout {
 	padding: 48px 20px;
 	gap: 96px;
 	}
-	.tutor-whats-new .tutor-section-wrapper {
+	.tutor-welcome .tutor-section-learner {
+		padding-bottom: 48px;
+	}
+	.tutor-welcome .tutor-section-bg-interactive {
+		padding-top: 48px;
+	}
+	.tutor-welcome .tutor-section-wrapper {
 	gap: 40px;
 	}
-	.tutor-whats-new .tutor-section-title {
+	.tutor-welcome .tutor-section-title {
 	gap: 10px;
 	align-items: flex-start;
 	}
-	.tutor-whats-new .tutor-section-title-left, .tutor-whats-new .tutor-section-title-center {
+	.tutor-welcome .tutor-section-title-left, .tutor-welcome .tutor-section-title-center {
 	gap: 4px;
 	}
-	.tutor-whats-new .tutor-section-title-left h2, .tutor-whats-new .tutor-section-title-center h2 {
+	.tutor-welcome .tutor-section-title-left h2, .tutor-welcome .tutor-section-title-center h2 {
 	font-size: 2rem;
 	line-height: 2.5rem;
 	margin-inline-end: 10px;
 	}
-	.tutor-whats-new .tutor-section-title-left p, .tutor-whats-new .tutor-section-title-center p {
+	.tutor-welcome .tutor-section-title-left p, .tutor-welcome .tutor-section-title-center p {
 	font-size: 0.75rem;
 	line-height: 1.125rem;
 	}
-	.tutor-whats-new .tutor-section-action {
+	.tutor-welcome .tutor-section-action {
 	max-width: fit-content;
 	}
-	.tutor-whats-new .tutor-section-cards {
+	.tutor-welcome .tutor-section-cards {
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 	gap: 10px;
 	}
-	.tutor-whats-new .tutor-section-card-title {
+	.tutor-welcome .tutor-section-card-title {
 	gap: 10px;
 	padding: 20px;
 	}
-	.tutor-whats-new .tutor-section-interactive .tutor-section-cards {
+	.tutor-welcome .tutor-section-interactive .tutor-section-cards {
 	grid-template-areas: "ordering image-marking" "graph puzzle" "range pin";
 	}
-	.tutor-whats-new .tutor-section-a11y .tutor-section-cards {
+	.tutor-welcome .tutor-section-a11y .tutor-section-cards {
 	grid-template-areas: "mode-preference mode-preference" "font contrast" "vision motion";
 	}
-	.tutor-whats-new .tutor-section-a11y .tutor-section-cards .tutor-section-card-comparison {
+	.tutor-welcome .tutor-section-a11y .tutor-section-cards .tutor-section-card-comparison {
 	margin: 0 40px 0 40px;
 	}
-	.tutor-whats-new .tutor-section-instructor-dashboard .tutor-section-cards {
+	.tutor-welcome .tutor-section-instructor-dashboard .tutor-section-cards {
 	grid-template-areas: "learners assignments" "announcements announcements";
 	}
-	.tutor-whats-new .tutor-section-instructor-dashboard .tutor-section-cards [style*="grid-area: announcements"] {
+	.tutor-welcome .tutor-section-instructor-dashboard .tutor-section-cards [style*="grid-area: announcements"] {
 	height: 400px;
 	}
-	.tutor-whats-new .tutor-section-instructor-dashboard .tutor-section-cards [style*="grid-area: announcements"] img {
+	.tutor-welcome .tutor-section-instructor-dashboard .tutor-section-cards [style*="grid-area: announcements"] img {
 	width: min-content;
 	margin-inline: auto;
 	}
 }
 @media (max-width: 768px) {
-	.tutor-whats-new {
+	.tutor-welcome {
 	margin-left: -10px;
 	}
-	.tutor-whats-new .tutor-hero-image {
+	.tutor-welcome .tutor-hero-image {
 	height: 404px;
 	object-fit: cover;
 	}
 }
 @media (max-width: 430px) {
-	.tutor-whats-new .tutor-hero-image {
+	.tutor-welcome .tutor-hero-image {
 	height: 263px;
 	object-fit: cover;
 	}
-	.tutor-whats-new .tutor-whats-new-dismiss-bar {
+	.tutor-welcome .tutor-welcome-dismiss-bar {
 	top: 8px;
 	
 	a {
 		margin-inline-end: 8px;
 	}
 	}
-	.tutor-whats-new .tutor-whats-new-dismiss-btn {
+	.tutor-welcome .tutor-welcome-dismiss-btn {
 	border-radius: 999px;
 	padding: 12px;
 	gap: 0;
 	}
-	.tutor-whats-new .tutor-whats-new-dismiss-btn span {
+	.tutor-welcome .tutor-welcome-dismiss-btn span {
 	display: none;
 	}
-	.tutor-whats-new .tutor-whats-new-dismiss-btn svg {
+	.tutor-welcome .tutor-welcome-dismiss-btn svg {
 	width: 20px;
 	height: 20px;
 	}
-	.tutor-whats-new .tutor-section-layout {
+	.tutor-welcome .tutor-section-layout {
 	padding-inline: 16px;
 	}
-	.tutor-whats-new .tutor-section-cards {
+	.tutor-welcome .tutor-section-cards {
 	gap: 16px;
 	}
-	.tutor-whats-new .tutor-section-title {
+	.tutor-welcome .tutor-section-title {
 	gap: 10px;
 	flex-wrap: wrap;
 	}
-	.tutor-whats-new .tutor-section-title-left, .tutor-whats-new .tutor-section-title-center, .tutor-whats-new .tutor-section-title-right {
+	.tutor-welcome .tutor-section-title-left, .tutor-welcome .tutor-section-title-center, .tutor-welcome .tutor-section-title-right {
 	flex-basis: 100%;
 	}
-	.tutor-whats-new .tutor-section-action {
+	.tutor-welcome .tutor-section-action {
 	max-width: 196px;
 	}
-	.tutor-whats-new .tutor-section-interactive .tutor-section-cards {
+	.tutor-welcome .tutor-section-interactive .tutor-section-cards {
 	grid-template-areas: "ordering" "image-marking" "graph" "puzzle" "range" "pin";
 	}
-	.tutor-whats-new .tutor-section-native .tutor-section-cards {
+	.tutor-welcome .tutor-section-native .tutor-section-cards {
 	grid-template-areas: "native-app" "navigation" "mode";
 	}
-	.tutor-whats-new .tutor-section-a11y .tutor-section-cards {
+	.tutor-welcome .tutor-section-a11y .tutor-section-cards {
 	grid-template-areas: "mode-preference" "font" "contrast" "vision" "motion";
 	}
-	.tutor-whats-new .tutor-section-a11y .tutor-section-cards .tutor-section-card-comparison {
+	.tutor-welcome .tutor-section-a11y .tutor-section-cards .tutor-section-card-comparison {
 	margin: 0 20px 0 20px;
 	}
-	.tutor-whats-new .tutor-section-instructor-dashboard .tutor-section-cards {
+	.tutor-welcome .tutor-section-instructor-dashboard .tutor-section-cards {
 	grid-template-areas: "learners" "assignments" "announcements";
 	}
 }
-
 </style>
 
-<div class="tutor-whats-new">
-	<div class="tutor-whats-new-dismiss-bar">
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor' ) ); ?>" class="tutor-section-action tutor-section-action-outline tutor-whats-new-dismiss-btn">
+<div class="tutor-welcome">
+	<div class="tutor-welcome-dismiss-bar">
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor' ) ); ?>" class="tutor-section-action tutor-section-action-outline tutor-welcome-dismiss-btn">
 			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m12.4 3.6-8.8 8.8m0-8.8 8.8 8.8"/></svg>
 			<span><?php esc_html_e( 'Don\'t show again', 'tutor' ); ?></span>
 		</a>
@@ -751,9 +880,12 @@ $a11y_feature_cards = array(
 				<?php endforeach; ?>
 			</div>
 		</section>
+	</div>
 
-		<!-- Interactive Assessments -->
-		<section class="tutor-section-wrapper tutor-section-interactive">
+	<div class="tutor-section-bg tutor-section-bg-interactive">
+		<div class="tutor-section-layout">
+			<!-- Interactive Assessments -->
+			<section class="tutor-section-wrapper tutor-section-interactive">
 			<div class="tutor-section-title">
 				<div class="tutor-section-title-left">
 					<p><?php esc_html_e( 'Interactive Assessments', 'tutor' ); ?></p>
@@ -773,12 +905,22 @@ $a11y_feature_cards = array(
 				<?php endforeach; ?>
 			</div>
 		</section>
+		</div>
+	</div>
 
-		<!-- Native App -->
-		<section class="tutor-section-wrapper tutor-section-native">
+	<div class="tutor-section-bg tutor-section-bg-native">
+		<div class="tutor-section-layout">
+			<!-- Native App -->
+			<section class="tutor-section-wrapper tutor-section-native">
 			<div class="tutor-section-title">
 				<div class="tutor-section-title-center">
-					<p><?php esc_html_e( 'Native App Like Experience', 'tutor' ); ?></p>
+					<div class="gradient-btn-wrapper">
+						<div class="gradient-spinner"></div>
+						<div class="gradient-btn-content">
+							<span class="gradient-btn-dot"></span>
+							<p><?php esc_html_e( 'Native App Like Experience', 'tutor' ); ?></p>
+						</div>
+					</div>
 					<h2>
 						<?php
 						printf(
@@ -818,8 +960,8 @@ $a11y_feature_cards = array(
 						<p><?php esc_html_e( 'Students move between courses, lessons, and their profile without friction — every tap takes them exactly where they need to go.', 'tutor' ); ?></p>
 					</div>
 					<div class="tutor-section-card-image tutor-toggle-images">
-						<img class="tutor-img-default" src="<?php echo esc_url( $asset_base . 'smooth-navigation.webp' ); ?>" alt="<?php esc_attr_e( 'Smoother navigation', 'tutor' ); ?>">
-						<img class="tutor-img-kids" src="<?php echo esc_url( $asset_base . 'smooth-navigation-kids.webp' ); ?>" alt="<?php esc_attr_e( 'Smoother navigation (Kids)', 'tutor' ); ?>">
+						<img class="tutor-img-default" src="<?php echo esc_url( $asset_base . 'smoother-navigation.webp' ); ?>" alt="<?php esc_attr_e( 'Smoother navigation', 'tutor' ); ?>">
+						<img class="tutor-img-kids" src="<?php echo esc_url( $asset_base . 'smoother-navigation-kids.webp' ); ?>" alt="<?php esc_attr_e( 'Smoother navigation (Kids)', 'tutor' ); ?>">
 					</div>
 				</div>
 
@@ -844,7 +986,10 @@ $a11y_feature_cards = array(
 				</div>
 			</div>
 		</section>
+		</div>
+	</div>
 
+	<div class="tutor-section-layout">
 		<!-- Accessibility -->
 		<section class="tutor-section-wrapper tutor-section-a11y">
 			<div class="tutor-section-title">
