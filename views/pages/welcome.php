@@ -93,6 +93,7 @@ $learner_cards = array(
 		'title' => __( 'Notes', 'tutor' ),
 		'desc'  => __( 'Highlight key moments from lessons and videos, jot down thoughts, and build a personal study guide without ever leaving the course.', 'tutor' ),
 		'image' => 'notes.webp',
+		'class' => 'tutor-section-card-notes',
 	),
 	array(
 		'title' => __( 'Discussions', 'tutor' ),
@@ -286,7 +287,7 @@ $a11y_feature_cards = array(
 	flex-direction: column;
 	justify-content: space-between;
 	border-radius: 20px;
-	background-color: rgb(245, 243, 241);
+	background-color: rgba(242, 242, 242, 1);
 	overflow: hidden;
 }
 .tutor-whats-new .tutor-section-card-icon {
@@ -433,10 +434,10 @@ $a11y_feature_cards = array(
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	grid-template-areas: "ordering ordering image-marking image-marking" "graph puzzle range pin";
 }
-/* .tutor-whats-new .tutor-section-interactive .tutor-section-cards .tutor-section-card-ordering {
+.tutor-whats-new .tutor-section-learner .tutor-section-cards .tutor-section-card-notes {
 	background-image: url("https://tutor-lms.s3.us-east-1.amazonaws.com/whats-new/ordering-bg.webp");
 	background-size: cover;
-} */
+}
 .tutor-whats-new .tutor-section-native .tutor-section-cards {
 	grid-template-areas: "native-app navigation" "mode mode";
 }
@@ -727,42 +728,74 @@ $a11y_feature_cards = array(
 
 /* Interactive Assessments Card background */
 .tutor-whats-new .tutor-section-bg-interactive .tutor-section-cards .tutor-section-card {
-	background-color: rgba(255, 255, 255, 0.06);
+	background-color: rgba(255, 255, 255, 0.1);
 	border: 1px solid rgba(26, 26, 26, 1)
 }
 .tutor-whats-new .tutor-section-bg-interactive .tutor-section-cards .tutor-section-card .tutor-section-card-title h6 {
 	color: #fff;
 }
 
-/* Left gradient border + dot on "Native App Like Experience" subtitle */
-.tutor-whats-new .tutor-section-native .tutor-section-title-center p:first-of-type {
-	display: flex;
-	align-items: flex-start;
-	gap: 6px;
-	padding: 8px;
+/* Rotating gradient border on "Native App Like Experience" subtitle */
+.tutor-whats-new .tutor-section-native .gradient-btn-wrapper {
 	position: relative;
-	color: #fff;
+	padding: 1.5px;
+	border-radius: 9999px;
+	display: inline-block;
+	overflow: hidden;
 	margin-bottom: 16px;
-	width: fit-content;
 }
-.tutor-whats-new .tutor-section-native .tutor-section-title-center p:first-of-type::before {
-	content: '';
+.tutor-whats-new .tutor-section-native .gradient-spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 220%;
+	aspect-ratio: 1 / 1;
+	transform-origin: center;
+	background: conic-gradient(
+		from 0deg,
+		transparent 0deg,
+		transparent 120deg,
+		#DAC64B 150deg,
+		#CC616E 180deg,
+		#517ECF 210deg,
+		#86C672 240deg,
+		transparent 270deg,
+		transparent 360deg
+	);
+	animation: tutor-gradient-spin 4s linear infinite;
+	z-index: 1;
+}
+.tutor-whats-new .tutor-section-native .gradient-btn-content {
+	position: relative;
+	z-index: 2;
+	background: #000;
+	color: #fff;
+	border: none;
+	border-radius: 9999px;
+	padding: 8px 20px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: inherit;
+	font-weight: 500;
+	white-space: nowrap;
+	user-select: none;
+	cursor: default;
+}
+.tutor-whats-new .tutor-section-native .gradient-btn-dot {
 	width: 8px;
 	height: 8px;
+	background-color: #fff;
+	border-radius: 50%;
+	display: inline-block;
 	flex-shrink: 0;
-	margin-top: 5px;
-	border-radius: 50%;
-	background: #fff;
 }
-.tutor-whats-new .tutor-section-native .tutor-section-title-center p:first-of-type::after {
-	content: '';
-	position: absolute;
-	left: -4px;
-	top: 0;
-	bottom: 0;
-	width: 20px;
-	border-radius: 50%;
-	background: linear-gradient(111.79deg, #DAC64B -8.96%, #CC616E 25.97%, #517ECF 59.39%, #EAEEF4 81.17%, #86C672 96.36%);
+@keyframes tutor-gradient-spin {
+	0%   { transform: translate(-50%, -50%) rotate(60deg); }
+	25%  { transform: translate(-50%, -50%) rotate(150deg); }
+	50%  { transform: translate(-50%, -50%) rotate(240deg); }
+	75%  { transform: translate(-50%, -50%) rotate(330deg); }
+	100% { transform: translate(-50%, -50%) rotate(420deg); }
 }
 
 /* Action button on dark backgrounds */
@@ -869,7 +902,13 @@ $a11y_feature_cards = array(
 			<section class="tutor-section-wrapper tutor-section-native">
 			<div class="tutor-section-title">
 				<div class="tutor-section-title-center">
-					<p><?php esc_html_e( 'Native App Like Experience', 'tutor' ); ?></p>
+					<div class="gradient-btn-wrapper">
+						<div class="gradient-spinner"></div>
+						<div class="gradient-btn-content">
+							<span class="gradient-btn-dot"></span>
+							<p><?php esc_html_e( 'Native App Like Experience', 'tutor' ); ?></p>
+						</div>
+					</div>
 					<h2>
 						<?php
 						printf(
