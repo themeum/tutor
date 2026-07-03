@@ -788,7 +788,7 @@ $a11y_feature_cards = array(
 	<div class="tutor-whats-new-dismiss-bar">
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor' ) ); ?>" class="tutor-section-action tutor-section-action-outline tutor-whats-new-dismiss-btn">
 			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m12.4 3.6-8.8 8.8m0-8.8 8.8 8.8"/></svg>
-			<span><?php esc_html_e( 'Close', 'tutor' ); ?></span>
+			<span><?php esc_html_e( 'Don\'t Show Again', 'tutor' ); ?></span>
 		</a>
 	</div>
 	<img class="tutor-hero-image" src="<?php echo esc_url( $asset_base . 'whats-new-hero.webp' ); ?>" alt="<?php esc_attr_e( "What's new in v4", 'tutor' ); ?>">
