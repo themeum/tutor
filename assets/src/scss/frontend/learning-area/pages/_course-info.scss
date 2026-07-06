@@ -32,6 +32,14 @@
   .tutor-course-intro {
     text-align: center;
     margin-top: $tutor-spacing-8;
+
+    a {
+      @include tutor-transition();
+
+      &:hover {
+        color: $tutor-text-brand;
+      }
+    }
   }
 
   .tutor-course-info-cards {

@@ -140,8 +140,8 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		$comment_id = 0;
-		$comment    = Input::post( 'comment', '', Input::TYPE_KSES_POST );
-		$lesson_id  = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
+		$comment   = Input::post( 'comment', '', Input::TYPE_TEXTAREA );
+		$lesson_id = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
 
 		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
 			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );

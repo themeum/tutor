@@ -2106,22 +2106,38 @@ class Utils {
 	 *
 	 * @return array
 	 */
-	public function get_completed_courses_ids_by_user( $user_id = 0 ) {
+	public function get_completed_courses_ids_by_user( $user_id = 0, $with_bundle_enrolled_courses = true ) {
 		global $wpdb;
 
 		$user_id = $this->get_user_id( $user_id );
 
+		$with_bundle_enrolled_courses_clause = '';
+		if ( ! $with_bundle_enrolled_courses ) {
+			$with_bundle_enrolled_courses_clause = $wpdb->prepare(
+				"AND NOT EXISTS (
+					SELECT 1
+					FROM {$wpdb->postmeta} pm
+					WHERE pm.post_id = e.ID
+						AND pm.meta_key = %s
+				)",
+				'_tutor_bundle_id'
+			);
+		}
+
 		$course_ids = (array) $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT comment_post_ID AS course_id
-			FROM 	{$wpdb->comments}
-			WHERE 	comment_agent = %s
+				FROM {$wpdb->comments}
+				WHERE comment_agent = %s
 					AND comment_type = %s
 					AND user_id = %d
 					AND comment_post_ID IN (
-						select post_parent AS course_id from {$wpdb->posts} where post_type=%s AND post_author = %d
-					)
-			",
+						SELECT e.post_parent
+						FROM {$wpdb->posts} e
+						WHERE e.post_type = %s
+							AND e.post_author = %d
+							{$with_bundle_enrolled_courses_clause}
+					)",
 				'TutorLMSPlugin',
 				'course_completed',
 				$user_id,
