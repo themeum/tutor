@@ -89,13 +89,15 @@ class Admin {
 	 * @return bool
 	 */
 	private function is_offer_notice_dismissed() {
-		return 'yes' === get_transient( 'tutor_offer_notice_dismissed' );
+		return '4.0.0' === get_transient( 'tutor_offer_notice_dismissed' );
 	}
 
 	/**
 	 * Show offer notice
 	 *
 	 * @since 4.0.0
+	 *
+	 * @return void
 	 */
 	public function show_offer_notice() {
 		if ( ! User::is_admin() ) {
@@ -150,7 +152,7 @@ class Admin {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @return void
+	 * @return void JSON response.
 	 */
 	public function ajax_dismiss_offer_notice() {
 		if ( ! User::is_admin() ) {
@@ -163,7 +165,7 @@ class Admin {
 
 		// Set expiry until next day.
 		$expiration = strtotime( 'tomorrow' ) - time();
-		set_transient( 'tutor_offer_notice_dismissed', 'yes', $expiration );
+		set_transient( 'tutor_offer_notice_dismissed', '4.0.0', $expiration );
 		$this->json_response( __( 'Notice dismissed', 'tutor' ) );
 	}
 
