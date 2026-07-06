@@ -137,7 +137,7 @@ class Tutor_Setup {
 			wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 
 			// load google inter font.
-			wp_enqueue_style( 'inter-font', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), TUTOR_VERSION );
+			wp_enqueue_style( 'tutor-inter-font', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), TUTOR_VERSION );
 
 			wp_localize_script(
 				'tutor-setup',
