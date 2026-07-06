@@ -135,7 +135,7 @@ class Admin {
 						<div data-subtext><?php esc_html_e( 'on all annual plans', 'tutor' ); ?></div>
 					</div>
 					<div class="tutor-offer-notice-right">
-						<div class="tutor-offer-notice-text"><?php esc_html_e( 'Offer ends by', 'tutor' ); ?> <span class="tutor-offer-notice-timer"><?php echo esc_html( $expire_in ); ?></span></div>
+						<div class="tutor-offer-notice-text"><?php esc_html_e( 'Offer ends by', 'tutor' ); ?> <span class="tutor-offer-notice-timer" data-expiry="<?php echo esc_attr( $expiration->getTimestamp() ); ?>"><?php echo esc_html( $expire_in ); ?></span></div>
 						<a class="tutor-offer-notice-cta" href="<?php echo esc_url( $cta_link ); ?>" target="_blank">
 							<?php echo esc_html( $cta_label ); ?>
 							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="#fff" d="M13.938 6.937a.55.55 0 0 0-.786 0 .555.555 0 0 0 0 .778l3.338 3.34H5.243a.55.55 0 0 0-.55.551c0 .305.242.558.55.558h11.246l-3.337 3.334a.563.563 0 0 0 0 .785.55.55 0 0 0 .786 0L18.217 12a.543.543 0 0 0 0-.78z"/></svg>

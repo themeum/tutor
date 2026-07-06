@@ -542,4 +542,36 @@ jQuery(document).ready(function ($) {
 			}
 		})
 	}
+
+	/**
+	 * Offer notice countdown timer.
+	 *
+	 * @since 4.0.0
+	 */
+	const timerEl = document.querySelector('.tutor-offer-notice-timer');
+	if (timerEl) {
+		const expiryTs = parseInt(timerEl.dataset.expiry, 10) * 1000;
+		if (!expiryTs) return;
+
+		const pad = (n) => String(n).padStart(2, '0');
+
+		const tick = () => {
+			const now = Date.now();
+			const diff = Math.max(0, expiryTs - now);
+
+			const days = Math.floor(diff / 86400000);
+			const hours = Math.floor((diff % 86400000) / 3600000);
+			const minutes = Math.floor((diff % 3600000) / 60000);
+			const seconds = Math.floor((diff % 60000) / 1000);
+
+			timerEl.textContent = `${days}d:${pad(hours)}h:${pad(minutes)}m:${pad(seconds)}s`;
+
+			if (diff <= 0) {
+				clearInterval(interval);
+			}
+		};
+
+		tick();
+		const interval = setInterval(tick, 1000);
+	}
 });
