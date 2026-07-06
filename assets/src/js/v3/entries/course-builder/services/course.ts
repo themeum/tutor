@@ -457,7 +457,7 @@ export interface GoogleMeetMeetingPayload {
   'post-id'?: ID; //only update
   'event-id'?: ID; //only update
   attendees: 'Yes' | 'No';
-  course_id: ID; // for additional
+  object_id: ID; // for additional
   topic_id?: ID; // for course builder
   meeting_title: string;
   meeting_summary: string;
@@ -898,7 +898,7 @@ const saveGoogleMeet = (payload: GoogleMeetMeetingPayload) => {
         'post-id': payload['post-id'],
         'event-id': payload['event-id'],
       }),
-    course_id: payload.topic_id ? payload.topic_id : payload.course_id,
+    object_id: payload.topic_id ? payload.topic_id : payload.object_id,
     meeting_summary: payload.meeting_summary,
     meeting_title: payload.meeting_title,
     meeting_start_date: payload.meeting_start_date,
@@ -926,11 +926,11 @@ export const useSaveGoogleMeetMutation = () => {
 
       if (payload.topic_id) {
         queryClient.invalidateQueries({
-          queryKey: ['Topic', payload.course_id],
+          queryKey: ['Topic', payload.object_id],
         });
       } else {
         queryClient.invalidateQueries({
-          queryKey: ['CourseDetails', payload.course_id],
+          queryKey: ['CourseDetails', payload.object_id],
         });
       }
     },

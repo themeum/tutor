@@ -308,6 +308,7 @@ final class Icon {
 	const PLAY_2                     = 'play-2';
 	const PLAY_FILL                  = 'play-fill';
 	const PLAY_LINE                  = 'play-line';
+	const PLAY_LINE_2                = 'play-line-2';
 	const PLUS                       = 'plus';
 	const PLUS_MINUS                 = 'plus-minus';
 	const PLUS_SQUARE                = 'plus-square';
