@@ -535,10 +535,10 @@ jQuery(document).ready(function ($) {
 					tutor_toast(__('Success', 'tutor'), response.message, 'success');
 					setTimeout(() => window.location.reload(true), 1000);
 				} else {
-					tutor_toast("Operation failed", response.message || "Something went wrong!", "error");
+					tutor_toast(__('Operation failed', 'tutor'), response.message || __('Something went wrong!', 'tutor'), "error");
 				}
 			} catch (e) {
-				tutor_toast("Operation failed", e, "error");
+				tutor_toast(__('Operation failed', 'tutor'), e, "error");
 			}
 		})
 	}
