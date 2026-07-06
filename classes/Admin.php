@@ -103,7 +103,7 @@ class Admin {
 		}
 
 		$is_free_user = ! tutor()->has_pro;
-		$cta_label    = __( 'Clain 30% OFF', 'tutor' );
+		$cta_label    = __( 'Claim 30% OFF', 'tutor' );
 		$cta_link     = 'https://tutorlms.com/pricing/?utm_source=tutor-plugin&utm_medium=notice&utm_campaign=tutor-lms-pro-offer';
 
 		$now           = new \DateTimeImmutable( 'now', wp_timezone() );
