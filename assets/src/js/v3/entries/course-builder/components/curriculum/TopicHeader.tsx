@@ -136,6 +136,7 @@ const TopicHeader = ({
         <div
           css={styles.headerContent({
             isSaved: topic.isSaved,
+            isEdit,
             isCollapsed: topic.isCollapsed,
             hasSummary,
           })}
@@ -373,32 +374,38 @@ const styles = {
 
     [data-toggle-collapse] {
       transition: transform 0.3s ease-in-out;
-      ${!isCollapsed &&
-      css`
-        transform: rotate(180deg);
-      `}
+      ${
+        !isCollapsed &&
+        css`
+          transform: rotate(180deg);
+        `
+      }
     }
 
-    ${!isCollapsed &&
-    css`
-      border-bottom: 1px solid ${colorTokens.stroke.divider};
-    `}
+    ${
+      !isCollapsed &&
+      css`
+        border-bottom: 1px solid ${colorTokens.stroke.divider};
+      `
+    }
 
-    ${!isEdit &&
-    !isDeletePopoverOpen &&
-    css`
-      [data-visually-hidden] {
-        opacity: 0;
-        transition: ${!isDragging ? 'opacity 0.3s ease-in-out' : 'none'};
-      }
-
-      :hover,
-      :focus-within {
+    ${
+      !isEdit &&
+      !isDeletePopoverOpen &&
+      css`
         [data-visually-hidden] {
-          opacity: ${isDragging ? 0 : 1};
+          opacity: 0;
+          transition: ${!isDragging ? 'opacity 0.3s ease-in-out' : 'none'};
         }
-      }
-    `}
+
+        :hover,
+        :focus-within {
+          [data-visually-hidden] {
+            opacity: ${isDragging ? 0 : 1};
+          }
+        }
+      `
+    }
 
     ${Breakpoint.smallTablet} {
       [data-visually-hidden] {
@@ -408,10 +415,12 @@ const styles = {
   `,
   headerContent: ({
     isSaved = true,
+    isEdit = false,
     isCollapsed = false,
     hasSummary = false,
   }: {
     isSaved: boolean;
+    isEdit: boolean;
     isCollapsed: boolean;
     hasSummary: boolean;
   }) => css`
@@ -419,7 +428,7 @@ const styles = {
     grid-template-columns: ${isSaved ? '1fr auto' : '1fr'};
     gap: ${spacing[12]};
     width: 100%;
-    padding-bottom: ${!isCollapsed && hasSummary ? spacing[12] : '0px'};
+    padding-bottom: ${!isCollapsed && !isEdit && hasSummary ? spacing[12] : '0px'};
   `,
   grabberInput: css`
     ${styleUtils.display.flex()};
@@ -456,10 +465,12 @@ const styles = {
     ${typography.body()};
     color: ${colorTokens.text.hints};
     width: 100%;
-    ${!isEdit &&
-    css`
-      ${styleUtils.text.ellipsis(1)};
-    `}
+    ${
+      !isEdit &&
+      css`
+        ${styleUtils.text.ellipsis(1)};
+      `
+    }
   `,
   description: ({ isEdit }: { isEdit: boolean }) => css`
     ${typography.caption()};
@@ -467,16 +478,20 @@ const styles = {
     padding-inline: ${spacing[8]};
     margin-left: ${spacing[24]};
 
-    ${!isEdit &&
-    css`
-      ${styleUtils.text.ellipsis(2)};
-    `}
+    ${
+      !isEdit &&
+      css`
+        ${styleUtils.text.ellipsis(2)};
+      `
+    }
 
-    ${isEdit &&
-    css`
-      padding-top: ${spacing[12]};
-      padding-right: 0;
-    `}
+    ${
+      isEdit &&
+      css`
+        padding-top: ${spacing[12]};
+        padding-right: 0;
+      `
+    }
   `,
   footer: css`
     width: 100%;

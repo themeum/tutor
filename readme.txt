@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.9.14
+Stable tag: 4.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,7 +318,11 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.0-rc.2 - 12 jun, 2026
+= 4.0.0 - 08 Jul, 2026
+
+Coming soon...
+
+= 4.0.0-rc.2 - 12 Jun, 2026
 
 Update: Added more details to the Instructor Dashboard header
 Update: Added page title and meta title support for learning pages
@@ -489,10 +493,14 @@ New: A new button “view as student” has been added to allow admin & instruct
 New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
 New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
 
+= 3.9.15 - Jul 06, 2026
+
+Update: Enhanced security for REST API requests.
+
 = 3.9.14 - Jun 29, 2026
 
-Update: WooCommerce block checkout page compatibility updated.
-Fix: Prevented withdrawal requests from exceeding the available payout balance. (Pro)
+Update: Improved compatibility with the block-based WooCommerce checkout page.
+Fix: Added validation to ensure withdrawal amounts do not exceed the available payout balance. (Pro)
 
 = 3.9.13 - Jun 17, 2026
 

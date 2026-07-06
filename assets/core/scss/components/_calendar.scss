@@ -6,6 +6,11 @@
   background-color: $tutor-surface-l1 !important;
   border-radius: $tutor-radius-md !important;
 
+  // Ensure hidden calendar doesn't block interaction with other elements
+  &[data-vc-calendar-hidden] {
+    pointer-events: none !important;
+  }
+
   [data-vc='month'],
   [data-vc='year'] {
     @include tutor-typography('small', 'medium', 'primary');

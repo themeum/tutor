@@ -292,6 +292,7 @@ export const icons = [
   'play2',
   'playFill',
   'playLine',
+  'playLine2',
   'plus',
   'plusMinus',
   'plusSquare',

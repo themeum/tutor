@@ -15,11 +15,6 @@
 
   .tutor-dashboard-welcome-content {
     padding: $tutor-spacing-8;
-    max-width: 318px;
-
-    [data-tutor-instructor-status="pending"] & {
-      max-width: 350px;
-    }
   }
 
   .tutor-dashboard-welcome-badge {
