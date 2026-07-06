@@ -1955,11 +1955,11 @@ h2.tutor-page-heading {
   height: 140px;
   background: #000001 url('../images/offer-notice-bg.svg') center/cover no-repeat;
   overflow: hidden;
-  margin-left: -20px;
+  margin-inline-start: -20px;
   position: relative;
 
   body:has(#tutor-course-builder) & {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 
   .tutor-offer-notice-dismiss {
