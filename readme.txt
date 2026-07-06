@@ -493,10 +493,14 @@ New: A new button “view as student” has been added to allow admin & instruct
 New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
 New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
 
+= 3.9.15 - Jul 06, 2026
+
+Update: Enhanced security for REST API requests.
+
 = 3.9.14 - Jun 29, 2026
 
-Update: WooCommerce block checkout page compatibility updated.
-Fix: Prevented withdrawal requests from exceeding the available payout balance. (Pro)
+Update: Improved compatibility with the block-based WooCommerce checkout page.
+Fix: Added validation to ensure withdrawal amounts do not exceed the available payout balance. (Pro)
 
 = 3.9.13 - Jun 17, 2026
 
