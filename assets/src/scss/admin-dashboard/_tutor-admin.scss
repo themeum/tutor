@@ -1950,3 +1950,27 @@ h2.tutor-page-heading {
   margin-left: 0px;
   margin-right: 20px;
 }
+
+.tutor-offer-notice{
+  height: 140px; 
+  background: #000001; 
+  overflow: hidden;
+  margin: 0 -20px;
+  position: relative;
+
+  .tutor-offer-notice-dismiss {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .tutor-offer-notice-wrapper {
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 720px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+}

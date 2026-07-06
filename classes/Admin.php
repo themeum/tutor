@@ -62,6 +62,9 @@ class Admin {
 		add_action( 'wp_ajax_tutor_do_not_show_feature_page', array( $this, 'handle_do_not_show_feature_page' ) );
 
 		add_action( 'upgrader_process_complete', array( $this, 'set_permalink_flag_on_upgrade' ), 10, 2 );
+
+		add_action( 'admin_notices', array( $this, 'show_offer_notice' ) );
+		add_action( 'wp_ajax_tutor_dismiss_offer_notice', array( $this, 'ajax_dismiss_offer_notice' ) );
 	}
 
 	/**
@@ -76,6 +79,92 @@ class Admin {
 	 */
 	public function set_permalink_flag_on_upgrade( $upgrader_object, $options ) {
 		Permalink::set_permalink_reset_flag( $upgrader_object, $options );
+	}
+
+	/**
+	 * Check offer notice is dismissed.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	private function is_offer_notice_dismissed() {
+		return 'yes' === get_transient( 'tutor_offer_notice_dismissed' );
+	}
+
+	/**
+	 * Show offer notice
+	 *
+	 * @since 4.0.0
+	 */
+	public function show_offer_notice() {
+		if ( ! User::is_admin() ) {
+			return;
+		}
+
+		$is_free_user = ! tutor()->has_pro;
+		$cta_label    = __( 'Clain 30% OFF', 'tutor' );
+		$cta_link     = 'https://tutorlms.com/pricing/?utm_source=tutor-plugin&utm_medium=notice&utm_campaign=tutor-lms-pro-offer';
+
+		$now           = new \DateTimeImmutable( 'now', wp_timezone() );
+		$expiration_dt = '2026-07-15 23:59:59';
+		$expiration    = new \DateTimeImmutable( $expiration_dt, wp_timezone() );
+
+		$remaining = max( 0, $expiration->getTimestamp() - $now->getTimestamp() );
+
+		$days    = floor( $remaining / DAY_IN_SECONDS );
+		$hours   = floor( ( $remaining % DAY_IN_SECONDS ) / HOUR_IN_SECONDS );
+		$minutes = floor( ( $remaining % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS );
+		$seconds = $remaining % MINUTE_IN_SECONDS;
+
+		$expire_in = sprintf(
+			'%dd:%02dh:%02dm:%02ds',
+			$days,
+			$hours,
+			$minutes,
+			$seconds
+		);
+
+		if ( $is_free_user && $remaining > 0 && ! self::is_offer_notice_dismissed() ) {
+			?>
+			<div class="tutor-offer-notice">
+				<div class="tutor-offer-notice-wrapper">
+					<div>
+						<div><?php esc_html_e( '4.0 launch offer', 'tutor' ); ?></div>
+						<div><?php esc_html_e( '30% OFF', 'tutor' ); ?></div>
+						<div><?php esc_html_e( 'on all annual plans', 'tutor' ); ?></div>
+					</div>
+					<div>
+						<div><?php esc_html_e( 'Offer ends by', 'tutor' ); ?> <span class="tutor-offer-notice-timer"><?php echo esc_html( $expire_in ); ?></span></div>
+						<a class="button button-primary" href="<?php echo esc_url( $cta_link ); ?>" target="_blank"><?php echo esc_html( $cta_label ); ?></a>	
+					</div>
+				</div>
+				<button type="button" class="tutor-offer-notice-dismiss"><span class="tutor-icon-times"></span></button>
+			</div>
+			<?php
+		}
+	}
+
+	/**
+	 * Dismiss offer notice.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_dismiss_offer_notice() {
+		if ( ! User::is_admin() ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
+		if ( self::is_offer_notice_dismissed() ) {
+			$this->response_bad_request( __( 'You have already dismissed the offer notice.', 'tutor' ) );
+		}
+
+		// Set expiry until next day.
+		$expiration = strtotime( 'tomorrow' ) - time();
+		set_transient( 'tutor_offer_notice_dismissed', 'yes', $expiration );
+		$this->json_response( __( 'Notice dismissed', 'tutor' ) );
 	}
 
 	/**

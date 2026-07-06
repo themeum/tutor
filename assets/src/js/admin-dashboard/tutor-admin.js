@@ -518,4 +518,28 @@ jQuery(document).ready(function ($) {
 		el.setAttribute('target', '_blank')
 	}
 
+	/**
+	 * Offer notice dismiss handler.
+	 * 
+	 * @since 4.0.0
+	 */
+	const btnOfferNoticeDismiss = document.querySelector('.tutor-offer-notice-dismiss');
+	if (btnOfferNoticeDismiss) {
+		btnOfferNoticeDismiss.addEventListener('click', async function () {
+			try {
+				const formData = new FormData();
+				formData.set('action', 'tutor_dismiss_offer_notice');
+				const post = await ajaxHandler(formData);
+				const response = await post.json();
+				if (post.ok) {
+					tutor_toast(__('Success', 'tutor'), response.message, 'success');
+					setTimeout(() => window.location.reload(true), 1000);
+				} else {
+					tutor_toast("Operation failed", response.message || "Something went wrong!", "error");
+				}
+			} catch (e) {
+				tutor_toast("Operation failed", e, "error");
+			}
+		})
+	}
 });
