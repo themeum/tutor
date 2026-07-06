@@ -526,6 +526,7 @@ jQuery(document).ready(function ($) {
 	const btnOfferNoticeDismiss = document.querySelector('.tutor-offer-notice-dismiss');
 	if (btnOfferNoticeDismiss) {
 		btnOfferNoticeDismiss.addEventListener('click', async function () {
+			btnOfferNoticeDismiss.disabled = true;
 			try {
 				const formData = new FormData();
 				formData.set('action', 'tutor_dismiss_offer_notice');
@@ -536,9 +537,11 @@ jQuery(document).ready(function ($) {
 					setTimeout(() => window.location.reload(true), 1000);
 				} else {
 					tutor_toast(__('Operation failed', 'tutor'), response.message || __('Something went wrong!', 'tutor'), "error");
+					btnOfferNoticeDismiss.disabled = false;
 				}
 			} catch (e) {
 				tutor_toast(__('Operation failed', 'tutor'), e, "error");
+				btnOfferNoticeDismiss.disabled = false;
 			}
 		})
 	}
