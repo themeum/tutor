@@ -38,10 +38,22 @@ $quick_tips = array(
 			<img src="<?php echo esc_attr( UrlHelper::asset( 'images/illustrations/confetti.svg' ) ); ?>" alt="<?php esc_html_e( 'Confetti', 'tutor' ); ?>" style="width: 16px; height: 16px;" />
 		</div>
 		<h3 class="tutor-h3 tutor-my-4">
-			<?php esc_html_e( 'You haven’t enrolled in a course yet', 'tutor' ); ?>
+			<?php
+				printf(
+					// translators: %s: <br />.
+					esc_html__( 'You haven\'t enrolled in %s a course yet.', 'tutor' ),
+					'<br />'
+				);
+				?>
 		</h3>
 		<p class="tutor-p2 tutor-mb-8">
-			<?php esc_html_e( 'Explore course and start building your skills today', 'tutor' ); ?>
+			<?php
+				printf(
+					// translators: %s: <br />.
+					esc_html__( 'Explore course and start building your %s skills today.', 'tutor' ),
+					'<br />'
+				);
+				?>
 		</p>
 		<?php
 		Button::make()
