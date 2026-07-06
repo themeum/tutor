@@ -166,7 +166,7 @@ set_current_screen();
 							</div>
 
 							<div class="tutor-onboard-load-sample tutor-form-check tutor-d-flex tutor-align-center tutor-gap-1 tutor-onboard-checkbox">
-								<input id="tutor-onboard-load-sample-course" type="checkbox" name="tutor_onboard_load_sample_course" value="1" class="tutor-form-check-input">
+								<input id="tutor-onboard-load-sample-course" type="checkbox" name="tutor_onboard_load_sample_course" value="1" class="tutor-form-check-input" checked>
 								<label for="tutor-onboard-load-sample-course" class="tutor-onboard-checkbox-label">
 									<?php esc_html_e( 'Load sample courses to help you get started.', 'tutor' ); ?>
 								</label>
