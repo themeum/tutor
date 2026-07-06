@@ -29,8 +29,9 @@ set_current_screen();
 	<body class="tutor-setup wp-core-ui">
 	<?php
 		$current_user = wp_get_current_user(); //phpcs:ignore
-		$display_name = $current_user instanceof \WP_User && $current_user->exists() ? tutor_utils()->display_name( $current_user->ID ) : __( 'there', 'tutor' );
-		$logo_url     = tutor()->url . 'assets/images/tutor-logo.png';
+		$display_name      = $current_user instanceof \WP_User && $current_user->exists() ? tutor_utils()->display_name( $current_user->ID ) : __( 'there', 'tutor' );
+		$logo_url          = tutor()->url . 'assets/images/tutor-logo.png';
+		$button_arrow_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="10" fill="none" aria-hidden="true"><path fill="#fff" d="M9.556.171a.57.57 0 0 0-.812 0 .574.574 0 0 0 0 .804l3.45 3.453H.568a.567.567 0 0 0-.57.57c0 .315.252.576.57.576h11.624L8.743 9.02a.58.58 0 0 0 0 .812.57.57 0 0 0 .813 0V9.83l4.423-4.426a.56.56 0 0 0 0-.807z"/></svg>';
 	?>
 		<div id="tutor-onboard-wrapper" class="tutor-d-flex tutor-flex-column tutor-align-center tutor-justify-center">
 			<section class="tutor-onboard-screen tutor-onboard-screen-welcome is-active" data-screen="welcome">
@@ -94,7 +95,7 @@ set_current_screen();
 					<div class="tutor-onboard-card-footer">
 						<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-block tutor-onboard-next-screen" data-target="preferences">
 							<span><?php esc_html_e( 'Next', 'tutor' ); ?></span>
-							<span aria-hidden="true">&#8594;</span>
+							<?php echo $button_arrow_icon; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</button>
 					</div>
 				</div>
@@ -175,7 +176,7 @@ set_current_screen();
 						<div class="tutor-onboard-card-footer tutor-onboard-card-footer-stack">
 							<button type="submit" class="tutor-onboard-submit-btn tutor-btn tutor-btn-primary tutor-btn-block" data-screen="loading">
 								<span><?php esc_html_e( 'Let\'s go', 'tutor' ); ?></span>
-								<span aria-hidden="true">&#8594;</span>
+								<?php echo $button_arrow_icon; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							</button>
 							<p class="tutor-onboard-help-text"><?php esc_html_e( 'Don\'t worry, you can always change these settings later! 😊', 'tutor' ); ?></p>
 						</div>
