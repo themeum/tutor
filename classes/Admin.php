@@ -30,6 +30,7 @@ class Admin {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -438,13 +439,13 @@ class Admin {
 	 */
 	public function feature_promotion_page() {
 		include tutor()->path . 'views/pages/welcome.php';
-		// include tutor()->path . 'views/pages/feature-promotion.php';
 	}
 
 	/**
 	 * Show students page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_students() {
@@ -455,6 +456,7 @@ class Admin {
 	 * Show instructor page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_instructors() {
@@ -465,6 +467,7 @@ class Admin {
 	 * Show announcements page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_announcements() {
@@ -475,6 +478,7 @@ class Admin {
 	 * Show Q&A page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function question_answer() {
@@ -485,6 +489,7 @@ class Admin {
 	 * Show quiz attempts page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function quiz_attempts() {
@@ -495,6 +500,7 @@ class Admin {
 	 * Show the withdraw requests table
 	 *
 	 * @since 1.2.0
+	 *
 	 * @return void
 	 */
 	public function withdraw_requests() {
@@ -505,6 +511,7 @@ class Admin {
 	 * Enable or disable addons
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function enable_disable_addons() {
@@ -515,6 +522,7 @@ class Admin {
 	 * Tutor tools page (OLD)
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_tools_old() {
@@ -549,6 +557,7 @@ class Admin {
 	 * Show pro upgrade page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_get_pro() {
@@ -561,6 +570,7 @@ class Admin {
 	 * @since 1.0.0
 	 *
 	 * @param string $parent_file parent file.
+	 *
 	 * @return string
 	 */
 	public function parent_menu_active( $parent_file ) {
@@ -600,6 +610,7 @@ class Admin {
 	 * Filter posts for instructor
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function filter_posts_for_instructors() {
@@ -615,6 +626,7 @@ class Admin {
 	 * @since 1.0.0
 	 *
 	 * @param mixed $clauses clauses.
+	 *
 	 * @return mixed
 	 */
 	public function posts_clauses_request( $clauses ) {
@@ -646,6 +658,7 @@ class Admin {
 	 * Prevent unauthorised course/lesson edit page by direct URL
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function check_if_current_users_post() {
@@ -686,6 +699,7 @@ class Admin {
 	 * @since 1.0.0
 	 *
 	 * @param string $template_path template file path.
+	 *
 	 * @return array
 	 */
 	public static function scan_template_files( $template_path = null ) {
@@ -717,6 +731,7 @@ class Admin {
 	 * Get Template overridden files
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return array
 	 */
 	public static function template_overridden_files() {
@@ -745,6 +760,7 @@ class Admin {
 	 * @since 1.0.0
 	 *
 	 * @param array $actions action list.
+	 *
 	 * @return array
 	 */
 	public function plugin_action_links( $actions ) {
@@ -798,6 +814,7 @@ class Admin {
 	 * @since 1.0.0
 	 *
 	 * @param string $footer_text footer text.
+	 *
 	 * @return string
 	 */
 	public function admin_footer_text( $footer_text ) {
@@ -832,6 +849,7 @@ class Admin {
 	 * Tutor Course List
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_course_list() {
@@ -887,6 +905,7 @@ class Admin {
 	 * Show welcome page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function welcome_page() {
