@@ -174,7 +174,7 @@ set_current_screen();
 							<?php endif; ?>
 						</div>
 
-						<div class="tutor-onboard-card-footer tutor-onboard-card-footer-stack">
+						<div class="tutor-onboard-card-footer tutor-onboard-card-footer-stack" style="margin-top: 22px">
 							<button type="submit" class="tutor-onboard-submit-btn tutor-btn tutor-btn-primary tutor-btn-block" data-screen="loading">
 								<span><?php esc_html_e( 'Let\'s go', 'tutor' ); ?></span>
 								<span aria-hidden="true">&#8594;</span>
