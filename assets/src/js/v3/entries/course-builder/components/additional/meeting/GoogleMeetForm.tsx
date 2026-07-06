@@ -90,7 +90,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
       ...(topicId && {
         topic_id: topicId,
       }),
-      course_id: courseId,
+      object_id: courseId,
       meeting_title: data.meeting_name,
       meeting_summary: data.meeting_summary,
       meeting_start_date: data.meeting_start_date,
