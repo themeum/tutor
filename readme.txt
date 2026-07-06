@@ -492,6 +492,7 @@ New: Lots of Micro-interactions with animations and sound effects to make lesson
 New: A new button “view as student” has been added to allow admin & instructor to change the dashboard view.
 New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
 New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
+
 = 3.9.15 - Jul 06, 2026
 
 Update: Enhanced security for REST API requests.
