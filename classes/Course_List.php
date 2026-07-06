@@ -102,8 +102,8 @@ class Course_List {
 			array_push( $actions, $this->bulk_action_trash() );
 		}
 
-		if ( ! current_user_can( 'administrator' ) ) {
-			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_course' );
+		if ( ! User::is_admin() ) {
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_courses' );
 			if ( ! $can_trash_post ) {
 				$actions = array_filter(
 					$actions,
@@ -292,7 +292,7 @@ class Course_List {
 		if ( ! current_user_can( 'administrator' ) ) {
 			$course_ids = explode( ',', $bulk_ids );
 
-			if ( current_user_can( 'edit_tutor_course' ) ) {
+			if ( current_user_can( 'edit_tutor_courses' ) ) {
 				$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
 
 				if ( 'publish' === $action && ! $can_publish_course ) {
