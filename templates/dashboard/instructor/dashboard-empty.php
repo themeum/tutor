@@ -26,10 +26,22 @@ $instructor_status = is_string( $instructor_status ) ? strtolower( $instructor_s
 	<?php if ( Instructors_List::STATUS_APPROVED === $instructor_status ) : ?>
 		<div class="tutor-dashboard-welcome-content">
 			<h3 class="tutor-h3 tutor-my-4">
-				<?php esc_html_e( 'You\'re ready to start teaching!', 'tutor' ); ?>
+				<?php
+					printf(
+						// translators: %s: <br />.
+						esc_html__( 'You\'re ready to start %s teaching!', 'tutor' ),
+						'<br />'
+					);
+				?>
 			</h3>
 			<p class="tutor-p2 tutor-text-secondary tutor-mb-8">
-				<?php esc_html_e( 'Create your first course and share your knowledge with learners around the world.', 'tutor' ); ?>
+				<?php
+					printf(
+						// translators: %s: <br />.
+						esc_html__( 'Create your first course and share your %s knowledge with learners around the world.', 'tutor' ),
+						'<br />'
+					);
+				?>
 			</p>
 			<?php
 			Button::make()
@@ -47,10 +59,23 @@ $instructor_status = is_string( $instructor_status ) ? strtolower( $instructor_s
 	<?php else : ?>
 		<div class="tutor-dashboard-welcome-content" data-tutor-instructor-status="pending">
 			<h3 class="tutor-h3">
-				<?php esc_html_e( 'Thank you for applying to become an Instructor!', 'tutor' ); ?>
+				<?php
+					printf(
+						// translators: %s: <br />.
+						esc_html__( 'Thank you for applying to %s become an Instructor!', 'tutor' ),
+						'<br />'
+					);
+				?>
 			</h3>
 			<p class="tutor-p2 tutor-text-secondary tutor-mt-4">
-				<?php esc_html_e( 'Our team is reviewing your application. Once approved, you\'ll be able to create and publish courses.', 'tutor' ); ?>
+				<?php
+					printf(
+						// translators: %s: <br />.
+						esc_html__( 'Our team is reviewing your application. Once %1$s approved, you\'ll be able to create and publish %2$s courses.', 'tutor' ),
+						'<br />',
+						'<br />'
+					);
+				?>
 			</p>
 		</div>
 		<div class="tutor-dashboard-welcome-banner">
