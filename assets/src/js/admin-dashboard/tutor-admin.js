@@ -534,7 +534,7 @@ jQuery(document).ready(function ($) {
 				const response = await post.json();
 				if (post.ok) {
 					tutor_toast(__('Success', 'tutor'), response.message, 'success');
-					setTimeout(() => window.location.reload(true), 1000);
+					window.location.reload();
 				} else {
 					tutor_toast(__('Operation failed', 'tutor'), response.message || __('Something went wrong!', 'tutor'), "error");
 					btnOfferNoticeDismiss.disabled = false;
