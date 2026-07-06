@@ -1951,17 +1951,37 @@ h2.tutor-page-heading {
   margin-right: 20px;
 }
 
-.tutor-offer-notice{
-  height: 140px; 
-  background: #000001; 
+.tutor-offer-notice {
+  height: 140px;
+  background: #000001 url('../images/offer-notice-bg.svg') center/cover no-repeat;
   overflow: hidden;
-  margin: 0 -20px;
+  margin-inline-start: -20px;
   position: relative;
+
+  body:has(#tutor-course-builder) & {
+    margin-inline-start: 0;
+  }
 
   .tutor-offer-notice-dismiss {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 50%;
+    inset-inline-end: 56px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: rgba(115, 118, 125, 1);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+
+    &:hover {
+      background: rgba(115, 118, 125, 0.6);
+    }
   }
 
   .tutor-offer-notice-wrapper {
@@ -1969,8 +1989,195 @@ h2.tutor-page-heading {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 720px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding-block: 24px;
+
+    .tutor-offer-notice-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      [data-subheader],
+      [data-subtext] {
+        font-family: Inter, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: 1%;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      [data-header] {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 40px;
+        line-height: 38px;
+        letter-spacing: 0%;
+        font-weight: 700;
+        color: rgba(255, 245, 58, 1);
+        margin-top: 10px;
+      }
+
+      [data-subtext] {
+        color: rgba(133, 198, 255, 1);
+        margin-top: 2px;
+      }
+    }
+
+    .tutor-offer-notice-right {
+      display: flex;
+      align-items: center;
+
+      .tutor-offer-notice-text {
+        font-family: Inter, sans-serif;
+        font-size: 16px;
+        line-height: 32px;
+        font-weight: 500;
+        color: rgba(160, 160, 160, 1);
+      }
+
+      .tutor-offer-notice-timer {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 20px;
+        line-height: 100%;
+        letter-spacing: 8%;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 1);
+        font-variant-numeric: tabular-nums;
+        margin-left: 12px;
+      }
+
+      .tutor-offer-notice-cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(62, 100, 222, 1);
+        border-radius: 5px;
+        padding: 8px 16px;
+        font-family: 'SF Pro Display', sans-serif;
+        font-size: 14px;
+        line-height: 23px;
+        letter-spacing: 0%;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 1);
+        box-shadow: 0px 0px 14px 0px rgba(59, 87, 255, 1);
+        text-decoration: none;
+        margin-left: 36px;
+        position: relative;
+        z-index: 1;
+
+        &::before {
+          position: absolute;
+          top: -6px;
+          right: 98%;
+          bottom: -6px;
+          border-radius: 6px;
+          content: '';
+          display: block;
+          width: 325px;
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          background: url('../images/offer-notice-shadow.svg');
+          background-position: center;
+          z-index: -1;
+        }
+      }
+    }
+  }
+
+  @include breakpoint-max(1024) {
+    .tutor-offer-notice-wrapper {
+      padding-inline: 24px 56px;
+    }
+
+    .tutor-offer-notice-dismiss {
+      inset-inline-end: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .tutor-offer-notice-left [data-header] {
+      font-size: 32px;
+      line-height: 30px;
+    }
+
+    .tutor-offer-notice-right .tutor-offer-notice-cta {
+      margin-left: 24px;
+
+      &::before {
+        width: 250px;
+      }
+    }
+  }
+
+  @include breakpoint-max(782) {
+    height: auto;
+    min-height: 140px;
+    margin-left: 0;
+
+    .tutor-offer-notice-dismiss {
+      inset-inline-end: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .tutor-offer-notice-wrapper {
+      padding-inline-end: 56px;
+
+      .tutor-offer-notice-right {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+
+        .tutor-offer-notice-text {
+          width: 100%;
+        }
+
+        .tutor-offer-notice-timer {
+          margin-left: 0;
+        }
+
+        .tutor-offer-notice-cta {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  @include breakpoint-max(480) {
+    .tutor-offer-notice-left {
+      [data-subheader],
+      [data-subtext] {
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      [data-header] {
+        font-size: 28px;
+        line-height: 26px;
+      }
+    }
+
+    .tutor-offer-notice-right {
+      align-items: center;
+      .tutor-offer-notice-text {
+        font-size: 14px;
+        line-height: 24px;
+        text-align: center;
+      }
+
+      .tutor-offer-notice-timer {
+        font-size: 16px;
+      }
+
+      .tutor-offer-notice-cta {
+        padding: 8px 12px;
+        font-size: 13px;
+
+        &::before {
+          width: 160px;
+        }
+      }
+    }
   }
 }

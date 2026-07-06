@@ -106,7 +106,7 @@ class Admin {
 		}
 
 		$is_free_user = ! tutor()->has_pro;
-		$cta_label    = __( 'Clain 30% OFF', 'tutor' );
+		$cta_label    = __( 'Claim 30% OFF', 'tutor' );
 		$cta_link     = 'https://tutorlms.com/pricing/?utm_source=tutor-plugin&utm_medium=notice&utm_campaign=tutor-lms-pro-offer';
 
 		$now           = new \DateTimeImmutable( 'now', wp_timezone() );
@@ -121,7 +121,7 @@ class Admin {
 		$seconds = $remaining % MINUTE_IN_SECONDS;
 
 		$expire_in = sprintf(
-			'%dd:%02dh:%02dm:%02ds',
+			'%dd:%02dh:%02d:%02d',
 			$days,
 			$hours,
 			$minutes,
@@ -132,14 +132,17 @@ class Admin {
 			?>
 			<div class="tutor-offer-notice">
 				<div class="tutor-offer-notice-wrapper">
-					<div>
-						<div><?php esc_html_e( '4.0 launch offer', 'tutor' ); ?></div>
-						<div><?php esc_html_e( '30% OFF', 'tutor' ); ?></div>
-						<div><?php esc_html_e( 'on all annual plans', 'tutor' ); ?></div>
+					<div class="tutor-offer-notice-left">
+						<div data-subheader><?php esc_html_e( '4.0 launch offer', 'tutor' ); ?></div>
+						<div data-header><?php esc_html_e( '30% OFF', 'tutor' ); ?></div>
+						<div data-subtext><?php esc_html_e( 'on all annual plans', 'tutor' ); ?></div>
 					</div>
-					<div>
-						<div><?php esc_html_e( 'Offer ends by', 'tutor' ); ?> <span class="tutor-offer-notice-timer"><?php echo esc_html( $expire_in ); ?></span></div>
-						<a class="button button-primary" href="<?php echo esc_url( $cta_link ); ?>" target="_blank"><?php echo esc_html( $cta_label ); ?></a>	
+					<div class="tutor-offer-notice-right">
+						<div class="tutor-offer-notice-text"><?php esc_html_e( 'Offer ends by', 'tutor' ); ?> <span class="tutor-offer-notice-timer" data-expiry="<?php echo esc_attr( $expiration->getTimestamp() ); ?>"><?php echo esc_html( $expire_in ); ?></span></div>
+						<a class="tutor-offer-notice-cta" href="<?php echo esc_url( $cta_link ); ?>" target="_blank">
+							<?php echo esc_html( $cta_label ); ?>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="#fff" d="M13.938 6.937a.55.55 0 0 0-.786 0 .555.555 0 0 0 0 .778l3.338 3.34H5.243a.55.55 0 0 0-.55.551c0 .305.242.558.55.558h11.246l-3.337 3.334a.563.563 0 0 0 0 .785.55.55 0 0 0 .786 0L18.217 12a.543.543 0 0 0 0-.78z"/></svg>
+						</a>	
 					</div>
 				</div>
 				<button type="button" class="tutor-offer-notice-dismiss"><span class="tutor-icon-times"></span></button>
