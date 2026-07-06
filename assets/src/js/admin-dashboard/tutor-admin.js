@@ -564,7 +564,7 @@ jQuery(document).ready(function ($) {
 			const minutes = Math.floor((diff % 3600000) / 60000);
 			const seconds = Math.floor((diff % 60000) / 1000);
 
-			timerEl.textContent = `${days}d:${pad(hours)}h:${pad(minutes)}m:${pad(seconds)}s`;
+			timerEl.textContent = `${days}d:${pad(hours)}h:${pad(minutes)}:${pad(seconds)}`;
 
 			if (diff <= 0) {
 				clearInterval(interval);

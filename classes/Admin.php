@@ -118,7 +118,7 @@ class Admin {
 		$seconds = $remaining % MINUTE_IN_SECONDS;
 
 		$expire_in = sprintf(
-			'%dd:%02dh:%02dm:%02ds',
+			'%dd:%02dh:%02d:%02d',
 			$days,
 			$hours,
 			$minutes,
