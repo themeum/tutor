@@ -62,7 +62,7 @@
         content: '';
         position: absolute;
         top: 50%;
-        right: -$tutor-spacing-4;
+        inset-inline-end: -$tutor-spacing-4;
         transform: translateY(-50%);
         width: 3.5px;
         height: 3.5px;
@@ -194,6 +194,11 @@
       background: $tutor-surface-base;
       padding: $tutor-spacing-none;
       @include tutor-flex(column);
+
+      body:has(#wpadminbar) & {
+        top: 46px !important;
+        height: calc(100% - 46px) !important;
+      }
 
       &-profile {
         padding: $tutor-spacing-none;

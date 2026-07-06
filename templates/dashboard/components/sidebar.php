@@ -104,6 +104,7 @@ $dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
 		SvgIcon::make()
 			->name( Icon::RIGHT_ARROW_UP )
 			->size( tutor_utils()->is_kids_mode() ? Size::SIZE_24 : Size::SIZE_20 )
+			->flip_rtl()
 			->render();
 		?>
 	</a>

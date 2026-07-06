@@ -108,7 +108,7 @@ class Progress extends BaseComponent {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	protected $stroke_color = 'var(--tutor-actions-brand-secondary)';
+	protected $stroke_color = 'var(--tutor-actions-gray-secondary)';
 
 	/**
 	 * Progress stroke color (progress arc).
@@ -351,9 +351,14 @@ class Progress extends BaseComponent {
 
 		$attributes = $this->get_attributes_string();
 
+		$fixed_offset   = $this->value - 10;
+		$proportional   = (int) round( $this->value * 0.85 );
+		$animation_from = max( 0, min( $fixed_offset, $proportional ) );
+
 		return sprintf(
-			'<div %s><div class="tutor-progress-bar-fill" style="--tutor-progress-width: %d%%;"></div></div>',
+			'<div %s><div class="tutor-progress-bar-fill" style="--tutor-progress-start: %d%%; --tutor-progress-width: %d%%;"></div></div>',
 			$attributes,
+			$animation_from,
 			$this->value
 		);
 	}

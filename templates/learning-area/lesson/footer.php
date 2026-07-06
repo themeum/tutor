@@ -47,32 +47,35 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 	->size( Size::SMALL )
 	->label( __( 'Previous', 'tutor' ) )
 	->icon( Icon::CHEVRON_LEFT_2 )
+	->flip_rtl()
 	->attr( 'href', esc_url( $prev_link ) )
 	->attr( 'style', 'visibility:' . ( $previous_id ? 'visible' : 'hidden' ) )
 	->disabled( $prev_is_locked )
 	->render();
 
-	ob_start();
-	?>
-	<form method="post" class="tutor-mb-none">
-		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
-		<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="lesson_id" />
-		<input type="hidden" value="tutor_complete_lesson" name="tutor_action" />
-		<button type="submit" name="complete_lesson_btn" class="tutor-mark-as-complete-button <?php echo esc_attr( $is_completed_lesson ? 'completed' : '' ); ?>" <?php echo esc_attr( $is_completed_lesson ? 'disabled' : '' ); ?>>
-			<span class="tutor-text-center tutor-w-full">
-				<?php echo esc_html( $is_completed_lesson ? __( 'Completed', 'tutor' ) : __( 'Mark as complete', 'tutor' ) ); ?>
-			</span>
-			<?php
-			if ( $is_completed_lesson ) {
-				SvgIcon::make()->name( Icon::LESSON_COMPLETED )->size( 40 )->render();
-			} else {
-				SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->color( Color::BRAND )->render();
-			}
-			?>
-		</button>
-	</form>
-	<?php
-	echo apply_filters( 'tutor_learning_area_lesson_mark_as_complete', ob_get_clean() ); // phpcs:ignore --already sanitized.
+	if ( $tutor_is_enrolled ) {
+		ob_start();
+		?>
+		<form method="post" class="tutor-mb-none" x-data="{ isLoading: false }">
+			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
+			<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="lesson_id" />
+			<input type="hidden" value="tutor_complete_lesson" name="tutor_action" />
+			<button type="submit" name="complete_lesson_btn" @click="isLoading = true" :class="{ 'tutor-btn-loading': isLoading }" class="tutor-mark-as-complete-button <?php echo esc_attr( $is_completed_lesson ? 'completed' : '' ); ?>" <?php echo esc_attr( $is_completed_lesson ? 'disabled' : '' ); ?>>
+				<span class="tutor-text-center tutor-w-full">
+					<?php echo esc_html( $is_completed_lesson ? __( 'Completed', 'tutor' ) : __( 'Mark as Complete', 'tutor' ) ); ?>
+				</span>
+				<?php
+				if ( $is_completed_lesson ) {
+					SvgIcon::make()->name( Icon::LESSON_COMPLETED )->size( 40 )->render();
+				} else {
+					SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->color( Color::BRAND )->render();
+				}
+				?>
+			</button>
+		</form>
+		<?php
+		echo apply_filters( 'tutor_learning_area_lesson_mark_as_complete', ob_get_clean() ); // phpcs:ignore --already sanitized.
+	}
 
 	Button::make()
 	->tag( 'a' )
@@ -80,6 +83,7 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 	->size( Size::SMALL )
 	->label( __( 'Next', 'tutor' ) )
 	->icon( Icon::CHEVRON_RIGHT_2, 'right' )
+	->flip_rtl()
 	->attr( 'href', esc_url( $next_link ) )
 	->attr( 'style', 'visibility:' . ( $next_id ? 'visible' : 'hidden' ) )
 	->disabled( $next_is_locked )

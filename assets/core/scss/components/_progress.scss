@@ -4,7 +4,7 @@
 .tutor-progress-bar {
   width: 100%;
   height: $tutor-progress-height;
-  background-color: $tutor-actions-gray-secondary;
+  background-color: $tutor-actions-gray-quaternary;
   box-shadow: inset 0 0 1.75px rgba(0, 0, 0, 0.16);
   border-radius: $tutor-radius-full;
   overflow: hidden;
@@ -12,6 +12,7 @@
 
   &-fill {
     --tutor-progress-width: 0%;
+    --tutor-progress-start: 0%;
     height: 100%;
     width: 100%;
     transform: translateX(calc(var(--tutor-progress-width) - 100%));
@@ -20,11 +21,15 @@
     position: relative;
     @include tutor-transition(transform, 0.3s);
 
+    [dir='rtl'] & {
+      transform: translateX(calc(100% - var(--tutor-progress-width)));
+    }
+
     &::before {
       content: '';
       position: absolute;
       top: $tutor-progress-indicator-top;
-      right: $tutor-spacing-2;
+      inset-inline-end: $tutor-spacing-2;
       height: $tutor-progress-indicator-height;
       width: 8.16px;
       background-color: $tutor-actions-success-secondary;
@@ -37,8 +42,8 @@
       display: $tutor-progress-indicator-secondary-display;
       position: absolute;
       top: $tutor-progress-indicator-top;
-      left: $tutor-spacing-2;
-      right: calc(#{$tutor-spacing-2} + 8.16px + 1px);
+      inset-inline-start: $tutor-spacing-2;
+      inset-inline-end: calc(#{$tutor-spacing-2} + 8.16px + 1px);
       height: $tutor-progress-indicator-height;
       background-color: $tutor-actions-success-secondary;
       border-radius: inherit;
@@ -47,7 +52,7 @@
   }
 
   &.tutor-progress-bar-brand {
-    background-color: $tutor-actions-gray-secondary;
+    background-color: $tutor-actions-gray-quaternary;
 
     .tutor-progress-bar-fill {
       background-color: $tutor-actions-brand-primary;
@@ -80,14 +85,27 @@
 
   &[data-tutor-animated] .tutor-progress-bar-fill {
     animation: tutor-progress-fill-animate 1s ease-out forwards;
+
+    [dir='rtl'] & {
+      animation-name: tutor-progress-fill-animate-rtl;
+    }
   }
 }
 
 @keyframes tutor-progress-fill-animate {
   from {
-    transform: translateX(-100%);
+    transform: translateX(calc(var(--tutor-progress-start, 0%) - 100%));
   }
   to {
     transform: translateX(calc(var(--tutor-progress-width) - 100%));
+  }
+}
+
+@keyframes tutor-progress-fill-animate-rtl {
+  from {
+    transform: translateX(calc(100% - var(--tutor-progress-start, 0%)));
+  }
+  to {
+    transform: translateX(calc(100% - var(--tutor-progress-width)));
   }
 }

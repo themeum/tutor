@@ -10,11 +10,12 @@
  */
 
 use Tutor\Components\Modal;
-use Tutor\Options_V2;
 
-$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
+$is_course_details_page = tutor_utils()->is_course_details_page();
+
+$modal_id = 'tutor-review-modal-' . $course_id;
 ?>
-<?php if ( $is_legacy_learning ) : ?> 
+<?php if ( $is_course_details_page ) : ?> 
 <form class="tutor-modal tutor-is-active tutor-course-review-popup-form">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">

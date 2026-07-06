@@ -171,7 +171,7 @@ class UserPreference {
 	 *
 	 * @var string
 	 */
-	const DEFAULT_THEME = self::THEME_LIGHT;
+	const DEFAULT_THEME = self::THEME_SYSTEM;
 
 	/**
 	 * Available theme options.
@@ -246,6 +246,13 @@ class UserPreference {
 	 * @return string
 	 */
 	public function add_theme_attribute( $output ) {
+		$is_logged_in  = is_user_logged_in();
+		$is_tutor_page = tutor_utils()->is_dashboard_page() || tutor_utils()->is_learning_area();
+
+		if ( ! $is_logged_in || ! $is_tutor_page ) {
+			return $output;
+		}
+
 		$prefs = $this->get_preferences();
 		$theme = isset( $prefs['theme'] ) ? (string) $prefs['theme'] : self::DEFAULT_THEME;
 		if ( ! in_array( $theme, self::THEMES, true ) ) {
@@ -554,7 +561,7 @@ class UserPreference {
 			'tutor_user_preference_defaults',
 			array(
 				'auto_play_next' => (bool) tutor_utils()->get_option( 'autoload_next_course_content' ),
-				'theme'          => self::DEFAULT_THEME,
+				'theme'          => tutor_utils()->get_option( 'default_theme', Options_V2::DEFAULT_THEME_SYSTEM ),
 				'vision'         => self::VISION_NORMAL,
 				'contrast'       => '',
 				'motion_effects' => self::MOTION_EFFECTS_AUTO,

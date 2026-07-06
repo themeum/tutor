@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\UserModel;
 use Tutor\Traits\JsonResponse;
+use TUTOR\InstructorList;
 
 /**
  * User class
@@ -31,15 +32,21 @@ class User {
 	/**
 	 * User meta keys.
 	 */
-	const REVIEW_POPUP_META      = 'tutor_review_course_popup';
-	const LAST_LOGIN_META        = 'tutor_last_login';
-	const TIMEZONE_META          = '_tutor_timezone';
-	const PROFILE_PHOTO_META     = '_tutor_profile_photo';
-	const PHONE_NUMBER_META      = 'phone_number';
-	const COVER_PHOTO_META       = '_tutor_cover_photo';
-	const PROFILE_BIO_META       = '_tutor_profile_bio';
-	const PROFILE_JOB_TITLE_META = '_tutor_profile_job_title';
-	const TUTOR_STUDENT_META     = '_is_tutor_student';
+	const REVIEW_POPUP_META               = 'tutor_review_course_popup';
+	const LAST_LOGIN_META                 = 'tutor_last_login';
+	const TIMEZONE_META                   = '_tutor_timezone';
+	const PROFILE_PHOTO_META              = '_tutor_profile_photo';
+	const PHONE_NUMBER_META               = 'phone_number';
+	const COVER_PHOTO_META                = '_tutor_cover_photo';
+	const PROFILE_BIO_META                = '_tutor_profile_bio';
+	const PROFILE_JOB_TITLE_META          = '_tutor_profile_job_title';
+	const TUTOR_STUDENT_META              = '_is_tutor_student';
+	const TOUR_COMPLETED_META             = '_tutor_tour_completed';
+	const APPLICATION_SOURCE_META         = '_tutor_application_source';
+	const INSTRUCTOR_APPROVAL_NOTICE_META = 'tutor_instructor_show_approval_message';
+
+	const SOURCE_INSTRUCTOR_REGISTRATION = 'instructor_registration';
+	const SOURCE_STUDENT_DASHBOARD       = 'student_dashboard';
 
 	/**
 	 * View as constants
@@ -109,6 +116,7 @@ class User {
 
 		add_action( 'wp_ajax_tutor_user_list', array( $this, 'ajax_user_list' ) );
 		add_action( 'wp_ajax_tutor_switch_profile', array( $this, 'ajax_switch_profile' ) );
+		add_action( 'wp_ajax_tutor_complete_tour', array( $this, 'ajax_complete_tour' ) );
 	}
 
 	/**
@@ -138,6 +146,26 @@ class User {
 	}
 
 	/**
+	 * Check current user has capability.
+	 *
+	 * Example usage:
+	 *
+	 * User::can( 'edit_posts' );
+	 * User::can( 'edit_post', $post->ID );
+	 * User::can( 'edit_post_meta', $post->ID, $meta_key );
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $capability capability.
+	 * @param mixed  ...$args     args.
+	 *
+	 * @return boolean
+	 */
+	public static function can( string $capability = 'manage_options', ...$args ) {
+		return current_user_can( $capability, ...$args );
+	}
+
+	/**
 	 * Check user has any role.
 	 *
 	 * @since 2.2.0
@@ -157,7 +185,6 @@ class User {
 		foreach ( $roles as $role ) {
 			if ( in_array( $role, $user->roles, true ) ) {
 				return true;
-				break;
 			}
 		}
 
@@ -206,6 +233,76 @@ class User {
 	 */
 	public static function is_instructor( $user_id = 0, $is_approved = true ) {
 		return tutils()->is_instructor( $user_id, $is_approved );
+	}
+
+	/**
+	 * Get Tutor application source for a user.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return string
+	 */
+	public static function get_application_source( $user_id = 0 ): string {
+		return (string) get_user_meta(
+			tutor_utils()->get_user_id( $user_id ),
+			self::APPLICATION_SOURCE_META,
+			true
+		);
+	}
+
+	/**
+	 * Check if the user came through instructor registration.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return boolean
+	 */
+	public static function used_instructor_registration( $user_id = 0 ): bool {
+		return self::SOURCE_INSTRUCTOR_REGISTRATION === self::get_application_source( $user_id );
+	}
+
+	/**
+	 * Check if a user can view instructor dashboard screens.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return boolean
+	 */
+	public static function can_view_instructor_dashboard( $user_id = 0 ): bool {
+		$user_id = tutor_utils()->get_user_id( $user_id );
+
+		if ( self::is_admin( $user_id ) || self::is_instructor( $user_id ) ) {
+			return true;
+		}
+
+		if ( ! self::used_instructor_registration( $user_id ) ) {
+			return false;
+		}
+
+		return in_array(
+			tutor_utils()->instructor_status( $user_id, false ),
+			array( Instructors_List::STATUS_PENDING, Instructors_List::STATUS_APPROVED ),
+			true
+		);
+	}
+
+	/**
+	 * Check if user has a pending instructor application.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return boolean
+	 */
+	public static function has_pending_instructor_application( $user_id = 0 ): bool {
+		return Instructors_List::STATUS_PENDING === tutor_utils()->instructor_status( $user_id, false );
 	}
 
 	/**
@@ -728,12 +825,22 @@ class User {
 	 */
 	public static function get_current_view_mode(): string {
 		$user_id      = get_current_user_id();
-		$default_mode = self::can_switch_mode( $user_id ) ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT;
+		$can_switch   = self::can_switch_mode( $user_id );
+		$default_mode = $can_switch ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT;
 		$current_mode = get_user_meta( $user_id, self::VIEW_MODE_USER_META, true );
 
-		return in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true )
-				? $current_mode
-				: $default_mode;
+		if ( $can_switch && in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true ) ) {
+			return $current_mode;
+		}
+
+		if ( self::used_instructor_registration( $user_id ) ) {
+			$instructor_status = tutor_utils()->instructor_status( $user_id, false );
+			if ( in_array( $instructor_status, array( Instructors_List::STATUS_PENDING, Instructors_List::STATUS_APPROVED ), true ) ) {
+				return self::VIEW_AS_INSTRUCTOR;
+			}
+		}
+
+		return $default_mode;
 	}
 
 	/**
@@ -759,17 +866,30 @@ class User {
 	}
 
 	/**
-	 * Check if the user can switch mode
+	 * Check if the user can switch between learner and instructor dashboard modes.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
-	 * @param integer $user_id User id.
+	 * @param int $user_id User ID.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	public static function can_switch_mode( int $user_id = 0 ) : bool {
-		$user_id = tutor_utils()->get_user_id( $user_id );
+	public static function can_switch_mode( int $user_id = 0 ): bool {
+		return self::is_admin( $user_id ) || self::is_instructor( $user_id );
+	}
 
-		return self::is_instructor( $user_id ) || self::is_admin( $user_id );
+	/**
+	 * Mark dashboard tour as completed for the current user.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void JSON response.
+	 */
+	public function ajax_complete_tour() {
+		tutor_utils()->check_nonce();
+
+		update_user_meta( get_current_user_id(), self::TOUR_COMPLETED_META, true );
+
+		$this->json_response( __( 'Tour completed', 'tutor' ) );
 	}
 }

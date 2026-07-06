@@ -224,6 +224,7 @@ class Assets {
 			'course_slug'                  => tutor_utils()->get_option( 'course_permalink_base', 'courses' ),
 			'lesson_slug'                  => tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ),
 			'quiz_slug'                    => tutor_utils()->get_option( 'quiz_permalink_base', 'quizzes' ),
+			'is_tour_completed'            => (bool) get_user_meta( get_current_user_id(), User::TOUR_COMPLETED_META, true ),
 		);
 	}
 
@@ -303,8 +304,6 @@ class Assets {
 			return;
 		}
 
-		global $post, $wp_query;
-
 		/**
 		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
 		 * condition updated @since v.1.7.4
@@ -316,20 +315,12 @@ class Assets {
 				$is_page_builder_used = et_pb_is_pagebuilder_used( get_the_ID() );
 				if ( ! $is_page_builder_used ) {
 					wp_enqueue_editor();
+					wp_enqueue_script( 'quicktags' );
 				}
 			} else {
 				wp_enqueue_editor();
+				wp_enqueue_script( 'quicktags' );
 			}
-		}
-
-		/**
-		 * Initializing quicktags script to use in wp_editor();
-		 */
-		wp_enqueue_script( 'quicktags' );
-
-		$tutor_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
-		if ( get_the_ID() === $tutor_dashboard_page_id ) {
-			wp_enqueue_media();
 		}
 
 		/**
@@ -348,41 +339,12 @@ class Assets {
 		wp_enqueue_script( 'tutor-social-share', tutor()->url . 'assets/lib/SocialShare/SocialShare.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
 		/**
-		 * Chart Data
-		 */
-		if ( ! empty( $wp_query->query_vars['tutor_dashboard_page'] ) ) {
-			wp_enqueue_script( 'jquery-ui-slider' );
-
-			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
-			wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-
-			if ( 'earning' === $wp_query->query_vars['tutor_dashboard_page'] ) {
-				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/lib/Chart.bundle.min.js', array(), TUTOR_VERSION );
-				wp_enqueue_script( 'jquery-ui-datepicker' );
-			}
-		}
-		/**
 		 * Dependency wp-i18n added for translate js file
 		 *
 		 * @since 1.9.0
 		 */
 		wp_enqueue_style( 'tutor-frontend', tutor()->url . 'assets/css/tutor-front.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
-
-		/**
-		 * Load frontend dashboard style
-		 *
-		 * @since v1.9.8
-		 */
-		$should_load_dashboard_styles = apply_filters( 'tutor_should_load_dashboard_styles', tutor_utils()->is_tutor_frontend_dashboard() );
-		if ( $should_load_dashboard_styles ) {
-			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', array(), TUTOR_VERSION );
-		}
-
-		// Load date picker for announcement at frontend.
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		$css = '.mce-notification.mce-notification-error{display: none !important;}';
-		wp_add_inline_style( 'tutor-frontend', $css );
 	}
 
 	/**
@@ -571,11 +533,25 @@ class Assets {
 			'tutor_gray_color'          => '#CDCFD5',
 		);
 
+		$brand_color = tutor_utils()->get_brand_color();
+
 		$color_string = '';
 		foreach ( $colors as $key => $property ) {
 			$fallback_color = isset( $fallback_colors[ $key ] ) ? $fallback_colors[ $key ] : '#212327';
-			$color          = tutor_utils()->get_option( $key, $fallback_color );
-			$color_rgb      = tutor_utils()->hex2rgb( $color );
+			$color          = $fallback_color;
+
+			if ( Options_V2::DEFAULT_BRAND_COLOR !== $brand_color ) {
+				if ( 'tutor_primary_color' === $key ) {
+					$color = $brand_color;
+				}
+
+				if ( 'tutor_primary_hover_color' === $key ) {
+					$palette = $this->generate_color_palette( $brand_color );
+					$color   = $palette[700];
+				}
+			}
+
+			$color_rgb = tutor_utils()->hex2rgb( $color );
 
 			if ( is_admin() && isset( $admin_colors[ $property ] ) ) {
 				$color     = $admin_colors[ $property ];
@@ -592,6 +568,83 @@ class Assets {
 		}
 
 		return ':root{' . $color_string . '}';
+	}
+
+	/**
+	 * Generate color palette
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $base_hex HEX color code.
+	 *
+	 * @return array
+	 */
+	private function generate_color_palette( $base_hex ) {
+		$base = tutor_utils()->hex_to_hsl( $base_hex );
+
+		// Mapping of [Hue-Shift, Saturation-Shift, Target-Lightness].
+		$rules = array(
+			100 => array( -1, 3, 97.5 ),
+			200 => array( -3, 1, 94.1 ),
+			300 => array( -3, -2, 92.2 ),
+			400 => array( -4, 0, 79.6 ),
+			450 => array( -2, -3, 76.7 ),
+			500 => array( -4, 5, 59.8 ),
+			600 => array( 0, 0, $base['l'] ),
+			700 => array( 3, -7, 48.0 ),
+			800 => array( 4, -12, 40.2 ),
+			900 => array( 5, -17, 33.1 ),
+			950 => array( 6, -24, 20.8 ),
+		);
+
+		$palette = array();
+		foreach ( $rules as $weight => $modifier ) {
+			if ( 600 === $weight ) {
+				$palette[ $weight ] = strtolower( $base_hex );
+				continue;
+			}
+
+			$new_h = fmod( ( $base['h'] + $modifier[0] + 360 ), 360 );
+			$new_s = max( 0, min( 100, $base['s'] + $modifier[1] ) );
+			$new_l = max( 0, min( 100, $modifier[2] ) );
+
+			$palette[ $weight ] = tutor_utils()->hsl_to_hex( $new_h, $new_s, $new_l );
+		}
+
+		return $palette;
+	}
+
+	/**
+	 * Load core color palette
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $brand_color Base color code.
+	 *
+	 * @return string
+	 */
+	private function load_core_color_palette( $brand_color ) {
+		if ( empty( $brand_color ) ) {
+			return '';
+		}
+
+		$palette = $this->generate_color_palette( $brand_color );
+
+		return "
+			:root {
+			--tutor-brand-100: {$palette[100]};
+			--tutor-brand-200: {$palette[200]};
+			--tutor-brand-300: {$palette[300]};
+			--tutor-brand-400: {$palette[400]};
+			--tutor-brand-450: {$palette[450]};
+			--tutor-brand-500: {$palette[500]};
+			--tutor-brand-600: {$palette[600]};
+			--tutor-brand-700: {$palette[700]};
+			--tutor-brand-800: {$palette[800]};
+			--tutor-brand-900: {$palette[900]};
+			--tutor-brand-950: {$palette[950]};
+			}
+		";
 	}
 
 	/**
@@ -846,6 +899,12 @@ class Assets {
 		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), $version, true );
 
 		wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
+
+		// Generate color palette from user selected brand color and add to the root.
+		$brand_color = tutor_utils()->get_brand_color();
+		if ( Options_V2::DEFAULT_BRAND_COLOR !== $brand_color ) {
+			wp_add_inline_style( 'tutor-core', $this->load_core_color_palette( $brand_color ) );
+		}
 
 		if ( $is_dashboard ) {
 			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );

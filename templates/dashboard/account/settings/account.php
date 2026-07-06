@@ -14,6 +14,7 @@ use TUTOR\Icon;
 use TUTOR\User;
 use Tutor\Components\Button;
 use Tutor\Components\InputField;
+use Tutor\Components\Modal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
@@ -107,13 +108,14 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 							>
 								<?php
 									Button::make()
+										->icon_only()
 										->variant( Variant::OUTLINE )
 										->label( __( 'Edit Cover Photo', 'tutor' ) )
 										->size( Size::X_SMALL )
 										->icon( Icon::CAMERA )
 										->attr( 'type', 'button' )
 										->attr( 'x-ref', 'trigger' )
-										->attr( '@click', 'toggle()' )
+										->attr( '@click', "imagePreview && imagePreview !== '" . esc_url( $settings_data['cover_placeholder'] ) . "' ? toggle() : openFileDialog()" )
 										->render();
 								?>
 
@@ -139,6 +141,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 												->size( Size::X_SMALL )
 												->attr( 'type', 'button' )
 												->attr( '@click', 'removeFile(), hide(), handleRemoveCoverPhoto()' )
+												->attr( 'x-show', "imagePreview && imagePreview !== '" . esc_url( $settings_data['cover_placeholder'] ) . "'" )
 												->render();
 										?>
 									</div>
@@ -196,7 +199,9 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 								<img
 									:src="imagePreview ? imagePreview : '<?php echo esc_url( $settings_data['profile_placeholder'] ); ?>'"
 									class="tutor-avatar-image"
+									:style="imagePreview && imagePreview !== '<?php echo esc_url( $settings_data['profile_placeholder'] ); ?>' ? 'cursor: pointer;' : ''"
 									alt="<?php esc_attr_e( 'User Avatar', 'tutor' ); ?>"
+									@click="imagePreview && imagePreview !== '<?php echo esc_url( $settings_data['profile_placeholder'] ); ?>' ? TutorCore.modal.showModal('tutor-profile-photo-modal') : openFileDialog()"
 								>
 
 								<?php
@@ -209,7 +214,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 										->attr( 'type', 'button' )
 										->attr( 'class', 'tutor-account-avatar-edit' )
 										->attr( 'x-ref', 'trigger' )
-										->attr( '@click', 'toggle()' )
+										->attr( '@click', "imagePreview && imagePreview !== '" . esc_url( $settings_data['profile_placeholder'] ) . "' ? toggle() : openFileDialog()" )
 										->render();
 								?>
 
@@ -236,10 +241,28 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 												->size( Size::X_SMALL )
 												->attr( 'type', 'button' )
 												->attr( '@click', 'removeFile(), hide(), handleRemoveProfilePhoto()' )
+												->attr( 'x-show', "imagePreview && imagePreview !== '" . esc_url( $settings_data['profile_placeholder'] ) . "'" )
 												->render();
 										?>
 									</div>
 								</div>
+
+								<?php
+									Modal::make()
+										->id( 'tutor-profile-photo-modal' )
+										->title( __( 'Profile Photo', 'tutor' ) )
+										->body(
+											'<div class="tutor-flex-center">
+												<img
+													:src="imagePreview ? imagePreview : \'' . esc_url( $settings_data['profile_placeholder'] ) . '\'"
+													alt="' . esc_attr__( 'User Avatar', 'tutor' ) . '"
+													style="max-width: 100%; height: auto; border-radius: 8px;"
+												/>
+											</div>',
+											'strval'
+										)
+										->render();
+									?>
 							</div>
 						</div>
 					</div>

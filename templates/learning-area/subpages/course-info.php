@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Avatar;
 use Tutor\Components\Badge;
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\StarRating;
 use Tutor\Components\SvgIcon;
@@ -166,7 +167,7 @@ if ( ! empty( $course_target_audience ) && is_array( $course_target_audience ) )
 
 $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_meta, $tutor_course_id );
 ?>
-<div class="tutor-course-info tutor-pt-4 tutor-pb-8" x-data="tutorCourseCompleteHandler">
+<div class="tutor-course-info tutor-pt-4" x-data="tutorCourseCompleteHandler">
 	<?php do_action( 'tutor_learning_area_before_course_info', $tutor_course_id ); ?>
 
 	<div class="tutor-course-thumb">
@@ -175,7 +176,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 
 	<div class="tutor-course-intro">
 		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-3 tutor-tiny tutor-text-secondary">
-			<?php SvgIcon::make()->name( Icon::RELOAD_2 )->render(); ?>
+			<?php SvgIcon::make()->name( Icon::CALENDAR_CHECK )->color( Color::BRAND )->render(); ?>
 			<?php
 			echo esc_html(
 				sprintf(
@@ -188,15 +189,25 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		</div>
 		<h3 class="tutor-h3 tutor-sm-text-h5 tutor-mt-3"><?php echo esc_html( $tutor_course->post_title ); ?></h3>
 		<div class="tutor-medium tutor-sm-text-small tutor-text-secondary tutor-mt-4 tutor-mb-6">
-		<?php
-		echo esc_html(
-			sprintf(
-				// translators: %s is the course author name.
-				__( 'by %s', 'tutor' ),
-				$course_author->display_name
-			)
-		);
-		?>
+			<?php
+			printf(
+				wp_kses(
+					// translators: %s is the linked course author name.
+					__( 'by %s', 'tutor' ),
+					array(
+						'a' => array(
+							'href'  => true,
+							'class' => true,
+						),
+					)
+				),
+				sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url( tutor_utils()->profile_url( $course_author, true ) ),
+					esc_html( $course_author->display_name )
+				)
+			);
+			?>
 		</div>
 	</div>
 
@@ -221,68 +232,40 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		</div>
 	</div> -->
 
-	<?php if ( ! empty( get_the_content() ) || ! empty( $course_benefits ) ) : ?>
-		<div class="tutor-course-accordion">
+	<div class="tutor-course-info-cards">
+		<?php if ( ! empty( get_the_content() ) || ! empty( $course_benefits ) ) : ?>
 			<?php if ( ! empty( get_the_content() ) ) : ?>
-				<div x-data="{ expanded: false }" class="tutor-course-accordion-item">
-					<div 
-						role="button" 
-						tabindex="0" 
-						@click="expanded = !expanded" 
-						@keydown.enter.prevent="expanded = !expanded" 
-						@keydown.space.prevent="expanded = !expanded" 
-						:aria-expanded="expanded ? 'true' : 'false'"
-						class="tutor-course-accordion-header"
-					>
-						<div class="tutor-course-accordion-header-title">
-							<?php esc_html_e( 'About this Course', 'tutor' ); ?>
-						</div>
-						<div class="tutor-course-accordion-header-icon" :class="{ 'is-expanded': expanded }">
-							<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 24 )->render(); ?>
-						</div>
+				<div class="tutor-card">
+					<div class="tutor-medium tutor-font-medium">
+						<?php esc_html_e( 'About this Course', 'tutor' ); ?>
 					</div>
-					<div x-show="expanded" x-collapse x-cloak class="tutor-course-accordion-body">
+					<div class="tutor-p3">
 						<?php the_content(); ?>
 					</div>
 				</div>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $course_benefits ) && is_array( $course_benefits ) ) : ?>
-				<div x-data="{ expanded: false }" class="tutor-course-accordion-item">
-					<div 
-						role="button" 
-						tabindex="0" 
-						@click="expanded = !expanded" 
-						@keydown.enter.prevent="expanded = !expanded" 
-						@keydown.space.prevent="expanded = !expanded" 
-						:aria-expanded="expanded ? 'true' : 'false'"
-						class="tutor-course-accordion-header"
-					>
-						<div class="tutor-course-accordion-header-title">
-							<?php esc_html_e( "What you'll learn", 'tutor' ); ?>
-						</div>
-						<div class="tutor-course-accordion-header-icon" :class="{ 'is-expanded': expanded }">
-							<?php SvgIcon::make()->name( Icon::CHEVRON_DOWN_2 )->size( 24 )->render(); ?>
-						</div>
+				<div class="tutor-card">
+					<div class="tutor-medium tutor-font-medium">
+						<?php esc_html_e( "What you'll learn", 'tutor' ); ?>
 					</div>
-					<div x-show="expanded" x-collapse x-cloak class="tutor-course-accordion-body">
-						<div class="tutor-course-accordion-list">
-							<?php foreach ( $course_benefits as $benefit ) : ?>
-								<div class="tutor-course-accordion-list-item">
-									<?php SvgIcon::make()->name( Icon::CHECK_2 )->render(); ?>
-									<div class="tutor-course-accordion-list-content">
-										<?php echo esc_html( $benefit ); ?>
-									</div>
+					<div class="tutor-course-info-list tutor-mt-6">
+						<?php foreach ( $course_benefits as $benefit ) : ?>
+							<div class="tutor-course-info-list-item">
+								<?php SvgIcon::make()->name( Icon::CHECK_2 )->render(); ?>
+								<div class="tutor-course-info-list-content">
+									<?php echo esc_html( $benefit ); ?>
 								</div>
-							<?php endforeach; ?>
-						</div>
+							</div>
+						<?php endforeach; ?>
 					</div>
 				</div>
 			<?php endif; ?>
-		</div>
-	<?php endif; ?>
+		<?php endif; ?>
+	</div>
 
-	<div class="tutor-course-info-table tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-mt-6">
+	<div class="tutor-course-info-table tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-mt-4">
 		<table class="tutor-table tutor-surface-l1">
 			<?php foreach ( $metadata as $meta ) : ?>
 				<tr>

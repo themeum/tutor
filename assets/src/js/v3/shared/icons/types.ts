@@ -216,6 +216,7 @@ export const icons = [
   'infoColorize',
   'infoFill',
   'infoOctagon',
+  'infoOctagonFill',
   'instructor',
   'interactiveQuiz',
   'interface',

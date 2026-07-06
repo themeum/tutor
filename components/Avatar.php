@@ -311,11 +311,18 @@ class Avatar extends BaseComponent {
 		$attributes = $this->get_attributes_string();
 
 		if ( 'image' === $this->type && $this->src ) {
-			$content = sprintf(
-				'<img src="%1$s" alt="%2$s" class="tutor-avatar-image" />',
+			$initials_html = sprintf(
+				'<span class="tutor-avatar-initials">%s</span>',
+				esc_html( $this->initials ?? '' )
+			);
+
+			$image_html = sprintf(
+				'<img src="%1$s" alt="%2$s" class="tutor-avatar-image" loading="lazy" onerror="this.style.display=\'none\'" />',
 				esc_url( $this->src ),
 				esc_attr( $this->alt ?? $this->initials ?? _x( 'User Avatar', 'image alter text', 'tutor' ) )
 			);
+
+			$content = $initials_html . $image_html;
 		} else {
 			$content = sprintf(
 				'<span class="tutor-avatar-initials">%s</span>',

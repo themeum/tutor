@@ -1,10 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
 
-import { wpPost } from '@Core/ts/utils/api';
-import { isMobileDevice } from '@Core/ts/utils/util';
-
-import { tutorConfig } from '@TutorShared/config/config';
-
 import { isVimeoPlyr, isYouTubePlyr } from '@FrontendTypes/index';
 
 interface AutoLoadResponse {
@@ -63,6 +58,7 @@ class LessonPlayer {
    */
   private isRequiredPercentage(): boolean {
     const { strict_mode, control_video_lesson_completion, lesson_completed, is_enrolled } = this.playerData;
+    const { tutorConfig } = window.TutorCore.config;
     return Boolean(
       tutorConfig.tutor_pro_url && is_enrolled && !lesson_completed && strict_mode && control_video_lesson_completion,
     );
@@ -154,6 +150,7 @@ class LessonPlayer {
       ...options,
     };
 
+    const { wpPost } = window.TutorCore.api;
     wpPost('sync_video_playback', data);
 
     const currentTime = this.player.currentTime;
@@ -171,6 +168,7 @@ class LessonPlayer {
   private autoloadContent() {
     if (!this.playerData.post_id) return;
 
+    const { wpPost } = window.TutorCore.api;
     wpPost<AutoLoadResponse>('autoload_next_course_content', {
       post_id: this.playerData.post_id,
     }).then((response) => {
@@ -250,6 +248,7 @@ class LessonPlayer {
        * Play from best watch time
        */
       const { best_watch_time = 0 } = this.playerData;
+      const { tutorConfig } = window.TutorCore.config;
       if (tutorConfig.tutor_pro_url && best_watch_time > 0) {
         const previousDuration = Math.floor(best_watch_time);
         setTimeout(() => {
@@ -267,6 +266,7 @@ class LessonPlayer {
        * Fix: Mobile Vimeo autoplay sound issue
        * Always start muted on mobile to comply with autoplay policy.
        */
+      const { isMobileDevice } = window.TutorCore.device;
       if (isVimeoPlyr(instance) && isMobileDevice()) {
         try {
           instance.muted = true;
@@ -296,6 +296,7 @@ class LessonPlayer {
        * Send to tutor backend about video playing time in this interval
        */
       const intervalSeconds = 10;
+      const { tutorConfig } = window.TutorCore.config;
       if (tutorConfig.tutor_pro_url) {
         this.syncInterval = setInterval(() => {
           this.syncTime();
@@ -307,6 +308,7 @@ class LessonPlayer {
        * Mobile browsers allow audio only after gesture.
        */
       const instance = event.detail.plyr;
+      const { isMobileDevice } = window.TutorCore.device;
       if (isVimeoPlyr(instance) && isMobileDevice()) {
         try {
           instance.muted = false;
@@ -333,6 +335,7 @@ class LessonPlayer {
     this.player.on('pause', () => {
       if (this.syncInterval) clearInterval(this.syncInterval);
 
+      const { tutorConfig } = window.TutorCore.config;
       if (tutorConfig.tutor_pro_url) {
         this.syncTime();
       }
@@ -344,6 +347,7 @@ class LessonPlayer {
       const instance = event.detail.plyr;
       this.syncTime({ is_ended: true });
 
+      const { tutorConfig } = window.TutorCore.config;
       if (tutorConfig.user_preferences.auto_play_next && this.playedOnce) {
         this.autoloadContent();
       }

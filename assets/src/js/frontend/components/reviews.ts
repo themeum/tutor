@@ -1,11 +1,7 @@
 import { __ } from '@wordpress/i18n';
 
 import { type MutationState } from '@Core/ts/services/Query';
-import { wpPost } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-
-import endpoints from '@TutorShared/utils/endpoints';
-import { type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type AjaxResponse } from '@Core/ts/types';
 
 interface ReviewFormProps {
   comment_ID?: string;
@@ -23,7 +19,8 @@ interface ReviewPayload {
 }
 
 const reviewDeleteModal = () => {
-  const query = window.TutorCore.query;
+  const { query, endpoints, toast } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
 
   return {
     query,
@@ -38,10 +35,10 @@ const reviewDeleteModal = () => {
       this.deleteReviewMutation = this.query.useMutation(this.deleteReview, {
         onSuccess: (data) => {
           window.location.reload();
-          window.TutorCore.toast.success(data?.message ?? __('Review deleted successfully', 'tutor'));
+          toast.success(data?.message ?? __('Review deleted successfully', 'tutor'));
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to delete review', 'tutor'));
+          toast.error(error.message || __('Failed to delete review', 'tutor'));
         },
       });
     },
@@ -51,7 +48,7 @@ const reviewDeleteModal = () => {
     },
 
     async deleteReview(reviewId: string) {
-      return wpPost<TutorMutationResponse<string>>(endpoints.DELETE_REVIEW, {
+      return wpPost<AjaxResponse<string>>(endpoints.DELETE_REVIEW, {
         review_id: reviewId,
       });
     },
@@ -59,11 +56,13 @@ const reviewDeleteModal = () => {
 };
 
 const reviewModal = () => {
-  const { query, modal, toast } = window.TutorCore;
+  const { query, modal, toast, endpoints } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
 
   return {
     query,
-    saveRatingMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    saveRatingMutation: null as MutationState<AjaxResponse<string>> | null,
     clear_review_popup_data: false as boolean,
 
     init() {
@@ -89,7 +88,7 @@ const reviewModal = () => {
     },
 
     async saveRating(payload: ReviewPayload) {
-      return wpPost<TutorMutationResponse<string>>(endpoints.PLACE_RATING, payload);
+      return wpPost<AjaxResponse<string>>(endpoints.PLACE_RATING, payload);
     },
 
     async clearReviewPopupData(courseId: string | number) {
@@ -110,7 +109,9 @@ const reviewModal = () => {
 };
 
 const reviewCard = (id: string) => {
-  const query = window.TutorCore.query;
+  const { query, endpoints, toast } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
 
   return {
     query,
@@ -122,7 +123,7 @@ const reviewCard = (id: string) => {
       delete: HTMLButtonElement;
       cancel: HTMLButtonElement;
     },
-    saveRatingMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    saveRatingMutation: null as MutationState<AjaxResponse<string>> | null,
 
     handlers: {} as { [key: string]: EventListener },
 
@@ -141,11 +142,11 @@ const reviewCard = (id: string) => {
       this.saveRatingMutation = this.query.useMutation(this.saveRating, {
         onSuccess: (data) => {
           this.isEditMode = false;
-          window.TutorCore.toast.success(data.message);
+          toast.success(data.message);
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
     },
@@ -162,7 +163,7 @@ const reviewCard = (id: string) => {
     },
 
     async saveRating(payload: ReviewPayload) {
-      return wpPost<TutorMutationResponse<string>>(endpoints.PLACE_RATING, payload);
+      return wpPost<AjaxResponse<string>>(endpoints.PLACE_RATING, payload);
     },
 
     convertFormDataToPayload(data: ReviewFormProps): ReviewPayload {

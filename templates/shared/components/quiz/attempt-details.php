@@ -40,10 +40,6 @@ if ( $attempt_id > 0 && ! $attempt_data ) {
 	$attempt_data = tutor_utils()->get_attempt( $attempt_id );
 }
 
-if ( ! $attempt_data && $quiz_id > 0 ) {
-	$attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
-}
-
 $render_attempt_not_found = static function ( string $title ) {
 	EmptyState::make()
 		->title( $title )
@@ -82,6 +78,7 @@ $course_contents = tutor_utils()->get_course_prev_next_contents_by_id( $quiz_id 
 				<?php
 					Button::make()
 						->icon( Icon::ARROW_LEFT_2 )
+						->flip_rtl()
 						->tag( 'a' )
 						->attr( 'href', $back_url )
 						->variant( Variant::GHOST )

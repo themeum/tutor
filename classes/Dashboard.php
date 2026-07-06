@@ -63,7 +63,8 @@ class Dashboard {
 	 */
 	public function redirect_old_dashboard_pages() {
 		$current_url = rtrim( UrlHelper::current(), '/' );
-		if ( is_user_logged_in() && ! is_admin() ) {
+
+		if ( ! is_admin() ) {
 			// Redirect logic here.
 			$redirect_mappings = array(
 				tutor_utils()->tutor_dashboard_url( self::PROFILE_PAGE_SLUG ) => self::get_account_page_url( 'profile' ),
@@ -74,6 +75,7 @@ class Dashboard {
 				tutor_utils()->tutor_dashboard_url( self::WISHLIST_PAGE_SLUG ) => tutor_utils()->tutor_dashboard_url( 'courses/wishlist' ),
 				tutor_utils()->tutor_dashboard_url( self::MY_QUIZ_ATTEMPTS_SUBPAGE_SLUG ) => tutor_utils()->tutor_dashboard_url( 'courses/my-quiz-attempts' ),
 				tutor_utils()->tutor_dashboard_url( self::ENROLLED_COURSES_PAGE_SLUG ) => tutor_utils()->tutor_dashboard_url( self::COURSES_PAGE_SLUG ),
+				tutor_utils()->get_tutor_dashboard_page_permalink( 'logout' ) => UrlHelper::add_query_params( wp_logout_url(), array( '_wpnonce' => wp_create_nonce( 'log-out' ) ) ),
 			);
 
 			if ( ! isset( $redirect_mappings[ $current_url ] ) ) {

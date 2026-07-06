@@ -17,7 +17,7 @@ let version = '';
 
 try {
   const data = fs.readFileSync('tutor.php', 'utf8');
-  version = data.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
+  version = data.match(/Version:\s*([0-9]+(?:\.[0-9]+)*(?:-[0-9A-Za-z.-]+)?)/i)?.[1] || '';
 } catch (err) {
   // eslint-disable-next-line no-console
   console.log(`Error reading version from tutor.php: ${err}`);
@@ -287,7 +287,6 @@ const scssEntries = {
   'tutor-scss': './v2-library/src/scss/main.scss',
   'tutor-rtl-scss': './v2-library/src/scss/main.rtl.scss',
   'tutor-icon-scss': './v2-library/tutor-icon/tutor-icon.scss',
-  'tutor-frontend-dashboard-scss': './assets/src/scss/frontend-dashboard/index.scss',
   'tutor-core-scss': './assets/core/scss/main.scss',
   'tutor-kids-scss': './assets/src/scss/frontend/kids/index.scss',
   'tutor-dashboard-scss': './assets/src/scss/frontend/main/dashboard.scss',

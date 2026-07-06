@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -13,8 +13,7 @@ import FormQuestionTitle from '@TutorShared/components/fields/quiz/FormQuestionT
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import { tutorConfig } from '@TutorShared/config/config';
-import { CURRENT_VIEWPORT, modal } from '@TutorShared/config/constants';
+import { CURRENT_VIEWPORT, DEFAULT_QUIZ_ATTEMPTS_ALLOWED, modal } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -55,7 +54,6 @@ interface QuizModalProps extends ModalProps {
 type QuizTabs = 'details' | 'settings';
 
 const courseId = getCourseId();
-const defaultQuizAttemptsAllowed = tutorConfig.settings?.quiz_attempts_allowed ?? 10;
 
 const QuizModal = ({
   closeModal,
@@ -89,7 +87,7 @@ const QuizModal = ({
         hide_quiz_time_display: false,
         limit_attempts_allowed: false,
         limit_questions_to_answer: false,
-        attempts_allowed: Number(defaultQuizAttemptsAllowed),
+        attempts_allowed: DEFAULT_QUIZ_ATTEMPTS_ALLOWED,
         passing_grade: 80,
         max_questions_for_answer: contentType === 'tutor_h5p_quiz' ? 0 : 10,
         quiz_auto_start: false,
@@ -393,22 +391,30 @@ const QuizModal = ({
               triggerRef={cancelRef}
               closePopover={() => setIsConfirmationOpen(false)}
               maxWidth="258px"
-              title={__('Your quiz has unsaved changes. If you cancel, you will lose your progress.', 'tutor')}
-              message={__('Are you sure you want to continue?', 'tutor')}
+              title={
+                <div css={styles.confirmationPopoverTitle}>
+                  <SVGIcon name="warning" width={20} height={20} />
+                  <span>{__('Discard changes?', 'tutor')}</span>
+                </div>
+              }
+              message={''}
               animationType={AnimationType.slideUp}
               placement={
                 CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER
               }
               positionModifier={{ top: -55, left: quizId ? 34 : 2 }}
               confirmButton={{
-                text: __('Yes', 'tutor'),
+                text: __('Keep Editing', 'tutor'),
                 variant: 'primary',
               }}
               cancelButton={{
-                text: __('No', 'tutor'),
+                text: __('Discard', 'tutor'),
                 variant: 'text',
               }}
               onConfirmation={() => {
+                setIsConfirmationOpen(false);
+              }}
+              onCancel={() => {
                 form.reset();
                 setValidationError(null);
 
@@ -420,6 +426,7 @@ const QuizModal = ({
                 if (!quizId) {
                   closeModal();
                 }
+                setIsConfirmationOpen(false);
               }}
             />
           </ModalWrapper>
@@ -452,6 +459,16 @@ const styles = {
       button {
         min-width: auto;
       }
+    }
+  `,
+  confirmationPopoverTitle: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[8]};
+    margin-bottom: ${spacing[8]};
+
+    svg {
+      color: ${colorTokens.icon.default};
     }
   `,
   left: css`

@@ -6,16 +6,17 @@
 // =============================================================================
 
 // Brand Colors
-$tutor-brand-100: #f6f8fe;
-$tutor-brand-200: #e4ebfc;
-$tutor-brand-300: #dbe4fa;
-$tutor-brand-400: #a4bcf4;
-$tutor-brand-500: #4979e8;
-$tutor-brand-600: #3e64de;
-$tutor-brand-700: #2b49ca;
-$tutor-brand-800: #293da4;
-$tutor-brand-900: #263782;
-$tutor-brand-950: #1c234f;
+$tutor-brand-100: var(--tutor-brand-100, #f6f8fe);
+$tutor-brand-200: var(--tutor-brand-200, #e4ebfc);
+$tutor-brand-300: var(--tutor-brand-300, #dbe4fa);
+$tutor-brand-400: var(--tutor-brand-400, #a4bcf4);
+$tutor-brand-450: var(--tutor-brand-450, #90A0F7);
+$tutor-brand-500: var(--tutor-brand-500, #4979e8);
+$tutor-brand-600: var(--tutor-brand-600, #3e64de);
+$tutor-brand-700: var(--tutor-brand-700, #2b49ca);
+$tutor-brand-800: var(--tutor-brand-800, #293da4);
+$tutor-brand-900: var(--tutor-brand-900, #263782);
+$tutor-brand-950: var(--tutor-brand-950, #1c234f);
 
 // Gray Colors
 $tutor-gray-1: #ffffff;
@@ -24,6 +25,7 @@ $tutor-gray-25: #fafafa;
 $tutor-gray-50: #f5f5f6;
 $tutor-gray-100: #f0f1f1;
 $tutor-gray-200: #ececed;
+$tutor-gray-250: #e0e0e1;
 $tutor-gray-300: #cecfd2;
 $tutor-gray-400: #94969c;
 $tutor-gray-500: #73767D;
@@ -126,6 +128,7 @@ $tutor-exception-6: #f2e8ff;
 $tutor-exception-7: #242a37;
 $tutor-exception-8: #2c0066;
 $tutor-exception-9: #f4f433;
+$tutor-exception-10: #423630;
 
 // =============================================================================
 // COLOR MAPS (for utility generation)
@@ -136,6 +139,7 @@ $tutor-brand-colors: (
   200: $tutor-brand-200,
   300: $tutor-brand-300,
   400: $tutor-brand-400,
+  450: $tutor-brand-450,
   500: $tutor-brand-500,
   600: $tutor-brand-600,
   700: $tutor-brand-700,
@@ -230,6 +234,10 @@ $tutor-exception-colors: (
   3: $tutor-exception-3,
   5: $tutor-exception-5,
   6: $tutor-exception-6,
+  7: $tutor-exception-7,
+  8: $tutor-exception-8,
+  9: $tutor-exception-9,
+  10: $tutor-exception-10,
 );
 
 $tutor-cyan-colors: (

@@ -1,9 +1,5 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
-import { wpPostForm } from '@Core/ts/utils/api';
-import { convertToErrorMessage } from '@Core/ts/utils/error';
-
-import endpoints from '@TutorShared/utils/endpoints';
 
 interface RetryAttemptPayload {
   quizID: string;
@@ -11,8 +7,9 @@ interface RetryAttemptPayload {
 }
 
 const quizRetryAttempt = () => {
-  const query = window.TutorCore.query;
-  const toast = window.TutorCore.toast;
+  const { query, toast, endpoints } = window.TutorCore;
+  const { wpPostForm } = window.TutorCore.api;
+  const { convertToErrorMessage } = window.TutorCore.error;
 
   return {
     retryMutation: null as MutationState<unknown, RetryAttemptPayload> | null,

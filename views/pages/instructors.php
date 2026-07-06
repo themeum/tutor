@@ -9,24 +9,26 @@
  * @since 2.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Input;
-use TUTOR\Instructors_List;
 use Tutor\Models\CourseModel;
 
 $allowed_subpage = array();
 
 if ( Input::has( 'sub_page' ) ) {
 	$sub_page = Input::get( 'sub_page' );
-	if ( in_array( $sub_page, $allowed, true ) ) {
+	if ( in_array( $sub_page, $allowed_subpage, true ) ) {
 		include_once tutor()->path . "views/pages/{$sub_page}.php";
 		return;
 	}
 }
 
+/**
+ * Instance of Instructors_List class
+ *
+ * @var TUTOR\Instructors_List
+ */
 $instructors = tutor_lms()->instructor_list;
 
 /**
@@ -74,19 +76,19 @@ $total            = $instructors::count_total_instructors( $instructor_status, $
 /**
  * Navbar data to make nav menu
  */
-$url               = get_pagenum_link();
-$add_insructor_url = $url . '&sub_page=add_new_instructor';
-$navbar_data       = array(
+$url                = get_pagenum_link();
+$add_instructor_url = $url . '&sub_page=add_new_instructor';
+$navbar_data        = array(
 	'page_title'   => $instructors->page_title,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
-	'button_url'   => $add_insructor_url,
+	'button_url'   => $add_instructor_url,
 	'modal_target' => 'tutor-instructor-add-new',
 );
 
 $filters = array(
 	'bulk_action'  => $instructors->bulk_action,
-	'bulk_actions' => $instructors->prpare_bulk_actions(),
+	'bulk_actions' => $instructors->prepare_bulk_actions(),
 	'ajax_action'  => 'tutor_instructor_bulk_action',
 	'filters'      => array(
 		array(
