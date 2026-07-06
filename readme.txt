@@ -320,178 +320,53 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 4.0.0 - 08 Jul, 2026
 
-Coming soon...
+New: Fully redesigned student learning experience
+New: App-like mobile experience with thumb-friendly navigation
+New: 5 new quiz types: Draw Image, Pin Image, Graph, Puzzle, and Scale (Pro)
+New: Kids Mode with a playful, colorful interface
+New: Light/Dark mode with improved accessibility contrast
+New: Accessibility support added for users with visual impairments
+New: Added GDPR compliance support for improved data handling
+New: Student Dashboard showing live lessons, progress, and tasks at a glance
+New: Instructor Dashboard with earnings overview, course stats, and student activity
+New: Switch between instructor and student views right from the dashboard
+New: New Live Lesson Hub (Pro)
+New: New Course Calendar with milestones and visual roadmap (Pro)
+New: Unified discussion and Q&A experience across courses
+New: Centralized notes across all lessons and videos
+New: Certificates linked to progress, with dynamic unlocking (Pro)
+New: Certificate verification feature (Pro)
+New: Resource Center for PDFs and downloadable assets
+New: Redesigned quiz interface with detailed tracking and review options
+New: Question preview added to the Quiz Builder
+New: AI Studio can now generate quiz questions independently
+New: Course bundle expiry functionality (Pro) 
+New: Clearer analytics for engagement, progress, and course performance (Pro)
+New: Centralized course billing with subscriptions, history, and renewals
+New: Profile management with certificate signature and personal info updates
+New: Preferences for lesson autoplay, downloads, themes, and accessibility settings
+New: Micro-interactions with animations and sound effects
+New: New global design modes — Modern, Kids, and Legacy layouts
+New: Order history list added for PMPro monetization (Pro)
 
-= 4.0.0-rc.2 - 12 Jun, 2026
+Update: Design compatibility improvements for the TutorStarter theme
+Update: Full compatibility with the Twenty Twenty-Five theme
+Update: Improved H5P support in the student learning area
+Update: WPML compatibility updates (Pro)
+Update: Better compatibility with Yoast SEO and Rank Math SEO
+Update: Gradebook is now shown in the Learning Area (Pro)
+Update: Improved translation compatibility
+Update: Lesson Note enable/disable option added to admin settings
+Update: Improved overall assignment functionality, with further UI refinements (Pro)
+Update: Improved Instructor Quiz Attempts preview for better usability
+Update: Subscription expiry date is now shown for WooCommerce Subscription enrollments (Pro)
+Update: Content Bank now supports all new quiz question types (Pro)
+Update: Improved notification list navigation (Pro)
+Update: Improved Live Class section on the homepage
+Update: Enhanced theme compatibility across Tutor LMS pages and layouts
+Update: Improved dashboard and learning area consistency with system default themes
+Update: Enhanced login experience and social login modal UI
 
-Update: Added more details to the Instructor Dashboard header
-Update: Added page title and meta title support for learning pages
-Update: Introduced a new empty dashboard design for students
-Update: Refined the pending payment modal for subscriptions
-Update: Improved Google Classroom compatibility
-Update: Improved accessibility across the plugin
-Update: Improved consistency in course analytics details
-Update: Added “Explore Course” button in the student dashboard
-Fix: Resolved the checkbox issue on the login page
-Fix: Corrected certificate visibility in bundle courses
-Fix: Addressed incorrect email notifications during partial refunds
-Fix: Fixed a fatal error in Learning Area live classes when translations are enabled
-Fix: Corrected "Cancel Enrollment" checkbox behavior for partial and full refunds
-Fix: Fixed order history filtering issues with WooCommerce monetization
-Fix: Resolved a homepage layout issue where content appeared outside the header
-Fix: Fixed attachment not opening in a new tab
-Fix: Removed infinite loop issue triggered by the back button
-Fix: Fixed email verification notice issue when Jetpack is active
-Fix: Restored visibility of enrolled courses in the student dashboard
-Fix: Corrected Learning Area URL access after a course is trashed
-Fix: Fixed incorrect countdown timing for Google Meet live classes
-Fix: Addressed multiple assignment-related issues
-Fix: Corrected quiz export and import functionality
-Fix: Resolved blank page issue when "Hide Quiz Details From Students" is enabled
-
-= 4.0.0-rc.1 - 15 May, 2026
-
-Update: Improved the Live Class section on the Homepage. (Pro)
-Update: Added WordPress wp_body_open hook support to custom templates.
-Update: Improved course completion warning behavior in strict mode. (Pro)
-Update: Added email notification preference grouping for students. (Pro)
-Update: Improved compatibility with Rank Math SEO and Yoast SEO in Tutor LMS 4.x dashboards.
-Update: Enhanced the Tutor LMS login experience and social login modal UI. (Pro)
-Update: Improved dashboard and learning area theme consistency with system default themes.
-Update: Improved responsive behavior across different themes and devices.
-Update: Enhanced theme compatibility across Tutor LMS pages and layouts.
-Update: Updated compatibility with the Twenty Twenty-Five theme.
-Fix: Fixed the issue where existing Google Meet lessons could not be updated. (Pro)
-Fix: Future scheduled coupons no longer appear as expired.
-Fix: Fixed UI inconsistencies in the Order History page.
-Fix: Resolved the "Continue Lesson" button issue in the students' learning area.
-Fix: Prevented fatal errors when deactivating the Easy Digital Downloads plugin.
-Fix: Corrected completed lesson counts on the student enrolled page.
-Fix: Resolved the "Skip Assignment" button issue. (Pro)
-Fix: Fixed the wishlist button issue for unauthenticated users.
-Fix: Saving Tutor LMS settings no longer causes the login page to disappear and regenerate.
-Fix: Fixed UI issues in the Manage Devices section.
-Fix: Corrected scheduled course time mismatches in the Safari browser.
-Fix: Private courses now appear properly under the active filter in the student dashboard.
-Fix: Gifted courses no longer incorrectly apply a 100% discount. (Pro)
-Fix: Fixed the sitewide enrollment pause issue.
-Fix: Fixed backend verification issues for "Retake Course" and "Reset Progress" actions. (Pro)
-Fix: "Mark as Complete", "Complete Course", and "Reset Progress" actions no longer appear for logged-out users.
-Fix: Subscription plan names now appear correctly during auto-renew and early renewal processes. (Pro)
-
-= 4.0.0-beta.4 - 06 May, 2026
-
-New: Introduced comprehensive GDPR compliance support for better data handling.
-New: Added an option to generate quiz questions via AI Studio (Pro)
-New: Added support for order history in Paid Memberships Pro. (Pro)
-Update: Improved H5P support in the students' learning area. (Pro)
-Fix: Resolved Checkout page styling issues when using WooCommerce monetization.
-Fix: Enrollment status now updates correctly after order cancellation or refund.
-Fix: Resolved the revenue calculation error for manual enrollments.
-Fix: Order history now displays properly when using the Easy Digital Downloads monetization.
-Fix: Addressed “Add to Cart” button issue in Easy Digital Downloads monetization.
-Fix: Auto-play next lesson feature is now working as expected.
-Fix: Fixed WPML translation issue on the assignment page in legacy mode. (Pro)
-Fix: Prevented ratings and reviews from appearing before course completion.
-
-= 4.0.0-beta.3 - 23 April, 2026
-
-New: Introduced a new Puzzle quiz type. (Pro)
-New: Accessibility support added for users with visual impairments.
-Update: Design compatibility improved for the TutorStarter theme.
-Update: WPML compatibility updated. (Pro)
-Update: Content Bank now supports all the new Quiz question types. (Pro)
-Update: UI improvements made to the assignment module. (Pro)
-Update: User navigation from the notification list has been improved. (Pro)
-Update: Order history list added for the PMPRO monetization. (Pro)
-Fix: Resolved a critical PHP error on the instructor dashboard.
-Fix: Fixed multiple mobile responsiveness issues.
-Fix: Lesson feature images now display correctly in the learning area.
-Fix: Course builder author dropdown styling restored.
-Fix: Design rendering fixed for new quiz types on the admin quiz review screen. (Pro)
-Fix: Blocked or pending instructors are now correctly redirected to the student dashboard.
-Fix: Purchase button now works on the course archive page for EDD monetization.
-Fix: Retry button in the Quiz attempt list three-dot menu is now functional.
-Fix: Retake/Retry option no longer appears when the attempt limit has been reached.
-Fix: Order history status dropdown now shows valid statuses for WooCommerce orders.
-
-= 4.0.0-beta.2 - 16 April, 2026
-
-New: Introduced the new Graph Quiz type. (Pro)
-New: Added question preview to the Quiz Builder.
-Updates: Enhanced the Course Bundle expiry feature. (Pro)
-Updates: Refined the Instructor Quiz Attempts preview for better usability.
-Updates: Displayed the subscription expiry date for WooCommerce Subscription enrollments. (Pro)
-Fix: Fixed the issue of the default lesson comment appearing on new sites.
-Fix: Fixed lesson comment replies not updating instantly.
-Fix: Resolved an issue where total quiz marks were displayed incorrectly.
-Fix: Fixed the layout breaking on the Quiz Attempt Details page.
-Fix: Resolved the missing student quiz attempt list data issue.
-Fix: Resolved the Become an Instructor button appearing even when disabled in settings.
-Fix: Restored the missing Edit Profile button on the instructor profile page.
-Fix: Resolved the course creation quick link issue.
-Fix: Fixed the Report page showing only bundle courses instead of all individual and bundle courses.
-Fix: Restored missing information on the Course Info page.
-Fix: Fixed payment gateways not appearing when media was added to Payment Instructions on custom payment gateways.
-Fix: Fixed the duplicate order creation issue during WooCommerce checkout.
-Fix: Fixed the Add to Cart button not responding under certain scenarios.
-Fix: Fixed the Gift Course feature not functioning properly.
-Fix: Prevented the Gift Course button from appearing for already-enrolled subscription courses.
-Fix: Resolved the missing logo issue in password reset emails.
-Fix: Fixed notification icons not rendering correctly.
-Fix: Resolved the tooltip not appearing on hover in the Student Progress modal.
-Fix: Resolved inaccurate Calendar meeting counts.
-Fix: Fixed the white flash occurring during page reload in Dark Mode.
-
-= 4.0.0-beta.1 - 06 April, 2026
-
-New: Introduced 3 new quiz types: Draw Image, Pin Image, and Scale. (Pro)
-New: Added certificate verification feature. (Pro)
-New: Added course bundle expiry functionality. (Pro)
-New: Added forgot password email template. (Pro)
-Update: Learning area updated to now show Gradebook. (Pro)
-Update: Improved translation compatibility.
-Update: Lesson Note enable/disable option added in admin settings.
-Update: Improved overall assignment functionality.
-Fix: Fixed issue where enrolment emails were not triggered via Tutor REST API. (Pro)
-Fix: Resolved critical errors affecting Quiz Submit and Quiz Quit actions.
-Fix: Fixed dashboard subpages showing "not found" without permalink reset.
-Fix: Resolved issue where account page information was missing in specific cases.
-Fix: Fixed assignment search and filtering issues.
-Fix: Fixed Hide Quiz Time feature not working.
-Fix: Fixed Retake Quiz button not working on the Quiz Summary page.
-Fix: Fixed security issue where unauthenticated users could access invoices. (Pro)
-Fix: Fixed database error in the report admin panel when monetization is disabled.
-Fix: Resolved 2FA login nonce error. (Pro)
-Fix: Fixed error when deleting quiz attempts.
-Fix: Fixed blank billing page when WooCommerce or EDD is active.
-Fix: Fixed issue where YouTube videos would not play when Tutor Player is disabled.
-
-= 4.0.0-alpha.1 - 30 March, 2026
-
-New: Fully redesigned with a learner-first approach to improve focus, discoverability, and engagement.
-New: Optimized interface for Mobile-First Experience and fluid lesson transitions.
-New: Thumb-zone navigation for a smoother mobile experience.
-New: Continuous learning environment without leaving lessons.
-New: Kids Mode with a playful and colorful interface.
-New: Redesigned student Dashboard showing live lessons, progress, and tasks at a glance.
-New: Five interactive quiz types: Scaling, Draw Image, Pin Map, Puzzle, Graph. (Pro)
-New: Students' profile management with certificate signature and personal info updates.
-New: Light/Dark mode and improved contrast for accessibility.
-New: Centralized notes for all lessons and videos.
-New: Unified discussion and Q&A across courses.
-New: Live Lesson Hub for upcoming and previous lessons. (Pro)
-New: Smarter Course Calendar with milestones and a visual roadmap. (Pro)
-New: Unified Resource Center for PDFs and downloadable assets.
-New: Certificates linked to progress with dynamic unlocking. (Pro)
-New: Preferences for autoplay lessons, manage downloads, and other accessibility settings.
-New: Centralized course billing with subscriptions, history, and renewals.
-New: Clearer analytics for engagement, progress, and course performance. (Pro)
-New: Global design modes to switch between Modern, Kids, or Legacy layouts platform-wide.
-New: Lots of Micro-interactions with animations and sound effects to make lessons more fun.
-New: A new button “view as student” has been added to allow admin & instructor to change the dashboard view.
-New: Live classes, a new dashboard menu has been added to manage the Google & Zoom meetings from the same page. (Pro)
-New: Redesigned the Instructor dashboard with earnings overview, course stats, and student activity.
 
 = 3.9.15 - Jul 06, 2026
 
