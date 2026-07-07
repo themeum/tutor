@@ -38,26 +38,28 @@
   padding: 24px;
 }
 
-.tutor-onboard-card-body {
-  padding-bottom: 20px;
-}
-
-.tutor-onboard-welcome-greeting,
-.tutor-onboard-help-text {
+.tutor-onboard-welcome-greeting {
   margin: 0;
-  color: #6b7280;
+  color: #333741;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
+  span {
+    color: #0C111D;
+  }
 }
 
-.tutor-onboard-welcome-greeting span {
-  font-weight: 600;
+.tutor-onboard-help-text {
+  margin: 0;
+  color: #5B616F;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
 }
 
 .tutor-onboard-welcome-title {
   margin: 4px 0 0;
-  color: #2f3137;
+  color: #0C111D;
   font-size: 24px;
   line-height: 32px;
   font-weight: 400;
@@ -72,7 +74,7 @@
   line-height: 32px;
   font-weight: 600;
   letter-spacing: -1%;
-  margin-bottom: 20px;
+  margin: 0px 0px 20px;
   color: #2f3137;
 }
 
@@ -99,10 +101,12 @@
 
 .tutor-onboard-welcome-description {
   margin: 0;
-  color: #5f6470;
+  color: #333741;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 22px;
+  margin-bottom: 20px;
   span {
+    color: #0C111D;
     font-weight: 600;
   }
 }
@@ -146,10 +150,10 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
   width: 90px;
-  padding: 8px;
-  border: 1px solid #ececed;
+  padding: 8px 0px;
+  box-shadow: 0 0 0 1px #ececed;
   border-radius: 10px;
   background: #fff;
   cursor: pointer;
@@ -165,8 +169,7 @@
   }
   &.is-selected {
     background-color: #f5f5f6;
-    border-color: #0049f8;
-    box-shadow: 0 0 0 1px #0049f8;
+    box-shadow: 0 0 0 2px #0049f8;
     .tutor-onboard-choice-text {
       color: #0c111d;
     }
@@ -192,11 +195,12 @@
 }
 
 .tutor-onboard-checkbox {
-  margin: 44px 0px 0px 0px;
+  margin: 44px 0px 12px 0px;
   .tutor-onboard-checkbox-label {
     color: #5d5f66;
     font-size: 14px;
     line-height: 18px;
+    font-weight: 400;
   }
 }
 
