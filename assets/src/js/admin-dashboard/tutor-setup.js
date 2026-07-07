@@ -58,6 +58,33 @@ document.addEventListener('DOMContentLoaded', () => {
 	const loadingText = loadingTextElement?.dataset.text || loadingTextElement?.textContent?.trim() || '';
 	let loadingTextTimer = null;
 	let isLoadingTextLooping = false;
+	let isSubmitting = false;
+
+	const handleReloadHotkeys = (event) => {
+		if (!isSubmitting) {
+			return undefined;
+		}
+
+		const isReloadShortcut = 'F5' === event.key || ((event.metaKey || event.ctrlKey) && 'r' === event.key.toLowerCase());
+
+		if (!isReloadShortcut) {
+			return undefined;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		return false;
+	};
+
+	const toggleReloadProtection = (shouldProtect) => {
+		if (shouldProtect) {
+			document.addEventListener('keydown', handleReloadHotkeys, true);
+			return;
+		}
+
+		document.removeEventListener('keydown', handleReloadHotkeys, true);
+	};
 
 	const stopLoadingTextAnimation = () => {
 		isLoadingTextLooping = false;
@@ -157,10 +184,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	onboardForm.addEventListener('submit', async (event) => {
 		event.preventDefault();
 
+		if (isSubmitting) {
+			return;
+		}
+
 		const formData = new FormData(onboardForm);
 		formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
 		const submitButton = onboardForm.querySelector('.tutor-onboard-submit-btn');
 		const loadingScreen = submitButton?.dataset.screen || __('Loading...', 'tutor');
+		isSubmitting = true;
+		toggleReloadProtection(true);
 
 		if (submitButton) {
 			submitButton.disabled = true;
@@ -190,11 +223,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			tutor_toast(error?.message || __('Something went wrong!', 'tutor'), '', 'error');
 			await wait(1000);
 		} finally {
+			isSubmitting = false;
 			if (submitButton) {
 				submitButton.disabled = false;
 			}
 			await loadingTextAnimation;
 			await fadeOutLoadingScreen();
+			toggleReloadProtection(false);
 			location.href = _tutorOnboardObject.tutor_welcome_page;
 		}
 	});
