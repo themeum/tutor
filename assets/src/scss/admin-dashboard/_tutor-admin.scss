@@ -1957,6 +1957,7 @@ h2.tutor-page-heading {
   overflow: hidden;
   margin-inline-start: -20px;
   position: relative;
+  overflow: hidden;
 
   body:has(#tutor-course-builder) & {
     margin-inline-start: 0;
@@ -1965,7 +1966,7 @@ h2.tutor-page-heading {
   .tutor-offer-notice-dismiss {
     position: absolute;
     top: 50%;
-    inset-inline-end: 56px;
+    inset-inline-end: 12px;
     transform: translateY(-50%);
     background: transparent;
     border: none;
@@ -1992,6 +1993,8 @@ h2.tutor-page-heading {
     max-width: 1200px;
     margin: 0 auto;
     padding-block: 24px;
+    padding-inline-start: 24px;
+    padding-inline-end: 56px;
 
     .tutor-offer-notice-left {
       display: flex;
@@ -2090,12 +2093,6 @@ h2.tutor-page-heading {
       padding-inline: 24px 56px;
     }
 
-    .tutor-offer-notice-dismiss {
-      inset-inline-end: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
     .tutor-offer-notice-left [data-header] {
       font-size: 32px;
       line-height: 30px;
@@ -2115,10 +2112,14 @@ h2.tutor-page-heading {
     min-height: 140px;
     margin-left: 0;
 
+    .auto-fold & {
+      margin-inline-start: -10px;
+    }
+
     .tutor-offer-notice-dismiss {
+      top: 12px;
       inset-inline-end: 12px;
-      top: 50%;
-      transform: translateY(-50%);
+      transform: none;
     }
 
     .tutor-offer-notice-wrapper {
@@ -2126,11 +2127,12 @@ h2.tutor-page-heading {
 
       .tutor-offer-notice-right {
         flex-direction: column;
-        align-items: flex-end;
+        align-items: center;
         gap: 12px;
 
         .tutor-offer-notice-text {
           width: 100%;
+          text-align: center;
         }
 
         .tutor-offer-notice-timer {
@@ -2145,6 +2147,16 @@ h2.tutor-page-heading {
   }
 
   @include breakpoint-max(480) {
+    .tutor-offer-notice-dismiss {
+      top: 12px;
+      inset-inline-end: 12px;
+      transform: none;
+    }
+
+    .tutor-offer-notice-wrapper {
+      padding-inline-end: 24px;
+    }
+
     .tutor-offer-notice-left {
       [data-subheader],
       [data-subtext] {
