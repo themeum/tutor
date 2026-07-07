@@ -17,9 +17,9 @@ $tutor_home_page    = 'https://tutorlms.com';
 $asset_base         = 'https://tutor-lms.s3.us-east-1.amazonaws.com/whats-new/';
 
 $action_button_text = $has_pro ? __( 'Learn more', 'tutor' ) : __( 'Get Pro', 'tutor' );
-$action_button_url  = $has_pro ? $tutor_home_page : $tutor_pricing_page;
 
-$render_action_button = function ( $text, $url ) {
+$render_action_button = function ( $text, $pro_url = '' ) use ( $has_pro, $tutor_pricing_page, $tutor_home_page ) {
+	$url = $has_pro ? ( $pro_url ? $pro_url : $tutor_home_page ) : $tutor_pricing_page;
 	?>
 	<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="tutor-section-action">
 		<?php echo esc_html( $text ); ?>
@@ -700,7 +700,7 @@ $a11y_feature_cards = array(
 	-webkit-text-fill-color: transparent;
 	color: transparent;
 	filter: url(#tutor-milestone-inner-shadow);
-	animation: tutor-milestone-gradient 6s linear infinite;
+	animation: tutor-milestone-gradient 2s linear infinite;
 }
 @keyframes tutor-milestone-gradient {
 	0% {
@@ -721,7 +721,7 @@ $a11y_feature_cards = array(
 	letter-spacing: -0.5%;
 	font-weight: 500;
 }
-.tutor-welcome .tutor-section-milestone .tutor-section-title p a {
+.tutor-welcome .tutor-section-milestone .tutor-section-title p span {
 	text-decoration: none;
 	color: rgba(0, 73, 248, 1);
 
@@ -1018,7 +1018,7 @@ $a11y_feature_cards = array(
 				<div class="tutor-section-title-right">
 					<p><?php esc_html_e( 'Notes, discussions, resources, lesson comments – all accessible without leaving the lesson. No more tab-switching. No more hunting.', 'tutor' ); ?></p>
 					<div>
-						<?php $render_action_button( $action_button_text, $action_button_url ); ?>
+						<?php $render_action_button( $action_button_text, 'https://tutorlms.com/Course-Builder/' ); ?>
 					</div>
 				</div>
 			</div>
@@ -1043,7 +1043,7 @@ $a11y_feature_cards = array(
 				<div class="tutor-section-title-right">
 					<p><?php esc_html_e( 'Most LMSs treat assessment as the boring part. Tutor LMS 4.0 turns it into the part students look forward to — with five new interactive quiz types designed to keep them engaged.', 'tutor' ); ?></p>
 					<div>
-						<?php $render_action_button( $action_button_text, $action_button_url ); ?>
+						<?php $render_action_button( $action_button_text, 'https://tutorlms.com/quizzess/' ); ?>
 					</div>
 				</div>
 			</div>
@@ -1216,7 +1216,7 @@ $a11y_feature_cards = array(
 						printf(
 							// translators: %s: placeholder is a link.
 							esc_html__( 'eLearning websites are running on %s', 'tutor' ),
-							'<a href="https://www.tutorlms.com/" target="_blank">Tutor LMS.</a>'
+							'<span>Tutor LMS.</span>'
 						);
 						?>
 					</p>
