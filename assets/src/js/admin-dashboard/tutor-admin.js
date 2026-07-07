@@ -528,20 +528,19 @@ jQuery(document).ready(function ($) {
 		btnOfferNoticeDismiss.addEventListener('click', async function () {
 			btnOfferNoticeDismiss.disabled = true;
 			try {
+				const notice = document.querySelector('.tutor-offer-notice')
+				notice.remove();
+
 				const formData = new FormData();
 				formData.set('action', 'tutor_dismiss_offer_notice');
 				const post = await ajaxHandler(formData);
-				const response = await post.json();
-				if (post.ok) {
-					tutor_toast(__('Success', 'tutor'), response.message, 'success');
-					window.location.reload();
-				} else {
-					tutor_toast(__('Operation failed', 'tutor'), response.message || __('Something went wrong!', 'tutor'), "error");
-					btnOfferNoticeDismiss.disabled = false;
+				if (!post.ok) {
+					throw new Error(__('Operation failed', 'tutor'));
 				}
 			} catch (e) {
 				tutor_toast(__('Operation failed', 'tutor'), e, "error");
 				btnOfferNoticeDismiss.disabled = false;
+				setTimeout(() => { window.location.reload() }, 1000);
 			}
 		})
 	}

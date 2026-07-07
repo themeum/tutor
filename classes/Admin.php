@@ -101,7 +101,7 @@ class Admin {
 	 * @return void
 	 */
 	public function show_offer_notice() {
-		if ( ! User::is_admin() ) {
+		if ( ! User::is_admin() || Input::has( 'welcome', Input::GET_REQUEST ) ) {
 			return;
 		}
 
