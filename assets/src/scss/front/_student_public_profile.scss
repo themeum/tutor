@@ -12,7 +12,9 @@
 		}
 		.ratings {
 			display: flex;
-			align-items: flex-end;
+			align-items: center;
+			gap: 4px;
+
 			.text-regular-caption {
 				color: #c0c3cb !important;
 			}
@@ -157,13 +159,13 @@
 					font-size: 16px;
 
 					.rating-digits {
-						color: white;
+						color: #ffffff;
 						font-size: 16px;
 						font-weight: 500;
 					}
 
 					.rating-total-meta {
-						color: #757575;
+						color: #ffffff;
 					}
 				}
 			}
