@@ -220,7 +220,7 @@ $a11y_feature_cards = array(
 	gap: 128px;
 	max-width: 1280px;
 	margin: 0 auto;
-	padding: 64px 20px;
+	padding: 64px 24px;
 }
 .tutor-welcome .tutor-section-title {
 	display: flex;
@@ -791,7 +791,7 @@ $a11y_feature_cards = array(
 	display: none;
 	}
 	.tutor-welcome .tutor-section-layout {
-	padding: 48px 20px;
+	padding: 48px 24px;
 	gap: 96px;
 	}
 	.tutor-welcome .tutor-section-learner {
