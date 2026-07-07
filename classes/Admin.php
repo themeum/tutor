@@ -30,6 +30,7 @@ class Admin {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -62,6 +63,9 @@ class Admin {
 		add_action( 'wp_ajax_tutor_do_not_show_feature_page', array( $this, 'handle_do_not_show_feature_page' ) );
 
 		add_action( 'upgrader_process_complete', array( $this, 'set_permalink_flag_on_upgrade' ), 10, 2 );
+
+		add_action( 'admin_notices', array( $this, 'show_offer_notice' ) );
+		add_action( 'wp_ajax_tutor_dismiss_offer_notice', array( $this, 'ajax_dismiss_offer_notice' ) );
 	}
 
 	/**
@@ -76,6 +80,97 @@ class Admin {
 	 */
 	public function set_permalink_flag_on_upgrade( $upgrader_object, $options ) {
 		Permalink::set_permalink_reset_flag( $upgrader_object, $options );
+	}
+
+	/**
+	 * Check offer notice is dismissed.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	private function is_offer_notice_dismissed() {
+		return '4.0.0' === get_transient( 'tutor_offer_notice_dismissed' );
+	}
+
+	/**
+	 * Show offer notice
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function show_offer_notice() {
+		if ( ! User::is_admin() ) {
+			return;
+		}
+
+		$is_free_user = ! tutor()->has_pro;
+		$cta_label    = __( 'Claim 30% OFF', 'tutor' );
+		$cta_link     = 'https://tutorlms.com/pricing/?utm_source=tutor-plugin&utm_medium=notice&utm_campaign=tutor-lms-pro-offer';
+
+		$now           = new \DateTimeImmutable( 'now', wp_timezone() );
+		$expiration_dt = '2026-07-15 23:59:59';
+		$expiration    = new \DateTimeImmutable( $expiration_dt, wp_timezone() );
+
+		$remaining = max( 0, $expiration->getTimestamp() - $now->getTimestamp() );
+
+		$days    = floor( $remaining / DAY_IN_SECONDS );
+		$hours   = floor( ( $remaining % DAY_IN_SECONDS ) / HOUR_IN_SECONDS );
+		$minutes = floor( ( $remaining % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS );
+		$seconds = $remaining % MINUTE_IN_SECONDS;
+
+		$expire_in = sprintf(
+			'%dd:%02dh:%02d:%02d',
+			$days,
+			$hours,
+			$minutes,
+			$seconds
+		);
+
+		if ( $is_free_user && $remaining > 0 && ! self::is_offer_notice_dismissed() ) {
+			?>
+			<div class="tutor-offer-notice">
+				<div class="tutor-offer-notice-wrapper">
+					<div class="tutor-offer-notice-left">
+						<div data-subheader><?php esc_html_e( '4.0 launch offer', 'tutor' ); ?></div>
+						<div data-header><?php esc_html_e( '30% OFF', 'tutor' ); ?></div>
+						<div data-subtext><?php esc_html_e( 'on all annual plans', 'tutor' ); ?></div>
+					</div>
+					<div class="tutor-offer-notice-right">
+						<div class="tutor-offer-notice-text"><?php esc_html_e( 'Offer ends by', 'tutor' ); ?> <span class="tutor-offer-notice-timer" data-expiry="<?php echo esc_attr( $expiration->getTimestamp() ); ?>"><?php echo esc_html( $expire_in ); ?></span></div>
+						<a class="tutor-offer-notice-cta" href="<?php echo esc_url( $cta_link ); ?>" target="_blank">
+							<?php echo esc_html( $cta_label ); ?>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="#fff" d="M13.938 6.937a.55.55 0 0 0-.786 0 .555.555 0 0 0 0 .778l3.338 3.34H5.243a.55.55 0 0 0-.55.551c0 .305.242.558.55.558h11.246l-3.337 3.334a.563.563 0 0 0 0 .785.55.55 0 0 0 .786 0L18.217 12a.543.543 0 0 0 0-.78z"/></svg>
+						</a>	
+					</div>
+				</div>
+				<button type="button" class="tutor-offer-notice-dismiss"><span class="tutor-icon-times"></span></button>
+			</div>
+			<?php
+		}
+	}
+
+	/**
+	 * Dismiss offer notice.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void JSON response.
+	 */
+	public function ajax_dismiss_offer_notice() {
+		if ( ! User::is_admin() ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
+		if ( self::is_offer_notice_dismissed() ) {
+			$this->response_bad_request( __( 'You have already dismissed the offer notice.', 'tutor' ) );
+		}
+
+		// Set expiry until next day.
+		$expiration = strtotime( 'tomorrow' ) - time();
+		set_transient( 'tutor_offer_notice_dismissed', '4.0.0', $expiration );
+		$this->json_response( __( 'Notice dismissed', 'tutor' ) );
 	}
 
 	/**
@@ -347,13 +442,13 @@ class Admin {
 	 */
 	public function feature_promotion_page() {
 		include tutor()->path . 'views/pages/welcome.php';
-		// include tutor()->path . 'views/pages/feature-promotion.php';
 	}
 
 	/**
 	 * Show students page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_students() {
@@ -364,6 +459,7 @@ class Admin {
 	 * Show instructor page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_instructors() {
@@ -374,6 +470,7 @@ class Admin {
 	 * Show announcements page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_announcements() {
@@ -384,6 +481,7 @@ class Admin {
 	 * Show Q&A page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function question_answer() {
@@ -394,6 +492,7 @@ class Admin {
 	 * Show quiz attempts page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function quiz_attempts() {
@@ -404,6 +503,7 @@ class Admin {
 	 * Show the withdraw requests table
 	 *
 	 * @since 1.2.0
+	 *
 	 * @return void
 	 */
 	public function withdraw_requests() {
@@ -414,6 +514,7 @@ class Admin {
 	 * Enable or disable addons
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function enable_disable_addons() {
@@ -424,6 +525,7 @@ class Admin {
 	 * Tutor tools page (OLD)
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_tools_old() {
@@ -458,6 +560,7 @@ class Admin {
 	 * Show pro upgrade page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_get_pro() {
@@ -470,6 +573,7 @@ class Admin {
 	 * @since 1.0.0
 	 *
 	 * @param string $parent_file parent file.
+	 *
 	 * @return string
 	 */
 	public function parent_menu_active( $parent_file ) {
@@ -509,6 +613,7 @@ class Admin {
 	 * Filter posts for instructor
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function filter_posts_for_instructors() {
@@ -524,6 +629,7 @@ class Admin {
 	 * @since 1.0.0
 	 *
 	 * @param mixed $clauses clauses.
+	 *
 	 * @return mixed
 	 */
 	public function posts_clauses_request( $clauses ) {
@@ -555,6 +661,7 @@ class Admin {
 	 * Prevent unauthorised course/lesson edit page by direct URL
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function check_if_current_users_post() {
@@ -595,6 +702,7 @@ class Admin {
 	 * @since 1.0.0
 	 *
 	 * @param string $template_path template file path.
+	 *
 	 * @return array
 	 */
 	public static function scan_template_files( $template_path = null ) {
@@ -626,6 +734,7 @@ class Admin {
 	 * Get Template overridden files
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return array
 	 */
 	public static function template_overridden_files() {
@@ -654,6 +763,7 @@ class Admin {
 	 * @since 1.0.0
 	 *
 	 * @param array $actions action list.
+	 *
 	 * @return array
 	 */
 	public function plugin_action_links( $actions ) {
@@ -707,6 +817,7 @@ class Admin {
 	 * @since 1.0.0
 	 *
 	 * @param string $footer_text footer text.
+	 *
 	 * @return string
 	 */
 	public function admin_footer_text( $footer_text ) {
@@ -741,6 +852,7 @@ class Admin {
 	 * Tutor Course List
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return void
 	 */
 	public function tutor_course_list() {
@@ -796,6 +908,7 @@ class Admin {
 	 * Show welcome page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function welcome_page() {
