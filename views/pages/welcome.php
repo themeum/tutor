@@ -104,10 +104,9 @@ $learner_cards = array(
 
 $interactive_cards = array(
 	array(
-		'title'     => __( 'Ordering', 'tutor' ),
-		'image'     => 'ordering.webp',
-		'class'     => 'tutor-section-card-ordering',
-		'grid_area' => 'ordering',
+		'title'     => __( 'Puzzle', 'tutor' ),
+		'image'     => 'puzzle.webp',
+		'grid_area' => 'puzzle',
 	),
 	array(
 		'title'     => __( 'Image Marking', 'tutor' ),
@@ -118,11 +117,6 @@ $interactive_cards = array(
 		'title'     => __( 'Graph', 'tutor' ),
 		'image'     => 'graph.webp',
 		'grid_area' => 'graph',
-	),
-	array(
-		'title'     => __( 'Puzzle', 'tutor' ),
-		'image'     => 'puzzle.webp',
-		'grid_area' => 'puzzle',
 	),
 	array(
 		'title'     => __( 'Range', 'tutor' ),
@@ -437,8 +431,8 @@ $a11y_feature_cards = array(
 	}
 }
 .tutor-welcome .tutor-section-interactive .tutor-section-cards {
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	grid-template-areas: "ordering ordering image-marking image-marking" "graph puzzle range pin";
+	grid-template-columns: repeat(6, 1fr);
+	grid-template-areas: "puzzle puzzle puzzle  image-marking image-marking image-marking" "graph graph range range pin pin";
 }
 .tutor-welcome .tutor-section-learner .tutor-section-cards .tutor-section-card-notes {
 	background-image: url("https://tutor-lms.s3.us-east-1.amazonaws.com/whats-new/notes-bg.webp");
@@ -831,7 +825,7 @@ $a11y_feature_cards = array(
 	padding: 20px;
 	}
 	.tutor-welcome .tutor-section-interactive .tutor-section-cards {
-	grid-template-areas: "ordering image-marking" "graph puzzle" "range pin";
+	grid-template-areas: "puzzle puzzle puzzle  image-marking image-marking image-marking" "graph graph range range pin pin";
 	}
 	.tutor-welcome .tutor-section-a11y .tutor-section-cards {
 	grid-template-areas: "mode-preference mode-preference" "font contrast" "vision motion";
@@ -966,7 +960,8 @@ $a11y_feature_cards = array(
 	max-width: 196px;
 	}
 	.tutor-welcome .tutor-section-interactive .tutor-section-cards {
-	grid-template-areas: "ordering" "image-marking" "graph" "puzzle" "range" "pin";
+	grid-template-columns: 1fr;
+	grid-template-areas: "puzzle" "image-marking" "graph" "range" "pin";
 	}
 	.tutor-welcome .tutor-section-native .tutor-section-cards {
 	grid-template-areas: "native-app" "navigation" "mode";
