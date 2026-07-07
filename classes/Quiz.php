@@ -2034,6 +2034,7 @@ class Quiz {
 
 				ConfirmationModal::make()
 					->id( $skip_modal_id )
+					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/warning.svg' ), 80, 80, ConfirmationModal::ICON_TYPE_HTML )
 					->title( __( 'Do You Want to Skip This Quiz?', 'tutor' ) )
 					->message( __( 'Are you sure you want to skip this quiz? Please confirm your choice.', 'tutor' ) )
 					->confirm_button( $skip_modal_confirm_button )

@@ -168,24 +168,20 @@ const styles = {
     background-color: ${colorTokens.bg.white};
     width: 100%;
 
-    ${
-      isActive &&
-      css`
-        border-color: ${colorTokens.stroke.brand};
-        background-color: ${colorTokens.background.hover};
-      `
-    }
+    ${isActive &&
+    css`
+      border-color: ${colorTokens.stroke.brand};
+      background-color: ${colorTokens.background.hover};
+    `}
 
     :hover {
       background-color: ${colorTokens.background.hover};
     }
 
-    ${
-      isOverlay &&
-      css`
-        box-shadow: ${shadow.drag};
-      `
-    }
+    ${isOverlay &&
+    css`
+      box-shadow: ${shadow.drag};
+    `}
   `,
   content: css`
     padding: ${spacing[16]};
