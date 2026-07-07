@@ -17,6 +17,7 @@ $tutor_home_page    = 'https://tutorlms.com';
 $asset_base         = 'https://tutor-lms.s3.us-east-1.amazonaws.com/whats-new/';
 
 $action_button_text = $has_pro ? __( 'Learn more', 'tutor' ) : __( 'Get Pro', 'tutor' );
+$action_button_url  = $has_pro ? $tutor_home_page : $tutor_pricing_page;
 
 $render_action_button = function ( $text, $pro_url = '' ) use ( $has_pro, $tutor_pricing_page, $tutor_home_page ) {
 	$url = $has_pro ? ( $pro_url ? $pro_url : $tutor_home_page ) : $tutor_pricing_page;
