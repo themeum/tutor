@@ -25,6 +25,13 @@ class Tutor_Setup {
 	use JsonResponse;
 
 	/**
+	 * Sample courses JSON URL for onboarding import.
+	 *
+	 * @since 4.0.0
+	 */
+	const TUTOR_SAMPLE_COURSES_JSON_URL = 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/onbaord-courses.json';
+
+	/**
 	 * Register hooks
 	 *
 	 * @since 1.0.0
@@ -107,8 +114,7 @@ class Tutor_Setup {
 		}
 
 		try {
-			$file_url = 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/workademy/data.json';
-			( new SampleCourse() )->import( $file_url );
+			( new SampleCourse() )->import( self::TUTOR_SAMPLE_COURSES_JSON_URL );
 			$this->json_response( __( 'Sample courses imported successfully', 'tutor' ) );
 		} catch ( \Throwable $th ) {
 			$this->response_bad_request( tutor_utils()->error_message() );
