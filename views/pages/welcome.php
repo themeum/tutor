@@ -1236,7 +1236,7 @@ $a11y_feature_cards = array(
 						</div>
 						<div class="tutor-rating-divider"></div>
 						<div class="tutor-rating-item">
-							<div class="tutor-rating-value"><?php esc_html_e( '1#', 'tutor' ); ?></div>
+							<div class="tutor-rating-value"><?php esc_html_e( '#1', 'tutor' ); ?></div>
 							<div class="tutor-rating-label"><?php esc_html_e( 'Product Hunt', 'tutor' ); ?></div>
 						</div>
 						<div class="tutor-rating-divider"></div>
