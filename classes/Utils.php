@@ -4445,9 +4445,9 @@ class Utils {
 		}
 
 		if ( $wpdb->use_mysqli ) {
-			$server_info = mysqli_get_server_info($wpdb->dbh); // @codingStandardsIgnoreLine.
+			$server_info = mysqli_get_server_info( $wpdb->dbh ); // @codingStandardsIgnoreLine.
 		} else {
-			$server_info = mysql_get_server_info($wpdb->dbh); // @codingStandardsIgnoreLine.
+			$server_info = mysql_get_server_info( $wpdb->dbh ); // @codingStandardsIgnoreLine.
 		}
 
 		return array(
@@ -7335,7 +7335,14 @@ class Utils {
 	 * @return string
 	 */
 	public function get_cover_photo_url( $user_id ) {
-		$cover_photo_src = tutor()->url . 'assets/images/cover-photo.jpg';
+		$cover_placeholder      = tutor()->url . 'assets/images/cover-photo.webp';
+		$cover_placeholder_kids = tutor()->url . 'assets/images/cover-photo-kids.webp';
+
+		$admin_learning_mode   = tutor_utils()->get_option( 'learning_mode', Options_V2::LEARNING_MODE_MODERN );
+		$student_learning_mood = UserPreference::get( 'learning_mood', $admin_learning_mode, $user_id );
+		$show_kids_cover_photo = Options_V2::LEARNING_MODE_KIDS === $student_learning_mood;
+
+		$cover_photo_src = $show_kids_cover_photo ? $cover_placeholder_kids : $cover_placeholder;
 		$cover_photo_id  = get_user_meta( $user_id, '_tutor_cover_photo', true );
 		if ( $cover_photo_id ) {
 			$url                               = wp_get_attachment_image_url( $cover_photo_id, 'full' );
@@ -9269,7 +9276,7 @@ class Utils {
 		if ( 0 === $s ) {
 			$r = $g = $b = $l; //phpcs:ignore
 		} else {
-			$hue2rgb = function( $p, $q, $t ) {
+			$hue2rgb = function ( $p, $q, $t ) {
 				if ( $t < 0 ) {
 					++$t;
 				}
@@ -9298,9 +9305,9 @@ class Utils {
 
 	/**
 	 * Get brand color
-	 * 
+	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_brand_color() {
@@ -9310,9 +9317,9 @@ class Utils {
 
 	/**
 	 * Get default brand color
-	 * 
+	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_default_brand_color() {

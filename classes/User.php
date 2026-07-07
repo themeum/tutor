@@ -667,9 +667,10 @@ class User {
 		$timezone = self::get_user_timezone_string( $user );
 
 		// Prepare cover photo.
-		$cover_placeholder = tutor()->url . 'assets/images/cover-photo.jpg';
-		$cover_photo_src   = $cover_placeholder;
-		$cover_photo_id    = get_user_meta( $user->ID, self::COVER_PHOTO_META, true );
+		$cover_placeholder      = tutor()->url . 'assets/images/cover-photo.webp';
+		$cover_placeholder_kids = tutor()->url . 'assets/images/cover-photo-kids.webp';
+		$cover_photo_src        = tutor_utils()->is_kids_mode() ? $cover_placeholder_kids : $cover_placeholder;
+		$cover_photo_id         = get_user_meta( $user->ID, self::COVER_PHOTO_META, true );
 
 		if ( $cover_photo_id ) {
 			$url = wp_get_attachment_image_url( $cover_photo_id, 'full' );
