@@ -426,6 +426,9 @@ $a11y_feature_cards = array(
 .tutor-welcome .tutor-lm-text-transition.fading {
 	opacity: 0;
 }
+.tutor-welcome .tutor-section-dashboard {
+	padding-top: 64px;
+}
 .tutor-welcome .tutor-section-dashboard .tutor-section-cards .tutor-section-card-navigation {
 	background-image: url("https://tutor-lms.s3.us-east-1.amazonaws.com/whats-new/navigation-bg.webp");
 	background-size: cover;
@@ -598,11 +601,13 @@ $a11y_feature_cards = array(
 .tutor-welcome .tutor-section-bg-interactive .tutor-section-title p,
 .tutor-welcome .tutor-section-bg-interactive .tutor-section-title h2,
 .tutor-welcome .tutor-section-bg-interactive .tutor-section-title-right p,
-.tutor-welcome .tutor-section-bg-native .tutor-section-title p,
 .tutor-welcome .tutor-section-bg-native .tutor-section-title h2,
 .tutor-welcome .tutor-section-bg-native .tutor-section-title-center p,
 .tutor-welcome .tutor-section-bg-native .tutor-section-title-center h2 {
 	color: #fff;
+}
+.tutor-welcome .tutor-section-bg-native .tutor-section-title p {
+	color: rgba(255, 255, 255, 0.7);
 }
 
 /* Interactive Assessments Card background */
@@ -664,7 +669,7 @@ $a11y_feature_cards = array(
 .tutor-welcome .tutor-section-native .gradient-btn-dot {
 	width: 8px;
 	height: 8px;
-	background-color: #fff;
+	background-color: rgba(255, 255, 255, 0.7);
 	border-radius: 50%;
 	display: inline-block;
 	flex-shrink: 0;
@@ -675,6 +680,89 @@ $a11y_feature_cards = array(
 	50%  { transform: translate(-50%, -50%) rotate(240deg); }
 	75%  { transform: translate(-50%, -50%) rotate(330deg); }
 	100% { transform: translate(-50%, -50%) rotate(420deg); }
+}
+.tutor-welcome .tutor-section-milestone {
+	padding-bottom: 32px 10px;
+}
+.tutor-welcome .tutor-section-milestone .tutor-section-title .tutor-section-title-center {
+	gap: 32px;
+}
+.tutor-welcome .tutor-section-milestone .tutor-section-title h1 {
+	font-size: 9rem;
+	line-height: 1;
+	font-weight: 700;
+	margin: 0;
+	background: linear-gradient(
+		90deg, 
+		#124BFF 0%, 
+		#4184FF 25%, 
+		#F26D6D 50%, 
+		#124BFF 75%, 
+		#124BFF 100%
+	);
+	background-size: 200% auto;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+	filter: url(#tutor-milestone-inner-shadow);
+	animation: tutor-milestone-gradient 6s linear infinite;
+}
+@keyframes tutor-milestone-gradient {
+	0% {
+		background-position: 0% center;
+	}
+	100% {
+		background-position: 200% center;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.tutor-welcome .tutor-section-milestone .tutor-section-title h1 {
+		animation: none;
+	}
+}
+.tutor-welcome .tutor-section-milestone .tutor-section-title p {
+	font-size: 20px;
+	line-height: 28px;
+	letter-spacing: -0.5%;
+	font-weight: 500;
+}
+.tutor-welcome .tutor-section-milestone .tutor-section-title p a {
+	text-decoration: none;
+	color: rgba(0, 73, 248, 1);
+
+}
+.tutor-welcome .tutor-milestone-ratings {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 24px;
+	margin-top: 40px;
+}
+.tutor-welcome .tutor-rating-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+}
+
+.tutor-welcome .tutor-rating-value {
+	font-size: 20px;
+	font-weight: 700;
+	color: rgb(15, 15, 15);
+	line-height: 28px;
+}
+.tutor-welcome .tutor-rating-label {
+	font-size: 18px;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.7);
+	line-height: 26px;
+}
+.tutor-welcome .tutor-rating-divider {
+	width: 1px;
+	height: 32px;
+	background-color: rgba(217, 217, 217, 1);
 }
 
 /* Action button on dark backgrounds */
@@ -761,6 +849,28 @@ $a11y_feature_cards = array(
 	width: min-content;
 	margin-inline: auto;
 	}
+	.tutor-welcome .tutor-section-milestone .tutor-section-title h1 {
+		font-size: 6rem;
+	}
+	.tutor-welcome .tutor-section-milestone .tutor-section-title p {
+		font-size: 18px;
+		line-height: 26px;
+	}
+	.tutor-welcome .tutor-milestone-ratings {
+		gap: 20px;
+		margin-top: 32px;
+	}
+	.tutor-welcome .tutor-rating-value {
+		font-size: 18px;
+		line-height: 26px;
+	}
+	.tutor-welcome .tutor-rating-label {
+		font-size: 16px;
+		line-height: 24px;
+	}
+	.tutor-welcome .tutor-rating-divider {
+		height: 28px;
+	}
 }
 @media (max-width: 768px) {
 	.tutor-welcome {
@@ -770,11 +880,55 @@ $a11y_feature_cards = array(
 	height: 404px;
 	object-fit: cover;
 	}
+	.tutor-welcome .tutor-section-milestone .tutor-section-title h1 {
+		font-size: 4.5rem;
+	}
+	.tutor-welcome .tutor-section-milestone .tutor-section-title p {
+		font-size: 16px;
+		line-height: 24px;
+	}
+	.tutor-welcome .tutor-milestone-ratings {
+		gap: 16px;
+		margin-top: 24px;
+	}
+	.tutor-welcome .tutor-rating-value {
+		font-size: 16px;
+		line-height: 24px;
+	}
+	.tutor-welcome .tutor-rating-label {
+		font-size: 14px;
+		line-height: 20px;
+	}
+	.tutor-welcome .tutor-rating-divider {
+		height: 24px;
+	}
 }
 @media (max-width: 430px) {
 	.tutor-welcome .tutor-hero-image {
 	height: 263px;
 	object-fit: cover;
+	}
+	.tutor-welcome .tutor-section-milestone .tutor-section-title h1 {
+		font-size: 3.2rem;
+	}
+	.tutor-welcome .tutor-section-milestone .tutor-section-title p {
+		font-size: 14px;
+		line-height: 20px;
+	}
+	.tutor-welcome .tutor-milestone-ratings {
+		gap: 10px;
+		margin-top: 20px;
+	}
+	.tutor-welcome .tutor-rating-value {
+		font-size: 14px;
+		line-height: 20px;
+	}
+	.tutor-welcome .tutor-rating-label {
+		font-size: 12px;
+		line-height: 16px;
+	}
+	.tutor-welcome .tutor-rating-divider {
+		height: 20px;
 	}
 	.tutor-welcome .tutor-welcome-dismiss-bar {
 	top: 8px;
@@ -930,15 +1084,6 @@ $a11y_feature_cards = array(
 						);
 						?>
 					</h2>
-					<p>
-						<?php
-						printf(
-							// translators: placeholder is a line break.
-							esc_html__( 'A premium mobile experience that feels like a native app — without building one. Optimized for the thumb %s zone, the commute, and every moment learning actually happens.', 'tutor' ),
-							'<br/>'
-						);
-						?>
-					</p>
 				</div>
 			</div>
 
@@ -1004,7 +1149,6 @@ $a11y_feature_cards = array(
 						);
 						?>
 					</h2>
-					<p><?php esc_html_e( 'From adjustable font sizes to color-blind friendly filters and reduced motion, Tutor LMS 4.0 adapts to how each student learns best — not the other way around.', 'tutor' ); ?></p>
 				</div>
 			</div>
 
@@ -1066,8 +1210,64 @@ $a11y_feature_cards = array(
 				<?php endforeach; ?>
 			</div>
 		</section>
+
+		<!-- Milestone -->
+		<section class="tutor-section-wrapper tutor-section-milestone">
+			<div class="tutor-section-title">
+				<div class="tutor-section-title-center">
+					<h1><?php esc_html_e( '100,000+', 'tutor' ); ?></h1>
+					<p>
+					<?php
+						printf(
+							// translators: %s: placeholder is a link.
+							esc_html__( 'eLearning websites are running on %s', 'tutor' ),
+							'<a href="https://www.tutorlms.com/" target="_blank">Tutor LMS.</a>'
+						);
+						?>
+					</p>
+					<div>
+						<?php $render_action_button( $action_button_text, $action_button_url ); ?>
+					</div>
+
+					<div class="tutor-milestone-ratings">
+						<div class="tutor-rating-item">
+							<div class="tutor-rating-value"><?php esc_html_e( '4.6 ★', 'tutor' ); ?></div>
+							<div class="tutor-rating-label"><?php esc_html_e( 'G2 Ratings', 'tutor' ); ?></div>
+						</div>
+						<div class="tutor-rating-divider"></div>
+						<div class="tutor-rating-item">
+							<div class="tutor-rating-value"><?php esc_html_e( '1#', 'tutor' ); ?></div>
+							<div class="tutor-rating-label"><?php esc_html_e( 'Product Hunt', 'tutor' ); ?></div>
+						</div>
+						<div class="tutor-rating-divider"></div>
+						<div class="tutor-rating-item">
+							<div class="tutor-rating-value"><?php esc_html_e( '4.7 ★', 'tutor' ); ?></div>
+							<div class="tutor-rating-label"><?php esc_html_e( 'Trustpilot', 'tutor' ); ?></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 	</div>
 </div>
+
+<!-- SVG Filter for Inset Shadow -->
+<svg width="0" height="0" style="position: absolute; pointer-events: none; overflow: hidden;" aria-hidden="true" focusable="false">
+	<defs>
+		<filter id="tutor-milestone-inner-shadow" x="-20%" y="-20%" width="140%" height="140%">
+			<feOffset dx="0" dy="3" />
+			<feGaussianBlur stdDeviation="1.5" result="offset-blur" />
+			<feComposite operator="out" in="SourceAlpha" in2="offset-blur" result="inverse" />
+			<feFlood flood-color="#9C0A0A" flood-opacity="0.14" result="color" />
+			<feComposite operator="in" in="color" in2="inverse" result="shadow" />
+			<feComposite operator="in" in="shadow" in2="SourceAlpha" result="inner-shadow" />
+			<feMerge>
+				<feMergeNode in="SourceGraphic" />
+				<feMergeNode in="inner-shadow" />
+			</feMerge>
+		</filter>
+	</defs>
+</svg>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
