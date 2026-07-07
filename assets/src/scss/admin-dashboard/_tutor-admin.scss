@@ -1957,16 +1957,20 @@ h2.tutor-page-heading {
   overflow: hidden;
   margin-inline-start: -20px;
   position: relative;
+  overflow: hidden;
 
   body:has(#tutor-course-builder) & {
     margin-inline-start: 0;
   }
 
+  .auto-fold & {
+    margin-inline-start: -10px;
+  }
+
   .tutor-offer-notice-dismiss {
     position: absolute;
-    top: 50%;
-    inset-inline-end: 56px;
-    transform: translateY(-50%);
+    top: 12px;
+    inset-inline-end: 12px;
     background: transparent;
     border: none;
     color: rgba(115, 118, 125, 1);
@@ -1992,6 +1996,8 @@ h2.tutor-page-heading {
     max-width: 1200px;
     margin: 0 auto;
     padding-block: 24px;
+    padding-inline-start: 24px;
+    padding-inline-end: 56px;
 
     .tutor-offer-notice-left {
       display: flex;
@@ -2090,12 +2096,6 @@ h2.tutor-page-heading {
       padding-inline: 24px 56px;
     }
 
-    .tutor-offer-notice-dismiss {
-      inset-inline-end: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
     .tutor-offer-notice-left [data-header] {
       font-size: 32px;
       line-height: 30px;
@@ -2115,22 +2115,17 @@ h2.tutor-page-heading {
     min-height: 140px;
     margin-left: 0;
 
-    .tutor-offer-notice-dismiss {
-      inset-inline-end: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
     .tutor-offer-notice-wrapper {
       padding-inline-end: 56px;
 
       .tutor-offer-notice-right {
         flex-direction: column;
-        align-items: flex-end;
+        align-items: center;
         gap: 12px;
 
         .tutor-offer-notice-text {
           width: 100%;
+          text-align: center;
         }
 
         .tutor-offer-notice-timer {
