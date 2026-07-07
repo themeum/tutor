@@ -1231,7 +1231,7 @@ $a11y_feature_cards = array(
 
 					<div class="tutor-milestone-ratings">
 						<div class="tutor-rating-item">
-							<div class="tutor-rating-value"><?php esc_html_e( '5 ★', 'tutor' ); ?></div>
+							<div class="tutor-rating-value"><?php esc_html_e( '4.6 ★', 'tutor' ); ?></div>
 							<div class="tutor-rating-label"><?php esc_html_e( 'G2 Ratings', 'tutor' ); ?></div>
 						</div>
 						<div class="tutor-rating-divider"></div>
