@@ -9819,7 +9819,7 @@ class Utils {
 	 *
 	 * @since 2.2.4
 	 *
-	 * @param string $plugin_slug
+	 * @param string $plugin_slug plugin slug.
 	 *
 	 * @return object|bool if success return object otherwise return false;
 	 */
