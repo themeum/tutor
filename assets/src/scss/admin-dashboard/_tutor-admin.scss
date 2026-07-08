@@ -1005,7 +1005,8 @@ a:has(> span.tutor-get-pro-text) {
   font-weight: 600;
   color: #000 !important;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: orange !important;
     color: #000 !important;
   }

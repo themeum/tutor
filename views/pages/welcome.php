@@ -186,6 +186,10 @@ $a11y_feature_cards = array(
 ?>
 
 <style type="text/css">
+.notice, .tutor-user-registration-notice-wrapper, #wpbody-content .error {
+	display: none;
+}
+
 .tutor-welcome {
 	margin-left: -20px;
 	background-color: rgb(255, 255, 255);
