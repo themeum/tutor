@@ -9833,6 +9833,70 @@ class Utils {
 	}
 
 	/**
+	 * Get the latest available version of a plugin from WordPress.org's update-check API,
+	 * with optional transient caching.
+	 *
+	 * @param string $plugin_file  Plugin file path relative to plugins dir, e.g. "tutor/tutor.php".
+	 * @param bool   $use_cache    Whether to read/write the transient cache. Default true.
+	 * @param int    $cache_expiry Cache lifetime in seconds. Default 5 minutes.
+	 *
+	 * @return string|false Latest version string on success, false if not found / on error.
+	 */
+	public function get_wp_org_update_version( $plugin_file, $use_cache = true, $cache_expiry = 5 * MINUTE_IN_SECONDS ) {
+
+		$cache_key = 'wp_org_update_' . md5( $plugin_file );
+
+		if ( $use_cache ) {
+			// Return cached result if available (including cached "not found" results).
+			$cached = get_transient( $cache_key );
+			if ( false !== $cached ) {
+				return ( '__none__' === $cached ) ? false : $cached;
+			}
+		}
+
+		$body = array(
+			'plugins' => wp_json_encode(
+				array(
+					'plugins' => array(
+						$plugin_file => array(),
+					),
+				)
+			),
+		);
+
+		$response = wp_remote_post(
+			'https://api.wordpress.org/plugins/update-check/1.1/',
+			array(
+				'timeout' => 10,
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded',
+					'User-Agent'   => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url( '/' ),
+				),
+				'body'    => $body,
+			)
+		);
+
+		$version = false;
+
+		if ( ! is_wp_error( $response ) ) {
+			$code = wp_remote_retrieve_response_code( $response );
+			$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+			if ( 200 === (int) $code && ! empty( $data['plugins'][ $plugin_file ]['new_version'] ) ) {
+				$version = $data['plugins'][ $plugin_file ]['new_version'];
+			}
+		}
+
+		if ( $use_cache ) {
+			// Cache the version string, or a "not found" marker so we don't hammer the API on repeated misses.
+			set_transient( $cache_key, false === $version ? '__none__' : $version, $cache_expiry );
+		}
+
+		return $version;
+	}
+
+
+	/**
 	 * Get editor list for post content.
 	 *
 	 * @since 3.0.0
