@@ -573,8 +573,8 @@ const getPreviewFrameStyles = () => `
   }
 
   /*
-   * Puzzle preview: same viewport idea as draw/pin above — board capped at min(52vh, 460px),
-   * scatter scroll area capped so header + board + pieces fit the modal column.
+   * Puzzle preview: board capped at min(52vh, 460px) like draw/pin; piece pool grows with content
+   * (no internal scroll), same as the live student scatter area on mobile.
    */
   .tutor-quiz-question[data-question='puzzle'] .quiz-question-ans-choice-area.tutor-puzzle-question {
     box-sizing: border-box;
@@ -609,11 +609,9 @@ const getPreviewFrameStyles = () => `
     box-sizing: border-box;
     width: 100%;
     max-width: 100%;
-    max-height: min(30vh, 220px);
     min-height: 96px;
     margin-top: 12px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: visible;
   }
 
   /*

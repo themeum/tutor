@@ -140,15 +140,15 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		$comment_id = 0;
-		$comment    = Input::post( 'comment', '', Input::TYPE_KSES_POST );
-		$lesson_id  = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
+		$comment   = Input::post( 'comment', '', Input::TYPE_TEXTAREA );
+		$lesson_id = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
 
 		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
 			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
 		}
 
 		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
-			if ( ! tutor_utils()->has_enrolled_content_access( 'lesson', $lesson_id ) ) {
+			if ( ! self::can_post_lesson_comment( $lesson_id ) ) {
 				wp_send_json_error( tutor_utils()->error_message() );
 				return;
 			}
@@ -714,6 +714,26 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
+	 * Check user can post lesson comment.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $lesson_id lesson id.
+	 * @param int $user_id user id. default 0 means current user id.
+	 *
+	 * @return bool true if user can post lesson comment, false otherwise.
+	 */
+	private static function can_post_lesson_comment( $lesson_id, $user_id = 0 ) {
+		$course_id = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
+		if ( ! $course_id ) {
+			return false;
+		}
+
+		$can_post = EnrollmentModel::is_enrolled( $course_id, $user_id ) || tutor_utils()->can_user_manage( 'course', $course_id, $user_id );
+		return $can_post;
+	}
+
+	/**
 	 * Replay lesson comment
 	 *
 	 * @since 1.0.0
@@ -722,22 +742,31 @@ class Lesson extends Tutor_Base {
 	 */
 	public function ajax_reply_lesson_comment() {
 		tutor_utils()->checking_nonce();
-		$comment = Input::post( 'comment', '', Input::TYPE_TEXTAREA );
-		if ( 0 === strlen( $comment ) ) {
-			wp_send_json_error();
+
+		$lesson_id      = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
+		$comment_parent = Input::post( 'comment_parent', 0, Input::TYPE_INT );
+		$comment        = Input::post( 'comment', '', Input::TYPE_TEXTAREA );
+
+		if ( ! $lesson_id || ! $comment_parent || 0 === strlen( $comment ) ) {
+			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
 			return;
 		}
 
-		$lesson_id = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
-		if ( ! tutor_utils()->has_enrolled_content_access( 'lesson', $lesson_id ) ) {
+		if ( ! self::can_post_lesson_comment( $lesson_id ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
+			return;
+		}
+
+		$parent_comment = get_comment( $comment_parent );
+		if ( ! $parent_comment || (int) $parent_comment->comment_post_ID !== $lesson_id ) {
+			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
 			return;
 		}
 
 		$comment_data = array(
 			'comment_content' => $comment,
 			'comment_post_ID' => $lesson_id,
-			'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
+			'comment_parent'  => $comment_parent,
 		);
 
 		if ( ! self::is_comment_enabled_for_lesson( $comment_data['comment_post_ID'] ) ) {
