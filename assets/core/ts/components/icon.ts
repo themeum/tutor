@@ -87,12 +87,22 @@ function fetchSVG(
   return promise;
 }
 
+let instanceCounter = 0;
+
+const namespaceSvgIds = (svgContent: string, suffix: string) => {
+  return svgContent
+    .replace(/\bid="([a-zA-Z0-9_-]+)"/g, `id="$1${suffix}"`)
+    .replace(/url\(#([a-zA-Z0-9_-]+)\)/g, `url(#$1${suffix})`)
+    .replace(/(xlink:href|href)="#([a-zA-Z0-9_-]+)"/g, `$1="#$2${suffix}"`);
+};
+
 export const icon = (props: IconProps) => ({
   name: props.name,
   width: props.width || 16,
   height: props.height || 16,
   from: props.from || 'php',
   ignoreKids: props.ignoreKids || false,
+  instanceId: `icon-${instanceCounter++}`,
 
   async init() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -105,8 +115,7 @@ export const icon = (props: IconProps) => ({
     }
 
     const svg = await fetchSVG(this.name, this.width, this.height, this.from, this.ignoreKids);
-
-    $el.innerHTML = svg;
+    $el.innerHTML = namespaceSvgIds(svg, `-${this.instanceId}`);
   },
 
   async updateIcon(newName: string) {
@@ -117,7 +126,7 @@ export const icon = (props: IconProps) => ({
     $el.innerHTML = createSvg({ width: this.width, height: this.height });
 
     const svg = await fetchSVG(this.name, this.width, this.height, this.from, this.ignoreKids);
-    $el.innerHTML = svg;
+    $el.innerHTML = namespaceSvgIds(svg, `-${this.instanceId}`);
   },
 });
 
