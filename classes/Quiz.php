@@ -964,7 +964,7 @@ class Quiz {
 					 * Check if question_type open ended or short ans the set
 					 * is_correct default value null before saving
 					 */
-					if ( in_array( $question_type, array( QuizModel::QUESTION_TYPE_OPEN_ENDED, QuizModel::QUESTION_TYPE_SHORT_ANSWER, QuizModel::QUESTION_TYPE_IMAGE_ANSWERING ), true ) ) {
+					if ( in_array( $question_type, QuizModel::get_manual_review_types(), true ) ) {
 						$answers_data['is_correct'] = null;
 						$review_required            = true;
 					}
