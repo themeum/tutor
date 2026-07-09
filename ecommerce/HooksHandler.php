@@ -404,8 +404,8 @@ class HooksHandler {
 					 * For subscription, renewal no need to update order id.
 					 */
 					if ( $this->order_model->is_single_order( $order ) ) {
+						update_post_meta( $has_enrollment->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
 						if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
-							update_post_meta( $has_enrollment->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
 							$has_bundle_enrollment_meta = get_post_meta( $has_enrollment->ID, CourseBundle::BUNDLE_ENROLLMENT_META, true );
 							if ( $has_bundle_enrollment_meta ) {
 								delete_post_meta( $has_enrollment->ID, CourseBundle::BUNDLE_ENROLLMENT_META );
