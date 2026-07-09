@@ -442,21 +442,23 @@ class HooksHandler {
 						do_action( 'tutor_order_enrolled', $order, $has_enrollment->ID );
 					}
 				}
-			} elseif ( $order->order_status === $this->order_model::ORDER_COMPLETED ) {
+			} else {
+				if ( $order->order_status === $this->order_model::ORDER_COMPLETED ) {
 					// Insert enrollment.
-					add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
+					add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
 					$enrollment_id = EnrollmentModel::do_enroll( $object_id, $order_id, $student_id );
-				if ( $enrollment_id ) {
-					if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
-						BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
-					}
-					update_post_meta( $enrollment_id, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
+					if ( $enrollment_id ) {
+						if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
+							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
+						}
+						update_post_meta( $enrollment_id, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
 
-					do_action( 'tutor_order_enrolled', $order, $enrollment_id );
-				} else {
-					// Log error message with student id and course id.
-					error_log( "Error updating enrollment for student {$student_id} and course {$object_id}" );
+						do_action( 'tutor_order_enrolled', $order, $enrollment_id );
+					} else {
+						// Log error message with student id and course id.
+						error_log( "Error updating enrollment for student {$student_id} and course {$object_id}" );
+					}
 				}
 			}
 		}
