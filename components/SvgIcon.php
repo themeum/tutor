@@ -275,8 +275,6 @@ class SvgIcon extends BaseComponent {
 
 		$unique_suffix = '-' . substr( md5( uniqid( '', true ) ), 0, 8 );
 
-		$unique_suffix = '-' . substr( md5( uniqid( '', true ) ), 0, 8 );
-
 		// Rewrite id="foo" -> id="foo-abc123".
 		$inner_svg = preg_replace(
 			'/\bid="([a-zA-Z0-9_-]+)"/',
