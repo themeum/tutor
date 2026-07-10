@@ -1953,6 +1953,10 @@ class Quiz {
 								)
 							);
 							?>
+
+							<div class="tutor-quiz-item-actions">
+								<?php $quiz_attempt_obj->render_details_button( $attempt, true ); ?>
+							</div>
 						</div>
 						<?php
 					}
