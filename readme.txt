@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.0.0
+Stable tag: 4.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -333,6 +333,15 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.1 - 10 July, 2026
+
+Update: Enhanced course access security through REST API's.
+Fix: Fixed an issue where lesson video failed to load in specific cases.
+Fix: Fixed an issue where leaner was able to download certificate even when no certificate template is selected. (Pro)
+Fix: Fixed an issue where student wasn't able to start the quiz in specific cases.
+Fix: Fixed the Quiz detail view button missing on the mobile device.
+Fix: Fixed 100% coupon causing PHP error.
 
 = 4.0.0 - 08 July, 2026
 
