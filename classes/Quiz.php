@@ -561,7 +561,7 @@ class Quiz {
 	 *
 	 * @return int inserted id|0
 	 */
-	public static function quiz_attempt( int $course_id, int $quiz_id, int $user_id, $attempt_status = 'attempt_started' ) {
+	public static function quiz_attempt( int $course_id, int $quiz_id, int $user_id, $attempt_status = QuizModel::ATTEMPT_STARTED ) {
 		global $wpdb;
 
 		if ( ! $course_id ) {
@@ -977,7 +977,7 @@ class Quiz {
 			);
 
 			if ( $review_required ) {
-				$attempt_info['attempt_status'] = 'review_required';
+				$attempt_info['attempt_status'] = QuizModel::REVIEW_REQUIRED;
 			}
 
 			$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_info, array( 'attempt_id' => $attempt_id ) );
@@ -1018,7 +1018,7 @@ class Quiz {
 		$attempt_info = array(
 			'total_answered_questions' => 0,
 			'earned_marks'             => 0,
-			'attempt_status'           => 'attempt_ended',
+			'attempt_status'           => QuizModel::ATTEMPT_ENDED,
 			'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 		);
 
@@ -1072,7 +1072,7 @@ class Quiz {
 			$attempt_id = $attempt->attempt_id;
 
 			$data = array(
-				'attempt_status'   => 'attempt_timeout',
+				'attempt_status'   => QuizModel::ATTEMPT_TIMEOUT,
 				'total_marks'      => self::get_quiz_total_marks( $quiz_id ),
 				'earned_marks'     => 0,
 				'attempt_ended_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
@@ -1388,7 +1388,7 @@ class Quiz {
 			}
 
 			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
-				$attempt_update_data['attempt_status'] = 'attempt_ended';
+				$attempt_update_data['attempt_status'] = QuizModel::ATTEMPT_ENDED;
 			}
 
 			if ( ! empty( $attempt_update_data ) ) {
@@ -1412,7 +1412,7 @@ class Quiz {
 			}
 
 			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
-				$attempt_update_data['attempt_status'] = 'attempt_ended';
+				$attempt_update_data['attempt_status'] = QuizModel::ATTEMPT_ENDED;
 			}
 
 			if ( ! empty( $attempt_update_data ) ) {
