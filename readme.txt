@@ -336,12 +336,12 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 4.0.1 - 10 July, 2026
 
-Update: Enhanced course access security through REST API's.
-Fix: Fixed an issue where lesson video failed to load in specific cases.
-Fix: Fixed an issue where leaner was able to download certificate even when no certificate template is selected. (Pro)
-Fix: Fixed an issue where student wasn't able to start the quiz in specific cases.
-Fix: Fixed the Quiz detail view button missing on the mobile device.
-Fix: Fixed 100% coupon causing PHP error.
+Update: Enhanced course access security through REST APIs.
+Fix: Resolved the lesson video loading issue.
+Fix: Resolved an issue preventing learners from starting quizzes.
+Fix: Added the missing Quiz Details button on mobile devices.
+Fix: Resolved the PHP error triggered by 100% discount coupons.
+Fix: Restricted certificate downloads when no certificate template is selected. (Pro)
 
 = 4.0.0 - 08 July, 2026
 
