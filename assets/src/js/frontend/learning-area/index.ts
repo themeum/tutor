@@ -12,6 +12,14 @@ import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './quiz';
 import { initializeSidebar } from './sidebar';
 
+const decodePathSegment = (segment: string): string => {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+};
+
 const initializeLearningArea = () => {
   initializeLearningAreaCommon();
   initializeCommon();
@@ -20,8 +28,8 @@ const initializeLearningArea = () => {
   initializeReviews();
   const { pathname, search } = window.location;
 
-  // Normalize path segments
-  const pathSegments = pathname.split('/').filter(Boolean);
+  // Decode URL-encoded path segments before comparing with configured slugs.
+  const pathSegments = pathname.split('/').filter(Boolean).map(decodePathSegment);
   const { tutorConfig } = window.TutorCore.config;
   const { lesson_slug = 'lessons', quiz_slug = 'quizzes' } = tutorConfig || {};
 
