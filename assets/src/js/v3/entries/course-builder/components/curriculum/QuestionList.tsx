@@ -637,7 +637,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                       <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
                       <div css={styles.questionTypeOptionLabelRow}>
                         <span css={styles.questionTypeOptionLabel}>{option.label}</span>
-                        <ProBadge size="small" content={__('Pro', 'tutor')} />
+                        <ProBadge size="small" />
                       </div>
                     </button>
                   </Show>
@@ -682,7 +682,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                       <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
                       <div css={styles.questionTypeOptionLabelRow}>
                         <span css={styles.questionTypeOptionLabel}>{option.label}</span>
-                        <ProBadge size="small" content={__('Pro', 'tutor')} />
+                        <ProBadge size="small" />
                       </div>
                     </button>
                   </Show>
