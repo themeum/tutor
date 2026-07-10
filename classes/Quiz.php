@@ -899,42 +899,32 @@ class Quiz {
 							$is_answer_was_correct = true;
 						}
 					} elseif ( QuizModel::QUESTION_TYPE_IMAGE_ANSWERING === $question_type ) {
-						$image_inputs          = tutor_utils()->avalue_dot( 'answer_id', $answers );
-						$image_inputs          = (array) array_map( 'sanitize_text_field', $image_inputs );
-						$given_answer          = maybe_serialize( $image_inputs );
-						$is_answer_was_correct = false;
-						/**
-						 * For the image_answering question type result
-						 * remain pending in spite of correct answer & required
-						 * review of admin/instructor. Since it's
-						 * pending we need to mark it as incorrect. Otherwise if
-						 * mark it correct then earned mark will be updated. then
-						 * again when instructor/admin review & mark it as correct
-						 * extra mark is adding. In this case, student
-						 * getting double mark for the same question.
-						 *
-						 * For now code is commenting will be removed later on
-						 *
-						 * @since 2.1.5
-						 */
+						$image_inputs = tutor_utils()->avalue_dot( 'answer_id', $answers );
+						$image_inputs = (array) array_map( 'sanitize_text_field', $image_inputs );
+						$given_answer = maybe_serialize( $image_inputs );
 
-						//phpcs:disable
+						$stored_answers = $wpdb->get_results(
+							$wpdb->prepare(
+								"SELECT answer_id, answer_title
+								FROM {$wpdb->prefix}tutor_quiz_question_answers
+								WHERE belongs_question_id = %d
+									AND belongs_question_type = %s
+								ORDER BY answer_order ASC",
+								$question_id,
+								QuizModel::QUESTION_TYPE_IMAGE_ANSWERING
+							)
+						);
 
-						// $db_answer = $wpdb->get_col(
-						// 	$wpdb->prepare(
-						// 		"SELECT answer_title
-						// 			FROM {$wpdb->prefix}tutor_quiz_question_answers
-						// 			WHERE belongs_question_id = %d
-						// 				AND belongs_question_type = 'image_answering'
-						// 			ORDER BY answer_order asc ;",
-						// 		$question_id
-						// 	)
-						// );
+						$is_answer_was_correct = true;
+						foreach ( $stored_answers as $stored_answer ) {
+							$user_answer    = isset( $image_inputs[ $stored_answer->answer_id ] ) ? trim( wp_unslash( $image_inputs[ $stored_answer->answer_id ] ) ) : '';
+							$correct_answer = trim( wp_unslash( $stored_answer->answer_title ) );
 
-						// if ( is_array( $db_answer ) && count( $db_answer ) ) {
-						// 	$is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
-						// }
-						//phpcs:enable
+							if ( 0 !== strcasecmp( $user_answer, $correct_answer ) ) {
+								$is_answer_was_correct = false;
+								break;
+							}
+						}
 					} else {
 						$custom_answer_data    = array(
 							'given_answer'          => $given_answer,
@@ -982,7 +972,7 @@ class Quiz {
 			$attempt_info = array(
 				'total_answered_questions' => tutor_utils()->count( $quiz_answers ),
 				'earned_marks'             => $total_marks,
-				'attempt_status'           => 'attempt_ended',
+				'attempt_status'           => QuizModel::ATTEMPT_ENDED,
 				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 			);
 
