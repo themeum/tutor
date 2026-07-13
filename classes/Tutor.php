@@ -936,7 +936,7 @@ final class Tutor extends Singleton {
 			PRIMARY KEY (id),
 			KEY order_id (order_id),
 			KEY meta_key (meta_key),
-			CONSTRAINT fk_tutor_ordermeta_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
+			CONSTRAINT fk_{$wpdb->prefix}tutor_ordermeta_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		$order_items_table = "CREATE TABLE {$wpdb->prefix}tutor_order_items (
@@ -950,7 +950,7 @@ final class Tutor extends Singleton {
 			PRIMARY KEY (id),
 			KEY order_id (order_id),
 			KEY item_id (item_id),
-			CONSTRAINT fk_tutor_order_item_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
+			CONSTRAINT fk_{$wpdb->prefix}tutor_order_item_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
@@ -984,7 +984,7 @@ final class Tutor extends Singleton {
 			reference_id BIGINT(20) UNSIGNED NOT NULL,
 			KEY coupon_code (coupon_code),
 			KEY reference_id (reference_id),
-			CONSTRAINT fk_tutor_coupon_application_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE
+			CONSTRAINT fk_{$wpdb->prefix}tutor_coupon_application_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE
 		) $charset_collate;";
 
 		$coupon_usage_table = "CREATE TABLE {$wpdb->prefix}tutor_coupon_usages (
@@ -994,8 +994,8 @@ final class Tutor extends Singleton {
 			PRIMARY KEY (id),
 			KEY coupon_code (coupon_code),
 			KEY user_id (user_id),
-			CONSTRAINT fk_tutor_coupon_usage_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE,
-			CONSTRAINT fk_tutor_coupon_usage_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE
+			CONSTRAINT fk_{$wpdb->prefix}tutor_coupon_usage_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE,
+			CONSTRAINT fk_{$wpdb->prefix}tutor_coupon_usage_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->users}(ID) ON DELETE CASCADE
 		) $charset_collate;";
 
 		$cart_table = "CREATE TABLE {$wpdb->prefix}tutor_carts (
@@ -1007,7 +1007,7 @@ final class Tutor extends Singleton {
 			PRIMARY KEY (id),
 			KEY user_id (user_id),
 			KEY coupon_code (coupon_code),
-			CONSTRAINT fk_tutor_cart_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE
+			CONSTRAINT fk_{$wpdb->prefix}tutor_cart_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->users}(ID) ON DELETE CASCADE
 		) $charset_collate;";
 
 		$cart_items_table = "CREATE TABLE {$wpdb->prefix}tutor_cart_items (
@@ -1017,8 +1017,8 @@ final class Tutor extends Singleton {
 			PRIMARY KEY (id),
 			KEY cart_id (cart_id),
 			KEY course_id (course_id),
-			CONSTRAINT fk_tutor_cart_item_cart_id FOREIGN KEY (cart_id) REFERENCES {$wpdb->prefix}tutor_carts(id) ON DELETE CASCADE,
-			CONSTRAINT fk_tutor_cart_item_course_id FOREIGN KEY (course_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
+			CONSTRAINT fk_{$wpdb->prefix}tutor_cart_item_cart_id FOREIGN KEY (cart_id) REFERENCES {$wpdb->prefix}tutor_carts(id) ON DELETE CASCADE,
+			CONSTRAINT fk_{$wpdb->prefix}tutor_cart_item_course_id FOREIGN KEY (course_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
 		) $charset_collate;";
 
 		$customer_table = "CREATE TABLE {$wpdb->prefix}tutor_customers (

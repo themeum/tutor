@@ -707,10 +707,10 @@ class QueryHelper {
 		// Count only.
 		if ( $count ) {
 			$sql_query = "SELECT COUNT(*)
-						FROM {$table_with_alias} 
-						{$join_clause} 
-						{$where_clause} 
-						{$groupby_clause} 
+						FROM {$table_with_alias}
+						{$join_clause}
+						{$where_clause}
+						{$groupby_clause}
 						{$having_clause}";
 
 			return (int) $wpdb->get_var( $sql_query ); //phpcs:ignore
@@ -718,11 +718,11 @@ class QueryHelper {
 
 		// Single record.
 		if ( $single ) {
-			$sql_query = "SELECT {$select_clause} 
-						FROM {$table_with_alias} 
-						{$join_clause} 
-						{$where_clause} 
-						{$groupby_clause} 
+			$sql_query = "SELECT {$select_clause}
+						FROM {$table_with_alias}
+						{$join_clause}
+						{$where_clause}
+						{$groupby_clause}
 						{$having_clause}
 						{$order_by_clause}
 						LIMIT 1";
@@ -741,11 +741,11 @@ class QueryHelper {
 
 		$limit_clause = self::prepare_limit_clause( $limit, $offset );
 
-		$sql_query = "SELECT {$calc_found_rows} {$select_clause} 
-					FROM {$table_with_alias} 
-					{$join_clause} 
-					{$where_clause} 
-					{$groupby_clause} 
+		$sql_query = "SELECT {$calc_found_rows} {$select_clause}
+					FROM {$table_with_alias}
+					{$join_clause}
+					{$where_clause}
+					{$groupby_clause}
 					{$having_clause}
 					{$order_by_clause}
 					{$limit_clause}";
@@ -913,7 +913,7 @@ class QueryHelper {
 				$value = esc_sql( sanitize_text_field( $value ) );
 				$set  .= is_numeric( $value ) ? "$key = $value" : "$key = '" . $value ."'";
 			}
-			
+
 			$set .= ",";
 		}
 		return rtrim( $set, ',' );
@@ -1038,7 +1038,7 @@ class QueryHelper {
 		$order_by_clause = self::prepare_order_clause( $order_by, $order );
 		$limit_clause    = self::prepare_limit_clause( $limit, $offset );
 
-		$query = "SELECT SQL_CALC_FOUND_ROWS 
+		$query = "SELECT SQL_CALC_FOUND_ROWS
 				{$select_clause}
 				FROM {$from_clause}
 				{$join_clauses}
@@ -1051,7 +1051,7 @@ class QueryHelper {
 		}
 
 		$results     = $wpdb->get_results( $query, $output );
-		$has_records = is_array( $results ) && count( $results );	
+		$has_records = is_array( $results ) && count( $results );
 		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
 
 		// Throw exception if error occurred.
@@ -1119,7 +1119,7 @@ class QueryHelper {
 	 */
 	public static function get_joined_count(string $primary_table, array $joining_tables, array $where = [], array $search = [], string $count_column = '*'): int {
 		global $wpdb;
-		
+
 		$from_clause  = self::prepare_table_name( $primary_table );
 		$join_clauses = self::prepare_join_clause( $joining_tables );
 		$where_clause = self::prepare_where_search_clause( $where, $search, 'AND' );
@@ -1166,33 +1166,33 @@ class QueryHelper {
 		$where_clause    = self::prepare_where_search_clause( $where, $search, 'AND' );
 		$order_by_clause = self::prepare_order_clause( $order_by, $order );
 		$limit_clause    = self::prepare_limit_clause( $limit, $offset );
-	
+
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
 		}
-	
+
 		$query = "SELECT SQL_CALC_FOUND_ROWS *
 			 FROM {$table}
 			 {$where_clause}
 			 {$order_by_clause}
 			 {$limit_clause}";
-	
+
 		$results     = $wpdb->get_results( $query, $output );
 		$has_records = is_array( $results ) && count( $results );
 		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
-	
+
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
 		}
-	
+
 		// Prepare response array.
 		$response = array(
 			'results'     => $results,
 			'total_count' => $total_count,
 		);
-	
+
 		return $response;
 	}
 
@@ -1268,10 +1268,32 @@ class QueryHelper {
 	 * @return string
 	 */
 	public static function prepare_table_name( string $table_name ) {
-		$table_prefix = self::get_table_prefix();
-		if ( strpos( $table_name,$table_prefix ) !== 0 ) {
-			$table_name = $table_prefix . $table_name;
+		global $wpdb;
+
+		// Clean up the input and extract the actual table name without its alias (e.g. "wp_users u")
+		$trimmed_table = trim( $table_name );
+		$parts         = preg_split( '/\s+/', $trimmed_table );
+		$actual_table  = $parts[0] ?? '';
+
+		// List of global tables that should never receive the subsite prefix
+		$global_tables = array(
+			$wpdb->users,
+			$wpdb->usermeta,
+			$wpdb->blogs ?? '',
+			$wpdb->blogmeta ?? '',
+			$wpdb->site ?? '',
+			$wpdb->sitemeta ?? '',
+		);
+
+		// If the targeted table is a global table, return it as-is without modification
+		if ( in_array( $actual_table, array_filter( $global_tables ), true ) ) {
+			return $table_name;
 		}
+
+		$table_prefix = self::get_table_prefix();
+		if ( strpos( $table_name, $table_prefix ) !== 0 ) {
+ 			$table_name = $table_prefix . $table_name;
+ 		}
 
 		return $table_name;
 	}
@@ -1318,7 +1340,7 @@ class QueryHelper {
 		$values       = array_values( $row );
 
 		$insert_sql = $wpdb->prepare(
-			"INSERT INTO `$table_name` (`" . implode( '`, `', $columns ) . "`) 
+			"INSERT INTO `$table_name` (`" . implode( '`, `', $columns ) . "`)
 			VALUES (" . implode( ', ', $placeholders ) . ")",
 			...$values
 		);
@@ -1357,7 +1379,7 @@ class QueryHelper {
 	 * @return array Returns an array of table columns and their details.
 	 */
 	public static function get_table_schema( $table_name) {
-		
+
 		global $wpdb;
 
 		$result = $wpdb->get_results( "DESCRIBE {$table_name}", ARRAY_A );
