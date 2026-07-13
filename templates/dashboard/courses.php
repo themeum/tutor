@@ -45,27 +45,32 @@ if ( ! isset( $active_tab, $page_tabs[ $active_tab ] ) ) {
 	$active_tab = 'courses';
 }
 
-$enrolled_courses  = CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ), $offset, $courses_per_page );
-$active_courses    = CourseModel::get_active_courses_by_user( null, $offset, $courses_per_page, array( 'post_status' => array( 'private', 'publish' ) ) );
-$completed_courses = CourseModel::get_completed_courses_by_user( null, $offset, $courses_per_page, array( 'post_status' => array( 'private', 'publish' ) ) );
+// Only fetch the paginated list for the active tab.
+switch ( $active_tab ) {
+	case 'courses':
+		$courses_list = CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( CourseModel::STATUS_PRIVATE, CourseModel::STATUS_PUBLISH ), $offset, $courses_per_page );
+		break;
+	case 'courses/active-courses':
+		$courses_list = CourseModel::get_active_courses_by_user( null, $offset, $courses_per_page, array( 'post_status' => array( CourseModel::STATUS_PRIVATE, CourseModel::STATUS_PUBLISH ) ) );
+		break;
+	case 'courses/completed-courses':
+		$courses_list = CourseModel::get_completed_courses_by_user( null, $offset, $courses_per_page, array( 'post_status' => array( CourseModel::STATUS_PRIVATE, CourseModel::STATUS_PUBLISH ) ) );
+		break;
+	default:
+		$courses_list = null;
+		break;
+}
 
-$enrolled_course_count  = is_a( $enrolled_courses, 'WP_Query' ) ? $enrolled_courses->found_posts : 0;
-$active_course_count    = is_a( $active_courses, 'WP_Query' ) ? $active_courses->found_posts : 0;
-$completed_course_count = is_a( $completed_courses, 'WP_Query' ) ? $completed_courses->found_posts : 0;
+// Separate count queries with no offset so tab counts are always accurate regardless of current page.
+$enrolled_courses_for_count  = CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( CourseModel::STATUS_PRIVATE, CourseModel::STATUS_PUBLISH ), 0, 1 );
+$active_courses_for_count    = CourseModel::get_active_courses_by_user( null, 0, 1, array( 'post_status' => array( CourseModel::STATUS_PRIVATE, CourseModel::STATUS_PUBLISH ) ) );
+$completed_courses_for_count = CourseModel::get_completed_courses_by_user( null, 0, 1, array( 'post_status' => array( CourseModel::STATUS_PRIVATE, CourseModel::STATUS_PUBLISH ) ) );
 
-// Get Paginated course list.
-$courses_list_array = array(
-	'courses'                   => $enrolled_courses,
-	'courses/active-courses'    => $active_courses,
-	'courses/completed-courses' => $completed_courses,
-	'courses/wishlist'          => array(),
-	'courses/my-quiz-attempts'  => __( 'Quiz Attempts', 'tutor' ),
-);
+$enrolled_course_count  = is_a( $enrolled_courses_for_count, 'WP_Query' ) ? $enrolled_courses_for_count->found_posts : 0;
+$active_course_count    = is_a( $active_courses_for_count, 'WP_Query' ) ? $active_courses_for_count->found_posts : 0;
+$completed_course_count = is_a( $completed_courses_for_count, 'WP_Query' ) ? $completed_courses_for_count->found_posts : 0;
 
 $courses_tab = ( new Student() )->get_courses_tab( $active_tab, $post_type_args, $enrolled_course_count, $active_course_count, $completed_course_count );
-
-// Prepare course list based on page tab.
-$courses_list = $courses_list_array[ $active_tab ];
 
 ?>
 
@@ -92,16 +97,22 @@ $courses_list = $courses_list_array[ $active_tab ];
 					break;
 			}
 		elseif ( 'courses' === $active_tab || 'courses/active-courses' === $active_tab || 'courses/completed-courses' === $active_tab ) :
-			// Prepare course list based on page tab.
-			$courses_list = $courses_list_array[ $active_tab ];
 			?>
 			<div class="tutor-dashboard-courses-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6 tutor-sm-p-none tutor-sm-mt-4">
 				<?php
 				if ( $courses_list && $courses_list->have_posts() ) :
 					while ( $courses_list->have_posts() ) :
 						$courses_list->the_post();
-						tutor_load_template( 'dashboard.courses.course-card' );
+						$course_id = get_the_ID();
+
+						$default_template     = tutor_get_template( 'dashboard.courses.course-card' );
+						$course_card_template = apply_filters( 'tutor_dashboard_course_card_template', $default_template, $course_id );
+
+						if ( file_exists( $course_card_template ) ) {
+							require $course_card_template;
+						}
 					endwhile;
+					wp_reset_postdata();
 				else :
 					EmptyState::make()
 						->title( __( 'No Courses Found', 'tutor' ) )

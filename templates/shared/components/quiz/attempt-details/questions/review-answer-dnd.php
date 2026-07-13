@@ -109,19 +109,23 @@ if ( 'ordering' === $question_type ) {
 	</div>
 
 	<div class="tutor-quiz-review-dnd-rows">
-		<?php foreach ( $rows as $row ) : ?>
+		<?php
+		foreach ( $rows as $row ) :
+			$given_text   = isset( $row['given_text'] ) ? wp_unslash( $row['given_text'] ) : '';
+			$correct_text = isset( $row['correct_text'] ) ? wp_unslash( $row['correct_text'] ) : '';
+			?>
 			<div class="tutor-quiz-review-dnd-row">
-				<div class="tutor-quiz-review-item tutor-quiz-review-given" data-option="<?php echo esc_attr( $row['given_status'] ); ?>">
+				<div class="tutor-quiz-review-item tutor-quiz-review-given" data-option="<?php echo esc_attr( $given_text ); ?>">
 					<?php if ( ! empty( $row['given_image'] ) ) : ?>
-						<img src="<?php echo esc_url( $row['given_image'] ); ?>" alt="<?php echo esc_attr( $row['given_text'] ); ?>">
+						<img src="<?php echo esc_url( $row['given_image'] ); ?>" alt="<?php echo esc_attr( $given_text ); ?>">
 					<?php endif; ?>
-					<span><?php echo esc_html( $row['given_text'] ); ?></span>
+					<span><?php echo esc_html( $given_text ); ?></span>
 				</div>
 				<div class="tutor-quiz-review-item tutor-quiz-review-correct" data-option="neutral">
 					<?php if ( ! empty( $row['correct_image'] ) ) : ?>
-						<img src="<?php echo esc_url( $row['correct_image'] ); ?>" alt="<?php echo esc_attr( $row['correct_text'] ); ?>">
+						<img src="<?php echo esc_url( $row['correct_image'] ); ?>" alt="<?php echo esc_attr( $correct_text ); ?>">
 					<?php endif; ?>
-					<span><?php echo esc_html( $row['correct_text'] ); ?></span>
+					<span><?php echo esc_html( $correct_text ); ?></span>
 				</div>
 			</div>
 		<?php endforeach; ?>

@@ -232,6 +232,7 @@ final class Icon {
 	const INFO_COLORIZE              = 'info-colorize';
 	const INFO_FILL                  = 'info-fill';
 	const INFO_OCTAGON               = 'info-octagon';
+	const INFO_OCTAGON_FILL          = 'info-octagon-fill';
 	const INSTRUCTOR                 = 'instructor';
 	const INTERACTIVE_QUIZ           = 'interactive-quiz';
 	const INTERFACE                  = 'interface';
@@ -307,6 +308,7 @@ final class Icon {
 	const PLAY_2                     = 'play-2';
 	const PLAY_FILL                  = 'play-fill';
 	const PLAY_LINE                  = 'play-line';
+	const PLAY_LINE_2                = 'play-line-2';
 	const PLUS                       = 'plus';
 	const PLUS_MINUS                 = 'plus-minus';
 	const PLUS_SQUARE                = 'plus-square';

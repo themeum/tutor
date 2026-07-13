@@ -96,6 +96,12 @@
     &:has(.tutor-popover-open) {
       background-color: $tutor-surface-l1-hover;
 
+      .tutor-my-courses-card-content {
+        a {
+          color: $tutor-text-brand;
+        }
+      }
+
       .tutor-my-courses-card-actions,
       .tutor-my-courses-card-footer-actions {
         opacity: 1;

@@ -122,7 +122,7 @@
       grid-template-columns: 324px 190px 1.5fr 1fr !important;
 
       @include tutor-breakpoint-down(sm) {
-        grid-template-columns: auto !important;
+        grid-template-columns: 1fr auto auto auto !important;
       }
     }
 
@@ -280,7 +280,7 @@
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-flex();
-      margin-left: $tutor-spacing-4;
+      margin-inline-start: $tutor-spacing-4;
     }
   }
 
@@ -289,7 +289,7 @@
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-flex(row, center);
-      margin-left: auto;
+      margin-inline-start: auto;
       gap: $tutor-spacing-2;
       @include tutor-typography('tiny', 'medium', 'secondary');
     }

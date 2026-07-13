@@ -85,7 +85,7 @@ class QuizModel {
 	public static function get_modern_mode_quiz_types() {
 		return array(
 			self::QUESTION_TYPE_DRAW_IMAGE  => array(
-				'name'   => __( 'Mark in the image', 'tutor' ),
+				'name'   => __( 'Image Marking', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
 				'is_pro' => true,
 			),
@@ -193,7 +193,11 @@ class QuizModel {
 	 * @return array
 	 */
 	public static function get_manual_review_types() {
-		return array( 'open_ended', 'short_answer' );
+		return array(
+			self::QUESTION_TYPE_OPEN_ENDED,
+			self::QUESTION_TYPE_SHORT_ANSWER,
+			self::QUESTION_TYPE_IMAGE_ANSWERING,
+		);
 	}
 
 

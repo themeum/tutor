@@ -78,7 +78,7 @@ tutor_load_template(
 		$json_data['lesson_completed']                = tutor_utils()->is_completed_lesson( $content_id, get_current_user_id() ) !== false;
 		$json_data['is_enrolled']                     = EnrollmentModel::is_enrolled( $course_id, get_current_user_id() ) !== false;
 		?>
-		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $json_data ) ); ?>">
+		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( wp_json_encode( $json_data ) ); ?>">
 	<?php endif; ?>
 	<div class="tutor-video-player-wrapper">
 		<?php echo apply_filters( 'tutor_single_lesson_video', tutor_lesson_video( false ), $video_info, $source_key ); //phpcs:ignore ?>

@@ -5,12 +5,9 @@
 @use '../mixins' as *;
 
 .tutor-preview-trigger {
-  display: inline-flex;
-  vertical-align: middle;
-  max-width: 100%;
+  display: flex;
   min-width: 0;
-  width: 100%;
-  position: relative;
+  max-width: 100%;
 
   &-text {
     font-style: italic;
@@ -21,6 +18,13 @@
     @include tutor-transition(color);
     padding-inline-end: $tutor-spacing-1;
 
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    vertical-align: bottom;
+
     &:focus {
       outline: none;
     }
@@ -30,13 +34,6 @@
       outline-offset: 2px;
       border-radius: $tutor-radius-sm;
     }
-
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    vertical-align: bottom;
   }
 }
 

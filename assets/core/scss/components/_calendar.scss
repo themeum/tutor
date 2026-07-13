@@ -6,6 +6,11 @@
   background-color: $tutor-surface-l1 !important;
   border-radius: $tutor-radius-md !important;
 
+  // Ensure hidden calendar doesn't block interaction with other elements
+  &[data-vc-calendar-hidden] {
+    pointer-events: none !important;
+  }
+
   [data-vc='month'],
   [data-vc='year'] {
     @include tutor-typography('small', 'medium', 'primary');
@@ -169,6 +174,10 @@
   .vc-controls {
     grid-area: controls;
     padding: $tutor-spacing-2 $tutor-spacing-none $tutor-spacing-none $tutor-spacing-none;
+
+    [dir='rtl'] & .vc-arrow {
+      transform: scaleX(-1);
+    }
   }
 
   .vc-grid {
@@ -177,7 +186,7 @@
     gap: $tutor-spacing-6;
 
     @include tutor-breakpoint-down(md) {
-      .vc-column:nth-child(n+2) {
+      .vc-column:nth-child(n + 2) {
         display: none;
       }
     }

@@ -2,8 +2,10 @@
 // Initializes dashboard functionality based on current page
 
 import { initializeReviews } from '@FrontendComponents/reviews';
+import { initializeTour } from '@FrontendComponents/tour';
 import { initializeCommon } from '@FrontendServices/common';
 
+import { initializeConfetti } from './confetti';
 import { initializeHeader } from './header';
 import { initializeAnnouncements } from './pages/announcements';
 import { initBillingCsvExport } from './pages/billing';
@@ -74,6 +76,7 @@ const getCurrentPage = (): string => {
 const initializeDashboard = () => {
   initializeHeader();
   initializeCommon();
+  initializeTour();
 
   const currentPage = getCurrentPage();
 
@@ -81,6 +84,7 @@ const initializeDashboard = () => {
   switch (currentPage) {
     case 'home':
     case 'dashboard':
+      initializeConfetti();
       initializeHome();
       break;
     case 'my-courses':

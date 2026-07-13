@@ -2112,10 +2112,23 @@ class Utils {
 	 *
 	 * @return array
 	 */
-	public function get_completed_courses_ids_by_user( $user_id = 0 ) {
+	public function get_completed_courses_ids_by_user( $user_id = 0, $with_bundle_enrolled_courses = true ) {
 		global $wpdb;
 
 		$user_id = $this->get_user_id( $user_id );
+
+		$with_bundle_enrolled_courses_clause = '';
+		if ( ! $with_bundle_enrolled_courses ) {
+			$with_bundle_enrolled_courses_clause = $wpdb->prepare(
+				"AND NOT EXISTS (
+					SELECT 1
+					FROM {$wpdb->postmeta} pm
+					WHERE pm.post_id = e.ID
+						AND pm.meta_key = %s
+				)",
+				'_tutor_bundle_id'
+			);
+		}
 
 		$cache_key = 'tutor_completed_courses_ids_by_user_' . $user_id;
 		$cache     = TutorCache::get( $cache_key );
@@ -2126,14 +2139,17 @@ class Utils {
 		$course_ids = (array) $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT comment_post_ID AS course_id
-			FROM 	{$wpdb->comments}
-			WHERE 	comment_agent = %s
+				FROM {$wpdb->comments}
+				WHERE comment_agent = %s
 					AND comment_type = %s
 					AND user_id = %d
 					AND comment_post_ID IN (
-						select post_parent AS course_id from {$wpdb->posts} where post_type=%s AND post_author = %d
-					)
-			",
+						SELECT e.post_parent
+						FROM {$wpdb->posts} e
+						WHERE e.post_type = %s
+							AND e.post_author = %d
+							{$with_bundle_enrolled_courses_clause}
+					)",
 				'TutorLMSPlugin',
 				'course_completed',
 				$user_id,
@@ -7378,7 +7394,7 @@ class Utils {
 	 * @return string
 	 */
 	public function get_cover_photo_url( $user_id ) {
-		$cover_photo_src = tutor()->url . 'assets/images/cover-photo.jpg';
+		$cover_photo_src = tutor()->url . 'assets/images/cover-photo.webp';
 		$cover_photo_id  = get_user_meta( $user_id, '_tutor_cover_photo', true );
 		if ( $cover_photo_id ) {
 			$url                               = wp_get_attachment_image_url( $cover_photo_id, 'full' );
@@ -7389,14 +7405,14 @@ class Utils {
 	}
 
 	/**
-	 * Return the course ID(s) by lession, quiz, answer etc.
+	 * Return the course ID by lesson, quiz, answer etc.
 	 *
 	 * @since 1.7.9
 	 *
-	 * @param string $content content like lession, quiz, answer etc.
+	 * @param string $content content like lesson, quiz, answer etc.
 	 * @param int    $object_id object id.
 	 *
-	 * @return int|int[]
+	 * @return int
 	 */
 	public function get_course_id_by( $content, $object_id ) {
 		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
@@ -7642,11 +7658,7 @@ class Utils {
 	public function has_enrolled_content_access( $content, $object_id = 0, $user_id = 0 ) {
 		$user_id   = $this->get_user_id( $user_id );
 		$object_id = $this->get_post_id( $object_id );
-
-		$course_id = Input::get( 'course', 0, Input::TYPE_INT );
-		if ( ! $course_id ) {
-			$course_id = $this->get_course_id_by( $content, $object_id );
-		}
+		$course_id = $this->get_course_id_by( $content, $object_id );
 
 		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
 
@@ -9875,7 +9887,7 @@ class Utils {
 	 *
 	 * @since 2.2.4
 	 *
-	 * @param string $plugin_slug
+	 * @param string $plugin_slug plugin slug.
 	 *
 	 * @return object|bool if success return object otherwise return false;
 	 */
@@ -9887,6 +9899,70 @@ class Utils {
 
 		return (object) json_decode( $response['body'], true );
 	}
+
+	/**
+	 * Get the latest available version of a plugin from WordPress.org's update-check API,
+	 * with optional transient caching.
+	 *
+	 * @param string $plugin_file  Plugin file path relative to plugins dir, e.g. "tutor/tutor.php".
+	 * @param bool   $use_cache    Whether to read/write the transient cache. Default true.
+	 * @param int    $cache_expiry Cache lifetime in seconds. Default 5 minutes.
+	 *
+	 * @return string|false Latest version string on success, false if not found / on error.
+	 */
+	public function get_wp_org_update_version( $plugin_file, $use_cache = true, $cache_expiry = 5 * MINUTE_IN_SECONDS ) {
+
+		$cache_key = 'wp_org_update_' . md5( $plugin_file );
+
+		if ( $use_cache ) {
+			// Return cached result if available (including cached "not found" results).
+			$cached = get_transient( $cache_key );
+			if ( false !== $cached ) {
+				return ( '__none__' === $cached ) ? false : $cached;
+			}
+		}
+
+		$body = array(
+			'plugins' => wp_json_encode(
+				array(
+					'plugins' => array(
+						$plugin_file => array(),
+					),
+				)
+			),
+		);
+
+		$response = wp_remote_post(
+			'https://api.wordpress.org/plugins/update-check/1.1/',
+			array(
+				'timeout' => 10,
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded',
+					'User-Agent'   => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url( '/' ),
+				),
+				'body'    => $body,
+			)
+		);
+
+		$version = false;
+
+		if ( ! is_wp_error( $response ) ) {
+			$code = wp_remote_retrieve_response_code( $response );
+			$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+			if ( 200 === (int) $code && ! empty( $data['plugins'][ $plugin_file ]['new_version'] ) ) {
+				$version = $data['plugins'][ $plugin_file ]['new_version'];
+			}
+		}
+
+		if ( $use_cache ) {
+			// Cache the version string, or a "not found" marker so we don't hammer the API on repeated misses.
+			set_transient( $cache_key, false === $version ? '__none__' : $version, $cache_expiry );
+		}
+
+		return $version;
+	}
+
 
 	/**
 	 * Get editor list for post content.

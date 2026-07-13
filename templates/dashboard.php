@@ -10,7 +10,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Alert;
+use Tutor\Components\EmptyState;
 use TUTOR\Dashboard;
+use TUTOR\Icon;
 use TUTOR\User;
 
 global $wp_query;
@@ -70,6 +73,7 @@ $user_id                   = get_current_user_id();
 $user                      = get_user_by( 'ID', $user_id );
 $enable_profile_completion = tutor_utils()->get_option( 'enable_profile_completion' );
 $is_instructor             = tutor_utils()->is_instructor();
+$is_tour_completed         = get_user_meta( $user_id, User::TOUR_COMPLETED_META, true );
 
 // URLS.
 $current_url  = tutor()->current_url;
@@ -109,7 +113,15 @@ $enrolled_student_count = (int) tutor_utils()->get_total_students_by_instructor(
 		<div class="tutor-dashboard-body" role="main">
 			<div class="tutor-dashboard-page">
 				<?php
-				if ( $dashboard_page_name ) {
+				if ( User::used_instructor_registration() && User::has_pending_instructor_application() && $dashboard_page_slug ) {
+					tutor_load_template( 'dashboard.instructor.instructor-request-alert' );
+
+					EmptyState::make()
+						->title( __( 'Your application is under review', 'tutor' ) )
+						->subtitle( __( 'Only your dashboard home is available while your instructor application is pending.', 'tutor' ) )
+						->attr( 'class', 'tutor-surface-l1 tutor-border tutor-rounded-2xl' )
+						->render();
+				} elseif ( $dashboard_page_name ) {
 					do_action( 'tutor_load_dashboard_template_before', $dashboard_page_name );
 
 					/**
@@ -140,6 +152,10 @@ $enrolled_student_count = (int) tutor_utils()->get_total_students_by_instructor(
 		</div>
 	</div>
 </div>
+<?php if ( User::is_student_view() && ! $is_tour_completed ) : ?>
+	<?php tutor_load_template( 'shared.tour' ); ?>
+<?php endif; ?>
+	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 <?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
 	<?php wp_footer(); ?>

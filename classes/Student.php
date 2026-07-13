@@ -373,7 +373,7 @@ class Student {
 					),
 					array(
 						'label'  => __( 'Active', 'tutor' ),
-						'icon'   => Icon::PLAY_LINE,
+						'icon'   => Icon::PLAY_LINE_2,
 						'url'    => esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'courses/active-courses' ) ) ),
 						'active' => 'courses/active-courses' === $active_tab ? true : false,
 						'count'  => $active_course_count,
