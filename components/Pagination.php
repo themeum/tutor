@@ -19,16 +19,51 @@ defined( 'ABSPATH' ) || exit;
  *
  * Responsible for rendering pagination component.
  *
- * // Example Usage :
+ * Example Usage:
  *
- * ```
- *  Pagination::make()
- *   ->current( 2 )
- *   ->total( 200 )
- *   ->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
- *   ->prev( SvgIcon::make()->name( Icon::CHEVRON_LEFT_2 )->get() )
- *   ->next( SvgIcon::make()->name( Icon::CHEVRON_RIGHT_2 )->get() )
- *   ->render();
+ * ```php
+ * // Minimal — current page from URL, default prev/next icons
+ * Pagination::make()
+ *     ->current( (int) Input::get( 'current_page', 1 ) )
+ *     ->total( $total_items )
+ *     ->limit( 10 )
+ *     ->render();
+ *
+ * // With custom prev/next icon markup
+ * Pagination::make()
+ *     ->current( 2 )
+ *     ->total( 200 )
+ *     ->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
+ *     ->prev( SvgIcon::make()->name( Icon::CHEVRON_LEFT_2 )->flip_rtl()->get() )
+ *     ->next( SvgIcon::make()->name( Icon::CHEVRON_RIGHT_2 )->flip_rtl()->get() )
+ *     ->render();
+ *
+ * // Custom URL format (e.g., pretty-permalink pagination)
+ * Pagination::make()
+ *     ->current( get_query_var( 'paged', 1 ) )
+ *     ->total( $total_items )
+ *     ->limit( 20 )
+ *     ->format( '/page/%#%/' )
+ *     ->render();
+ *
+ * // Show all page links (no ellipsis collapsing)
+ * Pagination::make()
+ *     ->current( 1 )
+ *     ->total( 50 )
+ *     ->limit( 5 )
+ *     ->show_all( true )
+ *     ->render();
+ *
+ * // Extra CSS class on the nav wrapper
+ * Pagination::make()
+ *     ->current( 1 )
+ *     ->total( 100 )
+ *     ->limit( 10 )
+ *     ->attr( 'class', 'tutor-mt-6' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = Pagination::make()->current( 1 )->total( 50 )->limit( 10 )->get();
  * ```
  *
  * @since 4.0.0
