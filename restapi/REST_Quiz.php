@@ -396,7 +396,7 @@ class REST_Quiz {
 	 *
 	 * @since 1.7.1
 	 *
-	 * @param int $id answer id.
+	 * @param int|int[] $id answer id or array of answer id.
 	 *
 	 * @return mixed
 	 */
@@ -404,27 +404,20 @@ class REST_Quiz {
 		global $wpdb;
 		$wpdb->t_quiz_ques_ans = $wpdb->prefix . $this->t_quiz_ques_ans;
 
-		if ( is_array( $id ) ) {
-			$array = QueryHelper::prepare_in_clause( $id );
-
-			$results = $wpdb->get_results(
-				"SELECT
-					answer_title
-				FROM {$wpdb->t_quiz_ques_ans} 
-				WHERE 
-				answer_id IN ('" . $array . "')"//phpcs:ignore
-			);
-		} else {
-			$results = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT
-					answer_title
-				FROM {$wpdb->t_quiz_ques_ans}
-				WHERE answer_id = %d",
-					$id
-				)
-			);
+		$ids = array_filter( array_map( 'absint', (array) $id ) );
+		if ( empty( $ids ) ) {
+			return array();
 		}
+
+		$array = QueryHelper::prepare_in_clause( $ids );
+
+		$results = $wpdb->get_results(
+			"SELECT
+				answer_title
+			FROM {$wpdb->t_quiz_ques_ans} 
+			WHERE 
+			answer_id IN ({$array})" //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		);
 
 		return $results;
 	}

@@ -793,7 +793,7 @@ class Quiz {
 					$is_answer_was_correct = false;
 					$given_answer          = '';
 
-					if ( 'true_false' === $question_type || 'single_choice' === $question_type ) {
+					if ( QuizModel::QUESTION_TYPE_TRUE_FALSE === $question_type || QuizModel::QUESTION_TYPE_SINGLE_CHOICE === $question_type ) {
 						$given_answer          = $answers;
 						$is_answer_was_correct = (bool) $wpdb->get_var(
 							$wpdb->prepare(
@@ -805,7 +805,7 @@ class Quiz {
 							)
 						);
 
-					} elseif ( 'multiple_choice' === $question_type ) {
+					} elseif ( QuizModel::QUESTION_TYPE_MULTIPLE_CHOICE === $question_type ) {
 
 						$given_answer = (array) ( $answers );
 						$given_answer = array_filter( $given_answer, fn ( $id ) => is_numeric( $id ) && intval( $id ) > 0 );
@@ -828,9 +828,10 @@ class Quiz {
 						if ( count( array_diff( $get_original_answers, $given_answer ) ) === 0 && count( $get_original_answers ) === count( $given_answer ) ) {
 							$is_answer_was_correct = true;
 						}
-						$given_answer = maybe_serialize( $answers );
 
-					} elseif ( 'fill_in_the_blank' === $question_type ) {
+						$given_answer = maybe_serialize( $given_answer );
+
+					} elseif ( QuizModel::QUESTION_TYPE_FILL_IN_THE_BLANK === $question_type ) {
 
 						$get_original_answer = $wpdb->get_row(
 							$wpdb->prepare(
@@ -869,11 +870,11 @@ class Quiz {
 						if ( strtolower( $given_answer ) === strtolower( $gap_answer ) ) {
 							$is_answer_was_correct = true;
 						}
-					} elseif ( 'open_ended' === $question_type || 'short_answer' === $question_type ) {
+					} elseif ( QuizModel::QUESTION_TYPE_OPEN_ENDED === $question_type || QuizModel::QUESTION_TYPE_SHORT_ANSWER === $question_type ) {
 						$review_required = true;
 						$given_answer    = wp_kses_post( $answers );
 
-					} elseif ( 'ordering' === $question_type || 'matching' === $question_type || 'image_matching' === $question_type ) {
+					} elseif ( QuizModel::QUESTION_TYPE_ORDERING === $question_type || QuizModel::QUESTION_TYPE_MATCHING === $question_type || QuizModel::QUESTION_TYPE_IMAGE_MATCHING === $question_type ) {
 						$answers = (array) tutor_utils()->avalue_dot( 'answers', $answers );
 
 						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
@@ -897,7 +898,7 @@ class Quiz {
 						if ( maybe_serialize( $get_original_answers ) == $given_answer ) {
 							$is_answer_was_correct = true;
 						}
-					} elseif ( 'image_answering' === $question_type ) {
+					} elseif ( QuizModel::QUESTION_TYPE_IMAGE_ANSWERING === $question_type ) {
 						$image_inputs          = tutor_utils()->avalue_dot( 'answer_id', $answers );
 						$image_inputs          = (array) array_map( 'sanitize_text_field', $image_inputs );
 						$given_answer          = maybe_serialize( $image_inputs );
@@ -963,7 +964,7 @@ class Quiz {
 					 * Check if question_type open ended or short ans the set
 					 * is_correct default value null before saving
 					 */
-					if ( in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ) ) ) {
+					if ( in_array( $question_type, QuizModel::get_manual_review_types(), true ) ) {
 						$answers_data['is_correct'] = null;
 						$review_required            = true;
 					}
@@ -1953,6 +1954,10 @@ class Quiz {
 								)
 							);
 							?>
+
+							<div class="tutor-quiz-item-actions">
+								<?php $quiz_attempt_obj->render_details_button( $attempt, true ); ?>
+							</div>
 						</div>
 						<?php
 					}
