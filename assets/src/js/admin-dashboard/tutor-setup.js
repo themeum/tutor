@@ -198,6 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		activateScreen(loadingScreen);
 		const loadingTextAnimation = startLoadingTextAnimation();
+		const minimumLoadingDuration = 6000;
+		const onboardStartTime = performance.now();
 
 		try {
 			if (loadSampleCourse) {
@@ -225,7 +227,9 @@ document.addEventListener('DOMContentLoaded', () => {
 				submitButton.disabled = false;
 			}
 			await loadingTextAnimation;
-			await wait(2000);
+			const onboardingDuration = performance.now() - onboardStartTime;
+			const remainingLoadingDuration = Math.max(0, minimumLoadingDuration - onboardingDuration);
+			await wait(remainingLoadingDuration);
 			await fadeOutLoadingScreen();
 			toggleReloadProtection(false);
 			location.href = _tutorOnboardObject.tutor_welcome_page;
