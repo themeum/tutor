@@ -190,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		const loadingScreen = submitButton?.dataset.screen || __('Loading...', 'tutor');
 		isSubmitting = true;
 		toggleReloadProtection(true);
-		const loadSampleCourse = formData.get('tutor_onboard_load_sample_course');
 
 		if (submitButton) {
 			submitButton.disabled = true;
@@ -202,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		const onboardStartTime = performance.now();
 
 		try {
-			if (loadSampleCourse) {
+			if (formData.get('tutor_onboard_load_sample_course')) {
 				const importSuccess = await importSampleCourses();
 				if (!importSuccess) {
 					tutor_toast(__('Sample course import failed.', 'tutor'), '', 'error');
