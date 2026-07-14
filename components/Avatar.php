@@ -24,25 +24,49 @@ defined( 'ABSPATH' ) || exit;
  * Example usage:
  *
  * ```php
- * Avatar with user object/ID
+ * // Avatar from a WP user ID (auto-resolves photo or initials)
  * Avatar::make()
- *     ->user($user_id)
- *     ->size(Size::SIZE_56)
+ *     ->user( $user_id )
+ *     ->size( Size::SIZE_56 )
  *     ->render();
  *
- * Avatar with image source
+ * // Avatar from a WP_User object
  * Avatar::make()
- *     ->src('https://example.com/avatar.jpg')
- *     ->size(Size::SIZE_20)
+ *     ->user( $user )
+ *     ->size( Size::SIZE_40 )
  *     ->bordered()
  *     ->render();
  *
- * Avatar with initials
+ * // Avatar with explicit image URL
  * Avatar::make()
- *     ->initials('SK')
- *     ->size(Size::SIZE_32)
- *     ->rounded(false)
+ *     ->src( 'https://example.com/avatar.jpg' )
+ *     ->alt( 'John Doe' )
+ *     ->size( Size::SIZE_32 )
  *     ->render();
+ *
+ * // Avatar with initials fallback only
+ * Avatar::make()
+ *     ->initials( 'JD' )
+ *     ->size( Size::SIZE_48 )
+ *     ->render();
+ *
+ * // Avatar with square shape (no border-radius)
+ * Avatar::make()
+ *     ->user( $user_id )
+ *     ->size( Size::SIZE_64 )
+ *     ->shape( 'square' )
+ *     ->render();
+ *
+ * // Avatar with border and custom attributes
+ * Avatar::make()
+ *     ->src( 'https://example.com/pic.jpg' )
+ *     ->size( Size::SIZE_20 )
+ *     ->bordered()
+ *     ->attr( 'data-user-id', $user_id )
+ *     ->render();
+ *
+ * // Retrieve HTML string without echoing
+ * $html = Avatar::make()->user( $user_id )->size( Size::SIZE_24 )->get();
  * ```
  *
  * @since 4.0.0
