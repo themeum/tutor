@@ -42,10 +42,9 @@ if ( ! $can_access ) {
 ?>
 
 <a
-	href="<?php echo esc_url( $can_access ? get_permalink( $lesson->ID ) : '#' ); ?>" 
+	href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>" 
 	title="<?php echo esc_attr( $lesson_title ); ?>"
 	class="<?php echo esc_attr( sprintf( 'tutor-learning-nav-item %s %s', $active_class, $disabled_class ) ); ?>"
-	<?php echo ! $can_access ? 'aria-disabled="true"' : ''; ?>
 >
 	<?php SvgIcon::make()->name( $icon_name )->size( 20 )->render(); ?>
 	<div class="tutor-overflow-hidden">

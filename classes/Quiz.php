@@ -2268,10 +2268,9 @@ class Quiz {
 		?>
 
 		<a
-			href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>" 
+			href="<?php echo esc_url( get_permalink( $quiz->ID ) ); ?>" 
 			title="<?php echo esc_attr( $quiz_title ); ?>"
 			class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s %s %s', $active_class, $disabled_class, $quiz_status ) ); ?>"
-			<?php echo ! $can_access ? 'aria-disabled="true"' : ''; ?>
 		>
 			<?php SvgIcon::make()->name( $icon_name )->size( 20 )->render(); ?>
 			<div class="tutor-overflow-hidden">
