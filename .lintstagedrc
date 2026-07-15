@@ -1,4 +1,5 @@
 {
   "*.{ts,tsx}": ["pnpm exec eslint --fix", "bash -c 'pnpm exec tsc --noEmit'"],
-  "*.{ts,tsx,jsonc,md}": ["pnpm exec prettier --write"]
+  "*.{ts,tsx,jsonc,md}": ["pnpm exec prettier --write"],
+  "*.php": ["./vendor/bin/phpstan analyze --memory-limit=-1"]
 }
