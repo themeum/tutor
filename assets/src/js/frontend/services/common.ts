@@ -1,3 +1,4 @@
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
 import { type AjaxResponse } from '@Core/ts/types';
 
@@ -96,7 +97,7 @@ export const initializeCommon = () => {
   const handler = createCourseHandler();
   handler.init();
   convertUTCTime();
-  window.addEventListener('tutor_content_changed_event', () => convertUTCTime());
+  window.addEventListener(TUTOR_CUSTOM_EVENTS.CONTENT_CHANGED, () => convertUTCTime());
 
   const createCourseButtons = document.querySelectorAll('.tutor-create-new-course');
   createCourseButtons.forEach((button) => {
