@@ -226,7 +226,6 @@
         }
 
         &.disabled {
-          pointer-events: none;
           color: $tutor-text-subdued;
 
           svg {
