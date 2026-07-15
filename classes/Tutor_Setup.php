@@ -25,6 +25,13 @@ class Tutor_Setup {
 	use JsonResponse;
 
 	/**
+	 * Sample courses JSON URL for onboarding import.
+	 *
+	 * @since 4.0.0
+	 */
+	const TUTOR_SAMPLE_COURSES_JSON_URL = 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/onbaord-courses.json';
+
+	/**
 	 * Register hooks
 	 *
 	 * @since 1.0.0
@@ -107,13 +114,11 @@ class Tutor_Setup {
 		}
 
 		try {
-			$file_url = 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/workademy/data.json';
-			( new SampleCourse() )->import( $file_url );
+			( new SampleCourse() )->import( self::TUTOR_SAMPLE_COURSES_JSON_URL );
 			$this->json_response( __( 'Sample courses imported successfully', 'tutor' ) );
 		} catch ( \Throwable $th ) {
 			$this->response_bad_request( tutor_utils()->error_message() );
 		}
-
 	}
 
 	/**
@@ -136,6 +141,9 @@ class Tutor_Setup {
 			}
 
 			wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
+
+			// load google inter font.
+			wp_enqueue_style( 'tutor-inter-font', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), TUTOR_VERSION );
 
 			wp_localize_script(
 				'tutor-setup',

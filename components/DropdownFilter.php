@@ -24,26 +24,70 @@ defined( 'ABSPATH' ) || exit;
  * Class DropdownFilter
  *
  * Example Usage:
- * ```
- * // Basic dropdown with custom options
+ * ```php
+ * // Basic dropdown bound to URL query param (link-based navigation)
+ * DropdownFilter::make()
+ *     ->options( $options )
+ *     ->query_param( 'status' )
+ *     ->render();
+ *
+ * // With custom variant, size and search box
  * DropdownFilter::make()
  *     ->options( $options )
  *     ->query_param( 'status' )
  *     ->variant( Variant::PRIMARY )
  *     ->size( Size::SMALL )
  *     ->search( true )
+ *     ->placeholder( __( 'Search status...', 'tutor' ) )
  *     ->render();
  *
- * // Course filter (convenience method)
+ * // JS callback on change (Alpine.js method name) instead of link navigation
  * DropdownFilter::make()
- *     ->options( $courses )
+ *     ->options( $options )
+ *     ->on_change( 'changeStatus' )
+ *     ->bind_active_value( 'currentStatus' )
+ *     ->render();
+ *
+ * // Course filter convenience use-case
+ * DropdownFilter::make()
+ *     ->options( CourseFilter::get_course_filter_options() )
  *     ->count( $total_items )
- *     ->query_param( 'course_id' )
+ *     ->query_param( 'course-id' )
  *     ->variant( Variant::PRIMARY_SOFT )
  *     ->size( Size::X_SMALL )
  *     ->popover_size( Size::MEDIUM )
  *     ->position( Positions::BOTTOM_END )
  *     ->placeholder( __( 'Search Course', 'tutor' ) )
+ *     ->search( true )
+ *     ->render();
+ *
+ * // Cumulative filtering — preserve existing query params via base_url
+ * DropdownFilter::make()
+ *     ->options( $options )
+ *     ->query_param( 'category' )
+ *     ->base_url( remove_query_arg( 'current_page' ) )
+ *     ->render();
+ *
+ * // Outline variant with custom button CSS
+ * DropdownFilter::make()
+ *     ->options( $options )
+ *     ->variant( Variant::OUTLINE )
+ *     ->button_class( 'tutor-btn tutor-btn-outline tutor-btn-small my-custom-btn' )
+ *     ->render();
+ *
+ * // Popover positioned bottom-end with large width
+ * DropdownFilter::make()
+ *     ->options( $options )
+ *     ->query_param( 'type' )
+ *     ->position( Positions::BOTTOM_END )
+ *     ->popover_size( Size::LARGE )
+ *     ->render();
+ *
+ * // Custom icon size for the chevron
+ * DropdownFilter::make()
+ *     ->options( $options )
+ *     ->variant( Variant::PRIMARY )
+ *     ->icon_size( 14 )
  *     ->render();
  * ```
  *

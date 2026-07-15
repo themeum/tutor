@@ -12,14 +12,11 @@ type ProBadgeSize = 'tiny' | 'small' | 'regular' | 'large';
 interface ProBadgeBaseProps {
   size?: ProBadgeSize;
   textOnly?: boolean;
-  children?: React.ReactNode;
-  content?: React.ReactNode;
 }
 
 interface ProBadgeWithContent extends ProBadgeBaseProps {
   content: React.ReactNode;
   children?: never;
-  textOnly?: boolean;
 }
 
 interface ProBadgeWithChildren extends ProBadgeBaseProps {
@@ -28,34 +25,41 @@ interface ProBadgeWithChildren extends ProBadgeBaseProps {
   textOnly?: never;
 }
 
-type ProBadgeProps = ProBadgeWithContent | ProBadgeWithChildren;
+interface ProBadgeIconOnly extends ProBadgeBaseProps {
+  content?: never;
+  children?: never;
+  textOnly?: never;
+}
+
+type ProBadgeProps = ProBadgeWithContent | ProBadgeWithChildren | ProBadgeIconOnly;
 
 const ProBadge = ({ children, content, size = 'regular', textOnly }: ProBadgeProps) => {
+  const hasChildren = isDefined(children);
+  const iconOnly = !hasChildren && !isDefined(content);
+
+  const icon = (
+    <SVGIcon
+      name={size === 'tiny' ? 'crownRoundedSmall' : 'crownRounded'}
+      width={hasChildren ? (size === 'tiny' ? badgeSizes[size].iconSize : 16) : badgeSizes[size].iconSize}
+      height={hasChildren ? undefined : badgeSizes[size].iconSize}
+    />
+  );
+
   return (
-    <div css={styles.wrapper({ hasChildren: isDefined(children), size })}>
+    <div css={styles.wrapper({ hasChildren, iconOnly, size })}>
       {children}
-      <Show when={!isDefined(children) && !textOnly}>
-        <SVGIcon
-          name={size === 'tiny' ? 'crownRoundedSmall' : 'crownRounded'}
-          width={badgeSizes[size].iconSize}
-          height={badgeSizes[size].iconSize}
-        />
-      </Show>
+
+      <Show when={!hasChildren && !textOnly && !iconOnly}>{icon}</Show>
+
       <div
         css={styles.content({
-          hasChildren: isDefined(children),
+          hasChildren,
+          iconOnly,
           size,
           textOnly,
         })}
       >
-        {isDefined(children) ? (
-          <SVGIcon
-            name={size === 'tiny' ? 'crownRoundedSmall' : 'crownRounded'}
-            width={size === 'tiny' ? badgeSizes[size].iconSize : 16}
-          />
-        ) : (
-          content
-        )}
+        {hasChildren || iconOnly ? icon : content}
       </div>
     </div>
   );
@@ -99,7 +103,15 @@ const badgeSizes = {
 };
 
 const styles = {
-  wrapper: ({ hasChildren, size = 'regular' }: { hasChildren: boolean; size?: ProBadgeSize }) => css`
+  wrapper: ({
+    hasChildren,
+    iconOnly,
+    size = 'regular',
+  }: {
+    hasChildren: boolean;
+    iconOnly: boolean;
+    size?: ProBadgeSize;
+  }) => css`
     position: relative;
 
     svg {
@@ -107,6 +119,7 @@ const styles = {
     }
 
     ${!hasChildren &&
+    !iconOnly &&
     css`
       height: ${badgeSizes[size].height};
       display: inline-flex;
@@ -119,10 +132,12 @@ const styles = {
   `,
   content: ({
     hasChildren,
+    iconOnly,
     size = 'regular',
     textOnly,
   }: {
     hasChildren: boolean;
+    iconOnly: boolean;
     size?: ProBadgeSize;
     textOnly?: boolean;
   }) => css`
@@ -134,6 +149,7 @@ const styles = {
     transform: translateX(50%) translateY(-50%);
 
     ${!hasChildren &&
+    !iconOnly &&
     css`
       display: inline-flex;
       position: static;
@@ -150,6 +166,13 @@ const styles = {
         padding-inline: ${spacing[6]};
         margin: 0;
       `}
+    `}
+
+    ${iconOnly &&
+    css`
+      position: static;
+      transform: none;
+      display: inline-flex;
     `}
   `,
 };

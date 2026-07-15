@@ -667,7 +667,7 @@ class User {
 		$timezone = self::get_user_timezone_string( $user );
 
 		// Prepare cover photo.
-		$cover_placeholder = tutor()->url . 'assets/images/cover-photo.jpg';
+		$cover_placeholder = tutor()->url . 'assets/images/cover-photo.webp';
 		$cover_photo_src   = $cover_placeholder;
 		$cover_photo_id    = get_user_meta( $user->ID, self::COVER_PHOTO_META, true );
 

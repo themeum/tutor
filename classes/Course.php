@@ -913,7 +913,7 @@ class Course extends Tutor_Base {
 		update_post_meta( $course_id, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_FREE );
 
 		$link = admin_url( 'admin.php?page=create-course' );
-		if ( Input::post( 'from_dashboard', false, Input::TYPE_BOOL ) ) {
+		if ( tutor()->has_pro && Input::post( 'from_dashboard', false, Input::TYPE_BOOL ) ) {
 			$link = tutor_utils()->tutor_dashboard_url( 'create-course' );
 		}
 

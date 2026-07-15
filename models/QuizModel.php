@@ -193,7 +193,10 @@ class QuizModel {
 	 * @return array
 	 */
 	public static function get_manual_review_types() {
-		return array( 'open_ended', 'short_answer' );
+		return array(
+			self::QUESTION_TYPE_OPEN_ENDED,
+			self::QUESTION_TYPE_SHORT_ANSWER,
+		);
 	}
 
 

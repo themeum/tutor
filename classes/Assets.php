@@ -199,6 +199,7 @@ class Assets {
 			'placeholder_img_src'          => tutor_placeholder_img_src(),
 			'enable_lesson_classic_editor' => get_tutor_option( 'enable_lesson_classic_editor' ),
 			'tutor_frontend_dashboard_url' => tutor_utils()->get_tutor_dashboard_page_permalink(),
+			'is_dashboard_page'            => tutor_utils()->is_dashboard_page(),
 			'wp_date_format'               => tutor_js_date_format_against_wp(),
 			'start_of_week'                => get_option( 'start_of_week', 1 ),
 			'is_admin'                     => is_admin(),
