@@ -76,6 +76,7 @@ const convertUTCTime = () => {
     }
 
     const localDateTime = parseUTCDate(rawUTC);
+    console.log(rawUTC, localDateTime);
     if (!localDateTime) {
       return;
     }
@@ -96,6 +97,7 @@ export const initializeCommon = () => {
   const handler = createCourseHandler();
   handler.init();
   convertUTCTime();
+  window.addEventListener('tutor_content_changed_event', () => convertUTCTime());
 
   const createCourseButtons = document.querySelectorAll('.tutor-create-new-course');
   createCourseButtons.forEach((button) => {
