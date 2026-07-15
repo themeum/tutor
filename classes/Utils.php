@@ -10364,4 +10364,17 @@ class Utils {
 	public function is_legacy_learning_mode(): bool {
 		return Options_V2::LEARNING_MODE_LEGACY === $this->get_option( 'learning_mode' );
 	}
+
+	/**
+	 * Check if the data is multi dimensional array
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param array $data Array value to check with.
+	 *
+	 * @return bool
+	 */
+	public function is_multi_dimensional_array( array $data ): bool {
+		return isset( $data[0] ) && is_array( $data[0] );
+	}
 }
