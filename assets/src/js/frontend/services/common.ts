@@ -1,7 +1,11 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { type AjaxResponse } from '@Core/ts/types';
 
-const UTC_DATE_CLASS = 'tutor-utc-date-time';
+const UTC_DATE_CLASS = 'tutor-utc-date-time'; // existing combined format
+const UTC_DATETIME_WRAPPER_CLASS = 'tutor-utc-datetime';
+const UTC_DATETIME_DATE_CLASS = 'tutor-utc-datetime-date';
+const UTC_DATETIME_TIME_CLASS = 'tutor-utc-datetime-time';
+const UTC_DATETIME_ATTRIBUTE = 'data-utc-datetime';
 
 const createCourseHandler = () => {
   const { query, toast, endpoints } = window.TutorCore;
@@ -38,33 +42,54 @@ const createCourseHandler = () => {
   };
 };
 
+const parseUTCDate = (value: string): Date | null => {
+  // Safari does not support format 0000-00-00, instead it needs 0000/00/00
+  const dateString = value.trim().replace(/-/g, '/');
+  const parsed = new Date(`${dateString} UTC`);
+  return parsed.toString() !== 'Invalid Date' ? parsed : null;
+};
+
 const convertUTCTime = () => {
-  const utcDateTimes = document.querySelectorAll('.' + UTC_DATE_CLASS);
-  if (utcDateTimes.length > 0 && wp.date) {
-    const settings = wp.date.getSettings();
-    const dateFormat = settings.formats.date;
-    const timeFormat = settings.formats.time;
-    const format = `${dateFormat}, ${timeFormat}`;
-
-    utcDateTimes.forEach((utcDateTime) => {
-      const textContent = utcDateTime.textContent?.trim() ?? '';
-
-      if (!textContent) {
-        return;
-      }
-      // Safari does not support format 0000-00-00, instead it needs 0000/00/00
-      const dateString = textContent.replace(/-/g, '/');
-      const localDateTime = new Date(`${dateString} UTC`);
-
-      if (localDateTime.toString() !== 'Invalid Date') {
-        utcDateTime.textContent = wp.date.dateI18n(
-          format,
-          localDateTime,
-          Intl.DateTimeFormat().resolvedOptions().timeZone,
-        );
-      }
-    });
+  if (!wp.date) {
+    return;
   }
+
+  const settings = wp.date.getSettings();
+  const dateFormat = settings.formats.date;
+  const timeFormat = settings.formats.time;
+  const dateTimeFormat = `${dateFormat}, ${timeFormat}`;
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  // Combined date + time in a single node
+  document.querySelectorAll('.' + UTC_DATE_CLASS).forEach((el) => {
+    const localDateTime = parseUTCDate(el.textContent ?? '');
+    if (localDateTime) {
+      el.textContent = wp.date.dateI18n(dateTimeFormat, localDateTime, timeZone);
+    }
+  });
+
+  // Separate date / time nodes sharing a wrapper with the raw UTC value
+  document.querySelectorAll('.' + UTC_DATETIME_WRAPPER_CLASS).forEach((wrapper) => {
+    const rawUTC = wrapper.getAttribute(UTC_DATETIME_ATTRIBUTE);
+    if (!rawUTC) {
+      return;
+    }
+
+    const localDateTime = parseUTCDate(rawUTC);
+    if (!localDateTime) {
+      return;
+    }
+
+    const dateEl = wrapper.querySelector('.' + UTC_DATETIME_DATE_CLASS);
+    const timeEl = wrapper.querySelector('.' + UTC_DATETIME_TIME_CLASS);
+
+    if (dateEl) {
+      dateEl.textContent = wp.date.dateI18n(dateFormat, localDateTime, timeZone);
+    }
+    if (timeEl) {
+      timeEl.textContent = wp.date.dateI18n(timeFormat, localDateTime, timeZone);
+    }
+  });
 };
 
 export const initializeCommon = () => {
