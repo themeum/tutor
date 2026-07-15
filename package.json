@@ -21,8 +21,9 @@
     "prepare": "husky",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build",
-    "replace-svg-colors": "tsx ./assets/core/ts/utils/replace-svg-colors.ts ./assets/images/illustrations ../tutor-pro/assets/images/illustrations",
-    "replace-svg-colors:dry": "tsx ./assets/core/ts/utils/replace-svg-colors.ts --dry-run ./assets/images/illustrations ../tutor-pro/assets/images/illustrations"
+    "replace-svg-colors": "tsx scripts/replace-svg-colors.ts ./assets/images/illustrations ../tutor-pro/assets/images/illustrations",
+    "replace-svg-colors:dry": "tsx scripts/replace-svg-colors.ts --dry-run ./assets/images/illustrations ../tutor-pro/assets/images/illustrations",
+    "svgo-optimize": "tsx scripts/svgo-optimize.ts"
   },
   "keywords": [
     "lms",
@@ -88,6 +89,7 @@
     "storybook": "^10.4.2",
     "storybook-react-rsbuild": "^3.0.0",
     "style-loader": "^4.0.0",
+    "svgo": "^4.0.1",
     "tsx": "^4.20.3",
     "typescript-eslint": "^8.37.0",
     "webpack-node-externals": "^3.0.0"

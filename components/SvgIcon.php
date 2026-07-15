@@ -313,6 +313,29 @@ class SvgIcon extends BaseComponent {
 
 		$attributes = $this->get_attributes_string();
 
+		$unique_suffix = '-' . substr( md5( uniqid( '', true ) ), 0, 8 );
+
+		// Rewrite id="foo" -> id="foo-abc123".
+		$inner_svg = preg_replace(
+			'/\bid="([a-zA-Z0-9_-]+)"/',
+			'id="$1' . $unique_suffix . '"',
+			$inner_svg
+		);
+
+		// Rewrite url(#foo) -> url(#foo-abc123).
+		$inner_svg = preg_replace(
+			'/url\(#([a-zA-Z0-9_-]+)\)/',
+			'url(#$1' . $unique_suffix . ')',
+			$inner_svg
+		);
+
+		// Rewrite href="#foo" / xlink:href="#foo" -> ...#foo-abc123.
+		$inner_svg = preg_replace(
+			'/(xlink:href|href)="#([a-zA-Z0-9_-]+)"/',
+			'$1="#$2' . $unique_suffix . '"',
+			$inner_svg
+		);
+
 		$this->component_string = sprintf(
 			'<svg %s>%s</svg>',
 			$attributes,
