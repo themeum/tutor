@@ -1,0 +1,27 @@
+.tutor-social-share-wrap {
+	display: flex;
+	gap: 16px;
+  button {
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    span {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 15px;
+      color: #ffffff;
+      position: relative;
+      top: 1px;
+      left: 2px;
+    }
+  }
+  .tutor_share {
+    &.s_linkedin i {
+      margin-top: -2px;
+    }
+  }
+}

@@ -1,0 +1,37 @@
+// Card Component
+// Base card styles using mixins
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-card {
+  @include tutor-card-base;
+  @include tutor-card-padding(medium);
+  @include tutor-card-radius(lg);
+}
+
+// Padding modifiers
+.tutor-card-padding-small {
+  @include tutor-card-padding(small);
+}
+
+.tutor-card-padding-medium {
+  @include tutor-card-padding(medium);
+}
+
+.tutor-card-padding-large {
+  @include tutor-card-padding(large);
+}
+
+// Border radius modifiers
+.tutor-card-rounded-md {
+  @include tutor-card-radius(md);
+}
+
+.tutor-card-rounded-lg {
+  @include tutor-card-radius(lg);
+}
+
+.tutor-card-rounded-2xl {
+  @include tutor-card-radius(2xl);
+}

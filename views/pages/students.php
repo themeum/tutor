@@ -29,7 +29,7 @@ $search    = Input::get( 'search', '' );
  * Pagination data
  */
 $paged    = Input::get( 'paged', 1, Input::TYPE_INT );
-$per_page = tutor_utils()->get_option( 'pagination_per_page' );
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset   = ( $per_page * $paged ) - $per_page;
 
 $students_list = tutor_utils()->get_students( $offset, $per_page, $search, $course_id, $date, $order );
@@ -136,8 +136,8 @@ $filters = array(
 										<span>
 											<?php echo esc_html( $list->display_name ); ?>
 										</span>
-										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, false ) ); ?>" class="tutor-iconic-btn" target="_blank">
-											<span class="tutor-icon-external-link" area-hidden="True"></span>
+										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, false ) ); ?>" class="tutor-iconic-btn" target="_blank" type="button">
+											<span class="tutor-icon-external-link" aria-hidden="true"></span>
 										</a>
 									</div>
 								</td>
@@ -159,15 +159,23 @@ $filters = array(
 									<span class="tutor-fs-7"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
 								</td>
 								<td>
-									<?php if ( tutor()->has_pro ) : ?>
-										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
-											<?php do_action( 'tutor_before_student_details_btn', $list->ID ); ?>
-											<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
-											class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
-												<?php esc_html_e( 'Details', 'tutor' ); ?>
-											</a>
-										</div>
-									<?php endif; ?>
+									<div class="tutor-d-flex tutor-align-center tutor-gap-1 tutor-justify-end">
+										<?php do_action( 'tutor_before_student_details_btn', $list->ID ); ?>
+										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
+										class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
+											<?php esc_html_e( 'Details', 'tutor' ); ?>
+										</a>
+										<?php
+										/**
+										 * Action to render consent logs button.
+										 *
+										 * @since 4.0.0
+										 *
+										 * @param object $list User list item.
+										 */
+										do_action( 'tutor_render_consent_logs_button', $list );
+										?>
+									</div>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -196,3 +204,7 @@ $filters = array(
 		</div>
 	</div>
 </div>
+
+<?php
+do_action( 'tutor_render_consent_logs_modal' );
+?>

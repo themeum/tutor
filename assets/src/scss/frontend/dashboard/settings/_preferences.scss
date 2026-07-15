@@ -1,0 +1,86 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-preferences {
+  &-reset-default {
+    @include tutor-flex(row, center, flex-end);
+    color: $tutor-text-secondary;
+    gap: $tutor-spacing-2;
+    cursor: pointer;
+  }
+
+  &-setting-item {
+    @include tutor-flex-between;
+    gap: $tutor-spacing-10;
+
+    &:not(:last-child) {
+      margin-bottom: $tutor-spacing-6;
+    }
+
+    .tutor-preferences-setting-content {
+      @include tutor-flex(row, center, flex-start);
+      gap: $tutor-spacing-4;
+
+      .tutor-preferences-setting-icon {
+        @include tutor-flex-center;
+        color: $tutor-icon-idle;
+      }
+
+      .tutor-preferences-setting-title {
+        @include tutor-typography('small', 'medium', 'primary');
+      }
+
+      .tutor-preferences-setting-subtitle {
+        @include tutor-typography(tiny);
+      }
+
+      .tutor-preferences-setting-text {
+        @include tutor-flex-column;
+        gap: $tutor-spacing-1;
+
+        .tutor-preferences-setting-subtitle {
+          @include tutor-typography('small', 'regular', 'subdued');
+        }
+      }
+
+      &:has(.tutor-preferences-setting-subtitle) {
+        align-items: start;
+
+        .tutor-preferences-setting-icon {
+          margin-top: 3px;
+        }
+      }
+    }
+
+    .tutor-preferences-setting-action {
+      @include tutor-flex(row, center, flex-end);
+      flex-shrink: 0;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      &:has(.tutor-select):has(.tutor-preferences-setting-subtitle) {
+        flex-direction: column;
+        align-items: start;
+        gap: $tutor-spacing-5;
+
+        .tutor-preferences-setting-action {
+          width: 100%;
+          padding-inline-start: 28px;
+        }
+      }
+    }
+  }
+
+  &-vision-preview {
+    @include tutor-flex-center();
+    background-color: $tutor-surface-l1-hover;
+    border-radius: $tutor-radius-md;
+    padding-top: $tutor-spacing-5;
+    margin-bottom: $tutor-spacing-5;
+
+    img {
+      width: 100%;
+      max-width: 65%;
+    }
+  }
+}

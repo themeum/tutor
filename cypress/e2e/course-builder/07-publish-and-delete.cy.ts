@@ -1,5 +1,7 @@
 import endpoints from '@TutorShared/utils/endpoints';
-import { backendUrls } from 'cypress/config/page-urls';
+
+import { backendUrls } from '@Cypress/config/page-urls';
+
 import { loginAsAdmin } from '../../support/auth';
 
 describe('Course Builder - Publish and Delete', () => {

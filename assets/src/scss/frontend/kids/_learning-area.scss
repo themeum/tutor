@@ -1,0 +1,291 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+@use './mixins' as *;
+
+[data-tutor-ui='kids'] {
+  .tutor-resources-wrapper,
+  .tutor-learning-area-qna,
+  .tutor-lesson-content .tutor-lesson-content-tab,
+  .tutor-quiz-intro,
+  .tutor-assignment-info,
+  .tutor-assignment-description,
+  .tutor-assignment-attachments,
+  .tutor-assignment-form,
+  .tutor-meeting,
+  .tutor-certificate-wrapper .tutor-certificate-header,
+  .tutor-pro-certificate-preview-container,
+  .tutor-certificate-wrapper .tutor-certificate-info,
+  .tutor-course-info-table,
+  .tutor-webinar-card,
+  .tutor-course-announcements,
+  .tutor-learning-area-resources .tutor-resources-wrapper,
+  .tutor-dashboard-header-user-popover,
+  .tutor-content-drip-card,
+  .tutor-dashboard-notification .tutor-popover,
+  .tutor-profile-settings-tab.tutor-tabs-nav,
+  .tutor-devices,
+  .tutor-certificate-share-modal .tutor-certificate-link-wrapper input {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+  }
+
+  .tutor-course-info .tutor-course-thumb {
+    border-radius: $tutor-radius-6xl;
+  }
+
+  .tutor-assignment-feedback,
+  .tutor-pro-certificate-preview-wrapper,
+  .tutor-learning-sidebar .tutor-learning-sidebar-pages,
+  .tutor-learning-sidebar .tutor-learning-sidebar-curriculum,
+  .tutor-dashboard-header-user-popover-profile,
+  .tutor-content-drip-card-header {
+    border-radius: $tutor-radius-5xl;
+  }
+
+  .tutor-alert,
+  .tutor-quiz-summary .tutor-empty-quiz-details {
+    border-radius: $tutor-radius-4xl;
+  }
+
+  .tutor-quiz-summary .tutor-quiz-result,
+  .tutor-quiz-question,
+  .tutor-quiz-summary-page .tutor-quiz-review-dnd,
+  .tutor-course-info .tutor-course-info-certificate,
+  .tutor-certificate-card {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-4xl, sm);
+  }
+
+  .tutor-learning-sidebar .tutor-learning-sidebar-curriculum .tutor-learning-nav .tutor-learning-nav-item {
+    &:hover,
+    &.active {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-2xl, sm);
+    }
+  }
+
+  .tutor-course-info .tutor-course-accordion-item {
+    border-radius: $tutor-radius-4xl;
+
+    &:has([style*='height: auto']) {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-4xl, sm);
+    }
+
+    &:not(:first-of-type) {
+      margin-top: $tutor-spacing-2;
+    }
+  }
+
+  .tutor-learning-sidebar .tutor-learning-sidebar-pages .tutor-sidebar-restore-dropdown button {
+    border-top-left-radius: $tutor-radius-md;
+    border-bottom-right-radius: $tutor-radius-md;
+  }
+
+  .tutor-lesson-content .tutor-lesson-content-tab {
+    margin-bottom: $tutor-spacing-2;
+  }
+
+  .tutor-quiz-submission[data-question-layout-view='single_question'],
+  .tutor-quiz-submission[data-question-layout-view='question_pagination'] {
+    .tutor-quiz-question {
+      width: calc(100% - 2px);
+      margin: 1px 1px 0 1px;
+    }
+  }
+
+  .tutor-learning-area-resources .tutor-resources-wrapper {
+    gap: $tutor-spacing-5;
+  }
+
+  .tutor-quiz-summary-page .tutor-quiz-review-dnd-rows {
+    gap: $tutor-spacing-4;
+  }
+
+  .tutor-webinar-actions {
+    gap: $tutor-spacing-3;
+  }
+
+  .tutor-quiz-question-number,
+  .tutor-quiz-question-option-number {
+    border-radius: $tutor-radius-md;
+  }
+
+  .tutor-quiz-explanation {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-4xl, sm);
+  }
+
+  .tutor-quiz-question:not([data-question='fill_in_the_blank']) {
+    .tutor-text-area {
+      --tutor-input-radius: #{$tutor-radius-2xl};
+    }
+    .tutor-quiz-question-option {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-2xl, sm);
+
+      &:has(.tutor-quiz-question-option-drop-zone) {
+        border-radius: $tutor-radius-lg;
+      }
+
+      &[data-option='dragging'] {
+        border-color: $tutor-border-brand;
+        box-shadow: -6px 7px 0px 0px #00000014;
+      }
+    }
+
+    .tutor-quiz-question-option:has(:checked) {
+      @include tutor-kids-shadow(false, $tutor-border-brand, $tutor-radius-2xl, sm);
+    }
+
+    .tutor-quiz-review-item[data-option='neutral'] {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-2xl, sm);
+    }
+
+    .tutor-quiz-review-item[data-option='pending'] {
+      @include tutor-kids-shadow(false, $tutor-border-warning-tertiary, $tutor-radius-2xl, sm);
+    }
+
+    .tutor-quiz-question-option[data-option='correct'],
+    .tutor-quiz-review-item[data-option='correct'] {
+      @include tutor-kids-shadow(false, $tutor-border-success, $tutor-radius-2xl, sm);
+    }
+
+    .tutor-quiz-question-option[data-option='incorrect'],
+    .tutor-quiz-review-item[data-option='incorrect'] {
+      @include tutor-kids-shadow(false, $tutor-border-error, $tutor-radius-2xl, sm);
+    }
+
+    .tutor-quiz-question-option-drop-zone {
+      border-radius: $tutor-radius-lg;
+    }
+
+    .tutor-quiz-question-draggable {
+      border-radius: $tutor-radius-2xl;
+    }
+  }
+
+  [data-question='matching'] [data-image-matching='0'] {
+    .tutor-quiz-question-option {
+      box-shadow: none;
+    }
+  }
+
+  [data-question='matching'] [data-image-matching='1'],
+  .tutor-quiz [data-question='image_answering'] {
+    .tutor-quiz-question-option {
+      box-shadow: none;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+
+      .tutor-input {
+        box-shadow: none;
+        border: 1px solid $tutor-border-idle;
+        border-radius: $tutor-radius-lg;
+      }
+    }
+  }
+
+  .tutor-assignment-attachments .tutor-attachment-card {
+    box-shadow: none;
+    border-radius: $tutor-radius-3xl;
+    border: 1px solid $tutor-border-idle;
+    padding: $tutor-spacing-4;
+
+    .tutor-attachment-card-icon {
+      border-radius: $tutor-radius-lg;
+    }
+  }
+
+  .tutor-meeting-hero,
+  .tutor-meeting-countdown,
+  .tutor-quiz-intro-icon,
+  .tutor-table-wrapper,
+  .tutor-quiz-attempts,
+  .tutor-quiz-summary-feedback,
+  .tutor-quiz-summary-page .tutor-quiz-summary-sidebar .tutor-quiz-sidebar-questions .tutor-quiz-sidebar-question-item,
+  .tutor-learning-header-inner,
+  .tutor-notification-tabs-wrapper,
+  .tutor-assignment-attempts-list {
+    border-radius: $tutor-radius-4xl;
+  }
+
+  .tutor-finish-course-progress {
+    border-radius: $tutor-radius-3xl;
+  }
+
+  .tutor-average-rating,
+  .tutor-certificate-icon,
+  .tutor-learning-sidebar .tutor-learning-sidebar-curriculum .tutor-learning-nav-topic .tutor-learning-nav-header,
+  .tutor-learning-sidebar .tutor-learning-sidebar-pages .tutor-learning-pages-item {
+    border-radius: $tutor-radius-2xl;
+  }
+
+  .tutor-quiz-intro,
+  .tutor-assignment-info,
+  .tutor-assignment-description,
+  .tutor-assignment-attachments,
+  .tutor-assignment-form {
+    padding: $tutor-spacing-8;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-6;
+    }
+  }
+
+  .tutor-learning-footer {
+    margin-top: $tutor-spacing-2;
+  }
+
+  .tutor-webinar .tutor-upcoming-lesson-card + .tutor-upcoming-lesson-card {
+    margin-top: $tutor-spacing-5;
+  }
+
+  .tutor-quiz-submission[data-question-layout-view='single_question'] .tutor-quiz-question-wrapper {
+    padding-bottom: 3px;
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    .tutor-quiz-intro {
+      padding: 0;
+    }
+
+    .tutor-webinar-card {
+      overflow: hidden;
+    }
+
+    .tutor-meeting,
+    .tutor-quiz-intro,
+    .tutor-lesson-content .tutor-lesson-content-tab,
+    .tutor-quiz-summary .tutor-quiz-result {
+      box-shadow: none;
+    }
+
+    .tutor-quiz .tutor-quiz-attempts {
+      border: none;
+    }
+
+    .tutor-meeting-hero-wrapper,
+    .tutor-meeting-details,
+    .tutor-quiz-intro-overview,
+    .tutor-quiz .tutor-quiz-attempts,
+    .tutor-quiz-summary .tutor-quiz-summary-overview,
+    .tutor-quiz-intro-params,
+    .tutor-lesson-content .tutor-lesson-content-tab .tutor-tabs-nav,
+    .tutor-lesson-content .tutor-lesson-content-tab .tutor-tabs-content,
+    .tutor-learning-area-resources .tutor-tabs-nav,
+    .tutor-learning-area-resources .tutor-tabs-content {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+    }
+
+    .tutor-quiz-attempts-list .tutor-quiz-attempts-item-wrapper:hover {
+      @include tutor-kids-shadow(false, $tutor-border-brand-tertiary, $tutor-radius-6xl, sm);
+    }
+
+    .tutor-quiz-attempts .tutor-quiz-attempts-item-wrapper .tutor-quiz-attempts-item {
+      .tutor-quiz-item-marks {
+        border-start-start-radius: $tutor-radius-4xl;
+        border-end-start-radius: $tutor-radius-4xl;
+      }
+
+      .tutor-quiz-item-result {
+        border-start-end-radius: $tutor-radius-4xl;
+        border-end-end-radius: $tutor-radius-4xl;
+      }
+    }
+  }
+}

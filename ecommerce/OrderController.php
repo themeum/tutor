@@ -18,6 +18,7 @@ use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\OrderActivitiesModel;
@@ -129,6 +130,9 @@ class OrderController {
 			add_action( 'wp_ajax_tutor_order_bulk_action', array( $this, 'bulk_action_handler' ) );
 
 			add_filter( 'tutor_calculate_order_tax_amount', array( $this, 'filter_calculate_single_order_tax_amount' ), 10, 5 );
+
+			add_filter( 'tutor_get_orders_by_user_id', array( $this, 'filter_get_orders_by_user_id' ), 10, 3 );
+			add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ), 10, 2 );
 		}
 	}
 
@@ -714,11 +718,14 @@ class OrderController {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
-	 * @return array
-	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 param $context added.
+	 *
+	 * @param string $context context.
+	 *
+	 * @return array
 	 */
-	public function tabs_key_value(): array {
+	public function tabs_key_value( $context = '' ): array {
 		$url = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 
 		$date           = Input::get( 'date', '' );
@@ -729,8 +736,30 @@ class OrderController {
 			'order_type' => OrderModel::TYPE_SINGLE_ORDER,
 		);
 
+		if ( ! is_admin() ) {
+			$where['o.user_id'] = get_current_user_id();
+		}
+
 		if ( ! empty( $date ) ) {
 			$where['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
+		}
+
+		if ( 'dashboard' === $context ) {
+			/**
+			 * Frontend dashboard will show all orders under `Billing > Order History` section.
+			 * So we need to remove order_type from where clause.
+			 *
+			 * @since 4.0.0
+			 */
+			if ( tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+				unset( $where['order_type'] );
+			}
+
+			$start_date = Input::get( 'start_date', '' );
+			$end_date   = Input::get( 'end_date', '' );
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$where['date(o.created_at_gmt)'] = array( 'BETWEEN', array( tutor_get_formated_date( '', $start_date ), tutor_get_formated_date( '', $end_date ) ) );
+			}
 		}
 
 		if ( ! empty( $payment_status ) ) {
@@ -745,7 +774,7 @@ class OrderController {
 			'key'   => '',
 			'title' => __( 'All', 'tutor' ),
 			'value' => $this->model->get_order_count( $where, $search ),
-			'url'   => $url . '&data=all',
+			'url'   => UrlHelper::add_query_params( $url, array( 'data' => 'all' ) ),
 		);
 
 		foreach ( $order_status as $key => $value ) {
@@ -755,7 +784,7 @@ class OrderController {
 				'key'   => $key,
 				'title' => $value,
 				'value' => $this->model->get_order_count( $where, $search ),
-				'url'   => $url . '&data=' . $key,
+				'url'   => UrlHelper::add_query_params( $url, array( 'data' => $key ) ),
 			);
 		}
 
@@ -1278,5 +1307,67 @@ class OrderController {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Filter get orders by user id.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $data Order data.
+	 * @param int    $user_id User ID.
+	 * @param array  $args Array of arguments.
+	 *
+	 * @return object {results: array, total_count: int}
+	 */
+	public function filter_get_orders_by_user_id( $data, $user_id, $args ) {
+		if ( ! $user_id ) {
+			return $data;
+		}
+
+		$other_params = array();
+		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+			$other_params['order_type'] = OrderModel::TYPE_SINGLE_ORDER;
+		}
+
+		$order_status = Input::sanitize( $args['status'] ?? 'all' );
+		$period       = isset( $args['period'] ) ? Input::sanitize( $args['period'] ) : null;
+		$start_date   = isset( $args['start_date'] ) ? Input::sanitize( $args['start_date'] ) : null;
+		$end_date     = isset( $args['end_date'] ) ? Input::sanitize( $args['end_date'] ) : null;
+		$offset       = (int) $args['offset'] ?? 0;
+		$limit        = (int) $args['limit'] ?? 0;
+		$order        = QueryHelper::get_valid_sort_order( $args['order'] ?? 'DESC' );
+
+		$data = $this->model->get_user_orders( $period, $start_date, $end_date, $order_status, $user_id, $limit, $offset, $order, $other_params );
+
+		return (object) $data;
+	}
+
+	/**
+	 * Filter order history status options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $options Order history status options.
+	 * @param string $selected Selected status.
+	 *
+	 * @return array<array{label: string, value: string, count: int, url: string, active: bool}>
+	 */
+	public function filter_order_history_status_options( $options, $selected ) {
+		$options = $this->tabs_key_value( 'dashboard' );
+		$options = array_map(
+			function( $option ) use ( $selected ) {
+				$key = $option['key'] ?? '';
+				return array(
+					'label'  => $option['title'] ?? '',
+					'value'  => $key,
+					'count'  => (int) $option['value'] ?? 0,
+					'url'    => $option['url'] ?? '',
+					'active' => $key === $selected || ( empty( $key ) && 'all' === $selected ),
+				);
+			},
+			$options
+		);
+		return $options;
 	}
 }

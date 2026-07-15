@@ -77,7 +77,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 					/**
 					 * Course and bundle checkout items.
 					 */
-					if ( is_array( $course_list ) && count( $course_list ) ) :
+					if ( is_array( $course_list ) && count( $course_list ) && isset( $checkout_data->items ) ) :
 						?>
 						<?php
 						foreach ( $checkout_data->items as $item ) :
@@ -100,7 +100,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 											</h6>
 										</div>
 										<div class="tutor-checkout-coupon-badge <?php echo esc_attr( $item->is_coupon_applied ? '' : 'tutor-d-none' ); ?>">
-											<i class="tutor-icon-tag" area-hidden="true"></i>
+											<i class="tutor-icon-tag" aria-hidden="true"></i>
 											<span><?php echo esc_html( $item->is_coupon_applied ? $checkout_data->coupon_title : '' ); ?></span>
 										</div>
 									</div>
@@ -170,12 +170,12 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 
 			<div class="tutor-checkout-summary-item tutor-checkout-coupon-wrapper <?php echo esc_attr( $checkout_data->is_coupon_applied ? '' : 'tutor-d-none' ); ?>">
 				<div class="tutor-checkout-coupon-badge tutor-has-delete-button">
-					<i class="tutor-icon-tag" area-hidden="true"></i>
+					<i class="tutor-icon-tag" aria-hidden="true"></i>
 					<span><?php echo esc_html( $checkout_data->coupon_title ); ?></span>
 
 					<?php if ( $checkout_data->is_coupon_applied ) : ?>
 					<button type="button" id="tutor-checkout-remove-coupon" class="tutor-btn">
-						<i class="tutor-icon-times" area-hidden="true"></i>
+						<i class="tutor-icon-times" aria-hidden="true"></i>
 					</button>
 					<?php endif; ?>
 				</div>
@@ -216,7 +216,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 
 		<?php
 		$is_zero_price        = empty( $checkout_data->total_price ) && OrderModel::TYPE_SINGLE_ORDER === $checkout_data->order_type;
-		$pay_now_btn_text     = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
+		$pay_now_btn_text     = $is_zero_price ? __( 'Place Order', 'tutor' ) : __( 'Pay Now', 'tutor' );
 		$pay_now_btn_text     = apply_filters( 'tutor_checkout_pay_now_btn_text', $pay_now_btn_text, $checkout_data );
 		$show_payment_methods = apply_filters( 'tutor_checkout_show_payment_methods', ! $is_zero_price, $checkout_data );
 

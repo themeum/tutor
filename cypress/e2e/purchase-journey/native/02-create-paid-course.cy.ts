@@ -1,9 +1,12 @@
-import { type CourseFormData } from '@CourseBuilderServices/course';
 import { faker } from '@faker-js/faker';
+
 import { Addons } from '@TutorShared/config/constants';
 import endpoints from '@TutorShared/utils/endpoints';
-import { backendUrls } from 'cypress/config/page-urls';
-import { loginAsAdmin } from 'cypress/support/auth';
+
+import { type CourseFormData } from '@CourseBuilderServices/course';
+
+import { backendUrls } from '@Cypress/config/page-urls';
+import { loginAsAdmin } from '@Cypress/support/auth';
 
 describe('Paid Course Creation for Native E-Commerce', () => {
   let courseId: string;

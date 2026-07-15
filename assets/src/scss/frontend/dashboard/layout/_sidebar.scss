@@ -1,0 +1,117 @@
+// Dashboard Sidebar Styles
+// Navigation menu for dashboard sections
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-dashboard-sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  min-height: 100dvh;
+  background-color: $tutor-surface-sidebar-l1;
+  border-inline-end: 1px solid $tutor-border-idle;
+
+  body:has(#wpadminbar) & {
+    top: 32px;
+    min-height: calc(100dvh - 32px);
+  }
+
+  @include tutor-breakpoint-down(md) {
+    display: none;
+  }
+
+  &-logo {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding: $tutor-spacing-6 $tutor-spacing-10;
+    border-bottom: 1px solid $tutor-border-idle;
+    overflow: hidden;
+
+    img {
+      display: block;
+      max-width: 120px;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      object-position: left center;
+
+      [dir='rtl'] & {
+        object-position: right center;
+      }
+    }
+  }
+
+  .tutor-dashboard-sidebar-nav {
+    padding: $tutor-spacing-8 $tutor-spacing-6;
+
+    ul {
+      @include tutor-flex-column();
+      gap: $tutor-spacing-2;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        &:nth-of-type(5):not(:nth-last-of-type(1)) {
+          position: relative;
+
+          &::after {
+            content: '';
+            display: block;
+            border-bottom: 1px solid $tutor-border-idle;
+            margin-top: $tutor-spacing-4;
+            margin-bottom: $tutor-spacing-2;
+            margin-inline-start: $tutor-spacing-8;
+            margin-inline-end: $tutor-spacing-none;
+            width: calc(100% - 48px);
+          }
+        }
+
+        a {
+          @include tutor-typography(small, medium);
+          @include tutor-flex(row, center);
+          gap: $tutor-spacing-5;
+          border-radius: $tutor-radius-md;
+          padding: $tutor-spacing-4 $tutor-spacing-8;
+          text-decoration: none;
+          outline: none;
+          box-shadow: none;
+
+          &:hover,
+          &:focus {
+            outline: none !important;
+            background-color: $tutor-tab-sidebar-l2-hover;
+          }
+
+          &.active {
+            background-color: $tutor-tab-sidebar-l2-active;
+            color: $tutor-text-brand;
+          }
+        }
+      }
+    }
+  }
+
+  .tutor-see-all-courses {
+    width: calc(100% - 32px);
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-3;
+    @include tutor-typography(small);
+    padding: $tutor-spacing-4 $tutor-spacing-8;
+    border-radius: $tutor-radius-md;
+    @include tutor-transition(background-color);
+    outline: none;
+
+    position: absolute;
+    inset-inline-start: $tutor-spacing-6;
+    bottom: $tutor-spacing-8;
+
+    &:hover,
+    &:focus {
+      background-color: $tutor-tab-sidebar-l2-hover;
+    }
+  }
+}

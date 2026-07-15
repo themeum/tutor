@@ -10,11 +10,14 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Ecommerce\Settings;
 use Tutor\Models\CourseModel;
+use Tutor\Options_V2;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -96,6 +99,23 @@ class Assets {
 		 * @since v2.0.5
 		 */
 		add_action( 'enqueue_block_editor_assets', __CLASS__ . '::add_frontend_editor_button' );
+
+		/**
+		 * Enqueue styles & scripts
+		 *
+		 * @since 4.0.0
+		 */
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		// Add custom meta.
+		add_action( 'wp_head', array( $this, 'add_custom_data' ) );
+
+		/**
+		 * Add preload to CSS
+		 *
+		 * @since 4.0.0
+		 */
+		add_filter( 'style_loader_tag', array( $this, 'add_preload_to_css' ), 10, 2 );
 	}
 
 	/**
@@ -154,6 +174,17 @@ class Assets {
 
 		$tutor_settings = Options_V2::get_only( $required_options );
 
+		// Load available kids mode icons to avoid frontend 404s if kids mode is active.
+		$kids_icons = array();
+		if ( tutor_utils()->is_kids_mode() ) {
+			$kids_icons = array_map(
+				function ( $file ) {
+					return basename( $file, '.svg' );
+				},
+				glob( tutor()->path . 'assets/icons/kids/*.svg' ) ?: array()
+			);
+		}
+
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => rtrim( get_home_url(), '/' ),
@@ -168,6 +199,7 @@ class Assets {
 			'placeholder_img_src'          => tutor_placeholder_img_src(),
 			'enable_lesson_classic_editor' => get_tutor_option( 'enable_lesson_classic_editor' ),
 			'tutor_frontend_dashboard_url' => tutor_utils()->get_tutor_dashboard_page_permalink(),
+			'is_dashboard_page'            => tutor_utils()->is_dashboard_page(),
 			'wp_date_format'               => tutor_js_date_format_against_wp(),
 			'start_of_week'                => get_option( 'start_of_week', 1 ),
 			'is_admin'                     => is_admin(),
@@ -176,7 +208,6 @@ class Assets {
 			'current_user'                 => $current_user,
 			'content_change_event'         => 'tutor_content_changed_event',
 			'is_tutor_course_edit'         => isset( $_GET['action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) ? true : false,
-			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
 			'current_page'                 => $current_page,
 			'quiz_answer_display_time'     => 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' ),
 			'is_ssl'                       => is_ssl(),
@@ -187,6 +218,14 @@ class Assets {
 			'settings'                     => $tutor_settings,
 			'max_upload_size'              => wp_max_upload_size(),
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
+			'kids_icons_registry'          => $kids_icons,
+			'is_kids_mode'                 => tutor_utils()->is_kids_mode(),
+			'user_preferences'             => UserPreference::get_preferences( get_current_user_id() ),
+			'is_legacy_learning_mode'      => tutor_utils()->is_legacy_learning_mode(),
+			'course_slug'                  => tutor_utils()->get_option( 'course_permalink_base', 'courses' ),
+			'lesson_slug'                  => tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ),
+			'quiz_slug'                    => tutor_utils()->get_option( 'quiz_permalink_base', 'quizzes' ),
+			'is_tour_completed'            => (bool) get_user_meta( get_current_user_id(), User::TOUR_COMPLETED_META, true ),
 		);
 	}
 
@@ -196,11 +235,14 @@ class Assets {
 	 * @since 1.0.0
 	 * @since 3.0.0 Order details & coupon scripts added.
 	 *
+	 * @param string $slug The page slug.
+	 *
 	 * @return void
 	 */
-	public function admin_scripts() {
+	public function admin_scripts( $slug ) {
 		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION );
+
 		/**
 		 * Scripts
 		 */
@@ -246,21 +288,22 @@ class Assets {
 		if ( 'tutor-addons' === $page ) {
 			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-addon-list.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 		}
-
-		if ( 'tutor-themes' === $page ) {
-			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
-			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
-		}
 	}
 
 	/**
 	 * Load frontend scripts
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 4.0.0 Legacy scripts loading check added.
+	 *
 	 * @return void
 	 */
 	public function frontend_scripts() {
-		global $post, $wp_query;
+		$load_legacy_scripts = self::should_load_legacy_scripts();
+		if ( ! $load_legacy_scripts ) {
+			return;
+		}
 
 		/**
 		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
@@ -273,20 +316,12 @@ class Assets {
 				$is_page_builder_used = et_pb_is_pagebuilder_used( get_the_ID() );
 				if ( ! $is_page_builder_used ) {
 					wp_enqueue_editor();
+					wp_enqueue_script( 'quicktags' );
 				}
 			} else {
 				wp_enqueue_editor();
+				wp_enqueue_script( 'quicktags' );
 			}
-		}
-
-		/**
-		 * Initializing quicktags script to use in wp_editor();
-		 */
-		wp_enqueue_script( 'quicktags' );
-
-		$tutor_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
-		if ( get_the_ID() === $tutor_dashboard_page_id ) {
-			wp_enqueue_media();
 		}
 
 		/**
@@ -305,41 +340,12 @@ class Assets {
 		wp_enqueue_script( 'tutor-social-share', tutor()->url . 'assets/lib/SocialShare/SocialShare.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
 		/**
-		 * Chart Data
-		 */
-		if ( ! empty( $wp_query->query_vars['tutor_dashboard_page'] ) ) {
-			wp_enqueue_script( 'jquery-ui-slider' );
-
-			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
-			wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-
-			if ( 'earning' === $wp_query->query_vars['tutor_dashboard_page'] ) {
-				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/lib/Chart.bundle.min.js', array(), TUTOR_VERSION );
-				wp_enqueue_script( 'jquery-ui-datepicker' );
-			}
-		}
-		/**
 		 * Dependency wp-i18n added for translate js file
 		 *
 		 * @since 1.9.0
 		 */
 		wp_enqueue_style( 'tutor-frontend', tutor()->url . 'assets/css/tutor-front.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
-
-		/**
-		 * Load frontend dashboard style
-		 *
-		 * @since v1.9.8
-		 */
-		$should_load_dashboard_styles = apply_filters( 'tutor_should_load_dashboard_styles', tutor_utils()->is_tutor_frontend_dashboard() );
-		if ( $should_load_dashboard_styles ) {
-			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', array(), TUTOR_VERSION );
-		}
-
-		// Load date picker for announcement at frontend.
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		$css = '.mce-notification.mce-notification-error{display: none !important;}';
-		wp_add_inline_style( 'tutor-frontend', $css );
 	}
 
 	/**
@@ -406,9 +412,17 @@ class Assets {
 	 * Load common scripts for frontend and backend
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 4.0.0 Legacy scripts loading check added.
+	 *
+	 * @param string $slug The page slug.
+	 *
 	 * @return void
 	 */
-	public function common_scripts() {
+	public function common_scripts( $slug ) {
+		if ( ! self::should_load_legacy_scripts() ) {
+			return;
+		}
 
 		/**
 		 * Load TinyMCE for tutor settings page if tutor pro is not available.
@@ -518,11 +532,25 @@ class Assets {
 			'tutor_gray_color'          => '#CDCFD5',
 		);
 
+		$brand_color = tutor_utils()->get_brand_color();
+
 		$color_string = '';
 		foreach ( $colors as $key => $property ) {
 			$fallback_color = isset( $fallback_colors[ $key ] ) ? $fallback_colors[ $key ] : '#212327';
-			$color          = tutor_utils()->get_option( $key, $fallback_color );
-			$color_rgb      = tutor_utils()->hex2rgb( $color );
+			$color          = $fallback_color;
+
+			if ( Options_V2::DEFAULT_BRAND_COLOR !== $brand_color ) {
+				if ( 'tutor_primary_color' === $key ) {
+					$color = $brand_color;
+				}
+
+				if ( 'tutor_primary_hover_color' === $key ) {
+					$palette = $this->generate_color_palette( $brand_color );
+					$color   = $palette[700];
+				}
+			}
+
+			$color_rgb = tutor_utils()->hex2rgb( $color );
 
 			if ( is_admin() && isset( $admin_colors[ $property ] ) ) {
 				$color     = $admin_colors[ $property ];
@@ -539,6 +567,83 @@ class Assets {
 		}
 
 		return ':root{' . $color_string . '}';
+	}
+
+	/**
+	 * Generate color palette
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $base_hex HEX color code.
+	 *
+	 * @return array
+	 */
+	private function generate_color_palette( $base_hex ) {
+		$base = tutor_utils()->hex_to_hsl( $base_hex );
+
+		// Mapping of [Hue-Shift, Saturation-Shift, Target-Lightness].
+		$rules = array(
+			100 => array( -1, 3, 97.5 ),
+			200 => array( -3, 1, 94.1 ),
+			300 => array( -3, -2, 92.2 ),
+			400 => array( -4, 0, 79.6 ),
+			450 => array( -2, -3, 76.7 ),
+			500 => array( -4, 5, 59.8 ),
+			600 => array( 0, 0, $base['l'] ),
+			700 => array( 3, -7, 48.0 ),
+			800 => array( 4, -12, 40.2 ),
+			900 => array( 5, -17, 33.1 ),
+			950 => array( 6, -24, 20.8 ),
+		);
+
+		$palette = array();
+		foreach ( $rules as $weight => $modifier ) {
+			if ( 600 === $weight ) {
+				$palette[ $weight ] = strtolower( $base_hex );
+				continue;
+			}
+
+			$new_h = fmod( ( $base['h'] + $modifier[0] + 360 ), 360 );
+			$new_s = max( 0, min( 100, $base['s'] + $modifier[1] ) );
+			$new_l = max( 0, min( 100, $modifier[2] ) );
+
+			$palette[ $weight ] = tutor_utils()->hsl_to_hex( $new_h, $new_s, $new_l );
+		}
+
+		return $palette;
+	}
+
+	/**
+	 * Load core color palette
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $brand_color Base color code.
+	 *
+	 * @return string
+	 */
+	private function load_core_color_palette( $brand_color ) {
+		if ( empty( $brand_color ) ) {
+			return '';
+		}
+
+		$palette = $this->generate_color_palette( $brand_color );
+
+		return "
+			:root {
+			--tutor-brand-100: {$palette[100]};
+			--tutor-brand-200: {$palette[200]};
+			--tutor-brand-300: {$palette[300]};
+			--tutor-brand-400: {$palette[400]};
+			--tutor-brand-450: {$palette[450]};
+			--tutor-brand-500: {$palette[500]};
+			--tutor-brand-600: {$palette[600]};
+			--tutor-brand-700: {$palette[700]};
+			--tutor-brand-800: {$palette[800]};
+			--tutor-brand-900: {$palette[900]};
+			--tutor-brand-950: {$palette[950]};
+			}
+		";
 	}
 
 	/**
@@ -746,5 +851,165 @@ class Assets {
 				'before'
 			);
 		}
+	}
+
+	/**
+	 * Enqueue styles & scripts for latest design system
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function enqueue_scripts() {
+		if ( self::should_load_legacy_scripts() ) {
+			return;
+		}
+
+		$is_dashboard       = tutor_utils()->is_dashboard_page();
+		$is_learning_area   = tutor_utils()->is_learning_area();
+		$is_kids_mode       = tutor_utils()->is_kids_mode();
+		$is_legacy_learning = Options_V2::LEARNING_MODE_LEGACY === tutor_utils()->get_option( 'learning_mode' );
+
+		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
+		$kids_css_url          = tutor()->assets_url . 'css/tutor-kids.min.css';
+		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
+		$learning_area_css_url = tutor()->assets_url . 'css/tutor-learning-area.min.css';
+		$google_font_url       = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+
+		$core_js_url          = tutor()->assets_url . 'js/tutor-core.js';
+		$dashboard_js_url     = tutor()->assets_url . 'js/tutor-dashboard.js';
+		$learning_area_js_url = tutor()->assets_url . 'js/tutor-learning-area.js';
+
+		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
+
+		$is_course_list_page    = tutor_utils()->is_course_list_page();
+		$is_course_details_page = tutor_utils()->is_course_details_page();
+
+		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
+		if ( $is_kids_mode ) {
+			$google_font_url = 'https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap';
+			wp_enqueue_style( 'tutor-kids', $kids_css_url, array( 'tutor-core' ), $version );
+		}
+
+		// Core.
+		wp_enqueue_style( 'tutor-google-fonts', $google_font_url, array(), $version );
+
+		wp_enqueue_style( 'tutor-core', $core_css_url, array( 'tutor-google-fonts' ), $version );
+		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), $version, true );
+
+		wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
+
+		// Generate color palette from user selected brand color and add to the root.
+		$brand_color = tutor_utils()->get_brand_color();
+		if ( Options_V2::DEFAULT_BRAND_COLOR !== $brand_color ) {
+			wp_add_inline_style( 'tutor-core', $this->load_core_color_palette( $brand_color ) );
+		}
+
+		if ( $is_dashboard ) {
+			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
+			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+		}
+
+		if ( $is_learning_area ) {
+			wp_enqueue_style( 'tutor-learning', $learning_area_css_url, array(), $version );
+			wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+
+			if ( is_single_course( true ) ) {
+				wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), $version );
+				wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), $version, true );
+			}
+		}
+	}
+
+	/**
+	 * Check if need to load legacy scripts
+	 *
+	 * If the current screen is dashboard or new learning area
+	 * then this method will return false to avoid loading legacy css & js files
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return boolean
+	 */
+	public static function should_load_legacy_scripts(): bool {
+		$load = true;
+
+		$post_id = get_the_ID();
+
+		$is_learning_area   = tutor_utils()->is_learning_area();
+		$is_legacy_learning = tutor_utils()->is_legacy_learning_mode();
+		$is_dashboard       = tutor_utils()->is_dashboard_page();
+
+		$page_ids = array(
+			(int) tutor_utils()->get_option( 'student_register_page' ),
+			(int) tutor_utils()->get_option( 'instructor_register_page' ),
+		);
+
+		// Ignore loading legacy scripts on specific case.
+		if ( $is_learning_area && ! $is_legacy_learning ) {
+			$load = false;
+		} elseif ( $is_dashboard ) {
+			$load = false;
+		} elseif ( in_array( $post_id, $page_ids, true ) ) {
+			$load = false;
+		} else {
+			// Ignore loading legacy scripts for these shortcodes.
+			$has_shortcode = false;
+
+			$shortcdes = array(
+				'tutor_student_registration_form',
+				'tutor_instructor_registration_form',
+				'tutor_dashboard',
+				'tutor_login',
+			);
+
+			$post_content = get_the_content();
+
+			foreach ( $shortcdes as $shortcde ) {
+				$has_shortcode = has_shortcode( $post_content, $shortcde );
+				if ( $has_shortcode ) {
+					$load = false;
+					break;
+				}
+			}
+		}
+
+		return apply_filters( 'tutor_should_load_legacy_scripts', $load );
+	}
+
+	/**
+	 * Add custom meta data to the head section.
+	 *
+	 * Outputs a viewport meta tag to improve mobile responsiveness.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function add_custom_data() {
+		if ( tutor_utils()->is_dashboard_page() || tutor_utils()->is_learning_area() ) {
+			echo '<meta name="viewport" content="width=device-width, initial-scale=1" />' . "\n";
+		}
+	}
+
+	/**
+	 * Add preload to CSS
+	 *
+	 * @param string $html HTML.
+	 * @param string $handle Handle.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	public function add_preload_to_css( $html, $handle ) {
+		if ( 'tutor-google-fonts' === $handle ) {
+			$html = str_replace(
+				"rel='stylesheet'",
+				"rel='preload' as='style' onload=\"this.onload=null;this.rel='stylesheet'\"",
+				$html
+			);
+		}
+		return $html;
 	}
 }

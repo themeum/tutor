@@ -1,0 +1,33 @@
+// Announcements Page Styles
+// Instructors announcements list and management
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-dashboard-announcements {
+  .tutor-announcement-item {
+    padding: $tutor-spacing-6;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid $tutor-border-idle;
+    }
+
+    @include tutor-breakpoint-up(sm) {
+      @include tutor-transition(background-color);
+
+      .tutor-announcement-actions {
+        opacity: 0;
+        @include tutor-transition(opacity);
+      }
+
+      &:hover,
+      &:focus-within {
+        background-color: $tutor-surface-l1-hover;
+
+        .tutor-announcement-actions {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}

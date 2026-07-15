@@ -9,6 +9,13 @@
  */
 
 use TUTOR\Ajax;
+use Tutor\Components\Alert;
+use Tutor\Components\Constants\InputType;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\InputField;
+use Tutor\Components\SvgIcon;
+use TUTOR\Icon;
+
 
 $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
 /**
@@ -18,31 +25,12 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
  */
 $login_errors = get_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ) ? get_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ) : array();
 foreach ( $login_errors as $login_error ) {
-	?>
-	<div class="tutor-alert tutor-warning tutor-mb-12" style="display:block; grid-gap: 0px 10px;">
-		<?php
-		echo wp_kses(
-			$login_error,
-			array(
-				'strong' => true,
-				'a'      => array(
-					'href'  => true,
-					'class' => true,
-					'id'    => true,
-				),
-				'p'      => array(
-					'class' => true,
-					'id'    => true,
-				),
-				'div'    => array(
-					'class' => true,
-					'id'    => true,
-				),
-			)
-		);
-		?>
-	</div>
-	<?php
+	Alert::make()
+		->text( $login_error )
+		->variant( Alert::ERROR )
+		->icon( Icon::WARNING )
+		->attr( 'class', 'tutor-mb-8' )
+		->render();
 }
 
 do_action( 'tutor_before_login_form' );
@@ -55,37 +43,52 @@ do_action( 'tutor_before_login_form' );
 	<input type="hidden" name="tutor_action" value="tutor_user_login" />
 	<input type="hidden" name="redirect_to" value="<?php echo esc_url( apply_filters( 'tutor_after_login_redirect_url', tutor()->current_url ) ); ?>" />
 
-	<div class="tutor-mb-20">
-		<input type="text" class="tutor-form-control" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" required/>
+	<div class="tutor-input-field tutor-mb-7">
+		<input type="text" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" required/>
 	</div>
 
-	<div class="tutor-mb-32">
-		<input type="password" class="tutor-form-control" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" value="" size="20" required/>
+	<div class="tutor-input-field tutor-mb-8" x-data="{ show: false, value: '' }" style="position: relative;">
+		<span 
+			class="tutor-flex tutor-items-center tutor-justify-center"
+			style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
+			x-show="value.length > 0"
+			@click="show = !show"
+		>
+			<template x-if="!show">
+				<?php SvgIcon::make()->name( Icon::EYE )->size( 20 )->render(); ?>
+			</template>
+			<template x-if="show">
+				<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
+			</template>
+		</span>
+		<input :type="show ? 'text' : 'password'" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" x-model="value" size="20" required style="padding-right: 45px;" autocomplete="off"/>
 	</div>
 
-	<div class="tutor-login-error"></div>
+	<div class="tutor-login-error" role="alert" aria-live="polite"></div>
 	<?php
 		do_action( 'tutor_login_form_middle' );
 		do_action( 'login_form' );
 		apply_filters( 'login_form_middle', '', '' );
 	?>
-	<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-mb-40">
-		<div class="tutor-form-check">
-			<input id="tutor-login-agmnt-1" type="checkbox" class="tutor-form-check-input tutor-bg-black-40" name="rememberme" value="forever" />
-			<label for="tutor-login-agmnt-1" class="tutor-fs-7 tutor-color-muted">
-				<?php esc_html_e( 'Keep me signed in', 'tutor' ); ?>
-			</label>
+	<div class="tutor-flex tutor-justify-between tutor-items-center tutor-mt-9">
+		<div class="tutor-input-field tutor-w-auto">
+			<div class="tutor-input-wrapper">
+				<input id="tutor-login-agmnt-1" type="checkbox" class="tutor-checkbox tutor-checkbox-md" name="rememberme" value="forever" />
+				<label for="tutor-login-agmnt-1" class="tutor-label">
+					<?php esc_html_e( 'Keep me signed in', 'tutor' ); ?>
+				</label>
+			</div>
 		</div>
-		<a href="<?php echo esc_url( $lost_pass ); ?>" class="tutor-btn tutor-btn-ghost">
+		<a href="<?php echo esc_url( $lost_pass ); ?>" class="tutor-btn tutor-btn-link-gray tutor-btn-small">
 			<?php esc_html_e( 'Forgot Password?', 'tutor' ); ?>
 		</a>
 	</div>
 
 	<?php do_action( 'tutor_login_form_end' ); ?>
-	<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block">
+	<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block tutor-mt-10">
 		<?php esc_html_e( 'Sign In', 'tutor' ); ?>
 	</button>
-	
+
 	<?php if ( get_option( 'users_can_register', false ) ) : ?>
 		<?php
 			$url_arg = array(
@@ -95,8 +98,10 @@ do_action( 'tutor_before_login_form' );
 				$url_arg['enrol_course_id'] = get_the_ID();
 			}
 			?>
-		<div class="tutor-text-center tutor-fs-6 tutor-color-secondary tutor-mt-20">
-			<?php esc_html_e( 'Don\'t have an account?', 'tutor' ); ?>&nbsp;
+		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-2 tutor-mt-7">
+			<div class="tutor-small">
+				<?php esc_html_e( 'Don\'t have an account?', 'tutor' ); ?>
+			</div>
 			<a href="<?php echo esc_url( add_query_arg( $url_arg, tutor_utils()->student_register_url() ) ); ?>" class="tutor-btn tutor-btn-link">
 				<?php esc_html_e( 'Register Now', 'tutor' ); ?>
 			</a>
@@ -106,10 +111,10 @@ do_action( 'tutor_before_login_form' );
 </form>
 <?php
 do_action( 'tutor_after_login_form' );
-if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) : ?>
+if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) :
+	?>
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
-		var { __ } = wp.i18n;
 		var loginModal = document.querySelector('.tutor-modal.tutor-login-modal');
 		var errors = <?php echo wp_json_encode( $login_errors ); ?>;
 		if (loginModal && errors.length) {

@@ -10,14 +10,37 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Config Class
  *
  * @since 3.7.0
+ *
+ * @property string $path Plugin file path.
+ * @property string $url Plugin url.
+ * @property string $basename Plugin base name.
+ * @property string $basepath Plugin base path.
+ * @property string $version Plugin version.
+ * @property string $assets_url Assets url.
+ * @property string $template_path Template path.
+ * @property string $icon_dir  Icons dir.
+ * @property string $v2_img_dir Version 2 images dir.
+ * @property string $current_url Current url.
+ * @property string $nonce_action Nonce action.
+ * @property string $nonce Nonce.
+ * @property bool   $has_pro Has pro plugin.
+ * @property string $course_post_type Course post type.
+ * @property string $bundle_post_type Bundle post type.
+ * @property string $lesson_post_type Lesson post type.
+ * @property string $instructor_role Instructor role.
+ * @property string $topics_post_type Topics post type.
+ * @property string $announcement_post_type Announcement post type.
+ * @property string $assignment_post_type Assignment post type.
+ * @property string $enrollment_post_type Enrollment post type.
+ * @property string $quiz_post_type Quiz post type.
+ * @property string $zoom_post_type Zoom post type.
+ * @property string $meet_post_type Meet post type.
  */
 class Config extends Singleton {
 	/**
@@ -49,6 +72,7 @@ class Config extends Singleton {
 		$this->settings = array(
 			'path'                   => $path,
 			'url'                    => plugin_dir_url( TUTOR_FILE ),
+			'assets_url'             => plugin_dir_url( TUTOR_FILE ) . 'assets/',
 			'icon_dir'               => plugin_dir_url( TUTOR_FILE ) . 'assets/images/images-v2/icons/',
 			'v2_img_dir'             => plugin_dir_url( TUTOR_FILE ) . 'assets/images/images-v2/',
 			'current_url'            => $current_url,

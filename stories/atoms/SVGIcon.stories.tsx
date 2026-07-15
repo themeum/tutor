@@ -1,6 +1,8 @@
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { icons, type IconCollection } from '@TutorShared/icons/types';
 import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
+
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import { type IconCollection, icons } from '@TutorShared/icons/types';
 
 const meta = {
   title: 'Atoms/SVGIcon',

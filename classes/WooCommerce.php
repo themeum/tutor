@@ -10,9 +10,11 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
+use Tutor\Models\EnrollmentModel;
 
 /**
  * Handle woocommerce hooks
@@ -64,6 +66,7 @@ class WooCommerce extends Tutor_Base {
 		 */
 		add_action( 'woocommerce_new_order', array( $this, 'course_placing_order_from_admin' ), 10, 3 );
 		add_action( 'woocommerce_new_order_item', array( $this, 'course_placing_order_from_customer' ), 10, 3 );
+		add_action( 'woocommerce_order_status_changed', array( $this, 'handle_customer_order_by_block_checkout' ), 9, 3 );
 
 		/**
 		 * Order Status Hook
@@ -93,8 +96,9 @@ class WooCommerce extends Tutor_Base {
 		 *
 		 * @since 1.7.8
 		 */
-		$woocommerce_path = dirname( dirname( __DIR__ ) ) . DIRECTORY_SEPARATOR . 'woocommerce' . DIRECTORY_SEPARATOR . 'woocommerce.php';
+		$woocommerce_path = WP_PLUGIN_DIR . '/woocommerce/woocommerce.php';
 		register_deactivation_hook( $woocommerce_path, array( $this, 'woocommerce_deactivation_handler' ) );
+
 		/**
 		 * Redirect student on enrolled courses after course
 		 * Enrollment complete
@@ -125,6 +129,11 @@ class WooCommerce extends Tutor_Base {
 		add_filter( 'woocommerce_shortcode_products_query_results', array( $this, 'filter_products_query_results' ), 10, 2 );
 
 		add_filter( 'woocommerce_shortcode_products_query', array( $this, 'filter_tutor_course_products' ) );
+
+		// @since 4.0.0
+		add_filter( 'tutor_order_history_card_template', fn( $template ) => tutor_get_template( 'dashboard.account.billing.wc-order-history-card' ) );
+		add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ), 10, 2 );
+		add_filter( 'tutor_get_orders_by_user_id', array( $this, 'filter_tutor_get_orders_by_user_id' ), 10, 3 );
 	}
 
 	/**
@@ -207,8 +216,13 @@ class WooCommerce extends Tutor_Base {
 		$order_id = WC()->session->get( self::WC_STORE_API_DRAFT_ORDER, 0 );
 
 		if ( $course_ids && $order_id ) {
+			$wc_order = wc_get_order( $order_id );
+			if ( ! $wc_order ) {
+				return;
+			}
+
 			foreach ( $course_ids as $course_id ) {
-				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
 			}
 		}
 	}
@@ -607,6 +621,15 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 
+		/**
+		 * Prevent adding earning data when order is created with WC block checkout page.
+		 *
+		 * @since 3.9.14
+		 */
+		if ( $order->has_status( 'checkout-draft' ) ) {
+			return;
+		}
+
 		$order_type = $order->get_type();
 
 		if ( 'shop_subscription' === $order_type ) {
@@ -709,17 +732,70 @@ class WooCommerce extends Tutor_Base {
 			if ( $if_has_course ) {
 				$course_id   = $if_has_course->post_id;
 				$customer_id = $order->get_customer_id();
-				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+				EnrollmentModel::do_enroll( $course_id, $order_id, $customer_id );
 			}
 		}
 	}
 
 	/**
+	 * Handle checkout order item.
+	 *
+	 * @since 3.9.14
+	 *
+	 * @param object $order the order object.
+	 * @param object $item the order item object.
+	 * @param string $context the context of checkout page.
+	 *
+	 * @return void
+	 */
+	private function handle_checkout_order_item( $order, $item, $context = 'classic_checkout' ) {
+		if ( ! $order instanceof \WC_Order || ! $item instanceof \WC_Order_Item_Product ) {
+			return;
+		}
+
+		$order_id     = $order->get_id();
+		$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item );
+		if ( $is_gift_item ) {
+			return;
+		}
+
+		$product_id    = $item->get_product_id();
+		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
+
+		if ( $if_has_course ) {
+			$should_process = apply_filters( 'tutor_wc_should_process_checkout_order_item', true, $item, $order );
+			if ( ! $should_process ) {
+				return;
+			}
+
+			$course_id   = $if_has_course->post_id;
+			$customer_id = $order->get_customer_id();
+
+			// Handle course enrollment.
+			if ( ! $customer_id && WC()->session && WC()->session->has_session() ) {
+				$guest_customer_id = WC()->session->get_customer_unique_id();
+				update_post_meta( $course_id, self::TUTOR_WC_GUEST_CUSTOMER_ID, $guest_customer_id );
+			} else {
+				$has_enrollment = tutor_utils()->is_enrolled( $course_id, $customer_id, true );
+				if ( ! $has_enrollment ) {
+					tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+				}
+			}
+
+			if ( 'block_checkout' === $context ) {
+				$this->add_earning_data( $item->get_id(), $item, $order_id );
+			}
+		}
+	}
+
+
+	/**
 	 * Course placing order from customer
 	 *
 	 * @since 1.6.7
-	 *
 	 * @since 3.8.0 Filter hook: tutor_is_gift_item added
+	 * @since 4.0.0 Filter hook: tutor_wc_should_process_checkout_order_item added
+	 *              Prevent duplicate enrollment on checkout.
 	 *
 	 * @param int   $item_id item id.
 	 * @param mixed $item order item.
@@ -732,35 +808,51 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 
-		$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item );
-		if ( $is_gift_item ) {
+		$order = wc_get_order( $order_id );
+		if ( ! $order ) {
 			return;
 		}
 
-		$item          = new \WC_Order_Item_Product( $item );
-		$product_id    = $item->get_product_id();
-		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
+		/**
+		 * Prevent when order is created with WC block checkout page.
+		 *
+		 * @since 3.9.14
+		 */
+		if ( $order->has_status( 'checkout-draft' ) ) {
+			return;
+		}
 
-		if ( $if_has_course ) {
-			$order = wc_get_order( $order_id );
+		$this->handle_checkout_order_item( $order, $item, 'classic_checkout' );
+	}
 
-			/**
-			 * Get customer ID from from order
-			 *
-			 * @since 2.1.7
-			 */
-			$customer_id = $order->get_customer_id();
-			$course_id   = $if_has_course->post_id;
-			if ( ! $customer_id && WC()->session->has_session() ) {
-				$guest_customer_id = WC()->session->get_customer_unique_id();
-				update_post_meta( $course_id, self::TUTOR_WC_GUEST_CUSTOMER_ID, $guest_customer_id );
-				return;
-			}
+	/**
+	 * Handle order status change by block checkout page.
+	 *
+	 * @since 3.9.14
+	 *
+	 * @param int    $order_id    WooCommerce order ID.
+	 * @param string $status_from Previous order status.
+	 * @param string $status_to   New order status.
+	 *
+	 * @return void
+	 */
+	public function handle_customer_order_by_block_checkout( $order_id, $status_from, $status_to ) {
+		if ( 'checkout-draft' !== $status_from ) {
+			return;
+		}
 
-			$has_enrollment = tutor_utils()->is_enrolled( $course_id, $customer_id, true );
-			if ( ! $has_enrollment ) {
-				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
-			}
+		// If transitioning to another draft or invalid status, do nothing.
+		if ( in_array( $status_to, array( 'checkout-draft', 'draft' ), true ) ) {
+			return;
+		}
+
+		$order = wc_get_order( $order_id );
+		if ( ! $order ) {
+			return;
+		}
+
+		foreach ( $order->get_items() as $item ) {
+			$this->handle_checkout_order_item( $order, $item, 'block_checkout' );
 		}
 	}
 
@@ -805,7 +897,7 @@ class WooCommerce extends Tutor_Base {
 		// get woo order details.
 		$order         = wc_get_order( $order_id );
 		$tutor_product = false;
-		$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
+		$url           = tutor_utils()->tutor_dashboard_url() . 'courses/';
 
 		/**
 		 * Loop though each WC order item.
@@ -929,5 +1021,197 @@ class WooCommerce extends Tutor_Base {
 
 		return $auto_complete;
 	}
-}
 
+	/**
+	 * Count orders for a user.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $args  array of arguments.
+	 *
+	 * @return int  return count of orders.
+	 */
+	public static function get_count( $args = array() ): int {
+		$query = wc_get_orders(
+			array(
+				'customer'     => $args['user_id'] ?? 0,
+				'status'       => $args['status'] ?? 'all',
+				'date_created' => $args['date_created'] ?? null,
+				'meta_query'   => array(
+					array(
+						'key'     => '_is_tutor_order_for_course',
+						'compare' => 'EXISTS',
+					),
+				),
+				// Limit 1 for query performance.
+				'limit'        => 1,
+				'paginate'     => true,
+			)
+		);
+
+		return $query->total;
+	}
+
+	/**
+	 * Filter order history status options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $options the status options.
+	 * @param string $seleted the selected status.
+	 *
+	 * @return array<array{label: string, value: string, count: int, url: string, active: bool}>
+	 */
+	public function filter_order_history_status_options( $options, $seleted ) {
+		$url     = get_pagenum_link();
+		$user_id = get_current_user_id();
+
+		$statuses = array_merge( array( 'all' => 'All' ), wc_get_order_statuses() );
+		if ( isset( $statuses['wc-checkout-draft'] ) ) {
+			unset( $statuses['wc-checkout-draft'] );
+		}
+
+		$start_date = Input::get( 'start_date' );
+		$end_date   = Input::get( 'end_date' );
+
+		$options = array();
+
+		foreach ( $statuses as $key => $status ) {
+			$params = array(
+				'user_id' => $user_id,
+				'status'  => $key,
+			);
+
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$params['date_created'] = $start_date . '...' . $end_date;
+			}
+
+			$options[] = array(
+				'label'  => $status,
+				'value'  => $key,
+				'count'  => self::get_count( $params ),
+				'url'    => UrlHelper::add_query_params( $url, array( 'data' => $key ) ),
+				'active' => $key === $seleted || ( empty( $key ) && 'all' === $seleted ),
+			);
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Filter tutor get orders by user id.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $data  data.
+	 * @param int    $user_id  user id.
+	 * @param array  $args  array of arguments.
+	 *
+	 * @return object {results: array, total_count: int}
+	 */
+	public function filter_tutor_get_orders_by_user_id( $data, $user_id, $args ) {
+		if ( ! $user_id ) {
+			return $data;
+		}
+
+		global $wpdb;
+
+		$period     = Input::sanitize( $args['period'] ?? '' );
+		$status     = Input::sanitize( $args['status'] ?? 'all' );
+		$start_date = Input::sanitize( $args['start_date'] ?? '' );
+		$end_date   = Input::sanitize( $args['end_date'] ?? '' );
+		$order      = QueryHelper::get_valid_sort_order( $args['order'] ?? 'DESC' );
+		$limit      = intval( $args['limit'] ?? 0 );
+		$offset     = intval( $args['offset'] ?? 0 );
+
+		$post_type = 'shop_order';
+		$user_meta = '_customer_user';
+		$wc_hpos   = self::hpos_enabled();
+		$dt_column = $wc_hpos ? 'date_created_gmt' : 'post_date';
+
+		$period_query = '';
+		if ( ! empty( $period ) ) {
+			if ( 'today' === $period ) {
+				$period_query = ' AND  DATE(' . $dt_column . ') = CURDATE() ';
+			} elseif ( 'monthly' === $period ) {
+				$period_query = ' AND  MONTH(' . $dt_column . ') = MONTH(CURDATE()) ';
+			} else {
+				$period_query = ' AND  YEAR(' . $dt_column . ') = YEAR(CURDATE()) ';
+			}
+		}
+
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$period_query = $wpdb->prepare(
+				//phpcs:ignore -- $dt_column is static value
+				" AND  DATE($dt_column) BETWEEN CAST(%s AS DATE) AND CAST(%s AS DATE) ",
+				$start_date,
+				$end_date
+			);
+		}
+
+		$offset_limit_query = '';
+		if ( $offset && $limit ) {
+			$offset_limit_query = "LIMIT {$offset}, {$limit}";
+		}
+
+		$status_query = '';
+		if ( 'all' !== $status ) {
+			$status_query = $wc_hpos
+							? $wpdb->prepare( 'AND status = %s', $status )
+							: $wpdb->prepare( 'AND post_status = %s', $status );
+		}
+
+		if ( $wc_hpos ) {
+			//phpcs:disable
+			$results = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT SQL_CALC_FOUND_ROWS orders.id AS ID, orders.status AS post_status, orders.date_created_gmt AS post_date, orders.* 
+					FROM 	{$wpdb->prefix}wc_orders orders 
+							INNER JOIN {$wpdb->prefix}wc_orders_meta order_meta 
+									ON orders.id = order_meta.order_id
+									AND order_meta.meta_key = '_is_tutor_order_for_course' 
+					WHERE 	orders.type = %s 
+							AND orders.customer_id = %d 
+							{$status_query}
+							{$period_query}
+					ORDER BY orders.id {$order}
+					{$offset_limit_query}",
+					$post_type,
+					$user_id
+				)
+			);
+			//phpcs:enable
+		} else {
+			//phpcs:disable
+			$results = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT SQL_CALC_FOUND_ROWS {$wpdb->posts}.*
+					FROM	{$wpdb->posts}
+							INNER JOIN {$wpdb->postmeta} customer
+									ON id = customer.post_id
+								AND customer.meta_key = '{$user_meta}'
+							INNER JOIN {$wpdb->postmeta} tutor_order
+									ON id = tutor_order.post_id
+								AND tutor_order.meta_key = '_is_tutor_order_for_course'
+					WHERE	post_type = %s
+							AND customer.meta_value = %d
+							{$status_query}
+							{$period_query}
+					ORDER BY {$wpdb->posts}.id {$order}
+					{$offset_limit_query}
+					",
+					$post_type,
+					$user_id
+				)
+			);
+			//phpcs:enable
+		}
+
+		$total_count = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
+
+		$data->results     = $results;
+		$data->total_count = $total_count;
+
+		return $data;
+	}
+}

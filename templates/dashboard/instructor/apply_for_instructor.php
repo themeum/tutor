@@ -15,29 +15,23 @@
 	<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 	<input type="hidden" value="tutor_apply_instructor" name="tutor_action"/>
 
-	<div class="tutor-container">
-		<div class="tutor-instructor-application-process tutor-pt-48 tutor-pb-48">
-			<div class="tutor-app-process-image tutor-m-auto tutor-pt-32 tutor-pb-44 tutor-d-flex tutor-justify-center tutor-align-center">
-				<span class="tutor-app-process-img">
-					<img src="<?php echo esc_url( tutor()->url . 'assets/images/instructor-application-received.png' ); ?>" alt="<?php esc_attr_e( 'Instructor Application', 'tutor' ); ?>" />
-				</span>
+	<div class="tutor-card tutor-p-9">
+		<div class="tutor-instructor-application-process">
+			<div class="tutor-mb-10 tutor-flex tutor-justify-center tutor-items-center">
+				<img src="<?php echo esc_url( tutor()->url . 'assets/images/instructor-application-received.png' ); ?>" alt="<?php esc_attr_e( 'Instructor Application', 'tutor' ); ?>" />
 			</div>
 
-			<div class="tutor-instructor-application-body">
-				<div class="tutor-ins-app-title tutor-m-auto tutor-text-center">
-					<span class="tutor-app-process-title tutor-fs-3 tutor-fw-medium tutor-color-black">
-						<?php esc_html_e( 'Do you want to start your career as an instructor?', 'tutor' ); ?>
-					</span>
-				</div>
+			<div class="tutor-instructor-application-body tutor-flex tutor-flex-column tutor-items-center">
+				<h3 class="tutor-h3 tutor-mb-4 tutor-text-center">
+					<?php esc_html_e( 'Do you want to start your career as an instructor?', 'tutor' ); ?>
+				</h3>
 
-				<div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-24 tutor-pb-48">
-					<span class="tutor-app-process-subtitle tutor-fs-6 tutor-color-muted">
-						<?php esc_html_e( 'Tell us your qualifications, show us your passion, and begin teaching with us!', 'tutor' ); ?>
-					</span>
-				</div>
+				<p class="tutor-p2 tutor-text-secondary tutor-mb-10 tutor-text-center" style="max-width: 480px;">
+					<?php esc_html_e( 'Tell us your qualifications, show us your passion, and begin teaching with us!', 'tutor' ); ?>
+				</p>
 
-				<div class="tutor-instructor-apply-button tutor-text-center">
-					<button class="tutor-btn tutor-btn-primary tutor-color-white" type="submit" name="tutor_register_instructor_btn" value="apply">
+				<div class="tutor-instructor-apply-button">
+					<button class="tutor-btn tutor-btn-primary" type="submit" name="tutor_register_instructor_btn" value="apply" style="min-width: 140px;">
 						<?php esc_html_e( 'Apply Now', 'tutor' ); ?>
 					</button>
 				</div>

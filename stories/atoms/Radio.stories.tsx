@@ -1,5 +1,5 @@
-import { css } from '@emotion/react';
 import React, { useState } from 'react';
+import { css } from '@emotion/react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 import Radio from '@TutorShared/atoms/Radio';
@@ -112,7 +112,7 @@ export const WithIcon = {
     label: 'Radio with Icon',
     icon: (
       <SVGIcon
-        name="star"
+        name="starFill"
         width={16}
         height={16}
         style={css`

@@ -1,0 +1,338 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-quiz-intro {
+  @include tutor-card-base();
+  @include tutor-card-padding(medium);
+  @include tutor-card-radius(2xl);
+  margin-top: $tutor-spacing-4;
+
+  @include tutor-breakpoint-down(sm) {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+  }
+
+  &-overview {
+    @include tutor-flex(column, stretch, flex-start);
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-card-base();
+      @include tutor-card-radius(2xl);
+      padding: $tutor-spacing-5;
+    }
+  }
+
+  &-icon {
+    @include tutor-flex-center;
+    height: 200px;
+    background-color: $tutor-surface-l3;
+    border-radius: $tutor-radius-lg;
+    overflow: hidden;
+    position: relative;
+
+    @include tutor-breakpoint-down(sm) {
+      svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+
+  &-title {
+    @include tutor-typography('h3', 'semibold', 'primary', 'heading');
+    margin-top: $tutor-spacing-8;
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-typography('h5', 'semibold', 'primary', 'heading');
+      margin-block: $tutor-spacing-5 $tutor-spacing-4;
+    }
+  }
+
+  &-description {
+    @include tutor-typography('p1', 'regular', 'secondary');
+    margin-block: $tutor-spacing-5 $tutor-spacing-8;
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-typography('small', 'regular', 'secondary');
+    }
+  }
+
+  &-params {
+    margin-top: $tutor-spacing-8;
+
+    .tutor-table-wrapper {
+      @include tutor-breakpoint-down(sm) {
+        overflow-x: hidden;
+      }
+    }
+
+    .tutor-table {
+      tr {
+        td {
+          &:first-of-type {
+            width: 31.71%;
+            svg {
+              flex-shrink: 0;
+            }
+          }
+
+          &:last-of-type {
+            width: 68.28%;
+          }
+
+          @include tutor-breakpoint-down(sm) {
+            &:first-of-type {
+              width: 50%;
+            }
+
+            &:last-of-type {
+              width: 50%;
+            }
+          }
+        }
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        min-width: auto;
+        width: 100%;
+      }
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      margin-top: $tutor-spacing-5;
+    }
+  }
+
+  &-attempts,
+  .tutor-quiz-attempts {
+    background-color: $tutor-surface-l1;
+    overflow: hidden;
+    .tutor-quiz-attempts-header {
+      grid-template-columns: 324px 190px 1.5fr 1fr;
+    }
+
+    .tutor-quiz-attempts-header-item:last-of-type {
+      text-align: center;
+    }
+
+    .tutor-quiz-attempts-item {
+      grid-template-columns: 324px 190px 1.5fr 1fr !important;
+
+      @include tutor-breakpoint-down(sm) {
+        grid-template-columns: 1fr auto auto auto !important;
+      }
+    }
+
+    .tutor-table-wrapper {
+      @include tutor-breakpoint-down(sm) {
+        overflow-x: hidden;
+      }
+    }
+
+    .tutor-table {
+      table-layout: fixed;
+
+      @include tutor-breakpoint-down(sm) {
+        min-width: auto;
+        width: 100%;
+      }
+    }
+
+    &-head {
+      @include tutor-breakpoint-down(sm) {
+        display: none;
+      }
+
+      th {
+        &.tutor-quiz-intro-attempts-header {
+          @include tutor-typography('tiny', 'regular', 'secondary');
+          letter-spacing: 0;
+
+          &:first-child {
+            width: 40%;
+          }
+
+          &:nth-child(2) {
+            width: 30%;
+          }
+        }
+      }
+    }
+
+    &-row {
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(column);
+        padding: $tutor-spacing-5;
+        gap: $tutor-spacing-4;
+      }
+    }
+
+    &-cell {
+      @include tutor-breakpoint-down(sm) {
+        padding: 0;
+      }
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      .tutor-table {
+        td.tutor-quiz-intro-attempts-cell {
+          padding: 0;
+        }
+      }
+    }
+
+    &-date-col {
+      width: 40%;
+
+      @include tutor-breakpoint-down(sm) {
+        width: 100%;
+        @include tutor-flex(column);
+      }
+    }
+
+    &-marks-col {
+      width: 30%;
+
+      @include tutor-breakpoint-down(sm) {
+        width: 100%;
+        @include tutor-flex(row, center, flex-start, wrap);
+
+        > div {
+          flex-shrink: 0;
+          background-color: $tutor-gray-25;
+          padding: $tutor-spacing-5;
+          border-radius: $tutor-radius-lg;
+        }
+
+        .tutor-quiz-marks-breakdown {
+          flex: 1;
+          max-width: 89px;
+        }
+      }
+    }
+
+    &-time-col {
+      @include tutor-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+
+    &-result-col {
+      @include tutor-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+  }
+
+  &-attempt {
+    &-number {
+      @include tutor-typography('medium', 'semibold', 'primary');
+      margin-bottom: $tutor-spacing-3;
+
+      @include tutor-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+
+    &-date {
+      @include tutor-typography('tiny', 'regular', 'subdued');
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-typography('small', 'semibold', 'brand');
+      }
+    }
+  }
+
+  &-time {
+    @include tutor-typography('medium', 'regular', 'subdued');
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-typography('small', 'regular', 'subdued');
+    }
+  }
+
+  &-stats-row {
+    width: 100%;
+
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-4;
+
+    @include tutor-breakpoint-down(sm) {
+      border-radius: $tutor-radius-2xl;
+      gap: $tutor-spacing-3;
+    }
+  }
+
+  &-time-info {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-2;
+
+    svg {
+      color: $tutor-icon-secondary;
+    }
+  }
+
+  &-mobile-result {
+    display: none;
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-flex();
+      margin-inline-start: $tutor-spacing-4;
+    }
+  }
+
+  &-mobile-time {
+    display: none;
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-flex(row, center);
+      margin-inline-start: auto;
+      gap: $tutor-spacing-2;
+      @include tutor-typography('tiny', 'medium', 'secondary');
+    }
+  }
+
+  &-marks {
+    &-breakdown {
+      @include tutor-flex(column);
+      gap: $tutor-spacing-2;
+
+      @include tutor-breakpoint-down(sm) {
+        flex-direction: column;
+      }
+    }
+
+    &-correct,
+    &-incorrect {
+      @include tutor-typography('tiny', 'medium', 'primary');
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-2;
+      background-color: $tutor-gray-200;
+      padding: 0 $tutor-spacing-4;
+      border-radius: 40px;
+
+      &::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: $tutor-radius-full;
+        display: inline-block;
+      }
+    }
+
+    &-correct {
+      &::before {
+        background-color: $tutor-success-700;
+      }
+    }
+
+    &-incorrect {
+      &::before {
+        background-color: $tutor-error-600;
+      }
+    }
+  }
+}

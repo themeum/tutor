@@ -188,14 +188,20 @@ class QueryHelper {
 	public static function insert_multiple_rows( $table, $request, $return_ids = false, $do_sanitize = true ) {
 		global $wpdb;
 
+		if ( ! tutor_utils()->is_multi_dimensional_array( $request ) ) {
+			return self::insert( $table, $request );
+		}
+
 		$table         = self::prepare_table_name( $table );
 		$column_keys   = '';
-		$column_values = '';
+		$column_values = array();
 		$sql           = '';
 		$last_key      = array_key_last( $request );
 		$first_key     = array_key_first( $request );
 		foreach ( $request as $k => $value ) {
 			$keys = array_keys( $value );
+
+			$value_placeholder = array();
 
 			// Prepare column keys & values.
 			foreach ( $keys as $v ) {
@@ -204,32 +210,44 @@ class QueryHelper {
 				if ( $sanitize_value && $do_sanitize ) {
 					$sanitize_value = sanitize_text_field( $sanitize_value );
 				}
-				$column_values .= is_numeric( $sanitize_value ) ? $sanitize_value . ',' : "'$sanitize_value'" . ',';
+
+				$column_values[] = $sanitize_value;
+
+				$value_placeholder[] = '%s';
 			}
+
+			$value_placeholder = implode( ',', $value_placeholder );
+
 			// Trim trailing comma.
 			$column_keys   = rtrim( $column_keys, ',' );
-			$column_values = rtrim( $column_values, ',' );
+			$column_values = $wpdb->prepare( $value_placeholder, $column_values ); // Escape values.
+
 			if ( $first_key === $k ) {
-				$sql .= "INSERT INTO {$table} ($column_keys) VALUES ($column_values)";
+				$sql .= "INSERT INTO
+						{$table}
+						($column_keys) VALUES ($column_values)
+					";
+
 				if ( count( $request ) > 1 ) {
 					$sql .= ',';
 				}
 			} elseif ( $last_key == $k ) {
-				$sql .= "($column_values)";
+				$sql .= "( $column_values )";
 			} else {
-				$sql .= "($column_values),";
+				$sql .= "( $column_values ),";
+
 			}
 
 			// Reset keys & values to avoid duplication.
 			$column_keys   = '';
-			$column_values = '';
+			$column_values = array();
 		}
 
 		$wpdb->query( $sql );//phpcs:ignore
 
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
-			throw new \Exception( $wpdb->last_error );
+			throw new \Exception( esc_html( $wpdb->last_error ) );
 		}
 
 		if ( $return_ids ) {
@@ -252,6 +270,7 @@ class QueryHelper {
 	 * Otherwise the clause would be `WHERE column_name = 'value'`
 	 *
 	 * @since 3.0.0
+	 * @since 3.9.7 added prepared statement for value.
 	 *
 	 * @param array $where  The where clause array. e.g. array( 'id', 'IN', array(1, 2, 3) ) or array( 'id', '=', 1 ).
 	 *
@@ -261,8 +280,16 @@ class QueryHelper {
 		list ( $field, $operator, $value ) = $where;
 
 		$upper_operator = strtoupper( $operator );
+
 		if ( in_array( $upper_operator, array( 'IN', 'NOT IN' ), true ) ) {
 			$value = '(' . self::prepare_in_clause( $value ) . ')';
+		} elseif ( in_array( $upper_operator, array( 'BETWEEN', 'NOT BETWEEN' ), true ) ) {
+			$value = array_map( fn( $val ) => self::prepare_value( $val ), $value );
+			$value = implode( ' AND ', $value );
+		} elseif ( strtoupper( $value ) === 'NULL' ) {
+			$value = 'NULL';
+		} else {
+			$value = self::prepare_value( $value );
 		}
 
 		return "{$field} {$upper_operator} {$value}";
@@ -346,15 +373,13 @@ class QueryHelper {
 					case 'BETWEEN':
 					case 'NOT BETWEEN':
 						if ( is_array( $val ) && count( $val ) === 2 ) {
-							$val1   = is_numeric( $val[0] ) ? $val[0] : "'" . $val[0] . "'";
-							$val2   = is_numeric( $val[1] ) ? $val[1] : "'" . $val[1] . "'";
-							$clause = array( $field, $operator, "{$val1} AND {$val2}" );
+							$clause = array( $field, $operator, $val );
 						}
 						break;
 
 					case 'IS':
 					case 'IS NOT':
-						$val    = strtoupper( $val ) === 'NULL' ? 'NULL' : "'" . $val . "'";
+						$val    = strtoupper( $val ) === 'NULL' ? 'NULL' : $val;
 						$clause = array( $field, $operator, $val );
 						break;
 					case 'RAW':
@@ -365,16 +390,14 @@ class QueryHelper {
 						$clause = $final_query;
 						break;
 					default: // =, !=, <, >, <=, >=, LIKE, NOT LIKE, <>
-						$val    = is_numeric( $val ) ? $val : "'" . $val . "'";
 						$clause = array( $field, $operator, $val );
 						break;
 				}
 			} elseif ( is_array( $value ) ) {
 				$clause = array( $field, 'IN', $value );
 			} elseif ( 'null' === strtolower( $value ) ) {
-					$clause = array( $field, 'IS', 'NULL' );
+				$clause = array( $field, 'IS', 'NULL' );
 			} else {
-				$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
 				$clause = array( $field, '=', $value );
 			}
 
@@ -477,9 +500,9 @@ class QueryHelper {
 		$ids = $wpdb->get_col( "SELECT comment_id FROM {$wpdb->comments} WHERE {$where}" );//phpcs:ignore
 
 		if ( is_array( $ids ) && count( $ids ) ) {
-			$ids_str = "'" . implode( "','", $ids ) . "'";
+			$in_clause = self::prepare_in_clause( $ids );
 			// delete comment metas.
-			$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN({$ids_str}) " );//phpcs:ignore
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN({$in_clause}) " ) );//phpcs:ignore
 			// delete comment.
 			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$where}" );//phpcs:ignore
 
@@ -509,9 +532,9 @@ class QueryHelper {
 		$ids = $wpdb->get_col( "SELECT id FROM {$wpdb->posts} WHERE {$where}" );//phpcs:ignore
 
 		if ( is_array( $ids ) && count( $ids ) ) {
-			$ids_str = "'" . implode( "','", $ids ) . "'";
+			$in_clause = self::prepare_in_clause( $ids );
 			// delete post metas.
-			$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE post_id IN({$ids_str}) " );//phpcs:ignore
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE post_id IN({$in_clause}) " ) );//phpcs:ignore
 			// delete post.
 			$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE {$where}" );//phpcs:ignore
 
@@ -824,13 +847,17 @@ class QueryHelper {
 
 		$table        = self::prepare_table_name( $table );
 		$where_clause = self::prepare_where_clause( $where );
+		if ( ! empty( $where_clause ) ) {
+			$where_clause = "WHERE {$where_clause}";
+		}
+
 		$limit        = (int) sanitize_text_field( $limit );
 		$limit_clause = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
 
 		//phpcs:disable
 		$query = "SELECT *
 				FROM {$table}
-				WHERE {$where_clause}
+				{$where_clause}
 				ORDER BY {$order_by} {$order}
 				{$limit_clause}";
 
@@ -911,31 +938,40 @@ class QueryHelper {
 	}
 
 	/**
+	 * Prepare value before using in query.
+	 *
+	 * @since 3.9.7
+	 *
+	 * @param string|int|float $value the value to prepare.
+	 *
+	 * @return mixed
+	 */
+	public static function prepare_value( $value ) {
+		global $wpdb;
+		$escaped_value = null;
+		if ( is_int( $value ) ) {
+			$escaped_value = $wpdb->prepare( '%d', $value );
+		} elseif ( is_float( $value ) ) {
+			list( $whole, $decimal ) = explode( '.', $value );
+			$expression = '%.'. strlen( $decimal ) . 'f';
+			$escaped_value = $wpdb->prepare( $expression, $value );
+		} else {
+			$escaped_value = $wpdb->prepare( '%s', $value );
+		}
+		return $escaped_value;
+	}
+
+	/**
 	 * Make sanitized SQL IN clause value from an array
 	 *
-	 * @param array $arr a sequential array.
-	 * @return string
 	 * @since 2.1.1
+	 *
+	 * @param array $arr a sequential array.
+	 *
+	 * @return string
 	 */
 	public static function prepare_in_clause( array $arr ) {
-		$escaped = array_map(
-			function( $value ) {
-				global $wpdb;
-				$escaped_value = null;
-				if ( is_int( $value ) ) {
-					$escaped_value = $wpdb->prepare( '%d', $value );
-				} else if( is_float( $value ) ) {
-					list( $whole, $decimal ) = explode( '.', $value );
-					$expression = '%.'. strlen( $decimal ) . 'f';
-					$escaped_value = $wpdb->prepare( $expression, $value );
-				} else {
-					$escaped_value = $wpdb->prepare( '%s', $value );
-				}
-				return $escaped_value;
-			},
-			$arr
-		);
-	
+		$escaped = array_map( fn( $value ) => self::prepare_value( $value ), $arr );
 		return implode( ',', $escaped );
 	}
 
@@ -1195,7 +1231,7 @@ class QueryHelper {
 				$period_clause = "AND DATE($column) = CURDATE()";
 				break;
 			case 'monthly':
-				$period_clause = "AND MONTH($column) = MONTH(CURDATE())";
+				$period_clause = "AND MONTH($column) = MONTH(CURDATE()) AND YEAR($column)  = YEAR(CURDATE())";
 				break;
 			case 'yearly':
 				$period_clause = "AND YEAR($column) = YEAR(CURDATE())";
@@ -1348,6 +1384,7 @@ class QueryHelper {
 		if ($wpdb->last_error) {
 			throw new \Exception($wpdb->last_error);
 		}
+
 
 		return $result;
 	}

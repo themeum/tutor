@@ -1,10 +1,14 @@
-import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
-import { rspack } from '@rspack/core';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+
+import purgecss from '@fullhuman/postcss-purgecss';
+import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
+import { rspack } from '@rspack/core';
 import nodeExternals from 'webpack-node-externals';
+
+import { purgecssContent, purgecssSafelist } from './purgecss.config.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,7 +17,7 @@ let version = '';
 
 try {
   const data = fs.readFileSync('tutor.php', 'utf8');
-  version = data.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
+  version = data.match(/Version:\s*([0-9]+(?:\.[0-9]+)*(?:-[0-9A-Za-z.-]+)?)/i)?.[1] || '';
 } catch (err) {
   // eslint-disable-next-line no-console
   console.log(`Error reading version from tutor.php: ${err}`);
@@ -59,6 +63,28 @@ const createConfig = (env, options) => {
   const isDevelopment = mode === 'development';
   const isMakePot = env?.['make-pot'];
 
+  const cssLoaderConfig = {
+    loader: 'css-loader',
+    options: {
+      url: {
+        filter: (url) => {
+          return /\.(woff2?|woff|ttf|otf|eot)(\?.*)?$/i.test(url);
+        },
+      },
+    },
+  };
+
+  const sassLoaderConfig = {
+    loader: 'sass-loader',
+    options: {
+      implementation: 'sass',
+      sassOptions: {
+        outputStyle: isDevelopment ? 'expanded' : 'compressed',
+        silenceDeprecations: ['abs-percent', 'color-functions', 'global-builtin', 'import', 'legacy-js-api'],
+      },
+    },
+  };
+
   const baseConfig = {
     mode,
     cache: false,
@@ -66,36 +92,32 @@ const createConfig = (env, options) => {
       rules: [
         {
           test: /\.s[ac]ss$/i,
+          include: [path.resolve(__dirname, 'assets/core/scss')],
           use: [
             rspack.CssExtractRspackPlugin.loader,
+            cssLoaderConfig,
             {
-              loader: 'css-loader',
+              loader: 'postcss-loader',
               options: {
-                url: {
-                  filter: (url) => {
-                    return /\.(woff2?|woff|ttf|otf|eot)(\?.*)?$/i.test(url);
-                  },
+                postcssOptions: {
+                  plugins: [
+                    !isDevelopment &&
+                      purgecss({
+                        content: purgecssContent,
+                        defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+                        safelist: purgecssSafelist,
+                      }),
+                  ].filter(Boolean),
                 },
               },
             },
-            {
-              loader: 'sass-loader',
-              options: {
-                implementation: 'sass',
-                sassOptions: {
-                  outputStyle: isDevelopment ? 'expanded' : 'compressed',
-                  silenceDeprecations: [
-                    'abs-percent',
-                    'color-functions',
-                    'global-builtin',
-                    'import',
-                    'legacy-js-api',
-                    'mixed-decls',
-                  ],
-                },
-              },
-            },
+            sassLoaderConfig,
           ],
+        },
+        {
+          test: /\.s[ac]ss$/i,
+          exclude: [path.resolve(__dirname, 'assets/core/scss')],
+          use: [rspack.CssExtractRspackPlugin.loader, cssLoaderConfig, sassLoaderConfig],
         },
         {
           test: /\.css$/i,
@@ -221,9 +243,9 @@ const createConfig = (env, options) => {
           'assets/icons/',
           'assets/images/',
           'assets/lib/',
-          'assets/react/',
-          'assets/scss/',
+          'assets/src/',
           'assets/json/',
+          'assets/core/',
         ];
         return keepDirectories.some((dir) => assetPath.includes(dir));
       },
@@ -241,45 +263,56 @@ const createConfig = (env, options) => {
 };
 
 const jsEntries = {
-  tutor: './assets/react/v2/common.js',
-  'tutor-front': './assets/react/front/tutor-front.js',
-  'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
-  'tutor-setup': './assets/react/admin-dashboard/tutor-setup.js',
-  'tutor-gutenberg': './assets/react/gutenberg/index.js',
-  'tutor-template-import-script': './assets/react/admin-dashboard/template-import-script.js',
-  'tutor-course-builder': './assets/react/v3/entries/course-builder/index.tsx',
-  'tutor-order-details': './assets/react/v3/entries/order-details/index.tsx',
-  'tutor-coupon': './assets/react/v3/entries/coupon-details/index.tsx',
-  'tutor-tax-settings': './assets/react/v3/entries/tax-settings/index.tsx',
-  'tutor-payment-settings': './assets/react/v3/entries/payment-settings/index.tsx',
-  'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
-  'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
+  tutor: './assets/src/js/v2/common.js',
+  'tutor-core': './assets/core/ts/index.ts',
+  'tutor-front': './assets/src/js/front/tutor-front.js',
+  'tutor-admin': './assets/src/js/admin-dashboard/tutor-admin.js',
+  'tutor-setup': './assets/src/js/admin-dashboard/tutor-setup.js',
+  'tutor-gutenberg': './assets/src/js/gutenberg/index.js',
+  'tutor-course-builder': './assets/src/js/v3/entries/course-builder/index.tsx',
+  'tutor-order-details': './assets/src/js/v3/entries/order-details/index.tsx',
+  'tutor-coupon': './assets/src/js/v3/entries/coupon-details/index.tsx',
+  'tutor-tax-settings': './assets/src/js/v3/entries/tax-settings/index.tsx',
+  'tutor-payment-settings': './assets/src/js/v3/entries/payment-settings/index.tsx',
+  'tutor-addon-list': './assets/src/js/v3/entries/addon-list/index.tsx',
+  'tutor-import-export': './assets/src/js/v3/entries/import-export/index.tsx',
+  'tutor-dashboard': './assets/src/js/frontend/dashboard/index.ts',
+  'tutor-learning-area': './assets/src/js/frontend/learning-area/index.ts',
 };
 
 const scssEntries = {
-  'tutor-front-scss': './assets/scss/front/index.scss',
-  'tutor-admin-scss': './assets/scss/admin-dashboard/index.scss',
-  'tutor-setup-scss': './assets/scss/admin-dashboard/tutor-setup.scss',
+  'tutor-front-scss': './assets/src/scss/front/index.scss',
+  'tutor-admin-scss': './assets/src/scss/admin-dashboard/index.scss',
+  'tutor-setup-scss': './assets/src/scss/admin-dashboard/tutor-setup.scss',
   'tutor-scss': './v2-library/src/scss/main.scss',
   'tutor-rtl-scss': './v2-library/src/scss/main.rtl.scss',
   'tutor-icon-scss': './v2-library/tutor-icon/tutor-icon.scss',
-  'tutor-frontend-dashboard-scss': './assets/scss/frontend-dashboard/index.scss',
-  'tutor-template-import-scss': './assets/scss/admin-dashboard/template-import.scss',
+  'tutor-core-scss': './assets/core/scss/main.scss',
+  'tutor-kids-scss': './assets/src/scss/frontend/kids/index.scss',
+  'tutor-dashboard-scss': './assets/src/scss/frontend/main/dashboard.scss',
+  'tutor-learning-area-scss': './assets/src/scss/frontend/main/learning-area.scss',
 };
 
 const resolveAliases = {
-  '@TutorShared': path.resolve(__dirname, './assets/react/v3/shared'),
-  '@SharedImages': path.resolve(__dirname, './assets/react/v3/public/images'),
-  '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
-  '@CourseBuilderServices': path.resolve(__dirname, './assets/react/v3/entries/course-builder/services/'),
-  '@CourseBuilderConfig': path.resolve(__dirname, './assets/react/v3/entries/course-builder/config/'),
-  '@CourseBuilderPages': path.resolve(__dirname, './assets/react/v3/entries/course-builder/pages/'),
-  '@CourseBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/course-builder/utils/'),
-  '@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
-  '@OrderDetails': path.resolve(__dirname, './assets/react/v3/entries/order-details/'),
-  '@CouponDetails': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/'),
-  '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
-  '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
+  '@Core': path.resolve(__dirname, './assets/core'),
+  '@TutorShared': path.resolve(__dirname, './assets/src/js/v3/shared'),
+  '@SharedImages': path.resolve(__dirname, './assets/src/js/v3/public/images'),
+  '@CourseBuilderComponents': path.resolve(__dirname, './assets/src/js/v3/entries/course-builder/components/'),
+  '@CourseBuilderServices': path.resolve(__dirname, './assets/src/js/v3/entries/course-builder/services/'),
+  '@CourseBuilderConfig': path.resolve(__dirname, './assets/src/js/v3/entries/course-builder/config/'),
+  '@CourseBuilderPages': path.resolve(__dirname, './assets/src/js/v3/entries/course-builder/pages/'),
+  '@CourseBuilderUtils': path.resolve(__dirname, './assets/src/js/v3/entries/course-builder/utils/'),
+  '@CourseBuilderContexts': path.resolve(__dirname, './assets/src/js/v3/entries/course-builder/contexts/'),
+  '@OrderDetails': path.resolve(__dirname, './assets/src/js/v3/entries/order-details/'),
+  '@CouponDetails': path.resolve(__dirname, './assets/src/js/v3/entries/coupon-details/'),
+  '@AddonList': path.resolve(__dirname, './assets/src/js/v3/entries/addon-list/'),
+  '@ImportExport': path.resolve(__dirname, './assets/src/js/v3/entries/import-export/'),
+  '@FrontendComponents': path.resolve(__dirname, './assets/src/js/frontend/components'),
+  '@FrontendTypes': path.resolve(__dirname, './assets/src/js/frontend/types'),
+  '@FrontendServices': path.resolve(__dirname, './assets/src/js/frontend/services'),
+  '@FrontendDashboard': path.resolve(__dirname, './assets/src/js/frontend/dashboard'),
+  '@LearningArea': path.resolve(__dirname, './assets/src/js/frontend/learning-area'),
+  '@TutorProQuiz': path.resolve(__dirname, '../tutor-pro/assets/src/js/quiz-type'),
 };
 
 const isScssEntry = (entry) => {

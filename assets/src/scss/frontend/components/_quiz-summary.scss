@@ -1,0 +1,148 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-quiz-summary {
+  @include tutor-frontend-layout();
+  margin: 0 auto;
+  padding-block: $tutor-spacing-13;
+
+  @include tutor-breakpoint-down(sm) {
+    padding: $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-8 $tutor-spacing-5;
+  }
+
+  .tutor-quiz-summary-overview {
+    @include tutor-breakpoint-down(sm) {
+      background-color: $tutor-surface-base;
+      border-radius: $tutor-radius-2xl;
+      padding: $tutor-spacing-5;
+    }
+  }
+
+  .tutor-quiz-result {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-areas:
+      'progress marks statics'
+      'progress marks retake';
+    gap: $tutor-spacing-8;
+    margin-bottom: $tutor-spacing-4;
+
+    @include tutor-breakpoint-up(sm) {
+      background-color: $tutor-quiz-idle;
+      border-radius: $tutor-radius-2xl;
+      padding: $tutor-spacing-7;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      grid-template-columns: 2fr 1fr;
+      grid-template-areas:
+        'progress progress'
+        'marks statics'
+        'retake retake';
+      gap: $tutor-spacing-6;
+    }
+
+    &-progress {
+      grid-area: progress;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(row, center, center);
+      }
+    }
+    &-marks {
+      @include tutor-typography(medium, regular, secondary);
+      @include tutor-flex(column);
+      gap: $tutor-spacing-6;
+      grid-area: marks;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-text(small);
+        gap: $tutor-spacing-4;
+      }
+    }
+    &-statics {
+      grid-area: statics;
+      @include tutor-typography(medium, regular, secondary);
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-text(small);
+        align-self: end;
+      }
+
+      .tutor-quiz-result-static-item {
+        @include tutor-flex(row, center);
+        gap: $tutor-spacing-3;
+
+        &::before {
+          content: '';
+          height: 8px;
+          width: 8px;
+          border-radius: 50%;
+          background-color: $tutor-icon-subdued;
+          margin-inline-end: $tutor-spacing-1;
+        }
+
+        &.correct::before {
+          background-color: $tutor-icon-success-primary;
+        }
+
+        &.incorrect::before {
+          background-color: $tutor-icon-critical;
+        }
+
+        &.total::before {
+          background-color: $tutor-icon-subdued;
+        }
+      }
+    }
+    &-retake {
+      grid-area: retake;
+      align-self: end;
+
+      @include tutor-breakpoint-down(sm) {
+        button {
+          @include tutor-button-size(large);
+        }
+      }
+    }
+
+    &-footer {
+      @include tutor-flex(row, center, center);
+      @include tutor-typography(tiny, regular, subdued);
+      gap: $tutor-spacing-4;
+      flex-wrap: wrap;
+
+      a {
+        text-decoration: none;
+      }
+
+      &:has(> :nth-child(2)) {
+        justify-content: space-between;
+      }
+
+      &-note {
+        font-style: italic;
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        margin-top: $tutor-spacing-5;
+      }
+    }
+  }
+
+  .tutor-empty-quiz-details {
+    @include tutor-flex(row, center, center);
+    padding: $tutor-spacing-6;
+    background-color: $tutor-surface-critical;
+    border: 1px solid $tutor-border-error-tertiary;
+    border-radius: $tutor-radius-lg;
+    gap: $tutor-spacing-4;
+    margin-block: $tutor-spacing-6 $tutor-spacing-10;
+
+    .error-message {
+      @include tutor-typography(small, regular);
+      color: $tutor-text-critical;
+      margin-block: 0;
+    }
+  }
+}

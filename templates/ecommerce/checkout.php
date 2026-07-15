@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CartController;
+use Tutor\GDPR\Controllers\LegalConsent;
 use TUTOR\Input;
 
 $user_id = apply_filters( 'tutor_checkout_user_id', get_current_user_id() );
@@ -96,7 +97,7 @@ $is_checkout_page = true;
 						</h5>
 
 						<div class="tutor-billing-fields">
-							<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
+							<?php require tutor()->path . 'templates/ecommerce/checkout-billing-form-fields.php'; ?>
 						</div>
 						<div class="tutor-payment-method-wrapper tutor-mt-20 <?php echo esc_attr( $show_payment_methods ? '' : 'tutor-d-none' ); ?>">
 							<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
@@ -155,16 +156,23 @@ $is_checkout_page = true;
 
 							<div class="tutor-payment-instructions tutor-mb-20 tutor-d-none"></div>
 						</div>
-						<?php if ( null !== $tutor_toc_page_link ) : ?>
+						<?php
+						$consents = LegalConsent::get_consent_by_display_key( LegalConsent::DISPLAY_ON_CHECKOUT );
+						if ( tutor_utils()->count( $consents ) ) :
+							?>
+							<?php foreach ( $consents as $consent ) : ?>
+								<?php LegalConsent::render_consent_field( $consent, 'tutor-mt-20' ); ?>
+							<?php endforeach; ?>
+						<?php elseif ( null !== $tutor_toc_page_link ) : ?>
 							<div class="tutor-mt-20">
 								<div class="tutor-form-check tutor-d-flex">
 									<input type="checkbox" id="tutor_checkout_agree_to_terms" name="agree_to_terms" class="tutor-form-check-input" required>
 									<label for="tutor_checkout_agree_to_terms">
 										<span class="tutor-color-subdued tutor-fw-normal">
-											<?php esc_html_e( 'I agree with the website\'s', 'tutor' ); ?> 
-											<a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" class="tutor-color-primary"><?php esc_html_e( 'Terms of Use', 'tutor' ); ?></a> 
+											<?php esc_html_e( 'I agree with the website\'s', 'tutor' ); ?>
+											<a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" class="tutor-color-primary"><?php esc_html_e( 'Terms of Use', 'tutor' ); ?></a>
 											<?php if ( null !== $tutor_privacy_page_link ) : ?>
-												<?php esc_html_e( 'and', 'tutor' ); ?> 
+												<?php esc_html_e( 'and', 'tutor' ); ?>
 												<a target="_blank" href="<?php echo esc_url( $tutor_privacy_page_link ); ?>" class="tutor-color-primary"><?php esc_html_e( 'Privacy Policy', 'tutor' ); ?></a>
 											<?php endif; ?>
 										</span>

@@ -1,16 +1,19 @@
+import { Controller, useForm } from 'react-hook-form';
 import { css } from '@emotion/react';
+import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
+
 import FormInput from '@TutorShared/components/fields/FormInput';
+
 import { DEFAULT_FORM_FIELD_PROPS, DEFAULT_FORM_FILED_STATE_PROPS } from '@TutorShared/config/constants';
 import { colorTokens } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { Controller, useForm } from 'react-hook-form';
-import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 
 const meta = {
   title: 'Components/Fields/FormInput',
   component: FormInput,
   args: {
     label: 'Course Title',
+    size: 'regular',
     type: 'text',
     maxLimit: undefined,
     disabled: false,
@@ -42,6 +45,11 @@ const meta = {
     label: {
       control: 'text',
       description: 'Label for the input field. Can be a string or ReactNode.',
+    },
+    size: {
+      control: 'select',
+      options: ['regular', 'small'],
+      description: 'Controls input density.',
     },
     type: {
       control: 'select',
@@ -168,6 +176,13 @@ export const Default = {} satisfies Story;
 export const WithPlaceholder = {
   args: {
     placeholder: 'Enter course title...',
+  },
+} satisfies Story;
+
+export const Small = {
+  args: {
+    size: 'small',
+    placeholder: 'Compact input',
   },
 } satisfies Story;
 

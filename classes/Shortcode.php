@@ -407,7 +407,7 @@ class Shortcode {
 
 		$remaining_categories = $wpdb->get_var(
 			$wpdb->prepare(
-				"SElECT 
+				"SELECT 
 					COUNT(*) AS total 
 				FROM {$wpdb->terms} AS term
 					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
@@ -422,7 +422,7 @@ class Shortcode {
 
 		$add_categories = $wpdb->get_results(
 			$wpdb->prepare(
-				"SElECT
+				"SELECT
 					* 
 				FROM {$wpdb->terms} term
 				INNER JOIN {$wpdb->term_taxonomy} as taxonomy

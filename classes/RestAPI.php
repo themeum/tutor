@@ -116,6 +116,66 @@ class RestAPI {
 		$this->rating_obj       = new REST_Rating();
 
 		add_action( 'rest_api_init', array( $this, 'init_routes' ) );
+		add_filter( 'rest_request_before_callbacks', array( $this, 'check_permission' ), 10, 3 );
+	}
+
+	/**
+	 * Check permission before dispatching REST request.
+	 *
+	 * @todo will remove and prevent by capability where needed.
+	 *
+	 * @since 4.0.1
+	 *
+	 * @param mixed            $response response.
+	 * @param mixed            $handler handler.
+	 * @param \WP_REST_Request $request request.
+	 *
+	 * @return mixed|\WP_Error
+	 */
+	public function check_permission( $response, $handler, $request ) {
+		$id            = absint( $request['id'] );
+		$method        = $request->get_method();
+		$write_methods = array( 'POST', 'PUT', 'PATCH', 'DELETE' );
+		$is_write      = in_array( $method, $write_methods, true );
+
+		if ( ! $id ) {
+			return $response;
+		}
+
+		$post = get_post( $id );
+
+		if ( ! $post ) {
+			return $response;
+		}
+
+		$post_types = array(
+			tutor()->course_post_type,
+			tutor()->bundle_post_type,
+		);
+
+		if ( ! in_array( $post->post_type, $post_types, true ) ) {
+			return $response;
+		}
+
+		// Prevent write actions which are only allowed for author.
+		if ( $is_write && ! current_user_can( 'edit_post', $id ) ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				tutor_utils()->error_message(),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		// Prevent access to non-publish posts, only author can access.
+		if ( 'publish' !== $post->post_status && ! current_user_can( 'edit_post', $id ) ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				tutor_utils()->error_message(),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return $response;
 	}
 
 	/**

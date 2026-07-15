@@ -177,7 +177,7 @@ $filters = array(
 									</td>
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( 'flat' === $coupon->discount_type ? __( 'Amount', 'tutor' ) : __( 'Percent', 'tutor' ) ); ?>
+											<?php echo esc_html( 'flat' === $coupon->discount_type ? __( 'Fixed Amount', 'tutor' ) : __( 'Percentage', 'tutor' ) ); ?>
 										</div>
 									</td>
 
@@ -189,10 +189,7 @@ $filters = array(
 
 									<td>
 										<?php
-										$coupon_status = $coupon->coupon_status;
-										if ( CouponModel::STATUS_ACTIVE === $coupon_status ) {
-											$coupon_status = $coupon_controller->model->has_coupon_validity( $coupon ) ? $coupon->coupon_status : 'expired';
-										}
+										$coupon_status = $coupon_controller->get_coupon_display_status( $coupon );
 										echo wp_kses_post( tutor_utils()->translate_dynamic_text( $coupon_status, true ) );
 										?>
 									</td>
@@ -208,12 +205,12 @@ $filters = array(
 											<?php if ( 'trash' === $active_tab ) : ?>
 											<div class="tutor-dropdown-parent">
 												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-													<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+													<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 												</button>
 												<div id="table-dashboard-coupon-list-<?php echo esc_attr( $coupon->id ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-delete-permanently"
 														data-tutor-modal-target="tutor-common-confirmation-modal" data-action="tutor_coupon_permanent_delete" data-id="<?php echo esc_attr( $coupon->id ); ?>">
-														<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+														<i class="tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true"></i>
 														<span>
 															<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
 														</span>

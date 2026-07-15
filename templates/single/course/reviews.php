@@ -9,7 +9,10 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
+use Tutor\Models\EnrollmentModel;
 
 $disable = ! get_tutor_option( 'enable_course_review' );
 if ( $disable ) {
@@ -37,11 +40,11 @@ if ( Input::has( 'course_id' ) ) {
 /**
  * Global $is_enrolled, $course_rating get null for third party
  * who only include this file without single-course.php file.
- * 
+ *
  * @since 2.1.9
  */
 if ( is_null( $is_enrolled ) ) {
-	$is_enrolled = tutor_utils()->is_enrolled( $course_id, $current_user_id );
+	$is_enrolled = EnrollmentModel::is_enrolled( $course_id, $current_user_id );
 }
 
 if ( is_null( $course_rating ) ) {
@@ -91,7 +94,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 									<div class="tutor-col-auto">
 										<div class="tutor-ratings">
 											<div class="tutor-ratings-stars">
-												<span class="tutor-icon-star-line" area-hidden="true"></span>
+												<span class="tutor-icon-star-line" aria-hidden="true"></span>
 											</div>
 											<div class="tutor-ratings-average">
 												<?php echo esc_html( $key ); ?>
@@ -101,7 +104,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 
 									<div class="tutor-col">
 										<div class="tutor-progress-bar tutor-ratings-progress-bar" style="--tutor-progress-value: <?php echo esc_attr( $rating_count_percent ); ?>%">
-											<span class="tutor-progress-value" area-hidden="true"></span>
+											<span class="tutor-progress-value" aria-hidden="true"></span>
 										</div>
 									</div>
 
@@ -109,7 +112,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 										<span class="tutor-fs-6 tutor-color-secondary tutor-individual-star-rating">
 											<?php
 												/* translators: %s: rating count */
-												printf( esc_html( _n( '%s Rating', '%s Ratings', 0 == $value ? 1 : $value, 'tutor' ) ), number_format_i18n( $value ) ); 
+												printf( esc_html( _n( '%s Rating', '%s Ratings', 0 == $value ? 1 : $value, 'tutor' ) ), number_format_i18n( $value ) );
 											?>
 										</span>
 									</div>
@@ -120,7 +123,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 				</div>
 			</div>
 
-			<div class="tutor-hr" area-hidden="true"></div>
+			<div class="tutor-hr" aria-hidden="true"></div>
 			
 			<div class="tutor-reviews tutor-card-list tutor-pagination-content-appendable">
 				<?php tutor_load_template( 'single.course.reviews-loop', array( 'reviews' => $reviews ) ); ?>

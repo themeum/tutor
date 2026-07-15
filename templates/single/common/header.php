@@ -9,12 +9,15 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Course;
 use Tutor\Models\CourseModel;
+use Tutor\Models\EnrollmentModel;
 
 $user_id            = get_current_user_id();
 $course_id          = isset( $course_id ) ? (int) $course_id : 0;
-$is_enrolled        = tutor_utils()->is_enrolled( $course_id );
+$is_enrolled        = EnrollmentModel::is_enrolled( $course_id );
 $course_stats       = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 $show_mark_complete = isset( $mark_as_complete ) ? $mark_as_complete : false;
 
@@ -48,11 +51,11 @@ if ( CourseModel::can_autocomplete_course( $course_id, $user_id ) ) {
 ?>
 <div class="tutor-course-topic-single-header tutor-single-page-top-bar">
 	<a href="#" class="tutor-course-topics-sidebar-toggler tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex tutor-flex-shrink-0" tutor-course-topics-sidebar-toggler>
-		<span class="tutor-icon-left" area-hidden="true"></span>
+		<span class="tutor-icon-left" aria-hidden="true"></span>
 	</a>
 
 	<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>" class="tutor-iconic-btn tutor-d-flex tutor-d-xl-none">
-		<span class="tutor-icon-previous" area-hidden="true"></span>
+		<span class="tutor-icon-previous" aria-hidden="true"></span>
 	</a>
 
 	<div class="tutor-course-topic-single-header-title tutor-fs-6 tutor-ml-12 tutor-ml-xl-24">
@@ -92,13 +95,13 @@ if ( CourseModel::can_autocomplete_course( $course_id, $user_id ) ) {
 		}
 		?>
 		<a class="tutor-iconic-btn tutor-flex-shrink-0" href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>">
-			<span class="tutor-icon-times" area-hidden="true"></span>
+			<span class="tutor-icon-times" aria-hidden="true"></span>
 		</a>
 	</div>
 
 	<div class="tutor-ml-auto tutor-align-center tutor-d-block tutor-d-xl-none">
 		<a class="tutor-iconic-btn" href="#" tutor-course-topics-sidebar-offcanvas-toggler>
-			<span class="tutor-icon-hamburger-menu" area-hidden="true"></span>
+			<span class="tutor-icon-hamburger-menu" aria-hidden="true"></span>
 		</a>
 	</div>
 </div>

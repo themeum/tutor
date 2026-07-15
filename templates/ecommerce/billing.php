@@ -1,36 +1,47 @@
 <?php
 /**
- * Billing Template
+ * Settings Billing Address
  *
  * @package Tutor\Templates
- * @subpackage Dashboard\Settings
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 3.0.0
+ * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Ecommerce\BillingController;
+
+$default_values        = BillingController::get_default_values();
+$country_state_options = BillingController::get_country_state_options();
+
+$country_options = $country_state_options->country_options;
+$state_mapping   = $country_state_options->state_options;
+
+$billing_country = $default_values['billing_country'] ?? '';
+$initial_states  = $state_mapping[ $billing_country ] ?? array();
+$form_id         = $form_id ?? 'tutor-billing-address-form';
 ?>
 
-<div class="tutor-fs-4 tutor-fw-medium tutor-mb-24"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
+<section class="tutor-flex tutor-flex-column tutor-gap-4">
+	<h5 class="tutor-h5 tutor-md-hidden"><?php echo esc_html__( 'Billing Address', 'tutor' ); ?></h5>
 
-<div class="tutor-dashboard-content-inner tutor-dashboard-setting-billing">
-	<div class="tutor-mb-32">
-		<?php tutor_load_template( 'dashboard.settings.nav-bar', array( 'active_setting_nav' => 'billing' ) ); ?>
-		<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-32"><?php esc_html_e( 'Billing Address', 'tutor' ); ?></div>
+	<div class="tutor-card tutor-flex tutor-flex-column tutor-gap-5 tutor-border">
+		<form
+			id="<?php echo esc_attr( $form_id ); ?>"
+			x-data="tutorForm({ 
+				id: '<?php echo esc_attr( $form_id ); ?>',
+				mode: 'onChange', 
+				shouldFocusError: true,
+				defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>,
+				stateOptions: <?php echo esc_attr( wp_json_encode( $state_mapping ) ); ?>
+			})"
+			x-bind="getFormBindings()"
+			x-init="$watch('values.billing_country', () => !isResetting && setValue('billing_state', '', { shouldDirty: true }))"
+			@submit="handleSubmit((data) => handleSaveBillingInfo(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
+			class="tutor-flex tutor-flex-column tutor-gap-5"
+		>
+			<?php require tutor_get_template( 'ecommerce.billing-form-fields' ); ?>
+		</form>
 	</div>
-
-	<form id="user_billing_form" style="max-width: 600px;">
-		<?php tutor_nonce_field(); ?>
-		<input type="hidden" value="tutor_save_billing_info" name="action" />
-
-		<?php require __DIR__ . '/billing-form-fields.php'; ?>
-
-		<div class="tutor-row">
-			<div class="tutor-col-12">
-				<button type="submit" class="tutor-btn tutor-btn-primary">
-					<?php esc_html_e( 'Save Address', 'tutor' ); ?>
-				</button>
-			</div>
-		</div>
-	</form>
-</div>
+</section>

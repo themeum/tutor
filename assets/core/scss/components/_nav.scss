@@ -1,0 +1,165 @@
+// Dashboard Page Nav Styles
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-nav {
+  @include tutor-flex(row, center);
+  gap: $tutor-spacing-2;
+  overflow-x: auto;
+
+  button.tutor-nav-item,
+  .tutor-nav-item {
+    @include tutor-button-reset();
+    @include tutor-typography(small, medium, secondary);
+    @include tutor-flex(row, center);
+    border-radius: $tutor-tab-radius;
+    font-weight: $tutor-tab-font-weight;
+    box-shadow: none;
+    gap: $tutor-spacing-3;
+    padding: 10px $tutor-spacing-6;
+    height: $tutor-tab-height;
+    white-space: nowrap;
+    @include tutor-transition((background-color, color, box-shadow));
+
+    &:hover {
+      color: $tutor-text-brand;
+      background-color: $tutor-tab-l3-active;
+      box-shadow: $tutor-tab-active-shadow;
+      svg {
+        color: $tutor-icon-brand;
+      }
+    }
+
+    &:focus {
+      color: $tutor-text-brand;
+      background-color: $tutor-tab-l3-active;
+      box-shadow: none;
+      outline: none;
+      svg {
+        color: $tutor-icon-brand;
+      }
+    }
+
+    &:focus-visible {
+      @include tutor-focus-ring('brand', true);
+      outline-offset: -2px;
+    }
+
+    &.active {
+      background-color: $tutor-tab-l3-active;
+      color: $tutor-text-brand;
+      box-shadow: $tutor-tab-active-shadow;
+      svg {
+        color: $tutor-icon-brand;
+      }
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
+  &-dropdown {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-2;
+    min-width: 170px;
+    padding: $tutor-spacing-2 0px;
+
+    &-item {
+      @include tutor-button-reset();
+      @include tutor-typography(small);
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-5;
+      padding: $tutor-spacing-4 $tutor-spacing-5;
+      @include tutor-transition((background-color, color));
+
+      &:hover {
+        color: $tutor-text-primary;
+        background-color: $tutor-tab-l3-active-hover;
+      }
+
+      &:focus {
+        color: $tutor-text-primary;
+        box-shadow: none;
+        outline: none;
+      }
+
+      &.active {
+        background-color: $tutor-tab-l3-active;
+        color: $tutor-text-brand;
+
+        &:hover {
+          background-color: $tutor-tab-l3-active;
+          color: $tutor-text-brand;
+
+          svg {
+            color: $tutor-icon-brand;
+          }
+        }
+      }
+    }
+  }
+
+  // Variant styles
+  &.tutor-nav-secondary {
+    .tutor-nav-item {
+      border-bottom: 2px solid transparent;
+      @include tutor-transition((border-color, background-color));
+
+      &.active {
+        background-color: transparent;
+        border-bottom-color: $tutor-border-brand;
+        border-radius: $tutor-radius-none;
+      }
+    }
+  }
+
+  // Size variants
+  &.tutor-nav-small {
+    .tutor-nav-item {
+      padding: 7px $tutor-spacing-5;
+      border-radius: $tutor-tab-radius-sm;
+      height: $tutor-tab-height-sm;
+    }
+
+    .tutor-nav-dropdown {
+      min-width: 150px;
+    }
+  }
+
+  &.tutor-nav-large {
+    .tutor-nav-item {
+      gap: $tutor-spacing-4;
+      padding: 11px $tutor-spacing-6;
+      height: $tutor-tab-height-lg;
+    }
+
+    .tutor-nav-dropdown {
+      min-width: 200px;
+
+      .tutor-nav-dropdown-item {
+        padding: $tutor-spacing-5 $tutor-spacing-6;
+      }
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    gap: 0;
+
+    .tutor-nav-item {
+      flex: 1;
+      min-width: fit-content;
+      justify-content: center;
+      font-size: $tutor-font-size-tiny;
+      line-height: $tutor-line-height-medium;
+      padding: $tutor-spacing-4 $tutor-spacing-5;
+      border-radius: $tutor-tab-radius;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}

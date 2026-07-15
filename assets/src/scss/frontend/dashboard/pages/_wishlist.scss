@@ -1,0 +1,21 @@
+// Wishlist Page Styles
+// Grid layout for wishlist cards with responsive breakpoints
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+.tutor-dashboard-wishlist-wrapper {
+  padding: $tutor-spacing-6;
+  background-color: $tutor-surface-l1;
+
+  .tutor-wishlist-grid {
+    @include tutor-grid(3, $tutor-spacing-4);
+    @include tutor-breakpoint-down('sm') {
+      @include tutor-grid(1, $tutor-spacing-4);
+      background-color: transparent;
+    }
+  }
+  @include tutor-breakpoint-down('sm') {
+    padding: $tutor-spacing-5 $tutor-spacing-none;
+    background-color: transparent;
+  }
+}

@@ -16,8 +16,10 @@ use TUTOR\Earnings;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Models\OrderMetaModel;
 use Tutor\Models\OrderActivitiesModel;
+use TUTOR\User;
 use TutorPro\CourseBundle\Models\BundleModel;
 use TutorPro\CourseBundle\CustomPosts\CourseBundle;
 
@@ -189,7 +191,15 @@ class HooksHandler {
 		$transaction_id     = $res->transaction_id;
 
 		$order_details = $this->order_model->get_order_by_id( $order_id );
-		if ( $order_details ) {
+
+		/**
+		 * Ignore canceled/failed webhooks for old/failed payment session to avoid unenrolling paid users.
+		 *
+		 * @since 3.9.7
+		 */
+		$is_valid_paid_order = OrderModel::ORDER_COMPLETED === $order_details->order_status && OrderModel::PAYMENT_PAID === $order_details->payment_status;
+
+		if ( $order_details && ! $is_valid_paid_order ) {
 			$prev_payment_status = $order_details->payment_status;
 
 			$order_data = array(
@@ -210,6 +220,9 @@ class HooksHandler {
 				case $this->order_model::PAYMENT_FAILED:
 				case $this->order_model::PAYMENT_REFUNDED:
 					$order_data['order_status'] = $this->order_model::ORDER_CANCELLED;
+					break;
+				case $this->order_model::PAYMENT_PENDING:
+					$order_data['order_status'] = $this->order_model::ORDER_PENDING;
 					break;
 			}
 
@@ -233,11 +246,8 @@ class HooksHandler {
 	 * @return void
 	 */
 	public function handle_payment_status_changed( $order_id, $prev_payment_status, $new_payment_status ) {
-
-		$order_status = $this->order_model->get_order_status_by_payment_status( $new_payment_status );
-
-		$cancel_reason     = Input::post( 'cancel_reason' );
-		$remove_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
+		$cancel_reason = Input::post( 'cancel_reason' );
+		$order_status  = $this->order_model->get_order_status_by_payment_status( $new_payment_status );
 
 		// Store activity.
 		$data = (object) array(
@@ -255,10 +265,6 @@ class HooksHandler {
 		}
 
 		$this->order_activities_model->add_order_meta( $data );
-
-		if ( $remove_enrollment ) {
-			$order_status = OrderModel::ORDER_CANCELLED;
-		}
 
 		$this->manage_earnings_and_enrollments( $order_status, $order_id );
 
@@ -327,6 +333,29 @@ class HooksHandler {
 
 		$enrollment_status = ( OrderModel::ORDER_COMPLETED === $order_status ? 'completed' : ( OrderModel::ORDER_INCOMPLETE === $order->order_status ? 'pending' : 'cancel' ) );
 
+		/**
+		 * Handles enrollment updates from the admin refund modal.
+		 *
+		 * - No action is taken if the enrollment is already in the canceled state.
+		 * - If the administrator explicitly chooses to remove the enrollment,
+		 *   the enrollment status is updated to canceled.
+		 *
+		 * @since 4.0.0
+		 */
+		if ( 'backend_refund' === Input::post( 'context' ) && User::is_admin() ) {
+			$has_enrollment = isset( $order->enrollment ) && is_object( $order->enrollment );
+			if ( $has_enrollment ) {
+				if ( EnrollmentModel::STATUS_CANCEL === $order->enrollment->status ) {
+					$enrollment_status = EnrollmentModel::STATUS_CANCEL;
+				}
+
+				if ( EnrollmentModel::STATUS_COMPLETED === $order->enrollment->status && Input::has( 'is_remove_enrolment', Input::POST_REQUEST ) ) {
+					$remove_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
+					$enrollment_status = $remove_enrollment ? EnrollmentModel::STATUS_CANCEL : EnrollmentModel::STATUS_COMPLETED;
+				}
+			}
+		}
+
 		foreach ( $order->items as $item ) {
 			$object_id    = $item->id; // It could be course/bundle/plan id.
 			$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item->primary_id );
@@ -358,10 +387,10 @@ class HooksHandler {
 				}
 			}
 
-			$has_enrollment = tutor_utils()->is_enrolled( $object_id, $student_id, false );
+			$has_enrollment = EnrollmentModel::is_enrolled( $object_id, $student_id, false );
 			if ( $has_enrollment ) {
 				// Update enrollment status based on order status.
-				$update = tutor_utils()->update_enrollments( $enrollment_status, array( $has_enrollment->ID ) );
+				$update = EnrollmentModel::update_enrollments( $enrollment_status, array( $has_enrollment->ID ) );
 				if ( $update ) {
 					if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
 						if ( 'completed' === $enrollment_status ) {
@@ -375,8 +404,13 @@ class HooksHandler {
 					 * For subscription, renewal no need to update order id.
 					 */
 					if ( $this->order_model->is_single_order( $order ) ) {
-						update_post_meta( $has_enrollment->ID, '_tutor_enrolled_by_order_id', $order_id );
-
+						update_post_meta( $has_enrollment->ID, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
+						if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
+							$has_bundle_enrollment_meta = get_post_meta( $has_enrollment->ID, CourseBundle::BUNDLE_ENROLLMENT_META, true );
+							if ( $has_bundle_enrollment_meta ) {
+								delete_post_meta( $has_enrollment->ID, CourseBundle::BUNDLE_ENROLLMENT_META );
+							}
+						}
 						/**
 						 * Update enrollment expiry date if it is set in a course.
 						 */
@@ -399,7 +433,7 @@ class HooksHandler {
 							}
 						}
 
-						if ( OrderModel::ORDER_COMPLETED === $order_status ) {
+						if ( OrderModel::ORDER_COMPLETED === $order_status && OrderModel::PAYMENT_PARTIALLY_REFUNDED !== $order->payment_status ) {
 							do_action( 'tutor_after_enrolled', $object_id, $student_id, $has_enrollment->ID );
 						}
 					}
@@ -413,12 +447,12 @@ class HooksHandler {
 					// Insert enrollment.
 					add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
-					$enrollment_id = tutor_utils()->do_enroll( $object_id, $order_id, $student_id );
+					$enrollment_id = EnrollmentModel::do_enroll( $object_id, $order_id, $student_id );
 					if ( $enrollment_id ) {
 						if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
 							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
 						}
-						update_post_meta( $enrollment_id, '_tutor_enrolled_by_order_id', $order_id );
+						update_post_meta( $enrollment_id, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
 
 						do_action( 'tutor_order_enrolled', $order, $enrollment_id );
 					} else {
@@ -467,9 +501,14 @@ class HooksHandler {
 			$user_id  = $order_data['user_id'];
 			$items    = $order_data['items'];
 			foreach ( $items as $item ) {
+				$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item );
+				if ( $is_gift_item ) {
+					continue;
+				}
+
 				add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
-				$enrolled_id = tutor_utils()->do_enroll( $item['item_id'], $order_data['id'], $user_id );
+				$enrolled_id = EnrollmentModel::do_enroll( $item['item_id'], $order_data['id'], $user_id );
 				if ( $enrolled_id && tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
 					BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
 				}

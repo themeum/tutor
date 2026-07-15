@@ -4,6 +4,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import pluginReact from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import storybook from 'eslint-plugin-storybook';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -23,8 +24,46 @@ export default [
   {
     plugins: {
       '@wordpress': wordpressEslintPlugin,
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            // Node builtins
+            ['^node:'],
+            // External packages
+            ['^react', '^@?\\w'],
+            // Internal aliases — Core
+            ['^@Core'],
+            // Internal aliases — Shared
+            ['^@TutorShared/atoms'],
+            ['^@TutorShare/molecules'],
+            ['^@TutorShared/components'],
+            ['^@TutorShared'],
+            // Internal packages
+            [
+              '^@CourseBuilder',
+              '^@OrderDetails',
+              '^@CouponDetails',
+              '^@AddonList',
+              '^@ImportExport',
+              '^@Frontend',
+              '^@LearningArea',
+              '^@TutorProQuiz',
+            ],
+            // Internal aliases — Test
+            ['^@Cypress'],
+
+            // Internal aliases — SharedImages
+            ['^@SharedImages'],
+            // Relative imports: parent first, then siblings
+            ['^\\.\\.', '^\\.'],
+          ],
+        },
+      ],
+      'simple-import-sort/exports': 'error',
       '@wordpress/i18n-text-domain': [
         'error',
         {
@@ -51,7 +90,7 @@ export default [
     },
   },
   {
-    files: ['./assets/react/v3/shared/**/*.{ts,tsx,js,jsx}'],
+    files: ['./assets/src/js/v3/shared/**/*.{ts,tsx,js,jsx}'],
     rules: {
       '@wordpress/i18n-text-domain': 'off',
       'no-restricted-syntax': [

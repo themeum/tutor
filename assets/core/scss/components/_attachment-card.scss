@@ -1,0 +1,65 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+@use '../utilities' as *;
+
+.tutor-attachment-card {
+  @include tutor-flex(row, center, flex-start);
+  width: 100%;
+  gap: $tutor-spacing-5;
+  padding: $tutor-spacing-4 $tutor-spacing-5;
+  @include tutor-transition(background-color);
+  position: relative;
+
+  &:hover,
+  &:focus-within {
+    background-color: $tutor-surface-l1-hover;
+  }
+
+  &-icon {
+    @include tutor-flex(row, center, center);
+    width: 48px;
+    height: 48px;
+    border-radius: $tutor-radius-sm;
+    background-color: $tutor-surface-l2;
+    flex-shrink: 0;
+
+    svg {
+      color: $tutor-icon-idle;
+    }
+
+    &-loading {
+      svg {
+        @include tutor-spin(0.9s);
+      }
+    }
+  }
+
+  &-body {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-1;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &-title {
+    @include tutor-typography('small', 'medium', 'primary');
+    @include tutor-text-clamp(1);
+  }
+
+  &-meta {
+    @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+  }
+
+  @include tutor-breakpoint-up(md) {
+    &-actions {
+      opacity: 0;
+      @include tutor-transition((opacity, visibility));
+    }
+
+    &:hover &-actions,
+    &:focus-within &-actions,
+    &-show-actions &-actions {
+      opacity: 1;
+    }
+  }
+}

@@ -9,12 +9,12 @@
  * @since 1.0.0
  */
 
-use TUTOR\Lesson;
-use TUTOR\User;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use TUTOR\Lesson;
+use Tutor\Components\SvgIcon;
+use Tutor\Models\EnrollmentModel;
+use TUTOR\User;
 
 global $post;
 global $previous_id;
@@ -32,7 +32,7 @@ $next_id     = $contents->next_id;
 
 $prev_is_preview = get_post_meta( $previous_id, '_is_preview', true );
 $next_is_preview = get_post_meta( $next_id, '_is_preview', true );
-$is_enrolled     = tutor_utils()->is_enrolled( $course_id );
+$is_enrolled     = EnrollmentModel::is_enrolled( $course_id );
 $is_public       = get_post_meta( $course_id, '_tutor_is_public_course', true );
 
 $prev_is_locked = ! ( $is_enrolled || $prev_is_preview || $is_public );
@@ -76,9 +76,9 @@ tutor_load_template(
 		$json_data['required_percentage']             = (int) tutor_utils()->get_option( 'required_percentage_to_complete_video_lesson', 80 );
 		$json_data['video_duration']                  = $video_info->duration_sec ?? 0;
 		$json_data['lesson_completed']                = tutor_utils()->is_completed_lesson( $content_id, get_current_user_id() ) !== false;
-		$json_data['is_enrolled']                     = tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) !== false;
+		$json_data['is_enrolled']                     = EnrollmentModel::is_enrolled( $course_id, get_current_user_id() ) !== false;
 		?>
-		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $json_data ) ); ?>">
+		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( wp_json_encode( $json_data ) ); ?>">
 	<?php endif; ?>
 	<div class="tutor-video-player-wrapper">
 		<?php echo apply_filters( 'tutor_single_lesson_video', tutor_lesson_video( false ), $video_info, $source_key ); //phpcs:ignore ?>
@@ -98,8 +98,7 @@ tutor_load_template(
 	$is_comment_enabled = Lesson::is_comment_enabled();
 	$has_lesson_comment = Lesson::has_lesson_comment( $course_content_id );
 
-	$nav_items    = Lesson::get_nav_items( $course_content_id );
-	$nav_contents = Lesson::get_nav_contents( $course_content_id );
+	$nav_items = Lesson::get_nav_items( $course_content_id );
 
 	$active_tab = $page_tab;
 	$valid_tabs = wp_list_pluck( $nav_items, 'value' );
@@ -130,7 +129,7 @@ tutor_load_template(
 					>
 						<?php
 						if ( isset( $nav_item['icon_type'] ) && 'svg' === $nav_item['icon_type'] ) {
-							tutor_utils()->render_svg_icon( $nav_item['icon'], 20, 20 );
+							SvgIcon::make()->name( $nav_item['icon'] )->size( 20 )->render();
 						} else {
 							?>
 							<span 
@@ -151,11 +150,11 @@ tutor_load_template(
 
 		<div class="tutor-tab tutor-course-spotlight-tab">
 			<?php
-			if ( ! empty( $nav_contents ) ) {
-				foreach ( $nav_contents as $key => $content ) {
+			if ( ! empty( $nav_items ) ) {
+				foreach ( $nav_items as $key => $content ) {
 					$is_pro = isset( $content['is_pro'] ) && true === $content['is_pro'];
 					tutor_load_template(
-						$content['template_path'],
+						$content['template'],
 						array(
 							'is_active' => $content['value'] === $active_tab,
 							'post'      => $post,

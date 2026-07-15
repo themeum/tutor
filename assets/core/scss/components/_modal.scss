@@ -1,0 +1,116 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+@use '../mixins/rtl' as rtl;
+@use '../components/button' as *;
+
+.tutor-modal {
+  position: fixed;
+  inset: 0;
+  z-index: $tutor-z-highest;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: #00000099;
+    backdrop-filter: blur(20px);
+
+    // Transitions
+    &-enter {
+      @include tutor-transition(opacity, 150ms, ease-out);
+    }
+
+    &-transition {
+      opacity: 0;
+    }
+
+    &-transition-reset {
+      opacity: 1;
+    }
+
+    &-leave {
+      @include tutor-transition(opacity, 150ms, ease-in);
+    }
+  }
+
+  &-content {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    max-height: calc(100dvh - 40px);
+    background-color: $tutor-surface-l1;
+    border-radius: $tutor-modal-radius;
+    box-shadow: $tutor-modal-shadow;
+    overflow-y: auto;
+
+    // Transitions
+    &-enter {
+      @include tutor-transition((opacity, transform), 150ms, ease-out);
+    }
+
+    &-transition {
+      opacity: 0;
+      transform: translateY(16px) scale(0.95);
+    }
+
+    &-transition-reset {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    &-leave {
+      @include tutor-transition((opacity, transform), 150ms, ease-in);
+    }
+  }
+
+  &-header {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-2;
+    padding: $tutor-spacing-7 $tutor-spacing-7 $tutor-spacing-none $tutor-spacing-7;
+  }
+
+  &-title {
+    @include tutor-typography('h5', 'semibold', 'secondary', 'heading');
+    margin: 0;
+  }
+
+  &-subtitle {
+    @include tutor-typography('p3', 'regular', 'secondary', 'body');
+  }
+
+  &-body {
+    padding: $tutor-spacing-7;
+  }
+
+  &-close {
+    @include tutor-button-base;
+    @include tutor-button-icon-size(x-small);
+    @include tutor-button-variant(ghost);
+    position: absolute;
+    top: $tutor-spacing-4;
+    inset-inline-end: $tutor-spacing-4;
+
+    svg {
+      color: $tutor-icon-idle !important;
+    }
+  }
+
+  &-footer {
+    @include tutor-flex(row, center, flex-end);
+    gap: $tutor-spacing-4;
+    padding: $tutor-spacing-5 $tutor-spacing-7;
+    border-top: 1px solid $tutor-border-idle;
+  }
+}
+
+@include tutor-breakpoint-down(md) {
+  .tutor-modal {
+    padding: $tutor-spacing-6;
+
+    &-content {
+      max-height: 95vh;
+    }
+  }
+}

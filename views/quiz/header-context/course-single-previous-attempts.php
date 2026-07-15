@@ -9,11 +9,15 @@
  */
 
 $passing_grade = tutor_utils()->get_quiz_option( get_the_ID(), 'passing_grade', 0 );
+$earned_marks  = (float) $earned_marks;
+$total_marks   = (float) $total_marks;
+$pass_marks    = ( $total_marks * $passing_grade ) / 100;
+
 ?>
 <?php if ( ! empty( $back_url ) ) : ?>
 	<div class="tutor-mb-24">
 		<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $back_url ); ?>">
-			<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
+			<span class="tutor-icon-previous tutor-mr-8" aria-hidden="true"></span>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
@@ -49,10 +53,7 @@ $passing_grade = tutor_utils()->get_quiz_option( get_the_ID(), 'passing_grade', 
 	<div class="tutor-d-flex tutor-gap-1">
 		<?php esc_html_e( 'Passing Marks', 'tutor' ); ?>: 
 		<span class="tutor-color-black">
-			<?php
-				$pass_marks = ( $total_marks * $passing_grade ) / 100;
-				echo esc_html( number_format_i18n( $pass_marks, 2 ) );
-			?>
+			<?php echo esc_html( number_format_i18n( $pass_marks, 2 ) ); ?>
 		</span>
 	</div>
 </div>

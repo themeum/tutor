@@ -28,8 +28,8 @@ class Input {
 	const TYPE_TEXTAREA  = 'textarea';
 	const TYPE_KSES_POST = 'kses-post';
 
-	private const GET_REQUEST  = 'get';
-	private const POST_REQUEST = 'post';
+	const GET_REQUEST  = 'get';
+	const POST_REQUEST = 'post';
 
 	/**
 	 * Common data sanitizer method
@@ -147,7 +147,6 @@ class Input {
 		}
 
 		return $sanitized_value;
-
 	}
 
 	/**
@@ -218,13 +217,61 @@ class Input {
 	 * Check input has key or not
 	 *
 	 * @since 2.0.2
+	 * @since 4.0.0 param $method added.
 	 *
 	 * @param string $key input key name.
+	 * @param string $method request method.
+	 *
 	 * @return boolean
 	 */
-	public static function has( $key ) {
+	public static function has( $key, $method = '' ) {
+		if ( empty( $method ) ) {
+			//phpcs:ignore WordPress.Security.NonceVerification
+			return isset( $_REQUEST[ $key ] );
+		}
+
 		//phpcs:ignore WordPress.Security.NonceVerification
-		return isset( $_REQUEST[ $key ] );
+		return self::GET_REQUEST === $method ? isset( $_GET[ $key ] ) : isset( $_POST[ $key ] );
+	}
+
+	/**
+	 * Check input has any keys.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $keys keys.
+	 * @param string $method request method.
+	 *
+	 * @return boolean
+	 */
+	public static function has_any( array $keys, $method = '' ) {
+		foreach ( $keys as $key ) {
+			if ( self::has( $key, $method ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check input has all keys.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $keys keys.
+	 * @param string $method request method.
+	 *
+	 * @return boolean
+	 */
+	public static function has_all( array $keys, $method = '' ) {
+		foreach ( $keys as $key ) {
+			if ( ! self::has( $key, $method ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -266,7 +313,7 @@ class Input {
 	 *
 	 * @return array
 	 */
-	public static function sanitize_array( array $input, array $sanitize_mapping = array(), $allow_iframe = false ):array {
+	public static function sanitize_array( array $input, array $sanitize_mapping = array(), $allow_iframe = false ): array {
 		$array = array();
 
 		if ( $allow_iframe ) {
@@ -317,5 +364,211 @@ class Input {
 			'style'           => true,
 		);
 		return $tags;
+	}
+
+	/**
+	 * This method is used with wp_kses_allowed_html filter
+	 * to allow svg tags.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $allowed_tags allowed HTML tags.
+	 *
+	 * @return array
+	 */
+	public static function allow_svg( $allowed_tags ) {
+		$attr_id        = array( 'id' => true );
+		$attr_fill      = array( 'fill' => true );
+		$attr_dims      = array(
+			'width'  => true,
+			'height' => true,
+			'x'      => true,
+			'y'      => true,
+		);
+		$attr_transform = array( 'transform' => true );
+		$attr_clip      = array(
+			'clip-path' => true,
+			'clip-rule' => true,
+		);
+		$attr_center    = array(
+			'cx' => true,
+			'cy' => true,
+		);
+		$attr_stroke    = array(
+			'stroke'            => true,
+			'stroke-width'      => true,
+			'stroke-linecap'    => true,
+			'stroke-linejoin'   => true,
+			'stroke-dasharray'  => true,
+			'stroke-dashoffset' => true,
+		);
+		$attr_style     = array( 'style' => true );
+		$attr_opacity   = array( 'opacity' => true );
+		$attr_xlink     = array( 'xlink:href' => true );
+
+		$svg_tags = array(
+			'svg'            => array_merge(
+				$attr_id,
+				$attr_fill,
+				$attr_dims,
+				$attr_style,
+				array(
+					'class'       => true,
+					'aria-hidden' => true,
+					'aria-label'  => true,
+					'role'        => true,
+					'xmlns'       => true,
+					'viewbox'     => true,
+					'viewBox'     => true,
+					'opacity'     => true,
+				)
+			),
+			'g'              => array_merge(
+				$attr_id,
+				$attr_fill,
+				$attr_clip,
+				$attr_transform,
+				$attr_style,
+				$attr_opacity
+			),
+			'defs'           => array(),
+			'clipPath'       => $attr_id,
+			'clippath'       => $attr_id,
+			'path'           => array_merge(
+				$attr_id,
+				$attr_fill,
+				$attr_stroke,
+				$attr_clip,
+				$attr_transform,
+				$attr_style,
+				array(
+					'd'         => true,
+					'fill-rule' => true,
+					'mask'      => true,
+					'opacity'   => true,
+				)
+			),
+			'mask'           => array_merge(
+				$attr_id,
+				$attr_fill,
+				$attr_dims,
+				$attr_style,
+				array(
+					'maskunits' => true,
+					'mask-type' => true,
+					'opacity'   => true,
+				)
+			),
+			'circle'         => array_merge(
+				$attr_id,
+				$attr_fill,
+				$attr_center,
+				$attr_transform,
+				$attr_stroke,
+				$attr_style,
+				array(
+					'r'       => true,
+					'opacity' => true,
+				)
+			),
+			'ellipse'        => array_merge(
+				$attr_id,
+				$attr_fill,
+				$attr_center,
+				$attr_transform,
+				$attr_style,
+				array(
+					'rx'      => true,
+					'ry'      => true,
+					'opacity' => true,
+				)
+			),
+			'rect'           => array_merge(
+				$attr_id,
+				$attr_fill,
+				$attr_dims,
+				$attr_stroke,
+				$attr_transform,
+				$attr_style,
+				array(
+					'maskunits' => true,
+					'rx'        => true,
+					'opacity'   => true,
+				)
+			),
+			'line'           => array_merge(
+				$attr_id,
+				$attr_stroke,
+				$attr_transform,
+				$attr_style,
+				array(
+					'x1'      => true,
+					'x2'      => true,
+					'y1'      => true,
+					'y2'      => true,
+					'opacity' => true,
+				)
+			),
+			'polyline'       => array_merge(
+				$attr_id,
+				$attr_fill,
+				$attr_stroke,
+				$attr_transform,
+				$attr_style,
+				array(
+					'points'  => true,
+					'opacity' => true,
+				)
+			),
+			'polygon'        => array_merge(
+				$attr_id,
+				$attr_fill,
+				$attr_stroke,
+				$attr_transform,
+				$attr_style,
+				array(
+					'points'  => true,
+					'opacity' => true,
+				)
+			),
+			'lineargradient' => array_merge(
+				$attr_id,
+				$attr_xlink,
+				array(
+					'x1'                => true,
+					'y1'                => true,
+					'x2'                => true,
+					'y2'                => true,
+					'gradientunits'     => true,
+					'gradienttransform' => true,
+					'spreadmethod'      => true,
+				)
+			),
+			'radialgradient' => array_merge(
+				$attr_id,
+				$attr_center,
+				$attr_xlink,
+				array(
+					'r'                 => true,
+					'fx'                => true,
+					'fy'                => true,
+					'gradientunits'     => true,
+					'gradienttransform' => true,
+					'spreadmethod'      => true,
+				)
+			),
+			'stop'           => array(
+				'offset'       => true,
+				'stop-color'   => true,
+				'stop-opacity' => true,
+			),
+			'use'            => array_merge(
+				$attr_id,
+				$attr_dims,
+				$attr_xlink
+			),
+		);
+
+		return array_merge( $allowed_tags, $svg_tags );
 	}
 }

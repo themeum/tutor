@@ -1,0 +1,205 @@
+// Discussion Card
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-discussion-card {
+  @include tutor-flex(column, flex-start);
+  gap: $tutor-spacing-4;
+  background-color: $tutor-surface-l1;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-lg;
+  padding: $tutor-spacing-6;
+  padding-bottom: $tutor-spacing-4;
+  position: relative;
+  @include tutor-transition(background-color);
+
+  @include tutor-breakpoint-down(sm) {
+    padding: $tutor-spacing-5;
+    border: none;
+    border-radius: 0;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid $tutor-border-idle;
+    }
+
+    .tutor-card {
+      padding: 0;
+    }
+  }
+
+  &.unread {
+    background-color: $tutor-surface-brand-tertiary;
+    border-color: $tutor-border-brand-secondary;
+
+    &::before {
+      content: '';
+      height: 4px;
+      width: 4px;
+      position: absolute;
+      inset-inline-start: 6px;
+      top: 30px;
+      background-color: $tutor-icon-critical;
+      border-radius: $tutor-radius-lg;
+
+      @include tutor-breakpoint-down(sm) {
+        inset-inline-start: 4px;
+        top: 26px;
+      }
+    }
+  }
+
+  &.is-important {
+    background-color: $tutor-surface-brand-tertiary;
+    border-color: $tutor-border-brand-secondary;
+
+    .tutor-discussion-card-bookmark {
+      position: absolute;
+      top: -4px;
+      inset-inline-end: $tutor-spacing-5;
+      color: $tutor-icon-exception4;
+    }
+  }
+
+  &-content {
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+  }
+
+  &-top {
+    @include tutor-typography(tiny);
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-5;
+    margin-block: $tutor-spacing-3;
+    min-width: 0;
+    overflow: hidden;
+    padding-inline-end: $tutor-spacing-17;
+
+    > div {
+      min-width: 0;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $tutor-spacing-none;
+      margin-bottom: $tutor-spacing-4;
+      padding-inline-end: $tutor-spacing-9;
+
+      > div {
+        width: 100%;
+      }
+    }
+  }
+
+  &-author {
+    position: relative;
+    text-transform: capitalize;
+
+    @include tutor-breakpoint-up(sm) {
+      &::after {
+        content: '';
+        width: 4px;
+        height: 4px;
+        position: absolute;
+        inset-inline-end: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: $tutor-text-subdued;
+        border-radius: $tutor-radius-lg;
+      }
+    }
+  }
+
+  &-title {
+    @include tutor-typography(medium, semibold);
+    @include tutor-text-clamp(2);
+    margin-bottom: $tutor-spacing-3;
+    margin-top: 0px;
+    @include tutor-transition(color);
+  }
+
+  &-meta {
+    @include tutor-typography(small, regular, subdued);
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-6;
+    line-height: $tutor-line-height-h3;
+
+    svg {
+      color: $tutor-icon-secondary;
+    }
+
+    .tutor-discussion-card-meta-reply-button {
+      @include tutor-button-reset();
+      @include tutor-typography(tiny, medium, subdued);
+      margin-inline-end: auto;
+      min-height: unset;
+      background: unset !important;
+
+      &:hover,
+      &:focus {
+        color: $tutor-text-brand !important;
+      }
+
+      @include tutor-breakpoint-up(sm) {
+        display: none;
+      }
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-typography(tiny, regular, subdued);
+      gap: $tutor-spacing-5;
+      width: 100%;
+
+      svg {
+        height: 16px;
+        width: 16px;
+      }
+
+      .tutor-avatar {
+        height: 20px;
+        width: 20px;
+      }
+    }
+  }
+
+  &-actions {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-3;
+    position: absolute;
+    top: $tutor-spacing-6;
+    inset-inline-end: $tutor-spacing-6;
+
+    @include tutor-breakpoint-up(sm) {
+      opacity: 0;
+      @include tutor-transition((opacity));
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      top: $tutor-spacing-5;
+      inset-inline-end: $tutor-spacing-5;
+
+      &-trigger {
+        @include tutor-button-variant(ghost);
+      }
+    }
+  }
+
+  &.active,
+  &:hover,
+  &:focus-within {
+    background-color: $tutor-surface-l1-hover;
+    border-color: $tutor-border-idle;
+
+    .tutor-discussion-card-title {
+      color: $tutor-text-brand;
+    }
+
+    @include tutor-breakpoint-up(sm) {
+      .tutor-discussion-card-actions {
+        opacity: 1;
+      }
+    }
+  }
+}

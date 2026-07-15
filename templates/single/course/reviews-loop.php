@@ -31,8 +31,8 @@ foreach ( $reviews as $review ) : ?>
 
 				<div class="tutor-reviewed-on tutor-fs-7 tutor-color-muted">
 					<?php
-					/* translators: %s: time difference */
-					echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ) );
+					/* translators: %s human-readable time difference. */
+					echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date_gmt ) ) ) );
 					?>
 				</div>
 			</div>

@@ -1,0 +1,150 @@
+// Deuteranomaly Theme
+// CVD variant for users with Deuteranomaly (shifted green cone cells — most common form).
+// Replaces red/error tokens with Orange palette; success tokens use Cyan where needed.
+// Applies on top of the active light or dark base theme via data-tutor-vision.
+
+@use '../tokens' as *;
+
+// =============================================================================
+// SHARED — identical values in both light and dark
+// =============================================================================
+
+[data-tutor-vision='deuteranomaly'] {
+  // ICON COLORS
+  --tutor-icon-caution: #{$tutor-yellow-500};
+  --tutor-icon-critical: #{$tutor-orange-600};
+  --tutor-icon-critical-hover: #{$tutor-orange-700};
+  --tutor-icon-warning: #{$tutor-orange-700};
+  --tutor-icon-warning-secondary: #{$tutor-yellow-500};
+
+  // BUTTON COLORS
+  --tutor-button-destructive: #{$tutor-orange-600};
+  --tutor-button-destructive-hover: #{$tutor-orange-700};
+  --tutor-button-destructive-focused: #{$tutor-orange-600};
+  --tutor-button-destructive-soft: #{$tutor-orange-100};
+  --tutor-button-destructive-soft-hover: #{$tutor-orange-200};
+  --tutor-button-destructive-soft-focused: #{$tutor-orange-100};
+
+  // BORDER COLORS
+  --tutor-border-warning: #{$tutor-yellow-300};
+  --tutor-border-warning-secondary: #{$tutor-orange-700};
+  --tutor-border-success: #{$tutor-cyan-400};
+  --tutor-border-success-secondary: #{$tutor-cyan-600};
+  --tutor-border-error-secondary: #{$tutor-orange-700};
+  --tutor-border-error-tertiary: #{$tutor-orange-400};
+
+  // ACTION COLORS
+  --tutor-actions-success-primary: #{$tutor-cyan-500};
+  --tutor-actions-success-secondary: #{$tutor-cyan-400};
+  --tutor-actions-warning-primary: #{$tutor-orange-300};
+  --tutor-actions-warning-tertiary: #{$tutor-orange-50};
+  --tutor-actions-critical-primary: #{$tutor-orange-600};
+  --tutor-actions-caution: #{$tutor-yellow-500};
+  --tutor-actions-caution-secondary: #{$tutor-yellow-100};
+
+  // TEXT COLORS
+  --tutor-text-critical: #{$tutor-orange-600};
+  --tutor-text-critical-hover: #{$tutor-orange-700};
+  --tutor-text-warning: #{$tutor-orange-700};
+  --tutor-text-caution: #{$tutor-yellow-700};
+
+  // VISUAL COLORS
+  --tutor-visual-success-1: #{$tutor-cyan-500};
+  --tutor-visual-success-2: #{$tutor-cyan-500};
+  --tutor-visual-exception-1: #{$tutor-cyan-200};
+}
+
+// =============================================================================
+// LIGHT — overrides specific to the light base theme
+// =============================================================================
+
+@mixin deuteranomaly-light-tokens {
+  // SURFACE COLORS
+  --tutor-surface-warning: #{$tutor-warning-50};
+  --tutor-surface-warning-hover: #{$tutor-warning-100};
+  --tutor-surface-success: #{$tutor-cyan-50};
+  --tutor-surface-critical: #{$tutor-orange-100};
+
+  // TEXT COLORS
+  --tutor-text-success: #{$tutor-success-700};
+
+  // ICON COLORS
+  --tutor-icon-success-primary: #{$tutor-success-600};
+  --tutor-icon-success-secondary: #{$tutor-success-700};
+
+  // BUTTON COLORS
+  --tutor-button-success: #{$tutor-cyan-500};
+  --tutor-button-success-hover: #{$tutor-cyan-600};
+  --tutor-button-success-focused: #{$tutor-cyan-600};
+
+  // BORDER COLORS
+  --tutor-border-warning-tertiary: #{$tutor-orange-400};
+  --tutor-border-error: #{$tutor-orange-300};
+
+  // ACTION COLORS
+  --tutor-actions-success-tertiary: #{$tutor-cyan-100};
+  --tutor-actions-success-exception: #{$tutor-cyan-400};
+  --tutor-actions-warning-secondary: #{$tutor-orange-100};
+  --tutor-actions-warning-exception: #{$tutor-orange-600};
+  --tutor-actions-critical-secondary: #{$tutor-orange-100};
+
+  // VISUAL COLORS
+  --tutor-visual-critical-1: #{$tutor-error-500};
+  --tutor-visual-critical-2: #{$tutor-orange-100};
+}
+
+// =============================================================================
+// DARK — overrides specific to the dark base theme
+// =============================================================================
+
+@mixin deuteranomaly-dark-tokens {
+  // SURFACE COLORS
+  --tutor-surface-warning: #{$tutor-gray-750};
+  --tutor-surface-warning-hover: #{$tutor-warning-900};
+  --tutor-surface-success: #{$tutor-cyan-900};
+  --tutor-surface-critical: #{$tutor-orange-900};
+
+  // TEXT COLORS
+  --tutor-text-success: #{$tutor-cyan-400};
+
+  // ICON COLORS
+  --tutor-icon-success-primary: #{$tutor-cyan-500};
+  --tutor-icon-success-secondary: #{$tutor-cyan-600};
+  --tutor-icon-exception4: #{$tutor-warning-400};
+
+  // BUTTON COLORS
+  --tutor-button-success: #{$tutor-cyan-500};
+  --tutor-button-success-hover: #{$tutor-cyan-600};
+  --tutor-button-success-focused: #{$tutor-cyan-500};
+
+  // BORDER COLORS
+  --tutor-border-warning-tertiary: #{$tutor-orange-300};
+  --tutor-border-success: #{$tutor-cyan-300};
+  --tutor-border-error: #{$tutor-orange-300};
+
+  // ACTION COLORS
+  --tutor-actions-success-tertiary: #{$tutor-gray-700};
+  --tutor-actions-success-exception: #{$tutor-cyan-950};
+  --tutor-actions-warning-secondary: #{$tutor-gray-700};
+  --tutor-actions-warning-exception: #{$tutor-orange-50};
+  --tutor-actions-critical-secondary: #{$tutor-gray-700};
+
+  // VISUAL COLORS
+  --tutor-visual-critical-1: #{$tutor-error-600};
+  --tutor-visual-critical-2: #{$tutor-orange-900};
+}
+
+[data-tutor-theme='light'][data-tutor-vision='deuteranomaly'],
+[data-tutor-theme='system'][data-tutor-vision='deuteranomaly'] {
+  @include deuteranomaly-light-tokens;
+}
+
+[data-tutor-theme='dark'][data-tutor-vision='deuteranomaly'] {
+  @include deuteranomaly-dark-tokens;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-tutor-theme='system'][data-tutor-vision='deuteranomaly'] {
+    @include deuteranomaly-dark-tokens;
+  }
+}

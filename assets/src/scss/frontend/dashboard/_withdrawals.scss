@@ -1,0 +1,187 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-user-withdrawals {
+  .tutor-withdrawal-history-heading {
+    @include tutor-typography(medium, medium);
+    margin-top: $tutor-spacing-10;
+    margin-bottom: $tutor-spacing-5;
+
+    @include tutor-breakpoint-down(md) {
+      margin-top: 20px;
+    }
+  }
+
+  .tutor-tooltip-wrap {
+    @include tutor-breakpoint-down(md) {
+      margin-top: $tutor-spacing-1;
+    }
+  }
+
+  .tutor-withdrawal-available-header {
+    @include tutor-breakpoint-down(sm) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: $tutor-spacing-7;
+    }
+  }
+
+  .tutor-withdrawal-status {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin-top: $tutor-spacing-6;
+    padding: $tutor-spacing-6;
+    background-color: $tutor-surface-base;
+    border: 1px solid $tutor-border-idle2;
+    border-radius: $tutor-radius-lg;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: $tutor-spacing-6;
+      bottom: $tutor-spacing-6;
+      width: 1px;
+      background-color: $tutor-border-idle;
+    }
+
+    &::before {
+      inset-inline-start: 33.3333%;
+    }
+
+    &::after {
+      inset-inline-start: 66.6667%;
+    }
+
+    &-item {
+      position: relative;
+      flex: 1;
+
+      &-label {
+        @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+      }
+
+      &-value {
+        @include tutor-typography('small', 'medium', 'primary', 'body');
+      }
+
+      &-value--pending {
+        @include tutor-typography('small', 'medium', 'warning', 'body');
+      }
+
+      &-info {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-inline-start: $tutor-spacing-1;
+        color: $tutor-text-secondary;
+      }
+
+      &:nth-child(2) {
+        padding-inline-start: 10%;
+      }
+
+      &:nth-child(3) {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+      }
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      flex-direction: column;
+      gap: 0;
+
+      &::before,
+      &::after {
+        display: none;
+      }
+
+      &-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        flex: none;
+        width: 100%;
+        padding: $tutor-spacing-4 0;
+        border-bottom: 1px solid $tutor-border-idle;
+
+        &:first-child {
+          padding-top: 0;
+        }
+
+        &:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+
+        &:nth-child(2) {
+          padding-inline-start: 0;
+        }
+
+        &:nth-child(3) {
+          flex-direction: row;
+          align-items: center;
+        }
+      }
+    }
+  }
+
+  .tutor-billing-card {
+    min-width: 0;
+    align-items: flex-start;
+  }
+
+  .tutor-billing-card-left {
+    gap: $tutor-spacing-4;
+    min-width: 0;
+
+    // Keep badge text in a single line; let adjacent text wrap instead.
+    .tutor-badge {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    // Allow long text (e.g. masked PayPal email) to wrap instead of overflowing.
+    .tutor-flex:first-child {
+      min-width: 0;
+
+      // Make the badge wrapper a flex item so shrink / nowrap behave correctly.
+      > div:first-child {
+        display: flex;
+        align-items: baseline;
+        flex-shrink: 0;
+      }
+
+      > div:last-child {
+        min-width: 0;
+        word-break: break-word;
+        overflow-wrap: break-word;
+      }
+    }
+  }
+
+  .tutor-billing-card-right {
+    flex-shrink: 0;
+  }
+}
+
+.tutor-withdrawal-available-balance {
+  @include tutor-flex();
+  gap: $tutor-spacing-5;
+  padding: $tutor-spacing-5 $tutor-spacing-6;
+  background: $tutor-surface-l1-hover;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-lg;
+
+  &-icon {
+    @include tutor-flex-center();
+    width: 44px;
+    height: 44px;
+    gap: $tutor-spacing-4;
+    background: $tutor-surface-l1;
+    border-radius: $tutor-radius-full;
+  }
+}

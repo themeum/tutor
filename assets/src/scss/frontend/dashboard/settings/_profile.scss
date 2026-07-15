@@ -1,0 +1,157 @@
+// Tutor dashboard profile settings
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-profile-settings-section {
+  background: $tutor-surface-base;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &.tutor-tabs-vertical {
+    display: block;
+  }
+
+  @include tutor-breakpoint-down(md) {
+    .tutor-account-container {
+      .tutor-tabs-tab {
+        gap: $tutor-spacing-6;
+
+        &:hover:not(:disabled):not(.tutor-tabs-tab-active) {
+          background: transparent;
+        }
+      }
+
+      .tutor-profile-settings-tab {
+        background: transparent;
+        height: 100dvh;
+        overflow-y: visible;
+        width: 100%;
+        flex-direction: column;
+        gap: $tutor-spacing-6;
+        border: none;
+        padding: $tutor-spacing-none;
+        overflow: unset;
+      }
+
+      .tutor-profile-settings-tab button {
+        padding: 0px 0px;
+      }
+
+      .tutor-icon {
+        background: $tutor-surface-l1;
+        color: $tutor-text-secondary;
+        width: 48px;
+        height: 48px;
+        border-radius: $tutor-radius-md;
+        border: 1px solid $tutor-border-idle;
+      }
+
+      .tutor-tabs-tab-active {
+        color: $tutor-text-brand;
+        background-color: transparent;
+      }
+    }
+
+    .tutor-profile-settings-tab-content {
+      background: $tutor-surface-base;
+      position: absolute;
+      top: 60px;
+      height: calc(100dvh - 60px);
+      display: none;
+      overflow-y: scroll;
+      padding: $tutor-spacing-6;
+
+      body:has(#wpadminbar) & {
+        height: calc(100dvh - 106px);
+      }
+
+      &.tutor-profile-tab-activated {
+        inset-inline-start: 0px;
+        display: block;
+      }
+    }
+  }
+}
+
+.tutor-profile-settings-tab.tutor-tabs-nav {
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+  background-color: $tutor-surface-l1;
+  height: min-content;
+  position: sticky;
+  top: calc(57px + 32px);
+
+  button {
+    font-weight: $tutor-font-weight-regular;
+    height: unset;
+    padding: $tutor-spacing-4 $tutor-spacing-7;
+
+    &:not(.tutor-tabs-tab-active):hover {
+      background-color: $tutor-tab-sidebar-l4-hover;
+    }
+
+    &.tutor-tabs-tab-active {
+      background-color: $tutor-tab-sidebar-l4-active;
+    }
+  }
+}
+
+// profile notification section
+.tutor-profile-notification {
+  .tutor-profile-notification-card {
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    overflow: hidden;
+
+    svg {
+      color: $tutor-icon-idle;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      .tutor-profile-notification-toggle {
+        visibility: visible;
+      }
+    }
+  }
+
+  .tutor-profile-notification-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    visibility: hidden;
+
+    &:not(.is-disabled):hover {
+      color: $tutor-text-primary;
+    }
+
+    svg {
+      color: $tutor-icon-secondary;
+      @include tutor-transition(transform);
+
+      path {
+        transform: translate(0px, 2px);
+      }
+    }
+
+    &.is-expanded {
+      visibility: visible;
+
+      svg {
+        transform: rotate(-180deg);
+      }
+    }
+  }
+
+  .tutor-input-field {
+    margin-bottom: 0px;
+  }
+
+  .tutor-profile-notification-content {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-3;
+    padding: $tutor-spacing-6;
+    border-top: 1px solid $tutor-border-idle;
+  }
+}

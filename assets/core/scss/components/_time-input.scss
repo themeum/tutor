@@ -1,0 +1,50 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+@use '../mixins/typography' as *;
+
+.tutor-time-input {
+  @include tutor-typography('small', 'regular', 'primary', 'body');
+
+  .tutor-input {
+    &:disabled {
+      cursor: not-allowed;
+      background: $tutor-surface-l1-hover;
+    }
+  }
+
+  .tutor-input-content {
+    color: $tutor-icon-secondary;
+  }
+
+  &-menu {
+    max-height: 380px;
+    overflow-y: auto;
+    padding: $tutor-spacing-3 0;
+    background: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-lg;
+    box-shadow: $tutor-shadow-lg;
+    @include tutor-scrollbar;
+  }
+
+  &-option {
+    @include tutor-button-reset;
+    @include tutor-typography('small', 'regular', 'subdued');
+    text-align: start;
+    padding: $tutor-spacing-4;
+    border-radius: $tutor-radius-md;
+    margin: 0 $tutor-spacing-3;
+    width: calc(100% - (#{$tutor-spacing-3} * 2));
+
+    &:hover,
+    &[data-active='true'] {
+      background: $tutor-surface-l1-hover;
+    }
+
+    &[data-selected='true'] {
+      background: $tutor-surface-brand-tertiary;
+      color: $tutor-text-brand;
+      outline: 1px solid $tutor-border-brand-tertiary;
+    }
+  }
+}

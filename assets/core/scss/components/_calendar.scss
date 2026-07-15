@@ -1,0 +1,202 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-vc-calendar {
+  z-index: calc($tutor-z-highest + 1);
+  background-color: $tutor-surface-l1 !important;
+  border-radius: $tutor-radius-md !important;
+
+  // Ensure hidden calendar doesn't block interaction with other elements
+  &[data-vc-calendar-hidden] {
+    pointer-events: none !important;
+  }
+
+  [data-vc='month'],
+  [data-vc='year'] {
+    @include tutor-typography('small', 'medium', 'primary');
+
+    &:hover {
+      color: $tutor-text-primary !important;
+    }
+  }
+
+  [data-vc-week-day] {
+    @include tutor-typography('tiny', 'regular', 'secondary');
+    color: $tutor-text-secondary !important;
+  }
+
+  .vc-months__month.vc-months__month,
+  .vc-years__year.vc-years__year {
+    @include tutor-button-base();
+    @include tutor-button-variant('ghost');
+    color: $tutor-text-primary;
+  }
+
+  [data-vc-months-month-selected],
+  [data-vc-years-year-selected] {
+    background-color: $tutor-surface-dark !important;
+    color: $tutor-text-primary-inverse !important;
+  }
+
+  button {
+    box-shadow: none;
+    transition: none;
+    @include tutor-transition((background-color, color));
+  }
+
+  button[data-vc-arrow],
+  button[data-vc='month'],
+  button[data-vc='year'] {
+    background-color: transparent;
+    color: $tutor-text-primary;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      color: $tutor-text-primary;
+    }
+  }
+
+  button.vc-date__btn {
+    background-color: transparent;
+    font-size: $tutor-font-size-small;
+    color: $tutor-text-primary;
+    border-radius: $tutor-radius-md;
+
+    &:hover {
+      background-color: $tutor-button-ghost-hover;
+    }
+  }
+
+  .vc-date[data-vc-date-today] .vc-date__btn {
+    background-color: $tutor-button-ghost-hover !important;
+    color: $tutor-text-primary !important;
+  }
+
+  .vc-date[data-vc-date-hover] .vc-date__btn {
+    background-color: $tutor-button-ghost-hover !important;
+  }
+
+  .vc-date[data-vc-date-hover='last'] .vc-date__btn {
+    background-color: $tutor-button-secondary-hover !important;
+  }
+
+  .vc-date[data-vc-date-selected] .vc-date__btn,
+  .vc-date[data-vc-date-selected] .vc-date__btn:hover {
+    background-color: $tutor-surface-dark !important;
+    color: $tutor-text-primary-inverse !important;
+  }
+
+  .vc-date[data-vc-date-selected='middle'][data-vc-date-selected] .vc-date__btn {
+    background-color: $tutor-surface-l1-hover !important;
+    color: $tutor-text-primary !important;
+  }
+}
+
+.tutor-range-calendar-popover {
+  width: 700px;
+  max-width: 700px;
+
+  @include tutor-breakpoint-down(md) {
+    width: 300px;
+  }
+
+  [data-vc='calendar'] {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    grid-template-areas:
+      'presets controls'
+      'presets grid'
+      'presets time'
+      'presets footer';
+    column-gap: $tutor-spacing-6;
+    padding: $tutor-spacing-5;
+
+    @include tutor-breakpoint-down(md) {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'presets'
+        'controls'
+        'grid'
+        'time'
+        'footer';
+    }
+  }
+
+  button[data-vc-arrow] {
+    padding: $tutor-spacing-none;
+  }
+
+  .vc-presets {
+    grid-area: presets;
+    @include tutor-flex(column);
+
+    button {
+      @include tutor-button-reset();
+      @include tutor-typography(tiny, medium);
+      @include tutor-flex(row, center, space-between);
+      border-radius: $tutor-radius-sm;
+      padding: $tutor-spacing-3 $tutor-spacing-5;
+      text-align: left;
+
+      .vc-preset-icon {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      &:hover {
+        background-color: $tutor-tab-sidebar-l2-hover;
+      }
+
+      &[data-active] {
+        background-color: $tutor-tab-sidebar-l2-active;
+        color: $tutor-text-brand;
+
+        .vc-preset-icon {
+          opacity: 1;
+        }
+      }
+    }
+
+    @include tutor-breakpoint-down(md) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      border-bottom: 1px solid $tutor-border-idle;
+      padding-bottom: $tutor-spacing-4;
+      margin-bottom: $tutor-spacing-4;
+
+      button {
+        width: 50%;
+      }
+    }
+  }
+
+  .vc-controls {
+    grid-area: controls;
+    padding: $tutor-spacing-2 $tutor-spacing-none $tutor-spacing-none $tutor-spacing-none;
+
+    [dir='rtl'] & .vc-arrow {
+      transform: scaleX(-1);
+    }
+  }
+
+  .vc-grid {
+    grid-area: grid;
+    display: flex;
+    gap: $tutor-spacing-6;
+
+    @include tutor-breakpoint-down(md) {
+      .vc-column:nth-child(n + 2) {
+        display: none;
+      }
+    }
+  }
+
+  [data-vc='time'] {
+    grid-area: time;
+  }
+
+  .vc-footer {
+    grid-area: footer;
+  }
+}

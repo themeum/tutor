@@ -1,0 +1,84 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-account-section {
+  .tutor-account-cover-photo {
+    min-height: 184px;
+    border-radius: $tutor-radius-lg;
+    background-color: $tutor-surface-brand-quaternary;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+
+    &.is-loading {
+      pointer-events: none;
+      background-image: none !important;
+
+      & > * {
+        visibility: hidden;
+      }
+
+      @include tutor-loading-spinner($tutor-surface-l1, $tutor-surface-l1-hover, 44px);
+
+      &::before {
+        z-index: $tutor-z-positive;
+      }
+    }
+
+    .tutor-account-cover-photo-action {
+      @include tutor-flex();
+      gap: $tutor-spacing-3;
+      position: absolute;
+      top: $tutor-spacing-4;
+      inset-inline-end: $tutor-spacing-4;
+    }
+  }
+
+  .tutor-account-avatar-wrapper {
+    @include tutor-flex(row, center, center);
+    transform: translateY(-52px);
+    margin-bottom: -52px;
+    position: relative;
+    z-index: $tutor-z-positive;
+
+    .tutor-account-avatar {
+      @include tutor-avatar-base();
+      width: 104px;
+      height: 104px;
+      border: 4px solid $tutor-border-inverse;
+      overflow: visible;
+
+      img {
+        border-radius: $tutor-radius-full;
+      }
+
+      &.is-loading {
+        position: relative;
+        pointer-events: none;
+        -webkit-text-fill-color: transparent;
+
+        & > * {
+          visibility: hidden;
+        }
+
+        @include tutor-loading-spinner($tutor-surface-l1, $tutor-surface-l1-hover);
+      }
+
+      .tutor-account-avatar-edit {
+        position: absolute;
+        inset-inline-end: 0;
+        bottom: 0;
+        border: 3px solid $tutor-border-inverse;
+        border-radius: $tutor-radius-full;
+        @include tutor-transition((background-color, color));
+
+        &:hover,
+        &:focus,
+        &:active {
+          border: 3px solid $tutor-border-inverse;
+        }
+      }
+    }
+  }
+}

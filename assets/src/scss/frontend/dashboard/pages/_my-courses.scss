@@ -1,0 +1,132 @@
+// My Courses Page Styles
+// Instructors courses list and management
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-dashboard-my-courses {
+  .tutor-my-courses-card-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: $tutor-spacing-4;
+    padding: $tutor-spacing-6;
+
+    @include tutor-breakpoint-down(lg) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include tutor-breakpoint-down(md) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: $tutor-spacing-5;
+    }
+
+    @include tutor-breakpoint-down(xs) {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  }
+
+  .tutor-my-courses-card {
+    @include tutor-flex(column);
+    @include tutor-card-base();
+    @include tutor-card-radius();
+    position: relative;
+    @include tutor-transition(background-color);
+    border-color: $tutor-border-idle2;
+
+    &-body {
+      @include tutor-flex(column);
+      gap: $tutor-spacing-4;
+      padding: $tutor-spacing-4;
+      flex: 1;
+    }
+
+    &-thumb {
+      height: 156px;
+      border-radius: $tutor-radius-sm;
+      overflow: hidden;
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    &-actions {
+      @include tutor-flex-center();
+      gap: $tutor-spacing-4;
+      position: absolute;
+      inset: 0;
+      background: #00000066;
+      box-shadow: 0px 4px 4px 0px #00000040;
+      opacity: 0;
+      @include tutor-transition((opacity));
+    }
+
+    &-footer {
+      @include tutor-typography(small, medium);
+      @include tutor-flex(row, center, space-between);
+      padding: $tutor-spacing-3 $tutor-spacing-5;
+      border-top: 1px solid $tutor-border-idle2;
+      min-height: 44px;
+
+      del {
+        font-weight: $tutor-font-weight-regular;
+        color: $tutor-text-subdued;
+      }
+
+      &-actions {
+        opacity: 0;
+        @include tutor-transition((opacity));
+      }
+    }
+
+    &-content {
+      min-width: 0;
+      flex: 1;
+    }
+
+    &:hover,
+    &:focus-within,
+    &:has(.tutor-popover-open) {
+      background-color: $tutor-surface-l1-hover;
+
+      .tutor-my-courses-card-content {
+        a {
+          color: $tutor-text-brand;
+        }
+      }
+
+      .tutor-my-courses-card-actions,
+      .tutor-my-courses-card-footer-actions {
+        opacity: 1;
+      }
+    }
+
+    .tutor-popover-menu-item.tutor-popover-menu-item-delete {
+      border-top: 1px solid $tutor-border-idle;
+    }
+
+    @include tutor-breakpoint-up(sm) {
+      .tutor-popover-menu-item.tutor-popover-menu-item-edit,
+      .tutor-popover-menu-item.tutor-popover-menu-item-overview {
+        display: none;
+      }
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      .tutor-my-courses-card-actions {
+        display: none;
+      }
+
+      .tutor-my-courses-card-footer-actions {
+        opacity: 1;
+      }
+    }
+  }
+}

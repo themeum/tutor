@@ -1,0 +1,282 @@
+// Dashboard Header Styles
+// Header with user menu, notifications, search, and navigation
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-dashboard-header {
+  position: sticky;
+  top: 0;
+  height: 80px;
+  z-index: $tutor-z-header;
+  background-color: $tutor-surface-base;
+  border-bottom: 1px solid $tutor-border-idle;
+  padding: $tutor-spacing-6 $tutor-spacing-8;
+
+  body:has(#wpadminbar) & {
+    top: 32px;
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    height: fit-content;
+    border-bottom: none;
+    padding: $tutor-spacing-6;
+
+    body:has(#wpadminbar) & {
+      top: 0;
+    }
+  }
+
+  &-inner {
+    @include tutor-frontend-layout();
+    @include tutor-flex(row, center, space-between);
+    height: 100%;
+
+    @include tutor-breakpoint-up(2xl) {
+      padding-inline: $tutor-spacing-6;
+    }
+  }
+
+  &-left {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-1;
+  }
+
+  &-user-streaks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @include tutor-typography(tiny, regular);
+    color: $tutor-text-secondary;
+
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-5;
+
+    li {
+      margin: 0;
+      padding: 0;
+      position: relative;
+
+      &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        inset-inline-end: -$tutor-spacing-4;
+        transform: translateY(-50%);
+        width: 3.5px;
+        height: 3.5px;
+        border-radius: $tutor-radius-full;
+        background-color: $tutor-icon-secondary;
+      }
+    }
+  }
+
+  &-right {
+    @include tutor-flex(row, center);
+
+    @include tutor-breakpoint-up(sm) {
+      gap: $tutor-spacing-4;
+    }
+  }
+
+  &-user {
+    position: relative;
+    @include tutor-flex(row, center);
+  }
+
+  .tutor-avatar {
+    margin: 0 auto;
+  }
+
+  &-user-avatar {
+    @include tutor-button-reset();
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-full;
+    overflow: hidden;
+    @include tutor-transition(border-color);
+
+    &:hover,
+    &.active {
+      border-color: $tutor-border-brand;
+    }
+
+    &:focus-visible {
+      @include tutor-focus-ring();
+    }
+  }
+
+  &-user-popover {
+    width: 230px;
+    padding: $tutor-spacing-4;
+    z-index: calc($tutor-z-highest + 1) !important;
+
+    &-profile {
+      @include tutor-flex(column, center, flex-start);
+      gap: $tutor-spacing-5;
+      background-color: $tutor-surface-brand-tertiary;
+      padding: $tutor-spacing-6 $tutor-spacing-5;
+      border-radius: $tutor-radius-md;
+      margin-bottom: $tutor-spacing-5;
+    }
+
+    .tutor-user-profile-info {
+      @include tutor-flex(column);
+    }
+
+    &-menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      @include tutor-flex(column);
+      gap: $tutor-spacing-2;
+
+      li {
+        margin: 0;
+        padding: 0;
+
+        &:last-of-type {
+          border-top: 1px solid $tutor-border-idle;
+          padding-top: $tutor-spacing-2;
+        }
+
+        a {
+          width: 100%;
+          @include tutor-flex(row, center);
+          gap: $tutor-spacing-5;
+          padding: $tutor-spacing-4 $tutor-spacing-5;
+          border-radius: $tutor-radius-md;
+          color: $tutor-text-primary;
+          text-decoration: none;
+          box-shadow: none;
+          outline: none;
+          @include tutor-transition(background-color);
+
+          &:hover {
+            background-color: $tutor-tab-sidebar-l2-hover;
+          }
+
+          &.active {
+            background-color: $tutor-tab-sidebar-l2-active;
+            color: $tutor-text-brand;
+          }
+
+          svg {
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    height: 60px;
+
+    .tutor-dashboard-header-user-avatar {
+      @include tutor-button-base();
+      @include tutor-button-variant(ghost);
+      padding: 9px;
+
+      .tutor-avatar {
+        display: none;
+      }
+    }
+
+    &-user-popover {
+      top: 0px !important;
+      left: 0px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      border-radius: $tutor-radius-none;
+      overflow-y: auto;
+      background: $tutor-surface-base;
+      padding: $tutor-spacing-none;
+      @include tutor-flex(column);
+
+      body:has(#wpadminbar) & {
+        top: 46px !important;
+        height: calc(100% - 46px) !important;
+      }
+
+      &-profile {
+        padding: $tutor-spacing-none;
+        gap: $tutor-spacing-none;
+        margin-bottom: $tutor-spacing-none;
+        padding-bottom: $tutor-spacing-6;
+        background: $tutor-surface-l1;
+
+        .tutor-profile-header-top {
+          width: 100%;
+          @include tutor-flex(row, center, space-between);
+          background: $tutor-surface-base;
+        }
+
+        .tutor-user-profile-info {
+          width: 100%;
+          flex-direction: row;
+          align-items: center;
+          gap: $tutor-spacing-5;
+          padding-block: $tutor-spacing-5;
+          padding-inline: $tutor-spacing-6;
+        }
+
+        .tutor-user-profile-meta {
+          align-items: flex-start;
+        }
+
+        .tutor-avatar {
+          margin: unset;
+        }
+
+        .tutor-profile-switch-button {
+          @include tutor-button-size(regular);
+        }
+      }
+
+      &-menu-wrapper {
+        @include tutor-flex(column, stretch, space-between);
+        height: 100%;
+      }
+
+      &-menu {
+        gap: $tutor-spacing-4;
+        padding: $tutor-spacing-6;
+
+        li {
+          &:last-of-type {
+            display: none;
+            border-top: 1px solid $tutor-border-idle;
+            padding-top: $tutor-spacing-2;
+          }
+
+          a {
+            padding: $tutor-spacing-7 $tutor-spacing-8;
+            border: 1px solid $tutor-border-idle;
+
+            &.active {
+              background-color: unset;
+              color: unset;
+            }
+
+            &.focus {
+              background-color: $tutor-tab-sidebar-l2-active;
+              color: $tutor-text-brand;
+            }
+          }
+        }
+      }
+
+      .tutor-mobile-logout-wrapper {
+        margin-top: auto;
+
+        a {
+          width: 100%;
+          padding: $tutor-spacing-5 $tutor-spacing-6;
+          border: 1px solid $tutor-border-idle;
+        }
+      }
+    }
+  }
+}

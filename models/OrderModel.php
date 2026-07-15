@@ -10,15 +10,22 @@
 
 namespace Tutor\Models;
 
+use DateTime;
 use Exception;
+use Tutor\Cache\TutorCache;
+use Tutor\Components\Badge;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Variant;
 use TUTOR\Earnings;
-use Tutor\Ecommerce\Tax;
-use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\DateTimeHelper;
 use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\CheckoutController;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OrderActivitiesController;
+use Tutor\Ecommerce\Tax;
+use Tutor\Helpers\DateTimeHelper;
+use Tutor\Helpers\QueryHelper;
+use TUTOR\User;
+use TutorPro\Ecommerce\Invoice;
 
 /**
  * OrderModel Class
@@ -38,6 +45,7 @@ class OrderModel {
 	const ORDER_COMPLETED  = 'completed';
 	const ORDER_CANCELLED  = 'cancelled';
 	const ORDER_TRASH      = 'trash';
+	const ORDER_PENDING    = 'pending';
 
 	/**
 	 * Payment status
@@ -51,6 +59,7 @@ class OrderModel {
 	const PAYMENT_UNPAID             = 'unpaid';
 	const PAYMENT_REFUNDED           = 'refunded';
 	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
+	const PAYMENT_PENDING            = 'pending';
 
 	/**
 	 * Payment methods
@@ -291,6 +300,7 @@ class OrderModel {
 			self::ORDER_COMPLETED  => __( 'Completed', 'tutor' ),
 			self::ORDER_CANCELLED  => __( 'Cancelled', 'tutor' ),
 			self::ORDER_TRASH      => __( 'Trash', 'tutor' ),
+			self::ORDER_PENDING    => __( 'Pending', 'tutor' ),
 		);
 	}
 
@@ -323,6 +333,7 @@ class OrderModel {
 			self::PAYMENT_FAILED             => __( 'Failed', 'tutor' ),
 			self::PAYMENT_REFUNDED           => __( 'Refunded', 'tutor' ),
 			self::PAYMENT_PARTIALLY_REFUNDED => __( 'Partially Refunded', 'tutor' ),
+			self::PAYMENT_PENDING            => __( 'Pending', 'tutor' ),
 		);
 	}
 
@@ -521,6 +532,11 @@ class OrderModel {
 		$order_data->activities = $order_activities_model->get_order_activities( $order_id );
 		$order_data->refunds    = $this->get_order_refunds( $order_id );
 
+		$enrollment_ids = $this->get_enrollment_ids( $order_id );
+		if ( tutor_utils()->count( $enrollment_ids ) ) {
+			$order_data->enrollment = EnrollmentModel::get_enrolment_by_enrol_id( $enrollment_ids[0] );
+		}
+
 		unset( $student->billing_address->id );
 		unset( $student->billing_address->user_id );
 
@@ -623,20 +639,23 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 *
 	 * @param int $order_id The ID of the order to retrieve items for.
 	 *
 	 * @return array The order items, each containing details and course titles, or an empty array if no items are found.
 	 */
 	public function get_order_items_by_id( $order_id ) {
-		global $wpdb;
+		$cache_key = 'tutor_get_order_items_by_id_' . $order_id;
+		$cached    = TutorCache::get( $cache_key );
 
-		$primary_table  = "{$wpdb->prefix}tutor_order_items AS oi";
+		if ( $cached ) {
+			return $cached;
+		}
+
+		$primary_table  = 'tutor_order_items AS oi';
 		$joining_tables = array(
 			array(
 				'type'  => 'LEFT',
-				'table' => "{$wpdb->prefix}posts AS p",
+				'table' => 'posts AS p',
 				'on'    => 'p.ID = oi.item_id',
 			),
 		);
@@ -648,13 +667,11 @@ class OrderModel {
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
 
-		if ( tutor()->has_pro ) {
-			$bundle_model = new \TutorPro\CourseBundle\Models\BundleModel();
-		}
+		$bundle_model = tutor()->has_pro ? new \TutorPro\CourseBundle\Models\BundleModel() : null;
 
 		if ( ! empty( $courses_data['total_count'] ) ) {
 			foreach ( $courses as &$course ) {
-				if ( tutor()->has_pro && 'course-bundle' === $course->type ) {
+				if ( is_object( $bundle_model ) && tutor()->bundle_post_type === $course->type ) {
 					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
 				}
 
@@ -670,7 +687,10 @@ class OrderModel {
 
 		unset( $course );
 
-		return ! empty( $courses ) ? $courses : array();
+		$result = ! empty( $courses ) ? $courses : array();
+		TutorCache::set( $cache_key, $result );
+
+		return $result;
 	}
 
 	/**
@@ -834,7 +854,7 @@ class OrderModel {
 				"SELECT * FROM {$wpdb->postmeta} 
 				WHERE meta_key=%s
 				AND meta_value LIKE %d",
-				'_tutor_enrolled_by_order_id',
+				EnrollmentModel::ENROLLMENT_ORDER_ID_META,
 				$order_id
 			)
 		);
@@ -988,21 +1008,28 @@ class OrderModel {
 	 * Get order of a user
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 params $order_status, $order and $args added.
 	 *
 	 * @param string $time_period $time_period Sorting time period,
 	 * supported time periods are: today, monthly & yearly.
 	 * @param string $start_date $start_date For date range sorting.
 	 * @param string $end_date $end_date For date range sorting.
+	 * @param string $order_status $order_status Order status.
 	 * @param int    $user_id  User id for fetching order list.
 	 * @param int    $limit  Limit to fetch record.
 	 * @param int    $offset  Offset to fetch record.
+	 * @param string $order  Order to fetch record.
+	 * @param array  $args Optional additional WHERE conditions.
 	 *
 	 * @throws \Exception Throw exception if database error occur.
 	 *
 	 * @return array
 	 */
-	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, int $user_id = 0, $limit = 10, int $offset = 0 ) {
-		$user_id = $user_id ? $user_id : get_current_user_id();
+	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, $order_status = '', int $user_id = 0, $limit = 10, int $offset = 0, $order = 'DESC', $args = array() ) {
+		$user_id           = tutor_utils()->get_user_id( $user_id );
+		$order             = QueryHelper::get_valid_sort_order( $order );
+		$order_status      = esc_sql( $order_status );
+		$order_type_clause = '';
 
 		$response = array(
 			'results'     => array(),
@@ -1011,8 +1038,9 @@ class OrderModel {
 
 		global $wpdb;
 
-		$time_period_clause = '';
-		$date_range_clause  = '';
+		$time_period_clause  = '';
+		$date_range_clause   = '';
+		$order_status_clause = ( empty( $order_status ) || 'all' === $order_status ) ? '' : "AND o.order_status = '{$order_status}'";
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
@@ -1026,6 +1054,10 @@ class OrderModel {
 			}
 		}
 
+		if ( ! empty( $args['order_type'] ) ) {
+			$order_type_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'o.order_type' => esc_sql( $args['order_type'] ) ) );
+		}
+
 		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT
@@ -1033,9 +1065,11 @@ class OrderModel {
 				o.* 
 				FROM $this->table_name AS o
 				WHERE o.user_id = %d
+				{$order_type_clause}
 				{$time_period_clause}
 				{$date_range_clause}
-				ORDER BY o.id DESC
+				{$order_status_clause}
+				ORDER BY o.id {$order}
 				LIMIT %d OFFSET %d
 			",
 			$user_id,
@@ -1064,6 +1098,7 @@ class OrderModel {
 	 * If period or date range not pass then it will return all time enrollment list
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 Minor query updates for the new graph.
 	 *
 	 * @param int    $user_id User id, if user not have admin access
 	 * then only this user's refund amount will fetched.
@@ -1086,8 +1121,8 @@ class OrderModel {
 		$date_range_clause = '';
 		$period_clause     = '';
 		$course_clause     = '';
-		$group_clause      = ' GROUP BY DATE(date_format) ';
-		$discount_clause   = 'o.coupon_amount as total';
+		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+		$select_query      = " DATE_FORMAT(o.created_at_gmt, '%%b') AS label_name, DATE(o.created_at_gmt) AS date_format ";
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
@@ -1095,12 +1130,21 @@ class OrderModel {
 				$start_date,
 				$end_date
 			);
+
+			$diff_days = ( new DateTime( $start_date ) )->diff( new DateTime( $end_date ) )->days;
+
+			if ( $diff_days > 31 ) {
+				$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+				$select_query = " DATE_FORMAT(o.created_at_gmt, '%%b') AS label_name ";
+
+			}
 		} else {
 			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
 		}
 
-		if ( 'today' !== $period ) {
-			$group_clause = ' GROUP BY MONTH(date_format) ';
+		if ( in_array( $period, array( 'last90days', 'last365days', 'yearly' ), true ) ) {
+			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+			$select_query = " DATE_FORMAT(o.created_at_gmt, '%%b') AS label_name ";
 		}
 
 		if ( $course_id ) {
@@ -1131,7 +1175,7 @@ class OrderModel {
 								0
 							)
 						) AS total,
-						o.created_at_gmt AS date_format
+						{$select_query}
 					FROM 
 						{$this->table_name} o
 					JOIN 
@@ -1173,7 +1217,7 @@ class OrderModel {
 							0
 						)
 					) AS total,
-					o.created_at_gmt AS date_format
+					{$select_query}
 					FROM {$this->table_name} AS o
 					WHERE 1 = %d
 					AND o.order_status = 'completed'
@@ -1206,13 +1250,13 @@ class OrderModel {
 				// Split each discount.
 				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
 
-				$discount->total = is_admin() ? $admin_discount : $instructor_discount;
+				$discount->total = User::is_admin() && is_admin() ? $admin_discount : $instructor_discount;
 			}
 
 			list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
 
 			$response['discounts']       = $discount_items;
-			$response['total_discounts'] = is_admin() ? $admin_total : $instructor_total;
+			$response['total_discounts'] = User::is_admin() && is_admin() ? $admin_total : $instructor_total;
 		}
 
 		return $response;
@@ -1226,6 +1270,7 @@ class OrderModel {
 	 * If period or date range not pass then it will return all time enrollment list
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 Minor query updates for the new graph.
 	 *
 	 * @param int    $user_id User id, if user not have admin access
 	 * then only this user's refund amount will fetched.
@@ -1247,24 +1292,29 @@ class OrderModel {
 		$user_clause       = '';
 		$date_range_clause = '';
 		$period_clause     = '';
-		$course_clause     = '';
-		$commission_clause = '';
-		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+		$group_clause      = ' GROUP BY DATE(order_meta.created_at_gmt) ';
+		$select_query      = " DATE_FORMAT(order_meta.created_at_gmt, '%%b') AS label_name, order_meta.created_at_gmt AS date_format ";
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
-				'AND o.created_at_gmt BETWEEN %s AND %s',
+				'AND DATE(order_meta.created_at_gmt) BETWEEN %s AND %s',
 				$start_date,
 				$end_date
 			);
-			$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
 
+			$diff_days = ( new DateTime( $start_date ) )->diff( new DateTime( $end_date ) )->days;
+
+			if ( $diff_days > 31 ) {
+				$group_clause = ' GROUP BY MONTH(order_meta.created_at_gmt) ';
+				$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%%b') AS label_name ";
+			}
 		} else {
-			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+			$period_clause = QueryHelper::get_period_clause( 'order_meta.created_at_gmt', $period );
 		}
 
-		if ( 'today' !== $period ) {
-			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+		if ( in_array( $period, array( 'last90days', 'last365days', 'yearly' ), true ) ) {
+			$group_clause = ' GROUP BY MONTH(order_meta.created_at_gmt) ';
+			$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%%b') AS label_name ";
 		}
 
 		if ( $course_id ) {
@@ -1272,11 +1322,18 @@ class OrderModel {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 			}
 		} elseif ( $user_id ) {
-				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 		}
 
 		// Refund query logic remains the same.
-		$item_table = $wpdb->prefix . 'tutor_order_items';
+		$item_table           = $wpdb->prefix . 'tutor_order_items';
+		$order_meta_table     = $wpdb->prefix . 'tutor_ordermeta';
+		$order_meta_in_clause = QueryHelper::prepare_in_clause(
+			array(
+				OrderActivitiesModel::META_KEY_REFUND,
+				OrderActivitiesModel::META_KEY_PARTIALLY_REFUND,
+			)
+		);
 
 		if ( $course_id ) {
 			//phpcs:disable
@@ -1295,7 +1352,8 @@ class OrderModel {
 									END / o.total_price
 								)
 							), 2
-						) AS total
+						) AS total,
+						{$select_query}
 					FROM 
 						{$this->table_name} o
 					JOIN 
@@ -1304,15 +1362,17 @@ class OrderModel {
 						{$wpdb->posts} c
 						ON c.ID = i.item_id
 						AND c.post_type = %s
+					JOIN {$order_meta_table} AS order_meta
+						ON order_meta.order_id = o.id
+						AND order_meta.meta_key IN ({$order_meta_in_clause})
 					WHERE 
 						o.refund_amount > 0
 						AND i.item_id = %d
 						{$user_clause}
 						{$period_clause}
 						{$date_range_clause}
-					{$group_clause},
-					i.item_id
-					",
+					{$group_clause}
+					ORDER BY order_meta.created_at_gmt ASC",
 					tutor()->course_post_type,
 					$course_id
 				)
@@ -1321,7 +1381,7 @@ class OrderModel {
 		} else {
 			$earning_table = $wpdb->tutor_earnings;
 			if ( $user_id ) {
-				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} LIMIT 1)";
+				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} WHERE user_id = {$user_id} LIMIT 1)";
 			}
 
 			//phpcs:disable
@@ -1329,17 +1389,18 @@ class OrderModel {
 				$wpdb->prepare(
 					"SELECT 
 					COALESCE(SUM(o.refund_amount), 0) AS total,
-					created_at_gmt AS date_format
+					{$select_query}
 					FROM {$this->table_name} AS o
-					-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-					-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+					LEFT JOIN {$order_meta_table} AS order_meta
+						ON order_meta.order_id = o.id
+						AND order_meta.meta_key IN ({$order_meta_in_clause})
 					WHERE 1 = %d
 					AND o.refund_amount > %d
 					{$user_clause}
 					{$period_clause}
 					{$date_range_clause}
-					{$group_clause},
-					o.id",
+					{$group_clause}
+					ORDER BY order_meta.created_at_gmt ASC",
 					1,
 					0
 				)
@@ -1354,14 +1415,14 @@ class OrderModel {
 
 			// Update total amount from list.
 			$split_refund  = (object) tutor_split_amounts( $refund->total );
-			$refund->total = is_admin() ? $split_refund->admin : $split_refund->instructor;
+			$refund->total = User::is_admin() && is_admin() ? $split_refund->admin : $split_refund->instructor;
 		}
 
 		$split_total_refund = (object) tutor_split_amounts( $total_refund );
 
 		$response = array(
 			'refunds'       => $refunds,
-			'total_refunds' => is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
+			'total_refunds' => User::is_admin() && is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
 		);
 
 		return $response;
@@ -1795,7 +1856,7 @@ class OrderModel {
 				foreach ( $order_items as $item ) {
 					$course_id = $item->id;
 					if ( $course_id ) {
-						$is_enrolled = tutor_utils()->is_enrolled( $course_id );
+						$is_enrolled = EnrollmentModel::is_enrolled( $course_id );
 						if ( $is_enrolled ) {
 							$is_enrolled_any_course = true;
 							break;
@@ -1804,7 +1865,7 @@ class OrderModel {
 				}
 			} elseif ( tutor_utils()->count( $order_items ) ) {
 					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
-				if ( tutor_utils()->is_enrolled( $course_id ) ) {
+				if ( EnrollmentModel::is_enrolled( $course_id ) ) {
 					$is_enrolled_any_course = true;
 				}
 			}
@@ -1902,18 +1963,27 @@ class OrderModel {
 	 * Retrieves statements for a specific user.
 	 *
 	 * @since 3.5.0
+	 * @since 4.0.0 Added $order_by and $order option.
 	 *
-	 * @param string $post_type_in_clause SQL clause to filter the course post types.
-	 * @param string $course_query SQL query string to further filter the courses .
-	 * @param string $date_query SQL query string to filter by date range.
-	 * @param int    $user_id The user ID for which the statements are being retrieved.
-	 * @param int    $offset The offset for pagination.
-	 * @param int    $limit The number of rows to return.
+	 * @param string $post_type_in_clause Prepared SQL IN clause containing allowed course post types.
+	 * @param string $course_query        Optional SQL fragment to filter by course ID.
+	 * @param string $date_query          Optional SQL fragment to filter by statement date.
+	 * @param int    $user_id             User (instructor) ID.
+	 * @param int    $offset              Number of records to skip (pagination offset).
+	 * @param int    $limit               Maximum number of records to return.
+	 * @param string $order_by            Column name to order results by.
+	 * @param string $order               Sort direction. Accepts 'ASC' or 'DESC'.
 	 *
 	 * @return array
 	 */
-	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit ): array {
+	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit, $order_by, $order ): array {
 		global $wpdb;
+
+		$order_clause = '';
+
+		if ( sanitize_sql_orderby( $order ) ) {
+			$order_clause = "ORDER BY {$order_by} {$order}";
+		}
 
 		//phpcs:disable
 		$statements = $wpdb->get_results(
@@ -1936,9 +2006,8 @@ class OrderModel {
 				WHERE statements.user_id = %d
 				{$course_query}
 				{$date_query}
-				ORDER BY statements.created_at DESC
-				LIMIT %d, %d
-			",
+				{$order_clause}
+				LIMIT %d, %d",
 				$user_id,
 				$offset,
 				$limit
@@ -1953,8 +2022,7 @@ class OrderModel {
 					AND course.post_type IN ({$post_type_in_clause})
 				WHERE statements.user_id = %d
 				{$course_query}
-				{$date_query}
-			",
+				{$date_query}",
 				$user_id
 			)
 		);
@@ -2126,7 +2194,7 @@ class OrderModel {
 
 		$link =
 			sprintf(
-				'<a href="%s" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+				'<a href="%s" class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit">
 				%s
 			</a>',
 				esc_url( $checkout_url ),
@@ -2146,5 +2214,36 @@ class OrderModel {
 		} else {
 			return $link;
 		}
+	}
+
+	/**
+	 * Get order item titles for order history display.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $order Order object.
+	 *
+	 * @return array<int, string> List of item titles.
+	 */
+	public static function get_order_history_titles( $order ) {
+		$titles = array();
+		$items  = ( new OrderModel() )->get_order_items_by_id( $order->id );
+		foreach ( $items as $item ) {
+
+			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
+				$titles[] = get_the_title( $item->id );
+				continue;
+			}
+
+			$object_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
+			$plan_info = apply_filters( 'tutor_get_plan_info', null, $item->id );
+			if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
+				$titles[] = $plan_info->plan_name;
+			} else {
+				$titles[] = get_the_title( $object_id );
+			}
+		}
+
+		return $titles;
 	}
 }

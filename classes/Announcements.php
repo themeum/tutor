@@ -10,11 +10,11 @@
 
 namespace TUTOR;
 
-use Tutor\Helpers\QueryHelper;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\UrlHelper;
+
 /**
  * Announcements class
  *
@@ -40,6 +40,7 @@ class Announcements {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -49,6 +50,8 @@ class Announcements {
 		 * @since 2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_announcement_bulk_action', array( $this, 'announcement_bulk_action' ) );
+
+		add_filter( 'tutor_learning_area_sub_page_nav_item', array( $this, 'add_subpage_nav_item' ), 10, 2 );
 	}
 
 	/**
@@ -71,6 +74,7 @@ class Announcements {
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return array
 	 */
 	public function prepare_bulk_actions(): array {
@@ -85,6 +89,7 @@ class Announcements {
 	 * Handle bulk action for enrollment cancel | delete
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return string JSON response.
 	 */
 	public function announcement_bulk_action() {
@@ -115,7 +120,7 @@ class Announcements {
 	 * @since 2.0.0
 	 *
 	 * @param string $action hold action.
-	 * @param string $bulk_ids comma seperated ids.
+	 * @param string $bulk_ids comma separated ids.
 	 *
 	 * @return bool
 	 */
@@ -134,5 +139,50 @@ class Announcements {
 			return false === $delete ? false : true;
 		}
 		return false;
+	}
+
+	/**
+	 * Get announcements based on passed arguments.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $args Array of query arguments for retrieving announcements.
+	 *
+	 * @return \WP_Query
+	 */
+	public static function get_announcements( array $args = array() ): \WP_Query {
+		$default_args = array(
+			'post_type'      => tutor()->announcement_post_type,
+			'post_status'    => 'publish',
+			'posts_per_page' => 10,
+			'orderBy'        => 'ID',
+			'order'          => 'DESC',
+		);
+
+		$args = wp_parse_args( $args, $default_args );
+
+		return new \WP_Query( $args );
+	}
+
+	/**
+	 * Add Nav Item to tutor subpage.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $nav_items the array of nav items.
+	 * @param string $base_url the base url.
+	 *
+	 * @return array
+	 */
+	public function add_subpage_nav_item( $nav_items, $base_url ): array {
+
+		$nav_items['announcements'] = array(
+			'title'    => __( 'Announcements', 'tutor' ),
+			'icon'     => Icon::ANNOUNCEMENT,
+			'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'announcements' ) ),
+			'template' => tutor()->path . 'templates/learning-area/subpages/announcements.php',
+		);
+
+		return $nav_items;
 	}
 }

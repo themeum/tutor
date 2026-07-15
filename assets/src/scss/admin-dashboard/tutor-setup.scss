@@ -1,0 +1,241 @@
+// Tutor setup page
+body.tutor-setup {
+  padding: 0px;
+  margin: 0px;
+}
+
+#tutor-onboard-wrapper {
+  font-family: 'Inter', sans-serif;
+  min-height: calc(100dvh - 64px);
+  padding: 32px 16px;
+  background: #f5f3f1;
+  gap: 32px;
+}
+
+.tutor-onboard-screen {
+  display: none;
+  width: 100%;
+  max-width: 444px;
+  margin: 0 auto;
+  &.is-active {
+    display: block;
+  }
+  &.tutor-onboard-screen-loading {
+    max-width: 600px;
+  }
+}
+
+.tutor-onboard-screen-logo {
+  margin-bottom: 32px;
+
+  img {
+    max-width: 118px;
+    height: auto;
+  }
+}
+
+.tutor-onboard-card {
+  background: #fafafa;
+  box-shadow: none;
+  overflow: hidden;
+  border: 1px solid #ececed;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.tutor-onboard-welcome-greeting {
+  margin: 0;
+  color: #333741;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  span {
+    color: #0c111d;
+  }
+}
+
+.tutor-onboard-help-text {
+  margin: 0;
+  color: #5b616f;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
+.tutor-onboard-welcome-title {
+  margin: 4px 0 0;
+  color: #0c111d;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 400;
+}
+
+.tutor-onboard-welcome-title span {
+  font-weight: 600;
+}
+
+.tutor-onboard-preferences-title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -1%;
+  margin: 0px 0px 20px;
+  color: #2f3137;
+}
+
+.tutor-onboard-preferences-label {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0%;
+  margin-bottom: 10px;
+  color: #333741;
+}
+
+.tutor-onboard-welcome-media {
+  margin: 32px 0 12px;
+  overflow: hidden;
+  border-radius: 10px;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.tutor-onboard-welcome-description {
+  margin: 0;
+  color: #333741;
+  font-size: 14px;
+  line-height: 22px;
+  margin-bottom: 20px;
+  span {
+    color: #0c111d;
+    font-weight: 600;
+  }
+}
+
+.tutor-onboard-card-footer-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tutor-onboard-next-screen,
+.tutor-onboard-card-footer .tutor-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tutor-onboard-preferences-group {
+  & + & {
+    margin-top: 20px;
+  }
+}
+
+.tutor-onboard-load-sample {
+  input#tutor-onboard-load-sample-course {
+    width: 18px;
+    height: 18px;
+    margin-right: 0px;
+  }
+}
+
+.tutor-onboard-choice-wrapper {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.tutor-onboard-choice-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+  width: 90px;
+  padding: 8px 0px;
+  box-shadow: 0 0 0 1px #ececed;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  .tutor-onboard-choice-text {
+    color: #73767d;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 500;
+    text-align: center;
+  }
+  &.is-selected {
+    background-color: #f5f5f6;
+    box-shadow: 0 0 0 2px #0049f8;
+    .tutor-onboard-choice-text {
+      color: #0c111d;
+    }
+  }
+}
+
+.tutor-onboard-choice-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tutor-onboard-choice-media {
+  width: 88px;
+  display: block;
+  overflow: hidden;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.tutor-onboard-checkbox {
+  margin: 44px 0px 12px 0px;
+  .tutor-onboard-checkbox-label {
+    color: #5d5f66;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 400;
+  }
+}
+
+.tutor-onboard-help-text {
+  color: #5b616f;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0px;
+  text-align: center;
+  margin: 0px;
+}
+
+.tutor-onboard-card-loading {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 400;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.tutor-onboard-screen-loading.is-fading-out .tutor-onboard-card-loading {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.tutor-onboard-loading-text {
+  display: block;
+  min-height: 80px;
+}

@@ -1,0 +1,47 @@
+// Avatar scss
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-avatar {
+  @include tutor-avatar-base;
+  @include tutor-avatar-size(48);
+}
+
+.tutor-avatar-image {
+  @include tutor-avatar-image;
+}
+
+.tutor-avatar-initials {
+  @include tutor-avatar-initials;
+}
+
+// Avatar sizes
+@each $size, $config in $tutor-avatar-sizes {
+  .tutor-avatar-#{$size} {
+    @include tutor-avatar-size($size);
+  }
+}
+
+// Avatar variants
+.tutor-avatar-square {
+  @include tutor-avatar-variant(square);
+}
+
+.tutor-avatar-icon {
+  @include tutor-avatar-variant(icon);
+}
+
+.tutor-avatar-border {
+  @include tutor-avatar-variant(border);
+}
+
+// Responsive Avatar sizes
+@each $breakpoint, $value in $tutor-breakpoints {
+  @include tutor-breakpoint-down($breakpoint) {
+    @each $size, $config in $tutor-avatar-sizes {
+      .tutor-avatar-#{$breakpoint}-#{$size} {
+        @include tutor-avatar-size($size);
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+@use './borders' as *;
+@use './shadows' as *;
+
+$tutor-popover-shadow: var(--tutor-popover-shadow, #{$tutor-shadow-lg});
+$tutor-popover-border: var(--tutor-popover-border, 1px solid #{$tutor-border-idle});
+$tutor-popover-radius: var(--tutor-popover-radius, #{$tutor-radius-2xl});
+
+$tutor-popover: (
+  shadow: $tutor-popover-shadow,
+  border: $tutor-popover-border,
+  radius: $tutor-popover-radius,
+)

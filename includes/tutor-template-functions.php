@@ -8,21 +8,19 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\CourseModel;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
+use Tutor\Models\EnrollmentModel;
 
 if ( ! function_exists( 'tutor_get_template' ) ) {
 	/**
-	 * Load template with override file system
+	 * Load template with override file system.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param null $template template.
-	 * @param bool $tutor_pro is tutor pro.
+	 * @param string $template template name.
+	 * @param bool   $tutor_pro whether to load from tutor pro.
 	 *
 	 * @return bool|string
 	 */
@@ -67,14 +65,14 @@ if ( ! function_exists( 'tutor_get_template' ) ) {
 
 if ( ! function_exists( 'tutor_get_template_path' ) ) {
 	/**
-	 * Get only template path without any warning...
+	 * Get only template path without any warning.
 	 *
 	 * @since 1.4.2
 	 *
-	 * @param null $template template.
-	 * @param bool $tutor_pro is tutor pro.
+	 * @param string $template template name.
+	 * @param bool   $tutor_pro whether to load from tutor pro.
 	 *
-	 * @return bool|mixed|void
+	 * @return bool|string
 	 */
 	function tutor_get_template_path( $template = null, $tutor_pro = false ) {
 		if ( ! $template ) {
@@ -103,24 +101,24 @@ if ( ! function_exists( 'tutor_get_template_path' ) ) {
 
 if ( ! function_exists( 'tutor_load_template' ) ) {
 	/**
-	 * Load template for TUTOR
+	 * Load template for TUTOR.
 	 *
 	 * @since 1.0.0
-	 * @since 1.1.2 updated
+	 * @since 1.1.2 updated.
 	 *
-	 * @param null  $template template.
-	 * @param array $variables variables.
-	 * @param bool  $tutor_pro is tutor pro.
+	 * @param string $template template name.
+	 * @param array  $variables variables.
+	 * @param bool   $tutor_pro whether to load from tutor pro.
 	 *
 	 * @return void
 	 */
 	function tutor_load_template( $template = null, $variables = array(), $tutor_pro = false ) {
 		$variables = (array) $variables;
 		$variables = apply_filters( 'get_tutor_load_template_variables', $variables );
-		extract( $variables );
+		extract( $variables ); //phpcs:ignore
 
-		$isLoad = apply_filters( 'should_tutor_load_template', true, $template, $variables );
-		if ( ! $isLoad ) {
+		$is_load = apply_filters( 'should_tutor_load_template', true, $template, $variables );
+		if ( ! $is_load ) {
 			return;
 		}
 
@@ -141,16 +139,16 @@ if ( ! function_exists( 'tutor_load_template_part' ) ) {
 	 *
 	 * @since 1.4.3
 	 *
-	 * @param null  $template template.
-	 * @param array $variables variables.
-	 * @param bool  $tutor_pro is tutor pro.
+	 * @param string $template template name.
+	 * @param array  $variables variables.
+	 * @param bool   $tutor_pro whether to load from tutor pro.
 	 *
 	 * @return void
 	 */
 	function tutor_load_template_part( $template = null, $variables = array(), $tutor_pro = false ) {
 		$variables = (array) $variables;
 		$variables = apply_filters( 'get_tutor_load_template_variables', $variables );
-		extract( $variables );
+		extract( $variables ); //phpcs:ignore
 
 		/**
 		 * Get template first from child-theme if exists
@@ -178,9 +176,9 @@ if ( ! function_exists( 'tutor_get_template_html' ) ) {
 	 *
 	 * @since 1.4.3
 	 *
-	 * @param null  $template template.
-	 * @param array $variables variables.
-	 * @param bool  $tutor_pro is tutor pro.
+	 * @param string $template_name template name.
+	 * @param array  $variables variables.
+	 * @param bool   $tutor_pro is tutor pro.
 	 *
 	 * @return string
 	 */
@@ -198,9 +196,9 @@ if ( ! function_exists( 'tutor_course_loop_start' ) ) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param boolean $echo echo.
+	 * @param bool $echo whether to echo content.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	function tutor_course_loop_start( $echo = true ) {
 		ob_start();
@@ -220,9 +218,9 @@ if ( ! function_exists( 'tutor_course_loop_end' ) ) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param boolean $echo echo.
+	 * @param bool $echo whether to echo content.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	function tutor_course_loop_end( $echo = true ) {
 		ob_start();
@@ -237,34 +235,38 @@ if ( ! function_exists( 'tutor_course_loop_end' ) ) {
 	}
 }
 
-/**
- * Tutor course loop before content.
- *
- * @since 1.0.0
- *
- * @return void
- */
-function tutor_course_loop_before_content() {
-	ob_start();
-	tutor_load_template( 'loop.loop-before-content' );
+if ( ! function_exists( 'tutor_course_loop_before_content' ) ) {
+	/**
+	 * Tutor course loop before content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	function tutor_course_loop_before_content() {
+		ob_start();
+		tutor_load_template( 'loop.loop-before-content' );
 
-	$output = apply_filters( 'tutor_course_loop_before_content', ob_get_clean() );
-	echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
+		$output = apply_filters( 'tutor_course_loop_before_content', ob_get_clean() );
+		echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
+	}
 }
 
-/**
- * Tutor course loop after content.
- *
- * @since 1.0.0
- *
- * @return void
- */
-function tutor_course_loop_after_content() {
-	ob_start();
-	tutor_load_template( 'loop.loop-after-content' );
+if ( ! function_exists( 'tutor_course_loop_after_content' ) ) {
+	/**
+	 * Tutor course loop after content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	function tutor_course_loop_after_content() {
+		ob_start();
+		tutor_load_template( 'loop.loop-after-content' );
 
-	$output = apply_filters( 'tutor_course_loop_after_content', ob_get_clean() );
-	echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
+		$output = apply_filters( 'tutor_course_loop_after_content', ob_get_clean() );
+		echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
+	}
 }
 
 if ( ! function_exists( 'tutor_course_loop_title' ) ) {
@@ -359,7 +361,7 @@ if ( ! function_exists( 'tutor_course_loop_thumbnail' ) ) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param boolean $echo echo.
+	 * @param bool $echo whether to echo content.
 	 *
 	 * @return mixed
 	 */
@@ -382,18 +384,18 @@ if ( ! function_exists( 'tutor_course_loop_wrap_classes' ) ) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param boolean $echo echo.
+	 * @param bool $echo whether to echo.
 	 *
 	 * @return mixed
 	 */
 	function tutor_course_loop_wrap_classes( $echo = true ) {
-		$courseID = get_the_ID();
-		$classes  = apply_filters(
+		$course_id = get_the_ID();
+		$classes   = apply_filters(
 			'tutor_course_loop_wrap_classes',
 			array(
 				'tutor-course',
 				'tutor-course-loop',
-				'tutor-course-loop-' . $courseID,
+				'tutor-course-loop-' . $course_id,
 			)
 		);
 
@@ -412,14 +414,14 @@ if ( ! function_exists( 'tutor_course_loop_col_classes' ) ) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param boolean $echo echo.
+	 * @param bool $echo whether to echo.
 	 *
 	 * @return mixed
 	 */
 	function tutor_course_loop_col_classes( $echo = true ) {
 		$course_filter      = (bool) tutor_utils()->get_option( 'course_archive_filter', false );
 		$course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
-		$course_cols        = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
+		$course_cols        = null === $course_archive_arg ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
 		$classes            = apply_filters(
 			'tutor_course_loop_col_classes',
 			array(
@@ -443,7 +445,7 @@ if ( ! function_exists( 'tutor_container_classes' ) ) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param boolean $echo echo.
+	 * @param bool $echo whether to echo.
 	 *
 	 * @return mixed
 	 */
@@ -499,11 +501,11 @@ if ( ! function_exists( 'tutor_post_class' ) ) {
 
 if ( ! function_exists( 'tutor_widget_course_loop_classes' ) ) {
 	/**
-	 * Get classes for widget loop single course wrap
+	 * Get classes for widget loop single course wrap.
 	 *
 	 * @since 1.3.1
 	 *
-	 * @param bool $echo echo.
+	 * @param bool $echo whether to echo content.
 	 *
 	 * @return string
 	 */
@@ -533,8 +535,8 @@ if ( ! function_exists( 'get_tutor_course_thumbnail' ) ) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string  $size size.
-	 * @param boolean $url url.
+	 * @param string $size size.
+	 * @param bool   $url whether to return url only.
 	 *
 	 * @return string
 	 */
@@ -610,7 +612,7 @@ if ( ! function_exists( 'tutor_course_loop_meta' ) ) {
 
 if ( ! function_exists( 'tutor_course_loop_author' ) ) {
 	/**
-	 * Get course author name in loop
+	 * Get course author name in loop.
 	 *
 	 * @since 1.0.0
 	 *
@@ -638,7 +640,7 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 		ob_start();
 
 		$course_id    = get_the_ID();
-		$can_continue = tutor_utils()->is_enrolled( $course_id ) || get_post_meta( $course_id, '_tutor_is_public_course', true ) == 'yes';
+		$can_continue = EnrollmentModel::is_enrolled( $course_id ) || get_post_meta( $course_id, '_tutor_is_public_course', true ) == 'yes';
 
 		// Check for further access type like course content access settings.
 		if ( ! $can_continue ) {
@@ -666,10 +668,10 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 
 if ( ! function_exists( 'tutor_course_loop_rating' ) ) {
 	/**
-	 * Get Course rating
+	 * Get Course rating.
 	 *
 	 * @since 1.0.0
-	 * @since v1.4.5 updated.
+	 * @since 1.4.5 updated.
 	 *
 	 * @return void
 	 */
@@ -688,15 +690,16 @@ if ( ! function_exists( 'tutor_course_loop_rating' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed|void
- *
- * Get add to cart form
- */
-
 if ( ! function_exists( 'tutor_course_loop_add_to_cart' ) ) {
+	/**
+	 * Get add to cart form.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string
+	 */
 	function tutor_course_loop_add_to_cart( $echo = true ) {
 		ob_start();
 		$tutor_course_sell_by = apply_filters( 'tutor_course_sell_by', null );
@@ -715,6 +718,13 @@ if ( ! function_exists( 'tutor_course_loop_add_to_cart' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_price' ) ) {
+	/**
+	 * Get course price.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	function tutor_course_price() {
 		ob_start();
 		tutor_load_template( 'single.course.wc-price-html' );
@@ -724,14 +734,16 @@ if ( ! function_exists( 'tutor_course_price' ) ) {
 	}
 }
 
-/**
- * @param int $post_id
- *
- * echo the excerpt of TUTOR post type
- *
- * @since: v.1.0.0
- */
 if ( ! function_exists( 'tutor_the_excerpt' ) ) {
+	/**
+	 * Echo the excerpt of TUTOR post type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $post_id post ID.
+	 *
+	 * @return void
+	 */
 	function tutor_the_excerpt( $post_id = 0 ) {
 		if ( ! $post_id ) {
 			$post_id = get_the_ID();
@@ -739,16 +751,16 @@ if ( ! function_exists( 'tutor_the_excerpt' ) ) {
 		echo esc_textarea( tutor_get_the_excerpt( $post_id ) );
 	}
 }
-/**
- * @param int $post_id
- *
- * @return mixed
- *
- * Return excerpt of TUTOR post type
- *
- * @since: v.1.0.0
- */
 if ( ! function_exists( 'tutor_get_the_excerpt' ) ) {
+	/**
+	 * Return excerpt of TUTOR post type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $post_id post ID.
+	 *
+	 * @return mixed
+	 */
 	function tutor_get_the_excerpt( $post_id = 0 ) {
 		if ( ! $post_id ) {
 			$post_id = get_the_ID();
@@ -759,36 +771,42 @@ if ( ! function_exists( 'tutor_get_the_excerpt' ) ) {
 	}
 }
 
-/**
- * @return mixed
- *
- * return course author
- *
- * @since: v.1.0.0
- */
-
 if ( ! function_exists( 'get_tutor_course_author' ) ) {
+	/**
+	 * Return course author.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
 	function get_tutor_course_author() {
 		global $post;
 		return apply_filters( 'get_tutor_course_author', get_the_author_meta( 'display_name', $post->post_author ) );
 	}
 }
 
+/**
+ * Get course author ID.
+ *
+ * @since 1.0.0
+ *
+ * @return int
+ */
 function get_tutor_course_author_id() {
 	global $post;
 	return (int) $post->post_author;
 }
 
-/**
- * @param int $course_id
- *
- * @return mixed
- * Course benefits return array
- *
- * @since: v.1.0.0
- */
-
 if ( ! function_exists( 'tutor_course_benefits' ) ) {
+	/**
+	 * Course benefits return array.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return array
+	 */
 	function tutor_course_benefits( $course_id = 0 ) {
 		if ( ! $course_id ) {
 			$course_id = get_the_ID();
@@ -806,17 +824,16 @@ if ( ! function_exists( 'tutor_course_benefits' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed
- *
- * Course single page benefits
- *
- * @since: v.1.0.0
- */
-
 if ( ! function_exists( 'tutor_course_benefits_html' ) ) {
+	/**
+	 * Course single page benefits.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string
+	 */
 	function tutor_course_benefits_html( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.course.course-benefits' );
@@ -829,16 +846,16 @@ if ( ! function_exists( 'tutor_course_benefits_html' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed|void
- *
- * Return Topics HTML
- *
- * @since: v.1.0.0
- */
 if ( ! function_exists( 'tutor_course_topics' ) ) {
+	/**
+	 * Return Topics HTML.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string
+	 */
 	function tutor_course_topics( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.course.course-topics' );
@@ -853,16 +870,16 @@ if ( ! function_exists( 'tutor_course_topics' ) ) {
 	}
 }
 
-/**
- * @param int $course_id
- *
- * @return mixed|void
- *
- * return course requirements in array
- *
- * @since: v.1.0.0
- */
 if ( ! function_exists( 'tutor_course_requirements' ) ) {
+	/**
+	 * Return course requirements in array.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return array
+	 */
 	function tutor_course_requirements( $course_id = 0 ) {
 		if ( ! $course_id ) {
 			$course_id = get_the_ID();
@@ -879,16 +896,16 @@ if ( ! function_exists( 'tutor_course_requirements' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed|void
- *
- * Return course requirements in course single page
- *
- * @since: v.1.0.0
- */
 if ( ! function_exists( 'tutor_course_requirements_html' ) ) {
+	/**
+	 * Return course requirements in course single page.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string
+	 */
 	function tutor_course_requirements_html( $echo = true ) {
 		ob_start();
 		tutor_course_material_includes_html();
@@ -903,16 +920,16 @@ if ( ! function_exists( 'tutor_course_requirements_html' ) ) {
 }
 
 
-/**
- * @param int $course_id
- *
- * @return mixed|void
- *
- * Return target audience in course single page
- *
- * @since: v.1.0.0
- */
 if ( ! function_exists( 'tutor_course_target_audience' ) ) {
+	/**
+	 * Return target audience in course single page.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return array
+	 */
 	function tutor_course_target_audience( $course_id = 0 ) {
 		if ( ! $course_id ) {
 			$course_id = get_the_ID();
@@ -929,16 +946,16 @@ if ( ! function_exists( 'tutor_course_target_audience' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed|void
- *
- * Return target audience in course single page
- *
- * @since: v.1.0.0
- */
 if ( ! function_exists( 'tutor_course_target_audience_html' ) ) {
+	/**
+	 * Return target audience in course single page.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_course_target_audience_html( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.course.course-target-audience' );
@@ -953,6 +970,15 @@ if ( ! function_exists( 'tutor_course_target_audience_html' ) ) {
 
 
 if ( ! function_exists( 'tutor_course_material_includes' ) ) {
+	/**
+	 * Return course material includes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return array
+	 */
 	function tutor_course_material_includes( $course_id = 0 ) {
 		if ( ! $course_id ) {
 			$course_id = get_the_ID();
@@ -970,6 +996,15 @@ if ( ! function_exists( 'tutor_course_material_includes' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_material_includes_html' ) ) {
+	/**
+	 * Return course material includes HTML.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string
+	 */
 	function tutor_course_material_includes_html( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.course.material-includes' );
@@ -982,10 +1017,17 @@ if ( ! function_exists( 'tutor_course_material_includes_html' ) ) {
 	}
 }
 
-// tutor_course_material_includes_html
-
 
 if ( ! function_exists( 'tutor_course_instructors_html' ) ) {
+	/**
+	 * Return course instructors HTML.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_course_instructors_html( $echo = true ) {
 		$display_course_instructors = tutor_utils()->get_option( 'display_course_instructors' );
 		if ( ! $display_course_instructors ) {
@@ -1004,6 +1046,15 @@ if ( ! function_exists( 'tutor_course_instructors_html' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_target_reviews_html' ) ) {
+	/**
+	 * Return course reviews HTML.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_course_target_reviews_html( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.course.reviews' );
@@ -1017,16 +1068,16 @@ if ( ! function_exists( 'tutor_course_target_reviews_html' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed
- *
- * Course single page main content / description
- *
- * @since: v.1.0.0
- */
 if ( ! function_exists( 'tutor_course_content' ) ) {
+	/**
+	 * Course single page main content / description.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_course_content( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.course.course-content' );
@@ -1040,20 +1091,22 @@ if ( ! function_exists( 'tutor_course_content' ) ) {
 	}
 }
 
-/**
- * Course single page lead info
- *
- * @since: v.1.0.0
- */
 if ( ! function_exists( 'tutor_course_lead_info' ) ) {
+	/**
+	 * Course single page lead info.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_course_lead_info( $echo = true ) {
 		ob_start();
 
-		// exit('failed');
-
 		$course_id        = get_the_ID();
 		$course_post_type = tutor()->course_post_type;
-		$queryCourse      = new WP_Query(
+		$query_course     = new WP_Query(
 			apply_filters(
 				'tutor_course_lead_info_args',
 				array(
@@ -1063,9 +1116,9 @@ if ( ! function_exists( 'tutor_course_lead_info' ) ) {
 			)
 		);
 
-		if ( $queryCourse->have_posts() ) {
-			while ( $queryCourse->have_posts() ) {
-				$queryCourse->the_post();
+		if ( $query_course->have_posts() ) {
+			while ( $query_course->have_posts() ) {
+				$query_course->the_post();
 				tutor_load_template( 'single.course.lead-info' );
 			}
 			wp_reset_postdata();
@@ -1080,28 +1133,31 @@ if ( ! function_exists( 'tutor_course_lead_info' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed|void
- */
-
 if ( ! function_exists( 'tutor_course_enrolled_lead_info' ) ) {
+	/**
+	 * Course enrolled lead info.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_course_enrolled_lead_info( $echo = true ) {
 		ob_start();
 
 		$course_id        = get_the_ID();
 		$course_post_type = tutor()->course_post_type;
-		$queryCourse      = new WP_Query(
+		$query_course     = new WP_Query(
 			array(
 				'p'         => $course_id,
 				'post_type' => $course_post_type,
 			)
 		);
 
-		if ( $queryCourse->have_posts() ) {
-			while ( $queryCourse->have_posts() ) {
-				$queryCourse->the_post();
+		if ( $query_course->have_posts() ) {
+			while ( $query_course->have_posts() ) {
+				$query_course->the_post();
 				tutor_load_template( 'single.course.lead-info' );
 			}
 			wp_reset_postdata();
@@ -1118,6 +1174,16 @@ if ( ! function_exists( 'tutor_course_enrolled_lead_info' ) ) {
 }
 
 if ( ! function_exists( 'tutor_lesson_lead_info' ) ) {
+	/**
+	 * Lesson lead info.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int  $lesson_id lesson id.
+	 * @param bool $echo      whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_lesson_lead_info( $lesson_id = 0, $echo = true ) {
 		if ( ! $lesson_id ) {
 			$lesson_id = get_the_ID();
@@ -1126,16 +1192,16 @@ if ( ! function_exists( 'tutor_lesson_lead_info' ) ) {
 		ob_start();
 		$course_id        = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
 		$course_post_type = tutor()->course_post_type;
-		$queryCourse      = new WP_Query(
+		$query_course     = new WP_Query(
 			array(
 				'p'         => $course_id,
 				'post_type' => $course_post_type,
 			)
 		);
 
-		if ( $queryCourse->have_posts() ) {
-			while ( $queryCourse->have_posts() ) {
-				$queryCourse->the_post();
+		if ( $query_course->have_posts() ) {
+			while ( $query_course->have_posts() ) {
+				$query_course->the_post();
 				tutor_load_template( 'single.course.lead-info' );
 			}
 			wp_reset_postdata();
@@ -1147,11 +1213,19 @@ if ( ! function_exists( 'tutor_lesson_lead_info' ) ) {
 		}
 
 		return $output;
-
 	}
 }
 
 if ( ! function_exists( 'tutor_course_video' ) ) {
+	/**
+	 * Course video.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_course_video( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.video.video' );
@@ -1165,6 +1239,15 @@ if ( ! function_exists( 'tutor_course_video' ) ) {
 }
 
 if ( ! function_exists( 'tutor_lesson_video' ) ) {
+	/**
+	 * Lesson video.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_lesson_video( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.video.video' );
@@ -1177,17 +1260,16 @@ if ( ! function_exists( 'tutor_lesson_video' ) ) {
 	}
 }
 
-/**
- *
- * Get all lessons attachments
- *
- * @param bool $echo
- *
- * @return mixed
- *
- * @since v.1.0.0
- */
 if ( ! function_exists( 'get_tutor_posts_attachments' ) ) {
+	/**
+	 * Get all lessons attachments.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function get_tutor_posts_attachments( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'global.attachments' );
@@ -1200,15 +1282,16 @@ if ( ! function_exists( 'get_tutor_posts_attachments' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed
- *
- * Render Lesson Main Content
- * @since v.1.0.0
- */
 if ( ! function_exists( 'tutor_lesson_content' ) ) {
+	/**
+	 * Render Lesson Main Content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_lesson_content( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.lesson.content' );
@@ -1223,6 +1306,15 @@ if ( ! function_exists( 'tutor_lesson_content' ) ) {
 }
 
 if ( ! function_exists( 'tutor_lesson_mark_complete_html' ) ) {
+	/**
+	 * Lesson mark complete HTML.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_lesson_mark_complete_html( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.lesson.complete_form' );
@@ -1236,6 +1328,15 @@ if ( ! function_exists( 'tutor_lesson_mark_complete_html' ) ) {
 	}
 }
 
+/**
+ * Course question and answer.
+ *
+ * @since 1.0.0
+ *
+ * @param bool $echo whether to echo content.
+ *
+ * @return string|void
+ */
 function tutor_course_question_and_answer( $echo = true ) {
 	ob_start();
 	tutor_load_template( 'single.course.enrolled.question_and_answer' );
@@ -1249,19 +1350,13 @@ function tutor_course_question_and_answer( $echo = true ) {
 }
 
 /**
- * @param bool $echo
+ * Render course info tab content.
  *
- * @return mixed
+ * @since 2.0.0
+ * @since 2.0.5 updated.
  *
- * @show progress bar about course complete
- *
- * @since v.2.0.0
- *
- * Course Curriculum added
- *
- * @since v2.0.5
+ * @return void
  */
-
 function tutor_course_info_tab() {
 	tutor_course_content();
 	tutor_course_benefits_html();
@@ -1269,6 +1364,15 @@ function tutor_course_info_tab() {
 }
 
 
+/**
+ * Course announcements.
+ *
+ * @since 1.0.0
+ *
+ * @param bool $echo whether to echo content.
+ *
+ * @return string|void
+ */
 function tutor_course_announcements( $echo = true ) {
 	ob_start();
 	tutor_load_template( 'single.course.enrolled.announcements' );
@@ -1281,6 +1385,15 @@ function tutor_course_announcements( $echo = true ) {
 	return $output;
 }
 
+/**
+ * Single quiz top.
+ *
+ * @since 1.0.0
+ *
+ * @param bool $echo whether to echo content.
+ *
+ * @return string|void
+ */
 function tutor_single_quiz_top( $echo = true ) {
 	ob_start();
 	tutor_load_template( 'single.quiz.top' );
@@ -1292,6 +1405,15 @@ function tutor_single_quiz_top( $echo = true ) {
 	return $output;
 }
 
+/**
+ * Single quiz body.
+ *
+ * @since 1.0.0
+ *
+ * @param bool $echo whether to echo content.
+ *
+ * @return string|void
+ */
 function tutor_single_quiz_body( $echo = true ) {
 	ob_start();
 	tutor_load_template( 'single.quiz.body' );
@@ -1304,11 +1426,13 @@ function tutor_single_quiz_body( $echo = true ) {
 }
 
 /**
- * @param bool $echo
+ * Get the quiz description.
  *
- * @return mixed|void
+ * @since 1.0.0
  *
- * Get the quiz description
+ * @param bool $echo whether to echo content.
+ *
+ * @return string|void
  */
 function tutor_single_quiz_content( $echo = true ) {
 	ob_start();
@@ -1322,6 +1446,15 @@ function tutor_single_quiz_content( $echo = true ) {
 }
 
 
+/**
+ * Single quiz no course belongs.
+ *
+ * @since 1.0.0
+ *
+ * @param bool $echo whether to echo content.
+ *
+ * @return string|void
+ */
 function tutor_single_quiz_no_course_belongs( $echo = true ) {
 	ob_start();
 	tutor_load_template( 'single.quiz.no_course_belongs' );
@@ -1333,6 +1466,15 @@ function tutor_single_quiz_no_course_belongs( $echo = true ) {
 	return $output;
 }
 
+/**
+ * Single quiz contents.
+ *
+ * @since 1.0.0
+ *
+ * @param bool $echo whether to echo content.
+ *
+ * @return string|void
+ */
 function single_quiz_contents( $echo = true ) {
 
 	ob_start();
@@ -1345,6 +1487,15 @@ function single_quiz_contents( $echo = true ) {
 	return $output;
 }
 
+/**
+ * Get course level.
+ *
+ * @since 1.0.0
+ *
+ * @param int $course_id course ID.
+ *
+ * @return string|bool
+ */
 function get_tutor_course_level( $course_id = 0 ) {
 	if ( ! $course_id ) {
 		$course_id = get_the_ID();
@@ -1362,6 +1513,16 @@ function get_tutor_course_level( $course_id = 0 ) {
 }
 
 if ( ! function_exists( 'get_tutor_course_duration_context' ) ) {
+	/**
+	 * Get course duration context.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int  $course_id  course ID.
+	 * @param bool $short_form whether to use short form.
+	 *
+	 * @return string|bool
+	 */
 	function get_tutor_course_duration_context( $course_id = 0, $short_form = false ) {
 		if ( ! $course_id ) {
 			$course_id = get_the_ID();
@@ -1369,27 +1530,28 @@ if ( ! function_exists( 'get_tutor_course_duration_context' ) ) {
 		if ( ! $course_id ) {
 			return '';
 		}
-		$duration        = get_post_meta( $course_id, '_course_duration', true );
-		$durationHours   = tutor_utils()->avalue_dot( 'hours', $duration );
-		$durationMinutes = tutor_utils()->avalue_dot( 'minutes', $duration );
-		$durationSeconds = tutor_utils()->avalue_dot( 'seconds', $duration );
 
-		$hour_format   = $short_form ? __( 'h', 'tutor' ) : ' ' . ( $durationHours > 1 ? __( 'hours', 'tutor' ) : __( 'hour', 'tutor' ) );
-		$minute_format = $short_form ? __( 'm', 'tutor' ) : ' ' . ( $durationMinutes > 1 ? __( 'minutes', 'tutor' ) : __( 'minute', 'tutor' ) );
-		$second_format = $short_form ? __( 's', 'tutor' ) : ' ' . ( $durationSeconds > 1 ? __( 'seconds', 'tutor' ) : __( 'second', 'tutor' ) );
+		$duration         = get_post_meta( $course_id, '_course_duration', true );
+		$duration_hours   = tutor_utils()->avalue_dot( 'hours', $duration );
+		$duration_minutes = tutor_utils()->avalue_dot( 'minutes', $duration );
+		$duration_seconds = tutor_utils()->avalue_dot( 'seconds', $duration );
+
+		$hour_format   = $short_form ? __( 'h', 'tutor' ) : ' ' . ( $duration_hours > 1 ? __( 'hours', 'tutor' ) : __( 'hour', 'tutor' ) );
+		$minute_format = $short_form ? __( 'm', 'tutor' ) : ' ' . ( $duration_minutes > 1 ? __( 'minutes', 'tutor' ) : __( 'minute', 'tutor' ) );
+		$second_format = $short_form ? __( 's', 'tutor' ) : ' ' . ( $duration_seconds > 1 ? __( 'seconds', 'tutor' ) : __( 'second', 'tutor' ) );
 
 		if ( $duration ) {
 			$output = '';
-			if ( $durationHours > 0 ) {
-				$output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $hour_format . '</span>';
+			if ( $duration_hours > 0 ) {
+				$output .= '<span class="tutor-meta-level">' . $duration_hours . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $hour_format . '</span>';
 			}
 
-			if ( $durationMinutes > 0 ) {
-				$output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $minute_format . '</span>';
+			if ( $duration_minutes > 0 ) {
+				$output .= '<span class="tutor-meta-level">' . $duration_minutes . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $minute_format . '</span>';
 			}
 
-			if ( ! $durationHours && ! $durationMinutes && $durationSeconds > 0 ) {
-				$output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $second_format . '</span>';
+			if ( ! $duration_hours && ! $duration_minutes && $duration_seconds > 0 ) {
+				$output .= '<span class="tutor-meta-level">' . $duration_seconds . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $second_format . '</span>';
 			}
 
 			return $output;
@@ -1399,6 +1561,15 @@ if ( ! function_exists( 'get_tutor_course_duration_context' ) ) {
 	}
 }
 if ( ! function_exists( 'get_tutor_course_categories' ) ) {
+	/**
+	 * Get course categories.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return array|bool|WP_Error
+	 */
 	function get_tutor_course_categories( $course_id = 0 ) {
 		if ( ! $course_id ) {
 			$course_id = get_the_ID();
@@ -1409,15 +1580,16 @@ if ( ! function_exists( 'get_tutor_course_categories' ) ) {
 	}
 }
 
-/**
- * @param int $course_id
- *
- * @return array|false|WP_Error
- *
- * Get course tags
- */
-
 if ( ! function_exists( 'get_tutor_course_tags' ) ) {
+	/**
+	 * Get course tags.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return array|false|WP_Error
+	 */
 	function get_tutor_course_tags( $course_id = 0 ) {
 		if ( ! $course_id ) {
 			$course_id = get_the_ID();
@@ -1428,37 +1600,39 @@ if ( ! function_exists( 'get_tutor_course_tags' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed|void
- *
- * Template for course tags html
- */
-
 if ( ! function_exists( 'tutor_course_tags_html' ) ) {
+	/**
+	 * Template for course tags html.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string
+	 */
 	function tutor_course_tags_html( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.course.tags' );
 		$output = apply_filters( 'tutor_course/single/tags_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore
 		}
 
 		return $output;
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed
- *
- * Get Q&A in lesson sidebar
- */
-
 if ( ! function_exists( 'tutor_lesson_sidebar_question_and_answer' ) ) {
+	/**
+	 * Get Q&A in lesson sidebar.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_lesson_sidebar_question_and_answer( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'single.lesson.sidebar_question_and_answer' );
@@ -1472,17 +1646,16 @@ if ( ! function_exists( 'tutor_lesson_sidebar_question_and_answer' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed
- *
- * Get Assignment content
- *
- * @since  v.1.3.3
- */
-
 if ( ! function_exists( 'tutor_assignment_content' ) ) {
+	/**
+	 * Get Assignment content.
+	 *
+	 * @since 1.3.3
+	 *
+	 * @param bool $echo whether to echo content.
+	 *
+	 * @return string|void
+	 */
 	function tutor_assignment_content( $echo = true ) {
 		$output = apply_filters( 'tutor_assignment/single/content', '' );
 
@@ -1494,17 +1667,18 @@ if ( ! function_exists( 'tutor_assignment_content' ) ) {
 	}
 }
 
-/**
- * @param string $msg
- * @param string $title
- * @param string $type
- *
- * @return string
- *
- * @since v.1.4.0
- */
-
 if ( ! function_exists( 'get_tnotice' ) ) {
+	/**
+	 * Get notice.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param string $msg   message.
+	 * @param string $title title.
+	 * @param string $type  type.
+	 *
+	 * @return string
+	 */
 	function get_tnotice( $msg = '', $title = 'Success', $type = 'success' ) {
 
 		$output = '<div class="tnotice tnotice--' . $type . '">
@@ -1523,16 +1697,15 @@ if ( ! function_exists( 'get_tnotice' ) ) {
 }
 
 /**
- * @param int  $course_content_id
- * @param bool $echo
+ * Next Previous Pagination.
  *
- * @return mixed|void
+ * @since 1.4.7
  *
- * Next Previous Pagination
+ * @param int  $course_content_id course content ID.
+ * @param bool $echo              whether to echo content.
  *
- * @since v.1.4.7
+ * @return string|void
  */
-
 function tutor_next_previous_pagination( $course_content_id = 0, $echo = true ) {
 	$content_id  = tutor_utils()->get_post_id( $course_content_id );
 	$contents    = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
@@ -1552,14 +1725,18 @@ function tutor_next_previous_pagination( $course_content_id = 0, $echo = true ) 
 	return $output;
 }
 
-/**
- * Load custom template from any given file
- *
- * Pass parameter as wish
- *
- * @since 1.9.8
- */
 if ( ! function_exists( 'tutor_load_template_from_custom_path' ) ) {
+	/**
+	 * Load custom template from any given file.
+	 *
+	 * @since 1.9.8
+	 *
+	 * @param string $template template path.
+	 * @param array  $data     data to pass.
+	 * @param bool   $once     whether to include once.
+	 *
+	 * @return void
+	 */
 	function tutor_load_template_from_custom_path( $template = null, $data = array(), $once = true ) {
 		do_action( 'tutor_load_template_from_custom_path_before', $template, $data );
 		if ( file_exists( $template ) ) {
@@ -1573,14 +1750,14 @@ if ( ! function_exists( 'tutor_load_template_from_custom_path' ) ) {
 	}
 }
 
-/**
- * Load enrolled course progress template
- *
- * This template will be used on only dashboard enrolled course page
- *
- * @since v2.0.0
- */
 if ( ! function_exists( 'tutor_enrolled_course_progress' ) ) {
+	/**
+	 * Load enrolled course progress template.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
 	function tutor_enrolled_course_progress() {
 		global $wp_query;
 		$query_vars = $wp_query->query_vars;
@@ -1592,7 +1769,7 @@ if ( ! function_exists( 'tutor_enrolled_course_progress' ) ) {
 
 if ( ! function_exists( 'tutor_permission_denied_template' ) ) {
 	/**
-	 * Load permission denied template
+	 * Load permission denied template.
 	 *
 	 * It will load permission denied template & return so not code
 	 * after this will execute
@@ -1620,5 +1797,28 @@ if ( ! function_exists( 'tutor_permission_denied_template' ) ) {
 
 		tutor_load_template( 'permission-denied', $args );
 		return;
+	}
+}
+
+if ( ! function_exists( 'get_template_buffer' ) ) {
+	/**
+	 * Render a template and return its output as a string.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $template   Template file path or slug.
+	 * @param array  $data       Data to be passed to the template.
+	 * @param bool   $once       Whether the template should be loaded only once.
+	 *                           Defaults to true.
+	 *
+	 * @return string Rendered template output.
+	 */
+	function get_template_buffer( $template, $data, $once = true ) {
+
+		ob_start();
+
+		tutor_load_template_from_custom_path( $template, $data, $once );
+
+		return ob_get_clean();
 	}
 }

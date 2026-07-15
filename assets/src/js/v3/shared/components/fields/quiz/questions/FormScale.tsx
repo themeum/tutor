@@ -1,0 +1,355 @@
+/**
+ * Form field for Scale quiz question type (instructor sets target value on scale).
+ *
+ * @package Tutor
+ * @since 4.0.0
+ */
+
+import { useCallback, useEffect, useState } from 'react';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+
+import TextInput from '@TutorShared/atoms/TextInput';
+
+import {
+  borderRadius,
+  Breakpoint,
+  colorTokens,
+  fontFamily,
+  fontSize,
+  fontWeight,
+  letterSpacing,
+  lineHeight,
+  spacing,
+} from '@TutorShared/config/styles';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import {
+  type ID,
+  QuizDataStatus,
+  type QuizQuestionOption,
+  type QuizValidationErrorType,
+} from '@TutorShared/utils/types';
+
+interface FormScaleProps extends FormControllerProps<QuizQuestionOption> {
+  questionId: ID;
+  validationError?: {
+    message: string;
+    type: QuizValidationErrorType;
+  } | null;
+  setValidationError?: React.Dispatch<
+    React.SetStateAction<{
+      message: string;
+      type: QuizValidationErrorType;
+    } | null>
+  >;
+}
+
+interface ScaleConfig {
+  min: number;
+  max: number;
+  step: number;
+  defaultValue: number;
+  pxPerUnit: number;
+  labelEvery: number;
+  minorTickEvery: number;
+  precision: number;
+}
+
+interface ScaleData {
+  value: number;
+  config: ScaleConfig;
+}
+
+function normalizeScaleConfig(config: ScaleConfig): ScaleConfig {
+  return {
+    ...config,
+    step: 1,
+  };
+}
+
+function parseStoredScaleData(value: string): ScaleData | null {
+  if (!value || typeof value !== 'string') return null;
+  try {
+    const data = JSON.parse(value) as Partial<ScaleData>;
+    if (typeof data.value === 'number' && data.config) {
+      return {
+        value: data.value,
+        config: normalizeScaleConfig({
+          min: data.config.min ?? 0,
+          max: data.config.max ?? 100,
+          step: 1,
+          defaultValue: data.config.defaultValue ?? 50,
+          pxPerUnit: data.config.pxPerUnit ?? 10,
+          labelEvery: data.config.labelEvery ?? 10,
+          minorTickEvery: data.config.minorTickEvery ?? 5,
+          precision: data.config.precision ?? 0,
+        }),
+      };
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+const scaleRangeErrorMessage = __('The maximum value must be greater than the minimum value.', __TUTOR_TEXT_DOMAIN__);
+const scaleCorrectValueRangeErrorMessage = __(
+  'The correct value must be between the minimum and maximum values.',
+  __TUTOR_TEXT_DOMAIN__,
+);
+
+const clearScaleRangeValidationError = (setValidationError: FormScaleProps['setValidationError']) => {
+  setValidationError?.((prev) => {
+    const isScaleRangeError =
+      prev?.type === 'question' && [scaleRangeErrorMessage, scaleCorrectValueRangeErrorMessage].includes(prev?.message);
+
+    return isScaleRangeError ? null : prev;
+  });
+};
+
+const getScaleValidationErrorMessage = (config: ScaleConfig, value: number): string | null => {
+  if (config.max <= config.min) {
+    return scaleRangeErrorMessage;
+  }
+
+  if (value < config.min || value > config.max) {
+    return scaleCorrectValueRangeErrorMessage;
+  }
+
+  return null;
+};
+
+const FormScale = ({ field, setValidationError }: FormScaleProps) => {
+  const option = field.value;
+  const [scaleData, setScaleData] = useState<ScaleData>(() => {
+    const parsed = parseStoredScaleData(option?.answer_two_gap_match ?? '');
+    return (
+      parsed || {
+        value: 50,
+        config: normalizeScaleConfig({
+          min: 0,
+          max: 100,
+          step: 1,
+          defaultValue: 50,
+          pxPerUnit: 10,
+          labelEvery: 10,
+          minorTickEvery: 5,
+          precision: 0,
+        }),
+      }
+    );
+  });
+
+  const [config, setConfig] = useState<ScaleConfig>(normalizeScaleConfig(scaleData.config));
+
+  useEffect(() => {
+    const parsed = parseStoredScaleData(option?.answer_two_gap_match ?? '');
+    if (parsed) {
+      setScaleData(parsed);
+      setConfig(normalizeScaleConfig(parsed.config));
+    }
+  }, [option?.answer_two_gap_match]);
+
+  const updateOption = useCallback(
+    (updated: QuizQuestionOption) => {
+      field.onChange(updated);
+    },
+    [field],
+  );
+
+  const saveScaleData = useCallback(
+    (data: ScaleData) => {
+      if (!option) return;
+
+      const json = JSON.stringify(data);
+      updateOption({
+        ...option,
+        ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
+          _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
+        }),
+        answer_two_gap_match: json,
+        is_saved: true,
+      });
+    },
+    [option, updateOption],
+  );
+
+  const handleConfigChange = useCallback(
+    (fieldKey: keyof ScaleConfig, value: number) => {
+      const newConfig = normalizeScaleConfig({ ...config, [fieldKey]: value });
+      const validationMessage = getScaleValidationErrorMessage(newConfig, scaleData.value);
+      if (validationMessage) {
+        setValidationError?.({
+          message: validationMessage,
+          type: 'question',
+        });
+      } else {
+        clearScaleRangeValidationError(setValidationError);
+      }
+
+      setConfig(newConfig);
+
+      const newScaleData = {
+        ...scaleData,
+        config: newConfig,
+        value: scaleData.value,
+      };
+      setScaleData(newScaleData);
+      saveScaleData(newScaleData);
+    },
+    [config, scaleData, saveScaleData, setValidationError],
+  );
+
+  const parseConfigNumber = (raw: string, fallback: number) => {
+    const n = parseFloat(String(raw));
+    return Number.isFinite(n) ? n : fallback;
+  };
+
+  const handleValueChange = useCallback(
+    (value: number) => {
+      const validationMessage = getScaleValidationErrorMessage(config, value);
+      if (validationMessage) {
+        setValidationError?.({
+          message: validationMessage,
+          type: 'question',
+        });
+      } else {
+        clearScaleRangeValidationError(setValidationError);
+      }
+
+      const newScaleData = { ...scaleData, value };
+      setScaleData(newScaleData);
+      saveScaleData(newScaleData);
+    },
+    [config, scaleData, saveScaleData, setValidationError],
+  );
+
+  if (!option) {
+    return null;
+  }
+
+  const isRangeInvalid = config.max <= config.min;
+
+  return (
+    <div css={styles.wrapper}>
+      <div css={styles.card}>
+        <div css={styles.answerHeader}>
+          <span css={styles.answerHeaderTitle}>{__('Scale range', __TUTOR_TEXT_DOMAIN__)}</span>
+        </div>
+        {/* Scale Configuration */}
+        <div css={styles.configSection}>
+          <div css={styles.configGrid}>
+            <div css={styles.configField}>
+              <TextInput
+                label={__('Min value', __TUTOR_TEXT_DOMAIN__)}
+                type="number"
+                size="small"
+                value={String(config.min)}
+                onChange={(v) => handleConfigChange('min', parseConfigNumber(v, 0))}
+              />
+            </div>
+            <div css={styles.configField}>
+              <TextInput
+                label={__('Max value', __TUTOR_TEXT_DOMAIN__)}
+                type="number"
+                size="small"
+                value={String(config.max)}
+                onChange={(v) => handleConfigChange('max', parseConfigNumber(v, 100))}
+              />
+            </div>
+            <div css={styles.configField}>
+              <TextInput
+                label={__('Label entry', __TUTOR_TEXT_DOMAIN__)}
+                type="number"
+                size="small"
+                value={String(config.labelEvery)}
+                onChange={(v) => handleConfigChange('labelEvery', parseConfigNumber(v, 10))}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div css={styles.card}>
+        <div css={styles.answerSection}>
+          {/* Answer Configuration */}
+          <div css={styles.configField}>
+            <TextInput
+              label={__('Correct Value', __TUTOR_TEXT_DOMAIN__)}
+              type="number"
+              size="small"
+              value={String(scaleData.value)}
+              onChange={(v) => handleValueChange(parseConfigNumber(v, config.min))}
+              placeholder={
+                isRangeInvalid
+                  ? undefined
+                  : sprintf(
+                      // translators: %1$s is the minimum scale value, %2$s is the maximum scale value
+                      __('Between %1$s and %2$s', __TUTOR_TEXT_DOMAIN__),
+                      String(config.min),
+                      String(config.max),
+                    )
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FormScale;
+
+const styles = {
+  wrapper: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[24]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
+  `,
+  card: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
+    padding: ${spacing[16]};
+    background: ${colorTokens.surface.tutor};
+    border-radius: ${borderRadius.input};
+  `,
+  answerHeader: css`
+    ${styleUtils.display.flex('row')};
+    align-items: center;
+    justify-content: space-between;
+    gap: ${spacing[12]};
+  `,
+  answerHeaderTitle: css`
+    font-family: ${fontFamily.sfProDisplay};
+    font-weight: ${fontWeight.medium};
+    font-size: ${fontSize[15]};
+    line-height: ${lineHeight[24]};
+    letter-spacing: ${letterSpacing.normal};
+    color: ${colorTokens.text.title};
+  `,
+  configSection: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[12]};
+  `,
+  answerSection: css`
+    ${styleUtils.display.flex('column')};
+  `,
+  configGrid: css`
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: ${spacing[8]};
+
+    ${Breakpoint.smallTablet} {
+      grid-template-columns: 1fr;
+    }
+  `,
+  configField: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+  `,
+};

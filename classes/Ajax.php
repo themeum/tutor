@@ -10,10 +10,9 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
+use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\LessonModel;
 use Tutor\Traits\JsonResponse;
@@ -27,6 +26,7 @@ class Ajax {
 	use JsonResponse;
 
 	const LOGIN_ERRORS_TRANSIENT_KEY = 'tutor_login_errors';
+
 	/**
 	 * Constructor
 	 *
@@ -40,7 +40,6 @@ class Ajax {
 	public function __construct( $allow_hooks = true ) {
 		if ( $allow_hooks ) {
 			add_action( 'wp_ajax_sync_video_playback', array( $this, 'sync_video_playback' ) );
-			add_action( 'wp_ajax_nopriv_sync_video_playback', array( $this, 'sync_video_playback_noprev' ) );
 			add_action( 'wp_ajax_tutor_place_rating', array( $this, 'tutor_place_rating' ) );
 			add_action( 'wp_ajax_delete_tutor_review', array( $this, 'delete_tutor_review' ) );
 
@@ -59,8 +58,8 @@ class Ajax {
 			 *
 			 * @since  v.1.7.9
 			 */
-			add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_annoucement' ) );
-			add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_annoucement' ) );
+			add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_announcement' ) );
+			add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_announcement' ) );
 
 			add_action( 'wp_ajax_tutor_youtube_video_duration', array( $this, 'ajax_youtube_video_duration' ) );
 		}
@@ -72,6 +71,7 @@ class Ajax {
 	 * Update video information and data when necessary
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function sync_video_playback() {
@@ -113,15 +113,6 @@ class Ajax {
 			LessonModel::update_lesson_reading_info( $post_id, $user_id, 'video_best_watched_time', 0 );
 		}
 		exit();
-	}
-
-	/**
-	 * Video playback callback for noprev
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function sync_video_playback_noprev() {
 	}
 
 	/**
@@ -395,9 +386,7 @@ class Ajax {
 	 * Process tutor login
 	 *
 	 * @since 1.6.3
-	 *
-	 * @since 2.1.3 Ajax removed, validation errors
-	 * stores in session.
+	 * @since 2.1.3 Ajax removed, validation errors stores in session.
 	 *
 	 * @return void
 	 */
@@ -410,12 +399,11 @@ class Ajax {
 		 *
 		 * @since 2.1.4
 		 */
-		if ( ! wp_verify_nonce( $_POST[ tutor()->nonce ], tutor()->nonce_action ) ) { //phpcs:ignore
+		if ( ! tutor_utils()->is_nonce_verified( 'post' ) ) {
 			$validation_error->add( 401, __( 'Nonce verification failed', 'tutor' ) );
-			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
+			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages(), MINUTE_IN_SECONDS );
 			return;
 		}
-		//phpcs:disable WordPress.Security.NonceVerification.Missing
 
 		/**
 		 * No sanitization/wp_unslash needed for log & pwd since WordPress
@@ -425,10 +413,12 @@ class Ajax {
 		 *
 		 * @see https://developer.wordpress.org/reference/functions/wp_signon/
 		 */
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		$username    = tutor_utils()->array_get( 'log', $_POST ); //phpcs:ignore
 		$password    = tutor_utils()->array_get( 'pwd', $_POST ); //phpcs:ignore
 		$redirect_to = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : '';
 		$remember    = isset( $_POST['rememberme'] );
+		//phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		try {
 			$creds = array(
@@ -438,7 +428,6 @@ class Ajax {
 			);
 
 			$validation_error = apply_filters( 'tutor_process_login_errors', $validation_error, $creds['user_login'], $creds['user_password'] );
-
 			if ( $validation_error->get_error_code() ) {
 				$validation_error->add(
 					$validation_error->get_error_code(),
@@ -453,10 +442,22 @@ class Ajax {
 				);
 			}
 
+			$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_LOGIN, $_POST );
+			if ( is_wp_error( $validate_consent ) ) {
+				$validation_error->add(
+					$validate_consent->get_error_code(),
+					$validate_consent->get_error_message(),
+				);
+			}
+
+			if ( $validation_error->has_errors() ) {
+				\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
+				return;
+			}
+
 			// On multi-site, ensure user exists on current site, if not add them before allowing login.
 			if ( is_multisite() ) {
 				$user_data = get_user_by( is_email( $creds['user_login'] ) ? 'email' : 'login', $creds['user_login'] );
-
 				if ( $user_data && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) {
 					add_user_to_blog( get_current_blog_id(), $user_data->ID, 'customer' );
 				}
@@ -464,14 +465,15 @@ class Ajax {
 
 			// Perform the login.
 			$user = wp_signon( apply_filters( 'tutor_login_credentials', $creds ), is_ssl() );
-
 			if ( is_wp_error( $user ) ) {
 				// If no error exist then add WP login error, to prevent error duplication.
 				if ( ! $validation_error->has_errors() ) {
 					$validation_error->add( 400, $user->get_error_message() );
 				}
 			} else {
-				do_action( 'tutor_after_login_success', $user->ID );
+				// @since 4.0.0 $validate _consent param added.
+				do_action( 'tutor_after_login_success', $user->ID, $validate_consent );
+
 				// Since 1.9.8 do enroll if guest attempt to enroll.
 				$course_enroll_attempt = Input::post( 'tutor_course_enroll_attempt' );
 				if ( ! empty( $course_enroll_attempt ) && is_a( $user, 'WP_User' ) ) {
@@ -485,7 +487,7 @@ class Ajax {
 			$validation_error->add( 400, $e->getMessage() );
 		} finally {
 			// Store errors in transient data.
-			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
+			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages(), MINUTE_IN_SECONDS );
 		}
 	}
 
@@ -493,9 +495,10 @@ class Ajax {
 	 * Create/Update announcement
 	 *
 	 * @since  1.7.9
+	 *
 	 * @return void
 	 */
-	public function create_or_update_annoucement() {
+	public function create_or_update_announcement() {
 		tutor_utils()->checking_nonce();
 
 		$error                = array();
@@ -503,7 +506,7 @@ class Ajax {
 		$announcement_title   = Input::post( 'tutor_announcement_title' );
 		$announcement_summary = Input::post( 'tutor_announcement_summary', '', Input::TYPE_TEXTAREA );
 
-		// Check if user can manage this announcment.
+		// Check if user can manage this announcement.
 		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
@@ -576,9 +579,10 @@ class Ajax {
 	 * Delete announcement
 	 *
 	 * @since  1.7.9
+	 *
 	 * @return void
 	 */
-	public function delete_annoucement() {
+	public function delete_announcement() {
 		tutor_utils()->checking_nonce();
 
 		$announcement_id = Input::post( 'announcement_id' );
@@ -610,7 +614,7 @@ class Ajax {
 			$this->json_response( __( 'Video ID is required', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
-		tutor_utils()->check_current_user_capability( 'edit_tutor_course' );
+		tutor_utils()->check_current_user_capability( 'edit_tutor_courses' );
 
 		$api_key = tutor_utils()->get_option( 'lesson_video_duration_youtube_api_key', '' );
 		$url     = "https://www.googleapis.com/youtube/v3/videos?id=$video_id&part=contentDetails&key=$api_key";

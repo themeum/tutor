@@ -1,0 +1,354 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+@use './mixins' as *;
+
+[data-tutor-ui='kids'] {
+  .tutor-dashboard-nav-mobile-list {
+    .tutor-dashboard-nav-mobile-icon {
+      padding: $tutor-spacing-2;
+    }
+
+    .tutor-dashboard-nav-mobile-text {
+      color: $tutor-text-primary;
+      font-weight: $tutor-font-weight-medium;
+    }
+
+    .active {
+      .tutor-dashboard-nav-mobile-icon {
+        @include tutor-kids-shadow(false, $tutor-border-brand, $tutor-radius-full, sm);
+        background-color: $tutor-surface-brand-tertiary;
+      }
+      .tutor-dashboard-nav-mobile-text {
+        font-weight: $tutor-font-weight-semibold;
+      }
+    }
+  }
+
+  .tutor-card {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
+  }
+
+  .tutor-badge,
+  .tutor-file-preview,
+  .tutor-dashboard-lesson-notes .tutor-lesson-note-thumb img {
+    border-radius: $tutor-radius-2xl;
+  }
+
+  .tutor-stat-card,
+  .tutor-progress-card,
+  .tutor-discussion-card,
+  .tutor-upcoming-lesson-card,
+  .tutor-wishlist-grid .tutor-course-card,
+  .tutor-review-card,
+  .tutor-dashboard-home-chart,
+  .tutor-dashboard-home-card,
+  .tutor-dashboard-home-sort .tutor-popover-bottom,
+  .tutor-subscription-payments-item:hover {
+    @include tutor-kids-shadow;
+  }
+
+  .tutor-dashboard-welcome-card,
+  .tutor-dashboard-quick-tips-card,
+  .tutor-profile-completion-header {
+    @include tutor-kids-shadow(false);
+  }
+
+  .tutor-billing-card:hover {
+    @include tutor-kids-shadow;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid transparent;
+    }
+  }
+
+  .tutor-billing-body {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+  }
+
+  .tutor-account-section #tutor-account-form .tutor-card {
+    border-radius: $tutor-radius-6xl;
+  }
+
+  .tutor-instructor-request-alert {
+    border-radius: $tutor-radius-5xl;
+  }
+
+  .tutor-account-section .tutor-account-cover-photo {
+    border-radius: $tutor-radius-4xl;
+  }
+
+  .tutor-progress-card .tutor-progress-card-thumbnail,
+  .tutor-subscription-overview-card,
+  .tutor-subscription-payments-list,
+  .tutor-subscription-details-alert {
+    border-radius: $tutor-radius-3xl;
+  }
+
+  .tutor-dashboard-header-user-popover-profile {
+    border-radius: $tutor-radius-3xl;
+
+    .tutor-surface-warning-hover.tutor-rounded-sm {
+      border-radius: $tutor-radius-3xl;
+    }
+  }
+
+  .tutor-dashboard-sidebar .tutor-see-all-courses {
+    @include tutor-typography(medium, medium);
+  }
+
+  .tutor-attachment-card-icon {
+    border-radius: $tutor-radius-2xl;
+  }
+
+  // home
+  .tutor-profile-completion-body {
+    border: none;
+    box-shadow:
+      0 2px 0 2px $tutor-border-idle,
+      0 5px 0 0 $tutor-border-idle;
+    border-bottom-left-radius: $tutor-radius-5xl;
+    border-bottom-right-radius: $tutor-radius-5xl;
+  }
+
+  .tutor-student-dashboard-courses {
+    .tutor-progress-card:not(:first-child) {
+      margin-top: $tutor-spacing-4;
+    }
+  }
+
+  .tutor-dashboard-home-sort .tutor-popover-bottom {
+    @include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-2xl);
+
+    .tutor-popover-menu-item {
+      border-radius: $tutor-radius-2xl;
+    }
+  }
+
+  .tutor-upcoming-lessons {
+    row-gap: $tutor-spacing-5;
+  }
+
+  .tutor-calendar-content .tutor-upcoming-lesson-card + .tutor-upcoming-lesson-card {
+    margin-top: $tutor-spacing-4;
+  }
+
+  // wishList
+  .tutor-dashboard-courses-wrapper {
+    .tutor-dashboard-courses-card {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+    }
+
+    .tutor-dashboard-courses-list,
+    .tutor-wishlist-grid {
+      gap: $tutor-spacing-6 $tutor-spacing-5;
+    }
+  }
+
+  // quiz attempts
+  .tutor-quiz-attempts-list {
+    padding: 2px 2px 7px;
+
+    .tutor-quiz-previous-attempts {
+      box-shadow: -2px 0 0 $tutor-border-idle;
+      border-radius: $tutor-radius-3xl;
+
+      .tutor-quiz-attempts-item:hover {
+        &:not(:first-of-type) {
+          @include tutor-kids-shadow($tutor-border-brand-tertiary);
+          border-bottom: 1px solid transparent;
+        }
+      }
+    }
+
+    .tutor-quiz-attempts-item-wrapper.tutor-quiz-previous-attempts {
+      @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
+    }
+
+    .tutor-quiz-attempts-item-wrapper:hover {
+      @include tutor-kids-shadow($tutor-border-brand-tertiary);
+
+      &:not(:last-of-type) {
+        border-bottom: 1px solid transparent;
+      }
+    }
+  }
+
+  // user account/profile
+  .tutor-user-profile {
+    .tutor-profile-card {
+      @include tutor-kids-shadow(false);
+    }
+
+    .tutor-user-profile-statistics .tutor-statistic-card {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-3xl);
+    }
+
+    .tutor-profile-card-header {
+      border-radius: $tutor-radius-5xl;
+    }
+  }
+
+  .tutor-account-billing-wrapper {
+    border-radius: $tutor-radius-5xl;
+  }
+
+  .tutor-account-section .tutor-account-cover-photo {
+    border-radius: $tutor-radius-4xl;
+  }
+
+  .tutor-review-card {
+    .tutor-review-form {
+      border-radius: $tutor-radius-6xl;
+    }
+  }
+
+  .tutor-dashboard-header-user-popover-menu li a {
+    border-radius: $tutor-radius-2xl;
+  }
+
+  // notification drawer
+  .tutor-pn-drawer-content {
+    border-width: 0px 2px 5px 2px;
+  }
+
+  // user account/notification
+  .tutor-profile-notification-card {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-5xl, sm);
+  }
+
+  // user account/device management
+  .tutor-devices-signout-all {
+    button {
+      margin-inline-end: $tutor-spacing-5;
+    }
+  }
+
+  // discussions
+  .tutor-dashboard-page-card {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+  }
+
+  .tutor-discussion-card-wrapper {
+    gap: $tutor-spacing-6 $tutor-spacing-4;
+
+    .tutor-card {
+      box-shadow: none;
+      background-color: $tutor-surface-l1-hover;
+      border: 1px solid $tutor-border-idle;
+    }
+  }
+
+  .tutor-discussion-single {
+    @include tutor-kids-shadow(false);
+  }
+
+  .tutor-my-courses-card-wrapper {
+    gap: $tutor-spacing-6;
+
+    .tutor-my-courses-card {
+      @include tutor-kids-shadow(true, $tutor-border-idle, $tutor-radius-3xl);
+    }
+  }
+
+  // calendar
+  .tutor-calendar {
+    @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+
+    .tutor-calendar-actions {
+      gap: $tutor-spacing-3;
+    }
+
+    .tutor-calendar-grid {
+      border-radius: $tutor-radius-5xl;
+
+      .tutor-calendar-day {
+        &:first-of-type {
+          border-top-left-radius: $tutor-radius-5xl;
+        }
+
+        &:nth-last-of-type(7) {
+          border-bottom-left-radius: $tutor-radius-5xl;
+        }
+      }
+    }
+  }
+
+  // note
+  .tutor-dashboard-lesson-notes {
+    .tutor-dashboard-page-card {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl, sm);
+    }
+
+    .tutor-lesson-note:hover {
+      @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
+      border-bottom: 1px solid transparent;
+    }
+  }
+
+  @include tutor-breakpoint-down(md) {
+    .tutor-calendar {
+      border-radius: 0px;
+      box-shadow: none;
+    }
+
+    .tutor-calendar-tabs {
+      @include tutor-kids-shadow(false);
+    }
+
+    .tutor-calendar-content {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    .tutor-dashboard-header-user-popover,
+    .tutor-profile-settings-tab.tutor-tabs-nav {
+      border-radius: 0px !important;
+      box-shadow: none !important;
+    }
+
+    .tutor-discussion-card-wrapper {
+      padding: $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-4;
+      gap: $tutor-spacing-5;
+    }
+
+    .tutor-dashboard-page-card,
+    .tutor-billing-body,
+    .tutor-dashboard-courses-wrapper .tutor-dashboard-courses-card,
+    .tutor-dashboard-lesson-notes .tutor-dashboard-page-card {
+      border-radius: 0px;
+      box-shadow: none;
+    }
+
+    .tutor-dashboard-courses-tab {
+      overflow: hidden;
+    }
+
+    .tutor-dashboard-page-card-header,
+    .tutor-billing-tabs,
+    .tutor-dashboard-courses-tab {
+      margin-bottom: $tutor-spacing-5;
+    }
+
+    .tutor-profile-settings-tab button .tutor-icon,
+    .tutor-dashboard-page-card-header {
+      @include tutor-kids-shadow(false);
+    }
+
+    .tutor-dashboard-page-card-body,
+    .tutor-billing-tabs,
+    .tutor-billing-tabs-content,
+    .tutor-dashboard-courses-card .tutor-dashboard-courses-tab,
+    .tutor-my-quiz-attempts-wrapper .tutor-quiz-attempts {
+      @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-6xl);
+    }
+
+    .tutor-dashboard-page-card-header {
+      border-radius: $tutor-radius-6xl;
+    }
+
+    .tutor-dashboard-courses-card {
+      padding: 2px 2px 5px 2px;
+      margin: -2px -2px -5px -2px;
+    }
+  }
+}

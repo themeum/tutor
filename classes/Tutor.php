@@ -4,7 +4,7 @@
  *
  * @package Tutor
  * @author Themeum <support@themeum.com>
- * @link https://themeum.com
+ * @link https://www.themeum.com/
  * @since 1.0.0
  */
 
@@ -12,8 +12,9 @@ namespace TUTOR;
 
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\GDPR\GDPR;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Migrations\Migration;
-use Tutor\TemplateImport\TemplateImportInit;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -231,6 +232,15 @@ final class Tutor extends Singleton {
 	 * @var object
 	 */
 	private $user;
+
+	/**
+	 * UserPreference class object
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var UserPreference
+	 */
+	private $user_preference;
 
 	/**
 	 * Theme_Compatibility class object
@@ -475,6 +485,8 @@ final class Tutor extends Singleton {
 
 		do_action( 'tutor_before_load' );
 
+		GDPR::get_instance();
+
 		$this->addons                = new Addons();
 		$this->post_types            = new Post_types();
 		$this->taxonomies            = new Taxonomies();
@@ -495,6 +507,7 @@ final class Tutor extends Singleton {
 		$this->quiz                  = new Quiz();
 		$this->tools                 = new Tools();
 		$this->user                  = new User();
+		$this->user_preference       = new UserPreference();
 		$this->theme_compatibility   = new Theme_Compatibility();
 		$this->gutenberg             = new Gutenberg();
 		$this->course_settings_tabs  = new Course_Settings_Tabs();
@@ -508,9 +521,6 @@ final class Tutor extends Singleton {
 		$this->private_course_access = new Private_Course_Access();
 		$this->course_filter         = new Course_Filter();
 		$this->permalink             = new Permalink();
-
-		// Template import.
-		new TemplateImportInit();
 
 		// Integrations.
 		$this->woocommerce = new WooCommerce();
@@ -633,11 +643,22 @@ final class Tutor extends Singleton {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		$is_droip_active  = \is_plugin_active( 'droip/droip.php' );
-		$tutor_droip_path = $tutor_path . 'includes/droip/droip.php';
-		if ( $is_droip_active && file_exists( $tutor_droip_path ) ) {
-			include $tutor_droip_path;
+		// Only kirki latest has class KirkiMain.
+		$is_kirki_active = \is_plugin_active( 'kirki-pro/kirki-pro.php' ) && class_exists( 'KirkiProMain' );
+
+		if ( $is_kirki_active ) {
+			$tutor_kirki_path = $tutor_path . 'includes/kirki/kirki.php';
+			if ( file_exists( $tutor_kirki_path ) ) {
+				include $tutor_kirki_path;
+			}
+		} else {
+			$is_droip_active  = \is_plugin_active( 'droip/droip.php' );
+			$tutor_droip_path = $tutor_path . 'includes/droip/droip.php';
+			if ( $is_droip_active && file_exists( $tutor_droip_path ) ) {
+				include $tutor_droip_path;
+			}
 		}
+
 	}
 
 	/**
@@ -664,8 +685,13 @@ final class Tutor extends Singleton {
 
 	/**
 	 * Do some task during plugin activation
+	 *
+	 * @since 4.0.0 Flush rewrite rules on activation.
 	 */
 	public static function tutor_activate() {
+		// Rewrite Flush.
+		Permalink::set_permalink_flag();
+
 		$version = get_option( 'tutor_version' );
 		if ( ! function_exists( 'tutor_time' ) ) {
 			include tutor()->path . 'includes/tutor-general-functions.php';
@@ -680,8 +706,6 @@ final class Tutor extends Singleton {
 			$options = self::default_options();
 			update_option( 'tutor_option', $options );
 
-			// Rewrite Flush.
-			Permalink::set_permalink_flag();
 			self::manage_tutor_roles_and_permissions();
 
 			// Save initial Page.
@@ -704,8 +728,6 @@ final class Tutor extends Singleton {
 			self::create_withdraw_database();
 			// Update the tutor version.
 			update_option( 'tutor_version', '1.2.0' );
-			// Rewrite Flush.
-			Permalink::set_permalink_flag();
 		}
 
 		/**
@@ -718,7 +740,6 @@ final class Tutor extends Singleton {
 				$wpdb->update( $wpdb->posts, array( 'post_type' => tutor()->course_post_type ), array( 'post_type' => 'course' ) );
 				update_option( 'is_course_post_type_updated', true );
 				update_option( 'tutor_version', '1.3.1' );
-				Permalink::set_permalink_flag();
 			}
 		}
 
@@ -1194,7 +1215,6 @@ final class Tutor extends Singleton {
 			'course_permalink_base'             => 'courses',
 			'lesson_permalink_base'             => 'lessons',
 			'quiz_when_time_expires'            => 'autosubmit',
-			'quiz_attempts_allowed'             => '10',
 			'quiz_grade_method'                 => 'highest_grade',
 			'enable_public_profile'             => '1',
 			'email_to_students'                 =>
@@ -1214,7 +1234,6 @@ final class Tutor extends Singleton {
 			'email_footer_text'                 => '',
 			'earning_admin_commission'          => '20',
 			'earning_instructor_commission'     => '80',
-			'color_preset_type'                 => 'default',
 
 			// Default options for tutor ecommerce.
 			'monetize_by'                       => Ecommerce::MONETIZE_BY,
@@ -1359,8 +1378,8 @@ final class Tutor extends Singleton {
 				'tutor_announcements',
 			);
 
-			$post_type_strings = "'" . implode( "','", $post_types ) . "'";
-			$tutor_posts       = $wpdb->get_col( "SELECT ID from {$wpdb->posts} WHERE post_type in({$post_type_strings}) ;" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$in_clause   = QueryHelper::prepare_in_clause( $post_types );
+			$tutor_posts = $wpdb->get_col( $wpdb->prepare( "SELECT ID from {$wpdb->posts} WHERE post_type IN({$in_clause}) ;" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			if ( is_array( $tutor_posts ) && count( $tutor_posts ) ) {
 				foreach ( $tutor_posts as $post_id ) {
@@ -1385,10 +1404,10 @@ final class Tutor extends Singleton {
 			/**
 			 * Deleting Comments (reviews, questions, quiz_answers, etc)
 			 */
-			$tutor_comments       = $wpdb->get_col( "SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;" );
-			$comments_ids_strings = "'" . implode( "','", $tutor_comments ) . "'";
+			$tutor_comments = $wpdb->get_col( "SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;" );
 			if ( is_array( $tutor_comments ) && count( $tutor_comments ) ) {
-				$wpdb->query( "DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$comments_ids_strings}) " ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$in_clause = QueryHelper::prepare_in_clause( $tutor_comments );
+				$wpdb->query( $wpdb->prepare( "DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$in_clause}) " ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			}
 			$wpdb->delete( $wpdb->comments, array( 'comment_agent' => 'comment_agent' ) );
 

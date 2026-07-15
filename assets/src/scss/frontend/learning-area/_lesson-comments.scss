@@ -1,0 +1,90 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-comments-list {
+  .tutor-comment-item {
+    &:not(:last-of-type) {
+      border-bottom: 1px solid $tutor-border-idle;
+    }
+  }
+
+  .tutor-comment-edit-form {
+    background-color: $tutor-surface-l1-hover;
+    padding: $tutor-spacing-6;
+  }
+
+  .tutor-comment {
+    @include tutor-flex(row, flex-start, flex-start);
+    gap: $tutor-spacing-5;
+    padding: $tutor-spacing-6;
+    position: relative;
+
+    &:has(.tutor-comment-replies)::before {
+      content: '';
+      position: absolute;
+      top: 60px;
+      inset-inline-start: 36px;
+      width: 28px;
+      height: calc(100% - 86px);
+      border-inline-start: 1px solid $tutor-border-idle;
+      border-bottom: 1px solid $tutor-border-idle;
+      border-end-start-radius: $tutor-radius-sm;
+    }
+
+    &-action-btn {
+      @include tutor-button-reset;
+      @include tutor-flex(row, center, center);
+      gap: $tutor-spacing-2;
+      @include tutor-typography('small', 'regular', 'subdued');
+      @include tutor-transition(color);
+
+      svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        color: $tutor-icon-secondary;
+        @include tutor-transition(color);
+      }
+
+      &:hover {
+        color: $tutor-text-primary;
+
+        svg {
+          color: $tutor-text-primary;
+        }
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &-replies {
+      @include tutor-flex(column);
+      gap: $tutor-spacing-6;
+      margin-top: $tutor-spacing-6;
+
+      .tutor-comment {
+        padding: $tutor-spacing-none;
+      }
+
+      .tutor-comment-edit-form {
+        border-radius: $tutor-radius-sm;
+      }
+    }
+
+    &-replies-toggle {
+      @include tutor-button-reset;
+      @include tutor-typography('tiny', 'medium', 'brand');
+      @include tutor-flex(row, center, flex-start);
+      gap: $tutor-spacing-2;
+      margin-top: $tutor-spacing-6;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+      }
+    }
+  }
+}
