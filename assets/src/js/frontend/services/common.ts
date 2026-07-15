@@ -1,6 +1,8 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { type AjaxResponse } from '@Core/ts/types';
 
+const UTC_DATE_CLASS = 'tutor-utc-date-time';
+
 const createCourseHandler = () => {
   const { query, toast, endpoints } = window.TutorCore;
   const { wpPost } = window.TutorCore.api;
@@ -36,9 +38,39 @@ const createCourseHandler = () => {
   };
 };
 
+const convertUTCTime = () => {
+  const utcDateTimes = document.querySelectorAll('.' + UTC_DATE_CLASS);
+  if (utcDateTimes.length > 0 && wp.date) {
+    const settings = wp.date.getSettings();
+    const dateFormat = settings.formats.date;
+    const timeFormat = settings.formats.time;
+    const format = `${dateFormat}, ${timeFormat}`;
+
+    utcDateTimes.forEach((utcDateTime) => {
+      const textContent = utcDateTime.textContent?.trim() ?? '';
+
+      if (!textContent) {
+        return;
+      }
+      // Safari does not support format 0000-00-00, instead it needs 0000/00/00
+      const dateString = textContent.replace(/-/g, '/');
+      const localDateTime = new Date(`${dateString} UTC`);
+
+      if (localDateTime.toString() !== 'Invalid Date') {
+        utcDateTime.textContent = wp.date.dateI18n(
+          format,
+          localDateTime,
+          Intl.DateTimeFormat().resolvedOptions().timeZone,
+        );
+      }
+    });
+  }
+};
+
 export const initializeCommon = () => {
   const handler = createCourseHandler();
   handler.init();
+  convertUTCTime();
 
   const createCourseButtons = document.querySelectorAll('.tutor-create-new-course');
   createCourseButtons.forEach((button) => {
