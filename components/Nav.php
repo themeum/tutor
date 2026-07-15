@@ -24,44 +24,59 @@ use TUTOR\Icon;
  * Responsible for rendering the nav component.
  *
  *
- * //Example Usage :
+ * Example Usage:
  *
- * ```
+ * ```php
+ * // Simple link-only nav (primary, medium)
  * $items = array(
- *   array(
- *       'type'     => 'link',        // 'link' or 'dropdown'
- *       'label'    => 'Wishlist',
- *       'icon'     => Icon::WISHLIST,
- *       'url'      => '#',
- *       'active'   => false,
- *   ),
- *   array(
- *       'type'    => 'dropdown',
- *       'active'  => true,
- *       'options' => array(
- *           array(
- *               'label'  => 'Active',
- *               'count   => 4,
- *               'icon'   => Icon::PLAY_LINE,
- *               'url'    => '#',
- *               'active' => false,
- *           ),
- *           array(
- *               'label'  => 'Enrolled',
- *               'count   => 4,
- *               'icon'   => Icon::ENROLLED,
- *               'url'    => '#',
- *               'active' => true,
- *           ),
- *       ),
- *   ),
+ *     array( 'type' => 'link', 'label' => 'Dashboard', 'icon' => Icon::DASHBOARD, 'url' => '/dashboard', 'active' => true ),
+ *     array( 'type' => 'link', 'label' => 'My Courses', 'icon' => Icon::BOOK,      'url' => '/my-courses' ),
+ *     array( 'type' => 'link', 'label' => 'Wishlist',   'icon' => Icon::WISHLIST,  'url' => '/wishlist' ),
  * );
  *
- *   echo Nav::make()
- *       ->items( array( $dropdown ) )
- *       ->size( Size::SMALL )
- *       ->variant( Variant::SECONDARY )
- *       ->render();
+ * Nav::make()
+ *     ->items( $items )
+ *     ->render();
+ *
+ * // Nav with a dropdown item
+ * $items = array(
+ *     array(
+ *         'type'    => 'dropdown',
+ *         'active'  => true,
+ *         'options' => array(
+ *             array( 'label' => 'Active',   'count' => 4, 'icon' => Icon::PLAY_LINE, 'url' => '?status=active',   'active' => true ),
+ *             array( 'label' => 'Enrolled', 'count' => 2, 'icon' => Icon::ENROLLED,  'url' => '?status=enrolled' ),
+ *             array( 'label' => 'Wishlist', 'count' => 1, 'icon' => Icon::WISHLIST,  'url' => '?status=wishlist' ),
+ *         ),
+ *     ),
+ *     array( 'type' => 'link', 'label' => 'Reviews', 'url' => '/reviews' ),
+ * );
+ *
+ * Nav::make()
+ *     ->items( $items )
+ *     ->size( Size::SMALL )
+ *     ->variant( Variant::SECONDARY )
+ *     ->render();
+ *
+ * // Nav with count displayed on link items
+ * $items = array(
+ *     array( 'type' => 'link', 'label' => 'Students', 'count' => 42, 'url' => '/students', 'active' => true ),
+ *     array( 'type' => 'link', 'label' => 'Reviews',  'count' => 8,  'url' => '/reviews' ),
+ * );
+ *
+ * Nav::make()
+ *     ->items( $items )
+ *     ->size( Size::LARGE )
+ *     ->render();
+ *
+ * // Extra attributes on the wrapper
+ * Nav::make()
+ *     ->items( $items )
+ *     ->attr( 'id', 'student-nav' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = Nav::make()->items( $items )->get();
  * ```
  *
  * @since 4.0.0

@@ -196,7 +196,6 @@ class QuizModel {
 		return array(
 			self::QUESTION_TYPE_OPEN_ENDED,
 			self::QUESTION_TYPE_SHORT_ANSWER,
-			self::QUESTION_TYPE_IMAGE_ANSWERING,
 		);
 	}
 

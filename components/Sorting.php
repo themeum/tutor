@@ -26,14 +26,44 @@ defined( 'ABSPATH' ) || exit;
  * Class Sorting
  *
  * Example Usage:
- * ```
+ * ```php
+ * // Minimal — URL query param driven, default labels
+ * Sorting::make()
+ *     ->render();
+ *
+ * // Pre-set the active order from URL param
+ * Sorting::make()
+ *     ->order( Input::get( 'order', 'DESC' ) )
+ *     ->render();
+ *
+ * // Custom ascending/descending labels
  * Sorting::make()
  *     ->order( 'DESC' )
- *     ->label_asc( 'Oldest' )
- *     ->label_desc( 'Newest' )
+ *     ->label_asc( __( 'Oldest', 'tutor' ) )
+ *     ->label_desc( __( 'Newest', 'tutor' ) )
+ *     ->render();
+ *
+ * // JavaScript callback on change (Alpine.js method)
+ * Sorting::make()
+ *     ->order( 'DESC' )
  *     ->on_change( 'changeOrder' )
  *     ->bind_active_order( 'currentOrder' )
  *     ->render();
+ *
+ * // Cumulative filtering — preserve existing query params via base_url
+ * Sorting::make()
+ *     ->order( Input::get( 'order', 'DESC' ) )
+ *     ->base_url( remove_query_arg( 'current_page' ) )
+ *     ->render();
+ *
+ * // Custom button size
+ * Sorting::make()
+ *     ->order( 'ASC' )
+ *     ->size( Size::SMALL )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = Sorting::make()->order( 'DESC' )->get();
  * ```
  *
  * @since 4.0.0

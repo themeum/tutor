@@ -18,12 +18,38 @@ use TUTOR\Icon;
  * Class AttachmentCard
  *
  * Example Usage:
+ * ```php
+ * // Basic downloadable attachment
  * AttachmentCard::make()
  *     ->file_name( 'lesson-plan.pdf' )
- *     ->file_size( '1.2 MB' )
+ *     ->file_size( '1258291' ) // bytes — size_format() is applied internally
  *     ->is_downloadable( true )
  *     ->action_attr( '@click', 'downloadFile()' )
  *     ->render();
+ *
+ * // Removable attachment (delete icon)
+ * AttachmentCard::make()
+ *     ->file_name( 'assignment.docx' )
+ *     ->file_size( '524288' )
+ *     ->is_downloadable( false )
+ *     ->action_attr( '@click', 'removeFile(index)' )
+ *     ->render();
+ *
+ * // With Alpine.js dynamic bindings on title and meta
+ * AttachmentCard::make()
+ *     ->title_attr( 'x-text', 'file.name' )
+ *     ->meta_attr( 'x-text', 'formatBytes(file.size)' )
+ *     ->action_attr( '@click.stop', 'removeFile(index)' )
+ *     ->render();
+ *
+ * // With extra attributes on the wrapper
+ * AttachmentCard::make()
+ *     ->file_name( 'course-notes.pdf' )
+ *     ->file_size( '2097152' )
+ *     ->is_downloadable( true )
+ *     ->attr( 'data-id', '42' )
+ *     ->render();
+ * ```
  *
  * @since 4.0.0
  */
