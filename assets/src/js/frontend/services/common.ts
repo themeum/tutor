@@ -76,7 +76,6 @@ const convertUTCTime = () => {
     }
 
     const localDateTime = parseUTCDate(rawUTC);
-    console.log(rawUTC, localDateTime);
     if (!localDateTime) {
       return;
     }
