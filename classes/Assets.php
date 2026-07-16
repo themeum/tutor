@@ -469,7 +469,7 @@ class Assets {
 
 			wp_enqueue_script( 'tutor-jquery-countdown', tutor()->url . 'assets/lib/countdown/jquery.countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
-			wp_enqueue_script( 'tutor-countdown', tutor()->url . 'assets/lib/countdown/tutor-countdown.min.js', array( 'jquery', 'wp-date' ), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-countdown', tutor()->url . 'assets/lib/countdown/tutor-countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
 			wp_enqueue_style( 'tutor-countdown', tutor()->url . 'assets/lib/countdown/tutor-countdown.min.css', '', TUTOR_VERSION );
 		}
