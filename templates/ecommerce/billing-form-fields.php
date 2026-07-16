@@ -6,14 +6,15 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * Received data
+ * - $show_close_button
+ * - $close_action
+ * - $country_options
+ * - $initial_states
  */
 
 defined( 'ABSPATH' ) || exit;
-
-/**
- * @var array $country_options
- * @var array $initial_states
- */
 
 use Tutor\Components\Button;
 use Tutor\Components\SvgIcon;
@@ -26,6 +27,8 @@ use TUTOR\Icon;
 
 $show_close_button = $show_close_button ?? false;
 $close_action      = $close_action ?? 'editBilling = false';
+$country_options   = $country_options ?? array();
+$initial_states    = $initial_states ?? array();
 ?>
 
 <?php if ( $show_close_button ) : ?>
