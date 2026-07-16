@@ -10,9 +10,39 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Button;
+use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\InputField;
+use TUTOR\Icon;
+
+$show_close_button = $show_close_button ?? false;
+$close_action      = $close_action ?? 'editBilling = false';
 ?>
+
+<?php if ( $show_close_button ) : ?>
+	<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-4">
+		<div class="tutor-flex tutor-items-center tutor-gap-2">
+			<span class="tutor-icon tutor-icon-md tutor-text-primary">
+				<?php SvgIcon::make()->name( Icon::BILLING )->size( 20 )->render(); ?>
+			</span>
+			<div class="tutor-medium tutor-mb-none tutor-font-semibold">
+				<?php echo esc_html__( 'Billing Address', 'tutor' ); ?>
+			</div>
+		</div>
+		<?php
+			Button::make()
+				->variant( Variant::LINK )
+				->size( Size::SMALL )
+				->label( __( 'Close', 'tutor' ) )
+				->attr( 'type', 'button' )
+				->attr( '@click', "{$close_action}" )
+				->render();
+		?>
+	</div>
+<?php endif; ?>
 
 <div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
 	<?php
