@@ -115,7 +115,7 @@ if ( 'ordering' === $question_type ) {
 			$correct_text = isset( $row['correct_text'] ) ? wp_unslash( $row['correct_text'] ) : '';
 			?>
 			<div class="tutor-quiz-review-dnd-row">
-				<div class="tutor-quiz-review-item tutor-quiz-review-given" data-option="<?php echo esc_attr( $given_text ); ?>">
+				<div class="tutor-quiz-review-item tutor-quiz-review-given" data-option="<?php echo esc_attr( $row['given_status'] ); ?>">
 					<?php if ( ! empty( $row['given_image'] ) ) : ?>
 						<img src="<?php echo esc_url( $row['given_image'] ); ?>" alt="<?php echo esc_attr( $given_text ); ?>">
 					<?php endif; ?>

@@ -35,14 +35,14 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 			name="<?php echo esc_attr( $answer_field_name ); ?>"
 			x-bind="<?php echo esc_attr( $register_attr ); ?>"
 		>
-		<?php foreach ( $question['question_answers'] as $answer ) : ?>
+		<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
 			<div
 				class="tutor-quiz-question-option"
 				data-option="draggable"
 				data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 			>
-				<div data-option-order="<?php echo esc_attr( $answer['answer_order'] ); ?>">
-					<?php echo esc_html( $answer['answer_order'] ); ?>
+				<div data-option-order="<?php echo esc_attr( $index + 1 ); ?>">
+					<?php echo esc_html( $index + 1 ); ?>
 				</div>
 				<div data-title>
 					<?php if ( ! empty( $answer['image_id'] ) ) : ?>
