@@ -2240,11 +2240,6 @@ class Quiz {
 	 * @return void
 	 */
 	public static function render_sidebar_nav( WP_Post $quiz, $can_access, $tutor_current_content_id ) {
-		$quiz_title = $quiz->post_title;
-
-		$active_class   = $tutor_current_content_id === $quiz->ID ? 'active' : '';
-		$disabled_class = $can_access ? '' : 'disabled';
-
 		$quiz_status = '';
 		$icon_name   = Icon::QUIZ_2;
 		if ( ! $can_access ) {
@@ -2266,21 +2261,19 @@ class Quiz {
 				}
 			}
 		}
-		?>
 
-		<a
-			href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>" 
-			title="<?php echo esc_attr( $quiz_title ); ?>"
-			class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s %s %s', $active_class, $disabled_class, $quiz_status ) ); ?>"
-			<?php echo ! $can_access ? 'aria-disabled="true"' : ''; ?>
-		>
-			<?php SvgIcon::make()->name( $icon_name )->size( 20 )->render(); ?>
-			<div class="tutor-overflow-hidden">
-				<div class="tutor-truncate"><?php echo esc_html( $quiz_title ); ?></div>
-				<div class="tutor-tiny-2 tutor-text-subdued"><?php esc_html_e( 'Quiz', 'tutor' ); ?></div>
-			</div>
-		</a>
-		<?php
+		tutor_load_template(
+			'learning-area.components.sidebar-nav-item',
+			array(
+				'item'         => $quiz,
+				'active'       => $tutor_current_content_id === $quiz->ID,
+				'can_access'   => $can_access,
+				'is_completed' => false,
+				'type_label'   => __( 'Quiz', 'tutor' ),
+				'icon'         => $icon_name,
+				'status_class' => $quiz_status,
+			)
+		);
 	}
 
 }
