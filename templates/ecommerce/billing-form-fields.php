@@ -10,8 +10,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * @var array $country_options
+ * @var array $initial_states
+ */
+
 use Tutor\Components\Button;
 use Tutor\Components\SvgIcon;
+use Tutor\Components\Constants\Color;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
@@ -26,7 +32,13 @@ $close_action      = $close_action ?? 'editBilling = false';
 	<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-4">
 		<div class="tutor-flex tutor-items-center tutor-gap-2">
 			<span class="tutor-icon tutor-icon-md tutor-text-primary">
-				<?php SvgIcon::make()->name( Icon::BILLING )->size( 20 )->render(); ?>
+				<?php
+					SvgIcon::make()
+						->name( Icon::MAP_PIN )
+						->color( Color::BRAND )
+						->size( 20 )
+						->render();
+				?>
 			</span>
 			<div class="tutor-medium tutor-mb-none tutor-font-semibold">
 				<?php echo esc_html__( 'Billing Address', 'tutor' ); ?>
