@@ -537,12 +537,16 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		if ( ! is_user_logged_in() ) {
-			die( esc_html__( 'Please sign in to do this operation', 'tutor' ) );
+			wp_die( esc_html__( 'Please sign in to do this operation', 'tutor' ) );
 		}
 
 		$user_id = get_current_user_id();
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
-		$course  = CourseModel::get_course_by_quiz( $quiz_id );
+
+		// Check & die if don't have quiz access.
+		QuizModel::has_quiz_access( $quiz_id );
+
+		$course = CourseModel::get_course_by_quiz( $quiz_id );
 
 		self::quiz_attempt( $course->ID, $quiz_id, $user_id );
 		wp_safe_redirect( get_permalink( $quiz_id ) );
@@ -563,6 +567,9 @@ class Quiz {
 	 */
 	public static function quiz_attempt( int $course_id, int $quiz_id, int $user_id, $attempt_status = QuizModel::ATTEMPT_STARTED ) {
 		global $wpdb;
+
+		// Check & die if don't have quiz access.
+		QuizModel::has_quiz_access( $quiz_id );
 
 		if ( ! $course_id ) {
 			die( 'There is something went wrong with course, please check if quiz attached with a course' );
@@ -706,6 +713,10 @@ class Quiz {
 		if ( ! $attempt ) {
 			die( 'Operation not allowed, attempt not found or permission denied' );
 		}
+
+		// Check & die if don't have quiz access.
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		QuizModel::has_quiz_access( $quiz_id );
 
 		if ( QuizModel::ATTEMPT_TIMEOUT === $attempt->attempt_status ) {
 			return false;
@@ -1868,7 +1879,7 @@ class Quiz {
 							' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
 						</div>',
 					),
-					array( 'content' =>  0 === $attempts_allowed ? __( 'No Limit', 'tutor' ) : $attempts_allowed ),
+					array( 'content' => 0 === $attempts_allowed ? __( 'No Limit', 'tutor' ) : $attempts_allowed ),
 				),
 			);
 		}
@@ -2271,4 +2282,5 @@ class Quiz {
 		</a>
 		<?php
 	}
+
 }
