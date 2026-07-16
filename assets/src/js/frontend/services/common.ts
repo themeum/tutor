@@ -3,10 +3,9 @@ import { type MutationState } from '@Core/ts/services/Query';
 import { type AjaxResponse } from '@Core/ts/types';
 
 const UTC_DATE_CLASS = 'tutor-utc-date-time'; // existing combined format
-const UTC_DATETIME_WRAPPER_CLASS = 'tutor-utc-datetime';
-const UTC_DATETIME_DATE_CLASS = 'tutor-utc-datetime-date';
-const UTC_DATETIME_TIME_CLASS = 'tutor-utc-datetime-time';
 const UTC_DATETIME_ATTRIBUTE = 'data-utc-datetime';
+const UTC_DATETIME_DATE_ATTRIBUTE = 'data-utc-datetime-date';
+const UTC_DATETIME_TIME_ATTRIBUTE = 'data-utc-datetime-time';
 
 const createCourseHandler = () => {
   const { query, toast, endpoints } = window.TutorCore;
@@ -69,8 +68,8 @@ const convertUTCTime = () => {
     }
   });
 
-  // Separate date / time nodes sharing a wrapper with the raw UTC value
-  document.querySelectorAll('.' + UTC_DATETIME_WRAPPER_CLASS).forEach((wrapper) => {
+  // Separate date / time nodes sharing a parent carrying the raw UTC value
+  document.querySelectorAll(`[${UTC_DATETIME_ATTRIBUTE}]`).forEach((wrapper) => {
     const rawUTC = wrapper.getAttribute(UTC_DATETIME_ATTRIBUTE);
     if (!rawUTC) {
       return;
@@ -81,8 +80,8 @@ const convertUTCTime = () => {
       return;
     }
 
-    const dateEl = wrapper.querySelector('.' + UTC_DATETIME_DATE_CLASS);
-    const timeEl = wrapper.querySelector('.' + UTC_DATETIME_TIME_CLASS);
+    const dateEl = wrapper.querySelector(`[${UTC_DATETIME_DATE_ATTRIBUTE}]`);
+    const timeEl = wrapper.querySelector(`[${UTC_DATETIME_TIME_ATTRIBUTE}]`);
 
     if (dateEl) {
       dateEl.textContent = wp.date.dateI18n(dateFormat, localDateTime, timeZone);
