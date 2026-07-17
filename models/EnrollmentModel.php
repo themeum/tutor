@@ -271,17 +271,17 @@ class EnrollmentModel {
 	 * Get single or list of enrolled course data by a user
 	 *
 	 * @since 2.0.5
-	 * @since 4.0.0 param $is_completed added.
+	 * @since 4.0.0 param $status added.
 	 *
 	 * @param integer $user_id user id.
 	 * @param integer $course_id course id.
-	 * @param bool    $is_completed whether to return enrollment completed record.
+	 * @param string  $status the status of enrollment.
 	 *
 	 * @return object|mixed
 	 */
-	public static function get_enrolled_data( $user_id = 0, $course_id = 0, $is_completed = true ) {
+	public static function get_enrolled_data( $user_id = 0, $course_id = 0, $status = self::STATUS_COMPLETED ) {
 		global $wpdb;
-		$is_completed_clause = $is_completed ? $wpdb->prepare( 'AND post_status = %s', self::STATUS_COMPLETED ) : '';
+		$status_clause = $status ? $wpdb->prepare( 'AND post_status = %s ', $status ) : '';
 		// If course ID provided, it will return single row data.
 		if ( $course_id > 0 ) {
 			return $wpdb->get_row(
@@ -289,7 +289,7 @@ class EnrollmentModel {
 					"SELECT * FROM 	{$wpdb->posts} 
 						WHERE post_type = %s
 						AND post_parent = %d
-						{$is_completed_clause}
+						{$status_clause}
 						AND post_author = %d;",
 					self::POST_TYPE,
 					$course_id,
@@ -302,7 +302,7 @@ class EnrollmentModel {
 				$wpdb->prepare(
 					"SELECT * FROM 	{$wpdb->posts} 
 						WHERE post_type = %s
-						{$is_completed_clause}
+						{$status_clause}
 						AND post_author = %d;",
 					self::POST_TYPE,
 					$user_id
