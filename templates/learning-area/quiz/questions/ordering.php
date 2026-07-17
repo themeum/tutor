@@ -52,7 +52,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 					<?php echo esc_html( $answer['answer_title'] ); ?>
 				</div>
 
-				<button type="button" data-grab-handle tabindex="-1" style="pointer-events: none;" aria-label="<?php esc_attr_e( 'Reorder item', 'tutor' ); ?>">
+				<button type="button" data-grab-handle tabindex="-1" aria-label="<?php esc_attr_e( 'Reorder item', 'tutor' ); ?>">
 					<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 40 )->render(); ?>
 				</button>
 			</div>

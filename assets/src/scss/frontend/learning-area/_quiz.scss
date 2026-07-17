@@ -876,6 +876,8 @@ $tutor-quiz-content-bottom-offset: calc(
           @include tutor-button-reset;
           @include tutor-flex-center;
           margin-inline: auto $tutor-spacing-4;
+          pointer-events: none;
+          cursor: inherit;
         }
       }
     }
@@ -1013,6 +1015,8 @@ $tutor-quiz-content-bottom-offset: calc(
               @include tutor-button-reset;
               @include tutor-flex-center;
               margin-inline-start: auto;
+              pointer-events: none;
+              cursor: inherit;
             }
           }
         }

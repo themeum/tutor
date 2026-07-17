@@ -171,13 +171,7 @@ const MatchingPreview = ({ answers, isImageMatching }: { answers: QuizQuestionOp
                     {answer.answer_title}
                   </Show>
                 </div>
-                <button
-                  type="button"
-                  data-grab-handle
-                  tabIndex={-1}
-                  style={{ pointerEvents: 'none' }}
-                  aria-label={answer.answer_title}
-                >
+                <button type="button" data-grab-handle tabIndex={-1} aria-label={answer.answer_title}>
                   <SVGIcon name="grabHandle" width={24} height={24} />
                 </button>
               </div>
