@@ -273,23 +273,10 @@ class CourseModel {
 	 *
 	 * @param int $quiz_id quiz id.
 	 *
-	 * @return array|bool|null|object|void
+	 * @return mixed WP_Post|null
 	 */
 	public static function get_course_by_quiz( $quiz_id ) {
-		$quiz_id = tutils()->get_post_id( $quiz_id );
-		$post    = get_post( $quiz_id );
-
-		if ( $post ) {
-			$course = get_post( $post->post_parent );
-			if ( $course ) {
-				if ( tutor()->course_post_type !== $course->post_type ) {
-					$course = get_post( $course->post_parent );
-				}
-				return $course;
-			}
-		}
-
-		return false;
+		return get_post_parent( get_post_parent( $quiz_id ) );
 	}
 
 	/**
