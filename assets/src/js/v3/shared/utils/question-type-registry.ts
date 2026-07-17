@@ -152,10 +152,3 @@ export function getQuestionTypeConfig(type: QuizQuestionType): QuestionTypeConfi
   }
   return undefined;
 }
-
-export function getEffectiveQuestionType(type: QuizQuestionType): RegistryQuestionType {
-  if (type in questionTypeRegistry) {
-    return type as RegistryQuestionType;
-  }
-  return legacyQuestionTypeMap[type] ?? (type as RegistryQuestionType);
-}
