@@ -41,13 +41,10 @@ const MatchingPreview = ({ answers, isImageMatching }: { answers: QuizQuestionOp
     const draggables = Array.from(
       wrapper.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-option="draggable"]'),
     ).map((element, index) => {
-      const handle = element.querySelector<HTMLElement>('[data-grab-handle]');
-
       return new Draggable(
         {
           id: element.dataset.id ?? String(index),
           element,
-          handle: handle ?? undefined,
           feedback: 'clone',
         },
         manager,
@@ -174,7 +171,13 @@ const MatchingPreview = ({ answers, isImageMatching }: { answers: QuizQuestionOp
                     {answer.answer_title}
                   </Show>
                 </div>
-                <button type="button" data-grab-handle aria-label={answer.answer_title}>
+                <button
+                  type="button"
+                  data-grab-handle
+                  tabIndex={-1}
+                  style={{ pointerEvents: 'none' }}
+                  aria-label={answer.answer_title}
+                >
                   <SVGIcon name="grabHandle" width={24} height={24} />
                 </button>
               </div>

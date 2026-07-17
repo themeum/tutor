@@ -39,14 +39,11 @@ const OrderingPreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
     const sortables = Array.from(
       container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-option="draggable"]'),
     ).map((element, index) => {
-      const handle = element.querySelector<HTMLElement>('[data-grab-handle]');
-
       return new Sortable(
         {
           id: element.dataset.id ?? String(index),
           index,
           element,
-          handle: handle ?? undefined,
         },
         manager,
       );
@@ -89,7 +86,13 @@ const OrderingPreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
                 {answer.image_url ? <img src={answer.image_url} alt={answer.answer_title} /> : null}
                 <div data-question-title>{answer.answer_title}</div>
               </div>
-              <button type="button" data-grab-handle aria-label={answer.answer_title}>
+              <button
+                type="button"
+                data-grab-handle
+                tabIndex={-1}
+                style={{ pointerEvents: 'none' }}
+                aria-label={answer.answer_title}
+              >
                 <SVGIcon name="grabHandle" width={24} height={24} />
               </button>
             </div>
