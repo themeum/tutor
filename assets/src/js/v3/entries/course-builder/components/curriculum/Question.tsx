@@ -7,6 +7,7 @@ import { __ } from '@wordpress/i18n';
 
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
@@ -122,12 +123,14 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
         <button data-drag-icon {...listeners} type="button" css={styles.dragButton}>
           <SVGIcon data-drag-icon name="dragVertical" width={24} height={24} />
         </button>
-        <SVGIcon
-          name={getQuestionTypeConfig(question.question_type)?.icon ?? 'quizTrueFalse'}
-          width={24}
-          height={24}
-          data-question-icon
-        />
+        <Tooltip content={getQuestionTypeConfig(question.question_type)?.label ?? ''}>
+          <SVGIcon
+            name={getQuestionTypeConfig(question.question_type)?.icon ?? 'quizTrueFalse'}
+            width={24}
+            height={24}
+            data-question-icon
+          />
+        </Tooltip>
       </div>
       <span
         css={styles.questionTitle({
