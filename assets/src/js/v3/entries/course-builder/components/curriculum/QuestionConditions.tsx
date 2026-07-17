@@ -14,78 +14,15 @@ import { useModal } from '@TutorShared/components/modals/Modal';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { type IconCollection } from '@TutorShared/icons/types';
+import { getQuestionTypeConfig } from '@TutorShared/utils/question-type-registry';
 import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { QuizDataStatus, type QuizQuestionType } from '@TutorShared/utils/types';
+import { QuizDataStatus } from '@TutorShared/utils/types';
 
 import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import QuestionPreviewModal from '@CourseBuilderComponents/modals/QuestionPreviewModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
-
-const questionTypes = {
-  true_false: {
-    label: __('True/False', 'tutor'),
-    icon: 'quizTrueFalse',
-  },
-  multiple_choice: {
-    label: __('Multiple Choice', 'tutor'),
-    icon: 'quizMultiChoice',
-  },
-  open_ended: {
-    label: __('Open Ended/Essay', 'tutor'),
-    icon: 'quizEssay',
-  },
-  fill_in_the_blank: {
-    label: __('Fill in the Blanks', 'tutor'),
-    icon: 'quizFillInTheBlanks',
-  },
-  short_answer: {
-    label: __('Short Answer', 'tutor'),
-    icon: 'quizShortAnswer',
-  },
-  matching: {
-    label: __('Matching', 'tutor'),
-    icon: 'quizImageMatching',
-  },
-  image_answering: {
-    label: __('Image Answering', 'tutor'),
-    icon: 'quizImageAnswer',
-  },
-  ordering: {
-    label: __('Ordering', 'tutor'),
-    icon: 'quizOrdering',
-  },
-  draw_image: {
-    label: __('Image Marking', 'tutor'),
-    icon: 'quizMarkInTheImage',
-  },
-  scale: {
-    label: __('Range', 'tutor'),
-    icon: 'quizRange',
-  },
-  coordinates: {
-    label: __('Graph', 'tutor'),
-    icon: 'quizGraph',
-  },
-  pin_image: {
-    label: __('Pin', 'tutor'),
-    icon: 'quizPin',
-  },
-  puzzle: {
-    label: __('Puzzle', 'tutor'),
-    icon: 'quizPuzzle',
-  },
-  h5p: {
-    label: __('H5P', 'tutor'),
-    icon: 'quizTrueFalse',
-  },
-};
-
-type QuestionTypes = Omit<QuizQuestionType, 'single_choice' | 'image_matching'>;
-
-const supportRandomize: QuestionTypes[] = ['multiple_choice', 'matching', 'image_answering'];
 
 const QuestionConditions = () => {
   const { activeQuestionIndex, activeQuestionId, validationError, setValidationError } = useQuizModalContext();
@@ -93,7 +30,7 @@ const QuestionConditions = () => {
   const { showModal, closeModal } = useModal();
 
   const activeQuestion = form.watch(`questions.${activeQuestionIndex}` as 'questions.0');
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as QuestionTypes;
+  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
   const activeDataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
 
   const handlePreview = useCallback(() => {
@@ -131,15 +68,13 @@ const QuestionConditions = () => {
             <SVGIcon
               name={
                 activeQuestionType
-                  ? (questionTypes[activeQuestionType as keyof typeof questionTypes].icon as IconCollection)
+                  ? (getQuestionTypeConfig(activeQuestionType)?.icon ?? 'quizTrueFalse')
                   : 'quizTrueFalse'
               }
               width={32}
               height={32}
             />
-            <span>
-              {activeQuestionType ? questionTypes[activeQuestionType as keyof typeof questionTypes].label : ''}
-            </span>
+            <span>{activeQuestionType ? (getQuestionTypeConfig(activeQuestionType)?.label ?? '') : ''}</span>
           </div>
 
           <Tooltip content={__('Preview (Option/Alt + P)', 'tutor')}>
@@ -244,7 +179,7 @@ const QuestionConditions = () => {
             )}
           />
 
-          <Show when={supportRandomize.includes(activeQuestionType)}>
+          <Show when={getQuestionTypeConfig(activeQuestionType)?.supportsRandomize}>
             <Controller
               control={form.control}
               name={
