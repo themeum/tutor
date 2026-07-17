@@ -1733,16 +1733,17 @@ class QuizModel {
 	 * @since 4.0.2
 	 *
 	 * @param int  $quiz_id Quiz id to check the access.
+	 * @param int  $course_id Quiz's course id.
 	 * @param bool $wp_die Whether to die the execution or not.
 	 *
 	 * @return mixed If wp_die is true then this method will kill the execution if
 	 * user don't have access to the provided quiz. Otherwise returns bool.
 	 */
-	public static function has_quiz_access( $quiz_id, $wp_die = true ) {
+	public static function has_quiz_access( $quiz_id, $course_id = 0, $wp_die = true ) {
 		$message    = __( 'Something went wrong', 'tutor' );
 		$has_access = true;
 
-		$course_id = tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+		$course_id = $course_id ? $course_id : tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
 		if ( Course_List::is_public( $course_id ) ) {
 			return true;
 		}

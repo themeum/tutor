@@ -542,11 +542,14 @@ class Quiz {
 
 		$user_id = get_current_user_id();
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		$course  = CourseModel::get_course_by_quiz( $quiz_id );
+
+		if ( ! $course ) {
+			wp_die( esc_html__( 'Invalid course', 'tutor' ) );
+		}
 
 		// Check & die if don't have quiz access.
-		QuizModel::has_quiz_access( $quiz_id );
-
-		$course = CourseModel::get_course_by_quiz( $quiz_id );
+		QuizModel::has_quiz_access( $quiz_id, $course->id );
 
 		self::quiz_attempt( $course->ID, $quiz_id, $user_id );
 		wp_safe_redirect( get_permalink( $quiz_id ) );
@@ -568,12 +571,12 @@ class Quiz {
 	public static function quiz_attempt( int $course_id, int $quiz_id, int $user_id, $attempt_status = QuizModel::ATTEMPT_STARTED ) {
 		global $wpdb;
 
-		// Check & die if don't have quiz access.
-		QuizModel::has_quiz_access( $quiz_id );
-
 		if ( ! $course_id ) {
-			die( 'There is something went wrong with course, please check if quiz attached with a course' );
+			wp_die( 'There is something went wrong with course, please check if quiz attached with a course' );
 		}
+
+		// Check & die if don't have quiz access.
+		QuizModel::has_quiz_access( $quiz_id, $course_id );
 
 		do_action( 'tutor_quiz/start/before', $quiz_id, $user_id );
 
@@ -2275,5 +2278,4 @@ class Quiz {
 			)
 		);
 	}
-
 }
