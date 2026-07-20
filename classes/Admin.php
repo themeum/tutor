@@ -985,5 +985,6 @@ class Admin {
 		// Welcome page redirect disabled.
 		// wp_safe_redirect( admin_url( 'admin.php?page=tutor&welcome=1' ) );
 		update_option( 'tutor-new-feature', TUTOR_VERSION );
+		
 	}
 }

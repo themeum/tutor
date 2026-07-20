@@ -149,7 +149,7 @@ class Tutor_Setup {
 				'tutor-setup',
 				'_tutorOnboardObject',
 				array(
-					'tutor_welcome_page' => admin_url( 'admin.php?page=tutor&welcome=1' ),
+					'tutor_welcome_page' => admin_url( 'admin.php?page=tutor' ),
 					'course_data_url'    => 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/workademy/data.json',
 				)
 			);
