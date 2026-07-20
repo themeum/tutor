@@ -13,10 +13,11 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 
+$question          = $question ?? array();
 $answer_field_name = ( $question_field_name_base ?? '' ) . '[answers][]';
 $register_rules    = '';
-if ( $answer_is_required ) {
-	$register_rules = ", { validate: (value) => Array.isArray(value) && value.length > 0 || '" . esc_js( $required_message ) . "' }";
+if ( $answer_is_required ?? false ) {
+	$register_rules = ", { validate: (value) => Array.isArray(value) && value.length > 0 || '" . esc_js( $required_message ?? '' ) . "' }";
 }
 $register_attr = "register('{$answer_field_name}'{$register_rules})";
 
@@ -51,7 +52,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 					<?php echo esc_html( $answer['answer_title'] ); ?>
 				</div>
 
-				<button type="button" data-grab-handle aria-label="<?php esc_attr_e( 'Reorder item', 'tutor' ); ?>">
+				<button type="button" data-grab-handle tabindex="-1" aria-label="<?php esc_attr_e( 'Reorder item', 'tutor' ); ?>">
 					<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 40 )->render(); ?>
 				</button>
 			</div>

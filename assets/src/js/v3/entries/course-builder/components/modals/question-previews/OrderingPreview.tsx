@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { DragDropManager, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
 import { Sortable } from '@dnd-kit/dom/sortable';
 
@@ -11,7 +11,7 @@ const getAnswerId = (answer: QuizQuestionOption, index: number) => String(answer
 
 const OrderingPreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [orderedAnswerIds, setOrderedAnswerIds] = useState(() => answers.map(getAnswerId));
+  const answerIds = useMemo(() => answers.map(getAnswerId), [answers]);
   const answersById = useMemo(
     () =>
       answers.reduce<Record<string, QuizQuestionOption>>((map, answer, index) => {
@@ -20,10 +20,6 @@ const OrderingPreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
       }, {}),
     [answers],
   );
-
-  useEffect(() => {
-    setOrderedAnswerIds(answers.map(getAnswerId));
-  }, [answers]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -39,14 +35,11 @@ const OrderingPreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
     const sortables = Array.from(
       container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-option="draggable"]'),
     ).map((element, index) => {
-      const handle = element.querySelector<HTMLElement>('[data-grab-handle]');
-
       return new Sortable(
         {
           id: element.dataset.id ?? String(index),
           index,
           element,
-          handle: handle ?? undefined,
         },
         manager,
       );
@@ -58,24 +51,16 @@ const OrderingPreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
 
     manager.monitor.addEventListener('dragend', (event) => {
       event.operation.source?.element?.setAttribute('data-option', 'draggable');
-
-      requestAnimationFrame(() => {
-        const nextOrder = Array.from(
-          container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-id]'),
-        ).flatMap((option) => (option.dataset.id ? [option.dataset.id] : []));
-
-        setOrderedAnswerIds([...new Set(nextOrder)]);
-      });
     });
 
     return () => {
       sortables.forEach((sortable) => sortable.destroy());
     };
-  }, [orderedAnswerIds]);
+  }, []);
 
   return (
     <div ref={containerRef} className="tutor-quiz-question-options">
-      <For each={orderedAnswerIds}>
+      <For each={answerIds}>
         {(answerId, index) => {
           const answer = answersById[answerId];
           if (!answer) {
@@ -89,7 +74,7 @@ const OrderingPreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
                 {answer.image_url ? <img src={answer.image_url} alt={answer.answer_title} /> : null}
                 <div data-question-title>{answer.answer_title}</div>
               </div>
-              <button type="button" data-grab-handle aria-label={answer.answer_title}>
+              <button type="button" data-grab-handle tabIndex={-1} aria-label={answer.answer_title}>
                 <SVGIcon name="grabHandle" width={24} height={24} />
               </button>
             </div>
