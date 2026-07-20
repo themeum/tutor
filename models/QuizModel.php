@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
+use TUTOR\Course_List;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Quiz;
@@ -193,7 +194,10 @@ class QuizModel {
 	 * @return array
 	 */
 	public static function get_manual_review_types() {
-		return array( 'open_ended', 'short_answer' );
+		return array(
+			self::QUESTION_TYPE_OPEN_ENDED,
+			self::QUESTION_TYPE_SHORT_ANSWER,
+		);
 	}
 
 
@@ -1721,5 +1725,41 @@ class QuizModel {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Kill the current execution if user don't have access to this quiz
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param int  $quiz_id Quiz id to check the access.
+	 * @param int  $course_id Quiz's course id.
+	 * @param bool $wp_die Whether to die the execution or not.
+	 *
+	 * @return mixed If wp_die is true then this method will kill the execution if
+	 * user don't have access to the provided quiz. Otherwise returns bool.
+	 */
+	public static function has_quiz_access( $quiz_id, $course_id = 0, $wp_die = true ) {
+		$message    = __( 'Something went wrong', 'tutor' );
+		$has_access = true;
+
+		$course_id = $course_id ? $course_id : tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+		if ( Course_List::is_public( $course_id ) ) {
+			return true;
+		}
+
+		if ( ! $quiz_id ) {
+			$message    = __( 'Invalid quiz ID', 'tutor' );
+			$has_access = false;
+		} elseif ( ! tutor_utils()->has_enrolled_content_access( 'quiz', $quiz_id ) ) {
+			$message    = __( 'You don\'t have access to this course', 'tutor' );
+			$has_access = false;
+		}
+
+		if ( ! $has_access && $wp_die ) {
+			wp_die( esc_html( $message ) );
+		}
+
+		return $has_access;
 	}
 }

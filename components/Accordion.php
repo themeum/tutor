@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->add_item( 'About Course', '<p>Description...</p>' )
  *     ->render();
  *
- * // Multiple items
+ * // Multiple items, first open by default
  * Accordion::make()
  *     ->add_item( 'About Course', '<p>Description...</p>' )
  *     ->add_item( 'Requirements', '<p>Prerequisites...</p>' )
@@ -35,10 +35,37 @@ defined( 'ABSPATH' ) || exit;
  *     ->default_open( array( 0 ) )
  *     ->render();
  *
- * // With custom icon and template
+ * // Multiple items open by default (indices 0 and 2)
  * Accordion::make()
- *     ->add_item( 'Details', '', 'path/to/template.php', 'custom-icon' )
+ *     ->add_item( 'Overview', '<p>Course overview...</p>' )
+ *     ->add_item( 'Curriculum', '<p>Topics covered...</p>' )
+ *     ->add_item( 'FAQ', '<p>Common questions...</p>' )
+ *     ->default_open( array( 0, 2 ) )
+ *     ->render();
+ *
+ * // Only one item open at a time (allow_multiple = false)
+ * Accordion::make()
+ *     ->add_item( 'Section 1', '<p>Content 1...</p>' )
+ *     ->add_item( 'Section 2', '<p>Content 2...</p>' )
  *     ->allow_multiple( false )
+ *     ->render();
+ *
+ * // With custom icon per item
+ * Accordion::make()
+ *     ->add_item( 'Resources', '', '', Icon::RESOURCES )
+ *     ->add_item( 'Downloads', '', '', Icon::DOWNLOAD_2 )
+ *     ->render();
+ *
+ * // With a PHP template file as content
+ * Accordion::make()
+ *     ->add_item( 'Details', '', get_template_directory() . '/partials/details.php' )
+ *     ->render();
+ *
+ * // Extra HTML attributes on the wrapper
+ * Accordion::make()
+ *     ->add_item( 'Notes', '<p>Some notes...</p>' )
+ *     ->attr( 'id', 'course-accordion' )
+ *     ->attr( 'class', 'my-custom-class' )
  *     ->render();
  * ```
  *
@@ -189,7 +216,7 @@ class Accordion extends BaseComponent {
 			'multiple'    => $this->multiple,
 			'defaultOpen' => $this->default_open,
 		);
-		$alpine_json = wp_json_encode( $alpine_config );
+		$alpine_json   = wp_json_encode( $alpine_config );
 
 		// Merge custom classes.
 		$wrapper_classes = 'tutor-accordion';
@@ -206,9 +233,9 @@ class Accordion extends BaseComponent {
 		// Build items HTML.
 		$items_html = '';
 		foreach ( $this->items as $index => $item ) {
-			$title     = isset( $item['title'] ) ? $item['title'] : '';
-			$icon      = isset( $item['icon'] ) ? $item['icon'] : '';
-			$panel_id  = 'tutor-acc-panel-' . $index;
+			$title      = isset( $item['title'] ) ? $item['title'] : '';
+			$icon       = isset( $item['icon'] ) ? $item['icon'] : '';
+			$panel_id   = 'tutor-acc-panel-' . $index;
 			$trigger_id = 'tutor-acc-trigger-' . $index;
 
 			$icon_html = $this->render_icon( $icon );
@@ -262,5 +289,4 @@ class Accordion extends BaseComponent {
 			$items_html
 		);
 	}
-
 }

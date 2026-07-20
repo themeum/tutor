@@ -26,33 +26,64 @@ defined( 'ABSPATH' ) || exit;
  * Example usage:
  *
  * ```php
- * $tabs_data = [
- *     [
- *         'id'      => 'lesson',
- *         'label'   => 'Lessons',
- *         'icon'    => 'book',
- *         'content' => '<p>Lesson content goes here.</p>',
- *     ],
- *     [
- *         'id'      => 'assignments',
- *         'label'   => 'Assignments',
- *         'icon'    => 'file',
- *         'content' => '<p>Assignment content goes here.</p>',
- *     ],
- *     [
- *         'id'      => 'quizzes',
- *         'label'   => 'Quizzes',
- *         'icon'    => 'check',
- *         'content' => '<p>Quiz content goes here.</p>',
- *     ],
- * ];
+ * // Horizontal tabs (default orientation)
+ * $tabs_data = array(
+ *     array( 'id' => 'overview',  'label' => 'Overview',  'content' => '<p>Course overview.</p>' ),
+ *     array( 'id' => 'lessons',   'label' => 'Lessons',   'content' => '<p>Lesson list here.</p>' ),
+ *     array( 'id' => 'quizzes',   'label' => 'Quizzes',   'content' => '<p>Quiz list here.</p>' ),
+ * );
+ *
+ * Tabs::make()
+ *     ->tabs( $tabs_data )
+ *     ->default_tab( 'overview' )
+ *     ->render();
+ *
+ * // Vertical orientation
+ * Tabs::make()
+ *     ->tabs( $tabs_data )
+ *     ->default_tab( 'lessons' )
+ *     ->orientation( Tabs::TYPE_VERTICAL )
+ *     ->render();
+ *
+ * // With icons in tab buttons
+ * $tabs_data = array(
+ *     array( 'id' => 'lesson',      'label' => 'Lessons',     'icon' => Icon::BOOK,  'content' => '<p>Lesson content.</p>' ),
+ *     array( 'id' => 'assignments', 'label' => 'Assignments', 'icon' => Icon::FILE,  'content' => '<p>Assignment content.</p>' ),
+ *     array( 'id' => 'quizzes',     'label' => 'Quizzes',     'icon' => Icon::CHECK, 'content' => '<p>Quiz content.</p>' ),
+ * );
  *
  * Tabs::make()
  *     ->tabs( $tabs_data )
  *     ->default_tab( 'lesson' )
- *     ->orientation( 'horizontal' )
- *     ->url_params( [ 'enabled' => true ] )
  *     ->render();
+ *
+ * // Sync active tab to a custom URL query param (?section=...)
+ * Tabs::make()
+ *     ->tabs( $tabs_data )
+ *     ->default_tab( 'overview' )
+ *     ->url_params( array( 'enabled' => true, 'paramName' => 'section' ) )
+ *     ->render();
+ *
+ * // Disable URL sync entirely
+ * Tabs::make()
+ *     ->tabs( $tabs_data )
+ *     ->default_tab( 'overview' )
+ *     ->url_params( array( 'enabled' => false ) )
+ *     ->render();
+ *
+ * // With a disabled tab
+ * $tabs_data = array(
+ *     array( 'id' => 'active',   'label' => 'Active',   'content' => '<p>...</p>' ),
+ *     array( 'id' => 'disabled', 'label' => 'Locked',   'content' => '', 'disabled' => true ),
+ * );
+ *
+ * Tabs::make()
+ *     ->tabs( $tabs_data )
+ *     ->default_tab( 'active' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = Tabs::make()->tabs( $tabs_data )->default_tab( 'overview' )->get();
  * ```
  *
  * @since 4.0.0

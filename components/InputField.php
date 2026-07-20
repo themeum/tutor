@@ -24,8 +24,16 @@ use Tutor\Components\Constants\InputType;
  * InputField Component Class.
  *
  * Example usage:
- * ```
- * // Text input with clear button
+ * ```php
+ * // Plain text input with label
+ * InputField::make()
+ *     ->type( 'text' )
+ *     ->name( 'full_name' )
+ *     ->label( 'Full Name' )
+ *     ->placeholder( 'Enter your full name' )
+ *     ->render();
+ *
+ * // Required text input with clear button and help text
  * InputField::make()
  *     ->type( 'text' )
  *     ->name( 'full_name' )
@@ -33,8 +41,16 @@ use Tutor\Components\Constants\InputType;
  *     ->placeholder( 'Enter your full name' )
  *     ->required()
  *     ->clearable()
- *     ->help_text( 'This is a helper text.' )
- *     ->attr( 'x-bind', "register('full_name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })")
+ *     ->help_text( 'This name will appear on your certificate.' )
+ *     ->render();
+ *
+ * // Text input with Alpine.js form validation binding
+ * InputField::make()
+ *     ->type( 'text' )
+ *     ->name( 'username' )
+ *     ->label( 'Username' )
+ *     ->required()
+ *     ->attr( 'x-bind', "register('username', { required: 'Username is required', minLength: { value: 3, message: 'Min 3 characters' } })" )
  *     ->render();
  *
  * // Text input with left icon
@@ -42,7 +58,40 @@ use Tutor\Components\Constants\InputType;
  *     ->type( 'text' )
  *     ->name( 'email' )
  *     ->label( 'Email' )
- *     ->left_icon( '<svg>...</svg>' )
+ *     ->left_icon( SvgIcon::make()->name( Icon::MAIL )->size( 18 )->get() )
+ *     ->render();
+ *
+ * // Text input with right icon
+ * InputField::make()
+ *     ->type( 'text' )
+ *     ->name( 'website' )
+ *     ->label( 'Website' )
+ *     ->right_icon( SvgIcon::make()->name( Icon::LINK )->size( 18 )->get() )
+ *     ->render();
+ *
+ * // Email input
+ * InputField::make()
+ *     ->type( 'email' )
+ *     ->name( 'email_address' )
+ *     ->label( 'Email Address' )
+ *     ->placeholder( 'you@example.com' )
+ *     ->render();
+ *
+ * // Number input
+ * InputField::make()
+ *     ->type( 'number' )
+ *     ->name( 'seats' )
+ *     ->label( 'Seats Available' )
+ *     ->value( '30' )
+ *     ->render();
+ *
+ * // Password input with strength meter
+ * InputField::make()
+ *     ->type( 'password' )
+ *     ->name( 'new_password' )
+ *     ->label( 'New Password' )
+ *     ->show_strength( true )
+ *     ->min_strength( 3 )
  *     ->render();
  *
  * // Textarea
@@ -50,17 +99,41 @@ use Tutor\Components\Constants\InputType;
  *     ->type( 'textarea' )
  *     ->name( 'bio' )
  *     ->label( 'Bio' )
+ *     ->placeholder( 'Tell us about yourself...' )
  *     ->render();
  *
  * // Checkbox
  * InputField::make()
  *     ->type( 'checkbox' )
  *     ->name( 'agree' )
- *     ->label( 'I agree to terms' )
- *     ->size( 'md' )
+ *     ->label( 'I agree to the terms and conditions' )
+ *     ->size( Size::MD )
  *     ->render();
  *
- * // Radio
+ * // Checkbox with HTML label (e.g., link inside label)
+ * InputField::make()
+ *     ->type( 'checkbox' )
+ *     ->name( 'agree' )
+ *     ->label_html( 'I agree to the <a href="/terms">Terms</a>' )
+ *     ->render();
+ *
+ * // Intermediate (indeterminate) checkbox
+ * InputField::make()
+ *     ->type( 'checkbox' )
+ *     ->name( 'select_all' )
+ *     ->label( 'Select All' )
+ *     ->intermediate( true )
+ *     ->render();
+ *
+ * // Pre-checked checkbox
+ * InputField::make()
+ *     ->type( 'checkbox' )
+ *     ->name( 'subscribe' )
+ *     ->label( 'Subscribe to newsletter' )
+ *     ->checked( true )
+ *     ->render();
+ *
+ * // Radio button
  * InputField::make()
  *     ->type( 'radio' )
  *     ->name( 'gender' )
@@ -68,15 +141,15 @@ use Tutor\Components\Constants\InputType;
  *     ->value( 'male' )
  *     ->render();
  *
- * // Switch
+ * // Toggle switch
  * InputField::make()
  *     ->type( 'switch' )
  *     ->name( 'notifications' )
- *     ->label( 'Enable notifications?' )
- *     ->size( 'md' )
+ *     ->label( 'Enable email notifications' )
+ *     ->size( Size::MD )
  *     ->render();
  *
- * // InputField with error
+ * // Input with error state
  * InputField::make()
  *     ->type( 'text' )
  *     ->name( 'username' )
@@ -84,22 +157,114 @@ use Tutor\Components\Constants\InputType;
  *     ->error( 'This field is required.' )
  *     ->render();
  *
- * // Select
+ * // Disabled input
  * InputField::make()
- *      ->type( 'select' )
- *      ->name( 'interests' )
- *      ->label( 'Interests' )
- *      ->placeholder( 'Select your interests')
- *      ->required( 'Please select an interest')
- *      ->clearable()
- *      ->options( $interests )
- *      ->multiple()
- *      ->searchable()
- *      ->size( 'md' )
- *      ->max_selections( 2 )
- *      ->help_text( 'This is a helper next.' )
- *      ->render();
+ *     ->type( 'text' )
+ *     ->name( 'readonly_field' )
+ *     ->label( 'Read Only' )
+ *     ->value( 'Cannot change me' )
+ *     ->disabled()
+ *     ->render();
  *
+ * // Loading state (e.g., while async options load)
+ * InputField::make()
+ *     ->type( 'select' )
+ *     ->name( 'category' )
+ *     ->label( 'Category' )
+ *     ->loading( true )
+ *     ->loading_message( __( 'Loading categories...', 'tutor' ) )
+ *     ->render();
+ *
+ * // Single select with flat options list
+ * InputField::make()
+ *     ->type( 'select' )
+ *     ->name( 'country' )
+ *     ->label( 'Country' )
+ *     ->placeholder( 'Select a country' )
+ *     ->options( array(
+ *         array( 'label' => 'United States', 'value' => 'us' ),
+ *         array( 'label' => 'United Kingdom', 'value' => 'uk' ),
+ *         array( 'label' => 'Canada',         'value' => 'ca' ),
+ *     ) )
+ *     ->render();
+ *
+ * // Select with icons and descriptions per option
+ * InputField::make()
+ *     ->type( 'select' )
+ *     ->name( 'level' )
+ *     ->label( 'Course Level' )
+ *     ->options( array(
+ *         array( 'label' => 'Beginner',     'value' => 'beginner',     'icon' => Icon::PLAY_LINE,  'description' => 'No prior knowledge needed' ),
+ *         array( 'label' => 'Intermediate', 'value' => 'intermediate', 'icon' => Icon::BOOK,       'description' => 'Some experience required' ),
+ *         array( 'label' => 'Advanced',     'value' => 'advanced',     'icon' => Icon::GRADUATION, 'description' => 'For experienced learners' ),
+ *     ) )
+ *     ->render();
+ *
+ * // Multi-select with search, clearable and max selections
+ * InputField::make()
+ *     ->type( 'select' )
+ *     ->name( 'interests' )
+ *     ->label( 'Interests' )
+ *     ->placeholder( 'Select your interests' )
+ *     ->required( 'Please select an interest' )
+ *     ->clearable()
+ *     ->options( $interests )
+ *     ->multiple()
+ *     ->searchable()
+ *     ->size( Size::MD )
+ *     ->max_selections( 2 )
+ *     ->help_text( 'You can pick up to 2 interests.' )
+ *     ->render();
+ *
+ * // Grouped select options
+ * InputField::make()
+ *     ->type( 'select' )
+ *     ->name( 'topic' )
+ *     ->label( 'Topic' )
+ *     ->groups( array(
+ *         array(
+ *             'label'   => 'Development',
+ *             'options' => array(
+ *                 array( 'label' => 'PHP',        'value' => 'php' ),
+ *                 array( 'label' => 'JavaScript', 'value' => 'js' ),
+ *             ),
+ *         ),
+ *         array(
+ *             'label'   => 'Design',
+ *             'options' => array(
+ *                 array( 'label' => 'Figma',      'value' => 'figma' ),
+ *                 array( 'label' => 'Illustrator','value' => 'ai' ),
+ *             ),
+ *         ),
+ *     ) )
+ *     ->render();
+ *
+ * // Select with onChange callback and collapsable on selection
+ * InputField::make()
+ *     ->type( 'select' )
+ *     ->name( 'sort_by' )
+ *     ->label( 'Sort By' )
+ *     ->options( $sort_options )
+ *     ->on_change( 'function(value){ handleSortChange(value); }' )
+ *     ->collapsable( true )
+ *     ->render();
+ *
+ * // Time picker (12-hour, 15-minute interval)
+ * InputField::make()
+ *     ->type( 'time' )
+ *     ->name( 'start_time' )
+ *     ->label( 'Start Time' )
+ *     ->selection_time_mode( 12 )
+ *     ->interval( 15 )
+ *     ->render();
+ *
+ * // Small-size input
+ * InputField::make()
+ *     ->type( 'text' )
+ *     ->name( 'search_term' )
+ *     ->placeholder( 'Search...' )
+ *     ->size( Size::SM )
+ *     ->render();
  * ```
  *
  * @since 4.0.0

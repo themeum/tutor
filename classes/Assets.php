@@ -199,6 +199,7 @@ class Assets {
 			'placeholder_img_src'          => tutor_placeholder_img_src(),
 			'enable_lesson_classic_editor' => get_tutor_option( 'enable_lesson_classic_editor' ),
 			'tutor_frontend_dashboard_url' => tutor_utils()->get_tutor_dashboard_page_permalink(),
+			'is_dashboard_page'            => tutor_utils()->is_dashboard_page(),
 			'wp_date_format'               => tutor_js_date_format_against_wp(),
 			'start_of_week'                => get_option( 'start_of_week', 1 ),
 			'is_admin'                     => is_admin(),
@@ -438,12 +439,10 @@ class Assets {
 		wp_enqueue_style( 'tutor-icon', tutor()->url . 'assets/css/tutor-icon.min.css', array(), TUTOR_VERSION );
 
 		// Common css library.
-		if ( 'tutor-lms-pro_page_playground' !== $slug ) {
-			if ( is_rtl() ) {
-				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
-			} else {
-				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
-			}
+		if ( is_rtl() ) {
+			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
+		} else {
+			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
 		}
 
 		/**

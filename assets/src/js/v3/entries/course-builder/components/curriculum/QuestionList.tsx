@@ -33,8 +33,8 @@ import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
-import { type IconCollection } from '@TutorShared/icons/types';
 import Popover from '@TutorShared/molecules/Popover';
+import { basicQuestionTypes, interactiveQuestionTypes } from '@TutorShared/utils/question-type-registry';
 import { convertedQuestion, validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
@@ -52,110 +52,18 @@ import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankCont
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
 
-interface QuestionTypeOption {
-  label: string;
-  value: QuizQuestionType;
-  icon: IconCollection;
-  isPro: boolean;
-  isLegacyDisabled?: boolean;
-}
-
-const basicQuestionTypeOptions: QuestionTypeOption[] = [
-  {
-    label: __('True/False', 'tutor'),
-    value: 'true_false',
-    icon: 'quizTrueFalse',
-    isPro: false,
-  },
-  {
-    label: __('Multiple Choice', 'tutor'),
-    value: 'multiple_choice',
-    icon: 'quizMultiChoice',
-    isPro: false,
-  },
-  {
-    label: __('Open Ended/Essay', 'tutor'),
-    value: 'open_ended',
-    icon: 'quizEssay',
-    isPro: false,
-  },
-  {
-    label: __('Fill in the Blanks', 'tutor'),
-    value: 'fill_in_the_blank',
-    icon: 'quizFillInTheBlanks',
-    isPro: false,
-  },
-  {
-    label: __('Short Answer', 'tutor'),
-    value: 'short_answer',
-    icon: 'quizShortAnswer',
-    isPro: true,
-  },
-];
-
-const interactiveQuestionTypeOptions: QuestionTypeOption[] = [
-  {
-    label: __('Matching', 'tutor'),
-    value: 'matching',
-    icon: 'quizImageMatching',
-    isPro: true,
-  },
-  {
-    label: __('Image Answering', 'tutor'),
-    value: 'image_answering',
-    icon: 'quizImageAnswer',
-    isPro: true,
-  },
-  {
-    label: __('Ordering', 'tutor'),
-    value: 'ordering',
-    icon: 'quizOrdering',
-    isPro: true,
-  },
-  {
-    label: __('Image Marking', 'tutor'),
-    value: 'draw_image',
-    icon: 'quizMarkInTheImage',
-    isPro: true,
-  },
-  {
-    label: __('Range', 'tutor'),
-    value: 'scale',
-    icon: 'quizRange',
-    isPro: true,
-  },
-  {
-    label: __('Pin', 'tutor'),
-    value: 'pin_image',
-    icon: 'quizPin',
-    isPro: true,
-  },
-  {
-    label: __('Graph', 'tutor'),
-    value: 'coordinates',
-    icon: 'quizGraph',
-    isPro: true,
-  },
-  {
-    label: __('Puzzle', 'tutor'),
-    value: 'puzzle',
-    icon: 'quizPuzzle',
-    isPro: true,
-  },
-];
-
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   const questionTypeOptionsForUi = useMemo(() => {
-    const legacyExcluded: QuizQuestionType[] = ['draw_image', 'pin_image', 'scale', 'coordinates', 'puzzle'];
-    const markLegacyDisabled = (options: QuestionTypeOption[]) =>
-      options.map((o) =>
-        tutorConfig.is_legacy_learning_mode && legacyExcluded.includes(o.value) ? { ...o, isLegacyDisabled: true } : o,
-      );
+    const markLegacyDisabled = <T extends { value: QuizQuestionType; legacyExcluded?: true }>(options: T[]) =>
+      options.map((option) => ({
+        ...option,
+        isLegacyDisabled: tutorConfig.is_legacy_learning_mode && option.legacyExcluded ? true : undefined,
+      }));
     return {
-      basic: markLegacyDisabled(basicQuestionTypeOptions),
-      interactive: markLegacyDisabled(interactiveQuestionTypeOptions),
+      basic: markLegacyDisabled(basicQuestionTypes),
+      interactive: markLegacyDisabled(interactiveQuestionTypes),
     };
   }, []);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -615,7 +523,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                           handleAddQuestion(option.value as QuizQuestionType);
                         }}
                       >
-                        <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                        <SVGIcon data-question-icon name={option.icon} width={24} height={24} />
                         <div css={styles.questionTypeOptionLabelRow}>
                           <span css={styles.questionTypeOptionLabel}>{option.label}</span>
                           <Show when={option.isLegacyDisabled}>
@@ -634,10 +542,10 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                     }
                   >
                     <button type="button" css={styles.questionTypeOption} title={option.label} disabled onClick={noop}>
-                      <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                      <SVGIcon data-question-icon name={option.icon} width={24} height={24} />
                       <div css={styles.questionTypeOptionLabelRow}>
                         <span css={styles.questionTypeOptionLabel}>{option.label}</span>
-                        <ProBadge size="small" content={__('Pro', 'tutor')} />
+                        <ProBadge size="small" />
                       </div>
                     </button>
                   </Show>
@@ -660,7 +568,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                           handleAddQuestion(option.value as QuizQuestionType);
                         }}
                       >
-                        <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                        <SVGIcon data-question-icon name={option.icon} width={24} height={24} />
                         <div css={styles.questionTypeOptionLabelRow}>
                           <span css={styles.questionTypeOptionLabel}>{option.label}</span>
                           <Show when={option.isLegacyDisabled}>
@@ -679,10 +587,10 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                     }
                   >
                     <button type="button" css={styles.questionTypeOption} title={option.label} disabled onClick={noop}>
-                      <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                      <SVGIcon data-question-icon name={option.icon} width={24} height={24} />
                       <div css={styles.questionTypeOptionLabelRow}>
                         <span css={styles.questionTypeOptionLabel}>{option.label}</span>
-                        <ProBadge size="small" content={__('Pro', 'tutor')} />
+                        <ProBadge size="small" />
                       </div>
                     </button>
                   </Show>

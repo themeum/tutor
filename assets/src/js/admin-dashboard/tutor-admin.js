@@ -518,4 +518,62 @@ jQuery(document).ready(function ($) {
 		el.setAttribute('target', '_blank')
 	}
 
+	/**
+	 * Offer notice dismiss handler.
+	 * 
+	 * @since 4.0.0
+	 */
+	const btnOfferNoticeDismiss = document.querySelector('.tutor-offer-notice-dismiss');
+	if (btnOfferNoticeDismiss) {
+		btnOfferNoticeDismiss.addEventListener('click', async function () {
+			btnOfferNoticeDismiss.disabled = true;
+			try {
+				const notice = document.querySelector('.tutor-offer-notice')
+				notice.remove();
+
+				const formData = new FormData();
+				formData.set('action', 'tutor_dismiss_offer_notice');
+				const post = await ajaxHandler(formData);
+				if (!post.ok) {
+					throw new Error(__('Operation failed', 'tutor'));
+				}
+			} catch (e) {
+				tutor_toast(__('Operation failed', 'tutor'), e, "error");
+				btnOfferNoticeDismiss.disabled = false;
+				setTimeout(() => { window.location.reload() }, 1000);
+			}
+		})
+	}
+
+	/**
+	 * Offer notice countdown timer.
+	 *
+	 * @since 4.0.0
+	 */
+	const timerEl = document.querySelector('.tutor-offer-notice-timer');
+	if (timerEl) {
+		const expiryTs = parseInt(timerEl.dataset.expiry, 10) * 1000;
+		if (!expiryTs) return;
+
+		const pad = (n) => String(n).padStart(2, '0');
+
+		const tick = () => {
+			const now = Date.now();
+			const diff = Math.max(0, expiryTs - now);
+
+			const days = Math.floor(diff / 86400000);
+			const hours = Math.floor((diff % 86400000) / 3600000);
+			const minutes = Math.floor((diff % 3600000) / 60000);
+			const seconds = Math.floor((diff % 60000) / 1000);
+
+			timerEl.textContent = `${days}d:${pad(hours)}h:${pad(minutes)}:${pad(seconds)}`;
+
+			if (diff <= 0) {
+				clearInterval(interval);
+			}
+		};
+
+		tick();
+		const interval = setInterval(tick, 1000);
+	}
 });

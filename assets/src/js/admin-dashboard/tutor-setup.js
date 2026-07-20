@@ -57,11 +57,35 @@ document.addEventListener('DOMContentLoaded', () => {
 	const loadingTextElement = onboardWrapper.querySelector('.tutor-onboard-loading-text');
 	const loadingText = loadingTextElement?.dataset.text || loadingTextElement?.textContent?.trim() || '';
 	let loadingTextTimer = null;
-	let isLoadingTextLooping = false;
+	let isSubmitting = false;
+
+	const handleReloadHotkeys = (event) => {
+		if (!isSubmitting) {
+			return undefined;
+		}
+
+		const isReloadShortcut = 'F5' === event.key || ((event.metaKey || event.ctrlKey) && 'r' === event.key.toLowerCase());
+
+		if (!isReloadShortcut) {
+			return undefined;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		return false;
+	};
+
+	const toggleReloadProtection = (shouldProtect) => {
+		if (shouldProtect) {
+			document.addEventListener('keydown', handleReloadHotkeys, true);
+			return;
+		}
+
+		document.removeEventListener('keydown', handleReloadHotkeys, true);
+	};
 
 	const stopLoadingTextAnimation = () => {
-		isLoadingTextLooping = false;
-
 		if (loadingTextTimer) {
 			clearTimeout(loadingTextTimer);
 			loadingTextTimer = null;
@@ -78,10 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		let dotsCount = 0;
-		isLoadingTextLooping = true;
 
 		const animateDots = () => {
-			if (!loadingTextElement || !isLoadingTextLooping) {
+			if (!loadingTextElement) {
 				return;
 			}
 
@@ -157,10 +180,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	onboardForm.addEventListener('submit', async (event) => {
 		event.preventDefault();
 
+		if (isSubmitting) {
+			return;
+		}
+
 		const formData = new FormData(onboardForm);
 		formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
 		const submitButton = onboardForm.querySelector('.tutor-onboard-submit-btn');
 		const loadingScreen = submitButton?.dataset.screen || __('Loading...', 'tutor');
+		isSubmitting = true;
+		toggleReloadProtection(true);
 
 		if (submitButton) {
 			submitButton.disabled = true;
@@ -168,6 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		activateScreen(loadingScreen);
 		const loadingTextAnimation = startLoadingTextAnimation();
+		const minimumLoadingDuration = 6000;
+		const onboardStartTime = performance.now();
 
 		try {
 			if (formData.get('tutor_onboard_load_sample_course')) {
@@ -190,11 +221,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			tutor_toast(error?.message || __('Something went wrong!', 'tutor'), '', 'error');
 			await wait(1000);
 		} finally {
+			isSubmitting = false;
 			if (submitButton) {
 				submitButton.disabled = false;
 			}
 			await loadingTextAnimation;
+			const onboardingDuration = performance.now() - onboardStartTime;
+			const remainingLoadingDuration = Math.max(0, minimumLoadingDuration - onboardingDuration);
+			await wait(remainingLoadingDuration);
 			await fadeOutLoadingScreen();
+			toggleReloadProtection(false);
 			location.href = _tutorOnboardObject.tutor_welcome_page;
 		}
 	});

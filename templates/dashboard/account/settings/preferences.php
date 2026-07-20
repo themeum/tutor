@@ -195,7 +195,7 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 					</div>
 					<div>
 						<div class="tutor-preferences-setting-title">
-							<?php esc_html_e( 'Font size', 'tutor' ); ?>
+							<?php esc_html_e( 'Font Size', 'tutor' ); ?>
 						</div>
 						<div class="tutor-preferences-setting-subtitle">
 							<?php esc_html_e( 'Adjust the text size for better readability.', 'tutor' ); ?>

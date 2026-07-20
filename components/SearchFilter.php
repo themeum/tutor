@@ -24,16 +24,50 @@ defined( 'ABSPATH' ) || exit;
  * Class SearchFilter
  *
  * Example Usage:
- * ```
+ * ```php
+ * // Minimal search form (uses current URL, param name = 'search')
  * SearchFilter::make()
- *     ->form_id( 'my-search-form' )
- *     ->placeholder( 'Search items...' )
- *     ->hidden_inputs( array( 'type' => 'course' ) )
- *     ->action( 'https://example.com/search' )
- *     ->input_name( 'search' )
- *     ->method( 'GET' )
- *     ->size( 'small' )
  *     ->render();
+ *
+ * // With custom placeholder and input name
+ * SearchFilter::make()
+ *     ->placeholder( 'Search students...' )
+ *     ->input_name( 'student_search' )
+ *     ->render();
+ *
+ * // With explicit action URL and hidden inputs to preserve context
+ * SearchFilter::make()
+ *     ->action( admin_url( 'admin.php?page=tutor-students' ) )
+ *     ->input_name( 'search' )
+ *     ->hidden_inputs( array( 'type' => 'enrolled', 'course_id' => $course_id ) )
+ *     ->render();
+ *
+ * // Small-size search field
+ * SearchFilter::make()
+ *     ->placeholder( 'Search...' )
+ *     ->size( Size::SMALL )
+ *     ->render();
+ *
+ * // Large-size search field
+ * SearchFilter::make()
+ *     ->placeholder( 'Search courses...' )
+ *     ->size( Size::LARGE )
+ *     ->render();
+ *
+ * // Custom form ID (useful when multiple search forms exist on the same page)
+ * SearchFilter::make()
+ *     ->form_id( 'announcement-search-form' )
+ *     ->placeholder( 'Search announcements...' )
+ *     ->render();
+ *
+ * // POST method (e.g., for AJAX-backed searches)
+ * SearchFilter::make()
+ *     ->input_name( 'q' )
+ *     ->method( 'POST' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = SearchFilter::make()->placeholder( 'Find a course...' )->get();
  * ```
  *
  * @since 4.0.0
@@ -222,7 +256,7 @@ class SearchFilter extends BaseComponent {
 
 		ob_start();
 		?>
-		<form <?php echo $this->render_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+		<form <?php $this->render_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 			<input type="hidden" name="paged" value="1">
 
 			<?php foreach ( $this->hidden_inputs as $name => $value ) : ?>

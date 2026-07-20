@@ -467,20 +467,26 @@ class Quiz_Attempts_List {
 	 * @since 4.0.0
 	 *
 	 * @param array $attempt the quiz attempt.
+	 * @param bool  $is_learning_area is learning area list item.
 	 *
 	 * @return void
 	 */
-	public function render_details_button( $attempt ) {
-		if ( User::is_student_view() ) {
-			Button::make()
-				->label( __( 'Details', 'tutor' ) )
-				->icon( Icon::RESOURCES, 'left', 20 )
-				->size( Size::MEDIUM )
-				->tag( 'a' )
-				->attr( 'href', $this->get_review_url( $attempt ) )
-				->variant( 'primary' )
-				->render();
+	public function render_details_button( $attempt, $is_learning_area = false ) {
+		if ( ! User::is_student_view() ) {
+			return;
 		}
+
+		$args = $is_learning_area ? array( 'action' => 'view_details' ) : array();
+		$url  = $this->get_review_url( $attempt, $args );
+
+		Button::make()
+		->label( __( 'Details', 'tutor' ) )
+		->icon( Icon::RESOURCES, 'left', 20 )
+		->size( Size::MEDIUM )
+		->tag( 'a' )
+		->attr( 'href', $url )
+		->variant( 'primary' )
+		->render();
 	}
 
 	/**

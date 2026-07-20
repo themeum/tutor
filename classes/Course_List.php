@@ -104,7 +104,7 @@ class Course_List {
 		}
 
 		if ( ! User::is_admin() ) {
-			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_course' );
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_courses' );
 			if ( ! $can_trash_post ) {
 				$actions = array_filter( $actions, fn ( $val ) => CourseModel::STATUS_TRASH !== $val['value'] );
 			}
@@ -289,7 +289,7 @@ class Course_List {
 		if ( ! User::is_admin() ) {
 			$course_ids = explode( ',', $bulk_ids );
 
-			if ( current_user_can( 'edit_tutor_course' ) ) {
+			if ( current_user_can( 'edit_tutor_courses' ) ) {
 				$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
 
 				if ( CourseModel::STATUS_PUBLISH === $action && ! $can_publish_course ) {

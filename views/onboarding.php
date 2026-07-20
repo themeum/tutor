@@ -6,6 +6,9 @@
  * @since 4.0.0 onboarding
  */
 
+use Tutor\Components\SvgIcon;
+use TUTOR\Icon;
+
 defined( 'ABSPATH' ) || exit;
 
 set_current_screen();
@@ -94,7 +97,7 @@ set_current_screen();
 					<div class="tutor-onboard-card-footer">
 						<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-block tutor-onboard-next-screen" data-target="preferences">
 							<span><?php esc_html_e( 'Next', 'tutor' ); ?></span>
-							<span aria-hidden="true">&#8594;</span>
+							<?php SvgIcon::make()->name( Icon::ARROW_RIGHT_2 )->flip_rtl()->render(); ?>
 						</button>
 					</div>
 				</div>
@@ -166,7 +169,7 @@ set_current_screen();
 
 							<?php if ( ! is_multisite() ) : ?>
 							<div class="tutor-onboard-load-sample tutor-form-check tutor-d-flex tutor-align-center tutor-gap-1 tutor-onboard-checkbox">
-								<input id="tutor-onboard-load-sample-course" type="checkbox" name="tutor_onboard_load_sample_course" value="1" class="tutor-form-check-input">
+								<input id="tutor-onboard-load-sample-course" type="checkbox" name="tutor_onboard_load_sample_course" value="1" class="tutor-form-check-input" checked>
 								<label for="tutor-onboard-load-sample-course" class="tutor-onboard-checkbox-label">
 									<?php esc_html_e( 'Load sample courses to help you get started.', 'tutor' ); ?>
 								</label>
@@ -177,7 +180,7 @@ set_current_screen();
 						<div class="tutor-onboard-card-footer tutor-onboard-card-footer-stack" style="margin-top: 22px">
 							<button type="submit" class="tutor-onboard-submit-btn tutor-btn tutor-btn-primary tutor-btn-block" data-screen="loading">
 								<span><?php esc_html_e( 'Let\'s go', 'tutor' ); ?></span>
-								<span aria-hidden="true">&#8594;</span>
+								<?php SvgIcon::make()->name( Icon::ARROW_RIGHT_2 )->flip_rtl()->render(); ?>
 							</button>
 							<p class="tutor-onboard-help-text"><?php esc_html_e( 'Don\'t worry, you can always change these settings later! 😊', 'tutor' ); ?></p>
 						</div>

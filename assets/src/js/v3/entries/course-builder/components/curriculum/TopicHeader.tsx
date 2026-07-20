@@ -136,6 +136,7 @@ const TopicHeader = ({
         <div
           css={styles.headerContent({
             isSaved: topic.isSaved,
+            isEdit,
             isCollapsed: topic.isCollapsed,
             hasSummary,
           })}
@@ -408,10 +409,12 @@ const styles = {
   `,
   headerContent: ({
     isSaved = true,
+    isEdit = false,
     isCollapsed = false,
     hasSummary = false,
   }: {
     isSaved: boolean;
+    isEdit: boolean;
     isCollapsed: boolean;
     hasSummary: boolean;
   }) => css`
@@ -419,7 +422,7 @@ const styles = {
     grid-template-columns: ${isSaved ? '1fr auto' : '1fr'};
     gap: ${spacing[12]};
     width: 100%;
-    padding-bottom: ${!isCollapsed && hasSummary ? spacing[12] : '0px'};
+    padding-bottom: ${!isCollapsed && !isEdit && hasSummary ? spacing[12] : '0px'};
   `,
   grabberInput: css`
     ${styleUtils.display.flex()};

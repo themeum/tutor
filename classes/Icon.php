@@ -390,9 +390,9 @@ final class Icon {
 	const SHORTCODE                  = 'shortcode';
 	const SIGNATURE_UPLOAD           = 'signature-upload';
 	const SORT                       = 'sort';
-	const SORT_A_S_C                 = 'sort-a-s-c';
+	const SORT_ASC                   = 'sort-asc';
 	const SORT_BY                    = 'sort-by';
-	const SORT_D_E_S_C               = 'sort-d-e-s-c';
+	const SORT_DESC                  = 'sort-desc';
 	const SORT_MINOR                 = 'sort-minor';
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
