@@ -197,7 +197,7 @@ Lesson notes allows students to take notes on lessons and videos while learning.
 
 == ✉️ BUILT-IN EMAIL MARKETING & AUTOMATION ==
 
-Tutor LMS supports automatic email notifications for admins, instructors, and students. It is equipped with 50+ email triggers and numerous placeholders. You can use those placeholders to send personalized emails. You can use these [Tutor LMS email placeholders](https://docs.themeum.com/tutor-lms/tutorials/email-placeholders/) in both the subject lines and the email body.
+Tutor LMS supports automatic email notifications for admins, instructors, and students. It is equipped with 50+ email triggers and numerous placeholders. You can use those placeholders to send personalized emails. You can use these [Tutor LMS email placeholders](https://tutorlms.com/docs/tutor-tutorial-list-of-tutor-lms-email-placeholders/) in both the subject lines and the email body.
 
 == 💵 MULTIPLE COURSE MONETIZATION TOOLS ==
 
