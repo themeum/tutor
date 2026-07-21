@@ -812,7 +812,7 @@ $tutor-quiz-content-bottom-offset: calc(
         img {
           height: 320px;
           width: 100%;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
           border-radius: $tutor-radius-sm;
         }
@@ -867,7 +867,7 @@ $tutor-quiz-content-bottom-offset: calc(
             width: 88px;
             aspect-ratio: 1;
             border-radius: $tutor-radius-sm;
-            object-fit: cover;
+            object-fit: contain;
             object-position: center;
           }
         }
@@ -913,7 +913,7 @@ $tutor-quiz-content-bottom-offset: calc(
           height: 320px;
           width: 100%;
           border-radius: $tutor-radius-sm;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
         }
 
