@@ -27,6 +27,11 @@ if ( ! $item || ! is_a( $item, 'WP_Post' ) ) {
 
 $active_class = $active ? 'active' : '';
 $item_title   = $item->post_title;
+$allowed_html = array(
+	'span' => array(
+		'class' => array(),
+	),
+);
 ?>
 
 <a
@@ -37,6 +42,6 @@ $item_title   = $item->post_title;
 	<?php SvgIcon::make()->name( $icon )->size( 20 )->render(); ?>
 	<div class="tutor-overflow-hidden">
 		<div><?php echo esc_html( $item_title ); ?></div>
-		<div class="tutor-tiny-2 tutor-text-subdued"><?php echo esc_html( $type_label ); ?></div>
+		<div class="tutor-tiny-2 tutor-text-subdued"><?php echo wp_kses( $type_label, $allowed_html ); ?></div>
 	</div>
 </a>
