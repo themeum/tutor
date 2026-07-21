@@ -235,7 +235,6 @@ const createConfig = (env, options) => {
         }),
         new rspack.LightningCssMinimizerRspackPlugin({
           minimizerOptions: {
-            // Keep logical properties in the final CSS so RTL behavior works as expected.
             exclude: {
               logicalProperties: true,
             },
