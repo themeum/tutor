@@ -1670,7 +1670,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 
 			$manual_methods = array();
 
-			if ( ! empty( $payments['payment_methods'] ) && is_array( $payments['payment_methods'] ) ) {
+			if ( tutor_utils()->count( $payments['payment_methods'] ) ) {
 				foreach ( $payments['payment_methods'] as $method ) {
 					if ( isset( $method['is_manual'] ) && 1 === (int) $method['is_manual'] ) {
 						$manual_methods[] = (object) $method;
