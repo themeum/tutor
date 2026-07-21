@@ -282,7 +282,7 @@ class Settings {
 	public static function is_active( string $gateway ): bool {
 		$payments = self::get_payment_settings();
 
-		if ( ! empty( $payments['payment_methods'] ) && is_array( $payments['payment_methods'] ) ) {
+		if ( tutor_utils()->count( $payments['payment_methods'] ) ) {
 			foreach ( $payments['payment_methods'] as $method ) {
 				if ( $method->name === $gateway ) {
 					return (bool) $method->is_active;
