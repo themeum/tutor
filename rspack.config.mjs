@@ -233,7 +233,15 @@ const createConfig = (env, options) => {
             },
           },
         }),
-        new rspack.LightningCssMinimizerRspackPlugin(),
+        new rspack.LightningCssMinimizerRspackPlugin({
+          minimizerOptions: {
+            // Keep logical properties in the final CSS so RTL behavior relies on `dir`,
+            // not Lightning CSS language-based fallback selectors.
+            exclude: {
+              logicalProperties: true,
+            },
+          },
+        }),
       ],
     };
     baseConfig.output.clean = {
