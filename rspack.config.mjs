@@ -235,8 +235,7 @@ const createConfig = (env, options) => {
         }),
         new rspack.LightningCssMinimizerRspackPlugin({
           minimizerOptions: {
-            // Keep logical properties in the final CSS so RTL behavior relies on `dir`,
-            // not Lightning CSS language-based fallback selectors.
+            // Keep logical properties in the final CSS so RTL behavior works as expected.
             exclude: {
               logicalProperties: true,
             },
