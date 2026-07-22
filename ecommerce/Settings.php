@@ -354,7 +354,7 @@ class Settings {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return object
+	 * @return array
 	 */
 	public static function get_payment_settings() {
 		$settings = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
