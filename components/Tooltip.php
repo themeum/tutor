@@ -21,13 +21,75 @@ use Tutor\Components\Constants\Size;
  * Tooltip Component Class.
  *
  * Example usage:
- * ```
+ * ```php
+ * // Basic tooltip on hover (top placement, default)
  * Tooltip::make()
- *     ->content( 'Helpful information' )
- *     ->placement( 'top' )
- *     ->size( Size::SMALL )
- *     ->trigger_element( '<button class="tutor-btn">Hover me</button>' )
+ *     ->content( 'This is a helpful tip.' )
+ *     ->trigger_element( '<button class="tutor-btn tutor-btn-ghost">Hover me</button>' )
  *     ->render();
+ *
+ * // Tooltip with specific placement and size
+ * Tooltip::make()
+ *     ->content( 'Detailed information here.' )
+ *     ->placement( Tooltip::PLACEMENT_BOTTOM )
+ *     ->size( Size::LARGE )
+ *     ->trigger_element( '<span class="tutor-icon-wrapper">' . SvgIcon::make()->name( Icon::INFO )->size( 16 )->get() . '</span>' )
+ *     ->render();
+ *
+ * // Tooltip triggered on focus (keyboard accessible)
+ * Tooltip::make()
+ *     ->content( 'This field requires a valid email.' )
+ *     ->trigger_on( Tooltip::FOCUS )
+ *     ->placement( Tooltip::PLACEMENT_TOP )
+ *     ->trigger_element( '<input type="email" class="tutor-input" name="email">' )
+ *     ->render();
+ *
+ * // Tooltip triggered on click
+ * Tooltip::make()
+ *     ->content( 'Copied to clipboard!' )
+ *     ->trigger_on( Tooltip::CLICK )
+ *     ->placement( Tooltip::PLACEMENT_END )
+ *     ->trigger_element( '<button class="tutor-btn tutor-btn-outline">Copy</button>' )
+ *     ->render();
+ *
+ * // Tooltip with arrow alignment (centered)
+ * Tooltip::make()
+ *     ->content( 'Centered arrow tip.' )
+ *     ->arrow( Tooltip::ARROW_CENTER )
+ *     ->placement( Tooltip::PLACEMENT_TOP )
+ *     ->trigger_element( '<span>Hover</span>' )
+ *     ->render();
+ *
+ * // Tooltip with custom offset distance
+ * Tooltip::make()
+ *     ->content( 'Offset from trigger by 16px.' )
+ *     ->offset( 16 )
+ *     ->trigger_element( '<button class="tutor-btn">Info</button>' )
+ *     ->render();
+ *
+ * // Tooltip with show/hide delay
+ * Tooltip::make()
+ *     ->content( 'Appears after 300ms, hides after 200ms.' )
+ *     ->delay( 300, 200 )
+ *     ->trigger_element( '<span>Hover me</span>' )
+ *     ->render();
+ *
+ * // Tooltip with rich HTML content
+ * Tooltip::make()
+ *     ->content( '<strong>Tip:</strong> Use <em>keyboard shortcuts</em> to save time.', array( 'strong' => array(), 'em' => array() ) )
+ *     ->placement( Tooltip::PLACEMENT_BOTTOM )
+ *     ->trigger_element( '<span>' . SvgIcon::make()->name( Icon::QUESTION_CIRCLE )->size( 16 )->get() . '</span>' )
+ *     ->render();
+ *
+ * // Tooltip placed at start (left in LTR)
+ * Tooltip::make()
+ *     ->content( 'Left-side tooltip.' )
+ *     ->placement( Tooltip::PLACEMENT_START )
+ *     ->trigger_element( '<button class="tutor-btn">Start</button>' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = Tooltip::make()->content( 'Save your work' )->trigger_element( $btn_html )->get();
  * ```
  *
  * @since 4.0.0

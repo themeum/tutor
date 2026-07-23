@@ -4,7 +4,7 @@
  * Plugin URI: https://tutorlms.com
  * Description: Build and manage professional online courses with unlimited lessons, a flexible quiz engine, and a complete student learning experience. No coding needed.
  * Author: Themeum
- * Version: 4.0.1
+ * Version: 4.0.2
  * Author URI: https://themeum.com
  * Requires PHP: 7.4
  * Requires at least: 5.3
@@ -26,7 +26,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  *
  * @since 1.0.0
  */
-define( 'TUTOR_VERSION', '4.0.1' );
+define( 'TUTOR_VERSION', '4.0.2' );
 define( 'TUTOR_FILE', __FILE__ );
 define( 'TUTOR_ENV', 'PROD' ); // DEV || PROD.
 

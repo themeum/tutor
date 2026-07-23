@@ -21,16 +21,51 @@ use TUTOR\Icon;
  * StatusSelect Component Class.
  *
  * Example usage:
- * ```
+ * ```php
+ * // Basic status select for a course
  * StatusSelect::make()
- *     ->options([
- *         'publish' => ['label' => 'Published', 'variant' => 'success', 'icon' => Icon::CHECK_MARK],
- *         'pending' => ['label' => 'Pending', 'variant' => 'warning', 'icon' => Icon::CLOCK],
- *     ])
- *     ->selected('publish')
- *     ->action('tutor_change_course_status')
- *     ->data(['id' => 123])
+ *     ->options( array(
+ *         'publish' => array( 'label' => 'Published', 'variant' => 'success', 'icon' => Icon::CHECK_MARK ),
+ *         'pending' => array( 'label' => 'Pending',   'variant' => 'warning', 'icon' => Icon::CLOCK ),
+ *         'draft'   => array( 'label' => 'Draft',     'variant' => 'default', 'icon' => Icon::EDIT ),
+ *     ) )
+ *     ->selected( 'publish' )
+ *     ->action( 'tutor_change_course_status' )
+ *     ->data( array( 'id' => $course_id ) )
  *     ->render();
+ *
+ * // Order / enrollment status select
+ * StatusSelect::make()
+ *     ->options( array(
+ *         'completed' => array( 'label' => 'Completed', 'variant' => 'success', 'icon' => Icon::CHECK_CIRCLE ),
+ *         'cancelled'  => array( 'label' => 'Cancelled', 'variant' => 'error',   'icon' => Icon::CLOSE_CIRCLE ),
+ *         'processing' => array( 'label' => 'Processing','variant' => 'warning', 'icon' => Icon::CLOCK ),
+ *     ) )
+ *     ->selected( 'processing' )
+ *     ->action( 'tutor_update_order_status' )
+ *     ->data( array( 'order_id' => $order_id ) )
+ *     ->render();
+ *
+ * // Without an AJAX action (display only, no auto-update)
+ * StatusSelect::make()
+ *     ->options( array(
+ *         'active'   => array( 'label' => 'Active',   'variant' => 'success' ),
+ *         'inactive' => array( 'label' => 'Inactive', 'variant' => 'disabled' ),
+ *     ) )
+ *     ->selected( 'active' )
+ *     ->render();
+ *
+ * // With extra data attributes and HTML attrs on the wrapper
+ * StatusSelect::make()
+ *     ->options( $status_options )
+ *     ->selected( $current_status )
+ *     ->action( 'tutor_change_status' )
+ *     ->data( array( 'id' => $item_id, 'nonce' => wp_create_nonce( 'tutor_nonce' ) ) )
+ *     ->attr( 'class', 'my-status-select' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = StatusSelect::make()->options( $options )->selected( 'publish' )->get();
  * ```
  */
 class StatusSelect extends BaseComponent {

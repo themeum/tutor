@@ -21,22 +21,86 @@ defined( 'ABSPATH' ) || exit;
  * Responsible for rendering popover component on button
  * at different placement positions with footer component and menu items.
  *
- * Example Usage: Basic Popover
- * ```
+ * Example Usage:
+ * ```php
+ * // Basic popover with title and body (bottom-start by default)
  * Popover::make()
- *      ->title( 'Basic' )
- *       ->body( '<p>This is a popover component</p>' )
- *       ->closeable( true )
- *       ->trigger(
- *           Button::make()
- *           ->label( 'Show Popover' )
- *           ->attr( 'x-ref', 'trigger' )
- *           ->attr( '@click', 'toggle()' )
- *           ->size( 'medium' )
- *           ->variant( 'primary' )
- *           ->get()
- *       )
- *       ->render();
+ *     ->title( 'Information' )
+ *     ->body( '<p>This is a popover component.</p>' )
+ *     ->trigger(
+ *         Button::make()
+ *             ->label( 'Show Info' )
+ *             ->attr( 'x-ref', 'trigger' )
+ *             ->attr( '@click', 'toggle()' )
+ *             ->variant( Variant::PRIMARY )
+ *             ->get()
+ *     )
+ *     ->render();
+ *
+ * // Popover with close button in header
+ * Popover::make()
+ *     ->title( 'Details' )
+ *     ->body( '<p>Here are the full details.</p>' )
+ *     ->closeable( true )
+ *     ->trigger(
+ *         Button::make()->label( 'Details' )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->get()
+ *     )
+ *     ->render();
+ *
+ * // Popover positioned top-end
+ * Popover::make()
+ *     ->title( 'Help' )
+ *     ->body( '<p>Read the documentation for more help.</p>' )
+ *     ->placement( Positions::TOP_END )
+ *     ->trigger(
+ *         Button::make()->label( '?' )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->get()
+ *     )
+ *     ->render();
+ *
+ * // Popover with footer buttons
+ * Popover::make()
+ *     ->title( 'Confirm' )
+ *     ->body( '<p>Are you sure you want to proceed?</p>' )
+ *     ->footer( array(
+ *         Button::make()->label( 'Cancel' )->variant( Variant::SECONDARY )->attr( '@click', 'hide()' )->get(),
+ *         Button::make()->label( 'Confirm' )->variant( Variant::PRIMARY )->get(),
+ *     ) )
+ *     ->footer_alignment( Positions::RIGHT )
+ *     ->trigger(
+ *         Button::make()->label( 'Open' )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->get()
+ *     )
+ *     ->render();
+ *
+ * // Popover as a context menu (menu items)
+ * Popover::make()
+ *     ->menu_item( array( 'tag' => 'button', 'content' => 'Edit',   'icon' => SvgIcon::make()->name( Icon::EDIT )->size( 16 )->get(),   'attr' => array( '@click' => 'editItem()' ) ) )
+ *     ->menu_item( array( 'tag' => 'button', 'content' => 'Delete', 'icon' => SvgIcon::make()->name( Icon::DELETE_2 )->size( 16 )->get(), 'attr' => array( '@click' => 'deleteItem()', 'class' => 'tutor-text-critical' ) ) )
+ *     ->menu_min_width( '140px' )
+ *     ->trigger(
+ *         Button::make()->icon( Icon::DOT_MENU_H )->icon_only()->variant( Variant::GHOST )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->get()
+ *     )
+ *     ->render();
+ *
+ * // Menu item with right-aligned icon
+ * Popover::make()
+ *     ->menu_item( array( 'tag' => 'a', 'content' => 'View Profile', 'icon' => SvgIcon::make()->name( Icon::ARROW_RIGHT )->size( 16 )->get(), 'icon_alignment' => Positions::RIGHT, 'attr' => array( 'href' => '#' ) ) )
+ *     ->trigger(
+ *         Button::make()->label( 'Actions' )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->get()
+ *     )
+ *     ->render();
+ *
+ * // Non-dismissible popover (click outside does NOT close it)
+ * Popover::make()
+ *     ->title( 'Important' )
+ *     ->body( '<p>You must complete this step before continuing.</p>' )
+ *     ->dismissible( false )
+ *     ->trigger(
+ *         Button::make()->label( 'Open' )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->get()
+ *     )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = Popover::make()->title( 'Tip' )->body( '<p>Hover for help.</p>' )->trigger( $btn )->get();
  * ```
  *
  * @since 4.0.0

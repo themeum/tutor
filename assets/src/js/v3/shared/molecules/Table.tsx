@@ -91,8 +91,8 @@ const Table = <TableItem, TSortProperties extends readonly string[] = string[]>(
   renderInLastRow,
   rowStyle,
   sortIcons = {
-    asc: <SVGIcon name="sortASC" height={16} width={16} />,
-    desc: <SVGIcon name="sortDESC" height={16} width={16} />,
+    asc: <SVGIcon name="sortAsc" height={16} width={16} />,
+    desc: <SVGIcon name="sortDesc" height={16} width={16} />,
   },
 }: TableProps<TableItem, TSortProperties>) => {
   const renderRow = (index: number, content: (column: Column<TableItem>) => ReactNode) => {

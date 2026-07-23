@@ -765,6 +765,7 @@ $tutor-quiz-content-bottom-offset: calc(
       }
 
       &[data-option='draggable'] {
+        cursor: grab;
         box-shadow: 2px 2px 0px 0px #00000014;
 
         &:hover,
@@ -811,7 +812,7 @@ $tutor-quiz-content-bottom-offset: calc(
         img {
           height: 320px;
           width: 100%;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
           border-radius: $tutor-radius-sm;
         }
@@ -833,6 +834,7 @@ $tutor-quiz-content-bottom-offset: calc(
         @include tutor-flex(row, center, flex-start);
         padding: 0;
         gap: $tutor-spacing-3;
+        cursor: grab;
 
         &:hover,
         &:focus,
@@ -841,8 +843,7 @@ $tutor-quiz-content-bottom-offset: calc(
           background-color: $tutor-quiz-hover !important;
         }
 
-        &:focus-visible,
-        &:has([data-grab-handle]:focus-visible) {
+        &:focus-visible {
           @include tutor-focus-ring(brand, true);
           outline-offset: $tutor-spacing-2;
         }
@@ -866,7 +867,7 @@ $tutor-quiz-content-bottom-offset: calc(
             width: 88px;
             aspect-ratio: 1;
             border-radius: $tutor-radius-sm;
-            object-fit: cover;
+            object-fit: contain;
             object-position: center;
           }
         }
@@ -874,8 +875,9 @@ $tutor-quiz-content-bottom-offset: calc(
         [data-grab-handle] {
           @include tutor-button-reset;
           @include tutor-flex-center;
-          cursor: grab;
           margin-inline: auto $tutor-spacing-4;
+          pointer-events: none;
+          cursor: inherit;
         }
       }
     }
@@ -911,7 +913,7 @@ $tutor-quiz-content-bottom-offset: calc(
           height: 320px;
           width: 100%;
           border-radius: $tutor-radius-sm;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
         }
 
@@ -984,6 +986,7 @@ $tutor-quiz-content-bottom-offset: calc(
             @include tutor-flex(row, center, flex-start);
             background-color: $tutor-surface-l1;
             padding: 0 $tutor-spacing-4;
+            cursor: grab;
 
             &:hover,
             &:focus,
@@ -992,8 +995,7 @@ $tutor-quiz-content-bottom-offset: calc(
               background-color: $tutor-quiz-hover !important;
             }
 
-            &:focus-visible,
-            &:has([data-grab-handle]:focus-visible) {
+            &:focus-visible {
               @include tutor-focus-ring(brand, true);
               outline-offset: $tutor-spacing-2;
             }
@@ -1012,8 +1014,9 @@ $tutor-quiz-content-bottom-offset: calc(
             [data-grab-handle] {
               @include tutor-button-reset;
               @include tutor-flex-center;
-              cursor: grab;
               margin-inline-start: auto;
+              pointer-events: none;
+              cursor: inherit;
             }
           }
         }

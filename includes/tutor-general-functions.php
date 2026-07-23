@@ -1666,15 +1666,14 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 * @return array
 		 */
 		function tutor_get_manual_payment_gateways() {
-			$payments = tutor_utils()->get_option( 'payment_settings' );
-			$payments = json_decode( stripslashes( $payments ) );
+			$payments = Settings::get_payment_settings();
 
 			$manual_methods = array();
 
-			if ( $payments ) {
-				foreach ( $payments->payment_methods as $method ) {
-					if ( isset( $method->is_manual ) && 1 === (int) $method->is_manual ) {
-						$manual_methods[] = $method;
+			if ( tutor_utils()->count( $payments['payment_methods'] ) ) {
+				foreach ( $payments['payment_methods'] as $method ) {
+					if ( isset( $method['is_manual'] ) && 1 === (int) $method['is_manual'] ) {
+						$manual_methods[] = (object) $method;
 					}
 				}
 			}

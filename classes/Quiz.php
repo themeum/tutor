@@ -537,12 +537,19 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		if ( ! is_user_logged_in() ) {
-			die( esc_html__( 'Please sign in to do this operation', 'tutor' ) );
+			wp_die( esc_html__( 'Please sign in to do this operation', 'tutor' ) );
 		}
 
 		$user_id = get_current_user_id();
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 		$course  = CourseModel::get_course_by_quiz( $quiz_id );
+
+		if ( ! $course ) {
+			wp_die( esc_html__( 'Invalid course', 'tutor' ) );
+		}
+
+		// Check & die if don't have quiz access.
+		QuizModel::has_quiz_access( $quiz_id, $course->id );
 
 		self::quiz_attempt( $course->ID, $quiz_id, $user_id );
 		wp_safe_redirect( get_permalink( $quiz_id ) );
@@ -561,12 +568,15 @@ class Quiz {
 	 *
 	 * @return int inserted id|0
 	 */
-	public static function quiz_attempt( int $course_id, int $quiz_id, int $user_id, $attempt_status = 'attempt_started' ) {
+	public static function quiz_attempt( int $course_id, int $quiz_id, int $user_id, $attempt_status = QuizModel::ATTEMPT_STARTED ) {
 		global $wpdb;
 
 		if ( ! $course_id ) {
-			die( 'There is something went wrong with course, please check if quiz attached with a course' );
+			wp_die( 'There is something went wrong with course, please check if quiz attached with a course' );
 		}
+
+		// Check & die if don't have quiz access.
+		QuizModel::has_quiz_access( $quiz_id, $course_id );
 
 		do_action( 'tutor_quiz/start/before', $quiz_id, $user_id );
 
@@ -706,6 +716,10 @@ class Quiz {
 		if ( ! $attempt ) {
 			die( 'Operation not allowed, attempt not found or permission denied' );
 		}
+
+		// Check & die if don't have quiz access.
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		QuizModel::has_quiz_access( $quiz_id );
 
 		if ( QuizModel::ATTEMPT_TIMEOUT === $attempt->attempt_status ) {
 			return false;
@@ -899,42 +913,32 @@ class Quiz {
 							$is_answer_was_correct = true;
 						}
 					} elseif ( QuizModel::QUESTION_TYPE_IMAGE_ANSWERING === $question_type ) {
-						$image_inputs          = tutor_utils()->avalue_dot( 'answer_id', $answers );
-						$image_inputs          = (array) array_map( 'sanitize_text_field', $image_inputs );
-						$given_answer          = maybe_serialize( $image_inputs );
-						$is_answer_was_correct = false;
-						/**
-						 * For the image_answering question type result
-						 * remain pending in spite of correct answer & required
-						 * review of admin/instructor. Since it's
-						 * pending we need to mark it as incorrect. Otherwise if
-						 * mark it correct then earned mark will be updated. then
-						 * again when instructor/admin review & mark it as correct
-						 * extra mark is adding. In this case, student
-						 * getting double mark for the same question.
-						 *
-						 * For now code is commenting will be removed later on
-						 *
-						 * @since 2.1.5
-						 */
+						$image_inputs = tutor_utils()->avalue_dot( 'answer_id', $answers );
+						$image_inputs = (array) array_map( 'sanitize_text_field', $image_inputs );
+						$given_answer = maybe_serialize( $image_inputs );
 
-						//phpcs:disable
+						$stored_answers = $wpdb->get_results(
+							$wpdb->prepare(
+								"SELECT answer_id, answer_title
+								FROM {$wpdb->prefix}tutor_quiz_question_answers
+								WHERE belongs_question_id = %d
+									AND belongs_question_type = %s
+								ORDER BY answer_order ASC",
+								$question_id,
+								QuizModel::QUESTION_TYPE_IMAGE_ANSWERING
+							)
+						);
 
-						// $db_answer = $wpdb->get_col(
-						// 	$wpdb->prepare(
-						// 		"SELECT answer_title
-						// 			FROM {$wpdb->prefix}tutor_quiz_question_answers
-						// 			WHERE belongs_question_id = %d
-						// 				AND belongs_question_type = 'image_answering'
-						// 			ORDER BY answer_order asc ;",
-						// 		$question_id
-						// 	)
-						// );
+						$is_answer_was_correct = true;
+						foreach ( $stored_answers as $stored_answer ) {
+							$user_answer    = isset( $image_inputs[ $stored_answer->answer_id ] ) ? trim( wp_unslash( $image_inputs[ $stored_answer->answer_id ] ) ) : '';
+							$correct_answer = trim( wp_unslash( $stored_answer->answer_title ) );
 
-						// if ( is_array( $db_answer ) && count( $db_answer ) ) {
-						// 	$is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
-						// }
-						//phpcs:enable
+							if ( 0 !== strcasecmp( $user_answer, $correct_answer ) ) {
+								$is_answer_was_correct = false;
+								break;
+							}
+						}
 					} else {
 						$custom_answer_data    = array(
 							'given_answer'          => $given_answer,
@@ -982,12 +986,12 @@ class Quiz {
 			$attempt_info = array(
 				'total_answered_questions' => tutor_utils()->count( $quiz_answers ),
 				'earned_marks'             => $total_marks,
-				'attempt_status'           => 'attempt_ended',
+				'attempt_status'           => QuizModel::ATTEMPT_ENDED,
 				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 			);
 
 			if ( $review_required ) {
-				$attempt_info['attempt_status'] = 'review_required';
+				$attempt_info['attempt_status'] = QuizModel::REVIEW_REQUIRED;
 			}
 
 			$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_info, array( 'attempt_id' => $attempt_id ) );
@@ -1028,7 +1032,7 @@ class Quiz {
 		$attempt_info = array(
 			'total_answered_questions' => 0,
 			'earned_marks'             => 0,
-			'attempt_status'           => 'attempt_ended',
+			'attempt_status'           => QuizModel::ATTEMPT_ENDED,
 			'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 		);
 
@@ -1082,7 +1086,7 @@ class Quiz {
 			$attempt_id = $attempt->attempt_id;
 
 			$data = array(
-				'attempt_status'   => 'attempt_timeout',
+				'attempt_status'   => QuizModel::ATTEMPT_TIMEOUT,
 				'total_marks'      => self::get_quiz_total_marks( $quiz_id ),
 				'earned_marks'     => 0,
 				'attempt_ended_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
@@ -1398,7 +1402,7 @@ class Quiz {
 			}
 
 			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
-				$attempt_update_data['attempt_status'] = 'attempt_ended';
+				$attempt_update_data['attempt_status'] = QuizModel::ATTEMPT_ENDED;
 			}
 
 			if ( ! empty( $attempt_update_data ) ) {
@@ -1422,7 +1426,7 @@ class Quiz {
 			}
 
 			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
-				$attempt_update_data['attempt_status'] = 'attempt_ended';
+				$attempt_update_data['attempt_status'] = QuizModel::ATTEMPT_ENDED;
 			}
 
 			if ( ! empty( $attempt_update_data ) ) {
@@ -1878,7 +1882,7 @@ class Quiz {
 							' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
 						</div>',
 					),
-					array( 'content' =>  0 === $attempts_allowed ? __( 'No Limit', 'tutor' ) : $attempts_allowed ),
+					array( 'content' => 0 === $attempts_allowed ? __( 'No Limit', 'tutor' ) : $attempts_allowed ),
 				),
 			);
 		}
@@ -2239,11 +2243,6 @@ class Quiz {
 	 * @return void
 	 */
 	public static function render_sidebar_nav( WP_Post $quiz, $can_access, $tutor_current_content_id ) {
-		$quiz_title = $quiz->post_title;
-
-		$active_class   = $tutor_current_content_id === $quiz->ID ? 'active' : '';
-		$disabled_class = $can_access ? '' : 'disabled';
-
 		$quiz_status = '';
 		$icon_name   = Icon::QUIZ_2;
 		if ( ! $can_access ) {
@@ -2265,20 +2264,18 @@ class Quiz {
 				}
 			}
 		}
-		?>
 
-		<a
-			href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>" 
-			title="<?php echo esc_attr( $quiz_title ); ?>"
-			class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s %s %s', $active_class, $disabled_class, $quiz_status ) ); ?>"
-			<?php echo ! $can_access ? 'aria-disabled="true"' : ''; ?>
-		>
-			<?php SvgIcon::make()->name( $icon_name )->size( 20 )->render(); ?>
-			<div class="tutor-overflow-hidden">
-				<div class="tutor-truncate"><?php echo esc_html( $quiz_title ); ?></div>
-				<div class="tutor-tiny-2 tutor-text-subdued"><?php esc_html_e( 'Quiz', 'tutor' ); ?></div>
-			</div>
-		</a>
-		<?php
+		tutor_load_template(
+			'learning-area.components.sidebar-nav-item',
+			array(
+				'item'         => $quiz,
+				'active'       => $tutor_current_content_id === $quiz->ID,
+				'can_access'   => $can_access,
+				'is_completed' => false,
+				'type_label'   => __( 'Quiz', 'tutor' ),
+				'icon'         => $icon_name,
+				'status_class' => $quiz_status,
+			)
+		);
 	}
 }

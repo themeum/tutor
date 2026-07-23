@@ -206,7 +206,7 @@
 
           &::before {
             content: '';
-            height: 40px;
+            height: calc(100% - 8px - 8px); // 8px: top and bottom padding
             width: 2px;
             background-color: $tutor-actions-brand-primary;
             position: absolute;
@@ -226,7 +226,6 @@
         }
 
         &.disabled {
-          pointer-events: none;
           color: $tutor-text-subdued;
 
           svg {

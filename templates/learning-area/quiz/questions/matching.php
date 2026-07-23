@@ -19,10 +19,11 @@ use Tutor\Components\Constants\Variant;
 
 $answer_field_name = ( $question_field_name_base ?? '' ) . '[answers][]';
 $register_rules    = '';
+$question          = $question ?? array();
 $draggable_answers = $question['question_randomized_answers'] ?? $question['question_answers'] ?? array();
 $is_image_matching = isset( $question['question_settings']['is_image_matching'] ) && '1' === (string) $question['question_settings']['is_image_matching'];
-if ( $answer_is_required ) {
-	$register_rules = ", { validate: (value) => Array.isArray(value) && value.every((item) => item) || '" . esc_js( $required_message ) . "' }";
+if ( $answer_is_required ?? false ) {
+	$register_rules = ", { validate: (value) => Array.isArray(value) && value.every((item) => item) || '" . esc_js( $required_message ?? '' ) . "' }";
 }
 $register_attr = "register('{$answer_field_name}'{$register_rules})";
 
@@ -110,7 +111,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 					<div data-title>
 						<?php echo esc_html( $draggable_title ); ?>
 					</div>
-					<button type="button" data-grab-handle aria-label="<?php esc_attr_e( 'Drag matching option', 'tutor' ); ?>">
+					<button type="button" data-grab-handle tabindex="-1" aria-label="<?php esc_attr_e( 'Drag matching option', 'tutor' ); ?>">
 						<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 24 )->render(); ?>
 					</button>
 				</div>
