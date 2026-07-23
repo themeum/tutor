@@ -180,6 +180,9 @@ const createConfig = (env, options) => {
       react: 'React',
       'react-dom': 'ReactDOM',
       '@wordpress/i18n': 'wp.i18n',
+      '@wordpress/blocks': 'wp.blocks',
+      '@wordpress/block-editor': 'wp.blockEditor',
+      '@wordpress/components': 'wp.components',
     },
     devtool: isDevelopment ? 'source-map' : false,
     stats: {
@@ -275,6 +278,7 @@ const jsEntries = {
   'tutor-admin': './assets/src/js/admin-dashboard/tutor-admin.js',
   'tutor-setup': './assets/src/js/admin-dashboard/tutor-setup.js',
   'tutor-gutenberg': './assets/src/js/gutenberg/index.js',
+  'tutor-gutenberg-cart-button': './assets/src/js/gutenberg/cart-button/index.js',
   'tutor-course-builder': './assets/src/js/v3/entries/course-builder/index.tsx',
   'tutor-order-details': './assets/src/js/v3/entries/order-details/index.tsx',
   'tutor-coupon': './assets/src/js/v3/entries/coupon-details/index.tsx',
@@ -288,6 +292,7 @@ const jsEntries = {
 
 const scssEntries = {
   'tutor-front-scss': './assets/src/scss/front/index.scss',
+  'tutor-cart-button-scss': './assets/src/scss/blocks/cart-button.scss',
   'tutor-admin-scss': './assets/src/scss/admin-dashboard/index.scss',
   'tutor-setup-scss': './assets/src/scss/admin-dashboard/tutor-setup.scss',
   'tutor-scss': './v2-library/src/scss/main.scss',

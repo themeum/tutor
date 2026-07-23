@@ -1,0 +1,30 @@
+.tutor-cart-button {
+  display: inline-block;
+  line-height: normal;
+
+  .tutor-btn-cart {
+    position: relative;
+    display: flex;
+
+    svg {
+      color: var(--tutor-cart-icon-color, currentColor);
+    }
+  }
+
+  .tutor-cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    border-radius: 50%;
+    padding: 0 6px;
+    text-align: center;
+    font-weight: bold;
+    box-sizing: border-box;
+    font-size: 12px;
+    min-width: 18px;
+    height: 18px;
+    line-height: 18px;
+    color: var(--tutor-cart-badge-color, #ffffff);
+    background-color: var(--tutor-cart-badge-bg, #e74c3c);
+  }
+}
