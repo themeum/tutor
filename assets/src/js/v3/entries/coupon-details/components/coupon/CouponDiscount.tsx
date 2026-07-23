@@ -18,7 +18,7 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { formatSubscriptionRepeatUnit, isAddonEnabled } from '@TutorShared/utils/util';
+import { decodeHtmlEntities, formatSubscriptionRepeatUnit, isAddonEnabled } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
 
 import CouponSelectItemModal from '@CouponDetails/components/modals/CourseListModal';
@@ -286,7 +286,7 @@ function AppliesToItem({ type, image, title, subTitle, handleDeleteClick }: Appl
         )}
       </div>
       <div css={styles.selectedContent}>
-        <div css={styles.selectedTitle}>{title}</div>
+        <div css={styles.selectedTitle}>{decodeHtmlEntities(title)}</div>
         <div css={styles.selectedSubTitle}>{subTitle}</div>
       </div>
       <div>
@@ -361,8 +361,9 @@ const styles = {
     flex-shrink: 0;
   `,
   thumbnail: css`
-    width: 48px;
+    width: 56px;
     height: 48px;
+    object-fit: cover;
     border-radius: ${borderRadius[4]};
   `,
   startingFrom: css`
