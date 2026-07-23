@@ -101,13 +101,15 @@ $footer_links = array(
 		'icon_class' => 'ttr tutor-icon-hamburger-o tutor-dashboard-menu-toggler',
 	),
 );
+
+$enrolled_student_count = (int) tutor_utils()->get_total_students_by_instructor( $user_id );
 ?>
 
 <?php do_action( 'tutor_dashboard/before/wrap' ); ?>
 <div class="tutor-dashboard-layout">
 	<?php tutor_load_template( 'dashboard.components.sidebar' ); ?>
 	<div class="tutor-dashboard-main">
-		<?php tutor_load_template( 'dashboard.components.header' ); ?>
+		<?php tutor_load_template( 'dashboard.components.header', array( 'enrolled_student_count' => $enrolled_student_count ) ); ?>
 		<div class="tutor-dashboard-body" role="main">
 			<div class="tutor-dashboard-page">
 				<?php
@@ -133,7 +135,7 @@ $footer_links = array(
 					$from_other_location = apply_filters( 'load_dashboard_template_part_from_other_location', $other_location );
 
 					if ( '' == $from_other_location ) {
-						tutor_load_template( 'dashboard.' . $dashboard_page_name );
+						tutor_load_template( 'dashboard.' . $dashboard_page_name, array( 'enrolled_student_count' => $enrolled_student_count ) );
 					} else {
 						// Load template from other location full abspath.
 						include_once $from_other_location;
@@ -141,7 +143,7 @@ $footer_links = array(
 
 					do_action( 'tutor_load_dashboard_template_after', $dashboard_page_name );
 				} elseif ( User::is_instructor_view() ) {
-						tutor_load_template( 'dashboard.dashboard' );
+						tutor_load_template( 'dashboard.dashboard', array( 'total_students' => $enrolled_student_count ) );
 				} else {
 					tutor_load_template( 'dashboard.student.dashboard' );
 				}

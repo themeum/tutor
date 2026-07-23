@@ -141,7 +141,7 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 	>
 		<?php tutor_load_template( 'learning-area.components.header' ); ?>
 		<div class="tutor-learning-area-body">
-			<?php tutor_load_template( 'learning-area.components.sidebar' ); ?>
+			<?php tutor_load_template( 'learning-area.components.sidebar', array( 'menu_items' => $subpages ) ); ?>
 			<div class="tutor-learning-area-content" role="main">
 				<div class="tutor-learning-area-container">
 					<?php
