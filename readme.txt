@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -333,6 +333,25 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.2 - 22 July, 2026
+
+Update: Added hyperlink support to Instructor Feedback and Instructor Notes.
+Update: Added support for Vimeo unlisted and private video URLs.
+Update: Improved the user experience for the Ordering Quiz.
+Update: Display full lesson names in the learning area without truncation.
+Fix: Resolved the Forgot Password email redirection issue. (Pro)
+Fix: Fixed course deletion issue from the WordPress admin dashboard.
+Fix: Restored access to locked lessons from the course sidebar. (Pro)
+Fix: Prevented learners from progressing after failing a quiz in Sequential Mode.
+Fix: Prevented the Ordering Quiz from revealing the correct answer through predefined numbering. (Pro)
+Fix: Corrected the Complete Course button icon in RTL mode.
+Fix: Allowed admins to manually enroll students with expired enrollment records. (Pro)
+Fix: Prevented the Manual Payment gateway description from disappearing when underline formatting was applied.
+Fix: Resolved the compatibility issue between Tutor LMS Native Invoice and Elementor. (Pro)
+Fix: Eliminated the need to reconnect the license to receive product updates. (Pro)
+Fix: Restored Facebook social login functionality. (Pro)
+Fix: Improved quiz responsiveness across different screen sizes.
 
 = 4.0.1 - 10 July, 2026
 
