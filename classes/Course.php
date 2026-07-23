@@ -1998,6 +1998,15 @@ class Course extends Tutor_Base {
 			}
 		}
 
+		/**
+		 * Update course content if main author is changed and multi-instructor addon is disabled.
+		 *
+		 * @since 4.0.3
+		 */
+		if ( ! $attached && ! tutor_utils()->is_addon_enabled( 'tutor-multi-instructors' ) ) {
+			CourseModel::update_course_content_author( $post_ID, (int) $author_id );
+		}
+
 		do_action( 'tutor_save_course_after', $post_ID, $post );
 	}
 

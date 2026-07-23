@@ -1750,4 +1750,38 @@ class CourseModel {
 			+ ( $duration['durationMinutes'] * MINUTE_IN_SECONDS )
 			+ ( $duration['durationSeconds'] );
 	}
+
+	/**
+	 * Update the post_author of a course's content (topics, lessons,
+	 * quizzes and assignments) to a given user.
+	 *
+	 * @since 4.0.3
+	 *
+	 * @param int $course_id course id.
+	 * @param int $author_id new author (user) id.
+	 *
+	 * @return bool
+	 */
+	public static function update_course_content_author( int $course_id, int $author_id ): bool {
+		global $wpdb;
+
+		$default_post_types = array( tutor()->lesson_post_type, tutor()->quiz_post_type );
+		$content_post_types = array_unique( apply_filters( 'tutor_course_contents_post_types', $default_post_types ) );
+
+		$post_types = QueryHelper::prepare_in_clause( $content_post_types );
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$query = $wpdb->prepare(
+			"UPDATE {$wpdb->posts}
+				SET post_author = %d
+				WHERE ( post_parent = %d AND post_type = 'topics' )
+					OR ( post_type IN ({$post_types}) AND post_parent IN (
+						SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_type = 'topics'
+					) )",
+			array_merge( array( $author_id, $course_id ), $content_post_types, array( $course_id ) )
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		return (bool) $wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	}
 }
