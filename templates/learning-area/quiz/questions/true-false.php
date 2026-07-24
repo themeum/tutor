@@ -38,7 +38,7 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 				value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 				x-bind="<?php echo esc_attr( $register_attr ); ?>"
 			>
-			<?php SvgIcon::make()->name( $answer['is_correct'] ? Icon::CHECK_2 : Icon::CROSS )->size( 20 )->render(); ?>
+			<?php // SvgIcon::make()->name( $answer['is_correct'] ? Icon::CHECK_2 : Icon::CROSS )->size( 20 )->render(); ?>
 			<?php echo esc_html( $answer['answer_title'] ); ?>
 		</label>
 	<?php endforeach; ?>
