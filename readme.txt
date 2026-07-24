@@ -340,7 +340,9 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 4.0.3 - 24 July, 2026
 
-Fix: On the legacy mode quiz submission failed issue has been fixed.
+Fix: Resolved an issue where quiz submissions failed in Legacy Mode.
+Fix: Resolved an issue where the correct answer was incorrectly marked in True/False quizzes.
+Fix: Resolved an issue where the footer displayed "Tutor LMS" instead of the site title. (Pro)
 
 = 4.0.2 - 22 July, 2026
 
