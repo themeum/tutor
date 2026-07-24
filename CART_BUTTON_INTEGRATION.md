@@ -4,7 +4,11 @@ This guide explains how to integrate the Tutor LMS native ecommerce cart button 
 
 ## Overview
 
-The Tutor LMS plugin now provides a global cart button function that can be used by any theme to display the shopping cart button in the header or any other location. This works with Tutor's native ecommerce system (when monetization is set to 'tutor').
+The Tutor LMS plugin provides multiple ways to display the shopping cart button for Tutor's native ecommerce system (when monetization is set to 'tutor'):
+
+1. **PHP Function** - For classic themes and direct theme integration
+2. **Shortcode** - For theme developers who prefer shortcode-based integration
+3. **Gutenberg Block** - For block-based themes (FSE) and site editor integration
 
 ## Available Functions
 
@@ -14,13 +18,13 @@ Displays the cart button with icon and item count.
 
 **Parameters:**
 - `$args` (array) - Optional arguments to customize the cart button:
-  - `class` (string) - CSS class for the cart button. Default: 'cart-contents'
+  - `class` (string) - CSS class for the cart button. Default: 'tutor-cart-button'
   - `title` (string) - Title attribute for the cart link. Default: 'View your shopping cart'
   - `show_icon` (bool) - Whether to show the cart icon. Default: true
-  - `show_count` (bool) - Whether to show the cart item count. Default: true
+  - `show_count` (string) - When to show the cart item count: 'always', 'if_has_items', or 'never'. Default: 'if_has_items'
   - `icon_svg` (string) - Custom SVG icon. If not provided, default cart icon will be used
-  - `before_count` (string) - Text before cart count. Default: '('
-  - `after_count` (string) - Text after cart count. Default: ')'
+  - `before_count` (string) - Text before cart count. Default: ''
+  - `after_count` (string) - Text after cart count. Default: ''
 
 **Example Usage:**
 
@@ -32,15 +36,18 @@ Displays the cart button with icon and item count.
 <?php tutor_ecommerce_cart_button( array( 'class' => 'my-theme-cart' ) ); ?>
 
 // Hide count, show only icon
-<?php tutor_ecommerce_cart_button( array( 'show_count' => false ) ); ?>
+<?php tutor_ecommerce_cart_button( array( 'show_count' => 'never' ) ); ?>
+
+// Always show count even when empty
+<?php tutor_ecommerce_cart_button( array( 'show_count' => 'always' ) ); ?>
 
 // Custom icon and styling
 <?php 
 tutor_ecommerce_cart_button( array(
     'class' => 'header-cart-btn',
     'title' => 'View Cart',
-    'before_count' => '',
-    'after_count' => ' items',
+    'before_count' => '<span class="cart-count">',
+    'after_count' => '</span>',
 ) ); 
 ?>
 ```
@@ -70,7 +77,7 @@ For themes that prefer shortcode integration, use:
 - `class` - CSS class for the cart button
 - `title` - Title attribute
 - `show_icon` - "true" or "false"
-- `show_count` - "true" or "false"
+- `show_count` - "true", "false", or "if_has_items"
 - `before_count` - Text before count
 - `after_count` - Text after count
 
@@ -94,11 +101,23 @@ For block-based themes (FSE - Full Site Editing), Tutor LMS provides a dedicated
 2. Add the block to your header template or any other template
 3. The block will automatically render the cart button with icon and count
 
+**Block Settings:**
+- **Show Icon** - Toggle to show/hide the cart icon
+- **Show Count** - Toggle to show/hide the cart item count
+- **Custom CSS Class** - Add custom CSS class for styling
+
+**Block Style Options:**
+- **Icon Color** - Color picker for the cart icon
+- **Count Background Color** - Color picker for the badge background
+- **Count Text Color** - Color picker for the badge text
+
 **Features:**
 - Automatically detects if Tutor native ecommerce is enabled
 - Shows cart icon and item count
 - Links to the cart page
 - Works in any block template (header, footer, etc.)
+- Server-side rendering for optimal performance
+- Dynamic cart count updates via JavaScript
 
 **Note:** The block uses dynamic rendering and will display the cart button only when Tutor native ecommerce is active.
 
@@ -129,37 +148,19 @@ This approach gives themes full control over where the cart appears, similar to 
 
 ### Block Themes (FSE - Full Site Editing)
 
-For block themes, the `wp_nav_menu_items` filter does NOT work because block themes use the Navigation block instead of `wp_nav_menu()`.
-
-**Important Limitation:** WordPress Navigation blocks have a strict whitelist of allowed blocks. Neither custom blocks (like Tutor Cart Button) nor the Shortcode block can be added directly inside Navigation blocks. This is a WordPress core restriction.
-
-#### Recommended Approach for Block Themes
-
-Place the **Tutor Cart Button Gutenberg block** in your header template (outside the Navigation block):
+For block themes, use the **Tutor Cart Button Gutenberg block** in your header template:
 
 1. Go to Appearance → Editor (Site Editor)
 2. Edit your Header template
 3. Add the "Tutor Cart Button" block in the header area, alongside or near your Navigation block
 4. The block will display the cart icon and count
 
-This is the standard approach used by WooCommerce and other plugins - the cart button is placed in the header template, not inside the Navigation block itself.
+**Alternative Methods:**
 
-#### Alternative: Custom Template Part with PHP
+- **Shortcode in Custom HTML:** Add a Custom HTML block with `[tutor_cart_button]` in a template part
+- **PHP in Theme Files:** Override the header template in a child theme and use `<?php tutor_ecommerce_cart_button(); ?>`
 
-For more control, create a custom template part:
-
-1. Go to Appearance → Editor (Site Editor)
-2. Create a new template part (e.g., "Header Cart")
-3. Add a "Custom HTML" block with the shortcode: `[tutor_cart_button]`
-4. Insert this template part in your header
-
-#### Alternative: Theme Customization
-
-If you need the cart inside the navigation area and have access to theme files:
-
-1. Create a child theme
-2. Override the header template
-3. Use the PHP function: `<?php tutor_ecommerce_cart_button(); ?>`
+**Note:** WordPress Navigation blocks have a strict whitelist of allowed blocks, so the cart button cannot be added directly inside Navigation blocks. This is a WordPress core restriction. The standard approach (used by WooCommerce and other plugins) is to place the cart button in the header template, outside the Navigation block.
 
 ## Theme Integration Examples
 
@@ -194,7 +195,7 @@ if ( function_exists( 'tutor_utils' ) && tutor_utils()->is_monetize_by_tutor() )
         <?php 
         tutor_ecommerce_cart_button( array(
             'class' => 'theme-cart-link',
-            'show_count' => true,
+            'show_count' => 'if_has_items',
             'before_count' => '<span class="cart-count">',
             'after_count' => '</span>',
         ) ); 
@@ -203,40 +204,17 @@ if ( function_exists( 'tutor_utils' ) && tutor_utils()->is_monetize_by_tutor() )
 <?php endif; ?>
 ```
 
-### Example 4: Replacing the Current Starter Theme Implementation
+## Dynamic Cart Count Updates
 
-The current implementation in tutorstarter theme can be simplified:
+The cart button includes JavaScript functionality for dynamic cart count updates. When items are added or removed from the cart, the count automatically updates across all cart button instances on the page.
 
-**Before (Current):**
-```php
-if ( class_exists( 'Tutor\Ecommerce\CartController' ) && 'tutor' === tutor_utils()->get_option( 'monetize_by' ) && 'header_fullwidth_center' !== get_theme_mod( 'header_type_select' ) ) {
-    $tutor_native_cart_controller = new CartController();
-    if ( true === get_theme_mod( 'cart_btn_toggle', true ) ) {
-        $items = $tutor_native_cart_controller->get_cart_items()['courses'];
-        ?>
-        <a class="cart-contents" href="<?php echo esc_url( $tutor_native_cart_controller->get_page_url() ); ?>"
-            title="<?php esc_attr_e( 'View your shopping cart', 'tutorstarter' ); ?>">
-            <span class="btn-cart">
-                <svg>...</svg>
-                <span class="tutor_native_cart_count"> 
-                <?php
-                if ( $items && $items['total_count'] ) {
-                    echo esc_html( $tutor_native_cart_controller->get_cart_items()['courses']['total_count'] );
-                } ?>
-                </span>
-            </span>
-        </a>
-        <?php
-    }
-}
-```
+**JavaScript Events:**
+- `tutorAddToCartEvent` - Dispatched when an item is added to cart
+- `tutorRemoveCartEvent` - Dispatched when an item is removed from cart
 
-**After (Using Global Function):**
-```php
-if ( 'header_fullwidth_center' !== get_theme_mod( 'header_type_select' ) && true === get_theme_mod( 'cart_btn_toggle', true ) ) {
-    tutor_ecommerce_cart_button();
-}
-```
+**CSS Classes for JavaScript:**
+- `.tutor-cart-count` - Targeted by JavaScript for count updates
+- `data-show-count` - Attribute to control when count is displayed ('always', 'if_has_items', 'never')
 
 ## Filters
 
@@ -254,12 +232,36 @@ function my_custom_cart_args( $args ) {
 
 ## CSS Classes
 
-The cart button uses the following CSS classes by default:
-- `.cart-contents` - Main cart link
-- `.btn-cart` - Icon container
-- `.tutor_cart_count` - Count badge
+The cart button uses the following CSS classes (same for both PHP function and Gutenberg block):
+- `.tutor-cart-button` - Main cart link/wrapper (default class)
+- `.tutor-btn-cart` - Icon container
+- `.tutor-cart-count` - Count badge
 
-You can override these using the `class` parameter or custom CSS.
+**Note:** The Gutenberg block wraps the cart button in a div with class `.tutor-cart-button` (from `get_block_wrapper_attributes`). The inner cart button uses the same classes as the PHP function.
+
+You can override the main class using the `class` parameter (PHP function) or Custom CSS Class setting (Gutenberg block).
+
+## File Structure
+
+**Gutenberg Block:**
+- `assets/src/js/gutenberg/cart-button/block.json` - Block metadata
+- `assets/src/js/gutenberg/cart-button/index.js` - Block registration
+- `assets/src/js/gutenberg/cart-button/edit.js` - React edit component
+- `assets/src/js/gutenberg/cart-button/save.js` - Save component (returns null for dynamic rendering)
+- `assets/src/js/gutenberg/cart-button/render.php` - Server-side render callback
+- `assets/src/js/gutenberg/cart-button/style.scss` - Block styles
+
+**Frontend JavaScript:**
+- `assets/src/js/front/tutor-cart-button.js` - Cart count update listeners
+- `assets/src/js/front/tutor-front.js` - Imports cart-button.js
+
+**PHP Functions**:**
+- `includes/ecommerce-functions.php` - `tutor_ecommerce_cart_button()` and `tutor_ecommerce_get_cart_count()`
+- `classes/Shortcode.php` - `[tutor_cart_button]` shortcode handler
+- `classes/Gutenberg.php` - Block registration
+
+**Build Configuration:**
+- `rspack.config.mjs` - Build entries for `tutor-gutenberg-cart-button` (JS and SCSS)
 
 ## Compatibility
 
@@ -267,13 +269,16 @@ You can override these using the `class` parameter or custom CSS.
 - Requires monetization setting to be set to 'tutor'
 - Automatically returns nothing if conditions are not met
 - Compatible with any WordPress theme
+- Supports both classic and block themes
 
 ## Notes
 
 - The function automatically checks if Tutor native ecommerce is enabled
 - If WooCommerce is used for monetization, this function will not display
-- The cart count only shows when there are items in the cart (configurable via `show_count`)
-- The default icon is the same as used in the tutorstarter theme
+- The cart count display behavior is configurable via `show_count` parameter
+- The default icon uses Tutor's built-in SVG icon system
+- The Gutenberg block uses modern WordPress block API (block.json, ES6 modules, React/JSX)
+- Cart count updates are handled via custom JavaScript events for real-time updates
 
 ## Support
 
