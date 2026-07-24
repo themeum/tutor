@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.0.2
+Stable tag: 4.0.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -26,6 +26,10 @@ You can create unlimited courses, quizzes, interactive lessons, generate reports
 👉 [Documentation](https://tutorlms.com/docs/)
 
 You can also join our [official Facebook Community](https://www.facebook.com/groups/tutorlms) to know all the latest news and be part of the Tutor LMS.
+
+Also, check out our Tutor LMS overview video:
+
+https://www.youtube.com/watch?v=0TGkkA5J5hE 
 
 Overall, Tutor LMS is the best WordPress LMS plugin for eLearning enthusiasts. It comes with every core feature you’ll need to build a perfect eLearning website. Additionally, it also has plenty of premium add-ons to empower the core plugin more! A few important addons are Course Builder, Certificate, Social Login, Reports, Content Drip, Assignments, Calendar, etc.
 
@@ -108,11 +112,11 @@ You can learn more about these features from [our website](https://tutorlms.com/
 
 Tutor LMS is a perfect solution for anyone who wants to create a full-fledged learning management system. Here are some core uses of Tutor LMS:
 
-👨‍🎨 [Individual Creators](https://tutorlms.com/solo-creators/)
-📚 [Schools & Academies](https://tutorlms.com/schools-and-academies/)
-🏫 [LMS Agencies](https://tutorlms.com/agencies/)
-💻 [Coaching Businesses](https://tutorlms.com/coaching-businesses/)
-🎓 [Nonprofits & Communities](https://tutorlms.com/nonprofits-and-community-builders/)
+👨‍🎨 [Individual Creators](https://tutorlms.com/solutions/solo-creators/)
+📚 [Schools & Academies](https://tutorlms.com/solutions/schools-and-academies/)
+🏫 [LMS Agencies](https://tutorlms.com/solutions/agencies/)
+💻 [Coaching Businesses](https://tutorlms.com/solutions/coaching-businesses/)
+🎓 [Nonprofits & Communities](https://tutorlms.com/solutions/nonprofits-and-community-builders/)
 
 These are just a few possibilities! There’s a whole new world of eLearning that’s yet to be discovered using this WordPress LMS plugin.
 
@@ -334,24 +338,29 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 4.0.3 - 24 July, 2026
+
+Fix: On the legacy mode quiz submission failed issue has been fixed.
+
 = 4.0.2 - 22 July, 2026
 
-Update: Added hyperlink support to Instructor Feedback and Instructor Notes.
-Update: Added support for Vimeo unlisted and private video URLs.
-Update: Improved the user experience for the Ordering Quiz.
-Update: Display full lesson names in the learning area without truncation.
-Fix: Resolved the Forgot Password email redirection issue. (Pro)
-Fix: Fixed course deletion issue from the WordPress admin dashboard.
-Fix: Restored access to locked lessons from the course sidebar. (Pro)
-Fix: Prevented learners from progressing after failing a quiz in Sequential Mode.
-Fix: Prevented the Ordering Quiz from revealing the correct answer through predefined numbering. (Pro)
-Fix: Corrected the Complete Course button icon in RTL mode.
-Fix: Allowed admins to manually enroll students with expired enrollment records. (Pro)
-Fix: Prevented the Manual Payment gateway description from disappearing when underline formatting was applied.
-Fix: Resolved the compatibility issue between Tutor LMS Native Invoice and Elementor. (Pro)
-Fix: Eliminated the need to reconnect the license to receive product updates. (Pro)
-Fix: Restored Facebook social login functionality. (Pro)
-Fix: Improved quiz responsiveness across different screen sizes.
+Update: Add Hyperlink Support to Instructor Feedback and Instructor Notes
+Update: Add support for Vimeo unlisted/private video URLs
+Update: UX updated for the ordering quiz
+Update: Show Full Lesson Name Without Ellipsis in the learning area
+
+Fix: Forgot Password Redirection Mail (Pro)
+Fix: Course deletion issue from the wp admin dashboard
+Fix: Unable to Access Locked Lessons from the Sidebar (Pro)
+Fix: Users Can Progress Despite Failing a Quiz in Sequential Mode
+Fix: Ordering Quiz Questions Reveals Correct Answer Through Predefined Numbering (Pro)
+Fix: In RTL mode, the Complete course button icon reverts along with the content - UI Issue
+Fix: Admin can not manually enrolled a student when they already have expired enrollment record. (Pro)
+Fix: Manual Payment Gateway Description Disappears When Underline Formatting Is Applied.
+Fix: Tutor LMS Native Invoice issue with Elementor.(Pro)
+Fix: Fixed an issue where license need to reconnect to get product updates. (Pro)
+Fix: Facebook Social Media login does not work.(Pro)
+Fix: Quiz Responsive issue.
 
 = 4.0.1 - 10 July, 2026
 
