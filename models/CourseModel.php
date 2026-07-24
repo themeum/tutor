@@ -1750,4 +1750,74 @@ class CourseModel {
 			+ ( $duration['durationMinutes'] * MINUTE_IN_SECONDS )
 			+ ( $duration['durationSeconds'] );
 	}
+
+	/**
+	 * Update the post_author of a course's content (topics, lessons,
+	 * quizzes and assignments) to a given user.
+	 *
+	 * @since 4.0.3
+	 *
+	 * @param int $course_id course id.
+	 * @param int $author_id new author (user) id.
+	 *
+	 * @return bool
+	 */
+	public static function update_course_content_author( int $course_id, int $author_id ): bool {
+		global $wpdb;
+
+		$content_ids = get_posts(
+			array(
+				'post_parent'    => $course_id,
+				'post_type'      => tutor()->topics_post_type,
+				'fields'         => 'ids',
+				'posts_per_page' => -1,
+				'post_status'    => 'any',
+			)
+		);
+
+		$content_ids        = is_array( $content_ids ) ? $content_ids : array();
+		$default_post_types = array( tutor()->lesson_post_type, tutor()->quiz_post_type );
+		$content_post_types = array_unique( apply_filters( 'tutor_course_contents_post_types', $default_post_types ) );
+
+		$primary_table = 'posts as course';
+		$topic_table   = 'posts as topic';
+		$content_table = 'posts as content';
+
+		$joined_data = QueryHelper::get_joined_data(
+			$primary_table,
+			array(
+				array(
+					'type'  => 'INNER',
+					'table' => $topic_table,
+					'on'    => 'course.ID = topic.post_parent',
+				),
+				array(
+					'type'  => 'INNER',
+					'table' => $content_table,
+					'on'    => 'topic.ID = content.post_parent',
+				),
+			),
+			array( 'content.ID' ),
+			array(
+				'course.ID'         => $course_id,
+				'content.post_type' => array( 'IN', $content_post_types ),
+			),
+			array(),
+			'',
+			-1
+		);
+
+		$content_ids = array_merge( $content_ids, wp_list_pluck( $joined_data['results'], 'ID' ) );
+		$content_ids = array_filter( array_unique( array_map( 'absint', $content_ids ) ) );
+
+		if ( empty( $content_ids ) ) {
+			return false;
+		}
+
+		return (bool) QueryHelper::update_where_in(
+			$wpdb->posts,
+			array( 'post_author' => $author_id ),
+			implode( ',', $content_ids )
+		);
+	}
 }

@@ -1998,6 +1998,18 @@ class Course extends Tutor_Base {
 			}
 		}
 
+		/**
+		 * Update course content if main author is changed and multi-instructor addon is disabled.
+		 *
+		 * @since 4.0.4
+		 */
+		if ( ! $attached && ! tutor_utils()->is_addon_enabled( 'tutor-multi-instructors' ) ) {
+			CourseModel::update_course_content_author( $post_ID, (int) $author_id );
+			// Remove all existing instructors from the course and add the new one.
+			delete_metadata( 'user', 0, '_tutor_instructor_course_id', $post_ID, true );
+			add_user_meta( $author_id, '_tutor_instructor_course_id', $post_ID );
+		}
+
 		do_action( 'tutor_save_course_after', $post_ID, $post );
 	}
 
@@ -3108,7 +3120,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @param integer $course_id course ID.
 	 * @param integer $user_id user ID.
-     *
+	 *
 	 * @return void
 	 */
 	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
