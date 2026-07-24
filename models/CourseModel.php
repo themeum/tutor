@@ -1765,23 +1765,59 @@ class CourseModel {
 	public static function update_course_content_author( int $course_id, int $author_id ): bool {
 		global $wpdb;
 
+		$content_ids = get_posts(
+			array(
+				'post_parent'    => $course_id,
+				'post_type'      => tutor()->topics_post_type,
+				'fields'         => 'ids',
+				'posts_per_page' => -1,
+				'post_status'    => 'any',
+			)
+		);
+
+		$content_ids        = is_array( $content_ids ) ? $content_ids : array();
 		$default_post_types = array( tutor()->lesson_post_type, tutor()->quiz_post_type );
 		$content_post_types = array_unique( apply_filters( 'tutor_course_contents_post_types', $default_post_types ) );
 
-		$post_types = QueryHelper::prepare_in_clause( $content_post_types );
+		$primary_table = 'posts as course';
+		$topic_table   = 'posts as topic';
+		$content_table = 'posts as content';
 
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$query = $wpdb->prepare(
-			"UPDATE {$wpdb->posts}
-				SET post_author = %d
-				WHERE ( post_parent = %d AND post_type = 'topics' )
-					OR ( post_type IN ({$post_types}) AND post_parent IN (
-						SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_type = 'topics'
-					) )",
-			array_merge( array( $author_id, $course_id ), $content_post_types, array( $course_id ) )
+		$joined_data = QueryHelper::get_joined_data(
+			$primary_table,
+			array(
+				array(
+					'type'  => 'INNER',
+					'table' => $topic_table,
+					'on'    => 'course.ID = topic.post_parent',
+				),
+				array(
+					'type'  => 'INNER',
+					'table' => $content_table,
+					'on'    => 'topic.ID = content.post_parent',
+				),
+			),
+			array( 'content.ID' ),
+			array(
+				'course.ID'         => $course_id,
+				'content.post_type' => array( 'IN', $content_post_types ),
+			),
+			array(),
+			'',
+			-1
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-		return (bool) $wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$content_ids = array_merge( $content_ids, wp_list_pluck( $joined_data['results'], 'ID' ) );
+		$content_ids = array_filter( array_unique( array_map( 'absint', $content_ids ) ) );
+
+		if ( empty( $content_ids ) ) {
+			return false;
+		}
+
+		return (bool) QueryHelper::update_where_in(
+			$wpdb->posts,
+			array( 'post_author' => $author_id ),
+			implode( ',', $content_ids )
+		);
 	}
 }
