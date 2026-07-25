@@ -79,7 +79,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
     "path": "^0.12.7",
-    "postcss": "^8.4.38",
+    "postcss": "^8.5.18",
     "postcss-loader": "^8.1.1",
     "prettier": "^3.8.1",
     "sass": "^1.62.1",
