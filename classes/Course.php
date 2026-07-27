@@ -1968,10 +1968,21 @@ class Course extends Tutor_Base {
 		/**
 		 * Adding author to instructor automatically
 		 */
+		$requested_author_id = Input::post( 'post_author_override', 0, Input::TYPE_INT );
 
-		// Override post author id.
-		$author_id = isset( $_POST['post_author_override'] ) ? $_POST['post_author_override'] : $post->post_author; //phpcs:ignore
-		$attached  = (int) $wpdb->get_var(
+		/**
+		 * Only accept the requested author override if it targets a real,approved instructor or admin
+		 *
+		 * @since 4.0.4
+		 */
+		$author_id = $post->post_author;
+		if ( $requested_author_id && ( User::is_admin() || User::is_instructor() ) ) {
+			if ( User::is_admin( $requested_author_id ) || User::is_instructor( $requested_author_id, true ) ) {
+				$author_id = $requested_author_id;
+			}
+		}
+
+		$attached = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(umeta_id) FROM {$wpdb->usermeta}
 					WHERE user_id = %d
