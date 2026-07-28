@@ -11,6 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
 use Tutor\Models\QuizModel;
 
 if ( ! isset( $question ) || ! is_object( $question ) ) {
@@ -111,8 +112,8 @@ if ( 'ordering' === $question_type ) {
 	<div class="tutor-quiz-review-dnd-rows">
 		<?php
 		foreach ( $rows as $row ) :
-			$given_text   = isset( $row['given_text'] ) ? wp_unslash( $row['given_text'] ) : '';
-			$correct_text = isset( $row['correct_text'] ) ? wp_unslash( $row['correct_text'] ) : '';
+			$given_text   = isset( $row['given_text'] ) ? Quiz::sanitize_quiz_content( $row['given_text'] ) : '';
+			$correct_text = isset( $row['correct_text'] ) ? Quiz::sanitize_quiz_content( $row['correct_text'] ) : '';
 			$given_status = isset( $row['given_status'] ) ? $row['given_status'] : 'neutral';
 			?>
 			<div class="tutor-quiz-review-dnd-row">

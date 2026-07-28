@@ -9,6 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
 use Tutor\Models\QuizModel;
 
 if ( ! isset( $question ) || ! is_object( $question ) ) {
@@ -45,8 +46,13 @@ $given_ids = array_map( 'intval', array_filter( $given_ids ) );
 		?>
 		<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $option_attr ); ?>" data-readonly="true">
 			<?php if ( ! empty( $answer->image_id ) ) : ?>
-				<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer->image_id, 'full' ) ); ?>" alt="<?php echo esc_attr( $answer->answer_title ?? '' ); ?>">
-				<div data-title><?php echo esc_html( $answer->answer_title ?? '' ); ?></div>
+				<img
+					src="<?php echo esc_url( wp_get_attachment_image_url( $answer->image_id, 'full' ) ); ?>"
+					alt="<?php echo esc_attr( Quiz::sanitize_quiz_content( $answer->answer_title ?? '' ) ); ?>"
+				>
+				<div data-title>
+					<?php echo esc_html( Quiz::sanitize_quiz_content( $answer->answer_title ?? '' ) ); ?>
+				</div>
 			<?php else : ?>
 				<div class="tutor-input-field">
 					<div class="tutor-input-wrapper">
@@ -58,7 +64,7 @@ $given_ids = array_map( 'intval', array_filter( $given_ids ) );
 							disabled
 						>
 						<label class="tutor-label" for="<?php echo esc_attr( 'attempt-review-' . $question->question_id . '-' . $index ); ?>">
-							<?php echo esc_html( $answer->answer_title ?? '' ); ?>
+							<?php echo esc_html( Quiz::sanitize_quiz_content( $answer->answer_title ?? '' ) ); ?>
 						</label>
 					</div>
 				</div>
