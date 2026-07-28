@@ -12,10 +12,12 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Quiz;
 use TUTOR\Icon;
-use Tutor\Components\SvgIcon;
 
-$field_name     = $question_field_name_base ?? '';
-$register_rules = '';
+$field_name         = $question_field_name_base ?? '';
+$register_rules     = '';
+$question           = (array) ( $question ?? array() );
+$answer_is_required = $answer_is_required ?? false;
+$required_message   = $required_message ?? '';
 if ( $answer_is_required ) {
 	$register_rules = ", { required: '" . esc_js( $required_message ) . "' }";
 }
@@ -24,7 +26,7 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 ?>
 
 <div class="tutor-quiz-question-options">
-	<?php foreach ( $question['question_answers'] as $answer ) : ?>
+	<?php foreach ( $question['question_answers'] ?? array() as $answer ) : ?>
 		<label 
 			class="tutor-quiz-question-option"
 			tabindex="0"
@@ -39,12 +41,6 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 				value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 				x-bind="<?php echo esc_attr( $register_attr ); ?>"
 			>
-			<?php
-				SvgIcon::make()
-					->name( __( 'True', 'tutor' ) === $answer['answer_title'] ? Icon::CHECK_2 : Icon::CROSS )
-					->size( 20 )
-					->render();
-			?>
 			<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
 		</label>
 	<?php endforeach; ?>

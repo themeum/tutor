@@ -9,6 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Models\QuizModel;
