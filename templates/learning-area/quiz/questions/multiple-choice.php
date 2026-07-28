@@ -10,6 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
+
 /**
  * Check if current answer has a thumb
  *
@@ -61,14 +63,17 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 						class="tutor-label"
 						for="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
 					>
-						<?php echo esc_html( $answer['answer_title'] ); ?>
+						<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
 					</label>
 				</div>
 			</div>
 			<?php if ( $has_image( $answer ) ) : ?>
-				<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+				<img
+					src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>"
+					alt="<?php echo esc_attr( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>"
+				>
 				<div data-title>
-					<?php echo esc_html( $answer['answer_title'] ); ?>
+					<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
 				</div>
 			<?php endif; ?>
 		</label>

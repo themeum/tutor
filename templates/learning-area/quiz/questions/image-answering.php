@@ -10,6 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
 use Tutor\Components\InputField;
 
 $field_name     = '';
@@ -23,7 +24,10 @@ if ( $answer_is_required ) {
 <div class="tutor-quiz-question-options">
 	<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
 		<div class="tutor-quiz-question-option">
-			<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+			<img
+				src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>"
+				alt="<?php echo esc_attr( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>"
+			>
 			<?php
 			$input_name    = sprintf( '%s[answer_id][%d]', $question_field_name_base ?? '', (int) $answer['answer_id'] );
 			$rules_suffix  = $register_rules;

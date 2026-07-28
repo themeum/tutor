@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use TUTOR\Quiz;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
 use Tutor\Components\Button;
@@ -44,13 +45,16 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option">
 				<?php if ( $is_image_matching && ! empty( $answer['image_id'] ) ) : ?>
-					<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+					<img
+						src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>"
+						alt="<?php echo esc_attr( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>"
+					>
 				<?php else : ?>
 					<div data-title>
 						<div class="tutor-quiz-question-option-number">
 							<?php echo esc_html( $answer['answer_order'] ); ?>
 						</div>
-						<?php echo esc_html( $answer['answer_title'] ); ?>
+						<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
 					</div>
 				<?php endif; ?>
 				<div
@@ -101,7 +105,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 			<?php foreach ( $draggable_answers as $answer ) : ?>
 				<?php
 				$draggable_title = $is_image_matching
-					? $answer['answer_title'] : $answer['answer_two_gap_match'];
+					? Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) : Quiz::sanitize_quiz_content( $answer['answer_two_gap_match'] ?? '' );
 				?>
 				<div
 					class="tutor-quiz-question-option"

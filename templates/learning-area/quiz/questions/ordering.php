@@ -10,6 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 
@@ -47,9 +48,12 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 				</div>
 				<div data-title>
 					<?php if ( ! empty( $answer['image_id'] ) ) : ?>
-						<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+						<img
+							src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>"
+							alt="<?php echo esc_attr( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>"
+						>
 					<?php endif; ?>
-					<?php echo esc_html( $answer['answer_title'] ); ?>
+					<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
 				</div>
 
 				<button type="button" data-grab-handle tabindex="-1" aria-label="<?php esc_attr_e( 'Reorder item', 'tutor' ); ?>">

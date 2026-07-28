@@ -10,6 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
+
 $base_field_name = ( $question_field_name_base ?? '' ) . '[]';
 $field_name      = '';
 $field_names     = array();
@@ -23,7 +25,7 @@ if ( $answer_is_required ) {
 	<?php foreach ( $question['question_answers'] as $answer ) : ?>
 		<div class="tutor-quiz-question-option">
 			<?php
-			$answer_title = $answer['answer_title'];
+			$answer_title = Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' );
 			$dash_count   = substr_count( $answer_title, '{dash}' );
 
 			if ( $dash_count > 0 ) {
