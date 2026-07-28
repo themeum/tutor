@@ -2278,4 +2278,14 @@ class Quiz {
 			)
 		);
 	}
+
+	/**
+	 * Sanitize quiz content
+	 *
+	 * @param string $content Content to sanitize.
+	 * @return string
+	 */
+	public static function sanitize_quiz_content( $content ) {
+		return wp_strip_all_tags( wp_unslash( (string) $content ) );
+	}
 }
