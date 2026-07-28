@@ -23,6 +23,8 @@ $has_image = function ( $answer ) {
 	return array_key_exists( 'image_id', $answer ) && ! empty( $answer['image_id'] );
 };
 
+$question                    = (array) ( $question ?? array() );
+$answer_is_required          = $answer_is_required ?? false;
 $has_multiple_correct_answer = isset( $question['question_settings']['has_multiple_correct_answer'] ) && '1' === $question['question_settings']['has_multiple_correct_answer'];
 $radio_required_message      = __( 'Please select an option to answer', 'tutor' );
 $checkbox_required_message   = __( 'Please select at least one option to answer.', 'tutor' );

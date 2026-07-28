@@ -39,7 +39,7 @@ $normalize = static function ( $value ) {
 };
 
 $get_answer_by_id = static function ( $answer_id ) {
-	$results = tutor_utils()->get_answer_by_id( (int) $answer_id );
+	$results = QuizModel::get_answer_by_id( (int) $answer_id );
 	return is_array( $results ) && ! empty( $results ) ? $results[0] : null;
 };
 

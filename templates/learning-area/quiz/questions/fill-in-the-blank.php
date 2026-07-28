@@ -12,17 +12,20 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Quiz;
 
-$base_field_name = ( $question_field_name_base ?? '' ) . '[]';
-$field_name      = '';
-$field_names     = array();
-$register_rules  = '';
+$base_field_name    = ( $question_field_name_base ?? '' ) . '[]';
+$field_name         = '';
+$field_names        = array();
+$register_rules     = '';
+$question           = (array) ( $question ?? array() );
+$answer_is_required = $answer_is_required ?? false;
+$required_message   = $required_message ?? '';
 if ( $answer_is_required ) {
 	$register_rules = ", { required: '" . esc_js( $required_message ) . "' }";
 }
 
 ?>
 <div class="tutor-quiz-question-options">
-	<?php foreach ( $question['question_answers'] as $answer ) : ?>
+	<?php foreach ( $question['question_answers'] ?? array() as $answer ) : ?>
 		<div class="tutor-quiz-question-option">
 			<?php
 			$answer_title = Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' );
