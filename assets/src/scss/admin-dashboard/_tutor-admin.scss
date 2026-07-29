@@ -324,20 +324,6 @@ body.tutor-backend-tutor_settings #wpbody-content {
     }
   }
 
-  .tutor-brand-logo-upload-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 20px;
-    font-weight: 500;
-    color: #41454f;
-
-    [class^='tutor-icon-'] {
-      font-size: 22px;
-      color: #606777;
-    }
-  }
-
   .tutor-brand-logo-upload-control {
     position: relative;
     max-width: 141px;
@@ -365,10 +351,6 @@ body.tutor-backend-tutor_settings #wpbody-content {
     &:not(.has-image) {
       display: none;
     }
-  }
-
-  .tutor-brand-logo-hint {
-    color: #6b7280;
   }
 
   .tutor-brand-logo-upload-actions {
@@ -448,11 +430,6 @@ body.tutor-backend-tutor_settings #wpbody-content {
     }
   }
 
-  .tutor-brand-logo-hint {
-    margin: 16px 0 0;
-    font-size: 16px;
-  }
-
   @include breakpoint-max(782) {
     .tutor-brand-logo-list {
       padding: 0 16px;
@@ -512,10 +489,6 @@ body.tutor-backend-tutor_settings #wpbody-content {
     align-items: center;
     justify-content: center;
     gap: 8px;
-  }
-
-  .tutor-page-elements-matrix-column .dashicons {
-    color: var(--tutor-color-primary);
   }
 
   .tutor-page-elements-toggle {
