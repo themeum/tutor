@@ -82,6 +82,53 @@ document.addEventListener('DOMContentLoaded', function () {
 		};
 	}
 
+	const allowedBrandLogoMimeTypes = ['image/jpeg', 'image/png'];
+
+	$(document).on('click', '.tutor-brand-logo-upload-select', function (event) {
+		event.preventDefault();
+
+		const $upload = $(this).closest('.tutor-brand-logo-upload');
+		const $input = $upload.find('.tutor-brand-logo-upload-input');
+		const $preview = $upload.find('.tutor-brand-logo-upload-preview');
+		const $image = $preview.find('img');
+		const $remove = $upload.find('.tutor-brand-logo-upload-remove');
+		const frame = wp.media({
+			title: __('Select a brand logo', 'tutor'),
+			button: { text: __('Use this logo', 'tutor') },
+			library: { type: 'image' },
+			multiple: false,
+		});
+
+		frame.on('select', function () {
+			const attachment = frame.state().get('selection').first().toJSON();
+			if (!allowedBrandLogoMimeTypes.includes(attachment.mime)) {
+				tutor_toast(__('Error!', 'tutor'), __('Please select a JPG, JPEG, or PNG image.', 'tutor'), 'error');
+				return;
+			}
+
+			$input.val(attachment.id).trigger('change');
+			$image.attr('src', attachment.url).prop('hidden', false);
+			$preview.addClass('has-image');
+			$upload.addClass('has-image');
+			$remove.prop('hidden', false);
+			$('#save_tutor_option').prop('disabled', false);
+		});
+
+		frame.open();
+	});
+
+	$(document).on('click', '.tutor-brand-logo-upload-remove', function (event) {
+		event.preventDefault();
+
+		const $upload = $(this).closest('.tutor-brand-logo-upload');
+		$upload.find('.tutor-brand-logo-upload-input').val('').trigger('change');
+		$upload.find('.tutor-brand-logo-upload-preview img').attr('src', '').prop('hidden', true);
+		$upload.find('.tutor-brand-logo-upload-preview').removeClass('has-image');
+		$upload.removeClass('has-image');
+		$(this).prop('hidden', true);
+		$('#save_tutor_option').prop('disabled', false);
+	});
+
 	const validateEmail = (email) => {
 		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(String(email).toLowerCase());
