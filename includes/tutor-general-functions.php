@@ -282,7 +282,7 @@ if ( ! function_exists( '_generate_categories_dropdown_option' ) ) {
 			$output .= '<option value="' . $category->term_id . '" ' . selected( $has_in_term, true, false ) . '>  ' . $depth_seperator . ' ' . $category->name . '</option>';
 
 			if ( tutor_utils()->count( $childrens ) ) {
-				++$depth;
+				$depth++;
 				$output .= _generate_categories_dropdown_option( $post_ID, $childrens, $args, $depth );
 			}
 		}
