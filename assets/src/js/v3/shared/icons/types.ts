@@ -181,6 +181,7 @@ export const icons = [
   'fireDisabled',
   'fla',
   'font',
+  'footer',
   'freeShippingType',
   'gift',
   'giftCard',

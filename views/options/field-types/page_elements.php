@@ -8,6 +8,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Icon;
+use Tutor\Components\SvgIcon;
+
 $elements = array(
 	'dashboard' => array(
 		'label'  => __( 'Dashboard', 'tutor' ),
@@ -43,11 +46,15 @@ $elements = array(
 		<div class="tutor-page-elements-matrix-head">
 			<span></span>
 			<span class="tutor-d-flex tutor-justify-center tutor-align-center tutor-gap-1 tutor-fs-6 tutor-fw-medium">
-				<span class="dashicons dashicons-table-row-before" aria-hidden="true"></span>
+				<span class="tutor-page-elements-head-icon" aria-hidden="true">
+					<?php SvgIcon::make()->name( Icon::FOOTER )->render(); ?>
+				</span>
 				<?php esc_html_e( 'Header', 'tutor' ); ?>
 			</span>
 			<span class="tutor-page-elements-matrix-column">
-				<span class="dashicons dashicons-table-row-after" aria-hidden="true"></span>
+				<span class="tutor-page-elements-head-icon" aria-hidden="true">
+					<?php SvgIcon::make()->name( Icon::FOOTER )->render(); ?>
+				</span>
 				<?php esc_html_e( 'Footer', 'tutor' ); ?>
 			</span>
 		</div>

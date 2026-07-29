@@ -197,6 +197,7 @@ final class Icon {
 	const FIRE_DISABLED              = 'fire-disabled';
 	const FLA                        = 'fla';
 	const FONT                       = 'font';
+	const FOOTER                     = 'footer';
 	const FREE_SHIPPING_TYPE         = 'free-shipping-type';
 	const GIFT                       = 'gift';
 	const GIFT_CARD                  = 'gift-card';

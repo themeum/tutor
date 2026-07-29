@@ -492,6 +492,19 @@ body.tutor-backend-tutor_settings #wpbody-content {
     border-bottom: 1px solid var(--tutor-border-color);
     font-size: 16px;
     font-weight: 500;
+
+    .tutor-page-elements-head-icon {
+      padding: 4px;
+      background-color: rgba(244, 246, 249, 1);
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      svg {
+        color: var(--tutor-color-primary);
+      }
+    }
   }
 
   .tutor-page-elements-matrix-column {
