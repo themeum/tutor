@@ -529,6 +529,14 @@ class Options_V2 {
 
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
 
+		// Spotlight mode has been replaced by the Page Elements settings.
+		unset( $option['enable_spotlight_mode'] );
+
+		foreach ( array( 'brand_logo_light', 'brand_logo_dark' ) as $brand_logo_key ) {
+			$attachment_id             = absint( $option[ $brand_logo_key ] ?? 0 );
+			$option[ $brand_logo_key ] = $attachment_id && wp_attachment_is_image( $attachment_id ) ? $attachment_id : 0;
+		}
+
 		do_action( 'tutor_option_save_before', $option );
 
 		if ( ! isset( $option['tutor_login_page'] ) ) {
@@ -856,14 +864,6 @@ class Options_V2 {
 								'label'   => __( 'Content Summary', 'tutor' ),
 								'default' => 'on',
 								'desc'    => __( 'Enabling this feature will show a course content summary on the Course Details page.', 'tutor' ),
-							),
-							array(
-								'key'         => 'enable_spotlight_mode',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Spotlight Mode', 'tutor' ),
-								'default'     => 'off',
-								'label_title' => '',
-								'desc'        => __( 'This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons.', 'tutor' ),
 							),
 							array(
 								'key'         => 'auto_course_complete_on_all_lesson_completion',
@@ -1227,7 +1227,7 @@ class Options_V2 {
 				'icon'     => 'tutor-icon-color-palette',
 				'blocks'   => array(
 					// Experimental.
-					'block_appearance' => array(
+					'block_appearance'    => array(
 						'label'      => __( 'Appearance', 'tutor' ),
 						'slug'       => 'appearance',
 						'block_type' => 'uniform',
@@ -1283,9 +1283,16 @@ class Options_V2 {
 								'class'       => 'color-picker-wrapper',
 								'default'     => tutor_utils()->get_default_brand_color(),
 							),
+							array(
+								'key'     => 'brand_logo',
+								'type'    => 'brand_logo',
+								'label'   => __( 'Brand Logo', 'tutor' ),
+								'desc'    => __( 'Upload separate logos for light and dark mode.', 'tutor' ),
+								'default' => 0,
+							),
 						),
 					),
-					'block_course'     => array(
+					'block_course'        => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
 						'block_type' => 'uniform',
@@ -1344,7 +1351,7 @@ class Options_V2 {
 							),
 						),
 					),
-					'layout'           => array(
+					'layout'              => array(
 						'label'      => __( 'Layout', 'tutor' ),
 						'slug'       => 'layout',
 						'block_type' => 'uniform',
@@ -1434,7 +1441,26 @@ class Options_V2 {
 							),
 						),
 					),
-					'course-details'   => array(
+					'block_page_elements' => array(
+						'label'      => __( 'Page Elements', 'tutor' ),
+						'slug'       => 'page-elements',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'page_elements',
+								'type'    => 'page_elements',
+								'label'   => __( 'Header & Footer', 'tutor' ),
+								'desc'    => __( 'Control the visibility of Header and Footer for Dashboard and Learning Experience', 'tutor' ),
+								'default' => array(
+									'show_dashboard_site_header' => 'on',
+									'show_dashboard_site_footer' => 'on',
+									'show_learning_site_header'  => 'off',
+									'show_learning_site_footer'  => 'off',
+								),
+							),
+						),
+					),
+					'course-details'      => array(
 						'label'      => __( 'Course Details', 'tutor' ),
 						'slug'       => 'course-details',
 						'block_type' => 'isolate',

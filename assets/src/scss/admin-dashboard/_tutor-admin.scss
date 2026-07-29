@@ -291,6 +291,238 @@ body.tutor-backend-tutor_settings #wpbody-content {
   border-bottom: none;
 }
 
+.tutor-brand-logo-field {
+  .tutor-brand-logo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 15px;
+    padding: 12px;
+    border: 1px solid var(--tutor-border-color);
+    border-radius: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .tutor-brand-logo-upload {
+    display: grid;
+    grid-template-columns: minmax(160px, 1fr) minmax(240px, 320px);
+    gap: 16px;
+    min-height: 40px;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+
+    > *:last-child {
+      justify-self: end;
+    }
+
+    @include breakpoint-max(782) {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+  }
+
+  .tutor-brand-logo-upload-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #41454f;
+
+    [class^='tutor-icon-'] {
+      font-size: 22px;
+      color: #606777;
+    }
+  }
+
+  .tutor-brand-logo-upload-control {
+    position: relative;
+    max-width: 141px;
+    width: 100%;
+  }
+
+  .tutor-brand-logo-upload-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 40px;
+    height: 100%;
+    padding: 12px;
+    background: #f7f8fa;
+    border-radius: 6px;
+    overflow: hidden;
+
+    img {
+      max-width: 100%;
+      max-height: 40px;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    &:not(.has-image) {
+      display: none;
+    }
+  }
+
+  .tutor-brand-logo-hint {
+    color: #6b7280;
+  }
+
+  .tutor-brand-logo-upload-actions {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(34, 37, 43, 0.72);
+    border-radius: 6px;
+
+    .tutor-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      padding: 6px;
+      border: 0;
+      border-radius: 4px;
+      background: #f3f5fa;
+      color: var(--tutor-color-primary);
+      font-size: 20px;
+    }
+
+    .tutor-brand-logo-upload-remove {
+      background: #e53935;
+      color: #fff;
+    }
+  }
+
+  .tutor-brand-logo-upload-preview.has-image:hover .tutor-brand-logo-upload-actions,
+  .tutor-brand-logo-upload-preview.has-image:focus-within .tutor-brand-logo-upload-actions {
+    display: flex;
+  }
+
+  .tutor-brand-logo-upload.has-image .tutor-brand-logo-upload-empty {
+    display: none;
+  }
+
+  .tutor-brand-logo-upload-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    max-height: 40px;
+    padding: 12px;
+    border: 1px dashed #d3d4d9;
+    border-radius: 6px;
+    background: #f7f8fa;
+    color: #69738a;
+    font-size: 13px;
+
+    svg {
+      color: var(--tutor-color-primary);
+    }
+  }
+
+  .tutor-brand-logo-upload[data-brand-logo-theme='dark'] {
+    .tutor-brand-logo-upload-preview,
+    .tutor-brand-logo-upload-empty {
+      background: #25272d;
+    }
+
+    .tutor-brand-logo-upload-empty {
+      border-color: #69738a;
+      color: #b8bdc8;
+    }
+  }
+
+  @media (hover: none) {
+    .tutor-brand-logo-upload-preview.has-image .tutor-brand-logo-upload-actions {
+      display: flex;
+    }
+  }
+
+  .tutor-brand-logo-hint {
+    margin: 16px 0 0;
+    font-size: 16px;
+  }
+
+  @include breakpoint-max(782) {
+    .tutor-brand-logo-list {
+      padding: 0 16px;
+    }
+
+    .tutor-brand-logo-upload {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 16px 0;
+    }
+  }
+}
+
+.tutor-page-elements-field {
+  .tutor-page-elements-matrix {
+    margin-top: 24px;
+    border: 1px solid var(--tutor-border-color);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .tutor-page-elements-matrix-head,
+  .tutor-page-elements-matrix-row {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) 180px 180px;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 12px;
+  }
+
+  .tutor-page-elements-matrix-row {
+    padding: 12px;
+  }
+
+  .tutor-page-elements-matrix-head {
+    background: #fff;
+    border-bottom: 1px solid var(--tutor-border-color);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .tutor-page-elements-matrix-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .tutor-page-elements-matrix-column .dashicons {
+    color: var(--tutor-color-primary);
+  }
+
+  .tutor-page-elements-toggle {
+    justify-self: center;
+  }
+
+  @include breakpoint-max(782) {
+    .tutor-page-elements-matrix-head,
+    .tutor-page-elements-matrix-row {
+      grid-template-columns: minmax(140px, 1fr) 1fr 1fr;
+      gap: 8px;
+      padding: 16px;
+    }
+
+    .tutor-page-elements-matrix-row {
+      font-size: 16px;
+    }
+  }
+}
+
 .tutor-option-field-row input[type='text'],
 .tutor-option-field-row input[type='email'],
 .tutor-option-field-row input[type='number'],
