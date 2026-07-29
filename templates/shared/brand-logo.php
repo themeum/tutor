@@ -38,7 +38,7 @@ $resolve_logo_url = static function ( array $attachment_ids ) {
 <span class="tutor-brand-logo" aria-label="<?php echo esc_attr( $site_name ); ?>">
 	<?php foreach ( $logo_ids as $theme => $logo_id ) : ?>
 		<?php $image_url = $resolve_logo_url( array( $logo_id, $custom_logo_id ) ); ?>
-		<span class="tutor-brand-logo__<?php echo esc_attr( $theme ); ?>">
+		<span class="tutor-brand-logo-<?php echo esc_attr( $theme ); ?>">
 			<?php if ( $image_url ) : ?>
 				<img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $site_name ); ?>">
 			<?php else : ?>

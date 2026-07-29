@@ -16,11 +16,11 @@ $elements = array(
 		'label'  => __( 'Dashboard', 'tutor' ),
 		'header' => array(
 			'key'     => 'show_dashboard_site_header',
-			'default' => 'on',
+			'default' => 'off',
 		),
 		'footer' => array(
 			'key'     => 'show_dashboard_site_footer',
-			'default' => 'on',
+			'default' => 'off',
 		),
 	),
 	'learning'  => array(
