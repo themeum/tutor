@@ -21,17 +21,10 @@ $page_data         = $page_meta['page_data'];
 $meta_title = $page_meta['meta_title'];
 Dashboard::set_document_title( $meta_title );
 
-?>
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<?php wp_head(); ?>
-</head>
-<body <?php body_class( '' ); ?>>
-	<?php wp_body_open(); ?>
-<?php
+$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header', true );
+$show_dashboard_site_footer = (bool) tutor_utils()->get_option( 'show_dashboard_site_footer', true );
+
+tutor_page_elements_header( $show_dashboard_site_header );
 
 $page_template = $page_data['template'] ?? '';
 $back_url      = tutor_utils()->tutor_dashboard_url();
@@ -44,6 +37,5 @@ $close_url     = $back_url;
 	}
 	?>
 </div>
-<?php wp_footer(); ?>
-</body>
-</html>
+<?php
+tutor_page_elements_footer( $show_dashboard_site_footer );

@@ -72,16 +72,12 @@ if ( $subpage && ! empty( $subpages[ $subpage ]['title'] ) ) {
 $page_meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $learning_meta_title, $site_name );
 
 Dashboard::set_document_title( $page_meta_title );
+
+$show_learning_site_header = (bool) tutor_utils()->get_option( 'show_learning_site_header', false );
+$show_learning_site_footer = (bool) tutor_utils()->get_option( 'show_learning_site_footer', false );
+tutor_page_elements_header( $show_learning_site_header );
 ?>
-<!DOCTYPE html>
-	<html <?php language_attributes(); ?>>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<?php wp_head(); ?>
-	</head>
-	<body <?php body_class( '' ); ?> x-data="tutorCourseCompleteHandler()">
-	<?php wp_body_open(); ?>
+<div class="tutor-learning-page" x-data="tutorCourseCompleteHandler()">
 <?php
 
 // Auto complete course.
@@ -110,6 +106,8 @@ if ( ! $tutor_course_content_access ) {
 	} else {
 		tutor_load_template( 'login' );
 	}
+	echo '</div>';
+	tutor_page_elements_footer( $show_learning_site_footer );
 	return;
 }
 
@@ -119,7 +117,8 @@ if ( tutor()->quiz_post_type === $tutor_current_post_type ) {
 
 	if ( $tutor_is_started_quiz ) {
 		tutor_load_template( 'learning-area.quiz.attempt' );
-		wp_footer();
+		echo '</div>';
+		tutor_page_elements_footer( $show_learning_site_footer );
 		exit;
 	}
 }
@@ -129,13 +128,14 @@ $user_action = Input::get( 'action' );
 
 if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 	tutor_load_template( 'learning-area.quiz.attempt-details' );
-	wp_footer();
+	echo '</div>';
+	tutor_page_elements_footer( $show_learning_site_footer );
 	exit;
 }
 
 ?>
 	<div
-		class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>"
+		class="tutor-learning-area<?php echo esc_attr( ( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ) . ( $show_learning_site_header ? ' tutor-has-site-header' : '' ) ); ?>"
 		x-data="{ sidebarOpen: false, isFullScreen: false }"
 		:class="{ 'is-fullscreen': isFullScreen }"
 	>
@@ -178,8 +178,6 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 		tutor_load_template( 'shared.tour' );
 	}
 	?>
-	<?php wp_footer(); ?>
-
 	<?php
 	if ( $tutor_can_complete_course ) {
 		$progress = $tutor_course_progress['completed_percent'] ?? 0;
@@ -209,5 +207,5 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 		->render();
 	}
 	?>
-</body>
-</html>
+</div>
+<?php tutor_page_elements_footer( $show_learning_site_footer ); ?>

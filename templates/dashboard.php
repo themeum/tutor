@@ -56,17 +56,8 @@ Dashboard::set_document_title( $meta_title );
 
 $is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
-	?>
-	<!DOCTYPE html>
-	<html <?php language_attributes(); ?>>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<?php wp_head(); ?>
-	</head>
-	<body <?php body_class( '' ); ?>>
-		<?php wp_body_open(); ?>
-	<?php
+	$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header', true );
+	tutor_page_elements_header( $show_dashboard_site_header );
 endif;
 
 $user_id                   = get_current_user_id();
@@ -156,7 +147,5 @@ $footer_links = array(
 	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 <?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
-	<?php wp_footer(); ?>
+	<?php tutor_page_elements_footer( (bool) tutor_utils()->get_option( 'show_dashboard_site_footer', true ) ); ?>
 <?php endif; ?>
-	</body>
-</html>

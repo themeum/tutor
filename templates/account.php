@@ -26,19 +26,14 @@ $back_url      = apply_filters( 'tutor_dashboard_back_url', $dashboard_url );
 $close_url     = $dashboard_url;
 
 Dashboard::set_document_title( $meta_title );
+
+$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header', true );
+$show_dashboard_site_footer = (bool) tutor_utils()->get_option( 'show_dashboard_site_footer', true );
+
+tutor_page_elements_header( $show_dashboard_site_header );
 ?>
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<?php wp_head(); ?>
-</head>
-<body <?php body_class( '' ); ?>>
-	<?php wp_body_open(); ?>
 <div class="tutor-account-page-wrapper">
 	<?php require_once $page_template; ?>
 </div>
-<?php wp_footer(); ?>
-</body>
-</html>
+<?php
+tutor_page_elements_footer( $show_dashboard_site_footer );

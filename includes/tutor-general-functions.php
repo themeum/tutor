@@ -452,6 +452,61 @@ if ( ! function_exists( 'tutor_generate_tags_checkbox' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_page_elements_header' ) ) {
+	/**
+	 * Open a standalone Tutor page with optional WordPress theme header.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $show_site_header Whether to render the active theme header.
+	 *
+	 * @return void
+	 */
+	function tutor_page_elements_header( $show_site_header ) {
+		if ( $show_site_header ) {
+			tutor_utils()->tutor_custom_header();
+			return;
+		}
+		?>
+		<!doctype html>
+		<html <?php language_attributes(); ?>>
+		<head>
+			<meta charset="<?php bloginfo( 'charset' ); ?>" />
+			<meta name="viewport" content="width=device-width, initial-scale=1" />
+			<?php wp_head(); ?>
+		</head>
+		<body <?php body_class(); ?>>
+			<?php wp_body_open(); ?>
+		<?php
+	}
+}
+
+if ( ! function_exists( 'tutor_page_elements_footer' ) ) {
+	/**
+	 * Close a standalone Tutor page with optional WordPress theme footer.
+	 *
+	 * Classic themes may couple markup between header.php and footer.php. When
+	 * only one is enabled, this deliberately provides a valid bare closure.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $show_site_footer Whether to render the active theme footer.
+	 *
+	 * @return void
+	 */
+	function tutor_page_elements_footer( $show_site_footer ) {
+		if ( $show_site_footer ) {
+			tutor_utils()->tutor_custom_footer();
+			return;
+		}
+		wp_footer();
+		?>
+		</body>
+		</html>
+		<?php
+	}
+}
+
 if ( ! function_exists( 'get_tutor_header' ) ) {
 	/**
 	 * Get Tutor Header.
@@ -463,9 +518,7 @@ if ( ! function_exists( 'get_tutor_header' ) ) {
 	 * @return void
 	 */
 	function get_tutor_header( $full_screen = false ) {
-		$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
-
-		if ( $enable_spotlight_mode || $full_screen ) {
+		if ( $full_screen ) {
 			?>
 			<!doctype html>
 			<html <?php language_attributes(); ?>>
@@ -498,8 +551,7 @@ if ( ! function_exists( 'get_tutor_footer' ) ) {
 	 * @return void
 	 */
 	function get_tutor_footer( $full_screen = false ) {
-		$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
-		if ( $enable_spotlight_mode || $full_screen ) {
+		if ( $full_screen ) {
 			?>
 				</div>
 			<?php wp_footer(); ?>

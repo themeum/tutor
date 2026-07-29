@@ -27,6 +27,11 @@
     position: sticky;
   }
 
+  .tutor-has-site-header & {
+    position: sticky;
+    top: 0;
+  }
+
   &-inner {
     @include tutor-flex(row, center);
 
