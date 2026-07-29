@@ -120,6 +120,8 @@ if ( ! function_exists( 'tutor_sanitize_data' ) ) {
 
 			return $array;
 		}
+
+		return '';
 	}
 }
 
@@ -167,6 +169,9 @@ if ( ! function_exists( 'tutor_course_categories_dropdown' ) ) {
 			$multiple_select = "multiple='multiple'";
 		}
 
+		$classes  = '';
+		$name     = '';
+		$multiple = '';
 		extract( $args ); //phpcs:ignore
 
 		$classes = (array) $classes;
@@ -215,6 +220,9 @@ if ( ! function_exists( 'tutor_course_tags_dropdown' ) ) {
 			$multiple_select = "multiple='multiple'";
 		}
 
+		$classes  = '';
+		$name     = '';
+		$multiple = '';
 		extract( $args ); //phpcs:ignore
 
 		$classes = (array) $classes;
@@ -274,7 +282,7 @@ if ( ! function_exists( '_generate_categories_dropdown_option' ) ) {
 			$output .= '<option value="' . $category->term_id . '" ' . selected( $has_in_term, true, false ) . '>  ' . $depth_seperator . ' ' . $category->name . '</option>';
 
 			if ( tutor_utils()->count( $childrens ) ) {
-				$depth++;
+				++$depth;
 				$output .= _generate_categories_dropdown_option( $post_ID, $childrens, $args, $depth );
 			}
 		}
@@ -456,7 +464,7 @@ if ( ! function_exists( 'tutor_page_elements_header' ) ) {
 	/**
 	 * Open a standalone Tutor page with optional WordPress theme header.
 	 *
-	 * @since 4.0.0
+	 * @since 4.0.4
 	 *
 	 * @param bool $show_site_header Whether to render the active theme header.
 	 *
@@ -488,7 +496,7 @@ if ( ! function_exists( 'tutor_page_elements_footer' ) ) {
 	 * Classic themes may couple markup between header.php and footer.php. When
 	 * only one is enabled, this deliberately provides a valid bare closure.
 	 *
-	 * @since 4.0.0
+	 * @since 4.0.4
 	 *
 	 * @param bool $show_site_footer Whether to render the active theme footer.
 	 *
@@ -518,7 +526,8 @@ if ( ! function_exists( 'get_tutor_header' ) ) {
 	 * @return void
 	 */
 	function get_tutor_header( $full_screen = false ) {
-		if ( $full_screen ) {
+		$show_learning_area_header = (bool) tutor_utils()->get_option( 'show_learning_site_header', false );
+		if ( ! $show_learning_area_header || $full_screen ) {
 			?>
 			<!doctype html>
 			<html <?php language_attributes(); ?>>
@@ -551,7 +560,8 @@ if ( ! function_exists( 'get_tutor_footer' ) ) {
 	 * @return void
 	 */
 	function get_tutor_footer( $full_screen = false ) {
-		if ( $full_screen ) {
+		$show_learning_area_footer = (bool) tutor_utils()->get_option( 'show_learning_site_footer', false );
+		if ( ! $show_learning_area_footer || $full_screen ) {
 			?>
 				</div>
 			<?php wp_footer(); ?>
@@ -687,8 +697,11 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 					break;
 			}
 
-			$html = Alert::make()->variant( $type )->text( $msg )->icon( $icon );
-			return $echo ? $html->render() : $html;
+			$html = Alert::make()->variant( $type )->text( $msg )->icon( $icon )->get();
+			if ( $echo ) {
+				echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+			return $html;
 		}
 
 		$html = '<div class="tutor-alert tutor-' . esc_attr( $type ) . '">
@@ -861,10 +874,8 @@ if ( ! function_exists( 'tutor_maintenance_mode' ) ) {
 			if ( ! file_exists( $file ) ) {
 				file_put_contents( $file, $maintenance_string );
 			}
-		} else {
-			if ( file_exists( $file ) ) {
+		} elseif ( file_exists( $file ) ) {
 				unlink( $file );
-			}
 		}
 	}
 }
@@ -1021,7 +1032,6 @@ if ( ! function_exists( 'get_request' ) ) {
 	 */
 	function get_request( $var ) {
 		return isset( $_REQUEST[ $var ] ) ? sanitize_text_field( $_REQUEST[ $var ] ) : false;//phpcs:ignore
-
 	}
 }
 
@@ -1151,7 +1161,7 @@ if ( ! function_exists( 'tutor_wc_price_currency_format' ) ) {
 	 */
 	function tutor_wc_price_currency_format( $amount ) {
 
-		$symbol   = get_woocommerce_currency_symbol();
+		$symbol   = function_exists( 'get_woocommerce_currency_symbol' ) ? get_woocommerce_currency_symbol() : '';
 		$position = get_option( 'woocommerce_currency_pos', 'left' );
 
 		switch ( $position ) {
@@ -1800,11 +1810,11 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 
 			$price = number_format( $price, $no_of_decimal, $decimal_separator, $thousand_separator );
 			$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;
-		} elseif ( 'wc' === $monetize_by ) {
+		} elseif ( 'wc' === $monetize_by && function_exists( 'wc_price' ) ) {
 			$price = wc_price( $price );
-		} elseif ( 'edd' === $monetize_by ) {
-			$price = edd_currency_filter( edd_format_amount( $price ) );
-		} elseif ( 'pmpro' === $monetize_by ) {
+		} elseif ( 'edd' === $monetize_by && function_exists( 'edd_currency_filter' ) ) {
+			$price = edd_currency_filter( function_exists( 'edd_format_amount' ) ? edd_format_amount( $price ) : $price );
+		} elseif ( 'pmpro' === $monetize_by && function_exists( 'pmpro_formatPrice' ) ) {
 			$price = pmpro_formatPrice( $price );
 		}
 
