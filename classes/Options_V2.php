@@ -724,6 +724,14 @@ class Options_V2 {
 
 		$page_posts             = get_posts( $page_args );
 		$course_archive_page_id = ( is_array( $page_posts ) && count( $page_posts ) ) ? $page_posts[0] : null;
+		$default_visibility     = (bool) tutor_utils()->get_option( 'enable_spotlight_mode', true ) ? 'off' : 'on';
+
+		$default_page_elements = array(
+			'show_dashboard_site_header' => $default_visibility,
+			'show_dashboard_site_footer' => $default_visibility,
+			'show_learning_site_header'  => $default_visibility,
+			'show_learning_site_footer'  => $default_visibility,
+		);
 
 		$attr = array(
 			'general'        => array(
@@ -1451,12 +1459,7 @@ class Options_V2 {
 								'type'    => 'page_elements',
 								'label'   => __( 'Header & Footer', 'tutor' ),
 								'desc'    => __( 'Control the visibility of Header and Footer for Dashboard and Learning Experience', 'tutor' ),
-								'default' => array(
-									'show_dashboard_site_header' => 'on',
-									'show_dashboard_site_footer' => 'on',
-									'show_learning_site_header'  => 'off',
-									'show_learning_site_footer'  => 'off',
-								),
+								'default' => $default_page_elements,
 							),
 						),
 					),
