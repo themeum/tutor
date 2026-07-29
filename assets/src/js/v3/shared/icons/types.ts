@@ -123,6 +123,7 @@ export const icons = [
   'css',
   'csv',
   'currency',
+  'dark',
   'dbf',
   'delete',
   'delete2',

@@ -139,6 +139,7 @@ final class Icon {
 	const CSS                        = 'css';
 	const CSV                        = 'csv';
 	const CURRENCY                   = 'currency';
+	const DARK                       = 'dark';
 	const DBF                        = 'dbf';
 	const DELETE                     = 'delete';
 	const DELETE_2                   = 'delete-2';
