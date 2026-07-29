@@ -1,0 +1,15 @@
+// Theme-aware Tutor branding shared by the dashboard and learning area.
+
+.tutor-brand-logo__dark {
+  display: none;
+}
+
+[data-tutor-theme='dark'] {
+  .tutor-brand-logo__light {
+    display: none;
+  }
+
+  .tutor-brand-logo__dark {
+    display: inline;
+  }
+}
