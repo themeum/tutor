@@ -481,6 +481,10 @@ body.tutor-backend-tutor_settings #wpbody-content {
       svg {
         color: var(--tutor-color-primary);
       }
+
+      [data-header-icon='true'] {
+        transform: rotate(180deg);
+      }
     }
   }
 

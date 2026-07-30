@@ -1,6 +1,7 @@
 <?php
 /**
  * Brand logo settings field.
+ * This is custom field type for Brand logo settings.
  *
  * @package Tutor\Views
  * @subpackage Tutor\Settings
@@ -13,6 +14,11 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 
+/**
+ * Field settings.
+ *
+ * @var array $field
+ */
 $logos = array(
 	'light' => array(
 		'label' => __( 'Light Mode', 'tutor' ),
@@ -36,7 +42,7 @@ $logos = array(
 		$index       = 0;
 		foreach ( $logos as $theme => $logo ) :
 			++$index;
-			$attachment_id = absint( $this->get( $logo['key'], 0 ) );
+			$attachment_id = absint( get_tutor_option( $logo['key'], 0 ) );
 			$image_url     = $attachment_id && wp_attachment_is_image( $attachment_id ) ? wp_get_attachment_image_url( $attachment_id, 'medium' ) : '';
 			?>
 			<div class="tutor-brand-logo-upload<?php echo esc_attr( $image_url ? ' has-image' : '' ); ?>" data-brand-logo-theme="<?php echo esc_attr( $theme ); ?>">

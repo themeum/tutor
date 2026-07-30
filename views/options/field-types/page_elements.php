@@ -1,6 +1,7 @@
 <?php
 /**
  * Page Elements settings matrix.
+ * This is custom field type for Page Elements settings.
  *
  * @package Tutor\Views
  * @subpackage Tutor\Settings
@@ -11,6 +12,11 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 
+/**
+ * Field settings.
+ *
+ * @var array $field
+ */
 $elements = array(
 	'dashboard' => array(
 		'label'  => __( 'Dashboard', 'tutor' ),
@@ -47,13 +53,22 @@ $elements = array(
 			<span></span>
 			<span class="tutor-d-flex tutor-justify-center tutor-align-center tutor-gap-1 tutor-fs-6 tutor-fw-medium">
 				<span class="tutor-page-elements-head-icon" aria-hidden="true">
-					<?php SvgIcon::make()->name( Icon::FOOTER )->render(); ?>
+					<?php
+						SvgIcon::make()
+							->name( Icon::FOOTER )
+							->attr( 'data-header-icon', 'true' )
+							->render();
+					?>
 				</span>
 				<?php esc_html_e( 'Header', 'tutor' ); ?>
 			</span>
 			<span class="tutor-page-elements-matrix-column">
 				<span class="tutor-page-elements-head-icon" aria-hidden="true">
-					<?php SvgIcon::make()->name( Icon::FOOTER )->render(); ?>
+					<?php
+						SvgIcon::make()
+							->name( Icon::FOOTER )
+							->render();
+					?>
 				</span>
 				<?php esc_html_e( 'Footer', 'tutor' ); ?>
 			</span>
@@ -69,24 +84,32 @@ $elements = array(
 				<div class="tutor-fs-6"><?php echo esc_html( $element['label'] ); ?></div>
 				<?php foreach ( array( 'header', 'footer' ) as $position ) : ?>
 					<?php
-					$setting      = $element[ $position ];
-					$option_value = $this->get( $setting['key'], $setting['default'] );
-					$is_enabled   = 'on' === $option_value || true === $option_value || 1 === (int) $option_value;
+						$setting      = $element[ $position ];
+						$option_value = get_tutor_option( $setting['key'], $setting['default'] );
+						$is_enabled   = 'on' === $option_value || true === $option_value || 1 === (int) $option_value;
 					?>
 					<label class="tutor-form-toggle tutor-page-elements-toggle">
-						<input type="hidden" name="tutor_option[<?php echo esc_attr( $setting['key'] ); ?>]" value="<?php echo esc_attr( $is_enabled ? 'on' : 'off' ); ?>">
-						<input type="checkbox" class="tutor-form-toggle-input"<?php checked( $is_enabled ); ?> aria-label="
-						<?php
-						echo esc_attr(
-							sprintf(
-							// translators: %1$s: element label, %2$s: position (header/footer).
-								__( '%1$s %2$s', 'tutor' ),
-								$element['label'],
-								ucfirst( $position )
-							)
-						);
-						?>
-							">
+						<input
+							type="hidden"
+							name="tutor_option[<?php echo esc_attr( $setting['key'] ); ?>]"
+							value="<?php echo esc_attr( $is_enabled ? 'on' : 'off' ); ?>"
+						>
+						<input 
+							type="checkbox"
+							class="tutor-form-toggle-input"<?php checked( $is_enabled ); ?> 
+							aria-label="
+								<?php
+								echo esc_attr(
+									sprintf(
+									// translators: %1$s: element label, %2$s: position (header/footer).
+										__( '%1$s %2$s', 'tutor' ),
+										$element['label'],
+										ucfirst( $position )
+									)
+								);
+								?>
+							"
+						>
 						<span class="tutor-form-toggle-control"></span>
 					</label>
 				<?php endforeach; ?>
