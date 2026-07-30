@@ -32,6 +32,16 @@
     top: 0;
   }
 
+  .tutor-has-site-header.tutor-has-admin-bar & {
+    @include tutor-breakpoint-up(md) {
+      top: 32px;
+    }
+
+    @include tutor-breakpoint-between(md, sm) {
+      top: 46px;
+    }
+  }
+
   &-inner {
     @include tutor-flex(row, center);
 
