@@ -105,8 +105,8 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 	<?php
 	ConfirmationModal::make()
 		->id( 'delete-comment-modal' )
-		->title( 'Delete This Item?' )
-		->message( 'This action cannot be undone.' )
+		->title( __( 'Delete This Item?', 'tutor' ) )
+		->message( __( 'This action cannot be undone.', 'tutor' ) )
 		->icon( Icon::DELETE_2, 80 )
 		->mutation_state( 'deleteCommentMutation' )
 		->confirm_handler( 'deleteCommentMutation?.mutate({ comment_id: payload?.commentId })' )
