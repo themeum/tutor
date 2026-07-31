@@ -340,10 +340,10 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 4.0.4 - 31 July, 2026
 
-Fix: Resolved a dark theme compatibility issue in the Course Builder.
-Fix: Resolved an issue where Tutor LMS Pro incorrectly displayed an update notification for the installed version. (Pro)
-Fix: Resolved missing translation strings.
-Fix: Resolved an issue where certificates were displayed in the user's account even when no certificate was available for the course. (Pro)
+Fix: Resolved the dark theme compatibility issue in the Course Builder.
+Fix: Added translation support for some previously untranslatable strings.
+Fix: Fixed the incorrect update notification in Tutor LMS Pro. (Pro)
+Fix: Prevented certificates from appearing for courses with no assigned certificate. (Pro)
 
 = 4.0.3 - 24 July, 2026
 
