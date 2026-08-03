@@ -1,5 +1,6 @@
 import collapse from '@alpinejs/collapse';
 import focus from '@alpinejs/focus';
+import { setLocaleData } from '@wordpress/i18n';
 import Alpine from 'alpinejs';
 
 import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
@@ -75,11 +76,16 @@ const initializePlugin = async () => {
   });
 
   TutorComponentRegistry.registerLazy({
-    calendar: () =>
-      import(
+    calendar: () => {
+      if (tutorConfig.calendar_locales) {
+        setLocaleData(tutorConfig.calendar_locales, 'tutor');
+      }
+
+      return import(
         /* webpackChunkName: "tutor-calendar" */
         '@Core/ts/components/calendar'
-      ).then(({ calendarMeta }) => calendarMeta),
+      ).then(({ calendarMeta }) => calendarMeta);
+    },
 
     form: () =>
       import(

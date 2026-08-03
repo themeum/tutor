@@ -374,6 +374,9 @@ class Assets {
 				}
 			}
 		} else {
+			if ( 'en_US' !== $localize_data['local'] ) {
+				$localize_data['calendar_locales'] = tutils()->get_script_locale_data( 'tutor-calendar', $localize_data['local'] );
+			}
 
 			// Assign quiz option.
 			if ( ! empty( $post->post_type ) && 'tutor_quiz' === $post->post_type ) {
