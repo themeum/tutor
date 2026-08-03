@@ -165,7 +165,7 @@ $visible_nav_items = array_slice( $visible_nav_items, 0, 1, true ) +
 								<?php
 								SvgIcon::make()
 									->name( Icon::BACK_2 )
-									->size( Size::SIZE_16 )
+									->size( tutor_utils()->is_kids_mode() ? Size::SIZE_20 : Size::SIZE_16 )
 									->render();
 								?>
 								<span class="tutor-tiny"><?php esc_html_e( 'Back to Site', 'tutor' ); ?></span>
