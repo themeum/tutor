@@ -76,7 +76,9 @@
     border-radius: $tutor-radius-6xl;
   }
 
-  .tutor-instructor-request-alert {
+  .tutor-instructor-request-alert,
+  .tutor-payment-form,
+  .tutor-payment-form-contents {
     border-radius: $tutor-radius-5xl;
   }
 

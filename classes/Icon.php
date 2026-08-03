@@ -273,6 +273,7 @@ final class Icon {
 	const MAGIC_ERASER               = 'magic-eraser';
 	const MAGIC_VARIATION            = 'magic-variation';
 	const MAGIC_WAND                 = 'magic-wand';
+	const MAP_PIN                    = 'map-pin';
 	const MARKER_TICK                = 'marker-tick';
 	const MARKS_TOTAL                = 'marks-total';
 	const MARK_CIRCLE                = 'mark-circle';

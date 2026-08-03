@@ -301,7 +301,7 @@
       width: 32px;
       height: 32px;
       border-radius: $tutor-radius-xs;
-      object-fit: cover;
+      object-fit: contain;
       object-position: center;
       flex-shrink: 0;
     }

@@ -13,7 +13,7 @@
   right: 0;
   z-index: $tutor-z-footer;
 
-  @include tutor-breakpoint-up(sm) {
+  @include tutor-breakpoint-up(md) {
     display: none;
   }
 

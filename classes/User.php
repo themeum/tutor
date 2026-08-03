@@ -117,6 +117,8 @@ class User {
 		add_action( 'wp_ajax_tutor_user_list', array( $this, 'ajax_user_list' ) );
 		add_action( 'wp_ajax_tutor_switch_profile', array( $this, 'ajax_switch_profile' ) );
 		add_action( 'wp_ajax_tutor_complete_tour', array( $this, 'ajax_complete_tour' ) );
+
+		add_filter( 'retrieve_password_message', array( $this, 'maybe_update_password_reset_link' ), 10, 3 );
 	}
 
 	/**
@@ -798,6 +800,7 @@ class User {
 		}
 
 		$switch_mode  = '';
+		$switch_label = '';
 		$current_mode = Input::post( 'current_mode' );
 
 		if ( ! in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true ) ) {
@@ -805,15 +808,17 @@ class User {
 		}
 
 		if ( self::VIEW_AS_INSTRUCTOR === $current_mode ) {
-			$switch_mode = self::VIEW_AS_STUDENT;
+			$switch_mode  = self::VIEW_AS_STUDENT;
+			$switch_label = __( 'Student', 'tutor' );
 		} elseif ( self::VIEW_AS_STUDENT === $current_mode ) {
-			$switch_mode = self::VIEW_AS_INSTRUCTOR;
+			$switch_mode  = self::VIEW_AS_INSTRUCTOR;
+			$switch_label = __( 'Instructor', 'tutor' );
 		}
 
 		update_user_meta( $user_id, self::VIEW_MODE_USER_META, $switch_mode );
 
 		// translators:%s for switching mode.
-		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_mode ) );
+		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_label ) );
 	}
 
 	/**
@@ -891,5 +896,54 @@ class User {
 		update_user_meta( get_current_user_id(), self::TOUR_COMPLETED_META, true );
 
 		$this->json_response( __( 'Tour completed', 'tutor' ) );
+	}
+
+	/**
+	 * If user don't have pro and using tutor login then change the password
+	 * reset email link
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param string $message Email message.
+	 * @param string $key Reset key.
+	 * @param string $user_login User login name.
+	 *
+	 * @return string
+	 */
+	public function maybe_update_password_reset_link( $message, $key, $user_login ) {
+		if ( tutor()->has_pro && tutor_utils()->is_addon_enabled( 'tutor-email' ) ) {
+			return $message;
+		}
+
+		$is_tutor_login_enabled = tutor_utils()->get_option( 'enable_tutor_native_login', false );
+		if ( ! $is_tutor_login_enabled ) {
+			return $message;
+		}
+
+		$default_url = add_query_arg(
+			array(
+				'login'  => $user_login,
+				'key'    => $key,
+				'action' => 'rp',
+			),
+			network_site_url( 'wp-login.php' )
+		);
+
+		$user = get_user_by( 'login', $user_login );
+		if ( ! $user ) {
+			return $message;
+		}
+
+		$tutor_reset_url = add_query_arg(
+			array(
+				'reset_key' => $key,
+				'user_id'   => $user->ID,
+			),
+			tutor_utils()->tutor_dashboard_url( 'retrieve-password' )
+		);
+
+		$message = str_replace( $default_url, $tutor_reset_url, $message );
+
+		return $message;
 	}
 }

@@ -52,6 +52,7 @@
 	<form id="tutor-answering-quiz" method="post">
 		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 		<input type="hidden" value="<?php echo esc_attr( $is_started_quiz->attempt_id ); ?>" name="attempt_id"/>
+		<input type="hidden" value="<?php echo esc_attr( $is_started_quiz->quiz_id ); ?>" name="quiz_id"/>
 		<input type="hidden" value="tutor_answering_quiz_question" name="tutor_action"/>
 		<?php
 			$question_i = 0;

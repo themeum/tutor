@@ -122,4 +122,57 @@ class BillingModel {
 		);
 		return $billing_info;
 	}
+
+	/**
+	 * Check if billing info has all required fields.
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param array $data Billing data to check.
+	 *
+	 * @return bool
+	 */
+	public function has_complete_billing_info( array $data ) {
+		foreach ( $this->get_required_fields() as $field ) {
+			if ( empty( $data[ $field ] ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get formatted billing display data.
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param array $data Billing data.
+	 * @param array $country_options Country options list.
+	 *
+	 * @return array
+	 */
+	public function get_formatted_billing_display_data( array $data, array $country_options ) {
+		$billing_country = $data['billing_country'] ?? '';
+		$full_name       = trim( ( $data['billing_first_name'] ?? '' ) . ' ' . ( $data['billing_last_name'] ?? '' ) );
+		$address_parts   = array_filter(
+			array(
+				$data['billing_address'] ?? '',
+				$data['billing_city'] ?? '',
+				$data['billing_state'] ?? '',
+				$data['billing_zip_code'] ?? '',
+				$country_options[ $billing_country ] ?? $billing_country,
+			)
+		);
+		$address_line    = implode( ', ', $address_parts );
+
+		return array_filter(
+			array(
+				'name'    => $full_name,
+				'email'   => $data['billing_email'] ?? '',
+				'address' => $address_line,
+				'phone'   => $data['billing_phone'] ?? '',
+			)
+		);
+	}
 }

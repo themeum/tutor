@@ -233,7 +233,13 @@ const createConfig = (env, options) => {
             },
           },
         }),
-        new rspack.LightningCssMinimizerRspackPlugin(),
+        new rspack.LightningCssMinimizerRspackPlugin({
+          minimizerOptions: {
+            exclude: {
+              logicalProperties: true,
+            },
+          },
+        }),
       ],
     };
     baseConfig.output.clean = {

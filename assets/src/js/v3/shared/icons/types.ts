@@ -257,6 +257,7 @@ export const icons = [
   'magicEraser',
   'magicVariation',
   'magicWand',
+  'mapPin',
   'markCircle',
   'markerTick',
   'marksTotal',
