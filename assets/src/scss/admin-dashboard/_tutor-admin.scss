@@ -291,8 +291,8 @@ body.tutor-backend-tutor_settings #wpbody-content {
   border-bottom: none;
 }
 
-.tutor-brand-logo-field {
-  .tutor-brand-logo-list {
+.tutor-image-upload-list-field {
+  .tutor-image-upload-list {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -304,7 +304,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
     min-width: 0;
   }
 
-  .tutor-brand-logo-upload {
+  .tutor-image-upload-item {
     display: grid;
     grid-template-columns: minmax(160px, 1fr) minmax(240px, 320px);
     gap: 16px;
@@ -324,13 +324,13 @@ body.tutor-backend-tutor_settings #wpbody-content {
     }
   }
 
-  .tutor-brand-logo-upload-control {
+  .tutor-image-upload-control {
     position: relative;
     max-width: 141px;
     width: 100%;
   }
 
-  .tutor-brand-logo-upload-preview {
+  .tutor-image-upload-preview {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -353,7 +353,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
     }
   }
 
-  .tutor-brand-logo-upload-actions {
+  .tutor-image-upload-actions {
     display: none;
     position: absolute;
     inset: 0;
@@ -377,22 +377,22 @@ body.tutor-backend-tutor_settings #wpbody-content {
       font-size: 20px;
     }
 
-    .tutor-brand-logo-upload-remove {
+    .tutor-image-upload-remove {
       background: #e53935;
       color: #fff;
     }
   }
 
-  .tutor-brand-logo-upload-preview.has-image:hover .tutor-brand-logo-upload-actions,
-  .tutor-brand-logo-upload-preview.has-image:focus-within .tutor-brand-logo-upload-actions {
+  .tutor-image-upload-preview.has-image:hover .tutor-image-upload-actions,
+  .tutor-image-upload-preview.has-image:focus-within .tutor-image-upload-actions {
     display: flex;
   }
 
-  .tutor-brand-logo-upload.has-image .tutor-brand-logo-upload-empty {
+  .tutor-image-upload-item.has-image .tutor-image-upload-empty {
     display: none;
   }
 
-  .tutor-brand-logo-upload-empty {
+  .tutor-image-upload-empty {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -412,30 +412,30 @@ body.tutor-backend-tutor_settings #wpbody-content {
     }
   }
 
-  .tutor-brand-logo-upload[data-brand-logo-theme='dark'] {
-    .tutor-brand-logo-upload-preview,
-    .tutor-brand-logo-upload-empty {
+  .tutor-image-upload-item[data-image-upload-theme='dark'] {
+    .tutor-image-upload-preview,
+    .tutor-image-upload-empty {
       background: #25272d;
     }
 
-    .tutor-brand-logo-upload-empty {
+    .tutor-image-upload-empty {
       border-color: #69738a;
       color: #b8bdc8;
     }
   }
 
   @media (hover: none) {
-    .tutor-brand-logo-upload-preview.has-image .tutor-brand-logo-upload-actions {
+    .tutor-image-upload-preview.has-image .tutor-image-upload-actions {
       display: flex;
     }
   }
 
   @include breakpoint-max(782) {
-    .tutor-brand-logo-list {
+    .tutor-image-upload-list {
       padding: 0 16px;
     }
 
-    .tutor-brand-logo-upload {
+    .tutor-image-upload-item {
       grid-template-columns: 1fr;
       gap: 10px;
       padding: 16px 0;

@@ -12,6 +12,7 @@ namespace Tutor;
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
 use Tutor\Ecommerce\OptionKeys;
@@ -1295,10 +1296,22 @@ class Options_V2 {
 							),
 							array(
 								'key'     => 'brand_logo',
-								'type'    => 'brand_logo',
+								'type'    => 'image_upload_list',
 								'label'   => __( 'Brand Logo', 'tutor' ),
 								'desc'    => __( 'Upload separate logos for light and dark mode.', 'tutor' ),
 								'default' => 0,
+								'items'   => array(
+									'light' => array(
+										'label' => __( 'Light Mode', 'tutor' ),
+										'key'   => 'brand_logo_light',
+										'icon'  => Icon::LIGHT,
+									),
+									'dark'  => array(
+										'label' => __( 'Dark Mode', 'tutor' ),
+										'key'   => 'brand_logo_dark',
+										'icon'  => Icon::DARK,
+									),
+								),
 							),
 						),
 					),

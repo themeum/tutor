@@ -84,14 +84,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const allowedBrandLogoMimeTypes = ['image/jpeg', 'image/png'];
 
-	$(document).on('click', '.tutor-brand-logo-upload-select', function (event) {
+	$(document).on('click', '.tutor-image-upload-select', function (event) {
 		event.preventDefault();
 
-		const $upload = $(this).closest('.tutor-brand-logo-upload');
-		const $input = $upload.find('.tutor-brand-logo-upload-input');
-		const $preview = $upload.find('.tutor-brand-logo-upload-preview');
+		const $upload = $(this).closest('.tutor-image-upload-item');
+		const $input = $upload.find('.tutor-image-upload-input');
+		const $preview = $upload.find('.tutor-image-upload-preview');
 		const $image = $preview.find('img');
-		const $remove = $upload.find('.tutor-brand-logo-upload-remove');
+		const $remove = $upload.find('.tutor-image-upload-remove');
 		const frame = wp.media({
 			title: __('Select a brand logo', 'tutor'),
 			button: { text: __('Use this logo', 'tutor') },
@@ -117,13 +117,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		frame.open();
 	});
 
-	$(document).on('click', '.tutor-brand-logo-upload-remove', function (event) {
+	$(document).on('click', '.tutor-image-upload-remove', function (event) {
 		event.preventDefault();
 
-		const $upload = $(this).closest('.tutor-brand-logo-upload');
-		$upload.find('.tutor-brand-logo-upload-input').val('').trigger('change');
-		$upload.find('.tutor-brand-logo-upload-preview img').attr('src', '').prop('hidden', true);
-		$upload.find('.tutor-brand-logo-upload-preview').removeClass('has-image');
+		const $upload = $(this).closest('.tutor-image-upload-item');
+		$upload.find('.tutor-image-upload-input').val('').trigger('change');
+		$upload.find('.tutor-image-upload-preview img').attr('src', '').prop('hidden', true);
+		$upload.find('.tutor-image-upload-preview').removeClass('has-image');
 		$upload.removeClass('has-image');
 		$(this).prop('hidden', true);
 		$('#save_tutor_option').prop('disabled', false);
