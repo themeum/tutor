@@ -1753,7 +1753,7 @@ class Course extends Tutor_Base {
 			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
 		}
 
-		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) || ! User::is_admin() ) {
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id, 0, true ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
