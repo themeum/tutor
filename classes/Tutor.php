@@ -675,6 +675,7 @@ final class Tutor extends Singleton {
 	 * Tutor Action Via do_action
 	 *
 	 * @since 1.2.14
+	 * @since 4.0.5 Instructor role update logic added
 	 */
 	public function init_action() {
 		$tutor_action = Input::sanitize_request_data( 'tutor_action' );
