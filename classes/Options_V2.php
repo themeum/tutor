@@ -540,7 +540,7 @@ class Options_V2 {
 		do_action( 'tutor_option_save_before', $option );
 
 		if ( ! isset( $option['tutor_login_page'] ) ) {
-			$option['tutor_login_page'] = $login_page_id ?? 0;
+			$option['tutor_login_page'] = $login_page_id;
 		}
 
 		$option = Input::sanitize_array(
@@ -641,6 +641,7 @@ class Options_V2 {
 		$attr                 = $this->get_setting_fields();
 		$tutor_default_option = get_option( 'tutor_default_option' );
 		$tutor_saved_option   = get_option( 'tutor_option' );
+		$attr_default         = array();
 
 		foreach ( $attr as $sections ) {
 			if ( is_array( $sections ) && count( $sections ) ) {
@@ -675,6 +676,7 @@ class Options_V2 {
 	 * @return void
 	 */
 	public function load_settings_page() {
+		$template_path = '';
 		extract( $this->get_setting_fields() ); //phpcs:ignore
 
 		if ( ! $template_path ) {
@@ -1993,22 +1995,16 @@ class Options_V2 {
 			}
 
 			if ( 'imported' === $action ) {
-				if ( ! empty( $save_import_data ) ) {
-					update_option( 'tutor_option', $save_import_data['dataset'] );
-				}
+				update_option( 'tutor_option', $save_import_data['dataset'] );
 			}
 
 			$get_final_data = get_option( 'tutor_settings_log' );
 
 		} else {
-			if ( ! empty( $import_data ) ) {
-				update_option( 'tutor_settings_log', $import_data );
-			}
+			update_option( 'tutor_settings_log', $import_data );
 
 			if ( 'imported' === $action ) {
-				if ( ! empty( $save_import_data ) ) {
-					update_option( 'tutor_option', $save_import_data['dataset'] );
-				}
+				update_option( 'tutor_option', $save_import_data['dataset'] );
 			}
 
 			$get_final_data = get_option( 'tutor_settings_log' );
