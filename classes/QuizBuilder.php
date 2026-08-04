@@ -20,6 +20,7 @@ use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
 use TUTOR_PRO\QuizImageStorage;
+use WP_Error;
 
 /**
  * Class QuizBuilder
@@ -27,6 +28,34 @@ use TUTOR_PRO\QuizImageStorage;
  * @since 1.0.0
  */
 class QuizBuilder {
+
+	/**
+	 * Store question ids of current quiz.
+	 *
+	 * @since 4.0.5
+	 *
+	 * @var array
+	 */
+	private $current_quiz_question_ids = null;
+
+	/**
+	 * Store answer ids of current quiz.
+	 *
+	 * @since 4.0.5
+	 *
+	 * @var array
+	 */
+	private $current_quiz_answer_ids = null;
+
+	/**
+	 * Store current quiz details
+	 *
+	 * @since 4.0.5
+	 *
+	 * @var object
+	 */
+	private $current_quiz = null;
+
 	use JsonResponse;
 
 	const TRACKING_KEY   = '_data_status';
@@ -169,7 +198,7 @@ class QuizBuilder {
 			}
 
 			// Save sort order.
-			$answer_order++;
+			++$answer_order;
 			$wpdb->update(
 				$answers_table,
 				array( 'answer_order' => $answer_order ),
@@ -250,7 +279,7 @@ class QuizBuilder {
 		$question_order = 0;
 		foreach ( $questions as $question ) {
 			$data_status = isset( $question[ self::TRACKING_KEY ] ) ? $question[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
-			$question_order++;
+			++$question_order;
 			if ( isset( $question['is_cb_question'], $question['cb_action'] ) && 'link' === $question['cb_action'] ) {
 				$question['question_order'] = $question_order;
 				do_action( 'tutor_content_bank_question_linked_to_quiz', $quiz_id, (object) $question );
@@ -711,6 +740,15 @@ class QuizBuilder {
 		$quiz_id   = $is_update ? $payload['ID'] : null;
 		$questions = isset( $payload['questions'] ) ? $payload['questions'] : array();
 
+		if ( $quiz_id > 0 && ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			return (object) array(
+				'success' => false,
+				'errors'  => array(
+					'unauthorized' => __( 'You are not authorize to access this quiz', 'tutor' ),
+				),
+			);
+		}
+
 		$menu_order = (int) ( isset( $payload['menu_order'] )
 						? $payload['menu_order']
 						: tutor_utils()->get_next_course_content_order_id( $topic_id, $quiz_id ) );
@@ -737,6 +775,15 @@ class QuizBuilder {
 			$quiz_id = wp_insert_post( $quiz_data );
 			do_action( ( $is_update ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
 
+			if ( $quiz_id ) {
+				$this->set_current_quiz_questions_answer_ids( $quiz_id );
+			}
+
+			// Check if the questions & answers are belong to this quiz.
+			if ( $this->current_quiz && $questions ) {
+				$this->is_valid_quiz_question_answer_payload( $questions );
+			}
+
 			// Save quiz settings.
 			$quiz_option = Input::sanitize_array( $payload['quiz_option'] ?? array() ); //phpcs:ignore
 			update_post_meta( $quiz_id, Quiz::META_QUIZ_OPTION, $quiz_option );
@@ -751,6 +798,23 @@ class QuizBuilder {
 			$deleted_question_ids     = Input::post( 'deleted_question_ids', array(), Input::TYPE_ARRAY );
 			$deleted_answer_ids       = Input::post( 'deleted_answer_ids', array(), Input::TYPE_ARRAY );
 			$deleted_temp_mask_values = Input::post( 'deleted_temp_mask_values', array(), Input::TYPE_ARRAY );
+
+			// Validate deleted question ids are valid.
+			if ( $deleted_question_ids ) {
+				$is_diff = array_diff( $deleted_question_ids, $this->current_quiz_question_ids );
+				if ( ! empty( $is_diff ) ) {
+					throw new \Exception( esc_html__( 'Invalid question id found', 'tutor' ), 1 );
+				}
+			}
+
+			// Validate deleted answer ids are valid.
+			if ( $deleted_answer_ids ) {
+				$is_diff = array_diff( $deleted_answer_ids, $this->current_quiz_answer_ids );
+				if ( ! empty( $is_diff ) ) {
+					throw new \Exception( esc_html__( 'Invalid answer id found', 'tutor' ), 1 );
+				}
+			}
+
 			$this->handle_delete( $deleted_question_ids, $deleted_answer_ids, $deleted_temp_mask_values );
 
 			$wpdb->query( 'COMMIT' );
@@ -800,5 +864,69 @@ class QuizBuilder {
 		} else {
 			$this->json_response( __( 'Error', 'tutor' ), $result->errors, HttpHelper::STATUS_BAD_REQUEST );
 		}
+	}
+
+	private function set_current_quiz_questions_answer_ids( int $quiz_id ) {
+		if ( ! $quiz_id ) {
+			return;
+		}
+
+		if ( is_null( $this->current_quiz ) ) {
+			$quiz_details = QuizModel::get_quiz_details( $quiz_id );
+			if ( $quiz_details ) {
+				$this->current_quiz = $quiz_details;
+			}
+		}
+
+		if ( is_null( $this->current_quiz_question_ids ) && $this->current_quiz ) {
+			$questions = $this->current_quiz->questions;
+			if ( $questions ) {
+				$this->current_quiz_question_ids = wp_list_pluck( $questions, 'question_id' );
+			}
+		}
+
+		if ( is_null( $this->current_quiz_answer_ids ) && $this->current_quiz ) {
+			$quiz_details = $this->current_quiz->questions;
+
+			$quiz_question_answer          = wp_list_pluck( $quiz_details, 'question_answers' );
+			$this->current_quiz_answer_ids = wp_list_pluck( array_merge( ...$quiz_question_answer ), 'answer_id' );
+		}
+	}
+
+	/**
+	 * Validate all the questions & answers are belongs to the provided quiz
+	 *
+	 * @since 4.0.5
+	 *
+	 * @param array $payload Array of question answer payload.
+	 *
+	 * @throws \Exception If discrepancy found in the payload.
+	 *
+	 * @return bool true True if everything is fine
+	 */
+	public function is_valid_quiz_question_answer_payload( array $payload ): bool {
+		$payload_question_ids     = wp_list_pluck( $payload, 'question_id' );
+		$payload_question_answers = wp_list_pluck( $payload, 'question_answers' );
+		$payload_answer_ids       = wp_list_pluck( array_merge( ...$payload_question_answers ), 'answer_id' );
+
+		// Remove the has id.
+		$payload_question_ids = array_filter( $payload_question_ids, fn( $id ) => is_numeric( $id ) );
+		$payload_answer_ids   = array_filter( $payload_answer_ids, fn( $id ) => is_numeric( $id ) );
+
+		if ( $this->current_quiz_question_ids ) {
+			$has_question_diff = array_diff( $payload_question_ids, $this->current_quiz_question_ids );
+			if ( $has_question_diff ) {
+				throw new \Exception( esc_html__( 'Invalid question id found', 'tutor' ), 1 );
+			}
+		}
+
+		if ( $this->current_quiz_answer_ids ) {
+			$has_answer_diff = array_diff( $payload_answer_ids, $this->current_quiz_answer_ids );
+			if ( $has_answer_diff ) {
+				throw new \Exception( esc_html__( 'Invalid question id found', 'tutor' ), 1 );
+			}
+		}
+
+		return true;
 	}
 }
