@@ -443,16 +443,16 @@ body.tutor-backend-tutor_settings #wpbody-content {
   }
 }
 
-.tutor-page-elements-field {
-  .tutor-page-elements-matrix {
+.tutor-toggle-matrix-field {
+  .tutor-toggle-matrix {
     margin-top: 24px;
     border: 1px solid var(--tutor-border-color);
     border-radius: 6px;
     overflow: hidden;
   }
 
-  .tutor-page-elements-matrix-head,
-  .tutor-page-elements-matrix-row {
+  .tutor-toggle-matrix-head,
+  .tutor-toggle-matrix-row {
     display: grid;
     grid-template-columns: minmax(180px, 1fr) 180px 180px;
     align-items: center;
@@ -460,17 +460,17 @@ body.tutor-backend-tutor_settings #wpbody-content {
     padding: 8px 12px;
   }
 
-  .tutor-page-elements-matrix-row {
+  .tutor-toggle-matrix-row {
     padding: 12px;
   }
 
-  .tutor-page-elements-matrix-head {
+  .tutor-toggle-matrix-head {
     background: #fff;
     border-bottom: 1px solid var(--tutor-border-color);
     font-size: 16px;
     font-weight: 500;
 
-    .tutor-page-elements-head-icon {
+    .tutor-toggle-matrix-head-icon {
       padding: 4px;
       background-color: rgba(244, 246, 249, 1);
       border-radius: 50%;
@@ -488,26 +488,26 @@ body.tutor-backend-tutor_settings #wpbody-content {
     }
   }
 
-  .tutor-page-elements-matrix-column {
+  .tutor-toggle-matrix-column {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
   }
 
-  .tutor-page-elements-toggle {
+  .tutor-toggle-matrix-toggle {
     justify-self: center;
   }
 
   @include breakpoint-max(782) {
-    .tutor-page-elements-matrix-head,
-    .tutor-page-elements-matrix-row {
+    .tutor-toggle-matrix-head,
+    .tutor-toggle-matrix-row {
       grid-template-columns: minmax(140px, 1fr) 1fr 1fr;
       gap: 8px;
       padding: 16px;
     }
 
-    .tutor-page-elements-matrix-row {
+    .tutor-toggle-matrix-row {
       font-size: 16px;
     }
   }

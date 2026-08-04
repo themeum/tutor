@@ -1471,10 +1471,45 @@ class Options_V2 {
 						'fields'     => array(
 							array(
 								'key'     => 'page_elements',
-								'type'    => 'page_elements',
+								'type'    => 'toggle_matrix',
 								'label'   => __( 'Header & Footer', 'tutor' ),
 								'desc'    => __( 'Control the visibility of Header and Footer for Dashboard and Learning Experience', 'tutor' ),
 								'default' => $default_page_elements,
+								'columns' => array(
+									'header' => array(
+										'label'      => __( 'Header', 'tutor' ),
+										'icon'       => Icon::FOOTER,
+										'icon_attrs' => array( 'data-header-icon' => 'true' ),
+									),
+									'footer' => array(
+										'label' => __( 'Footer', 'tutor' ),
+										'icon'  => Icon::FOOTER,
+									),
+								),
+								'items'   => array(
+									'dashboard' => array(
+										'label'  => __( 'Dashboard', 'tutor' ),
+										'header' => array(
+											'key'     => 'show_dashboard_site_header',
+											'default' => 'off',
+										),
+										'footer' => array(
+											'key'     => 'show_dashboard_site_footer',
+											'default' => 'off',
+										),
+									),
+									'learning'  => array(
+										'label'  => __( 'Learning Experience', 'tutor' ),
+										'header' => array(
+											'key'     => 'show_learning_site_header',
+											'default' => 'off',
+										),
+										'footer' => array(
+											'key'     => 'show_learning_site_footer',
+											'default' => 'off',
+										),
+									),
+								),
 							),
 						),
 					),
