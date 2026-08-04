@@ -541,7 +541,7 @@ class Options_V2 {
 		do_action( 'tutor_option_save_before', $option );
 
 		if ( ! isset( $option['tutor_login_page'] ) ) {
-			$option['tutor_login_page'] = $login_page_id;
+			$option['tutor_login_page'] = $login_page_id ? $login_page_id : 0;
 		}
 
 		$option = Input::sanitize_array(
@@ -2043,7 +2043,9 @@ class Options_V2 {
 			}
 
 			if ( 'imported' === $action ) {
-				update_option( 'tutor_option', $save_import_data['dataset'] );
+				if ( ! empty( $save_import_data['dataset'] ) ) {
+					update_option( 'tutor_option', $save_import_data['dataset'] );
+				}
 			}
 
 			$get_final_data = get_option( 'tutor_settings_log' );
@@ -2052,7 +2054,9 @@ class Options_V2 {
 			update_option( 'tutor_settings_log', $import_data );
 
 			if ( 'imported' === $action ) {
-				update_option( 'tutor_option', $save_import_data['dataset'] );
+				if ( ! empty( $save_import_data['dataset'] ) ) {
+					update_option( 'tutor_option', $save_import_data['dataset'] );
+				}
 			}
 
 			$get_final_data = get_option( 'tutor_settings_log' );
