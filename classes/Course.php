@@ -1750,11 +1750,11 @@ class Course extends Tutor_Base {
 		$course_id = wp_get_post_parent_id( $topic_id );
 
 		if ( ! $topic_id || ! $course_id ) {
-			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
 		}
 
-		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) || ! User::is_admin() ) {
-			wp_send_json_error( tutor_utils()->error_message() );
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) && ! User::is_admin() ) {
+			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
 		if ( Input::has( 'content_parent' ) ) {
@@ -1770,7 +1770,7 @@ class Course extends Tutor_Base {
 		// Save course content order.
 		$this->save_course_content_order( $sorting_order );
 
-		wp_send_json_success();
+		$this->response_success( __( 'Course content order updated successfully!', 'tutor' ) );
 	}
 
 	/**
@@ -3108,7 +3108,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @param integer $course_id course ID.
 	 * @param integer $user_id user ID.
-     *
+	 *
 	 * @return void
 	 */
 	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
