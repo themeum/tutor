@@ -6306,27 +6306,50 @@ class Utils {
 	 * Get all courses id assigned or owned by an instructors
 	 *
 	 * @since 1.3.3
+	 * @since 4.0.5 $status param added to filter by instructor status.
 	 *
-	 * @param int $user_id user id.
+	 * @param int    $user_id user id.
+	 * @param string $status  Optional instructor status to filter by, e.g. 'approved'. Empty to skip the filter.
 	 *
 	 * @return array
 	 */
-	public function get_assigned_courses_ids_by_instructors( $user_id = 0 ) {
+	public function get_assigned_courses_ids_by_instructors( $user_id = 0, $status = '' ) {
 		global $wpdb;
 		$user_id = $this->get_user_id( $user_id );
 
-		$get_assigned_courses_ids = $wpdb->get_col(
-			$wpdb->prepare(
+		if ( ! empty( $status ) ) {
+			$query = $wpdb->prepare(
 				"SELECT meta.meta_value
-			FROM {$wpdb->usermeta} meta
-				INNER JOIN {$wpdb->posts} course ON meta.meta_value=course.ID
+				FROM {$wpdb->usermeta} meta
+					INNER JOIN {$wpdb->posts} course ON meta.meta_value = course.ID
 				WHERE meta.meta_key = '_tutor_instructor_course_id'
-					AND meta.user_id = %d GROUP BY meta_value",
+					AND meta.user_id = %d
+					AND EXISTS(
+						SELECT 1
+						FROM {$wpdb->usermeta} meta_status
+						WHERE meta_status.user_id = meta.user_id
+							AND meta_status.meta_key = '_tutor_instructor_status'
+							AND meta_status.meta_value = %s
+					)
+				GROUP BY meta.meta_value",
+				$user_id,
+				$status
+			);
+		} else {
+			$query = $wpdb->prepare(
+				"SELECT meta.meta_value
+				FROM {$wpdb->usermeta} meta
+					INNER JOIN {$wpdb->posts} course ON meta.meta_value = course.ID
+				WHERE meta.meta_key = '_tutor_instructor_course_id'
+					AND meta.user_id = %d
+				GROUP BY meta.meta_value",
 				$user_id
-			)
-		);
+			);
+		}
 
-		return $get_assigned_courses_ids;
+		$course_ids = $wpdb->get_col( $query );
+
+		return array_map( 'intval', $course_ids );
 	}
 
 	/**
