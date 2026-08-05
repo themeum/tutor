@@ -2293,6 +2293,8 @@ class Quiz {
 	 *
 	 * @param string $content Content to sanitize.
 	 * @return string
+	 *
+	 * @since 4.0.5
 	 */
 	public static function sanitize_quiz_content( $content ) {
 		if ( empty( $content ) ) {
