@@ -7,6 +7,8 @@
  *
  * @package Tutor\Views
  * @subpackage Tutor\Settings
+ *
+ * @since 4.0.5
  */
 
 defined( 'ABSPATH' ) || exit;

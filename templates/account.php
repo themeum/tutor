@@ -27,8 +27,8 @@ $close_url     = $dashboard_url;
 
 Dashboard::set_document_title( $meta_title );
 
-$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header', true );
-$show_dashboard_site_footer = (bool) tutor_utils()->get_option( 'show_dashboard_site_footer', true );
+$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header', false );
+$show_dashboard_site_footer = (bool) tutor_utils()->get_option( 'show_dashboard_site_footer', false );
 
 tutor_page_elements_header( $show_dashboard_site_header );
 ?>
