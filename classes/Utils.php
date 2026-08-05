@@ -6317,37 +6317,29 @@ class Utils {
 		global $wpdb;
 		$user_id = $this->get_user_id( $user_id );
 
+		$where_clause = "meta.meta_key = '_tutor_instructor_course_id' AND meta.user_id = %d";
+		$args         = array( $user_id );
+
 		if ( ! empty( $status ) ) {
-			$query = $wpdb->prepare(
-				"SELECT meta.meta_value
-				FROM {$wpdb->usermeta} meta
-					INNER JOIN {$wpdb->posts} course ON meta.meta_value = course.ID
-				WHERE meta.meta_key = '_tutor_instructor_course_id'
-					AND meta.user_id = %d
-					AND EXISTS(
+			$where_clause .= " AND EXISTS(
 						SELECT 1
 						FROM {$wpdb->usermeta} meta_status
 						WHERE meta_status.user_id = meta.user_id
 							AND meta_status.meta_key = '_tutor_instructor_status'
 							AND meta_status.meta_value = %s
-					)
-				GROUP BY meta.meta_value",
-				$user_id,
-				$status
-			);
-		} else {
-			$query = $wpdb->prepare(
+					)";
+			$args[]        = $status;
+		}
+
+		$course_ids = $wpdb->get_col(
+			$wpdb->prepare(
 				"SELECT meta.meta_value
 				FROM {$wpdb->usermeta} meta
 					INNER JOIN {$wpdb->posts} course ON meta.meta_value = course.ID
-				WHERE meta.meta_key = '_tutor_instructor_course_id'
-					AND meta.user_id = %d
-				GROUP BY meta.meta_value",
-				$user_id
-			);
-		}
-
-		$course_ids = $wpdb->get_col( $query );
+				WHERE {$where_clause} GROUP BY meta.meta_value", //phpcs:ignore
+				...$args
+			)
+		);
 
 		return array_map( 'intval', $course_ids );
 	}
@@ -9292,7 +9284,7 @@ class Utils {
 		if ( 0 === $s ) {
 			$r = $g = $b = $l; //phpcs:ignore
 		} else {
-			$hue2rgb = function( $p, $q, $t ) {
+			$hue2rgb = function ( $p, $q, $t ) {
 				if ( $t < 0 ) {
 					++$t;
 				}
@@ -9321,9 +9313,9 @@ class Utils {
 
 	/**
 	 * Get brand color
-	 * 
+	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_brand_color() {
@@ -9333,9 +9325,9 @@ class Utils {
 
 	/**
 	 * Get default brand color
-	 * 
+	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_default_brand_color() {
