@@ -791,15 +791,6 @@ class QuizBuilder {
 		$quiz_id   = $is_update ? $payload['ID'] : null;
 		$questions = isset( $payload['questions'] ) ? $payload['questions'] : array();
 
-		if ( $quiz_id > 0 && ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
-			return (object) array(
-				'success' => false,
-				'errors'  => array(
-					'unauthorized' => __( 'You are not authorize to access this quiz', 'tutor' ),
-				),
-			);
-		}
-
 		$menu_order = (int) ( isset( $payload['menu_order'] )
 						? $payload['menu_order']
 						: tutor_utils()->get_next_course_content_order_id( $topic_id, $quiz_id ) );
@@ -825,15 +816,6 @@ class QuizBuilder {
 
 			$quiz_id = wp_insert_post( $quiz_data );
 			do_action( ( $is_update ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
-
-			if ( $quiz_id ) {
-				$this->set_current_quiz_questions_answer_ids( $quiz_id );
-			}
-
-			// Check if the questions & answers are belong to this quiz.
-			if ( $this->current_quiz && $questions ) {
-				$this->is_valid_quiz_question_answer_payload( $questions );
-			}
 
 			// Save quiz settings.
 			$quiz_option = Input::sanitize_array( $payload['quiz_option'] ?? array() ); //phpcs:ignore
@@ -953,7 +935,7 @@ class QuizBuilder {
 		$payload_question_answers = wp_list_pluck( $payload, 'question_answers' );
 		$payload_answer_ids       = wp_list_pluck( array_merge( ...$payload_question_answers ), 'answer_id' );
 
-		// Remove the has id.
+		// Remove the hash id.
 		$payload_question_ids = array_filter( $payload_question_ids, fn( $id ) => is_numeric( $id ) );
 		$payload_answer_ids   = array_filter( $payload_answer_ids, fn( $id ) => is_numeric( $id ) );
 
