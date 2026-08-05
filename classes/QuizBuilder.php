@@ -345,6 +345,8 @@ class QuizBuilder {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @since 4.0.5 Quiz's question & answer id discrepancy validation added
+	 *
 	 * @param array $payload payload.
 	 *
 	 * @return object consist success, errors.
@@ -356,6 +358,27 @@ class QuizBuilder {
 		if ( ! is_array( $payload ) ) {
 			$success           = false;
 			$errors['payload'] = __( 'Invalid payload', 'tutor' );
+		}
+
+		$quiz_id   = (int) $payload['ID'] ?? 0;
+		$questions = $payload['questions'] ?? array();
+		$quiz      = get_post( $quiz_id );
+
+		if ( $quiz_id && ( ! $quiz || tutor()->quiz_post_type !== $quiz->post_type ) ) {
+			$success        = false;
+			$errors['ID'][] = __( 'Invalid quiz id provided', 'tutor' );
+		}
+
+		if ( $quiz && ! current_user_can( 'edit_post', $quiz_id ) ) {
+			$success                = false;
+			$errors['permission'][] = __( 'You do not have permission to edit this quiz', 'tutor' );
+		}
+
+		if ( ! $success ) {
+			return (object) array(
+				'success' => $success,
+				'errors'  => $errors,
+			);
 		}
 
 		$rules = array(
@@ -374,20 +397,48 @@ class QuizBuilder {
 			$errors  = array_merge( $errors, $validation->errors );
 		}
 
-		if ( isset( $payload['ID'] ) && is_numeric( $payload['ID'] ) ) {
-			if ( ! current_user_can( 'edit_post', $payload['ID'] ) ) {
-				$success                = false;
-				$errors['permission'][] = __( 'You do not have permission to edit this quiz', 'tutor' );
-			} else {
-				$quiz = get_post( $payload['ID'] );
-				if ( ! $quiz || tutor()->quiz_post_type !== $quiz->post_type ) {
-					$success        = false;
-					$errors['ID'][] = __( 'Invalid quiz id provided', 'tutor' );
-				}
+		if ( $quiz && ! empty( $questions ) ) {
+			$this->set_current_quiz_questions_answer_ids( $quiz_id );
+			try {
+				$this->is_valid_quiz_question_answer_payload( $questions );
+			} catch ( \Throwable $th ) {
+				$success                 = false;
+				$errors['bad_request'][] = $th->getMessage();
 			}
 		}
 
-		foreach ( $payload['questions'] as $question ) {
+		$deleted_question_ids = Input::post( 'deleted_question_ids', array(), Input::TYPE_ARRAY );
+		$deleted_answer_ids   = Input::post( 'deleted_answer_ids', array(), Input::TYPE_ARRAY );
+
+		// Validate deleted question ids are valid.
+		if ( $deleted_question_ids ) {
+			if ( $quiz ) {
+				$is_diff = array_diff( $deleted_question_ids, $this->current_quiz_question_ids );
+				if ( ! empty( $is_diff ) ) {
+					$success                 = false;
+					$errors['bad_request'][] = __( 'Invalid deleted question id found', 'tutor' );
+				}
+			} else {
+				$success                 = false;
+				$errors['bad_request'][] = __( 'Invalid deleted question id found', 'tutor' );
+			}
+		}
+
+		// Validate deleted answer ids are valid.
+		if ( $deleted_answer_ids ) {
+			if ( $quiz ) {
+				$is_diff = array_diff( $deleted_answer_ids, $this->current_quiz_answer_ids );
+				if ( ! empty( $is_diff ) ) {
+					$success                 = false;
+					$errors['bad_request'][] = __( 'Invalid deleted answer id found', 'tutor' );
+				}
+			} else {
+				$success                 = false;
+				$errors['bad_request'][] = __( 'Invalid deleted answer id found', 'tutor' );
+			}
+		}
+
+		foreach ( $questions as $question ) {
 			if ( ! isset( $question[ self::TRACKING_KEY ] ) ) {
 				$success = false;
 				// translators: %s is the tracking key required for each question.
@@ -798,22 +849,6 @@ class QuizBuilder {
 			$deleted_question_ids     = Input::post( 'deleted_question_ids', array(), Input::TYPE_ARRAY );
 			$deleted_answer_ids       = Input::post( 'deleted_answer_ids', array(), Input::TYPE_ARRAY );
 			$deleted_temp_mask_values = Input::post( 'deleted_temp_mask_values', array(), Input::TYPE_ARRAY );
-
-			// Validate deleted question ids are valid.
-			if ( $deleted_question_ids ) {
-				$is_diff = array_diff( $deleted_question_ids, $this->current_quiz_question_ids );
-				if ( ! empty( $is_diff ) ) {
-					throw new \Exception( esc_html__( 'Invalid question id found', 'tutor' ), 1 );
-				}
-			}
-
-			// Validate deleted answer ids are valid.
-			if ( $deleted_answer_ids ) {
-				$is_diff = array_diff( $deleted_answer_ids, $this->current_quiz_answer_ids );
-				if ( ! empty( $is_diff ) ) {
-					throw new \Exception( esc_html__( 'Invalid answer id found', 'tutor' ), 1 );
-				}
-			}
 
 			$this->handle_delete( $deleted_question_ids, $deleted_answer_ids, $deleted_temp_mask_values );
 
