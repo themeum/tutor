@@ -572,6 +572,7 @@ final class Tutor extends Singleton {
 		do_action( 'tutor_loaded' );
 
 		add_action( 'init', array( $this, 'init_action' ) );
+		add_action( 'init', array( $this, 'update_instructor_capability' ) );
 
 		/**
 		 * Check activated plugin
@@ -675,33 +676,11 @@ final class Tutor extends Singleton {
 	 * Tutor Action Via do_action
 	 *
 	 * @since 1.2.14
-	 * @since 4.0.5 Instructor role update logic added
 	 */
 	public function init_action() {
 		$tutor_action = Input::sanitize_request_data( 'tutor_action' );
 		if ( '' !== $tutor_action ) {
 			do_action( 'tutor_action_' . $tutor_action );
-		}
-
-		// Remove edit_others content cap from tutor_instructor role.
-		$is_removed = get_option( 'tutor_removed_edit_other_items_permission', false );
-		if ( ! $is_removed ) {
-			$role = get_role( tutor()->instructor_role );
-
-			$cap_to_be_removed = array(
-				'edit_others_tutor_courses',
-				'edit_others_tutor_lessons',
-				'edit_others_tutor_quizzes',
-				'edit_others_tutor_questions',
-			);
-
-			foreach ( $cap_to_be_removed as $cap ) {
-				if ( $role->has_cap( $cap ) ) {
-					$role->remove_cap( $cap );
-				}
-			}
-
-			update_option( 'tutor_removed_edit_other_items_permission', true, false );
 		}
 	}
 
@@ -1445,6 +1424,37 @@ final class Tutor extends Singleton {
 			//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$wpdb->query( "DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers, {$prefix}tutor_earnings, {$prefix}tutor_withdraws " );
 
+		}
+	}
+
+	/**
+	 * Update instructor capability
+	 *
+	 * Remove other author items permission
+	 *
+	 * @since 4.0.5
+	 */
+	public function update_instructor_capability() {
+		// Remove edit_others content cap from tutor_instructor role.
+		$is_removed = get_option( 'tutor_removed_edit_other_items_permission', false );
+		if ( ! $is_removed ) {
+			$role = get_role( tutor()->instructor_role );
+
+			$cap_to_be_removed = array(
+				'edit_others_tutor_courses',
+				'edit_others_tutor_lessons',
+				'edit_others_tutor_quizzes',
+				'edit_others_tutor_questions',
+				'edit_others_tutor_assignments',
+			);
+
+			foreach ( $cap_to_be_removed as $cap ) {
+				if ( $role->has_cap( $cap ) ) {
+					$role->remove_cap( $cap );
+				}
+			}
+
+			update_option( 'tutor_removed_edit_other_items_permission', true, false );
 		}
 	}
 }
