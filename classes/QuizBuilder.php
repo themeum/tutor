@@ -34,7 +34,7 @@ class QuizBuilder {
 	 *
 	 * @since 4.0.5
 	 *
-	 * @var array
+	 * @var array|null
 	 */
 	private $current_quiz_question_ids = null;
 
@@ -43,7 +43,7 @@ class QuizBuilder {
 	 *
 	 * @since 4.0.5
 	 *
-	 * @var array
+	 * @var array|null
 	 */
 	private $current_quiz_answer_ids = null;
 
@@ -52,7 +52,7 @@ class QuizBuilder {
 	 *
 	 * @since 4.0.5
 	 *
-	 * @var object
+	 * @var object|null
 	 */
 	private $current_quiz = null;
 
@@ -866,6 +866,15 @@ class QuizBuilder {
 		}
 	}
 
+	/**
+	 * Set current quiz questions & answer ids
+	 *
+	 * @since 4.0.5
+	 *
+	 * @param int $quiz_id Quiz id.
+	 *
+	 * @return void
+	 */
 	private function set_current_quiz_questions_answer_ids( int $quiz_id ) {
 		if ( ! $quiz_id ) {
 			return;
@@ -923,7 +932,7 @@ class QuizBuilder {
 		if ( $this->current_quiz_answer_ids ) {
 			$has_answer_diff = array_diff( $payload_answer_ids, $this->current_quiz_answer_ids );
 			if ( $has_answer_diff ) {
-				throw new \Exception( esc_html__( 'Invalid question id found', 'tutor' ), 1 );
+				throw new \Exception( esc_html__( 'Invalid answer id found', 'tutor' ), 1 );
 			}
 		}
 
