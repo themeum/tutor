@@ -12,6 +12,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
+$sidebar_logo_visibility = get_tutor_option( 'sidebar_logo_visibility', true );
+
+if ( ! $sidebar_logo_visibility ) {
+	return;
+}
+
 $site_name      = get_bloginfo( 'name' );
 $custom_logo_id = absint( get_theme_mod( 'custom_logo' ) );
 $logo_ids       = array(

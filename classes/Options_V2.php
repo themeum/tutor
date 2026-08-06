@@ -1313,6 +1313,13 @@ class Options_V2 {
 									),
 								),
 							),
+							array(
+								'key'     => 'sidebar_logo_visibility',
+								'type'    => 'toggle_switch',
+								'default' => 'on',
+								'label'   => __( 'Sidebar Logo Visibility', 'tutor' ),
+								'desc'    => __( 'Enable or disable the logo display in the sidebar', 'tutor' ),
+							),
 						),
 					),
 					'block_course'        => array(
