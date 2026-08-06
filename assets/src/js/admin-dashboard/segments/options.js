@@ -621,12 +621,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		const cart_page_field = document.querySelector("#field_tutor_cart_page_id");
 		const checkout_page_field = document.querySelector("#field_tutor_checkout_page_id");
+		const hide_course_from_shop_page = document.querySelector("#field_hide_course_from_shop_page");
 
 		showHideOption(woocommerce_block, () => monetized_by === 'wc');
 		showHideOption(currency_block, () => monetized_by === 'tutor');
 		showHideOption(cart_page_field, () => monetized_by === 'tutor');
 		showHideOption(checkout_page_field, () => monetized_by === 'tutor');
 		showHideOption(invoice_block, () => monetized_by === 'tutor');
+		showHideOption(hide_course_from_shop_page, () => monetized_by !== 'tutor');
 
 		showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(monetized_by));
 		showHideOption(fees_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
@@ -640,6 +642,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			showHideOption(cart_page_field, () => value === 'tutor');
 			showHideOption(checkout_page_field, () => value === 'tutor');
 			showHideOption(invoice_block, () => value === 'tutor');
+			showHideOption(hide_course_from_shop_page, () => value !== 'tutor');
 
 			showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(value));
 			showHideOption(fees_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
