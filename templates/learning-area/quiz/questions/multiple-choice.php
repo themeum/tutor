@@ -43,43 +43,45 @@ $register_attr = "register('{$field_name}'{$register_rules})";
 ?>
 
 <div class="tutor-quiz-question-options">
-	<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
-		<label 
-			class="tutor-quiz-question-option"
-			tabindex="0"
-			@keydown.space.prevent="$el.querySelector('input').click()"
-			@keydown.enter.prevent="$el.querySelector('input').click()"
-		>
-			<div class="tutor-input-field <?php echo $has_image( $answer ) ? 'tutor-hidden' : ''; ?>">
-				<div class="tutor-input-wrapper">
-					<input 
-						type="<?php echo esc_attr( $has_multiple_correct_answer ? 'checkbox' : 'radio' ); ?>"
-						class="<?php echo esc_attr( $has_multiple_correct_answer ? 'tutor-checkbox' : 'tutor-radio' ); ?>"
-						id="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
-						name="<?php echo esc_attr( $field_name ); ?>"
-						value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
-						tabindex="-1"
-						x-bind="<?php echo esc_attr( $register_attr ); ?>"
+	<?php if ( tutor_utils()->count( $question['question_answers'] ) ) : ?>
+		<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
+			<label 
+				class="tutor-quiz-question-option"
+				tabindex="0"
+				@keydown.space.prevent="$el.querySelector('input').click()"
+				@keydown.enter.prevent="$el.querySelector('input').click()"
+			>
+				<div class="tutor-input-field <?php echo $has_image( $answer ) ? 'tutor-hidden' : ''; ?>">
+					<div class="tutor-input-wrapper">
+						<input 
+							type="<?php echo esc_attr( $has_multiple_correct_answer ? 'checkbox' : 'radio' ); ?>"
+							class="<?php echo esc_attr( $has_multiple_correct_answer ? 'tutor-checkbox' : 'tutor-radio' ); ?>"
+							id="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
+							name="<?php echo esc_attr( $field_name ); ?>"
+							value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
+							tabindex="-1"
+							x-bind="<?php echo esc_attr( $register_attr ); ?>"
+						>
+						<label 
+							class="tutor-label"
+							for="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
+						>
+							<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
+						</label>
+					</div>
+				</div>
+				<?php if ( $has_image( $answer ) ) : ?>
+					<img
+						src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>"
+						alt="<?php echo esc_attr( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>"
 					>
-					<label 
-						class="tutor-label"
-						for="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
-					>
+					<div data-title>
 						<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
-					</label>
-				</div>
-			</div>
-			<?php if ( $has_image( $answer ) ) : ?>
-				<img
-					src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>"
-					alt="<?php echo esc_attr( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>"
-				>
-				<div data-title>
-					<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
-				</div>
-			<?php endif; ?>
-		</label>
-	<?php endforeach; ?>
+					</div>
+				<?php endif; ?>
+			</label>
+		<?php endforeach; ?>
+	<?php endif; ?>
 </div>
 
 

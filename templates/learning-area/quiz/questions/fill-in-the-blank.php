@@ -25,62 +25,64 @@ if ( $answer_is_required ) {
 
 ?>
 <div class="tutor-quiz-question-options">
-	<?php foreach ( $question['question_answers'] ?? array() as $answer ) : ?>
-		<div class="tutor-quiz-question-option">
-			<?php
-			$answer_title = Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' );
-			$dash_count   = substr_count( $answer_title, '{dash}' );
+	<?php if ( tutor_utils()->count( $question['question_answers'] ) ) : ?>
+		<?php foreach ( $question['question_answers'] as $answer ) : ?>
+			<div class="tutor-quiz-question-option">
+				<?php
+				$answer_title = Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' );
+				$dash_count   = substr_count( $answer_title, '{dash}' );
 
-			if ( $dash_count > 0 ) {
-				$input_index = 0;
+				if ( $dash_count > 0 ) {
+					$input_index = 0;
 
-				$answer_title = preg_replace_callback(
-					'/{dash}/',
-					function () use ( &$input_index, $base_field_name, $register_rules, &$field_name, &$field_names ) {
+					$answer_title = preg_replace_callback(
+						'/{dash}/',
+						function () use ( &$input_index, $base_field_name, $register_rules, &$field_name, &$field_names ) {
 
-						$input_name = sprintf( '%s[%d]', $base_field_name, $input_index );
+							$input_name = sprintf( '%s[%d]', $base_field_name, $input_index );
 
-						$register_attr = "register('{$input_name}'{$register_rules})";
-						$input_html    = sprintf(
-							'<input
-								type="text"
-								class="tutor-quiz-question-input"
-								placeholder="%s"
-								name="%s"
-								x-bind="%s"
-							/>',
-							esc_attr__( 'Type your answer here', 'tutor' ),
-							$input_name,
-							esc_attr( $register_attr )
-						);
+							$register_attr = "register('{$input_name}'{$register_rules})";
+							$input_html    = sprintf(
+								'<input
+									type="text"
+									class="tutor-quiz-question-input
+									placeholder="%s"
+									name="%s"
+									x-bind="%s"
+								/>',
+								esc_attr__( 'Type your answer here', 'tutor' ),
+								$input_name,
+								esc_attr( $register_attr )
+							);
 
-						$input_index++;
-						if ( '' === $field_name ) {
-							$field_name = $input_name;
-						}
-						$field_names[] = $input_name;
+							$input_index++;
+							if ( '' === $field_name ) {
+								$field_name = $input_name;
+							}
+							$field_names[] = $input_name;
 
-						return $input_html;
-					},
-					$answer_title
+							return $input_html;
+						},
+						$answer_title
+					);
+				}
+
+				echo wp_kses(
+					$answer_title,
+					array(
+						'input' => array(
+							'type'        => true,
+							'class'       => true,
+							'name'        => true,
+							'placeholder' => true,
+							'x-bind'      => true,
+						),
+					)
 				);
-			}
-
-			echo wp_kses(
-				$answer_title,
-				array(
-					'input' => array(
-						'type'        => true,
-						'class'       => true,
-						'name'        => true,
-						'placeholder' => true,
-						'x-bind'      => true,
-					),
-				)
-			);
-			?>
-		</div>
-	<?php endforeach; ?>
+				?>
+			</div>
+		<?php endforeach; ?>
+	<?php endif; ?>
 </div>
 
 <?php if ( $field_name ) : ?>
