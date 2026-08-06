@@ -11,6 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
 use Tutor\Models\QuizModel;
 
 if ( ! isset( $question ) || ! is_object( $question ) ) {
@@ -38,7 +39,7 @@ $normalize = static function ( $value ) {
 };
 
 $get_answer_by_id = static function ( $answer_id ) {
-	$results = tutor_utils()->get_answer_by_id( (int) $answer_id );
+	$results = QuizModel::get_answer_by_id( (int) $answer_id );
 	return is_array( $results ) && ! empty( $results ) ? $results[0] : null;
 };
 
@@ -111,8 +112,8 @@ if ( 'ordering' === $question_type ) {
 	<div class="tutor-quiz-review-dnd-rows">
 		<?php
 		foreach ( $rows as $row ) :
-			$given_text   = isset( $row['given_text'] ) ? wp_unslash( $row['given_text'] ) : '';
-			$correct_text = isset( $row['correct_text'] ) ? wp_unslash( $row['correct_text'] ) : '';
+			$given_text   = isset( $row['given_text'] ) ? Quiz::sanitize_quiz_content( $row['given_text'] ) : '';
+			$correct_text = isset( $row['correct_text'] ) ? Quiz::sanitize_quiz_content( $row['correct_text'] ) : '';
 			$given_status = isset( $row['given_status'] ) ? $row['given_status'] : 'neutral';
 			?>
 			<div class="tutor-quiz-review-dnd-row">
