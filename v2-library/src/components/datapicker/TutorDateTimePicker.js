@@ -29,7 +29,7 @@ const TutorDateTimePicker = (data) => {
 				<DatePicker
 					inline={data.inline ? true : false}
 					customInput={<CustomInput />}
-					placeholderText="Y-M-d h:mm aa"
+					placeholderText="yyyy-MM-dd h:mm aa"
 					selected={startDate}
 					onChange={(date) => handleCalendarChange(date)}
 					showPopperArrow={false}
@@ -38,7 +38,7 @@ const TutorDateTimePicker = (data) => {
 					onCalendarClose={handleCalendarClose}
 					onClick={handleCalendarClose}
 					timeCaption={__('Time', 'tutor')}
-					dateFormat="Y-M-d h:mm aa"
+					dateFormat="yyyy-MM-dd h:mm aa"
 					minDate={data.disable_previous ? new Date() : false}
 					formatWeekDay={(nameOfDay) => translateWeekday(nameOfDay)}
 					calendarStartDay={_tutorobject.start_of_week}

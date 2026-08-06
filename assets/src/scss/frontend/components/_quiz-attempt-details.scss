@@ -326,6 +326,7 @@
   }
   .tutor-quiz-question-option {
     &[data-readonly='true'] {
+      pointer-events: none;
       cursor: default;
     }
   }

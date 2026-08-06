@@ -10,6 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 
@@ -36,27 +37,32 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 			name="<?php echo esc_attr( $answer_field_name ); ?>"
 			x-bind="<?php echo esc_attr( $register_attr ); ?>"
 		>
-		<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
-			<div
-				class="tutor-quiz-question-option"
-				data-option="draggable"
-				data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>"
-			>
-				<div data-option-order="<?php echo esc_attr( $index + 1 ); ?>">
-					<?php echo esc_html( $index + 1 ); ?>
-				</div>
-				<div data-title>
-					<?php if ( ! empty( $answer['image_id'] ) ) : ?>
-						<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
-					<?php endif; ?>
-					<?php echo esc_html( $answer['answer_title'] ); ?>
-				</div>
+		<?php if ( tutor_utils()->count( $question['question_answers'] ) ) : ?>
+			<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
+				<div
+					class="tutor-quiz-question-option"
+					data-option="draggable"
+					data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>"
+				>
+					<div data-option-order="<?php echo esc_attr( $index + 1 ); ?>">
+						<?php echo esc_html( $index + 1 ); ?>
+					</div>
+					<div data-title>
+						<?php if ( ! empty( $answer['image_id'] ) ) : ?>
+							<img
+								src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>"
+								alt="<?php echo esc_attr( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>"
+							>
+						<?php endif; ?>
+						<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
+					</div>
 
-				<button type="button" data-grab-handle tabindex="-1" aria-label="<?php esc_attr_e( 'Reorder item', 'tutor' ); ?>">
-					<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 40 )->render(); ?>
-				</button>
-			</div>
-		<?php endforeach; ?>
+					<button type="button" data-grab-handle tabindex="-1" aria-label="<?php esc_attr_e( 'Reorder item', 'tutor' ); ?>">
+						<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 40 )->render(); ?>
+					</button>
+				</div>
+			<?php endforeach; ?>
+		<?php endif; ?>
 	</div>
 
 	

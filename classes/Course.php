@@ -208,7 +208,12 @@ class Course extends Tutor_Base {
 		 *
 		 * @since v.1.6.6
 		 */
-		add_action( 'deleted_post', array( new CourseModel(), 'delete_course_data' ) );
+		add_action(
+			'deleted_post',
+			function ( $post_id ) {
+				( new CourseModel() )->delete_course_data( $post_id );
+			}
+		);
 
 		/**
 		 * Delete course data after deleted course
@@ -355,8 +360,8 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param bool    $required Whether the password is required.
-	 * @param WP_Post $post     The post object.
+	 * @param bool     $required Whether the password is required.
+	 * @param \WP_Post $post     The post object.
 	 *
 	 * @return bool false if the current user is enrolled, original value otherwise.
 	 */
@@ -1098,7 +1103,8 @@ class Course extends Tutor_Base {
 				'course_target_audience'   => 'sanitize_textarea_field',
 				'course_material_includes' => 'sanitize_textarea_field',
 				'course_requirements'      => 'sanitize_textarea_field',
-			)
+			),
+			true
 		);
 
 		$course_id = (int) $params['course_id'];
@@ -1254,13 +1260,16 @@ class Course extends Tutor_Base {
 				$topic_contents = tutor_utils()->get_course_contents_by_topic( $post->ID, -1 );
 
 				if ( $topic_contents->have_posts() ) {
-					foreach ( $topic_contents->get_posts() as $post ) {
-						if ( tutor()->quiz_post_type === $post->post_type ) {
-							$questions            = tutor_utils()->get_questions_by_quiz( $post->ID );
-							$post->total_question = is_array( $questions ) ? count( $questions ) : 0;
+					foreach ( $topic_contents->get_posts() as $content ) {
+						if ( tutor()->quiz_post_type === $content->post_type ) {
+							$questions = tutor_utils()->get_questions_by_quiz( $content->ID );
+							$content   = (object) array_merge(
+								(array) $content,
+								array( 'total_question' => is_array( $questions ) ? count( $questions ) : 0 )
+							);
 						}
 
-						array_push( $current_topic['contents'], $post );
+						array_push( $current_topic['contents'], $content );
 					}
 				}
 
@@ -1361,10 +1370,10 @@ class Course extends Tutor_Base {
 		if ( $video_intro ) {
 			$source = $video_intro['source'] ?? '';
 			if ( 'html5' === $source ) {
-					$poster_url            = wp_get_attachment_url( $video['poster'] ?? 0 );
-					$source_html5          = wp_get_attachment_url( $video['source_video_id'] ?? 0 );
-					$video['poster_url']   = $poster_url;
-					$video['source_html5'] = $source_html5;
+					$poster_url                  = wp_get_attachment_url( $video_intro['poster'] ?? 0 );
+					$source_html5                = wp_get_attachment_url( $video_intro['source_video_id'] ?? 0 );
+					$video_intro['poster_url']   = $poster_url;
+					$video_intro['source_html5'] = $source_html5;
 			}
 		}
 
@@ -1521,7 +1530,7 @@ class Course extends Tutor_Base {
 
 		if ( isset( $default_data['current_user']['data']['id'] ) ) {
 			$tutor_user = tutor_utils()->get_tutor_user( $default_data['current_user']['data']['id'] );
-			$default_data['current_user']['data']['tutor_profile_photo_url'] = $tutor_user->tutor_profile_photo_url;
+			$default_data['current_user']['data']['tutor_profile_photo_url'] = is_object( $tutor_user ) ? $tutor_user->tutor_profile_photo_url : '';
 		}
 
 		/**
@@ -1750,11 +1759,11 @@ class Course extends Tutor_Base {
 		$course_id = wp_get_post_parent_id( $topic_id );
 
 		if ( ! $topic_id || ! $course_id ) {
-			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
 		}
 
-		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) || ! User::is_admin() ) {
-			wp_send_json_error( tutor_utils()->error_message() );
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) && ! User::is_admin() ) {
+			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
 		if ( Input::has( 'content_parent' ) ) {
@@ -1770,7 +1779,7 @@ class Course extends Tutor_Base {
 		// Save course content order.
 		$this->save_course_content_order( $sorting_order );
 
-		wp_send_json_success();
+		$this->response_success( __( 'Course content order updated successfully!', 'tutor' ) );
 	}
 
 	/**
@@ -2235,7 +2244,7 @@ class Course extends Tutor_Base {
 		} else {
 			CourseModel::mark_course_as_completed( $course_id, $user_id );
 			// Set temporary identifier to show review pop up.
-			self::set_review_popup_data( $user_id, $course_id, $permalink );
+			self::set_review_popup_data( $user_id, $course_id );
 
 			wp_safe_redirect( $permalink );
 			exit;
@@ -2639,7 +2648,7 @@ class Course extends Tutor_Base {
 	 * @return string
 	 */
 	public function enable_disable_material_includes( $html ) {
-		$disable_option = ! (bool) get_tutor_option( 'enable_course_material', true, true );
+		$disable_option = ! (bool) get_tutor_option( 'enable_course_material', true );
 		if ( $disable_option ) {
 			return '';
 		}
@@ -2775,9 +2784,9 @@ class Course extends Tutor_Base {
 		if ( ! $hide_course_from_shop_page ) {
 			return;
 		}
-		add_action( 'woocommerce_product_query', array( $this, 'filter_woocommerce_product_query' ) );
-		add_filter( 'edd_downloads_query', array( $this, 'filter_edd_downloads_query' ), 10, 2 );
-		add_action( 'pre_get_posts', array( $this, 'filter_archive_meta_query' ), 1 );
+		add_filter( 'woocommerce_product_query', array( $this, 'filter_woocommerce_product_query' ) );
+		add_filter( 'edd_downloads_query', array( $this, 'filter_edd_downloads_query' ), 10 );
+		add_filter( 'pre_get_posts', array( $this, 'filter_archive_meta_query' ), 1 );
 	}
 
 
@@ -2911,7 +2920,7 @@ class Course extends Tutor_Base {
 		}
 
 		$completed_lessons = tutor_utils()->get_completed_lesson_count_by_course( $course_id, $user_id );
-		$total_lessons     = tutor_utils()->get_lesson_count_by_course( $course_id );
+		$total_lessons     = tutor_utils()->get_lesson_count_by_course( $course_id ); // @phpstan-ignore method.notFound
 
 		if ( $completed_lessons < $total_lessons ) {
 			return __( 'Complete all lessons to mark this course as complete', 'tutor' );
