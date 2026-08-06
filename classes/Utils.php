@@ -6306,27 +6306,42 @@ class Utils {
 	 * Get all courses id assigned or owned by an instructors
 	 *
 	 * @since 1.3.3
+	 * @since 4.0.5 $status param added to filter by instructor status.
 	 *
-	 * @param int $user_id user id.
+	 * @param int    $user_id user id.
+	 * @param string $status  Optional instructor status to filter by, e.g. 'approved'. Empty to skip the filter.
 	 *
 	 * @return array
 	 */
-	public function get_assigned_courses_ids_by_instructors( $user_id = 0 ) {
+	public function get_assigned_courses_ids_by_instructors( $user_id = 0, $status = '' ) {
 		global $wpdb;
 		$user_id = $this->get_user_id( $user_id );
 
-		$get_assigned_courses_ids = $wpdb->get_col(
+		$where_clause = "meta.meta_key = '_tutor_instructor_course_id' AND meta.user_id = %d";
+		$args         = array( $user_id );
+
+		if ( ! empty( $status ) ) {
+			$where_clause .= " AND EXISTS(
+						SELECT 1
+						FROM {$wpdb->usermeta} meta_status
+						WHERE meta_status.user_id = meta.user_id
+							AND meta_status.meta_key = '_tutor_instructor_status'
+							AND meta_status.meta_value = %s
+					)";
+			$args[]        = $status;
+		}
+
+		$course_ids = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT meta.meta_value
-			FROM {$wpdb->usermeta} meta
-				INNER JOIN {$wpdb->posts} course ON meta.meta_value=course.ID
-				WHERE meta.meta_key = '_tutor_instructor_course_id'
-					AND meta.user_id = %d GROUP BY meta_value",
-				$user_id
+				FROM {$wpdb->usermeta} meta
+					INNER JOIN {$wpdb->posts} course ON meta.meta_value = course.ID
+				WHERE {$where_clause} GROUP BY meta.meta_value", //phpcs:ignore
+				...$args
 			)
 		);
 
-		return $get_assigned_courses_ids;
+		return array_map( 'intval', $course_ids );
 	}
 
 	/**
@@ -9269,7 +9284,7 @@ class Utils {
 		if ( 0 === $s ) {
 			$r = $g = $b = $l; //phpcs:ignore
 		} else {
-			$hue2rgb = function( $p, $q, $t ) {
+			$hue2rgb = function ( $p, $q, $t ) {
 				if ( $t < 0 ) {
 					++$t;
 				}
@@ -9298,9 +9313,9 @@ class Utils {
 
 	/**
 	 * Get brand color
-	 * 
+	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_brand_color() {
@@ -9310,9 +9325,9 @@ class Utils {
 
 	/**
 	 * Get default brand color
-	 * 
+	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_default_brand_color() {
