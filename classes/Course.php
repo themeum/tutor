@@ -365,7 +365,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @return bool false if the current user is enrolled, original value otherwise.
 	 */
-	public function bypass_password_for_enrolled( $required, \WP_Post $post ) {
+	public function bypass_password_for_enrolled( $required, $post ) {
 		if ( ! $required ) {
 			return $required;
 		}
