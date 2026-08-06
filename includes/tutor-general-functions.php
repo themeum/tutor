@@ -526,7 +526,7 @@ if ( ! function_exists( 'get_tutor_header' ) ) {
 	 * @return void
 	 */
 	function get_tutor_header( $full_screen = false ) {
-		$show_learning_area_header = (bool) tutor_utils()->get_option( 'show_learning_site_header', false );
+		$show_learning_area_header = (bool) tutor_utils()->get_option( 'show_learning_site_header' );
 		if ( ! $show_learning_area_header || $full_screen ) {
 			?>
 			<!doctype html>

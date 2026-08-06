@@ -73,8 +73,8 @@ $page_meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $learning_meta_title, 
 
 Dashboard::set_document_title( $page_meta_title );
 
-$show_learning_site_header = (bool) tutor_utils()->get_option( 'show_learning_site_header', false );
-$show_learning_site_footer = (bool) tutor_utils()->get_option( 'show_learning_site_footer', false );
+$show_learning_site_header = (bool) tutor_utils()->get_option( 'show_learning_site_header' );
+$show_learning_site_footer = (bool) tutor_utils()->get_option( 'show_learning_site_footer' );
 tutor_page_elements_header( $show_learning_site_header );
 ?>
 <div class="tutor-learning-page" x-data="tutorCourseCompleteHandler()">

@@ -730,8 +730,8 @@ class Options_V2 {
 		$default_visibility     = (bool) tutor_utils()->get_option( 'enable_spotlight_mode', true ) ? 'off' : 'on';
 
 		$default_page_elements = array(
-			'show_dashboard_site_header' => $default_visibility,
-			'show_dashboard_site_footer' => $default_visibility,
+			'show_dashboard_site_header' => false,
+			'show_dashboard_site_footer' => false,
 			'show_learning_site_header'  => $default_visibility,
 			'show_learning_site_footer'  => $default_visibility,
 		);

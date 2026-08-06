@@ -56,7 +56,7 @@ Dashboard::set_document_title( $meta_title );
 
 $is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
-	$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header', false );
+	$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header' );
 	tutor_page_elements_header( $show_dashboard_site_header );
 endif;
 
