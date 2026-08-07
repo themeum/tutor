@@ -11,6 +11,7 @@ import { initializeCourseCourseInfo } from './pages/course-info';
 import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './quiz';
 import { initializeSidebar } from './sidebar';
+import { initializeSiteShell } from './site-shell';
 
 const decodePathSegment = (segment: string): string => {
   try {
@@ -21,6 +22,7 @@ const decodePathSegment = (segment: string): string => {
 };
 
 const initializeLearningArea = () => {
+  initializeSiteShell();
   initializeLearningAreaCommon();
   initializeCommon();
   initializeSidebar();

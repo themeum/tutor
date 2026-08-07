@@ -7,6 +7,9 @@ $tutor-fixed-footer-height: 80px;
 $tutor-fixed-footer-offset: $tutor-spacing-6;
 
 .tutor-learning-area {
+  --tutor-site-header-offset: 0px;
+  --tutor-learning-header-height: 64px;
+
   background-color: $tutor-surface-base;
 
   .tutor-learning-area-body {
@@ -21,6 +24,59 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
 
   &.is-fullscreen .tutor-learning-area-body {
     padding-inline-start: 0;
+  }
+
+  &.tutor-has-site-shell {
+    .tutor-learning-area-content {
+      padding-top: 0;
+    }
+
+    @include tutor-breakpoint-up(lg) {
+      .tutor-learning-area-body {
+        display: grid;
+        grid-template-columns: 320px minmax(0, 1fr);
+        align-items: start;
+        padding-inline-start: 0;
+      }
+
+      .tutor-learning-sidebar {
+        position: sticky;
+        top: calc(var(--tutor-site-header-offset) + var(--tutor-learning-header-height));
+        grid-column: 1;
+        width: 320px;
+        height: calc(100dvh - var(--tutor-site-header-offset) - var(--tutor-learning-header-height));
+      }
+
+      .tutor-learning-area-content {
+        grid-column: 2;
+        min-width: 0;
+      }
+    }
+
+    @include tutor-breakpoint-down(lg) {
+      --tutor-learning-header-height: 56px;
+
+      .tutor-learning-sidebar {
+        top: var(--tutor-site-header-offset);
+        height: calc(100dvh - var(--tutor-site-header-offset));
+      }
+    }
+  }
+
+  &.tutor-has-site-shell.is-fullscreen {
+    @include tutor-breakpoint-up(lg) {
+      .tutor-learning-area-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .tutor-learning-sidebar {
+        display: none;
+      }
+
+      .tutor-learning-area-content {
+        grid-column: 1;
+      }
+    }
   }
 
   @include tutor-breakpoint-up(md) {

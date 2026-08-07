@@ -75,6 +75,27 @@ Dashboard::set_document_title( $page_meta_title );
 
 $show_learning_site_header = (bool) tutor_utils()->get_option( 'show_learning_site_header' );
 $show_learning_site_footer = (bool) tutor_utils()->get_option( 'show_learning_site_footer' );
+$has_learning_site_shell   = $show_learning_site_header || $show_learning_site_footer;
+$theme_header_selector     = '';
+
+if ( $show_learning_site_header ) {
+	/**
+	 * Filters the selector used to find a theme header that overlays the Learning Area.
+	 *
+	 * Themes with non-standard header markup can return their header selector here.
+	 * The selector is evaluated in the browser and invalid selectors are ignored.
+	 *
+	 * @since 4.0.5
+	 *
+	 * @param string $selector CSS selector for the active theme header.
+	 */
+	$theme_header_selector = apply_filters(
+		'tutor_learning_area_theme_header_selector',
+		'header[role="banner"], header.site-header, header#masthead, #masthead, .site-header, header.wp-block-template-part'
+	);
+	$theme_header_selector = is_string( $theme_header_selector ) ? $theme_header_selector : '';
+}
+
 tutor_page_elements_header( $show_learning_site_header );
 ?>
 <div class="tutor-learning-page" x-data="tutorCourseCompleteHandler()">
@@ -135,7 +156,11 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 
 ?>
 	<div
-		class="tutor-learning-area<?php echo esc_attr( ( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ) . ( $show_learning_site_header ? ' tutor-has-site-header' : '' ) ); ?>"
+		class="tutor-learning-area<?php echo esc_attr( ( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ) . ( $show_learning_site_header ? ' tutor-has-site-header' : '' ) . ( $has_learning_site_shell ? ' tutor-has-site-shell' : '' ) ); ?>"
+		<?php if ( $has_learning_site_shell ) : ?>
+			data-tutor-learning-site-shell
+			data-tutor-theme-header-selector="<?php echo esc_attr( $theme_header_selector ); ?>"
+		<?php endif; ?>
 		x-data="{ sidebarOpen: false, isFullScreen: false }"
 		:class="{ 'is-fullscreen': isFullScreen }"
 	>
@@ -158,7 +183,7 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 					?>
 				</div>
 			</div>
-			<button 
+			<button
 				class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon tutor-expand-btn"
 				@click="isFullScreen = !isFullScreen"
 				:aria-label="isFullScreen ? '<?php echo esc_attr__( 'Exit fullscreen', 'tutor' ); ?>' : '<?php echo esc_attr__( 'Enter fullscreen', 'tutor' ); ?>'"
