@@ -1,5 +1,8 @@
 parameters:
     level: 3
+    scanDirectories:
+      - ../tutor-pro
+      - ../woocommerce
     paths:
         - .
     excludePaths:

@@ -10,6 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
+
 global $tutor_is_started_quiz;
 
 $quiz_id                       = $quiz_id ?? ( $tutor_is_started_quiz->quiz_id ?? 0 );
@@ -32,7 +34,7 @@ $question_mark        = $question->question_mark ?? '';
 	<?php endif; ?>
 
 	<div class="tutor-quiz-question-title">
-		<?php echo esc_html( wp_unslash( $question_title ) ); ?>
+		<?php echo esc_html( Quiz::sanitize_quiz_content( $question_title ?? '' ) ); ?>
 
 		<?php if ( ! empty( $question_description ) ) : ?>
 			<?php
