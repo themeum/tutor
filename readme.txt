@@ -347,6 +347,9 @@ Fix: Resolve an issue where enrollment time extend date-picker was showing wrong
 Fix: Fixed the cart & checkout shows only 10 items.
 Fix: Course bundle maximum enrollment limit issue fixed. (Pro)
 Fix: Cancelling a failed order revokes access from a valid paid order.
+Fix: Co-author unable to see submitted assignments. (Pro)
+Fix: Youtube link's preview not showing on the quiz's answer explanation.
+Fix: Course detail page on the record showing incorrect enrollment date. (Pro)
 
 = 4.0.4 - 31 July, 2026
 
