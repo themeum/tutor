@@ -102,38 +102,36 @@ const CourseBasicSidebar = () => {
 
   const handleAuthorChange = async () => {
     const previousAuthor = courseDetails?.post_author;
-
-    const { action } = await showModal({
-      component: ConfirmationModal,
-      props: {
-        title: __('Are you sure?', 'tutor'),
-        description: __('Changing the author will remove the current author from the course.', 'tutor'),
-        confirmButtonText: __('Yes, change author', 'tutor'),
-      },
-    });
-
-    if (action !== 'CONFIRM') {
-      form.setValue('post_author', {
-        id: Number(previousAuthor?.ID),
-        name: previousAuthor?.display_name,
-        email: previousAuthor?.user_email,
-        avatar_url: previousAuthor?.tutor_profile_photo_url,
-      });
-      return;
-    }
-
-    const courseInstructors = form.getValues('course_instructors');
-    const isAlreadyAdded = !!courseInstructors.find(
-      (instructor) => String(instructor.id) === String(previousAuthor?.ID),
-    );
-
     const convertedAuthor: UserOption = {
       id: Number(previousAuthor?.ID),
       name: previousAuthor?.display_name,
       email: previousAuthor?.user_email,
       avatar_url: previousAuthor?.tutor_profile_photo_url,
-      isRemoveAble: String(previousAuthor?.ID) !== String(currentUser.data.id),
     };
+
+    const { action } = await showModal({
+      component: ConfirmationModal,
+      props: {
+        title: __('Are you sure?', 'tutor'),
+        description: __(
+          'Changing the author will transfer all course content to the new author and remove the current author.',
+          'tutor',
+        ),
+        confirmButtonText: __('Yes, change author', 'tutor'),
+      },
+    });
+
+    if (action !== 'CONFIRM') {
+      form.setValue('post_author', convertedAuthor);
+      return;
+    }
+
+    convertedAuthor.isRemoveAble = String(previousAuthor?.ID) !== String(currentUser.data.id);
+
+    const courseInstructors = form.getValues('course_instructors');
+    const isAlreadyAdded = !!courseInstructors.find(
+      (instructor) => String(instructor.id) === String(previousAuthor?.ID),
+    );
 
     const updatedInstructors = isAlreadyAdded ? courseInstructors : [...courseInstructors, convertedAuthor];
 
