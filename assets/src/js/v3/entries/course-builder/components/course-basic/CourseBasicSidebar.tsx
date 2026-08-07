@@ -114,7 +114,7 @@ const CourseBasicSidebar = () => {
       props: {
         title: __('Are you sure?', 'tutor'),
         description: __(
-          'Changing the author will transfer all course content to the new author and remove the current author.',
+          'Changing the course author will assign all the updates and course data to the selected author.',
           'tutor',
         ),
         confirmButtonText: __('Yes, change author', 'tutor'),
