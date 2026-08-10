@@ -343,13 +343,18 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 Update: Hid the course products on shop page settings when monetize is native.
 Update: UX updated for mobile devices to get back to website's home page from learning area.
 Update: Updated instructor capability for better security.
+Update: Updating a course author now set new instructor as author for all the course contents.
 Fix: Resolve an issue where enrollment time extend date-picker was showing wrong date. (Pro)
+Fix: Sending manual email is not working. (Pro)
+Fix: Wrong site url set on the login otp email. (Pro)
+Fix: WC Subscription renewal order trigger PHP fatal error. (Pro)
 Fix: Fixed the cart & checkout shows only 10 items.
 Fix: Course bundle maximum enrollment limit issue fixed. (Pro)
 Fix: Cancelling a failed order revokes access from a valid paid order.
 Fix: Co-author unable to see submitted assignments. (Pro)
 Fix: Youtube link's preview not showing on the quiz's answer explanation.
 Fix: Course detail page on the record showing incorrect enrollment date. (Pro)
+Fix: LaTeX equations not render properly on the quiz options.
 
 = 4.0.4 - 31 July, 2026
 
