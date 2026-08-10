@@ -40,6 +40,10 @@
     overflow-y: auto;
     background-color: $tutor-surface-base;
     z-index: $tutor-z-sidebar;
+
+    .tutor-has-site-shell & {
+      z-index: $tutor-z-highest;
+    }
     transform: translateX(100%);
     @include tutor-transition(transform, 0.3s);
 
