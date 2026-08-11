@@ -310,7 +310,22 @@ class Template extends Tutor_Base {
 			return $content;
 		}
 
-		$page_id = get_the_ID();
+		$page_id                = get_the_ID();
+		$tutor_cart_page_id     = (int) tutor_utils()->get_option( 'tutor_cart_page_id' );
+		$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
+
+		/**
+		 * Do not replace page content with Tutor templates during REST responses.
+		 *
+		 * Site Editor / Patterns REST applies `the_content` while preparing posts.
+		 * Running cart/checkout templates there queries ecommerce tables and can
+		 * error when those tables are missing on a Multisite blog.
+		 *
+		 * @since 4.0.5
+		 */
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return $content;
+		}
 
 		// Dashboard Page.
 		$student_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
@@ -330,12 +345,10 @@ class Template extends Tutor_Base {
 		}
 
 		if ( tutor_utils()->is_monetize_by_tutor() ) {
-			$tutor_cart_page_id = (int) tutor_utils()->get_option( 'tutor_cart_page_id' );
 			if ( $page_id === $tutor_cart_page_id ) {
 				return $this->shortcode_obj->tutor_cart_page();
 			}
 
-			$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
 			if ( $page_id === $tutor_checkout_page_id ) {
 				if ( ! apply_filters( 'tutor_should_load_checkout_page', true ) ) {
 					return '';

@@ -785,6 +785,13 @@ final class Tutor extends Singleton {
 		 *
 		 * @since 1.0.0
 		 */
+		/*
+		 * dbDelta-compatible schemas:
+		 * - Use KEY name (col), not unnamed INDEX (col).
+		 * - Do not use inline `--` comments (they break CHANGE COLUMN).
+		 * - Do not set DEFAULT on TEXT/BLOB columns.
+		 * - Do not declare FOREIGN KEY CONSTRAINTs (dbDelta emits invalid ALTER SQL).
+		 */
 		$quiz_attempts_sql = "CREATE TABLE {$wpdb->prefix}tutor_quiz_attempts (
 				attempt_id bigint(20) NOT NULL AUTO_INCREMENT,
 				course_id bigint(20) DEFAULT NULL,
@@ -803,10 +810,10 @@ final class Tutor extends Singleton {
 				manually_reviewed_at datetime DEFAULT NULL,
 				result varchar(10) DEFAULT NULL,
 				PRIMARY KEY  (attempt_id),
-				INDEX (course_id),
-				INDEX (quiz_id),
-				INDEX (user_id),
-				INDEX (result)
+				KEY course_id (course_id),
+				KEY quiz_id (quiz_id),
+				KEY user_id (user_id),
+				KEY result (result)
 			) $charset_collate;";
 
 		$quiz_attempt_answers = "CREATE TABLE {$wpdb->prefix}tutor_quiz_attempt_answers (
@@ -828,7 +835,7 @@ final class Tutor extends Singleton {
 				quiz_id bigint(20) DEFAULT NULL,
 				question_title text,
 				question_description longtext,
-				answer_explanation longtext DEFAULT '',
+				answer_explanation longtext,
 				question_type varchar(50) DEFAULT NULL,
 				question_mark decimal(9,2) DEFAULT NULL,
 				question_settings longtext,
@@ -869,17 +876,17 @@ final class Tutor extends Singleton {
 			process_by varchar(20) DEFAULT NULL,
 			created_at datetime DEFAULT NULL,
 			PRIMARY KEY (earning_id),
-			INDEX (user_id),
-			INDEX (course_id),
-			INDEX (order_id),
-			INDEX (process_by)
+			KEY user_id (user_id),
+			KEY course_id (course_id),
+			KEY order_id (order_id),
+			KEY process_by (process_by)
 		) $charset_collate;";
 
 		$withdraw_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_withdraws (
 			withdraw_id bigint(20) NOT NULL AUTO_INCREMENT,
 			user_id bigint(20) DEFAULT NULL,
 			amount decimal(16,2) DEFAULT NULL,
-			method_data text DEFAULT NULL,
+			method_data text,
 			status varchar(50) DEFAULT NULL,
 			updated_at datetime DEFAULT NULL,
 			created_at datetime DEFAULT NULL,
@@ -888,27 +895,27 @@ final class Tutor extends Singleton {
 
 		$orders_table = "CREATE TABLE {$wpdb->prefix}tutor_orders (
 			id BIGINT(20) UNSIGNED AUTO_INCREMENT,
-			parent_id BIGINT(20) UNSIGNED DEFAULT 0, -- for subscription order, store subscription record id
+			parent_id BIGINT(20) UNSIGNED DEFAULT 0,
 			transaction_id VARCHAR(255) COMMENT 'Transaction id from payment gateway',
 			user_id BIGINT(20) UNSIGNED NOT NULL,
-			order_type VARCHAR(50) NOT NULL, -- single_order, subscription
+			order_type VARCHAR(50) NOT NULL,
 			order_status VARCHAR(50) NOT NULL,
 			payment_status VARCHAR(50) NOT NULL,
-			subtotal_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
-			pre_tax_price DECIMAL(13, 2) NOT NULL,  -- total price before adding tax
+			subtotal_price DECIMAL(13, 2) NOT NULL,
+			pre_tax_price DECIMAL(13, 2) NOT NULL,
 			tax_type VARCHAR(50),
 			tax_rate DECIMAL(13, 2) COMMENT 'Tax percentage',
 			tax_amount DECIMAL(13, 2),
-			total_price DECIMAL(13, 2) NOT NULL, -- final price
-			net_payment DECIMAL(13, 2) NOT NULL, -- calculated price if any refund is done else same as total_price
+			total_price DECIMAL(13, 2) NOT NULL,
+			net_payment DECIMAL(13, 2) NOT NULL,
 			coupon_code VARCHAR(255),
 			coupon_amount DECIMAL(13, 2),
 			discount_type ENUM('percentage', 'flat') DEFAULT NULL,
 			discount_amount DECIMAL(13, 2),
 			discount_reason TEXT,
-			fees DECIMAL(13, 2), -- payment gateway fees
-			earnings DECIMAL(13, 2), -- net earning
-			refund_amount DECIMAL(13, 2), -- Refund amount
+			fees DECIMAL(13, 2),
+			earnings DECIMAL(13, 2),
+			refund_amount DECIMAL(13, 2),
 			payment_method VARCHAR(255),
 			payment_payloads LONGTEXT,
 			note TEXT,
@@ -935,37 +942,35 @@ final class Tutor extends Singleton {
 			updated_by BIGINT(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			KEY order_id (order_id),
-			KEY meta_key (meta_key),
-			CONSTRAINT fk_tutor_ordermeta_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
+			KEY meta_key (meta_key)
 		) $charset_collate;";
 
 		$order_items_table = "CREATE TABLE {$wpdb->prefix}tutor_order_items (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			order_id BIGINT(20) UNSIGNED NOT NULL,
-			item_id BIGINT(20) UNSIGNED NOT NULL, -- course id/plan id
-			regular_price DECIMAL(13, 2) NOT NULL, -- course regular price
-			sale_price VARCHAR(13) DEFAULT NULL, -- course sale price
-			discount_price VARCHAR(13) DEFAULT NULL, -- course discount price
-			coupon_code VARCHAR(255) DEFAULT NULL, -- coupon code
+			item_id BIGINT(20) UNSIGNED NOT NULL,
+			regular_price DECIMAL(13, 2) NOT NULL,
+			sale_price VARCHAR(13) DEFAULT NULL,
+			discount_price VARCHAR(13) DEFAULT NULL,
+			coupon_code VARCHAR(255) DEFAULT NULL,
 			PRIMARY KEY (id),
 			KEY order_id (order_id),
-			KEY item_id (item_id),
-			CONSTRAINT fk_tutor_order_item_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
+			KEY item_id (item_id)
 		) $charset_collate;";
 
 		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			coupon_status VARCHAR(50),
-			coupon_type VARCHAR(100) DEFAULT 'code', -- coupon type 'code' or 'automatic'
+			coupon_type VARCHAR(100) DEFAULT 'code',
 			coupon_code VARCHAR(50) NOT NULL,
 			coupon_title VARCHAR(255) NOT NULL,
 			coupon_description TEXT,
 			discount_type ENUM('percentage', 'flat') NOT NULL,
 			discount_amount DECIMAL(13, 2) NOT NULL,
-			applies_to VARCHAR(100) DEFAULT 'all_courses_and_bundles', -- possible values 'all_courses_and_bundles', 'all_courses', 'all_bundles', 'specific_courses', 'specific_bundles', 'specific_category'
-			total_usage_limit INT(10) UNSIGNED DEFAULT NULL, -- null for unlimited usage
-			per_user_usage_limit TINYINT(4) UNSIGNED DEFAULT NULL, -- null for unlimited usage
-			purchase_requirement VARCHAR(50) DEFAULT 'no_minimum', -- possible values 'no_minimum', 'minimum_purchase', 'minimum_quantity'
+			applies_to VARCHAR(100) DEFAULT 'all_courses_and_bundles',
+			total_usage_limit INT(10) UNSIGNED DEFAULT NULL,
+			per_user_usage_limit TINYINT(4) UNSIGNED DEFAULT NULL,
+			purchase_requirement VARCHAR(50) DEFAULT 'no_minimum',
 			purchase_requirement_value DECIMAL(13, 2),
 			start_date_gmt DATETIME NOT NULL,
 			expire_date_gmt DATETIME DEFAULT NULL,
@@ -983,8 +988,7 @@ final class Tutor extends Singleton {
 			coupon_code VARCHAR(50) NOT NULL,
 			reference_id BIGINT(20) UNSIGNED NOT NULL,
 			KEY coupon_code (coupon_code),
-			KEY reference_id (reference_id),
-			CONSTRAINT fk_tutor_coupon_application_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE
+			KEY reference_id (reference_id)
 		) $charset_collate;";
 
 		$coupon_usage_table = "CREATE TABLE {$wpdb->prefix}tutor_coupon_usages (
@@ -993,9 +997,7 @@ final class Tutor extends Singleton {
 			user_id BIGINT(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			KEY coupon_code (coupon_code),
-			KEY user_id (user_id),
-			CONSTRAINT fk_tutor_coupon_usage_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE,
-			CONSTRAINT fk_tutor_coupon_usage_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE
+			KEY user_id (user_id)
 		) $charset_collate;";
 
 		$cart_table = "CREATE TABLE {$wpdb->prefix}tutor_carts (
@@ -1006,8 +1008,7 @@ final class Tutor extends Singleton {
 			updated_at_gmt DATETIME,
 			PRIMARY KEY (id),
 			KEY user_id (user_id),
-			KEY coupon_code (coupon_code),
-			CONSTRAINT fk_tutor_cart_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE
+			KEY coupon_code (coupon_code)
 		) $charset_collate;";
 
 		$cart_items_table = "CREATE TABLE {$wpdb->prefix}tutor_cart_items (
@@ -1016,9 +1017,7 @@ final class Tutor extends Singleton {
 			course_id BIGINT(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			KEY cart_id (cart_id),
-			KEY course_id (course_id),
-			CONSTRAINT fk_tutor_cart_item_cart_id FOREIGN KEY (cart_id) REFERENCES {$wpdb->prefix}tutor_carts(id) ON DELETE CASCADE,
-			CONSTRAINT fk_tutor_cart_item_course_id FOREIGN KEY (course_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
+			KEY course_id (course_id)
 		) $charset_collate;";
 
 		$customer_table = "CREATE TABLE {$wpdb->prefix}tutor_customers (
