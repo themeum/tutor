@@ -120,6 +120,7 @@ class QuizBuilder {
 		$answer_title = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
 		$is_correct   = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
 		$image_id     = Input::sanitize( $input['image_id'] ?? null );
+		$image_id     = empty( $image_id ) ? null : (int) $image_id;
 		// Let the hook handle special cases (e.g. draw_image, pin_image) and return a normalized value (URL).
 		$answer_two_gap_match_raw = isset( $input['answer_two_gap_match'] ) ? wp_unslash( $input['answer_two_gap_match'] ) : '';
 		$answer_two_gap_match_raw = apply_filters(
@@ -170,7 +171,14 @@ class QuizBuilder {
 
 			// New answer.
 			if ( self::FLAG_NEW === $data_status ) {
-				$wpdb->insert( $answers_table, $answer_data );
+				// Filter out null values to use database column defaults.
+				$insert_data = array_filter(
+					$answer_data,
+					function ( $value ) {
+						return null !== $value;
+					}
+				);
+				$wpdb->insert( $answers_table, $insert_data );
 				$answer_id = $wpdb->insert_id;
 			}
 
