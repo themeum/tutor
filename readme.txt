@@ -338,23 +338,23 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.5 - 06 Aug, 2026
+= 4.0.5 - 12 Aug, 2026
 
-Update: Hid the course products on shop page settings when monetize is native.
-Update: UX updated for mobile devices to get back to website's home page from learning area.
-Update: Updated instructor capability for better security.
-Update: Updating a course author now set new instructor as author for all the course contents.
-Fix: Resolve an issue where enrollment time extend date-picker was showing wrong date. (Pro)
-Fix: Sending manual email is not working. (Pro)
-Fix: Wrong site url set on the login otp email. (Pro)
-Fix: WC Subscription renewal order trigger PHP fatal error. (Pro)
-Fix: Fixed the cart & checkout shows only 10 items.
-Fix: Course bundle maximum enrollment limit issue fixed. (Pro)
-Fix: Cancelling a failed order revokes access from a valid paid order.
-Fix: Co-author unable to see submitted assignments. (Pro)
-Fix: Youtube link's preview not showing on the quiz's answer explanation.
-Fix: Course detail page on the record showing incorrect enrollment date. (Pro)
-Fix: LaTeX equations not render properly on the quiz options.
+Update: Hid course products from the shop page when using Native Monetization.
+Update: Added an option to return to the homepage from the learning area on mobile devices.
+Update: Strengthened instructor capability checks for better security.
+Update: Updating a course author now sets the new instructor as the author across all course content.
+Fix: Resolved a PHP fatal error triggered by WooCommerce Subscriptions renewal orders. (Pro)
+Fix: The enrollment time extension date picker now shows the correct date. (Pro)
+Fix: Fixed the manual email delivery issue. (Pro)
+Fix: Fixed the incorrect website URL in OTP verification emails. (Pro)
+Fix: Course bundle enrollment limits now work correctly. (Pro)
+Fix: Course access is no longer removed when a failed order is canceled.
+Fix: Co-authors can now view submitted assignments. (Pro)
+Fix: YouTube link previews now appear correctly in quiz answer explanations.
+Fix: Removed a display limitation that capped the cart and checkout page at 10 products.
+Fix: Course records now show the correct enrollment date. (Pro)
+Fix: LaTeX equations now render correctly in quiz options.
 
 = 4.0.4 - 31 July, 2026
 
