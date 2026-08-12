@@ -913,6 +913,14 @@ class Utils {
 			}
 		}
 
+		if ( ! $result && $get_stats ) {
+			$result = array(
+				'completed_percent' => 0,
+				'completed_count'   => 0,
+				'total_count'       => 0,
+			);
+		}
+
 		return apply_filters( 'tutor_course_completed_percent', $result, $course_id, $user_id, $get_stats );
 	}
 
