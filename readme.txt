@@ -343,18 +343,18 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 Update: Hid course products from the shop page when using Native Monetization.
 Update: Added an option to return to the homepage from the learning area on mobile devices.
 Update: Strengthened instructor capability checks for better security.
-Update: Updating a course author now sets the new instructor as the author across all course content.
-Fix: Resolved a PHP fatal error triggered by WooCommerce Subscriptions renewal orders. (Pro)
-Fix: The enrollment time extension date picker now shows the correct date. (Pro)
-Fix: Fixed the manual email delivery issue. (Pro)
-Fix: Fixed the incorrect website URL in OTP verification emails. (Pro)
-Fix: Course bundle enrollment limits now work correctly. (Pro)
-Fix: Course access is no longer removed when a failed order is canceled.
-Fix: Co-authors can now view submitted assignments. (Pro)
-Fix: YouTube link previews now appear correctly in quiz answer explanations.
-Fix: Removed a display limitation that capped the cart and checkout page at 10 products.
-Fix: Course records now show the correct enrollment date. (Pro)
-Fix: LaTeX equations now render correctly in quiz options.
+Update: Changing a course author now updates authorship across all content.
+Fix: Resolved the PHP fatal error caused by WooCommerce Subscriptions renewal orders. (Pro)
+Fix: Fixed the incorrect date issue on the enrollment time extension date picker. (Pro)
+Fix: Resolved the manual email delivery issue. (Pro)
+Fix: Fixed the incorrect URL issue in OTP verification emails. (Pro)
+Fix: Resolved the course bundle enrollment limit issue. (Pro)
+Fix: Fixed the issue where canceling a failed order removed course access.
+Fix: Resolved the issue preventing co-authors from viewing submitted assignments. (Pro)
+Fix: Fixed the YouTube preview issue in quiz answer explanations.
+Fix: Resolved the display limitation that capped the cart and checkout page at 10 products.
+Fix: Fixed the incorrect enrollment date issue on course records. (Pro)
+Fix: Resolved the LaTeX equations rendering issue in quiz options.
 
 = 4.0.4 - 31 July, 2026
 
