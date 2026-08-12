@@ -67,7 +67,7 @@ do_action( 'tutor_before_login_form' );
 	<?php
 		do_action( 'tutor_login_form_middle' );
 		do_action( 'login_form' );
-		apply_filters( 'login_form_middle', '', '' );
+		apply_filters( 'login_form_middle', '', array() );
 	?>
 	<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-mb-40">
 		<div class="tutor-form-check">
