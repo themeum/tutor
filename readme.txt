@@ -340,10 +340,10 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 4.0.5 - 12 Aug, 2026
 
-Update: Hid course products from the shop page when using Native Monetization.
-Update: Added an option to return to the homepage from the learning area on mobile devices.
+Update: Added an option to return to the homepage from the student dashboard on mobile devices.
 Update: Strengthened instructor capability checks for better security.
 Update: Changing a course author now updates authorship across all content.
+Update: Hid course products from the shop page settings when using Native Monetization.
 Fix: Resolved the PHP fatal error caused by WooCommerce Subscriptions renewal orders. (Pro)
 Fix: Fixed the incorrect date issue on the enrollment time extension date picker. (Pro)
 Fix: Resolved the manual email delivery issue. (Pro)
