@@ -3895,7 +3895,7 @@ class Utils {
 			$where_clause = '_reviews.comment_post_ID = %d';
 		}
 
-		$limit_offset    = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
+		$limit_offset    = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
 		$status_in       = '"' . implode( '","', $status_in ) . '"';
 		$include_user_id = is_array( $include_user_id ) ? $include_user_id : array( $include_user_id );
 		$include_user_id = implode( ',', $include_user_id );
@@ -4492,7 +4492,7 @@ class Utils {
 		$user_id            = get_current_user_id();
 		$course_type        = tutor()->course_post_type;
 		$search_term        = '%' . $wpdb->esc_like( $search_term ) . '%';
-		$question_clause    = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
+		$question_clause    = $question_id ? ' AND _question.comment_ID=' . (int) $question_id : '';
 		$order_condition    = ' ORDER BY _question.comment_ID DESC ';
 		$meta_clause        = '';
 		$in_course_id_query = '';
@@ -4502,12 +4502,20 @@ class Utils {
 		// Sanitize args before process.
 		$args = Input::sanitize_array( $args );
 
+		if ( ! $user_id && ! $asker_id && null === $question_id && empty( $args['course_id'] ) ) {
+			return $count_only ? 0 : array();
+		}
+
 		/**
 		 * Get only assinged  courses questions if current user is not admin
 		 * User query.
 		 */
 		if ( $asker_id ) {
-			$question_clause .= ' AND _question.user_id=' . $asker_id;
+			$question_clause .= ' AND _question.user_id=' . (int) $asker_id;
+		}
+
+		if ( ! $user_id ) {
+			$in_course_id_query .= " AND _course.post_status = 'publish' ";
 		}
 
 		if ( isset( $args['course_id'] ) ) {
@@ -4594,7 +4602,7 @@ class Utils {
 						WHERE 	answers_t.comment_parent = _question.comment_ID
 					) AS answer_count";
 
-		$limit_offset = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
+		$limit_offset = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
 
 		$query = $wpdb->prepare(
 			"SELECT  {$columns_select}
