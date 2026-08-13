@@ -38,7 +38,13 @@ $field_id = 'field_' . $field['key'];
 			?>
 			<div class="tutor-image-upload-item<?php echo esc_attr( $image_url ? ' has-image' : '' ); ?>" data-image-upload-theme="<?php echo esc_attr( $theme ); ?>">
 				<div class="tutor-fs-6 tutor-d-flex tutor-align-center tutor-gap-1">
-					<?php SvgIcon::make()->name( $item['icon'] )->size( 20 )->render(); ?>
+					<?php
+						SvgIcon::make()
+							->name( $item['icon'] )
+							->size( 20 )
+							->ignore_kids()
+							->render();
+					?>
 					<?php echo esc_html( $item['label'] ); ?>
 				</div>
 				<input type="hidden" class="tutor-image-upload-input" name="tutor_option[<?php echo esc_attr( $item['key'] ); ?>]" value="<?php echo esc_attr( $attachment_id ); ?>">
@@ -47,10 +53,22 @@ $field_id = 'field_' . $field['key'];
 					<img src="<?php echo esc_url( $image_url ); ?>" alt=""<?php echo $image_url ? '' : ' hidden'; ?> />
 					<div class="tutor-image-upload-actions">
 						<button type="button" class="tutor-btn tutor-image-upload-select" aria-label="<?php esc_attr_e( 'Replace logo', 'tutor' ); ?>">
-							<?php SvgIcon::make()->name( Icon::RELOAD_2 )->size( 12 )->render(); ?>
+							<?php
+								SvgIcon::make()
+									->name( Icon::RELOAD_2 )
+									->size( 12 )
+									->ignore_kids()
+									->render();
+							?>
 						</button>
 						<button type="button" class="tutor-btn tutor-image-upload-remove" aria-label="<?php esc_attr_e( 'Remove logo', 'tutor' ); ?>">
-							<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 12 )->render(); ?>
+							<?php
+								SvgIcon::make()
+									->name( Icon::DELETE_2 )
+									->size( 12 )
+									->ignore_kids()
+									->render();
+							?>
 						</button>
 					</div>
 				</div>
@@ -58,6 +76,7 @@ $field_id = 'field_' . $field['key'];
 						<?php
 							SvgIcon::make()
 								->name( Icon::IMAGE_PLUS )
+								->ignore_kids()
 								->size( 20 )
 								->render();
 						?>
@@ -71,7 +90,12 @@ $field_id = 'field_' . $field['key'];
 		<?php endforeach; ?>
 	</div>
 	<p class="tutor-fs-7 tutor-color-muted tutor-mt-8 tutor-d-flex tutor-align-center tutor-gap-1">
-		<?php SvgIcon::make()->name( Icon::INFO_OCTAGON )->render(); ?>
+		<?php
+			SvgIcon::make()
+				->name( Icon::INFO_OCTAGON )
+				->ignore_kids()
+				->render();
+		?>
 		<?php esc_html_e( 'Recommended size: 700 x 430 px - Supported formats: .jpg, .jpeg, .png', 'tutor' ); ?>
 
 	</p>

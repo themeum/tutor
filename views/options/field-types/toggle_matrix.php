@@ -38,7 +38,9 @@ $field_id = 'field_' . $field['key'];
 					<?php if ( ! empty( $column['icon'] ) ) : ?>
 						<span class="tutor-toggle-matrix-head-icon" aria-hidden="true">
 							<?php
-							$svg = SvgIcon::make()->name( $column['icon'] );
+							$svg = SvgIcon::make()
+								->name( $column['icon'] )
+								->ignore_kids();
 							foreach ( $column['icon_attrs'] ?? array() as $attr_name => $attr_value ) {
 								$svg->attr( $attr_name, $attr_value );
 							}
