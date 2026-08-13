@@ -34,6 +34,7 @@ export const icons = [
   'audio',
   'avi',
   'back',
+  'back2',
   'badge',
   'badgeCheck',
   'badgeInfo',

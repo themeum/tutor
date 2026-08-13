@@ -20,7 +20,7 @@ const TutorDatepicker = (data) => {
 	if (data.disable_past_date) {
 		isPreviousDateAllowed = false;
 	}
-	const dateFormat = 'Y-M-d';
+	const dateFormat = 'yyyy-MM-dd';
 	const default_date = data.input_value || null;
 	const url = new URL(window.location.href);
 	const params = url.searchParams;
@@ -47,7 +47,7 @@ const TutorDatepicker = (data) => {
 
 	useEffect(() => {
 		if (params.has('date') && !!params.get('date')) {
-			setStartDate(new Date(params.get('date')));
+			setStartDate(stringToDate(params.get('date'), 'yyyy-mm-dd', '-'));
 		}
 	}, []);
 

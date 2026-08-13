@@ -10,6 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
 use Tutor\Models\QuizModel;
 
 if ( ! isset( $quiz_id ) ) {
@@ -89,7 +90,7 @@ $first_question_id = $first_question_id > 0 ? $first_question_id : '';
 				>
 					<div class="tutor-question-number"><?php echo esc_html( (int) $index + 1 ); ?>.</div>
 					<div class="tutor-question-content">
-						<?php echo esc_html( wp_strip_all_tags( wp_unslash( (string) ( $question->question_title ?? '' ) ) ) ); ?>
+						<?php echo esc_html( Quiz::sanitize_quiz_content( $question->question_title ?? '' ) ); ?>
 					</div>
 				</a>
 			<?php endforeach; ?>

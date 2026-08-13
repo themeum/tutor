@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.0.4
+Stable tag: 4.0.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -337,6 +337,24 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.5 - 12 Aug, 2026
+
+Update: Added an option to return to the homepage from the student dashboard on mobile devices.
+Update: Strengthened instructor capability checks for better security.
+Update: Changing a course author now updates authorship across all content.
+Update: Hid course products from the shop page settings when using Native Monetization.
+Fix: Resolved the PHP fatal error caused by WooCommerce Subscriptions renewal orders. (Pro)
+Fix: Fixed the incorrect date issue on the enrollment time extension date picker. (Pro)
+Fix: Resolved the manual email delivery issue. (Pro)
+Fix: Fixed the incorrect URL issue in OTP verification emails. (Pro)
+Fix: Resolved the course bundle enrollment limit issue. (Pro)
+Fix: Fixed the issue where canceling a failed order removed course access.
+Fix: Resolved the issue preventing co-authors from viewing submitted assignments. (Pro)
+Fix: Fixed the YouTube preview issue in quiz answer explanations.
+Fix: Resolved the display limitation that capped the cart and checkout page at 10 products.
+Fix: Fixed the incorrect enrollment date issue on course records. (Pro)
+Fix: Resolved the LaTeX equations rendering issue in quiz options.
 
 = 4.0.4 - 31 July, 2026
 

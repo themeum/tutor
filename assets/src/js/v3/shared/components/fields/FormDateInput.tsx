@@ -11,6 +11,7 @@ import { DateFormats, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { POPOVER_PLACEMENTS, Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { usePrefersReducedMotion } from '@TutorShared/hooks/usePrefersReducedMotion';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
@@ -69,6 +70,7 @@ const FormDateInput = ({
   onChange,
   dateFormat = DateFormats.monthDayYear,
 }: FormDateInputProps) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const parsedDate = parseDate(field.value);
@@ -159,7 +161,7 @@ const FormDateInput = ({
               >
                 <DayPicker
                   dir={isRTL ? 'rtl' : 'ltr'}
-                  animate
+                  animate={!prefersReducedMotion}
                   mode="single"
                   formatters={createFormatters()}
                   disabled={[

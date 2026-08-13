@@ -387,8 +387,9 @@ class HooksHandler {
 				}
 			}
 
-			$has_enrollment = EnrollmentModel::is_enrolled( $object_id, $student_id, false );
-			if ( $has_enrollment ) {
+			$has_enrollment             = EnrollmentModel::is_enrolled( $object_id, $student_id, false );
+			$active_enrollment_order_id = isset( $has_enrollment->order_id ) ? $has_enrollment->order_id : null;
+			if ( $has_enrollment && $order_id === $active_enrollment_order_id ) {
 				// Update enrollment status based on order status.
 				$update = EnrollmentModel::update_enrollments( $enrollment_status, array( $has_enrollment->ID ) );
 				if ( $update ) {
