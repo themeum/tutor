@@ -7,7 +7,7 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  *
- * @since 4.0.4
+ * @since 4.0.6
  */
 
 defined( 'ABSPATH' ) || exit;

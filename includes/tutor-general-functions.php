@@ -464,7 +464,7 @@ if ( ! function_exists( 'tutor_page_elements_header' ) ) {
 	/**
 	 * Open a standalone Tutor page with optional WordPress theme header.
 	 *
-	 * @since 4.0.5
+	 * @since 4.0.6
 	 *
 	 * @param bool $show_site_header Whether to render the active theme header.
 	 *
@@ -496,7 +496,7 @@ if ( ! function_exists( 'tutor_page_elements_footer' ) ) {
 	 * Classic themes may couple markup between header.php and footer.php. When
 	 * only one is enabled, this deliberately provides a valid bare closure.
 	 *
-	 * @since 4.0.5
+	 * @since 4.0.6
 	 *
 	 * @param bool $show_site_footer Whether to render the active theme footer.
 	 *
@@ -560,7 +560,7 @@ if ( ! function_exists( 'get_tutor_footer' ) ) {
 	 * @return void
 	 */
 	function get_tutor_footer( $full_screen = false ) {
-		$show_learning_area_footer = (bool) tutor_utils()->get_option( 'show_learning_site_footer', false );
+		$show_learning_area_footer = (bool) tutor_utils()->get_option( 'show_learning_site_footer' );
 		if ( ! $show_learning_area_footer || $full_screen ) {
 			?>
 				</div>

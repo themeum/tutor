@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	 * Wires up the select/remove buttons rendered by the `image_upload_list`
 	 * field type, so any similar field can reuse it with its own settings.
 	 *
-	 * @since 4.0.5
+	 * @since 4.0.6
 	 *
 	 * @param {Object}        config
 	 * @param {string}        config.mediaTitle       Media frame title.

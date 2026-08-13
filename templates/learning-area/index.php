@@ -85,7 +85,7 @@ if ( $show_learning_site_header ) {
 	 * Themes with non-standard header markup can return their header selector here.
 	 * The selector is evaluated in the browser and invalid selectors are ignored.
 	 *
-	 * @since 4.0.5
+	 * @since 4.0.6
 	 *
 	 * @param string $selector CSS selector for the active theme header.
 	 */
