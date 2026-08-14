@@ -267,6 +267,12 @@ body.tutor-backend-tutor_settings #wpbody-content {
   display: none !important;
 }
 
+// Isolated option blocks wrap each field in their own item wrapper. Hide that
+// wrapper when a dependent Course Details field is toggled off as well.
+.course-details > .item-wrapper:has(.tutor-hide-option) {
+  display: none;
+}
+
 .tutor-option-no-bottom-border {
   border-bottom: 0 !important;
   padding-bottom: 0 !important;
