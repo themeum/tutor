@@ -1542,8 +1542,57 @@ class Utils {
 		$post_id = $this->get_post_id( $post_id );
 
 		if ( is_array( $video_data ) && count( $video_data ) ) {
-			update_post_meta( $post_id, '_video', $video_data );
+			update_post_meta( $post_id, '_video', $this->filter_video_meta( $video_data ) );
 		}
+	}
+
+	/**
+	 * Copy only trusted keys from video meta.
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param array $video video meta.
+	 *
+	 * @return array
+	 */
+	public function filter_video_meta( $video ) {
+		if ( ! is_array( $video ) ) {
+			return array();
+		}
+
+		$allowed_keys = apply_filters(
+			'tutor_allowed_video_meta_keys',
+			array(
+				'source',
+				'source_video_id',
+				'source_html5',
+				'source_external_url',
+				'source_youtube',
+				'source_vimeo',
+				'source_embedded',
+				'source_shortcode',
+				'source_type',
+				'poster',
+				'poster_url',
+				'runtime',
+				'duration_sec',
+				'playtime',
+			)
+		);
+
+		$filtered = array();
+		foreach ( $video as $key => $value ) {
+			if ( 'path' === $key ) {
+				continue;
+			}
+
+			$is_source_key = is_string( $key ) && 1 === preg_match( '/^source_[a-z0-9_]+$/', $key );
+			if ( in_array( $key, $allowed_keys, true ) || $is_source_key ) {
+				$filtered[ $key ] = $value;
+			}
+		}
+
+		return $filtered;
 	}
 
 	/**
@@ -1799,7 +1848,14 @@ class Utils {
 			$info['playtime'] = "$runtime_hours:$runtime_minutes:$runtime_seconds";
 		}
 
-		$info = array_merge( $info, $video );
+		$resolved_path = isset( $info['path'] ) ? $info['path'] : null;
+		$info          = array_merge( $info, $this->filter_video_meta( (array) $video ) );
+
+		if ( $resolved_path ) {
+			$info['path'] = $resolved_path;
+		} else {
+			unset( $info['path'] );
+		}
 
 		return (object) $info;
 	}
