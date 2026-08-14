@@ -106,12 +106,3 @@ $show_site_header    = (bool) get_tutor_option( 'show_dashboard_site_header' );
 	</a>
 	<?php endif; ?>
 </div>
-<?php
-	tutor_load_template(
-		'dashboard.components.sidebar-nav-mobile',
-		array(
-			'dashboard_pages'     => $dashboard_pages,
-			'dashboard_page_slug' => $dashboard_page_slug,
-		)
-	);
-	?>

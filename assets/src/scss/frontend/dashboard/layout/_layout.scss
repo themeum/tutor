@@ -23,6 +23,12 @@
       padding-top: $tutor-spacing-1;
     }
   }
+
+  &.tutor-has-site-footer .tutor-dashboard-page {
+    @include tutor-breakpoint-down(sm) {
+      padding-bottom: $tutor-spacing-7;
+    }
+  }
 }
 
 .tutor-dashboard-page-card {

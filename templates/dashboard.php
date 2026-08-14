@@ -54,9 +54,12 @@ $page_meta = Dashboard::get_page_meta_data( $dashboard_page_slug ? $dashboard_pa
 $meta_title = $page_meta['meta_title'];
 Dashboard::set_document_title( $meta_title );
 
-$is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
+$is_by_short_code           = isset( $is_shortcode ) && true === $is_shortcode;
+$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header' );
+$show_dashboard_site_footer = (bool) tutor_utils()->get_option( 'show_dashboard_site_footer' );
+$has_dashboard_site_footer  = ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) && $show_dashboard_site_footer;
+
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
-	$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header' );
 	tutor_page_elements_header( $show_dashboard_site_header );
 endif;
 
@@ -95,7 +98,7 @@ $footer_links = array(
 ?>
 
 <?php do_action( 'tutor_dashboard/before/wrap' ); ?>
-<div class="tutor-dashboard-layout">
+<div class="tutor-dashboard-layout<?php echo esc_attr( $has_dashboard_site_footer ? ' tutor-has-site-footer' : '' ); ?>">
 	<?php tutor_load_template( 'dashboard.components.sidebar' ); ?>
 	<div class="tutor-dashboard-main">
 		<?php tutor_load_template( 'dashboard.components.header' ); ?>
@@ -140,6 +143,15 @@ $footer_links = array(
 			</div>
 		</div>
 	</div>
+	<?php
+	tutor_load_template(
+		'dashboard.components.sidebar-nav-mobile',
+		array(
+			'dashboard_pages'     => $dashboard_pages,
+			'dashboard_page_slug' => $dashboard_page_slug,
+		)
+	);
+	?>
 </div>
 <?php if ( User::is_student_view() && ! $is_tour_completed ) : ?>
 	<?php tutor_load_template( 'shared.tour' ); ?>
@@ -147,5 +159,5 @@ $footer_links = array(
 	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 <?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
-	<?php tutor_page_elements_footer( (bool) tutor_utils()->get_option( 'show_dashboard_site_footer', false ) ); ?>
+	<?php tutor_page_elements_footer( $show_dashboard_site_footer ); ?>
 <?php endif; ?>
