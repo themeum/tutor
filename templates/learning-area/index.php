@@ -138,7 +138,17 @@ if ( tutor()->quiz_post_type === $tutor_current_post_type ) {
 	$tutor_is_started_quiz = tutor_utils()->is_started_quiz( $tutor_current_content_id );
 
 	if ( $tutor_is_started_quiz ) {
+		?>
+		<div
+			class="tutor-learning-area<?php echo esc_attr( ( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ) . ( $show_learning_site_header ? ' tutor-has-site-header' : '' ) . ( $has_learning_site_shell ? ' tutor-has-site-shell' : '' ) ); ?>"
+			<?php if ( $has_learning_site_shell ) : ?>
+				data-tutor-learning-site-shell
+				data-tutor-theme-header-selector="<?php echo esc_attr( $theme_header_selector ); ?>"
+			<?php endif; ?>
+		>
+		<?php
 		tutor_load_template( 'learning-area.quiz.attempt' );
+		echo '</div>';
 		echo '</div>';
 		tutor_page_elements_footer( $show_learning_site_footer );
 		exit;
@@ -149,7 +159,17 @@ $attempt_id  = Input::get( 'attempt_id', 0, Input::TYPE_INT );
 $user_action = Input::get( 'action' );
 
 if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
+	?>
+	<div
+		class="tutor-learning-area<?php echo esc_attr( ( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ) . ( $show_learning_site_header ? ' tutor-has-site-header' : '' ) . ( $has_learning_site_shell ? ' tutor-has-site-shell' : '' ) ); ?>"
+		<?php if ( $has_learning_site_shell ) : ?>
+			data-tutor-learning-site-shell
+			data-tutor-theme-header-selector="<?php echo esc_attr( $theme_header_selector ); ?>"
+		<?php endif; ?>
+	>
+	<?php
 	tutor_load_template( 'learning-area.quiz.attempt-details' );
+	echo '</div>';
 	echo '</div>';
 	tutor_page_elements_footer( $show_learning_site_footer );
 	exit;
