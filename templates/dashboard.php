@@ -147,5 +147,5 @@ $footer_links = array(
 	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 <?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
-	<?php tutor_page_elements_footer( (bool) tutor_utils()->get_option( 'show_dashboard_site_footer', true ) ); ?>
+	<?php tutor_page_elements_footer( (bool) tutor_utils()->get_option( 'show_dashboard_site_footer', false ) ); ?>
 <?php endif; ?>

@@ -73,8 +73,9 @@ $page_meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $learning_meta_title, 
 
 Dashboard::set_document_title( $page_meta_title );
 
-$show_learning_site_header = (bool) tutor_utils()->get_option( 'show_learning_site_header' );
-$show_learning_site_footer = (bool) tutor_utils()->get_option( 'show_learning_site_footer' );
+$legacy_spotlight_mode     = (bool) tutor_utils()->get_option( 'enable_spotlight_mode', true );
+$show_learning_site_header = (bool) tutor_utils()->get_option( 'show_learning_site_header', ! $legacy_spotlight_mode );
+$show_learning_site_footer = (bool) tutor_utils()->get_option( 'show_learning_site_footer', ! $legacy_spotlight_mode );
 $has_learning_site_shell   = $show_learning_site_header || $show_learning_site_footer;
 $theme_header_selector     = '';
 
