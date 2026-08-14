@@ -1547,6 +1547,38 @@ class Utils {
 	}
 
 	/**
+	 * Whether a scalar looks like an absolute local filesystem path.
+	 *
+	 * Used when filtering video meta so paths cannot be smuggled under another key.
+	 * Does not call file_exists() — that would allow path probing on save.
+	 *
+	 * @since 4.0.6
+	 *
+	 * @param mixed $value value to inspect.
+	 *
+	 * @return bool
+	 */
+	private function is_local_filesystem_path_value( $value ) {
+		if ( ! is_string( $value ) || '' === $value ) {
+			return false;
+		}
+
+		if ( preg_match( '#^https?://#i', $value ) ) {
+			return false;
+		}
+
+		if ( '/' === $value[0] ) {
+			return true;
+		}
+
+		if ( preg_match( '/^[a-zA-Z]:[\\\\\\/]/', $value ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Copy only trusted keys from video meta.
 	 *
 	 * @since 4.0.2
@@ -1583,6 +1615,10 @@ class Utils {
 		$filtered = array();
 		foreach ( $video as $key => $value ) {
 			if ( 'path' === $key ) {
+				continue;
+			}
+
+			if ( $this->is_local_filesystem_path_value( $value ) ) {
 				continue;
 			}
 
