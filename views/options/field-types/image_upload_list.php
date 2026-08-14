@@ -33,10 +33,12 @@ $field_id = 'field_' . $field['key'];
 		$index       = 0;
 		foreach ( $items as $theme => $item ) :
 			++$index;
-			$attachment_id = absint( get_tutor_option( $item['key'], 0 ) );
-			$image_url     = $attachment_id && wp_attachment_is_image( $attachment_id ) ? wp_get_attachment_image_url( $attachment_id, 'medium' ) : '';
+			$default_attachment_id = absint( $item['default'] ?? 0 );
+			$attachment_id         = absint( get_tutor_option( $item['key'], $default_attachment_id ) );
+			$image_url             = $attachment_id && wp_attachment_is_image( $attachment_id ) ? wp_get_attachment_image_url( $attachment_id, 'medium' ) : '';
+			$default_image_url     = $default_attachment_id && wp_attachment_is_image( $default_attachment_id ) ? wp_get_attachment_image_url( $default_attachment_id, 'medium' ) : '';
 			?>
-			<div class="tutor-image-upload-item<?php echo esc_attr( $image_url ? ' has-image' : '' ); ?>" data-image-upload-theme="<?php echo esc_attr( $theme ); ?>">
+			<div class="tutor-image-upload-item<?php echo esc_attr( $image_url ? ' has-image' : '' ); ?>" data-image-upload-theme="<?php echo esc_attr( $theme ); ?>" data-default-image-url="<?php echo esc_url( $default_image_url ); ?>">
 				<div class="tutor-fs-6 tutor-d-flex tutor-align-center tutor-gap-1">
 					<?php
 						SvgIcon::make()

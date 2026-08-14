@@ -530,8 +530,7 @@ class Options_V2 {
 
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
 
-		// Spotlight mode has been replaced by the Page Elements settings.
-		unset( $option['enable_spotlight_mode'] );
+		unset( $option['enable_spotlight_mode'], $option['tutor_frontend_course_page_logo_id'] );
 
 		foreach ( array( 'brand_logo_light', 'brand_logo_dark' ) as $brand_logo_key ) {
 			$attachment_id             = absint( $option[ $brand_logo_key ] ?? 0 );
@@ -728,13 +727,6 @@ class Options_V2 {
 		$page_posts             = get_posts( $page_args );
 		$course_archive_page_id = ( is_array( $page_posts ) && count( $page_posts ) ) ? $page_posts[0] : null;
 		$default_visibility     = (bool) tutor_utils()->get_option( 'enable_spotlight_mode', true ) ? 'off' : 'on';
-
-		$default_page_elements = array(
-			'show_dashboard_site_header' => false,
-			'show_dashboard_site_footer' => false,
-			'show_learning_site_header'  => $default_visibility,
-			'show_learning_site_footer'  => $default_visibility,
-		);
 
 		$attr = array(
 			'general'        => array(
@@ -1295,30 +1287,24 @@ class Options_V2 {
 								'default'     => tutor_utils()->get_default_brand_color(),
 							),
 							array(
-								'key'     => 'brand_logo',
-								'type'    => 'image_upload_list',
-								'label'   => __( 'Brand Logo', 'tutor' ),
-								'desc'    => __( 'Upload separate logos for light and dark mode.', 'tutor' ),
-								'default' => 0,
-								'items'   => array(
+								'key'   => 'brand_logo',
+								'type'  => 'image_upload_list',
+								'label' => __( 'Brand Logo', 'tutor' ),
+								'desc'  => __( 'Upload separate logos for light and dark mode.', 'tutor' ),
+								'items' => array(
 									'light' => array(
-										'label' => __( 'Light Mode', 'tutor' ),
-										'key'   => 'brand_logo_light',
-										'icon'  => Icon::LIGHT,
+										'label'   => __( 'Light Mode', 'tutor' ),
+										'key'     => 'brand_logo_light',
+										'icon'    => Icon::LIGHT,
+										'default' => get_tutor_option( 'tutor_frontend_course_page_logo_id', 0 ),
 									),
 									'dark'  => array(
-										'label' => __( 'Dark Mode', 'tutor' ),
-										'key'   => 'brand_logo_dark',
-										'icon'  => Icon::DARK,
+										'label'   => __( 'Dark Mode', 'tutor' ),
+										'key'     => 'brand_logo_dark',
+										'icon'    => Icon::DARK,
+										'default' => 0,
 									),
 								),
-							),
-							array(
-								'key'     => 'sidebar_logo_visibility',
-								'type'    => 'toggle_switch',
-								'default' => 'on',
-								'label'   => __( 'Sidebar Logo Visibility', 'tutor' ),
-								'desc'    => __( 'Enable or disable the logo display in the sidebar', 'tutor' ),
 							),
 						),
 					),
@@ -1481,7 +1467,6 @@ class Options_V2 {
 								'type'    => 'toggle_matrix',
 								'label'   => __( 'Header & Footer', 'tutor' ),
 								'desc'    => __( 'Control the visibility of Header and Footer for Dashboard and Learning Experience', 'tutor' ),
-								'default' => $default_page_elements,
 								'columns' => array(
 									'header' => array(
 										'label'      => __( 'Header', 'tutor' ),
@@ -1509,11 +1494,11 @@ class Options_V2 {
 										'label'  => __( 'Learning Experience', 'tutor' ),
 										'header' => array(
 											'key'     => 'show_learning_site_header',
-											'default' => 'off',
+											'default' => $default_visibility,
 										),
 										'footer' => array(
 											'key'     => 'show_learning_site_footer',
-											'default' => 'off',
+											'default' => $default_visibility,
 										),
 									),
 								),
