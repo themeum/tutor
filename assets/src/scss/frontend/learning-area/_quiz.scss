@@ -1241,3 +1241,68 @@ $tutor-quiz-content-bottom-offset: calc(
     }
   }
 }
+
+// An active quiz is normally an isolated, viewport-fixed screen. When the
+// Learning Area renders the theme shell, keep its controls inside the quiz
+// instead so the theme footer remains in document flow after the attempt.
+.tutor-learning-area.tutor-has-site-shell {
+  .tutor-quiz-header {
+    position: sticky;
+    top: var(--tutor-site-header-offset);
+  }
+
+  .tutor-quiz-submission {
+    &[data-question-layout-view='single_question'],
+    &[data-question-layout-view='question_pagination'] {
+      height: calc(100dvh - var(--tutor-site-header-overlay-offset));
+      position: relative;
+    }
+
+    &[data-question-layout-view='single_question'] .tutor-quiz-footer,
+    &[data-question-layout-view='question_pagination'] .tutor-quiz-footer {
+      position: sticky;
+      margin-top: auto;
+    }
+  }
+
+  .tutor-quiz-questions {
+    &[data-question-layout-view='single_question'],
+    &[data-question-layout-view='question_pagination'] {
+      top: calc(#{$tutor-quiz-header-offset} + var(--tutor-site-header-overlay-offset));
+      height: calc(
+        100% - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset} - var(--tutor-site-header-overlay-offset)
+      );
+    }
+  }
+
+  .tutor-quiz-questions-pagination {
+    position: absolute;
+  }
+}
+
+// Keep the site-shell geometry authoritative when the WordPress admin bar is
+// present; the isolated-mode admin-bar selectors above intentionally win in
+// every other context.
+body:has(#wpadminbar) .tutor-learning-area.tutor-has-site-shell {
+  .tutor-quiz-header {
+    position: sticky;
+    top: var(--tutor-site-header-offset);
+  }
+
+  .tutor-quiz-submission {
+    &[data-question-layout-view='single_question'],
+    &[data-question-layout-view='question_pagination'] {
+      height: calc(100dvh - var(--tutor-site-header-overlay-offset));
+    }
+  }
+
+  .tutor-quiz-questions {
+    &[data-question-layout-view='single_question'],
+    &[data-question-layout-view='question_pagination'] {
+      top: calc(#{$tutor-quiz-header-offset} + var(--tutor-site-header-overlay-offset));
+      height: calc(
+        100% - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset} - var(--tutor-site-header-overlay-offset)
+      );
+    }
+  }
+}
