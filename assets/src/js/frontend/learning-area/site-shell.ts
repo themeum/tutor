@@ -83,6 +83,14 @@ class LearningAreaSiteShellController {
     const offset = getVisibleHeaderBoundary(elements);
 
     this.root.style.setProperty(CSS_VARIABLE, `${offset}px`);
+
+    // The active-quiz form is positioned below a normal-flow theme header,
+    // but starts behind a fixed or stuck header. This value lets its
+    // absolutely positioned question panel reserve only the part of the
+    // visible boundary that overlays the Learning Area itself.
+    const rootTop = this.root.getBoundingClientRect().top;
+    const overlayOffset = Math.max(0, offset - Math.max(0, rootTop));
+    this.root.style.setProperty('--tutor-site-header-overlay-offset', `${overlayOffset}px`);
   }
 }
 
