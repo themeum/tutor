@@ -113,7 +113,6 @@ class Ajax {
 			LessonModel::update_lesson_reading_info( $post_id, $user_id, 'video_best_watched_time', 0 );
 
 			do_action( 'tutor_lesson_completed_email_after', $post_id, $user_id );
-			do_action( 'tutor_lesson_completed_after', $post_id, $user_id );
 		}
 		exit();
 	}
