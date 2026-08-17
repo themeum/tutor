@@ -26,7 +26,7 @@ const isStaticPosition = (element: HTMLElement): boolean => {
   return window.getComputedStyle(element).position === 'static';
 };
 
-class LearningAreaSiteShellController {
+class SiteShellController {
   private animationFrame: number | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private themeHeader: HTMLElement | null = null;
@@ -125,7 +125,7 @@ class LearningAreaSiteShellController {
 export const initializeSiteShell = (): (() => void) => {
   const controllers = Array.from(document.querySelectorAll<HTMLElement>(SITE_SHELL_ROOT_SELECTOR)).map((root) => {
     const selector = root.dataset.tutorThemeHeaderSelector || '';
-    const controller = new LearningAreaSiteShellController(root, selector);
+    const controller = new SiteShellController(root, selector);
     controller.start();
     return controller;
   });

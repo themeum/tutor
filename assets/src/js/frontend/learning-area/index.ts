@@ -4,6 +4,7 @@
 import { initializeReviews } from '@FrontendComponents/reviews';
 import { initializeTour } from '@FrontendComponents/tour';
 import { initializeCommon } from '@FrontendServices/common';
+import { initializeSiteShell } from '@FrontendServices/site-shell';
 
 import { initializeCommon as initializeLearningAreaCommon } from './common';
 import { initializeLesson } from './lesson';
@@ -11,7 +12,6 @@ import { initializeCourseCourseInfo } from './pages/course-info';
 import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './quiz';
 import { initializeSidebar } from './sidebar';
-import { initializeSiteShell } from './site-shell';
 
 const decodePathSegment = (segment: string): string => {
   try {
