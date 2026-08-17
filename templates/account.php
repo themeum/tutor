@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Dashboard;
+use TUTOR\Template;
 
 global $wp_query;
 
@@ -27,12 +28,21 @@ $close_url     = $dashboard_url;
 
 Dashboard::set_document_title( $meta_title );
 
-$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header' );
-$show_dashboard_site_footer = (bool) tutor_utils()->get_option( 'show_dashboard_site_footer' );
+$site_shell                 = Template::get_site_shell_data( Template::SITE_SHELL_CONTEXT_DASHBOARD );
+$show_dashboard_site_header = $site_shell['show_site_header'];
+$show_dashboard_site_footer = $site_shell['show_site_footer'];
+$has_dashboard_site_shell   = $site_shell['has_site_shell'];
+$theme_header_selector      = $site_shell['theme_header_selector'];
 
 tutor_page_elements_header( $show_dashboard_site_header );
 ?>
-<div class="tutor-account-page-wrapper">
+<div
+	class="tutor-account-page-wrapper<?php echo esc_attr( $has_dashboard_site_shell ? ' tutor-has-site-shell' : '' ); ?>"
+	<?php if ( $has_dashboard_site_shell ) : ?>
+		data-tutor-dashboard-site-shell
+		data-tutor-theme-header-selector="<?php echo esc_attr( $theme_header_selector ); ?>"
+	<?php endif; ?>
+>
 	<?php require_once $page_template; ?>
 </div>
 <?php

@@ -14,6 +14,7 @@ use Tutor\Components\Alert;
 use Tutor\Components\EmptyState;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
+use TUTOR\Template;
 use TUTOR\User;
 
 global $wp_query;
@@ -55,9 +56,12 @@ $meta_title = $page_meta['meta_title'];
 Dashboard::set_document_title( $meta_title );
 
 $is_by_short_code           = isset( $is_shortcode ) && true === $is_shortcode;
-$show_dashboard_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header' );
-$show_dashboard_site_footer = (bool) tutor_utils()->get_option( 'show_dashboard_site_footer' );
-$has_dashboard_site_footer  = ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) && $show_dashboard_site_footer;
+$site_shell                 = Template::get_site_shell_data( Template::SITE_SHELL_CONTEXT_DASHBOARD );
+$show_dashboard_site_header = $site_shell['show_site_header'];
+$show_dashboard_site_footer = $site_shell['show_site_footer'];
+$has_dashboard_site_shell   = ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) && $site_shell['has_site_shell'];
+$has_dashboard_site_footer  = $has_dashboard_site_shell && $show_dashboard_site_footer;
+$theme_header_selector      = $site_shell['theme_header_selector'];
 
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
 	tutor_page_elements_header( $show_dashboard_site_header );
@@ -98,7 +102,13 @@ $footer_links = array(
 ?>
 
 <?php do_action( 'tutor_dashboard/before/wrap' ); ?>
-<div class="tutor-dashboard-layout<?php echo esc_attr( $has_dashboard_site_footer ? ' tutor-has-site-footer' : '' ); ?>">
+<div
+	class="tutor-dashboard-layout<?php echo esc_attr( ( $has_dashboard_site_footer ? ' tutor-has-site-footer' : '' ) . ( $has_dashboard_site_shell ? ' tutor-has-site-shell' : '' ) ); ?>"
+	<?php if ( $has_dashboard_site_shell ) : ?>
+		data-tutor-dashboard-site-shell
+		data-tutor-theme-header-selector="<?php echo esc_attr( $theme_header_selector ); ?>"
+	<?php endif; ?>
+>
 	<?php tutor_load_template( 'dashboard.components.sidebar' ); ?>
 	<div class="tutor-dashboard-main">
 		<?php tutor_load_template( 'dashboard.components.header' ); ?>

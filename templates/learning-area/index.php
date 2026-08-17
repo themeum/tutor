@@ -73,29 +73,11 @@ $page_meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $learning_meta_title, 
 
 Dashboard::set_document_title( $page_meta_title );
 
-$legacy_spotlight_mode     = (bool) tutor_utils()->get_option( 'enable_spotlight_mode', true );
-$show_learning_site_header = (bool) tutor_utils()->get_option( 'show_learning_site_header', ! $legacy_spotlight_mode );
-$show_learning_site_footer = (bool) tutor_utils()->get_option( 'show_learning_site_footer', ! $legacy_spotlight_mode );
-$has_learning_site_shell   = $show_learning_site_header || $show_learning_site_footer;
-$theme_header_selector     = '';
-
-if ( $show_learning_site_header ) {
-	/**
-	 * Filters the selector used to find a theme header that overlays the Learning Area.
-	 *
-	 * Themes with non-standard header markup can return their header selector here.
-	 * The selector is evaluated in the browser and invalid selectors are ignored.
-	 *
-	 * @since 4.0.6
-	 *
-	 * @param string $selector CSS selector for the active theme header.
-	 */
-	$theme_header_selector = apply_filters(
-		'tutor_learning_area_theme_header_selector',
-		'header[role="banner"], header.site-header, header#masthead, #masthead, .site-header, header.wp-block-template-part'
-	);
-	$theme_header_selector = is_string( $theme_header_selector ) ? $theme_header_selector : '';
-}
+$site_shell                = Template::get_site_shell_data( Template::SITE_SHELL_CONTEXT_LEARNING );
+$show_learning_site_header = $site_shell['show_site_header'];
+$show_learning_site_footer = $site_shell['show_site_footer'];
+$has_learning_site_shell   = $site_shell['has_site_shell'];
+$theme_header_selector     = $site_shell['theme_header_selector'];
 
 tutor_page_elements_header( $show_learning_site_header );
 ?>
