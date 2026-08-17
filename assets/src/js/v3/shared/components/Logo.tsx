@@ -15,7 +15,7 @@ const Logo = ({ wrapperCss }: LogoProps) => {
   return (
     <button tabIndex={-1} type="button" css={[styleUtils.resetButton, styles.logo, wrapperCss]}>
       <Show when={tutorConfig.settings?.brand_logo_light} fallback={<LogoSvg width={108} height={24} />}>
-        {(logo) => <img src={logo} alt="Tutor LMS" />}
+        {(logo) => <img src={logo} alt={tutorConfig.site_title} />}
       </Show>
     </button>
   );
