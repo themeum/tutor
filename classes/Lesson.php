@@ -346,7 +346,7 @@ class Lesson extends Tutor_Base {
 				),
 				true
 			);
-			update_post_meta( $post_ID, '_video', $video );
+			update_post_meta( $post_ID, '_video', tutor_utils()->filter_video_meta( $video ) );
 		}
 
 		// Attachments.
