@@ -5,6 +5,7 @@ import { initializeReviews } from '@FrontendComponents/reviews';
 import { initializeTour } from '@FrontendComponents/tour';
 import { initializeCommon } from '@FrontendServices/common';
 
+import { initializeSiteShell } from '../learning-area/site-shell';
 import { initializeConfetti } from './confetti';
 import { initializeHeader } from './header';
 import { initializeAnnouncements } from './pages/announcements';
@@ -74,6 +75,7 @@ const getCurrentPage = (): string => {
 };
 
 const initializeDashboard = () => {
+  initializeSiteShell();
   initializeHeader();
   initializeCommon();
   initializeTour();
