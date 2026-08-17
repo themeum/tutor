@@ -5,6 +5,9 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-dashboard-layout {
+  --tutor-site-header-offset: 0px;
+  --tutor-site-header-overlay-offset: 0px;
+
   display: grid;
   grid-template-columns: 274px 1fr;
 
@@ -28,6 +31,19 @@
     @include tutor-breakpoint-down(sm) {
       padding-bottom: $tutor-spacing-7;
     }
+  }
+
+  &.tutor-has-site-shell {
+    padding-top: var(--tutor-site-header-overlay-offset);
+  }
+}
+
+.tutor-dashboard-isolated-page-wrapper {
+  --tutor-site-header-offset: 0px;
+  --tutor-site-header-overlay-offset: 0px;
+
+  &.tutor-has-site-shell {
+    padding-top: var(--tutor-site-header-overlay-offset);
   }
 }
 

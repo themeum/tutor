@@ -280,3 +280,11 @@
     }
   }
 }
+
+.tutor-dashboard-layout.tutor-has-site-shell .tutor-dashboard-header {
+  top: var(--tutor-site-header-offset);
+}
+
+body:has(#wpadminbar) .tutor-dashboard-layout.tutor-has-site-shell .tutor-dashboard-header {
+  top: var(--tutor-site-header-offset);
+}

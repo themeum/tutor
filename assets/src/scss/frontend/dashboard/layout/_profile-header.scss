@@ -54,3 +54,11 @@
     }
   }
 }
+
+.tutor-has-site-shell .tutor-profile-header {
+  top: var(--tutor-site-header-offset);
+}
+
+body:has(#wpadminbar) .tutor-has-site-shell .tutor-profile-header {
+  top: var(--tutor-site-header-offset);
+}
