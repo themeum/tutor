@@ -221,6 +221,7 @@ class Course_Filter {
 		ob_start();
 
 		query_posts( $filters );
+		unset( $sanitized_post['template'], $sanitized_post['data'] );
 		tutor_load_template( 'archive-course-init', array_merge( array( 'loop_content_only' => true ), $sanitized_post ) );
 
 		wp_send_json_success( array( 'html' => ob_get_clean() ) );

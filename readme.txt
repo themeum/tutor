@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.0.5
+Stable tag: 4.0.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -338,18 +338,29 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.5 - 06 Aug, 2026
+= 4.0.6 - 18 Aug, 2026
 
-Update: Hid the course products on shop page settings when monetize is native.
-Update: UX updated for mobile devices to get back to website's home page from learning area.
-Update: Updated instructor capability for better security.
-Fix: Resolve an issue where enrollment time extend date-picker was showing wrong date. (Pro)
-Fix: Fixed the cart & checkout shows only 10 items.
-Fix: Course bundle maximum enrollment limit issue fixed. (Pro)
-Fix: Cancelling a failed order revokes access from a valid paid order.
-Fix: Co-author unable to see submitted assignments. (Pro)
-Fix: Youtube link's preview not showing on the quiz's answer explanation.
-Fix: Course detail page on the record showing incorrect enrollment date. (Pro)
+Update: Improved WPML compatibility. (Pro)
+Fix: Resolved an issue where the course content author ID was not updated when the course author was changed with the Multi-Instructor add-on enabled. (Pro)
+Fix: Patched a security vulnerability related to the course list query parameter.
+
+= 4.0.5 - 12 Aug, 2026
+
+Update: Added an option to return to the homepage from the student dashboard on mobile devices.
+Update: Strengthened instructor capability checks for better security.
+Update: Changing a course author now updates authorship across all content.
+Update: Hid course products from the shop page settings when using Native Monetization.
+Fix: Resolved the PHP fatal error caused by WooCommerce Subscriptions renewal orders. (Pro)
+Fix: Fixed the incorrect date issue on the enrollment time extension date picker. (Pro)
+Fix: Resolved the manual email delivery issue. (Pro)
+Fix: Fixed the incorrect URL issue in OTP verification emails. (Pro)
+Fix: Resolved the course bundle enrollment limit issue. (Pro)
+Fix: Fixed the issue where canceling a failed order removed course access.
+Fix: Resolved the issue preventing co-authors from viewing submitted assignments. (Pro)
+Fix: Fixed the YouTube preview issue in quiz answer explanations.
+Fix: Resolved the display limitation that capped the cart and checkout page at 10 products.
+Fix: Fixed the incorrect enrollment date issue on course records. (Pro)
+Fix: Resolved the LaTeX equations rendering issue in quiz options.
 
 = 4.0.4 - 31 July, 2026
 
