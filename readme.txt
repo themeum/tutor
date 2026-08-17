@@ -340,8 +340,9 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 4.0.6 - 18 Aug, 2026
 
-Update: WPML compatibility updated. (Pro)
-Fix: Security vulnerability on course list query param fixed.
+Update: Improved WPML compatibility. (Pro)
+Fix: Resolved an issue where the course content author ID was not updated when the course author was changed with the Multi-Instructor add-on enabled. (Pro)
+Fix: Patched a security vulnerability related to the course list query parameter.
 
 = 4.0.5 - 12 Aug, 2026
 
