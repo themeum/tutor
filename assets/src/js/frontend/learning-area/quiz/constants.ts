@@ -40,8 +40,14 @@ export const ERROR_MESSAGES = {
 } as const;
 
 export const QUIZ_LAYOUT_SELECTORS = {
+  QUESTIONS_CONTAINER: '.tutor-quiz-questions',
   QUESTION_WRAPPER_ATTR: 'data-quiz-question-index',
   QUESTION_WRAPPER: '.tutor-quiz-question-wrapper',
+  PAGINATION: '.tutor-quiz-questions-pagination',
+  PAGINATION_ITEM_ATTR: 'data-quiz-question-index',
+  PAGINATION_ITEM: '.tutor-quiz-question-paginate-item',
+  PAGINATION_HAS_SCROLL_LEFT_ATTR: 'data-has-scroll-left',
+  PAGINATION_HAS_SCROLL_RIGHT_ATTR: 'data-has-scroll-right',
 } as const;
 
 export const QUIZ_LAYOUT_KEYS = {
