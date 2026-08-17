@@ -913,6 +913,14 @@ class Utils {
 			}
 		}
 
+		if ( ! $result && $get_stats ) {
+			$result = array(
+				'completed_percent' => 0,
+				'completed_count'   => 0,
+				'total_count'       => 0,
+			);
+		}
+
 		return apply_filters( 'tutor_course_completed_percent', $result, $course_id, $user_id, $get_stats );
 	}
 
@@ -1542,8 +1550,93 @@ class Utils {
 		$post_id = $this->get_post_id( $post_id );
 
 		if ( is_array( $video_data ) && count( $video_data ) ) {
-			update_post_meta( $post_id, '_video', $video_data );
+			update_post_meta( $post_id, '_video', $this->filter_video_meta( $video_data ) );
 		}
+	}
+
+	/**
+	 * Whether a scalar looks like an absolute local filesystem path.
+	 *
+	 * Used when filtering video meta so paths cannot be smuggled under another key.
+	 * Does not call file_exists() — that would allow path probing on save.
+	 *
+	 * @since 4.0.6
+	 *
+	 * @param mixed $value value to inspect.
+	 *
+	 * @return bool
+	 */
+	private function is_local_filesystem_path_value( $value ) {
+		if ( ! is_string( $value ) || '' === $value ) {
+			return false;
+		}
+
+		if ( preg_match( '#^https?://#i', $value ) ) {
+			return false;
+		}
+
+		if ( '/' === $value[0] ) {
+			return true;
+		}
+
+		if ( preg_match( '/^[a-zA-Z]:[\\\\\\/]/', $value ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Copy only trusted keys from video meta.
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param array $video video meta.
+	 *
+	 * @return array
+	 */
+	public function filter_video_meta( $video ) {
+		if ( ! is_array( $video ) ) {
+			return array();
+		}
+
+		$allowed_keys = apply_filters(
+			'tutor_allowed_video_meta_keys',
+			array(
+				'source',
+				'source_video_id',
+				'source_html5',
+				'source_external_url',
+				'source_youtube',
+				'source_vimeo',
+				'source_embedded',
+				'source_shortcode',
+				'source_type',
+				'poster',
+				'poster_url',
+				'runtime',
+				'duration_sec',
+				'playtime',
+			)
+		);
+
+		$filtered = array();
+		foreach ( $video as $key => $value ) {
+			if ( 'path' === $key ) {
+				continue;
+			}
+
+			if ( $this->is_local_filesystem_path_value( $value ) ) {
+				continue;
+			}
+
+			$is_source_key = is_string( $key ) && 1 === preg_match( '/^source_[a-z0-9_]+$/', $key );
+			if ( in_array( $key, $allowed_keys, true ) || $is_source_key ) {
+				$filtered[ $key ] = $value;
+			}
+		}
+
+		return $filtered;
 	}
 
 	/**
@@ -1799,7 +1892,14 @@ class Utils {
 			$info['playtime'] = "$runtime_hours:$runtime_minutes:$runtime_seconds";
 		}
 
-		$info = array_merge( $info, $video );
+		$resolved_path = isset( $info['path'] ) ? $info['path'] : null;
+		$info          = array_merge( $info, $this->filter_video_meta( (array) $video ) );
+
+		if ( $resolved_path ) {
+			$info['path'] = $resolved_path;
+		} else {
+			unset( $info['path'] );
+		}
 
 		return (object) $info;
 	}
@@ -3895,7 +3995,7 @@ class Utils {
 			$where_clause = '_reviews.comment_post_ID = %d';
 		}
 
-		$limit_offset    = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
+		$limit_offset    = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
 		$status_in       = '"' . implode( '","', $status_in ) . '"';
 		$include_user_id = is_array( $include_user_id ) ? $include_user_id : array( $include_user_id );
 		$include_user_id = implode( ',', $include_user_id );
@@ -4492,7 +4592,7 @@ class Utils {
 		$user_id            = get_current_user_id();
 		$course_type        = tutor()->course_post_type;
 		$search_term        = '%' . $wpdb->esc_like( $search_term ) . '%';
-		$question_clause    = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
+		$question_clause    = $question_id ? ' AND _question.comment_ID=' . (int) $question_id : '';
 		$order_condition    = ' ORDER BY _question.comment_ID DESC ';
 		$meta_clause        = '';
 		$in_course_id_query = '';
@@ -4502,12 +4602,20 @@ class Utils {
 		// Sanitize args before process.
 		$args = Input::sanitize_array( $args );
 
+		if ( ! $user_id && ! $asker_id && null === $question_id && empty( $args['course_id'] ) ) {
+			return $count_only ? 0 : array();
+		}
+
 		/**
 		 * Get only assinged  courses questions if current user is not admin
 		 * User query.
 		 */
 		if ( $asker_id ) {
-			$question_clause .= ' AND _question.user_id=' . $asker_id;
+			$question_clause .= ' AND _question.user_id=' . (int) $asker_id;
+		}
+
+		if ( ! $user_id ) {
+			$in_course_id_query .= " AND _course.post_status = 'publish' ";
 		}
 
 		if ( isset( $args['course_id'] ) ) {
@@ -4594,7 +4702,7 @@ class Utils {
 						WHERE 	answers_t.comment_parent = _question.comment_ID
 					) AS answer_count";
 
-		$limit_offset = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
+		$limit_offset = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
 
 		$query = $wpdb->prepare(
 			"SELECT  {$columns_select}

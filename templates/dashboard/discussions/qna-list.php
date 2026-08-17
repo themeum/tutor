@@ -25,14 +25,24 @@ use Tutor\Components\DropdownFilter;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
+use Tutor\Helpers\QueryHelper;
 use TUTOR\Input;
 use TUTOR\User;
 
-$user_id       = get_current_user_id();
-$is_instructor = tutor_utils()->is_instructor( $user_id, true );
-$q_status      = Input::get( 'data' );
-$view_as       = User::get_current_view_mode();
-$asker_id      = User::is_instructor_view() ? null : $user_id;
+if ( ! is_user_logged_in() ) {
+	return;
+}
+
+$user_id        = get_current_user_id();
+$is_instructor  = tutor_utils()->is_instructor( $user_id, true );
+$q_status       = Input::get( 'data' );
+$view_as        = User::get_current_view_mode();
+$asker_id       = User::is_instructor_view() ? null : $user_id;
+$item_per_page  = isset( $item_per_page ) ? (int) $item_per_page : (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
+$offset         = isset( $offset ) ? (int) $offset : 0;
+$current_page   = isset( $current_page ) ? max( 1, (int) $current_page ) : 1;
+$order_filter   = isset( $order_filter ) ? QueryHelper::get_valid_sort_order( $order_filter ) : 'DESC';
+$discussion_url = isset( $discussion_url ) ? $discussion_url : tutor_utils()->tutor_dashboard_url( 'discussions' );
 
 $total_items = (int) tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, $q_status, true );
 $questions   = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, $q_status, false, array( 'order' => $order_filter ) );
