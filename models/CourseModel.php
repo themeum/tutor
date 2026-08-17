@@ -1381,11 +1381,15 @@ class CourseModel {
 
 				foreach ( $course_ids as $id ) {
 					foreach ( $result->posts as $post ) {
-						$post->ID == $id ? $new_array[] = $post : 0;
+						if ( $post->ID == $id ) {
+							$new_array[] = $post;
+						}
 					}
 				}
 
-				$result->posts = $new_array;
+				if ( count( $new_array ) ) {
+					$result->posts = $new_array;
+				}
 			}
 
 			return $result;
