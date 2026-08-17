@@ -17,6 +17,9 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
   let handleFirstTab: ((e: KeyboardEvent) => void) | null = null;
   let handleMouseDown: (() => void) | null = null;
+  let paginationEl: HTMLElement | null | undefined = null;
+  let handlePaginationScroll: (() => void) | null = null;
+  let paginationResizeObserver: ResizeObserver | null = null;
 
   return {
     layout: config.layout ?? QuizLayoutType.QUESTION_BELOW_EACH_OTHER,
@@ -37,7 +40,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
     $root: null as HTMLElement | null,
 
     init() {
-      container = (this.$root ?? this.$el)?.querySelector('.tutor-quiz-questions');
+      container = (this.$root ?? this.$el)?.querySelector(QUIZ_LAYOUT_SELECTORS.QUESTIONS_CONTAINER);
 
       // Keyboard vs Mouse Navigation helper for focus styles
       handleFirstTab = (e: KeyboardEvent) => {
@@ -71,6 +74,25 @@ const quizLayout = (config: QuizLayoutConfig) => {
       }
       this.currentIndex = 1;
       this.syncCurrentRevealFooterState();
+
+      paginationEl = (this.$root ?? this.$el)?.querySelector<HTMLElement>(QUIZ_LAYOUT_SELECTORS.PAGINATION) ?? null;
+      if (paginationEl) {
+        handlePaginationScroll = () => {
+          this.updatePaginationScrollState();
+        };
+        paginationEl.addEventListener('scroll', handlePaginationScroll, { passive: true });
+
+        if (typeof ResizeObserver !== 'undefined') {
+          paginationResizeObserver = new ResizeObserver(() => {
+            this.updatePaginationScrollState();
+          });
+          paginationResizeObserver.observe(paginationEl);
+        }
+
+        window.requestAnimationFrame(() => {
+          this.updatePaginationScrollState();
+        });
+      }
     },
 
     destroy() {
@@ -80,6 +102,13 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (handleMouseDown) {
         window.removeEventListener('mousedown', handleMouseDown);
         window.removeEventListener('touchstart', handleMouseDown);
+      }
+      if (paginationEl && handlePaginationScroll) {
+        paginationEl.removeEventListener('scroll', handlePaginationScroll);
+      }
+      if (paginationResizeObserver) {
+        paginationResizeObserver.disconnect();
+        paginationResizeObserver = null;
       }
     },
 
@@ -525,6 +554,54 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
       wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      this.scrollPaginationToCurrentQuestion();
+    },
+
+    updatePaginationScrollState() {
+      const root = this.$root ?? this.$el;
+      const pagination = paginationEl ?? root?.querySelector<HTMLElement>(QUIZ_LAYOUT_SELECTORS.PAGINATION) ?? null;
+      if (!pagination) {
+        return;
+      }
+
+      const maxScrollLeft = pagination.scrollWidth - pagination.clientWidth;
+      const hasOverflow = maxScrollLeft > 1;
+
+      if (!hasOverflow) {
+        pagination.setAttribute(QUIZ_LAYOUT_SELECTORS.PAGINATION_HAS_SCROLL_LEFT_ATTR, 'false');
+        pagination.setAttribute(QUIZ_LAYOUT_SELECTORS.PAGINATION_HAS_SCROLL_RIGHT_ATTR, 'false');
+        return;
+      }
+
+      const scrollLeft = pagination.scrollLeft;
+      const hasScrollLeft = scrollLeft > 1;
+      const hasScrollRight = scrollLeft < maxScrollLeft - 1;
+
+      pagination.setAttribute(QUIZ_LAYOUT_SELECTORS.PAGINATION_HAS_SCROLL_LEFT_ATTR, hasScrollLeft ? 'true' : 'false');
+      pagination.setAttribute(
+        QUIZ_LAYOUT_SELECTORS.PAGINATION_HAS_SCROLL_RIGHT_ATTR,
+        hasScrollRight ? 'true' : 'false',
+      );
+    },
+
+    scrollPaginationToCurrentQuestion() {
+      const root = this.$root ?? this.$el;
+      const pagination = paginationEl ?? root?.querySelector<HTMLElement>(QUIZ_LAYOUT_SELECTORS.PAGINATION) ?? null;
+      const item = pagination?.querySelector<HTMLElement>(
+        `${QUIZ_LAYOUT_SELECTORS.PAGINATION_ITEM}[${QUIZ_LAYOUT_SELECTORS.PAGINATION_ITEM_ATTR}="${this.currentIndex}"]`,
+      );
+
+      if (!pagination || !item) {
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        pagination.scrollTo({
+          left: item.offsetLeft - (pagination.clientWidth - item.offsetWidth) / 2,
+          behavior: 'smooth',
+        });
+        this.updatePaginationScrollState();
+      });
     },
 
     getQuestionIdByIndex(values: Record<string, unknown>, index: number) {
