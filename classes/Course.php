@@ -1966,6 +1966,7 @@ class Course extends Tutor_Base {
 				),
 				true
 			);
+			$video        = tutor_utils()->filter_video_meta( $video );
 			$video_source = tutor_utils()->array_get( 'source', $video );
 			if ( -1 !== $video_source ) {
 				update_post_meta( $post_ID, '_video', $video );
