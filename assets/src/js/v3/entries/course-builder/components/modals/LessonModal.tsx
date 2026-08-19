@@ -409,9 +409,13 @@ const LessonModal = ({
                     )
                   }
                   onGetDuration={(duration) => {
-                    form.setValue('duration.hour', duration.hours);
-                    form.setValue('duration.minute', duration.minutes);
-                    form.setValue('duration.second', duration.seconds);
+                    if (!form.getFieldState('video').isDirty) {
+                      return;
+                    }
+
+                    form.setValue('duration.hour', duration.hours, { shouldDirty: true });
+                    form.setValue('duration.minute', duration.minutes, { shouldDirty: true });
+                    form.setValue('duration.second', duration.seconds, { shouldDirty: true });
                   }}
                   visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO}
                 />
