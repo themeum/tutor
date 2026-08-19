@@ -127,6 +127,21 @@ abstract class BatchProcessor {
 	abstract protected function get_total_items() : int;
 
 	/**
+	 * Whether this batch processor can safely run on the current site.
+	 *
+	 * Override in child classes to require Tutor tables, etc. Used to avoid
+	 * fatal errors on Multisite blogs where Tutor was network-activated but
+	 * site tables were never created.
+	 *
+	 * @since 4.0.5
+	 *
+	 * @return bool
+	 */
+	protected function can_run(): bool {
+		return true;
+	}
+
+	/**
 	 * Schedule the batch processing.
 	 *
 	 * This method checks if the action is already scheduled, and if not, it schedules a single event
@@ -137,6 +152,10 @@ abstract class BatchProcessor {
 	 * @return void
 	 */
 	public function schedule() {
+		if ( ! $this->can_run() ) {
+			return;
+		}
+
 		if ( ! wp_next_scheduled( $this->action ) ) {
 			wp_schedule_single_event( time() + $this->schedule_interval, $this->action );
 		}
@@ -155,6 +174,15 @@ abstract class BatchProcessor {
 	 * @throws \Exception If not implemented any interface on child class..
 	 */
 	public function process_batch() {
+		/**
+		 * Skip safely when required tables are missing (e.g. Multisite blog without
+		 * Tutor initialized). Do not mark complete so migration can run later if
+		 * tables are created.
+		 */
+		if ( ! $this->can_run() ) {
+			return;
+		}
+
 		$progress = get_option(
 			$this->progress_option,
 			array(

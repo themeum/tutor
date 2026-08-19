@@ -117,6 +117,26 @@ class CartModel {
 			),
 		);
 
+		/**
+		 * On Multisite, ecommerce tables may be missing if create_database previously
+		 * failed (e.g. duplicate global FOREIGN KEY names across blogs). Attempt once
+		 * to create them, then soft-fail with an empty cart if still absent.
+		 *
+		 * @since 4.0.5
+		 */
+		static $attempted_create_database = false;
+		if ( ! QueryHelper::table_exists( 'tutor_carts' ) ) {
+			if ( ! $attempted_create_database ) {
+				$attempted_create_database = true;
+				\TUTOR\Tutor::create_database();
+			}
+
+			if ( ! QueryHelper::table_exists( 'tutor_carts' ) ) {
+				TutorCache::set( $cache_key, $is_details ? $cart_data : $cart_data['courses']['results'] );
+				return $is_details ? $cart_data : $cart_data['courses']['results'];
+			}
+		}
+
 		$user_cart = QueryHelper::get_row(
 			'tutor_carts',
 			array(

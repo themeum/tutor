@@ -57,6 +57,17 @@ class QuizAttemptMigrator extends BatchProcessor implements SingleProcessor {
 	protected $schedule_interval = 10;
 
 	/**
+	 * Only run when Tutor quiz attempt tables exist for this blog.
+	 *
+	 * @since 4.0.5
+	 *
+	 * @return bool
+	 */
+	protected function can_run(): bool {
+		return QueryHelper::table_exists( 'tutor_quiz_attempts' );
+	}
+
+	/**
 	 * Get total unprocessed result.
 	 *
 	 * @since 3.8.0
@@ -64,6 +75,10 @@ class QuizAttemptMigrator extends BatchProcessor implements SingleProcessor {
 	 * @return int
 	 */
 	protected function get_total_items(): int {
+		if ( ! $this->can_run() ) {
+			return 0;
+		}
+
 		return QueryHelper::get_count( 'tutor_quiz_attempts', array( 'result' => array( 'IS', 'NULL' ) ), array(), 'attempt_id' );
 	}
 
@@ -78,6 +93,10 @@ class QuizAttemptMigrator extends BatchProcessor implements SingleProcessor {
 	 * @return array
 	 */
 	protected function get_items( $offset, $limit ) : array {
+		if ( ! $this->can_run() ) {
+			return array();
+		}
+
 		global $wpdb;
 		return $wpdb->get_results(
 			$wpdb->prepare(

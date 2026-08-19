@@ -58,6 +58,17 @@ class ProcessByWcMigrator extends BatchProcessor implements BulkProcessor {
 	protected $schedule_interval = 10;
 
 	/**
+	 * Only run when Tutor earnings tables exist for this blog.
+	 *
+	 * @since 4.0.5
+	 *
+	 * @return bool
+	 */
+	protected function can_run(): bool {
+		return QueryHelper::table_exists( 'tutor_earnings' );
+	}
+
+	/**
 	 * Get the total count of the data to be processed
 	 *
 	 * @since 3.8.2
@@ -65,6 +76,10 @@ class ProcessByWcMigrator extends BatchProcessor implements BulkProcessor {
 	 * @return int
 	 */
 	protected function get_total_items() : int {
+		if ( ! $this->can_run() ) {
+			return 0;
+		}
+
 		$primary_table  = 'tutor_earnings te';
 		$joining_tables = array(
 			array(
@@ -101,6 +116,10 @@ class ProcessByWcMigrator extends BatchProcessor implements BulkProcessor {
 	 * @return array
 	 */
 	protected function get_items( $offset, $limit ) : array {
+		if ( ! $this->can_run() ) {
+			return array();
+		}
+
 		$primary_table  = 'tutor_earnings te';
 		$joining_tables = array(
 			array(

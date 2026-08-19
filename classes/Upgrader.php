@@ -271,8 +271,7 @@ class Upgrader {
 				meta_value LONGTEXT NOT NULL,
 				PRIMARY KEY (id),
 				KEY item_id (item_id),
-				KEY meta_key (meta_key),
-				CONSTRAINT fk_tutor_itemmeta FOREIGN KEY (item_id) REFERENCES {$wpdb->prefix}tutor_order_items(id) ON DELETE CASCADE
+				KEY meta_key (meta_key)
 			) $charset_collate;";
 				dbDelta( $item_meta_table );
 			}
