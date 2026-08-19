@@ -521,6 +521,21 @@ $tutor-quiz-content-bottom-offset: calc(
         max-width: none;
         margin-inline: auto;
       }
+
+      @media (hover: hover) and (pointer: fine) {
+        &[data-has-scroll-left='true'],
+        &[data-has-scroll-right='true'] {
+          cursor: grab;
+
+          &:active {
+            cursor: grabbing;
+
+            .tutor-quiz-question-paginate-item {
+              cursor: grabbing;
+            }
+          }
+        }
+      }
     }
 
     &[data-pagination-style='shape'] {

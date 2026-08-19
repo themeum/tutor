@@ -1,7 +1,7 @@
 import type { AlpineComponentMeta } from '@Core/ts/types';
 
 import { QUIZ_LAYOUT_KEYS, QUIZ_LAYOUT_SELECTORS, QUIZ_REVEAL_CONFIG, QuizLayoutType } from './constants';
-import { revealQuestionWithAnswers } from './helpers';
+import { createDragScroll, revealQuestionWithAnswers } from './helpers';
 
 export interface QuizLayoutConfig {
   layout: (typeof QuizLayoutType)[keyof typeof QuizLayoutType];
@@ -20,6 +20,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
   let paginationEl: HTMLElement | null | undefined = null;
   let handlePaginationScroll: (() => void) | null = null;
   let paginationResizeObserver: ResizeObserver | null = null;
+  let destroyDragScroll: (() => void) | null = null;
 
   return {
     layout: config.layout ?? QuizLayoutType.QUESTION_BELOW_EACH_OTHER,
@@ -92,6 +93,8 @@ const quizLayout = (config: QuizLayoutConfig) => {
         window.requestAnimationFrame(() => {
           this.updatePaginationScrollState();
         });
+
+        destroyDragScroll = createDragScroll(paginationEl);
       }
     },
 
@@ -106,6 +109,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (paginationEl && handlePaginationScroll) {
         paginationEl.removeEventListener('scroll', handlePaginationScroll);
       }
+      destroyDragScroll?.();
       if (paginationResizeObserver) {
         paginationResizeObserver.disconnect();
         paginationResizeObserver = null;
