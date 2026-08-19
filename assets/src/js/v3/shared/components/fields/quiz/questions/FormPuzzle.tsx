@@ -6,7 +6,9 @@ import { __ } from '@wordpress/i18n';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
+import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -43,6 +45,9 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
   const option = field.value;
   const resolvedGridSizePath =
     gridSizePath ?? (`questions.${activeQuestionIndex}.question_settings.puzzle_grid_size` as const);
+  const resolvedBackgroundPath = Array.isArray(form?.getValues?.('questions'))
+    ? (`questions.${activeQuestionIndex}.question_settings.enable_puzzle_answer_background` as const)
+    : ('question_settings.enable_puzzle_answer_background' as const);
   const resolvedQuestionDataStatusPath = Array.isArray(form?.getValues?.('questions'))
     ? (`questions.${activeQuestionIndex}._data_status` as const)
     : ('_data_status' as const);
@@ -195,6 +200,32 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
               )}
             />
           )}
+
+          <Show when={!!tutorConfig.tutor_pro_url && !tutorConfig.is_legacy_learning_mode}>
+            <Controller
+              control={form.control}
+              name={resolvedBackgroundPath}
+              defaultValue={true}
+              render={(backgroundControllerProps) => (
+                <FormSwitch
+                  {...backgroundControllerProps}
+                  label={__('Show puzzle answer background', __TUTOR_TEXT_DOMAIN__)}
+                  helpText={__(
+                    'Display a faded reference image behind the puzzle board during attempts.',
+                    __TUTOR_TEXT_DOMAIN__,
+                  )}
+                  onChange={() => {
+                    if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+                      form.setValue(
+                        resolvedQuestionDataStatusPath,
+                        calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                      );
+                    }
+                  }}
+                />
+              )}
+            />
+          </Show>
         </div>
       </Show>
 

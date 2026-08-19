@@ -235,6 +235,10 @@ export const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>):
       if (rawGridSize !== undefined && rawGridSize !== null && !Number.isNaN(Number(rawGridSize))) {
         question.question_settings.puzzle_grid_size = Number(rawGridSize);
       }
+      question.question_settings.enable_puzzle_answer_background =
+        question.question_settings.enable_puzzle_answer_background === undefined
+          ? true
+          : !!Number(question.question_settings.enable_puzzle_answer_background);
     }
     if (question.question_type === 'coordinates') {
       const rawCoordinatesAxisRange = question.question_settings.coordinates_axis_range;
