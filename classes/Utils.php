@@ -1893,7 +1893,7 @@ class Utils {
 		}
 
 		$resolved_path = isset( $info['path'] ) ? $info['path'] : null;
-		$info          = array_merge( $info, $this->filter_video_meta( (array) $video ) );
+		$info          = array_merge( $this->filter_video_meta( (array) $video ), $info );
 
 		if ( $resolved_path ) {
 			$info['path'] = $resolved_path;
