@@ -408,14 +408,19 @@ const LessonModal = ({
                       formatBytes(Number(tutorConfig?.max_upload_size || 0)),
                     )
                   }
-                  onGetDuration={(duration) => {
+                  onChange={(video) => {
+                    if (video?.source) {
+                      return;
+                    }
+
+                    form.setValue('duration', { hour: 0, minute: 0, second: 0 }, { shouldDirty: true });
+                  }}
+                  onGetDuration={({ hours, minutes, seconds }) => {
                     if (!form.getFieldState('video').isDirty) {
                       return;
                     }
 
-                    form.setValue('duration.hour', duration.hours, { shouldDirty: true });
-                    form.setValue('duration.minute', duration.minutes, { shouldDirty: true });
-                    form.setValue('duration.second', duration.seconds, { shouldDirty: true });
+                    form.setValue('duration', { hour: hours, minute: minutes, second: seconds }, { shouldDirty: true });
                   }}
                   visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO}
                 />
