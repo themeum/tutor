@@ -52,6 +52,30 @@ $tutor-quiz-content-bottom-offset: calc(
       overflow: auto;
     }
 
+    &[data-question-layout-view='single_question']:has(.tutor-quiz-question[data-question='draw_image']),
+    &[data-question-layout-view='single_question']:has(.tutor-quiz-question[data-question='pin_image']),
+    &[data-question-layout-view='question_pagination']:has(.tutor-quiz-question[data-question='draw_image']),
+    &[data-question-layout-view='question_pagination']:has(.tutor-quiz-question[data-question='pin_image']) {
+      .tutor-quiz-questions {
+        justify-content: flex-start;
+        overflow: hidden;
+      }
+
+      .tutor-quiz-question-wrapper {
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: none;
+        overflow: hidden;
+      }
+
+      .tutor-quiz-question {
+        height: 100%;
+        min-height: 0;
+        margin-block: 0;
+        overflow: hidden;
+      }
+    }
+
     &[data-question-layout-view='single_question'] {
       &:has(.tutor-quiz-questions-pagination) {
         .tutor-quiz-question-wrapper {
@@ -1101,6 +1125,50 @@ $tutor-quiz-content-bottom-offset: calc(
 
     canvas {
       max-width: 100%;
+    }
+  }
+
+  &-submission[data-question-layout-view='single_question'],
+  &-submission[data-question-layout-view='question_pagination'] {
+    [data-question='draw_image'],
+    [data-question='pin_image'] {
+      .tutor-quiz-question-header {
+        flex-shrink: 0;
+      }
+
+      .tutor-draw-image-question,
+      .tutor-pin-image-question {
+        @include tutor-flex(column, center, center);
+        flex: 1 1 auto;
+        min-height: 0;
+        margin-top: 0;
+        width: 100%;
+        container-type: size;
+      }
+
+      .tutor-draw-image-actions {
+        flex-shrink: 0;
+        align-self: stretch;
+      }
+
+      .tutor-draw-image-wrapper,
+      .tutor-pin-image-wrapper {
+        position: relative;
+        flex: 0 1 auto;
+        min-height: 0;
+        max-height: 100%;
+        width: fit-content;
+        max-width: 100%;
+
+        img {
+          display: block;
+          max-height: 100cqh;
+          max-width: 100cqw;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+        }
+      }
     }
   }
 
