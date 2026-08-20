@@ -38,9 +38,16 @@ interface FormPuzzleProps extends FormControllerProps<QuizQuestionOption> {
   >;
   gridSizeControllerProps?: FormControllerProps<number | null>;
   gridSizePath?: string;
+  backgroundControllerProps?: FormControllerProps<boolean | undefined>;
 }
 
-const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, gridSizePath }: FormPuzzleProps) => {
+const FormPuzzle = ({
+  field,
+  activeQuestionIndex = 0,
+  gridSizeControllerProps,
+  gridSizePath,
+  backgroundControllerProps,
+}: FormPuzzleProps) => {
   const form = useFormContext();
   const option = field.value;
   const resolvedGridSizePath =
@@ -127,6 +134,22 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
     return null;
   }
 
+  const renderBackgroundSwitch = (controllerProps: FormControllerProps<boolean | undefined>) => (
+    <FormSwitch
+      {...controllerProps}
+      label={__('Show puzzle answer background', __TUTOR_TEXT_DOMAIN__)}
+      helpText={__('Display a faded reference image behind the puzzle board during attempts.', __TUTOR_TEXT_DOMAIN__)}
+      onChange={() => {
+        if (form && calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+          form.setValue(
+            resolvedQuestionDataStatusPath,
+            calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+          );
+        }
+      }}
+    />
+  );
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.card}>
@@ -163,7 +186,7 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
               helpText={__('Larger grids create more pieces and a harder puzzle for learners.', __TUTOR_TEXT_DOMAIN__)}
               onChange={(selectedOption) => {
                 gridSizeControllerProps.field.onChange(selectedOption.value);
-                if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+                if (form && calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
                   form.setValue(
                     resolvedQuestionDataStatusPath,
                     calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
@@ -202,29 +225,16 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
           )}
 
           <Show when={!!tutorConfig.tutor_pro_url && !tutorConfig.is_legacy_learning_mode}>
-            <Controller
-              control={form.control}
-              name={resolvedBackgroundPath}
-              defaultValue={true}
-              render={(backgroundControllerProps) => (
-                <FormSwitch
-                  {...backgroundControllerProps}
-                  label={__('Show puzzle answer background', __TUTOR_TEXT_DOMAIN__)}
-                  helpText={__(
-                    'Display a faded reference image behind the puzzle board during attempts.',
-                    __TUTOR_TEXT_DOMAIN__,
-                  )}
-                  onChange={() => {
-                    if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
-                      form.setValue(
-                        resolvedQuestionDataStatusPath,
-                        calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                      );
-                    }
-                  }}
-                />
-              )}
-            />
+            {backgroundControllerProps ? (
+              renderBackgroundSwitch(backgroundControllerProps)
+            ) : (
+              <Controller
+                control={form.control}
+                name={resolvedBackgroundPath}
+                defaultValue={true}
+                render={renderBackgroundSwitch}
+              />
+            )}
           </Show>
         </div>
       </Show>
