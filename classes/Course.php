@@ -1392,10 +1392,6 @@ class Course extends Tutor_Base {
 		$post_author = (int) $course['post_author'];
 		if ( 0 === $post_author && $course_id > 0 ) {
 			$post_author = get_current_user_id();
-
-			global $wpdb;
-			// Perform a direct database update to prevent firing hooks.
-			$wpdb->update( $wpdb->posts, array( 'post_author' => $post_author ), array( 'ID' => $course_id ) );
 		}
 
 		$data = array(
