@@ -76,6 +76,32 @@ $tutor-quiz-content-bottom-offset: calc(
       }
     }
 
+    // Puzzle: card fills the viewport slot; board + scatter scroll inside the card body.
+    &[data-question-layout-view='single_question']:has(.tutor-quiz-question[data-question='puzzle']),
+    &[data-question-layout-view='question_pagination']:has(.tutor-quiz-question[data-question='puzzle']) {
+      .tutor-quiz-questions {
+        justify-content: flex-start;
+        overflow: hidden;
+      }
+
+      .tutor-quiz-question-wrapper {
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: 100%;
+        overflow: hidden;
+        @include tutor-flex(column);
+      }
+
+      .tutor-quiz-question {
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: 100%;
+        height: auto;
+        margin-block: 0;
+        overflow: hidden;
+      }
+    }
+
     &[data-question-layout-view='single_question'] {
       &:has(.tutor-quiz-questions-pagination) {
         .tutor-quiz-question-wrapper {
@@ -1168,6 +1194,28 @@ $tutor-quiz-content-bottom-offset: calc(
           height: auto;
           object-fit: contain;
         }
+      }
+    }
+
+    // Puzzle: card stays viewport-bound; board keeps natural size; scroll happens on the puzzle body.
+    [data-question='puzzle'] {
+      .tutor-quiz-question-header {
+        flex-shrink: 0;
+      }
+
+      .tutor-puzzle-question {
+        @include tutor-flex(column, center, flex-start);
+        flex: 1 1 auto;
+        flex-grow: 1;
+        // Force flex item to honor parent height so overflow-y:auto creates a scrollport.
+        height: 0;
+        min-height: 0;
+        margin-top: 0;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
       }
     }
   }
