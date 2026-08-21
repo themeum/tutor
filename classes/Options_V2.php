@@ -1290,7 +1290,7 @@ class Options_V2 {
 								'key'   => 'brand_logo',
 								'type'  => 'image_upload_list',
 								'label' => __( 'Brand Logo', 'tutor' ),
-								'desc'  => __( 'Upload separate logos for light and dark mode.', 'tutor' ),
+								'desc'  => __( 'Upload your brand logo to display it in the Course Builder and Frontend Dashboard.', 'tutor' ),
 								'items' => array(
 									'light' => array(
 										'label'   => __( 'Light Mode', 'tutor' ),

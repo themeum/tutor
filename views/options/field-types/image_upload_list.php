@@ -25,7 +25,10 @@ $field_id = 'field_' . $field['key'];
 ?>
 <div class="tutor-option-field-row tutor-d-block tutor-image-upload-list-field" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label">
-		<div class="tutor-fs-6 tutor-fw-medium" tutor-option-name><?php echo esc_html( $field['label'] ); ?></div>
+		<div class="tutor-fs-6 tutor-fw-medium<?php echo ! empty( $field['desc'] ) ? ' tutor-mb-8' : ''; ?>" tutor-option-name><?php echo esc_html( $field['label'] ); ?></div>
+		<?php if ( ! empty( $field['desc'] ) ) : ?>
+			<div class="tutor-fs-7 tutor-color-muted"><?php echo wp_kses_post( $field['desc'] ); ?></div>
+		<?php endif; ?>
 	</div>
 	<div class="tutor-image-upload-list">
 		<?php
