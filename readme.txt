@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.0.6
+Stable tag: 4.0.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -337,6 +337,10 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.7 - 20 Aug, 2026
+
+Fix: Fixed course creation issues caused by the Multi Instructor addon. (Pro)
 
 = 4.0.6 - 18 Aug, 2026
 
