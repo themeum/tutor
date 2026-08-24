@@ -2297,7 +2297,7 @@ class Quiz {
 	 * @since 4.0.5
 	 */
 	public static function sanitize_quiz_content( $content ) {
-		if ( empty( $content ) ) {
+		if ( null === $content || '' === $content ) {
 			return '';
 		}
 
