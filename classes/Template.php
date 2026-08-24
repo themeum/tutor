@@ -42,7 +42,7 @@ class Template extends Tutor_Base {
 	 *
 	 * @var string
 	 */
-	private const THEME_HEADER_SELECTOR = 'header[role="banner"], header.site-header, header#masthead, #masthead, .site-header, header.wp-block-template-part, header.header-sticky';
+	private const THEME_HEADER_SELECTOR = 'header[role="banner"], header[role="heading"], header.site-header, header#masthead, #masthead, .site-header, header.wp-block-template-part, header.header-sticky';
 
 	/**
 	 * Store Shortcode Object
