@@ -1384,11 +1384,21 @@ class Course extends Tutor_Base {
 
 		$editors = tutor_utils()->get_editor_list( $course_id );
 
+		/**
+		 * Replaced the post_author with current user id if post_author value is 0.
+		 *
+		 * @since 4.0.7
+		 */
+		$post_author = (int) $course['post_author'];
+		if ( 0 === $post_author && $course_id > 0 ) {
+			$post_author = get_current_user_id();
+		}
+
 		$data = array(
 			'editors'                  => array_values( $editors ),
 			'editor_used'              => tutor_utils()->get_editor_used( $course_id ),
 			'preview_link'             => get_preview_post_link( $course_id ),
-			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
+			'post_author'              => tutor_utils()->get_tutor_user( $post_author ),
 			'course_categories'        => wp_get_post_terms( $course_id, CourseModel::COURSE_CATEGORY ),
 			'course_tags'              => wp_get_post_terms( $course_id, CourseModel::COURSE_TAG ),
 			'thumbnail_id'             => get_post_meta( $course_id, '_thumbnail_id', true ),
