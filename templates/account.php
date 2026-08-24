@@ -34,7 +34,7 @@ $show_dashboard_site_footer = $site_shell['show_site_footer'];
 $has_dashboard_site_shell   = $site_shell['has_site_shell'];
 $theme_header_selector      = $site_shell['theme_header_selector'];
 
-tutor_page_elements_header( $show_dashboard_site_header );
+tutor_utils()->tutor_custom_header( $show_dashboard_site_header );
 ?>
 <div
 	class="tutor-account-page-wrapper<?php echo esc_attr( $has_dashboard_site_shell ? ' tutor-has-site-shell' : '' ); ?>"
@@ -46,4 +46,4 @@ tutor_page_elements_header( $show_dashboard_site_header );
 	<?php require_once $page_template; ?>
 </div>
 <?php
-tutor_page_elements_footer( $show_dashboard_site_footer );
+tutor_utils()->tutor_custom_footer( $show_dashboard_site_footer );

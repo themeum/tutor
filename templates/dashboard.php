@@ -64,7 +64,7 @@ $has_dashboard_site_footer  = $has_dashboard_site_shell && $show_dashboard_site_
 $theme_header_selector      = $site_shell['theme_header_selector'];
 
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
-	tutor_page_elements_header( $show_dashboard_site_header );
+	tutor_utils()->tutor_custom_header( $show_dashboard_site_header );
 endif;
 
 $user_id                   = get_current_user_id();
@@ -169,5 +169,5 @@ $footer_links = array(
 	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 <?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
-	<?php tutor_page_elements_footer( $show_dashboard_site_footer ); ?>
+	<?php tutor_utils()->tutor_custom_footer( $show_dashboard_site_footer ); ?>
 <?php endif; ?>

@@ -28,7 +28,7 @@ $show_dashboard_site_footer = $site_shell['show_site_footer'];
 $has_dashboard_site_shell   = $site_shell['has_site_shell'];
 $theme_header_selector      = $site_shell['theme_header_selector'];
 
-tutor_page_elements_header( $show_dashboard_site_header );
+tutor_utils()->tutor_custom_header( $show_dashboard_site_header );
 
 $page_template = $page_data['template'] ?? '';
 $back_url      = tutor_utils()->tutor_dashboard_url();
@@ -48,4 +48,4 @@ $close_url     = $back_url;
 	?>
 </div>
 <?php
-tutor_page_elements_footer( $show_dashboard_site_footer );
+tutor_utils()->tutor_custom_footer( $show_dashboard_site_footer );

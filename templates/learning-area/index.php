@@ -79,7 +79,7 @@ $show_learning_site_footer = $site_shell['show_site_footer'];
 $has_learning_site_shell   = $site_shell['has_site_shell'];
 $theme_header_selector     = $site_shell['theme_header_selector'];
 
-tutor_page_elements_header( $show_learning_site_header );
+tutor_utils()->tutor_custom_header( $show_learning_site_header );
 ?>
 <div class="tutor-learning-page" x-data="tutorCourseCompleteHandler()">
 <?php
@@ -111,7 +111,7 @@ if ( ! $tutor_course_content_access ) {
 		tutor_load_template( 'login' );
 	}
 	echo '</div>';
-	tutor_page_elements_footer( $show_learning_site_footer );
+	tutor_utils()->tutor_custom_footer( $show_learning_site_footer );
 	return;
 }
 
@@ -132,7 +132,7 @@ if ( tutor()->quiz_post_type === $tutor_current_post_type ) {
 		tutor_load_template( 'learning-area.quiz.attempt' );
 		echo '</div>';
 		echo '</div>';
-		tutor_page_elements_footer( $show_learning_site_footer );
+		tutor_utils()->tutor_custom_footer( $show_learning_site_footer );
 		exit;
 	}
 }
@@ -153,7 +153,7 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 	tutor_load_template( 'learning-area.quiz.attempt-details' );
 	echo '</div>';
 	echo '</div>';
-	tutor_page_elements_footer( $show_learning_site_footer );
+	tutor_utils()->tutor_custom_footer( $show_learning_site_footer );
 	exit;
 }
 
@@ -236,4 +236,4 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 	}
 	?>
 </div>
-<?php tutor_page_elements_footer( $show_learning_site_footer ); ?>
+<?php tutor_utils()->tutor_custom_footer( $show_learning_site_footer ); ?>
