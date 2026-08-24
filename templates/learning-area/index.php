@@ -186,19 +186,6 @@ if ( Quiz::ACTION_VIEW_DETAILS === $user_action && $attempt_id ) {
 					?>
 				</div>
 			</div>
-			<button
-				class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon tutor-expand-btn"
-				@click="isFullScreen = !isFullScreen"
-				:aria-label="isFullScreen ? '<?php echo esc_attr__( 'Exit fullscreen', 'tutor' ); ?>' : '<?php echo esc_attr__( 'Enter fullscreen', 'tutor' ); ?>'"
-			>
-				<template x-if="!isFullScreen">
-					<?php SvgIcon::make()->name( Icon::EXPAND )->flip_rtl()->render(); ?>
-				</template>
-
-				<template x-if="isFullScreen">
-					<?php SvgIcon::make()->name( Icon::COLLAPSED )->flip_rtl()->render(); ?>
-				</template>
-			</button>
 		</div>
 	</div>
 	<?php

@@ -72,15 +72,16 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
   &.tutor-has-site-shell.is-fullscreen {
     @include tutor-breakpoint-up(lg) {
       .tutor-learning-area-body {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: 0 minmax(0, 1fr);
       }
 
       .tutor-learning-sidebar {
-        display: none;
+        padding: 0;
+        width: 0;
       }
 
       .tutor-learning-area-content {
-        grid-column: 1;
+        grid-column: 2;
       }
     }
   }
@@ -88,17 +89,6 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
   @include tutor-breakpoint-up(md) {
     .tutor-learning-area-content {
       padding-top: 64px;
-    }
-  }
-
-  .tutor-expand-btn {
-    position: fixed;
-    inset-inline-start: $tutor-spacing-6;
-    bottom: $tutor-spacing-6;
-    color: $tutor-icon-secondary;
-
-    @include tutor-breakpoint-down(lg) {
-      display: none;
     }
   }
 
