@@ -57,7 +57,7 @@ class Template extends Tutor_Base {
 	 * This is the single source of truth for theme header/footer visibility and
 	 * the browser selector used to measure a rendered theme header.
 	 *
-	 * @since 4.0.6
+	 * @since 4.0.7
 	 *
 	 * @param string $context One of the SITE_SHELL_CONTEXT_* constants.
 	 *

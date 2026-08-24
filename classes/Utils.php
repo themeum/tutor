@@ -304,13 +304,16 @@ class Utils {
 		// Normalize legacy option keys that have been superseded by new settings.
 		// When we reach here, $key does not exist in $option (checked above).
 		if ( 'enable_spotlight_mode' === $key ) {
-			// Derive from new page-elements setting: spotlight mode = header hidden.
+			// Derive from new page-elements setting: spotlight mode = both header and footer hidden.
 			// Default to $default when new keys are absent (fresh install).
-			$show_header = array_key_exists( 'show_learning_site_header', $option )
-				? $option['show_learning_site_header']
-				: null;
-			if ( null !== $show_header ) {
-				$is_spotlight = ( 'off' === $show_header || false === $show_header );
+			$show_header = $option['show_learning_site_header'] ?? null;
+			$show_footer = $option['show_learning_site_footer'] ?? null;
+
+			if ( null !== $show_header || null !== $show_footer ) {
+				$header_off   = ( null === $show_header || 'off' === $show_header || false === $show_header );
+				$footer_off   = ( null === $show_footer || 'off' === $show_footer || false === $show_footer );
+				$is_spotlight = $header_off && $footer_off;
+
 				return apply_filters( $key, $is_spotlight );
 			}
 			return $this->get_option_default( $key, $default, $from_options );
