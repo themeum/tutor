@@ -301,6 +301,29 @@ class Utils {
 			return apply_filters( $key, $value );
 		}
 
+		// Normalize legacy option keys that have been superseded by new settings.
+		// When we reach here, $key does not exist in $option (checked above).
+		if ( 'enable_spotlight_mode' === $key ) {
+			// Derive from new page-elements setting: spotlight mode = header hidden.
+			// Default to $default when new keys are absent (fresh install).
+			$show_header = array_key_exists( 'show_learning_site_header', $option )
+				? $option['show_learning_site_header']
+				: null;
+			if ( null !== $show_header ) {
+				$is_spotlight = ( 'off' === $show_header || false === $show_header );
+				return apply_filters( $key, $is_spotlight );
+			}
+			return $this->get_option_default( $key, $default, $from_options );
+		}
+
+		if ( 'tutor_frontend_course_page_logo_id' === $key ) {
+			// Fall back to the new brand_logo_light key.
+			if ( array_key_exists( 'brand_logo_light', $option ) ) {
+				return apply_filters( $key, absint( $option['brand_logo_light'] ) );
+			}
+			return $this->get_option_default( $key, $default, $from_options );
+		}
+
 		return $this->get_option_default( $key, $default, $from_options );
 	}
 
