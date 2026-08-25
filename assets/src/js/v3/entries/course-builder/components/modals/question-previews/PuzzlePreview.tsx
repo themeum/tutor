@@ -99,7 +99,7 @@ const PuzzlePreview = ({
   const describedByIds = `${instructionId} ${statusId}`;
   const wrapperClassName = [
     'quiz-question-ans-choice-area tutor-mt-40 tutor-puzzle-question question-type-puzzle',
-    showPuzzleAnswerBackground ? '' : 'tutor-puzzle-question--no-answer-background',
+    showPuzzleAnswerBackground ? '' : 'tutor-puzzle-question-no-answer-background',
   ]
     .filter(Boolean)
     .join(' ');
