@@ -95,7 +95,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
       }
     }
 
-    // Puzzle: card fills the viewport slot; board + scatter scroll inside the card body.
+    // Puzzle: don't stretch the card when board/scatter are short; scroll only when they overflow.
     &[data-question-layout-view='single_question']:has(
         .tutor-quiz-question-wrapper-active .tutor-quiz-question[data-question='puzzle']
       ),
@@ -108,18 +108,18 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
       }
 
       .tutor-quiz-question-wrapper-active {
-        flex: 1 1 auto;
+        flex: 0 1 auto;
         min-height: 0;
         max-height: 100%;
+        width: 100%;
         overflow: hidden;
         @include tutor-flex(column);
 
         .tutor-quiz-question {
-          flex: 1 1 auto;
+          flex: 0 1 auto;
+          height: auto;
           min-height: 0;
           max-height: 100%;
-          height: auto;
-          margin-block: 0;
           overflow: hidden;
         }
       }
@@ -1308,7 +1308,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
       }
     }
 
-    // Puzzle: card stays viewport-bound; board keeps natural size; scroll happens on the puzzle body.
+    // Puzzle: content-sized body; scrolls only when board + scatter exceed the card.
     [data-question='puzzle'] {
       .tutor-quiz-question-header {
         flex-shrink: 0;
@@ -1316,11 +1316,10 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
       .tutor-puzzle-question {
         @include tutor-flex(column, center, flex-start);
-        flex: 1 1 auto;
-        flex-grow: 1;
-        // Force flex item to honor parent height so overflow-y:auto creates a scrollport.
-        height: 0;
+        flex: 0 1 auto;
         min-height: 0;
+        max-height: 100%;
+        height: auto;
         margin-top: 0;
         width: 100%;
         overflow-x: hidden;
