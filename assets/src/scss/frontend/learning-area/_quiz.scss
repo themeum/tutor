@@ -5,7 +5,7 @@ $tutor-admin-bar-height: 46px;
 $tutor-quiz-header-offset: 96px;
 $tutor-quiz-footer-offset: 96px;
 $tutor-quiz-pagination-gap-from-footer: 32px;
-$tutor-quiz-pagination-height: 48px;
+$tutor-quiz-pagination-height: 60px;
 $tutor-quiz-content-bottom-offset: calc(
   #{$tutor-quiz-pagination-gap-from-footer} + #{$tutor-quiz-pagination-height} + #{$tutor-spacing-2}
 );
@@ -497,6 +497,97 @@ $tutor-quiz-content-bottom-offset: calc(
       }
     }
 
+    &[data-pagination-style='shape'],
+    &[data-pagination-style='radio'],
+    &[data-pagination-style='number'] {
+      @include tutor-frontend-layout();
+      width: calc(100dvw - #{$tutor-spacing-8});
+      justify-content: flex-start;
+      padding-block: 10px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      -webkit-mask-image: none;
+      mask-image: none;
+      transition:
+        -webkit-mask-image 0.25s ease,
+        mask-image 0.25s ease;
+
+      &[data-has-scroll-left='true'][data-has-scroll-right='true'] {
+        -webkit-mask-image: linear-gradient(
+          to right,
+          transparent 0,
+          black #{$tutor-spacing-10},
+          black calc(100% - #{$tutor-spacing-10}),
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          to right,
+          transparent 0,
+          black #{$tutor-spacing-10},
+          black calc(100% - #{$tutor-spacing-10}),
+          transparent 100%
+        );
+      }
+
+      &[data-has-scroll-left='true'][data-has-scroll-right='false'] {
+        -webkit-mask-image: linear-gradient(
+          to right,
+          transparent 0,
+          black #{$tutor-spacing-10},
+          black 100%
+        );
+        mask-image: linear-gradient(
+          to right,
+          transparent 0,
+          black #{$tutor-spacing-10},
+          black 100%
+        );
+      }
+
+      &[data-has-scroll-left='false'][data-has-scroll-right='true'] {
+        -webkit-mask-image: linear-gradient(
+          to right,
+          black 0,
+          black calc(100% - #{$tutor-spacing-10}),
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          to right,
+          black 0,
+          black calc(100% - #{$tutor-spacing-10}),
+          transparent 100%
+        );
+      }
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      ul {
+        flex-wrap: nowrap;
+        width: max-content;
+        max-width: none;
+        margin-inline: auto;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        &[data-has-scroll-left='true'],
+        &[data-has-scroll-right='true'] {
+          cursor: grab;
+
+          &:active {
+            cursor: grabbing;
+
+            .tutor-quiz-question-paginate-item {
+              cursor: grabbing;
+            }
+          }
+        }
+      }
+    }
+
     &[data-pagination-style='shape'] {
       ul {
         gap: $tutor-spacing-2;
@@ -661,10 +752,7 @@ $tutor-quiz-content-bottom-offset: calc(
 
     &[data-pagination-style='number'] {
       ul {
-        flex-wrap: nowrap;
-        max-width: 100%;
         height: 28px;
-        overflow: visible;
         background-color: $tutor-surface-l1;
         border: 1px solid $tutor-border-idle;
         border-radius: $tutor-radius-full;

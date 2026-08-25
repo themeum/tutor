@@ -2,6 +2,7 @@ import { __, sprintf } from '@wordpress/i18n';
 
 import {
   type ID,
+  isDefined,
   QuizDataStatus,
   type QuizQuestion,
   type QuizQuestionOption,
@@ -235,10 +236,11 @@ export const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>):
       if (rawGridSize !== undefined && rawGridSize !== null && !Number.isNaN(Number(rawGridSize))) {
         question.question_settings.puzzle_grid_size = Number(rawGridSize);
       }
-      question.question_settings.enable_puzzle_answer_background =
-        question.question_settings.enable_puzzle_answer_background === undefined
-          ? true
-          : !!Number(question.question_settings.enable_puzzle_answer_background);
+      question.question_settings.enable_puzzle_answer_background = isDefined(
+        question.question_settings.enable_puzzle_answer_background,
+      )
+        ? !!Number(question.question_settings.enable_puzzle_answer_background)
+        : true;
     }
     if (question.question_type === 'coordinates') {
       const rawCoordinatesAxisRange = question.question_settings.coordinates_axis_range;

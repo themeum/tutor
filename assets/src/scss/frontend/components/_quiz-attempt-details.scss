@@ -287,7 +287,23 @@
     padding: $tutor-spacing-4;
     overflow: hidden;
 
+    &:has(.tutor-quiz-review-item-title) {
+      @include tutor-flex(column, flex-start, center);
+      gap: $tutor-spacing-none;
+    }
+
+    .tutor-quiz-review-item-title {
+      @include tutor-typography(tiny);
+      color: inherit;
+      min-width: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .tutor-quiz-review-item-text,
     span {
+      @include tutor-typography(small, semibold);
+      color: inherit;
       min-width: 0;
       overflow-wrap: break-word;
       word-break: break-word;
