@@ -410,6 +410,7 @@ const renderQuestionPreview = (question: QuizQuestion) => {
           answers={question.question_answers}
           gridSize={question.question_settings.puzzle_grid_size}
           questionId={question.question_id}
+          showPuzzleAnswerBackground={question.question_settings?.enable_puzzle_answer_background ?? true}
         />
       );
     }
