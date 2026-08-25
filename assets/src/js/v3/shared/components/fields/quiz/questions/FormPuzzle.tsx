@@ -1,11 +1,12 @@
 import { useCallback, useMemo } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
 import ImageInput from '@TutorShared/atoms/ImageInput';
 
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -34,15 +35,18 @@ interface FormPuzzleProps extends FormControllerProps<QuizQuestionOption> {
       type: QuizValidationErrorType;
     } | null>
   >;
-  gridSizeControllerProps?: FormControllerProps<number | null>;
-  gridSizePath?: string;
+  gridSizeControllerProps: FormControllerProps<number | null>;
+  backgroundControllerProps: FormControllerProps<boolean | undefined>;
 }
 
-const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, gridSizePath }: FormPuzzleProps) => {
+const FormPuzzle = ({
+  field,
+  activeQuestionIndex = 0,
+  gridSizeControllerProps,
+  backgroundControllerProps,
+}: FormPuzzleProps) => {
   const form = useFormContext();
   const option = field.value;
-  const resolvedGridSizePath =
-    gridSizePath ?? (`questions.${activeQuestionIndex}.question_settings.puzzle_grid_size` as const);
   const resolvedQuestionDataStatusPath = Array.isArray(form?.getValues?.('questions'))
     ? (`questions.${activeQuestionIndex}._data_status` as const)
     : ('_data_status' as const);
@@ -122,6 +126,15 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
     return null;
   }
 
+  const markQuestionUpdated = () => {
+    if (form && calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
+      form.setValue(
+        resolvedQuestionDataStatusPath,
+        calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+      );
+    }
+  };
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.card}>
@@ -148,53 +161,28 @@ const FormPuzzle = ({ field, activeQuestionIndex = 0, gridSizeControllerProps, g
 
       <Show when={option?.image_url}>
         <div css={styles.card}>
-          {gridSizeControllerProps ? (
-            <FormSelectInput
-              {...gridSizeControllerProps}
-              label={__('Difficulty Level', __TUTOR_TEXT_DOMAIN__)}
-              options={gridSizeOptions}
-              wrapperCss={styles.dropdownText}
-              optionItemCss={styles.dropdownOptionText}
-              helpText={__('Larger grids create more pieces and a harder puzzle for learners.', __TUTOR_TEXT_DOMAIN__)}
-              onChange={(selectedOption) => {
-                gridSizeControllerProps.field.onChange(selectedOption.value);
-                if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
-                  form.setValue(
-                    resolvedQuestionDataStatusPath,
-                    calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                  );
-                }
-              }}
-            />
-          ) : (
-            <Controller
-              control={form.control}
-              name={resolvedGridSizePath}
-              defaultValue={4}
-              render={(gridSizeControllerProps) => (
-                <FormSelectInput
-                  {...gridSizeControllerProps}
-                  label={__('Difficulty Level', __TUTOR_TEXT_DOMAIN__)}
-                  options={gridSizeOptions}
-                  wrapperCss={styles.dropdownText}
-                  optionItemCss={styles.dropdownOptionText}
-                  helpText={__(
-                    'Larger grids create more pieces and a harder puzzle for learners.',
-                    __TUTOR_TEXT_DOMAIN__,
-                  )}
-                  onChange={(selectedOption) => {
-                    gridSizeControllerProps.field.onChange(selectedOption.value);
-                    if (calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE)) {
-                      form.setValue(
-                        resolvedQuestionDataStatusPath,
-                        calculateQuizDataStatus(activeQuestionDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                      );
-                    }
-                  }}
-                />
-              )}
-            />
-          )}
+          <FormSelectInput
+            {...gridSizeControllerProps}
+            label={__('Difficulty Level', __TUTOR_TEXT_DOMAIN__)}
+            options={gridSizeOptions}
+            wrapperCss={styles.dropdownText}
+            optionItemCss={styles.dropdownOptionText}
+            helpText={__('Larger grids create more pieces and a harder puzzle for learners.', __TUTOR_TEXT_DOMAIN__)}
+            onChange={(selectedOption) => {
+              gridSizeControllerProps.field.onChange(selectedOption.value);
+              markQuestionUpdated();
+            }}
+          />
+
+          <FormSwitch
+            {...backgroundControllerProps}
+            label={__('Show puzzle answer background', __TUTOR_TEXT_DOMAIN__)}
+            helpText={__(
+              'Display a faded reference image behind the puzzle board during attempts.',
+              __TUTOR_TEXT_DOMAIN__,
+            )}
+            onChange={markQuestionUpdated}
+          />
         </div>
       </Show>
 
