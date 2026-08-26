@@ -40,9 +40,21 @@ $is_solved    = (int) tutor_utils()->array_get( 'tutor_qna_solved', $question->m
 $is_important = (int) tutor_utils()->array_get( 'tutor_qna_important', $question->meta, 0 );
 $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question->meta, 0 );
 
+$content_post_type = get_post_type( $question->comment_post_ID );
+$action_url        = '';
+$action_text       = '';
+
+if ( tutor()->lesson_post_type === $content_post_type ) {
+	$action_url  = add_query_arg( 'page_tab', 'comments', get_permalink( $question->comment_post_ID ) );
+	$action_text = __( 'Go to Lesson', 'tutor' );
+} elseif ( tutor()->course_post_type === $content_post_type ) {
+	$action_url  = add_query_arg( 'page_tab', 'qna', get_permalink( $question->comment_post_ID ) );
+	$action_text = __( 'Go to all Q&A', 'tutor' );
+}
+
 ?>
 <div class="tutor-discussion-single" x-init="isSolved = <?php echo $is_solved ? 'true' : 'false'; ?>; isImportant = <?php echo $is_important ? 'true' : 'false'; ?>; isArchived = <?php echo $is_archived ? 'true' : 'false'; ?>;">
-	<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
+	<div class="tutor-flex tutor-justify-between tutor-items-center tutor-px-6 tutor-py-5 tutor-border-b">
 		<a href="<?php echo esc_url( $discussion_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
 			<?php SvgIcon::make()->name( Icon::ARROW_LEFT_2 )->flip_rtl()->render(); ?>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
@@ -91,6 +103,21 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 				<?php esc_html_e( 'Important', 'tutor' ); ?>
 			</button>
 		</div>
+		<?php elseif ( User::is_student_view() && ! empty( $action_url ) ) : ?>
+			<?php
+			Button::make()
+				->label( $action_text )
+				->variant( Variant::LINK )
+				->size( Size::X_SMALL )
+				->icon( Icon::CHEVRON_RIGHT, 'right' )
+				->flip_rtl()
+				->tag( 'a' )
+				->attr( 'href', esc_url( $action_url ) )
+				->attr( 'target', '_blank' )
+				->attr( 'rel', 'noopener noreferrer' )
+				->attr( 'class', 'tutor-gap-2' )
+				->render();
+			?>
 		<?php endif; ?>
 	</div>
 	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
