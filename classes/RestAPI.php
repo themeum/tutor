@@ -181,6 +181,10 @@ class RestAPI {
 	/**
 	 * Class loading
 	 *
+	 * Only autoloads Tutor REST API classes from the plugin's restapi/
+	 * directory. Arbitrary class names must never resolve to files under
+	 * the plugin root (e.g. Composer packages used as POP gadgets).
+	 *
 	 * @since 1.5.0
 	 *
 	 * @param string $class_name class name to load.
@@ -188,20 +192,36 @@ class RestAPI {
 	 * @return void
 	 */
 	private function loader( $class_name ) {
-		if ( ! class_exists( $class_name ) ) {
-			$class_name = preg_replace(
-				array( '/([a-z])([A-Z])/', '/\\\/' ),
-				array( '$1$2', DIRECTORY_SEPARATOR ),
-				$class_name
-			);
-
-			$class_name = str_replace( 'TUTOR' . DIRECTORY_SEPARATOR, 'restapi' . DIRECTORY_SEPARATOR, $class_name );
-			$file_name  = $this->path . $class_name . '.php';
-
-			if ( file_exists( $file_name ) ) {
-				require_once $file_name;
-			}
+		if ( class_exists( $class_name ) ) {
+			return;
 		}
+
+		// Only handle namespaced Tutor REST classes.
+		if ( 0 !== strpos( $class_name, 'TUTOR\\' ) ) {
+			return;
+		}
+
+		$relative = substr( $class_name, strlen( 'TUTOR\\' ) );
+		$relative = str_replace( '\\', DIRECTORY_SEPARATOR, $relative );
+
+		// Block path traversal and unexpected nested paths.
+		if ( '' === $relative || false !== strpos( $relative, '..' ) || false !== strpos( $relative, DIRECTORY_SEPARATOR ) ) {
+			return;
+		}
+
+		$restapi_dir = realpath( $this->path . 'restapi' );
+		if ( false === $restapi_dir ) {
+			return;
+		}
+
+		$file_name = $restapi_dir . DIRECTORY_SEPARATOR . $relative . '.php';
+		$real_file = realpath( $file_name );
+
+		if ( false === $real_file || 0 !== strpos( $real_file, $restapi_dir . DIRECTORY_SEPARATOR ) ) {
+			return;
+		}
+
+		require_once $real_file;
 	}
 
 	/**

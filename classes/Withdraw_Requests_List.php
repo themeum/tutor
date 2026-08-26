@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\WithdrawModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -203,7 +205,11 @@ class Withdraw_Requests_List {
 		if ( 'rejected' === $status ) {
 			$withdraw = self::get_withdraw_by_id( $withdraw_id );
 			if ( $withdraw ) {
-				$details = unserialize( $withdraw->method_data );
+				$details = WithdrawModel::safe_unserialize_array( $withdraw->method_data );
+
+				if ( empty( $details ) ) {
+					$details = array();
+				}
 
 				$details['rejects']  = array(
 					'reject_type'    => sanitize_text_field( $reject_type ),
