@@ -7,6 +7,9 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * @var int    $discussion_id
+ * @var string $discussion_url
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -60,13 +63,12 @@ $action_url = add_query_arg( 'page_tab', 'comments', get_permalink( $lesson_comm
 				->label( __( 'Go to Lesson', 'tutor' ) )
 				->variant( Variant::LINK )
 				->size( Size::X_SMALL )
-				->icon( Icon::CHEVRON_RIGHT, 'right' )
+				->icon( Icon::CHEVRON_RIGHT_2, 'right' )
 				->flip_rtl()
 				->tag( 'a' )
 				->attr( 'href', esc_url( $action_url ) )
 				->attr( 'target', '_blank' )
 				->attr( 'rel', 'noopener noreferrer' )
-				->attr( 'class', 'tutor-gap-2' )
 				->render();
 			?>
 		<?php endif; ?>
