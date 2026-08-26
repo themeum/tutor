@@ -123,7 +123,7 @@ $filters = array(
 						<?php foreach ( $withdraw_list->results as $list ) : ?>
 							<?php
 								$user_data = get_userdata( $list->user_id );
-								$details   = WithdrawModel::safe_unserialize_array( $list->method_data );
+								$details   = unserialize( $list->method_data );
 								$alert     = ( 'pending' == $list->status ? 'warning' : ( 'rejected' === $list->status ? 'danger' : ( 'approved' === $list->status ? 'success' : 'default' ) ) );
 								$data_name = isset( $details['account_name']['value'] ) ? $details['account_name']['value'] : $user_data->display_name;
 							if ( ! $details ) {
