@@ -191,7 +191,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 				<?php if ( tutor_utils()->count( $withdral_history->results ) > 0 ) : ?>
 					<?php
 					foreach ( $withdral_history->results as $withdrawal ) :
-						$method_data  = WithdrawModel::safe_unserialize_array( $withdrawal->method_data );
+						$method_data  = maybe_unserialize( $withdrawal->method_data );
 						$method_key   = $method_data['withdraw_method_key'] ?? '';
 						$method_icon  = $method_icons[ $method_key ] ?? '';
 						$method_title = '';
