@@ -574,25 +574,42 @@ const getPreviewFrameStyles = () => `
   }
 
   /*
-   * Puzzle preview: board capped at min(52vh, 460px) like draw/pin; piece pool grows with content
-   * (no internal scroll), same as the live student scatter area on mobile.
+   * Puzzle preview: match student learning-area — content-sized card (no forced fill).
+   * Board keeps the course-builder cap; scatter grows with pieces (no inner stretch).
+   * Wrapper stays centered in the modal like other question previews.
    */
+  .tutor-quiz-question-wrapper:has([data-question='puzzle']),
+  .tutor-quiz-question[data-question='puzzle'] {
+    flex: 0 1 auto;
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    margin-block: 0;
+  }
+
   .tutor-quiz-question[data-question='puzzle'] .quiz-question-ans-choice-area.tutor-puzzle-question {
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 0 1 auto;
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    align-items: center;
-    margin-top: 24px;
+    height: auto;
+    max-height: none;
+    margin-top: 0;
+    overflow: visible;
   }
 
   .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-playground {
     box-sizing: border-box;
+    flex: 0 0 auto;
     width: auto;
     max-width: 100%;
     max-height: min(52vh, 460px);
     height: auto;
-    flex-shrink: 0;
     margin-inline: auto;
     overflow: hidden;
   }
@@ -608,10 +625,13 @@ const getPreviewFrameStyles = () => `
 
   .tutor-quiz-question[data-question='puzzle'] .tutor-puzzle-scatter {
     box-sizing: border-box;
+    flex: 0 0 auto;
     width: 100%;
     max-width: 100%;
-    min-height: 96px;
-    margin-top: 12px;
+    min-height: 150px;
+    height: auto;
+    max-height: none;
+    margin-top: 0;
     overflow: visible;
   }
 
