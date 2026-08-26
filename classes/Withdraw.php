@@ -187,6 +187,7 @@ class Withdraw {
 	 * Save Withdraw Method Data
 	 *
 	 * @since 1.2.0
+	 * @since 4.0.8 Withdraw method check added
 	 *
 	 * @return void send wp_json response
 	 */
