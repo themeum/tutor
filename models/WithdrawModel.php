@@ -294,6 +294,7 @@ class WithdrawModel {
 	 * @since 1.0.0
 	 *
 	 * @param int $user_id user id.
+	 *
 	 * @return bool|mixed
 	 */
 	public static function get_user_withdraw_method( $user_id = 0 ) {
@@ -313,6 +314,7 @@ class WithdrawModel {
 	 *
 	 * @param int    $user_id  User ID.
 	 * @param string $meta_key Meta key.
+	 *
 	 * @return array
 	 */
 	public static function get_user_withdraw_method_meta( $user_id, $meta_key ) {
@@ -342,6 +344,7 @@ class WithdrawModel {
 	 * @since 4.0.8
 	 *
 	 * @param mixed $data Serialized string or already-decoded array.
+	 *
 	 * @return array
 	 */
 	public static function safe_unserialize_array( $data ) {

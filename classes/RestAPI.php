@@ -181,7 +181,7 @@ class RestAPI {
 	/**
 	 * Class loading
 	 *
-	 * Only autoloads Tutor REST API classes from the plugin's restapi/
+	 * @since 4.0.8 Only autoloads Tutor REST API classes from the plugin's restapi/
 	 * directory. Arbitrary class names must never resolve to files under
 	 * the plugin root (e.g. Composer packages used as POP gadgets).
 	 *
