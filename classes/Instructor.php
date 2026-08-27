@@ -548,26 +548,35 @@ class Instructor {
 
 		$sql = "
 			SELECT
-				COUNT(*) AS enrolled,
-	
-				SUM(
-					e.post_status IN ('cancel', 'canceled', 'cancelled')
+				COUNT(DISTINCT e.ID) AS enrolled,
+
+				COUNT(
+					DISTINCT CASE
+						WHEN e.post_status IN ('cancel', 'canceled', 'cancelled')
+						THEN e.ID
+					END
 				) AS cancelled,
-	
-				SUM(
-					e.post_status = 'completed'
-					AND completion.user_id IS NOT NULL
+
+				COUNT(
+					DISTINCT CASE
+						WHEN e.post_status = 'completed'
+							AND completion.user_id IS NOT NULL
+						THEN e.ID
+					END
 				) AS completed,
-	
-				SUM(
-					e.post_status = 'completed'
-					AND completion.user_id IS NULL
-					AND (
-						lesson_progress.user_id IS NOT NULL
-						OR quiz_progress.user_id IS NOT NULL
-						OR assignment_progress.user_id IS NOT NULL
-						OR meeting_progress.user_id IS NOT NULL
-					)
+
+				COUNT(
+					DISTINCT CASE
+						WHEN e.post_status = 'completed'
+							AND completion.user_id IS NULL
+							AND (
+								lesson_progress.user_id IS NOT NULL
+								OR quiz_progress.user_id IS NOT NULL
+								OR assignment_progress.user_id IS NOT NULL
+								OR meeting_progress.user_id IS NOT NULL
+							)
+						THEN e.ID
+					END
 				) AS inprogress
 	
 			FROM {$wpdb->posts} AS e
