@@ -17,6 +17,7 @@ use DateTime;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;
 
 /**
@@ -494,8 +495,6 @@ class Instructor {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $instructor_course_ids    Optional list of course IDs.
-	 *
 	 * @return array {
 	 *     Enrollment distribution counts.
 	 *
@@ -506,10 +505,21 @@ class Instructor {
 	 *     @type int $cancelled  Number of cancelled enrollments.
 	 * }
 	 */
-	public static function get_course_completion_distribution_data_by_instructor( $instructor_course_ids = array() ) {
+	public static function get_course_completion_distribution_data_by_instructor() {
 		global $wpdb;
 
 		$user_id = get_current_user_id();
+		$counts  = array(
+			'enrolled'   => 0,
+			'completed'  => 0,
+			'inprogress' => 0,
+			'inactive'   => 0,
+			'cancelled'  => 0,
+		);
+
+		if ( ! User::is_admin( $user_id ) && ! User::is_instructor( $user_id, true ) ) {
+			return $counts;
+		}
 
 		$cache_key = self::DASHBOARD_COURSE_COMPLETION_RATE_TRANSIENT . $user_id;
 
@@ -518,20 +528,19 @@ class Instructor {
 			return $cached_data;
 		}
 
-		$counts = array(
-			'enrolled'   => 0,
-			'completed'  => 0,
-			'inprogress' => 0,
-			'inactive'   => 0,
-			'cancelled'  => 0,
-		);
+		$instructor_course_ids = array();
+		if ( ! User::is_admin() && User::is_instructor( $user_id, true ) ) {
+			$instructor_course_ids = CourseModel::get_courses_by_args(
+				array(
+					'post_author'    => $user_id,
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				)
+			)->posts;
 
-		$instructor_course_ids = array_filter(
-			array_map( 'absint', (array) $instructor_course_ids )
-		);
-
-		if ( empty( $instructor_course_ids ) ) {
-			return $counts;
+			$instructor_course_ids = array_filter(
+				array_map( 'absint', (array) $instructor_course_ids )
+			);
 		}
 
 		$topic_type      = tutor()->topics_post_type;
@@ -545,6 +554,13 @@ class Instructor {
 			',',
 			array_fill( 0, count( $instructor_course_ids ), '%d' )
 		);
+
+		$topic_post_parent_clause      = '';
+		$enrollment_post_parent_clause = '';
+		if ( tutor_utils()->count( $instructor_course_ids ) ) {
+			$topic_post_parent_clause      = "AND topic.post_parent IN ({$placeholders})";
+			$enrollment_post_parent_clause = "AND e.post_parent IN ({$placeholders})";
+		}
 
 		$sql = "
 			SELECT
@@ -601,7 +617,8 @@ class Instructor {
 					ON um.meta_key = CONCAT('_tutor_completed_lesson_id_', lesson.ID)
 				INNER JOIN {$wpdb->posts} AS topic
 					ON lesson.post_parent = topic.ID
-				WHERE topic.post_parent IN ({$placeholders})
+				WHERE 1 = 1
+				 	{$topic_post_parent_clause}
 					AND topic.post_type = %s
 					AND lesson.post_type = %s
 					AND lesson.post_status = 'publish'
@@ -618,7 +635,8 @@ class Instructor {
 					ON quiz.ID = qa.quiz_id
 				INNER JOIN {$wpdb->posts} AS topic
 					ON quiz.post_parent = topic.ID
-				WHERE topic.post_parent IN ({$placeholders})
+				WHERE 1 = 1
+					{$topic_post_parent_clause}
 					AND topic.post_type = %s
 					AND quiz.post_type = %s
 					AND quiz.post_status = 'publish'
@@ -637,7 +655,7 @@ class Instructor {
 					ON assignment.post_parent = topic.ID
 				WHERE c.comment_type = 'tutor_assignment'
 					AND c.comment_approved = 'submitted'
-					AND topic.post_parent IN ({$placeholders})
+					{$topic_post_parent_clause}
 					AND topic.post_type = %s
 					AND assignment.post_type = %s
 					AND assignment.post_status = 'publish'
@@ -654,7 +672,8 @@ class Instructor {
 					ON um.meta_key = CONCAT('_tutor_completed_lesson_id_', meeting.ID)
 				INNER JOIN {$wpdb->posts} AS topic
 					ON meeting.post_parent = topic.ID
-				WHERE topic.post_parent IN ({$placeholders})
+				WHERE 1 = 1
+					{$topic_post_parent_clause}
 					AND topic.post_type = %s
 					AND meeting.post_type IN (%s, %s)
 					AND meeting.post_status = 'publish'
@@ -669,7 +688,7 @@ class Instructor {
 					'canceled',
 					'cancelled'
 				)
-				AND e.post_parent IN ({$placeholders})
+				{$enrollment_post_parent_clause}
 		";
 
 		$prepare_args = array_merge(
