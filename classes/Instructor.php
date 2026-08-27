@@ -493,7 +493,14 @@ class Instructor {
 	/**
 	 * Get course completion distribution data for a specific instructor.
 	 *
+	 * If the user is Admin then this method will consider all the course, considering
+	 * specific courses when user is an instructor
+	 *
 	 * @since 4.0.0
+	 *
+	 * @since 4.0.8 Instead of course id getting user id.
+	 *
+	 * @param int $user_id User id to get course completion rate.
 	 *
 	 * @return array {
 	 *     Enrollment distribution counts.
@@ -505,11 +512,12 @@ class Instructor {
 	 *     @type int $cancelled  Number of cancelled enrollments.
 	 * }
 	 */
-	public static function get_course_completion_distribution_data_by_instructor() {
+	public static function get_course_completion_distribution_data_by_instructor( int $user_id = 0 ) {
 		global $wpdb;
 
-		$user_id = get_current_user_id();
-		$counts  = array(
+		$user_id = $user_id ? $user_id : get_current_user_id();
+
+		$counts = array(
 			'enrolled'   => 0,
 			'completed'  => 0,
 			'inprogress' => 0,
