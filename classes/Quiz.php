@@ -1050,7 +1050,7 @@ class Quiz {
 	}
 
 	/**
-	 * Get quiz total marks.
+	 * Get total marks for a quiz
 	 *
 	 * @since 3.0.0
 	 *
@@ -1061,16 +1061,62 @@ class Quiz {
 	public static function get_quiz_total_marks( $quiz_id ) {
 		global $wpdb;
 
-		$total_marks = $wpdb->get_var(
+		if ( ! $quiz_id ) {
+			return 0;
+		}
+
+		$questions = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT SUM(question_mark) total_marks 
+				"SELECT question_id, question_mark, question_order
 				FROM {$wpdb->prefix}tutor_quiz_questions
-				WHERE quiz_id=%d",
+				WHERE quiz_id = %d",
 				$quiz_id
 			)
 		);
 
-		return floatval( $total_marks );
+		if ( empty( $questions ) ) {
+			return 0;
+		}
+
+		$total_count = count( $questions );
+		$max_count   = (int) tutor_utils()->total_questions_for_student_by_quiz( $quiz_id );
+		$total_marks = 0;
+
+		// If no limit or max_count exceeds pool size, return sum of all.
+		if ( $max_count <= 0 || $max_count >= $total_count ) {
+			$total_marks = array_sum( array_column( $questions, 'question_mark' ) );
+		} else {
+			$questions_order = tutor_utils()->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
+
+			// Deterministic order: sum marks of the first $max_count questions.
+			if ( 'sorting' === $questions_order ) {
+				usort( $questions, fn( $a, $b ) => (int) $a->question_order <=> (int) $b->question_order );
+				$sliced      = array_slice( $questions, 0, $max_count );
+				$total_marks = array_sum( array_column( $sliced, 'question_mark' ) );
+			} elseif ( 'asc' === $questions_order ) {
+				usort( $questions, fn( $a, $b ) => (int) $a->question_id <=> (int) $b->question_id );
+				$sliced      = array_slice( $questions, 0, $max_count );
+				$total_marks = array_sum( array_column( $sliced, 'question_mark' ) );
+			} elseif ( 'desc' === $questions_order ) {
+				usort( $questions, fn( $a, $b ) => (int) $b->question_id <=> (int) $a->question_id );
+				$sliced      = array_slice( $questions, 0, $max_count );
+				$total_marks = array_sum( array_column( $sliced, 'question_mark' ) );
+			} else {
+				// Random order:
+				// If question marks vary, total marks is indeterminate before starting.
+				$marks        = array_map( 'floatval', array_column( $questions, 'question_mark' ) );
+				$unique_marks = array_unique( $marks );
+
+				if ( count( $unique_marks ) > 1 ) {
+					return 0;
+				}
+
+				// All questions have equal marks: exact calculation.
+				$total_marks = reset( $unique_marks ) * $max_count;
+			}
+		}
+
+		return (float) $total_marks;
 	}
 
 	/**
@@ -1848,16 +1894,18 @@ class Quiz {
 			);
 		}
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
-					</div>',
+		if ( ! empty( $total_marks ) ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' => (float) $total_marks ),
 				),
-				array( 'content' => $total_marks ),
-			),
-		);
+			);
+		}
 
 		$quiz_summary[] = array(
 			'columns' => array(
