@@ -40,6 +40,17 @@ class Instructor {
 	const DASHBOARD_COURSE_COMPLETION_RATE_TRANSIENT = 'tutor_dashboard_course_completion_rate_';
 
 	/**
+	 * Transient key to store top performing courses
+	 *
+	 * Current user id & query param will be appended with the key
+	 *
+	 * @since 4.0.8
+	 *
+	 * @var string
+	 */
+	const DASHBOARD_TOP_PERFORMING_COURSE_TRANSIENT = 'tutor_dashboard_top_performing_course_transient_';
+
+	/**
 	 * Error message
 	 *
 	 * @var string
@@ -784,9 +795,21 @@ class Instructor {
 
 		global $wpdb;
 
+		if ( ! User::is_admin( $instructor_id ) && ! User::is_instructor( $instructor_id, true ) ) {
+			return array();
+		}
+
+		$order_by   = 'revenue' === $args['order_by'] ? 'total_revenue' : 'total_student';
 		$start_date = $args['start_date'] ?? null;
 		$end_date   = $args['end_date'] ?? null;
 		$order_by   = 'revenue' === $args['order_by'] ? 'total_revenue' : 'total_student';
+
+		$unique_query_token = md5( $instructor_id . $order_by . $start_date . $end_date . $limit );
+		$cache_key          = self::DASHBOARD_TOP_PERFORMING_COURSE_TRANSIENT . $unique_query_token;
+		$cached_data        = get_transient( $cache_key );
+		if ( $cached_data ) {
+			return $cached_data;
+		}
 
 		$complete_status = tutor_utils()->get_earnings_completed_statuses();
 
@@ -861,6 +884,9 @@ class Instructor {
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error ); //phpcs:ignore.
 		}
+
+		// Cache the data for 10min.
+		set_transient( $cache_key, $result, MINUTE_IN_SECONDS * 10 );
 
 		return $result;
 	}
