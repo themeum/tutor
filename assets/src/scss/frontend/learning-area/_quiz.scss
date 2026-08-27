@@ -9,6 +9,9 @@ $tutor-quiz-pagination-height: 60px;
 $tutor-quiz-content-bottom-offset: calc(
   #{$tutor-quiz-pagination-gap-from-footer} + #{$tutor-quiz-pagination-height} + #{$tutor-spacing-2}
 );
+// Chrome inside the questions slot for draw/pin: meta, card padding/gap, header, actions.
+// Plain sum string so it interpolates cleanly into a single outer calc().
+$tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8} * 2 + #{$tutor-spacing-7} + 4.5rem + 3rem';
 
 .tutor-quiz {
   &-submission {
@@ -50,6 +53,76 @@ $tutor-quiz-content-bottom-offset: calc(
       @include tutor-flex(column);
       max-height: calc(100dvh - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset});
       overflow: auto;
+    }
+
+    // Scope to the active question only — all questions stay in the DOM (x-show),
+    // so a bare :has([data-question='…']) would leak layout rules to other types.
+    // Draw/pin: keep the card content-sized (hugs the scaled image) while the
+    // questions slot remains the size container that caps the image to the viewport.
+    &[data-question-layout-view='single_question']:has(
+        .tutor-quiz-question-wrapper-active .tutor-quiz-question[data-question='draw_image']
+      ),
+    &[data-question-layout-view='single_question']:has(
+        .tutor-quiz-question-wrapper-active .tutor-quiz-question[data-question='pin_image']
+      ),
+    &[data-question-layout-view='question_pagination']:has(
+        .tutor-quiz-question-wrapper-active .tutor-quiz-question[data-question='draw_image']
+      ),
+    &[data-question-layout-view='question_pagination']:has(
+        .tutor-quiz-question-wrapper-active .tutor-quiz-question[data-question='pin_image']
+      ) {
+      .tutor-quiz-questions {
+        justify-content: center;
+        overflow: hidden;
+        container-type: size;
+      }
+
+      .tutor-quiz-question-wrapper-active {
+        flex: 0 1 auto;
+        min-height: 0;
+        max-height: 100%;
+        width: 100%;
+        overflow: hidden;
+        @include tutor-flex(column);
+
+        .tutor-quiz-question {
+          flex: 0 1 auto;
+          height: auto;
+          min-height: 0;
+          max-height: 100%;
+          overflow: auto;
+        }
+      }
+    }
+
+    // Puzzle: don't stretch the card when board/scatter are short; scroll only when they overflow.
+    &[data-question-layout-view='single_question']:has(
+        .tutor-quiz-question-wrapper-active .tutor-quiz-question[data-question='puzzle']
+      ),
+    &[data-question-layout-view='question_pagination']:has(
+        .tutor-quiz-question-wrapper-active .tutor-quiz-question[data-question='puzzle']
+      ) {
+      .tutor-quiz-questions {
+        justify-content: flex-start;
+        overflow: hidden;
+      }
+
+      .tutor-quiz-question-wrapper-active {
+        flex: 0 1 auto;
+        min-height: 0;
+        max-height: 100%;
+        width: 100%;
+        overflow: hidden;
+        @include tutor-flex(column);
+
+        .tutor-quiz-question {
+          flex: 0 1 auto;
+          height: auto;
+          min-height: 0;
+          max-height: 100%;
+          overflow: hidden;
+        }
+      }
     }
 
     &[data-question-layout-view='single_question'] {
@@ -1189,6 +1262,71 @@ $tutor-quiz-content-bottom-offset: calc(
 
     canvas {
       max-width: 100%;
+    }
+  }
+
+  &-submission[data-question-layout-view='single_question'],
+  &-submission[data-question-layout-view='question_pagination'] {
+    [data-question='draw_image'],
+    [data-question='pin_image'] {
+      .tutor-quiz-question-header {
+        flex-shrink: 0;
+      }
+
+      .tutor-draw-image-question,
+      .tutor-pin-image-question {
+        @include tutor-flex(column, center, center);
+        flex: 0 1 auto;
+        min-height: 0;
+        margin-top: 0;
+        width: 100%;
+      }
+
+      .tutor-draw-image-actions {
+        flex-shrink: 0;
+        align-self: stretch;
+      }
+
+      .tutor-draw-image-wrapper,
+      .tutor-pin-image-wrapper {
+        position: relative;
+        flex: 0 1 auto;
+        min-height: 0;
+        width: fit-content;
+        max-width: 100%;
+
+        img {
+          display: block;
+          // Cap against the questions slot (size container), not a stretched card.
+          // Interpolate the whole value so Sass does not strip the outer calc().
+          max-height: #{"min(744px, calc(100cqh - (#{$tutor-quiz-draw-pin-chrome})))"};
+          max-width: 100%;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+        }
+      }
+    }
+
+    // Puzzle: content-sized body; scrolls only when board + scatter exceed the card.
+    [data-question='puzzle'] {
+      .tutor-quiz-question-header {
+        flex-shrink: 0;
+      }
+
+      .tutor-puzzle-question {
+        @include tutor-flex(column, center, flex-start);
+        flex: 0 1 auto;
+        min-height: 0;
+        max-height: 100%;
+        height: auto;
+        margin-top: 0;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
     }
   }
 

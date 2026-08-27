@@ -194,63 +194,30 @@ class Withdraw {
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
 
-		$user_id = get_current_user_id();
-
-		// Withdraw account settings are for instructors only.
-		if ( ! tutor_utils()->is_instructor( $user_id ) ) {
-			wp_send_json_error( array( 'msg' => tutor_utils()->error_message() ) );
-		}
-
 		//phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce already verified
-		$method                    = sanitize_key( tutor_utils()->avalue_dot( 'tutor_selected_withdraw_method', $_POST ) );
-		$available_withdraw_method = $this->withdraw_methods_available();
-
-		if ( ! $method || ! isset( $available_withdraw_method[ $method ] ) ) {
+		$user_id = get_current_user_id();
+		$method  = sanitize_text_field( tutor_utils()->avalue_dot( 'tutor_selected_withdraw_method', $_POST ) );
+		if ( ! $method ) {
 			wp_send_json_error();
 		}
 
-		$form_fields = $available_withdraw_method[ $method ]['form_fields'] ?? array();
-		if ( ! is_array( $form_fields ) || empty( $form_fields ) ) {
-			wp_send_json_error();
-		}
+		$method_data               = tutor_utils()->avalue_dot( 'withdraw_method_field.' . $method, $_POST );
+		$available_withdraw_method = $this->withdraw_methods_all();
 
-		$method_data = tutor_utils()->avalue_dot( 'withdraw_method_field.' . $method, $_POST );
-		if ( ! is_array( $method_data ) || ! tutor_utils()->count( $method_data ) ) {
-			wp_send_json_error();
-		}
+		if ( tutor_utils()->count( $method_data ) ) {
+			$saved_data                         = array();
+			$saved_data['withdraw_method_key']  = $method;
+			$saved_data['withdraw_method_name'] = tutor_utils()->avalue_dot( $method . '.method_name', $available_withdraw_method );
 
-		$saved_data                         = array();
-		$saved_data['withdraw_method_key']  = $method;
-		$saved_data['withdraw_method_name'] = $available_withdraw_method[ $method ]['method_name'] ?? '';
-
-		foreach ( $form_fields as $input_name => $field ) {
-			if ( ! array_key_exists( $input_name, $method_data ) ) {
-				continue;
+			foreach ( $method_data as $input_name => $value ) {
+				$saved_data[ $input_name ]['value'] = esc_sql( sanitize_text_field( $value ) );
+				$saved_data[ $input_name ]['label'] = tutor_utils()->avalue_dot( $method . ".form_fields.{$input_name}.label", $available_withdraw_method );
 			}
 
-			$raw_value = $method_data[ $input_name ];
-			if ( is_array( $raw_value ) ) {
-				continue;
-			}
-
-			$field_type = $field['type'] ?? 'text';
-			$value      = 'email' === $field_type
-				? sanitize_email( wp_unslash( $raw_value ) )
-				: sanitize_text_field( wp_unslash( $raw_value ) );
-
-			$saved_data[ $input_name ] = array(
-				'value' => $value,
-				'label' => $field['label'] ?? '',
-			);
+			update_user_meta( $user_id, '_tutor_withdraw_method_data', $saved_data );
+			update_user_meta( $user_id, '_tutor_withdraw_selected_method', $method );
+			update_user_meta( $user_id, '_tutor_withdraw_method_data_' . $method, $saved_data );
 		}
-
-		if ( count( $saved_data ) <= 2 ) {
-			wp_send_json_error();
-		}
-
-		update_user_meta( $user_id, '_tutor_withdraw_method_data', $saved_data );
-		update_user_meta( $user_id, '_tutor_withdraw_selected_method', $method );
-		update_user_meta( $user_id, '_tutor_withdraw_method_data_' . $method, $saved_data );
 
 		$msg = apply_filters( 'tutor_withdraw_method_set_success_msg', __( 'Withdrawal information saved!', 'tutor' ) );
 		wp_send_json_success( array( 'msg' => $msg ) );
