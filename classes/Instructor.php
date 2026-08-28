@@ -560,6 +560,10 @@ class Instructor {
 			$instructor_course_ids = array_filter(
 				array_map( 'absint', (array) $instructor_course_ids )
 			);
+
+			if ( empty( $instructor_course_ids ) ) {
+				return $counts;
+			}
 		}
 
 		$topic_type      = tutor()->topics_post_type;
