@@ -50,6 +50,7 @@
 
 	&-category {
 		@include tutor-typography('tiny', 'regular', 'secondary');
+		@include tutor-text-truncate();
 		margin-bottom: $tutor-spacing-1;
 	}
 

@@ -100,10 +100,10 @@ window.jQuery(document).ready($=>{
     $(document).on('click', '.tutor-qa-reply button.tutor-btn, .tutor-qa-new button.sidebar-ask-new-qna-submit-btn', function(e){
         let button      = $(this);
         let currentEditor = '';
-        const closestWrapper = e.target.closest('.tutor-qna-reply-editor');
+        const closestWrapper = button.closest('.tutor-qna-reply-editor');
         if (_tutorobject.tutor_pro_url && tinymce) {
             // Current editor id
-            currentEditor = closestWrapper.querySelector('.tmce-active').getAttribute('id').split('-')[1];
+            currentEditor = closestWrapper.find('.tmce-active').attr('id').split('-')[1];
         }
         let form        = button.closest('[data-question_id]');
 

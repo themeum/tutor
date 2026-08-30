@@ -46,6 +46,7 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
     is_image_matching?: '0' | '1';
     draw_image_threshold_percent?: number;
     puzzle_grid_size?: number;
+    enable_puzzle_answer_background?: '0' | '1';
     coordinates_axis_range?: number;
   };
 }
@@ -335,6 +336,7 @@ export const convertQuizFormDataToPayload = (
             }),
             ...(question.question_type === 'puzzle' && {
               puzzle_grid_size: Number(question.question_settings.puzzle_grid_size ?? 4),
+              enable_puzzle_answer_background: question.question_settings.enable_puzzle_answer_background ? '1' : '0',
             }),
             ...(question.question_type === 'coordinates' && {
               coordinates_axis_range: Number(question.question_settings.coordinates_axis_range ?? 10),
