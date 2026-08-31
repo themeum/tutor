@@ -57,6 +57,7 @@
     overflow-y: auto;
     background-color: $tutor-surface-base;
     z-index: calc($tutor-z-sidebar + 2);
+    padding-bottom: $tutor-spacing-4;
 
     .tutor-has-site-shell & {
       z-index: $tutor-z-highest;
