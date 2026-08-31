@@ -1065,56 +1065,42 @@ class Quiz {
 			return 0;
 		}
 
-		$questions = $wpdb->get_results(
+		$max_questions   = (int) tutor_utils()->get_quiz_option( $quiz_id, 'max_questions_for_answer' );
+		$questions_order = tutor_utils()->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
+
+		$order_by_map = array(
+			'asc'     => 'question_id ASC',
+			'desc'    => 'question_id DESC',
+			'sorting' => 'question_order ASC',
+		);
+		$order_by     = $order_by_map[ $questions_order ] ?? 'question_order ASC';
+
+		$limit = $max_questions > 0 ? $max_questions : PHP_INT_MAX;
+
+		$total_marks = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT question_id, question_mark, question_order
-				FROM {$wpdb->prefix}tutor_quiz_questions
-				WHERE quiz_id = %d",
+				"SELECT CASE
+        WHEN %s = 'rand' AND %d > 0 AND COUNT(question_id) > %d THEN 0
+        ELSE (
+          SELECT SUM(questions.question_mark) FROM (
+            SELECT question_mark
+            FROM {$wpdb->prefix}tutor_quiz_questions
+            WHERE quiz_id = %d
+            ORDER BY {$order_by}
+            LIMIT %d
+          ) AS questions
+        )
+      END
+      FROM {$wpdb->prefix}tutor_quiz_questions
+      WHERE quiz_id = %d",
+				$questions_order,
+				$max_questions,
+				$max_questions,
+				$quiz_id,
+				$limit,
 				$quiz_id
 			)
 		);
-
-		if ( empty( $questions ) ) {
-			return 0;
-		}
-
-		$total_count = count( $questions );
-		$max_count   = (int) tutor_utils()->total_questions_for_student_by_quiz( $quiz_id );
-		$total_marks = 0;
-
-		// If no limit or max_count exceeds pool size, return sum of all.
-		if ( $max_count <= 0 || $max_count >= $total_count ) {
-			$total_marks = array_sum( array_column( $questions, 'question_mark' ) );
-		} else {
-			$questions_order = tutor_utils()->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
-
-			// Deterministic order: sum marks of the first $max_count questions.
-			if ( 'sorting' === $questions_order ) {
-				usort( $questions, fn( $a, $b ) => (int) $a->question_order <=> (int) $b->question_order );
-				$sliced      = array_slice( $questions, 0, $max_count );
-				$total_marks = array_sum( array_column( $sliced, 'question_mark' ) );
-			} elseif ( 'asc' === $questions_order ) {
-				usort( $questions, fn( $a, $b ) => (int) $a->question_id <=> (int) $b->question_id );
-				$sliced      = array_slice( $questions, 0, $max_count );
-				$total_marks = array_sum( array_column( $sliced, 'question_mark' ) );
-			} elseif ( 'desc' === $questions_order ) {
-				usort( $questions, fn( $a, $b ) => (int) $b->question_id <=> (int) $a->question_id );
-				$sliced      = array_slice( $questions, 0, $max_count );
-				$total_marks = array_sum( array_column( $sliced, 'question_mark' ) );
-			} else {
-				// Random order:
-				// If question marks vary, total marks is indeterminate before starting.
-				$marks        = array_map( 'floatval', array_column( $questions, 'question_mark' ) );
-				$unique_marks = array_unique( $marks );
-
-				if ( count( $unique_marks ) > 1 ) {
-					return 0;
-				}
-
-				// All questions have equal marks: exact calculation.
-				$total_marks = reset( $unique_marks ) * $max_count;
-			}
-		}
 
 		return (float) $total_marks;
 	}
