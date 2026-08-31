@@ -1081,16 +1081,16 @@ class Quiz {
 		$total_marks = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT CASE
-        WHEN %s = 'rand' AND %d > 0 AND COUNT(question_id) > %d THEN 0
-        ELSE (
-          SELECT SUM(questions.question_mark) FROM (
-            SELECT question_mark
-            FROM {$wpdb->prefix}tutor_quiz_questions
-            WHERE quiz_id = %d
-            ORDER BY {$order_by}
-            LIMIT %d
-          ) AS questions
-        )
+				WHEN %s = 'rand' AND %d > 0 AND COUNT(question_id) > %d THEN 0
+				ELSE (
+					SELECT SUM(questions.question_mark) FROM (
+						SELECT question_mark
+						FROM {$wpdb->prefix}tutor_quiz_questions
+						WHERE quiz_id = %d
+						ORDER BY {$order_by}
+						LIMIT %d
+					) AS questions
+				)
 				END
 				FROM {$wpdb->prefix}tutor_quiz_questions
 				WHERE quiz_id = %d",
