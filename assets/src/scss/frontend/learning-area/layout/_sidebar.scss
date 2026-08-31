@@ -7,6 +7,7 @@
   @include tutor-flex(column);
   gap: $tutor-spacing-6;
   padding: $tutor-spacing-4;
+  padding-bottom: calc(#{$tutor-spacing-6} + 40px);
   position: fixed;
   height: calc(100dvh - 62px);
   top: 62px;
@@ -37,15 +38,11 @@
     }
 
     .tutor-expand-btn {
-      position: fixed;
-      inset-inline-start: $tutor-spacing-6;
-      bottom: $tutor-spacing-6;
       pointer-events: auto;
-      transform: translateX(calc(100% + $tutor-spacing-6));
-      z-index: calc($tutor-z-sidebar + 1);
+      transform: translateX(320px);
 
       [dir='rtl'] & {
-        transform: translateX(calc(-100% - $tutor-spacing-6));
+        transform: translateX(-320px);
       }
     }
   }
@@ -59,7 +56,7 @@
     height: 100dvh;
     overflow-y: auto;
     background-color: $tutor-surface-base;
-    z-index: $tutor-z-sidebar;
+    z-index: calc($tutor-z-sidebar + 2);
 
     .tutor-has-site-shell & {
       z-index: $tutor-z-highest;
@@ -441,9 +438,13 @@
   }
 
   .tutor-expand-btn {
-    align-self: flex-start;
-    flex-shrink: 0;
+    position: absolute;
+    bottom: $tutor-spacing-6;
+    inset-inline-start: $tutor-spacing-6;
+    z-index: calc($tutor-z-sidebar + 1);
     color: $tutor-icon-secondary;
+    transform: translateX(0);
+    @include tutor-transition(transform);
 
     @include tutor-breakpoint-down(lg) {
       display: none;
