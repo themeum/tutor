@@ -13,6 +13,7 @@
   width: 320px;
   inset-inline-start: 0;
   overflow: hidden;
+  z-index: $tutor-z-sidebar;
   @include tutor-transition((opacity, transform));
 
   .tutor-has-admin-bar & {
@@ -21,12 +22,31 @@
   }
 
   .is-fullscreen & {
-    opacity: 0;
     pointer-events: none;
     transform: translateX(-100%);
+    overflow: visible;
 
     [dir='rtl'] & {
       transform: translateX(100%);
+    }
+
+    .tutor-learning-sidebar-curriculum,
+    .tutor-learning-sidebar-pages {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .tutor-expand-btn {
+      position: fixed;
+      inset-inline-start: $tutor-spacing-6;
+      bottom: $tutor-spacing-6;
+      pointer-events: auto;
+      transform: translateX(calc(100% + $tutor-spacing-6));
+      z-index: calc($tutor-z-sidebar + 1);
+
+      [dir='rtl'] & {
+        transform: translateX(calc(-100% - $tutor-spacing-6));
+      }
     }
   }
 
@@ -40,6 +60,10 @@
     overflow-y: auto;
     background-color: $tutor-surface-base;
     z-index: $tutor-z-sidebar;
+
+    .tutor-has-site-shell & {
+      z-index: $tutor-z-highest;
+    }
     transform: translateX(100%);
     @include tutor-transition(transform, 0.3s);
 
@@ -258,10 +282,6 @@
       }
     }
 
-    @include tutor-breakpoint-up(lg) {
-      margin-bottom: $tutor-spacing-11;
-    }
-
     .tutor-sidebar-resizer {
       position: absolute;
       top: -14px;
@@ -417,6 +437,16 @@
       &.is-minimized svg {
         transform: rotate(180deg);
       }
+    }
+  }
+
+  .tutor-expand-btn {
+    align-self: flex-start;
+    flex-shrink: 0;
+    color: $tutor-icon-secondary;
+
+    @include tutor-breakpoint-down(lg) {
+      display: none;
     }
   }
 }

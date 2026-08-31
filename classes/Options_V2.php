@@ -12,6 +12,7 @@ namespace Tutor;
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
 use Tutor\Ecommerce\OptionKeys;
@@ -529,10 +530,17 @@ class Options_V2 {
 
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
 
+		unset( $option['enable_spotlight_mode'], $option['tutor_frontend_course_page_logo_id'] );
+
+		foreach ( array( 'brand_logo_light', 'brand_logo_dark' ) as $brand_logo_key ) {
+			$attachment_id             = absint( $option[ $brand_logo_key ] ?? 0 );
+			$option[ $brand_logo_key ] = $attachment_id && wp_attachment_is_image( $attachment_id ) ? $attachment_id : 0;
+		}
+
 		do_action( 'tutor_option_save_before', $option );
 
 		if ( ! isset( $option['tutor_login_page'] ) ) {
-			$option['tutor_login_page'] = $login_page_id ?? 0;
+			$option['tutor_login_page'] = $login_page_id ? $login_page_id : 0;
 		}
 
 		$option = Input::sanitize_array(
@@ -633,6 +641,7 @@ class Options_V2 {
 		$attr                 = $this->get_setting_fields();
 		$tutor_default_option = get_option( 'tutor_default_option' );
 		$tutor_saved_option   = get_option( 'tutor_option' );
+		$attr_default         = array();
 
 		foreach ( $attr as $sections ) {
 			if ( is_array( $sections ) && count( $sections ) ) {
@@ -667,6 +676,7 @@ class Options_V2 {
 	 * @return void
 	 */
 	public function load_settings_page() {
+		$template_path = '';
 		extract( $this->get_setting_fields() ); //phpcs:ignore
 
 		if ( ! $template_path ) {
@@ -716,6 +726,7 @@ class Options_V2 {
 
 		$page_posts             = get_posts( $page_args );
 		$course_archive_page_id = ( is_array( $page_posts ) && count( $page_posts ) ) ? $page_posts[0] : null;
+		$default_visibility     = (bool) tutor_utils()->get_option( 'enable_spotlight_mode', true ) ? 'off' : 'on';
 
 		$attr = array(
 			'general'        => array(
@@ -856,14 +867,6 @@ class Options_V2 {
 								'label'   => __( 'Content Summary', 'tutor' ),
 								'default' => 'on',
 								'desc'    => __( 'Enabling this feature will show a course content summary on the Course Details page.', 'tutor' ),
-							),
-							array(
-								'key'         => 'enable_spotlight_mode',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Spotlight Mode', 'tutor' ),
-								'default'     => 'off',
-								'label_title' => '',
-								'desc'        => __( 'This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons.', 'tutor' ),
 							),
 							array(
 								'key'         => 'auto_course_complete_on_all_lesson_completion',
@@ -1227,7 +1230,7 @@ class Options_V2 {
 				'icon'     => 'tutor-icon-color-palette',
 				'blocks'   => array(
 					// Experimental.
-					'block_appearance' => array(
+					'block_appearance'    => array(
 						'label'      => __( 'Appearance', 'tutor' ),
 						'slug'       => 'appearance',
 						'block_type' => 'uniform',
@@ -1283,9 +1286,29 @@ class Options_V2 {
 								'class'       => 'color-picker-wrapper',
 								'default'     => tutor_utils()->get_default_brand_color(),
 							),
+							array(
+								'key'   => 'brand_logo',
+								'type'  => 'image_upload_list',
+								'label' => __( 'Brand Logo', 'tutor' ),
+								'desc'  => __( 'Upload your brand logo to display it in the Course Builder and Frontend Dashboard.', 'tutor' ),
+								'items' => array(
+									'light' => array(
+										'label'   => __( 'Light Mode', 'tutor' ),
+										'key'     => 'brand_logo_light',
+										'icon'    => Icon::LIGHT,
+										'default' => get_tutor_option( 'tutor_frontend_course_page_logo_id', 0 ),
+									),
+									'dark'  => array(
+										'label'   => __( 'Dark Mode', 'tutor' ),
+										'key'     => 'brand_logo_dark',
+										'icon'    => Icon::DARK,
+										'default' => 0,
+									),
+								),
+							),
 						),
 					),
-					'block_course'     => array(
+					'block_course'        => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
 						'block_type' => 'uniform',
@@ -1344,7 +1367,7 @@ class Options_V2 {
 							),
 						),
 					),
-					'layout'           => array(
+					'layout'              => array(
 						'label'      => __( 'Layout', 'tutor' ),
 						'slug'       => 'layout',
 						'block_type' => 'uniform',
@@ -1434,7 +1457,55 @@ class Options_V2 {
 							),
 						),
 					),
-					'course-details'   => array(
+					'block_page_elements' => array(
+						'label'      => __( 'Page Elements', 'tutor' ),
+						'slug'       => 'page-elements',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'page_elements',
+								'type'    => 'toggle_matrix',
+								'label'   => __( 'Header & Footer', 'tutor' ),
+								'desc'    => __( 'Control the visibility of Header and Footer for Dashboard and Learning Experience', 'tutor' ),
+								'columns' => array(
+									'header' => array(
+										'label'      => __( 'Header', 'tutor' ),
+										'icon'       => Icon::FOOTER,
+										'icon_attrs' => array( 'data-header-icon' => 'true' ),
+									),
+									'footer' => array(
+										'label' => __( 'Footer', 'tutor' ),
+										'icon'  => Icon::FOOTER,
+									),
+								),
+								'items'   => array(
+									'dashboard' => array(
+										'label'  => __( 'Dashboard', 'tutor' ),
+										'header' => array(
+											'key'     => 'show_dashboard_site_header',
+											'default' => 'off',
+										),
+										'footer' => array(
+											'key'     => 'show_dashboard_site_footer',
+											'default' => 'off',
+										),
+									),
+									'learning'  => array(
+										'label'  => __( 'Learning Experience', 'tutor' ),
+										'header' => array(
+											'key'     => 'show_learning_site_header',
+											'default' => $default_visibility,
+										),
+										'footer' => array(
+											'key'     => 'show_learning_site_footer',
+											'default' => $default_visibility,
+										),
+									),
+								),
+							),
+						),
+					),
+					'course-details'      => array(
 						'label'      => __( 'Course Details', 'tutor' ),
 						'slug'       => 'course-details',
 						'block_type' => 'isolate',
@@ -1964,7 +2035,7 @@ class Options_V2 {
 			}
 
 			if ( 'imported' === $action ) {
-				if ( ! empty( $save_import_data ) ) {
+				if ( ! empty( $save_import_data['dataset'] ) ) {
 					update_option( 'tutor_option', $save_import_data['dataset'] );
 				}
 			}
@@ -1972,12 +2043,10 @@ class Options_V2 {
 			$get_final_data = get_option( 'tutor_settings_log' );
 
 		} else {
-			if ( ! empty( $import_data ) ) {
-				update_option( 'tutor_settings_log', $import_data );
-			}
+			update_option( 'tutor_settings_log', $import_data );
 
 			if ( 'imported' === $action ) {
-				if ( ! empty( $save_import_data ) ) {
+				if ( ! empty( $save_import_data['dataset'] ) ) {
 					update_option( 'tutor_option', $save_import_data['dataset'] );
 				}
 			}

@@ -82,6 +82,73 @@ document.addEventListener('DOMContentLoaded', function () {
 		};
 	}
 
+	/**
+	 * Initialize a reusable image upload list field.
+	 *
+	 * Wires up the select/remove buttons rendered by the `image_upload_list`
+	 * field type, so any similar field can reuse it with its own settings.
+	 *
+	 * @since 4.0.7
+	 *
+	 * @param {Object}        config
+	 * @param {string}        config.mediaTitle       Media frame title.
+	 * @param {string}        config.mediaButtonText  Media frame select button text.
+	 * @param {string[]}      [config.allowedMimeTypes] Restrict selectable attachment mime types. Empty means any image.
+	 * @return {void}
+	 */
+	function initImageUploadList({ mediaTitle, mediaButtonText, allowedMimeTypes = [] }) {
+		$(document).on('click', '.tutor-image-upload-select', function (event) {
+			event.preventDefault();
+
+			const $upload = $(this).closest('.tutor-image-upload-item');
+			const $input = $upload.find('.tutor-image-upload-input');
+			const $preview = $upload.find('.tutor-image-upload-preview');
+			const $image = $preview.find('img');
+			const $remove = $upload.find('.tutor-image-upload-remove');
+			const frame = wp.media({
+				title: mediaTitle,
+				button: { text: mediaButtonText },
+				library: { type: 'image' },
+				multiple: false,
+			});
+
+			frame.on('select', function () {
+				const attachment = frame.state().get('selection').first().toJSON();
+				if (allowedMimeTypes.length && !allowedMimeTypes.includes(attachment.mime)) {
+					tutor_toast(__('Error!', 'tutor'), __('Please select a supported image.', 'tutor'), 'error');
+					return;
+				}
+
+				$input.val(attachment.id).trigger('change');
+				$image.attr('src', attachment.url).prop('hidden', false);
+				$preview.addClass('has-image');
+				$upload.addClass('has-image');
+				$remove.prop('hidden', false);
+				$('#save_tutor_option').prop('disabled', false);
+			});
+
+			frame.open();
+		});
+
+		$(document).on('click', '.tutor-image-upload-remove', function (event) {
+			event.preventDefault();
+
+			const $upload = $(this).closest('.tutor-image-upload-item');
+			$upload.find('.tutor-image-upload-input').val('').trigger('change');
+			$upload.find('.tutor-image-upload-preview img').attr('src', '').prop('hidden', true);
+			$upload.find('.tutor-image-upload-preview').removeClass('has-image');
+			$upload.removeClass('has-image');
+			$(this).prop('hidden', true);
+			$('#save_tutor_option').prop('disabled', false);
+		});
+	}
+
+	initImageUploadList({
+		mediaTitle: __('Select a brand logo', 'tutor'),
+		mediaButtonText: __('Use this logo', 'tutor'),
+		allowedMimeTypes: ['image/jpeg', 'image/png'],
+	});
+
 	const validateEmail = (email) => {
 		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(String(email).toLowerCase());

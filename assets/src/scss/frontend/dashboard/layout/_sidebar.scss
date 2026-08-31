@@ -29,6 +29,11 @@
     border-bottom: 1px solid $tutor-border-idle;
     overflow: hidden;
 
+    .tutor-brand-logo {
+      display: block;
+      max-width: 120px;
+    }
+
     img {
       display: block;
       max-width: 120px;
@@ -43,7 +48,6 @@
       }
     }
   }
-
   .tutor-dashboard-sidebar-nav {
     padding: $tutor-spacing-8 $tutor-spacing-6;
 
@@ -114,4 +118,14 @@
       background-color: $tutor-tab-sidebar-l2-hover;
     }
   }
+}
+
+.tutor-dashboard-layout.tutor-has-site-shell .tutor-dashboard-sidebar {
+  top: var(--tutor-site-header-offset);
+  min-height: calc(100dvh - var(--tutor-site-header-offset));
+}
+
+body:has(#wpadminbar) .tutor-dashboard-layout.tutor-has-site-shell .tutor-dashboard-sidebar {
+  top: var(--tutor-site-header-offset);
+  min-height: calc(100dvh - var(--tutor-site-header-offset));
 }
