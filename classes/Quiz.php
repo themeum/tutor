@@ -1068,39 +1068,49 @@ class Quiz {
 		$max_questions   = (int) tutor_utils()->get_quiz_option( $quiz_id, 'max_questions_for_answer' );
 		$questions_order = tutor_utils()->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
 
-		$order_by_map = array(
-			'asc'     => 'question_id ASC',
-			'desc'    => 'question_id DESC',
-			'sorting' => 'question_order ASC',
-		);
-		$order_by     = $order_by_map[ $questions_order ] ?? 'question_order ASC';
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ( $max_questions <= 0 ) {
+			// No question limit: sum all questions regardless of order.
+			$total_marks = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT SUM(question_mark)
+					FROM {$wpdb->prefix}tutor_quiz_questions
+					WHERE quiz_id = %d",
+					$quiz_id
+				)
+			);
+		} else {
+			// Question limit is active. $order_by is resolved from a fixed allowlist; no user input reaches it.
+			$order_by_map = array(
+				'asc'     => 'question_id ASC',
+				'desc'    => 'question_id DESC',
+				'sorting' => 'question_order ASC',
+			);
+			$order_by = $order_by_map[ $questions_order ] ?? 'question_order ASC';
 
-		$limit = $max_questions > 0 ? $max_questions : PHP_INT_MAX;
+			// • rand + COUNT > limit → a true random subset, total is unknowable → 0.
+			// • rand + COUNT ≤ limit → all questions shown, sum is deterministic.
+			// • deterministic        → sum of the first $max_questions by ORDER BY.
+			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$sql = "SELECT CASE
+					WHEN %s = 'rand' AND COUNT(question_id) > %d THEN 0
+					ELSE (
+						SELECT SUM(q.question_mark) FROM (
+							SELECT question_mark
+							FROM {$wpdb->prefix}tutor_quiz_questions
+							WHERE quiz_id = %d
+							ORDER BY {$order_by}
+							LIMIT %d
+						) AS q
+					)
+				END
+				FROM {$wpdb->prefix}tutor_quiz_questions
+				WHERE quiz_id = %d";
 
-		$total_marks = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT CASE
-        WHEN %s = 'rand' AND %d > 0 AND COUNT(question_id) > %d THEN 0
-        ELSE (
-          SELECT SUM(questions.question_mark) FROM (
-            SELECT question_mark
-            FROM {$wpdb->prefix}tutor_quiz_questions
-            WHERE quiz_id = %d
-            ORDER BY {$order_by}
-            LIMIT %d
-          ) AS questions
-        )
-      END
-      FROM {$wpdb->prefix}tutor_quiz_questions
-      WHERE quiz_id = %d",
-				$questions_order,
-				$max_questions,
-				$max_questions,
-				$quiz_id,
-				$limit,
-				$quiz_id
-			)
-		);
+			$total_marks = $wpdb->get_var( $wpdb->prepare( $sql, $questions_order, $max_questions, $quiz_id, $max_questions, $quiz_id ) );
+			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		}
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		return (float) $total_marks;
 	}
