@@ -18,14 +18,11 @@ do_action( 'tutor_course/single/enrolled/nav/before' );
 ?>
 <nav class="tutor-nav" tutor-priority-nav>
 	<?php
+	$active_key = isset( $default_active_key ) ? $default_active_key : apply_filters( 'tutor_default_topics_active_tab', 'info' );
 	foreach ( $course_nav_item as $nav_key => $nav_item ) {
-		/**
-		 * Apply filters to show default active tab
-		 */
-		$default_active_key = apply_filters( 'tutor_default_topics_active_tab', 'info' );
 		?>
 				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo $nav_key == $default_active_key ? ' is-active' : ''; ?>" href="#" data-tutor-nav-target="tutor-course-details-tab-<?php echo esc_attr( $nav_key ); ?>"><?php echo esc_html( $nav_item['title'] ); ?></a>
+					<a class="tutor-nav-link<?php echo $nav_key == $active_key ? ' is-active' : ''; ?>" href="#" data-tutor-nav-target="tutor-course-details-tab-<?php echo esc_attr( $nav_key ); ?>"><?php echo esc_html( $nav_item['title'] ); ?></a>
 				</li>
 			<?php
 	}
