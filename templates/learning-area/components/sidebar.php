@@ -285,6 +285,19 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 			<?php endif; ?>
 		</div>
 	</div>
+	<button
+		class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon tutor-expand-btn"
+		@click="isFullScreen = !isFullScreen"
+		:aria-label="isFullScreen ? '<?php echo esc_attr__( 'Exit fullscreen', 'tutor' ); ?>' : '<?php echo esc_attr__( 'Enter fullscreen', 'tutor' ); ?>'"
+	>
+		<template x-if="!isFullScreen">
+			<?php SvgIcon::make()->name( Icon::EXPAND )->flip_rtl()->render(); ?>
+		</template>
+
+		<template x-if="isFullScreen">
+			<?php SvgIcon::make()->name( Icon::COLLAPSED )->flip_rtl()->render(); ?>
+		</template>
+	</button>
 	<?php if ( $tutor_is_enrolled ) : ?>
 	<div class="tutor-hidden tutor-md-flex tutor-flex-column tutor-gap-2">
 		<?php

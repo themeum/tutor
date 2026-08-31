@@ -1563,11 +1563,12 @@ class Course extends Tutor_Base {
 			'instructor_can_manage_co_instructors',
 		);
 
-		$full_settings                       = get_option( 'tutor_option', array() );
-		$settings                            = Options_V2::get_only( $required_options );
-		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $full_settings['tutor_frontend_course_page_logo_id'] ?? 0, 'full' );
-		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
-		$settings['youtube_api_key_exist']   = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
+		$full_settings                     = get_option( 'tutor_option', array() );
+		$settings                          = Options_V2::get_only( $required_options );
+		$logo_id                           = absint( $full_settings['brand_logo_light'] ?? $full_settings['tutor_frontend_course_page_logo_id'] ?? 0 );
+		$settings['brand_logo_light']      = $logo_id > 0 ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
+		$settings['chatgpt_key_exist']     = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+		$settings['youtube_api_key_exist'] = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
 		$settings['enable_tax']                    = Tax::get_setting( 'enable_tax', true );
 		$settings['is_tax_included_in_price']      = Tax::is_tax_included_in_price();

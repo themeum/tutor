@@ -301,6 +301,32 @@ class Utils {
 			return apply_filters( $key, $value );
 		}
 
+		// Normalize legacy option keys that have been superseded by new settings.
+		// When we reach here, $key does not exist in $option (checked above).
+		if ( 'enable_spotlight_mode' === $key ) {
+			// Derive from new page-elements setting: spotlight mode = both header and footer hidden.
+			// Default to $default when new keys are absent (fresh install).
+			$show_header = $option['show_learning_site_header'] ?? null;
+			$show_footer = $option['show_learning_site_footer'] ?? null;
+
+			if ( null !== $show_header || null !== $show_footer ) {
+				$header_off   = ( null === $show_header || 'off' === $show_header || false === $show_header );
+				$footer_off   = ( null === $show_footer || 'off' === $show_footer || false === $show_footer );
+				$is_spotlight = $header_off && $footer_off;
+
+				return apply_filters( $key, $is_spotlight );
+			}
+			return $this->get_option_default( $key, $default, $from_options );
+		}
+
+		if ( 'tutor_frontend_course_page_logo_id' === $key ) {
+			// Fall back to the new brand_logo_light key.
+			if ( array_key_exists( 'brand_logo_light', $option ) ) {
+				return apply_filters( $key, absint( $option['brand_logo_light'] ) );
+			}
+			return $this->get_option_default( $key, $default, $from_options );
+		}
+
 		return $this->get_option_default( $key, $default, $from_options );
 	}
 
@@ -9018,49 +9044,104 @@ class Utils {
 	/**
 	 * Tutor custom header.
 	 *
+	 * Renders the page-opening HTML. When $show is true (default) the active
+	 * theme header is included — either via get_header() for classic themes or
+	 * a block template-part for block themes. When $show is false, only the
+	 * bare standalone boilerplate (doctype / head / body) is output, with no
+	 * theme header rendered.
+	 *
+	 * All existing callers that pass no argument continue to work unchanged.
+	 *
 	 * @since 2.0.0
+	 * @since 4.0.6 Added optional $show param to suppress the theme header/footer.
+	 *
+	 * @param bool $show Whether to render the active theme header. Default true.
 	 *
 	 * @return void
 	 */
-	public function tutor_custom_header() {
+	public function tutor_custom_header( bool $show = true ) {
 		global $wp_version;
-		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+		$is_block_theme = version_compare( $wp_version, '5.9', '>=' )
+			&& function_exists( 'wp_is_block_theme' )
+			&& wp_is_block_theme();
+
+		if ( $show ) {
+			if ( $is_block_theme ) {
+				?>
+				<!doctype html>
+					<html <?php language_attributes(); ?>>
+					<head>
+					<meta charset="<?php bloginfo( 'charset' ); ?>">
+					<?php wp_head(); ?>
+					</head>
+					<body <?php body_class(); ?>>
+				<?php wp_body_open(); ?>
+						<div class="wp-site-blocks">
+				<?php
+				$theme      = wp_get_theme();
+				$theme_slug = $theme->get( 'TextDomain' );
+				echo do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
+			} else {
+				get_header();
+			}
+		} else {
+			// Standalone boilerplate — no theme header rendered.
 			?>
 			<!doctype html>
-				<html <?php language_attributes(); ?>>
-				<head>
-					<meta charset="<?php bloginfo( 'charset' ); ?>">
+			<html <?php language_attributes(); ?>>
+			<head>
+				<meta charset="<?php bloginfo( 'charset' ); ?>" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<?php wp_head(); ?>
-				</head>
-				<body <?php body_class(); ?>>
-			<?php wp_body_open(); ?>
-					<div class="wp-site-blocks">
-				<?php
-					$theme      = wp_get_theme();
-					$theme_slug = $theme->get( 'TextDomain' );
-					echo do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
-		} else {
-			get_header();
+			</head>
+			<body <?php body_class(); ?>>
+				<?php wp_body_open(); ?>
+			<?php
 		}
 	}
 
 	/**
-	 * Tutor Custom Header
+	 * Tutor custom footer.
+	 *
+	 * Renders the page-closing HTML. When $show is true (default) the active
+	 * theme footer is included. When $show is false, only the bare standalone
+	 * close tags are output (wp_footer, </body>, </html>) with no theme footer
+	 * and no wp-site-blocks closing wrapper for block themes.
+	 *
+	 * All existing callers that pass no argument continue to work unchanged.
 	 *
 	 * @since 2.0.0
+	 * @since 4.0.6 Added optional $show param to suppress the theme header/footer.
+	 *
+	 * @param bool $show Whether to render the active theme footer. Default true.
+	 *
+	 * @return void
 	 */
-	public function tutor_custom_footer() {
+	public function tutor_custom_footer( bool $show = true ) {
 		global $wp_version;
-		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && true === wp_is_block_theme() ) {
-			$theme      = wp_get_theme();
-			$theme_slug = $theme->get( 'TextDomain' );
-			echo do_blocks( '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer","className":"site-footer","layout":{"inherit":true}} /-->' );
-			echo '</div>';
-			wp_footer();
-			echo '</body>';
-			echo '</html>';
+		$is_block_theme = version_compare( $wp_version, '5.9', '>=' )
+			&& function_exists( 'wp_is_block_theme' )
+			&& true === wp_is_block_theme();
+
+		if ( $show ) {
+			if ( $is_block_theme ) {
+				$theme      = wp_get_theme();
+				$theme_slug = $theme->get( 'TextDomain' );
+				echo do_blocks( '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer","className":"site-footer","layout":{"inherit":true}} /-->' );
+				echo '</div>';
+				wp_footer();
+				echo '</body>';
+				echo '</html>';
+			} else {
+				get_footer();
+			}
 		} else {
-			get_footer();
+			// Standalone close — no theme footer rendered.
+			wp_footer();
+			?>
+			</body>
+			</html>
+			<?php
 		}
 	}
 

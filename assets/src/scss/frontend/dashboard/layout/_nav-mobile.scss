@@ -93,3 +93,13 @@
     }
   }
 }
+
+// A theme footer is part of the document-flow dashboard shell. Keep the
+// mobile navigation at the viewport bottom while the dashboard is visible,
+// then let it stop before the theme footer.
+.tutor-dashboard-layout.tutor-has-site-footer .tutor-dashboard-nav-mobile {
+  position: sticky;
+  bottom: 0;
+  left: auto;
+  right: auto;
+}

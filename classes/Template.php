@@ -24,11 +24,92 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Template extends Tutor_Base {
 
 	/**
+	 * Page context for the Learning Area theme shell.
+	 *
+	 * @var string
+	 */
+	public const SITE_SHELL_CONTEXT_LEARNING = 'learning';
+
+	/**
+	 * Page context for the Dashboard theme shell.
+	 *
+	 * @var string
+	 */
+	public const SITE_SHELL_CONTEXT_DASHBOARD = 'dashboard';
+
+	/**
+	 * Default selector used to find common theme header markup.
+	 *
+	 * @var string
+	 */
+	private const THEME_HEADER_SELECTOR = 'header[role="banner"], header[role="heading"], header.site-header, header#masthead, #masthead, .site-header, header.wp-block-template-part, header.header-sticky';
+
+	/**
 	 * Store Shortcode Object
 	 *
 	 * @var Shortcode
 	 */
 	public $shortcode_obj;
+
+	/**
+	 * Get the site-shell state for a Tutor page context.
+	 *
+	 * This is the single source of truth for theme header/footer visibility and
+	 * the browser selector used to measure a rendered theme header.
+	 *
+	 * @since 4.0.7
+	 *
+	 * @param string $context One of the SITE_SHELL_CONTEXT_* constants.
+	 *
+	 * @return array{
+	 *     show_site_header: bool,
+	 *     show_site_footer: bool,
+	 *     has_site_shell: bool,
+	 *     theme_header_selector: string
+	 * }
+	 */
+	public static function get_site_shell_data( string $context ): array {
+		if ( self::SITE_SHELL_CONTEXT_LEARNING === $context ) {
+			$legacy_spotlight_mode = (bool) tutor_utils()->get_option( 'enable_spotlight_mode' );
+			$show_site_header      = (bool) tutor_utils()->get_option( 'show_learning_site_header', ! $legacy_spotlight_mode );
+			$show_site_footer      = (bool) tutor_utils()->get_option( 'show_learning_site_footer', ! $legacy_spotlight_mode );
+		} elseif ( self::SITE_SHELL_CONTEXT_DASHBOARD === $context ) {
+			$show_site_header = (bool) tutor_utils()->get_option( 'show_dashboard_site_header' );
+			$show_site_footer = (bool) tutor_utils()->get_option( 'show_dashboard_site_footer' );
+		} else {
+			return array(
+				'show_site_header'      => false,
+				'show_site_footer'      => false,
+				'has_site_shell'        => false,
+				'theme_header_selector' => '',
+			);
+		}
+
+		$has_site_shell = $show_site_header || $show_site_footer;
+		$selector       = '';
+
+		if ( $show_site_header ) {
+			/**
+			 * Filters the selector used to find a theme header that overlays a Tutor page.
+			 *
+			 * Themes with non-standard header markup can return their exact selector.
+			 * The selector is evaluated in the browser and invalid selectors are ignored.
+			 *
+			 * @since 4.0.6
+			 *
+			 * @param string $selector CSS selector for the active theme header.
+			 */
+			$selector = apply_filters( 'tutor_theme_header_selector', self::THEME_HEADER_SELECTOR );
+			$selector = is_string( $selector ) ? $selector : '';
+		}
+
+		return array(
+			'show_site_header'      => $show_site_header,
+			'show_site_footer'      => $show_site_footer,
+			'has_site_shell'        => $has_site_shell,
+			'theme_header_selector' => $selector,
+		);
+	}
 
 	/**
 	 * Register Hooks

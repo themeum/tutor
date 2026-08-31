@@ -27,6 +27,11 @@
     position: sticky;
   }
 
+  .tutor-has-site-shell & {
+    position: sticky;
+    top: var(--tutor-site-header-offset);
+  }
+
   &-inner {
     @include tutor-flex(row, center);
 
