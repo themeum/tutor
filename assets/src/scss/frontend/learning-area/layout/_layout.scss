@@ -16,7 +16,7 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
   .tutor-learning-area-body {
     padding-inline-start: 320px;
     position: relative;
-    @include tutor-transition(padding);
+    @include tutor-transition((padding, grid-template-columns), 0.3s);
 
     @include tutor-breakpoint-down(lg) {
       padding-inline-start: 0;
@@ -43,6 +43,7 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
         grid-template-columns: 320px minmax(0, 1fr);
         align-items: start;
         padding-inline-start: 0;
+        @include tutor-transition(grid-template-columns, 0.3s);
       }
 
       .tutor-learning-sidebar {
@@ -77,7 +78,6 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
 
       .tutor-learning-sidebar {
         padding: 0;
-        width: 0;
       }
 
       .tutor-learning-area-content {

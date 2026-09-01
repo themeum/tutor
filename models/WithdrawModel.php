@@ -294,16 +294,75 @@ class WithdrawModel {
 	 * @since 1.0.0
 	 *
 	 * @param int $user_id user id.
+	 *
 	 * @return bool|mixed
 	 */
 	public static function get_user_withdraw_method( $user_id = 0 ) {
 		$user_id = tutor_utils()->get_user_id( $user_id );
-		$account = get_user_meta( $user_id, '_tutor_withdraw_method_data', true );
+		$account = self::get_user_withdraw_method_meta( $user_id, '_tutor_withdraw_method_data' );
 
-		if ( $account ) {
-			return maybe_unserialize( $account );
+		return $account ? $account : false;
+	}
+
+	/**
+	 * Get a withdraw method meta blob as a plain array.
+	 *
+	 * Reads the raw usermeta value and unserializes with objects disabled so
+	 * poisoned serialized payloads cannot materialize PHP objects.
+	 *
+	 * @since 4.0.8
+	 *
+	 * @param int    $user_id  User ID.
+	 * @param string $meta_key Meta key.
+	 *
+	 * @return array
+	 */
+	public static function get_user_withdraw_method_meta( $user_id, $meta_key ) {
+		global $wpdb;
+
+		$user_id  = absint( $user_id );
+		$meta_key = sanitize_key( $meta_key );
+
+		if ( ! $user_id || ! $meta_key ) {
+			return array();
 		}
 
-		return false;
+		$raw = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT meta_value FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s LIMIT 1",
+				$user_id,
+				$meta_key
+			)
+		);
+
+		return self::safe_unserialize_array( $raw );
+	}
+
+	/**
+	 * Unserialize withdraw method data as an array only.
+	 *
+	 * @since 4.0.8
+	 *
+	 * @param mixed $data Serialized string or already-decoded array.
+	 *
+	 * @return array
+	 */
+	public static function safe_unserialize_array( $data ) {
+		if ( is_array( $data ) ) {
+			return $data;
+		}
+
+		if ( ! is_string( $data ) || '' === $data ) {
+			return array();
+		}
+
+		// Reject object payloads before calling unserialize().
+		if ( preg_match( '/(^|;|{|})O:\+?[0-9]+:"/', $data ) ) {
+			return array();
+		}
+
+		$unserialized = unserialize( $data, array( 'allowed_classes' => false ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+
+		return is_array( $unserialized ) ? $unserialized : array();
 	}
 }

@@ -322,7 +322,10 @@ class QuizBuilder {
 				$wpdb->update(
 					$questions_table,
 					$question_data,
-					array( 'question_id' => $question_id )
+					array(
+						'question_id' => $question_id,
+						'quiz_id'     => $quiz_id,
+					)
 				);
 			}
 
@@ -334,7 +337,10 @@ class QuizBuilder {
 			$wpdb->update(
 				$questions_table,
 				array( 'question_order' => $question_order ),
-				array( 'question_id' => $question_id )
+				array(
+					'question_id' => $question_id,
+					'quiz_id'     => $quiz_id,
+				)
 			);
 
 			// Save question's answers.
@@ -399,7 +405,7 @@ class QuizBuilder {
 			$errors  = array_merge( $errors, $validation->errors );
 		}
 
-		if ( $quiz && ! empty( $questions ) ) {
+		if ( ! empty( $questions ) ) {
 			$this->set_current_quiz_questions_answer_ids( $quiz_id );
 			try {
 				$this->is_valid_quiz_question_answer_payload( $questions );
@@ -936,6 +942,7 @@ class QuizBuilder {
 		$payload_question_ids     = wp_list_pluck( $payload, 'question_id' );
 		$payload_question_answers = wp_list_pluck( $payload, 'question_answers', 'question_id' );
 		$is_cb_question           = wp_list_pluck( $payload, 'is_cb_question', 'question_id' );
+
 		// Remove content bank answers.
 		$payload_question_answers = array_filter( $payload_question_answers, fn( $question_id ) => ! $is_cb_question[ $question_id ], ARRAY_FILTER_USE_KEY );
 		$payload_question_answers = array_values( $payload_question_answers );
@@ -944,6 +951,11 @@ class QuizBuilder {
 		// Remove the hash id.
 		$payload_question_ids = array_filter( $payload_question_ids, fn( $id ) => is_numeric( $id ) && ! $is_cb_question[ $id ] );
 		$payload_answer_ids   = array_filter( $payload_answer_ids, fn( $id ) => is_numeric( $id ) );
+
+		// For the new quiz current_quiz is null, in this there should not be any numeric question or answer id.
+		if ( is_null( $this->current_quiz ) && ( count( $payload_question_ids ) || count( $payload_answer_ids ) ) ) {
+			throw new \Exception( esc_html__( 'Invalid question or answer id found', 'tutor' ), 1 );
+		}
 
 		if ( $this->current_quiz_question_ids ) {
 			$has_question_diff = array_diff( $payload_question_ids, $this->current_quiz_question_ids );
