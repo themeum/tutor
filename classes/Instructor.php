@@ -17,6 +17,7 @@ use DateTime;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;
 
 /**
@@ -28,9 +29,31 @@ class Instructor {
 	use JsonResponse;
 
 	/**
-	 * Error message
+	 * Transient key to store dashboard course completion rate
+	 *
+	 * Current user id will be append with the key
+	 *
+	 * @since 4.0.8
 	 *
 	 * @var string
+	 */
+	const DASHBOARD_COURSE_COMPLETION_RATE_TRANSIENT = 'tutor_dashboard_course_completion_rate_';
+
+	/**
+	 * Transient key to store top performing courses
+	 *
+	 * Current user id & query param will be appended with the key
+	 *
+	 * @since 4.0.8
+	 *
+	 * @var string
+	 */
+	const DASHBOARD_TOP_PERFORMING_COURSE_TRANSIENT = 'tutor_dashboard_top_performing_course_transient_';
+
+	/**
+	 * Error message
+	 *
+	 * @var array<string, string>|string
 	 */
 	protected $error_msgs = '';
 
@@ -84,7 +107,7 @@ class Instructor {
 	 * For Register new user and mark him as instructor
 	 *
 	 * @since 1.0.0
-	 * @return void|null
+	 * @return void
 	 */
 	public function register_instructor() {
 		// Here tutor_action checking required before nonce checking.
@@ -214,7 +237,7 @@ class Instructor {
 	 * for instructor applying when a user already logged in
 	 *
 	 * @since 1.0.0
-	 * @return void|null
+	 * @return void
 	 */
 	public function apply_instructor() {
 		// Here tutor_action checking required before nonce checking.
@@ -481,9 +504,14 @@ class Instructor {
 	/**
 	 * Get course completion distribution data for a specific instructor.
 	 *
+	 * If the user is Admin then this method will consider all the course, considering
+	 * specific courses when user is an instructor
+	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $instructor_course_ids    Optional list of course IDs.
+	 * @since 4.0.8 Instead of course id getting user id.
+	 *
+	 * @param int $user_id User id to get course completion rate.
 	 *
 	 * @return array {
 	 *     Enrollment distribution counts.
@@ -495,9 +523,10 @@ class Instructor {
 	 *     @type int $cancelled  Number of cancelled enrollments.
 	 * }
 	 */
-	public static function get_course_completion_distribution_data_by_instructor( $instructor_course_ids = array() ) {
-
+	public static function get_course_completion_distribution_data_by_instructor( int $user_id = 0 ) {
 		global $wpdb;
+
+		$user_id = $user_id ? $user_id : get_current_user_id();
 
 		$counts = array(
 			'enrolled'   => 0,
@@ -507,60 +536,237 @@ class Instructor {
 			'cancelled'  => 0,
 		);
 
-		$cancel_statuses = array( 'cancel', 'canceled', 'cancelled' );
-		$post_statuses   = array_merge( $cancel_statuses, array( 'completed' ) );
-
-		if ( empty( $instructor_course_ids ) ) {
+		if ( ! User::is_admin( $user_id ) && ! User::is_instructor( $user_id, true ) ) {
 			return $counts;
 		}
 
-		$where = array(
-			'post_type'   => 'tutor_enrolled',
-			'post_status' => array( 'IN', $post_statuses ),
-			'post_parent' => array( 'IN', $instructor_course_ids ),
-		);
+		$cache_key = self::DASHBOARD_COURSE_COMPLETION_RATE_TRANSIENT . $user_id;
 
-		$args = array(
-			'select' => array( 'id', 'post_status', 'post_author', 'post_parent' ),
-			'where'  => $where,
-		);
-
-		$enrollments = QueryHelper::query( $wpdb->posts, $args );
-
-		if ( empty( $enrollments ) ) {
-			return $counts;
+		$cached_data = get_transient( $cache_key );
+		if ( $cached_data && is_array( $cached_data ) ) {
+			return $cached_data;
 		}
 
-		$counts['enrolled'] = count( $enrollments );
+		$instructor_course_ids = array();
+		if ( ! User::is_admin() && User::is_instructor( $user_id, true ) ) {
+			$instructor_course_ids = CourseModel::get_courses_by_args(
+				array(
+					'post_author'    => $user_id,
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				)
+			)->posts;
 
-		foreach ( $enrollments as $enrollment ) {
+			$instructor_course_ids = array_filter(
+				array_map( 'absint', (array) $instructor_course_ids )
+			);
 
-			// Cancelled enrollment.
-			if ( in_array( $enrollment->post_status, $cancel_statuses, true ) ) {
-				++$counts['cancelled'];
-				continue;
+			if ( empty( $instructor_course_ids ) ) {
+				return $counts;
 			}
-
-			// Completed course.
-			if ( tutor_utils()->is_completed_course( $enrollment->post_parent, $enrollment->post_author ) ) {
-				++$counts['completed'];
-				continue;
-			}
-
-			$course_progress = (int) tutor_utils()->get_course_completed_percent( $enrollment->post_parent, $enrollment->post_author );
-
-			if ( 100 === $course_progress ) { // If progress is 100% but the `Complete Course` button hasn't been clicked.
-				++$counts['completed'];
-				continue;
-			}
-
-			if ( $course_progress > 0 ) {
-				++$counts['inprogress'];
-				continue;
-			}
-
-			++$counts['inactive'];
 		}
+
+		$topic_type      = tutor()->topics_post_type;
+		$lesson_type     = tutor()->lesson_post_type;
+		$quiz_type       = tutor()->quiz_post_type;
+		$assignment_type = tutor()->assignment_post_type;
+		$zoom_type       = tutor()->zoom_post_type;
+		$meet_type       = tutor()->meet_post_type;
+
+		$placeholders = implode(
+			',',
+			array_fill( 0, count( $instructor_course_ids ), '%d' )
+		);
+
+		$topic_post_parent_clause      = '';
+		$enrollment_post_parent_clause = '';
+		if ( tutor_utils()->count( $instructor_course_ids ) ) {
+			$topic_post_parent_clause      = "AND topic.post_parent IN ({$placeholders})";
+			$enrollment_post_parent_clause = "AND e.post_parent IN ({$placeholders})";
+		}
+
+		$sql = "
+			SELECT
+				COUNT(DISTINCT e.ID) AS enrolled,
+
+				COUNT(
+					DISTINCT CASE
+						WHEN e.post_status IN ('cancel', 'canceled', 'cancelled')
+						THEN e.ID
+					END
+				) AS cancelled,
+
+				COUNT(
+					DISTINCT CASE
+						WHEN e.post_status = 'completed'
+							AND completion.user_id IS NOT NULL
+						THEN e.ID
+					END
+				) AS completed,
+
+				COUNT(
+					DISTINCT CASE
+						WHEN e.post_status = 'completed'
+							AND completion.user_id IS NULL
+							AND (
+								lesson_progress.user_id IS NOT NULL
+								OR quiz_progress.user_id IS NOT NULL
+								OR assignment_progress.user_id IS NOT NULL
+								OR meeting_progress.user_id IS NOT NULL
+							)
+						THEN e.ID
+					END
+				) AS inprogress
+	
+			FROM {$wpdb->posts} AS e
+	
+			LEFT JOIN (
+				SELECT DISTINCT
+					c.comment_post_ID AS course_id,
+					c.user_id
+				FROM {$wpdb->comments} AS c
+				WHERE c.comment_agent = 'TutorLMSPlugin'
+					AND c.comment_type = 'course_completed'
+			) AS completion
+				ON completion.course_id = e.post_parent
+				AND completion.user_id = e.post_author
+	
+			LEFT JOIN (
+				SELECT DISTINCT
+					um.user_id,
+					topic.post_parent AS course_id
+				FROM {$wpdb->usermeta} AS um
+				INNER JOIN {$wpdb->posts} AS lesson
+					ON um.meta_key = CONCAT('_tutor_completed_lesson_id_', lesson.ID)
+				INNER JOIN {$wpdb->posts} AS topic
+					ON lesson.post_parent = topic.ID
+				WHERE 1 = 1
+				 	{$topic_post_parent_clause}
+					AND topic.post_type = %s
+					AND lesson.post_type = %s
+					AND lesson.post_status = 'publish'
+			) AS lesson_progress
+				ON lesson_progress.user_id = e.post_author
+				AND lesson_progress.course_id = e.post_parent
+	
+			LEFT JOIN (
+				SELECT DISTINCT
+					qa.user_id,
+					topic.post_parent AS course_id
+				FROM {$wpdb->tutor_quiz_attempts} AS qa
+				INNER JOIN {$wpdb->posts} AS quiz
+					ON quiz.ID = qa.quiz_id
+				INNER JOIN {$wpdb->posts} AS topic
+					ON quiz.post_parent = topic.ID
+				WHERE 1 = 1
+					{$topic_post_parent_clause}
+					AND topic.post_type = %s
+					AND quiz.post_type = %s
+					AND quiz.post_status = 'publish'
+			) AS quiz_progress
+				ON quiz_progress.user_id = e.post_author
+				AND quiz_progress.course_id = e.post_parent
+	
+			LEFT JOIN (
+				SELECT DISTINCT
+					c.user_id,
+					topic.post_parent AS course_id
+				FROM {$wpdb->comments} AS c
+				INNER JOIN {$wpdb->posts} AS assignment
+					ON assignment.ID = c.comment_post_ID
+				INNER JOIN {$wpdb->posts} AS topic
+					ON assignment.post_parent = topic.ID
+				WHERE c.comment_type = 'tutor_assignment'
+					AND c.comment_approved = 'submitted'
+					{$topic_post_parent_clause}
+					AND topic.post_type = %s
+					AND assignment.post_type = %s
+					AND assignment.post_status = 'publish'
+			) AS assignment_progress
+				ON assignment_progress.user_id = e.post_author
+				AND assignment_progress.course_id = e.post_parent
+	
+			LEFT JOIN (
+				SELECT DISTINCT
+					um.user_id,
+					topic.post_parent AS course_id
+				FROM {$wpdb->usermeta} AS um
+				INNER JOIN {$wpdb->posts} AS meeting
+					ON um.meta_key = CONCAT('_tutor_completed_lesson_id_', meeting.ID)
+				INNER JOIN {$wpdb->posts} AS topic
+					ON meeting.post_parent = topic.ID
+				WHERE 1 = 1
+					{$topic_post_parent_clause}
+					AND topic.post_type = %s
+					AND meeting.post_type IN (%s, %s)
+					AND meeting.post_status = 'publish'
+			) AS meeting_progress
+				ON meeting_progress.user_id = e.post_author
+				AND meeting_progress.course_id = e.post_parent
+	
+			WHERE e.post_type = 'tutor_enrolled'
+				AND e.post_status IN (
+					'completed',
+					'cancel',
+					'canceled',
+					'cancelled'
+				)
+				{$enrollment_post_parent_clause}
+		";
+
+		$prepare_args = array_merge(
+			// lesson_progress.
+			$instructor_course_ids,
+			array(
+				$topic_type,
+				$lesson_type,
+			),
+			// quiz_progress.
+			$instructor_course_ids,
+			array(
+				$topic_type,
+				$quiz_type,
+			),
+			// assignment_progress.
+			$instructor_course_ids,
+			array(
+				$topic_type,
+				$assignment_type,
+			),
+			// meeting_progress.
+			$instructor_course_ids,
+			array(
+				$topic_type,
+				$zoom_type,
+				$meet_type,
+			),
+			// Enrollment.
+			$instructor_course_ids
+		);
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$row = $wpdb->get_row(
+			$wpdb->prepare( $sql, $prepare_args ),
+			ARRAY_A
+		);
+
+		if ( $row ) {
+			$counts['enrolled']   = (int) $row['enrolled'];
+			$counts['cancelled']  = (int) $row['cancelled'];
+			$counts['completed']  = (int) $row['completed'];
+			$counts['inprogress'] = (int) $row['inprogress'];
+		}
+
+		$counts['inactive'] = max(
+			0,
+			$counts['enrolled']
+				- $counts['cancelled']
+				- $counts['completed']
+				- $counts['inprogress']
+		);
+
+		// Cache data for 10min.
+		set_transient( $cache_key, $counts, MINUTE_IN_SECONDS * 10 );
 
 		return $counts;
 	}
@@ -593,9 +799,21 @@ class Instructor {
 
 		global $wpdb;
 
+		if ( ! User::is_admin( $instructor_id ) && ! User::is_instructor( $instructor_id, true ) ) {
+			return array();
+		}
+
+		$order_by   = 'revenue' === $args['order_by'] ? 'total_revenue' : 'total_student';
 		$start_date = $args['start_date'] ?? null;
 		$end_date   = $args['end_date'] ?? null;
 		$order_by   = 'revenue' === $args['order_by'] ? 'total_revenue' : 'total_student';
+
+		$unique_query_token = md5( $instructor_id . $order_by . $start_date . $end_date . $limit );
+		$cache_key          = self::DASHBOARD_TOP_PERFORMING_COURSE_TRANSIENT . $unique_query_token;
+		$cached_data        = get_transient( $cache_key );
+		if ( $cached_data ) {
+			return $cached_data;
+		}
 
 		$complete_status = tutor_utils()->get_earnings_completed_statuses();
 
@@ -670,6 +888,9 @@ class Instructor {
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error ); //phpcs:ignore.
 		}
+
+		// Cache the data for 10min.
+		set_transient( $cache_key, $result, MINUTE_IN_SECONDS * 10 );
 
 		return $result;
 	}
@@ -848,6 +1069,7 @@ class Instructor {
 				'percentage' => '',
 				'icon'       => Icon::MINUS,
 				'class'      => 'tutor-text-primary',
+				'icon_class' => '',
 			);
 		}
 

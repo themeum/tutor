@@ -1050,7 +1050,7 @@ class Quiz {
 	}
 
 	/**
-	 * Get quiz total marks.
+	 * Get total marks for a quiz
 	 *
 	 * @since 3.0.0
 	 *
@@ -1061,16 +1061,50 @@ class Quiz {
 	public static function get_quiz_total_marks( $quiz_id ) {
 		global $wpdb;
 
+		if ( ! $quiz_id ) {
+			return 0;
+		}
+
+		$max_questions   = (int) tutor_utils()->get_quiz_option( $quiz_id, 'max_questions_for_answer' );
+		$questions_order = tutor_utils()->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
+
+		$order_by_map = array(
+			'asc'     => 'question_id ASC',
+			'desc'    => 'question_id DESC',
+			'sorting' => 'question_order ASC',
+		);
+		$order_by     = $order_by_map[ $questions_order ] ?? 'question_order ASC';
+
+		$limit = $max_questions > 0 ? $max_questions : PHP_INT_MAX;
+
+		// phpcs:disable
 		$total_marks = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT SUM(question_mark) total_marks 
+				"SELECT CASE
+				WHEN %s = 'rand' AND %d > 0 AND COUNT(question_id) > %d THEN 0
+				ELSE (
+					SELECT SUM(questions.question_mark) FROM (
+						SELECT question_mark
+						FROM {$wpdb->prefix}tutor_quiz_questions
+						WHERE quiz_id = %d
+						ORDER BY {$order_by}
+						LIMIT %d
+					) AS questions
+				)
+				END
 				FROM {$wpdb->prefix}tutor_quiz_questions
-				WHERE quiz_id=%d",
+				WHERE quiz_id = %d",
+				$questions_order,
+				$max_questions,
+				$max_questions,
+				$quiz_id,
+				$limit,
 				$quiz_id
 			)
 		);
+		// phpcs:enable
 
-		return floatval( $total_marks );
+		return (float) $total_marks;
 	}
 
 	/**
@@ -1848,16 +1882,18 @@ class Quiz {
 			);
 		}
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
-					</div>',
+		if ( ! empty( $total_marks ) ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' => (float) $total_marks ),
 				),
-				array( 'content' => $total_marks ),
-			),
-		);
+			);
+		}
 
 		$quiz_summary[] = array(
 			'columns' => array(
