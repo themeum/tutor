@@ -166,7 +166,7 @@ class DateFilter extends BaseComponent {
 	/**
 	 * Whether to operate in AJAX mode (dispatch event instead of full page reload).
 	 *
-	 * @since 4.0.0
+	 * @since 4.0.9
 	 *
 	 * @var bool
 	 */
@@ -175,7 +175,7 @@ class DateFilter extends BaseComponent {
 	/**
 	 * Set AJAX mode.
 	 *
-	 * @since 4.0.0
+	 * @since 4.0.9
 	 *
 	 * @param bool $ajax True to dispatch events without reloading.
 	 * @return self

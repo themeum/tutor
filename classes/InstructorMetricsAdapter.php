@@ -8,7 +8,7 @@
  * @package Tutor
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 4.0.0
+ * @since 4.0.9
  */
 
 namespace TUTOR;
@@ -22,7 +22,7 @@ use Tutor\Models\WithdrawModel;
 /**
  * Class InstructorMetricsAdapter
  *
- * @since 4.0.0
+ * @since 4.0.9
  */
 class InstructorMetricsAdapter {
 
@@ -32,6 +32,8 @@ class InstructorMetricsAdapter {
 	 * @param string $from Start date.
 	 * @param string $to   End date.
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	public static function date_range( string $from, string $to ): array {
 		return array(
@@ -47,6 +49,8 @@ class InstructorMetricsAdapter {
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
 	 * @return float
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_total_earnings( int $user_id, string $start_date = '', string $end_date = '' ): float {
 		$tutor_pro_enabled = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
@@ -71,6 +75,8 @@ class InstructorMetricsAdapter {
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
 	 * @return int
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_total_courses( int $user_id, string $start_date = '', string $end_date = '' ): int {
 		if ( empty( $start_date ) && empty( $end_date ) ) {
@@ -86,6 +92,8 @@ class InstructorMetricsAdapter {
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
 	 * @return int
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_total_students( int $user_id, string $start_date = '', string $end_date = '' ): int {
 		$date_arg = ( ! empty( $start_date ) && ! empty( $end_date ) ) ? self::date_range( $start_date, $end_date ) : array();
@@ -99,6 +107,8 @@ class InstructorMetricsAdapter {
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
 	 * @return object
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_instructor_ratings( int $user_id, string $start_date = '', string $end_date = '' ): object {
 		$date_arg = ( ! empty( $start_date ) && ! empty( $end_date ) ) ? self::date_range( $start_date, $end_date ) : array();
@@ -119,6 +129,8 @@ class InstructorMetricsAdapter {
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_stat_cards( int $user_id, string $start_date = '', string $end_date = '' ): array {
 		$is_all_time    = empty( $start_date ) && empty( $end_date );
@@ -194,6 +206,8 @@ class InstructorMetricsAdapter {
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_overview_chart_data( int $user_id, string $start_date = '', string $end_date = '' ): array {
 		$tutor_pro_enabled = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
@@ -240,6 +254,8 @@ class InstructorMetricsAdapter {
 	 *
 	 * @param int $user_id Instructor user ID.
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_course_completion_distribution( int $user_id ): array {
 		$instructor_course_ids = CourseModel::get_courses_by_args(
@@ -284,6 +300,8 @@ class InstructorMetricsAdapter {
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_top_performing_courses( int $user_id, string $type = 'revenue', string $start_date = '', string $end_date = '' ): array {
 		$args = array(
@@ -302,6 +320,8 @@ class InstructorMetricsAdapter {
 	 *
 	 * @param int $user_id Instructor user ID.
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_upcoming_tasks( int $user_id ): array {
 		$tutor_pro_enabled = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
@@ -322,6 +342,8 @@ class InstructorMetricsAdapter {
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_recent_reviews( int $user_id, int $limit = 3, string $start_date = '', string $end_date = '' ): array {
 		$review_args = array( 'comment_approved' => 'approved' );

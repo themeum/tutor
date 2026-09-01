@@ -8,7 +8,7 @@
  * @package Tutor\Components
  * @author Themeum
  * @link https://themeum.com
- * @since 4.0.0
+ * @since 4.0.9
  */
 
 namespace Tutor\Components;
@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) || exit;
  * Skeleton::make()->type( 'reviews' )->count( 3 )->render();
  * ```
  *
- * @since 4.0.0
+ * @since 4.0.9
  */
 class Skeleton extends BaseComponent {
 
@@ -107,6 +107,8 @@ class Skeleton extends BaseComponent {
 	 *
 	 * @param string $type Type name.
 	 * @return self
+	 *
+	 * @since 4.0.9
 	 */
 	public function type( string $type ): self {
 		$this->type = $type;
@@ -118,6 +120,8 @@ class Skeleton extends BaseComponent {
 	 *
 	 * @param string|int $width Width value.
 	 * @return self
+	 *
+	 * @since 4.0.9
 	 */
 	public function width( $width ): self {
 		$this->width = is_numeric( $width ) ? "{$width}px" : $width;
@@ -129,6 +133,8 @@ class Skeleton extends BaseComponent {
 	 *
 	 * @param string|int $height Height value.
 	 * @return self
+	 *
+	 * @since 4.0.9
 	 */
 	public function height( $height ): self {
 		$this->height = is_numeric( $height ) ? "{$height}px" : $height;
@@ -140,6 +146,8 @@ class Skeleton extends BaseComponent {
 	 *
 	 * @param int $count Number of items.
 	 * @return self
+	 *
+	 * @since 4.0.9
 	 */
 	public function count( int $count ): self {
 		$this->count = max( 1, $count );
@@ -151,6 +159,8 @@ class Skeleton extends BaseComponent {
 	 *
 	 * @param int $lines Number of lines.
 	 * @return self
+	 *
+	 * @since 4.0.9
 	 */
 	public function lines( int $lines ): self {
 		$this->lines = max( 1, $lines );
@@ -162,6 +172,8 @@ class Skeleton extends BaseComponent {
 	 *
 	 * @param string $radius (circle|full|md|sm).
 	 * @return self
+	 *
+	 * @since 4.0.9
 	 */
 	public function rounded( string $radius ): self {
 		$this->radius = $radius;
@@ -172,6 +184,8 @@ class Skeleton extends BaseComponent {
 	 * Get the component output as an HTML string.
 	 *
 	 * @return string
+	 *
+	 * @since 4.0.9
 	 */
 	public function get(): string {
 		ob_start();
@@ -224,6 +238,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render single or multi lines
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_lines(): void {
 		$height = $this->height ? $this->height : '16px';
@@ -241,6 +259,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render Avatar skeleton
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_avatar(): void {
 		$size = $this->height ? $this->height : ( $this->width ? $this->width : '40px' );
@@ -253,6 +275,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render single stat card skeleton markup
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_single_stat_card(): void {
 		?>
@@ -276,6 +302,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render Stat Cards skeleton (matching .tutor-stat-card layout)
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_stat_cards(): void {
 		?>
@@ -291,6 +321,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render Box Cards skeleton (for Report Overview 3 KPI cards)
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_box_cards(): void {
 		?>
@@ -304,6 +338,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render Chart skeleton (matching .tutor-dashboard-home-chart)
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_chart(): void {
 		$chart_height = $this->height ? $this->height : '179px';
@@ -331,6 +369,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render Course Completion chart skeleton (horizontal stacked bar matching design)
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_completion_chart(): void {
 		?>
@@ -357,6 +399,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render Top Performing Courses skeleton
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_top_courses(): void {
 		$course_widths = array( '85%', '70%', '92%', '60%' );
@@ -398,6 +444,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render Upcoming Tasks skeleton
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_upcoming_tasks(): void {
 		?>
@@ -431,6 +481,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render Recent Reviews skeleton
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_reviews(): void {
 		?>
@@ -458,6 +512,10 @@ class Skeleton extends BaseComponent {
 
 	/**
 	 * Render Table skeleton
+	 *
+	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	protected function render_table(): void {
 		?>

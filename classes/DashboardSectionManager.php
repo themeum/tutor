@@ -8,7 +8,7 @@
  * @package Tutor
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 4.0.0
+ * @since 4.0.9
  */
 
 namespace TUTOR;
@@ -21,13 +21,15 @@ use Tutor\Traits\JsonResponse;
 /**
  * Class DashboardSectionManager
  *
- * @since 4.0.0
+ * @since 4.0.9
  */
 class DashboardSectionManager {
 	use JsonResponse;
 
 	/**
 	 * Constructor
+	 *
+	 * @since 4.0.9
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_tutor_get_dashboard_section', array( $this, 'ajax_get_dashboard_section' ) );
@@ -37,6 +39,8 @@ class DashboardSectionManager {
 	 * Get all registered dashboard and analytics sections metadata
 	 *
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_registered_sections(): array {
 		$sections = array(
@@ -76,6 +80,8 @@ class DashboardSectionManager {
 	 * @param string $section_id Section identifier.
 	 * @param array  $params     Context parameters (user_id, start_date, end_date, type, limit, etc.).
 	 * @return mixed
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_section_data( string $section_id, array $params = array() ) {
 		$user_id    = $params['user_id'] ?? get_current_user_id();
@@ -114,6 +120,8 @@ class DashboardSectionManager {
 	 * @param string $section_id Section identifier.
 	 * @param array  $params     Context parameters.
 	 * @return string
+	 *
+	 * @since 4.0.9
 	 */
 	public static function get_section_html( string $section_id, array $params = array() ): string {
 		$result = self::render_section( $section_id, $params );
@@ -126,6 +134,8 @@ class DashboardSectionManager {
 	 * @param string $section_id Section identifier.
 	 * @param array  $params     Context parameters.
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	public static function render_section( string $section_id, array $params = array() ): array {
 		$registered = self::get_registered_sections();
@@ -188,6 +198,8 @@ class DashboardSectionManager {
 	 * Handle AJAX request to lazyload a dashboard section
 	 *
 	 * @return void
+	 *
+	 * @since 4.0.9
 	 */
 	public function ajax_get_dashboard_section() {
 		tutor_utils()->check_nonce();
@@ -243,6 +255,8 @@ class DashboardSectionManager {
 	 * @param array $data   Stats cards from adapter.
 	 * @param array $params Context parameters.
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	protected static function render_current_stats( $data, array $params ): array {
 		$start_date = $params['start_date'] ?? '';
@@ -288,6 +302,8 @@ class DashboardSectionManager {
 	 * @param array $data   Chart data from adapter.
 	 * @param array $params Context parameters.
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	protected static function render_overview_chart( $data, array $params ): array {
 		if ( empty( $data ) ) {
@@ -319,6 +335,8 @@ class DashboardSectionManager {
 	 * @param array $data   Distribution data from adapter.
 	 * @param array $params Context parameters.
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	protected static function render_course_completion( $data, array $params ): array {
 		if ( empty( $data ) ) {
@@ -356,6 +374,8 @@ class DashboardSectionManager {
 	 * @param array $data   Top courses data from adapter.
 	 * @param array $params Context parameters.
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	protected static function render_top_performing_courses( $data, array $params ): array {
 		$type        = $params['top_performing_course'] ?? $params['type'] ?? 'revenue';
@@ -420,6 +440,8 @@ class DashboardSectionManager {
 	 * @param array $data   Tasks data from adapter.
 	 * @param array $params Context parameters.
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	protected static function render_upcoming_tasks( $data, array $params ): array {
 		$tasks = is_array( $data ) ? $data : array();
@@ -465,6 +487,8 @@ class DashboardSectionManager {
 	 * @param array $data   Reviews data from adapter.
 	 * @param array $params Context parameters.
 	 * @return array
+	 *
+	 * @since 4.0.9
 	 */
 	protected static function render_recent_reviews( $data, array $params ): array {
 		$reviews = is_array( $data ) ? $data : array();
