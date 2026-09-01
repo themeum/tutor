@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Quiz;
-use TUTOR\Models\QuizModel;
+use Tutor\Models\QuizModel;
 
 global $tutor_current_post, $tutor_course_id;
 
@@ -25,7 +25,6 @@ if ( ! $quiz || ! is_a( $quiz, 'WP_Post' ) ) {
 $quiz_id            = $quiz->ID;
 $total_questions    = (int) tutor_utils()->total_questions_for_student_by_quiz( $quiz_id );
 $quiz_options       = tutor_utils()->get_quiz_option( $quiz_id );
-$total_marks        = Quiz::get_quiz_total_marks( $quiz_id );
 $passing_grade      = (int) ( $quiz_options['passing_grade'] ?? 0 );
 $quiz_time          = $quiz_options['time_limit'] ?? null;
 $has_time_limit     = is_array( $quiz_time ) && ! empty( $quiz_time['time_value'] ) && (int) $quiz_time['time_value'] > 0;
@@ -33,11 +32,13 @@ $time_units         = Quiz::quiz_time_units();
 $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $time_units[ $quiz_time['time_type'] ] : null;
 $quiz_attempt       = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id ?? get_current_user_id() );
 $earned_marks       = 0;
+$total_marks        = 0;
 
-if ( $quiz_attempt && $total_marks > 0 ) {
-	$earned_marks = (float) $quiz_attempt->earned_marks;
-	$total        = (float) $total_marks;
-	$earned_marks = number_format( ( $earned_marks / $total_marks ) * 100, 2 );
+if ( is_object( $quiz_attempt ) && (float) ( $quiz_attempt->total_marks ?? 0 ) > 0 ) {
+	$total_marks  = (float) $quiz_attempt->total_marks;
+	$earned_marks = QuizModel::calculate_attempt_earned_percentage( $quiz_attempt );
+} else {
+	$total_marks = Quiz::get_quiz_total_marks( $quiz_id );
 }
 $limit_attempts   = (int) $quiz_options['limit_attempts_allowed'] ?? 0;
 $allowed_attempts = $limit_attempts ? $quiz_options['attempts_allowed'] ?? '' : '1';
