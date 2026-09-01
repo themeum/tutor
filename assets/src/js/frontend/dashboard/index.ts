@@ -8,6 +8,7 @@ import { initializeSiteShell } from '@FrontendServices/site-shell';
 
 import { initializeConfetti } from './confetti';
 import { initializeHeader } from './header';
+import { initializeLazySection } from './lazy-section';
 import { initializeAnnouncements } from './pages/announcements';
 import { initBillingCsvExport } from './pages/billing';
 import { initializeDiscussions } from './pages/discussions';
@@ -79,6 +80,7 @@ const initializeDashboard = () => {
   initializeHeader();
   initializeCommon();
   initializeTour();
+  initializeLazySection();
 
   const currentPage = getCurrentPage();
 
