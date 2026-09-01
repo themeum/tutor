@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://tutorlms.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.0.7
+Stable tag: 4.0.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -337,6 +337,27 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.8 - 07 Sep, 2026
+
+Update: Add toggle settings for puzzle quiz background reference image. (Pro)
+Update: UX updated for the assignment flow. (Pro)
+Update: Add go-to content links in Q&A single views and deep-linkable course tabs.
+Update: Site Header and Footer support in dashboard and learning area.
+Update: Dark and Light Logo in settings.
+Update: Quiz pagination and attempt details enhancement.
+Update: Optimization of instructor dashboard db query to load page faster.
+Update: Button Accessibility updated.
+Fix: Google OAuth blank screen in incognito social login. (Pro)
+Fix: Latex not rendering correctly on answer explanation.
+Fix: Incorrect view of Category / tag in students dashboard.
+Fix: Quiz Answer Option 0 Not Displaying on Frontend.
+Fix: Reduce image display size in new quiz types views to eliminate inner scrolling. (Pro)
+Fix: Course Prerequisite Missing After Section Removal. (Pro)
+Fix: Content Bank – Invalid Question ID When Adding to Existing Quiz. (Pro)
+Fix: Lesson Time Duration Not Saving/Updating.
+Fix: Assignment attempt details attachment input should not be visible. (Pro)
+Fix: Wrong display for total marks in Quiz.
 
 = 4.0.7 - 20 Aug, 2026
 
