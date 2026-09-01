@@ -882,7 +882,7 @@ class CheckoutController {
 			);
 		}
 
-		return (object) array(
+		$payment_data = (object) array(
 			'items'              => (object) $items,
 			'subtotal'           => floatval( $subtotal_price ),
 			'total_price'        => floatval( $total_price ),
@@ -906,6 +906,22 @@ class CheckoutController {
 			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, '.' ),
 			'customer'           => (object) $customer_info,
 		);
+
+		/**
+		 * Filter the payment data before it is handed to a payment gateway.
+		 *
+		 * Addons use this to attach whatever a gateway needs to bill the order
+		 * — the subscription addon attaches recurring billing terms, for
+		 * instance — so a gateway never has to read Tutor's models itself.
+		 * Attach data in gateway-neutral terms: every gateway sees it.
+		 *
+		 * @since 4.0.8
+		 *
+		 * @param object $payment_data Payment data passed to the gateway.
+		 * @param object $order        Order the payment is being made for.
+		 */
+		$payment_data = apply_filters( 'tutor_payment_data', $payment_data, (object) $order );
+		return $payment_data;
 	}
 
 	/**
