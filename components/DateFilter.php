@@ -352,7 +352,7 @@ class DateFilter extends BaseComponent {
 		<div 
 			x-data="{
 				...tutorPopover({ placement: '<?php echo esc_attr( $this->placement ); ?>' }),
-				label: '<?php echo esc_js( $default_label ); ?>',
+				label: <?php echo esc_attr( wp_json_encode( $default_label ) ); ?>,
 				hasSelection: <?php echo $has_selection ? 'true' : 'false'; ?>,
 				showLabel: <?php echo $this->show_label ? 'true' : 'false'; ?>,
 				hideInitialLabel: <?php echo $this->hide_initial_label ? 'true' : 'false'; ?>,
@@ -380,7 +380,7 @@ class DateFilter extends BaseComponent {
 					const end = detail.endDate;
 					if ( ! start && ! end && ! detail.date ) {
 						this.hasSelection = false;
-						this.label = this.hideInitialLabel ? '' : '<?php echo esc_js( __( 'All Time', 'tutor' ) ); ?>';
+						this.label = this.hideInitialLabel ? '' : <?php echo esc_attr( wp_json_encode( __( 'All Time', 'tutor' ) ) ); ?>;
 						return;
 					}
 					this.hasSelection = true;
