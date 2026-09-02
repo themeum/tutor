@@ -42,7 +42,7 @@ class Template extends Tutor_Base {
 	 *
 	 * @var string
 	 */
-	private const THEME_HEADER_SELECTOR = 'header[role="banner"], header.site-header, header#masthead, #masthead, .site-header, #site-header, header.wp-block-template-part, header.header-sticky, header.has-sticky-header, header.shfb, .shfb-header, .shfb-sticky-header, .ast-primary-header-bar, .main-header-bar, #main-header, .et-l--header, .ct-header, #rs-header, .rs-header, .full-width-header, .header-area, .navbar-area, .ecademy-nav, .edali-nav, .turitor-header, .edubin-header, .edumodo-header, .bb-header, #bb-header, .elementor-location-header, header';
+	private const THEME_HEADER_SELECTOR = 'header[role="banner"], header[role="heading"], header.site-header, header#masthead, #masthead, .site-header, #site-header, header.wp-block-template-part, header.header-sticky, header.has-sticky-header, header.shfb, .shfb-header, .shfb-sticky-header, .ast-primary-header-bar, .main-header-bar, #main-header, .et-l--header, .ct-header, #rs-header, .rs-header, .full-width-header, .header-area, .navbar-area, .ecademy-nav, .edali-nav, .turitor-header, .edubin-header, .edumodo-header, .bb-header, #bb-header, .elementor-location-header, header';
 
 	/**
 	 * Store Shortcode Object
