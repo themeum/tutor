@@ -77,36 +77,6 @@ class Instructor {
 
 		add_action( 'wp_ajax_tutor_save_instructor_home_sections_order', array( $this, 'ajax_save_home_sections_order' ) );
 		add_action( 'wp_ajax_tutor_save_instructor_home_sections_visibility', array( $this, 'ajax_save_home_section_visibility' ) );
-		add_filter( 'map_meta_cap', array( $this, 'map_meta_cap_for_instructor' ), 10, 4 );
-	}
-
-	/**
-	 * Map meta capability for instructor.
-	 *
-	 * @since 4.0.8
-	 *
-	 * @param array  $caps Array of capabilities.
-	 * @param string $cap  Capability name.
-	 * @param int    $user_id User ID.
-	 * @param array  $args Array of arguments.
-	 * @return array Array of capabilities.
-	 */
-	public function map_meta_cap_for_instructor( $caps, $cap, $user_id, $args ) {
-		if ( 'edit_post' !== $cap ) {
-			return $caps;
-		}
-
-		$course_id = isset( $args[0] ) ? (int) $args[0] : null;
-
-		if ( ! $course_id || ! $user_id || tutor()->course_post_type !== get_post_type( $course_id ) ) {
-			return $caps;
-		}
-
-		if ( tutor_utils()->is_instructor_of_this_course( $user_id, $course_id ) ) {
-			return array( 'edit_tutor_course' );
-		}
-
-		return $caps;
 	}
 
 	/**
