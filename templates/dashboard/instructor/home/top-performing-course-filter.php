@@ -48,7 +48,6 @@ $selected = $selected ?? 'revenue';
 					@click.prevent="
 						const url = new URL(window.location.href);
 						url.searchParams.set('top_performing_course', <?php echo esc_attr( wp_json_encode( $key ) ); ?>);
-						url.searchParams.delete('type');
 						window.history.pushState({}, '', url.toString());
 						window.dispatchEvent(new CustomEvent(window.TutorCore?.constants?.TUTOR_CUSTOM_EVENTS?.SORT_CHANGED || 'tutor:sort-changed', { detail: { type: <?php echo esc_attr( wp_json_encode( $key ) ); ?> } }));
 						hide();
