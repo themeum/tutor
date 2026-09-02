@@ -1645,7 +1645,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 
 			$supported_gateways = array();
 			foreach ( $payment_gateways as $gateway ) {
-				$support_subscription = $gateway['support_subscription'] ?? false;
+				$support_subscription = true; //$gateway['support_subscription'] ?? false;
 
 				if ( ! $support_subscription ) {
 					continue;
