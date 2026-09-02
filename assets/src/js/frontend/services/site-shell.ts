@@ -7,6 +7,19 @@ const MAX_HEADER_HEIGHT = 250;
 const SITE_SHELL_ROOT_SELECTOR = '[data-tutor-learning-site-shell], [data-tutor-dashboard-site-shell]';
 
 /**
+ * Returns the effective height in pixels for a valid header element.
+ */
+const getHeaderHeight = (element: HTMLElement | null): number => {
+  if (!element || !element.isConnected) {
+    return 0;
+  }
+
+  const rect = element.getBoundingClientRect();
+  const height = rect.height > 0 && rect.height <= MAX_HEADER_HEIGHT ? rect.height : element.offsetHeight;
+  return Math.min(Math.max(0, Math.round(height)), MAX_HEADER_HEIGHT);
+};
+
+/**
  * Checks if an element represents a visible header bar with reasonable dimensions.
  */
 const isValidHeaderBar = (element: HTMLElement | null): boolean => {
@@ -135,23 +148,23 @@ class SiteShellController {
 
   start(): void {
     this.themeHeader = this.findThemeHeader();
-    this.updateOffset();
+    this.updateOffset(true);
 
     if (this.themeHeader && typeof ResizeObserver !== 'undefined') {
-      this.resizeObserver = new ResizeObserver(() => this.scheduleOffsetUpdate());
+      this.resizeObserver = new ResizeObserver(() => this.scheduleOffsetUpdate(true));
       this.resizeObserver.observe(this.themeHeader);
     }
 
-    window.addEventListener('resize', this.scheduleOffsetUpdate);
-    window.addEventListener('scroll', this.scheduleOffsetUpdate, { passive: true });
+    window.addEventListener('resize', this.scheduleResizeUpdate);
+    window.addEventListener('scroll', this.scheduleScrollUpdate, { passive: true });
   }
 
   destroy(): void {
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
 
-    window.removeEventListener('resize', this.scheduleOffsetUpdate);
-    window.removeEventListener('scroll', this.scheduleOffsetUpdate);
+    window.removeEventListener('resize', this.scheduleResizeUpdate);
+    window.removeEventListener('scroll', this.scheduleScrollUpdate);
 
     if (this.animationFrame !== null) {
       window.cancelAnimationFrame(this.animationFrame);
@@ -174,44 +187,47 @@ class SiteShellController {
     }
   }
 
-  private scheduleOffsetUpdate = (): void => {
+  private scheduleResizeUpdate = (): void => {
+    this.scheduleOffsetUpdate(true);
+  };
+
+  private scheduleScrollUpdate = (): void => {
+    this.scheduleOffsetUpdate(false);
+  };
+
+  private scheduleOffsetUpdate = (isResize: boolean): void => {
     if (this.animationFrame !== null) {
       return;
     }
 
     this.animationFrame = window.requestAnimationFrame(() => {
       this.animationFrame = null;
-      this.updateOffset();
+      this.updateOffset(isResize);
     });
   };
 
-  private updateOffset(): void {
+  private updateOffset(isResize = false): void {
     const adminBarBottom = getAdminBarBottom();
     const stickyHeader = findStickyHeaderElement(this.themeHeader);
-
-    let headerHeight = 0;
-    if (stickyHeader) {
-      const rect = stickyHeader.getBoundingClientRect();
-      headerHeight = rect.height > 0 && rect.height <= MAX_HEADER_HEIGHT ? rect.height : stickyHeader.offsetHeight;
-    }
+    const headerHeight = getHeaderHeight(stickyHeader);
 
     // For sticky/fixed theme headers, the offset below the header is adminBarBottom + headerHeight
     const totalHeaderOffset = stickyHeader ? adminBarBottom + headerHeight : adminBarBottom;
     const clampedOffset = Math.min(Math.max(0, Math.round(totalHeaderOffset)), MAX_HEADER_HEIGHT);
     this.root.style.setProperty(CSS_VARIABLE_HEADER_OFFSET, `${clampedOffset}px`);
 
-    // Overlay offset applies when a fixed/absolute/transparent header overlays the page on initial load
-    let overlayOffset = 0;
-    if (this.themeHeader && isOverlayHeader(this.themeHeader)) {
-      const rect = this.themeHeader.getBoundingClientRect();
-      const themeHeaderHeight =
-        rect.height > 0 && rect.height <= MAX_HEADER_HEIGHT ? rect.height : this.themeHeader.offsetHeight;
-      const rootTop = this.root.getBoundingClientRect().top;
-      overlayOffset = Math.max(0, adminBarBottom + themeHeaderHeight - Math.max(0, rootTop));
-    }
+    // Overlay offset sets initial reserve padding-top on load/resize without mutating during scroll
+    if (isResize) {
+      let overlayOffset = 0;
+      if (this.themeHeader && isOverlayHeader(this.themeHeader)) {
+        const themeHeaderHeight = getHeaderHeight(this.themeHeader);
+        const rootTop = this.root.getBoundingClientRect().top;
+        overlayOffset = Math.max(0, adminBarBottom + themeHeaderHeight - Math.max(0, rootTop));
+      }
 
-    const clampedOverlayOffset = Math.min(Math.max(0, Math.round(overlayOffset)), MAX_HEADER_HEIGHT);
-    this.root.style.setProperty(CSS_VARIABLE_HEADER_OVERLAY_OFFSET, `${clampedOverlayOffset}px`);
+      const clampedOverlayOffset = Math.min(Math.max(0, Math.round(overlayOffset)), MAX_HEADER_HEIGHT);
+      this.root.style.setProperty(CSS_VARIABLE_HEADER_OVERLAY_OFFSET, `${clampedOverlayOffset}px`);
+    }
   }
 }
 
