@@ -55,6 +55,8 @@ class InstructorMetricsAdapter {
 	 * @return float
 	 */
 	public static function get_total_earnings( int $user_id, string $start_date = '', string $end_date = '' ): float {
+		$start_date        = sanitize_text_field( $start_date );
+		$end_date          = sanitize_text_field( $end_date );
 		$tutor_pro_enabled = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
 		$is_pro_reports    = $tutor_pro_enabled && tutor_utils()->is_addon_enabled( 'tutor-report' );
 
@@ -82,6 +84,9 @@ class InstructorMetricsAdapter {
 	 * @return int
 	 */
 	public static function get_total_courses( int $user_id, string $start_date = '', string $end_date = '' ): int {
+		$start_date = sanitize_text_field( $start_date );
+		$end_date   = sanitize_text_field( $end_date );
+
 		if ( empty( $start_date ) && empty( $end_date ) ) {
 			return (int) CourseModel::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX, true );
 		}
@@ -100,7 +105,10 @@ class InstructorMetricsAdapter {
 	 * @return int
 	 */
 	public static function get_total_students( int $user_id, string $start_date = '', string $end_date = '' ): int {
-		$date_arg = ( ! empty( $start_date ) && ! empty( $end_date ) ) ? self::date_range( $start_date, $end_date ) : array();
+		$start_date = sanitize_text_field( $start_date );
+		$end_date   = sanitize_text_field( $end_date );
+		$date_arg   = ( ! empty( $start_date ) && ! empty( $end_date ) ) ? self::date_range( $start_date, $end_date ) : array();
+
 		return (int) tutor_utils()->get_total_students_by_instructor( $user_id, $date_arg );
 	}
 
@@ -116,8 +124,11 @@ class InstructorMetricsAdapter {
 	 * @return object
 	 */
 	public static function get_instructor_ratings( int $user_id, string $start_date = '', string $end_date = '' ): object {
-		$date_arg = ( ! empty( $start_date ) && ! empty( $end_date ) ) ? self::date_range( $start_date, $end_date ) : array();
-		$ratings  = tutor_utils()->get_instructor_ratings( $user_id, $date_arg );
+		$start_date = sanitize_text_field( $start_date );
+		$end_date   = sanitize_text_field( $end_date );
+		$date_arg   = ( ! empty( $start_date ) && ! empty( $end_date ) ) ? self::date_range( $start_date, $end_date ) : array();
+		$ratings    = tutor_utils()->get_instructor_ratings( $user_id, $date_arg );
+
 		if ( ! is_object( $ratings ) ) {
 			$ratings = (object) array(
 				'rating_avg'   => 0,
@@ -139,6 +150,8 @@ class InstructorMetricsAdapter {
 	 * @return array
 	 */
 	public static function get_stat_cards( int $user_id, string $start_date = '', string $end_date = '' ): array {
+		$start_date     = sanitize_text_field( $start_date );
+		$end_date       = sanitize_text_field( $end_date );
 		$is_all_time    = empty( $start_date ) && empty( $end_date );
 		$previous_dates = $is_all_time ? array() : Instructor::get_comparison_date_range( $start_date, $end_date );
 
@@ -217,6 +230,8 @@ class InstructorMetricsAdapter {
 	 * @return array
 	 */
 	public static function get_overview_chart_data( int $user_id, string $start_date = '', string $end_date = '' ): array {
+		$start_date        = sanitize_text_field( $start_date );
+		$end_date          = sanitize_text_field( $end_date );
 		$tutor_pro_enabled = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
 		$is_pro_reports    = $tutor_pro_enabled && tutor_utils()->is_addon_enabled( 'tutor-report' );
 
@@ -266,15 +281,7 @@ class InstructorMetricsAdapter {
 	 * @return array
 	 */
 	public static function get_course_completion_distribution( int $user_id ): array {
-		$instructor_course_ids = CourseModel::get_courses_by_args(
-			array(
-				'post_author'    => $user_id,
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-			)
-		)->posts;
-
-		$distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
+		$distribution = Instructor::get_course_completion_distribution_data_by_instructor( $user_id );
 
 		return array(
 			'enrolled'    => array(
@@ -313,6 +320,10 @@ class InstructorMetricsAdapter {
 	 * @return array
 	 */
 	public static function get_top_performing_courses( int $user_id, string $type = 'revenue', string $start_date = '', string $end_date = '' ): array {
+		$type       = sanitize_text_field( $type );
+		$start_date = sanitize_text_field( $start_date );
+		$end_date   = sanitize_text_field( $end_date );
+
 		$args = array(
 			'start_date' => $start_date,
 			'end_date'   => $end_date,
@@ -357,7 +368,10 @@ class InstructorMetricsAdapter {
 	 * @return array
 	 */
 	public static function get_recent_reviews( int $user_id, int $limit = 3, string $start_date = '', string $end_date = '' ): array {
+		$start_date  = sanitize_text_field( $start_date );
+		$end_date    = sanitize_text_field( $end_date );
 		$review_args = array( 'comment_approved' => 'approved' );
+
 		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$review_args = self::date_range( $start_date, $end_date );
 		}

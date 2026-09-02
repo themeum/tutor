@@ -85,11 +85,12 @@ class DashboardSectionManager {
 	 * @return mixed
 	 */
 	public static function get_section_data( string $section_id, array $params = array() ) {
-		$user_id    = $params['user_id'] ?? get_current_user_id();
-		$start_date = $params['start_date'] ?? '';
-		$end_date   = $params['end_date'] ?? '';
-		$type       = $params['type'] ?? 'revenue';
-		$limit      = $params['limit'] ?? 3;
+		$user_id    = isset( $params['user_id'] ) ? (int) $params['user_id'] : get_current_user_id();
+		$start_date = ! empty( $params['start_date'] ) ? sanitize_text_field( $params['start_date'] ) : '';
+		$end_date   = ! empty( $params['end_date'] ) ? sanitize_text_field( $params['end_date'] ) : '';
+		$type       = ! empty( $params['type'] ) ? sanitize_text_field( $params['type'] ) : 'revenue';
+		$type       = in_array( $type, array( 'revenue', 'student' ), true ) ? $type : 'revenue';
+		$limit      = isset( $params['limit'] ) ? (int) $params['limit'] : 3;
 
 		switch ( $section_id ) {
 			case 'current_stats':
@@ -151,7 +152,7 @@ class DashboardSectionManager {
 
 		$params['user_id'] = $params['user_id'] ?? get_current_user_id();
 
-		// Custom filter hook for third-party or Pro sections
+		// Custom filter hook for third-party or Pro sections.
 		$custom_render = apply_filters( 'tutor_dashboard_section_render', null, $section_id, $params );
 		if ( ! is_null( $custom_render ) ) {
 			if ( is_array( $custom_render ) ) {
@@ -163,7 +164,7 @@ class DashboardSectionManager {
 			);
 		}
 
-		// If registered section has a custom callback (e.g. legacy/Pro registrations)
+		// If registered section has a custom callback (e.g. legacy/Pro registrations).
 		if ( isset( $registered[ $section_id ]['callback'] ) && is_callable( $registered[ $section_id ]['callback'] ) ) {
 			return call_user_func( $registered[ $section_id ]['callback'], $params );
 		}
@@ -175,19 +176,19 @@ class DashboardSectionManager {
 				return self::render_current_stats( $data, $params );
 
 			case 'overview_chart':
-				return self::render_overview_chart( $data, $params );
+				return self::render_overview_chart( $data );
 
 			case 'course_completion_and_leader':
-				return self::render_course_completion( $data, $params );
+				return self::render_course_completion( $data );
 
 			case 'top_performing_courses':
 				return self::render_top_performing_courses( $data, $params );
 
 			case 'upcoming_tasks_and_activity':
-				return self::render_upcoming_tasks( $data, $params );
+				return self::render_upcoming_tasks( $data );
 
 			case 'recent_reviews':
-				return self::render_recent_reviews( $data, $params );
+				return self::render_recent_reviews( $data );
 
 			default:
 				return array(
@@ -238,15 +239,11 @@ class DashboardSectionManager {
 			'type'                  => $type,
 		);
 
-		try {
-			$result = self::render_section( $section_id, $params );
-			$this->response_data( $result );
-		} catch ( \Throwable $e ) {
-			$this->json_response( __( 'An error occurred while loading this section.', 'tutor' ), null, 500 );
-		}
+		$result = self::render_section( $section_id, $params );
+		$this->response_data( $result );
 	}
 
-	/* 
+	/*
 	=========================================================================
 	SECTION VIEW RENDERERS
 	=========================================================================
@@ -263,8 +260,8 @@ class DashboardSectionManager {
 	 * @return array
 	 */
 	protected static function render_current_stats( $data, array $params ): array {
-		$start_date = $params['start_date'] ?? '';
-		$end_date   = $params['end_date'] ?? '';
+		$start_date = ! empty( $params['start_date'] ) ? sanitize_text_field( $params['start_date'] ) : '';
+		$end_date   = ! empty( $params['end_date'] ) ? sanitize_text_field( $params['end_date'] ) : '';
 		$cards      = is_array( $data ) ? $data : array();
 
 		ob_start();
@@ -305,12 +302,11 @@ class DashboardSectionManager {
 	 *
 	 * @since 4.0.8
 	 *
-	 * @param array $data   Chart data from adapter.
-	 * @param array $params Context parameters.
+	 * @param array $data Chart data from adapter.
 	 *
 	 * @return array
 	 */
-	protected static function render_overview_chart( $data, array $params ): array {
+	protected static function render_overview_chart( $data ): array {
 		if ( empty( $data ) ) {
 			return array(
 				'html'     => '',
@@ -339,12 +335,11 @@ class DashboardSectionManager {
 	 *
 	 * @since 4.0.8
 	 *
-	 * @param array $data   Distribution data from adapter.
-	 * @param array $params Context parameters.
+	 * @param array $data Distribution data from adapter.
 	 *
 	 * @return array
 	 */
-	protected static function render_course_completion( $data, array $params ): array {
+	protected static function render_course_completion( $data ): array {
 		if ( empty( $data ) ) {
 			return array(
 				'html'     => '',
@@ -386,6 +381,8 @@ class DashboardSectionManager {
 	 */
 	protected static function render_top_performing_courses( $data, array $params ): array {
 		$type        = $params['top_performing_course'] ?? $params['type'] ?? 'revenue';
+		$type        = sanitize_text_field( $type );
+		$type        = in_array( $type, array( 'revenue', 'student' ), true ) ? $type : 'revenue';
 		$top_courses = is_array( $data ) ? $data : array();
 
 		if ( empty( $top_courses ) ) {
@@ -446,12 +443,11 @@ class DashboardSectionManager {
 	 *
 	 * @since 4.0.8
 	 *
-	 * @param array $data   Tasks data from adapter.
-	 * @param array $params Context parameters.
+	 * @param array $data Tasks data from adapter.
 	 *
 	 * @return array
 	 */
-	protected static function render_upcoming_tasks( $data, array $params ): array {
+	protected static function render_upcoming_tasks( $data ): array {
 		$tasks = is_array( $data ) ? $data : array();
 		if ( empty( $tasks ) ) {
 			return array(
@@ -494,12 +490,11 @@ class DashboardSectionManager {
 	 *
 	 * @since 4.0.8
 	 *
-	 * @param array $data   Reviews data from adapter.
-	 * @param array $params Context parameters.
+	 * @param array $data Reviews data from adapter.
 	 *
 	 * @return array
 	 */
-	protected static function render_recent_reviews( $data, array $params ): array {
+	protected static function render_recent_reviews( $data ): array {
 		$reviews = is_array( $data ) ? $data : array();
 		if ( empty( $reviews ) ) {
 			return array(
