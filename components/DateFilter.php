@@ -178,6 +178,7 @@ class DateFilter extends BaseComponent {
 	 * @since 4.0.9
 	 *
 	 * @param bool $ajax True to dispatch events without reloading.
+	 *
 	 * @return self
 	 */
 	public function ajax_mode( bool $ajax = true ): self {

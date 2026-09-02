@@ -103,12 +103,13 @@ class Skeleton extends BaseComponent {
 	protected $radius = '';
 
 	/**
-	 * Set the skeleton type
-	 *
-	 * @param string $type Type name.
-	 * @return self
+	 * Set the skeleton type.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @param string $type Type name.
+	 *
+	 * @return self
 	 */
 	public function type( string $type ): self {
 		$this->type = $type;
@@ -116,12 +117,13 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Set width
-	 *
-	 * @param string|int $width Width value.
-	 * @return self
+	 * Set width.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @param string|int $width Width value.
+	 *
+	 * @return self
 	 */
 	public function width( $width ): self {
 		$this->width = is_numeric( $width ) ? "{$width}px" : $width;
@@ -129,12 +131,13 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Set height
-	 *
-	 * @param string|int $height Height value.
-	 * @return self
+	 * Set height.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @param string|int $height Height value.
+	 *
+	 * @return self
 	 */
 	public function height( $height ): self {
 		$this->height = is_numeric( $height ) ? "{$height}px" : $height;
@@ -142,12 +145,13 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Set repetition count
-	 *
-	 * @param int $count Number of items.
-	 * @return self
+	 * Set repetition count.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @param int $count Number of items.
+	 *
+	 * @return self
 	 */
 	public function count( int $count ): self {
 		$this->count = max( 1, $count );
@@ -155,12 +159,13 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Set number of lines
-	 *
-	 * @param int $lines Number of lines.
-	 * @return self
+	 * Set number of lines.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @param int $lines Number of lines.
+	 *
+	 * @return self
 	 */
 	public function lines( int $lines ): self {
 		$this->lines = max( 1, $lines );
@@ -168,12 +173,13 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Set rounded radius
-	 *
-	 * @param string $radius (circle|full|md|sm).
-	 * @return self
+	 * Set rounded radius.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @param string $radius (circle|full|md|sm).
+	 *
+	 * @return self
 	 */
 	public function rounded( string $radius ): self {
 		$this->radius = $radius;
@@ -183,9 +189,9 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Get the component output as an HTML string.
 	 *
-	 * @return string
-	 *
 	 * @since 4.0.9
+	 *
+	 * @return string
 	 */
 	public function get(): string {
 		ob_start();
@@ -237,11 +243,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render single or multi lines
-	 *
-	 * @return void
+	 * Render single or multi lines.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_lines(): void {
 		$height = $this->height ? $this->height : '16px';
@@ -258,11 +264,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render Avatar skeleton
-	 *
-	 * @return void
+	 * Render Avatar skeleton.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_avatar(): void {
 		$size = $this->height ? $this->height : ( $this->width ? $this->width : '40px' );
@@ -274,11 +280,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render single stat card skeleton markup
-	 *
-	 * @return void
+	 * Render single stat card skeleton markup.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_single_stat_card(): void {
 		?>
@@ -301,11 +307,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render Stat Cards skeleton (matching .tutor-stat-card layout)
-	 *
-	 * @return void
+	 * Render Stat Cards skeleton (matching .tutor-stat-card layout).
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_stat_cards(): void {
 		?>
@@ -320,11 +326,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render Box Cards skeleton (for Report Overview 3 KPI cards)
-	 *
-	 * @return void
+	 * Render Box Cards skeleton (for Report Overview 3 KPI cards).
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_box_cards(): void {
 		?>
@@ -337,11 +343,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render Chart skeleton (matching .tutor-dashboard-home-chart)
-	 *
-	 * @return void
+	 * Render Chart skeleton (matching .tutor-dashboard-home-chart).
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_chart(): void {
 		$chart_height = $this->height ? $this->height : '179px';
@@ -368,11 +374,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render Course Completion chart skeleton (horizontal stacked bar matching design)
-	 *
-	 * @return void
+	 * Render Course Completion chart skeleton (horizontal stacked bar matching design).
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_completion_chart(): void {
 		?>
@@ -398,11 +404,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render Top Performing Courses skeleton
-	 *
-	 * @return void
+	 * Render Top Performing Courses skeleton.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_top_courses(): void {
 		$course_widths = array( '85%', '70%', '92%', '60%' );
@@ -443,11 +449,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render Upcoming Tasks skeleton
-	 *
-	 * @return void
+	 * Render Upcoming Tasks skeleton.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_upcoming_tasks(): void {
 		?>
@@ -480,11 +486,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render Recent Reviews skeleton
-	 *
-	 * @return void
+	 * Render Recent Reviews skeleton.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_reviews(): void {
 		?>
@@ -511,11 +517,11 @@ class Skeleton extends BaseComponent {
 	}
 
 	/**
-	 * Render Table skeleton
-	 *
-	 * @return void
+	 * Render Table skeleton.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	protected function render_table(): void {
 		?>

@@ -27,7 +27,7 @@ class DashboardSectionManager {
 	use JsonResponse;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
 	 * @since 4.0.9
 	 */
@@ -36,11 +36,11 @@ class DashboardSectionManager {
 	}
 
 	/**
-	 * Get all registered dashboard and analytics sections metadata
-	 *
-	 * @return array
+	 * Get all registered dashboard and analytics sections metadata.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return array
 	 */
 	public static function get_registered_sections(): array {
 		$sections = array(
@@ -75,13 +75,14 @@ class DashboardSectionManager {
 	}
 
 	/**
-	 * Get raw normalized domain data for a section via the Adapter
+	 * Get raw normalized domain data for a section via the Adapter.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param string $section_id Section identifier.
 	 * @param array  $params     Context parameters (user_id, start_date, end_date, type, limit, etc.).
-	 * @return mixed
 	 *
-	 * @since 4.0.9
+	 * @return mixed
 	 */
 	public static function get_section_data( string $section_id, array $params = array() ) {
 		$user_id    = $params['user_id'] ?? get_current_user_id();
@@ -115,13 +116,14 @@ class DashboardSectionManager {
 	}
 
 	/**
-	 * Get rendered HTML partial for a given section
+	 * Get rendered HTML partial for a given section.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param string $section_id Section identifier.
 	 * @param array  $params     Context parameters.
-	 * @return string
 	 *
-	 * @since 4.0.9
+	 * @return string
 	 */
 	public static function get_section_html( string $section_id, array $params = array() ): string {
 		$result = self::render_section( $section_id, $params );
@@ -129,13 +131,14 @@ class DashboardSectionManager {
 	}
 
 	/**
-	 * Render a dashboard section, returning HTML, chart_data, and status payload
+	 * Render a dashboard section, returning HTML, chart_data, and status payload.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param string $section_id Section identifier.
 	 * @param array  $params     Context parameters.
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	public static function render_section( string $section_id, array $params = array() ): array {
 		$registered = self::get_registered_sections();
@@ -195,11 +198,11 @@ class DashboardSectionManager {
 	}
 
 	/**
-	 * Handle AJAX request to lazyload a dashboard section
-	 *
-	 * @return void
+	 * Handle AJAX request to lazyload a dashboard section.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @return void
 	 */
 	public function ajax_get_dashboard_section() {
 		tutor_utils()->check_nonce();
@@ -250,13 +253,14 @@ class DashboardSectionManager {
 	*/
 
 	/**
-	 * Render Current Stats View
+	 * Render Current Stats View.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param array $data   Stats cards from adapter.
 	 * @param array $params Context parameters.
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	protected static function render_current_stats( $data, array $params ): array {
 		$start_date = $params['start_date'] ?? '';
@@ -297,13 +301,14 @@ class DashboardSectionManager {
 	}
 
 	/**
-	 * Render Overview Chart View
+	 * Render Overview Chart View.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param array $data   Chart data from adapter.
 	 * @param array $params Context parameters.
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	protected static function render_overview_chart( $data, array $params ): array {
 		if ( empty( $data ) ) {
@@ -330,13 +335,14 @@ class DashboardSectionManager {
 	}
 
 	/**
-	 * Render Course Completion View
+	 * Render Course Completion View.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param array $data   Distribution data from adapter.
 	 * @param array $params Context parameters.
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	protected static function render_course_completion( $data, array $params ): array {
 		if ( empty( $data ) ) {
@@ -369,13 +375,14 @@ class DashboardSectionManager {
 	}
 
 	/**
-	 * Render Top Performing Courses View
+	 * Render Top Performing Courses View.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param array $data   Top courses data from adapter.
 	 * @param array $params Context parameters.
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	protected static function render_top_performing_courses( $data, array $params ): array {
 		$type        = $params['top_performing_course'] ?? $params['type'] ?? 'revenue';
@@ -435,13 +442,14 @@ class DashboardSectionManager {
 	}
 
 	/**
-	 * Render Upcoming Tasks View
+	 * Render Upcoming Tasks View.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param array $data   Tasks data from adapter.
 	 * @param array $params Context parameters.
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	protected static function render_upcoming_tasks( $data, array $params ): array {
 		$tasks = is_array( $data ) ? $data : array();
@@ -482,13 +490,14 @@ class DashboardSectionManager {
 	}
 
 	/**
-	 * Render Recent Reviews View
+	 * Render Recent Reviews View.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param array $data   Reviews data from adapter.
 	 * @param array $params Context parameters.
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	protected static function render_recent_reviews( $data, array $params ): array {
 		$reviews = is_array( $data ) ? $data : array();

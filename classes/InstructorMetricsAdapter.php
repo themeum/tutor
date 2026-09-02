@@ -27,30 +27,32 @@ use Tutor\Models\WithdrawModel;
 class InstructorMetricsAdapter {
 
 	/**
-	 * Date range array helper
+	 * Date range array helper.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param string $from Start date.
 	 * @param string $to   End date.
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	public static function date_range( string $from, string $to ): array {
 		return array(
-			'from' => $from,
-			'to'   => $to,
+			'from' => sanitize_text_field( $from ),
+			'to'   => sanitize_text_field( $to ),
 		);
 	}
 
 	/**
-	 * Get total earnings for an instructor within a date range
+	 * Get total earnings for an instructor within a date range.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
-	 * @return float
 	 *
-	 * @since 4.0.9
+	 * @return float
 	 */
 	public static function get_total_earnings( int $user_id, string $start_date = '', string $end_date = '' ): float {
 		$tutor_pro_enabled = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
@@ -69,14 +71,15 @@ class InstructorMetricsAdapter {
 	}
 
 	/**
-	 * Get total courses count for an instructor
+	 * Get total courses count for an instructor.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
-	 * @return int
 	 *
-	 * @since 4.0.9
+	 * @return int
 	 */
 	public static function get_total_courses( int $user_id, string $start_date = '', string $end_date = '' ): int {
 		if ( empty( $start_date ) && empty( $end_date ) ) {
@@ -86,14 +89,15 @@ class InstructorMetricsAdapter {
 	}
 
 	/**
-	 * Get total students for an instructor
+	 * Get total students for an instructor.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
-	 * @return int
 	 *
-	 * @since 4.0.9
+	 * @return int
 	 */
 	public static function get_total_students( int $user_id, string $start_date = '', string $end_date = '' ): int {
 		$date_arg = ( ! empty( $start_date ) && ! empty( $end_date ) ) ? self::date_range( $start_date, $end_date ) : array();
@@ -101,14 +105,15 @@ class InstructorMetricsAdapter {
 	}
 
 	/**
-	 * Get instructor average rating and review counts
+	 * Get instructor average rating and review counts.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
-	 * @return object
 	 *
-	 * @since 4.0.9
+	 * @return object
 	 */
 	public static function get_instructor_ratings( int $user_id, string $start_date = '', string $end_date = '' ): object {
 		$date_arg = ( ! empty( $start_date ) && ! empty( $end_date ) ) ? self::date_range( $start_date, $end_date ) : array();
@@ -123,14 +128,15 @@ class InstructorMetricsAdapter {
 	}
 
 	/**
-	 * Adapt and format Current Stats cards with comparison data
+	 * Adapt and format Current Stats cards with comparison data.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	public static function get_stat_cards( int $user_id, string $start_date = '', string $end_date = '' ): array {
 		$is_all_time    = empty( $start_date ) && empty( $end_date );
@@ -200,14 +206,15 @@ class InstructorMetricsAdapter {
 	}
 
 	/**
-	 * Adapt Overview Chart data
+	 * Adapt Overview Chart data.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	public static function get_overview_chart_data( int $user_id, string $start_date = '', string $end_date = '' ): array {
 		$tutor_pro_enabled = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
@@ -250,12 +257,13 @@ class InstructorMetricsAdapter {
 	}
 
 	/**
-	 * Adapt Course Completion Distribution data
-	 *
-	 * @param int $user_id Instructor user ID.
-	 * @return array
+	 * Adapt Course Completion Distribution data.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @param int $user_id Instructor user ID.
+	 *
+	 * @return array
 	 */
 	public static function get_course_completion_distribution( int $user_id ): array {
 		$instructor_course_ids = CourseModel::get_courses_by_args(
@@ -293,15 +301,16 @@ class InstructorMetricsAdapter {
 	}
 
 	/**
-	 * Adapt Top Performing Courses data
+	 * Adapt Top Performing Courses data.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $type       Sort type ('revenue' or 'student').
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	public static function get_top_performing_courses( int $user_id, string $type = 'revenue', string $start_date = '', string $end_date = '' ): array {
 		$args = array(
@@ -316,12 +325,13 @@ class InstructorMetricsAdapter {
 	}
 
 	/**
-	 * Adapt Upcoming Tasks data
-	 *
-	 * @param int $user_id Instructor user ID.
-	 * @return array
+	 * Adapt Upcoming Tasks data.
 	 *
 	 * @since 4.0.9
+	 *
+	 * @param int $user_id Instructor user ID.
+	 *
+	 * @return array
 	 */
 	public static function get_upcoming_tasks( int $user_id ): array {
 		$tutor_pro_enabled = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
@@ -335,15 +345,16 @@ class InstructorMetricsAdapter {
 	}
 
 	/**
-	 * Adapt Recent Reviews data
+	 * Adapt Recent Reviews data.
+	 *
+	 * @since 4.0.9
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param int    $limit      Max count.
 	 * @param string $start_date Start date (Y-m-d).
 	 * @param string $end_date   End date (Y-m-d).
-	 * @return array
 	 *
-	 * @since 4.0.9
+	 * @return array
 	 */
 	public static function get_recent_reviews( int $user_id, int $limit = 3, string $start_date = '', string $end_date = '' ): array {
 		$review_args = array( 'comment_approved' => 'approved' );
