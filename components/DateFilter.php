@@ -353,52 +353,14 @@ class DateFilter extends BaseComponent {
 			x-data="{
 				...tutorPopover({ placement: '<?php echo esc_attr( $this->placement ); ?>' }),
 				label: <?php echo esc_attr( wp_json_encode( $default_label ) ); ?>,
-				hasSelection: <?php echo $has_selection ? 'true' : 'false'; ?>,
-				showLabel: <?php echo $this->show_label ? 'true' : 'false'; ?>,
-				hideInitialLabel: <?php echo $this->hide_initial_label ? 'true' : 'false'; ?>,
-				ajaxMode: <?php echo $this->ajax_mode ? 'true' : 'false'; ?>,
-				dateFilterHandler: null,
-				init() {
-					this.actualPlacement = this.getActualPlacement();
-					this.setupEventListeners();
-					if ( this.ajaxMode ) {
-						this.dateFilterHandler = (e) => {
-							const detail = e.detail || {};
-							this.handleDateChange(detail);
-						};
-						window.addEventListener('tutor:date-filter-changed', this.dateFilterHandler);
-					}
-				},
-				destroy() {
-					this.removeEventListeners();
-					if ( this.dateFilterHandler ) {
-						window.removeEventListener('tutor:date-filter-changed', this.dateFilterHandler);
-					}
-				},
-				handleDateChange(detail) {
-					const start = detail.startDate;
-					const end = detail.endDate;
-					if ( ! start && ! end && ! detail.date ) {
-						this.hasSelection = false;
-						this.label = this.hideInitialLabel ? '' : <?php echo esc_attr( wp_json_encode( __( 'All Time', 'tutor' ) ) ); ?>;
-						return;
-					}
-					this.hasSelection = true;
-					if ( detail.presetTitle ) {
-						this.label = detail.presetTitle;
-						return;
-					}
-					if ( start && end ) {
-						if ( start === end ) {
-							this.label = start;
-						} else {
-							this.label = start + ' - ' + end;
-						}
-					} else if ( detail.date ) {
-						this.label = detail.date;
-					}
-				}
+				hasSelection: <?php echo $has_selection ? 'true' : 'false'; ?>
 			}"
+			<?php if ( $this->ajax_mode ) : ?>
+				@tutor:date-filter-changed.window="
+					hasSelection = Boolean( $event.detail.startDate || $event.detail.endDate || $event.detail.date );
+					label = $event.detail.label || <?php echo esc_attr( wp_json_encode( $this->hide_initial_label ? '' : __( 'All Time', 'tutor' ) ) ); ?>;
+				"
+			<?php endif; ?>
 			<?php echo $this->get_attributes_string(); //phpcs:ignore -- Sanitization is performed inside get_attributes_string. ?>
 		>
 
@@ -411,7 +373,9 @@ class DateFilter extends BaseComponent {
 				aria-label="<?php echo $is_range ? esc_attr__( 'Filter by date range', 'tutor' ) : esc_attr__( 'Filter by date', 'tutor' ); ?>"
 			>
 				<?php SvgIcon::make()->name( $icon )->size( $this->icon_size )->render(); ?>
-				<span x-show="showLabel && Boolean(label)" x-text="label"><?php echo esc_html( $this->label ); ?></span>
+				<?php if ( $this->show_label ) : ?>
+					<span x-show="Boolean(label)" x-text="label"><?php echo esc_html( $this->label ); ?></span>
+				<?php endif; ?>
 
 				<span x-show="hasSelection" x-cloak <?php echo ! $has_selection ? 'style="display: none;"' : ''; ?> @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary tutor-flex tutor-align-center">
 					<?php SvgIcon::make()->name( Icon::CROSS_2 )->render(); ?>

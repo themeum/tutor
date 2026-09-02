@@ -521,12 +521,17 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
 
         this.updateActivePreset();
 
+        const formattedLabel =
+          presetTitle ||
+          (startDate && endDate ? (startDate === endDate ? startDate : `${startDate} - ${endDate}`) : date || '');
+
         window.dispatchEvent(
           new CustomEvent(TUTOR_CUSTOM_EVENTS.DATE_FILTER_CHANGED, {
             detail: {
               startDate,
               endDate,
               date,
+              label: formattedLabel,
               preset: presetKey || '',
               presetTitle: presetTitle || '',
               url: url.toString(),
