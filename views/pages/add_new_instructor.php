@@ -110,7 +110,7 @@
 			</div>
 
 			<div class="tutor-option-field">
-				<input type="password" name="password" value="<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>" placeholder="<?php esc_attr_e( 'Password', 'tutor' ); ?>">
+				<input type="password" name="password" value="" placeholder="<?php esc_attr_e( 'Password', 'tutor' ); ?>">
 			</div>
 		</div>
 
@@ -123,7 +123,7 @@
 			</div>
 
 			<div class="tutor-option-field">
-				<input type="password" name="password_confirmation" value="<?php echo esc_attr( tutor_utils()->input_old( 'password_confirmation' ) ); ?>" placeholder="<?php esc_attr_e( 'Password Confirmation', 'tutor' ); ?>">
+				<input type="password" name="password_confirmation" value="" placeholder="<?php esc_attr_e( 'Password Confirmation', 'tutor' ); ?>">
 			</div>
 		</div>
 

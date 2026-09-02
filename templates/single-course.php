@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Models\EnrollmentModel;
+use TUTOR\Input;
 
 $course_id     = get_the_ID();
 $course_rating = tutor_utils()->get_course_rating( $course_id );
@@ -56,14 +57,32 @@ $is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
 				<?php endif; ?>
 
 				<div class="tutor-course-details-tab tutor-mt-32">
+					<?php
+					$active_tab = Input::get( 'page_tab', Input::get( 'tab', 'info' ) );
+					if ( 'qna' === $active_tab ) {
+						$active_tab = 'questions';
+					}
+					if ( ! is_array( $course_nav_item ) || ! array_key_exists( $active_tab, $course_nav_item ) ) {
+						$active_tab = 'info';
+					}
+					$default_active_key = apply_filters( 'tutor_default_topics_active_tab', $active_tab );
+					?>
 					<?php if ( is_array( $course_nav_item ) && count( $course_nav_item ) > 1 ) : ?>
 						<div class="tutor-is-sticky">
-							<?php tutor_load_template( 'single.course.enrolled.nav', array( 'course_nav_item' => $course_nav_item ) ); ?>
+							<?php
+							tutor_load_template(
+								'single.course.enrolled.nav',
+								array(
+									'course_nav_item'    => $course_nav_item,
+									'default_active_key' => $default_active_key,
+								)
+							);
+							?>
 						</div>
 					<?php endif; ?>
 					<div class="tutor-tab tutor-pt-24">
 						<?php foreach ( $course_nav_item as $key => $subpage ) : ?>
-							<div id="tutor-course-details-tab-<?php echo esc_attr( $key ); ?>" class="tutor-tab-item<?php echo 'info' == $key ? ' is-active' : ''; ?>">
+							<div id="tutor-course-details-tab-<?php echo esc_attr( $key ); ?>" class="tutor-tab-item<?php echo $default_active_key == $key ? ' is-active' : ''; ?>">
 								<?php
 									do_action( 'tutor_course/single/tab/' . $key . '/before' );
 

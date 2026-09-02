@@ -40,10 +40,12 @@
 
 	&-content {
 		flex: 0 0 calc(100% - 350px);
+		min-width: 0;
 		@include tutor-flex(column, stretch, space-between);
 	}
 
 	&-header {
+		min-width: 0;
 		@include tutor-flex(column, stretch, flex-start);
 		gap: $tutor-spacing-1;
 	}
@@ -51,6 +53,8 @@
 	&-category {
 		@include tutor-typography('tiny', 'regular', 'secondary');
 		@include tutor-text-truncate();
+		min-width: 0;
+		max-width: 100%;
 		margin-bottom: $tutor-spacing-1;
 	}
 

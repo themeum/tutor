@@ -8,7 +8,7 @@
   padding: $tutor-spacing-4;
   position: fixed;
   top: 0;
-  z-index: $tutor-z-header;
+  z-index: calc($tutor-z-sidebar + 1);
   width: 100%;
 
   @include tutor-breakpoint-up(md) {
@@ -25,6 +25,11 @@
 
   @include tutor-breakpoint-down(md) {
     position: sticky;
+  }
+
+  .tutor-has-site-shell & {
+    position: sticky;
+    top: var(--tutor-site-header-offset);
   }
 
   &-inner {

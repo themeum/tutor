@@ -28,14 +28,8 @@ $recent_reviews          = array();
 $course_completion_data  = array();
 $sortable_sections       = array();
 
-$user                  = wp_get_current_user();
-$instructor_course_ids = CourseModel::get_courses_by_args(
-	array(
-		'post_author'    => $user->ID,
-		'posts_per_page' => -1,
-		'fields'         => 'ids',
-	)
-)->posts;
+$user = wp_get_current_user();
+
 
 $tutor_pro_enabled = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
 $is_pro_reports    = $tutor_pro_enabled && tutor_utils()->is_addon_enabled( 'tutor-report' );
@@ -197,7 +191,7 @@ if ( $is_pro_reports ) {
  */
 
 if ( $is_all_time ) {
-	$distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
+	$distribution = Instructor::get_course_completion_distribution_data_by_instructor();
 
 	$course_completion_data = array(
 		'enrolled'    => array(

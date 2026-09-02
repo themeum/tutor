@@ -19,8 +19,7 @@ $previous_id = $contents->previous_id;
 $next_id     = $contents->next_id;
 $user_id     = get_current_user_id();
 
-$is_course_completed   = tutor_utils()->is_completed_course( $course_id, $user_id );
-$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
+$is_course_completed = tutor_utils()->is_completed_course( $course_id, $user_id );
 
 $data         = isset( $data ) && is_array( $data ) ? $data : array();
 $context      = isset( $data['context'] ) ? sanitize_key( $data['context'] ) : '';
@@ -60,7 +59,7 @@ if ( tutor()->lesson_post_type === $post->post_type ) {
 ?>
 
 <?php do_action( 'tutor_' . $context . '/single/before/wrap' ); ?>
-<div class="tutor-course-single-content-wrapper<?php echo $enable_spotlight_mode ? ' tutor-spotlight-mode' : ''; ?>">
+<div class="tutor-course-single-content-wrapper">
 	<div class="tutor-course-single-sidebar-wrapper tutor-<?php echo esc_attr( $context ); ?>-sidebar">
 		<?php tutor_course_single_sidebar(); ?>
 	</div>

@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Dashboard;
+use TUTOR\Template;
 
 global $wp_query;
 
@@ -26,19 +27,23 @@ $back_url      = apply_filters( 'tutor_dashboard_back_url', $dashboard_url );
 $close_url     = $dashboard_url;
 
 Dashboard::set_document_title( $meta_title );
+
+$site_shell                 = Template::get_site_shell_data( Template::SITE_SHELL_CONTEXT_DASHBOARD );
+$show_dashboard_site_header = $site_shell['show_site_header'];
+$show_dashboard_site_footer = $site_shell['show_site_footer'];
+$has_dashboard_site_shell   = $site_shell['has_site_shell'];
+$theme_header_selector      = $site_shell['theme_header_selector'];
+
+tutor_utils()->tutor_custom_header( $show_dashboard_site_header );
 ?>
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<?php wp_head(); ?>
-</head>
-<body <?php body_class( '' ); ?>>
-	<?php wp_body_open(); ?>
-<div class="tutor-account-page-wrapper">
+<div
+	class="tutor-account-page-wrapper<?php echo esc_attr( $has_dashboard_site_shell ? ' tutor-has-site-shell' : '' ); ?>"
+	<?php if ( $has_dashboard_site_shell ) : ?>
+		data-tutor-dashboard-site-shell
+		data-tutor-theme-header-selector="<?php echo esc_attr( $theme_header_selector ); ?>"
+	<?php endif; ?>
+>
 	<?php require_once $page_template; ?>
 </div>
-<?php wp_footer(); ?>
-</body>
-</html>
+<?php
+tutor_utils()->tutor_custom_footer( $show_dashboard_site_footer );

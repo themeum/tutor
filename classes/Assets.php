@@ -520,7 +520,7 @@ class Assets {
 		if ( is_admin() ) {
 			$admin_colors = array(
 				'--tutor-color-primary'       => '#3E64DE',
-				'--tutor-color-primary-hover' => '#3A5CCC',
+				'--tutor-color-primary-hover' => '#2B49CA',
 				'--tutor-body-color'          => '#212327',
 				'--tutor-border-color'        => '#CDCFD5',
 				'--tutor-color-gray'          => '#CDCFD5',
@@ -529,7 +529,7 @@ class Assets {
 
 		$fallback_colors = array(
 			'tutor_primary_color'       => '#3E64DE',
-			'tutor_primary_hover_color' => '#3A5CCC',
+			'tutor_primary_hover_color' => '#2B49CA',
 			'tutor_text_color'          => '#212327',
 			'tutor_border_color'        => '#E3E5EB',
 			'tutor_gray_color'          => '#CDCFD5',
