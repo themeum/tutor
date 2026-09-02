@@ -119,14 +119,7 @@ $sortable_sections_defaults = array_reduce(
 	array()
 );
 
-$sortable_sections_ids = array_reduce(
-	$sortable_sections,
-	function ( $carry, $section ) {
-		$carry[ $section['order'] ] = $section['id'];
-		return $carry;
-	},
-	array()
-);
+$sortable_sections_ids = array_values( array_column( $sortable_sections, 'id' ) );
 ?>
 <form x-data='tutorForm({
 		id: "sortable-sections",
