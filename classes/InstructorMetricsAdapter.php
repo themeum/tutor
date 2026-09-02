@@ -8,7 +8,7 @@
  * @package Tutor
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 4.0.9
+ * @since 4.0.8
  */
 
 namespace TUTOR;
@@ -22,14 +22,14 @@ use Tutor\Models\WithdrawModel;
 /**
  * Class InstructorMetricsAdapter
  *
- * @since 4.0.9
+ * @since 4.0.8
  */
 class InstructorMetricsAdapter {
 
 	/**
 	 * Date range array helper.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param string $from Start date.
 	 * @param string $to   End date.
@@ -46,7 +46,7 @@ class InstructorMetricsAdapter {
 	/**
 	 * Get total earnings for an instructor within a date range.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
@@ -73,7 +73,7 @@ class InstructorMetricsAdapter {
 	/**
 	 * Get total courses count for an instructor.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
@@ -91,7 +91,7 @@ class InstructorMetricsAdapter {
 	/**
 	 * Get total students for an instructor.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
@@ -107,7 +107,7 @@ class InstructorMetricsAdapter {
 	/**
 	 * Get instructor average rating and review counts.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
@@ -130,7 +130,7 @@ class InstructorMetricsAdapter {
 	/**
 	 * Adapt and format Current Stats cards with comparison data.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
@@ -208,7 +208,7 @@ class InstructorMetricsAdapter {
 	/**
 	 * Adapt Overview Chart data.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $start_date Start date (Y-m-d).
@@ -259,7 +259,7 @@ class InstructorMetricsAdapter {
 	/**
 	 * Adapt Course Completion Distribution data.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int $user_id Instructor user ID.
 	 *
@@ -303,7 +303,7 @@ class InstructorMetricsAdapter {
 	/**
 	 * Adapt Top Performing Courses data.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param string $type       Sort type ('revenue' or 'student').
@@ -327,7 +327,7 @@ class InstructorMetricsAdapter {
 	/**
 	 * Adapt Upcoming Tasks data.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int $user_id Instructor user ID.
 	 *
@@ -347,7 +347,7 @@ class InstructorMetricsAdapter {
 	/**
 	 * Adapt Recent Reviews data.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int    $user_id    Instructor user ID.
 	 * @param int    $limit      Max count.

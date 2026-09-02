@@ -8,7 +8,7 @@
  * @package Tutor\Components
  * @author Themeum
  * @link https://themeum.com
- * @since 4.0.9
+ * @since 4.0.8
  */
 
 namespace Tutor\Components;
@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) || exit;
  * Skeleton::make()->type( 'reviews' )->count( 3 )->render();
  * ```
  *
- * @since 4.0.9
+ * @since 4.0.8
  */
 class Skeleton extends BaseComponent {
 
@@ -105,7 +105,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Set the skeleton type.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param string $type Type name.
 	 *
@@ -119,7 +119,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Set width.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param string|int $width Width value.
 	 *
@@ -133,7 +133,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Set height.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param string|int $height Height value.
 	 *
@@ -147,7 +147,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Set repetition count.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int $count Number of items.
 	 *
@@ -161,7 +161,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Set number of lines.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param int $lines Number of lines.
 	 *
@@ -175,7 +175,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Set rounded radius.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param string $radius (circle|full|md|sm).
 	 *
@@ -189,7 +189,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Get the component output as an HTML string.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return string
 	 */
@@ -245,7 +245,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render single or multi lines.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -266,7 +266,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render Avatar skeleton.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -282,7 +282,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render single stat card skeleton markup.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -309,7 +309,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render Stat Cards skeleton (matching .tutor-stat-card layout).
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -328,7 +328,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render Box Cards skeleton (for Report Overview 3 KPI cards).
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -345,7 +345,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render Chart skeleton (matching .tutor-dashboard-home-chart).
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -376,7 +376,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render Course Completion chart skeleton (horizontal stacked bar matching design).
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -406,7 +406,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render Top Performing Courses skeleton.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -451,7 +451,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render Upcoming Tasks skeleton.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -488,7 +488,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render Recent Reviews skeleton.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -519,7 +519,7 @@ class Skeleton extends BaseComponent {
 	/**
 	 * Render Table skeleton.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */

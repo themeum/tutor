@@ -8,7 +8,7 @@
  * @package Tutor
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 4.0.9
+ * @since 4.0.8
  */
 
 namespace TUTOR;
@@ -21,7 +21,7 @@ use Tutor\Traits\JsonResponse;
 /**
  * Class DashboardSectionManager
  *
- * @since 4.0.9
+ * @since 4.0.8
  */
 class DashboardSectionManager {
 	use JsonResponse;
@@ -29,7 +29,7 @@ class DashboardSectionManager {
 	/**
 	 * Constructor.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_tutor_get_dashboard_section', array( $this, 'ajax_get_dashboard_section' ) );
@@ -38,7 +38,7 @@ class DashboardSectionManager {
 	/**
 	 * Get all registered dashboard and analytics sections metadata.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return array
 	 */
@@ -77,7 +77,7 @@ class DashboardSectionManager {
 	/**
 	 * Get raw normalized domain data for a section via the Adapter.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param string $section_id Section identifier.
 	 * @param array  $params     Context parameters (user_id, start_date, end_date, type, limit, etc.).
@@ -118,7 +118,7 @@ class DashboardSectionManager {
 	/**
 	 * Get rendered HTML partial for a given section.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param string $section_id Section identifier.
 	 * @param array  $params     Context parameters.
@@ -133,7 +133,7 @@ class DashboardSectionManager {
 	/**
 	 * Render a dashboard section, returning HTML, chart_data, and status payload.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param string $section_id Section identifier.
 	 * @param array  $params     Context parameters.
@@ -200,7 +200,7 @@ class DashboardSectionManager {
 	/**
 	 * Handle AJAX request to lazyload a dashboard section.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @return void
 	 */
@@ -255,7 +255,7 @@ class DashboardSectionManager {
 	/**
 	 * Render Current Stats View.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param array $data   Stats cards from adapter.
 	 * @param array $params Context parameters.
@@ -303,7 +303,7 @@ class DashboardSectionManager {
 	/**
 	 * Render Overview Chart View.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param array $data   Chart data from adapter.
 	 * @param array $params Context parameters.
@@ -337,7 +337,7 @@ class DashboardSectionManager {
 	/**
 	 * Render Course Completion View.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param array $data   Distribution data from adapter.
 	 * @param array $params Context parameters.
@@ -377,7 +377,7 @@ class DashboardSectionManager {
 	/**
 	 * Render Top Performing Courses View.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param array $data   Top courses data from adapter.
 	 * @param array $params Context parameters.
@@ -444,7 +444,7 @@ class DashboardSectionManager {
 	/**
 	 * Render Upcoming Tasks View.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param array $data   Tasks data from adapter.
 	 * @param array $params Context parameters.
@@ -492,7 +492,7 @@ class DashboardSectionManager {
 	/**
 	 * Render Recent Reviews View.
 	 *
-	 * @since 4.0.9
+	 * @since 4.0.8
 	 *
 	 * @param array $data   Reviews data from adapter.
 	 * @param array $params Context parameters.
