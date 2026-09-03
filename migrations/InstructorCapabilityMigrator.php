@@ -74,8 +74,10 @@ class InstructorCapabilityMigrator extends BatchProcessor implements SingleProce
 		$this->user_model = new UserModel();
 		$users            = $this->user_model->get_users_list(
 			array(
-				'role'   => tutor()->instructor_role,
-				'fields' => 'ID',
+				'role'       => tutor()->instructor_role,
+				'meta_key'   => '_tutor_instructor_status',
+				'meta_value' => 'approved',
+				'fields'     => 'ID',
 			)
 		);
 		return $users->get_total();
@@ -95,9 +97,11 @@ class InstructorCapabilityMigrator extends BatchProcessor implements SingleProce
 		$this->user_model = new UserModel();
 		$users            = $this->user_model->get_users_list(
 			array(
-				'role'   => tutor()->instructor_role,
-				'number' => $limit,
-				'offset' => $offset,
+				'role'       => tutor()->instructor_role,
+				'meta_key'   => '_tutor_instructor_status',
+				'meta_value' => 'approved',
+				'number'     => $limit,
+				'offset'     => $offset,
 			)
 		);
 		return $users->get_results();
