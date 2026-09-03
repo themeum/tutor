@@ -42,6 +42,7 @@ class SiteShellController {
     this.updateOffset();
 
     const isSticky = this.isStickyHeader(this.themeHeader);
+    const hasAdminBar = Boolean(document.getElementById(WP_ADMIN_BAR_ID));
 
     if (isSticky && this.themeHeader && typeof ResizeObserver !== 'undefined') {
       this.resizeObserver = new ResizeObserver(() => this.scheduleOffsetUpdate());
@@ -49,7 +50,10 @@ class SiteShellController {
     }
 
     window.addEventListener('resize', this.scheduleOffsetUpdate);
-    window.addEventListener('scroll', this.scheduleOffsetUpdate, { passive: true });
+
+    if (isSticky || hasAdminBar) {
+      window.addEventListener('scroll', this.scheduleOffsetUpdate, { passive: true });
+    }
   }
 
   destroy(): void {
