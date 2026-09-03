@@ -542,28 +542,25 @@ class Instructor {
 
 		$cache_key = self::DASHBOARD_COURSE_COMPLETION_RATE_TRANSIENT . $user_id;
 
-		$cached_data = get_transient( $cache_key );
+		$cached_data = false; //get_transient( $cache_key );
 		if ( $cached_data && is_array( $cached_data ) ) {
 			return $cached_data;
 		}
 
-		$instructor_course_ids = array();
-		if ( ! User::is_admin() && User::is_instructor( $user_id, true ) ) {
-			$instructor_course_ids = CourseModel::get_courses_by_args(
-				array(
-					'post_author'    => $user_id,
-					'posts_per_page' => -1,
-					'fields'         => 'ids',
-				)
-			)->posts;
+		$instructor_course_ids = CourseModel::get_courses_by_args(
+			array(
+				'post_author'    => $user_id,
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			)
+		)->posts;
 
-			$instructor_course_ids = array_filter(
-				array_map( 'absint', (array) $instructor_course_ids )
-			);
+		$instructor_course_ids = array_filter(
+			array_map( 'absint', (array) $instructor_course_ids )
+		);
 
-			if ( empty( $instructor_course_ids ) ) {
-				return $counts;
-			}
+		if ( empty( $instructor_course_ids ) ) {
+			return $counts;
 		}
 
 		$topic_type      = tutor()->topics_post_type;
