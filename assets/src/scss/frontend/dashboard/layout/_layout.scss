@@ -8,6 +8,7 @@
   --tutor-site-header-offset: 0px;
   --tutor-site-header-overlay-offset: 0px;
 
+  width: 100%;
   display: grid;
   grid-template-columns: 274px 1fr;
 
@@ -41,6 +42,8 @@
 .tutor-dashboard-isolated-page-wrapper {
   --tutor-site-header-offset: 0px;
   --tutor-site-header-overlay-offset: 0px;
+
+  width: 100%;
 
   &.tutor-has-site-shell {
     padding-top: var(--tutor-site-header-overlay-offset);
