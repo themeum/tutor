@@ -9067,6 +9067,9 @@ class Utils {
 
 		if ( $show ) {
 			if ( $is_block_theme ) {
+				$theme          = wp_get_theme();
+				$theme_slug     = $theme->get( 'TextDomain' );
+				$header_content = do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
 				?>
 				<!doctype html>
 					<html <?php language_attributes(); ?>>
@@ -9078,9 +9081,7 @@ class Utils {
 				<?php wp_body_open(); ?>
 						<div class="wp-site-blocks">
 				<?php
-				$theme      = wp_get_theme();
-				$theme_slug = $theme->get( 'TextDomain' );
-				echo do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
+				echo $header_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			} else {
 				get_header();
 			}
@@ -9127,8 +9128,16 @@ class Utils {
 			if ( $is_block_theme ) {
 				$theme      = wp_get_theme();
 				$theme_slug = $theme->get( 'TextDomain' );
-				echo do_blocks( '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer","className":"site-footer","layout":{"inherit":true}} /-->' );
+				echo do_blocks( '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer","className":"site-footer","layout":{"inherit":true}} /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo '</div>';
+
+				if ( function_exists( 'wp_style_engine_get_stylesheet_from_context' ) ) {
+					$late_styles = wp_style_engine_get_stylesheet_from_context( 'block-supports' );
+					if ( ! empty( $late_styles ) ) {
+						echo '<style id="wp-block-supports-late-inline-css">' . $late_styles . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
+				}
+
 				wp_footer();
 				echo '</body>';
 				echo '</html>';

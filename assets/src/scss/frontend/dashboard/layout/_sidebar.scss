@@ -120,11 +120,7 @@
   }
 }
 
-.tutor-dashboard-layout.tutor-has-site-shell .tutor-dashboard-sidebar {
-  top: var(--tutor-site-header-offset);
-  min-height: calc(100dvh - var(--tutor-site-header-offset));
-}
-
+.tutor-dashboard-layout.tutor-has-site-shell .tutor-dashboard-sidebar,
 body:has(#wpadminbar) .tutor-dashboard-layout.tutor-has-site-shell .tutor-dashboard-sidebar {
   top: var(--tutor-site-header-offset);
   min-height: calc(100dvh - var(--tutor-site-header-offset));

@@ -2,6 +2,7 @@ const CSS_VARIABLE_HEADER_OFFSET = '--tutor-site-header-offset';
 const CSS_VARIABLE_HEADER_OVERLAY_OFFSET = '--tutor-site-header-overlay-offset';
 
 const WP_ADMIN_BAR_ID = 'wpadminbar';
+const MAX_HEADER_HEIGHT = 250;
 
 const SITE_SHELL_ROOT_SELECTOR = '[data-tutor-learning-site-shell], [data-tutor-dashboard-site-shell]';
 
@@ -9,9 +10,21 @@ const SITE_SHELL_ROOT_SELECTOR = '[data-tutor-learning-site-shell], [data-tutor-
  * Returns the lowest visible bottom edge among the site header and admin bar.
  */
 const getVisibleHeaderBoundary = (elements: HTMLElement[]): number => {
-  return elements.reduce((offset, element) => {
-    return Math.max(offset, element.getBoundingClientRect().bottom, 0);
+  const boundary = elements.reduce((offset, element) => {
+    const style = window.getComputedStyle(element);
+    if (style.display === 'none' || style.visibility === 'hidden') {
+      return offset;
+    }
+
+    const rect = element.getBoundingClientRect();
+    if (rect.bottom <= 0 || rect.top > MAX_HEADER_HEIGHT) {
+      return offset;
+    }
+
+    return Math.max(offset, rect.bottom);
   }, 0);
+
+  return Math.min(Math.round(boundary), MAX_HEADER_HEIGHT);
 };
 
 class SiteShellController {
@@ -29,6 +42,7 @@ class SiteShellController {
     this.updateOffset();
 
     const isSticky = this.isStickyHeader(this.themeHeader);
+    const hasAdminBar = Boolean(document.getElementById(WP_ADMIN_BAR_ID));
 
     if (isSticky && this.themeHeader && typeof ResizeObserver !== 'undefined') {
       this.resizeObserver = new ResizeObserver(() => this.scheduleOffsetUpdate());
@@ -37,7 +51,7 @@ class SiteShellController {
 
     window.addEventListener('resize', this.scheduleOffsetUpdate);
 
-    if (isSticky) {
+    if (isSticky || hasAdminBar) {
       window.addEventListener('scroll', this.scheduleOffsetUpdate, { passive: true });
     }
   }
@@ -76,12 +90,12 @@ class SiteShellController {
     }
 
     const position = window.getComputedStyle(header).position;
-    if (position === 'fixed' || position === 'sticky') {
+    if (position === 'fixed' || position === 'sticky' || position === 'absolute') {
       return true;
     }
 
     const className = (header.className || '').toString();
-    return /sticky/i.test(className) || header.hasAttribute('data-sticky');
+    return /sticky|transparent/i.test(className) || header.hasAttribute('data-sticky');
   }
 
   private getStickyHeader(header: HTMLElement | null): HTMLElement | null {
@@ -89,27 +103,28 @@ class SiteShellController {
       return null;
     }
 
-    const position = window.getComputedStyle(header).position;
-    if (position === 'fixed' || position === 'sticky') {
+    const isHeaderBar = (el: HTMLElement): boolean => {
+      const style = window.getComputedStyle(el);
+      if (style.display === 'none' || style.visibility === 'hidden') {
+        return false;
+      }
+      const rect = el.getBoundingClientRect();
+      // Must have realistic header bar dimensions (reject full-screen mobile drawers/modals > 250px)
+      return rect.height > 0 && rect.height <= MAX_HEADER_HEIGHT && rect.width >= window.innerWidth * 0.4;
+    };
+
+    if (this.isStickyHeader(header) && isHeaderBar(header)) {
       return header;
     }
 
     // Check if an inner row is fixed or sticky (e.g. Sydney, Astra)
-    const children = header.querySelectorAll<HTMLElement>('*');
+    const children = header.querySelectorAll<HTMLElement>(
+      'div, nav, header, [class*="header"], [class*="sticky"], [class*="navbar"], [class*="shfb"]',
+    );
     for (let i = 0; i < children.length; i++) {
-      const pos = window.getComputedStyle(children[i]).position;
-      if (pos === 'fixed' || pos === 'sticky') {
-        return children[i];
-      }
-    }
-
-    // If the header has sticky classes (e.g. TutorStarter .header-sticky, Sydney .has-sticky-header)
-    // and is active in the viewport
-    const className = (header.className || '').toString();
-    if (/sticky/i.test(className) || header.hasAttribute('data-sticky')) {
-      const rect = header.getBoundingClientRect();
-      if (rect.top <= 50 && rect.bottom > 0) {
-        return header;
+      const child = children[i];
+      if (this.isStickyHeader(child) && isHeaderBar(child)) {
+        return child;
       }
     }
 
