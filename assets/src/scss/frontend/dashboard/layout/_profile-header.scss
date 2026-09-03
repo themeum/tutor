@@ -55,10 +55,7 @@
   }
 }
 
-.tutor-has-site-shell .tutor-profile-header {
-  top: var(--tutor-site-header-offset);
-}
-
+.tutor-has-site-shell .tutor-profile-header,
 body:has(#wpadminbar) .tutor-has-site-shell .tutor-profile-header {
   top: var(--tutor-site-header-offset);
 }
