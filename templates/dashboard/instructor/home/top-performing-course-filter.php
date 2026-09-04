@@ -14,6 +14,9 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+
+$options  = $options ?? array();
+$selected = $selected ?? 'revenue';
 ?>
 
 <div
@@ -40,7 +43,17 @@ use Tutor\Components\Constants\Color;
 	>
 		<div class="tutor-popover-menu" style="min-width: 108px;">
 			<?php foreach ( $options as $key => $option ) : ?>
-				<a href="<?php echo esc_url( add_query_arg( 'type', $key ) ); ?>" class="tutor-popover-menu-item <?php echo $selected === $key ? 'tutor-active' : ''; ?>">
+				<a 
+					href="<?php echo esc_url( add_query_arg( 'top_performing_course', $key, tutor_utils()->tutor_dashboard_url() ) ); ?>" 
+					@click.prevent="
+						const url = new URL(window.location.href);
+						url.searchParams.set('top_performing_course', <?php echo esc_attr( wp_json_encode( $key ) ); ?>);
+						window.history.pushState({}, '', url.toString());
+						window.dispatchEvent(new CustomEvent(window.TutorCore?.constants?.TUTOR_CUSTOM_EVENTS?.SORT_CHANGED || 'tutor:sort-changed', { detail: { type: <?php echo esc_attr( wp_json_encode( $key ) ); ?> } }));
+						hide();
+					"
+					class="tutor-popover-menu-item <?php echo $selected === $key ? 'tutor-active' : ''; ?>"
+				>
 					<?php echo esc_html( $option ); ?>
 				</a>
 			<?php endforeach; ?>

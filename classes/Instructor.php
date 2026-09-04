@@ -53,7 +53,7 @@ class Instructor {
 	/**
 	 * Error message
 	 *
-	 * @var string
+	 * @var array<string, string>|string
 	 */
 	protected $error_msgs = '';
 
@@ -107,7 +107,7 @@ class Instructor {
 	 * For Register new user and mark him as instructor
 	 *
 	 * @since 1.0.0
-	 * @return void|null
+	 * @return void
 	 */
 	public function register_instructor() {
 		// Here tutor_action checking required before nonce checking.
@@ -237,7 +237,7 @@ class Instructor {
 	 * for instructor applying when a user already logged in
 	 *
 	 * @since 1.0.0
-	 * @return void|null
+	 * @return void
 	 */
 	public function apply_instructor() {
 		// Here tutor_action checking required before nonce checking.
@@ -1069,6 +1069,7 @@ class Instructor {
 				'percentage' => '',
 				'icon'       => Icon::MINUS,
 				'class'      => 'tutor-text-primary',
+				'icon_class' => '',
 			);
 		}
 
