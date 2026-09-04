@@ -384,16 +384,8 @@ class Instructors_List {
 
 		$query  = "SELECT
 					DISTINCT user.*,
-					ins_status.meta_value AS status,
-					(
-						SELECT
-							COUNT(*)
-							FROM {$wpdb->posts}
-							WHERE post_author = user.ID
-								AND post_type = 'courses'
-					) total_courses
+					ins_status.meta_value AS status
 					FROM {$wpdb->users} AS user
-						
 					INNER JOIN {$wpdb->usermeta} AS ins_status
 						ON ( user.ID = ins_status.user_id )
 						AND ins_status.meta_key = '_tutor_instructor_status'

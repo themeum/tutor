@@ -22,8 +22,14 @@ use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
+use TUTOR\Dashboard;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use TUTOR\User;
+
+if ( ! User::is_instructor_view() ) {
+	tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( Dashboard::COURSES_PAGE_SLUG ) );
+}
 
 // Get the user ID and active tab.
 $current_user_id                     = get_current_user_id();
@@ -46,10 +52,10 @@ $search_term  = Input::get( 'search', '' );
 
 // Get counts for course tabs.
 $count_map = array(
-	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true, $course_post_type, $search_term ),
-	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true, $course_post_type, $search_term ),
-	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true, $course_post_type, $search_term ),
-	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true, $course_post_type, $search_term ),
+	'publish' => CourseModel::get_course_count_by_instructor( $current_user_id, $course_post_type, array( CourseModel::STATUS_PUBLISH ), $search_term ),
+	'pending' => CourseModel::get_course_count_by_instructor( $current_user_id, $course_post_type, array( CourseModel::STATUS_PENDING ), $search_term ),
+	'draft'   => CourseModel::get_course_count_by_instructor( $current_user_id, $course_post_type, array( CourseModel::STATUS_DRAFT ), $search_term ),
+	'future'  => CourseModel::get_course_count_by_instructor( $current_user_id, $course_post_type, array( CourseModel::STATUS_FUTURE ), $search_term ),
 );
 
 $item_per_page      = tutor_utils()->get_option( 'pagination_per_page', 10 );
@@ -225,10 +231,11 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							</span>
 							<?php endif ?>
 							<?php
-							if ( null === tutor_utils()->get_course_price() ) {
+							$course_price = tutor_utils()->get_course_price();
+							if ( null === $course_price ) {
 								esc_html_e( 'Free', 'tutor' );
 							} else {
-								echo wp_kses_post( tutor_utils()->get_course_price() );
+								echo wp_kses_post( $course_price );
 							}
 							?>
 						</div>
