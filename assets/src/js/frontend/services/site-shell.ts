@@ -2,28 +2,29 @@ const CSS_VARIABLE_HEADER_OFFSET = '--tutor-site-header-offset';
 const CSS_VARIABLE_HEADER_OVERLAY_OFFSET = '--tutor-site-header-overlay-offset';
 
 const WP_ADMIN_BAR_ID = 'wpadminbar';
+const MAX_HEADER_HEIGHT = 250;
 
 const SITE_SHELL_ROOT_SELECTOR = '[data-tutor-learning-site-shell], [data-tutor-dashboard-site-shell]';
 
 /**
  * Returns the lowest visible bottom edge among the site header and admin bar.
- *
- * A normal-flow header contributes while it is visible, then naturally drops
- * out of the boundary as the document scrolls. Fixed and sticky headers keep
- * contributing because their bottom edge remains in the viewport.
  */
 const getVisibleHeaderBoundary = (elements: HTMLElement[]): number => {
-  return elements.reduce((offset, element) => {
-    return Math.max(offset, element.getBoundingClientRect().bottom, 0);
-  }, 0);
-};
+  const boundary = elements.reduce((offset, element) => {
+    const style = window.getComputedStyle(element);
+    if (style.display === 'none' || style.visibility === 'hidden') {
+      return offset;
+    }
 
-/**
- * A static (normal-flow) header only needs its computed position checked,
- * not its inline style, since positioning is almost always set via CSS.
- */
-const isStaticPosition = (element: HTMLElement): boolean => {
-  return window.getComputedStyle(element).position === 'static';
+    const rect = element.getBoundingClientRect();
+    if (rect.bottom <= 0 || rect.top > MAX_HEADER_HEIGHT) {
+      return offset;
+    }
+
+    return Math.max(offset, rect.bottom);
+  }, 0);
+
+  return Math.min(Math.round(boundary), MAX_HEADER_HEIGHT);
 };
 
 class SiteShellController {
@@ -40,20 +41,19 @@ class SiteShellController {
     this.themeHeader = this.findThemeHeader();
     this.updateOffset();
 
-    // A normal-flow (static) header naturally drops out of the visible
-    // boundary once scrolled past — its contribution to updateOffset()
-    // only matters on first paint, so skip the ongoing listeners/observer.
-    if (this.themeHeader && isStaticPosition(this.themeHeader)) {
-      return;
-    }
+    const isSticky = this.isStickyHeader(this.themeHeader);
+    const hasAdminBar = Boolean(document.getElementById(WP_ADMIN_BAR_ID));
 
-    if (this.themeHeader && typeof ResizeObserver !== 'undefined') {
+    if (isSticky && this.themeHeader && typeof ResizeObserver !== 'undefined') {
       this.resizeObserver = new ResizeObserver(() => this.scheduleOffsetUpdate());
       this.resizeObserver.observe(this.themeHeader);
     }
 
     window.addEventListener('resize', this.scheduleOffsetUpdate);
-    window.addEventListener('scroll', this.scheduleOffsetUpdate, { passive: true });
+
+    if (isSticky || hasAdminBar) {
+      window.addEventListener('scroll', this.scheduleOffsetUpdate, { passive: true });
+    }
   }
 
   destroy(): void {
@@ -78,10 +78,57 @@ class SiteShellController {
 
     try {
       const header = document.querySelector(this.themeHeaderSelector);
-      return header instanceof HTMLElement ? header : null;
+      return header instanceof HTMLElement && !this.root.contains(header) ? header : null;
     } catch {
       return null;
     }
+  }
+
+  private isStickyHeader(header: HTMLElement | null): boolean {
+    if (!header) {
+      return false;
+    }
+
+    const position = window.getComputedStyle(header).position;
+    if (position === 'fixed' || position === 'sticky' || position === 'absolute') {
+      return true;
+    }
+
+    const className = (header.className || '').toString();
+    return /sticky|transparent/i.test(className) || header.hasAttribute('data-sticky');
+  }
+
+  private getStickyHeader(header: HTMLElement | null): HTMLElement | null {
+    if (!header) {
+      return null;
+    }
+
+    const isHeaderBar = (el: HTMLElement): boolean => {
+      const style = window.getComputedStyle(el);
+      if (style.display === 'none' || style.visibility === 'hidden') {
+        return false;
+      }
+      const rect = el.getBoundingClientRect();
+      // Must have realistic header bar dimensions (reject full-screen mobile drawers/modals > 250px)
+      return rect.height > 0 && rect.height <= MAX_HEADER_HEIGHT && rect.width >= window.innerWidth * 0.4;
+    };
+
+    if (this.isStickyHeader(header) && isHeaderBar(header)) {
+      return header;
+    }
+
+    // Check if an inner row is fixed or sticky (e.g. Sydney, Astra)
+    const children = header.querySelectorAll<HTMLElement>(
+      'div, nav, header, [class*="header"], [class*="sticky"], [class*="navbar"], [class*="shfb"]',
+    );
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      if (this.isStickyHeader(child) && isHeaderBar(child)) {
+        return child;
+      }
+    }
+
+    return null;
   }
 
   private scheduleOffsetUpdate = (): void => {
@@ -97,7 +144,8 @@ class SiteShellController {
 
   private updateOffset(): void {
     const adminBar = document.getElementById(WP_ADMIN_BAR_ID);
-    const elements = [this.themeHeader, adminBar].filter(
+    const stickyHeader = this.getStickyHeader(this.themeHeader);
+    const elements = [stickyHeader, adminBar].filter(
       (element): element is HTMLElement => element instanceof HTMLElement,
     );
     const offset = getVisibleHeaderBoundary(elements);
