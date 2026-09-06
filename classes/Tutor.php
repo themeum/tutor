@@ -1115,6 +1115,7 @@ final class Tutor extends Singleton {
 		if ( $instructor ) {
 			$instructor_cap = array(
 				'edit_posts',
+				'edit_published_posts',
 				'read',
 				'upload_files',
 			);
