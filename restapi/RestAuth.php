@@ -85,6 +85,9 @@ class RestAuth {
 	 * API auth.
 	 *
 	 * @since 2.7.1
+	 * @since 4.0.8 Only authenticate on real Tutor REST paths, and only when the
+	 *              API key permission is All (full identity must not be granted
+	 *              to Read/Write-scoped keys via determine_current_user).
 	 *
 	 * @param int|false $user_id user id.
 	 *
@@ -92,7 +95,7 @@ class RestAuth {
 	 */
 	public function api_auth( $user_id ) {
 		// Don't authenticate twice.
-		if ( ! empty( $user_id ) || ! $this->is_tutor_api_request() ) {
+		if ( ! empty( $user_id ) || ! self::is_tutor_api_request() ) {
 			return $user_id;
 		}
 
@@ -104,30 +107,53 @@ class RestAuth {
 			return $user_id;
 		}
 
-		$api_key    = $_SERVER['PHP_AUTH_USER']; //phpcs:ignore sanitization ok
-		$api_secret = $_SERVER['PHP_AUTH_PW']; //phpcs:ignore sanitization ok
+		$api_key    = sanitize_key( $_SERVER['PHP_AUTH_USER'] ) ?? '';
+		$api_secret = sanitize_key( $_SERVER['PHP_AUTH_PW'] ) ?? '';
 		$record     = self::validate_api_key_secret( $api_key, $api_secret, true );
-		if ( $record ) {
-			return $record->user_id;
+
+		if ( ! $record ) {
+			return $user_id;
 		}
 
-		return $user_id;
+		$meta = json_decode( $record->meta_value );
+		if ( ! is_object( $meta ) || ! isset( $meta->permission ) || self::ALL !== $meta->permission ) {
+			return $user_id;
+		}
+
+		return (int) $record->user_id;
 	}
 
 	/**
-	 * Is request is tutor rest api.
+	 * Whether the current request targets a Tutor REST API route.
+	 *
+	 * Matches the URL path only (not arbitrary query values), so embedding
+	 * "/wp-json/tutor/" in an unrelated query parameter cannot trigger auth.
+	 * Also accepts the plain-permalink form via the rest_route query var only.
 	 *
 	 * @since 2.7.1
+	 * @since 4.0.8 Path-only detection; ignore unrelated query string values.
 	 *
 	 * @return boolean
 	 */
 	public static function is_tutor_api_request() {
-		$rest_prefix = trailingslashit( rest_get_url_prefix() );
-		$request_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) );
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return false;
+		}
 
-		$is_tutor_api = ( false !== strpos( $request_uri, $rest_prefix . 'tutor/' ) );
+		$request_uri = wp_unslash( $_SERVER['REQUEST_URI'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$path        = wp_parse_url( $request_uri, PHP_URL_PATH );
 
-		return $is_tutor_api;
+		if ( is_string( $path ) && '' !== $path ) {
+			$path        = trailingslashit( $path );
+			$rest_prefix = trailingslashit( rest_get_url_prefix() ); // e.g. wp-json/.
+			$needle      = '/' . $rest_prefix . 'tutor/';
+
+			if ( false !== strpos( $path, $needle ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
