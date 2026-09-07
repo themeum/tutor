@@ -32,13 +32,10 @@ $time_units         = Quiz::quiz_time_units();
 $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $time_units[ $quiz_time['time_type'] ] : null;
 $quiz_attempt       = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id ?? get_current_user_id() );
 $earned_marks       = 0;
-$total_marks        = 0;
+$total_marks        = Quiz::get_quiz_total_marks( $quiz_id );
 
 if ( is_object( $quiz_attempt ) && (float) ( $quiz_attempt->total_marks ?? 0 ) > 0 ) {
-	$total_marks  = (float) $quiz_attempt->total_marks;
 	$earned_marks = QuizModel::calculate_attempt_earned_percentage( $quiz_attempt );
-} else {
-	$total_marks = Quiz::get_quiz_total_marks( $quiz_id );
 }
 $limit_attempts   = (int) $quiz_options['limit_attempts_allowed'] ?? 0;
 $allowed_attempts = $limit_attempts ? $quiz_options['attempts_allowed'] ?? '' : '1';
