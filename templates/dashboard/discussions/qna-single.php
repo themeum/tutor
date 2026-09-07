@@ -43,7 +43,7 @@ $is_solved    = (int) tutor_utils()->array_get( 'tutor_qna_solved', $question->m
 $is_important = (int) tutor_utils()->array_get( 'tutor_qna_important', $question->meta, 0 );
 $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question->meta, 0 );
 
-$action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->comment_post_ID ) );
+$action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->comment_post_ID ) ) . '#tutor-course-details-tab';
 ?>
 <div class="tutor-discussion-single" x-init="isSolved = <?php echo $is_solved ? 'true' : 'false'; ?>; isImportant = <?php echo $is_important ? 'true' : 'false'; ?>; isArchived = <?php echo $is_archived ? 'true' : 'false'; ?>;">
 	<div class="tutor-flex tutor-justify-between tutor-items-center tutor-px-6 tutor-py-5 tutor-border-b">

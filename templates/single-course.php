@@ -56,7 +56,7 @@ $is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
 					</div>
 				<?php endif; ?>
 
-				<div class="tutor-course-details-tab tutor-mt-32">
+				<div id="tutor-course-details-tab" class="tutor-course-details-tab tutor-mt-32">
 					<?php
 					$active_tab = Input::get( 'page_tab', Input::get( 'tab', 'info' ) );
 					if ( 'qna' === $active_tab ) {
