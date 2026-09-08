@@ -84,6 +84,7 @@ function copy() {
         '!phpstan.neon',
         '!.claude',
         '!.cursor',
+        '!docs/**',
       ],
       {
         allowEmpty: true,
