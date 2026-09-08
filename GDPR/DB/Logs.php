@@ -43,12 +43,13 @@ class Logs extends DB {
 		$charset_collate = $wpdb->get_charset_collate();
 
 		return "CREATE TABLE {$table_name} (
-			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+			id BIGINT UNSIGNED AUTO_INCREMENT,
 			legal_consent_id BIGINT UNSIGNED NOT NULL,
-			action VARCHAR(50), -- created, updated, deleted
+			action VARCHAR(50),
 			old_data JSON NULL,
 			new_data JSON NULL,
-			created_at_gmt DATETIME NOT NULL
+			created_at_gmt DATETIME NOT NULL,
+			PRIMARY KEY  (id)
 		) {$charset_collate};";
 	}
 }
