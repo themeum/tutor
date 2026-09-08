@@ -10,6 +10,9 @@
 
 namespace TUTOR;
 
+use Exception;
+use InvalidArgumentException;
+
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
@@ -1753,6 +1756,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 1.0.0
 	 * @since 3.9.9 Check if user can manage course before updating order.
+	 * @since 4.0.8 Course content validation added.
 	 *
 	 * @return void
 	 */
@@ -1766,8 +1770,9 @@ class Course extends Tutor_Base {
 			wp_send_json_error( __( 'Sorting order is required', 'tutor' ) );
 		}
 
-		$topic_id  = (int) isset( $sorting_order[0], $sorting_order[0]['topic_id'] ) ? $sorting_order[0]['topic_id'] : 0;
-		$course_id = wp_get_post_parent_id( $topic_id );
+		$topic_id       = (int) isset( $sorting_order[0], $sorting_order[0]['topic_id'] ) ? $sorting_order[0]['topic_id'] : 0;
+		$course_id      = wp_get_post_parent_id( $topic_id );
+		$content_parent = Input::post( 'content_parent', array(), Input::TYPE_ARRAY );
 
 		if ( ! $topic_id || ! $course_id ) {
 			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
@@ -1777,10 +1782,15 @@ class Course extends Tutor_Base {
 			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		if ( Input::has( 'content_parent' ) ) {
-			$content_parent = Input::post( 'content_parent', array(), Input::TYPE_ARRAY );
-			$topic_id       = tutor_utils()->array_get( 'parent_topic_id', $content_parent );
-			$content_id     = tutor_utils()->array_get( 'content_id', $content_parent );
+		try {
+			$this->validate_course_content_order( $course_id, $topic_id, $sorting_order, $content_parent );
+		} catch ( \Throwable $th ) {
+			$this->response_bad_request( $th->getMessage() );
+		}
+
+		if ( ! empty( $content_parent ) ) {
+			$topic_id   = tutor_utils()->array_get( 'parent_topic_id', $content_parent );
+			$content_id = tutor_utils()->array_get( 'content_id', $content_parent );
 
 			// Update the parent topic id of the content.
 			global $wpdb;
@@ -3583,5 +3593,83 @@ class Course extends Tutor_Base {
 		->attr( 'type', 'button' )
 		->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" )
 		->render();
+	}
+
+	/**
+	 * Validate course content order
+	 *
+	 * @since 4.0.0
+	 *
+	 * @throws InvalidArgumentException If passing argument wrong.
+	 * @throws Exception If discrepency found in topic of content ids.
+	 *
+	 * @param int   $course_id   The ID of the course.
+	 * @param int   $topic_id    The ID of the topic.
+	 * @param array $sorting_order The sorting order of the course contents.
+	 * @param array $content_parent Parent topic & content ids.
+	 *
+	 * @return void
+	 */
+	private function validate_course_content_order( int $course_id, int $topic_id, array $sorting_order, array $content_parent = array() ): void {
+		if ( ! $course_id || ! $topic_id ) {
+			throw new InvalidArgumentException( esc_html__( 'Invalid course or topic ID', 'tutor' ) );
+		}
+
+		$provided_topic_ids   = array();
+		$provided_content_ids = array();
+		foreach ( $sorting_order as $topic ) {
+			$provided_topic_ids[] = (int) $topic['topic_id'] ?? 0;
+
+			if ( ! empty( $topic['lesson_ids'] ) ) {
+				$provided_content_ids = array_merge( $provided_content_ids, $topic['lesson_ids'] );
+			}
+		}
+
+		if ( ! empty( $content_parent ) ) {
+			foreach ( $content_parent as $topic ) {
+				$provided_topic_ids[]   = $topic['parent_topic_id'];
+				$provided_content_ids[] = $topic['content_id'];
+			}
+		}
+
+		$provided_topic_ids   = array_values( array_unique( array_filter( $provided_topic_ids ) ) );
+		$provided_content_ids = array_values( array_unique( array_filter( $provided_content_ids ) ) );
+
+		if ( empty( $provided_topic_ids ) ) {
+			throw new InvalidArgumentException( esc_html__( 'No topics provided', 'tutor' ) );
+		}
+
+		$topic_ids = get_posts(
+			array(
+				'fields'         => 'ids',
+				'post_parent'    => $course_id,
+				'post_type'      => tutor()->topics_post_type,
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+			)
+		);
+
+		$topic_id_diff = array_diff( $provided_topic_ids, $topic_ids );
+		if ( ! empty( $topic_id_diff ) ) {
+			throw new Exception( esc_html__( 'Invalid topic id provided', 'tutor' ) );
+		}
+
+		$default_post_types = array( tutor()->lesson_post_type, tutor()->quiz_post_type );
+		$content_post_types = array_unique( apply_filters( 'tutor_course_contents_post_types', $default_post_types ) );
+
+		$content_ids = get_posts(
+			array(
+				'fields'          => 'ids',
+				'post_parent__in' => $topic_ids,
+				'post_status'     => 'publish',
+				'post_type'       => $content_post_types,
+				'posts_per_page'  => -1,
+			)
+		);
+
+		$content_id_diff = array_diff( $provided_content_ids, $content_ids );
+		if ( ! empty( $content_id_diff ) ) {
+			throw new Exception( esc_html__( 'Invalid content id provided', 'tutor' ) );
+		}
 	}
 }
