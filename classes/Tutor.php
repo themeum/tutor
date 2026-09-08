@@ -1441,8 +1441,11 @@ final class Tutor extends Singleton {
 		$is_removed_private_items_permissions    = get_option( 'tutor_removed_read_private_items_permission', false );
 
 		$role = get_role( tutor()->instructor_role );
+		if ( ! ( $role instanceof \WP_Role ) ) {
+			return;
+		}
+
 		if ( ! $is_removed_edit_other_items_permissions ) {
-			$role = get_role( tutor()->instructor_role );
 
 			$caps_to_be_removed = array(
 				'edit_others_tutor_courses',
