@@ -1,0 +1,123 @@
+meta {
+  name: courses
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/courses
+  body: none
+  auth: basic
+}
+
+params:query {
+  ~paged: 1
+  ~order: ASC
+  ~orderby: title
+  ~categories: design,development
+  ~tags: beginner
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get All Courses
+  
+  Retrieves a paginated list of published courses along with categories, tags, author info, rating summary, price, and thumbnail.
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/courses`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Query Parameters
+  
+  | Parameter | Type | Default | Description |
+  | :--- | :--- | :--- | :--- |
+  | `paged` | `integer` | `1` | Page number for pagination. |
+  | `order` | `string` | `ASC` | Sort order direction: `ASC` or `DESC`. |
+  | `orderby` | `string` | `title` | Sort by field: `title`, `date`, `price`, `ID`, `rand`, etc. When `orderby=price` is used, WooCommerce product prices are queried. |
+  | `categories` | `string` | _None_ | Comma-separated category names (e.g. `web-development,design`). |
+  | `tags` | `string` | _None_ | Comma-separated tag names (e.g. `javascript,beginners`). |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "success",
+    "message": "Course retrieved successfully",
+    "data": {
+      "posts": [
+        {
+          "ID": 105,
+          "post_author": {
+            "ID": "1",
+            "user_login": "instructor_jane",
+            "user_nicename": "instructor_jane",
+            "user_email": "jane@example.com",
+            "display_name": "Jane Doe"
+          },
+          "post_date": "2026-01-15 10:00:00",
+          "post_title": "Modern JavaScript from Scratch",
+          "post_content": "Course description and syllabus overview...",
+          "post_status": "publish",
+          "post_name": "modern-javascript-from-scratch",
+          "thumbnail_url": "http://tutor-dev.local/wp-content/uploads/course-js.jpg",
+          "ratings": {
+            "rating_count": 12,
+            "rating_avg": 4.75
+          },
+          "course_category": [
+            {
+              "term_id": 4,
+              "name": "Web Development",
+              "slug": "web-development"
+            }
+          ],
+          "course_tag": [
+            {
+              "term_id": 9,
+              "name": "JavaScript",
+              "slug": "javascript"
+            }
+          ],
+          "price": "49.00",
+          "additional_info": {
+            "course_duration": "6 hours 30 mins",
+            "course_level": "beginner"
+          }
+        }
+      ],
+      "total_course": 25,
+      "total_page": 3
+    }
+  }
+  ```
+  
+  ### 404 Not Found
+  ```json
+  {
+    "code": "not_found",
+    "message": "Course not found",
+    "data": []
+  }
+  ```
+  
+  ### 401 / 403 Forbidden
+  ```json
+  {
+    "code": "rest_forbidden",
+    "message": "Sorry, you are not allowed to do that.",
+    "data": {
+      "status": 401
+    }
+  }
+  ```
+}

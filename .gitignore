@@ -61,3 +61,6 @@ assets/.rsdoctor
 
 *storybook.log
 storybook-static
+
+# Bruno Local Environment
+docs/api/environments/local.bru

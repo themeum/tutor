@@ -1,0 +1,72 @@
+meta {
+  name: quiz-attempt-details/{id}
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/quiz-attempt-details/1
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Quiz Attempt Details
+  
+  Retrieves historical attempt records, passing status, marks obtained, and earned grades for a given quiz ID.
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/quiz-attempt-details/:id`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Path Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `id` | `integer` | **Yes** | The WordPress Post ID of the quiz. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "success",
+    "message": "Quiz attempt detail retrieved successfully",
+    "data": [
+      {
+        "attempt_id": 88,
+        "course_id": 105,
+        "quiz_id": 501,
+        "user_id": 14,
+        "total_questions": 10,
+        "total_answered_questions": 10,
+        "total_marks": "100.00",
+        "earned_marks": "90.00",
+        "attempt_status": "review_required",
+        "attempt_info": "...",
+        "attempt_started_at": "2026-02-01 14:20:00",
+        "attempt_ended_at": "2026-02-01 14:45:00",
+        "is_manually_reviewed": 0
+      }
+    ]
+  }
+  ```
+  
+  ### 404 Not Found
+  ```json
+  {
+    "code": "not_found",
+    "message": "Quiz attempt detail not found for given ID",
+    "data": []
+  }
+  ```
+}

@@ -1,0 +1,70 @@
+meta {
+  name: author-information/{id}
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/author-information/1
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Instructor Information
+  
+  Retrieves public instructor/author details including display name, email, registration date, biographical info, and a list of courses authored by the instructor.
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/author-information/:id`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Path Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `id` | `integer` | **Yes** | The WordPress User ID of the instructor/author. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "success",
+    "message": "Author details retrieved successfully",
+    "data": {
+      "ID": "1",
+      "user_login": "jane_instructor",
+      "user_nicename": "jane_instructor",
+      "user_email": "jane@example.com",
+      "user_url": "https://example.com",
+      "user_registered": "2025-01-01 12:00:00",
+      "user_status": "0",
+      "display_name": "Jane Doe",
+      "courses": [
+        "105",
+        "110",
+        "120"
+      ]
+    }
+  }
+  ```
+  
+  ### 404 / Invalid ID
+  ```json
+  {
+    "code": "invalid_id",
+    "message": "Author not found",
+    "data": []
+  }
+  ```
+}
