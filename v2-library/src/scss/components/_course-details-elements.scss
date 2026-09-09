@@ -27,8 +27,6 @@
 
 .tutor-course-details-page {
 	.tutor-course-details-tab {
-		scroll-margin-top: 16px;
-
 		@include breakpoint-min(800) {
 			.tutor-is-sticky {
 				position: sticky;
@@ -43,8 +41,6 @@
 
 .admin-bar {
 	.tutor-course-details-tab {
-		scroll-margin-top: 48px;
-
 		@include breakpoint-min(800) {
 			.tutor-is-sticky {
 				top: 32px;

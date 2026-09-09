@@ -60,41 +60,9 @@ window.jQuery(document).ready(($) => {
     });
 });
 
-const scrollToActiveCourseTab = () => {
-	const params = new URLSearchParams(window.location.search);
-	if (!params.has('page_tab')) {
-		return;
-	}
-
-	const pageTab = params.get('page_tab');
-	const tabKey = 'qna' === pageTab ? 'questions' : pageTab;
-	const tabSection = document.querySelector('.tutor-course-details-page .tutor-course-details-tab');
-	const tabPane = document.getElementById(`tutor-course-details-tab-${tabKey}`);
-	const target = tabSection || tabPane;
-
-	if (!target) {
-		return;
-	}
-
-	const adminBar = document.getElementById('wpadminbar');
-	const offset = adminBar ? adminBar.offsetHeight : 0;
-	const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-
-	window.scrollTo({
-		top: Math.max(0, top),
-		behavior: 'smooth',
-	});
-};
-
 readyState_complete(() => {
     let loadingSpinner = document.querySelector('.tutor-video-player .loading-spinner');
     if (null !== loadingSpinner) {
         loadingSpinner.remove();
     }
 });
-
-if (document.readyState === 'complete') {
-	scrollToActiveCourseTab();
-} else {
-	window.addEventListener('load', scrollToActiveCourseTab, { once: true });
-}
