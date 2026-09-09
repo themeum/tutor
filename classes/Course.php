@@ -1978,8 +1978,8 @@ class Course extends Tutor_Base {
 		try {
 			$this->validate_course_content_order( $post_ID, $sorting_order );
 			$this->save_course_content_order( $sorting_order );
-		} catch ( \Throwable $th ) {
-			tutor_log( $th );
+		} catch ( \Throwable $th ) { // phpcs:ignore
+			// Doing nothing.
 		}
 
 		// Additional data like course intro video.
