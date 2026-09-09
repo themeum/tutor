@@ -176,9 +176,9 @@ const FormPuzzle = ({
 
           <FormSwitch
             {...backgroundControllerProps}
-            label={__('Show puzzle answer background', __TUTOR_TEXT_DOMAIN__)}
+            label={__('Show Reference Image to Learners', __TUTOR_TEXT_DOMAIN__)}
             helpText={__(
-              'Display a faded reference image behind the puzzle board during attempts.',
+              'When enabled, learners can view a faded version of the reference image while answering the puzzle.',
               __TUTOR_TEXT_DOMAIN__,
             )}
             onChange={markQuestionUpdated}
