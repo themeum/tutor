@@ -1,5 +1,17 @@
 $disabled-color: #e9e9ea !default;
 
+button.tutor-btn,
+a.tutor-btn,
+.tutor-btn {
+	&:focus,
+	&:focus-visible {
+		&:not(:disabled):not([disabled]):not(.disabled) {
+			outline: none;
+			box-shadow: 0px 0px 0px 2px var(--tutor-brand-450, #90A0F7);
+		}
+	}
+}
+
 .tutor-btn {
 	display: inline-flex;
 	align-items: center;
@@ -17,7 +29,15 @@ $disabled-color: #e9e9ea !default;
 	border-radius: 6px;
 	box-sizing: border-box;
 	cursor: pointer;
-	transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out;
+	transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out, box-shadow 200ms ease-in-out;
+
+	&:focus,
+	&:focus-visible {
+		&:not(:disabled):not([disabled]):not(.disabled) {
+			outline: none;
+			box-shadow: 0px 0px 0px 2px var(--tutor-brand-450, #90A0F7);
+		}
+	}
 
 	&[disabled],
 	&.disabled {
@@ -392,9 +412,16 @@ $disabled-color: #e9e9ea !default;
     display: inline-flex;
     vertical-align: middle;
 
+	button.tutor-btn,
+	a.tutor-btn,
 	.tutor-btn {
 		position: relative;
 		flex: 1;
+
+		&:focus,
+		&:focus-visible {
+			z-index: 1;
+		}
 
 		&:not(:last-child) {
 			border-top-right-radius: 0;

@@ -1466,7 +1466,7 @@ class Options_V2 {
 								'key'     => 'page_elements',
 								'type'    => 'toggle_matrix',
 								'label'   => __( 'Header & Footer', 'tutor' ),
-								'desc'    => __( 'Control the visibility of Header and Footer for Dashboard and Learning Experience', 'tutor' ),
+								'desc'    => __( 'Control the visibility of Header and Footer for Dashboard and Learning Area', 'tutor' ),
 								'columns' => array(
 									'header' => array(
 										'label'      => __( 'Header', 'tutor' ),
@@ -1491,7 +1491,7 @@ class Options_V2 {
 										),
 									),
 									'learning'  => array(
-										'label'  => __( 'Learning Experience', 'tutor' ),
+										'label'  => __( 'Learning Area', 'tutor' ),
 										'header' => array(
 											'key'     => 'show_learning_site_header',
 											'default' => $default_visibility,
