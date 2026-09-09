@@ -140,8 +140,8 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		$comment_id = 0;
-		$comment   = Input::post( 'comment', '', Input::TYPE_TEXTAREA );
-		$lesson_id = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
+		$comment    = Input::post( 'comment', '', Input::TYPE_TEXTAREA );
+		$lesson_id  = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
 
 		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
 			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
@@ -1126,16 +1126,24 @@ class Lesson extends Tutor_Base {
 	public function ajax_load_lesson_comments() {
 		tutor_utils()->check_nonce();
 
+		$user_id      = get_current_user_id();
 		$lesson_id    = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 		$current_page = Input::post( 'current_page', 1, Input::TYPE_INT );
 		$offset       = Input::post( 'offset', -1, Input::TYPE_INT );
 		$order        = QueryHelper::get_valid_sort_order( Input::post( 'order', 'DESC' ) );
 
+		if ( ! $user_id ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
 		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
 			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
 		}
 
-		$user_id       = get_current_user_id();
+		if ( ! self::can_post_lesson_comment( $lesson_id, $user_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
 		$item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 
 		$query_args = array(
@@ -1143,6 +1151,7 @@ class Lesson extends Tutor_Base {
 			'parent'  => 0,
 			'number'  => $item_per_page,
 			'order'   => $order,
+			'status'  => 'approve',
 		);
 
 		if ( $offset >= 0 ) {
@@ -1159,6 +1168,7 @@ class Lesson extends Tutor_Base {
 				'post_id' => $lesson_id,
 				'parent'  => 0,
 				'count'   => true,
+				'status'  => 'approve',
 			)
 		);
 
@@ -1196,14 +1206,32 @@ class Lesson extends Tutor_Base {
 	public function ajax_load_comment_replies() {
 		tutor_utils()->check_nonce();
 
+		$user_id       = get_current_user_id();
 		$comment_id    = Input::post( 'comment_id', 0, Input::TYPE_INT );
 		$replies_order = Input::post( 'order', 'DESC' );
+
+		if ( ! $user_id ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
 
 		if ( ! $comment_id ) {
 			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
 		}
 
-		$user_id = get_current_user_id();
+		$comment = get_comment( $comment_id );
+		if ( ! $comment ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$lesson_id = $comment->comment_post_ID;
+		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
+
+		if ( ! self::can_post_lesson_comment( $lesson_id, $user_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
 		$replies = self::get_comment_replies( $comment_id, $replies_order );
 
 		ob_start();
