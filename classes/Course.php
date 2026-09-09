@@ -3598,7 +3598,7 @@ class Course extends Tutor_Base {
 	/**
 	 * Validate course content order
 	 *
-	 * @since 4.0.0
+	 * @since 4.0.8
 	 *
 	 * @throws InvalidArgumentException If passing argument wrong.
 	 * @throws Exception If discrepency found in topic of content ids.
@@ -3621,7 +3621,7 @@ class Course extends Tutor_Base {
 			$provided_topic_ids[] = (int) $topic['topic_id'] ?? 0;
 
 			if ( ! empty( $topic['lesson_ids'] ) ) {
-				$provided_content_ids = array_merge( $provided_content_ids, $topic['lesson_ids'] );
+				$provided_content_ids = array_merge( $provided_content_ids, array_map( 'intval', $topic['lesson_ids'] ) );
 			}
 		}
 
