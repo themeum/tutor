@@ -1971,10 +1971,16 @@ class Course extends Tutor_Base {
 
 		$sorting_order = Input::post( 'tutor_topics_lessons_sorting', '' );
 		$sorting_order = json_decode( $sorting_order, true ) ?? array();
+
 		/**
 		 * Sorting Topics and lesson
 		 */
-		$this->save_course_content_order( $sorting_order );
+		try {
+			$this->validate_course_content_order( $post_ID, $sorting_order );
+			$this->save_course_content_order( $sorting_order );
+		} catch ( \Throwable $th ) {
+			tutor_log( $th );
+		}
 
 		// Additional data like course intro video.
 		if ( $additional_data_edit ) {
