@@ -181,24 +181,23 @@ class CourseTest extends \WP_UnitTestCase {
 	 * Helper method to invoke the private validate_course_content_order method via Reflection.
 	 *
 	 * @param int   $course_id      Course ID.
-	 * @param int   $topic_id       Topic ID.
 	 * @param array $sorting_order  Sorting order structure.
 	 * @param array $content_parent Optional content parent array.
 	 *
 	 * @return void
 	 */
-	private function validate_course_content_order( int $course_id, int $topic_id, array $sorting_order, array $content_parent = array() ): void {
+	private function validate_course_content_order( int $course_id, array $sorting_order, array $content_parent = array() ): void {
 		$course = new Course( false );
 		$method = new ReflectionMethod( Course::class, 'validate_course_content_order' );
 		if ( PHP_VERSION_ID < 80100 ) {
 			$method->setAccessible( true );
 		}
-		$method->invoke( $course, $course_id, $topic_id, $sorting_order, $content_parent );
+		$method->invoke( $course, $course_id, $sorting_order, $content_parent );
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| 1. Parameter Validation (course_id & topic_id)
+	| 1. Parameter Validation (course_id)
 	|--------------------------------------------------------------------------
 	*/
 
@@ -218,38 +217,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( 0, $this->topic_id_1, $sorting_order );
-	}
-
-	/**
-	 * Test that an InvalidArgumentException is thrown when topic_id is 0.
-	 *
-	 * @return void
-	 */
-	public function test_validate_throws_exception_when_topic_id_is_zero(): void {
-		$this->expectException( InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Invalid course or topic ID' );
-
-		$sorting_order = array(
-			array(
-				'topic_id'   => $this->topic_id_1,
-				'lesson_ids' => array( $this->lesson_id_1 ),
-			),
-		);
-
-		$this->validate_course_content_order( $this->course_id, 0, $sorting_order );
-	}
-
-	/**
-	 * Test that an InvalidArgumentException is thrown when both course_id and topic_id are 0.
-	 *
-	 * @return void
-	 */
-	public function test_validate_throws_exception_when_both_course_and_topic_id_are_zero(): void {
-		$this->expectException( InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Invalid course or topic ID' );
-
-		$this->validate_course_content_order( 0, 0, array() );
+		$this->validate_course_content_order( 0, $sorting_order );
 	}
 
 	/*
@@ -267,7 +235,7 @@ class CourseTest extends \WP_UnitTestCase {
 		$this->expectException( InvalidArgumentException::class );
 		$this->expectExceptionMessage( 'No topics provided' );
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, array(), array() );
+		$this->validate_course_content_order( $this->course_id, array(), array() );
 	}
 
 	/**
@@ -286,7 +254,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 	}
 
 	/*
@@ -312,7 +280,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 	}
 
 	/**
@@ -331,7 +299,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 	}
 
 	/**
@@ -356,7 +324,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order, $content_parent );
+		$this->validate_course_content_order( $this->course_id, $sorting_order, $content_parent );
 	}
 
 	/**
@@ -384,7 +352,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 	}
 
 	/**
@@ -407,7 +375,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 	}
 
 	/*
@@ -433,7 +401,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 	}
 
 	/**
@@ -452,7 +420,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 	}
 
 	/**
@@ -477,7 +445,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order, $content_parent );
+		$this->validate_course_content_order( $this->course_id, $sorting_order, $content_parent );
 	}
 
 	/**
@@ -505,7 +473,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 	}
 
 	/**
@@ -533,7 +501,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 	}
 
 	/**
@@ -552,7 +520,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 	}
 
 	/*
@@ -574,7 +542,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 		$this->addToAssertionCount( 1 );
 	}
 
@@ -595,7 +563,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 		$this->addToAssertionCount( 1 );
 	}
 
@@ -612,7 +580,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 		$this->addToAssertionCount( 1 );
 	}
 
@@ -628,7 +596,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 		$this->addToAssertionCount( 1 );
 	}
 
@@ -651,7 +619,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_2, $sorting_order, $content_parent );
+		$this->validate_course_content_order( $this->course_id, $sorting_order, $content_parent );
 		$this->addToAssertionCount( 1 );
 	}
 
@@ -672,7 +640,7 @@ class CourseTest extends \WP_UnitTestCase {
 			),
 		);
 
-		$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+		$this->validate_course_content_order( $this->course_id, $sorting_order );
 		$this->addToAssertionCount( 1 );
 	}
 
@@ -709,7 +677,7 @@ class CourseTest extends \WP_UnitTestCase {
 				),
 			);
 
-			$this->validate_course_content_order( $this->course_id, $this->topic_id_1, $sorting_order );
+			$this->validate_course_content_order( $this->course_id, $sorting_order );
 			$this->addToAssertionCount( 1 );
 		} finally {
 			remove_filter( 'tutor_course_contents_post_types', $filter_callback );
