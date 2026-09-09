@@ -542,7 +542,7 @@ class Instructor {
 
 		$cache_key = self::DASHBOARD_COURSE_COMPLETION_RATE_TRANSIENT . $user_id;
 
-		$cached_data = false; //get_transient( $cache_key );
+		$cached_data = get_transient( $cache_key );
 		if ( $cached_data && is_array( $cached_data ) ) {
 			return $cached_data;
 		}
