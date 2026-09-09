@@ -1783,7 +1783,7 @@ class Course extends Tutor_Base {
 		}
 
 		try {
-			$this->validate_course_content_order( $course_id, $topic_id, $sorting_order, $content_parent );
+			$this->validate_course_content_order( $course_id, $sorting_order, $content_parent );
 		} catch ( \Throwable $th ) {
 			$this->response_bad_request( $th->getMessage() );
 		}
@@ -3604,14 +3604,13 @@ class Course extends Tutor_Base {
 	 * @throws Exception If discrepency found in topic of content ids.
 	 *
 	 * @param int   $course_id   The ID of the course.
-	 * @param int   $topic_id    The ID of the topic.
 	 * @param array $sorting_order The sorting order of the course contents.
 	 * @param array $content_parent Parent topic & content ids.
 	 *
 	 * @return void
 	 */
-	private function validate_course_content_order( int $course_id, int $topic_id, array $sorting_order, array $content_parent = array() ): void {
-		if ( ! $course_id || ! $topic_id ) {
+	private function validate_course_content_order( int $course_id, array $sorting_order, array $content_parent = array() ): void {
+		if ( ! $course_id ) {
 			throw new InvalidArgumentException( esc_html__( 'Invalid course or topic ID', 'tutor' ) );
 		}
 
