@@ -7,7 +7,9 @@ a.tutor-btn,
 	&:focus-visible {
 		&:not(:disabled):not([disabled]):not(.disabled) {
 			outline: none;
-			box-shadow: 0px 0px 0px 2px var(--tutor-brand-450, #90A0F7);
+			box-shadow:
+				0px 0px 0px 1px #ffffff,
+				0px 0px 0px 3px var(--tutor-color-primary, #90a0f7);
 		}
 	}
 }
@@ -30,14 +32,6 @@ a.tutor-btn,
 	box-sizing: border-box;
 	cursor: pointer;
 	transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out, box-shadow 200ms ease-in-out;
-
-	&:focus,
-	&:focus-visible {
-		&:not(:disabled):not([disabled]):not(.disabled) {
-			outline: none;
-			box-shadow: 0px 0px 0px 2px var(--tutor-brand-450, #90A0F7);
-		}
-	}
 
 	&[disabled],
 	&.disabled {
