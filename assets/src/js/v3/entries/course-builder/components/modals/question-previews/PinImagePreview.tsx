@@ -81,7 +81,9 @@ const PinImagePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
         <img id={`tutor-pin-image-bg-${qId}`} src={imageUrl} alt={__('Pin on image question', 'tutor')} />
         <span className="tutor-pin-image-placement" aria-hidden="true">
           <span className="tutor-pin-image-shadow" />
-          <span className="tutor-pin-image-marker" />
+          <span className="tutor-pin-image-marker">
+            <span className="tutor-pin-image-handle" />
+          </span>
         </span>
       </div>
       <p id={instructionId} className="tutor-quiz-a11y-sr-only">
