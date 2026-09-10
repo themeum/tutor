@@ -338,26 +338,25 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.8 - 07 Sep, 2026
+= 4.0.8 - 10 Sep, 2026
 
-Update: Add toggle settings for puzzle quiz background reference image. (Pro)
-Update: UX updated for the assignment flow. (Pro)
-Update: Add go-to content links in Q&A single views and deep-linkable course tabs.
-Update: Site Header and Footer support in dashboard and learning area.
-Update: Dark and Light Logo in settings.
-Update: Quiz pagination and attempt details enhancement.
-Update: Optimization of instructor dashboard db query to load page faster.
-Update: Button Accessibility updated.
-Fix: Google OAuth blank screen in incognito social login. (Pro)
-Fix: Latex not rendering correctly on answer explanation.
-Fix: Incorrect view of Category / tag in students dashboard.
-Fix: Quiz Answer Option 0 Not Displaying on Frontend.
-Fix: Reduce image display size in new quiz types views to eliminate inner scrolling. (Pro)
-Fix: Course Prerequisite Missing After Section Removal. (Pro)
-Fix: Content Bank – Invalid Question ID When Adding to Existing Quiz. (Pro)
-Fix: Lesson Time Duration Not Saving/Updating.
-Fix: Assignment attempt details attachment input should not be visible. (Pro)
-Fix: Wrong display for total marks in Quiz.
+Update: Added an option to show or hide the Header and Footer in the Dashboard and Learning Area.
+Update: Added options to upload separate logos for Light and Dark modes.
+Update: Added a setting to control the Puzzle Quiz reference image visibility. (Pro)
+Update: Improved the assignment submission flow for learners. (Pro)
+Update: Added links to the associated course and lesson in frontend Q&A lists.
+Update: Improved Quiz pagination and quiz attempt details for a better browsing experience.
+Update: Optimized instructor dashboard database queries to improve page load speed.
+Fix: Resolved a blank screen issue with Google OAuth when using incognito mode. (Pro)
+Fix: Resolved LaTeX rendering issues in quiz answer explanations.
+Fix: Corrected category and tag display issues in the learner dashboard.
+Fix: Resolved an issue where Quiz Answer Option 0 was not displaying on the frontend.
+Fix: Reduced image size in new quiz type views to resolve inner scrolling issues. (Pro)
+Fix: Resolved an issue where course prerequisites were missing after section removal. (Pro)
+Fix: Resolved an invalid Question ID issue when adding questions to an existing quiz from Content Bank. (Pro)
+Fix: Resolved an issue where lesson time duration was not saving or updating properly.
+Fix: Removed the attachment input from assignment attempt details where it should not be visible. (Pro)
+Fix: Resolved the quiz marks calculation issue.
 
 = 4.0.7 - 20 Aug, 2026
 
