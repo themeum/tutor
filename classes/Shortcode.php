@@ -64,6 +64,7 @@ class Shortcode {
 
 		add_shortcode( 'tutor_cart', array( $this, 'tutor_cart_page' ) );
 		add_shortcode( 'tutor_checkout', array( $this, 'tutor_checkout_page' ) );
+		add_shortcode( 'tutor_cart_button', array( $this, 'tutor_cart_button' ) );
 
 		/**
 		 * Load more categories
@@ -504,5 +505,44 @@ class Shortcode {
 		ob_start();
 		tutor_load_template( 'ecommerce.checkout' );
 		return apply_filters( 'tutor_ecommerce/checkout', ob_get_clean() );
+	}
+
+	/**
+	 * Tutor Cart Button Shortcode
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array $atts shortcode attributes.
+	 *
+	 * @return mixed
+	 */
+	public function tutor_cart_button( $atts ) {
+		$atts = shortcode_atts(
+			array(
+				'class'        => 'cart-contents',
+				'title'        => __( 'View your shopping cart', 'tutor' ),
+				'show_icon'    => 'true',
+				'show_count'   => 'if_has_items',
+				'before_count' => '(',
+				'after_count'  => ')',
+			),
+			$atts
+		);
+
+		$atts['show_icon'] = 'true' === $atts['show_icon'];
+
+		if ( 'true' === $atts['show_count'] ) {
+			$atts['show_count'] = 'if_has_items';
+		} elseif ( 'false' === $atts['show_count'] ) {
+			$atts['show_count'] = 'never';
+		}
+
+		if ( ! in_array( $atts['show_count'], array( 'always', 'if_has_items', 'never' ), true ) ) {
+			$atts['show_count'] = 'if_has_items';
+		}
+
+		ob_start();
+		tutor_ecommerce_cart_button( $atts );
+		return ob_get_clean();
 	}
 }

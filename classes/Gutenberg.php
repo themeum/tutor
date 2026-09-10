@@ -105,6 +105,22 @@ class Gutenberg {
 			)
 		);
 
+		// Register cart button block scripts and styles.
+		wp_register_script(
+			'tutor-gutenberg-cart-button',
+			tutor()->url . 'assets/js/tutor-gutenberg-cart-button.js',
+			array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-editor' ),
+			TUTOR_VERSION
+		);
+		wp_register_style(
+			'tutor-cart-button',
+			tutor()->url . 'assets/css/tutor-cart-button.min.css',
+			array(),
+			TUTOR_VERSION
+		);
+
+		register_block_type( tutor()->path . 'assets/src/js/gutenberg/cart-button' );
+
 		// Check if WP version is equal to or greater than 5.9.
 		global $wp_version;
 		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
@@ -198,6 +214,7 @@ class Gutenberg {
 		$allowed_shortcode = array(
 			'tutor_instructor_registration_form',
 			'tutor_student_registration_form',
+			'tutor_cart_button',
 		);
 
 		if ( ! in_array( $shortcode, $allowed_shortcode ) ) {
@@ -206,5 +223,4 @@ class Gutenberg {
 
 		wp_send_json_success( do_shortcode( "[{$shortcode}]" ) );
 	}
-
 }
