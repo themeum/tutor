@@ -59,7 +59,6 @@ if ( $date_params_present && $quiz_attempts_count <= $offset ) {
 
 
 $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data(
-	$quiz_attempts_count,
 	$url,
 	$result_filter,
 	$search_filter,
