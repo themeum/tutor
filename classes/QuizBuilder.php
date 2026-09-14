@@ -167,6 +167,7 @@ class QuizBuilder {
 		foreach ( $question_answers as $answer ) {
 			$data_status = isset( $answer[ self::TRACKING_KEY ] ) ? $answer[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
 			$answer_data = $this->prepare_answer_data( $question_id, $question_type, $answer, $data_status );
+			$answer_id   = 0;
 
 			// New answer.
 			if ( self::FLAG_NEW === $data_status ) {
@@ -278,6 +279,7 @@ class QuizBuilder {
 
 		$question_order = 0;
 		foreach ( $questions as $question ) {
+			$question_id = 0;
 			$data_status = isset( $question[ self::TRACKING_KEY ] ) ? $question[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
 			++$question_order;
 			if ( isset( $question['is_cb_question'], $question['cb_action'] ) && 'link' === $question['cb_action'] ) {
@@ -320,7 +322,10 @@ class QuizBuilder {
 				$wpdb->update(
 					$questions_table,
 					$question_data,
-					array( 'question_id' => $question_id )
+					array(
+						'question_id' => $question_id,
+						'quiz_id'     => $quiz_id,
+					)
 				);
 			}
 
@@ -332,7 +337,10 @@ class QuizBuilder {
 			$wpdb->update(
 				$questions_table,
 				array( 'question_order' => $question_order ),
-				array( 'question_id' => $question_id )
+				array(
+					'question_id' => $question_id,
+					'quiz_id'     => $quiz_id,
+				)
 			);
 
 			// Save question's answers.
@@ -397,7 +405,7 @@ class QuizBuilder {
 			$errors  = array_merge( $errors, $validation->errors );
 		}
 
-		if ( $quiz && ! empty( $questions ) ) {
+		if ( ! empty( $questions ) ) {
 			$this->set_current_quiz_questions_answer_ids( $quiz_id );
 			try {
 				$this->is_valid_quiz_question_answer_payload( $questions );
@@ -932,12 +940,22 @@ class QuizBuilder {
 	 */
 	public function is_valid_quiz_question_answer_payload( array $payload ): bool {
 		$payload_question_ids     = wp_list_pluck( $payload, 'question_id' );
-		$payload_question_answers = wp_list_pluck( $payload, 'question_answers' );
+		$payload_question_answers = wp_list_pluck( $payload, 'question_answers', 'question_id' );
+		$is_cb_question           = wp_list_pluck( $payload, 'is_cb_question', 'question_id' );
+
+		// Remove content bank answers.
+		$payload_question_answers = array_filter( $payload_question_answers, fn( $question_id ) => ! $is_cb_question[ $question_id ], ARRAY_FILTER_USE_KEY );
+		$payload_question_answers = array_values( $payload_question_answers );
 		$payload_answer_ids       = wp_list_pluck( array_merge( ...$payload_question_answers ), 'answer_id' );
 
 		// Remove the hash id.
-		$payload_question_ids = array_filter( $payload_question_ids, fn( $id ) => is_numeric( $id ) );
+		$payload_question_ids = array_filter( $payload_question_ids, fn( $id ) => is_numeric( $id ) && ! $is_cb_question[ $id ] );
 		$payload_answer_ids   = array_filter( $payload_answer_ids, fn( $id ) => is_numeric( $id ) );
+
+		// For the new quiz current_quiz is null, in this there should not be any numeric question or answer id.
+		if ( is_null( $this->current_quiz ) && ( count( $payload_question_ids ) || count( $payload_answer_ids ) ) ) {
+			throw new \Exception( esc_html__( 'Invalid question or answer id found', 'tutor' ), 1 );
+		}
 
 		if ( $this->current_quiz_question_ids ) {
 			$has_question_diff = array_diff( $payload_question_ids, $this->current_quiz_question_ids );

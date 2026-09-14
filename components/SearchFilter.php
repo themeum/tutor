@@ -240,7 +240,7 @@ class SearchFilter extends BaseComponent {
 
 		$clear_action = 'GET' === strtoupper( $method )
 			? 'window.location.href = ' . wp_json_encode( $clear_url )
-			: "setValue('" . esc_js( $input_name ) . "', ''); \$el.closest('form').submit();";
+			: 'setValue(' . wp_json_encode( (string) $input_name ) . ', \'\'); $el.closest(\'form\').submit();';
 
 		$this->attributes = array_merge(
 			array(
@@ -279,8 +279,8 @@ class SearchFilter extends BaseComponent {
 						name="<?php echo esc_attr( $input_name ); ?>"
 						placeholder="<?php echo esc_attr( $placeholder ); ?>"
 						class="tutor-input <?php echo esc_attr( $size ); ?> tutor-input-content-left tutor-input-content-clear"
-						x-bind="register('<?php echo esc_attr( $input_name ); ?>')"
-						x-init="$nextTick(() => setValue('<?php echo esc_attr( $input_name ); ?>', '<?php echo esc_attr( $search_value ); ?>'))"
+						x-bind="register(<?php echo esc_attr( wp_json_encode( (string) $input_name ) ); ?>)"
+						x-init="$nextTick(() => setValue(<?php echo esc_attr( wp_json_encode( (string) $input_name ) ); ?>, <?php echo esc_attr( wp_json_encode( (string) $search_value ) ); ?>))"
 					/>
 
 					<button 

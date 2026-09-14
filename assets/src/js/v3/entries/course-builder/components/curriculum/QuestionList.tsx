@@ -269,6 +269,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         }),
         ...(questionType === 'puzzle' && {
           puzzle_grid_size: 4,
+          enable_puzzle_answer_background: true,
         }),
         ...(questionType === 'coordinates' && {
           coordinates_axis_range: 10,

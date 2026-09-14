@@ -235,6 +235,7 @@ $default_values = array(
 						<button
 							type="button"
 							class="tutor-quiz-question-paginate-item"
+							data-quiz-question-index="<?php echo esc_attr( $index + 1 ); ?>"
 							:class="getPaginationItemClass(<?php echo esc_attr( $index + 1 ); ?>)"
 							:data-state="getPaginationState(<?php echo esc_attr( $index + 1 ); ?>)"
 							@click="goTo(<?php echo esc_attr( $index + 1 ); ?>)"

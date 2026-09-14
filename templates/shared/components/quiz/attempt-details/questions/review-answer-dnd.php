@@ -75,6 +75,7 @@ if ( 'ordering' === $question_type ) {
 		$is_row_ok     = $normalize( $given_text ) === $normalize( $correct_text );
 
 		$rows[] = array(
+			'answer_title'  => ! $is_image_matching ? ( $correct_item->answer_title ?? '' ) : '',
 			'given_text'    => $given_text,
 			'given_image'   => $is_image_matching && $selected_item ? $get_image_url( $selected_item ) : '',
 			'correct_text'  => $correct_text,
@@ -112,22 +113,29 @@ if ( 'ordering' === $question_type ) {
 	<div class="tutor-quiz-review-dnd-rows">
 		<?php
 		foreach ( $rows as $row ) :
+			$answer_title = isset( $row['answer_title'] ) ? Quiz::sanitize_quiz_content( $row['answer_title'] ) : '';
 			$given_text   = isset( $row['given_text'] ) ? Quiz::sanitize_quiz_content( $row['given_text'] ) : '';
 			$correct_text = isset( $row['correct_text'] ) ? Quiz::sanitize_quiz_content( $row['correct_text'] ) : '';
 			$given_status = isset( $row['given_status'] ) ? $row['given_status'] : 'neutral';
 			?>
 			<div class="tutor-quiz-review-dnd-row">
 				<div class="tutor-quiz-review-item tutor-quiz-review-given" data-option="<?php echo esc_attr( $given_status ); ?>">
+					<?php if ( ! empty( $answer_title ) ) : ?>
+						<div class="tutor-quiz-review-item-title"><?php echo esc_html( $answer_title ); ?></div>
+					<?php endif; ?>
 					<?php if ( ! empty( $row['given_image'] ) ) : ?>
 						<img src="<?php echo esc_url( $row['given_image'] ); ?>" alt="<?php echo esc_attr( $given_text ); ?>">
 					<?php endif; ?>
-					<span><?php echo esc_html( $given_text ); ?></span>
+					<span class="tutor-quiz-review-item-text"><?php echo esc_html( '' !== $given_text ? $given_text : '—' ); ?></span>
 				</div>
 				<div class="tutor-quiz-review-item tutor-quiz-review-correct" data-option="neutral">
+					<?php if ( ! empty( $answer_title ) ) : ?>
+						<div class="tutor-quiz-review-item-title"><?php echo esc_html( $answer_title ); ?></div>
+					<?php endif; ?>
 					<?php if ( ! empty( $row['correct_image'] ) ) : ?>
 						<img src="<?php echo esc_url( $row['correct_image'] ); ?>" alt="<?php echo esc_attr( $correct_text ); ?>">
 					<?php endif; ?>
-					<span><?php echo esc_html( $correct_text ); ?></span>
+					<span class="tutor-quiz-review-item-text"><?php echo esc_html( $correct_text ); ?></span>
 				</div>
 			</div>
 		<?php endforeach; ?>

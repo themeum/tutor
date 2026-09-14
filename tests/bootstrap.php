@@ -51,3 +51,9 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 // Start up the WP testing environment.
 require "{$_tests_dir}/includes/bootstrap.php";
+
+// Initialize Tutor roles for testing environment.
+if ( class_exists( 'TUTOR\Tutor' ) ) {
+	TUTOR\Tutor::manage_tutor_roles_and_permissions();
+}
+

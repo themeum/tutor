@@ -179,7 +179,7 @@ declare global {
         instructor_can_change_course_author: 'on' | 'off';
         instructor_can_manage_co_instructors: 'on' | 'off';
         chatgpt_enable: 'on' | 'off';
-        course_builder_logo_url: string | false;
+        brand_logo_light: string | false;
         chatgpt_key_exist: boolean;
         hide_admin_bar_for_users: 'on' | 'off';
         enable_redirect_on_course_publish_from_frontend: 'on' | 'off';

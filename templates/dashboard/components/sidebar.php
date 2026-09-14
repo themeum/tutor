@@ -37,27 +37,23 @@ if ( isset( $wp_query->query_vars['tutor_dashboard_sub_page'] ) && $wp_query->qu
 }
 $dashboard_page_name = apply_filters( 'tutor_dashboard_sub_page_template', $dashboard_page_name );
 $dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
+$show_site_header    = (bool) get_tutor_option( 'show_dashboard_site_header' );
 
 ?>
 <div class="tutor-dashboard-sidebar">
+	<?php if ( ! $show_site_header ) : ?>
 	<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="tutor-dashboard-sidebar-logo">
-		<?php
-		$custom_logo_id = get_theme_mod( 'custom_logo' );
-		$logo_url       = $custom_logo_id ? wp_get_attachment_image_url( $custom_logo_id, 'full' ) : false;
-
-		if ( $logo_url ) :
-			?>
-			<img src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
-		<?php else : ?>
-			<span class="site-title"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
-		<?php endif; ?>
+		<?php tutor_load_template( 'shared.brand-logo' ); ?>
 	</a>
+	<?php endif; ?>
 	<div class="tutor-dashboard-sidebar-nav" role="navigation">
 		<ul>
 			<?php
 			foreach ( $dashboard_pages as $dashboard_key => $dashboard_page ) {
-				$menu_title = $dashboard_page;
-				$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $dashboard_key );
+				$menu_title       = $dashboard_page;
+				$menu_link        = tutor_utils()->get_tutor_dashboard_page_permalink( $dashboard_key );
+				$menu_icon_name   = '';
+				$active_icon_name = '';
 
 				if ( is_array( $dashboard_page ) ) {
 					$menu_title       = tutor_utils()->array_get( 'title', $dashboard_page );
@@ -110,12 +106,3 @@ $dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
 	</a>
 	<?php endif; ?>
 </div>
-<?php
-	tutor_load_template(
-		'dashboard.components.sidebar-nav-mobile',
-		array(
-			'dashboard_pages'     => $dashboard_pages,
-			'dashboard_page_slug' => $dashboard_page_slug,
-		)
-	);
-	?>
