@@ -1,4 +1,6 @@
 <?php
+
+use TUTOR\User;
 /**
  * Tutor dashboard profile.
  *
@@ -18,7 +20,11 @@ use Tutor\Components\SvgIcon;
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Input;
 
-$user_id          = Input::get( 'student_id', get_current_user_id(), Input::TYPE_INT );
+$user_id = Input::get( 'student_id', get_current_user_id(), Input::TYPE_INT );
+if ( ! User::can_view_user_profile( $user_id ) ) {
+	$user_id = get_current_user_id();
+}
+
 $student_details  = get_userdata( $user_id );
 $student_meta     = get_user_meta( $user_id );
 $cover_photo_url  = tutor_utils()->get_cover_photo_url( $user_id );
