@@ -534,12 +534,10 @@ class Quiz {
 	 * @return array
 	 */
 	private function get_question_feedback_map( int $attempt_id ): array {
-		global $wpdb;
-		$attempt_row = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT attempt_info FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id = %d",
-				$attempt_id
-			)
+		$attempt_row = QueryHelper::get_row(
+			'tutor_quiz_attempts',
+			array( 'attempt_id' => $attempt_id ),
+			'attempt_id'
 		);
 
 		if ( ! $attempt_row || empty( $attempt_row->attempt_info ) ) {
@@ -568,12 +566,10 @@ class Quiz {
 	 * @return bool
 	 */
 	private function save_question_feedback_map( int $attempt_id, array $feedback_map ): bool {
-		global $wpdb;
-		$attempt_row = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT attempt_info FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id = %d",
-				$attempt_id
-			)
+		$attempt_row = QueryHelper::get_row(
+			'tutor_quiz_attempts',
+			array( 'attempt_id' => $attempt_id ),
+			'attempt_id'
 		);
 
 		$attempt_info = array();
@@ -584,16 +580,13 @@ class Quiz {
 
 		$attempt_info['question_feedback'] = $feedback_map;
 
-		//phpcs:ignore WordPress.DB.DirectDatabaseQuery -- method isolated with prepared query
-		$updated = $wpdb->update(
-			$wpdb->prefix . 'tutor_quiz_attempts',
+		return QueryHelper::update(
+			'tutor_quiz_attempts',
 			array(
 				'attempt_info' => maybe_serialize( $attempt_info ),
 			),
 			array( 'attempt_id' => $attempt_id )
 		);
-
-		return false !== $updated;
 	}
 
 	/**
@@ -1669,6 +1662,21 @@ class Quiz {
 				);
 			}
 
+			if ( ! in_array( $question->question_type, QuizModel::get_manual_review_types(), true ) ) {
+				$attempt_row  = QueryHelper::get_row( 'tutor_quiz_attempts', array( 'attempt_id' => $attempt_id ), 'attempt_id' );
+				$attempt_info = ( $attempt_row && ! empty( $attempt_row->attempt_info ) ) ? maybe_unserialize( $attempt_row->attempt_info ) : array();
+				$attempt_info = is_array( $attempt_info ) ? $attempt_info : array();
+
+				if ( ! isset( $attempt_info['manual_overrides'] ) || ! is_array( $attempt_info['manual_overrides'] ) ) {
+					$attempt_info['manual_overrides'] = array();
+				}
+
+				$attempt_info['manual_overrides'][ (int) $question->question_id ] = $mark_as;
+				$attempt_update_data['attempt_info']         = maybe_serialize( $attempt_info );
+				$attempt_update_data['is_manually_reviewed'] = 1;
+				$attempt_update_data['manually_reviewed_at'] = gmdate( 'Y-m-d H:i:s', tutor_time() );
+			}
+
 			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
 				$attempt_update_data['attempt_status'] = QuizModel::ATTEMPT_ENDED;
 			}
@@ -1691,6 +1699,21 @@ class Quiz {
 					'is_manually_reviewed' => 1,
 					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 				);
+			}
+
+			if ( ! in_array( $question->question_type, QuizModel::get_manual_review_types(), true ) ) {
+				$attempt_row  = QueryHelper::get_row( 'tutor_quiz_attempts', array( 'attempt_id' => $attempt_id ), 'attempt_id' );
+				$attempt_info = ( $attempt_row && ! empty( $attempt_row->attempt_info ) ) ? maybe_unserialize( $attempt_row->attempt_info ) : array();
+				$attempt_info = is_array( $attempt_info ) ? $attempt_info : array();
+
+				if ( ! isset( $attempt_info['manual_overrides'] ) || ! is_array( $attempt_info['manual_overrides'] ) ) {
+					$attempt_info['manual_overrides'] = array();
+				}
+
+				$attempt_info['manual_overrides'][ (int) $question->question_id ] = $mark_as;
+				$attempt_update_data['attempt_info']         = maybe_serialize( $attempt_info );
+				$attempt_update_data['is_manually_reviewed'] = 1;
+				$attempt_update_data['manually_reviewed_at'] = gmdate( 'Y-m-d H:i:s', tutor_time() );
 			}
 
 			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
