@@ -399,6 +399,9 @@ class User {
 		$photo_type = Input::post( 'photo_type', '' );
 		$meta_key   = 'cover_photo' === $photo_type ? '_tutor_cover_photo' : '_tutor_profile_photo';
 
+		// Strict allowlist of image MIME types.
+		$allowed_mime_types = array( 'image/jpeg', 'image/png', 'image/gif', 'image/webp' );
+
 		/**
 		 * Photo Update from profile
 		 */
@@ -422,11 +425,22 @@ class User {
 					$mime_type  = is_array( $image_info ) && count( $image_info ) ? $image_info['mime'] : '';
 				}
 
+				// Validate against strict MIME allowlist.
+				if ( ! in_array( $mime_type, $allowed_mime_types, true ) ) {
+					wp_delete_file( $file_path );
+					wp_send_json_error( array( 'message' => __( 'Invalid image file type.', 'tutor' ) ) );
+					return;
+				}
+
+				// Use a controlled title instead of user-supplied filename.
+				$photo_label  = 'cover_photo' === Input::post( 'photo_type', '' ) ? 'cover' : 'profile';
+				$controlled_title = sprintf( 'tutor-%s-photo-%d', $photo_label, $user_id );
+
 				$media_id = wp_insert_attachment(
 					array(
 						'guid'           => $file_path,
 						'post_mime_type' => $mime_type,
-						'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_url ) ),
+						'post_title'     => $controlled_title,
 						'post_content'   => '',
 						'post_status'    => 'inherit',
 					),
