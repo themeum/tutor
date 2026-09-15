@@ -60,3 +60,11 @@
 
 - [ ] 8.1 Manual QA across Legacy and v4: Pro on/off, Gradebook addon on/off, Admin turn-off confirmation modals, Grandfathered quizzes continue to score and show switch when admin toggle off, negative mark input validation in Quiz settings, skipped questions hidden from students & visible to instructors with badge and no overrides, manual grading of open-ended and short-answer with numeric marks input & strictly pending/graded status (unaffected by partial/negative settings), Instructor dashboard inline feedback (instant delete), Admin dashboard modal feedback (delete confirmation modal), Student view feedback callout box, retry, reveal mode, matching/ordering/MC/FITB, percent vs fixed negative, H5P unchanged
 - [ ] 8.2 Run PHPCS on touched PHP in tutor and tutor-pro and verify zero WordPress-standard errors
+
+## 9. Learning Area Quiz Summary & Builder Polish
+
+- [ ] 9.1 Update `QuizSettings.tsx` and `quiz.ts` to use `FormInputWithContent` for `negative_mark_value`, inheriting the admin default negative mark penalty value (with ability for user to override in quiz settings), and locking `negative_mark_type` from user editing while maintaining form state for future extensibility
+- [ ] 9.2 Add negative marking penalty calculation helper using `QueryHelper::get_all` to determine whether question penalties are uniform (`-{value} for wrong answers` for fixed) or varying (`{min} – {max}` for percent)
+- [ ] 9.3 Update `Quiz::render_quiz_summary()` and `templates/learning-area/quiz/content.php` to render `Partial marking: Enabled` and `Negative marking` parameter rows matching the design mockups
+- [ ] 9.4 Ensure query operations use `QueryHelper.php` and AJAX endpoints adopt `JsonResponse.php` trait where applicable
+- [ ] 9.5 Run frontend build (rspack/gulp) and PHP validation to ensure no regressions

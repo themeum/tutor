@@ -9,12 +9,24 @@ Core submits quiz attempts with baseline calculations, then Pro refines scores v
 | Course Builder (QuizSettings.tsx) & Admin Settings (Grading Tab)               |
 | - Admin: 'Grading' tab (Pro active, independent of Gradebook add-on)          |
 |   - Automatic Assessment block: Partial marking & Negative marking switches   |
+|   - Default negative mark penalty amount and mode                             |
 |   - Confirmation modals on turn-off (Negative conditionally checks DB usage)  |
 |   - Grandfathering: Turning off affects new quizzes only                      |
 | - Builder: QuizSettings.tsx under 'Grading' section:                          |
 |   - FormSwitch for Partial marking (visible if Pro active && enabled)         |
-|   - FormCheckbox for Negative marking + penalty input & unit dropdown        |
+|   - FormCheckbox for Negative marking + FormInputWithContent for penalty      |
+|   - Negative mark value inherits admin default (overridable in quiz)          |
+|   - negative_mark_type locked/read-only in UI, maintained for future typing   |
 |   - react-hook-form validation on negative mark value (0-100% or >=0 Pts)     |
++-------------------------------------------------------------------------------+
+                                    |
+                                    v
++-------------------------------------------------------------------------------+
+| Learning Area Quiz Intro: templates/learning-area/quiz/content.php            |
+| - Quiz::render_quiz_summary() renders overview parameters table:              |
+|   - Partial marking: Enabled (if enabled)                                     |
+|   - Negative marking: -{val} for wrong answers (fixed) or {min} – {max}       |
+|     (percent with varying question marks, queried via QueryHelper)            |
 +-------------------------------------------------------------------------------+
                                     |
                                     v
@@ -88,17 +100,17 @@ We store `2` in `tutor_quiz_attempt_answers.is_correct` for partially correct au
    - Initial state: `[ —— ] / 5` with `💬 Add Feedback`.
    - Clicking `Add Feedback` expands an inline textarea "Write feedback for the student" with `Cancel` and `Save`.
    - Saving transitions status to `Graded` (blue badge) and displays `👁 Show Feedback`.
-   - Clicking `Show Feedback` expands "Edit feedback" with `Delete` (red text), `Cancel`, and `Save`.
+   - Clicking `Show Feedback` expands \"Edit feedback\" with `Delete` (red text), `Cancel`, and `Save`.
    - **No confirmation dialog for delete**: Because the v4 dashboard saves the entire review form in one go on submit, clicking `Delete` simply clears the inline feedback state without a confirmation popup.
 2. **Legacy WP-Admin (`views/quiz/attempt-details.php`)**:
    - Table-based row review with `Manual Review` column.
    - Shows `[ obtained_mark ] / {question_mark}` and `Add Feedback` / `Show Feedback`.
    - Clicking `Add Feedback` opens an AJAX modal dialog: "Write feedback" with close 'X', textarea, `Cancel` and `Save`.
-   - Clicking `Show Feedback` opens "Edit feedback" modal with `Delete`, `Cancel`, and `Save`.
-   - Clicking `Delete` opens the confirmation modal: _"Are you sure you want to delete this feedback?"_ with `[No, keep it]` and `[Yes, delete]`.
+   - Clicking `Show Feedback` opens \"Edit feedback\" modal with `Delete`, `Cancel`, and `Save`.
+   - Clicking `Delete` opens the confirmation modal: _\"Are you sure you want to delete this feedback?\"_ with `[No, keep it]` and `[Yes, delete]`.
 3. **Student View (Legacy & v4)**:
    - Displays `Graded` badge with `Score: X/Y`.
-   - Displays a dedicated callout section: **"Feedback from instructor"** beneath the student's submitted answer.
+   - Displays a dedicated callout section: **\"Feedback from instructor\"** beneath the student's submitted answer.
    - Completely omits skipped questions.
 
 ### Decision: Question-level feedback storage
@@ -121,3 +133,33 @@ We store `2` in `tutor_quiz_attempt_answers.is_correct` for partially correct au
   - **Partial marking**: Informs instructor that existing quizzes continue working as configured while new quizzes won't have partial marking.
   - **Negative marking**: Queries DB for any customized negative marking values. If found, shows modal; if none found, turns off immediately.
 - **Grandfathering**: Quizzes with `enable_partial_marking == 1` continue scoring partially and keep the toggle active in the Course Builder even when the admin toggle is OFF.
+
+### Decision: Learning Area Quiz Summary Parameters Table (`content.php` & `Quiz::render_quiz_summary`)
+
+- In `templates/learning-area/quiz/content.php`, pass `$quiz_id` to `Quiz::render_quiz_summary()`.
+- **Partial marking row**:
+  - Rendered when Tutor Pro is active and `enable_partial_marking` is true on the quiz.
+  - Icon: `Icon::CHECK_SQUARE`, Column: `Partial marking`, Value: `Enabled`.
+- **Negative marking row**:
+  - Rendered when Tutor Pro is active and `enable_negative_marking` is true on the quiz.
+  - Icon: `Icon::MINUS_SQUARE`, Column: `Negative marking`.
+  - Penalty value calculation:
+    - If `negative_mark_type === 'fixed'`:
+      - Single penalty for all questions: `-{value} for wrong answers` (e.g. `-0.10 for wrong answers`).
+    - If `negative_mark_type === 'percent'`:
+      - Question mark values can vary. The system queries quiz questions using `QueryHelper::get_all( $wpdb->tutor_quiz_questions, ['quiz_id' => $quiz_id], 'question_id' )`.
+      - For each question with mark $M$, calculated penalty is $( \text{negative\_mark\_value} / 100 ) \times M$.
+      - If penalties vary ($min \neq max$): display range `{min} – {max}` (e.g. `0.05 – 0.25`).
+      - If penalties are uniform ($min = max$): display `-{min} for wrong answers`.
+  - Both rows are hidden if their respective features are disabled on the quiz.
+
+### Decision: Builder `QuizSettings.tsx` with `FormInputWithContent` and Admin Default Inheritance
+
+- For negative marking penalty value, `QuizSettings.tsx` uses `FormInputWithContent` with `content={negativeMarkType === 'percent' ? '%' : 'Pts'}` and `contentPosition="right"`.
+- When initializing or creating a quiz, `negative_mark_value` inherits the admin default negative mark value (`quiz_negative_mark_amount`). Instructors can override this value in the quiz settings.
+- Currently, users cannot change the negative mark type from `QuizSettings.tsx` (locked/fixed), but the underlying form state maintains `negative_mark_type` for future support.
+
+### Decision: Standardization on `QueryHelper` and `JsonResponse`
+
+- All new database queries in Tutor use `Tutor\Helpers\QueryHelper` methods (`get_all`, `get_row`, `get_count`, etc.) instead of raw `$wpdb` calls.
+- AJAX endpoints use the `Tutor\Traits\JsonResponse` trait for standardized JSON response output.

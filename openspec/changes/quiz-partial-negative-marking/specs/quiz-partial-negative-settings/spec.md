@@ -1,6 +1,6 @@
 ## Purpose
 
-Defines how instructors and administrators configure partial and negative marking. Defines the admin `Grading` settings page, confirmation modals, default penalty settings, quiz grandfathering, client-side validation in quiz settings, and how those settings persist through builder save, Pro REST, and quiz import/export. There are no per-question scoring overrides in v1.
+Defines how instructors and administrators configure partial and negative marking. Defines the admin `Grading` settings page, confirmation modals, default penalty settings inheritance, quiz grandfathering, client-side validation in quiz settings using `FormInputWithContent`, display of partial and negative marking in the learning area quiz overview, and how those settings persist through builder save, Pro REST, and quiz import/export. There are no per-question scoring overrides in v1.
 
 ## ADDED Requirements
 
@@ -27,7 +27,7 @@ The `Grading` tab SHALL include an `Automatic Assessment` settings block contain
 
 If the `Gradebook` add-on is enabled, the Gradebook settings block SHALL render above the `Automatic Assessment` block. If the `Gradebook` add-on is disabled, the `Grading` tab SHALL display only the `Automatic Assessment` block.
 
-Tutor core SHALL localize `enable_quiz_partial_marking`, `enable_quiz_negative_marking`, and negative marking default penalty values in `Course.php` so they are accessible via `tutorConfig.settings` in the course builder.
+Tutor core SHALL localize `enable_quiz_partial_marking`, `enable_quiz_negative_marking`, and negative marking default penalty values (`quiz_negative_mark_mode`, `quiz_negative_mark_amount`) in `Course.php` so they are accessible via `tutorConfig.settings` in the course builder.
 
 #### Scenario: Grading tab visible with Gradebook add-on disabled
 
@@ -79,7 +79,7 @@ Turning the admin `enable_quiz_partial_marking` toggle OFF SHALL NOT modify or d
 - **WHEN** an instructor creates a new quiz in the course builder
 - **THEN** the Partial marking switch is not shown
 
-### Requirement: Course Builder Quiz settings layout and validation
+### Requirement: Course Builder Quiz settings layout, inheritance, and validation
 
 In `QuizSettings.tsx`, under the `Grading` card section (below "Passing grade (%)"):
 
@@ -87,11 +87,20 @@ In `QuizSettings.tsx`, under the `Grading` card section (below "Passing grade (%
   - Visible if `isTutorPro && (adminPartialEnabled || quizOptionPartialAlreadyOn)`.
 - `Negative marking` SHALL be rendered as a `FormCheckbox` with label "Negative marking", tooltip, and description "Deducts points for each wrong answer once enabled".
   - Visible if `isTutorPro && adminNegativeEnabled`.
-  - When checked, reveals "Penalty per wrong answer" with numeric input `negative_mark_value` and dropdown `negative_mark_type` (`%` or `Pts`).
+  - When checked, reveals "Penalty per wrong answer" using `FormInputWithContent` for `negative_mark_value` with content set according to `negative_mark_type` (e.g. `Pts` or `%`).
+  - **Inheritance**: If `negative_mark_value` is not yet saved for the quiz, it SHALL inherit from the admin default negative mark value (`quiz_negative_mark_amount`, default `0.15`). The instructor CAN override it directly in the quiz settings.
+  - The UI does not currently allow users to change `negative_mark_type` from `QuizSettings.tsx` (locked/fixed as `Pts` or inherited type), but the underlying form state maintains `negative_mark_type` so it can be enabled in future releases.
   - The input field SHALL enforce client-side form validation via `react-hook-form`:
     - When `negative_mark_type` is `percent` (`%`), the value MUST be between `0` and `100` (inclusive).
     - When `negative_mark_type` is `fixed` (`Pts`), the value MUST be $\ge 0$.
     - Invalid values display inline error messages and block form submission.
+
+#### Scenario: Negative mark value inherits admin default for new quiz
+
+- **GIVEN** admin default negative mark amount is configured as `0.15`
+- **WHEN** an instructor creates a new quiz and enables negative marking
+- **THEN** the penalty input field initializes with `0.15`
+- **AND** the instructor can edit the value to any valid custom penalty
 
 #### Scenario: Negative mark percent value out of range displays validation error
 
@@ -104,6 +113,49 @@ In `QuizSettings.tsx`, under the `Grading` card section (below "Passing grade (%
 - **GIVEN** negative marking is enabled and `negative_mark_type` is `fixed`
 - **WHEN** the instructor enters a value less than 0 in `QuizSettings.tsx`
 - **THEN** an inline validation error is displayed and the quiz settings form cannot be submitted
+
+### Requirement: Learning Area Quiz Summary displays Partial and Negative Marking Info
+
+In the Learning Area quiz overview table rendered by `templates/learning-area/quiz/content.php` via `Quiz::render_quiz_summary()`:
+
+- When `enable_partial_marking` is enabled for the quiz (`tutor_utils()->get_quiz_option($quiz_id)['enable_partial_marking'] == 1` and Tutor Pro is active):
+  - The table SHALL display a row with label "Partial marking" and value "Enabled".
+- When `enable_negative_marking` is enabled for the quiz (`tutor_utils()->get_quiz_option($quiz_id)['enable_negative_marking'] == 1` and Tutor Pro is active):
+  - When `negative_mark_type` is `fixed`:
+    - The table SHALL display a row with label "Negative marking" and value `-{value} for wrong answers` (e.g. `-0.10 for wrong answers`).
+  - When `negative_mark_type` is `percent`:
+    - The system SHALL query the quiz's questions using `Tutor\Helpers\QueryHelper`.
+    - For each question with a mark $M$, the penalty points are $( \text{negative\_mark\_value} / 100 ) \times M$.
+    - IF the computed penalty points vary across questions ($min \neq max$):
+      - The table SHALL display a row with label "Negative marking" and value `{min} – {max}` (e.g. `0.05 – 0.25`).
+    - IF all questions have the same mark ($min = max$):
+      - The table SHALL display `-{min} for wrong answers`.
+- When either feature is disabled, the corresponding row SHALL NOT be rendered in the quiz summary table.
+
+#### Scenario: Quiz with Partial marking on displays Enabled row
+
+- **GIVEN** Tutor Pro is active and `enable_partial_marking` is enabled on the quiz
+- **WHEN** a student views the quiz start screen in the learning area
+- **THEN** the quiz summary table displays a "Partial marking" row with value "Enabled"
+
+#### Scenario: Quiz with fixed Negative marking displays single penalty for wrong answers
+
+- **GIVEN** Tutor Pro is active and `enable_negative_marking` is enabled with type `fixed` and value `0.10`
+- **WHEN** a student views the quiz start screen in the learning area
+- **THEN** the quiz summary table displays a "Negative marking" row with value "-0.10 for wrong answers"
+
+#### Scenario: Quiz with percent Negative marking and varying marks displays range
+
+- **GIVEN** Tutor Pro is active and `enable_negative_marking` is enabled with type `percent` and value `10`
+- **AND** the quiz contains questions worth 0.5 points and 2.5 points
+- **WHEN** a student views the quiz start screen in the learning area
+- **THEN** the quiz summary table displays a "Negative marking" row with value "0.05 – 0.25"
+
+#### Scenario: Features disabled omit rows from summary table
+
+- **GIVEN** both partial marking and negative marking are disabled on a quiz
+- **WHEN** a student views the quiz start screen
+- **THEN** neither "Partial marking" nor "Negative marking" rows are shown in the parameters table
 
 ### Requirement: Scoring settings are quiz-level only
 
