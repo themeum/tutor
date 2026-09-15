@@ -38,6 +38,7 @@ import QuizSingleLayoutSvg from '@SharedImages/quiz-single-question.svg';
 import FormQuizLayoutSelect from './FormQuizLayoutSelect';
 
 const courseId = getCourseId();
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 interface QuizSettingsProps {
   contentDripType: ContentDripType;
@@ -96,6 +97,11 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const { quizId, contentType } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const isLegacyLearningMode = tutorConfig.settings?.learning_mode === 'legacy';
+  const adminPartialEnabled = ['1', 'on'].includes(String(tutorConfig.settings?.enable_quiz_partial_marking ?? ''));
+  const adminNegativeEnabled = ['1', 'on'].includes(String(tutorConfig.settings?.enable_quiz_negative_marking ?? ''));
+  const quizOptionPartialAlreadyOn = form.watch('quiz_option.enable_partial_marking');
+  const negativeMarkType = form.watch('quiz_option.negative_mark_type');
+  const negativeMarkingEnabled = form.watch('quiz_option.enable_negative_marking');
 
   const questions = form.watch('questions');
   const questionsCount = questions.length;
@@ -328,6 +334,70 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               </Show>
             </Show>
           </div>
+
+          <Show when={isTutorPro && (adminPartialEnabled || quizOptionPartialAlreadyOn || adminNegativeEnabled)}>
+            <div css={styles.card}>
+              <h5>{__('Grading', 'tutor')}</h5>
+              <div css={styles.innerCard}>
+                <Show when={adminPartialEnabled || quizOptionPartialAlreadyOn}>
+                  <Controller
+                    name="quiz_option.enable_partial_marking"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormSwitch
+                        {...controllerProps}
+                        label={__('Partial marking', 'tutor')}
+                        helpText={__('Award credit for correct sub-answers on multi-part questions', 'tutor')}
+                      />
+                    )}
+                  />
+                </Show>
+
+                <Show when={adminNegativeEnabled}>
+                  <div css={styles.inlineForm({ minHeight: '32px' })}>
+                    <Controller
+                      name="quiz_option.enable_negative_marking"
+                      control={form.control}
+                      render={(controllerProps) => (
+                        <FormCheckbox
+                          {...controllerProps}
+                          label={__('Negative marking', 'tutor')}
+                          helpText={__('Deduct points for each wrong answer once enabled.', 'tutor')}
+                        />
+                      )}
+                    />
+                    <Show when={negativeMarkingEnabled}>
+                      <Controller
+                        name="quiz_option.negative_mark_value"
+                        control={form.control}
+                        rules={{
+                          validate: (value) => {
+                            const numericValue = Number(value);
+                            if (numericValue < 0) return __('Negative mark value cannot be less than 0', 'tutor');
+                            if (negativeMarkType === 'percent' && numericValue > 100)
+                              return __('Percentage penalty cannot be greater than 100', 'tutor');
+                            return true;
+                          },
+                        }}
+                        render={(controllerProps) => (
+                          <FormInputWithContent
+                            {...controllerProps}
+                            type="number"
+                            size="small"
+                            isInlineLabel
+                            label={__('Penalty per wrong answer', 'tutor')}
+                            content={negativeMarkType === 'percent' ? '%' : __('Pts', 'tutor')}
+                            contentPosition="right"
+                            showVerticalBar={false}
+                          />
+                        )}
+                      />
+                    </Show>
+                  </div>
+                </Show>
+              </div>
+            </div>
+          </Show>
 
           <h5>{__('Timing', 'tutor')}</h5>
 
