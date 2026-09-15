@@ -76,7 +76,19 @@ declare global {
           onMaskChange?: (value: string) => void;
           interactionRoot?: HTMLElement | null;
           activateOnHover?: boolean;
-        }) => { destroy: () => void };
+          clearOnDrawStart?: boolean;
+          onDrawStart?: () => void;
+        }) => {
+          destroy: () => void;
+          clear: () => void;
+          isDrawing: () => boolean;
+          startStrokeAt: (x: number, y: number) => boolean;
+          continueStrokeAt: (x: number, y: number) => boolean;
+          finishStroke: () => boolean;
+          cancelStroke: () => boolean;
+          renderWithOverlay: (overlayFn: (ctx: CanvasRenderingContext2D) => void) => void;
+          syncCanvas: () => void;
+        };
         DEFAULT_BRUSH_SIZE?: number;
         DEFAULT_STROKE_STYLE?: string;
       };
