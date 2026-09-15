@@ -5,11 +5,15 @@ import { type MutationState } from '@Core/ts/services/Query';
 
 const REVIEW_STATUSES = ['correct', 'incorrect'] as const;
 const REVIEW_STATUS_FIELD = 'review_statuses' as const;
+const MANUAL_MARK_FIELD = 'manual_marks' as const;
 
 type ReviewStatus = (typeof REVIEW_STATUSES)[number];
 type ReviewStatusFieldName = `${typeof REVIEW_STATUS_FIELD}[${string}]`;
 type ReviewStatusMap = Record<string, ReviewStatus>;
 type ReviewStatusesAjaxPayload = Partial<Record<ReviewStatusFieldName, ReviewStatus>>;
+type ManualMarkFieldName = `${typeof MANUAL_MARK_FIELD}[${string}]`;
+type ManualMarksMap = Record<string, number>;
+type ManualMarksAjaxPayload = Partial<Record<ManualMarkFieldName, number>>;
 
 interface QuizAttemptFeedbackProps {
   attemptId: number;
@@ -20,6 +24,7 @@ interface QuizAttemptFeedbackPayload {
   attempt_id: number;
   feedback: string;
   review_statuses: ReviewStatusMap;
+  manual_marks: ManualMarksMap;
 }
 
 interface QuizAttemptFeedbackResponse<TData = unknown> {
@@ -39,6 +44,7 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
   const { convertToErrorMessage } = window.TutorCore.error;
 
   const reviewStatusFieldPattern = new RegExp(`^${REVIEW_STATUS_FIELD}\\[[^\\]]+\\]$`);
+  const manualMarkFieldPattern = new RegExp(`^${MANUAL_MARK_FIELD}\\[[^\\]]+\\]$`);
   let isProgrammaticReload = false;
 
   const getReviewStatuses = (data: Record<string, unknown>) => {
@@ -64,6 +70,22 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
     return Object.entries(reviewStatuses).reduce<ReviewStatusesAjaxPayload>((acc, [questionId, status]) => {
       const fieldName: ReviewStatusFieldName = `${REVIEW_STATUS_FIELD}[${questionId}]`;
       acc[fieldName] = status;
+      return acc;
+    }, {});
+  };
+
+  const getManualMarks = (data: Record<string, unknown>) => {
+    return Object.entries(data).reduce<ManualMarksMap>((acc, [key, value]) => {
+      if (!manualMarkFieldPattern.test(key) || Number.isNaN(Number(value))) return acc;
+      const questionId = key.slice(`${MANUAL_MARK_FIELD}[`.length, -1);
+      acc[questionId] = Number(value);
+      return acc;
+    }, {});
+  };
+
+  const getManualMarksPayload = (manualMarks: ManualMarksMap) => {
+    return Object.entries(manualMarks).reduce<ManualMarksAjaxPayload>((acc, [questionId, mark]) => {
+      acc[`${MANUAL_MARK_FIELD}[${questionId}]` as ManualMarkFieldName] = mark;
       return acc;
     }, {});
   };
@@ -118,6 +140,7 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
     async saveFeedback(payload: QuizAttemptFeedbackPayload) {
       let feedbackDirty = true;
       let reviewStatusesDirty = true;
+      let manualMarksDirty = true;
 
       if (form.hasForm(formId)) {
         const formState = form.getFormState(formId);
@@ -126,14 +149,20 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
         reviewStatusesDirty = Object.keys(dirtyFields ?? {}).some(
           (key) => key.startsWith(`${REVIEW_STATUS_FIELD}[`) && dirtyFields[key],
         );
+        manualMarksDirty = Object.keys(dirtyFields ?? {}).some(
+          (key) => key.startsWith(`${MANUAL_MARK_FIELD}[`) && dirtyFields[key],
+        );
       }
 
       const reviewStatusesPayload = getReviewStatusesPayload(payload.review_statuses);
+      const manualMarksPayload = getManualMarksPayload(payload.manual_marks);
       const reviewRequest =
-        reviewStatusesDirty && Object.keys(reviewStatusesPayload).length > 0
+        (reviewStatusesDirty || manualMarksDirty) &&
+        (Object.keys(reviewStatusesPayload).length > 0 || Object.keys(manualMarksPayload).length > 0)
           ? wpPost<QuizAttemptFeedbackResponse>(endpoints.REVIEW_QUIZ_ANSWERS, {
               attempt_id: payload.attempt_id,
               ...reviewStatusesPayload,
+              ...manualMarksPayload,
             })
           : Promise.resolve(null);
 
@@ -157,6 +186,7 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
         attempt_id: this.attemptId,
         feedback: String(data.feedback ?? ''),
         review_statuses: getReviewStatuses(data),
+        manual_marks: getManualMarks(data),
       });
     },
   };
@@ -165,4 +195,98 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
 export const quizAttemptFeedbackMeta = {
   name: 'quizAttemptFeedback',
   component: quizAttemptFeedback,
+};
+
+interface QuestionFeedbackProps {
+  attemptId: number;
+  attemptAnswerId: number;
+  feedback: string;
+}
+
+const questionFeedback = ({ attemptId, attemptAnswerId, feedback }: QuestionFeedbackProps) => {
+  const { toast, endpoints } = window.TutorCore;
+  const { wpPost } = window.TutorCore.api;
+
+  return {
+    attemptId,
+    attemptAnswerId,
+    feedback: String(feedback || ''),
+    draft: String(feedback || ''),
+    expanded: false,
+    editing: false,
+    saving: false,
+
+    toggle() {
+      if (!this.feedback) {
+        this.expanded = !this.expanded;
+        this.editing = true;
+      } else if (!this.editing) {
+        this.expanded = !this.expanded;
+        this.editing = true;
+      } else {
+        this.expanded = false;
+        this.editing = false;
+        this.draft = this.feedback;
+      }
+    },
+
+    async save() {
+      if (!this.attemptId || !this.attemptAnswerId || this.saving) return;
+
+      this.saving = true;
+      try {
+        const response = await wpPost<QuizAttemptFeedbackResponse>(endpoints.SAVE_QUESTION_FEEDBACK, {
+          attempt_id: this.attemptId,
+          attempt_answer_id: this.attemptAnswerId,
+          feedback: this.draft,
+        });
+
+        if (!response.success) {
+          toast.error(response.message || __('Could not save feedback.', 'tutor'));
+          return;
+        }
+
+        this.feedback = this.draft;
+        this.editing = false;
+        this.expanded = false;
+        toast.success(__('Feedback saved successfully.', 'tutor'));
+      } catch {
+        toast.error(__('Could not save feedback.', 'tutor'));
+      } finally {
+        this.saving = false;
+      }
+    },
+
+    async del() {
+      if (!this.attemptId || !this.attemptAnswerId || this.saving) return;
+
+      this.saving = true;
+      try {
+        const response = await wpPost<QuizAttemptFeedbackResponse>(endpoints.DELETE_QUESTION_FEEDBACK, {
+          attempt_id: this.attemptId,
+          attempt_answer_id: this.attemptAnswerId,
+        });
+
+        if (!response.success) {
+          toast.error(response.message || __('Could not delete feedback.', 'tutor'));
+          return;
+        }
+
+        this.feedback = '';
+        this.draft = '';
+        this.editing = false;
+        this.expanded = false;
+        toast.success(__('Feedback deleted successfully.', 'tutor'));
+      } catch {
+        toast.error(__('Could not delete feedback.', 'tutor'));
+      } finally {
+        this.saving = false;
+      }
+    },
+  };
+};
+
+export const questionFeedbackMeta = {
+  name: 'questionFeedback',
+  component: questionFeedback,
 };

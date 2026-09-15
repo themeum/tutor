@@ -135,6 +135,8 @@ class Quiz {
 		add_action( 'wp_ajax_review_quiz_answer', array( $this, 'review_quiz_answer' ) );
 		add_action( 'wp_ajax_tutor_review_quiz_answers', array( $this, 'review_quiz_answers' ) );
 		add_action( 'wp_ajax_tutor_instructor_feedback', array( $this, 'tutor_instructor_feedback' ) );
+		add_action( 'wp_ajax_tutor_save_question_feedback', array( $this, 'save_question_feedback' ) );
+		add_action( 'wp_ajax_tutor_delete_question_feedback', array( $this, 'delete_question_feedback' ) );
 
 		/**
 		 * New quiz builder Ajax API.
@@ -520,6 +522,146 @@ class Quiz {
 			}
 		}
 		wp_send_json_error();
+	}
+
+	/**
+	 * Read the question feedback map from an attempt's serialized info.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return array
+	 */
+	private function get_question_feedback_map( int $attempt_id ): array {
+		global $wpdb;
+		$attempt_row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT attempt_info FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id = %d",
+				$attempt_id
+			)
+		);
+
+		if ( ! $attempt_row || empty( $attempt_row->attempt_info ) ) {
+			return array();
+		}
+
+		$attempt_info = maybe_unserialize( $attempt_row->attempt_info );
+
+		if ( ! is_array( $attempt_info ) ) {
+			return array();
+		}
+
+		$feedback_map = $attempt_info['question_feedback'] ?? array();
+
+		return is_array( $feedback_map ) ? $feedback_map : array();
+	}
+
+	/**
+	 * Persist the question feedback map into an attempt's serialized info.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int   $attempt_id Attempt ID.
+	 * @param array $feedback_map Feedback keyed by attempt answer ID.
+	 *
+	 * @return bool
+	 */
+	private function save_question_feedback_map( int $attempt_id, array $feedback_map ): bool {
+		global $wpdb;
+		$attempt_row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT attempt_info FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id = %d",
+				$attempt_id
+			)
+		);
+
+		$attempt_info = array();
+		if ( $attempt_row && ! empty( $attempt_row->attempt_info ) ) {
+			$attempt_info = maybe_unserialize( $attempt_row->attempt_info );
+			$attempt_info = is_array( $attempt_info ) ? $attempt_info : array();
+		}
+
+		$attempt_info['question_feedback'] = $feedback_map;
+
+		//phpcs:ignore WordPress.DB.DirectDatabaseQuery -- method isolated with prepared query
+		$updated = $wpdb->update(
+			$wpdb->prefix . 'tutor_quiz_attempts',
+			array(
+				'attempt_info' => maybe_serialize( $attempt_info ),
+			),
+			array( 'attempt_id' => $attempt_id )
+		);
+
+		return false !== $updated;
+	}
+
+	/**
+	 * Save, update, or delete per-question instructor feedback via AJAX.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function save_question_feedback() {
+		tutor_utils()->checking_nonce();
+
+		$attempt_id       = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$attempt_answer_id = Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
+		$feedback          = Input::post( 'feedback', '', Input::TYPE_KSES_POST );
+
+		if ( ! $attempt_id || ! $attempt_answer_id ) {
+			$this->response_fail( __( 'Invalid request data', 'tutor' ), 400 );
+		}
+
+		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
+			$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
+		}
+
+		$feedback_map                     = $this->get_question_feedback_map( $attempt_id );
+		$feedback_map[ $attempt_answer_id ] = $feedback;
+
+		if ( ! $this->save_question_feedback_map( $attempt_id, $feedback_map ) ) {
+			$this->response_fail( __( 'Could not save feedback', 'tutor' ), 500 );
+		}
+
+		$this->response_success( __( 'Feedback saved successfully', 'tutor' ) );
+	}
+
+	/**
+	 * Delete per-question instructor feedback via AJAX.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function delete_question_feedback() {
+		tutor_utils()->checking_nonce();
+
+		$attempt_id       = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$attempt_answer_id = Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
+
+		if ( ! $attempt_id || ! $attempt_answer_id ) {
+			$this->response_fail( __( 'Invalid request data', 'tutor' ), 400 );
+		}
+
+		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
+			$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
+		}
+
+		$feedback_map = $this->get_question_feedback_map( $attempt_id );
+
+		if ( ! isset( $feedback_map[ $attempt_answer_id ] ) ) {
+			$this->response_success( __( 'Feedback removed', 'tutor' ) );
+		}
+
+		unset( $feedback_map[ $attempt_answer_id ] );
+
+		if ( ! $this->save_question_feedback_map( $attempt_id, $feedback_map ) ) {
+			$this->response_fail( __( 'Could not delete feedback', 'tutor' ), 500 );
+		}
+
+		$this->response_success( __( 'Feedback deleted successfully', 'tutor' ) );
 	}
 
 	/**
@@ -1158,6 +1300,7 @@ class Quiz {
 		$attempt_answer_id = Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
 		$question_id       = Input::post( 'question_id', 0, Input::TYPE_INT );
 		$mark_as           = Input::post( 'mark_as' );
+		$manual_mark       = Input::post( 'manual_mark', null );
 
 		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
@@ -1168,7 +1311,28 @@ class Quiz {
 		}
 
 		$attempt_answer = $this->resolve_attempt_answer_for_review( $attempt_id, $attempt_answer_id, $question_id );
-		$review_data    = $attempt_answer ? $this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as ) : null;
+		$review_data    = null;
+
+		if ( null !== $manual_mark && $attempt_answer ) {
+			$mark_delta = $this->apply_manual_quiz_answer_mark( $attempt_answer, $manual_mark );
+			$attempt    = tutor_utils()->get_attempt( $attempt_id );
+
+			if ( null !== $mark_delta && is_object( $attempt ) ) {
+				QueryHelper::update(
+					'tutor_quiz_attempts',
+					array(
+						'earned_marks'         => max( 0, (float) $attempt->earned_marks + $mark_delta ),
+						'is_manually_reviewed' => 1,
+						'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
+					),
+					array( 'attempt_id' => $attempt_id )
+				);
+
+				$review_data = array( 'student_id' => $attempt->user_id );
+			}
+		} elseif ( $attempt_answer ) {
+			$review_data = $this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
+		}
 
 		if ( ! $review_data ) {
 			wp_send_json_error( array( 'message' => __( 'Review update failed', 'tutor' ) ) );
@@ -1201,8 +1365,9 @@ class Quiz {
 
 		$attempt_id      = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$review_statuses = Input::post( 'review_statuses', array(), Input::TYPE_ARRAY );
+		$manual_marks    = Input::post( 'manual_marks', array(), Input::TYPE_ARRAY );
 
-		$this->review_quiz_answers_bulk( $attempt_id, $review_statuses );
+		$this->review_quiz_answers_bulk( $attempt_id, $review_statuses, $manual_marks );
 	}
 
 	/**
@@ -1212,10 +1377,11 @@ class Quiz {
 	 *
 	 * @param int   $attempt_id Attempt ID.
 	 * @param array $review_statuses Review statuses keyed by question ID.
+	 * @param array $manual_marks Numeric manual marks keyed by question ID.
 	 *
 	 * @return void
 	 */
-	private function review_quiz_answers_bulk( int $attempt_id, array $review_statuses ) {
+	private function review_quiz_answers_bulk( int $attempt_id, array $review_statuses, array $manual_marks = array() ) {
 		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
 			$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
 		}
@@ -1254,9 +1420,68 @@ class Quiz {
 			$this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
 		}
 
+		$manual_marks_delta     = 0.0;
+		$has_manual_mark_update = false;
+		foreach ( $manual_marks as $question_id => $mark ) {
+			$question_id    = (int) $question_id;
+			$attempt_answer = $answers_by_question_id[ $question_id ] ?? $this->resolve_attempt_answer_for_review( $attempt_id, 0, $question_id );
+			$mark_delta     = $this->apply_manual_quiz_answer_mark( $attempt_answer, $mark );
+
+			if ( null !== $mark_delta ) {
+				$has_manual_mark_update = true;
+				$manual_marks_delta    += $mark_delta;
+			}
+		}
+
+		if ( $has_manual_mark_update ) {
+			$attempt = tutor_utils()->get_attempt( $attempt_id );
+			if ( is_object( $attempt ) ) {
+				QueryHelper::update(
+					'tutor_quiz_attempts',
+					array(
+						'earned_marks'         => max( 0, (float) $attempt->earned_marks + $manual_marks_delta ),
+						'is_manually_reviewed' => 1,
+						'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
+					),
+					array( 'attempt_id' => $attempt_id )
+				);
+			}
+		}
+
 		QuizModel::update_attempt_result( $attempt_id );
 
 		$this->response_success( __( 'Review updated successfully', 'tutor' ) );
+	}
+
+	/**
+	 * Apply a numeric manual mark without assigning an auto-grading status.
+	 *
+	 * @param object $attempt_answer Attempt answer row.
+	 * @param mixed  $mark Requested mark.
+	 *
+	 * @return float|null Delta on success, null otherwise.
+	 */
+	private function apply_manual_quiz_answer_mark( $attempt_answer, $mark ) {
+		if ( ! is_object( $attempt_answer ) || ! in_array( $attempt_answer->question_type, QuizModel::get_manual_review_types(), true ) || ! is_numeric( $mark ) ) {
+			return null;
+		}
+
+		$new_mark       = min( max( 0, (float) $mark ), (float) $attempt_answer->question_mark );
+		$previous_mark  = (float) $attempt_answer->achieved_mark;
+		$answer_updated = QueryHelper::update(
+			'tutor_quiz_attempt_answers',
+			array(
+				'achieved_mark' => $new_mark,
+				'is_correct'    => QuizModel::ATTEMPT_ANSWER_INCORRECT,
+			),
+			array( 'attempt_answer_id' => (int) $attempt_answer->attempt_answer_id )
+		);
+
+		if ( ! $answer_updated ) {
+			return null;
+		}
+
+		return $new_mark - $previous_mark;
 	}
 
 	/**
@@ -1852,10 +2077,11 @@ class Quiz {
 	 * @param string $passing_grade Passing grade.
 	 * @param string $earned_marks Earned marks.
 	 * @param string $attempts_allowed Total Attempts allowed.
+	 * @param int    $quiz_id Quiz post ID used for Pro scoring parameters.
 	 *
 	 * @return void
 	 */
-	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, $attempts_allowed ) {
+	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, $attempts_allowed, $quiz_id = 0 ) {
 		$quiz_summary = array(
 			array(
 				'columns' => array(
@@ -1893,6 +2119,23 @@ class Quiz {
 					array( 'content' => (float) $total_marks ),
 				),
 			);
+		}
+
+		$quiz_options = $quiz_id && ! empty( tutor()->has_pro ) ? tutor_utils()->get_quiz_option( $quiz_id, '', array() ) : array();
+		if ( '1' === (string) ( $quiz_options['enable_partial_marking'] ?? '0' ) ) {
+			$quiz_summary[] = self::summary_parameter_row(
+				Icon::CHECK_SQUARE,
+				__( 'Partial marking', 'tutor' ),
+				__( 'Enabled', 'tutor' )
+			);
+		}
+
+		if ( '1' === (string) ( $quiz_options['enable_negative_marking'] ?? '0' ) ) {
+			$negative_value = max( 0, (float) ( $quiz_options['negative_mark_value'] ?? 0 ) );
+			$negative_type  = $quiz_options['negative_mark_type'] ?? 'percent';
+			$penalty_label  = self::get_negative_marking_summary_label( $quiz_id, $negative_type, $negative_value );
+
+			$quiz_summary[] = self::summary_parameter_row( Icon::MINUS_SQUARE, __( 'Negative marking', 'tutor' ), $penalty_label );
 		}
 
 		$quiz_summary[] = array(
@@ -1933,6 +2176,62 @@ class Quiz {
 		}
 
 		Table::make()->contents( $quiz_summary )->render();
+	}
+
+	/**
+	 * Build one Learning Area quiz summary parameter row.
+	 *
+	 * @param string $icon Icon name.
+	 * @param string $label Parameter label.
+	 * @param string $value Parameter value.
+	 *
+	 * @return array
+	 */
+	private static function summary_parameter_row( $icon, $label, $value ) {
+		return array(
+			'columns' => array(
+				array(
+					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">' . SvgIcon::make()->name( $icon )->size( 20 )->get() . esc_html( $label ) . '</div>',
+				),
+				array( 'content' => esc_html( $value ) ),
+			),
+		);
+	}
+
+	/**
+	 * Get the Learning Area negative marking description.
+	 *
+	 * @param int    $quiz_id Quiz post ID.
+	 * @param string $negative_type Fixed or percent.
+	 * @param float  $negative_value Configured penalty value.
+	 *
+	 * @return string
+	 */
+	private static function get_negative_marking_summary_label( $quiz_id, $negative_type, $negative_value ) {
+		if ( 'fixed' === $negative_type ) {
+			/* translators: %s: fixed negative marking penalty. */
+			return sprintf( __( '-%s for wrong answers', 'tutor' ), number_format_i18n( $negative_value, 2 ) );
+		}
+
+		$questions = QueryHelper::get_all( 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ), 'question_id', -1 );
+		$penalties = array();
+		foreach ( $questions as $question ) {
+			$penalties[] = round( ( $negative_value / 100 ) * (float) $question->question_mark, 2 );
+		}
+
+		if ( empty( $penalties ) ) {
+			/* translators: %s: negative marking penalty. */
+			return sprintf( __( '-%s for wrong answers', 'tutor' ), number_format_i18n( 0, 2 ) );
+		}
+
+		$minimum = min( $penalties );
+		$maximum = max( $penalties );
+		if ( $minimum !== $maximum ) {
+			return number_format_i18n( $minimum, 2 ) . ' – ' . number_format_i18n( $maximum, 2 );
+		}
+
+		/* translators: %s: negative marking penalty. */
+		return sprintf( __( '-%s for wrong answers', 'tutor' ), number_format_i18n( $minimum, 2 ) );
 	}
 
 	/**

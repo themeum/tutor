@@ -220,14 +220,17 @@ extract( QuizModel::get_quiz_attempt_timing( $attempt_data ) ); // $attempt_dura
 // Prepare the correct/incorrect answer count for the first summary table.
 $answers   = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 $correct   = 0;
+$partial   = 0;
 $incorrect = 0;
 if ( is_array( $answers ) && count( $answers ) > 0 ) {
 	foreach ( $answers as $answer ) {
-		if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-			$correct++;
-		} elseif ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
-		} else {
-			$incorrect++;
+		$answer_status = QuizModel::get_attempt_answer_status( $answer );
+		if ( 'correct' === $answer_status ) {
+			++$correct;
+		} elseif ( 'partial' === $answer_status ) {
+			++$partial;
+		} elseif ( 'incorrect' === $answer_status ) {
+			++$incorrect;
 		}
 	}
 }
@@ -358,6 +361,8 @@ $query_vars   = $wp_query->query_vars;
 $page_name    = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
 $attempt_info = maybe_unserialize( $attempt_data->attempt_info );
 $feedback     = is_array( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '';
+$question_feedback_map = is_array( $attempt_info ) && isset( $attempt_info['question_feedback'] ) && is_array( $attempt_info['question_feedback'] ) ? $attempt_info['question_feedback'] : array();
+$is_instructor_review  = 'frontend-dashboard-students-attempts' === $context || tutor_utils()->can_user_manage( 'attempt', $attempt_id );
 // don't show on instructor quiz attempt since below already have feedback box area.
 if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 	?>
@@ -392,21 +397,11 @@ if ( is_array( $answers ) && count( $answers ) ) {
 				<?php
 					$answer_i = 0;
 				foreach ( $answers as $answer ) {
-					$answer_i++;
+					++$answer_i;
 					$question_type     = QuizModel::get_question_types( $answer->question_type );
 					$question_settings = maybe_unserialize( $answer->question_settings );
 					$is_image_matching = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];
-					$answer_status     = 'wrong';
-
-					// If already correct, then show it.
-					if ( (bool) $answer->is_correct ) {
-						$answer_status = 'correct';
-					}
-
-					// Image answering also needs review since the answer texts are not meant to match exactly.
-					elseif ( in_array( $answer->question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true ) ) {
-						$answer_status = null === $answer->is_correct ? 'pending' : 'wrong';
-					}
+					$answer_status     = QuizModel::get_attempt_answer_status( $answer );
 
 					// Allow Pro and add-ons to set answer status for custom question types.
 					/**
@@ -603,6 +598,15 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												}
 												?>
 												</div>
+												<?php if ( '' !== trim( (string) ( $question_feedback_map[ $answer->attempt_answer_id ] ?? '' ) ) ) : ?>
+													<div class="tutor-question-feedback-callout tutor-bg-primary tutor-py-12 tutor-px-16 tutor-rounded-6 tutor-mt-16">
+														<div class="tutor-d-flex tutor-align-center tutor-gap-1 tutor-fs-7 tutor-fw-medium tutor-color-white tutor-mb-4">
+															<span class="tutor-icon-speaker-volume tutor-mr-4"></span>
+															<?php esc_html_e( 'Feedback from instructor', 'tutor' ); ?>
+														</div>
+														<div class="tutor-fs-7 tutor-color-white"><?php echo esc_html( $question_feedback_map[ $answer->attempt_answer_id ] ); ?></div>
+													</div>
+												<?php endif; ?>
 												</td>
 												<?php
 											break;
@@ -715,7 +719,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 														if ( $is_image_matching ) {
 															array_map(
-																function( $ans ) {
+																function ( $ans ) {
 																	$ans->answer_view_format   = 'text_image';
 																	$ans->answer_two_gap_match = '';
 																},
@@ -801,7 +805,19 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																	echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
 																	break;
 
-																case 'wrong':
+																case 'partial':
+																	echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Partially correct', 'tutor' ) . '</span>';
+																	break;
+
+																case 'graded':
+																	echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Graded', 'tutor' ) . '</span>';
+																	break;
+
+																case 'skipped':
+																	echo '<span class="tutor-badge-label label-secondary">' . esc_html__( 'Skipped', 'tutor' ) . '</span>';
+																	break;
+
+																case 'incorrect':
 																	echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
 																	break;
 															}
@@ -818,13 +834,28 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											?>
 												<td class="tutor-text-center tutor-nowrap-ellipsis" data-title="<?php echo esc_attr( $column ); ?>">
 													<div class="tutor-manual-review-wrapper">
-													<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-mark-as="correct" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-color-success">
-														<i class="tutor-icon-mark"></i>
-													</a>
+													<?php if ( in_array( $answer->question_type, QuizModel::get_manual_review_types(), true ) && 'skipped' !== $answer_status ) : ?>
+														<input class="tutor-form-control tutor-w-20 quiz-manual-mark-input" type="number" min="0" max="<?php echo esc_attr( (string) $answer->question_mark ); ?>" step="0.01" value="<?php echo esc_attr( (string) $answer->achieved_mark ); ?>" aria-label="<?php esc_attr_e( 'Obtained marks', 'tutor' ); ?>" />
+														<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Save mark', 'tutor' ); ?>" class="quiz-manual-mark-save tutor-ml-8 tutor-icon-rounded tutor-color-success">
+															<i class="tutor-icon-mark"></i>
+														</a>
+														<?php if ( $is_instructor_review ) : ?>
+															<?php
+															$has_question_feedback = '' !== trim( (string) ( $question_feedback_map[ $answer->attempt_answer_id ] ?? '' ) );
+															?>
+															<a href="javascript:;" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-feedback="<?php echo esc_attr( $has_question_feedback ? $question_feedback_map[ $answer->attempt_answer_id ] : '' ); ?>" title="<?php echo $has_question_feedback ? esc_attr_e( 'Show feedback', 'tutor' ) : esc_attr_e( 'Add feedback', 'tutor' ); ?>" class="quiz-question-feedback-action tutor-ml-8 tutor-fs-7 tutor-text-primary">
+																<?php echo $has_question_feedback ? esc_html__( 'Show Feedback', 'tutor' ) : esc_html__( 'Add Feedback', 'tutor' ); ?>
+															</a>
+														<?php endif; ?>
+													<?php elseif ( 'skipped' !== $answer_status ) : ?>
+														<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-mark-as="correct" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-color-success">
+															<i class="tutor-icon-mark"></i>
+														</a>
 
-													<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-mark-as="incorrect" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as In correct', 'tutor' ); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-color-danger">
-														<i class="tutor-icon-times"></i>
-													</a>
+														<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-mark-as="incorrect" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as incorrect', 'tutor' ); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-color-danger">
+															<i class="tutor-icon-times"></i>
+														</a>
+													<?php endif; ?>
 													</div>
 												</td>
 												<?php
@@ -847,3 +878,66 @@ if ( is_array( $answers ) && count( $answers ) ) {
 ?>
 
 <?php echo is_admin() ? '</div>' : ''; ?>
+
+<?php if ( $is_instructor_review ) : ?>
+	<div class="tutor-modal" id="tutor-question-feedback-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-question-feedback-modal-title" aria-hidden="true">
+		<div class="tutor-modal-overlay"></div>
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content tutor-modal-content-white">
+				<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+					<span class="tutor-icon-times" aria-hidden="true"></span>
+				</button>
+				<div class="tutor-modal-header">
+					<h3 id="tutor-question-feedback-modal-title" class="tutor-modal-title tutor-fs-5 tutor-fw-medium">
+						<?php esc_html_e( 'Feedback', 'tutor' ); ?>
+					</h3>
+				</div>
+				<div class="tutor-modal-body">
+					<div class="tutor-mb-24">
+						<input type="hidden" id="tutor-question-feedback-attempt-id">
+						<input type="hidden" id="tutor-question-feedback-answer-id">
+						<textarea id="tutor-question-feedback-content" class="tutor-form-control tutor-form-control-auto-height" rows="5" placeholder="<?php esc_attr_e( 'Write feedback for the student...', 'tutor' ); ?>"></textarea>
+					</div>
+				</div>
+				<div class="tutor-modal-footer">
+					<button type="button" class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+					</button>
+					<button type="button" id="tutor-question-feedback-delete" class="tutor-btn tutor-btn-outline-danger tutor-ml-16">
+						<?php esc_html_e( 'Delete', 'tutor' ); ?>
+					</button>
+					<button type="button" id="tutor-question-feedback-save" class="tutor-btn tutor-btn-primary tutor-ml-16">
+						<?php esc_html_e( 'Save', 'tutor' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="tutor-modal tutor-modal-confirmation" id="tutor-question-feedback-delete-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-question-feedback-delete-modal-title" aria-hidden="true">
+		<div class="tutor-modal-overlay"></div>
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content tutor-modal-content-white">
+				<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+					<span class="tutor-icon-times" aria-hidden="true"></span>
+				</button>
+				<div class="tutor-modal-header">
+					<h3 id="tutor-question-feedback-delete-modal-title" class="tutor-modal-title tutor-fs-5 tutor-fw-medium">
+						<?php esc_html_e( 'Delete feedback', 'tutor' ); ?>
+					</h3>
+				</div>
+				<div class="tutor-modal-body">
+					<p class="tutor-fs-6 tutor-color-muted tutor-mb-0"><?php esc_html_e( 'Are you sure you want to delete this feedback?', 'tutor' ); ?></p>
+				</div>
+				<div class="tutor-modal-footer">
+					<button type="button" class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+						<?php esc_html_e( 'No, keep it', 'tutor' ); ?>
+					</button>
+					<button type="button" id="tutor-question-feedback-delete-confirm" class="tutor-btn tutor-btn-danger tutor-ml-16">
+						<?php esc_html_e( 'Yes, delete', 'tutor' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>
