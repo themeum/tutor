@@ -595,18 +595,7 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
       hidePopover?.();
 
       const dates = this.getPresetDates(preset);
-      const presetLabels: Record<string, string> = {
-        [PRESETS.ALL_TIME]: __('All Time', 'tutor'),
-        [PRESETS.YESTERDAY]: __('Yesterday', 'tutor'),
-        [PRESETS.LAST_7]: __('Last 7 Days', 'tutor'),
-        [PRESETS.LAST_14]: __('Last 14 Days', 'tutor'),
-        [PRESETS.LAST_30]: __('Last 30 Days', 'tutor'),
-        [PRESETS.THIS_MONTH]: __('This Month', 'tutor'),
-        [PRESETS.LAST_MONTH]: __('Last Month', 'tutor'),
-        [PRESETS.LAST_YEAR]: __('Last Year', 'tutor'),
-      };
-
-      const presetTitle = presetLabels[preset] || '';
+      const presetTitle = PRESET_LABELS[preset] || '';
 
       if (dates.length) {
         this.navigateWithParams(
