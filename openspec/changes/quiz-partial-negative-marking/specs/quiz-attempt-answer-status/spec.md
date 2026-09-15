@@ -1,6 +1,6 @@
 ## Purpose
 
-Defines how a quiz attempt answer is classified as fully correct, partially correct, incorrect, or pending, and how results UIs count and display those states. Status is persisted on the attempt-answer row and is independent of awarded marks.
+Defines how a quiz attempt answer is classified as fully correct, partially correct, incorrect, or pending, and how results UIs count and display those states. Status is persisted on the attempt-answer row. Partial status (`2`) is written only when quiz-level partial marking is on in the attempt snapshot; awarded marks are still not used to infer that status.
 
 ## ADDED Requirements
 
@@ -9,8 +9,8 @@ Defines how a quiz attempt answer is classified as fully correct, partially corr
 The system SHALL persist attempt-answer correctness on the existing attempt-answer `is_correct` column using these values only:
 
 - `1` — every graded item on the question is correct
-- `2` — at least one graded item is correct and at least one is not
-- `0` — no graded item is correct, or the question was skipped or left blank
+- `2` — quiz-level partial marking is on, and at least one graded item is correct and at least one is not
+- `0` — no graded item is correct, the question was skipped or left blank, or quiz-level partial marking is off and the answer is not fully correct
 - `null` — the question is awaiting instructor review (open ended or short answer)
 
 The option-bank `is_correct` value that marks which option is the right answer SHALL remain `0` or `1`. The system MUST NOT introduce a new database column for attempt status.
@@ -22,8 +22,15 @@ The option-bank `is_correct` value that marks which option is the right answer S
 
 #### Scenario: Partially correct attempt answer
 
+- **GIVEN** quiz-level partial marking is on
 - **WHEN** some graded items match the key and some do not
 - **THEN** the attempt answer is stored with `is_correct` equal to `2`
+
+#### Scenario: Mixed answer with partial marking off is incorrect
+
+- **GIVEN** quiz-level partial marking is off
+- **WHEN** some graded items match the key and some do not
+- **THEN** the attempt answer is stored with `is_correct` equal to `0`
 
 #### Scenario: Incorrect or skipped attempt answer
 
@@ -40,13 +47,14 @@ The option-bank `is_correct` value that marks which option is the right answer S
 - **WHEN** an instructor saves a question's answer options in the builder
 - **THEN** each option's correctness remains `0` or `1` and is never stored as `2`
 
-### Requirement: Status is derived from item results, not marks
+### Requirement: When quiz partial marking is on, status is derived from item results, not marks
 
-The system MUST determine attempt-answer status from item-level correctness, not from `achieved_mark`. A row MAY have `is_correct` equal to `2` and `achieved_mark` equal to `0` when negative marking floors the score.
+When quiz-level partial marking is on, the system MUST determine attempt-answer status from item-level correctness, not from `achieved_mark`. A row MAY have `is_correct` equal to `2` and `achieved_mark` equal to `0` when negative marking floors the score. When quiz-level partial marking is off, mixed answers MUST store `is_correct` equal to `0` even if some items matched.
 
 #### Scenario: Partial status survives a zero score
 
-- **GIVEN** a multi-item question where some items are correct
+- **GIVEN** quiz-level partial marking is on
+- **AND** a multi-item question where some items are correct
 - **AND** negative marking reduces the awarded mark to `0`
 - **WHEN** the attempt answer is stored
 - **THEN** `is_correct` is `2` and the results UI shows Partially correct, not Incorrect

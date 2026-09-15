@@ -14,8 +14,8 @@ When Tutor Pro is not active, new attempts SHALL keep core all-or-nothing marks 
 
 #### Scenario: Supported type with Pro active
 
-- **GIVEN** Tutor Pro is active and partial marking is enabled for a matching question
-- **WHEN** the student places some items correctly and some incorrectly
+- **GIVEN** Tutor Pro is active and quiz partial marking is enabled
+- **WHEN** the student places some matching items correctly and some incorrectly
 - **THEN** the attempt answer receives proportional marks and a partial status
 
 #### Scenario: Unsupported modern Pro type is unchanged
@@ -29,9 +29,9 @@ When Tutor Pro is not active, new attempts SHALL keep core all-or-nothing marks 
 - **WHEN** a student submits a multi-correct multiple-choice question with some correct options selected
 - **THEN** the attempt answer is stored as fully correct or incorrect with full marks or zero
 
-### Requirement: Effective flags come from the attempt snapshot and question overrides
+### Requirement: Flags come from the attempt quiz snapshot only
 
-The grader SHALL read quiz-level flags from the attempt's snapshotted quiz options, not from live quiz settings edited after the attempt started. Question-level `inherit` SHALL use the snapshotted quiz value. Question-level `on` or `off` SHALL override that snapshot. An empty question-level negative percent SHALL inherit the snapshotted quiz percent.
+The grader SHALL read `enable_partial_marking`, `enable_negative_marking`, `negative_mark_type`, `negative_mark_percent`, and `negative_mark_value` from the attempt's snapshotted quiz options, not from live quiz settings edited after the attempt started. The system MUST NOT read per-question scoring overrides.
 
 #### Scenario: Later quiz edit does not change an in-flight attempt
 
@@ -40,16 +40,9 @@ The grader SHALL read quiz-level flags from the attempt's snapshotted quiz optio
 - **WHEN** the student submits that attempt
 - **THEN** the attempt is still graded all-or-nothing
 
-#### Scenario: Question override turns partial off
-
-- **GIVEN** the snapshotted quiz has partial marking on
-- **AND** the question override is `off`
-- **WHEN** the student submits a supported type
-- **THEN** that question is graded all-or-nothing even if some items are correct
-
 ### Requirement: Partial marks use type-specific proportional formulas
 
-When partial marking is effectively enabled for a supported type, the system SHALL compute a raw partial mark as follows, then round to two decimal places:
+When quiz partial marking is enabled, the system SHALL compute a raw partial mark as follows, then round to two decimal places:
 
 - Matching, image matching, and ordering: `correct_positions / total_items * question_mark`
 - Fill-in-the-blank: `correct_blanks / total_blanks * question_mark` using the same case-insensitive comparison as today
@@ -63,47 +56,66 @@ partial = max(0, raw)
 
 If every option is correct (`total_incorrect` is `0`), the system SHALL omit the incorrect-option penalty term.
 
-When partial marking is effectively off, a supported type SHALL keep full marks only when every item is correct, otherwise `0`. Status still follows item-level results (`1`, `2`, or `0`).
+When quiz partial marking is off, a supported type SHALL keep full marks only when every item is correct, otherwise `0`, and SHALL store `is_correct` as `1` only when every item is correct, otherwise `0`. The system MUST write `is_correct` equal to `2` only when quiz partial marking is on and the item-level result is mixed.
 
 #### Scenario: Matching awards half credit
 
-- **GIVEN** a 4-item matching question worth 4 points with partial marking on
+- **GIVEN** a 4-item matching question worth 4 points with quiz partial marking on
 - **WHEN** the student matches 2 items to the correct position
 - **THEN** `achieved_mark` is `2.00` before any negative penalty
+- **AND** `is_correct` is `2`
 
 #### Scenario: Select-all multiple choice cannot full-score
 
-- **GIVEN** a multiple-choice question with 2 correct and 2 incorrect options, worth 4 points, partial marking on
+- **GIVEN** a multiple-choice question with 2 correct and 2 incorrect options, worth 4 points, quiz partial marking on
 - **WHEN** the student selects every option
 - **THEN** the raw partial mark is `0` and the answer is not fully correct
 
 #### Scenario: All-correct multiple-choice options skip the penalty term
 
 - **GIVEN** a multiple-choice question where every option is correct
+- **AND** quiz partial marking is on
 - **WHEN** the student selects a subset of the options
 - **THEN** the mark is `selected / total_correct * question_mark` with no incorrect-option penalty
 
-#### Scenario: Partial marking off still records partial status
+#### Scenario: Partial marking off stores mixed answers as incorrect
 
-- **GIVEN** partial marking is effectively off
+- **GIVEN** quiz partial marking is off
 - **WHEN** a student answers some matching items correctly and some incorrectly
-- **THEN** `achieved_mark` is `0` and `is_correct` is `2`
+- **THEN** `achieved_mark` is `0` and `is_correct` is `0`
 
 ### Requirement: Negative marking applies only to answered, not-fully-correct questions
 
-When negative marking is effectively enabled, the system SHALL compute `minus_mark = (negative_mark_percent / 100) * question_mark` only if the student answered the question and the item-level result is not fully correct. Skipped or blank questions SHALL receive `is_correct` `0`, `achieved_mark` `0`, and `minus_mark` `0`.
+When quiz negative marking is enabled, the system SHALL compute `minus_mark` only if the student answered the question and the item-level result is not fully correct:
 
-The awarded mark SHALL be `max(0, partial_or_full - minus_mark)`. Quiz `earned_marks` SHALL be the sum of awarded marks and MUST NOT go below `0`. Pass/fail SHALL continue to use earned percentage against the passing grade.
+- If `negative_mark_type` is `percent`: `minus_mark = (negative_mark_percent / 100) * question_mark`
+- If `negative_mark_type` is `fixed`: `minus_mark = negative_mark_value`
 
-#### Scenario: Wrong answered question takes a penalty
+Skipped or blank questions SHALL receive `is_correct` `0`, `achieved_mark` `0`, and `minus_mark` `0`.
 
-- **GIVEN** a 10-point question with negative marking at 20 percent
+The awarded mark SHALL be `max(0, partial_or_full - minus_mark)`. Quiz `earned_marks` SHALL be the sum of awarded marks and MUST NOT go below `0`. Pass/fail SHALL continue to use earned percentage against the passing grade. Round `minus_mark` and `achieved_mark` to two decimal places.
+
+#### Scenario: Wrong answered question takes a percent penalty
+
+- **GIVEN** a 10-point question with negative marking type `percent` at 20 percent
 - **WHEN** the student submits an answered question with no correct items
 - **THEN** `minus_mark` is `2.00` and `achieved_mark` is `0.00`
 
-#### Scenario: Partial then penalty floors at zero
+#### Scenario: Wrong answered question takes a fixed penalty
 
-- **GIVEN** a 10-point question with a 2-point partial raw mark and 30 percent negative marking
+- **GIVEN** a 10-point question with negative marking type `fixed` and value `1.50`
+- **WHEN** the student submits an answered question with no correct items
+- **THEN** `minus_mark` is `1.50` and `achieved_mark` is `0.00`
+
+#### Scenario: Partial then percent penalty floors at zero
+
+- **GIVEN** a 10-point question with a 2-point partial raw mark and negative marking type `percent` at 30 percent
+- **WHEN** the penalty is applied
+- **THEN** `minus_mark` is `3.00` and `achieved_mark` is `0.00`
+
+#### Scenario: Partial then fixed penalty floors at zero
+
+- **GIVEN** a 10-point question with a 2-point partial raw mark and negative marking type `fixed` with value `3`
 - **WHEN** the penalty is applied
 - **THEN** `minus_mark` is `3.00` and `achieved_mark` is `0.00`
 

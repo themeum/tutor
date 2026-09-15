@@ -9,24 +9,26 @@ See proposal.md for motivation. Core submit in `tutor/classes/Quiz.php` still wr
 - Keep core submit all-or-nothing; Pro rewrites marks and status after that line.
 - Encode partial on the existing attempt `is_correct` column (`2`) with no migration.
 - Route every attempt-row status read through an explicit `1` / `2` / `0` / `null` compare.
-- Snapshot-safe flags: grade from `attempt_info` plus `question_settings`, never live quiz meta.
-- Inject builder UI through existing course-builder slots so free `QuizSettings` / `QuestionConditions` stay thin.
+- Snapshot-safe flags: grade from quiz options in `attempt_info`, never live quiz meta or per-question scoring keys.
+- Inject quiz settings UI through the existing course-builder quiz settings slot so free `QuizSettings` stays thin.
 
 **Non-Goals:**
 
 - Rewriting the core grading loop or adding a new status column.
+- Per-question partial or negative marking overrides.
 - Partial credit for true/false, single-select MC, essays, H5P, or modern Pro types.
 - Recalculating historical attempts or allowing a negative quiz total.
 - Instructor partial-credit slider.
 
 ## Decisions
 
-### Decision: Persist partial on attempt `is_correct = 2`
+### Decision: Persist partial on attempt `is_correct = 2` only when quiz partial marking is on
 
-Reuse `{prefix}tutor_quiz_attempt_answers.is_correct` instead of inferring partial from `achieved_mark` or adding a column. Status must survive a zero score after negative marking.
+Reuse `{prefix}tutor_quiz_attempt_answers.is_correct` instead of inferring partial from `achieved_mark` or adding a column. Write `2` only when snapshotted quiz `enable_partial_marking` is on and the item-level result is mixed. When quiz partial marking is off, mixed answers stay `0` (Incorrect) with zero marks. When quiz partial marking is on, status must still survive a zero score after negative marking.
 
 Alternatives considered:
 
+- Always store `2` for mixed item results even when partial marking is off — rejected; instructors expect Incorrect when the partial-credit switch is off.
 - Infer partial from `0 < achieved_mark < question_mark` — rejected; negative marking can floor a partial answer to `0`.
 - New `answer_status` column — rejected; the tinyint is already nullable and unused values are available.
 
@@ -46,11 +48,25 @@ Use `correct_selected / total_correct - incorrect_selected / total_incorrect` so
 
 Alternative considered: `correct_selected / total_options` — rejected; it rewards checking every box.
 
-### Decision: Settings live in existing blobs; UI via Pro slots
+### Decision: Quiz-level settings only; percent or fixed negative marks
 
-Quiz keys on `tutor_quiz_option` via `tutor_quiz_default_settings`. Question keys on `question_settings` via `tutor_question_default_settings` and `tutor_quiz_question_data`. Prefer merging on `tutor_quiz_settings_updated` if slot fields land outside `payload.quiz_option`. Add a one-line core `tutor_quiz_option_data` filter only if that merge cannot see the keys. If `convertQuizFormDataToPayload` still drops unknown keys, add a small core passthrough behind `tutorConfig.tutor_pro_url` (same pattern as `answer_explanation`).
+Store all scoring keys on `tutor_quiz_option` via `tutor_quiz_default_settings`:
 
-Quiz defaults: `Curriculum.Quiz.bottom_of_settings`. Question overrides: `Curriculum.Quiz.bottom_of_question_sidebar` via `registerContent` (inherit/on/off plus type gating). Mirror question controls in the Pro content bank.
+- `enable_partial_marking`, `enable_negative_marking`
+- `negative_mark_type` (`percent` | `fixed`)
+- `negative_mark_percent` (for percent mode)
+- `negative_mark_value` (absolute marks for fixed mode)
+
+Do not add question_settings scoring keys or content-bank scoring UI. Prefer merging on `tutor_quiz_settings_updated` if slot fields land outside `payload.quiz_option`. Add a one-line core `tutor_quiz_option_data` filter only if that merge cannot see the keys. If `convertQuizFormDataToPayload` still drops unknown keys, add a small core passthrough behind `tutorConfig.tutor_pro_url` (same pattern as `answer_explanation`).
+
+UI: `Curriculum.Quiz.bottom_of_settings` only.
+
+Penalty: when answered and not fully correct, `minus_mark` is either `(percent / 100) * question_mark` or the fixed `negative_mark_value`, then `achieved_mark = max(0, marks - minus_mark)`.
+
+Alternatives considered:
+
+- Per-question inherit/on/off for partial and negative — rejected; instructors want a single quiz policy.
+- Percent-only negative marks — rejected; instructors also need a solid mark deduction.
 
 ### Decision: Instructor review stays binary
 

@@ -1,3 +1,3 @@
 # quiz-partial-negative-marking
 
-Pro-only partial and negative quiz marking with persisted partially-correct attempt status
+Pro-only quiz-level partial and negative marking (percent or fixed) with persisted partially-correct attempt status
