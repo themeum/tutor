@@ -21,6 +21,7 @@ $attempt_id           = (int) ( $attempt_id ?? 0 );
 $back_url             = (string) ( $back_url ?? '' );
 $context              = (string) ( $context ?? '' );
 $is_instructor_review = ! empty( $is_instructor_review );
+$is_overridden        = ! empty( $is_overridden );
 $review_field_name    = (string) ( $review_field_name ?? '' );
 $question_settings    = maybe_unserialize( $question->question_settings );
 $question_settings    = is_array( $question_settings ) ? $question_settings : array();
@@ -106,6 +107,7 @@ if ( 'review-answer-dnd' === $question_template ) {
 			'context'              => $context,
 			'is_instructor_review' => $is_instructor_review,
 			'review_field_name'    => $review_field_name,
+			'is_overridden'        => $is_overridden,
 		)
 	);
 

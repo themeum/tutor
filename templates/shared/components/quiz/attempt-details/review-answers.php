@@ -18,6 +18,7 @@ $context      = isset( $context ) ? (string) $context : '';
 
 $attempt_info          = $attempt_data && is_object( $attempt_data ) && isset( $attempt_data->attempt_info ) ? maybe_unserialize( $attempt_data->attempt_info ) : array();
 $question_feedback_map = is_array( $attempt_info ) && isset( $attempt_info['question_feedback'] ) && is_array( $attempt_info['question_feedback'] ) ? $attempt_info['question_feedback'] : array();
+$manual_overrides_map  = is_array( $attempt_info ) && isset( $attempt_info['manual_overrides'] ) && is_array( $attempt_info['manual_overrides'] ) ? $attempt_info['manual_overrides'] : array();
 ?>
 
 <div class="tutor-quiz tutor-quiz-questions">
@@ -79,6 +80,7 @@ $question_feedback_map = is_array( $attempt_info ) && isset( $attempt_info['ques
 						'is_instructor_review' => $is_instructor_review,
 						'review_field_name'    => "review_statuses[{$question_id}]",
 						'question_feedback'    => (string) ( $question_feedback_map[ $question->attempt_answer_id ?? 0 ] ?? '' ),
+						'is_overridden'        => ! empty( $manual_overrides_map[ $question_id ] ),
 					)
 				);
 			}

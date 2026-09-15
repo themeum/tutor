@@ -62,6 +62,7 @@ $attempt_id           = (int) ( $attempt_id ?? 0 );
 $attempt_answer_id    = (int) ( $attempt_answer_id ?? 0 );
 $is_instructor_review = ! empty( $is_instructor_review );
 $is_skipped           = ! empty( $is_skipped );
+$is_overridden        = ! empty( $is_overridden );
 $review_field_name    = (string) ( $review_field_name ?? '' );
 $is_manual_question   = $question && in_array( (string) ( $question->question_type ?? '' ), Tutor\Models\QuizModel::get_manual_review_types(), true );
 ?>
@@ -127,49 +128,58 @@ $is_manual_question   = $question && in_array( (string) ( $question->question_ty
 			<?php if ( $is_instructor_review && $attempt_id && $review_field_name && ! $is_skipped && ! $is_manual_question ) : ?>
 				<div class="tutor-quiz-question-header-divider" aria-hidden="true"></div>
 
-				<div class="tutor-quiz-question-review-actions">
-					<input
-						type="hidden"
-						name="<?php echo esc_attr( $review_field_name ); ?>"
-						value="<?php echo esc_attr( $answer_status ); ?>"
-						x-bind="register('<?php echo esc_attr( $review_field_name ); ?>')"
-					/>
-
-					<label
-						class="tutor-quiz-question-review-action"
-						data-review-status="correct"
-						title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>"
-						@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'correct', { shouldDirty: true })"
-					>
+				<div class="tutor-quiz-question-review-actions-wrap">
+					<div class="tutor-quiz-question-review-actions">
 						<input
-							class="tutor-quiz-question-review-input"
-							type="radio"
+							type="hidden"
 							name="<?php echo esc_attr( $review_field_name ); ?>"
-							value="correct"
-							:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'correct'"
-							tabindex="-1"
-							aria-hidden="true"
+							value="<?php echo esc_attr( $answer_status ); ?>"
+							x-bind="register('<?php echo esc_attr( $review_field_name ); ?>')"
 						/>
-						<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->render(); ?>
-					</label>
 
-					<label
-						class="tutor-quiz-question-review-action"
-						data-review-status="incorrect"
-						title="<?php esc_attr_e( 'Mark as incorrect', 'tutor' ); ?>"
-						@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'incorrect', { shouldDirty: true })"
+						<label
+							class="tutor-quiz-question-review-action"
+							data-review-status="correct"
+							title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>"
+							@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'correct', { shouldDirty: true })"
+						>
+							<input
+								class="tutor-quiz-question-review-input"
+								type="radio"
+								name="<?php echo esc_attr( $review_field_name ); ?>"
+								value="correct"
+								:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'correct'"
+								tabindex="-1"
+								aria-hidden="true"
+							/>
+							<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->render(); ?>
+						</label>
+
+						<label
+							class="tutor-quiz-question-review-action"
+							data-review-status="incorrect"
+							title="<?php esc_attr_e( 'Mark as incorrect', 'tutor' ); ?>"
+							@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'incorrect', { shouldDirty: true })"
+						>
+							<input
+								class="tutor-quiz-question-review-input"
+								type="radio"
+								name="<?php echo esc_attr( $review_field_name ); ?>"
+								value="incorrect"
+								:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'incorrect'"
+								tabindex="-1"
+								aria-hidden="true"
+							/>
+							<?php SvgIcon::make()->name( Icon::CROSS )->size( 20 )->render(); ?>
+						</label>
+					</div>
+
+					<div
+						class="tutor-quiz-question-review-override-notice tutor-fs-8 tutor-color-muted tutor-mt-4"
+						x-show="<?php echo $is_overridden ? 'true' : "watch('" . esc_attr( $review_field_name ) . "') !== '" . esc_attr( $answer_status ) . "'"; ?>"
 					>
-						<input
-							class="tutor-quiz-question-review-input"
-							type="radio"
-							name="<?php echo esc_attr( $review_field_name ); ?>"
-							value="incorrect"
-							:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'incorrect'"
-							tabindex="-1"
-							aria-hidden="true"
-						/>
-						<?php SvgIcon::make()->name( Icon::CROSS )->size( 20 )->render(); ?>
-					</label>
+						<?php esc_html_e( '(Overrides the auto-graded result)', 'tutor' ); ?>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>
