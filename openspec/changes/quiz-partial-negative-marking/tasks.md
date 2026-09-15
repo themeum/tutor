@@ -5,8 +5,8 @@
 - [x] 1.3 Audit every attempt-row truthy `is_correct` check (`format_quiz_attempts`, summary, attempt-table, attempt-details, question header, questions sidebar, Pro `set_custom_question_answer_status`) and verify none treat `2` as fully correct
 - [x] 1.4 Count auto-graded `1`, `2`, and `0` separately in summary and `format_quiz_attempts`, and verify manual questions (`pending` / `graded`) are excluded from auto-graded correct/incorrect counts
 - [x] 1.5 Show a Partially correct badge and sidebar `partial` state in attempt details, and verify `is_correct = 2` is not collapsed into correct or incorrect
-- [ ] 1.6 Show `Skipped` badge only for instructors in instructor dashboard and admin attempts overview; keep skipped questions completely hidden from student results views across Legacy and v4
-- [ ] 1.7 Any new attempt-answer read code added in this change must use `QueryHelper::get_all` / `QueryHelper::get_row`; any new AJAX endpoint that returns status or badge data must use the `JsonResponse` trait (`json_response` / `response_data`) — do not modify existing code
+- [x] 1.6 Show `Skipped` badge only for instructors in instructor dashboard and admin attempts overview; keep skipped questions completely hidden from student results views across Legacy and v4
+- [x] 1.7 Any new attempt-answer read code added in this change must use `QueryHelper::get_all` / `QueryHelper::get_row`; any new AJAX endpoint that returns status or badge data must use the `JsonResponse` trait (`json_response` / `response_data`) — do not modify existing code
 
 ## 2. Pro grader and unit tests
 
@@ -48,13 +48,13 @@
 ## 6. Manual grading across Legacy and v4 & feedback flows
 
 - [x] 6.1 Remove binary `[✓]` / `[✕]` manual override buttons for all skipped questions and for manually gradeable questions (`open_ended`, `short_answer`) across both Legacy WP-Admin table and v4 attempt-details components
-- [ ] 6.2 Display `(Overrides the auto-graded result)` beneath `[✓]` / `[✕]` override buttons on auto-graded questions when overridden by an instructor
+- [x] 6.2 Display `(Overrides the auto-graded result)` beneath `[✓]` / `[✕]` override buttons on auto-graded questions when overridden by an instructor
 - [x] 6.3 Implement numeric obtained marks input `[ obtained_mark ] / {question_mark}` for `open_ended` and `short_answer` questions across Legacy and v4, updating `achieved_mark`, delta `earned_marks`, and strictly setting status to `Graded` (never correct/incorrect/partial, unaffected by partial/negative marking)
 - [x] 6.4 Implement v4 Instructor Dashboard inline feedback flow in `open-ended.php` / question review: `Add Feedback` inline accordion with `Cancel` / `Save`, `Show Feedback` inline accordion with `Delete`, `Cancel`, `Save`, with instant deletion without a confirmation dialog
 - [x] 6.5 Implement Legacy WP-Admin modal feedback flow in `views/quiz/attempt-details.php`: `Add Feedback` modal, `Show Feedback` modal, and `Delete` confirmation modal ("Are you sure you want to delete this feedback? [No, keep it] [Yes, delete]") via AJAX
 - [x] 6.6 Store question-level feedback in serialized `attempt_info['question_feedback'][$attempt_answer_id]`
-- [ ] 6.7 Implement Student View across Legacy and v4: render "Feedback from instructor" callout beneath the student's answer when feedback exists, along with `Graded` badge and score, while keeping skipped questions completely hidden
-- [ ] 6.8 All new manual-grading AJAX endpoints introduced in this change (mark submission, feedback save, feedback delete) must use the `JsonResponse` trait (`response_success`, `response_fail`, `response_bad_request`); any new DB reads or writes they introduce must use `QueryHelper::get_row` / `QueryHelper::update` — do not modify existing endpoints or existing DB calls
+- [x] 6.7 Implement Student View across Legacy and v4: render "Feedback from instructor" callout beneath the student's answer when feedback exists, along with `Graded` badge and score, while keeping skipped questions completely hidden
+- [x] 6.8 All new manual-grading AJAX endpoints introduced in this change (mark submission, feedback save, feedback delete) must use the `JsonResponse` trait (`response_success`, `response_fail`, `response_bad_request`); any new DB reads or writes they introduce must use `QueryHelper::get_row` / `QueryHelper::update` — do not modify existing endpoints or existing DB calls
 
 ## 7. Pro REST and import/export
 
@@ -64,14 +64,14 @@
 
 ## 8. QA and compatibility
 
-- [ ] 8.1 Manual QA across Legacy and v4: Pro on/off, Gradebook addon on/off, Admin turn-off confirmation modals, Grandfathered quizzes continue to score and show switch when admin toggle off, negative mark input validation in Quiz settings, skipped questions hidden from students & visible to instructors with badge and no overrides, manual grading of open-ended and short-answer with numeric marks input & strictly pending/graded status (unaffected by partial/negative settings), Instructor dashboard inline feedback (instant delete), Admin dashboard modal feedback (delete confirmation modal), Student view feedback callout box, retry, reveal mode, matching/ordering/MC/FITB, percent vs fixed negative, H5P unchanged
-- [ ] 8.2 Run PHPCS on touched PHP in tutor and tutor-pro and verify zero WordPress-standard errors
-- [ ] 8.3 During QA, verify new PHP files and functions added in this change contain no raw `$wpdb` calls and no `wp_send_json_success` / `wp_send_json_error` — existing code is out of scope
+- [x] 8.1 Manual QA across Legacy and v4: Pro on/off, Gradebook addon on/off, Admin turn-off confirmation modals, Grandfathered quizzes continue to score and show switch when admin toggle off, negative mark input validation in Quiz settings, skipped questions hidden from students & visible to instructors with badge and no overrides, manual grading of open-ended and short-answer with numeric marks input & strictly pending/graded status (unaffected by partial/negative settings), Instructor dashboard inline feedback (instant delete), Admin dashboard modal feedback (delete confirmation modal), Student view feedback callout box, retry, reveal mode, matching/ordering/MC/FITB, percent vs fixed negative, H5P unchanged
+- [x] 8.2 Run PHPCS on touched PHP in tutor and tutor-pro and verify zero WordPress-standard errors
+- [x] 8.3 During QA, verify new PHP files and functions added in this change contain no raw `$wpdb` calls and no `wp_send_json_success` / `wp_send_json_error` — existing code is out of scope
 
 ## 9. Learning Area Quiz Summary & Builder Polish
 
 - [x] 9.1 Update `QuizSettings.tsx` and `quiz.ts` to use `FormInputWithContent` for `negative_mark_value`, inheriting the admin default negative mark penalty value (with ability for user to override in quiz settings), and locking `negative_mark_type` from user editing while maintaining form state for future extensibility
 - [x] 9.2 Add negative marking penalty calculation helper using `QueryHelper::get_all` to determine whether question penalties are uniform (`-{value} for wrong answers` for fixed) or varying (`{min} – {max}` for percent)
 - [x] 9.3 Update `Quiz::render_quiz_summary()` and `templates/learning-area/quiz/content.php` to render `Partial marking: Enabled` and `Negative marking` parameter rows matching the design mockups
-- [ ] 9.4 Cross-cutting audit: confirm every section's `QueryHelper` and `JsonResponse` sub-tasks (1.7, 2.7, 3.4, 4.9, 6.8, 7.3, 8.3) are satisfied for all **new** code introduced in this change — existing code is not in scope
+- [x] 9.4 Cross-cutting audit: confirm every section's `QueryHelper` and `JsonResponse` sub-tasks (1.7, 2.7, 3.4, 4.9, 6.8, 7.3, 8.3) are satisfied for all **new** code introduced in this change — existing code is not in scope
 - [x] 9.5 Run frontend build (rspack/gulp) and PHP validation to ensure no regressions
