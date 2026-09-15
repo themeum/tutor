@@ -1,130 +1,123 @@
-## Context
+# Design: Quiz Partial & Negative Marking, Admin Settings, and Manual Grading (Legacy & v4)
 
-See proposal.md for motivation. Core submit in `tutor/classes/Quiz.php` still writes all-or-nothing `achieved_mark` and `is_correct` `0`/`1` (`null` for manual review), then Pro and H5P already rewrite rows through `tutor_filter_quiz_answer_data` and `tutor_filter_quiz_total_marks`. The attempt-answers table already has `minus_mark` (always `0` today) and a nullable `is_correct` tinyint. Quiz options are snapshotted into `attempt_info` at attempt start. PHP treats `2` as truthy, so today's `(bool) $is_correct` / `! empty( $is_correct )` consumers would show a partial row as fully correct.
+## Architecture Overview
 
-## Goals / Non-Goals
+Core submits quiz attempts with baseline calculations, then Pro refines scores via filter hooks when Pro features are enabled. Core handles attempt statuses, UI presentation across both Tutor Legacy and v4 architectures, admin option registration, manual review flows, and question-level feedback.
 
-**Goals:**
+```
++-------------------------------------------------------------------------------+
+| Course Builder (QuizSettings.tsx) & Admin Settings (Grading Tab)               |
+| - Admin: 'Grading' tab (Pro active, independent of Gradebook add-on)          |
+|   - Automatic Assessment block: Partial marking & Negative marking switches   |
+|   - Confirmation modals on turn-off (Negative conditionally checks DB usage)  |
+|   - Grandfathering: Turning off affects new quizzes only                      |
+| - Builder: QuizSettings.tsx under 'Grading' section:                          |
+|   - FormSwitch for Partial marking (visible if Pro active && enabled)         |
+|   - FormCheckbox for Negative marking + penalty input & unit dropdown        |
+|   - react-hook-form validation on negative mark value (0-100% or >=0 Pts)     |
++-------------------------------------------------------------------------------+
+                                    |
+                                    v
++-------------------------------------------------------------------------------+
+| Core Submit & Snapshot: Quiz.php                                              |
+| - Writes attempt row with attempt_info containing settings snapshot           |
+| - Writes attempt_answers rows with initial is_correct (0, 1, or null)        |
++-------------------------------------------------------------------------------+
+                                    |
+                                    v
++-------------------------------------------------------------------------------+
+| Pro Filter Pipeline: TUTOR_PRO\Quiz                                           |
+| - Hook tutor_filter_quiz_answer_data                                          |
+|   - Reads snapshot flags from attempt_info                                    |
+|   - Computes proportional earned marks for 6 auto-graded multi-item types      |
+|   - Applies negative penalties (fixed or percent) if enabled                  |
+|   - Writes achieved_mark, minus_mark, and is_correct = 2 (partial)           |
+| - Hook tutor_filter_quiz_total_marks                                          |
+|   - Sums achieved marks and clamps total earned marks to max(0.0, total)      |
++-------------------------------------------------------------------------------+
+                                    |
+                                    v
++-------------------------------------------------------------------------------+
+| Legacy & v4 Presentation, Stats & Manual Review Flows                         |
+| - Auto-graded: null -> pending, 1 -> correct, 2 -> partial, 0 -> incorrect     |
+| - Manual gradeable (open_ended, short_answer):                                |
+|   - STRICTLY 'pending' or 'graded' (NEVER correct, incorrect, or partial)     |
+|   - Completely unbothered by partial marking and negative marking             |
+| - Skipped questions:                                                          |
+|   - Hidden from students (maintains existing Tutor behavior)                  |
+|   - Visible to instructors with 'Skipped' badge, 0 marks, and no penalty      |
+| - Override buttons [✓] / [✕]:                                                 |
+|   - REMOVED for Skipped questions and Manually Gradeable questions            |
+|   - Kept for Auto-Graded answered questions (adds '(Overrides auto-graded)')  |
+| - Dual interface implementations:                                             |
+|   - v4 Instructor Dashboard (shared.components): Inline feedback (no modal)   |
+|   - Legacy WP-Admin (views/quiz/attempt-details.php): Modal feedback flow     |
+|   - Student View: Displays 'Graded' badge & 'Feedback from instructor' box    |
++-------------------------------------------------------------------------------+
+```
 
-- Keep core submit all-or-nothing; Pro rewrites marks and status after that line.
-- Encode partial on the existing attempt `is_correct` column (`2`) with no migration.
-- Route every attempt-row status read through an explicit `1` / `2` / `0` / `null` compare.
-- Snapshot-safe flags: grade from quiz options in `attempt_info`, never live quiz meta or per-question scoring keys.
-- Rename the `Gradebook` settings menu to `Grading`, decouple it from the Gradebook add-on (registering whenever Tutor Pro is active), and render an `Automatic Assessment` settings block below the Gradebook settings block when the add-on is enabled (or standalone when disabled).
-- Implement quiz settings UI directly in `QuizSettings.tsx` gated by Tutor Pro plugin and admin settings checks, with `react-hook-form` validation on `negative_mark_value`.
+## Key Decisions
 
-**Non-Goals:**
+### Decision: Four-state `is_correct` for auto-graded questions
 
-- Rewriting the core grading loop or adding a new status column.
-- Per-question partial or negative marking overrides.
-- Partial credit for true/false, single-select MC, essays, H5P, or modern Pro types.
-- Recalculating historical attempts or allowing a negative quiz total.
-- Instructor partial-credit slider.
-- Injecting partial/negative quiz settings via injection field slots (`Curriculum.Quiz.bottom_of_settings`).
+We store `2` in `tutor_quiz_attempt_answers.is_correct` for partially correct auto-graded answers. Option banks continue using only `0` and `1`. No schema migration is required.
 
-## Decisions
+### Decision: Manual grading status is strictly `pending` or `graded`
 
-### Decision: Persist partial on attempt `is_correct = 2` only when quiz partial marking is on
+- Manually gradeable questions (`open_ended` and `short_answer`) are **never** categorized as `correct`, `incorrect`, or `partial`.
+- Their status lifecycle is strictly:
+  - **`pending`** (rendered as `Pending` / `Pending Review`) before manual scoring.
+  - **`graded`** (rendered as `Graded` with label `Score: {achieved_mark}/{question_mark}`) once scored.
+- **Unbothered by partial and negative marking**:
+  - Quiz-level partial marking toggle and negative marking settings have zero impact on manual questions.
+  - Attempt-level stats (e.g. counts of Correct, Incorrect, Partial answers) strictly exclude `open_ended` and `short_answer` questions from those buckets.
+- Numeric marks input: `[ obtained_mark ] / {question_mark}` (e.g., `[ 3.0 ] / 5`), accepting values from `0` to `question_mark`.
+- Recalculates total attempt `earned_marks` by delta: `attempt.earned_marks + (new_mark - previous_mark)`.
 
-Reuse `{prefix}tutor_quiz_attempt_answers.is_correct` instead of inferring partial from `achieved_mark` or adding a column. Write `2` only when snapshotted quiz `enable_partial_marking` is on and the item-level result is mixed. When quiz partial marking is off, mixed answers stay `0` (Incorrect) with zero marks. When quiz partial marking is on, status must still survive a zero score after negative marking.
+### Decision: Skipped questions stay hidden from students
 
-Alternatives considered:
+- In student-facing views, skipped questions are not displayed, maintaining existing Tutor LMS behavior.
+- In instructor views (both Legacy WP-Admin table and v4 Instructor Dashboard), skipped questions are visible with a `Skipped` badge.
+- Skipped questions earn `0.00` points and **never receive negative marking penalties**.
+- **Manual override buttons `[✓]` and `[✕]` are removed** for skipped questions.
 
-- Always store `2` for mixed item results even when partial marking is off — rejected; instructors expect Incorrect when the partial-credit switch is off.
-- Infer partial from `0 < achieved_mark < question_mark` — rejected; negative marking can floor a partial answer to `0`.
-- New `answer_status` column — rejected; the tinyint is already nullable and unused values are available.
+### Decision: Dual implementation across Legacy and v4
 
-Add `QuizModel` constants (`ATTEMPT_ANSWER_INCORRECT = 0`, `ATTEMPT_ANSWER_CORRECT = 1`, `ATTEMPT_ANSWER_PARTIAL = 2`) and change `get_attempt_answer_status()` to return `correct` | `partial` | `incorrect` | `pending`. Do not teach the option bank a `2`.
+1. **v4 Instructor Dashboard (`templates/shared/components/quiz/attempt-details/*`)**:
+   - Card layout with Alpine.js form bindings.
+   - Initial state: `[ —— ] / 5` with `💬 Add Feedback`.
+   - Clicking `Add Feedback` expands an inline textarea "Write feedback for the student" with `Cancel` and `Save`.
+   - Saving transitions status to `Graded` (blue badge) and displays `👁 Show Feedback`.
+   - Clicking `Show Feedback` expands "Edit feedback" with `Delete` (red text), `Cancel`, and `Save`.
+   - **No confirmation dialog for delete**: Because the v4 dashboard saves the entire review form in one go on submit, clicking `Delete` simply clears the inline feedback state without a confirmation popup.
+2. **Legacy WP-Admin (`views/quiz/attempt-details.php`)**:
+   - Table-based row review with `Manual Review` column.
+   - Shows `[ obtained_mark ] / {question_mark}` and `Add Feedback` / `Show Feedback`.
+   - Clicking `Add Feedback` opens an AJAX modal dialog: "Write feedback" with close 'X', textarea, `Cancel` and `Save`.
+   - Clicking `Show Feedback` opens "Edit feedback" modal with `Delete`, `Cancel`, and `Save`.
+   - Clicking `Delete` opens the confirmation modal: _"Are you sure you want to delete this feedback?"_ with `[No, keep it]` and `[Yes, delete]`.
+3. **Student View (Legacy & v4)**:
+   - Displays `Graded` badge with `Score: X/Y`.
+   - Displays a dedicated callout section: **"Feedback from instructor"** beneath the student's submitted answer.
+   - Completely omits skipped questions.
 
-### Decision: Pro QuizGrader behind existing filters
+### Decision: Question-level feedback storage
 
-Put formulas in a dedicated Pro helper (`tutor-pro/includes/QuizGrader.php` or `tutor-pro/classes/QuizGrader.php`) and call it from `TUTOR_PRO\Quiz`. Gate by question type so H5P and draw/pin/puzzle/scale/graph callbacks stay exclusive.
+- Per-question instructor feedback is stored in `attempt_info['question_feedback'][$attempt_answer_id]`.
+- Backwards compatible, requires no table alterations, and is automatically preserved with quiz attempt exports and backups.
 
-Total-marks rule: core adds full marks only when 100% correct. For a row that was not fully correct before Pro ran, **add** the new `achieved_mark`. For a fully correct row, leave the running total alone.
+### Decision: Auto-graded question override buttons
 
-Alternative considered: move all six types into core submit — rejected; scoring is Pro-only and the filter path already exists.
+- Auto-graded answered questions retain `[✓]` and `[✕]` manual override buttons.
+- When an auto-graded question has been overridden by an instructor, the UI displays `(Overrides the auto-graded result)` beneath the buttons.
+- Manually gradeable questions (`open_ended`, `short_answer`) and skipped questions do NOT show `[✓]` / `[✕]` buttons.
 
-### Decision: Moodle-style multiple-choice formula
+### Decision: Admin `Grading` settings tab & decoupling from Gradebook
 
-Use `correct_selected / total_correct - incorrect_selected / total_incorrect` so “select all” cannot full-score. Skip the penalty term when `total_incorrect` is `0`.
-
-Alternative considered: `correct_selected / total_options` — rejected; it rewards checking every box.
-
-### Decision: Admin Grading settings & Automatic Assessment block
-
-Update Tutor Settings to provide a centralized `Grading` menu tab:
-
-- Rename the settings tab from `Gradebook` to `Grading` (`slug: grading`, `label: Grading`).
-- Register the tab whenever Tutor Pro is active, without requiring the Gradebook add-on to be enabled.
-- Block structure:
-  - If the `Gradebook` add-on is enabled, its settings block (`Settings` with letter grades, GPA scale) renders first.
-  - An `Automatic Assessment` block (`slug: automatic_assessment`, `label: Automatic Assessment`) renders below the Gradebook settings block.
-  - If the `Gradebook` add-on is disabled, the `Grading` tab displays only the `Automatic Assessment` block.
-- Fields in `Automatic Assessment`:
-  - `enable_quiz_partial_marking`: `toggle_switch`, default `'off'`, label "Partial marking", description "Award credit for correct sub-answers on multi-part questions", with tooltip.
-  - `enable_quiz_negative_marking`: `toggle_switch`, default `'off'`, label "Negative marking", description "Deducts points for each wrong answer once enabled", with tooltip.
-- Both option keys are registered in Tutor Pro and localized into `Course.php` (`$required_options`) so `tutorConfig.settings` exposes them in the course builder.
-
-### Decision: Quiz-level settings only; percent or fixed negative marks
-
-Store scoring keys on `tutor_quiz_option` via `tutor_quiz_default_settings`:
-
-- `enable_partial_marking`, `enable_negative_marking`
-- `negative_mark_type` (`percent` | `fixed`)
-- `negative_mark_value` (percentage between `0` and `100` when type is `percent`; absolute marks $\ge 0$ when type is `fixed`)
-
-Do not add question_settings scoring keys or content-bank scoring UI.
-
-UI: Direct implementation in `QuizSettings.tsx` (not via injection field slots). Gate the settings UI behind Tutor Pro and individual admin settings:
-
-1. `enable_partial_marking` toggle is displayed when `isTutorPro && tutorConfig.settings?.enable_quiz_partial_marking === 'on'`.
-2. `enable_negative_marking` toggle, type switch, and `negative_mark_value` field are displayed when `isTutorPro && tutorConfig.settings?.enable_quiz_negative_marking === 'on'`.
-
-Validation in Quiz settings:
-
-- In `QuizSettings.tsx`, enforce client-side form validation via `react-hook-form` `rules` on `negative_mark_value`:
-  - When `negative_mark_type === 'percent'`: validate `value >= 0 && value <= 100`, showing an error message (e.g., "Percentage must be between 0 and 100") and blocking form submission if violated.
-  - When `negative_mark_type === 'fixed'`: validate `value >= 0`, showing an error message (e.g., "Negative mark value must be greater than or equal to 0") and blocking form submission if violated.
-  - Inputs also declare `min={0}`, `max={type === 'percent' ? 100 : undefined}`, and `step="any"` for standard input behavior.
-  - Note: Admin-side toggles are boolean switches and do not require range validation.
-
-Because inputs are native form controls in `QuizSettings.tsx`, they bind directly to `quiz_option.*` using `useFormContext<QuizForm>()`, natively serializing into standard quiz option payloads without requiring injection slot merges.
-
-Penalty: when answered and not fully correct:
-
-- If `negative_mark_type` is `percent`: `minus_mark = (negative_mark_value / 100) * question_mark`
-- If `negative_mark_type` is `fixed`: `minus_mark = negative_mark_value`
-  Then `achieved_mark = max(0, marks - minus_mark)`.
-
-Alternatives considered:
-
-- Per-question inherit/on/off for partial and negative — rejected; instructors want a single quiz policy.
-- Percent-only negative marks — rejected; instructors also need a solid mark deduction.
-- Separate `negative_mark_percent` and `negative_mark_value` keys — rejected; a single `negative_mark_value` interpreted according to `negative_mark_type` is simpler, avoids redundant keys, and maps directly to a single UI input with dynamic unit label.
-- Injecting settings via `Curriculum.Quiz.bottom_of_settings` slot — rejected; direct implementation in `QuizSettings.tsx` with Tutor Pro and admin settings checks avoids slot registration and payload merging fragility.
-
-### Decision: Instructor review stays binary
-
-Review still writes `is_correct` `1` or `0` and full or zero marks. Fix `apply_quiz_answer_review()` so a previous `2` still adjusts `earned_marks` (today only `0`/`null` add marks when marking correct, and only `1` subtracts when marking incorrect). Use the previous `achieved_mark` as the delta, not a hardcoded full question mark, so partial → incorrect subtracts what was actually awarded.
-
-## Risks / Trade-offs
-
-- [Truthy `is_correct = 2`] → Audit every attempt-row consumer; leave option-bank reads alone. Mitigation: route UI through `get_attempt_answer_status()` and use `=== 1` / `=== 2`.
-- [Filter collision with H5P and modern Pro types] → Gate the new grader by the six v1 types only.
-- [Admin setting not localized in builder] → Ensure `enable_quiz_partial_marking` and `enable_quiz_negative_marking` are included in `Course::localize_course_builder_data` so `tutorConfig.settings` exposes them to `QuizSettings.tsx`.
-- [Grading settings tab without Gradebook addon] → Decouple tab creation from Gradebook add-on init and conditionally render Gradebook block only when the add-on is active.
-- [Guessing on multi-correct MC] → Moodle-style wrong-option penalty.
-- [Pass/fail “correct count”] → Count `is_correct === 1` only; add a separate partial count.
-- [Decimals] → Round `achieved_mark` and `minus_mark` to 2 places to match `decimal(8,2)`.
-
-## Migration Plan
-
-- No schema migration. Defaults off keep existing quizzes all-or-nothing.
-- Existing installations with Gradebook add-on continue to see their GPA/letter grade settings under the renamed `Grading` tab.
-- Deploy core status/display first so stored `2` never renders as fully correct, then Pro grader and settings.
-- Rollback: deactivate Pro to stop new partial scoring; core still displays any stored `2`.
-- Do not backfill historical rows.
-
-## Open Questions
-
-None. Scope, formulas, storage, and v1 exclusions are fixed by the approved feasibility plan.
+- The settings menu is renamed to `Grading` (`slug: grading`, `label: Grading`).
+- Registers whenever Tutor Pro is active, without requiring the Gradebook add-on.
+- When Gradebook add-on is enabled, its configuration block appears first; the `Automatic Assessment` block appears below it. When Gradebook is disabled, only `Automatic Assessment` appears.
+- Confirmation modals on turn-off:
+  - **Partial marking**: Informs instructor that existing quizzes continue working as configured while new quizzes won't have partial marking.
+  - **Negative marking**: Queries DB for any customized negative marking values. If found, shows modal; if none found, turns off immediately.
+- **Grandfathering**: Quizzes with `enable_partial_marking == 1` continue scoring partially and keep the toggle active in the Course Builder even when the admin toggle is OFF.

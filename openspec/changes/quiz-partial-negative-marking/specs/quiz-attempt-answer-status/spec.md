@@ -1,128 +1,69 @@
 ## Purpose
 
-Defines how a quiz attempt answer is classified as fully correct, partially correct, incorrect, or pending, and how results UIs count and display those states. Status is persisted on the attempt-answer row. Partial status (`2`) is written only when quiz-level partial marking is on in the attempt snapshot; awarded marks are still not used to infer that status.
+Defines how a quiz attempt answer is classified and displayed across Tutor Legacy and v4. Auto-graded answers are classified as `correct`, `partial`, `incorrect`, or `skipped`. Manually gradeable questions (`open_ended` and `short_answer`) strictly use `pending` or `graded` and are never categorized as `correct`, `partial`, or `incorrect`. Skipped questions remain completely hidden from student results.
 
 ## ADDED Requirements
 
-### Requirement: Attempt answers use a four-state correctness value
+### Requirement: Attempt answer statuses distinguish auto-graded and manually gradeable questions
 
-The system SHALL persist attempt-answer correctness on the existing attempt-answer `is_correct` column using these values only:
+For auto-graded questions:
+The system SHALL persist attempt-answer correctness on the existing attempt-answer `is_correct` column using:
 
-- `1` — every graded item on the question is correct
-- `2` — quiz-level partial marking is on, and at least one graded item is correct and at least one is not
-- `0` — no graded item is correct, the question was skipped or left blank, or quiz-level partial marking is off and the answer is not fully correct
-- `null` — the question is awaiting instructor review (open ended or short answer)
+- `1` — fully correct (all graded items match)
+- `2` — partially correct (quiz partial marking is on with mixed items)
+- `0` — incorrect (no items correct, or mixed items with partial marking off, or skipped)
 
-The option-bank `is_correct` value that marks which option is the right answer SHALL remain `0` or `1`. The system MUST NOT introduce a new database column for attempt status.
+For manually gradeable questions (`open_ended` and `short_answer`):
 
-#### Scenario: Fully correct attempt answer
+- The question SHALL strictly have one of two statuses: `pending` or `graded`.
+- It SHALL NOT be categorized as `correct`, `partial`, or `incorrect` at any point.
+- It SHALL NOT be affected by quiz-level partial marking or negative marking settings.
+- Before manual grading, its status SHALL be `pending` (rendered as `Pending` / `Pending Review`).
+- Once graded by an instructor (numeric marks assigned and saved), its status SHALL be `graded` (rendered as `Graded` with label `Score: {achieved_mark}/{question_mark}`).
 
-- **WHEN** every graded item on an auto-graded question matches the key
-- **THEN** the attempt answer is stored with `is_correct` equal to `1`
+#### Scenario: Open-ended essay awaiting review is pending
 
-#### Scenario: Partially correct attempt answer
+- **WHEN** a student submits an open-ended essay question
+- **THEN** its status is `pending`
+- **AND** it is not labeled as correct, partial, or incorrect
 
-- **GIVEN** quiz-level partial marking is on
-- **WHEN** some graded items match the key and some do not
-- **THEN** the attempt answer is stored with `is_correct` equal to `2`
+#### Scenario: Graded essay has graded status, not correct or incorrect
 
-#### Scenario: Mixed answer with partial marking off is incorrect
+- **GIVEN** an instructor awards 3 marks out of 5 for an open-ended question
+- **WHEN** the attempt details are displayed
+- **THEN** its status is `graded`
+- **AND** the badge displays `Graded` with `Score: 3/5`
+- **AND** it is not marked as `correct`, `partial`, or `incorrect`
 
-- **GIVEN** quiz-level partial marking is off
-- **WHEN** some graded items match the key and some do not
-- **THEN** the attempt answer is stored with `is_correct` equal to `0`
+### Requirement: Skipped questions remain hidden from students and visible only to instructors
 
-#### Scenario: Incorrect or skipped attempt answer
+When an attempt answer is skipped by a student:
 
-- **WHEN** no graded item matches, or the student skipped or left the question blank
-- **THEN** the attempt answer is stored with `is_correct` equal to `0`
+- The question SHALL NOT be displayed in student results views, maintaining Tutor's existing student view behavior.
+- In instructor views (both WP-Admin Quiz Attempts details and Instructor Dashboard review), the skipped question SHALL be displayed with a `Skipped` badge.
+- Skipped questions SHALL award 0 marks, SHALL NOT incur any negative marking penalty, and SHALL NOT display `[✓]` / `[✕]` manual override buttons.
 
-#### Scenario: Pending manual review
+#### Scenario: Student results view does not show skipped questions
 
-- **WHEN** the question type is open ended or short answer and has not been reviewed
-- **THEN** the attempt answer is stored with `is_correct` equal to `null`
+- **GIVEN** a student skipped Question 3 in a quiz
+- **WHEN** the student views their quiz attempt results
+- **THEN** Question 3 is not visible in the results view
 
-#### Scenario: Option bank stays binary
+#### Scenario: Instructor view displays skipped question with badge and no overrides
 
-- **WHEN** an instructor saves a question's answer options in the builder
-- **THEN** each option's correctness remains `0` or `1` and is never stored as `2`
-
-### Requirement: When quiz partial marking is on, status is derived from item results, not marks
-
-When quiz-level partial marking is on, the system MUST determine attempt-answer status from item-level correctness, not from `achieved_mark`. A row MAY have `is_correct` equal to `2` and `achieved_mark` equal to `0` when negative marking floors the score. When quiz-level partial marking is off, mixed answers MUST store `is_correct` equal to `0` even if some items matched.
-
-#### Scenario: Partial status survives a zero score
-
-- **GIVEN** quiz-level partial marking is on
-- **AND** a multi-item question where some items are correct
-- **AND** negative marking reduces the awarded mark to `0`
-- **WHEN** the attempt answer is stored
-- **THEN** `is_correct` is `2` and the results UI shows Partially correct, not Incorrect
-
-### Requirement: Results UI distinguishes partial from correct and incorrect
-
-The system SHALL map stored attempt-answer values to these display statuses, checking `null` and `2` before any truthy test:
-
-- `null` → pending
-- `1` → correct
-- `2` → partial
-- any other value → incorrect
-
-Attempt-details question headers SHALL show a **Partially correct** badge for partial answers. The questions sidebar SHALL use a distinct `partial` state and MUST NOT map `2` to correct or incorrect. Legacy attempt-details badges SHALL include a `partial` case.
-
-#### Scenario: Question header shows Partially correct
-
-- **WHEN** a student or instructor opens attempt details for an answer with `is_correct` equal to `2`
-- **THEN** the question header displays Partially correct
-
-#### Scenario: Sidebar does not treat partial as correct
-
-- **WHEN** the questions sidebar renders an answer with `is_correct` equal to `2`
-- **THEN** the item uses the partial state and is not styled or labeled as correct
-
-#### Scenario: Truthy two is not fully correct
-
-- **WHEN** any attempt-row consumer evaluates `is_correct` equal to `2`
-- **THEN** the consumer treats it as partial, not as fully correct
+- **GIVEN** a student skipped Question 3 in a quiz
+- **WHEN** an instructor views the attempt details
+- **THEN** Question 3 is visible with a `Skipped` badge
+- **AND** the score is 0 with no penalty
+- **AND** no `[✓]` or `[✕]` override buttons are displayed
 
 ### Requirement: Summary and attempt stats count states separately
 
-The system SHALL count fully correct answers as `is_correct === 1` only. Partially correct answers (`2`) SHALL be counted separately. Incorrect answers SHALL be `is_correct === 0`. Pending answers SHALL not be counted as correct, partial, or incorrect.
+The system SHALL count fully correct answers as `is_correct === 1` only. Partially correct answers (`2`) SHALL be counted separately. Incorrect answers SHALL be `is_correct === 0`.
+Manually gradeable questions (`pending` or `graded`) SHALL NOT be included in correct, partial, or incorrect counts.
 
-#### Scenario: Mixed attempt summary
+#### Scenario: Mixed attempt summary excludes manual questions from correct/incorrect counts
 
-- **GIVEN** an attempt with one fully correct, one partially correct, and one incorrect auto-graded answer
-- **WHEN** the attempt summary or formatted attempt stats are computed
-- **THEN** correct is `1`, partial is `1`, and incorrect is `1`
-
-#### Scenario: Partial is not added to correct count
-
-- **WHEN** formatted quiz-attempt stats include an answer with `is_correct` equal to `2`
-- **THEN** that answer is not added to `correct_answers`
-
-### Requirement: Instructor review remains binary and adjusts marks from partial
-
-Instructor review SHALL set attempt-answer `is_correct` to `1` (correct) or `0` (incorrect) and MUST NOT offer a partial-credit review action in this version. When the previous value is `2`, changing the review to correct or incorrect SHALL still update the attempt `earned_marks`. The review UI MAY show a read-only Partially correct badge before the instructor acts.
-
-#### Scenario: Review a partial answer as correct
-
-- **GIVEN** an attempt answer with `is_correct` equal to `2` and a non-zero `achieved_mark`
-- **WHEN** the instructor marks the answer correct
-- **THEN** `is_correct` becomes `1`, `achieved_mark` becomes the full question mark, and `earned_marks` increases by the difference
-
-#### Scenario: Review a partial answer as incorrect
-
-- **GIVEN** an attempt answer with `is_correct` equal to `2`
-- **WHEN** the instructor marks the answer incorrect
-- **THEN** `is_correct` becomes `0`, `achieved_mark` becomes `0`, and `earned_marks` decreases by the previous achieved mark
-
-### Requirement: Partial status remains visible without Pro
-
-The system SHALL display stored `is_correct` equal to `2` as Partially correct even when Tutor Pro is not active. New attempts graded without Pro SHALL continue to store only `0`, `1`, or `null`.
-
-#### Scenario: Historical partial after Pro is deactivated
-
-- **GIVEN** an existing attempt answer stored with `is_correct` equal to `2`
-- **AND** Tutor Pro is not active
-- **WHEN** a user views attempt details
-- **THEN** the answer still displays as Partially correct
+- **GIVEN** an attempt with one fully correct auto-graded question, one incorrect auto-graded question, and one graded open-ended question
+- **WHEN** attempt summary statistics are computed
+- **THEN** correct answer count is `1`, incorrect answer count is `1`, and the graded open-ended question is not added to either count

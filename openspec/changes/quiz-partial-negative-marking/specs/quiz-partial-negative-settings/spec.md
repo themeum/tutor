@@ -1,21 +1,33 @@
 ## Purpose
 
-Defines how instructors and administrators configure partial and negative marking. Defines the admin `Grading` settings page, who can see the quiz-level controls, client-side validation in quiz settings, and how those settings persist through builder save, Pro REST, and quiz import/export. There are no per-question scoring overrides in v1.
+Defines how instructors and administrators configure partial and negative marking. Defines the admin `Grading` settings page, confirmation modals, default penalty settings, quiz grandfathering, client-side validation in quiz settings, and how those settings persist through builder save, Pro REST, and quiz import/export. There are no per-question scoring overrides in v1.
 
 ## ADDED Requirements
 
-### Requirement: Admin Grading settings provide independent Automatic Assessment toggles
+### Requirement: Admin Grading settings provide independent Automatic Assessment toggles and confirmation modals
 
 The system SHALL register a `Grading` tab in Tutor admin settings whenever Tutor Pro is active, without requiring the `Gradebook` add-on to be enabled.
 
-The `Grading` tab SHALL include an `Automatic Assessment` settings block containing two independent toggle switches:
+The `Grading` tab SHALL include an `Automatic Assessment` settings block containing:
 
-- `enable_quiz_partial_marking`: `toggle_switch`, default `'off'`, label "Partial marking", description "Award credit for correct sub-answers on multi-part questions", with tooltip.
-- `enable_quiz_negative_marking`: `toggle_switch`, default `'off'`, label "Negative marking", description "Deducts points for each wrong answer once enabled", with tooltip.
+- `enable_quiz_partial_marking`: `toggle_switch`, default `'off'`, label "Partial marking", description "Award credit for correct sub-answers on multi-part questions".
+  - When switched from ON to OFF, the UI SHALL display a confirmation modal:
+    - Title: "Turn off Partial marking?"
+    - Content: "Partial marking will be disabled for new quizzes. Quizzes that already have it enabled will continue to work as they are."
+    - Buttons: "No, keep it" (cancels toggle) and "Yes, turn off" (applies turn-off).
+- `enable_quiz_negative_marking`: `toggle_switch`, default `'off'`, label "Negative marking", description "Deducts points for each wrong answer once enabled", with tooltip:
+  - Tooltip: "Final quiz marks ≥ 0; Individual question scores can be negative, but a student's final earned score can never be less than 0. If negative scores reduce the total below 0, the final score will be set to 0."
+  - When enabled, exposes sub-fields: "Penalty per wrong answer" with a numeric input (default `0.15`) and a unit dropdown (`Pts` or `%`, defaulting to `Pts`).
+  - When switched from ON to OFF, the UI SHALL check if negative marking has been customized in any quiz:
+    - IF negative marking has been customized in at least one quiz, the UI SHALL display a confirmation modal:
+      - Title: "Turn off Negative marking?"
+      - Content: "This hides negative marking across all quizzes. Your question-level values stay saved until you turn it back on."
+      - Buttons: "No, keep it" (cancels toggle) and "Yes, turn off" (applies turn-off).
+    - IF negative marking has NOT been customized in any quiz, the toggle SHALL turn off immediately without displaying a confirmation modal.
 
 If the `Gradebook` add-on is enabled, the Gradebook settings block SHALL render above the `Automatic Assessment` block. If the `Gradebook` add-on is disabled, the `Grading` tab SHALL display only the `Automatic Assessment` block.
 
-Tutor core SHALL localize both `enable_quiz_partial_marking` and `enable_quiz_negative_marking` in `Course.php` so they are accessible via `tutorConfig.settings` in the course builder.
+Tutor core SHALL localize `enable_quiz_partial_marking`, `enable_quiz_negative_marking`, and negative marking default penalty values in `Course.php` so they are accessible via `tutorConfig.settings` in the course builder.
 
 #### Scenario: Grading tab visible with Gradebook add-on disabled
 
@@ -23,94 +35,63 @@ Tutor core SHALL localize both `enable_quiz_partial_marking` and `enable_quiz_ne
 - **AND** the Gradebook add-on is disabled
 - **WHEN** an admin navigates to Tutor Settings
 - **THEN** the `Grading` tab is visible
-- **AND** it displays the `Automatic Assessment` block with `Partial marking` and `Negative marking` toggles
+- **AND** it displays the `Automatic Assessment` block with `Partial marking` and `Negative marking` controls
 - **AND** the Gradebook configuration block is not displayed
 
-#### Scenario: Grading tab ordering with Gradebook add-on enabled
+#### Scenario: Turning off Partial marking displays grandfathering confirmation modal
 
-- **GIVEN** Tutor Pro is active
-- **AND** the Gradebook add-on is enabled
-- **WHEN** an admin navigates to the `Grading` tab in Tutor Settings
-- **THEN** the Gradebook settings block is displayed at the top
-- **AND** the `Automatic Assessment` block is displayed below the Gradebook settings block
+- **GIVEN** `enable_quiz_partial_marking` is currently ON in Admin Settings
+- **WHEN** the admin clicks the toggle to turn it OFF
+- **THEN** a confirmation modal is shown with title "Turn off Partial marking?" and body stating that existing quizzes will continue to work as they are
+- **AND** clicking "No, keep it" keeps the toggle ON
+- **AND** clicking "Yes, turn off" turns the toggle OFF
 
-#### Scenario: Free site does not show Grading tab
+#### Scenario: Turning off Negative marking displays modal only when values are customized
 
-- **GIVEN** Tutor Pro is not active
-- **WHEN** an admin navigates to Tutor Settings
-- **THEN** the `Grading` tab is not present
+- **GIVEN** `enable_quiz_negative_marking` is currently ON in Admin Settings
+- **AND** at least one quiz has customized negative marking enabled or configured
+- **WHEN** the admin clicks the toggle to turn it OFF
+- **THEN** a confirmation modal is shown with title "Turn off Negative marking?"
+- **AND** clicking "Yes, turn off" turns the toggle OFF
 
-### Requirement: Quiz-level defaults are off until an instructor enables them
+#### Scenario: Turning off Negative marking does not show modal when no customizations exist
 
-A quiz SHALL store these options in existing quiz settings, with defaults that keep current all-or-nothing behavior:
+- **GIVEN** `enable_quiz_negative_marking` is currently ON in Admin Settings
+- **AND** no quiz has customized negative marking enabled or configured
+- **WHEN** the admin clicks the toggle to turn it OFF
+- **THEN** the toggle turns OFF immediately without displaying a confirmation modal
 
-- `enable_partial_marking`: `0` or `1`, default `0`
-- `enable_negative_marking`: `0` or `1`, default `0`
-- `negative_mark_type`: `percent` or `fixed`, default `percent`
-- `negative_mark_value`: number, default `0` (percentage between `0` and `100` when `negative_mark_type` is `percent`; absolute marks $\ge 0$ when `negative_mark_type` is `fixed`)
+### Requirement: Grandfathering preserves existing quizzes when admin toggle turns off
 
-The course-builder quiz settings in `QuizSettings.tsx` SHALL implement these controls directly (not via injection field slots) and SHALL gate them independently:
+Turning the admin `enable_quiz_partial_marking` toggle OFF SHALL NOT modify or disable partial marking on quizzes that already had it enabled. Quizzes with `enable_partial_marking == 1` SHALL continue to score partially as configured and SHALL continue to display the Partial marking setting in the course builder.
 
-1. `enable_partial_marking` toggle is displayed ONLY when Tutor Pro is active (`!!tutorConfig.tutor_pro_url`) AND `tutorConfig.settings?.enable_quiz_partial_marking === 'on'`.
-2. `enable_negative_marking` toggle, type switch, and `negative_mark_value` input are displayed ONLY when Tutor Pro is active (`!!tutorConfig.tutor_pro_url`) AND `tutorConfig.settings?.enable_quiz_negative_marking === 'on'`.
+#### Scenario: Existing quiz with partial marking remains active after admin toggle turned off
 
-If Tutor Pro is not active, `QuizSettings.tsx` SHALL NOT display any partial or negative marking controls. Existing quizzes without these keys SHALL behave as if every flag is off and type is `percent`.
+- **GIVEN** a quiz was created with `enable_partial_marking` set to 1
+- **AND** the admin later turns off `enable_quiz_partial_marking` in Admin Settings
+- **WHEN** a student takes that quiz
+- **THEN** partial scoring still applies according to the quiz options
+- **AND** when an instructor opens that quiz in the course builder, the Partial marking switch remains visible and enabled
 
-#### Scenario: New quiz defaults to all-or-nothing
+#### Scenario: New quiz does not have partial marking when admin toggle is off
 
-- **WHEN** an instructor creates a quiz and does not change scoring options
-- **THEN** partial marking is off, negative marking is off, type is `percent`, and `negative_mark_value` is `0`
+- **GIVEN** `enable_quiz_partial_marking` is OFF in Admin Settings
+- **WHEN** an instructor creates a new quiz in the course builder
+- **THEN** the Partial marking switch is not shown
 
-#### Scenario: Free builder hides the controls
+### Requirement: Course Builder Quiz settings layout and validation
 
-- **GIVEN** Tutor Pro is not active
-- **WHEN** an instructor opens quiz settings in the course builder
-- **THEN** partial and negative marking controls are not shown
+In `QuizSettings.tsx`, under the `Grading` card section (below "Passing grade (%)"):
 
-#### Scenario: Partial marking admin setting disabled hides quiz partial toggle
-
-- **GIVEN** Tutor Pro is active
-- **AND** `enable_quiz_partial_marking` is disabled in admin settings
-- **WHEN** an instructor opens quiz settings in the course builder
-- **THEN** the partial marking toggle is not shown in `QuizSettings.tsx`
-
-#### Scenario: Negative marking admin setting disabled hides quiz negative controls
-
-- **GIVEN** Tutor Pro is active
-- **AND** `enable_quiz_negative_marking` is disabled in admin settings
-- **WHEN** an instructor opens quiz settings in the course builder
-- **THEN** the negative marking toggle, type, and value controls are not shown in `QuizSettings.tsx`
-
-#### Scenario: Both admin settings enabled exposes all controls
-
-- **GIVEN** Tutor Pro is active
-- **AND** both `enable_quiz_partial_marking` and `enable_quiz_negative_marking` are enabled in admin settings
-- **WHEN** an instructor opens quiz settings in the course builder
-- **THEN** both partial marking and negative marking controls are displayed in `QuizSettings.tsx`
-
-#### Scenario: Invalid percent value is rejected
-
-- **WHEN** `negative_mark_type` is `percent`
-- **AND** a save or REST request sets `negative_mark_value` below `0` or above `100`
-- **THEN** the value is rejected or clamped to the `0`–`100` range and is never stored outside that range
-
-#### Scenario: Invalid fixed value is rejected
-
-- **WHEN** `negative_mark_type` is `fixed`
-- **AND** a save or REST request sets `negative_mark_value` below `0`
-- **THEN** the value is rejected or clamped to `0` or greater and is never stored as negative
-
-#### Scenario: Invalid type is rejected
-
-- **WHEN** a save or REST request sets `negative_mark_type` to a value other than `percent` or `fixed`
-- **THEN** the value is rejected or falls back to `percent`
-
-### Requirement: Negative mark input field in Quiz settings validates user input
-
-In `QuizSettings.tsx`, when negative marking is enabled, the `negative_mark_value` input field SHALL enforce client-side form validation via `react-hook-form` based on `negative_mark_type`:
-
-- If `negative_mark_type` is `percent`, the value MUST be between `0` and `100` (inclusive). If the value is $< 0$ or $> 100$, the form SHALL display a validation error message and prevent form submission.
-- If `negative_mark_type` is `fixed`, the value MUST be $\ge 0$. If the value is $< 0$, the form SHALL display a validation error message and prevent form submission.
+- `Partial marking` SHALL be rendered as a `FormSwitch` with description "Award credit for correct sub-answers on multi-part questions" and tooltip: "Applies to question types with multiple sub-answers (Matching, Ordering, Image Matching, Fill in the Blanks (multiple answer), Puzzle, multi-select Multiple Choice)".
+  - Visible if `isTutorPro && (adminPartialEnabled || quizOptionPartialAlreadyOn)`.
+- `Negative marking` SHALL be rendered as a `FormCheckbox` with label "Negative marking", tooltip, and description "Deducts points for each wrong answer once enabled".
+  - Visible if `isTutorPro && adminNegativeEnabled`.
+  - When checked, reveals "Penalty per wrong answer" with numeric input `negative_mark_value` and dropdown `negative_mark_type` (`%` or `Pts`).
+  - The input field SHALL enforce client-side form validation via `react-hook-form`:
+    - When `negative_mark_type` is `percent` (`%`), the value MUST be between `0` and `100` (inclusive).
+    - When `negative_mark_type` is `fixed` (`Pts`), the value MUST be $\ge 0$.
+    - Invalid values display inline error messages and block form submission.
 
 #### Scenario: Negative mark percent value out of range displays validation error
 
