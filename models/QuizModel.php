@@ -35,6 +35,16 @@ class QuizModel {
 	const ATTEMPTS_TABLE = 'tutor_quiz_attempts';
 
 	/**
+	 * Attempt-answer correctness values.
+	 *
+	 * These values are only for tutor_quiz_attempt_answers rows. Question-answer
+	 * option rows remain binary and must continue to use 0 or 1.
+	 */
+	const ATTEMPT_ANSWER_INCORRECT = 0;
+	const ATTEMPT_ANSWER_CORRECT   = 1;
+	const ATTEMPT_ANSWER_PARTIAL   = 2;
+
+	/**
 	 * Question type constants
 	 *
 	 * @since 4.0.0
@@ -239,16 +249,20 @@ class QuizModel {
 			$earned_percent = self::calculate_attempt_earned_percentage( $quiz_attempt );
 
 			$correct_answers   = 0;
+			$partial_answers   = 0;
 			$incorrect_answers = 0;
 
 			$answers = self::get_quiz_answers_by_attempt_id( $quiz_attempt->attempt_id );
 
 			if ( tutor_utils()->count( $answers ) ) {
 				foreach ( $answers as $answer ) {
-					$is_correct = (int) $answer->is_correct ?? 0;
-					if ( $is_correct ) {
+					$status = self::get_attempt_answer_status( $answer );
+
+					if ( 'correct' === $status ) {
 						++$correct_answers;
-					} else {
+					} elseif ( 'partial' === $status ) {
+						++$partial_answers;
+					} elseif ( 'incorrect' === $status ) {
 						++$incorrect_answers;
 					}
 				}
@@ -259,6 +273,7 @@ class QuizModel {
 				'result'            => $quiz_attempt_result,
 				'marks_percent'     => $earned_percent ?? 0,
 				'correct_answers'   => $correct_answers,
+				'partial_answers'   => $partial_answers,
 				'incorrect_answers' => $incorrect_answers,
 				'time_taken'        => $attempt_time ?? '',
 				'date'              => $start_time ?? '',
@@ -1072,37 +1087,34 @@ class QuizModel {
 	/**
 	 * Get normalized attempt-answer status.
 	 *
-	 * Status rules follow legacy attempt-details logic:
-	 * - correct: is_correct is truthy.
-	 * - pending: is_correct is null for manually reviewed question types.
-	 * - incorrect: all other cases.
+	 * Manually graded questions have a separate lifecycle: pending until reviewed,
+	 * then graded. Auto-graded questions use the attempt-answer correctness
+	 * constants, including the partial value.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @param object $attempt_answer Attempt answer object.
 	 *
-	 * @return string One of: correct, pending, wrong.
+	 * @return string One of: pending, correct, partial, incorrect, graded, skipped.
 	 */
 	public static function get_attempt_answer_status( $attempt_answer ): string {
 		$question_type = (string) ( $attempt_answer->question_type ?? '' );
+		$is_correct    = $attempt_answer->is_correct ?? null;
 
-		if ( 'image_matching' === $question_type ) {
-			$question_type = 'matching';
+		if ( self::is_attempt_answer_skipped( $attempt_answer ) ) {
+			return 'skipped';
 		}
 
-		if ( 'single_choice' === $question_type ) {
-			$question_type = 'multiple_choice';
+		if ( in_array( $question_type, self::get_manual_review_types(), true ) ) {
+			return null === $is_correct ? 'pending' : 'graded';
 		}
 
-		if ( (bool) ( $attempt_answer->is_correct ?? false ) ) {
+		if ( self::ATTEMPT_ANSWER_CORRECT === (int) $is_correct ) {
 			return 'correct';
 		}
 
-		if (
-			null === ( $attempt_answer->is_correct ?? null ) &&
-			in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true )
-		) {
-			return 'pending';
+		if ( self::ATTEMPT_ANSWER_PARTIAL === (int) $is_correct ) {
+			return 'partial';
 		}
 
 		return 'incorrect';
