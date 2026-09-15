@@ -7,8 +7,9 @@ Tutor LMS grades every auto-graded quiz question as all-or-nothing, so a student
 - Persist a four-state attempt-answer status on the existing `{prefix}tutor_quiz_attempt_answers.is_correct` column: `1` fully correct, `2` partially correct (only when quiz partial marking is on), `0` incorrect, `null` pending. No new column.
 - Treat `2` as **Partially correct** in core attempt results (header, sidebar, summary counts, legacy badges). Do not treat a truthy `2` as fully correct.
 - Add Pro-only scoring for six multi-item auto-graded types: multiple choice (multi-correct), matching, image matching, ordering, fill-in-the-blank, and image answering.
-- Apply optional quiz-level negative marking only when the question was answered and is not fully correct, using either a percent of the question mark or a fixed mark value. Floor `achieved_mark` and quiz `earned_marks` at 0.
-- Add quiz-level controls in the Pro course builder only (no per-question scoring overrides, no content-bank scoring controls). Read flags from the attempt `attempt_info` snapshot, not live quiz meta.
+- Apply optional quiz-level negative marking only when the question was answered and is not fully correct, using either a percent of the question mark or a fixed mark value via `negative_mark_type` and `negative_mark_value`. Floor `achieved_mark` and quiz `earned_marks` at 0.
+- Update Tutor Settings: Rename the `Gradebook` settings menu to `Grading`, register it whenever Tutor Pro is active (not bound to the `Gradebook` add-on), and render an `Automatic Assessment` settings block containing two independent toggles (`enable_quiz_partial_marking` and `enable_quiz_negative_marking`), positioned below Gradebook settings when the Gradebook add-on is active.
+- Add quiz-level controls directly in `QuizSettings.tsx` gated by Tutor Pro plugin and admin settings checks (no injection field slots, no per-question scoring overrides, no content-bank scoring controls). Read flags from the attempt `attempt_info` snapshot, not live quiz meta.
 - Keep instructor review binary (`1` or `0`). Review mark math MUST still adjust `earned_marks` when the previous status is `2`.
 - Free Tutor stays all-or-nothing for new attempts. Stored `2` values still display as Partially correct if Pro is later deactivated.
 
@@ -18,7 +19,7 @@ Tutor LMS grades every auto-graded quiz question as all-or-nothing, so a student
 
 - `quiz-attempt-answer-status`: Four-state attempt-answer status (`correct` / `partial` / `incorrect` / `pending`) and how results UI and stats count those states.
 - `quiz-partial-negative-scoring`: Pro-only partial and negative mark formulas, supported question types, skip/blank rules, and interaction with core all-or-nothing submit.
-- `quiz-partial-negative-settings`: Quiz-level defaults (including percent vs fixed negative marks), who can see the controls, and how settings persist through save, REST, and import/export.
+- `quiz-partial-negative-settings`: Admin `Grading` settings with `Automatic Assessment` toggles, quiz-level defaults and controls in `QuizSettings.tsx`, who can see the controls, and how settings persist through save, REST, and import/export.
 
 ### Modified Capabilities
 
@@ -26,7 +27,7 @@ Tutor LMS grades every auto-graded quiz question as all-or-nothing, so a student
 
 ## Impact
 
-- **Tutor core:** `QuizModel` status helpers and attempt-row consumers (`get_attempt_answer_status`, `format_quiz_attempts`, attempt-details templates/views, instructor review mark math). Option-bank `is_correct` is unchanged.
-- **Tutor Pro:** New grader hooked to `tutor_filter_quiz_answer_data` and `tutor_filter_quiz_total_marks`; course-builder quiz settings slot; quiz option persistence; quiz import/export.
+- **Tutor core:** `QuizModel` status helpers and attempt-row consumers (`get_attempt_answer_status`, `format_quiz_attempts`, attempt-details templates/views, instructor review mark math); quiz settings UI implemented in `QuizSettings.tsx` with Tutor Pro and admin settings checks; localized course-builder settings in `Course.php` (`enable_quiz_partial_marking`, `enable_quiz_negative_marking`). Option-bank `is_correct` is unchanged.
+- **Tutor Pro:** Register `Grading` settings tab (renamed from `Gradebook`) when Pro is active; render Gradebook block if add-on is active and `Automatic Assessment` block below it (or standalone); new grader hooked to `tutor_filter_quiz_answer_data` and `tutor_filter_quiz_total_marks`; quiz option persistence; quiz import/export.
 - **Not in v1:** question-level scoring overrides, true/false, single-select MC, essays, H5P, puzzle/pin/draw/scale/graph, per-option weights, negative quiz totals, historical recalculation, core submit-loop rewrite, partial-review slider.
 - **Compatibility:** Defaults off. Old attempt rows stay `0`/`1`/`null`. No schema migration.

@@ -31,7 +31,7 @@ When Tutor Pro is not active, new attempts SHALL keep core all-or-nothing marks 
 
 ### Requirement: Flags come from the attempt quiz snapshot only
 
-The grader SHALL read `enable_partial_marking`, `enable_negative_marking`, `negative_mark_type`, `negative_mark_percent`, and `negative_mark_value` from the attempt's snapshotted quiz options, not from live quiz settings edited after the attempt started. The system MUST NOT read per-question scoring overrides.
+The grader SHALL read `enable_partial_marking`, `enable_negative_marking`, `negative_mark_type`, and `negative_mark_value` from the attempt's snapshotted quiz options, not from live quiz settings edited after the attempt started. The system MUST NOT read per-question scoring overrides.
 
 #### Scenario: Later quiz edit does not change an in-flight attempt
 
@@ -88,7 +88,7 @@ When quiz partial marking is off, a supported type SHALL keep full marks only wh
 
 When quiz negative marking is enabled, the system SHALL compute `minus_mark` only if the student answered the question and the item-level result is not fully correct:
 
-- If `negative_mark_type` is `percent`: `minus_mark = (negative_mark_percent / 100) * question_mark`
+- If `negative_mark_type` is `percent`: `minus_mark = (negative_mark_value / 100) * question_mark`
 - If `negative_mark_type` is `fixed`: `minus_mark = negative_mark_value`
 
 Skipped or blank questions SHALL receive `is_correct` `0`, `achieved_mark` `0`, and `minus_mark` `0`.
@@ -97,7 +97,7 @@ The awarded mark SHALL be `max(0, partial_or_full - minus_mark)`. Quiz `earned_m
 
 #### Scenario: Wrong answered question takes a percent penalty
 
-- **GIVEN** a 10-point question with negative marking type `percent` at 20 percent
+- **GIVEN** a 10-point question with negative marking type `percent` and value 20 (percent)
 - **WHEN** the student submits an answered question with no correct items
 - **THEN** `minus_mark` is `2.00` and `achieved_mark` is `0.00`
 
@@ -109,7 +109,7 @@ The awarded mark SHALL be `max(0, partial_or_full - minus_mark)`. Quiz `earned_m
 
 #### Scenario: Partial then percent penalty floors at zero
 
-- **GIVEN** a 10-point question with a 2-point partial raw mark and negative marking type `percent` at 30 percent
+- **GIVEN** a 10-point question with a 2-point partial raw mark and negative marking type `percent` and value 30
 - **WHEN** the penalty is applied
 - **THEN** `minus_mark` is `3.00` and `achieved_mark` is `0.00`
 
