@@ -6,6 +6,10 @@
 $tutor-fixed-footer-height: 80px;
 $tutor-fixed-footer-offset: $tutor-spacing-6;
 
+.tutor-learning-page {
+  width: 100%;
+}
+
 .tutor-learning-area {
   --tutor-site-header-offset: 0px;
   --tutor-site-header-overlay-offset: 0px;
@@ -27,6 +31,14 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
     padding-inline-start: 0;
   }
 
+  .tutor-learning-area-content {
+    padding-inline-end: $tutor-spacing-4;
+  }
+
+  &.is-fullscreen .tutor-learning-area-content {
+    padding-inline: $tutor-spacing-4;
+  }
+
   &.tutor-has-site-shell {
     // Sticky positioning offsets the header visually without reserving that
     // offset in normal flow. Reserve only the theme-header portion that
@@ -35,6 +47,7 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
 
     .tutor-learning-area-content {
       padding-top: 0;
+      padding-inline-end: $tutor-spacing-4;
     }
 
     @include tutor-breakpoint-up(lg) {
@@ -57,6 +70,7 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
       .tutor-learning-area-content {
         grid-column: 2;
         min-width: 0;
+        padding-inline-end: $tutor-spacing-4;
       }
     }
 
@@ -66,6 +80,10 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
       .tutor-learning-sidebar {
         top: var(--tutor-site-header-offset);
         height: calc(100dvh - var(--tutor-site-header-offset));
+      }
+
+      .tutor-learning-area-content {
+        padding-inline-end: 0;
       }
     }
   }
@@ -82,6 +100,7 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
 
       .tutor-learning-area-content {
         grid-column: 2;
+        padding-inline: $tutor-spacing-4;
       }
     }
   }

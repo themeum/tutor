@@ -5,6 +5,8 @@
   --tutor-site-header-offset: 0px;
   --tutor-site-header-overlay-offset: 0px;
 
+  width: 100%;
+
   .tutor-account-header {
     position: sticky;
     top: 0;
@@ -36,13 +38,10 @@
 
   &.tutor-has-site-shell {
     padding-top: var(--tutor-site-header-overlay-offset);
-
-    .tutor-account-header {
-      top: var(--tutor-site-header-offset);
-    }
   }
 }
 
+.tutor-account-page-wrapper.tutor-has-site-shell .tutor-account-header,
 body:has(#wpadminbar) .tutor-account-page-wrapper.tutor-has-site-shell .tutor-account-header {
   top: var(--tutor-site-header-offset);
 }

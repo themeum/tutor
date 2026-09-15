@@ -1,0 +1,76 @@
+meta {
+  name: courses/{id}
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/courses/1
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Course Details
+  
+  Retrieves detailed metadata, settings, requirements, benefits, target audience, and video settings for a single course.
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/courses/:id`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Path Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `id` | `integer` | **Yes** | The WordPress Post ID of the course. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "course_detail",
+    "message": "Course detail retrieved successfully",
+    "data": {
+      "course_settings": {
+        "maximum_students": "100",
+        "is_public": "no"
+      },
+      "course_price_type": "paid",
+      "course_duration": {
+        "hours": "4",
+        "minutes": "30"
+      },
+      "course_level": "all_levels",
+      "course_benefits": "Learn modern web development principles and build complete apps.",
+      "course_requirements": "Basic knowledge of HTML and CSS.",
+      "course_target_audience": "Beginner developers looking to expand their frontend skills.",
+      "course_material_includes": "Source code repository access, Certificate of Completion.",
+      "video": {
+        "source": "youtube",
+        "source_youtube": "https://www.youtube.com/watch?v=example"
+      },
+      "disable_qa": false
+    }
+  }
+  ```
+  
+  ### 404 / Not Found
+  ```json
+  {
+    "code": "course_detail",
+    "message": "Detail not found for given ID",
+    "data": []
+  }
+  ```
+}
