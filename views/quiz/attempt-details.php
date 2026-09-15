@@ -357,11 +357,12 @@ if ( is_array( $attempt_info ) ) {
 <?php
 // instructor feedback.
 global $wp_query;
-$query_vars   = $wp_query->query_vars;
-$page_name    = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
-$attempt_info = maybe_unserialize( $attempt_data->attempt_info );
-$feedback     = is_array( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '';
+$query_vars            = $wp_query->query_vars;
+$page_name             = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
+$attempt_info          = maybe_unserialize( $attempt_data->attempt_info );
+$feedback              = is_array( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '';
 $question_feedback_map = is_array( $attempt_info ) && isset( $attempt_info['question_feedback'] ) && is_array( $attempt_info['question_feedback'] ) ? $attempt_info['question_feedback'] : array();
+$manual_overrides_map  = is_array( $attempt_info ) && isset( $attempt_info['manual_overrides'] ) && is_array( $attempt_info['manual_overrides'] ) ? $attempt_info['manual_overrides'] : array();
 $is_instructor_review  = 'frontend-dashboard-students-attempts' === $context || tutor_utils()->can_user_manage( 'attempt', $attempt_id );
 // don't show on instructor quiz attempt since below already have feedback box area.
 if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
@@ -381,6 +382,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 	// Filter out not needed columns based on question type.
 	$table_2_columns = apply_filters( 'tutor_filter_attempt_answer_column', $table_2_columns, $answers );
 	$answers         = apply_filters( 'tutor_filter_attempt_answers', $answers );
+	$answers         = QuizModel::filter_attempt_answers_for_details( $answers, $is_instructor_review );
 	echo 'course-single-previous-attempts' !== $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
 	?>
 		<div class="tutor-table-responsive tutor-table-mobile tutor-mt-16">
@@ -511,6 +513,18 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																'span' => true,
 															)
 														);
+													}
+
+													$student_q_feedback = trim( (string) ( $question_feedback_map[ $answer->attempt_answer_id ] ?? '' ) );
+													if ( ! $is_instructor_review && '' !== $student_q_feedback ) {
+														?>
+														<div class="tutor-question-feedback student-view tutor-bg-primary tutor-rounded-lg tutor-p-12 tutor-mt-12 tutor-color-white">
+															<div class="tutor-fs-7 tutor-fw-medium tutor-mb-4">
+																<?php esc_html_e( 'Feedback from instructor', 'tutor' ); ?>
+															</div>
+															<p class="tutor-fs-7 tutor-m-0"><?php echo esc_html( $student_q_feedback ); ?></p>
+														</div>
+														<?php
 													}
 												}
 
@@ -811,6 +825,14 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 																case 'graded':
 																	echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Graded', 'tutor' ) . '</span>';
+																	echo '<div class="tutor-fs-8 tutor-color-muted tutor-mt-4">' .
+																		sprintf(
+																			/* translators: 1: achieved marks, 2: available marks. */
+																			esc_html__( 'Score: %1$s / %2$s', 'tutor' ),
+																			esc_html( (string) ( $answer->achieved_mark ?? 0 ) ),
+																			esc_html( (string) $answer->question_mark )
+																		) .
+																	'</div>';
 																	break;
 
 																case 'skipped':
@@ -855,6 +877,11 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-mark-as="incorrect" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as incorrect', 'tutor' ); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-color-danger">
 															<i class="tutor-icon-times"></i>
 														</a>
+														<?php if ( ! empty( $manual_overrides_map[ $answer->question_id ] ) ) : ?>
+															<div class="tutor-fs-8 tutor-color-muted tutor-mt-4">
+																<?php esc_html_e( '(Overrides the auto-graded result)', 'tutor' ); ?>
+															</div>
+														<?php endif; ?>
 													<?php endif; ?>
 													</div>
 												</td>
