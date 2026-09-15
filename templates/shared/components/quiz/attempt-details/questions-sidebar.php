@@ -27,8 +27,11 @@ $question_status_map = array();
 $default_item_status = ( isset( $attempt_data ) && is_object( $attempt_data ) ) ? 'incorrect' : '';
 $status_priority     = array(
 	'correct'   => 1,
-	'incorrect' => 2,
-	'pending'   => 3,
+	'partial'   => 2,
+	'incorrect' => 3,
+	'pending'   => 4,
+	'graded'    => 5,
+	'skipped'   => 6,
 );
 
 if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_data->attempt_id ) ) {
@@ -42,7 +45,7 @@ if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_d
 		}
 
 		$answer_status = QuizModel::get_attempt_answer_status( $answer_row );
-		$item_status   = 'correct' === $answer_status ? 'correct' : ( 'pending' === $answer_status ? 'pending' : 'incorrect' );
+		$item_status   = $answer_status;
 		$current       = $question_status_map[ $question_id ] ?? '';
 
 		if ( ! $current || $status_priority[ $item_status ] > $status_priority[ $current ] ) {

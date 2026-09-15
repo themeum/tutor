@@ -26,7 +26,10 @@ $build_badge_attrs = function ( string $review_field_name ): array {
 		array(
 			'pending'   => __( 'Pending', 'tutor' ),
 			'correct'   => __( 'Correct', 'tutor' ),
+			'partial'   => __( 'Partially correct', 'tutor' ),
 			'incorrect' => __( 'Incorrect', 'tutor' ),
+			'graded'    => __( 'Graded', 'tutor' ),
+			'skipped'   => __( 'Skipped', 'tutor' ),
 		)
 	);
 
@@ -34,7 +37,10 @@ $build_badge_attrs = function ( string $review_field_name ): array {
 		array(
 			'pending'   => Badge::WARNING,
 			'correct'   => Badge::SUCCESS,
+			'partial'   => Badge::WARNING,
 			'incorrect' => Badge::ERROR,
+			'graded'    => Badge::INFO,
+			'skipped'   => Badge::INFO,
 		)
 	);
 
@@ -55,7 +61,9 @@ $answer_status        = (string) ( $answer_status ?? '' );
 $attempt_id           = (int) ( $attempt_id ?? 0 );
 $attempt_answer_id    = (int) ( $attempt_answer_id ?? 0 );
 $is_instructor_review = ! empty( $is_instructor_review );
+$is_skipped           = ! empty( $is_skipped );
 $review_field_name    = (string) ( $review_field_name ?? '' );
+$is_manual_question   = $question && in_array( (string) ( $question->question_type ?? '' ), Tutor\Models\QuizModel::get_manual_review_types(), true );
 ?>
 
 <div class="tutor-quiz-question-header">
@@ -116,7 +124,7 @@ $review_field_name    = (string) ( $review_field_name ?? '' );
 				</div>
 			<?php endif; ?>
 
-			<?php if ( $is_instructor_review && $attempt_id && $review_field_name ) : ?>
+			<?php if ( $is_instructor_review && $attempt_id && $review_field_name && ! $is_skipped && ! $is_manual_question ) : ?>
 				<div class="tutor-quiz-question-header-divider" aria-hidden="true"></div>
 
 				<div class="tutor-quiz-question-review-actions">

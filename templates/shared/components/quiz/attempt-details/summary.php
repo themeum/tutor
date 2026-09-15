@@ -54,13 +54,17 @@ $attempt_duration_taken = $timing['attempt_duration_taken'] ?? '';
 
 $answers   = isset( $answers ) ? $answers : QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 $correct   = 0;
+$partial   = 0;
 $incorrect = 0;
 
 if ( is_array( $answers ) ) {
 	foreach ( $answers as $answer ) {
-		if ( ! empty( $answer->is_correct ) ) {
+		$answer_status = QuizModel::get_attempt_answer_status( $answer );
+		if ( 'correct' === $answer_status ) {
 			++$correct;
-		} elseif ( ! in_array( $answer->question_type, array( 'open_ended', 'short_answer' ), true ) ) {
+		} elseif ( 'partial' === $answer_status ) {
+			++$partial;
+		} elseif ( 'incorrect' === $answer_status ) {
 			++$incorrect;
 		}
 	}
@@ -185,6 +189,23 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 							)
 						),
 						esc_html( $correct )
+					);
+					?>
+				</div>
+
+				<div class="tutor-quiz-result-static-item partial">
+					<?php
+					printf(
+						wp_kses(
+							/* translators: %d: number of partially correct answers. */
+							__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> partially correct', 'tutor' ),
+							array(
+								'span' => array(
+									'class' => true,
+								),
+							)
+						),
+						esc_html( $partial )
 					);
 					?>
 				</div>

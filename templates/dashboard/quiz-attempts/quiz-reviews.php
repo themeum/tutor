@@ -47,6 +47,9 @@ if ( is_array( $questions ) ) {
 			$attempt_answers_map[ $question_id ] = $question;
 			$answer_status                       = QuizModel::get_attempt_answer_status( $question );
 			$form_default_values[ "review_statuses[{$question_id}]" ] = $answer_status;
+			if ( in_array( $question->question_type, QuizModel::get_manual_review_types(), true ) ) {
+				$form_default_values[ "manual_marks[{$question_id}]" ] = (float) ( $question->achieved_mark ?? 0 );
+			}
 		}
 	}
 }

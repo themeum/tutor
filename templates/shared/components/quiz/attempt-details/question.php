@@ -46,7 +46,7 @@ if ( $is_skipped ) {
 	);
 }
 
-if ( $is_instructor_review ) {
+if ( $is_instructor_review && ! $is_skipped ) {
 	$status_badges[] = array(
 		'status' => $review_status,
 	);
@@ -58,6 +58,17 @@ if ( $is_instructor_review ) {
 } elseif ( 'pending' === $review_status ) {
 	$status_badges[] = array(
 		'label'   => __( 'Pending', 'tutor' ),
+		'variant' => Badge::WARNING,
+	);
+
+} elseif ( 'graded' === $review_status ) {
+	$status_badges[] = array(
+		'label'   => __( 'Graded', 'tutor' ),
+		'variant' => Badge::INFO,
+	);
+} elseif ( 'partial' === $review_status ) {
+	$status_badges[] = array(
+		'label'   => __( 'Partially correct', 'tutor' ),
 		'variant' => Badge::WARNING,
 	);
 } elseif ( 'incorrect' === $review_status ) {
@@ -90,6 +101,7 @@ if ( 'review-answer-dnd' === $question_template ) {
 			'answer_status'        => $answer_status,
 			'attempt_id'           => $attempt_id,
 			'attempt_answer_id'    => (int) ( $question->attempt_answer_id ?? 0 ),
+			'is_skipped'           => $is_skipped,
 			'back_url'             => $back_url,
 			'context'              => $context,
 			'is_instructor_review' => $is_instructor_review,
@@ -100,8 +112,15 @@ if ( 'review-answer-dnd' === $question_template ) {
 	tutor_load_template(
 		'shared.components.quiz.attempt-details.questions.' . $question_template,
 		array(
-			'question' => $question,
-			'index'    => $index,
+			'question'             => $question,
+			'index'                => $index,
+			'is_instructor_review' => $is_instructor_review,
+			'is_skipped'           => $is_skipped,
+			'review_status'        => $review_status,
+			'manual_mark_field'    => "manual_marks[{$question->question_id}]",
+			'question_feedback'    => (string) ( $question_feedback ?? '' ),
+			'attempt_id'           => $attempt_id,
+			'attempt_answer_id'    => (int) ( $question->attempt_answer_id ?? 0 ),
 		)
 	);
 
