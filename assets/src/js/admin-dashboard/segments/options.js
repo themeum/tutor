@@ -713,4 +713,130 @@ document.addEventListener('DOMContentLoaded', function () {
 			bankTransferInstruction.previousElementSibling?.classList.toggle('tutor-option-no-bottom-border', !e.target.checked);
 		});
 	}
+
+	/**
+	 * Grading toggle turn-off confirmation modals.
+	 *
+	 * Intercepts the change event on tutor-form-toggle-input elements that declare
+	 * a data-confirm-turnoff-message attribute. When the toggle is turned OFF,
+	 * the handler reverts the toggle, shows a confirm modal, and only proceeds
+	 * with the turn-off if the user confirms.
+	 *
+	 * For negative marking, the handler can optionally query a usage-check AJAX
+	 * action (data-confirm-usage-check-action) to decide whether to show the modal.
+	 *
+	 * @since 4.0.0
+	 */
+	const toggleTurnoffTargets = document.querySelectorAll('.tutor-form-toggle-input[data-confirm-turnoff-message]');
+	toggleTurnoffTargets.forEach((checkbox) => {
+		checkbox.addEventListener('change', function (e) {
+			if (this.checked) {
+				return;
+			}
+
+			const message = this.dataset.confirmTurnoffMessage;
+			const usageAjaxAction = this.dataset.confirmUsageCheckAction || '';
+
+			if (!message) {
+				return;
+			}
+
+			const hiddenInput = this.previousElementSibling;
+			const revertToggle = () => {
+				this.checked = true;
+				if (hiddenInput) {
+					hiddenInput.value = 'on';
+				}
+			};
+
+			const proceedWithTurnoff = () => {
+				this.checked = false;
+				if (hiddenInput) {
+					hiddenInput.value = 'off';
+				}
+			};
+
+			if (!usageAjaxAction) {
+				revertToggle();
+				tutorConfirmTurnoffModal(message).then((confirmed) => {
+					if (confirmed) {
+						proceedWithTurnoff();
+					}
+				});
+				return;
+			}
+
+			const formData = new FormData();
+			formData.append('action', usageAjaxAction);
+			formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+
+			fetch(_tutorobject.ajaxurl, { method: 'POST', body: formData })
+				.then((response) => response.json())
+				.then((result) => {
+					const hasCustomized = result?.data?.has_customized;
+					if (hasCustomized) {
+						revertToggle();
+						tutorConfirmTurnoffModal(message).then((confirmed) => {
+							if (confirmed) {
+								proceedWithTurnoff();
+							}
+						});
+					}
+				})
+				.catch(() => {
+					revertToggle();
+				});
+		});
+	});
 });
+
+/**
+ * Show a confirmation modal for grading toggle turn-off.
+ *
+ * @param {string} message The confirmation message.
+ * @return {Promise<boolean>} Resolves true if confirmed, false if cancelled.
+ */
+function tutorConfirmTurnoffModal(message) {
+	const { __ } = wp.i18n;
+
+	return new Promise((resolve) => {
+		let popup;
+		let resolved = false;
+
+		const finish = (confirmed) => {
+			if (resolved) {
+				return;
+			}
+			resolved = true;
+			resolve(confirmed);
+			popup.find('[data-tutor-modal-close]').click();
+		};
+
+		popup = new window.tutor_popup(window.jQuery, '').popup({
+			title: __('Confirm Turn Off', 'tutor'),
+			description: message,
+			buttons: {
+				cancel: {
+					title: __('Cancel', 'tutor'),
+					id: 'cancel',
+					class: 'tutor-btn tutor-btn-outline-primary',
+					callback: function () {
+						finish(false);
+					},
+				},
+				confirm: {
+					title: __('Turn Off', 'tutor'),
+					id: 'confirm',
+					class: 'tutor-btn tutor-btn-primary tutor-ml-20',
+					callback: function () {
+						finish(true);
+					},
+				},
+			},
+		});
+
+		popup.on('click', '[data-tutor-modal-close], .tutor-modal-overlay', function () {
+			finish(false);
+		});
+	});
+}

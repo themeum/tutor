@@ -21,6 +21,8 @@ $toggle_fields      = isset( $field['toggle_fields'] ) ? $field['toggle_fields']
 $toggle_blocks      = isset( $field['toggle_blocks'] ) ? $field['toggle_blocks'] : null;
 $has_control_button = empty( $field['has_control_button'] ) ? false : true;
 $label_icon         = isset( $field['label_icon'] ) ? $field['label_icon'] : '';
+$confirm_turnoff_message = isset( $field['confirm_turnoff_message'] ) ? $field['confirm_turnoff_message'] : '';
+$confirm_usage_check_action = isset( $field['confirm_usage_check_action'] ) ? $field['confirm_usage_check_action'] : '';
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
@@ -28,15 +30,21 @@ $label_icon         = isset( $field['label_icon'] ) ? $field['label_icon'] : '';
 		<label class="tutor-form-toggle">
 			<?php printf( "<span class='label-before'>%s</span>", esc_attr( $field_label_title ) ); ?>
 			<input type="hidden" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
-			<input type="checkbox" 
-				<?php if ( ! $has_control_button && $toggle_fields ) : ?>
-					data-toggle-fields="<?php echo esc_attr( $toggle_fields ); ?>" 
-				<?php endif; ?>
-				<?php if ( ! $has_control_button && $toggle_blocks ) : ?>
-					data-toggle-blocks="<?php echo esc_attr( $toggle_blocks ); ?>" 
-				<?php endif; ?>
-				<?php checked( esc_attr( $option_value ), 'on' ); ?> 
-				class="tutor-form-toggle-input">
+<input type="checkbox" 
+			<?php if ( ! $has_control_button && $toggle_fields ) : ?>
+				data-toggle-fields="<?php echo esc_attr( $toggle_fields ); ?>" 
+			<?php endif; ?>
+			<?php if ( ! $has_control_button && $toggle_blocks ) : ?>
+				data-toggle-blocks="<?php echo esc_attr( $toggle_blocks ); ?>" 
+			<?php endif; ?>
+			<?php if ( $confirm_turnoff_message ) : ?>
+				data-confirm-turnoff-message="<?php echo esc_attr( $confirm_turnoff_message ); ?>"
+			<?php endif; ?>
+			<?php if ( $confirm_usage_check_action ) : ?>
+				data-confirm-usage-check-action="<?php echo esc_attr( $confirm_usage_check_action ); ?>"
+			<?php endif; ?>
+			<?php checked( esc_attr( $option_value ), 'on' ); ?> 
+			class="tutor-form-toggle-input">
 			<span class="tutor-form-toggle-control"></span>
 		</label>
 		<?php if ( $has_control_button ) : ?>
@@ -47,6 +55,12 @@ $label_icon         = isset( $field['label_icon'] ) ? $field['label_icon'] : '';
 				<?php endif; ?>
 				<?php if ( $toggle_blocks ) : ?>
 					data-toggle-blocks="<?php echo esc_attr( $toggle_blocks ); ?>" 
+				<?php endif; ?>
+				<?php if ( $confirm_turnoff_message ) : ?>
+					data-confirm-turnoff-message="<?php echo esc_attr( $confirm_turnoff_message ); ?>"
+				<?php endif; ?>
+				<?php if ( $confirm_usage_check_action ) : ?>
+					data-confirm-usage-check-action="<?php echo esc_attr( $confirm_usage_check_action ); ?>"
 				<?php endif; ?>
 			>
 			<i class="tutor-icon-slider-horizontal"></i>
