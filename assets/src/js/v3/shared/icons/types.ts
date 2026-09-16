@@ -285,6 +285,7 @@ export const icons = [
   'notification2',
   'open',
   'outlineNone',
+  'partial',
   'passed',
   'passedFill',
   'passing',

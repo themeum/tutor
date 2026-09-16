@@ -71,7 +71,7 @@
 ## 9. Learning Area Quiz Summary & Builder Polish
 
 - [x] 9.1 Update `QuizSettings.tsx` and `quiz.ts` to use `FormInputWithContent` for `negative_mark_value`, inheriting the admin default negative mark penalty value (with ability for user to override in quiz settings), and locking `negative_mark_type` from user editing while maintaining form state for future extensibility
-- [x] 9.2 Add negative marking penalty calculation helper using `QueryHelper::get_all` to determine whether question penalties are uniform (`-{value} for wrong answers` for fixed) or varying (`{min} – {max}` for percent)
-- [x] 9.3 Update `Quiz::render_quiz_summary()` and `templates/learning-area/quiz/content.php` to render `Partial marking: Enabled` and `Negative marking` parameter rows matching the design mockups
+- [x] 9.2 Add negative marking penalty calculation helper in Tutor Pro using `QueryHelper::get_all` to determine whether question penalties are uniform (`-{value} for wrong answers` for fixed) or varying (`{min} – {max}` for percent)
+- [x] 9.3 Update `Quiz::render_quiz_summary()` to expose `tutor_quiz_summary_parameters` filter (removing Pro logic from Free), and hook into it from `TutorPro\Quiz` to inject `Partial marking` and `Negative marking` parameter rows directly under `'tutor-pro'` text domain
 - [x] 9.4 Cross-cutting audit: confirm every section's `QueryHelper` and `JsonResponse` sub-tasks (1.7, 2.7, 3.4, 4.9, 6.8, 7.3, 8.3) are satisfied for all **new** code introduced in this change — existing code is not in scope
 - [x] 9.5 Run frontend build (rspack/gulp) and PHP validation to ensure no regressions

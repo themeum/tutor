@@ -148,13 +148,19 @@ We store `2` in `tutor_quiz_attempt_answers.is_correct` for partially correct au
 ### Decision: Learning Area Quiz Summary Parameters Table (`content.php` & `Quiz::render_quiz_summary`)
 
 - In `templates/learning-area/quiz/content.php`, pass `$quiz_id` to `Quiz::render_quiz_summary()`.
-- **Partial marking row**:
-  - Rendered when Tutor Pro is active and `enable_partial_marking` is true on the quiz.
-  - Icon: `Icon::CHECK_SQUARE`, Column: `Partial marking`, Value: `Enabled`.
-- **Negative marking row**:
-  - Rendered when Tutor Pro is active and `enable_negative_marking` is true on the quiz.
-  - Icon: `Icon::MINUS_SQUARE`, Column: `Negative marking`.
-  - Penalty value calculation:
+- **Decoupled Architecture & Filter Injection**:
+  - Tutor Free core's `Quiz::render_quiz_summary()` applies the `tutor_quiz_summary_parameters` filter on `$quiz_summary` before rendering the table:
+    `$quiz_summary = apply_filters( 'tutor_quiz_summary_parameters', $quiz_summary, $quiz_id );`
+  - Tutor Pro injects standard table rows directly into `$quiz_summary`.
+  - Tutor Pro (`tutor-pro/classes/Quiz.php`) hooks into `tutor_quiz_summary_parameters` via `add_filter( 'tutor_quiz_summary_parameters', array( $this, 'add_quiz_summary_parameters' ), 10, 2 );`.
+  - All Pro-specific logic (checking `tutor_utils()->get_quiz_option()`, localized strings in `'tutor-pro'`, and negative penalty calculations) lives entirely in Tutor Pro.
+- **Partial marking row** (injected by Tutor Pro):
+  - Injected when Tutor Pro is active and `enable_partial_marking` is true on the quiz.
+  - Icon: `Icon::CHECK_SQUARE`, Column: `__( 'Partial marking', 'tutor-pro' )`, Value: `__( 'Enabled', 'tutor-pro' )`.
+- **Negative marking row** (injected by Tutor Pro):
+  - Injected when Tutor Pro is active and `enable_negative_marking` is true on the quiz.
+  - Icon: `Icon::MINUS_SQUARE`, Column: `__( 'Negative marking', 'tutor-pro' )`.
+  - Penalty value calculation (computed within Tutor Pro via `get_negative_marking_summary_label`):
     - If `negative_mark_type === 'fixed'`:
       - Single penalty for all questions: `-{value} for wrong answers` (e.g. `-0.10 for wrong answers`).
     - If `negative_mark_type === 'percent'`:

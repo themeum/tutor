@@ -2123,22 +2123,17 @@ class Quiz {
 			);
 		}
 
-		$quiz_options = $quiz_id && ! empty( tutor()->has_pro ) ? tutor_utils()->get_quiz_option( $quiz_id, '', array() ) : array();
-		if ( '1' === (string) ( $quiz_options['enable_partial_marking'] ?? '0' ) ) {
-			$quiz_summary[] = self::summary_parameter_row(
-				Icon::CHECK_SQUARE,
-				__( 'Partial marking', 'tutor' ),
-				__( 'Enabled', 'tutor' )
-			);
-		}
-
-		if ( '1' === (string) ( $quiz_options['enable_negative_marking'] ?? '0' ) ) {
-			$negative_value = max( 0, (float) ( $quiz_options['negative_mark_value'] ?? 0 ) );
-			$negative_type  = $quiz_options['negative_mark_type'] ?? 'percent';
-			$penalty_label  = self::get_negative_marking_summary_label( $quiz_id, $negative_type, $negative_value );
-
-			$quiz_summary[] = self::summary_parameter_row( Icon::MINUS_SQUARE, __( 'Negative marking', 'tutor' ), $penalty_label );
-		}
+		/**
+		 * Filter the quiz summary parameter rows.
+		 *
+		 * Allows Pro and add-ons to inject additional parameter rows (e.g. partial/negative marking).
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array $quiz_summary Array of table rows for the quiz summary.
+		 * @param int   $quiz_id      Quiz post ID.
+		 */
+		$quiz_summary = apply_filters( 'tutor_quiz_summary_parameters', $quiz_summary, $quiz_id );
 
 		$quiz_summary[] = array(
 			'columns' => array(
@@ -2178,66 +2173,6 @@ class Quiz {
 		}
 
 		Table::make()->contents( $quiz_summary )->render();
-	}
-
-	/**
-	 * Build one Learning Area quiz summary parameter row.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @param string $icon Icon name.
-	 * @param string $label Parameter label.
-	 * @param string $value Parameter value.
-	 *
-	 * @return array
-	 */
-	private static function summary_parameter_row( $icon, $label, $value ) {
-		return array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">' . SvgIcon::make()->name( $icon )->size( 20 )->get() . esc_html( $label ) . '</div>',
-				),
-				array( 'content' => esc_html( $value ) ),
-			),
-		);
-	}
-
-	/**
-	 * Get the Learning Area negative marking description.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @param int    $quiz_id Quiz post ID.
-	 * @param string $negative_type Fixed or percent.
-	 * @param float  $negative_value Configured penalty value.
-	 *
-	 * @return string
-	 */
-	private static function get_negative_marking_summary_label( $quiz_id, $negative_type, $negative_value ) {
-		if ( 'fixed' === $negative_type ) {
-			/* translators: %s: fixed negative marking penalty. */
-			return sprintf( __( '-%s for wrong answers', 'tutor' ), number_format_i18n( $negative_value, 2 ) );
-		}
-
-		$questions = QueryHelper::get_all( 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ), 'question_id', -1 );
-		$penalties = array();
-		foreach ( $questions as $question ) {
-			$penalties[] = round( ( $negative_value / 100 ) * (float) $question->question_mark, 2 );
-		}
-
-		if ( empty( $penalties ) ) {
-			/* translators: %s: negative marking penalty. */
-			return sprintf( __( '-%s for wrong answers', 'tutor' ), number_format_i18n( 0, 2 ) );
-		}
-
-		$minimum = min( $penalties );
-		$maximum = max( $penalties );
-		if ( $minimum !== $maximum ) {
-			return number_format_i18n( $minimum, 2 ) . ' – ' . number_format_i18n( $maximum, 2 );
-		}
-
-		/* translators: %s: negative marking penalty. */
-		return sprintf( __( '-%s for wrong answers', 'tutor' ), number_format_i18n( $minimum, 2 ) );
 	}
 
 	/**

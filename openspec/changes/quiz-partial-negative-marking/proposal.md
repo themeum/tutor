@@ -28,11 +28,13 @@ This change introduces:
 - **Pro auto-graded scoring**: Six question types support partial scoring: matching, image matching, ordering, fill-in-the-blank, image answering, and multiple choice with multiple correct answers.
 - **Pro negative marking**: Instructors configure negative marking at the quiz level (percent or fixed deduction per wrong item or question). Final quiz marks floor at `0.00`.
 - **Learning Area Quiz Overview (`content.php` & `Quiz::render_quiz_summary`)**:
-  - When `enable_partial_marking` is on, renders `Partial marking` parameter row with value `Enabled`.
-  - When `enable_negative_marking` is on, renders `Negative marking` parameter row:
-    - If negative mark type is `fixed`: displays `-{value} for wrong answers` (e.g. `-0.10 for wrong answers`).
-    - If negative mark type is `percent`: calculates penalty per question using `QueryHelper`. If question penalties vary, displays range `{min} – {max}` (e.g. `0.05 – 0.25`); if uniform, displays `-{value} for wrong answers`.
-  - Rows are omitted if their respective features are disabled.
+  - Tutor Free exposes a `tutor_quiz_summary_parameters` filter in `Quiz::render_quiz_summary()` before rendering the overview table.
+  - Tutor Pro hooks into `tutor_quiz_summary_parameters` to inject Pro parameter rows under the `'tutor-pro'` text domain:
+    - When `enable_partial_marking` is on, injects `Partial marking` parameter row with value `Enabled`.
+    - When `enable_negative_marking` is on, injects `Negative marking` parameter row:
+      - If negative mark type is `fixed`: displays `-{value} for wrong answers` (e.g. `-0.10 for wrong answers`).
+      - If negative mark type is `percent`: calculates penalty per question using `QueryHelper`. If question penalties vary, displays range `{min} – {max}` (e.g. `0.05 – 0.25`); if uniform, displays `-{value} for wrong answers`.
+    - Rows are omitted if their respective features are disabled.
 - **Manual grading for Open-Ended & Short Answer (Legacy and v4)**:
   - Strict statuses: strictly **`pending`** (before review) and **`graded`** (after review). Never marked as `correct`, `incorrect`, or `partial`.
   - Unbothered by partial or negative marking settings.

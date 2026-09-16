@@ -118,6 +118,8 @@ In `QuizSettings.tsx`, under the `Grading` card section (below "Passing grade (%
 
 In the Learning Area quiz overview table rendered by `templates/learning-area/quiz/content.php` via `Quiz::render_quiz_summary()`:
 
+- Tutor Free SHALL apply the `tutor_quiz_summary_parameters` filter on `$quiz_summary`, passing `($quiz_summary, $quiz_id)`.
+- Tutor Pro SHALL hook into `tutor_quiz_summary_parameters` to inject the relevant scoring parameter rows under the `tutor-pro` text domain.
 - When `enable_partial_marking` is enabled for the quiz (`tutor_utils()->get_quiz_option($quiz_id)['enable_partial_marking'] == 1` and Tutor Pro is active):
   - The table SHALL display a row with label "Partial marking" and value "Enabled".
 - When `enable_negative_marking` is enabled for the quiz (`tutor_utils()->get_quiz_option($quiz_id)['enable_negative_marking'] == 1` and Tutor Pro is active):
