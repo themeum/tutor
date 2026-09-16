@@ -9,8 +9,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Icon;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\InputField;
 use Tutor\Components\SvgIcon;
+use TUTOR\Icon;
 
 if ( ! isset( $question ) || ! is_object( $question ) ) {
 	return;
@@ -32,9 +36,20 @@ $is_skipped                 = ! empty( $is_skipped );
 $review_status              = (string) ( $review_status ?? '' );
 $manual_mark_field          = (string) ( $manual_mark_field ?? '' );
 $question_feedback          = (string) ( $question_feedback ?? '' );
-$feedback_attempt_id        = (int) ( $attempt_id ?? 0 );
-$feedback_attempt_answer_id = (int) ( $attempt_answer_id ?? 0 );
+$feedback_attempt_id        = (int) ( $attempt_id ?? ( $question->quiz_attempt_id ?? 0 ) );
+$feedback_attempt_answer_id = (int) ( $attempt_answer_id ?? ( $question->attempt_answer_id ?? ( $question->question_id ?? 0 ) ) );
 $question_id                = (int) ( $question->question_id ?? 0 );
+
+if ( ! $feedback_attempt_answer_id && $question_id > 0 ) {
+	$feedback_attempt_answer_id = $question_id;
+}
+
+if ( '' === $question_feedback && isset( $attempt_data->attempt_info ) ) {
+	$info = maybe_unserialize( $attempt_data->attempt_info );
+	if ( is_array( $info ) && isset( $info['question_feedback'] ) && is_array( $info['question_feedback'] ) ) {
+		$question_feedback = (string) ( $info['question_feedback'][ $feedback_attempt_answer_id ] ?? ( $info['question_feedback'][ $question_id ] ?? '' ) );
+	}
+}
 
 $qmark_raw       = (float) ( $question->question_mark ?? 0 );
 $qmark_formatted = ( floor( $qmark_raw ) === $qmark_raw ) ? (string) (int) $qmark_raw : (string) round( $qmark_raw, 2 );
@@ -43,6 +58,26 @@ $is_unscored     = 'pending' === $review_status && ( null === $achieved_raw || 0
 $achieved_val    = ( null !== $achieved_raw && ! $is_unscored )
 	? ( ( floor( $achieved_raw ) === $achieved_raw ) ? (string) (int) $achieved_raw : (string) round( $achieved_raw, 2 ) )
 	: '';
+
+$is_graded             = 'graded' === $review_status;
+$mark_validation_rules = array(
+	'min' => array(
+		'value'   => 0,
+		'message' => __( 'Mark cannot be negative', 'tutor' ),
+	),
+	'max' => array(
+		'value'   => (float) $qmark_formatted,
+		'message' => sprintf(
+			/* translators: %s: maximum mark */
+			__( 'Mark cannot exceed %s', 'tutor' ),
+			$qmark_formatted
+		),
+	),
+);
+
+if ( $is_graded ) {
+	$mark_validation_rules['required'] = __( 'Mark is required', 'tutor' );
+}
 ?>
 
 <div class="tutor-quiz-question-options">
@@ -57,108 +92,123 @@ $achieved_val    = ( null !== $achieved_raw && ! $is_unscored )
 					<?php esc_html_e( 'Obtained marks', 'tutor' ); ?>
 				</label>
 				<div class="tutor-quiz-obtained-marks-row">
-					<input
-						id="<?php echo esc_attr( 'tutor-' . $manual_mark_field ); ?>"
-						class="tutor-quiz-obtained-marks-control"
-						type="number"
-						min="0"
-						max="<?php echo esc_attr( $qmark_formatted ); ?>"
-						step="any"
-						placeholder="—"
-						name="<?php echo esc_attr( $manual_mark_field ); ?>"
-						value="<?php echo esc_attr( $achieved_val ); ?>"
-						x-bind="register('<?php echo esc_attr( $manual_mark_field ); ?>', {
-							required: '<?php echo esc_js( __( 'Mark is required', 'tutor' ) ); ?>',
-							min: {
-								value: 0,
-								message: '<?php echo esc_js( __( 'Mark cannot be negative', 'tutor' ) ); ?>'
-							},
-							max: {
-								value: <?php echo esc_js( $qmark_formatted ); ?>,
-								message: '<?php echo esc_js( sprintf( /* translators: %s: maximum mark */ __( 'Mark cannot exceed %s', 'tutor' ), $qmark_formatted ) ); ?>'
-							}
-						})"
-						:class="{ 'is-invalid': errors?.['<?php echo esc_attr( $manual_mark_field ); ?>'] }"
-						@input="trigger('<?php echo esc_attr( $manual_mark_field ); ?>')"
-					/>
+					<?php
+					InputField::make()
+						->type( 'number' )
+						->name( $manual_mark_field )
+						->id( 'tutor-' . $manual_mark_field )
+						->value( $achieved_val )
+						->placeholder( '—' )
+						->attr( 'min', '0' )
+						->attr( 'max', $qmark_formatted )
+						->attr( 'step', 'any' )
+						->attr( 'style', 'width: 80px;' )
+						->attr(
+							'x-bind',
+							'register(' . wp_json_encode( $manual_mark_field ) . ', ' . wp_json_encode( $mark_validation_rules ) . ')'
+						)
+						->render();
+					?>
 					<span class="tutor-quiz-obtained-marks-total">/ <?php echo esc_html( $qmark_formatted ); ?></span>
 				</div>
-				<div
-					class="tutor-quiz-manual-review-error"
-					x-cloak
-					x-show="errors?.['<?php echo esc_attr( $manual_mark_field ); ?>']?.message"
-					x-text="errors?.['<?php echo esc_attr( $manual_mark_field ); ?>']?.message"
-				></div>
 			</div>
 
-			<?php if ( $feedback_attempt_id && $feedback_attempt_answer_id ) : ?>
+			<?php if ( $feedback_attempt_answer_id > 0 ) : ?>
 				<div
 					class="tutor-question-feedback"
-					x-data="tutorQuestionFeedback({
-						attemptId: <?php echo esc_attr( $feedback_attempt_id ); ?>,
-						attemptAnswerId: <?php echo esc_attr( $feedback_attempt_answer_id ); ?>,
-						feedback: <?php echo wp_json_encode( $question_feedback ); ?>
-					})"
+					x-data='tutorQuestionFeedback({
+						initialFeedback: <?php echo wp_json_encode( (string) $question_feedback ); ?>,
+						fieldName: <?php echo wp_json_encode( "question_feedback[{$feedback_attempt_answer_id}]" ); ?>,
+						formId: <?php echo wp_json_encode( $form_id ?? 'quiz-attempt-review-form' ); ?>
+					})'
 				>
-					<template x-if="!expanded">
-						<button
-							type="button"
-							class="tutor-quiz-add-feedback-btn"
-							@click="toggle()"
-						>
-							<?php SvgIcon::make()->name( Icon::COMMENTS )->size( 16 )->render(); ?>
-							<span x-show="!feedback"><?php esc_html_e( 'Add Feedback', 'tutor' ); ?></span>
-							<span x-show="feedback"><?php esc_html_e( 'Show Feedback', 'tutor' ); ?></span>
-						</button>
-					</template>
+					<?php
+					Button::make()
+						->label( __( 'Add Feedback', 'tutor' ) )
+						->icon( Icon::COMMENTS )
+						->variant( Variant::LINK )
+						->size( Size::SM )
+						->attr( 'type', 'button' )
+						->attr( 'class', 'tutor-quiz-add-feedback-btn' )
+						->attr( 'x-show', '!expanded && !feedback' )
+						->attr( '@click', 'toggle()' )
+						->render();
 
-					<template x-if="expanded">
-						<div class="tutor-quiz-feedback-panel">
-							<div class="tutor-quiz-feedback-panel-header">
-								<span class="tutor-quiz-feedback-panel-title">
-									<?php esc_html_e( 'Feedback from instructor', 'tutor' ); ?>
-								</span>
-								<span class="tutor-quiz-feedback-panel-status" x-show="feedback"><?php esc_html_e( 'Editing', 'tutor' ); ?></span>
+					Button::make()
+						->label( __( 'Show Feedback', 'tutor' ) )
+						->icon( Icon::EYE_LINE )
+						->variant( Variant::LINK )
+						->size( Size::SM )
+						->attr( 'type', 'button' )
+						->attr( 'class', 'tutor-quiz-add-feedback-btn' )
+						->attr( 'x-show', '!expanded && feedback' )
+						->attr( 'x-cloak', true )
+						->attr( '@click', 'toggle()' )
+						->render();
+					?>
+
+					<div
+						class="tutor-quiz-feedback-panel"
+						x-show="expanded"
+						x-collapse
+						x-cloak
+					>
+						<div class="tutor-quiz-feedback-panel-header">
+							<span class="tutor-quiz-feedback-panel-title">
+								<?php esc_html_e( 'Write feedback', 'tutor' ); ?>
+							</span>
+							<span class="tutor-quiz-feedback-panel-status" x-show="feedback" x-cloak><?php esc_html_e( 'Editing', 'tutor' ); ?></span>
+						</div>
+
+						<?php
+						InputField::make()
+							->type( 'textarea' )
+							->name( "question_feedback[{$feedback_attempt_answer_id}]" )
+							->placeholder( __( 'Write feedback for the student...', 'tutor' ) )
+							->attr( 'rows', '3' )
+							->attr(
+								'x-bind',
+								'register(' . wp_json_encode( "question_feedback[{$feedback_attempt_answer_id}]" ) . ')'
+							)
+							->render();
+						?>
+
+						<div class="tutor-quiz-feedback-actions tutor-flex tutor-justify-between tutor-items-center">
+							<div class="tutor-quiz-feedback-actions-start">
+								<?php
+								Button::make()
+									->label( __( 'Delete', 'tutor' ) )
+									->variant( Variant::DESTRUCTIVE )
+									->size( Size::SM )
+									->attr( 'type', 'button' )
+									->attr( '@click.prevent', 'del()' )
+									->attr( 'x-show', 'feedback' )
+									->attr( 'x-cloak', true )
+									->render();
+								?>
 							</div>
 
-							<p x-show="feedback && !editing" class="tutor-quiz-feedback-panel-content" x-text="feedback"></p>
+							<div class="tutor-quiz-feedback-actions-main tutor-flex tutor-items-center tutor-gap-3">
+								<?php
+								Button::make()
+									->label( __( 'Cancel', 'tutor' ) )
+									->variant( Variant::GHOST )
+									->size( Size::SM )
+									->attr( 'type', 'button' )
+									->attr( '@click.prevent', 'cancel()' )
+									->render();
 
-							<template x-if="!feedback || editing">
-								<textarea
-									class="tutor-quiz-feedback-textarea"
-									rows="3"
-									name="question_feedback[<?php echo esc_attr( $feedback_attempt_answer_id ); ?>]"
-									placeholder="<?php esc_attr_e( 'Write feedback for the student...', 'tutor' ); ?>"
-									x-model="draft"
-								></textarea>
-							</template>
-
-							<div class="tutor-quiz-feedback-actions">
-								<button
-									type="button"
-									class="tutor-btn tutor-btn-outline-primary tutor-btn-sm"
-									@click="toggle()"
-								>
-									<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-								</button>
-								<button
-									type="button"
-									class="tutor-btn tutor-btn-destructive tutor-btn-sm"
-									@click="del()"
-									x-show="feedback"
-								>
-									<?php esc_html_e( 'Delete', 'tutor' ); ?>
-								</button>
-								<button
-									type="button"
-									class="tutor-btn tutor-btn-primary tutor-btn-sm"
-									@click="save()"
-									:disabled="saving"
-									x-text="saving ? '<?php esc_html_e( 'Saving...', 'tutor' ); ?>' : '<?php esc_html_e( 'Save', 'tutor' ); ?>'"
-								></button>
+								Button::make()
+									->label( __( 'Save', 'tutor' ) )
+									->variant( Variant::PRIMARY )
+									->size( Size::SM )
+									->attr( 'type', 'button' )
+									->attr( '@click.prevent', 'save()' )
+									->render();
+								?>
 							</div>
 						</div>
-					</template>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>

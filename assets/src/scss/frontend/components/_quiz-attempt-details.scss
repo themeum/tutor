@@ -556,37 +556,16 @@ body:has(#wpadminbar)
   }
 
   .tutor-quiz-obtained-marks-row {
-    @include tutor-flex(row, center);
+    @include tutor-flex(row, baseline);
     gap: $tutor-spacing-3;
-  }
 
-  .tutor-quiz-obtained-marks-control {
-    width: 80px;
-    height: 40px;
-    border: 1px solid $tutor-border-idle;
-    border-radius: $tutor-radius-lg;
-    background-color: $tutor-surface-base;
-    padding: $tutor-spacing-2 $tutor-spacing-4;
-    @include tutor-typography(p2, regular, primary);
-    outline: none;
-    @include tutor-transition((border-color, box-shadow));
+    .tutor-input-field {
+      width: 80px;
+      margin-bottom: 0;
 
-    &:focus {
-      @include tutor-focus-ring;
-      border-color: $tutor-border-brand;
-    }
-
-    &.is-invalid,
-    &.tutor-input-error {
-      border-color: $tutor-border-error;
-
-      &:focus {
-        @include tutor-focus-ring('error');
+      .tutor-input-wrapper {
+        width: 80px;
       }
-    }
-
-    &::placeholder {
-      color: $tutor-text-subdued;
     }
   }
 
@@ -651,26 +630,17 @@ body:has(#wpadminbar)
       margin-bottom: $tutor-spacing-4;
     }
 
-    .tutor-quiz-feedback-textarea {
-      width: 100%;
-      border: 1px solid $tutor-border-idle;
-      border-radius: $tutor-radius-lg;
-      background-color: $tutor-surface-base;
-      padding: $tutor-spacing-4;
-      @include tutor-typography(p2, regular, primary);
-      line-height: 1.5;
-      resize: vertical;
+    .tutor-input-field {
       margin-bottom: $tutor-spacing-4;
-
-      &:focus {
-        @include tutor-focus-ring;
-        border-color: $tutor-border-brand;
-      }
     }
 
     .tutor-quiz-feedback-actions {
-      @include tutor-flex(row, center);
-      gap: $tutor-spacing-3;
+      @include tutor-flex(row, center, space-between);
+
+      .tutor-quiz-feedback-actions-main {
+        @include tutor-flex(row, center);
+        gap: $tutor-spacing-3;
+      }
     }
   }
 }

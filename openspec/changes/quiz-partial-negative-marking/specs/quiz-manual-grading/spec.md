@@ -36,18 +36,25 @@ The system SHALL implement manual grading for questions of type `open_ended` and
 In the v4 Instructor Dashboard review interface (`templates/shared/components/quiz/attempt-details/*`):
 
 - For `open_ended` and `short_answer` questions, if no feedback exists, the card SHALL display an `Add Feedback` button.
-- Clicking `Add Feedback` SHALL expand an inline feedback section beneath the question card containing a textarea with placeholder "Write feedback for the student" and `Cancel` and `Save` buttons.
-- Saving feedback SHALL store the text in the form state and update the trigger to `Show Feedback`.
-- Clicking `Show Feedback` SHALL expand the inline area into "Edit feedback" mode with `Delete` (red text), `Cancel`, and `Save` buttons.
-- Clicking `Delete` SHALL clear the feedback immediately without displaying a confirmation dialog, because instructor review in this view is saved in one go with the review form.
+- If feedback already exists (loaded from the server), the card SHALL display a `Show Feedback` button instead.
+- Clicking `Add Feedback` or `Show Feedback` SHALL expand an inline feedback panel titled **"Write feedback"** beneath the question card.
+- The panel SHALL contain a `<textarea name="question_feedback[{attempt_answer_id}]">` (a plain form field participating in the parent form), `Cancel` and `Save` buttons, and — when existing feedback is present — a `Delete` button (red text).
+- The panel-level **`Save` button SHALL be a client-side-only action**: it commits the draft textarea content to Alpine state, collapses the panel, and updates the trigger button to `Show Feedback`. **No API call is fired.**
+- The panel-level **`Cancel` button** SHALL revert the draft to the last committed state and collapse the panel, discarding any unsaved edits.
+- The **`Delete` button** (visible when existing feedback is present) SHALL clear the feedback field to an empty string in Alpine state and update the trigger to `Add Feedback`. **No API call is fired and no confirmation dialog is shown.**
+- **All data (marks and feedback) SHALL be persisted in a single API call** when the instructor clicks the page-level form Submit button. There SHALL be no per-question or per-feedback AJAX call in the v4 flow.
+- The server-side AJAX handler SHALL read feedback via `Input::post('question_feedback', [], Input::TYPE_ARRAY)` (an associative array keyed by `attempt_answer_id`) and marks via `Input::post('manual_marks', [], Input::TYPE_ARRAY)` (keyed by `question_id`). Both MUST use `Input::TYPE_ARRAY` to comply with the `QueryHelper` / `Input.php` standardisation requirement.
 
 #### Scenario: Inline feedback authoring and deletion on instructor dashboard
 
 - **GIVEN** an instructor reviewing an attempt in the v4 instructor dashboard
-- **WHEN** the instructor clicks `Add Feedback`, types text, and saves
-- **THEN** the trigger changes to `Show Feedback`
+- **WHEN** the instructor clicks `Add Feedback`, types text, and clicks the panel `Save` button
+- **THEN** the draft is committed to Alpine state and the panel collapses
+- **AND** the trigger button changes to `Show Feedback` (no API call fired yet)
+- **WHEN** the instructor clicks the page-level form `Submit` button
+- **THEN** all marks and feedback are sent in a single API call
 - **WHEN** the instructor clicks `Show Feedback` and clicks `Delete`
-- **THEN** the feedback is cleared immediately without a confirmation prompt
+- **THEN** the feedback field is cleared to empty string in Alpine state (no API call, no confirmation prompt)
 - **AND** the trigger reverts to `Add Feedback`
 
 ### Requirement: Admin dashboard feedback flow (Legacy) uses modals and delete confirmation

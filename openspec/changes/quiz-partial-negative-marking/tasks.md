@@ -50,11 +50,17 @@
 - [x] 6.1 Remove binary `[✓]` / `[✕]` manual override buttons for all skipped questions and for manually gradeable questions (`open_ended`, `short_answer`) across both Legacy WP-Admin table and v4 attempt-details components
 - [x] 6.2 Display `(Overrides the auto-graded result)` beneath `[✓]` / `[✕]` override buttons on auto-graded questions when overridden by an instructor
 - [x] 6.3 Implement numeric obtained marks input `[ obtained_mark ] / {question_mark}` for `open_ended` and `short_answer` questions across Legacy and v4, updating `achieved_mark`, delta `earned_marks`, and strictly setting status to `Graded` (never correct/incorrect/partial, unaffected by partial/negative marking)
-- [x] 6.4 Implement v4 Instructor Dashboard inline feedback flow in `open-ended.php` / question review: `Add Feedback` inline accordion with `Cancel` / `Save`, `Show Feedback` inline accordion with `Delete`, `Cancel`, `Save`, with instant deletion without a confirmation dialog
+- [x] 6.4 Implement v4 Instructor Dashboard inline feedback flow in `open-ended.php` / question review:
+  - `Add Feedback` button (shown when feedback is empty) and `Show Feedback` button (shown when feedback exists) — both collapse/expand the inline panel
+  - **Panel is client-side only**: the panel-level `Save` button commits the draft to Alpine state and collapses (no API call); `Cancel` reverts draft and collapses; `Delete` (shown in Show Feedback mode) clears the textarea to empty string in Alpine state (no API call, no confirmation dialog)
+  - The feedback `<textarea>` MUST carry `name="question_feedback[{attempt_answer_id}]"` so it participates in the parent form as a plain field
+  - **No separate per-question or per-feedback AJAX call** — all marks and feedback are persisted in a single form submit
+  - Investigate and fix the `Add Feedback` button not rendering bug (the gate `$feedback_attempt_id && $feedback_attempt_answer_id` in `open-ended.php` may be failing because `attempt_answer_id` is not correctly passed or is `0`)
+
 - [x] 6.5 Implement Legacy WP-Admin modal feedback flow in `views/quiz/attempt-details.php`: `Add Feedback` modal, `Show Feedback` modal, and `Delete` confirmation modal ("Are you sure you want to delete this feedback? [No, keep it] [Yes, delete]") via AJAX
 - [x] 6.6 Store question-level feedback in serialized `attempt_info['question_feedback'][$attempt_answer_id]`
 - [x] 6.7 Implement Student View across Legacy and v4: render "Feedback from instructor" callout beneath the student's answer when feedback exists, along with `Graded` badge and score, while keeping skipped questions completely hidden
-- [x] 6.8 All new manual-grading AJAX endpoints introduced in this change (mark submission, feedback save, feedback delete) must use the `JsonResponse` trait (`response_success`, `response_fail`, `response_bad_request`); any new DB reads or writes they introduce must use `QueryHelper::get_row` / `QueryHelper::update` — do not modify existing endpoints or existing DB calls
+- [x] 6.8 All new manual-grading AJAX endpoints introduced in this change (mark submission, feedback save, feedback delete) must use the `JsonResponse` trait (`response_success`, `response_fail`, `response_bad_request`); any new DB reads or writes they introduce must use `QueryHelper::get_row` / `QueryHelper::update` — do not modify existing endpoints or existing DB calls. The `REVIEW_QUIZ_ANSWERS` endpoint MUST read `question_feedback` via `Input::post('question_feedback', [], Input::TYPE_ARRAY)` (keyed by `attempt_answer_id`) and `manual_marks` via `Input::post('manual_marks', [], Input::TYPE_ARRAY)` (keyed by `question_id`) — no raw `$_POST` access for these fields.
 
 ## 7. Pro REST and import/export
 

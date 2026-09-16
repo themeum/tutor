@@ -1356,11 +1356,12 @@ class Quiz {
 	public function review_quiz_answers() {
 		tutor_utils()->checking_nonce();
 
-		$attempt_id      = Input::post( 'attempt_id', 0, Input::TYPE_INT );
-		$review_statuses = Input::post( 'review_statuses', array(), Input::TYPE_ARRAY );
-		$manual_marks    = Input::post( 'manual_marks', array(), Input::TYPE_ARRAY );
+		$attempt_id        = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$review_statuses   = Input::post( 'review_statuses', array(), Input::TYPE_ARRAY );
+		$manual_marks      = Input::post( 'manual_marks', array(), Input::TYPE_ARRAY );
+		$question_feedback = Input::post( 'question_feedback', array(), Input::TYPE_ARRAY );
 
-		$this->review_quiz_answers_bulk( $attempt_id, $review_statuses, $manual_marks );
+		$this->review_quiz_answers_bulk( $attempt_id, $review_statuses, $manual_marks, $question_feedback );
 	}
 
 	/**
@@ -1371,10 +1372,11 @@ class Quiz {
 	 * @param int   $attempt_id Attempt ID.
 	 * @param array $review_statuses Review statuses keyed by question ID.
 	 * @param array $manual_marks Numeric manual marks keyed by question ID.
+	 * @param array $question_feedback Per-question feedback keyed by attempt answer ID or question ID.
 	 *
 	 * @return void
 	 */
-	private function review_quiz_answers_bulk( int $attempt_id, array $review_statuses, array $manual_marks = array() ) {
+	private function review_quiz_answers_bulk( int $attempt_id, array $review_statuses, array $manual_marks = array(), array $question_feedback = array() ) {
 		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
 			$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
 		}
@@ -1416,6 +1418,10 @@ class Quiz {
 		$manual_marks_delta     = 0.0;
 		$has_manual_mark_update = false;
 		foreach ( $manual_marks as $question_id => $mark ) {
+			if ( '' === $mark || null === $mark || ! is_numeric( $mark ) ) {
+				continue;
+			}
+
 			$question_id    = (int) $question_id;
 			$attempt_answer = $answers_by_question_id[ $question_id ] ?? $this->resolve_attempt_answer_for_review( $attempt_id, 0, $question_id );
 			$mark_delta     = $this->apply_manual_quiz_answer_mark( $attempt_answer, $mark );
@@ -1424,6 +1430,32 @@ class Quiz {
 				$has_manual_mark_update = true;
 				$manual_marks_delta    += $mark_delta;
 			}
+		}
+
+		if ( is_array( $question_feedback ) && count( $question_feedback ) > 0 ) {
+			$feedback_map = $this->get_question_feedback_map( $attempt_id );
+			foreach ( $question_feedback as $key => $feedback_text ) {
+				$key       = (int) $key;
+				$target_id = $key;
+				if ( isset( $answers_by_question_id[ $key ]->attempt_answer_id ) ) {
+					$target_id = (int) $answers_by_question_id[ $key ]->attempt_answer_id;
+				}
+
+				if ( ! $target_id ) {
+					continue;
+				}
+
+				$feedback_text = is_string( $feedback_text ) ? trim( $feedback_text ) : '';
+				if ( '' === $feedback_text ) {
+					unset( $feedback_map[ $target_id ] );
+					if ( $target_id !== $key ) {
+						unset( $feedback_map[ $key ] );
+					}
+				} else {
+					$feedback_map[ $target_id ] = $feedback_text;
+				}
+			}
+			$this->save_question_feedback_map( $attempt_id, $feedback_map );
 		}
 
 		if ( $has_manual_mark_update ) {

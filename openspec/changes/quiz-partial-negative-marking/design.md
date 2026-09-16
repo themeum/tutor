@@ -108,11 +108,13 @@ We store `2` in `tutor_quiz_attempt_answers.is_correct` for partially correct au
 
 1. **v4 Instructor Dashboard (`templates/shared/components/quiz/attempt-details/*`)**:
    - Card layout with Alpine.js form bindings.
-   - Initial state: `[ —— ] / 5` with `💬 Add Feedback`.
-   - Clicking `Add Feedback` expands an inline textarea "Write feedback for the student" with `Cancel` and `Save`.
-   - Saving transitions status to `Graded` (blue badge) and displays `👁 Show Feedback`.
-   - Clicking `Show Feedback` expands \"Edit feedback\" with `Delete` (red text), `Cancel`, and `Save`.
-   - **No confirmation dialog for delete**: Because the v4 dashboard saves the entire review form in one go on submit, clicking `Delete` simply clears the inline feedback state without a confirmation popup.
+   - Initial state: `[ —— ] / 5` with `💬 Add Feedback` button (shown when no feedback exists). When feedback exists, `👁 Show Feedback` button is shown instead.
+   - Clicking `Add Feedback` or `Show Feedback` expands an inline feedback panel titled **"Write feedback"** containing a `<textarea name="question_feedback[{attempt_answer_id}]">` and `Cancel` and `Save` buttons.
+   - The panel-level **`Save` button is client-side only**: it commits the draft textarea content to Alpine state and collapses the panel. **No API call is fired at this point.**
+   - The panel-level **`Cancel` button** reverts the draft to the last committed state and collapses the panel, discarding any unsaved edits.
+   - In "Show Feedback" mode (when existing feedback is loaded from the server), a **`Delete` button** (red) is also shown inside the panel. Clicking `Delete` clears the feedback field to an empty string in Alpine state — no API call at that point. **No confirmation dialog** is shown.
+   - **All data (obtained marks + feedback) is sent in a single API call** when the instructor clicks the page-level form `Submit` button. There is no per-question or per-feedback AJAX call in v4.
+   - The server-side AJAX handler for the submit reads feedback as a POST array via `Input::post('question_feedback', [], Input::TYPE_ARRAY)` (keyed by `attempt_answer_id`), and reads marks via `Input::post('manual_marks', [], Input::TYPE_ARRAY)` (keyed by `question_id`).
 2. **Legacy WP-Admin (`views/quiz/attempt-details.php`)**:
    - Table-based row review with `Manual Review` column.
    - Shows `[ obtained_mark ] / {question_mark}` and `Add Feedback` / `Show Feedback`.
