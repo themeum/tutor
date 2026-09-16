@@ -530,9 +530,8 @@ body:has(#wpadminbar)
 }
 
 .tutor-quiz-student-penalty-notice {
-  @include tutor-typography(small, regular);
+  @include tutor-typography(p2, regular);
   color: $tutor-text-critical;
-  margin-top: $tutor-spacing-4;
 }
 
 .tutor-quiz-instructor-score-breakdown {

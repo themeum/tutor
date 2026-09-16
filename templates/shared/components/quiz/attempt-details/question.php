@@ -9,7 +9,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Components\Badge;
 use Tutor\Models\QuizModel;
 
 if ( ! isset( $question ) || ! is_object( $question ) || empty( $question_template ) ) {
@@ -38,57 +37,6 @@ if ( 'single_choice' === $question_type ) {
 $is_skipped    = QuizModel::is_attempt_answer_skipped( $question );
 $review_status = $question ? QuizModel::get_attempt_answer_status( $question ) : 'skipped';
 $answer_status = $review_status;
-$status_badges = array();
-
-if ( $is_skipped ) {
-	$status_badges[] = array(
-		'label'   => __( 'Skipped', 'tutor' ),
-		'variant' => Badge::INFO,
-	);
-}
-
-if ( $is_instructor_review && ! $is_skipped ) {
-	$status_badges[] = array(
-		'status' => $review_status,
-	);
-} elseif ( 'correct' === $review_status ) {
-	$status_badges[] = array(
-		'label'   => __( 'Correct', 'tutor' ),
-		'variant' => Badge::SUCCESS,
-	);
-} elseif ( 'pending' === $review_status ) {
-	$status_badges[] = array(
-		'label'   => __( 'Pending', 'tutor' ),
-		'variant' => Badge::WARNING,
-	);
-
-} elseif ( 'graded' === $review_status ) {
-	$status_badges[] = array(
-		'label'   => __( 'Graded', 'tutor' ),
-		'variant' => Badge::INFO,
-	);
-} elseif ( 'partial' === $review_status ) {
-	$partial_counts = QuizModel::get_attempt_answer_correct_counts( $question );
-	$partial_label  = $partial_counts
-		? sprintf(
-			/* translators: 1: correct count, 2: total correct count. */
-			__( '%1$d/%2$d correct', 'tutor' ),
-			$partial_counts['correct'],
-			$partial_counts['total']
-		)
-		: __( 'Partially correct', 'tutor' );
-
-	$status_badges[] = array(
-		'label'   => $partial_label,
-		'variant' => Badge::WARNING,
-	);
-} elseif ( 'incorrect' === $review_status ) {
-	$status_badges[] = array(
-		'label'   => __( 'Incorrect', 'tutor' ),
-		'variant' => Badge::ERROR,
-	);
-}
-
 
 $question_wrapper_classes = array( 'tutor-quiz-question' );
 if ( 'review-answer-dnd' === $question_template ) {
@@ -108,7 +56,6 @@ if ( 'review-answer-dnd' === $question_template ) {
 			'question_description' => (string) ( $question->question_description ?? '' ),
 			'question_mark'        => (string) ( $question->question_mark ?? '' ),
 			'show_question_mark'   => '1' === (string) ( $question_settings['show_question_mark'] ?? '1' ),
-			'status_badges'        => $status_badges,
 			'answer_status'        => $answer_status,
 			'attempt_id'           => $attempt_id,
 			'attempt_answer_id'    => (int) ( $question->attempt_answer_id ?? 0 ),

@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Components\Badge;
 use TUTOR\Course_List;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
@@ -1111,6 +1112,95 @@ class QuizModel {
 		}
 
 		return 'incorrect';
+	}
+
+	/**
+	 * Get attempt answer status badge metadata.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param object|null $attempt_answer Attempt answer object.
+	 *
+	 * @return array Associative array with status, label, variant, label_map, and variant_map.
+	 */
+	public static function get_attempt_answer_badge( $attempt_answer ): array {
+		$status         = $attempt_answer ? self::get_attempt_answer_status( $attempt_answer ) : 'skipped';
+		$partial_counts = $attempt_answer ? self::get_attempt_answer_correct_counts( $attempt_answer ) : null;
+		$partial_label  = $partial_counts
+			? sprintf(
+				/* translators: 1: correct count, 2: total correct count. */
+				__( '%1$d/%2$d correct', 'tutor' ),
+				$partial_counts['correct'],
+				$partial_counts['total']
+			)
+			: __( 'Partially correct', 'tutor' );
+
+		$label_map = array(
+			'pending'   => __( 'Pending', 'tutor' ),
+			'correct'   => __( 'Correct', 'tutor' ),
+			'partial'   => $partial_label,
+			'incorrect' => __( 'Incorrect', 'tutor' ),
+			'graded'    => __( 'Graded', 'tutor' ),
+			'skipped'   => __( 'Skipped', 'tutor' ),
+		);
+
+		$variant_map = array(
+			'pending'   => Badge::WARNING,
+			'correct'   => Badge::SUCCESS,
+			'partial'   => Badge::SUCCESS,
+			'incorrect' => Badge::ERROR,
+			'graded'    => Badge::HIGHLIGHT,
+			'skipped'   => Badge::INFO,
+		);
+
+		$badge = array(
+			'status'      => $status,
+			'label'       => $label_map[ $status ] ?? '',
+			'variant'     => $variant_map[ $status ] ?? Badge::INFO,
+			'label_map'   => $label_map,
+			'variant_map' => $variant_map,
+		);
+
+		return apply_filters( 'tutor_quiz_attempt_answer_badge', $badge, $attempt_answer );
+	}
+
+	/**
+	 * Render attempt answer status badge.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param object|null $attempt_answer Attempt answer object.
+	 * @param array       $options Optional rendering options (is_instructor_review, review_field_name).
+	 *
+	 * @return void
+	 */
+	public static function render_attempt_answer_badge( $attempt_answer, array $options = array() ): void {
+		$badge                = self::get_attempt_answer_badge( $attempt_answer );
+		$is_instructor_review = ! empty( $options['is_instructor_review'] );
+		$review_field_name    = (string) ( $options['review_field_name'] ?? '' );
+		$is_skipped           = self::is_attempt_answer_skipped( $attempt_answer );
+
+		if ( $is_instructor_review && ! $is_skipped && $review_field_name ) {
+			$label_map   = wp_json_encode( $badge['label_map'] );
+			$variant_map = wp_json_encode( $badge['variant_map'] );
+			$field       = esc_attr( $review_field_name );
+
+			Badge::make()
+				->rounded()
+				->attr( 'x-text', "({$label_map})[watch('{$field}')] ?? ''" )
+				->attr( ':class', "'tutor-badge tutor-badge-rounded tutor-badge-' + (({$variant_map})[watch('{$field}')] ?? 'info')" )
+				->render();
+		} else {
+			if ( empty( $badge['label'] ) ) {
+				return;
+			}
+
+			Badge::make()
+				->label( $badge['label'] )
+				->variant( $badge['variant'] )
+				->rounded()
+				->render();
+		}
 	}
 
 	/**

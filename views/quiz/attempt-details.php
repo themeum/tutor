@@ -816,55 +816,27 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																	$qmark_str
 																);
 
-																switch ( $answer_status ) {
-																	case 'correct':
-																		echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
-																		echo '<div class="tutor-quiz-result-score">' . esc_html( $score_label ) . '</div>';
-																		break;
+																$badge_info    = QuizModel::get_attempt_answer_badge( $answer );
+																$badge_classes = array(
+																	'correct'   => 'label-success',
+																	'partial'   => 'label-success',
+																	'graded'    => 'label-success',
+																	'pending'   => 'label-warning',
+																	'incorrect' => 'label-danger',
+																	'skipped'   => 'label-secondary',
+																);
+																$badge_class   = $badge_classes[ $answer_status ] ?? 'label-secondary';
 
-																	case 'pending':
-																		echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
-																		break;
+																echo '<span class="tutor-badge-label ' . esc_attr( $badge_class ) . '">' . esc_html( $badge_info['label'] ) . '</span>';
 
-																	case 'partial':
-																		$partial_counts = QuizModel::get_attempt_answer_correct_counts( $answer );
-																		$partial_label  = $partial_counts
-																			? sprintf(
-																				/* translators: 1: correct count, 2: total correct count. */
-																				esc_html__( '%1$d/%2$d Correct', 'tutor' ),
-																				$partial_counts['correct'],
-																				$partial_counts['total']
-																			)
-																			: esc_html__( 'Partially correct', 'tutor' );
+																if ( in_array( $answer_status, array( 'partial', 'incorrect' ), true ) && $minus_val > 0 ) {
+																	$earned_str = number_format( $earned_val, 2, '.', '' );
+																	$minus_str  = number_format( $minus_val, 2, '.', '' );
+																	echo '<div class="tutor-quiz-result-delta"><span class="is-earned">(+' . esc_html( $earned_str ) . ')</span> <span class="is-penalty">-' . esc_html( $minus_str ) . '</span></div>';
+																}
 
-																		echo '<span class="tutor-badge-label label-success">' . $partial_label . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
-																		if ( $minus_val > 0 ) {
-																			$earned_str = number_format( $earned_val, 2, '.', '' );
-																			$minus_str  = number_format( $minus_val, 2, '.', '' );
-																			echo '<div class="tutor-quiz-result-delta"><span class="is-earned">(+' . esc_html( $earned_str ) . ')</span> <span class="is-penalty">-' . esc_html( $minus_str ) . '</span></div>';
-																		}
-																		echo '<div class="tutor-quiz-result-score">' . esc_html( $score_label ) . '</div>';
-																		break;
-
-																	case 'graded':
-																		echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Graded', 'tutor' ) . '</span>';
-																		echo '<div class="tutor-quiz-result-score">' . esc_html( $score_label ) . '</div>';
-																		break;
-
-																	case 'skipped':
-																		echo '<span class="tutor-badge-label label-secondary">' . esc_html__( 'Skipped', 'tutor' ) . '</span>';
-																		break;
-
-																	case 'incorrect':
-																		echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
-																		if ( $minus_val > 0 ) {
-																			$earned_str = number_format( $earned_val, 2, '.', '' );
-																			$minus_str  = number_format( $minus_val, 2, '.', '' );
-																			echo '<div class="tutor-quiz-result-delta"><span class="is-earned">(+' . esc_html( $earned_str ) . ')</span> <span class="is-penalty">-' . esc_html( $minus_str ) . '</span></div>';
-																		}
-																		echo '<div class="tutor-quiz-result-score">' . esc_html( $score_label ) . '</div>';
-																		break;
+																if ( 'pending' !== $answer_status && 'skipped' !== $answer_status ) {
+																	echo '<div class="tutor-quiz-result-score">' . esc_html( $score_label ) . '</div>';
 																}
 															}
 															?>
