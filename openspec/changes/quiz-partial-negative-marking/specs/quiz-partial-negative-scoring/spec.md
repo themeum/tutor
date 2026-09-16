@@ -93,31 +93,37 @@ When quiz negative marking is enabled, the system SHALL compute `minus_mark` onl
 
 Skipped or blank questions SHALL receive `is_correct` `0`, `achieved_mark` `0`, and `minus_mark` `0`.
 
-The awarded mark SHALL be `max(0, partial_or_full - minus_mark)`. Quiz `earned_marks` SHALL be the sum of awarded marks and MUST NOT go below `0`. Pass/fail SHALL continue to use earned percentage against the passing grade. Round `minus_mark` and `achieved_mark` to two decimal places.
+The awarded question mark (`achieved_mark`) SHALL be `partial_or_full - minus_mark` (allowing negative values when penalty exceeds earned marks). Quiz cumulative `earned_marks` SHALL be the sum of question awarded marks clamped to `max(0, total)` and MUST NOT go below `0`. Pass/fail SHALL continue to use earned percentage against the passing grade. Round `minus_mark` and `achieved_mark` to two decimal places.
 
 #### Scenario: Wrong answered question takes a percent penalty
 
 - **GIVEN** a 10-point question with negative marking type `percent` and value 20 (percent)
 - **WHEN** the student submits an answered question with no correct items
-- **THEN** `minus_mark` is `2.00` and `achieved_mark` is `0.00`
+- **THEN** `minus_mark` is `2.00` and `achieved_mark` is `-2.00`
 
 #### Scenario: Wrong answered question takes a fixed penalty
 
 - **GIVEN** a 10-point question with negative marking type `fixed` and value `1.50`
 - **WHEN** the student submits an answered question with no correct items
-- **THEN** `minus_mark` is `1.50` and `achieved_mark` is `0.00`
+- **THEN** `minus_mark` is `1.50` and `achieved_mark` is `-1.50`
 
-#### Scenario: Partial then percent penalty floors at zero
+#### Scenario: Partial then percent penalty yields negative net mark
 
 - **GIVEN** a 10-point question with a 2-point partial raw mark and negative marking type `percent` and value 30
 - **WHEN** the penalty is applied
-- **THEN** `minus_mark` is `3.00` and `achieved_mark` is `0.00`
+- **THEN** `minus_mark` is `3.00` and `achieved_mark` is `-1.00`
 
-#### Scenario: Partial then fixed penalty floors at zero
+#### Scenario: Partial then fixed penalty yields negative net mark
 
 - **GIVEN** a 10-point question with a 2-point partial raw mark and negative marking type `fixed` with value `3`
 - **WHEN** the penalty is applied
-- **THEN** `minus_mark` is `3.00` and `achieved_mark` is `0.00`
+- **THEN** `minus_mark` is `3.00` and `achieved_mark` is `-1.00`
+
+#### Scenario: Cumulative quiz earned marks floors at zero
+
+- **GIVEN** an attempt where the sum of question `achieved_mark` values is `-1.00`
+- **WHEN** total quiz marks are calculated
+- **THEN** total quiz `earned_marks` is `0.00`
 
 #### Scenario: Skipped question has no penalty
 

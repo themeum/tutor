@@ -25,6 +25,23 @@ This change introduces:
   - Auto-graded answers map to `correct`, `partial`, `incorrect`.
   - Partially graded questions remove the static `Partially correct` badge and instead display an **`N/M correct`** badge in the question header (e.g. `2/4 correct`), where $N$ is the number of correct answers given by the user and $M$ is the total number of correct answers possible.
   - Skipped questions remain **hidden from students** (preserving existing Tutor LMS behavior). For instructors, skipped questions display a `Skipped` badge with 0 marks, no negative penalty, and no override buttons.
+- **Attempt Details Header Score & Under-Explanation Penalty Breakdown**:
+  - **Header score**: In the question header top right, all questions except `pending` review and `skipped` display `Score: {achieved_mark}/{question_mark}` (e.g. `Score: -0.25/1` or `Score: 0.75/1`).
+  - **Student view penalty notice**: When a negative penalty applies (`minus_mark > 0`), the deducted mark appears directly under `Answer Explanation` in red text (e.g. `-{minus_mark} points`).
+  - **Instructor view detailed mark breakdown**: Under `Answer Explanation` (excluding `pending` review questions), instructors see a detailed mark breakdown table:
+    - Row 1: `Earned` (for `correct`/`incorrect`) or `Partial credit` (for `partial`) with value `x`.
+    - Row 2: If a penalty applies, `Penalty -y deducted` in red with value `-y`.
+    - Row 3: Total `Score: (x-y)/{question_mark}`.
+  - **Question-level net scoring**: Individual question `achieved_mark` can reflect negative net marks when penalties exceed earned credit, while overall quiz total earned marks floors at `0.00`.
+- **Admin Dashboard Quiz Attempt Review Table (`views/quiz/attempt-details.php`)**:
+  - In the `Result` column:
+    - `Correct`: Badge `Correct` (`label-success`), and below it `Score: {achieved_mark}/{question_mark}`.
+    - `Partial`: Badge `{N}/{M} Correct` (`label-success`). If penalty was deducted (`minus_mark > 0`), displays `(+{earned_mark}) -{minus_mark}` (earned in green `tutor-color-success`, penalty in red `tutor-color-danger`), followed by `Score: {achieved_mark}/{question_mark}`. If no penalty, displays `Score: {achieved_mark}/{question_mark}`.
+    - `Incorrect`: Badge `Incorrect` (`label-danger`). If penalty was deducted (`minus_mark > 0`), displays `(+{earned_mark}) -{minus_mark}` followed by `Score: {achieved_mark}/{question_mark}`. If no penalty, displays `Score: {achieved_mark}/{question_mark}`.
+    - `Pending`: Badge `Pending` (`label-warning`), omitting score in the Result column (the score input lives in the `Manual Review` column).
+    - `Skipped`: Badge `Skipped` (`label-secondary`), omitting score in the Result column.
+    - `Graded`: Badge `Graded` (`label-success`), and below it `Score: {achieved_mark}/{question_mark}`.
+
 - **Pro auto-graded scoring**: Six question types support partial scoring: matching, image matching, ordering, fill-in-the-blank, image answering, and multiple choice with multiple correct answers.
 - **Pro negative marking**: Instructors configure negative marking at the quiz level (percent or fixed deduction per wrong item or question). Final quiz marks floor at `0.00`.
 - **Learning Area Quiz Overview (`content.php` & `Quiz::render_quiz_summary`)**:

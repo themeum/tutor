@@ -96,3 +96,118 @@ The count mapping per supported question type SHALL be:
 - **WHEN** the student selects 2 of the correct options and 0 incorrect options
 - **THEN** the attempt answer status is `partial`
 - **AND** the question header displays a `2/3 correct` badge
+
+### Requirement: Question header displays score for evaluated questions
+
+In both student results and instructor attempt details views (across Legacy and v4), every evaluated question SHALL display `Score: {achieved_mark}/{question_mark}` in the top right of the question card.
+The header score SHALL NOT be displayed for:
+
+- Questions with status `pending` (pending review).
+- Questions with status `skipped` (skipped by student).
+
+#### Scenario: Evaluated question displays achieved and total marks in header
+
+- **GIVEN** an auto-graded question worth 1 mark with achieved mark -0.25 (due to negative marking penalty)
+- **WHEN** the attempt details are rendered
+- **THEN** the top right displays `Score: -0.25/1`
+
+#### Scenario: Partial question displays achieved and total marks in header
+
+- **GIVEN** a question worth 4 marks with achieved mark 2
+- **WHEN** the attempt details are rendered
+- **THEN** the top right displays `Score: 2/4`
+
+#### Scenario: Pending question omits header score
+
+- **GIVEN** an open-ended question awaiting instructor grading
+- **WHEN** the attempt details are rendered
+- **THEN** the question displays a `Pending Review` badge and no `Score:` text in the top right
+
+#### Scenario: Skipped question omits header score
+
+- **GIVEN** a question skipped by the student
+- **WHEN** an instructor views the attempt details
+- **THEN** the question displays a `Skipped` badge and no `Score:` text in the top right
+
+### Requirement: Student view displays negative mark penalty notice under Answer Explanation
+
+In student attempt results, if a negative marking penalty was deducted for a question (`minus_mark > 0`), the system SHALL display the deducted penalty amount in red text directly beneath the `Answer Explanation` card (e.g. `-{minus_mark} points`).
+If `minus_mark == 0`, no penalty text SHALL be displayed.
+
+#### Scenario: Student views question with penalty applied
+
+- **GIVEN** a student answered a question incorrectly where negative marking deducted 0.25 marks
+- **WHEN** the student views the question result
+- **THEN** `-0.25 points` is displayed in red text directly below the `Answer Explanation` card
+
+#### Scenario: Student views question without penalty
+
+- **GIVEN** a student answered a question correctly with 0 penalty
+- **WHEN** the student views the question result
+- **THEN** no penalty notice is displayed below the `Answer Explanation` card
+
+### Requirement: Instructor view displays detailed mark breakdown table under Answer Explanation
+
+In instructor attempt review (both Legacy and v4), for all evaluated questions (excluding `pending` review), the system SHALL display a detailed mark breakdown beneath the `Answer Explanation` card:
+
+- **Earned credit row**:
+  - For `correct` or `incorrect` questions: label `Earned` with value `{earned_mark}` (where raw earned mark = `achieved_mark + minus_mark`).
+  - For `partial` questions: label `Partial credit` with value `{earned_mark}`.
+- **Penalty deduction row** (displayed only when `minus_mark > 0`):
+  - Label `Penalty -{minus_mark} deducted` in red text with value `-{minus_mark}` in red text.
+- **Total score row**:
+  - Label `Score: {achieved_mark}/{question_mark}` displayed right-aligned.
+
+This breakdown table SHALL NOT be displayed for questions with status `pending`.
+
+#### Scenario: Instructor views incorrect question with penalty
+
+- **GIVEN** an instructor views an answered question worth 1 mark where earned marks is 0 and penalty deduction is 0.08
+- **WHEN** the question details are displayed
+- **THEN** under Answer Explanation, Row 1 displays `Earned` with `0`
+- **AND** Row 2 displays `Penalty -0.08 deducted` with `-0.08` in red
+- **AND** Row 3 displays `Score: -0.08/1`
+
+#### Scenario: Instructor views partial question with penalty
+
+- **GIVEN** an instructor views a 4-point question where earned credit is 2.00 and penalty deduction is 0.50
+- **WHEN** the question details are displayed
+- **THEN** under Answer Explanation, Row 1 displays `Partial credit` with `2`
+- **AND** Row 2 displays `Penalty -0.50 deducted` with `-0.50` in red
+- **AND** Row 3 displays `Score: 1.50/4`
+
+### Requirement: Admin attempt details table displays inline mark breakdown in Result column
+
+In the legacy WP-Admin attempt details view (`views/quiz/attempt-details.php`), the `Result` column SHALL display:
+
+- For `correct` status: Badge `Correct` (`label-success`) and a secondary line `Score: {achieved_mark}/{question_mark}`.
+- For `partial` status: Badge `{N}/{M} Correct` (`label-success`).
+  - If `minus_mark > 0`: line 1 displays `(+{earned_mark}) -{minus_mark}` where `(+{earned_mark})` has green text class `tutor-color-success` and `-{minus_mark}` has red text class `tutor-color-danger`, followed by line 2 displaying `Score: {achieved_mark}/{question_mark}`.
+  - If `minus_mark == 0`: line 1 displays `Score: {achieved_mark}/{question_mark}`.
+- For `incorrect` status: Badge `Incorrect` (`label-danger`).
+  - If `minus_mark > 0`: line 1 displays `(+{earned_mark}) -{minus_mark}` and line 2 displays `Score: {achieved_mark}/{question_mark}`.
+  - If `minus_mark == 0`: line 1 displays `Score: {achieved_mark}/{question_mark}`.
+- For `pending` and `skipped` statuses: Badges `Pending` and `Skipped` respectively, with no score displayed in the Result column.
+- For `graded` status: Badge `Graded` (`label-success`) and a secondary line `Score: {achieved_mark}/{question_mark}`.
+
+#### Scenario: Admin table displays partial with negative penalty breakdown
+
+- **GIVEN** a 6-item ordering question worth 1 mark where student got 4 correct (+0.67) and penalty is 0.16
+- **WHEN** the admin views the attempt details table
+- **THEN** the Result column displays badge `4/6 Correct`
+- **AND** below it displays `(+0.67)` in green and `-0.16` in red
+- **AND** below that displays `Score: 0.51/1`
+
+#### Scenario: Admin table displays correct question with score
+
+- **GIVEN** a question worth 1 mark answered correctly
+- **WHEN** the admin views the attempt details table
+- **THEN** the Result column displays badge `Correct`
+- **AND** below it displays `Score: 1.00/1`
+
+#### Scenario: Admin table displays pending question without score in Result column
+
+- **GIVEN** an open-ended essay question awaiting review
+- **WHEN** the admin views the attempt details table
+- **THEN** the Result column displays badge `Pending`
+- **AND** no score text is rendered in the Result column

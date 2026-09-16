@@ -75,3 +75,12 @@
 - [x] 9.3 Update `Quiz::render_quiz_summary()` to expose `tutor_quiz_summary_parameters` filter (removing Pro logic from Free), and hook into it from `TutorPro\Quiz` to inject `Partial marking` and `Negative marking` parameter rows directly under `'tutor-pro'` text domain
 - [x] 9.4 Cross-cutting audit: confirm every section's `QueryHelper` and `JsonResponse` sub-tasks (1.7, 2.7, 3.4, 4.9, 6.8, 7.3, 8.3) are satisfied for all **new** code introduced in this change — existing code is not in scope
 - [x] 9.5 Run frontend build (rspack/gulp) and PHP validation to ensure no regressions
+
+## 10. Question Header Score, Student Penalty Notice, Instructor Breakdown Table & Question-Level Net Marks
+
+- [ ] 10.1 Update Pro `QuizGrader` and scoring filters so question `achieved_mark` allows negative values (`earned - minus_mark`) instead of flooring each question to 0, while keeping quiz cumulative `earned_marks` floored at `0.00`
+- [ ] 10.2 Update question header component (`templates/shared/components/quiz/attempt-details/question.php` & `question-header.php`) to display `Score: {achieved_mark}/{question_mark}` in the top right for all evaluated questions, strictly excluding `pending` and `skipped`
+- [ ] 10.3 Update legacy Admin Dashboard quiz attempt review table (`views/quiz/attempt-details.php`) Result column: render status badge, conditional `(+{earned_mark}) -{minus_mark}` breakdown (green earned, red penalty when `minus_mark > 0`), and `Score: {achieved_mark}/{question_mark}` line
+- [ ] 10.4 Implement Student View penalty notice under `Answer Explanation`: when `minus_mark > 0`, render `-{minus_mark} points` in red text directly beneath the answer explanation card
+- [ ] 10.5 Implement Instructor View detailed mark breakdown table under `Answer Explanation` (excluding `pending` review): render `Earned` / `Partial credit` row, `Penalty -y deducted` row (in red), and right-aligned `Score: {achieved_mark}/{question_mark}` row
+- [ ] 10.6 Visual verification across Legacy and v4 attempt details for Student and Instructor views against mockups, and run PHPCS / test validation

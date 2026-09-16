@@ -180,3 +180,58 @@ We store `2` in `tutor_quiz_attempt_answers.is_correct` for partially correct au
 
 - All new database queries in Tutor use `Tutor\Helpers\QueryHelper` methods (`get_all`, `get_row`, `get_count`, etc.) instead of raw `$wpdb` calls.
 - AJAX endpoints use the `Tutor\Traits\JsonResponse` trait for standardized JSON response output.
+
+### Decision: Attempt Details Question Header Score & Penalty Breakdown (Student vs. Instructor View)
+
+- **Question Header Score**:
+  - In `templates/shared/components/quiz/attempt-details/question.php` (v4) and legacy `views/quiz/attempt-details.php`:
+  - For all evaluated questions (where status is NOT `pending` and NOT `skipped`), display `Score: {achieved_mark}/{question_mark}` in the top right of the question header card.
+  - Omitted when `status === 'pending'` or `status === 'skipped'`.
+- **Student View: Under-Explanation Penalty Notice**:
+  - In student attempt review:
+  - When `minus_mark > 0`, render the deducted mark directly beneath the `Answer Explanation` card in red text (e.g. `-{minus_mark} points` such as `-0.25 points`).
+  - Omitted when `minus_mark == 0`.
+- **Instructor View: Under-Explanation Detailed Mark Breakdown Table**:
+  - In instructor review (WP-Admin attempt details & v4 instructor dashboard):
+  - Render a structured breakdown beneath the `Answer Explanation` card for all evaluated questions (strictly excluding `pending` review questions):
+    - Row 1: Earned credit:
+      - If question status is `correct` or `incorrect`: label is `Earned`, value is `{earned_mark}` (where earned mark before deduction = `achieved_mark + minus_mark`).
+      - If question status is `partial`: label is `Partial credit`, value is `{earned_mark}`.
+    - Row 2: Penalty deduction (displayed only when `minus_mark > 0`):
+      - Label is `Penalty -{minus_mark} deducted` (styled in red), and value is `-{minus_mark}` (styled in red).
+    - Row 3: Final question score:
+      - Displayed right-aligned: `Score: {achieved_mark}/{question_mark}`.
+- **Question-Level Net Marks vs Quiz Earned Marks**:
+  - Individual question `achieved_mark` is calculated as `earned_mark - minus_mark`. It is NOT clamped to `0.00` at the question level when negative marking is applied — it can be negative (e.g., `-0.25`, `-0.08`).
+  - Quiz-level cumulative `earned_marks` continues to floor at `0.00` (`max(0.00, sum(achieved_marks))`), ensuring the overall quiz grade never goes below 0%.
+
+### Decision: Admin Dashboard Quiz Attempt Review Table Result Column (`views/quiz/attempt-details.php`)
+
+In the WP-Admin legacy quiz attempt details table, the `Result` column (`<td class="result">`) renders a badge and conditional score/penalty breakdown:
+
+- **`Correct` status**:
+  - Badge: `<span class="tutor-badge-label label-success">Correct</span>`
+  - Below badge: `<div class="tutor-fs-8 tutor-color-muted tutor-mt-4">Score: {achieved_mark}/{question_mark}</div>`
+- **`Partial` status**:
+  - Badge: `<span class="tutor-badge-label label-success">{N}/{M} Correct</span>`
+  - When `minus_mark > 0`:
+    - Line 1: `<div class="tutor-fs-8 tutor-mt-4"><span class="tutor-color-success">(+{earned_mark})</span> <span class="tutor-color-danger">-{minus_mark}</span></div>` (where raw earned credit = `achieved_mark + minus_mark`)
+    - Line 2: `<div class="tutor-fs-8 tutor-color-muted tutor-mt-2">Score: {achieved_mark}/{question_mark}</div>`
+  - When `minus_mark == 0`:
+    - Below badge: `<div class="tutor-fs-8 tutor-color-muted tutor-mt-4">Score: {achieved_mark}/{question_mark}</div>`
+- **`Incorrect` status**:
+  - Badge: `<span class="tutor-badge-label label-danger">Incorrect</span>`
+  - When `minus_mark > 0`:
+    - Line 1: `<div class="tutor-fs-8 tutor-mt-4"><span class="tutor-color-success">(+{earned_mark})</span> <span class="tutor-color-danger">-{minus_mark}</span></div>`
+    - Line 2: `<div class="tutor-fs-8 tutor-color-muted tutor-mt-2">Score: {achieved_mark}/{question_mark}</div>`
+  - When `minus_mark == 0`:
+    - Below badge: `<div class="tutor-fs-8 tutor-color-muted tutor-mt-4">Score: {achieved_mark}/{question_mark}</div>`
+- **`Pending` status**:
+  - Badge: `<span class="tutor-badge-label label-warning">Pending</span>`
+  - Omitted from `Result` column; score input lives in the `Manual Review` column (`[ 3.0 ] / 5` with `💬 Add Feedback`).
+- **`Skipped` status**:
+  - Badge: `<span class="tutor-badge-label label-secondary">Skipped</span>`
+  - Omitted from `Result` column; manual review buttons are omitted.
+- **`Graded` status**:
+  - Badge: `<span class="tutor-badge-label label-success">Graded</span>`
+  - Below badge: `<div class="tutor-fs-8 tutor-color-muted tutor-mt-4">Score: {achieved_mark}/{question_mark}</div>`
