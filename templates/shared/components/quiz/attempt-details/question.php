@@ -74,8 +74,18 @@ if ( $is_instructor_review && ! $is_skipped ) {
 		),
 	);
 } elseif ( 'partial' === $review_status ) {
+	$partial_counts = QuizModel::get_attempt_answer_correct_counts( $question );
+	$partial_label  = $partial_counts
+		? sprintf(
+			/* translators: 1: correct count, 2: total correct count. */
+			__( '%1$d/%2$d correct', 'tutor' ),
+			$partial_counts['correct'],
+			$partial_counts['total']
+		)
+		: __( 'Partially correct', 'tutor' );
+
 	$status_badges[] = array(
-		'label'   => __( 'Partially correct', 'tutor' ),
+		'label'   => $partial_label,
 		'variant' => Badge::WARNING,
 	);
 } elseif ( 'incorrect' === $review_status ) {

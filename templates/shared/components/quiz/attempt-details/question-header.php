@@ -21,12 +21,12 @@ use Tutor\Components\SvgIcon;
  *
  * @return array{ x_text: string, class_expr: string }
  */
-$build_badge_attrs = function ( string $review_field_name ): array {
+$build_badge_attrs = function ( string $review_field_name, string $partial_label = '' ): array {
 	$label_map = wp_json_encode(
 		array(
 			'pending'   => __( 'Pending', 'tutor' ),
 			'correct'   => __( 'Correct', 'tutor' ),
-			'partial'   => __( 'Partially correct', 'tutor' ),
+			'partial'   => ! empty( $partial_label ) ? $partial_label : __( 'Partially correct', 'tutor' ),
 			'incorrect' => __( 'Incorrect', 'tutor' ),
 			'graded'    => __( 'Graded', 'tutor' ),
 			'skipped'   => __( 'Skipped', 'tutor' ),
@@ -65,6 +65,15 @@ $is_skipped           = ! empty( $is_skipped );
 $is_overridden        = ! empty( $is_overridden );
 $review_field_name    = (string) ( $review_field_name ?? '' );
 $is_manual_question   = $question && in_array( (string) ( $question->question_type ?? '' ), Tutor\Models\QuizModel::get_manual_review_types(), true );
+$partial_counts       = $question ? Tutor\Models\QuizModel::get_attempt_answer_correct_counts( $question ) : null;
+$partial_label        = $partial_counts
+	? sprintf(
+		/* translators: 1: correct count, 2: total correct count. */
+		__( '%1$d/%2$d correct', 'tutor' ),
+		$partial_counts['correct'],
+		$partial_counts['total']
+	)
+	: __( 'Partially correct', 'tutor' );
 ?>
 
 <div class="tutor-quiz-question-header">
@@ -99,7 +108,7 @@ $is_manual_question   = $question && in_array( (string) ( $question->question_ty
 						$badge_status = (string) ( $badge['status'] ?? '' );
 
 						if ( $badge_status && $is_instructor_review ) :
-							$badge_attrs = $build_badge_attrs( $review_field_name );
+							$badge_attrs = $build_badge_attrs( $review_field_name, $partial_label );
 
 							Badge::make()
 								->rounded()

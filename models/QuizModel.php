@@ -40,9 +40,9 @@ class QuizModel {
 	 * These values are only for tutor_quiz_attempt_answers rows. Question-answer
 	 * option rows remain binary and must continue to use 0 or 1.
 	 */
-	const ATTEMPT_ANSWER_INCORRECT     = 0;
-	const ATTEMPT_ANSWER_CORRECT       = 1;
-	const ATTEMPT_ANSWER_PARTIAL       = 2;
+	const ATTEMPT_ANSWER_INCORRECT = 0;
+	const ATTEMPT_ANSWER_CORRECT   = 1;
+	const ATTEMPT_ANSWER_PARTIAL   = 2;
 
 	/**
 	 * Attempt-answer status for manually graded questions.
@@ -1142,6 +1142,168 @@ class QuizModel {
 		}
 
 		return $counts;
+	}
+
+	/**
+	 * Get correct answer count and total count for an attempt answer.
+	 *
+	 * Returns array with 'correct' (N) and 'total' (M) for supported auto-graded questions,
+	 * or null if unsupported/unavailable.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param object $attempt_answer Attempt answer object.
+	 *
+	 * @return array{ correct: int, total: int }|null
+	 */
+	public static function get_attempt_answer_correct_counts( $attempt_answer ): ?array {
+		if ( ! is_object( $attempt_answer ) ) {
+			return null;
+		}
+
+		$question_id   = (int) ( $attempt_answer->question_id ?? 0 );
+		$question_type = (string) ( $attempt_answer->question_type ?? '' );
+		$given_answer  = maybe_unserialize( $attempt_answer->given_answer ?? null );
+
+		if ( $question_id <= 0 || empty( $question_type ) ) {
+			return null;
+		}
+
+		switch ( $question_type ) {
+			case self::QUESTION_TYPE_MATCHING:
+			case self::QUESTION_TYPE_IMAGE_MATCHING:
+			case self::QUESTION_TYPE_ORDERING:
+				$original_answer_rows = QueryHelper::get_all(
+					'tutor_quiz_question_answers',
+					array(
+						'belongs_question_id'   => $question_id,
+						'belongs_question_type' => $question_type,
+					),
+					'answer_order',
+					-1,
+					'ASC'
+				);
+				$original_answers     = wp_list_pluck( $original_answer_rows, 'answer_id' );
+				$total                = (int) tutor_utils()->count( $original_answers );
+				if ( 0 === $total ) {
+					return null;
+				}
+
+				$submitted_answers = is_array( $given_answer ) ? array_values( $given_answer ) : array();
+				$correct           = 0;
+				for ( $i = 0; $i < $total; $i++ ) {
+					if ( isset( $submitted_answers[ $i ] ) && (string) $submitted_answers[ $i ] === (string) $original_answers[ $i ] ) {
+						++$correct;
+					}
+				}
+
+				return array(
+					'correct' => $correct,
+					'total'   => $total,
+				);
+
+			case self::QUESTION_TYPE_FILL_IN_THE_BLANK:
+				$original_rows = QueryHelper::get_all(
+					'tutor_quiz_question_answers',
+					array(
+						'belongs_question_id'   => $question_id,
+						'belongs_question_type' => $question_type,
+					),
+					'answer_id',
+					1
+				);
+				$original_row  = $original_rows[0] ?? null;
+				if ( ! $original_row ) {
+					return null;
+				}
+
+				$gap_answers = array_map( 'trim', explode( '|', $original_row->answer_two_gap_match ) );
+				$total       = (int) tutor_utils()->count( $gap_answers );
+				if ( 0 === $total ) {
+					return null;
+				}
+
+				$user_inputs = is_array( $given_answer ) ? array_values( $given_answer ) : array( (string) $given_answer );
+				$correct     = 0;
+				for ( $i = 0; $i < $total; $i++ ) {
+					$user_val = isset( $user_inputs[ $i ] ) ? trim( (string) $user_inputs[ $i ] ) : '';
+					$orig_val = isset( $gap_answers[ $i ] ) ? trim( (string) $gap_answers[ $i ] ) : '';
+					if ( '' !== $user_val && 0 === strcasecmp( $user_val, $orig_val ) ) {
+						++$correct;
+					}
+				}
+
+				return array(
+					'correct' => $correct,
+					'total'   => $total,
+				);
+
+			case self::QUESTION_TYPE_IMAGE_ANSWERING:
+				$stored_answers = QueryHelper::get_all(
+					'tutor_quiz_question_answers',
+					array(
+						'belongs_question_id'   => $question_id,
+						'belongs_question_type' => $question_type,
+					),
+					'answer_order',
+					-1,
+					'ASC'
+				);
+				$total          = (int) tutor_utils()->count( $stored_answers );
+				if ( 0 === $total ) {
+					return null;
+				}
+
+				$correct = 0;
+				foreach ( $stored_answers as $stored ) {
+					$user_val    = isset( $given_answer[ $stored->answer_id ] ) ? trim( (string) $given_answer[ $stored->answer_id ] ) : '';
+					$correct_val = trim( (string) $stored->answer_title );
+					if ( '' !== $user_val && 0 === strcasecmp( $user_val, $correct_val ) ) {
+						++$correct;
+					}
+				}
+
+				return array(
+					'correct' => $correct,
+					'total'   => $total,
+				);
+
+			case self::QUESTION_TYPE_MULTIPLE_CHOICE:
+			case self::QUESTION_TYPE_SINGLE_CHOICE:
+				$all_options = QueryHelper::get_all(
+					'tutor_quiz_question_answers',
+					array(
+						'belongs_question_id'   => $question_id,
+						'belongs_question_type' => $question_type,
+					),
+					'answer_id',
+					-1
+				);
+
+				$correct_ids = array();
+				foreach ( $all_options as $opt ) {
+					if ( 1 === (int) $opt->is_correct ) {
+						$correct_ids[] = (int) $opt->answer_id;
+					}
+				}
+
+				$total = (int) tutor_utils()->count( $correct_ids );
+				if ( 0 === $total ) {
+					return null;
+				}
+
+				$selected_ids = is_array( $given_answer ) ? array_map( 'intval', $given_answer ) : array( (int) $given_answer );
+				$selected_ids = array_filter( $selected_ids );
+				$correct      = (int) tutor_utils()->count( array_intersect( $selected_ids, $correct_ids ) );
+
+				return array(
+					'correct' => $correct,
+					'total'   => $total,
+				);
+
+			default:
+				return null;
+		}
 	}
 
 	/**

@@ -809,7 +809,17 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																	break;
 
 																case 'partial':
-																	echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Partially correct', 'tutor' ) . '</span>';
+																	$partial_counts = QuizModel::get_attempt_answer_correct_counts( $answer );
+																	$partial_label  = $partial_counts
+																		? sprintf(
+																			/* translators: 1: correct count, 2: total correct count. */
+																			esc_html__( '%1$d/%2$d correct', 'tutor' ),
+																			$partial_counts['correct'],
+																			$partial_counts['total']
+																		)
+																		: esc_html__( 'Partially correct', 'tutor' );
+
+																	echo '<span class="tutor-badge-label label-warning">' . $partial_label . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 																	break;
 
 																case 'graded':
