@@ -23,7 +23,6 @@ $attempt_id           = (int) ( $attempt_id ?? 0 );
 $attempt_answer_id    = (int) ( $attempt_answer_id ?? 0 );
 $is_instructor_review = ! empty( $is_instructor_review );
 $is_skipped           = ! empty( $is_skipped );
-$is_overridden        = ! empty( $is_overridden );
 $review_field_name    = (string) ( $review_field_name ?? '' );
 $is_manual_question   = $question && in_array( (string) ( $question->question_type ?? '' ), QuizModel::get_manual_review_types(), true );
 ?>
@@ -136,13 +135,6 @@ $is_manual_question   = $question && in_array( (string) ( $question->question_ty
 							/>
 							<?php SvgIcon::make()->name( Icon::CROSS )->size( 20 )->render(); ?>
 						</label>
-					</div>
-
-					<div
-						class="tutor-quiz-question-review-override-notice tutor-fs-8 tutor-color-muted tutor-mt-4"
-						x-show="<?php echo $is_overridden ? 'true' : "watch('" . esc_attr( $review_field_name ) . "') !== '" . esc_attr( $answer_status ) . "'"; ?>"
-					>
-						<?php esc_html_e( '(Overrides the auto-graded result)', 'tutor' ); ?>
 					</div>
 				</div>
 			<?php endif; ?>
