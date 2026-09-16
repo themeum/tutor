@@ -62,23 +62,11 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 						$attempt_result    = QuizModel::get_attempt_result( $attempt->attempt_id );
 						$is_result_pending = QuizModel::RESULT_PENDING === $attempt_result;
 
-						$correct    = 0;
-						$partial    = 0;
-						$incorrect  = 0;
-						$attempt_id = $attempt->attempt_id;
-
-					if ( is_array( $answers ) && count( $answers ) > 0 ) {
-						foreach ( $answers as $answer ) {
-							$answer_status = QuizModel::get_attempt_answer_status( $answer );
-							if ( 'correct' === $answer_status ) {
-								++$correct;
-							} elseif ( 'partial' === $answer_status ) {
-								++$partial;
-							} elseif ( 'incorrect' === $answer_status ) {
-								++$incorrect;
-							}
-						}
-					}
+						$attempt_id    = $attempt->attempt_id;
+						$answer_counts = QuizModel::get_attempt_answer_counts( $answers );
+						$correct       = $answer_counts['correct'];
+						$partial       = $answer_counts['partial'];
+						$incorrect     = $answer_counts['incorrect'];
 					?>
 					<tr>
 						<?php foreach ( $table_columns as $key => $column ) : ?>

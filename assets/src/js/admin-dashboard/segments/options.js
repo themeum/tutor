@@ -725,7 +725,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	 * For negative marking, the handler can optionally query a usage-check AJAX
 	 * action (data-confirm-usage-check-action) to decide whether to show the modal.
 	 *
-	 * @since 4.0.0
+	 * @since 4.1.0
 	 */
 	const toggleTurnoffTargets = document.querySelectorAll('.tutor-form-toggle-input[data-confirm-turnoff-message]');
 	toggleTurnoffTargets.forEach((checkbox) => {
@@ -735,8 +735,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 
 			const message = this.dataset.confirmTurnoffMessage;
-			const usageAjaxAction = this.dataset.confirmUsageCheckAction || '';
-
+			const title = this.dataset.confirmTurnoffTitle;
+			const cancelText = this.dataset.confirmTurnoffCancel;
+			const confirmText = this.dataset.confirmTurnoffConfirm;
+			const usageAjaxAction = this.dataset.confirmUsageCheckAction;
 			if (!message) {
 				return;
 			}
@@ -758,7 +760,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			if (!usageAjaxAction) {
 				revertToggle();
-				tutorConfirmTurnoffModal(message).then((confirmed) => {
+				tutorConfirmTurnoffModal(message, title, cancelText, confirmText).then((confirmed) => {
 					if (confirmed) {
 						proceedWithTurnoff();
 					}
@@ -776,7 +778,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					const hasCustomized = result?.data?.has_customized;
 					if (hasCustomized) {
 						revertToggle();
-						tutorConfirmTurnoffModal(message).then((confirmed) => {
+						tutorConfirmTurnoffModal(message, title, cancelText, confirmText).then((confirmed) => {
 							if (confirmed) {
 								proceedWithTurnoff();
 							}
@@ -793,10 +795,15 @@ document.addEventListener('DOMContentLoaded', function () {
 /**
  * Show a confirmation modal for grading toggle turn-off.
  *
+ * @since 4.1.0
+ *
  * @param {string} message The confirmation message.
+ * @param {string} [title] Optional modal title.
+ * @param {string} [cancelText] Optional cancel button label.
+ * @param {string} [confirmText] Optional confirm button label.
  * @return {Promise<boolean>} Resolves true if confirmed, false if cancelled.
  */
-function tutorConfirmTurnoffModal(message) {
+function tutorConfirmTurnoffModal(message, title, cancelText, confirmText) {
 	const { __ } = wp.i18n;
 
 	return new Promise((resolve) => {
@@ -813,11 +820,11 @@ function tutorConfirmTurnoffModal(message) {
 		};
 
 		popup = new window.tutor_popup(window.jQuery, '').popup({
-			title: __('Confirm Turn Off', 'tutor'),
+			title: title || __('Turn off setting?', 'tutor'),
 			description: message,
 			buttons: {
 				cancel: {
-					title: __('Cancel', 'tutor'),
+					title: cancelText || __('No, keep it', 'tutor'),
 					id: 'cancel',
 					class: 'tutor-btn tutor-btn-outline-primary',
 					callback: function () {
@@ -825,7 +832,7 @@ function tutorConfirmTurnoffModal(message) {
 					},
 				},
 				confirm: {
-					title: __('Turn Off', 'tutor'),
+					title: confirmText || __('Yes, turn off', 'tutor'),
 					id: 'confirm',
 					class: 'tutor-btn tutor-btn-primary tutor-ml-20',
 					callback: function () {

@@ -66,6 +66,12 @@ if ( $is_instructor_review && ! $is_skipped ) {
 	$status_badges[] = array(
 		'label'   => __( 'Graded', 'tutor' ),
 		'variant' => Badge::INFO,
+		'score'   => sprintf(
+			/* translators: 1: achieved marks, 2: available marks. */
+			__( 'Score: %1$s/%2$s', 'tutor' ),
+			(string) ( $question->achieved_mark ?? 0 ),
+			(string) ( $question->question_mark ?? 0 )
+		),
 	);
 } elseif ( 'partial' === $review_status ) {
 	$status_badges[] = array(

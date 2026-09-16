@@ -346,7 +346,19 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     render={(controllerProps) => (
                       <FormSwitch
                         {...controllerProps}
-                        label={__('Partial marking', 'tutor')}
+                        label={
+                          <div css={styles.labelWithTooltip}>
+                            {__('Partial marking', 'tutor')}
+                            <Tooltip
+                              content={__(
+                                'Applies to question types with multiple sub-answers (Matching, Ordering, Fill in the Blanks, Multiple Choice with multiple answers). Students receive partial marks based on how many sub-answers they get right.',
+                                'tutor',
+                              )}
+                            >
+                              <SVGIcon name="info" width={16} height={16} />
+                            </Tooltip>
+                          </div>
+                        }
                         helpText={__('Award credit for correct sub-answers on multi-part questions', 'tutor')}
                       />
                     )}
@@ -362,7 +374,11 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         <FormCheckbox
                           {...controllerProps}
                           label={__('Negative marking', 'tutor')}
-                          helpText={__('Deduct points for each wrong answer once enabled.', 'tutor')}
+                          description={__('Deduct points for each wrong answer once enabled.', 'tutor')}
+                          helpText={__(
+                            "Final quiz marks ≥ 0; Individual question scores can be negative, but a student's final earned score can never be less than 0. If negative scores reduce the total below 0, the final score will be set to 0.",
+                            'tutor',
+                          )}
                         />
                       )}
                     />
@@ -1126,6 +1142,15 @@ const styles = {
       ${styleUtils.flexCenter()};
       margin-left: ${spacing[4]};
       color: ${colorTokens.color.black[30]};
+    }
+  `,
+  labelWithTooltip: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[6]};
+
+    svg {
+      color: ${colorTokens.icon.default};
     }
   `,
 };

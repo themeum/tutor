@@ -527,7 +527,7 @@ class Quiz {
 	/**
 	 * Read the question feedback map from an attempt's serialized info.
 	 *
-	 * @since 4.0.0
+	 * @since 4.1.0
 	 *
 	 * @param int $attempt_id Attempt ID.
 	 *
@@ -558,7 +558,7 @@ class Quiz {
 	/**
 	 * Persist the question feedback map into an attempt's serialized info.
 	 *
-	 * @since 4.0.0
+	 * @since 4.1.0
 	 *
 	 * @param int   $attempt_id Attempt ID.
 	 * @param array $feedback_map Feedback keyed by attempt answer ID.
@@ -592,7 +592,7 @@ class Quiz {
 	/**
 	 * Save, update, or delete per-question instructor feedback via AJAX.
 	 *
-	 * @since 4.0.0
+	 * @since 4.1.0
 	 *
 	 * @return void
 	 */
@@ -624,7 +624,7 @@ class Quiz {
 	/**
 	 * Delete per-question instructor feedback via AJAX.
 	 *
-	 * @since 4.0.0
+	 * @since 4.1.0
 	 *
 	 * @return void
 	 */
@@ -1328,7 +1328,7 @@ class Quiz {
 		}
 
 		if ( ! $review_data ) {
-			wp_send_json_error( array( 'message' => __( 'Review update failed', 'tutor' ) ) );
+			$this->response_fail( __( 'Review update failed', 'tutor' ) );
 		}
 
 		QuizModel::update_attempt_result( $attempt_id );
@@ -1349,7 +1349,7 @@ class Quiz {
 	/**
 	 * Review quiz answers in bulk for v4 dashboard flow.
 	 *
-	 * @since 4.0.0
+	 * @since 4.1.0
 	 *
 	 * @return void
 	 */
@@ -1366,7 +1366,7 @@ class Quiz {
 	/**
 	 * Review quiz answers in bulk for v4 dashboard flow.
 	 *
-	 * @since 4.0.0
+	 * @since 4.1.0
 	 *
 	 * @param int   $attempt_id Attempt ID.
 	 * @param array $review_statuses Review statuses keyed by question ID.
@@ -1449,6 +1449,8 @@ class Quiz {
 	/**
 	 * Apply a numeric manual mark without assigning an auto-grading status.
 	 *
+	 * @since 4.1.0
+	 *
 	 * @param object $attempt_answer Attempt answer row.
 	 * @param mixed  $mark Requested mark.
 	 *
@@ -1465,7 +1467,7 @@ class Quiz {
 			'tutor_quiz_attempt_answers',
 			array(
 				'achieved_mark' => $new_mark,
-				'is_correct'    => QuizModel::ATTEMPT_ANSWER_INCORRECT,
+				'is_correct'    => QuizModel::ATTEMPT_ANSWER_MANUAL_GRADED,
 			),
 			array( 'attempt_answer_id' => (int) $attempt_answer->attempt_answer_id )
 		);
@@ -1645,9 +1647,10 @@ class Quiz {
 
 		$mark_as = apply_filters( 'tutor_quiz_review_mark_as', $mark_as, $attempt_answer_id, $attempt_id, $question );
 
+		$attempt_update_data = array();
+
 		if ( 'correct' === $mark_as ) {
-			$attempt_update_data = array();
-			$answer_update_data  = array(
+			$answer_update_data = array(
 				'achieved_mark' => $attempt_answer->question_mark,
 				'is_correct'    => 1,
 			);
@@ -1661,32 +1664,8 @@ class Quiz {
 					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 				);
 			}
-
-			if ( ! in_array( $question->question_type, QuizModel::get_manual_review_types(), true ) ) {
-				$attempt_row  = QueryHelper::get_row( 'tutor_quiz_attempts', array( 'attempt_id' => $attempt_id ), 'attempt_id' );
-				$attempt_info = ( $attempt_row && ! empty( $attempt_row->attempt_info ) ) ? maybe_unserialize( $attempt_row->attempt_info ) : array();
-				$attempt_info = is_array( $attempt_info ) ? $attempt_info : array();
-
-				if ( ! isset( $attempt_info['manual_overrides'] ) || ! is_array( $attempt_info['manual_overrides'] ) ) {
-					$attempt_info['manual_overrides'] = array();
-				}
-
-				$attempt_info['manual_overrides'][ (int) $question->question_id ] = $mark_as;
-				$attempt_update_data['attempt_info']         = maybe_serialize( $attempt_info );
-				$attempt_update_data['is_manually_reviewed'] = 1;
-				$attempt_update_data['manually_reviewed_at'] = gmdate( 'Y-m-d H:i:s', tutor_time() );
-			}
-
-			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
-				$attempt_update_data['attempt_status'] = QuizModel::ATTEMPT_ENDED;
-			}
-
-			if ( ! empty( $attempt_update_data ) ) {
-				$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
-			}
 		} elseif ( 'incorrect' === $mark_as ) {
-			$attempt_update_data = array();
-			$answer_update_data  = array(
+			$answer_update_data = array(
 				'achieved_mark' => '0.00',
 				'is_correct'    => 0,
 			);
@@ -1700,29 +1679,29 @@ class Quiz {
 					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 				);
 			}
+		}
 
-			if ( ! in_array( $question->question_type, QuizModel::get_manual_review_types(), true ) ) {
-				$attempt_row  = QueryHelper::get_row( 'tutor_quiz_attempts', array( 'attempt_id' => $attempt_id ), 'attempt_id' );
-				$attempt_info = ( $attempt_row && ! empty( $attempt_row->attempt_info ) ) ? maybe_unserialize( $attempt_row->attempt_info ) : array();
-				$attempt_info = is_array( $attempt_info ) ? $attempt_info : array();
+		if ( ! in_array( $question->question_type, QuizModel::get_manual_review_types(), true ) ) {
+			$attempt_row  = QueryHelper::get_row( 'tutor_quiz_attempts', array( 'attempt_id' => $attempt_id ), 'attempt_id' );
+			$attempt_info = ( $attempt_row && ! empty( $attempt_row->attempt_info ) ) ? maybe_unserialize( $attempt_row->attempt_info ) : array();
+			$attempt_info = is_array( $attempt_info ) ? $attempt_info : array();
 
-				if ( ! isset( $attempt_info['manual_overrides'] ) || ! is_array( $attempt_info['manual_overrides'] ) ) {
-					$attempt_info['manual_overrides'] = array();
-				}
-
-				$attempt_info['manual_overrides'][ (int) $question->question_id ] = $mark_as;
-				$attempt_update_data['attempt_info']         = maybe_serialize( $attempt_info );
-				$attempt_update_data['is_manually_reviewed'] = 1;
-				$attempt_update_data['manually_reviewed_at'] = gmdate( 'Y-m-d H:i:s', tutor_time() );
+			if ( ! isset( $attempt_info['manual_overrides'] ) || ! is_array( $attempt_info['manual_overrides'] ) ) {
+				$attempt_info['manual_overrides'] = array();
 			}
 
-			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
-				$attempt_update_data['attempt_status'] = QuizModel::ATTEMPT_ENDED;
-			}
+			$attempt_info['manual_overrides'][ (int) $question->question_id ] = $mark_as;
+			$attempt_update_data['attempt_info']         = maybe_serialize( $attempt_info );
+			$attempt_update_data['is_manually_reviewed'] = 1;
+			$attempt_update_data['manually_reviewed_at'] = gmdate( 'Y-m-d H:i:s', tutor_time() );
+		}
 
-			if ( ! empty( $attempt_update_data ) ) {
-				$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
-			}
+		if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
+			$attempt_update_data['attempt_status'] = QuizModel::ATTEMPT_ENDED;
+		}
+
+		if ( ! empty( $attempt_update_data ) ) {
+			$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
 		}
 
 		do_action( 'tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as );
@@ -2204,6 +2183,8 @@ class Quiz {
 	/**
 	 * Build one Learning Area quiz summary parameter row.
 	 *
+	 * @since 4.1.0
+	 *
 	 * @param string $icon Icon name.
 	 * @param string $label Parameter label.
 	 * @param string $value Parameter value.
@@ -2223,6 +2204,8 @@ class Quiz {
 
 	/**
 	 * Get the Learning Area negative marking description.
+	 *
+	 * @since 4.1.0
 	 *
 	 * @param int    $quiz_id Quiz post ID.
 	 * @param string $negative_type Fixed or percent.

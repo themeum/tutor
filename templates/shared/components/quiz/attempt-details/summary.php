@@ -52,23 +52,11 @@ $timing                 = QuizModel::get_quiz_attempt_timing( $attempt_data );
 $attempt_duration       = $timing['attempt_duration'] ?? '';
 $attempt_duration_taken = $timing['attempt_duration_taken'] ?? '';
 
-$answers   = isset( $answers ) ? $answers : QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
-$correct   = 0;
-$partial   = 0;
-$incorrect = 0;
-
-if ( is_array( $answers ) ) {
-	foreach ( $answers as $answer ) {
-		$answer_status = QuizModel::get_attempt_answer_status( $answer );
-		if ( 'correct' === $answer_status ) {
-			++$correct;
-		} elseif ( 'partial' === $answer_status ) {
-			++$partial;
-		} elseif ( 'incorrect' === $answer_status ) {
-			++$incorrect;
-		}
-	}
-}
+$answers       = isset( $answers ) ? $answers : QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+$answer_counts = QuizModel::get_attempt_answer_counts( $answers );
+$correct       = $answer_counts['correct'];
+$partial       = $answer_counts['partial'];
+$incorrect     = $answer_counts['incorrect'];
 
 $total_questions = (int) $attempt_data->total_questions;
 $attempts_count  = 0;

@@ -40,9 +40,16 @@ class QuizModel {
 	 * These values are only for tutor_quiz_attempt_answers rows. Question-answer
 	 * option rows remain binary and must continue to use 0 or 1.
 	 */
-	const ATTEMPT_ANSWER_INCORRECT = 0;
-	const ATTEMPT_ANSWER_CORRECT   = 1;
-	const ATTEMPT_ANSWER_PARTIAL   = 2;
+	const ATTEMPT_ANSWER_INCORRECT     = 0;
+	const ATTEMPT_ANSWER_CORRECT       = 1;
+	const ATTEMPT_ANSWER_PARTIAL       = 2;
+
+	/**
+	 * Attempt-answer status for manually graded questions.
+	 *
+	 * @since 4.1.0
+	 */
+	const ATTEMPT_ANSWER_MANUAL_GRADED = 3;
 
 	/**
 	 * Question type constants
@@ -248,25 +255,11 @@ class QuizModel {
 
 			$earned_percent = self::calculate_attempt_earned_percentage( $quiz_attempt );
 
-			$correct_answers   = 0;
-			$partial_answers   = 0;
-			$incorrect_answers = 0;
-
-			$answers = self::get_quiz_answers_by_attempt_id( $quiz_attempt->attempt_id );
-
-			if ( tutor_utils()->count( $answers ) ) {
-				foreach ( $answers as $answer ) {
-					$status = self::get_attempt_answer_status( $answer );
-
-					if ( 'correct' === $status ) {
-						++$correct_answers;
-					} elseif ( 'partial' === $status ) {
-						++$partial_answers;
-					} elseif ( 'incorrect' === $status ) {
-						++$incorrect_answers;
-					}
-				}
-			}
+			$answers           = self::get_quiz_answers_by_attempt_id( $quiz_attempt->attempt_id );
+			$answer_counts     = self::get_attempt_answer_counts( $answers );
+			$correct_answers   = $answer_counts['correct'];
+			$partial_answers   = $answer_counts['partial'];
+			$incorrect_answers = $answer_counts['incorrect'];
 
 			$formatted_attempt = array(
 				'attempt_id'        => $quiz_attempt->attempt_id ?? 0,
@@ -1118,6 +1111,37 @@ class QuizModel {
 		}
 
 		return 'incorrect';
+	}
+
+	/**
+	 * Get attempt answer counts categorized by status.
+	 *
+	 * Fully correct answers are counted under 'correct', partial answers under 'partial',
+	 * and incorrect answers under 'incorrect'. Pending, graded, and skipped answers are excluded.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array|null $answers List of answer objects.
+	 *
+	 * @return array Associative array with keys 'correct', 'partial', and 'incorrect'.
+	 */
+	public static function get_attempt_answer_counts( $answers ): array {
+		$counts = array(
+			'correct'   => 0,
+			'partial'   => 0,
+			'incorrect' => 0,
+		);
+
+		if ( is_array( $answers ) ) {
+			foreach ( $answers as $answer ) {
+				$status = self::get_attempt_answer_status( $answer );
+				if ( isset( $counts[ $status ] ) ) {
+					++$counts[ $status ];
+				}
+			}
+		}
+
+		return $counts;
 	}
 
 	/**

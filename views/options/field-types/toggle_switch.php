@@ -22,6 +22,9 @@ $toggle_blocks      = isset( $field['toggle_blocks'] ) ? $field['toggle_blocks']
 $has_control_button = empty( $field['has_control_button'] ) ? false : true;
 $label_icon         = isset( $field['label_icon'] ) ? $field['label_icon'] : '';
 $confirm_turnoff_message = isset( $field['confirm_turnoff_message'] ) ? $field['confirm_turnoff_message'] : '';
+$confirm_turnoff_title   = isset( $field['confirm_turnoff_title'] ) ? $field['confirm_turnoff_title'] : '';
+$confirm_turnoff_cancel  = isset( $field['confirm_turnoff_cancel'] ) ? $field['confirm_turnoff_cancel'] : '';
+$confirm_turnoff_confirm = isset( $field['confirm_turnoff_confirm'] ) ? $field['confirm_turnoff_confirm'] : '';
 $confirm_usage_check_action = isset( $field['confirm_usage_check_action'] ) ? $field['confirm_usage_check_action'] : '';
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
@@ -37,8 +40,17 @@ $confirm_usage_check_action = isset( $field['confirm_usage_check_action'] ) ? $f
 			<?php if ( ! $has_control_button && $toggle_blocks ) : ?>
 				data-toggle-blocks="<?php echo esc_attr( $toggle_blocks ); ?>" 
 			<?php endif; ?>
+			<?php if ( $confirm_turnoff_title ) : ?>
+				data-confirm-turnoff-title="<?php echo esc_attr( $confirm_turnoff_title ); ?>"
+			<?php endif; ?>
 			<?php if ( $confirm_turnoff_message ) : ?>
 				data-confirm-turnoff-message="<?php echo esc_attr( $confirm_turnoff_message ); ?>"
+			<?php endif; ?>
+			<?php if ( $confirm_turnoff_cancel ) : ?>
+				data-confirm-turnoff-cancel="<?php echo esc_attr( $confirm_turnoff_cancel ); ?>"
+			<?php endif; ?>
+			<?php if ( $confirm_turnoff_confirm ) : ?>
+				data-confirm-turnoff-confirm="<?php echo esc_attr( $confirm_turnoff_confirm ); ?>"
 			<?php endif; ?>
 			<?php if ( $confirm_usage_check_action ) : ?>
 				data-confirm-usage-check-action="<?php echo esc_attr( $confirm_usage_check_action ); ?>"
@@ -56,8 +68,17 @@ $confirm_usage_check_action = isset( $field['confirm_usage_check_action'] ) ? $f
 				<?php if ( $toggle_blocks ) : ?>
 					data-toggle-blocks="<?php echo esc_attr( $toggle_blocks ); ?>" 
 				<?php endif; ?>
+				<?php if ( $confirm_turnoff_title ) : ?>
+					data-confirm-turnoff-title="<?php echo esc_attr( $confirm_turnoff_title ); ?>"
+				<?php endif; ?>
 				<?php if ( $confirm_turnoff_message ) : ?>
 					data-confirm-turnoff-message="<?php echo esc_attr( $confirm_turnoff_message ); ?>"
+				<?php endif; ?>
+				<?php if ( $confirm_turnoff_cancel ) : ?>
+					data-confirm-turnoff-cancel="<?php echo esc_attr( $confirm_turnoff_cancel ); ?>"
+				<?php endif; ?>
+				<?php if ( $confirm_turnoff_confirm ) : ?>
+					data-confirm-turnoff-confirm="<?php echo esc_attr( $confirm_turnoff_confirm ); ?>"
 				<?php endif; ?>
 				<?php if ( $confirm_usage_check_action ) : ?>
 					data-confirm-usage-check-action="<?php echo esc_attr( $confirm_usage_check_action ); ?>"

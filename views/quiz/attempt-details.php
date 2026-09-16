@@ -218,22 +218,11 @@ if ( ! isset( $user_data ) ) {
 extract( QuizModel::get_quiz_attempt_timing( $attempt_data ) ); // $attempt_duration, $attempt_duration_taken;
 
 // Prepare the correct/incorrect answer count for the first summary table.
-$answers   = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
-$correct   = 0;
-$partial   = 0;
-$incorrect = 0;
-if ( is_array( $answers ) && count( $answers ) > 0 ) {
-	foreach ( $answers as $answer ) {
-		$answer_status = QuizModel::get_attempt_answer_status( $answer );
-		if ( 'correct' === $answer_status ) {
-			++$correct;
-		} elseif ( 'partial' === $answer_status ) {
-			++$partial;
-		} elseif ( 'incorrect' === $answer_status ) {
-			++$incorrect;
-		}
-	}
-}
+$answers       = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+$answer_counts = QuizModel::get_attempt_answer_counts( $answers );
+$correct       = $answer_counts['correct'];
+$partial       = $answer_counts['partial'];
+$incorrect     = $answer_counts['incorrect'];
 
 // Prepare the column list for the first summary table.
 $page_key        = 'attempt-details-summary';
@@ -858,6 +847,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													<div class="tutor-manual-review-wrapper">
 													<?php if ( in_array( $answer->question_type, QuizModel::get_manual_review_types(), true ) && 'skipped' !== $answer_status ) : ?>
 														<input class="tutor-form-control tutor-w-20 quiz-manual-mark-input" type="number" min="0" max="<?php echo esc_attr( (string) $answer->question_mark ); ?>" step="0.01" value="<?php echo esc_attr( (string) $answer->achieved_mark ); ?>" aria-label="<?php esc_attr_e( 'Obtained marks', 'tutor' ); ?>" />
+														<span class="tutor-fs-7 tutor-color-muted tutor-ml-4">/ <?php echo esc_html( (string) $answer->question_mark ); ?></span>
 														<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Save mark', 'tutor' ); ?>" class="quiz-manual-mark-save tutor-ml-8 tutor-icon-rounded tutor-color-success">
 															<i class="tutor-icon-mark"></i>
 														</a>
@@ -865,7 +855,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 															<?php
 															$has_question_feedback = '' !== trim( (string) ( $question_feedback_map[ $answer->attempt_answer_id ] ?? '' ) );
 															?>
-															<a href="javascript:;" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-feedback="<?php echo esc_attr( $has_question_feedback ? $question_feedback_map[ $answer->attempt_answer_id ] : '' ); ?>" title="<?php echo $has_question_feedback ? esc_attr_e( 'Show feedback', 'tutor' ) : esc_attr_e( 'Add feedback', 'tutor' ); ?>" class="quiz-question-feedback-action tutor-ml-8 tutor-fs-7 tutor-text-primary">
+															<a href="javascript:;" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-feedback="<?php echo esc_attr( $has_question_feedback ? $question_feedback_map[ $answer->attempt_answer_id ] : '' ); ?>" title="<?php echo $has_question_feedback ? esc_attr__( 'Show feedback', 'tutor' ) : esc_attr__( 'Add feedback', 'tutor' ); ?>" class="quiz-question-feedback-action tutor-ml-8 tutor-fs-7 tutor-text-primary">
 																<?php echo $has_question_feedback ? esc_html__( 'Show Feedback', 'tutor' ) : esc_html__( 'Add Feedback', 'tutor' ); ?>
 															</a>
 														<?php endif; ?>

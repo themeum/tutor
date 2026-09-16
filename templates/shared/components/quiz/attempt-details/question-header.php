@@ -119,6 +119,10 @@ $is_manual_question   = $question && in_array( (string) ( $question->question_ty
 								->variant( $badge_variant )
 								->rounded()
 								->render();
+
+							if ( ! empty( $badge['score'] ) ) : ?>
+								<span class="tutor-fs-7 tutor-color-muted tutor-ml-8"><?php echo esc_html( $badge['score'] ); ?></span>
+							<?php endif;
 						endif;
 						?>
 					<?php endforeach; ?>
