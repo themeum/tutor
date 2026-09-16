@@ -13,6 +13,7 @@ use TUTOR\Quiz;
 use TUTOR\Icon;
 use Tutor\Components\Badge;
 use Tutor\Components\SvgIcon;
+use Tutor\Models\QuizModel;
 
 /**
  * Build Alpine.js attribute expressions for a reactive review-status badge.
@@ -64,8 +65,8 @@ $is_instructor_review = ! empty( $is_instructor_review );
 $is_skipped           = ! empty( $is_skipped );
 $is_overridden        = ! empty( $is_overridden );
 $review_field_name    = (string) ( $review_field_name ?? '' );
-$is_manual_question   = $question && in_array( (string) ( $question->question_type ?? '' ), Tutor\Models\QuizModel::get_manual_review_types(), true );
-$partial_counts       = $question ? Tutor\Models\QuizModel::get_attempt_answer_correct_counts( $question ) : null;
+$is_manual_question   = $question && in_array( (string) ( $question->question_type ?? '' ), QuizModel::get_manual_review_types(), true );
+$partial_counts       = $question ? QuizModel::get_attempt_answer_correct_counts( $question ) : null;
 $partial_label        = $partial_counts
 	? sprintf(
 		/* translators: 1: correct count, 2: total correct count. */

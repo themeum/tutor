@@ -49,7 +49,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 
 			<?php
 				$attempt_ids   = array_column( $attempt_list, 'attempt_id' );
-				$answers_array = \Tutor\Models\QuizModel::get_quiz_answers_by_attempt_id( $attempt_ids, true );
+				$answers_array = QuizModel::get_quiz_answers_by_attempt_id( $attempt_ids, true );
 			?>
 
 			<tbody>
