@@ -4,7 +4,7 @@
 - [x] 1.2 Update `get_attempt_answer_status()` to return `pending` / `correct` / `partial` / `incorrect` / `graded` / `skipped`, ensuring `open_ended` and `short_answer` strictly return `pending` (if unreviewed) or `graded` (if reviewed) and are never classified as correct, partial, or incorrect
 - [x] 1.3 Audit every attempt-row truthy `is_correct` check (`format_quiz_attempts`, summary, attempt-table, attempt-details, question header, questions sidebar, Pro `set_custom_question_answer_status`) and verify none treat `2` as fully correct
 - [x] 1.4 Count auto-graded `1`, `2`, and `0` separately in summary and `format_quiz_attempts`, and verify manual questions (`pending` / `graded`) are excluded from auto-graded correct/incorrect counts
-- [x] 1.5 Show a Partially correct badge and sidebar `partial` state in attempt details, and verify `is_correct = 2` is not collapsed into correct or incorrect
+- [ ] 1.5 Replace static 'Partially correct' badge with `N/M correct` badge in question header for partially graded questions (where N is correct answers given by user, M is total correct answers) while preserving sidebar `partial` state in attempt details across Legacy and v4, and verify `is_correct = 2` is not collapsed into correct or incorrect
 - [x] 1.6 Show `Skipped` badge only for instructors in instructor dashboard and admin attempts overview; keep skipped questions completely hidden from student results views across Legacy and v4
 - [x] 1.7 Any new attempt-answer read code added in this change must use `QueryHelper::get_all` / `QueryHelper::get_row`; any new AJAX endpoint that returns status or badge data must use the `JsonResponse` trait (`json_response` / `response_data`) — do not modify existing code
 

@@ -74,6 +74,17 @@ Core submits quiz attempts with baseline calculations, then Pro refines scores v
 
 We store `2` in `tutor_quiz_attempt_answers.is_correct` for partially correct auto-graded answers. Option banks continue using only `0` and `1`. No schema migration is required.
 
+### Decision: Remove `Partially correct` badge and show `N/M correct` badge in question header
+
+- For partially graded questions (`is_correct = 2`), the static `Partially correct` badge is completely removed.
+- Instead, the question header in both v4 (`question-header.php`) and Legacy (`views/quiz/attempt-details.php`) displays an **`{N}/{M} correct`** badge with warning styling (`Badge::WARNING` / `label-warning`).
+- `N` is the number of correct answers/items given by the user, and `M` is the total number of correct answers/items possible for that question:
+  - **Matching / Image matching / Ordering**: $N$ = correctly placed items, $M$ = total items.
+  - **Fill-in-the-blank**: $N$ = correctly matched blanks, $M$ = total blanks.
+  - **Image answering**: $N$ = correctly answered image labels, $M$ = total images.
+  - **Multiple choice (multi-correct)**: $N$ = correct options selected by user, $M$ = total correct options.
+- Attempt summary stats (e.g. `X partially correct` count) and sidebar question navigator dots continue to represent partial status, but the per-question header badge specifically uses `{N}/{M} correct`.
+
 ### Decision: Manual grading status is strictly `pending` or `graded`
 
 - Manually gradeable questions (`open_ended` and `short_answer`) are **never** categorized as `correct`, `incorrect`, or `partial`.

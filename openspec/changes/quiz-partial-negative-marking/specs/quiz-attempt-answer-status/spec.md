@@ -67,3 +67,32 @@ Manually gradeable questions (`pending` or `graded`) SHALL NOT be included in co
 - **GIVEN** an attempt with one fully correct auto-graded question, one incorrect auto-graded question, and one graded open-ended question
 - **WHEN** attempt summary statistics are computed
 - **THEN** correct answer count is `1`, incorrect answer count is `1`, and the graded open-ended question is not added to either count
+
+### Requirement: Partially graded questions display an `N/M correct` badge in question header instead of `Partially correct`
+
+When an auto-graded question has partial status (`is_correct === 2`), the question header SHALL NOT display a static `Partially correct` badge. Instead, it SHALL display an `{N}/{M} correct` badge, where:
+
+- `N` is the number of correct answers or items matched/answered by the user.
+- `M` is the total number of correct answers or items possible for that question.
+
+The count mapping per supported question type SHALL be:
+
+- **Multiple choice (multi-correct)**: `N` = count of correct options selected by user, `M` = total correct options.
+- **Matching, Image matching, Ordering**: `N` = count of items placed in correct position, `M` = total items.
+- **Fill in the blank**: `N` = count of blanks correctly filled, `M` = total blanks.
+- **Image answering**: `N` = count of images correctly labeled, `M` = total images.
+
+#### Scenario: Partially matched question displays N/M correct badge without static Partially correct badge
+
+- **GIVEN** a 4-item matching question with quiz partial marking enabled
+- **WHEN** the student correctly matches 2 of the 4 items
+- **THEN** the attempt answer status is `partial`
+- **AND** the question header displays a `2/4 correct` badge
+- **AND** the static `Partially correct` badge is omitted
+
+#### Scenario: Multi-choice question displays correct selections count
+
+- **GIVEN** a multiple choice question with 3 correct options out of 5 options
+- **WHEN** the student selects 2 of the correct options and 0 incorrect options
+- **THEN** the attempt answer status is `partial`
+- **AND** the question header displays a `2/3 correct` badge

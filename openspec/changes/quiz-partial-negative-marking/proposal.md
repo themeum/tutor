@@ -23,6 +23,7 @@ This change introduces:
 - **Attempt answer correctness**: Core stores `is_correct` as `1` (correct), `2` (partial), `0` (incorrect), or `null` (pending review). Option banks stay strictly `0` or `1`.
 - **Display states & Skipped questions**:
   - Auto-graded answers map to `correct`, `partial`, `incorrect`.
+  - Partially graded questions remove the static `Partially correct` badge and instead display an **`N/M correct`** badge in the question header (e.g. `2/4 correct`), where $N$ is the number of correct answers given by the user and $M$ is the total number of correct answers possible.
   - Skipped questions remain **hidden from students** (preserving existing Tutor LMS behavior). For instructors, skipped questions display a `Skipped` badge with 0 marks, no negative penalty, and no override buttons.
 - **Pro auto-graded scoring**: Six question types support partial scoring: matching, image matching, ordering, fill-in-the-blank, image answering, and multiple choice with multiple correct answers.
 - **Pro negative marking**: Instructors configure negative marking at the quiz level (percent or fixed deduction per wrong item or question). Final quiz marks floor at `0.00`.
