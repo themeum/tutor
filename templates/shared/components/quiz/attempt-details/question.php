@@ -66,12 +66,6 @@ if ( $is_instructor_review && ! $is_skipped ) {
 	$status_badges[] = array(
 		'label'   => __( 'Graded', 'tutor' ),
 		'variant' => Badge::INFO,
-		'score'   => sprintf(
-			/* translators: 1: achieved marks, 2: available marks. */
-			__( 'Score: %1$s/%2$s', 'tutor' ),
-			(string) ( $question->achieved_mark ?? 0 ),
-			(string) ( $question->question_mark ?? 0 )
-		),
 	);
 } elseif ( 'partial' === $review_status ) {
 	$partial_counts = QuizModel::get_attempt_answer_correct_counts( $question );
@@ -146,6 +140,7 @@ if ( 'review-answer-dnd' === $question_template ) {
 
 	if ( is_object( $question ) ) {
 		do_action( 'tutor_quiz_attempt_details_loop_after_row', $question, $answer_status, array() );
+		do_action( 'tutor_quiz_attempt_details_mark_breakdown', $question, $answer_status, $is_instructor_review );
 	}
 	?>
 </div>

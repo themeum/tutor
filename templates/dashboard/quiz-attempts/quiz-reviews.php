@@ -48,7 +48,8 @@ if ( is_array( $questions ) ) {
 			$answer_status                       = QuizModel::get_attempt_answer_status( $question );
 			$form_default_values[ "review_statuses[{$question_id}]" ] = $answer_status;
 			if ( in_array( $question->question_type, QuizModel::get_manual_review_types(), true ) ) {
-				$form_default_values[ "manual_marks[{$question_id}]" ] = (float) ( $question->achieved_mark ?? 0 );
+				$is_unscored = 'pending' === $answer_status && ( empty( $question->achieved_mark ) || 0.0 === (float) $question->achieved_mark );
+				$form_default_values[ "manual_marks[{$question_id}]" ] = $is_unscored ? '' : (float) ( $question->achieved_mark ?? 0 );
 			}
 		}
 	}

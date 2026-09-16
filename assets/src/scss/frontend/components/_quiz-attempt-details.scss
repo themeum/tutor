@@ -383,11 +383,11 @@
 
       &-actions {
         @include tutor-flex(row, center);
-        gap: $tutor-spacing-7;
+        gap: $tutor-spacing-4;
         flex-shrink: 0;
 
         @include tutor-breakpoint-down(sm) {
-          gap: $tutor-spacing-5;
+          gap: $tutor-spacing-3;
         }
       }
 
@@ -400,6 +400,12 @@
         width: 1px;
         align-self: stretch;
         background-color: $tutor-border-idle;
+        flex-shrink: 0;
+      }
+
+      &-score {
+        @include tutor-typography(small, regular, subdued);
+        white-space: nowrap;
       }
     }
 
@@ -520,5 +526,206 @@ body:has(#wpadminbar)
 .tutor-quiz-attempt-feedback {
   .tutor-wp-editor-wrapper {
     margin-bottom: $tutor-spacing-6;
+  }
+}
+
+.tutor-quiz-student-penalty-notice {
+  @include tutor-typography(small, regular);
+  color: $tutor-text-critical;
+  margin-top: $tutor-spacing-4;
+}
+
+.tutor-quiz-instructor-score-breakdown {
+  border-top: 1px solid $tutor-border-idle;
+  margin-top: $tutor-spacing-7;
+  margin-inline: -$tutor-spacing-8;
+  padding-inline: $tutor-spacing-8;
+  padding-top: $tutor-spacing-6;
+
+  @include tutor-breakpoint-down(sm) {
+    margin-top: $tutor-spacing-5;
+    margin-inline: -$tutor-spacing-5;
+    padding-inline: $tutor-spacing-5;
+    padding-top: $tutor-spacing-5;
+  }
+
+  .tutor-quiz-instructor-breakdown-row {
+    @include tutor-flex(row, center, space-between);
+    @include tutor-typography(p2, regular, primary);
+    margin-bottom: $tutor-spacing-3;
+
+    &.is-penalty {
+      color: $tutor-text-critical;
+    }
+  }
+
+  .tutor-quiz-instructor-breakdown-total {
+    text-align: right;
+    @include tutor-typography(p1, medium, primary);
+    margin-top: $tutor-spacing-4;
+  }
+}
+
+.tutor-quiz-open-ended-answer {
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+  background-color: $tutor-surface-base;
+  padding: $tutor-spacing-6;
+  @include tutor-typography(p2, regular, primary);
+  line-height: 1.5;
+  word-break: break-word;
+
+  &.is-empty {
+    color: $tutor-text-subdued;
+  }
+}
+
+.tutor-quiz-manual-review-wrap {
+  margin-top: $tutor-spacing-6;
+
+  .tutor-quiz-obtained-marks-group {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-3;
+  }
+
+  .tutor-quiz-obtained-marks-label {
+    @include tutor-typography(p2, regular, secondary);
+  }
+
+  .tutor-quiz-obtained-marks-row {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-3;
+  }
+
+  .tutor-quiz-obtained-marks-control {
+    width: 80px;
+    height: 40px;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-lg;
+    background-color: $tutor-surface-base;
+    padding: $tutor-spacing-2 $tutor-spacing-4;
+    @include tutor-typography(p2, regular, primary);
+    outline: none;
+    @include tutor-transition((border-color, box-shadow));
+
+    &:focus {
+      @include tutor-focus-ring;
+      border-color: $tutor-border-brand;
+    }
+
+    &.is-invalid,
+    &.tutor-input-error {
+      border-color: $tutor-border-error;
+
+      &:focus {
+        @include tutor-focus-ring('error');
+      }
+    }
+
+    &::placeholder {
+      color: $tutor-text-subdued;
+    }
+  }
+
+  .tutor-quiz-obtained-marks-total {
+    @include tutor-typography(p2, regular, secondary);
+  }
+
+  .tutor-quiz-manual-review-error {
+    @include tutor-typography(small, regular);
+    color: $tutor-text-critical;
+    margin-top: $tutor-spacing-1;
+  }
+
+  .tutor-quiz-add-feedback-btn {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-2;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-top: $tutor-spacing-4;
+    cursor: pointer;
+    color: $tutor-text-brand;
+    @include tutor-typography(p2, medium);
+    @include tutor-transition(color);
+
+    &:hover {
+      color: $tutor-text-brand-hover;
+    }
+
+    svg {
+      color: $tutor-text-brand;
+      flex-shrink: 0;
+    }
+
+    &:hover svg {
+      color: $tutor-text-brand-hover;
+    }
+  }
+
+  .tutor-quiz-feedback-panel {
+    background-color: $tutor-surface-brand-tertiary;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-6;
+    margin-top: $tutor-spacing-4;
+
+    &-header {
+      @include tutor-flex(row, center, space-between);
+      margin-bottom: $tutor-spacing-3;
+    }
+
+    &-title {
+      @include tutor-typography(p2, semibold, primary);
+    }
+
+    &-status {
+      @include tutor-typography(small, regular, secondary);
+    }
+
+    &-content {
+      @include tutor-typography(p2, regular, primary);
+      line-height: 1.5;
+      margin-bottom: $tutor-spacing-4;
+    }
+
+    .tutor-quiz-feedback-textarea {
+      width: 100%;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-lg;
+      background-color: $tutor-surface-base;
+      padding: $tutor-spacing-4;
+      @include tutor-typography(p2, regular, primary);
+      line-height: 1.5;
+      resize: vertical;
+      margin-bottom: $tutor-spacing-4;
+
+      &:focus {
+        @include tutor-focus-ring;
+        border-color: $tutor-border-brand;
+      }
+    }
+
+    .tutor-quiz-feedback-actions {
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-3;
+    }
+  }
+}
+
+.tutor-quiz-question-feedback-wrap {
+  margin-top: $tutor-spacing-6;
+
+  .tutor-quiz-question-feedback-title {
+    @include tutor-typography(p2, semibold, primary);
+    margin-bottom: $tutor-spacing-3;
+  }
+
+  .tutor-quiz-question-feedback-card {
+    background-color: $tutor-surface-brand-tertiary;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-6;
+    @include tutor-typography(p2, regular, primary);
+    line-height: 1.5;
+    word-break: break-word;
   }
 }

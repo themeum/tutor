@@ -83,11 +83,11 @@ $partial_label        = $partial_counts
 	</div>
 
 	<div class="tutor-quiz-question-title">
-		<?php echo esc_html( Quiz::sanitize_quiz_content( $question_title ?? '' ) ); ?>
+		<?php echo esc_html( Quiz::sanitize_quiz_content( $question_title ) ); ?>
 
 		<?php if ( ! empty( $question_description ) ) : ?>
 			<?php
-			$description = apply_filters( 'tutor_filter_quiz_question_description', wp_unslash( (string) ( $question_description ?? '' ) ) );
+			$description = apply_filters( 'tutor_filter_quiz_question_description', wp_unslash( $question_description ) );
 			if ( $description ) {
 				$markup = "<div class='tutor-p2 tutor-text-secondary'>{$description}</div>";
 				if ( function_exists( 'tutor' ) && tutor()->has_pro ) {
@@ -101,9 +101,9 @@ $partial_label        = $partial_counts
 	</div>
 
 	<?php if ( ! empty( $status_badges ) || ( $is_instructor_review && $attempt_id ) ) : ?>
-		<div class="tutor-quiz-question-header-actions">
+		<div class="tutor-quiz-question-header-actions tutor-d-flex tutor-align-center">
 			<?php if ( ! empty( $status_badges ) ) : ?>
-				<div class="tutor-quiz-question-header-status">
+				<div class="tutor-quiz-question-header-status tutor-d-flex tutor-align-center">
 					<?php foreach ( $status_badges as $badge ) : ?>
 						<?php
 						$badge_status = (string) ( $badge['status'] ?? '' );
@@ -129,14 +129,34 @@ $partial_label        = $partial_counts
 								->variant( $badge_variant )
 								->rounded()
 								->render();
-
-							if ( ! empty( $badge['score'] ) ) : ?>
-								<span class="tutor-fs-7 tutor-color-muted tutor-ml-8"><?php echo esc_html( $badge['score'] ); ?></span>
-							<?php endif;
 						endif;
 						?>
 					<?php endforeach; ?>
 				</div>
+			<?php endif; ?>
+
+			<?php
+			$show_header_score = ! $is_instructor_review && ! $is_skipped && 'pending' !== $answer_status && isset( $question->question_mark );
+			if ( $show_header_score ) :
+				$achieved_display   = (float) ( $question->achieved_mark ?? 0 );
+				$achieved_formatted = ( floor( $achieved_display ) === $achieved_display ) ? (string) (int) $achieved_display : (string) round( $achieved_display, 2 );
+
+				$total_display   = (float) ( $question->question_mark ?? 0 );
+				$total_formatted = ( floor( $total_display ) === $total_display ) ? (string) (int) $total_display : (string) round( $total_display, 2 );
+				?>
+				<div class="tutor-quiz-question-header-divider" aria-hidden="true"></div>
+				<span class="tutor-quiz-question-header-score">
+					<?php
+					echo esc_html(
+						sprintf(
+							/* translators: 1: achieved marks, 2: total marks. */
+							__( 'Score: %1$s/%2$s', 'tutor' ),
+							$achieved_formatted,
+							$total_formatted
+						)
+					);
+					?>
+				</span>
 			<?php endif; ?>
 
 			<?php if ( $is_instructor_review && $attempt_id && $review_field_name && ! $is_skipped && ! $is_manual_question ) : ?>

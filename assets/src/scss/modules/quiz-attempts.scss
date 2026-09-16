@@ -99,6 +99,42 @@
 		}
 	}
 
+	td.result {
+		.tutor-quiz-attempt-result-col {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 4px;
+		}
+
+		.tutor-quiz-result-wrap {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 4px;
+		}
+
+		.tutor-quiz-result-delta {
+			font-size: 11px;
+			line-height: 1.2;
+
+			.is-earned {
+				color: #218838;
+			}
+
+			.is-penalty {
+				color: #dc3545;
+				margin-left: 2px;
+			}
+		}
+
+		.tutor-quiz-result-score {
+			font-size: 11px;
+			color: #757c8e;
+			line-height: 1.2;
+		}
+	}
+
 	.explain-toggle{
 		background:#F4F6F9; 
 		text-align:center!important;
