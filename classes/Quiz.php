@@ -1489,12 +1489,29 @@ class Quiz {
 	 * @return float|null Delta on success, null otherwise.
 	 */
 	private function apply_manual_quiz_answer_mark( $attempt_answer, $mark ) {
-		if ( ! is_object( $attempt_answer ) || ! in_array( $attempt_answer->question_type, QuizModel::get_manual_review_types(), true ) || ! is_numeric( $mark ) ) {
+		if ( ! is_object( $attempt_answer ) || ! is_numeric( $mark ) ) {
 			return null;
 		}
 
-		$new_mark       = min( max( 0, (float) $mark ), (float) $attempt_answer->question_mark );
-		$previous_mark  = (float) $attempt_answer->achieved_mark;
+		$question_type = $attempt_answer->question_type ?? '';
+		if ( empty( $question_type ) && ! empty( $attempt_answer->question_id ) ) {
+			$question                      = QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
+			$question_type                 = $question->question_type ?? '';
+			$attempt_answer->question_type = $question_type;
+		}
+
+		if ( ! in_array( $question_type, QuizModel::get_manual_review_types(), true ) ) {
+			return null;
+		}
+
+		$question_mark = isset( $attempt_answer->question_mark ) ? (float) $attempt_answer->question_mark : 0.0;
+		if ( $question_mark <= 0.0 && ! empty( $attempt_answer->question_id ) ) {
+			$question      = isset( $question ) && is_object( $question ) ? $question : QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
+			$question_mark = (float) ( $question->question_mark ?? 0.0 );
+		}
+
+		$new_mark       = min( max( 0, (float) $mark ), $question_mark );
+		$previous_mark  = (float) ( $attempt_answer->achieved_mark ?? 0.0 );
 		$answer_updated = QueryHelper::update(
 			'tutor_quiz_attempt_answers',
 			array(
