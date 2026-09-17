@@ -715,87 +715,92 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/**
-	 * Grading toggle turn-off confirmation modals.
+	 * Toggle turn-off confirmation modals.
 	 *
-	 * Intercepts the change event on tutor-form-toggle-input elements that declare
-	 * a data-confirm-turnoff-message attribute. When the toggle is turned OFF,
-	 * the handler reverts the toggle, shows a confirm modal, and only proceeds
-	 * with the turn-off if the user confirms.
+	 * Intercepts the change event on tutor-form-toggle-input elements that are
+	 * configured in the localized `tutorTurnoffConfirm` map (keyed by field key).
+	 * When such a toggle is turned OFF, the handler reverts the toggle, shows a
+	 * confirm modal, and only proceeds with the turn-off if the user confirms.
 	 *
-	 * For negative marking, the handler can optionally query a usage-check AJAX
-	 * action (data-confirm-usage-check-action) to decide whether to show the modal.
+	 * The config can include a usage-check AJAX action to decide whether the
+	 * modal needs to be shown at all.
+	 *
+	 * The map is localized by Tutor Pro; Free only provides this generic,
+	 * configuration-driven mechanism.
 	 *
 	 * @since 4.1.0
 	 */
-	const toggleTurnoffTargets = document.querySelectorAll('.tutor-form-toggle-input[data-confirm-turnoff-message]');
-	toggleTurnoffTargets.forEach((checkbox) => {
-		checkbox.addEventListener('change', function (e) {
-			if (this.checked) {
-				return;
-			}
-
-			const message = this.dataset.confirmTurnoffMessage;
-			const title = this.dataset.confirmTurnoffTitle;
-			const cancelText = this.dataset.confirmTurnoffCancel;
-			const confirmText = this.dataset.confirmTurnoffConfirm;
-			const usageAjaxAction = this.dataset.confirmUsageCheckAction;
-			if (!message) {
-				return;
-			}
-
-			const hiddenInput = this.previousElementSibling;
-			const revertToggle = () => {
-				this.checked = true;
-				if (hiddenInput) {
-					hiddenInput.value = 'on';
+	const turnOffConfirmations = window.tutorTurnoffConfirm || {};
+	Object.entries(turnOffConfirmations).forEach(([fieldKey, config]) => {
+		document.querySelectorAll(`#field_${fieldKey} .tutor-form-toggle-input`).forEach((checkbox) => {
+			checkbox.addEventListener('change', function (e) {
+				if (this.checked) {
+					return;
 				}
-			};
 
-			const proceedWithTurnoff = () => {
-				this.checked = false;
-				if (hiddenInput) {
-					hiddenInput.value = 'off';
+				const message = config.message;
+				const title = config.title;
+				const cancelText = config.cancel;
+				const confirmText = config.confirm;
+				const usageAjaxAction = config.usage_check_action;
+				if (!message) {
+					return;
 				}
-			};
 
-			if (!usageAjaxAction) {
-				revertToggle();
-				tutorConfirmTurnoffModal(message, title, cancelText, confirmText).then((confirmed) => {
-					if (confirmed) {
-						proceedWithTurnoff();
+				const hiddenInput = this.previousElementSibling;
+				const revertToggle = () => {
+					this.checked = true;
+					if (hiddenInput) {
+						hiddenInput.value = 'on';
 					}
-				});
-				return;
-			}
+				};
 
-			const formData = new FormData();
-			formData.append('action', usageAjaxAction);
-			formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-
-			fetch(_tutorobject.ajaxurl, { method: 'POST', body: formData })
-				.then((response) => response.json())
-				.then((result) => {
-					const hasCustomized = result?.data?.has_customized;
-					if (hasCustomized) {
-						revertToggle();
-						tutorConfirmTurnoffModal(message, title, cancelText, confirmText).then((confirmed) => {
-							if (confirmed) {
-								proceedWithTurnoff();
-							}
-						});
-					} else {
-						proceedWithTurnoff();
+				const proceedWithTurnoff = () => {
+					this.checked = false;
+					if (hiddenInput) {
+						hiddenInput.value = 'off';
 					}
-				})
-				.catch(() => {
+				};
+
+				if (!usageAjaxAction) {
 					revertToggle();
-				});
+					tutorConfirmTurnoffModal(message, title, cancelText, confirmText).then((confirmed) => {
+						if (confirmed) {
+							proceedWithTurnoff();
+						}
+					});
+					return;
+				}
+
+				const formData = new FormData();
+				formData.append('action', usageAjaxAction);
+				formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+
+				fetch(_tutorobject.ajaxurl, { method: 'POST', body: formData })
+					.then((response) => response.json())
+					.then((result) => {
+						const hasCustomized = result?.data?.has_customized;
+						if (hasCustomized) {
+							revertToggle();
+							tutorConfirmTurnoffModal(message, title, cancelText, confirmText).then((confirmed) => {
+								if (confirmed) {
+									proceedWithTurnoff();
+								}
+							});
+						} else {
+							proceedWithTurnoff();
+						}
+					})
+					.catch(() => {
+						revertToggle();
+					});
+			});
 		});
 	});
 });
 
 /**
- * Show a confirmation modal for grading toggle turn-off.
+ * Show a confirmation modal for toggle turn-off.
  *
  * @since 4.1.0
  *
