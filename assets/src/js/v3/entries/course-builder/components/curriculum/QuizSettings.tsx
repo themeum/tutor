@@ -97,8 +97,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const { quizId, contentType } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const isLegacyLearningMode = tutorConfig.settings?.learning_mode === 'legacy';
-  const adminPartialEnabled = ['1', 'on'].includes(String(tutorConfig.settings?.enable_quiz_partial_marking ?? ''));
-  const adminNegativeEnabled = ['1', 'on'].includes(String(tutorConfig.settings?.enable_quiz_negative_marking ?? ''));
+  const adminPartialEnabled = tutorConfig.settings?.enable_quiz_partial_marking === 'on';
+  const adminNegativeEnabled = tutorConfig.settings?.enable_quiz_negative_marking === 'on';
   const quizOptionPartialAlreadyOn = form.watch('quiz_option.enable_partial_marking');
   const negativeMarkType = form.watch('quiz_option.negative_mark_type');
   const negativeMarkingEnabled = form.watch('quiz_option.enable_negative_marking');
@@ -346,19 +346,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     render={(controllerProps) => (
                       <FormSwitch
                         {...controllerProps}
-                        label={
-                          <div css={styles.labelWithTooltip}>
-                            {__('Partial marking', 'tutor')}
-                            <Tooltip
-                              content={__(
-                                'Applies to question types with multiple sub-answers (Matching, Ordering, Fill in the Blanks, Multiple Choice with multiple answers). Students receive partial marks based on how many sub-answers they get right.',
-                                'tutor',
-                              )}
-                            >
-                              <SVGIcon name="info" width={16} height={16} />
-                            </Tooltip>
-                          </div>
-                        }
+                        label={__('Partial marking', 'tutor')}
                         helpText={__('Award credit for correct sub-answers on multi-part questions', 'tutor')}
                       />
                     )}
@@ -366,50 +354,49 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 </Show>
 
                 <Show when={adminNegativeEnabled}>
-                  <div css={styles.inlineForm({ minHeight: '32px' })}>
+                  <Controller
+                    name="quiz_option.enable_negative_marking"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormCheckbox
+                        {...controllerProps}
+                        label={__('Negative marking', 'tutor')}
+                        description={__('Deduct points for each wrong answer once enabled.', 'tutor')}
+                        helpText={__(
+                          "Final quiz marks ≥ 0; Individual question scores can be negative, but a student's final earned score can never be less than 0. If negative scores reduce the total below 0, the final score will be set to 0.",
+                          'tutor',
+                        )}
+                      />
+                    )}
+                  />
+                  <Show when={negativeMarkingEnabled}>
                     <Controller
-                      name="quiz_option.enable_negative_marking"
+                      name="quiz_option.negative_mark_value"
                       control={form.control}
+                      rules={{
+                        validate: (value) => {
+                          const numericValue = Number(value);
+                          if (numericValue < 0) return __('Negative mark value cannot be less than 0', 'tutor');
+                          if (negativeMarkType === 'percent' && numericValue > 100)
+                            return __('Percentage penalty cannot be greater than 100', 'tutor');
+                          return true;
+                        },
+                      }}
                       render={(controllerProps) => (
-                        <FormCheckbox
+                        <FormInputWithContent
                           {...controllerProps}
-                          label={__('Negative marking', 'tutor')}
-                          description={__('Deduct points for each wrong answer once enabled.', 'tutor')}
-                          helpText={__(
-                            "Final quiz marks ≥ 0; Individual question scores can be negative, but a student's final earned score can never be less than 0. If negative scores reduce the total below 0, the final score will be set to 0.",
-                            'tutor',
-                          )}
+                          type="number"
+                          size="small"
+                          isInlineLabel
+                          wrapperCss={styles.maxWidth('100px')}
+                          label={__('Penalty per wrong answer', 'tutor')}
+                          content={negativeMarkType === 'percent' ? '%' : __('Pts', 'tutor')}
+                          contentPosition="right"
+                          showVerticalBar={false}
                         />
                       )}
                     />
-                    <Show when={negativeMarkingEnabled}>
-                      <Controller
-                        name="quiz_option.negative_mark_value"
-                        control={form.control}
-                        rules={{
-                          validate: (value) => {
-                            const numericValue = Number(value);
-                            if (numericValue < 0) return __('Negative mark value cannot be less than 0', 'tutor');
-                            if (negativeMarkType === 'percent' && numericValue > 100)
-                              return __('Percentage penalty cannot be greater than 100', 'tutor');
-                            return true;
-                          },
-                        }}
-                        render={(controllerProps) => (
-                          <FormInputWithContent
-                            {...controllerProps}
-                            type="number"
-                            size="small"
-                            isInlineLabel
-                            label={__('Penalty per wrong answer', 'tutor')}
-                            content={negativeMarkType === 'percent' ? '%' : __('Pts', 'tutor')}
-                            contentPosition="right"
-                            showVerticalBar={false}
-                          />
-                        )}
-                      />
-                    </Show>
-                  </div>
+                  </Show>
                 </Show>
               </div>
             </div>
