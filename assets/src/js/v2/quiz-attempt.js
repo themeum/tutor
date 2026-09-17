@@ -80,17 +80,33 @@ window.addEventListener('DOMContentLoaded', function() {
  * @return {void}
  */
 function initQuestionFeedbackHandlers(__, defaultErrorMsg) {
-    const feedbackModal   = document.getElementById('tutor-question-feedback-modal');
-    const deleteModal     = document.getElementById('tutor-question-feedback-delete-modal');
+    const feedbackModal    = document.getElementById('tutor-question-feedback-modal');
+    const deleteModal      = document.getElementById('tutor-question-feedback-delete-modal');
 
     if (!feedbackModal || !deleteModal) return;
 
-    const attemptInput    = document.getElementById('tutor-question-feedback-attempt-id');
-    const answerInput     = document.getElementById('tutor-question-feedback-answer-id');
-    const textarea        = document.getElementById('tutor-question-feedback-content');
-    const saveBtn         = document.getElementById('tutor-question-feedback-save');
-    const deleteBtn       = document.getElementById('tutor-question-feedback-delete');
+    const modalTitle       = document.getElementById('tutor-question-feedback-modal-title');
+    const attemptInput     = document.getElementById('tutor-question-feedback-attempt-id');
+    const answerInput      = document.getElementById('tutor-question-feedback-answer-id');
+    const textarea         = document.getElementById('tutor-question-feedback-content');
+    const saveBtn          = document.getElementById('tutor-question-feedback-save');
+    const deleteBtn        = document.getElementById('tutor-question-feedback-delete');
     const deleteConfirmBtn = document.getElementById('tutor-question-feedback-delete-confirm');
+
+    let activeTriggerLink  = null;
+
+    // Helper to update the trigger button state.
+    function updateTriggerLinkState(link, hasFeedback, feedbackText = '') {
+        if (!link) return;
+        link.dataset.feedback = feedbackText;
+        if (hasFeedback) {
+            link.innerHTML = `<span class="tutor-icon-eye-line tutor-mr-4"></span>${__('Show Feedback', 'tutor')}`;
+            link.setAttribute('title', __('Show feedback', 'tutor'));
+        } else {
+            link.innerHTML = `<span class="tutor-icon-comment tutor-mr-4"></span>${__('Add Feedback', 'tutor')}`;
+            link.setAttribute('title', __('Add feedback', 'tutor'));
+        }
+    }
 
     // Open feedback modal when "Add Feedback" or "Show Feedback" is clicked.
     document.addEventListener('click', (e) => {
@@ -98,18 +114,28 @@ function initQuestionFeedbackHandlers(__, defaultErrorMsg) {
         if (!link) return;
         e.preventDefault();
 
-        attemptInput.value = link.dataset.attemptId || '';
-        answerInput.value  = link.dataset.attemptAnswerId || '';
-        textarea.value     = link.dataset.feedback || '';
+        activeTriggerLink     = link;
+        attemptInput.value    = link.dataset.attemptId || '';
+        answerInput.value     = link.dataset.attemptAnswerId || '';
+        const currentFeedback = (link.dataset.feedback || '').trim();
+        textarea.value        = currentFeedback;
+
+        if (modalTitle) {
+            modalTitle.textContent = currentFeedback ? __('Edit feedback', 'tutor') : __('Write feedback', 'tutor');
+        }
+
+        if (deleteBtn) {
+            deleteBtn.style.display = currentFeedback ? '' : 'none';
+        }
 
         openModal(feedbackModal, link);
     });
 
     // Save feedback via AJAX.
     saveBtn.addEventListener('click', async () => {
-        const attemptId     = attemptInput.value;
+        const attemptId       = attemptInput.value;
         const attemptAnswerId = answerInput.value;
-        const feedback      = textarea.value.trim();
+        const feedback        = textarea.value.trim();
 
         if (!attemptId || !attemptAnswerId) return;
 
@@ -129,8 +155,8 @@ function initQuestionFeedbackHandlers(__, defaultErrorMsg) {
 
             if (result.success) {
                 tutor_toast(__('Saved', 'tutor'), result.data || __('Feedback saved', 'tutor'), 'success');
+                updateTriggerLinkState(activeTriggerLink, '' !== feedback, feedback);
                 closeModal(feedbackModal);
-                window.location.reload();
             } else {
                 tutor_toast(__('Error', 'tutor'), result.data || defaultErrorMsg, 'error');
             }
@@ -170,8 +196,9 @@ function initQuestionFeedbackHandlers(__, defaultErrorMsg) {
 
             if (result.success) {
                 tutor_toast(__('Deleted', 'tutor'), result.data || __('Feedback deleted', 'tutor'), 'success');
+                updateTriggerLinkState(activeTriggerLink, false, '');
+                textarea.value = '';
                 closeModal(deleteModal);
-                window.location.reload();
             } else {
                 tutor_toast(__('Error', 'tutor'), result.data || defaultErrorMsg, 'error');
             }
