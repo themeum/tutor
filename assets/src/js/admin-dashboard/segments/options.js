@@ -783,6 +783,8 @@ document.addEventListener('DOMContentLoaded', function () {
 								proceedWithTurnoff();
 							}
 						});
+					} else {
+						proceedWithTurnoff();
 					}
 				})
 				.catch(() => {
