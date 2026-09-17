@@ -2229,9 +2229,12 @@ class OrderModel {
 		$titles = array();
 		$items  = ( new OrderModel() )->get_order_items_by_id( $order->id );
 		foreach ( $items as $item ) {
-
 			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
-				$titles[] = get_the_title( $item->id );
+				if ( empty( $item->title ) ) {
+					continue;
+				}
+
+				$titles[] = $item->title;
 				continue;
 			}
 

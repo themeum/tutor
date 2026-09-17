@@ -975,17 +975,27 @@ class QuizModel {
 			return array();
 		}
 
-		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$results = $wpdb->get_results(
-			"SELECT answers.*,
+		$cache_key = __FUNCTION__ . implode( '_', $ids );
+		$cached    = TutorCache::get( $cache_key );
+		$results   = array();
+
+		if ( false === $cached ) {
+			//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$results = $wpdb->get_results(
+				"SELECT answers.*,
 					question.*
 			FROM 	{$wpdb->prefix}tutor_quiz_attempt_answers answers
 					LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question
 						   ON answers.question_id = question.question_id
 			WHERE 	answers.quiz_attempt_id IN ({$ids_in})
 			ORDER BY attempt_answer_id ASC;"
-		);
-		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			);
+			//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+			TutorCache::set( $cache_key, $results );
+		} else {
+			$results = $cached;
+		}
 
 		if ( $add_index ) {
 			$new_array = array();
