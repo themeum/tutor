@@ -1,6 +1,4 @@
 <?php
-
-use TUTOR\User;
 /**
  * Order List Template.
  *
@@ -19,6 +17,7 @@ use Tutor\Ecommerce\OrderController;
 use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
+use TUTOR\User;
 
 /**
  * Determine active tab

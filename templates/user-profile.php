@@ -1,6 +1,4 @@
 <?php
-
-use TUTOR\User;
 /**
  * Tutor dashboard profile.
  *
@@ -19,6 +17,7 @@ use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Input;
+use TUTOR\User;
 
 $user_id = Input::get( 'student_id', get_current_user_id(), Input::TYPE_INT );
 if ( ! User::can_view_user_profile( $user_id ) ) {
