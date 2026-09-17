@@ -1570,7 +1570,76 @@ class Course extends Tutor_Base {
 		$settings                          = Options_V2::get_only( $required_options );
 		$logo_id                           = absint( $full_settings['brand_logo_light'] ?? $full_settings['tutor_frontend_course_page_logo_id'] ?? 0 );
 		$settings['brand_logo_light']      = $logo_id > 0 ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
-		$settings['chatgpt_key_exist']     = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+
+		$is_wp_ai_supported = function_exists( 'wp_ai_client_prompt' ) || class_exists( '\WordPress\AiClient\AiClient' ) || function_exists( 'wp_get_connectors' );
+		$has_ai_connector   = false;
+		if ( $is_wp_ai_supported ) {
+			if ( class_exists( '\TutorPro\TutorAI\Helper' ) && method_exists( '\TutorPro\TutorAI\Helper', 'has_ai_connector' ) ) {
+				$has_ai_connector = \TutorPro\TutorAI\Helper::has_ai_connector();
+			} elseif ( function_exists( 'wp_get_connectors' ) ) {
+				$connectors = wp_get_connectors();
+				foreach ( $connectors as $connector_id => $connector_data ) {
+					if ( 'ai_provider' !== ( $connector_data['type'] ?? '' ) ) {
+						continue;
+					}
+					$auth = $connector_data['authentication'] ?? array();
+					if ( 'api_key' === ( $auth['method'] ?? '' ) ) {
+						$setting_name  = $auth['setting_name'] ?? '';
+						$env_var_name  = $auth['env_var_name'] ?? '';
+						$constant_name = $auth['constant_name'] ?? '';
+
+						$source = function_exists( '_wp_connectors_get_api_key_source' )
+							? _wp_connectors_get_api_key_source( $setting_name, $env_var_name, $constant_name )
+							: ( function_exists( '\WordPress\AI\get_connector_api_key_source' )
+								? \WordPress\AI\get_connector_api_key_source( $setting_name, $env_var_name, $constant_name )
+								: 'none' );
+
+						if ( 'none' !== $source ) {
+							$has_ai_connector = true;
+							break;
+						}
+					} elseif ( 'application_password' === ( $auth['method'] ?? '' ) ) {
+						if ( function_exists( 'wp_connectors_get_application_password_credentials' ) ) {
+							$creds = wp_connectors_get_application_password_credentials( $auth );
+							if ( 'none' !== ( $creds['source'] ?? 'none' ) ) {
+								$has_ai_connector = true;
+								break;
+							}
+						}
+					}
+				}
+			} elseif ( function_exists( '\WordPress\AI\has_connector_authentication' ) && function_exists( '\WordPress\AI\get_ai_connectors' ) ) {
+				$connectors = \WordPress\AI\get_ai_connectors();
+				foreach ( array_keys( $connectors ) as $connector_id ) {
+					if ( \WordPress\AI\has_connector_authentication( $connector_id ) ) {
+						$has_ai_connector = true;
+						break;
+					}
+				}
+			}
+		}
+
+		$settings['is_wp_ai_supported']   = $is_wp_ai_supported;
+		$settings['has_ai_connector']     = $has_ai_connector;
+		$settings['connectors_admin_url'] = admin_url( 'options-connectors.php' );
+
+		if ( $is_wp_ai_supported ) {
+			$has_image_connector = false;
+			if ( $has_ai_connector ) {
+				if ( class_exists( '\TutorPro\TutorAI\Helper' ) && method_exists( '\TutorPro\TutorAI\Helper', 'has_image_generation_support' ) ) {
+					$has_image_connector = \TutorPro\TutorAI\Helper::has_image_generation_support();
+				} elseif ( function_exists( '\WordPress\AI\has_image_generation_support' ) ) {
+					$has_image_connector = \WordPress\AI\has_image_generation_support();
+				}
+			}
+			$settings['chatgpt_key_exist']   = tutor()->has_pro && $has_ai_connector;
+			$settings['has_image_connector'] = tutor()->has_pro && $has_image_connector;
+		} else {
+			$has_legacy_key                  = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+			$settings['chatgpt_key_exist']   = $has_legacy_key;
+			$settings['has_image_connector'] = $has_legacy_key;
+		}
+
 		$settings['youtube_api_key_exist'] = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
 		$settings['enable_tax']                    = Tax::get_setting( 'enable_tax', true );
