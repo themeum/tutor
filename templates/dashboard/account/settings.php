@@ -79,6 +79,7 @@ $settings_tab_data = array_values(
 <section x-data="tutorSettings()">
 	<div 
 		x-data='(() => {
+			const initialTab = new URL(window.location.href).searchParams.get("tab");
 			const tabs = tutorTabs({
 				tabs: <?php echo wp_json_encode( $settings_tab_data ); ?>,
 				orientation: "vertical",
@@ -92,6 +93,24 @@ $settings_tab_data = array_values(
 			return {
 				...tabs,
 				backUrl: <?php echo wp_json_encode( $back_url ); ?>,
+				viewportWidth: window.innerWidth,
+				hasInitialUrlTab: tabs.tabs.some((tab) => tab.id === initialTab),
+				handleViewportResize() {
+					const wasDesktop = this.viewportWidth >= 768;
+					const isDesktop = window.innerWidth >= 768;
+
+					this.viewportWidth = window.innerWidth;
+
+					if (wasDesktop === isDesktop || this.hasInitialUrlTab) {
+						return;
+					}
+
+					if (isDesktop && this.activeTab === "none") {
+						this.selectTab("account");
+					} else if (!isDesktop && this.activeTab !== "none") {
+						this.selectTab("none");
+					}
+				},
 				selectTab(tabId) {
 					if (tabId === "none") {
 						this.activeTab = "none";
@@ -123,20 +142,7 @@ $settings_tab_data = array_values(
 
 		<div class="tutor-account-container">
 			<div 
-				x-init="$watch('$store.windowWidth', () => {
-					if (window.innerWidth >= 768 && activeTab === 'none') {
-						selectTab('account');
-					} else if (window.innerWidth < 768 && activeTab !== 'none') {
-						selectTab('none');
-					}
-				})"
-				@resize.window="
-					if (window.innerWidth >= 768 && activeTab === 'none') {
-						selectTab('account');
-					} else if (window.innerWidth < 768 && activeTab !== 'none') {
-						selectTab('none');
-					}
-				"
+				@resize.window="handleViewportResize()"
 				x-cloak
 				class="tutor-gap-8"
 			>

@@ -50,6 +50,7 @@ final class Icon {
 	const AUDIO                      = 'audio';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
+	const BACK_2                     = 'back-2';
 	const BADGE                      = 'badge';
 	const BADGE_CHECK                = 'badge-check';
 	const BADGE_INFO                 = 'badge-info';
@@ -139,6 +140,7 @@ final class Icon {
 	const CSS                        = 'css';
 	const CSV                        = 'csv';
 	const CURRENCY                   = 'currency';
+	const DARK                       = 'dark';
 	const DBF                        = 'dbf';
 	const DELETE                     = 'delete';
 	const DELETE_2                   = 'delete-2';
@@ -196,6 +198,7 @@ final class Icon {
 	const FIRE_DISABLED              = 'fire-disabled';
 	const FLA                        = 'fla';
 	const FONT                       = 'font';
+	const FOOTER                     = 'footer';
 	const FREE_SHIPPING_TYPE         = 'free-shipping-type';
 	const GIFT                       = 'gift';
 	const GIFT_CARD                  = 'gift-card';

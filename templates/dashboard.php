@@ -14,6 +14,7 @@ use Tutor\Components\Alert;
 use Tutor\Components\EmptyState;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
+use TUTOR\Template;
 use TUTOR\User;
 
 global $wp_query;
@@ -54,19 +55,16 @@ $page_meta = Dashboard::get_page_meta_data( $dashboard_page_slug ? $dashboard_pa
 $meta_title = $page_meta['meta_title'];
 Dashboard::set_document_title( $meta_title );
 
-$is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
+$is_by_short_code           = isset( $is_shortcode ) && true === $is_shortcode;
+$site_shell                 = Template::get_site_shell_data( Template::SITE_SHELL_CONTEXT_DASHBOARD );
+$show_dashboard_site_header = $site_shell['show_site_header'];
+$show_dashboard_site_footer = $site_shell['show_site_footer'];
+$has_dashboard_site_shell   = ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) && $site_shell['has_site_shell'];
+$has_dashboard_site_footer  = $has_dashboard_site_shell && $show_dashboard_site_footer;
+$theme_header_selector      = $site_shell['theme_header_selector'];
+
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
-	?>
-	<!DOCTYPE html>
-	<html <?php language_attributes(); ?>>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<?php wp_head(); ?>
-	</head>
-	<body <?php body_class( '' ); ?>>
-		<?php wp_body_open(); ?>
-	<?php
+	tutor_utils()->tutor_custom_header( $show_dashboard_site_header );
 endif;
 
 $user_id                   = get_current_user_id();
@@ -104,7 +102,13 @@ $footer_links = array(
 ?>
 
 <?php do_action( 'tutor_dashboard/before/wrap' ); ?>
-<div class="tutor-dashboard-layout">
+<div
+	class="tutor-dashboard-layout<?php echo esc_attr( ( $has_dashboard_site_footer ? ' tutor-has-site-footer' : '' ) . ( $has_dashboard_site_shell ? ' tutor-has-site-shell' : '' ) ); ?>"
+	<?php if ( $has_dashboard_site_shell ) : ?>
+		data-tutor-dashboard-site-shell
+		data-tutor-theme-header-selector="<?php echo esc_attr( $theme_header_selector ); ?>"
+	<?php endif; ?>
+>
 	<?php tutor_load_template( 'dashboard.components.sidebar' ); ?>
 	<div class="tutor-dashboard-main">
 		<?php tutor_load_template( 'dashboard.components.header' ); ?>
@@ -149,6 +153,15 @@ $footer_links = array(
 			</div>
 		</div>
 	</div>
+	<?php
+	tutor_load_template(
+		'dashboard.components.sidebar-nav-mobile',
+		array(
+			'dashboard_pages'     => $dashboard_pages,
+			'dashboard_page_slug' => $dashboard_page_slug,
+		)
+	);
+	?>
 </div>
 <?php if ( User::is_student_view() && ! $is_tour_completed ) : ?>
 	<?php tutor_load_template( 'shared.tour' ); ?>
@@ -156,7 +169,5 @@ $footer_links = array(
 	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 <?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
-	<?php wp_footer(); ?>
+	<?php tutor_utils()->tutor_custom_footer( $show_dashboard_site_footer ); ?>
 <?php endif; ?>
-	</body>
-</html>

@@ -482,7 +482,7 @@ class Quiz {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return void | send json response
+	 * @return void
 	 */
 	public function tutor_instructor_feedback() {
 		tutor_utils()->checking_nonce();
@@ -801,7 +801,10 @@ class Quiz {
 			if ( tutor_utils()->count( $quiz_answers ) ) {
 
 				foreach ( $quiz_answers as $question_id => $answers ) {
-					$question      = QuizModel::get_quiz_question_by_id( $question_id );
+					$question = QuizModel::get_quiz_question_by_id( $question_id );
+					if ( ! is_object( $question ) ) {
+						continue;
+					}
 					$question_type = $question->question_type;
 
 					$is_answer_was_correct = false;
@@ -1025,8 +1028,11 @@ class Quiz {
 
 		global $wpdb;
 
-		$quiz_id    = Input::post( 'quiz_id', 0, Input::TYPE_INT );
-		$attempt    = tutor_utils()->is_started_quiz( $quiz_id );
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		$attempt = tutor_utils()->is_started_quiz( $quiz_id );
+		if ( ! is_object( $attempt ) ) {
+			wp_die( esc_html__( 'No active quiz attempt found', 'tutor' ) );
+		}
 		$attempt_id = $attempt->attempt_id;
 
 		$attempt_info = array(
@@ -1044,7 +1050,7 @@ class Quiz {
 	}
 
 	/**
-	 * Get quiz total marks.
+	 * Get total marks for a quiz
 	 *
 	 * @since 3.0.0
 	 *
@@ -1055,16 +1061,50 @@ class Quiz {
 	public static function get_quiz_total_marks( $quiz_id ) {
 		global $wpdb;
 
+		if ( ! $quiz_id ) {
+			return 0;
+		}
+
+		$max_questions   = (int) tutor_utils()->get_quiz_option( $quiz_id, 'max_questions_for_answer' );
+		$questions_order = tutor_utils()->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
+
+		$order_by_map = array(
+			'asc'     => 'question_id ASC',
+			'desc'    => 'question_id DESC',
+			'sorting' => 'question_order ASC',
+		);
+		$order_by     = $order_by_map[ $questions_order ] ?? 'question_order ASC';
+
+		$limit = $max_questions > 0 ? $max_questions : PHP_INT_MAX;
+
+		// phpcs:disable
 		$total_marks = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT SUM(question_mark) total_marks 
+				"SELECT CASE
+				WHEN %s = 'rand' AND %d > 0 AND COUNT(question_id) > %d THEN 0
+				ELSE (
+					SELECT SUM(questions.question_mark) FROM (
+						SELECT question_mark
+						FROM {$wpdb->prefix}tutor_quiz_questions
+						WHERE quiz_id = %d
+						ORDER BY {$order_by}
+						LIMIT %d
+					) AS questions
+				)
+				END
 				FROM {$wpdb->prefix}tutor_quiz_questions
-				WHERE quiz_id=%d",
+				WHERE quiz_id = %d",
+				$questions_order,
+				$max_questions,
+				$max_questions,
+				$quiz_id,
+				$limit,
 				$quiz_id
 			)
 		);
+		// phpcs:enable
 
-		return floatval( $total_marks );
+		return (float) $total_marks;
 	}
 
 	/**
@@ -1082,7 +1122,7 @@ class Quiz {
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 		$attempt = tutor_utils()->is_started_quiz( $quiz_id );
 
-		if ( $attempt ) {
+		if ( is_object( $attempt ) ) {
 			$attempt_id = $attempt->attempt_id;
 
 			$data = array(
@@ -1279,12 +1319,12 @@ class Quiz {
 	 */
 	private function create_skipped_attempt_answer( int $attempt_id, int $question_id ) {
 		$attempt = tutor_utils()->get_attempt( $attempt_id );
-		if ( ! $attempt ) {
+		if ( ! is_object( $attempt ) ) {
 			return null;
 		}
 
 		$question = QuizModel::get_quiz_question_by_id( $question_id );
-		if ( ! $question || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
+		if ( ! is_object( $question ) || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
 			return null;
 		}
 
@@ -1370,15 +1410,18 @@ class Quiz {
 
 		$attempt = tutor_utils()->get_attempt( $attempt_id );
 
-		if ( ! $attempt ) {
+		if ( ! is_object( $attempt ) ) {
 			return null;
 		}
 
 		$attempt_answer_id = (int) $attempt_answer->attempt_answer_id;
 		$question          = QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
-		$course_id         = (int) $attempt->course_id;
-		$student_id        = (int) $attempt->user_id;
-		$previous_ans      = $attempt_answer->is_correct;
+		if ( ! is_object( $question ) ) {
+			return null;
+		}
+		$course_id    = (int) $attempt->course_id;
+		$student_id   = (int) $attempt->user_id;
+		$previous_ans = $attempt_answer->is_correct;
 
 		do_action( 'tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as );
 
@@ -1589,7 +1632,7 @@ class Quiz {
 	 * @param mixed   $question_type type of question.
 	 * @param boolean $is_correct only correct answers or not.
 	 *
-	 * @return wpdb:get_results
+	 * @return array|object|null
 	 */
 	private function get_answers_by_q_id( $question_id, $question_type, $is_correct = false ) {
 		global $wpdb;
@@ -1672,7 +1715,7 @@ class Quiz {
 	 * @param int   $attempt_id attempt id.
 	 * @param mixed $attempt_info serialize data.
 	 *
-	 * @return bool, true on success, false on failure
+	 * @return bool
 	 */
 	public static function update_attempt_info( int $attempt_id, $attempt_info ) {
 		global $wpdb;
@@ -1697,7 +1740,7 @@ class Quiz {
 
 		$attempt_id = Input::post( 'id', 0, Input::TYPE_INT );
 		$attempt    = tutor_utils()->get_attempt( $attempt_id );
-		if ( ! $attempt ) {
+		if ( ! is_object( $attempt ) ) {
 			wp_send_json_error( __( 'Invalid attempt ID', 'tutor' ) );
 		}
 
@@ -1839,16 +1882,18 @@ class Quiz {
 			);
 		}
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
-					</div>',
+		if ( ! empty( $total_marks ) ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' => (float) $total_marks ),
 				),
-				array( 'content' => $total_marks ),
-			),
-		);
+			);
+		}
 
 		$quiz_summary[] = array(
 			'columns' => array(
@@ -2002,7 +2047,7 @@ class Quiz {
 		$current_content_id  = $tutor_current_post ? $tutor_current_post->ID : $quiz_id;
 		$course_id           = $tutor_course_id ? $tutor_course_id : tutor_utils()->get_course_id_by_subcontent( $current_content_id );
 		$contents            = tutor_utils()->get_course_prev_next_contents_by_id( $current_content_id );
-		$next_id             = $contents ? $contents->next_id : 0;
+		$next_id             = is_object( $contents ) ? $contents->next_id : 0;
 		$skip_url            = get_the_permalink( $next_id ? $next_id : $course_id );
 		$skip_modal_id       = 'tutor-quiz-skip-to-next';
 		$auto_start_modal_id = 'tutor-quiz-autostart-modal';
@@ -2277,5 +2322,21 @@ class Quiz {
 				'status_class' => $quiz_status,
 			)
 		);
+	}
+
+	/**
+	 * Sanitize quiz content
+	 *
+	 * @param string $content Content to sanitize.
+	 * @return string
+	 *
+	 * @since 4.0.5
+	 */
+	public static function sanitize_quiz_content( $content ) {
+		if ( null === $content || '' === $content ) {
+			return '';
+		}
+
+		return wp_strip_all_tags( wp_unslash( (string) $content ) );
 	}
 }

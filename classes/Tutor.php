@@ -26,6 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 final class Tutor extends Singleton {
+
 	/**
 	 * Tutor version
 	 *
@@ -571,6 +572,7 @@ final class Tutor extends Singleton {
 		do_action( 'tutor_loaded' );
 
 		add_action( 'init', array( $this, 'init_action' ) );
+		add_action( 'init', array( $this, 'update_instructor_capability' ) );
 
 		/**
 		 * Check activated plugin
@@ -586,6 +588,8 @@ final class Tutor extends Singleton {
 		 * @since 2.8.0
 		 */
 		add_action( 'admin_init', array( $this, 'redirect_to_setup_page' ) );
+
+		// add_filter( 'rest_request_before_callbacks', array( $this, 'enforce_courses_privacy_rest_api' ), 10, 3 );
 	}
 
 	/**
@@ -658,7 +662,6 @@ final class Tutor extends Singleton {
 				include $tutor_droip_path;
 			}
 		}
-
 	}
 
 	/**
@@ -1080,8 +1083,6 @@ final class Tutor extends Singleton {
 			'delete_tutor_course',
 			'delete_tutor_courses',
 			'edit_tutor_courses',
-			'edit_others_tutor_courses',
-			'read_private_tutor_courses',
 			'edit_tutor_courses',
 
 			'edit_tutor_lesson',
@@ -1089,8 +1090,6 @@ final class Tutor extends Singleton {
 			'delete_tutor_lesson',
 			'delete_tutor_lessons',
 			'edit_tutor_lessons',
-			'edit_others_tutor_lessons',
-			'read_private_tutor_lessons',
 			'edit_tutor_lessons',
 			'publish_tutor_lessons',
 
@@ -1099,8 +1098,6 @@ final class Tutor extends Singleton {
 			'delete_tutor_quiz',
 			'delete_tutor_quizzes',
 			'edit_tutor_quizzes',
-			'edit_others_tutor_quizzes',
-			'read_private_tutor_quizzes',
 			'edit_tutor_quizzes',
 			'publish_tutor_quizzes',
 
@@ -1109,9 +1106,7 @@ final class Tutor extends Singleton {
 			'delete_tutor_question',
 			'delete_tutor_questions',
 			'edit_tutor_questions',
-			'edit_others_tutor_questions',
 			'publish_tutor_questions',
-			'read_private_tutor_questions',
 			'edit_tutor_questions',
 		);
 
@@ -1119,6 +1114,7 @@ final class Tutor extends Singleton {
 		if ( $instructor ) {
 			$instructor_cap = array(
 				'edit_posts',
+				'edit_published_posts',
 				'read',
 				'upload_files',
 			);
@@ -1427,6 +1423,64 @@ final class Tutor extends Singleton {
 			//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$wpdb->query( "DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers, {$prefix}tutor_earnings, {$prefix}tutor_withdraws " );
 
+		}
+	}
+
+	/**
+	 * Update instructor capability
+	 *
+	 * Remove other author items permission
+	 *
+	 * @since 4.0.5
+	 *
+	 * @since 4.0.6 read_private_{items} permissions removed
+	 */
+	public function update_instructor_capability() {
+		// Remove edit_others content cap from tutor_instructor role.
+		$is_removed_edit_other_items_permissions = get_option( 'tutor_removed_edit_other_items_permission', false );
+		$is_removed_private_items_permissions    = get_option( 'tutor_removed_read_private_items_permission', false );
+
+		$role = get_role( tutor()->instructor_role );
+		if ( ! ( $role instanceof \WP_Role ) ) {
+			return;
+		}
+
+		if ( ! $is_removed_edit_other_items_permissions ) {
+
+			$caps_to_be_removed = array(
+				'edit_others_tutor_courses',
+				'edit_others_tutor_lessons',
+				'edit_others_tutor_quizzes',
+				'edit_others_tutor_questions',
+				'edit_others_tutor_assignments',
+			);
+
+			foreach ( $caps_to_be_removed as $cap ) {
+				if ( $role->has_cap( $cap ) ) {
+					$role->remove_cap( $cap );
+				}
+			}
+
+			update_option( 'tutor_removed_edit_other_items_permission', true, false );
+		}
+
+		// Removed private items permission @since 4.0.6.
+		if ( ! $is_removed_private_items_permissions ) {
+			$caps_to_be_removed = array(
+				'read_private_tutor_courses',
+				'read_private_tutor_lessons',
+				'read_private_tutor_quizzes',
+				'read_private_tutor_assignments',
+				'read_private_tutor_questions',
+			);
+
+			foreach ( $caps_to_be_removed as $cap ) {
+				if ( $role->has_cap( $cap ) ) {
+					$role->remove_cap( $cap );
+				}
+			}
+
+			update_option( 'tutor_removed_read_private_items_permission', true, false );
 		}
 	}
 }

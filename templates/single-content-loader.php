@@ -12,11 +12,6 @@ global $post;
 //phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 $currentPost = $post;
 
-$method_map = array(
-	'lesson'     => 'tutor_lesson_content',
-	'assignment' => 'tutor_assignment_content',
-);
-
 $content_id  = tutor_utils()->get_post_id();
 $course_id   = tutor_utils()->get_course_id_by_subcontent( $content_id );
 $contents    = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
@@ -24,10 +19,11 @@ $previous_id = $contents->previous_id;
 $next_id     = $contents->next_id;
 $user_id     = get_current_user_id();
 
-$is_course_completed   = tutor_utils()->is_completed_course( $course_id, $user_id );
-$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
-//phpcs:ignore WordPress.PHP.DontExtract.extract_extract
-extract( $data ); // $data variable consist $context, $html_content.
+$is_course_completed = tutor_utils()->is_completed_course( $course_id, $user_id );
+
+$data         = isset( $data ) && is_array( $data ) ? $data : array();
+$context      = isset( $data['context'] ) ? sanitize_key( $data['context'] ) : '';
+$html_content = isset( $data['html_content'] ) ? $data['html_content'] : '';
 
 /**
  * Single course sidebar content
@@ -63,18 +59,26 @@ if ( tutor()->lesson_post_type === $post->post_type ) {
 ?>
 
 <?php do_action( 'tutor_' . $context . '/single/before/wrap' ); ?>
-<div class="tutor-course-single-content-wrapper<?php echo $enable_spotlight_mode ? ' tutor-spotlight-mode' : ''; ?>">
+<div class="tutor-course-single-content-wrapper">
 	<div class="tutor-course-single-sidebar-wrapper tutor-<?php echo esc_attr( $context ); ?>-sidebar">
 		<?php tutor_course_single_sidebar(); ?>
 	</div>
 	<div id="tutor-single-entry-content" class="tutor-quiz-single-entry-wrap">
-		<?php ( isset( $method_map[ $context ] ) && is_callable( $method_map[ $context ] ) ) ? $method_map[ $context ]() : 0; ?>
+		<?php
+		switch ( $context ) {
+			case 'lesson':
+				tutor_lesson_content();
+				break;
+			case 'assignment':
+				tutor_assignment_content();
+				break;
+		}
+		?>
 		<?php
 			/**
-			 * Note: $html_content comes from extracted $data variable
-			 * $html_content consist dynamic HTML content which is loaded by tutor_load_template_from_custom_path
+			 * $html_content is trusted markup from tutor_load_template_from_custom_path (quiz wrapper).
 			 */
-			echo isset( $html_content ) ? $html_content : ''; //phpcs:ignore 
+			echo $html_content; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>
 	</div>
 </div>

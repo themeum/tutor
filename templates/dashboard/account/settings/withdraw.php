@@ -28,8 +28,7 @@ $map_field_type = function ( $field_type ) {
 
 $get_saved_method_values = function ( $method_id, $user_id ) {
 	$meta_key = '_tutor_withdraw_method_data_' . $method_id;
-	$values   = get_user_meta( $user_id, $meta_key, true );
-	$values   = maybe_unserialize( $values );
+	$values   = WithdrawModel::get_user_withdraw_method_meta( $user_id, $meta_key );
 	return is_array( $values ) ? $values : array();
 };
 

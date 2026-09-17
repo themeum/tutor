@@ -7,6 +7,9 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * @var int    $discussion_id
+ * @var string $discussion_url
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -24,6 +27,7 @@ use Tutor\Components\Constants\Color;
 use Tutor\Components\Constants\Variant;
 use TUTOR\Input;
 use TUTOR\Lesson;
+use TUTOR\User;
 
 $lesson_comment = get_comment( $discussion_id );
 if ( ! $lesson_comment ) {
@@ -40,11 +44,12 @@ $comment_delete_modal_id = 'tutor-comment-delete-modal';
 $replies_order = Input::get( 'order', 'DESC' );
 $replies       = Lesson::get_comment_replies( $discussion_id, $replies_order );
 
-$course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->comment_post_ID ) );
+$course     = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->comment_post_ID ) );
+$action_url = add_query_arg( 'page_tab', 'comments', get_permalink( $lesson_comment->comment_post_ID ) );
 
 ?>
 <div class="tutor-discussion-single">
-	<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
+	<div class="tutor-flex tutor-justify-between tutor-items-center tutor-px-6 tutor-py-5 tutor-border-b">
 		<a 
 			href="<?php echo esc_url( UrlHelper::add_query_params( $discussion_url, array( 'tab' => 'lesson-comments' ) ) ); ?>" 
 			class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2"
@@ -52,6 +57,21 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 			<?php SvgIcon::make()->name( Icon::ARROW_LEFT_2 )->flip_rtl()->render(); ?>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
+		<?php if ( User::is_student_view() && ! empty( $action_url ) ) : ?>
+			<?php
+			Button::make()
+				->label( __( 'Go to Lesson', 'tutor' ) )
+				->variant( Variant::LINK )
+				->size( Size::X_SMALL )
+				->icon( Icon::CHEVRON_RIGHT_2, 'right' )
+				->flip_rtl()
+				->tag( 'a' )
+				->attr( 'href', esc_url( $action_url ) )
+				->attr( 'target', '_blank' )
+				->attr( 'rel', 'noopener noreferrer' )
+				->render();
+			?>
+		<?php endif; ?>
 	</div>
 	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-gap-5 tutor-mb-5">

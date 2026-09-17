@@ -287,7 +287,23 @@
     padding: $tutor-spacing-4;
     overflow: hidden;
 
+    &:has(.tutor-quiz-review-item-title) {
+      @include tutor-flex(column, flex-start, center);
+      gap: $tutor-spacing-none;
+    }
+
+    .tutor-quiz-review-item-title {
+      @include tutor-typography(tiny);
+      color: inherit;
+      min-width: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .tutor-quiz-review-item-text,
     span {
+      @include tutor-typography(small, semibold);
+      color: inherit;
       min-width: 0;
       overflow-wrap: break-word;
       word-break: break-word;
@@ -326,6 +342,7 @@
   }
   .tutor-quiz-question-option {
     &[data-readonly='true'] {
+      pointer-events: none;
       cursor: default;
     }
   }
@@ -428,6 +445,36 @@
       border: 0;
     }
   }
+}
+
+// The summary page is normally an isolated screen. In a Tutor page shell,
+// keep its sticky controls below the theme header and let the footer remain
+// bounded by the page so the theme footer can follow it in normal flow.
+.tutor-learning-area.tutor-has-site-shell .tutor-quiz-summary-page,
+.tutor-dashboard-layout.tutor-has-site-shell .tutor-quiz-summary-page,
+.tutor-dashboard-isolated-page-wrapper.tutor-has-site-shell .tutor-quiz-summary-page {
+  --tutor-quiz-summary-header-top: var(--tutor-site-header-offset);
+  --tutor-quiz-summary-footer-height: 0px;
+
+  .tutor-quiz-summary-body {
+    padding-bottom: $tutor-spacing-4;
+  }
+
+  .tutor-quiz-summary-footer {
+    position: sticky;
+    bottom: 0;
+    left: auto;
+    right: auto;
+  }
+}
+
+body:has(#wpadminbar)
+  :is(
+    .tutor-learning-area.tutor-has-site-shell .tutor-quiz-summary-page,
+    .tutor-dashboard-layout.tutor-has-site-shell .tutor-quiz-summary-page,
+    .tutor-dashboard-isolated-page-wrapper.tutor-has-site-shell .tutor-quiz-summary-page
+  ) {
+  --tutor-quiz-summary-header-top: var(--tutor-site-header-offset);
 }
 
 .tutor-quiz-summary-feedback {

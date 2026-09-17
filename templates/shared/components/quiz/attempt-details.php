@@ -34,6 +34,7 @@ $attempt_id           = (int) ( $attempt_id ?? Input::get( 'attempt_id', 0, Inpu
 $attempt_data         = $attempt_data ?? null;
 $back_url             = $back_url ?? get_permalink( $quiz_id );
 $context              = (string) ( $context ?? '' );
+$is_learning_area     = ! empty( $is_learning_area );
 $is_instructor_review = ! empty( $is_instructor_review );
 
 if ( $attempt_id > 0 && ! $attempt_data ) {

@@ -115,7 +115,8 @@ if ( ! function_exists( 'tutor_load_template' ) ) {
 	function tutor_load_template( $template = null, $variables = array(), $tutor_pro = false ) {
 		$variables = (array) $variables;
 		$variables = apply_filters( 'get_tutor_load_template_variables', $variables );
-		extract( $variables ); //phpcs:ignore
+		// EXTR_SKIP keeps $template and other locals from being overwritten by caller data.
+		extract( $variables, EXTR_SKIP ); //phpcs:ignore
 
 		$is_load = apply_filters( 'should_tutor_load_template', true, $template, $variables );
 		if ( ! $is_load ) {
@@ -148,7 +149,8 @@ if ( ! function_exists( 'tutor_load_template_part' ) ) {
 	function tutor_load_template_part( $template = null, $variables = array(), $tutor_pro = false ) {
 		$variables = (array) $variables;
 		$variables = apply_filters( 'get_tutor_load_template_variables', $variables );
-		extract( $variables ); //phpcs:ignore
+		// EXTR_SKIP keeps $template and other locals from being overwritten by caller data.
+		extract( $variables, EXTR_SKIP ); //phpcs:ignore
 
 		/**
 		 * Get template first from child-theme if exists

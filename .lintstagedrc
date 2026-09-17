@@ -1,5 +1,7 @@
 {
   "*.{ts,tsx}": ["pnpm exec eslint --fix", "bash -c 'pnpm exec tsc --noEmit'"],
   "*.{ts,tsx,jsonc,md}": ["pnpm exec prettier --write"],
-  "*.php": ["./vendor/bin/phpstan analyze --memory-limit=-1"]
+  "*.php": [
+    "bash -c 'if [ ! -x ./vendor/bin/phpstan ]; then printf \"\\nError: PHPStan is not installed.\\n\\nInstall it with:\\n  composer install\\n\\nThen retry your commit.\\n\\n\" >&2; exit 1; fi; exec ./vendor/bin/phpstan analyze --memory-limit=-1 \"$@\"' --"
+  ]
 }

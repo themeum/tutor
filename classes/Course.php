@@ -10,6 +10,9 @@
 
 namespace TUTOR;
 
+use Exception;
+use InvalidArgumentException;
+
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
@@ -208,7 +211,12 @@ class Course extends Tutor_Base {
 		 *
 		 * @since v.1.6.6
 		 */
-		add_action( 'deleted_post', array( new CourseModel(), 'delete_course_data' ) );
+		add_action(
+			'deleted_post',
+			function ( $post_id ) {
+				( new CourseModel() )->delete_course_data( $post_id );
+			}
+		);
 
 		/**
 		 * Delete course data after deleted course
@@ -355,8 +363,8 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param bool    $required Whether the password is required.
-	 * @param WP_Post $post     The post object.
+	 * @param bool     $required Whether the password is required.
+	 * @param \WP_Post $post     The post object.
 	 *
 	 * @return bool false if the current user is enrolled, original value otherwise.
 	 */
@@ -1098,7 +1106,8 @@ class Course extends Tutor_Base {
 				'course_target_audience'   => 'sanitize_textarea_field',
 				'course_material_includes' => 'sanitize_textarea_field',
 				'course_requirements'      => 'sanitize_textarea_field',
-			)
+			),
+			true
 		);
 
 		$course_id = (int) $params['course_id'];
@@ -1254,13 +1263,16 @@ class Course extends Tutor_Base {
 				$topic_contents = tutor_utils()->get_course_contents_by_topic( $post->ID, -1 );
 
 				if ( $topic_contents->have_posts() ) {
-					foreach ( $topic_contents->get_posts() as $post ) {
-						if ( tutor()->quiz_post_type === $post->post_type ) {
-							$questions            = tutor_utils()->get_questions_by_quiz( $post->ID );
-							$post->total_question = is_array( $questions ) ? count( $questions ) : 0;
+					foreach ( $topic_contents->get_posts() as $content ) {
+						if ( tutor()->quiz_post_type === $content->post_type ) {
+							$questions = tutor_utils()->get_questions_by_quiz( $content->ID );
+							$content   = (object) array_merge(
+								(array) $content,
+								array( 'total_question' => is_array( $questions ) ? count( $questions ) : 0 )
+							);
 						}
 
-						array_push( $current_topic['contents'], $post );
+						array_push( $current_topic['contents'], $content );
 					}
 				}
 
@@ -1361,10 +1373,10 @@ class Course extends Tutor_Base {
 		if ( $video_intro ) {
 			$source = $video_intro['source'] ?? '';
 			if ( 'html5' === $source ) {
-					$poster_url            = wp_get_attachment_url( $video['poster'] ?? 0 );
-					$source_html5          = wp_get_attachment_url( $video['source_video_id'] ?? 0 );
-					$video['poster_url']   = $poster_url;
-					$video['source_html5'] = $source_html5;
+					$poster_url                  = wp_get_attachment_url( $video_intro['poster'] ?? 0 );
+					$source_html5                = wp_get_attachment_url( $video_intro['source_video_id'] ?? 0 );
+					$video_intro['poster_url']   = $poster_url;
+					$video_intro['source_html5'] = $source_html5;
 			}
 		}
 
@@ -1375,11 +1387,21 @@ class Course extends Tutor_Base {
 
 		$editors = tutor_utils()->get_editor_list( $course_id );
 
+		/**
+		 * Replaced the post_author with current user id if post_author value is 0.
+		 *
+		 * @since 4.0.7
+		 */
+		$post_author = (int) $course['post_author'];
+		if ( 0 === $post_author && $course_id > 0 ) {
+			$post_author = get_current_user_id();
+		}
+
 		$data = array(
 			'editors'                  => array_values( $editors ),
 			'editor_used'              => tutor_utils()->get_editor_used( $course_id ),
 			'preview_link'             => get_preview_post_link( $course_id ),
-			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
+			'post_author'              => tutor_utils()->get_tutor_user( $post_author ),
 			'course_categories'        => wp_get_post_terms( $course_id, CourseModel::COURSE_CATEGORY ),
 			'course_tags'              => wp_get_post_terms( $course_id, CourseModel::COURSE_TAG ),
 			'thumbnail_id'             => get_post_meta( $course_id, '_thumbnail_id', true ),
@@ -1521,7 +1543,7 @@ class Course extends Tutor_Base {
 
 		if ( isset( $default_data['current_user']['data']['id'] ) ) {
 			$tutor_user = tutor_utils()->get_tutor_user( $default_data['current_user']['data']['id'] );
-			$default_data['current_user']['data']['tutor_profile_photo_url'] = $tutor_user->tutor_profile_photo_url;
+			$default_data['current_user']['data']['tutor_profile_photo_url'] = is_object( $tutor_user ) ? $tutor_user->tutor_profile_photo_url : '';
 		}
 
 		/**
@@ -1544,11 +1566,12 @@ class Course extends Tutor_Base {
 			'instructor_can_manage_co_instructors',
 		);
 
-		$full_settings                       = get_option( 'tutor_option', array() );
-		$settings                            = Options_V2::get_only( $required_options );
-		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $full_settings['tutor_frontend_course_page_logo_id'] ?? 0, 'full' );
-		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
-		$settings['youtube_api_key_exist']   = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
+		$full_settings                     = get_option( 'tutor_option', array() );
+		$settings                          = Options_V2::get_only( $required_options );
+		$logo_id                           = absint( $full_settings['brand_logo_light'] ?? $full_settings['tutor_frontend_course_page_logo_id'] ?? 0 );
+		$settings['brand_logo_light']      = $logo_id > 0 ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
+		$settings['chatgpt_key_exist']     = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+		$settings['youtube_api_key_exist'] = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
 		$settings['enable_tax']                    = Tax::get_setting( 'enable_tax', true );
 		$settings['is_tax_included_in_price']      = Tax::is_tax_included_in_price();
@@ -1733,6 +1756,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 1.0.0
 	 * @since 3.9.9 Check if user can manage course before updating order.
+	 * @since 4.0.8 Course content validation added.
 	 *
 	 * @return void
 	 */
@@ -1746,21 +1770,27 @@ class Course extends Tutor_Base {
 			wp_send_json_error( __( 'Sorting order is required', 'tutor' ) );
 		}
 
-		$topic_id  = (int) isset( $sorting_order[0], $sorting_order[0]['topic_id'] ) ? $sorting_order[0]['topic_id'] : 0;
-		$course_id = wp_get_post_parent_id( $topic_id );
+		$topic_id       = (int) isset( $sorting_order[0], $sorting_order[0]['topic_id'] ) ? $sorting_order[0]['topic_id'] : 0;
+		$course_id      = wp_get_post_parent_id( $topic_id );
+		$content_parent = Input::post( 'content_parent', array(), Input::TYPE_ARRAY );
 
 		if ( ! $topic_id || ! $course_id ) {
-			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
 		}
 
-		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) || ! User::is_admin() ) {
-			wp_send_json_error( tutor_utils()->error_message() );
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) && ! User::is_admin() ) {
+			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		if ( Input::has( 'content_parent' ) ) {
-			$content_parent = Input::post( 'content_parent', array(), Input::TYPE_ARRAY );
-			$topic_id       = tutor_utils()->array_get( 'parent_topic_id', $content_parent );
-			$content_id     = tutor_utils()->array_get( 'content_id', $content_parent );
+		try {
+			$this->validate_course_content_order( $course_id, $sorting_order, $content_parent );
+		} catch ( \Throwable $th ) {
+			$this->response_bad_request( $th->getMessage() );
+		}
+
+		if ( ! empty( $content_parent ) ) {
+			$topic_id   = tutor_utils()->array_get( 'parent_topic_id', $content_parent );
+			$content_id = tutor_utils()->array_get( 'content_id', $content_parent );
 
 			// Update the parent topic id of the content.
 			global $wpdb;
@@ -1770,7 +1800,7 @@ class Course extends Tutor_Base {
 		// Save course content order.
 		$this->save_course_content_order( $sorting_order );
 
-		wp_send_json_success();
+		$this->response_success( __( 'Course content order updated successfully!', 'tutor' ) );
 	}
 
 	/**
@@ -1941,10 +1971,16 @@ class Course extends Tutor_Base {
 
 		$sorting_order = Input::post( 'tutor_topics_lessons_sorting', '' );
 		$sorting_order = json_decode( $sorting_order, true ) ?? array();
+
 		/**
 		 * Sorting Topics and lesson
 		 */
-		$this->save_course_content_order( $sorting_order );
+		try {
+			$this->validate_course_content_order( $post_ID, $sorting_order );
+			$this->save_course_content_order( $sorting_order );
+		} catch ( \Throwable $th ) { // phpcs:ignore
+			// Doing nothing.
+		}
 
 		// Additional data like course intro video.
 		if ( $additional_data_edit ) {
@@ -1957,6 +1993,7 @@ class Course extends Tutor_Base {
 				),
 				true
 			);
+			$video        = tutor_utils()->filter_video_meta( $video );
 			$video_source = tutor_utils()->array_get( 'source', $video );
 			if ( -1 !== $video_source ) {
 				update_post_meta( $post_ID, '_video', $video );
@@ -1968,10 +2005,21 @@ class Course extends Tutor_Base {
 		/**
 		 * Adding author to instructor automatically
 		 */
+		$requested_author_id = Input::post( 'post_author_override', 0, Input::TYPE_INT );
 
-		// Override post author id.
-		$author_id = isset( $_POST['post_author_override'] ) ? $_POST['post_author_override'] : $post->post_author; //phpcs:ignore
-		$attached  = (int) $wpdb->get_var(
+		/**
+		 * Only accept the requested author override if it targets a real,approved instructor or admin
+		 *
+		 * @since 4.0.4
+		 */
+		$author_id = $post->post_author;
+		if ( $requested_author_id && ( User::is_admin() || User::is_instructor() ) ) {
+			if ( User::is_admin( $requested_author_id ) || User::is_instructor( $requested_author_id, true ) ) {
+				$author_id = $requested_author_id;
+			}
+		}
+
+		$attached = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(umeta_id) FROM {$wpdb->usermeta}
 					WHERE user_id = %d
@@ -1996,6 +2044,18 @@ class Course extends Tutor_Base {
 				//phpcs:ignore WordPress.Security.NonceVerification.Missing
 				update_post_meta( $post_ID, $key, ( isset( $_POST[ $key ] ) ? 'yes' : 'no' ) );
 			}
+		}
+
+		/**
+		 * Update course content if main author is changed and multi-instructor addon is disabled.
+		 *
+		 * @since 4.0.4
+		 */
+		if ( ! $attached && ! tutor_utils()->is_addon_enabled( 'tutor-multi-instructors' ) ) {
+			CourseModel::update_course_content_author( $post_ID, (int) $author_id );
+			// Remove all existing instructors from the course and add the new one.
+			delete_metadata( 'user', 0, '_tutor_instructor_course_id', $post_ID, true );
+			add_user_meta( $author_id, '_tutor_instructor_course_id', $post_ID );
 		}
 
 		do_action( 'tutor_save_course_after', $post_ID, $post );
@@ -2212,7 +2272,7 @@ class Course extends Tutor_Base {
 		} else {
 			CourseModel::mark_course_as_completed( $course_id, $user_id );
 			// Set temporary identifier to show review pop up.
-			self::set_review_popup_data( $user_id, $course_id, $permalink );
+			self::set_review_popup_data( $user_id, $course_id );
 
 			wp_safe_redirect( $permalink );
 			exit;
@@ -2616,7 +2676,7 @@ class Course extends Tutor_Base {
 	 * @return string
 	 */
 	public function enable_disable_material_includes( $html ) {
-		$disable_option = ! (bool) get_tutor_option( 'enable_course_material', true, true );
+		$disable_option = ! (bool) get_tutor_option( 'enable_course_material', true );
 		if ( $disable_option ) {
 			return '';
 		}
@@ -2752,9 +2812,9 @@ class Course extends Tutor_Base {
 		if ( ! $hide_course_from_shop_page ) {
 			return;
 		}
-		add_action( 'woocommerce_product_query', array( $this, 'filter_woocommerce_product_query' ) );
-		add_filter( 'edd_downloads_query', array( $this, 'filter_edd_downloads_query' ), 10, 2 );
-		add_action( 'pre_get_posts', array( $this, 'filter_archive_meta_query' ), 1 );
+		add_filter( 'woocommerce_product_query', array( $this, 'filter_woocommerce_product_query' ) );
+		add_filter( 'edd_downloads_query', array( $this, 'filter_edd_downloads_query' ), 10 );
+		add_filter( 'pre_get_posts', array( $this, 'filter_archive_meta_query' ), 1 );
 	}
 
 
@@ -2888,7 +2948,7 @@ class Course extends Tutor_Base {
 		}
 
 		$completed_lessons = tutor_utils()->get_completed_lesson_count_by_course( $course_id, $user_id );
-		$total_lessons     = tutor_utils()->get_lesson_count_by_course( $course_id );
+		$total_lessons     = tutor_utils()->get_lesson_count_by_course( $course_id ); // @phpstan-ignore method.notFound
 
 		if ( $completed_lessons < $total_lessons ) {
 			return __( 'Complete all lessons to mark this course as complete', 'tutor' );
@@ -3108,7 +3168,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @param integer $course_id course ID.
 	 * @param integer $user_id user ID.
-     *
+	 *
 	 * @return void
 	 */
 	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
@@ -3539,5 +3599,82 @@ class Course extends Tutor_Base {
 		->attr( 'type', 'button' )
 		->attr( '@click', "TutorCore.modal.showModal('{$modal_id}')" )
 		->render();
+	}
+
+	/**
+	 * Validate course content order
+	 *
+	 * @since 4.0.8
+	 *
+	 * @throws InvalidArgumentException If passing argument wrong.
+	 * @throws Exception If discrepency found in topic of content ids.
+	 *
+	 * @param int   $course_id   The ID of the course.
+	 * @param array $sorting_order The sorting order of the course contents.
+	 * @param array $content_parent Parent topic & content ids.
+	 *
+	 * @return void
+	 */
+	private function validate_course_content_order( int $course_id, array $sorting_order, array $content_parent = array() ): void {
+		if ( ! $course_id ) {
+			throw new InvalidArgumentException( esc_html__( 'Invalid course or topic ID', 'tutor' ) );
+		}
+
+		$provided_topic_ids   = array();
+		$provided_content_ids = array();
+		foreach ( $sorting_order as $topic ) {
+			$provided_topic_ids[] = (int) $topic['topic_id'] ?? 0;
+
+			if ( ! empty( $topic['lesson_ids'] ) ) {
+				$provided_content_ids = array_merge( $provided_content_ids, array_map( 'intval', $topic['lesson_ids'] ) );
+			}
+		}
+
+		if ( ! empty( $content_parent ) ) {
+			foreach ( $content_parent as $topic ) {
+				$provided_topic_ids[]   = $topic['parent_topic_id'];
+				$provided_content_ids[] = $topic['content_id'];
+			}
+		}
+
+		$provided_topic_ids   = array_values( array_unique( array_filter( $provided_topic_ids ) ) );
+		$provided_content_ids = array_values( array_unique( array_filter( $provided_content_ids ) ) );
+
+		if ( empty( $provided_topic_ids ) ) {
+			throw new InvalidArgumentException( esc_html__( 'No topics provided', 'tutor' ) );
+		}
+
+		$topic_ids = get_posts(
+			array(
+				'fields'         => 'ids',
+				'post_parent'    => $course_id,
+				'post_type'      => tutor()->topics_post_type,
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+			)
+		);
+
+		$topic_id_diff = array_diff( $provided_topic_ids, $topic_ids );
+		if ( ! empty( $topic_id_diff ) ) {
+			throw new Exception( esc_html__( 'Invalid topic id provided', 'tutor' ) );
+		}
+
+		$default_post_types = array( tutor()->lesson_post_type, tutor()->quiz_post_type );
+		$content_post_types = array_unique( apply_filters( 'tutor_course_contents_post_types', $default_post_types ) );
+
+		$content_ids = get_posts(
+			array(
+				'fields'          => 'ids',
+				'post_parent__in' => $topic_ids,
+				'post_status'     => 'publish',
+				'post_type'       => $content_post_types,
+				'posts_per_page'  => -1,
+			)
+		);
+
+		$content_id_diff = array_diff( $provided_content_ids, $content_ids );
+		if ( ! empty( $content_id_diff ) ) {
+			throw new Exception( esc_html__( 'Invalid content id provided', 'tutor' ) );
+		}
 	}
 }

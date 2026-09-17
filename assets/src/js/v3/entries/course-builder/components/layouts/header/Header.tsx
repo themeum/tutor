@@ -188,6 +188,7 @@ const styles = {
         'logo closeButton'
         'container container';
       row-gap: ${spacing[8]};
+      top: 0;
     }
   `,
   container: css`

@@ -155,7 +155,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		<?php if ( empty( $results ) ) : ?>
 			<?php
 				EmptyState::make()
-					->title( 'No Courses Found' )
+					->title( __( 'No Courses Found', 'tutor' ) )
 					->icon( tutor_utils()->get_themed_svg( 'images/illustrations/learning-empty.svg' ) )
 					->render();
 			?>

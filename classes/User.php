@@ -800,6 +800,7 @@ class User {
 		}
 
 		$switch_mode  = '';
+		$switch_label = '';
 		$current_mode = Input::post( 'current_mode' );
 
 		if ( ! in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true ) ) {
@@ -807,15 +808,17 @@ class User {
 		}
 
 		if ( self::VIEW_AS_INSTRUCTOR === $current_mode ) {
-			$switch_mode = self::VIEW_AS_STUDENT;
+			$switch_mode  = self::VIEW_AS_STUDENT;
+			$switch_label = __( 'Student', 'tutor' );
 		} elseif ( self::VIEW_AS_STUDENT === $current_mode ) {
-			$switch_mode = self::VIEW_AS_INSTRUCTOR;
+			$switch_mode  = self::VIEW_AS_INSTRUCTOR;
+			$switch_label = __( 'Instructor', 'tutor' );
 		}
 
 		update_user_meta( $user_id, self::VIEW_MODE_USER_META, $switch_mode );
 
 		// translators:%s for switching mode.
-		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_mode ) );
+		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_label ) );
 	}
 
 	/**

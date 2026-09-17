@@ -1,0 +1,86 @@
+meta {
+  name: course-rating/{id}
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{base_url}}/course-rating/1
+  body: none
+  auth: basic
+}
+
+params:query {
+  ~offset: 0
+  ~limit: 10
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Course Ratings & Reviews
+  
+  Retrieves overall rating statistics (count, average rating, star breakdown) and a paginated list of approved student reviews for a course.
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/course-rating/:id`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Path Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `id` | `integer` | **Yes** | The WordPress Post ID of the course. |
+  
+  ## Query Parameters
+  
+  | Parameter | Type | Default | Description |
+  | :--- | :--- | :--- | :--- |
+  | `offset` | `integer` | `0` | Offset for pagination of reviews. |
+  | `limit` | `integer` | `10` | Number of reviews to return per request. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "success",
+    "message": "Course rating retrieved successfully",
+    "data": {
+      "rating_count": 8,
+      "rating_avg": 4.88,
+      "five_star_count": 7,
+      "four_star_count": 1,
+      "three_star_count": 0,
+      "two_star_count": 0,
+      "one_star_count": 0,
+      "reviews": [
+        {
+          "comment_ID": "85",
+          "comment_post_ID": "105",
+          "comment_author": "Alex Smith",
+          "comment_content": "Exceptional course! Very clear and concise.",
+          "rating": 5,
+          "review_title": "Great practical examples"
+        }
+      ]
+    }
+  }
+  ```
+  
+  ### 404 Not Found
+  ```json
+  {
+    "code": "not_found",
+    "message": "Rating not found for given ID",
+    "data": []
+  }
+  ```
+}

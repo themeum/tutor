@@ -94,8 +94,8 @@
 }
 
 .tutor-range-calendar-popover {
-  width: 700px;
-  max-width: 700px;
+  min-width: 700px;
+  max-width: 750px;
 
   @include tutor-breakpoint-down(md) {
     width: 300px;

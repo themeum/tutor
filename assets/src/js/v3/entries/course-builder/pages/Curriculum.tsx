@@ -562,7 +562,7 @@ export default Curriculum;
 
 const styles = {
   container: css`
-    margin-top: ${spacing[32]};
+    margin-top: calc(${spacing[32]} - 1px);
     width: 100%;
 
     ${Breakpoint.smallTablet} {
