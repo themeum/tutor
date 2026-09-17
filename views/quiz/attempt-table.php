@@ -65,7 +65,6 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 						$attempt_id    = $attempt->attempt_id;
 						$answer_counts = QuizModel::get_attempt_answer_counts( $answers );
 						$correct       = $answer_counts['correct'];
-						$partial       = $answer_counts['partial'];
 						$incorrect     = $answer_counts['incorrect'];
 					?>
 					<tr>

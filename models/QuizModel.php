@@ -259,7 +259,7 @@ class QuizModel {
 			$answers           = self::get_quiz_answers_by_attempt_id( $quiz_attempt->attempt_id );
 			$answer_counts     = self::get_attempt_answer_counts( $answers );
 			$correct_answers   = $answer_counts['correct'];
-			$partial_answers   = $answer_counts['partial'];
+			$partial_answers   = $answer_counts['partial'] ?? 0;
 			$incorrect_answers = $answer_counts['incorrect'];
 
 			$formatted_attempt = array(
@@ -1096,22 +1096,16 @@ class QuizModel {
 		$is_correct    = $attempt_answer->is_correct ?? null;
 
 		if ( self::is_attempt_answer_skipped( $attempt_answer ) ) {
-			return 'skipped';
+			$status = 'skipped';
+		} elseif ( in_array( $question_type, self::get_manual_review_types(), true ) ) {
+			$status = null === $is_correct ? 'pending' : 'graded';
+		} elseif ( self::ATTEMPT_ANSWER_CORRECT === (int) $is_correct ) {
+			$status = 'correct';
+		} else {
+			$status = 'incorrect';
 		}
 
-		if ( in_array( $question_type, self::get_manual_review_types(), true ) ) {
-			return null === $is_correct ? 'pending' : 'graded';
-		}
-
-		if ( self::ATTEMPT_ANSWER_CORRECT === (int) $is_correct ) {
-			return 'correct';
-		}
-
-		if ( self::ATTEMPT_ANSWER_PARTIAL === (int) $is_correct ) {
-			return 'partial';
-		}
-
-		return 'incorrect';
+		return apply_filters( 'tutor_quiz_attempt_answer_status', $status, $attempt_answer );
 	}
 
 	/**
@@ -1124,21 +1118,11 @@ class QuizModel {
 	 * @return array Associative array with status, label, variant, label_map, and variant_map.
 	 */
 	public static function get_attempt_answer_badge( $attempt_answer ): array {
-		$status         = $attempt_answer ? self::get_attempt_answer_status( $attempt_answer ) : 'skipped';
-		$partial_counts = $attempt_answer ? self::get_attempt_answer_correct_counts( $attempt_answer ) : null;
-		$partial_label  = $partial_counts
-			? sprintf(
-				/* translators: 1: correct count, 2: total correct count. */
-				__( '%1$d/%2$d correct', 'tutor' ),
-				$partial_counts['correct'],
-				$partial_counts['total']
-			)
-			: __( 'Partially correct', 'tutor' );
+		$status = $attempt_answer ? self::get_attempt_answer_status( $attempt_answer ) : 'skipped';
 
 		$label_map = array(
 			'pending'   => __( 'Pending', 'tutor' ),
 			'correct'   => __( 'Correct', 'tutor' ),
-			'partial'   => $partial_label,
 			'incorrect' => __( 'Incorrect', 'tutor' ),
 			'graded'    => __( 'Graded', 'tutor' ),
 			'skipped'   => __( 'Skipped', 'tutor' ),
@@ -1147,18 +1131,27 @@ class QuizModel {
 		$variant_map = array(
 			'pending'   => Badge::WARNING,
 			'correct'   => Badge::SUCCESS,
-			'partial'   => Badge::SUCCESS,
 			'incorrect' => Badge::ERROR,
 			'graded'    => Badge::HIGHLIGHT,
 			'skipped'   => Badge::INFO,
+		);
+
+		$class_map = array(
+			'pending'   => 'label-warning',
+			'correct'   => 'label-success',
+			'incorrect' => 'label-danger',
+			'graded'    => 'label-primary',
+			'skipped'   => 'label-default',
 		);
 
 		$badge = array(
 			'status'      => $status,
 			'label'       => $label_map[ $status ] ?? '',
 			'variant'     => $variant_map[ $status ] ?? Badge::INFO,
+			'class'       => $class_map[ $status ] ?? 'label-default',
 			'label_map'   => $label_map,
 			'variant_map' => $variant_map,
+			'class_map'   => $class_map,
 		);
 
 		return apply_filters( 'tutor_quiz_attempt_answer_badge', $badge, $attempt_answer );
@@ -1218,7 +1211,6 @@ class QuizModel {
 	public static function get_attempt_answer_counts( $answers ): array {
 		$counts = array(
 			'correct'   => 0,
-			'partial'   => 0,
 			'incorrect' => 0,
 		);
 
@@ -1231,169 +1223,7 @@ class QuizModel {
 			}
 		}
 
-		return $counts;
-	}
-
-	/**
-	 * Get correct answer count and total count for an attempt answer.
-	 *
-	 * Returns array with 'correct' (N) and 'total' (M) for supported auto-graded questions,
-	 * or null if unsupported/unavailable.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @param object $attempt_answer Attempt answer object.
-	 *
-	 * @return array{ correct: int, total: int }|null
-	 */
-	public static function get_attempt_answer_correct_counts( $attempt_answer ): ?array {
-		if ( ! is_object( $attempt_answer ) ) {
-			return null;
-		}
-
-		$question_id   = (int) ( $attempt_answer->question_id ?? 0 );
-		$question_type = (string) ( $attempt_answer->question_type ?? '' );
-		$given_answer  = maybe_unserialize( $attempt_answer->given_answer ?? null );
-
-		if ( $question_id <= 0 || empty( $question_type ) ) {
-			return null;
-		}
-
-		switch ( $question_type ) {
-			case self::QUESTION_TYPE_MATCHING:
-			case self::QUESTION_TYPE_IMAGE_MATCHING:
-			case self::QUESTION_TYPE_ORDERING:
-				$original_answer_rows = QueryHelper::get_all(
-					'tutor_quiz_question_answers',
-					array(
-						'belongs_question_id'   => $question_id,
-						'belongs_question_type' => $question_type,
-					),
-					'answer_order',
-					-1,
-					'ASC'
-				);
-				$original_answers     = wp_list_pluck( $original_answer_rows, 'answer_id' );
-				$total                = (int) tutor_utils()->count( $original_answers );
-				if ( 0 === $total ) {
-					return null;
-				}
-
-				$submitted_answers = is_array( $given_answer ) ? array_values( $given_answer ) : array();
-				$correct           = 0;
-				for ( $i = 0; $i < $total; $i++ ) {
-					if ( isset( $submitted_answers[ $i ] ) && (string) $submitted_answers[ $i ] === (string) $original_answers[ $i ] ) {
-						++$correct;
-					}
-				}
-
-				return array(
-					'correct' => $correct,
-					'total'   => $total,
-				);
-
-			case self::QUESTION_TYPE_FILL_IN_THE_BLANK:
-				$original_rows = QueryHelper::get_all(
-					'tutor_quiz_question_answers',
-					array(
-						'belongs_question_id'   => $question_id,
-						'belongs_question_type' => $question_type,
-					),
-					'answer_id',
-					1
-				);
-				$original_row  = $original_rows[0] ?? null;
-				if ( ! $original_row ) {
-					return null;
-				}
-
-				$gap_answers = array_map( 'trim', explode( '|', $original_row->answer_two_gap_match ) );
-				$total       = (int) tutor_utils()->count( $gap_answers );
-				if ( 0 === $total ) {
-					return null;
-				}
-
-				$user_inputs = is_array( $given_answer ) ? array_values( $given_answer ) : array( (string) $given_answer );
-				$correct     = 0;
-				for ( $i = 0; $i < $total; $i++ ) {
-					$user_val = isset( $user_inputs[ $i ] ) ? trim( (string) $user_inputs[ $i ] ) : '';
-					$orig_val = isset( $gap_answers[ $i ] ) ? trim( (string) $gap_answers[ $i ] ) : '';
-					if ( '' !== $user_val && 0 === strcasecmp( $user_val, $orig_val ) ) {
-						++$correct;
-					}
-				}
-
-				return array(
-					'correct' => $correct,
-					'total'   => $total,
-				);
-
-			case self::QUESTION_TYPE_IMAGE_ANSWERING:
-				$stored_answers = QueryHelper::get_all(
-					'tutor_quiz_question_answers',
-					array(
-						'belongs_question_id'   => $question_id,
-						'belongs_question_type' => $question_type,
-					),
-					'answer_order',
-					-1,
-					'ASC'
-				);
-				$total          = (int) tutor_utils()->count( $stored_answers );
-				if ( 0 === $total ) {
-					return null;
-				}
-
-				$correct = 0;
-				foreach ( $stored_answers as $stored ) {
-					$user_val    = isset( $given_answer[ $stored->answer_id ] ) ? trim( (string) $given_answer[ $stored->answer_id ] ) : '';
-					$correct_val = trim( (string) $stored->answer_title );
-					if ( '' !== $user_val && 0 === strcasecmp( $user_val, $correct_val ) ) {
-						++$correct;
-					}
-				}
-
-				return array(
-					'correct' => $correct,
-					'total'   => $total,
-				);
-
-			case self::QUESTION_TYPE_MULTIPLE_CHOICE:
-			case self::QUESTION_TYPE_SINGLE_CHOICE:
-				$all_options = QueryHelper::get_all(
-					'tutor_quiz_question_answers',
-					array(
-						'belongs_question_id'   => $question_id,
-						'belongs_question_type' => $question_type,
-					),
-					'answer_id',
-					-1
-				);
-
-				$correct_ids = array();
-				foreach ( $all_options as $opt ) {
-					if ( 1 === (int) $opt->is_correct ) {
-						$correct_ids[] = (int) $opt->answer_id;
-					}
-				}
-
-				$total = (int) tutor_utils()->count( $correct_ids );
-				if ( 0 === $total ) {
-					return null;
-				}
-
-				$selected_ids = is_array( $given_answer ) ? array_map( 'intval', $given_answer ) : array( (int) $given_answer );
-				$selected_ids = array_filter( $selected_ids );
-				$correct      = (int) tutor_utils()->count( array_intersect( $selected_ids, $correct_ids ) );
-
-				return array(
-					'correct' => $correct,
-					'total'   => $total,
-				);
-
-			default:
-				return null;
-		}
+		return apply_filters( 'tutor_quiz_attempt_answer_counts', $counts, $answers );
 	}
 
 	/**
@@ -2054,6 +1884,8 @@ class QuizModel {
 	/**
 	 * Check if attempt info snapshot has partial or negative marking enabled.
 	 *
+	 * Delegated via filter to Tutor Pro.
+	 *
 	 * @since 4.1.0
 	 *
 	 * @param array|string $attempt_info Attempt info snapshot array or serialized string.
@@ -2061,14 +1893,6 @@ class QuizModel {
 	 * @return bool
 	 */
 	public static function has_partial_or_negative_marking( $attempt_info ): bool {
-		$attempt_info = is_string( $attempt_info ) ? maybe_unserialize( $attempt_info ) : $attempt_info;
-		if ( ! is_array( $attempt_info ) ) {
-			return false;
-		}
-
-		$enable_partial  = ! empty( $attempt_info['enable_partial_marking'] ) && '1' === (string) $attempt_info['enable_partial_marking'];
-		$enable_negative = ! empty( $attempt_info['enable_negative_marking'] ) && '1' === (string) $attempt_info['enable_negative_marking'];
-
-		return $enable_partial || $enable_negative;
+		return (bool) apply_filters( 'tutor_quiz_has_partial_or_negative_marking', false, $attempt_info );
 	}
 }

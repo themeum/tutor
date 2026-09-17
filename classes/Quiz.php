@@ -1412,6 +1412,13 @@ class Quiz {
 				continue;
 			}
 
+			$target_is_correct = ( 'correct' === $mark_as ) ? 1 : 0;
+			$prev_is_correct   = null !== $attempt_answer->is_correct ? (int) $attempt_answer->is_correct : null;
+
+			if ( $prev_is_correct === $target_is_correct ) {
+				continue;
+			}
+
 			$this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
 		}
 
@@ -1697,38 +1704,40 @@ class Quiz {
 		$mark_as = apply_filters( 'tutor_quiz_review_mark_as', $mark_as, $attempt_answer_id, $attempt_id, $question );
 
 		$attempt_update_data = array();
+		$previous_achieved   = (float) ( $attempt_answer->achieved_mark ?? 0.0 );
 
-		if ( 'correct' === $mark_as ) {
-			$answer_update_data = array(
-				'achieved_mark' => $attempt_answer->question_mark,
-				'is_correct'    => 1,
-			);
+		$question_mark = (float) ( $attempt_answer->question_mark ?? $question->question_mark ?? 0.0 );
+		$default_marks = array(
+			'achieved_mark' => 'correct' === $mark_as ? $question_mark : 0.00,
+			'minus_mark'    => 0,
+		);
 
-			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
+		$review_marks = apply_filters(
+			'tutor_quiz_review_answer_marks',
+			$default_marks,
+			$mark_as,
+			$attempt_answer,
+			$question,
+			$attempt
+		);
 
-			if ( 0 == $previous_ans || null == $previous_ans ) {
-				$attempt_update_data = array(
-					'earned_marks'         => $attempt->earned_marks + $attempt_answer->question_mark,
-					'is_manually_reviewed' => 1,
-					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
-				);
-			}
-		} elseif ( 'incorrect' === $mark_as ) {
-			$answer_update_data = array(
-				'achieved_mark' => '0.00',
-				'is_correct'    => 0,
-			);
+		$new_achieved = (float) ( $review_marks['achieved_mark'] ?? $default_marks['achieved_mark'] );
+		$new_minus    = (float) ( $review_marks['minus_mark'] ?? $default_marks['minus_mark'] );
+		$mark_diff    = $new_achieved - $previous_achieved;
 
-			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
+		$answer_update_data = array(
+			'achieved_mark' => $new_achieved,
+			'minus_mark'    => $new_minus,
+			'is_correct'    => 'correct' === $mark_as ? 1 : 0,
+		);
 
-			if ( 1 == $previous_ans ) {
-				$attempt_update_data = array(
-					'earned_marks'         => $attempt->earned_marks - $attempt_answer->question_mark,
-					'is_manually_reviewed' => 1,
-					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
-				);
-			}
-		}
+		$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
+
+		$attempt_update_data = array(
+			'earned_marks'         => max( 0.0, (float) $attempt->earned_marks + $mark_diff ),
+			'is_manually_reviewed' => 1,
+			'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
+		);
 
 		if ( ! in_array( $question->question_type, QuizModel::get_manual_review_types(), true ) ) {
 			$attempt_row  = QueryHelper::get_row( 'tutor_quiz_attempts', array( 'attempt_id' => $attempt_id ), 'attempt_id' );

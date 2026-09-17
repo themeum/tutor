@@ -221,7 +221,6 @@ extract( QuizModel::get_quiz_attempt_timing( $attempt_data ) ); // $attempt_dura
 $answers       = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 $answer_counts = QuizModel::get_attempt_answer_counts( $answers );
 $correct       = $answer_counts['correct'];
-$partial       = $answer_counts['partial'];
 $incorrect     = $answer_counts['incorrect'];
 
 // Prepare the column list for the first summary table.
@@ -789,12 +788,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 															<?php
 															if ( 'h5p' !== $answer->question_type ) {
 																$achieved_val  = (float) ( $answer->achieved_mark ?? 0 );
-																$minus_val     = (float) ( $answer->minus_mark ?? 0 );
-																$earned_val    = round( $achieved_val + $minus_val, 2 );
 																$question_mark = (float) ( $answer->question_mark ?? 0 );
 																$qmark_str     = ( floor( $question_mark ) === $question_mark ) ? (string) (int) $question_mark : (string) round( $question_mark, 2 );
 																$achieved_str  = (string) round( $achieved_val, 2 );
-																if ( floor( $achieved_val ) === $achieved_val && 0.0 === $minus_val ) {
+																if ( floor( $achieved_val ) === $achieved_val ) {
 																	$achieved_str = number_format( $achieved_val, 1, '.', '' );
 																}
 																$score_label = sprintf(
@@ -804,24 +801,12 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																	$qmark_str
 																);
 
-																$badge_info    = QuizModel::get_attempt_answer_badge( $answer );
-																$badge_classes = array(
-																	'correct'   => 'label-success',
-																	'partial'   => 'label-success',
-																	'graded'    => 'label-primary',
-																	'pending'   => 'label-warning',
-																	'incorrect' => 'label-danger',
-																	'skipped'   => 'label-default',
-																);
-																$badge_class   = $badge_classes[ $answer_status ] ?? 'label-default';
+																$badge_info  = QuizModel::get_attempt_answer_badge( $answer );
+																$badge_class = $badge_info['class'] ?? 'label-default';
 
-																echo '<span class="tutor-badge-label ' . esc_attr( $badge_class ) . '">' . esc_html( $badge_info['label'] ) . '</span>';
+																echo '<span class="tutor-badge-label ' . esc_attr( $badge_class ) . '">' . esc_html( $badge_info['label'] ?? '' ) . '</span>';
 
-																if ( in_array( $answer_status, array( 'partial', 'incorrect' ), true ) && $minus_val > 0 ) {
-																	$earned_str = number_format( $earned_val, 2, '.', '' );
-																	$minus_str  = number_format( $minus_val, 2, '.', '' );
-																	echo '<div class="tutor-quiz-result-delta"><span class="is-earned">(+' . esc_html( $earned_str ) . ')</span> <span class="is-penalty">-' . esc_html( $minus_str ) . '</span></div>';
-																}
+																do_action( 'tutor_quiz_attempt_details_result_badge_after', $answer, $answer_status, $attempt_id, ! empty( $manual_overrides_map[ $answer->question_id ] ) );
 
 																if ( 'pending' !== $answer_status && 'skipped' !== $answer_status ) {
 																	echo '<div class="tutor-quiz-result-score">' . esc_html( $score_label ) . '</div>';

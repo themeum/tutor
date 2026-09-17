@@ -88,7 +88,7 @@ if ( 'review-answer-dnd' === $question_template ) {
 
 	if ( is_object( $question ) ) {
 		do_action( 'tutor_quiz_attempt_details_loop_after_row', $question, $answer_status, array() );
-		do_action( 'tutor_quiz_attempt_details_mark_breakdown', $question, $answer_status, $is_instructor_review, $has_partial_or_negative );
+		do_action( 'tutor_quiz_attempt_details_mark_breakdown', $question, $answer_status, $is_instructor_review, $has_partial_or_negative, $is_overridden );
 	}
 	?>
 </div>

@@ -91,3 +91,15 @@
 - [x] 10.5 Implement Instructor View detailed mark breakdown table under `Answer Explanation` (excluding `pending` review): render `Earned` / `Partial credit` row, `Penalty -y deducted` row (in red), and right-aligned `Score: {achieved_mark}/{question_mark}` row
 - [x] 10.6 Visual verification across Legacy and v4 attempt details for Student and Instructor views against mockups, and run PHPCS / test validation
 - [x] 10.7 Make Instructor View detailed mark breakdown table conditional: display only when Partial Marking or Negative Marking is enabled on the quiz attempt; otherwise suppress the breakdown table
+
+## 11. Decouple Pro Partial/Negative Marking from Free Core via Hooks and Suppress UI When Pro Disabled
+
+- [x] 11.1 Move `get_attempt_answer_correct_counts()` from Free `QuizModel` to Pro `QuizGrader`
+- [x] 11.2 Hookify `get_attempt_answer_status()` with filter `tutor_quiz_attempt_answer_status` so Free defaults to standard binary statuses and Pro injects `partial` status
+- [x] 11.3 Hookify `get_attempt_answer_badge()` with filter `tutor_quiz_attempt_answer_badge` so Free defaults to standard binary badges and Pro injects `X/Y Correct` or `Partially correct` badge
+- [x] 11.4 Hookify `get_attempt_answer_counts()` with filter `tutor_quiz_attempt_answer_counts` so Free counts binary statuses and Pro tracks `partial` counts
+- [x] 11.5 Delegate `QuizModel::has_partial_or_negative_marking()` via filter `tutor_quiz_has_partial_or_negative_marking` to Pro
+- [x] 11.6 Hookify attempt summary statics with action `tutor_quiz_attempt_summary_statics_after_correct` and move partial stat rendering to Pro
+- [x] 11.7 Hookify attempt details result badge delta with action `tutor_quiz_attempt_details_result_badge_after` and move delta penalty rendering to Pro
+- [x] 11.8 Ensure stored DB marks (`achieved_mark`, `earned_marks`, `earned_percentage`) are not recalculated or modified in Free
+- [x] 11.9 Verify PHP syntax and clean separation across both repositories

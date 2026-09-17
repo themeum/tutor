@@ -55,7 +55,6 @@ $attempt_duration_taken = $timing['attempt_duration_taken'] ?? '';
 $answers       = isset( $answers ) ? $answers : QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 $answer_counts = QuizModel::get_attempt_answer_counts( $answers );
 $correct       = $answer_counts['correct'];
-$partial       = $answer_counts['partial'];
 $incorrect     = $answer_counts['incorrect'];
 
 $total_questions = (int) $attempt_data->total_questions;
@@ -181,22 +180,7 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 					?>
 				</div>
 
-				<div class="tutor-quiz-result-static-item partial">
-					<?php
-					printf(
-						wp_kses(
-							/* translators: %d: number of partially correct answers. */
-							__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> partially correct', 'tutor' ),
-							array(
-								'span' => array(
-									'class' => true,
-								),
-							)
-						),
-						esc_html( $partial )
-					);
-					?>
-				</div>
+				<?php do_action( 'tutor_quiz_attempt_summary_statics_after_correct', $attempt_data, $answers ); ?>
 
 				<div class="tutor-quiz-result-static-item incorrect">
 					<?php
