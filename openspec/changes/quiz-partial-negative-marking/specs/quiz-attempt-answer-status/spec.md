@@ -148,7 +148,7 @@ If `minus_mark == 0`, no penalty text SHALL be displayed.
 
 ### Requirement: Instructor view displays detailed mark breakdown table under Answer Explanation
 
-In instructor attempt review (both Legacy and v4), for all evaluated questions (excluding `pending` review), the system SHALL display a detailed mark breakdown beneath the `Answer Explanation` card:
+In instructor attempt review (v4), for all evaluated questions (excluding `pending` review), the system SHALL display a detailed mark breakdown beneath the `Answer Explanation` card **only when the quiz attempt has Partial Marking (`enable_partial_marking == '1'`) or Negative Marking (`enable_negative_marking == '1'`) enabled** in `attempt_info`:
 
 - **Earned credit row**:
   - For `correct` or `incorrect` questions: label `Earned` with value `{earned_mark}` (where raw earned mark = `achieved_mark + minus_mark`).
@@ -159,6 +159,15 @@ In instructor attempt review (both Legacy and v4), for all evaluated questions (
   - Label `Score: {achieved_mark}/{question_mark}` displayed right-aligned.
 
 This breakdown table SHALL NOT be displayed for questions with status `pending`.
+
+When neither Partial Marking nor Negative Marking is enabled for the quiz attempt, this breakdown table SHALL NOT be displayed.
+
+#### Scenario: Instructor views evaluated question when partial and negative marking are disabled
+
+- **GIVEN** a quiz attempt where neither partial marking nor negative marking is enabled
+- **WHEN** the instructor views an evaluated question in attempt details
+- **THEN** no detailed mark breakdown table is displayed beneath the Answer Explanation card
+- **AND** no score text is displayed in the question header card
 
 #### Scenario: Instructor views incorrect question with penalty
 

@@ -26,12 +26,13 @@ This change introduces:
   - Partially graded questions remove the static `Partially correct` badge and instead display an **`N/M correct`** badge in the question header (e.g. `2/4 correct`), where $N$ is the number of correct answers given by the user and $M$ is the total number of correct answers possible.
   - Skipped questions remain **hidden from students** (preserving existing Tutor LMS behavior). For instructors, skipped questions display a `Skipped` badge with 0 marks, no negative penalty, and no override buttons.
 - **Attempt Details Header Score & Under-Explanation Penalty Breakdown**:
-  - **Header score**: In the question header top right, all questions except `pending` review and `skipped` display `Score: {achieved_mark}/{question_mark}` (e.g. `Score: -0.25/1` or `Score: 0.75/1`).
-  - **Student view penalty notice**: When a negative penalty applies (`minus_mark > 0`), the deducted mark appears directly under `Answer Explanation` in red text (e.g. `-{minus_mark} points`).
-  - **Instructor view detailed mark breakdown**: Under `Answer Explanation` (excluding `pending` review questions), instructors see a detailed mark breakdown table:
+  - **Header score**: In the question header top right, all questions except `pending` review and `skipped` display `Score: {achieved_mark}/{question_mark}` for students (strictly omitted for instructors).
+  - **Student view penalty notice**: When negative marking is enabled and a negative penalty applies (`minus_mark > 0`), the deducted mark appears directly under `Answer Explanation` in red text (e.g. `-{minus_mark} points`).
+  - **Instructor view detailed mark breakdown**: Under `Answer Explanation` (excluding `pending` review questions), instructors see a detailed mark breakdown table **only when partial or negative marking is enabled** for the quiz attempt:
     - Row 1: `Earned` (for `correct`/`incorrect`) or `Partial credit` (for `partial`) with value `x`.
     - Row 2: If a penalty applies, `Penalty -y deducted` in red with value `-y`.
     - Row 3: Total `Score: (x-y)/{question_mark}`.
+      When neither partial nor negative marking is enabled, this breakdown table is suppressed entirely.
   - **Question-level net scoring**: Individual question `achieved_mark` can reflect negative net marks when penalties exceed earned credit, while overall quiz total earned marks floors at `0.00`.
 - **Admin Dashboard Quiz Attempt Review Table (`views/quiz/attempt-details.php`)**:
   - In the `Result` column:

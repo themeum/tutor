@@ -2050,4 +2050,25 @@ class QuizModel {
 
 		return $has_access;
 	}
+
+	/**
+	 * Check if attempt info snapshot has partial or negative marking enabled.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array|string $attempt_info Attempt info snapshot array or serialized string.
+	 *
+	 * @return bool
+	 */
+	public static function has_partial_or_negative_marking( $attempt_info ): bool {
+		$attempt_info = is_string( $attempt_info ) ? maybe_unserialize( $attempt_info ) : $attempt_info;
+		if ( ! is_array( $attempt_info ) ) {
+			return false;
+		}
+
+		$enable_partial  = ! empty( $attempt_info['enable_partial_marking'] ) && '1' === (string) $attempt_info['enable_partial_marking'];
+		$enable_negative = ! empty( $attempt_info['enable_negative_marking'] ) && '1' === (string) $attempt_info['enable_negative_marking'];
+
+		return $enable_partial || $enable_negative;
+	}
 }

@@ -185,17 +185,17 @@ We store `2` in `tutor_quiz_attempt_answers.is_correct` for partially correct au
 
 ### Decision: Attempt Details Question Header Score & Penalty Breakdown (Student vs. Instructor View)
 
-- **Question Header Score**:
-  - In `templates/shared/components/quiz/attempt-details/question.php` (v4) and legacy `views/quiz/attempt-details.php`:
-  - For all evaluated questions (where status is NOT `pending` and NOT `skipped`), display `Score: {achieved_mark}/{question_mark}` in the top right of the question header card.
-  - Omitted when `status === 'pending'` or `status === 'skipped'`.
+- **Question Header Score (`templates/shared/components/quiz/attempt-details/question-header.php`)**:
+  - For all evaluated questions (where status is NOT `pending` and NOT `skipped`):
+    - For students, display `Score: {achieved_mark}/{question_mark}` in the top right of the question header card.
+    - Strictly omitted for instructors (`! $is_instructor_review`).
 - **Student View: Under-Explanation Penalty Notice**:
   - In student attempt review:
-  - When `minus_mark > 0`, render the deducted mark directly beneath the `Answer Explanation` card in red text (e.g. `-{minus_mark} points` such as `-0.25 points`).
-  - Omitted when `minus_mark == 0`.
+  - When `enable_negative_marking` is enabled in `attempt_info` and `minus_mark > 0`, render the deducted mark directly beneath the `Answer Explanation` card in red text (e.g. `-{minus_mark} points` such as `-0.25 points`).
+  - Omitted when `minus_mark == 0` or negative marking is disabled.
 - **Instructor View: Under-Explanation Detailed Mark Breakdown Table**:
   - In instructor review (WP-Admin attempt details & v4 instructor dashboard):
-  - Render a structured breakdown beneath the `Answer Explanation` card for all evaluated questions (strictly excluding `pending` review questions):
+  - Rendered beneath the `Answer Explanation` card for all evaluated questions (strictly excluding `pending` review questions) **only when the quiz attempt has Partial Marking (`enable_partial_marking == '1'`) or Negative Marking (`enable_negative_marking == '1'`) enabled**:
     - Row 1: Earned credit:
       - If question status is `correct` or `incorrect`: label is `Earned`, value is `{earned_mark}` (where earned mark before deduction = `achieved_mark + minus_mark`).
       - If question status is `partial`: label is `Partial credit`, value is `{earned_mark}`.
@@ -203,6 +203,7 @@ We store `2` in `tutor_quiz_attempt_answers.is_correct` for partially correct au
       - Label is `Penalty -{minus_mark} deducted` (styled in red), and value is `-{minus_mark}` (styled in red).
     - Row 3: Final question score:
       - Displayed right-aligned: `Score: {achieved_mark}/{question_mark}`.
+  - When neither Partial Marking nor Negative Marking is enabled on the quiz attempt, the breakdown table is completely omitted.
 - **Question-Level Net Marks vs Quiz Earned Marks**:
   - Individual question `achieved_mark` is calculated as `earned_mark - minus_mark`. It is NOT clamped to `0.00` at the question level when negative marking is applied — it can be negative (e.g., `-0.25`, `-0.08`).
   - Quiz-level cumulative `earned_marks` continues to floor at `0.00` (`max(0.00, sum(achieved_marks))`), ensuring the overall quiz grade never goes below 0%.
