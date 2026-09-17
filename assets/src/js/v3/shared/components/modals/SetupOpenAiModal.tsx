@@ -101,32 +101,36 @@ const SetupOpenAiModal = ({ closeModal, image, image2x, isImage }: SetupOpenAiMo
 
               <div>
                 <div css={styles.message}>{__('API is not connected', __TUTOR_TEXT_DOMAIN__)}</div>
-                <div css={styles.title}>
-                  {isWpAiSupported
-                    ? isImage
-                      ? __('Please ask your Admin to configure an image-capable AI connector in WordPress Settings > Connectors.', __TUTOR_TEXT_DOMAIN__)
-                      : __('Please ask your Admin to configure an AI connector in WordPress Settings > Connectors.', __TUTOR_TEXT_DOMAIN__)
-                    : __('Please, ask your Admin to connect the API with Tutor LMS Pro.', __TUTOR_TEXT_DOMAIN__)}
-                </div>
+                {isWpAiSupported ? (
+                  <div css={{ marginTop: spacing[12] }}>
+                    <Alert type="warning" icon="warning">
+                      {isImage
+                        ? __('Please ask your Admin to configure an image-capable AI connector in WordPress Settings > Connectors.', __TUTOR_TEXT_DOMAIN__)
+                        : __('Please ask your Admin to configure an AI connector in WordPress Settings > Connectors.', __TUTOR_TEXT_DOMAIN__)}
+                    </Alert>
+                  </div>
+                ) : (
+                  <div css={styles.title}>
+                    {__('Please, ask your Admin to connect the API with Tutor LMS Pro.', __TUTOR_TEXT_DOMAIN__)}
+                  </div>
+                )}
               </div>
             </>
           }
         >
           {isWpAiSupported ? (
             <div css={styles.formWrapper}>
-              <div css={styles.infoText}>
-                <div>
-                  {isImage
-                    ? __(
-                        'Your configured AI connector does not support image generation, or no AI connector is configured. Please configure an image-capable connector (such as OpenAI or Google) in WordPress settings to generate images in Tutor LMS.',
-                        __TUTOR_TEXT_DOMAIN__,
-                      )
-                    : __(
-                        'WordPress uses AI Connectors to integrate with AI providers like OpenAI, Anthropic Claude, Google Gemini, and others. Please configure at least one AI connector in WordPress settings to use AI features in Tutor LMS.',
-                        __TUTOR_TEXT_DOMAIN__,
-                      )}
-                </div>
-              </div>
+              <Alert type="warning" icon="warning">
+                {isImage
+                  ? __(
+                      'Your configured AI connector does not support image generation, or no AI connector is configured. Please configure an image-capable connector (such as OpenAI or Google) in WordPress settings to generate images in Tutor LMS.',
+                      __TUTOR_TEXT_DOMAIN__,
+                    )
+                  : __(
+                      'No AI connector is configured. WordPress uses AI Connectors to integrate with AI providers like OpenAI, Anthropic Claude, Google Gemini, and others. Please configure at least one AI connector in WordPress Settings > Connectors to use AI features in Tutor LMS.',
+                      __TUTOR_TEXT_DOMAIN__,
+                    )}
+              </Alert>
 
               <div css={styles.formFooter}>
                 <Button
