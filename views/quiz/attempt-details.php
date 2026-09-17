@@ -414,6 +414,9 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					if ( null !== $custom_status ) {
 						$answer_status = $custom_status;
 					}
+
+					$student_q_feedback = trim( (string) ( $question_feedback_map[ $answer->attempt_answer_id ] ?? ( $question_feedback_map[ $answer->question_id ] ?? '' ) ) );
+					$feedback_dom_id    = 'tutor-question-feedback-' . ( ! empty( $answer->attempt_answer_id ) ? $answer->attempt_answer_id : $answer->question_id );
 					?>
 
 							<tr class="tutor-quiz-answer-status-<?php echo esc_html( $answer_status ); ?>">
@@ -508,18 +511,6 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																'span' => true,
 															)
 														);
-													}
-
-													$student_q_feedback = trim( (string) ( $question_feedback_map[ $answer->attempt_answer_id ] ?? '' ) );
-													if ( ! $is_instructor_review && '' !== $student_q_feedback ) {
-														?>
-														<div class="tutor-question-feedback student-view tutor-bg-primary tutor-rounded-lg tutor-p-12 tutor-mt-12 tutor-color-white">
-															<div class="tutor-fs-7 tutor-fw-medium tutor-mb-4">
-																<?php esc_html_e( 'Feedback from instructor', 'tutor' ); ?>
-															</div>
-															<p class="tutor-fs-7 tutor-m-0"><?php echo esc_html( $student_q_feedback ); ?></p>
-														</div>
-														<?php
 													}
 												}
 
@@ -839,7 +830,20 @@ if ( is_array( $answers ) && count( $answers ) ) {
 															?>
 														</div>
 
-														<?php do_action( 'tutor_quiz_attempt_details_after_result', $answer, $answer_status ); ?>
+														<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+															<?php do_action( 'tutor_quiz_attempt_details_after_result', $answer, $answer_status ); ?>
+
+															<?php if ( ! $is_instructor_review && '' !== $student_q_feedback ) : ?>
+																<div class="tooltip-wrap">
+																	<span class="tooltip-txt <?php echo esc_attr( is_rtl() ? 'tooltip-right' : 'tooltip-left' ); ?>"><?php esc_html_e( 'Show Feedback', 'tutor' ); ?></span>
+																	<button type="button" class="tutor-quiz-feedback-toggle-button" data-td-target="<?php echo esc_attr( $feedback_dom_id ); ?>" aria-label="<?php esc_attr_e( 'Show Feedback', 'tutor' ); ?>">
+																		<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0049F8" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+																			<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+																		</svg>
+																	</button>
+																</div>
+															<?php endif; ?>
+														</div>
 													</div>
 												</td>
 												<?php
@@ -888,6 +892,26 @@ if ( is_array( $answers ) && count( $answers ) ) {
 									?>
 								<?php endforeach; ?>
 							</tr>
+
+							<?php
+							if ( ! $is_instructor_review && '' !== $student_q_feedback ) :
+								?>
+								<tr class="tutor-quiz-question-feedback-row">
+									<td colspan="<?php echo esc_attr( count( $table_2_columns ) ); ?>" class="column-empty-state data-td-content" id="<?php echo esc_attr( $feedback_dom_id ); ?>" style="display:none;">
+										<div class="tutor-quiz-question-feedback-card">
+											<div class="tutor-d-flex tutor-gap-1 tutor-align-center tutor-mb-8">
+												<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B505C" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+													<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+												</svg>
+												<span class="tutor-quiz-question-feedback-title"><?php esc_html_e( 'Feedback from instructor', 'tutor' ); ?></span>
+											</div>
+											<div class="tutor-quiz-question-feedback-body">
+												<?php echo nl2br( esc_html( $student_q_feedback ) ); ?>
+											</div>
+										</div>
+									</td>
+								</tr>
+							<?php endif; ?>
 
 							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status, $table_2_columns ); ?>
 
