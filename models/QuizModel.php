@@ -1097,8 +1097,10 @@ class QuizModel {
 
 		if ( self::is_attempt_answer_skipped( $attempt_answer ) ) {
 			$status = 'skipped';
+		} elseif ( null === $is_correct ) {
+			$status = 'pending';
 		} elseif ( in_array( $question_type, self::get_manual_review_types(), true ) ) {
-			$status = null === $is_correct ? 'pending' : 'graded';
+			$status = 'graded';
 		} elseif ( self::ATTEMPT_ANSWER_CORRECT === (int) $is_correct ) {
 			$status = 'correct';
 		} else {
@@ -1894,5 +1896,53 @@ class QuizModel {
 	 */
 	public static function has_partial_or_negative_marking( $attempt_info ): bool {
 		return (bool) apply_filters( 'tutor_quiz_has_partial_or_negative_marking', false, $attempt_info );
+	}
+
+	/**
+	 * Get the question feedback map from attempt info.
+	 *
+	 * Consistent extraction for the question_feedback map stored inside
+	 * attempt_info, keyed by attempt answer ID with a question ID fallback.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array|string $attempt_info Attempt info snapshot array or serialized string.
+	 *
+	 * @return array
+	 */
+	public static function get_attempt_feedback_map( $attempt_info ): array {
+		$attempt_info = is_array( $attempt_info ) ? $attempt_info : ( is_string( $attempt_info ) ? maybe_unserialize( $attempt_info ) : array() );
+
+		if ( ! is_array( $attempt_info ) ) {
+			return array();
+		}
+
+		$feedback_map = $attempt_info['question_feedback'] ?? array();
+
+		return is_array( $feedback_map ) ? $feedback_map : array();
+	}
+
+	/**
+	 * Get the manual overrides map from attempt info.
+	 *
+	 * Consistent extraction for the manual_overrides map stored inside
+	 * attempt_info, keyed by question ID.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array|string $attempt_info Attempt info snapshot array or serialized string.
+	 *
+	 * @return array
+	 */
+	public static function get_manual_overrides_map( $attempt_info ): array {
+		$attempt_info = is_array( $attempt_info ) ? $attempt_info : ( is_string( $attempt_info ) ? maybe_unserialize( $attempt_info ) : array() );
+
+		if ( ! is_array( $attempt_info ) ) {
+			return array();
+		}
+
+		$overrides_map = $attempt_info['manual_overrides'] ?? array();
+
+		return is_array( $overrides_map ) ? $overrides_map : array();
 	}
 }
