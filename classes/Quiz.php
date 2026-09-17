@@ -511,7 +511,7 @@ class Quiz {
 		 * Always notify on Submit — including when only answer reviews changed
 		 * and feedback text is unchanged.
 		 */
-		do_action( 'tutor_quiz/attempt/graded', $attempt_id );
+		$this->notify_quiz_attempt_graded( $attempt_id );
 		wp_send_json_success();
 	}
 
@@ -1268,11 +1268,28 @@ class Quiz {
 		}
 
 		/**
-		 * Fire after instructor clicks Update — email listeners send on this hook.
+		 * Fire after instructor clicks Submit — graded email + on-site/push notifications.
 		 */
-		do_action( 'tutor_quiz/attempt/graded', $attempt_id );
+		$this->notify_quiz_attempt_graded( $attempt_id );
 
 		$this->response_success( __( 'Review updated successfully', 'tutor' ) );
+	}
+
+	/**
+	 * Notify listeners that a quiz attempt was graded/submitted by instructor.
+	 *
+	 * Fires both hooks so graded email and feedback on-site/push notifications
+	 * stay in sync on every Submit.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return void
+	 */
+	private function notify_quiz_attempt_graded( int $attempt_id ): void {
+		do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_id );
+		do_action( 'tutor_quiz/attempt/graded', $attempt_id );
 	}
 
 	/**
@@ -1301,13 +1318,8 @@ class Quiz {
 
 		//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 		$update = self::update_attempt_info( $attempt_id, serialize( $unserialized ) );
-		if ( ! $update ) {
-			return false;
-		}
 
-		do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_id );
-
-		return true;
+		return (bool) $update;
 	}
 
 	/**
