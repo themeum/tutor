@@ -19,8 +19,8 @@ $context              = isset( $context ) ? (string) $context : '';
 $is_instructor_review = ! empty( $is_instructor_review );
 
 $attempt_info            = $attempt_data && is_object( $attempt_data ) && isset( $attempt_data->attempt_info ) ? maybe_unserialize( $attempt_data->attempt_info ) : array();
-$question_feedback_map   = is_array( $attempt_info ) && isset( $attempt_info['question_feedback'] ) && is_array( $attempt_info['question_feedback'] ) ? $attempt_info['question_feedback'] : array();
-$manual_overrides_map    = is_array( $attempt_info ) && isset( $attempt_info['manual_overrides'] ) && is_array( $attempt_info['manual_overrides'] ) ? $attempt_info['manual_overrides'] : array();
+$question_feedback_map   = QuizModel::get_attempt_feedback_map( $attempt_info );
+$manual_overrides_map    = QuizModel::get_manual_overrides_map( $attempt_info );
 $has_partial_or_negative = QuizModel::has_partial_or_negative_marking( $attempt_info );
 ?>
 

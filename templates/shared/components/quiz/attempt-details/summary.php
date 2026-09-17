@@ -180,8 +180,6 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 					?>
 				</div>
 
-				<?php do_action( 'tutor_quiz_attempt_summary_statics_after_correct', $attempt_data, $answers ); ?>
-
 				<div class="tutor-quiz-result-static-item incorrect">
 					<?php
 					printf(

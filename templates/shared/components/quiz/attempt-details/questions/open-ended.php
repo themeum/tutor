@@ -15,6 +15,7 @@ use Tutor\Components\Constants\Variant;
 use Tutor\Components\InputField;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
+use Tutor\Models\QuizModel;
 
 if ( ! isset( $question ) || ! is_object( $question ) ) {
 	return;
@@ -45,10 +46,8 @@ if ( ! $feedback_attempt_answer_id && $question_id > 0 ) {
 }
 
 if ( '' === $question_feedback && isset( $attempt_data->attempt_info ) ) {
-	$info = maybe_unserialize( $attempt_data->attempt_info );
-	if ( is_array( $info ) && isset( $info['question_feedback'] ) && is_array( $info['question_feedback'] ) ) {
-		$question_feedback = (string) ( $info['question_feedback'][ $feedback_attempt_answer_id ] ?? ( $info['question_feedback'][ $question_id ] ?? '' ) );
-	}
+	$question_feedback_map = QuizModel::get_attempt_feedback_map( $attempt_data->attempt_info );
+	$question_feedback     = (string) ( $question_feedback_map[ $feedback_attempt_answer_id ] ?? ( $question_feedback_map[ $question_id ] ?? '' ) );
 }
 
 $qmark_formatted = (string) round( (float) ( $question->question_mark ?? 0 ), 2 );

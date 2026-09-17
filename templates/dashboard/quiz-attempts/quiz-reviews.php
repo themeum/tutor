@@ -31,7 +31,7 @@ if ( ! $attempt_data || ! $can_review ) {
 	return;
 }
 
-$question_feedback_map = is_array( $attempt_info ) && isset( $attempt_info['question_feedback'] ) && is_array( $attempt_info['question_feedback'] ) ? $attempt_info['question_feedback'] : array();
+$question_feedback_map = QuizModel::get_attempt_feedback_map( $attempt_info );
 $form_id               = 'quiz-attempt-review-form';
 $form_default_values   = array(
 	'feedback' => tutor_utils()->count( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '',
