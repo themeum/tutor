@@ -105,21 +105,14 @@ class Gutenberg {
 			)
 		);
 
-		// Register cart button block scripts and styles.
-		wp_register_script(
-			'tutor-gutenberg-cart-button',
-			tutor()->url . 'assets/js/tutor-gutenberg-cart-button.js',
-			array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-editor' ),
-			TUTOR_VERSION
-		);
 		wp_register_style(
 			'tutor-cart-button',
-			tutor()->url . 'assets/css/tutor-cart-button.min.css',
+			tutor()->url . 'assets/blocks/cart-button/index.css',
 			array(),
 			TUTOR_VERSION
 		);
 
-		register_block_type( tutor()->path . 'assets/src/js/gutenberg/cart-button' );
+		register_block_type( tutor()->path . 'assets/blocks/cart-button' );
 
 		// Check if WP version is equal to or greater than 5.9.
 		global $wp_version;

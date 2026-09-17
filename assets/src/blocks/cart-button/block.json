@@ -34,7 +34,7 @@
       "padding": true
     }
   },
-  "editorScript": "tutor-gutenberg-cart-button",
+  "editorScript": "file:./index.js",
   "style": "tutor-cart-button",
   "render": "file:./render.php"
 }
