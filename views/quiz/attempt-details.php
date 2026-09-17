@@ -352,7 +352,12 @@ $attempt_info          = maybe_unserialize( $attempt_data->attempt_info );
 $feedback              = is_array( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '';
 $question_feedback_map = is_array( $attempt_info ) && isset( $attempt_info['question_feedback'] ) && is_array( $attempt_info['question_feedback'] ) ? $attempt_info['question_feedback'] : array();
 $manual_overrides_map  = is_array( $attempt_info ) && isset( $attempt_info['manual_overrides'] ) && is_array( $attempt_info['manual_overrides'] ) ? $attempt_info['manual_overrides'] : array();
-$is_instructor_review  = 'frontend-dashboard-students-attempts' === $context || tutor_utils()->can_user_manage( 'attempt', $attempt_id );
+$is_student_context   = in_array( $context, array( 'course-single-previous-attempts', 'frontend-dashboard-my-attempts' ), true );
+$is_instructor_review = ! $is_student_context && (
+	'frontend-dashboard-students-attempts' === $context ||
+	'backend-dashboard-students-attempts' === $context ||
+	( is_admin() && empty( $context ) )
+) && tutor_utils()->can_user_manage( 'attempt', $attempt_id );
 // don't show on instructor quiz attempt since below already have feedback box area.
 if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 	?>
@@ -367,11 +372,12 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 <?php } ?>
 
 <?php
+$answers = apply_filters( 'tutor_filter_attempt_answers', $answers );
+$answers = QuizModel::filter_attempt_answers_for_details( $answers, $is_instructor_review );
+
 if ( is_array( $answers ) && count( $answers ) ) {
 	// Filter out not needed columns based on question type.
 	$table_2_columns = apply_filters( 'tutor_filter_attempt_answer_column', $table_2_columns, $answers );
-	$answers         = apply_filters( 'tutor_filter_attempt_answers', $answers );
-	$answers         = QuizModel::filter_attempt_answers_for_details( $answers, $is_instructor_review );
 	echo 'course-single-previous-attempts' !== $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
 	?>
 		<div class="tutor-table-responsive tutor-table-mobile tutor-mt-16">
@@ -893,6 +899,9 @@ if ( is_array( $answers ) && count( $answers ) ) {
 		</div>
 		<?php
 		do_action( 'tutor_quiz_attempt_details_loop_after' );
+} else {
+	echo 'course-single-previous-attempts' !== $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
+	tutor_utils()->tutor_empty_state( __( 'No answered questions to display', 'tutor' ) );
 }
 ?>
 
