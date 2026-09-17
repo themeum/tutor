@@ -67,11 +67,8 @@ $is_manual_question   = $question && in_array( (string) ( $question->question_ty
 			<?php
 			$show_header_score = ! $is_instructor_review && ! $is_skipped && 'pending' !== $answer_status && isset( $question->question_mark );
 			if ( $show_header_score ) :
-				$achieved_display   = (float) ( $question->achieved_mark ?? 0 );
-				$achieved_formatted = ( floor( $achieved_display ) === $achieved_display ) ? (string) (int) $achieved_display : (string) round( $achieved_display, 2 );
-
-				$total_display   = (float) ( $question->question_mark ?? 0 );
-				$total_formatted = ( floor( $total_display ) === $total_display ) ? (string) (int) $total_display : (string) round( $total_display, 2 );
+				$achieved_formatted = (string) round( (float) ( $question->achieved_mark ?? 0 ), 2 );
+				$total_formatted    = (string) round( (float) ( $question->question_mark ?? 0 ), 2 );
 				?>
 				<div class="tutor-quiz-question-header-divider" aria-hidden="true"></div>
 				<span class="tutor-quiz-question-header-score">

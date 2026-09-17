@@ -51,13 +51,10 @@ if ( '' === $question_feedback && isset( $attempt_data->attempt_info ) ) {
 	}
 }
 
-$qmark_raw       = (float) ( $question->question_mark ?? 0 );
-$qmark_formatted = ( floor( $qmark_raw ) === $qmark_raw ) ? (string) (int) $qmark_raw : (string) round( $qmark_raw, 2 );
+$qmark_formatted = (string) round( (float) ( $question->question_mark ?? 0 ), 2 );
 $achieved_raw    = isset( $question->achieved_mark ) && null !== $question->achieved_mark && '' !== $question->achieved_mark ? (float) $question->achieved_mark : null;
 $is_unscored     = 'pending' === $review_status && ( null === $achieved_raw || 0.0 === (float) $achieved_raw );
-$achieved_val    = ( null !== $achieved_raw && ! $is_unscored )
-	? ( ( floor( $achieved_raw ) === $achieved_raw ) ? (string) (int) $achieved_raw : (string) round( $achieved_raw, 2 ) )
-	: '';
+$achieved_val    = ( null !== $achieved_raw && ! $is_unscored ) ? (string) round( $achieved_raw, 2 ) : '';
 
 $is_graded             = 'graded' === $review_status;
 $mark_validation_rules = array(
