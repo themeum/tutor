@@ -383,11 +383,11 @@
 
       &-actions {
         @include tutor-flex(row, center);
-        gap: $tutor-spacing-4;
+        gap: $tutor-spacing-7;
         flex-shrink: 0;
 
         @include tutor-breakpoint-down(sm) {
-          gap: $tutor-spacing-3;
+          gap: $tutor-spacing-5;
         }
       }
 

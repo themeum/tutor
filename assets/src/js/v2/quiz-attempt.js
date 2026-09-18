@@ -23,6 +23,7 @@ window.addEventListener('DOMContentLoaded', function() {
     if (currentPage === 'quiz-attempts' || currentPage === 'tutor_quiz_attempts' ) {
         const deleteButtons = document.querySelectorAll('.tutor-quiz-attempt-delete');
         const deleteForm = document.getElementById('tutor-common-confirmation-form');
+        const defaultErrorMsg = __( 'Something went wrong, please try again', 'tutor' );
         deleteButtons.forEach((button) => {
             button.onclick = (e) => {
                

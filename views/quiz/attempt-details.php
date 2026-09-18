@@ -393,7 +393,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 				<?php
 					$answer_i = 0;
 				foreach ( $answers as $answer ) {
-					++$answer_i;
+					$answer_i++;
 					$question_type     = QuizModel::get_question_types( $answer->question_type );
 					$question_settings = maybe_unserialize( $answer->question_settings );
 					$is_image_matching = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];

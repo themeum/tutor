@@ -127,6 +127,8 @@ if ( $is_graded ) {
 						->attr( 'type', 'button' )
 						->attr( 'class', 'tutor-quiz-add-feedback-btn' )
 						->attr( 'x-show', '!expanded && !feedback' )
+						->attr( 'x-cloak', true )
+						->attr( 'x-collapse', true )
 						->attr( '@click', 'toggle()' )
 						->render();
 
@@ -139,6 +141,7 @@ if ( $is_graded ) {
 						->attr( 'class', 'tutor-quiz-add-feedback-btn' )
 						->attr( 'x-show', '!expanded && feedback' )
 						->attr( 'x-cloak', true )
+						->attr( 'x-collapse', true )
 						->attr( '@click', 'toggle()' )
 						->render();
 					?>
@@ -150,10 +153,7 @@ if ( $is_graded ) {
 						x-cloak
 					>
 						<div class="tutor-quiz-feedback-panel-header">
-							<span class="tutor-quiz-feedback-panel-title">
-								<?php esc_html_e( 'Write feedback', 'tutor' ); ?>
-							</span>
-							<span class="tutor-quiz-feedback-panel-status" x-show="feedback" x-cloak><?php esc_html_e( 'Editing', 'tutor' ); ?></span>
+							<span class="tutor-quiz-feedback-panel-title" x-text="feedback ? <?php echo esc_attr( wp_json_encode( __( 'Edit Feedback', 'tutor' ) ) ); ?> : <?php echo esc_attr( wp_json_encode( __( 'Write feedback', 'tutor' ) ) ); ?>"></span>
 						</div>
 
 						<?php

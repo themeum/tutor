@@ -1082,6 +1082,13 @@ class QuizModel {
 	 * Manually graded questions have a separate lifecycle: pending until reviewed,
 	 * then graded. Auto-graded questions use the attempt-answer correctness constants.
 	 *
+	 * Status rules follow legacy attempt-details logic:
+	 * - correct: is_correct is truthy.
+	 * - pending: is_correct is null for manually reviewed question types.
+	 * - incorrect: all other cases.
+	 * - graded: is_correct set after an instructor reviews a manually reviewed question.
+	 * - skipped: question has no given answer.
+	 *
 	 * @since 4.0.0
 	 * @since 4.1.0 Added manual graded questions and filter hook.
 	 *
@@ -1092,6 +1099,14 @@ class QuizModel {
 	public static function get_attempt_answer_status( $attempt_answer ): string {
 		$question_type = (string) ( $attempt_answer->question_type ?? '' );
 		$is_correct    = $attempt_answer->is_correct ?? null;
+
+		if ( 'image_matching' === $question_type ) {
+			$question_type = 'matching';
+		}
+
+		if ( 'single_choice' === $question_type ) {
+			$question_type = 'multiple_choice';
+		}
 
 		if ( self::is_attempt_answer_skipped( $attempt_answer ) ) {
 			$status = 'skipped';
@@ -1136,6 +1151,8 @@ class QuizModel {
 			'skipped'   => Badge::INFO,
 		);
 
+		// Legacy class map: old `label-*` CSS classes used by the admin attempt-details
+		// badge rendering. The new Badge component variant map is used instead where available.
 		$class_map = array(
 			'pending'   => 'label-warning',
 			'correct'   => 'label-success',
