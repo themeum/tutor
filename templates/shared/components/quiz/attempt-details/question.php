@@ -22,7 +22,6 @@ $context              = (string) ( $context ?? '' );
 $is_instructor_review    = ! empty( $is_instructor_review );
 $is_overridden           = ! empty( $is_overridden );
 $review_field_name       = (string) ( $review_field_name ?? '' );
-$has_partial_or_negative = ! empty( $has_partial_or_negative );
 $question_settings       = maybe_unserialize( $question->question_settings );
 $question_settings    = is_array( $question_settings ) ? $question_settings : array();
 $question_type        = (string) ( $question->question_type ?? '' );
@@ -88,7 +87,7 @@ if ( 'review-answer-dnd' === $question_template ) {
 
 	if ( is_object( $question ) ) {
 		do_action( 'tutor_quiz_attempt_details_loop_after_row', $question, $answer_status, array() );
-		do_action( 'tutor_quiz_attempt_details_mark_breakdown', $question, $answer_status, $is_instructor_review, $has_partial_or_negative, $is_overridden );
+		do_action( 'tutor_quiz_attempt_details_mark_breakdown', $question, $answer_status, $is_instructor_review, $is_overridden );
 	}
 	?>
 </div>

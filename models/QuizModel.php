@@ -259,7 +259,6 @@ class QuizModel {
 			$answers           = self::get_quiz_answers_by_attempt_id( $quiz_attempt->attempt_id );
 			$answer_counts     = self::get_attempt_answer_counts( $answers );
 			$correct_answers   = $answer_counts['correct'];
-			$partial_answers   = $answer_counts['partial'] ?? 0;
 			$incorrect_answers = $answer_counts['incorrect'];
 
 			$formatted_attempt = array(
@@ -267,7 +266,6 @@ class QuizModel {
 				'result'            => $quiz_attempt_result,
 				'marks_percent'     => $earned_percent ?? 0,
 				'correct_answers'   => $correct_answers,
-				'partial_answers'   => $partial_answers,
 				'incorrect_answers' => $incorrect_answers,
 				'time_taken'        => $attempt_time ?? '',
 				'date'              => $start_time ?? '',
@@ -1082,14 +1080,14 @@ class QuizModel {
 	 * Get normalized attempt-answer status.
 	 *
 	 * Manually graded questions have a separate lifecycle: pending until reviewed,
-	 * then graded. Auto-graded questions use the attempt-answer correctness
-	 * constants, including the partial value.
+	 * then graded. Auto-graded questions use the attempt-answer correctness constants.
 	 *
 	 * @since 4.0.0
+	 * @since 4.1.0 Added manual graded questions and filter hook.
 	 *
 	 * @param object $attempt_answer Attempt answer object.
 	 *
-	 * @return string One of: pending, correct, partial, incorrect, graded, skipped.
+	 * @return string One of: pending, correct, incorrect, graded, skipped (or one from the filter).
 	 */
 	public static function get_attempt_answer_status( $attempt_answer ): string {
 		$question_type = (string) ( $attempt_answer->question_type ?? '' );
@@ -1201,14 +1199,14 @@ class QuizModel {
 	/**
 	 * Get attempt answer counts categorized by status.
 	 *
-	 * Fully correct answers are counted under 'correct', partial answers under 'partial',
-	 * and incorrect answers under 'incorrect'. Pending, graded, and skipped answers are excluded.
+	 * Fully correct answers are counted under 'correct' and incorrect answers under 'incorrect'.
+	 * Pending, graded, and skipped answers are excluded.
 	 *
 	 * @since 4.1.0
 	 *
 	 * @param array|null $answers List of answer objects.
 	 *
-	 * @return array Associative array with keys 'correct', 'partial', and 'incorrect'.
+	 * @return array Associative array with answer status counts.
 	 */
 	public static function get_attempt_answer_counts( $answers ): array {
 		$counts = array(
@@ -1881,21 +1879,6 @@ class QuizModel {
 		}
 
 		return $has_access;
-	}
-
-	/**
-	 * Check if attempt info snapshot has partial or negative marking enabled.
-	 *
-	 * Delegated via filter to Tutor Pro.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @param array|string $attempt_info Attempt info snapshot array or serialized string.
-	 *
-	 * @return bool
-	 */
-	public static function has_partial_or_negative_marking( $attempt_info ): bool {
-		return (bool) apply_filters( 'tutor_quiz_has_partial_or_negative_marking', false, $attempt_info );
 	}
 
 	/**

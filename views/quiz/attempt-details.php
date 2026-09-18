@@ -806,7 +806,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 																echo '<span class="tutor-badge-label ' . esc_attr( $badge_class ) . '">' . esc_html( $badge_info['label'] ?? '' ) . '</span>';
 
-																do_action( 'tutor_quiz_attempt_details_result_badge_after', $answer, $answer_status, $attempt_id, ! empty( $manual_overrides_map[ $answer->question_id ] ) );
+																do_action( 'tutor_quiz_attempt_details_result_badge_after', $answer, $answer_status);
 
 																if ( 'pending' !== $answer_status && 'skipped' !== $answer_status ) {
 																	echo '<div class="tutor-quiz-result-score">' . esc_html( $score_label ) . '</div>';
@@ -930,7 +930,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					</h3>
 				</div>
 				<div class="tutor-modal-body">
-					<div class="tutor-mb-24">
+					<div>
 						<input type="hidden" id="tutor-question-feedback-attempt-id">
 						<input type="hidden" id="tutor-question-feedback-answer-id">
 						<textarea id="tutor-question-feedback-content" class="tutor-form-control tutor-form-control-auto-height" rows="5" placeholder="<?php esc_attr_e( 'Write feedback for the student...', 'tutor' ); ?>"></textarea>
