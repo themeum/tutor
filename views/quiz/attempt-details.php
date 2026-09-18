@@ -838,14 +838,21 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											?>
 												<td class="tutor-text-center tutor-nowrap-ellipsis" data-title="<?php echo esc_attr( $column ); ?>">
 													<div class="tutor-manual-review-wrapper">
-													<?php if ( in_array( $answer->question_type, QuizModel::get_manual_review_types(), true ) && 'skipped' !== $answer_status ) : ?>
-														<div class="tutor-d-inline-flex tutor-align-center tutor-justify-center">
-															<input class="tutor-form-control tutor-form-control-sm quiz-manual-mark-input" style="width: 72px; height: 32px; text-align: center;" type="number" min="0" max="<?php echo esc_attr( (string) $answer->question_mark ); ?>" step="0.01" value="<?php echo esc_attr( (string) $answer->achieved_mark ); ?>" aria-label="<?php esc_attr_e( 'Obtained marks', 'tutor' ); ?>" />
-															<span class="tutor-fs-7 tutor-color-muted tutor-ml-4">/ <?php echo esc_html( (string) $answer->question_mark ); ?></span>
-															<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Save mark', 'tutor' ); ?>" class="quiz-manual-mark-save tutor-ml-8 tutor-icon-rounded tutor-color-success">
-																<i class="tutor-icon-mark"></i>
-															</a>
-														</div>
+												<?php if ( in_array( $answer->question_type, QuizModel::get_manual_review_types(), true ) && 'skipped' !== $answer_status ) : ?>
+													<?php
+													$manual_mark_error_id = 'tutor-manual-mark-error-' . (int) $answer->attempt_answer_id;
+													$is_manual_graded     = null !== ( $answer->is_correct ?? null );
+													$manual_mark_value    = $is_manual_graded ? (string) ( $answer->achieved_mark ?? '' ) : '';
+													$has_manual_mark      = '' !== $manual_mark_value;
+													?>
+													<div class="tutor-d-inline-flex tutor-align-center tutor-justify-center">
+														<input class="tutor-form-control tutor-form-control-sm quiz-manual-mark-input" style="width: 72px; height: 32px; text-align: center;" type="number" min="0" max="<?php echo esc_attr( (string) $answer->question_mark ); ?>" step="0.01" value="<?php echo esc_attr( $has_manual_mark ? $manual_mark_value : '' ); ?>" aria-label="<?php esc_attr_e( 'Obtained marks', 'tutor' ); ?>" aria-describedby="<?php echo esc_attr( $manual_mark_error_id ); ?>" />
+														<span class="tutor-fs-7 tutor-color-muted tutor-ml-4">/ <?php echo esc_html( (string) $answer->question_mark ); ?></span>
+														<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Save mark', 'tutor' ); ?>" class="quiz-manual-mark-save tutor-ml-8 tutor-icon-rounded tutor-color-success"<?php echo $has_manual_mark ? '' : ' style="display:none;"'; ?>>
+															<i class="tutor-icon-mark"></i>
+														</a>
+													</div>
+													<div id="<?php echo esc_attr( $manual_mark_error_id ); ?>" class="quiz-manual-mark-error tutor-fs-8 tutor-color-danger tutor-mt-4" style="display:none;" role="alert"></div>
 														<?php if ( $is_instructor_review ) : ?>
 															<?php
 															$has_question_feedback = '' !== trim( (string) ( $question_feedback_map[ $answer->attempt_answer_id ] ?? '' ) );
