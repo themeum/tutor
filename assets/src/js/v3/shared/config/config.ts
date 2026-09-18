@@ -97,6 +97,10 @@ const defaultTutorConfig = {
     is_tax_included_in_price: false,
     pagination_per_page: 10,
     has_active_membership_plans: false,
+    is_wp_ai_supported: false,
+    has_ai_connector: false,
+    has_image_connector: false,
+    connectors_admin_url: '',
   },
   tutor_currency: {
     symbol: '',
