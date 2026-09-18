@@ -147,6 +147,14 @@
         &.pending .tutor-question-number::before {
           background-color: $tutor-border-warning-tertiary;
         }
+
+        &.partial .tutor-question-number::before {
+          background-color: $tutor-icon-success-primary;
+        }
+
+        &.graded .tutor-question-number::before {
+          background-color: $tutor-icon-exception2;
+        }
       }
     }
   }
