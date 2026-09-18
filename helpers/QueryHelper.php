@@ -1277,21 +1277,86 @@ class QueryHelper {
 	}
 
 	/**
-	 * Prepare table name with prefix.
+	 * Prepare table name with the correct WordPress prefix.
+	 *
+	 * Resolves blog-scoped tables with `$wpdb->prefix` and WordPress global
+	 * tables (e.g. users, usermeta) with `$wpdb->base_prefix` so Multisite
+	 * subsites do not produce invalid names like `wp_7_users` or `wp_7_wp_users`.
+	 * Optional SQL aliases are preserved unchanged.
 	 *
 	 * @since 3.7.0
+	 * @since 4.0.5 Multisite-safe global vs blog table resolution.
 	 *
-	 * @param string $table_name table name.
+	 * @param string $table_name Table name, optionally with an alias (e.g. `users u`, `users AS u`).
 	 *
 	 * @return string
 	 */
 	public static function prepare_table_name( string $table_name ) {
-		$table_prefix = self::get_table_prefix();
-		if ( strpos( $table_name,$table_prefix ) !== 0 ) {
-			$table_name = $table_prefix . $table_name;
+		global $wpdb;
+
+		$table_name = trim( $table_name );
+		if ( '' === $table_name ) {
+			return $table_name;
 		}
 
-		return $table_name;
+		$alias = '';
+		$base  = $table_name;
+
+		// Split optional alias: "users u", "users AS u", "wp_users AS user_tbl".
+		if ( preg_match( '/^(\S+)(\s+(?:AS\s+)?\S+)$/i', $table_name, $matches ) ) {
+			$base  = $matches[1];
+			$alias = $matches[2];
+		}
+
+		// Only resolve safe SQL identifiers; leave unexpected input unchanged.
+		if ( ! preg_match( '/^[A-Za-z0-9_]+$/', $base ) ) {
+			return $table_name;
+		}
+
+		$blog_prefix = $wpdb->prefix;
+		$base_prefix = $wpdb->base_prefix;
+
+		// Already qualified with the current blog prefix.
+		if ( 0 === strpos( $base, $blog_prefix ) ) {
+			return $base . $alias;
+		}
+
+		$global_tables = isset( $wpdb->global_tables ) && is_array( $wpdb->global_tables )
+			? $wpdb->global_tables
+			: array( 'users', 'usermeta' );
+
+		if ( is_multisite() && isset( $wpdb->ms_global_tables ) && is_array( $wpdb->ms_global_tables ) ) {
+			$global_tables = array_merge( $global_tables, $wpdb->ms_global_tables );
+		}
+
+		$global_tables = array_unique( $global_tables );
+
+		// Unprefixed WordPress global table (e.g. "users", "usermeta").
+		if ( in_array( $base, $global_tables, true ) ) {
+			if ( isset( $wpdb->$base ) && is_string( $wpdb->$base ) && '' !== $wpdb->$base ) {
+				return $wpdb->$base . $alias;
+			}
+
+			return $base_prefix . $base . $alias;
+		}
+
+		// Already a fully qualified global table name (e.g. $wpdb->users).
+		foreach ( $global_tables as $global_table ) {
+			$qualified = ( isset( $wpdb->$global_table ) && is_string( $wpdb->$global_table ) && '' !== $wpdb->$global_table )
+				? $wpdb->$global_table
+				: $base_prefix . $global_table;
+
+			if ( $base === $qualified ) {
+				return $base . $alias;
+			}
+		}
+
+		// Already qualified with the network/base prefix (avoid double-prefixing).
+		if ( 0 === strpos( $base, $base_prefix ) ) {
+			return $base . $alias;
+		}
+
+		return $blog_prefix . $base . $alias;
 	}
 
 	/**
