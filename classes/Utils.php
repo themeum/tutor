@@ -3349,6 +3349,7 @@ class Utils {
 					INNER JOIN {$wpdb->posts} course
 							ON _user.ID = course.post_author
 						   AND course.ID = %d
+						   AND course.post_type = %s
 					LEFT  JOIN {$wpdb->usermeta} tutor_job_title
 						    ON _user.ID = tutor_job_title.user_id
 						   AND tutor_job_title.meta_key = %s
@@ -3360,6 +3361,7 @@ class Utils {
 						   AND tutor_photo.meta_key = %s
 			",
 				$course_id,
+				tutor()->course_post_type,
 				'_tutor_profile_job_title',
 				'_tutor_profile_bio',
 				'_tutor_profile_photo'
@@ -7512,7 +7514,9 @@ class Utils {
 			global $wpdb;
 			switch ( $content ) {
 				case 'course':
-					$course_id = $object_id;
+					if ( get_post_type( $object_id ) === tutor()->course_post_type ) {
+						$course_id = $object_id;
+					}
 					break;
 
 				case 'zoom_meeting':

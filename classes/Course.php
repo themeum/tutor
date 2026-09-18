@@ -1929,6 +1929,9 @@ class Course extends Tutor_Base {
 			return;
 		}
 
+		$default_content_types = array( tutor()->lesson_post_type, tutor()->quiz_post_type );
+		$allowed_content_types = array_unique( apply_filters( 'tutor_course_contents_post_types', $default_content_types ) );
+
 		$i = 0;
 		foreach ( $sort_order as $topic ) {
 			++$i;
@@ -1958,6 +1961,12 @@ class Course extends Tutor_Base {
 			}
 			if ( count( $lesson_ids ) ) {
 				foreach ( $lesson_ids as $lesson_key => $lesson_id ) {
+					// Verify the post is a valid Tutor content type before reparenting.
+					$lesson_post_type = get_post_type( (int) $lesson_id );
+					if ( ! $lesson_post_type || ! in_array( $lesson_post_type, $allowed_content_types, true ) ) {
+						continue;
+					}
+
 					$wpdb->update(
 						$wpdb->posts,
 						array(
