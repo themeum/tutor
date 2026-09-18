@@ -1,4 +1,0 @@
-schema: spec-driven
-created: 2026-09-14
-goal: Add Tutor Pro partial and negative marking for six auto-graded question
-  types, persist is_correct=2, and render Partially correct in core attempt UI.
