@@ -284,13 +284,15 @@ class Dashboard {
 			return $url;
 		}
 
-		$back_url = Input::get( 'back_url', '' );
-		$decoded  = urldecode( $back_url );
-		if ( ! str_starts_with( $decoded, home_url() ) ) {
+		$back_url  = Input::get( 'back_url', '' );
+		$decoded   = urldecode( $back_url );
+		$validated = wp_validate_redirect( $decoded, false );
+
+		if ( ! $validated ) {
 			return $url;
 		}
 
-		return esc_url_raw( $decoded );
+		return esc_url_raw( $validated );
 	}
 
 	/**

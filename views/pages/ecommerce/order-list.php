@@ -17,6 +17,7 @@ use Tutor\Ecommerce\OrderController;
 use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
+use TUTOR\User;
 
 /**
  * Determine active tab
@@ -177,10 +178,11 @@ $filters = array(
 											echo wp_kses(
 												tutor_utils()->get_tutor_avatar( $user_data, 'sm' ),
 												tutor_utils()->allowed_avatar_tags()
-											)
+											);
+											$is_instructor = User::is_instructor( $user_data->ID, false );
 											?>
 											<div class="tutor-ml-12">
-												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $user_data, true ) ); ?>">
+												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $user_data, $is_instructor ) ); ?>">
 													<?php echo esc_html( $user_data ? $user_data->display_name : '' ); ?>
 												</a>
 											</div>
