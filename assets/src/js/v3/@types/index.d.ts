@@ -191,6 +191,10 @@ declare global {
         is_tax_included_in_price: boolean;
         pagination_per_page: string | number;
         has_active_membership_plans: boolean;
+        enable_quiz_partial_marking: 'on' | 'off';
+        enable_quiz_negative_marking: 'on' | 'off';
+        quiz_negative_mark_mode: 'percent' | 'fixed';
+        quiz_negative_mark_amount: string | number;
       };
       tutor_currency: {
         symbol: string;

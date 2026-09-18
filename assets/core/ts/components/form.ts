@@ -227,12 +227,12 @@ async function validateFieldValue(name: string, value: unknown, rules?: Validati
   }
 
   // Numeric validations
-  if (rules.min && !isNaN(numericValue)) {
+  if (typeof rules.min !== 'undefined' && !isNaN(numericValue)) {
     const error = ValidationHelpers.validateMin(numericValue, rules.min);
     if (error) return error;
   }
 
-  if (rules.max && !isNaN(numericValue)) {
+  if (typeof rules.max !== 'undefined' && !isNaN(numericValue)) {
     const error = ValidationHelpers.validateMax(numericValue, rules.max);
     if (error) return error;
   }

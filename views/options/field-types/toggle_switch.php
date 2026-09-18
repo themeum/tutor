@@ -28,25 +28,25 @@ $label_icon         = isset( $field['label_icon'] ) ? $field['label_icon'] : '';
 		<label class="tutor-form-toggle">
 			<?php printf( "<span class='label-before'>%s</span>", esc_attr( $field_label_title ) ); ?>
 			<input type="hidden" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
-			<input type="checkbox" 
+			<input type="checkbox"
 				<?php if ( ! $has_control_button && $toggle_fields ) : ?>
-					data-toggle-fields="<?php echo esc_attr( $toggle_fields ); ?>" 
+					data-toggle-fields="<?php echo esc_attr( $toggle_fields ); ?>"
 				<?php endif; ?>
 				<?php if ( ! $has_control_button && $toggle_blocks ) : ?>
-					data-toggle-blocks="<?php echo esc_attr( $toggle_blocks ); ?>" 
+					data-toggle-blocks="<?php echo esc_attr( $toggle_blocks ); ?>"
 				<?php endif; ?>
-				<?php checked( esc_attr( $option_value ), 'on' ); ?> 
+				<?php checked( esc_attr( $option_value ), 'on' ); ?>
 				class="tutor-form-toggle-input">
 			<span class="tutor-form-toggle-control"></span>
 		</label>
 		<?php if ( $has_control_button ) : ?>
 		<button type="button" class="tutor-control-button">
-			<input type="checkbox" 
+			<input type="checkbox"
 				<?php if ( $toggle_fields ) : ?>
-					data-toggle-fields="<?php echo esc_attr( $toggle_fields ); ?>" 
+					data-toggle-fields="<?php echo esc_attr( $toggle_fields ); ?>"
 				<?php endif; ?>
 				<?php if ( $toggle_blocks ) : ?>
-					data-toggle-blocks="<?php echo esc_attr( $toggle_blocks ); ?>" 
+					data-toggle-blocks="<?php echo esc_attr( $toggle_blocks ); ?>"
 				<?php endif; ?>
 			>
 			<i class="tutor-icon-slider-horizontal"></i>

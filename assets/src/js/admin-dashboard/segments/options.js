@@ -713,4 +713,156 @@ document.addEventListener('DOMContentLoaded', function () {
 			bankTransferInstruction.previousElementSibling?.classList.toggle('tutor-option-no-bottom-border', !e.target.checked);
 		});
 	}
+
+	/**
+	 * Toggle turn-off confirmation modals.
+	 *
+	 * Intercepts the change event on tutor-form-toggle-input elements that are
+	 * configured in the localized `tutorTurnoffConfirm` map (keyed by field key).
+	 * When such a toggle is turned OFF, the handler reverts the toggle, shows a
+	 * confirm modal, and only proceeds with the turn-off if the user confirms.
+	 *
+	 * The config can include a usage-check AJAX action to decide whether the
+	 * modal needs to be shown at all.
+	 *
+	 * The map is localized by Tutor Pro; Free only provides this generic,
+	 * configuration-driven mechanism.
+	 *
+	 * @since 4.1.0
+	 */
+	const turnOffConfirmations = window.tutorTurnoffConfirm || {};
+	Object.entries(turnOffConfirmations).forEach(([fieldKey, config]) => {
+		document.querySelectorAll(`#field_${fieldKey} .tutor-form-toggle-input`).forEach((checkbox) => {
+			checkbox.addEventListener('change', function (e) {
+				if (this.checked) {
+					return;
+				}
+
+				const message = config.message;
+				const title = config.title;
+				const cancelText = config.cancel;
+				const confirmText = config.confirm;
+				const usageAjaxAction = config.usage_check_action;
+				if (!message) {
+					return;
+				}
+
+				const hiddenInput = this.previousElementSibling;
+				const syncToggleVisibility = () => {
+					const $toggle = $(this);
+					if ($toggle.data('toggle-fields')) {
+						showHideToggleChildren($toggle);
+					}
+					if ($toggle.data('toggle-blocks')) {
+						showHideToggleBlock($toggle);
+					}
+				};
+
+				const revertToggle = () => {
+					this.checked = true;
+					if (hiddenInput) {
+						hiddenInput.value = 'on';
+					}
+					syncToggleVisibility();
+				};
+
+				const proceedWithTurnoff = () => {
+					this.checked = false;
+					if (hiddenInput) {
+						hiddenInput.value = 'off';
+					}
+					syncToggleVisibility();
+				};
+
+				if (!usageAjaxAction) {
+					revertToggle();
+					tutorConfirmTurnoffModal(message, title, cancelText, confirmText).then((confirmed) => {
+						if (confirmed) {
+							proceedWithTurnoff();
+						}
+					});
+					return;
+				}
+
+				const formData = new FormData();
+				formData.append('action', usageAjaxAction);
+				formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+
+				fetch(_tutorobject.ajaxurl, { method: 'POST', body: formData })
+					.then((response) => response.json())
+					.then((result) => {
+						const hasCustomized = result?.data?.has_customized;
+						if (hasCustomized) {
+							revertToggle();
+							tutorConfirmTurnoffModal(message, title, cancelText, confirmText).then((confirmed) => {
+								if (confirmed) {
+									proceedWithTurnoff();
+								}
+							});
+						} else {
+							proceedWithTurnoff();
+						}
+					})
+					.catch(() => {
+						revertToggle();
+					});
+			});
+		});
+	});
 });
+
+/**
+ * Show a confirmation modal for toggle turn-off.
+ *
+ * @since 4.1.0
+ *
+ * @param {string} message The confirmation message.
+ * @param {string} [title] Optional modal title.
+ * @param {string} [cancelText] Optional cancel button label.
+ * @param {string} [confirmText] Optional confirm button label.
+ * @return {Promise<boolean>} Resolves true if confirmed, false if cancelled.
+ */
+function tutorConfirmTurnoffModal(message, title, cancelText, confirmText) {
+	const { __ } = wp.i18n;
+
+	return new Promise((resolve) => {
+		let popup;
+		let resolved = false;
+
+		const finish = (confirmed) => {
+			if (resolved) {
+				return;
+			}
+			resolved = true;
+			resolve(confirmed);
+			popup.find('[data-tutor-modal-close]').click();
+		};
+
+		popup = new window.tutor_popup(window.jQuery, '').popup({
+			title: title || __('Turn off setting?', 'tutor'),
+			description: message,
+			buttons: {
+				cancel: {
+					title: cancelText || __('No, keep it', 'tutor'),
+					id: 'cancel',
+					class: 'tutor-btn tutor-btn-outline-primary',
+					callback: function () {
+						finish(false);
+					},
+				},
+				confirm: {
+					title: confirmText || __('Yes, turn off', 'tutor'),
+					id: 'confirm',
+					class: 'tutor-btn tutor-btn-primary tutor-ml-20',
+					callback: function () {
+						finish(true);
+					},
+				},
+			},
+		});
+
+		popup.on('click', '[data-tutor-modal-close], .tutor-modal-overlay', function () {
+			finish(false);
+		});
+	});
+}

@@ -52,19 +52,10 @@ $timing                 = QuizModel::get_quiz_attempt_timing( $attempt_data );
 $attempt_duration       = $timing['attempt_duration'] ?? '';
 $attempt_duration_taken = $timing['attempt_duration_taken'] ?? '';
 
-$answers   = isset( $answers ) ? $answers : QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
-$correct   = 0;
-$incorrect = 0;
-
-if ( is_array( $answers ) ) {
-	foreach ( $answers as $answer ) {
-		if ( ! empty( $answer->is_correct ) ) {
-			++$correct;
-		} elseif ( ! in_array( $answer->question_type, array( 'open_ended', 'short_answer' ), true ) ) {
-			++$incorrect;
-		}
-	}
-}
+$answers       = isset( $answers ) ? $answers : QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+$answer_counts = QuizModel::get_attempt_answer_counts( $answers );
+$correct       = $answer_counts['correct'];
+$incorrect     = $answer_counts['incorrect'];
 
 $total_questions = (int) $attempt_data->total_questions;
 $attempts_count  = 0;
@@ -172,6 +163,8 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 			</div>
 
 			<div class="tutor-quiz-result-statics">
+				<?php do_action( 'tutor_quiz_attempt_summary_statics_before_correct', $attempt_data, $answers ); ?>
+				
 				<div class="tutor-quiz-result-static-item correct">
 					<?php
 					printf(

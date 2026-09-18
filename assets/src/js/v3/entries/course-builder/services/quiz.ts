@@ -102,6 +102,10 @@ export interface QuizDetailsResponse {
     hide_question_number_overview: '0' | '1';
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
+    enable_partial_marking?: '0' | '1';
+    enable_negative_marking?: '0' | '1';
+    negative_mark_type?: 'percent' | 'fixed';
+    negative_mark_value?: number;
     content_drip_settings: {
       unlock_date: string;
       after_xdays_of_enroll: number;
@@ -140,6 +144,10 @@ export interface QuizForm {
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
     pagination_type: QuizPaginationType;
+    enable_partial_marking: boolean;
+    enable_negative_marking: boolean;
+    negative_mark_type: 'percent' | 'fixed';
+    negative_mark_value: number;
     content_drip_settings: {
       unlock_date: string;
       after_xdays_of_enroll: number;
@@ -210,6 +218,13 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       hide_question_number_overview: quiz.quiz_option.hide_question_number_overview === '1',
       short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit ?? 200,
       open_ended_answer_characters_limit: quiz.quiz_option.open_ended_answer_characters_limit ?? 500,
+      enable_partial_marking: quiz.quiz_option.enable_partial_marking === '1',
+      enable_negative_marking: quiz.quiz_option.enable_negative_marking === '1',
+      negative_mark_type:
+        quiz.quiz_option.negative_mark_type ??
+        (tutorConfig.settings?.quiz_negative_mark_mode === 'fixed' ? 'fixed' : 'percent'),
+      negative_mark_value:
+        quiz.quiz_option.negative_mark_value ?? Number(tutorConfig.settings?.quiz_negative_mark_amount ?? 0.15),
       content_drip_settings: quiz.quiz_option.content_drip_settings || {
         unlock_date: '',
         after_xdays_of_enroll: 0,
@@ -270,6 +285,10 @@ export const convertQuizFormDataToPayload = (
         quiz_auto_start: formData.quiz_option.quiz_auto_start ? '1' : '0',
         auto_start_delay: Number(formData.quiz_option.auto_start_delay),
         short_answer_characters_limit: formData.quiz_option.short_answer_characters_limit,
+        enable_partial_marking: formData.quiz_option.enable_partial_marking ? '1' : '0',
+        enable_negative_marking: formData.quiz_option.enable_negative_marking ? '1' : '0',
+        negative_mark_type: formData.quiz_option.negative_mark_type,
+        negative_mark_value: formData.quiz_option.negative_mark_value,
         time_limit: {
           time_type: formData.quiz_option.time_limit.time_type,
           time_value: formData.quiz_option.enable_time_limit ? formData.quiz_option.time_limit.time_value : 0,

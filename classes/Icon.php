@@ -301,6 +301,7 @@ final class Icon {
 	const NOTIFICATION_2             = 'notification-2';
 	const OPEN                       = 'open';
 	const OUTLINE_NONE               = 'outline-none';
+	const PARTIAL                    = 'partial';
 	const PASSED                     = 'passed';
 	const PASSED_FILL                = 'passed-fill';
 	const PASSING                    = 'passing';
