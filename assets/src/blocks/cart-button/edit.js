@@ -28,7 +28,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						label={ __( 'Custom CSS Class', 'tutor' ) }
 						value={ customClass }
 						onChange={ ( value ) => setAttributes( { customClass: value } ) }
-						placeholder="cart-contents"
+						placeholder="tutor-cart-button"
 					/>
 				</PanelBody>
 			</InspectorControls>

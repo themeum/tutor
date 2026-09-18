@@ -519,17 +519,14 @@ class Shortcode {
 	public function tutor_cart_button( $atts ) {
 		$atts = shortcode_atts(
 			array(
-				'class'        => 'cart-contents',
+				'class'        => 'tutor-cart-button',
 				'title'        => __( 'View your shopping cart', 'tutor' ),
-				'show_icon'    => 'true',
 				'show_count'   => 'if_has_items',
 				'before_count' => '(',
 				'after_count'  => ')',
 			),
 			$atts
 		);
-
-		$atts['show_icon'] = 'true' === $atts['show_icon'];
 
 		if ( 'true' === $atts['show_count'] ) {
 			$atts['show_count'] = 'if_has_items';

@@ -13,14 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = $attributes ?? array();
 
 $atts = array(
-	'show_icon'  => 'true',
 	'show_count' => isset( $attributes['showCount'] ) ? $attributes['showCount'] : 'if_has_items',
-	'class'      => isset( $attributes['customClass'] ) && ! empty( $attributes['customClass'] ) ? $attributes['customClass'] : 'cart-contents',
+	'class'      => isset( $attributes['customClass'] ) && ! empty( $attributes['customClass'] ) ? $attributes['customClass'] : 'tutor-cart-button',
 );
 
 $shortcode = '[tutor_cart_button';
 foreach ( $atts as $key => $value ) {
-	$shortcode .= ' ' . $key . '="' . esc_attr( $value ) . '"';
+	$shortcode .= sprintf( ' %s="%s"', $key, esc_attr( $value ) );
 }
 $shortcode .= ']';
 
@@ -39,10 +38,12 @@ if ( ! empty( $attributes['badgeTextColor'] ) ) {
 }
 
 $wrapper_attributes = get_block_wrapper_attributes(
-	array_filter( array(
-		'class' => 'tutor-cart-button',
-		'style' => $css_vars ?: null,
-	) )
+	array_filter(
+		array(
+			'class' => 'tutor-cart-button',
+			'style' => $css_vars ? $css_vars : null,
+		)
+	)
 );
 
 echo '<div ' . $wrapper_attributes . '>' . do_shortcode( $shortcode ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

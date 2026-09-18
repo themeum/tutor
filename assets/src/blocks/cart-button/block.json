@@ -1,8 +1,8 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "tutor-gutenberg/cart-button",
-  "title": "Tutor Cart Button",
+  "name": "tutor-blocks/cart-button",
+  "title": "Cart Button",
   "category": "tutor",
   "icon": "cart",
   "description": "Display a cart button with item count for Tutor LMS ecommerce",
@@ -13,7 +13,7 @@
     },
     "customClass": {
       "type": "string",
-      "default": "cart-contents"
+      "default": "tutor-cart-button"
     },
     "iconColor": {
       "type": "string",

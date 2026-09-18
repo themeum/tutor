@@ -192,9 +192,8 @@ if ( ! function_exists( 'tutor_ecommerce_cart_button' ) ) {
 	 * @param array $args {
 	 *     Optional. Array of arguments for customizing the cart button.
 	 *
-	 *     @type string $class        CSS class for the cart button. Default 'cart-contents'.
+	 *     @type string $class        CSS class for the cart button. Default 'tutor-cart-button'.
 	 *     @type string $title        Title attribute for the cart link. Default 'View your shopping cart'.
-	 *     @type bool   $show_icon    Whether to show the cart icon. Default true.
 	 *     @type string $show_count   When to show the cart item count: 'always', 'if_has_items', or 'never'. Default 'if_has_items'.
 	 *     @type string $icon_svg     Custom SVG icon. If not provided, default cart icon will be used.
 	 *     @type string $before_count Text before cart count. Default '('.
@@ -212,7 +211,6 @@ if ( ! function_exists( 'tutor_ecommerce_cart_button' ) ) {
 		$defaults = array(
 			'class'        => 'tutor-cart-button',
 			'title'        => __( 'View your shopping cart', 'tutor' ),
-			'show_icon'    => true,
 			'show_count'   => 'if_has_items',
 			'icon_svg'     => '',
 			'before_count' => '',
@@ -228,33 +226,29 @@ if ( ! function_exists( 'tutor_ecommerce_cart_button' ) ) {
 
 		$cart_count = is_array( $cart_items ) ? count( $cart_items ) : 0;
 
-		if ( empty( $args['icon_svg'] ) && $args['show_icon'] ) {
+		if ( empty( $args['icon_svg'] ) ) {
 			$args['icon_svg'] = SvgIcon::make()->name( Icon::CART )->size( Size::SIZE_20 )->get();
 		}
 
 		ob_start();
 		?>
-		<a class="<?php echo esc_attr( $args['class'] ); ?>" href="<?php echo esc_url( $cart_url ); ?>"
-			title="<?php echo esc_attr( $args['title'] ); ?>">
-			<?php if ( $args['show_icon'] ) : ?>
-				<span class="tutor-btn-cart">
-					<?php echo $args['icon_svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<a class="<?php echo esc_attr( $args['class'] ); ?>" href="<?php echo esc_url( $cart_url ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>">
+			<span class="tutor-btn-cart">
+				<?php echo $args['icon_svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php
+				$show_count = $args['show_count'];
+				if ( 'never' !== $show_count ) :
+					$hidden = ( 'if_has_items' === $show_count && 0 === $cart_count );
+					?>
+					<span class="tutor-cart-count" data-show-count="<?php echo esc_attr( $show_count ); ?>" 
 					<?php
-					$show_count = $args['show_count'];
-					if ( 'never' !== $show_count ) :
-						$hidden = ( 'if_has_items' === $show_count && 0 === $cart_count );
+					if ( $hidden ) :
 						?>
-						<span class="tutor-cart-count"
-							data-show-count="<?php echo esc_attr( $show_count ); ?>"
-							<?php
-							if ( $hidden ) :
-								?>
-								style="display:none;"<?php endif; ?>>
-							<?php echo esc_html( $cart_count ); ?>
-						</span>
-					<?php endif; ?>
-				</span>
-			<?php endif; ?>
+					style="display:none;"<?php endif; ?>>
+						<?php echo esc_html( $cart_count ); ?>
+					</span>
+				<?php endif; ?>
+			</span>
 		</a>
 		<?php
 		echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
