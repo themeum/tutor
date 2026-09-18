@@ -299,16 +299,112 @@ jQuery(document).ready(function($) {
 	 * @since v.1.6.4
 	 * Quiz Attempts Instructor Feedback
 	 */
+	const FEEDBACK_EDITOR_ID = 'tutor-global-text-editor';
+
+	const getInstructorFeedbackEditor = () => {
+		if (typeof tinymce === 'undefined') {
+			return null;
+		}
+
+		return tinymce.get(FEEDBACK_EDITOR_ID) || tinymce.activeEditor || null;
+	};
+
+	const getInstructorFeedbackContent = () => {
+		const editor = getInstructorFeedbackEditor();
+		if (editor) {
+			return editor.getContent();
+		}
+
+		const textarea = document.getElementById(FEEDBACK_EDITOR_ID);
+		return textarea ? textarea.value : '';
+	};
+
+	const syncInstructorFeedbackSubmitButton = ($button) => {
+		if (!$button.length) {
+			return;
+		}
+
+		const originalContent = $button.data('original-feedback');
+		const reviewsChanged = !!$button.data('reviews-changed');
+		const feedbackChanged =
+			typeof originalContent === 'string' && getInstructorFeedbackContent() !== originalContent;
+
+		$button.prop('disabled', !(feedbackChanged || reviewsChanged));
+	};
+
+	const bindInstructorFeedbackDirtyState = () => {
+		const $button = $('.tutor-instructor-feedback');
+		if (!$button.length || $button.data('feedback-bound')) {
+			return false;
+		}
+
+		const editor = getInstructorFeedbackEditor();
+		const textarea = document.getElementById(FEEDBACK_EDITOR_ID);
+
+		if (!editor && !textarea) {
+			return false;
+		}
+
+		$button.data('feedback-bound', true);
+		$button.data('original-feedback', getInstructorFeedbackContent());
+		$button.data('reviews-changed', false);
+		syncInstructorFeedbackSubmitButton($button);
+
+		if (editor) {
+			editor.on('change keyup NodeChange SetContent input', function() {
+				syncInstructorFeedbackSubmitButton($button);
+			});
+		}
+
+		if (textarea) {
+			$(textarea).on('input.tutorFeedbackDirty keyup.tutorFeedbackDirty change.tutorFeedbackDirty', function() {
+				syncInstructorFeedbackSubmitButton($button);
+			});
+		}
+
+		return true;
+	};
+
+	const ensureInstructorFeedbackDirtyState = () => {
+		if (bindInstructorFeedbackDirtyState()) {
+			return;
+		}
+
+		let attempts = 0;
+		const timer = setInterval(function() {
+			attempts += 1;
+			if (bindInstructorFeedbackDirtyState() || attempts > 40) {
+				clearInterval(timer);
+			}
+		}, 250);
+	};
+
+	$(document).on('click', '.quiz-manual-review-action', function() {
+		const $button = $('.tutor-instructor-feedback');
+		if (!$button.length) {
+			return;
+		}
+
+		$button.data('reviews-changed', true);
+		syncInstructorFeedbackSubmitButton($button);
+	});
+
 	$(document).on('click', '.tutor-instructor-feedback', function(e) {
 		e.preventDefault();
 		var $that = $(this);
+		if ($that.prop('disabled')) {
+			return;
+		}
+
 		let btnContent = $that.html();
+		const feedbackContent = getInstructorFeedbackContent();
+
 		$.ajax({
 			url: window.ajaxurl || _tutorobject.ajaxurl,
 			type: 'POST',
 			data: {
 				attempt_id: $that.data('attempt-id'),
-				feedback: tinymce.activeEditor.getContent(),
+				feedback: feedbackContent,
 				action: 'tutor_instructor_feedback',
 			},
 			beforeSend: function() {
@@ -316,15 +412,26 @@ jQuery(document).ready(function($) {
 			},
 			success: function(data) {
 				if (data.success) {
-					$that.closest('.course-content-item').remove();
+					$that.data('original-feedback', feedbackContent);
+					$that.data('reviews-changed', false);
 					tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
 				}
 			},
 			complete: function() {
-				$that.html(btnContent).removeAttr('disabled').removeClass('is-loading');
+				$that.html(btnContent).removeClass('is-loading');
+				syncInstructorFeedbackSubmitButton($that);
 			},
 		});
 	});
+
+	$(document).on('tinymce-editor-init', function(event, editor) {
+		if (editor && editor.id === FEEDBACK_EDITOR_ID) {
+			$('.tutor-instructor-feedback').removeData('feedback-bound');
+			ensureInstructorFeedbackDirtyState();
+		}
+	});
+
+	$(ensureInstructorFeedbackDirtyState);
 
 	/**
 	 * @since v.1.8.6

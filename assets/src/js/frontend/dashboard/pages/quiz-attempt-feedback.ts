@@ -28,11 +28,6 @@ interface QuizAttemptFeedbackResponse<TData = unknown> {
   data?: TData;
 }
 
-interface QuizAttemptSubmitResponse {
-  reviewResponse: QuizAttemptFeedbackResponse | null;
-  feedbackResponse: QuizAttemptFeedbackResponse | null;
-}
-
 const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) => {
   const { query, toast, endpoints, form } = window.TutorCore;
   const { wpPost } = window.TutorCore.api;
@@ -71,7 +66,7 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
   return {
     formId,
     attemptId,
-    feedbackMutation: null as MutationState<QuizAttemptSubmitResponse, QuizAttemptFeedbackPayload> | null,
+    feedbackMutation: null as MutationState<QuizAttemptFeedbackResponse, QuizAttemptFeedbackPayload> | null,
     _destroy: () => {},
 
     init() {
@@ -128,28 +123,24 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
         );
       }
 
-      const reviewStatusesPayload = getReviewStatusesPayload(payload.review_statuses);
-      const reviewRequest =
-        reviewStatusesDirty && Object.keys(reviewStatusesPayload).length > 0
-          ? wpPost<QuizAttemptFeedbackResponse>(endpoints.REVIEW_QUIZ_ANSWERS, {
-              attempt_id: payload.attempt_id,
-              ...reviewStatusesPayload,
-            })
-          : Promise.resolve(null);
+      if (!feedbackDirty && !reviewStatusesDirty) {
+        throw new Error(__('No changes to update', 'tutor'));
+      }
 
-      const feedbackRequest = feedbackDirty
-        ? wpPost<QuizAttemptFeedbackResponse>(endpoints.INSTRUCTOR_FEEDBACK, {
-            attempt_id: payload.attempt_id,
-            feedback: payload.feedback,
-          })
-        : Promise.resolve(null);
-
-      const [reviewResponse, feedbackResponse] = await Promise.all([reviewRequest, feedbackRequest]);
-
-      return {
-        reviewResponse,
-        feedbackResponse,
+      const requestPayload: Record<string, unknown> = {
+        attempt_id: payload.attempt_id,
       };
+
+      if (reviewStatusesDirty) {
+        Object.assign(requestPayload, getReviewStatusesPayload(payload.review_statuses));
+      }
+
+      if (feedbackDirty) {
+        requestPayload.feedback = payload.feedback;
+      }
+
+      // Single request so the graded email is sent once per Submit click.
+      return wpPost<QuizAttemptFeedbackResponse>(endpoints.REVIEW_QUIZ_ANSWERS, requestPayload);
     },
 
     async handleSaveFeedback(data: Record<string, unknown>) {
