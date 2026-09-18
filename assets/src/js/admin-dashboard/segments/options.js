@@ -748,11 +748,22 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 
 				const hiddenInput = this.previousElementSibling;
+				const syncToggleVisibility = () => {
+					const $toggle = $(this);
+					if ($toggle.data('toggle-fields')) {
+						showHideToggleChildren($toggle);
+					}
+					if ($toggle.data('toggle-blocks')) {
+						showHideToggleBlock($toggle);
+					}
+				};
+
 				const revertToggle = () => {
 					this.checked = true;
 					if (hiddenInput) {
 						hiddenInput.value = 'on';
 					}
+					syncToggleVisibility();
 				};
 
 				const proceedWithTurnoff = () => {
@@ -760,6 +771,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					if (hiddenInput) {
 						hiddenInput.value = 'off';
 					}
+					syncToggleVisibility();
 				};
 
 				if (!usageAjaxAction) {
