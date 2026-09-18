@@ -191,6 +191,10 @@ declare global {
         is_tax_included_in_price: boolean;
         pagination_per_page: string | number;
         has_active_membership_plans: boolean;
+        is_wp_ai_supported?: boolean;
+        has_ai_connector?: boolean;
+        has_image_connector?: boolean;
+        connectors_admin_url?: string;
       };
       tutor_currency: {
         symbol: string;
