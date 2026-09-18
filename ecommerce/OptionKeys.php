@@ -44,6 +44,9 @@ class OptionKeys {
 
 	const BUY_NOW = 'is_enable_buy_now';
 
+	// PayPal advanced settings.
+	const PAYPAL_ENABLE_VAULTING = 'tutor_paypal_enable_vaulting';
+
 	/**
 	 * Get billing field options
 	 *
