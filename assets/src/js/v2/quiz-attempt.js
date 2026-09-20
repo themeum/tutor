@@ -81,134 +81,129 @@ window.addEventListener('DOMContentLoaded', function() {
  * @return {void}
  */
 function initQuestionFeedbackHandlers(__, defaultErrorMsg) {
-    const feedbackModal    = document.getElementById('tutor-question-feedback-modal');
-    const deleteModal      = document.getElementById('tutor-question-feedback-delete-modal');
+    let activeTriggerLink = null;
 
-    if (!feedbackModal || !deleteModal) return;
-
-    const modalTitle       = document.getElementById('tutor-question-feedback-modal-title');
-    const attemptInput     = document.getElementById('tutor-question-feedback-attempt-id');
-    const answerInput      = document.getElementById('tutor-question-feedback-answer-id');
-    const textarea         = document.getElementById('tutor-question-feedback-content');
-    const saveBtn          = document.getElementById('tutor-question-feedback-save');
-    const deleteBtn        = document.getElementById('tutor-question-feedback-delete');
-    const deleteConfirmBtn = document.getElementById('tutor-question-feedback-delete-confirm');
-
-    let activeTriggerLink  = null;
+    // The attempt-details markup — including these modals — is re-rendered by AJAX
+    // after a manual review action, so node references are re-queried on every
+    // interaction and all handlers are bound via event delegation.
+    const feedbackModalElements = () => ({
+        feedbackModal:      document.getElementById('tutor-question-feedback-modal'),
+        modalTitle:         document.getElementById('tutor-question-feedback-modal-title'),
+        attemptInput:       document.getElementById('tutor-question-feedback-attempt-id'),
+        answerInput:        document.getElementById('tutor-question-feedback-answer-id'),
+        textarea:           document.getElementById('tutor-question-feedback-content'),
+        deleteBtn:          document.getElementById('tutor-question-feedback-delete'),
+        deleteConfirmModal: document.getElementById('tutor-question-feedback-delete-modal'),
+    });
 
     // Helper to update the trigger button state.
-    function updateTriggerLinkState(link, hasFeedback, feedbackText = '') {
+    const updateTriggerLinkState = (link, hasFeedback, feedbackText = '') => {
         if (!link) return;
         link.dataset.feedback = feedbackText;
-        if (hasFeedback) {
-            link.innerHTML = `<span class="tutor-icon-eye-line tutor-mr-4"></span>${__('Show Feedback', 'tutor')}`;
-            link.setAttribute('title', __('Show feedback', 'tutor'));
-        } else {
-            link.innerHTML = `<span class="tutor-icon-comment tutor-mr-4"></span>${__('Add Feedback', 'tutor')}`;
-            link.setAttribute('title', __('Add feedback', 'tutor'));
-        }
-    }
+        const icon  = hasFeedback ? 'tutor-icon-eye-line' : 'tutor-icon-comment';
+        const label = hasFeedback ? __('Show Feedback', 'tutor') : __('Add Feedback', 'tutor');
+        link.innerHTML = `<span class="${icon} tutor-mr-4"></span>${label}`;
+        link.setAttribute('title', hasFeedback ? __('Show feedback', 'tutor') : __('Add feedback', 'tutor'));
+    };
 
-    // Open feedback modal when "Add Feedback" or "Show Feedback" is clicked.
-    document.addEventListener('click', (e) => {
-        const link = e.target.closest('.quiz-question-feedback-action');
-        if (!link) return;
-        e.preventDefault();
+    const openFeedbackModal = (link) => {
+        const { feedbackModal, modalTitle, attemptInput, answerInput, textarea, deleteBtn } = feedbackModalElements();
+        if (!feedbackModal || !attemptInput || !answerInput || !textarea) return;
 
         activeTriggerLink     = link;
         attemptInput.value    = link.dataset.attemptId || '';
         answerInput.value     = link.dataset.attemptAnswerId || '';
         const currentFeedback = (link.dataset.feedback || '').trim();
         textarea.value        = currentFeedback;
-
         if (modalTitle) {
             modalTitle.textContent = currentFeedback ? __('Edit feedback', 'tutor') : __('Write feedback', 'tutor');
         }
-
         if (deleteBtn) {
             deleteBtn.style.display = currentFeedback ? '' : 'none';
         }
-
         openModal(feedbackModal, link);
-    });
+    };
 
-    // Save feedback via AJAX.
-    saveBtn.addEventListener('click', async () => {
+    // Save or delete feedback via AJAX with shared loading state and error toast.
+    const persistFeedback = async (action, button) => {
+        const { attemptInput, answerInput, textarea } = feedbackModalElements();
         const attemptId       = attemptInput.value;
         const attemptAnswerId = answerInput.value;
         const feedback        = textarea.value.trim();
 
-        if (!attemptId || !attemptAnswerId) return;
+        if (!attemptId || !attemptAnswerId) return null;
 
         const formData = new FormData();
-        formData.append('action', 'tutor_save_question_feedback');
+        formData.append('action', action);
         formData.append('attempt_id', attemptId);
         formData.append('attempt_answer_id', attemptAnswerId);
         formData.append('feedback', feedback);
         formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
 
-        saveBtn.classList.add('is-loading');
-        saveBtn.setAttribute('disabled', true);
+        button.classList.add('is-loading');
+        button.setAttribute('disabled', true);
 
         try {
             const response = await fetch(_tutorobject.ajaxurl, { method: 'POST', body: formData });
             const result   = await response.json();
-
-            if (result.success) {
-                tutor_toast(__('Saved', 'tutor'), result.data || __('Feedback saved', 'tutor'), 'success');
-                updateTriggerLinkState(activeTriggerLink, '' !== feedback, feedback);
-                closeModal(feedbackModal);
-            } else {
-                tutor_toast(__('Error', 'tutor'), result.data || defaultErrorMsg, 'error');
-            }
+            if (result.success) return result;
+            tutor_toast(__('Error', 'tutor'), result.data || defaultErrorMsg, 'error');
         } catch {
             tutor_toast(__('Error', 'tutor'), defaultErrorMsg, 'error');
         } finally {
-            saveBtn.classList.remove('is-loading');
-            saveBtn.removeAttribute('disabled');
+            button.classList.remove('is-loading');
+            button.removeAttribute('disabled');
         }
+
+        return null;
+    };
+
+    // Open feedback modal when "Add Feedback" or "Show Feedback" is clicked.
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('.quiz-question-feedback-action');
+        if (!link) return;
+        e.preventDefault();
+        openFeedbackModal(link);
+    });
+
+    // Save feedback via AJAX.
+    document.addEventListener('click', async (e) => {
+        const saveBtn = e.target.closest('#tutor-question-feedback-save');
+        if (!saveBtn) return;
+
+        const { textarea, feedbackModal } = feedbackModalElements();
+        const feedback = textarea.value.trim();
+        const result   = await persistFeedback('tutor_save_question_feedback', saveBtn);
+        if (!result) return;
+
+        tutor_toast(__('Saved', 'tutor'), result.data || __('Feedback saved', 'tutor'), 'success');
+        updateTriggerLinkState(activeTriggerLink, '' !== feedback, feedback);
+        closeModal(feedbackModal);
     });
 
     // Open delete confirmation modal.
-    deleteBtn.addEventListener('click', () => {
+    document.addEventListener('click', (e) => {
+        const deleteBtn = e.target.closest('#tutor-question-feedback-delete');
+        if (!deleteBtn) return;
+
+        const { feedbackModal, deleteConfirmModal } = feedbackModalElements();
         closeModal(feedbackModal, false);
-        openModal(deleteModal, deleteBtn);
+        openModal(deleteConfirmModal, deleteBtn);
     });
 
     // Confirm delete via AJAX.
-    deleteConfirmBtn.addEventListener('click', async () => {
-        const attemptId       = attemptInput.value;
-        const attemptAnswerId = answerInput.value;
+    document.addEventListener('click', async (e) => {
+        const deleteConfirmBtn = e.target.closest('#tutor-question-feedback-delete-confirm');
+        if (!deleteConfirmBtn) return;
 
-        if (!attemptId || !attemptAnswerId) return;
+        const { textarea, deleteConfirmModal } = feedbackModalElements();
+        const result = await persistFeedback('tutor_delete_question_feedback', deleteConfirmBtn);
+        if (!result) return;
 
-        const formData = new FormData();
-        formData.append('action', 'tutor_delete_question_feedback');
-        formData.append('attempt_id', attemptId);
-        formData.append('attempt_answer_id', attemptAnswerId);
-        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-
-        deleteConfirmBtn.classList.add('is-loading');
-        deleteConfirmBtn.setAttribute('disabled', true);
-
-        try {
-            const response = await fetch(_tutorobject.ajaxurl, { method: 'POST', body: formData });
-            const result   = await response.json();
-
-            if (result.success) {
-                tutor_toast(__('Deleted', 'tutor'), result.data || __('Feedback deleted', 'tutor'), 'success');
-                updateTriggerLinkState(activeTriggerLink, false, '');
-                textarea.value = '';
-                closeModal(deleteModal);
-            } else {
-                tutor_toast(__('Error', 'tutor'), result.data || defaultErrorMsg, 'error');
-            }
-        } catch {
-            tutor_toast(__('Error', 'tutor'), defaultErrorMsg, 'error');
-        } finally {
-            deleteConfirmBtn.classList.remove('is-loading');
-            deleteConfirmBtn.removeAttribute('disabled');
-        }
+        tutor_toast(__('Deleted', 'tutor'), result.data || __('Feedback deleted', 'tutor'), 'success');
+        updateTriggerLinkState(activeTriggerLink, false, '');
+        textarea.value = '';
+        closeModal(deleteConfirmModal);
     });
 }
 

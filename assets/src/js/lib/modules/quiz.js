@@ -98,6 +98,13 @@ window.jQuery(document).ready(($) => {
 		});
 	});
 
+	$(document).on('keydown', '.quiz-manual-review-action[role="button"]', function(e) {
+		if (13 === e.which || 32 === e.which) {
+			e.preventDefault();
+			$(this).trigger('click');
+		}
+	});
+
 	$(document).on('click', '.quiz-manual-mark-save', function(e) {
 		e.preventDefault();
 
