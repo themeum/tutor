@@ -52,13 +52,9 @@ $timing                 = QuizModel::get_quiz_attempt_timing( $attempt_data );
 $attempt_duration       = $timing['attempt_duration'] ?? '';
 $attempt_duration_taken = $timing['attempt_duration_taken'] ?? '';
 
-$answers       = isset( $answers ) ? $answers : QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
-$answer_counts = QuizModel::get_attempt_answer_counts( $answers );
-$correct       = $answer_counts['correct'];
-$incorrect     = $answer_counts['incorrect'];
+$answers = isset( $answers ) ? $answers : QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 
-$total_questions = (int) $attempt_data->total_questions;
-$attempts_count  = 0;
+$attempts_count = 0;
 
 $attempts = ( new QuizModel() )->quiz_attempts( $quiz_id, get_current_user_id() );
 if ( is_array( $attempts ) ) {
@@ -163,58 +159,24 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 			</div>
 
 			<div class="tutor-quiz-result-statics">
-				<?php do_action( 'tutor_quiz_attempt_summary_statics_before_correct', $attempt_data, $answers ); ?>
-				
-				<div class="tutor-quiz-result-static-item correct">
-					<?php
-					printf(
-						wp_kses(
-							/* translators: %d: number of correct answers. */
-							__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> correct', 'tutor' ),
-							array(
-								'span' => array(
-									'class' => true,
-								),
-							)
-						),
-						esc_html( $correct )
-					);
-					?>
-				</div>
+				<?php
+				$static_item_allowed_html = array(
+					'span' => array(
+						'class' => true,
+					),
+				);
 
-				<div class="tutor-quiz-result-static-item incorrect">
-					<?php
-					printf(
-						wp_kses(
-							/* translators: %d: number of incorrect answers. */
-							__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> incorrect', 'tutor' ),
-							array(
-								'span' => array(
-									'class' => true,
-								),
-							)
-						),
-						esc_html( $incorrect )
-					);
+				foreach ( Quiz_Attempts_List::get_quiz_attempt_summary_statics( $attempt_data, $answers ) as $item ) {
+					$item_class = isset( $item['class'] ) ? $item['class'] : '';
+					$item_label = isset( $item['label'] ) ? $item['label'] : '';
+					$item_count = isset( $item['count'] ) ? (int) $item['count'] : 0;
 					?>
-				</div>
-
-				<div class="tutor-quiz-result-static-item total">
+					<div class="tutor-quiz-result-static-item <?php echo esc_attr( $item_class ); ?>">
+						<?php printf( wp_kses( $item_label, $static_item_allowed_html ), esc_html( $item_count ) ); ?>
+					</div>
 					<?php
-					printf(
-						wp_kses(
-							/* translators: %d: number of total questions. */
-							__( '<span class="tutor-font-semibold tutor-text-primary">%d</span> total', 'tutor' ),
-							array(
-								'span' => array(
-									'class' => true,
-								),
-							)
-						),
-						esc_html( $total_questions )
-					);
-					?>
-				</div>
+				}
+				?>
 			</div>
 
 			<?php if ( ! $is_instructor_review && $can_retry ) : ?>

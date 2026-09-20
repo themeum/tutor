@@ -642,6 +642,70 @@ class Quiz_Attempts_List {
 	}
 
 	/**
+	 * Get quiz attempt summary statics in render order.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param object $attempt_data Quiz attempt object.
+	 * @param array  $answers      Quiz attempt answers.
+	 *
+	 * @return array
+	 */
+	public static function get_quiz_attempt_summary_statics( $attempt_data, $answers ) {
+		$answer_counts = QuizModel::get_attempt_answer_counts( $answers );
+
+		$static_items = array(
+			'correct'   => array(
+				'class' => 'correct',
+				/* translators: %d: number of correct answers. */
+				'label' => __( '<span class="tutor-font-semibold tutor-text-primary">%d</span> correct', 'tutor' ),
+				'count' => (int) $answer_counts['correct'],
+			),
+			'incorrect' => array(
+				'class' => 'incorrect',
+				/* translators: %d: number of incorrect answers. */
+				'label' => __( '<span class="tutor-font-semibold tutor-text-primary">%d</span> incorrect', 'tutor' ),
+				'count' => (int) $answer_counts['incorrect'],
+			),
+			'total'     => array(
+				'class' => 'total',
+				/* translators: %d: number of total questions. */
+				'label' => __( '<span class="tutor-font-semibold tutor-text-primary">%d</span> total', 'tutor' ),
+				'count' => (int) $attempt_data->total_questions,
+			),
+		);
+
+		/**
+		 * Filters the attempt summary statics and their render order.
+		 *
+		 * The value is an associative array of `key => item` pairs rendered in
+		 * array order by `templates/shared/components/quiz/attempt-details/summary.php`.
+		 * Each item is an associative array with the following keys:
+		 *
+		 * - `class`: Wrap CSS class. Appended to the
+		 *   `.tutor-quiz-result-static-item` wrapper element.
+		 * - `label`: Display label. A translated string with a single `%d`
+		 *   placeholder for the count, wrapped in
+		 *   `<span class="tutor-font-semibold tutor-text-primary">%d</span>`.
+		 * - `count`: Stat value. Substituted for the `%d` placeholder in `label`.
+		 *
+		 * Reorder the pairs to change the statics order, unset a pair to hide an
+		 * item, or extend the array to add a custom stat. Statics counts are
+		 * derived from the `tutor_quiz_attempt_answer_counts` filter; read custom
+		 * counts from that filtered value instead of recomputing them here.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array  $items        Ordered associative array of `key => item` pairs.
+		 * @param object $attempt_data Quiz attempt object.
+		 * @param array  $answers      Quiz attempt answers.
+		 *
+		 * @return array Ordered associative array of `key => item` pairs.
+		 */
+		return apply_filters( 'tutor_quiz_attempt_summary_statics', $static_items, $attempt_data, $answers );
+	}
+
+	/**
 	 * Render List Badge for quiz attempts.
 	 *
 	 * @since 4.0.0
