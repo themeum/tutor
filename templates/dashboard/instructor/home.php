@@ -195,8 +195,8 @@ $sortable_sections_ids = array_values( array_column( $sortable_sections, 'id' ) 
 	<?php foreach ( $sortable_sections as $section ) : ?>
 		<div 
 			data-section-id="<?php echo esc_attr( $section['id'] ); ?>"
-			x-show="watch('<?php echo esc_attr( $section['id'] ); ?>')"
-			x-cloak
+			x-show="watch('<?php echo esc_attr( $section['id'] ); ?>') && (isLoading || hasData)"
+			<?php echo empty( $section['is_active'] ) ? 'style="display: none;"' : ''; ?>
 			x-data="tutorLazySection({
 				section: '<?php echo esc_attr( $section['id'] ); ?>',
 				dateDependent: <?php echo ! empty( $section['date_dependent'] ) ? 'true' : 'false'; ?>,
@@ -218,3 +218,14 @@ $sortable_sections_ids = array_values( array_column( $sortable_sections, 'id' ) 
 		</div>
 	<?php endforeach; ?>
 </form>
+
+<noscript>
+	<style>
+		[data-tutor-ajax-dashboard="true"] {
+			display: none !important;
+		}
+	</style>
+	<div class="tutor-text-warning">
+		<?php esc_html_e( 'JavaScript is required to load your dashboard statistics. Please enable JavaScript in your browser to view your dashboard.', 'tutor' ); ?>
+	</div>
+</noscript>
