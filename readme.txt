@@ -338,9 +338,9 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.9 - 15 Sep, 2026
+= 4.0.9 - 17 Sep, 2026
 
-Fix: Optimized overall performance.
+Update: Improved overall performance and strengthened security measures.
 
 = 4.0.8 - 10 Sep, 2026
 
