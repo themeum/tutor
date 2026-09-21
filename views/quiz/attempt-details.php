@@ -774,11 +774,8 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														$achieved_val  = (float) ( $answer->achieved_mark ?? 0 );
 														$question_mark = (float) ( $answer->question_mark ?? 0 );
 														$qmark_str     = ( floor( $question_mark ) === $question_mark ) ? (string) (int) $question_mark : (string) round( $question_mark, 2 );
-														$achieved_str  = (string) round( $achieved_val, 2 );
-														if ( floor( $achieved_val ) === $achieved_val ) {
-															$achieved_str = number_format( $achieved_val, 1, '.', '' );
-														}
-														$score_label = sprintf(
+														$achieved_str  = ( floor( $achieved_val ) === $achieved_val ) ? (string) (int) $achieved_val : (string) round( $achieved_val, 2 );
+														$score_label   = sprintf(
 															/* translators: 1: achieved marks, 2: total marks. */
 															esc_html__( 'Score: %1$s/%2$s', 'tutor' ),
 															$achieved_str,
@@ -790,7 +787,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 														echo '<span class="tutor-badge-label ' . esc_attr( $badge_class ) . '">' . esc_html( $badge_info['label'] ?? '' ) . '</span>';
 
-														do_action( 'tutor_quiz_attempt_details_result_badge_after', $answer, $answer_status );
+														do_action( 'tutor_quiz_attempt_details_result_badge_after', $answer, $answer_status, $is_instructor_review );
 
 														if ( 'pending' !== $answer_status && 'skipped' !== $answer_status ) {
 															echo '<div class="tutor-quiz-result-score">' . esc_html( $score_label ) . '</div>';

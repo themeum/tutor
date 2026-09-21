@@ -285,6 +285,7 @@ final class Icon {
 	const MEMBER                     = 'member';
 	const MENU                       = 'menu';
 	const MINUS                      = 'minus';
+	const MINUS_CIRCLE               = 'minus-circle';
 	const MINUS_SQUARE               = 'minus-square';
 	const MONITOR_PLAY               = 'monitor-play';
 	const MORE                       = 'more';

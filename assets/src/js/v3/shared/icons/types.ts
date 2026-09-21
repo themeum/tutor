@@ -269,6 +269,7 @@ export const icons = [
   'member',
   'menu',
   'minus',
+  'minusCircle',
   'minusSquare',
   'monitorPlay',
   'more',

@@ -2217,19 +2217,8 @@ class Quiz {
 			);
 		}
 
-		/**
-		 * Filter the quiz summary parameter rows.
-		 *
-		 * Allows Pro and add-ons to inject additional parameter rows (e.g. partial/negative marking).
-		 *
-		 * @since 4.1.0
-		 *
-		 * @param array $quiz_summary Array of table rows for the quiz summary.
-		 * @param int   $quiz_id      Quiz post ID.
-		 */
-		$quiz_summary = apply_filters( 'tutor_quiz_summary_parameters', $quiz_summary, $quiz_id );
-
 		$quiz_summary[] = array(
+			'key'     => 'passing_grade',
 			'columns' => array(
 				array(
 					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
@@ -2265,6 +2254,18 @@ class Quiz {
 				),
 			);
 		}
+
+		/**
+		 * Filter the quiz summary parameter rows.
+		 *
+		 * Allows Pro and add-ons to inject additional parameter rows (e.g. partial/negative marking).
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array $quiz_summary Array of table rows for the quiz summary.
+		 * @param int   $quiz_id      Quiz post ID.
+		 */
+		$quiz_summary = apply_filters( 'tutor_quiz_summary_parameters', $quiz_summary, $quiz_id );
 
 		Table::make()->contents( $quiz_summary )->render();
 	}
