@@ -13,9 +13,9 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
-import CartIcon from '../../../icons/cart.svg';
-import BagIcon from '../../../icons/bag.svg';
-import BasketIcon from '../../../icons/basket.svg';
+import CartIcon from '@Icons/cart.svg';
+import BagIcon from '@Icons/bag.svg';
+import BasketIcon from '@Icons/basket.svg';
 
 const ToggleGroupControl = WpToggleGroupControl || ExperimentalToggleGroupControl;
 const ToggleGroupControlOption = WpToggleGroupControlOption || ExperimentalToggleGroupControlOption;

@@ -324,6 +324,7 @@ const scssEntries = {
 
 const resolveAliases = {
   '@Core': path.resolve(__dirname, './assets/core'),
+  '@Icons': path.resolve(__dirname, './assets/icons'),
   '@TutorShared': path.resolve(__dirname, './assets/src/js/v3/shared'),
   '@SharedImages': path.resolve(__dirname, './assets/src/js/v3/public/images'),
   '@CourseBuilderComponents': path.resolve(__dirname, './assets/src/js/v3/entries/course-builder/components/'),

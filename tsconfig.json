@@ -20,6 +20,7 @@
     "typeRoots": ["./node_modules/@types/", "./assets/src/js/@types"],
     "paths": {
       "@Core/*": ["./assets/core/*"],
+      "@Icons/*": ["./assets/icons/*"],
       "@TutorShared/*": ["./assets/src/js/v3/shared/*"],
       "@SharedImages/*": ["./assets/src/js/v3/public/images/*"],
       "@CourseBuilderComponents/*": ["./assets/src/js/v3/entries/course-builder/components/*"],
