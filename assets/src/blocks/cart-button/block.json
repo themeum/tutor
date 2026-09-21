@@ -21,7 +21,7 @@
     },
     "badgeBgColor": {
       "type": "string",
-      "default": "#e74c3c"
+      "default": "#0c111d"
     },
     "badgeTextColor": {
       "type": "string",
