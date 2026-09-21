@@ -76,3 +76,45 @@
     z-index: 2;
   }
 }
+
+/* Keep the video letterboxed in landscape fullscreen instead of cropping the top. */
+.plyr.plyr--video:fullscreen,
+.plyr.plyr--video:-webkit-full-screen,
+.plyr.plyr--video.plyr--fullscreen-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+
+  .plyr__video-wrapper,
+  .plyr__video-embed {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .plyr__video-embed > .plyr__video-embed__container {
+    height: 100%;
+    width: 100%;
+    padding-bottom: 0;
+    transform: none;
+    position: relative;
+  }
+
+  video,
+  iframe {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.plyr.plyr--video.plyr--fullscreen-fallback {
+  inset: 0;
+  width: 100vw;
+  width: 100dvw;
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+}

@@ -1,3 +1,5 @@
+import { bindPlyrMobileFullscreenFix } from '@Core/ts/utils/player-fullscreen';
+
 import '../admin-dashboard/segments/filter';
 import '../admin-dashboard/segments/lib';
 import { isMobileDevice } from '../helper/utils';
@@ -153,6 +155,7 @@ jQuery(document).ready(function($) {
 						}),
 					}
 				});
+				bindPlyrMobileFullscreenFix(player);
 				player.on('ready', function(event) {
 					const instance = event.detail.plyr;
 					const { best_watch_time = 0 } = video_data || {};

@@ -1,5 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 
+import { bindPlyrMobileFullscreenFix } from '@Core/ts/utils/player-fullscreen';
+
 import { isVimeoPlyr, isYouTubePlyr } from '@FrontendTypes/index';
 
 interface AutoLoadResponse {
@@ -223,6 +225,7 @@ class LessonPlayer {
     };
 
     this.player = new window.Plyr(this.element, config);
+    bindPlyrMobileFullscreenFix(this.player);
     this.setupEvents();
 
     if (requiredPercentage) {

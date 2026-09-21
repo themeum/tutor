@@ -4,6 +4,13 @@
 
 .tutor-video-player {
   aspect-ratio: 16 / 9;
+
+  &:fullscreen,
+  &:-webkit-full-screen {
+    aspect-ratio: auto;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .tutor-lesson-content {
