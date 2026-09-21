@@ -10,7 +10,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Constants\Size;
+use Tutor\Components\SvgIcon;
 use Tutor\Ecommerce\Cart\CartFactory;
+use TUTOR\Icon;
 use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! function_exists( 'tutor_add_to_cart' ) ) {
@@ -175,5 +178,116 @@ if ( ! function_exists( 'tutor_is_guest_checkout_enabled' ) ) {
 		} elseif ( 'wc' === $monetization ) {
 			return tutor_utils()->get_option( 'enable_guest_course_cart', false );
 		}
+	}
+}
+
+if ( ! function_exists( 'tutor_ecommerce_get_cart_icon_svg' ) ) {
+	/**
+	 * Get cart icon SVG markup.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param string $icon Icon type ('cart', 'bag', 'basket').
+	 *
+	 * @return string SVG HTML markup.
+	 */
+	function tutor_ecommerce_get_cart_icon_svg( $icon = 'cart' ) {
+		$allowed_icons = array( 'cart', 'bag', 'basket' );
+		if ( ! in_array( $icon, $allowed_icons, true ) ) {
+			$icon = 'cart';
+		}
+
+		$svg = SvgIcon::make()->name( $icon )->size( Size::SIZE_20 )->get();
+
+		return apply_filters( 'tutor_ecommerce_cart_icon_svg', $svg, $icon );
+	}
+}
+
+if ( ! function_exists( 'tutor_ecommerce_cart_button' ) ) {
+	/**
+	 * Display global cart button for Tutor native ecommerce.
+	 *
+	 * This function can be used by any theme to display the cart button in header
+	 * similar to woocommerce_header_cart().
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array $args {
+	 *     Optional. Array of arguments for customizing the cart button.
+	 *
+	 *     @type string $class        CSS class for the cart button. Default 'tutor-cart-button'.
+	 *     @type string $title        Title attribute for the cart link. Default 'View your shopping cart'.
+	 *     @type string $show_count When to show the cart item count: 'always', 'if_has_items', or 'never'. Default 'if_has_items'.
+	 *     @type string $cart_icon  Cart icon type: 'cart', 'bag', or 'basket'. Default 'cart'.
+	 *     @type string $icon_svg   Custom SVG icon. If not provided, icon will be resolved from cart_icon.
+	 * }
+	 *
+	 * @return void
+	 */
+	function tutor_ecommerce_cart_button( $args = array() ) {
+		// Only show if Tutor native ecommerce is active and monetization is set to 'tutor'.
+		if ( ! tutor_utils()->is_monetize_by_tutor() ) {
+			return;
+		}
+
+		$defaults = array(
+			'class'      => 'tutor-cart-button',
+			'title'      => __( 'View your shopping cart', 'tutor' ),
+			'show_count' => 'if_has_items',
+			'cart_icon'  => 'cart',
+			'icon_svg'   => '',
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$args = apply_filters( 'tutor_ecommerce_cart_button_args', $args );
+
+		$cart_url   = tutor_get_cart_url();
+		$cart_count = tutor_ecommerce_get_cart_count();
+
+		if ( empty( $args['icon_svg'] ) ) {
+			$args['icon_svg'] = tutor_ecommerce_get_cart_icon_svg( $args['cart_icon'] ?? 'cart' );
+		}
+
+		ob_start();
+		?>
+		<a class="<?php echo esc_attr( $args['class'] ); ?>" href="<?php echo esc_url( $cart_url ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>">
+			<span class="tutor-btn-cart">
+				<?php echo $args['icon_svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php
+				$show_count = $args['show_count'];
+				if ( 'never' !== $show_count ) :
+					$hidden = ( 'if_has_items' === $show_count && 0 === $cart_count );
+					?>
+					<span class="tutor-cart-count" data-show-count="<?php echo esc_attr( $show_count ); ?>" 
+					<?php
+					if ( $hidden ) :
+						?>
+					style="display:none;"<?php endif; ?>>
+						<?php echo esc_html( $cart_count ); ?>
+					</span>
+				<?php endif; ?>
+			</span>
+		</a>
+		<?php
+		echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+}
+
+if ( ! function_exists( 'tutor_ecommerce_get_cart_count' ) ) {
+	/**
+	 * Get cart item count for Tutor native ecommerce
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return int Cart item count
+	 */
+	function tutor_ecommerce_get_cart_count() {
+		if ( ! tutor_utils()->is_monetize_by_tutor() ) {
+			return 0;
+		}
+
+		$cart_items = tutor_get_cart_items();
+		return is_array( $cart_items ) ? count( $cart_items ) : 0;
 	}
 }
