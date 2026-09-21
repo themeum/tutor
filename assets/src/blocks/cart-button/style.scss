@@ -29,5 +29,6 @@
     line-height: 18px;
     color: var(--tutor-cart-badge-color, #ffffff);
     background-color: var(--tutor-cart-badge-bg, #0c111d);
+    z-index: 1;
   }
 }
