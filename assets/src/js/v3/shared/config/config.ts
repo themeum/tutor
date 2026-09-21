@@ -99,8 +99,8 @@ const defaultTutorConfig = {
     has_active_membership_plans: false,
     enable_quiz_partial_marking: 'off',
     enable_quiz_negative_marking: 'off',
-    quiz_negative_mark_mode: 'percent',
-    quiz_negative_mark_amount: 0.15,
+    quiz_negative_mark_type: 'percent',
+    quiz_negative_mark_value: 0.15,
   },
   tutor_currency: {
     symbol: '',

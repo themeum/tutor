@@ -193,8 +193,8 @@ declare global {
         has_active_membership_plans: boolean;
         enable_quiz_partial_marking: 'on' | 'off';
         enable_quiz_negative_marking: 'on' | 'off';
-        quiz_negative_mark_mode: 'percent' | 'fixed';
-        quiz_negative_mark_amount: string | number;
+        quiz_negative_mark_type: 'percent' | 'fixed';
+        quiz_negative_mark_value: string | number;
       };
       tutor_currency: {
         symbol: string;

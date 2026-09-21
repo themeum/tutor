@@ -38,7 +38,6 @@ import QuizSingleLayoutSvg from '@SharedImages/quiz-single-question.svg';
 import FormQuizLayoutSelect from './FormQuizLayoutSelect';
 
 const courseId = getCourseId();
-const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 interface QuizSettingsProps {
   contentDripType: ContentDripType;
@@ -99,7 +98,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const isLegacyLearningMode = tutorConfig.settings?.learning_mode === 'legacy';
   const adminPartialEnabled = tutorConfig.settings?.enable_quiz_partial_marking === 'on';
   const adminNegativeEnabled = tutorConfig.settings?.enable_quiz_negative_marking === 'on';
-  const quizOptionPartialAlreadyOn = form.watch('quiz_option.enable_partial_marking');
+  const partialMarkingEnabled = form.watch('quiz_option.enable_partial_marking');
   const negativeMarkType = form.watch('quiz_option.negative_mark_type');
   const negativeMarkingEnabled = form.watch('quiz_option.enable_negative_marking');
 
@@ -302,113 +301,111 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             </Show>
           </div>
 
-          <Show when={isTutorPro && (adminPartialEnabled || quizOptionPartialAlreadyOn || adminNegativeEnabled)}>
-            <h5>{__('Grading', 'tutor')}</h5>
-            <div css={styles.innerCard}>
+          <h5>{__('Grading', 'tutor')}</h5>
+          <div css={styles.innerCard}>
+            <Controller
+              name="quiz_option.passing_grade"
+              control={form.control}
+              rules={{
+                ...requiredRule(),
+                validate: (value) => {
+                  if (value > 100) {
+                    return __('Passing grade cannot be greater than 100', 'tutor');
+                  }
+
+                  if (value < 0) {
+                    return __('Passing grade cannot be less than 0', 'tutor');
+                  }
+
+                  return true;
+                },
+              }}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  isInlineLabel
+                  size="small"
+                  type="number"
+                  label={__('Passing Grade', 'tutor')}
+                  helpText={__('Set the minimum score percentage required to pass this quiz', 'tutor')}
+                  wrapperCss={styles.maxWidth('67px')}
+                  content="%"
+                  contentPosition="right"
+                  showVerticalBar={false}
+                />
+              )}
+            />
+
+            <Show when={adminPartialEnabled || partialMarkingEnabled}>
+              <hr />
               <Controller
-                name="quiz_option.passing_grade"
+                name="quiz_option.enable_partial_marking"
                 control={form.control}
-                rules={{
-                  ...requiredRule(),
-                  validate: (value) => {
-                    if (value > 100) {
-                      return __('Passing grade cannot be greater than 100', 'tutor');
-                    }
-
-                    if (value < 0) {
-                      return __('Passing grade cannot be less than 0', 'tutor');
-                    }
-
-                    return true;
-                  },
-                }}
                 render={(controllerProps) => (
-                  <FormInputWithContent
+                  <FormSwitch
                     {...controllerProps}
-                    isInlineLabel
-                    size="small"
-                    type="number"
-                    label={__('Passing Grade', 'tutor')}
-                    helpText={__('Set the minimum score percentage required to pass this quiz', 'tutor')}
-                    wrapperCss={styles.maxWidth('67px')}
-                    content="%"
-                    contentPosition="right"
-                    showVerticalBar={false}
+                    disabled={!adminPartialEnabled}
+                    label={__('Partial marking', 'tutor')}
+                    helpText={__(
+                      'Applies to question types with multiple answer parts, including Matching, Ordering, Image Matching, Fill in the Blanks, and Multiple Choice with multiple correct answers',
+                      'tutor',
+                    )}
                   />
                 )}
               />
+              <p css={styles.infoText}>
+                {__('Award credit for correct sub-answers on multi-part questions.', 'tutor')}
+              </p>
+            </Show>
 
-              <Show when={adminPartialEnabled || quizOptionPartialAlreadyOn}>
-                <hr />
+            <Show when={adminNegativeEnabled || negativeMarkingEnabled}>
+              <hr />
+              <div css={styles.inlineForm({ minHeight: '42px' })}>
                 <Controller
-                  name="quiz_option.enable_partial_marking"
+                  name="quiz_option.enable_negative_marking"
                   control={form.control}
                   render={(controllerProps) => (
-                    <FormSwitch
+                    <FormCheckbox
                       {...controllerProps}
-                      label={__('Partial marking', 'tutor')}
-                      helpText={__(
-                        'Applies to question types with multiple answer parts, including Matching, Ordering, Image Matching, Fill in the Blanks, and Multiple Choice with multiple correct answers',
-                        'tutor',
-                      )}
+                      disabled={!adminNegativeEnabled}
+                      label={__('Negative marking', 'tutor')}
+                      helpText={__('Applies to incorrect answers across all question types in this quiz.', 'tutor')}
                     />
                   )}
                 />
-                <p css={styles.infoText}>
-                  {__('Award credit for correct sub-answers on multi-part questions.', 'tutor')}
-                </p>
-              </Show>
-
-              <Show when={adminNegativeEnabled && adminNegativeEnabled}>
-                <hr />
-              </Show>
-
-              <Show when={adminNegativeEnabled}>
-                <div css={styles.inlineForm({ minHeight: '42px' })}>
+                <Show when={negativeMarkingEnabled}>
                   <Controller
-                    name="quiz_option.enable_negative_marking"
+                    name="quiz_option.negative_mark_value"
                     control={form.control}
+                    rules={{
+                      validate: (value) => {
+                        const numericValue = Number(value);
+                        if (numericValue < 0) return __('Negative mark value cannot be less than 0', 'tutor');
+                        if (negativeMarkType === 'percent' && numericValue > 100)
+                          return __('Percentage penalty cannot be greater than 100', 'tutor');
+                        return true;
+                      },
+                    }}
                     render={(controllerProps) => (
-                      <FormCheckbox
+                      <FormInputWithContent
                         {...controllerProps}
-                        label={__('Negative marking', 'tutor')}
-                        helpText={__('Applies to incorrect answers across all question types in this quiz.', 'tutor')}
+                        type="number"
+                        size="small"
+                        isInlineLabel
+                        disabled={!adminNegativeEnabled}
+                        wrapperCss={styles.maxWidth('80px')}
+                        contentCss={styles.minWidth('fit-content')}
+                        formFieldWrapperCss={styles.width('auto')}
+                        content={negativeMarkType === 'percent' ? '%' : __('pts', 'tutor')}
+                        contentPosition="right"
+                        showVerticalBar={false}
                       />
                     )}
                   />
-                  <Show when={negativeMarkingEnabled}>
-                    <Controller
-                      name="quiz_option.negative_mark_value"
-                      control={form.control}
-                      rules={{
-                        validate: (value) => {
-                          const numericValue = Number(value);
-                          if (numericValue < 0) return __('Negative mark value cannot be less than 0', 'tutor');
-                          if (negativeMarkType === 'percent' && numericValue > 100)
-                            return __('Percentage penalty cannot be greater than 100', 'tutor');
-                          return true;
-                        },
-                      }}
-                      render={(controllerProps) => (
-                        <FormInputWithContent
-                          {...controllerProps}
-                          type="number"
-                          size="small"
-                          isInlineLabel
-                          wrapperCss={styles.maxWidth('80px')}
-                          contentCss={styles.minWidth('fit-content')}
-                          formFieldWrapperCss={styles.width('auto')}
-                          content={negativeMarkType === 'percent' ? '%' : __('pts', 'tutor')}
-                          contentPosition="right"
-                          showVerticalBar={false}
-                        />
-                      )}
-                    />
-                  </Show>
-                </div>
-              </Show>
-            </div>
-          </Show>
+                </Show>
+              </div>
+            </Show>
+          </div>
 
           <h5>{__('Timing', 'tutor')}</h5>
 
