@@ -181,11 +181,34 @@ if ( ! function_exists( 'tutor_is_guest_checkout_enabled' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_ecommerce_get_cart_icon_svg' ) ) {
+	/**
+	 * Get cart icon SVG markup.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param string $icon Icon type ('cart', 'bag', 'basket').
+	 *
+	 * @return string SVG HTML markup.
+	 */
+	function tutor_ecommerce_get_cart_icon_svg( $icon = 'cart' ) {
+		$allowed_icons = array( 'cart', 'bag', 'basket' );
+		if ( ! in_array( $icon, $allowed_icons, true ) ) {
+			$icon = 'cart';
+		}
+
+		$svg = SvgIcon::make()->name( $icon )->size( Size::SIZE_20 )->get();
+
+		return apply_filters( 'tutor_ecommerce_cart_icon_svg', $svg, $icon );
+	}
+}
+
 if ( ! function_exists( 'tutor_ecommerce_cart_button' ) ) {
 	/**
-	 * Display global cart button for Tutor native ecommerce
+	 * Display global cart button for Tutor native ecommerce.
+	 *
 	 * This function can be used by any theme to display the cart button in header
-	 * Similar to woocommerce_header_cart()
+	 * similar to woocommerce_header_cart().
 	 *
 	 * @since 4.1.0
 	 *
@@ -194,10 +217,9 @@ if ( ! function_exists( 'tutor_ecommerce_cart_button' ) ) {
 	 *
 	 *     @type string $class        CSS class for the cart button. Default 'tutor-cart-button'.
 	 *     @type string $title        Title attribute for the cart link. Default 'View your shopping cart'.
-	 *     @type string $show_count   When to show the cart item count: 'always', 'if_has_items', or 'never'. Default 'if_has_items'.
-	 *     @type string $icon_svg     Custom SVG icon. If not provided, default cart icon will be used.
-	 *     @type string $before_count Text before cart count. Default '('.
-	 *     @type string $after_count  Text after cart count. Default ')'.
+	 *     @type string $show_count When to show the cart item count: 'always', 'if_has_items', or 'never'. Default 'if_has_items'.
+	 *     @type string $cart_icon  Cart icon type: 'cart', 'bag', or 'basket'. Default 'cart'.
+	 *     @type string $icon_svg   Custom SVG icon. If not provided, icon will be resolved from cart_icon.
 	 * }
 	 *
 	 * @return void
@@ -209,12 +231,11 @@ if ( ! function_exists( 'tutor_ecommerce_cart_button' ) ) {
 		}
 
 		$defaults = array(
-			'class'        => 'tutor-cart-button',
-			'title'        => __( 'View your shopping cart', 'tutor' ),
-			'show_count'   => 'if_has_items',
-			'icon_svg'     => '',
-			'before_count' => '',
-			'after_count'  => '',
+			'class'      => 'tutor-cart-button',
+			'title'      => __( 'View your shopping cart', 'tutor' ),
+			'show_count' => 'if_has_items',
+			'cart_icon'  => 'cart',
+			'icon_svg'   => '',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -222,12 +243,10 @@ if ( ! function_exists( 'tutor_ecommerce_cart_button' ) ) {
 		$args = apply_filters( 'tutor_ecommerce_cart_button_args', $args );
 
 		$cart_url   = tutor_get_cart_url();
-		$cart_items = tutor_get_cart_items();
-
-		$cart_count = is_array( $cart_items ) ? count( $cart_items ) : 0;
+		$cart_count = tutor_ecommerce_get_cart_count();
 
 		if ( empty( $args['icon_svg'] ) ) {
-			$args['icon_svg'] = SvgIcon::make()->name( Icon::CART )->size( Size::SIZE_20 )->get();
+			$args['icon_svg'] = tutor_ecommerce_get_cart_icon_svg( $args['cart_icon'] ?? 'cart' );
 		}
 
 		ob_start();

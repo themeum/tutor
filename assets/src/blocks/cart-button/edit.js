@@ -1,18 +1,100 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, RadioControl, TextControl, BaseControl } from '@wordpress/components';
-import { ColorPalette } from '@wordpress/components';
+import {
+	PanelBody,
+	RadioControl,
+	TextControl,
+	RangeControl,
+	BaseControl,
+	ColorPalette,
+	__experimentalToggleGroupControl as ExperimentalToggleGroupControl,
+	__experimentalToggleGroupControlOption as ExperimentalToggleGroupControlOption,
+	ToggleGroupControl as WpToggleGroupControl,
+	ToggleGroupControlOption as WpToggleGroupControlOption,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
+import CartIcon from '../../../icons/cart.svg';
+import BagIcon from '../../../icons/bag.svg';
+import BasketIcon from '../../../icons/basket.svg';
+
+const ToggleGroupControl = WpToggleGroupControl || ExperimentalToggleGroupControl;
+const ToggleGroupControlOption = WpToggleGroupControlOption || ExperimentalToggleGroupControlOption;
+
+const ICON_COMPONENTS = {
+	cart: CartIcon,
+	bag: BagIcon,
+	basket: BasketIcon,
+};
+
 export default function Edit( { attributes, setAttributes } ) {
-	const { showCount, customClass, iconColor, badgeBgColor, badgeTextColor } = attributes;
+	const {
+		showCount = 'if_has_items',
+		customClass = 'tutor-cart-button',
+		cartIcon = 'cart',
+		iconSize = 20,
+		iconColor,
+		badgeBgColor,
+		badgeTextColor,
+	} = attributes;
 
 	// Use a sample count for editor preview
 	const cartCount = 3;
+	const SelectedIcon = ICON_COMPONENTS[ cartIcon ] || ICON_COMPONENTS.cart;
 
 	return (
 		<>
 			<InspectorControls group="settings">
 				<PanelBody title={ __( 'Settings', 'tutor' ) }>
+					{ ToggleGroupControl && (
+						<ToggleGroupControl
+							__nextHasNoMarginBottom
+							__next40pxDefaultSize
+							label={ __( 'Cart Icon', 'tutor' ) }
+							value={ cartIcon }
+							isBlock
+							onChange={ ( value ) => setAttributes( { cartIcon: value } ) }
+						>
+							<ToggleGroupControlOption
+								value="cart"
+								label={ (
+									<span style={ { display: 'inline-flex', alignItems: 'center', justifyContent: 'center' } }>
+										<CartIcon width={ 20 } height={ 20 } />
+									</span>
+								) }
+								aria-label={ __( 'Cart', 'tutor' ) }
+							/>
+							<ToggleGroupControlOption
+								value="bag"
+								label={ (
+									<span style={ { display: 'inline-flex', alignItems: 'center', justifyContent: 'center' } }>
+										<BagIcon width={ 20 } height={ 20 } />
+									</span>
+								) }
+								aria-label={ __( 'Bag', 'tutor' ) }
+							/>
+							<ToggleGroupControlOption
+								value="basket"
+								label={ (
+									<span style={ { display: 'inline-flex', alignItems: 'center', justifyContent: 'center' } }>
+										<BasketIcon width={ 20 } height={ 20 } />
+									</span>
+								) }
+								aria-label={ __( 'Basket', 'tutor' ) }
+							/>
+						</ToggleGroupControl>
+					) }
+
+					<RangeControl
+						__nextHasNoMarginBottom
+						__next40pxDefaultSize
+						label={ __( 'Icon Size', 'tutor' ) }
+						value={ iconSize }
+						onChange={ ( value ) => setAttributes( { iconSize: value } ) }
+						min={ 16 }
+						max={ 48 }
+						step={ 2 }
+					/>
+
 					<RadioControl
 						label={ __( 'Cart Item Count', 'tutor' ) }
 						selected={ showCount }
@@ -53,6 +135,15 @@ export default function Edit( { attributes, setAttributes } ) {
 							clearable={ true }
 						/>
 					</BaseControl>
+					<BaseControl label={ __( 'Badge Text Color', 'tutor' ) }>
+						<ColorPalette
+							colors={ [] }
+							value={ badgeTextColor }
+							onChange={ ( value ) => setAttributes( { badgeTextColor: value } ) }
+							disableCustomColors={ false }
+							clearable={ true }
+						/>
+					</BaseControl>
 				</PanelBody>
 			</InspectorControls>
 
@@ -61,49 +152,22 @@ export default function Edit( { attributes, setAttributes } ) {
 					<span
 						className="tutor-btn-cart"
 						style={ {
-							...(iconColor && { '--tutor-cart-icon-color': iconColor }),
+							...( iconColor && { '--tutor-cart-icon-color': iconColor } ),
+							...( iconSize && { '--tutor-cart-icon-size': `${ iconSize }px` } ),
 						} }
 					>
-							<svg
-								width="20"
-								height="20"
-								viewBox="0 0 20 20"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
+						<SelectedIcon viewBox="0 0 20 20" />
+						{ ( showCount === 'always' || showCount === 'if_has_items' ) && (
+							<span
+								className="tutor-cart-count"
+								style={ {
+									...( badgeBgColor && { '--tutor-cart-badge-bg': badgeBgColor } ),
+									...( badgeTextColor && { '--tutor-cart-badge-color': badgeTextColor } ),
+								} }
 							>
-								<path
-									d="M6.75055 17.964C7.1915 17.964 7.54895 17.6065 7.54895 17.1656C7.54895 16.7246 7.1915 16.3672 6.75055 16.3672C6.30961 16.3672 5.95215 16.7246 5.95215 17.1656C5.95215 17.6065 6.30961 17.964 6.75055 17.964Z"
-									stroke="currentColor"
-									strokeWidth="1.3"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								/>
-								<path
-									d="M15.5328 17.964C15.9737 17.964 16.3312 17.6065 16.3312 17.1656C16.3312 16.7246 15.9737 16.3672 15.5328 16.3672C15.0918 16.3672 14.7344 16.7246 14.7344 17.1656C14.7344 17.6065 15.0918 17.964 15.5328 17.964Z"
-									stroke="currentColor"
-									strokeWidth="1.3"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								/>
-								<path
-									d="M2 2.03516H3.59681L5.72056 11.9513C5.79847 12.3145 6.00053 12.6391 6.29198 12.8694C6.58343 13.0996 6.94603 13.2211 7.31736 13.2128H15.1257C15.4892 13.2122 15.8415 13.0877 16.1246 12.8598C16.4076 12.6319 16.6045 12.3142 16.6826 11.9593L18 6.02717H4.4511"
-									stroke="currentColor"
-									strokeWidth="1.3"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								/>
-							</svg>
-							{ ( showCount === 'always' || showCount === 'if_has_items' ) && (
-								<span
-									className="tutor-cart-count"
-									style={ {
-										...(badgeBgColor && { '--tutor-cart-badge-bg': badgeBgColor }),
-										...(badgeTextColor && { '--tutor-cart-badge-color': badgeTextColor }),
-									} }
-								>
-									{ cartCount }
-								</span>
-							) }
+								{ cartCount }
+							</span>
+						) }
 					</span>
 				</div>
 			</div>

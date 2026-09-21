@@ -19,6 +19,14 @@
       "type": "string",
       "default": ""
     },
+    "cartIcon": {
+      "type": "string",
+      "default": "cart"
+    },
+    "iconSize": {
+      "type": "number",
+      "default": 20
+    },
     "badgeBgColor": {
       "type": "string",
       "default": "#0c111d"

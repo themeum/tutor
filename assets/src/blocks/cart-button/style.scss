@@ -1,20 +1,23 @@
 .tutor-cart-button {
-  display: inline-block;
+  display: inline-flex;
   line-height: normal;
 
   .tutor-btn-cart {
     position: relative;
-    display: flex;
+    display: inline-flex;
+    align-items: center;
 
     svg {
       color: var(--tutor-cart-icon-color, currentColor);
+      width: var(--tutor-cart-icon-size, 20px);
+      height: var(--tutor-cart-icon-size, 20px);
     }
   }
 
   .tutor-cart-count {
     position: absolute;
-    top: -8px;
-    inset-inline-start: 8px;
+    top: -6px;
+    inset-inline-start: calc(100% - 8px);
     border-radius: 24px;
     padding: 0 6px;
     text-align: center;

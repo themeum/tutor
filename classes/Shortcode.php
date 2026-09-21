@@ -519,11 +519,10 @@ class Shortcode {
 	public function tutor_cart_button( $atts ) {
 		$atts = shortcode_atts(
 			array(
-				'class'        => 'tutor-cart-button',
-				'title'        => __( 'View your shopping cart', 'tutor' ),
-				'show_count'   => 'if_has_items',
-				'before_count' => '(',
-				'after_count'  => ')',
+				'class'      => 'tutor-cart-button',
+				'title'      => __( 'View your shopping cart', 'tutor' ),
+				'show_count' => 'if_has_items',
+				'cart_icon'  => 'cart',
 			),
 			$atts
 		);
