@@ -215,19 +215,20 @@ if ( ! function_exists( 'tutor_ecommerce_cart_button' ) ) {
 	 * @param array $args {
 	 *     Optional. Array of arguments for customizing the cart button.
 	 *
-	 *     @type string $class        CSS class for the cart button. Default 'tutor-cart-button'.
-	 *     @type string $title        Title attribute for the cart link. Default 'View your shopping cart'.
+	 *     @type string $class      CSS class for the cart button. Default 'tutor-cart-button'.
+	 *     @type string $title      Title attribute for the cart link. Default 'View your shopping cart'.
 	 *     @type string $show_count When to show the cart item count: 'always', 'if_has_items', or 'never'. Default 'if_has_items'.
 	 *     @type string $cart_icon  Cart icon type: 'cart', 'bag', or 'basket'. Default 'cart'.
 	 *     @type string $icon_svg   Custom SVG icon. If not provided, icon will be resolved from cart_icon.
 	 * }
+	 * @param bool  $echo Whether to echo the output or return it. Default true.
 	 *
-	 * @return void
+	 * @return string HTML output of the cart button.
 	 */
-	function tutor_ecommerce_cart_button( $args = array() ) {
+	function tutor_ecommerce_cart_button( $args = array(), $echo = true ) {
 		// Only show if Tutor native ecommerce is active and monetization is set to 'tutor'.
 		if ( ! tutor_utils()->is_monetize_by_tutor() ) {
-			return;
+			return '';
 		}
 
 		$defaults = array(
@@ -249,28 +250,36 @@ if ( ! function_exists( 'tutor_ecommerce_cart_button' ) ) {
 			$args['icon_svg'] = tutor_ecommerce_get_cart_icon_svg( $args['cart_icon'] ?? 'cart' );
 		}
 
-		ob_start();
-		?>
-		<a class="<?php echo esc_attr( $args['class'] ); ?>" href="<?php echo esc_url( $cart_url ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>">
-			<span class="tutor-btn-cart">
-				<?php echo $args['icon_svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<?php
-				$show_count = $args['show_count'];
-				if ( 'never' !== $show_count ) :
-					$hidden = ( 'if_has_items' === $show_count && 0 === $cart_count );
-					?>
-					<span class="tutor-cart-count" data-show-count="<?php echo esc_attr( $show_count ); ?>" 
-					<?php
-					if ( $hidden ) :
-						?>
-					style="display:none;"<?php endif; ?>>
-						<?php echo esc_html( $cart_count ); ?>
-					</span>
-				<?php endif; ?>
-			</span>
-		</a>
-		<?php
-		echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$count_html = '';
+		$show_count = $args['show_count'];
+		if ( 'never' !== $show_count ) {
+			$hidden     = ( 'if_has_items' === $show_count && 0 === $cart_count );
+			$style_attr = $hidden ? ' style="display:none;"' : '';
+			$count_html = sprintf(
+				'<span class="tutor-cart-count" data-show-count="%1$s"%2$s>%3$s</span>',
+				esc_attr( $show_count ),
+				$style_attr,
+				esc_html( $cart_count )
+			);
+		}
+
+		$output = sprintf(
+			'<a class="%1$s" href="%2$s" title="%3$s"><span class="tutor-btn-cart">%4$s%5$s</span></a>',
+			esc_attr( $args['class'] ),
+			esc_url( $cart_url ),
+			esc_attr( $args['title'] ),
+			$args['icon_svg'],
+			$count_html
+		);
+
+		// Strip line breaks so that auto-paragraph filters (e.g. wpautop) do not insert unwanted <br> tags.
+		$output = str_replace( array( "\r\n", "\r", "\n" ), '', $output );
+
+		if ( $echo ) {
+			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+
+		return $output;
 	}
 }
 

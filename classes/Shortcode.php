@@ -514,9 +514,9 @@ class Shortcode {
 	 *
 	 * @param array $atts shortcode attributes.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	public function tutor_cart_button( $atts ) {
+	public function tutor_cart_button( $atts = array() ) {
 		$atts = shortcode_atts(
 			array(
 				'class'      => 'tutor-cart-button',
@@ -537,8 +537,6 @@ class Shortcode {
 			$atts['show_count'] = 'if_has_items';
 		}
 
-		ob_start();
-		tutor_ecommerce_cart_button( $atts );
-		return ob_get_clean();
+		return tutor_ecommerce_cart_button( $atts, false );
 	}
 }
