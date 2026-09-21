@@ -847,8 +847,8 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												<?php endif; ?>
 											<?php elseif ( 'skipped' !== $answer_status ) : ?>
 												<?php
-												$answer_is_correct   = null !== ( $answer->is_correct ?? null ) && (int) $answer->is_correct === QuizModel::ATTEMPT_ANSWER_CORRECT;
-												$answer_is_incorrect = null !== ( $answer->is_correct ?? null ) && (int) $answer->is_correct === QuizModel::ATTEMPT_ANSWER_INCORRECT;
+												$answer_is_correct   = null !== ( $answer->is_correct ?? null ) && (int) QuizModel::ATTEMPT_ANSWER_CORRECT === $answer->is_correct;
+												$answer_is_incorrect = null !== ( $answer->is_correct ?? null ) && (int) QuizModel::ATTEMPT_ANSWER_INCORRECT === $answer->is_correct;
 												?>
 												<div class="tutor-quiz-question-review-actions">
 													<label class="quiz-manual-review-action tutor-quiz-question-review-action" data-review-status="correct" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-mark-as="correct" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>" role="button" tabindex="0" aria-pressed="<?php echo $answer_is_correct ? 'true' : 'false'; ?>">

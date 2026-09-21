@@ -538,12 +538,11 @@ body:has(#wpadminbar)
 }
 
 .tutor-quiz-open-ended-answer {
+  @include tutor-typography(p2, regular, primary);
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
   background-color: $tutor-surface-base;
   padding: $tutor-spacing-6;
-  @include tutor-typography(p2, regular, primary);
-  line-height: 1.5;
   word-break: break-word;
 
   &.is-empty {
@@ -568,12 +567,8 @@ body:has(#wpadminbar)
     gap: $tutor-spacing-3;
 
     .tutor-input-field {
-      width: 80px;
+      width: 114px;
       margin-bottom: 0;
-
-      .tutor-input-wrapper {
-        width: 80px;
-      }
     }
   }
 
@@ -589,6 +584,7 @@ body:has(#wpadminbar)
 
   .tutor-quiz-add-feedback-btn {
     @include tutor-flex(row, center);
+    @include tutor-typography(p2, medium);
     gap: $tutor-spacing-2;
     background: none;
     border: none;
@@ -596,7 +592,6 @@ body:has(#wpadminbar)
     margin-top: $tutor-spacing-4;
     cursor: pointer;
     color: $tutor-text-brand;
-    @include tutor-typography(p2, medium);
     @include tutor-transition(color);
 
     &:hover {
@@ -634,7 +629,6 @@ body:has(#wpadminbar)
 
     &-content {
       @include tutor-typography(p2, regular, primary);
-      line-height: 1.5;
       margin-bottom: $tutor-spacing-4;
     }
 
@@ -662,11 +656,10 @@ body:has(#wpadminbar)
   }
 
   .tutor-quiz-question-feedback-card {
+    @include tutor-typography(p2, regular, primary);
     background-color: $tutor-surface-brand-tertiary;
     border-radius: $tutor-radius-2xl;
     padding: $tutor-spacing-6;
-    @include tutor-typography(p2, regular, primary);
-    line-height: 1.5;
     word-break: break-word;
   }
 }

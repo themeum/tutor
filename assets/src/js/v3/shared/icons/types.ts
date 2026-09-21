@@ -93,6 +93,7 @@ export const icons = [
   'collapsed',
   'colorOption',
   'command',
+  'commentOutline',
   'comments',
   'commission',
   'completed',

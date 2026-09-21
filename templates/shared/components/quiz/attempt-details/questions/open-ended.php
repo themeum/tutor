@@ -98,7 +98,6 @@ if ( $is_graded ) {
 						->attr( 'min', '0' )
 						->attr( 'max', $qmark_formatted )
 						->attr( 'step', 'any' )
-						->attr( 'style', 'width: 80px;' )
 						->attr(
 							'x-bind',
 							'register(' . wp_json_encode( $manual_mark_field ) . ', ' . wp_json_encode( $mark_validation_rules ) . ')'
@@ -121,7 +120,8 @@ if ( $is_graded ) {
 					<?php
 					Button::make()
 						->label( __( 'Add Feedback', 'tutor' ) )
-						->icon( Icon::COMMENTS )
+						->icon( Icon::COMMENT_OUTLINE, 'left', 20, 20 )
+						->flip_rtl()
 						->variant( Variant::LINK )
 						->size( Size::SM )
 						->attr( 'type', 'button' )

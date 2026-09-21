@@ -110,6 +110,7 @@ final class Icon {
 	const COLOR_OPTION               = 'color-option';
 	const COMMAND                    = 'command';
 	const COMMENTS                   = 'comments';
+	const COMMENT_OUTLINE            = 'comment-outline';
 	const COMMISSION                 = 'commission';
 	const COMPLETED                  = 'completed';
 	const COMPLETED_CIRCLE           = 'completed-circle';
