@@ -162,7 +162,7 @@ const refreshPlayerFullscreenLayout = (player: Plyr): void => {
 /**
  * Bind orientation/viewport listeners so fullscreen video is letterboxed, not cropped.
  *
- * @since 4.0.8
+ * @since 4.1.0
  *
  * @param player Plyr instance.
  * @return Cleanup function.
