@@ -152,9 +152,16 @@ export const ImageGeneration = () => {
                 .then((response) => {
                   setImages((previous) => {
                     const copy = [...previous];
-                    const rawImage = response.data.data?.[0]?.b64_json ?? response.data.data?.[0]?.url ?? null;
-                    let imageSrc = rawImage;
-                    if (imageSrc && !imageSrc.startsWith('data:') && !imageSrc.startsWith('http://') && !imageSrc.startsWith('https://')) {
+                    const rawB64 = response.data.data?.[0]?.b64_json;
+                    const rawUrl = response.data.data?.[0]?.url;
+                    const isValidB64 = Boolean(rawB64 && rawB64 !== 'data:image/png;base64,' && rawB64.trim() !== '');
+                    let imageSrc = isValidB64 ? rawB64 : (rawUrl ?? null);
+                    if (
+                      imageSrc &&
+                      !imageSrc.startsWith('data:') &&
+                      !imageSrc.startsWith('http://') &&
+                      !imageSrc.startsWith('https://')
+                    ) {
                       imageSrc = `data:image/png;base64,${imageSrc}`;
                     }
                     copy[index] = imageSrc;
