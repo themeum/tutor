@@ -530,8 +530,15 @@ class Lesson extends Tutor_Base {
 			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 
-		$content   = __( 'Lesson', 'tutor' );
-		$post_type = get_post_type( $lesson_id );
+		$post_type     = get_post_type( $lesson_id );
+		$allowed_types = array( tutor()->lesson_post_type, tutor()->assignment_post_type );
+		$allowed_types = array_unique( apply_filters( 'tutor_deletable_content_post_types', $allowed_types ) );
+
+		if ( ! in_array( $post_type, $allowed_types, true ) ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
+
+		$content = __( 'Lesson', 'tutor' );
 		if ( tutor()->assignment_post_type === $post_type ) {
 			$content = __( 'Assignment', 'tutor' );
 		}
