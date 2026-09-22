@@ -101,6 +101,10 @@ const defaultTutorConfig = {
     has_ai_connector: false,
     has_image_connector: false,
     connectors_admin_url: '',
+    enable_quiz_partial_marking: 'off',
+    enable_quiz_negative_marking: 'off',
+    quiz_negative_mark_type: 'percent',
+    quiz_negative_mark_value: 15,
   },
   tutor_currency: {
     symbol: '',

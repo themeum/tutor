@@ -2,6 +2,7 @@ node_modules/
 assets/css/*
 !assets/css/.gitkeep
 assets/js/*
+assets/blocks/
 languages/*
 !languages/.gitkeep
 test/

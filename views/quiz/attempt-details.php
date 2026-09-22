@@ -218,19 +218,10 @@ if ( ! isset( $user_data ) ) {
 extract( QuizModel::get_quiz_attempt_timing( $attempt_data ) ); // $attempt_duration, $attempt_duration_taken;
 
 // Prepare the correct/incorrect answer count for the first summary table.
-$answers   = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
-$correct   = 0;
-$incorrect = 0;
-if ( is_array( $answers ) && count( $answers ) > 0 ) {
-	foreach ( $answers as $answer ) {
-		if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-			$correct++;
-		} elseif ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
-		} else {
-			$incorrect++;
-		}
-	}
-}
+$answers       = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+$answer_counts = QuizModel::get_attempt_answer_counts( $answers );
+$correct       = $answer_counts['correct'];
+$incorrect     = $answer_counts['incorrect'];
 
 // Prepare the column list for the first summary table.
 $page_key        = 'attempt-details-summary';
@@ -354,10 +345,18 @@ if ( is_array( $attempt_info ) ) {
 <?php
 // instructor feedback.
 global $wp_query;
-$query_vars   = $wp_query->query_vars;
-$page_name    = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
-$attempt_info = maybe_unserialize( $attempt_data->attempt_info );
-$feedback     = is_array( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '';
+$query_vars            = $wp_query->query_vars;
+$page_name             = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
+$attempt_info          = maybe_unserialize( $attempt_data->attempt_info );
+$feedback              = is_array( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '';
+$question_feedback_map = is_array( $attempt_info ) && isset( $attempt_info['question_feedback'] ) && is_array( $attempt_info['question_feedback'] ) ? $attempt_info['question_feedback'] : array();
+$manual_overrides_map  = is_array( $attempt_info ) && isset( $attempt_info['manual_overrides'] ) && is_array( $attempt_info['manual_overrides'] ) ? $attempt_info['manual_overrides'] : array();
+$is_student_context    = in_array( $context, array( 'course-single-previous-attempts', 'frontend-dashboard-my-attempts' ), true );
+$is_instructor_review  = ! $is_student_context && (
+	'frontend-dashboard-students-attempts' === $context ||
+	'backend-dashboard-students-attempts' === $context ||
+	( is_admin() && empty( $context ) )
+) && tutor_utils()->can_user_manage( 'attempt', $attempt_id );
 // don't show on instructor quiz attempt since below already have feedback box area.
 if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 	?>
@@ -372,10 +371,12 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 <?php } ?>
 
 <?php
+$answers = apply_filters( 'tutor_filter_attempt_answers', $answers );
+$answers = QuizModel::filter_attempt_answers_for_details( $answers, $is_instructor_review );
+
 if ( is_array( $answers ) && count( $answers ) ) {
 	// Filter out not needed columns based on question type.
 	$table_2_columns = apply_filters( 'tutor_filter_attempt_answer_column', $table_2_columns, $answers );
-	$answers         = apply_filters( 'tutor_filter_attempt_answers', $answers );
 	echo 'course-single-previous-attempts' !== $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
 	?>
 		<div class="tutor-table-responsive tutor-table-mobile tutor-mt-16">
@@ -390,452 +391,512 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 				<tbody>
 				<?php
-					$answer_i = 0;
+				$answer_i = 0;
 				foreach ( $answers as $answer ) {
-					$answer_i++;
-					$question_type     = QuizModel::get_question_types( $answer->question_type );
-					$question_settings = maybe_unserialize( $answer->question_settings );
-					$is_image_matching = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];
-					$answer_status     = 'wrong';
-
-					// If already correct, then show it.
-					if ( (bool) $answer->is_correct ) {
-						$answer_status = 'correct';
-					}
-
-					// Image answering also needs review since the answer texts are not meant to match exactly.
-					elseif ( in_array( $answer->question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true ) ) {
-						$answer_status = null === $answer->is_correct ? 'pending' : 'wrong';
-					}
-
-					// Allow Pro and add-ons to set answer status for custom question types.
-					/**
-					 * Filter to set answer status for custom question types.
-					 * Pro handles draw_image via this filter.
-					 *
-					 * @param string|null $answer_status Current answer status (null if not set).
-					 * @param object      $answer        Answer object.
-					 *
-					 * @return string|null Answer status or null to use default.
-					 */
-					$custom_status = apply_filters( 'tutor_quiz_answer_status_for_question_type', null, $answer );
-					if ( null !== $custom_status ) {
-						$answer_status = $custom_status;
-					}
+					++$answer_i;
+					$question_type      = QuizModel::get_question_types( $answer->question_type );
+					$question_settings  = maybe_unserialize( $answer->question_settings );
+					$is_image_matching  = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];
+					$answer_status      = QuizModel::get_attempt_answer_status( $answer );
+					$student_q_feedback = trim( (string) ( $question_feedback_map[ $answer->attempt_answer_id ] ?? ( $question_feedback_map[ $answer->question_id ] ?? '' ) ) );
+					$feedback_dom_id    = 'tutor-question-feedback-' . ( ! empty( $answer->attempt_answer_id ) ? $answer->attempt_answer_id : $answer->question_id );
 					?>
 
-							<tr class="tutor-quiz-answer-status-<?php echo esc_html( $answer_status ); ?>">
+					<tr class="tutor-quiz-answer-status-<?php echo esc_html( $answer_status ); ?>">
 						<?php foreach ( $table_2_columns as $key => $column ) : ?>
-									<?php
-									switch ( $key ) {
-										case 'no':
-											?>
-												<td class="no" data-title="<?php echo esc_attr( $column ); ?>">
-													<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-													<?php echo esc_html( $answer_i ); ?>
-													</span>
-												</td>
-												<?php
-											break;
-
-										case 'type':
-											?>
-												<td class="type" data-title="<?php echo esc_attr( $column ); ?>">
-													<div class="tooltip-wrap tutor-d-inline-flex tutor-align-center">
-														<?php
-														$question_icon_name = tutor_render_question_type_icon( $answer->question_type );
-														if ( ! empty( $question_icon_name ) ) {
-															SvgIcon::make()
-																->name( $question_icon_name )
-																->size( 32 )
-																->render();
-														}
-														?>
-														<span class="tooltip-txt tooltip-top">
-															<?php echo esc_html( QuizModel::get_question_types( $answer->question_type )['name'] ?? '' ); ?>
-														</span>
-													</div>
-												</td>
-												<?php
-											break;
-
-										case 'questions':
-											?>
-												<td class="questions" data-title="<?php echo esc_attr( $column ); ?>">
-													<span class="tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-center">
-													<?php echo esc_html( stripslashes( $answer->question_title ) ); ?>
-													</span>
-												</td>
-												<?php
-											break;
-
-										case 'given_answer':
-											?>
-												<td class="given-answer" data-title="<?php echo esc_attr( $column ); ?>">
-												<div>
-												<?php
-													// Single choice.
-												if ( 'single_choice' === $answer->question_type ) {
-													$get_answers = tutor_utils()->get_answer_by_id( $answer->given_answer );
-													tutor_render_answer_list( $get_answers );
-												}
-
-
-													// True false or single choice.
-												if ( 'true_false' === $answer->question_type ) {
-													$get_answers   = tutor_utils()->get_answer_by_id( $answer->given_answer );
-													$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
-													$answer_titles = array_map( 'stripslashes', $answer_titles );
-
-													echo '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
-															implode( '</p><p>', $answer_titles ) .  //phpcs:ignore
-														'</span>';
-												}
-
-												// Multiple choice.
-												elseif ( 'multiple_choice' === $answer->question_type ) {
-													$get_answers = tutor_utils()->get_answer_by_id( maybe_unserialize( $answer->given_answer ) );
-													tutor_render_answer_list( $get_answers );
-												}
-
-													// Fill in the blank.
-												elseif ( 'fill_in_the_blank' === $answer->question_type ) {
-													$answer_titles              = maybe_unserialize( $answer->given_answer );
-													$get_db_answers_by_question = QuizModel::get_answers_by_quiz_question( $answer->question_id );
-
-													echo tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
-												}
-
-													// Open ended or short answer.
-												elseif ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
-													if ( $answer->given_answer ) {
-														echo wp_kses(
-															wpautop( stripslashes( $answer->given_answer ) ),
-															array(
-																'p' => true,
-																'span' => true,
-															)
-														);
-													}
-												}
-
-													// Ordering.
-												elseif ( 'ordering' === $answer->question_type ) {
-													$ordering_ids = maybe_unserialize( $answer->given_answer );
-													foreach ( $ordering_ids as $ordering_id ) {
-														$get_answers = tutor_utils()->get_answer_by_id( $ordering_id );
-														tutor_render_answer_list( $get_answers );
-													}
-												}
-
-												// Matching.
-												elseif ( 'matching' === $answer->question_type ) {
-
-													$ordering_ids           = maybe_unserialize( $answer->given_answer );
-													$original_saved_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id );
-
-													$answers = array();
-
-													foreach ( $original_saved_answers as $key => $original_saved_answer ) {
-														$provided_answer_order_id = isset( $ordering_ids[ $key ] ) ? $ordering_ids[ $key ] : 0;
-														$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
-														if ( tutor_utils()->count( $provided_answer_order ) ) {
-															foreach ( $provided_answer_order as $provided_answer_order ) {
-																if ( $is_image_matching ) {
-																	$original_saved_answer->answer_view_format   = 'text_image';
-																	$original_saved_answer->answer_title         = $provided_answer_order->answer_title;
-																	$original_saved_answer->answer_two_gap_match = '';
-																	$answers[]                                   = $original_saved_answer;
-																} else {
-																	$original_saved_answer->answer_two_gap_match = $provided_answer_order->answer_two_gap_match;
-																	$answers[]                                   = $original_saved_answer;
-																}
-															}
-														}
-													}
-
-													tutor_render_answer_list( $answers );
-												} elseif ( 'image_matching' === $answer->question_type ) {
-
-													$ordering_ids           = maybe_unserialize( $answer->given_answer );
-													$original_saved_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id );
-
-													$answers = array();
-
-													foreach ( $original_saved_answers as $key => $original_saved_answer ) {
-														$provided_answer_order_id = isset( $ordering_ids[ $key ] ) ? $ordering_ids[ $key ] : 0;
-														$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
-														foreach ( $provided_answer_order as $p_answer ) {
-															if ( $p_answer->answer_title ) {
-																$original_saved_answer->answer_view_format = 'text_image';
-																$original_saved_answer->answer_title       = $p_answer->answer_title;
-																$answers[]                                 = $original_saved_answer;
-															}
-														}
-													}
-
-													tutor_render_answer_list( $answers );
-												} elseif ( 'image_answering' === $answer->question_type ) {
-
-													$ordering_ids = maybe_unserialize( $answer->given_answer );
-
-													$answers = array();
-
-													foreach ( $ordering_ids as $answer_id => $image_answer ) {
-														$db_answers = tutor_utils()->get_answer_by_id( $answer_id );
-														foreach ( $db_answers as $db_answer ) {
-														}
-														$db_answer->answer_title       = $image_answer;
-														$db_answer->answer_view_format = 'text_image';
-														$answers[]                     = $db_answer;
-
-													}
-
-													tutor_render_answer_list( $answers );
-												} else {
-													/**
-													 * Allow Pro and add-ons to render given answer for custom question types.
-													 * Pro handles draw_image and pin_image via this action.
-													 *
-													 * @param object $answer Answer object.
-													 */
-													do_action( 'tutor_quiz_render_given_answer_for_question_type', $answer );
-												}
-												?>
-												</div>
-												</td>
-												<?php
-											break;
-
-										case 'correct_answer':
-											?>
-												<td class="correct-answer" data-title="<?php echo esc_attr( $column ); ?>">
-												<div>
-												<?php
-												if ( ( $answer->question_type != 'open_ended' && $answer->question_type != 'short_answer' ) ) {
-
-													global $wpdb;
-
-													// True false.
-													if ( 'true_false' === $answer->question_type ) {
-														$correct_answer = $wpdb->get_var(
-															$wpdb->prepare(
-																"SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers
-                                                                WHERE belongs_question_id = %d
-                                                                    AND belongs_question_type='true_false'
-                                                                    AND is_correct = 1",
-																$answer->question_id
-															)
-														);
-
-														echo '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
-																esc_html( $correct_answer ) .
-															'</span>';
-													}
-
-													// Single choice.
-													elseif ( 'single_choice' === $answer->question_type ) {
-														$correct_answer = $wpdb->get_results(
-															$wpdb->prepare(
-																"SELECT answer_title, image_id, answer_view_format
-                                                                FROM {$wpdb->prefix}tutor_quiz_question_answers
-                                                                WHERE belongs_question_id = %d
-                                                                    AND belongs_question_type='single_choice' AND 
-                                                                    is_correct = 1",
-																$answer->question_id
-															)
-														);
-
-														tutor_render_answer_list( $correct_answer );
-													}
-
-													// Multiple choice.
-													elseif ( 'multiple_choice' === $answer->question_type ) {
-														$correct_answer = $wpdb->get_results(
-															$wpdb->prepare(
-																"SELECT answer_title, image_id, answer_view_format
-                                                                FROM {$wpdb->prefix}tutor_quiz_question_answers
-                                                                WHERE belongs_question_id = %d
-                                                                    AND belongs_question_type='multiple_choice'
-                                                                    AND is_correct = 1 ;",
-																$answer->question_id
-															)
-														);
-
-														tutor_render_answer_list( $correct_answer );
-													}
-
-													// Fill in the blanks.
-													elseif ( 'fill_in_the_blank' === $answer->question_type ) {
-														$correct_answer = $wpdb->get_var(
-															$wpdb->prepare(
-																"SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers
-                                                                WHERE belongs_question_id = %d
-                                                                    AND belongs_question_type='fill_in_the_blank'",
-																$answer->question_id
-															)
-														);
-
-														$answer_titles              = explode( '|', stripslashes( $correct_answer ) );
-														$get_db_answers_by_question = QuizModel::get_answers_by_quiz_question( $answer->question_id );
-
-														echo tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
-													}
-
-													// Ordering.
-													elseif ( 'ordering' === $answer->question_type ) {
-														$correct_answer = $wpdb->get_results(
-															$wpdb->prepare(
-																"SELECT answer_title, image_id, answer_view_format
-                                                                FROM {$wpdb->prefix}tutor_quiz_question_answers
-                                                                WHERE belongs_question_id = %d
-                                                                    AND belongs_question_type='ordering'
-                                                                ORDER BY answer_order ASC;",
-																$answer->question_id
-															)
-														);
-
-														foreach ( $correct_answer as $ans ) {
-															tutor_render_answer_list( array( $ans ) );
-														}
-													}
-
-													// Matching.
-													elseif ( 'matching' === $answer->question_type ) {
-														$correct_answer = $wpdb->get_results(
-															$wpdb->prepare(
-																"SELECT answer_title, image_id, answer_two_gap_match, answer_view_format
-                                                                FROM {$wpdb->prefix}tutor_quiz_question_answers
-                                                                WHERE belongs_question_id = %d
-                                                                    AND belongs_question_type='matching'
-                                                                ORDER BY answer_order ASC;",
-																$answer->question_id
-															)
-														);
-
-														if ( $is_image_matching ) {
-															array_map(
-																function( $ans ) {
-																	$ans->answer_view_format   = 'text_image';
-																	$ans->answer_two_gap_match = '';
-																},
-																$correct_answer
-															);
-														}
-
-														tutor_render_answer_list( $correct_answer );
-													}
-
-													// Image matching.
-													elseif ( 'image_matching' === $answer->question_type ) {
-														$correct_answer = $wpdb->get_results(
-															$wpdb->prepare(
-																"SELECT answer_title, image_id, answer_two_gap_match
-                                                                FROM {$wpdb->prefix}tutor_quiz_question_answers
-                                                                WHERE belongs_question_id = %d
-                                                                    AND belongs_question_type='image_matching'
-                                                                ORDER BY answer_order ASC;",
-																$answer->question_id
-															)
-														);
-
-														tutor_render_answer_list( $correct_answer, true );
-													}
-
-													// Image Answering.
-													elseif ( 'image_answering' === $answer->question_type ) {
-
-														$correct_answer = $wpdb->get_results(
-															$wpdb->prepare(
-																"SELECT answer_title, image_id, answer_two_gap_match
-                                                                FROM {$wpdb->prefix}tutor_quiz_question_answers
-                                                                WHERE belongs_question_id = %d
-                                                                    AND belongs_question_type='image_answering'
-                                                                ORDER BY answer_order ASC;",
-																$answer->question_id
-															)
-														);
-
-														! is_array( $correct_answer ) ? $correct_answer = array() : 0;
-
-														echo '<div class="answer-image-matched-wrap">';
-														foreach ( $correct_answer as $image_answer ) {
-															?>
-																	<div class="image-matching-item">
-																		<p class="dragged-img-rap"><img src="<?php echo esc_url( wp_get_attachment_image_url( $image_answer->image_id ) ); ?>" /> </p>
-																		<p class="dragged-caption"><?php echo esc_html( $image_answer->answer_title ); ?></p>
-																	</div>
-																<?php
-														}
-														echo '</div>';
-													} else {
-														/**
-														 * Allow Pro and add-ons to render correct answer for custom question types.
-														 * Pro handles draw_image and pin_image via this action.
-														 *
-														 * @param object $answer Answer object.
-														 */
-														do_action( 'tutor_quiz_render_correct_answer_for_question_type', $answer );
-													}
-												}
-												?>
-												</div>
-												</td>
-												<?php
-											break;
-
-										case 'result':
-											?>
-												<td class="result" data-title="<?php echo esc_attr( $column ); ?>">
-													<div class="tutor-d-flex tutor-align-center tutor-justify-between tutor-gap-4px">
-														<?php do_action( 'tutor_quiz_attempt_after_result_column', $answer, $answer_status ); ?>
-
-														<?php
-														if ( 'h5p' !== $answer->question_type ) {
-															switch ( $answer_status ) {
-																case 'correct':
-																	echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
-																	break;
-
-																case 'pending':
-																	echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
-																	break;
-
-																case 'wrong':
-																	echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
-																	break;
-															}
-														}
-														?>
-
-														<?php do_action( 'tutor_quiz_attempt_details_after_result', $answer, $answer_status ); ?>
-													</div>
-												</td>
-												<?php
-											break;
-
-										case 'manual_review':
-											?>
-												<td class="tutor-text-center tutor-nowrap-ellipsis" data-title="<?php echo esc_attr( $column ); ?>">
-													<div class="tutor-manual-review-wrapper">
-													<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-mark-as="correct" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-color-success">
-														<i class="tutor-icon-mark"></i>
-													</a>
-
-													<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-mark-as="incorrect" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as In correct', 'tutor' ); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-color-danger">
-														<i class="tutor-icon-times"></i>
-													</a>
-													</div>
-												</td>
-												<?php
-									}
+							<?php
+							switch ( $key ) {
+								case 'no':
 									?>
-								<?php endforeach; ?>
+										<td class="no" data-title="<?php echo esc_attr( $column ); ?>">
+											<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+											<?php echo esc_html( $answer_i ); ?>
+											</span>
+										</td>
+										<?php
+									break;
+
+								case 'type':
+									?>
+										<td class="type" data-title="<?php echo esc_attr( $column ); ?>">
+											<div class="tooltip-wrap tutor-d-inline-flex tutor-align-center">
+												<?php
+												$question_icon_name = tutor_render_question_type_icon( $answer->question_type );
+												if ( ! empty( $question_icon_name ) ) {
+													SvgIcon::make()
+														->name( $question_icon_name )
+														->size( 32 )
+														->render();
+												}
+												?>
+												<span class="tooltip-txt tooltip-top">
+													<?php echo esc_html( QuizModel::get_question_types( $answer->question_type )['name'] ?? '' ); ?>
+												</span>
+											</div>
+										</td>
+										<?php
+									break;
+
+								case 'questions':
+									?>
+										<td class="questions" data-title="<?php echo esc_attr( $column ); ?>">
+											<span class="tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-center">
+											<?php echo esc_html( stripslashes( $answer->question_title ) ); ?>
+											</span>
+										</td>
+										<?php
+									break;
+
+								case 'given_answer':
+									?>
+										<td class="given-answer" data-title="<?php echo esc_attr( $column ); ?>">
+										<div>
+										<?php
+											// Single choice.
+										if ( 'single_choice' === $answer->question_type ) {
+											$get_answers = tutor_utils()->get_answer_by_id( $answer->given_answer );
+											tutor_render_answer_list( $get_answers );
+										}
+
+
+											// True false or single choice.
+										if ( 'true_false' === $answer->question_type ) {
+											$get_answers   = tutor_utils()->get_answer_by_id( $answer->given_answer );
+											$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
+											$answer_titles = array_map( 'stripslashes', $answer_titles );
+
+											echo '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
+													implode( '</p><p>', $answer_titles ) .  //phpcs:ignore
+												'</span>';
+										}
+
+										// Multiple choice.
+										elseif ( 'multiple_choice' === $answer->question_type ) {
+											$get_answers = tutor_utils()->get_answer_by_id( maybe_unserialize( $answer->given_answer ) );
+											tutor_render_answer_list( $get_answers );
+										}
+
+											// Fill in the blank.
+										elseif ( 'fill_in_the_blank' === $answer->question_type ) {
+											$answer_titles              = maybe_unserialize( $answer->given_answer );
+											$get_db_answers_by_question = QuizModel::get_answers_by_quiz_question( $answer->question_id );
+
+											echo tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
+										}
+
+											// Open ended or short answer.
+										elseif ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
+											if ( $answer->given_answer ) {
+												echo wp_kses(
+													wpautop( stripslashes( $answer->given_answer ) ),
+													array(
+														'p' => true,
+														'span' => true,
+													)
+												);
+											}
+										}
+
+											// Ordering.
+										elseif ( 'ordering' === $answer->question_type ) {
+											$ordering_ids = maybe_unserialize( $answer->given_answer );
+											foreach ( $ordering_ids as $ordering_id ) {
+												$get_answers = tutor_utils()->get_answer_by_id( $ordering_id );
+												tutor_render_answer_list( $get_answers );
+											}
+										}
+
+										// Matching.
+										elseif ( 'matching' === $answer->question_type ) {
+
+											$ordering_ids           = maybe_unserialize( $answer->given_answer );
+											$original_saved_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id );
+
+											$answers = array();
+
+											foreach ( $original_saved_answers as $key => $original_saved_answer ) {
+												$provided_answer_order_id = isset( $ordering_ids[ $key ] ) ? $ordering_ids[ $key ] : 0;
+												$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
+												if ( tutor_utils()->count( $provided_answer_order ) ) {
+													foreach ( $provided_answer_order as $provided_answer_order ) {
+														if ( $is_image_matching ) {
+															$original_saved_answer->answer_view_format   = 'text_image';
+															$original_saved_answer->answer_title         = $provided_answer_order->answer_title;
+															$original_saved_answer->answer_two_gap_match = '';
+															$answers[]                                   = $original_saved_answer;
+														} else {
+															$original_saved_answer->answer_two_gap_match = $provided_answer_order->answer_two_gap_match;
+															$answers[]                                   = $original_saved_answer;
+														}
+													}
+												}
+											}
+
+											tutor_render_answer_list( $answers );
+										} elseif ( 'image_matching' === $answer->question_type ) {
+
+											$ordering_ids           = maybe_unserialize( $answer->given_answer );
+											$original_saved_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id );
+
+											$answers = array();
+
+											foreach ( $original_saved_answers as $key => $original_saved_answer ) {
+												$provided_answer_order_id = isset( $ordering_ids[ $key ] ) ? $ordering_ids[ $key ] : 0;
+												$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
+												foreach ( $provided_answer_order as $p_answer ) {
+													if ( $p_answer->answer_title ) {
+														$original_saved_answer->answer_view_format = 'text_image';
+														$original_saved_answer->answer_title       = $p_answer->answer_title;
+														$answers[]                                 = $original_saved_answer;
+													}
+												}
+											}
+
+											tutor_render_answer_list( $answers );
+										} elseif ( 'image_answering' === $answer->question_type ) {
+
+											$ordering_ids = maybe_unserialize( $answer->given_answer );
+
+											$answers = array();
+
+											foreach ( $ordering_ids as $answer_id => $image_answer ) {
+												$db_answers = tutor_utils()->get_answer_by_id( $answer_id );
+												foreach ( $db_answers as $db_answer ) {
+												}
+												$db_answer->answer_title       = $image_answer;
+												$db_answer->answer_view_format = 'text_image';
+												$answers[]                     = $db_answer;
+
+											}
+
+											tutor_render_answer_list( $answers );
+										} else {
+											/**
+											 * Allow Pro and add-ons to render given answer for custom question types.
+											 * Pro handles draw_image and pin_image via this action.
+											 *
+											 * @param object $answer Answer object.
+											 */
+											do_action( 'tutor_quiz_render_given_answer_for_question_type', $answer );
+										}
+										?>
+										</div>
+										</td>
+										<?php
+									break;
+
+								case 'correct_answer':
+									?>
+										<td class="correct-answer" data-title="<?php echo esc_attr( $column ); ?>">
+										<div>
+										<?php
+										if ( ( $answer->question_type != 'open_ended' && $answer->question_type != 'short_answer' ) ) {
+
+											global $wpdb;
+
+											// True false.
+											if ( 'true_false' === $answer->question_type ) {
+												$correct_answer = $wpdb->get_var(
+													$wpdb->prepare(
+														"SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers
+																														WHERE belongs_question_id = %d
+																																AND belongs_question_type='true_false'
+																																AND is_correct = 1",
+														$answer->question_id
+													)
+												);
+
+												echo '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
+														esc_html( $correct_answer ) .
+													'</span>';
+											}
+
+											// Single choice.
+											elseif ( 'single_choice' === $answer->question_type ) {
+												$correct_answer = $wpdb->get_results(
+													$wpdb->prepare(
+														"SELECT answer_title, image_id, answer_view_format
+																														FROM {$wpdb->prefix}tutor_quiz_question_answers
+																														WHERE belongs_question_id = %d
+																																AND belongs_question_type='single_choice' AND 
+																																is_correct = 1",
+														$answer->question_id
+													)
+												);
+
+												tutor_render_answer_list( $correct_answer );
+											}
+
+											// Multiple choice.
+											elseif ( 'multiple_choice' === $answer->question_type ) {
+												$correct_answer = $wpdb->get_results(
+													$wpdb->prepare(
+														"SELECT answer_title, image_id, answer_view_format
+																														FROM {$wpdb->prefix}tutor_quiz_question_answers
+																														WHERE belongs_question_id = %d
+																																AND belongs_question_type='multiple_choice'
+																																AND is_correct = 1 ;",
+														$answer->question_id
+													)
+												);
+
+												tutor_render_answer_list( $correct_answer );
+											}
+
+											// Fill in the blanks.
+											elseif ( 'fill_in_the_blank' === $answer->question_type ) {
+												$correct_answer = $wpdb->get_var(
+													$wpdb->prepare(
+														"SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers
+																														WHERE belongs_question_id = %d
+																																AND belongs_question_type='fill_in_the_blank'",
+														$answer->question_id
+													)
+												);
+
+												$answer_titles              = explode( '|', stripslashes( $correct_answer ) );
+												$get_db_answers_by_question = QuizModel::get_answers_by_quiz_question( $answer->question_id );
+
+												echo tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
+											}
+
+											// Ordering.
+											elseif ( 'ordering' === $answer->question_type ) {
+												$correct_answer = $wpdb->get_results(
+													$wpdb->prepare(
+														"SELECT answer_title, image_id, answer_view_format
+																														FROM {$wpdb->prefix}tutor_quiz_question_answers
+																														WHERE belongs_question_id = %d
+																																AND belongs_question_type='ordering'
+																														ORDER BY answer_order ASC;",
+														$answer->question_id
+													)
+												);
+
+												foreach ( $correct_answer as $ans ) {
+													tutor_render_answer_list( array( $ans ) );
+												}
+											}
+
+											// Matching.
+											elseif ( 'matching' === $answer->question_type ) {
+												$correct_answer = $wpdb->get_results(
+													$wpdb->prepare(
+														"SELECT answer_title, image_id, answer_two_gap_match, answer_view_format
+																														FROM {$wpdb->prefix}tutor_quiz_question_answers
+																														WHERE belongs_question_id = %d
+																																AND belongs_question_type='matching'
+																														ORDER BY answer_order ASC;",
+														$answer->question_id
+													)
+												);
+
+												if ( $is_image_matching ) {
+													array_map(
+														function ( $ans ) {
+															$ans->answer_view_format   = 'text_image';
+															$ans->answer_two_gap_match = '';
+														},
+														$correct_answer
+													);
+												}
+
+												tutor_render_answer_list( $correct_answer );
+											}
+
+											// Image matching.
+											elseif ( 'image_matching' === $answer->question_type ) {
+												$correct_answer = $wpdb->get_results(
+													$wpdb->prepare(
+														"SELECT answer_title, image_id, answer_two_gap_match
+																														FROM {$wpdb->prefix}tutor_quiz_question_answers
+																														WHERE belongs_question_id = %d
+																																AND belongs_question_type='image_matching'
+																														ORDER BY answer_order ASC;",
+														$answer->question_id
+													)
+												);
+
+												tutor_render_answer_list( $correct_answer, true );
+											}
+
+											// Image Answering.
+											elseif ( 'image_answering' === $answer->question_type ) {
+
+												$correct_answer = $wpdb->get_results(
+													$wpdb->prepare(
+														"SELECT answer_title, image_id, answer_two_gap_match
+																														FROM {$wpdb->prefix}tutor_quiz_question_answers
+																														WHERE belongs_question_id = %d
+																																AND belongs_question_type='image_answering'
+																														ORDER BY answer_order ASC;",
+														$answer->question_id
+													)
+												);
+
+												! is_array( $correct_answer ) ? $correct_answer = array() : 0;
+
+												echo '<div class="answer-image-matched-wrap">';
+												foreach ( $correct_answer as $image_answer ) {
+													?>
+															<div class="image-matching-item">
+																<p class="dragged-img-rap"><img src="<?php echo esc_url( wp_get_attachment_image_url( $image_answer->image_id ) ); ?>" /> </p>
+																<p class="dragged-caption"><?php echo esc_html( $image_answer->answer_title ); ?></p>
+															</div>
+														<?php
+												}
+												echo '</div>';
+											} else {
+												/**
+												 * Allow Pro and add-ons to render correct answer for custom question types.
+												 * Pro handles draw_image and pin_image via this action.
+												 *
+												 * @param object $answer Answer object.
+												 */
+												do_action( 'tutor_quiz_render_correct_answer_for_question_type', $answer );
+											}
+										}
+										?>
+										</div>
+										</td>
+										<?php
+									break;
+
+								case 'result':
+									?>
+										<td class="result" data-title="<?php echo esc_attr( $column ); ?>">
+											<div class="tutor-quiz-attempt-result-col">
+												<div class="tutor-quiz-result-wrap">
+													<?php do_action( 'tutor_quiz_attempt_after_result_column', $answer, $answer_status ); ?>
+
+													<?php
+													if ( 'h5p' !== $answer->question_type ) {
+														$achieved_val  = (float) ( $answer->achieved_mark ?? 0 );
+														$question_mark = (float) ( $answer->question_mark ?? 0 );
+														$qmark_str     = ( floor( $question_mark ) === $question_mark ) ? (string) (int) $question_mark : (string) round( $question_mark, 2 );
+														$achieved_str  = ( floor( $achieved_val ) === $achieved_val ) ? (string) (int) $achieved_val : (string) round( $achieved_val, 2 );
+														$score_label   = sprintf(
+															/* translators: 1: achieved marks, 2: total marks. */
+															esc_html__( 'Score: %1$s/%2$s', 'tutor' ),
+															$achieved_str,
+															$qmark_str
+														);
+
+														$badge_info  = QuizModel::get_attempt_answer_badge( $answer );
+														$badge_class = $badge_info['class'] ?? 'label-default';
+
+														echo '<span class="tutor-badge-label ' . esc_attr( $badge_class ) . '">' . esc_html( $badge_info['label'] ?? '' ) . '</span>';
+
+														do_action( 'tutor_quiz_attempt_details_result_badge_after', $answer, $answer_status, $is_instructor_review );
+
+														if ( 'pending' !== $answer_status && 'skipped' !== $answer_status ) {
+															echo '<div class="tutor-quiz-result-score">' . esc_html( $score_label ) . '</div>';
+														}
+													}
+													?>
+												</div>
+
+												<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+													<?php do_action( 'tutor_quiz_attempt_details_after_result', $answer, $answer_status ); ?>
+
+													<?php if ( ! $is_instructor_review && '' !== $student_q_feedback ) : ?>
+														<div class="tooltip-wrap">
+															<span class="tooltip-txt <?php echo esc_attr( is_rtl() ? 'tooltip-right' : 'tooltip-left' ); ?>"><?php esc_html_e( 'Show Feedback', 'tutor' ); ?></span>
+															<button type="button" class="tutor-quiz-feedback-toggle-button" data-td-target="<?php echo esc_attr( $feedback_dom_id ); ?>" aria-label="<?php esc_attr_e( 'Show Feedback', 'tutor' ); ?>">
+																<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0049F8" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+																	<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+																</svg>
+															</button>
+														</div>
+													<?php endif; ?>
+												</div>
+											</div>
+										</td>
+										<?php
+									break;
+
+								case 'manual_review':
+									?>
+										<td class="tutor-text-center tutor-nowrap-ellipsis" data-title="<?php echo esc_attr( $column ); ?>">
+											<div class="tutor-manual-review-wrapper">
+										<?php if ( in_array( $answer->question_type, QuizModel::get_manual_review_types(), true ) && 'skipped' !== $answer_status ) : ?>
+											<?php
+											$manual_mark_error_id = 'tutor-manual-mark-error-' . (int) $answer->attempt_answer_id;
+											$is_manual_graded     = null !== ( $answer->is_correct ?? null );
+											$manual_mark_value    = $is_manual_graded ? (string) ( $answer->achieved_mark ?? '' ) : '';
+											$has_manual_mark      = '' !== $manual_mark_value;
+											?>
+											<div class="tutor-d-inline-flex tutor-align-center tutor-justify-center">
+												<input class="tutor-form-control tutor-form-control-sm quiz-manual-mark-input" style="width: 72px; height: 32px; text-align: center;" type="number" min="0" max="<?php echo esc_attr( (string) $answer->question_mark ); ?>" step="0.01" value="<?php echo esc_attr( $has_manual_mark ? $manual_mark_value : '' ); ?>" aria-label="<?php esc_attr_e( 'Obtained marks', 'tutor' ); ?>" aria-describedby="<?php echo esc_attr( $manual_mark_error_id ); ?>" />
+												<span class="tutor-fs-7 tutor-color-muted tutor-ml-4">/ <?php echo esc_html( (string) $answer->question_mark ); ?></span>
+												<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Save mark', 'tutor' ); ?>" class="quiz-manual-mark-save tutor-quiz-question-review-action tutor-ml-8" data-review-status="correct"<?php echo $has_manual_mark ? '' : ' style="display:none;"'; ?>>
+													<input class="tutor-quiz-question-review-input" type="radio" name="tutor-quiz-save-marks-<?php echo esc_attr( (int) $answer->attempt_answer_id ); ?>" value="correct" <?php checked( $has_manual_mark, true ); ?> tabindex="-1" aria-hidden="true" />
+													<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->render(); ?>
+												</a>
+											</div>
+											<div id="<?php echo esc_attr( $manual_mark_error_id ); ?>" class="quiz-manual-mark-error tutor-fs-8 tutor-color-danger tutor-mt-4" style="display:none;" role="alert"></div>
+												<?php if ( $is_instructor_review ) : ?>
+													<?php
+													$has_question_feedback = '' !== trim( (string) ( $question_feedback_map[ $answer->attempt_answer_id ] ?? '' ) );
+													?>
+													<div class="tutor-mt-4">
+														<a href="javascript:;" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-feedback="<?php echo esc_attr( $has_question_feedback ? $question_feedback_map[ $answer->attempt_answer_id ] : '' ); ?>" title="<?php echo $has_question_feedback ? esc_attr__( 'Show feedback', 'tutor' ) : esc_attr__( 'Add feedback', 'tutor' ); ?>" class="quiz-question-feedback-action tutor-fs-7 tutor-text-primary">
+															<span class="<?php echo $has_question_feedback ? 'tutor-icon-eye-line' : 'tutor-icon-comment'; ?> tutor-mr-4"></span><?php echo $has_question_feedback ? esc_html__( 'Show Feedback', 'tutor' ) : esc_html__( 'Add Feedback', 'tutor' ); ?>
+														</a>
+													</div>
+												<?php endif; ?>
+											<?php elseif ( 'skipped' !== $answer_status ) : ?>
+												<?php
+												$answer_is_correct   = null !== ( $answer->is_correct ?? null ) && (int) QuizModel::ATTEMPT_ANSWER_CORRECT === $answer->is_correct;
+												$answer_is_incorrect = null !== ( $answer->is_correct ?? null ) && (int) QuizModel::ATTEMPT_ANSWER_INCORRECT === $answer->is_correct;
+												?>
+												<div class="tutor-quiz-question-review-actions">
+													<label class="quiz-manual-review-action tutor-quiz-question-review-action" data-review-status="correct" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-mark-as="correct" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>" role="button" tabindex="0" aria-pressed="<?php echo $answer_is_correct ? 'true' : 'false'; ?>">
+														<input class="tutor-quiz-question-review-input" type="radio" name="tutor-quiz-review-marks-<?php echo esc_attr( (int) $answer->attempt_answer_id ); ?>" value="correct" <?php checked( $answer_is_correct, true ); ?> tabindex="-1" aria-hidden="true" />
+														<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->render(); ?>
+													</label>
+													<label class="quiz-manual-review-action tutor-quiz-question-review-action" data-review-status="incorrect" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" data-mark-as="incorrect" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as incorrect', 'tutor' ); ?>" role="button" tabindex="0" aria-pressed="<?php echo $answer_is_incorrect ? 'true' : 'false'; ?>">
+														<input class="tutor-quiz-question-review-input" type="radio" name="tutor-quiz-review-marks-<?php echo esc_attr( (int) $answer->attempt_answer_id ); ?>" value="incorrect" <?php checked( $answer_is_incorrect, true ); ?> tabindex="-1" aria-hidden="true" />
+														<?php SvgIcon::make()->name( Icon::CROSS )->size( 20 )->render(); ?>
+													</label>
+												</div>
+												<?php if ( ! empty( $manual_overrides_map[ $answer->question_id ] ) ) : ?>
+													<div class="tutor-fs-8 tutor-color-muted tutor-mt-4">
+														<?php esc_html_e( '(Overrides the auto-graded result)', 'tutor' ); ?>
+													</div>
+												<?php endif; ?>
+											<?php endif; ?>
+											</div>
+										</td>
+										<?php
+							}
+							?>
+						<?php endforeach; ?>
 							</tr>
 
-							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status, $table_2_columns ); ?>
+						<?php
+						if ( ! $is_instructor_review && '' !== $student_q_feedback ) :
+							?>
+							<tr class="tutor-quiz-question-feedback-row">
+								<td colspan="<?php echo esc_attr( count( $table_2_columns ) ); ?>" class="column-empty-state data-td-content" id="<?php echo esc_attr( $feedback_dom_id ); ?>" style="display:none;">
+									<div class="tutor-quiz-question-feedback-card">
+										<div class="tutor-d-flex tutor-gap-1 tutor-align-center tutor-mb-8">
+											<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B505C" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+												<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+											</svg>
+											<span class="tutor-quiz-question-feedback-title"><?php esc_html_e( 'Feedback from instructor', 'tutor' ); ?></span>
+										</div>
+										<div class="tutor-quiz-question-feedback-body">
+											<?php echo nl2br( esc_html( $student_q_feedback ) ); ?>
+										</div>
+									</div>
+								</td>
+							</tr>
+						<?php endif; ?>
 
-							<?php
+						<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status, $table_2_columns ); ?>
+
+						<?php
 				}
 				?>
 				</tbody>
@@ -843,7 +904,75 @@ if ( is_array( $answers ) && count( $answers ) ) {
 		</div>
 		<?php
 		do_action( 'tutor_quiz_attempt_details_loop_after' );
+} else {
+	echo 'course-single-previous-attempts' !== $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
+	tutor_utils()->tutor_empty_state( __( 'No answered questions to display', 'tutor' ) );
 }
 ?>
 
 <?php echo is_admin() ? '</div>' : ''; ?>
+
+<?php if ( $is_instructor_review ) : ?>
+	<div class="tutor-modal" id="tutor-question-feedback-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-question-feedback-modal-title" aria-hidden="true">
+		<div class="tutor-modal-overlay"></div>
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content tutor-modal-content-white">
+				<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+					<span class="tutor-icon-times" aria-hidden="true"></span>
+				</button>
+				<div class="tutor-modal-header">
+					<h3 id="tutor-question-feedback-modal-title" class="tutor-modal-title tutor-fs-5 tutor-fw-medium">
+						<?php esc_html_e( 'Write feedback', 'tutor' ); ?>
+					</h3>
+				</div>
+				<div class="tutor-modal-body">
+					<div>
+						<input type="hidden" id="tutor-question-feedback-attempt-id">
+						<input type="hidden" id="tutor-question-feedback-answer-id">
+						<textarea id="tutor-question-feedback-content" class="tutor-form-control tutor-form-control-auto-height" rows="5" placeholder="<?php esc_attr_e( 'Write feedback for the student...', 'tutor' ); ?>"></textarea>
+					</div>
+				</div>
+				<div class="tutor-modal-footer">
+					<button type="button" id="tutor-question-feedback-delete" class="tutor-btn tutor-btn-danger" style="display: none;">
+						<?php esc_html_e( 'Delete', 'tutor' ); ?>
+					</button>
+					<div class="tutor-d-flex tutor-align-center tutor-gap-2 tutor-ml-auto">
+						<button type="button" class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+						</button>
+						<button type="button" id="tutor-question-feedback-save" class="tutor-btn tutor-btn-primary">
+							<?php esc_html_e( 'Save', 'tutor' ); ?>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="tutor-modal tutor-modal-confirmation" id="tutor-question-feedback-delete-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-question-feedback-delete-modal-title" aria-hidden="true">
+		<div class="tutor-modal-overlay"></div>
+		<div class="tutor-modal-window tutor-modal-window-sm">
+			<div class="tutor-modal-content tutor-modal-content-white">
+				<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+					<span class="tutor-icon-times" aria-hidden="true"></span>
+				</button>
+				<div class="tutor-modal-body tutor-text-center tutor-py-24 tutor-px-32">
+					<div class="tutor-mb-16">
+						<img src="<?php echo esc_url( tutor()->url . 'assets/images/illustrations/delete.svg' ); ?>" style="width: 80px; height: 80px;" alt="" class="tutor-d-inline-block" aria-hidden="true" />
+					</div>
+					<h4 id="tutor-question-feedback-delete-modal-title" class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-0">
+						<?php esc_html_e( 'Are you sure you want to delete this feedback?', 'tutor' ); ?>
+					</h4>
+				</div>
+				<div class="tutor-modal-footer tutor-d-flex tutor-justify-center tutor-gap-2">
+					<button type="button" class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+						<?php esc_html_e( 'No, keep it', 'tutor' ); ?>
+					</button>
+					<button type="button" id="tutor-question-feedback-delete-confirm" class="tutor-btn tutor-btn-danger">
+						<i class="tutor-icon-trash-can-bold tutor-mr-4"></i><?php esc_html_e( 'Yes, delete', 'tutor' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>
