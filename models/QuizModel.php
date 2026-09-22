@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Components\Badge;
 use TUTOR\Course_List;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
@@ -33,6 +34,22 @@ class QuizModel {
 	const RESULT_PENDING = 'pending';
 
 	const ATTEMPTS_TABLE = 'tutor_quiz_attempts';
+
+	/**
+	 * Attempt-answer correctness values.
+	 *
+	 * These values are only for tutor_quiz_attempt_answers rows. Question-answer
+	 * option rows remain binary and must continue to use 0 or 1.
+	 */
+	const ATTEMPT_ANSWER_INCORRECT = 0;
+	const ATTEMPT_ANSWER_CORRECT   = 1;
+
+	/**
+	 * Attempt-answer status for manually graded questions.
+	 *
+	 * @since 4.1.0
+	 */
+	const ATTEMPT_ANSWER_MANUAL_GRADED = 3;
 
 	/**
 	 * Question type constants
@@ -238,21 +255,10 @@ class QuizModel {
 
 			$earned_percent = self::calculate_attempt_earned_percentage( $quiz_attempt );
 
-			$correct_answers   = 0;
-			$incorrect_answers = 0;
-
-			$answers = self::get_quiz_answers_by_attempt_id( $quiz_attempt->attempt_id );
-
-			if ( tutor_utils()->count( $answers ) ) {
-				foreach ( $answers as $answer ) {
-					$is_correct = (int) $answer->is_correct ?? 0;
-					if ( $is_correct ) {
-						++$correct_answers;
-					} else {
-						++$incorrect_answers;
-					}
-				}
-			}
+			$answers           = self::get_quiz_answers_by_attempt_id( $quiz_attempt->attempt_id );
+			$answer_counts     = self::get_attempt_answer_counts( $answers );
+			$correct_answers   = $answer_counts['correct'];
+			$incorrect_answers = $answer_counts['incorrect'];
 
 			$formatted_attempt = array(
 				'attempt_id'        => $quiz_attempt->attempt_id ?? 0,
@@ -1072,19 +1078,26 @@ class QuizModel {
 	/**
 	 * Get normalized attempt-answer status.
 	 *
+	 * Manually graded questions have a separate lifecycle: pending until reviewed,
+	 * then graded. Auto-graded questions use the attempt-answer correctness constants.
+	 *
 	 * Status rules follow legacy attempt-details logic:
 	 * - correct: is_correct is truthy.
 	 * - pending: is_correct is null for manually reviewed question types.
 	 * - incorrect: all other cases.
+	 * - graded: is_correct set after an instructor reviews a manually reviewed question.
+	 * - skipped: question has no given answer.
 	 *
 	 * @since 4.0.0
+	 * @since 4.1.0 Added manual graded questions and filter hook.
 	 *
 	 * @param object $attempt_answer Attempt answer object.
 	 *
-	 * @return string One of: correct, pending, wrong.
+	 * @return string One of: pending, correct, incorrect, graded, skipped (or one from the filter).
 	 */
 	public static function get_attempt_answer_status( $attempt_answer ): string {
 		$question_type = (string) ( $attempt_answer->question_type ?? '' );
+		$is_correct    = $attempt_answer->is_correct ?? null;
 
 		if ( 'image_matching' === $question_type ) {
 			$question_type = 'matching';
@@ -1094,18 +1107,139 @@ class QuizModel {
 			$question_type = 'multiple_choice';
 		}
 
-		if ( (bool) ( $attempt_answer->is_correct ?? false ) ) {
-			return 'correct';
+		if ( self::is_attempt_answer_skipped( $attempt_answer ) ) {
+			$status = 'skipped';
+		} elseif ( null === $is_correct ) {
+			$status = 'pending';
+		} elseif ( in_array( $question_type, self::get_manual_review_types(), true ) ) {
+			$status = 'graded';
+		} elseif ( self::ATTEMPT_ANSWER_CORRECT === (int) $is_correct ) {
+			$status = 'correct';
+		} else {
+			$status = 'incorrect';
 		}
 
-		if (
-			null === ( $attempt_answer->is_correct ?? null ) &&
-			in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true )
-		) {
-			return 'pending';
+		return apply_filters( 'tutor_quiz_attempt_answer_status', $status, $attempt_answer );
+	}
+
+	/**
+	 * Get attempt answer status badge metadata.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param object|null $attempt_answer Attempt answer object.
+	 *
+	 * @return array Associative array with status, label, variant, label_map, and variant_map.
+	 */
+	public static function get_attempt_answer_badge( $attempt_answer ): array {
+		$status = $attempt_answer ? self::get_attempt_answer_status( $attempt_answer ) : 'skipped';
+
+		$label_map = array(
+			'pending'   => __( 'Pending', 'tutor' ),
+			'correct'   => __( 'Correct', 'tutor' ),
+			'incorrect' => __( 'Incorrect', 'tutor' ),
+			'graded'    => __( 'Graded', 'tutor' ),
+			'skipped'   => __( 'Skipped', 'tutor' ),
+		);
+
+		$variant_map = array(
+			'pending'   => Badge::WARNING,
+			'correct'   => Badge::SUCCESS,
+			'incorrect' => Badge::ERROR,
+			'graded'    => Badge::HIGHLIGHT,
+			'skipped'   => Badge::INFO,
+		);
+
+		// Legacy class map: old `label-*` CSS classes used by the admin attempt-details
+		// badge rendering. The new Badge component variant map is used instead where available.
+		$class_map = array(
+			'pending'   => 'label-warning',
+			'correct'   => 'label-success',
+			'incorrect' => 'label-danger',
+			'graded'    => 'label-primary',
+			'skipped'   => 'label-default',
+		);
+
+		$badge = array(
+			'status'      => $status,
+			'label'       => $label_map[ $status ] ?? '',
+			'variant'     => $variant_map[ $status ] ?? Badge::INFO,
+			'class'       => $class_map[ $status ] ?? 'label-default',
+			'label_map'   => $label_map,
+			'variant_map' => $variant_map,
+			'class_map'   => $class_map,
+		);
+
+		return apply_filters( 'tutor_quiz_attempt_answer_badge', $badge, $attempt_answer );
+	}
+
+	/**
+	 * Render attempt answer status badge.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param object|null $attempt_answer Attempt answer object.
+	 * @param array       $options Optional rendering options (is_instructor_review, review_field_name).
+	 *
+	 * @return void
+	 */
+	public static function render_attempt_answer_badge( $attempt_answer, array $options = array() ): void {
+		$badge                = self::get_attempt_answer_badge( $attempt_answer );
+		$is_instructor_review = ! empty( $options['is_instructor_review'] );
+		$review_field_name    = (string) ( $options['review_field_name'] ?? '' );
+		$is_skipped           = self::is_attempt_answer_skipped( $attempt_answer );
+
+		if ( $is_instructor_review && ! $is_skipped && $review_field_name ) {
+			$label_map   = wp_json_encode( $badge['label_map'] );
+			$variant_map = wp_json_encode( $badge['variant_map'] );
+			$field       = esc_attr( $review_field_name );
+
+			Badge::make()
+				->rounded()
+				->attr( 'x-text', "({$label_map})[watch('{$field}')] ?? ''" )
+				->attr( ':class', "'tutor-badge tutor-badge-rounded tutor-badge-' + (({$variant_map})[watch('{$field}')] ?? 'info')" )
+				->render();
+		} else {
+			if ( empty( $badge['label'] ) ) {
+				return;
+			}
+
+			Badge::make()
+				->label( $badge['label'] )
+				->variant( $badge['variant'] )
+				->rounded()
+				->render();
+		}
+	}
+
+	/**
+	 * Get attempt answer counts categorized by status.
+	 *
+	 * Fully correct answers are counted under 'correct' and incorrect answers under 'incorrect'.
+	 * Pending, graded, and skipped answers are excluded.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array|null $answers List of answer objects.
+	 *
+	 * @return array Associative array with answer status counts.
+	 */
+	public static function get_attempt_answer_counts( $answers ): array {
+		$counts = array(
+			'correct'   => 0,
+			'incorrect' => 0,
+		);
+
+		if ( is_array( $answers ) ) {
+			foreach ( $answers as $answer ) {
+				$status = self::get_attempt_answer_status( $answer );
+				if ( isset( $counts[ $status ] ) ) {
+					++$counts[ $status ];
+				}
+			}
 		}
 
-		return 'incorrect';
+		return apply_filters( 'tutor_quiz_attempt_answer_counts', $counts, $answers );
 	}
 
 	/**
@@ -1761,5 +1895,53 @@ class QuizModel {
 		}
 
 		return $has_access;
+	}
+
+	/**
+	 * Get the question feedback map from attempt info.
+	 *
+	 * Consistent extraction for the question_feedback map stored inside
+	 * attempt_info, keyed by attempt answer ID with a question ID fallback.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array|string $attempt_info Attempt info snapshot array or serialized string.
+	 *
+	 * @return array
+	 */
+	public static function get_attempt_feedback_map( $attempt_info ): array {
+		$attempt_info = is_array( $attempt_info ) ? $attempt_info : ( is_string( $attempt_info ) ? maybe_unserialize( $attempt_info ) : array() );
+
+		if ( ! is_array( $attempt_info ) ) {
+			return array();
+		}
+
+		$feedback_map = $attempt_info['question_feedback'] ?? array();
+
+		return is_array( $feedback_map ) ? $feedback_map : array();
+	}
+
+	/**
+	 * Get the manual overrides map from attempt info.
+	 *
+	 * Consistent extraction for the manual_overrides map stored inside
+	 * attempt_info, keyed by question ID.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array|string $attempt_info Attempt info snapshot array or serialized string.
+	 *
+	 * @return array
+	 */
+	public static function get_manual_overrides_map( $attempt_info ): array {
+		$attempt_info = is_array( $attempt_info ) ? $attempt_info : ( is_string( $attempt_info ) ? maybe_unserialize( $attempt_info ) : array() );
+
+		if ( ! is_array( $attempt_info ) ) {
+			return array();
+		}
+
+		$overrides_map = $attempt_info['manual_overrides'] ?? array();
+
+		return is_array( $overrides_map ) ? $overrides_map : array();
 	}
 }

@@ -86,6 +86,10 @@
           background-color: $tutor-icon-success-primary;
         }
 
+        &.partial::before {
+          background-color: $tutor-icon-success-primary;
+        }
+
         &.incorrect::before {
           background-color: $tutor-icon-critical;
         }

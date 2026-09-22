@@ -764,6 +764,8 @@ const styles = {
     }
   `,
   questionTypeOptionLabel: css`
+    ${typography.small('regular')};
+    color: ${colorTokens.text.hints};
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
