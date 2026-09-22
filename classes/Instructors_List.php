@@ -362,27 +362,42 @@ class Instructors_List {
 	public static function get_instructors( array $status, $offset, $per_page, $search = '', $course_id = '', $date = '', $order = 'DESC' ) {
 		global $wpdb;
 
-		$wild = '%';
+		$params        = array();
+		$search_clause = '%' . $wpdb->esc_like( $search ) . '%';
 
-		$search_clause = $wild . $wpdb->esc_like( $search ) . $wild;
+		$params[] = $search_clause;
+		$params[] = $search_clause;
+
 		$course_clause = '';
-		if ( '' !== $course_id ) {
-			$course_id     = (int) $course_id;
-			$course_clause = "AND umeta.meta_value = {$course_id}";
+		if ( '' !== $course_id && 0 !== (int) $course_id ) {
+			$course_clause = 'AND umeta.meta_value = %d';
+			$params[]      = absint( $course_id );
 		}
 
-		$order_clause = '';
-		if ( '' !== $order ) {
-			$is_valid_sql = sanitize_sql_orderby( $order );
-			if ( $is_valid_sql ) {
-				$order_clause = "ORDER BY user.ID {$order}";
+		$date_clause = '';
+		if ( '' !== $date ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $date );
+			if ( '' !== $formatted_date ) {
+				$date_clause = 'AND DATE(user.user_registered) = CAST(%s AS DATE)';
+				$params[]    = $formatted_date;
 			}
 		}
 
-		$date_clause = '' !== $date ? $wpdb->prepare( 'AND DATE(user.user_registered) = %s', $date ) : '';
-		$in_clause   = QueryHelper::prepare_in_clause( $status );
+		$order        = in_array( strtoupper( trim( $order ) ), array( 'ASC', 'DESC' ), true ) ? strtoupper( trim( $order ) ) : 'DESC';
+		$order_clause = "ORDER BY user.ID {$order}";
 
-		$query  = "SELECT
+		$status    = array_values( array_filter( array_map( 'sanitize_key', $status ) ) );
+		$in_clause = QueryHelper::prepare_in_clause( $status );
+		if ( empty( $in_clause ) ) {
+			$in_clause = "''";
+		}
+
+		$offset   = absint( $offset );
+		$per_page = absint( $per_page );
+		$params[] = $offset;
+		$params[] = $per_page;
+
+		$query = "SELECT
 					DISTINCT user.*,
 					ins_status.meta_value AS status,
 					(
@@ -415,10 +430,7 @@ class Instructors_List {
 				$result = $wpdb->get_results(
 					$wpdb->prepare(
 						$query,
-						$search_clause,
-						$search_clause,
-						$offset,
-						$per_page
+						$params
 					)
 				)
 				//phpcs:enable
@@ -446,17 +458,32 @@ class Instructors_List {
 	public static function count_total_instructors( array $status, $search = '', $course_id = '', $date = '', $unique_cache_key = '' ) {
 		global $wpdb;
 
-		$wild = '%';
+		$params        = array();
+		$search_clause = '%' . $wpdb->esc_like( $search ) . '%';
 
-		$search_clause = $wild . $wpdb->esc_like( $search ) . $wild;
+		$params[] = $search_clause;
+		$params[] = $search_clause;
+
 		$course_clause = '';
-		if ( '' !== $course_id ) {
-			$course_id     = (int) $course_id;
-			$course_clause = "AND umeta.meta_value = {$course_id}";
+		if ( '' !== $course_id && 0 !== (int) $course_id ) {
+			$course_clause = 'AND umeta.meta_value = %d';
+			$params[]      = absint( $course_id );
 		}
 
-		$date_clause = '' !== $date ? $wpdb->prepare( 'AND DATE(user.user_registered) = %s', $date ) : '';
-		$in_clause   = QueryHelper::prepare_in_clause( $status );
+		$date_clause = '';
+		if ( '' !== $date ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $date );
+			if ( '' !== $formatted_date ) {
+				$date_clause = 'AND DATE(user.user_registered) = CAST(%s AS DATE)';
+				$params[]    = $formatted_date;
+			}
+		}
+
+		$status    = array_values( array_filter( array_map( 'sanitize_key', $status ) ) );
+		$in_clause = QueryHelper::prepare_in_clause( $status );
+		if ( empty( $in_clause ) ) {
+			$in_clause = "''";
+		}
 
 		$query  = "SELECT
 					COUNT(DISTINCT user.ID)
@@ -482,8 +509,7 @@ class Instructors_List {
 				$result = $wpdb->get_var(
 					$wpdb->prepare(
 						$query,
-						$search_clause,
-						$search_clause
+						$params
 					)
 				)
 				//phpcs:enable

@@ -308,57 +308,63 @@ class CourseModel {
 		$order = 'DESC'
 	) {
 		global $wpdb;
-		$offset        = sanitize_text_field( $offset );
-		$limit         = sanitize_text_field( $limit );
+		$offset        = absint( $offset );
+		$limit         = absint( $limit );
 		$instructor_id = tutils()->get_user_id( $instructor_id );
 
 		if ( ! count( $post_types ) ) {
 			$post_types = array( tutor()->course_post_type );
 		}
 
+		$post_types = array_values( array_filter( array_map( 'sanitize_key', (array) $post_types ) ) );
 		$post_types = QueryHelper::prepare_in_clause( $post_types );
+		if ( empty( $post_types ) ) {
+			$post_types = "''";
+		}
 
-		if ( empty( $post_status ) || 'any' == $post_status ) {
+		if ( empty( $post_status ) || 'any' === $post_status ) {
 			$where_post_status = '';
 		} else {
-			! is_array( $post_status ) ? $post_status = array( $post_status ) : 0;
-			$statuses                                 = "'" . implode( "','", $post_status ) . "'";
-			$where_post_status                        = "AND $wpdb->posts.post_status IN({$statuses}) ";
+			$post_status       = array_values( array_filter( array_map( 'sanitize_key', (array) $post_status ) ) );
+			$statuses          = count( $post_status ) ? "'" . implode( "','", $post_status ) . "'" : "''";
+			$where_post_status = "AND {$wpdb->posts}.post_status IN({$statuses}) ";
 		}
+
+		$params = array(
+			$instructor_id,
+			'_tutor_instructor_course_id',
+			$instructor_id,
+			$instructor_id,
+		);
 
 		$search_sql = '';
-		if ( ! empty( $search ) ) {
+		if ( '' !== trim( $search ) ) {
 			$like       = '%' . $wpdb->esc_like( $search ) . '%';
-			$search_sql = $wpdb->prepare(
-				" AND ( {$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s ) ",
-				$like,
-				$like
-			);
+			$search_sql = " AND ( {$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s ) ";
+			$params[]   = $like;
+			$params[]   = $like;
 		}
 
-		$order     = strtoupper( $order ) === 'ASC' ? 'ASC' : 'DESC';
-		$order_sql = " ORDER BY $wpdb->posts.post_date {$order} ";
+		$order     = in_array( strtoupper( trim( $order ) ), array( 'ASC', 'DESC' ), true ) ? strtoupper( trim( $order ) ) : 'DESC';
+		$order_sql = " ORDER BY {$wpdb->posts}.post_date {$order} ";
 
-		$select_col   = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
-		$limit_offset = $count_only ? '' : " LIMIT $offset, $limit ";
+		$select_col   = $count_only ? " COUNT(DISTINCT {$wpdb->posts}.ID) " : " {$wpdb->posts}.* ";
+		$limit_offset = $count_only ? '' : " LIMIT {$offset}, {$limit} ";
 
 		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT $select_col
-			FROM $wpdb->posts
+			FROM {$wpdb->posts}
 			LEFT JOIN {$wpdb->usermeta}
-				ON $wpdb->usermeta.user_id = %d
-				AND $wpdb->usermeta.meta_key = %s
-				AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
+				ON {$wpdb->usermeta}.user_id = %d
+				AND {$wpdb->usermeta}.meta_key = %s
+				AND {$wpdb->usermeta}.meta_value = {$wpdb->posts}.ID
 			WHERE 1 = 1 {$where_post_status}
-				AND $wpdb->posts.post_type IN ({$post_types})
-				AND ($wpdb->posts.post_author = %d OR $wpdb->usermeta.user_id = %d)
+				AND {$wpdb->posts}.post_type IN ({$post_types})
+				AND ({$wpdb->posts}.post_author = %d OR {$wpdb->usermeta}.user_id = %d)
 				{$search_sql}
 			{$order_sql} {$limit_offset}",
-			$instructor_id,
-			'_tutor_instructor_course_id',
-			$instructor_id,
-			$instructor_id
+			$params
 		);
 		//phpcs:enable
 
