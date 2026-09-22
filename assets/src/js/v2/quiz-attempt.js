@@ -1,4 +1,5 @@
 import ajaxHandler from "../helper/ajax-handler";
+import tutorFormData from "../helper/tutor-formdata";
 
 /**
  * Manage quiz attempt page script
@@ -133,12 +134,12 @@ function initQuestionFeedbackHandlers(__, defaultErrorMsg) {
 
         if (!attemptId || !attemptAnswerId) return null;
 
-        const formData = new FormData();
-        formData.append('action', action);
-        formData.append('attempt_id', attemptId);
-        formData.append('attempt_answer_id', attemptAnswerId);
-        formData.append('feedback', feedback);
-        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+        const formData = tutorFormData([
+            { action },
+            { attempt_id: attemptId },
+            { attempt_answer_id: attemptAnswerId },
+            { feedback },
+        ]);
 
         button.classList.add('is-loading');
         button.setAttribute('disabled', true);

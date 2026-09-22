@@ -153,7 +153,7 @@ if ( $is_graded ) {
 						x-cloak
 					>
 						<div class="tutor-quiz-feedback-panel-header">
-							<span class="tutor-quiz-feedback-panel-title" x-text="feedback ? <?php echo esc_attr( wp_json_encode( __( 'Edit Feedback', 'tutor' ) ) ); ?> : <?php echo esc_attr( wp_json_encode( __( 'Write feedback', 'tutor' ) ) ); ?>"></span>
+							<span class="tutor-quiz-feedback-panel-title" x-text="feedback ? <?php echo esc_attr( __( 'Edit Feedback', 'tutor' ) ); ?> : <?php echo esc_attr( __( 'Write feedback', 'tutor' ) ); ?>"></span>
 						</div>
 
 						<?php

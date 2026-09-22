@@ -654,23 +654,37 @@ class Quiz_Attempts_List {
 	public static function get_quiz_attempt_summary_statics( $attempt_data, $answers ) {
 		$answer_counts = QuizModel::get_attempt_answer_counts( $answers );
 
+		/**
+		 * Build a count label with the number wrapped in markup,
+		 * keeping markup out of the translatable string.
+		 *
+		 * @param int    $count      The number to display.
+		 * @param string $translated Translated string containing a %1$s placeholder.
+		 *
+		 * @return string
+		 */
+		$format_count_label = function ( $count, $translated ) {
+			$formatted_count = '<span class="tutor-font-semibold tutor-text-primary">' . (int) $count . '</span>';
+			return sprintf( $translated, $formatted_count );
+		};
+
 		$static_items = array(
 			'correct'   => array(
 				'class' => 'correct',
-				/* translators: %d: number of correct answers. */
-				'label' => __( '<span class="tutor-font-semibold tutor-text-primary">%d</span> correct', 'tutor' ),
+				/* translators: %1$s: number of correct answers, wrapped in markup. */
+				'label' => $format_count_label( $answer_counts['correct'], __( '%1$s correct', 'tutor' ) ),
 				'count' => (int) $answer_counts['correct'],
 			),
 			'incorrect' => array(
 				'class' => 'incorrect',
-				/* translators: %d: number of incorrect answers. */
-				'label' => __( '<span class="tutor-font-semibold tutor-text-primary">%d</span> incorrect', 'tutor' ),
+				/* translators: %1$s: number of incorrect answers, wrapped in markup. */
+				'label' => $format_count_label( $answer_counts['incorrect'], __( '%1$s incorrect', 'tutor' ) ),
 				'count' => (int) $answer_counts['incorrect'],
 			),
 			'total'     => array(
 				'class' => 'total',
-				/* translators: %d: number of total questions. */
-				'label' => __( '<span class="tutor-font-semibold tutor-text-primary">%d</span> total', 'tutor' ),
+				/* translators: %1$s: total number of questions, wrapped in markup. */
+				'label' => $format_count_label( $attempt_data->total_questions, __( '%1$s total', 'tutor' ) ),
 				'count' => (int) $attempt_data->total_questions,
 			),
 		);

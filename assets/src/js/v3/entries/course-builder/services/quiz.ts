@@ -5,7 +5,14 @@ import type { AxiosResponse } from 'axios';
 import { useToast } from '@TutorShared/atoms/Toast';
 
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons, DEFAULT_QUIZ_ATTEMPTS_ALLOWED } from '@TutorShared/config/constants';
+import {
+  Addons,
+  DEFAULT_QUIZ_ATTEMPTS_ALLOWED,
+  DEFAULT_QUIZ_NEGATIVE_MARK_TYPE,
+  DEFAULT_QUIZ_NEGATIVE_MARK_VALUE,
+  QUIZ_NEGATIVE_MARK_TYPES,
+  type QuizNegativeMarkType,
+} from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
@@ -104,7 +111,7 @@ export interface QuizDetailsResponse {
     open_ended_answer_characters_limit: number;
     enable_partial_marking?: '0' | '1';
     enable_negative_marking?: '0' | '1';
-    negative_mark_type?: 'percent' | 'fixed';
+    negative_mark_type?: QuizNegativeMarkType;
     negative_mark_value?: number;
     content_drip_settings: {
       unlock_date: string;
@@ -146,7 +153,7 @@ export interface QuizForm {
     pagination_type: QuizPaginationType;
     enable_partial_marking: boolean;
     enable_negative_marking: boolean;
-    negative_mark_type: 'percent' | 'fixed';
+    negative_mark_type: QuizNegativeMarkType;
     negative_mark_value: number;
     content_drip_settings: {
       unlock_date: string;
@@ -222,9 +229,12 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       enable_negative_marking: quiz.quiz_option.enable_negative_marking === '1',
       negative_mark_type:
         quiz.quiz_option.negative_mark_type ??
-        (tutorConfig.settings?.quiz_negative_mark_type === 'fixed' ? 'fixed' : 'percent'),
+        (tutorConfig.settings?.quiz_negative_mark_type === QUIZ_NEGATIVE_MARK_TYPES.FIXED
+          ? QUIZ_NEGATIVE_MARK_TYPES.FIXED
+          : DEFAULT_QUIZ_NEGATIVE_MARK_TYPE),
       negative_mark_value:
-        quiz.quiz_option.negative_mark_value ?? Number(tutorConfig.settings?.quiz_negative_mark_value ?? 0.15),
+        quiz.quiz_option.negative_mark_value ??
+        Number(tutorConfig.settings?.quiz_negative_mark_value ?? DEFAULT_QUIZ_NEGATIVE_MARK_VALUE),
       content_drip_settings: quiz.quiz_option.content_drip_settings || {
         unlock_date: '',
         after_xdays_of_enroll: 0,

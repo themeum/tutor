@@ -43,7 +43,6 @@ class QuizModel {
 	 */
 	const ATTEMPT_ANSWER_INCORRECT = 0;
 	const ATTEMPT_ANSWER_CORRECT   = 1;
-	const ATTEMPT_ANSWER_PARTIAL   = 2;
 
 	/**
 	 * Attempt-answer status for manually graded questions.

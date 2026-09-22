@@ -16,7 +16,7 @@ import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
 
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons } from '@TutorShared/config/constants';
+import { Addons, QUIZ_NEGATIVE_MARK_TYPES } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -381,7 +381,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       validate: (value) => {
                         const numericValue = Number(value);
                         if (numericValue < 0) return __('Negative mark value cannot be less than 0', 'tutor');
-                        if (negativeMarkType === 'percent' && numericValue > 100)
+                        if (negativeMarkType === QUIZ_NEGATIVE_MARK_TYPES.PERCENT && numericValue > 100)
                           return __('Percentage penalty cannot be greater than 100', 'tutor');
                         return true;
                       },
@@ -396,7 +396,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         wrapperCss={styles.maxWidth('80px')}
                         contentCss={styles.minWidth('fit-content')}
                         formFieldWrapperCss={styles.width('auto')}
-                        content={negativeMarkType === 'percent' ? '%' : __('pts', 'tutor')}
+                        content={negativeMarkType === QUIZ_NEGATIVE_MARK_TYPES.PERCENT ? '%' : __('pts', 'tutor')}
                         contentPosition="right"
                         showVerticalBar={false}
                       />

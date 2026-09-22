@@ -1343,7 +1343,7 @@ class Quiz {
 	/**
 	 * Review quiz answers in bulk for v4 dashboard flow.
 	 *
-	 * @since 4.1.0
+	 * @since 4.0.0
 	 *
 	 * @return void
 	 */
@@ -1361,7 +1361,7 @@ class Quiz {
 	/**
 	 * Review quiz answers in bulk for v4 dashboard flow.
 	 *
-	 * @since 4.1.0
+	 * @since 4.0.0
 	 *
 	 * @param int   $attempt_id Attempt ID.
 	 * @param array $review_statuses Review statuses keyed by question ID.
@@ -1467,7 +1467,7 @@ class Quiz {
 			array( 'attempt_answer_id' => (int) $attempt_answer->attempt_answer_id )
 		);
 
-		if ( ! $answer_updated ) {
+		if ( false === $answer_updated ) {
 			return null;
 		}
 
