@@ -1281,7 +1281,7 @@ class Quiz {
 	 * Fires both hooks so graded email and feedback on-site/push notifications
 	 * stay in sync on every Submit.
 	 *
-	 * @since 4.0.0
+	 * @since 4.1.0
 	 *
 	 * @param int $attempt_id Attempt ID.
 	 *
@@ -1295,7 +1295,7 @@ class Quiz {
 	/**
 	 * Save instructor feedback for a quiz attempt.
 	 *
-	 * @since 4.0.0
+	 * @since 4.1.0
 	 *
 	 * @param int    $attempt_id Attempt ID.
 	 * @param string $feedback Feedback content.
