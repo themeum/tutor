@@ -794,10 +794,10 @@ class QuizModel {
 		$start         = absint( $start );
 		$limit         = absint( $limit );
 
-		$order_direction = in_array( strtoupper( trim( $order_filter ) ), array( 'ASC', 'DESC' ), true ) ? strtoupper( trim( $order_filter ) ) : 'DESC';
+		$order_direction = QueryHelper::get_valid_sort_order( $order_filter );
 
 		$course_ids    = array_filter( array_map( 'absint', (array) $course_ids ) );
-		$course_ids_in = count( $course_ids ) ? ' AND quiz_attempts.course_id IN (' . implode( ', ', $course_ids ) . ') ' : '';
+		$course_ids_in = count( $course_ids ) ? ' AND quiz_attempts.course_id IN (' . QueryHelper::prepare_in_clause( $course_ids ) . ') ' : '';
 
 		$search_filter   = $search_filter ? '%' . $wpdb->esc_like( $search_filter ) . '%' : '';
 		$search_term_raw = $search_filter;
