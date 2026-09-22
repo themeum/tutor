@@ -492,34 +492,27 @@ class Quiz {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$attempt_details = self::attempt_details( Input::post( 'attempt_id', 0, Input::TYPE_INT ) );
-		$feedback        = Input::post( 'feedback', '', Input::TYPE_KSES_POST );
-		$attempt_info    = isset( $attempt_details->attempt_info ) ? $attempt_details->attempt_info : false;
-		$course_id       = tutor_utils()->avalue_dot( 'course_id', $attempt_details, 0 );
-		$is_instructor   = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
+		$attempt_id    = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$feedback      = Input::post( 'feedback', '', Input::TYPE_KSES_POST );
+		$attempt_details = self::attempt_details( $attempt_id );
+		$course_id     = tutor_utils()->avalue_dot( 'course_id', $attempt_details, 0 );
+		$is_instructor = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
 		if ( ! current_user_can( 'manage_options' ) && ! $is_instructor ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		if ( $attempt_info ) {
-			//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
-			$unserialized = unserialize( $attempt_details->attempt_info );
-			if ( is_array( $unserialized ) ) {
-				$unserialized['instructor_feedback'] = $feedback;
-
-				//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-				$update = self::update_attempt_info( $attempt_details->attempt_id, serialize( $unserialized ) );
-				if ( $update ) {
-					do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_details->attempt_id );
-					wp_send_json_success();
-				} else {
-					wp_send_json_error();
-				}
-			} else {
-				wp_send_json_error( __( 'Invalid quiz info', 'tutor' ) );
-			}
+		if ( ! $attempt_details ) {
+			wp_send_json_error();
 		}
-		wp_send_json_error();
+
+		$this->save_instructor_feedback( $attempt_id, $feedback );
+
+		/**
+		 * Always notify on Submit — including when only answer reviews changed
+		 * and feedback text is unchanged.
+		 */
+		$this->notify_quiz_attempt_graded( $attempt_id );
+		wp_send_json_success();
 	}
 
 	/**
@@ -1201,26 +1194,30 @@ class Quiz {
 
 		$attempt_id      = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$review_statuses = Input::post( 'review_statuses', array(), Input::TYPE_ARRAY );
+		$feedback        = Input::has( 'feedback' ) ? Input::post( 'feedback', '', Input::TYPE_KSES_POST ) : null;
 
-		$this->review_quiz_answers_bulk( $attempt_id, $review_statuses );
+		$this->review_quiz_answers_bulk( $attempt_id, $review_statuses, $feedback );
 	}
 
 	/**
 	 * Review quiz answers in bulk for v4 dashboard flow.
 	 *
 	 * @since 4.0.0
+	 * @since 4.0.0 Accepts optional instructor feedback and fires graded hook once per Update.
 	 *
-	 * @param int   $attempt_id Attempt ID.
-	 * @param array $review_statuses Review statuses keyed by question ID.
+	 * @param int         $attempt_id Attempt ID.
+	 * @param array       $review_statuses Review statuses keyed by question ID.
+	 * @param string|null $feedback Optional instructor feedback. Null means leave unchanged.
 	 *
 	 * @return void
 	 */
-	private function review_quiz_answers_bulk( int $attempt_id, array $review_statuses ) {
+	private function review_quiz_answers_bulk( int $attempt_id, array $review_statuses, $feedback = null ) {
 		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
 			$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
 		}
 
-		$attempt_answers        = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
+		$has_review_updates = false;
+		$attempt_answers    = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 		$answers_by_question_id = array();
 
 		if ( is_array( $attempt_answers ) ) {
@@ -1251,12 +1248,78 @@ class Quiz {
 				continue;
 			}
 
-			$this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
+			$review_data = $this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
+			if ( $review_data ) {
+				$has_review_updates = true;
+			}
 		}
 
-		QuizModel::update_attempt_result( $attempt_id );
+		if ( $has_review_updates ) {
+			QuizModel::update_attempt_result( $attempt_id );
+		}
+
+		$feedback_updated = false;
+		if ( null !== $feedback ) {
+			$feedback_updated = $this->save_instructor_feedback( $attempt_id, $feedback );
+		}
+
+		if ( ! $has_review_updates && ! $feedback_updated ) {
+			$this->response_fail( __( 'No changes to update', 'tutor' ) );
+		}
+
+		/**
+		 * Fire after instructor clicks Submit — graded email + on-site/push notifications.
+		 */
+		$this->notify_quiz_attempt_graded( $attempt_id );
 
 		$this->response_success( __( 'Review updated successfully', 'tutor' ) );
+	}
+
+	/**
+	 * Notify listeners that a quiz attempt was graded/submitted by instructor.
+	 *
+	 * Fires both hooks so graded email and feedback on-site/push notifications
+	 * stay in sync on every Submit.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return void
+	 */
+	private function notify_quiz_attempt_graded( int $attempt_id ): void {
+		do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_id );
+		do_action( 'tutor_quiz/attempt/graded', $attempt_id );
+	}
+
+	/**
+	 * Save instructor feedback for a quiz attempt.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int    $attempt_id Attempt ID.
+	 * @param string $feedback Feedback content.
+	 *
+	 * @return bool
+	 */
+	private function save_instructor_feedback( int $attempt_id, string $feedback ): bool {
+		$attempt_details = self::attempt_details( $attempt_id );
+		if ( ! $attempt_details || empty( $attempt_details->attempt_info ) ) {
+			return false;
+		}
+
+		//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+		$unserialized = unserialize( $attempt_details->attempt_info );
+		if ( ! is_array( $unserialized ) ) {
+			return false;
+		}
+
+		$unserialized['instructor_feedback'] = $feedback;
+
+		//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+		$update = self::update_attempt_info( $attempt_id, serialize( $unserialized ) );
+
+		return (bool) $update;
 	}
 
 	/**
