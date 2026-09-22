@@ -3251,7 +3251,7 @@ class Utils {
 		} elseif ( 'popular' === $order_filter ) {
 			$order_query = ' ORDER BY rating DESC ';
 		} else {
-			$order_direction = in_array( strtoupper( trim( $order_filter ) ), array( 'ASC', 'DESC' ), true ) ? strtoupper( trim( $order_filter ) ) : 'DESC';
+			$order_direction = QueryHelper::get_valid_sort_order( $order_filter );
 			$order_query     = " ORDER BY user_meta.meta_value {$order_direction} ";
 		}
 
@@ -4178,7 +4178,7 @@ class Utils {
 			$course_ids    = is_array( $course_id ) ? $course_id : array( $course_id );
 			$course_ids    = array_filter( array_map( 'absint', $course_ids ) );
 			if ( ! empty( $course_ids ) ) {
-				$course_ids_str = implode( ',', $course_ids );
+				$course_ids_str = QueryHelper::prepare_in_clause( $course_ids );
 				$course_filter  = " AND _comment.comment_post_ID IN ($course_ids_str)";
 			}
 		}
