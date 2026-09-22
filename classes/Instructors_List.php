@@ -383,7 +383,7 @@ class Instructors_List {
 			}
 		}
 
-		$order        = in_array( strtoupper( trim( $order ) ), array( 'ASC', 'DESC' ), true ) ? strtoupper( trim( $order ) ) : 'DESC';
+		$order        = QueryHelper::get_valid_sort_order( $order );
 		$order_clause = "ORDER BY user.ID {$order}";
 
 		$status    = array_values( array_filter( array_map( 'sanitize_key', $status ) ) );

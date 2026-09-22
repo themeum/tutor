@@ -345,7 +345,7 @@ class CourseModel {
 			$params[]   = $like;
 		}
 
-		$order     = in_array( strtoupper( trim( $order ) ), array( 'ASC', 'DESC' ), true ) ? strtoupper( trim( $order ) ) : 'DESC';
+		$order     = QueryHelper::get_valid_sort_order( $order );
 		$order_sql = " ORDER BY {$wpdb->posts}.post_date {$order} ";
 
 		$select_col   = $count_only ? " COUNT(DISTINCT {$wpdb->posts}.ID) " : " {$wpdb->posts}.* ";
