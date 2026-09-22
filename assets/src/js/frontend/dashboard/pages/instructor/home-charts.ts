@@ -70,34 +70,31 @@ const CHART_CONFIG = {
     overviewMaxHeight: 179,
     completionMaxHeight: 118,
   },
-
   aspectRatio: {
     overview: 3,
   },
-
   point: {
     radius: 4,
     hoverRadius: 6,
     borderWidth: 2,
     hoverBorderWidth: 3,
   },
-
   line: {
     width: 1.3,
     tension: 0.4,
   },
-
   bar: {
     thickness: 118,
     borderRadius: 5,
     borderWidth: 3,
   },
-
+  completionSegment: {
+    minWidth: 16,
+  },
   gradient: {
     topOffset: -0.95,
     opacity: 0.9,
   },
-
   tooltip: {
     fontSize: '10px',
     lineHeight: '1.6',
@@ -111,7 +108,6 @@ const CHART_CONFIG = {
     barOffsetX: 6,
     lineOffsetX: 12,
   },
-
   common: {
     devicePixelRatio: () => window.devicePixelRatio || 2,
     responsive: true,
@@ -179,6 +175,22 @@ const getCompletionChartAnimation = (): { duration: 0 } | Record<string, unknown
       },
     },
   };
+};
+
+const applyMinSegmentWidth = (values: readonly number[], minWidth: number, canvas?: HTMLCanvasElement): number[] => {
+  const total = values.reduce((sum, value) => sum + value, 0);
+  const canvasWidth = canvas?.clientWidth || 0;
+  const minValue = (minWidth / canvasWidth) * total;
+  const activeCount = values.filter((value) => value > 0).length;
+
+  if (total <= 0 || minValue <= 0 || activeCount * minValue >= total) {
+    return [...values];
+  }
+
+  const padded = values.map((value) => (value > 0 ? Math.max(value, minValue) : 0));
+  const paddedTotal = padded.reduce((sum, value) => sum + value, 0);
+
+  return padded.map((value) => (value / paddedTotal) * total);
 };
 
 const createChart = (canvas: HTMLCanvasElement, config: ChartConfiguration): void => {
@@ -808,13 +820,15 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
   createChartConfig(data: CourseCompletionChartData): ChartConfiguration<'bar'> {
     const colors = extractCompletionChartColors(this.$refs.canvas);
 
-    const chartData = [
+    const rawValues = [
       data.enrolled.value,
       data.completed.value,
       data.in_progress.value,
       data.inactive.value,
       data.cancelled.value,
     ];
+
+    const chartData = applyMinSegmentWidth(rawValues, CHART_CONFIG.completionSegment.minWidth, this.$refs.canvas);
 
     const chartColors = [colors.enrolled, colors.completed, colors.in_progress, colors.inactive, colors.cancelled];
     const dataKeys: CourseCompletionChartDataKey[] = ['enrolled', 'completed', 'in_progress', 'inactive', 'cancelled'];
@@ -870,7 +884,7 @@ export const courseCompletionChart = (data: CourseCompletionChartData) => ({
                 return data[dataKeys[item.datasetIndex]]?.label || '';
               },
               label: (item) => {
-                const value = item.raw as number;
+                const value = rawValues[item.datasetIndex] ?? 0;
                 return `${value}`;
               },
             },

@@ -38,11 +38,6 @@ interface QuizAttemptFeedbackResponse<TData = unknown> {
   data?: TData;
 }
 
-interface QuizAttemptSubmitResponse {
-  reviewResponse: QuizAttemptFeedbackResponse | null;
-  feedbackResponse: QuizAttemptFeedbackResponse | null;
-}
-
 const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) => {
   const { query, toast, endpoints, form } = window.TutorCore;
   const { wpPost } = window.TutorCore.api;
@@ -119,7 +114,7 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
   return {
     formId,
     attemptId,
-    feedbackMutation: null as MutationState<QuizAttemptSubmitResponse, QuizAttemptFeedbackPayload> | null,
+    feedbackMutation: null as MutationState<QuizAttemptFeedbackResponse, QuizAttemptFeedbackPayload> | null,
     _destroy: () => {},
 
     init() {
@@ -184,38 +179,34 @@ const quizAttemptFeedback = ({ attemptId, formId }: QuizAttemptFeedbackProps) =>
         );
       }
 
-      const reviewStatusesPayload = getReviewStatusesPayload(payload.review_statuses);
-      const manualMarksPayload = getManualMarksPayload(payload.manual_marks);
-      const questionFeedbackPayload = getQuestionFeedbackPayload(payload.question_feedback);
+      const payloadHasReviewUpdates = feedbackDirty || reviewStatusesDirty || manualMarksDirty || questionFeedbackDirty;
 
-      const hasReviewPayload =
-        Object.keys(reviewStatusesPayload).length > 0 ||
-        Object.keys(manualMarksPayload).length > 0 ||
-        Object.keys(questionFeedbackPayload).length > 0;
+      if (!payloadHasReviewUpdates) {
+        throw new Error(__('No changes to update', 'tutor'));
+      }
 
-      const reviewRequest =
-        (reviewStatusesDirty || manualMarksDirty || questionFeedbackDirty) && hasReviewPayload
-          ? wpPost<QuizAttemptFeedbackResponse>(endpoints.REVIEW_QUIZ_ANSWERS, {
-              attempt_id: payload.attempt_id,
-              ...reviewStatusesPayload,
-              ...manualMarksPayload,
-              ...questionFeedbackPayload,
-            })
-          : Promise.resolve(null);
-
-      const feedbackRequest = feedbackDirty
-        ? wpPost<QuizAttemptFeedbackResponse>(endpoints.INSTRUCTOR_FEEDBACK, {
-            attempt_id: payload.attempt_id,
-            feedback: payload.feedback,
-          })
-        : Promise.resolve(null);
-
-      const [reviewResponse, feedbackResponse] = await Promise.all([reviewRequest, feedbackRequest]);
-
-      return {
-        reviewResponse,
-        feedbackResponse,
+      const requestPayload: Record<string, unknown> = {
+        attempt_id: payload.attempt_id,
       };
+
+      if (reviewStatusesDirty) {
+        Object.assign(requestPayload, getReviewStatusesPayload(payload.review_statuses));
+      }
+
+      if (manualMarksDirty) {
+        Object.assign(requestPayload, getManualMarksPayload(payload.manual_marks));
+      }
+
+      if (questionFeedbackDirty) {
+        Object.assign(requestPayload, getQuestionFeedbackPayload(payload.question_feedback));
+      }
+
+      if (feedbackDirty) {
+        requestPayload.feedback = payload.feedback;
+      }
+
+      // Single request so the graded email is sent once per Submit click.
+      return wpPost<QuizAttemptFeedbackResponse>(endpoints.REVIEW_QUIZ_ANSWERS, requestPayload);
     },
 
     async handleSaveFeedback(data: Record<string, unknown>) {
