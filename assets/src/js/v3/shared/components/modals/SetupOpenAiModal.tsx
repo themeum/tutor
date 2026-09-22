@@ -101,24 +101,106 @@ const SetupOpenAiModal = ({ closeModal, image, image2x, isImage }: SetupOpenAiMo
 
               <div>
                 <div css={styles.message}>{__('API is not connected', __TUTOR_TEXT_DOMAIN__)}</div>
-                {isWpAiSupported ? (
+                <Show
+                  when={isWpAiSupported}
+                  fallback={
+                    <div css={styles.title}>
+                      {__('Please, ask your Admin to connect the API with Tutor LMS Pro.', __TUTOR_TEXT_DOMAIN__)}
+                    </div>
+                  }
+                >
                   <div css={{ marginTop: spacing[12] }}>
                     <Alert type="warning" icon="warning">
                       {isImage
-                        ? __('Please ask your Admin to configure an image-capable AI connector in WordPress Settings > Connectors.', __TUTOR_TEXT_DOMAIN__)
-                        : __('Please ask your Admin to configure an AI connector in WordPress Settings > Connectors.', __TUTOR_TEXT_DOMAIN__)}
+                        ? __(
+                            'Please ask your Admin to configure an image-capable AI connector in WordPress Settings > Connectors.',
+                            __TUTOR_TEXT_DOMAIN__,
+                          )
+                        : __(
+                            'Please ask your Admin to configure an AI connector in WordPress Settings > Connectors.',
+                            __TUTOR_TEXT_DOMAIN__,
+                          )}
                     </Alert>
                   </div>
-                ) : (
-                  <div css={styles.title}>
-                    {__('Please, ask your Admin to connect the API with Tutor LMS Pro.', __TUTOR_TEXT_DOMAIN__)}
-                  </div>
-                )}
+                </Show>
               </div>
             </>
           }
         >
-          {isWpAiSupported ? (
+          <Show
+            when={isWpAiSupported}
+            fallback={
+              <>
+                <form css={styles.formWrapper} onSubmit={form.handleSubmit(handleSubmit)}>
+                  <div css={styles.infoText}>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        /* translators: %1$s and %2$s are opening and closing anchor tags for the "OpenAI User settings" link */
+                        __html: sprintf(
+                          __(
+                            'Find your Secret API key in your %1$sOpenAI User settings%2$s and paste it here to connect OpenAI with your Tutor LMS website.',
+                            __TUTOR_TEXT_DOMAIN__,
+                          ),
+                          `<a href="${config.CHATGPT_PLATFORM_URL}" target="_blank" rel="noopener noreferrer">`,
+                          '</a>',
+                        ),
+                      }}
+                    ></div>
+
+                    <Alert type="info" icon="warning">
+                      {__(
+                        'The page will reload after submission. Make sure to save the course information.',
+                        __TUTOR_TEXT_DOMAIN__,
+                      )}
+                    </Alert>
+                  </div>
+
+                  <Controller
+                    name="openAIApiKey"
+                    control={form.control}
+                    rules={requiredRule()}
+                    render={(controllerProps) => (
+                      <FormInput
+                        {...controllerProps}
+                        type="password"
+                        isPassword
+                        label={__('OpenAI API key', __TUTOR_TEXT_DOMAIN__)}
+                        placeholder={__('Enter your OpenAI API key', __TUTOR_TEXT_DOMAIN__)}
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="enable_open_ai"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormSwitch {...controllerProps} label={__('Enable OpenAI', __TUTOR_TEXT_DOMAIN__)} />
+                    )}
+                  />
+                </form>
+                <div css={styles.formFooter}>
+                  <Button
+                    onClick={() =>
+                      closeModal({
+                        action: 'CLOSE',
+                      })
+                    }
+                    variant="text"
+                    size="small"
+                  >
+                    {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={form.handleSubmit(handleSubmit)}
+                    loading={saveOpenAiSettingsMutation.isPending}
+                  >
+                    {__('Save', __TUTOR_TEXT_DOMAIN__)}
+                  </Button>
+                </div>
+              </>
+            }
+          >
             <div css={styles.formWrapper}>
               <Alert type="warning" icon="warning">
                 {isImage
@@ -154,77 +236,7 @@ const SetupOpenAiModal = ({ closeModal, image, image2x, isImage }: SetupOpenAiMo
                 </Button>
               </div>
             </div>
-          ) : (
-            <>
-              <form css={styles.formWrapper} onSubmit={form.handleSubmit(handleSubmit)}>
-                <div css={styles.infoText}>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      /* translators: %1$s and %2$s are opening and closing anchor tags for the "OpenAI User settings" link */
-                      __html: sprintf(
-                        __(
-                          'Find your Secret API key in your %1$sOpenAI User settings%2$s and paste it here to connect OpenAI with your Tutor LMS website.',
-                          __TUTOR_TEXT_DOMAIN__,
-                        ),
-                        `<a href="${config.CHATGPT_PLATFORM_URL}" target="_blank" rel="noopener noreferrer">`,
-                        '</a>',
-                      ),
-                    }}
-                  ></div>
-
-                  <Alert type="info" icon="warning">
-                    {__(
-                      'The page will reload after submission. Make sure to save the course information.',
-                      __TUTOR_TEXT_DOMAIN__,
-                    )}
-                  </Alert>
-                </div>
-
-                <Controller
-                  name="openAIApiKey"
-                  control={form.control}
-                  rules={requiredRule()}
-                  render={(controllerProps) => (
-                    <FormInput
-                      {...controllerProps}
-                      type="password"
-                      isPassword
-                      label={__('OpenAI API key', __TUTOR_TEXT_DOMAIN__)}
-                      placeholder={__('Enter your OpenAI API key', __TUTOR_TEXT_DOMAIN__)}
-                    />
-                  )}
-                />
-
-                <Controller
-                  name="enable_open_ai"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormSwitch {...controllerProps} label={__('Enable OpenAI', __TUTOR_TEXT_DOMAIN__)} />
-                  )}
-                />
-              </form>
-              <div css={styles.formFooter}>
-                <Button
-                  onClick={() =>
-                    closeModal({
-                      action: 'CLOSE',
-                    })
-                  }
-                  variant="text"
-                  size="small"
-                >
-                  {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
-                </Button>
-                <Button
-                  size="small"
-                  onClick={form.handleSubmit(handleSubmit)}
-                  loading={saveOpenAiSettingsMutation.isPending}
-                >
-                  {__('Save', __TUTOR_TEXT_DOMAIN__)}
-                </Button>
-              </div>
-            </>
-          )}
+          </Show>
         </Show>
       </div>
     </BasicModalWrapper>
