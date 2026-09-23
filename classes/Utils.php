@@ -4023,10 +4023,13 @@ class Utils {
 			$where_clause = '_reviews.comment_post_ID = %d';
 		}
 
-		$limit_offset    = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
-		$status_in       = '"' . implode( '","', $status_in ) . '"';
-		$include_user_id = is_array( $include_user_id ) ? $include_user_id : array( $include_user_id );
-		$include_user_id = implode( ',', $include_user_id );
+		$start           = absint( $start );
+		$limit           = absint( $limit );
+		$limit_offset    = $count_only ? '' : " LIMIT {$limit} OFFSET {$start} ";
+		$status_in       = array_values( array_filter( array_map( 'sanitize_key', (array) $status_in ) ) );
+		$status_in_str   = count( $status_in ) ? QueryHelper::prepare_in_clause( $status_in ) : "''";
+		$include_user_id = array_values( array_filter( array_map( 'absint', (array) $include_user_id ) ) );
+		$user_id_in_str  = count( $include_user_id ) ? QueryHelper::prepare_in_clause( $include_user_id ) : '0';
 
 		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
 		'_reviews.comment_ID,
@@ -4050,7 +4053,7 @@ class Utils {
 						ON _reviews.user_id = _reviewer.ID
 			WHERE 	{$where_clause}
 					AND _reviews.comment_type = 'tutor_course_rating' 
-					AND (_reviews.comment_approved IN ({$status_in}) OR _reviews.user_id IN ({$include_user_id}))
+					AND (_reviews.comment_approved IN ({$status_in_str}) OR _reviews.user_id IN ({$user_id_in_str}))
 					AND _rev_meta.meta_key = 'tutor_rating'
 			ORDER BY _reviews.comment_ID DESC {$limit_offset}",
 			$object_id
@@ -4630,6 +4633,8 @@ class Utils {
 		// Sanitize args before process.
 		$args = Input::sanitize_array( $args );
 
+		$params = array( $search_term );
+
 		if ( ! $user_id && ! $asker_id && null === $question_id && empty( $args['course_id'] ) ) {
 			return $count_only ? 0 : array();
 		}
@@ -4639,7 +4644,7 @@ class Utils {
 		 * User query.
 		 */
 		if ( $asker_id ) {
-			$question_clause .= ' AND _question.user_id=' . (int) $asker_id;
+			$question_clause .= ' AND _question.user_id=' . absint( $asker_id );
 		}
 
 		if ( ! $user_id ) {
@@ -4648,31 +4653,32 @@ class Utils {
 
 		if ( isset( $args['course_id'] ) ) {
 			// Get qa for specific course.
-			$args['course_id']   = intval( $args['course_id'] );
+			$args['course_id']   = absint( $args['course_id'] );
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
 		} elseif ( ! $asker_id && null === $question_id && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
 			// If current user is simple instructor (non admin), then get qa from their courses only.
-			$my_course_ids       = $this->get_course_id_by( 'instructor', $user_id );
-			$in_ids              = count( $my_course_ids ) ? implode( ',', $my_course_ids ) : '0';
+			$my_course_ids       = array_filter( array_map( 'absint', (array) $this->get_course_id_by( 'instructor', $user_id ) ) );
+			$in_ids              = count( $my_course_ids ) ? QueryHelper::prepare_in_clause( $my_course_ids ) : '0';
 			$in_course_id_query .= " AND _question.comment_post_ID IN($in_ids) ";
 		}
 
 		// Add more filters to the query.
 		if ( isset( $args['course-id'] ) && is_numeric( $args['course-id'] ) ) {
-			$filter_clause .= ' AND _course.ID=' . $args['course-id'];
+			$filter_clause .= ' AND _course.ID=' . absint( $args['course-id'] );
 		}
 
-		if ( isset( $args['date'] ) ) {
-			$date           = esc_sql( $args['date'] );
-			$filter_clause .= ' AND DATE(_question.comment_date)=\'' . $date . '\'';
+		if ( ! empty( $args['date'] ) ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $args['date'] );
+			if ( '' !== $formatted_date ) {
+				$filter_clause .= ' AND DATE(_question.comment_date) = CAST(%s AS DATE)';
+				$params[]       = $formatted_date;
+			}
 		}
 
 		if ( isset( $args['order'] ) ) {
-			$order = strtolower( $args['order'] );
-			if ( 'asc' === $order || 'desc' === $order ) {
-				$order_condition = ' ORDER BY _question.comment_ID ' . $order . ' ';
-			}
+			$order           = QueryHelper::get_valid_sort_order( $args['order'] );
+			$order_condition = " ORDER BY _question.comment_ID {$order} ";
 		}
 
 		// Meta query.
@@ -4730,7 +4736,9 @@ class Utils {
 						WHERE 	answers_t.comment_parent = _question.comment_ID
 					) AS answer_count";
 
-		$limit_offset = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
+		$start        = absint( $start );
+		$limit        = absint( $limit );
+		$limit_offset = $count_only ? '' : " LIMIT {$limit} OFFSET {$start} ";
 
 		$query = $wpdb->prepare(
 			"SELECT  {$columns_select}
@@ -4753,7 +4761,7 @@ class Utils {
 					{$filter_clause}
 			{$order_condition}
 			{$limit_offset}",
-			$search_term
+			$params
 		);
 		if ( $count_only ) {
 			return $wpdb->get_var( $query );
@@ -4770,7 +4778,7 @@ class Utils {
 
 		// Assign meta data.
 		if ( count( $question_ids ) ) {
-			$q_ids      = implode( ',', $question_ids );
+			$q_ids      = QueryHelper::prepare_in_clause( array_map( 'absint', $question_ids ) );
 			$meta_array = $wpdb->get_results(
 				"SELECT comment_id, meta_key, meta_value
 				FROM {$wpdb->commentmeta}

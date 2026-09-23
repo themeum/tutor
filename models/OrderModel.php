@@ -1028,7 +1028,6 @@ class OrderModel {
 	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, $order_status = '', int $user_id = 0, $limit = 10, int $offset = 0, $order = 'DESC', $args = array() ) {
 		$user_id           = tutor_utils()->get_user_id( $user_id );
 		$order             = QueryHelper::get_valid_sort_order( $order );
-		$order_status      = esc_sql( $order_status );
 		$order_type_clause = '';
 
 		$response = array(
@@ -1038,12 +1037,19 @@ class OrderModel {
 
 		global $wpdb;
 
+		$params              = array( $user_id );
 		$time_period_clause  = '';
 		$date_range_clause   = '';
-		$order_status_clause = ( empty( $order_status ) || 'all' === $order_status ) ? '' : "AND o.order_status = '{$order_status}'";
+		$order_status_clause = '';
 
 		if ( $start_date && $end_date ) {
-			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
+			$formatted_start = tutor_get_formated_date( 'Y-m-d', $start_date );
+			$formatted_end   = tutor_get_formated_date( 'Y-m-d', $end_date );
+			if ( '' !== $formatted_start && '' !== $formatted_end ) {
+				$date_range_clause = 'AND DATE(created_at_gmt) BETWEEN CAST(%s AS DATE) AND CAST(%s AS DATE)';
+				$params[]          = $formatted_start;
+				$params[]          = $formatted_end;
+			}
 		} elseif ( $time_period ) {
 			if ( 'today' === $time_period ) {
 				$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
@@ -1054,16 +1060,26 @@ class OrderModel {
 			}
 		}
 
-		if ( ! empty( $args['order_type'] ) ) {
-			$order_type_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'o.order_type' => esc_sql( $args['order_type'] ) ) );
+		if ( ! empty( $order_status ) && 'all' !== $order_status ) {
+			$order_status_clause = 'AND o.order_status = %s';
+			$params[]            = sanitize_key( $order_status );
 		}
+
+		if ( ! empty( $args['order_type'] ) ) {
+			$order_type_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'o.order_type' => sanitize_key( $args['order_type'] ) ) );
+		}
+
+		$limit    = absint( $limit );
+		$offset   = absint( $offset );
+		$params[] = $limit;
+		$params[] = $offset;
 
 		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT
 				SQL_CALC_FOUND_ROWS
 				o.* 
-				FROM $this->table_name AS o
+				FROM {$this->table_name} AS o
 				WHERE o.user_id = %d
 				{$order_type_clause}
 				{$time_period_clause}
@@ -1072,9 +1088,7 @@ class OrderModel {
 				ORDER BY o.id {$order}
 				LIMIT %d OFFSET %d
 			",
-			$user_id,
-			$limit,
-			$offset
+			$params
 		);
 
 		$results = $wpdb->get_results( $query );
