@@ -10231,14 +10231,35 @@ class Utils {
 	 */
 	public function upload_base64_image( $base64_image_str, $filename = null, $add_to_wp_media = true ) {
 		try {
-			$arr = explode( ',', $base64_image_str, 2 );
-			if ( ! isset( $arr[1] ) ) {
+			$image_data = null;
+
+			// Handle remote URLs.
+			if ( preg_match( '/^https?:\/\//i', $base64_image_str ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+				$temp_file = download_url( $base64_image_str );
+				if ( is_wp_error( $temp_file ) ) {
+					throw new \Exception( $temp_file->get_error_message() );
+				}
+				$image_data = file_get_contents( $temp_file );
+				@unlink( $temp_file );
+			} else {
+				$arr = explode( ',', $base64_image_str, 2 );
+				if ( isset( $arr[1] ) ) {
+					$image_data = base64_decode( $arr[1] );
+				} elseif ( ! empty( $base64_image_str ) && false !== base64_decode( $base64_image_str, true ) ) {
+					// Raw base64 string without data: prefix.
+					$image_data = base64_decode( $base64_image_str );
+				} else {
+					throw new \Exception( 'Invalid base64 string' );
+				}
+			}
+
+			if ( empty( $image_data ) ) {
 				throw new \Exception( 'Invalid base64 string' );
 			}
 
-			$filename   = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
-			$image_data = base64_decode( $arr[1] );
-			$uploaded   = wp_upload_bits( $filename, null, $image_data );
+			$filename = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
+			$uploaded = wp_upload_bits( $filename, null, $image_data );
 
 			if ( ! empty( $uploaded['error'] ) ) {
 				throw new \Exception( $uploaded['error'] );
