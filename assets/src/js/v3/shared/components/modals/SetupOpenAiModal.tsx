@@ -209,7 +209,7 @@ const SetupOpenAiModal = ({ closeModal, image, image2x, isImage }: SetupOpenAiMo
                       __TUTOR_TEXT_DOMAIN__,
                     )
                   : __(
-                      'No AI connector is configured. WordPress uses AI Connectors to integrate with AI providers like OpenAI, Anthropic Claude, Google Gemini, and others. Please configure at least one AI connector in WordPress Settings > Connectors to use AI features in Tutor LMS.',
+                      'No AI connector is configured yet. To use AI features in Tutor LMS, set up at least one connector such as OpenAI, Anthropic, or Google Gemini from WordPress Settings > Connectors.',
                       __TUTOR_TEXT_DOMAIN__,
                     )}
               </Alert>
@@ -232,7 +232,7 @@ const SetupOpenAiModal = ({ closeModal, image, image2x, isImage }: SetupOpenAiMo
                     window.open(connectorsAdminUrl, '_blank');
                   }}
                 >
-                  {__('Configure Connectors in Settings', __TUTOR_TEXT_DOMAIN__)}
+                  {__('Configure Connectors', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
               </div>
             </div>
