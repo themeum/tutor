@@ -1109,7 +1109,7 @@ class Quiz {
 
 			$attempt_info = array(
 				'total_answered_questions' => tutor_utils()->count( $quiz_answers ),
-				'earned_marks'             => $total_marks,
+				'earned_marks'             => max( 0.0, $total_marks ),
 				'attempt_status'           => QuizModel::ATTEMPT_ENDED,
 				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 			);
