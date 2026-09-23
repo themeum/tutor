@@ -231,7 +231,8 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
         quiz.quiz_option.negative_mark_type ??
         (tutorConfig.settings?.quiz_negative_mark_type === QUIZ_NEGATIVE_MARK_TYPES.FIXED
           ? QUIZ_NEGATIVE_MARK_TYPES.FIXED
-          : DEFAULT_QUIZ_NEGATIVE_MARK_TYPE),
+          : QUIZ_NEGATIVE_MARK_TYPES.PERCENT) ??
+        DEFAULT_QUIZ_NEGATIVE_MARK_TYPE,
       negative_mark_value:
         quiz.quiz_option.negative_mark_value ??
         Number(tutorConfig.settings?.quiz_negative_mark_value ?? DEFAULT_QUIZ_NEGATIVE_MARK_VALUE),
