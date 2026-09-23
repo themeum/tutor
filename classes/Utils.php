@@ -7341,6 +7341,8 @@ class Utils {
 	 * Get students list based on course id
 	 *
 	 * @since 1.6.6
+	 * @since 4.1.0 Query refactored to use Tutor\Helpers\QueryHelper and
+	 *              `tutor_students_data_by_course_id_query_args` filter added to extend the query clause.
 	 *
 	 * @param integer $course_id course id.
 	 * @param string  $field_name field name.
@@ -7350,24 +7352,43 @@ class Utils {
 	 */
 	public function get_students_data_by_course_id( $course_id = 0, $field_name = 'ID', $all = false ) {
 
-		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 
-		$student_data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT student.{$field_name}, student.display_name as display_name, student.user_login as username, student.user_email
-			FROM   	{$wpdb->posts} enrol
-					INNER JOIN {$wpdb->users} student
-						    ON enrol.post_author = student.id
-			WHERE  	enrol.post_type = %s
-					AND enrol.post_parent = %d
-					AND enrol.post_status = %s;
-			",
-				'tutor_enrolled',
-				$course_id,
-				'completed'
-			)
+		$query_args = array(
+			'select' => "student.{$field_name}, student.display_name as display_name, student.user_login as username, student.user_email",
+			'alias'  => 'enrol',
+			'where'  => array(
+				'enrol.post_type'   => 'tutor_enrolled',
+				'enrol.post_parent' => $course_id,
+				'enrol.post_status' => 'completed',
+			),
+			'joins'  => array(
+				array(
+					'type'  => 'INNER',
+					'table' => 'users AS student',
+					'on'    => 'enrol.post_author = student.id',
+				),
+			),
 		);
+
+		/**
+		 * Filter the QueryHelper args used to fetch students of a course.
+		 *
+		 * Addons can modify the query clause (select, joins, where, groupby)
+		 * to extend the result without running an extra query.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array $query_args QueryHelper::query() arguments.
+		 * @param int   $course_id course id.
+		 */
+		$query_args = apply_filters( 'tutor_students_data_by_course_id_query_args', $query_args, $course_id );
+
+		$student_data = QueryHelper::query(
+			'posts',
+			$query_args
+		);
+
 		if ( $all ) {
 			return $student_data;
 		}
