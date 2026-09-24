@@ -86,19 +86,20 @@ const styles = {
   contentBox: (placement: Placement) => css`
     max-width: 250px;
     width: 100%;
-    background-color: ${colorTokens.color.black.main};
+    background-color: ${colorTokens.background.dark10};
     color: ${colorTokens.text.white};
     border-radius: ${borderRadius[6]};
     padding: ${spacing[4]} ${spacing[8]};
     font-size: ${fontSize[15]};
     line-height: ${lineHeight[20]};
     position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 
     &::before {
       content: '';
       height: 8px;
       width: 8px;
-      background-color: ${colorTokens.color.black.main};
+      background-color: ${colorTokens.background.dark10};
       position: absolute;
       bottom: -4px;
       left: 50%;

@@ -1,6 +1,5 @@
 import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import rgba from 'polished/lib/color/rgba';
 
 import type { ButtonSize } from '@TutorShared/atoms/Button';
 import Button from '@TutorShared/atoms/Button';
@@ -235,7 +234,7 @@ const styles = {
     opacity: 0;
     position: absolute;
     inset: 0;
-    background-color: ${rgba(colorTokens.color.black.main, 0.6)};
+    background-color: rgba(17, 18, 19, 0.6);
 
     button:first-of-type {
       box-shadow: ${shadow.button};

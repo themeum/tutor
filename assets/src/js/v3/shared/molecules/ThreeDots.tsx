@@ -1,6 +1,5 @@
 import React, { type MouseEvent, type ReactNode, useRef } from 'react';
 import { css, type SerializedStyles } from '@emotion/react';
-import rgba from 'polished/lib/color/rgba';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
@@ -205,7 +204,7 @@ const styles = {
 
       &:hover:not(:disabled) {
         color: ${colorTokens.text.error};
-        background-color: ${rgba(colorTokens.bg.error, 0.1)};
+        background-color: color-mix(in srgb, ${colorTokens.bg.error} 10%, transparent);
 
         svg {
           color: ${colorTokens.icon.error};

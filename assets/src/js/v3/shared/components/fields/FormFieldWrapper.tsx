@@ -217,6 +217,7 @@ const styles = {
       border-radius: ${borderRadius[6]};
       border: 1px solid ${colorTokens.stroke.default};
       padding: ${spacing[8]} ${spacing[16]};
+      background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.title};
       appearance: textfield;
 

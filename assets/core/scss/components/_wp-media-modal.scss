@@ -1,0 +1,312 @@
+// WordPress Media Modal Dark Theme Styles
+// Comprehensive theme support for wp.media dialogs
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+[data-tutor-theme='dark'] {
+  // Backdrop Overlay
+  .media-modal-backdrop {
+    background-color: #000000 !important;
+    opacity: 0.75 !important;
+  }
+
+  // Modal Container
+  .media-modal-content {
+    background-color: $tutor-surface-l1 !important;
+    border: 1px solid $tutor-border-idle !important;
+    box-shadow: $tutor-shadow-2xl !important;
+    color: $tutor-text-primary !important;
+  }
+
+  // Close Button
+  .media-modal-close {
+    color: $tutor-icon-idle !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $tutor-icon-hover !important;
+      background: $tutor-surface-l1-hover !important;
+    }
+
+    .media-modal-icon:before {
+      color: inherit !important;
+    }
+  }
+
+  // Title Bar
+  .media-frame-title {
+    background-color: $tutor-surface-l1 !important;
+
+    h1 {
+      color: $tutor-text-primary !important;
+    }
+  }
+
+  // Left Menu (Sidebar)
+  .media-frame-menu {
+    border-right: 1px solid $tutor-border-idle !important;
+
+    .media-menu {
+      background-color: $tutor-surface-sidebar-l1 !important;
+      border-right: none !important;
+
+      .separator {
+        border-bottom: 1px solid $tutor-border-idle !important;
+      }
+    }
+  }
+
+  // Left Menu Items
+  .media-menu-item {
+    color: $tutor-text-subdued !important;
+
+    &:hover {
+      background-color: $tutor-surface-l1-hover !important;
+      color: $tutor-text-primary !important;
+    }
+
+    &.active {
+      color: $tutor-text-brand !important;
+      background-color: $tutor-surface-l1 !important;
+    }
+  }
+
+  // Top Router Tabs (Upload files / Media Library)
+  .media-frame-router {
+    .media-router {
+      background-color: $tutor-surface-l1 !important;
+
+      .media-menu-item {
+        color: $tutor-text-subdued !important;
+
+        &:hover {
+          color: $tutor-text-primary !important;
+          background: transparent !important;
+        }
+
+        &.active {
+          color: $tutor-text-brand !important;
+          background: $tutor-surface-l1 !important;
+          border: 1px solid $tutor-border-idle !important;
+          border-bottom: none !important;
+        }
+      }
+    }
+  }
+
+  // Frame Content (Grid / Upload Canvas)
+  .media-frame-content {
+    background-color: $tutor-surface-base !important;
+    border-top: 1px solid $tutor-border-idle !important;
+  }
+
+  // Inline Drag-and-Drop Uploader
+  .uploader-inline {
+    background-color: $tutor-surface-l1 !important;
+
+    .drop-instructions,
+    .upload-ui h2,
+    .max-upload-size {
+      color: $tutor-text-subdued !important;
+    }
+
+    .has-upload-message .upload-message {
+      color: $tutor-text-primary !important;
+    }
+  }
+
+  // Media Toolbar (Filters, Search)
+  .media-toolbar {
+    background-color: $tutor-surface-l1 !important;
+
+    .media-toolbar-secondary {
+      color: $tutor-text-subdued !important;
+    }
+  }
+
+  // Form Inputs, Search, Dropdowns inside Media Modal
+  .media-modal {
+    input[type='text'],
+    input[type='search'],
+    input[type='url'],
+    input[type='number'],
+    textarea,
+    select {
+      background-color: $tutor-surface-l2 !important;
+      border: 1px solid $tutor-border-idle !important;
+      color: $tutor-text-primary !important;
+      border-radius: $tutor-radius-sm !important;
+
+      &:focus {
+        border-color: $tutor-brand-600 !important;
+        box-shadow: 0 0 0 1px $tutor-brand-600 !important;
+        outline: none !important;
+      }
+    }
+
+    select {
+      background-color: $tutor-surface-l2 !important;
+      color: $tutor-text-primary !important;
+    }
+
+    label {
+      color: $tutor-text-primary !important;
+    }
+  }
+
+  // Attachments Grid
+  .attachments-browser {
+    .attachments {
+      background-color: $tutor-surface-base !important;
+    }
+  }
+
+  .attachment {
+    .thumbnail {
+      background-color: $tutor-surface-l1 !important;
+      box-shadow: inset 0 0 0 1px $tutor-border-idle !important;
+    }
+
+    &:focus .thumbnail {
+      box-shadow: inset 0 0 0 2px $tutor-brand-600 !important;
+    }
+
+    &.details .thumbnail {
+      box-shadow: inset 0 0 0 1px $tutor-border-idle !important;
+    }
+
+    &.selected .thumbnail {
+      box-shadow: inset 0 0 0 3px $tutor-brand-600 !important;
+    }
+
+    .filename {
+      color: $tutor-text-primary !important;
+    }
+
+    .describe {
+      color: $tutor-text-subdued !important;
+    }
+  }
+
+  // Details Sidebar (Right Pane)
+  .media-sidebar {
+    background-color: $tutor-surface-l1 !important;
+    border-left: 1px solid $tutor-border-idle !important;
+    color: $tutor-text-primary !important;
+
+    .attachment-details {
+      h2 {
+        color: $tutor-text-primary !important;
+      }
+
+      .attachment-info {
+        border-bottom: 1px solid $tutor-border-idle !important;
+        color: $tutor-text-primary !important;
+
+        .filename {
+          color: $tutor-text-primary !important;
+        }
+
+        .edit-attachment,
+        .delete-attachment {
+          color: $tutor-text-brand !important;
+        }
+
+        .delete-attachment {
+          color: $tutor-text-critical !important;
+        }
+      }
+
+      .setting {
+        span {
+          color: $tutor-text-subdued !important;
+        }
+
+        .name {
+          color: $tutor-text-subdued !important;
+        }
+      }
+
+      .compat-item {
+        border-bottom: 1px solid $tutor-border-idle !important;
+      }
+    }
+  }
+
+  // Bottom Toolbar
+  .media-frame-toolbar {
+    .media-toolbar {
+      background-color: $tutor-surface-l1 !important;
+      border-top: 1px solid $tutor-border-idle !important;
+    }
+
+    .media-toolbar-secondary {
+      color: $tutor-text-subdued !important;
+
+      .count {
+        color: $tutor-text-primary !important;
+      }
+
+      .button-link {
+        color: $tutor-text-brand !important;
+      }
+    }
+
+    .media-button-select,
+    .media-button-insert,
+    .button-primary.media-button {
+      background-color: $tutor-brand-600 !important;
+      border-color: $tutor-brand-600 !important;
+      color: #ffffff !important;
+      text-shadow: none !important;
+
+      &:hover,
+      &:focus {
+        background-color: var(--tutor-button-primary-hover, #3a5ccc) !important;
+        border-color: var(--tutor-button-primary-hover, #3a5ccc) !important;
+        color: #ffffff !important;
+      }
+
+      &[disabled],
+      &:disabled {
+        background-color: $tutor-surface-l2 !important;
+        border-color: $tutor-border-idle !important;
+        color: $tutor-text-disabled !important;
+      }
+    }
+  }
+
+  // Image Editor inside Modal
+  .imgedit-wrap {
+    background-color: $tutor-surface-l1 !important;
+    color: $tutor-text-primary !important;
+
+    .imgedit-settings {
+      background-color: $tutor-surface-l1 !important;
+      border-left: 1px solid $tutor-border-idle !important;
+    }
+
+    .imgedit-group {
+      border-bottom: 1px solid $tutor-border-idle !important;
+
+      .imgedit-group-top h2,
+      .imgedit-group-top h3 {
+        color: $tutor-text-primary !important;
+      }
+    }
+  }
+
+  // Attachment Details Modal (when opening attachment details full overlay)
+  .edit-attachment-frame {
+    .attachment-media-view {
+      background-color: $tutor-surface-base !important;
+    }
+
+    .attachment-info {
+      background-color: $tutor-surface-l1 !important;
+      border-left: 1px solid $tutor-border-idle !important;
+    }
+  }
+}

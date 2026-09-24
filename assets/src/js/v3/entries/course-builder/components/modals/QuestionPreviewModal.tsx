@@ -41,8 +41,7 @@ const isTutorPro = tutorConfig.tutor_pro_url;
  * (`tutor-pro/assets/src/scss/quiz/_quiz_puzzle.scss` → `front.css`), same pattern as the live quiz UI.
  */
 const TUTOR_PRO_FRONT_STYLESHEET_PATH = '/wp-content/plugins/tutor-pro/assets/css/front.css';
-const IFRAME_SRC_DOC =
-  '<!doctype html><html><head><meta charset="utf-8" /></head><body><div id="preview-root"></div></body></html>';
+const IFRAME_SRC_DOC = `<!doctype html><html><head><meta charset="utf-8" /></head><body data-tutor-theme="${tutorConfig.user_preferences.theme ?? 'light'}"><div id="preview-root"></div></body></html>`;
 const PREVIEW_STYLESHEET_PATHS = [
   '/wp-content/plugins/tutor/assets/css/tutor-learning-area.min.css',
   '/wp-content/plugins/tutor/assets/css/tutor-core.min.css',

@@ -89,19 +89,34 @@ function editorConfig(
       branding: false,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setup: (editor: any) => {
+        const syncTheme = () => {
+          const iframeDoc = editor.getDoc?.();
+          if (!iframeDoc || !iframeDoc.body) return;
+
+          const theme = document.documentElement.getAttribute('data-tutor-theme') || 'light';
+          iframeDoc.documentElement.setAttribute('data-tutor-theme', theme);
+
+          iframeDoc.body.style.backgroundColor = 'transparent';
+          iframeDoc.body.style.color = theme === 'dark' ? '#f0f0f1' : '#212327';
+        };
+
         editor.on('init', () => {
+          syncTheme();
+
           if (isFocused && !readOnly) {
-            editor.getBody().focus();
+            editor.getBody()?.focus();
           }
 
           if (readOnly) {
             editor.setMode('readonly');
 
             const editorBody = editor.contentDocument.querySelector('.mce-content-body');
-            editorBody.style.backgroundColor = 'transparent';
+            if (editorBody) {
+              editorBody.style.backgroundColor = 'transparent';
+            }
 
             setTimeout(() => {
-              const height = editorBody.scrollHeight;
+              const height = editorBody?.scrollHeight;
 
               if (height) {
                 editor.iframeElement.style.height = `${height}px`;
@@ -109,6 +124,7 @@ function editorConfig(
             }, 500);
           }
         });
+
         editor.on('change keyup paste', () => {
           onChange(editor.getContent());
         });
@@ -232,6 +248,8 @@ const WPEditor = ({
         const inlineTarget = iframeDoc.createElement('div');
         inlineTarget.id = editorId;
         inlineTarget.innerHTML = value;
+        inlineTarget.style.color = colorTokens.text.primary;
+        inlineTarget.style.backgroundColor = 'transparent';
 
         // Hide textarea and transfer its id to the div (TinyMCE uses element id for registration)
         currentRef.removeAttribute('id');
@@ -262,6 +280,7 @@ const WPEditor = ({
               const body = editor.getBody();
               if (body) {
                 body.style.backgroundColor = 'transparent';
+                body.style.color = colorTokens.text.primary;
               }
 
               if (isFocused && !readonly) {
@@ -342,6 +361,7 @@ const styles = {
     }
 
     .wp-editor-container {
+      border-color: ${colorTokens.stroke.default};
       border-top-left-radius: ${borderRadius[6]};
       border-bottom-left-radius: ${borderRadius[6]};
       border-bottom-right-radius: ${borderRadius[6]};
@@ -359,29 +379,39 @@ const styles = {
 
     .wp-switch-editor {
       height: auto;
-      border: 1px solid #dcdcde;
+      border: 1px solid ${colorTokens.stroke.default};
+      background: ${colorTokens.surface.tutor};
       border-radius: 0px;
       border-top-left-radius: ${borderRadius[4]};
       border-top-right-radius: ${borderRadius[4]};
       top: 2px;
       padding: 3px 8px 4px;
       font-size: 13px;
-      color: #646970;
+      color: ${colorTokens.text.subdued};
 
       &:focus,
       &:active,
       &:hover {
-        background: #f0f0f1;
-        color: #646970;
+        background: ${colorTokens.background.hover};
+        color: ${colorTokens.text.primary};
       }
     }
 
+    .html-active .switch-html,
+    .tmce-active .switch-tmce {
+      background: ${colorTokens.surface.tutor} !important;
+      color: ${colorTokens.text.primary} !important;
+      border-bottom-color: ${colorTokens.surface.tutor} !important;
+    }
+
     .mce-btn button {
+      color: ${colorTokens.text.primary};
+
       &:focus,
       &:active,
       &:hover {
         background: none;
-        color: #50575e;
+        color: ${colorTokens.text.primary};
       }
     }
 
@@ -434,6 +464,8 @@ const styles = {
       border: none;
       outline: none;
       padding: ${spacing[10]};
+      background-color: ${colorTokens.surface.tutor};
+      color: ${colorTokens.text.primary};
     }
   `,
 };

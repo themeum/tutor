@@ -397,7 +397,7 @@ const styles = {
     width: 100%;
     ${styleUtils.flexCenter()};
     gap: ${spacing[8]};
-    background-color: ${rgba(colorTokens.background.modal, 0.6)};
+    background-color: color-mix(in srgb, ${colorTokens.background.modal} 60%, transparent);
     border-radius: ${borderRadius[6]};
     z-index: ${zIndex.positive};
     backdrop-filter: blur(8px);

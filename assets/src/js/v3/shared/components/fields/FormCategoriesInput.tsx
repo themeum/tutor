@@ -339,6 +339,7 @@ const styles = {
       border-radius: ${borderRadius[6]};
       border: 1px solid ${colorTokens.stroke.default};
       padding: ${spacing[4]} ${spacing[16]} ${spacing[4]} ${spacing[32]};
+      background-color: transparent;
       color: ${colorTokens.text.title};
       appearance: textfield;
 

@@ -31,7 +31,7 @@ if ( is_admin() ) {
 
 	<?php wp_head(); ?>
 </head>
-<body data-tutor-theme='light' <?php body_class(); ?>>
+<body <?php body_class(); ?>>
 	<div id="tutor-course-builder"></div>
 	<?php do_action( 'tutor_course_builder_footer' ); ?>
 	<?php wp_footer(); ?>

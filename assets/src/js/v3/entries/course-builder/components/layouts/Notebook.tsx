@@ -440,6 +440,11 @@ const styles = {
     background: url('data:image/svg+xml,<svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="%23D9D9D9"/></svg>')
       repeat;
     transition: all 0.3s ease-in-out;
+
+    [data-tutor-theme='dark'] & {
+      background: url("data:image/svg+xml,<svg width='8' height='8' viewBox='0 0 8 8' xmlns='http://www.w3.org/2000/svg'><circle cx='1' cy='1' r='1' fill='%23333741'/></svg>")
+        repeat;
+    }
   `,
   notebook: ({ isCollapsed }: { isCollapsed: boolean }) => css`
     ${styleUtils.overflowYAuto};
