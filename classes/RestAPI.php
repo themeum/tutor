@@ -232,6 +232,37 @@ class RestAPI {
 	 * @return void
 	 */
 	public function init_routes() {
+		// Auth: login / refresh / logout.
+		register_rest_route(
+			$this->namespace,
+			'/auth/login',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( RestAuth::class, 'rest_login' ),
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/auth/refresh',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( RestAuth::class, 'rest_refresh' ),
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/auth/logout',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( RestAuth::class, 'rest_logout' ),
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+			)
+		);
+
 		// Courses.
 		register_rest_route(
 			$this->namespace,
@@ -284,7 +315,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_topics' ),
 			)
 		);
 
@@ -305,7 +336,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_by_topic' ),
 			)
 		);
 
@@ -326,7 +357,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_course_content' ),
 			)
 		);
 
@@ -347,7 +378,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_by_topic' ),
 			)
 		);
 
@@ -368,7 +399,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_quiz' ),
 			)
 		);
 
@@ -389,7 +420,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_quiz' ),
 			)
 		);
 
@@ -410,7 +441,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_quiz' ),
 			)
 		);
 
@@ -473,7 +504,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_course_content' ),
 			)
 		);
 	}
