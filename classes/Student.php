@@ -205,7 +205,11 @@ class Student {
 		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
 		$timezone                = Input::post( 'timezone', '' );
 
-		$display_name = sanitize_text_field( tutor_utils()->input_old( 'display_name' ) );
+		// Decode HTML entities first (e.g. &lt;script&gt; → <script>), then strip the
+		// resulting tags. sanitize_text_field() alone does not decode entities, so an
+		// entity-encoded payload would pass through and later be decoded by the browser.
+		$display_name_raw = tutor_utils()->input_old( 'display_name' );
+		$display_name     = sanitize_text_field( wp_strip_all_tags( html_entity_decode( $display_name_raw, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ) );
 
 		$userdata = array(
 			'ID'           => $user_id,
