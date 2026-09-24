@@ -318,7 +318,12 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
       const topEdge = graphToPixel(0, maxCoord).y;
       const bottomEdge = graphToPixel(0, minCoord).y;
 
-      ctx.strokeStyle = '#cecfd2';
+      const computed = window.getComputedStyle(ctx.canvas || document.body);
+      const gridColor = computed.getPropertyValue('--tutor-surface-l2-hover').trim() || '#cecfd2';
+      const axisColor = computed.getPropertyValue('--tutor-surface-dark').trim() || '#0c111d';
+      const textColor = computed.getPropertyValue('--tutor-text-secondary').trim() || '#333741';
+
+      ctx.strokeStyle = gridColor;
       ctx.lineWidth = 0.5;
       for (let i = minCoord; i <= maxCoord; i++) {
         if (i === 0) continue;
@@ -334,7 +339,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
         ctx.stroke();
       }
 
-      ctx.strokeStyle = '#0c111d';
+      ctx.strokeStyle = axisColor;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.moveTo(leftEdge, centerY);
@@ -345,7 +350,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
       ctx.lineTo(centerX, bottomEdge);
       ctx.stroke();
 
-      ctx.fillStyle = colorTokens.text.subdued;
+      ctx.fillStyle = textColor;
       ctx.font = '11px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
@@ -1083,7 +1088,7 @@ const styles = {
     width: 100%;
     height: 100%;
     cursor: crosshair;
-    border: 1px solid #ececed;
+    border: 1px solid ${colorTokens.stroke.divider};
     border-radius: ${borderRadius.card};
   `,
 };
