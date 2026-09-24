@@ -7,6 +7,8 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 1.4.3
+ *
+ * @var int $total_students passed from tutor\templates\dashboard.php
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -52,4 +54,4 @@ if ( $is_instructor_approved && $used_instructor_registration ) {
 	}
 }
 
-tutor_load_template( 'dashboard.instructor.home' );
+tutor_load_template( 'dashboard.instructor.home', array( 'total_students' => $total_students ?? 0 ) );
