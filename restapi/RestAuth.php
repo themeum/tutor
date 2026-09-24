@@ -283,7 +283,7 @@ class RestAuth {
 	public static function generate_api_keys() {
 		tutor_utils()->checking_nonce();
 
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -328,7 +328,7 @@ class RestAuth {
 
 		tutor_utils()->checking_nonce();
 
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -367,7 +367,7 @@ class RestAuth {
 	public static function revoke_api_keys() {
 		tutor_utils()->checking_nonce();
 
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
