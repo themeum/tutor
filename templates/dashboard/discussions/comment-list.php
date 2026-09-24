@@ -105,7 +105,7 @@ remove_filter( 'comments_clauses', $tutor_comments_filter, 10 );
 <?php if ( empty( $lesson_comments ) ) : ?>
 	<?php
 		EmptyState::make()
-			->title( 'No Comments Found!' )
+			->title( __( 'No Comments Found!', 'tutor' ) )
 			->icon( tutor_utils()->get_themed_svg( 'images/illustrations/comments-empty.svg' ) )
 			->render();
 	?>

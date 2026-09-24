@@ -271,7 +271,7 @@
           border-end-end-radius: $tutor-radius-md;
           height: 160px;
           width: 100%;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
         }
 

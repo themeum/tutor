@@ -190,7 +190,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	 */
 	const bulkActionButton = document.getElementById('tutor-confirm-bulk-action');
 	if (bulkActionButton) {
-		bulkActionButton.onclick = () => {
+		bulkActionButton.onclick = (e) => {
+			e.preventDefault();
 			const input = document.createElement('input');
 			input.type = 'submit';
 			bulkForm.appendChild(input);

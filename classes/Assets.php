@@ -374,6 +374,9 @@ class Assets {
 				}
 			}
 		} else {
+			if ( 'en_US' !== $localize_data['local'] ) {
+				$localize_data['calendar_locales'] = tutils()->get_script_locale_data( 'tutor-calendar', $localize_data['local'] );
+			}
 
 			// Assign quiz option.
 			if ( ! empty( $post->post_type ) && 'tutor_quiz' === $post->post_type ) {
@@ -517,7 +520,7 @@ class Assets {
 		if ( is_admin() ) {
 			$admin_colors = array(
 				'--tutor-color-primary'       => '#3E64DE',
-				'--tutor-color-primary-hover' => '#3A5CCC',
+				'--tutor-color-primary-hover' => '#2B49CA',
 				'--tutor-body-color'          => '#212327',
 				'--tutor-border-color'        => '#CDCFD5',
 				'--tutor-color-gray'          => '#CDCFD5',
@@ -526,7 +529,7 @@ class Assets {
 
 		$fallback_colors = array(
 			'tutor_primary_color'       => '#3E64DE',
-			'tutor_primary_hover_color' => '#3A5CCC',
+			'tutor_primary_hover_color' => '#2B49CA',
 			'tutor_text_color'          => '#212327',
 			'tutor_border_color'        => '#E3E5EB',
 			'tutor_gray_color'          => '#CDCFD5',
@@ -895,7 +898,7 @@ class Assets {
 		wp_enqueue_style( 'tutor-google-fonts', $google_font_url, array(), $version );
 
 		wp_enqueue_style( 'tutor-core', $core_css_url, array( 'tutor-google-fonts' ), $version );
-		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), $version, true );
+		wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n', 'wp-date' ), $version, true );
 
 		wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
 
@@ -907,12 +910,12 @@ class Assets {
 
 		if ( $is_dashboard ) {
 			wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
-			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+			wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n', 'wp-date' ), $version, true );
 		}
 
 		if ( $is_learning_area ) {
 			wp_enqueue_style( 'tutor-learning', $learning_area_css_url, array(), $version );
-			wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+			wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n', 'wp-date' ), $version, true );
 
 			if ( is_single_course( true ) ) {
 				wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), $version );

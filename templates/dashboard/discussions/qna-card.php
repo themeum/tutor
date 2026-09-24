@@ -55,7 +55,6 @@ $single_url = UrlHelper::add_query_params(
 <div
 	class="tutor-discussion-card tutor-flex-column"
 	data-question-id="<?php echo esc_attr( (int) $question_id ); ?>"
-	x-show="editingId !== <?php echo (int) $question_id; ?>"
 	x-data="{ 
 		...tutorPopover({ placement: 'bottom-end' }),
 		isUnread: <?php echo $is_unread ? 'true' : 'false'; ?>, 
@@ -73,7 +72,7 @@ $single_url = UrlHelper::add_query_params(
 		}
 	"
 >
-	<div class="tutor-flex tutor-gap-4 tutor-w-full">
+	<div class="tutor-flex tutor-gap-4 tutor-w-full" x-show="editingId !== <?php echo (int) $question_id; ?>">
 		<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
 			<div class="tutor-discussion-card-top">

@@ -105,6 +105,34 @@ class Video_Stream {
 	}
 
 	/**
+	 * Whether the file is a real video inside the uploads directory.
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param string $file_path file path.
+	 *
+	 * @return bool
+	 */
+	private function is_allowed_path( $file_path ) {
+		$real_file = $file_path ? realpath( $file_path ) : false;
+		if ( ! $real_file || ! is_file( $real_file ) ) {
+			return false;
+		}
+
+		$uploads      = wp_get_upload_dir();
+		$real_uploads = ! empty( $uploads['basedir'] ) ? realpath( $uploads['basedir'] ) : false;
+		if ( ! $real_uploads ) {
+			return false;
+		}
+
+		$real_file    = wp_normalize_path( $real_file );
+		$real_uploads = trailingslashit( wp_normalize_path( $real_uploads ) );
+		$is_allowed   = 0 === strpos( $real_file, $real_uploads );
+
+		return (bool) apply_filters( 'tutor_video_stream_is_allowed_path', $is_allowed, $real_file );
+	}
+
+	/**
 	 * Open stream
 	 *
 	 * @since 1.0.0
@@ -210,6 +238,11 @@ class Video_Stream {
 	 * @return void
 	 */
 	public function start() {
+		if ( ! $this->is_allowed_path( $this->path ) ) {
+			status_header( 403 );
+			exit;
+		}
+
 		$this->open();
 		$this->set_header();
 		$this->stream();

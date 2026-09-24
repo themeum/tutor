@@ -21,41 +21,83 @@ defined( 'ABSPATH' ) || exit;
  * WPEditor Component Class.
  *
  * Example usage:
- * ```
- * // Basic editor
+ * ```php
+ * // Basic editor with label
  * WPEditor::make()
  *     ->name( 'description' )
- *     ->label( 'Description' )
- *     ->content( 'Default content' )
+ *     ->label( 'Course Description' )
+ *     ->content( 'Default content here.' )
  *     ->render();
  *
- * // Editor with validation
+ * // Required editor with placeholder
  * WPEditor::make()
  *     ->name( 'answer' )
  *     ->label( 'Your Answer' )
- *     ->placeholder( 'Write your answer here' )
+ *     ->placeholder( 'Write your answer here...' )
+ *     ->required( true )
+ *     ->render();
+ *
+ * // Editor with Alpine.js form validation binding
+ * WPEditor::make()
+ *     ->name( 'answer' )
+ *     ->label( 'Your Answer' )
  *     ->attr( 'x-bind', "register('answer', { required: 'Answer is required' })" )
  *     ->render();
  *
- * // Editor with custom configuration
+ * // Editor pre-filled with saved content
  * WPEditor::make()
  *     ->name( 'bio' )
- *     ->content( $user_bio )
- *     ->editor_config(
- *         array(
- *             'teeny'         => false,
- *             'media_buttons' => false,
- *             'quicktags'     => false,
- *             'editor_height' => 150,
- *             'tinymce'       => array(
- *                 'toolbar1' => 'bold,italic,underline,link,unlink,removeformat,image,bullist,codesample',
- *                 'toolbar2' => '',
- *                 'toolbar3' => '',
- *                 'plugins'  => 'link,image,lists,codesample',
- *             ),
- *         )
- *     );
+ *     ->label( 'Instructor Bio' )
+ *     ->content( get_user_meta( $user_id, 'description', true ) )
  *     ->render();
+ *
+ * // Editor with help text and error state
+ * WPEditor::make()
+ *     ->name( 'overview' )
+ *     ->label( 'Course Overview' )
+ *     ->help_text( 'Describe what students will learn.' )
+ *     ->error( 'This field is required.' )
+ *     ->render();
+ *
+ * // Custom TinyMCE toolbar (no media buttons, custom toolbar)
+ * WPEditor::make()
+ *     ->name( 'announcement' )
+ *     ->label( 'Announcement' )
+ *     ->editor_config( array(
+ *         'teeny'         => false,
+ *         'media_buttons' => false,
+ *         'quicktags'     => false,
+ *         'editor_height' => 200,
+ *         'tinymce'       => array(
+ *             'toolbar1' => 'bold,italic,underline,link,unlink,bullist,numlist,removeformat',
+ *             'toolbar2' => '',
+ *             'toolbar3' => '',
+ *         ),
+ *     ) )
+ *     ->render();
+ *
+ * // Teeny editor (minimal toolbar)
+ * WPEditor::make()
+ *     ->name( 'short_bio' )
+ *     ->label( 'Short Bio' )
+ *     ->editor_config( array( 'teeny' => true, 'media_buttons' => false ) )
+ *     ->render();
+ *
+ * // Custom wrapper attribute (e.g., Alpine.js show binding)
+ * WPEditor::make()
+ *     ->name( 'notes' )
+ *     ->label( 'Notes' )
+ *     ->wrapper_attr( 'x-show', 'showNotes' )
+ *     ->render();
+ *
+ * // With explicit editor ID
+ * WPEditor::make()
+ *     ->name( 'content' )
+ *     ->id( 'my-custom-editor-id' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = WPEditor::make()->name( 'description' )->content( $saved_content )->get();
  * ```
  *
  * @since 4.0.0

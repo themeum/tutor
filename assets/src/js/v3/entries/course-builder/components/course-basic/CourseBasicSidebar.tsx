@@ -14,6 +14,8 @@ import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSelectUser, { type UserOption } from '@TutorShared/components/fields/FormSelectUser';
 import FormTagsInput from '@TutorShared/components/fields/FormTagsInput';
 import FormVideoInput from '@TutorShared/components/fields/FormVideoInput';
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats, TutorRoles, VisibilityControlKeys } from '@TutorShared/config/constants';
@@ -39,6 +41,7 @@ const CourseBasicSidebar = () => {
     queryKey: ['CourseDetails', courseId],
   });
   const [userSearchText, setUserSearchText] = useState('');
+  const { showModal } = useModal();
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
@@ -97,20 +100,38 @@ const CourseBasicSidebar = () => {
     (instructor) => String(instructor.id) !== String(currentAuthor?.id),
   );
 
-  const handleAuthorChange = () => {
+  const handleAuthorChange = async () => {
     const previousAuthor = courseDetails?.post_author;
+    const convertedAuthor: UserOption = {
+      id: Number(previousAuthor?.ID),
+      name: previousAuthor?.display_name,
+      email: previousAuthor?.user_email,
+      avatar_url: previousAuthor?.tutor_profile_photo_url,
+    };
+
+    const { action } = await showModal({
+      component: ConfirmationModal,
+      props: {
+        title: __('Are you sure?', 'tutor'),
+        description: __(
+          'Changing the course author will assign all the updates and course data to the selected author.',
+          'tutor',
+        ),
+        confirmButtonText: __('Yes, change author', 'tutor'),
+      },
+    });
+
+    if (action !== 'CONFIRM') {
+      form.setValue('post_author', convertedAuthor);
+      return;
+    }
+
+    convertedAuthor.isRemoveAble = String(previousAuthor?.ID) !== String(currentUser.data.id);
+
     const courseInstructors = form.getValues('course_instructors');
     const isAlreadyAdded = !!courseInstructors.find(
       (instructor) => String(instructor.id) === String(previousAuthor?.ID),
     );
-
-    const convertedAuthor: UserOption = {
-      id: Number(previousAuthor?.ID),
-      name: previousAuthor?.display_name,
-      email: previousAuthor.user_email,
-      avatar_url: previousAuthor?.tutor_profile_photo_url,
-      isRemoveAble: String(previousAuthor?.ID) !== String(currentUser.data.id),
-    };
 
     const updatedInstructors = isAlreadyAdded ? courseInstructors : [...courseInstructors, convertedAuthor];
 

@@ -1,5 +1,11 @@
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
 import { type AjaxResponse } from '@Core/ts/types';
+
+const UTC_DATE_CLASS = 'tutor-utc-date-time'; // existing combined format
+const UTC_DATETIME_ATTRIBUTE = 'data-utc-datetime';
+const UTC_DATETIME_DATE_ATTRIBUTE = 'data-utc-datetime-date';
+const UTC_DATETIME_TIME_ATTRIBUTE = 'data-utc-datetime-time';
 
 const createCourseHandler = () => {
   const { query, toast, endpoints } = window.TutorCore;
@@ -36,9 +42,61 @@ const createCourseHandler = () => {
   };
 };
 
+const parseUTCDate = (value: string): Date | null => {
+  // Safari does not support format 0000-00-00, instead it needs 0000/00/00
+  const dateString = value.trim().replace(/-/g, '/');
+  const parsed = new Date(`${dateString} UTC`);
+  return parsed.toString() !== 'Invalid Date' ? parsed : null;
+};
+
+const convertUTCTime = () => {
+  if (!wp.date) {
+    return;
+  }
+
+  const settings = wp.date.getSettings();
+  const dateFormat = settings.formats.date;
+  const timeFormat = settings.formats.time;
+  const dateTimeFormat = `${dateFormat}, ${timeFormat}`;
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  // Combined date + time in a single node
+  document.querySelectorAll('.' + UTC_DATE_CLASS).forEach((el) => {
+    const localDateTime = parseUTCDate(el.textContent ?? '');
+    if (localDateTime) {
+      el.textContent = wp.date.dateI18n(dateTimeFormat, localDateTime, timeZone);
+    }
+  });
+
+  // Separate date / time nodes sharing a parent carrying the raw UTC value
+  document.querySelectorAll(`[${UTC_DATETIME_ATTRIBUTE}]`).forEach((wrapper) => {
+    const rawUTC = wrapper.getAttribute(UTC_DATETIME_ATTRIBUTE);
+    if (!rawUTC) {
+      return;
+    }
+
+    const localDateTime = parseUTCDate(rawUTC);
+    if (!localDateTime) {
+      return;
+    }
+
+    const dateEl = wrapper.querySelector(`[${UTC_DATETIME_DATE_ATTRIBUTE}]`);
+    const timeEl = wrapper.querySelector(`[${UTC_DATETIME_TIME_ATTRIBUTE}]`);
+
+    if (dateEl) {
+      dateEl.textContent = wp.date.dateI18n(dateFormat, localDateTime, timeZone);
+    }
+    if (timeEl) {
+      timeEl.textContent = wp.date.dateI18n(timeFormat, localDateTime, timeZone);
+    }
+  });
+};
+
 export const initializeCommon = () => {
   const handler = createCourseHandler();
   handler.init();
+  convertUTCTime();
+  window.addEventListener(TUTOR_CUSTOM_EVENTS.CONTENT_CHANGED, () => convertUTCTime());
 
   const createCourseButtons = document.querySelectorAll('.tutor-create-new-course');
   createCourseButtons.forEach((button) => {

@@ -460,6 +460,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     buildSubmitPayload(data: Record<string, unknown>): Record<string, unknown> {
       const payload = this.normalizePayload(data);
       payload.attempt_id = this.attemptId;
+      payload.quiz_id = this.quizId;
 
       return payload;
     },

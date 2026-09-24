@@ -12,8 +12,8 @@ import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { type IconCollection } from '@TutorShared/icons/types';
 import Popover from '@TutorShared/molecules/Popover';
+import { allQuestionTypes } from '@TutorShared/utils/question-type-registry';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestionType } from '@TutorShared/utils/types';
 
@@ -44,58 +44,6 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
   const contentTypes = form.watch('contentTypes') || [];
   const questionTypes = form.watch('questionTypes') || [];
   const isQuestionType = type === 'question';
-
-  const questionTypeOptions: {
-    label: string;
-    value: QuizQuestionType;
-    icon: IconCollection;
-  }[] = [
-    {
-      label: __('True/False', 'tutor'),
-      value: 'true_false',
-      icon: 'quizTrueFalse',
-    },
-    {
-      label: __('Multiple Choice', 'tutor'),
-      value: 'multiple_choice',
-      icon: 'quizMultiChoice',
-    },
-    {
-      label: __('Open Ended/Essay', 'tutor'),
-      value: 'open_ended',
-      icon: 'quizEssay',
-    },
-    {
-      label: __('Fill in the Blanks', 'tutor'),
-      value: 'fill_in_the_blank',
-      icon: 'quizFillInTheBlanks',
-    },
-    {
-      label: __('Short Answer', 'tutor'),
-      value: 'short_answer',
-      icon: 'quizShortAnswer',
-    },
-    {
-      label: __('Matching', 'tutor'),
-      value: 'matching',
-      icon: 'quizImageMatching',
-    },
-    {
-      label: __('Image Answering', 'tutor'),
-      value: 'image_answering',
-      icon: 'quizImageAnswer',
-    },
-    {
-      label: __('Ordering', 'tutor'),
-      value: 'ordering',
-      icon: 'quizOrdering',
-    },
-    {
-      label: __('Puzzle', 'tutor'),
-      value: 'puzzle',
-      icon: 'quizPuzzle',
-    },
-  ];
 
   return (
     <>
@@ -145,7 +93,7 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
           <Button
             variant="tertiary"
             isIconOnly
-            icon={<SVGIcon name={order === 'asc' ? 'sortASC' : 'sortDESC'} width={18} height={18} />}
+            icon={<SVGIcon name={order === 'asc' ? 'sortAsc' : 'sortDesc'} width={18} height={18} />}
             onClick={() => {
               const newOrder = order === 'asc' ? 'desc' : 'asc';
               form.setValue('order', newOrder);
@@ -171,7 +119,7 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
           <h6>{__('Filter by', 'tutor')}</h6>
           <div css={styles.filterFields}>
             <Show when={isQuestionType}>
-              <For each={questionTypeOptions}>
+              <For each={allQuestionTypes}>
                 {(option) => (
                   <Checkbox
                     label={

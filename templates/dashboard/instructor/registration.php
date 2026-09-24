@@ -76,7 +76,7 @@ use TUTOR\Icon;
 				<input class="tutor-form-control tutor-input" type="text" name="email" value="<?php echo esc_attr( tutor_utils()->input_old( 'email' ) ); ?>" placeholder="<?php esc_html_e( 'E-Mail', 'tutor' ); ?>" required autocomplete="email">
 			</div>
 
-			<div class="tutor-password-strength-checker tutor-mb-8" x-data="{ show: false, value: '<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>' }">
+			<div class="tutor-password-strength-checker tutor-mb-8" x-data="{ show: false, value: '' }">
 				<div class="tutor-input-field">
 					<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
 					<div class="tutor-form-wrap" style="position: relative;">

@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
+
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Helpers\HttpHelper;
@@ -117,6 +119,8 @@ class User {
 		add_action( 'wp_ajax_tutor_user_list', array( $this, 'ajax_user_list' ) );
 		add_action( 'wp_ajax_tutor_switch_profile', array( $this, 'ajax_switch_profile' ) );
 		add_action( 'wp_ajax_tutor_complete_tour', array( $this, 'ajax_complete_tour' ) );
+
+		add_filter( 'retrieve_password_message', array( $this, 'maybe_update_password_reset_link' ), 10, 3 );
 	}
 
 	/**
@@ -397,6 +401,9 @@ class User {
 		$photo_type = Input::post( 'photo_type', '' );
 		$meta_key   = 'cover_photo' === $photo_type ? '_tutor_cover_photo' : '_tutor_profile_photo';
 
+		// Strict allowlist of image MIME types.
+		$allowed_mime_types = array( 'image/jpeg', 'image/png', 'image/gif', 'image/webp' );
+
 		/**
 		 * Photo Update from profile
 		 */
@@ -420,11 +427,22 @@ class User {
 					$mime_type  = is_array( $image_info ) && count( $image_info ) ? $image_info['mime'] : '';
 				}
 
+				// Validate against strict MIME allowlist.
+				if ( ! in_array( $mime_type, $allowed_mime_types, true ) ) {
+					wp_delete_file( $file_path );
+					wp_send_json_error( array( 'message' => __( 'Invalid image file type.', 'tutor' ) ) );
+					return;
+				}
+
+				// Use a controlled title instead of user-supplied filename.
+				$photo_label      = 'cover_photo' === Input::post( 'photo_type', '' ) ? 'cover' : 'profile';
+				$controlled_title = sprintf( 'tutor-%s-photo-%d', $photo_label, $user_id );
+
 				$media_id = wp_insert_attachment(
 					array(
 						'guid'           => $file_path,
 						'post_mime_type' => $mime_type,
-						'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_url ) ),
+						'post_title'     => $controlled_title,
 						'post_content'   => '',
 						'post_status'    => 'inherit',
 					),
@@ -798,6 +816,7 @@ class User {
 		}
 
 		$switch_mode  = '';
+		$switch_label = '';
 		$current_mode = Input::post( 'current_mode' );
 
 		if ( ! in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true ) ) {
@@ -805,15 +824,17 @@ class User {
 		}
 
 		if ( self::VIEW_AS_INSTRUCTOR === $current_mode ) {
-			$switch_mode = self::VIEW_AS_STUDENT;
+			$switch_mode  = self::VIEW_AS_STUDENT;
+			$switch_label = __( 'Student', 'tutor' );
 		} elseif ( self::VIEW_AS_STUDENT === $current_mode ) {
-			$switch_mode = self::VIEW_AS_INSTRUCTOR;
+			$switch_mode  = self::VIEW_AS_INSTRUCTOR;
+			$switch_label = __( 'Instructor', 'tutor' );
 		}
 
 		update_user_meta( $user_id, self::VIEW_MODE_USER_META, $switch_mode );
 
 		// translators:%s for switching mode.
-		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_mode ) );
+		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_label ) );
 	}
 
 	/**
@@ -891,5 +912,86 @@ class User {
 		update_user_meta( get_current_user_id(), self::TOUR_COMPLETED_META, true );
 
 		$this->json_response( __( 'Tour completed', 'tutor' ) );
+	}
+
+	/**
+	 * If user don't have pro and using tutor login then change the password
+	 * reset email link
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param string $message Email message.
+	 * @param string $key Reset key.
+	 * @param string $user_login User login name.
+	 *
+	 * @return string
+	 */
+	public function maybe_update_password_reset_link( $message, $key, $user_login ) {
+		if ( tutor()->has_pro && tutor_utils()->is_addon_enabled( 'tutor-email' ) ) {
+			return $message;
+		}
+
+		$is_tutor_login_enabled = tutor_utils()->get_option( 'enable_tutor_native_login', false );
+		if ( ! $is_tutor_login_enabled ) {
+			return $message;
+		}
+
+		$default_url = add_query_arg(
+			array(
+				'login'  => $user_login,
+				'key'    => $key,
+				'action' => 'rp',
+			),
+			network_site_url( 'wp-login.php' )
+		);
+
+		$user = get_user_by( 'login', $user_login );
+		if ( ! $user ) {
+			return $message;
+		}
+
+		$tutor_reset_url = add_query_arg(
+			array(
+				'reset_key' => $key,
+				'user_id'   => $user->ID,
+			),
+			tutor_utils()->tutor_dashboard_url( 'retrieve-password' )
+		);
+
+		$message = str_replace( $default_url, $tutor_reset_url, $message );
+
+		return $message;
+	}
+
+	/**
+	 * Check if the current user can view provided user profile
+	 *
+	 * @since 4.0.9
+	 *
+	 * @param int $user_id User id, whose profile will be viewed.
+	 *
+	 * @return bool
+	 */
+	public static function can_view_user_profile( int $user_id ) {
+		$current_user_id = get_current_user_id();
+		if ( $current_user_id === $user_id ) {
+			return true;
+		}
+
+		if ( self::is_admin( $current_user_id ) ) {
+			return true;
+		}
+
+		if ( self::is_instructor( $current_user_id ) ) {
+			$enrolled_courses = CourseModel::get_enrolled_courses_by_user( $user_id );
+			if ( $enrolled_courses ) {
+				$course_author_ids = array_column( $enrolled_courses->get_posts(), 'post_author' );
+				if ( in_array( $current_user_id, $course_author_ids, true ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }

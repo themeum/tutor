@@ -20,11 +20,46 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example usage:
  * ```
+ * // Default (neutral) alert
  * Alert::make()
- *     ->text( 'This is an alert' )
+ *     ->text( 'Your changes have been saved.' )
+ *     ->render();
+ *
+ * // Success alert with icon
+ * Alert::make()
+ *     ->text( 'Course published successfully.' )
  *     ->variant( Alert::SUCCESS )
  *     ->icon( Icon::PRIME_CHECK_CIRCLE )
- *     ->action( '<button class="...">Resume</button>' )
+ *     ->render();
+ *
+ * // Info alert with action button
+ * Alert::make()
+ *     ->text( 'You have an incomplete quiz. Resume where you left off.' )
+ *     ->variant( Alert::INFO )
+ *     ->icon( Icon::INFO )
+ *     ->action( '<button class="tutor-btn tutor-btn-primary tutor-btn-small">Resume</button>' )
+ *     ->render();
+ *
+ * // Warning alert
+ * Alert::make()
+ *     ->text( 'Your subscription expires in 3 days.' )
+ *     ->variant( Alert::WARNING )
+ *     ->icon( Icon::WARNING )
+ *     ->render();
+ *
+ * // Error alert with custom icon size
+ * Alert::make()
+ *     ->text( 'Payment failed. Please try again.' )
+ *     ->variant( Alert::ERROR )
+ *     ->icon( Icon::CLOSE_CIRCLE, 24, 24 )
+ *     ->render();
+ *
+ * // Alert with extra HTML attributes
+ * Alert::make()
+ *     ->text( 'Draft saved.' )
+ *     ->variant( Alert::SUCCESS )
+ *     ->attr( 'id', 'draft-alert' )
+ *     ->attr( 'x-show', 'showAlert' )
  *     ->render();
  * ```
  *

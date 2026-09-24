@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\WithdrawModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -118,14 +120,23 @@ class Withdraw_Requests_List {
 		$status         = sanitize_text_field( $status );
 		$date           = sanitize_text_field( $date );
 		$search         = sanitize_text_field( $search );
-		// Prepare date query.
+		// Prepare query parameters.
+		$params     = array( $status );
 		$date_query = '';
 		if ( '' !== $date ) {
-			$date_query = "AND DATE(withdraw.created_at) = CAST('{$date}' AS DATE) ";
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $date );
+			if ( '' !== $formatted_date ) {
+				$date_query = 'AND DATE(withdraw.created_at) = CAST(%s AS DATE) ';
+				$params[]   = $formatted_date;
+			}
 		}
 
 		// Prepare search query.
-		$search = '%' . $wpdb->esc_like( $search ) . '%';
+		$search   = '%' . $wpdb->esc_like( $search ) . '%';
+		$params[] = $search;
+		$params[] = $search;
+		$params[] = $search;
+		$params[] = $search;
 
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
@@ -136,11 +147,7 @@ class Withdraw_Requests_List {
 					{$date_query}
 					AND ( user.user_login LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.display_name LIKE %s )
 			",
-				$status,
-				$search,
-				$search,
-				$search,
-				$search
+				$params
 			)
 		);
 		return $count ? $count : 0;
@@ -203,7 +210,11 @@ class Withdraw_Requests_List {
 		if ( 'rejected' === $status ) {
 			$withdraw = self::get_withdraw_by_id( $withdraw_id );
 			if ( $withdraw ) {
-				$details = unserialize( $withdraw->method_data );
+				$details = WithdrawModel::safe_unserialize_array( $withdraw->method_data );
+
+				if ( empty( $details ) ) {
+					$details = array();
+				}
 
 				$details['rejects']  = array(
 					'reject_type'    => sanitize_text_field( $reject_type ),

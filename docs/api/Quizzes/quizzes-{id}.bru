@@ -1,0 +1,96 @@
+meta {
+  name: quizzes/{id}
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/quizzes/1
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Quiz Details
+  
+  Retrieves complete details for a specific quiz, including all questions, question types, point values, descriptions, and answer options.
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/quizzes/:id`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Path Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `id` | `integer` | **Yes** | The WordPress Post ID of the quiz. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "success",
+    "message": "Quiz retrieved successfully",
+    "data": {
+      "ID": 501,
+      "post_title": "Module 1 Knowledge Check",
+      "post_content": "Assessment quiz...",
+      "post_name": "module-1-knowledge-check",
+      "quiz_settings": [
+        {
+          "time_limit": {
+            "time_value": "30",
+            "time_type": "minutes"
+          },
+          "attempts_allowed": "3",
+          "passing_grade": "80"
+        }
+      ],
+      "questions": [
+        {
+          "question_id": 12,
+          "question_title": "Which HTTP method is idempotent?",
+          "question_description": "Select the correct answer.",
+          "question_type": "single_choice",
+          "question_mark": 1,
+          "question_settings": {
+            "answer_required": "1",
+            "randomize_question": "0"
+          },
+          "answers": [
+            {
+              "answer_id": 45,
+              "answer_title": "GET",
+              "is_correct": 1
+            },
+            {
+              "answer_id": 46,
+              "answer_title": "POST",
+              "is_correct": 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+  ```
+  
+  ### 404 Not Found
+  ```json
+  {
+    "code": "not_found",
+    "message": "Quiz not found for given ID",
+    "data": []
+  }
+  ```
+}

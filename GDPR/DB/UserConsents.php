@@ -43,7 +43,7 @@ class UserConsents extends DB {
 		$charset_collate = $wpdb->get_charset_collate();
 
 		return "CREATE TABLE {$table_name} (
-			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+			id BIGINT UNSIGNED AUTO_INCREMENT,
 			user_id BIGINT UNSIGNED NULL,
 			user_email VARCHAR(190) NOT NULL,
 			consent_title VARCHAR(100) NOT NULL,
@@ -53,11 +53,12 @@ class UserConsents extends DB {
 			consent_method VARCHAR(255) NOT NULL,
 			ip_address VARCHAR(45),
 			user_agent TEXT,
-			source VARCHAR(50), -- consent page info
+			source VARCHAR(50),
 			created_at_gmt DATETIME NOT NULL,
-			INDEX (user_id),
-			INDEX (consent_title),
-			INDEX (created_at_gmt)
+			PRIMARY KEY  (id),
+			KEY user_id (user_id),
+			KEY consent_title (consent_title),
+			KEY created_at_gmt (created_at_gmt)
 		) {$charset_collate};";
 	}
 }

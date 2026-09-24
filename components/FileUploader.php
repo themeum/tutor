@@ -22,32 +22,43 @@ use Tutor\Components\AttachmentCard;
 /**
  * Class FileUploader
  *
- * Example Usage (Native Multiple):
+ * Example Usage:
+ * ```php
+ * // Native single-file upload
+ * FileUploader::make()
+ *     ->name( 'resume' )
+ *     ->accept( '.pdf,.doc' )
+ *     ->render();
+ *
+ * // Native multiple-file upload with size/count limits
  * FileUploader::make()
  *     ->name( 'course_attachments' )
  *     ->uploader_title( __( 'Upload Assignments', 'tutor' ) )
- *     ->uploader_subtitle( __( 'Support PDF, DOCX (Max 20MB)', 'tutor' ) )
+ *     ->uploader_subtitle( __( 'Supports PDF, DOCX — max 20 MB each', 'tutor' ) )
  *     ->accept( '.pdf,.docx' )
  *     ->multiple( true )
  *     ->max_files( 3 )
  *     ->max_size( 20 * 1024 * 1024 )
  *     ->render();
  *
- * Example Usage (Native Single):
+ * // Image uploader (native file input, image preview variant)
  * FileUploader::make()
- *     ->name( 'resume' )
- *     ->accept( '.pdf,.doc' )
+ *     ->variant( FileUploader::IMAGE_UPLOADER )
+ *     ->name( 'cover_photo' )
+ *     ->accept( '.jpg,.jpeg,.png,.webp' )
  *     ->render();
  *
- * Example Usage (WP Media Image):
+ * // WP Media Library — single image
  * FileUploader::make()
  *     ->variant( FileUploader::IMAGE_UPLOADER )
  *     ->use_wp_media( true )
  *     ->wp_media_library_type( 'image' )
+ *     ->wp_media_title( __( 'Select Profile Photo', 'tutor' ) )
+ *     ->wp_media_button_text( __( 'Use This Photo', 'tutor' ) )
  *     ->name( 'profile_photo' )
  *     ->render();
  *
- * Example Usage (WP Media Multiple Documents):
+ * // WP Media Library — multiple documents
  * FileUploader::make()
  *     ->use_wp_media( true )
  *     ->multiple( true )
@@ -55,20 +66,29 @@ use Tutor\Components\AttachmentCard;
  *     ->name( 'shared_files' )
  *     ->render();
  *
- * Example Usage (Native Image):
+ * // Custom icon, title, subtitle and button text
  * FileUploader::make()
- *     ->variant( FileUploader::IMAGE_UPLOADER )
- *     ->name( 'cover_photo' )
- *     ->render();
- *
- * Example Usage (Custom UI):
- * FileUploader::make()
- *     ->name( 'custom_upload' )
+ *     ->name( 'resources' )
  *     ->uploader_icon( Icon::RESOURCES )
+ *     ->uploader_icon_size( 32 )
  *     ->uploader_title( __( 'Resource Center', 'tutor' ) )
  *     ->uploader_subtitle( __( 'Add any relevant documents here', 'tutor' ) )
  *     ->uploader_button_text( __( 'Choose Resources', 'tutor' ) )
  *     ->render();
+ *
+ * // Required upload with an ID and Alpine.js callbacks
+ * FileUploader::make()
+ *     ->name( 'assignment_file' )
+ *     ->id( 'assignment-upload' )
+ *     ->required( true )
+ *     ->accept( '.pdf' )
+ *     ->attr( 'onFileSelect', 'handleFileSelect' )
+ *     ->attr( 'onError', 'handleUploadError' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = FileUploader::make()->name( 'attachment' )->get();
+ * ```
  *
  * @since 4.0.0
  */

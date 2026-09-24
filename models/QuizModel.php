@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
+use TUTOR\Course_List;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Quiz;
@@ -196,7 +197,6 @@ class QuizModel {
 		return array(
 			self::QUESTION_TYPE_OPEN_ENDED,
 			self::QUESTION_TYPE_SHORT_ANSWER,
-			self::QUESTION_TYPE_IMAGE_ANSWERING,
 		);
 	}
 
@@ -789,29 +789,30 @@ class QuizModel {
 	public static function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only = false, $all_attempt = false ) {
 		global $wpdb;
 		$search_filter = sanitize_text_field( $search_filter );
-		$course_filter = (int) sanitize_text_field( $course_filter );
+		$course_filter = absint( $course_filter );
 		$date_filter   = sanitize_text_field( $date_filter );
-		$order_filter  = sanitize_sql_orderby( $order_filter );
+		$start         = absint( $start );
+		$limit         = absint( $limit );
 
-		$course_ids = array_map(
-			function ( $id ) {
-				return "'" . esc_sql( $id ) . "'";
-			},
-			$course_ids
-		);
+		$order_direction = QueryHelper::get_valid_sort_order( $order_filter );
 
-		$course_ids_in = count( $course_ids ) ? ' AND quiz_attempts.course_id IN (' . implode( ', ', $course_ids ) . ') ' : '';
+		$course_ids    = array_filter( array_map( 'absint', (array) $course_ids ) );
+		$course_ids_in = count( $course_ids ) ? ' AND quiz_attempts.course_id IN (' . QueryHelper::prepare_in_clause( $course_ids ) . ') ' : '';
 
 		$search_filter   = $search_filter ? '%' . $wpdb->esc_like( $search_filter ) . '%' : '';
 		$search_term_raw = $search_filter;
 		$search_filter   = $search_filter ? $wpdb->prepare( 'AND ( users.user_email = %s OR users.display_name LIKE %s OR quiz.post_title LIKE %s OR course.post_title LIKE %s )', $search_term_raw, $search_filter, $search_filter, $search_filter ) : '';
 
-		$course_filter = 0 !== $course_filter ? " AND quiz_attempts.course_id = $course_filter " : '';
-		$date_filter   = '' != $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-		$date_filter   = '' != $date_filter ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
-		$user_filter   = $user_id ? ' AND user_id=\'' . esc_sql( $user_id ) . '\' ' : '';
+		$course_filter = 0 !== $course_filter ? " AND quiz_attempts.course_id = {$course_filter} " : '';
+		if ( '' !== $date_filter ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $date_filter );
+			$date_filter    = '' !== $formatted_date ? $wpdb->prepare( ' AND DATE(quiz_attempts.attempt_started_at) = CAST(%s AS DATE) ', $formatted_date ) : '';
+		} else {
+			$date_filter = '';
+		}
+		$user_filter = $user_id ? ' AND user_id = ' . absint( $user_id ) . ' ' : '';
 
-		$limit_offset = $count_only || ( 0 === $limit && 0 === $start ) ? '' : " LIMIT 	{$start}, {$limit} ";
+		$limit_offset = $count_only || ( 0 === $limit && 0 === $start ) ? '' : " LIMIT {$start}, {$limit} ";
 		$select_col   = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, quiz.* ';
 
 		$attempt_type = $all_attempt ? '' : " AND quiz_attempts.attempt_status != 'attempt_started' ";
@@ -831,7 +832,7 @@ class QuizModel {
 					{$course_filter}
 					{$date_filter}
 					{$user_filter}
-			ORDER 	BY quiz_attempts.attempt_id {$order_filter} {$limit_offset};";
+			ORDER 	BY quiz_attempts.attempt_id {$order_direction} {$limit_offset};";
 
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query );
@@ -1735,5 +1736,41 @@ class QuizModel {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Kill the current execution if user don't have access to this quiz
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param int  $quiz_id Quiz id to check the access.
+	 * @param int  $course_id Quiz's course id.
+	 * @param bool $wp_die Whether to die the execution or not.
+	 *
+	 * @return mixed If wp_die is true then this method will kill the execution if
+	 * user don't have access to the provided quiz. Otherwise returns bool.
+	 */
+	public static function has_quiz_access( $quiz_id, $course_id = 0, $wp_die = true ) {
+		$message    = __( 'Something went wrong', 'tutor' );
+		$has_access = true;
+
+		$course_id = $course_id ? $course_id : tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+		if ( Course_List::is_public( $course_id ) ) {
+			return true;
+		}
+
+		if ( ! $quiz_id ) {
+			$message    = __( 'Invalid quiz ID', 'tutor' );
+			$has_access = false;
+		} elseif ( ! tutor_utils()->has_enrolled_content_access( 'quiz', $quiz_id ) ) {
+			$message    = __( 'You don\'t have access to this course', 'tutor' );
+			$has_access = false;
+		}
+
+		if ( ! $has_access && $wp_die ) {
+			wp_die( esc_html( $message ) );
+		}
+
+		return $has_access;
 	}
 }

@@ -1,0 +1,90 @@
+meta {
+  name: lessons
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/lessons
+  body: none
+  auth: basic
+}
+
+params:query {
+  ~topic_id: 1
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Lessons by Topic
+  
+  Retrieves all lessons belonging to a specific topic, including lesson descriptions, downloadable attachments, video player settings, and thumbnails.
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/lessons`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Query Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `topic_id` | `integer` | **Yes** | The WordPress Post ID of the parent topic. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "success",
+    "message": "Lesson retrieved successfully",
+    "data": [
+      {
+        "ID": 301,
+        "post_title": "1.1 Setting Up Your Development Workspace",
+        "post_content": "Full instructional text and transcript...",
+        "post_name": "1-1-setting-up-workspace",
+        "topic_id": 201,
+        "attachments": [
+          "http://tutor-dev.local/wp-content/uploads/starter-kit.zip"
+        ],
+        "thumbnail": "http://tutor-dev.local/wp-content/uploads/lesson-thumb.jpg",
+        "video": [
+          {
+            "source": "html5",
+            "source_video_id": 450,
+            "poster": "http://tutor-dev.local/wp-content/uploads/poster.jpg"
+          }
+        ]
+      }
+    ]
+  }
+  ```
+  
+  ### Error Responses
+  
+  When `topic_id` is missing:
+  ```json
+  {
+    "code": "not_found",
+    "message": "topic_id is required",
+    "data": []
+  }
+  ```
+  
+  When no lessons exist for the topic ID:
+  ```json
+  {
+    "code": "not_found",
+    "message": "Lesson not found for the given topic ID",
+    "data": []
+  }
+  ```
+}

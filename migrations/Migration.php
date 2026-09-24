@@ -30,6 +30,7 @@ class Migration {
 	 */
 	public function schedule_migrations() {
 		$migrators = array(
+			InstructorCapabilityMigrator::instance(),
 			QuizAttemptMigrator::instance(),
 		);
 

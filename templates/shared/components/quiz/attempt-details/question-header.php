@@ -9,8 +9,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Components\Badge;
+use TUTOR\Quiz;
 use TUTOR\Icon;
+use Tutor\Components\Badge;
 use Tutor\Components\SvgIcon;
 
 /**
@@ -63,11 +64,11 @@ $review_field_name    = (string) ( $review_field_name ?? '' );
 	</div>
 
 	<div class="tutor-quiz-question-title">
-		<?php echo esc_html( wp_unslash( $question_title ) ); ?>
+		<?php echo esc_html( Quiz::sanitize_quiz_content( $question_title ?? '' ) ); ?>
 
 		<?php if ( ! empty( $question_description ) ) : ?>
 			<?php
-			$description = apply_filters( 'tutor_filter_quiz_question_description', wp_unslash( $question_description ) );
+			$description = apply_filters( 'tutor_filter_quiz_question_description', wp_unslash( (string) ( $question_description ?? '' ) ) );
 			if ( $description ) {
 				$markup = "<div class='tutor-p2 tutor-text-secondary'>{$description}</div>";
 				if ( function_exists( 'tutor' ) && tutor()->has_pro ) {

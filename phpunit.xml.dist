@@ -30,5 +30,8 @@
 		<testsuite name="lesson-test">
 			<directory>tests/phpunit/LessonContentInfoTest.php</directory>
 		</testsuite>
+		<testsuite name="course-test">
+			<directory>tests/phpunit/CourseTest.php</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>

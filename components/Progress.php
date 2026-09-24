@@ -22,20 +22,77 @@ use Tutor\Components\Constants\Variant;
  * Progress Component Class.
  *
  * Example usage:
- * ```
- * // Progress bar
+ * ```php
+ * // Basic animated progress bar (0–100)
  * Progress::make()
  *     ->type( 'bar' )
  *     ->value( 75 )
- *     ->animated()
  *     ->render();
  *
- * // Progress circle
+ * // Progress bar without animation
+ * Progress::make()
+ *     ->type( 'bar' )
+ *     ->value( 50 )
+ *     ->animated( false )
+ *     ->render();
+ *
+ * // Progress bar with a specific size
+ * Progress::make()
+ *     ->type( 'bar' )
+ *     ->value( 30 )
+ *     ->size( Size::MEDIUM )
+ *     ->render();
+ *
+ * // Progress bar with brand variant color
+ * Progress::make()
+ *     ->type( 'bar' )
+ *     ->value( 60 )
+ *     ->variant( Variant::BRAND )
+ *     ->render();
+ *
+ * // Progress circle (percentage arc)
  * Progress::make()
  *     ->type( 'circle' )
  *     ->value( 75 )
  *     ->render();
  *
+ * // Progress circle — complete state (shows checkmark)
+ * Progress::make()
+ *     ->type( 'circle' )
+ *     ->complete()
+ *     ->render();
+ *
+ * // Progress circle — locked state
+ * Progress::make()
+ *     ->type( 'circle' )
+ *     ->locked()
+ *     ->render();
+ *
+ * // Progress circle without label
+ * Progress::make()
+ *     ->type( 'circle' )
+ *     ->value( 40 )
+ *     ->show_label( false )
+ *     ->render();
+ *
+ * // Progress circle with custom label text
+ * Progress::make()
+ *     ->type( 'circle' )
+ *     ->value( 90 )
+ *     ->label( '9/10 done' )
+ *     ->render();
+ *
+ * // Progress circle with custom colors and animation duration
+ * Progress::make()
+ *     ->type( 'circle' )
+ *     ->value( 55 )
+ *     ->stroke_color( '#e0e0e0' )
+ *     ->progress_stroke_color( '#4CAF50' )
+ *     ->duration( 1500 )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = Progress::make()->type( 'bar' )->value( 80 )->get();
  * ```
  *
  * @since 4.0.0

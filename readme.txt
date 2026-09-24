@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://tutorlms.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.0.1
+Stable tag: 4.0.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -26,6 +26,10 @@ You can create unlimited courses, quizzes, interactive lessons, generate reports
 👉 [Documentation](https://tutorlms.com/docs/)
 
 You can also join our [official Facebook Community](https://www.facebook.com/groups/tutorlms) to know all the latest news and be part of the Tutor LMS.
+
+Also, check out our Tutor LMS overview video:
+
+https://www.youtube.com/watch?v=0TGkkA5J5hE 
 
 Overall, Tutor LMS is the best WordPress LMS plugin for eLearning enthusiasts. It comes with every core feature you’ll need to build a perfect eLearning website. Additionally, it also has plenty of premium add-ons to empower the core plugin more! A few important addons are Course Builder, Certificate, Social Login, Reports, Content Drip, Assignments, Calendar, etc.
 
@@ -108,11 +112,11 @@ You can learn more about these features from [our website](https://tutorlms.com/
 
 Tutor LMS is a perfect solution for anyone who wants to create a full-fledged learning management system. Here are some core uses of Tutor LMS:
 
-👨‍🎨 [Individual Creators](https://tutorlms.com/solo-creators/)
-📚 [Schools & Academies](https://tutorlms.com/schools-and-academies/)
-🏫 [LMS Agencies](https://tutorlms.com/agencies/)
-💻 [Coaching Businesses](https://tutorlms.com/coaching-businesses/)
-🎓 [Nonprofits & Communities](https://tutorlms.com/nonprofits-and-community-builders/)
+👨‍🎨 [Individual Creators](https://tutorlms.com/solutions/solo-creators/)
+📚 [Schools & Academies](https://tutorlms.com/solutions/schools-and-academies/)
+🏫 [LMS Agencies](https://tutorlms.com/solutions/agencies/)
+💻 [Coaching Businesses](https://tutorlms.com/solutions/coaching-businesses/)
+🎓 [Nonprofits & Communities](https://tutorlms.com/solutions/nonprofits-and-community-builders/)
 
 These are just a few possibilities! There’s a whole new world of eLearning that’s yet to be discovered using this WordPress LMS plugin.
 
@@ -197,7 +201,7 @@ Lesson notes allows students to take notes on lessons and videos while learning.
 
 == ✉️ BUILT-IN EMAIL MARKETING & AUTOMATION ==
 
-Tutor LMS supports automatic email notifications for admins, instructors, and students. It is equipped with 50+ email triggers and numerous placeholders. You can use those placeholders to send personalized emails. You can use these [Tutor LMS email placeholders](https://docs.themeum.com/tutor-lms/tutorials/email-placeholders/) in both the subject lines and the email body.
+Tutor LMS supports automatic email notifications for admins, instructors, and students. It is equipped with 50+ email triggers and numerous placeholders. You can use those placeholders to send personalized emails. You can use these [Tutor LMS email placeholders](https://tutorlms.com/docs/tutor-tutorial-list-of-tutor-lms-email-placeholders/) in both the subject lines and the email body.
 
 == 💵 MULTIPLE COURSE MONETIZATION TOOLS ==
 
@@ -333,6 +337,91 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.0.9 - 17 Sep, 2026
+
+Update: Improved overall performance and strengthened security measures.
+
+= 4.0.8 - 10 Sep, 2026
+
+Update: Added an option to show or hide the Header and Footer in the Dashboard and Learning Area.
+Update: Added options to upload separate logos for Light and Dark modes.
+Update: Added a setting to control the Puzzle Quiz reference image visibility. (Pro)
+Update: Improved the assignment submission flow for learners. (Pro)
+Update: Added links to the associated course and lesson in frontend Q&A lists.
+Update: Improved Quiz pagination and quiz attempt details for a better browsing experience.
+Update: Optimized instructor dashboard database queries to improve page load speed.
+Fix: Resolved a blank screen issue with Google OAuth when using incognito mode. (Pro)
+Fix: Resolved LaTeX rendering issues in quiz answer explanations.
+Fix: Corrected category and tag display issues in the learner dashboard.
+Fix: Resolved an issue where Quiz Answer Option 0 was not displaying on the frontend.
+Fix: Reduced image size in new quiz type views to resolve inner scrolling issues. (Pro)
+Fix: Resolved an issue where course prerequisites were missing after section removal. (Pro)
+Fix: Resolved an invalid Question ID issue when adding questions to an existing quiz from Content Bank. (Pro)
+Fix: Resolved an issue where lesson time duration was not saving or updating properly.
+Fix: Removed the attachment input from assignment attempt details where it should not be visible. (Pro)
+Fix: Resolved the quiz marks calculation issue.
+
+= 4.0.7 - 20 Aug, 2026
+
+Fix: Fixed course creation issues caused by the Multi Instructor addon. (Pro)
+
+= 4.0.6 - 18 Aug, 2026
+
+Update: Improved WPML compatibility. (Pro)
+Fix: Resolved the author ID mismatch after changing the course author. (Pro)
+Fix: Patched a security vulnerability.
+
+= 4.0.5 - 12 Aug, 2026
+
+Update: Added an option to return to the homepage from the student dashboard on mobile devices.
+Update: Strengthened instructor capability checks for better security.
+Update: Changing a course author now updates authorship across all content.
+Update: Hid course products from the shop page settings when using Native Monetization.
+Fix: Resolved the PHP fatal error caused by WooCommerce Subscriptions renewal orders. (Pro)
+Fix: Fixed the incorrect date issue on the enrollment time extension date picker. (Pro)
+Fix: Resolved the manual email delivery issue. (Pro)
+Fix: Fixed the incorrect URL issue in OTP verification emails. (Pro)
+Fix: Resolved the course bundle enrollment limit issue. (Pro)
+Fix: Fixed the issue where canceling a failed order removed course access.
+Fix: Resolved the issue preventing co-authors from viewing submitted assignments. (Pro)
+Fix: Fixed the YouTube preview issue in quiz answer explanations.
+Fix: Resolved the display limitation that capped the cart and checkout page at 10 products.
+Fix: Fixed the incorrect enrollment date issue on course records. (Pro)
+Fix: Resolved the LaTeX equations rendering issue in quiz options.
+
+= 4.0.4 - 31 July, 2026
+
+Fix: Resolved the dark theme compatibility issue in the Course Builder.
+Fix: Added translation support for some previously untranslatable strings.
+Fix: Fixed the incorrect update notification in Tutor LMS Pro. (Pro)
+Fix: Prevented certificates from appearing for courses with no assigned certificate. (Pro)
+
+= 4.0.3 - 24 July, 2026
+
+Fix: Resolved an issue where quiz submissions failed in Legacy Mode.
+Fix: Resolved an issue where the correct answer was incorrectly marked in True/False quizzes.
+Fix: Resolved an issue where the certificate footer displayed "Tutor LMS" instead of the site title. (Pro)
+
+= 4.0.2 - 22 July, 2026
+
+Update: Add Hyperlink Support to Instructor Feedback and Instructor Notes
+Update: Add support for Vimeo unlisted/private video URLs
+Update: UX updated for the ordering quiz
+Update: Show Full Lesson Name Without Ellipsis in the learning area
+
+Fix: Forgot Password Redirection Mail (Pro)
+Fix: Course deletion issue from the wp admin dashboard
+Fix: Unable to Access Locked Lessons from the Sidebar (Pro)
+Fix: Users Can Progress Despite Failing a Quiz in Sequential Mode
+Fix: Ordering Quiz Questions Reveals Correct Answer Through Predefined Numbering (Pro)
+Fix: In RTL mode, the Complete course button icon reverts along with the content - UI Issue
+Fix: Admin can not manually enrolled a student when they already have expired enrollment record. (Pro)
+Fix: Manual Payment Gateway Description Disappears When Underline Formatting Is Applied.
+Fix: Tutor LMS Native Invoice issue with Elementor.(Pro)
+Fix: Fixed an issue where license need to reconnect to get product updates. (Pro)
+Fix: Facebook Social Media login does not work.(Pro)
+Fix: Quiz Responsive issue.
 
 = 4.0.1 - 10 July, 2026
 

@@ -14,6 +14,7 @@ use TUTOR\Input;
 tutor_utils()->tutor_custom_header();
 
 $get = isset( $_GET['course_filter'] ) ? Input::sanitize_array( $_GET ) : array();//phpcs:ignore
+unset( $get['template'], $get['data'] );
 if ( isset( $get['course_filter'] ) ) {
 	$filter = ( new \Tutor\Course_Filter( false ) )->load_listing( $get, true );
 	query_posts( $filter );

@@ -298,23 +298,10 @@ class CourseModel {
 	 *
 	 * @param int $quiz_id quiz id.
 	 *
-	 * @return array|bool|null|object|void
+	 * @return mixed WP_Post|null
 	 */
 	public static function get_course_by_quiz( $quiz_id ) {
-		$quiz_id = tutils()->get_post_id( $quiz_id );
-		$post    = get_post( $quiz_id );
-
-		if ( $post ) {
-			$course = get_post( $post->post_parent );
-			if ( $course ) {
-				if ( tutor()->course_post_type !== $course->post_type ) {
-					$course = get_post( $course->post_parent );
-				}
-				return $course;
-			}
-		}
-
-		return false;
+		return get_post_parent( get_post_parent( $quiz_id ) );
 	}
 
 	/**
@@ -346,57 +333,63 @@ class CourseModel {
 		$order = 'DESC'
 	) {
 		global $wpdb;
-		$offset        = sanitize_text_field( $offset );
-		$limit         = sanitize_text_field( $limit );
+		$offset        = absint( $offset );
+		$limit         = absint( $limit );
 		$instructor_id = tutils()->get_user_id( $instructor_id );
 
 		if ( ! count( $post_types ) ) {
 			$post_types = array( tutor()->course_post_type );
 		}
 
+		$post_types = array_values( array_filter( array_map( 'sanitize_key', (array) $post_types ) ) );
 		$post_types = QueryHelper::prepare_in_clause( $post_types );
+		if ( empty( $post_types ) ) {
+			$post_types = "''";
+		}
 
-		if ( empty( $post_status ) || 'any' == $post_status ) {
+		if ( empty( $post_status ) || 'any' === $post_status ) {
 			$where_post_status = '';
 		} else {
-			! is_array( $post_status ) ? $post_status = array( $post_status ) : 0;
-			$statuses                                 = "'" . implode( "','", $post_status ) . "'";
-			$where_post_status                        = "AND $wpdb->posts.post_status IN({$statuses}) ";
+			$post_status       = array_values( array_filter( array_map( 'sanitize_key', (array) $post_status ) ) );
+			$statuses          = count( $post_status ) ? "'" . implode( "','", $post_status ) . "'" : "''";
+			$where_post_status = "AND {$wpdb->posts}.post_status IN({$statuses}) ";
 		}
+
+		$params = array(
+			$instructor_id,
+			'_tutor_instructor_course_id',
+			$instructor_id,
+			$instructor_id,
+		);
 
 		$search_sql = '';
-		if ( ! empty( $search ) ) {
+		if ( '' !== trim( $search ) ) {
 			$like       = '%' . $wpdb->esc_like( $search ) . '%';
-			$search_sql = $wpdb->prepare(
-				" AND ( {$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s ) ",
-				$like,
-				$like
-			);
+			$search_sql = " AND ( {$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s ) ";
+			$params[]   = $like;
+			$params[]   = $like;
 		}
 
-		$order     = strtoupper( $order ) === 'ASC' ? 'ASC' : 'DESC';
-		$order_sql = " ORDER BY $wpdb->posts.post_date {$order} ";
+		$order     = QueryHelper::get_valid_sort_order( $order );
+		$order_sql = " ORDER BY {$wpdb->posts}.post_date {$order} ";
 
-		$select_col   = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
-		$limit_offset = $count_only ? '' : " LIMIT $offset, $limit ";
+		$select_col   = $count_only ? " COUNT(DISTINCT {$wpdb->posts}.ID) " : " {$wpdb->posts}.* ";
+		$limit_offset = $count_only ? '' : " LIMIT {$offset}, {$limit} ";
 
 		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT $select_col
-			FROM $wpdb->posts
+			FROM {$wpdb->posts}
 			INNER JOIN {$wpdb->usermeta}
-				ON $wpdb->usermeta.user_id = %d
-				AND $wpdb->usermeta.meta_key = %s
-				AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
+				ON {$wpdb->usermeta}.user_id = %d
+				AND {$wpdb->usermeta}.meta_key = %s
+				AND {$wpdb->usermeta}.meta_value = {$wpdb->posts}.ID
 			WHERE 1 = 1 {$where_post_status}
-				AND $wpdb->posts.post_type IN ({$post_types})
-				AND ($wpdb->posts.post_author = %d OR $wpdb->usermeta.user_id = %d)
+				AND {$wpdb->posts}.post_type IN ({$post_types})
+				AND ({$wpdb->posts}.post_author = %d OR {$wpdb->usermeta}.user_id = %d)
 				{$search_sql}
 			{$order_sql} {$limit_offset}",
-			$instructor_id,
-			'_tutor_instructor_course_id',
-			$instructor_id,
-			$instructor_id
+			$params
 		);
 		//phpcs:enable
 
@@ -1419,11 +1412,15 @@ class CourseModel {
 
 				foreach ( $course_ids as $id ) {
 					foreach ( $result->posts as $post ) {
-						$post->ID == $id ? $new_array[] = $post : 0;
+						if ( $post->ID == $id ) {
+							$new_array[] = $post;
+						}
 					}
 				}
 
-				$result->posts = $new_array;
+				if ( count( $new_array ) ) {
+					$result->posts = $new_array;
+				}
 			}
 
 			return $result;
@@ -1795,5 +1792,75 @@ class CourseModel {
 		return ( $duration['durationHours'] * HOUR_IN_SECONDS )
 			+ ( $duration['durationMinutes'] * MINUTE_IN_SECONDS )
 			+ ( $duration['durationSeconds'] );
+	}
+
+	/**
+	 * Update the post_author of a course's content (topics, lessons,
+	 * quizzes and assignments) to a given user.
+	 *
+	 * @since 4.0.3
+	 *
+	 * @param int $course_id course id.
+	 * @param int $author_id new author (user) id.
+	 *
+	 * @return bool
+	 */
+	public static function update_course_content_author( int $course_id, int $author_id ): bool {
+		global $wpdb;
+
+		$content_ids = get_posts(
+			array(
+				'post_parent'    => $course_id,
+				'post_type'      => tutor()->topics_post_type,
+				'fields'         => 'ids',
+				'posts_per_page' => -1,
+				'post_status'    => 'any',
+			)
+		);
+
+		$content_ids        = is_array( $content_ids ) ? $content_ids : array();
+		$default_post_types = array( tutor()->lesson_post_type, tutor()->quiz_post_type );
+		$content_post_types = array_unique( apply_filters( 'tutor_course_contents_post_types', $default_post_types ) );
+
+		$primary_table = 'posts as course';
+		$topic_table   = 'posts as topic';
+		$content_table = 'posts as content';
+
+		$joined_data = QueryHelper::get_joined_data(
+			$primary_table,
+			array(
+				array(
+					'type'  => 'INNER',
+					'table' => $topic_table,
+					'on'    => 'course.ID = topic.post_parent',
+				),
+				array(
+					'type'  => 'INNER',
+					'table' => $content_table,
+					'on'    => 'topic.ID = content.post_parent',
+				),
+			),
+			array( 'content.ID' ),
+			array(
+				'course.ID'         => $course_id,
+				'content.post_type' => array( 'IN', $content_post_types ),
+			),
+			array(),
+			'',
+			-1
+		);
+
+		$content_ids = array_merge( $content_ids, wp_list_pluck( $joined_data['results'], 'ID' ) );
+		$content_ids = array_filter( array_unique( array_map( 'absint', $content_ids ) ) );
+
+		if ( empty( $content_ids ) ) {
+			return false;
+		}
+
+		return (bool) QueryHelper::update_where_in(
+			$wpdb->posts,
+			array( 'post_author' => $author_id ),
+			implode( ',', $content_ids )
+		);
 	}
 }

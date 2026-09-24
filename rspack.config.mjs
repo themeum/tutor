@@ -233,7 +233,13 @@ const createConfig = (env, options) => {
             },
           },
         }),
-        new rspack.LightningCssMinimizerRspackPlugin(),
+        new rspack.LightningCssMinimizerRspackPlugin({
+          minimizerOptions: {
+            exclude: {
+              logicalProperties: true,
+            },
+          },
+        }),
       ],
     };
     baseConfig.output.clean = {
@@ -312,7 +318,6 @@ const resolveAliases = {
   '@FrontendServices': path.resolve(__dirname, './assets/src/js/frontend/services'),
   '@FrontendDashboard': path.resolve(__dirname, './assets/src/js/frontend/dashboard'),
   '@LearningArea': path.resolve(__dirname, './assets/src/js/frontend/learning-area'),
-  '@TutorProQuiz': path.resolve(__dirname, '../tutor-pro/assets/src/js/quiz-type'),
 };
 
 const isScssEntry = (entry) => {

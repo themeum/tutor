@@ -23,16 +23,57 @@ defined( 'ABSPATH' ) || exit;
  * Example usage:
  *
  * ```php
- * DateFilter::make()
- *     ->type( DateFilter::TYPE_RANGE )
- *     ->placement( DateFilter::PLACEMENT_BOTTOM_START )
- *     ->render();
- * ```
- *
- * ```php
+ * // Single-date picker (bottom-start)
  * DateFilter::make()
  *     ->type( DateFilter::TYPE_SINGLE )
+ *     ->render();
+ *
+ * // Date-range picker (bottom-start, default)
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->render();
+ *
+ * // Date-range picker positioned at bottom-end
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
  *     ->placement( DateFilter::PLACEMENT_BOTTOM_END )
+ *     ->render();
+ *
+ * // With a custom button label
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->label( 'Filter by date' )
+ *     ->render();
+ *
+ * // Hide the initial label (show only icon until a range is selected)
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->hide_initial_label()
+ *     ->render();
+ *
+ * // Suppress label text entirely (icon-only button)
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->show_label( false )
+ *     ->render();
+ *
+ * // Custom trigger button size and icon size
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->trigger_size( Size::X_SMALL )
+ *     ->icon_size( 14 )
+ *     ->render();
+ *
+ * // Clear related query params when the filter changes (e.g. reset pagination)
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->clear_params( array( 'current_page' ) )
+ *     ->render();
+ *
+ * // Extra attributes on the wrapper
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_SINGLE )
+ *     ->attr( 'id', 'my-date-filter' )
  *     ->render();
  * ```
  *

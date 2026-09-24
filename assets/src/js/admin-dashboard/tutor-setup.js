@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	const loadingTextElement = onboardWrapper.querySelector('.tutor-onboard-loading-text');
 	const loadingText = loadingTextElement?.dataset.text || loadingTextElement?.textContent?.trim() || '';
 	let loadingTextTimer = null;
-	let isLoadingTextLooping = false;
 	let isSubmitting = false;
 
 	const handleReloadHotkeys = (event) => {
@@ -87,8 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	};
 
 	const stopLoadingTextAnimation = () => {
-		isLoadingTextLooping = false;
-
 		if (loadingTextTimer) {
 			clearTimeout(loadingTextTimer);
 			loadingTextTimer = null;
@@ -105,10 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		let dotsCount = 0;
-		isLoadingTextLooping = true;
 
 		const animateDots = () => {
-			if (!loadingTextElement || !isLoadingTextLooping) {
+			if (!loadingTextElement) {
 				return;
 			}
 
@@ -201,6 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		activateScreen(loadingScreen);
 		const loadingTextAnimation = startLoadingTextAnimation();
+		const minimumLoadingDuration = 6000;
+		const onboardStartTime = performance.now();
 
 		try {
 			if (formData.get('tutor_onboard_load_sample_course')) {
@@ -228,6 +226,9 @@ document.addEventListener('DOMContentLoaded', () => {
 				submitButton.disabled = false;
 			}
 			await loadingTextAnimation;
+			const onboardingDuration = performance.now() - onboardStartTime;
+			const remainingLoadingDuration = Math.max(0, minimumLoadingDuration - onboardingDuration);
+			await wait(remainingLoadingDuration);
 			await fadeOutLoadingScreen();
 			toggleReloadProtection(false);
 			location.href = _tutorOnboardObject.tutor_welcome_page;

@@ -1,0 +1,79 @@
+meta {
+  name: quizzes
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/quizzes
+  body: none
+  auth: basic
+}
+
+params:query {
+  ~topic_id: 1
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Quizzes by Topic
+  
+  Retrieves all quizzes configured under a specific topic module, including quiz settings (time limits, passing grades, attempt limits).
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/quizzes`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Query Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `topic_id` | `integer` | **Yes** | The WordPress Post ID of the parent topic. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "success",
+    "message": "Quiz retrieved successfully",
+    "data": [
+      {
+        "ID": 501,
+        "post_title": "Module 1 Knowledge Check",
+        "post_content": "Short 10-question evaluation of module 1 concepts.",
+        "post_name": "module-1-knowledge-check",
+        "topic_id": 201,
+        "quiz_settings": [
+          {
+            "time_limit": {
+              "time_value": "30",
+              "time_type": "minutes"
+            },
+            "attempts_allowed": "3",
+            "passing_grade": "80",
+            "max_questions_for_answer": "10"
+          }
+        ]
+      }
+    ]
+  }
+  ```
+  
+  ### 404 / Missing Param Errors
+  ```json
+  {
+    "code": "not_found",
+    "message": "topic_id is required",
+    "data": []
+  }
+  ```
+}
