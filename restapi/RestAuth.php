@@ -382,47 +382,105 @@ class RestAuth {
 	}
 
 	/**
-	 * Process api request — validate key/secret and honor Read/Write/All vs HTTP method.
+	 * Permission string for a valid API key/secret on this request.
 	 *
-	 * @since 2.2.1
-	 * @since 4.0.10 Honor key permission; accept X-Tutor-Api-Key headers.
+	 * @since 4.0.10
 	 *
-	 * @return boolean
+	 * @return string Empty when credentials are missing or invalid.
 	 */
-	public static function process_api_request() {
+	private static function get_api_key_permission() {
 		$credentials = static::get_api_credentials_from_request();
 		if ( ! $credentials ) {
-			return false;
+			return '';
 		}
 
 		$record = static::validate_api_key_secret( $credentials['key'], $credentials['secret'], true );
 		if ( ! $record ) {
-			return false;
+			return '';
 		}
 
 		$meta = json_decode( $record->meta_value );
 		if ( ! is_object( $meta ) || empty( $meta->permission ) ) {
+			return '';
+		}
+
+		return (string) $meta->permission;
+	}
+
+	/**
+	 * Whether the API key grants Read (or higher).
+	 *
+	 * @since 4.0.10
+	 *
+	 * @return bool
+	 */
+	public static function process_read_request() {
+		$permission = static::get_api_key_permission();
+		if ( '' === $permission ) {
 			return false;
 		}
 
-		$method     = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
-		$permission = $meta->permission;
+		return in_array( $permission, array( static::READ, static::READ_WRITE, static::ALL ), true );
+	}
 
+	/**
+	 * Whether the API key grants Write (or higher).
+	 *
+	 * @since 4.0.10
+	 *
+	 * @return bool
+	 */
+	public static function process_write_request() {
+		$permission = static::get_api_key_permission();
+		if ( '' === $permission ) {
+			return false;
+		}
+
+		return in_array( $permission, array( static::WRITE, static::READ_WRITE, static::ALL ), true );
+	}
+
+	/**
+	 * Whether the API key grants Delete (or Write/All).
+	 *
+	 * @since 4.0.10
+	 *
+	 * @return bool
+	 */
+	public static function process_delete_request() {
+		$permission = static::get_api_key_permission();
+		if ( '' === $permission ) {
+			return false;
+		}
+
+		return in_array( $permission, array( static::DELETE, static::WRITE, static::READ_WRITE, static::ALL ), true );
+	}
+
+	/**
+	 * Process api request — validate key/secret and honor Read/Write/All vs HTTP method.
+	 *
+	 * @since 2.2.1
+	 * @since 4.0.10 Honor key permission; accept X-Tutor-Api-Key headers.
+	 * @since 4.0.10 Delegate to process_read/write/delete_request().
+	 *
+	 * @return boolean
+	 */
+	public static function process_api_request() {
 		// Auth routes may POST with a Read key (login/refresh/logout).
 		if ( static::is_auth_route() ) {
-			return in_array( $permission, array( static::READ, static::READ_WRITE, static::ALL ), true );
+			return static::process_read_request();
 		}
+
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
 
 		if ( 'DELETE' === $method ) {
-			return in_array( $permission, array( static::DELETE, static::WRITE, static::READ_WRITE, static::ALL ), true );
+			return static::process_delete_request();
 		}
 
-		$write_methods = array( 'POST', 'PUT', 'PATCH' );
-		if ( in_array( $method, $write_methods, true ) ) {
-			return in_array( $permission, array( static::WRITE, static::READ_WRITE, static::ALL ), true );
+		if ( in_array( $method, array( 'POST', 'PUT', 'PATCH' ), true ) ) {
+			return static::process_write_request();
 		}
 
-		return in_array( $permission, array( static::READ, static::READ_WRITE, static::ALL ), true );
+		return static::process_read_request();
 	}
 
 	/**
@@ -437,9 +495,42 @@ class RestAuth {
 	}
 
 	/**
+	 * Read-capable API key and an authenticated end user (JWT).
+	 *
+	 * @since 4.0.10
+	 *
+	 * @return bool
+	 */
+	public static function process_authenticated_read_request() {
+		return static::process_read_request() && static::has_authenticated_user();
+	}
+
+	/**
+	 * Write-capable API key and an authenticated end user (JWT).
+	 *
+	 * @since 4.0.10
+	 *
+	 * @return bool
+	 */
+	public static function process_authenticated_write_request() {
+		return static::process_write_request() && static::has_authenticated_user();
+	}
+
+	/**
+	 * Delete-capable API key and an authenticated end user (JWT).
+	 *
+	 * @since 4.0.10
+	 *
+	 * @return bool
+	 */
+	public static function process_authenticated_delete_request() {
+		return static::process_delete_request() && static::has_authenticated_user();
+	}
+
+	/**
 	 * Valid API key for this HTTP method and an authenticated end user (JWT).
 	 *
-	 * Used by Tutor Pro REST routes.
+	 * Used when the route does not declare a specific read/write/delete check.
 	 *
 	 * @since 4.0.10
 	 *
