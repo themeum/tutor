@@ -110,7 +110,8 @@ class UserConsent extends BaseController {
 			return $value;
 		}
 
-		$value = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" data-tutor-modal-target="tutor-consent-logs-modal" data-consent-logs-trigger data-user-id="' . esc_attr( $user_id ) . '" data-user-name="' . esc_attr( $user->display_name ) . '" data-user-joined="' . esc_attr( $user->user_registered ) . '" data-user-email="' . esc_attr( $user->user_email ) . '" data-user-login="' . esc_attr( $user->user_login ) . '" data-avatar-src="' . esc_url( tutor_utils()->get_user_avatar_url( $user_id ) ) . '"><i class="tutor-icon-eye-line tutor-mr-8" aria-hidden="true"></i>' . esc_html__( 'View Logs', 'tutor' ) . '</button>';
+		$user_name = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( $user->display_name ?? '', ENT_QUOTES ) ) );
+		$value     = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" data-tutor-modal-target="tutor-consent-logs-modal" data-consent-logs-trigger data-user-id="' . esc_attr( $user_id ) . '" data-user-name="' . esc_attr( $user_name ) . '" data-user-joined="' . esc_attr( $user->user_registered ) . '" data-user-email="' . esc_attr( $user->user_email ) . '" data-user-login="' . esc_attr( $user->user_login ) . '" data-avatar-src="' . esc_url( tutor_utils()->get_user_avatar_url( $user_id ) ) . '"><i class="tutor-icon-eye-line tutor-mr-8" aria-hidden="true"></i>' . esc_html__( 'View Logs', 'tutor' ) . '</button>';
 
 		return $value;
 	}
@@ -387,7 +388,7 @@ class UserConsent extends BaseController {
 			return;
 		}
 
-		$user_name   = $user_data->display_name ?? '';
+		$user_name   = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( $user_data->display_name ?? '', ENT_QUOTES ) ) );
 		$user_joined = $user_data->user_registered ?? '';
 		$user_email  = $user_data->user_email ?? '';
 		$user_login  = $user_data->user_login ?? '';

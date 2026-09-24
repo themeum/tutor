@@ -95,10 +95,10 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
 			}
 			const userCard = `
                     <div class="tutor-consent-user-card">
-                        ${avatarSrc ? `<img src="${avatarSrc}" alt="${userName}" />` : ''}
+                        ${avatarSrc ? `<img class="tutor-consent-user-card-avatar" src="${avatarSrc}" alt="" />` : ''}
                         <div class="tutor-consent-user-card-info">
-                            <span class="tutor-consent-user-card-name">${userName}</span>
-                            <span class="tutor-consent-user-card-joined">${userJoined ? `${__('Joined', 'tutor')} ${userJoined}` : ''}</span>
+                            <span class="tutor-consent-user-card-name"></span>
+                            <span class="tutor-consent-user-card-joined"></span>
                         </div>
                     </div>
                 `;
@@ -106,6 +106,10 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
                     <div class="tutor-consent-timeline">${renderTimeline(logs)}</div>
                     ${userCard}
                 `;
+			const cardNameEl = modalBody.querySelector('.tutor-consent-user-card-name');
+			if (cardNameEl) cardNameEl.textContent = userName;
+			const cardJoinedEl = modalBody.querySelector('.tutor-consent-user-card-joined');
+			if (cardJoinedEl && userJoined) cardJoinedEl.textContent = `${__('Joined', 'tutor')} ${userJoined}`;
 		})
 		.catch(() => showEmpty());
 };

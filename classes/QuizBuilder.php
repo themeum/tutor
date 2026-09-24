@@ -377,7 +377,7 @@ class QuizBuilder {
 			$errors['ID'][] = __( 'Invalid quiz id provided', 'tutor' );
 		}
 
-		if ( $quiz && ! current_user_can( 'edit_post', $quiz_id ) ) {
+		if ( $quiz && ( ! current_user_can( 'edit_post', $quiz_id ) || ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) ) {
 			$success                = false;
 			$errors['permission'][] = __( 'You do not have permission to edit this quiz', 'tutor' );
 		}
@@ -405,8 +405,11 @@ class QuizBuilder {
 			$errors  = array_merge( $errors, $validation->errors );
 		}
 
-		if ( ! empty( $questions ) ) {
+		if ( $quiz_id ) {
 			$this->set_current_quiz_questions_answer_ids( $quiz_id );
+		}
+
+		if ( ! empty( $questions ) ) {
 			try {
 				$this->is_valid_quiz_question_answer_payload( $questions );
 			} catch ( \Throwable $th ) {
@@ -482,16 +485,44 @@ class QuizBuilder {
 	 * @param array $deleted_question_ids question ids.
 	 * @param array $deleted_answer_ids answer ids.
 	 * @param array $deleted_temp_mask_values unsaved draw/pin/puzzle mask values.
+	 * @param int   $quiz_id optional quiz id to scope deletions.
 	 *
 	 * @return void
 	 */
-	public function handle_delete( $deleted_question_ids = array(), $deleted_answer_ids = array(), $deleted_temp_mask_values = array() ) {
+	public function handle_delete( $deleted_question_ids = array(), $deleted_answer_ids = array(), $deleted_temp_mask_values = array(), $quiz_id = 0 ) {
 		global $wpdb;
 		$deleted_question_ids     = array_filter( $deleted_question_ids, 'is_numeric' );
 		$deleted_answer_ids       = array_filter( $deleted_answer_ids, 'is_numeric' );
 		$deleted_temp_mask_values = is_array( $deleted_temp_mask_values ) ? array_values( array_filter( array_map( 'strval', $deleted_temp_mask_values ) ) ) : array();
 		$question_file_paths      = array();
 		$mask_question_ids        = array();
+
+		$quiz_id = (int) $quiz_id;
+		if ( $quiz_id > 0 ) {
+			if ( count( $deleted_question_ids ) ) {
+				$in_clause          = QueryHelper::prepare_in_clause( $deleted_question_ids );
+				//phpcs:ignore -- sanitized $in_clause.
+				$valid_question_ids = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d AND question_id IN ({$in_clause})",
+						$quiz_id
+					)
+				);
+				$deleted_question_ids = ! empty( $valid_question_ids ) ? array_map( 'intval', $valid_question_ids ) : array();
+			}
+
+			if ( count( $deleted_answer_ids ) ) {
+				$in_clause        = QueryHelper::prepare_in_clause( $deleted_answer_ids );
+				//phpcs:ignore -- sanitized $in_clause.
+				$valid_answer_ids = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT a.answer_id FROM {$wpdb->prefix}tutor_quiz_question_answers a INNER JOIN {$wpdb->prefix}tutor_quiz_questions q ON a.belongs_question_id = q.question_id WHERE q.quiz_id = %d AND a.answer_id IN ({$in_clause})",
+						$quiz_id
+					)
+				);
+				$deleted_answer_ids = ! empty( $valid_answer_ids ) ? array_map( 'intval', $valid_answer_ids ) : array();
+			}
+		}
 
 		if ( count( $deleted_question_ids ) ) {
 			$mask_question_ids = $this->get_deletable_mask_question_ids( $deleted_question_ids );
@@ -840,7 +871,7 @@ class QuizBuilder {
 			$deleted_answer_ids       = Input::post( 'deleted_answer_ids', array(), Input::TYPE_ARRAY );
 			$deleted_temp_mask_values = Input::post( 'deleted_temp_mask_values', array(), Input::TYPE_ARRAY );
 
-			$this->handle_delete( $deleted_question_ids, $deleted_answer_ids, $deleted_temp_mask_values );
+			$this->handle_delete( $deleted_question_ids, $deleted_answer_ids, $deleted_temp_mask_values, $quiz_id );
 
 			$wpdb->query( 'COMMIT' );
 
@@ -902,6 +933,8 @@ class QuizBuilder {
 	 */
 	private function set_current_quiz_questions_answer_ids( int $quiz_id ) {
 		if ( ! $quiz_id ) {
+			$this->current_quiz_question_ids = array();
+			$this->current_quiz_answer_ids   = array();
 			return;
 		}
 
@@ -912,18 +945,16 @@ class QuizBuilder {
 			}
 		}
 
-		if ( is_null( $this->current_quiz_question_ids ) && $this->current_quiz ) {
-			$questions = $this->current_quiz->questions;
-			if ( $questions ) {
-				$this->current_quiz_question_ids = wp_list_pluck( $questions, 'question_id' );
-			}
+		if ( is_null( $this->current_quiz_question_ids ) ) {
+			$questions                       = $this->current_quiz ? ( $this->current_quiz->questions ?? array() ) : array();
+			$this->current_quiz_question_ids = ! empty( $questions ) ? wp_list_pluck( $questions, 'question_id' ) : array();
 		}
 
-		if ( is_null( $this->current_quiz_answer_ids ) && $this->current_quiz ) {
-			$quiz_details = $this->current_quiz->questions;
-
-			$quiz_question_answer          = wp_list_pluck( $quiz_details, 'question_answers' );
-			$this->current_quiz_answer_ids = wp_list_pluck( array_merge( ...$quiz_question_answer ), 'answer_id' );
+		if ( is_null( $this->current_quiz_answer_ids ) ) {
+			$questions             = $this->current_quiz ? ( $this->current_quiz->questions ?? array() ) : array();
+			$quiz_question_answers = ! empty( $questions ) ? wp_list_pluck( $questions, 'question_answers' ) : array();
+			$flattened             = ! empty( $quiz_question_answers ) ? array_merge( ...$quiz_question_answers ) : array();
+			$this->current_quiz_answer_ids = ! empty( $flattened ) ? wp_list_pluck( $flattened, 'answer_id' ) : array();
 		}
 	}
 
