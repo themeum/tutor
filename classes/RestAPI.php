@@ -249,7 +249,7 @@ class RestAPI {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( RestAuth::class, 'rest_refresh' ),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 
@@ -259,7 +259,7 @@ class RestAPI {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( RestAuth::class, 'rest_logout' ),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 

@@ -120,6 +120,13 @@ class RestAuth {
 	const LOGIN_WINDOW = 900;
 
 	/**
+	 * Verified access-token claims for the current request (user_id, kid).
+	 *
+	 * @var array{user_id:int,kid:int}|null
+	 */
+	private static $verified_token_claims = null;
+
+	/**
 	 * Register hooks.
 	 *
 	 * @since 2.2.1
@@ -202,6 +209,52 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function is_auth_route() {
+		return static::is_login_route() || static::is_refresh_route() || static::is_logout_route();
+	}
+
+	/**
+	 * Whether request is the auth login route (requires API key + secret).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return bool
+	 */
+	public static function is_login_route() {
+		return static::auth_path_matches( 'login' );
+	}
+
+	/**
+	 * Whether request is the auth refresh route.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return bool
+	 */
+	public static function is_refresh_route() {
+		return static::auth_path_matches( 'refresh' );
+	}
+
+	/**
+	 * Whether request is the auth logout route.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return bool
+	 */
+	public static function is_logout_route() {
+		return static::auth_path_matches( 'logout' );
+	}
+
+	/**
+	 * Whether the request path matches a Tutor auth endpoint segment.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param string $segment login|refresh|logout.
+	 *
+	 * @return bool
+	 */
+	private static function auth_path_matches( $segment ) {
 		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
 			return false;
 		}
@@ -215,16 +268,9 @@ class RestAuth {
 
 		$path        = trailingslashit( $path );
 		$rest_prefix = trailingslashit( rest_get_url_prefix() );
-		$base = '/' . $rest_prefix . 'tutor/v1/auth/';
+		$base        = '/' . $rest_prefix . 'tutor/v1/auth/' . $segment;
 
-		return (
-			false !== strpos( $path, $base . 'login/' )
-			|| false !== strpos( $path, $base . 'refresh/' )
-			|| false !== strpos( $path, $base . 'logout/' )
-			|| false !== strpos( $path, $base . 'login' )
-			|| false !== strpos( $path, $base . 'refresh' )
-			|| false !== strpos( $path, $base . 'logout' )
-		);
+		return false !== strpos( $path, $base . '/' ) || false !== strpos( $path, $base );
 	}
 
 	/**
@@ -382,13 +428,37 @@ class RestAuth {
 	}
 
 	/**
-	 * Permission string for a valid API key/secret on this request.
+	 * Permission string for this request.
+	 *
+	 * Login: from API key/secret headers.
+	 * All other Tutor REST routes: from the API key id (`kid`) bound into the access JWT.
 	 *
 	 * @since 4.0.10
+	 * @since 4.1.0 Non-login routes resolve permission from the access token kid.
 	 *
-	 * @return string Empty when credentials are missing or invalid.
+	 * @return string Empty when credentials/token are missing, invalid, or revoked.
 	 */
 	private static function get_api_key_permission() {
+		if ( static::is_login_route() ) {
+			return static::get_permission_from_api_credentials();
+		}
+
+		$kid = static::get_access_token_kid();
+		if ( ! $kid ) {
+			return '';
+		}
+
+		return static::get_permission_by_kid( $kid );
+	}
+
+	/**
+	 * Permission from API key/secret headers.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return string
+	 */
+	private static function get_permission_from_api_credentials() {
 		$credentials = static::get_api_credentials_from_request();
 		if ( ! $credentials ) {
 			return '';
@@ -399,12 +469,73 @@ class RestAuth {
 			return '';
 		}
 
-		$meta = json_decode( $record->meta_value );
+		return static::permission_from_key_meta( $record->meta_value );
+	}
+
+	/**
+	 * Permission for an API key usermeta row id (kid).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $kid usermeta umeta_id of the API key row.
+	 *
+	 * @return string Empty when missing or revoked.
+	 */
+	private static function get_permission_by_kid( $kid ) {
+		$kid = absint( $kid );
+		if ( ! $kid ) {
+			return '';
+		}
+
+		global $wpdb;
+		$record = QueryHelper::get_row( $wpdb->usermeta, array( 'umeta_id' => $kid ), 'umeta_id' );
+		if ( ! $record || static::KEYS_USER_META_KEY !== $record->meta_key ) {
+			return '';
+		}
+
+		return static::permission_from_key_meta( $record->meta_value );
+	}
+
+	/**
+	 * Extract permission string from API key meta JSON.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param string $meta_value JSON meta value.
+	 *
+	 * @return string
+	 */
+	private static function permission_from_key_meta( $meta_value ) {
+		$meta = json_decode( $meta_value );
 		if ( ! is_object( $meta ) || empty( $meta->permission ) ) {
 			return '';
 		}
 
 		return (string) $meta->permission;
+	}
+
+	/**
+	 * API key id (umeta_id) from the verified access token on this request.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return int
+	 */
+	private static function get_access_token_kid() {
+		$token = static::get_access_token_from_request();
+		if ( ! $token ) {
+			return 0;
+		}
+
+		if ( null !== static::$verified_token_claims && isset( static::$verified_token_claims['kid'] ) ) {
+			return absint( static::$verified_token_claims['kid'] );
+		}
+
+		if ( ! static::verify_access_token( $token ) ) {
+			return 0;
+		}
+
+		return isset( static::$verified_token_claims['kid'] ) ? absint( static::$verified_token_claims['kid'] ) : 0;
 	}
 
 	/**
@@ -456,17 +587,20 @@ class RestAuth {
 	}
 
 	/**
-	 * Process api request — validate key/secret and honor Read/Write/All vs HTTP method.
+	 * Process api request — honor Read/Write/All vs HTTP method.
+	 *
+	 * Login uses API key/secret. All other routes use the access token's bound key permission.
 	 *
 	 * @since 2.2.1
 	 * @since 4.0.10 Honor key permission; accept X-Tutor-Api-Key headers.
 	 * @since 4.0.10 Delegate to process_read/write/delete_request().
+	 * @since 4.1.0 Login-only key/secret; other routes use JWT kid permission.
 	 *
 	 * @return boolean
 	 */
 	public static function process_api_request() {
-		// Auth routes may POST with a Read key (login/refresh/logout).
-		if ( static::is_auth_route() ) {
+		// Login may POST with a Read-capable API key.
+		if ( static::is_login_route() ) {
 			return static::process_read_request();
 		}
 
@@ -862,7 +996,11 @@ class RestAuth {
 	/**
 	 * Login — issue access + refresh tokens.
 	 *
+	 * Requires a valid Read-capable API key/secret (permission_callback). The key id
+	 * is bound into issued tokens so later requests need only the Bearer token.
+	 *
 	 * @since 4.0.10
+	 * @since 4.1.0 Bind API key id (kid) into access and refresh tokens.
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
@@ -872,6 +1010,33 @@ class RestAuth {
 		$ssl_error = static::require_ssl_for_auth();
 		if ( is_wp_error( $ssl_error ) ) {
 			return $ssl_error;
+		}
+
+		$credentials = static::get_api_credentials_from_request();
+		if ( ! $credentials ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				__( 'API key and secret are required.', 'tutor' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$record = static::validate_api_key_secret( $credentials['key'], $credentials['secret'], true );
+		if ( ! $record ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				__( 'Invalid API key or secret.', 'tutor' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$kid = absint( $record->umeta_id );
+		if ( ! $kid || '' === static::permission_from_key_meta( $record->meta_value ) ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				__( 'Invalid API key or secret.', 'tutor' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
 		}
 
 		$username = sanitize_text_field( (string) $request->get_param( 'username' ) );
@@ -912,13 +1077,14 @@ class RestAuth {
 
 		static::clear_login_rate_limit( $username );
 
-		return rest_ensure_response( static::build_token_response( (int) $user->ID ) );
+		return rest_ensure_response( static::build_token_response( (int) $user->ID, $kid ) );
 	}
 
 	/**
 	 * Refresh access token (rotates refresh token).
 	 *
 	 * @since 4.0.10
+	 * @since 4.1.0 No API key/secret; reuses kid stored with the refresh token.
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
@@ -939,8 +1105,8 @@ class RestAuth {
 			);
 		}
 
-		$user_id = static::consume_refresh_token( $refresh );
-		if ( ! $user_id ) {
+		$session = static::consume_refresh_token( $refresh );
+		if ( ! $session ) {
 			return new \WP_Error(
 				'rest_invalid_refresh',
 				__( 'Invalid refresh token.', 'tutor' ),
@@ -948,7 +1114,15 @@ class RestAuth {
 			);
 		}
 
-		return rest_ensure_response( static::build_token_response( $user_id ) );
+		if ( '' === static::get_permission_by_kid( $session['kid'] ) ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				__( 'API key has been revoked.', 'tutor' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return rest_ensure_response( static::build_token_response( $session['user_id'], $session['kid'] ) );
 	}
 
 	/**
@@ -1121,12 +1295,13 @@ class RestAuth {
 	 * Build login/refresh response payload.
 	 *
 	 * @param int $user_id user id.
+	 * @param int $kid     API key usermeta id.
 	 *
 	 * @return array
 	 */
-	private static function build_token_response( $user_id ) {
-		$access  = static::issue_access_token( $user_id );
-		$refresh = static::issue_refresh_token( $user_id );
+	private static function build_token_response( $user_id, $kid ) {
+		$access  = static::issue_access_token( $user_id, $kid );
+		$refresh = static::issue_refresh_token( $user_id, $kid );
 		$user    = get_userdata( $user_id );
 
 		return array(
@@ -1142,14 +1317,23 @@ class RestAuth {
 	 * Issue HS256 access JWT.
 	 *
 	 * @param int $user_id user id.
+	 * @param int $kid     API key usermeta id.
 	 *
 	 * @return array{token:string,expires_in:int}
 	 */
-	private static function issue_access_token( $user_id ) {
+	private static function issue_access_token( $user_id, $kid ) {
 		$now = time();
 		$tv  = (int) get_user_meta( $user_id, static::TOKEN_VERSION_META, true );
+		$kid = absint( $kid );
 
-		$header  = static::base64url_encode( wp_json_encode( array( 'alg' => 'HS256', 'typ' => 'JWT' ) ) );
+		$header  = static::base64url_encode(
+			wp_json_encode(
+				array(
+					'alg' => 'HS256',
+					'typ' => 'JWT',
+				)
+			)
+		);
 		$payload = static::base64url_encode(
 			wp_json_encode(
 				array(
@@ -1158,6 +1342,7 @@ class RestAuth {
 					'exp' => $now + static::ACCESS_TTL,
 					'iss' => 'tutor',
 					'tv'  => $tv,
+					'kid' => $kid,
 				)
 			)
 		);
@@ -1177,6 +1362,8 @@ class RestAuth {
 	 * @return int
 	 */
 	private static function verify_access_token( $jwt ) {
+		static::$verified_token_claims = null;
+
 		$parts = explode( '.', $jwt );
 		if ( 3 !== count( $parts ) ) {
 			return 0;
@@ -1206,6 +1393,11 @@ class RestAuth {
 			return 0;
 		}
 
+		$kid = isset( $payload->kid ) ? absint( $payload->kid ) : 0;
+		if ( ! $kid || '' === static::get_permission_by_kid( $kid ) ) {
+			return 0;
+		}
+
 		$user_id = (int) $payload->sub;
 		$user    = get_userdata( $user_id );
 		if ( ! $user || ! $user->exists() ) {
@@ -1220,6 +1412,11 @@ class RestAuth {
 		if ( (int) ( $payload->tv ?? -1 ) !== $tv ) {
 			return 0;
 		}
+
+		static::$verified_token_claims = array(
+			'user_id' => $user_id,
+			'kid'     => $kid,
+		);
 
 		return $user_id;
 	}
@@ -1360,17 +1557,19 @@ class RestAuth {
 	}
 
 	/**
-	 * Issue opaque refresh token; store hash in usermeta.
+	 * Issue opaque refresh token; store hash + kid in usermeta.
 	 *
 	 * @param int $user_id user id.
+	 * @param int $kid     API key usermeta id.
 	 *
 	 * @return string
 	 */
-	private static function issue_refresh_token( $user_id ) {
+	private static function issue_refresh_token( $user_id, $kid ) {
 		$token = bin2hex( random_bytes( 32 ) );
 		$hash  = hash( 'sha256', $token );
 		$list  = static::get_refresh_token_list( $user_id );
 		$now   = time();
+		$kid   = absint( $kid );
 
 		$list   = array_values(
 			array_filter(
@@ -1383,6 +1582,7 @@ class RestAuth {
 		$list[] = array(
 			'hash' => $hash,
 			'exp'  => $now + static::REFRESH_TTL,
+			'kid'  => $kid,
 		);
 
 		update_user_meta( $user_id, static::REFRESH_META_KEY, wp_json_encode( $list ) );
@@ -1391,20 +1591,20 @@ class RestAuth {
 	}
 
 	/**
-	 * Validate and remove refresh token; return user id.
+	 * Validate and remove refresh token; return user id + kid.
 	 *
 	 * @param string $token refresh token.
 	 *
-	 * @return int
+	 * @return array{user_id:int,kid:int}|null
 	 */
 	private static function consume_refresh_token( $token ) {
-		$user_id = static::find_user_id_by_refresh_token( $token );
-		if ( ! $user_id ) {
-			return 0;
+		$session = static::find_refresh_session( $token );
+		if ( ! $session ) {
+			return null;
 		}
 
 		static::delete_refresh_token( $token );
-		return $user_id;
+		return $session;
 	}
 
 	/**
@@ -1415,6 +1615,20 @@ class RestAuth {
 	 * @return int
 	 */
 	private static function find_user_id_by_refresh_token( $token ) {
+		$session = static::find_refresh_session( $token );
+		return $session ? $session['user_id'] : 0;
+	}
+
+	/**
+	 * Find refresh session (user id + kid) for a refresh token.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param string $token refresh token.
+	 *
+	 * @return array{user_id:int,kid:int}|null
+	 */
+	private static function find_refresh_session( $token ) {
 		global $wpdb;
 
 		$hash = hash( 'sha256', $token );
@@ -1429,7 +1643,7 @@ class RestAuth {
 		);
 
 		if ( ! is_array( $rows ) ) {
-			return 0;
+			return null;
 		}
 
 		foreach ( $rows as $row ) {
@@ -1441,13 +1655,23 @@ class RestAuth {
 				if ( empty( $entry['hash'] ) || empty( $entry['exp'] ) ) {
 					continue;
 				}
-				if ( hash_equals( $entry['hash'], $hash ) && (int) $entry['exp'] > $now ) {
-					return (int) $row->user_id;
+				if ( ! hash_equals( $entry['hash'], $hash ) || (int) $entry['exp'] <= $now ) {
+					continue;
 				}
+
+				$kid = isset( $entry['kid'] ) ? absint( $entry['kid'] ) : 0;
+				if ( ! $kid ) {
+					return null;
+				}
+
+				return array(
+					'user_id' => (int) $row->user_id,
+					'kid'     => $kid,
+				);
 			}
 		}
 
-		return 0;
+		return null;
 	}
 
 	/**
