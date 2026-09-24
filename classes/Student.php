@@ -198,18 +198,13 @@ class Student {
 		$user_id = get_current_user_id();
 		do_action( 'tutor_profile_update_before', $user_id );
 
-		$first_name              = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
-		$last_name               = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
-		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
+		$first_name              = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'first_name' ) );
+		$last_name               = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'last_name' ) );
+		$phone_number            = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'phone_number' ) );
 		$tutor_profile_bio       = wp_kses( Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST ), tutor_utils()->allowed_profile_bio_tags() );
 		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
-		$timezone                = Input::post( 'timezone', '' );
-
-		// Decode HTML entities first (e.g. &lt;script&gt; → <script>), then strip the
-		// resulting tags. sanitize_text_field() alone does not decode entities, so an
-		// entity-encoded payload would pass through and later be decoded by the browser.
-		$display_name_raw = tutor_utils()->input_old( 'display_name' );
-		$display_name     = sanitize_text_field( wp_strip_all_tags( html_entity_decode( $display_name_raw, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ) );
+		$timezone                = Input::sanitize_with_strip_tags( Input::post( 'timezone', '' ) );
+		$display_name            = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'display_name' ) );
 
 		$userdata = array(
 			'ID'           => $user_id,
