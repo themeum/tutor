@@ -18,24 +18,26 @@ import type { QuizForm } from '@CourseBuilderServices/quiz';
 interface NegativeMarkTypeMismatchModalContentProps {
   isSwitchingToPoints: boolean;
   currentPenalty: number | string;
+  adminNegativeMarkValue: number | string;
 }
 
 const NegativeMarkTypeMismatchModalContent = ({
   isSwitchingToPoints,
   currentPenalty,
+  adminNegativeMarkValue,
 }: NegativeMarkTypeMismatchModalContentProps) => {
   const descriptionHtml = isSwitchingToPoints
     ? sprintf(
         // translators: 1: current penalty percentage (e.g. 15%), 2: new penalty placeholder ({new penalty})
         __('The penalty per wrong answer will change from %1$s to <strong>%2$s</strong> points.', 'tutor'),
         `${currentPenalty}%`,
-        '{new penalty}',
+        adminNegativeMarkValue,
       )
     : sprintf(
         // translators: 1: current penalty points (e.g. 15), 2: new penalty placeholder ({new penalty})
         __('The penalty per wrong answer will change from %1$s points to <strong>%2$s</strong>%%.', 'tutor'),
         currentPenalty,
-        '{new penalty}',
+        adminNegativeMarkValue,
       );
 
   return (
@@ -58,6 +60,7 @@ const NegativeMarkTypeMismatchNotice = () => {
   const negativeMarkingEnabled = form.watch('quiz_option.enable_negative_marking');
   const negativeMarkValue = form.watch('quiz_option.negative_mark_value');
 
+  const adminNegativeMarkValue = tutorConfig.settings.quiz_negative_mark_value;
   const adminNegativeMarkType =
     tutorConfig.settings?.quiz_negative_mark_type === QUIZ_NEGATIVE_MARK_TYPES.FIXED
       ? QUIZ_NEGATIVE_MARK_TYPES.FIXED
@@ -101,6 +104,7 @@ const NegativeMarkTypeMismatchNotice = () => {
           <NegativeMarkTypeMismatchModalContent
             isSwitchingToPoints={isSwitchingToPoints}
             currentPenalty={negativeMarkValue || DEFAULT_QUIZ_NEGATIVE_MARK_VALUE}
+            adminNegativeMarkValue={adminNegativeMarkValue}
           />
         ),
       },
@@ -109,8 +113,11 @@ const NegativeMarkTypeMismatchNotice = () => {
     });
 
     if (result?.action === 'CONFIRM') {
-      // Only the unit type changes, unit value remains unchanged
       form.setValue('quiz_option.negative_mark_type', adminNegativeMarkType, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      form.setValue('quiz_option.negative_mark_value', adminNegativeMarkValue, {
         shouldDirty: true,
         shouldValidate: true,
       });
