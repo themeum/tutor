@@ -159,12 +159,12 @@ class RestAuth {
 			return $user_id;
 		}
 
-		$token = static::get_access_token_from_request();
+		$token = self::get_access_token_from_request();
 		if ( ! $token ) {
 			return $user_id;
 		}
 
-		$jwt_user_id = static::verify_access_token( $token );
+		$jwt_user_id = self::verify_access_token( $token );
 		if ( ! $jwt_user_id ) {
 			return $user_id;
 		}
@@ -220,7 +220,7 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function is_login_route() {
-		return static::auth_path_matches( 'login' );
+		return self::auth_path_matches( 'login' );
 	}
 
 	/**
@@ -231,7 +231,7 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function is_refresh_route() {
-		return static::auth_path_matches( 'refresh' );
+		return self::auth_path_matches( 'refresh' );
 	}
 
 	/**
@@ -242,7 +242,7 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function is_logout_route() {
-		return static::auth_path_matches( 'logout' );
+		return self::auth_path_matches( 'logout' );
 	}
 
 	/**
@@ -440,15 +440,15 @@ class RestAuth {
 	 */
 	private static function get_api_key_permission() {
 		if ( static::is_login_route() ) {
-			return static::get_permission_from_api_credentials();
+			return self::get_permission_from_api_credentials();
 		}
 
-		$kid = static::get_access_token_kid();
+		$kid = self::get_access_token_kid();
 		if ( ! $kid ) {
 			return '';
 		}
 
-		return static::get_permission_by_kid( $kid );
+		return self::get_permission_by_kid( $kid );
 	}
 
 	/**
@@ -459,17 +459,17 @@ class RestAuth {
 	 * @return string
 	 */
 	private static function get_permission_from_api_credentials() {
-		$credentials = static::get_api_credentials_from_request();
+		$credentials = self::get_api_credentials_from_request();
 		if ( ! $credentials ) {
 			return '';
 		}
 
 		$record = static::validate_api_key_secret( $credentials['key'], $credentials['secret'], true );
-		if ( ! $record ) {
+		if ( ! is_object( $record ) ) {
 			return '';
 		}
 
-		return static::permission_from_key_meta( $record->meta_value );
+		return self::permission_from_key_meta( $record->meta_value );
 	}
 
 	/**
@@ -493,7 +493,7 @@ class RestAuth {
 			return '';
 		}
 
-		return static::permission_from_key_meta( $record->meta_value );
+		return self::permission_from_key_meta( $record->meta_value );
 	}
 
 	/**
@@ -522,20 +522,20 @@ class RestAuth {
 	 * @return int
 	 */
 	private static function get_access_token_kid() {
-		$token = static::get_access_token_from_request();
+		$token = self::get_access_token_from_request();
 		if ( ! $token ) {
 			return 0;
 		}
 
-		if ( null !== static::$verified_token_claims && isset( static::$verified_token_claims['kid'] ) ) {
-			return absint( static::$verified_token_claims['kid'] );
+		if ( null !== self::$verified_token_claims && isset( self::$verified_token_claims['kid'] ) ) {
+			return absint( self::$verified_token_claims['kid'] );
 		}
 
-		if ( ! static::verify_access_token( $token ) ) {
+		if ( ! self::verify_access_token( $token ) ) {
 			return 0;
 		}
 
-		return isset( static::$verified_token_claims['kid'] ) ? absint( static::$verified_token_claims['kid'] ) : 0;
+		return isset( self::$verified_token_claims['kid'] ) ? absint( self::$verified_token_claims['kid'] ) : 0;
 	}
 
 	/**
@@ -546,7 +546,7 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function process_read_request() {
-		$permission = static::get_api_key_permission();
+		$permission = self::get_api_key_permission();
 		if ( '' === $permission ) {
 			return false;
 		}
@@ -562,7 +562,7 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function process_write_request() {
-		$permission = static::get_api_key_permission();
+		$permission = self::get_api_key_permission();
 		if ( '' === $permission ) {
 			return false;
 		}
@@ -578,7 +578,7 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function process_delete_request() {
-		$permission = static::get_api_key_permission();
+		$permission = self::get_api_key_permission();
 		if ( '' === $permission ) {
 			return false;
 		}
@@ -1007,12 +1007,12 @@ class RestAuth {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public static function rest_login( WP_REST_Request $request ) {
-		$ssl_error = static::require_ssl_for_auth();
+		$ssl_error = self::require_ssl_for_auth();
 		if ( is_wp_error( $ssl_error ) ) {
 			return $ssl_error;
 		}
 
-		$credentials = static::get_api_credentials_from_request();
+		$credentials = self::get_api_credentials_from_request();
 		if ( ! $credentials ) {
 			return new \WP_Error(
 				'rest_forbidden',
@@ -1022,7 +1022,7 @@ class RestAuth {
 		}
 
 		$record = static::validate_api_key_secret( $credentials['key'], $credentials['secret'], true );
-		if ( ! $record ) {
+		if ( ! is_object( $record ) ) {
 			return new \WP_Error(
 				'rest_forbidden',
 				__( 'Invalid API key or secret.', 'tutor' ),
@@ -1031,7 +1031,7 @@ class RestAuth {
 		}
 
 		$kid = absint( $record->umeta_id );
-		if ( ! $kid || '' === static::permission_from_key_meta( $record->meta_value ) ) {
+		if ( ! $kid || '' === self::permission_from_key_meta( $record->meta_value ) ) {
 			return new \WP_Error(
 				'rest_forbidden',
 				__( 'Invalid API key or secret.', 'tutor' ),
@@ -1057,7 +1057,7 @@ class RestAuth {
 			}
 		}
 
-		if ( static::is_login_rate_limited( $username ) ) {
+		if ( self::is_login_rate_limited( $username ) ) {
 			return new \WP_Error(
 				'rest_login_limited',
 				__( 'Too many failed login attempts. Please try again later.', 'tutor' ),
@@ -1067,7 +1067,7 @@ class RestAuth {
 
 		$user = wp_authenticate( $username, $password );
 		if ( is_wp_error( $user ) ) {
-			static::bump_login_rate_limit( $username );
+			self::bump_login_rate_limit( $username );
 			return new \WP_Error(
 				'rest_invalid_credentials',
 				__( 'Invalid username or password.', 'tutor' ),
@@ -1075,9 +1075,9 @@ class RestAuth {
 			);
 		}
 
-		static::clear_login_rate_limit( $username );
+		self::clear_login_rate_limit( $username );
 
-		return rest_ensure_response( static::build_token_response( (int) $user->ID, $kid ) );
+		return rest_ensure_response( self::build_token_response( (int) $user->ID, $kid ) );
 	}
 
 	/**
@@ -1091,7 +1091,7 @@ class RestAuth {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public static function rest_refresh( WP_REST_Request $request ) {
-		$ssl_error = static::require_ssl_for_auth();
+		$ssl_error = self::require_ssl_for_auth();
 		if ( is_wp_error( $ssl_error ) ) {
 			return $ssl_error;
 		}
@@ -1105,7 +1105,7 @@ class RestAuth {
 			);
 		}
 
-		$session = static::consume_refresh_token( $refresh );
+		$session = self::consume_refresh_token( $refresh );
 		if ( ! $session ) {
 			return new \WP_Error(
 				'rest_invalid_refresh',
@@ -1114,7 +1114,7 @@ class RestAuth {
 			);
 		}
 
-		if ( '' === static::get_permission_by_kid( $session['kid'] ) ) {
+		if ( '' === self::get_permission_by_kid( $session['kid'] ) ) {
 			return new \WP_Error(
 				'rest_forbidden',
 				__( 'API key has been revoked.', 'tutor' ),
@@ -1122,7 +1122,7 @@ class RestAuth {
 			);
 		}
 
-		return rest_ensure_response( static::build_token_response( $session['user_id'], $session['kid'] ) );
+		return rest_ensure_response( self::build_token_response( $session['user_id'], $session['kid'] ) );
 	}
 
 	/**
@@ -1135,7 +1135,7 @@ class RestAuth {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public static function rest_logout( WP_REST_Request $request ) {
-		$ssl_error = static::require_ssl_for_auth();
+		$ssl_error = self::require_ssl_for_auth();
 		if ( is_wp_error( $ssl_error ) ) {
 			return $ssl_error;
 		}
@@ -1144,16 +1144,16 @@ class RestAuth {
 		$all     = (bool) $request->get_param( 'all' );
 
 		if ( $all ) {
-			$token   = static::get_access_token_from_request();
-			$user_id = $token ? static::verify_access_token( $token ) : 0;
+			$token   = self::get_access_token_from_request();
+			$user_id = $token ? self::verify_access_token( $token ) : 0;
 			if ( ! $user_id && $refresh ) {
-				$user_id = static::find_user_id_by_refresh_token( $refresh );
+				$user_id = self::find_user_id_by_refresh_token( $refresh );
 			}
 			if ( $user_id ) {
-				static::delete_all_refresh_tokens( $user_id );
+				self::delete_all_refresh_tokens( $user_id );
 			}
 		} elseif ( $refresh ) {
-			static::delete_refresh_token( $refresh );
+			self::delete_refresh_token( $refresh );
 		}
 
 		return rest_ensure_response(
@@ -1201,7 +1201,7 @@ class RestAuth {
 
 		$version = (int) get_user_meta( $user_id, static::TOKEN_VERSION_META, true );
 		update_user_meta( $user_id, static::TOKEN_VERSION_META, $version + 1 );
-		static::delete_all_refresh_tokens( $user_id );
+		self::delete_all_refresh_tokens( $user_id );
 	}
 
 	/**
@@ -1300,8 +1300,8 @@ class RestAuth {
 	 * @return array
 	 */
 	private static function build_token_response( $user_id, $kid ) {
-		$access  = static::issue_access_token( $user_id, $kid );
-		$refresh = static::issue_refresh_token( $user_id, $kid );
+		$access  = self::issue_access_token( $user_id, $kid );
+		$refresh = self::issue_refresh_token( $user_id, $kid );
 		$user    = get_userdata( $user_id );
 
 		return array(
@@ -1326,7 +1326,7 @@ class RestAuth {
 		$tv  = (int) get_user_meta( $user_id, static::TOKEN_VERSION_META, true );
 		$kid = absint( $kid );
 
-		$header  = static::base64url_encode(
+		$header  = self::base64url_encode(
 			wp_json_encode(
 				array(
 					'alg' => 'HS256',
@@ -1334,7 +1334,7 @@ class RestAuth {
 				)
 			)
 		);
-		$payload = static::base64url_encode(
+		$payload = self::base64url_encode(
 			wp_json_encode(
 				array(
 					'sub' => (int) $user_id,
@@ -1346,7 +1346,7 @@ class RestAuth {
 				)
 			)
 		);
-		$sig     = static::base64url_encode( hash_hmac( 'sha256', $header . '.' . $payload, static::jwt_secret(), true ) );
+		$sig     = self::base64url_encode( hash_hmac( 'sha256', $header . '.' . $payload, self::jwt_secret(), true ) );
 
 		return array(
 			'token'      => $header . '.' . $payload . '.' . $sig,
@@ -1362,7 +1362,7 @@ class RestAuth {
 	 * @return int
 	 */
 	private static function verify_access_token( $jwt ) {
-		static::$verified_token_claims = null;
+		self::$verified_token_claims = null;
 
 		$parts = explode( '.', $jwt );
 		if ( 3 !== count( $parts ) ) {
@@ -1371,15 +1371,15 @@ class RestAuth {
 
 		list( $header_b64, $payload_b64, $sig_b64 ) = $parts;
 
-		$expected = static::base64url_encode(
-			hash_hmac( 'sha256', $header_b64 . '.' . $payload_b64, static::jwt_secret(), true )
+		$expected = self::base64url_encode(
+			hash_hmac( 'sha256', $header_b64 . '.' . $payload_b64, self::jwt_secret(), true )
 		);
 
 		if ( ! hash_equals( $expected, $sig_b64 ) ) {
 			return 0;
 		}
 
-		$payload_json = static::base64url_decode( $payload_b64 );
+		$payload_json = self::base64url_decode( $payload_b64 );
 		$payload      = json_decode( $payload_json );
 		if ( ! is_object( $payload ) || empty( $payload->sub ) || empty( $payload->exp ) ) {
 			return 0;
@@ -1394,7 +1394,7 @@ class RestAuth {
 		}
 
 		$kid = isset( $payload->kid ) ? absint( $payload->kid ) : 0;
-		if ( ! $kid || '' === static::get_permission_by_kid( $kid ) ) {
+		if ( ! $kid || '' === self::get_permission_by_kid( $kid ) ) {
 			return 0;
 		}
 
@@ -1413,7 +1413,7 @@ class RestAuth {
 			return 0;
 		}
 
-		static::$verified_token_claims = array(
+		self::$verified_token_claims = array(
 			'user_id' => $user_id,
 			'kid'     => $kid,
 		);
@@ -1443,30 +1443,29 @@ class RestAuth {
 	}
 
 	/**
-	 * Base64 URL encode.
+	 * Base64 URL encode (JWT-safe, no padding).
 	 *
 	 * @param string $data raw.
 	 *
 	 * @return string
 	 */
 	private static function base64url_encode( $data ) {
-		return rtrim( strtr( base64_encode( $data ), '+/', '-_' ), '=' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		return sodium_bin2base64( $data, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING );
 	}
 
 	/**
-	 * Base64 URL decode.
+	 * Base64 URL decode (JWT-safe, no padding).
 	 *
 	 * @param string $data encoded.
 	 *
 	 * @return string
 	 */
 	private static function base64url_decode( $data ) {
-		$remainder = strlen( $data ) % 4;
-		if ( $remainder ) {
-			$data .= str_repeat( '=', 4 - $remainder );
+		try {
+			return sodium_base642bin( $data, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING );
+		} catch ( \Throwable $e ) {
+			return '';
 		}
-		$decoded = base64_decode( strtr( $data, '-_', '+/' ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-		return false === $decoded ? '' : $decoded;
 	}
 
 	/**
@@ -1475,7 +1474,7 @@ class RestAuth {
 	 * @return string
 	 */
 	private static function get_access_token_from_request() {
-		$headers = static::get_request_headers();
+		$headers = self::get_request_headers();
 
 		if ( ! empty( $headers['x-tutor-user-token'] ) ) {
 			return trim( $headers['x-tutor-user-token'] );
@@ -1494,7 +1493,7 @@ class RestAuth {
 	 * @return array{key:string,secret:string}|null
 	 */
 	private static function get_api_credentials_from_request() {
-		$headers = static::get_request_headers();
+		$headers = self::get_request_headers();
 
 		if ( ! empty( $headers['x-tutor-api-key'] ) && ! empty( $headers['x-tutor-api-secret'] ) ) {
 			return array(
@@ -1505,7 +1504,11 @@ class RestAuth {
 
 		$auth = $headers['authorization'] ?? '';
 		if ( $auth && 0 === stripos( $auth, 'Basic ' ) ) {
-			$decoded = base64_decode( substr( $auth, 6 ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+			try {
+				$decoded = sodium_base642bin( substr( $auth, 6 ), SODIUM_BASE64_VARIANT_ORIGINAL );
+			} catch ( \Throwable $e ) {
+				$decoded = '';
+			}
 			if ( is_string( $decoded ) && false !== strpos( $decoded, ':' ) ) {
 				list( $key, $secret ) = explode( ':', $decoded, 2 );
 				return array(
@@ -1567,7 +1570,7 @@ class RestAuth {
 	private static function issue_refresh_token( $user_id, $kid ) {
 		$token = bin2hex( random_bytes( 32 ) );
 		$hash  = hash( 'sha256', $token );
-		$list  = static::get_refresh_token_list( $user_id );
+		$list  = self::get_refresh_token_list( $user_id );
 		$now   = time();
 		$kid   = absint( $kid );
 
@@ -1598,12 +1601,12 @@ class RestAuth {
 	 * @return array{user_id:int,kid:int}|null
 	 */
 	private static function consume_refresh_token( $token ) {
-		$session = static::find_refresh_session( $token );
+		$session = self::find_refresh_session( $token );
 		if ( ! $session ) {
 			return null;
 		}
 
-		static::delete_refresh_token( $token );
+		self::delete_refresh_token( $token );
 		return $session;
 	}
 
@@ -1615,7 +1618,7 @@ class RestAuth {
 	 * @return int
 	 */
 	private static function find_user_id_by_refresh_token( $token ) {
-		$session = static::find_refresh_session( $token );
+		$session = self::find_refresh_session( $token );
 		return $session ? $session['user_id'] : 0;
 	}
 
@@ -1682,16 +1685,16 @@ class RestAuth {
 	 * @return void
 	 */
 	private static function delete_refresh_token( $token ) {
-		$user_id = static::find_user_id_by_refresh_token( $token );
+		$user_id = self::find_user_id_by_refresh_token( $token );
 		if ( ! $user_id ) {
 			// Token may already be partially matched — scan by hash after consume path.
 			$hash = hash( 'sha256', $token );
-			static::delete_refresh_hash_for_all_users( $hash );
+			self::delete_refresh_hash_for_all_users( $hash );
 			return;
 		}
 
 		$hash = hash( 'sha256', $token );
-		$list = static::get_refresh_token_list( $user_id );
+		$list = self::get_refresh_token_list( $user_id );
 		$list = array_values(
 			array_filter(
 				$list,
@@ -1812,7 +1815,7 @@ class RestAuth {
 	 * @return bool
 	 */
 	private static function is_login_rate_limited( $username ) {
-		return (int) get_transient( static::login_rate_limit_key( $username ) ) >= static::LOGIN_MAX_ATTEMPTS;
+		return (int) get_transient( self::login_rate_limit_key( $username ) ) >= static::LOGIN_MAX_ATTEMPTS;
 	}
 
 	/**
@@ -1823,7 +1826,7 @@ class RestAuth {
 	 * @return void
 	 */
 	private static function bump_login_rate_limit( $username ) {
-		$key   = static::login_rate_limit_key( $username );
+		$key   = self::login_rate_limit_key( $username );
 		$count = (int) get_transient( $key );
 		set_transient( $key, $count + 1, static::LOGIN_WINDOW );
 	}
@@ -1836,6 +1839,6 @@ class RestAuth {
 	 * @return void
 	 */
 	private static function clear_login_rate_limit( $username ) {
-		delete_transient( static::login_rate_limit_key( $username ) );
+		delete_transient( self::login_rate_limit_key( $username ) );
 	}
 }
