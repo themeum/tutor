@@ -106,7 +106,7 @@ class REST_Quiz {
 				'message' => __( 'Quiz not found for given ID', 'tutor' ),
 				'data'    => array(),
 			);
-			return self::send( $response );
+			return static::send( $response );
 		}
 
 		$quiz->quiz_settings = get_post_meta( $quiz->ID, 'tutor_quiz_option', false );
@@ -133,6 +133,10 @@ class REST_Quiz {
 			$question->question_answers = QuizModel::get_question_answers( $question->question_id, $question->question_type );
 		}
 
+		if ( ! RestAuth::can_reveal_quiz_answers( $quiz_id ) ) {
+			$questions = static::strip_is_correct_from_questions( $questions );
+		}
+
 		$quiz->quiz_questions = $questions;
 
 		$response = array(
@@ -141,7 +145,7 @@ class REST_Quiz {
 			'data'    => $quiz,
 		);
 
-		return self::send( $response );
+		return static::send( $response );
 	}
 
 	/**
@@ -188,7 +192,7 @@ class REST_Quiz {
 					'data'    => $data,
 				);
 			}
-			return self::send( $response );
+			return static::send( $response );
 		}
 
 		$response = array(
@@ -196,7 +200,7 @@ class REST_Quiz {
 			'message' => __( 'Quiz not found for given ID', 'tutor' ),
 			'data'    => $data,
 		);
-		return self::send( $response );
+		return static::send( $response );
 	}
 
 	/**
@@ -256,13 +260,17 @@ class REST_Quiz {
 				array_push( $data, $quiz );
 			}
 
+			if ( ! RestAuth::can_reveal_quiz_answers( (int) $this->post_parent ) ) {
+				$data = static::strip_is_correct_from_questions( $data );
+			}
+
 			$response = array(
 				'code'    => 'success',
 				'message' => __( 'Question retrieved successfully', 'tutor' ),
 				'data'    => $data,
 			);
 
-			return self::send( $response );
+			return static::send( $response );
 		}
 
 		$response = array(
@@ -271,7 +279,7 @@ class REST_Quiz {
 			'data'    => array(),
 		);
 
-		return self::send( $response );
+		return static::send( $response );
 	}
 
 	/**
@@ -312,8 +320,17 @@ class REST_Quiz {
 		);
 
 		if ( count( $attempts ) > 0 ) {
+			$user_id      = get_current_user_id();
+			$course_id    = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+			$can_view_all = $course_id && tutor_utils()->has_user_course_content_access( $user_id, $course_id );
+
 			// unserialize each attempt info.
 			foreach ( $attempts as $key => $attempt ) {
+				if ( ! $can_view_all && (int) $attempt->user_id !== (int) $user_id ) {
+					unset( $attempts[ $key ] );
+					continue;
+				}
+
 				$attempt->attempt_info = maybe_unserialize( $attempt->attempt_info );
 				// attach attempt ans.
 				$answers = $this->get_quiz_attempt_ans( $quiz_id );
@@ -325,13 +342,15 @@ class REST_Quiz {
 				}
 			}
 
+			$attempts = array_values( $attempts );
+
 			$response = array(
 				'code'    => 'success',
 				'message' => __( 'Quiz attempts retrieved successfully', 'tutor' ),
 				'data'    => $attempts,
 			);
 
-			return self::send( $response );
+			return static::send( $response );
 		}
 
 		$response = array(
@@ -340,7 +359,7 @@ class REST_Quiz {
 			'data'    => array(),
 		);
 
-		return self::send( $response );
+		return static::send( $response );
 	}
 
 	/**
@@ -420,5 +439,29 @@ class REST_Quiz {
 		);
 
 		return $results;
+	}
+
+	/**
+	 * Strip is_correct from question answer options.
+	 *
+	 * @since 4.0.10
+	 *
+	 * @param array $questions questions with answers.
+	 *
+	 * @return array
+	 */
+	private static function strip_is_correct_from_questions( $questions ) {
+		foreach ( $questions as $question ) {
+			if ( empty( $question->question_answers ) || ! is_array( $question->question_answers ) ) {
+				continue;
+			}
+			foreach ( $question->question_answers as $answer ) {
+				if ( is_object( $answer ) && isset( $answer->is_correct ) ) {
+					unset( $answer->is_correct );
+				}
+			}
+		}
+
+		return $questions;
 	}
 }

@@ -154,12 +154,22 @@ class REST_Course {
 				$author = get_userdata( $post->post_author );
 
 				if ( $author ) {
-					// Unset user pass & key.
-					unset( $author->data->user_pass );
-					unset( $author->data->user_activation_key );
-				}
+					$author_payload = (object) array(
+						'ID'            => $author->ID,
+						'display_name'  => $author->display_name,
+						'user_nicename' => $author->user_nicename,
+					);
 
-				is_a( $author, 'WP_User' ) ? $post->post_author = $author->data : new \stdClass();
+					if ( RestAuth::can_view_user_private_fields( (int) $author->ID ) ) {
+						$author_payload->user_login      = $author->user_login;
+						$author_payload->user_email      = $author->user_email;
+						$author_payload->user_registered = $author->user_registered;
+					}
+
+					$post->post_author = $author_payload;
+				} else {
+					$post->post_author = new \stdClass();
+				}
 
 				$thumbnail_size      = apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' );
 				$post->thumbnail_url = get_the_post_thumbnail_url( $post->ID, $thumbnail_size );
@@ -185,7 +195,7 @@ class REST_Course {
 				'data'    => $data,
 			);
 
-			return self::send( $response );
+			return static::send( $response );
 		}
 
 		$response = array(
@@ -194,7 +204,7 @@ class REST_Course {
 			'data'    => array(),
 		);
 
-		return self::send( $response );
+		return static::send( $response );
 	}
 
 	/**
@@ -216,7 +226,7 @@ class REST_Course {
 				'message' => __( 'Course detail retrieved successfully', 'tutor' ),
 				'data'    => $detail,
 			);
-			return self::send( $response );
+			return static::send( $response );
 		}
 		$response = array(
 			'code'    => 'course_detail',
@@ -224,7 +234,7 @@ class REST_Course {
 			'data'    => array(),
 		);
 
-		return self::send( $response );
+		return static::send( $response );
 	}
 
 	/**
@@ -330,7 +340,7 @@ class REST_Course {
 				'message' => __( 'Course contents retrieved successfully', 'tutor' ),
 				'data'    => $data,
 			);
-			return self::send( $response );
+			return static::send( $response );
 		}
 
 		$response = array(
@@ -339,6 +349,6 @@ class REST_Course {
 			'data'    => array(),
 		);
 
-		return self::send( $response );
+		return static::send( $response );
 	}
 }
