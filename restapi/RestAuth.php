@@ -1530,7 +1530,7 @@ class RestAuth {
 		}
 
 		if ( isset( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) && empty( $headers['authorization'] ) ) {
-			$headers['authorization'] = wp_unslash( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$headers['authorization'] = sanitize_text_field( wp_unslash( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) );
 		}
 
 		return $headers;
