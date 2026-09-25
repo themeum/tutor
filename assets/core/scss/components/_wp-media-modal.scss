@@ -46,11 +46,11 @@
 
   // Left Menu (Sidebar)
   .media-frame-menu {
-    border-right: 1px solid $tutor-border-idle !important;
+    border-inline-end: 1px solid $tutor-border-idle !important;
 
     .media-menu {
       background-color: $tutor-surface-sidebar-l1 !important;
-      border-right: none !important;
+      border-inline-end: none !important;
 
       .separator {
         border-bottom: 1px solid $tutor-border-idle !important;
@@ -100,6 +100,10 @@
   .media-frame-content {
     background-color: $tutor-surface-base !important;
     border-top: 1px solid $tutor-border-idle !important;
+
+    .embed-url {
+      background-color: $tutor-surface-base !important;
+    }
   }
 
   // Inline Drag-and-Drop Uploader
@@ -193,7 +197,7 @@
   // Details Sidebar (Right Pane)
   .media-sidebar {
     background-color: $tutor-surface-l1 !important;
-    border-left: 1px solid $tutor-border-idle !important;
+    border-inline-start: 1px solid $tutor-border-idle !important;
     color: $tutor-text-primary !important;
 
     .attachment-details {
@@ -285,7 +289,7 @@
 
     .imgedit-settings {
       background-color: $tutor-surface-l1 !important;
-      border-left: 1px solid $tutor-border-idle !important;
+      border-inline-start: 1px solid $tutor-border-idle !important;
     }
 
     .imgedit-group {
@@ -306,7 +310,7 @@
 
     .attachment-info {
       background-color: $tutor-surface-l1 !important;
-      border-left: 1px solid $tutor-border-idle !important;
+      border-inline-start: 1px solid $tutor-border-idle !important;
     }
   }
 }

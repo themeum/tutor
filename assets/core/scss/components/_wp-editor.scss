@@ -35,7 +35,7 @@
 
       &.mce-active.mce-menu-item-normal {
         background-color: $tutor-surface-l2 !important;
-        border-left: 4px solid $tutor-brand-600 !important;
+        border-inline-start: 4px solid $tutor-brand-600 !important;
 
         span {
           color: $tutor-text-primary !important;
@@ -299,7 +299,7 @@
 
       .query-notice-default,
       .query-notice-hint {
-        border-left: 4px solid $tutor-brand-600 !important;
+        border-inline-start: 4px solid $tutor-brand-600 !important;
         color: $tutor-text-subdued !important;
       }
     }
@@ -309,7 +309,7 @@
       border-bottom: 1px solid $tutor-border-idle !important;
 
       .item-title {
-        border-left: 4px solid $tutor-text-critical !important;
+        border-inline-start: 4px solid $tutor-text-critical !important;
         color: $tutor-text-subdued !important;
       }
     }
@@ -457,6 +457,30 @@
       border-bottom-color: $tutor-surface-l1 !important;
     }
 
+    .quicktags-toolbar {
+      background-color: $tutor-surface-l1 !important;
+      border-color: $tutor-border-idle !important;
+
+      input.button {
+        background-color: $tutor-surface-l1 !important;
+        color: $tutor-text-primary !important;
+        border: 1px solid $tutor-border-idle !important;
+
+        &:hover,
+        &:focus {
+          background-color: $tutor-surface-l1-hover !important;
+          color: $tutor-text-primary !important;
+        }
+      }
+    }
+
+    textarea.wp-editor-area {
+      background-color: $tutor-surface-l1 !important;
+      color: $tutor-text-primary !important;
+    }
+  }
+
+  .mce-tinymce {
     .mce-tinymce,
     .mce-toolbar-grp,
     .mce-panel,
@@ -496,33 +520,11 @@
     }
 
     .mce-btn-group:not(:first-child) {
-      border-left-color: $tutor-border-idle !important;
+      border-inline-start-color: $tutor-border-idle !important;
     }
 
     .mce-toolbar:last-of-type {
       border-top-color: $tutor-border-idle !important;
-    }
-
-    .quicktags-toolbar {
-      background-color: $tutor-surface-l1 !important;
-      border-color: $tutor-border-idle !important;
-
-      input.button {
-        background-color: $tutor-surface-l1 !important;
-        color: $tutor-text-primary !important;
-        border: 1px solid $tutor-border-idle !important;
-
-        &:hover,
-        &:focus {
-          background-color: $tutor-surface-l1-hover !important;
-          color: $tutor-text-primary !important;
-        }
-      }
-    }
-
-    textarea.wp-editor-area {
-      background-color: $tutor-surface-l1 !important;
-      color: $tutor-text-primary !important;
     }
   }
 }

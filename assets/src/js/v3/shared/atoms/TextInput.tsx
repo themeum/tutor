@@ -172,6 +172,7 @@ const styles = {
       border-radius: ${borderRadius[5]};
       border: 1px solid ${colorTokens.stroke.default};
       padding: 0 ${spacing[32]} 0 ${spacing[12]};
+      background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.primary};
       appearance: textfield;
 

@@ -101,6 +101,7 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
     margin: 0 ${spacing[8]};
+    background-color: ${colorTokens.background.white};
     color: ${colorTokens.text.subdued};
     padding: 8px 12px;
     width: 72px;
