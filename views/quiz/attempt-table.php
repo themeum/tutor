@@ -49,7 +49,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 
 			<?php
 				$attempt_ids   = array_column( $attempt_list, 'attempt_id' );
-				$answers_array = \Tutor\Models\QuizModel::get_quiz_answers_by_attempt_id( $attempt_ids, true );
+				$answers_array = QuizModel::get_quiz_answers_by_attempt_id( $attempt_ids, true );
 			?>
 
 			<tbody>
@@ -62,19 +62,10 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 						$attempt_result    = QuizModel::get_attempt_result( $attempt->attempt_id );
 						$is_result_pending = QuizModel::RESULT_PENDING === $attempt_result;
 
-						$correct    = 0;
-						$incorrect  = 0;
-						$attempt_id = $attempt->attempt_id;
-
-					if ( is_array( $answers ) && count( $answers ) > 0 ) {
-						foreach ( $answers as $answer ) {
-							if ( (bool) $answer->is_correct ) {
-								$correct++;
-							} elseif ( ! ( null === $answer->is_correct ) ) {
-								$incorrect++;
-							}
-						}
-					}
+						$attempt_id    = $attempt->attempt_id;
+						$answer_counts = QuizModel::get_attempt_answer_counts( $answers );
+						$correct       = $answer_counts['correct'];
+						$incorrect     = $answer_counts['incorrect'];
 					?>
 					<tr>
 						<?php foreach ( $table_columns as $key => $column ) : ?>
@@ -140,7 +131,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 								<?php elseif ( 'incorrect_answer' == $key ) : ?>
 									<?php echo esc_html( $incorrect ); ?>
 								<?php elseif ( 'earned_marks' == $key ) : ?>
-									<?php echo esc_html( isset( $attempt->earned_marks ) ? round( $attempt->earned_marks ) . ' (' . $earned_percentage . '%)' : '0 (0%)' ); ?>
+									<?php echo esc_html( isset( $attempt->earned_marks ) ? round( (float) $attempt->earned_marks, 2 ) . ' (' . $earned_percentage . '%)' : '0 (0%)' ); ?>
 								<?php elseif ( 'result' == $key ) : ?>
 									<?php
 									if ( $is_result_pending ) {
