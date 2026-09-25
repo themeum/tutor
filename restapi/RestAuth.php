@@ -592,7 +592,7 @@ class RestAuth {
 	 * Login uses API key/secret. All other routes use the access token's bound key permission.
 	 *
 	 * @since 2.2.1
-	 * @since 4.0.10 Honor key permission; accept X-Tutor-Api-Key headers.
+	 * @since 4.0.10 Honor key permission; accept Tutor-Api-Key headers.
 	 * @since 4.0.10 Delegate to process_read/write/delete_request().
 	 * @since 4.1.0 Login-only key/secret; other routes use JWT kid permission.
 	 *
@@ -1469,15 +1469,15 @@ class RestAuth {
 	}
 
 	/**
-	 * Read access token from Authorization Bearer or X-Tutor-User-Token.
+	 * Read access token from Authorization Bearer or Tutor-User-Token.
 	 *
 	 * @return string
 	 */
 	private static function get_access_token_from_request() {
 		$headers = self::get_request_headers();
 
-		if ( ! empty( $headers['x-tutor-user-token'] ) ) {
-			return trim( $headers['x-tutor-user-token'] );
+		if ( ! empty( $headers['tutor-user-token'] ) ) {
+			return trim( $headers['tutor-user-token'] );
 		}
 
 		if ( ! empty( $headers['authorization'] ) && 0 === stripos( $headers['authorization'], 'Bearer ' ) ) {
@@ -1488,17 +1488,17 @@ class RestAuth {
 	}
 
 	/**
-	 * Read API key/secret from Basic auth or X-Tutor-Api-* headers.
+	 * Read API key/secret from Basic auth or Tutor-Api-* headers.
 	 *
 	 * @return array{key:string,secret:string}|null
 	 */
 	private static function get_api_credentials_from_request() {
 		$headers = self::get_request_headers();
 
-		if ( ! empty( $headers['x-tutor-api-key'] ) && ! empty( $headers['x-tutor-api-secret'] ) ) {
+		if ( ! empty( $headers['tutor-api-key'] ) && ! empty( $headers['tutor-api-secret'] ) ) {
 			return array(
-				'key'    => sanitize_text_field( $headers['x-tutor-api-key'] ),
-				'secret' => sanitize_text_field( $headers['x-tutor-api-secret'] ),
+				'key'    => sanitize_text_field( $headers['tutor-api-key'] ),
+				'secret' => sanitize_text_field( $headers['tutor-api-secret'] ),
 			);
 		}
 
