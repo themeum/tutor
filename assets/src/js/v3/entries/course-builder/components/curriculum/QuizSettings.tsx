@@ -36,6 +36,7 @@ import QuizFullPageSvg from '@SharedImages/quiz-fullpage.svg';
 import QuizSingleLayoutSvg from '@SharedImages/quiz-single-question.svg';
 
 import FormQuizLayoutSelect from './FormQuizLayoutSelect';
+import NegativeMarkTypeMismatchNotice from './NegativeMarkTypeMismatchNotice';
 
 const courseId = getCourseId();
 
@@ -382,6 +383,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     rules={{
                       ...requiredRule(),
                       validate: (value) => {
+                        if (isNaN(Number(value))) return __('Must be a number', 'tutor');
                         const numericValue = Number(value);
                         if (numericValue <= 0) return __('Cannot be less than or equal to 0', 'tutor');
                         if (negativeMarkType === QUIZ_NEGATIVE_MARK_TYPES.PERCENT && numericValue > 100)
@@ -408,6 +410,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   />
                 </Show>
               </div>
+
+              <NegativeMarkTypeMismatchNotice />
             </Show>
           </div>
 
