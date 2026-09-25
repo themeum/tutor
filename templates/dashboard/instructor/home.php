@@ -332,7 +332,7 @@ $sortable_sections_ids = array_reduce(
 <form x-data='tutorForm({
 		id: "sortable-sections",
 		mode: "onBlur",
-		defaultValues: <?php echo wp_json_encode( $sortable_sections_defaults ); ?>
+		defaultValues: <?php echo tutor_json_encode( $sortable_sections_defaults ); ?>
 	})' 
 	x-bind="getFormBindings()"
 	class="tutor-flex tutor-flex-column tutor-gap-6"
@@ -364,7 +364,7 @@ $sortable_sections_ids = array_reduce(
 				<div 
 					class="tutor-popover-menu"
 					x-data='tutorSortableSections(
-							<?php echo wp_json_encode( $sortable_sections_ids ); ?>
+							<?php echo tutor_json_encode( $sortable_sections_ids ); ?>
 						)'
 				>
 					<?php foreach ( $sortable_sections as $section ) : ?>

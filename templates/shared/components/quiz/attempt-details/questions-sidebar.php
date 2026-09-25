@@ -60,7 +60,7 @@ $first_question_id = $first_question_id > 0 ? $first_question_id : '';
 <div
 	class="tutor-quiz-summary-sidebar"
 	x-data="tutorQuizSummarySidebar({
-		firstQuestionId: '<?php echo esc_js( (string) $first_question_id ); ?>'
+		firstQuestionId: '<?php echo (int) $first_question_id ? (int) $first_question_id : ''; ?>'
 	})"
 >
 	<h3 class="tutor-h3 tutor-mb-10">
@@ -85,8 +85,8 @@ $first_question_id = $first_question_id > 0 ? $first_question_id : '';
 					href="#question-<?php echo esc_attr( $question_id ); ?>"
 					class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>"
 					data-question-id="<?php echo esc_attr( $question_id ); ?>"
-					:class="{ 'active': String(activeQuestionId) === '<?php echo esc_attr( $question_id ); ?>' }"
-					@click.prevent="setActiveQuestion('<?php echo esc_attr( $question_id ); ?>')"
+					:class="{ 'active': String(activeQuestionId) === '<?php echo (int) $question_id; ?>' }"
+					@click.prevent="setActiveQuestion('<?php echo (int) $question_id; ?>')"
 				>
 					<div class="tutor-question-number"><?php echo esc_html( (int) $index + 1 ); ?>.</div>
 					<div class="tutor-question-content">

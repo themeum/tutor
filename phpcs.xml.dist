@@ -14,4 +14,13 @@
             </property>
         </properties>
     </rule>
+
+    <!-- Whitelist custom escaping functions -->
+    <rule ref="WordPress.Security.EscapeOutput">
+        <properties>
+            <property name="customEscapingFunctions" type="array">
+                <element value="tutor_json_encode"/>
+            </property>
+        </properties>
+    </rule>
 </ruleset>

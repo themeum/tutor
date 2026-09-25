@@ -34,7 +34,7 @@ $form_id = 'create-review-form';
 			id: "<?php echo esc_attr( $form_id ); ?>",
 			mode: "onChange",
 			defaultValues: {
-				comment_post_ID: <?php echo esc_html( $tutor_course_id ); ?>,
+				comment_post_ID: <?php echo (int) $tutor_course_id; ?>,
 				clear_review_popup_data: <?php echo ! empty( $data['clear_review_popup_data'] ) ? 'true' : 'false'; ?>
 			},
 		})'

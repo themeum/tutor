@@ -28,7 +28,7 @@ $is_pending    = $is_pending ?? 'false';
 
 <form 
 	class="<?php echo esc_attr( $form_class ); ?>"
-	x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>', mode: 'onSubmit', defaultValues: { comment: '<?php echo esc_js( $default_value ); ?>' } }), focused: false }"
+	x-data="{ ...tutorForm({ id: <?php echo tutor_json_encode( (string) $form_id ); ?>, mode: 'onSubmit', defaultValues: { comment: <?php echo tutor_json_encode( (string) $default_value ); ?> } }), focused: false }"
 	x-bind="getFormBindings()"
 	@submit.prevent="handleSubmit(<?php echo esc_js( $submit_handler ); ?>)($event)"
 >

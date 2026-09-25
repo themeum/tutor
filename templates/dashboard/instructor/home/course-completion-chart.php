@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php esc_html_e( 'Course Completion Rate', 'tutor' ); ?>
 	</div>
 
-	<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorCourseCompletionChart(<?php echo esc_attr( wp_json_encode( $course_completion_data ) ); ?>)' x-ref="canvas"></canvas>
+	<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorCourseCompletionChart(<?php echo tutor_json_encode( $course_completion_data ); ?>)' x-ref="canvas"></canvas>
 
 	<div class="tutor-flex tutor-flex-wrap tutor-gap-5 tutor-mt-6">
 		<?php foreach ( $course_completion_data as $key => $value ) : ?>

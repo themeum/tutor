@@ -40,13 +40,13 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data='tutorForm({ 
-			id: "<?php echo esc_attr( $form_id ); ?>", 
+			id: <?php echo tutor_json_encode( (string) $form_id ); ?>, 
 			mode: "onChange", 
 			shouldFocusError: true,
-			defaultValues: <?php echo wp_json_encode( $user_preferences ); ?>
+			defaultValues: <?php echo tutor_json_encode( $user_preferences ); ?>
 		})'
 		x-bind="getFormBindings()"
-		@submit="handleSubmit((data) => { savePreferencesMutation?.mutate({...data, formId: '<?php echo esc_attr( $form_id ); ?>'}); })($event)"
+		@submit="handleSubmit((data) => { savePreferencesMutation?.mutate({...data, formId: '<?php echo esc_js( $form_id ); ?>'}); })($event)"
 	>
 		<!-- Course Content Section -->
 		<div class="tutor-flex tutor-justify-between tutor-mb-4">

@@ -32,9 +32,9 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 
 <div
 	x-data="tutorQuestionMatching({
-		questionId: 'question-<?php echo esc_attr( $question['question_id'] ); ?>',
-		onDrop: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
-		onClear: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
+		questionId: <?php echo tutor_json_encode( 'question-' . (int) $question['question_id'] ); ?>,
+		onDrop: (values) => setValue(<?php echo tutor_json_encode( $answer_field_name ); ?>, values, { shouldDirty: true }),
+		onClear: (values) => setValue(<?php echo tutor_json_encode( $answer_field_name ); ?>, values, { shouldDirty: true }),
 	})"
 	class='tutor-flex tutor-flex-column tutor-gap-7 tutor-sm-gap-5'
 >

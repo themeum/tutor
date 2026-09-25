@@ -37,7 +37,7 @@ $hide_footer_init = $hide_footer_init ?? false;
 		x-collapse
 		x-init="$watch('<?php echo esc_js( $x_show ); ?>', value => value && $nextTick(() => $refs.commentInput.focus()))"
 	<?php endif; ?>
-	x-data="tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>', mode: 'onSubmit', defaultValues: { comment: '<?php echo esc_js( $default_value ); ?>' } })"
+	x-data="{ ...tutorForm({ id: <?php echo tutor_json_encode( (string) $form_id ); ?>, mode: 'onSubmit', defaultValues: { comment: <?php echo tutor_json_encode( (string) $default_value ); ?> } }), focused: false }"
 	x-bind="getFormBindings()"
 	@submit.prevent="handleSubmit((data) => <?php echo esc_js( $submit_handler ); ?>)($event)"
 >

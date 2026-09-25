@@ -65,11 +65,11 @@ $render_timer_tokens = static function ( array $tokens ) {
 	<div
 		class="tutor-quiz-progress"
 		x-data="tutorQuizTimer({
-			duration: <?php echo esc_attr( $remaining_time_secs ); ?>,
+			duration: <?php echo (int) $remaining_time_secs; ?>,
 			hasLimit: <?php echo $has_time_limit ? 'true' : 'false'; ?>,
-			expiresAction: '<?php echo esc_attr( $quiz_when_time_expires ); ?>',
-			formId: '<?php echo esc_attr( $form_id ); ?>',
-			totalQuestions: <?php echo esc_attr( $total_questions ); ?>,
+			expiresAction: <?php echo tutor_json_encode( $quiz_when_time_expires ); ?>,
+			formId: <?php echo tutor_json_encode( $form_id ); ?>,
+			totalQuestions: <?php echo (int) $total_questions; ?>,
 		})"
 		x-init="init()"
 	>

@@ -121,7 +121,7 @@ $action_url = add_query_arg( 'page_tab', 'comments', get_permalink( $lesson_comm
 								<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
-							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('<?php echo esc_js( $comment_delete_modal_id ); ?>', { commentId: <?php echo esc_html( $lesson_comment->comment_ID ); ?> }); hide()">
+							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('<?php echo esc_js( $comment_delete_modal_id ); ?>', { commentId: <?php echo (int) $lesson_comment->comment_ID; ?> }); hide()">
 								<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>

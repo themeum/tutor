@@ -85,7 +85,7 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 					->size( Size::SMALL )
 					->icon( Icon::DELETE_2 )
 					->icon_only()
-					->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review->comment_ID ) . ' })' )
+					->attr( 'onclick', 'TutorCore.modal.showModal(' . tutor_json_encode( $delete_modal_id ) . ', { id: ' . (int) $review->comment_ID . ' })' )
 					->icon_only()
 					->render();
 				?>
@@ -101,7 +101,7 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 			x-data='tutorForm({
 				id: "<?php echo esc_attr( $form_id ); ?>",
 				mode: "onChange",
-				defaultValues: <?php echo wp_json_encode( $review ); ?>,
+				defaultValues: <?php echo tutor_json_encode( $review ); ?>,
 			})'
 			x-bind="getFormBindings()"
 			@submit.prevent="handleSubmit(

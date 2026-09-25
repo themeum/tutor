@@ -76,7 +76,7 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 								</button>
 								<button 
 									class="tutor-popover-menu-item tutor-gap-5"
-									@click="TutorCore.modal.showModal('<?php echo esc_js( $qna_delete_modal_id ); ?>', { question_id: <?php echo esc_html( $question->comment_ID ); ?> }); hide();"
+									@click="TutorCore.modal.showModal('<?php echo esc_js( $qna_delete_modal_id ); ?>', { question_id: <?php echo (int) $question->comment_ID; ?> }); hide();"
 								>
 									<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 								</button>

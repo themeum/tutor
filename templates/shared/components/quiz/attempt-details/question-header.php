@@ -22,7 +22,7 @@ use Tutor\Components\SvgIcon;
  * @return array{ x_text: string, class_expr: string }
  */
 $build_badge_attrs = function ( string $review_field_name ): array {
-	$label_map = wp_json_encode(
+	$label_map = tutor_json_encode(
 		array(
 			'pending'   => __( 'Pending', 'tutor' ),
 			'correct'   => __( 'Correct', 'tutor' ),
@@ -30,7 +30,7 @@ $build_badge_attrs = function ( string $review_field_name ): array {
 		)
 	);
 
-	$variant_map = wp_json_encode(
+	$variant_map = tutor_json_encode(
 		array(
 			'pending'   => Badge::WARNING,
 			'correct'   => Badge::SUCCESS,
@@ -38,11 +38,11 @@ $build_badge_attrs = function ( string $review_field_name ): array {
 		)
 	);
 
-	$field = esc_attr( $review_field_name );
+	$clean_field = preg_replace( '/[^a-zA-Z0-9_\[\]]/', '', $review_field_name );
 
 	return array(
-		'x_text'     => "({$label_map})[watch('{$field}')] ?? ''",
-		'class_expr' => "'tutor-badge tutor-badge-rounded tutor-badge-' + (({$variant_map})[watch('{$field}')] ?? 'info')",
+		'x_text'     => "({$label_map})[watch('{$clean_field}')] ?? ''",
+		'class_expr' => "'tutor-badge tutor-badge-rounded tutor-badge-' + (({$variant_map})[watch('{$clean_field}')] ?? 'info')",
 	);
 };
 
@@ -56,6 +56,7 @@ $attempt_id           = (int) ( $attempt_id ?? 0 );
 $attempt_answer_id    = (int) ( $attempt_answer_id ?? 0 );
 $is_instructor_review = ! empty( $is_instructor_review );
 $review_field_name    = (string) ( $review_field_name ?? '' );
+$clean_field_name     = preg_replace( '/[^a-zA-Z0-9_\[\]]/', '', $review_field_name );
 ?>
 
 <div class="tutor-quiz-question-header">
@@ -124,21 +125,21 @@ $review_field_name    = (string) ( $review_field_name ?? '' );
 						type="hidden"
 						name="<?php echo esc_attr( $review_field_name ); ?>"
 						value="<?php echo esc_attr( $answer_status ); ?>"
-						x-bind="register('<?php echo esc_attr( $review_field_name ); ?>')"
+						x-bind="register('<?php echo esc_attr( $clean_field_name ); ?>')"
 					/>
 
 					<label
 						class="tutor-quiz-question-review-action"
 						data-review-status="correct"
 						title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>"
-						@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'correct', { shouldDirty: true })"
+						@click="setValue('<?php echo esc_attr( $clean_field_name ); ?>', 'correct', { shouldDirty: true })"
 					>
 						<input
 							class="tutor-quiz-question-review-input"
 							type="radio"
 							name="<?php echo esc_attr( $review_field_name ); ?>"
 							value="correct"
-							:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'correct'"
+							:checked="watch('<?php echo esc_attr( $clean_field_name ); ?>') === 'correct'"
 							tabindex="-1"
 							aria-hidden="true"
 						/>
@@ -149,14 +150,14 @@ $review_field_name    = (string) ( $review_field_name ?? '' );
 						class="tutor-quiz-question-review-action"
 						data-review-status="incorrect"
 						title="<?php esc_attr_e( 'Mark as incorrect', 'tutor' ); ?>"
-						@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'incorrect', { shouldDirty: true })"
+						@click="setValue('<?php echo esc_attr( $clean_field_name ); ?>', 'incorrect', { shouldDirty: true })"
 					>
 						<input
 							class="tutor-quiz-question-review-input"
 							type="radio"
 							name="<?php echo esc_attr( $review_field_name ); ?>"
 							value="incorrect"
-							:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'incorrect'"
+							:checked="watch('<?php echo esc_attr( $clean_field_name ); ?>') === 'incorrect'"
 							tabindex="-1"
 							aria-hidden="true"
 						/>

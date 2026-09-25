@@ -61,11 +61,11 @@ if ( is_array( $questions ) ) {
 			const form = tutorForm({
 				id: "<?php echo esc_attr( $form_id ); ?>",
 				mode: "onSubmit",
-				defaultValues: <?php echo wp_json_encode( $form_default_values, JSON_HEX_APOS ); ?>
+				defaultValues: <?php echo tutor_json_encode( $form_default_values ); ?>
 			});
 			const feedback =  tutorQuizAttemptFeedback({
-				attemptId: <?php echo esc_attr( $attempt_id ); ?>,
-				formId: "<?php echo esc_attr( $form_id ); ?>"
+				attemptId: <?php echo (int) $attempt_id; ?>,
+				formId: <?php echo tutor_json_encode( (string) $form_id ); ?>
 			});
 
 			return {

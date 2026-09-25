@@ -116,7 +116,7 @@ if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) :
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 		var loginModal = document.querySelector('.tutor-modal.tutor-login-modal');
-		var errors = <?php echo wp_json_encode( $login_errors ); ?>;
+		var errors = <?php echo tutor_json_encode( $login_errors ); ?>;
 		if (loginModal && errors.length) {
 			loginModal.classList.add('tutor-is-active');
 		}

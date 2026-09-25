@@ -76,7 +76,7 @@ use Tutor\Components\Constants\Variant;
 								<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
-							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('tutor-comment-delete-modal', { commentId: <?php echo esc_html( $reply->comment_ID ); ?>, isReply: true }); hide()">
+							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('tutor-comment-delete-modal', { commentId: <?php echo (int) $reply->comment_ID; ?>, isReply: true }); hide()">
 								<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>

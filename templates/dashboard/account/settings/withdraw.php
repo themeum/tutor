@@ -104,12 +104,12 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data='tutorForm({ 
-			id: "<?php echo esc_attr( $form_id ); ?>",
+			id: <?php echo tutor_json_encode( (string) $form_id ); ?>,
 			mode: "onChange",
-			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
+			defaultValues: <?php echo tutor_json_encode( $default_values ); ?>,
 		})'
 		x-bind="getFormBindings()"
-		@submit="handleSubmit((data) => handleSaveWithdrawMethod(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
+		@submit="handleSubmit((data) => handleSaveWithdrawMethod(data, '<?php echo esc_js( $form_id ); ?>'))($event)"
 		class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5"
 	>
 		<?php

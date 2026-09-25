@@ -237,11 +237,11 @@ if ( QuizModel::RESULT_PASS === $attempt_result ) {
 							'@click',
 							sprintf(
 								'TutorCore.modal.showModal("%s", { data: %s });',
-								$retry_modal_id,
-								wp_json_encode(
+								esc_js( $retry_modal_id ),
+								tutor_json_encode(
 									array(
-										'quizID'      => $quiz_id,
-										'redirectURL' => get_post_permalink( $quiz_id ),
+										'quizID'      => (int) $quiz_id,
+										'redirectURL' => esc_url_raw( get_post_permalink( $quiz_id ) ),
 									)
 								)
 							)

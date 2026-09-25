@@ -63,12 +63,12 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data='tutorForm({ 
-			id: "<?php echo esc_attr( $form_id ); ?>",
+			id: <?php echo tutor_json_encode( (string) $form_id ); ?>,
 			mode: "onChange",
-			defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>,
+			defaultValues: <?php echo tutor_json_encode( $default_values ); ?>,
 		})'
 		x-bind="getFormBindings()"
-		@submit="handleSubmit((data) => handleUpdateProfile(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
+		@submit="handleSubmit((data) => handleUpdateProfile(data, '<?php echo esc_js( $form_id ); ?>'))($event)"
 		class="tutor-flex tutor-flex-column tutor-gap-6"
 	>
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">

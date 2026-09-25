@@ -31,13 +31,13 @@ foreach ( $social_fields as $key => $field ) {
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data='tutorForm({ 
-			id: "<?php echo esc_attr( $form_id ); ?>",
+			id: <?php echo tutor_json_encode( (string) $form_id ); ?>,
 			mode: "onChange",
 			shouldFocusError: true,
-			defaultValues: <?php echo esc_attr( wp_json_encode( $social_links ) ); ?>
+			defaultValues: <?php echo tutor_json_encode( $social_links ); ?>
 		})'
 		x-bind="getFormBindings()"
-		@submit="handleSubmit((data) => handleSaveSocialProfile(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
+		@submit="handleSubmit((data) => handleSaveSocialProfile(data, '<?php echo esc_js( $form_id ); ?>'))($event)"
 		class="tutor-card tutor-social-form"
 	>
 		<?php do_action( 'tutor_profile_edit_before_social_media', $user ); ?>

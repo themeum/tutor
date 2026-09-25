@@ -354,7 +354,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 									<?php if ( $show_course_delete && $is_main_instructor && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT, CourseModel::STATUS_FUTURE ), true ) ) : ?>
 										<button 
 											class="tutor-popover-menu-item tutor-popover-menu-item-delete"
-											@click="hide(); TutorCore.modal.showModal('tutor-course-delete-modal', { courseId: <?php echo esc_html( $post->ID ); ?> });"
+											@click="hide(); TutorCore.modal.showModal('tutor-course-delete-modal', { courseId: <?php echo (int) $post->ID; ?> });"
 										>
 											<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 											<?php esc_html_e( 'Delete', 'tutor' ); ?>
