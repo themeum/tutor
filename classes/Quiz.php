@@ -2311,7 +2311,7 @@ class Quiz {
 			),
 		);
 
-		if ( $earned_marks ) {
+		if ( null !== $earned_marks ) {
 			$quiz_summary[] = array(
 				'columns' => array(
 					array(
