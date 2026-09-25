@@ -1488,44 +1488,21 @@ class RestAuth {
 	}
 
 	/**
-	 * Read API key/secret from Basic auth or Tutor-Api-* headers.
+	 * Read API key/secret from Tutor-Api-* headers.
 	 *
 	 * @return array{key:string,secret:string}|null
 	 */
 	private static function get_api_credentials_from_request() {
 		$headers = self::get_request_headers();
 
-		if ( ! empty( $headers['tutor-api-key'] ) && ! empty( $headers['tutor-api-secret'] ) ) {
-			return array(
-				'key'    => sanitize_text_field( $headers['tutor-api-key'] ),
-				'secret' => sanitize_text_field( $headers['tutor-api-secret'] ),
-			);
+		if ( empty( $headers['tutor-api-key'] ) || empty( $headers['tutor-api-secret'] ) ) {
+			return null;
 		}
 
-		$auth = $headers['authorization'] ?? '';
-		if ( $auth && 0 === stripos( $auth, 'Basic ' ) ) {
-			try {
-				$decoded = sodium_base642bin( substr( $auth, 6 ), SODIUM_BASE64_VARIANT_ORIGINAL );
-			} catch ( \Throwable $e ) {
-				$decoded = '';
-			}
-			if ( is_string( $decoded ) && false !== strpos( $decoded, ':' ) ) {
-				list( $key, $secret ) = explode( ':', $decoded, 2 );
-				return array(
-					'key'    => sanitize_text_field( $key ),
-					'secret' => sanitize_text_field( $secret ),
-				);
-			}
-		}
-
-		if ( isset( $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] ) ) {
-			return array(
-				'key'    => sanitize_text_field( wp_unslash( $_SERVER['PHP_AUTH_USER'] ) ),
-				'secret' => sanitize_text_field( wp_unslash( $_SERVER['PHP_AUTH_PW'] ) ),
-			);
-		}
-
-		return null;
+		return array(
+			'key'    => sanitize_text_field( $headers['tutor-api-key'] ),
+			'secret' => sanitize_text_field( $headers['tutor-api-secret'] ),
+		);
 	}
 
 	/**
