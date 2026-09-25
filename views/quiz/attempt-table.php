@@ -131,7 +131,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 								<?php elseif ( 'incorrect_answer' == $key ) : ?>
 									<?php echo esc_html( $incorrect ); ?>
 								<?php elseif ( 'earned_marks' == $key ) : ?>
-									<?php echo esc_html( isset( $attempt->earned_marks ) ? round( $attempt->earned_marks ) . ' (' . $earned_percentage . '%)' : '0 (0%)' ); ?>
+									<?php echo esc_html( isset( $attempt->earned_marks ) ? round( (float) $attempt->earned_marks, 2 ) . ' (' . $earned_percentage . '%)' : '0 (0%)' ); ?>
 								<?php elseif ( 'result' == $key ) : ?>
 									<?php
 									if ( $is_result_pending ) {

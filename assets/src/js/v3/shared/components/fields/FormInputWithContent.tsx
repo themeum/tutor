@@ -27,6 +27,7 @@ interface FormInputWithContentProps extends FormControllerProps<string | number 
   wrapperCss?: SerializedStyles;
   contentCss?: SerializedStyles;
   formFieldWrapperCss?: SerializedStyles;
+  inputContainerCss?: SerializedStyles;
   removeBorder?: boolean;
   selectOnFocus?: boolean;
   isInlineLabel?: boolean;
@@ -52,6 +53,7 @@ const FormInputWithContent = ({
   wrapperCss,
   contentCss,
   formFieldWrapperCss,
+  inputContainerCss,
   removeBorder = false,
   selectOnFocus = false,
   isInlineLabel = false,
@@ -71,6 +73,7 @@ const FormInputWithContent = ({
       removeBorder={removeBorder}
       isInlineLabel={isInlineLabel}
       wrapperCss={formFieldWrapperCss}
+      inputContainerCss={inputContainerCss}
     >
       {(inputProps) => {
         const { css: inputCss, ...restInputProps } = inputProps;

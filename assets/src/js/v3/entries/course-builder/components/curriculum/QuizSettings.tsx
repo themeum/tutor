@@ -36,6 +36,7 @@ import QuizFullPageSvg from '@SharedImages/quiz-fullpage.svg';
 import QuizSingleLayoutSvg from '@SharedImages/quiz-single-question.svg';
 
 import FormQuizLayoutSelect from './FormQuizLayoutSelect';
+import NegativeMarkTypeMismatchNotice from './NegativeMarkTypeMismatchNotice';
 
 const courseId = getCourseId();
 
@@ -360,29 +361,33 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
             <Show when={adminNegativeEnabled || negativeMarkingEnabled}>
               <hr />
-              <div css={styles.inlineForm({ minHeight: '42px' })}>
-                <Controller
-                  name="quiz_option.enable_negative_marking"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormCheckbox
-                      {...controllerProps}
-                      disabled={!adminNegativeEnabled}
-                      label={__('Negative marking', 'tutor')}
-                      helpText={__('Applies to incorrect answers across all question types in this quiz.', 'tutor')}
-                    />
-                  )}
-                />
+              <div css={styles.negativeMarkingRow}>
+                <div css={styles.negativeMarkingCheckbox}>
+                  <Controller
+                    name="quiz_option.enable_negative_marking"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormCheckbox
+                        {...controllerProps}
+                        disabled={!adminNegativeEnabled}
+                        label={__('Negative marking', 'tutor')}
+                        helpText={__('Applies to incorrect answers across all question types in this quiz.', 'tutor')}
+                      />
+                    )}
+                  />
+                </div>
                 <Show when={negativeMarkingEnabled}>
                   <Controller
                     name="quiz_option.negative_mark_value"
                     control={form.control}
                     rules={{
+                      ...requiredRule(),
                       validate: (value) => {
+                        if (isNaN(Number(value))) return __('Must be a number', 'tutor');
                         const numericValue = Number(value);
-                        if (numericValue < 0) return __('Negative mark value cannot be less than 0', 'tutor');
+                        if (numericValue <= 0) return __('Cannot be less than or equal to 0', 'tutor');
                         if (negativeMarkType === QUIZ_NEGATIVE_MARK_TYPES.PERCENT && numericValue > 100)
-                          return __('Percentage penalty cannot be greater than 100', 'tutor');
+                          return __('Cannot be greater than 100', 'tutor');
                         return true;
                       },
                     }}
@@ -393,9 +398,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         size="small"
                         isInlineLabel
                         disabled={!adminNegativeEnabled}
-                        wrapperCss={styles.maxWidth('80px')}
+                        wrapperCss={styles.negativeMarkingInput}
                         contentCss={styles.minWidth('fit-content')}
-                        formFieldWrapperCss={styles.width('auto')}
+                        formFieldWrapperCss={styles.negativeMarkingFieldWrapper}
+                        inputContainerCss={styles.justifyContent('flex-end')}
                         content={negativeMarkType === QUIZ_NEGATIVE_MARK_TYPES.PERCENT ? '%' : __('pts', 'tutor')}
                         contentPosition="right"
                         showVerticalBar={false}
@@ -404,6 +410,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   />
                 </Show>
               </div>
+
+              <NegativeMarkTypeMismatchNotice />
             </Show>
           </div>
 
@@ -1071,6 +1079,37 @@ const styles = {
     padding: ${spacing[12]};
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.surface.courseBuilder};
+  `,
+  negativeMarkingRow: css`
+    ${styleUtils.display.flex('row')};
+    width: 100%;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: ${spacing[8]};
+    min-height: 34px;
+  `,
+  negativeMarkingCheckbox: css`
+    display: flex;
+    align-items: center;
+    min-height: 34px;
+    width: auto;
+
+    [data-cy='form-field-wrapper'] {
+      width: auto;
+    }
+  `,
+  negativeMarkingFieldWrapper: css`
+    width: auto;
+    align-items: flex-end;
+    margin-left: auto;
+
+    p {
+      text-align: right;
+    }
+  `,
+  negativeMarkingInput: css`
+    max-width: 80px;
+    margin-left: auto;
   `,
   inlineForm: ({ withPrefix, minHeight }: { withPrefix?: boolean; minHeight?: string } = {}) => css`
     ${styleUtils.display.flex('row')};

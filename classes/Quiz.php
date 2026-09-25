@@ -1109,7 +1109,7 @@ class Quiz {
 
 			$attempt_info = array(
 				'total_answered_questions' => tutor_utils()->count( $quiz_answers ),
-				'earned_marks'             => $total_marks,
+				'earned_marks'             => max( 0.0, $total_marks ),
 				'attempt_status'           => QuizModel::ATTEMPT_ENDED,
 				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 			);
@@ -1300,7 +1300,7 @@ class Quiz {
 				QueryHelper::update(
 					'tutor_quiz_attempts',
 					array(
-						'earned_marks'         => max( 0, (float) $attempt->earned_marks + $mark_delta ),
+						'earned_marks'         => $this->calculate_attempt_earned_marks( $attempt_id ),
 						'is_manually_reviewed' => 1,
 						'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
 						'attempt_status'       => QuizModel::ATTEMPT_ENDED,
@@ -1505,7 +1505,6 @@ class Quiz {
 	 * @return void
 	 */
 	private function apply_manual_marks_bulk( int $attempt_id, array $manual_marks, array $answers_by_question_id ): void {
-		$delta   = 0.0;
 		$applied = false;
 
 		foreach ( $manual_marks as $question_id => $mark ) {
@@ -1519,7 +1518,6 @@ class Quiz {
 
 			if ( null !== $mark_delta ) {
 				$applied = true;
-				$delta  += $mark_delta;
 			}
 		}
 
@@ -1532,7 +1530,7 @@ class Quiz {
 			QueryHelper::update(
 				'tutor_quiz_attempts',
 				array(
-					'earned_marks'         => max( 0, (float) $attempt->earned_marks + $delta ),
+					'earned_marks'         => $this->calculate_attempt_earned_marks( $attempt_id ),
 					'is_manually_reviewed' => 1,
 					'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
 					'attempt_status'       => QuizModel::ATTEMPT_ENDED,
@@ -1804,7 +1802,6 @@ class Quiz {
 		$mark_as = apply_filters( 'tutor_quiz_review_mark_as', $mark_as, $attempt_answer_id, $attempt_id, $question );
 
 		$attempt_update_data = array();
-		$previous_achieved   = (float) ( $attempt_answer->achieved_mark ?? 0.0 );
 
 		$question_mark = (float) ( $attempt_answer->question_mark ?? $question->question_mark ?? 0.0 );
 		$default_marks = array(
@@ -1823,7 +1820,6 @@ class Quiz {
 
 		$new_achieved = (float) ( $review_marks['achieved_mark'] ?? $default_marks['achieved_mark'] );
 		$new_minus    = (float) ( $review_marks['minus_mark'] ?? $default_marks['minus_mark'] );
-		$mark_diff    = $new_achieved - $previous_achieved;
 
 		$answer_update_data = array(
 			'achieved_mark' => $new_achieved,
@@ -1834,7 +1830,7 @@ class Quiz {
 		$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
 
 		$attempt_update_data = array(
-			'earned_marks'         => max( 0.0, (float) $attempt->earned_marks + $mark_diff ),
+			'earned_marks'         => $this->calculate_attempt_earned_marks( $attempt_id ),
 			'is_manually_reviewed' => 1,
 			'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
 		);
@@ -1868,6 +1864,27 @@ class Quiz {
 			'course_id'  => $course_id,
 			'student_id' => $student_id,
 		);
+	}
+
+	/**
+	 * Calculate total earned marks for an attempt from individual answer records.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return float
+	 */
+	private function calculate_attempt_earned_marks( int $attempt_id ): float {
+		$marks = QueryHelper::query(
+			'tutor_quiz_attempt_answers',
+			array(
+				'select' => 'SUM(achieved_mark) AS earned_marks',
+				'where'  => array( 'quiz_attempt_id' => $attempt_id ),
+			)
+		);
+
+		return max( 0.0, (float) ( $marks[0]->earned_marks ?? 0.0 ) );
 	}
 
 	/**
@@ -2292,7 +2309,7 @@ class Quiz {
 			),
 		);
 
-		if ( $earned_marks ) {
+		if ( null !== $earned_marks ) {
 			$quiz_summary[] = array(
 				'columns' => array(
 					array(
