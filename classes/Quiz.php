@@ -1505,7 +1505,6 @@ class Quiz {
 	 * @return void
 	 */
 	private function apply_manual_marks_bulk( int $attempt_id, array $manual_marks, array $answers_by_question_id ): void {
-		$delta   = 0.0;
 		$applied = false;
 
 		foreach ( $manual_marks as $question_id => $mark ) {
@@ -1519,7 +1518,6 @@ class Quiz {
 
 			if ( null !== $mark_delta ) {
 				$applied = true;
-				$delta  += $mark_delta;
 			}
 		}
 

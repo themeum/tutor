@@ -776,13 +776,17 @@ document.addEventListener('DOMContentLoaded', function () {
 						syncToggleVisibility();
 					};
 
-					if (!usageAjaxAction) {
+					const confirmAndTurnoff = () => {
 						revertToggle();
 						tutorConfirmOptionModal(message, title, cancelText, confirmText).then((confirmed) => {
 							if (confirmed) {
 								proceedWithTurnoff();
 							}
 						});
+					};
+
+					if (!usageAjaxAction) {
+						confirmAndTurnoff();
 						return;
 					}
 
@@ -795,12 +799,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						.then((result) => {
 							const hasCustomized = result?.data?.has_customized;
 							if (hasCustomized) {
-								revertToggle();
-								tutorConfirmOptionModal(message, title, cancelText, confirmText).then((confirmed) => {
-									if (confirmed) {
-										proceedWithTurnoff();
-									}
-								});
+								confirmAndTurnoff();
 							} else {
 								proceedWithTurnoff();
 							}
