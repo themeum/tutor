@@ -81,7 +81,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 							variant: 'image-uploader',
 							accept: '.png,.jpg,.jpeg',
 							onFileSelect: handleUploadCoverPhoto,
-							imagePreviewPlaceholder: '<?php echo esc_attr( $settings_data['cover_placeholder'] ); ?>',
+							imagePreviewPlaceholder: '<?php echo esc_js( $settings_data['cover_placeholder'] ); ?>',
 						})"
 						class="tutor-account-cover-photo"
 						:class="{
@@ -179,7 +179,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 									variant: 'image-uploader',
 									accept: '.png,.jpg,.jpeg',
 									onFileSelect: handleUploadProfilePhoto,
-									imagePreviewPlaceholder: '<?php echo esc_attr( $settings_data['profile_placeholder'] ); ?>',
+									imagePreviewPlaceholder: '<?php echo esc_js( $settings_data['profile_placeholder'] ); ?>',
 								})"
 								class="tutor-account-avatar"
 								:class="{

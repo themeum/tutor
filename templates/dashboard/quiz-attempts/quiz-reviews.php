@@ -59,7 +59,7 @@ if ( is_array( $questions ) ) {
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data='(() => {
 			const form = tutorForm({
-				id: "<?php echo esc_attr( $form_id ); ?>",
+				id: <?php echo tutor_json_encode( $form_id ); ?>,
 				mode: "onSubmit",
 				defaultValues: <?php echo tutor_json_encode( $form_default_values ); ?>
 			});
