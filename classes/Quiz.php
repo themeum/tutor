@@ -838,20 +838,14 @@ class Quiz {
 			die( 'Operation not allowed, attempt not found or permission denied' );
 		}
 
-		// Check & die if don't have quiz access.
-		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
-		QuizModel::has_quiz_access( $quiz_id );
-
-		if ( QuizModel::ATTEMPT_TIMEOUT === $attempt->attempt_status ) {
-			return false;
-		}
+		// Check & die if don't have quiz access. quiz_id/course_id derive from owned attempt; no POST quiz_id needed.
+		QuizModel::has_quiz_access( (int) $attempt->quiz_id, (int) $attempt->course_id );
 
 		// Sanitize data by helper method.
 		$attempt_answers = isset( $_POST['attempt'] ) ? tutor_sanitize_data( $_POST['attempt'] ) : false; //phpcs:ignore
 		$attempt_answers = is_array( $attempt_answers ) ? $attempt_answers : array();
 
-		self::manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $attempt->course_id, $user_id );
-		return true;
+		return self::manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $attempt->course_id, $user_id );
 	}
 
 	/**
@@ -867,11 +861,12 @@ class Quiz {
 	 * @param int    $course_id course id.
 	 * @param int    $user_id user id.
 	 *
-	 * @return void
+	 * @return bool true when answers were processed otherwise false
 	 */
 	public static function manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $course_id, $user_id ) {
-		if ( ! is_array( $attempt_answers ) || ! self::validate_attempt( $attempt_id, $user_id ) ) {
-			return;
+		// Public entry point: assert ownership from the passed attempt rather than re-querying it.
+		if ( ! is_object( $attempt ) || (int) $attempt->user_id !== (int) $user_id || ! is_array( $attempt_answers ) || QuizModel::ATTEMPT_STARTED !== $attempt->attempt_status ) {
+			return false;
 		}
 
 		global $wpdb;
@@ -880,13 +875,14 @@ class Quiz {
 
 		// Single quiz can have multiple question. So multiple answer should be saved.
 		foreach ( $attempt_answers as $posted_attempt_id => $attempt_answer ) {
-			if ( ! self::validate_attempt( $posted_attempt_id, $user_id ) ) {
-				continue;
+			if ( (int) $posted_attempt_id !== (int) $attempt_id ) {
+				die( 'Operation not allowed, attempt mismatch' );
 			}
 
 			// Get total marks of all question comes.
 			$question_ids = tutor_utils()->avalue_dot( 'quiz_question_ids', $attempt_answer );
 			$question_ids = array_filter( $question_ids, fn ( $id ) => is_numeric( $id ) && intval( $id ) > 0 );
+			$quiz_answers = tutor_utils()->avalue_dot( 'quiz_question', $attempt_answer );
 
 			// Calculate and set the total marks in attempt table for this question.
 			if ( tutor_utils()->count( $question_ids ) ) {
@@ -898,9 +894,11 @@ class Quiz {
 					"SELECT SUM(question_mark)
 						FROM {$wpdb->prefix}tutor_quiz_questions
 						WHERE 1 = %d
+							AND quiz_id = %d
 							AND question_id IN({$question_ids_string});
 					",
-					1
+					1,
+					$attempt->quiz_id
 				);
 				$total_question_marks = $wpdb->get_var( $query );
 				//phpcs:enable
@@ -917,13 +915,12 @@ class Quiz {
 
 			$total_marks     = 0;
 			$review_required = false;
-			$quiz_answers    = tutor_utils()->avalue_dot( 'quiz_question', $attempt_answer );
 
 			if ( tutor_utils()->count( $quiz_answers ) ) {
 
 				foreach ( $quiz_answers as $question_id => $answers ) {
 					$question = QuizModel::get_quiz_question_by_id( $question_id );
-					if ( ! is_object( $question ) ) {
+					if ( ! is_object( $question ) || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
 						continue;
 					}
 					$question_type = $question->question_type;
@@ -938,8 +935,10 @@ class Quiz {
 								"SELECT is_correct
 									FROM {$wpdb->prefix}tutor_quiz_question_answers
 									WHERE answer_id = %d
+										AND belongs_question_id = %d
 								",
-								$answers
+								$answers,
+								$question->question_id
 							)
 						);
 
@@ -1125,6 +1124,8 @@ class Quiz {
 
 		// After hook.
 		do_action( 'tutor_quiz/attempt_ended', $attempt_id, $course_id, $user_id );
+
+		return true;
 	}
 
 
