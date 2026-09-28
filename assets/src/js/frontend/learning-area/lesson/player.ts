@@ -243,6 +243,12 @@ class LessonPlayer {
       this.syncTime();
 
       const instance = event.detail.plyr;
+      // Tab click reveals youtube controls fixed
+      if (isYouTubePlyr(instance)) {
+        const iframe = instance.elements.wrapper?.querySelector('iframe');
+        iframe?.setAttribute('tabindex', '-1');
+        iframe?.setAttribute('aria-hidden', 'true');
+      }
 
       /**
        * Play from best watch time
@@ -361,6 +367,16 @@ class LessonPlayer {
           poster.style.opacity = '1';
         }
       }
+    });
+
+    this.player.on('enterfullscreen', (event) => {
+      const instance = event.detail.plyr;
+      instance?.elements.wrapper?.classList.add('is-fullscreen');
+    });
+
+    this.player.on('exitfullscreen', (event) => {
+      const instance = event.detail.plyr;
+      instance?.elements.wrapper?.classList.remove('is-fullscreen');
     });
   }
 

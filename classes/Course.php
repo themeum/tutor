@@ -1570,12 +1570,14 @@ class Course extends Tutor_Base {
 		$settings                          = Options_V2::get_only( $required_options );
 		$logo_id                           = absint( $full_settings['brand_logo_light'] ?? $full_settings['tutor_frontend_course_page_logo_id'] ?? 0 );
 		$settings['brand_logo_light']      = $logo_id > 0 ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
-		$settings['chatgpt_key_exist']     = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+
 		$settings['youtube_api_key_exist'] = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
 		$settings['enable_tax']                    = Tax::get_setting( 'enable_tax', true );
 		$settings['is_tax_included_in_price']      = Tax::is_tax_included_in_price();
 		$settings['enable_individual_tax_control'] = Tax::get_setting( 'enable_individual_tax_control' );
+
+		$settings = apply_filters( 'tutor_course_builder_settings', $settings, $course_id );
 
 		$new_data = array( 'settings' => $settings );
 
@@ -1631,7 +1633,7 @@ class Course extends Tutor_Base {
 			$data['course_builder_additional_locales'] = tutils()->get_script_locale_data( 'tutor-course-builder-additional', $data['local'] );
 		}
 
-		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
+		$data = apply_filters( 'tutor_course_builder_localized_data', $data, $course_id );
 
 		return $data;
 	}
