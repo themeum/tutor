@@ -106,20 +106,6 @@ class RestAuth {
 	const REFRESH_TTL = 2592000;
 
 	/**
-	 * Max failed login attempts before rate limit.
-	 *
-	 * @var int
-	 */
-	const LOGIN_MAX_ATTEMPTS = 5;
-
-	/**
-	 * Login rate-limit window in seconds.
-	 *
-	 * @var int
-	 */
-	const LOGIN_WINDOW = 900;
-
-	/**
 	 * Verified access-token claims for the current request (user_id, kid).
 	 *
 	 * @var array{user_id:int,kid:int}|null
@@ -1057,25 +1043,14 @@ class RestAuth {
 			}
 		}
 
-		if ( self::is_login_rate_limited( $username ) ) {
-			return new \WP_Error(
-				'rest_login_limited',
-				__( 'Too many failed login attempts. Please try again later.', 'tutor' ),
-				array( 'status' => 429 )
-			);
-		}
-
 		$user = wp_authenticate( $username, $password );
 		if ( is_wp_error( $user ) ) {
-			self::bump_login_rate_limit( $username );
 			return new \WP_Error(
 				'rest_invalid_credentials',
 				__( 'Invalid username or password.', 'tutor' ),
 				array( 'status' => 401 )
 			);
 		}
-
-		self::clear_login_rate_limit( $username );
 
 		return rest_ensure_response( self::build_token_response( (int) $user->ID, $kid ) );
 	}
@@ -1770,52 +1745,5 @@ class RestAuth {
 			__( 'HTTPS is required for authentication.', 'tutor' ),
 			array( 'status' => 403 )
 		);
-	}
-
-	/**
-	 * Rate-limit key for login.
-	 *
-	 * @param string $username username.
-	 *
-	 * @return string
-	 */
-	private static function login_rate_limit_key( $username ) {
-		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-		return 'tutor_rest_login_' . md5( strtolower( $username ) . '|' . $ip );
-	}
-
-	/**
-	 * Whether login is rate limited.
-	 *
-	 * @param string $username username.
-	 *
-	 * @return bool
-	 */
-	private static function is_login_rate_limited( $username ) {
-		return (int) get_transient( self::login_rate_limit_key( $username ) ) >= static::LOGIN_MAX_ATTEMPTS;
-	}
-
-	/**
-	 * Bump login failure counter.
-	 *
-	 * @param string $username username.
-	 *
-	 * @return void
-	 */
-	private static function bump_login_rate_limit( $username ) {
-		$key   = self::login_rate_limit_key( $username );
-		$count = (int) get_transient( $key );
-		set_transient( $key, $count + 1, static::LOGIN_WINDOW );
-	}
-
-	/**
-	 * Clear login rate limit on success.
-	 *
-	 * @param string $username username.
-	 *
-	 * @return void
-	 */
-	private static function clear_login_rate_limit( $username ) {
-		delete_transient( self::login_rate_limit_key( $username ) );
 	}
 }
