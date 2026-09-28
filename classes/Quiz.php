@@ -845,7 +845,8 @@ class Quiz {
 		$attempt_answers = isset( $_POST['attempt'] ) ? tutor_sanitize_data( $_POST['attempt'] ) : false; //phpcs:ignore
 		$attempt_answers = is_array( $attempt_answers ) ? $attempt_answers : array();
 
-		return self::manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $attempt->course_id, $user_id );
+		self::manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $attempt->course_id, $user_id );
+		return true;
 	}
 
 	/**
@@ -861,12 +862,12 @@ class Quiz {
 	 * @param int    $course_id course id.
 	 * @param int    $user_id user id.
 	 *
-	 * @return bool true when answers were processed otherwise false
+	 * @return void
 	 */
 	public static function manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $course_id, $user_id ) {
 		// Public entry point: assert ownership from the passed attempt rather than re-querying it.
 		if ( ! is_object( $attempt ) || (int) $attempt->user_id !== (int) $user_id || ! is_array( $attempt_answers ) || QuizModel::ATTEMPT_STARTED !== $attempt->attempt_status ) {
-			return false;
+			return;
 		}
 
 		global $wpdb;
@@ -1124,8 +1125,6 @@ class Quiz {
 
 		// After hook.
 		do_action( 'tutor_quiz/attempt_ended', $attempt_id, $course_id, $user_id );
-
-		return true;
 	}
 
 
