@@ -1979,11 +1979,23 @@ class OrderModel {
 	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit, $order_by, $order ): array {
 		global $wpdb;
 
-		$order_clause = '';
+		$allowed_order_by = array(
+			'earning_id'         => 'statements.earning_id',
+			'order_id'           => 'statements.order_id',
+			'course_id'          => 'statements.course_id',
+			'course_price_total' => 'statements.course_price_total',
+			'order_total_price'  => 'order_total_price',
+			'instructor_amount'  => 'statements.instructor_amount',
+			'admin_amount'       => 'statements.admin_amount',
+			'created_at'         => 'statements.created_at',
+			'course_title'       => 'course.post_title',
+			'post_title'         => 'course.post_title',
+		);
 
-		if ( sanitize_sql_orderby( $order ) ) {
-			$order_clause = "ORDER BY {$order_by} {$order}";
-		}
+		$order_by_clean  = strtolower( trim( (string) $order_by ) );
+		$order_by_column = isset( $allowed_order_by[ $order_by_clean ] ) ? $allowed_order_by[ $order_by_clean ] : 'statements.earning_id';
+		$order_direction = 'ASC' === strtoupper( trim( (string) $order ) ) ? 'ASC' : 'DESC';
+		$order_clause    = "ORDER BY {$order_by_column} {$order_direction}";
 
 		//phpcs:disable
 		$statements = $wpdb->get_results(

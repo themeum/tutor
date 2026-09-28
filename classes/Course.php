@@ -1689,9 +1689,13 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function get_wc_products() {
+		tutor_utils()->checking_nonce();
+
 		$exclude                 = array();
 		$exclude_linked_products = Input::has( 'exclude_linked_products' );
 		$course_id               = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		$this->check_access( $course_id );
 
 		if ( $exclude_linked_products ) {
 			$exclude = tutor_utils()->get_linked_product_ids();
@@ -1722,9 +1726,11 @@ class Course extends Tutor_Base {
 	 */
 	public function get_wc_product() {
 		tutor_utils()->checking_nonce();
+		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$this->check_access( $course_id );
+
 		$product_id = Input::post( 'product_id' );
 		$product    = wc_get_product( $product_id );
-		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
 
