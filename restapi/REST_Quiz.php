@@ -106,7 +106,7 @@ class REST_Quiz {
 				'message' => __( 'Quiz not found for given ID', 'tutor' ),
 				'data'    => array(),
 			);
-			return static::send( $response );
+			return self::send( $response );
 		}
 
 		$quiz->quiz_settings = get_post_meta( $quiz->ID, 'tutor_quiz_option', false );
@@ -145,7 +145,7 @@ class REST_Quiz {
 			'data'    => $quiz,
 		);
 
-		return static::send( $response );
+		return self::send( $response );
 	}
 
 	/**
@@ -192,7 +192,7 @@ class REST_Quiz {
 				'message' => __( 'Quiz retrieved successfully', 'tutor' ),
 				'data'    => $data,
 			);
-			return static::send( $response );
+			return self::send( $response );
 		}
 
 		$response = array(
@@ -200,7 +200,7 @@ class REST_Quiz {
 			'message' => __( 'Quiz not found for given ID', 'tutor' ),
 			'data'    => $data,
 		);
-		return static::send( $response );
+		return self::send( $response );
 	}
 
 	/**
@@ -270,7 +270,7 @@ class REST_Quiz {
 				'data'    => $data,
 			);
 
-			return static::send( $response );
+			return self::send( $response );
 		}
 
 		$response = array(
@@ -279,7 +279,7 @@ class REST_Quiz {
 			'data'    => array(),
 		);
 
-		return static::send( $response );
+		return self::send( $response );
 	}
 
 	/**
@@ -351,7 +351,7 @@ class REST_Quiz {
 				'data'    => $attempts,
 			);
 
-			return static::send( $response );
+			return self::send( $response );
 		}
 
 		$response = array(
@@ -360,7 +360,7 @@ class REST_Quiz {
 			'data'    => array(),
 		);
 
-		return static::send( $response );
+		return self::send( $response );
 	}
 
 	/**

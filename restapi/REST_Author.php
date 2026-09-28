@@ -52,7 +52,7 @@ class REST_Author {
 				'data'    => array(),
 			);
 
-			return static::send( $response );
+			return self::send( $response );
 		}
 
 		$author = (object) array(
@@ -75,6 +75,6 @@ class REST_Author {
 			'data'    => $author,
 		);
 
-		return static::send( $response );
+		return self::send( $response );
 	}
 }

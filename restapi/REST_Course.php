@@ -10,8 +10,10 @@
 
 namespace TUTOR;
 
-use WP_REST_Request;
 use WP_Query;
+use WP_REST_Request;
+use WP_REST_Response;
+use WP_Post;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -132,14 +134,6 @@ class REST_Course {
 
 		// if post found.
 		if ( count( $query->posts ) > 0 ) {
-			// unset filter property.
-			array_map(
-				function ( $post ) {
-					unset( $post->filter );
-				},
-				$query->posts
-			);
-
 			$data = array(
 				'posts'        => array(),
 				'total_course' => $query->found_posts,
@@ -147,6 +141,13 @@ class REST_Course {
 			);
 
 			foreach ( $query->posts as $post ) {
+				if ( ! $post instanceof WP_Post ) {
+					continue;
+				}
+
+				$item = (object) $post->to_array();
+				unset( $item->filter );
+
 				$category = wp_get_post_terms( $post->ID, $this->course_cat_tax );
 
 				$tag = wp_get_post_terms( $post->ID, $this->course_tag_tax );
@@ -166,27 +167,27 @@ class REST_Course {
 						$author_payload->user_registered = $author->user_registered;
 					}
 
-					$post->post_author = $author_payload;
+					$item->post_author = $author_payload;
 				} else {
-					$post->post_author = new \stdClass();
+					$item->post_author = new \stdClass();
 				}
 
 				$thumbnail_size      = apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' );
-				$post->thumbnail_url = get_the_post_thumbnail_url( $post->ID, $thumbnail_size );
+				$item->thumbnail_url = get_the_post_thumbnail_url( $post->ID, $thumbnail_size );
 
-				$post->additional_info = $this->course_additional_info( $post->ID );
+				$item->additional_info = $this->course_additional_info( $post->ID );
 
-				$post->ratings = tutor_utils()->get_course_rating( $post->ID );
+				$item->ratings = tutor_utils()->get_course_rating( $post->ID );
 
-				$post->course_category = $category;
+				$item->course_category = $category;
 
-				$post->course_tag = $tag;
+				$item->course_tag = $tag;
 
-				$post->price = get_post_meta( $post->ID, '_regular_price', true );
+				$item->price = get_post_meta( $post->ID, '_regular_price', true );
 
-				$post = apply_filters( 'tutor_rest_course_single_post', $post );
+				$item = apply_filters( 'tutor_rest_course_single_post', $item );
 
-				array_push( $data['posts'], $post );
+				array_push( $data['posts'], $item );
 			}
 
 			$response = array(
@@ -195,7 +196,7 @@ class REST_Course {
 				'data'    => $data,
 			);
 
-			return static::send( $response );
+			return self::send( $response );
 		}
 
 		$response = array(
@@ -204,7 +205,7 @@ class REST_Course {
 			'data'    => array(),
 		);
 
-		return static::send( $response );
+		return self::send( $response );
 	}
 
 	/**
@@ -226,7 +227,7 @@ class REST_Course {
 				'message' => __( 'Course detail retrieved successfully', 'tutor' ),
 				'data'    => $detail,
 			);
-			return static::send( $response );
+			return self::send( $response );
 		}
 		$response = array(
 			'code'    => 'course_detail',
@@ -234,7 +235,7 @@ class REST_Course {
 			'data'    => array(),
 		);
 
-		return static::send( $response );
+		return self::send( $response );
 	}
 
 	/**
@@ -340,7 +341,7 @@ class REST_Course {
 				'message' => __( 'Course contents retrieved successfully', 'tutor' ),
 				'data'    => $data,
 			);
-			return static::send( $response );
+			return self::send( $response );
 		}
 
 		$response = array(
@@ -349,6 +350,6 @@ class REST_Course {
 			'data'    => array(),
 		);
 
-		return static::send( $response );
+		return self::send( $response );
 	}
 }
