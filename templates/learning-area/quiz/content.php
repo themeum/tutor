@@ -31,7 +31,7 @@ $has_time_limit     = is_array( $quiz_time ) && ! empty( $quiz_time['time_value'
 $time_units         = Quiz::quiz_time_units();
 $quiz_item_readable = $has_time_limit ? $quiz_time['time_value'] . ' ' . $time_units[ $quiz_time['time_type'] ] : null;
 $quiz_attempt       = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id ?? get_current_user_id() );
-$earned_marks       = 0;
+$earned_marks       = null;
 $total_marks        = Quiz::get_quiz_total_marks( $quiz_id );
 
 if ( is_object( $quiz_attempt ) && (float) ( $quiz_attempt->total_marks ?? 0 ) > 0 ) {
@@ -65,7 +65,7 @@ $allowed_attempts = $limit_attempts ? $quiz_options['attempts_allowed'] ?? '' : 
 		<!-- Quiz Parameters Table -->
 		<div class="tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-quiz-intro-params tutor-mb-8 tutor-sm-mb-5">
 			<?php
-				Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, (int) $allowed_attempts );
+				Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, (int) $allowed_attempts, $quiz_id );
 			?>
 		</div>
 

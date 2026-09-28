@@ -4,7 +4,7 @@ import { type MutationState } from '@Core/ts/services/Query';
 import { quizRetryAttemptMeta } from '@FrontendComponents/quiz/retry-attempt';
 import { quizSummarySidebarMeta } from '@FrontendComponents/quiz/summary-sidebar';
 
-import { quizAttemptFeedbackMeta } from './quiz-attempt-feedback';
+import { questionFeedbackMeta, quizAttemptFeedbackMeta } from './quiz-attempt-feedback';
 
 const quizAttemptsPage = () => {
   const { query, modal, toast } = window.TutorCore;
@@ -48,6 +48,7 @@ export const initializeQuizAttempts = () => {
       },
       quizRetryAttemptMeta,
       quizAttemptFeedbackMeta,
+      questionFeedbackMeta,
       quizSummarySidebarMeta,
     ],
   });

@@ -110,6 +110,7 @@ final class Icon {
 	const COLOR_OPTION               = 'color-option';
 	const COMMAND                    = 'command';
 	const COMMENTS                   = 'comments';
+	const COMMENT_OUTLINE            = 'comment-outline';
 	const COMMISSION                 = 'commission';
 	const COMPLETED                  = 'completed';
 	const COMPLETED_CIRCLE           = 'completed-circle';
@@ -285,6 +286,7 @@ final class Icon {
 	const MEMBER                     = 'member';
 	const MENU                       = 'menu';
 	const MINUS                      = 'minus';
+	const MINUS_CIRCLE               = 'minus-circle';
 	const MINUS_SQUARE               = 'minus-square';
 	const MONITOR_PLAY               = 'monitor-play';
 	const MORE                       = 'more';
@@ -301,6 +303,7 @@ final class Icon {
 	const NOTIFICATION_2             = 'notification-2';
 	const OPEN                       = 'open';
 	const OUTLINE_NONE               = 'outline-none';
+	const PARTIAL                    = 'partial';
 	const PASSED                     = 'passed';
 	const PASSED_FILL                = 'passed-fill';
 	const PASSING                    = 'passing';
