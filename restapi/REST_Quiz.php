@@ -134,7 +134,7 @@ class REST_Quiz {
 		}
 
 		if ( ! RestAuth::can_reveal_quiz_answers( $quiz_id ) ) {
-			$questions = static::strip_is_correct_from_questions( $questions );
+			$questions = self::strip_is_correct_from_questions( $questions );
 		}
 
 		$quiz->quiz_questions = $questions;
@@ -185,13 +185,13 @@ class REST_Quiz {
 				$quiz->quiz_settings = get_post_meta( $quiz->ID, 'tutor_quiz_option', false );
 
 				array_push( $data, $quiz );
-
-				$response = array(
-					'code'    => 'success',
-					'message' => __( 'Quiz retrieved successfully', 'tutor' ),
-					'data'    => $data,
-				);
 			}
+
+			$response = array(
+				'code'    => 'success',
+				'message' => __( 'Quiz retrieved successfully', 'tutor' ),
+				'data'    => $data,
+			);
 			return static::send( $response );
 		}
 
@@ -261,7 +261,7 @@ class REST_Quiz {
 			}
 
 			if ( ! RestAuth::can_reveal_quiz_answers( (int) $this->post_parent ) ) {
-				$data = static::strip_is_correct_from_questions( $data );
+				$data = self::strip_is_correct_from_questions( $data );
 			}
 
 			$response = array(
@@ -294,13 +294,14 @@ class REST_Quiz {
 	public function quiz_attempt_details( WP_REST_Request $request ) {
 		global $wpdb;
 
-		$quiz_id = $request->get_param( 'id' );
+		$quiz_id = Input::sanitize( $request->get_param( 'id' ), 0, Input::TYPE_INT );
 
 		$wpdb->quiz_attempt = $wpdb->prefix . $this->t_quiz_attempt;
 
 		$attempts = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT
+				att.attempt_id,
 				att.user_id,
 				att.total_questions,
 				att.total_answered_questions,
@@ -332,8 +333,8 @@ class REST_Quiz {
 				}
 
 				$attempt->attempt_info = maybe_unserialize( $attempt->attempt_info );
-				// attach attempt ans.
-				$answers = $this->get_quiz_attempt_ans( $quiz_id );
+				// Attach answers for this attempt only.
+				$answers = $this->get_quiz_attempt_ans( (int) $attempt->attempt_id );
 
 				if ( false !== $answers ) {
 					$attempt->attempts_answer = $answers;
@@ -363,16 +364,23 @@ class REST_Quiz {
 	}
 
 	/**
-	 * Get quiz attempt answers.
+	 * Get quiz attempt answers for a single attempt.
 	 *
 	 * @since 1.7.1
+	 * @since 4.0.10 Scope by quiz_attempt_id to prevent cross-user answer leaks.
 	 *
-	 * @param int $quiz_id quiz id.
+	 * @param int $attempt_id quiz attempt id.
 	 *
 	 * @return mixed
 	 */
-	protected function get_quiz_attempt_ans( $quiz_id ) {
+	protected function get_quiz_attempt_ans( $attempt_id ) {
 		global $wpdb;
+
+		$attempt_id = absint( $attempt_id );
+		if ( ! $attempt_id ) {
+			return false;
+		}
+
 		$wpdb->quiz_attempt_ans = $wpdb->prefix . $this->t_quiz_attempt_ans;
 		$wpdb->quiz_question    = $wpdb->prefix . $this->t_quiz_question;
 
@@ -387,9 +395,9 @@ class REST_Quiz {
 				att_ans.minus_mark,
 				att_ans.is_correct FROM {$wpdb->quiz_attempt_ans} as att_ans
 			JOIN {$wpdb->quiz_question} q ON q.question_id = att_ans.question_id 
-			WHERE att_ans.quiz_id = %d
+			WHERE att_ans.quiz_attempt_id = %d
 			",
-				$quiz_id
+				$attempt_id
 			)
 		);
 
