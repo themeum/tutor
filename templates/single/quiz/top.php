@@ -108,6 +108,7 @@ do_action( 'tutor_quiz/single/before/top' );
 			</div>
 
 			<!-- Show Passing grade -->
+			<?php do_action( 'tutor_quiz/single/before/passing_grade', $quiz_id ); ?>
 			<?php if ( $passing_grade ) : ?>
 				<div class="tutor-quiz-info">
 					<span class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Passing Grade', 'tutor' ); ?></span>
