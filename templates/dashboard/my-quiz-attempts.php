@@ -57,7 +57,7 @@ if ( tutor_utils()->count( $quizzes ) ) {
 }
 
 if ( tutor_utils()->count( $all_quizzes ) ) {
-	$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts_count, $url, $result_filter, '', 0, '', '', $order_filter, $all_quizzes );
+	$nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $url, $result_filter, '', 0, '', '', $order_filter, $all_quizzes );
 }
 
 ?>
