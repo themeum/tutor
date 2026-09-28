@@ -280,7 +280,7 @@ $single_url = UrlHelper::add_query_params(
 
 						<button 
 							class="tutor-popover-menu-item tutor-gap-5"
-							@click="handleQnASingleAction(<?php echo (int) $question_id; ?>, 'read', { context: <?php echo tutor_json_encode( $context ); ?> })"
+							@click="handleQnASingleAction(<?php echo (int) $question_id; ?>, 'read', { context: <?php echo esc_attr( tutor_json_encode( $context ) ); ?> })"
 							:disabled="qnaSingleActionMutation?.isPending"
 						>
 							<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'read' && currentQuestionId === <?php echo (int) $question_id; ?>">

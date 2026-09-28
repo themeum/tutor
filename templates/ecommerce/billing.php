@@ -29,13 +29,13 @@ $form_id         = $form_id ?? 'tutor-billing-address-form';
 	<div class="tutor-card tutor-flex tutor-flex-column tutor-gap-5 tutor-border">
 		<form
 			id="<?php echo esc_attr( $form_id ); ?>"
-			x-data='tutorForm({ 
-				id: <?php echo tutor_json_encode( (string) $form_id ); ?>,
-				mode: "onChange", 
+			x-data="tutorForm({ 
+				id: <?php echo esc_attr( tutor_json_encode( (string) $form_id ) ); ?>,
+				mode: 'onChange', 
 				shouldFocusError: true,
-				defaultValues: <?php echo tutor_json_encode( $default_values ); ?>,
-				stateOptions: <?php echo tutor_json_encode( $state_mapping ); ?>
-			})'
+				defaultValues: <?php echo esc_attr( tutor_json_encode( $default_values ) ); ?>,
+				stateOptions: <?php echo esc_attr( tutor_json_encode( $state_mapping ) ); ?>
+			})"
 			x-bind="getFormBindings()"
 			x-init="$watch('values.billing_country', () => !isResetting && setValue('billing_state', '', { shouldDirty: true }))"
 			@submit="handleSubmit((data) => handleSaveBillingInfo(data, '<?php echo esc_js( $form_id ); ?>'))($event)"

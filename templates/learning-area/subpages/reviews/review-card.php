@@ -98,11 +98,11 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 		<form
 			class="tutor-flex tutor-flex-column tutor-gap-6"
 			id="<?php echo esc_attr( $form_id ); ?>"
-			x-data='tutorForm({
-				id: <?php echo tutor_json_encode( $form_id ); ?>,
-				mode: "onChange",
-				defaultValues: <?php echo tutor_json_encode( $review ); ?>,
-			})'
+			x-data="tutorForm({
+				id: <?php echo esc_attr( tutor_json_encode( $form_id ) ); ?>,
+				mode: 'onChange',
+				defaultValues: <?php echo esc_attr( tutor_json_encode( $review ) ); ?>,
+			})"
 			x-bind="getFormBindings()"
 			@submit.prevent="handleSubmit(
 				(data) => handleReviewSubmit(data),

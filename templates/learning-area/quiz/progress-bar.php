@@ -67,8 +67,8 @@ $render_timer_tokens = static function ( array $tokens ) {
 		x-data="tutorQuizTimer({
 			duration: <?php echo (int) $remaining_time_secs; ?>,
 			hasLimit: <?php echo $has_time_limit ? 'true' : 'false'; ?>,
-			expiresAction: <?php echo tutor_json_encode( $quiz_when_time_expires ); ?>,
-			formId: <?php echo tutor_json_encode( $form_id ); ?>,
+			expiresAction: <?php echo esc_attr( tutor_json_encode( $quiz_when_time_expires ) ); ?>,
+			formId: <?php echo esc_attr( tutor_json_encode( $form_id ) ); ?>,
 			totalQuestions: <?php echo (int) $total_questions; ?>,
 		})"
 		x-init="init()"

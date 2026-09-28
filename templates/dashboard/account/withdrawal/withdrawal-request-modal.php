@@ -42,9 +42,9 @@ $currency_symbol      = $data['currency_symbol'] ?? '';
 </div>
 
 <form 
-	x-data="tutorForm({ id: <?php echo tutor_json_encode( $form_id ); ?>, mode: 'onBlur', shouldFocusError: true })"
+	x-data="tutorForm({ id: <?php echo esc_attr( tutor_json_encode( $form_id ) ); ?>, mode: 'onBlur', shouldFocusError: true })"
 	x-bind="getFormBindings()"
-	@submit="handleSubmit((data) => handleWithdrawalFormSubmit(data, <?php echo tutor_json_encode( $form_id ); ?>))($event)"
+	@submit="handleSubmit((data) => handleWithdrawalFormSubmit(data, <?php echo esc_attr( tutor_json_encode( $form_id ) ); ?>))($event)"
 	>
 
 	<div class="tutor-p-6">

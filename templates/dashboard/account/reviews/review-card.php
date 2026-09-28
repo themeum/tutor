@@ -212,11 +212,11 @@ $delete_modal_id = 'review-delete-modal';
 			<form
 				class="tutor-review-form-fields"
 				id="<?php echo esc_attr( $form_id ); ?>"
-				x-data='tutorForm({
-					id: <?php echo tutor_json_encode( (string) $form_id ); ?>,
-					mode: "onChange",
-					defaultValues: <?php echo tutor_json_encode( $review ); ?>,
-				})'
+				x-data="tutorForm({
+					id: <?php echo esc_attr( tutor_json_encode( (string) $form_id ) ); ?>,
+					mode: 'onChange',
+					defaultValues: <?php echo esc_attr( tutor_json_encode( $review ) ); ?>,
+				})"
 				x-bind="getFormBindings()"
 				@submit.prevent="handleSubmit(
 					(data) => handleReviewSubmit(data),

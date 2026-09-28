@@ -39,12 +39,12 @@ $reset_modal_id = 'tutor-preferences-reset-modal';
 <section class="tutor-preferences-section">
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
-		x-data='tutorForm({ 
-			id: <?php echo tutor_json_encode( (string) $form_id ); ?>, 
-			mode: "onChange", 
+		x-data="tutorForm({ 
+			id: <?php echo esc_attr( tutor_json_encode( (string) $form_id ) ); ?>, 
+			mode: 'onChange', 
 			shouldFocusError: true,
-			defaultValues: <?php echo tutor_json_encode( $user_preferences ); ?>
-		})'
+			defaultValues: <?php echo esc_attr( tutor_json_encode( $user_preferences ) ); ?>
+		})"
 		x-bind="getFormBindings()"
 		@submit="handleSubmit((data) => { savePreferencesMutation?.mutate({...data, formId: '<?php echo esc_js( $form_id ); ?>'}); })($event)"
 	>

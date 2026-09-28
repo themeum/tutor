@@ -111,11 +111,11 @@ if ( $is_graded ) {
 			<?php if ( $feedback_attempt_answer_id > 0 ) : ?>
 				<div
 					class="tutor-question-feedback"
-					x-data='tutorQuestionFeedback({
-						initialFeedback: <?php echo wp_json_encode( (string) $question_feedback ); ?>,
-						fieldName: <?php echo wp_json_encode( "question_feedback[{$feedback_attempt_answer_id}]" ); ?>,
-						formId: <?php echo wp_json_encode( $form_id ?? 'quiz-attempt-review-form' ); ?>
-					})'
+					x-data="tutorQuestionFeedback({
+						initialFeedback: <?php echo esc_attr( tutor_json_encode( (string) $question_feedback ) ); ?>,
+						fieldName: <?php echo esc_attr( tutor_json_encode( "question_feedback[{$feedback_attempt_answer_id}]" ) ); ?>,
+						formId: <?php echo esc_attr( tutor_json_encode( $form_id ?? 'quiz-attempt-review-form' ) ); ?>
+					})"
 				>
 					<?php
 					Button::make()

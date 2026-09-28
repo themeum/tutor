@@ -30,12 +30,12 @@ foreach ( $social_fields as $key => $field ) {
 	<h5 class="tutor-h5 tutor-md-hidden tutor-my-none"><?php echo esc_html__( 'Social Profile Link', 'tutor' ); ?></h5>
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
-		x-data='tutorForm({ 
-			id: <?php echo tutor_json_encode( (string) $form_id ); ?>,
-			mode: "onChange",
+		x-data="tutorForm({ 
+			id: <?php echo esc_attr( tutor_json_encode( (string) $form_id ) ); ?>,
+			mode: 'onChange',
 			shouldFocusError: true,
-			defaultValues: <?php echo tutor_json_encode( $social_links ); ?>
-		})'
+			defaultValues: <?php echo esc_attr( tutor_json_encode( $social_links ) ); ?>
+		})"
 		x-bind="getFormBindings()"
 		@submit="handleSubmit((data) => handleSaveSocialProfile(data, '<?php echo esc_js( $form_id ); ?>'))($event)"
 		class="tutor-card tutor-social-form"

@@ -31,10 +31,10 @@ $form_id = 'tutor-reset-password-form';
 
 		<div 
 			class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5"
-			x-data='tutorForm({
-				mode: "onChange",
-				defaultValues: <?php echo tutor_json_encode( array( 'account_email' => $user->user_email ) ); ?>
-			})'
+			x-data="tutorForm({
+				mode: 'onChange',
+				defaultValues: <?php echo esc_attr( tutor_json_encode( array( 'account_email' => $user->user_email ) ) ); ?>
+			})"
 		>
 			<?php
 			echo '<div class="tutor-flex tutor-items-end tutor-gap-3">';
