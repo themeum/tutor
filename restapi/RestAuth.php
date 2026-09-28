@@ -92,18 +92,72 @@ class RestAuth {
 	const JWT_SECRET_OPTION = 'tutor_rest_jwt_secret';
 
 	/**
-	 * Access JWT lifetime in seconds (~10 minutes).
+	 * Default access JWT lifetime in seconds (~10 minutes).
 	 *
 	 * @var int
 	 */
 	const ACCESS_TTL = 600;
 
 	/**
-	 * Refresh token lifetime in seconds (30 days).
+	 * Default refresh token lifetime in seconds (30 days).
 	 *
 	 * @var int
 	 */
 	const REFRESH_TTL = 2592000;
+
+	/**
+	 * Option key for access JWT lifetime (seconds).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @var string
+	 */
+	const OPTION_ACCESS_TTL = 'rest_api_access_token_ttl';
+
+	/**
+	 * Option key for refresh token lifetime (seconds).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @var string
+	 */
+	const OPTION_REFRESH_TTL = 'rest_api_refresh_token_ttl';
+
+	/**
+	 * Minimum access token TTL in seconds.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @var int
+	 */
+	const MIN_ACCESS_TTL = 60;
+
+	/**
+	 * Maximum access token TTL in seconds (24 hours).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @var int
+	 */
+	const MAX_ACCESS_TTL = 86400;
+
+	/**
+	 * Minimum refresh token TTL in seconds (1 hour).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @var int
+	 */
+	const MIN_REFRESH_TTL = 3600;
+
+	/**
+	 * Maximum refresh token TTL in seconds (365 days).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @var int
+	 */
+	const MAX_REFRESH_TTL = 31536000;
 
 	/**
 	 * Verified access-token claims for the current request (user_id, kid).
@@ -123,11 +177,95 @@ class RestAuth {
 		add_action( 'wp_ajax_tutor_generate_api_keys', __CLASS__ . '::generate_api_keys' );
 		add_action( 'wp_ajax_tutor_update_api_permission', __CLASS__ . '::update_api_permission' );
 		add_action( 'wp_ajax_tutor_revoke_api_keys', __CLASS__ . '::revoke_api_keys' );
+		add_action( 'wp_ajax_tutor_save_rest_api_token_settings', __CLASS__ . '::save_token_settings' );
 		add_filter( 'determine_current_user', array( $this, 'api_auth' ) );
 		add_action( 'profile_update', array( $this, 'maybe_invalidate_tokens_on_profile_update' ), 10, 2 );
 		add_action( 'after_password_reset', array( $this, 'invalidate_user_tokens' ), 10, 1 );
 		add_action( 'password_reset', array( $this, 'invalidate_user_tokens' ), 10, 1 );
 		add_filter( 'rest_request_before_callbacks', array( __CLASS__, 'enforce_actor_identity' ), 20, 3 );
+	}
+
+	/**
+	 * Configured access JWT lifetime in seconds.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return int
+	 */
+	public static function get_access_ttl() {
+		$ttl = (int) tutor_utils()->get_option( static::OPTION_ACCESS_TTL, static::ACCESS_TTL );
+
+		if ( $ttl < static::MIN_ACCESS_TTL ) {
+			return static::ACCESS_TTL;
+		}
+
+		return min( $ttl, static::MAX_ACCESS_TTL );
+	}
+
+	/**
+	 * Configured refresh token lifetime in seconds.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return int
+	 */
+	public static function get_refresh_ttl() {
+		$ttl = (int) tutor_utils()->get_option( static::OPTION_REFRESH_TTL, static::REFRESH_TTL );
+
+		if ( $ttl < static::MIN_REFRESH_TTL ) {
+			return static::REFRESH_TTL;
+		}
+
+		return min( $ttl, static::MAX_REFRESH_TTL );
+	}
+
+	/**
+	 * Save Rest API token lifetime settings from Tools.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return void
+	 */
+	public static function save_token_settings() {
+		tutor_utils()->checking_nonce();
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
+		$access_ttl  = Input::post( static::OPTION_ACCESS_TTL, static::ACCESS_TTL, Input::TYPE_INT );
+		$refresh_ttl = Input::post( static::OPTION_REFRESH_TTL, static::REFRESH_TTL, Input::TYPE_INT );
+
+		if ( $access_ttl < static::MIN_ACCESS_TTL || $access_ttl > static::MAX_ACCESS_TTL ) {
+			wp_send_json_error(
+				sprintf(
+					/* translators: 1: min seconds, 2: max seconds */
+					__( 'Access token lifetime must be between %1$d and %2$d seconds.', 'tutor' ),
+					static::MIN_ACCESS_TTL,
+					static::MAX_ACCESS_TTL
+				)
+			);
+		}
+
+		if ( $refresh_ttl < static::MIN_REFRESH_TTL || $refresh_ttl > static::MAX_REFRESH_TTL ) {
+			wp_send_json_error(
+				sprintf(
+					/* translators: 1: min seconds, 2: max seconds */
+					__( 'Refresh token lifetime must be between %1$d and %2$d seconds.', 'tutor' ),
+					static::MIN_REFRESH_TTL,
+					static::MAX_REFRESH_TTL
+				)
+			);
+		}
+
+		if ( $refresh_ttl <= $access_ttl ) {
+			wp_send_json_error( __( 'Refresh token lifetime must be greater than access token lifetime.', 'tutor' ) );
+		}
+
+		tutor_utils()->update_option( static::OPTION_ACCESS_TTL, $access_ttl );
+		tutor_utils()->update_option( static::OPTION_REFRESH_TTL, $refresh_ttl );
+
+		wp_send_json_success( __( 'Token settings saved successfully', 'tutor' ) );
 	}
 
 	/**
@@ -1297,9 +1435,10 @@ class RestAuth {
 	 * @return array{token:string,expires_in:int}
 	 */
 	private static function issue_access_token( $user_id, $kid ) {
-		$now = time();
-		$tv  = (int) get_user_meta( $user_id, static::TOKEN_VERSION_META, true );
-		$kid = absint( $kid );
+		$now        = time();
+		$tv         = (int) get_user_meta( $user_id, static::TOKEN_VERSION_META, true );
+		$kid        = absint( $kid );
+		$access_ttl = self::get_access_ttl();
 
 		$header  = self::base64url_encode(
 			wp_json_encode(
@@ -1314,7 +1453,7 @@ class RestAuth {
 				array(
 					'sub' => (int) $user_id,
 					'iat' => $now,
-					'exp' => $now + static::ACCESS_TTL,
+					'exp' => $now + $access_ttl,
 					'iss' => 'tutor',
 					'tv'  => $tv,
 					'kid' => $kid,
@@ -1325,7 +1464,7 @@ class RestAuth {
 
 		return array(
 			'token'      => $header . '.' . $payload . '.' . $sig,
-			'expires_in' => static::ACCESS_TTL,
+			'expires_in' => $access_ttl,
 		);
 	}
 
@@ -1536,7 +1675,7 @@ class RestAuth {
 		);
 		$list[] = array(
 			'hash' => $hash,
-			'exp'  => $now + static::REFRESH_TTL,
+			'exp'  => $now + self::get_refresh_ttl(),
 			'kid'  => $kid,
 		);
 

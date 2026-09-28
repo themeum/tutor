@@ -10,13 +10,44 @@ document.addEventListener("DOMContentLoaded", async function() {
     const submitBtn = document.querySelector("#tutor-generate-api-keys button[type=submit]");
     const modal = document.getElementById("tutor-add-new-api-keys");
     const noRecordElem = document.getElementById("tutor-api-keys-no-record");
+    const tokenSettingsForm = document.getElementById("tutor-rest-api-token-settings");
+    const tokenSettingsSubmitBtn = document.querySelector("#tutor-rest-api-token-settings button[type=submit]");
     
     const updatePermissionForm = document.querySelector("#tutor-update-permission-form");
     const updateSubmitBtn = document.querySelector("#tutor-update-permission-modal button[type=submit]");
     const updatePermissionModal = document.querySelector("#tutor-update-permission-modal");
 
-    if (!keysListWrapper) {
+    if (!keysListWrapper && !tokenSettingsForm) {
         return;
+    }
+
+    // Save token lifetime settings
+    if (tokenSettingsForm) {
+        tokenSettingsForm.onsubmit = async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(tokenSettingsForm);
+
+            try {
+                tokenSettingsSubmitBtn.classList.add("is-loading");
+                tokenSettingsSubmitBtn.setAttribute("disabled", true);
+
+                const post = await ajaxHandler(formData);
+                const res = await post.json();
+                const { success, data } = res;
+
+                if (success) {
+                    tutor_toast(__("Success", "tutor"), data, "success");
+                } else {
+                    tutor_toast(__("Failed", "tutor"), data, "error");
+                }
+            } catch (error) {
+                tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
+            } finally {
+                tokenSettingsSubmitBtn.classList.remove("is-loading");
+                tokenSettingsSubmitBtn.removeAttribute("disabled");
+            }
+        };
     }
 
     // Add API keys
