@@ -94,7 +94,7 @@ class RestAuth {
 	/**
 	 * TTL value meaning no expiration (unlimited).
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @var int
 	 */
@@ -103,7 +103,7 @@ class RestAuth {
 	/**
 	 * Minimum token lifetime in days when not unlimited.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @var int
 	 */
@@ -112,7 +112,7 @@ class RestAuth {
 	/**
 	 * Maximum token lifetime in days.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @var int
 	 */
@@ -135,7 +135,7 @@ class RestAuth {
 	/**
 	 * Option key for access JWT lifetime (seconds).
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @var string
 	 */
@@ -144,7 +144,7 @@ class RestAuth {
 	/**
 	 * Option key for refresh token lifetime (seconds).
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @var string
 	 */
@@ -179,7 +179,7 @@ class RestAuth {
 	/**
 	 * Configured access JWT lifetime in seconds (0 = unlimited).
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @return int
 	 */
@@ -193,7 +193,7 @@ class RestAuth {
 	/**
 	 * Configured refresh token lifetime in seconds (0 = unlimited).
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @return int
 	 */
@@ -207,7 +207,7 @@ class RestAuth {
 	/**
 	 * Convert stored TTL seconds to whole days for admin UI.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @param int $seconds TTL in seconds (0 = unlimited).
 	 *
@@ -226,7 +226,7 @@ class RestAuth {
 	/**
 	 * Convert admin UI days to stored TTL seconds.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @param int $days Days (0 = unlimited).
 	 *
@@ -244,7 +244,7 @@ class RestAuth {
 	/**
 	 * Whether a day-based TTL is allowed (0 or 1–365).
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @param int $days Days value from admin UI.
 	 *
@@ -262,7 +262,7 @@ class RestAuth {
 	/**
 	 * Normalize a stored TTL in seconds (0 = unlimited, otherwise clamp to max).
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @param int $ttl             Stored seconds.
 	 * @param int $default_seconds Fallback when value is invalid.
@@ -286,7 +286,7 @@ class RestAuth {
 	/**
 	 * Whether a refresh-token exp timestamp is still valid (0 = unlimited).
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @param int $exp Expiration unix timestamp, or 0 for unlimited.
 	 * @param int $now Current unix timestamp.
@@ -308,7 +308,7 @@ class RestAuth {
 	 * Admin UI posts lifetimes in days; values are stored as seconds.
 	 * 0 means unlimited / no expiration.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @return void
 	 */
@@ -424,7 +424,7 @@ class RestAuth {
 	/**
 	 * Whether request is a Tutor auth login/refresh/logout route.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -435,7 +435,7 @@ class RestAuth {
 	/**
 	 * Whether request is the auth login route (requires API key + secret).
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -446,7 +446,7 @@ class RestAuth {
 	/**
 	 * Whether request is the auth refresh route.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -457,7 +457,7 @@ class RestAuth {
 	/**
 	 * Whether request is the auth logout route.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -468,7 +468,7 @@ class RestAuth {
 	/**
 	 * Whether the request path matches a Tutor auth endpoint segment.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @param string $segment login|refresh|logout.
 	 *
@@ -653,8 +653,8 @@ class RestAuth {
 	 * Login: from API key/secret headers.
 	 * All other Tutor REST routes: from the API key id (`kid`) bound into the access JWT.
 	 *
-	 * @since 4.0.10
-	 * @since 4.1.0 Non-login routes resolve permission from the access token kid.
+	 * @since 4.2.0
+	 * @since 4.2.0 Non-login routes resolve permission from the access token kid.
 	 *
 	 * @return string Empty when credentials/token are missing, invalid, or revoked.
 	 */
@@ -674,7 +674,7 @@ class RestAuth {
 	/**
 	 * Permission from API key/secret headers.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @return string
 	 */
@@ -695,7 +695,7 @@ class RestAuth {
 	/**
 	 * Permission for an API key usermeta row id (kid).
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @param int $kid usermeta umeta_id of the API key row.
 	 *
@@ -719,7 +719,7 @@ class RestAuth {
 	/**
 	 * Extract permission string from API key meta JSON.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @param string $meta_value JSON meta value.
 	 *
@@ -737,7 +737,7 @@ class RestAuth {
 	/**
 	 * API key id (umeta_id) from the verified access token on this request.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @return int
 	 */
@@ -761,7 +761,7 @@ class RestAuth {
 	/**
 	 * Whether the API key grants Read (or higher).
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -777,7 +777,7 @@ class RestAuth {
 	/**
 	 * Whether the API key grants Write (or higher).
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -796,7 +796,7 @@ class RestAuth {
 	 * Matches pre-4.0.10 Pro route allowlists: Delete and All only.
 	 * Write / Read/Write do not authorize DELETE.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -815,9 +815,9 @@ class RestAuth {
 	 * Login uses API key/secret. All other routes use the access token's bound key permission.
 	 *
 	 * @since 2.2.1
-	 * @since 4.0.10 Honor key permission; accept Tutor-Api-Key headers.
-	 * @since 4.0.10 Delegate to process_read/write/delete_request().
-	 * @since 4.1.0 Login-only key/secret; other routes use JWT kid permission.
+	 * @since 4.2.0 Honor key permission; accept Tutor-Api-Key headers.
+	 * @since 4.2.0 Delegate to process_read/write/delete_request().
+	 * @since 4.2.0 Login-only key/secret; other routes use JWT kid permission.
 	 *
 	 * @return boolean
 	 */
@@ -843,7 +843,7 @@ class RestAuth {
 	/**
 	 * Whether the request has a JWT-authenticated WordPress user.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -854,7 +854,7 @@ class RestAuth {
 	/**
 	 * Read-capable API key and an authenticated end user (JWT).
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -865,7 +865,7 @@ class RestAuth {
 	/**
 	 * Write-capable API key and an authenticated end user (JWT).
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -876,7 +876,7 @@ class RestAuth {
 	/**
 	 * Delete-capable API key and an authenticated end user (JWT).
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -889,7 +889,7 @@ class RestAuth {
 	 *
 	 * Used when the route does not declare a specific read/write/delete check.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */
@@ -900,7 +900,7 @@ class RestAuth {
 	/**
 	 * Whether the current user may act as the given user (self or privileged admin).
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param int $target_user_id target user id.
 	 *
@@ -926,7 +926,7 @@ class RestAuth {
 	 *
 	 * Self, admin, or instructor/admin with course content access.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param int $student_id student user id.
 	 * @param int $course_id course id when known.
@@ -954,7 +954,7 @@ class RestAuth {
 	 * routes and unauthenticated requests are skipped. Object-level checks
 	 * can plug in via the `tutor_rest_enforce_object_access` filter.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @param mixed           $response response.
 	 * @param array           $handler  handler.
@@ -1024,7 +1024,7 @@ class RestAuth {
 		/**
 		 * Object-level access for extensions (Tutor Pro ObjectAccess).
 		 *
-		 * @since 4.1.0
+		 * @since 4.2.0
 		 *
 		 * @param true|\WP_Error  $result  Pass-through true, or WP_Error to deny.
 		 * @param WP_REST_Request $request Request.
@@ -1041,7 +1041,7 @@ class RestAuth {
 	/**
 	 * Permission: valid API key and may view course learning content.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
@@ -1063,7 +1063,7 @@ class RestAuth {
 	/**
 	 * Permission: topics by course_id.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
@@ -1080,7 +1080,7 @@ class RestAuth {
 	/**
 	 * Permission: lessons or quizzes listed by topic_id.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
@@ -1100,7 +1100,7 @@ class RestAuth {
 	/**
 	 * Permission: quiz by quiz id.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
@@ -1120,7 +1120,7 @@ class RestAuth {
 	/**
 	 * Whether the user may view full course learning content.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param int $course_id course id.
 	 * @param int $user_id user id.
@@ -1152,7 +1152,7 @@ class RestAuth {
 	/**
 	 * Whether answer keys (is_correct) may be revealed.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param int $quiz_id quiz id.
 	 * @param int $user_id user id.
@@ -1178,7 +1178,7 @@ class RestAuth {
 	/**
 	 * Whether viewer may see private user fields (email, login, registered).
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param int $target_user_id target user.
 	 * @param int $viewer_id viewer.
@@ -1222,8 +1222,8 @@ class RestAuth {
 	 * Requires a valid Read-capable API key/secret (permission_callback). The key id
 	 * is bound into issued tokens so later requests need only the Bearer token.
 	 *
-	 * @since 4.0.10
-	 * @since 4.1.0 Bind API key id (kid) into access and refresh tokens.
+	 * @since 4.2.0
+	 * @since 4.2.0 Bind API key id (kid) into access and refresh tokens.
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
@@ -1295,8 +1295,8 @@ class RestAuth {
 	/**
 	 * Refresh access token (rotates refresh token).
 	 *
-	 * @since 4.0.10
-	 * @since 4.1.0 No API key/secret; reuses kid stored with the refresh token.
+	 * @since 4.2.0
+	 * @since 4.2.0 No API key/secret; reuses kid stored with the refresh token.
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
@@ -1340,7 +1340,7 @@ class RestAuth {
 	/**
 	 * Logout — delete refresh token(s).
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
@@ -1378,7 +1378,7 @@ class RestAuth {
 	/**
 	 * Invalidate tokens when password changes on profile update.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param int      $user_id user id.
 	 * @param \WP_User $old_user_data old user.
@@ -1399,7 +1399,7 @@ class RestAuth {
 	/**
 	 * Bump token_version and delete refresh tokens.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param int|\WP_User $user user id or object.
 	 *
@@ -1824,7 +1824,7 @@ class RestAuth {
 	/**
 	 * Find refresh session (user id + kid) for a refresh token.
 	 *
-	 * @since 4.1.0
+	 * @since 4.2.0
 	 *
 	 * @param string $token refresh token.
 	 *

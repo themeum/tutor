@@ -367,7 +367,7 @@ class REST_Quiz {
 	 * Get quiz attempt answers for a single attempt.
 	 *
 	 * @since 1.7.1
-	 * @since 4.0.10 Scope by quiz_attempt_id to prevent cross-user answer leaks.
+	 * @since 4.2.0 Scope by quiz_attempt_id to prevent cross-user answer leaks.
 	 *
 	 * @param int $attempt_id quiz attempt id.
 	 *
@@ -452,7 +452,7 @@ class REST_Quiz {
 	/**
 	 * Strip is_correct from question answer options.
 	 *
-	 * @since 4.0.10
+	 * @since 4.2.0
 	 *
 	 * @param array $questions questions with answers.
 	 *
