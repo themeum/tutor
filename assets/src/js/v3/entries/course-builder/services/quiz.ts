@@ -232,8 +232,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
           ? QUIZ_NEGATIVE_MARK_TYPES.FIXED
           : QUIZ_NEGATIVE_MARK_TYPES.PERCENT),
       negative_mark_value:
-        quiz.quiz_option.negative_mark_value ??
-        Number(tutorConfig.settings?.quiz_negative_mark_value ?? DEFAULT_QUIZ_NEGATIVE_MARK_VALUE),
+        Number(quiz.quiz_option.negative_mark_value) > 0
+          ? Number(quiz.quiz_option.negative_mark_value)
+          : Number(tutorConfig.settings?.quiz_negative_mark_value ?? DEFAULT_QUIZ_NEGATIVE_MARK_VALUE),
       content_drip_settings: quiz.quiz_option.content_drip_settings || {
         unlock_date: '',
         after_xdays_of_enroll: 0,
