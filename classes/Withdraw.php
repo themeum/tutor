@@ -362,7 +362,7 @@ class Withdraw {
 			if ( $this->is_dangerous_value( $value ) ) {
 				$errors[] = sprintf(
 					/* translators: %s: field label */
-					__( 'Field "%s" contains an invalid value (file paths and code are not allowed).', 'tutor' ),
+					__( 'Field "%s" contains an invalid value.', 'tutor' ),
 					$label
 				);
 				continue;
