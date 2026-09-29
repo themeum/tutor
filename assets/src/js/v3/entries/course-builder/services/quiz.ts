@@ -8,7 +8,6 @@ import { tutorConfig } from '@TutorShared/config/config';
 import {
   Addons,
   DEFAULT_QUIZ_ATTEMPTS_ALLOWED,
-  DEFAULT_QUIZ_NEGATIVE_MARK_TYPE,
   DEFAULT_QUIZ_NEGATIVE_MARK_VALUE,
   QUIZ_NEGATIVE_MARK_TYPES,
   type QuizNegativeMarkType,
@@ -231,10 +230,11 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
         quiz.quiz_option.negative_mark_type ??
         (tutorConfig.settings?.quiz_negative_mark_type === QUIZ_NEGATIVE_MARK_TYPES.FIXED
           ? QUIZ_NEGATIVE_MARK_TYPES.FIXED
-          : DEFAULT_QUIZ_NEGATIVE_MARK_TYPE),
+          : QUIZ_NEGATIVE_MARK_TYPES.PERCENT),
       negative_mark_value:
-        quiz.quiz_option.negative_mark_value ??
-        Number(tutorConfig.settings?.quiz_negative_mark_value ?? DEFAULT_QUIZ_NEGATIVE_MARK_VALUE),
+        Number(quiz.quiz_option.negative_mark_value) > 0
+          ? Number(quiz.quiz_option.negative_mark_value)
+          : Number(tutorConfig.settings?.quiz_negative_mark_value ?? DEFAULT_QUIZ_NEGATIVE_MARK_VALUE),
       content_drip_settings: quiz.quiz_option.content_drip_settings || {
         unlock_date: '',
         after_xdays_of_enroll: 0,

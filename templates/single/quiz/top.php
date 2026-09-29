@@ -114,6 +114,8 @@ do_action( 'tutor_quiz/single/before/top' );
 					<span class="tutor-fs-6 tutor-color-black">(<?php echo esc_html( $passing_grade . '%' ); ?>)</span>
 				</div>
 			<?php endif; ?>
+
+			<?php do_action( 'tutor_quiz/single/info', $quiz_id ); ?>
 		</div>
 
 		<?php

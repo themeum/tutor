@@ -525,7 +525,7 @@ class Skeleton extends BaseComponent {
 	 */
 	protected function render_table(): void {
 		?>
-		<div class="tutor-table-wrapper tutor-rounded-2xl tutor-border tutor-p-6" <?php $this->render_attributes(); ?>>
+		<div class="tutor-surface-l1 tutor-table-wrapper tutor-rounded-2xl tutor-border tutor-p-6" <?php $this->render_attributes(); ?>>
 			<div class="tutor-flex tutor-justify-between tutor-items-center tutor-mb-6 tutor-border-b tutor-pb-4">
 				<span class="tutor-skeleton" style="width: 30%; height: 14px;"></span>
 				<span class="tutor-skeleton" style="width: 20%; height: 14px;"></span>

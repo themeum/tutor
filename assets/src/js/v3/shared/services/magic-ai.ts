@@ -38,7 +38,17 @@ interface FillPayload {
 const magicFillImage = (payload: FillPayload) => {
   return wpAjaxInstance
     .post<FillPayload, TutorMutationResponse<ImageResponse>>(endpoints.MAGIC_FILL_AI_IMAGE, payload)
-    .then((response) => response.data.data[0].b64_json);
+    .then((response) => {
+      const item = response.data?.data?.[0];
+      const rawB64 = item?.b64_json;
+      const rawUrl = item?.url;
+      const isValidB64 = Boolean(rawB64 && rawB64 !== 'data:image/png;base64,' && rawB64.trim() !== '');
+      let img = isValidB64 ? rawB64 : (rawUrl ?? '');
+      if (img && !img.startsWith('data:') && !img.startsWith('http://') && !img.startsWith('https://')) {
+        img = `data:image/png;base64,${img}`;
+      }
+      return img;
+    });
 };
 
 export const useMagicFillImageMutation = () => {
