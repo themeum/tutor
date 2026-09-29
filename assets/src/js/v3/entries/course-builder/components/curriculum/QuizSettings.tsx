@@ -355,7 +355,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 )}
               />
               <p css={styles.infoText}>
-                {__('Award credit for correct sub-answers on multi-part questions.', 'tutor')}
+                {__('Award points for correct sub-answers on multi-part questions.', 'tutor')}
               </p>
             </Show>
 
