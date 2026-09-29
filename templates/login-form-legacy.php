@@ -110,9 +110,8 @@ if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) :
 	?>
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
-		var { __ } = wp.i18n;
 		var loginModal = document.querySelector('.tutor-modal.tutor-login-modal');
-		var errors = <?php echo tutor_json_encode( $login_errors ); ?>;
+		var errors = <?php echo tutor_json_encode( $login_errors ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
 		if (loginModal && errors.length) {
 			loginModal.classList.add('tutor-is-active');
 		}

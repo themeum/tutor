@@ -149,8 +149,8 @@ $single_url = UrlHelper::add_query_params(
 							x-transition
 							class="tutor-tooltip"
 							x-text="isSolved
-								? '<?php esc_html_e( 'Solved', 'tutor' ); ?>'
-								: '<?php esc_html_e( 'Unresolved', 'tutor' ); ?>'"
+								? <?php echo esc_attr( tutor_json_encode( __( 'Solved', 'tutor' ) ) ); ?>
+								: <?php echo esc_attr( tutor_json_encode( __( 'Unresolved', 'tutor' ) ) ); ?>"
 							>
 						</div>
 					</div>
@@ -183,8 +183,8 @@ $single_url = UrlHelper::add_query_params(
 							x-transition
 							class="tutor-tooltip"
 							x-text="isImportant
-								? '<?php esc_html_e( 'This conversation is important', 'tutor' ); ?>'
-								: '<?php esc_html_e( 'Mark this conversation as important', 'tutor' ); ?>'"
+								? <?php echo esc_attr( tutor_json_encode( __( 'This conversation is important', 'tutor' ) ) ); ?>
+								: <?php echo esc_attr( tutor_json_encode( __( 'Mark this conversation as important', 'tutor' ) ) ); ?>"
 							>
 						</div>
 					</div>
@@ -274,7 +274,7 @@ $single_url = UrlHelper::add_query_params(
 							<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'archived' && currentQuestionId === <?php echo (int) $question_id; ?>)">
 								<?php SvgIcon::make()->name( Icon::ARCHIVE_2 )->size( 20 )->render(); ?>
 							</template>
-							<span x-text="isArchived ? '<?php echo esc_js( __( 'Un-Archive', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Archive', 'tutor' ) ); ?>'"></span>
+							<span x-text="isArchived ? <?php echo esc_attr( tutor_json_encode( __( 'Un-Archive', 'tutor' ) ) ); ?> : <?php echo esc_attr( tutor_json_encode( __( 'Archive', 'tutor' ) ) ); ?>"></span>
 						</button>
 						<?php endif; ?>
 
@@ -296,7 +296,7 @@ $single_url = UrlHelper::add_query_params(
 									</template>
 								</span>
 							</template>
-							<span x-text="isUnread ? '<?php echo esc_js( __( 'Mark as Read', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Mark as Unread', 'tutor' ) ); ?>'"></span>
+							<span x-text="isUnread ? <?php echo esc_attr( tutor_json_encode( __( 'Mark as Read', 'tutor' ) ) ); ?> : <?php echo esc_attr( tutor_json_encode( __( 'Mark as Unread', 'tutor' ) ) ); ?>"></span>
 						</button>
 
 						<?php if ( $is_user_asker ) : ?>

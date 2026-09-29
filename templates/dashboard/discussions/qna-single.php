@@ -165,7 +165,7 @@ $action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->commen
 								<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'archived')">
 									<?php SvgIcon::make()->name( Icon::ARCHIVE_2 )->size( 20 )->render(); ?> 
 								</template>
-								<span x-text="isArchived ? '<?php echo esc_js( __( 'Un-Archive', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Archive', 'tutor' ) ); ?>'"></span>
+								<span x-text="isArchived ? <?php echo esc_attr( tutor_json_encode( __( 'Un-Archive', 'tutor' ) ) ); ?> : <?php echo esc_attr( tutor_json_encode( __( 'Archive', 'tutor' ) ) ); ?>"></span>
 							</button>
 							<?php endif; ?>
 							<?php if ( $is_user_asker ) : ?>

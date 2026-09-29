@@ -23,10 +23,11 @@ $attempt_id           = (int) ( $attempt_id ?? 0 );
 $attempt_answer_id    = (int) ( $attempt_answer_id ?? 0 );
 $is_instructor_review = ! empty( $is_instructor_review );
 $is_skipped           = ! empty( $is_skipped );
+
 // Sanitize field name for use inside JS string literals in Alpine directives.
 // Only alphanumerics, underscores, and brackets are allowed — no quote/breakout chars.
-$review_field_name    = preg_replace( '/[^a-zA-Z0-9_\[\]]/', '', (string) ( $review_field_name ?? '' ) );
-$is_manual_question   = $question && in_array( (string) ( $question->question_type ?? '' ), QuizModel::get_manual_review_types(), true );
+$review_field_name  = preg_replace( '/[^a-zA-Z0-9_\[\]]/', '', (string) ( $review_field_name ?? '' ) );
+$is_manual_question = $question && in_array( (string) ( $question->question_type ?? '' ), QuizModel::get_manual_review_types(), true );
 ?>
 
 <div class="tutor-quiz-question-header">
