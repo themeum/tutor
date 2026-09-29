@@ -201,12 +201,20 @@ class Withdraw {
 	 */
 	private function is_dangerous_value( string $value ): bool {
 
-		// Escape HTML.
-		$value   = html_entity_decode( $value );
-		$value   = wp_kses( $value, array() );
-		$trimmed = trim( $value );
+		$decoded = html_entity_decode( $value );
 
-		if ( empty( $value ) ) {
+		// Check for PHP / script tags on the DECODED string.
+		if ( preg_match( '/<\?(?:php)?|<script/i', $decoded ) ) {
+			return true;
+		}
+
+		// Strip any remaining HTML / tag-like content after the tag checks.
+		$clean   = wp_kses( $decoded, array() );
+		$trimmed = trim( $clean );
+
+		// Treat a value that is entirely HTML tags (nothing left after stripping)
+		// as dangerous — it means the input was purely markup with no real content.
+		if ( empty( $trimmed ) ) {
 			return true;
 		}
 
@@ -220,13 +228,8 @@ class Withdraw {
 			return true;
 		}
 
-		// Reject values that end with a file extension.
-		if ( preg_match( '/\.[a-zA-Z]{2,5}$/', $trimmed ) ) {
-			return true;
-		}
-
-		// Reject PHP open tags or inline script tags.
-		if ( preg_match( '/<\?(?:php)?|<script/i', $trimmed ) ) {
+		// Reject values that end with a known dangerous file extension.
+		if ( preg_match( '/\.(php\d*|phtml|js|sh|py|rb|pl|cgi|asp|aspx|exe|bat|cmd)$/i', $trimmed ) ) {
 			return true;
 		}
 
