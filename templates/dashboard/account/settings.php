@@ -81,7 +81,7 @@ $settings_tab_data = array_values(
 		x-data='(() => {
 			const initialTab = new URL(window.location.href).searchParams.get("tab");
 			const tabs = tutorTabs({
-				tabs: <?php echo wp_json_encode( $settings_tab_data ); ?>,
+				tabs: <?php echo wp_json_encode( $settings_tab_data, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP ); ?>,
 				orientation: "vertical",
 				defaultTab: window.innerWidth >= 768 ? "account" : "none",
 				urlParams: {
@@ -92,7 +92,7 @@ $settings_tab_data = array_values(
 
 			return {
 				...tabs,
-				backUrl: <?php echo wp_json_encode( $back_url ); ?>,
+				backUrl: <?php echo wp_json_encode( $back_url, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP ); ?>,
 				viewportWidth: window.innerWidth,
 				hasInitialUrlTab: tabs.tabs.some((tab) => tab.id === initialTab),
 				handleViewportResize() {

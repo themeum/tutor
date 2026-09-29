@@ -321,6 +321,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 											array(
 												'tutor_action' => 'duplicate_course',
 												'course_id' => $post->ID,
+												tutor()->nonce => $tutor_nonce_value,
 											)
 										);
 										?>

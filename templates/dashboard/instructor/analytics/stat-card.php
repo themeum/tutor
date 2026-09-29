@@ -23,19 +23,20 @@ $content_display = $content ?? '';
 $show_graph      = $show_graph ?? false;
 $data            = $data ?? array( 0, 0, 0 );
 $hover_content   = $hover_content ?? array();
+$icon            = $icon ?? '';
 $variation       = empty( $variation ) ? $icon : $variation;
 
 // Required fields validation.
 if ( ! isset( $card_title ) || empty( $card_title ) ) {
 	return;
 }
-if ( ! isset( $icon ) || empty( $icon ) ) {
+if ( empty( $icon ) ) {
 	return;
 }
 
 if ( ! empty( $hover_content ) ) {
-	$start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
-	$end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
+	$start_date     = ! empty( $start_date ) ? $start_date : ( Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : ( Input::post( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::post( 'start_date' ) ) : '' ) );
+	$end_date       = ! empty( $end_date ) ? $end_date : ( Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : ( Input::post( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::post( 'end_date' ) ) : '' ) );
 	$template_path  = tutor()->path . 'templates/dashboard/instructor/analytics/stat-card-hover.php';
 	$hover_template = get_template_buffer(
 		$template_path,
@@ -71,12 +72,12 @@ if ( ! empty( $hover_content ) ) {
 		<?php endif; ?>
 
 		<?php if ( ! empty( $hover_content ) ) : ?>
-			<?php echo $hover_template; //phpcs:ignore ?>
+			<?php echo $hover_template; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		<?php endif; ?>
 	</div>
 	<?php if ( $show_graph ) : ?>
 		<div class="tutor-stat-card-chart" x-data="tutorStatCard(<?php echo esc_attr( wp_json_encode( $data ) ); ?>)">
-			<canvas x-ref="canvas" hright="33" width="100%"></canvas>
+			<canvas x-ref="canvas" height="33" width="100%"></canvas>
 		</div>
 	<?php endif; ?>
 </div>

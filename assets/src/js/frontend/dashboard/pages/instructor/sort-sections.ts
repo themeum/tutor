@@ -164,7 +164,8 @@ export const sortSections = (sectionsIds: string[]) => {
 
       const existingOrder = Array.from(
         new Set(
-          Array.from(parentContainer.querySelectorAll<HTMLElement>('[data-section-id]'))
+          Array.from(parentContainer.children)
+            .filter((el): el is HTMLElement => el instanceof HTMLElement && el.hasAttribute('data-section-id'))
             .map((el) => el.dataset.sectionId)
             .filter((id): id is string => id !== undefined),
         ),
@@ -174,17 +175,12 @@ export const sortSections = (sectionsIds: string[]) => {
         return;
       }
 
-      const fragment = document.createDocumentFragment();
-
       for (const id of newOrder) {
         const section = sectionMap[id];
         if (section) {
-          section.remove();
-          fragment.appendChild(section);
+          parentContainer.appendChild(section);
         }
       }
-
-      parentContainer.appendChild(fragment);
     },
 
     getOrder() {
@@ -200,9 +196,17 @@ export const sortSections = (sectionsIds: string[]) => {
     },
 
     getSortableSections() {
-      const sections = document.querySelectorAll<HTMLElement>('[data-section-id]');
+      const firstSection = document.querySelector<HTMLElement>('[data-section-id]');
+      const parentContainer = firstSection?.parentElement;
+      if (!parentContainer) {
+        return {};
+      }
 
-      return Array.from(sections).reduce(
+      const sections = Array.from(parentContainer.children).filter(
+        (el): el is HTMLElement => el instanceof HTMLElement && el.hasAttribute('data-section-id'),
+      );
+
+      return sections.reduce(
         (acc, section) => {
           const sectionId = section.dataset.sectionId;
           if (sectionId) {

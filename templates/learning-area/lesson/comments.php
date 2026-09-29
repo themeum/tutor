@@ -29,12 +29,14 @@ $comments_list_args = array(
 	'paged'   => $current_page,
 	'number'  => $item_per_page,
 	'order'   => $order_filter,
+	'status'  => 'approve',
 );
 
 $comment_count_args = array(
 	'post_id' => $lesson_id,
 	'parent'  => 0,
 	'count'   => true,
+	'status'  => 'approve',
 );
 
 $comments_count = Lesson::get_comments( $comment_count_args );

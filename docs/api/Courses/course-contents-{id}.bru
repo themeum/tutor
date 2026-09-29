@@ -1,0 +1,78 @@
+meta {
+  name: course-contents/{id}
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/course-contents/1
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Course Contents Tree
+  
+  Retrieves the complete hierarchical curriculum structure for a course, grouping topics and their nested child items (lessons, quizzes, assignments).
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/course-contents/:id`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Path Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `id` | `integer` | **Yes** | The WordPress Post ID of the course. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "success",
+    "message": "Course contents retrieved successfully",
+    "data": [
+      {
+        "id": 201,
+        "title": "Module 1: Introduction to Web APIs",
+        "summary": "Overview of REST architecture and HTTP fundamentals.",
+        "contents": [
+          {
+            "ID": 301,
+            "post_title": "Lesson 1: What is a REST API?",
+            "post_content": "Detailed overview text...",
+            "post_name": "what-is-a-rest-api",
+            "post_type": "lesson"
+          },
+          {
+            "ID": 302,
+            "post_title": "Quiz 1: HTTP Basics",
+            "post_content": "Test your knowledge of status codes.",
+            "post_name": "quiz-1-http-basics",
+            "post_type": "tutor_quiz"
+          }
+        ]
+      }
+    ]
+  }
+  ```
+  
+  ### 404 Not Found
+  ```json
+  {
+    "code": "not_found",
+    "message": "Contents for this course with the given course id not found",
+    "data": []
+  }
+  ```
+}

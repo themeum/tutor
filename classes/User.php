@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
+
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Helpers\HttpHelper;
@@ -399,6 +401,9 @@ class User {
 		$photo_type = Input::post( 'photo_type', '' );
 		$meta_key   = 'cover_photo' === $photo_type ? '_tutor_cover_photo' : '_tutor_profile_photo';
 
+		// Strict allowlist of image MIME types.
+		$allowed_mime_types = array( 'image/jpeg', 'image/png', 'image/gif', 'image/webp' );
+
 		/**
 		 * Photo Update from profile
 		 */
@@ -422,11 +427,22 @@ class User {
 					$mime_type  = is_array( $image_info ) && count( $image_info ) ? $image_info['mime'] : '';
 				}
 
+				// Validate against strict MIME allowlist.
+				if ( ! in_array( $mime_type, $allowed_mime_types, true ) ) {
+					wp_delete_file( $file_path );
+					wp_send_json_error( array( 'message' => __( 'Invalid image file type.', 'tutor' ) ) );
+					return;
+				}
+
+				// Use a controlled title instead of user-supplied filename.
+				$photo_label      = 'cover_photo' === Input::post( 'photo_type', '' ) ? 'cover' : 'profile';
+				$controlled_title = sprintf( 'tutor-%s-photo-%d', $photo_label, $user_id );
+
 				$media_id = wp_insert_attachment(
 					array(
 						'guid'           => $file_path,
 						'post_mime_type' => $mime_type,
-						'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_url ) ),
+						'post_title'     => $controlled_title,
 						'post_content'   => '',
 						'post_status'    => 'inherit',
 					),
@@ -945,5 +961,37 @@ class User {
 		$message = str_replace( $default_url, $tutor_reset_url, $message );
 
 		return $message;
+	}
+
+	/**
+	 * Check if the current user can view provided user profile
+	 *
+	 * @since 4.0.9
+	 *
+	 * @param int $user_id User id, whose profile will be viewed.
+	 *
+	 * @return bool
+	 */
+	public static function can_view_user_profile( int $user_id ) {
+		$current_user_id = get_current_user_id();
+		if ( $current_user_id === $user_id ) {
+			return true;
+		}
+
+		if ( self::is_admin( $current_user_id ) ) {
+			return true;
+		}
+
+		if ( self::is_instructor( $current_user_id ) ) {
+			$enrolled_courses = CourseModel::get_enrolled_courses_by_user( $user_id );
+			if ( $enrolled_courses ) {
+				$course_author_ids = array_column( $enrolled_courses->get_posts(), 'post_author' );
+				if ( in_array( $current_user_id, $course_author_ids, true ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }

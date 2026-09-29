@@ -43,19 +43,20 @@ class LegalConsents extends DB {
 		$charset_collate = $wpdb->get_charset_collate();
 
 		return "CREATE TABLE {$table_name} (
-			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+			id BIGINT UNSIGNED AUTO_INCREMENT,
 			consent_title VARCHAR(255) NOT NULL,
-			display_on TEXT NOT NULL, -- comma separate value for multiple scopes
+			display_on TEXT NOT NULL,
 			consent_message TEXT NOT NULL,
-			consent_map JSON, -- JSON map [terms_conditions => 1]
+			consent_map JSON,
 			version VARCHAR(20) NOT NULL,
 			consent_method VARCHAR(255) NOT NULL,
 			is_active TINYINT(1) DEFAULT 1,
 			settings JSON,
 			created_at_gmt DATETIME NOT NULL,
 			updated_at_gmt DATETIME,
-			INDEX (consent_title),
-			INDEX (is_active)
+			PRIMARY KEY  (id),
+			KEY consent_title (consent_title),
+			KEY is_active (is_active)
 		) {$charset_collate};";
 	}
 }

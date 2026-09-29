@@ -3180,13 +3180,12 @@ class Utils {
 
 		$search_term_raw = $search_filter;
 		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';
-		$course_filter   = $course_filter != '' ? " AND umeta.meta_value = $course_filter " : '';
+		$course_filter   = '' !== $course_filter && absint( $course_filter ) > 0 ? ' AND umeta.meta_value = ' . absint( $course_filter ) . ' ' : '';
 
-		if ( '' != $date_filter ) {
-			$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
+		if ( '' !== $date_filter ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $date_filter );
+			$date_filter    = '' !== $formatted_date ? $wpdb->prepare( ' AND  DATE(user.user_registered) = CAST(%s AS DATE) ', $formatted_date ) : '';
 		}
-
-		$date_filter = $date_filter != '' ? " AND  DATE(user.user_registered) = CAST('$date_filter' AS DATE) " : '';
 
 		$category_join  = '';
 		$category_where = '';
@@ -3196,7 +3195,7 @@ class Utils {
 
 			$status = array_map(
 				function ( $str ) {
-					return "'{$str}'";
+					return "'" . esc_sql( $str ) . "'";
 				},
 				$status
 			);
@@ -3252,7 +3251,8 @@ class Utils {
 		} elseif ( 'popular' === $order_filter ) {
 			$order_query = ' ORDER BY rating DESC ';
 		} else {
-			$order_query = " ORDER BY user_meta.meta_value {$order_filter} ";
+			$order_direction = QueryHelper::get_valid_sort_order( $order_filter );
+			$order_query     = " ORDER BY user_meta.meta_value {$order_direction} ";
 		}
 
 		$limit_offset = $count_only ? '' : " LIMIT {$start}, {$limit} ";
@@ -3349,6 +3349,7 @@ class Utils {
 					INNER JOIN {$wpdb->posts} course
 							ON _user.ID = course.post_author
 						   AND course.ID = %d
+						   AND course.post_type = %s
 					LEFT  JOIN {$wpdb->usermeta} tutor_job_title
 						    ON _user.ID = tutor_job_title.user_id
 						   AND tutor_job_title.meta_key = %s
@@ -3360,6 +3361,7 @@ class Utils {
 						   AND tutor_photo.meta_key = %s
 			",
 				$course_id,
+				tutor()->course_post_type,
 				'_tutor_profile_job_title',
 				'_tutor_profile_bio',
 				'_tutor_profile_photo'
@@ -4022,8 +4024,10 @@ class Utils {
 		}
 
 		$limit_offset    = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
+		$status_in       = array_map( 'esc_sql', (array) $status_in );
 		$status_in       = '"' . implode( '","', $status_in ) . '"';
 		$include_user_id = is_array( $include_user_id ) ? $include_user_id : array( $include_user_id );
+		$include_user_id = array_map( 'absint', $include_user_id );
 		$include_user_id = implode( ',', $include_user_id );
 
 		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
@@ -4172,16 +4176,20 @@ class Utils {
 		$course_filter = '';
 		if ( $course_id ) {
 			$course_ids    = is_array( $course_id ) ? $course_id : array( $course_id );
-			$course_ids    = implode( ',', $course_ids );
-			$course_filter = " AND _comment.comment_post_ID IN ($course_ids)";
+			$course_ids    = array_filter( array_map( 'absint', $course_ids ) );
+			if ( ! empty( $course_ids ) ) {
+				$course_ids_str = QueryHelper::prepare_in_clause( $course_ids );
+				$course_filter  = " AND _comment.comment_post_ID IN ($course_ids_str)";
+			}
 		}
 
 		$user_filter = '';
 		if ( null !== $user_id ) {
-			$user_id     = $this->get_user_id( $user_id );
+			$user_id     = absint( $this->get_user_id( $user_id ) );
 			$user_filter = ' AND _comment.user_id=' . $user_id;
 		}
 
+		$status_in     = array_map( 'esc_sql', (array) $status_in );
 		$status_in     = '"' . implode( '","', $status_in ) . '"';
 		$status_filter = ' AND _comment.comment_approved IN (' . $status_in . ')';
 
@@ -4299,12 +4307,13 @@ class Utils {
 			$extra_where_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'comment_approved' => $args['comment_approved'] ) );
 		}
 
-		if ( '' !== $course_id ) {
-			$course_query = " AND {$wpdb->comments}.comment_post_ID = {$course_id} ";
+		if ( '' !== $course_id && absint( $course_id ) > 0 ) {
+			$course_id_int = absint( $course_id );
+			$course_query  = " AND {$wpdb->comments}.comment_post_ID = {$course_id_int} ";
 		}
 		if ( '' !== $date_filter ) {
-			$date_filter = \tutor_get_formated_date( 'Y-m-d', $date_filter );
-			$date_query  = " AND DATE({$wpdb->comments}.comment_date) = CAST( '$date_filter' AS DATE ) ";
+			$formatted_date = \tutor_get_formated_date( 'Y-m-d', $date_filter );
+			$date_query     = '' !== $formatted_date ? $wpdb->prepare( " AND DATE({$wpdb->comments}.comment_date) = CAST(%s AS DATE) ", $formatted_date ) : '';
 		}
 
 		$results = array(
@@ -4313,6 +4322,7 @@ class Utils {
 		);
 
 		$cours_ids = (array) $this->get_assigned_courses_ids_by_instructors( $instructor_id );
+		$cours_ids = array_filter( array_map( 'absint', $cours_ids ) );
 
 		if ( $this->count( $cours_ids ) ) {
 			$implode_ids = implode( ',', $cours_ids );
@@ -4338,7 +4348,8 @@ class Utils {
 				)
 			);
 
-			$order_by = $args['order_by'] ?? 'comment_ID';
+			$allowed_order_by = array( 'comment_ID', 'comment_date', 'comment_post_ID', 'user_id' );
+			$order_by         = isset( $args['order_by'] ) && in_array( $args['order_by'], $allowed_order_by, true ) ? $args['order_by'] : 'comment_ID';
 			// Results.
 			$results['results'] = $wpdb->get_results(
 				$wpdb->prepare(
@@ -7339,6 +7350,8 @@ class Utils {
 	 * Get students list based on course id
 	 *
 	 * @since 1.6.6
+	 * @since 4.1.0 Query refactored to use Tutor\Helpers\QueryHelper and
+	 *              `tutor_students_data_by_course_id_query_args` filter added to extend the query clause.
 	 *
 	 * @param integer $course_id course id.
 	 * @param string  $field_name field name.
@@ -7348,24 +7361,43 @@ class Utils {
 	 */
 	public function get_students_data_by_course_id( $course_id = 0, $field_name = 'ID', $all = false ) {
 
-		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 
-		$student_data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT student.{$field_name}, student.display_name as display_name, student.user_login as username, student.user_email
-			FROM   	{$wpdb->posts} enrol
-					INNER JOIN {$wpdb->users} student
-						    ON enrol.post_author = student.id
-			WHERE  	enrol.post_type = %s
-					AND enrol.post_parent = %d
-					AND enrol.post_status = %s;
-			",
-				'tutor_enrolled',
-				$course_id,
-				'completed'
-			)
+		$query_args = array(
+			'select' => "student.{$field_name}, student.display_name as display_name, student.user_login as username, student.user_email",
+			'alias'  => 'enrol',
+			'where'  => array(
+				'enrol.post_type'   => 'tutor_enrolled',
+				'enrol.post_parent' => $course_id,
+				'enrol.post_status' => 'completed',
+			),
+			'joins'  => array(
+				array(
+					'type'  => 'INNER',
+					'table' => 'users AS student',
+					'on'    => 'enrol.post_author = student.id',
+				),
+			),
 		);
+
+		/**
+		 * Filter the QueryHelper args used to fetch students of a course.
+		 *
+		 * Addons can modify the query clause (select, joins, where, groupby)
+		 * to extend the result without running an extra query.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array $query_args QueryHelper::query() arguments.
+		 * @param int   $course_id course id.
+		 */
+		$query_args = apply_filters( 'tutor_students_data_by_course_id_query_args', $query_args, $course_id );
+
+		$student_data = QueryHelper::query(
+			'posts',
+			$query_args
+		);
+
 		if ( $all ) {
 			return $student_data;
 		}
@@ -7512,7 +7544,9 @@ class Utils {
 			global $wpdb;
 			switch ( $content ) {
 				case 'course':
-					$course_id = $object_id;
+					if ( get_post_type( $object_id ) === tutor()->course_post_type ) {
+						$course_id = $object_id;
+					}
 					break;
 
 				case 'zoom_meeting':
@@ -10227,14 +10261,35 @@ class Utils {
 	 */
 	public function upload_base64_image( $base64_image_str, $filename = null, $add_to_wp_media = true ) {
 		try {
-			$arr = explode( ',', $base64_image_str, 2 );
-			if ( ! isset( $arr[1] ) ) {
+			$image_data = null;
+
+			// Handle remote URLs.
+			if ( preg_match( '/^https?:\/\//i', $base64_image_str ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+				$temp_file = download_url( $base64_image_str );
+				if ( is_wp_error( $temp_file ) ) {
+					throw new \Exception( $temp_file->get_error_message() );
+				}
+				$image_data = file_get_contents( $temp_file );
+				@unlink( $temp_file );
+			} else {
+				$arr = explode( ',', $base64_image_str, 2 );
+				if ( isset( $arr[1] ) ) {
+					$image_data = base64_decode( $arr[1] );
+				} elseif ( ! empty( $base64_image_str ) && false !== base64_decode( $base64_image_str, true ) ) {
+					// Raw base64 string without data: prefix.
+					$image_data = base64_decode( $base64_image_str );
+				} else {
+					throw new \Exception( 'Invalid base64 string' );
+				}
+			}
+
+			if ( empty( $image_data ) ) {
 				throw new \Exception( 'Invalid base64 string' );
 			}
 
-			$filename   = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
-			$image_data = base64_decode( $arr[1] );
-			$uploaded   = wp_upload_bits( $filename, null, $image_data );
+			$filename = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
+			$uploaded = wp_upload_bits( $filename, null, $image_data );
 
 			if ( ! empty( $uploaded['error'] ) ) {
 				throw new \Exception( $uploaded['error'] );

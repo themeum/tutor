@@ -15,6 +15,11 @@
 		<?php isset( $field['label_icon'] ) ? printf( '<img src="%s" />', esc_attr( $field['label_icon'] ) ) : null; ?>
 		<?php isset( $field['label'] ) ? printf( '<div class="tutor-fs-6 tutor-fw-medium" tutor-option-name>%s</div>', esc_attr( $field['label'] ) ) : null; ?>
 		<?php isset( $field['label_tag'] ) ? printf( '<div class="tutor-tag tag-success" tutor-option-name>%s</div>', esc_attr( $field['label_tag'] ) ) : null; ?>
+		<?php if ( ! empty( $field['tooltip'] ) ) : ?>
+			<div class="tooltip-wrap tooltip-icon" style="margin-left: 0;">
+				<span class="tooltip-txt tooltip-top"><?php echo esc_attr( $field['tooltip'] ); ?></span>
+			</div>
+		<?php endif; ?>
 	</div>
 	<?php ( isset( $field['desc'] ) && ! empty( $field['desc'] ) ) ? printf( '<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">%s</div>', wp_kses_post( $field['desc'] ) ) : null; ?>
 </div>

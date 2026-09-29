@@ -51,7 +51,6 @@ export default [
               '^@ImportExport',
               '^@Frontend',
               '^@LearningArea',
-              '^@TutorProQuiz',
             ],
             // Internal aliases — Test
             ['^@Cypress'],

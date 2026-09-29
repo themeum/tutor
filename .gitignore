@@ -2,6 +2,7 @@ node_modules/
 assets/css/*
 !assets/css/.gitkeep
 assets/js/*
+assets/blocks/
 languages/*
 !languages/.gitkeep
 test/
@@ -61,3 +62,6 @@ assets/.rsdoctor
 
 *storybook.log
 storybook-static
+
+# Bruno Local Environment
+docs/api/environments/local.bru
