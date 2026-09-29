@@ -791,7 +791,10 @@ class RestAuth {
 	}
 
 	/**
-	 * Whether the API key grants Delete (or Write/All).
+	 * Whether the API key grants Delete (or All).
+	 *
+	 * Matches pre-4.0.10 Pro route allowlists: Delete and All only.
+	 * Write / Read/Write do not authorize DELETE.
 	 *
 	 * @since 4.0.10
 	 *
@@ -803,7 +806,7 @@ class RestAuth {
 			return false;
 		}
 
-		return in_array( $permission, array( static::DELETE, static::WRITE, static::READ_WRITE, static::ALL ), true );
+		return in_array( $permission, array( static::DELETE, static::ALL ), true );
 	}
 
 	/**
