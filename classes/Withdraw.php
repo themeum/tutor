@@ -184,15 +184,107 @@ class Withdraw {
 	}
 
 	/**
+	 * Check whether a string looks like a file path or a JSON string.
+	 *
+	 * Rejected patterns:
+	 *  - Escape HTML
+	 *  - Strings that start with / or ./ or ../ (absolute / relative paths).
+	 *  - Path-traversal sequences anywhere in the value.
+	 *  - Values that end with a file extension (e.g. .php, .js, .sh).
+	 *  - PHP / script open tags embedded in the value.
+	 *  - JSON objects or arrays (starts with { or [).
+	 *
+	 * @since 4.1.1
+	 *
+	 * @param string $value Sanitized field value.
+	 * @return bool True when the value must be rejected.
+	 */
+	private function is_dangerous_value( string $value ): bool {
+
+		// Escape HTML.
+		$value   = html_entity_decode( $value );
+		$value   = wp_kses( $value, array() );
+		$trimmed = trim( $value );
+
+		if ( empty( $value ) ) {
+			return true;
+		}
+
+		// Reject JSON objects or arrays.
+		if ( str_starts_with( $trimmed, '{' ) || str_starts_with( $trimmed, '[' ) ) {
+			return true;
+		}
+
+		// Reject file-path patterns (absolute, relative, Windows-style).
+		if ( preg_match( '#(^[/\\\\]|\.{1,2}[/\\\\]|[/\\\\]\.\.)#', $trimmed ) ) {
+			return true;
+		}
+
+		// Reject values that end with a file extension.
+		if ( preg_match( '/\.[a-zA-Z]{2,5}$/', $trimmed ) ) {
+			return true;
+		}
+
+		// Reject PHP open tags or inline script tags.
+		if ( preg_match( '/<\?(?:php)?|<script/i', $trimmed ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Validate a single field value against its declared type.
+	 *
+	 * Supported types: text, email, number, textarea.
+	 * Unknown types fall back to the same rules as "text".
+	 *
+	 * @since 4.0.10
+	 *
+	 * @param string $type  Field type declared in withdraw_methods_all().
+	 * @param string $value Sanitized field value.
+	 * @return bool True when the value passes validation.
+	 */
+	private function is_valid_field_value( string $type, string $value ): bool {
+		// Empty values are handled by the required-field check; skip type validation.
+		if ( '' === $value ) {
+			return true;
+		}
+
+		switch ( $type ) {
+			case 'email':
+				return (bool) is_email( $value );
+
+			case 'number':
+				return is_numeric( $value );
+
+			case 'text':
+			case 'textarea':
+			default:
+				// Must not exceed a reasonable length and must not be purely whitespace.
+				return strlen( $value ) <= 500 && '' !== trim( $value );
+		}
+	}
+
+	/**
 	 * Save Withdraw Method Data
 	 *
-	 * @since 1.2.0
-	 * @since 4.0.8 Harden against object injection: capability check, field whitelist, no esc_sql().
+	 * Hardening checklist (4.0.10):
+	 *  1. Method key must exist in withdraw_methods_all() (full registry).
+	 *  2. Method key must also be currently available (enabled by the admin).
+	 *  3. Submitted field keys must match the fields declared in withdraw_methods_all().
+	 *     Any unrecognised field is rejected with an error message.
+	 *  4. Values containing file paths, JSON strings, or PHP/script tags are rejected.
+	 *  5. Each value is validated against the field's declared type.
 	 *
-	 * @return void send wp_json response
+	 * @since 1.2.0
+	 * @since 4.0.8  Capability check, field whitelist, no esc_sql().
+	 * @since 4.0.10 Reject file paths / JSON; unknown-field check; per-type validation.
+	 *
+	 * @return void Sends a JSON response and exits.
 	 */
 	public function tutor_save_withdraw_account() {
-		// Checking nonce.
+		// Verify nonce.
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
@@ -203,50 +295,105 @@ class Withdraw {
 		}
 
 		//phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce already verified
-		$method                    = sanitize_key( tutor_utils()->avalue_dot( 'tutor_selected_withdraw_method', $_POST ) );
-		$available_withdraw_method = $this->withdraw_methods_available();
+		$method      = sanitize_key( tutor_utils()->avalue_dot( 'tutor_selected_withdraw_method', $_POST ) );
+		$all_methods = $this->withdraw_methods_all();
 
-		if ( ! $method || ! isset( $available_withdraw_method[ $method ] ) ) {
-			wp_send_json_error();
+		if ( ! $method || ! isset( $all_methods[ $method ] ) ) {
+			wp_send_json_error(
+				array( 'msg' => __( 'Invalid withdrawal method.', 'tutor' ) )
+			);
 		}
 
-		$form_fields = $available_withdraw_method[ $method ]['form_fields'] ?? array();
+		$available_methods = $this->withdraw_methods_available();
+		if ( ! isset( $available_methods[ $method ] ) ) {
+			wp_send_json_error(
+				array( 'msg' => __( 'This withdrawal method is not currently available.', 'tutor' ) )
+			);
+		}
+
+		$form_fields = $all_methods[ $method ]['form_fields'] ?? array();
 		if ( ! is_array( $form_fields ) || empty( $form_fields ) ) {
-			wp_send_json_error();
+			wp_send_json_error(
+				array( 'msg' => __( 'No form fields defined for this withdrawal method.', 'tutor' ) )
+			);
 		}
 
 		$method_data = tutor_utils()->avalue_dot( 'withdraw_method_field.' . $method, $_POST );
 		if ( ! is_array( $method_data ) || ! tutor_utils()->count( $method_data ) ) {
-			wp_send_json_error();
+			wp_send_json_error(
+				array( 'msg' => __( 'No withdrawal data submitted.', 'tutor' ) )
+			);
 		}
 
 		$saved_data                         = array();
 		$saved_data['withdraw_method_key']  = $method;
-		$saved_data['withdraw_method_name'] = $available_withdraw_method[ $method ]['method_name'] ?? '';
+		$saved_data['withdraw_method_name'] = $all_methods[ $method ]['method_name'] ?? '';
+		$errors                             = array();
 
-		foreach ( $form_fields as $input_name => $field ) {
-			if ( ! array_key_exists( $input_name, $method_data ) ) {
+		foreach ( $method_data as $submitted_key => $raw_value ) {
+			$submitted_key = sanitize_key( $submitted_key );
+
+			if ( ! array_key_exists( $submitted_key, $form_fields ) ) {
+				$errors[] = sprintf(
+					/* translators: %s: submitted field key */
+					__( 'Unknown field submitted: "%s".', 'tutor' ),
+					$submitted_key
+				);
 				continue;
 			}
 
-			$raw_value = $method_data[ $input_name ];
 			if ( is_array( $raw_value ) ) {
+				$errors[] = sprintf(
+					/* translators: %s: field label */
+					__( 'Field "%s" must not be an array.', 'tutor' ),
+					$form_fields[ $submitted_key ]['label'] ?? $submitted_key
+				);
 				continue;
 			}
 
+			$field      = $form_fields[ $submitted_key ];
 			$field_type = $field['type'] ?? 'text';
-			$value      = 'email' === $field_type
+			$label      = $field['label'] ?? $submitted_key;
+
+			$value = ( 'email' === $field_type )
 				? sanitize_email( wp_unslash( $raw_value ) )
 				: sanitize_text_field( wp_unslash( $raw_value ) );
 
-			$saved_data[ $input_name ] = array(
+			if ( $this->is_dangerous_value( $value ) ) {
+				$errors[] = sprintf(
+					/* translators: %s: field label */
+					__( 'Field "%s" contains an invalid value (file paths and code are not allowed).', 'tutor' ),
+					$label
+				);
+				continue;
+			}
+
+			if ( ! $this->is_valid_field_value( $field_type, $value ) ) {
+				$errors[] = sprintf(
+					/* translators: 1: field label, 2: expected field type */
+					__( 'Field "%1$s" has an invalid value for type "%2$s".', 'tutor' ),
+					$label,
+					$field_type
+				);
+				continue;
+			}
+
+			$saved_data[ $submitted_key ] = array(
 				'value' => $value,
-				'label' => $field['label'] ?? '',
+				'label' => $label,
 			);
 		}
 
+		// Return all validation errors at once.
+		if ( ! empty( $errors ) ) {
+			wp_send_json_error( array( 'message' => implode( ' ', $errors ) ) );
+		}
+
+		// $saved_data always starts with 2 internal keys (method_key, method_name).
 		if ( count( $saved_data ) <= 2 ) {
-			wp_send_json_error();
+			wp_send_json_error(
+				array( 'msg' => __( 'Please fill in the required withdrawal fields.', 'tutor' ) )
+			);
 		}
 
 		update_user_meta( $user_id, '_tutor_withdraw_method_data', $saved_data );
