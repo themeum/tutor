@@ -24,6 +24,7 @@ interface SetupOpenAiModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   image?: string;
   image2x?: string;
+  isImage?: boolean;
 }
 
 interface OpenAiApiForm {
@@ -34,7 +35,10 @@ interface OpenAiApiForm {
 const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
 const isCurrentUserAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
 
-const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps) => {
+const isWpAiSupported = !!tutorConfig.settings?.is_wp_ai_supported;
+const connectorsAdminUrl = tutorConfig.settings?.connectors_admin_url || 'options-connectors.php';
+
+const SetupOpenAiModal = ({ closeModal, image, image2x, isImage }: SetupOpenAiModalProps) => {
   const form = useFormWithGlobalError<OpenAiApiForm>({
     defaultValues: {
       openAIApiKey: '',
@@ -58,14 +62,24 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
   };
 
   useEffect(() => {
-    form.setFocus('openAIApiKey');
+    if (!isWpAiSupported) {
+      form.setFocus('openAIApiKey');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const modalTitle = isCurrentUserAdmin
+    ? isWpAiSupported
+      ? isImage
+        ? __('Configure AI Image Connector', __TUTOR_TEXT_DOMAIN__)
+        : __('Configure AI Connectors', __TUTOR_TEXT_DOMAIN__)
+      : __('Set OpenAI API key', __TUTOR_TEXT_DOMAIN__)
+    : undefined;
 
   return (
     <BasicModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      title={isCurrentUserAdmin ? __('Set OpenAI API key', __TUTOR_TEXT_DOMAIN__) : undefined}
+      title={modalTitle}
       entireHeader={isCurrentUserAdmin ? undefined : <>&nbsp;</>}
       maxWidth={560}
     >
@@ -87,82 +101,142 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
 
               <div>
                 <div css={styles.message}>{__('API is not connected', __TUTOR_TEXT_DOMAIN__)}</div>
-                <div css={styles.title}>
-                  {__('Please, ask your Admin to connect the API with Tutor LMS Pro.', __TUTOR_TEXT_DOMAIN__)}
-                </div>
+                <Show
+                  when={isWpAiSupported}
+                  fallback={
+                    <div css={styles.title}>
+                      {__('Please, ask your Admin to connect the API with Tutor LMS Pro.', __TUTOR_TEXT_DOMAIN__)}
+                    </div>
+                  }
+                >
+                  <div css={{ marginTop: spacing[12] }}>
+                    <Alert type="warning" icon="warning">
+                      {isImage
+                        ? __(
+                            'Please ask your Admin to configure an image-capable AI connector in WordPress Settings > Connectors.',
+                            __TUTOR_TEXT_DOMAIN__,
+                          )
+                        : __(
+                            'Please ask your Admin to configure an AI connector in WordPress Settings > Connectors.',
+                            __TUTOR_TEXT_DOMAIN__,
+                          )}
+                    </Alert>
+                  </div>
+                </Show>
               </div>
             </>
           }
         >
-          <>
-            <form css={styles.formWrapper} onSubmit={form.handleSubmit(handleSubmit)}>
-              <div css={styles.infoText}>
-                <div
-                  dangerouslySetInnerHTML={{
-                    /* translators: %1$s and %2$s are opening and closing anchor tags for the "OpenAI User settings" link */
-                    __html: sprintf(
-                      __(
-                        'Find your Secret API key in your %1$sOpenAI User settings%2$s and paste it here to connect OpenAI with your Tutor LMS website.',
+          <Show
+            when={isWpAiSupported}
+            fallback={
+              <>
+                <form css={styles.formWrapper} onSubmit={form.handleSubmit(handleSubmit)}>
+                  <div css={styles.infoText}>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        /* translators: %1$s and %2$s are opening and closing anchor tags for the "OpenAI User settings" link */
+                        __html: sprintf(
+                          __(
+                            'Find your Secret API key in your %1$sOpenAI User settings%2$s and paste it here to connect OpenAI with your Tutor LMS website.',
+                            __TUTOR_TEXT_DOMAIN__,
+                          ),
+                          `<a href="${config.CHATGPT_PLATFORM_URL}" target="_blank" rel="noopener noreferrer">`,
+                          '</a>',
+                        ),
+                      }}
+                    ></div>
+
+                    <Alert type="info" icon="warning">
+                      {__(
+                        'The page will reload after submission. Make sure to save the course information.',
                         __TUTOR_TEXT_DOMAIN__,
-                      ),
-                      `<a href="${config.CHATGPT_PLATFORM_URL}" target="_blank" rel="noopener noreferrer">`,
-                      '</a>',
-                    ),
-                  }}
-                ></div>
+                      )}
+                    </Alert>
+                  </div>
 
-                <Alert type="info" icon="warning">
-                  {__(
-                    'The page will reload after submission. Make sure to save the course information.',
-                    __TUTOR_TEXT_DOMAIN__,
-                  )}
-                </Alert>
-              </div>
-
-              <Controller
-                name="openAIApiKey"
-                control={form.control}
-                rules={requiredRule()}
-                render={(controllerProps) => (
-                  <FormInput
-                    {...controllerProps}
-                    type="password"
-                    isPassword
-                    label={__('OpenAI API key', __TUTOR_TEXT_DOMAIN__)}
-                    placeholder={__('Enter your OpenAI API key', __TUTOR_TEXT_DOMAIN__)}
+                  <Controller
+                    name="openAIApiKey"
+                    control={form.control}
+                    rules={requiredRule()}
+                    render={(controllerProps) => (
+                      <FormInput
+                        {...controllerProps}
+                        type="password"
+                        isPassword
+                        label={__('OpenAI API key', __TUTOR_TEXT_DOMAIN__)}
+                        placeholder={__('Enter your OpenAI API key', __TUTOR_TEXT_DOMAIN__)}
+                      />
+                    )}
                   />
-                )}
-              />
 
-              <Controller
-                name="enable_open_ai"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormSwitch {...controllerProps} label={__('Enable OpenAI', __TUTOR_TEXT_DOMAIN__)} />
-                )}
-              />
-            </form>
-            <div css={styles.formFooter}>
-              <Button
-                onClick={() =>
-                  closeModal({
-                    action: 'CLOSE',
-                  })
-                }
-                variant="text"
-                size="small"
-              >
-                {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
-              </Button>
-              <Button
-                size="small"
-                onClick={form.handleSubmit(handleSubmit)}
-                loading={saveOpenAiSettingsMutation.isPending}
-              >
-                {__('Save', __TUTOR_TEXT_DOMAIN__)}
-              </Button>
+                  <Controller
+                    name="enable_open_ai"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormSwitch {...controllerProps} label={__('Enable OpenAI', __TUTOR_TEXT_DOMAIN__)} />
+                    )}
+                  />
+                </form>
+                <div css={styles.formFooter}>
+                  <Button
+                    onClick={() =>
+                      closeModal({
+                        action: 'CLOSE',
+                      })
+                    }
+                    variant="text"
+                    size="small"
+                  >
+                    {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={form.handleSubmit(handleSubmit)}
+                    loading={saveOpenAiSettingsMutation.isPending}
+                  >
+                    {__('Save', __TUTOR_TEXT_DOMAIN__)}
+                  </Button>
+                </div>
+              </>
+            }
+          >
+            <div css={styles.formWrapper}>
+              <Alert type="warning" icon="warning">
+                {isImage
+                  ? __(
+                      'Your configured AI connector does not support image generation, or no AI connector is configured. Please configure an image-capable connector (such as OpenAI or Google) in WordPress settings to generate images in Tutor LMS.',
+                      __TUTOR_TEXT_DOMAIN__,
+                    )
+                  : __(
+                      'No AI connector is configured yet. To use AI features in Tutor LMS, set up at least one connector such as OpenAI, Anthropic, or Google Gemini from WordPress Settings > Connectors.',
+                      __TUTOR_TEXT_DOMAIN__,
+                    )}
+              </Alert>
+
+              <div css={styles.formFooter}>
+                <Button
+                  onClick={() =>
+                    closeModal({
+                      action: 'CLOSE',
+                    })
+                  }
+                  variant="text"
+                  size="small"
+                >
+                  {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    window.open(connectorsAdminUrl, '_blank');
+                  }}
+                >
+                  {__('Configure Connectors', __TUTOR_TEXT_DOMAIN__)}
+                </Button>
+              </div>
             </div>
-          </>
+          </Show>
         </Show>
       </div>
     </BasicModalWrapper>

@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.0.9
+Stable tag: 4.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -337,6 +337,19 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.1.0 - 29 Sep, 2026
+
+New: Introduced negative and partial marking for quizzes. (Pro)
+New: Added a new Cart button for Block and Classic themes.
+Update: Integrated the WordPress AI Connector with Tutor AI Studio. (Pro)
+Update: Improved page loading performance on the Instructor Dashboard.
+Update: Quiz grading emails are now sent only after manual evaluation is complete. (Pro)
+Update: Learners enrolled through a course bundle are now automatically enrolled when new courses are added to that bundle. (Pro)
+Fix: Fixed a data integrity error when duplicating courses. (Pro)
+Fix: Fixed an issue where the "New Lesson Added" email notification was not triggered. (Pro)
+Fix: Fixed course image generation when using the Tutor AI connection. (Pro)
+Fix: Fixed Tutor LMS Player videos being cropped at the top in fullscreen landscape mode on Android.
 
 = 4.0.9 - 17 Sep, 2026
 

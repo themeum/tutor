@@ -9,12 +9,18 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Quiz;
+use TUTOR\Quiz;
+use Tutor\Models\QuizModel;
 
-$questions    = isset( $questions ) && is_array( $questions ) ? $questions : array();
-$attempt_data = isset( $attempt_data ) && is_object( $attempt_data ) ? $attempt_data : null;
-$back_url     = isset( $back_url ) ? (string) $back_url : '';
-$context      = isset( $context ) ? (string) $context : '';
+$questions            = isset( $questions ) && is_array( $questions ) ? $questions : array();
+$attempt_data         = isset( $attempt_data ) && is_object( $attempt_data ) ? $attempt_data : null;
+$back_url             = isset( $back_url ) ? (string) $back_url : '';
+$context              = isset( $context ) ? (string) $context : '';
+$is_instructor_review = ! empty( $is_instructor_review );
+
+$attempt_info            = $attempt_data && is_object( $attempt_data ) && isset( $attempt_data->attempt_info ) ? maybe_unserialize( $attempt_data->attempt_info ) : array();
+$question_feedback_map   = QuizModel::get_attempt_feedback_map( $attempt_info );
+$manual_overrides_map    = QuizModel::get_manual_overrides_map( $attempt_info );
 ?>
 
 <div class="tutor-quiz tutor-quiz-questions">
@@ -73,8 +79,10 @@ $context      = isset( $context ) ? (string) $context : '';
 						'is_manually_reviewed' => ! empty( $attempt_data->is_manually_reviewed ),
 						'back_url'             => $back_url,
 						'context'              => $context,
-						'is_instructor_review' => $is_instructor_review,
-						'review_field_name'    => "review_statuses[{$question_id}]",
+						'is_instructor_review'    => $is_instructor_review,
+						'review_field_name'       => "review_statuses[{$question_id}]",
+						'question_feedback'       => (string) ( $question_feedback_map[ $question->attempt_answer_id ?? 0 ] ?? '' ),
+						'is_overridden'           => ! empty( $manual_overrides_map[ $question_id ] ),
 					)
 				);
 			}
