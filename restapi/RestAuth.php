@@ -92,11 +92,38 @@ class RestAuth {
 	const JWT_SECRET_OPTION = 'tutor_rest_jwt_secret';
 
 	/**
-	 * Default access JWT lifetime in seconds (~10 minutes).
+	 * TTL value meaning no expiration (unlimited).
+	 *
+	 * @since 4.1.0
 	 *
 	 * @var int
 	 */
-	const ACCESS_TTL = 600;
+	const TTL_UNLIMITED = 0;
+
+	/**
+	 * Minimum token lifetime in days when not unlimited.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @var int
+	 */
+	const MIN_TTL_DAYS = 1;
+
+	/**
+	 * Maximum token lifetime in days.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @var int
+	 */
+	const MAX_TTL_DAYS = 365;
+
+	/**
+	 * Default access JWT lifetime in seconds (1 day).
+	 *
+	 * @var int
+	 */
+	const ACCESS_TTL = 86400;
 
 	/**
 	 * Default refresh token lifetime in seconds (30 days).
@@ -122,42 +149,6 @@ class RestAuth {
 	 * @var string
 	 */
 	const OPTION_REFRESH_TTL = 'rest_api_refresh_token_ttl';
-
-	/**
-	 * Minimum access token TTL in seconds.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @var int
-	 */
-	const MIN_ACCESS_TTL = 60;
-
-	/**
-	 * Maximum access token TTL in seconds (24 hours).
-	 *
-	 * @since 4.1.0
-	 *
-	 * @var int
-	 */
-	const MAX_ACCESS_TTL = 86400;
-
-	/**
-	 * Minimum refresh token TTL in seconds (1 hour).
-	 *
-	 * @since 4.1.0
-	 *
-	 * @var int
-	 */
-	const MIN_REFRESH_TTL = 3600;
-
-	/**
-	 * Maximum refresh token TTL in seconds (365 days).
-	 *
-	 * @since 4.1.0
-	 *
-	 * @var int
-	 */
-	const MAX_REFRESH_TTL = 31536000;
 
 	/**
 	 * Verified access-token claims for the current request (user_id, kid).
@@ -186,41 +177,136 @@ class RestAuth {
 	}
 
 	/**
-	 * Configured access JWT lifetime in seconds.
+	 * Configured access JWT lifetime in seconds (0 = unlimited).
 	 *
 	 * @since 4.1.0
 	 *
 	 * @return int
 	 */
 	public static function get_access_ttl() {
-		$ttl = (int) tutor_utils()->get_option( static::OPTION_ACCESS_TTL, static::ACCESS_TTL );
-
-		if ( $ttl < static::MIN_ACCESS_TTL ) {
-			return static::ACCESS_TTL;
-		}
-
-		return min( $ttl, static::MAX_ACCESS_TTL );
+		return self::normalize_ttl_seconds(
+			(int) tutor_utils()->get_option( static::OPTION_ACCESS_TTL, static::ACCESS_TTL ),
+			static::ACCESS_TTL
+		);
 	}
 
 	/**
-	 * Configured refresh token lifetime in seconds.
+	 * Configured refresh token lifetime in seconds (0 = unlimited).
 	 *
 	 * @since 4.1.0
 	 *
 	 * @return int
 	 */
 	public static function get_refresh_ttl() {
-		$ttl = (int) tutor_utils()->get_option( static::OPTION_REFRESH_TTL, static::REFRESH_TTL );
+		return self::normalize_ttl_seconds(
+			(int) tutor_utils()->get_option( static::OPTION_REFRESH_TTL, static::REFRESH_TTL ),
+			static::REFRESH_TTL
+		);
+	}
 
-		if ( $ttl < static::MIN_REFRESH_TTL ) {
-			return static::REFRESH_TTL;
+	/**
+	 * Convert stored TTL seconds to whole days for admin UI.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $seconds TTL in seconds (0 = unlimited).
+	 *
+	 * @return int Days (0 = unlimited).
+	 */
+	public static function ttl_seconds_to_days( $seconds ) {
+		$seconds = (int) $seconds;
+		if ( $seconds <= static::TTL_UNLIMITED ) {
+			return static::TTL_UNLIMITED;
 		}
 
-		return min( $ttl, static::MAX_REFRESH_TTL );
+		$days = (int) round( $seconds / DAY_IN_SECONDS );
+		return max( static::MIN_TTL_DAYS, min( static::MAX_TTL_DAYS, $days ) );
+	}
+
+	/**
+	 * Convert admin UI days to stored TTL seconds.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $days Days (0 = unlimited).
+	 *
+	 * @return int Seconds (0 = unlimited).
+	 */
+	public static function ttl_days_to_seconds( $days ) {
+		$days = (int) $days;
+		if ( $days <= static::TTL_UNLIMITED ) {
+			return static::TTL_UNLIMITED;
+		}
+
+		return $days * DAY_IN_SECONDS;
+	}
+
+	/**
+	 * Whether a day-based TTL is allowed (0 or 1–365).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $days Days value from admin UI.
+	 *
+	 * @return bool
+	 */
+	public static function is_valid_ttl_days( $days ) {
+		$days = (int) $days;
+		if ( static::TTL_UNLIMITED === $days ) {
+			return true;
+		}
+
+		return $days >= static::MIN_TTL_DAYS && $days <= static::MAX_TTL_DAYS;
+	}
+
+	/**
+	 * Normalize a stored TTL in seconds (0 = unlimited, otherwise clamp to max).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $ttl             Stored seconds.
+	 * @param int $default_seconds Fallback when value is invalid.
+	 *
+	 * @return int
+	 */
+	private static function normalize_ttl_seconds( $ttl, $default_seconds ) {
+		$ttl = (int) $ttl;
+		if ( static::TTL_UNLIMITED === $ttl ) {
+			return static::TTL_UNLIMITED;
+		}
+
+		if ( $ttl < 0 ) {
+			return (int) $default_seconds;
+		}
+
+		$max_seconds = static::MAX_TTL_DAYS * DAY_IN_SECONDS;
+		return min( $ttl, $max_seconds );
+	}
+
+	/**
+	 * Whether a refresh-token exp timestamp is still valid (0 = unlimited).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $exp Expiration unix timestamp, or 0 for unlimited.
+	 * @param int $now Current unix timestamp.
+	 *
+	 * @return bool
+	 */
+	private static function is_refresh_exp_valid( $exp, $now ) {
+		$exp = (int) $exp;
+		if ( static::TTL_UNLIMITED === $exp ) {
+			return true;
+		}
+
+		return $exp > (int) $now;
 	}
 
 	/**
 	 * Save Rest API token lifetime settings from Tools.
+	 *
+	 * Admin UI posts lifetimes in days; values are stored as seconds.
+	 * 0 means unlimited / no expiration.
 	 *
 	 * @since 4.1.0
 	 *
@@ -233,37 +319,47 @@ class RestAuth {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$access_ttl  = Input::post( static::OPTION_ACCESS_TTL, static::ACCESS_TTL, Input::TYPE_INT );
-		$refresh_ttl = Input::post( static::OPTION_REFRESH_TTL, static::REFRESH_TTL, Input::TYPE_INT );
+		$default_access_days  = self::ttl_seconds_to_days( static::ACCESS_TTL );
+		$default_refresh_days = self::ttl_seconds_to_days( static::REFRESH_TTL );
+		$access_days          = Input::post( static::OPTION_ACCESS_TTL, $default_access_days, Input::TYPE_INT );
+		$refresh_days         = Input::post( static::OPTION_REFRESH_TTL, $default_refresh_days, Input::TYPE_INT );
 
-		if ( $access_ttl < static::MIN_ACCESS_TTL || $access_ttl > static::MAX_ACCESS_TTL ) {
+		if ( ! self::is_valid_ttl_days( $access_days ) ) {
 			wp_send_json_error(
 				sprintf(
-					/* translators: 1: min seconds, 2: max seconds */
-					__( 'Access token lifetime must be between %1$d and %2$d seconds.', 'tutor' ),
-					static::MIN_ACCESS_TTL,
-					static::MAX_ACCESS_TTL
+					/* translators: 1: min days, 2: max days */
+					__( 'Access token lifetime must be 0 (unlimited) or between %1$d and %2$d days.', 'tutor' ),
+					static::MIN_TTL_DAYS,
+					static::MAX_TTL_DAYS
 				)
 			);
 		}
 
-		if ( $refresh_ttl < static::MIN_REFRESH_TTL || $refresh_ttl > static::MAX_REFRESH_TTL ) {
+		if ( ! self::is_valid_ttl_days( $refresh_days ) ) {
 			wp_send_json_error(
 				sprintf(
-					/* translators: 1: min seconds, 2: max seconds */
-					__( 'Refresh token lifetime must be between %1$d and %2$d seconds.', 'tutor' ),
-					static::MIN_REFRESH_TTL,
-					static::MAX_REFRESH_TTL
+					/* translators: 1: min days, 2: max days */
+					__( 'Refresh token lifetime must be 0 (unlimited) or between %1$d and %2$d days.', 'tutor' ),
+					static::MIN_TTL_DAYS,
+					static::MAX_TTL_DAYS
 				)
 			);
 		}
 
-		if ( $refresh_ttl <= $access_ttl ) {
+		if ( static::TTL_UNLIMITED === $access_days && static::TTL_UNLIMITED !== $refresh_days ) {
+			wp_send_json_error( __( 'When the access token has no expiration, the refresh token must also have no expiration.', 'tutor' ) );
+		}
+
+		if (
+			static::TTL_UNLIMITED !== $access_days
+			&& static::TTL_UNLIMITED !== $refresh_days
+			&& $refresh_days <= $access_days
+		) {
 			wp_send_json_error( __( 'Refresh token lifetime must be greater than access token lifetime.', 'tutor' ) );
 		}
 
-		tutor_utils()->update_option( static::OPTION_ACCESS_TTL, $access_ttl );
-		tutor_utils()->update_option( static::OPTION_REFRESH_TTL, $refresh_ttl );
+		tutor_utils()->update_option( static::OPTION_ACCESS_TTL, self::ttl_days_to_seconds( $access_days ) );
+		tutor_utils()->update_option( static::OPTION_REFRESH_TTL, self::ttl_days_to_seconds( $refresh_days ) );
 
 		wp_send_json_success( __( 'Token settings saved successfully', 'tutor' ) );
 	}
@@ -1440,7 +1536,7 @@ class RestAuth {
 		$kid        = absint( $kid );
 		$access_ttl = self::get_access_ttl();
 
-		$header  = self::base64url_encode(
+		$header = self::base64url_encode(
 			wp_json_encode(
 				array(
 					'alg' => 'HS256',
@@ -1448,18 +1544,20 @@ class RestAuth {
 				)
 			)
 		);
-		$payload = self::base64url_encode(
-			wp_json_encode(
-				array(
-					'sub' => (int) $user_id,
-					'iat' => $now,
-					'exp' => $now + $access_ttl,
-					'iss' => 'tutor',
-					'tv'  => $tv,
-					'kid' => $kid,
-				)
-			)
+
+		$claims = array(
+			'sub' => (int) $user_id,
+			'iat' => $now,
+			'iss' => 'tutor',
+			'tv'  => $tv,
+			'kid' => $kid,
 		);
+
+		if ( $access_ttl > static::TTL_UNLIMITED ) {
+			$claims['exp'] = $now + $access_ttl;
+		}
+
+		$payload = self::base64url_encode( wp_json_encode( $claims ) );
 		$sig     = self::base64url_encode( hash_hmac( 'sha256', $header . '.' . $payload, self::jwt_secret(), true ) );
 
 		return array(
@@ -1495,11 +1593,12 @@ class RestAuth {
 
 		$payload_json = self::base64url_decode( $payload_b64 );
 		$payload      = json_decode( $payload_json );
-		if ( ! is_object( $payload ) || empty( $payload->sub ) || empty( $payload->exp ) ) {
+		if ( ! is_object( $payload ) || empty( $payload->sub ) ) {
 			return 0;
 		}
 
-		if ( (int) $payload->exp < time() ) {
+		// Missing exp means unlimited; otherwise require a future expiration.
+		if ( isset( $payload->exp ) && (int) $payload->exp < time() ) {
 			return 0;
 		}
 
@@ -1659,23 +1758,29 @@ class RestAuth {
 	 * @return string
 	 */
 	private static function issue_refresh_token( $user_id, $kid ) {
-		$token = bin2hex( random_bytes( 32 ) );
-		$hash  = hash( 'sha256', $token );
-		$list  = self::get_refresh_token_list( $user_id );
-		$now   = time();
-		$kid   = absint( $kid );
+		$token       = bin2hex( random_bytes( 32 ) );
+		$hash        = hash( 'sha256', $token );
+		$list        = self::get_refresh_token_list( $user_id );
+		$now         = time();
+		$kid         = absint( $kid );
+		$refresh_ttl = self::get_refresh_ttl();
 
-		$list   = array_values(
+		$list = array_values(
 			array_filter(
 				$list,
 				function ( $row ) use ( $now ) {
-					return is_array( $row ) && ! empty( $row['hash'] ) && ! empty( $row['exp'] ) && (int) $row['exp'] > $now;
+					if ( ! is_array( $row ) || empty( $row['hash'] ) || ! isset( $row['exp'] ) ) {
+						return false;
+					}
+
+					return self::is_refresh_exp_valid( $row['exp'], $now );
 				}
 			)
 		);
+
 		$list[] = array(
 			'hash' => $hash,
-			'exp'  => $now + self::get_refresh_ttl(),
+			'exp'  => $refresh_ttl > static::TTL_UNLIMITED ? $now + $refresh_ttl : static::TTL_UNLIMITED,
 			'kid'  => $kid,
 		);
 
@@ -1746,10 +1851,10 @@ class RestAuth {
 				continue;
 			}
 			foreach ( $list as $entry ) {
-				if ( empty( $entry['hash'] ) || empty( $entry['exp'] ) ) {
+				if ( empty( $entry['hash'] ) || ! isset( $entry['exp'] ) ) {
 					continue;
 				}
-				if ( ! hash_equals( $entry['hash'], $hash ) || (int) $entry['exp'] <= $now ) {
+				if ( ! hash_equals( $entry['hash'], $hash ) || ! self::is_refresh_exp_valid( $entry['exp'], $now ) ) {
 					continue;
 				}
 

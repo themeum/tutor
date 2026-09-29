@@ -27,10 +27,12 @@ $tokens = QueryHelper::get_all(
 	'umeta_id'
 );
 
-$permissions = RestAuth::available_permissions();
-$user        = get_userdata( get_current_user_id() );
-$access_ttl  = RestAuth::get_access_ttl();
-$refresh_ttl = RestAuth::get_refresh_ttl();
+$permissions          = RestAuth::available_permissions();
+$user                 = get_userdata( get_current_user_id() );
+$access_days          = RestAuth::ttl_seconds_to_days( RestAuth::get_access_ttl() );
+$refresh_days         = RestAuth::ttl_seconds_to_days( RestAuth::get_refresh_ttl() );
+$default_access_days  = RestAuth::ttl_seconds_to_days( RestAuth::ACCESS_TTL );
+$default_refresh_days = RestAuth::ttl_seconds_to_days( RestAuth::REFRESH_TTL );
 
 ?>
 <div class="tutor-option-main-title">
@@ -57,11 +59,11 @@ $refresh_ttl = RestAuth::get_refresh_ttl();
 				<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
 					<?php
 					printf(
-						/* translators: 1: min seconds, 2: max seconds, 3: default seconds */
-						esc_html__( 'Lifetime in seconds before access tokens expire. Allowed range: %1$d–%2$d. Default: %3$d (~10 minutes).', 'tutor' ),
-						(int) RestAuth::MIN_ACCESS_TTL,
-						(int) RestAuth::MAX_ACCESS_TTL,
-						(int) RestAuth::ACCESS_TTL
+						/* translators: 1: min days, 2: max days, 3: default days */
+						esc_html__( 'Lifetime in days before access tokens expire. Allowed range: %1$d–%2$d. Default: %3$d day(s). Use 0 for no expiration.', 'tutor' ),
+						(int) RestAuth::MIN_TTL_DAYS,
+						(int) RestAuth::MAX_TTL_DAYS,
+						(int) $default_access_days
 					);
 					?>
 				</div>
@@ -71,9 +73,10 @@ $refresh_ttl = RestAuth::get_refresh_ttl();
 					class="tutor-form-control tutor-w-160"
 					type="number"
 					name="<?php echo esc_attr( RestAuth::OPTION_ACCESS_TTL ); ?>"
-					value="<?php echo esc_attr( (string) $access_ttl ); ?>"
-					min="<?php echo esc_attr( (string) RestAuth::MIN_ACCESS_TTL ); ?>"
-					max="<?php echo esc_attr( (string) RestAuth::MAX_ACCESS_TTL ); ?>"
+					value="<?php echo esc_attr( (string) $access_days ); ?>"
+					min="0"
+					max="<?php echo esc_attr( (string) RestAuth::MAX_TTL_DAYS ); ?>"
+					step="1"
 					required
 				>
 			</div>
@@ -87,11 +90,11 @@ $refresh_ttl = RestAuth::get_refresh_ttl();
 				<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
 					<?php
 					printf(
-						/* translators: 1: min seconds, 2: max seconds, 3: default seconds */
-						esc_html__( 'Lifetime in seconds before refresh tokens expire. Allowed range: %1$d–%2$d. Default: %3$d (30 days). Must be greater than the access token lifetime.', 'tutor' ),
-						(int) RestAuth::MIN_REFRESH_TTL,
-						(int) RestAuth::MAX_REFRESH_TTL,
-						(int) RestAuth::REFRESH_TTL
+						/* translators: 1: min days, 2: max days, 3: default days */
+						esc_html__( 'Lifetime in days before refresh tokens expire. Allowed range: %1$d–%2$d. Default: %3$d day(s). Must be greater than the access token lifetime. Use 0 for no expiration.', 'tutor' ),
+						(int) RestAuth::MIN_TTL_DAYS,
+						(int) RestAuth::MAX_TTL_DAYS,
+						(int) $default_refresh_days
 					);
 					?>
 				</div>
@@ -101,12 +104,17 @@ $refresh_ttl = RestAuth::get_refresh_ttl();
 					class="tutor-form-control tutor-w-160"
 					type="number"
 					name="<?php echo esc_attr( RestAuth::OPTION_REFRESH_TTL ); ?>"
-					value="<?php echo esc_attr( (string) $refresh_ttl ); ?>"
-					min="<?php echo esc_attr( (string) RestAuth::MIN_REFRESH_TTL ); ?>"
-					max="<?php echo esc_attr( (string) RestAuth::MAX_REFRESH_TTL ); ?>"
+					value="<?php echo esc_attr( (string) $refresh_days ); ?>"
+					min="0"
+					max="<?php echo esc_attr( (string) RestAuth::MAX_TTL_DAYS ); ?>"
+					step="1"
 					required
 				>
 			</div>
+		</div>
+
+		<div class="tutor-fs-7 tutor-color-warning tutor-mt-12 tutor-mb-16">
+			<?php esc_html_e( 'Note: Setting a lifetime to 0 means the token never expires. Tutor LMS strongly recommends against this, because a stolen token would remain valid indefinitely.', 'tutor' ); ?>
 		</div>
 
 		<div class="tutor-option-field-row">
