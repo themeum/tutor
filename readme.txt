@@ -338,7 +338,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.1.0 - 28 Sep, 2026
+= 4.1.0 - 29 Sep, 2026
 
 New: Introduced negative and partial marking for quizzes. (Pro)
 New: Added a new Cart button for Block and Classic themes.
