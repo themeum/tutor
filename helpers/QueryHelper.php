@@ -852,14 +852,15 @@ class QueryHelper {
 			$where_clause = "WHERE {$where_clause}";
 		}
 
-		$limit        = (int) sanitize_text_field( $limit );
-		$limit_clause = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
+		$limit           = intval( $limit );
+		$limit_clause    = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
+		$order_by_clause = self::prepare_order_clause( $order_by, $order );
 
 		//phpcs:disable
 		$query = "SELECT *
 				FROM {$table}
 				{$where_clause}
-				ORDER BY {$order_by} {$order}
+				{$order_by_clause}
 				{$limit_clause}";
 
 		return $wpdb->get_results(
