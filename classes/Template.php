@@ -142,7 +142,7 @@ class Template extends Tutor_Base {
 
 		add_filter( 'the_content', array( $this, 'convert_static_page_to_template' ) );
 		add_action( 'pre_get_posts', array( $this, 'limit_course_query_archive' ), 99 );
-		add_filter( 'template_include', array( $this, 'load_learning_template' ) );
+		add_filter( 'template_include', array( $this, 'load_learning_template' ), 99 );
 
 		$this->shortcode_obj = new Shortcode( false );
 	}
