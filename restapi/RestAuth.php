@@ -13,6 +13,7 @@
 namespace TUTOR;
 
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 use Tutor\Models\QuizModel;
 use WP_REST_Request;
@@ -1129,7 +1130,7 @@ class RestAuth {
 	 */
 	public static function can_view_course_content( $course_id, $user_id = 0 ) {
 		$course_id = absint( $course_id );
-		if ( ! $course_id ) {
+		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
 			return false;
 		}
 
@@ -1189,15 +1190,20 @@ class RestAuth {
 		$target_user_id = absint( $target_user_id );
 		$viewer_id      = $viewer_id ? absint( $viewer_id ) : get_current_user_id();
 
-		if ( ! $target_user_id || ! $viewer_id ) {
+		if ( ! $viewer_id ) {
+			return false;
+		}
+
+		// Privileged users may see private fields, including guest reviews (user_id 0).
+		if ( user_can( $viewer_id, 'list_users' ) ) {
+			return true;
+		}
+
+		if ( ! $target_user_id ) {
 			return false;
 		}
 
 		if ( $target_user_id === $viewer_id ) {
-			return true;
-		}
-
-		if ( user_can( $viewer_id, 'list_users' ) ) {
 			return true;
 		}
 

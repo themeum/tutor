@@ -294,7 +294,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_course_content' ),
 			)
 		);
 

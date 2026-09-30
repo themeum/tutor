@@ -66,23 +66,22 @@ class REST_Rating {
 		$offset = ! empty( $offset ) ? $offset : 0;
 		$limit  = ! empty( $limit ) ? $limit : 10;
 
-		$ratings          = tutor_utils()->get_course_rating( $this->post_id );
-		$ratings->reviews = tutor_utils()->get_course_reviews( $this->post_id, $offset, $limit, false, array( 'approved' ) );
+		$ratings = tutor_utils()->get_course_rating( $this->post_id );
+		$reviews = tutor_utils()->get_course_reviews( $this->post_id, $offset, $limit, false, array( 'approved' ) );
 
-		if ( ! empty( $ratings ) ) {
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Course rating retrieved successfully', 'tutor' ),
-				'data'    => $ratings,
-			);
+		$ratings->reviews = is_array( $reviews ) ? $reviews : array();
 
-			return self::send( $response );
+		foreach ( $ratings->reviews as $review ) {
+			$user_id = isset( $review->user_id ) ? (int) $review->user_id : 0;
+			if ( ! RestAuth::can_view_user_private_fields( $user_id ) ) {
+				unset( $review->comment_author_email );
+			}
 		}
 
 		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Rating not found for given ID', 'tutor' ),
-			'data'    => array(),
+			'code'    => 'success',
+			'message' => __( 'Course rating retrieved successfully', 'tutor' ),
+			'data'    => $ratings,
 		);
 
 		return self::send( $response );

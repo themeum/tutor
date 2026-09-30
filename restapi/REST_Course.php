@@ -146,7 +146,7 @@ class REST_Course {
 				}
 
 				$item = (object) $post->to_array();
-				unset( $item->filter );
+				unset( $item->filter, $item->post_password );
 
 				$category = wp_get_post_terms( $post->ID, $this->course_cat_tax );
 
