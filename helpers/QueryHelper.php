@@ -805,15 +805,16 @@ class QueryHelper {
 	public static function get_row( string $table, array $where, string $order_by, string $order = 'DESC', string $output = 'OBJECT' ) {
 		global $wpdb;
 
-		$table        = self::prepare_table_name( $table );
-		$where_clause = self::prepare_where_clause( $where );
+		$table           = self::prepare_table_name( $table );
+		$where_clause    = self::prepare_where_clause( $where );
+		$order_by_clause = self::prepare_order_clause( $order_by, $order );
 
 		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT *
 				FROM {$table}
 				WHERE {$where_clause}
-				ORDER BY {$order_by} {$order}
+				{$order_by_clause}
 				LIMIT %d
 			",
 			1
