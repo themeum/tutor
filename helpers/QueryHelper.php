@@ -941,8 +941,9 @@ class QueryHelper {
 			if ( is_null( $value ) ) {
 				$set .= "$key = null";
 			} else {
-				$value = esc_sql( sanitize_text_field( $value ) );
-				$set  .= is_numeric( $value ) ? "$key = $value" : "$key = '" . $value . "'";
+				$safe_key = '`' . sanitize_key( $key ) . '`';
+				$set     .= is_numeric( $value ) ? "$safe_key = $value" : "$safe_key = '" . $value . "'";
+
 			}
 
 			$set .= ',';
