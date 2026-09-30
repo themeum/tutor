@@ -65,25 +65,35 @@ class Withdraw {
 				'desc'        => __( 'Get your payment directly into your bank account', 'tutor' ),
 
 				'form_fields' => array(
+					// SWIFT MT103 beneficiary name allows up to 140 chars; 100 is a safe practical limit.
 					'account_name'   => array(
-						'type'  => 'text',
-						'label' => __( 'Account Name', 'tutor' ),
+						'type'       => 'text',
+						'label'      => __( 'Account Name', 'tutor' ),
+						'max_length' => 140,
 					),
+					// Longest national account number (US) is 17 digits; SEPA IBAN max is 34.
 					'account_number' => array(
-						'type'  => 'text',
-						'label' => __( 'Account Number', 'tutor' ),
+						'type'       => 'text',
+						'label'      => __( 'Account Number', 'tutor' ),
+						'max_length' => 34,
 					),
+					// No international hard limit; practical bank names fit within 100 characters.
 					'bank_name'      => array(
-						'type'  => 'text',
-						'label' => __( 'Bank Name', 'tutor' ),
+						'type'       => 'text',
+						'label'      => __( 'Bank Name', 'tutor' ),
+						'max_length' => 140,
 					),
+					// ISO 13616: IBAN hard maximum is 34 alphanumeric characters.
 					'iban'           => array(
-						'type'  => 'text',
-						'label' => __( 'IBAN', 'tutor' ),
+						'type'       => 'text',
+						'label'      => __( 'IBAN', 'tutor' ),
+						'max_length' => 34,
 					),
+					// ISO 9362: BIC is exactly 8 or 11 characters (BIC8 / BIC11).
 					'swift'          => array(
-						'type'  => 'text',
-						'label' => __( 'BIC / SWIFT', 'tutor' ),
+						'type'       => 'text',
+						'label'      => __( 'BIC / SWIFT', 'tutor' ),
+						'max_length' => 11,
 					),
 
 				),
@@ -93,10 +103,12 @@ class Withdraw {
 				'method_name' => __( 'E-Check', 'tutor' ),
 				'image'       => tutor()->url . 'assets/images/payment-echeck.png',
 				'form_fields' => array(
+					// USPS postal standard: 4 lines x ~35 chars each; 250 adds safe headroom.
 					'physical_address' => array(
-						'type'  => 'text',
-						'label' => __( 'Your Physical Address', 'tutor' ),
-						'desc'  => __( 'We will send you an E-Check to this address directly.', 'tutor' ),
+						'type'       => 'textarea',
+						'label'      => __( 'Your Physical Address', 'tutor' ),
+						'desc'       => __( 'We will send you an E-Check to this address directly.', 'tutor' ),
+						'max_length' => 500,
 					),
 				),
 			),
@@ -105,10 +117,12 @@ class Withdraw {
 				'method_name' => __( 'PayPal', 'tutor' ),
 				'image'       => tutor()->url . 'assets/images/payment-paypal.png',
 				'form_fields' => array(
+					// RFC 5321: email max is 254 chars; 100 covers all practical PayPal addresses.
 					'paypal_email' => array(
-						'type'  => 'email',
-						'label' => __( 'PayPal E-Mail Address', 'tutor' ),
-						'desc'  => __( 'We will use this email address to send the money to your Paypal account', 'tutor' ),
+						'type'       => 'email',
+						'label'      => __( 'PayPal E-Mail Address', 'tutor' ),
+						'desc'       => __( 'We will use this email address to send the money to your Paypal account', 'tutor' ),
+						'max_length' => 254,
 					),
 
 				),
@@ -237,35 +251,54 @@ class Withdraw {
 	}
 
 	/**
-	 * Validate a single field value against its declared type.
+	 * Validate a single field value against its declared type and max_length.
+	 *
+	 * The $field array comes directly from withdraw_methods_all() and must contain
+	 * at minimum a 'type' key. An optional 'max_length' key enforces a per-field
+	 * character ceiling based on real-world banking standards:
+	 *
+	 *  - account_name   : 100 (SWIFT MT103 beneficiary name)
+	 *  - account_number : 34  (SEPA IBAN max length)
+	 *  - bank_name      : 100 (practical limit)
+	 *  - iban           : 34  (ISO 13616 hard max)
+	 *  - swift          : 11  (ISO 9362 BIC11)
+	 *  - physical_address: 250 (USPS postal lines)
+	 *  - paypal_email   : 100 (RFC 5321 practical)
 	 *
 	 * Supported types: text, email, number, textarea.
-	 * Unknown types fall back to the same rules as "text".
+	 * Unknown types fall back to the same rules as 'text'.
 	 *
 	 * @since 4.0.10
+	 * @since 4.0.11 Accepts full $field array; enforces per-field max_length.
 	 *
-	 * @param string $type  Field type declared in withdraw_methods_all().
+	 * @param array  $field Field definition from withdraw_methods_all().
 	 * @param string $value Sanitized field value.
 	 * @return bool True when the value passes validation.
 	 */
-	private function is_valid_field_value( string $type, string $value ): bool {
+	private function is_valid_field_value( array $field, string $value ): bool {
 		// Empty values are handled by the required-field check; skip type validation.
 		if ( '' === $value ) {
 			return true;
 		}
 
+		$type       = $field['type'] ?? 'text';
+		$max_length = isset( $field['max_length'] ) ? (int) $field['max_length'] : 500;
+
 		switch ( $type ) {
 			case 'email':
-				return (bool) is_email( $value );
+				// Validate format and enforce max_length.
+				return (bool) is_email( $value ) && strlen( $value ) <= $max_length;
 
 			case 'number':
-				return is_numeric( $value );
+				// Numbers have no meaningful character length limit from banking standards,
+				// but we still apply max_length as a sanity cap.
+				return is_numeric( $value ) && strlen( $value ) <= $max_length;
 
 			case 'text':
 			case 'textarea':
 			default:
-				// Must not exceed a reasonable length and must not be purely whitespace.
-				return strlen( $value ) <= 500 && '' !== trim( $value );
+				// Must not exceed max_length and must not be purely whitespace.
+				return strlen( $value ) <= $max_length && '' !== trim( $value );
 		}
 	}
 
@@ -371,7 +404,7 @@ class Withdraw {
 				continue;
 			}
 
-			if ( ! $this->is_valid_field_value( $field_type, $value ) ) {
+			if ( ! $this->is_valid_field_value( $field, $value ) ) {
 				$errors[] = sprintf(
 					/* translators: 1: field label, 2: expected field type */
 					__( 'Field "%1$s" has an invalid value for type "%2$s".', 'tutor' ),
