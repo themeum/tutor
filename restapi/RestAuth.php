@@ -72,7 +72,7 @@ class RestAuth {
 	const KEYS_USER_META_KEY = 'tutor-api-key-secret';
 
 	/**
-	 * Usermeta: refresh token hashes.
+	 * Usermeta: refresh token hashes (keyed per user; lookup via signed JWT `sub`).
 	 *
 	 * @var string
 	 */
@@ -1548,15 +1548,6 @@ class RestAuth {
 		$kid        = absint( $kid );
 		$access_ttl = self::get_access_ttl();
 
-		$header = self::base64url_encode(
-			wp_json_encode(
-				array(
-					'alg' => 'HS256',
-					'typ' => 'JWT',
-				)
-			)
-		);
-
 		$claims = array(
 			'sub' => (int) $user_id,
 			'iat' => $now,
@@ -1569,11 +1560,8 @@ class RestAuth {
 			$claims['exp'] = $now + $access_ttl;
 		}
 
-		$payload = self::base64url_encode( wp_json_encode( $claims ) );
-		$sig     = self::base64url_encode( hash_hmac( 'sha256', $header . '.' . $payload, self::jwt_secret(), true ) );
-
 		return array(
-			'token'      => $header . '.' . $payload . '.' . $sig,
+			'token'      => self::encode_jwt( $claims ),
 			'expires_in' => $access_ttl,
 		);
 	}
@@ -1588,33 +1576,13 @@ class RestAuth {
 	private static function verify_access_token( $jwt ) {
 		self::$verified_token_claims = null;
 
-		$parts = explode( '.', $jwt );
-		if ( 3 !== count( $parts ) ) {
+		$payload = self::decode_jwt( $jwt );
+		if ( ! $payload ) {
 			return 0;
 		}
 
-		list( $header_b64, $payload_b64, $sig_b64 ) = $parts;
-
-		$expected = self::base64url_encode(
-			hash_hmac( 'sha256', $header_b64 . '.' . $payload_b64, self::jwt_secret(), true )
-		);
-
-		if ( ! hash_equals( $expected, $sig_b64 ) ) {
-			return 0;
-		}
-
-		$payload_json = self::base64url_decode( $payload_b64 );
-		$payload      = json_decode( $payload_json );
-		if ( ! is_object( $payload ) || empty( $payload->sub ) ) {
-			return 0;
-		}
-
-		// Missing exp means unlimited; otherwise require a future expiration.
-		if ( isset( $payload->exp ) && (int) $payload->exp < time() ) {
-			return 0;
-		}
-
-		if ( empty( $payload->iss ) || 'tutor' !== $payload->iss ) {
+		// Access tokens must not carry the refresh typ claim.
+		if ( ! empty( $payload->typ ) && 'refresh' === $payload->typ ) {
 			return 0;
 		}
 
@@ -1665,6 +1633,105 @@ class RestAuth {
 
 		update_option( static::JWT_SECRET_OPTION, $secret, false );
 		return $secret;
+	}
+
+	/**
+	 * Encode claims as an HS256 JWT.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $claims JWT payload claims.
+	 *
+	 * @return string
+	 */
+	private static function encode_jwt( array $claims ) {
+		$header = self::base64url_encode(
+			wp_json_encode(
+				array(
+					'alg' => 'HS256',
+					'typ' => 'JWT',
+				)
+			)
+		);
+
+		$payload = self::base64url_encode( wp_json_encode( $claims ) );
+		$sig     = self::base64url_encode( hash_hmac( 'sha256', $header . '.' . $payload, self::jwt_secret(), true ) );
+
+		return $header . '.' . $payload . '.' . $sig;
+	}
+
+	/**
+	 * Decode and verify HS256 JWT signature + shared claims (iss, optional exp).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $jwt Token string.
+	 *
+	 * @return object|null Payload object on success, null on failure.
+	 */
+	private static function decode_jwt( $jwt ) {
+		$parts = explode( '.', (string) $jwt );
+		if ( 3 !== count( $parts ) ) {
+			return null;
+		}
+
+		list( $header_b64, $payload_b64, $sig_b64 ) = $parts;
+
+		$expected = self::base64url_encode(
+			hash_hmac( 'sha256', $header_b64 . '.' . $payload_b64, self::jwt_secret(), true )
+		);
+
+		if ( ! hash_equals( $expected, $sig_b64 ) ) {
+			return null;
+		}
+
+		$payload = json_decode( self::base64url_decode( $payload_b64 ) );
+		if ( ! is_object( $payload ) || empty( $payload->sub ) ) {
+			return null;
+		}
+
+		if ( empty( $payload->iss ) || 'tutor' !== $payload->iss ) {
+			return null;
+		}
+
+		// Missing exp means unlimited; otherwise require a future expiration.
+		if ( isset( $payload->exp ) && (int) $payload->exp < time() ) {
+			return null;
+		}
+
+		return $payload;
+	}
+
+	/**
+	 * Verify refresh JWT. Returns payload or null.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $jwt Refresh token.
+	 *
+	 * @return object|null
+	 */
+	private static function verify_refresh_jwt( $jwt ) {
+		$payload = self::decode_jwt( $jwt );
+		if ( ! $payload ) {
+			return null;
+		}
+
+		if ( empty( $payload->typ ) || 'refresh' !== $payload->typ ) {
+			return null;
+		}
+
+		$user_id = (int) $payload->sub;
+		$user    = get_userdata( $user_id );
+		if ( ! $user || ! $user->exists() ) {
+			return null;
+		}
+
+		if ( function_exists( 'is_user_spammy' ) && is_user_spammy( $user ) ) {
+			return null;
+		}
+
+		return $payload;
 	}
 
 	/**
@@ -1762,7 +1829,12 @@ class RestAuth {
 	}
 
 	/**
-	 * Issue opaque refresh token; store hash + kid in usermeta.
+	 * Issue signed refresh JWT; store hash + kid in that user's usermeta.
+	 *
+	 * The JWT carries `sub` (user id) so refresh/logout can load a single
+	 * usermeta row instead of scanning all users.
+	 *
+	 * @since 4.2.0
 	 *
 	 * @param int $user_id user id.
 	 * @param int $kid     API key usermeta id.
@@ -1770,12 +1842,11 @@ class RestAuth {
 	 * @return string
 	 */
 	private static function issue_refresh_token( $user_id, $kid ) {
-		$token       = bin2hex( random_bytes( 32 ) );
-		$hash        = hash( 'sha256', $token );
 		$list        = self::get_refresh_token_list( $user_id );
 		$now         = time();
 		$kid         = absint( $kid );
 		$refresh_ttl = self::get_refresh_ttl();
+		$exp         = $refresh_ttl > static::TTL_UNLIMITED ? $now + $refresh_ttl : static::TTL_UNLIMITED;
 
 		$list = array_values(
 			array_filter(
@@ -1790,9 +1861,24 @@ class RestAuth {
 			)
 		);
 
+		$claims = array(
+			'sub' => (int) $user_id,
+			'iat' => $now,
+			'iss' => 'tutor',
+			'typ' => 'refresh',
+			'kid' => $kid,
+		);
+
+		if ( $exp > static::TTL_UNLIMITED ) {
+			$claims['exp'] = $exp;
+		}
+
+		$token = self::encode_jwt( $claims );
+		$hash  = hash( 'sha256', $token );
+
 		$list[] = array(
 			'hash' => $hash,
-			'exp'  => $refresh_ttl > static::TTL_UNLIMITED ? $now + $refresh_ttl : static::TTL_UNLIMITED,
+			'exp'  => $exp,
 			'kid'  => $kid,
 		);
 
@@ -1814,7 +1900,7 @@ class RestAuth {
 			return null;
 		}
 
-		self::delete_refresh_token( $token );
+		self::delete_refresh_token( $token, $session['user_id'] );
 		return $session;
 	}
 
@@ -1833,6 +1919,8 @@ class RestAuth {
 	/**
 	 * Find refresh session (user id + kid) for a refresh token.
 	 *
+	 * Verifies the signed refresh JWT, then checks the hash only for that user.
+	 *
 	 * @since 4.2.0
 	 *
 	 * @param string $token refresh token.
@@ -1840,65 +1928,55 @@ class RestAuth {
 	 * @return array{user_id:int,kid:int}|null
 	 */
 	private static function find_refresh_session( $token ) {
-		global $wpdb;
-
-		$hash = hash( 'sha256', $token );
-		$now  = time();
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$rows = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = %s",
-				static::REFRESH_META_KEY
-			)
-		);
-
-		if ( ! is_array( $rows ) ) {
+		$payload = self::verify_refresh_jwt( $token );
+		if ( ! $payload ) {
 			return null;
 		}
 
-		foreach ( $rows as $row ) {
-			$list = json_decode( $row->meta_value, true );
-			if ( ! is_array( $list ) ) {
+		$user_id = (int) $payload->sub;
+		$hash    = hash( 'sha256', $token );
+		$now     = time();
+
+		foreach ( self::get_refresh_token_list( $user_id ) as $entry ) {
+			if ( empty( $entry['hash'] ) || ! isset( $entry['exp'] ) ) {
 				continue;
 			}
-			foreach ( $list as $entry ) {
-				if ( empty( $entry['hash'] ) || ! isset( $entry['exp'] ) ) {
-					continue;
-				}
-				if ( ! hash_equals( $entry['hash'], $hash ) || ! self::is_refresh_exp_valid( $entry['exp'], $now ) ) {
-					continue;
-				}
-
-				$kid = isset( $entry['kid'] ) ? absint( $entry['kid'] ) : 0;
-				if ( ! $kid ) {
-					return null;
-				}
-
-				return array(
-					'user_id' => (int) $row->user_id,
-					'kid'     => $kid,
-				);
+			if ( ! hash_equals( $entry['hash'], $hash ) || ! self::is_refresh_exp_valid( $entry['exp'], $now ) ) {
+				continue;
 			}
+
+			$kid = isset( $entry['kid'] ) ? absint( $entry['kid'] ) : 0;
+			if ( ! $kid ) {
+				return null;
+			}
+
+			return array(
+				'user_id' => $user_id,
+				'kid'     => $kid,
+			);
 		}
 
 		return null;
 	}
 
 	/**
-	 * Delete one refresh token.
+	 * Delete one refresh token for a known (or JWT-derived) user.
 	 *
-	 * @param string $token refresh token.
+	 * @since 4.2.0
+	 *
+	 * @param string $token   Refresh token.
+	 * @param int    $user_id Optional. Skip JWT parse when already known.
 	 *
 	 * @return void
 	 */
-	private static function delete_refresh_token( $token ) {
-		$user_id = self::find_user_id_by_refresh_token( $token );
+	private static function delete_refresh_token( $token, $user_id = 0 ) {
+		$user_id = absint( $user_id );
 		if ( ! $user_id ) {
-			// Token may already be partially matched — scan by hash after consume path.
-			$hash = hash( 'sha256', $token );
-			self::delete_refresh_hash_for_all_users( $hash );
-			return;
+			$payload = self::verify_refresh_jwt( $token );
+			if ( ! $payload ) {
+				return;
+			}
+			$user_id = (int) $payload->sub;
 		}
 
 		$hash = hash( 'sha256', $token );
@@ -1912,47 +1990,6 @@ class RestAuth {
 			)
 		);
 		update_user_meta( $user_id, static::REFRESH_META_KEY, wp_json_encode( $list ) );
-	}
-
-	/**
-	 * Remove a refresh hash across users (best-effort).
-	 *
-	 * @param string $hash sha256 hash.
-	 *
-	 * @return void
-	 */
-	private static function delete_refresh_hash_for_all_users( $hash ) {
-		global $wpdb;
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$rows = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT umeta_id, user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = %s",
-				static::REFRESH_META_KEY
-			)
-		);
-
-		if ( ! is_array( $rows ) ) {
-			return;
-		}
-
-		foreach ( $rows as $row ) {
-			$list = json_decode( $row->meta_value, true );
-			if ( ! is_array( $list ) ) {
-				continue;
-			}
-			$new = array_values(
-				array_filter(
-					$list,
-					function ( $entry ) use ( $hash ) {
-						return empty( $entry['hash'] ) || ! hash_equals( $entry['hash'], $hash );
-					}
-				)
-			);
-			if ( count( $new ) !== count( $list ) ) {
-				update_user_meta( (int) $row->user_id, static::REFRESH_META_KEY, wp_json_encode( $new ) );
-			}
-		}
 	}
 
 	/**
