@@ -347,6 +347,32 @@ class QueryHelper {
 	}
 
 	/**
+	 * Safely quotes a SQL identifier or qualified identifier.
+	 *
+	 * Supports simple identifiers (e.g. `foo`) and qualified identifiers
+	 * (e.g. `u.ID`). Each identifier segment is validated before being
+	 * wrapped in backticks.
+	 *
+	 * @since 4.1.1
+	 *
+	 * @param string $identifier SQL identifier to quote.
+	 * @return string Quoted SQL identifier, or an empty string if invalid.
+	 */
+	public static function quote_sql_identifier( $identifier ) {
+		$parts = explode( '.', $identifier );
+
+		foreach ( $parts as &$part ) {
+			if ( ! preg_match( '/^[A-Za-z_][A-Za-z0-9_]*$/', $part ) ) {
+				return '';
+			}
+
+			$part = '`' . $part . '`';
+		}
+
+		return implode( '.', $parts );
+	}
+
+	/**
 	 * Prepare where clause string
 	 *
 	 * @since 2.0.9
@@ -473,9 +499,10 @@ class QueryHelper {
 				continue;
 			}
 
+			$quoted_column     = self::quote_sql_identifier( $column_name );
 			$like_conditions[] = $wpdb->prepare(
 				//phpcs:ignore
-				sprintf( '`%s` LIKE %%s', $column_name ),
+				sprintf( '%s LIKE %%s', $quoted_column ),
 				'%' . $wpdb->esc_like( $term ) . '%'
 			);
 		}
