@@ -253,26 +253,11 @@ class Withdraw {
 	/**
 	 * Validate a single field value against its declared type and max_length.
 	 *
-	 * The $field array comes directly from withdraw_methods_all() and must contain
-	 * at minimum a 'type' key. An optional 'max_length' key enforces a per-field
-	 * character ceiling based on real-world banking standards:
-	 *
-	 *  - account_name   : 100 (SWIFT MT103 beneficiary name)
-	 *  - account_number : 34  (SEPA IBAN max length)
-	 *  - bank_name      : 100 (practical limit)
-	 *  - iban           : 34  (ISO 13616 hard max)
-	 *  - swift          : 11  (ISO 9362 BIC11)
-	 *  - physical_address: 250 (USPS postal lines)
-	 *  - paypal_email   : 100 (RFC 5321 practical)
-	 *
-	 * Supported types: text, email, number, textarea.
-	 * Unknown types fall back to the same rules as 'text'.
-	 *
-	 * @since 4.0.10
-	 * @since 4.0.11 Accepts full $field array; enforces per-field max_length.
+	 * @since 4.1.1
 	 *
 	 * @param array  $field Field definition from withdraw_methods_all().
 	 * @param string $value Sanitized field value.
+	 *
 	 * @return bool True when the value passes validation.
 	 */
 	private function is_valid_field_value( array $field, string $value ): bool {
@@ -314,8 +299,7 @@ class Withdraw {
 	 *  5. Each value is validated against the field's declared type.
 	 *
 	 * @since 1.2.0
-	 * @since 4.0.8  Capability check, field whitelist, no esc_sql().
-	 * @since 4.0.10 Reject file paths / JSON; unknown-field check; per-type validation.
+	 * @since 4.1.1 Reject file paths / JSON; unknown-field check; per-type validation.
 	 *
 	 * @return void Sends a JSON response and exits.
 	 */
@@ -407,7 +391,7 @@ class Withdraw {
 			if ( ! $this->is_valid_field_value( $field, $value ) ) {
 				$errors[] = sprintf(
 					/* translators: 1: field label, 2: expected field type */
-					__( 'Field "%1$s" has an invalid value for type "%2$s".', 'tutor' ),
+					__( 'Field "%1$s" has an invalid value".', 'tutor' ),
 					$label,
 					$field_type
 				);
