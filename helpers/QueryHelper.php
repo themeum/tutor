@@ -1069,7 +1069,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table = self::prepare_table_name( $table );
-		$sql   = "SHOW COLUMNS FROM {$table} LIKE '{$column}'";
+		$sql   = "SHOW COLUMNS FROM `{$table}` LIKE '{$column}'";
 		return $wpdb->get_var( $sql ) === $column;//phpcs:ignore
 	}
 
@@ -1449,7 +1449,7 @@ class QueryHelper {
 
 		$table_name = self::prepare_table_name( $table_name );
 		//phpcs:ignore
-		$result = $wpdb->get_results( "DESCRIBE {$table_name}", ARRAY_A );
+		$result = $wpdb->get_results( "DESCRIBE `{$table_name}`", ARRAY_A );
 
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
