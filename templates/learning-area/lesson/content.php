@@ -53,7 +53,7 @@ $feature_url   = $feature_image ? wp_get_attachment_url( $feature_image ) : null
 	<div 
 		x-data="tutorTabs({
 			tabs: <?php echo esc_attr( tutor_json_encode( $tabs_data ) ); ?>,
-			defaultTab: <?php echo esc_attr( tutor_json_encode( $active_tab ) ); ?>,
+			defaultTab: '<?php echo esc_js( $active_tab ); ?>',
 			urlParams: {
 				paramName: 'page_tab',
 			}

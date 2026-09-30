@@ -31,7 +31,7 @@ $form_id = 'create-review-form';
 		class="tutor-flex tutor-flex-column tutor-gap-6"
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data="tutorForm({
-			id: <?php echo esc_attr( tutor_json_encode( $form_id ) ); ?>,
+			id: '<?php echo esc_js( $form_id ); ?>',
 			mode: 'onChange',
 			defaultValues: {
 				comment_post_ID: <?php echo (int) $tutor_course_id; ?>,
