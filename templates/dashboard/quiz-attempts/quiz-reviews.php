@@ -67,13 +67,13 @@ if ( is_array( $questions ) ) {
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data="(() => {
 			const form = tutorForm({
-				id: <?php echo esc_attr( tutor_json_encode( $form_id ) ); ?>,
+				id: '<?php echo esc_js( $form_id ); ?>',
 				mode: 'onChange',
 				defaultValues: <?php echo esc_attr( tutor_json_encode( $form_default_values ) ); ?>
 			});
 			const feedback = tutorQuizAttemptFeedback({
 				attemptId: <?php echo (int) $attempt_id; ?>,
-				formId: <?php echo esc_attr( tutor_json_encode( (string) $form_id ) ); ?>
+				formId: '<?php echo esc_js( $form_id ); ?>'
 			});
 
 			return {

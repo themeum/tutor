@@ -104,7 +104,7 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data="tutorForm({ 
-			id: <?php echo esc_attr( tutor_json_encode( (string) $form_id ) ); ?>,
+			id: '<?php echo esc_js( $form_id ); ?>',
 			mode: 'onChange',
 			defaultValues: <?php echo esc_attr( tutor_json_encode( $default_values ) ); ?>,
 		})"

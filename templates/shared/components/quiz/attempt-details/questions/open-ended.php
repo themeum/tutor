@@ -113,8 +113,8 @@ if ( $is_graded ) {
 					class="tutor-question-feedback"
 					x-data="tutorQuestionFeedback({
 						initialFeedback: <?php echo esc_attr( tutor_json_encode( (string) $question_feedback ) ); ?>,
-						fieldName: <?php echo esc_attr( tutor_json_encode( "question_feedback[{$feedback_attempt_answer_id}]" ) ); ?>,
-						formId: <?php echo esc_attr( tutor_json_encode( $form_id ?? 'quiz-attempt-review-form' ) ); ?>
+						fieldName: 'question_feedback[<?php echo (int) $feedback_attempt_answer_id; ?>]',
+						formId: '<?php echo esc_js( $form_id ?? 'quiz-attempt-review-form' ); ?>'
 					})"
 				>
 					<?php

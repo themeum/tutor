@@ -52,7 +52,7 @@ $slides_json           = tutor_json_encode( $slides_data );
 <div
 	x-data="tutorTour({
 		slidesData: <?php echo esc_attr( $slides_json ); ?>,
-		modalId: <?php echo esc_attr( tutor_json_encode( $tour_modal_id ) ); ?>,
+		modalId: '<?php echo esc_js( $tour_modal_id ); ?>',
 		userId: <?php echo absint( $tour_user_id ); ?>
 	})"
 >

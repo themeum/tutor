@@ -47,9 +47,9 @@ $selected = $selected ?? 'revenue';
 					href="<?php echo esc_url( add_query_arg( 'top_performing_course', $key, tutor_utils()->tutor_dashboard_url() ) ); ?>" 
 					@click.prevent="
 						const url = new URL(window.location.href);
-						url.searchParams.set('top_performing_course', <?php echo esc_attr( tutor_json_encode( $key ) ); ?>);
+						url.searchParams.set('top_performing_course', '<?php echo esc_js( $key ); ?>');
 						window.history.pushState({}, '', url.toString());
-						window.dispatchEvent(new CustomEvent(window.TutorCore?.constants?.TUTOR_CUSTOM_EVENTS?.SORT_CHANGED || 'tutor:sort-changed', { detail: { type: <?php echo esc_attr( tutor_json_encode( $key ) ); ?> } }));
+						window.dispatchEvent(new CustomEvent(window.TutorCore?.constants?.TUTOR_CUSTOM_EVENTS?.SORT_CHANGED || 'tutor:sort-changed', { detail: { type: '<?php echo esc_js( $key ); ?>' } }));
 						hide();
 					"
 					class="tutor-popover-menu-item <?php echo $selected === $key ? 'tutor-active' : ''; ?>"
