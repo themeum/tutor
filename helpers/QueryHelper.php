@@ -332,6 +332,21 @@ class QueryHelper {
 	}
 
 	/**
+	 * Check if a string is a valid column name.
+	 *
+	 * @since 4.1.1
+	 *
+	 * @param string $column_name The column name to check.
+	 * Allowed: foo, foo_bar, _foo, foo.bar etc.
+	 *
+	 * @return bool True if the column name is valid, false otherwise.
+	 */
+	public static function is_valid_column_name( $column_name ) {
+		return is_string( $column_name )
+			&& (bool) preg_match( '/^[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)?$/', $column_name );
+	}
+
+	/**
 	 * Prepare where clause string
 	 *
 	 * @since 2.0.9
@@ -454,8 +469,15 @@ class QueryHelper {
 		$like_conditions = array();
 
 		foreach ( $where as $column_name => $term ) {
-			//phpcs:ignore
-			$like_conditions[] = $wpdb->prepare( "$column_name LIKE %s", '%' . $wpdb->esc_like( $term ) . '%' );
+			if ( ! self::is_valid_column_name( $column_name ) ) {
+				continue;
+			}
+
+			$like_conditions[] = $wpdb->prepare(
+				//phpcs:ignore
+				sprintf( '`%s` LIKE %%s', $column_name ),
+				'%' . $wpdb->esc_like( $term ) . '%'
+			);
 		}
 
 		$where_clause = implode( ' OR ', $like_conditions );
