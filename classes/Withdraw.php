@@ -199,7 +199,7 @@ class Withdraw {
 
 		// Withdraw account settings are for instructors only.
 		if ( ! tutor_utils()->is_instructor( $user_id ) ) {
-			wp_send_json_error( array( 'msg' => tutor_utils()->error_message() ) );
+			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 		}
 
 		//phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce already verified
@@ -254,7 +254,7 @@ class Withdraw {
 		update_user_meta( $user_id, '_tutor_withdraw_method_data_' . $method, $saved_data );
 
 		$msg = apply_filters( 'tutor_withdraw_method_set_success_msg', __( 'Withdrawal information saved!', 'tutor' ) );
-		wp_send_json_success( array( 'msg' => $msg ) );
+		wp_send_json_success( array( 'message' => $msg ) );
 	}
 
 	/**
@@ -273,7 +273,7 @@ class Withdraw {
 
 		$user_id = get_current_user_id();
 		if ( ! tutor_utils()->is_instructor( $user_id ) ) {
-			wp_send_json_error( array( 'msg' => tutor_utils()->error_message() ) );
+			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 		}
 
 		$lock_name = 'tutor_withdraw_lock_' . $user_id;
@@ -282,7 +282,7 @@ class Withdraw {
 		if ( 1 !== (int) $locked ) {
 			wp_send_json_error(
 				array(
-					'msg' => __( 'Another withdrawal request is in progress. Please try again.', 'tutor' ),
+					'message' => __( 'Another withdrawal request is in progress. Please try again.', 'tutor' ),
 				)
 			);
 		}
@@ -355,15 +355,15 @@ class Withdraw {
 			do_action( 'tutor_withdraw_after' );
 
 			$response = array(
-				'msg'               => apply_filters( 'tutor_withdraw_successful_msg', __( 'Withdrawal Request Sent!', 'tutor' ) ),
+				'message'           => apply_filters( 'tutor_withdraw_successful_msg', __( 'Withdrawal Request Sent!', 'tutor' ) ),
 				'available_balance' => $new_available_balance,
 			);
 
 		} catch ( Exception $e ) {
 
 			$response = array(
-				'error' => true,
-				'msg'   => $e->getMessage(),
+				'error'   => true,
+				'message' => $e->getMessage(),
 			);
 
 		} finally {
@@ -379,7 +379,7 @@ class Withdraw {
 		if ( ! empty( $response['error'] ) ) {
 			wp_send_json_error(
 				array(
-					'msg' => $response['msg'],
+					'message' => $response['message'],
 				)
 			);
 		}
