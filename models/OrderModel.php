@@ -1994,7 +1994,7 @@ class OrderModel {
 
 		$order_by_clean  = strtolower( trim( (string) $order_by ) );
 		$order_by_column = isset( $allowed_order_by[ $order_by_clean ] ) ? $allowed_order_by[ $order_by_clean ] : 'statements.earning_id';
-		$order_direction = 'ASC' === strtoupper( trim( (string) $order ) ) ? 'ASC' : 'DESC';
+		$order_direction = QueryHelper::get_valid_sort_order( $order );
 		$order_clause    = "ORDER BY {$order_by_column} {$order_direction}";
 
 		//phpcs:disable
