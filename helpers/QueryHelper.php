@@ -1121,6 +1121,7 @@ class QueryHelper {
 
 		$table        = self::prepare_table_name( $table );
 		$where_clause = self::prepare_where_search_clause( $where, $search, 'AND' );
+		$count_column = '*' === trim( $count_column ) ? '*' : preg_replace( '/[^A-Za-z0-9_.]/', '', $count_column );
 
 		//phpcs:ignore
 		$count = $wpdb->get_var( "SELECT COUNT($count_column) FROM $table {$where_clause}" );
@@ -1156,6 +1157,7 @@ class QueryHelper {
 		$from_clause  = self::prepare_table_name( $primary_table );
 		$join_clauses = self::prepare_join_clause( $joining_tables );
 		$where_clause = self::prepare_where_search_clause( $where, $search, 'AND' );
+		$count_column = '*' === trim( $count_column ) ? '*' : preg_replace( '/[^A-Za-z0-9_.]/', '', $count_column );
 
 		$count_query = "SELECT COUNT($count_column) as total_count
 			FROM {$from_clause}
