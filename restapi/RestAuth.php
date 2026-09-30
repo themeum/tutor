@@ -1239,11 +1239,6 @@ class RestAuth {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public static function rest_login( WP_REST_Request $request ) {
-		$ssl_error = self::require_ssl_for_auth();
-		if ( is_wp_error( $ssl_error ) ) {
-			return $ssl_error;
-		}
-
 		$credentials = self::get_api_credentials_from_request();
 		if ( ! $credentials ) {
 			return new \WP_Error(
@@ -1312,11 +1307,6 @@ class RestAuth {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public static function rest_refresh( WP_REST_Request $request ) {
-		$ssl_error = self::require_ssl_for_auth();
-		if ( is_wp_error( $ssl_error ) ) {
-			return $ssl_error;
-		}
-
 		$refresh = sanitize_text_field( (string) $request->get_param( 'refresh_token' ) );
 		if ( '' === $refresh ) {
 			return new \WP_Error(
@@ -1356,11 +1346,6 @@ class RestAuth {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public static function rest_logout( WP_REST_Request $request ) {
-		$ssl_error = self::require_ssl_for_auth();
-		if ( is_wp_error( $ssl_error ) ) {
-			return $ssl_error;
-		}
-
 		$refresh = sanitize_text_field( (string) $request->get_param( 'refresh_token' ) );
 		$all     = (bool) $request->get_param( 'all' );
 
@@ -2017,26 +2002,5 @@ class RestAuth {
 		}
 		$list = json_decode( $raw, true );
 		return is_array( $list ) ? $list : array();
-	}
-
-	/**
-	 * Require SSL for auth endpoints (except local).
-	 *
-	 * @return true|\WP_Error
-	 */
-	private static function require_ssl_for_auth() {
-		if ( is_ssl() ) {
-			return true;
-		}
-
-		if ( function_exists( 'wp_get_environment_type' ) && 'local' === wp_get_environment_type() ) {
-			return true;
-		}
-
-		return new \WP_Error(
-			'rest_ssl_required',
-			__( 'HTTPS is required for authentication.', 'tutor' ),
-			array( 'status' => 403 )
-		);
 	}
 }
