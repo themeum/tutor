@@ -201,7 +201,6 @@ const settings = () => {
           toast.success(data?.message ?? __('Withdrawal method saved successfully', 'tutor'));
         },
         onError: (error: Error) => {
-          console.log(error)
           toast.error(convertToErrorMessage(error));
         },
       });

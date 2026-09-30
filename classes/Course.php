@@ -1005,7 +1005,7 @@ class Course extends Tutor_Base {
 		tutor_utils()->check_nonce();
 
 		$course_id = intval( wp_unslash( $_POST['ID'] ?? 0 ) );
-		$this->check_access( $course_id ); // Check user cap for the give id before processing.
+		$this->check_access( $course_id ); // Check user cap for the given id before processing.
 
 		$params = Input::sanitize_array(
 			//phpcs:ignore WordPress.Security.NonceVerification.Missing
