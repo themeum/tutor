@@ -368,26 +368,29 @@ class RestAuth {
 	/**
 	 * Authenticate Tutor REST requests from access JWT only.
 	 *
+	 * Identity comes only from a valid
+	 * access token so it stays aligned with kid-based API permission.
+	 *
 	 * @since 2.7.1
-	 * @since 4.0.8 Identity is never taken from the API key owner.
+	 * @since 4.2.0 Ignore cookie sessions on tutor/*; JWT-only identity.
 	 *
 	 * @param int|false $user_id user id.
 	 *
 	 * @return int|false
 	 */
 	public function api_auth( $user_id ) {
-		if ( ! empty( $user_id ) || ! static::is_tutor_api_request() ) {
+		if ( ! static::is_tutor_api_request() ) {
 			return $user_id;
 		}
 
 		$token = self::get_access_token_from_request();
 		if ( ! $token ) {
-			return $user_id;
+			return false;
 		}
 
 		$jwt_user_id = self::verify_access_token( $token );
 		if ( ! $jwt_user_id ) {
-			return $user_id;
+			return false;
 		}
 
 		return $jwt_user_id;
