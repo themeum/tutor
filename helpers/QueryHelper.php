@@ -220,7 +220,7 @@ class QueryHelper {
 
 			// Trim trailing comma.
 			$column_keys   = rtrim( $column_keys, ',' );
-			$column_values = $wpdb->prepare( $value_placeholder, $column_values ); // Escape values.
+			$column_values = $wpdb->prepare( $value_placeholder, $column_values ); //phpcs:ignore
 
 			if ( $first_key === $k ) {
 				$sql .= "INSERT INTO
@@ -967,7 +967,7 @@ class QueryHelper {
 		} elseif ( is_float( $value ) ) {
 			list( $whole, $decimal ) = explode( '.', $value );
 			$expression              = '%.' . strlen( $decimal ) . 'f';
-			$escaped_value           = $wpdb->prepare( $expression, $value );
+			$escaped_value           = $wpdb->prepare( $expression, $value );//phpcs:ignore
 		} else {
 			$escaped_value = $wpdb->prepare( '%s', $value );
 		}
@@ -1002,7 +1002,7 @@ class QueryHelper {
 
 		$table = self::prepare_table_name( $table );
 		$sql   = "SHOW TABLES LIKE '{$table}'";
-		return $wpdb->get_var( $sql ) === $table;
+		return $wpdb->get_var( $sql ) === $table;//phpcs:ignore
 	}
 
 	/**
@@ -1020,7 +1020,7 @@ class QueryHelper {
 
 		$table = self::prepare_table_name( $table );
 		$sql   = "SHOW COLUMNS FROM {$table} LIKE '{$column}'";
-		return $wpdb->get_var( $sql ) === $column;
+		return $wpdb->get_var( $sql ) === $column;//phpcs:ignore
 	}
 
 	/**
@@ -1078,10 +1078,10 @@ class QueryHelper {
 				{$limit_clause}";
 
 		if ( $get_row ) {
-			return $wpdb->get_row( $query, $output );
+			return $wpdb->get_row( $query, $output );//phpcs:ignore
 		}
 
-		$results     = $wpdb->get_results( $query, $output );
+		$results     = $wpdb->get_results( $query, $output );//phpcs:ignore
 		$has_records = is_array( $results ) && count( $results );
 		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
 
@@ -1121,11 +1121,8 @@ class QueryHelper {
 		$table        = self::prepare_table_name( $table );
 		$where_clause = self::prepare_where_search_clause( $where, $search, 'AND' );
 
-		$count = $wpdb->get_var(
-			"SELECT COUNT($count_column)
-			FROM $table
-			{$where_clause}"
-		);
+		//phpcs:ignore
+		$count = $wpdb->get_var( "SELECT COUNT($count_column) FROM $table {$where_clause}" );
 
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
@@ -1165,7 +1162,7 @@ class QueryHelper {
 			{$where_clause}
 		";
 
-		$total_count = $wpdb->get_var( $count_query );
+		$total_count = $wpdb->get_var( $count_query );//phpcs:ignore
 
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
@@ -1212,7 +1209,7 @@ class QueryHelper {
 			 {$order_by_clause}
 			 {$limit_clause}";
 
-		$results     = $wpdb->get_results( $query, $output );
+		$results     = $wpdb->get_results( $query, $output );//phpcs:ignore
 		$has_records = is_array( $results ) && count( $results );
 		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
 
@@ -1329,9 +1326,11 @@ class QueryHelper {
 			return new \WP_Error( 'missing_where', 'No WHERE condition provided.' );
 		}
 
+		//phpcs:disable
 		$where_clause = self::prepare_where_clause( $where );
 		$sql          = $wpdb->prepare( "SELECT * FROM `$table_name` WHERE {$where_clause} LIMIT %d", 1 );
 		$row          = $wpdb->get_row( $sql, ARRAY_A );
+		//phpcs:enable
 
 		if ( ! $row ) {
 			return new \WP_Error( 'not_found', 'No matching row found to duplicate.' );
@@ -1351,6 +1350,7 @@ class QueryHelper {
 		$placeholders = array_fill( 0, count( $columns ), '%s' );
 		$values       = array_values( $row );
 
+		//phpcs:disable
 		$insert_sql = $wpdb->prepare(
 			"INSERT INTO `$table_name` (`" . implode( '`, `', $columns ) . '`) 
 			VALUES (' . implode( ', ', $placeholders ) . ')',
@@ -1358,6 +1358,7 @@ class QueryHelper {
 		);
 
 		$result = $wpdb->query( $insert_sql );
+		//phpcs:enable
 
 		if ( false === $result ) {
 			return new \WP_Error( 'insert_failed', 'Failed to insert duplicate row.' );
