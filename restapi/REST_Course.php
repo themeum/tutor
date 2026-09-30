@@ -71,13 +71,16 @@ class REST_Course {
 	 * Get course list along with pagination, categories, tags
 	 * author details, reviews
 	 *
+	 * @since 1.7.1
+	 * @since 4.2.0 Whitelist order/orderby; isolate price sort path.
+	 *
 	 * @param WP_REST_Request $request request data.
 	 *
 	 * @return WP_REST_Response
 	 */
 	public function course( WP_REST_Request $request ) {
-		$order      = sanitize_text_field( $request->get_param( 'order' ) );
-		$orderby    = sanitize_text_field( $request->get_param( 'orderby' ) );
+		$order      = self::sanitize_course_order( $request->get_param( 'order' ) );
+		$orderby    = self::sanitize_course_orderby( $request->get_param( 'orderby' ) );
 		$paged      = sanitize_text_field( $request->get_param( 'paged' ) );
 		$categories = null;
 		if ( isset( $request['categories'] ) ) {
@@ -95,8 +98,8 @@ class REST_Course {
 			'post_status'    => 'publish',
 			'posts_per_page' => $post_per_page,
 			'paged'          => $paged ? $paged : 1,
-			'order'          => $order ? $order : 'ASC',
-			'orderby'        => $orderby ? $orderby : 'title',
+			'order'          => $order,
+			'orderby'        => $orderby,
 		);
 
 		if ( isset( $categories ) || isset( $tags ) ) {
@@ -117,15 +120,7 @@ class REST_Course {
 		}
 
 		if ( 'price' === $orderby ) {
-			$args['post_type']  = 'product';
-			$args['meta_key']   = '_regular_price';
-			$args['meta_query'] = array(
-				'relation' => 'AND',
-				array(
-					'key'   => '_tutor_product',
-					'value' => 'yes',
-				),
-			);
+			$args = self::apply_price_order_args( $args );
 		}
 
 		$args = apply_filters( 'tutor_rest_course_query_args', $args );
@@ -313,23 +308,37 @@ class REST_Course {
 	 */
 	public function course_contents( WP_REST_Request $request ) {
 		$course_id = $request->get_param( 'id' );
-		$topics    = tutor_utils()->get_topics( $course_id );
+		$topics    = tutor_utils()->get_topics(
+			$course_id,
+			array(
+				'post_status' => 'publish',
+			)
+		);
 
 		if ( $topics->have_posts() ) {
 			$data = array();
-			foreach ( $topics->get_posts() as $post ) {
+			foreach ( $topics->get_posts() as $topic ) {
 				$current_topic = array(
-					'id'       => $post->ID,
-					'title'    => $post->post_title,
-					'summary'  => $post->post_content,
+					'id'       => $topic->ID,
+					'title'    => $topic->post_title,
+					'summary'  => $topic->post_content,
 					'contents' => array(),
 				);
 
-				$topic_contents = tutor_utils()->get_course_contents_by_topic( $post->ID, -1 );
+				$topic_contents = tutor_utils()->get_course_contents_by_topic(
+					$topic->ID,
+					-1,
+					array(
+						'post_status' => 'publish',
+					)
+				);
 
 				if ( $topic_contents->have_posts() ) {
-					foreach ( $topic_contents->get_posts() as $post ) {
-						array_push( $current_topic['contents'], $post );
+					foreach ( $topic_contents->get_posts() as $content_post ) {
+						array_push(
+							$current_topic['contents'],
+							self::sanitize_course_content_item( $content_post )
+						);
 					}
 				}
 
@@ -351,5 +360,104 @@ class REST_Course {
 		);
 
 		return self::send( $response );
+	}
+
+	/**
+	 * Map a curriculum post to a student-safe DTO (no post_password/guid/etc).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_Post $post Curriculum post.
+	 *
+	 * @return array
+	 */
+	private static function sanitize_course_content_item( WP_Post $post ) {
+		return array(
+			'ID'           => (int) $post->ID,
+			'post_title'   => $post->post_title,
+			'post_content' => $post->post_content,
+			'post_name'    => $post->post_name,
+			'post_type'    => $post->post_type,
+			'menu_order'   => (int) $post->menu_order,
+		);
+	}
+
+	/**
+	 * Whitelist WP_Query order direction for the course list.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param mixed $order Raw request order value.
+	 *
+	 * @return string ASC or DESC.
+	 */
+	private static function sanitize_course_order( $order ) {
+		$order   = strtoupper( sanitize_text_field( (string) $order ) );
+		$allowed = array( 'ASC', 'DESC' );
+
+		if ( in_array( $order, $allowed, true ) ) {
+			return $order;
+		}
+
+		return 'ASC';
+	}
+
+	/**
+	 * Whitelist WP_Query orderby for the course list.
+	 *
+	 * `price` is accepted here but applied only via apply_price_order_args().
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param mixed $orderby Raw request orderby value.
+	 *
+	 * @return string Allowed orderby key.
+	 */
+	private static function sanitize_course_orderby( $orderby ) {
+		$orderby = sanitize_text_field( (string) $orderby );
+		$allowed = array(
+			'title',
+			'date',
+			'modified',
+			'ID',
+			'name',
+			'author',
+			'menu_order',
+			'price',
+		);
+
+		if ( in_array( $orderby, $allowed, true ) ) {
+			return $orderby;
+		}
+
+		return 'title';
+	}
+
+	/**
+	 * Apply the reviewed price-sort path (Tutor-linked WooCommerce products only).
+	 *
+	 * Client input never chooses post_type or meta_key; those are fixed here.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $args WP_Query arguments.
+	 *
+	 * @return array
+	 */
+	private static function apply_price_order_args( array $args ) {
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Required to sort Tutor-linked WC products by numeric regular price.
+		$args['post_type']  = 'product';
+		$args['meta_key']   = '_regular_price';
+		$args['orderby']    = 'meta_value_num';
+		$args['meta_query'] = array(
+			'relation' => 'AND',
+			array(
+				'key'   => '_tutor_product',
+				'value' => 'yes',
+			),
+		);
+		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+
+		return $args;
 	}
 }
