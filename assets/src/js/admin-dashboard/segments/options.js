@@ -191,6 +191,18 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			});
 
+			numberField.addEventListener(
+				'wheel',
+				(e) => {
+					if (document.activeElement !== numberField) {
+						return;
+					}
+					e.preventDefault();
+					window.scrollBy({ top: e.deltaY, behavior: 'instant' });
+				},
+				{ passive: false },
+			);
+
 			numberField.oninput = (e) => {
 				const { target } = e;
 				if ('' === target.value) {
