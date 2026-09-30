@@ -42,7 +42,7 @@
     "@fullhuman/postcss-purgecss": "^6.0.0",
     "@rsbuild/core": "^1.6.2",
     "@rsbuild/plugin-react": "^1.4.6",
-    "@rsdoctor/rspack-plugin": "^1.5.12",
+    "@rsdoctor/rspack-plugin": "^1.5.16",
     "@rspack/cli": "^1.6.2",
     "@rspack/core": "^1.6.2",
     "@storybook/addon-a11y": "^10.4.2",
