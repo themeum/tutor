@@ -938,7 +938,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table     = self::prepare_table_name( $table );
-		$where_col = sanitize_key( $where_col );
+		$where_col = self::quote_sql_identifier( $where_col );
 		if ( empty( $where_in ) || empty( $where_col ) ) {
 			return false;
 		}
@@ -959,7 +959,7 @@ class QueryHelper {
 		$query      = $wpdb->prepare(
 			"UPDATE {$table}
 				{$set_clause}
-				WHERE `{$where_col}` IN ( {$in_clause} )
+				WHERE {$where_col} IN ( {$in_clause} )
 				AND 1 = %d
 			",
 			1
