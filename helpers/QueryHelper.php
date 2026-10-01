@@ -347,6 +347,25 @@ class QueryHelper {
 	}
 
 	/**
+	 * Validate a single identifier part.
+	 *
+	 * @since 4.1.1
+	 *
+	 * @param string $part Raw identifier part, e.g. 'post_id'.
+	 *
+	 * @return string The same part if valid, or '' if invalid.
+	 */
+	public static function prepare_identifier( $part ) {
+		$part = (string) $part;
+
+		if ( ! preg_match( '/^[A-Za-z_][A-Za-z0-9_]*\z/', $part ) ) {
+			return '';
+		}
+
+		return $part;
+	}
+
+	/**
 	 * Safely quotes a SQL identifier or qualified identifier.
 	 *
 	 * Supports simple identifiers (e.g. `foo`) and qualified identifiers
@@ -360,17 +379,19 @@ class QueryHelper {
 	 * @return string Quoted SQL identifier, or an empty string if invalid.
 	 */
 	public static function quote_sql_identifier( $identifier ) {
-		$parts = explode( '.', $identifier );
+		$quoted = array();
 
-		foreach ( $parts as &$part ) {
-			if ( ! preg_match( '/^[A-Za-z_][A-Za-z0-9_]*$/', $part ) ) {
+		foreach ( explode( '.', (string) $identifier ) as $part ) {
+			$part = self::prepare_identifier( $part );
+
+			if ( '' === $part ) {
 				return '';
 			}
 
-			$part = '`' . $part . '`';
+			$quoted[] = '`' . $part . '`';
 		}
 
-		return implode( '.', $parts );
+		return implode( '.', $quoted );
 	}
 
 	/**
@@ -1171,7 +1192,7 @@ class QueryHelper {
 
 		$table        = self::prepare_table_name( $table );
 		$where_clause = self::prepare_where_search_clause( $where, $search, 'AND' );
-		$count_column = '*' === trim( $count_column ) ? '*' : preg_replace( '/[^A-Za-z0-9_.]/', '', $count_column );
+		$count_column = '*' === $count_column ? '*' : self::quote_sql_identifier( $count_column );
 
 		//phpcs:ignore
 		$count = $wpdb->get_var( "SELECT COUNT($count_column) FROM $table {$where_clause}" );
@@ -1207,7 +1228,7 @@ class QueryHelper {
 		$from_clause  = self::prepare_table_name( $primary_table );
 		$join_clauses = self::prepare_join_clause( $joining_tables );
 		$where_clause = self::prepare_where_search_clause( $where, $search, 'AND' );
-		$count_column = '*' === trim( $count_column ) ? '*' : preg_replace( '/[^A-Za-z0-9_.]/', '', $count_column );
+		$count_column = '*' === $count_column ? '*' : self::quote_sql_identifier( $count_column );
 
 		$count_query = "SELECT COUNT($count_column) as total_count
 			FROM {$from_clause}
