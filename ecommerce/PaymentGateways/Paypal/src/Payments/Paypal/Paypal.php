@@ -6,11 +6,11 @@ use Throwable;
 use ErrorException;
 use Ollyo\PaymentHub\Core\Support\Arr;
 use Ollyo\PaymentHub\Core\Support\System;
-use GuzzleHttp\Exception\RequestException;
 use Ollyo\PaymentHub\Core\Payment\BasePayment;
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
 use Ollyo\PaymentHub\Exceptions\InvalidDataException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
+use Ollyo\PaymentHub\Exceptions\HttpRequestException;
 
 class Paypal extends BasePayment {
 
@@ -170,10 +170,11 @@ class Paypal extends BasePayment {
 
 			header( "Location: {$checkoutUrl}" );
 			exit();
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
+			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
+			error_log( 'Paypal Error: ' . $error_message ); //phpcs:ignore.
+			throw new ErrorException( esc_html__( 'Something Went Wrong', 'tutor' ) );
 		}
 	}
 
@@ -186,7 +187,7 @@ class Paypal extends BasePayment {
 	 *
 	 * @param  object $payload  The payload object containing the webhook data.
 	 * @return object           Returns the processed order data or an error response.
-	 * @throws RequestException If the request fails.
+	 * @throws HttpRequestException If the request fails.
 	 * @since  3.0.0
 	 */
 	public function verifyAndCreateOrderData( object $payload ): object {
@@ -219,7 +220,7 @@ class Paypal extends BasePayment {
 				default:
 					return new \stdClass();
 			}
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 
 			// Handle the error response.
 			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
@@ -270,10 +271,11 @@ class Paypal extends BasePayment {
 	public function createRecurringPayment() {
 		try {
 			Api::createOrder( $this->getData(), $this->orderID );
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
+			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
+			error_log( 'Paypal Error: ', $error_message );
+			throw new ErrorException( esc_html__( 'Something Went Wrong', 'tutor' ) );
 		}
 	}
 
@@ -319,7 +321,7 @@ class Paypal extends BasePayment {
 		try {
 			Api::refund( $this->refundLink, $this->orderID, $this->getData() );
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
@@ -328,7 +330,7 @@ class Paypal extends BasePayment {
 	/**
 	 * Retrieves the refund status based on the provided links and type.
 	 *
-	 * @param array  $links An array of links provided by the PayPal API.
+	 * @param array       $links An array of links provided by the PayPal API.
 	 * @param string|null $type The type of link to use.
 	 *
 	 * @since 1.0.0
@@ -366,7 +368,7 @@ class Paypal extends BasePayment {
 				'options' => array( 'headers' => $this->headers ),
 			);
 
-			$responseData = $this->sendHttpRequest( $requestData );
+			$responseData = System::sendHttpRequest( $requestData );
 
 			if ( isset( $responseData->webhooks ) && is_array( $responseData->webhooks ) ) {
 
@@ -378,7 +380,7 @@ class Paypal extends BasePayment {
 
 			throw new ErrorException( 'Webhook Information Not Found' );
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
@@ -412,7 +414,7 @@ class Paypal extends BasePayment {
 				),
 			);
 
-			$responseData = $this->sendHttpRequest( $requestData );
+			$responseData = System::sendHttpRequest( $requestData );
 
 			if ( $responseData->url === $this->config->get( 'webhook_url' ) && $responseData->id ) {
 				return (object) array(
@@ -423,7 +425,7 @@ class Paypal extends BasePayment {
 
 			throw new InvalidDataException( 'Invalid Webhook Information' );
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
@@ -459,7 +461,7 @@ class Paypal extends BasePayment {
 
 			return $returnData;
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}

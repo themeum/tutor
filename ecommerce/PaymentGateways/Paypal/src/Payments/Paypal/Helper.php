@@ -4,9 +4,8 @@ namespace Ollyo\PaymentHub\Payments\Paypal;
 
 use Ollyo\PaymentHub\Core\Support\Path;
 use Ollyo\PaymentHub\Core\Support\System;
-use GuzzleHttp\Exception\RequestException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
-
+use Ollyo\PaymentHub\Exceptions\HttpRequestException;
 
 /**
  * Paypal Helper Class
@@ -174,16 +173,16 @@ final class Helper {
 	 * error message. It processes different parts of the error response, including issues,
 	 * details, and general error messages, and combines them into a single message string.
 	 *
-	 * @param  RequestException $errorResponse The error response from the HTTP request.
+	 * @param  HttpRequestException $errorResponse The error response from the HTTP request.
 	 * @return string|null                          The formatted error message.
 	 * @since  3.0.0
 	 */
 	public static function handleErrorResponse( $errorResponse ): ?string {
 		$message = '';
 
-		if ( ! is_null( $errorResponse->getResponse() ) ) {
+		if ( ! is_null( $errorResponse->get_response() ) ) {
 
-			$errorBody = json_decode( $errorResponse->getResponse()->getBody() );
+			$errorBody = json_decode( $errorResponse->get_response()->get_body() );
 
 			if ( ! empty( $errorBody->issues ) ) {
 				$message .= self::processIssues( $errorBody->issues );

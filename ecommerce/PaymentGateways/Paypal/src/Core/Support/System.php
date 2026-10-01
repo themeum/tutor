@@ -3,7 +3,6 @@ namespace Ollyo\PaymentHub\Core\Support;
 
 use stdClass;
 use Brick\Money\Money;
-use GuzzleHttp\Client;
 use Brick\Math\RoundingMode;
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
 use Ollyo\PaymentHub\Exceptions\InvalidDataException;
@@ -234,16 +233,27 @@ class System {
 	/**
 	 * Sends an HTTP request using the specified method and options.
 	 *
-	 * @param   object $requestData    An object containing the request method, URL, and options (e.g., headers, body).
+	 * @since   4.1.2
+	 *
+	 * @param   object $request_data    An object containing the request method, URL, and options (e.g., headers, body).
+	 *
 	 * @return  object|null                 The decoded JSON response body if $return is true, otherwise null.
-	 * @since   1.0.0
 	 */
-	public static function sendHttpRequest( $requestData ) {
-		$http       = new Client();
-		$method     = $requestData->method;
-		$requestUrl = $requestData->url;
-		$response   = $http->$method( $requestUrl, $requestData->options );
+	public static function sendHttpRequest( $request_data ) {
+		$method = strtolower( $request_data->method );
+		if ( ! is_callable( array( Request::class, $method ) ) ) {
 
-		return json_decode( $response->getBody() );
+			$error_message = sprintf(
+					/* translators: %s: Method name */
+				__( 'Unsupported HTTP method: %1$s', 'tutor' ),
+				$method
+			);
+			throw new \InvalidArgumentException( $error_message ); //phpcs:ignore
+		}
+
+		$url      = $request_data->url;
+		$response = Request::$method( $url, $request_data->options );
+
+		return json_decode( $response->get_body() );
 	}
 }

@@ -4,8 +4,8 @@ namespace Ollyo\PaymentHub\Payments\Paypal;
 
 use ErrorException;
 use Ollyo\PaymentHub\Core\Support\System;
-use GuzzleHttp\Exception\RequestException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
+use Ollyo\PaymentHub\Exceptions\HttpRequestException;
 
 /**
  * Paypal Api Class
@@ -211,7 +211,7 @@ final class Api {
 
 			return System::sendHttpRequest( $request_data );
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $error_message ) );
 		}
@@ -273,7 +273,7 @@ final class Api {
 
 			return System::sendHttpRequest( $request_data );
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( $error_message ); //phpcs:ignore
 		}
