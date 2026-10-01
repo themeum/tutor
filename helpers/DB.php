@@ -13,14 +13,14 @@
 namespace Tutor\Helpers;
 
 /**
- * Class QueryBuilder
+ * Class DB
  *
  * Fluent, chainable query builder for WordPress database operations.
  * All user-supplied values are escaped via $wpdb->prepare(), and
  * identifiers (columns, tables) are validated against a safe pattern.
  *
  * Usage:
- *   QueryBuilder::table('tutor_orders')
+ *   DB::table('tutor_orders')
  *       ->where('status', 'completed')
  *       ->order_by('id', 'DESC')
  *       ->limit(10)
@@ -28,7 +28,7 @@ namespace Tutor\Helpers;
  *
  * @since 4.2.0
  */
-class QueryBuilder {
+class DB {
 
 	/**
 	 * Table name (with prefix).
@@ -170,7 +170,7 @@ class QueryBuilder {
 	// ─────────────────────────────────────────────
 
 	/**
-	 * Create a new QueryBuilder instance for the given table.
+	 * Create a new DB query instance for the given table.
 	 *
 	 * The table name will be automatically prefixed with the WordPress
 	 * table prefix if not already present.
