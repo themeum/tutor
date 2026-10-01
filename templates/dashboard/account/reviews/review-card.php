@@ -47,7 +47,7 @@ $form_id         = "review-form-{$review['comment_ID']}";
 $delete_modal_id = 'review-delete-modal';
 ?>
 
-<div class="tutor-review-card" x-data="tutorReviewCard('<?php echo esc_attr( $review['comment_ID'] ); ?>')">
+<div class="tutor-review-card" x-data="tutorReviewCard(<?php echo (int) $review['comment_ID']; ?>)">
 
 	<!-- Review Display (Hidden in Edit Mode) -->
 	<div x-show="!isEditMode">
@@ -130,7 +130,7 @@ $delete_modal_id = 'review-delete-modal';
 								->size( Size::X_SMALL )
 								->icon( SvgIcon::make()->name( Icon::DELETE_2 )->get() )
 								->icon_only()
-								->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review['comment_ID'] ) . ' })' )
+								->attr( 'onclick', "TutorCore.modal.showModal('" . esc_js( $delete_modal_id ) . "', { id: " . (int) $review['comment_ID'] . ' })' )
 								->render();
 						?>
 					</div>
@@ -212,11 +212,11 @@ $delete_modal_id = 'review-delete-modal';
 			<form
 				class="tutor-review-form-fields"
 				id="<?php echo esc_attr( $form_id ); ?>"
-				x-data='tutorForm({
-					id: "<?php echo esc_attr( $form_id ); ?>",
-					mode: "onChange",
-					defaultValues: <?php echo wp_json_encode( $review ); ?>,
-				})'
+				x-data="tutorForm({
+					id: '<?php echo esc_js( $form_id ); ?>',
+					mode: 'onChange',
+					defaultValues: <?php echo esc_attr( tutor_json_encode( $review ) ); ?>,
+				})"
 				x-bind="getFormBindings()"
 				@submit.prevent="handleSubmit(
 					(data) => handleReviewSubmit(data),
