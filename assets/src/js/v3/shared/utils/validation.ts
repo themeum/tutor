@@ -14,6 +14,41 @@ export const maxValueRule = ({ maxValue, message }: { maxValue: number; message?
   },
 });
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const URL_PATTERN = /^https?:\/\//i;
+
+export const emailRule = (): object => ({
+  validate: (value?: string) => {
+    const email = value?.trim();
+
+    if (email && !EMAIL_PATTERN.test(email)) {
+      return __('Invalid email address entered!', __TUTOR_TEXT_DOMAIN__);
+    }
+
+    return undefined;
+  },
+});
+
+export const credentialRule = ({ allowEmail = false }: { allowEmail?: boolean } = {}): object => ({
+  validate: (value?: string) => {
+    const credential = value?.trim();
+
+    if (!credential) {
+      return undefined;
+    }
+
+    if (URL_PATTERN.test(credential)) {
+      return __('This field should not be a URL.', __TUTOR_TEXT_DOMAIN__);
+    }
+
+    if (!allowEmail && EMAIL_PATTERN.test(credential)) {
+      return __('This field should not be an email.', __TUTOR_TEXT_DOMAIN__);
+    }
+
+    return undefined;
+  },
+});
+
 export const discountRule = (): object => ({
   validate: (value?: ProductDiscount) => {
     if (value?.amount === undefined) {
