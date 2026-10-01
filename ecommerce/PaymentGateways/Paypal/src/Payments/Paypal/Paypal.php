@@ -274,7 +274,7 @@ class Paypal extends BasePayment {
 		} catch ( HttpRequestException $error ) {
 
 			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			error_log( 'Paypal Error: ', $error_message );
+			error_log( 'Paypal Error: ' . $error_message );
 			throw new ErrorException( esc_html__( 'Something Went Wrong', 'tutor' ) );
 		}
 	}
