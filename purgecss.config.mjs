@@ -133,6 +133,7 @@ export const purgecssSafelist = {
     /^arrow-/,
     tutorIconColorUtilitiesRegex,
     tutorComponentsRegex,
+    /^tutor-skeleton/,
     'active',
     'disabled',
     'failed',

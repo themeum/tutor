@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import dayjs from 'dayjs';
 import { type Calendar, Calendar as VanillaCalendar, type Options } from 'vanilla-calendar-pro';
 
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { DateFormats } from '@Core/ts/date-formats';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 
@@ -481,7 +482,7 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
       });
     },
 
-    navigateWithParams(params: Record<string, string | null>) {
+    navigateWithParams(params: Record<string, string | null>, presetKey?: string, presetTitle?: string) {
       const url = new URL(window.location.href);
 
       // Always reset pagination when the date filter changes.
@@ -501,6 +502,44 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
           url.searchParams.set(key, value);
         }
       });
+
+      const isAjax = Boolean((options as Record<string, unknown>)?.ajaxMode);
+      if (isAjax) {
+        window.history.pushState({}, '', url.toString());
+
+        const startDate = params[TUTOR_CALENDAR_QUERY_PARAMS.startDate] || '';
+        const endDate = params[TUTOR_CALENDAR_QUERY_PARAMS.endDate] || '';
+        const date = params[TUTOR_CALENDAR_QUERY_PARAMS.date] || '';
+
+        if (startDate && endDate) {
+          this.calendar?.set({ selectedDates: [startDate, endDate] });
+        } else if (date) {
+          this.calendar?.set({ selectedDates: [date] });
+        } else {
+          this.calendar?.set({ selectedDates: [] });
+        }
+
+        this.updateActivePreset();
+
+        const formattedLabel =
+          presetTitle ||
+          (startDate && endDate ? (startDate === endDate ? startDate : `${startDate} - ${endDate}`) : date || '');
+
+        window.dispatchEvent(
+          new CustomEvent(TUTOR_CUSTOM_EVENTS.DATE_FILTER_CHANGED, {
+            detail: {
+              startDate,
+              endDate,
+              date,
+              label: formattedLabel,
+              preset: presetKey || '',
+              presetTitle: presetTitle || '',
+              url: url.toString(),
+            },
+          }),
+        );
+        return;
+      }
 
       window.location.href = url.toString();
     },
@@ -553,18 +592,29 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
     applyPreset(preset: Preset) {
       if (!this.calendar) return;
 
+      hidePopover?.();
+
       const dates = this.getPresetDates(preset);
+      const presetTitle = PRESET_LABELS[preset] || '';
 
       if (dates.length) {
-        this.navigateWithParams({
-          [TUTOR_CALENDAR_QUERY_PARAMS.startDate]: dates[0],
-          [TUTOR_CALENDAR_QUERY_PARAMS.endDate]: dates[1],
-        });
+        this.navigateWithParams(
+          {
+            [TUTOR_CALENDAR_QUERY_PARAMS.startDate]: dates[0],
+            [TUTOR_CALENDAR_QUERY_PARAMS.endDate]: dates[1],
+          },
+          preset,
+          presetTitle,
+        );
       } else {
-        this.navigateWithParams({
-          [TUTOR_CALENDAR_QUERY_PARAMS.startDate]: null,
-          [TUTOR_CALENDAR_QUERY_PARAMS.endDate]: null,
-        });
+        this.navigateWithParams(
+          {
+            [TUTOR_CALENDAR_QUERY_PARAMS.startDate]: null,
+            [TUTOR_CALENDAR_QUERY_PARAMS.endDate]: null,
+          },
+          preset,
+          presetTitle,
+        );
       }
     },
 

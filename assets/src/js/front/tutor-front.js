@@ -8,6 +8,7 @@ import './pages/cart';
 import './pages/checkout';
 import './pages/course-landing';
 import './pages/instructor-list-filter';
+import './tutor-cart-button';
 
 /**
  * Codes from this file should be decentralized according to relavent file/folder structure.

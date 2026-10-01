@@ -11,51 +11,20 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Quiz;
 use TUTOR\Icon;
-use Tutor\Components\Badge;
 use Tutor\Components\SvgIcon;
-
-/**
- * Build Alpine.js attribute expressions for a reactive review-status badge.
- *
- * @param string $review_field_name The form field name, e.g. "review_statuses[42]".
- *
- * @return array{ x_text: string, class_expr: string }
- */
-$build_badge_attrs = function ( string $review_field_name ): array {
-	$label_map = wp_json_encode(
-		array(
-			'pending'   => __( 'Pending', 'tutor' ),
-			'correct'   => __( 'Correct', 'tutor' ),
-			'incorrect' => __( 'Incorrect', 'tutor' ),
-		)
-	);
-
-	$variant_map = wp_json_encode(
-		array(
-			'pending'   => Badge::WARNING,
-			'correct'   => Badge::SUCCESS,
-			'incorrect' => Badge::ERROR,
-		)
-	);
-
-	$field = esc_attr( $review_field_name );
-
-	return array(
-		'x_text'     => "({$label_map})[watch('{$field}')] ?? ''",
-		'class_expr' => "'tutor-badge tutor-badge-rounded tutor-badge-' + (({$variant_map})[watch('{$field}')] ?? 'info')",
-	);
-};
+use Tutor\Models\QuizModel;
 
 $index                = (int) ( $index ?? 1 );
 $question_title       = (string) ( $question_title ?? '' );
 $question_description = (string) ( $question_description ?? '' );
-$status_badges        = isset( $status_badges ) && is_array( $status_badges ) ? $status_badges : array();
 $question             = isset( $question ) && is_object( $question ) ? $question : null;
 $answer_status        = (string) ( $answer_status ?? '' );
 $attempt_id           = (int) ( $attempt_id ?? 0 );
 $attempt_answer_id    = (int) ( $attempt_answer_id ?? 0 );
 $is_instructor_review = ! empty( $is_instructor_review );
+$is_skipped           = ! empty( $is_skipped );
 $review_field_name    = (string) ( $review_field_name ?? '' );
+$is_manual_question   = $question && in_array( (string) ( $question->question_type ?? '' ), QuizModel::get_manual_review_types(), true );
 ?>
 
 <div class="tutor-quiz-question-header">
@@ -81,87 +50,89 @@ $review_field_name    = (string) ( $review_field_name ?? '' );
 		<?php endif; ?>
 	</div>
 
-	<?php if ( ! empty( $status_badges ) || ( $is_instructor_review && $attempt_id ) ) : ?>
+	<?php if ( $question || ( $is_instructor_review && $attempt_id ) ) : ?>
 		<div class="tutor-quiz-question-header-actions">
-			<?php if ( ! empty( $status_badges ) ) : ?>
-				<div class="tutor-quiz-question-header-status">
-					<?php foreach ( $status_badges as $badge ) : ?>
-						<?php
-						$badge_status = (string) ( $badge['status'] ?? '' );
+			<div class="tutor-quiz-question-header-status">
+				<?php
+				QuizModel::render_attempt_answer_badge(
+					$question,
+					array(
+						'is_instructor_review' => $is_instructor_review,
+						'review_field_name'    => $review_field_name,
+					)
+				);
+				?>
+			</div>
 
-						if ( $badge_status && $is_instructor_review ) :
-							$badge_attrs = $build_badge_attrs( $review_field_name );
-
-							Badge::make()
-								->rounded()
-								->attr( 'x-text', $badge_attrs['x_text'] )
-								->attr( ':class', $badge_attrs['class_expr'] )
-								->render();
-						else :
-							$badge_label   = (string) ( $badge['label'] ?? '' );
-							$badge_variant = (string) ( $badge['variant'] ?? '' );
-
-							if ( '' === $badge_label || '' === $badge_variant ) {
-								continue;
-							}
-
-							Badge::make()
-								->label( $badge_label )
-								->variant( $badge_variant )
-								->rounded()
-								->render();
-						endif;
-						?>
-					<?php endforeach; ?>
-				</div>
+			<?php
+			$show_header_score = ! $is_instructor_review && ! $is_skipped && 'pending' !== $answer_status && isset( $question->question_mark );
+			if ( $show_header_score ) :
+				$achieved_formatted = (string) round( (float) ( $question->achieved_mark ?? 0 ), 2 );
+				$total_formatted    = (string) round( (float) ( $question->question_mark ?? 0 ), 2 );
+				?>
+				<div class="tutor-quiz-question-header-divider" aria-hidden="true"></div>
+				<span class="tutor-quiz-question-header-score">
+					<?php
+					echo esc_html(
+						sprintf(
+							/* translators: 1: achieved marks, 2: total marks. */
+							__( 'Score: %1$s/%2$s', 'tutor' ),
+							$achieved_formatted,
+							$total_formatted
+						)
+					);
+					?>
+				</span>
 			<?php endif; ?>
 
-			<?php if ( $is_instructor_review && $attempt_id && $review_field_name ) : ?>
+			<?php if ( $is_instructor_review && $attempt_id && $review_field_name && ! $is_skipped && ! $is_manual_question ) : ?>
 				<div class="tutor-quiz-question-header-divider" aria-hidden="true"></div>
 
-				<div class="tutor-quiz-question-review-actions">
-					<input
-						type="hidden"
-						name="<?php echo esc_attr( $review_field_name ); ?>"
-						value="<?php echo esc_attr( $answer_status ); ?>"
-						x-bind="register('<?php echo esc_attr( $review_field_name ); ?>')"
-					/>
-
-					<label
-						class="tutor-quiz-question-review-action"
-						data-review-status="correct"
-						title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>"
-						@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'correct', { shouldDirty: true })"
-					>
+				<div class="tutor-quiz-question-review-actions-wrap">
+					<div class="tutor-quiz-question-review-actions">
 						<input
-							class="tutor-quiz-question-review-input"
-							type="radio"
+							type="hidden"
 							name="<?php echo esc_attr( $review_field_name ); ?>"
-							value="correct"
-							:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'correct'"
-							tabindex="-1"
-							aria-hidden="true"
+							value="<?php echo esc_attr( $answer_status ); ?>"
+							x-bind="register('<?php echo esc_attr( $review_field_name ); ?>')"
 						/>
-						<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->render(); ?>
-					</label>
 
-					<label
-						class="tutor-quiz-question-review-action"
-						data-review-status="incorrect"
-						title="<?php esc_attr_e( 'Mark as incorrect', 'tutor' ); ?>"
-						@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'incorrect', { shouldDirty: true })"
-					>
-						<input
-							class="tutor-quiz-question-review-input"
-							type="radio"
-							name="<?php echo esc_attr( $review_field_name ); ?>"
-							value="incorrect"
-							:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'incorrect'"
-							tabindex="-1"
-							aria-hidden="true"
-						/>
-						<?php SvgIcon::make()->name( Icon::CROSS )->size( 20 )->render(); ?>
-					</label>
+						<label
+							class="tutor-quiz-question-review-action"
+							data-review-status="correct"
+							title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>"
+							@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'correct', { shouldDirty: true })"
+						>
+							<input
+								class="tutor-quiz-question-review-input"
+								type="radio"
+								name="<?php echo esc_attr( $review_field_name ); ?>"
+								value="correct"
+								:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'correct'"
+								tabindex="-1"
+								aria-hidden="true"
+							/>
+							<?php SvgIcon::make()->name( Icon::CHECK_2 )->size( 20 )->render(); ?>
+						</label>
+
+						<label
+							class="tutor-quiz-question-review-action"
+							data-review-status="incorrect"
+							title="<?php esc_attr_e( 'Mark as incorrect', 'tutor' ); ?>"
+							@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'incorrect', { shouldDirty: true })"
+						>
+							<input
+								class="tutor-quiz-question-review-input"
+								type="radio"
+								name="<?php echo esc_attr( $review_field_name ); ?>"
+								value="incorrect"
+								:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'incorrect'"
+								tabindex="-1"
+								aria-hidden="true"
+							/>
+							<?php SvgIcon::make()->name( Icon::CROSS )->size( 20 )->render(); ?>
+						</label>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>

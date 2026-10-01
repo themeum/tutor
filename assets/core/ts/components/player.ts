@@ -2,7 +2,7 @@ import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { isMobileDevice } from '@Core/ts/utils/util';
 
-import { isVimeoPlyr } from '@FrontendTypes/index';
+import { isVimeoPlyr, isYouTubePlyr } from '@FrontendTypes/index';
 
 export interface PlayerProps {
   config?: Plyr.Options;
@@ -51,6 +51,13 @@ export const player = (props: PlayerProps = {}): AlpinePlayerData => ({
             console.warn('Vimeo mute init failed:', err);
           }
         }
+
+        // Tab click reveals youtube controls fixed
+        if (this.plyr && isYouTubePlyr(this.plyr)) {
+          const iframe = this.plyr.elements.wrapper?.querySelector('iframe');
+          iframe?.setAttribute('tabindex', '-1');
+          iframe?.setAttribute('aria-hidden', 'true');
+        }
       });
 
       this.plyr.on('play', () => {
@@ -69,6 +76,16 @@ export const player = (props: PlayerProps = {}): AlpinePlayerData => ({
             console.warn('Vimeo unmute on play failed:', err);
           }
         }
+      });
+
+      this.plyr.on('enterfullscreen', (event) => {
+        const instance = event.detail.plyr;
+        instance?.elements.wrapper?.classList.add('is-fullscreen');
+      });
+
+      this.plyr.on('exitfullscreen', (event) => {
+        const instance = event.detail.plyr;
+        instance?.elements.wrapper?.classList.remove('is-fullscreen');
       });
     }
 
