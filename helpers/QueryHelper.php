@@ -279,6 +279,12 @@ class QueryHelper {
 	public static function make_clause( array $where ) {
 		list ( $field, $operator, $value ) = $where;
 
+		// Validate and quote the field/column name to prevent SQL injection.
+		if ( ! self::is_valid_column_name( $field ) ) {
+			return '1=0';
+		}
+
+		$quoted_field   = self::quote_sql_identifier( $field );
 		$upper_operator = strtoupper( $operator );
 
 		if ( in_array( $upper_operator, array( 'IN', 'NOT IN' ), true ) ) {
@@ -292,7 +298,7 @@ class QueryHelper {
 			$value = self::prepare_value( $value );
 		}
 
-		return "{$field} {$upper_operator} {$value}";
+		return "{$quoted_field} {$upper_operator} {$value}";
 	}
 
 	/**
@@ -707,7 +713,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function prepare_order_clause( $orderby = '', $order = 'DESC' ) {
+	public static function prepare_order_clause( $orderby = '', $order = 'DESC' ) {
 		if ( empty( $orderby ) ) {
 			return '';
 		}
@@ -731,7 +737,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function prepare_limit_clause( $limit = 0, $offset = 0 ) {
+	public static function prepare_limit_clause( $limit = 0, $offset = 0 ) {
 		if ( $limit < 1 || $offset < 0 ) {
 			return '';
 		}
@@ -779,15 +785,18 @@ class QueryHelper {
 		$output     = $args['output'] ?? 'OBJECT';
 
 		// Primary table.
-		$table            = self::prepare_table_name( $table );
-		$alias            = $args['alias'] ?? 'main';
-		$table_with_alias = "{$table} AS {$alias}";
+		$table = self::prepare_table_name( $table );
+		$alias = self::prepare_identifier( $args['alias'] ?? 'main' );
+		if ( '' === $alias ) {
+			$alias = 'main';
+		}
+		$table_with_alias = "{$table} AS `{$alias}`";
 
 		// Build clauses.
 		$select_clause   = self::prepare_select_clause( $args['select'] ?? '' );
 		$join_clause     = self::prepare_join_clause( $args['joins'] ?? array() );
 		$where_clause    = self::prepare_where_search_clause( $args['where'] ?? array(), $args['search'] ?? array() );
-		$groupby_clause  = empty( $args['groupby'] ) ? '' : 'GROUP BY ' . $args['groupby'];
+		$groupby_clause  = empty( $args['groupby'] ) || ! self::is_valid_column_name( $args['groupby'] ) ? '' : 'GROUP BY ' . self::quote_sql_identifier( $args['groupby'] );
 		$having_clause   = empty( $args['having'] ) ? '' : 'HAVING ' . $args['having'];
 		$order_by_clause = self::prepare_order_clause( $args['orderby'] ?? '', $args['order'] ?? 'DESC' );
 
@@ -1009,12 +1018,13 @@ class QueryHelper {
 				continue;
 			}
 
-			if ( is_null( $value ) ) {
-				$set .= "$key = null";
-			} else {
-				$safe_key = '`' . sanitize_key( $key ) . '`';
-				$set     .= is_numeric( $value ) ? "$safe_key = $value" : "$safe_key = '" . $value . "'";
+			$safe_key = '`' . sanitize_key( $key ) . '`';
 
+			if ( is_null( $value ) ) {
+				$set .= "{$safe_key} = null";
+			} else {
+				$prepared_value = self::prepare_value( $value );
+				$set           .= "{$safe_key} = {$prepared_value}";
 			}
 
 			$set .= ',';
@@ -1090,9 +1100,14 @@ class QueryHelper {
 	public static function column_exist( $table, $column ) {
 		global $wpdb;
 
+		$column = self::prepare_identifier( $column );
+		if ( '' === $column ) {
+			return false;
+		}
+
 		$table = self::prepare_table_name( $table );
-		$sql   = "SHOW COLUMNS FROM `{$table}` LIKE '{$column}'";
-		return $wpdb->get_var( $sql ) === $column;//phpcs:ignore
+		$sql   = $wpdb->prepare( "SHOW COLUMNS FROM `{$table}` LIKE %s", $column ); //phpcs:ignore
+		return $wpdb->get_var( $sql ) === $column; //phpcs:ignore
 	}
 
 	/**
@@ -1312,25 +1327,31 @@ class QueryHelper {
 	 * @return string
 	 */
 	public static function get_period_clause( string $column, string $period = '' ) {
+		// Validate the column name to prevent SQL injection.
+		if ( ! self::is_valid_column_name( $column ) ) {
+			return '';
+		}
+
+		$quoted_column = self::quote_sql_identifier( $column );
 		$period_clause = '';
 		switch ( $period ) {
 			case 'today':
-				$period_clause = "AND DATE($column) = CURDATE()";
+				$period_clause = "AND DATE({$quoted_column}) = CURDATE()";
 				break;
 			case 'monthly':
-				$period_clause = "AND MONTH($column) = MONTH(CURDATE()) AND YEAR($column)  = YEAR(CURDATE())";
+				$period_clause = "AND MONTH({$quoted_column}) = MONTH(CURDATE()) AND YEAR({$quoted_column}) = YEAR(CURDATE())";
 				break;
 			case 'yearly':
-				$period_clause = "AND YEAR($column) = YEAR(CURDATE())";
+				$period_clause = "AND YEAR({$quoted_column}) = YEAR(CURDATE())";
 				break;
 			case 'last30days':
-				$period_clause = "AND DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()";
+				$period_clause = "AND DATE({$quoted_column}) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()";
 				break;
 			case 'last90days':
-				$period_clause = "AND DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND CURDATE()";
+				$period_clause = "AND DATE({$quoted_column}) BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND CURDATE()";
 				break;
 			case 'last365days':
-				$period_clause = "AND DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 365 DAY) AND CURDATE()";
+				$period_clause = "AND DATE({$quoted_column}) BETWEEN DATE_SUB(CURDATE(), INTERVAL 365 DAY) AND CURDATE()";
 				break;
 			default:
 				break;
@@ -1419,8 +1440,14 @@ class QueryHelper {
 			}
 		}
 
-		// Prepare insert.
-		$columns      = array_keys( $row );
+		// Prepare insert — validate column names to prevent injection via modifier callback.
+		$columns = array_keys( $row );
+		foreach ( $columns as $col ) {
+			if ( '' === self::prepare_identifier( $col ) ) {
+				return new \WP_Error( 'invalid_column', 'Invalid column name: ' . sanitize_text_field( $col ) );
+			}
+		}
+
 		$placeholders = array_fill( 0, count( $columns ), '%s' );
 		$values       = array_values( $row );
 
