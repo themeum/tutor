@@ -356,6 +356,7 @@ class QueryHelper {
 	 * @since 4.1.1
 	 *
 	 * @param string $identifier SQL identifier to quote.
+	 *
 	 * @return string Quoted SQL identifier, or an empty string if invalid.
 	 */
 	public static function quote_sql_identifier( $identifier ) {
