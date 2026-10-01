@@ -220,7 +220,7 @@ class QueryHelper {
 
 			// Trim trailing comma.
 			$column_keys   = rtrim( $column_keys, ',' );
-			$column_values = $wpdb->prepare( $value_placeholder, $column_values ); // Escape values.
+			$column_values = $wpdb->prepare( $value_placeholder, $column_values ); //phpcs:ignore
 
 			if ( $first_key === $k ) {
 				$sql .= "INSERT INTO
@@ -279,6 +279,12 @@ class QueryHelper {
 	public static function make_clause( array $where ) {
 		list ( $field, $operator, $value ) = $where;
 
+		// Validate and quote the field/column name to prevent SQL injection.
+		if ( ! self::is_valid_column_name( $field ) ) {
+			return '1=0';
+		}
+
+		$quoted_field   = self::quote_sql_identifier( $field );
 		$upper_operator = strtoupper( $operator );
 
 		if ( in_array( $upper_operator, array( 'IN', 'NOT IN' ), true ) ) {
@@ -292,7 +298,7 @@ class QueryHelper {
 			$value = self::prepare_value( $value );
 		}
 
-		return "{$field} {$upper_operator} {$value}";
+		return "{$quoted_field} {$upper_operator} {$value}";
 	}
 
 	/**
@@ -329,6 +335,69 @@ class QueryHelper {
 			),
 			true
 		);
+	}
+
+	/**
+	 * Check if a string is a valid column name.
+	 *
+	 * @since 4.1.1
+	 *
+	 * @param string $column_name The column name to check.
+	 * Allowed: foo, foo_bar, _foo, foo.bar etc.
+	 *
+	 * @return bool True if the column name is valid, false otherwise.
+	 */
+	public static function is_valid_column_name( $column_name ) {
+		return is_string( $column_name )
+			&& (bool) preg_match( '/^[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)?$/', $column_name );
+	}
+
+	/**
+	 * Validate a single identifier part.
+	 *
+	 * @since 4.1.1
+	 *
+	 * @param string $part Raw identifier part, e.g. 'post_id'.
+	 *
+	 * @return string The same part if valid, or '' if invalid.
+	 */
+	public static function prepare_identifier( $part ) {
+		$part = (string) $part;
+
+		if ( ! preg_match( '/^[A-Za-z_][A-Za-z0-9_]*\z/', $part ) ) {
+			return '';
+		}
+
+		return $part;
+	}
+
+	/**
+	 * Safely quotes a SQL identifier or qualified identifier.
+	 *
+	 * Supports simple identifiers (e.g. `foo`) and qualified identifiers
+	 * (e.g. `u.ID`). Each identifier segment is validated before being
+	 * wrapped in backticks.
+	 *
+	 * @since 4.1.1
+	 *
+	 * @param string $identifier SQL identifier to quote.
+	 *
+	 * @return string Quoted SQL identifier, or an empty string if invalid.
+	 */
+	public static function quote_sql_identifier( $identifier ) {
+		$quoted = array();
+
+		foreach ( explode( '.', (string) $identifier ) as $part ) {
+			$part = self::prepare_identifier( $part );
+
+			if ( '' === $part ) {
+				return '';
+			}
+
+			$quoted[] = '`' . $part . '`';
+		}
+
+		return implode( '.', $quoted );
 	}
 
 	/**
@@ -454,8 +523,16 @@ class QueryHelper {
 		$like_conditions = array();
 
 		foreach ( $where as $column_name => $term ) {
-			//phpcs:ignore
-			$like_conditions[] = $wpdb->prepare( "$column_name LIKE %s", '%' . $wpdb->esc_like( $term ) . '%' );
+			if ( ! self::is_valid_column_name( $column_name ) ) {
+				continue;
+			}
+
+			$quoted_column     = self::quote_sql_identifier( $column_name );
+			$like_conditions[] = $wpdb->prepare(
+				//phpcs:ignore
+				sprintf( '%s LIKE %%s', $quoted_column ),
+				'%' . $wpdb->esc_like( $term ) . '%'
+			);
 		}
 
 		$where_clause = implode( ' OR ', $like_conditions );
@@ -636,7 +713,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function prepare_order_clause( $orderby = '', $order = 'DESC' ) {
+	public static function prepare_order_clause( $orderby = '', $order = 'DESC' ) {
 		if ( empty( $orderby ) ) {
 			return '';
 		}
@@ -660,7 +737,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function prepare_limit_clause( $limit = 0, $offset = 0 ) {
+	public static function prepare_limit_clause( $limit = 0, $offset = 0 ) {
 		if ( $limit < 1 || $offset < 0 ) {
 			return '';
 		}
@@ -708,15 +785,18 @@ class QueryHelper {
 		$output     = $args['output'] ?? 'OBJECT';
 
 		// Primary table.
-		$table            = self::prepare_table_name( $table );
-		$alias            = $args['alias'] ?? 'main';
-		$table_with_alias = "{$table} AS {$alias}";
+		$table = self::prepare_table_name( $table );
+		$alias = self::prepare_identifier( $args['alias'] ?? 'main' );
+		if ( '' === $alias ) {
+			$alias = 'main';
+		}
+		$table_with_alias = "{$table} AS `{$alias}`";
 
 		// Build clauses.
 		$select_clause   = self::prepare_select_clause( $args['select'] ?? '' );
 		$join_clause     = self::prepare_join_clause( $args['joins'] ?? array() );
 		$where_clause    = self::prepare_where_search_clause( $args['where'] ?? array(), $args['search'] ?? array() );
-		$groupby_clause  = empty( $args['groupby'] ) ? '' : 'GROUP BY ' . $args['groupby'];
+		$groupby_clause  = empty( $args['groupby'] ) || ! self::is_valid_column_name( $args['groupby'] ) ? '' : 'GROUP BY ' . self::quote_sql_identifier( $args['groupby'] );
 		$having_clause   = empty( $args['having'] ) ? '' : 'HAVING ' . $args['having'];
 		$order_by_clause = self::prepare_order_clause( $args['orderby'] ?? '', $args['order'] ?? 'DESC' );
 
@@ -805,15 +885,16 @@ class QueryHelper {
 	public static function get_row( string $table, array $where, string $order_by, string $order = 'DESC', string $output = 'OBJECT' ) {
 		global $wpdb;
 
-		$table        = self::prepare_table_name( $table );
-		$where_clause = self::prepare_where_clause( $where );
+		$table           = self::prepare_table_name( $table );
+		$where_clause    = self::prepare_where_clause( $where );
+		$order_by_clause = self::prepare_order_clause( $order_by, $order );
 
 		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT *
 				FROM {$table}
 				WHERE {$where_clause}
-				ORDER BY {$order_by} {$order}
+				{$order_by_clause}
 				LIMIT %d
 			",
 			1
@@ -851,14 +932,15 @@ class QueryHelper {
 			$where_clause = "WHERE {$where_clause}";
 		}
 
-		$limit        = (int) sanitize_text_field( $limit );
-		$limit_clause = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
+		$limit           = intval( $limit );
+		$limit_clause    = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
+		$order_by_clause = self::prepare_order_clause( $order_by, $order );
 
 		//phpcs:disable
 		$query = "SELECT *
 				FROM {$table}
 				{$where_clause}
-				ORDER BY {$order_by} {$order}
+				{$order_by_clause}
 				{$limit_clause}";
 
 		return $wpdb->get_results(
@@ -885,24 +967,35 @@ class QueryHelper {
 	public static function update_where_in( string $table, array $data, string $where_in, string $where_col = 'ID' ) {
 		global $wpdb;
 
-		$table = self::prepare_table_name( $table );
+		$table     = self::prepare_table_name( $table );
+		$where_col = self::quote_sql_identifier( $where_col );
 		if ( empty( $where_in ) || empty( $where_col ) ) {
 			return false;
 		}
+
+		$in_array  = is_array( $where_in ) ? $where_in : explode( ',', $where_in );
+		$in_clause = self::prepare_in_clause( array_filter( array_map( 'trim', $in_array ) ) );
+
+		if ( empty( $in_clause ) ) {
+			return false;
+		}
+
 		$set_clause = self::prepare_set_clause( $data );
 		if ( '' === $set_clause ) {
 			return false;
 		}
-		// @codingStandardsIgnoreStart
+
+		//phpcs:disable
 		$query      = $wpdb->prepare(
 			"UPDATE {$table}
 				{$set_clause}
-				WHERE $where_col IN ( $where_in )
+				WHERE {$where_col} IN ( {$in_clause} )
 				AND 1 = %d
 			",
 			1
 		);
 		return $wpdb->query( $query ) ? true : false;
+		//phpcs:enable
 	}
 
 	/**
@@ -915,24 +1008,26 @@ class QueryHelper {
 	 * @return string
 	 */
 	public static function prepare_set_clause( array $data ) {
-		$set   = '';
+		$set = '';
 		foreach ( $data as $key => $value ) {
-			if ( $key === array_key_first ( $data ) ) {
-				$set .= "SET ";
+			if ( array_key_first( $data ) === $key ) {
+				$set .= 'SET ';
 			}
 			// Multi dimension not allowed.
 			if ( is_array( $value ) ) {
 				continue;
 			}
 
+			$safe_key = '`' . sanitize_key( $key ) . '`';
+
 			if ( is_null( $value ) ) {
-				$set  .= "$key = null";
+				$set .= "{$safe_key} = null";
 			} else {
-				$value = esc_sql( sanitize_text_field( $value ) );
-				$set  .= is_numeric( $value ) ? "$key = $value" : "$key = '" . $value ."'";
+				$prepared_value = self::prepare_value( $value );
+				$set           .= "{$safe_key} = {$prepared_value}";
 			}
-			
-			$set .= ",";
+
+			$set .= ',';
 		}
 		return rtrim( $set, ',' );
 	}
@@ -953,8 +1048,8 @@ class QueryHelper {
 			$escaped_value = $wpdb->prepare( '%d', $value );
 		} elseif ( is_float( $value ) ) {
 			list( $whole, $decimal ) = explode( '.', $value );
-			$expression = '%.'. strlen( $decimal ) . 'f';
-			$escaped_value = $wpdb->prepare( $expression, $value );
+			$expression              = '%.' . strlen( $decimal ) . 'f';
+			$escaped_value           = $wpdb->prepare( $expression, $value );//phpcs:ignore
 		} else {
 			$escaped_value = $wpdb->prepare( '%s', $value );
 		}
@@ -989,7 +1084,7 @@ class QueryHelper {
 
 		$table = self::prepare_table_name( $table );
 		$sql   = "SHOW TABLES LIKE '{$table}'";
-		return $wpdb->get_var( $sql ) === $table;
+		return $wpdb->get_var( $sql ) === $table;//phpcs:ignore
 	}
 
 	/**
@@ -1005,9 +1100,14 @@ class QueryHelper {
 	public static function column_exist( $table, $column ) {
 		global $wpdb;
 
+		$column = self::prepare_identifier( $column );
+		if ( '' === $column ) {
+			return false;
+		}
+
 		$table = self::prepare_table_name( $table );
-		$sql   = "SHOW COLUMNS FROM {$table} LIKE '{$column}'";
-		return $wpdb->get_var( $sql ) === $column;
+		$sql   = $wpdb->prepare( "SHOW COLUMNS FROM `{$table}` LIKE %s", $column ); //phpcs:ignore
+		return $wpdb->get_var( $sql ) === $column; //phpcs:ignore
 	}
 
 	/**
@@ -1038,8 +1138,8 @@ class QueryHelper {
 		string $primary_table,
 		array $joining_tables,
 		array $select_columns,
-		array $where = [],
-		array $search = [],
+		array $where = array(),
+		array $search = array(),
 		string $order_by = '',
 		$limit = 10,
 		$offset = 0,
@@ -1065,11 +1165,11 @@ class QueryHelper {
 				{$limit_clause}";
 
 		if ( $get_row ) {
-			return $wpdb->get_row( $query, $output );
+			return $wpdb->get_row( $query, $output );//phpcs:ignore
 		}
 
-		$results     = $wpdb->get_results( $query, $output );
-		$has_records = is_array( $results ) && count( $results );	
+		$results     = $wpdb->get_results( $query, $output );//phpcs:ignore
+		$has_records = is_array( $results ) && count( $results );
 		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
 
 		// Throw exception if error occurred.
@@ -1099,18 +1199,18 @@ class QueryHelper {
 	 * @param string $count_column column name to count, default id.
 	 *
 	 * @return int
+	 *
+	 * @throws \Exception If an error occurred.
 	 */
-	public static function get_count( $table, $where = [], $search = [], $count_column = 'id' ): int {
+	public static function get_count( $table, $where = array(), $search = array(), $count_column = 'id' ): int {
 		global $wpdb;
 
-		$table         = self::prepare_table_name( $table );
-		$where_clause  = self::prepare_where_search_clause( $where, $search, 'AND' );
+		$table        = self::prepare_table_name( $table );
+		$where_clause = self::prepare_where_search_clause( $where, $search, 'AND' );
+		$count_column = '*' === $count_column ? '*' : self::quote_sql_identifier( $count_column );
 
-		$count = $wpdb->get_var(
-			"SELECT COUNT($count_column)
-			FROM $table
-			{$where_clause}"
-		);
+		//phpcs:ignore
+		$count = $wpdb->get_var( "SELECT COUNT($count_column) FROM $table {$where_clause}" );
 
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
@@ -1134,22 +1234,24 @@ class QueryHelper {
 	 * @param string $count_column column name to count, default id.
 	 *
 	 * @return int
+	 *
+	 * @throws \Exception If an error occurred.
 	 */
-	public static function get_joined_count(string $primary_table, array $joining_tables, array $where = [], array $search = [], string $count_column = '*'): int {
+	public static function get_joined_count( string $primary_table, array $joining_tables, array $where = array(), array $search = array(), string $count_column = '*' ): int {
 		global $wpdb;
-		
+
 		$from_clause  = self::prepare_table_name( $primary_table );
 		$join_clauses = self::prepare_join_clause( $joining_tables );
 		$where_clause = self::prepare_where_search_clause( $where, $search, 'AND' );
+		$count_column = '*' === $count_column ? '*' : self::quote_sql_identifier( $count_column );
 
-		$count_query = "
-			SELECT COUNT($count_column) as total_count
+		$count_query = "SELECT COUNT($count_column) as total_count
 			FROM {$from_clause}
 			{$join_clauses}
 			{$where_clause}
 		";
 
-		$total_count = $wpdb->get_var( $count_query );
+		$total_count = $wpdb->get_var( $count_query );//phpcs:ignore
 
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
@@ -1184,33 +1286,33 @@ class QueryHelper {
 		$where_clause    = self::prepare_where_search_clause( $where, $search, 'AND' );
 		$order_by_clause = self::prepare_order_clause( $order_by, $order );
 		$limit_clause    = self::prepare_limit_clause( $limit, $offset );
-	
+
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
 		}
-	
+
 		$query = "SELECT SQL_CALC_FOUND_ROWS *
 			 FROM {$table}
 			 {$where_clause}
 			 {$order_by_clause}
 			 {$limit_clause}";
-	
-		$results     = $wpdb->get_results( $query, $output );
+
+		$results     = $wpdb->get_results( $query, $output );//phpcs:ignore
 		$has_records = is_array( $results ) && count( $results );
 		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
-	
+
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
 		}
-	
+
 		// Prepare response array.
 		$response = array(
 			'results'     => $results,
 			'total_count' => $total_count,
 		);
-	
+
 		return $response;
 	}
 
@@ -1225,25 +1327,31 @@ class QueryHelper {
 	 * @return string
 	 */
 	public static function get_period_clause( string $column, string $period = '' ) {
+		// Validate the column name to prevent SQL injection.
+		if ( ! self::is_valid_column_name( $column ) ) {
+			return '';
+		}
+
+		$quoted_column = self::quote_sql_identifier( $column );
 		$period_clause = '';
 		switch ( $period ) {
 			case 'today':
-				$period_clause = "AND DATE($column) = CURDATE()";
+				$period_clause = "AND DATE({$quoted_column}) = CURDATE()";
 				break;
 			case 'monthly':
-				$period_clause = "AND MONTH($column) = MONTH(CURDATE()) AND YEAR($column)  = YEAR(CURDATE())";
+				$period_clause = "AND MONTH({$quoted_column}) = MONTH(CURDATE()) AND YEAR({$quoted_column}) = YEAR(CURDATE())";
 				break;
 			case 'yearly':
-				$period_clause = "AND YEAR($column) = YEAR(CURDATE())";
+				$period_clause = "AND YEAR({$quoted_column}) = YEAR(CURDATE())";
 				break;
 			case 'last30days':
-				$period_clause = "AND DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()";
+				$period_clause = "AND DATE({$quoted_column}) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()";
 				break;
 			case 'last90days':
-				$period_clause = "AND DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND CURDATE()";
+				$period_clause = "AND DATE({$quoted_column}) BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND CURDATE()";
 				break;
 			case 'last365days':
-				$period_clause = "AND DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 365 DAY) AND CURDATE()";
+				$period_clause = "AND DATE({$quoted_column}) BETWEEN DATE_SUB(CURDATE(), INTERVAL 365 DAY) AND CURDATE()";
 				break;
 			default:
 				break;
@@ -1259,7 +1367,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	public static function get_last_query(){
+	public static function get_last_query() {
 		global $wpdb;
 		return $wpdb->last_query;
 	}
@@ -1287,7 +1395,7 @@ class QueryHelper {
 	 */
 	public static function prepare_table_name( string $table_name ) {
 		$table_prefix = self::get_table_prefix();
-		if ( strpos( $table_name,$table_prefix ) !== 0 ) {
+		if ( strpos( $table_name, $table_prefix ) !== 0 ) {
 			$table_name = $table_prefix . $table_name;
 		}
 
@@ -1299,9 +1407,9 @@ class QueryHelper {
 	 *
 	 * @since 3.7.0
 	 *
-	 * @param string             $table_name name of the database table (with prefix if needed).
-	 * @param array              $where      associative array of WHERE conditions.
-	 * @param callable|null      $modifier   optional callback to modify or exclude fields before insertion.
+	 * @param string        $table_name name of the database table (with prefix if needed).
+	 * @param array         $where      associative array of WHERE conditions.
+	 * @param callable|null $modifier   optional callback to modify or exclude fields before insertion.
 	 *
 	 * @return int|WP_Error      New row ID on success, or WP_Error on failure.
 	 */
@@ -1313,15 +1421,17 @@ class QueryHelper {
 			return new \WP_Error( 'missing_where', 'No WHERE condition provided.' );
 		}
 
+		//phpcs:disable
 		$where_clause = self::prepare_where_clause( $where );
 		$sql          = $wpdb->prepare( "SELECT * FROM `$table_name` WHERE {$where_clause} LIMIT %d", 1 );
 		$row          = $wpdb->get_row( $sql, ARRAY_A );
+		//phpcs:enable
 
 		if ( ! $row ) {
 			return new \WP_Error( 'not_found', 'No matching row found to duplicate.' );
 		}
 
-		// Apply user-defined modifications (ex: remove ID, change field value)
+		// Apply user-defined modifications (ex: remove ID, change field value).
 		if ( is_callable( $modifier ) ) {
 			$row = call_user_func( $modifier, $row );
 
@@ -1330,18 +1440,26 @@ class QueryHelper {
 			}
 		}
 
-		// Prepare insert
-		$columns      = array_keys( $row );
+		// Prepare insert — validate column names to prevent injection via modifier callback.
+		$columns = array_keys( $row );
+		foreach ( $columns as $col ) {
+			if ( '' === self::prepare_identifier( $col ) ) {
+				return new \WP_Error( 'invalid_column', 'Invalid column name: ' . sanitize_text_field( $col ) );
+			}
+		}
+
 		$placeholders = array_fill( 0, count( $columns ), '%s' );
 		$values       = array_values( $row );
 
+		//phpcs:disable
 		$insert_sql = $wpdb->prepare(
-			"INSERT INTO `$table_name` (`" . implode( '`, `', $columns ) . "`) 
-			VALUES (" . implode( ', ', $placeholders ) . ")",
+			"INSERT INTO `$table_name` (`" . implode( '`, `', $columns ) . '`) 
+			VALUES (' . implode( ', ', $placeholders ) . ')',
 			...$values
 		);
 
 		$result = $wpdb->query( $insert_sql );
+		//phpcs:enable
 
 		if ( false === $result ) {
 			return new \WP_Error( 'insert_failed', 'Failed to insert duplicate row.' );
@@ -1374,17 +1492,18 @@ class QueryHelper {
 	 *
 	 * @return array Returns an array of table columns and their details.
 	 */
-	public static function get_table_schema( $table_name) {
-		
+	public static function get_table_schema( $table_name ) {
+
 		global $wpdb;
 
-		$result = $wpdb->get_results( "DESCRIBE {$table_name}", ARRAY_A );
+		$table_name = self::prepare_table_name( $table_name );
+		//phpcs:ignore
+		$result = $wpdb->get_results( "DESCRIBE `{$table_name}`", ARRAY_A );
 
 		// If error occurred then throw new exception.
-		if ($wpdb->last_error) {
-			throw new \Exception($wpdb->last_error);
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
 		}
-
 
 		return $result;
 	}
