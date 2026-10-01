@@ -3,7 +3,7 @@
  * DB Class Unit Test
  *
  * @package Tutor\Test
- * @since 4.2.0
+ * @since 4.1.2
  */
 
 namespace TutorTest;

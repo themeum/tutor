@@ -10,8 +10,9 @@
 namespace Tutor\Helpers;
 
 /**
- * Do the common db operations through helper
- * methods
+ * Do the common db operations through helper methods.
+ *
+ * @deprecated since 4.1.2. Use \Tutor\Helpers\DB instead.
  */
 class QueryHelper {
 

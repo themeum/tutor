@@ -7,7 +7,7 @@
  * consistent use of $wpdb->prepare().
  *
  * @package Tutor\Helpers
- * @since 4.2.0
+ * @since 4.1.2
  */
 
 namespace Tutor\Helpers;
@@ -26,14 +26,14 @@ namespace Tutor\Helpers;
  *       ->limit(10)
  *       ->get();
  *
- * @since 4.2.0
+ * @since 4.1.2
  */
 class DB {
 
 	/**
 	 * Table name (with prefix).
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var string
 	 */
@@ -42,7 +42,7 @@ class DB {
 	/**
 	 * Table alias.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var string
 	 */
@@ -51,7 +51,7 @@ class DB {
 	/**
 	 * Columns to select.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var array
 	 */
@@ -60,7 +60,7 @@ class DB {
 	/**
 	 * Raw select expressions.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var array
 	 */
@@ -69,7 +69,7 @@ class DB {
 	/**
 	 * Whether to apply DISTINCT.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var bool
 	 */
@@ -78,7 +78,7 @@ class DB {
 	/**
 	 * JOIN clauses.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var array
 	 */
@@ -89,7 +89,7 @@ class DB {
 	 *
 	 * Each entry: [ 'sql' => string, 'boolean' => 'AND'|'OR' ].
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var array
 	 */
@@ -98,7 +98,7 @@ class DB {
 	/**
 	 * GROUP BY columns.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var array
 	 */
@@ -107,7 +107,7 @@ class DB {
 	/**
 	 * HAVING clause conditions.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var array
 	 */
@@ -116,7 +116,7 @@ class DB {
 	/**
 	 * ORDER BY clauses.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var array
 	 */
@@ -125,7 +125,7 @@ class DB {
 	/**
 	 * LIMIT value.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var int|null
 	 */
@@ -134,7 +134,7 @@ class DB {
 	/**
 	 * OFFSET value.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var int
 	 */
@@ -143,7 +143,7 @@ class DB {
 	/**
 	 * Supported comparison operators.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @var string[]
 	 */
@@ -175,7 +175,7 @@ class DB {
 	 * The table name will be automatically prefixed with the WordPress
 	 * table prefix if not already present.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $table Table name (without prefix is fine).
 	 *
@@ -197,7 +197,7 @@ class DB {
 	 *
 	 * Accepts one or more column names. Multiple calls are additive.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string ...$columns Column names to select.
 	 *
@@ -219,7 +219,7 @@ class DB {
 	 * Use this for aggregate functions, computed columns, or any SQL
 	 * expression that cannot be represented as a simple column name.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $expression Raw SQL expression, e.g., 'COUNT(*) AS total'.
 	 * @param array  $bindings   Optional values to bind to placeholders.
@@ -241,7 +241,7 @@ class DB {
 	/**
 	 * Apply DISTINCT to the query.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return self
 	 */
@@ -254,7 +254,7 @@ class DB {
 	/**
 	 * Set a table alias.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $alias Alias for the primary table.
 	 *
@@ -275,7 +275,7 @@ class DB {
 	/**
 	 * Add an INNER JOIN clause.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $table    Table to join (may include alias, e.g., 'users AS u').
 	 * @param string $first    First column in the ON condition.
@@ -291,7 +291,7 @@ class DB {
 	/**
 	 * Add a LEFT JOIN clause.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $table    Table to join.
 	 * @param string $first    First column.
@@ -307,7 +307,7 @@ class DB {
 	/**
 	 * Add a RIGHT JOIN clause.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $table    Table to join.
 	 * @param string $first    First column.
@@ -326,7 +326,7 @@ class DB {
 	 * Validates join type, table alias, columns, and operator before
 	 * adding to the query.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $type     Join type (INNER, LEFT, RIGHT, CROSS).
 	 * @param string $table    Table name, may include alias e.g., 'users AS u'.
@@ -376,7 +376,7 @@ class DB {
 	 * Three-argument form uses custom operator: where('col', '>=', 5).
 	 * Passing null as value auto-converts to IS NULL / IS NOT NULL.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column           Column name.
 	 * @param mixed  $operator_or_value Operator (if 3 args) or value (if 2 args).
@@ -391,7 +391,7 @@ class DB {
 	/**
 	 * Add an OR WHERE condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column           Column name.
 	 * @param mixed  $operator_or_value Operator or value.
@@ -406,7 +406,7 @@ class DB {
 	/**
 	 * Add a WHERE IN condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param array  $values Array of values.
@@ -420,7 +420,7 @@ class DB {
 	/**
 	 * Add a WHERE NOT IN condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param array  $values Array of values.
@@ -434,7 +434,7 @@ class DB {
 	/**
 	 * Add an OR WHERE IN condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param array  $values Array of values.
@@ -448,7 +448,7 @@ class DB {
 	/**
 	 * Add an OR WHERE NOT IN condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param array  $values Array of values.
@@ -462,7 +462,7 @@ class DB {
 	/**
 	 * Add a WHERE IS NULL condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 *
@@ -482,7 +482,7 @@ class DB {
 	/**
 	 * Add a WHERE IS NOT NULL condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 *
@@ -502,7 +502,7 @@ class DB {
 	/**
 	 * Add an OR WHERE IS NULL condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 *
@@ -522,7 +522,7 @@ class DB {
 	/**
 	 * Add an OR WHERE IS NOT NULL condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 *
@@ -542,7 +542,7 @@ class DB {
 	/**
 	 * Add a WHERE BETWEEN condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param mixed  $min    Minimum value.
@@ -557,7 +557,7 @@ class DB {
 	/**
 	 * Add a WHERE NOT BETWEEN condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param mixed  $min    Minimum value.
@@ -572,7 +572,7 @@ class DB {
 	/**
 	 * Add an OR WHERE BETWEEN condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param mixed  $min    Minimum value.
@@ -587,7 +587,7 @@ class DB {
 	/**
 	 * Add an OR WHERE NOT BETWEEN condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param mixed  $min    Minimum value.
@@ -605,7 +605,7 @@ class DB {
 	 * The value is automatically wrapped with '%' wildcards and escaped
 	 * using $wpdb->esc_like() to prevent LIKE injection.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param string $value  Search term (auto-wrapped with % wildcards).
@@ -619,7 +619,7 @@ class DB {
 	/**
 	 * Add a WHERE NOT LIKE condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param string $value  Search term.
@@ -633,7 +633,7 @@ class DB {
 	/**
 	 * Add an OR WHERE LIKE condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param string $value  Search term.
@@ -647,7 +647,7 @@ class DB {
 	/**
 	 * Add an OR WHERE NOT LIKE condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name.
 	 * @param string $value  Search term.
@@ -664,7 +664,7 @@ class DB {
 	 * Use $wpdb->prepare() format specifiers (%s, %d, %f) in the expression
 	 * and pass corresponding values in the bindings array.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $expression Raw SQL expression, e.g., 'DATE(col) = %s'.
 	 * @param array  $bindings   Optional values to bind.
@@ -678,7 +678,7 @@ class DB {
 	/**
 	 * Add a raw OR WHERE expression.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $expression Raw SQL expression.
 	 * @param array  $bindings   Optional values to bind.
@@ -696,7 +696,7 @@ class DB {
 	/**
 	 * Add GROUP BY columns.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string ...$columns Column names to group by.
 	 *
@@ -719,7 +719,7 @@ class DB {
 	/**
 	 * Add a raw HAVING expression.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $expression Raw SQL expression, e.g., 'COUNT(*) > %d'.
 	 * @param array  $bindings   Optional values to bind.
@@ -747,7 +747,7 @@ class DB {
 	 *
 	 * Multiple calls add multiple sort columns.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column    Column name.
 	 * @param string $direction ASC or DESC, default ASC.
@@ -768,7 +768,7 @@ class DB {
 	/**
 	 * Add a raw ORDER BY expression.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $expression Raw SQL expression.
 	 * @param array  $bindings   Optional values to bind.
@@ -790,7 +790,7 @@ class DB {
 	/**
 	 * Order results by the given column descending (default 'id').
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name, default 'id'.
 	 *
@@ -803,7 +803,7 @@ class DB {
 	/**
 	 * Order results by the given column ascending (default 'id').
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name, default 'id'.
 	 *
@@ -820,7 +820,7 @@ class DB {
 	/**
 	 * Set the query LIMIT.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param int $limit Number of rows to return.
 	 *
@@ -835,7 +835,7 @@ class DB {
 	/**
 	 * Set the query OFFSET.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param int $offset Number of rows to skip.
 	 *
@@ -854,7 +854,7 @@ class DB {
 	/**
 	 * Execute the query and return all matching rows.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $output Output type: OBJECT, ARRAY_A, ARRAY_N.
 	 *
@@ -874,7 +874,7 @@ class DB {
 	/**
 	 * Execute the query and return the first matching row.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $output Output type: OBJECT, ARRAY_A, ARRAY_N.
 	 *
@@ -898,7 +898,7 @@ class DB {
 	/**
 	 * Get the count of rows matching the query.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column to count, default '*'.
 	 *
@@ -944,7 +944,7 @@ class DB {
 	/**
 	 * Execute the query with pagination.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param int    $per_page     Results per page.
 	 * @param int    $current_page Current page number (1-indexed).
@@ -989,7 +989,7 @@ class DB {
 	/**
 	 * Get a single column value from the first matching row.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column name to retrieve.
 	 *
@@ -1029,7 +1029,7 @@ class DB {
 	 * If a key column is provided, the resulting array will use that column's
 	 * values as array keys.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string      $column Column value to retrieve.
 	 * @param string|null $key    Optional column to use as array key.
@@ -1074,7 +1074,7 @@ class DB {
 	/**
 	 * Determine if any matching records exist for the current query.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return bool True if at least one matching record exists.
 	 */
@@ -1085,7 +1085,7 @@ class DB {
 	/**
 	 * Find a single record by its primary key.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param int|string $id          Primary key value.
 	 * @param string     $primary_key Primary key column name, default 'id'.
@@ -1100,7 +1100,7 @@ class DB {
 	/**
 	 * Apply the given callback if the condition is truthy.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param mixed         $condition Truthy/falsy condition.
 	 * @param callable      $callback         Callback receiving ($this, $condition).
@@ -1123,7 +1123,7 @@ class DB {
 	 *
 	 * Uses $wpdb->insert() which automatically handles escaping.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param array $data   Assoc array of column => value pairs.
 	 * @param array $format Optional format specifiers (%s, %d, %f) for each value.
@@ -1151,7 +1151,7 @@ class DB {
 	 * All rows must have the same columns. Values are individually escaped
 	 * using $wpdb->prepare(). NULL values are inserted as SQL NULL.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param array $rows Array of assoc arrays, each representing a row.
 	 *
@@ -1201,7 +1201,7 @@ class DB {
 	 * All SET values are individually escaped using $wpdb->prepare().
 	 * NULL values produce `SET column = NULL`.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param array $data Assoc array of column => value pairs to update.
 	 *
@@ -1252,7 +1252,7 @@ class DB {
 	 * WARNING: Calling delete() without any where() conditions will
 	 * delete ALL rows from the table.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @throws \Exception If a database error occurs.
 	 *
@@ -1293,7 +1293,7 @@ class DB {
 	 * Useful for debugging and logging. Returns the SELECT query as it
 	 * would be sent to the database.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string The generated SQL string.
 	 */
@@ -1319,7 +1319,7 @@ class DB {
 	 * Handles two-argument (default '=') and three-argument (custom operator)
 	 * forms. Null values are auto-converted to IS NULL / IS NOT NULL.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column           Column name.
 	 * @param mixed  $operator_or_value Operator or value.
@@ -1372,7 +1372,7 @@ class DB {
 	/**
 	 * Internal method to add WHERE IN / NOT IN conditions.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column  Column name.
 	 * @param array  $values  Array of values.
@@ -1399,7 +1399,7 @@ class DB {
 	/**
 	 * Internal method for BETWEEN / NOT BETWEEN conditions.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column  Column name.
 	 * @param mixed  $min     Minimum value.
@@ -1430,7 +1430,7 @@ class DB {
 	 *
 	 * Escapes the value with $wpdb->esc_like() and wraps with '%' wildcards.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column  Column name.
 	 * @param string $value   Search term.
@@ -1460,7 +1460,7 @@ class DB {
 	/**
 	 * Internal method for raw WHERE expressions.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $expression Raw SQL expression.
 	 * @param array  $bindings   Values to bind.
@@ -1490,7 +1490,7 @@ class DB {
 	/**
 	 * Build the complete SELECT query string.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param bool $calc_found_rows Whether to include SQL_CALC_FOUND_ROWS.
 	 *
@@ -1549,7 +1549,7 @@ class DB {
 	/**
 	 * Build SELECT column list.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -1562,7 +1562,7 @@ class DB {
 	/**
 	 * Build FROM clause with optional alias.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -1577,7 +1577,7 @@ class DB {
 	/**
 	 * Build JOIN clauses.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -1591,7 +1591,7 @@ class DB {
 	 * Joins conditions with their respective boolean operators (AND/OR).
 	 * The first condition's boolean is always omitted.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -1615,7 +1615,7 @@ class DB {
 	/**
 	 * Build GROUP BY clause (without the GROUP BY keywords).
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -1626,7 +1626,7 @@ class DB {
 	/**
 	 * Build HAVING clause (without the HAVING keyword).
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -1637,7 +1637,7 @@ class DB {
 	/**
 	 * Build ORDER BY clause (without the ORDER BY keywords).
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -1648,7 +1648,7 @@ class DB {
 	/**
 	 * Build LIMIT/OFFSET clause.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -1669,7 +1669,7 @@ class DB {
 	 *
 	 * Allows: column, table.column, t.*, *, _col, col123, etc.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $column Column identifier.
 	 *
@@ -1682,7 +1682,7 @@ class DB {
 	/**
 	 * Validate a SQL identifier (table name, alias).
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $identifier Identifier to validate.
 	 *
@@ -1695,7 +1695,7 @@ class DB {
 	/**
 	 * Check whether a comparison operator is supported.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $operator SQL operator.
 	 *
@@ -1708,7 +1708,7 @@ class DB {
 	/**
 	 * Get the wpdb format placeholder for a value based on its PHP type.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param mixed $value Value to determine placeholder for.
 	 *
@@ -1736,7 +1736,7 @@ class DB {
 	 * Numbers and booleans are formatted accordingly; strings are escaped and quoted.
 	 * NULL is returned as the unquoted literal string 'NULL'.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param mixed $value Value to prepare.
 	 *
@@ -1774,7 +1774,7 @@ class DB {
 	/**
 	 * Make sanitized SQL IN clause values from an array.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param array $values Array of scalar values.
 	 *
@@ -1794,7 +1794,7 @@ class DB {
 	/**
 	 * Prepare table name with WordPress prefix if not already prefixed.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @param string $table Table name.
 	 *
@@ -1814,7 +1814,7 @@ class DB {
 	/**
 	 * Get the WordPress database table prefix.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string Table prefix.
 	 */
@@ -1827,7 +1827,7 @@ class DB {
 	/**
 	 * Get the last executed query from $wpdb.
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 *
 	 * @return string Last executed SQL query.
 	 */
