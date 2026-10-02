@@ -6,6 +6,7 @@ use Ollyo\PaymentHub\Core\Support\Path;
 use Ollyo\PaymentHub\Core\Support\System;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 use Ollyo\PaymentHub\Exceptions\HttpRequestException;
+use Tutor\Helpers\HttpHelper;
 
 /**
  * Paypal Helper Class
@@ -418,5 +419,29 @@ final class Helper {
 				'address'            => self::format_address( $shipping_address ),
 			),
 		);
+	}
+
+	/**
+	 * Retrieves the refund status based on the provided links and type.
+	 *
+	 * @param array       $links An array of links provided by the PayPal API.
+	 * @param string|null $type The type of link to use.
+	 *
+	 * @since 1.0.0
+	 */
+	private function getRefundStatus( $links, $type = 'self' ): ?string {
+		$url = self::getUrl( $links, $type );
+
+		$requestData = array(
+			'url'     => $url,
+			'options' => array(
+				'headers' => self::$headers,
+				'method'  => HttpHelper::METHOD_GET,
+			),
+		);
+
+		$responseData = System::sendHttpRequest( $requestData );
+
+		return strtolower( $responseData->status ) ?? null;
 	}
 }

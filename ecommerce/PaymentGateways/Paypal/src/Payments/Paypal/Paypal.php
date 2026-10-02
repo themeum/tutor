@@ -11,6 +11,7 @@ use Ollyo\PaymentHub\Exceptions\NotFoundException;
 use Ollyo\PaymentHub\Exceptions\InvalidDataException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 use Ollyo\PaymentHub\Exceptions\HttpRequestException;
+use Tutor\Helpers\HttpHelper;
 
 class Paypal extends BasePayment {
 
@@ -113,9 +114,6 @@ class Paypal extends BasePayment {
 	 * @since  3.0.0
 	 */
 	public function prepareData( $data ): array {
-		if ( empty( $data ) ) {
-			return array();
-		}
 
 		$this->orderID = $data->order_id;
 		$type          = $data->type ?? 'one-time';
@@ -332,28 +330,6 @@ class Paypal extends BasePayment {
 	}
 
 	/**
-	 * Retrieves the refund status based on the provided links and type.
-	 *
-	 * @param array       $links An array of links provided by the PayPal API.
-	 * @param string|null $type The type of link to use.
-	 *
-	 * @since 1.0.0
-	 */
-	private function getRefundStatus( $links, $type = 'self' ): ?string {
-		$url = $this->getUrl( $links, $type );
-
-		$requestData = (object) array(
-			'method'  => 'get',
-			'url'     => $url,
-			'options' => array( 'headers' => $this->headers ),
-		);
-
-		$responseData = System::sendHttpRequest( $requestData );
-
-		return strtolower( $responseData->status ) ?? null;
-	}
-
-	/**
 	 * Creates a webhook for PayPal notifications if it does not already exist.
 	 *
 	 * @return object|null Returns the webhook object or null if already registered.
@@ -367,10 +343,12 @@ class Paypal extends BasePayment {
 
 			$webhookApiUrl = $this->config->get( 'api_url' ) . '/v1/notifications/webhooks';
 
-			$requestData = (object) array(
-				'method'  => 'get',
+			$requestData = array(
 				'url'     => $webhookApiUrl,
-				'options' => array( 'headers' => $this->headers ),
+				'options' => array(
+					'headers' => $this->headers,
+					'method'  => HttpHelper::METHOD_GET,
+				),
 			);
 
 			$responseData = System::sendHttpRequest( $requestData );
@@ -411,12 +389,12 @@ class Paypal extends BasePayment {
 				'event_types' => array( (object) array( 'name' => 'PAYMENT.CAPTURE.REFUNDED' ) ),
 			);
 
-			$requestData = (object) array(
-				'method'  => 'post',
+			$requestData = array(
 				'url'     => $webhookApiUrl,
 				'options' => array(
 					'headers' => $this->headers,
 					'body'    => json_encode( $body ),
+					'method'  => HttpHelper::METHOD_POST,
 				),
 			);
 
