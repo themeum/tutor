@@ -80,27 +80,9 @@ class REST_Quiz {
 		global $wpdb;
 
 		$quiz_id   = Input::sanitize( $request->get_param( 'id' ), 0, Input::TYPE_INT );
-		$wpdb->q_t = $wpdb->prefix . $this->t_quiz_question; // Question table.
+		$quiz_post = get_post( $quiz_id );
 
-		$wpdb->q_a_t = $wpdb->prefix . $this->t_quiz_ques_ans; // Question answer table.
-
-		$quiz = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT 
-					ID,
-					post_title,
-					post_content,
-					post_name
-				FROM {$wpdb->posts}
-				WHERE post_type = %s 
-					AND ID = %d
-				",
-				$this->post_type,
-				$quiz_id
-			)
-		);
-
-		if ( ! isset( $quiz ) ) {
+		if ( ! $quiz_post || $this->post_type !== $quiz_post->post_type || 'publish' !== $quiz_post->post_status ) {
 			$response = array(
 				'code'    => 'not_found',
 				'message' => __( 'Quiz not found for given ID', 'tutor' ),
@@ -109,8 +91,13 @@ class REST_Quiz {
 			return self::send( $response );
 		}
 
+		$quiz = REST_Posts::to_public_post_dto( $quiz_post );
+
+		$wpdb->q_t = $wpdb->prefix . $this->t_quiz_question; // Question table.
+
 		$quiz->quiz_settings = get_post_meta( $quiz->ID, 'tutor_quiz_option', false );
-		$questions           = $wpdb->get_results(
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom tutor_quiz_questions table; no WP API.
+		$questions = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT
 				question_id,
@@ -131,6 +118,10 @@ class REST_Quiz {
 			}
 
 			$question->question_answers = QuizModel::get_question_answers( $question->question_id, $question->question_type );
+		}
+
+		if ( ! RestAuth::can_reveal_quiz_answers( $quiz_id ) ) {
+			$questions = self::redact_answers_for_student( $questions );
 		}
 
 		$quiz->quiz_questions = $questions;
@@ -156,38 +147,18 @@ class REST_Quiz {
 	public function quiz_with_settings( WP_REST_Request $request ) {
 		$this->post_parent = $request->get_param( 'topic_id' );
 
-		global $wpdb;
+		$data = REST_Posts::get_published_child_posts( $this->post_type, $this->post_parent );
 
-		$quizs = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 
-					ID,
-					post_title,
-					post_content,
-					post_name
-				FROM {$wpdb->posts}
-				WHERE post_type = %s 
-					AND post_parent = %d
-				",
-				$this->post_type,
-				$this->post_parent
-			)
-		);
-
-		$data = array();
-
-		if ( count( $quizs ) > 0 ) {
-			foreach ( $quizs as $quiz ) {
+		if ( count( $data ) > 0 ) {
+			foreach ( $data as $quiz ) {
 				$quiz->quiz_settings = get_post_meta( $quiz->ID, 'tutor_quiz_option', false );
-
-				array_push( $data, $quiz );
-
-				$response = array(
-					'code'    => 'success',
-					'message' => __( 'Quiz retrieved successfully', 'tutor' ),
-					'data'    => $data,
-				);
 			}
+
+			$response = array(
+				'code'    => 'success',
+				'message' => __( 'Quiz retrieved successfully', 'tutor' ),
+				'data'    => $data,
+			);
 			return self::send( $response );
 		}
 
@@ -213,8 +184,7 @@ class REST_Quiz {
 
 		$wpdb->q_t = $wpdb->prefix . $this->t_quiz_question; // Question table.
 
-		$wpdb->q_a_t = $wpdb->prefix . $this->t_quiz_ques_ans; // Question answer table.
-
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom tutor_quiz_questions table; no WP API.
 		$quizs = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT
@@ -237,23 +207,14 @@ class REST_Quiz {
 				// Un-serialized question settings.
 				$quiz->question_settings = maybe_unserialize( $quiz->question_settings );
 
-				// question options with correct ans.
-				$options = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT
-						answer_id,
-						answer_title,
-						is_correct FROM {$wpdb->q_a_t}
-						WHERE belongs_question_id = %d
-						",
-						$quiz->question_id
-					)
-				);
-
-				// set question_answers as quiz property.
-				$quiz->question_answers = $options;
+				// Question options (redacted later when answers must stay hidden).
+				$quiz->question_answers = QuizModel::get_question_answers( $quiz->question_id, $quiz->question_type );
 
 				array_push( $data, $quiz );
+			}
+
+			if ( ! RestAuth::can_reveal_quiz_answers( (int) $this->post_parent ) ) {
+				$data = self::redact_answers_for_student( $data );
 			}
 
 			$response = array(
@@ -286,13 +247,15 @@ class REST_Quiz {
 	public function quiz_attempt_details( WP_REST_Request $request ) {
 		global $wpdb;
 
-		$quiz_id = $request->get_param( 'id' );
+		$quiz_id = Input::sanitize( $request->get_param( 'id' ), 0, Input::TYPE_INT );
 
 		$wpdb->quiz_attempt = $wpdb->prefix . $this->t_quiz_attempt;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom tutor_quiz_attempts table; no WP API.
 		$attempts = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT
+				att.attempt_id,
 				att.user_id,
 				att.total_questions,
 				att.total_answered_questions,
@@ -303,8 +266,8 @@ class REST_Quiz {
 				att.attempt_started_at,
 				att.attempt_ended_at,
 				att.is_manually_reviewed,
-				att.manually_reviewed_at 
-			FROM {$wpdb->quiz_attempt} att 
+				att.manually_reviewed_at
+			FROM {$wpdb->quiz_attempt} att
 				WHERE att.quiz_id = %d
 			",
 				$quiz_id
@@ -312,11 +275,20 @@ class REST_Quiz {
 		);
 
 		if ( count( $attempts ) > 0 ) {
+			$user_id      = get_current_user_id();
+			$course_id    = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+			$can_view_all = $course_id && tutor_utils()->has_user_course_content_access( $user_id, $course_id );
+
 			// unserialize each attempt info.
 			foreach ( $attempts as $key => $attempt ) {
+				if ( ! $can_view_all && (int) $attempt->user_id !== (int) $user_id ) {
+					unset( $attempts[ $key ] );
+					continue;
+				}
+
 				$attempt->attempt_info = maybe_unserialize( $attempt->attempt_info );
-				// attach attempt ans.
-				$answers = $this->get_quiz_attempt_ans( $quiz_id );
+				// Attach answers for this attempt only.
+				$answers = $this->get_quiz_attempt_ans( (int) $attempt->attempt_id );
 
 				if ( false !== $answers ) {
 					$attempt->attempts_answer = $answers;
@@ -324,6 +296,8 @@ class REST_Quiz {
 					$attempt->attempts_answer = array();
 				}
 			}
+
+			$attempts = array_values( $attempts );
 
 			$response = array(
 				'code'    => 'success',
@@ -344,20 +318,27 @@ class REST_Quiz {
 	}
 
 	/**
-	 * Get quiz attempt answers.
+	 * Get quiz attempt answers for a single attempt.
 	 *
 	 * @since 1.7.1
+	 * @since 4.2.0 Scope by quiz_attempt_id to prevent cross-user answer leaks.
 	 *
-	 * @param int $quiz_id quiz id.
+	 * @param int $attempt_id quiz attempt id.
 	 *
 	 * @return mixed
 	 */
-	protected function get_quiz_attempt_ans( $quiz_id ) {
+	protected function get_quiz_attempt_ans( $attempt_id ) {
 		global $wpdb;
+
+		$attempt_id = absint( $attempt_id );
+		if ( ! $attempt_id ) {
+			return false;
+		}
+
 		$wpdb->quiz_attempt_ans = $wpdb->prefix . $this->t_quiz_attempt_ans;
 		$wpdb->quiz_question    = $wpdb->prefix . $this->t_quiz_question;
 
-		// get attempt answers.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom attempt/question tables; no WP API.
 		$answers = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT
@@ -367,10 +348,10 @@ class REST_Quiz {
 				att_ans.achieved_mark,
 				att_ans.minus_mark,
 				att_ans.is_correct FROM {$wpdb->quiz_attempt_ans} as att_ans
-			JOIN {$wpdb->quiz_question} q ON q.question_id = att_ans.question_id 
-			WHERE att_ans.quiz_id = %d
+			JOIN {$wpdb->quiz_question} q ON q.question_id = att_ans.question_id
+			WHERE att_ans.quiz_attempt_id = %d
 			",
-				$quiz_id
+				$attempt_id
 			)
 		);
 
@@ -411,14 +392,58 @@ class REST_Quiz {
 
 		$array = QueryHelper::prepare_in_clause( $ids );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom answers table; no WP API.
 		$results = $wpdb->get_results(
 			"SELECT
 				answer_title
-			FROM {$wpdb->t_quiz_ques_ans} 
-			WHERE 
-			answer_id IN ({$array})" //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			FROM {$wpdb->t_quiz_ques_ans}
+			WHERE
+			answer_id IN ({$array})" // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- IDs prepared via QueryHelper::prepare_in_clause.
 		);
 
 		return $results;
+	}
+
+	/**
+	 * Redact quiz solution fields for students who cannot reveal answers.
+	 *
+	 * Choice types keep option titles but drop correctness markers. Types where
+	 * the answer row itself is the key (FIB, matching, ordering, etc.) return
+	 * an empty answers list.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $questions Questions with answers.
+	 *
+	 * @return array
+	 */
+	private static function redact_answers_for_student( $questions ) {
+		$choice_types = array(
+			QuizModel::QUESTION_TYPE_TRUE_FALSE,
+			QuizModel::QUESTION_TYPE_SINGLE_CHOICE,
+			QuizModel::QUESTION_TYPE_MULTIPLE_CHOICE,
+		);
+
+		foreach ( $questions as $question ) {
+			$type = isset( $question->question_type ) ? (string) $question->question_type : '';
+
+			if ( ! in_array( $type, $choice_types, true ) ) {
+				$question->question_answers = array();
+				continue;
+			}
+
+			if ( empty( $question->question_answers ) || ! is_array( $question->question_answers ) ) {
+				continue;
+			}
+
+			foreach ( $question->question_answers as $answer ) {
+				if ( ! is_object( $answer ) ) {
+					continue;
+				}
+				unset( $answer->is_correct, $answer->answer_two_gap_match );
+			}
+		}
+
+		return $questions;
 	}
 }

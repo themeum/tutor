@@ -52,10 +52,13 @@ class REST_Course_Announcement {
 	public function course_announcement( WP_REST_Request $request ) {
 		$this->post_parent = $request->get_param( 'id' );
 
-		global $wpdb;
-
-		$result = $wpdb->get_results(
-			$wpdb->prepare( "SELECT ID, post_title, post_content, post_name FROM {$wpdb->posts} WHERE post_type = %s AND post_parent = %d", $this->post_type, $this->post_parent )
+		$result = REST_Posts::get_published_child_posts(
+			$this->post_type,
+			$this->post_parent,
+			array(
+				'orderby' => 'date',
+				'order'   => 'DESC',
+			)
 		);
 
 		if ( count( $result ) > 0 ) {

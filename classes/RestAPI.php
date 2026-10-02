@@ -225,6 +225,22 @@ class RestAPI {
 	}
 
 	/**
+	 * Integer ID argument schema for REST routes.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return array
+	 */
+	private function get_id_arg_schema() {
+		return array(
+			'type'              => 'integer',
+			'minimum'           => 1,
+			'sanitize_callback' => 'absint',
+			'required'          => true,
+		);
+	}
+
+	/**
 	 * Initialize routes
 	 *
 	 * @since 1.5.0
@@ -232,6 +248,37 @@ class RestAPI {
 	 * @return void
 	 */
 	public function init_routes() {
+		// Auth: login / refresh / logout.
+		register_rest_route(
+			$this->namespace,
+			'/auth/login',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( RestAuth::class, 'rest_login' ),
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/auth/refresh',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( RestAuth::class, 'rest_refresh' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/auth/logout',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( RestAuth::class, 'rest_logout' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+
 		// Courses.
 		register_rest_route(
 			$this->namespace,
@@ -257,13 +304,9 @@ class RestAPI {
 					'course_detail',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_course_content' ),
 			)
 		);
 
@@ -278,13 +321,9 @@ class RestAPI {
 					'course_topic',
 				),
 				'args'                => array(
-					'course_id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'course_id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_topics' ),
 			)
 		);
 
@@ -299,13 +338,9 @@ class RestAPI {
 					'topic_lesson',
 				),
 				'args'                => array(
-					'topic_id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'topic_id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_by_topic' ),
 			)
 		);
 
@@ -320,13 +355,9 @@ class RestAPI {
 					'course_announcement',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_course_content' ),
 			)
 		);
 
@@ -341,13 +372,9 @@ class RestAPI {
 					'quiz_with_settings',
 				),
 				'args'                => array(
-					'topic_id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'topic_id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_by_topic' ),
 			)
 		);
 
@@ -362,13 +389,9 @@ class RestAPI {
 					'get_quiz',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_quiz' ),
 			)
 		);
 
@@ -383,13 +406,9 @@ class RestAPI {
 					'quiz_question_ans',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_quiz' ),
 			)
 		);
 
@@ -404,13 +423,9 @@ class RestAPI {
 					'quiz_attempt_details',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_quiz' ),
 			)
 		);
 
@@ -425,11 +440,7 @@ class RestAPI {
 					'author_detail',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
 				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
@@ -446,11 +457,7 @@ class RestAPI {
 					'course_rating',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
 				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
@@ -467,13 +474,9 @@ class RestAPI {
 					'course_contents',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_course_content' ),
 			)
 		);
 	}

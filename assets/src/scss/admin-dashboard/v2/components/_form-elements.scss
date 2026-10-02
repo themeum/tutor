@@ -20,6 +20,14 @@
 			min-width: 90px;
 			height: 40px;
 		}
+
+		&.tutor-w-160 {
+			padding: 0px 5px;
+			text-align: center;
+			max-width: 160px;
+			min-width: 160px;
+			height: 40px;
+		}
 	}
 
 	textarea.tutor-form-control {
