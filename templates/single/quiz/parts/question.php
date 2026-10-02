@@ -74,6 +74,7 @@
 					<?php echo 'h5p' === $question->question_type ? 'data-h5p-quiz-content-id=' . esc_attr( $question->question_description ) : ''; ?>
 					data-enable-answer-reveal="<?php echo esc_attr( $enable_answer_reveal ? '1' : '0' ); ?>"
 					data-question_index="<?php echo esc_attr( $question_i ); ?>"
+					data-question-id="<?php echo esc_attr( $question->question_id ); ?>"
 					data-question-type="<?php echo esc_attr( $question->question_type ); ?>">
 
 					<div class="quiz-question tutor-mt-44 tutor-mr-md-100">

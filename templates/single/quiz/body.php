@@ -33,7 +33,6 @@ $passing_grade               = (int) ( $quiz_details['passing_grade'] ?? 0 );
 $can_retry_quiz              = Quiz::can_retry_quiz( $limit_attempts_allowed, $configured_attempts_allowed, $attempted_count );
 
 $attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
-$quiz_answers      = array();
 
 if ( 0 !== $attempted_count ) {
 	?>
@@ -99,7 +98,3 @@ if ( 0 !== $attempted_count ) {
 		<?php
 }
 ?>
-
-<script>
-	window.tutor_quiz_context = '<?php echo strrev( json_encode( $quiz_answers ) ); //phpcs:ignore ?>';
-</script>

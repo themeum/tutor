@@ -69,21 +69,6 @@ $pagination_style            = in_array( $pagination_style, $supported_paginatio
 $questions                     = tutor_utils()->get_random_questions_by_quiz();
 $hide_question_number_overview = (bool) ( $quiz_settings['hide_question_number_overview'] ?? false );
 
-$reveal_question_types = array( 'true_false', 'single_choice', 'multiple_choice' );
-$quiz_answers          = array();
-foreach ( $questions as $question ) {
-	if ( ! in_array( $question->question_type, $reveal_question_types, true ) ) {
-		continue;
-	}
-
-	$answers = QuizModel::get_answers_by_quiz_question( $question->question_id );
-	foreach ( $answers as $answer ) {
-		if ( ! empty( $answer->is_correct ) ) {
-			$quiz_answers[] = $answer->answer_id;
-		}
-	}
-}
-
 $form_id             = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id . '-' . $tutor_is_started_quiz->quiz_id;
 $modal_id            = 'tutor-quiz-abandon-modal';
 $submitted_modal_id  = 'tutor-quiz-submitted-modal';
@@ -124,6 +109,17 @@ $default_values = array(
 			mode: "onSubmit",
 			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
 		});
+
+		const layout = tutorQuizLayout({
+			layout: "<?php echo esc_attr( $question_layout_view ); ?>",
+			formId: "<?php echo esc_attr( $form_id ); ?>",
+			attemptId: "<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>",
+			quizId: <?php echo esc_attr( $tutor_is_started_quiz->quiz_id ); ?>,
+			totalQuestions: <?php echo esc_attr( count( $questions ) ); ?>,
+			enableAnswerReveal: <?php echo $enable_answer_reveal ? 'true' : 'false'; ?>,
+			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
+		});
+
 		const submission = tutorQuizSubmission({
 			formId: "<?php echo esc_attr( $form_id ); ?>",
 			attemptId: "<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>",
@@ -132,26 +128,24 @@ $default_values = array(
 			submittedModalId: "<?php echo esc_attr( $submitted_modal_id ); ?>",
 			timeoutModalId: "<?php echo esc_attr( $timeout_modal_id ); ?>",
 			totalQuestions: <?php echo esc_attr( count( $questions ) ); ?>,
-			enableAnswerReveal: <?php echo $enable_answer_reveal ? 'true' : 'false'; ?>,
-			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
-		});
-
-		const layout = tutorQuizLayout({
-			layout: "<?php echo esc_attr( $question_layout_view ); ?>",
-			formId: "<?php echo esc_attr( $form_id ); ?>",
-			totalQuestions: <?php echo esc_attr( count( $questions ) ); ?>,
-			enableAnswerReveal: <?php echo $enable_answer_reveal ? 'true' : 'false'; ?>,
-			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
+			beforeSubmit() {
+				return layout.revealOnSubmit.call(this);
+			},
 		});
 
 		return {
 			...form,
-			...submission,
 			...layout,
+			...submission,
 			init() {
 				form.init?.call(this);
-				submission.init?.call(this);
 				layout.init?.call(this);
+				submission.init?.call(this);
+			},
+			destroy() {
+				form.destroy?.call(this);
+				layout.destroy?.call(this);
+				submission.destroy?.call(this);
 			},
 		};
 	})()'
@@ -238,6 +232,7 @@ $default_values = array(
 							data-quiz-question-index="<?php echo esc_attr( $index + 1 ); ?>"
 							:class="getPaginationItemClass(<?php echo esc_attr( $index + 1 ); ?>)"
 							:data-state="getPaginationState(<?php echo esc_attr( $index + 1 ); ?>)"
+							:disabled="isVerifying"
 							@click="goTo(<?php echo esc_attr( $index + 1 ); ?>)"
 						>
 							<span class="tutor-quiz-question-paginate-label">
@@ -299,7 +294,7 @@ $default_values = array(
 						->size( Size::LARGE )
 						->variant( Variant::LINK_GRAY )
 						->attr( 'type', 'button' )
-						->attr( ':disabled', 'isRevealSubmitting || isRevealing' )
+						->attr( ':disabled', 'isRevealSubmitting || isRevealing || isVerifying' )
 						->attr( 'x-show', 'canSkip(currentIndex) && revealFooterState === ""' )
 						->attr( '@click', 'goNext({ skipValidation: true })' )
 						->attr( 'class', 'tutor-quiz-skip-btn' )
@@ -315,7 +310,7 @@ $default_values = array(
 						->icon( Icon::ARROW_LEFT_2, 'left', 20 )
 						->flip_rtl()
 						->attr( 'type', 'button' )
-						->attr( ':disabled', 'isRevealSubmitting' )
+						->attr( ':disabled', 'isRevealSubmitting || isVerifying' )
 						->attr( '@click', 'goPrev()' )
 						->attr( 'x-show', $show_previous_button ? 'currentIndex > 1' : 'false' )
 						->attr( 'class', 'tutor-quiz-answer-previous-btn' )
@@ -325,7 +320,8 @@ $default_values = array(
 						->label( __( 'Next', 'tutor' ) )
 						->size( Size::LARGE )
 						->attr( 'type', 'button' )
-						->attr( ':disabled', 'isRevealSubmitting || shouldDisableNextButton()' )
+						->attr( ':disabled', 'isRevealSubmitting || isVerifying || shouldDisableNextButton()' )
+						->attr( ':class', '{ \'tutor-btn-loading\': isVerifying }' )
 						->attr( '@click', 'goNext()' )
 						->attr( 'x-show', 'currentIndex < totalQuestions' )
 						->attr( 'class', 'tutor-quiz-answer-next-btn' )
@@ -336,7 +332,7 @@ $default_values = array(
 						->size( Size::LARGE )
 						->attr( 'type', 'submit' )
 						->attr( 'x-show', 'currentIndex === totalQuestions' )
-						->attr( ':disabled', 'isRevealSubmitting' )
+						->attr( ':disabled', 'isRevealSubmitting || submitQuizMutation?.isPending' )
 						->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
 						->attr( 'class', 'tutor-quiz-submit-btn' )
 						->render();
@@ -352,7 +348,7 @@ $default_values = array(
 					->size( Size::LARGE )
 					->attr( 'form', $form_id )
 					->attr( 'type', 'submit' )
-					->attr( ':disabled', 'isRevealSubmitting' )
+					->attr( ':disabled', 'isRevealSubmitting || submitQuizMutation?.isPending' )
 					->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
 					->attr( 'style', 'display: block; margin: 0 auto; min-width: 290px;' )
 					->render();
@@ -408,7 +404,3 @@ $default_values = array(
 			->render();
 		?>
 </form>
-
-<script type="application/octet-stream" id="tutor-quiz-context">
-	<?php echo esc_html( bin2hex( wp_json_encode( $quiz_answers ) ) ); ?>
-</script>

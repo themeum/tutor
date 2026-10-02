@@ -157,6 +157,13 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_quiz_abandon', array( $this, 'tutor_quiz_abandon' ) );
 
 		/**
+		 * Quiz check answer action (per-question reveal)
+		 *
+		 * @since 4.2.0
+		 */
+		add_action( 'wp_ajax_tutor_quiz_check_answer', array( $this, 'tutor_quiz_check_answer' ) );
+
+		/**
 		 * Delete quiz attempt
 		 *
 		 * @since 2.1.0
@@ -1261,6 +1268,98 @@ class Quiz {
 		}
 
 		wp_send_json_error( __( 'Quiz has been timeout already', 'tutor' ) );
+	}
+
+	/**
+	 * Check answer for a single quiz question during answer reveal mode.
+	 *
+	 * Grades only the submitted question and returns its verification status,
+	 * correct option IDs, and answer explanation. Correct answer data is never
+	 * sent for any subsequent questions.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void JSON response
+	 */
+	public function tutor_quiz_check_answer() {
+		tutor_utils()->checking_nonce();
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'message' => __( 'Please sign in to perform this operation', 'tutor' ) ), 401 );
+		}
+
+		$user_id     = get_current_user_id();
+		$attempt_id  = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
+		$quiz_id     = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+
+		$attempt = self::validate_attempt( $attempt_id, $user_id );
+		if ( ! $attempt ) {
+			wp_send_json_error( array( 'message' => __( 'Operation not allowed, attempt not found or permission denied', 'tutor' ) ), 403 );
+		}
+
+		if ( QuizModel::ATTEMPT_TIMEOUT === $attempt->attempt_status || QuizModel::ATTEMPT_ENDED === $attempt->attempt_status ) {
+			wp_send_json_error( array( 'message' => __( 'Attempt has ended or timed out', 'tutor' ) ), 400 );
+		}
+
+		$effective_quiz_id    = $quiz_id ? $quiz_id : (int) $attempt->quiz_id;
+		$quiz_settings        = tutor_utils()->get_quiz_option( $effective_quiz_id );
+		$enable_answer_reveal = '1' === (string) ( $quiz_settings['enable_answer_reveal'] ?? '0' );
+		if ( ! $enable_answer_reveal ) {
+			wp_send_json_error( array( 'message' => __( 'Answer reveal is disabled for this quiz', 'tutor' ) ), 403 );
+		}
+
+		global $wpdb;
+		$question = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id = %d AND quiz_id = %d",
+				$question_id,
+				$attempt->quiz_id
+			)
+		);
+
+		if ( ! $question ) {
+			wp_send_json_error( array( 'message' => __( 'Question not found or does not belong to this quiz', 'tutor' ) ), 404 );
+		}
+
+		$answers            = QuizModel::get_answers_by_quiz_question( $question_id );
+		$correct_answer_ids = array();
+		if ( is_array( $answers ) ) {
+			foreach ( $answers as $answer ) {
+				if ( ! empty( $answer->is_correct ) ) {
+					$correct_answer_ids[] = (int) $answer->answer_id;
+				}
+			}
+		}
+
+		$submitted = Input::post( 'answers', array(), Input::TYPE_ARRAY );
+		if ( empty( $submitted ) ) {
+			$single_value = Input::post( 'answer' );
+			if ( null !== $single_value && '' !== $single_value ) {
+				$submitted = array( $single_value );
+			}
+		}
+		$submitted_ids = array_map( 'intval', array_filter( (array) $submitted, 'is_numeric' ) );
+
+		$is_correct = false;
+		if ( ! empty( $submitted_ids ) && ! empty( $correct_answer_ids ) ) {
+			$sorted_submitted_ids      = $submitted_ids;
+			$sorted_correct_answer_ids = $correct_answer_ids;
+			sort( $sorted_submitted_ids );
+			sort( $sorted_correct_answer_ids );
+			$is_correct = ( $sorted_submitted_ids === $sorted_correct_answer_ids );
+		}
+
+		$explanation = apply_filters( 'tutor_quiz_question_answer_explanation', '', $question, $attempt );
+
+		wp_send_json_success(
+			array(
+				'question_id'        => $question_id,
+				'is_correct'         => $is_correct,
+				'correct_answer_ids' => $correct_answer_ids,
+				'answer_explanation' => $explanation,
+			)
+		);
 	}
 
 	/**

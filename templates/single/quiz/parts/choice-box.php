@@ -65,8 +65,7 @@ $choice_type = $multiple_answer_allowed ? 'checkbox' : 'radio';
 			<?php if ( count( $answers ) ) : ?>
 				<?php foreach ( $answers as $answer ) : ?>
 					<?php
-						$answer_title                         = stripslashes( $answer->answer_title );
-						$answer->is_correct ? $quiz_answers[] = $answer->answer_id : 0;
+						$answer_title = stripslashes( $answer->answer_title );
 					?>
 
 					<?php if ( 'image' !== $answer->answer_view_format && 'text_image' !== $answer->answer_view_format ) : ?>
