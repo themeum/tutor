@@ -195,4 +195,17 @@ class HttpHelper {
 	public function get_error_message() {
 		return $this->wp_error->get_error_message();
 	}
+
+	public static function send( $url, $args = array() ) {
+
+		$response = wp_remote_request(
+			$url,
+			$args
+		);
+
+		$self = new self();
+		$self->parse_response( $response );
+
+		return $self;
+	}
 }

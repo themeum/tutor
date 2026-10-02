@@ -4,9 +4,9 @@ namespace Ollyo\PaymentHub\Payments\Paypal;
 
 use Ollyo\PaymentHub\Core\Support\Path;
 use Ollyo\PaymentHub\Core\Support\System;
-use GuzzleHttp\Exception\RequestException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
-
+use Ollyo\PaymentHub\Exceptions\HttpRequestException;
+use Tutor\Helpers\HttpHelper;
 
 /**
  * Paypal Helper Class
@@ -174,16 +174,17 @@ final class Helper {
 	 * error message. It processes different parts of the error response, including issues,
 	 * details, and general error messages, and combines them into a single message string.
 	 *
-	 * @param  RequestException $errorResponse The error response from the HTTP request.
+	 * @param  HttpRequestException $errorResponse The error response from the HTTP request.
 	 * @return string|null                          The formatted error message.
 	 * @since  3.0.0
+	 * @since  4.1.2 Accepts HttpRequestException instead of Guzzle's RequestException.
 	 */
 	public static function handleErrorResponse( $errorResponse ): ?string {
 		$message = '';
 
-		if ( ! is_null( $errorResponse->getResponse() ) ) {
+		if ( ! is_null( $errorResponse->get_response() ) ) {
 
-			$errorBody = json_decode( $errorResponse->getResponse()->getBody() );
+			$errorBody = json_decode( $errorResponse->get_response()->get_body() );
 
 			if ( ! empty( $errorBody->issues ) ) {
 				$message .= self::processIssues( $errorBody->issues );
@@ -418,5 +419,29 @@ final class Helper {
 				'address'            => self::format_address( $shipping_address ),
 			),
 		);
+	}
+
+	/**
+	 * Retrieves the refund status based on the provided links and type.
+	 *
+	 * @param array       $links An array of links provided by the PayPal API.
+	 * @param string|null $type The type of link to use.
+	 *
+	 * @since 1.0.0
+	 */
+	private function getRefundStatus( $links, $type = 'self' ): ?string {
+		$url = self::getUrl( $links, $type );
+
+		$requestData = array(
+			'url'     => $url,
+			'options' => array(
+				'headers' => self::$headers,
+				'method'  => HttpHelper::METHOD_GET,
+			),
+		);
+
+		$responseData = System::sendHttpRequest( $requestData );
+
+		return strtolower( $responseData->status ) ?? null;
 	}
 }

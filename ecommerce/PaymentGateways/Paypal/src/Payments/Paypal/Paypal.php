@@ -6,11 +6,12 @@ use Throwable;
 use ErrorException;
 use Ollyo\PaymentHub\Core\Support\Arr;
 use Ollyo\PaymentHub\Core\Support\System;
-use GuzzleHttp\Exception\RequestException;
 use Ollyo\PaymentHub\Core\Payment\BasePayment;
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
 use Ollyo\PaymentHub\Exceptions\InvalidDataException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
+use Ollyo\PaymentHub\Exceptions\HttpRequestException;
+use Tutor\Helpers\HttpHelper;
 
 class Paypal extends BasePayment {
 
@@ -113,9 +114,6 @@ class Paypal extends BasePayment {
 	 * @since  3.0.0
 	 */
 	public function prepareData( $data ): array {
-		if ( empty( $data ) ) {
-			return array();
-		}
 
 		$this->orderID = $data->order_id;
 		$type          = $data->type ?? 'one-time';
@@ -158,6 +156,7 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException If there is an error retrieving the checkout URL or handling the response.
 	 * @since  3.0.0
+	 * @since  4.1.2 Catches HttpRequestException, logs the error and shows a generic message.
 	 */
 	public function createPayment() {
 		try {
@@ -170,10 +169,11 @@ class Paypal extends BasePayment {
 
 			header( "Location: {$checkoutUrl}" );
 			exit();
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
+			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
+			error_log( 'Paypal Error: ' . $error_message ); //phpcs:ignore.
+			throw new ErrorException( esc_html__( 'Something Went Wrong', 'tutor' ) );
 		}
 	}
 
@@ -186,8 +186,9 @@ class Paypal extends BasePayment {
 	 *
 	 * @param  object $payload  The payload object containing the webhook data.
 	 * @return object           Returns the processed order data or an error response.
-	 * @throws RequestException If the request fails.
+	 * @throws HttpRequestException If the request fails.
 	 * @since  3.0.0
+	 * @since  4.1.2 Catches HttpRequestException instead of Guzzle's RequestException.
 	 */
 	public function verifyAndCreateOrderData( object $payload ): object {
 		try {
@@ -219,7 +220,7 @@ class Paypal extends BasePayment {
 				default:
 					return new \stdClass();
 			}
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 
 			// Handle the error response.
 			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
@@ -266,14 +267,16 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException If there is an error during the payment process or request handling.
 	 * @since  3.0.0
+	 * @since  4.1.2 Catches HttpRequestException, logs the error and shows a generic message.
 	 */
 	public function createRecurringPayment() {
 		try {
 			Api::createOrder( $this->getData(), $this->orderID );
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
+			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
+			error_log( 'Paypal Error: ' . $error_message );
+			throw new ErrorException( esc_html__( 'Something Went Wrong', 'tutor' ) );
 		}
 	}
 
@@ -313,38 +316,17 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException Throws an exception if an error occurs while making the HTTP request or processing the response.
 	 * @since  3.0.0
+	 * @since  4.1.2 Catches HttpRequestException instead of Guzzle's RequestException.
 	 */
 	public function createRefund() {
 
 		try {
 			Api::refund( $this->refundLink, $this->orderID, $this->getData() );
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
-	}
-
-	/**
-	 * Retrieves the refund status based on the provided links and type.
-	 *
-	 * @param array  $links An array of links provided by the PayPal API.
-	 * @param string|null $type The type of link to use.
-	 *
-	 * @since 1.0.0
-	 */
-	private function getRefundStatus( $links, $type = 'self' ): ?string {
-		$url = $this->getUrl( $links, $type );
-
-		$requestData = (object) array(
-			'method'  => 'get',
-			'url'     => $url,
-			'options' => array( 'headers' => $this->headers ),
-		);
-
-		$responseData = System::sendHttpRequest( $requestData );
-
-		return strtolower( $responseData->status ) ?? null;
 	}
 
 	/**
@@ -354,19 +336,22 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException Throws an exception if there's an issue with the HTTP request or if webhook information is not found.
 	 * @since  1.0.0
+	 * @since  4.1.2 Uses System::sendHttpRequest() and catches HttpRequestException.
 	 */
 	public function createWebhook(): ?object {
 		try {
 
 			$webhookApiUrl = $this->config->get( 'api_url' ) . '/v1/notifications/webhooks';
 
-			$requestData = (object) array(
-				'method'  => 'get',
+			$requestData = array(
 				'url'     => $webhookApiUrl,
-				'options' => array( 'headers' => $this->headers ),
+				'options' => array(
+					'headers' => $this->headers,
+					'method'  => HttpHelper::METHOD_GET,
+				),
 			);
 
-			$responseData = $this->sendHttpRequest( $requestData );
+			$responseData = System::sendHttpRequest( $requestData );
 
 			if ( isset( $responseData->webhooks ) && is_array( $responseData->webhooks ) ) {
 
@@ -378,7 +363,7 @@ class Paypal extends BasePayment {
 
 			throw new ErrorException( 'Webhook Information Not Found' );
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
@@ -392,6 +377,7 @@ class Paypal extends BasePayment {
 	 * @throws InvalidDataException Throws an exception if the webhook information is invalid or the creation fails.
 	 * @throws ErrorException       Throws an exception if the HTTP request fails.
 	 * @since  1.0.0
+	 * @since  4.1.2 Uses System::sendHttpRequest() and catches HttpRequestException.
 	 */
 	private function createNewWebhook() {
 		try {
@@ -403,16 +389,16 @@ class Paypal extends BasePayment {
 				'event_types' => array( (object) array( 'name' => 'PAYMENT.CAPTURE.REFUNDED' ) ),
 			);
 
-			$requestData = (object) array(
-				'method'  => 'post',
+			$requestData = array(
 				'url'     => $webhookApiUrl,
 				'options' => array(
 					'headers' => $this->headers,
 					'body'    => json_encode( $body ),
+					'method'  => HttpHelper::METHOD_POST,
 				),
 			);
 
-			$responseData = $this->sendHttpRequest( $requestData );
+			$responseData = System::sendHttpRequest( $requestData );
 
 			if ( $responseData->url === $this->config->get( 'webhook_url' ) && $responseData->id ) {
 				return (object) array(
@@ -423,7 +409,7 @@ class Paypal extends BasePayment {
 
 			throw new InvalidDataException( 'Invalid Webhook Information' );
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
@@ -459,7 +445,7 @@ class Paypal extends BasePayment {
 
 			return $returnData;
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
