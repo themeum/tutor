@@ -1,5 +1,4 @@
 <?php
-
 namespace Ollyo\PaymentHub\Core\Support;
 
 use Ollyo\PaymentHub\Contracts\Support\RequestContract;
@@ -19,11 +18,15 @@ use Ollyo\PaymentHub\Exceptions\HttpRequestException;
  * - auth        (array|string) [ user, pass ] for Basic auth, or a raw Authorization value.
  * - timeout     (int)          Timeout in seconds. Default 30.
  * - http_errors (bool)         Throw on 4xx/5xx responses. Default true.
+ *
+ * @since 4.1.2
  */
 class Request implements RequestContract {
 
 	/**
 	 * The HTTP method.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @var string
 	 */
@@ -32,6 +35,8 @@ class Request implements RequestContract {
 	/**
 	 * The request URL.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @var string
 	 */
 	protected $url;
@@ -39,12 +44,16 @@ class Request implements RequestContract {
 	/**
 	 * The Guzzle-style request options.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @var array
 	 */
 	protected $options;
 
 	/**
 	 * Create a new request instance.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @param string $method  The HTTP method.
 	 * @param string $url     The request URL.
@@ -59,6 +68,8 @@ class Request implements RequestContract {
 	/**
 	 * Create a request from the { method, url, options } object used by the gateways.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @param object $request_data The request data object.
 	 *
 	 * @return static
@@ -69,6 +80,8 @@ class Request implements RequestContract {
 
 	/**
 	 * Send a GET request.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @param string $url     The request URL.
 	 * @param array  $options The request options.
@@ -83,6 +96,8 @@ class Request implements RequestContract {
 	/**
 	 * Send a POST request.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @param string $url     The request URL.
 	 * @param array  $options The request options.
 	 *
@@ -95,6 +110,8 @@ class Request implements RequestContract {
 
 	/**
 	 * Send a PUT request.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @param string $url     The request URL.
 	 * @param array  $options The request options.
@@ -109,6 +126,8 @@ class Request implements RequestContract {
 	/**
 	 * Send a PATCH request.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @param string $url     The request URL.
 	 * @param array  $options The request options.
 	 *
@@ -122,7 +141,7 @@ class Request implements RequestContract {
 	/**
 	 * Send the request and decode the JSON response.
 	 *
-	 * Replacement for System::sendHttpRequest().
+	 * @since 4.1.2
 	 *
 	 * @param object $request_data The { method, url, options } request data object.
 	 * @param bool   $raw          Return the response object instead of the decoded body.
@@ -138,6 +157,8 @@ class Request implements RequestContract {
 
 	/**
 	 * Send the request.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @return ResponseContract
 	 * @throws HttpRequestException On a transport error, or on a 4xx/5xx status unless http_errors is false.
@@ -166,6 +187,8 @@ class Request implements RequestContract {
 	/**
 	 * Get the HTTP method.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @return string
 	 */
 	public function get_method(): string {
@@ -174,6 +197,8 @@ class Request implements RequestContract {
 
 	/**
 	 * Get the request URL, without the query option applied.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -184,6 +209,8 @@ class Request implements RequestContract {
 	/**
 	 * Get the request options.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @return array
 	 */
 	public function get_options(): array {
@@ -192,6 +219,8 @@ class Request implements RequestContract {
 
 	/**
 	 * Build the final URL with the query option applied.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -205,6 +234,8 @@ class Request implements RequestContract {
 
 	/**
 	 * Convert the Guzzle-style options to wp_remote_request() arguments.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @return array
 	 */
@@ -240,6 +271,8 @@ class Request implements RequestContract {
 
 	/**
 	 * Determine if a header is set, ignoring case.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @param array  $headers The headers.
 	 * @param string $name    The header name.

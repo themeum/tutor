@@ -7,11 +7,15 @@ use Ollyo\PaymentHub\Contracts\Support\ResponseContract;
 
 /**
  * Thrown when an HTTP request fails at the transport level or returns a 4xx/5xx status.
+ *
+ * @since 4.1.2
  */
 class HttpRequestException extends RuntimeException {
 
 	/**
 	 * The response, or null when the request never received one.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @var ResponseContract|null
 	 */
@@ -19,6 +23,8 @@ class HttpRequestException extends RuntimeException {
 
 	/**
 	 * Create a new exception instance.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @param string                $message  The exception message.
 	 * @param int                   $code     The HTTP status code, or 0 for transport errors.
@@ -34,6 +40,8 @@ class HttpRequestException extends RuntimeException {
 	/**
 	 * Get the response, or null for transport errors.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @return ResponseContract|null
 	 */
 	public function get_response(): ?ResponseContract {
@@ -42,6 +50,8 @@ class HttpRequestException extends RuntimeException {
 
 	/**
 	 * Determine if a response was received.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @return bool
 	 */

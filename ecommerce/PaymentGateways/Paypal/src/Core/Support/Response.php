@@ -6,11 +6,15 @@ use Ollyo\PaymentHub\Contracts\Support\ResponseContract;
 
 /**
  * Wraps the array returned by the WordPress HTTP API (wp_remote_request).
+ *
+ * @since 4.1.2
  */
 class Response implements ResponseContract {
 
 	/**
 	 * The raw response array returned by wp_remote_request().
+	 *
+	 * @since 4.1.2
 	 *
 	 * @var array
 	 */
@@ -19,12 +23,16 @@ class Response implements ResponseContract {
 	/**
 	 * Cached response body with the UTF-8 BOM stripped.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @var string|null
 	 */
 	protected $body;
 
 	/**
 	 * Create a new response instance.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @param array $raw The raw response array returned by wp_remote_request().
 	 */
@@ -35,6 +43,8 @@ class Response implements ResponseContract {
 	/**
 	 * Get the HTTP status code.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @return int
 	 */
 	public function get_status_code(): int {
@@ -44,6 +54,8 @@ class Response implements ResponseContract {
 	/**
 	 * Get the HTTP reason phrase, e.g. "Not Found".
 	 *
+	 * @since 4.1.2
+	 *
 	 * @return string
 	 */
 	public function get_reason_phrase(): string {
@@ -52,6 +64,8 @@ class Response implements ResponseContract {
 
 	/**
 	 * Determine if the status code is in the 2xx range.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @return bool
 	 */
@@ -63,6 +77,8 @@ class Response implements ResponseContract {
 
 	/**
 	 * Get all response headers as an associative array with lowercase keys.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @return array
 	 */
@@ -79,6 +95,8 @@ class Response implements ResponseContract {
 	/**
 	 * Get a single response header (case-insensitive).
 	 *
+	 * @since 4.1.2
+	 *
 	 * @param string $name    The header name.
 	 * @param mixed  $default The value to return when the header is missing.
 	 *
@@ -92,6 +110,8 @@ class Response implements ResponseContract {
 
 	/**
 	 * Get the response body with any UTF-8 BOM stripped.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */
@@ -112,6 +132,8 @@ class Response implements ResponseContract {
 	/**
 	 * Decode the JSON response body.
 	 *
+	 * @since 4.1.2
+	 *
 	 * @param bool $assoc Return associative arrays instead of objects.
 	 *
 	 * @return mixed Null if the body is empty or not valid JSON.
@@ -129,6 +151,8 @@ class Response implements ResponseContract {
 	/**
 	 * Get the raw response array returned by wp_remote_request().
 	 *
+	 * @since 4.1.2
+	 *
 	 * @return array
 	 */
 	public function get_raw(): array {
@@ -137,6 +161,8 @@ class Response implements ResponseContract {
 
 	/**
 	 * Get the response body as a string.
+	 *
+	 * @since 4.1.2
 	 *
 	 * @return string
 	 */

@@ -233,7 +233,8 @@ class System {
 	/**
 	 * Sends an HTTP request using the specified method and options.
 	 *
-	 * @since   4.1.2
+	 * @since   1.0.0
+	 * @since   4.1.2 Sends the request through the WordPress HTTP API instead of Guzzle.
 	 *
 	 * @param   object $request_data    An object containing the request method, URL, and options (e.g., headers, body).
 	 *

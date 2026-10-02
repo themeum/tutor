@@ -195,6 +195,7 @@ final class Api {
 	 * Retrieve PayPal order details using the provided API URL.
 	 *
 	 * @since 3.9.0
+	 * @since 4.1.2 Catches HttpRequestException instead of Guzzle's RequestException.
 	 *
 	 * @param string $url The PayPal API endpoint URL for fetching order details.
 	 * @return object|null The API response object containing order details.
@@ -255,6 +256,7 @@ final class Api {
 	 * Retrieve PayPal vault details from a given URL.
 	 *
 	 * @since 3.9.0
+	 * @since 4.1.2 Catches HttpRequestException instead of Guzzle's RequestException.
 	 *
 	 * @param string $url The PayPal vault API URL to retrieve details.
 	 *
