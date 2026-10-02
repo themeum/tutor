@@ -3,7 +3,7 @@ namespace Ollyo\PaymentHub\Exceptions;
 
 use RuntimeException;
 use Throwable;
-use Ollyo\PaymentHub\Contracts\Support\ResponseContract;
+use Tutor\Helpers\HttpHelper;
 
 /**
  * Thrown when an HTTP request fails at the transport level or returns a 4xx/5xx status.
@@ -17,7 +17,7 @@ class HttpRequestException extends RuntimeException {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @var ResponseContract|null
+	 * @var HttpHelper|null
 	 */
 	protected $response;
 
@@ -26,12 +26,12 @@ class HttpRequestException extends RuntimeException {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @param string                $message  The exception message.
-	 * @param int                   $code     The HTTP status code, or 0 for transport errors.
-	 * @param ResponseContract|null $response The response, if one was received.
-	 * @param Throwable|null        $previous The previous exception.
+	 * @param string          $message  The exception message.
+	 * @param int             $code     The HTTP status code, or 0 for transport errors.
+	 * @param HttpHelper|null $response The response, if one was received.
+	 * @param Throwable|null  $previous The previous exception.
 	 */
-	public function __construct( string $message = '', int $code = 0, ?ResponseContract $response = null, ?Throwable $previous = null ) {
+	public function __construct( string $message = '', int $code = 0, ?HttpHelper $response = null, ?Throwable $previous = null ) {
 		parent::__construct( $message, $code, $previous );
 
 		$this->response = $response;
@@ -42,9 +42,9 @@ class HttpRequestException extends RuntimeException {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @return ResponseContract|null
+	 * @return HttpHelper|null
 	 */
-	public function get_response(): ?ResponseContract {
+	public function get_response(): ?HttpHelper {
 		return $this->response;
 	}
 

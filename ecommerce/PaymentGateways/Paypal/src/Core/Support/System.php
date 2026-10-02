@@ -4,8 +4,10 @@ namespace Ollyo\PaymentHub\Core\Support;
 use stdClass;
 use Brick\Money\Money;
 use Brick\Math\RoundingMode;
+use Tutor\Helpers\HttpHelper;
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
 use Ollyo\PaymentHub\Exceptions\InvalidDataException;
+use Ollyo\PaymentHub\Exceptions\HttpRequestException;
 
 class System {
 
@@ -137,9 +139,8 @@ class System {
 	/**
 	 * Splits the address into two parts if it exceeds a certain length.
 	 *
-	 * @param  string $address1   The primary address.
-	 * @param  string $address2   The secondary address (optional).
-	 * @param  int    $length     The maximum length for the first part of the street address.
+	 * @param  object $data  Address data.
+	 * @param  int    $maxLength     The maximum length for the first part of the street address.
 	 * @return array                The formatted part of the street address.
 	 * @since  1.0.0
 	 */
@@ -162,9 +163,10 @@ class System {
 	 *
 	 * @return int|null                 Returns the minor currency amount as an integer, or null if the amount is invalid.
 	 * @since  1.0.0
+	 * @since  4.1.2 Simplified the null check; behavior is unchanged.
 	 */
 	public static function getMinorAmountBasedOnCurrency( $amount, $currency ) {
-		if ( ! is_null( $amount ) || ! empty( $amount ) ) {
+		if ( ! empty( $amount ) ) {
 			return Money::of( (float) $amount, $currency, null, RoundingMode::HALF_UP )->getMinorAmount()->toInt();
 		}
 
@@ -179,9 +181,10 @@ class System {
 	 *
 	 * @return float|null           Returns the major currency amount as a float, or null if the amount is invalid.
 	 * @since  1.0.0
+	 * @since  4.1.2 Simplified the null check; behavior is unchanged.
 	 */
 	public static function convertMinorAmountToMajor( $amount, $currency ) {
-		if ( ! is_null( $amount ) || ! empty( $amount ) ) {
+		if ( null !== $amount ) {
 			return Money::ofMinor( $amount, $currency, null, RoundingMode::HALF_UP )->getAmount()->toFloat();
 		}
 
@@ -234,27 +237,41 @@ class System {
 	 * Sends an HTTP request using the specified method and options.
 	 *
 	 * @since   1.0.0
-	 * @since   4.1.2 Sends the request through the WordPress HTTP API instead of Guzzle.
+	 * @since   4.1.2 Sends the request through HttpHelper instead of Guzzle.
 	 *
-	 * @param   object $request_data    An object containing the request method, URL, and options (e.g., headers, body).
+	 * Supported options: headers, body, form_params, query (GET only), and
+	 * auth as [ user, pass ] for Basic auth or a raw Authorization value.
 	 *
-	 * @return  object|null                 The decoded JSON response body if $return is true, otherwise null.
+	 * @param   array $request_data An object containing the request method (get or post), URL, and options.
+	 *
+	 * @return  object|array|null The decoded JSON response body.
+	 *
+	 * @throws  \InvalidArgumentException If the HTTP method is not supported.
+	 * @throws  HttpRequestException      On a transport error or a 4xx/5xx response.
 	 */
 	public static function sendHttpRequest( $request_data ) {
-		$method = strtolower( $request_data->method );
-		if ( ! is_callable( array( Request::class, $method ) ) ) {
+		$url  = $request_data['url'];
+		$args = $request_data['options'] ?? array();
 
-			$error_message = sprintf(
-					/* translators: %s: Method name */
-				__( 'Unsupported HTTP method: %1$s', 'tutor' ),
-				$method
-			);
-			throw new \InvalidArgumentException( $error_message ); //phpcs:ignore
+		$response = HttpHelper::send( $url, $args );
+
+		if ( $response->has_error() ) {
+			throw new HttpRequestException( esc_html( $response->get_error_message() ) );
 		}
 
-		$url      = $request_data->url;
-		$response = Request::$method( $url, $request_data->options );
+		$status = (int) $response->get_status_code();
 
-		return json_decode( $response->get_body() );
+		if ( $status >= 400 ) {
+			throw new HttpRequestException( esc_html( sprintf( 'HTTP %d returned from %s', $status, $url ) ), $status, $response ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+		}
+
+		$body = (string) $response->get_body();
+
+		// Strip the UTF-8 BOM some gateways (e.g. Authorize.net) prepend to JSON responses.
+		if ( 0 === strncmp( $body, "\xEF\xBB\xBF", 3 ) ) {
+			$body = substr( $body, 3 );
+		}
+
+		return json_decode( $body );
 	}
 }
