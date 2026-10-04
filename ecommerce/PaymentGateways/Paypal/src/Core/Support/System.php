@@ -274,4 +274,24 @@ class System {
 
 		return json_decode( $body );
 	}
+
+	/**
+	 * Builds the Tutor metadata attached to every payment gateway.
+	 *
+	 * @since 4.1.2
+	 *
+	 * @param   string $env  The payment mode.
+	 * @param   int    $order_user_id The Tutor order ID.
+	 * @return  array  The metadata as string key/value pairs.
+	 */
+	public static function get_tutor_metadata( $env, $order_user_id ): array {
+		$user = $order_user_id ? get_userdata( $order_user_id ) : false;
+
+		return array(
+			'tutor_version' => defined( 'TUTOR_VERSION' ) ? TUTOR_VERSION : '',
+			'wp_user'       => $user ? "{$user->ID} | {$user->user_email}" : '',
+			'site_url'      => get_site_url(),
+			'env'           => $env,
+		);
+	}
 }

@@ -67,8 +67,10 @@ final class Api {
 			$requestData = array(
 				'url'     => self::$config->get( 'api_url' ) . '/v1/oauth2/token',
 				'options' => array(
-					'auth'    => array( self::$config->get( 'client_id' ), self::$config->get( 'client_secret' ) ),
-					'headers' => array( 'Content-Type' => 'application/x-www-form-urlencoded' ),
+					'headers' => array(
+						'Authorization' => 'Basic ' . base64_encode( self::$config->get( 'client_id' ) . ':' . self::$config->get( 'client_secret' ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+						'Content-Type'  => 'application/x-www-form-urlencoded',
+					),
 					'body'    => array( 'grant_type' => 'client_credentials' ),
 					'method'  => HttpHelper::METHOD_POST,
 				),

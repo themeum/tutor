@@ -115,18 +115,28 @@ class Paypal extends BasePayment {
 	 */
 	public function prepareData( $data ): array {
 
-		$this->orderID = $data->order_id;
-		$type          = $data->type ?? 'one-time';
-		$items         = 'one-time' === $type ? Helper::getItems( $data ) : null;
-		$amount        = 'one-time' === $type ? Helper::createAmountData( $data ) : Helper::createAmountForRecurring( $data );
+		$this->orderID  = $data->order_id;
+		$type           = $data->type ?? 'one-time';
+		$items          = 'one-time' === $type ? Helper::getItems( $data ) : null;
+		$amount         = 'one-time' === $type ? Helper::createAmountData( $data ) : Helper::createAmountForRecurring( $data );
+		$tutor_metadata = System::get_tutor_metadata( $this->config->get( 'mode' ), $data->order_user_id );
+		$description    = implode(
+			',',
+			array_map(
+				fn ( $key, $value ) => "{$key}: {$value}",
+				array_keys( $tutor_metadata ),
+				$tutor_metadata
+			)
+		);
 
 		$returnData = array(
 			'purchase_units' => array(
 				array(
-					'custom_id' => $data->order_id,
-					'items'     => $items,
-					'amount'    => $amount,
-					'payee'     => array( 'email_address' => $this->config->get( 'merchant_email' ) ),
+					'custom_id'   => $data->order_id,
+					'items'       => $items,
+					'amount'      => $amount,
+					'payee'       => array( 'email_address' => $this->config->get( 'merchant_email' ) ),
+					'description' => $description,
 				),
 			),
 			'intent'         => 'CAPTURE',
