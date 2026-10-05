@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
 use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -53,6 +54,7 @@ class REST_Rating {
 	 * Retrieve course ratings via REST API.
 	 *
 	 * @since 1.7.1
+	 * @since 4.2.0 Guest payload matches reviews UI; require published course.
 	 *
 	 * @param WP_REST_Request $request The REST request object.
 	 *
@@ -64,10 +66,49 @@ class REST_Rating {
 		$limit         = (int) sanitize_text_field( $request->get_param( 'limit' ) );
 
 		$offset = ! empty( $offset ) ? $offset : 0;
-		$limit  = ! empty( $limit ) ? $limit : 10;
+		$limit  = ! empty( $limit ) ? min( $limit, 100 ) : 10;
+
+		if ( ! CourseModel::get_post_types( $this->post_id ) || 'publish' !== get_post_status( $this->post_id ) ) {
+			$response = array(
+				'code'    => 'not_found',
+				'message' => __( 'Course not found', 'tutor' ),
+				'data'    => array(),
+			);
+			return self::send( $response );
+		}
 
 		$ratings = tutor_utils()->get_course_rating( $this->post_id );
 		$reviews = tutor_utils()->get_course_reviews( $this->post_id, $offset, $limit, false, array( 'approved' ) );
+
+		$is_guest = ! RestAuth::is_rest_authenticated();
+
+		if ( $is_guest ) {
+			$payload = (object) array(
+				'rating_count'   => isset( $ratings->rating_count ) ? $ratings->rating_count : 0,
+				'rating_avg'     => isset( $ratings->rating_avg ) ? $ratings->rating_avg : 0,
+				'count_by_value' => isset( $ratings->count_by_value ) ? $ratings->count_by_value : array(),
+				'reviews'        => array(),
+			);
+
+			if ( is_array( $reviews ) ) {
+				foreach ( $reviews as $review ) {
+					$payload->reviews[] = (object) array(
+						'display_name'      => isset( $review->display_name ) ? $review->display_name : '',
+						'comment_content'   => isset( $review->comment_content ) ? $review->comment_content : '',
+						'comment_date_gmt'  => isset( $review->comment_date_gmt ) ? $review->comment_date_gmt : '',
+						'rating'            => isset( $review->rating ) ? $review->rating : 0,
+					);
+				}
+			}
+
+			$response = array(
+				'code'    => 'success',
+				'message' => __( 'Course rating retrieved successfully', 'tutor' ),
+				'data'    => $payload,
+			);
+
+			return self::send( $response );
+		}
 
 		$ratings->reviews = is_array( $reviews ) ? $reviews : array();
 

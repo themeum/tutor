@@ -61,7 +61,23 @@ class REST_Topic {
 			return self::send( $response );
 		}
 
+		$course_id     = absint( $this->post_parent );
+		$reveal_bodies = RestAuth::can_reveal_learning_payload( $course_id );
+
 		$result = REST_Posts::get_published_child_posts( $this->post_type, $this->post_parent );
+
+		if ( ! $reveal_bodies ) {
+			$result = array_map(
+				static function ( $topic ) {
+					return (object) array(
+						'ID'         => (int) $topic->ID,
+						'post_title' => $topic->post_title,
+						'post_name'  => $topic->post_name,
+					);
+				},
+				$result
+			);
+		}
 
 		if ( count( $result ) > 0 ) {
 			$response = array(

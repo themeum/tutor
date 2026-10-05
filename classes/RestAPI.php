@@ -289,7 +289,7 @@ class RestAPI {
 					$this->course_obj,
 					'course',
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_public_catalog' ),
 			)
 		);
 
@@ -306,7 +306,7 @@ class RestAPI {
 				'args'                => array(
 					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'permission_course_content' ),
+				'permission_callback' => array( RestAuth::class, 'permission_course_detail' ),
 			)
 		);
 
@@ -357,7 +357,7 @@ class RestAPI {
 				'args'                => array(
 					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'permission_course_content' ),
+				'permission_callback' => array( RestAuth::class, 'permission_authenticated_course_content' ),
 			)
 		);
 
@@ -374,7 +374,7 @@ class RestAPI {
 				'args'                => array(
 					'topic_id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'permission_by_topic' ),
+				'permission_callback' => array( RestAuth::class, 'permission_authenticated_by_topic' ),
 			)
 		);
 
@@ -442,7 +442,7 @@ class RestAPI {
 				'args'                => array(
 					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_public_author' ),
 			)
 		);
 
@@ -459,7 +459,7 @@ class RestAPI {
 				'args'                => array(
 					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_public_rating' ),
 			)
 		);
 

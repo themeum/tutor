@@ -40,6 +40,31 @@ class REST_Posts {
 	}
 
 	/**
+	 * Curriculum outline DTO (titles only — guest / locked curriculum parity).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_Post $post Post object.
+	 *
+	 * @return object
+	 */
+	public static function to_outline_post_dto( WP_Post $post ) {
+		$dto = (object) array(
+			'ID'         => (int) $post->ID,
+			'post_title' => $post->post_title,
+			'post_name'  => $post->post_name,
+			'post_type'  => $post->post_type,
+		);
+
+		$video_info = tutor_utils()->get_video_info( $post->ID );
+		if ( $video_info && ! empty( $video_info->playtime ) ) {
+			$dto->duration = $video_info->playtime;
+		}
+
+		return $dto;
+	}
+
+	/**
 	 * Fetch published child posts as public DTOs.
 	 *
 	 * @since 4.2.0

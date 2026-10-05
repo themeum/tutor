@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
 use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -59,7 +60,7 @@ class REST_Author {
 			'ID'            => $user_data->ID,
 			'display_name'  => $user_data->display_name,
 			'user_nicename' => $user_data->user_nicename,
-			'courses'       => get_user_meta( $this->user_id, '_tutor_instructor_course_id', false ),
+			'courses'       => self::get_published_instructor_course_ids( $this->user_id ),
 		);
 
 		if ( RestAuth::can_view_user_private_fields( $this->user_id ) ) {
@@ -76,5 +77,31 @@ class REST_Author {
 		);
 
 		return self::send( $response );
+	}
+
+	/**
+	 * Published course IDs for an instructor (public profile parity).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id Instructor user id.
+	 *
+	 * @return int[]
+	 */
+	private static function get_published_instructor_course_ids( $user_id ) {
+		$courses = CourseModel::get_courses_by_instructor( absint( $user_id ), array( 'publish' ) );
+		$ids     = array();
+
+		if ( ! is_array( $courses ) ) {
+			return $ids;
+		}
+
+		foreach ( $courses as $course ) {
+			if ( is_object( $course ) && isset( $course->ID ) ) {
+				$ids[] = (int) $course->ID;
+			}
+		}
+
+		return $ids;
 	}
 }

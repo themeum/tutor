@@ -140,45 +140,51 @@ class REST_Course {
 					continue;
 				}
 
-				$item = (object) $post->to_array();
-				unset( $item->filter, $item->post_password );
+				$is_guest = ! RestAuth::is_rest_authenticated();
 
-				$category = wp_get_post_terms( $post->ID, $this->course_cat_tax );
+				if ( $is_guest ) {
+					$item = self::to_catalog_card_dto( $post );
+				} else {
+					$item = (object) $post->to_array();
+					unset( $item->filter, $item->post_password );
 
-				$tag = wp_get_post_terms( $post->ID, $this->course_tag_tax );
+					$category = wp_get_post_terms( $post->ID, $this->course_cat_tax );
 
-				$author = get_userdata( $post->post_author );
+					$tag = wp_get_post_terms( $post->ID, $this->course_tag_tax );
 
-				if ( $author ) {
-					$author_payload = (object) array(
-						'ID'            => $author->ID,
-						'display_name'  => $author->display_name,
-						'user_nicename' => $author->user_nicename,
-					);
+					$author = get_userdata( $post->post_author );
 
-					if ( RestAuth::can_view_user_private_fields( (int) $author->ID ) ) {
-						$author_payload->user_login      = $author->user_login;
-						$author_payload->user_email      = $author->user_email;
-						$author_payload->user_registered = $author->user_registered;
+					if ( $author ) {
+						$author_payload = (object) array(
+							'ID'            => $author->ID,
+							'display_name'  => $author->display_name,
+							'user_nicename' => $author->user_nicename,
+						);
+
+						if ( RestAuth::can_view_user_private_fields( (int) $author->ID ) ) {
+							$author_payload->user_login      = $author->user_login;
+							$author_payload->user_email      = $author->user_email;
+							$author_payload->user_registered = $author->user_registered;
+						}
+
+						$item->post_author = $author_payload;
+					} else {
+						$item->post_author = new \stdClass();
 					}
 
-					$item->post_author = $author_payload;
-				} else {
-					$item->post_author = new \stdClass();
+					$thumbnail_size      = apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' );
+					$item->thumbnail_url = get_the_post_thumbnail_url( $post->ID, $thumbnail_size );
+
+					$item->additional_info = $this->course_additional_info( $post->ID );
+
+					$item->ratings = tutor_utils()->get_course_rating( $post->ID );
+
+					$item->course_category = $category;
+
+					$item->course_tag = $tag;
+
+					$item->price = get_post_meta( $post->ID, '_regular_price', true );
 				}
-
-				$thumbnail_size      = apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' );
-				$item->thumbnail_url = get_the_post_thumbnail_url( $post->ID, $thumbnail_size );
-
-				$item->additional_info = $this->course_additional_info( $post->ID );
-
-				$item->ratings = tutor_utils()->get_course_rating( $post->ID );
-
-				$item->course_category = $category;
-
-				$item->course_tag = $tag;
-
-				$item->price = get_post_meta( $post->ID, '_regular_price', true );
 
 				$item = apply_filters( 'tutor_rest_course_single_post', $item );
 
@@ -213,9 +219,9 @@ class REST_Course {
 	 * @return WP_REST_Response
 	 */
 	public function course_detail( WP_REST_Request $request ) {
-		$post_id = $request->get_param( 'id' );
+		$post_id = absint( $request->get_param( 'id' ) );
 
-		$detail = $this->course_additional_info( $post_id );
+		$detail = $this->course_additional_info( $post_id, ! RestAuth::is_rest_authenticated() );
 		if ( $detail ) {
 			$response = array(
 				'code'    => 'course_detail',
@@ -237,36 +243,36 @@ class REST_Course {
 	 * Get course additional info
 	 *
 	 * @since 2.6.1
+	 * @since 4.2.0 Guest responses omit internal course_settings.
 	 *
 	 * @param integer $post_id post id.
+	 * @param bool    $for_guest Whether to redact instructor-only settings.
 	 *
 	 * @return array
 	 */
-	public function course_additional_info( int $post_id ) {
+	public function course_additional_info( int $post_id, $for_guest = false ) {
 		$detail = array(
-
-			'course_settings'          => get_post_meta( $post_id, '_tutor_course_settings', false ),
-
 			'course_price_type'        => get_post_meta( $post_id, '_tutor_course_price_type', false ),
-
 			'course_duration'          => get_post_meta( $post_id, '_course_duration', false ),
-
 			'course_level'             => get_post_meta( $post_id, '_tutor_course_level', false ),
-
 			'course_benefits'          => get_post_meta( $post_id, '_tutor_course_benefits', false ),
-
 			'course_requirements'      => get_post_meta( $post_id, '_tutor_course_requirements', false ),
-
 			'course_target_audience'   => get_post_meta( $post_id, '_tutor_course_target_audience', false ),
-
 			'course_material_includes' => get_post_meta( $post_id, '_tutor_course_material_includes', false ),
-
 			'video'                    => get_post_meta( $post_id, '_video', false ),
-
 			'disable_qa'               => get_post_meta( $post_id, '_tutor_enable_qa', true ) != 'yes',
 		);
 
-		return apply_filters( 'tutor_course_additional_info', $detail );
+		if ( ! $for_guest ) {
+			$detail = array_merge(
+				array(
+					'course_settings' => get_post_meta( $post_id, '_tutor_course_settings', false ),
+				),
+				$detail
+			);
+		}
+
+		return apply_filters( 'tutor_course_additional_info', $detail, $post_id, $for_guest );
 	}
 
 	/**
@@ -307,8 +313,9 @@ class REST_Course {
 	 * @return WP_REST_Response
 	 */
 	public function course_contents( WP_REST_Request $request ) {
-		$course_id = $request->get_param( 'id' );
-		$topics    = tutor_utils()->get_topics(
+		$course_id     = absint( $request->get_param( 'id' ) );
+		$reveal_bodies = RestAuth::can_reveal_learning_payload( $course_id );
+		$topics        = tutor_utils()->get_topics(
 			$course_id,
 			array(
 				'post_status' => 'publish',
@@ -321,7 +328,7 @@ class REST_Course {
 				$current_topic = array(
 					'id'       => $topic->ID,
 					'title'    => $topic->post_title,
-					'summary'  => $topic->post_content,
+					'summary'  => $reveal_bodies ? $topic->post_content : '',
 					'contents' => array(),
 				);
 
@@ -337,7 +344,9 @@ class REST_Course {
 					foreach ( $topic_contents->get_posts() as $content_post ) {
 						array_push(
 							$current_topic['contents'],
-							self::sanitize_course_content_item( $content_post )
+							$reveal_bodies
+								? self::sanitize_course_content_item( $content_post )
+								: self::sanitize_course_content_outline_item( $content_post )
 						);
 					}
 				}
@@ -380,6 +389,97 @@ class REST_Course {
 			'post_type'    => $post->post_type,
 			'menu_order'   => (int) $post->menu_order,
 		);
+	}
+
+	/**
+	 * Outline-only curriculum item (guest / locked parity with course-topics UI).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_Post $post Curriculum post.
+	 *
+	 * @return array
+	 */
+	private static function sanitize_course_content_outline_item( WP_Post $post ) {
+		$item = array(
+			'ID'         => (int) $post->ID,
+			'post_title' => $post->post_title,
+			'post_name'  => $post->post_name,
+			'post_type'  => $post->post_type,
+			'menu_order' => (int) $post->menu_order,
+		);
+
+		$video_info = tutor_utils()->get_video_info( $post->ID );
+		if ( $video_info && ! empty( $video_info->playtime ) ) {
+			$item['duration'] = $video_info->playtime;
+		}
+
+		return $item;
+	}
+
+	/**
+	 * Guest catalog card DTO (archive loop parity).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_Post $post Course post.
+	 *
+	 * @return object
+	 */
+	private function to_catalog_card_dto( WP_Post $post ) {
+		$author  = get_userdata( $post->post_author );
+		$ratings = tutor_utils()->get_course_rating( $post->ID );
+
+		$item = (object) array(
+			'ID'               => (int) $post->ID,
+			'post_title'       => $post->post_title,
+			'post_name'        => $post->post_name,
+			'thumbnail_url'    => get_the_post_thumbnail_url( $post->ID, apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' ) ),
+			'price'            => get_post_meta( $post->ID, '_regular_price', true ),
+			'post_author'      => $author
+				? (object) array(
+					'ID'           => (int) $author->ID,
+					'display_name' => $author->display_name,
+				)
+				: new \stdClass(),
+			'ratings'          => (object) array(
+				'rating_count' => isset( $ratings->rating_count ) ? $ratings->rating_count : 0,
+				'rating_avg'   => isset( $ratings->rating_avg ) ? $ratings->rating_avg : 0,
+			),
+			'course_category'  => self::terms_to_name_dto( wp_get_post_terms( $post->ID, $this->course_cat_tax ) ),
+			'course_tag'       => self::terms_to_name_dto( wp_get_post_terms( $post->ID, $this->course_tag_tax ) ),
+		);
+
+		return $item;
+	}
+
+	/**
+	 * Reduce WP_Term objects to id + name (card UI).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array|\WP_Error $terms Terms.
+	 *
+	 * @return array
+	 */
+	private static function terms_to_name_dto( $terms ) {
+		if ( ! is_array( $terms ) ) {
+			return array();
+		}
+
+		$out = array();
+		foreach ( $terms as $term ) {
+			if ( ! is_object( $term ) ) {
+				continue;
+			}
+			$out[] = (object) array(
+				'term_id' => (int) $term->term_id,
+				'name'    => $term->name,
+				'slug'    => $term->slug,
+			);
+		}
+
+		return $out;
 	}
 
 	/**

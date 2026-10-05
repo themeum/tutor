@@ -1043,7 +1043,116 @@ class RestAuth {
 	}
 
 	/**
-	 * Permission: valid API key and may view course learning content.
+	 * Permission: published course catalog (anonymous allowed).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return bool
+	 */
+	public static function permission_public_catalog() {
+		return true;
+	}
+
+	/**
+	 * Permission: course ratings / reviews (anonymous allowed).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return bool
+	 */
+	public static function permission_public_rating() {
+		return true;
+	}
+
+	/**
+	 * Whether a user's public profile layout is open (not private).
+	 *
+	 * Mirrors templates/public-profile.php layout keys.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return bool
+	 */
+	public static function is_public_profile_layout_open( $user_id ) {
+		$user_id = absint( $user_id );
+		if ( ! $user_id || ! get_userdata( $user_id ) ) {
+			return false;
+		}
+
+		$is_instructor  = tutor_utils()->is_instructor( $user_id, true );
+		$layout_key     = $is_instructor ? 'public_profile_layout' : 'student_public_profile_layout';
+		$profile_layout = tutor_utils()->get_option( $layout_key, 'private' );
+
+		return 'private' !== $profile_layout;
+	}
+
+	/**
+	 * Permission: author card — JWT/key or open public-profile layout.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_REST_Request $request request.
+	 *
+	 * @return bool
+	 */
+	public static function permission_public_author( WP_REST_Request $request ) {
+		if ( static::process_api_request() ) {
+			return true;
+		}
+
+		return static::is_public_profile_layout_open( absint( $request->get_param( 'id' ) ) );
+	}
+
+	/**
+	 * Permission: course marketing detail (anonymous with website login option).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_REST_Request $request request.
+	 *
+	 * @return bool
+	 */
+	public static function permission_course_detail( WP_REST_Request $request ) {
+		$course_id = absint( $request->get_param( 'id' ) );
+		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
+			return false;
+		}
+
+		if ( static::process_api_request() ) {
+			return static::can_view_course_content( $course_id );
+		}
+
+		if ( Course_List::is_public( $course_id ) ) {
+			return true;
+		}
+
+		return ! tutor_utils()->get_option( 'student_must_login_to_view_course' );
+	}
+
+	/**
+	 * Resolve course id from common REST route params.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_REST_Request $request request.
+	 *
+	 * @return int
+	 */
+	private static function course_id_from_request( WP_REST_Request $request ) {
+		$course_id = absint( $request->get_param( 'id' ) );
+		if ( ! $course_id ) {
+			$course_id = absint( $request->get_param( 'course_id' ) );
+		}
+
+		return $course_id;
+	}
+
+	/**
+	 * Permission: course learning content — JWT path or public course (no token).
+	 *
+	 * Used by course-contents. Announcements use permission_authenticated_course_content.
 	 *
 	 * @since 4.2.0
 	 *
@@ -1052,20 +1161,34 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function permission_course_content( WP_REST_Request $request ) {
+		$course_id = self::course_id_from_request( $request );
+
+		if ( static::process_api_request() ) {
+			return static::can_view_course_content( $course_id );
+		}
+
+		return $course_id && Course_List::is_public( $course_id );
+	}
+
+	/**
+	 * Permission: course content that always requires a valid access token.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_REST_Request $request request.
+	 *
+	 * @return bool
+	 */
+	public static function permission_authenticated_course_content( WP_REST_Request $request ) {
 		if ( ! static::process_api_request() ) {
 			return false;
 		}
 
-		$course_id = absint( $request->get_param( 'id' ) );
-		if ( ! $course_id ) {
-			$course_id = absint( $request->get_param( 'course_id' ) );
-		}
-
-		return static::can_view_course_content( $course_id );
+		return static::can_view_course_content( self::course_id_from_request( $request ) );
 	}
 
 	/**
-	 * Permission: topics by course_id.
+	 * Permission: topics by course_id — JWT or public course.
 	 *
 	 * @since 4.2.0
 	 *
@@ -1074,15 +1197,17 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function permission_topics( WP_REST_Request $request ) {
-		if ( ! static::process_api_request() ) {
-			return false;
+		$course_id = absint( $request->get_param( 'course_id' ) );
+
+		if ( static::process_api_request() ) {
+			return static::can_view_course_content( $course_id );
 		}
 
-		return static::can_view_course_content( absint( $request->get_param( 'course_id' ) ) );
+		return $course_id && Course_List::is_public( $course_id );
 	}
 
 	/**
-	 * Permission: lessons or quizzes listed by topic_id.
+	 * Permission: lessons or quizzes listed by topic_id — JWT or public course.
 	 *
 	 * @since 4.2.0
 	 *
@@ -1091,6 +1216,26 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function permission_by_topic( WP_REST_Request $request ) {
+		$topic_id  = absint( $request->get_param( 'topic_id' ) );
+		$course_id = (int) tutor_utils()->get_course_id_by( 'topic', $topic_id );
+
+		if ( static::process_api_request() ) {
+			return static::can_view_course_content( $course_id );
+		}
+
+		return $course_id && Course_List::is_public( $course_id );
+	}
+
+	/**
+	 * Permission: topic children that always require a valid access token (e.g. quiz list).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_REST_Request $request request.
+	 *
+	 * @return bool
+	 */
+	public static function permission_authenticated_by_topic( WP_REST_Request $request ) {
 		if ( ! static::process_api_request() ) {
 			return false;
 		}
@@ -1102,7 +1247,7 @@ class RestAuth {
 	}
 
 	/**
-	 * Permission: quiz by quiz id.
+	 * Permission: quiz by quiz id (always requires access token).
 	 *
 	 * @since 4.2.0
 	 *
@@ -1151,6 +1296,49 @@ class RestAuth {
 		}
 
 		return (bool) tutor_utils()->has_user_course_content_access( $user_id, $course_id );
+	}
+
+	/**
+	 * Whether full lesson/quiz bodies, video, and attachments may be returned.
+	 *
+	 * Matches Template::load_single_lesson_template: enrolled / instructor-admin,
+	 * or a public course that is not purchasable (guest-readable lessons).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return bool
+	 */
+	public static function can_reveal_learning_payload( $course_id, $user_id = 0 ) {
+		$course_id = absint( $course_id );
+		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
+			return false;
+		}
+
+		$user_id = $user_id ? absint( $user_id ) : get_current_user_id();
+
+		if ( $user_id && EnrollmentModel::is_enrolled( $course_id, $user_id ) ) {
+			return true;
+		}
+
+		if ( $user_id && tutor_utils()->has_user_course_content_access( $user_id, $course_id ) ) {
+			return true;
+		}
+
+		return Course_List::is_public( $course_id ) && ! tutor_utils()->is_course_purchasable( $course_id );
+	}
+
+	/**
+	 * Whether this Tutor REST call has a valid access JWT (key permission).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return bool
+	 */
+	public static function is_rest_authenticated() {
+		return static::process_api_request();
 	}
 
 	/**
