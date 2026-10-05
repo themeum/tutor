@@ -1284,10 +1284,6 @@ class Quiz {
 	public function tutor_quiz_check_answer() {
 		tutor_utils()->checking_nonce();
 
-		if ( ! is_user_logged_in() ) {
-			$this->json_response( __( 'Please sign in to perform this operation', 'tutor' ), null, HttpHelper::STATUS_UNAUTHORIZED );
-		}
-
 		$user_id     = get_current_user_id();
 		$attempt_id  = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
