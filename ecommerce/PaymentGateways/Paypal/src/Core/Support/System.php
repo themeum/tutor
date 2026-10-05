@@ -239,21 +239,55 @@ class System {
 	 * @since   1.0.0
 	 * @since   4.1.2 Sends the request through HttpHelper instead of Guzzle.
 	 *
-	 * @param   array $request_data An object containing the request method (get or post), URL, and options.
+	 * @param   array|object $request_data Request data with url, optional method, and options.
+	 * @param   bool         $return_raw_payload Whether to return the raw response object
+	 *                                         instead of the JSON-decoded body. Default false.
 	 *
 	 * @return  object|array|null The decoded JSON response body.
 	 *
 	 * @throws  \InvalidArgumentException If the HTTP method is not supported.
 	 * @throws  HttpRequestException      On a transport error or a 4xx/5xx response.
 	 */
-	public static function sendHttpRequest( $request_data ) {
-		$url    = $request_data['url'];
-		$args   = $request_data['options'] ?? array();
-		$method = strtoupper( $args['method'] ?? 'GET' );
+	public static function sendHttpRequest( $request_data, $return_raw_payload = false ) {
+		$request_data = (object) $request_data;
+		$url          = $request_data->url;
+		$options      = (array) ( $request_data->options ?? array() );
+		$method       = strtoupper( $options['method'] ?? $request_data->method ?? HttpHelper::METHOD_GET );
+		$headers      = $options['headers'] ?? array();
+		$body         = $options['body'] ?? array();
 
-		unset( $args['method'] ); // Remove method from args to avoid conflicts with HttpHelper.
+		unset( $options['method'] );
 
-		$response = HttpHelper::$method( $url, $args );
+		switch ( $method ) {
+			case HttpHelper::METHOD_GET:
+				$response = HttpHelper::get( $url, $body, $headers );
+				break;
+
+			case HttpHelper::METHOD_POST:
+				$response = HttpHelper::post( $url, $body, $headers );
+				break;
+
+			case HttpHelper::METHOD_PUT:
+				$response = HttpHelper::put( $url, $body, $headers );
+				break;
+
+			case HttpHelper::METHOD_PATCH:
+				$response = HttpHelper::patch( $url, $body, $headers );
+				break;
+
+			case HttpHelper::METHOD_DELETE:
+				$response = HttpHelper::delete( $url, $body, $headers );
+				break;
+
+			default:
+				$error_message = sprintf(
+					/* translators: %s: HTTP method name */
+					__( 'Unsupported HTTP method: %s', 'tutor' ),
+					$method
+				);
+				throw new \InvalidArgumentException( esc_html( $error_message ) );
+		}
+
 		if ( $response->has_error() ) {
 			throw new HttpRequestException( esc_html( $response->get_error_message() ) );
 		}
@@ -264,9 +298,11 @@ class System {
 			throw new HttpRequestException( esc_html( sprintf( 'HTTP %d returned from %s', $status, $url ) ), $status, $response ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
-		$body = (string) $response->get_body();
+		if ( $return_raw_payload ) {
+			return $response;
+		}
 
-		return json_decode( $body );
+		return json_decode( (string) $response->get_body() );
 	}
 
 	/**

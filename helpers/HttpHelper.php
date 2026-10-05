@@ -101,36 +101,51 @@ class HttpHelper {
 	/**
 	 * Make HTTP GET request.
 	 *
-	 * @param string $url     The URL for the request.
-	 * @param array  $data    Optional. The data to include in the request (added to the URL as query parameters).
-	 * @param array  $headers Optional. Additional headers for the request.
+	 * @param string $url     Request URL.
+	 * @param array  $data    Request body. Default empty array.
+	 * @param array  $headers Request headers. Default empty array.
+	 * @param array  $args    Additional arguments passed through to send(),
+	 *                        merged over the defaults. Default empty array.
 	 *
 	 * @return self
 	 */
-	public static function get( $url, $data = array(), $headers = array() ) {
-		$url_with_params = add_query_arg( $data, $url );
-		$args            = array(
-			'headers' => $headers,
-			'method'  => self::METHOD_GET,
+	public static function get( $url, $data = array(), $headers = array(), $args = array() ) {
+
+		if ( ! empty( $data ) ) {
+			$url = add_query_arg( $data, $url );
+		}
+
+		$args = array_merge(
+			array(
+				'headers' => $headers,
+				'method'  => self::METHOD_GET,
+			),
+			$args
 		);
 
-		return self::send( $url_with_params, $args );
+		return self::send( $url, $args );
 	}
 
 	/**
 	 * Make HTTP POST request.
 	 *
-	 * @param string $url     The URL for the request.
-	 * @param array  $data    Optional. The data to include in the request body.
-	 * @param array  $headers Optional. Additional headers for the request.
+	 * @param string $url     Request URL.
+	 * @param array  $data    Request body. Default empty array.
+	 * @param array  $headers Request headers. Default empty array.
+	 * @param array  $args    Additional arguments passed through to send(),
+	 *                        merged over the defaults. Default empty array.
 	 *
 	 * @return self
 	 */
-	public static function post( $url, $data = array(), $headers = array() ) {
-		$args = array(
-			'body'    => $data,
-			'headers' => $headers,
-			'method'  => self::METHOD_POST,
+	public static function post( $url, $data = array(), $headers = array(), $args = array() ) {
+
+		$args = array_merge(
+			array(
+				'body'    => $data,
+				'headers' => $headers,
+				'method'  => self::METHOD_POST,
+			),
+			$args
 		);
 
 		return self::send( $url, $args );
@@ -218,14 +233,24 @@ class HttpHelper {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @param string $url     The URL for the request.
-	 * @param array  $args    Optional. The data to include in the request body.
+	 * @param string $url     Request URL.
+	 * @param array  $data    Request body. Default empty array.
+	 * @param array  $headers Request headers. Default empty array.
+	 * @param array  $args    Additional arguments passed through to send(),
+	 *                        merged over the defaults. Default empty array.
 	 *
 	 * @return self
 	 */
-	public static function put( $url, $args = array() ) {
+	public static function put( $url, $data = array(), $headers = array(), $args = array() ) {
 
-		$args['method'] = self::METHOD_PUT;
+		$args = array_merge(
+			array(
+				'body'    => $data,
+				'headers' => $headers,
+				'method'  => self::METHOD_PUT,
+			),
+			$args
+		);
 
 		return self::send( $url, $args );
 	}
@@ -235,14 +260,51 @@ class HttpHelper {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @param string $url     The URL for the request.
-	 * @param array  $args    Optional. The data to include in the request body.
+	 * @param string $url     Request URL.
+	 * @param array  $data    Request body. Default empty array.
+	 * @param array  $headers Request headers. Default empty array.
+	 * @param array  $args    Additional arguments passed through to send(),
+	 *                        merged over the defaults. Default empty array.
 	 *
 	 * @return self
 	 */
-	public static function patch( $url, $args = array() ) {
+	public static function patch( $url, $data = array(), $headers = array(), $args = array() ) {
 
-		$args['method'] = self::METHOD_PATCH;
+		$args = array_merge(
+			array(
+				'body'    => $data,
+				'headers' => $headers,
+				'method'  => self::METHOD_PATCH,
+			),
+			$args
+		);
+
+		return self::send( $url, $args );
+	}
+
+	/**
+	 * Make HTTP DELETE request.
+	 *
+	 * @since 4.1.2
+	 *
+	 * @param string $url     Request URL.
+	 * @param array  $data    Request body. Default empty array.
+	 * @param array  $headers Request headers. Default empty array.
+	 * @param array  $args    Additional arguments passed through to send(),
+	 *                        merged over the defaults. Default empty array.
+	 *
+	 * @return self
+	 */
+	public static function delete( $url, $data = array(), $headers = array(), $args = array() ) {
+
+		$args = array_merge(
+			array(
+				'body'    => $data,
+				'headers' => $headers,
+				'method'  => self::METHOD_DELETE,
+			),
+			$args
+		);
 
 		return self::send( $url, $args );
 	}
