@@ -26,8 +26,8 @@ $tabs_data = Lesson::get_nav_items( $lesson->ID );
 
 $active_tab = Input::get( 'tab', 'overview' );
 $valid_tabs = wp_list_pluck( $tabs_data, 'id' );
-if ( ! in_array( $active_tab, $valid_tabs, true ) && ! empty( $tabs_data ) ) {
-	$active_tab = $tabs_data[0]['id'];
+if ( ! in_array( $active_tab, $valid_tabs, true ) ) {
+	$active_tab = $tabs_data[0]['id'] ?? 'overview';
 }
 
 $json_data                                 = array();
@@ -51,13 +51,13 @@ $feature_url   = $feature_image ? wp_get_attachment_url( $feature_image ) : null
 <div class="tutor-lesson-content">
 	<?php ob_start(); ?>
 	<div 
-		x-data='tutorTabs({
-			tabs: <?php echo wp_json_encode( $tabs_data ); ?>,
-			defaultTab: "<?php echo esc_html( $active_tab ); ?>",
+		x-data="tutorTabs({
+			tabs: <?php echo esc_attr( tutor_json_encode( $tabs_data ) ); ?>,
+			defaultTab: '<?php echo esc_js( $active_tab ); ?>',
 			urlParams: {
-				paramName: "page_tab",
+				paramName: 'page_tab',
 			}
-		})'
+		})"
 		class="tutor-lesson-content-tab"
 	>
 		<!-- Load Lesson Video -->
