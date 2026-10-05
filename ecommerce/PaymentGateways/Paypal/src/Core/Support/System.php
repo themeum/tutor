@@ -239,9 +239,6 @@ class System {
 	 * @since   1.0.0
 	 * @since   4.1.2 Sends the request through HttpHelper instead of Guzzle.
 	 *
-	 * Supported options: headers, body, form_params, query (GET only), and
-	 * auth as [ user, pass ] for Basic auth or a raw Authorization value.
-	 *
 	 * @param   array $request_data An object containing the request method (get or post), URL, and options.
 	 *
 	 * @return  object|array|null The decoded JSON response body.
@@ -250,11 +247,13 @@ class System {
 	 * @throws  HttpRequestException      On a transport error or a 4xx/5xx response.
 	 */
 	public static function sendHttpRequest( $request_data ) {
-		$url  = $request_data['url'];
-		$args = $request_data['options'] ?? array();
+		$url    = $request_data['url'];
+		$args   = $request_data['options'] ?? array();
+		$method = strtoupper( $args['method'] ?? 'GET' );
 
-		$response = HttpHelper::send( $url, $args );
+		unset( $args['method'] ); // Remove method from args to avoid conflicts with HttpHelper.
 
+		$response = HttpHelper::$method( $url, $args );
 		if ( $response->has_error() ) {
 			throw new HttpRequestException( esc_html( $response->get_error_message() ) );
 		}
@@ -266,11 +265,6 @@ class System {
 		}
 
 		$body = (string) $response->get_body();
-
-		// Strip the UTF-8 BOM some gateways (e.g. Authorize.net) prepend to JSON responses.
-		if ( 0 === strncmp( $body, "\xEF\xBB\xBF", 3 ) ) {
-			$body = substr( $body, 3 );
-		}
 
 		return json_decode( $body );
 	}

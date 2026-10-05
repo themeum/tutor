@@ -109,13 +109,12 @@ class HttpHelper {
 	 */
 	public static function get( $url, $data = array(), $headers = array() ) {
 		$url_with_params = add_query_arg( $data, $url );
+		$args            = array(
+			'headers' => $headers,
+			'method'  => self::METHOD_GET,
+		);
 
-		$response = wp_remote_get( $url_with_params, array( 'headers' => $headers ) );
-
-		$self = new self();
-		$self->parse_response( $response );
-
-		return $self;
+		return self::send( $url_with_params, $args );
 	}
 
 	/**
@@ -128,18 +127,13 @@ class HttpHelper {
 	 * @return self
 	 */
 	public static function post( $url, $data = array(), $headers = array() ) {
-		$response = wp_remote_post(
-			$url,
-			array(
-				'body'    => $data,
-				'headers' => $headers,
-			)
+		$args = array(
+			'body'    => $data,
+			'headers' => $headers,
+			'method'  => self::METHOD_POST,
 		);
 
-		$self = new self();
-		$self->parse_response( $response );
-
-		return $self;
+		return self::send( $url, $args );
 	}
 
 	/**
@@ -196,7 +190,17 @@ class HttpHelper {
 		return $this->wp_error->get_error_message();
 	}
 
-	public static function send( $url, $args = array() ) {
+	/**
+	 * Sends an HTTP request and parses the response.
+	 *
+	 * @since 4.1.2
+	 *
+	 * @param string $url  Request URL.
+	 * @param array  $args Optional request arguments.
+	 *
+	 * @return self Parsed HTTP response instance.
+	 */
+	private static function send( $url, $args = array() ) {
 
 		$response = wp_remote_request(
 			$url,
@@ -207,5 +211,39 @@ class HttpHelper {
 		$self->parse_response( $response );
 
 		return $self;
+	}
+
+	/**
+	 * Make HTTP PUT request.
+	 *
+	 * @since 4.1.2
+	 *
+	 * @param string $url     The URL for the request.
+	 * @param array  $args    Optional. The data to include in the request body.
+	 *
+	 * @return self
+	 */
+	public static function put( $url, $args = array() ) {
+
+		$args['method'] = self::METHOD_PUT;
+
+		return self::send( $url, $args );
+	}
+
+	/**
+	 * Make HTTP PATCH request.
+	 *
+	 * @since 4.1.2
+	 *
+	 * @param string $url     The URL for the request.
+	 * @param array  $args    Optional. The data to include in the request body.
+	 *
+	 * @return self
+	 */
+	public static function patch( $url, $args = array() ) {
+
+		$args['method'] = self::METHOD_PATCH;
+
+		return self::send( $url, $args );
 	}
 }
