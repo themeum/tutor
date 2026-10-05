@@ -101,6 +101,8 @@ class HttpHelper {
 	/**
 	 * Make HTTP GET request.
 	 *
+	 * @since 4.1.2 param $args added
+	 *
 	 * @param string $url     Request URL.
 	 * @param array  $data    Request body. Default empty array.
 	 * @param array  $headers Request headers. Default empty array.
@@ -128,6 +130,8 @@ class HttpHelper {
 
 	/**
 	 * Make HTTP POST request.
+	 *
+	 * @since 4.1.2 param $args added
 	 *
 	 * @param string       $url     Request URL.
 	 * @param array|string $data    Request body. An array is form-encoded; a string (e.g. JSON) is sent as-is. Default empty array.
