@@ -289,7 +289,7 @@ window.jQuery(document).ready($ => {
                     answers: checkedAnswers,
                 },
                 success: function (res) {
-                    if (res && res.success && res.data) {
+                    if (res && res.data) {
                         feedback_response($question_wrap, res.data.correct_answer_ids, res.data.answer_explanation);
                     }
                 },
@@ -443,7 +443,7 @@ window.jQuery(document).ready($ => {
                     answers: checkedAnswers,
                 },
                 success: function (res) {
-                    if (res && res.success && res.data) {
+                    if (res && res.data) {
                         feedback_response($lastQuestion, res.data.correct_answer_ids, res.data.answer_explanation);
                     }
                 },

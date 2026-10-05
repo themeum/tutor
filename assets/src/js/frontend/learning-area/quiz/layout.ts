@@ -1,4 +1,4 @@
-import type { AlpineComponentMeta } from '@Core/ts/types';
+import type { AjaxResponse, AlpineComponentMeta } from '@Core/ts/types';
 import endpoints from '@Core/ts/utils/endpoints';
 
 import { QUIZ_LAYOUT_KEYS, QUIZ_LAYOUT_SELECTORS, QUIZ_REVEAL_CONFIG, QuizLayoutType } from './constants';
@@ -17,6 +17,7 @@ export interface QuizLayoutConfig {
 const quizLayout = (config: QuizLayoutConfig) => {
   const { form } = window.TutorCore;
   const { tutorConfig } = window.TutorCore.config;
+  const { wpPost } = window.TutorCore.api;
   let container: Element | null | undefined = null;
 
   let handleFirstTab: ((e: KeyboardEvent) => void) | null = null;
@@ -435,15 +436,14 @@ const quizLayout = (config: QuizLayoutConfig) => {
       this.isVerifying = true;
 
       try {
-        const response = await window.TutorCore.api.wpPost<{
-          success: boolean;
-          data: {
+        const response = await wpPost<
+          AjaxResponse<{
             question_id: number;
             is_correct: boolean;
             correct_answer_ids: number[];
             answer_explanation?: string;
-          };
-        }>(endpoints.QUIZ_CHECK_ANSWER, {
+          }>
+        >(endpoints.QUIZ_CHECK_ANSWER, {
           attempt_id: this.attemptId,
           quiz_id: this.quizId,
           question_id: questionId,

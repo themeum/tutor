@@ -1285,7 +1285,7 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		if ( ! is_user_logged_in() ) {
-			wp_send_json_error( array( 'message' => __( 'Please sign in to perform this operation', 'tutor' ) ), 401 );
+			$this->json_response( __( 'Please sign in to perform this operation', 'tutor' ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
 		$user_id     = get_current_user_id();
@@ -1295,18 +1295,18 @@ class Quiz {
 
 		$attempt = self::validate_attempt( $attempt_id, $user_id );
 		if ( ! $attempt ) {
-			wp_send_json_error( array( 'message' => __( 'Operation not allowed, attempt not found or permission denied', 'tutor' ) ), 403 );
+			$this->json_response( __( 'Operation not allowed, attempt not found or permission denied', 'tutor' ), null, HttpHelper::STATUS_FORBIDDEN );
 		}
 
 		if ( QuizModel::ATTEMPT_TIMEOUT === $attempt->attempt_status || QuizModel::ATTEMPT_ENDED === $attempt->attempt_status ) {
-			wp_send_json_error( array( 'message' => __( 'Attempt has ended or timed out', 'tutor' ) ), 400 );
+			$this->json_response( __( 'Attempt has ended or timed out', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
 		$effective_quiz_id    = $quiz_id ? $quiz_id : (int) $attempt->quiz_id;
 		$quiz_settings        = tutor_utils()->get_quiz_option( $effective_quiz_id );
 		$enable_answer_reveal = '1' === (string) ( $quiz_settings['enable_answer_reveal'] ?? '0' );
 		if ( ! $enable_answer_reveal ) {
-			wp_send_json_error( array( 'message' => __( 'Answer reveal is disabled for this quiz', 'tutor' ) ), 403 );
+			$this->json_response( __( 'Answer reveal is disabled for this quiz', 'tutor' ), null, HttpHelper::STATUS_FORBIDDEN );
 		}
 
 		global $wpdb;
@@ -1319,7 +1319,7 @@ class Quiz {
 		);
 
 		if ( ! $question ) {
-			wp_send_json_error( array( 'message' => __( 'Question not found or does not belong to this quiz', 'tutor' ) ), 404 );
+			$this->json_response( __( 'Question not found or does not belong to this quiz', 'tutor' ), null, HttpHelper::STATUS_NOT_FOUND );
 		}
 
 		$answers            = QuizModel::get_answers_by_quiz_question( $question_id );
@@ -1352,13 +1352,15 @@ class Quiz {
 
 		$explanation = apply_filters( 'tutor_quiz_question_answer_explanation', '', $question, $attempt );
 
-		wp_send_json_success(
+		$this->json_response(
+			'',
 			array(
 				'question_id'        => $question_id,
 				'is_correct'         => $is_correct,
 				'correct_answer_ids' => $correct_answer_ids,
 				'answer_explanation' => $explanation,
-			)
+			),
+			HttpHelper::STATUS_OK
 		);
 	}
 
