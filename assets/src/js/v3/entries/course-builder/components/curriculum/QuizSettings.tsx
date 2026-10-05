@@ -397,7 +397,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       {...controllerProps}
                       type="number"
                       size="small"
-                      label={__('Penalty per incorrect question', 'tutor')}
+                      label={__('Penalty per incorrect answer', 'tutor')}
                       isInlineLabel
                       disabled={!adminNegativeEnabled}
                       wrapperCss={styles.negativeMarkingInput}
