@@ -940,7 +940,7 @@ class Assets {
 	public static function should_load_legacy_scripts(): bool {
 		// Always load in the admin panel.
 		if ( is_admin() ) {
-			return apply_filters( 'tutor_should_load_legacy_scripts', true );
+			return true;
 		}
 
 		$load = true;
@@ -985,7 +985,7 @@ class Assets {
 			}
 
 			// Ignore loading legacy scripts for these blocks on frontend.
-			if ( ! is_admin() && $load && function_exists( 'has_block' ) ) {
+			if ( $load && function_exists( 'has_block' ) ) {
 				$blocks = array(
 					'tutor-gutenberg/student-registration',
 					'tutor-gutenberg/instructor-registration',
