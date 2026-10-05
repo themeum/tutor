@@ -129,11 +129,11 @@ class HttpHelper {
 	/**
 	 * Make HTTP POST request.
 	 *
-	 * @param string $url     Request URL.
-	 * @param array  $data    Request body. Default empty array.
-	 * @param array  $headers Request headers. Default empty array.
-	 * @param array  $args    Additional arguments passed through to send(),
-	 *                        merged over the defaults. Default empty array.
+	 * @param string       $url     Request URL.
+	 * @param array|string $data    Request body. An array is form-encoded; a string (e.g. JSON) is sent as-is. Default empty array.
+	 * @param array        $headers Request headers. Default empty array.
+	 * @param array        $args    Additional arguments passed through to send(),
+	 *                              merged over the defaults. Default empty array.
 	 *
 	 * @return self
 	 */
@@ -233,11 +233,11 @@ class HttpHelper {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @param string $url     Request URL.
-	 * @param array  $data    Request body. Default empty array.
-	 * @param array  $headers Request headers. Default empty array.
-	 * @param array  $args    Additional arguments passed through to send(),
-	 *                        merged over the defaults. Default empty array.
+	 * @param string       $url     Request URL.
+	 * @param array|string $data    Request body. An array is form-encoded; a string (e.g. JSON) is sent as-is. Default empty array.
+	 * @param array        $headers Request headers. Default empty array.
+	 * @param array        $args    Additional arguments passed through to send(),
+	 *                              merged over the defaults. Default empty array.
 	 *
 	 * @return self
 	 */
@@ -260,11 +260,11 @@ class HttpHelper {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @param string $url     Request URL.
-	 * @param array  $data    Request body. Default empty array.
-	 * @param array  $headers Request headers. Default empty array.
-	 * @param array  $args    Additional arguments passed through to send(),
-	 *                        merged over the defaults. Default empty array.
+	 * @param string       $url     Request URL.
+	 * @param array|string $data    Request body. An array is form-encoded; a string (e.g. JSON) is sent as-is. Default empty array.
+	 * @param array        $headers Request headers. Default empty array.
+	 * @param array        $args    Additional arguments passed through to send(),
+	 *                              merged over the defaults. Default empty array.
 	 *
 	 * @return self
 	 */
@@ -287,11 +287,11 @@ class HttpHelper {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @param string $url     Request URL.
-	 * @param array  $data    Request body. Default empty array.
-	 * @param array  $headers Request headers. Default empty array.
-	 * @param array  $args    Additional arguments passed through to send(),
-	 *                        merged over the defaults. Default empty array.
+	 * @param string       $url     Request URL.
+	 * @param array|string $data    Request body. An array is form-encoded; a string (e.g. JSON) is sent as-is. Default empty array.
+	 * @param array        $headers Request headers. Default empty array.
+	 * @param array        $args    Additional arguments passed through to send(),
+	 *                              merged over the defaults. Default empty array.
 	 *
 	 * @return self
 	 */
