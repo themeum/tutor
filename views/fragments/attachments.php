@@ -9,7 +9,9 @@
  * @since 2.0.0
  */
 
-$attachments = $data['attachments'];
+defined( 'ABSPATH' ) || exit;
+
+$attachments = isset( $data['attachments'] ) && is_array( $data['attachments'] ) ? $data['attachments'] : array();
 $size_below  = isset( $data['size_below'] ) && true == $data['size_below'];
 ?>
 

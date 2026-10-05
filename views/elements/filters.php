@@ -11,6 +11,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
@@ -26,10 +28,11 @@ if ( isset( $data ) ) : ?>
 			<?php if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) : ?>
 				<div class="tutor-wp-dashboard-filter-items tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap">
 					<form id="tutor-admin-bulk-action-form" action method="post">
-						<input type="hidden" name="action" value="<?php echo esc_html( $data['ajax_action'] ); ?>" />
+						<?php tutor_nonce_field(); ?>
+						<input type="hidden" name="action" value="<?php echo esc_attr( $data['ajax_action'] ); ?>" />
 						<div class="tutor-d-flex">
 							<div class="tutor-mr-12">
-								<select name="bulk-action" title="Please select an action" class="tutor-form-control tutor-form-select">
+								<select name="bulk-action" title="<?php esc_attr_e( 'Please select an action', 'tutor' ); ?>" class="tutor-form-control tutor-form-select">
 									<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
 										<option value="<?php echo esc_attr( $v['value'] ); ?>">
 											<?php echo esc_html( $v['option'] ); ?>
@@ -46,7 +49,7 @@ if ( isset( $data ) ) : ?>
 			<?php endif; ?>
 			<?php if ( isset( $data['filters'] ) && true === $data['filters'] ) : ?>
 				<?php
-				$courses    = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
+				$courses    = current_user_can( 'manage_options' ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 				$terms_arg  = array(
 					'taxonomy' => CourseModel::COURSE_CATEGORY,
 					'orderby'  => 'term_id',
@@ -60,9 +63,9 @@ if ( isset( $data ) ) : ?>
 						<label class="tutor-form-label">
 						</label>
 						<?php
-						$page        = Input::get( 'page', '' );
-						$sub_page    = Input::get( 'sub_page', '' );
-						$current_tab = Input::get( 'tab', '' );
+						$current_page = Input::get( 'page', '' );
+						$sub_page     = Input::get( 'sub_page', '' );
+						$current_tab  = Input::get( 'tab', '' );
 						if ( '' === $sub_page && '' !== $current_tab ) {
 							$sub_page = $current_tab;
 						}
@@ -73,11 +76,11 @@ if ( isset( $data ) ) : ?>
 						 * @since v2.1.0
 						 */
 						if ( '' === $sub_page && '' === $current_tab ) {
-							$url = "?page=$page";
+							$url = "?page=$current_page";
 						} elseif ( '' === $current_tab ) {
-							$url = "?page=$page&sub_page=$sub_page";
+							$url = "?page=$current_page&sub_page=$sub_page";
 						} else {
-							$url = "?page=$page&tab=$current_tab";
+							$url = "?page=$current_page&tab=$current_tab";
 						}
 
 						?>
@@ -87,9 +90,9 @@ if ( isset( $data ) ) : ?>
 					</div>
 					<?php
 					$course_id     = Input::get( 'course-id', 0, Input::TYPE_INT );
-					$order         = Input::get( 'order', 'DESC' );
+					$sort_order    = Input::get( 'order', 'DESC' );
 					$date          = Input::get( 'date', '' );
-					$search        = Input::get( 'search', '' );
+					$search_filter = Input::get( 'search', '' );
 					$category_slug = Input::get( 'category', '' );
 					?>
 					<?php do_action( 'tutor_data_list_before_filter_items' ); ?>
@@ -185,10 +188,10 @@ if ( isset( $data ) ) : ?>
 								<?php esc_html_e( 'Sort By', 'tutor' ); ?>
 							</label>
 							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-order" data-search="no">
-								<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
+								<option value="DESC" <?php selected( $sort_order, 'DESC', 'selected' ); ?>>
 									<?php esc_html_e( 'DESC', 'tutor' ); ?>
 								</option>
-								<option value="ASC" <?php selected( $order, 'ASC', 'selected' ); ?>>
+								<option value="ASC" <?php selected( $sort_order, 'ASC', 'selected' ); ?>>
 									<?php esc_html_e( 'ASC', 'tutor' ); ?>
 								</option>
 							</select>
@@ -215,7 +218,7 @@ if ( isset( $data ) ) : ?>
 							</label>
 							<div class="tutor-form-wrap">
 								<span class="tutor-form-icon"><span class="tutor-icon-search" aria-hidden="true"></span></span>
-								<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...', 'tutor' ); ?>" value="<?php echo esc_html( wp_unslash( $search ) ); ?>" />
+								<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_attr_e( 'Search...', 'tutor' ); ?>" value="<?php echo esc_attr( wp_unslash( $search_filter ) ); ?>" />
 							</div>
 						</form>
 					</div>
