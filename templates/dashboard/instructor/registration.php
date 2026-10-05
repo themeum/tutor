@@ -83,7 +83,7 @@ use TUTOR\Icon;
 						<span 
 							class="tutor-flex"
 							style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
-							x-show="value.length > 0"
+							x-show="value.length"
 							@click="show = !show"
 						>
 						<template x-if="!show">

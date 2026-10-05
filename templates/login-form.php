@@ -48,7 +48,7 @@ do_action( 'tutor_before_login_form' );
 		<span 
 			class="tutor-flex tutor-items-center tutor-justify-center"
 			style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
-			x-show="value.length > 0"
+			x-show="value.length"
 			@click="show = !show"
 		>
 			<template x-if="!show">
