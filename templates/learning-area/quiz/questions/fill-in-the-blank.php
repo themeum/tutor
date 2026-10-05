@@ -89,7 +89,7 @@ if ( $answer_is_required ) {
 	<?php $unique_field_names = array_values( array_unique( $field_names ) ); ?>
 	<div
 		class="tutor-quiz-questions-error"
-		x-data="{ fieldNames: <?php echo esc_attr( wp_json_encode( $unique_field_names ) ); ?> }"
+		x-data="{ fieldNames: <?php echo esc_attr( tutor_json_encode( $unique_field_names ) ); ?> }"
 		x-cloak
 		x-show="fieldNames.some((name) => errors?.[name]?.message)"
 		x-text="(() => {

@@ -90,7 +90,7 @@ class Gutenberg {
 		}
 
 		register_block_type(
-			'tutor-gutenberg/student-registration',
+			tutor()->path . 'assets/blocks/student-registration',
 			array(
 				'editor_script'   => 'tutor-student-registration-block',
 				'render_callback' => array( $this, 'render_block_student_registration' ),
@@ -98,7 +98,7 @@ class Gutenberg {
 		);
 
 		register_block_type(
-			'tutor-gutenberg/instructor-registration',
+			tutor()->path . 'assets/blocks/instructor-registration',
 			array(
 				'editor_script'   => 'tutor-student-registration-block',
 				'render_callback' => array( $this, 'render_block_tutor_instructor_registration_form' ),

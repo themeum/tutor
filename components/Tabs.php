@@ -211,22 +211,23 @@ class Tabs extends BaseComponent {
 	 * @return string HTML markup for the tabs component.
 	 */
 	public function get(): string {
-		$tabs_json   = wp_json_encode( $this->tabs );
-		$default     = esc_js( $this->default_tab );
-		$orientation = esc_attr( $this->orientation );
-		$url_params  = wp_json_encode( $this->url_params );
+		$tabs_json        = esc_attr( tutor_json_encode( $this->tabs ) );
+		$default          = esc_attr( tutor_json_encode( $this->default_tab ) );
+		$orientation_attr = esc_attr( $this->orientation );
+		$orientation_json = esc_attr( tutor_json_encode( $this->orientation ) );
+		$url_params       = esc_attr( tutor_json_encode( $this->url_params ) );
 
 		ob_start();
 		?>
 		<div 
-			x-data='tutorTabs({
+			x-data="tutorTabs({
 				tabs: <?php echo $tabs_json; // phpcs:ignore ?>,
-				orientation: "<?php echo $orientation; // phpcs:ignore ?>",
-				defaultTab: "<?php echo $default; // phpcs:ignore ?>",
+				orientation: <?php echo $orientation_json; // phpcs:ignore ?>,
+				defaultTab: <?php echo $default; // phpcs:ignore ?>,
 				urlParams: <?php echo $url_params; // phpcs:ignore ?>
-			})'
+			})"
 		>
-			<div x-ref="tablist" class="tutor-tabs-nav" role="tablist" aria-orientation="<?php echo $orientation; // phpcs:ignore ?>">
+			<div x-ref="tablist" class="tutor-tabs-nav" role="tablist" aria-orientation="<?php echo $orientation_attr; // phpcs:ignore ?>">
 				<template x-for="tab in tabs" :key="tab.id">
 					<button
 						type="button"
