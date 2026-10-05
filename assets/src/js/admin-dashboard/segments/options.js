@@ -178,18 +178,50 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
+	const isIntegerNumberField = (field) => ['integer', 'int'].includes(field.getAttribute('data-number-type') || 'decimal');
+
 	const checkNumberFields = (inputFields) => {
 		inputFields.forEach((numberField) => {
+			numberField.addEventListener('beforeinput', (e) => {
+				if (!e.data) {
+					return;
+				}
+				if (/[eE+-]/.test(e.data) || (isIntegerNumberField(numberField) && '.' === e.data)) {
+					e.preventDefault();
+				}
+			});
+
+			numberField.addEventListener(
+				'wheel',
+				(e) => {
+					if (document.activeElement !== numberField) {
+						return;
+					}
+					e.preventDefault();
+					window.scrollBy({ top: e.deltaY, behavior: 'instant' });
+				},
+				{ passive: false },
+			);
+
 			numberField.oninput = (e) => {
 				const { target } = e;
+				if ('' === target.value) {
+					return;
+				}
+
 				const min = Number(target.getAttribute('min') || -Infinity);
 				const max = Number(target.getAttribute('max') || Infinity);
-				const numberType = target.getAttribute('data-number-type') || 'decimal';
 				const value = Number(target.value);
 
-				if (min !== -Infinity && value <= min) e.target.value = min;
-				if (max !== Infinity && value >= max) e.target.value = max;
-				if (['integer', 'int'].includes(numberType)) e.target.value = parseInt(e.target.value)
+				if (min !== -Infinity && value < min) {
+					e.target.value = min;
+				}
+				if (max !== Infinity && value > max) {
+					e.target.value = max;
+				}
+				if (isIntegerNumberField(target)) {
+					e.target.value = parseInt(e.target.value);
+				}
 			};
 		});
 	};

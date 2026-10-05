@@ -24,13 +24,13 @@ $default_values = array(
 
 <form
 	id="<?php echo esc_attr( $form_id ); ?>"
-	x-data='tutorForm({ 
-		id: "<?php echo esc_attr( $form_id ); ?>",
-		mode: "onChange",
-		defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
-	})'
+	x-data="tutorForm({ 
+		id: '<?php echo esc_js( $form_id ); ?>',
+		mode: 'onChange',
+		defaultValues: <?php echo esc_attr( tutor_json_encode( $default_values ) ); ?>,
+	})"
 	x-bind="getFormBindings()"
-	@submit="handleSubmit((data) => handleResetPassword(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
+	@submit="handleSubmit((data) => handleResetPassword(data, '<?php echo esc_js( $form_id ); ?>'))($event)"
 	class="tutor-modal-body tutor-flex tutor-flex-column tutor-gap-5 tutor-border-t"
 >
 	<?php
